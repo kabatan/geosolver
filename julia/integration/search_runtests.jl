@@ -330,6 +330,30 @@ end
     @test length(S.candidate_records(store)) == history_length
 end
 
+@testset "generic target enclosures never merge without proof identity" begin
+    store = S.CandidateStore()
+    first = S.Proposal(1, 101, S.LANE_IID, (0.0,))
+    second = S.Proposal(2, 202, S.LANE_IID, (1.0,))
+    value = setprecision(BigFloat, 256) do
+        BigFloat("1e400")
+    end
+    for (proposal, configuration) in ((first, 101), (second, 202))
+        observation = S.Observation(
+            proposal.task_id,
+            configuration;
+            canonical_near_feasible=true,
+            canonical_valid=true,
+            target=S.TargetEnclosure(value),
+            verified=true,
+            verified_payload=(:validated, configuration),
+            residual_score=0.0,
+        )
+        S.insert_candidate!(store, proposal, observation)
+    end
+    @test length(S.verified_answers(store)) == 2
+    @test all(answer -> answer.target.lower isa BigFloat, S.verified_answers(store))
+end
+
 @testset "blocked pending or refinement work stops instead of accumulating" begin
     no_attempt_budget = S.BudgetLedger(
         S.BudgetLimits(proposals=10, local_attempts=0, refinements=10, oracle_work=100),

@@ -115,13 +115,10 @@ function _verified_key(observation::Observation)
     if observation.target_identity !== nothing
         return "identity:" * observation.target_identity
     end
-    target = observation.target
-    return string(
-        "interval:",
-        bitstring(target.lower),
-        ":",
-        bitstring(target.upper),
-    )
+    # Numerical equality or overlap is not an irreversible target identity.
+    # Without proof supplied by the validator, retain one output identity per
+    # configuration and let reversible niches guide scheduling only.
+    return "configuration:" * string(observation.configuration_id)
 end
 
 function _record_verified!(store::CandidateStore, observation::Observation)

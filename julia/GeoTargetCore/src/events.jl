@@ -75,17 +75,18 @@ function _freeze_search_value(value)
     return value
 end
 
-struct TargetEnclosure
-    lower::Float64
-    upper::Float64
+struct TargetEnclosure{T<:Real}
+    lower::T
+    upper::T
 
     function TargetEnclosure(lower::Real, upper::Real=lower)
-        lo = Float64(lower)
-        hi = Float64(upper)
+        lo, hi = promote(lower, upper)
         isfinite(lo) && isfinite(hi) ||
             throw(ArgumentError("target enclosure bounds must be finite"))
         lo <= hi || throw(ArgumentError("target enclosure lower bound exceeds upper"))
-        return new(lo, hi)
+        frozen_lo = deepcopy(lo)
+        frozen_hi = deepcopy(hi)
+        return new{typeof(frozen_lo)}(frozen_lo, frozen_hi)
     end
 end
 
