@@ -13,6 +13,10 @@ $JuliaProject = Join-Path $Root "julia"
 if ($LASTEXITCODE -ne 0) { throw "Governance lint failed." }
 & python (Join-Path $PSScriptRoot "architecture_lint.py")
 if ($LASTEXITCODE -ne 0) { throw "Architecture lint failed." }
+& python (Join-Path $Root "research\validate.py")
+if ($LASTEXITCODE -ne 0) { throw "Research contract validation failed." }
+& python -m unittest discover -s (Join-Path $Root "research\tests") -v
+if ($LASTEXITCODE -ne 0) { throw "Research harness tests failed." }
 
 $env:JULIA_NUM_THREADS = "1"
 $env:OPENBLAS_NUM_THREADS = "1"
