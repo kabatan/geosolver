@@ -18,6 +18,7 @@ include("events.jl")
 include("candidate_store.jl")
 include("search_policy.jl")
 include("search_loop.jl")
+include("proposal_engine.jl")
 
 """Return the stable plugin ABI version understood by this Core build."""
 abi_version() = CORE_ABI_VERSION
@@ -86,6 +87,10 @@ export CORE_ABI_VERSION,
     cancel!,
     is_cancelled,
     ExecutionContext,
+    PROPOSAL_ENGINE_VERSION,
+    ProposalEngineError,
+    ProposalEngine,
+    emit_proposal,
     PROBLEM_WIRE_VERSION,
     PLUGIN_WIRE_VERSION,
     SOLVE_RESULT_WIRE_VERSION,

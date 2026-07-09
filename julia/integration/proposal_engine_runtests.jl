@@ -3,13 +3,6 @@ using GeoTargetCore
 using Test
 using UUIDs
 
-if !isdefined(GeoTargetCore, :ProposalEngine)
-    Base.include(
-        GeoTargetCore,
-        joinpath(@__DIR__, "..", "GeoTargetCore", "src", "proposal_engine.jl"),
-    )
-end
-
 const C = GeoTargetCore
 const TEST_PLUGIN = PluginId(
     UUID("3eca5164-eb64-43f1-90d5-6d857dc3486f"),
