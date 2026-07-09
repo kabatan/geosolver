@@ -13,25 +13,28 @@ function _canonical_name(value::AbstractString, kind::AbstractString)
     return name
 end
 
-for (type_name, label) in (
-    (:NodeId, "node identifier"),
-    (:VariableId, "variable identifier"),
-    (:ChoiceKey, "choice key"),
-)
-    @eval begin
-        struct $type_name <: AbstractGeoTargetId
+macro define_simple_id(type_name, label)
+    display_name = string(type_name)
+    return quote
+        struct $(esc(type_name)) <: AbstractGeoTargetId
             value::String
 
-            function $type_name(value::AbstractString)
+            function $(esc(type_name))(value::AbstractString)
                 return new(_canonical_name(value, $label))
             end
         end
 
-        Base.string(id::$type_name) = id.value
-        Base.show(io::IO, id::$type_name) = print(io, $(string(type_name)), "(\"", id.value, "\")")
-        Base.isless(left::$type_name, right::$type_name) = isless(left.value, right.value)
+        Base.string(id::$(esc(type_name))) = id.value
+        Base.show(io::IO, id::$(esc(type_name))) =
+            print(io, $display_name, "(\"", id.value, "\")")
+        Base.isless(left::$(esc(type_name)), right::$(esc(type_name))) =
+            isless(left.value, right.value)
     end
 end
+
+@define_simple_id NodeId "node identifier"
+@define_simple_id VariableId "variable identifier"
+@define_simple_id ChoiceKey "choice key"
 
 """Stable identity of a plugin namespace."""
 struct PluginId <: AbstractGeoTargetId
@@ -60,27 +63,25 @@ function Base.parse(::Type{PluginId}, value::AbstractString)
     return PluginId(UUID(parts[1]), parts[2])
 end
 
-for (type_name, label) in (
-    (:TypeId, "type name"),
-    (:PrimitiveId, "operation name"),
-    (:SelectorId, "selector name"),
-)
-    @eval begin
-        struct $type_name <: AbstractGeoTargetId
+macro define_qualified_id(type_name, label)
+    display_name = string(type_name)
+    return quote
+        struct $(esc(type_name)) <: AbstractGeoTargetId
             plugin::PluginId
             name::String
 
-            function $type_name(plugin::PluginId, name::AbstractString)
+            function $(esc(type_name))(plugin::PluginId, name::AbstractString)
                 return new(plugin, _canonical_name(name, $label))
             end
         end
 
-        Base.string(id::$type_name) = string(string(id.plugin), "::", id.name)
-        Base.show(io::IO, id::$type_name) = print(io, $(string(type_name)), "(\"", string(id), "\")")
-        Base.isless(left::$type_name, right::$type_name) =
+        Base.string(id::$(esc(type_name))) = string(string(id.plugin), "::", id.name)
+        Base.show(io::IO, id::$(esc(type_name))) =
+            print(io, $display_name, "(\"", string(id), "\")")
+        Base.isless(left::$(esc(type_name)), right::$(esc(type_name))) =
             (left.plugin, left.name) < (right.plugin, right.name)
 
-        function Base.parse(::Type{$type_name}, value::AbstractString)
+        function Base.parse(::Type{$(esc(type_name))}, value::AbstractString)
             parts = split(String(value), "::"; limit = 2)
             length(parts) == 2 || throw(
                 InvariantError(
@@ -88,10 +89,14 @@ for (type_name, label) in (
                     "wire-qualified IDs use <uuid>/<plugin>::<symbol>",
                 ),
             )
-            return $type_name(parse(PluginId, parts[1]), parts[2])
+            return $(esc(type_name))(parse(PluginId, parts[1]), parts[2])
         end
     end
 end
+
+@define_qualified_id TypeId "type name"
+@define_qualified_id PrimitiveId "operation name"
+@define_qualified_id SelectorId "selector name"
 
 """A canonical SHA-256 digest used by plugin, graph, policy and environment locks."""
 struct ContentHash
