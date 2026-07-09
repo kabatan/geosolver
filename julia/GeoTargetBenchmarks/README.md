@@ -1,0 +1,57 @@
+# GeoTargetBenchmarks
+
+`GeoTargetBenchmarks` is the standalone analytic laboratory for M0 local-solve
+and discovery experiments. It depends only on Julia standard libraries and is
+deliberately absent from the production `GeoTargetCore`/`GeoTargetGeometry`
+dependency graph. Gold configurations are benchmark truth, never routing
+features or solver starts.
+
+Each `generate(params)` call returns a `DirectAnalyticProblem` containing:
+
+- in-place canonical `residual!` and an optional in-place analytic `jacobian!`;
+- a scalar target function, finite bounds, and declared variable/residual scales;
+- independently constructed Gold configurations and distinct target
+  descriptors (`ExactGoldTarget` or `ValidatedGoldTarget`);
+- family/critical-stratum and requested/observed condition metadata; and
+- fully materialized starts, transformations, coefficients, and Gold matrices.
+
+Every materialized matrix has a platform-independent SHA-256 over explicit
+little-endian Float64 bits. `replay_checksum(problem)` covers the complete
+ordered artifact set, while `verify_replay_material(problem)` detects mutation.
+A seed by itself is therefore never accepted as a replay record.
+
+## Parameterized families
+
+| Family | Controlled stress |
+| --- | --- |
+| `ScaleLadderParams` | Dimension and residual row-scale spread |
+| `CurvedChainParams` | Dimension and narrow curved-chain strength |
+| `NearRankDeficientParams` | Dimension, singular-value ratio, and materialized random orientations |
+| `RedundantOverdeterminedParams` | Redundancy and near-dependency perturbation |
+| `TangentCircleLineParams` | Closed-form root separation and tangency conditioning |
+| `MultiRootWarpedParams` | Dimension, root count/separation, warp, row condition, and target collisions |
+
+The compact D2 seed artifact is
+`../../benchmarks/generated/m0-analytic-seed-manifest.json`. Regenerate its
+exact contents with:
+
+```powershell
+julia --startup-file=no --project=julia/GeoTargetBenchmarks `
+  julia/GeoTargetBenchmarks/scripts/render_m0_seed_manifest.jl
+```
+
+The manifest intentionally claims only S1, S2, S3, S5, S7, and S8. These
+analytic families do not establish S4 strict-boundary/guard coverage or S6
+opaque/plugin coverage.
+
+## Verification
+
+```powershell
+julia --startup-file=no --project=julia/GeoTargetBenchmarks `
+  -e "using Pkg; Pkg.test()"
+```
+
+Tests independently evaluate every declared root, central-difference every
+analytic Jacobian at every root, distinguish target values from configuration
+count, replay the generated manifest, and check that Gold truth cannot affect
+saved-start generation or production routing APIs.
