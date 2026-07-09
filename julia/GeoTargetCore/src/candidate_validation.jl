@@ -190,9 +190,8 @@ function _numeric_enclosure(value::Real, options::CandidateValidationOptions)
     type = typeof(center)
     absolute_error = type(options.enclosure_absolute_error)
     relative_error = type(options.enclosure_relative_error) * abs(center)
-    magnitude = max(abs(center), one(center))
     roundoff = if center isa AbstractFloat
-        type(options.roundoff_multiplier) * eps(center) * magnitude
+        type(options.roundoff_multiplier) * eps(center)
     else
         zero(center)
     end
@@ -532,6 +531,7 @@ function _finish_candidate_validation(
     validation_config_digest,
     method,
     precision_bits,
+    oracle_work,
 )
     relation_enclosures = Tuple(
         (node = relation.node, enclosure = _numeric_enclosure(relation.scaled, options)) for
@@ -638,7 +638,7 @@ function _finish_candidate_validation(
         artifact,
         target_enclosure,
         accepted_guards,
-        fast.evaluation_cost + canonical.evaluation_cost,
+        oracle_work,
         exact_failure,
     )
 end
@@ -665,6 +665,7 @@ function validate_candidate(
     )
     candidate_coordinates = Tuple(deepcopy(value) for value in x)
     fast = fast_observation === nothing ? evaluate(compiled, x; capability = C0) : fast_observation
+    fast_work = fast_observation === nothing ? fast.evaluation_cost : 0
     problem_digest, problem_hash_method = _candidate_problem_identity(compiled)
     configuration_digest = _candidate_configuration_hash(compiled, x)
     validation_config_digest = _validation_config_hash(options)
@@ -686,6 +687,7 @@ function validate_candidate(
                 validation_config_digest,
                 "canonical_bigfloat_recheck",
                 options.precision_bits,
+                fast_work + canonical.evaluation_cost,
             )
         end
     end
@@ -706,6 +708,7 @@ function validate_candidate(
             validation_config_digest,
             "canonical_c0_second_pass",
             53,
+            fast_work + canonical.evaluation_cost,
         )
     end
 end

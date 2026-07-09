@@ -14,6 +14,7 @@ include("compiler.jl")
 include("compiled_oracle.jl")
 include("local_solver.jl")
 include("protocol_json.jl")
+include("candidate_validation.jl")
 include("events.jl")
 include("candidate_store.jl")
 include("search_policy.jl")
@@ -112,6 +113,24 @@ export CORE_ABI_VERSION,
     encode_plugin_manifest_json,
     decode_plugin_manifest_document,
     decode_plugin_manifest_json,
-    validate_protocol_json
+    validate_protocol_json,
+    CandidateValidationFailure,
+    CANDIDATE_VALIDATION_NONE,
+    CANDIDATE_FAST_OBSERVATION_FAILED,
+    CANDIDATE_CANONICAL_EVALUATION_FAILED,
+    CANDIDATE_VARIABLE_BOUNDS_FAILED,
+    CANDIDATE_RELATION_RESIDUAL_FAILED,
+    CANDIDATE_RELATION_TRUTH_FAILED,
+    CANDIDATE_DOMAIN_FAILED,
+    CANDIDATE_STRICT_GUARD_UNSEPARATED,
+    CANDIDATE_NONSTRICT_GUARD_FAILED,
+    CANDIDATE_BRANCH_KEY_MISMATCH,
+    CANDIDATE_BRANCH_VALIDITY_FAILED,
+    CANDIDATE_BRANCH_SELECTOR_UNSEPARATED,
+    CANDIDATE_TARGET_INCONSISTENT,
+    CandidateValidationDiagnostic,
+    CandidateValidationOptions,
+    CandidateValidationResult,
+    validate_candidate
 
 end

@@ -3,13 +3,6 @@ using GeoTargetCore
 using GeoTargetGeometry
 using Test
 
-if !isdefined(GeoTargetCore, :CandidateValidationResult)
-    Base.include(
-        GeoTargetCore,
-        joinpath(@__DIR__, "..", "GeoTargetCore", "src", "candidate_validation.jl"),
-    )
-end
-
 if !isdefined(Main, :OpaquePlugin)
     include(joinpath(@__DIR__, "..", "fixtures", "OpaquePlugin", "src", "OpaquePlugin.jl"))
 end
@@ -333,6 +326,7 @@ end
     from_attempt = GeoTargetCore.validate_candidate(compiled, attempt; options)
     @test from_attempt.accepted
     @test from_attempt.artifact.digest == result.artifact.digest
+    @test from_attempt.oracle_work == from_attempt.canonical_observation.evaluation_cost
 end
 
 @testset "C0-only paths use an explicit independent canonical second pass" begin
@@ -492,4 +486,10 @@ end
         residual_tolerance = big"1e1000",
     )
     @test_throws ArgumentError GeoTargetCore.CandidateValidationOptions(roundoff_multiplier = 0)
+
+    large = GeoTargetCore._numeric_enclosure(
+        1.0e100,
+        GeoTargetCore.CandidateValidationOptions(),
+    )
+    @test large.upper - large.lower < 1.0e87
 end
