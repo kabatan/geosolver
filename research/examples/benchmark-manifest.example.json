@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0.0",
+  "benchmark_id": "BENCH-EXAMPLE-001",
+  "manifest_version": "1.0.0",
+  "status": "development",
+  "partition": "D2",
+  "access_policy": "Example only; real locked artifacts are separately access controlled.",
+  "family_grouping_rule": "Group all instances from the same generator and construction template.",
+  "truth_policy": "Analytic generator truth is established independently of a solver output.",
+  "tested_envelope_ref": "benchmarks/manifests/m0-m4-tested-envelope.json",
+  "budgets_seconds": [60, 180],
+  "seed_count": 10,
+  "metrics": ["p_local_valid", "false_candidate_count"],
+  "cases": [
+    {
+      "case_id": "EXAMPLE-CASE-001",
+      "family_id": "SCALE-LADDER",
+      "generator_id": "GEN-SCALE-LADDER-1",
+      "instance_id": "D4-SPREAD12-SEED1",
+      "problem_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "truth_level": "analytic",
+      "truth_artifact": "research/results/example/truth.json",
+      "truth_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "exact_eligible": false,
+      "strata": ["S1", "S8"],
+      "unknown_level": "U1"
+    }
+  ]
+}

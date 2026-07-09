@@ -1,0 +1,245 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geotarget.local/schemas/experiment-card.schema.json",
+  "title": "GeoTarget Experiment Card",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "title",
+    "status",
+    "requirements",
+    "failure_ids",
+    "baseline_id",
+    "objective",
+    "hypothesis",
+    "scope",
+    "literature",
+    "controls",
+    "candidates",
+    "synthetic_families",
+    "design",
+    "hyperparameters",
+    "budgets",
+    "seeds",
+    "metrics",
+    "promotion_gate",
+    "kill_gate",
+    "safety_invariants",
+    "artifacts",
+    "decision"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "id": {"type": "string", "pattern": "^EXP-[A-Z]+-[0-9]{3}$"},
+    "title": {"type": "string", "minLength": 8},
+    "status": {
+      "enum": ["preregistered", "running", "completed", "promoted", "rejected"]
+    },
+    "requirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "pattern": "^(RES|GOAL|ARCH|QA|DSL|ANS)-[0-9]{2}$"}
+    },
+    "failure_ids": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "pattern": "^F([0-9]|1[0-8])$"}
+    },
+    "baseline_id": {"type": "string", "minLength": 3},
+    "objective": {"type": "string", "minLength": 20},
+    "hypothesis": {"type": "string", "minLength": 20},
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["included", "excluded"],
+      "properties": {
+        "included": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "excluded": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+      }
+    },
+    "literature": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/literature"}
+    },
+    "controls": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/variant"}
+    },
+    "candidates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/variant"}
+    },
+    "synthetic_families": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/family"}
+    },
+    "real_problem_policy": {"type": "string"},
+    "design": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_order",
+        "pairing",
+        "tuning_round_limit",
+        "freeze_rule",
+        "locked_validation_rule"
+      ],
+      "properties": {
+        "execution_order": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "pairing": {"type": "string", "minLength": 10},
+        "tuning_round_limit": {"type": "integer", "minimum": 0, "maximum": 2},
+        "freeze_rule": {"type": "string", "minLength": 10},
+        "locked_validation_rule": {"type": "string", "minLength": 10},
+        "development_instances": {"type": "integer", "minimum": 1},
+        "locked_instances": {"type": "integer", "minimum": 1},
+        "notes": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "hyperparameters": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {"$ref": "#/$defs/hyperparameter"}
+    },
+    "budgets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["wall_seconds", "launch_checkpoints", "accounting"],
+      "properties": {
+        "wall_seconds": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "number", "minimum": 0}
+        },
+        "launch_checkpoints": {
+          "type": "array",
+          "items": {"type": "integer", "minimum": 1}
+        },
+        "local_maxiters": {"type": "integer", "minimum": 1},
+        "accounting": {"type": "string", "minLength": 10}
+      }
+    },
+    "seeds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["development_count", "locked_count", "generation"],
+      "properties": {
+        "development_count": {"type": "integer", "minimum": 1},
+        "locked_count": {"type": "integer", "minimum": 1},
+        "generation": {"type": "string", "minLength": 10}
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primary", "secondary", "safety"],
+      "properties": {
+        "primary": {"$ref": "#/$defs/metric"},
+        "secondary": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/metric"}},
+        "safety": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/metric"}}
+      }
+    },
+    "promotion_gate": {"$ref": "#/$defs/gate"},
+    "kill_gate": {"$ref": "#/$defs/gate"},
+    "safety_invariants": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 8}
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["run_manifest_schema", "benchmark_manifest_schema", "result_path", "negative_result_path"],
+      "properties": {
+        "run_manifest_schema": {"type": "string"},
+        "benchmark_manifest_schema": {"type": "string"},
+        "result_path": {"type": "string"},
+        "negative_result_path": {"type": "string"}
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "selected_variant", "rationale", "decision_commit"],
+      "properties": {
+        "state": {"enum": ["pending", "promoted", "specialized", "rejected"]},
+        "selected_variant": {"type": ["string", "null"]},
+        "rationale": {"type": ["string", "null"]},
+        "decision_commit": {"type": ["string", "null"]}
+      }
+    }
+  },
+  "$defs": {
+    "literature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "url", "claim", "assumptions", "break_conditions"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^LIT-[A-Z0-9-]+$"},
+        "url": {"type": "string", "pattern": "^https://"},
+        "claim": {"type": "string", "minLength": 10},
+        "assumptions": {"type": "string", "minLength": 5},
+        "break_conditions": {"type": "string", "minLength": 5}
+      }
+    },
+    "variant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "role", "description", "differences_from_baseline"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[A-Z][A-Z0-9-]+$"},
+        "role": {"enum": ["control", "candidate", "lower_bound", "negative_control"]},
+        "description": {"type": "string", "minLength": 10},
+        "differences_from_baseline": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "family": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "purpose", "factors", "gold_source", "counterexample_for"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[A-Z][A-Z0-9-]+$"},
+        "purpose": {"type": "string", "minLength": 10},
+        "factors": {"type": "object"},
+        "gold_source": {"type": "string", "minLength": 5},
+        "counterexample_for": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "hyperparameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "status", "rationale", "tuning_domain", "freeze_rule"],
+      "properties": {
+        "value": {},
+        "status": {"const": "hypothesis"},
+        "rationale": {"type": "string", "minLength": 8},
+        "tuning_domain": {"type": "array"},
+        "freeze_rule": {"type": "string", "minLength": 8}
+      }
+    },
+    "metric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "definition", "direction"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]+$"},
+        "definition": {"type": "string", "minLength": 8},
+        "direction": {"enum": ["maximize", "minimize", "zero_required", "report_only"]}
+      }
+    },
+    "gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "criteria"],
+      "properties": {
+        "mode": {"enum": ["all", "any"]},
+        "criteria": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 8}}
+      }
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geotarget.local/schemas/negative-result-ledger.schema.json",
+  "title": "GeoTarget Negative Result Ledger",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "entries"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "title",
+          "evidence_state",
+          "source_evidence_ids",
+          "claim_not_supported",
+          "observed_break_condition",
+          "current_decision",
+          "reopen_gate"
+        ],
+        "properties": {
+          "id": {"type": "string", "pattern": "^NEG-[0-9]{3}$"},
+          "title": {"type": "string", "minLength": 8},
+          "evidence_state": {"enum": ["prior_unreproduced", "reproduced", "locked_validation"]},
+          "source_evidence_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^EVID-[0-9]{2}$"}},
+          "claim_not_supported": {"type": "string", "minLength": 10},
+          "observed_break_condition": {"type": "string", "minLength": 10},
+          "current_decision": {"type": "string", "minLength": 10},
+          "reopen_gate": {"type": "string", "minLength": 10}
+        }
+      }
+    }
+  }
+}

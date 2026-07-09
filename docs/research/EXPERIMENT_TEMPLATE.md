@@ -1,33 +1,19 @@
 # Experiment Card Template
 
-```yaml
-id: EXP-YYYY-NNN
-status: preregistered | running | completed | promoted | rejected
-hypothesis: ""
-failure_ids: []
-requirements: []
-literature:
-  - source: ""
-    assumptions: ""
-    break_conditions: ""
-controls: []
-candidate: ""
-applicability_predicate: ""
-success_families: []
-counterexample_families: []
-fixed_parameters: {}
-tuning_round_limit: 2
-seeds: []
-budgets_seconds: [60, 180, 420]
-primary_metric: "P_full_validated"
-non_regression_metrics: []
-promotion_gate: ""
-kill_gate: ""
-implementation_commit: ""
-manifest_path: ""
-result_path: ""
-decision: ""
+The canonical machine-readable contract is
+[`research/schemas/experiment-card.schema.json`](../../research/schemas/experiment-card.schema.json).
+Cards are JSON files in `research/experiments/` and are validated with:
+
+```powershell
+python research/validate.py
 ```
+
+A card must name its requirements and first-failure IDs, cite primary or
+official sources with assumptions and break conditions, define permanent
+controls and counterexample families, and make every H0 numeric setting an
+explicit `hypothesis` hyperparameter. Promotion and kill criteria are arrays of
+independently checkable statements; a prose claim such as "looks faster" is not
+a gate.
 
 Required sequence: literature/assumption matrix, preregistration, minimum
 success and counterexample cases, factorial family, paired same-budget run,
@@ -35,3 +21,10 @@ ablation, development tuning (at most twice), parameter freeze, one locked
 validation, then promote/specialize/reject. Rejected code is deleted; its card,
 compact results, checksums and counterexamples remain.
 
+The first three canonical cards are:
+
+- `EXP-COMP-001`: compiler semantics and economics;
+- `EXP-LOCAL-001`: fixed-start local scaling and derivative routing; and
+- `EXP-DISC-001`: full-support sampling and soft topographical ordering.
+
+None names the final solver algorithm.
