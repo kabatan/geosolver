@@ -65,6 +65,44 @@ function constant_problem(value=3.5)
     )
 end
 
+function unconstrained_target_problem()
+    plugin = geometry_plugin()
+    variable = VariableSpec(
+        VariableId("x"),
+        SCALAR_TYPE_ID,
+        0.0,
+        1.0;
+        lower=-2.0,
+        upper=2.0,
+    )
+    graph = ConstructionGraph((ReferenceNode(NodeId("x"), variable.id),))
+    return ProblemSpecV1(
+        (plugin_lock(plugin),),
+        (variable,),
+        graph;
+        target=NodeId("x"),
+    )
+end
+
+function constant_manifold_problem(value=7.0)
+    plugin = geometry_plugin()
+    variable = VariableSpec(
+        VariableId("free"),
+        SCALAR_TYPE_ID,
+        0.0,
+        1.0;
+        lower=-2.0,
+        upper=2.0,
+    )
+    graph = ConstructionGraph((LiteralNode(NodeId("target"), SCALAR_TYPE_ID, value),))
+    return ProblemSpecV1(
+        (plugin_lock(plugin),),
+        (variable,),
+        graph;
+        target=NodeId("target"),
+    )
+end
+
 function short_options(; kwargs...)
     return SolveOptions(; preset=:fast, wall_seconds=60.0, seed=17, kwargs...)
 end
@@ -175,6 +213,33 @@ end
     @test read(destination, String) == execution.evidence_json
     @test content_hash(read(destination)) == execution.result.evidence_log.content
     rm(destination; force=true)
+end
+
+@testset "solve distinguishes continuous target images from constant manifolds" begin
+    registry = solve_registry()
+    continuous = solve_execution(
+        unconstrained_target_problem(),
+        registry;
+        options=short_options(),
+        max_actions=2,
+    )
+    @test continuous.result.target_image_status == TARGET_LIKELY_CONTINUOUS
+    @test isempty(continuous.result.exact_answers)
+    @test isempty(continuous.result.provisional_answers)
+    @test continuous.result.search_status == SEARCH_FINISHED_UNKNOWN
+    @test occursin("TARGET_LIKELY_CONTINUOUS", continuous.evidence_json)
+
+    constant_manifold = solve_execution(
+        constant_manifold_problem(),
+        registry;
+        options=short_options(),
+        max_actions=2,
+    )
+    @test constant_manifold.result.target_image_status == TARGET_FINITE_OBSERVED
+    @test length(constant_manifold.result.provisional_answers) == 1
+    answer = only(constant_manifold.result.provisional_answers)
+    @test answer.target.lower <= BigFloat(7) <= answer.target.upper
+    @test occursin("TARGET_LOCALLY_CONSTANT_MANIFOLD", constant_manifold.evidence_json)
 end
 
 @testset "stable options reject unsupported execution expansion" begin

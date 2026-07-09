@@ -98,6 +98,8 @@ mutable struct _CompiledAttemptRunner
     workspace::CompiledWorkspace
     local_options::LocalSolveOptions
     validation_options::CandidateValidationOptions
+    image_options::TargetImageDiagnosticOptions
+    saw_likely_continuous::Bool
 end
 
 function _remaining_deadline_ns(context::ExecutionContext)
@@ -138,8 +140,9 @@ function _validation_target(validation::CandidateValidationResult)
     return TargetEnclosure(enclosure.lower, enclosure.upper)
 end
 
-function _local_diagnostic(attempt, validation=nothing)
+function _local_diagnostic(attempt, validation=nothing, image=nothing)
     validation_text = validation === nothing ? "not_run" : string(validation.failure)
+    image_text = image === nothing ? "not_run" : string(image.classification)
     return join(
         (
             "local_status=$(attempt.status)",
@@ -148,8 +151,72 @@ function _local_diagnostic(attempt, validation=nothing)
             "rank=$(attempt.numerical_rank)",
             "condition=$(attempt.condition_estimate)",
             "validation=$validation_text",
+            "target_image=$image_text",
         ),
         ';',
+    )
+end
+
+function _target_error_floor(
+    image::TargetImageDiagnostic,
+    validation::CandidateValidationOptions,
+)
+    floor = validation.target_consistency_tolerance
+    image.linearization_computed || return floor
+    rank = image.numerical_rank
+    rank === nothing && return floor
+    rank == 0 && return floor
+    length(image.singular_values) >= rank || return floor
+    smallest = image.singular_values[rank]
+    isfinite(smallest) && smallest > 0 || return floatmax(Float64) / 4
+    gradient_norm_squared = sum(abs2, image.target_gradient)
+    normal_squared = max(
+        0.0,
+        gradient_norm_squared - image.nullspace_target_sensitivity^2,
+    )
+    normal_gradient = sqrt(normal_squared)
+    residual_dimension = max(1, length(image.base_observation.relations))
+    estimate = normal_gradient * sqrt(residual_dimension) *
+               validation.residual_tolerance / smallest
+    isfinite(estimate) || return floatmax(Float64) / 4
+    return max(floor, estimate)
+end
+
+function _validation_for_image(
+    options::CandidateValidationOptions,
+    image::TargetImageDiagnostic,
+)
+    return CandidateValidationOptions(
+        precision_bits=options.precision_bits,
+        residual_tolerance=options.residual_tolerance,
+        enclosure_absolute_error=options.enclosure_absolute_error,
+        enclosure_relative_error=options.enclosure_relative_error,
+        target_consistency_tolerance=_target_error_floor(image, options),
+        roundoff_multiplier=options.roundoff_multiplier,
+    )
+end
+
+_finite_target_image_candidate(image::TargetImageDiagnostic) =
+    image.classification in (TARGET_LOCALLY_ISOLATED, TARGET_LOCALLY_CONSTANT_MANIFOLD)
+
+function _zero_relation_attempt(runner, proposal, evaluate_for_local)
+    start = Tuple(proposal.coordinates)
+    observation = evaluate_for_local(collect(start))
+    accepted = canonical_feasible(
+        observation;
+        residual_tolerance=runner.local_options.residual_tolerance,
+    )
+    return LocalAttempt(
+        start,
+        start,
+        observation,
+        accepted ? LOCAL_CONVERGED : LOCAL_EVALUATION_FAILED,
+        accepted,
+        0,
+        1,
+        0,
+        Inf,
+        (),
     )
 end
 
@@ -172,17 +239,21 @@ function (runner::_CompiledAttemptRunner)(
     upper = Float64[
         variable.upper === nothing ? Inf : variable.upper for variable in problem.variables
     ]
-    attempt = solve_local(
-        evaluate_for_local,
-        collect(proposal.coordinates);
-        origins,
-        scales,
-        lower,
-        upper,
-        options=runner.local_options,
-        deadline_ns=_remaining_deadline_ns(context),
-        cancelled=() -> is_cancelled(context.cancel),
-    )
+    attempt = if isempty(problem.relations)
+        _zero_relation_attempt(runner, proposal, evaluate_for_local)
+    else
+        solve_local(
+            evaluate_for_local,
+            collect(proposal.coordinates);
+            origins,
+            scales,
+            lower,
+            upper,
+            options=runner.local_options,
+            deadline_ns=_remaining_deadline_ns(context),
+            cancelled=() -> is_cancelled(context.cancel),
+        )
+    end
     score = _residual_score(attempt.observation)
     near = _near_feasible(attempt.observation, runner.local_options.residual_tolerance)
     if !attempt.accepted || is_cancelled(context.cancel) ||
@@ -201,10 +272,16 @@ function (runner::_CompiledAttemptRunner)(
         )
     end
 
+    image = analyze_target_image(
+        runner.compiled,
+        collect(attempt.final);
+        options=runner.image_options,
+    )
+    oracle_work[] += image.oracle_work
     validation = validate_candidate(
         runner.compiled,
         attempt;
-        options=runner.validation_options,
+        options=_validation_for_image(runner.validation_options, image),
     )
     oracle_work[] += validation.oracle_work
     if !validation.accepted
@@ -218,7 +295,26 @@ function (runner::_CompiledAttemptRunner)(
             residual_score=score,
             oracle_work=oracle_work[],
             endpoint=attempt.final,
-            diagnostic=_local_diagnostic(attempt, validation),
+            diagnostic=_local_diagnostic(attempt, validation, image),
+        )
+    end
+
+
+    if !_finite_target_image_candidate(image)
+        runner.saw_likely_continuous |= image.classification == TARGET_LIKELY_CONTINUOUS
+        return Observation(
+            proposal.task_id,
+            proposal.configuration_id;
+            canonical_near_feasible=true,
+            canonical_valid=true,
+            target=_validation_target(validation),
+            branch_signature=validation.provisional.branch_signature,
+            verified=false,
+            needs_refinement=image.classification == TARGET_IMAGE_INCONCLUSIVE,
+            residual_score=Float64(validation.provisional.canonical_residual_bound),
+            oracle_work=oracle_work[],
+            endpoint=attempt.final,
+            diagnostic=_local_diagnostic(attempt, validation, image),
         )
     end
 
@@ -244,7 +340,7 @@ function (runner::_CompiledAttemptRunner)(
         residual_score=Float64(provisional.canonical_residual_bound),
         oracle_work=oracle_work[],
         endpoint=attempt.final,
-        diagnostic=_local_diagnostic(attempt, validation),
+        diagnostic=_local_diagnostic(attempt, validation, image),
     )
 end
 
@@ -404,13 +500,18 @@ function _finish_execution(
     context::ExecutionContext,
     search::SearchLoopResult;
     evidence_path::Union{Nothing,AbstractString}=nothing,
+    target_image_override::Union{Nothing,TargetImageStatus}=nothing,
 )
     evidence = _evidence_json(context)
     digest = content_hash(evidence)
     location = evidence_path === nothing ?
                "memory:$(string(digest))" : _write_evidence(evidence_path, evidence)
     provisional = _provisional_answers(context.workspace.candidates)
-    target_status = isempty(provisional) ? TARGET_IMAGE_UNKNOWN : TARGET_FINITE_OBSERVED
+    target_status = if target_image_override !== nothing
+        target_image_override
+    else
+        isempty(provisional) ? TARGET_IMAGE_UNKNOWN : TARGET_FINITE_OBSERVED
+    end
     result = SolveResult(
         (),
         provisional,
@@ -496,6 +597,7 @@ function solve_execution(
         deadline=max(deadline, now),
         rng_checkpoint=Base.identity,
     )
+    target_image_override = nothing
     search = if now >= deadline
         _finish_search(context, LOOP_DEADLINE_REACHED; detail="compile consumed wall budget")
     elseif isempty(problem.variables)
@@ -507,10 +609,16 @@ function solve_execution(
             CompiledWorkspace(compiled),
             options._local,
             options._validation,
+            TargetImageDiagnosticOptions(
+                relation_tolerance=options._validation.residual_tolerance,
+            ),
+            false,
         )
-        run_search!(context, engine, runner; max_actions)
+        loop_result = run_search!(context, engine, runner; max_actions)
+        runner.saw_likely_continuous && (target_image_override = TARGET_LIKELY_CONTINUOUS)
+        loop_result
     end
-    return _finish_execution(context, search; evidence_path)
+    return _finish_execution(context, search; evidence_path, target_image_override)
 end
 
 function solve(

@@ -12,6 +12,7 @@ include("oracle.jl")
 include("reference_interpreter.jl")
 include("compiler.jl")
 include("compiled_oracle.jl")
+include("target_image.jl")
 include("local_solver.jl")
 include("protocol_json.jl")
 include("candidate_validation.jl")
@@ -69,6 +70,26 @@ export CORE_ABI_VERSION,
     evaluate,
     evaluate_batch,
     evaluate_canonical,
+    LocalTargetImageClassification,
+    TargetImageClassification,
+    TARGET_LOCALLY_ISOLATED,
+    TARGET_LOCALLY_CONSTANT_MANIFOLD,
+    TARGET_IMAGE_INCONCLUSIVE,
+    TARGET_LIKELY_CONTINUOUS,
+    TargetImageDiagnosticFailure,
+    TARGET_IMAGE_DIAGNOSTIC_NONE,
+    TARGET_IMAGE_CAPABILITY_UNAVAILABLE,
+    TARGET_IMAGE_BASE_EVALUATION_FAILED,
+    TARGET_IMAGE_BASE_SEMANTICS_FAILED,
+    TARGET_IMAGE_BASE_NOT_ON_RELATION,
+    TARGET_IMAGE_INSUFFICIENT_STENCIL,
+    TARGET_IMAGE_NONFINITE_LINEARIZATION,
+    TARGET_IMAGE_INSUFFICIENT_PROBES,
+    TARGET_IMAGE_SINGULAR_LINEARIZATION,
+    TargetDifferenceScheme,
+    TargetImageDiagnosticOptions,
+    TargetImageDiagnostic,
+    analyze_target_image,
     LocalSolveStatus,
     LOCAL_CONVERGED,
     LOCAL_MAX_ITERATIONS,

@@ -3,13 +3,6 @@ using GeoTargetCore
 using GeoTargetGeometry
 using Test
 
-if !isdefined(GeoTargetCore, :TargetImageDiagnostic)
-    Base.include(
-        GeoTargetCore,
-        joinpath(@__DIR__, "..", "GeoTargetCore", "src", "target_image.jl"),
-    )
-end
-
 const TARGET_IMAGE_FIXTURE_PLUGIN =
     parse(PluginId, "b13a1ef0-b636-4713-b527-53367b86e46f/target_image_fixture")
 
@@ -409,7 +402,8 @@ end
     @test low_threshold.numerical_rank == 1
     @test low_threshold.classification == GeoTargetCore.TARGET_LOCALLY_ISOLATED
     @test high_threshold.numerical_rank == 0
-    @test high_threshold.classification == TARGET_LIKELY_CONTINUOUS
+    @test high_threshold.classification == GeoTargetCore.TARGET_IMAGE_INCONCLUSIVE
+    @test high_threshold.failure == GeoTargetCore.TARGET_IMAGE_SINGULAR_LINEARIZATION
     @test high_threshold.rank_threshold == 1.0e-6
 
     bounded = GeoTargetCore.analyze_target_image(

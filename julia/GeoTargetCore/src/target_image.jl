@@ -16,6 +16,7 @@ const TargetImageClassification = Union{LocalTargetImageClassification,TargetIma
     TARGET_IMAGE_INSUFFICIENT_STENCIL = 5
     TARGET_IMAGE_NONFINITE_LINEARIZATION = 6
     TARGET_IMAGE_INSUFFICIENT_PROBES = 7
+    TARGET_IMAGE_SINGULAR_LINEARIZATION = 8
 end
 
 @enum TargetDifferenceScheme::UInt8 begin
@@ -284,7 +285,10 @@ function _usable_target_image_base(observation, options)
     observation.status == EVAL_OK || return false
     observation.target isa Real && isfinite(observation.target) || return false
     canonical_feasible(observation; residual_tolerance = options.relation_tolerance) || return false
-    all(relation -> relation.truth !== false, observation.relations) || return false
+    all(
+        relation -> relation.truth !== false || !iszero(relation.raw),
+        observation.relations,
+    ) || return false
     return _separated_branches(observation, options.branch_margin_tolerance)
 end
 
@@ -518,7 +522,7 @@ function _analyze_target_image(compiled, coordinates, options)
             TARGET_IMAGE_BASE_EVALUATION_FAILED
         elseif any(
             relation -> abs(relation.scaled) > options.relation_tolerance ||
-                        relation.truth === false,
+                        (relation.truth === false && iszero(relation.raw)),
             base.relations,
         )
             TARGET_IMAGE_BASE_NOT_ON_RELATION
@@ -655,6 +659,38 @@ function _analyze_target_image(compiled, coordinates, options)
     target_scale = max(1.0, abs(Float64(base.target)))
     continuous = sensitivity > options.target_sensitivity_tolerance * target_scale ||
                  probe_variation > options.probe_target_tolerance * target_scale
+    regular_manifold = isempty(base.relations) ||
+                       numerical_rank == min(
+        length(base.relations),
+        length(compiled.variables),
+    )
+    if continuous && !regular_manifold
+        return _target_image_result(
+            TARGET_IMAGE_INCONCLUSIVE,
+            base,
+            options,
+            target_dependencies;
+            failure = TARGET_IMAGE_SINGULAR_LINEARIZATION,
+            diagnostic = "rank-deficient relation linearization cannot distinguish a singular isolated root from a feasible manifold",
+            linearization_computed = true,
+            jacobian,
+            gradient,
+            singular_values,
+            numerical_rank,
+            rank_threshold,
+            nullspace,
+            projection,
+            sensitivity,
+            probe_variation,
+            probe_relation_drift,
+            probe_coverage,
+            schemes,
+            condition,
+            oracle_work = work.oracle_work,
+            sampled_points = work.sampled_points,
+            accepted_points = work.accepted_points,
+        )
+    end
     classification = continuous ? TARGET_LIKELY_CONTINUOUS : TARGET_LOCALLY_CONSTANT_MANIFOLD
     return _target_image_result(
         classification,
