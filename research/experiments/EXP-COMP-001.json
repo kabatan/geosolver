@@ -1,0 +1,213 @@
+{
+  "schema_version": "1.0.0",
+  "id": "EXP-COMP-001",
+  "title": "Typed compiler economics and semantic parity",
+  "status": "preregistered",
+  "requirements": ["RES-01", "RES-02", "RES-03", "RES-04", "RES-05", "RES-06", "GOAL-02", "GOAL-03", "GOAL-04", "GOAL-05", "ARCH-03"],
+  "failure_ids": ["F1", "F17"],
+  "baseline_id": "RB0-IID-LMQR-1",
+  "objective": "Select the simplest typed EvaluationOracle implementation that preserves canonical plugin semantics and materially improves end-to-end solve economics after compile cost is charged.",
+  "hypothesis": "A typed nested kernel will remove dynamic graph overhead, and runtime straight-line generation will be worthwhile only for graphs whose measured evaluation count amortizes its additional compile latency.",
+  "scope": {
+    "included": [
+      "Float64 scalar and batch evaluation",
+      "Dual-number derivative compatibility",
+      "BigFloat reference spot checks",
+      "domain, guard, branch and target observations",
+      "opaque Julia plugin calls"
+    ],
+    "excluded": [
+      "symbolic or polynomial lowering",
+      "whole-system exact solving",
+      "global-search policy selection",
+      "legacy runtime imports or legacy outputs as truth"
+    ]
+  },
+  "literature": [
+    {
+      "id": "LIT-JULIA-PERF",
+      "url": "https://docs.julialang.org/en/v1/manual/performance-tips/",
+      "claim": "Official Julia guidance identifies type stability, function barriers and preallocation as central performance mechanisms.",
+      "assumptions": "The compiler sees stable concrete call paths and reusable buffers.",
+      "break_conditions": "Opaque dynamic dispatch or generated-method code-size explosion dominates runtime."
+    },
+    {
+      "id": "LIT-RGF",
+      "url": "https://docs.sciml.ai/RuntimeGeneratedFunctions/stable/api/",
+      "claim": "RuntimeGeneratedFunctions constructs immediately callable functions without ordinary world-age errors.",
+      "assumptions": "Generated expressions use a controlled module context and frozen plugin references.",
+      "break_conditions": "Arbitrary input code, closure conversion, plugin mutation or excessive compile latency."
+    },
+    {
+      "id": "LIT-NLS-FUNCTION",
+      "url": "https://docs.sciml.ai/NonlinearSolve/dev/basics/nonlinear_functions/",
+      "claim": "The nonlinear function interface accepts optional Jacobian, JVP, VJP, sparsity and color metadata.",
+      "assumptions": "Function shape and optional capabilities remain stable for a compiled problem.",
+      "break_conditions": "A branch changes structure without producing a distinct compiled chart."
+    }
+  ],
+  "controls": [
+    {
+      "id": "R0-REFERENCE",
+      "role": "control",
+      "description": "Clear allocation-tolerant reference graph interpreter with explicit node and status semantics.",
+      "differences_from_baseline": ["No compiler optimization", "No performance claim"]
+    },
+    {
+      "id": "H0-HANDWRITTEN",
+      "role": "lower_bound",
+      "description": "Handwritten Julia kernels for analytic synthetic families, used only as a performance floor.",
+      "differences_from_baseline": ["No general graph compilation", "Never used as the semantic oracle"]
+    }
+  ],
+  "candidates": [
+    {
+      "id": "C1-TYPED-PLAN",
+      "role": "candidate",
+      "description": "Pre-resolved typed topological instruction plan without runtime source generation.",
+      "differences_from_baseline": ["Typed primitive call sites", "Reusable typed buffers", "CSE and DCE enabled"]
+    },
+    {
+      "id": "C2-RGF-NESTED",
+      "role": "candidate",
+      "description": "Straight-line nested scalar and batch kernels built with RuntimeGeneratedFunctions.",
+      "differences_from_baseline": ["Runtime expression generation", "Plugin calls resolved to allowlisted global references"]
+    }
+  ],
+  "synthetic_families": [
+    {
+      "id": "SHARED-DAG",
+      "purpose": "Measure CSE, graph depth and instruction-count economics independently of geometry names.",
+      "factors": {"dimension": [2, 4, 8], "nodes": [16, 64, 256, 1024], "shared_fraction": [0.0, 0.5, 0.8]},
+      "gold_source": "Analytic generator and 256-bit direct evaluation",
+      "counterexample_for": ["C2-RGF-NESTED on small graphs", "unbounded code generation"]
+    },
+    {
+      "id": "TYPED-GEOMETRY-CHAIN",
+      "purpose": "Exercise Point, Line, Circle, distance and projection compositions at increasing depth.",
+      "factors": {"depth": [8, 32, 128], "dimension": [2, 4, 8]},
+      "gold_source": "Analytic construction generator",
+      "counterexample_for": ["scalar-only compiler specialization"]
+    },
+    {
+      "id": "CHOICE-GRAPH",
+      "purpose": "Check 0/1/2-candidate status, selector margin and discriminant behavior.",
+      "factors": {"selector_state": ["stable", "near_tie"], "discriminant_state": ["positive", "zero_neighborhood", "negative"]},
+      "gold_source": "Analytic line-circle construction",
+      "counterexample_for": ["branch decisions changed by optimization", "nonfinite fallback"]
+    },
+    {
+      "id": "OPAQUE-TRANSCENDENTAL",
+      "purpose": "Preserve loop, control-flow and transcendental black-box plugin calls.",
+      "factors": {"loop_count": [4, 16, 64], "control_paths": [2, 4]},
+      "gold_source": "Direct type-generic Julia function",
+      "counterexample_for": ["mandatory symbolic lowering", "Float64-only code generation"]
+    }
+  ],
+  "real_problem_policy": "Translated development cases may measure timing only after independent Gold audit; no retired output or artifact is accepted as truth.",
+  "design": {
+    "execution_order": [
+      "Run semantic differential tests before any timing result is inspected",
+      "Compare warm scalar and batch kernels",
+      "Measure first compile and first call separately",
+      "Compute per-problem break-even evaluation counts",
+      "Run paired 32-start end-to-end solves"
+    ],
+    "pairing": "All variants evaluate identical graph instances, coordinates, numeric types and local-solve starts.",
+    "tuning_round_limit": 1,
+    "freeze_rule": "Freeze code-generation thresholds before the family-disjoint locked timing run.",
+    "locked_validation_rule": "A semantic mismatch burns the run and blocks timing-based promotion until corrected and rerun on a new locked seed set.",
+    "development_instances": 32,
+    "locked_instances": 64,
+    "notes": [
+      "At least 10000 valid, 10000 invalid/domain and 2000 selector-boundary evaluations are required.",
+      "At least 2000 Dual directional checks and 1000 BigFloat spot checks are required."
+    ]
+  },
+  "hyperparameters": {
+    "batch_sizes": {
+      "value": [32, 128, 512],
+      "status": "hypothesis",
+      "rationale": "Separates local scalar use from discovery screening throughput.",
+      "tuning_domain": [[16, 64, 256], [32, 128, 512]],
+      "freeze_rule": "Choose once on development timing before locked validation."
+    },
+    "float_comparison_ulps_factor": {
+      "value": 64,
+      "status": "hypothesis",
+      "rationale": "Allows bounded reassociation error while still detecting changed semantics.",
+      "tuning_domain": [32, 64, 128],
+      "freeze_rule": "May only be changed from a forward-error analysis, never to excuse a mismatch."
+    },
+    "rgf_break_even_evaluations": {
+      "value": 256,
+      "status": "hypothesis",
+      "rationale": "Prevents runtime generation from slowing ordinary multistart solves.",
+      "tuning_domain": [128, 256, 512],
+      "freeze_rule": "Freeze from development compile/evaluation profiles."
+    },
+    "rgf_compile_p95_seconds": {
+      "value": 2.0,
+      "status": "hypothesis",
+      "rationale": "Bounds one-problem latency before search begins.",
+      "tuning_domain": [0.5, 1.0, 2.0],
+      "freeze_rule": "No upward tuning after locked results."
+    }
+  },
+  "budgets": {
+    "wall_seconds": [60, 180],
+    "launch_checkpoints": [32],
+    "local_maxiters": 250,
+    "accounting": "Charge graph lowering, JIT first call, calibration, evaluation, local solve and canonical validation separately and end-to-end."
+  },
+  "seeds": {
+    "development_count": 10,
+    "locked_count": 30,
+    "generation": "Generator seeds and point sets are produced before timing and stored with checksums in the run artifacts."
+  },
+  "metrics": {
+    "primary": {"id": "end_to_end_time_32_starts", "definition": "Cold compile through canonical validation for 32 paired local starts.", "direction": "minimize"},
+    "secondary": [
+      {"id": "warm_evaluations_per_second", "definition": "Steady-state canonical evaluations per second by graph stratum.", "direction": "maximize"},
+      {"id": "compile_break_even_evaluations", "definition": "Compile cost divided by saved per-evaluation time.", "direction": "minimize"},
+      {"id": "steady_state_allocations", "definition": "Heap allocations after reusable buffers and derivative preparations exist.", "direction": "minimize"}
+    ],
+    "safety": [
+      {"id": "semantic_mismatch_count", "definition": "Status, branch, guard, target or residual mismatches outside declared ambiguity.", "direction": "zero_required"},
+      {"id": "numeric_type_contamination_count", "definition": "Float64 constants or values contaminating Dual or BigFloat execution.", "direction": "zero_required"}
+    ]
+  },
+  "promotion_gate": {
+    "mode": "all",
+    "criteria": [
+      "Semantic mismatch and numeric-type contamination counts are zero.",
+      "The promoted typed compiler is at least 10x faster than R0 at the warm median and 2x at p90.",
+      "Evaluator-heavy 32-start end-to-end time improves by at least 20 percent.",
+      "Median compiled warm time is no more than 2x the handwritten lower-bound kernel on primary geometry families.",
+      "C2 is selected over C1 only if it improves end-to-end time by 20 percent or has median break-even at most 256 evaluations."
+    ]
+  },
+  "kill_gate": {
+    "mode": "any",
+    "criteria": [
+      "Any unresolved semantic, branch, guard or numeric-type mismatch occurs.",
+      "The hot path requires eval or invokelatest.",
+      "C2 compile p95 exceeds 2 seconds and break-even exceeds 1024 evaluations without end-to-end gain.",
+      "C2 remains within 5 percent of C1, in which case C2 is removed and C1 is retained.",
+      "Generated kernels cannot execute the opaque type-generic plugin family."
+    ]
+  },
+  "safety_invariants": [
+    "ReferenceGraphInterpreter remains the only semantic reference.",
+    "All candidate endpoints are re-evaluated through canonical semantics.",
+    "JSON never supplies executable source code.",
+    "Compiler selection never depends on a case ID, primitive name or known answer."
+  ],
+  "artifacts": {
+    "run_manifest_schema": "research/schemas/run-manifest.schema.json",
+    "benchmark_manifest_schema": "research/schemas/benchmark-manifest.schema.json",
+    "result_path": "research/results/EXP-COMP-001/summary.json",
+    "negative_result_path": "research/negative-results/ledger.json"
+  },
+  "decision": {"state": "pending", "selected_variant": null, "rationale": null, "decision_commit": null}
+}

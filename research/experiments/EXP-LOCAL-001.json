@@ -1,0 +1,267 @@
+{
+  "schema_version": "1.0.0",
+  "id": "EXP-LOCAL-001",
+  "title": "Variable and residual scaling for local root capture",
+  "status": "preregistered",
+  "requirements": ["RES-01", "RES-02", "RES-03", "RES-04", "RES-05", "RES-06", "GOAL-02", "GOAL-03", "GOAL-04", "GOAL-05"],
+  "failure_ids": ["F2", "F3", "F5", "F6", "F9"],
+  "baseline_id": "RB0-IID-LMQR-1",
+  "objective": "Measure variable and residual scaling independently of start selection and choose a robust fixed-start local policy without accepting positive-residual stationary points.",
+  "hypothesis": "Bounds-based variable normalization plus truth-independent residual scaling improves local capture and evaluation cost on scale-spread and ill-conditioned systems when the linearized step uses rank-aware QR.",
+  "scope": {
+    "included": [
+      "bounded smooth square and overdetermined systems",
+      "analytic, ForwardDiff and central finite-difference Jacobians",
+      "dense column-pivoted QR and graph-derived sparse QR",
+      "canonical raw-residual endpoint checks"
+    ],
+    "excluded": [
+      "global start-policy changes",
+      "strict-boundary promotion",
+      "singular-root certification",
+      "deflation, continuation or exact identification"
+    ]
+  },
+  "literature": [
+    {
+      "id": "LIT-NLS-NLLS",
+      "url": "https://docs.sciml.ai/NonlinearSolve/stable/solvers/nonlinear_least_squares_solvers/",
+      "claim": "Official NonlinearSolve guidance exposes LM, Gauss-Newton and trust-region methods for nonlinear least squares.",
+      "assumptions": "The residual model is smooth enough and derivative information is meaningful.",
+      "break_conditions": "A solver may stop at a nonzero least-squares stationary point."
+    },
+    {
+      "id": "LIT-LINEARSOLVE",
+      "url": "https://docs.sciml.ai/LinearSolve/stable/solvers/solvers/",
+      "claim": "Official LinearSolve guidance recommends QR or SVD for precision and provides rank-revealing sparse column-pivoted QR.",
+      "assumptions": "The selected factorization supports the matrix structure and numeric type.",
+      "break_conditions": "Severe rank defect, changing sparsity or unsupported arbitrary precision."
+    },
+    {
+      "id": "LIT-FORWARDDIFF",
+      "url": "https://arxiv.org/abs/1607.07892",
+      "claim": "ForwardDiff implements performant forward-mode automatic differentiation for native type-generic Julia code.",
+      "assumptions": "Executed primitive paths accept dual numbers and are differentiable locally.",
+      "break_conditions": "Opaque foreign callbacks, hard Float64 assertions or nonsmooth branches."
+    },
+    {
+      "id": "LIT-LM",
+      "url": "https://arxiv.org/abs/1201.5885",
+      "claim": "LM robustness and speed trade off in narrow and flat nonlinear least-squares landscapes.",
+      "assumptions": "Smooth least-squares model with informative local derivatives.",
+      "break_conditions": "Invalid domains, guards and piecewise branch transitions."
+    }
+  ],
+  "controls": [
+    {
+      "id": "L0-RAW",
+      "role": "control",
+      "description": "Raw variables and raw residuals with the same LM-QR algorithm and fixed starts.",
+      "differences_from_baseline": []
+    },
+    {
+      "id": "LJ-ANALYTIC",
+      "role": "lower_bound",
+      "description": "Analytic Jacobian for generated families, used to isolate scaling from derivative error.",
+      "differences_from_baseline": ["Exact generated Jacobian"]
+    }
+  ],
+  "candidates": [
+    {
+      "id": "LX-VARIABLE",
+      "role": "candidate",
+      "description": "Normalize variables from finite bounds while leaving residuals raw.",
+      "differences_from_baseline": ["Center and half-width variable transform"]
+    },
+    {
+      "id": "LR-RESIDUAL",
+      "role": "candidate",
+      "description": "Scale each residual from declared metadata or an independent calibration block.",
+      "differences_from_baseline": ["Component-wise residual scale"]
+    },
+    {
+      "id": "LXR-BOTH",
+      "role": "candidate",
+      "description": "Combine bounds-based variable normalization and residual scaling.",
+      "differences_from_baseline": ["Variable transform", "Component-wise residual scale"]
+    },
+    {
+      "id": "LD-AUTODIFF",
+      "role": "candidate",
+      "description": "Apply the winning scale policy with prepared ForwardDiff or sparse colored ForwardDiff.",
+      "differences_from_baseline": ["Prepared automatic Jacobian"]
+    }
+  ],
+  "synthetic_families": [
+    {
+      "id": "SCALE-LADDER",
+      "purpose": "Isolate row-scale spread with an analytically known root and Jacobian.",
+      "factors": {"dimension": [2, 4, 8, 16], "residual_scale_spread": [1.0, 1000000.0, 1000000000000.0, 1e+20]},
+      "gold_source": "Analytic affine roots",
+      "counterexample_for": ["raw residual convergence", "unstable inferred scaling"]
+    },
+    {
+      "id": "CURVED-CHAIN",
+      "purpose": "Measure scaling in narrow curved Rosenbrock-like root valleys.",
+      "factors": {"dimension": [2, 4, 8, 16], "curvature": [1.0, 100.0, 10000.0, 100000000.0]},
+      "gold_source": "Analytic chain construction",
+      "counterexample_for": ["fast but brittle local steps"]
+    },
+    {
+      "id": "NEAR-RANK-DEFICIENT",
+      "purpose": "Exercise QR rank diagnostics without claiming singular-root support.",
+      "factors": {"singular_value_ratio": [1.0, 0.0001, 1e-08, 1e-12], "dimension": [2, 4, 8]},
+      "gold_source": "Constructed SVD factors and analytic root",
+      "counterexample_for": ["normal-equation stability", "unpivoted QR"]
+    },
+    {
+      "id": "REDUNDANT-OVERDETERMINED",
+      "purpose": "Separate true roots from positive-residual or rank-deficient least-squares endpoints.",
+      "factors": {"redundancy": [1, 2, 4], "dependency_error": [0.0, 1e-08, 0.0001]},
+      "gold_source": "Analytic consistent system",
+      "counterexample_for": ["library-retcode-only acceptance"]
+    },
+    {
+      "id": "TANGENT-CIRCLE-LINE",
+      "purpose": "Stress conditioning as a geometry intersection approaches tangency.",
+      "factors": {"height_radius_ratio": [0.0, 0.9, 0.999, 0.99999999]},
+      "gold_source": "Closed-form circle-line roots",
+      "counterexample_for": ["fixed rank threshold", "boundary attraction"]
+    },
+    {
+      "id": "MULTIROOT-WARPED",
+      "purpose": "Check whether scaling changes capture among several known basins.",
+      "factors": {"dimension": [2, 4, 8], "root_count": [2, 4, 8], "warp": [0.0, 0.5, 0.9]},
+      "gold_source": "Invertible analytic warp of known roots",
+      "counterexample_for": ["scale policy that favors one basin"]
+    }
+  ],
+  "real_problem_policy": "Use only independently audited Gold development problems; execute every variant from the same saved starts and never infer scale from a known answer.",
+  "design": {
+    "execution_order": [
+      "Run a 2x2 raw, variable, residual and combined scaling factorial with analytic Jacobians",
+      "Freeze the scale winner",
+      "Compare analytic, prepared ForwardDiff, central finite difference and sparse colored ForwardDiff",
+      "Run the frozen candidate once on family-disjoint locked instances"
+    ],
+    "pairing": "Every variant receives the identical problem instance, 32 saved starts, local iteration budget and canonical endpoint gate.",
+    "tuning_round_limit": 2,
+    "freeze_rule": "Scale formula and derivative routing freeze before locked validation; the locked result is not used to retune.",
+    "locked_validation_rule": "Opening a locked family for diagnosis burns it and requires replacement by a generator-disjoint family.",
+    "development_instances": 48,
+    "locked_instances": 96,
+    "notes": [
+      "Primary roots are at least 0.05 normalized units from artificial bounds.",
+      "Strict-boundary and exactly singular cases are diagnostics and cannot promote this policy."
+    ]
+  },
+  "hyperparameters": {
+    "local_maxiters": {
+      "value": 250,
+      "status": "hypothesis",
+      "rationale": "Bounds local work while allowing difficult fixed-start traces to expose stagnation.",
+      "tuning_domain": [100, 250, 500],
+      "freeze_rule": "Keep fixed across all scaling variants."
+    },
+    "solver_tolerance_exponent": {
+      "value": 0.8,
+      "status": "hypothesis",
+      "rationale": "Matches the documented type-dependent NonlinearSolve default eps(T)^(4/5).",
+      "tuning_domain": [0.6666666667, 0.8],
+      "freeze_rule": "No tuning from target recall; change only through numerical-error analysis."
+    },
+    "candidate_residual_threshold": {
+      "value": "sqrt(eps(Float64))",
+      "status": "hypothesis",
+      "rationale": "A scale-aware internal discovery threshold, not a public validation certificate.",
+      "tuning_domain": ["eps(Float64)^(2/3)", "sqrt(eps(Float64))"],
+      "freeze_rule": "Hold fixed for all variants and keep raw residuals in evidence."
+    },
+    "calibration_points": {
+      "value": 64,
+      "status": "hypothesis",
+      "rationale": "Provides a robust component scale without dominating the M0-M4 solve budget.",
+      "tuning_domain": [32, 64, 128],
+      "freeze_rule": "Choose on development cost/stability before locked validation."
+    },
+    "residual_quantile": {
+      "value": 0.75,
+      "status": "hypothesis",
+      "rationale": "Reduces sensitivity to roots and rare large invalid values relative to a maximum.",
+      "tuning_domain": [0.5, 0.75],
+      "freeze_rule": "At most one development comparison; no locked retuning."
+    },
+    "minimum_finite_calibration_values": {
+      "value": 8,
+      "status": "hypothesis",
+      "rationale": "Avoids treating sparse accidental finite observations as a reliable scale.",
+      "tuning_domain": [8, 16],
+      "freeze_rule": "Fallback to declared scale or one when unmet."
+    },
+    "fixed_starts_per_instance": {
+      "value": 32,
+      "status": "hypothesis",
+      "rationale": "Supports paired basin-level comparison at manageable compiled cost.",
+      "tuning_domain": [16, 32, 64],
+      "freeze_rule": "Generate and checksum before executing any variant."
+    }
+  },
+  "budgets": {
+    "wall_seconds": [60, 180],
+    "launch_checkpoints": [32],
+    "local_maxiters": 250,
+    "accounting": "Charge calibration, derivative preparation, residual/Jacobian evaluations, factorization, local wall time and canonical validation."
+  },
+  "seeds": {
+    "development_count": 10,
+    "locked_count": 30,
+    "generation": "Family, calibration and start seeds use separate namespaces and saved coordinate checksums."
+  },
+  "metrics": {
+    "primary": {"id": "p_local_valid", "definition": "Fraction of fixed starts reaching a canonical valid Gold root within the local budget.", "direction": "maximize"},
+    "secondary": [
+      {"id": "oracle_calls_to_valid_root", "definition": "Primal-equivalent oracle work conditional on reaching a valid root.", "direction": "minimize"},
+      {"id": "local_wall_time", "definition": "Derivative preparation through canonical endpoint validation.", "direction": "minimize"},
+      {"id": "nonzero_stationary_rate", "definition": "Fraction ending at a finite positive-residual stationary point.", "direction": "minimize"},
+      {"id": "calibration_seed_sensitivity", "definition": "Maximum paired P_local change across declared calibration seeds.", "direction": "minimize"}
+    ],
+    "safety": [
+      {"id": "false_candidate_count", "definition": "Endpoints accepted despite failing Gold canonical root, domain, guard or branch checks.", "direction": "zero_required"},
+      {"id": "derivative_contract_failure_count", "definition": "Analytic, AD or finite-difference directional checks outside their preregistered tolerances.", "direction": "zero_required"}
+    ]
+  },
+  "promotion_gate": {
+    "mode": "all",
+    "criteria": [
+      "False candidate and derivative contract failure counts are zero.",
+      "Critical scale or conditioning strata gain at least 10 P_local percentage points or reduce oracle calls by at least 20 percent at equal P_local.",
+      "Overall P_local gains at least 5 points or achieves the same recall with at least 20 percent lower cost.",
+      "Regular well-scaled strata lose no more than 2 P_local points and incur no more than 10 percent overhead.",
+      "The effect repeats in at least three unrelated families and calibration-seed sensitivity is at most 2 points."
+    ]
+  },
+  "kill_gate": {
+    "mode": "any",
+    "criteria": [
+      "Any canonical false candidate is introduced.",
+      "Scale estimation requires Gold roots, targets or prior local solutions.",
+      "Regular well-scaled strata lose more than 2 P_local points.",
+      "Calibration seed sensitivity exceeds 2 points after two tuning rounds.",
+      "The best scaled policy remains within 5 percent of raw control on recall and cost, in which case the raw control is retained.",
+      "Automatic inferred row scales are unstable, in which case only declared scales survive."
+    ]
+  },
+  "safety_invariants": [
+    "A nonlinear-solver success code is never the canonical acceptance predicate.",
+    "Raw residual, guard, domain and branch observations are retained after scaling.",
+    "No normal-equation Cholesky default is introduced for unknown conditioning.",
+    "Scale and solver routing never use problem identity or known target values."
+  ],
+  "artifacts": {
+    "run_manifest_schema": "research/schemas/run-manifest.schema.json",
+    "benchmark_manifest_schema": "research/schemas/benchmark-manifest.schema.json",
+    "result_path": "research/results/EXP-LOCAL-001/summary.json",
+    "negative_result_path": "research/negative-results/ledger.json"
+  },
+  "decision": {"state": "pending", "selected_variant": null, "rationale": null, "decision_commit": null}
+}
