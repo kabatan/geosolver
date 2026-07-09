@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.geotarget.dev/plugin-manifest-v1.schema.json",
+  "title": "GeoTarget PluginManifestV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "plugin_id",
+    "version",
+    "core_abi",
+    "content_hash",
+    "types",
+    "primitives",
+    "relations",
+    "guards",
+    "domains",
+    "branches",
+    "selectors"
+  ],
+  "properties": {
+    "schema_version": {"const": "geotarget.plugin/v1"},
+    "plugin_id": {"$ref": "#/$defs/pluginId"},
+    "version": {"$ref": "#/$defs/semver"},
+    "core_abi": {"$ref": "#/$defs/semver"},
+    "content_hash": {"$ref": "#/$defs/sha256"},
+    "types": {"type": "array", "items": {"$ref": "#/$defs/typeSpec"}},
+    "primitives": {"type": "array", "items": {"$ref": "#/$defs/primitiveSpec"}},
+    "relations": {"type": "array", "items": {"$ref": "#/$defs/relationSpec"}},
+    "guards": {"type": "array", "items": {"$ref": "#/$defs/guardSpec"}},
+    "domains": {"type": "array", "items": {"$ref": "#/$defs/domainSpec"}},
+    "branches": {"type": "array", "items": {"$ref": "#/$defs/branchSpec"}},
+    "selectors": {"type": "array", "items": {"$ref": "#/$defs/selectorSpec"}}
+  },
+  "$defs": {
+    "stableId": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_.-]*$"},
+    "pluginId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[A-Za-z_][A-Za-z0-9_.-]*$"
+    },
+    "qualifiedSymbol": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[A-Za-z_][A-Za-z0-9_.-]*::[A-Za-z_][A-Za-z0-9_.-]*$"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "typeSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "literal_codec", "documentation"],
+      "properties": {
+        "id": {"$ref": "#/$defs/qualifiedSymbol"},
+        "literal_codec": {"type": "boolean"},
+        "documentation": {"type": "string"}
+      }
+    },
+    "keywordType": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type_id", "required"],
+      "properties": {
+        "type_id": {"$ref": "#/$defs/qualifiedSymbol"},
+        "required": {"type": "boolean"}
+      }
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["arguments", "keywords", "output", "variadic"],
+      "properties": {
+        "arguments": {"type": "array", "items": {"$ref": "#/$defs/qualifiedSymbol"}},
+        "keywords": {
+          "type": "object",
+          "propertyNames": {"$ref": "#/$defs/stableId"},
+          "additionalProperties": {"$ref": "#/$defs/keywordType"}
+        },
+        "output": {"$ref": "#/$defs/qualifiedSymbol"},
+        "variadic": {"type": "boolean"}
+      }
+    },
+    "kernel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["capabilities", "smoothness", "derivative_modes"],
+      "properties": {
+        "capabilities": {
+          "type": "array",
+          "items": {"enum": ["C0", "C1", "C2", "C3V", "C3A"]},
+          "uniqueItems": true,
+          "contains": {"const": "C0"}
+        },
+        "smoothness": {
+          "enum": ["unknown", "smooth_c1", "piecewise_smooth", "locally_lipschitz", "declared_nonsmooth"]
+        },
+        "derivative_modes": {
+          "type": "array",
+          "items": {"enum": ["autodiff", "jacobian", "jvp", "vjp"]},
+          "uniqueItems": true
+        }
+      }
+    },
+    "operationBase": {
+      "type": "object",
+      "required": ["id", "signatures", "documentation"],
+      "properties": {
+        "id": {"$ref": "#/$defs/qualifiedSymbol"},
+        "signatures": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/signature"}},
+        "documentation": {"type": "string"}
+      }
+    },
+    "primitiveSpec": {
+      "allOf": [
+        {"$ref": "#/$defs/operationBase"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "signatures", "kernel", "documentation"],
+          "properties": {
+            "id": {"$ref": "#/$defs/qualifiedSymbol"},
+            "signatures": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/signature"}},
+            "kernel": {"$ref": "#/$defs/kernel"},
+            "documentation": {"type": "string"}
+          }
+        }
+      ]
+    },
+    "relationSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "signatures", "residual_kernel", "truth_available", "documentation"],
+      "properties": {
+        "id": {"$ref": "#/$defs/qualifiedSymbol"},
+        "signatures": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/signature"}},
+        "residual_kernel": {"$ref": "#/$defs/kernel"},
+        "truth_available": {"type": "boolean"},
+        "scale_hint": {"type": "number", "exclusiveMinimum": 0},
+        "documentation": {"type": "string"}
+      }
+    },
+    "guardSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "signatures", "margin_kernel", "strict", "documentation"],
+      "properties": {
+        "id": {"$ref": "#/$defs/qualifiedSymbol"},
+        "signatures": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/signature"}},
+        "margin_kernel": {"$ref": "#/$defs/kernel"},
+        "strict": {"type": "boolean"},
+        "scale_hint": {"type": "number", "exclusiveMinimum": 0},
+        "documentation": {"type": "string"}
+      }
+    },
+    "domainSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "signatures", "margin_kernel", "singularity_available", "strict", "documentation"],
+      "properties": {
+        "id": {"$ref": "#/$defs/qualifiedSymbol"},
+        "signatures": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/signature"}},
+        "margin_kernel": {"$ref": "#/$defs/kernel"},
+        "singularity_available": {"type": "boolean"},
+        "strict": {"type": "boolean"},
+        "documentation": {"type": "string"}
+      }
+    },
+    "branchSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "signatures", "candidate_type", "kernel", "documentation"],
+      "properties": {
+        "id": {"$ref": "#/$defs/qualifiedSymbol"},
+        "signatures": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/signature"}},
+        "candidate_type": {"$ref": "#/$defs/qualifiedSymbol"},
+        "kernel": {"$ref": "#/$defs/kernel"},
+        "documentation": {"type": "string"}
+      }
+    },
+    "selectorSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "signatures", "kernel", "documentation"],
+      "properties": {
+        "id": {"$ref": "#/$defs/qualifiedSymbol"},
+        "signatures": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/signature"}},
+        "kernel": {"$ref": "#/$defs/kernel"},
+        "documentation": {"type": "string"}
+      }
+    }
+  }
+}

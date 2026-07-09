@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.geotarget.dev/solve-options-v1.schema.json",
+  "title": "GeoTarget SolveOptionsV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "wall_time_seconds", "seed", "preset", "answer_level"],
+  "properties": {
+    "schema_version": {"const": "geotarget.solve-options/v1"},
+    "wall_time_seconds": {"type": "number", "exclusiveMinimum": 0},
+    "seed": {"type": "integer", "minimum": 0, "maximum": 18446744073709551615},
+    "preset": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$"
+    },
+    "answer_level": {"enum": ["validated", "exact_if_available"]},
+    "worker_count": {"type": "integer", "minimum": 1},
+    "checkpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "problem_hash", "plugin_lock_hash", "policy_hash", "environment_hash"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "problem_hash": {"$ref": "#/$defs/sha256"},
+        "plugin_lock_hash": {"$ref": "#/$defs/sha256"},
+        "policy_hash": {"$ref": "#/$defs/sha256"},
+        "environment_hash": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}

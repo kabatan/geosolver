@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.geotarget.dev/problem-spec-v1.schema.json",
+  "title": "GeoTarget ProblemSpecV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "plugin_locks",
+    "variables",
+    "graph",
+    "relations",
+    "guards",
+    "domains",
+    "target"
+  ],
+  "properties": {
+    "schema_version": {"const": "geotarget.problem/v1"},
+    "plugin_locks": {"type": "array", "items": {"$ref": "#/$defs/pluginLock"}},
+    "variables": {"type": "array", "items": {"$ref": "#/$defs/variable"}},
+    "graph": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {"$ref": "#/$defs/literalNode"},
+          {"$ref": "#/$defs/referenceNode"},
+          {"$ref": "#/$defs/callNode"},
+          {"$ref": "#/$defs/selectNode"}
+        ]
+      }
+    },
+    "relations": {"type": "array", "items": {"$ref": "#/$defs/relationBinding"}},
+    "guards": {"type": "array", "items": {"$ref": "#/$defs/guardBinding"}},
+    "domains": {"type": "array", "items": {"$ref": "#/$defs/domainBinding"}},
+    "target": {"$ref": "#/$defs/stableId"}
+  },
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "pattern": "^[A-Za-z_][A-Za-z0-9_.-]*$"
+    },
+    "pluginId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[A-Za-z_][A-Za-z0-9_.-]*$"
+    },
+    "qualifiedSymbol": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[A-Za-z_][A-Za-z0-9_.-]*::[A-Za-z_][A-Za-z0-9_.-]*$"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "pluginLock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plugin_id", "version", "core_abi", "content_hash"],
+      "properties": {
+        "plugin_id": {"$ref": "#/$defs/pluginId"},
+        "version": {"$ref": "#/$defs/semver"},
+        "core_abi": {"$ref": "#/$defs/semver"},
+        "content_hash": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "variable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type_id", "origin", "scale"],
+      "properties": {
+        "id": {"$ref": "#/$defs/stableId"},
+        "type_id": {"$ref": "#/$defs/qualifiedSymbol"},
+        "origin": {"type": "number"},
+        "scale": {"type": "number", "exclusiveMinimum": 0},
+        "lower": {"type": "number"},
+        "upper": {"type": "number"}
+      }
+    },
+    "literalNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "type_id", "value"],
+      "properties": {
+        "kind": {"const": "literal"},
+        "id": {"$ref": "#/$defs/stableId"},
+        "type_id": {"$ref": "#/$defs/qualifiedSymbol"},
+        "value": {}
+      }
+    },
+    "referenceNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "variable"],
+      "properties": {
+        "kind": {"const": "reference"},
+        "id": {"$ref": "#/$defs/stableId"},
+        "variable": {"$ref": "#/$defs/stableId"}
+      }
+    },
+    "callNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "operation", "args", "kwargs"],
+      "properties": {
+        "kind": {"const": "call"},
+        "id": {"$ref": "#/$defs/stableId"},
+        "operation": {"$ref": "#/$defs/qualifiedSymbol"},
+        "args": {"type": "array", "items": {"$ref": "#/$defs/stableId"}},
+        "kwargs": {
+          "type": "object",
+          "propertyNames": {"$ref": "#/$defs/stableId"},
+          "additionalProperties": {"$ref": "#/$defs/stableId"}
+        }
+      }
+    },
+    "selectNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "choice", "selector", "args", "kwargs"],
+      "properties": {
+        "kind": {"const": "select"},
+        "id": {"$ref": "#/$defs/stableId"},
+        "choice": {"$ref": "#/$defs/stableId"},
+        "selector": {"$ref": "#/$defs/qualifiedSymbol"},
+        "args": {"type": "array", "items": {"$ref": "#/$defs/stableId"}},
+        "kwargs": {
+          "type": "object",
+          "propertyNames": {"$ref": "#/$defs/stableId"},
+          "additionalProperties": {"$ref": "#/$defs/stableId"}
+        }
+      }
+    },
+    "relationBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node"],
+      "properties": {
+        "node": {"$ref": "#/$defs/stableId"},
+        "scale_override": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "guardBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node", "strict"],
+      "properties": {
+        "node": {"$ref": "#/$defs/stableId"},
+        "strict": {"type": "boolean"},
+        "scale_override": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "domainBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node", "strict"],
+      "properties": {
+        "node": {"$ref": "#/$defs/stableId"},
+        "strict": {"type": "boolean"}
+      }
+    }
+  }
+}
