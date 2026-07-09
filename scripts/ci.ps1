@@ -9,6 +9,10 @@ $Root = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $JuliaProject = Join-Path $Root "julia"
 
 & (Join-Path $PSScriptRoot "doctor.ps1")
+& python (Join-Path $PSScriptRoot "governance_lint.py")
+if ($LASTEXITCODE -ne 0) { throw "Governance lint failed." }
+& python (Join-Path $PSScriptRoot "architecture_lint.py")
+if ($LASTEXITCODE -ne 0) { throw "Architecture lint failed." }
 
 $env:JULIA_NUM_THREADS = "1"
 $env:OPENBLAS_NUM_THREADS = "1"
