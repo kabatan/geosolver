@@ -1,0 +1,153 @@
+{
+  "schema_version": "geotarget.plugin/v1",
+  "plugin_id": "11111111-1111-4111-8111-111111111111/fixture",
+  "version": "1.2.3",
+  "core_abi": "1.0.0",
+  "content_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "types": [
+    {
+      "id": "11111111-1111-4111-8111-111111111111/fixture::Real",
+      "literal_codec": true,
+      "documentation": "Fixture real scalar"
+    }
+  ],
+  "primitives": [
+    {
+      "id": "11111111-1111-4111-8111-111111111111/fixture::target_value",
+      "signatures": [
+        {
+          "arguments": ["11111111-1111-4111-8111-111111111111/fixture::Real"],
+          "keywords": {},
+          "output": "11111111-1111-4111-8111-111111111111/fixture::Real",
+          "variadic": false
+        }
+      ],
+      "kernel": {
+        "capabilities": ["C0", "C1", "C2"],
+        "smoothness": "smooth_c1",
+        "derivative_mode": "autodiff",
+        "generic_numeric": true,
+        "deterministic": true
+      },
+      "documentation": "Target projection"
+    }
+  ],
+  "relations": [
+    {
+      "id": "11111111-1111-4111-8111-111111111111/fixture::equal",
+      "signatures": [
+        {
+          "arguments": [
+            "11111111-1111-4111-8111-111111111111/fixture::Real",
+            "11111111-1111-4111-8111-111111111111/fixture::Real"
+          ],
+          "keywords": {},
+          "output": "11111111-1111-4111-8111-111111111111/fixture::Real",
+          "variadic": false
+        }
+      ],
+      "residual_kernel": {
+        "capabilities": ["C0"],
+        "smoothness": "smooth_c1",
+        "derivative_mode": "none",
+        "generic_numeric": true,
+        "deterministic": true
+      },
+      "truth_available": true,
+      "scale_hint": 1,
+      "documentation": "Equality residual"
+    }
+  ],
+  "guards": [
+    {
+      "id": "11111111-1111-4111-8111-111111111111/fixture::positive",
+      "signatures": [
+        {
+          "arguments": ["11111111-1111-4111-8111-111111111111/fixture::Real"],
+          "keywords": {},
+          "output": "11111111-1111-4111-8111-111111111111/fixture::Real",
+          "variadic": false
+        }
+      ],
+      "margin_kernel": {
+        "capabilities": ["C0"],
+        "smoothness": "smooth_c1",
+        "derivative_mode": "none",
+        "generic_numeric": true,
+        "deterministic": true
+      },
+      "default_strict": true,
+      "scale_hint": 1,
+      "documentation": "Positive margin"
+    }
+  ],
+  "domains": [
+    {
+      "id": "11111111-1111-4111-8111-111111111111/fixture::defined",
+      "signatures": [
+        {
+          "arguments": ["11111111-1111-4111-8111-111111111111/fixture::Real"],
+          "keywords": {},
+          "output": "11111111-1111-4111-8111-111111111111/fixture::Real",
+          "variadic": false
+        }
+      ],
+      "margin_kernel": {
+        "capabilities": ["C0"],
+        "smoothness": "locally_lipschitz",
+        "derivative_mode": "none",
+        "generic_numeric": true,
+        "deterministic": true
+      },
+      "singularity_available": true,
+      "default_strict": false,
+      "documentation": "Domain margin"
+    }
+  ],
+  "branches": [
+    {
+      "id": "11111111-1111-4111-8111-111111111111/fixture::pair",
+      "signatures": [
+        {
+          "arguments": ["11111111-1111-4111-8111-111111111111/fixture::Real"],
+          "keywords": {},
+          "output": "11111111-1111-4111-8111-111111111111/fixture::Real",
+          "variadic": false
+        }
+      ],
+      "candidate_type": "11111111-1111-4111-8111-111111111111/fixture::Real",
+      "kernel": {
+        "capabilities": ["C0"],
+        "smoothness": "piecewise_smooth",
+        "derivative_mode": "none",
+        "generic_numeric": true,
+        "deterministic": true
+      },
+      "documentation": "Two candidates"
+    }
+  ],
+  "selectors": [
+    {
+      "id": "11111111-1111-4111-8111-111111111111/fixture::near",
+      "signatures": [
+        {
+          "arguments": [
+            "11111111-1111-4111-8111-111111111111/fixture::Real",
+            "11111111-1111-4111-8111-111111111111/fixture::Real"
+          ],
+          "keywords": {},
+          "output": "11111111-1111-4111-8111-111111111111/fixture::Real",
+          "variadic": false
+        }
+      ],
+      "kernel": {
+        "capabilities": ["C0"],
+        "smoothness": "piecewise_smooth",
+        "derivative_mode": "none",
+        "generic_numeric": true,
+        "deterministic": true
+      },
+      "documentation": "Nearest candidate selector"
+    }
+  ]
+}

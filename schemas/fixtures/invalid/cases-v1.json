@@ -1,0 +1,146 @@
+{
+  "fixture_format": "geotarget.invalid-cases/v1",
+  "cases": [
+    {
+      "id": "plugin-derivative-without-c1",
+      "base": "valid/plugin-manifest-full-v1.json",
+      "patch": [
+        {"op": "replace", "path": "/primitives/0/kernel/capabilities", "value": ["C0"]}
+      ],
+      "expected": "requires capability C1"
+    },
+    {
+      "id": "plugin-reserved-version",
+      "base": "valid/plugin-manifest-full-v1.json",
+      "patch": [
+        {"op": "replace", "path": "/version", "value": "0.0.0"}
+      ],
+      "expected": "reserved"
+    },
+    {
+      "id": "plugin-noncanonical-capability-order",
+      "base": "valid/plugin-manifest-full-v1.json",
+      "patch": [
+        {"op": "replace", "path": "/primitives/0/kernel/capabilities", "value": ["C2", "C0", "C1"]}
+      ],
+      "expected": "canonical capability order"
+    },
+    {
+      "id": "problem-non-topological-edge",
+      "base": "valid/problem-open-world-v1.json",
+      "patch": [
+        {"op": "replace", "path": "/graph/2/args/0", "value": "target_value"}
+      ],
+      "expected": "non-topological node reference"
+    },
+    {
+      "id": "problem-invalid-variable-bounds",
+      "base": "valid/problem-open-world-v1.json",
+      "patch": [
+        {"op": "replace", "path": "/variables/0/lower", "value": 10}
+      ],
+      "expected": "lower bound must be strictly below upper bound"
+    },
+    {
+      "id": "problem-overlapping-role",
+      "base": "valid/problem-open-world-v1.json",
+      "patch": [
+        {"op": "replace", "path": "/target", "value": "equation"}
+      ],
+      "expected": "semantic role node"
+    },
+    {
+      "id": "result-artifact-digest-mismatch",
+      "base": "valid/solve-result-combined-v1.json",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/exact_answers/0/configuration_certificate/artifact/digest",
+          "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ],
+      "expected": "does not match payload bytes"
+    },
+    {
+      "id": "result-invalid-base64",
+      "base": "valid/solve-result-combined-v1.json",
+      "patch": [
+        {"op": "replace", "path": "/exact_answers/0/target_certificate/artifact/payload_base64", "value": "***"}
+      ],
+      "expected": "strict base64"
+    },
+    {
+      "id": "result-certificate-problem-mismatch",
+      "base": "valid/solve-result-combined-v1.json",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/exact_answers/0/target_certificate/problem_hash",
+          "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ],
+      "expected": "configuration and target problems differ"
+    },
+    {
+      "id": "result-target-identity-mismatch",
+      "base": "valid/solve-result-combined-v1.json",
+      "patch": [
+        {
+          "op": "replace",
+          "path": "/exact_answers/0/target_certificate/identity_hash",
+          "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ],
+      "expected": "identity hash mismatch"
+    },
+    {
+      "id": "result-unreduced-rational",
+      "base": "valid/solve-result-combined-v1.json",
+      "patch": [
+        {"op": "replace", "path": "/exact_answers/0/identity/isolating_interval/lower/numerator", "value": "14"},
+        {"op": "replace", "path": "/exact_answers/0/identity/isolating_interval/lower/denominator", "value": "10"}
+      ],
+      "expected": "rational must be reduced"
+    },
+    {
+      "id": "result-strict-guard-unseparated",
+      "base": "valid/solve-result-combined-v1.json",
+      "patch": [
+        {"op": "replace", "path": "/provisional_answers/0/guard_enclosures/0/enclosure/lower", "value": "0"}
+      ],
+      "expected": "strict guard is not separated"
+    },
+    {
+      "id": "result-invalid-coverage",
+      "base": "valid/solve-result-combined-v1.json",
+      "patch": [
+        {"op": "replace", "path": "/coverage/pending_tasks", "value": 3}
+      ],
+      "expected": "completed plus pending exceeds proposed"
+    },
+    {
+      "id": "result-blank-evidence-location",
+      "base": "valid/solve-result-combined-v1.json",
+      "patch": [
+        {"op": "replace", "path": "/evidence_log/location", "value": "   "}
+      ],
+      "expected": "evidence_log.location"
+    },
+    {
+      "id": "result-empty-certified-with-answers",
+      "base": "valid/solve-result-combined-v1.json",
+      "patch": [
+        {"op": "replace", "path": "/target_image_status", "value": "empty_certified"}
+      ],
+      "expected": "cannot contain answers"
+    },
+    {
+      "id": "options-seed-overflow",
+      "base": "valid/solve-options-checkpoint-v1.json",
+      "patch": [
+        {"op": "replace", "path": "/seed", "value": "18446744073709551616"}
+      ],
+      "expected": "exceeds UInt64"
+    }
+  ]
+}
