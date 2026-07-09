@@ -325,6 +325,7 @@ end
     EXACT_SINGULAR = 5
     EXACT_BUDGET_EXHAUSTED = 6
     EXACT_UNSUPPORTED = 7
+    EXACT_GUARD_NOT_SEPARATED = 8
 end
 
 function _freeze_branch_signature(signature)

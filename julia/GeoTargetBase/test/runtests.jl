@@ -379,6 +379,7 @@ end
     @test provisional isa AbstractAnswer
     @test !(provisional isa ExactAnswer)
     @test provisional.exact_failure == EXACT_TARGET_CERT_FAILED
+    @test EXACT_GUARD_NOT_SEPARATED != EXACT_CONFIGURATION_CERT_FAILED
     @test provisional.guard_enclosures[1].enclosure.lower == 0.1
     @test_throws InvariantError GuardEnclosure(
         NodeId("strict_boundary"),
