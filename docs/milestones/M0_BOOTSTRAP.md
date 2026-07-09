@@ -5,15 +5,15 @@
 - [x] `C:\solver` resolved and old working copy verified clean.
 - [x] New independent `main` repository created without old history/code.
 - [x] No remote configured; external old repository left untouched.
-- [ ] Root commit, annotated tag and Git bundle checkpoint created.
+- [x] Root commit, annotated tag and verified Git bundle checkpoint created.
 
 ## M0 — governance and toolchain
 
 - [x] Charter, requirements, traceability, ADRs and research protocol written.
 - [x] Julia 1.12.6 selected; Python requires 3.12 or newer.
-- [ ] Julia/Python workspace skeleton and lock files committed.
-- [ ] One cross-platform test entry point and CI smoke are green.
-- [ ] Architecture fitness checks reject forbidden dependencies/patterns.
+- [x] Julia/Python workspace skeleton and lock files committed.
+- [x] One developer/CI test entry point and smoke tier are green on Windows.
+- [x] Architecture fitness checks reject forbidden dependencies/patterns.
 - [ ] Initial literature matrix and three preregistered experiment cards exist.
 
 ## M1 — ABI vertical slice
@@ -27,4 +27,3 @@
 - [ ] Exact-capable demonstration carries separate config/target certificates.
 - [ ] Python builder emits canonical JSON and invokes the Julia CLI.
 - [ ] Differential, conformance, schema and negative capability tests pass.
-
