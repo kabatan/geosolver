@@ -4,11 +4,11 @@ This pilot checks adapters and records observations only. It does not evaluate t
 
 | Variant | Gold-valid / attempts | Full-target instances | False candidates | Callback calls | Median warm (s) | Cold first attempt (s) |
 |---|---:|---:|---:|---:|---:|---:|
-| NLS-LM | 53 / 64 | 7 / 8 | 11 | 11642 | 0.0001553 | 4.7438 |
-| NLS-TR | 59 / 64 | 7 / 8 | 5 | 7142 | 5.0e-5 | 1.4783 |
-| NLS-RMN | 59 / 64 | 7 / 8 | 5 | 7142 | 4.73e-5 | 2.3437 |
-| NLS-TR-STRICT | 59 / 64 | 7 / 8 | 5 | 7251 | 2.94e-5 | 8.48e-5 |
-| LXR-LMQR | 43 / 64 | 6 / 8 | 13 | 20569 | 0.0004417 | 0.058806 |
+| NLS-LM | 53 / 64 | 7 / 8 | 11 | 11642 | 0.0001262 | 4.8336 |
+| NLS-TR | 59 / 64 | 7 / 8 | 5 | 7142 | 3.75e-5 | 1.3195 |
+| NLS-RMN | 59 / 64 | 7 / 8 | 5 | 7142 | 4.46e-5 | 2.4432 |
+| NLS-TR-STRICT | 59 / 64 | 7 / 8 | 5 | 7251 | 1.97e-5 | 6.42e-5 |
+| LXR-LMQR | 43 / 64 | 6 / 8 | 13 | 20569 | 0.0006343 | 0.053435 |
 
 ## Fixed protocol
 
