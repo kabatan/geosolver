@@ -1,6 +1,7 @@
 module GeoTargetCore
 
 using GeoTargetBase
+using LinearAlgebra
 
 const CORE_ABI_VERSION = v"1.0.0"
 
@@ -9,6 +10,7 @@ include("registry.jl")
 include("validation.jl")
 include("oracle.jl")
 include("reference_interpreter.jl")
+include("local_solver.jl")
 
 """Return the stable plugin ABI version understood by this Core build."""
 abi_version() = CORE_ABI_VERSION
@@ -45,6 +47,18 @@ export CORE_ABI_VERSION,
     residual_values,
     scaled_residual_values,
     canonical_feasible,
-    evaluate_reference
+    evaluate_reference,
+    LocalSolveStatus,
+    LOCAL_CONVERGED,
+    LOCAL_MAX_ITERATIONS,
+    LOCAL_MAX_EVALUATIONS,
+    LOCAL_DEADLINE,
+    LOCAL_CANCELLED,
+    LOCAL_NO_PROGRESS,
+    LOCAL_EVALUATION_FAILED,
+    LocalSolveOptions,
+    LocalTracePoint,
+    LocalAttempt,
+    solve_local
 
 end

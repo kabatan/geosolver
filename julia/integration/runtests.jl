@@ -84,3 +84,5 @@ end
     @test observation.target == 1.0
     @test canonical_feasible(observation; residual_tolerance = 0.0)
 end
+
+include(joinpath(@__DIR__, "local_solver_runtests.jl"))
