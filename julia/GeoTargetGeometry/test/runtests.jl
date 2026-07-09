@@ -29,15 +29,18 @@ function operation(plugin::PluginSpec, name::AbstractString)
     return only(spec for spec in operation_specs(plugin) if spec.id == id)
 end
 
+type_spec(plugin::PluginSpec, id::TypeId) = only(spec for spec in plugin.types if spec.id == id)
+
 @testset "built-in plugin identity and conformance" begin
     plugin = geometry_plugin()
     @test GeoTargetGeometry.abi_version() == v"1.0.0"
     @test plugin.core_abi == v"1.0.0"
+    @test plugin.version == v"0.1.1"
     @test plugin === geometry_plugin()
     @test string(plugin.id) ==
           "5cba7841-765c-4ef1-987e-27fcb9985e3d/builtin_geometry"
     @test string(plugin.content) ==
-          "sha256:22585ce0501f448de3184b7ee5aedef9f4e084f7c6bb728823e645d2bce3f7a7"
+          "sha256:37a31a5b39c6f3d5be5ec4e200f5b6069b43f035f19d7946603b0064ac07e65f"
     @test plugin_lock(plugin).content == GEOMETRY_CONTENT_HASH
     @test length(plugin.types) == 5
     @test length(plugin.primitives) == 4
@@ -48,6 +51,17 @@ end
     @test length(plugin.selectors) == 3
     @test Set(spec.id for spec in plugin.types) ==
           Set((SCALAR_TYPE_ID, POINT_TYPE_ID, LINE_TYPE_ID, CIRCLE_TYPE_ID, CHOICE_TYPE_ID))
+    @test all(
+        spec -> spec.encoder !== nothing && spec.decoder !== nothing,
+        (
+            type_spec(plugin, SCALAR_TYPE_ID),
+            type_spec(plugin, POINT_TYPE_ID),
+            type_spec(plugin, LINE_TYPE_ID),
+            type_spec(plugin, CIRCLE_TYPE_ID),
+        ),
+    )
+    @test type_spec(plugin, CHOICE_TYPE_ID).encoder === nothing
+    @test type_spec(plugin, CHOICE_TYPE_ID).decoder === nothing
     @test all(spec -> spec.id.plugin == plugin.id, operation_specs(plugin))
     @test all(spec -> supports(kernel(spec).capabilities, C0), operation_specs(plugin))
     @test all(spec -> !supports(kernel(spec).capabilities, C3V), operation_specs(plugin))
@@ -60,6 +74,150 @@ end
     )
     @test only(plugin.guards).default_strict
     @test only(plugin.domains).default_strict
+end
+
+@testset "canonical numeric-generic literal codecs" begin
+    plugin = geometry_plugin()
+    scalar = type_spec(plugin, SCALAR_TYPE_ID)
+
+    @test scalar.encoder(Int64(7)) === Int64(7)
+    @test scalar.decoder(Int64(7)) === Int64(7)
+    @test scalar.encoder(0.25) === 0.25
+    @test scalar.decoder(0.25) === 0.25
+
+    big_value = setprecision(BigFloat, 192) do
+        parse(BigFloat, "0.1")
+    end
+    exact_values = Any[
+        -0.0,
+        Float64(2)^53,
+        Float16(0.1),
+        Float32(0.1),
+        big_value,
+        Int128(2)^100,
+        big(2)^200,
+        Int16(5) // Int16(7),
+        big(5) // big(7),
+    ]
+    for value in exact_values
+        projection = scalar.encoder(value)
+        decoded = scalar.decoder(deepcopy(projection))
+        @test typeof(decoded) === typeof(value)
+        @test isequal(decoded, value)
+    end
+
+    big_projection = scalar.encoder(big_value)
+    @test big_projection["type"] == "BigFloat"
+    @test big_projection["precision_bits"] == 192
+    @test big_projection["decimal"] == string(big_value)
+    @test scalar.encoder(Float16(0.1))["bits"] == "2e66"
+    @test scalar.encoder(Float32(0.1))["bits"] == "3dcccccd"
+    @test scalar.encoder(-0.0)["bits"] == "8000000000000000"
+
+    @test_throws ArgumentError scalar.encoder(true)
+    @test_throws ArgumentError scalar.decoder(true)
+    @test_throws ArgumentError scalar.encoder(NaN)
+    @test_throws ArgumentError scalar.encoder(Inf)
+    @test_throws ArgumentError scalar.decoder(NaN)
+    @test_throws ArgumentError scalar.decoder(Inf)
+    @test_throws ArgumentError scalar.decoder(Int64(9_007_199_254_740_992))
+    @test_throws ArgumentError scalar.decoder(Dict("kind" => "unknown"))
+    @test_throws ArgumentError scalar.decoder(
+        Dict("kind" => "integer", "type" => "BigInt"),
+    )
+    @test_throws ArgumentError scalar.decoder(
+        Dict(
+            "kind" => "integer",
+            "type" => "BigInt",
+            "decimal" => "01",
+        ),
+    )
+    @test_throws ArgumentError scalar.decoder(
+        Dict(
+            "kind" => "integer",
+            "type" => "Int64",
+            "decimal" => "7",
+        ),
+    )
+    @test_throws ArgumentError scalar.decoder(
+        Dict(
+            "kind" => "float",
+            "type" => "Float32",
+            "bits" => "3DCCCCCD",
+        ),
+    )
+    @test_throws ArgumentError scalar.decoder(
+        Dict(
+            "kind" => "float",
+            "type" => "Float64",
+            "bits" => "3fe0000000000000",
+        ),
+    )
+    @test_throws ArgumentError scalar.decoder(
+        Dict(
+            "kind" => "float",
+            "type" => "BigFloat",
+            "precision_bits" => 192,
+            "decimal" => "0.10",
+        ),
+    )
+    @test_throws ArgumentError scalar.decoder(
+        Dict(
+            "kind" => "rational",
+            "type" => "Int64",
+            "numerator" => "2",
+            "denominator" => "4",
+        ),
+    )
+    @test_throws ArgumentError scalar.decoder(
+        Dict(
+            "kind" => "rational",
+            "type" => "Int64",
+            "numerator" => "1",
+            "denominator" => "-2",
+        ),
+    )
+
+    point = type_spec(plugin, POINT_TYPE_ID)
+    line = type_spec(plugin, LINE_TYPE_ID)
+    circle = type_spec(plugin, CIRCLE_TYPE_ID)
+    float_point = point2(1.0, -2.0)
+    float_line = line_through(
+        point2(Float32(1), Float32(2)),
+        point2(Float32(3), Float32(5)),
+    )
+    rational_circle = circle2(
+        point2(Int16(1) // Int16(3), Int16(2) // Int16(5)),
+        Int16(7) // Int16(11),
+    )
+    for (spec, value) in (
+        (point, float_point),
+        (line, float_line),
+        (circle, rational_circle),
+    )
+        projection = spec.encoder(value)
+        decoded = spec.decoder(deepcopy(projection))
+        @test typeof(decoded) === typeof(value)
+        @test isequal(decoded, value)
+    end
+    @test point.encoder(float_point)["numeric_type"] == "Float64"
+    @test_throws ArgumentError point.decoder(
+        Dict("kind" => "point2", "x" => 1, "y" => 2),
+    )
+    @test_throws ArgumentError point.decoder(
+        Dict(
+            "kind" => "Point2",
+            "numeric_type" => "Float64",
+            "x" => 1,
+            "y" => 2,
+        ),
+    )
+    mismatched_line = line.encoder(float_line)
+    mismatched_line["direction"]["numeric_type"] = "Float64"
+    @test_throws ArgumentError line.decoder(mismatched_line)
+    mismatched_circle = circle.encoder(rational_circle)
+    mismatched_circle["radius"] = 1
+    @test_throws ArgumentError circle.decoder(mismatched_circle)
 end
 
 @testset "numeric-generic elementary constructions" begin

@@ -295,8 +295,8 @@ end
     @test result.provisional.exact_failure == EXACT_CAPABILITY_MISSING
     @test result.exact_failure == EXACT_CAPABILITY_MISSING
     @test result.provisional.validation.artifact.digest == result.artifact.digest
-    @test result.problem == compiled.cache_identity.problem
-    @test result.problem_hash_method == "compiled_structural_v1"
+    @test result.problem == GeoTargetCore.problem_hash(problem, registry)
+    @test result.problem_hash_method == "protocol_canonical_json"
     @test result.oracle_work ==
           result.fast_observation.evaluation_cost + result.canonical_observation.evaluation_cost
 

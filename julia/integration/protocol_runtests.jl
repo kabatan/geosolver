@@ -2,6 +2,7 @@ module ProtocolIntegrationTests
 
 using GeoTargetBase
 using GeoTargetCore
+using GeoTargetGeometry
 using Test
 using UUIDs
 
@@ -159,6 +160,58 @@ end
 const PROBLEM_REGISTRY = _registry(problem_plugin())
 const MANIFEST_REGISTRY = _registry(manifest_plugin())
 
+function _geometry_codec_registry()
+    plugin = geometry_plugin()
+    builder = RegistryBuilder(allowlist = (plugin.id,))
+    register!(builder, plugin)
+    return freeze(builder)
+end
+
+function _geometry_codec_problem()
+    plugin = geometry_plugin()
+    big_value = setprecision(BigFloat, 192) do
+        parse(BigFloat, "0.1")
+    end
+    nodes = (
+        LiteralNode(NodeId("safe_int"), SCALAR_TYPE_ID, Int64(7)),
+        LiteralNode(NodeId("small_float"), SCALAR_TYPE_ID, 0.25),
+        LiteralNode(NodeId("negative_zero"), SCALAR_TYPE_ID, -0.0),
+        LiteralNode(NodeId("float16"), SCALAR_TYPE_ID, Float16(0.1)),
+        LiteralNode(NodeId("float32"), SCALAR_TYPE_ID, Float32(0.1)),
+        LiteralNode(NodeId("bigfloat"), SCALAR_TYPE_ID, big_value),
+        LiteralNode(NodeId("integer"), SCALAR_TYPE_ID, Int128(2)^100),
+        LiteralNode(NodeId("bigint"), SCALAR_TYPE_ID, big(2)^200),
+        LiteralNode(
+            NodeId("rational"),
+            SCALAR_TYPE_ID,
+            Int16(5) // Int16(7),
+        ),
+        LiteralNode(NodeId("point"), POINT_TYPE_ID, point2(1.0, 2.0)),
+        LiteralNode(
+            NodeId("line"),
+            LINE_TYPE_ID,
+            line_through(
+                point2(Float32(1), Float32(2)),
+                point2(Float32(3), Float32(5)),
+            ),
+        ),
+        LiteralNode(
+            NodeId("circle"),
+            CIRCLE_TYPE_ID,
+            circle2(
+                point2(Int16(1) // Int16(3), Int16(2) // Int16(5)),
+                Int16(7) // Int16(11),
+            ),
+        ),
+    )
+    return ProblemSpecV1(
+        (plugin_lock(plugin),),
+        (),
+        ConstructionGraph(nodes);
+        target = NodeId("safe_int"),
+    )
+end
+
 _fixture(name) = read(joinpath(VALID, basename(name)), String)
 
 function _replace_pointer!(document, pointer::String, value)
@@ -218,6 +271,54 @@ end
     @test plugin === only(registered_plugins(MANIFEST_REGISTRY))
     @test GeoTargetCore.encode_plugin_manifest_json(plugin) ==
         GeoTargetCore.canonical_json(GeoTargetCore.parse_protocol_json(plugin_source))
+end
+
+@testset "built-in geometry literals round-trip through the owned protocol" begin
+    registry = _geometry_codec_registry()
+    problem = _geometry_codec_problem()
+    source = GeoTargetCore.encode_problem_json(problem, registry)
+    document = GeoTargetCore.parse_protocol_json(source)
+    projections = Dict(
+        node["id"] => node["value"] for node in document["graph"] if
+        node["kind"] == "literal"
+    )
+
+    @test projections["safe_int"] == 7
+    @test projections["small_float"] == 0.25
+    @test projections["negative_zero"]["type"] == "Float64"
+    @test projections["float16"]["type"] == "Float16"
+    @test projections["float32"]["bits"] == "3dcccccd"
+    @test projections["bigfloat"]["precision_bits"] == 192
+    @test projections["integer"]["type"] == "Int128"
+    @test projections["bigint"]["type"] == "BigInt"
+    @test projections["rational"]["type"] == "Int16"
+    @test projections["point"]["numeric_type"] == "Float64"
+    @test projections["line"]["direction"]["numeric_type"] == "Float32"
+    @test projections["circle"]["center"]["numeric_type"] == "Rational{Int16}"
+
+    decoded = GeoTargetCore.decode_problem_json(source, registry)
+    @test GeoTargetCore.encode_problem_json(decoded, registry) == source
+    @test GeoTargetCore.problem_hash(decoded, registry) ==
+          GeoTargetCore.problem_hash(problem, registry)
+    @test GeoTargetCore.problem_hash(problem, registry) ==
+          GeoTargetCore.canonical_json_hash(document)
+
+    values = Dict(
+        string(node.id) => node.value for node in decoded.graph.nodes if
+        node isa LiteralNode
+    )
+    @test typeof(values["negative_zero"]) === Float64
+    @test signbit(values["negative_zero"])
+    @test typeof(values["float16"]) === Float16
+    @test typeof(values["float32"]) === Float32
+    @test typeof(values["bigfloat"]) === BigFloat
+    @test precision(values["bigfloat"]) == 192
+    @test typeof(values["integer"]) === Int128
+    @test typeof(values["bigint"]) === BigInt
+    @test typeof(values["rational"]) === Rational{Int16}
+    @test typeof(values["point"]) === Point2{Float64}
+    @test typeof(values["line"]) === Line2{Float32}
+    @test typeof(values["circle"]) === Circle2{Rational{Int16}}
 end
 
 @testset "Invalid common-fixture mutations are rejected" begin

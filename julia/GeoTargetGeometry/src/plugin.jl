@@ -1,6 +1,6 @@
 const GEOMETRY_PLUGIN_ID =
     parse(PluginId, "5cba7841-765c-4ef1-987e-27fcb9985e3d/builtin_geometry")
-const GEOMETRY_PLUGIN_VERSION = v"0.1.0"
+const GEOMETRY_PLUGIN_VERSION = v"0.1.1"
 const GEOMETRY_CORE_ABI = v"1.0.0"
 
 const SCALAR_TYPE_ID = TypeId(GEOMETRY_PLUGIN_ID, "scalar")
@@ -13,8 +13,9 @@ const CHOICE_TYPE_ID = TypeId(GEOMETRY_PLUGIN_ID, "choice")
 # pipeline will generate it from PluginSpec metadata once code generation lands.
 const _GEOMETRY_MANIFEST_V1 = join(
     (
-        "plugin=5cba7841-765c-4ef1-987e-27fcb9985e3d/builtin_geometry@0.1.0",
+        "plugin=5cba7841-765c-4ef1-987e-27fcb9985e3d/builtin_geometry@0.1.1",
         "types=scalar,point2,line2,circle2,choice",
+        "literal_codecs=scalar,point2,line2,circle2",
         "primitives=point2,line_through,circle2,distance",
         "relations=scalar_equality",
         "guards=positive",
@@ -57,10 +58,34 @@ function _piecewise_derivative_kernel(evaluator)
 end
 
 function _build_geometry_plugin()
-    scalar = TypeSpec(SCALAR_TYPE_ID, Real; documentation = "Real scalar")
-    point = TypeSpec(POINT_TYPE_ID, Point2; documentation = "Cartesian Point2{T}")
-    line = TypeSpec(LINE_TYPE_ID, Line2; documentation = "Directed unnormalized Line2{T}")
-    circle = TypeSpec(CIRCLE_TYPE_ID, Circle2; documentation = "Circle2{T}")
+    scalar = TypeSpec(
+        SCALAR_TYPE_ID,
+        Real;
+        encoder = _encode_scalar_literal,
+        decoder = _decode_scalar_literal,
+        documentation = "Real scalar with canonical numeric-generic literal projection",
+    )
+    point = TypeSpec(
+        POINT_TYPE_ID,
+        Point2;
+        encoder = _encode_point_literal,
+        decoder = _decode_point_literal,
+        documentation = "Cartesian Point2{T} with canonical nested scalar projection",
+    )
+    line = TypeSpec(
+        LINE_TYPE_ID,
+        Line2;
+        encoder = _encode_line_literal,
+        decoder = _decode_line_literal,
+        documentation = "Directed unnormalized Line2{T} with canonical nested point projection",
+    )
+    circle = TypeSpec(
+        CIRCLE_TYPE_ID,
+        Circle2;
+        encoder = _encode_circle_literal,
+        decoder = _decode_circle_literal,
+        documentation = "Circle2{T} with canonical nested point/scalar projection",
+    )
     choice = TypeSpec(CHOICE_TYPE_ID, Choice; documentation = "Finite branch Choice")
 
     point_signature = SignatureSpec((SCALAR_TYPE_ID, SCALAR_TYPE_ID), POINT_TYPE_ID)

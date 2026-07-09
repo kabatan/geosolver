@@ -3,6 +3,7 @@ module GeoTargetGeometry
 using GeoTargetBase
 
 include("types.jl")
+include("literal_codecs.jl")
 include("operations.jl")
 include("plugin.jl")
 
