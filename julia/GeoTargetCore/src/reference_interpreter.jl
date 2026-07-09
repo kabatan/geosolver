@@ -66,10 +66,10 @@ function _role_spec(problem, registry, node_indexes, binding)
     return resolve_operation(registry, node.operation).spec
 end
 
-function _truth_value(spec::RelationSpec, raw)
+function _truth_value(spec::RelationSpec, arguments, keywords)
     spec.truth === nothing && return nothing, nothing
     try # Explicit plugin truth-predicate boundary.
-        result = spec.truth(raw)
+        result = spec.truth(arguments...; keywords...)
         result isa Bool || return nothing, "relation truth predicate did not return Bool"
         return result, nothing
     catch error
@@ -195,7 +195,12 @@ function evaluate_reference(
         )
         spec = _role_spec(problem, registry, indexes, binding)
         scale = something(binding.scale_override, spec.scale_hint, 1.0)
-        truth, truth_error = _truth_value(spec, raw)
+        node = problem.graph[indexes[binding.node]]
+        truth, truth_error = _truth_value(
+            spec,
+            _node_arguments(node, values, indexes),
+            _node_keywords(node, values, indexes),
+        )
         truth_error === nothing || return _empty_observation(EVAL_PLUGIN_ERROR, cost, truth_error)
         push!(relations, RelationObservation(binding.node, raw, scale, raw / scale, truth))
     end
