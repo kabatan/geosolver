@@ -173,6 +173,20 @@
       "rationale": "Provides paired basin comparisons while keeping cold experiments tractable.",
       "tuning_domain": [16, 32],
       "freeze_rule": "Persist and checksum starts before executing variants."
+    },
+    "gold_configuration_tolerance": {
+      "value": 1e-06,
+      "status": "hypothesis",
+      "rationale": "Makes configuration truth matching explicit in normalized variable coordinates.",
+      "tuning_domain": [1e-06],
+      "freeze_rule": "Fixed before the pilot and never widened from observed misses."
+    },
+    "pilot_target_tolerance": {
+      "value": 1e-06,
+      "status": "hypothesis",
+      "rationale": "Separates exploratory target matching from exact or validated answer claims.",
+      "tuning_domain": [1e-06],
+      "freeze_rule": "Pilot-only fixed tolerance; locked truth uses the benchmark metric contract."
     }
   },
   "budgets": {
