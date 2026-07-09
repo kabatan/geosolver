@@ -11,6 +11,10 @@ include("validation.jl")
 include("oracle.jl")
 include("reference_interpreter.jl")
 include("local_solver.jl")
+include("events.jl")
+include("candidate_store.jl")
+include("search_policy.jl")
+include("search_loop.jl")
 
 """Return the stable plugin ABI version understood by this Core build."""
 abi_version() = CORE_ABI_VERSION
@@ -59,6 +63,14 @@ export CORE_ABI_VERSION,
     LocalSolveOptions,
     LocalTracePoint,
     LocalAttempt,
-    solve_local
+    solve_local,
+    SolvePolicy,
+    fast_policy,
+    standard_policy,
+    thorough_policy,
+    CancellationToken,
+    cancel!,
+    is_cancelled,
+    ExecutionContext
 
 end

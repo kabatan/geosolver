@@ -86,3 +86,4 @@ end
 end
 
 include(joinpath(@__DIR__, "local_solver_runtests.jl"))
+include(joinpath(@__DIR__, "search_runtests.jl"))
