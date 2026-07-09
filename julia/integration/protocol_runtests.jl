@@ -5,12 +5,6 @@ using GeoTargetCore
 using Test
 using UUIDs
 
-if !isdefined(GeoTargetCore, :decode_problem_json)
-    Base.include(
-        GeoTargetCore,
-        normpath(joinpath(@__DIR__, "..", "GeoTargetCore", "src", "protocol_json.jl")),
-    )
-end
 include(normpath(joinpath(@__DIR__, "..", "app", "GeoTargetApp.jl")))
 
 const ROOT = normpath(joinpath(@__DIR__, "..", ".."))

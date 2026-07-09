@@ -11,6 +11,7 @@ include("validation.jl")
 include("oracle.jl")
 include("reference_interpreter.jl")
 include("local_solver.jl")
+include("protocol_json.jl")
 include("events.jl")
 include("candidate_store.jl")
 include("search_policy.jl")
@@ -71,6 +72,28 @@ export CORE_ABI_VERSION,
     CancellationToken,
     cancel!,
     is_cancelled,
-    ExecutionContext
+    ExecutionContext,
+    PROBLEM_WIRE_VERSION,
+    PLUGIN_WIRE_VERSION,
+    SOLVE_RESULT_WIRE_VERSION,
+    ProtocolJsonError,
+    parse_protocol_json,
+    canonical_json_bytes,
+    canonical_json,
+    canonical_json_hash,
+    decode_problem_document,
+    decode_problem_json,
+    problem_document,
+    encode_problem_json,
+    problem_hash,
+    decode_solve_result_document,
+    decode_solve_result_json,
+    solve_result_document,
+    encode_solve_result_json,
+    plugin_manifest_document,
+    encode_plugin_manifest_json,
+    decode_plugin_manifest_document,
+    decode_plugin_manifest_json,
+    validate_protocol_json
 
 end

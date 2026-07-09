@@ -4,13 +4,6 @@ using GeoTargetBase
 using GeoTargetCore
 using GeoTargetGeometry
 
-if !isdefined(GeoTargetCore, :decode_problem_json)
-    Base.include(
-        GeoTargetCore,
-        normpath(joinpath(@__DIR__, "..", "GeoTargetCore", "src", "protocol_json.jl")),
-    )
-end
-
 function default_registry()
     plugin = GeoTargetGeometry.geometry_plugin()
     builder = RegistryBuilder(allowlist = (plugin.id,))
