@@ -73,13 +73,13 @@ struct DomainBinding
 end
 
 """Canonical v1 problem contract; semantic operator roles remain disjoint."""
-struct ProblemSpecV1{L<:Tuple,V<:Tuple,G<:ConstructionGraph,R<:Tuple,U<:Tuple,D<:Tuple}
-    plugin_locks::L
-    variables::V
-    graph::G
-    relations::R
-    guards::U
-    domains::D
+struct ProblemSpecV1
+    plugin_locks::Tuple
+    variables::Tuple
+    graph::ConstructionGraph
+    relations::Tuple
+    guards::Tuple
+    domains::Tuple
     target::NodeId
 
     function ProblemSpecV1(
@@ -157,14 +157,7 @@ struct ProblemSpecV1{L<:Tuple,V<:Tuple,G<:ConstructionGraph,R<:Tuple,U<:Tuple,D<
             ),
         )
 
-        return new{
-            typeof(frozen_locks),
-            typeof(frozen_variables),
-            typeof(graph),
-            typeof(frozen_relations),
-            typeof(frozen_guards),
-            typeof(frozen_domains),
-        }(
+        return new(
             frozen_locks,
             frozen_variables,
             graph,

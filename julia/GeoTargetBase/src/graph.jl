@@ -41,11 +41,11 @@ function _canonical_keywords(keywords)
 end
 
 """A call to one plugin-qualified operation."""
-struct CallNode{A<:Tuple,K<:Tuple} <: AbstractGraphNode
+struct CallNode <: AbstractGraphNode
     id::NodeId
     operation::PrimitiveId
-    arguments::A
-    keywords::K
+    arguments::Tuple
+    keywords::Tuple
 
     function CallNode(
         id::NodeId,
@@ -55,7 +55,7 @@ struct CallNode{A<:Tuple,K<:Tuple} <: AbstractGraphNode
     )
         frozen_arguments = tuple((argument isa NodeId ? argument : NodeId(argument) for argument in arguments)...)
         frozen_keywords = _canonical_keywords(keywords)
-        return new{typeof(frozen_arguments),typeof(frozen_keywords)}(
+        return new(
             id,
             operation,
             frozen_arguments,
@@ -65,12 +65,12 @@ struct CallNode{A<:Tuple,K<:Tuple} <: AbstractGraphNode
 end
 
 """A generic plugin selector applied to a Choice-producing node."""
-struct SelectNode{A<:Tuple,K<:Tuple} <: AbstractGraphNode
+struct SelectNode <: AbstractGraphNode
     id::NodeId
     choice::NodeId
     selector::SelectorId
-    arguments::A
-    keywords::K
+    arguments::Tuple
+    keywords::Tuple
 
     function SelectNode(
         id::NodeId,
@@ -81,7 +81,7 @@ struct SelectNode{A<:Tuple,K<:Tuple} <: AbstractGraphNode
     )
         frozen_arguments = tuple((argument isa NodeId ? argument : NodeId(argument) for argument in arguments)...)
         frozen_keywords = _canonical_keywords(keywords)
-        return new{typeof(frozen_arguments),typeof(frozen_keywords)}(
+        return new(
             id,
             choice,
             selector,
@@ -106,8 +106,8 @@ Canonical topologically ordered construction graph.
 Every edge must point to an earlier node. This gives deterministic traversal and
 prevents cycles before plugin typing or numerical compilation begins.
 """
-struct ConstructionGraph{N<:Tuple}
-    nodes::N
+struct ConstructionGraph
+    nodes::Tuple
 
     function ConstructionGraph(nodes)
         frozen = tuple((deepcopy(node) for node in nodes)...)
@@ -131,7 +131,7 @@ struct ConstructionGraph{N<:Tuple}
             end
             push!(seen, id)
         end
-        return new{typeof(frozen)}(frozen)
+        return new(frozen)
     end
 end
 

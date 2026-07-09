@@ -127,6 +127,9 @@ end
     literal_payload[1] = 50.0
     @test literal.value == [1.0, 2.0]
     @test length(graph) == 4
+    @test typeof(graph) === ConstructionGraph
+    @test typeof(graph[3]) === CallNode
+    @test typeof(graph[4]) === SelectNode
     @test map(keyword -> keyword.name, graph[3].keywords) == ("alpha", "zeta")
     @test referenced_nodes(graph[3]) ==
           (NodeId("literal"), NodeId("x_ref"), NodeId("literal"), NodeId("x_ref"))
@@ -316,6 +319,11 @@ end
     @test_throws InvariantError AlgebraicTargetIdentity((-1, 1), RationalInterval(0, 1), 1)
 
     artifact = CertificateArtifact("interval_v1", "replayable")
+    @test typeof(artifact) === CertificateArtifact
+    @test typeof(CertificateArtifact("interval_v1", repeat("x", 1000))) === CertificateArtifact
+    binary_artifact = CertificateArtifact("binary_v1", UInt8[0xff, 0x00, 0x7f])
+    @test collect(codeunits(binary_artifact.payload)) == UInt8[0xff, 0x00, 0x7f]
+    @test binary_artifact.digest == content_hash(UInt8[0xff, 0x00, 0x7f])
     problem_hash = content_hash("problem")
     config_certificate = ConfigurationValidityCertificate(
         problem_hash,

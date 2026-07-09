@@ -270,18 +270,18 @@ struct PluginLock
 end
 
 """The single immutable source of all Julia and generated protocol metadata."""
-struct PluginSpec{T<:Tuple,P<:Tuple,R<:Tuple,G<:Tuple,D<:Tuple,B<:Tuple,S<:Tuple}
+struct PluginSpec
     id::PluginId
     version::VersionNumber
     core_abi::VersionNumber
     content::ContentHash
-    types::T
-    primitives::P
-    relations::R
-    guards::G
-    domains::D
-    branches::B
-    selectors::S
+    types::Tuple
+    primitives::Tuple
+    relations::Tuple
+    guards::Tuple
+    domains::Tuple
+    branches::Tuple
+    selectors::Tuple
 
     function PluginSpec(
         id::PluginId,
@@ -314,15 +314,7 @@ struct PluginSpec{T<:Tuple,P<:Tuple,R<:Tuple,G<:Tuple,D<:Tuple,B<:Tuple,S<:Tuple
         _validate_plugin_members(id, frozen_types, frozen_primitives, frozen_relations,
             frozen_guards, frozen_domains, frozen_branches, frozen_selectors)
 
-        return new{
-            typeof(frozen_types),
-            typeof(frozen_primitives),
-            typeof(frozen_relations),
-            typeof(frozen_guards),
-            typeof(frozen_domains),
-            typeof(frozen_branches),
-            typeof(frozen_selectors),
-        }(
+        return new(
             id,
             version,
             core_abi,

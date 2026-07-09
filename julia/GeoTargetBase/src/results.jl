@@ -99,8 +99,8 @@ Coefficients are stored in ascending power order. The constructor verifies
 canonical primitive form and square-freeness; minimality and root isolation are
 established by the separate TargetIdentityCertificate.
 """
-struct AlgebraicTargetIdentity{C<:Tuple}
-    coefficients::C
+struct AlgebraicTargetIdentity
+    coefficients::Tuple
     isolating_interval::RationalInterval
     real_root_index::Int
 
@@ -131,7 +131,7 @@ struct AlgebraicTargetIdentity{C<:Tuple}
         _evaluate_polynomial(raw, interval.upper) != 0 || throw(
             InvariantError(:root_on_interval_boundary, "upper isolating endpoint is a polynomial root"),
         )
-        return new{typeof(frozen)}(frozen, interval, Int(real_root_index))
+        return new(frozen, interval, Int(real_root_index))
     end
 end
 
@@ -197,10 +197,10 @@ function _identity_hash(identity::AlgebraicTargetIdentity)
 end
 
 """Replayable immutable certificate payload with an intrinsic digest."""
-struct CertificateArtifact{P<:Tuple}
+struct CertificateArtifact
     scheme::String
     media_type::String
-    payload::P
+    payload::String
     digest::ContentHash
 
     function CertificateArtifact(
@@ -216,12 +216,12 @@ struct CertificateArtifact{P<:Tuple}
         isempty(payload) && throw(
             InvariantError(:empty_certificate, "a replayable certificate payload cannot be empty"),
         )
-        frozen_payload = Tuple(payload)
-        return new{typeof(frozen_payload)}(
+        frozen_payload = String(copy(payload))
+        return new(
             canonical_scheme,
             canonical_media_type,
             frozen_payload,
-            content_hash(collect(frozen_payload)),
+            content_hash(Vector{UInt8}(codeunits(frozen_payload))),
         )
     end
 end
@@ -230,17 +230,17 @@ CertificateArtifact(scheme::AbstractString, payload::AbstractString; kwargs...) 
     CertificateArtifact(scheme, Vector{UInt8}(codeunits(payload)); kwargs...)
 
 """Proof that one configuration satisfies canonical relation/domain/guard/branch semantics."""
-struct ConfigurationValidityCertificate{A<:CertificateArtifact}
+struct ConfigurationValidityCertificate
     problem::ContentHash
     configuration::ContentHash
-    artifact::A
+    artifact::CertificateArtifact
 end
 
 """Proof binding an algebraic identity to the final target value."""
-struct TargetIdentityCertificate{A<:CertificateArtifact}
+struct TargetIdentityCertificate
     problem::ContentHash
     identity::ContentHash
-    artifact::A
+    artifact::CertificateArtifact
 end
 
 TargetIdentityCertificate(
@@ -250,12 +250,12 @@ TargetIdentityCertificate(
 ) = TargetIdentityCertificate(problem, _identity_hash(identity), artifact)
 
 """Independent high-precision or validated replay evidence for a provisional answer."""
-struct NumericalValidationEvidence{A<:CertificateArtifact}
+struct NumericalValidationEvidence
     problem::ContentHash
     configuration::ContentHash
     method::String
     precision_bits::Int
-    artifact::A
+    artifact::CertificateArtifact
 
     function NumericalValidationEvidence(
         problem::ContentHash,
@@ -274,7 +274,7 @@ struct NumericalValidationEvidence{A<:CertificateArtifact}
         precision_bits >= 53 || throw(
             InvariantError(:insufficient_precision, "validation precision must be at least 53 bits"),
         )
-        return new{typeof(artifact)}(
+        return new(
             problem,
             configuration,
             _canonical_name(method, "validation method"),
@@ -291,9 +291,9 @@ struct BranchDecision
 end
 
 """Validated guard range bound to its graph node and strictness semantics."""
-struct GuardEnclosure{E<:NumericEnclosure}
+struct GuardEnclosure
     node::NodeId
-    enclosure::E
+    enclosure::NumericEnclosure
     strict::Bool
 
     function GuardEnclosure(node::NodeId, enclosure::NumericEnclosure, strict::Bool)
@@ -312,7 +312,7 @@ struct GuardEnclosure{E<:NumericEnclosure}
                 ),
             )
         end
-        return new{typeof(enclosure)}(node, enclosure, strict)
+        return new(node, enclosure, strict)
     end
 end
 
@@ -339,12 +339,12 @@ function _freeze_branch_signature(signature)
     return Tuple(sort(collect(frozen); by = decision -> string(decision.choice_node)))
 end
 
-struct ExactAnswer{I<:AlgebraicTargetIdentity,A<:Real,B<:Tuple,C<:ConfigurationValidityCertificate,T<:TargetIdentityCertificate} <: AbstractAnswer
-    identity::I
-    approximation::A
-    branch_signature::B
-    configuration_certificate::C
-    target_certificate::T
+struct ExactAnswer <: AbstractAnswer
+    identity::AlgebraicTargetIdentity
+    approximation::Real
+    branch_signature::Tuple
+    configuration_certificate::ConfigurationValidityCertificate
+    target_certificate::TargetIdentityCertificate
 
     function ExactAnswer(
         identity::AlgebraicTargetIdentity,
@@ -370,13 +370,7 @@ struct ExactAnswer{I<:AlgebraicTargetIdentity,A<:Real,B<:Tuple,C<:ConfigurationV
             ),
         )
         frozen_branches = _freeze_branch_signature(branch_signature)
-        return new{
-            typeof(identity),
-            typeof(frozen_approximation),
-            typeof(frozen_branches),
-            typeof(configuration_certificate),
-            typeof(target_certificate),
-        }(
+        return new(
             identity,
             frozen_approximation,
             frozen_branches,
@@ -386,12 +380,12 @@ struct ExactAnswer{I<:AlgebraicTargetIdentity,A<:Real,B<:Tuple,C<:ConfigurationV
     end
 end
 
-struct ProvisionalAnswer{E<:NumericEnclosure,R<:Real,B<:Tuple,G<:Tuple,V<:NumericalValidationEvidence} <: AbstractAnswer
-    target::E
-    canonical_residual_bound::R
-    branch_signature::B
-    guard_enclosures::G
-    validation::V
+struct ProvisionalAnswer <: AbstractAnswer
+    target::NumericEnclosure
+    canonical_residual_bound::Real
+    branch_signature::Tuple
+    guard_enclosures::Tuple
+    validation::NumericalValidationEvidence
     exact_failure::ExactPromotionFailure
     exact_failure_detail::String
 
@@ -421,13 +415,7 @@ struct ProvisionalAnswer{E<:NumericEnclosure,R<:Real,B<:Tuple,G<:Tuple,V<:Numeri
             ),
         )
         frozen_bound = deepcopy(canonical_residual_bound)
-        return new{
-            typeof(target),
-            typeof(frozen_bound),
-            typeof(frozen_branches),
-            typeof(frozen_guards),
-            typeof(validation),
-        }(
+        return new(
             target,
             frozen_bound,
             frozen_branches,
@@ -440,9 +428,9 @@ struct ProvisionalAnswer{E<:NumericEnclosure,R<:Real,B<:Tuple,G<:Tuple,V<:Numeri
 end
 
 """Exact identity required to resume a checkpoint without semantic drift."""
-struct ResumeIdentity{L<:Tuple}
+struct ResumeIdentity
     graph::ContentHash
-    plugin_locks::L
+    plugin_locks::Tuple
     policy::ContentHash
     environment::ContentHash
 
@@ -452,18 +440,18 @@ struct ResumeIdentity{L<:Tuple}
             InvariantError(:duplicate_plugin_lock, "resume identity contains a duplicate plugin lock"),
         )
         ordered_locks = Tuple(sort(collect(frozen_locks); by = lock -> string(lock.id)))
-        return new{typeof(ordered_locks)}(graph, ordered_locks, policy, environment)
+        return new(graph, ordered_locks, policy, environment)
     end
 end
 
 can_resume(current::ResumeIdentity, stored::ResumeIdentity) = current == stored
 
-struct CoverageEvidence{S<:Tuple}
+struct CoverageEvidence
     independent_waves::Int
     proposed_tasks::Int
     completed_tasks::Int
     pending_tasks::Int
-    explored_shells::S
+    explored_shells::Tuple
     last_new_target_seconds::Union{Nothing,Float64}
 
     function CoverageEvidence(
@@ -498,7 +486,7 @@ struct CoverageEvidence{S<:Tuple}
         frozen_time !== nothing && (!isfinite(frozen_time) || frozen_time < 0) && throw(
             InvariantError(:invalid_discovery_time, "last-new-target time must be finite and nonnegative"),
         )
-        return new{typeof(frozen_shells)}(
+        return new(
             Int(independent_waves),
             Int(proposed_tasks),
             Int(completed_tasks),
@@ -523,14 +511,14 @@ struct EvidenceLogReference
     end
 end
 
-struct SolveResult{E<:Tuple,P<:Tuple,C<:CoverageEvidence,R<:ResumeIdentity,L<:EvidenceLogReference}
-    exact_answers::E
-    provisional_answers::P
+struct SolveResult
+    exact_answers::Tuple
+    provisional_answers::Tuple
     search_status::SearchStatus
     target_image_status::TargetImageStatus
-    coverage::C
-    environment_lock::R
-    evidence_log::L
+    coverage::CoverageEvidence
+    environment_lock::ResumeIdentity
+    evidence_log::EvidenceLogReference
 
     function SolveResult(
         exact_answers,
@@ -564,13 +552,7 @@ struct SolveResult{E<:Tuple,P<:Tuple,C<:CoverageEvidence,R<:ResumeIdentity,L<:Ev
                     "SEARCH_COMPLETE_CERTIFIED requires a certified target-image status",
                 ),
             )
-        return new{
-            typeof(frozen_exact),
-            typeof(frozen_provisional),
-            typeof(coverage),
-            typeof(environment_lock),
-            typeof(evidence_log),
-        }(
+        return new(
             frozen_exact,
             frozen_provisional,
             search_status,
