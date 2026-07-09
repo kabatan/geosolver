@@ -10,6 +10,8 @@ include("registry.jl")
 include("validation.jl")
 include("oracle.jl")
 include("reference_interpreter.jl")
+include("compiler.jl")
+include("compiled_oracle.jl")
 include("local_solver.jl")
 include("protocol_json.jl")
 include("events.jl")
@@ -53,6 +55,17 @@ export CORE_ABI_VERSION,
     scaled_residual_values,
     canonical_feasible,
     evaluate_reference,
+    CompilerError,
+    CompiledCacheIdentity,
+    CompileStats,
+    CompiledSparsity,
+    CompiledProblem,
+    CompiledWorkspace,
+    compile_problem,
+    capabilities,
+    evaluate,
+    evaluate_batch,
+    evaluate_canonical,
     LocalSolveStatus,
     LOCAL_CONVERGED,
     LOCAL_MAX_ITERATIONS,

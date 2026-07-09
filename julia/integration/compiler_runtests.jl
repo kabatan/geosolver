@@ -4,14 +4,6 @@ using GeoTargetGeometry
 using Random
 using Test
 
-if !isdefined(GeoTargetCore, :CompiledProblem)
-    Base.include(GeoTargetCore, joinpath(@__DIR__, "..", "GeoTargetCore", "src", "compiler.jl"))
-    Base.include(
-        GeoTargetCore,
-        joinpath(@__DIR__, "..", "GeoTargetCore", "src", "compiled_oracle.jl"),
-    )
-end
-
 if !isdefined(Main, :OpaquePlugin)
     include(joinpath(@__DIR__, "..", "fixtures", "OpaquePlugin", "src", "OpaquePlugin.jl"))
 end
