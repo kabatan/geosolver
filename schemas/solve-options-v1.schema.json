@@ -15,11 +15,10 @@
       ]
     },
     "preset": {
-      "type": "string",
-      "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$"
+      "enum": ["fast", "default", "standard", "thorough"]
     },
     "answer_level": {"enum": ["validated", "exact_if_available"]},
-    "worker_count": {"type": "integer", "minimum": 1},
+    "worker_count": {"type": "integer", "minimum": 1, "default": 1},
     "checkpoint": {
       "type": "object",
       "additionalProperties": false,

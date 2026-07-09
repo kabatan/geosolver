@@ -85,6 +85,14 @@ function SolveOptions(
     )
 end
 
+SolveOptions(options::SolveOptionsV1) = SolveOptions(
+    preset=options.preset,
+    wall_seconds=options.wall_time_seconds,
+    seed=options.seed,
+    answer_level=options.answer_level,
+    worker_count=options.worker_count,
+)
+
 """A result plus its in-memory replay evidence and resumable search snapshot."""
 struct SolveExecution
     result::SolveResult

@@ -177,6 +177,11 @@ def test_valid_plugin_manifest_and_solve_options() -> None:
     options = valid_options()
     assert validate_document(options) == "geotarget.solve-options/v1"
 
+    invalid_preset = valid_options()
+    invalid_preset["preset"] = "turbo"
+    with pytest.raises(ProtocolValidationError, match="preset"):
+        validate_document(invalid_preset)
+
     digest = "sha256:" + "1" * 64
     options["seed"] = "18446744073709551615"
     options["checkpoint"] = {

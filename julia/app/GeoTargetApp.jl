@@ -123,11 +123,32 @@ function _plugin_info(id_text, registry, output)
     return 0
 end
 
+function _solve(problem_path, options_path, evidence_path, registry, output)
+    isempty(strip(evidence_path)) && throw(ArgumentError("--evidence path must not be blank"))
+    problem = GeoTargetCore.decode_problem_json(read(problem_path, String), registry)
+    wire_options = GeoTargetCore.decode_solve_options_json(read(options_path, String))
+    wire_options.checkpoint === nothing || throw(
+        SolveConfigurationError(
+            :checkpoint_resume_unavailable,
+            "checkpoint resume is not implemented; the checkpoint request was not ignored",
+        ),
+    )
+    execution = solve_execution(
+        problem,
+        registry;
+        options = SolveOptions(wire_options),
+        evidence_path,
+    )
+    println(output, GeoTargetCore.encode_solve_result_json(execution.result))
+    return 0
+end
+
 function _usage(io)
     println(io, "usage:")
     println(io, "  geotarget validate <document.json>")
     println(io, "  geotarget eval <problem.json> --x <comma-separated-values|JSON-array>")
     println(io, "  geotarget plugin-info [canonical-plugin-id]")
+    println(io, "  geotarget solve <problem.json> --options <options.json> --evidence <path>")
 end
 
 function main(
@@ -149,8 +170,17 @@ function main(
         elseif command == "plugin-info"
             length(args) <= 2 || throw(ArgumentError("plugin-info accepts at most one plugin id"))
             return _plugin_info(length(args) == 2 ? args[2] : nothing, registry, stdout)
+        elseif command == "solve"
+            length(args) == 6 || throw(
+                ArgumentError(
+                    "solve expects <problem.json> --options <options.json> --evidence <path>",
+                ),
+            )
+            args[3] == "--options" || throw(ArgumentError("solve requires --options"))
+            args[5] == "--evidence" || throw(ArgumentError("solve requires --evidence"))
+            return _solve(args[2], args[4], args[6], registry, stdout)
         end
-        throw(ArgumentError("unknown command $(repr(command)); solve is intentionally unavailable"))
+        throw(ArgumentError("unknown command $(repr(command))"))
     catch error
         println(stderr, "error: ", sprint(showerror, error))
         return 2

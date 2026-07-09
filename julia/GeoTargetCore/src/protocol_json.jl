@@ -3,6 +3,7 @@ using StructTypes
 
 const PROBLEM_WIRE_VERSION = "geotarget.problem/v1"
 const PLUGIN_WIRE_VERSION = "geotarget.plugin/v1"
+const SOLVE_OPTIONS_WIRE_VERSION = "geotarget.solve-options/v1"
 const SOLVE_RESULT_WIRE_VERSION = "geotarget.solve-result/v1"
 const _JCS_SAFE_INTEGER = Int128(9_007_199_254_740_991)
 
@@ -1103,6 +1104,176 @@ function _environment_lock_document(value::ResumeIdentity)
     )
 end
 
+"""Typed checkpoint request carried by SolveOptionsV1."""
+struct SolveCheckpointV1
+    path::String
+    environment_lock::ResumeIdentity
+
+    function SolveCheckpointV1(path::AbstractString, environment_lock::ResumeIdentity)
+        frozen_path = String(path)
+        isempty(strip(frozen_path)) &&
+            throw(ArgumentError("checkpoint path must not be blank"))
+        return new(frozen_path, environment_lock)
+    end
+end
+
+const _SOLVE_OPTION_PRESETS = (:fast, :default, :standard, :thorough)
+const _SOLVE_OPTION_ANSWER_LEVELS = (:validated, :exact_if_available)
+
+"""Strict, runtime-independent projection of geotarget.solve-options/v1."""
+struct SolveOptionsV1
+    wall_time_seconds::Float64
+    seed::UInt64
+    preset::Symbol
+    answer_level::Symbol
+    worker_count::Int
+    checkpoint::Union{Nothing,SolveCheckpointV1}
+
+    function SolveOptionsV1(
+        wall_time_seconds::Real,
+        seed::Integer,
+        preset::Symbol,
+        answer_level::Symbol,
+        worker_count::Integer = 1,
+        checkpoint::Union{Nothing,SolveCheckpointV1} = nothing,
+    )
+        seconds = Float64(wall_time_seconds)
+        isfinite(seconds) && seconds > 0 ||
+            throw(ArgumentError("wall_time_seconds must be finite and positive"))
+        0 <= seed <= typemax(UInt64) ||
+            throw(ArgumentError("seed must fit in UInt64"))
+        preset in _SOLVE_OPTION_PRESETS || throw(
+            ArgumentError("preset must be fast, default, standard, or thorough"),
+        )
+        answer_level in _SOLVE_OPTION_ANSWER_LEVELS || throw(
+            ArgumentError("answer_level must be validated or exact_if_available"),
+        )
+        1 <= worker_count <= typemax(Int) ||
+            throw(ArgumentError("worker_count must be a positive runtime Int"))
+        return new(
+            seconds,
+            UInt64(seed),
+            preset,
+            answer_level,
+            Int(worker_count),
+            checkpoint,
+        )
+    end
+end
+
+function SolveOptionsV1(
+    ;
+    wall_time_seconds::Real,
+    seed::Integer = 0,
+    preset::Union{Symbol,AbstractString} = :standard,
+    answer_level::Union{Symbol,AbstractString} = :exact_if_available,
+    worker_count::Integer = 1,
+    checkpoint::Union{Nothing,SolveCheckpointV1} = nothing,
+)
+    return SolveOptionsV1(
+        wall_time_seconds,
+        seed,
+        Symbol(preset),
+        Symbol(answer_level),
+        worker_count,
+        checkpoint,
+    )
+end
+
+function _decode_solve_seed(raw, path)
+    if raw isa Integer && !(raw isa Bool)
+        0 <= raw <= _JCS_SAFE_INTEGER || _protocol_error(
+            path,
+            "numeric seed must be in the safe JSON integer domain; use a decimal string otherwise",
+        )
+        return UInt64(raw)
+    elseif raw isa String
+        occursin(r"^(?:0|[1-9][0-9]{0,19})$", raw) ||
+            _protocol_error(path, "seed string is not a canonical UInt64 decimal")
+        value = try
+            parse(UInt64, raw)
+        catch error
+            _protocol_error(path, "seed decimal exceeds UInt64: $(sprint(showerror, error))")
+        end
+        return value
+    end
+    _protocol_error(path, "seed must be a safe JSON integer or canonical UInt64 decimal string")
+end
+
+_solve_seed_document(seed::UInt64) =
+    seed <= _JCS_SAFE_INTEGER ? Int64(seed) : string(seed)
+
+function _decode_solve_checkpoint(raw, path)
+    object = _object(raw, ("path", "environment_lock"); path)
+    return _construct(path, () -> SolveCheckpointV1(
+        _string(object["path"], string(path, ".path")),
+        _decode_environment_lock(
+            object["environment_lock"],
+            string(path, ".environment_lock"),
+        ),
+    ))
+end
+
+function _solve_checkpoint_document(checkpoint::SolveCheckpointV1)
+    return Dict{String,Any}(
+        "path" => checkpoint.path,
+        "environment_lock" => _environment_lock_document(checkpoint.environment_lock),
+    )
+end
+
+function decode_solve_options_document(raw)
+    object = _object(
+        raw,
+        ("schema_version", "wall_time_seconds", "seed", "preset", "answer_level"),
+        ("worker_count", "checkpoint");
+        path = "document",
+    )
+    _string(object["schema_version"], "schema_version") == SOLVE_OPTIONS_WIRE_VERSION ||
+        _protocol_error("schema_version", "expected $SOLVE_OPTIONS_WIRE_VERSION")
+    canonical_json_bytes(object)
+    seconds = _wire_number(object["wall_time_seconds"], "wall_time_seconds")
+    preset_text = _string(object["preset"], "preset")
+    preset = Symbol(preset_text)
+    preset in _SOLVE_OPTION_PRESETS ||
+        _protocol_error("preset", "must be fast, default, standard, or thorough")
+    answer_text = _string(object["answer_level"], "answer_level")
+    answer_level = Symbol(answer_text)
+    answer_level in _SOLVE_OPTION_ANSWER_LEVELS ||
+        _protocol_error("answer_level", "must be validated or exact_if_available")
+    worker_count = haskey(object, "worker_count") ?
+                   _integer(object["worker_count"], "worker_count"; minimum = 1) : 1
+    checkpoint = haskey(object, "checkpoint") ?
+                 _decode_solve_checkpoint(object["checkpoint"], "checkpoint") : nothing
+    return _construct("document", () -> SolveOptionsV1(
+        seconds,
+        _decode_solve_seed(object["seed"], "seed"),
+        preset,
+        answer_level,
+        worker_count,
+        checkpoint,
+    ))
+end
+
+decode_solve_options_json(source) =
+    decode_solve_options_document(parse_protocol_json(source))
+
+function solve_options_document(options::SolveOptionsV1)
+    document = Dict{String,Any}(
+        "schema_version" => SOLVE_OPTIONS_WIRE_VERSION,
+        "wall_time_seconds" => options.wall_time_seconds,
+        "seed" => _solve_seed_document(options.seed),
+        "preset" => String(options.preset),
+        "answer_level" => String(options.answer_level),
+        "worker_count" => options.worker_count,
+    )
+    options.checkpoint === nothing ||
+        (document["checkpoint"] = _solve_checkpoint_document(options.checkpoint))
+    return document
+end
+
+encode_solve_options_json(options::SolveOptionsV1) =
+    canonical_json(solve_options_document(options))
+
 function decode_solve_result_document(raw)
     object = _object(
         raw,
@@ -1361,6 +1532,8 @@ function validate_protocol_json(source, registry::FrozenPluginRegistry)
         decode_problem_document(document, registry)
     elseif version == PLUGIN_WIRE_VERSION
         decode_plugin_manifest_document(document, registry)
+    elseif version == SOLVE_OPTIONS_WIRE_VERSION
+        decode_solve_options_document(document)
     elseif version == SOLVE_RESULT_WIRE_VERSION
         decode_solve_result_document(document)
     else

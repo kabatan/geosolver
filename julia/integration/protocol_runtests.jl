@@ -212,6 +212,18 @@ function _geometry_codec_problem()
     )
 end
 
+function _geometry_constant_problem(value = 1.25)
+    plugin = geometry_plugin()
+    return ProblemSpecV1(
+        (plugin_lock(plugin),),
+        (),
+        ConstructionGraph((
+            LiteralNode(NodeId("target"), SCALAR_TYPE_ID, value),
+        ));
+        target = NodeId("target"),
+    )
+end
+
 _fixture(name) = read(joinpath(VALID, basename(name)), String)
 
 function _replace_pointer!(document, pointer::String, value)
@@ -237,6 +249,8 @@ function _decode_owned(document, registry)
         return GeoTargetCore.decode_problem_json(source, registry)
     elseif version == GeoTargetCore.PLUGIN_WIRE_VERSION
         return GeoTargetCore.decode_plugin_manifest_json(source, registry)
+    elseif version == GeoTargetCore.SOLVE_OPTIONS_WIRE_VERSION
+        return GeoTargetCore.decode_solve_options_json(source)
     elseif version == GeoTargetCore.SOLVE_RESULT_WIRE_VERSION
         return GeoTargetCore.decode_solve_result_json(source)
     end
@@ -271,6 +285,99 @@ end
     @test plugin === only(registered_plugins(MANIFEST_REGISTRY))
     @test GeoTargetCore.encode_plugin_manifest_json(plugin) ==
         GeoTargetCore.canonical_json(GeoTargetCore.parse_protocol_json(plugin_source))
+
+    options_source = _fixture("solve-options-checkpoint-v1.json")
+    options = GeoTargetCore.decode_solve_options_json(options_source)
+    @test options.wall_time_seconds == 180.0
+    @test options.seed == typemax(UInt64)
+    @test options.preset == :default
+    @test options.answer_level == :exact_if_available
+    @test options.worker_count == 2
+    @test options.checkpoint isa GeoTargetCore.SolveCheckpointV1
+    @test options.checkpoint.path == "checkpoint/run-1.json"
+    @test can_resume(
+        options.checkpoint.environment_lock,
+        deepcopy(options.checkpoint.environment_lock),
+    )
+    @test GeoTargetCore.encode_solve_options_json(options) ==
+        GeoTargetCore.canonical_json(GeoTargetCore.parse_protocol_json(options_source))
+end
+
+@testset "SolveOptionsV1 is strict, typed, and canonically encoded" begin
+    minimal = Dict{String,Any}(
+        "schema_version" => GeoTargetCore.SOLVE_OPTIONS_WIRE_VERSION,
+        "wall_time_seconds" => 60,
+        "seed" => 42,
+        "preset" => "fast",
+        "answer_level" => "validated",
+    )
+    decoded = GeoTargetCore.decode_solve_options_document(minimal)
+    @test decoded.worker_count == 1
+    @test decoded.checkpoint === nothing
+    @test SolveOptions(decoded).preset == :fast
+    @test SolveOptions(decoded).answer_level == ANSWER_VALIDATED
+    encoded = GeoTargetCore.encode_solve_options_json(decoded)
+    encoded_document = GeoTargetCore.parse_protocol_json(encoded)
+    @test encoded_document["worker_count"] == 1
+    @test encoded_document["seed"] == 42
+
+    string_seed = copy(minimal)
+    string_seed["seed"] = "9007199254740992"
+    @test GeoTargetCore.decode_solve_options_document(string_seed).seed ==
+          UInt64(9_007_199_254_740_992)
+    max_seed = copy(minimal)
+    max_seed["seed"] = "18446744073709551615"
+    @test GeoTargetCore.decode_solve_options_document(max_seed).seed == typemax(UInt64)
+
+    safe_string = copy(minimal)
+    safe_string["seed"] = "42"
+    @test GeoTargetCore.decode_solve_options_document(safe_string).seed == UInt64(42)
+    @test GeoTargetCore.solve_options_document(
+        GeoTargetCore.decode_solve_options_document(safe_string),
+    )["seed"] == 42
+    leading_zero = copy(minimal)
+    leading_zero["seed"] = "09007199254740992"
+    @test_throws GeoTargetCore.ProtocolJsonError GeoTargetCore.decode_solve_options_document(
+        leading_zero,
+    )
+    overflow = copy(minimal)
+    overflow["seed"] = "18446744073709551616"
+    @test_throws GeoTargetCore.ProtocolJsonError GeoTargetCore.decode_solve_options_document(
+        overflow,
+    )
+    unsafe_number = copy(minimal)
+    unsafe_number["seed"] = Int64(9_007_199_254_740_992)
+    @test_throws GeoTargetCore.ProtocolJsonError GeoTargetCore.decode_solve_options_document(
+        unsafe_number,
+    )
+    float_seed = copy(minimal)
+    float_seed["seed"] = 42.0
+    @test_throws GeoTargetCore.ProtocolJsonError GeoTargetCore.decode_solve_options_document(
+        float_seed,
+    )
+    nonfinite = copy(minimal)
+    nonfinite["wall_time_seconds"] = Inf
+    @test_throws GeoTargetCore.ProtocolJsonError GeoTargetCore.decode_solve_options_document(
+        nonfinite,
+    )
+    unknown_preset = copy(minimal)
+    unknown_preset["preset"] = "turbo"
+    @test_throws GeoTargetCore.ProtocolJsonError GeoTargetCore.decode_solve_options_document(
+        unknown_preset,
+    )
+    unknown_member = copy(minimal)
+    unknown_member["automatic_plugin"] = true
+    @test_throws GeoTargetCore.ProtocolJsonError GeoTargetCore.decode_solve_options_document(
+        unknown_member,
+    )
+    invalid_workers = copy(minimal)
+    invalid_workers["worker_count"] = 0
+    @test_throws GeoTargetCore.ProtocolJsonError GeoTargetCore.decode_solve_options_document(
+        invalid_workers,
+    )
+    @test_throws ArgumentError GeoTargetCore.SolveOptionsV1(
+        wall_time_seconds = 0,
+    )
 end
 
 @testset "built-in geometry literals round-trip through the owned protocol" begin
@@ -325,7 +432,6 @@ end
     cases = GeoTargetCore.parse_protocol_json(read(INVALID, String))["cases"]
     for case in cases
         base = GeoTargetCore.parse_protocol_json(read(joinpath(ROOT, "schemas", "fixtures", case["base"]), String))
-        base["schema_version"] == "geotarget.solve-options/v1" && continue
         for patch in case["patch"]
             @test patch["op"] == "replace"
             _replace_pointer!(base, patch["path"], patch["value"])
@@ -441,7 +547,7 @@ end
     @test GeoTargetCore.encode_problem_json(decoded_problem, PROBLEM_REGISTRY) == encoded
 end
 
-@testset "CLI composition without solve" begin
+@testset "CLI validate, eval, and plugin-info composition" begin
     mktempdir() do directory
         fixture_path = joinpath(directory, "fixture.json")
         write(fixture_path, _fixture("problem-open-world-v1.json"))
@@ -492,12 +598,207 @@ end
         @test observation["status"] == "ok"
         @test observation["target"] == "2.5"
 
+    end
+end
+
+@testset "CLI solve executes, persists evidence, and never fakes resume" begin
+    mktempdir() do directory
+        registry = GeoTargetApp.default_registry()
+        problem = _geometry_constant_problem()
+        problem_path = joinpath(directory, "problem.json")
+        options_path = joinpath(directory, "options.json")
+        evidence_path = joinpath(directory, "evidence.json")
+        write(problem_path, GeoTargetCore.encode_problem_json(problem, registry))
+        write(
+            options_path,
+            GeoTargetCore.encode_solve_options_json(GeoTargetCore.SolveOptionsV1(
+                wall_time_seconds = 60,
+                seed = 17,
+                preset = :fast,
+                answer_level = :validated,
+            )),
+        )
+
+        output = IOBuffer()
+        errors = IOBuffer()
         @test GeoTargetApp.main(
-            ["solve", eval_path];
-            registry = PROBLEM_REGISTRY,
-            stdout = IOBuffer(),
+            [
+                "solve",
+                problem_path,
+                "--options",
+                options_path,
+                "--evidence",
+                evidence_path,
+            ];
+            stdout = output,
+            stderr = errors,
+        ) == 0
+        @test isempty(String(take!(errors)))
+        result_source = strip(String(take!(output)))
+        result = GeoTargetCore.decode_solve_result_json(result_source)
+        @test GeoTargetCore.encode_solve_result_json(result) == result_source
+        @test result.search_status == SEARCH_FINISHED_UNKNOWN
+        @test result.target_image_status == TARGET_FINITE_OBSERVED
+        @test length(result.provisional_answers) == 1
+        @test result.coverage.proposed_tasks == 1
+        @test result.coverage.completed_tasks == 1
+        @test result.environment_lock.graph == GeoTargetCore.problem_hash(problem, registry)
+        @test result.evidence_log.location == abspath(evidence_path)
+        @test isfile(evidence_path)
+        @test result.evidence_log.content == content_hash(read(evidence_path))
+        @test GeoTargetCore.canonical_json(
+            GeoTargetCore.parse_protocol_json(read(evidence_path, String)),
+        ) == read(evidence_path, String)
+        @test isempty(filter(name -> occursin(".tmp-", name), readdir(directory)))
+
+        deadline_options = joinpath(directory, "deadline-options.json")
+        deadline_evidence = joinpath(directory, "deadline-evidence.json")
+        write(
+            deadline_options,
+            GeoTargetCore.encode_solve_options_json(GeoTargetCore.SolveOptionsV1(
+                wall_time_seconds = nextfloat(0.0),
+                preset = :fast,
+            )),
+        )
+        output = IOBuffer()
+        @test GeoTargetApp.main(
+            [
+                "solve",
+                problem_path,
+                "--options",
+                deadline_options,
+                "--evidence",
+                deadline_evidence,
+            ];
+            stdout = output,
             stderr = IOBuffer(),
+        ) == 0
+        deadline_result = GeoTargetCore.decode_solve_result_json(String(take!(output)))
+        @test deadline_result.search_status == SEARCH_DEADLINE_REACHED
+        @test isempty(deadline_result.provisional_answers)
+        @test deadline_result.target_image_status == TARGET_IMAGE_UNKNOWN
+        @test deadline_result.evidence_log.content == content_hash(read(deadline_evidence))
+
+        invalid_options = joinpath(directory, "invalid-options.json")
+        invalid_document = GeoTargetCore.parse_protocol_json(read(options_path, String))
+        invalid_document["unknown"] = true
+        write(invalid_options, GeoTargetCore.canonical_json(invalid_document))
+        invalid_evidence = joinpath(directory, "invalid-evidence.json")
+        errors = IOBuffer()
+        @test GeoTargetApp.main(
+            [
+                "solve",
+                problem_path,
+                "--options",
+                invalid_options,
+                "--evidence",
+                invalid_evidence,
+            ];
+            stdout = IOBuffer(),
+            stderr = errors,
         ) == 2
+        @test occursin("unknown member", String(take!(errors)))
+        @test !isfile(invalid_evidence)
+
+        workers_path = joinpath(directory, "workers.json")
+        write(
+            workers_path,
+            GeoTargetCore.encode_solve_options_json(GeoTargetCore.SolveOptionsV1(
+                wall_time_seconds = 60,
+                worker_count = 2,
+            )),
+        )
+        errors = IOBuffer()
+        @test GeoTargetApp.main(
+            [
+                "solve",
+                problem_path,
+                "--options",
+                workers_path,
+                "--evidence",
+                joinpath(directory, "workers-evidence.json"),
+            ];
+            stdout = IOBuffer(),
+            stderr = errors,
+        ) == 2
+        @test occursin("parallel_execution_unavailable", String(take!(errors)))
+
+        lock = ResumeIdentity(
+            content_hash("problem"),
+            (),
+            content_hash("policy"),
+            content_hash("environment"),
+        )
+        checkpoint_path = joinpath(directory, "checkpoint-options.json")
+        write(
+            checkpoint_path,
+            GeoTargetCore.encode_solve_options_json(GeoTargetCore.SolveOptionsV1(
+                wall_time_seconds = 60,
+                checkpoint = GeoTargetCore.SolveCheckpointV1("checkpoint.json", lock),
+            )),
+        )
+        errors = IOBuffer()
+        @test GeoTargetApp.main(
+            [
+                "solve",
+                problem_path,
+                "--options",
+                checkpoint_path,
+                "--evidence",
+                joinpath(directory, "checkpoint-evidence.json"),
+            ];
+            stdout = IOBuffer(),
+            stderr = errors,
+        ) == 2
+        @test occursin("checkpoint_resume_unavailable", String(take!(errors)))
+    end
+end
+
+@testset "CLI solve accepts custom plugins only through registry injection" begin
+    mktempdir() do directory
+        problem = ProblemSpecV1(
+            (plugin_lock(problem_plugin()),),
+            (),
+            ConstructionGraph((LiteralNode(NodeId("target"), REAL, 1.5),));
+            target = NodeId("target"),
+        )
+        problem_path = joinpath(directory, "custom-problem.json")
+        options_path = joinpath(directory, "options.json")
+        write(problem_path, GeoTargetCore.encode_problem_json(problem, PROBLEM_REGISTRY))
+        write(
+            options_path,
+            GeoTargetCore.encode_solve_options_json(GeoTargetCore.SolveOptionsV1(
+                wall_time_seconds = 60,
+                preset = :fast,
+            )),
+        )
+        arguments = [
+            "solve",
+            problem_path,
+            "--options",
+            options_path,
+            "--evidence",
+            joinpath(directory, "custom-evidence.json"),
+        ]
+        errors = IOBuffer()
+        @test GeoTargetApp.main(
+            arguments;
+            stdout = IOBuffer(),
+            stderr = errors,
+        ) == 2
+        @test occursin("not in the frozen allowlisted registry", String(take!(errors)))
+
+        output = IOBuffer()
+        @test GeoTargetApp.main(
+            arguments;
+            registry = PROBLEM_REGISTRY,
+            stdout = output,
+            stderr = IOBuffer(),
+        ) == 0
+        result = GeoTargetCore.decode_solve_result_json(String(take!(output)))
+        @test length(result.provisional_answers) == 1
+        @test result.environment_lock.graph ==
+              GeoTargetCore.problem_hash(problem, PROBLEM_REGISTRY)
     end
 end
 
