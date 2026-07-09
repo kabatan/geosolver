@@ -31,7 +31,8 @@ end
 
 @testset "built-in plugin identity and conformance" begin
     plugin = geometry_plugin()
-    @test GeoTargetGeometry.abi_version() == GeoTargetBase.PACKAGE_VERSION
+    @test GeoTargetGeometry.abi_version() == v"1.0.0"
+    @test plugin.core_abi == v"1.0.0"
     @test plugin === geometry_plugin()
     @test string(plugin.id) ==
           "5cba7841-765c-4ef1-987e-27fcb9985e3d/builtin_geometry"
@@ -74,11 +75,13 @@ end
     )
     @test float_line isa Line2{Float64}
     @test big_line isa Line2{BigFloat}
+    @test line_through(big_point, float_point) isa Line2{BigFloat}
 
     float_circle = circle2(float_point, 3.0)
     big_circle = circle2(big_point, big"3.0")
     @test float_circle isa Circle2{Float64}
     @test big_circle isa Circle2{BigFloat}
+    @test circle2(big_point, 3.0) isa Circle2{BigFloat}
     @test distance(point2(0.0, 0.0), point2(3.0, 4.0)) == 5.0
     @test distance(
         point2(big"0.0", big"0.0"),
@@ -170,6 +173,7 @@ end
 
 @testset "external ArcPlugin composes built-in custom objects" begin
     plugin = arc_plugin()
+    @test plugin.core_abi == v"1.0.0"
     @test string(plugin.content) ==
           "sha256:470996af9a6733ef65941253492e99f1a79bf5558f22a4c696cdfbf934f33325"
     @test length(plugin.types) == 1
@@ -199,6 +203,7 @@ end
 
 @testset "OpaquePlugin advertises truthful capability loss" begin
     plugin = opaque_plugin()
+    @test plugin.core_abi == v"1.0.0"
     @test string(plugin.content) ==
           "sha256:96534b4fd97e7f83e0fba1b05fc998013830ed8da7e4d8117940a23e9bb3b5be"
     generic_spec = operation(plugin, "opaque_iterate")

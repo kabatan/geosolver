@@ -97,7 +97,7 @@ function _build_arc_plugin()
     return PluginSpec(
         ARC_PLUGIN_ID,
         v"0.1.0",
-        v"0.1.0",
+        v"1.0.0",
         ARC_CONTENT_HASH;
         types = (arc_type,),
         primitives,

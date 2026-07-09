@@ -23,8 +23,14 @@ end
 
 point2(x::Real, y::Real) = Point2(x, y)
 
-function line_through(first::Point2{T}, second::Point2{T}) where {T<:Real}
-    return Line2(first, Point2(second.x - first.x, second.y - first.y))
+function line_through(first::Point2, second::Point2)
+    first_x, first_y, second_x, second_y =
+        promote(first.x, first.y, second.x, second.y)
+    anchor = Point2(first_x, first_y)
+    return Line2(anchor, Point2(second_x - first_x, second_y - first_y))
 end
 
-circle2(center::Point2{T}, radius::T) where {T<:Real} = Circle2(center, radius)
+function circle2(center::Point2, radius::Real)
+    center_x, center_y, promoted_radius = promote(center.x, center.y, radius)
+    return Circle2(Point2(center_x, center_y), promoted_radius)
+end

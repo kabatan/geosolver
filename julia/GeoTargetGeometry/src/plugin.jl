@@ -1,7 +1,7 @@
 const GEOMETRY_PLUGIN_ID =
     parse(PluginId, "5cba7841-765c-4ef1-987e-27fcb9985e3d/builtin_geometry")
 const GEOMETRY_PLUGIN_VERSION = v"0.1.0"
-const GEOMETRY_CORE_ABI = v"0.1.0"
+const GEOMETRY_CORE_ABI = v"1.0.0"
 
 const SCALAR_TYPE_ID = TypeId(GEOMETRY_PLUGIN_ID, "scalar")
 const POINT_TYPE_ID = TypeId(GEOMETRY_PLUGIN_ID, "point2")

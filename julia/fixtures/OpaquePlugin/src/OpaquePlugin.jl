@@ -109,7 +109,7 @@ function _build_opaque_plugin()
     return PluginSpec(
         OPAQUE_PLUGIN_ID,
         v"0.1.0",
-        v"0.1.0",
+        v"1.0.0",
         OPAQUE_CONTENT_HASH;
         types = (opaque_type,),
         primitives,

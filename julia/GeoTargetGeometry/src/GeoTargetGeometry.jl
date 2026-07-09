@@ -7,7 +7,7 @@ include("operations.jl")
 include("plugin.jl")
 
 """Return the ABI version implemented by the built-in geometry plugin."""
-abi_version() = GeoTargetBase.PACKAGE_VERSION
+abi_version() = GEOMETRY_CORE_ABI
 
 export abi_version,
     Point2,
@@ -28,6 +28,7 @@ export abi_version,
     select_orientation,
     GEOMETRY_PLUGIN_ID,
     GEOMETRY_PLUGIN_VERSION,
+    GEOMETRY_CORE_ABI,
     GEOMETRY_CONTENT_HASH,
     SCALAR_TYPE_ID,
     POINT_TYPE_ID,
