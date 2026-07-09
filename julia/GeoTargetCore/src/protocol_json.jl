@@ -115,22 +115,40 @@ function _write_json_string(io::IO, value::String)
     return nothing
 end
 
+# RFC 8785 section 3.2.2.3 delegates finite binary64 rendering to
+# ECMAScript Number::toString, including its shortest/round-to-even rule.
 function _canonical_float(value::AbstractFloat, path::AbstractString)
     isfinite(value) || _protocol_error(path, "non-finite numbers are outside the RFC 8785 input domain")
+    value isa Union{Float16,Float32,Float64} || _protocol_error(
+        path,
+        "non-binary floating-point values must use a canonical decimal string",
+    )
     iszero(value) && return "0"
     float_value = Float64(value)
-    isfinite(float_value) || _protocol_error(path, "number is outside the binary64 RFC 8785 domain")
-    float_value == value || _protocol_error(path, "number is not exactly representable as binary64")
-    if isinteger(float_value) && abs(float_value) <= Float64(_JCS_SAFE_INTEGER)
-        return string(Int128(float_value))
+    significand, decimal_exponent = Base.Ryu.reduce_shortest(abs(float_value))
+    digits = string(significand)
+    digit_count = ncodeunits(digits)
+    decimal_point = decimal_exponent + digit_count
+    sign = signbit(float_value) ? "-" : ""
+
+    # ECMAScript Number::toString radix-10 presentation. Ryu supplies the
+    # correctly rounded shortest significand and exponent; these branches only
+    # select fixed versus scientific notation and place punctuation.
+    if -5 <= decimal_point <= 21
+        body = if decimal_point >= digit_count
+            string(digits, repeat("0", decimal_point - digit_count))
+        elseif decimal_point > 0
+            string(digits[1:decimal_point], ".", digits[(decimal_point + 1):end])
+        else
+            string("0.", repeat("0", -decimal_point), digits)
+        end
+        return string(sign, body)
     end
-    spelling = repr(float_value)
-    occursin('e', lowercase(spelling)) && _protocol_error(
-        path,
-        "exponent-form binary64 values are outside GeoTarget's audited JCS subset; encode an exact decimal string",
-    )
-    endswith(spelling, ".0") && (spelling = spelling[1:(end - 2)])
-    return spelling
+
+    exponent = decimal_point - 1
+    exponent_sign = exponent < 0 ? "-" : "+"
+    coefficient = digit_count == 1 ? digits : string(digits[1], ".", digits[2:end])
+    return string(sign, coefficient, "e", exponent_sign, abs(exponent))
 end
 
 function _canonical_write(io::IO, value, path::AbstractString)
@@ -174,7 +192,7 @@ function _canonical_write(io::IO, value, path::AbstractString)
     else
         # A codec may return a custom StructTypes projection. JSON3 is used only
         # to lower that declared representation; this file's writer still owns
-        # key ordering and the audited RFC 8785 numeric subset.
+        # key ordering and RFC 8785 binary64 number presentation.
         lowered = try
             parse_protocol_json(JSON3.write(value))
         catch error
@@ -459,7 +477,7 @@ function decode_problem_document(raw, registry::FrozenPluginRegistry)
     )
     _string(object["schema_version"], "schema_version") == PROBLEM_WIRE_VERSION ||
         _protocol_error("schema_version", "expected $PROBLEM_WIRE_VERSION")
-    canonical_json_bytes(object) # reject values outside the audited JCS subset
+    canonical_json_bytes(object) # reject values outside the RFC 8785/I-JSON input domain
     locks = _decode_plugin_locks(object["plugin_locks"], "plugin_locks"; registry)
     variables = Tuple(
         _decode_variable(value, string("variables.", index - 1)) for
