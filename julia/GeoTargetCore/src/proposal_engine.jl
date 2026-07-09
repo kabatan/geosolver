@@ -530,7 +530,12 @@ function emit_proposal(
     else
         source_configuration = decision.source_configuration::UInt64
         record = _latest_source_record(context, source_configuration)
-        length(record.proposal.coordinates) == dimension || throw(
+        source_coordinates = if record.observation.endpoint === nothing
+            record.proposal.coordinates
+        else
+            record.observation.endpoint
+        end
+        length(source_coordinates) == dimension || throw(
             ProposalEngineError(
                 :refinement_dimension_mismatch,
                 "source coordinate dimension does not match ProposalEngine",
@@ -538,7 +543,7 @@ function emit_proposal(
         )
         for index in 1:dimension
             source = _finite_source_coordinate(
-                record.proposal.coordinates[index],
+                source_coordinates[index],
                 index,
                 engine.variables[index],
             )
@@ -557,6 +562,7 @@ function emit_proposal(
             :seed => engine.seed,
             :sequence => :deterministic_refinement,
             :source_revision => record.revision,
+            :source_kind => record.observation.endpoint === nothing ? :proposal : :endpoint,
             :normalized_radius => ldexp(1.0, -min(record.revision, 1022)),
         )
     end

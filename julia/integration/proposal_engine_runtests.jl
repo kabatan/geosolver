@@ -317,6 +317,7 @@ end
         canonical_near_feasible=false,
         needs_refinement=true,
         oracle_work=1,
+        endpoint=(0.75, 1.5, -1.5, 0.25),
     )
     C.insert_candidate!(context.workspace.candidates, source, source_observation)
 
@@ -330,11 +331,13 @@ end
     @test first.coordinates[2] >= 0.0
     @test first.coordinates[3] <= 0.0
     @test metadata(first)[:source_revision] == 1
+    @test metadata(first)[:source_kind] === :endpoint
     @test metadata(first)[:normalized_radius] == 0.5
+    endpoint = source_observation.endpoint
     for index in 1:4
-        change = abs(first.coordinates[index] - source.coordinates[index])
+        change = abs(first.coordinates[index] - endpoint[index])
         @test change <= 0.5 * Float64(problem.variables[index].scale) +
-              2 * eps(abs(source.coordinates[index]) + 1)
+              2 * eps(abs(endpoint[index]) + 1)
     end
 
     first_observation = C.Observation(
@@ -343,6 +346,7 @@ end
         canonical_near_feasible=false,
         needs_refinement=true,
         oracle_work=1,
+        endpoint=first.coordinates,
     )
     C.insert_candidate!(context.workspace.candidates, first, first_observation)
     second = proposal_at(engine, context, C.LANE_REFINEMENT, 101; source=42)

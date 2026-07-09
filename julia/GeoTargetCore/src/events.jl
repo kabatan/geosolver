@@ -185,6 +185,7 @@ struct Observation
     needs_refinement::Bool
     residual_score::Float64
     oracle_work::Int
+    endpoint::Union{Nothing,Tuple}
     diagnostic::Union{Nothing,String}
 
     function Observation(
@@ -200,6 +201,7 @@ struct Observation
         needs_refinement::Bool=false,
         residual_score::Real=Inf,
         oracle_work::Integer=0,
+        endpoint=nothing,
         diagnostic::Union{Nothing,AbstractString}=nothing,
     )
         task_id > 0 || throw(ArgumentError("task_id must be positive"))
@@ -235,6 +237,14 @@ struct Observation
         branches = _freeze_search_value(branch_signature)
         branches isa Tuple || throw(ArgumentError("branch_signature must freeze to a tuple"))
         payload = _freeze_search_value(verified_payload)
+        frozen_endpoint = _freeze_search_value(endpoint)
+        frozen_endpoint === nothing || frozen_endpoint isa Tuple || throw(
+            ArgumentError("endpoint must freeze to a tuple or be nothing"),
+        )
+        frozen_endpoint === nothing || all(
+            value -> value isa Real && isfinite(value),
+            frozen_endpoint,
+        ) || throw(ArgumentError("endpoint coordinates must be finite real values"))
         return new(
             UInt64(task_id),
             UInt64(configuration_id),
@@ -248,6 +258,7 @@ struct Observation
             needs_refinement,
             score,
             Int(oracle_work),
+            frozen_endpoint,
             diagnostic === nothing ? nothing : String(diagnostic),
         )
     end
