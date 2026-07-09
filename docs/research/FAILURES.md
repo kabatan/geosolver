@@ -2,7 +2,7 @@
 
 The Miss Analyzer reports the first failed checkpoint in this chain:
 
-`truth -> sample -> capture -> local solve -> canonical residual -> domain -> guard -> branch -> archive -> scheduler -> high precision -> configuration certificate -> target identity proof -> output deduplication`
+`truth -> reference/plugin semantics -> compilation -> sample -> capture -> local solve -> canonical residual -> domain -> guard -> branch -> archive -> scheduler -> high precision -> configuration certificate -> target identity proof -> output deduplication`
 
 | ID | Failure |
 |---|---|
@@ -24,8 +24,8 @@ The Miss Analyzer reports the first failed checkpoint in this chain:
 | F15 | Final target deduplication/output failure |
 | F16 | Adaptive-unbounded shell coverage failure |
 | F17 | Seed, thread, precision or machine nondeterminism |
+| F18 | Compiler, screening or coordination overhead erases the claimed same-budget gain |
 
 No case-specific repair is implemented before a minimal reproduction, a
 parameterized failure family, a counterexample family and a counterfactual trace
 identify the responsible checkpoint.
-

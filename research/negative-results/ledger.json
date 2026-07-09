@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0.0",
+  "entries": [
+    {
+      "id": "NEG-001",
+      "title": "Residual-only start selection is not a safe discovery policy",
+      "evidence_state": "prior_unreproduced",
+      "source_evidence_ids": ["EVID-01"],
+      "claim_not_supported": "The smallest screening residuals reliably identify all important local-solver basins.",
+      "observed_break_condition": "A true basin can have unremarkable residuals away from its root while a boundary or nonzero local minimum has a very small residual.",
+      "current_decision": "Keep residual-only hard selection as a one-time negative control and forbid it as a production default.",
+      "reopen_gate": "A preregistered family-disjoint study must recover close and narrow basins without hard discard and pass the standard promotion gate."
+    },
+    {
+      "id": "NEG-002",
+      "title": "Hard APOSMM-like suppression can erase close roots",
+      "evidence_state": "prior_unreproduced",
+      "source_evidence_ids": ["EVID-03"],
+      "claim_not_supported": "Distance and value tests derived for separated minima safely suppress local launches in all-root geometry search.",
+      "observed_break_condition": "Close roots and several configurations sharing a target violate the separation intuition behind aggressive basin suppression.",
+      "current_decision": "Exclude hard suppression from M0-M4 and preserve an all-launch IID control plus a nonvanishing independent lane.",
+      "reopen_gate": "A soft emitter must pass close-root counterexamples and may not permanently discard starts."
+    },
+    {
+      "id": "NEG-003",
+      "title": "Naive homotopy and lifting are not general default improvements",
+      "evidence_state": "prior_unreproduced",
+      "source_evidence_ids": ["EVID-07"],
+      "claim_not_supported": "Adding a configuration homotopy or lifting every construction improves generic target recovery.",
+      "observed_break_condition": "Additional paths or variables can preserve the same basins, add conditioning cost and fail to repair strict-boundary attraction.",
+      "current_decision": "Reserve both mechanisms for a diagnosed failure family after the compiler/local baseline is stable.",
+      "reopen_gate": "A card must identify an applicability predicate and outperform the nested direct control on three unrelated families."
+    },
+    {
+      "id": "NEG-004",
+      "title": "Barrier proximity is not proof of strict-guard validity",
+      "evidence_state": "prior_unreproduced",
+      "source_evidence_ids": ["EVID-07", "EVID-08"],
+      "claim_not_supported": "A penalty or barrier prevents invalid boundary-limit values from being reported as answers.",
+      "observed_break_condition": "Optimization can converge arbitrarily near a strict invalid boundary and produce a stable-looking target limit.",
+      "current_decision": "Keep guard semantics and uncertainty separate from residual minimization; M0-M4 candidates are not public validated answers.",
+      "reopen_gate": "Only a guard-aware experiment with canonical and validated sign separation may promote a production mechanism."
+    },
+    {
+      "id": "NEG-005",
+      "title": "Dynamic expression evaluation is not a production kernel",
+      "evidence_state": "prior_unreproduced",
+      "source_evidence_ids": ["EVID-09", "EVID-11"],
+      "claim_not_supported": "A general dynamic evaluator is fast and constrained enough for repeated numerical oracle calls.",
+      "observed_break_condition": "Repeated name lookup, object construction and dynamic execution dominate cheap geometry arithmetic and complicate semantic control.",
+      "current_decision": "Use a clear reference interpreter and compare typed-plan/runtime-generated kernels with no input-supplied executable code.",
+      "reopen_gate": "No reopen is planned; any alternative must still satisfy the no-eval architecture invariant and compiler semantic gate."
+    }
+  ]
+}
