@@ -1,9 +1,11 @@
-"""Deterministic JSON encoding used for protocol identities."""
+"""RFC 8785 JSON Canonicalization Scheme encoding for protocol identities."""
 
 from __future__ import annotations
 
 import hashlib
-import json
+from typing import Any, cast
+
+import rfc8785
 
 
 class CanonicalJsonError(ValueError):
@@ -11,29 +13,23 @@ class CanonicalJsonError(ValueError):
 
 
 def canonical_json(value: object) -> str:
-    """Encode *value* with stable object ordering and no insignificant whitespace.
+    """Encode *value* as RFC 8785 JCS text.
 
-    The protocol hash is over these UTF-8 bytes. A consumer should hash the
-    received canonical bytes rather than parse and re-serialize floating-point
-    values in another language.
+    JCS fixes object ordering, string escaping and IEEE-754 number rendering.
+    Integers outside the interoperable binary64 domain must travel as canonical
+    decimal strings in fields whose schema explicitly allows them.
     """
 
-    try:
-        return json.dumps(
-            value,
-            allow_nan=False,
-            ensure_ascii=False,
-            separators=(",", ":"),
-            sort_keys=True,
-        )
-    except (TypeError, ValueError) as exc:
-        raise CanonicalJsonError(str(exc)) from exc
+    return canonical_bytes(value).decode("utf-8")
 
 
 def canonical_bytes(value: object) -> bytes:
     """Return the UTF-8 canonical representation of *value*."""
 
-    return canonical_json(value).encode("utf-8")
+    try:
+        return bytes(rfc8785.dumps(cast(Any, value)))
+    except (TypeError, ValueError, rfc8785.CanonicalizationError) as exc:
+        raise CanonicalJsonError(str(exc)) from exc
 
 
 def canonical_hash(value: object) -> str:

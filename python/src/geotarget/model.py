@@ -41,6 +41,8 @@ class PluginLock:
         plugin_id(self.plugin_id)
         semver(self.version)
         semver(self.core_abi, field="core_abi")
+        if self.version == "0.0.0" or self.core_abi == "0.0.0":
+            raise ModelError("plugin version and core ABI 0.0.0 are reserved")
         sha256_id(self.content_hash)
 
     def to_dict(self) -> dict[str, object]:
@@ -272,6 +274,8 @@ class ProblemSpecV1:
         plugin_ids = [item.plugin_id for item in self.plugin_locks]
         if len(plugin_ids) != len(set(plugin_ids)):
             raise ModelError("duplicate plugin lock")
+        if plugin_ids != sorted(plugin_ids):
+            raise ModelError("plugin locks must be sorted by plugin_id")
         variable_ids = [item.id for item in self.variables]
         if len(variable_ids) != len(set(variable_ids)):
             raise ModelError("duplicate variable id")

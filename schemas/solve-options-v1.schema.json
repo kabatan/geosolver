@@ -8,7 +8,12 @@
   "properties": {
     "schema_version": {"const": "geotarget.solve-options/v1"},
     "wall_time_seconds": {"type": "number", "exclusiveMinimum": 0},
-    "seed": {"type": "integer", "minimum": 0, "maximum": 18446744073709551615},
+    "seed": {
+      "oneOf": [
+        {"type": "integer", "minimum": 0, "maximum": 9007199254740991},
+        {"type": "string", "pattern": "^(0|[1-9][0-9]{0,19})$"}
+      ]
+    },
     "preset": {
       "type": "string",
       "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$"
@@ -18,13 +23,10 @@
     "checkpoint": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["path", "problem_hash", "plugin_lock_hash", "policy_hash", "environment_hash"],
+      "required": ["path", "environment_lock"],
       "properties": {
         "path": {"type": "string", "minLength": 1},
-        "problem_hash": {"$ref": "#/$defs/sha256"},
-        "plugin_lock_hash": {"$ref": "#/$defs/sha256"},
-        "policy_hash": {"$ref": "#/$defs/sha256"},
-        "environment_hash": {"$ref": "#/$defs/sha256"}
+        "environment_lock": {"$ref": "#/$defs/environmentLock"}
       }
     }
   },
@@ -32,6 +34,36 @@
     "sha256": {
       "type": "string",
       "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "pluginId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[A-Za-z_][A-Za-z0-9_.-]*$"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "pluginLock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plugin_id", "version", "core_abi", "content_hash"],
+      "properties": {
+        "plugin_id": {"$ref": "#/$defs/pluginId"},
+        "version": {"$ref": "#/$defs/semver"},
+        "core_abi": {"$ref": "#/$defs/semver"},
+        "content_hash": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "environmentLock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["problem_hash", "plugin_locks", "policy_hash", "environment_hash"],
+      "properties": {
+        "problem_hash": {"$ref": "#/$defs/sha256"},
+        "plugin_locks": {"type": "array", "items": {"$ref": "#/$defs/pluginLock"}},
+        "policy_hash": {"$ref": "#/$defs/sha256"},
+        "environment_hash": {"$ref": "#/$defs/sha256"}
+      }
     }
   }
 }

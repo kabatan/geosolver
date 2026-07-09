@@ -11,7 +11,8 @@
     "search_status",
     "target_image_status",
     "coverage",
-    "resume_identity"
+    "environment_lock",
+    "evidence_log"
   ],
   "properties": {
     "schema_version": {"const": "geotarget.solve-result/v1"},
@@ -37,7 +38,8 @@
       ]
     },
     "coverage": {"$ref": "#/$defs/coverage"},
-    "resume_identity": {"$ref": "#/$defs/resumeIdentity"}
+    "environment_lock": {"$ref": "#/$defs/environmentLock"},
+    "evidence_log": {"$ref": "#/$defs/evidenceLog"}
   },
   "allOf": [
     {
@@ -67,7 +69,11 @@
     "numericValue": {
       "oneOf": [
         {"type": "number"},
-        {"type": "string", "minLength": 1, "maxLength": 4096}
+        {
+          "type": "string",
+          "pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]*[1-9])?$",
+          "maxLength": 4096
+        }
       ]
     },
     "integerString": {"type": "string", "pattern": "^(0|-?[1-9][0-9]*)$"},
@@ -123,8 +129,9 @@
     "targetCertificate": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["identity_hash", "artifact"],
+      "required": ["problem_hash", "identity_hash", "artifact"],
       "properties": {
+        "problem_hash": {"$ref": "#/$defs/sha256"},
         "identity_hash": {"$ref": "#/$defs/sha256"},
         "artifact": {"$ref": "#/$defs/certificateArtifact"}
       }
@@ -164,7 +171,7 @@
       ],
       "properties": {
         "identity": {"$ref": "#/$defs/algebraicIdentity"},
-        "approximation": {"type": "number"},
+        "approximation": {"$ref": "#/$defs/numericValue"},
         "branch_signature": {
           "type": "array",
           "items": {"$ref": "#/$defs/branchDecision"}
@@ -176,18 +183,58 @@
     "validationEvidence": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["method", "precision_bits", "strict_guards_separated", "artifact"],
+      "required": [
+        "problem_hash",
+        "configuration_hash",
+        "method",
+        "precision_bits",
+        "independent",
+        "artifact"
+      ],
       "properties": {
+        "problem_hash": {"$ref": "#/$defs/sha256"},
+        "configuration_hash": {"$ref": "#/$defs/sha256"},
         "method": {"$ref": "#/$defs/stableId"},
         "precision_bits": {"type": "integer", "minimum": 53},
-        "strict_guards_separated": {"const": true},
+        "independent": {"const": true},
         "artifact": {"$ref": "#/$defs/certificateArtifact"}
       }
+    },
+    "guardEnclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node", "enclosure", "strict"],
+      "properties": {
+        "node": {"$ref": "#/$defs/stableId"},
+        "enclosure": {"$ref": "#/$defs/numericEnclosure"},
+        "strict": {"type": "boolean"}
+      }
+    },
+    "exactFailure": {
+      "enum": [
+        "capability_missing",
+        "non_algebraic",
+        "recognition_failed",
+        "configuration_certificate_failed",
+        "target_certificate_failed",
+        "guard_not_separated",
+        "singular",
+        "budget_exhausted",
+        "unsupported"
+      ]
     },
     "provisionalAnswer": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["target", "canonical_residual_bound", "branch_signature", "validation"],
+      "required": [
+        "target",
+        "canonical_residual_bound",
+        "branch_signature",
+        "guard_enclosures",
+        "validation",
+        "exact_failure",
+        "exact_failure_detail"
+      ],
       "properties": {
         "target": {"$ref": "#/$defs/numericEnclosure"},
         "canonical_residual_bound": {"$ref": "#/$defs/numericValue"},
@@ -195,7 +242,13 @@
           "type": "array",
           "items": {"$ref": "#/$defs/branchDecision"}
         },
-        "validation": {"$ref": "#/$defs/validationEvidence"}
+        "guard_enclosures": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/guardEnclosure"}
+        },
+        "validation": {"$ref": "#/$defs/validationEvidence"},
+        "exact_failure": {"$ref": "#/$defs/exactFailure"},
+        "exact_failure_detail": {"type": "string"}
       }
     },
     "coverage": {
@@ -233,15 +286,24 @@
         "content_hash": {"$ref": "#/$defs/sha256"}
       }
     },
-    "resumeIdentity": {
+    "environmentLock": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["graph_hash", "plugin_locks", "policy_hash", "environment_hash"],
+      "required": ["problem_hash", "plugin_locks", "policy_hash", "environment_hash"],
       "properties": {
-        "graph_hash": {"$ref": "#/$defs/sha256"},
+        "problem_hash": {"$ref": "#/$defs/sha256"},
         "plugin_locks": {"type": "array", "items": {"$ref": "#/$defs/pluginLock"}},
         "policy_hash": {"$ref": "#/$defs/sha256"},
         "environment_hash": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "evidenceLog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["content_hash", "location"],
+      "properties": {
+        "content_hash": {"$ref": "#/$defs/sha256"},
+        "location": {"type": "string", "pattern": ".*\\S.*"}
       }
     }
   }

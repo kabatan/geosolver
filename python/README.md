@@ -9,3 +9,7 @@ Every operation is a plugin-qualified open-world ID such as
 `550e8400-e29b-41d4-a716-446655440000/example.geometry::intersect`. The `validate` CLI checks both JSON Schema and
 graph-wide reference/plugin invariants. Julia execution remains explicitly
 unavailable until the application transport is implemented.
+
+Content identities are SHA-256 digests of RFC 8785 JCS bytes. This is a
+cross-language wire contract, not an implementation-specific `json.dumps`
+ordering convention.

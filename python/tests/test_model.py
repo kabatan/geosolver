@@ -8,11 +8,13 @@ from hypothesis import given
 from hypothesis import strategies as st
 
 from geotarget import (
+    CanonicalJsonError,
     ModelError,
     PluginLock,
     ProblemBuilder,
     ProblemSpecV1,
     canonical_hash,
+    canonical_json,
     validate_document,
 )
 
@@ -109,3 +111,19 @@ def test_duplicate_ids_and_missing_target_are_rejected() -> None:
         builder.literal(1, type_id=f"{PLUGIN_ID}::Real", node_id="x")
     with pytest.raises(ModelError, match=r"target\(\)"):
         builder.build()
+
+
+def test_reserved_plugin_versions_and_non_jcs_numbers_are_rejected() -> None:
+    with pytest.raises(ModelError, match=r"0\.0\.0"):
+        PluginLock(PLUGIN_ID, "0.0.0", "1.0.0", HASH)
+    with pytest.raises(CanonicalJsonError):
+        canonical_hash({"unsafe_integer": 1 << 53})
+
+
+def test_rfc_8785_number_and_object_canonicalization() -> None:
+    value = {
+        "unicode": "Euro:\u20ac",
+        "numbers": [333333333.33333329, 1e30, 4.5, 0.002, 1e-27, -0.0],
+    }
+    expected = '{"numbers":[333333333.3333333,1e+30,4.5,0.002,1e-27,0],"unicode":"Euro:\u20ac"}'
+    assert canonical_json(value) == expected
