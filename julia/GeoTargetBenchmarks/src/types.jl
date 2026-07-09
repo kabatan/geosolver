@@ -214,8 +214,20 @@ function DirectAnalyticProblem(
     sort(represented) == collect(1:size(configurations, 2)) ||
         throw(ArgumentError("every Gold configuration must belong to exactly one target"))
 
+    target_material = zeros(3 + size(configurations, 2), length(targets))
+    for (column, entry) in enumerate(targets)
+        lower_target, upper_target = target_interval(entry)
+        target_material[1, column] = lower_target
+        target_material[2, column] = upper_target
+        target_material[3, column] = entry isa ExactGoldTarget ? 1.0 : 0.0
+        for configuration in entry.configurations
+            target_material[3 + configuration, column] = 1.0
+        end
+    end
+
     artifacts = MaterializedArtifact[
         MaterializedArtifact(:gold_configurations, configurations),
+        MaterializedArtifact(:gold_targets, target_material),
         MaterializedArtifact(:saved_starts, starts),
         MaterializedArtifact(:bounds, hcat(lower, upper)),
         MaterializedArtifact(:scales, reshape(vcat(xscale, rscale), :, 1)),

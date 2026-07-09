@@ -41,7 +41,9 @@ end
 
 """Detect accidental mutation or seed-only/nonmaterialized replay records."""
 function verify_replay_material(problem::DirectAnalyticProblem)
-    required = Set((:gold_configurations, :saved_starts, :bounds, :scales, :parameters))
+    required = Set(
+        (:gold_configurations, :gold_targets, :saved_starts, :bounds, :scales, :parameters),
+    )
     names = Set(entry.name for entry in problem.artifacts)
     issubset(required, names) || return false
     for artifact in problem.artifacts
