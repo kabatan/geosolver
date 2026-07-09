@@ -30,6 +30,8 @@ A seed by itself is therefore never accepted as a replay record.
 | `RedundantOverdeterminedParams` | Redundancy and near-dependency perturbation |
 | `TangentCircleLineParams` | Closed-form root separation and tangency conditioning |
 | `MultiRootWarpedParams` | Dimension, root count/separation, warp, row condition, and target collisions |
+| `StrictGuardBoundaryParams` | Strict margins that are well separated, positive near zero, or exactly on the excluded boundary |
+| `OpaqueTranscendentalParams` | C0-only Float64 callbacks with loops, control flow, and transcendental calls |
 
 The compact D2 seed artifact is
 `../../benchmarks/generated/m0-analytic-seed-manifest.json`. Regenerate its
@@ -40,9 +42,12 @@ julia --startup-file=no --project=julia/GeoTargetBenchmarks `
   julia/GeoTargetBenchmarks/scripts/render_m0_seed_manifest.jl
 ```
 
-The manifest intentionally claims only S1, S2, S3, S5, S7, and S8. These
-analytic families do not establish S4 strict-boundary/guard coverage or S6
-opaque/plugin coverage.
+The manifest contains twenty fixed-seed S4 instances and twenty fixed-seed S6
+instances in addition to the original analytic controls. Invalid strict-boundary
+roots are materialized but excluded from Gold targets, and the opaque family
+materializes its C0-only capability contract. The resulting development
+manifest exercises all S1-S8 critical strata without turning diagnostic cases
+into production support claims.
 
 ## Verification
 

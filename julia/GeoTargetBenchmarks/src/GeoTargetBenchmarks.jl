@@ -16,6 +16,8 @@ include("near_rank_deficient.jl")
 include("redundant_overdetermined.jl")
 include("tangent_circle_line.jl")
 include("multiroot_warped.jl")
+include("strict_guard_boundary.jl")
+include("opaque_transcendental.jl")
 
 export PACKAGE_VERSION,
     REPLAY_FORMAT_VERSION,
@@ -38,6 +40,10 @@ export PACKAGE_VERSION,
     NearRankDeficientParams,
     RedundantOverdeterminedParams,
     TangentCircleLineParams,
-    MultiRootWarpedParams
+    MultiRootWarpedParams,
+    StrictGuardBoundaryParams,
+    OpaqueTranscendentalParams,
+    strict_guard_margin,
+    strict_guard_valid
 
 end

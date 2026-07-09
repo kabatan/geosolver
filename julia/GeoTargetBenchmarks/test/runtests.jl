@@ -35,7 +35,6 @@ function central_difference_jacobian(problem, input)
 end
 
 function test_all_gold(problem)
-    @test has_analytic_jacobian(problem)
     @test verify_replay_material(problem)
     @test size(saved_starts(problem)) == (problem.dimension, problem.parameters.start_count)
     @test all(problem.lower_bounds .<= problem.saved_starts .<= problem.upper_bounds)
@@ -63,10 +62,14 @@ function test_all_gold(problem)
         normalized = residual ./ problem.residual_scales
         @test norm(normalized, Inf) <= 2e-11
 
-        analytic = evaluate_jacobian(problem, root)
-        finite_difference = central_difference_jacobian(problem, root)
-        @test norm(analytic - finite_difference, Inf) <=
-            2e-5 * max(1.0, norm(analytic, Inf))
+        if has_analytic_jacobian(problem)
+            analytic = evaluate_jacobian(problem, root)
+            finite_difference = central_difference_jacobian(problem, root)
+            @test norm(analytic - finite_difference, Inf) <=
+                2e-5 * max(1.0, norm(analytic, Inf))
+        else
+            @test problem.metadata[:declared_capabilities] == (:C0,)
+        end
     end
 end
 
@@ -136,8 +139,129 @@ end
                 start_seed=1207,
             ),
         ),
+        generate(
+            StrictGuardBoundaryParams(
+                boundary_case=:near_boundary,
+                guard_margin=1.0e-10,
+                instance_seed=208,
+                start_seed=1208,
+            ),
+        ),
+        generate(
+            OpaqueTranscendentalParams(
+                root_count=5,
+                loop_count=16,
+                phase=0.1,
+                mixing=0.2,
+                instance_seed=209,
+                start_seed=1209,
+            ),
+        ),
     ]
     foreach(test_all_gold, problems)
+end
+
+@testset "S4 strict guard boundary truth" begin
+    problems = s4_seed_problems()
+    @test length(problems) == 20
+    @test Set(problem.metadata[:boundary_case] for problem in problems) ==
+        Set((:well_separated, :near_boundary, :on_boundary))
+    for problem in problems
+        test_all_gold(problem)
+        @test problem.strata == (:S4,)
+        @test problem.metadata[:strict_guard] === true
+        candidates = only(
+            artifact.values for artifact in problem.artifacts if
+            artifact.name === :candidate_configurations
+        )
+        margins = vec(
+            only(
+                artifact.values for artifact in problem.artifacts if
+                artifact.name === :candidate_guard_margins
+            ),
+        )
+        validity = Bool.(
+            vec(
+                only(
+                    artifact.values for artifact in problem.artifacts if
+                    artifact.name === :candidate_strict_validity
+                ),
+            ),
+        )
+        @test validity == (margins .> 0)
+        @test margins ≈ [strict_guard_margin(problem, candidate) for candidate in eachcol(candidates)]
+        @test validity == [strict_guard_valid(problem, candidate) for candidate in eachcol(candidates)]
+        for candidate in eachcol(candidates)
+            @test norm(evaluate_residual(problem, candidate), Inf) <= 2e-15
+        end
+        expected = sort([
+            problem.target(candidate) for candidate in eachcol(candidates) if
+            strict_guard_valid(problem, candidate)
+        ])
+        @test expected == sort(problem.metadata[:expected_target_values])
+        @test expected == sort(numeric_target.(problem.gold_targets))
+        if problem.parameters.boundary_case === :on_boundary
+            @test margins[1] == 0
+            @test !validity[1]
+            @test expected == [2.0]
+        elseif problem.parameters.boundary_case === :near_boundary
+            @test 0 < margins[1] <= 1.0e-6
+            @test validity[1]
+            @test expected == [1.0, 2.0]
+        else
+            @test margins[1] >= 0.25
+            @test all(validity)
+        end
+    end
+end
+
+@testset "S6 C0-only opaque transcendental truth" begin
+    problems = s6_seed_problems()
+    @test length(problems) == 20
+    for problem in problems
+        test_all_gold(problem)
+        @test problem.strata == (:S6,)
+        @test !has_analytic_jacobian(problem)
+        @test problem.metadata[:declared_capabilities] == (:C0,)
+        @test problem.metadata[:opaque_callback] === true
+        @test problem.metadata[:capability_order] == (:C0, :C1, :C2, :C3V, :C3A)
+        @test problem.metadata[:plugin_high_precision_available] === false
+        @test problem.metadata[:plugin_validated_available] === false
+        @test problem.metadata[:plugin_algebraic_available] === false
+        capability = vec(
+            only(
+                artifact.values for artifact in problem.artifacts if
+                artifact.name === :capability_contract
+            ),
+        )
+        @test capability == [1.0, 0.0, 0.0, 0.0, 0.0]
+        @test all(target -> target isa ValidatedGoldTarget, problem.gold_targets)
+        @test length(problem.gold_targets) == problem.parameters.root_count
+        @test all(
+            target_interval(target)[1] <= expected <= target_interval(target)[2] for
+            (target, expected) in zip(
+                problem.gold_targets,
+                problem.metadata[:expected_target_values],
+            )
+        )
+        root = problem.gold_configurations[:, 1]
+        @test_throws MethodError problem.residual!(zeros(BigFloat, 2), BigFloat.(root))
+    end
+end
+
+@testset "S4/S6 fixed-seed replay checksums" begin
+    first = vcat(s4_seed_problems(), s6_seed_problems())
+    second = vcat(s4_seed_problems(), s6_seed_problems())
+    @test length(first) == 40
+    @test replay_checksum.(first) == replay_checksum.(second)
+    @test [problem.saved_starts for problem in first] ==
+        [problem.saved_starts for problem in second]
+    @test all(verify_replay_material, first)
+    @test all(
+        artifact.sha256 == artifact_checksum(artifact.name, artifact.values) for
+        problem in first for artifact in problem.artifacts
+    )
+    @test length(unique(replay_checksum.(first))) == 40
 end
 
 @testset "distinct target values versus duplicate configurations" begin
@@ -287,6 +411,16 @@ end
     @test_throws ArgumentError MultiRootWarpedParams(root_count=13)
     @test_throws ArgumentError MultiRootWarpedParams(target_map=:unknown)
     @test_throws ArgumentError RedundantOverdeterminedParams(dependency_error=-1)
+    @test_throws ArgumentError StrictGuardBoundaryParams(
+        boundary_case=:on_boundary,
+        guard_margin=eps(),
+    )
+    @test_throws ArgumentError StrictGuardBoundaryParams(
+        boundary_case=:near_boundary,
+        guard_margin=0,
+    )
+    @test_throws ArgumentError OpaqueTranscendentalParams(root_count=1)
+    @test_throws ArgumentError OpaqueTranscendentalParams(mixing=0)
 end
 
 @testset "generated M0 seed manifest is replayable and scoped" begin
@@ -299,10 +433,13 @@ end
     )
     generated = render_m0_seed_manifest()
     @test read(manifest_path, String) == generated
-    @test occursin("\"not_claimed_strata\":[\"S4\",\"S6\"]", generated)
-    @test !occursin(
+    @test occursin(
         "\"covered_strata\":[\"S1\",\"S2\",\"S3\",\"S4\",\"S5\",\"S6\",\"S7\",\"S8\"]",
         generated,
     )
-    @test length(m0_seed_problems()) == 7
+    @test occursin("\"not_claimed_strata\":[]", generated)
+    @test length(m0_seed_problems()) == 47
+    @test length(findall("\"family_id\":\"STRICT-GUARD-BOUNDARY\"", generated)) == 20
+    @test length(findall("\"family_id\":\"OPAQUE-TRANSCENDENTAL-C0\"", generated)) == 20
+    @test occursin("\"case_id\":\"M0-ANALYTIC-047\"", generated)
 end

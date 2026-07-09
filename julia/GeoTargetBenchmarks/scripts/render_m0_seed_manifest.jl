@@ -66,8 +66,12 @@ function parameter_object(parameters)
     )
 end
 
+const _S4_CASE_ORDER = (:well_separated, :near_boundary, :on_boundary)
+const _S6_LOOP_COUNTS = (4, 8, 16, 32, 64)
+const _S6_MIXING = (0.05, 0.1, 0.2)
+
 function m0_seed_problems()
-    return DirectAnalyticProblem[
+    problems = DirectAnalyticProblem[
         generate(
             ScaleLadderParams(
                 dimension=4,
@@ -140,6 +144,53 @@ function m0_seed_problems()
                 start_count=32,
             ),
         ),
+    ]
+    append!(problems, s4_seed_problems())
+    append!(problems, s6_seed_problems())
+    return problems
+end
+
+function s4_seed_problems()
+    problems = DirectAnalyticProblem[]
+    for index in 1:20
+        case_index = mod1(index, 3)
+        boundary_case = _S4_CASE_ORDER[case_index]
+        margin = if boundary_case === :well_separated
+            0.25 + 0.05 * mod(index - 1, 5)
+        elseif boundary_case === :near_boundary
+            10.0^(-6 - mod(index - 1, 6))
+        else
+            0.0
+        end
+        push!(
+            problems,
+            generate(
+                StrictGuardBoundaryParams(
+                    boundary_case=boundary_case,
+                    guard_margin=margin,
+                    instance_seed=800 + index,
+                    start_seed=1800 + index,
+                    start_count=32,
+                ),
+            ),
+        )
+    end
+    return problems
+end
+
+function s6_seed_problems()
+    return DirectAnalyticProblem[
+        generate(
+            OpaqueTranscendentalParams(
+                root_count=2 + mod(index - 1, 4),
+                loop_count=_S6_LOOP_COUNTS[mod1(index, length(_S6_LOOP_COUNTS))],
+                phase=-0.2 + 0.02 * (index - 1),
+                mixing=_S6_MIXING[mod1(index, length(_S6_MIXING))],
+                instance_seed=900 + index,
+                start_seed=1900 + index,
+                start_count=32,
+            ),
+        ) for index in 1:20
     ]
 end
 
