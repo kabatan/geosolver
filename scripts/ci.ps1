@@ -30,6 +30,12 @@ if ($LASTEXITCODE -ne 0) { throw "Julia instantiate failed." }
     (Join-Path $Root "julia\integration\runtests.jl")
 if ($LASTEXITCODE -ne 0) { throw "Julia tests failed." }
 
+$BenchmarkProject = Join-Path $Root "julia\GeoTargetBenchmarks"
+& julia +1.12.6 --startup-file=no --history-file=no `
+    "--project=$BenchmarkProject" `
+    -e "using Pkg; Pkg.instantiate(); Pkg.test()"
+if ($LASTEXITCODE -ne 0) { throw "Analytic benchmark tests failed." }
+
 & uv sync --project (Join-Path $Root "python") --frozen --group dev
 if ($LASTEXITCODE -ne 0) { throw "Python environment sync failed." }
 & uv run --project (Join-Path $Root "python") ruff format --check (Join-Path $Root "python")
