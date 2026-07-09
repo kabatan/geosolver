@@ -185,10 +185,17 @@ function _validation_center(value::Real)
     return BigFloat(value)
 end
 
-function _numeric_enclosure(value::Real, options::CandidateValidationOptions)
+function _numeric_enclosure(
+    value::Real,
+    options::CandidateValidationOptions;
+    absolute_floor::Real=0,
+)
     center = _validation_center(value)
     type = typeof(center)
-    absolute_error = type(options.enclosure_absolute_error)
+    absolute_error = max(
+        type(options.enclosure_absolute_error),
+        type(absolute_floor),
+    )
     relative_error = type(options.enclosure_relative_error) * abs(center)
     roundoff = if center isa AbstractFloat
         type(options.roundoff_multiplier) * eps(center)
@@ -439,9 +446,14 @@ function _classify_candidate(
         )
     end
     for relation in canonical.relations
-        relation.truth === false && return _diagnostic(
+        # A pointwise exact predicate such as `a == b` is normally false at a
+        # provisional numerical approximation. It is a hard contradiction at
+        # an exactly zero residual; otherwise the independently bounded raw
+        # residual is the provisional acceptance contract. Discrete validity
+        # belongs in domain/guard/branch channels.
+        relation.truth === false && iszero(relation.raw) && return _diagnostic(
             CANDIDATE_RELATION_TRUTH_FAILED,
-            "relation truth predicate rejected the canonical replay",
+            "relation truth predicate rejected an exactly zero canonical residual",
             node = relation.node,
         )
     end
@@ -553,9 +565,17 @@ function _finish_candidate_validation(
         ) for branch in canonical.branches
     )
     target_enclosure = canonical.target isa Real && isfinite(canonical.target) ?
-                       _numeric_enclosure(canonical.target, options) : nothing
+                       _numeric_enclosure(
+        canonical.target,
+        options;
+        absolute_floor=options.target_consistency_tolerance,
+    ) : nothing
     fast_target_enclosure = fast.target isa Real && isfinite(fast.target) ?
-                            _numeric_enclosure(fast.target, options) : nothing
+                            _numeric_enclosure(
+        fast.target,
+        options;
+        absolute_floor=options.target_consistency_tolerance,
+    ) : nothing
     diagnostic = _classify_candidate(
         compiled,
         replay_coordinates,

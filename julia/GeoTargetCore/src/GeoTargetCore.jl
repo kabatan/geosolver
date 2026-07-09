@@ -20,6 +20,7 @@ include("candidate_store.jl")
 include("search_policy.jl")
 include("search_loop.jl")
 include("proposal_engine.jl")
+include("solver.jl")
 
 """Return the stable plugin ABI version understood by this Core build."""
 abi_version() = CORE_ABI_VERSION
@@ -92,6 +93,15 @@ export CORE_ABI_VERSION,
     ProposalEngineError,
     ProposalEngine,
     emit_proposal,
+    SOLVE_API_VERSION,
+    SolveConfigurationError,
+    SolveAnswerLevel,
+    ANSWER_VALIDATED,
+    ANSWER_EXACT_IF_AVAILABLE,
+    SolveOptions,
+    SolveExecution,
+    solve_execution,
+    solve,
     PROBLEM_WIRE_VERSION,
     PLUGIN_WIRE_VERSION,
     SOLVE_RESULT_WIRE_VERSION,
