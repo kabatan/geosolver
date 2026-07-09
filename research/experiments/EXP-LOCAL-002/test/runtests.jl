@@ -2,7 +2,9 @@ using JSON3
 using Test
 
 include(joinpath(@__DIR__, "..", "src", "ExperimentLocal002.jl"))
+include(joinpath(@__DIR__, "..", "src", "DevelopmentLocal002.jl"))
 using .ExperimentLocal002
+using .DevelopmentLocal002
 
 @testset "EXP-LOCAL-002 frozen pilot material" begin
     @test string(Base.pkgversion(ExperimentLocal002.NonlinearSolve)) == "4.20.2"
@@ -25,6 +27,28 @@ using .ExperimentLocal002
             @test validation["accepted"]
         end
     end
+end
+
+@testset "EXP-LOCAL-002 frozen development grid" begin
+    problems = development_problems()
+    @test validate_development_grid(problems)
+    @test length(problems) == DEVELOPMENT_INSTANCE_COUNT == 48
+    @test all(problem -> size(problem.saved_starts, 2) == DEVELOPMENT_START_COUNT, problems)
+    @test Set(problem.dimension for problem in problems) >= Set((2, 4, 8, 16))
+    family_counts = Dict(
+        family => count(problem -> problem.family_id == family, problems) for
+        family in DEVELOPMENT_FAMILIES
+    )
+    @test all(==(6), values(family_counts))
+    for stratum in (Symbol("S$index") for index in 1:8)
+        @test count(problem -> stratum in problem.strata, problems) >= 6
+    end
+    @test validate_development_input_manifest()
+    manifest = development_input_manifest(problems)
+    @test manifest["thresholds"]["gold_configuration_normalized"] ==
+        GOLD_CONFIGURATION_TOLERANCE == 1.0e-6
+    @test manifest["thresholds"]["gold_target"] == GOLD_TARGET_TOLERANCE == 1.0e-6
+    @test Tuple(manifest["variants"]) == VARIANTS
 end
 
 @testset "independent truth gate rejects the excluded S4 root" begin

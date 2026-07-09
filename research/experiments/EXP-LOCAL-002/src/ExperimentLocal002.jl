@@ -206,7 +206,7 @@ function _external_attempt(
     caught = nothing
     elapsed = @elapsed begin
         try
-            solution = solve(
+            solution = NonlinearSolve.solve(
                 least_squares_problem,
                 _external_algorithm(variant);
                 abstol=tolerance,
