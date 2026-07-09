@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate GeoTarget M0 research artifacts with Python's standard library."""
+"""Validate GeoTarget research artifacts with Python's standard library."""
 
 from __future__ import annotations
 
@@ -231,9 +231,13 @@ def main() -> int:
     failure_text = FAILURES.read_text(encoding="utf-8")
     known_failures = failure_ids_from_markdown(failure_text)
     card_paths = sorted(CARD_DIR.glob("EXP-*.json"))
-    expected_cards = {"EXP-COMP-001", "EXP-LOCAL-001", "EXP-DISC-001"}
-    if {path.stem for path in card_paths} != expected_cards:
-        errors.append("experiment cards must be exactly the three M0 preregistrations")
+    required_m0_cards = {"EXP-COMP-001", "EXP-LOCAL-001", "EXP-DISC-001"}
+    missing_m0_cards = required_m0_cards - {path.stem for path in card_paths}
+    if missing_m0_cards:
+        errors.append(
+            "required M0 preregistrations are missing: "
+            + ", ".join(sorted(missing_m0_cards))
+        )
     for path in card_paths:
         card = load_json(path)
         errors.extend(f"{path}: {error}" for error in validate_instance(card, card_schema))

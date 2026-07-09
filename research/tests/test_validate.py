@@ -37,6 +37,15 @@ class SchemaSubsetTests(unittest.TestCase):
     def test_repository_artifacts_validate(self) -> None:
         self.assertEqual(VALIDATE.main(), 0)
 
+    def test_post_m0_cards_do_not_remove_frozen_preregistrations(self) -> None:
+        card_stems = {
+            path.stem for path in (VALIDATE.CARD_DIR).glob("EXP-*.json")
+        }
+        self.assertTrue(
+            {"EXP-COMP-001", "EXP-LOCAL-001", "EXP-DISC-001"}.issubset(card_stems)
+        )
+        self.assertIn("EXP-LOCAL-002", card_stems)
+
 
 if __name__ == "__main__":
     unittest.main()

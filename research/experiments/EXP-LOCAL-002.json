@@ -1,0 +1,239 @@
+{
+  "schema_version": "1.0.0",
+  "id": "EXP-LOCAL-002",
+  "title": "Rank-aware local algorithm and stopping-policy comparison",
+  "status": "preregistered",
+  "requirements": ["RES-01", "RES-02", "RES-03", "RES-04", "RES-05", "RES-06", "GOAL-01", "GOAL-02", "GOAL-04", "GOAL-05", "ARCH-07"],
+  "failure_ids": ["F2", "F3", "F5", "F6", "F9", "F12"],
+  "baseline_id": "RB0-IID-LMQR-1",
+  "objective": "Select a fixed-start local root-solving policy that increases canonical Gold-root capture on rank-deficient, tangent and warped systems without accepting low-residual nonroots or making the open plugin ABI solver-specific.",
+  "hypothesis": "A scaled trust-region dogleg route with a stricter canonical residual gate will improve difficult-root capture and oracle cost over the in-house LM-QR control, while a large robustness polyalgorithm will not justify its cold and fallback cost on regular families.",
+  "scope": {
+    "included": [
+      "bounded C0/C1 smooth square and overdetermined systems",
+      "fixed saved starts and identical residual/variable scaling",
+      "in-house LM-QR, NonlinearSolve LM, trust-region and robustness polyalgorithm controls",
+      "canonical endpoint replay and independent Gold configuration/target checks",
+      "cold compilation, warm wall time and primal-equivalent oracle work"
+    ],
+    "excluded": [
+      "start selection or discovery-policy changes",
+      "hard target-based suppression or residual deflation",
+      "singular-root certification and exact target recognition",
+      "C0-only nonsmooth promotion based only on a package return code",
+      "adding NonlinearSolve as a production dependency before the locked gate passes"
+    ]
+  },
+  "literature": [
+    {
+      "id": "LIT-NLS-PAPER",
+      "url": "https://arxiv.org/abs/2403.16341",
+      "claim": "NonlinearSolve compares unified Newton, least-squares, trust-region and quasi-Newton implementations in Julia.",
+      "assumptions": "The problem satisfies the selected algorithm interface and derivative route.",
+      "break_conditions": "A successful optimizer return is not proof of a canonical root, guard or branch."
+    },
+    {
+      "id": "LIT-NLS-NLLS",
+      "url": "https://docs.sciml.ai/NonlinearSolve/stable/solvers/nonlinear_least_squares_solvers/",
+      "claim": "The official solver guide exposes Levenberg-Marquardt, Gauss-Newton and trust-region algorithms for nonlinear least squares.",
+      "assumptions": "Residual minimization is a useful smooth local model.",
+      "break_conditions": "Positive-residual stationary points, invalid domains and unstable branch charts remain possible."
+    },
+    {
+      "id": "LIT-SINGULAR-BROYDEN",
+      "url": "https://doi.org/10.1137/0722034",
+      "claim": "Broyden iteration has local linear convergence for a stated class of roots with singular Jacobian.",
+      "assumptions": "The root and initial point satisfy the paper's special-region and singularity hypotheses.",
+      "break_conditions": "The guarantee is not global and does not establish discovery of every root."
+    },
+    {
+      "id": "LIT-NULLSPACE-NEWTON",
+      "url": "https://doi.org/10.1016/j.apnum.2004.09.029",
+      "claim": "Approximate left and right Jacobian nullspaces can form a bordered system with quadratic convergence near generalized regular singularities.",
+      "assumptions": "Reliable rank and nullspace estimates exist near an isolated singular root.",
+      "break_conditions": "Opaque derivatives, manifolds, noisy rank thresholds or nonisolated roots invalidate the route."
+    },
+    {
+      "id": "LIT-RANK-DEFICIENT-NLS",
+      "url": "https://doi.org/10.1137/090780882",
+      "claim": "Rank-deficient nonlinear least-squares accuracy can be damaged by ill-defined numerical rank and unstable truncated singular-vector selection.",
+      "assumptions": "Residual and Jacobian errors are material near a rank transition.",
+      "break_conditions": "A fixed SVD cutoff is not a universally safe repair."
+    }
+  ],
+  "controls": [
+    {
+      "id": "LXR-LMQR",
+      "role": "control",
+      "description": "Current bounds-scaled variables and declared residual scales with finite-difference LM and column-pivoted QR.",
+      "differences_from_baseline": []
+    },
+    {
+      "id": "TR-ANALYTIC",
+      "role": "lower_bound",
+      "description": "Trust-region execution with the generator's analytic Jacobian where available, used only to separate derivative error from step policy.",
+      "differences_from_baseline": ["Analytic generated Jacobian", "Trust-region step"]
+    }
+  ],
+  "candidates": [
+    {
+      "id": "NLS-LM",
+      "role": "candidate",
+      "description": "NonlinearSolve Levenberg-Marquardt with the frozen scaling, finite-difference route and canonical endpoint gate.",
+      "differences_from_baseline": ["External LM implementation", "Package termination trace"]
+    },
+    {
+      "id": "NLS-TR",
+      "role": "candidate",
+      "description": "NonlinearSolve trust-region dogleg with the frozen scaling and canonical endpoint gate.",
+      "differences_from_baseline": ["Trust-region dogleg globalization"]
+    },
+    {
+      "id": "NLS-RMN",
+      "role": "candidate",
+      "description": "NonlinearSolve RobustMultiNewton fallback sequence with all fallback work charged.",
+      "differences_from_baseline": ["Six-method robustness polyalgorithm"]
+    },
+    {
+      "id": "NLS-TR-STRICT",
+      "role": "candidate",
+      "description": "Trust-region route with the preregistered stricter internal residual threshold and unchanged independent validation.",
+      "differences_from_baseline": ["Trust-region dogleg globalization", "Stricter internal stop threshold"]
+    }
+  ],
+  "synthetic_families": [
+    {
+      "id": "LOCAL-GOLD-S1-S8",
+      "purpose": "Exercise scaling, curvature, rank loss, strict guards, tangency, opaque callbacks, multiple roots and redundancy under one truth policy.",
+      "factors": {"strata": ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"], "dimension": [2, 4, 8, 16], "conditioning": [1.0, 10000.0, 100000000.0, 1000000000000.0]},
+      "gold_source": "GeoTargetBenchmarks analytic configurations and independently materialized target truth",
+      "counterexample_for": ["retcode-only acceptance", "fixed loose residual thresholds", "one-algorithm rescue stacking"]
+    },
+    {
+      "id": "LOCAL-NEAR-RANK-TANGENT",
+      "purpose": "Resolve whether the trust-region pilot gain survives seed, dimension and conditioning changes.",
+      "factors": {"singular_value_ratio": [1.0, 0.0001, 1e-08, 1e-12], "tangent_ratio": [0.9, 0.999, 0.999999, 0.99999999]},
+      "gold_source": "Constructed SVD roots and closed-form circle-line intersections",
+      "counterexample_for": ["LM-only local control", "unmeasured rank routing"]
+    },
+    {
+      "id": "LOCAL-MULTIROOT-CLOSE",
+      "purpose": "Detect policies that converge reliably but collapse onto only the easiest target basins.",
+      "factors": {"root_count": [2, 4, 8], "minimum_separation": [0.1, 0.001, 1e-06], "condition": [1.0, 10000.0, 100000000.0]},
+      "gold_source": "Invertible analytic warp of known configurations and targets",
+      "counterexample_for": ["aggregate residual success without all-target recall"]
+    }
+  ],
+  "real_problem_policy": "Only independently audited Gold problems may affect selection; translated cases measure timing until separately audited.",
+  "design": {
+    "execution_order": [
+      "Verify exact package/environment versions and run semantic adapter tests",
+      "Run a small non-gating pilot to reject broken adapters",
+      "Execute paired development instances at every fixed-start prefix",
+      "Freeze one route and one stopping threshold after at most one tuning round",
+      "Run family-disjoint locked validation and charge cold compilation"
+    ],
+    "pairing": "All variants receive identical generated problems, saved starts, scale vectors, endpoint truth predicates and launch prefixes.",
+    "tuning_round_limit": 1,
+    "freeze_rule": "Algorithm, derivative backend, stop threshold and fallback order freeze before locked validation.",
+    "locked_validation_rule": "Inspecting a locked failure burns the family seed block and requires a generator-disjoint replacement.",
+    "development_instances": 48,
+    "locked_instances": 96,
+    "notes": [
+      "Package retcodes are diagnostic only; canonical and Gold gates decide success.",
+      "The C0 opaque family can reject an incompatible derivative route but cannot by itself justify high-assurance promotion.",
+      "A stricter residual threshold is judged by target correctness and cost, never by residual counts alone."
+    ]
+  },
+  "hyperparameters": {
+    "local_maxiters": {
+      "value": 250,
+      "status": "hypothesis",
+      "rationale": "Matches the permanent local control and bounds per-start work.",
+      "tuning_domain": [120, 250],
+      "freeze_rule": "No algorithm-specific increase during comparison."
+    },
+    "internal_residual_threshold": {
+      "value": "eps(Float64)^(2/3)",
+      "status": "hypothesis",
+      "rationale": "The pilot exposed target-inaccurate endpoints under sqrt-eps on ill-conditioned systems.",
+      "tuning_domain": ["sqrt(eps(Float64))", "eps(Float64)^(2/3)", "1e-12"],
+      "freeze_rule": "Choose once using development false-candidate and work curves."
+    },
+    "derivative_route": {
+      "value": "central-finite-difference",
+      "status": "hypothesis",
+      "rationale": "Available for the full black-box C0 development envelope.",
+      "tuning_domain": ["central-finite-difference", "forwarddiff-when-C1"],
+      "freeze_rule": "Capability routing is explicit and frozen before locked execution."
+    },
+    "fixed_starts_per_instance": {
+      "value": 32,
+      "status": "hypothesis",
+      "rationale": "Provides paired basin comparisons while keeping cold experiments tractable.",
+      "tuning_domain": [16, 32],
+      "freeze_rule": "Persist and checksum starts before executing variants."
+    }
+  },
+  "budgets": {
+    "wall_seconds": [60, 180],
+    "launch_checkpoints": [8, 16, 32],
+    "local_maxiters": 250,
+    "accounting": "Charge package load, compilation, derivative work, every residual/Jacobian call, factorization, fallback and canonical validation."
+  },
+  "seeds": {
+    "development_count": 10,
+    "locked_count": 30,
+    "generation": "Family parameters and saved starts use separate fixed seed namespaces and materialized checksums."
+  },
+  "metrics": {
+    "primary": {"id": "p_local_gold", "definition": "Fraction of fixed starts ending at a canonical valid independently matched Gold configuration and target.", "direction": "maximize"},
+    "secondary": [
+      {"id": "p_full_target_prefix", "definition": "Fraction of instances whose prefix recovers every distinct Gold target.", "direction": "maximize"},
+      {"id": "oracle_work_to_gold", "definition": "Primal-equivalent oracle work through a Gold-valid endpoint.", "direction": "minimize"},
+      {"id": "cold_and_warm_wall", "definition": "Cold first-use and warm paired local wall time reported separately.", "direction": "minimize"},
+      {"id": "target_inaccurate_residual_success", "definition": "Canonical residual-qualified endpoints outside Gold target/configuration tolerance.", "direction": "minimize"}
+    ],
+    "safety": [
+      {"id": "false_candidate_count", "definition": "Endpoints accepted despite failing canonical or independent Gold truth.", "direction": "zero_required"},
+      {"id": "budget_overrun_count", "definition": "Attempts exceeding declared iteration, evaluation or wall budgets.", "direction": "zero_required"},
+      {"id": "capability_fallback_count", "definition": "Silent derivative or numeric capability fallback events.", "direction": "zero_required"}
+    ]
+  },
+  "promotion_gate": {
+    "mode": "all",
+    "criteria": [
+      "False-candidate, budget-overrun and silent-capability-fallback counts are zero.",
+      "P_local_gold improves by at least 5 percentage points or oracle work drops by at least 20 percent at equal recall.",
+      "Near-rank and tangent strata each improve by at least 10 points or 20 percent work without a multiroot recall loss.",
+      "No unrelated regular family loses more than 2 P_local_gold points or gains more than 10 percent warm overhead.",
+      "The paired family-clustered 95 percent interval is on the improvement side in at least three unrelated families.",
+      "Cold package and compilation cost breaks even within 32 starts for problems selecting the external route."
+    ]
+  },
+  "kill_gate": {
+    "mode": "any",
+    "criteria": [
+      "Any package retcode bypasses canonical or Gold validation.",
+      "A candidate accepts more target-inaccurate low-residual endpoints than the control.",
+      "All-target recall drops by more than 2 points in close-root or tangent strata.",
+      "A robustness polyalgorithm remains within 5 percent of the simpler trust-region route after fallback work is charged.",
+      "Cold cost fails to break even within 128 starts and no critical recall gain remains.",
+      "The improvement fails to reproduce after the single declared tuning round."
+    ]
+  },
+  "safety_invariants": [
+    "No local solver return code is an answer predicate.",
+    "Every endpoint is replayed through canonical relation, domain, guard, branch and target semantics.",
+    "The fixed independent start stream is identical across variants.",
+    "Routing uses capabilities and measured numerical diagnostics, never family or problem identity.",
+    "A production dependency is added only after the locked end-to-end gate passes."
+  ],
+  "artifacts": {
+    "run_manifest_schema": "research/schemas/run-manifest.schema.json",
+    "benchmark_manifest_schema": "research/schemas/benchmark-manifest.schema.json",
+    "result_path": "research/results/EXP-LOCAL-002/summary.json",
+    "negative_result_path": "research/negative-results/ledger.json"
+  },
+  "decision": {"state": "pending", "selected_variant": null, "rationale": null, "decision_commit": null}
+}
