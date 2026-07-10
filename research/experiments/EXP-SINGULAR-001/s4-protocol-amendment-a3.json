@@ -1,0 +1,58 @@
+{
+  "schema": "geotarget.singular-s4-protocol-amendment/v1",
+  "experiment_id": "EXP-SINGULAR-001",
+  "phase": "S4-C2-NULLSPACE-TWO-STEP-development",
+  "amendment_id": "A3",
+  "status": "frozen-after-development-input-freeze-before-first-mechanism-execution",
+  "temporal_boundary": {
+    "development_input_manifest_materialized": true,
+    "development_gold_materialized": true,
+    "input_freeze_commit": "3fb7480b15dce34d618a10f532a4f1264b32640f",
+    "candidate_and_control_source_in_progress": true,
+    "candidate_or_control_executed": false,
+    "development_outcome_observed": false,
+    "gold_outcome_interpreted": false,
+    "locked_inputs_materialized": false,
+    "product_connected": false
+  },
+  "bound_parents": {
+    "a1_sha256": "30dbb6cb1a79d92f8885a164f019d30441bab36a7069cf1578492ea599af96df",
+    "a2_sha256": "b0b226656ce98a8bac58196e6fbc1563392630c40e3b8a6a18e999f5f87cd789",
+    "input_freeze_path": "research/experiments/EXP-SINGULAR-001/s4-input-freeze.json",
+    "input_freeze_sha256": "e20fa3db2c30a230a491738b45d9a5d39aaa82cc2d45a87c4fd2fe10d3903da9",
+    "input_manifest_sha256": "86dc3225544c551d9f2a8ae0e00ae445ea83f03564110be4a1696ef9bb2733c9",
+    "gold_artifact_sha256": "80def4e6bf1a53425854cbc7478d4bf003cd8f2ed270e8626420241c49835cfa"
+  },
+  "finding": {
+    "id": "S4-A3-COMMON-MODE-FINAL-CORRECTION",
+    "problem": "A1 included only radius/precision disagreements between final unapplied corrections q. If all q probes agree on one large common-mode correction, their differences can be small even though the final endpoint is not self-consistent under the frozen two-step map. The last accepted trajectory step does not dominate this quantity because the reserved ell=65 physical audit direction can differ from the last trajectory-local direction.",
+    "discovery": "Source-only implementation review; no candidate, control, development, Gold or locked outcome was executed or inspected.",
+    "risk": "The old expression could understate configuration error and its target-gradient propagation, contrary to the preregistered requirement that evidence include the final correction."
+  },
+  "override": {
+    "candidate_final_correction_magnitude": "Q_fd=max_{p in {128,256}, m in {1,0.5}} norm(q_(p,m),Inf).",
+    "analytic_final_correction_magnitude": "Q_analytic=max_{p in {128,256}} norm(q_p,Inf).",
+    "candidate_raw_configuration_error": "raw_x=max(last_step_128,last_step_256,norm(x_256-x_128,Inf),maximum pairwise confirmation disagreement,R_x_fd,Q_fd).",
+    "analytic_raw_configuration_error": "raw_x=max(last_step_128,last_step_256,norm(x_256-x_128,Inf),maximum pairwise confirmation disagreement,R_x_analytic,Q_analytic).",
+    "configuration_error": "E_x=16*raw_x, unchanged after adding the common-mode term.",
+    "target_error": "The unchanged A1 target formula uses the corrected raw_x, so both gradient-propagation terms inherit Q_fd or Q_analytic.",
+    "artifact_requirement": "Persist every q vector, every norm(q,Inf), Q, all remaining raw_x operands, and independently reconstruct them before accepting the development summary."
+  },
+  "unchanged": {
+    "candidate_and_control_maps": "unchanged",
+    "route_and_applicability_predicate": "unchanged",
+    "input_cases_transforms_and_gold": "unchanged",
+    "hard_budgets": "unchanged",
+    "configuration_and_target_goals": "unchanged",
+    "development_advancement_gate": "unchanged",
+    "candidate_tuning_rounds_remaining": 0,
+    "locked_inputs_materialized": false,
+    "product_connected": false
+  },
+  "freeze_order": [
+    "Commit A3 and the fully reconstructible implementation while no S4 mechanism has been executed.",
+    "Run only family-disjoint synthetic unit tests and static protocol tests.",
+    "Freeze implementation, A3, dependency and independent-analyzer hashes.",
+    "Only then execute the frozen 36-case development split."
+  ]
+}

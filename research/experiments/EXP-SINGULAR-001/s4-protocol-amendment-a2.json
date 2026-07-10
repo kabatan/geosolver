@@ -1,0 +1,65 @@
+{
+  "schema": "geotarget.singular-s4-protocol-amendment/v1",
+  "experiment_id": "EXP-SINGULAR-001",
+  "phase": "S4-C2-NULLSPACE-TWO-STEP-development",
+  "amendment_id": "A2",
+  "status": "frozen-after-input-scaffold-before-input-materialization",
+  "temporal_boundary": {
+    "reason": "Static review found that A1's common coefficient vector does not define a common physical probe when an SVD null basis rotates between start, final, precision or radius probes.",
+    "source_scaffold_exists": true,
+    "input_manifest_materialized": false,
+    "gold_artifact_materialized": false,
+    "development_outcome_observed": false,
+    "candidate_implementation_exists": false,
+    "analytic_control_implementation_exists": false,
+    "generator_strata_or_values_changed": false
+  },
+  "bound_parents": {
+    "a1_path": "research/experiments/EXP-SINGULAR-001/s4-protocol-amendment-a1.json",
+    "a1_sha256": "30dbb6cb1a79d92f8885a164f019d30441bab36a7069cf1578492ea599af96df",
+    "generator_scaffold_commit": "658f9f6bd0a889e68c6fbcab6d737449e91c92ec",
+    "generator_scaffold_path": "research/experiments/EXP-SINGULAR-001/src/s4_inputs.jl",
+    "generator_scaffold_sha256": "b364801483a338787b80558a3dabe197bcea40ef49049e4072b747e506f04593"
+  },
+  "finding": {
+    "id": "S4-A2-PHYSICAL-PROBE",
+    "problem": "For an equal nullspace, an SVD may replace V2 by V2*R for an arbitrary orthogonal R. Reusing the same coordinate vector c in each local basis changes v=V2*c, so A1's start/final projected-spectrum ratio could measure basis choice rather than projected-operator order.",
+    "scope": "Audit-only ell=65 projected-order and final correction/reserve probes. Actual trajectory iterations and ell=1 step-safety probes are unchanged."
+  },
+  "physical_probe_transport": {
+    "trajectory_scope": "Construct one reference per primary trajectory and per confirmation trajectory from that trajectory's frozen start. Do not share a reference across different starts.",
+    "candidate_reference": "At the frozen trajectory start, use the eligible candidate right-null basis V2_ref from the charged 256-bit, Jacobian-radius-0.5 decomposition.",
+    "analytic_reference": "At the frozen trajectory start, use the eligible analytic-control right-null basis V2_ref from the charged 256-bit analytic-Jacobian decomposition.",
+    "reference_coefficient": "Generate c65 exactly once from the A1 SplitMix64 rule with ell=65 and the frozen k, and set v_ref=V2_ref*c65. Normalize v_ref in two-norm and require a finite nonzero norm.",
+    "local_transport": "For each start or final audit basis Q=V2, compute c_local=Q'*v_ref. Require a finite norm(c_local,2)>0, then set v_local=Q*(c_local/norm(c_local,2)).",
+    "subspace_gate": "For every transported start/final basis, compute projection_loss=norm(v_ref-Q*(Q'*v_ref),2) and sin_theta_max=sqrt(max(0,1-sigma_min(V2_ref'*Q)^2)). Require finite values and sin_theta_max<=1e-6; equality passes. A zero projection, nonfinite value, dimension drift or subspace-gate failure is typed unknown.",
+    "trace": "Persist trajectory identity within the variant artifact, k, ell=65, c65, V2_ref provenance, v_ref, local probe precision/radius, c_local, norm(c_local), v_local, projection_loss, sin_theta_max, bound and decision. No case/family/Gold field enters the calculation."
+  },
+  "overrides": {
+    "a1_projected_order_direction": "Every B_order_start and B_order_final in the A1 persistence gate uses transported v_local derived from the trajectory's fixed v_ref, not a newly interpreted local c65.",
+    "a1_final_audit_direction": "Every ell=65 final unapplied q audit and configuration finite-difference reserve uses the same transported v_local. Thus radius/precision and start/final comparisons represent one physical probe up to the accepted subspace projection.",
+    "unchanged_step_direction": "The ell=1 step-safety audit and actual ell=1:64 trajectory steps retain A1's locally generated c and v=V2*c.",
+    "basis_invariance": "U2 and V2 may rotate inside their accepted subspaces. With a fixed physical v, sorted singular values of U2'*D2F[v,V2] are invariant under orthogonal left/right basis changes.",
+    "control_independence": "Candidate and analytic control duplicate the transport, angle, projection and trace implementation. Only this frozen formula and artifact field contract are common."
+  },
+  "superseding_freeze_order": [
+    "Bind the immutable S4 preregistration, final A1, this A2, generator-scaffold commit and generator-scaffold source hash.",
+    "After the host-exclusive performance run ends, execute input/scaffold tests without candidate or analytic-control implementation present.",
+    "Materialize and commit the development input manifest and separate Gold artifact; the manifest must contain hashes for the preregistration, A1, A2, generator scaffold and current manifest-builder source.",
+    "Only from that committed input-freeze parent may candidate and independent analytic-control source be added.",
+    "Freeze all implementation/applicability hashes before the first development outcome.",
+    "Do not materialize locked inputs unless the unchanged development gate passes."
+  ],
+  "unchanged": {
+    "candidate_family": "S4-C2-NULLSPACE-TWO-STEP",
+    "development_instance_count": 36,
+    "metamorphic_group_count": 12,
+    "representations_per_group": 3,
+    "generator_strata_and_values": "unchanged from generator scaffold commit 658f9f6bd0a889e68c6fbcab6d737449e91c92ec",
+    "hard_budgets": "unchanged; all additional probes are charged to the same per-variant endpoint ledger",
+    "advancement_gate": "unchanged",
+    "candidate_tuning_rounds_remaining": 0,
+    "locked_inputs_materialized": false,
+    "product_connected": false
+  }
+}

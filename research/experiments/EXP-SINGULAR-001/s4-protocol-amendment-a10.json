@@ -1,0 +1,78 @@
+{
+  "schema": "geotarget.singular-s4-protocol-amendment/v1",
+  "experiment_id": "EXP-SINGULAR-001",
+  "phase": "S4-C2-NULLSPACE-TWO-STEP-development-closure",
+  "amendment_id": "A10",
+  "status": "frozen-bounded-negative-after-independent-mismatch-analysis",
+  "parent_a9_sha256": "fb8d73e485db73c3a6cbcb293fb63d1426ab4c1ea9b90f2924ea8b1b5a016b86",
+  "source_bindings": {
+    "result_bindings_sha256": "f827cd0bed35651fc448bf90fba8221a54652809293e999030131979aa307658",
+    "independent_analysis_sha256": "9c8891915b8d7e34f3de925118b9b0c58ccfa4c90470c633ab56ece33c8b6c26",
+    "analysis_a9_formal_run_audit_sha256": "4c6a217cf4758fd5eac3a9da155930652c900f6e578ca30f12a36be7522989fd",
+    "implementation_freeze_sha256": "e20a591d2e3ca7af63e3f283256fb2520d032038242a622f551455a8e339d9bb"
+  },
+  "independent_integrity": {
+    "mechanical_audit_failures": 0,
+    "work_accounting_failures": 0,
+    "budget_violations": 0,
+    "candidate_control_disagreements": 0,
+    "noneligible_s4_promotions": 0,
+    "source_runtime_checkpoint_and_raw_replay_verified": true,
+    "independent_reconstruction_passed": false,
+    "interpretation": "The false value is intentional evidence that the frozen Julia assessment/summary disagrees with exact independent recomputation; it is not a source, checkpoint, work-ledger or numerical-operand replay failure."
+  },
+  "reconstructed_results": {
+    "baseline_eligible_gold_successes": 0,
+    "candidate_eligible_gold_successes": 11,
+    "analytic_control_eligible_gold_successes": 11,
+    "eligible_instances": 15,
+    "candidate_gain_percentage_points": 73.33333333333333,
+    "candidate_false_promotions": 0,
+    "analytic_control_false_promotions": 0,
+    "candidate_and_control_decisions_identical": true,
+    "candidate_metamorphic_disagreement_groups": [
+      "s4-d1-k1-a",
+      "s4-d1-k2-a",
+      "s4-d1-k3",
+      "s4-d1-k4"
+    ],
+    "analytic_control_metamorphic_disagreement_groups": [
+      "s4-d1-k1-a",
+      "s4-d1-k2-a",
+      "s4-d1-k3",
+      "s4-d1-k4"
+    ],
+    "shared_failure_pattern": "For all four groups, both candidate and analytic control reject the orthogonal-variable-and-residual-rotation representation at the trajectory final applicability audit while promoting the independent signed/permuted and equivalent DAG representations.",
+    "fully_stable_eligible_group": "s4-d1-r2-k2",
+    "control_strata_unpromoted": true
+  },
+  "frozen_assessor_bug": {
+    "assessment_mismatches": 4,
+    "affected_variant": "S1-AP-LMQR",
+    "affected_stratum": "regular-close-root-controls",
+    "cause": "The frozen Julia assessor narrows evidence endpoints, targets, Gold configurations and Gold targets to Float64 before differencing. Four regular-fold target errors between 3.3333333333333333e-18 and 3.3333333333333335e-17 round to zero at the surrounding target scale, so the persisted rows incorrectly report Gold success and no false promotion.",
+    "independent_decision": "Decimal recomputation marks all four S1 promotions false, with target-error undercoverage. No S4 candidate/control assessment differs from independent recomputation.",
+    "effect_on_summary": "variant_summaries, advancement_gate and promoted evidence-failure fields are invalid in the frozen summary; the independent reconstruction is authoritative for closure."
+  },
+  "reconstructed_gate": {
+    "candidate_control_decisions_identical": true,
+    "candidate_gain_at_least_60_percentage_points": true,
+    "candidate_recovers_at_least_12_of_15": false,
+    "control_strata_unpromoted": true,
+    "false_promotions_zero": false,
+    "hard_budget_violations_zero": true,
+    "metamorphic_disagreements_zero": false,
+    "promoted_evidence_failures_zero": false,
+    "development_gate_passed": false
+  },
+  "decision": {
+    "classification": "bounded-negative-stop-before-locked",
+    "candidate_tuning_rounds_remaining": 0,
+    "locked_inputs_materialized": false,
+    "locked_validation": false,
+    "product_connected": false,
+    "action": "Reject the frozen S4 candidate at development. Do not retune, open locked inputs or connect either S4 mechanism to product code.",
+    "research_value": "The two-step map is materially promising and independently replicated: it gains 73.3 percentage points over the exact baseline reconstruction with zero S4 false promotions and exact candidate/control decision agreement. Its current final applicability/stop interaction is nevertheless representation-sensitive and misses the registered recall threshold.",
+    "reopen_gate": "A new preregistered successor must use exact/non-narrowing Gold assessment, preserve endpoint-global budgets and all control-strata rejections, recover at least 12/15 on a fresh family-disjoint development split, and eliminate the orthogonal-representation final-audit disagreement before any locked validation."
+  }
+}

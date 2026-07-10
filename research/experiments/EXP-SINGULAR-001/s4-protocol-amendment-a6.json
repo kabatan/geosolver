@@ -1,0 +1,39 @@
+{
+  "schema": "geotarget.singular-s4-protocol-amendment/v1",
+  "experiment_id": "EXP-SINGULAR-001",
+  "phase": "S4-C2-NULLSPACE-TWO-STEP-development",
+  "amendment_id": "A6",
+  "status": "frozen-after-runner-source-preflight-before-implementation-freeze",
+  "temporal_boundary": {
+    "validated_source_commit": "cf37defe987753d2cf17807b8e302bdd2935ee7e",
+    "runner_source_included_after_correction": true,
+    "development_case_mechanism_executed": false,
+    "development_outcome_observed": false,
+    "development_outcome_assessed_against_gold": false,
+    "locked_inputs_materialized": false,
+    "product_connected": false
+  },
+  "bound_parent": {
+    "a5_sha256": "300d1619caf57b1b60aa44914b5659349a60d345aae6adc0cf5d25dfa99494a8"
+  },
+  "preflight_finding": {
+    "id": "S4-A6-RUNNER-ENTRYPOINT-PARSE",
+    "finding": "Julia 1.12.6 parses the bare terminal expression abspath(PROGRAM_FILE) == @__FILE__ && main() as an invalid macro/identifier boundary, so the formal runner could not be included or executed.",
+    "correction": "Replace only the terminal shorthand with an explicit if block comparing abspath(PROGRAM_FILE) and abspath(@__FILE__) before calling main().",
+    "effect": "The corrected runner source includes successfully. Case-grid construction and immutable manifest/Gold-hash verification pass; exact runtime/freezer identity verification remains intentionally deferred until the implementation-freeze artifact exists.",
+    "algorithm_protocol_threshold_or_gate_changed": false
+  },
+  "source_binding": {
+    "research/experiments/EXP-SINGULAR-001/run_s4_development.jl": "e2e81dd173f2937cd17b3c1dccb7a4a4bb687cc6e37513c26c1188e959d34e75"
+  },
+  "unchanged": {
+    "candidate_and_control_sources": "unchanged from A5 bindings",
+    "development_inputs_and_gold": "unchanged",
+    "runtime_policy": "unchanged",
+    "checkpoint_and_archive_policy": "unchanged",
+    "development_advancement_gate": "unchanged",
+    "candidate_tuning_rounds_remaining": 0,
+    "locked_inputs_materialized": false,
+    "product_connected": false
+  }
+}

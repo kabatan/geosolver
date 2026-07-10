@@ -1,5 +1,6 @@
 using JSON3
 using LinearAlgebra
+using SHA
 using Test
 
 include(joinpath(@__DIR__, "..", "src", "ExperimentSingular001.jl"))
@@ -7,6 +8,109 @@ using .ExperimentSingular001
 
 function case_by_id(cases, id)
     return only(filter(case -> case.input.oracle.id == id, cases))
+end
+
+include(joinpath(@__DIR__, "test_s4.jl"))
+
+@testset "S4 input scaffold is frozen before mechanism code" begin
+    cases = ExperimentSingular001.s4_development_cases()
+    @test length(cases) == 36
+    @test length(unique(case.generated.input.oracle.metamorphic_group for case in cases)) == 12
+    @test all(
+        count(
+            other -> other.generated.input.oracle.metamorphic_group ==
+                     case.generated.input.oracle.metamorphic_group,
+            cases,
+        ) == 3 for case in cases
+    )
+    @test count(case -> case.stratum == "isolated-deflation-one", cases) == 15
+    @test count(case -> case.stratum == "higher-deflation-depth-controls", cases) == 6
+    @test count(case -> case.stratum == "manifold-controls", cases) == 6
+    @test count(case -> case.stratum == "inconsistent-nonroots", cases) == 3
+    @test count(case -> case.stratum == "regular-close-root-controls", cases) == 6
+    @test all(
+        count(other -> other.representation == representation, cases) == 12 for
+        representation in (
+            "orthogonal-variable-and-residual-rotation",
+            "independent-signed-variable-and-residual-permutation",
+            "equivalent-shared-DAG-reordering",
+        )
+    )
+    @test all(case.generated.input.oracle.analytic_jacobian === nothing for case in cases)
+    @test all(
+        case.analytic_control.analytic_jacobian !== nothing &&
+        case.analytic_control.analytic_second_directional !== nothing for case in cases
+    )
+    @test all(
+        ExperimentSingular001.candidate_input(case) === case.generated.input for case in cases
+    )
+
+    for case in cases
+        setprecision(BigFloat, 256) do
+            input = ExperimentSingular001.candidate_input(case)
+            point = BigFloat.(input.endpoint)
+            residual = input.oracle.residual(point)
+            target = input.oracle.target(point)
+            jacobian = case.analytic_control.analytic_jacobian(point)
+            direction = fill(inv(sqrt(BigFloat(input.oracle.dimension))), input.oracle.dimension)
+            second = case.analytic_control.analytic_second_directional(
+                point,
+                direction,
+                reverse(direction),
+            )
+            @test size(jacobian) == (input.oracle.residual_dimension, input.oracle.dimension)
+            @test length(residual) == input.oracle.residual_dimension
+            @test length(second) == input.oracle.residual_dimension
+            @test all(isfinite, residual)
+            @test all(isfinite, jacobian)
+            @test all(isfinite, second)
+            @test isfinite(target)
+        end
+    end
+
+    experiment_directory = normpath(joinpath(@__DIR__, ".."))
+    input_document = ExperimentSingular001.s4_development_input_document(
+        cases;
+        gold_artifact_sha256=repeat("0", 64),
+    )
+    @test input_document["development_instance_count"] == 36
+    @test input_document["metamorphic_group_count"] == 12
+    @test input_document["candidate_implementation_present"] == false
+    @test input_document["gold_values_embedded"] == false
+    @test input_document["locked_inputs_materialized"] == false
+    @test input_document["product_connected"] == false
+    @test length(input_document["cases"]) == 36
+    @test all(!haskey(case_document, "gold_analysis_only") for case_document in input_document["cases"])
+    @test input_document["amendment_a1_sha256"] == bytes2hex(sha256(read(
+        joinpath(experiment_directory, "s4-protocol-amendment-a1.json"),
+    )))
+    @test input_document["amendment_a2_sha256"] == bytes2hex(sha256(read(
+        joinpath(experiment_directory, "s4-protocol-amendment-a2.json"),
+    )))
+
+    gold_document = ExperimentSingular001.s4_development_gold_document(cases)
+    @test gold_document["candidate_visible"] == false
+    @test length(gold_document["cases"]) == 36
+    fold_gold = filter(
+        item -> occursin("regular-fold", item["case_id"]),
+        gold_document["cases"],
+    )
+    @test length(fold_gold) == 6
+    @test all(length(item["isolated_configurations"]) == 2 for item in fold_gold)
+    @test all(length(item["isolated_targets"]) == 2 for item in fold_gold)
+
+    mktempdir() do directory
+        source_directory = joinpath(directory, "src")
+        mechanism_directory = joinpath(source_directory, "s4")
+        mkpath(mechanism_directory)
+        @test ExperimentSingular001._assert_s4_preimplementation_state(
+            ; source_directory,
+        ) === nothing
+        write(joinpath(mechanism_directory, "candidate.jl"), "# forbidden before input freeze\n")
+        @test_throws ErrorException ExperimentSingular001._assert_s4_preimplementation_state(
+            ; source_directory,
+        )
+    end
 end
 
 @testset "Gold-independent fixed endpoint generator" begin

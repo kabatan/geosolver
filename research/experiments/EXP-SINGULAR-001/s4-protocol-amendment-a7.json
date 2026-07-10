@@ -1,0 +1,64 @@
+{
+  "schema": "geotarget.singular-s4-protocol-amendment/v1",
+  "experiment_id": "EXP-SINGULAR-001",
+  "phase": "S4-C2-NULLSPACE-TWO-STEP-development",
+  "amendment_id": "A7",
+  "status": "frozen-after-complete-checkpoint-run-before-result-finalization",
+  "temporal_boundary": {
+    "finalizer_source_commit": "4345034aedfd218487faa4ac14b343d24ab002cb",
+    "development_cases_executed": 36,
+    "variant_rows_checkpointed": 108,
+    "checkpoint_manifest_persisted": true,
+    "summary_computed_in_failed_process": true,
+    "summary_persisted": false,
+    "result_values_inspected_after_failure": false,
+    "post_outcome_numerical_source_changed": false,
+    "candidate_tuning_permanently_closed": true,
+    "locked_inputs_materialized": false,
+    "product_connected": false
+  },
+  "failure": {
+    "stage": "final artifact writer after all 36 checkpoints and checkpoint manifest",
+    "exception": "UndefVarError: checkpoint_manifest_sha256 not defined in Main.ExperimentSingular001",
+    "cause": "The frozen writer referenced checkpoint_manifest_sha256, run_identity_sha256 and warmup_sha256 as module globals but its keyword signature and frozen runner call did not supply them.",
+    "numerical_or_gate_effect": "none; the failure occurred after checkpointed numerical rows and the in-memory summary were complete, before raw.json, summary.json, environment.json, report.md or result-bindings.json was written"
+  },
+  "failed_run_bindings": {
+    "implementation_freeze_sha256": "e20a591d2e3ca7af63e3f283256fb2520d032038242a622f551455a8e339d9bb",
+    "run_identity_sha256": "ffcc4998ae206ba33295917ba0c069aca22e1ade5cb4188692eadd23c65b6897",
+    "warmup_sha256": "03545b88e4ebc5604e3b091c683d1745bd98f37b9eba188a949cfb54ca327fd1",
+    "checkpoint_manifest_sha256": "1ed28cc6e66a396550cc70e0ab5c9946a228cca1c6944bca85b583939b434098",
+    "checkpoint_count": 36,
+    "checkpoint_name_hash_collection_sha256": "e93b8411cda8ffca082def15eac8149fb25fa31f249ae0a43d86e098c0a4e5a4",
+    "failed_formal_run_audit_sha256": "8fe9f15995e5ce91efa03f95e16362a786229db309fed7bc521babb64b0e3670",
+    "raw_present_before_repair": false,
+    "summary_present_before_repair": false,
+    "environment_present_before_repair": false,
+    "report_present_before_repair": false,
+    "result_bindings_present_before_repair": false
+  },
+  "repair_boundary": {
+    "allowed": "checkpoint-only read/verify/replay, recomputation of the already-frozen summary, installation of the three bound hashes as const String globals required by the frozen writer, staged artifact generation and terminal-marker publication",
+    "forbidden": "executing any baseline/candidate/control mechanism, changing a checkpoint, changing any implementation-freeze source, changing a predicate/threshold/order/assessment, retuning the candidate, materializing locked inputs or connecting product code",
+    "mechanism_fallback_call_edges": 0,
+    "checkpoint_read_rule": "read each checkpoint payload once, verify SHA-256 on those bytes, then parse the same bytes",
+    "provenance_read_rule": "hash and parse A7, run identity and checkpoint manifest from their approved byte snapshots; carry approved hashes and reverify the full implementation freeze, Gold/base artifacts and checkpoint collection immediately before terminal publication"
+  },
+  "finalization_publication": {
+    "staging": "generate raw, summary, environment, report and result bindings in a same-filesystem sibling temporary directory",
+    "verification": "verify all writer-returned hashes before publication",
+    "nonterminal_phase": "publish raw, summary, environment and report idempotently; existing equal hashes pass and any difference fails closed",
+    "preterminal_recheck": "require the exact top-level archive set, all 37 implementation-freeze sources, Gold/input/runtime artifacts, checkpoint manifest and all 36 checkpoint hashes to remain unchanged",
+    "terminal_phase": "publish result-bindings.json alone and last",
+    "partial_retry": "a missing terminal marker permits regeneration; already-published nonterminal files must exactly match regenerated hashes"
+  },
+  "finalizer_source_sha256": "202e5f18d1da9f243ede139ff674bd9f8a150649181ab6a06f0d1f65d21ee1b3",
+  "unchanged_claim_boundary": {
+    "development_only": true,
+    "locked_inputs_materialized": false,
+    "locked_validation": false,
+    "product_connected": false,
+    "certificate_claim": false,
+    "performance_claim_from_s4_wall_time": false
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "schema": "geotarget.singular-s4-protocol-amendment/v1",
+  "experiment_id": "EXP-SINGULAR-001",
+  "phase": "S4-C2-NULLSPACE-TWO-STEP-development-analysis",
+  "amendment_id": "A9",
+  "status": "frozen-after-radius-token-analysis-failure",
+  "parent_a8_sha256": "08d7392f22977e57b7c2356319f1fc3d9c65f4a9b5396c21a30ac33bb419b5e7",
+  "temporal_boundary": {
+    "wrapper_source_commit": "02f1257b8b4afdf7603dd5b37d2a6262ba3f9d25",
+    "formal_checkpoint_finalization_completed": true,
+    "independent_analysis_attempted": true,
+    "independent_analysis_persisted": false,
+    "result_values_or_advancement_gate_inspected_after_failure": false,
+    "checkpoint_numerical_source_summary_or_result_changed": false,
+    "candidate_tuning_permanently_closed": true,
+    "locked_inputs_materialized": false,
+    "product_connected": false
+  },
+  "failure": {
+    "exception": "KeyError: (128, '1.0')",
+    "location": "frozen verify_error_audit gradient-radius lookup",
+    "cause": "Julia JSON encoded a Float64 radius multiplier equal to 1.0 as the JSON number 1; Python json decoded that token as int 1, so str(radius_multiplier) produced '1' while the frozen analyzer looked up '1.0'.",
+    "boundary": "The frozen analyzer completed result/source/runtime/checkpoint/raw replay checks before entering independent numerical reconstruction. It crashed on representation lookup before writing independent-analysis.json.",
+    "mathematical_or_gate_effect": "none"
+  },
+  "repair": {
+    "normalization": "On an in-memory deep copy passed only to frozen analyze, replace radius_multiplier with float 1.0 exactly when type(radius_multiplier) is int and value equals 1.",
+    "unchanged_values": "Existing floats, 0.5, booleans, strings, nulls and all other values are passed unchanged to the frozen analyzer; the wrapper introduces no new numeric-radius acceptance gate.",
+    "frozen_analyzer_execution": "Read the approved original analyzer bytes once, hash those bytes, compile and execute those same bytes, then replace only the global analyze call with the deep-copy adapter.",
+    "canonical_cli": "Accept exactly four argument tokens in fixed order: one full --result-directory/value pair followed by one full --experiment-directory/value pair; require the experiment path to equal the wrapper directory.",
+    "terminal_provenance": "Before analysis and immediately before the A9 terminal binding, verify exact result/checkpoint sets, all 36 checkpoint payload hashes, result bindings and artifacts, the implementation freeze and all 37 implementation sources, plus direct input-freeze/input-manifest/Gold bindings.",
+    "analysis_output": "Hash and parse one independent-analysis byte snapshot, reverify it unchanged, then atomically publish a separate A9 binding file."
+  },
+  "result_bindings_sha256": "f827cd0bed35651fc448bf90fba8221a54652809293e999030131979aa307658",
+  "raw_sha256": "ea37833c7bf556a784d0cf625f66ef71616572e0da3374895cf63d04e761137a",
+  "summary_sha256": "382bc0d3dfbf0348f2e26eab90930c859fa08b640bcfa47f761128a4a041f114",
+  "implementation_freeze_sha256": "e20a591d2e3ca7af63e3f283256fb2520d032038242a622f551455a8e339d9bb",
+  "successful_finalization_audit_sha256": "67d122be52132a7f6c815ec0fde64a19b3bf0460ebf5370856e5e5e4f3191aa6",
+  "original_analyzer_sha256": "7a3843daa4f37cf10c29173ee7cfbb1f14c458ded13d1c0d62f976e85ec65797",
+  "wrapper_source_sha256": "3b19e8d48a8cc955b45067ed6df8bfd4df32b1136c7dcb0b1fd958d9ce3b41dc",
+  "unchanged_claim_boundary": {
+    "development_only": true,
+    "locked_inputs_materialized": false,
+    "locked_validation": false,
+    "product_connected": false,
+    "certificate_claim": false,
+    "performance_claim_from_s4_wall_time": false
+  }
+}
