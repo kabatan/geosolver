@@ -4,12 +4,11 @@ from __future__ import annotations
 
 import copy
 import hashlib
-import importlib.util
 import json
 import os
 import sys
 import tempfile
-from decimal import Decimal
+import types
 from pathlib import Path
 from typing import Any
 
@@ -19,12 +18,12 @@ ORIGINAL_ANALYZER = EXPERIMENT_DIRECTORY / "s4_development_analysis.py"
 ANALYSIS_AMENDMENT = EXPERIMENT_DIRECTORY / "s4-protocol-amendment-a9.json"
 
 
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+def bytes_sha256(payload: bytes) -> str:
+    return hashlib.sha256(payload).hexdigest()
 
 
-def load_json(path: Path) -> Any:
-    return json.loads(path.read_text(encoding="utf-8"))
+def parse_json(payload: bytes) -> Any:
+    return json.loads(payload.decode("utf-8"))
 
 
 def normalize_unit_radius_tokens(
@@ -40,14 +39,9 @@ def normalize_unit_radius_tokens(
         )
         for gradient in gradients:
             radius = gradient.get("radius_multiplier")
-            if isinstance(radius, bool) or not isinstance(radius, (int, float)):
-                raise TypeError("S4 gradient radius must be a JSON number")
-            exact = Decimal(str(radius))
-            if exact == Decimal("1"):
+            if type(radius) is int and radius == 1:
                 gradient["radius_multiplier"] = 1.0
                 count += 1
-            elif exact != Decimal("0.5"):
-                raise ValueError(f"unexpected S4 gradient radius: {radius!r}")
     if count == 0:
         raise ValueError("S4 A9 repair found no unit-radius token")
     return normalized, count
@@ -71,33 +65,80 @@ def write_json_atomic(path: Path, document: dict[str, Any]) -> None:
         temporary.unlink(missing_ok=True)
 
 
-def load_frozen_analyzer() -> Any:
-    specification = importlib.util.spec_from_file_location(
-        "geotarget_s4_frozen_analysis_a9", ORIGINAL_ANALYZER
-    )
-    if specification is None or specification.loader is None:
-        raise ImportError("cannot load frozen S4 analyzer")
-    module = importlib.util.module_from_spec(specification)
-    specification.loader.exec_module(module)
+def load_frozen_analyzer(payload: bytes) -> Any:
+    module = types.ModuleType("geotarget_s4_frozen_analysis_a9")
+    module.__file__ = str(ORIGINAL_ANALYZER)
+    module.__package__ = None
+    code = compile(payload, str(ORIGINAL_ANALYZER), "exec")
+    exec(code, module.__dict__)
     return module
 
 
+def unique_path_option(arguments: list[str], option: str) -> Path:
+    positions = [index for index, value in enumerate(arguments) if value == option]
+    if len(positions) != 1:
+        raise ValueError(f"S4 A9 requires exactly one {option}")
+    position = positions[0]
+    if position + 1 >= len(arguments) or arguments[position + 1].startswith("--"):
+        raise ValueError(f"S4 A9 {option} has no value")
+    return Path(arguments[position + 1]).resolve()
+
+
+def verify_bound_result_artifacts(
+    result_directory: Path, result_bindings: dict[str, Any]
+) -> None:
+    bindings = result_bindings["bindings"]
+    for filename, key in (
+        ("checkpoint-manifest.json", "checkpoint_manifest_sha256"),
+        ("environment.json", "environment_sha256"),
+        ("raw.json", "raw_sha256"),
+        ("report.md", "report_sha256"),
+        ("summary.json", "summary_sha256"),
+    ):
+        observed = bytes_sha256((result_directory / filename).read_bytes())
+        if observed != bindings[key]:
+            raise ValueError(f"S4 A9 result artifact changed: {filename}")
+    for filename, key in (
+        ("run-identity.json", "run_identity_sha256"),
+        ("warmup.json", "warmup_sha256"),
+    ):
+        observed = bytes_sha256((result_directory / filename).read_bytes())
+        if observed != result_bindings[key]:
+            raise ValueError(f"S4 A9 base artifact changed: {filename}")
+
+
 def main() -> int:
-    amendment = load_json(ANALYSIS_AMENDMENT)
+    amendment_payload = ANALYSIS_AMENDMENT.read_bytes()
+    amendment_sha256 = bytes_sha256(amendment_payload)
+    amendment = parse_json(amendment_payload)
     if amendment["status"] != "frozen-after-radius-token-analysis-failure":
         raise ValueError("S4 A9 status mismatch")
-    if sha256(Path(__file__)) != amendment["wrapper_source_sha256"]:
+    wrapper_path = Path(__file__).resolve()
+    wrapper_payload = wrapper_path.read_bytes()
+    wrapper_sha256 = bytes_sha256(wrapper_payload)
+    if wrapper_sha256 != amendment["wrapper_source_sha256"]:
         raise ValueError("S4 A9 wrapper source mismatch")
-    if sha256(ORIGINAL_ANALYZER) != amendment["original_analyzer_sha256"]:
+    analyzer_payload = ORIGINAL_ANALYZER.read_bytes()
+    analyzer_sha256 = bytes_sha256(analyzer_payload)
+    if analyzer_sha256 != amendment["original_analyzer_sha256"]:
         raise ValueError("S4 A9 original analyzer mismatch")
-    result_index = sys.argv.index("--result-directory") + 1
-    result_directory = Path(sys.argv[result_index]).resolve()
+    result_directory = unique_path_option(sys.argv[1:], "--result-directory")
+    experiment_directory = unique_path_option(sys.argv[1:], "--experiment-directory")
+    if experiment_directory != EXPERIMENT_DIRECTORY:
+        raise ValueError("S4 A9 experiment directory mismatch")
+    result_bindings_path = result_directory / "result-bindings.json"
+    result_bindings_payload = result_bindings_path.read_bytes()
+    result_bindings_sha256 = bytes_sha256(result_bindings_payload)
+    if result_bindings_sha256 != amendment["result_bindings_sha256"]:
+        raise ValueError("S4 A9 result bindings mismatch")
+    result_bindings = parse_json(result_bindings_payload)
+    verify_bound_result_artifacts(result_directory, result_bindings)
     destination = result_directory / "independent-analysis.json"
     binding_path = result_directory / "independent-analysis-a9-bindings.json"
     if destination.exists() or binding_path.exists():
         raise FileExistsError("S4 A9 refuses an existing independent analysis")
 
-    frozen = load_frozen_analyzer()
+    frozen = load_frozen_analyzer(analyzer_payload)
     original_analyze = frozen.analyze
     normalization_count = 0
 
@@ -115,20 +156,33 @@ def main() -> int:
     exit_code = int(frozen.main())
     if exit_code != 0:
         return exit_code
-    analysis = load_json(destination)
+    analysis_payload = destination.read_bytes()
+    analysis_sha256 = bytes_sha256(analysis_payload)
+    analysis = parse_json(analysis_payload)
     if analysis.get("independent_reconstruction_passed") is not True:
         raise ValueError("S4 A9 analyzer returned success without reconstruction pass")
+    if bytes_sha256(ANALYSIS_AMENDMENT.read_bytes()) != amendment_sha256:
+        raise ValueError("S4 A9 amendment changed before binding")
+    if bytes_sha256(wrapper_path.read_bytes()) != wrapper_sha256:
+        raise ValueError("S4 A9 wrapper changed before binding")
+    if bytes_sha256(ORIGINAL_ANALYZER.read_bytes()) != analyzer_sha256:
+        raise ValueError("S4 A9 original analyzer changed before binding")
+    if bytes_sha256(destination.read_bytes()) != analysis_sha256:
+        raise ValueError("S4 A9 independent analysis changed before binding")
+    if bytes_sha256(result_bindings_path.read_bytes()) != result_bindings_sha256:
+        raise ValueError("S4 A9 result bindings changed before binding")
+    verify_bound_result_artifacts(result_directory, result_bindings)
     write_json_atomic(
         binding_path,
         {
-            "analysis_amendment_sha256": sha256(ANALYSIS_AMENDMENT),
-            "independent_analysis_sha256": sha256(destination),
+            "analysis_amendment_sha256": amendment_sha256,
+            "independent_analysis_sha256": analysis_sha256,
             "normalization_count": normalization_count,
-            "original_analyzer_sha256": sha256(ORIGINAL_ANALYZER),
+            "original_analyzer_sha256": analyzer_sha256,
             "product_connected": False,
-            "result_bindings_sha256": sha256(result_directory / "result-bindings.json"),
+            "result_bindings_sha256": result_bindings_sha256,
             "schema": "geotarget.singular-s4-independent-analysis-a9-bindings/v1",
-            "wrapper_source_sha256": sha256(Path(__file__)),
+            "wrapper_source_sha256": wrapper_sha256,
         },
     )
     return 0
