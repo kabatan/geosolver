@@ -52,7 +52,7 @@ frozen Latin schedule, with orientation reversed on alternating groups. Thus
 each variant occupies every position once per group and JIT/warm-cache order is
 not confounded with representation or variant.
 
-## Protocol corrections A2 through A5
+## Protocol corrections A2 through A6
 
 A2 is fully observable: each audit records `V2_ref`, `v_ref`, `c65`, every
 local `V2`, raw `c_local`, its norm, transported direction, projection loss,
@@ -78,6 +78,12 @@ source and distinguishes inherited start probes from strict final probes. It
 also corrects the synthetic ledger expectation: the two perturbed
 confirmations each need a root-reaching step and a second complete step to
 satisfy the normalized-last-step gate.
+
+The final runner-source preflight, still before any development mechanism
+execution, found that Julia 1.12.6 cannot parse the shorthand terminal
+`@__FILE__ && main()` expression. A6 binds the equivalent explicit `if`
+entrypoint after source inclusion and immutable case-grid verification pass.
+It changes no numerical map, runtime policy, checkpoint field or gate.
 
 ## Claim boundary
 

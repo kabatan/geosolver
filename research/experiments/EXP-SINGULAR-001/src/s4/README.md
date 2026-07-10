@@ -33,7 +33,8 @@ This directory is a sequencing guard, not a product package.
 
 Development inputs were frozen at commit `3fb7480`. A3/A4 preceded mechanism
 execution; A5 binds corrections found only on family-disjoint synthetic
-fixtures. Static tests reconstruct the already-frozen input/Gold documents,
+fixtures, and A6 binds the parse-only formal-runner entrypoint correction.
+Static tests reconstruct the already-frozen input/Gold documents,
 but no development mechanism outcome has been executed or assessed against
 Gold. The next legal transition is an implementation-freeze commit. The
 36-case development split remains forbidden until that freeze exists and
