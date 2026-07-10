@@ -8,6 +8,7 @@
 - [EXP-JAC-002 terminal protocol deviation](EXP-JAC-002.md)
 - [EXP-JAC-003 terminal formal-protocol failure](EXP-JAC-003.md)
 - [EXP-LOCAL-001 diagnostic pilot closure](EXP-LOCAL-001.md)
+- [EXP-LOCAL-003 semantic-preserving model scaling](EXP-LOCAL-003.md)
 - [Failure taxonomy](FAILURES.md)
 - [Miss Analyzer v0.2](MISS_ANALYZER.md)
 - [QA-02 deterministic fuzz and metamorphic gate](QA02_FUZZ_METAMORPHIC.md)

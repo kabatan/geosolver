@@ -1,0 +1,361 @@
+{
+  "schema_version": "1.0.0",
+  "id": "EXP-LOCAL-003",
+  "title": "Semantic-preserving local model scaling",
+  "status": "preregistered",
+  "requirements": ["GOAL-01", "GOAL-02", "GOAL-04", "GOAL-05", "DSL-01", "ARCH-02", "RES-01", "RES-02", "RES-03", "RES-04", "RES-05", "RES-06"],
+  "failure_ids": ["F2", "F3", "F5", "F6", "F9", "F17"],
+  "baseline_id": "RB0-IID-LMQR-1",
+  "objective": "Test bounds-based variable coordinates and Gold-independent residual equilibration as local-model transformations while preserving the public black-box DSL, semantic residuals, canonical validation and target truth.",
+  "hypothesis": "Bounds midpoint/half-width coordinates and a frozen upper-quartile residual scale will improve fixed-start Gold recall or charged expected work on ill-scaled systems without changing semantic convergence or introducing representation-dependent decisions.",
+  "scope": {
+    "included": [
+      "bounded one-to-sixteen-variable C0 black-box square and overdetermined systems",
+      "the current dense finite-difference LM-QR step with fixed starts",
+      "semantic, bounds-coordinate, model-residual and combined scaling ablations",
+      "canonical and independent Gold assessment outside the candidate process"
+    ],
+    "excluded": [
+      "analytic or automatic Jacobian routing, sparse QR and local-algorithm switching",
+      "start-policy changes, target-aware calibration, deflation and singular certification",
+      "wire-format, RelationObservation, plugin ABI or geometry-primitive changes",
+      "any reuse of EXP-LOCAL-001 or EXP-LOCAL-002 inputs for selection"
+    ]
+  },
+  "literature": [
+    {
+      "id": "LIT-MORE-LM",
+      "url": "https://doi.org/10.1007/BFb0067700",
+      "claim": "Moré gives a robust Levenberg-Marquardt implementation whose stated features include implicit variable scaling and a safeguarded damping parameter.",
+      "assumptions": "A continuously differentiable nonlinear least-squares model and meaningful local linearization.",
+      "break_conditions": "Opaque C0 paths, invalid domains, singular roots and a scaling rule that changes problem semantics."
+    },
+    {
+      "id": "LIT-RUIZ-EQUILIBRATION",
+      "url": "https://cds.cern.ch/record/585592",
+      "claim": "Ruiz analyzes iterative row-and-column matrix equilibration and proves convergence under stated matrix-pattern conditions.",
+      "assumptions": "A fixed finite matrix with the pattern and norm conditions required by the report.",
+      "break_conditions": "A sampled nonlinear residual model is not the Ruiz algorithm, and branch or domain changes can invalidate a fixed local matrix interpretation."
+    },
+    {
+      "id": "LIT-MGH",
+      "url": "https://doi.org/10.1145/355934.355936",
+      "claim": "Moré, Garbow and Hillstrom provide a broad test-function collection and reliability-oriented guidance for optimization software testing.",
+      "assumptions": "The benchmark instances and starting points expose the numerical behavior being claimed.",
+      "break_conditions": "A small convenient subset or post-outcome representation choice cannot support general robustness claims."
+    },
+    {
+      "id": "LIT-NEWTON-FLOATING-POINT",
+      "url": "https://doi.org/10.1137/S0895479899359837",
+      "claim": "Higham separates residual evaluation, Jacobian formation and linear-solve error when analyzing limiting Newton accuracy.",
+      "assumptions": "The local Newton model and error bounds describe the executed residual and linear algebra.",
+      "break_conditions": "A small model residual alone does not establish forward accuracy or a correct target under poor conditioning."
+    },
+    {
+      "id": "LIT-COCO",
+      "url": "https://arxiv.org/abs/1605.03560",
+      "claim": "COCO advocates fixed-target, budget-aware empirical comparisons rather than best-run summaries.",
+      "assumptions": "Targets, budgets, instances and charged cost are fixed before execution.",
+      "break_conditions": "Ignoring calibration, failed starts, compilation or post-hoc thresholds biases runtime and recall comparisons."
+    }
+  ],
+  "controls": [
+    {
+      "id": "L0-SEMANTIC",
+      "role": "control",
+      "description": "Use declared variable origin/scale and semantic residual z_i = y_i / s_i; all step, convergence and validation behavior is otherwise current LM-QR.",
+      "differences_from_baseline": ["Current semantic variable metadata", "Semantic residual z = raw/declared-scale"]
+    }
+  ],
+  "candidates": [
+    {
+      "id": "LX-BOUNDS",
+      "role": "candidate",
+      "description": "Replace only variable coordinates by finite-bounds midpoint and half-width coordinates while retaining semantic residual z.",
+      "differences_from_baseline": ["Bounds midpoint/half-width local coordinates"]
+    },
+    {
+      "id": "LR-MODEL",
+      "role": "candidate",
+      "description": "Use m_i = z_i / a_i only inside the LM model and merit calculation; convergence, canonical replay and Gold matching continue to use z.",
+      "differences_from_baseline": ["Gold-independent model-only residual equilibration"]
+    },
+    {
+      "id": "LXR-BOUNDS-MODEL",
+      "role": "candidate",
+      "description": "Combine LX bounds coordinates with LR model-only residual equilibration without changing semantic observations.",
+      "differences_from_baseline": ["Bounds coordinates", "Model-only residual equilibration"]
+    }
+  ],
+  "synthetic_families": [
+    {
+      "id": "SCALE-LADDER",
+      "purpose": "Expose residual row-scale spread while preserving an independently constructed regular root.",
+      "factors": {"latent_groups": 2, "representations": ["base", "signed-permutation", "semantic-equivalent-row-rescaling"]},
+      "gold_source": "Independent analytic configurations and targets",
+      "counterexample_for": ["semantic scaling is sufficient for every row-scale pattern"]
+    },
+    {
+      "id": "CURVED-CHAIN",
+      "purpose": "Exercise narrow curved valleys where model conditioning and accepted-step prediction interact.",
+      "factors": {"latent_groups": 2, "representations": ["base", "signed-permutation", "semantic-equivalent-row-rescaling"]},
+      "gold_source": "Independent analytic chain construction",
+      "counterexample_for": ["linear scaling gains transfer automatically to nonlinear valleys"]
+    },
+    {
+      "id": "NEAR-RANK-DEFICIENT",
+      "purpose": "Measure scaling near unstable rank transitions without claiming singular-root support.",
+      "factors": {"latent_groups": 2, "representations": ["base", "signed-permutation", "semantic-equivalent-row-rescaling"]},
+      "gold_source": "Constructed SVD factors and analytic configurations",
+      "counterexample_for": ["small model residual implies accurate configuration"]
+    },
+    {
+      "id": "REDUNDANT-OVERDETERMINED",
+      "purpose": "Separate true-root capture from positive-residual least-squares stationarity.",
+      "factors": {"latent_groups": 2, "representations": ["base", "signed-permutation", "semantic-equivalent-row-rescaling"]},
+      "gold_source": "Independent consistent-system construction",
+      "counterexample_for": ["package convergence is a root predicate"]
+    },
+    {
+      "id": "TANGENT-CIRCLE-LINE",
+      "purpose": "Stress close geometric intersections and near-tangent conditioning.",
+      "factors": {"latent_groups": 2, "representations": ["base", "signed-permutation", "semantic-equivalent-row-rescaling"]},
+      "gold_source": "Closed-form circle-line configurations and targets",
+      "counterexample_for": ["coordinate scaling repairs tangency"]
+    },
+    {
+      "id": "MULTIROOT-WARPED",
+      "purpose": "Detect transformations that improve one basin while losing other correct targets.",
+      "factors": {"latent_groups": 2, "representations": ["base", "signed-permutation", "semantic-equivalent-row-rescaling"]},
+      "gold_source": "Invertible analytic warp of independent roots and targets",
+      "counterexample_for": ["aggregate local success preserves all-target coverage"]
+    },
+    {
+      "id": "STRICT-GUARD-BOUNDARY",
+      "purpose": "Ensure local model scaling never weakens strict guard or boundary semantics.",
+      "factors": {"latent_groups": 2, "representations": ["base", "signed-permutation", "semantic-equivalent-row-rescaling"]},
+      "gold_source": "Independent guard-aware analytic construction",
+      "counterexample_for": ["residual improvement authorizes boundary promotion"]
+    },
+    {
+      "id": "OPAQUE-TRANSCENDENTAL-C0",
+      "purpose": "Require the complete experiment to operate through an opaque C0 black-box callback.",
+      "factors": {"latent_groups": 2, "representations": ["base", "signed-permutation", "semantic-equivalent-row-rescaling"]},
+      "gold_source": "Generator-disjoint validated target intervals",
+      "counterexample_for": ["scaling requires polynomial lowering or automatic differentiation"]
+    }
+  ],
+  "real_problem_policy": "Candidate execution sees only public bounds, semantic variable metadata and OracleObservation. Candidate and Gold artifacts occupy separate frozen trees; problem/family identity, Gold configurations, targets and assessor tolerances are unavailable to calibration, routing and local steps.",
+  "design": {
+    "execution_order": [
+      "Commit this card before any EXP-LOCAL-003 generator or mechanism source",
+      "Materialize and hash-separate candidate and Gold development trees",
+      "Freeze 48 development cases, 32 starts and 64 calibration points before variant execution",
+      "Run L0, LX, LR and LXR from identical starts at prefixes 8, 16 and 32",
+      "Capture Safety16 and raw traces before the independent Gold assessor opens its tree",
+      "Apply the frozen clustered recall and charged-ERT gates once",
+      "Materialize 96 generator-disjoint locked cases only if every development gate passes"
+    ],
+    "pairing": "Each of eight families has two latent groups and three semantic-equivalent representations, giving 48 cases. All variants share each case, start order, calibration block, local budget and canonical replay; representation replicates remain inside their latent-group cluster.",
+    "tuning_round_limit": 0,
+    "freeze_rule": "There is no tuning. Formulae, thresholds, case descriptors, order statistics, fallbacks, budgets and assessment code freeze before candidate or Gold development artifacts are materialized.",
+    "locked_validation_rule": "After a full development pass, materialize four new latent groups per family with the same three representations, giving 96 locked cases. Any opened failure burns and replaces the entire affected family group before analysis.",
+    "development_instances": 48,
+    "locked_instances": 96,
+    "notes": [
+      "For each latent group, base, deterministic signed variable/residual permutation, and positive row rescaling multiply y_i and s_i together so semantic z is invariant.",
+      "Safety16 is one preregistered orthogonal representation per latent group. It is report-only, excluded from promotion denominators and may only block a product claim pending a successor study.",
+      "The inferential cluster is the latent group (16 in development), never a representation row or start. Family summaries and positive-family count are descriptive only.",
+      "The schema-required RB0 baseline ID names the historical M0-M4 lineage; L0-SEMANTIC is the actual current control and its differences from raw RB0 are explicit.",
+      "LR calibration accepts a point only when the complete observation vector is status-valid and every z_i is finite; componentwise partial observations are discarded.",
+      "The additional a_i never enters wire data or RelationObservation. Every convergence test, canonical check and Gold comparison uses the unchanged semantic z vector."
+    ]
+  },
+  "hyperparameters": {
+    "calibration_point_count": {
+      "value": 64,
+      "status": "hypothesis",
+      "rationale": "Fixed Gold-independent coverage for one charged model scale estimate.",
+      "tuning_domain": [64],
+      "freeze_rule": "Generate independently of starts and persist before execution."
+    },
+    "calibration_nearest_rank": {
+      "value": "ceil(0.75*K)",
+      "status": "hypothesis",
+      "rationale": "A deterministic upper-quartile magnitude without interpolation ambiguity.",
+      "tuning_domain": ["ceil(0.75*K)"],
+      "freeze_rule": "Sort absolute z values from complete valid vectors only."
+    },
+    "minimum_valid_calibration_vectors": {
+      "value": 8,
+      "status": "hypothesis",
+      "rationale": "Avoid component scales inferred from accidental finite samples.",
+      "tuning_domain": [8],
+      "freeze_rule": "If K is below eight, or any selected a_i is not finite and positive, set every a_i to one."
+    },
+    "starts_per_case": {
+      "value": 32,
+      "status": "hypothesis",
+      "rationale": "Supports paired basin recall at fixed prefixes.",
+      "tuning_domain": [32],
+      "freeze_rule": "Persist the complete ordered matrix before execution."
+    },
+    "local_maxiters": {
+      "value": 250,
+      "status": "hypothesis",
+      "rationale": "Matches the current dense LM-QR control budget.",
+      "tuning_domain": [250],
+      "freeze_rule": "Identical for every variant and representation."
+    },
+    "recall_gain_points": {
+      "value": 0.05,
+      "status": "hypothesis",
+      "rationale": "Minimum material fixed-start recall gain.",
+      "tuning_domain": [0.05],
+      "freeze_rule": "No post-outcome threshold changes."
+    },
+    "recall_noninferiority_margin": {
+      "value": 0.02,
+      "status": "hypothesis",
+      "rationale": "Maximum tolerated recall loss for an efficiency claim.",
+      "tuning_domain": [0.02],
+      "freeze_rule": "Apply to every mandatory prefix and critical family."
+    },
+    "ert_reduction_fraction": {
+      "value": 0.20,
+      "status": "hypothesis",
+      "rationale": "Minimum charged expected-work reduction at noninferior recall.",
+      "tuning_domain": [0.2],
+      "freeze_rule": "Calibration and failed starts remain charged."
+    },
+    "ert_recall_gain_max_overhead_fraction": {
+      "value": 0.10,
+      "status": "hypothesis",
+      "rationale": "Bounds the work cost accepted for a material recall gain.",
+      "tuning_domain": [0.1],
+      "freeze_rule": "Apply only to the recall-gain path."
+    },
+    "minimum_positive_family_count": {
+      "value": 3,
+      "status": "hypothesis",
+      "rationale": "Requires a descriptive breadth check across unrelated mechanisms.",
+      "tuning_domain": [3],
+      "freeze_rule": "Family count remains descriptive and cannot replace clustered inference."
+    }
+  },
+  "budgets": {
+    "wall_seconds": [60, 180],
+    "launch_checkpoints": [8, 16, 32],
+    "local_maxiters": 250,
+    "accounting": "Charge all 64 LR/LXR calibration observations, invalid vectors, residual/Jacobian calls, factorization, rejected steps, canonical replay, Gold assessment, compilation, allocations and failed starts. Primary ERT uses primal-equivalent oracle work; process CPU and formal wall are secondary."
+  },
+  "seeds": {
+    "development_count": 16,
+    "locked_count": 32,
+    "generation": "One namespace per latent group and disjoint namespaces for parameters, representations, calibration, starts and Gold. Exact artifacts and checksums, not RNG seeds alone, are replay authority."
+  },
+  "metrics": {
+    "primary": {
+      "id": "p_local_gold",
+      "definition": "Fraction of fixed starts ending at a canonical-valid independently matched Gold configuration and target.",
+      "direction": "maximize"
+    },
+    "secondary": [
+      {
+        "id": "charged_ert_to_gold",
+        "definition": "Total charged primal-equivalent work, including calibration and full failed-start budgets, divided by Gold-valid endpoints; infinity when none succeed.",
+        "direction": "minimize"
+      },
+      {
+        "id": "positive_family_count",
+        "definition": "Descriptive count of the eight families with positive paired recall or ERT effect; never an inferential sample size.",
+        "direction": "report_only"
+      },
+      {
+        "id": "process_cpu_seconds",
+        "definition": "Charged process CPU time reported separately from oracle work.",
+        "direction": "report_only"
+      },
+      {
+        "id": "formal_wall_seconds",
+        "definition": "Host-observed formal wall time, secondary and invalid whenever host exclusion fails.",
+        "direction": "report_only"
+      },
+      {
+        "id": "calibration_fallback_count",
+        "definition": "Cases using the all-a_i-equals-one fallback.",
+        "direction": "report_only"
+      }
+    ],
+    "safety": [
+      {
+        "id": "false_candidate_count",
+        "definition": "Endpoints accepted despite failing canonical or independent Gold configuration/target truth.",
+        "direction": "zero_required"
+      },
+      {
+        "id": "semantic_or_wire_drift_count",
+        "definition": "Any change to z, raw/scale/scaled observations, relation truth, guards, domains, branches, target or public wire bytes caused by model scaling.",
+        "direction": "zero_required"
+      },
+      {
+        "id": "gold_or_identity_leak_count",
+        "definition": "Gold values, assessor tolerances, problem IDs or family names observed by candidate calibration, routing or steps.",
+        "direction": "zero_required"
+      },
+      {
+        "id": "budget_overrun_count",
+        "definition": "Attempts or calibration work exceeding a declared hard budget.",
+        "direction": "zero_required"
+      },
+      {
+        "id": "orthogonal_safety_disagreement_count",
+        "definition": "Safety16 decision disagreements under frozen orthogonal representations; report-only and excluded from development inference.",
+        "direction": "report_only"
+      }
+    ]
+  },
+  "promotion_gate": {
+    "mode": "all",
+    "criteria": [
+      "False-candidate, semantic/wire drift, Gold/identity leak and budget-overrun counts are zero.",
+      "At prefixes 8, 16 and 32, the overall latent-group-clustered one-sided 95 percent recall loss is no worse than 2 points, and no critical family has a descriptive point loss above 2 points.",
+      "At prefix 32, one candidate either gains at least 5 recall points with clustered lower bound above zero and charged ERT no more than 10 percent above L0, or is recall-noninferior within 2 points and reduces charged ERT by at least 20 percent with the clustered bound on the improvement side.",
+      "The candidate has a positive descriptive effect in at least three of eight families; this count does not replace latent-group inference.",
+      "The opaque C0 and strict-guard families pass without analytic/AD capability, family routing or semantic fallback.",
+      "Safety16 is published separately with no claim of orthogonal invariance, regardless of its report-only outcome."
+    ]
+  },
+  "kill_gate": {
+    "mode": "any",
+    "criteria": [
+      "Any candidate changes semantic z, RelationObservation, wire data or canonical/Gold acceptance semantics.",
+      "Any calibration or step reads Gold, assessor tolerances, problem identity or family identity.",
+      "Any candidate introduces a canonical false candidate or hard-budget overrun.",
+      "Every candidate fails both the recall-gain and recall-noninferior charged-ERT paths.",
+      "The opaque C0 family requires polynomial lowering, analytic derivatives or an unavailable plugin capability.",
+      "Development infrastructure fails before a complete frozen assessment; no retry or locked materialization is implied."
+    ]
+  },
+  "safety_invariants": [
+    "Semantic residual z_i is always RelationObservation.scaled = raw/semantic-scale and is never replaced by model residual m_i.",
+    "The a_i vector exists only in an experiment-local numerical model and never in DSL, plugin or wire state.",
+    "A calibration sample is valid only as a complete observation vector; fallback is all components together.",
+    "All variants receive identical ordered starts and no start is suppressed by an earlier result.",
+    "Solver status and model residual are never answer predicates; unchanged canonical replay and independent Gold decide correctness.",
+    "Candidate source imports no Gold tree and routes on no problem, family, primitive or target identity.",
+    "No product connection or locked input materialization occurs before every development gate passes."
+  ],
+  "artifacts": {
+    "run_manifest_schema": "research/schemas/run-manifest.schema.json",
+    "benchmark_manifest_schema": "research/schemas/benchmark-manifest.schema.json",
+    "result_path": "research/results/EXP-LOCAL-003/summary.json",
+    "negative_result_path": "research/negative-results/ledger.json"
+  },
+  "decision": {
+    "state": "pending",
+    "selected_variant": null,
+    "rationale": null,
+    "decision_commit": null
+  }
+}
