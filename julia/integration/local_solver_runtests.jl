@@ -178,17 +178,22 @@ end
         lower,
         upper,
     )
+    jacobian_events = NamedTuple[]
     colored_attempt = solve_local(
         diagonal_observation,
         fill(-0.5, dimension);
         lower,
         upper,
         jacobian_entries = entries,
+        jacobian_observer = event -> push!(jacobian_events, event),
     )
     @test colored_attempt.accepted
     @test collect(colored_attempt.final) ≈ collect(dense_attempt.final) atol = 1.0e-10 rtol = 1.0e-10
     @test colored_attempt.evaluations < dense_attempt.evaluations
+    @test !isempty(jacobian_events)
+    @test all(event -> event.colored && event.evaluations == 2, jacobian_events)
 
+    group_events = NamedTuple[]
     fallback, fallback_evaluations = GeoTargetCore._colored_finite_difference_jacobian(
         x -> diagonal_observation(x; reject_combined = true),
         origin,
@@ -199,9 +204,15 @@ end
         upper,
         step,
         coloring,
+        group_observer = event -> push!(group_events, event),
     )
     @test fallback ≈ dense atol = 1.0e-12 rtol = 1.0e-12
     @test fallback_evaluations == 2 + 2dimension
+    @test length(group_events) == 1
+    @test only(group_events).columns == Tuple(1:dimension)
+    @test only(group_events).grouped_evaluations == 2
+    @test only(group_events).fallback
+    @test only(group_events).fallback_evaluations == 2dimension
 
     incomplete = GeoTargetCore._local_jacobian_coloring(
         dimension,

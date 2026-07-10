@@ -257,6 +257,8 @@ function _colored_finite_difference_jacobian(
     upper_u,
     step_scale,
     coloring::LocalJacobianColoring,
+    ;
+    group_observer=nothing,
 )
     residual_count = length(base_residual)
     variable_count = length(u)
@@ -282,8 +284,10 @@ function _colored_finite_difference_jacobian(
         minus_attempted && (evaluations += 1)
         plus_valid = !plus_attempted || _usable_local_observation(plus)
         minus_valid = !minus_attempted || _usable_local_observation(minus)
+        grouped_evaluations = Int(plus_attempted) + Int(minus_attempted)
 
         if !plus_valid || !minus_valid
+            fallback_evaluations = 0
             for column in group
                 derivative, column_evaluations = _finite_difference_column(
                     evaluate_fn,
@@ -298,7 +302,14 @@ function _colored_finite_difference_jacobian(
                 )
                 jacobian[:, column] .= derivative
                 evaluations += column_evaluations
+                fallback_evaluations += column_evaluations
             end
+            group_observer === nothing || group_observer((
+                columns = Tuple(group),
+                grouped_evaluations = grouped_evaluations,
+                fallback = true,
+                fallback_evaluations = fallback_evaluations,
+            ))
             continue
         end
 
@@ -325,6 +336,12 @@ function _colored_finite_difference_jacobian(
                 end
             end
         end
+        group_observer === nothing || group_observer((
+            columns = Tuple(group),
+            grouped_evaluations = grouped_evaluations,
+            fallback = false,
+            fallback_evaluations = 0,
+        ))
     end
     return jacobian, evaluations
 end
@@ -404,6 +421,8 @@ function solve_local(
     cancelled = () -> false,
     jacobian_entries = nothing,
     color_order::Symbol = :natural,
+    color_group_observer = nothing,
+    jacobian_observer = nothing,
 )
     variable_count = length(x0)
     variable_count > 0 || throw(ArgumentError("a local solve needs at least one variable"))
@@ -537,9 +556,14 @@ function solve_local(
                 upper_u,
                 options.finite_difference_step,
                 coloring,
+                group_observer = color_group_observer,
             )
         end
         evaluations += jacobian_evaluations
+        jacobian_observer === nothing || jacobian_observer((
+            colored = coloring !== nothing,
+            evaluations = jacobian_evaluations,
+        ))
         step = _lm_step(jacobian, residual, damping)
         if norm(step) <= options.step_tolerance * (1 + norm(u))
             push!(
