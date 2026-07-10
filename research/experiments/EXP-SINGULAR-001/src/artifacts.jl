@@ -217,6 +217,50 @@ function s2_development_input_document(
     )
 end
 
+function s3_development_input_document(
+    cases=s3_development_cases(),
+    options::ExperimentOptions=ExperimentOptions();
+    card_path=normpath(joinpath(@__DIR__, "..", "..", "EXP-SINGULAR-001.json")),
+    preregistration_path=normpath(joinpath(@__DIR__, "..", "s3-preregistration.json")),
+    parent_summary_path=normpath(joinpath(
+        @__DIR__,
+        "..",
+        "..",
+        "..",
+        "results",
+        "EXP-SINGULAR-001",
+        "development-s2-v0",
+        "summary.json",
+    )),
+)
+    case_document = case_manifest_document(cases)
+    collection_material = join((case.checksum for case in cases), '\n')
+    return Dict{String,Any}(
+        "card_path" => replace(
+            relpath(card_path, normpath(joinpath(@__DIR__, "..", "..", "..", ".."))),
+            '\\' => '/',
+        ),
+        "card_sha256" => bytes2hex(sha256(read(card_path))),
+        "case_collection_sha256" => bytes2hex(sha256(collection_material)),
+        "cases" => case_document["cases"],
+        "development_instance_count" => length(cases),
+        "experiment_id" => EXPERIMENT_ID,
+        "harness_version" => string(HARNESS_VERSION),
+        "options" => _options_document(options),
+        "parent_gate" => "development-s2-v0",
+        "parent_summary_sha256" => bytes2hex(sha256(read(parent_summary_path))),
+        "preregistration_sha256" => bytes2hex(sha256(read(preregistration_path))),
+        "route_precision_bits" => Any[128, 256],
+        "schema" => "geotarget.singular-s3-development-input/v1",
+        "transform_namespace" => "singular-s3-development-v0",
+        "variants" => Any[
+            "S1-AP-LMQR",
+            "S3-AP-BROYDEN",
+            "S3-ANALYTIC-SECANT-CONTROL",
+        ],
+    )
+end
+
 function write_json_artifact(path::AbstractString, document)
     destination = abspath(String(path))
     mkpath(dirname(destination))

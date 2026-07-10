@@ -307,6 +307,40 @@ end
     @test full_rank.root_evidence === nothing
 end
 
+@testset "S3 development inputs are frozen before candidate outcomes" begin
+    cases = s3_development_cases()
+    @test length(cases) == 30
+    @test length(unique(case.input.oracle.id for case in cases)) == 30
+    @test length(unique(case.input.oracle.metamorphic_group for case in cases)) == 10
+    @test all(
+        count(other -> other.input.oracle.metamorphic_group == case.input.oracle.metamorphic_group, cases) == 3 for
+        case in cases
+    )
+    @test count(case -> case.input.oracle.family == "SING-ISOLATED-MULTIPLE", cases) == 9
+    @test count(case -> case.input.oracle.family == "SING-MANIFOLD-CONTROLS", cases) == 6
+    @test count(case -> case.input.oracle.family == "SING-NONROOT-STATIONARY", cases) == 6
+    @test count(case -> case.input.oracle.family == "SING-TANGENCY-AND-CLOSE-ROOTS", cases) == 9
+    document = s3_development_input_document(cases)
+    @test document["schema"] == "geotarget.singular-s3-development-input/v1"
+    @test document["development_instance_count"] == 30
+    @test document["parent_gate"] == "development-s2-v0"
+    @test document["transform_namespace"] == "singular-s3-development-v0"
+    @test length(document["case_collection_sha256"]) == 64
+    @test length(document["preregistration_sha256"]) == 64
+    @test document["variants"] == [
+        "S1-AP-LMQR",
+        "S3-AP-BROYDEN",
+        "S3-ANALYTIC-SECANT-CONTROL",
+    ]
+    manifest_path = joinpath(@__DIR__, "..", "s3-development-input-manifest.json")
+    @test isfile(manifest_path)
+    frozen = JSON3.read(read(manifest_path, String))
+    @test frozen.case_collection_sha256 == document["case_collection_sha256"]
+    @test frozen.preregistration_sha256 == document["preregistration_sha256"]
+    @test [entry.checksum for entry in frozen.cases] ==
+          [entry["checksum"] for entry in document["cases"]]
+end
+
 @testset "S2 metamorphic decisions agree" begin
     cases = s2_development_cases()
     for group in unique(case.input.oracle.metamorphic_group for case in cases)

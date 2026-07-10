@@ -449,6 +449,179 @@ function s2_development_cases()
     return cases
 end
 
+function _s3_system_case(
+    id::AbstractString;
+    mode::Symbol,
+    root=(0.0, 0.0),
+    multiplicity::Integer=2,
+    coupling::Real=0.25,
+    separation::Real=0.0,
+    inconsistency::Real=0.0,
+    tangent_coordinate::Real=0.0,
+    target_scale::Real=1.0,
+    variable_transform,
+    residual_transform,
+    group::AbstractString,
+)
+    mode in (:isolated, :manifold_constant, :manifold_varying, :nonroot, :fold) ||
+        throw(ArgumentError("unsupported S3 system mode"))
+    multiplicity >= 2 || throw(ArgumentError("multiplicity must be at least two"))
+    q = Matrix{Float64}(variable_transform)
+    p = Matrix{Float64}(residual_transform)
+    size(q) == (2, 2) || throw(DimensionMismatch("variable transform must be 2x2"))
+    size(p) == (2, 2) || throw(DimensionMismatch("residual transform must be 2x2"))
+    frozen_root = Float64[root...]
+    frozen_coupling = Float64(coupling)
+    frozen_separation = Float64(separation)
+    frozen_inconsistency = Float64(inconsistency)
+    frozen_tangent = Float64(tangent_coordinate)
+    frozen_target_scale = Float64(target_scale)
+    local_endpoint = if mode === :fold
+        frozen_root .+ [0.0, frozen_separation]
+    elseif mode in (:manifold_constant, :manifold_varying)
+        [frozen_root[1], frozen_tangent]
+    else
+        copy(frozen_root)
+    end
+    endpoint = q * local_endpoint
+
+    function residual(z::AbstractVector{T}) where {T<:Real}
+        x = transpose(_matrix_for_type(T, q)) * z
+        du = x[1] - T(frozen_root[1])
+        dv = x[2] - T(frozen_root[2])
+        raw = if mode === :isolated
+            power = dv^multiplicity
+            T[du + T(frozen_coupling) * power, power]
+        elseif mode in (:manifold_constant, :manifold_varying)
+            T[du, T(2) * du]
+        elseif mode === :nonroot
+            T[du, T(2) * du + T(frozen_inconsistency)]
+        else
+            T[du, dv^2 - T(frozen_separation)^2]
+        end
+        return _matrix_for_type(T, p) * raw
+    end
+    function target(z::AbstractVector{T}) where {T<:Real}
+        x = transpose(_matrix_for_type(T, q)) * z
+        if mode === :manifold_constant
+            return x[1]
+        elseif mode === :manifold_varying
+            return x[2]
+        end
+        return T(3) / T(8) + T(frozen_target_scale) * (x[1] - T(0.5) * x[2])
+    end
+    function jacobian(z::AbstractVector{T}) where {T<:Real}
+        x = transpose(_matrix_for_type(T, q)) * z
+        dv = x[2] - T(frozen_root[2])
+        raw = if mode === :isolated
+            directional = T(multiplicity) * dv^(multiplicity - 1)
+            T[one(T) T(frozen_coupling) * directional; zero(T) directional]
+        elseif mode in (:manifold_constant, :manifold_varying, :nonroot)
+            T[one(T) zero(T); T(2) zero(T)]
+        else
+            T[one(T) zero(T); zero(T) T(2) * dv]
+        end
+        return _matrix_for_type(T, p) * raw * transpose(_matrix_for_type(T, q))
+    end
+
+    family = if mode === :isolated
+        "SING-ISOLATED-MULTIPLE"
+    elseif mode in (:manifold_constant, :manifold_varying)
+        "SING-MANIFOLD-CONTROLS"
+    elseif mode === :nonroot
+        "SING-NONROOT-STATIONARY"
+    else
+        "SING-TANGENCY-AND-CLOSE-ROOTS"
+    end
+    oracle = EndpointOracle(
+        id,
+        family,
+        group,
+        2,
+        2,
+        :C2,
+        residual,
+        target,
+        jacobian,
+    )
+    input = CandidateInput(oracle, endpoint)
+    parameters = Dict{String,Any}(
+        "coupling" => frozen_coupling,
+        "inconsistency" => frozen_inconsistency,
+        "local_endpoint" => local_endpoint,
+        "mode" => string(mode),
+        "multiplicity" => Int(multiplicity),
+        "residual_transform" => vec(p),
+        "root" => frozen_root,
+        "separation" => frozen_separation,
+        "tangent_coordinate" => frozen_tangent,
+        "target_scale" => frozen_target_scale,
+        "transform_namespace" => "singular-s3-development-v0",
+        "variable_transform" => vec(q),
+    )
+    gold = if mode in (:isolated, :fold)
+        GoldTruth(
+            :isolated_root;
+            configuration=endpoint,
+            target=Float64(target(endpoint)),
+            finite_discrete_target=true,
+        )
+    elseif mode === :manifold_constant
+        GoldTruth(
+            :finite_manifold_target;
+            target=frozen_root[1],
+            finite_discrete_target=true,
+        )
+    elseif mode === :manifold_varying
+        GoldTruth(:nonfinite_target_image; finite_discrete_target=false)
+    else
+        GoldTruth(:no_local_root)
+    end
+    return _generated(input, gold, parameters)
+end
+
+"""Generator- and transform-disjoint S3 development endpoints, frozen pre-outcome."""
+function s3_development_cases()
+    signed_axis = [-1.0 0.0; 0.0 1.0]
+    quarter_turn = [0.0 -1.0; 1.0 0.0]
+    negative_quarter_turn = [0.0 1.0; -1.0 0.0]
+    negation = [-1.0 0.0; 0.0 -1.0]
+    representations = (
+        ("signed-axis-quarter-residual", signed_axis, quarter_turn),
+        ("quarter-turn-signed-residual", quarter_turn, signed_axis),
+        ("negative-quarter-negated-residual", negative_quarter_turn, negation),
+    )
+    specifications = (
+        (group="s3-isolated-m2-a", mode=:isolated, root=(0.25, -0.5), multiplicity=2, coupling=0.25, target_scale=1.0),
+        (group="s3-isolated-m2-b", mode=:isolated, root=(-0.75, 0.125), multiplicity=2, coupling=-0.5, target_scale=2.0^-20),
+        (group="s3-isolated-m4-stress", mode=:isolated, root=(0.5, 0.25), multiplicity=4, coupling=0.5, target_scale=1.0),
+        (group="s3-manifold-constant", mode=:manifold_constant, root=(0.25, 0.0), tangent_coordinate=0.375),
+        (group="s3-manifold-varying", mode=:manifold_varying, root=(-0.5, 0.0), tangent_coordinate=-0.25),
+        (group="s3-nonroot-below-semantic", mode=:nonroot, root=(0.0, 0.0), inconsistency=2.0^-42),
+        (group="s3-nonroot-visible", mode=:nonroot, root=(0.0, 0.0), inconsistency=2.0^-24),
+        (group="s3-fold-separated", mode=:fold, root=(0.125, 0.0), separation=2.0^-10, target_scale=1.0),
+        (group="s3-fold-close", mode=:fold, root=(-0.25, 0.0), separation=2.0^-24, target_scale=2.0^-20),
+        (group="s3-fold-coalesced", mode=:fold, root=(0.625, 0.0), separation=0.0, target_scale=1.0),
+    )
+    cases = GeneratedEndpoint[]
+    for specification in specifications
+        for (representation, q, p) in representations
+            push!(
+                cases,
+                _s3_system_case(
+                    "$(specification.group)-$representation";
+                    specification...,
+                    variable_transform=q,
+                    residual_transform=p,
+                ),
+            )
+        end
+    end
+    length(cases) == 30 || error("S3 development grid must contain 30 cases")
+    allunique(case.input.oracle.id for case in cases) || error("S3 ids must be unique")
+    return cases
+end
+
 """Frozen in-memory controls; development materialization is a later step."""
 function fixed_control_cases()
     angle = pi / 4
