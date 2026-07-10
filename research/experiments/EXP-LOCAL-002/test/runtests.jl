@@ -3,8 +3,10 @@ using Test
 
 include(joinpath(@__DIR__, "..", "src", "ExperimentLocal002.jl"))
 include(joinpath(@__DIR__, "..", "src", "DevelopmentLocal002.jl"))
+include(joinpath(@__DIR__, "..", "src", "RoutingLocal002.jl"))
 using .ExperimentLocal002
 using .DevelopmentLocal002
+using .RoutingLocal002
 
 @testset "EXP-LOCAL-002 frozen pilot material" begin
     @test string(Base.pkgversion(ExperimentLocal002.NonlinearSolve)) == "4.20.2"
@@ -27,6 +29,54 @@ using .DevelopmentLocal002
             @test validation["accepted"]
         end
     end
+end
+
+@testset "EXP-LOCAL-002 preregistered diagnostic routing" begin
+    @test validate_amendment()
+    policy_source = read(joinpath(@__DIR__, "..", "src", "routing_policy.jl"), String)
+    for forbidden in ("family_id", "instance_id", "known_answer", "target value", "start_index")
+        @test !occursin(forbidden, policy_source)
+    end
+
+    problems = development_problems()
+    low_dimension = first(problems)
+    low = route_diagnostic(low_dimension, low_dimension.saved_starts[:, 1])
+    @test low.selected_algorithm == "NLS-TR"
+    @test !low.computed
+    @test low.residual_calls == 0
+
+    opaque = only(filter(
+        problem -> problem.family_id == "OPAQUE-TRANSCENDENTAL-C0" &&
+            problem.metadata[:loop_count] == 1,
+        problems,
+    ))
+    c0 = route_diagnostic(opaque, opaque.saved_starts[:, 1])
+    @test c0.selected_algorithm == "NLS-TR"
+    @test c0.capability == "C0"
+    @test !c0.computed
+
+    rank_deficient = only(filter(
+        problem -> problem.dimension == 16 &&
+            problem.metadata[:generator_role] == :analytic_conditioning_control,
+        problems,
+    ))
+    rank_route = route_diagnostic(rank_deficient, rank_deficient.saved_starts[:, 1])
+    @test rank_route.selected_algorithm == "NLS-TR"
+    @test rank_route.computed
+    @test rank_route.numerical_rank < rank_route.dimension
+
+    selected_count = 0
+    diagnostic_calls = 0
+    fallback_count = 0
+    for problem in problems, start in eachcol(problem.saved_starts)
+        diagnostic = route_diagnostic(problem, start)
+        selected_count += diagnostic.selected_algorithm == "NLS-LM"
+        diagnostic_calls += diagnostic.residual_calls
+        fallback_count += diagnostic.explicit_fallback
+    end
+    @test selected_count == 11
+    @test diagnostic_calls == 5_120
+    @test fallback_count == 0
 end
 
 @testset "EXP-LOCAL-002 frozen development grid" begin
