@@ -1,0 +1,144 @@
+{
+  "schema": "geotarget.singular-s3-preregistration/v1",
+  "experiment_id": "EXP-SINGULAR-001",
+  "phase": "S3-AP-BROYDEN-development",
+  "status": "frozen-before-input-materialization",
+  "parent_gate": {
+    "result": "development-s2-v0",
+    "summary_sha256": "15bbc24adfbf9b73ad2a6e7d53ba6d54146230856c3db9337d460f99ba2e7f59",
+    "decision": "advance-to-S3-AP-BROYDEN"
+  },
+  "claim_boundary": {
+    "locked_validation": false,
+    "product_connected": false,
+    "allowed_claim": "A development-only comparison of S1 and S3 on stable-rank-deficient fixed endpoints, with controls that can only advance the sequence to S4 or a later locked gate.",
+    "forbidden_claims": [
+      "general singular-root certification",
+      "all-root completeness",
+      "production readiness",
+      "manifold isolation from finite probes",
+      "a result about the unopened locked split"
+    ]
+  },
+  "variants": [
+    {
+      "id": "S1-AP-LMQR",
+      "role": "paired baseline",
+      "implementation": "unchanged frozen S1 implementation"
+    },
+    {
+      "id": "S3-AP-BROYDEN",
+      "role": "candidate",
+      "implementation": "multiprecision good-Broyden with stable singular-route diagnostics and independently seeded confirmations"
+    },
+    {
+      "id": "S3-ANALYTIC-SECANT-CONTROL",
+      "role": "lower-bound control",
+      "implementation": "independently coded analytic-Jacobian iteration with a two-point secant rescue; candidate code and finite-difference Jacobian helpers are not reused"
+    }
+  ],
+  "routing_contract": {
+    "allowed_inputs": [
+      "declared callback capability",
+      "problem and residual dimensions",
+      "canonical residual values",
+      "charged progress traces",
+      "rank, condition and nullspace diagnostics at two precisions and two finite-difference radii"
+    ],
+    "forbidden_inputs": [
+      "case id",
+      "family id",
+      "metamorphic group",
+      "Gold truth",
+      "generator parameters",
+      "target identity"
+    ],
+    "candidate_trigger": "C2-or-C3V, square system, primary endpoint has canonical residual below the strict numerical goal, and rank deficiency/nullity agree at 128 and 256 bits and at radius multipliers 1 and 0.5",
+    "promotion_requirements": [
+      "the route trigger is satisfied",
+      "two frozen perturbation confirmations independently contract to the primary endpoint",
+      "every primary and confirmation endpoint passes canonical semantic replay",
+      "a linear-convergence trace gate is satisfied without reading family or Gold",
+      "typed configuration- and target-error estimates are within their frozen goals",
+      "the independently recomputed target enclosure contains Gold during analysis"
+    ]
+  },
+  "development_split": {
+    "namespace": "singular-s3-development-v0",
+    "instance_count": 30,
+    "metamorphic_group_count": 10,
+    "representations_per_group": 3,
+    "generator_disjoint_from": [
+      "development-s0-s1-v0",
+      "development-s2-v0"
+    ],
+    "transforms": [
+      "signed-axis-with-quarter-turn-residual",
+      "quarter-turn-with-signed-axis-residual",
+      "negative-quarter-turn-with-negated-residual"
+    ],
+    "strata": [
+      {
+        "id": "isolated-even-multiple",
+        "groups": 3,
+        "instances": 9,
+        "notes": "two double-root groups and one quartic-root stress group"
+      },
+      {
+        "id": "manifold-controls",
+        "groups": 2,
+        "instances": 6,
+        "notes": "one varying-target and one structurally constant-target manifold"
+      },
+      {
+        "id": "inconsistent-nonroots",
+        "groups": 2,
+        "instances": 6,
+        "notes": "one inconsistency lies below semantic replay tolerance but above the strict numerical residual goal"
+      },
+      {
+        "id": "tangency-coalescence-close-roots",
+        "groups": 3,
+        "instances": 9,
+        "notes": "two regular close-root folds and their coalesced singular limit"
+      }
+    ]
+  },
+  "frozen_controls": {
+    "precision_ladder_bits": [128, 256, 512, 1024],
+    "route_precision_bits": [128, 256],
+    "finite_difference_radius_multipliers": [1.0, 0.5],
+    "maximum_iterations": 64,
+    "maximum_callbacks": 4096,
+    "wall_seconds": 10.0,
+    "independent_confirmation_count": 2,
+    "confirmation_perturbation_radius": 1e-6,
+    "rank_roundoff_multiplier": 32.0,
+    "error_reserve_multiplier": 16.0,
+    "configuration_error_goal": 1e-10,
+    "target_error_goal": 1e-12,
+    "semantic_residual_tolerance": 1e-12,
+    "candidate_tuning_rounds_remaining": 0
+  },
+  "development_advancement_gate": {
+    "mode": "all",
+    "criteria": [
+      "false promotions equal zero across all variants",
+      "semantic-replay-only promotions equal zero",
+      "budget and deadline violations beyond typed unknown equal zero",
+      "metamorphic promotion and Gold-success disagreements equal zero",
+      "all manifold, nonroot and regular close-root cases remain unpromoted by S3",
+      "S3 succeeds on at least 75 percent of the 12 isolated/coalesced singular cases",
+      "S3 gains at least 50 percentage points of isolated/coalesced singular recall over S1",
+      "S3 and the independent analytic/secant control have identical promotion/Gold-success decisions",
+      "all promoted configuration- and target-error estimates cover development Gold",
+      "all promoted S3 rows satisfy the stable-rank, independent-confirmation, canonical-semantics and linear-trace gates"
+    ],
+    "pass_action": "advance to S4-AP-BORDERED-NULLSPACE development; keep S3 product-disconnected and do not open locked inputs",
+    "fail_action": "record a bounded negative result for S3 and continue only according to the preregistered sequence"
+  },
+  "reserved_records": {
+    "evidence_id": "EVID-18",
+    "negative_result_id": "NEG-012"
+  }
+}
