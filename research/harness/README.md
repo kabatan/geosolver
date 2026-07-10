@@ -96,9 +96,12 @@ terminal B. Do not use either terminal for other work until observation ends.
 
 The Windows backend uses only Python's standard library and one persistent
 PowerShell 7 inventory child. A capability-gated `System.Management`
-process-start subscription supplements low-rate snapshots so short-lived work
-cannot disappear between them. It permits the exact lease-owner process tree,
-excludes the observer and its declared monitoring infrastructure, and fails closed on other
+subscription first attempts `Win32_ProcessStartTrace`; hosts that deny that
+provider use an explicitly recorded `__InstanceCreationEvent` fallback. The
+fallback is polling-based and does not claim capture of every sub-interval
+process; unexplained aggregate CPU remains an independent fail-closed check. It
+permits the exact lease-owner process tree, excludes the observer from
+per-process checks, and fails closed on other
 Julia/Python/compiler/benchmark/package-manager work, configured CPU or memory
 pressure, unexplained system-wide CPU, lease loss, excessive polling gaps,
 backend stall/exit, PID/topology mismatch, or output overwrite. It reads only
@@ -116,11 +119,11 @@ C:\Users\bakat\miniforge3\python.exe -m research.harness.observe_formal_host `
   --capture-schema exp-jac-003-formal-abba-capture/v1 `
   --segment-count 4 `
   --label EXP-JAC-003-development-abba `
-  --observer "Codex independent host observer" `
+  --observer "Codex subagent /root/jac003_host_plan" `
   --outer-audit C:\solver-worktrees\exp-jac-003-inputs\research\results\EXP-JAC-003-development-formal-run-audit.json `
   --capture C:\solver-worktrees\exp-jac-003-inputs\research\results\EXP-JAC-003-development-abba-staging\capture.json `
   --lock "$env:LOCALAPPDATA/GeoTarget/formal-performance.lock" `
-  --ready C:\solver-worktrees\exp-jac-003-inputs\research\results\EXP-JAC-003-development-host-observation.ready.json `
+  --ready C:\solver\research\results\EXP-JAC-003\development-host-observation.ready.json `
   --output C:\solver-worktrees\exp-jac-003-inputs\research\results\EXP-JAC-003-development-host-observation.json `
   --powershell "C:\Program Files\PowerShell\7\pwsh.exe" `
   --poll-seconds 2 --max-poll-gap-seconds 5 `
@@ -139,5 +142,6 @@ parent/event capabilities. The final receipt also binds the terminal
 outer/capture hashes, every observed formal `(PID, creation-time)` identity and
 its canonical digest, maximum polling gap, unexplained aggregate CPU maximum,
 and the raw inventory stream digest. Success requires every formal descendant,
-not only the outer and four segments, to end after lease release. Any nonzero
-event count makes the observation unusable by the frozen finalizer.
+not only the outer and four segments, to be absent in two consecutive complete
+snapshots after lease release. Any nonzero event count makes the observation
+unusable by the frozen finalizer.

@@ -11,6 +11,7 @@ from types import SimpleNamespace
 
 from research.harness.observe_formal_host import (
     ContentionTracker,
+    FormalClearTracker,
     Inventory,
     LeaseTracker,
     LeaseView,
@@ -118,11 +119,29 @@ class ProcessObservationTests(unittest.TestCase):
             process(11, 1, "python", start=999),
             process(12, 1, "julia", start=120),
             process(13, 12, "julia", start=130),
+            events=(ProcessStartEvent(14, 11, "julia", 140),),
         )
         extend_formal_identities(second, 10, known)
         self.assertIn((12, 120), known)
         self.assertIn((13, 130), known)
         self.assertNotIn((11, 999), known)
+        self.assertNotIn((14, 140), known)
+
+    def test_release_requires_two_clear_snapshots_and_defers_event_only(self) -> None:
+        tracker = FormalClearTracker()
+        formal = {(10, 100), (11, 110)}
+        event_sample = inventory(1, events=(ProcessStartEvent(11, 10, "julia", 110),))
+        self.assertFalse(
+            tracker.observe(event_sample, formal, {(11, 110)}, lease_released=True)
+        )
+        self.assertEqual(tracker.count, 0)
+        self.assertFalse(
+            tracker.observe(inventory(2), formal, set(), lease_released=True)
+        )
+        self.assertTrue(
+            tracker.observe(inventory(3), formal, set(), lease_released=True)
+        )
+        self.assertEqual(tracker.ticks, [2, 3])
 
     def test_short_process_event_and_unexplained_cpu_fail_closed(self) -> None:
         tracker = ContentionTracker(
@@ -147,6 +166,28 @@ class ProcessObservationTests(unittest.TestCase):
         categories = {event["category"] for event in tracker.events.values()}
         self.assertIn("process_start", categories)
         self.assertIn("aggregate_cpu", categories)
+
+    def test_shared_wmi_cpu_remains_unexplained_aggregate(self) -> None:
+        tracker = ContentionTracker(
+            own_pids=set(),
+            cpu_heavy_cores=100,
+            memory_heavy_bytes=10**12,
+            memory_growth_bytes=10**12,
+            max_poll_gap_seconds=2,
+            unexplained_cpu_cores=0.5,
+        )
+        tracker.observe(inventory(0, process(7, 1, "WmiPrvSE", cpu=0), kernel=0), set())
+        tracker.observe(
+            inventory(
+                10,
+                process(7, 1, "WmiPrvSE", cpu=10_000_000),
+                kernel=10_000_000,
+            ),
+            set(),
+        )
+        categories = {event["category"] for event in tracker.events.values()}
+        self.assertIn("aggregate_cpu", categories)
+        self.assertNotIn("host_process", categories)
 
     def test_valid_and_lost_lease_transitions(self) -> None:
         tracker = LeaseTracker("formal")
@@ -264,7 +305,8 @@ class FinalizationTests(unittest.TestCase):
                 (),
                 parent_capability=True,
                 event_capability=True,
-                event_source="event",
+                true_trace_capability=True,
+                event_source="Win32_ProcessStartTrace",
                 event_within_seconds=0.1,
                 capability_probe_pid=9,
             )
@@ -272,6 +314,10 @@ class FinalizationTests(unittest.TestCase):
             self.assertEqual(bound["settings"]["timeout_seconds"], 100.0)
             self.assertEqual(bound["paths"]["output"], str((root / "output").resolve()))
             self.assertTrue(bound["backend"]["event_capability"])
+            self.assertTrue(bound["backend"]["true_trace_capability"])
+            self.assertEqual(
+                bound["backend"]["event_source"], "Win32_ProcessStartTrace"
+            )
             source = bound["observer_source"]
             self.assertEqual(Path(source["path"]), Path(source["path"]).resolve())
             self.assertEqual(

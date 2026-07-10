@@ -110,27 +110,52 @@ $source = "geotarget-process-start-$PID"
 $selfProcess = Get-Process -Id $PID
 $parentCapability = ($null -ne $selfProcess.Parent -and $selfProcess.Parent.Id -eq $observerPid)
 Add-Type -AssemblyName System.Management
-$eventQuery = "SELECT * FROM __InstanceCreationEvent WITHIN $eventWithin " +
-  "WHERE TargetInstance ISA 'Win32_Process'"
-$watcher = [System.Management.ManagementEventWatcher]::new($eventQuery)
-$subscription = Register-ObjectEvent -InputObject $watcher `
-  -EventName EventArrived -SourceIdentifier $source
-$watcher.Start()
+$trueTraceCapability = $false
+try {
+  $watcher = [System.Management.ManagementEventWatcher]::new(
+    'SELECT * FROM Win32_ProcessStartTrace')
+  $subscription = Register-ObjectEvent -InputObject $watcher `
+    -EventName EventArrived -SourceIdentifier $source
+  $watcher.Start()
+  $eventSourceName = 'Win32_ProcessStartTrace'
+  $trueTraceCapability = $true
+} catch {
+  Unregister-Event -SourceIdentifier $source -ErrorAction SilentlyContinue
+  if ($null -ne $watcher) { $watcher.Dispose() }
+  $eventQuery = "SELECT * FROM __InstanceCreationEvent WITHIN $eventWithin " +
+    "WHERE TargetInstance ISA 'Win32_Process'"
+  $watcher = [System.Management.ManagementEventWatcher]::new($eventQuery)
+  $subscription = Register-ObjectEvent -InputObject $watcher `
+    -EventName EventArrived -SourceIdentifier $source
+  $watcher.Start()
+  $eventSourceName = 'System.Management __InstanceCreationEvent fallback'
+}
 
 function Read-StartEvents {
   $rows = [Collections.Generic.List[object]]::new()
   foreach ($event in @(Get-Event -SourceIdentifier $source -ErrorAction SilentlyContinue)) {
     try {
-      $target = $event.SourceEventArgs.NewEvent['TargetInstance']
       $created = 0
-      try {
-        $created = [System.Management.ManagementDateTimeConverter]::ToDateTime(
-          [string]$target.CreationDate).ToUniversalTime().Ticks
-      } catch {}
+      $newEvent = $event.SourceEventArgs.NewEvent
+      if ($trueTraceCapability) {
+        $pidValue = [int]$newEvent['ProcessID']
+        $parentValue = [int]$newEvent['ParentProcessID']
+        $nameValue = [string]$newEvent['ProcessName']
+        try { $created = [int64]$newEvent['TIME_CREATED'] } catch {}
+      } else {
+        $target = $newEvent['TargetInstance']
+        $pidValue = [int]$target.ProcessId
+        $parentValue = [int]$target.ParentProcessId
+        $nameValue = [string]$target.Name
+        try {
+          $created = [System.Management.ManagementDateTimeConverter]::ToDateTime(
+            [string]$target.CreationDate).ToUniversalTime().Ticks
+        } catch {}
+      }
       $rows.Add([ordered]@{
-        pid = [int]$target.ProcessId
-        parent_pid = [int]$target.ParentProcessId
-        name = [string]$target.Name
+        pid = $pidValue
+        parent_pid = $parentValue
+        name = $nameValue
         start_ticks = [int64]$created
       })
     } finally {
@@ -140,12 +165,13 @@ function Read-StartEvents {
   return $rows
 }
 
+$probeDuration = if ($trueTraceCapability) { 25 } else { 750 }
 $probe = Start-Process -FilePath (Join-Path $PSHOME 'pwsh.exe') `
   -ArgumentList @('-NoLogo','-NoProfile','-NonInteractive','-Command',
-    'Start-Sleep -Milliseconds 750') -WindowStyle Hidden -PassThru
+    "Start-Sleep -Milliseconds $probeDuration") -WindowStyle Hidden -PassThru
 $probePid = $probe.Id
 $probe.WaitForExit()
-Start-Sleep -Milliseconds ([math]::Ceiling($eventWithin * 1000) + 250)
+Start-Sleep -Milliseconds ([math]::Ceiling($eventWithin * 1000) + 1000)
 $pendingEvents = @(Read-StartEvents)
 $eventCapability = @($pendingEvents | Where-Object {
   $_.pid -eq $probePid -and $_.start_ticks -gt 0 }).Count -eq 1
@@ -184,7 +210,8 @@ while ($true) {
     monotonic_frequency = $frequency
     parent_capability = $parentCapability
     event_capability = $eventCapability
-    event_source = "System.Management __InstanceCreationEvent"
+    event_source = $eventSourceName
+    true_trace_capability = $trueTraceCapability
     event_within_seconds = $eventWithin
     capability_probe_pid = $probePid
     start_events = $events
@@ -269,6 +296,7 @@ class Inventory:
     system_user_100ns: int = 0
     parent_capability: bool = False
     event_capability: bool = False
+    true_trace_capability: bool = False
     event_source: str = ""
     event_within_seconds: float = 0.0
     capability_probe_pid: int = 0
@@ -290,6 +318,7 @@ class Inventory:
             system_user_100ns=user,
             parent_capability=value.get("parent_capability") is True,
             event_capability=value.get("event_capability") is True,
+            true_trace_capability=value.get("true_trace_capability") is True,
             event_source=str(value.get("event_source", "")),
             event_within_seconds=float(value.get("event_within_seconds", 0.0)),
             capability_probe_pid=int(value.get("capability_probe_pid", 0)),
@@ -336,23 +365,10 @@ def extend_formal_identities(
                 formal_pids.add(row.pid)
                 changed = True
     known.update(row.identity for row in inventory.processes if row.pid in formal_pids)
-    pending = list(inventory.start_events)
-    while pending:
-        next_pending: list[ProcessStartEvent] = []
-        changed = False
-        formal_event_pids = set(formal_pids)
-        for event in pending:
-            if event.start_ticks > 0 and (
-                event.pid == root_pid or event.parent_pid in formal_event_pids
-            ):
-                known.add(event.identity)
-                formal_pids.add(event.pid)
-                changed = True
-            else:
-                next_pending.append(event)
-        if not changed:
-            break
-        pending = next_pending
+    live_formal_parent_pids = frozenset(formal_pids)
+    for event in inventory.start_events:
+        if event.start_ticks > 0 and event.parent_pid in live_formal_parent_pids:
+            known.add(event.identity)
     return known
 
 
@@ -431,6 +447,30 @@ class LeaseTracker:
         if same and lease.state == "released" and lease.held is True:
             return  # owner metadata is written immediately before unlock
         self._loss("lease label, PID, state or byte lock was lost")
+
+
+class FormalClearTracker:
+    def __init__(self, required_snapshots: int = 2) -> None:
+        self.required_snapshots = required_snapshots
+        self.count = 0
+        self.ticks: list[int] = []
+
+    def observe(
+        self,
+        inventory: Inventory,
+        formal_identities: set[tuple[int, int]],
+        new_identities: set[tuple[int, int]],
+        *,
+        lease_released: bool,
+    ) -> bool:
+        current = {row.identity for row in inventory.processes}
+        if lease_released and not (formal_identities & current) and not new_identities:
+            self.count += 1
+            self.ticks.append(inventory.monotonic_ticks)
+        else:
+            self.count = 0
+            self.ticks.clear()
+        return self.count >= self.required_snapshots
 
 
 class ContentionTracker:
@@ -550,12 +590,7 @@ class ContentionTracker:
                 prior = old.get(row.identity)
                 if prior is None:
                     continue
-                name = row.name.lower().removesuffix(".exe")
-                if (
-                    row.identity in formal_identities
-                    or row.pid in self.own_pids
-                    or name in OBSERVER_INFRA_NAMES
-                ):
+                if row.identity in formal_identities or row.pid in self.own_pids:
                     accounted += max(0, row.cpu_100ns - prior.cpu_100ns)
             unexplained = max(0, system_busy - accounted) / 10_000_000 / gap
             self.unexplained_cpu_cores_max = max(
@@ -759,6 +794,7 @@ def observation_bindings(
             "script_sha256": worker.script_sha256,
             "parent_capability": capability.parent_capability,
             "event_capability": capability.event_capability,
+            "true_trace_capability": capability.true_trace_capability,
             "event_source": capability.event_source,
             "event_within_seconds": capability.event_within_seconds,
             "capability_probe_pid": capability.capability_probe_pid,
@@ -841,6 +877,7 @@ def run_observer(arguments: argparse.Namespace) -> int:
     started = ""
     ended = ""
     all_ended = False
+    clear_tracker = FormalClearTracker(required_snapshots=2)
     try:
         raw, first = worker.next(arguments.backend_stall_seconds)
         digest.update(raw)
@@ -914,9 +951,11 @@ def run_observer(arguments: argparse.Namespace) -> int:
 
             lease = read_lease(arguments.lock.resolve())
             lease_tracker.observe(lease, audit_exists=arguments.outer_audit.exists())
+            prior_formal_identities = set(formal_identities)
             extend_formal_identities(
                 inventory, lease_tracker.owner_pid, formal_identities
             )
+            new_formal_identities = formal_identities - prior_formal_identities
             contention.observe(inventory, formal_identities)
 
             if outer is None and arguments.outer_audit.exists():
@@ -951,9 +990,12 @@ def run_observer(arguments: argparse.Namespace) -> int:
                     formal_pids = {pid for pid, _start in formal_identities}
                     if any(pid not in formal_pids for pid in required):
                         raise ObservationError("a formal PID was not observed live")
-                    current_identities = {row.identity for row in inventory.processes}
-                    formal_live = bool(formal_identities & current_identities)
-                    if lease_tracker.phase == "released" and not formal_live:
+                    if clear_tracker.observe(
+                        inventory,
+                        formal_identities,
+                        new_formal_identities,
+                        lease_released=lease_tracker.phase == "released",
+                    ):
                         ended = tentative_end
                         all_ended = True
                         break
@@ -1022,8 +1064,9 @@ def run_observer(arguments: argparse.Namespace) -> int:
             ],
             "method": (
                 "Independent standard-library Python observer with one persistent "
-                "PowerShell process-inventory child; periodic PID/parent/CPU/memory "
-                "snapshots plus advisory-owner and byte-range-lock checks."
+                "PowerShell process-inventory/start-event child; periodic "
+                "PID/parent/CPU/memory snapshots, system CPU deltas, advisory-owner "
+                "and byte-range-lock checks, followed by two clear snapshots."
             ),
             "outcomes_inspected": False,
             "template_only": False,
@@ -1040,6 +1083,8 @@ def run_observer(arguments: argparse.Namespace) -> int:
             "formal_process_identities_sha256": hashlib.sha256(
                 identities_payload
             ).hexdigest(),
+            "formal_clear_snapshot_count": clear_tracker.count,
+            "formal_clear_snapshot_ticks": clear_tracker.ticks,
             "bindings": bindings,
             "ready_receipt_sha256": ready_sha256,
             "outer_audit_sha256": outer_sha256,
