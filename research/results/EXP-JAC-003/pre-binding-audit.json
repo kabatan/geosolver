@@ -1,0 +1,412 @@
+{
+  "authority": {
+    "amendment_commit": "441cc6bc54ad4f93d12dae76e1481f03332167f6",
+    "amendment_sha256": "516328a7c068e097adf199ace7433da3e60e2e044f46b3c0231f521098886fe2",
+    "checker_commit": "441cc6bc54ad4f93d12dae76e1481f03332167f6",
+    "checker_sha256": "7e478d57854f2f42b722304ea722e42ca65905353e03e522fc530924c2ff5329"
+  },
+  "checks": [
+    {
+      "code": "amendment-schema",
+      "detail": "formal binding amendment schema must be frozen v1",
+      "passed": true
+    },
+    {
+      "code": "amendment-experiment",
+      "detail": "amendment must bind EXP-JAC-003",
+      "passed": true
+    },
+    {
+      "code": "amendment-status",
+      "detail": "amendment must be frozen before formal outcomes",
+      "passed": true
+    },
+    {
+      "code": "amendment-outcome-blind",
+      "detail": "amendment attestation must deny all outcome access",
+      "passed": true
+    },
+    {
+      "code": "authority-root",
+      "detail": "authority repository root must be exact",
+      "passed": true
+    },
+    {
+      "code": "amendment-path",
+      "detail": "invoked amendment path must equal the frozen authority path",
+      "passed": true
+    },
+    {
+      "code": "checker-hash",
+      "detail": "authority checker hash must match amendment",
+      "passed": true
+    },
+    {
+      "code": "executing-checker-hash",
+      "detail": "executing checker bytes must match the committed authority checker",
+      "passed": true
+    },
+    {
+      "code": "authority-clean-files",
+      "detail": "amendment and checker must be committed and unmodified",
+      "passed": true
+    },
+    {
+      "code": "authority-commits",
+      "detail": "amendment and checker must have committed provenance",
+      "passed": true
+    },
+    {
+      "code": "joint-authority-commit",
+      "detail": "amendment and checker must be frozen by the same pre-outcome commit",
+      "passed": true
+    },
+    {
+      "code": "path-aliases",
+      "detail": "all bound roles must resolve to distinct canonical paths",
+      "passed": true
+    },
+    {
+      "code": "frozen-head",
+      "detail": "frozen worktree HEAD must equal the source-lock commit",
+      "passed": true
+    },
+    {
+      "code": "frozen-parent",
+      "detail": "source-lock commit must be the sole child of the source commit",
+      "passed": true
+    },
+    {
+      "code": "frozen-worktree-clean",
+      "detail": "pre-run worktree must be fully clean",
+      "passed": true
+    },
+    {
+      "code": "source-lock-commit",
+      "detail": "HEAD must be the commit that introduced the source lock",
+      "passed": true
+    },
+    {
+      "code": "source-lock-hash",
+      "detail": "source lock bytes must match the amendment",
+      "passed": true
+    },
+    {
+      "code": "source-lock-schema",
+      "detail": "source lock schema must be frozen v1",
+      "passed": true
+    },
+    {
+      "code": "source-lock-lineage",
+      "detail": "source lock embedded source commit must match",
+      "passed": true
+    },
+    {
+      "code": "source-lock-files",
+      "detail": "all 58 locked files must match; mismatches=[]",
+      "passed": true
+    },
+    {
+      "code": "julia-manifest-hash",
+      "detail": "Julia Manifest must match the frozen environment",
+      "passed": true
+    },
+    {
+      "code": "formal-runner-hash",
+      "detail": "formal runner must match its frozen bytes",
+      "passed": true
+    },
+    {
+      "code": "finalizer-hash",
+      "detail": "finalizer must match its frozen bytes",
+      "passed": true
+    },
+    {
+      "code": "exclusive-runner-hash",
+      "detail": "exclusive runner must match its outcome-blind binding",
+      "passed": true
+    },
+    {
+      "code": "official-manifest-hash",
+      "detail": "official manifest must match amendment hash",
+      "passed": true
+    },
+    {
+      "code": "source-lock-manifest-binding",
+      "detail": "source lock must bind official manifest",
+      "passed": true
+    },
+    {
+      "code": "official-candidate-hash",
+      "detail": "official candidate must match amendment hash",
+      "passed": true
+    },
+    {
+      "code": "source-lock-candidate-binding",
+      "detail": "source lock must bind official candidate",
+      "passed": true
+    },
+    {
+      "code": "official-truth-hash",
+      "detail": "official truth must match amendment hash",
+      "passed": true
+    },
+    {
+      "code": "source-lock-truth-binding",
+      "detail": "source lock must bind official truth",
+      "passed": true
+    },
+    {
+      "code": "official-frozen_k0-hash",
+      "detail": "official frozen_k0 must match amendment hash",
+      "passed": true
+    },
+    {
+      "code": "source-lock-frozen_k0-binding",
+      "detail": "source lock must bind official frozen_k0",
+      "passed": true
+    },
+    {
+      "code": "manifest-candidate-binding",
+      "detail": "manifest descriptor must bind official candidate without opening its payload",
+      "passed": true
+    },
+    {
+      "code": "manifest-truth-binding",
+      "detail": "manifest descriptor must bind official truth without opening its payload",
+      "passed": true
+    },
+    {
+      "code": "manifest-frozen_k0-binding",
+      "detail": "manifest descriptor must bind official frozen_k0 without opening its payload",
+      "passed": true
+    },
+    {
+      "code": "absent-staging",
+      "detail": "pre-run staging path must not exist",
+      "passed": true
+    },
+    {
+      "code": "absent-partial",
+      "detail": "pre-run partial path must not exist",
+      "passed": true
+    },
+    {
+      "code": "absent-official",
+      "detail": "pre-run official path must not exist",
+      "passed": true
+    },
+    {
+      "code": "absent-outer_audit",
+      "detail": "pre-run outer audit path must not exist",
+      "passed": true
+    },
+    {
+      "code": "absent-host_observation",
+      "detail": "pre-run host observation path must not exist",
+      "passed": true
+    },
+    {
+      "code": "absent-source_observation",
+      "detail": "pre-run source observation path must not exist",
+      "passed": true
+    },
+    {
+      "code": "absent-pre_binding_audit",
+      "detail": "pre-run pre binding audit path must not exist",
+      "passed": true
+    },
+    {
+      "code": "absent-post_binding_audit",
+      "detail": "pre-run post binding audit path must not exist",
+      "passed": true
+    },
+    {
+      "code": "exact-child-command",
+      "detail": "computed direct-child command must equal the frozen token array",
+      "passed": true
+    },
+    {
+      "code": "exact-exclusive-command",
+      "detail": "computed exclusive command must equal the frozen token array",
+      "passed": true
+    },
+    {
+      "code": "exact-finalizer-command",
+      "detail": "computed finalizer command must equal the frozen token array",
+      "passed": true
+    },
+    {
+      "code": "unique-repo",
+      "detail": "--repo must occur exactly once; duplicate flags are forbidden",
+      "passed": true
+    },
+    {
+      "code": "unique-source-lock",
+      "detail": "--source-lock must occur exactly once; duplicate flags are forbidden",
+      "passed": true
+    },
+    {
+      "code": "unique-input-manifest",
+      "detail": "--input-manifest must occur exactly once; duplicate flags are forbidden",
+      "passed": true
+    },
+    {
+      "code": "unique-candidate",
+      "detail": "--candidate must occur exactly once; duplicate flags are forbidden",
+      "passed": true
+    },
+    {
+      "code": "unique-truth",
+      "detail": "--truth must occur exactly once; duplicate flags are forbidden",
+      "passed": true
+    },
+    {
+      "code": "unique-frozen-k0",
+      "detail": "--frozen-k0 must occur exactly once; duplicate flags are forbidden",
+      "passed": true
+    },
+    {
+      "code": "unique-staging",
+      "detail": "--staging must occur exactly once; duplicate flags are forbidden",
+      "passed": true
+    },
+    {
+      "code": "unique-julia",
+      "detail": "--julia must occur exactly once; duplicate flags are forbidden",
+      "passed": true
+    }
+  ],
+  "command_plan": {
+    "child_command_tokens": [
+      "C:\\Users\\bakat\\miniforge3\\python.exe",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\source\\formal_abba.py",
+      "--repo",
+      "C:\\solver-worktrees\\exp-jac-003-inputs",
+      "--source-lock",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-source-lock.json",
+      "--input-manifest",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-inputs\\manifest.json",
+      "--candidate",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-inputs\\development-candidate-inputs.json.gz",
+      "--truth",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-inputs\\development-assessor-truth.json.gz",
+      "--frozen-k0",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-inputs\\development-k0-control-traces.json.gz",
+      "--staging",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-abba-staging",
+      "--julia",
+      "C:\\Users\\bakat\\.julia\\juliaup\\julia-1.12.6+0.x64.w64.mingw32\\bin\\julia.exe"
+    ],
+    "cwd": "C:\\solver-worktrees\\exp-jac-003-inputs",
+    "exclusive_command_tokens": [
+      "C:\\Users\\bakat\\miniforge3\\python.exe",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\harness\\exclusive_run.py",
+      "--label",
+      "EXP-JAC-003-development-abba",
+      "--audit",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-formal-run-audit.json",
+      "--cwd",
+      "C:\\solver-worktrees\\exp-jac-003-inputs",
+      "--",
+      "C:\\Users\\bakat\\miniforge3\\python.exe",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\source\\formal_abba.py",
+      "--repo",
+      "C:\\solver-worktrees\\exp-jac-003-inputs",
+      "--source-lock",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-source-lock.json",
+      "--input-manifest",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-inputs\\manifest.json",
+      "--candidate",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-inputs\\development-candidate-inputs.json.gz",
+      "--truth",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-inputs\\development-assessor-truth.json.gz",
+      "--frozen-k0",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-inputs\\development-k0-control-traces.json.gz",
+      "--staging",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-abba-staging",
+      "--julia",
+      "C:\\Users\\bakat\\.julia\\juliaup\\julia-1.12.6+0.x64.w64.mingw32\\bin\\julia.exe"
+    ],
+    "finalizer_command_tokens": [
+      "C:\\Users\\bakat\\miniforge3\\python.exe",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\source\\finalize_abba.py",
+      "--repo",
+      "C:\\solver-worktrees\\exp-jac-003-inputs",
+      "--source-lock",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-source-lock.json",
+      "--staging",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-abba-staging",
+      "--official",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003\\development-abba-v0",
+      "--outer-audit",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-formal-run-audit.json",
+      "--host-observation",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-host-observation.json",
+      "--source-observation",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-source-observation.json"
+    ],
+    "label": "EXP-JAC-003-development-abba"
+  },
+  "execution_closure_a3": {
+    "authority": {
+      "a2_amendment_sha256": "39a94a38d49509b1a57858f60d6151fb4cceee921096a53a567e9b41c865bc4f",
+      "a2_checker_sha256": "f499e5c3b7bd1b2ba9ff7ef89f225b639f0818f070f66d3ee61363f5c1163699",
+      "amendment_commit": "9e869630883c0d7f1896cf65ef20bf963e8f7657",
+      "amendment_sha256": "df5088aa00b0249be10f604300d5ee3d3157adc42bbbf04ac18b3e086c265cfd",
+      "checker_commit": "9e869630883c0d7f1896cf65ef20bf963e8f7657",
+      "checker_sha256": "fa640f50635df6aae4c1d15a631f0c89466a5d04582afc140f89e2969175898f"
+    },
+    "monitor_plan_sha256": "e4351ce44a4e3b3114dedd2d93779b0d734d61cd917fb3c775d75c514065289d",
+    "outcome_data_inspected": false,
+    "passed": true,
+    "schema_version": "exp-jac-003-formal-execution-closure-amendment-a3/v1"
+  },
+  "experiment_id": "EXP-JAC-003",
+  "formal_chain_final_a4": {
+    "authority": {
+      "a3_amendment_sha256": "df5088aa00b0249be10f604300d5ee3d3157adc42bbbf04ac18b3e086c265cfd",
+      "a3_checker_sha256": "fa640f50635df6aae4c1d15a631f0c89466a5d04582afc140f89e2969175898f",
+      "amendment_commit": "82ea0626271f07699674ce900c104b7907e2ed72",
+      "amendment_sha256": "6a840f6da122efd3b08ebce80bf78d0b268e08f5184fa8a8508ee07500135544",
+      "checker_commit": "82ea0626271f07699674ce900c104b7907e2ed72",
+      "checker_sha256": "ccd3940d50410d6cd537cfaa083d89c64f80e0f363b0cf050b4e5415d8aad346"
+    },
+    "outcome_data_inspected": false,
+    "passed": true,
+    "schema_version": "exp-jac-003-formal-chain-final-amendment-a4/v1"
+  },
+  "frozen_binding": {
+    "head_commit": "2601dce271368e67ecafe57f4465de9415151cae",
+    "locked_file_count": 58,
+    "locked_file_hash_mismatch_count": 0,
+    "source_commit": "0494e656fe714828ed8cf580b4262941ff9c9d8b",
+    "source_lock_sha256": "7d2059ee4dedc26975b7a0a5f94297a5fdcd8c719c5f3ce08dedfd3f82c8b354"
+  },
+  "generated_at_utc": "2026-07-10T16:59:59.718471Z",
+  "outcome_data_inspected": false,
+  "outcome_payload_files_opened": false,
+  "passed": true,
+  "phase": "pre",
+  "publication_binding_a2": {
+    "authority": {
+      "amendment_commit": "8348a4d9a4a26a64db322708697b27f4ec488f45",
+      "amendment_sha256": "39a94a38d49509b1a57858f60d6151fb4cceee921096a53a567e9b41c865bc4f",
+      "checker_commit": "8348a4d9a4a26a64db322708697b27f4ec488f45",
+      "checker_sha256": "f499e5c3b7bd1b2ba9ff7ef89f225b639f0818f070f66d3ee61363f5c1163699",
+      "v1_amendment_sha256": "516328a7c068e097adf199ace7433da3e60e2e044f46b3c0231f521098886fe2",
+      "v1_checker_sha256": "7e478d57854f2f42b722304ea722e42ca65905353e03e522fc530924c2ff5329"
+    },
+    "hygiene": {
+      "ignored_file_count": 0,
+      "ordinary_untracked_file_count": 0,
+      "output_file_count": 0,
+      "rejected_file_count": 0
+    },
+    "outcome_data_inspected": false,
+    "passed": true,
+    "schema_version": "exp-jac-003-formal-publication-binding-amendment-a2/v1"
+  },
+  "required_output_path": "C:\\solver\\research\\results\\EXP-JAC-003\\pre-binding-audit.json",
+  "schema_version": "exp-jac-003-formal-binding-audit/v1"
+}
