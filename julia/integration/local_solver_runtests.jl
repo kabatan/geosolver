@@ -62,6 +62,12 @@ function diagonal_observation(x; reject_combined = false)
     return OracleObservation(relations, sum(x), (), (), (), EVAL_OK, 1, nothing)
 end
 
+@testset "public local solver documentation" begin
+    metadata = Base.Docs.meta(GeoTargetCore)
+    @test haskey(metadata, Base.Docs.Binding(GeoTargetCore, :solve_local))
+    @test !haskey(metadata, Base.Docs.Binding(GeoTargetCore, :_solve_local_kernel))
+end
+
 @testset "scaled LM-QR local control" begin
     attempt = solve_local(
         x -> local_observation(x),

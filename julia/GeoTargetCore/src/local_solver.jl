@@ -803,13 +803,6 @@ function _local_result(
     )
 end
 
-"""
-Run the deliberately minimal RB0 local control.
-
-The merit function contains relation residuals only. Guards and domains remain
-separate semantic channels and are enforced only by step safety/final canonical
-validation; they are never multiplied into the residual.
-"""
 function _solve_local_kernel(
     evaluate_fn,
     x0::AbstractVector,
@@ -1086,6 +1079,13 @@ function _solve_local_kernel(
     )
 end
 
+"""
+Run the deliberately minimal RB0 local control.
+
+The merit function contains relation residuals only. Guards and domains remain
+separate semantic channels and are enforced only by step safety/final canonical
+validation; they are never multiplied into the residual.
+"""
 function solve_local(
     evaluate_fn,
     x0::AbstractVector;
