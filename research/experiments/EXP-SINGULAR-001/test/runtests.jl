@@ -321,3 +321,47 @@ end
         @test length(unique(assessment.false_promotion for assessment in assessments)) == 1
     end
 end
+
+@testset "S2 development gate remains research-only" begin
+    cases = s2_development_cases()
+    options = ExperimentOptions()
+    rows = run_s2_development(; cases, options)
+    summary = s2_development_summary(rows, cases; options)
+    @test length(rows) == 72
+    @test summary["development_instance_count"] == 24
+    @test summary["product_connected"] == false
+    @test summary["locked_validation"] == false
+    @test summary["false_promotions"] == 0
+    @test summary["semantic_replay_only_promotions"] == 0
+    @test summary["metamorphic_group_count"] == 8
+    @test isempty(summary["metamorphic_disagreement_groups"])
+    @test isempty(summary["analytic_control_disagreement_cases"])
+    @test isempty(summary["budget_limit_violation_rows"])
+    @test summary["variants"]["S1-AP-LMQR"]["eligible_gold_successes"] == 0
+    @test summary["variants"]["S2-AP-CPQR-SUBSET"]["eligible_gold_successes"] == 12
+    @test summary["variants"]["S2-ANALYTIC-SUBSET-CONTROL"]["eligible_gold_successes"] == 12
+    @test summary["development_advancement_passed"]
+    @test summary["next_route"] == "S3-AP-BROYDEN"
+    @test all(values(summary["advancement_criteria"]))
+    duplicate_grid = vcat(rows[1:(end - 1)], rows[1:1])
+    @test_throws ArgumentError s2_development_summary(
+        duplicate_grid,
+        cases;
+        options,
+    )
+    mktempdir() do directory
+        write_s2_development_results(directory, rows, summary; options)
+        for filename in (
+            "attempts.json",
+            "development-report.md",
+            "environment.json",
+            "summary.json",
+        )
+            @test isfile(joinpath(directory, filename))
+        end
+        parsed = JSON3.read(read(joinpath(directory, "summary.json"), String))
+        @test parsed.development_advancement_passed
+        @test !parsed.product_connected
+        @test !parsed.locked_validation
+    end
+end
