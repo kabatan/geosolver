@@ -65,3 +65,24 @@ retains both family lists and the reason.
 audited causal facts. It reports the earliest evidenced F0-F18 checkpoint or a
 typed `unknown`; absent logs never become no-capture, fairness or completeness
 evidence. See [the full contract](../../docs/research/MISS_ANALYZER.md).
+
+## Formal performance-run exclusion
+
+Wall-clock experiments must be launched through
+`python -m research.harness.exclusive_run`. The wrapper takes one advisory host
+lease shared across worktrees, streams a heartbeat, and writes an atomic JSON
+audit containing the command, child PID, timestamps, platform and exit state.
+For example:
+
+```powershell
+python -m research.harness.exclusive_run `
+  --label EXP-JAC-002-development-rerun `
+  --audit research/results/EXP-JAC-002/formal-run-audit.json `
+  -- python research/experiments/EXP-JAC-002/run_experiment.py
+```
+
+The lease coordinates cooperating formal runners; it is not a claim that the
+host is otherwise idle. While it is held, do not start CI, benchmarks, Julia
+tests, compilation, package installation, or other CPU/memory-heavy work. A run
+with overlapping host work is infrastructure-invalid for wall-time gates even
+when its semantic and oracle-work artifacts remain useful diagnostics.
