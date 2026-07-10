@@ -654,6 +654,377 @@ function run_s1(
     end
 end
 
+struct _SubsetStageResult
+    precision_bits::Int
+    endpoint::Vector{BigFloat}
+    target::BigFloat
+    residual_linf::BigFloat
+    correction::Vector{BigFloat}
+    correction_norm::BigFloat
+    rank::Int
+    condition_estimate::BigFloat
+    active_columns::Tuple{Vararg{Int}}
+    jacobian::Matrix{BigFloat}
+    rank_stable::Bool
+    converged::Bool
+    reason::String
+end
+
+function _active_columns(rank_factor::_RankFactorization, rank::Int)
+    permutation = rank_factor.factorization.p
+    return Tuple(Int(permutation[index]) for index in 1:rank)
+end
+
+function _subset_correction!(ledger, jacobian, residual, active_columns, options)
+    subset = jacobian[:, collect(active_columns)]
+    subset_factor = _rank_factorization!(ledger, subset, options)
+    subset_factor.rank == length(active_columns) || return nothing, BigFloat(Inf)
+    active_step = subset_factor.factorization \ (-residual)
+    correction = zeros(BigFloat, size(jacobian, 2))
+    correction[collect(active_columns)] .= active_step
+    return correction, BigFloat(subset_factor.condition_estimate)
+end
+
+function _refine_subset_stage!(
+    ledger,
+    input::CandidateInput,
+    start,
+    precision_bits::Int,
+    options::ExperimentOptions,
+    derivative_mode::Symbol,
+)
+    oracle = input.oracle
+    return setprecision(BigFloat, precision_bits) do
+        x = BigFloat[BigFloat(value) for value in start]
+        residual = BigFloat.(_evaluate_residual!(ledger, oracle, x, precision_bits))
+        last_correction = fill(BigFloat(Inf), oracle.dimension)
+        last_rank = 0
+        last_condition = BigFloat(Inf)
+        last_active = ()
+        converged = false
+        reason = "maximum_iterations"
+
+        while true
+            _charge_iteration!(ledger)
+            jacobian = BigFloat.(_jacobian!(
+                ledger,
+                oracle,
+                x,
+                precision_bits,
+                options,
+                derivative_mode,
+            ))
+            rank_factor = _rank_factorization!(ledger, jacobian, options)
+            last_rank = rank_factor.rank
+            if !(0 < last_rank < oracle.dimension)
+                reason = "rank_not_subset"
+                break
+            end
+            last_active = _active_columns(rank_factor, last_rank)
+            correction, condition = _subset_correction!(
+                ledger,
+                jacobian,
+                residual,
+                last_active,
+                options,
+            )
+            correction === nothing && begin
+                reason = "subset_factorization_failed"
+                break
+            end
+            last_correction = correction
+            last_condition = condition
+            correction_norm = norm(correction, Inf)
+            residual_norm = norm(residual, Inf)
+            if residual_norm <= _residual_goal(BigFloat) &&
+               correction_norm <= _correction_goal(BigFloat, options)
+                converged = true
+                reason = "converged"
+                break
+            end
+            trial_x, trial_residual, accepted =
+                _line_search!(ledger, oracle, x, residual, correction, precision_bits)
+            if !accepted
+                reason = "no_progress"
+                break
+            end
+            x = BigFloat[trial_x...]
+            residual = BigFloat[trial_residual...]
+        end
+
+        final_residual = BigFloat.(_evaluate_residual!(ledger, oracle, x, precision_bits))
+        final_target = BigFloat(_evaluate_target!(ledger, oracle, x, precision_bits))
+        first_jacobian = BigFloat.(_jacobian!(
+            ledger,
+            oracle,
+            x,
+            precision_bits,
+            options,
+            derivative_mode;
+            radius_multiplier=1,
+        ))
+        second_jacobian = BigFloat.(_jacobian!(
+            ledger,
+            oracle,
+            x,
+            precision_bits,
+            options,
+            derivative_mode;
+            radius_multiplier=0.5,
+        ))
+        first_rank = _rank_factorization!(ledger, first_jacobian, options)
+        second_rank = _rank_factorization!(ledger, second_jacobian, options)
+        first_active = 0 < first_rank.rank < oracle.dimension ?
+                       _active_columns(first_rank, first_rank.rank) : ()
+        second_active = 0 < second_rank.rank < oracle.dimension ?
+                        _active_columns(second_rank, second_rank.rank) : ()
+        rank_stable = first_rank.rank == second_rank.rank &&
+                      0 < first_rank.rank < oracle.dimension &&
+                      first_active == second_active
+        final_correction, final_condition = rank_stable ?
+            _subset_correction!(
+                ledger,
+                first_jacobian,
+                final_residual,
+                first_active,
+                options,
+            ) : (nothing, BigFloat(Inf))
+        frozen_correction = final_correction === nothing ?
+                            fill(BigFloat(Inf), oracle.dimension) : final_correction
+        return _SubsetStageResult(
+            precision_bits,
+            BigFloat[x...],
+            final_target,
+            BigFloat(norm(final_residual, Inf)),
+            BigFloat[frozen_correction...],
+            BigFloat(norm(frozen_correction, Inf)),
+            first_rank.rank,
+            BigFloat(final_condition),
+            first_active,
+            first_jacobian,
+            rank_stable,
+            converged,
+            reason,
+        )
+    end
+end
+
+function _nullspace_target_sensitivity!(
+    ledger,
+    stage::_SubsetStageResult,
+    target_gradient,
+    options,
+)
+    active = collect(stage.active_columns)
+    inactive = setdiff(collect(1:size(stage.jacobian, 2)), active)
+    isempty(inactive) && return BigFloat(Inf)
+    subset_factor = _rank_factorization!(ledger, stage.jacobian[:, active], options)
+    subset_factor.rank == length(active) || return BigFloat(Inf)
+    sensitivities = BigFloat[]
+    for column in inactive
+        active_coefficients = subset_factor.factorization \ (-stage.jacobian[:, column])
+        direction = zeros(BigFloat, size(stage.jacobian, 2))
+        direction[active] .= active_coefficients
+        direction[column] = 1
+        push!(
+            sensitivities,
+            abs(dot(target_gradient, direction)) / max(one(BigFloat), norm(direction)),
+        )
+    end
+    return maximum(sensitivities)
+end
+
+function run_s2(
+    input::CandidateInput;
+    options::ExperimentOptions=ExperimentOptions(),
+    derivative_mode::Symbol=:dense,
+    clock_ns=time_ns,
+)
+    variant = derivative_mode === :dense ? "S2-AP-CPQR-SUBSET" :
+              "S2-ANALYTIC-SUBSET-CONTROL"
+    route = derivative_mode === :dense ? "adaptive-precision-cpqr-subset" :
+            "analytic-cpqr-subset-control"
+    ledger = _work_ledger(options, clock_ns)
+    if input.oracle.capability == :C0
+        return ExperimentalOutcome(
+            variant,
+            route,
+            :unknown,
+            "C2 capability unavailable",
+            nothing,
+            nothing,
+            _work_snapshot(ledger),
+        )
+    end
+    derivative_mode in (:dense, :analytic) || throw(ArgumentError("unsupported derivative mode"))
+    stages = _SubsetStageResult[]
+    selected = nothing
+    start = input.endpoint
+    reason = "precision ladder exhausted"
+    try
+        for precision_bits in options.precision_ladder
+            stage = _refine_subset_stage!(
+                ledger,
+                input,
+                start,
+                precision_bits,
+                options,
+                derivative_mode,
+            )
+            push!(stages, stage)
+            if !stage.converged || !stage.rank_stable
+                reason = stage.reason
+                break
+            end
+            if length(stages) >= 2
+                previous = stages[end - 1]
+                target_disagreement = abs(stage.target - previous.target)
+                active_disagreement = isempty(stage.active_columns) ? BigFloat(Inf) : maximum(
+                    abs(stage.endpoint[index] - previous.endpoint[index]) for
+                    index in stage.active_columns
+                )
+                enough_bits = precision_bits >= _required_precision_bits(
+                    stage.condition_estimate,
+                    options,
+                )
+                if enough_bits && stage.active_columns == previous.active_columns &&
+                   active_disagreement <= options.configuration_error_goal /
+                                          options.error_reserve_multiplier &&
+                   target_disagreement <= options.target_error_goal /
+                                          options.error_reserve_multiplier
+                    selected = stage
+                    break
+                end
+            end
+            start = stage.endpoint
+        end
+        selected === nothing && return ExperimentalOutcome(
+            variant,
+            route,
+            :unknown,
+            reason,
+            isempty(stages) ? nothing : _semantic_replay!(
+                ledger,
+                input,
+                stages[end].endpoint,
+                stages[end].precision_bits,
+                options,
+            ),
+            nothing,
+            _work_snapshot(ledger),
+        )
+
+        final_stage = selected::_SubsetStageResult
+        confirmations = _SubsetStageResult[]
+        for index in 1:options.independent_confirmation_count
+            direction = _confirmation_direction(input.oracle.dimension, index)
+            confirmation_start = input.endpoint .+
+                                 options.confirmation_perturbation_radius .* direction
+            push!(
+                confirmations,
+                _refine_subset_stage!(
+                    ledger,
+                    input,
+                    confirmation_start,
+                    final_stage.precision_bits,
+                    options,
+                    derivative_mode,
+                ),
+            )
+        end
+        confirmations_ok = all(
+            confirmation -> confirmation.converged && confirmation.rank_stable &&
+                            confirmation.rank == final_stage.rank,
+            confirmations,
+        )
+        semantic = _semantic_replay!(
+            ledger,
+            input,
+            final_stage.endpoint,
+            final_stage.precision_bits,
+            options,
+        )
+        target_gradient = setprecision(BigFloat, final_stage.precision_bits) do
+            _target_gradient!(
+                ledger,
+                input.oracle,
+                final_stage.endpoint,
+                final_stage.precision_bits,
+                options,
+            )
+        end
+        nullspace_sensitivity = _nullspace_target_sensitivity!(
+            ledger,
+            final_stage,
+            target_gradient,
+            options,
+        )
+        previous = stages[end - 1]
+        active_disagreement = maximum(
+            abs(final_stage.endpoint[index] - previous.endpoint[index]) for
+            index in final_stage.active_columns
+        )
+        confirmation_target_disagreement = maximum(
+            abs(confirmation.target - final_stage.target) for confirmation in confirmations
+        )
+        active_error = BigFloat(options.error_reserve_multiplier) * maximum((
+            final_stage.correction_norm,
+            active_disagreement,
+            eps(BigFloat),
+        ))
+        target_error = BigFloat(options.error_reserve_multiplier) * maximum((
+            abs(final_stage.target - previous.target),
+            confirmation_target_disagreement,
+            nullspace_sensitivity * BigFloat(options.confirmation_perturbation_radius),
+            eps(BigFloat) * max(one(BigFloat), abs(final_stage.target)),
+        ))
+        evidence = NumericalManifoldRootEvidence(
+            derivative_mode === :dense ? "adaptive_precision_cpqr_subset_v1" :
+            "analytic_cpqr_subset_control_v1",
+            final_stage.precision_bits,
+            Tuple(stage.precision_bits for stage in stages),
+            Tuple(final_stage.endpoint),
+            final_stage.target,
+            final_stage.residual_linf,
+            final_stage.rank,
+            final_stage.condition_estimate,
+            final_stage.active_columns,
+            active_error,
+            target_error,
+            nullspace_sensitivity,
+            Tuple(Tuple(confirmation.endpoint) for confirmation in confirmations),
+            Tuple(confirmation.target for confirmation in confirmations),
+            final_stage.rank_stable,
+        )
+        promotable = confirmations_ok && semantic.accepted &&
+                     final_stage.residual_linf <= _residual_goal(BigFloat) &&
+                     active_error <= options.configuration_error_goal &&
+                     target_error <= options.target_error_goal &&
+                     nullspace_sensitivity <= options.target_error_goal
+        return ExperimentalOutcome(
+            variant,
+            route,
+            promotable ? :promoted : :unknown,
+            promotable ? "target-constant rank-deficient root evidence accepted" :
+            "rank-deficient root evidence gate failed",
+            semantic,
+            evidence,
+            _work_snapshot(ledger),
+        )
+    catch error
+        error isa ExperimentBudgetExceeded || rethrow()
+        return ExperimentalOutcome(
+            variant,
+            route,
+            :unknown,
+            string(error.reason),
+            nothing,
+            nothing,
+            _work_snapshot(ledger),
+        )
+    end
+end
+
 function assess_outcome(case::GeneratedEndpoint, outcome::ExperimentalOutcome)
     promoted = outcome.status == :promoted
     if !promoted
@@ -669,8 +1040,24 @@ function assess_outcome(case::GeneratedEndpoint, outcome::ExperimentalOutcome)
             false,
         )
     end
-    evidence = outcome.root_evidence::NumericalRootEvidence
-    if case.gold.kind != :isolated_root
+    evidence = outcome.root_evidence::AbstractNumericalRootEvidence
+    if case.gold.kind == :finite_manifold_target &&
+       evidence isa NumericalManifoldRootEvidence
+        target_error = abs(Float64(evidence.target) - (case.gold.target::Float64))
+        target_covered = target_error <= Float64(evidence.target_error_estimate)
+        return GoldAssessment(
+            case.input.oracle.id,
+            outcome.variant,
+            true,
+            target_covered,
+            !target_covered,
+            nothing,
+            target_error,
+            true,
+            target_covered,
+        )
+    end
+    if case.gold.kind != :isolated_root || !(evidence isa NumericalRootEvidence)
         return GoldAssessment(
             case.input.oracle.id,
             outcome.variant,

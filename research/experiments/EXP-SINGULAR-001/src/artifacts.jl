@@ -55,6 +55,33 @@ function _root_document(evidence::NumericalRootEvidence)
     )
 end
 
+function _root_document(evidence::NumericalManifoldRootEvidence)
+    return Dict{String,Any}(
+        "active_columns" => Any[evidence.active_columns...],
+        "active_configuration_error_estimate" =>
+            _evidence_real(evidence.active_configuration_error_estimate),
+        "condition_estimate" => _evidence_real(evidence.condition_estimate),
+        "configuration_mode" => "target_constant_manifold",
+        "confirmation_endpoints" => Any[
+            Any[_evidence_real(value) for value in endpoint] for
+            endpoint in evidence.confirmation_endpoints
+        ],
+        "confirmation_targets" =>
+            Any[_evidence_real(value) for value in evidence.confirmation_targets],
+        "endpoint" => Any[_evidence_real(value) for value in evidence.endpoint],
+        "method" => evidence.method,
+        "nullspace_target_sensitivity" =>
+            _evidence_real(evidence.nullspace_target_sensitivity),
+        "numerical_rank" => evidence.numerical_rank,
+        "precision_bits" => evidence.precision_bits,
+        "precision_stages" => Any[evidence.precision_stages...],
+        "rank_stable" => evidence.rank_stable,
+        "residual_linf" => _evidence_real(evidence.residual_linf),
+        "target" => _evidence_real(evidence.target),
+        "target_error_estimate" => _evidence_real(evidence.target_error_estimate),
+    )
+end
+
 function outcome_document(case::GeneratedEndpoint, outcome::ExperimentalOutcome)
     return Dict{String,Any}(
         "case_checksum" => case.checksum,

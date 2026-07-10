@@ -213,7 +213,9 @@ struct SemanticReplayEvidence
     accepted::Bool
 end
 
-struct NumericalRootEvidence
+abstract type AbstractNumericalRootEvidence end
+
+struct NumericalRootEvidence <: AbstractNumericalRootEvidence
     method::String
     precision_bits::Int
     precision_stages::Tuple
@@ -229,13 +231,31 @@ struct NumericalRootEvidence
     rank_stable::Bool
 end
 
+struct NumericalManifoldRootEvidence <: AbstractNumericalRootEvidence
+    method::String
+    precision_bits::Int
+    precision_stages::Tuple
+    endpoint::Tuple
+    target::BigFloat
+    residual_linf::BigFloat
+    numerical_rank::Int
+    condition_estimate::BigFloat
+    active_columns::Tuple{Vararg{Int}}
+    active_configuration_error_estimate::BigFloat
+    target_error_estimate::BigFloat
+    nullspace_target_sensitivity::BigFloat
+    confirmation_endpoints::Tuple
+    confirmation_targets::Tuple
+    rank_stable::Bool
+end
+
 struct ExperimentalOutcome
     variant::String
     route::String
     status::Symbol
     reason::String
     semantic_replay::Union{Nothing,SemanticReplayEvidence}
-    root_evidence::Union{Nothing,NumericalRootEvidence}
+    root_evidence::Union{Nothing,AbstractNumericalRootEvidence}
     work::WorkSnapshot
 
     function ExperimentalOutcome(
@@ -259,7 +279,7 @@ struct ExperimentalOutcome
         semantic_replay === nothing || semantic_replay isa SemanticReplayEvidence || throw(
             ArgumentError("invalid semantic replay evidence"),
         )
-        root_evidence === nothing || root_evidence isa NumericalRootEvidence || throw(
+        root_evidence === nothing || root_evidence isa AbstractNumericalRootEvidence || throw(
             ArgumentError("invalid root evidence"),
         )
         return new(

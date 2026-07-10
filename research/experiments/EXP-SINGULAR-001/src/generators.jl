@@ -311,6 +311,144 @@ function development_cases()
     return cases
 end
 
+function _rank_deficient_manifold_case(
+    id::AbstractString;
+    target_mode::Symbol,
+    offset::Real,
+    normal_error::Real=0.5,
+    tangent_coordinate::Real=0.3,
+    inconsistency::Real=0.0,
+    variable_transform=Matrix{Float64}(I, 2, 2),
+    residual_transform=Matrix{Float64}(I, 2, 2),
+    group::AbstractString=String(id),
+)
+    target_mode in (:constant, :varying) || throw(ArgumentError("invalid target mode"))
+    q = Matrix{Float64}(variable_transform)
+    p = Matrix{Float64}(residual_transform)
+    base_normal = [1.0, 0.0]
+    base_tangent = [0.0, 1.0]
+    endpoint_x = (Float64(offset) + Float64(normal_error)) .* base_normal .+
+                 Float64(tangent_coordinate) .* base_tangent
+    endpoint = q * endpoint_x
+    frozen_offset = Float64(offset)
+    frozen_inconsistency = Float64(inconsistency)
+
+    function residual(z::AbstractVector{T}) where {T<:Real}
+        x = transpose(_matrix_for_type(T, q)) * z
+        relation = x[1] - T(frozen_offset)
+        raw = T[relation, T(2) * relation + T(frozen_inconsistency)]
+        return _matrix_for_type(T, p) * raw
+    end
+    function target(z::AbstractVector{T}) where {T<:Real}
+        x = transpose(_matrix_for_type(T, q)) * z
+        return target_mode === :constant ? x[1] : x[2]
+    end
+    function jacobian(z::AbstractVector{T}) where {T<:Real}
+        length(z) == 2 || throw(DimensionMismatch("manifold case expects two variables"))
+        base = T[one(T) zero(T); T(2) zero(T)]
+        return _matrix_for_type(T, p) * base * transpose(_matrix_for_type(T, q))
+    end
+    family = frozen_inconsistency == 0 ?
+             "SING-MANIFOLD-CONTROLS" : "SING-NONROOT-STATIONARY"
+    oracle = EndpointOracle(
+        id,
+        family,
+        group,
+        2,
+        2,
+        :C2,
+        residual,
+        target,
+        jacobian,
+    )
+    input = CandidateInput(oracle, endpoint)
+    parameters = Dict{String,Any}(
+        "inconsistency" => frozen_inconsistency,
+        "normal_error" => Float64(normal_error),
+        "offset" => frozen_offset,
+        "residual_transform" => vec(p),
+        "tangent_coordinate" => Float64(tangent_coordinate),
+        "target_mode" => string(target_mode),
+        "variable_transform" => vec(q),
+    )
+    gold = if frozen_inconsistency != 0
+        GoldTruth(:no_local_root)
+    elseif target_mode === :constant
+        GoldTruth(
+            :finite_manifold_target;
+            target=frozen_offset,
+            finite_discrete_target=true,
+        )
+    else
+        GoldTruth(:nonfinite_target_image; finite_discrete_target=false)
+    end
+    return _generated(input, gold, parameters)
+end
+
+"""S2-only development split frozen after the S1 advancement gate passed."""
+function s2_development_cases()
+    angle = pi / 4
+    rotation = [cos(angle) -sin(angle); sin(angle) cos(angle)]
+    representations = (
+        ("base", Matrix{Float64}(I, 2, 2), Matrix{Float64}(I, 2, 2)),
+        ("variable_rotation", rotation, Matrix{Float64}(I, 2, 2)),
+        ("residual_rotation", Matrix{Float64}(I, 2, 2), rotation),
+    )
+    cases = GeneratedEndpoint[]
+    for offset in (-0.5, 0.0, 0.75, 1.25)
+        group = "s2-constant-o$(_token(offset))"
+        for (representation, q, p) in representations
+            push!(
+                cases,
+                _rank_deficient_manifold_case(
+                    "$group-$representation";
+                    target_mode=:constant,
+                    offset,
+                    variable_transform=q,
+                    residual_transform=p,
+                    group,
+                ),
+            )
+        end
+    end
+    for offset in (-0.5, 0.5)
+        group = "s2-varying-o$(_token(offset))"
+        for (representation, q, p) in representations
+            push!(
+                cases,
+                _rank_deficient_manifold_case(
+                    "$group-$representation";
+                    target_mode=:varying,
+                    offset,
+                    variable_transform=q,
+                    residual_transform=p,
+                    group,
+                ),
+            )
+        end
+    end
+    for inconsistency in (1.0e-13, 1.0e-10)
+        group = "s2-nonroot-i$(_token(inconsistency))"
+        for (representation, q, p) in representations
+            push!(
+                cases,
+                _rank_deficient_manifold_case(
+                    "$group-$representation";
+                    target_mode=:constant,
+                    offset=0.25,
+                    inconsistency,
+                    variable_transform=q,
+                    residual_transform=p,
+                    group,
+                ),
+            )
+        end
+    end
+    length(cases) == 24 || error("S2 development grid must contain 24 cases")
+    allunique(case.input.oracle.id for case in cases) || error("S2 ids must be unique")
+    return cases
+end
+
 """Frozen in-memory controls; development materialization is a later step."""
 function fixed_control_cases()
     angle = pi / 4

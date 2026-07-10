@@ -250,3 +250,59 @@ end
         @test !parsed.locked_validation
     end
 end
+
+@testset "S2 CPQR subset is target-aware and fail-closed" begin
+    cases = s2_development_cases()
+    @test length(cases) == 24
+    @test count(case -> case.gold.kind == :finite_manifold_target, cases) == 12
+    @test count(case -> case.gold.kind == :nonfinite_target_image, cases) == 6
+    @test count(case -> case.gold.kind == :no_local_root, cases) == 6
+
+    constant_case = first(filter(
+        case -> case.gold.kind == :finite_manifold_target,
+        cases,
+    ))
+    s1 = run_s1(candidate_input(constant_case))
+    @test s1.status == :unknown
+    @test s1.reason == "rank_deficient"
+
+    s2 = run_s2(candidate_input(constant_case))
+    @test s2.status == :promoted
+    @test s2.root_evidence isa NumericalManifoldRootEvidence
+    @test s2.root_evidence.numerical_rank == 1
+    @test s2.root_evidence.nullspace_target_sensitivity <= 1.0e-12
+    @test assess_outcome(constant_case, s2).gold_success
+
+    analytic = run_s2(candidate_input(constant_case); derivative_mode=:analytic)
+    @test analytic.status == :promoted
+    @test assess_outcome(constant_case, analytic).gold_success
+    @test analytic.work.residual_calls < s2.work.residual_calls
+
+    for kind in (:nonfinite_target_image, :no_local_root)
+        case = first(filter(case -> case.gold.kind == kind, cases))
+        outcome = run_s2(candidate_input(case))
+        @test outcome.status != :promoted
+        @test !assess_outcome(case, outcome).false_promotion
+    end
+
+    p1 = case_by_id(fixed_control_cases(), "p1-near-null-base")
+    full_rank = run_s2(candidate_input(p1))
+    @test full_rank.status == :unknown
+    @test full_rank.reason == "rank_not_subset"
+    @test full_rank.root_evidence === nothing
+end
+
+@testset "S2 metamorphic decisions agree" begin
+    cases = s2_development_cases()
+    for group in unique(case.input.oracle.metamorphic_group for case in cases)
+        grouped = filter(case -> case.input.oracle.metamorphic_group == group, cases)
+        outcomes = [run_s2(candidate_input(case)) for case in grouped]
+        assessments = [
+            assess_outcome(case, outcome) for
+            (case, outcome) in zip(grouped, outcomes)
+        ]
+        @test length(grouped) == 3
+        @test length(unique(outcome.status for outcome in outcomes)) == 1
+        @test length(unique(assessment.false_promotion for assessment in assessments)) == 1
+    end
+end
