@@ -1,0 +1,188 @@
+{
+  "schema_version": "exp-jac-003-formal-binding-amendment/v1",
+  "experiment_id": "EXP-JAC-003",
+  "status": "frozen-outcome-blind-before-formal-run",
+  "purpose": "Close the frozen formal runner's CLI artifact-substitution gap without changing the runner, source lock, inputs, candidate, assessor, thresholds, budgets, ABBA order, numerical mechanism or public product surface.",
+  "authority_repository_root": "C:\\solver",
+  "amendment_relative_path": "research/experiments/EXP-JAC-003/formal-binding-amendment.json",
+  "checker": {
+    "relative_path": "research/experiments/EXP-JAC-003/source/formal_binding_guard.py",
+    "sha256": "7e478d57854f2f42b722304ea722e42ca65905353e03e522fc530924c2ff5329",
+    "role": "Run as a separate pre-run or post-run process. It is forbidden to wrap, parent or replace the frozen formal runner."
+  },
+  "governing_interpretation": {
+    "existing_rule": "The frozen protocol already requires exact source/input hashes, zero input_or_source_hash_mismatch_count, exact source-lock provenance and publication only after source, input, process-isolation and host audits pass.",
+    "defect": "formal_abba.py verifies the repository copies named by development-source-lock.json but does not prove that its four CLI input paths designate those exact copies; finalize_abba.py also does not consume manifest_match or input_match from the source observer.",
+    "correction_class": "Outcome-blind external fail-closed provenance enforcement only. mechanism-preregistration.json permits defect corrections that make source conform to its frozen text when recorded before any outcome is opened.",
+    "not_authorized": [
+      "Changing formal_abba.py, finalize_abba.py, development-source-lock.json or any hash they freeze",
+      "Accepting an alternative path, artifact, hash, environment, runner, assessor, threshold, route, budget or ABBA sequence",
+      "Adding a wrapper between exclusive_run.py and formal_abba.py",
+      "Opening or interpreting Gold, K0, K1, safety, segment or efficacy outcomes during either binding phase",
+      "Retrying, resuming or concatenating a failed or incomplete formal run"
+    ]
+  },
+  "outcome_blind_attestation": {
+    "recorded_before_formal_run": true,
+    "candidate_numerical_outcome_opened": false,
+    "assessor_truth_opened": false,
+    "gold_outcome_opened": false,
+    "k0_outcome_opened": false,
+    "k1_outcome_opened": false,
+    "formal_abba_run_started": false,
+    "any_outcome_opened": false,
+    "allowed_observation": "File paths, byte counts, SHA-256 values, Git lineage, source-lock metadata, command tokens, process IDs, timestamps and capture topology only. Candidate/truth/K0 gzip payloads and segment traces remain unopened."
+  },
+  "frozen_execution": {
+    "repository_root": "C:\\solver-worktrees\\exp-jac-003-inputs",
+    "head_commit": "2601dce271368e67ecafe57f4465de9415151cae",
+    "source_commit": "0494e656fe714828ed8cf580b4262941ff9c9d8b",
+    "source_lock_sha256": "7d2059ee4dedc26975b7a0a5f94297a5fdcd8c719c5f3ce08dedfd3f82c8b354",
+    "julia_manifest_sha256": "c09c0387638fdb3b93b6cd2080c47514c0eae3ef05988569009183b3ba1855cf",
+    "clean_rule": "Pre-run requires an entirely clean worktree. Post-run permits only untracked result/audit artifacts; the index and every tracked file must remain clean.",
+    "lineage_rule": "HEAD must equal head_commit, HEAD^ must equal source_commit, and HEAD must be the commit that introduced development-source-lock.json. A merge commit or later documentation commit is not eligible."
+  },
+  "official_inputs": {
+    "manifest": {
+      "relative_path": "research/experiments/EXP-JAC-003/development-inputs/manifest.json",
+      "sha256": "82d0f85ff69d23463844560b2114e0aac87761a3970632b71a6747e797e4e98e"
+    },
+    "candidate": {
+      "relative_path": "research/experiments/EXP-JAC-003/development-inputs/development-candidate-inputs.json.gz",
+      "sha256": "3856b80fcb31c1ac948428846a8171b0b2775f113f33d6e98258d0c0f0d1e463",
+      "uncompressed_sha256": "b23a0c2267bf31234b153316b7ec40a4209d34eb2e6d33f771bba15c59515634"
+    },
+    "truth": {
+      "relative_path": "research/experiments/EXP-JAC-003/development-inputs/development-assessor-truth.json.gz",
+      "sha256": "7be45e9be52cd772af3d9305e252532be7374ec69354978433ccfbbfa76909fd",
+      "uncompressed_sha256": "20fcb2e0d1c5aba580ff7a1dc7e8c2868182e6676c094830f2001c3723819c79"
+    },
+    "frozen_k0": {
+      "relative_path": "research/experiments/EXP-JAC-003/development-inputs/development-k0-control-traces.json.gz",
+      "sha256": "67cc52e5972f1d2c7437f2cedd0cb0918000f10700ac654ec2154610a97d0ebe",
+      "uncompressed_sha256": "bd622031e579359392bfc92bd44ce25cf27efdfed018b0791ff45857d4eab9c3"
+    }
+  },
+  "execution_plan": {
+    "label": "EXP-JAC-003-development-abba",
+    "python_executable": "C:\\Users\\bakat\\miniforge3\\python.exe",
+    "julia_executable": "C:\\Users\\bakat\\.julia\\juliaup\\julia-1.12.6+0.x64.w64.mingw32\\bin\\julia.exe",
+    "source_lock_relative_path": "research/experiments/EXP-JAC-003/development-source-lock.json",
+    "julia_manifest_relative_path": "research/experiments/EXP-JAC-003/Manifest.toml",
+    "formal_runner_relative_path": "research/experiments/EXP-JAC-003/source/formal_abba.py",
+    "formal_runner_sha256": "2c48beabb4c5214eaa2e4f135f0ff6ac3eb4dd6a180ca4ace6094ece22b9202a",
+    "finalizer_relative_path": "research/experiments/EXP-JAC-003/source/finalize_abba.py",
+    "finalizer_sha256": "4315dd9cf6eb5debdc25733cd8ba77bbcbd62da23e3ad9179be699527501e389",
+    "exclusive_runner_relative_path": "research/harness/exclusive_run.py",
+    "exclusive_runner_sha256": "2437fcac4147cf0ef8a6abcbbe8431291d57f462e130f09a4d8427c564c6dd62",
+    "staging_relative_path": "research/results/EXP-JAC-003-development-abba-staging",
+    "partial_relative_path": "research/results/.EXP-JAC-003-development-abba-staging.partial",
+    "official_relative_path": "research/results/EXP-JAC-003/development-abba-v0",
+    "outer_audit_relative_path": "research/results/EXP-JAC-003-development-formal-run-audit.json",
+    "host_observation_relative_path": "research/results/EXP-JAC-003-development-host-observation.json",
+    "source_observation_relative_path": "research/results/EXP-JAC-003-development-source-observation.json",
+    "pre_binding_audit_path": "C:\\solver\\research\\results\\EXP-JAC-003\\pre-binding-audit.json",
+    "post_binding_audit_filename": "formal-binding-post-audit.json",
+    "abba_sequence": [
+      "K0-DENSE-PUBLIC",
+      "K1-CACHED-ROUTED",
+      "K1-CACHED-ROUTED",
+      "K0-DENSE-PUBLIC"
+    ],
+    "exact_child_command_tokens": [
+      "C:\\Users\\bakat\\miniforge3\\python.exe",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\source\\formal_abba.py",
+      "--repo",
+      "C:\\solver-worktrees\\exp-jac-003-inputs",
+      "--source-lock",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-source-lock.json",
+      "--input-manifest",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-inputs\\manifest.json",
+      "--candidate",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-inputs\\development-candidate-inputs.json.gz",
+      "--truth",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-inputs\\development-assessor-truth.json.gz",
+      "--frozen-k0",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-inputs\\development-k0-control-traces.json.gz",
+      "--staging",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-abba-staging",
+      "--julia",
+      "C:\\Users\\bakat\\.julia\\juliaup\\julia-1.12.6+0.x64.w64.mingw32\\bin\\julia.exe"
+    ],
+    "exact_exclusive_command_tokens": [
+      "C:\\Users\\bakat\\miniforge3\\python.exe",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\harness\\exclusive_run.py",
+      "--label",
+      "EXP-JAC-003-development-abba",
+      "--audit",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-formal-run-audit.json",
+      "--cwd",
+      "C:\\solver-worktrees\\exp-jac-003-inputs",
+      "--",
+      "C:\\Users\\bakat\\miniforge3\\python.exe",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\source\\formal_abba.py",
+      "--repo",
+      "C:\\solver-worktrees\\exp-jac-003-inputs",
+      "--source-lock",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-source-lock.json",
+      "--input-manifest",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-inputs\\manifest.json",
+      "--candidate",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-inputs\\development-candidate-inputs.json.gz",
+      "--truth",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-inputs\\development-assessor-truth.json.gz",
+      "--frozen-k0",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-inputs\\development-k0-control-traces.json.gz",
+      "--staging",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-abba-staging",
+      "--julia",
+      "C:\\Users\\bakat\\.julia\\juliaup\\julia-1.12.6+0.x64.w64.mingw32\\bin\\julia.exe"
+    ],
+    "exact_finalizer_command_tokens": [
+      "C:\\Users\\bakat\\miniforge3\\python.exe",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\source\\finalize_abba.py",
+      "--repo",
+      "C:\\solver-worktrees\\exp-jac-003-inputs",
+      "--source-lock",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-source-lock.json",
+      "--staging",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-abba-staging",
+      "--official",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003\\development-abba-v0",
+      "--outer-audit",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-formal-run-audit.json",
+      "--host-observation",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-host-observation.json",
+      "--source-observation",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-source-observation.json"
+    ]
+  },
+  "pre_run_requirements": [
+    "The amendment and checker are committed, unmodified and match checker.sha256.",
+    "The frozen worktree is fully clean at exact HEAD 2601dce with parent 0494e65.",
+    "Every development-source-lock file and all four official input hashes match.",
+    "No bound staging, partial, official, outer, host, source, pre-binding or post-binding path exists.",
+    "No bound path or existing ancestor traverses a symlink, junction or reparse point.",
+    "The computed direct-child, exclusive and finalizer token arrays equal the exact arrays above; every formal flag occurs exactly once.",
+    "The successful pre-binding audit is atomically written only to pre_binding_audit_path before the host observer and exclusive run start."
+  ],
+  "post_run_requirements": [
+    "The successful pre-binding audit, amendment, checker, HEAD, source lock, tracked files, inputs and command plan are unchanged.",
+    "The outer audit records the exact child command, cwd and label with completed outcome, exit code zero and no runner error.",
+    "capture.json binds the exact lock commit, source-lock hash, manifest hash, candidate uncompressed hash, Julia Manifest and complete fresh-process ABBA topology.",
+    "No segment trace is opened or interpreted by the binding checker.",
+    "The host observation binds all PIDs, spans the full outer interval and reports zero contention, zero lease loss, no live formal PID and no outcome inspection.",
+    "The source observation explicitly records manifest_match=true, input_match=true, zero source mismatch, no outcome inspection, and hashes of this amendment, checker and pre-binding audit.",
+    "The successful post-binding audit is atomically written once inside staging as post_binding_audit_filename before exact_finalizer_command_tokens may be executed."
+  ],
+  "terminal_stop_conditions": [
+    "Any pre-run or post-run checker failure or inability to write its fixed audit path",
+    "Any path, hash, Git lineage, tracked-file, command-token, cwd, label, executable, capture, host or source-observer mismatch",
+    "Any duplicate formal flag, symlink, junction, reparse point or path alias",
+    "Any existing output path, partial run, nonzero child exit, incomplete ABBA, lease loss or host contention",
+    "Any Gold, K0, K1, safety or segment outcome inspection before the frozen assessor phase",
+    "Any attempt to repair a mismatch by editing an expected hash or rerunning a partial formal sequence"
+  ],
+  "publication_rule": "finalize_abba.py may be invoked only with exact_finalizer_command_tokens after a passed post-binding audit exists in staging. A passed development assessment still authorizes only result-blind locked-family preregistration, never immediate product connection.",
+  "change_rule": "This amendment and checker are immutable after their joint pre-outcome commit. Any change requires a new experiment ID; expected hashes and exact command tokens are never updated to accept drift."
+}
