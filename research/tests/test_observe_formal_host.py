@@ -126,6 +126,21 @@ class ProcessObservationTests(unittest.TestCase):
         self.assertIn((13, 130), known)
         self.assertNotIn((11, 999), known)
         self.assertNotIn((14, 140), known)
+        tracker = ContentionTracker(
+            own_pids=set(),
+            cpu_heavy_cores=100,
+            memory_heavy_bytes=10**12,
+            memory_growth_bytes=10**12,
+            max_poll_gap_seconds=2,
+            unexplained_cpu_cores=100,
+        )
+        tracker.observe(second, known)
+        self.assertTrue(
+            any(
+                event.get("category") == "process_start" and event.get("pid") == 14
+                for event in tracker.events.values()
+            )
+        )
 
     def test_release_requires_two_clear_snapshots_and_defers_event_only(self) -> None:
         tracker = FormalClearTracker()
