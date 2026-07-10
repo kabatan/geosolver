@@ -1,4 +1,4 @@
-const SOLVE_API_VERSION = v"1.1.0"
+const SOLVE_API_VERSION = v"1.2.0"
 
 struct SolveConfigurationError <: CoreError
     code::Symbol
@@ -120,12 +120,12 @@ function _checkpoint_saw_inconclusive_image(checkpoint::SolveCheckpointArtifact)
     )
 end
 
-mutable struct _CompiledAttemptRunner
+mutable struct _CompiledAttemptRunner{I<:TargetImageDiagnosticOptions}
     compiled::CompiledProblem
     workspace::CompiledWorkspace
     local_options::LocalSolveOptions
     validation_options::CandidateValidationOptions
-    image_options::TargetImageDiagnosticOptions
+    image_options::I
     saw_likely_continuous::Bool
     saw_inconclusive_image::Bool
 end
@@ -136,6 +136,46 @@ function _remaining_deadline_ns(context::ExecutionContext)
     remaining >= Float64(typemax(UInt64) - now) / 1.0e9 && return typemax(UInt64)
     addition = UInt64(clamp(floor(remaining * 1.0e9), 0, typemax(UInt64) - now))
     return now + addition
+end
+
+function _remaining_oracle_work(context::ExecutionContext, uncommitted::Int=0)
+    uncommitted >= 0 || throw(ArgumentError("uncommitted oracle work must be nonnegative"))
+    limit = context.budget.limits.oracle_work
+    limit === nothing && return typemax(Int)
+    consumed = context.budget.oracle_work
+    consumed <= limit || throw(
+        InvariantError(:oracle_budget_overdrawn, "oracle budget ledger exceeds its limit"),
+    )
+    available = limit - consumed
+    return uncommitted >= available ? 0 : available - uncommitted
+end
+
+function _local_options_with_evaluation_limit(options::LocalSolveOptions, limit::Int)
+    limit > 0 || throw(ArgumentError("local evaluation limit must be positive"))
+    limit == options.max_evaluations && return options
+    return LocalSolveOptions(
+        max_iterations=options.max_iterations,
+        max_evaluations=limit,
+        residual_tolerance=options.residual_tolerance,
+        step_tolerance=options.step_tolerance,
+        finite_difference_step=options.finite_difference_step,
+        initial_damping=options.initial_damping,
+        damping_increase=options.damping_increase,
+        damping_decrease=options.damping_decrease,
+    )
+end
+
+function _oracle_budget_partial_observation(proposal::Proposal)
+    return Observation(
+        proposal.task_id,
+        proposal.configuration_id;
+        canonical_near_feasible=false,
+        needs_refinement=false,
+        residual_score=Inf,
+        oracle_work=0,
+        endpoint=proposal.coordinates,
+        diagnostic="local_status=not_run;resource=oracle_budget_exhausted",
+    )
 end
 
 function _residual_score(observation::OracleObservation)
@@ -171,6 +211,7 @@ end
 function _local_diagnostic(attempt, validation=nothing, image=nothing, correction=nothing)
     validation_text = validation === nothing ? "not_run" : string(validation.failure)
     image_text = image === nothing ? "not_run" : string(image.classification)
+    image_failure_text = image === nothing ? "not_run" : string(image.failure)
     correction_text = correction === nothing ? "not_run" : correction.detail
     return join(
         (
@@ -181,6 +222,7 @@ function _local_diagnostic(attempt, validation=nothing, image=nothing, correctio
             "condition=$(attempt.condition_estimate)",
             "validation=$validation_text",
             "target_image=$image_text",
+            "target_image_failure=$image_failure_text",
             "root_correction=$correction_text",
         ),
         ';',
@@ -281,8 +323,21 @@ function (runner::_CompiledAttemptRunner)(
     proposal::Proposal,
 )
     oracle_work = Ref(0)
+    logical_evaluation_cost = runner.compiled.logical_evaluation_cost
+    available_at_start = _remaining_oracle_work(context)
+    local_evaluation_limit = logical_evaluation_cost == 0 ?
+                             runner.local_options.max_evaluations : min(
+        runner.local_options.max_evaluations,
+        div(available_at_start, logical_evaluation_cost),
+    )
+    local_evaluation_limit > 0 || return _oracle_budget_partial_observation(proposal)
+    local_options = _local_options_with_evaluation_limit(
+        runner.local_options,
+        local_evaluation_limit,
+    )
     function evaluate_for_local(x)
         observation = evaluate(runner.compiled, x; workspace=runner.workspace)
+        _check_logical_evaluation_bound(runner.compiled, observation)
         oracle_work[] += observation.evaluation_cost
         return observation
     end
@@ -305,7 +360,7 @@ function (runner::_CompiledAttemptRunner)(
             scales,
             lower,
             upper,
-            options=runner.local_options,
+            options=local_options,
             deadline_ns=_remaining_deadline_ns(context),
             cancelled=() -> is_cancelled(context.cancel),
         )
@@ -332,8 +387,33 @@ function (runner::_CompiledAttemptRunner)(
         runner.compiled,
         collect(attempt.final);
         options=runner.image_options,
+        deadline_ns=_remaining_deadline_ns(context),
+        cancelled=() -> is_cancelled(context.cancel),
+        remaining_oracle_work=max(
+            0,
+            _remaining_oracle_work(context, oracle_work[]) - logical_evaluation_cost,
+        ),
     )
     oracle_work[] += image.oracle_work
+    if image.failure in (
+        TARGET_IMAGE_CANCELLED,
+        TARGET_IMAGE_DEADLINE_REACHED,
+        TARGET_IMAGE_ORACLE_BUDGET_EXHAUSTED,
+    )
+        runner.saw_inconclusive_image = true
+        return Observation(
+            proposal.task_id,
+            proposal.configuration_id;
+            canonical_near_feasible=true,
+            target=_candidate_target(attempt.observation),
+            branch_signature=Tuple(branch.decision for branch in attempt.observation.branches),
+            needs_refinement=image.failure == TARGET_IMAGE_ORACLE_BUDGET_EXHAUSTED,
+            residual_score=score,
+            oracle_work=oracle_work[],
+            endpoint=attempt.final,
+            diagnostic=_local_diagnostic(attempt, nothing, image),
+        )
+    end
     correction = _candidate_root_correction(image, runner.validation_options)
     if !correction.resolved
         return Observation(
@@ -349,11 +429,42 @@ function (runner::_CompiledAttemptRunner)(
             diagnostic=_local_diagnostic(attempt, nothing, image, correction),
         )
     end
+    validation_capacity = _remaining_oracle_work(context, oracle_work[])
+    cancelled_before_validation = is_cancelled(context.cancel)
+    deadline_before_validation = Float64(context.clock()) >= context.deadline
+    budget_before_validation = validation_capacity < logical_evaluation_cost
+    if cancelled_before_validation || deadline_before_validation || budget_before_validation
+        runner.saw_inconclusive_image = true
+        resource = if cancelled_before_validation
+            "cancelled_before_canonical_validation"
+        elseif deadline_before_validation
+            "deadline_before_canonical_validation"
+        else
+            "oracle_budget_before_canonical_validation"
+        end
+        return Observation(
+            proposal.task_id,
+            proposal.configuration_id;
+            canonical_near_feasible=true,
+            target=_candidate_target(attempt.observation),
+            branch_signature=Tuple(branch.decision for branch in attempt.observation.branches),
+            needs_refinement=budget_before_validation,
+            residual_score=score,
+            oracle_work=oracle_work[],
+            endpoint=attempt.final,
+            diagnostic=string(
+                _local_diagnostic(attempt, nothing, image, correction),
+                ';',
+                resource,
+            ),
+        )
+    end
     validation = validate_candidate(
         runner.compiled,
         attempt;
         options=runner.validation_options,
     )
+    _check_logical_evaluation_bound(runner.compiled, validation.canonical_observation)
     oracle_work[] += validation.oracle_work
     if !validation.accepted
         return Observation(

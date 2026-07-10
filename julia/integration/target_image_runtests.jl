@@ -9,6 +9,7 @@ const TARGET_IMAGE_FIXTURE_PLUGIN =
 _target_identity(value::Real) = value
 _target_square(value::Real) = value * value
 _target_sum(first::Real, second::Real) = first + second
+_target_huge_signed(value::Real) = signbit(value) ? -floatmax(Float64) : floatmax(Float64)
 _zero_residual(value::Real) = value
 _sum_zero_residual(first::Real, second::Real) = first + second
 _tiny_zero_residual(value::Real) = 1.0e-8 * value
@@ -49,6 +50,15 @@ function target_image_fixture_plugin()
             PrimitiveId(TARGET_IMAGE_FIXTURE_PLUGIN, "sum"),
             (scalar_two,),
             generic_kernel(_target_sum),
+        ),
+        PrimitiveSpec(
+            PrimitiveId(TARGET_IMAGE_FIXTURE_PLUGIN, "huge_signed"),
+            (scalar_one,),
+            OperatorKernel(
+                _target_huge_signed;
+                capabilities = CapabilitySet(C0),
+                smoothness = SMOOTH_C1,
+            ),
         ),
         PrimitiveSpec(
             PrimitiveId(TARGET_IMAGE_FIXTURE_PLUGIN, "c0_only"),
@@ -122,7 +132,7 @@ function target_image_fixture_plugin()
         TARGET_IMAGE_FIXTURE_PLUGIN,
         v"0.1.0",
         GeoTargetCore.CORE_ABI_VERSION,
-        content_hash("target-image-fixture-v2");
+        content_hash("target-image-fixture-v3");
         primitives,
         relations,
         domains = (domain,),
@@ -674,6 +684,96 @@ end
     @test !occursin("invokelatest", source)
     @test !occursin(r"\beval\s*\(", source)
     @test !occursin(r"\b(point2|line_through|circle2|scalar_equality)\b", source)
+end
+
+@testset "resource bounds, canonical nullspaces and overflow fail closed" begin
+    registry = target_image_registry()
+    compiled = GeoTargetCore.compile_problem(unconstrained_problem("identity"), registry)
+    @test compiled.logical_evaluation_cost > 0
+
+    cancelled = GeoTargetCore.analyze_target_image(
+        compiled,
+        [0.0];
+        cancelled = () -> true,
+    )
+    @test cancelled.classification == GeoTargetCore.TARGET_IMAGE_INCONCLUSIVE
+    @test cancelled.failure == GeoTargetCore.TARGET_IMAGE_CANCELLED
+    @test cancelled.oracle_work == 0
+    @test cancelled.sampled_points == 0
+
+    cancellation_checks = Ref(0)
+    cancelled_after_base = GeoTargetCore.analyze_target_image(
+        compiled,
+        [0.0];
+        cancelled = () -> begin
+            cancellation_checks[] += 1
+            cancellation_checks[] > 2
+        end,
+    )
+    @test cancelled_after_base.failure == GeoTargetCore.TARGET_IMAGE_CANCELLED
+    @test cancelled_after_base.oracle_work == compiled.logical_evaluation_cost
+    @test cancelled_after_base.sampled_points == 1
+
+    deadline = GeoTargetCore.analyze_target_image(
+        compiled,
+        [0.0];
+        deadline_ns = time_ns(),
+    )
+    @test deadline.classification == GeoTargetCore.TARGET_IMAGE_INCONCLUSIVE
+    @test deadline.failure == GeoTargetCore.TARGET_IMAGE_DEADLINE_REACHED
+    @test deadline.oracle_work == 0
+
+    too_small = compiled.logical_evaluation_cost - 1
+    budget = GeoTargetCore.analyze_target_image(
+        compiled,
+        [0.0];
+        remaining_oracle_work = too_small,
+    )
+    @test budget.classification == GeoTargetCore.TARGET_IMAGE_INCONCLUSIVE
+    @test budget.failure == GeoTargetCore.TARGET_IMAGE_ORACLE_BUDGET_EXHAUSTED
+    @test budget.oracle_work == 0
+
+    partial_limit = 2 * compiled.logical_evaluation_cost
+    partial = GeoTargetCore.analyze_target_image(
+        compiled,
+        [0.0];
+        remaining_oracle_work = partial_limit,
+    )
+    @test partial.failure == GeoTargetCore.TARGET_IMAGE_ORACLE_BUDGET_EXHAUSTED
+    @test 0 < partial.oracle_work <= partial_limit
+    @test partial.sampled_points >= 1
+
+    first_basis = [1.0 0.0; 0.0 1.0; 0.0 0.0]
+    angle = 0.37
+    rotation = [cos(angle) -sin(angle); sin(angle) cos(angle)]
+    rotated_basis = first_basis * rotation
+    canonical_first = GeoTargetCore._canonical_nullspace_basis(first_basis)
+    canonical_rotated = GeoTargetCore._canonical_nullspace_basis(rotated_basis)
+    @test canonical_first ≈ canonical_rotated atol = 1.0e-14
+    @test canonical_rotated' * canonical_rotated ≈ [1.0 0.0; 0.0 1.0] atol = 1.0e-14
+
+    overflow = GeoTargetCore.analyze_target_image(
+        GeoTargetCore.compile_problem(unconstrained_problem("huge_signed"), registry),
+        [0.0],
+    )
+    @test overflow.classification == GeoTargetCore.TARGET_IMAGE_INCONCLUSIVE
+    @test overflow.failure == GeoTargetCore.TARGET_IMAGE_NONFINITE_LINEARIZATION
+    @test !all(isfinite, overflow.target_gradient)
+
+    options = GeoTargetCore.TargetImageDiagnosticOptions()
+    @test isconcretetype(typeof(options))
+    @test options.probe_radii isa NTuple{3,Float64}
+    @test fieldtype(typeof(options), :probe_radii) == typeof(options.probe_radii)
+    @test_throws ArgumentError GeoTargetCore.analyze_target_image(
+        compiled,
+        [0.0];
+        remaining_oracle_work = -1,
+    )
+    @test_throws ArgumentError GeoTargetCore.analyze_target_image(
+        compiled,
+        [0.0];
+        remaining_oracle_work = true,
+    )
 end
 
 @testset "target-image options reject unsafe controls" begin

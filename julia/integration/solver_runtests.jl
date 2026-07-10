@@ -103,8 +103,69 @@ function constant_manifold_problem(value=7.0)
     )
 end
 
+function evaluated_constant_manifold_problem()
+    plugin = geometry_plugin()
+    variable = VariableSpec(
+        VariableId("free-evaluated"),
+        SCALAR_TYPE_ID,
+        0.0,
+        1.0;
+        lower=-2.0,
+        upper=2.0,
+    )
+    graph = ConstructionGraph((
+        ReferenceNode(NodeId("free-evaluated-ref"), variable.id),
+        LiteralNode(NodeId("zero"), SCALAR_TYPE_ID, 0.0),
+        CallNode(
+            NodeId("same-point"),
+            PrimitiveId(plugin.id, "point2"),
+            (NodeId("free-evaluated-ref"), NodeId("zero")),
+        ),
+        CallNode(
+            NodeId("target"),
+            PrimitiveId(plugin.id, "distance"),
+            (NodeId("same-point"), NodeId("same-point")),
+        ),
+    ))
+    return ProblemSpecV1(
+        (plugin_lock(plugin),),
+        (variable,),
+        graph;
+        target=NodeId("target"),
+    )
+end
+
 function short_options(; kwargs...)
     return SolveOptions(; preset=:fast, wall_seconds=60.0, seed=17, kwargs...)
+end
+
+function options_with_oracle_budget(limit::Integer)
+    options = short_options()
+    source = options.policy
+    limits = source.budget_limits
+    policy = GeoTargetCore.SolvePolicy(
+        Val(:internal),
+        source.preset,
+        source.wall_seconds,
+        GeoTargetCore.BudgetLimits(
+            proposals=limits.proposals,
+            local_attempts=limits.local_attempts,
+            refinements=limits.refinements,
+            oracle_work=limit,
+        ),
+        source._h0,
+    )
+    return GeoTargetCore.SolveOptions(
+        options.version,
+        options.preset,
+        options.wall_seconds,
+        options.seed,
+        options.answer_level,
+        options.worker_count,
+        policy,
+        options._local,
+        options._validation,
+    )
 end
 
 @testset "public solve path returns canonical provisional evidence" begin
@@ -397,6 +458,28 @@ end
     answer = only(constant_manifold.result.provisional_answers)
     @test answer.target.lower <= BigFloat(7) <= answer.target.upper
     @test occursin("TARGET_LOCALLY_CONSTANT_MANIFOLD", constant_manifold.evidence_json)
+end
+
+@testset "target-image work respects the enclosing oracle budget" begin
+    registry = solve_registry()
+    problem = evaluated_constant_manifold_problem()
+    compiled = GeoTargetCore.compile_problem(problem, registry)
+    @test compiled.logical_evaluation_cost > 0
+    oracle_limit = 2 * compiled.logical_evaluation_cost
+    execution = solve_execution(
+        problem,
+        registry;
+        options=options_with_oracle_budget(oracle_limit),
+        max_actions=2,
+    )
+    @test execution.loop_status != GeoTargetCore.LOOP_PROTOCOL_ERROR
+    @test execution.loop_status != GeoTargetCore.LOOP_CALLBACK_ERROR
+    @test execution.result.search_status == SEARCH_FINISHED_UNKNOWN
+    @test execution.result.target_image_status == TARGET_IMAGE_UNKNOWN
+    @test isempty(execution.result.provisional_answers)
+    @test execution.checkpoint.budget.oracle_work <= oracle_limit
+    @test occursin("TARGET_IMAGE_ORACLE_BUDGET_EXHAUSTED", execution.evidence_json)
+    @test !occursin("callback_budget_overrun", execution.evidence_json)
 end
 
 @testset "stable options reject unsupported execution expansion" begin

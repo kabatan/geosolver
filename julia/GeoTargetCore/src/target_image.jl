@@ -18,6 +18,9 @@ const TargetImageClassification = Union{LocalTargetImageClassification,TargetIma
     TARGET_IMAGE_INSUFFICIENT_PROBES = 7
     TARGET_IMAGE_SINGULAR_LINEARIZATION = 8
     TARGET_IMAGE_UNRESOLVED_VARIATION = 9
+    TARGET_IMAGE_CANCELLED = 10
+    TARGET_IMAGE_DEADLINE_REACHED = 11
+    TARGET_IMAGE_ORACLE_BUDGET_EXHAUSTED = 12
 end
 
 @enum TargetDifferenceScheme::UInt8 begin
@@ -28,9 +31,9 @@ end
 end
 
 """Numerical controls for normalized finite differences, SVD rank and probes."""
-struct TargetImageDiagnosticOptions
+struct TargetImageDiagnosticOptions{R<:Tuple}
     finite_difference_radius::Float64
-    probe_radii::Tuple
+    probe_radii::R
     relation_tolerance::Float64
     rank_absolute_tolerance::Float64
     rank_relative_tolerance::Float64
@@ -77,7 +80,7 @@ struct TargetImageDiagnosticOptions
             CapabilityError(capability, "target-image diagnostics support only C0 and C2"),
         )
         precision_bits >= 53 || throw(ArgumentError("precision_bits must be at least 53"))
-        return new(
+        return new{typeof(frozen_probe_radii)}(
             radius,
             frozen_probe_radii,
             tolerances...,
@@ -237,12 +240,20 @@ function TargetImageDiagnostic(
     )
 end
 
-mutable struct _TargetImageWork
+mutable struct _TargetImageWork{
+    C<:Vector,
+    O<:TargetImageDiagnosticOptions,
+    F,
+}
     compiled::CompiledProblem
-    base_coordinates::Vector
+    base_coordinates::C
     base_observation::OracleObservation
-    options::TargetImageDiagnosticOptions
+    options::O
     workspace::CompiledWorkspace
+    deadline_ns::UInt64
+    cancelled::F
+    oracle_work_limit::Int
+    stop_failure::TargetImageDiagnosticFailure
     oracle_work::Int
     sampled_points::Int
     accepted_points::Int
@@ -256,6 +267,81 @@ function _target_image_capability_available(compiled, options)
     options.capability == C0 && return true
     supports(capabilities(compiled), C2) || return false
     return all(variable -> BigFloat(0) isa variable.runtime_type, compiled.variables)
+end
+
+function _target_image_resource_failure(
+    compiled::CompiledProblem,
+    oracle_work::Int,
+    oracle_work_limit::Int,
+    deadline_ns::UInt64,
+    cancelled,
+    ;
+    reserve_evaluation::Bool,
+)
+    cancelled() && return TARGET_IMAGE_CANCELLED
+    time_ns() >= deadline_ns && return TARGET_IMAGE_DEADLINE_REACHED
+    if reserve_evaluation
+        reservation = compiled.logical_evaluation_cost
+        if reservation > oracle_work_limit ||
+           oracle_work > oracle_work_limit - reservation
+            return TARGET_IMAGE_ORACLE_BUDGET_EXHAUSTED
+        end
+    end
+    return TARGET_IMAGE_DIAGNOSTIC_NONE
+end
+
+function _target_image_stop_diagnostic(failure::TargetImageDiagnosticFailure)
+    failure == TARGET_IMAGE_CANCELLED && return "target-image analysis was cancelled"
+    failure == TARGET_IMAGE_DEADLINE_REACHED &&
+        return "target-image analysis reached its monotonic deadline"
+    failure == TARGET_IMAGE_ORACLE_BUDGET_EXHAUSTED &&
+        return "target-image analysis cannot reserve another complete oracle evaluation"
+    throw(ArgumentError("failure is not a target-image resource stop"))
+end
+
+function _target_image_stopped_result(
+    failure::TargetImageDiagnosticFailure,
+    base,
+    options,
+    target_dependencies;
+    kwargs...,
+)
+    return _target_image_result(
+        TARGET_IMAGE_INCONCLUSIVE,
+        base,
+        options,
+        target_dependencies;
+        failure,
+        diagnostic=_target_image_stop_diagnostic(failure),
+        kwargs...,
+    )
+end
+
+function _check_target_image_resources!(
+    work::_TargetImageWork;
+    reserve_evaluation::Bool,
+)
+    work.stop_failure == TARGET_IMAGE_DIAGNOSTIC_NONE || return false
+    failure = _target_image_resource_failure(
+        work.compiled,
+        work.oracle_work,
+        work.oracle_work_limit,
+        work.deadline_ns,
+        work.cancelled;
+        reserve_evaluation,
+    )
+    work.stop_failure = failure
+    return failure == TARGET_IMAGE_DIAGNOSTIC_NONE
+end
+
+function _check_logical_evaluation_bound(compiled, observation)
+    observation.evaluation_cost <= compiled.logical_evaluation_cost || throw(
+        InvariantError(
+            :logical_evaluation_cost_underflow,
+            "an oracle evaluation exceeded its compiled logical cost reservation",
+        ),
+    )
+    return observation
 end
 
 function _same_branch_signature(first::OracleObservation, second::OracleObservation)
@@ -328,16 +414,20 @@ function _normalized_perturbation(work::_TargetImageWork, delta)
 end
 
 function _sample_delta!(work::_TargetImageWork, delta)
+    _check_target_image_resources!(work; reserve_evaluation=false) || return nothing
     coordinates = _normalized_perturbation(work, delta)
     _within_variable_bounds(work.compiled, coordinates) || return nothing
+    _check_target_image_resources!(work; reserve_evaluation=true) || return nothing
     observation = evaluate(
         work.compiled,
         coordinates;
         capability = work.options.capability,
         workspace = work.workspace,
     )
+    _check_logical_evaluation_bound(work.compiled, observation)
     work.oracle_work += observation.evaluation_cost
     work.sampled_points += 1
+    _check_target_image_resources!(work; reserve_evaluation=false)
     if _usable_target_image_sample(observation, work.base_observation, work.options)
         work.accepted_points += 1
         return observation
@@ -384,7 +474,11 @@ function _linearize_target_image!(work::_TargetImageWork)
         plus_delta[column] = radius
         minus_delta[column] = -radius
         plus = _sample_delta!(work, plus_delta)
+        work.stop_failure == TARGET_IMAGE_DIAGNOSTIC_NONE ||
+            return jacobian, gradient, Tuple(schemes)
         minus = _sample_delta!(work, minus_delta)
+        work.stop_failure == TARGET_IMAGE_DIAGNOSTIC_NONE ||
+            return jacobian, gradient, Tuple(schemes)
         plus_residual = plus === nothing ? nothing : _float_relation_vector(plus)
         minus_residual = minus === nothing ? nothing : _float_relation_vector(minus)
         plus_target = plus === nothing ? nothing : _float_target_image_value(plus.target)
@@ -463,6 +557,8 @@ function _probe_target_nullspace!(work, nullspace)
                 delta = Vector{Float64}(undef, variable_count)
                 delta .= sign * radius .* direction
                 observation = _sample_delta!(work, delta)
+                work.stop_failure == TARGET_IMAGE_DIAGNOSTIC_NONE ||
+                    return max_variation, max_relation_drift, Tuple(coverage)
                 observation === nothing && continue
                 target = _float_target_image_value(observation.target)
                 residual = _float_relation_vector(observation)
@@ -533,10 +629,62 @@ function _target_image_result(
     )
 end
 
-function _analyze_target_image(compiled, coordinates, options)
+function _analyze_target_image(
+    compiled,
+    coordinates,
+    options,
+    deadline_ns,
+    cancelled,
+    oracle_work_limit,
+)
     workspace = CompiledWorkspace(compiled)
-    base = evaluate(compiled, coordinates; capability = options.capability, workspace)
     target_dependencies = compiled.sparsity.target_variables
+    resource_failure = _target_image_resource_failure(
+        compiled,
+        0,
+        oracle_work_limit,
+        deadline_ns,
+        cancelled;
+        reserve_evaluation=true,
+    )
+    if resource_failure != TARGET_IMAGE_DIAGNOSTIC_NONE
+        diagnostic = _target_image_stop_diagnostic(resource_failure)
+        base = _target_image_empty_observation(EVAL_PLUGIN_ERROR, diagnostic)
+        return _target_image_stopped_result(
+            resource_failure,
+            base,
+            options,
+            target_dependencies;
+            jacobian=zeros(Float64, length(compiled.relations), length(compiled.variables)),
+            gradient=zeros(Float64, length(compiled.variables)),
+            oracle_work=0,
+            sampled_points=0,
+            accepted_points=0,
+        )
+    end
+    base = evaluate(compiled, coordinates; capability = options.capability, workspace)
+    _check_logical_evaluation_bound(compiled, base)
+    resource_failure = _target_image_resource_failure(
+        compiled,
+        base.evaluation_cost,
+        oracle_work_limit,
+        deadline_ns,
+        cancelled;
+        reserve_evaluation=false,
+    )
+    if resource_failure != TARGET_IMAGE_DIAGNOSTIC_NONE
+        return _target_image_stopped_result(
+            resource_failure,
+            base,
+            options,
+            target_dependencies;
+            jacobian=zeros(Float64, length(base.relations), length(compiled.variables)),
+            gradient=zeros(Float64, length(compiled.variables)),
+            oracle_work=base.evaluation_cost,
+            sampled_points=1,
+            accepted_points=0,
+        )
+    end
     if !_usable_target_image_base(base, compiled, options)
         failure = if base.status in (EVAL_INVALID_DOMAIN, EVAL_INVALID_BRANCH, EVAL_AMBIGUOUS_BRANCH)
             TARGET_IMAGE_BASE_SEMANTICS_FAILED
@@ -582,6 +730,10 @@ function _analyze_target_image(compiled, coordinates, options)
         base,
         options,
         workspace,
+        deadline_ns,
+        cancelled,
+        oracle_work_limit,
+        TARGET_IMAGE_DIAGNOSTIC_NONE,
         base.evaluation_cost,
         1,
         1,
@@ -603,6 +755,20 @@ function _analyze_target_image(compiled, coordinates, options)
         )
     end
     jacobian, gradient, schemes = linearization
+    if work.stop_failure != TARGET_IMAGE_DIAGNOSTIC_NONE
+        return _target_image_stopped_result(
+            work.stop_failure,
+            base,
+            options,
+            target_dependencies;
+            jacobian,
+            gradient,
+            schemes,
+            oracle_work=work.oracle_work,
+            sampled_points=work.sampled_points,
+            accepted_points=work.accepted_points,
+        )
+    end
     if any(scheme -> scheme == TARGET_DIFFERENCE_UNAVAILABLE, schemes)
         return _target_image_result(
             TARGET_IMAGE_INCONCLUSIVE,
@@ -662,6 +828,29 @@ function _analyze_target_image(compiled, coordinates, options)
     singular_values, numerical_rank, rank_threshold, nullspace, condition = factorization
     projection = Vector{Float64}(nullspace' * gradient)
     sensitivity = norm(projection)
+    _check_target_image_resources!(work; reserve_evaluation=false)
+    if work.stop_failure != TARGET_IMAGE_DIAGNOSTIC_NONE
+        return _target_image_stopped_result(
+            work.stop_failure,
+            base,
+            options,
+            target_dependencies;
+            linearization_computed=true,
+            jacobian,
+            gradient,
+            singular_values,
+            numerical_rank,
+            rank_threshold,
+            nullspace,
+            projection,
+            sensitivity,
+            schemes,
+            condition,
+            oracle_work=work.oracle_work,
+            sampled_points=work.sampled_points,
+            accepted_points=work.accepted_points,
+        )
+    end
     if numerical_rank == length(compiled.variables)
         return _target_image_result(
             TARGET_LOCALLY_ISOLATED,
@@ -687,6 +876,31 @@ function _analyze_target_image(compiled, coordinates, options)
 
     probe_variation, probe_relation_drift, probe_coverage =
         _probe_target_nullspace!(work, nullspace)
+    if work.stop_failure != TARGET_IMAGE_DIAGNOSTIC_NONE
+        return _target_image_stopped_result(
+            work.stop_failure,
+            base,
+            options,
+            target_dependencies;
+            linearization_computed=true,
+            jacobian,
+            gradient,
+            singular_values,
+            numerical_rank,
+            rank_threshold,
+            nullspace,
+            projection,
+            sensitivity,
+            probe_variation,
+            probe_relation_drift,
+            probe_coverage,
+            schemes,
+            condition,
+            oracle_work=work.oracle_work,
+            sampled_points=work.sampled_points,
+            accepted_points=work.accepted_points,
+        )
+    end
     if any(iszero, probe_coverage)
         return _target_image_result(
             TARGET_IMAGE_INCONCLUSIVE,
@@ -806,15 +1020,31 @@ Estimate the local target image without making any completeness or exactness cla
 
 Finite differences are taken in normalized variables. SVD is an explicitly
 Float64 diagnostic control even when samples are evaluated through C2 BigFloat.
+`deadline_ns` uses the same monotonic `time_ns()` clock as `solve_local`.
+Before every oracle call, the diagnostic reserves the compiled logical
+evaluation cost against `remaining_oracle_work`; cancellation, deadline and
+budget stops return typed inconclusive diagnostics rather than throwing.
 """
 function analyze_target_image(
     compiled::CompiledProblem,
     x::AbstractVector;
     options::TargetImageDiagnosticOptions = TargetImageDiagnosticOptions(),
+    deadline_ns::UInt64 = typemax(UInt64),
+    cancelled = () -> false,
+    remaining_oracle_work::Union{Nothing,Integer} = nothing,
 )
     length(x) == length(compiled.variables) || throw(
         ArgumentError("expected $(length(compiled.variables)) variables, received $(length(x))"),
     )
+    remaining_oracle_work isa Bool && throw(
+        ArgumentError("remaining_oracle_work must be a nonnegative integer or nothing"),
+    )
+    remaining_oracle_work === nothing ||
+        0 <= remaining_oracle_work <= typemax(Int) || throw(
+            ArgumentError("remaining_oracle_work must fit a nonnegative Int"),
+        )
+    oracle_work_limit = remaining_oracle_work === nothing ?
+                        typemax(Int) : Int(remaining_oracle_work)
     if !_target_image_capability_available(compiled, options)
         diagnostic = "requested $(options.capability) is not available on every target-image path"
         observation = _target_image_empty_observation(EVAL_UNSUPPORTED_CAPABILITY, diagnostic)
@@ -834,8 +1064,22 @@ function analyze_target_image(
     if options.capability == C2
         return setprecision(BigFloat, options.precision_bits) do
             coordinates = BigFloat[BigFloat(value) for value in x]
-            _analyze_target_image(compiled, coordinates, options)
+            _analyze_target_image(
+                compiled,
+                coordinates,
+                options,
+                deadline_ns,
+                cancelled,
+                oracle_work_limit,
+            )
         end
     end
-    return _analyze_target_image(compiled, collect(x), options)
+    return _analyze_target_image(
+        compiled,
+        collect(x),
+        options,
+        deadline_ns,
+        cancelled,
+        oracle_work_limit,
+    )
 end
