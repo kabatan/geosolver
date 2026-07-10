@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geotarget.local/research/exp-local-003-calibration-truth-v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "card_sha256",
+    "candidate_projection_sha256",
+    "assessor_projection_sha256",
+    "audit",
+    "cases"
+  ],
+  "properties": {
+    "schema_version": {"const": "exp-local-003-calibration-truth/v1"},
+    "card_sha256": {"const": "0caae294a032f6d920c718219836e60e57f20c76fe5d790a615e554a95c6ee3c"},
+    "candidate_projection_sha256": {"$ref": "#/$defs/digest"},
+    "assessor_projection_sha256": {"$ref": "#/$defs/digest"},
+    "audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "latent_groups_checked",
+        "primary_semantic_z_mismatch_count",
+        "primary_scale_permutation_mismatch_count",
+        "safety_qz_mismatch_count"
+      ],
+      "properties": {
+        "latent_groups_checked": {"const": 16},
+        "primary_semantic_z_mismatch_count": {"const": 0},
+        "primary_scale_permutation_mismatch_count": {"const": 0},
+        "safety_qz_mismatch_count": {"const": 0}
+      }
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 64,
+      "maxItems": 64,
+      "items": {"$ref": "#/$defs/case"}
+    }
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "bits": {"type": "string", "pattern": "^0x[0-9a-f]{16}$"},
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "opaque_case_key",
+        "problem_sha256",
+        "calibration_points_sha256",
+        "variable_count",
+        "residual_count",
+        "logical_evaluation_cost",
+        "observations",
+        "calibration"
+      ],
+      "properties": {
+        "opaque_case_key": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "problem_sha256": {"$ref": "#/$defs/digest"},
+        "calibration_points_sha256": {"$ref": "#/$defs/digest"},
+        "variable_count": {"type": "integer", "minimum": 1, "maximum": 16},
+        "residual_count": {"type": "integer", "minimum": 1, "maximum": 64},
+        "logical_evaluation_cost": {"type": "integer", "minimum": 1},
+        "observations": {
+          "type": "array",
+          "minItems": 64,
+          "maxItems": 64,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["status", "evaluation_cost", "z_bits"],
+            "properties": {
+              "status": {
+                "enum": [
+                  "EVAL_OK",
+                  "EVAL_INVALID_DOMAIN",
+                  "EVAL_NONFINITE",
+                  "EVAL_UNSUPPORTED_CAPABILITY",
+                  "EVAL_PLUGIN_ERROR",
+                  "EVAL_INVALID_BRANCH",
+                  "EVAL_AMBIGUOUS_BRANCH"
+                ]
+              },
+              "evaluation_cost": {"type": "integer", "minimum": 0},
+              "z_bits": {"type": "array", "items": {"$ref": "#/$defs/bits"}}
+            }
+          }
+        },
+        "calibration": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "valid_vector_count",
+            "nearest_rank_index",
+            "r_bits",
+            "a_bits",
+            "a_vector_sha256",
+            "joint_fallback_reason",
+            "clamp_reasons"
+          ],
+          "properties": {
+            "valid_vector_count": {"type": "integer", "minimum": 0, "maximum": 64},
+            "nearest_rank_index": {"type": "integer", "minimum": 0, "maximum": 64},
+            "r_bits": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/bits"}},
+            "a_bits": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/bits"}},
+            "a_vector_sha256": {"$ref": "#/$defs/digest"},
+            "joint_fallback_reason": {
+              "type": ["string", "null"],
+              "enum": [null, "insufficient_valid_vectors", "nonpositive_or_nonfinite_nearest_rank"]
+            },
+            "clamp_reasons": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "enum": ["joint_fallback", "below_0x1.0p-40", "above_0x1.0p+40", "none"]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

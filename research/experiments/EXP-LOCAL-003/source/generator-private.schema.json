@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geotarget.local/research/exp-local-003-generator-private-v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "card_sha256", "counter_contract", "cases"],
+  "properties": {
+    "schema_version": {"const": "exp-local-003-generator-private/v1"},
+    "card_sha256": {"const": "0caae294a032f6d920c718219836e60e57f20c76fe5d790a615e554a95c6ee3c"},
+    "counter_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "calibration_domain_hex",
+        "calibration_seed_hex",
+        "start_domain_hex",
+        "start_seed_hex",
+        "binary64_fma"
+      ],
+      "properties": {
+        "calibration_domain_hex": {"type": "string", "pattern": "^[0-9a-f]+$"},
+        "calibration_seed_hex": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "start_domain_hex": {"type": "string", "pattern": "^[0-9a-f]+$"},
+        "start_seed_hex": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "binary64_fma": {"const": "exact-rational-then-roundTiesToEven"}
+      }
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 64,
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "opaque_case_key",
+          "source_ordinal",
+          "family_id",
+          "latent_group",
+          "representation",
+          "calibration_key_hex",
+          "start_key_hex"
+        ],
+        "properties": {
+          "opaque_case_key": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "source_ordinal": {"type": "integer", "minimum": 0, "maximum": 63},
+          "family_id": {"type": "string"},
+          "latent_group": {"type": "integer", "minimum": 0, "maximum": 1},
+          "representation": {"type": "string"},
+          "calibration_key_hex": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "start_key_hex": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    }
+  }
+}
