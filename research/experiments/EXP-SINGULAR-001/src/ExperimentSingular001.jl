@@ -11,6 +11,7 @@ include("types.jl")
 include("generators.jl")
 include("harness.jl")
 include("artifacts.jl")
+include("development.jl")
 
 export EXPERIMENT_ID,
     HARNESS_VERSION,
@@ -34,6 +35,9 @@ export EXPERIMENT_ID,
     outcome_document,
     assessment_document,
     development_input_document,
+    run_development,
+    development_summary,
+    write_development_results,
     write_json_artifact
 
 end

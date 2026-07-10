@@ -218,3 +218,35 @@ end
         @test isempty(filter(name -> occursin(".tmp-", name), readdir(directory)))
     end
 end
+
+@testset "development runner summarizes without product promotion" begin
+    controls = fixed_control_cases()
+    cases = [
+        case_by_id(controls, "p1-near-null-base"),
+        case_by_id(controls, "nonroot-stationary-1e-13"),
+        case_by_id(controls, "zero-manifold-varying-target"),
+        case_by_id(controls, "regular-linear-c0"),
+    ]
+    rows = run_development(; cases)
+    summary = development_summary(rows, cases)
+    @test length(rows) == 12
+    @test summary["product_connected"] == false
+    @test summary["locked_validation"] == false
+    @test summary["false_promotions"] == 0
+    @test summary["semantic_replay_only_promotions"] == 0
+    @test summary["variants"]["S1-AP-LMQR"]["phase_a_gold_successes"] == 1
+    mktempdir() do directory
+        write_development_results(directory, rows, summary; cases)
+        for filename in (
+            "attempts.json",
+            "development-report.md",
+            "environment.json",
+            "summary.json",
+        )
+            @test isfile(joinpath(directory, filename))
+        end
+        parsed = JSON3.read(read(joinpath(directory, "summary.json"), String))
+        @test !parsed.product_connected
+        @test !parsed.locked_validation
+    end
+end
