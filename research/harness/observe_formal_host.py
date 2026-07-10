@@ -722,6 +722,11 @@ def observation_bindings(
     worker: PowerShellInventory,
     capability: Inventory,
 ) -> dict[str, Any]:
+    source_path = Path(__file__).resolve()
+    command_tokens = list(arguments.command_tokens)
+    command_payload = json.dumps(
+        command_tokens, ensure_ascii=False, separators=(",", ":")
+    ).encode()
     return {
         "settings": {
             "schema_version": arguments.schema_version,
@@ -759,6 +764,12 @@ def observation_bindings(
             "capability_probe_pid": capability.capability_probe_pid,
             "shared_infrastructure_process_names": sorted(OBSERVER_INFRA_NAMES),
         },
+        "observer_source": {
+            "path": str(source_path),
+            "sha256": _file_sha256(source_path),
+        },
+        "command_tokens": command_tokens,
+        "command_tokens_sha256": hashlib.sha256(command_payload).hexdigest(),
     }
 
 
@@ -1072,7 +1083,14 @@ def _parser() -> argparse.ArgumentParser:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    arguments = _parser().parse_args(argv)
+    frozen_argv = list(sys.argv[1:] if argv is None else argv)
+    arguments = _parser().parse_args(frozen_argv)
+    arguments.command_tokens = [
+        str(Path(sys.executable).resolve()),
+        "-m",
+        "research.harness.observe_formal_host",
+        *frozen_argv,
+    ]
     positive = (
         arguments.poll_seconds,
         arguments.max_poll_gap_seconds,

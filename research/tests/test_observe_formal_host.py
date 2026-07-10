@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import tempfile
@@ -241,6 +242,13 @@ class FinalizationTests(unittest.TestCase):
                 capture=root / "capture",
                 ready=root / "ready",
                 output=root / "output",
+                command_tokens=[
+                    "python.exe",
+                    "-m",
+                    "research.harness.observe_formal_host",
+                    "--label",
+                    "formal",
+                ],
             )
             worker = SimpleNamespace(
                 executable=(root / "pwsh.exe").resolve(),
@@ -264,6 +272,20 @@ class FinalizationTests(unittest.TestCase):
             self.assertEqual(bound["settings"]["timeout_seconds"], 100.0)
             self.assertEqual(bound["paths"]["output"], str((root / "output").resolve()))
             self.assertTrue(bound["backend"]["event_capability"])
+            source = bound["observer_source"]
+            self.assertEqual(Path(source["path"]), Path(source["path"]).resolve())
+            self.assertEqual(
+                source["sha256"],
+                hashlib.sha256(Path(source["path"]).read_bytes()).hexdigest(),
+            )
+            self.assertEqual(bound["command_tokens"], arguments.command_tokens)
+            expected_tokens = json.dumps(
+                arguments.command_tokens, ensure_ascii=False, separators=(",", ":")
+            ).encode()
+            self.assertEqual(
+                bound["command_tokens_sha256"],
+                hashlib.sha256(expected_tokens).hexdigest(),
+            )
 
     def test_interval_and_four_pids_are_validated(self) -> None:
         outer = {
