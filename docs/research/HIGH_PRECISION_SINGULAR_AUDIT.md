@@ -2,7 +2,8 @@
 
 Status: **audited; safety repair committed; next experiment preregistered**
 Date: 2026-07-10
-Repair commit: `07b15b8`
+Repair source commit: `07b15b8`  
+Integrated main commit: `c7f47a1`
 
 ## Outcome
 
