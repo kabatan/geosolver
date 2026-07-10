@@ -27,7 +27,7 @@ checks; it is not a singular-root certificate.
 
 ## Ambiguities closed before input generation
 
-The original card did not uniquely define the rank cutoff, gap tie rule,
+The original card did not uniquely define the rank cutoff, smallest-gap rule,
 principal-angle reference, absolute mixed-stencil scale, projected-rank cutoff,
 coefficient counter, strict route residual goal, or analytic Hessian callback
 charge. A gap-only initial route can also admit a regular but ill-conditioned
@@ -36,6 +36,28 @@ applicability gate. A persistent discarded singular value must fail as the last
 step vanishes; this is a fail-closed empirical discriminator, not a proof of
 multiplicity or isolation. These definitions do not change a stratum, budget,
 advancement gate or allowed claim.
+
+The candidate route makes four finite-difference probes (128/256 bits crossed
+with radius 1/0.5) and compares the other three left/right nullspaces to the
+fixed `(256, 0.5)` reference. The analytic control instead makes two analytic
+Jacobian probes, one at each precision, with no fictitious radius. At every
+trajectory iteration the endpoint-selected `k` remains fixed, but finite
+retained singular values, the retained cutoff, and a full-rank/well-conditioned
+projected operator are rechecked.
+
+Every accepted iteration is one undamped, unclipped range-plus-null step. No
+line search, trust adjustment, projection or fallback is allowed. At least one
+complete step is mandatory, after which both the frozen residual and normalized
+step goals must pass. A domain, guard or declared-bound violation is typed
+unknown.
+
+The final artifact also freezes the S3-style conservative error construction:
+configuration error is 16 times the maximum of both final steps, cross-precision
+and confirmation disagreement, and a charged radius/precision finite-difference
+reserve. Target error is 16 times the maximum of target disagreement, the
+256-bit radius-1 target-gradient propagation, a charged gradient reserve and
+target roundoff. Promotion requires the original `1e-10`/`1e-12` limits and all
+route, null-decay, semantic and budget gates.
 
 The phrase that the analytic control may share "only" ledger and semantic
 types is impossible literally because a paired control must consume the same

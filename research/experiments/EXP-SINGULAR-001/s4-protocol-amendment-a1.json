@@ -13,7 +13,7 @@
     {
       "id": "S4-A1-RANK",
       "finding": "A gap ratio alone can label a regular but ill-conditioned close root as singular, and the preregistered rank_roundoff_multiplier otherwise had no defined use.",
-      "resolution": "Use the frozen roundoff-scaled retained-value cutoff and unique smallest-gap split rule below. A full-rank split is ineligible, and the separate final null-decay gate rejects a persistent discarded singular value."
+      "resolution": "Use the frozen roundoff-scaled retained-value cutoff and deterministic smallest qualifying index below. A full-rank split is ineligible, and the separate final null-decay gate rejects a persistent discarded singular value."
     },
     {
       "id": "S4-A1-MIXED-STENCIL",
@@ -23,7 +23,7 @@
     {
       "id": "S4-A1-SUBSPACE",
       "finding": "The principal-angle comparison set and the provenance of U2, V2 and v after the range step were implicit.",
-      "resolution": "Require all six pairwise comparisons among the four route decompositions, and retain the current-iterate J(x) bases through both steps. Recomputing a nullspace at x_range is forbidden."
+      "resolution": "Use the frozen (256-bit,radius-0.5) reference and compare the other three route decompositions to it, and retain the current-iterate J(x) bases through both steps. Recomputing a nullspace at x_range is forbidden."
     },
     {
       "id": "S4-A1-CONTROL-INDEPENDENCE",
@@ -39,16 +39,16 @@
   "route_definition": {
     "route_precision_bits": [128, 256],
     "jacobian_radius_multipliers": [1.0, 0.5],
-    "jacobian_column_step": "h_j=rho*eps(T)^(1/3)*max(1,abs(x_j))",
+    "jacobian_column_step": "h_j=m*eps(T)^(1/3)*max(1,abs(x_j)), with m in {1,0.5}",
     "rank_cutoff": "tau_rank=32*n*eps(T)*max(1,sigma_1(J)) for the preregistered square systems",
     "rank_selection": "With singular values in descending order, r is the smallest index 1<=r<n for which sigma_(r+1)/sigma_r<=1e-6 and sigma_r>tau_rank. No qualifying index, zero retained directions, or k=n-r>4 is typed unknown. Exactly the same r is required at 128 and 256 bits and radius multipliers 1 and 0.5. Equality with the gap bound passes; equality with tau_rank fails.",
     "principal_angle_definition": "The reference is the decomposition at the same endpoint with (precision_bits=256,radius_multiplier=0.5). For two equal-dimensional orthonormal bases Qref and Q, sin(theta_max)=sqrt(max(0,1-sigma_min(Qref'*Q)^2)). The maximum left-nullspace value and maximum right-nullspace value over the other three route probes must each be <=1e-6.",
     "route_residual_goal": "semantic_residual_tolerance/(4*error_reserve_multiplier), equal to 1.5625e-14 under the frozen controls",
-    "nonfinite_or_ambiguous": "Any nonfinite singular value, zero retained boundary value, dimension disagreement or non-unique cutoff result fails closed.",
+    "fail_closed_route": "Any nonfinite singular value, zero retained boundary value, dimension disagreement or absence of a qualifying smallest index fails closed.",
     "final_null_decay_gate": "At the final audit, normalized_discarded_sigma=max(sigma_(r+1),...,sigma_n)/max(1,sigma_1) and normalized_last_step=norm(x_final-x_previous,Inf)/max(1,norm(x_final,Inf)). At both precisions and both Jacobian radii require normalized_discarded_sigma<=16*(normalized_last_step^2+eps(T)^(2/3)). This fail-closed applicability check prevents a regular close root with a persistent small singular value from being presented as S4 evidence; it is not a proof of multiplicity or isolation. Persist both normalized quantities, the bound and the Boolean decision for every probe."
   },
   "two_step_definition": {
-    "frozen_nullity": "The eligible endpoint route fixes k for the complete primary and confirmation run. At an outer iteration, the trailing k singular vectors and leading n-k retained vectors of the charged J(x) are used; k is not redetected or retuned from the iterate.",
+    "frozen_nullity": "The eligible endpoint route fixes k for the complete primary and confirmation run. At an outer iteration, the trailing k singular vectors and leading r=n-k retained vectors of the charged J(x) are used; k is not redetected or retuned from the iterate. Every iteration nevertheless requires finite singular values, sigma_r>tau_rank, and an m=1 projected B with full rank k and condition<=1e12.",
     "basis_lifetime": "Compute J(x)=U*Sigma*V'. Form x_range with U1,Sigma1,V1. The U2,V2 below and v=V2*c are from this same J(x). They remain unchanged while evaluating J(x_range), B and the null step. No SVD or basis replacement at x_range is permitted.",
     "counter_coefficients": "Use the fixed namespace 0x53342d43322d5631. For one-based null coordinate j and one-based trajectory-local iteration ell, initialize z=namespace xor (UInt64(k)<<48) xor (UInt64(ell)<<16) xor UInt64(j), then apply SplitMix64 exactly: z+=0x9e3779b97f4a7c15; z=(z xor (z>>30))*0xbf58476d1ce4e5b9; z=(z xor (z>>27))*0x94d049bb133111eb; u=z xor (z>>31). Set magnitude=1+Int(u & 0x7fffffff), sign=+1 when bit 63 is zero and -1 otherwise, a_j=sign*magnitude, and c=T.(a)/norm(T.(a),2). Precision, representation, case/family/Gold identity and confirmation index are not inputs. Persist c and v in every iteration trace. Candidate and control duplicate this formula rather than share a helper.",
     "range_step": "Solve Sigma1*y=U1'*F(x), then x_range=x-V1*y; no explicit inverse and no normal equations.",
@@ -57,7 +57,24 @@
     "projected_operator": "B[:,j]=U2'*D2F(x_range)[v,V2[:,j]]. The candidate uses m=1 to supply each trajectory step. Initial-route and final audits require the m=1 and m=0.5 operators to agree on full rank and the frozen condition gate. The analytic control has no finite-difference radius and obtains B from its independent analytic second-directional callback.",
     "projected_rank_cutoff": "tau_B=32*k*eps(T)^(1/2)*max(1,sigma_1(B)). Both radius operators must have exactly k singular values strictly above tau_B and condition number <=1e12. Otherwise the trajectory is typed unknown.",
     "null_step": "Evaluate a charged radius-1 C2 J(x_range), solve B*delta=-U2'*J(x_range)*v without an explicit inverse, and set x_next=x_range+V2*delta.",
-    "failed_probe": "An outer iteration is charged before its first oracle call. Any later domain, guard, nonfinite, factorization, rank, condition, callback, iteration or deadline failure consumes all work already incurred and returns typed unknown."
+    "step_policy": "Apply the complete range step followed by the complete null step with unit step length. Damping, line search, trust clipping, component clipping, projection, fallback and partial-step acceptance are forbidden.",
+    "stop_rule": "A trajectory cannot converge before at least one complete two-step iteration. Thereafter it stops only when residual_linf<=1.5625e-14 and normalized_last_step=norm(x_next-x,Inf)/max(1,norm(x_next,Inf))<=configuration_error_goal/(4*error_reserve_multiplier)=1.5625e-12.",
+    "failed_probe": "An outer iteration is charged before its first oracle call. Any later domain, guard, declared-bound, nonfinite, factorization, retained-value, projected-rank, condition, callback, iteration or deadline failure consumes all work already incurred and returns typed unknown."
+  },
+  "error_and_promotion_definition": {
+    "final_audit_corrections": "At x_final, q_(p,m) is the complete but unapplied two-step correction recomputed at precision p in {128,256} with Jacobian radius m and mixed-direction multiplier m in {1,0.5}; each q uses U2,V2,v from its own pre-range J(x_final). All audit oracle work is charged.",
+    "configuration_fd_reserve": "Let s_p=eps(T_p)^(2/3)*max(1,norm(x_p,Inf)). R_x_fd=max(max_p(norm(q_(p,1)-q_(p,0.5),Inf)+s_p), max_m(norm(q_(256,m)-q_(128,m),Inf)+max(s_128,s_256))). Values are compared after conversion to the 256-bit arithmetic used by the final artifact.",
+    "analytic_configuration_reserve": "The analytic control has one audit correction q_p per precision and no radius. It uses R_x_analytic=norm(q_256-q_128,Inf)+max(s_128,s_256), with the same s_p definition; inventing radius replicas is forbidden.",
+    "raw_configuration_error": "For the candidate, raw_x=max(last_step_128,last_step_256,norm(x_256-x_128,Inf),maximum pairwise Inf-norm disagreement among x_256 and all confirmation endpoints,R_x_fd). For the analytic control replace R_x_fd by R_x_analytic. last_step_p is the absolute Inf-norm of the final accepted complete two-step at precision p.",
+    "configuration_error": "E_x=16*raw_x; promotion requires E_x<=1e-10.",
+    "target_gradient_audit": "Compute charged central target gradients g_(p,m) at x_p using coordinate step h_j=m*eps(T_p)^(1/3)*max(1,abs(x_p[j])) for p in {128,256}, m in {1,0.5}. Let u_(p,m)=eps(T_p)^(2/3)*max(1,norm(g_(p,m),1)). R_g=max(max_p(norm(g_(p,1)-g_(p,0.5),1)+max(u_(p,1),u_(p,0.5))), max_m(norm(g_(256,m)-g_(128,m),1)+max(u_(128,m),u_(256,m)))). Use g_t=g_(256,1).",
+    "target_error": "Let target_roundoff=max_p(eps(T_p)*max(1,abs(t_p))). E_t=16*max(abs(t_256-t_128),maximum pairwise absolute disagreement among t_256 and all confirmation targets,norm(g_t,1)*raw_x,R_g*raw_x,target_roundoff). Promotion requires E_t<=1e-12.",
+    "promotion": "Promotion requires E_x<=1e-10, E_t<=1e-12, every primary and confirmation stop rule, every canonical semantic replay, the initial and final route/subspace/projected-operator gates, every final null-decay gate, all domain/guard/bound checks, and no budget/deadline failure. Any missing diagnostic is typed unknown."
+  },
+  "variant_route_probes": {
+    "candidate": "four charged finite-difference route probes: precision 128 and 256 crossed with Jacobian radius multipliers 1 and 0.5",
+    "analytic_control": "two independently coded charged analytic-Jacobian probes at precision 128 and 256; there is no analytic radius. The 256-bit analytic nullspaces are the angle reference, and the same deterministic smallest qualifying r, retained-value, final null-decay and condition boundaries apply where defined.",
+    "projected_operator": "The candidate audits mixed multipliers 1 and 0.5 initially and finally and uses multiplier 1 in trajectory steps. The analytic control invokes analytic_second_directional and has no finite-difference radius."
   },
   "work_ledger": {
     "scope": "one variant on one endpoint, shared by route probes, both primary precisions, all confirmations, final audits, convergence diagnostics, target-gradient/error work and canonical semantic replay",
