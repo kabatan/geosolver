@@ -244,7 +244,7 @@ def run_command(
                         f"elapsed_seconds={elapsed:.1f}",
                         flush=True,
                     )
-            outcome = "completed"
+            outcome = "completed" if exit_code == 0 else "child_failed"
             return exit_code
         except BaseException as error:
             error_text = f"{type(error).__name__}: {error}"

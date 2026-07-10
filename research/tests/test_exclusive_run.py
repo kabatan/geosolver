@@ -70,6 +70,23 @@ class FormalRunLeaseTests(unittest.TestCase):
                     heartbeat_seconds=0,
                 )
 
+    def test_nonzero_child_is_not_reported_as_completed(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            audit = root / "audit.json"
+            exit_code = run_command(
+                [sys.executable, "-c", "raise SystemExit(7)"],
+                label="failing-child",
+                audit_path=audit,
+                lock_path=root / "formal.lock",
+                cwd=root,
+                heartbeat_seconds=0.05,
+            )
+            self.assertEqual(exit_code, 7)
+            document = json.loads(audit.read_text(encoding="utf-8"))
+            self.assertEqual(document["outcome"], "child_failed")
+            self.assertEqual(document["exit_code"], 7)
+
 
 if __name__ == "__main__":
     unittest.main()
