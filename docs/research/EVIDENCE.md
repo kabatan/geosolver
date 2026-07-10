@@ -17,4 +17,4 @@ repository before it may justify production policy.
 | EVID-09 | A direct typed kernel matched a reference to about 1e-15 and indicated large speed potential. | Compiler economics precede global-policy selection. |
 | EVID-10 | Primitive registries/backends were fragmented and branch names leaked across layers. | Plugin conformance and Core/Geometry separation are gates. |
 | EVID-11 | Dynamic safe evaluation was materially slower and semantically brittle. | No eval/dynamic expression execution in production kernels. |
-
+| EVID-12 | The preregistered dimension/rank/condition LM/TR route improved development P_local_gold by 0.65 points with no truth regression, but its fully charged warm wall was 3.03 times the simple TR control. | Reject ROUTE-LMTR-A1 at the development freeze gate; do not materialize locked inputs. |

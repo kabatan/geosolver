@@ -50,6 +50,16 @@
       "observed_break_condition": "Repeated name lookup, object construction and dynamic execution dominate cheap geometry arithmetic and complicate semantic control.",
       "current_decision": "Use a clear reference interpreter and compare typed-plan/runtime-generated kernels with no input-supplied executable code.",
       "reopen_gate": "No reopen is planned; any alternative must still satisfy the no-eval architecture invariant and compiler semantic gate."
+    },
+    {
+      "id": "NEG-006",
+      "title": "Up-front rank and condition routing did not justify its warm overhead",
+      "evidence_state": "reproduced",
+      "source_evidence_ids": ["EVID-12"],
+      "claim_not_supported": "A separate dense finite-difference rank and condition diagnostic can cheaply route between LM and trust-region local solvers.",
+      "observed_break_condition": "ROUTE-LMTR-A1 selected LM for only 11 of 1536 starts and gained 10 Gold-valid endpoints, while the diagnostic residuals and SVDs raised fully charged warm wall to 3.03 times the simple trust-region control.",
+      "current_decision": "Reject ROUTE-LMTR-A1, stop EXP-LOCAL-002 after its single tuning round, and leave locked inputs unmaterialized.",
+      "reopen_gate": "A new preregistered experiment must reuse solver-native Jacobian or progress state without a separate dense diagnostic and pass the same truth, work, and warm-wall gates."
     }
   ]
 }
