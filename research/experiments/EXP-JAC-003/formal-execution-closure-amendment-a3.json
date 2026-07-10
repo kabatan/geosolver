@@ -1,0 +1,323 @@
+{
+  "schema_version": "exp-jac-003-formal-execution-closure-amendment-a3/v1",
+  "experiment_id": "EXP-JAC-003",
+  "status": "frozen-outcome-blind-before-formal-run",
+  "purpose": "Close the four remaining execution-chain gaps without editing v1 or A2: continuous source windows, strict host identity binding, stable single-byte archive validation, and an archive-receipt assessment blockade.",
+  "authority_repository_root": "C:\\solver",
+  "frozen_repository_root": "C:\\solver-worktrees\\exp-jac-003-inputs",
+  "amendment_relative_path": "research/experiments/EXP-JAC-003/formal-execution-closure-amendment-a3.json",
+  "checker": {
+    "relative_path": "research/experiments/EXP-JAC-003/source/formal_execution_closure_a3.py",
+    "sha256": "fa640f50635df6aae4c1d15a631f0c89466a5d04582afc140f89e2969175898f"
+  },
+  "a2_authority": {
+    "amendment_relative_path": "research/experiments/EXP-JAC-003/formal-publication-binding-amendment-a2.json",
+    "amendment_sha256": "39a94a38d49509b1a57858f60d6151fb4cceee921096a53a567e9b41c865bc4f",
+    "checker_relative_path": "research/experiments/EXP-JAC-003/source/formal_publication_guard_a2.py",
+    "checker_sha256": "f499e5c3b7bd1b2ba9ff7ef89f225b639f0818f070f66d3ee61363f5c1163699",
+    "immutability_rule": "A3 imports approved A2 bytes and calls build_pre_receipt, publish, no-replace output, frozen snapshot and hygiene helpers. A2 archive is forbidden and must remain absent."
+  },
+  "execution": {
+    "python_executable": "C:\\Users\\bakat\\miniforge3\\python.exe",
+    "staging_relative_path": "research/results/EXP-JAC-003-development-abba-staging",
+    "partial_relative_path": "research/results/.EXP-JAC-003-development-abba-staging.partial",
+    "official_relative_path": "research/results/EXP-JAC-003/development-abba-v0",
+    "source_observation_relative_path": "research/results/EXP-JAC-003-development-source-observation.json",
+    "v1_pre_audit_path": "C:\\solver\\research\\results\\EXP-JAC-003\\pre-binding-audit.json",
+    "source_window_receipt_path": "C:\\solver\\research\\results\\EXP-JAC-003\\source-window-receipt-a3.json",
+    "a2_anchor_path": "C:\\solver\\research\\results\\EXP-JAC-003\\publication-anchor-a2.json",
+    "a2_execution_audit_path": "C:\\solver\\research\\results\\EXP-JAC-003\\finalizer-execution-audit-a2.json",
+    "host_identity_receipt_path": "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-host-observation.json",
+    "host_ready_receipt_path": "C:\\solver\\research\\results\\EXP-JAC-003\\development-host-observation.ready.json",
+    "a2_archive_receipt_filename": "formal-archive-receipt-a2.json",
+    "a2_seal_filename": "formal-publication-seal-a2.json",
+    "a3_archive_receipt_filename": "formal-execution-closure-receipt-a3.json",
+    "assessment_output_filename": "development-summary.json",
+    "assessment_audit_path": "C:\\solver\\research\\results\\EXP-JAC-003\\assessment-execution-audit-a3.json",
+    "assessor_relative_path": "research/experiments/EXP-JAC-003/source/assess_development.py",
+    "assessor_sha256": "b5506df76a28640103a171b5c2cb0d8d8980c4f093802c7f4362c0e02e24f760",
+    "input_manifest_relative_path": "research/experiments/EXP-JAC-003/development-inputs/manifest.json",
+    "candidate_relative_path": "research/experiments/EXP-JAC-003/development-inputs/development-candidate-inputs.json.gz",
+    "truth_relative_path": "research/experiments/EXP-JAC-003/development-inputs/development-assessor-truth.json.gz",
+    "frozen_k0_relative_path": "research/experiments/EXP-JAC-003/development-inputs/development-k0-control-traces.json.gz",
+    "post_allowed_exact_paths": [
+      "research/results/EXP-JAC-003-development-formal-run-audit.json",
+      "research/results/EXP-JAC-003-development-host-observation.json",
+      "research/results/EXP-JAC-003-development-source-observation.json"
+    ],
+    "assessment_environment_policy": {
+      "fixed_overrides": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONHASHSEED": "0",
+        "PYTHONNOUSERSITE": "1"
+      },
+      "removed_variables": [
+        "PYTHONHOME",
+        "PYTHONPATH"
+      ]
+    },
+    "exact_finalizer_launch_intent": {
+      "command_sha256": "e573e7c35487d6967c8a99e6bf2103be7c5b0f3315039e6556d2397c0b09aa37",
+      "cwd": "C:\\solver-worktrees\\exp-jac-003-inputs",
+      "environment": {
+        "fixed_overrides": {
+          "PYTHONDONTWRITEBYTECODE": "1",
+          "PYTHONHASHSEED": "0",
+          "PYTHONNOUSERSITE": "1"
+        },
+        "policy_sha256": "37793306238cb0a66aabd0fb52ac15389aedfd7e226651a85d318702d86c971b",
+        "removed_variables": [
+          "PYTHONHOME",
+          "PYTHONPATH"
+        ]
+      },
+      "exact_command_tokens": [
+        "C:\\Users\\bakat\\miniforge3\\python.exe",
+        "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\source\\finalize_abba.py",
+        "--repo",
+        "C:\\solver-worktrees\\exp-jac-003-inputs",
+        "--source-lock",
+        "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-source-lock.json",
+        "--staging",
+        "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-abba-staging",
+        "--official",
+        "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003\\development-abba-v0",
+        "--outer-audit",
+        "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-formal-run-audit.json",
+        "--host-observation",
+        "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-host-observation.json",
+        "--source-observation",
+        "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-source-observation.json"
+      ],
+      "one_shot": true
+    },
+    "exact_assessor_command_tokens": [
+      "C:\\Users\\bakat\\miniforge3\\python.exe",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\source\\assess_development.py",
+      "--manifest",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-inputs\\manifest.json",
+      "--candidate",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-inputs\\development-candidate-inputs.json.gz",
+      "--truth",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-inputs\\development-assessor-truth.json.gz",
+      "--frozen-k0",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-inputs\\development-k0-control-traces.json.gz",
+      "--safety",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003\\development-abba-v0\\candidate-safety.json",
+      "--run",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003\\development-abba-v0\\formal-run-manifest.json",
+      "--segment",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003\\development-abba-v0\\segments\\segment-0.json",
+      "--segment",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003\\development-abba-v0\\segments\\segment-1.json",
+      "--segment",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003\\development-abba-v0\\segments\\segment-2.json",
+      "--segment",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003\\development-abba-v0\\segments\\segment-3.json",
+      "--output",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003\\development-abba-v0\\development-summary.json"
+    ],
+    "exact_pre_command_tokens": [
+      "C:\\Users\\bakat\\miniforge3\\python.exe",
+      "C:\\solver\\research\\experiments\\EXP-JAC-003\\source\\formal_execution_closure_a3.py",
+      "pre",
+      "--amendment",
+      "C:\\solver\\research\\experiments\\EXP-JAC-003\\formal-execution-closure-amendment-a3.json",
+      "--output",
+      "C:\\solver\\research\\results\\EXP-JAC-003\\pre-binding-audit.json"
+    ],
+    "exact_publish_command_tokens": [
+      "C:\\Users\\bakat\\miniforge3\\python.exe",
+      "C:\\solver\\research\\experiments\\EXP-JAC-003\\source\\formal_execution_closure_a3.py",
+      "publish",
+      "--amendment",
+      "C:\\solver\\research\\experiments\\EXP-JAC-003\\formal-execution-closure-amendment-a3.json",
+      "--pre-audit",
+      "C:\\solver\\research\\results\\EXP-JAC-003\\pre-binding-audit.json"
+    ],
+    "exact_archive_command_tokens": [
+      "C:\\Users\\bakat\\miniforge3\\python.exe",
+      "C:\\solver\\research\\experiments\\EXP-JAC-003\\source\\formal_execution_closure_a3.py",
+      "archive",
+      "--amendment",
+      "C:\\solver\\research\\experiments\\EXP-JAC-003\\formal-execution-closure-amendment-a3.json",
+      "--output",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003\\development-abba-v0\\formal-execution-closure-receipt-a3.json"
+    ],
+    "exact_assess_command_tokens": [
+      "C:\\Users\\bakat\\miniforge3\\python.exe",
+      "C:\\solver\\research\\experiments\\EXP-JAC-003\\source\\formal_execution_closure_a3.py",
+      "assess",
+      "--amendment",
+      "C:\\solver\\research\\experiments\\EXP-JAC-003\\formal-execution-closure-amendment-a3.json",
+      "--audit",
+      "C:\\solver\\research\\results\\EXP-JAC-003\\assessment-execution-audit-a3.json"
+    ]
+  },
+  "monitor": {
+    "interval_seconds": 0.05,
+    "source_lock_relative_path": "research/experiments/EXP-JAC-003/development-source-lock.json",
+    "julia_manifest_relative_path": "research/experiments/EXP-JAC-003/Manifest.toml",
+    "exclusive_runner_relative_path": "research/harness/exclusive_run.py",
+    "files": [
+      {
+        "root": "authority_root",
+        "relative_path": "research/experiments/EXP-JAC-003/formal-binding-amendment.json"
+      },
+      {
+        "root": "authority_root",
+        "relative_path": "research/experiments/EXP-JAC-003/source/formal_binding_guard.py"
+      },
+      {
+        "root": "authority_root",
+        "relative_path": "research/experiments/EXP-JAC-003/formal-publication-binding-amendment-a2.json"
+      },
+      {
+        "root": "authority_root",
+        "relative_path": "research/experiments/EXP-JAC-003/source/formal_publication_guard_a2.py"
+      },
+      {
+        "root": "authority_root",
+        "relative_path": "research/experiments/EXP-JAC-003/formal-execution-closure-amendment-a3.json"
+      },
+      {
+        "root": "authority_root",
+        "relative_path": "research/experiments/EXP-JAC-003/source/formal_execution_closure_a3.py"
+      },
+      {
+        "root": "authority_root",
+        "relative_path": "research/harness/observe_formal_host.py"
+      }
+    ],
+    "directories": [
+      {
+        "root": "repo",
+        "relative_path": "julia/GeoTargetCore/src"
+      },
+      {
+        "root": "repo",
+        "relative_path": "research/experiments/EXP-JAC-003/source"
+      },
+      {
+        "root": "repo",
+        "relative_path": "research/harness"
+      }
+    ]
+  },
+  "host_observer_binding": {
+    "status": "frozen-before-formal-run",
+    "ready_schema_version": "geotarget.formal-host-ready/v1",
+    "receipt_schema_version": "exp-jac-003-host-observation/v1",
+    "observer_source": {
+      "relative_path": "research/harness/observe_formal_host.py",
+      "path": "C:\\solver\\research\\harness\\observe_formal_host.py",
+      "sha256": "3c3ef4705879caa63b9870d0df164c6862a29404c3862b68c01c8006e47c3e00",
+      "last_change_commit": "b1068b52345cb400a2a7dda001c864876fc4b6a2"
+    },
+    "command_tokens_sha256": "c1e64af55f519fef7ec640b364f159f5ccb01b0659cf8d043f34e84719823764",
+    "command_tokens": [
+      "C:\\Users\\bakat\\miniforge3\\python.exe",
+      "-m",
+      "research.harness.observe_formal_host",
+      "--schema-version",
+      "exp-jac-003-host-observation/v1",
+      "--capture-schema",
+      "exp-jac-003-formal-abba-capture/v1",
+      "--segment-count",
+      "4",
+      "--label",
+      "EXP-JAC-003-development-abba",
+      "--observer",
+      "Codex subagent /root/jac003_host_plan",
+      "--outer-audit",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-formal-run-audit.json",
+      "--capture",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-abba-staging\\capture.json",
+      "--lock",
+      "C:\\Users\\bakat\\AppData\\Local\\GeoTarget\\formal-performance.lock",
+      "--ready",
+      "C:\\solver\\research\\results\\EXP-JAC-003\\development-host-observation.ready.json",
+      "--output",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-host-observation.json",
+      "--powershell",
+      "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+      "--poll-seconds",
+      "2",
+      "--max-poll-gap-seconds",
+      "5",
+      "--cpu-heavy-cores",
+      "0.25",
+      "--memory-heavy-bytes",
+      "2147483648",
+      "--memory-growth-bytes",
+      "536870912",
+      "--unexplained-cpu-cores",
+      "1.0",
+      "--event-within-seconds",
+      "0.1",
+      "--backend-stall-seconds",
+      "15",
+      "--timeout-seconds",
+      "86400"
+    ],
+    "settings": {
+      "schema_version": "exp-jac-003-host-observation/v1",
+      "capture_schema": "exp-jac-003-formal-abba-capture/v1",
+      "segment_count": 4,
+      "label": "EXP-JAC-003-development-abba",
+      "observer": "Codex subagent /root/jac003_host_plan",
+      "poll_seconds": 2.0,
+      "max_poll_gap_seconds": 5.0,
+      "cpu_heavy_cores": 0.25,
+      "memory_heavy_bytes": 2147483648,
+      "memory_growth_bytes": 536870912,
+      "unexplained_cpu_cores": 1.0,
+      "event_within_seconds": 0.1,
+      "backend_stall_seconds": 15.0,
+      "timeout_seconds": 86400.0
+    },
+    "paths": {
+      "lock": "C:\\Users\\bakat\\AppData\\Local\\GeoTarget\\formal-performance.lock",
+      "outer_audit": "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-formal-run-audit.json",
+      "capture": "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-abba-staging\\capture.json",
+      "ready": "C:\\solver\\research\\results\\EXP-JAC-003\\development-host-observation.ready.json",
+      "output": "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-host-observation.json"
+    },
+    "backend": {
+      "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+      "executable_sha256": "146c90d22ed253ca8016ce4193d0a779efed5a8a343304344fd6b5b729d6ee38",
+      "version": "7.5.8",
+      "script_template_sha256": "df2fbe501da0279b24006b00d8814794b864a4dc8587295f13fdbe3a8c8a890c",
+      "parent_capability": true,
+      "event_capability": true,
+      "true_trace_capability": false,
+      "event_source": "System.Management __InstanceCreationEvent fallback",
+      "event_within_seconds": 0.1,
+      "shared_infrastructure_process_names": [
+        "wmiprvse"
+      ]
+    }
+  },
+  "source_observation_required_fields": [
+    "formal_execution_closure_amendment_a3_sha256",
+    "formal_execution_closure_checker_a3_sha256",
+    "formal_execution_closure_pre_audit_sha256"
+  ],
+  "outcome_blind_attestation": {
+    "recorded_before_formal_run": true,
+    "formal_run_started": false,
+    "any_outcome_opened": false,
+    "gold_opened": false,
+    "k0_opened": false,
+    "k1_opened": false,
+    "segment_json_parsed_before_assess": false
+  },
+  "terminal_stop_conditions": [
+    "Any v1/A2/A3 authority, source observation, source-window, host identity, path, command, environment, PID, hash or archive mismatch",
+    "Any monitor event, differing initial/final snapshot, sensitive membership drift, untracked/ignored leakage, reparse entry or unstable double inventory",
+    "Any existing A2 archive receipt, A3 receipt, summary or audit; any crash/partial/nonzero child; any retry or numerical rerun",
+    "Any assessor invocation before a passed A3 receipt or any output lacking its passed A3 one-shot audit"
+  ],
+  "assessment_rule": "A summary decision may be PASS or FAIL while the assessor exits zero. Only the exact output SHA and decision recorded by a passed A3 assessment audit are evidence; the receipt never authorizes product connection.",
+  "change_rule": "After host values and checker self-hash are frozen by the joint pre-outcome commit, v1, A2 and A3 are immutable. Any correction requires A4."
+}
