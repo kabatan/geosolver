@@ -118,6 +118,158 @@ struct LocalJacobianColoring{R<:Tuple,G<:Tuple}
     structural_nonzeros::Int
 end
 
+struct _DeferredLocalJacobianSource{E}
+    entries::E
+    order::Symbol
+end
+
+struct _SealedLocalJacobianProvider{C<:LocalJacobianColoring}
+    coloring::C
+    residual_count::Int
+    variable_count::Int
+    projection_hash::String
+end
+
+function _natural_local_color_groups(row_supports)
+    groups = Vector{Vector{Int}}()
+    occupied_rows = BitSet[]
+    for column in eachindex(row_supports)
+        isempty(row_supports[column]) && continue
+        rows = BitSet(row_supports[column])
+        destination = findfirst(occupied -> isdisjoint(occupied, rows), occupied_rows)
+        if destination === nothing
+            push!(groups, [column])
+            push!(occupied_rows, rows)
+        else
+            push!(groups[destination], column)
+            union!(occupied_rows[destination], rows)
+        end
+    end
+    return Tuple(Tuple(group) for group in groups)
+end
+
+function _sealed_local_jacobian_provider(
+    row_supports,
+    groups,
+    structural_nonzeros::Integer,
+    residual_count::Integer,
+    variable_count::Integer,
+    projection_hash::AbstractString,
+)
+    residual_count isa Bool && throw(ArgumentError("residual_count must be an integer count"))
+    variable_count isa Bool && throw(ArgumentError("variable_count must be an integer count"))
+    structural_nonzeros isa Bool && throw(
+        ArgumentError("structural_nonzeros must be an integer count"),
+    )
+    residual_count > 0 || throw(ArgumentError("residual_count must be positive"))
+    variable_count > 0 || throw(ArgumentError("variable_count must be positive"))
+    length(row_supports) == variable_count || throw(
+        ArgumentError("row_supports must have one entry per variable"),
+    )
+    occursin(r"^sha256:[0-9a-f]{64}$", projection_hash) || throw(
+        ArgumentError("projection_hash must be a canonical lowercase SHA-256 content hash"),
+    )
+
+    supports = Tuple(Tuple(
+        begin
+            row isa Integer && !(row isa Bool) || throw(
+                ArgumentError("row supports must contain integers"),
+            )
+            Int(row)
+        end for row in support
+    ) for support in row_supports)
+    for support in supports
+        issorted(support) || throw(ArgumentError("row supports must be sorted"))
+        allunique(support) || throw(ArgumentError("row supports must be unique"))
+        all(row -> 1 <= row <= residual_count, support) || throw(
+            ArgumentError("row support is outside the residual range"),
+        )
+    end
+    expected_nonzeros = sum(length, supports)
+    structural_nonzeros == expected_nonzeros || throw(
+        ArgumentError("structural_nonzeros does not match row supports"),
+    )
+
+    group_tuple = Tuple(Tuple(
+        begin
+            column isa Integer && !(column isa Bool) || throw(
+                ArgumentError("color groups must contain integers"),
+            )
+            Int(column)
+        end for column in group
+    ) for group in groups)
+    all(!isempty, group_tuple) || throw(ArgumentError("color groups must be nonempty"))
+    flattened = Tuple(Iterators.flatten(group_tuple))
+    allunique(flattened) || throw(ArgumentError("colored columns must be unique"))
+    all(column -> 1 <= column <= variable_count, flattened) || throw(
+        ArgumentError("colored column is outside the variable range"),
+    )
+    active_columns = Tuple(column for column in 1:variable_count if !isempty(supports[column]))
+    sort(collect(flattened)) == collect(active_columns) || throw(
+        ArgumentError("color groups must partition exactly the active columns"),
+    )
+    for group in group_tuple
+        occupied = BitSet()
+        for column in group
+            rows = BitSet(supports[column])
+            isdisjoint(occupied, rows) || throw(
+                ArgumentError("same-color columns have overlapping row supports"),
+            )
+            union!(occupied, rows)
+        end
+    end
+    group_tuple == _natural_local_color_groups(supports) || throw(
+        ArgumentError("color groups must equal the natural first-fit partition"),
+    )
+
+    projection_document = Dict{String,Any}(
+        "groups" => Any[collect(group) for group in group_tuple],
+        "row_supports" => Any[collect(rows) for rows in supports],
+        "structural_nonzeros" => Int(structural_nonzeros),
+    )
+    expected_hash = string(canonical_json_hash(projection_document))
+    String(projection_hash) == expected_hash || throw(
+        ArgumentError("projection_hash does not seal the canonical provider projection"),
+    )
+
+    coloring = LocalJacobianColoring(supports, group_tuple, Int(structural_nonzeros))
+    return _SealedLocalJacobianProvider(
+        coloring,
+        Int(residual_count),
+        Int(variable_count),
+        String(projection_hash),
+    )
+end
+
+_resolve_local_jacobian_source(::Nothing, residual_count, variable_count) = nothing
+
+function _resolve_local_jacobian_source(
+    source::_DeferredLocalJacobianSource,
+    residual_count,
+    variable_count,
+)
+    return _local_jacobian_coloring(
+        residual_count,
+        variable_count,
+        source.entries;
+        order=source.order,
+    )
+end
+
+function _resolve_local_jacobian_source(
+    source::_SealedLocalJacobianProvider,
+    residual_count,
+    variable_count,
+)
+    source.residual_count == residual_count || throw(
+        ArgumentError("sealed provider residual dimension mismatch"),
+    )
+    source.variable_count == variable_count || throw(
+        ArgumentError("sealed provider variable dimension mismatch"),
+    )
+    return source
+end
+
 function _local_jacobian_coloring(
     residual_count::Integer,
     variable_count::Integer,
@@ -346,9 +498,258 @@ function _colored_finite_difference_jacobian(
     return jacobian, evaluations
 end
 
+function _sealed_probe(
+    evaluate_fn,
+    u,
+    origins,
+    scales,
+    residual_count,
+    deadline_ns,
+    cancelled,
+)
+    cancelled() && return nothing, false, 0, LOCAL_CANCELLED
+    time_ns() >= deadline_ns && return nothing, false, 0, LOCAL_DEADLINE
+    observation = _evaluate_local(evaluate_fn, u, origins, scales)
+    evaluations = 1
+    if time_ns() >= deadline_ns
+        return observation, false, evaluations, LOCAL_DEADLINE
+    end
+    usable = _usable_local_observation(observation) &&
+             length(observation.relations) == residual_count &&
+             all(relation -> isfinite(relation.scaled), observation.relations)
+    return observation, usable, evaluations, nothing
+end
+
+function _sealed_finite_difference_column(
+    evaluate_fn,
+    u,
+    base_residual,
+    origins,
+    scales,
+    lower_u,
+    upper_u,
+    step_scale,
+    column,
+    deadline_ns,
+    cancelled,
+)
+    residual_count = length(base_residual)
+    step = step_scale * max(1.0, abs(u[column]))
+    plus_u = copy(u)
+    minus_u = copy(u)
+    plus_u[column] = min(upper_u[column], u[column] + step)
+    minus_u[column] = max(lower_u[column], u[column] - step)
+    plus_step = plus_u[column] - u[column]
+    minus_step = u[column] - minus_u[column]
+    plus_step > 0 || minus_step > 0 || return (
+        zeros(Float64, residual_count),
+        0,
+        LOCAL_EVALUATION_FAILED,
+    )
+
+    plus = nothing
+    plus_valid = false
+    minus = nothing
+    minus_valid = false
+    evaluations = 0
+    if plus_step > 0
+        plus, plus_valid, used, terminal = _sealed_probe(
+            evaluate_fn,
+            plus_u,
+            origins,
+            scales,
+            residual_count,
+            deadline_ns,
+            cancelled,
+        )
+        evaluations += used
+        terminal === nothing || return zeros(Float64, residual_count), evaluations, terminal
+    end
+    if minus_step > 0
+        minus, minus_valid, used, terminal = _sealed_probe(
+            evaluate_fn,
+            minus_u,
+            origins,
+            scales,
+            residual_count,
+            deadline_ns,
+            cancelled,
+        )
+        evaluations += used
+        terminal === nothing || return zeros(Float64, residual_count), evaluations, terminal
+    end
+    plus_valid || minus_valid || return (
+        zeros(Float64, residual_count),
+        evaluations,
+        LOCAL_EVALUATION_FAILED,
+    )
+
+    derivative = zeros(Float64, residual_count)
+    if plus_valid && minus_valid
+        derivative .= (_float_residual(plus) .- _float_residual(minus)) ./
+                      (plus_step + minus_step)
+    elseif plus_valid
+        derivative .= (_float_residual(plus) .- base_residual) ./ plus_step
+    else
+        derivative .= (base_residual .- _float_residual(minus)) ./ minus_step
+    end
+    return derivative, evaluations, nothing
+end
+
+function _sealed_colored_finite_difference_jacobian(
+    evaluate_fn,
+    u,
+    base_residual,
+    origins,
+    scales,
+    lower_u,
+    upper_u,
+    step_scale,
+    provider::_SealedLocalJacobianProvider;
+    deadline_ns,
+    cancelled,
+    group_observer=nothing,
+)
+    coloring = provider.coloring
+    residual_count = length(base_residual)
+    variable_count = length(u)
+    jacobian = zeros(Float64, residual_count, variable_count)
+    evaluations = 0
+    for group in coloring.groups
+        plus_u = copy(u)
+        minus_u = copy(u)
+        plus_steps = zeros(Float64, variable_count)
+        minus_steps = zeros(Float64, variable_count)
+        for column in group
+            step = step_scale * max(1.0, abs(u[column]))
+            plus_u[column] = min(upper_u[column], u[column] + step)
+            minus_u[column] = max(lower_u[column], u[column] - step)
+            plus_steps[column] = plus_u[column] - u[column]
+            minus_steps[column] = u[column] - minus_u[column]
+        end
+        plus_attempted = any(column -> plus_steps[column] > 0, group)
+        minus_attempted = any(column -> minus_steps[column] > 0, group)
+        plus_attempted || minus_attempted || return (
+            jacobian,
+            evaluations,
+            LOCAL_EVALUATION_FAILED,
+        )
+
+        plus = nothing
+        plus_valid = !plus_attempted
+        minus = nothing
+        minus_valid = !minus_attempted
+        grouped_evaluations = 0
+        if plus_attempted
+            plus, plus_valid, used, terminal = _sealed_probe(
+                evaluate_fn,
+                plus_u,
+                origins,
+                scales,
+                residual_count,
+                deadline_ns,
+                cancelled,
+            )
+            evaluations += used
+            grouped_evaluations += used
+            terminal === nothing || return jacobian, evaluations, terminal
+        end
+        if minus_attempted
+            minus, minus_valid, used, terminal = _sealed_probe(
+                evaluate_fn,
+                minus_u,
+                origins,
+                scales,
+                residual_count,
+                deadline_ns,
+                cancelled,
+            )
+            evaluations += used
+            grouped_evaluations += used
+            terminal === nothing || return jacobian, evaluations, terminal
+        end
+
+        if !plus_valid || !minus_valid
+            fallback_evaluations = 0
+            for (fallback_index, column) in enumerate(group)
+                derivative, used, terminal = _sealed_finite_difference_column(
+                    evaluate_fn,
+                    u,
+                    base_residual,
+                    origins,
+                    scales,
+                    lower_u,
+                    upper_u,
+                    step_scale,
+                    column,
+                    deadline_ns,
+                    cancelled,
+                )
+                evaluations += used
+                fallback_evaluations += used
+                if terminal !== nothing
+                    group_observer === nothing || group_observer((
+                        columns = Tuple(group),
+                        grouped_evaluations = grouped_evaluations,
+                        fallback = true,
+                        fallback_evaluations = fallback_evaluations,
+                        completed_fallback_columns = fallback_index - 1,
+                    ))
+                    return jacobian, evaluations, terminal
+                end
+                jacobian[:, column] .= derivative
+            end
+            group_observer === nothing || group_observer((
+                columns = Tuple(group),
+                grouped_evaluations = grouped_evaluations,
+                fallback = true,
+                fallback_evaluations = fallback_evaluations,
+                completed_fallback_columns = length(group),
+            ))
+            continue
+        end
+
+        plus_residual = plus_attempted ? _float_residual(plus) : base_residual
+        minus_residual = minus_attempted ? _float_residual(minus) : base_residual
+        for column in group
+            rows = coloring.row_supports[column]
+            plus_step = plus_steps[column]
+            minus_step = minus_steps[column]
+            if plus_step > 0 && minus_step > 0
+                for row in rows
+                    jacobian[row, column] =
+                        (plus_residual[row] - minus_residual[row]) / (plus_step + minus_step)
+                end
+            elseif plus_step > 0
+                for row in rows
+                    jacobian[row, column] =
+                        (plus_residual[row] - base_residual[row]) / plus_step
+                end
+            elseif minus_step > 0
+                for row in rows
+                    jacobian[row, column] =
+                        (base_residual[row] - minus_residual[row]) / minus_step
+                end
+            else
+                return jacobian, evaluations, LOCAL_EVALUATION_FAILED
+            end
+        end
+        group_observer === nothing || group_observer((
+            columns = Tuple(group),
+            grouped_evaluations = grouped_evaluations,
+            fallback = false,
+            fallback_evaluations = 0,
+            completed_fallback_columns = 0,
+        ))
+    end
+    return jacobian, evaluations, nothing
+end
+
 _jacobian_evaluation_bound(::Nothing, variable_count) = 2 * variable_count
 _jacobian_evaluation_bound(coloring::LocalJacobianColoring, variable_count) =
     2 * length(coloring.groups) + 2 * count(rows -> !isempty(rows), coloring.row_supports)
+_jacobian_evaluation_bound(provider::_SealedLocalJacobianProvider, variable_count) =
+    _jacobian_evaluation_bound(provider.coloring, variable_count)
 
 function _lm_step(jacobian, residual, damping)
     variable_count = size(jacobian, 2)
@@ -409,9 +810,10 @@ The merit function contains relation residuals only. Guards and domains remain
 separate semantic channels and are enforced only by step safety/final canonical
 validation; they are never multiplied into the residual.
 """
-function solve_local(
+function _solve_local_kernel(
     evaluate_fn,
-    x0::AbstractVector;
+    x0::AbstractVector,
+    jacobian_source;
     origins = nothing,
     scales = nothing,
     lower = nothing,
@@ -419,8 +821,6 @@ function solve_local(
     options::LocalSolveOptions = LocalSolveOptions(),
     deadline_ns::UInt64 = typemax(UInt64),
     cancelled = () -> false,
-    jacobian_entries = nothing,
-    color_order::Symbol = :natural,
     color_group_observer = nothing,
     jacobian_observer = nothing,
 )
@@ -460,11 +860,10 @@ function solve_local(
     end
 
     residual = _float_residual(observation)
-    coloring = jacobian_entries === nothing ? nothing : _local_jacobian_coloring(
+    coloring = _resolve_local_jacobian_source(
+        jacobian_source,
         length(residual),
         variable_count,
-        jacobian_entries;
-        order=color_order,
     )
     damping = options.initial_damping
     jacobian = empty_jacobian
@@ -534,8 +933,8 @@ function solve_local(
             )
         end
 
-        jacobian, jacobian_evaluations = if coloring === nothing
-            _finite_difference_jacobian(
+        jacobian, jacobian_evaluations, jacobian_failure = if coloring === nothing
+            dense_jacobian, dense_evaluations = _finite_difference_jacobian(
                 evaluate_fn,
                 u,
                 residual,
@@ -545,8 +944,24 @@ function solve_local(
                 upper_u,
                 options.finite_difference_step,
             )
+            dense_jacobian, dense_evaluations, nothing
+        elseif coloring isa _SealedLocalJacobianProvider
+            _sealed_colored_finite_difference_jacobian(
+                evaluate_fn,
+                u,
+                residual,
+                origin_values,
+                scale_values,
+                lower_u,
+                upper_u,
+                options.finite_difference_step,
+                coloring;
+                deadline_ns,
+                cancelled,
+                group_observer=color_group_observer,
+            )
         else
-            _colored_finite_difference_jacobian(
+            colored_jacobian, colored_evaluations = _colored_finite_difference_jacobian(
                 evaluate_fn,
                 u,
                 residual,
@@ -558,12 +973,28 @@ function solve_local(
                 coloring,
                 group_observer = color_group_observer,
             )
+            colored_jacobian, colored_evaluations, nothing
         end
         evaluations += jacobian_evaluations
         jacobian_observer === nothing || jacobian_observer((
             colored = coloring !== nothing,
             evaluations = jacobian_evaluations,
         ))
+        if jacobian_failure !== nothing
+            return _local_result(
+                start,
+                u,
+                origin_values,
+                scale_values,
+                observation,
+                jacobian_failure,
+                iteration - 1,
+                evaluations,
+                jacobian,
+                trace,
+                options,
+            )
+        end
         step = _lm_step(jacobian, residual, damping)
         if norm(step) <= options.step_tolerance * (1 + norm(u))
             push!(
@@ -652,6 +1083,69 @@ function solve_local(
         jacobian,
         trace,
         options,
+    )
+end
+
+function solve_local(
+    evaluate_fn,
+    x0::AbstractVector;
+    origins = nothing,
+    scales = nothing,
+    lower = nothing,
+    upper = nothing,
+    options::LocalSolveOptions = LocalSolveOptions(),
+    deadline_ns::UInt64 = typemax(UInt64),
+    cancelled = () -> false,
+    jacobian_entries = nothing,
+    color_order::Symbol = :natural,
+    color_group_observer = nothing,
+    jacobian_observer = nothing,
+)
+    source = jacobian_entries === nothing ? nothing :
+             _DeferredLocalJacobianSource(jacobian_entries, color_order)
+    return _solve_local_kernel(
+        evaluate_fn,
+        x0,
+        source;
+        origins,
+        scales,
+        lower,
+        upper,
+        options,
+        deadline_ns,
+        cancelled,
+        color_group_observer,
+        jacobian_observer,
+    )
+end
+
+function _solve_local_with_provider(
+    evaluate_fn,
+    x0::AbstractVector,
+    provider::_SealedLocalJacobianProvider;
+    origins = nothing,
+    scales = nothing,
+    lower = nothing,
+    upper = nothing,
+    options::LocalSolveOptions = LocalSolveOptions(),
+    deadline_ns::UInt64 = typemax(UInt64),
+    cancelled = () -> false,
+    color_group_observer = nothing,
+    jacobian_observer = nothing,
+)
+    return _solve_local_kernel(
+        evaluate_fn,
+        x0,
+        provider;
+        origins,
+        scales,
+        lower,
+        upper,
+        options,
+        deadline_ns,
+        cancelled,
+        color_group_observer,
+        jacobian_observer,
     )
 end
 
