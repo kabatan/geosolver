@@ -110,9 +110,10 @@ certificate.
    policy or explicit `L0-SEMANTIC`. It then preregisters and runs the separate
    current-core native-globalization study `EXP-LOCAL-004` with that frozen
    scaling policy. After `EXP-LOCAL-004` terminates, an outcome-bound record
-   freezes exactly one complete local pipeline; a rejected, inconclusive,
-   protocol-failed or infrastructure-failed study falls back explicitly to the
-   current production `L0-SEMANTIC` pipeline, never to a non-gating pilot.
+   freezes exactly one complete local pipeline. A missing locked scaling pass
+   falls back to `L0-SEMANTIC`; a missing locked globalization pass falls back
+   to current LM-QR while retaining any independently locked-passing scaling
+   policy. Neither stage may fall back to a non-gating pilot.
 6. **M4 discovery gate:** `EXP-DISC-001` may materialize candidate/assessor
    inputs or proposal matrices only after that record binds the original card,
    A1, A2, A3, the exact champion source, canonical options, ABI/compiler and

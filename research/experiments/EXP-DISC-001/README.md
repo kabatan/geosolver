@@ -21,9 +21,10 @@ current-core chain: terminally decide EXP-LOCAL-003 and freeze its locked-pass
 scaling policy or explicit `L0-SEMANTIC`; preregister and run the separate
 native-globalization study EXP-LOCAL-004 with that frozen policy; then create an
 outcome-bound local-champion freeze record. A rejected, inconclusive, protocol-
-failed or infrastructure-failed study falls back explicitly to the current
-production `L0-SEMANTIC` pipeline, never to a non-gating pilot or a
-development-only winner.
+failed or infrastructure-failed scaling study falls back to `L0-SEMANTIC`; a
+globalization study without a locked-passing candidate falls back to current
+LM-QR while retaining any independently locked-passing scaling policy. The
+chain never selects a non-gating pilot or development-only winner.
 
 The original card and all three amendments form one preregistration bundle.
 No EXP-DISC-001 candidate input, assessor input or proposal matrix may be

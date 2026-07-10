@@ -65,7 +65,7 @@
         "step": 2,
         "experiment": "EXP-LOCAL-004",
         "requirement": "After the EXP-LOCAL-003 scaling-policy freeze, create a separate outcome-unobserved preregistration for a current-core native-globalization study and execute it with that exact frozen scaling policy. EXP-LOCAL-004 must preserve the open C0 black-box DSL/plugin path, semantic/canonical answer predicates and charged fixed-budget comparison.",
-        "freeze": "A globalization candidate is eligible only after its own protocol-valid locked pass. The study cannot inherit efficacy from EXP-LOCAL-003 or from any non-gating pilot."
+        "freeze": "A globalization candidate is eligible only after its own protocol-valid locked pass. Otherwise freeze the current LM-QR globalization control while retaining the already frozen EXP-LOCAL-003 scaling policy. The study cannot infer globalization efficacy from EXP-LOCAL-003 or from any non-gating pilot."
       },
       {
         "step": 3,
@@ -73,7 +73,7 @@
         "requirement": "Create this record only after EXP-LOCAL-004 has a valid decision or terminal closure. It selects exactly one complete local pipeline and binds the outcome artifacts, exact source and exact options described below."
       }
     ],
-    "failure_fallback": "If EXP-LOCAL-003 or EXP-LOCAL-004 rejects every candidate, terminates inconclusively, has a protocol failure, or has an infrastructure failure, the final freeze record must explicitly select the current production L0-SEMANTIC local pipeline. It must not select an unvalidated intermediate candidate, infer a champion from absence of a result, or use EXP-LOCAL-001/002 or any other non-gating pilot.",
+    "failure_fallback": "Fallback is stage-local. If EXP-LOCAL-003 has no protocol-valid locked-passing candidate, freeze L0-SEMANTIC. If EXP-LOCAL-004 has no protocol-valid locked-passing candidate, freeze the current LM-QR globalization control with the scaling policy already frozen by step 1. Thus a locked-passing EXP-LOCAL-003 scaling policy is not discarded merely because a later globalization candidate fails, while an unvalidated intermediate candidate is never selected. EXP-LOCAL-001/002 and every other non-gating pilot remain ineligible.",
     "no_implicit_champion": "A terminal experiment without a passing locked candidate never silently promotes its best development row. A named control selection and its hashes are mandatory."
   },
   "local_champion_freeze_record": {
@@ -82,12 +82,12 @@
       "EXP-LOCAL-001 closure and termination commits plus closure SHA-256 from this amendment",
       "EXP-LOCAL-003 card hash, card-chain tip, merge commit, terminal decision/closure commits and every decision-authority input/result hash",
       "EXP-LOCAL-004 card hash, terminal decision/closure commits and every decision-authority input/result hash",
-      "the selected scaling-policy ID and selected globalization-policy ID, or the explicit current production L0-SEMANTIC fallback",
+      "the selected scaling-policy ID or explicit L0-SEMANTIC fallback, and independently the selected globalization-policy ID or explicit current LM-QR globalization control",
       "the exact Julia local-solver source tree or enumerated source-file SHA-256 values",
       "the exact canonical LocalSolveOptions bytes and SHA-256, including every integer, boolean, enum and binary64 hexadecimal value",
       "the compiler, plugin ABI, problem-wire, solve-API and environment/Manifest versions and hashes needed to replay that local pipeline"
     ],
-    "selection_rule": "The record may name an experimental complete pipeline only when each contributing experimental policy has the locked-passing authority required by its preregistration. Otherwise it names the current production L0-SEMANTIC pipeline explicitly.",
+    "selection_rule": "Each experimental component requires its own locked-passing authority. A missing scaling authority falls back to L0-SEMANTIC; a missing globalization authority falls back to current LM-QR without undoing an independently locked-passing scaling policy. The record names the resulting complete pipeline explicitly, never a development-only winner.",
     "immutability": "After the record is bound into EXP-DISC-001 input manifests, any local source, option, ABI, compiler or environment change invalidates materialization and requires a new prospective discovery experiment; it cannot be repaired by amending or regenerating EXP-DISC-001 outcomes."
   },
   "disc_materialization_gate": {
