@@ -86,3 +86,48 @@ host is otherwise idle. While it is held, do not start CI, benchmarks, Julia
 tests, compilation, package installation, or other CPU/memory-heavy work. A run
 with overlapping host work is infrastructure-invalid for wall-time gates even
 when its semantic and oracle-work artifacts remain useful diagnostics.
+
+### Independent host observation
+
+`observe_formal_host` is an independent process, never the parent or wrapper of
+the formal runner. Start it in terminal A and wait for both its `HOST-OBSERVER
+READY` line and exclusive ready receipt. Only then start `exclusive_run` in
+terminal B. Do not use either terminal for other work until observation ends.
+
+The Windows backend uses only Python's standard library and one persistent,
+low-rate PowerShell inventory child. It permits the exact lease-owner process
+tree, excludes the observer and inventory child, and fails closed on other
+Julia/Python/compiler/benchmark/package-manager work, configured CPU or memory
+pressure, lease loss, excessive polling gaps, PID/topology mismatch, or output
+overwrite. It reads only the outer-run audit and `capture.json` metadata; it
+does not open segment traces or numerical outcomes.
+
+For EXP-JAC-003, run the observer from its independent worktree in terminal A;
+never copy it into or modify the frozen experiment worktree. The ready and host
+paths must not already exist:
+
+```powershell
+Set-Location C:\solver-worktrees\jac003-host-observer
+C:\Users\bakat\miniforge3\python.exe -m research.harness.observe_formal_host `
+  --schema-version exp-jac-003-host-observation/v1 `
+  --capture-schema exp-jac-003-formal-abba-capture/v1 `
+  --segment-count 4 `
+  --label EXP-JAC-003-development-abba `
+  --observer "Codex independent host observer" `
+  --outer-audit C:\solver-worktrees\exp-jac-003-inputs\research\results\EXP-JAC-003-development-formal-run-audit.json `
+  --capture C:\solver-worktrees\exp-jac-003-inputs\research\results\EXP-JAC-003-development-abba-staging\capture.json `
+  --lock "$env:LOCALAPPDATA/GeoTarget/formal-performance.lock" `
+  --ready C:\solver-worktrees\exp-jac-003-inputs\research\results\EXP-JAC-003-development-host-observation.ready.json `
+  --output C:\solver-worktrees\exp-jac-003-inputs\research\results\EXP-JAC-003-development-host-observation.json `
+  --poll-seconds 2 --max-poll-gap-seconds 5 `
+  --cpu-heavy-cores 0.25 `
+  --memory-heavy-bytes 2147483648 `
+  --memory-growth-bytes 536870912 `
+  --timeout-seconds 86400
+```
+
+The observer records fixed-width UTC times, the outer PID from the outer audit,
+the four ordered segment PIDs from capture metadata, maximum polling gap, a
+SHA-256 digest of every raw inventory sample, contention and lease-loss events,
+and confirmation that every formal PID ended after lease release. Any nonzero
+event count makes the observation unusable by the frozen finalizer.
