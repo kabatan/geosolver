@@ -669,10 +669,15 @@ function _supports_bigfloat_replay(compiled::CompiledProblem)
 end
 
 """
-Independently replay a discovered candidate through the canonical interpreter.
+Replay a discovered point through the independent canonical interpreter.
 
-This gate can produce only a `ProvisionalAnswer`. Exact promotion belongs to a
-separate proof stage and cannot be inferred from numerical agreement.
+This low-level gate establishes relation/domain/guard/branch/target semantics
+at the supplied coordinates. Its `ProvisionalAnswer` payload is semantic replay
+material for the solve pipeline, not by itself evidence that a nearby root
+exists or that target forward error is bounded. Public answer promotion must
+also pass the solver's root-correction and target-image gates. Exact promotion
+belongs to a separate proof stage and cannot be inferred from numerical
+agreement.
 """
 function validate_candidate(
     compiled::CompiledProblem,
