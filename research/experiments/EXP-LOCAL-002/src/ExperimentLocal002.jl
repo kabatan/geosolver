@@ -28,7 +28,6 @@ const CARD_PATH = joinpath(REPO_ROOT, "research", "experiments", "EXP-LOCAL-002.
 const DEFAULT_OUTPUT_ROOT =
     joinpath(REPO_ROOT, "research", "results", EXPERIMENT_ID, "pilot-v0")
 
-const RELATION_NODES = [NodeId("exp-local-002-relation-$(index)") for index in 1:64]
 const STRICT_GUARD_NODE = NodeId("exp-local-002-strict-guard")
 
 struct CallbackBudgetExceeded <: Exception
@@ -56,6 +55,7 @@ struct AttemptExecution
     nfactors::Int
     nsolve::Int
     iterations::Int
+    budget_exhausted::Bool
     budget_exceeded::Bool
 end
 
@@ -236,6 +236,7 @@ function _external_attempt(
             -1,
             -1,
             exhausted,
+            counter.calls > MAX_EVALUATIONS,
         )
     end
 
@@ -254,17 +255,24 @@ function _external_attempt(
         Int(stats.nfactors),
         Int(stats.nsolve),
         Int(stats.nsteps),
+        counter.calls >= MAX_EVALUATIONS || Int(stats.nsteps) >= MAX_ITERATIONS ||
+            occursin("MaxIters", retcode),
         counter.calls > MAX_EVALUATIONS || Int(stats.nsteps) > MAX_ITERATIONS,
     )
 end
 
-function _lxr_observation(problem::DirectAnalyticProblem, x::AbstractVector, calls::Base.RefValue{Int})
+function _lxr_observation(
+    problem::DirectAnalyticProblem,
+    x::AbstractVector,
+    calls::Base.RefValue{Int},
+    relation_nodes,
+)
     calls[] += 1
     raw = zeros(problem.residual_dimension)
     problem.residual!(raw, x)
     relations = Tuple(
         RelationObservation(
-            RELATION_NODES[index],
+            relation_nodes[index],
             raw[index],
             problem.residual_scales[index],
             raw[index] / problem.residual_scales[index],
@@ -285,6 +293,10 @@ end
 function _lxr_attempt(problem::DirectAnalyticProblem, start::AbstractVector)
     origins, scales, _, _ = bounds_normalization(problem)
     calls = Ref(0)
+    relation_nodes = [
+        NodeId("exp-local-002-relation-$(index)") for
+        index in 1:problem.residual_dimension
+    ]
     options = LocalSolveOptions(
         max_iterations=MAX_ITERATIONS,
         max_evaluations=MAX_EVALUATIONS,
@@ -296,7 +308,7 @@ function _lxr_attempt(problem::DirectAnalyticProblem, start::AbstractVector)
     elapsed = @elapsed begin
         try
             attempt = solve_local(
-                x -> _lxr_observation(problem, x, calls),
+                x -> _lxr_observation(problem, x, calls, relation_nodes),
                 collect(Float64, start);
                 origins=origins,
                 scales=scales,
@@ -322,6 +334,7 @@ function _lxr_attempt(problem::DirectAnalyticProblem, start::AbstractVector)
             -1,
             -1,
             -1,
+            calls[] >= MAX_EVALUATIONS,
             calls[] > MAX_EVALUATIONS,
         )
     end
@@ -339,6 +352,8 @@ function _lxr_attempt(problem::DirectAnalyticProblem, start::AbstractVector)
         jacobians,
         jacobians,
         attempt.iterations,
+        attempt.status in (LOCAL_MAX_EVALUATIONS, LOCAL_MAX_ITERATIONS) ||
+            calls[] >= MAX_EVALUATIONS || attempt.iterations >= MAX_ITERATIONS,
         calls[] > MAX_EVALUATIONS || attempt.iterations > MAX_ITERATIONS,
     )
 end
@@ -479,6 +494,7 @@ function _attempt_row(
         "linear_work" => execution.nfactors >= 0 && execution.nsolve >= 0 ?
             execution.nfactors + execution.nsolve : nothing,
         "iterations" => execution.iterations,
+        "budget_exhausted" => execution.budget_exhausted,
         "budget_exceeded" => execution.budget_exceeded,
         "replay_checksum" => replay_checksum(problem),
         "starts_checksum" => _artifact_checksum(problem, :saved_starts),
@@ -697,6 +713,7 @@ function summarize(rows, environment)
                     row in selected
                 ),
                 "budget_overruns" => count(row -> row["budget_exceeded"], selected),
+                "budget_exhaustions" => count(row -> row["budget_exhausted"], selected),
                 "exceptions" => count(row -> row["exception"] !== nothing, selected),
             ),
         )
@@ -763,6 +780,7 @@ const CSV_COLUMNS = (
     "nsolve",
     "linear_work",
     "iterations",
+    "budget_exhausted",
     "budget_exceeded",
     "raw_residual_linf",
     "scaled_residual_linf",

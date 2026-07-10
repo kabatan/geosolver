@@ -348,7 +348,7 @@ function execute_development_variant(
             problem.saved_starts[:, 1],
             variant,
         )
-        warmup.exception === nothing || warmup.budget_exceeded ||
+        warmup.exception === nothing || warmup.budget_exhausted ||
             error("warmup failed for $(problem.instance_id): $(warmup.exception)")
     end
     warmup_seconds = (time_ns() - warmup_start_ns) / 1.0e9
@@ -414,7 +414,12 @@ function execute_development_variant(
         "measured_attempt_seconds" => measured_seconds,
         "worker_seconds" => (time_ns() - worker_start_ns) / 1.0e9,
         "budget_overruns" => count(row -> row["budget_exceeded"], rows),
+        "budget_exhaustions" => count(row -> row["budget_exhausted"], rows),
         "exceptions" => count(row -> row["exception"] !== nothing, rows),
+        "nonbudget_exceptions" => count(
+            row -> row["exception"] !== nothing && !row["budget_exhausted"],
+            rows,
+        ),
         "accepted" => count(row -> row["accepted"], rows),
         "false_candidates" => count(row -> row["false_candidate"], rows),
         "callback_residual_calls" => sum(row["callback_residual_calls"] for row in rows),

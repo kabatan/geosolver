@@ -49,6 +49,19 @@ end
         GOLD_CONFIGURATION_TOLERANCE == 1.0e-6
     @test manifest["thresholds"]["gold_target"] == GOLD_TARGET_TOLERANCE == 1.0e-6
     @test Tuple(manifest["variants"]) == VARIANTS
+
+    largest_overdetermined = only(filter(
+        problem -> problem.family_id == "REDUNDANT-OVERDETERMINED" &&
+            problem.residual_dimension == 80,
+        problems,
+    ))
+    control = run_attempt(
+        largest_overdetermined,
+        largest_overdetermined.saved_starts[:, 1],
+        "LXR-LMQR",
+    )
+    @test control.exception === nothing
+    @test !control.budget_exceeded
 end
 
 @testset "independent truth gate rejects the excluded S4 root" begin

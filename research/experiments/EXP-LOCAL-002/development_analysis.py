@@ -12,6 +12,7 @@ import json
 import os
 from pathlib import Path
 import platform
+import re
 import shutil
 import subprocess
 import sys
@@ -49,6 +50,7 @@ EXPECTED_ROWS = EXPECTED_INSTANCES * EXPECTED_STARTS * len(VARIANTS)
 BOOL_FIELDS = (
     "pilot_non_gating",
     "package_reported_success",
+    "budget_exhausted",
     "budget_exceeded",
     "residual_qualified",
     "bounds_valid",
@@ -196,7 +198,10 @@ def parse_row(raw: Mapping[str, str]) -> dict[str, Any]:
         row[field] = float(raw[field])
     for field in OPTIONAL_FLOAT_FIELDS:
         row[field] = float(raw[field]) if raw[field] else None
-    row["strata"] = tuple(item for item in raw["strata"].split(";") if item)
+    # The pilot writer historically serialized Tuple strata using Julia's tuple
+    # display, while vector-backed rows use semicolons. Accept only explicit S1--S8
+    # tokens from either representation and reject every other payload below.
+    row["strata"] = tuple(re.findall(r"S[1-8]", raw["strata"]))
     row["exception"] = raw["exception"] or None
     return row
 
@@ -372,6 +377,12 @@ def metric_record(
     )
     callback_work = sum(row["callback_residual_calls"] for row in selected)
     wall = sum(row["wall_seconds"] for row in selected)
+    budget_exhaustions = sum(bool(row["budget_exhausted"]) for row in selected)
+    budget_overruns = sum(bool(row["budget_exceeded"]) for row in selected)
+    exceptions = sum(row["exception"] is not None for row in selected)
+    nonbudget_exceptions = sum(
+        row["exception"] is not None and not row["budget_exhausted"] for row in selected
+    )
     return {
         "variant": variant,
         "prefix": prefix,
@@ -389,6 +400,10 @@ def metric_record(
         "mean_charged_work": charged_work / len(selected),
         "wall_seconds": wall,
         "mean_wall_seconds": wall / len(selected),
+        "budget_exhaustion_count": budget_exhaustions,
+        "budget_overrun_count": budget_overruns,
+        "exception_count": exceptions,
+        "nonbudget_exception_count": nonbudget_exceptions,
     }
 
 
@@ -846,14 +861,15 @@ def markdown_report(summary: Mapping[str, Any]) -> str:
         "",
         "## Prefix-32 overall",
         "",
-        "| Variant | P_local_gold | P_full_target | Residual-qualified non-Gold | Charged work | Warm wall (s) |",
-        "|---|---:|---:|---:|---:|---:|",
+        "| Variant | P_local_gold | P_full_target | Residual-qualified non-Gold | Budget exhausted | Charged work | Warm wall (s) |",
+        "|---|---:|---:|---:|---:|---:|---:|",
     ]
     for variant in VARIANTS:
         item = find_aggregate(aggregates, variant, 32)
         lines.append(
             f"| {variant} | {item['p_local_gold']:.4f} | {item['p_full_target']:.4f} | "
-            f"{item['residual_qualified_non_gold_count']} | {item['charged_work']} | "
+            f"{item['residual_qualified_non_gold_count']} | {item['budget_exhaustion_count']} | "
+            f"{item['charged_work']} | "
             f"{item['wall_seconds']:.4f} |"
         )
     lines.extend(
@@ -921,6 +937,10 @@ def validate_final_artifacts(output_directory: Path, input_manifest_path: Path =
         raise ArtifactValidationError("summary attempt count does not match raw attempts")
     if summary.get("unsafe_accepted_count") != 0:
         raise ArtifactValidationError("summary reports an unsafe accepted endpoint")
+    if summary.get("budget_overrun_count") != 0:
+        raise ArtifactValidationError("summary reports an actual budget overrun")
+    if summary.get("nonbudget_exception_count") != 0:
+        raise ArtifactValidationError("summary reports a non-budget adapter exception")
     plan_set = load_json(output_directory / "bootstrap-plans.json")
     for raw in plan_set.get("plans", {}).values():
         plan = BootstrapPlan(
@@ -1025,7 +1045,11 @@ def analyze_worker_outputs(
             for row in rows
         ),
         "budget_overrun_count": sum(row["budget_exceeded"] for row in rows),
+        "budget_exhaustion_count": sum(row["budget_exhausted"] for row in rows),
         "exception_count": sum(row["exception"] is not None for row in rows),
+        "nonbudget_exception_count": sum(
+            row["exception"] is not None and not row["budget_exhausted"] for row in rows
+        ),
         "promotion_decision": "not-evaluated-development-only",
     }
     write_json(output_directory / "summary.json", summary)
