@@ -74,14 +74,16 @@ def load_frozen_analyzer(payload: bytes) -> Any:
     return module
 
 
-def unique_path_option(arguments: list[str], option: str) -> Path:
-    positions = [index for index, value in enumerate(arguments) if value == option]
-    if len(positions) != 1:
-        raise ValueError(f"S4 A9 requires exactly one {option}")
-    position = positions[0]
-    if position + 1 >= len(arguments) or arguments[position + 1].startswith("--"):
-        raise ValueError(f"S4 A9 {option} has no value")
-    return Path(arguments[position + 1]).resolve()
+def canonical_paths(arguments: list[str]) -> tuple[Path, Path]:
+    if (
+        len(arguments) != 4
+        or arguments[0] != "--result-directory"
+        or arguments[2] != "--experiment-directory"
+        or arguments[1].startswith("--")
+        or arguments[3].startswith("--")
+    ):
+        raise ValueError("S4 A9 requires one canonical result/experiment argument pair")
+    return Path(arguments[1]).resolve(), Path(arguments[3]).resolve()
 
 
 def verify_bound_result_artifacts(
@@ -107,6 +109,66 @@ def verify_bound_result_artifacts(
             raise ValueError(f"S4 A9 base artifact changed: {filename}")
 
 
+def verify_frozen_closure(
+    result_directory: Path,
+    result_bindings: dict[str, Any],
+    *,
+    analysis_present: bool,
+) -> None:
+    verify_bound_result_artifacts(result_directory, result_bindings)
+    expected_top = {
+        "case-checkpoints",
+        "checkpoint-manifest.json",
+        "environment.json",
+        "raw.json",
+        "report.md",
+        "result-bindings.json",
+        "run-identity.json",
+        "summary.json",
+        "warmup.json",
+    }
+    if analysis_present:
+        expected_top.add("independent-analysis.json")
+    if {path.name for path in result_directory.iterdir()} != expected_top:
+        raise ValueError("S4 A9 result archive set mismatch")
+
+    checkpoint_manifest_path = result_directory / "checkpoint-manifest.json"
+    checkpoint_manifest_payload = checkpoint_manifest_path.read_bytes()
+    checkpoint_manifest = parse_json(checkpoint_manifest_payload)
+    if (
+        bytes_sha256(checkpoint_manifest_payload)
+        != result_bindings["bindings"]["checkpoint_manifest_sha256"]
+    ):
+        raise ValueError("S4 A9 checkpoint manifest changed")
+    checkpoint_root = (result_directory / "case-checkpoints").resolve()
+    checkpoint_paths: list[tuple[Path, str]] = []
+    for entry in checkpoint_manifest["checkpoints"]:
+        path = (result_directory / entry["path"]).resolve()
+        if not path.is_relative_to(checkpoint_root) or path.parent != checkpoint_root:
+            raise ValueError("S4 A9 checkpoint path escapes its directory")
+        checkpoint_paths.append((path, entry["sha256"]))
+    if len(checkpoint_paths) != 36 or {path for path, _ in checkpoint_paths} != set(
+        checkpoint_root.iterdir()
+    ):
+        raise ValueError("S4 A9 checkpoint set mismatch")
+    for path, expected_sha256 in checkpoint_paths:
+        if bytes_sha256(path.read_bytes()) != expected_sha256:
+            raise ValueError(f"S4 A9 checkpoint changed: {path.name}")
+
+    freeze_path = EXPERIMENT_DIRECTORY / "s4-implementation-freeze.json"
+    freeze_payload = freeze_path.read_bytes()
+    if bytes_sha256(freeze_payload) != result_bindings["implementation_freeze_sha256"]:
+        raise ValueError("S4 A9 implementation freeze changed")
+    freeze = parse_json(freeze_payload)
+    repository = EXPERIMENT_DIRECTORY.parents[2]
+    for relative, expected_sha256 in freeze["implementation_sources"].items():
+        source = (repository / relative).resolve()
+        if not source.is_relative_to(repository) or not source.is_file():
+            raise ValueError(f"S4 A9 frozen source path invalid: {relative}")
+        if bytes_sha256(source.read_bytes()) != expected_sha256:
+            raise ValueError(f"S4 A9 frozen source changed: {relative}")
+
+
 def main() -> int:
     amendment_payload = ANALYSIS_AMENDMENT.read_bytes()
     amendment_sha256 = bytes_sha256(amendment_payload)
@@ -122,8 +184,7 @@ def main() -> int:
     analyzer_sha256 = bytes_sha256(analyzer_payload)
     if analyzer_sha256 != amendment["original_analyzer_sha256"]:
         raise ValueError("S4 A9 original analyzer mismatch")
-    result_directory = unique_path_option(sys.argv[1:], "--result-directory")
-    experiment_directory = unique_path_option(sys.argv[1:], "--experiment-directory")
+    result_directory, experiment_directory = canonical_paths(sys.argv[1:])
     if experiment_directory != EXPERIMENT_DIRECTORY:
         raise ValueError("S4 A9 experiment directory mismatch")
     result_bindings_path = result_directory / "result-bindings.json"
@@ -132,11 +193,15 @@ def main() -> int:
     if result_bindings_sha256 != amendment["result_bindings_sha256"]:
         raise ValueError("S4 A9 result bindings mismatch")
     result_bindings = parse_json(result_bindings_payload)
-    verify_bound_result_artifacts(result_directory, result_bindings)
     destination = result_directory / "independent-analysis.json"
     binding_path = result_directory / "independent-analysis-a9-bindings.json"
     if destination.exists() or binding_path.exists():
         raise FileExistsError("S4 A9 refuses an existing independent analysis")
+    verify_frozen_closure(
+        result_directory,
+        result_bindings,
+        analysis_present=False,
+    )
 
     frozen = load_frozen_analyzer(analyzer_payload)
     original_analyze = frozen.analyze
@@ -171,7 +236,11 @@ def main() -> int:
         raise ValueError("S4 A9 independent analysis changed before binding")
     if bytes_sha256(result_bindings_path.read_bytes()) != result_bindings_sha256:
         raise ValueError("S4 A9 result bindings changed before binding")
-    verify_bound_result_artifacts(result_directory, result_bindings)
+    verify_frozen_closure(
+        result_directory,
+        result_bindings,
+        analysis_present=True,
+    )
     write_json_atomic(
         binding_path,
         {
