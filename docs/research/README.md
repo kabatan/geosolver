@@ -6,6 +6,7 @@
 - [Evidence priors](EVIDENCE.md)
 - [High-precision and singular-path audit](HIGH_PRECISION_SINGULAR_AUDIT.md)
 - [Failure taxonomy](FAILURES.md)
+- [Miss Analyzer v0.1](MISS_ANALYZER.md)
 - [Negative-result policy](NEGATIVE_RESULTS.md)
 - [Benchmark envelope](../../benchmarks/RESEARCH_ENVELOPE.md)
 

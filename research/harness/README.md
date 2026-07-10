@@ -57,3 +57,11 @@ Opening a locked or blind failure uses `burn_and_replace`. It atomically marks
 the original family set burned (and therefore development-readable) only after
 a family-disjoint replacement has passed all checks. The immutable burn record
 retains both family lists and the reason.
+
+## Miss Analyzer
+
+`research.harness.miss_analyzer` combines typed `CaseInput`, `RunInput` and
+`RunEvaluation` with optional canonical solver evidence/checkpoint events and
+audited causal facts. It reports the earliest evidenced F0-F18 checkpoint or a
+typed `unknown`; absent logs never become no-capture, fairness or completeness
+evidence. See [the full contract](../../docs/research/MISS_ANALYZER.md).

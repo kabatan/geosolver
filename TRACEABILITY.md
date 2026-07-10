@@ -34,3 +34,12 @@ Every milestone records artifacts, quantitative results and a rollback point.
 Failure to pass a gate reverts to the prior champion; gates are never loosened to
 promote an implementation.
 
+## Current RES-03 evidence
+
+The M3 Miss Analyzer has an implemented v0.1 vertical slice: strict diagnostic
+and report schemas, a deterministic API/CLI, conservative adapters for current
+event/checkpoint `Observation` diagnostics, and counterexample/metamorphic
+tests. Coverage and deliberately unknown paths are recorded in
+`docs/research/MISS_ANALYZER.md`. RES-03 remains active and M3 is not declared
+complete here: automatic capture instrumentation, archive/scheduler causal
+audits and the listed unclassified paths still require later milestone work.
