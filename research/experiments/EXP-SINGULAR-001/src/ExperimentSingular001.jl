@@ -25,6 +25,7 @@ export EXPERIMENT_ID,
     ExperimentalOutcome,
     GoldAssessment,
     fixed_control_cases,
+    development_cases,
     candidate_input,
     run_s0,
     run_s1,
@@ -32,6 +33,7 @@ export EXPERIMENT_ID,
     case_manifest_document,
     outcome_document,
     assessment_document,
+    development_input_document,
     write_json_artifact
 
 end

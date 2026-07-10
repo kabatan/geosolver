@@ -34,6 +34,33 @@ end
     @test all(haskey(entry, "gold_analysis_only") for entry in manifest["cases"])
 end
 
+@testset "development grid freezes the preregistered S0 S1 phase" begin
+    cases = development_cases()
+    @test length(cases) == 72
+    @test length(unique(case.input.oracle.id for case in cases)) == 72
+    @test count(case -> case.input.oracle.family == "SING-NEAR-NULL-FULL-RANK", cases) == 52
+    @test count(case -> case.input.oracle.family == "SING-NONROOT-STATIONARY", cases) == 8
+    @test count(case -> case.input.oracle.family == "SING-MANIFOLD-CONTROLS", cases) == 8
+    @test count(case -> case.input.oracle.family == "SING-ISOLATED-MULTIPLE", cases) == 4
+    @test count(case -> case.input.oracle.capability == :C0, cases) == 4
+    document = development_input_document(cases)
+    @test document["development_instance_count"] == 72
+    @test length(document["case_collection_sha256"]) == 64
+    @test length(document["card_sha256"]) == 64
+    @test document["variants"] == [
+        "S0-POINT-REPLAY",
+        "S1-AP-LMQR",
+        "SLB-ANALYTIC-DERIVATIVES",
+    ]
+    manifest_path = joinpath(@__DIR__, "..", "development-input-manifest.json")
+    @test isfile(manifest_path)
+    frozen = JSON3.read(read(manifest_path, String))
+    @test frozen.card_path == "research/experiments/EXP-SINGULAR-001.json"
+    @test frozen.case_collection_sha256 == document["case_collection_sha256"]
+    @test [entry.checksum for entry in frozen.cases] ==
+          [entry["checksum"] for entry in document["cases"]]
+end
+
 @testset "S0 point replay can diagnose but never promote" begin
     p1 = case_by_id(fixed_control_cases(), "p1-near-null-base")
     outcome = run_s0(candidate_input(p1))

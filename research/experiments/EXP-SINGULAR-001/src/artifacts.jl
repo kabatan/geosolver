@@ -114,6 +114,53 @@ function case_manifest_document(cases=fixed_control_cases())
     )
 end
 
+function _options_document(options::ExperimentOptions)
+    return Dict{String,Any}(
+        "configuration_error_goal" => options.configuration_error_goal,
+        "confirmation_perturbation_radius" => options.confirmation_perturbation_radius,
+        "error_reserve_multiplier" => options.error_reserve_multiplier,
+        "finite_difference_exponent" => options.finite_difference_exponent,
+        "independent_confirmation_count" => options.independent_confirmation_count,
+        "maximum_callbacks" => options.maximum_callbacks,
+        "maximum_iterations" => options.maximum_iterations,
+        "precision_ladder" => Any[options.precision_ladder...],
+        "rank_roundoff_multiplier" => options.rank_roundoff_multiplier,
+        "required_precision_guard_bits" => options.required_precision_guard_bits,
+        "semantic_precision_bits" => options.semantic_precision_bits,
+        "semantic_residual_tolerance" => options.semantic_residual_tolerance,
+        "target_error_goal" => options.target_error_goal,
+        "wall_seconds" => options.wall_seconds,
+    )
+end
+
+function development_input_document(
+    cases=development_cases(),
+    options::ExperimentOptions=ExperimentOptions();
+    card_path=normpath(joinpath(@__DIR__, "..", "..", "EXP-SINGULAR-001.json")),
+)
+    case_document = case_manifest_document(cases)
+    collection_material = join((case.checksum for case in cases), '\n')
+    return Dict{String,Any}(
+        "card_path" => replace(
+            relpath(card_path, normpath(joinpath(@__DIR__, "..", "..", "..", ".."))),
+            '\\' => '/',
+        ),
+        "card_sha256" => bytes2hex(sha256(read(card_path))),
+        "case_collection_sha256" => bytes2hex(sha256(collection_material)),
+        "cases" => case_document["cases"],
+        "development_instance_count" => length(cases),
+        "experiment_id" => EXPERIMENT_ID,
+        "harness_version" => string(HARNESS_VERSION),
+        "options" => _options_document(options),
+        "schema" => "geotarget.singular-development-input/v1",
+        "variants" => Any[
+            "S0-POINT-REPLAY",
+            "S1-AP-LMQR",
+            "SLB-ANALYTIC-DERIVATIVES",
+        ],
+    )
+end
+
 function write_json_artifact(path::AbstractString, document)
     destination = abspath(String(path))
     mkpath(dirname(destination))
