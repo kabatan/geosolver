@@ -1,0 +1,53 @@
+{
+  "schema_version": "exp-local-003-numeric-json-domain/v1",
+  "experiment_id": "EXP-LOCAL-003",
+  "purpose": "Prevent JSON lexical spelling from being mistaken for a Python or Julia runtime numeric type.",
+  "canonical_payload_text": "{\"exact_integral_real\":1,\"fractional_real\":0.5,\"negative_zero_normalized\":0,\"smallest_open_unit\":1.1102230246251565e-16}",
+  "accepted_number_rule": "A JSON number is accepted when the parser value is an integer or finite floating value but not a Boolean. Consumers normalize it to binary64 and verify the declared bit authority when one exists.",
+  "cases": [
+    {
+      "id": "integral-real-token",
+      "json_value": 1,
+      "semantic_domain": "finite_binary64_real",
+      "binary64_bits": "0x3ff0000000000000"
+    },
+    {
+      "id": "fractional-real-token",
+      "json_value": 0.5,
+      "semantic_domain": "finite_binary64_real",
+      "binary64_bits": "0x3fe0000000000000"
+    },
+    {
+      "id": "safe-integer-count",
+      "json_value": 64,
+      "semantic_domain": "nonnegative_integer_count",
+      "maximum": 9007199254740991
+    }
+  ],
+  "extended_real_tokens": {
+    "positive_infinity": "+Inf",
+    "negative_infinity": "-Inf",
+    "rule": "Extended values are tagged strings only; NaN and nonstandard Infinity JSON numbers are forbidden."
+  },
+  "fma_fixture": [
+    {
+      "a_bits": "0x4000000000000000",
+      "b_bits": "0x3ca0000000000000",
+      "c_bits": "0xbff0000000000000",
+      "result_bits": "0xbfeffffffffffffe"
+    },
+    {
+      "a_bits": "0x4000000000000000",
+      "b_bits": "0x3fefffffffffffff",
+      "c_bits": "0xbff0000000000000",
+      "result_bits": "0x3feffffffffffffe"
+    },
+    {
+      "a_bits": "0x4008000000000000",
+      "b_bits": "0x3fd0000000000000",
+      "c_bits": "0xbfe0000000000000",
+      "result_bits": "0x3fd0000000000000"
+    }
+  ],
+  "cross_runtime_gate": "Python exact-rational fma emulation and Julia Base.fma must produce every result_bits value; JSON consumers must accept integral-real-token as a real despite its integer lexical form."
+}

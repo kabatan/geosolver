@@ -1,0 +1,83 @@
+{
+  "schema_version": "exp-local-003-visibility-contract/v1",
+  "experiment_id": "EXP-LOCAL-003",
+  "card_sha256": "0caae294a032f6d920c718219836e60e57f20c76fe5d790a615e554a95c6ee3c",
+  "trees": {
+    "candidate": {
+      "process_access": "candidate runner only",
+      "allowed_case_material": [
+        "independently random opaque_case_key",
+        "canonical ProblemSpecV1 document and its candidate-only hash",
+        "content-locked generic fixture plugin manifest needed to compile the document",
+        "public bounds, origins, variable scales and semantic relation scales",
+        "64 persisted physical calibration points",
+        "32 persisted physical starts",
+        "frozen public local options and hard budgets"
+      ],
+      "forbidden_case_material": [
+        "family or factor labels",
+        "latent-group or representation IDs and links",
+        "primary versus Safety16 classification",
+        "calibration_key or generator seed namespaces",
+        "Gold configurations, targets, intervals or tolerances",
+        "expected decisions, analytic truth or branch truth",
+        "assessor or generator-private hashes",
+        "prior or paired outcomes"
+      ],
+      "semantic_target_exception": "ProblemSpecV1.target is required public problem semantics and is not a Gold answer. It may appear only inside the canonical problem document.",
+      "checksum_boundary": "Candidate case, artifact and manifest hashes contain candidate-tree bytes only."
+    },
+    "assessor": {
+      "process_access": "opened by a separate assessor process only after candidate raw output is sealed",
+      "allowed_case_material": [
+        "opaque_case_key join",
+        "family, latent-group and representation mapping",
+        "primary or Safety16 role and expected_invariant flag",
+        "Gold configurations, distinct targets and fixed tolerances",
+        "inverse representation map and analytic or branch truth needed for assessment",
+        "frozen bootstrap index bytes"
+      ],
+      "forbidden_use": [
+        "candidate calibration, routing, local steps or termination",
+        "mutating candidate inputs or sealed raw output",
+        "selecting starts, thresholds, families or a replacement run"
+      ]
+    },
+    "generator_private": {
+      "process_access": "one-shot materializer and audit only; never candidate or formal assessor input",
+      "allowed_case_material": [
+        "calibration_key",
+        "counter namespaces and replacement ordinals",
+        "unprojected deterministic fixture descriptor",
+        "projection checksums"
+      ]
+    }
+  },
+  "runtime_layers": {
+    "document_loader": "May read one candidate ProblemSpec and its content locks only to construct the oracle.",
+    "compiler": "May read typed graph, plugin contracts and public numeric metadata; it receives no assessor or generator-private tree.",
+    "solver_and_calibrator": "Receive only the callable compiled C0 oracle, physical bounds/origin/scale, persisted calibration points, one start and frozen options. They never receive problem, plugin, primitive, case, family, group or representation IDs.",
+    "candidate_output": "Contains opaque_case_key, variant, start index, endpoint, charged execution trace, semantic/canonical replay and calibration audit only; it contains no Gold match.",
+    "assessor": "Joins sealed candidate output to assessor truth by opaque_case_key and start index after verifying both manifests and the output seal."
+  },
+  "mandatory_dsl_path": [
+    "Python SDK ProblemBuilder",
+    "RFC 8785 canonical encoder and protocol validator",
+    "decode_problem_document",
+    "allowlisted FrozenPluginRegistry",
+    "compile_problem",
+    "evaluate(compiled, C0)",
+    "local solver",
+    "evaluate_canonical and validate_candidate"
+  ],
+  "forbidden_shortcuts": [
+    "DirectAnalyticProblem",
+    "hand-written candidate JSON",
+    "manually constructed RelationObservation",
+    "polynomial lowering",
+    "analytic or automatic derivative requirement",
+    "family-, primitive-, problem- or representation-based routing"
+  ],
+  "formal_order": "The candidate process receives only the candidate-tree path. It seals and closes its raw output before a new process may receive the assessor-tree path. Root and generator-private manifests are never candidate arguments.",
+  "production_connection": false
+}
