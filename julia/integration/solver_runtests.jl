@@ -5,6 +5,170 @@ using GeoTargetCore
 using GeoTargetGeometry
 using Test
 
+const NEAR_RANK_PLUGIN_ID =
+    parse(PluginId, "11111111-1111-1111-1111-111111111111/near_rank_audit")
+const NEAR_RANK_SUM_ID = PrimitiveId(NEAR_RANK_PLUGIN_ID, "sum_relation")
+const NEAR_RANK_TILT_ID = PrimitiveId(NEAR_RANK_PLUGIN_ID, "tilted_relation")
+const NEAR_RANK_ZERO_ID = PrimitiveId(NEAR_RANK_PLUGIN_ID, "zero_relation")
+
+_near_rank_sum(left::Real, right::Real) = left + right
+_near_rank_tilt(left::Real, right::Real, delta::Real) =
+    left + (one(right) + delta) * right
+_near_rank_zero(left::Real, right::Real) = zero(left + right)
+_near_rank_sum_truth(left::Real, right::Real) = iszero(_near_rank_sum(left, right))
+_near_rank_tilt_truth(left::Real, right::Real, delta::Real) =
+    iszero(_near_rank_tilt(left, right, delta))
+_near_rank_zero_truth(::Real, ::Real) = true
+
+function _near_rank_kernel(evaluator)
+    return OperatorKernel(
+        evaluator;
+        capabilities=CapabilitySet(C0, C1, C2),
+        smoothness=SMOOTH_C1,
+        derivative_mode=DERIVATIVE_AUTODIFF,
+        generic_numeric=true,
+    )
+end
+
+function near_rank_plugin()
+    binary = SignatureSpec((SCALAR_TYPE_ID, SCALAR_TYPE_ID), SCALAR_TYPE_ID)
+    ternary = SignatureSpec(
+        (SCALAR_TYPE_ID, SCALAR_TYPE_ID, SCALAR_TYPE_ID),
+        SCALAR_TYPE_ID,
+    )
+    return PluginSpec(
+        NEAR_RANK_PLUGIN_ID,
+        v"0.0.1",
+        v"1.0.0",
+        content_hash("near-rank-audit-plugin-v1");
+        relations=(
+            RelationSpec(
+                NEAR_RANK_SUM_ID,
+                (binary,),
+                _near_rank_kernel(_near_rank_sum);
+                truth=_near_rank_sum_truth,
+                truth_policy=RELATION_TRUTH_APPROXIMATE_ZERO,
+                scale_hint=1.0,
+            ),
+            RelationSpec(
+                NEAR_RANK_TILT_ID,
+                (ternary,),
+                _near_rank_kernel(_near_rank_tilt);
+                truth=_near_rank_tilt_truth,
+                truth_policy=RELATION_TRUTH_APPROXIMATE_ZERO,
+                scale_hint=1.0,
+            ),
+            RelationSpec(
+                NEAR_RANK_ZERO_ID,
+                (binary,),
+                _near_rank_kernel(_near_rank_zero);
+                truth=_near_rank_zero_truth,
+                scale_hint=1.0,
+            ),
+        ),
+    )
+end
+
+function singular_zero_manifold_problem()
+    geometry = geometry_plugin()
+    near_rank = near_rank_plugin()
+    x = VariableSpec(
+        VariableId("x"),
+        SCALAR_TYPE_ID,
+        0.0,
+        1.0;
+        lower=-2.0,
+        upper=2.0,
+    )
+    y = VariableSpec(
+        VariableId("y"),
+        SCALAR_TYPE_ID,
+        0.0,
+        1.0;
+        lower=-2.0,
+        upper=2.0,
+    )
+    nodes = AbstractGraphNode[
+        ReferenceNode(NodeId("x"), x.id),
+        ReferenceNode(NodeId("y"), y.id),
+        CallNode(
+            NodeId("zero_relation_1"),
+            NEAR_RANK_ZERO_ID,
+            (NodeId("x"), NodeId("y")),
+        ),
+        CallNode(
+            NodeId("zero_relation_2"),
+            NEAR_RANK_ZERO_ID,
+            (NodeId("y"), NodeId("x")),
+        ),
+    ]
+    return ProblemSpecV1(
+        (plugin_lock(geometry), plugin_lock(near_rank)),
+        (x, y),
+        ConstructionGraph(Tuple(nodes));
+        relations=(
+            RelationBinding(NodeId("zero_relation_1")),
+            RelationBinding(NodeId("zero_relation_2")),
+        ),
+        target=NodeId("x"),
+    )
+end
+
+function near_rank_registry()
+    geometry = geometry_plugin()
+    near_rank = near_rank_plugin()
+    builder = RegistryBuilder(allowlist=(geometry.id, near_rank.id))
+    register!(builder, geometry)
+    register!(builder, near_rank)
+    return freeze(builder)
+end
+
+function near_rank_problem(delta::Real)
+    geometry = geometry_plugin()
+    near_rank = near_rank_plugin()
+    x = VariableSpec(
+        VariableId("x"),
+        SCALAR_TYPE_ID,
+        0.0,
+        1.0;
+        lower=-2.0,
+        upper=2.0,
+    )
+    y = VariableSpec(
+        VariableId("y"),
+        SCALAR_TYPE_ID,
+        0.0,
+        1.0;
+        lower=-2.0,
+        upper=2.0,
+    )
+    nodes = AbstractGraphNode[
+        ReferenceNode(NodeId("x"), x.id),
+        ReferenceNode(NodeId("y"), y.id),
+        LiteralNode(NodeId("delta"), SCALAR_TYPE_ID, delta),
+        CallNode(
+            NodeId("sum_relation"),
+            NEAR_RANK_SUM_ID,
+            (NodeId("x"), NodeId("y")),
+        ),
+        CallNode(
+            NodeId("tilted_relation"),
+            NEAR_RANK_TILT_ID,
+            (NodeId("x"), NodeId("y"), NodeId("delta")),
+        ),
+    ]
+    return ProblemSpecV1(
+        (plugin_lock(geometry), plugin_lock(near_rank)),
+        (x, y),
+        ConstructionGraph(Tuple(nodes));
+        relations=(
+            RelationBinding(NodeId("sum_relation")),
+            RelationBinding(NodeId("tilted_relation")),
+        ),
+        target=NodeId("x"),
+    )
+end
+
 function solve_registry()
     plugin = geometry_plugin()
     builder = RegistryBuilder(allowlist=(plugin.id,))
@@ -204,6 +368,86 @@ end
     decoded = decode_solve_result_json(encoded)
     @test encode_solve_result_json(decoded) == encoded
     @test decoded.search_status == SEARCH_FINISHED_UNKNOWN
+end
+
+@testset "singular nonzero residuals fail closed before answer promotion" begin
+    registry = near_rank_registry()
+    singular = compile_problem(near_rank_problem(1.0e-13), registry)
+    start = [1.0, -1.0]
+    attempt = solve_local(
+        coordinates -> evaluate(singular, coordinates),
+        start;
+        lower=[-2.0, -2.0],
+        upper=[2.0, 2.0],
+        options=LocalSolveOptions(residual_tolerance=1.0e-12),
+    )
+    @test attempt.status == LOCAL_CONVERGED
+    @test attempt.accepted
+
+    singular_image = analyze_target_image(singular, collect(attempt.final))
+    @test singular_image.classification == TARGET_IMAGE_INCONCLUSIVE
+    @test singular_image.failure == GeoTargetCore.TARGET_IMAGE_SINGULAR_LINEARIZATION
+    @test singular_image.numerical_rank == 1
+    singular_correction = GeoTargetCore._candidate_root_correction(
+        singular_image,
+        CandidateValidationOptions(),
+    )
+    @test !singular_correction.resolved
+    @test singular_correction.detail == "rank_deficient_nonzero_residual"
+
+    direct_validation = validate_candidate(singular, attempt)
+    @test direct_validation.accepted
+    @test direct_validation.provisional.target.lower > BigFloat(0.9)
+
+    execution = solve_execution(
+        near_rank_problem(1.0e-13),
+        registry;
+        options=short_options(),
+        max_actions=2,
+    )
+    @test isempty(execution.result.provisional_answers)
+    @test execution.result.target_image_status == TARGET_IMAGE_UNKNOWN
+    record = only(execution.checkpoint.workspace.candidates.history)
+    @test record.observation.canonical_near_feasible
+    @test !record.observation.verified
+    @test record.observation.verified_payload === nothing
+    @test record.observation.needs_refinement
+    @test occursin("rank_deficient_nonzero_residual", record.observation.diagnostic)
+    @test execution.checkpoint.workspace.refinement_queue ==
+          (record.observation.configuration_id,)
+
+    exact_zero_execution = solve_execution(
+        singular_zero_manifold_problem(),
+        registry;
+        options=short_options(),
+        max_actions=2,
+    )
+    @test isempty(exact_zero_execution.result.provisional_answers)
+    exact_zero_record = only(exact_zero_execution.checkpoint.workspace.candidates.history)
+    @test exact_zero_record.observation.canonical_valid
+    @test !exact_zero_record.observation.verified
+    @test exact_zero_record.observation.verified_payload === nothing
+    @test exact_zero_record.observation.needs_refinement
+    @test occursin("TARGET_IMAGE_INCONCLUSIVE", exact_zero_record.observation.diagnostic)
+    @test occursin("exact_zero_residual", exact_zero_record.observation.diagnostic)
+
+    exact_zero_image = analyze_target_image(singular, [0.0, 0.0])
+    exact_zero_correction = GeoTargetCore._candidate_root_correction(
+        exact_zero_image,
+        CandidateValidationOptions(),
+    )
+    @test exact_zero_correction.resolved
+    @test exact_zero_correction.detail == "exact_zero_residual"
+
+    full_rank = compile_problem(near_rank_problem(1.0e-4), registry)
+    full_rank_image = analyze_target_image(full_rank, [1.0e-13, -1.0e-13])
+    @test full_rank_image.classification == TARGET_LOCALLY_ISOLATED
+    @test full_rank_image.numerical_rank == 2
+    full_rank_correction = GeoTargetCore._candidate_root_correction(
+        full_rank_image,
+        CandidateValidationOptions(),
+    )
+    @test full_rank_correction.resolved
 end
 
 @testset "replay is deterministic and longer action prefixes retain answers" begin

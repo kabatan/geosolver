@@ -262,6 +262,14 @@ function _candidate_root_correction(
         )
     end
     jacobian = image.scaled_relation_jacobian
+    if rank < min(size(jacobian)...)
+        return (
+            resolved=false,
+            normalized_step=Inf,
+            target_step=Inf,
+            detail="rank_deficient_nonzero_residual",
+        )
+    end
     factorization = svd(jacobian; full=false)
     retained = min(rank::Int, length(factorization.S))
     correction = zeros(Float64, size(jacobian, 2))
@@ -395,6 +403,8 @@ function (runner::_CompiledAttemptRunner)(
         ),
     )
     oracle_work[] += image.oracle_work
+    inconclusive_image = image.classification == TARGET_IMAGE_INCONCLUSIVE
+    runner.saw_inconclusive_image |= inconclusive_image
     if image.failure in (
         TARGET_IMAGE_CANCELLED,
         TARGET_IMAGE_DEADLINE_REACHED,
@@ -500,8 +510,6 @@ function (runner::_CompiledAttemptRunner)(
     end
 
     provisional = validation.provisional::ProvisionalAnswer
-    inconclusive_image = image.classification == TARGET_IMAGE_INCONCLUSIVE
-    runner.saw_inconclusive_image |= inconclusive_image
     target = _validation_target(validation)
     target === nothing && throw(
         SolveConfigurationError(
@@ -509,6 +517,22 @@ function (runner::_CompiledAttemptRunner)(
             "accepted candidate validation did not carry a target enclosure",
         ),
     )
+    if inconclusive_image
+        return Observation(
+            proposal.task_id,
+            proposal.configuration_id;
+            canonical_near_feasible=true,
+            canonical_valid=true,
+            target,
+            branch_signature=provisional.branch_signature,
+            verified=false,
+            needs_refinement=true,
+            residual_score=Float64(provisional.canonical_residual_bound),
+            oracle_work=oracle_work[],
+            endpoint=attempt.final,
+            diagnostic=_local_diagnostic(attempt, validation, image, correction),
+        )
+    end
     return Observation(
         proposal.task_id,
         proposal.configuration_id;
@@ -519,7 +543,7 @@ function (runner::_CompiledAttemptRunner)(
         branch_signature=provisional.branch_signature,
         verified=true,
         verified_payload=provisional,
-        needs_refinement=inconclusive_image,
+        needs_refinement=false,
         residual_score=Float64(provisional.canonical_residual_bound),
         oracle_work=oracle_work[],
         endpoint=attempt.final,

@@ -518,7 +518,12 @@ end
         max_actions = 2,
     )
     @test high_order_execution.result.target_image_status == TARGET_IMAGE_UNKNOWN
-    @test length(high_order_execution.result.provisional_answers) == 1
+    @test isempty(high_order_execution.result.provisional_answers)
+    high_order_record = only(high_order_execution.checkpoint.workspace.candidates.history)
+    @test high_order_record.observation.canonical_valid
+    @test !high_order_record.observation.verified
+    @test high_order_record.observation.verified_payload === nothing
+    @test high_order_record.observation.needs_refinement
     @test occursin("TARGET_IMAGE_INCONCLUSIVE", high_order_execution.evidence_json)
 
     multiplicity_compiled = GeoTargetCore.compile_problem(
