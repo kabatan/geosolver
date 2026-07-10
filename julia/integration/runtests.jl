@@ -88,6 +88,7 @@ end
 include(joinpath(@__DIR__, "local_solver_runtests.jl"))
 include(joinpath(@__DIR__, "search_runtests.jl"))
 include(joinpath(@__DIR__, "protocol_runtests.jl"))
+include(joinpath(@__DIR__, "sdk_quickstart_runtests.jl"))
 include(joinpath(@__DIR__, "compiler_runtests.jl"))
 include(joinpath(@__DIR__, "proposal_engine_runtests.jl"))
 include(joinpath(@__DIR__, "candidate_validation_runtests.jl"))

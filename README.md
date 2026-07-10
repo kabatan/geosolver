@@ -19,8 +19,17 @@ promoted only through preregistered experiments.
 
 ## Current status
 
-Bootstrap/M0. The public ABI and vertical slice are under construction. No
-solver-completeness claim is made yet.
+Research preview. The public Julia solve path, open-world plugin ABI, Python
+canonical problem builder/validator, deterministic proposal/search loop,
+independent candidate replay and checkpoint/resume protocol are implemented and
+covered by cross-language tests. Algorithm selection and robustness promotion
+continue through preregistered experiments. No solver-completeness claim is
+made: ordinary numerical results remain finite observations, not a proof that
+all target values were found.
+
+Start with the executable [SDK and plugin quickstart](docs/SDK_AND_PLUGIN_QUICKSTART.md).
+It shows a plugin-private differentiable geometric object, Python problem
+authoring, registry validation, evaluation and the Julia CLI solve handoff.
 
 ## Repository map
 
@@ -35,6 +44,20 @@ scripts/                   Reproducible developer and CI entry points
 ```
 
 Operational protocol: [checkpoint and resume](docs/operations/CHECKPOINTS.md).
+
+## Source-tree commands
+
+The Python `geotarget` command authors and validates protocol documents; it
+does not launch Julia. The Julia application entry point is explicit:
+
+```powershell
+uv run --project python geotarget validate problem.json
+julia +1.12.6 --startup-file=no --history-file=no --project=julia julia/app/geotarget.jl solve problem.json --options options.json --evidence evidence.json
+```
+
+The default Julia application allowlists only the built-in geometry plugin.
+Custom applications inject a frozen registry as demonstrated by the
+quickstart. `worker_count > 1` is not available in the production runner yet.
 
 ## License
 

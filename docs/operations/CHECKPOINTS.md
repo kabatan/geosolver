@@ -7,18 +7,22 @@ not part of the format.
 
 ## CLI
 
-A normal solve remains compatible:
+A normal source-tree solve uses the Julia application entry point:
 
 ```text
-geotarget solve problem.json --options options.json --evidence evidence.json
+julia +1.12.6 --project=julia julia/app/geotarget.jl solve problem.json --options options.json --evidence evidence.json
 ```
 
 To stop at a deterministic action boundary and write the resulting snapshot:
 
 ```text
-geotarget solve problem.json --options options.json --evidence prefix-evidence.json \
+julia +1.12.6 --project=julia julia/app/geotarget.jl solve problem.json --options options.json --evidence prefix-evidence.json \
   --max-actions 32 --checkpoint-out checkpoint.json
 ```
+
+The Python command named `geotarget` does not currently transport solve
+requests to Julia. A packaged application may expose the same arguments under
+its own launcher.
 
 To resume, set `checkpoint.path` and its exact `environment_lock` in the
 `geotarget.solve-options/v1` document, then invoke the normal solve command.
@@ -45,10 +49,10 @@ candidate views and seen-task membership are reconstructed and checked from
 history. Corrupt event sequences, impossible scheduler counters, inconsistent
 budgets and unknown references are rejected.
 
-Only production checkpoint payload types are accepted. Adding a custom plugin
-does not extend the checkpoint decoder or install executable code; plugins must
-continue to produce the existing typed `Proposal`, `Observation` and
-`ProvisionalAnswer` state.
+Only built-in protocol payload types are accepted. Adding a custom plugin does
+not extend the checkpoint decoder or install executable code; plugin execution
+must continue to produce the existing typed proposal, observation and answer
+state.
 
 ## Deterministic equivalence boundary
 
