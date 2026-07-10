@@ -200,3 +200,14 @@ metamorphic disagreement independently fails the S3 card. Consequently S3 is
 rejected as `EVID-18` / `NEG-012`; no retuning, locked inspection, or product
 connection is permitted. A bordered-nullspace S4 study must start from a new
 frozen development gate.
+
+That new gate is now frozen in
+`research/experiments/EXP-SINGULAR-001/s4-preregistration.json`, before S4 input
+materialization. It makes the formerly generic S4 label concrete as a C2
+range/nullspace two-step iteration based on Shen--Ypma's stable-nullspace
+conditions and Lee--Li--Zhi's projected second-derivative correction. The gate
+requires an independently differentiated analytic control, one global
+64-iteration ledger, stable singular-value gaps and subspace angles, and zero
+promotion on higher-depth singularities, manifolds, nonroots and regular close
+roots. This preregistration is not S4 evidence: no S4 development or locked
+input has yet been materialized and no product path is connected.
