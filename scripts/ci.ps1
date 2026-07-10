@@ -53,8 +53,29 @@ if ($LASTEXITCODE -ne 0) { throw "mypy failed." }
 & uv run --project (Join-Path $Root "python") pytest (Join-Path $Root "python\tests")
 if ($LASTEXITCODE -ne 0) { throw "pytest failed." }
 
-if ($Tier -eq "Nightly") {
-    Write-Host "Nightly property/fuzz suites are not implemented yet."
+$Qa02Runner = Join-Path $Root "julia\qa\run_qa02.jl"
+if ($Tier -eq "Smoke") {
+    $Qa02Arguments = @(
+        "--graph-evaluations", "20",
+        "--solve-executions", "4",
+        "--skip-isolation"
+    )
+} elseif ($Tier -eq "Pr") {
+    $Qa02Arguments = @(
+        "--graph-evaluations", "60",
+        "--solve-executions", "20",
+        "--skip-isolation"
+    )
+} else {
+    $Qa02Arguments = @(
+        "--graph-evaluations", "10000",
+        "--solve-executions", "1000",
+        "--require-nightly-minimum"
+    )
 }
+& julia +1.12.6 --startup-file=no --history-file=no `
+    "--project=$JuliaProject" `
+    $Qa02Runner @Qa02Arguments
+if ($LASTEXITCODE -ne 0) { throw "QA-02 deterministic fuzz/metamorphic suite failed." }
 
 Write-Host "GeoTarget CI tier '$Tier': OK"
