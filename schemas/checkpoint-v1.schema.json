@@ -240,6 +240,84 @@
         "digest": {"$ref": "#/$defs/sha256"}
       }
     },
+    "exactIntegerString": {
+      "type": "string",
+      "pattern": "^(0|-?[1-9][0-9]*)$"
+    },
+    "positiveExactIntegerString": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*$"
+    },
+    "exactRational": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["numerator", "denominator"],
+      "properties": {
+        "numerator": {"$ref": "#/$defs/exactIntegerString"},
+        "denominator": {"$ref": "#/$defs/positiveExactIntegerString"}
+      }
+    },
+    "rationalInterval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lower", "upper"],
+      "properties": {
+        "lower": {"$ref": "#/$defs/exactRational"},
+        "upper": {"$ref": "#/$defs/exactRational"}
+      }
+    },
+    "algebraicIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["coefficients", "isolating_interval", "real_root_index"],
+      "properties": {
+        "coefficients": {
+          "type": "array",
+          "minItems": 2,
+          "items": {"$ref": "#/$defs/exactIntegerString"}
+        },
+        "isolating_interval": {"$ref": "#/$defs/rationalInterval"},
+        "real_root_index": {"type": "integer", "minimum": 1}
+      }
+    },
+    "configurationCertificate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["problem_hash", "configuration_hash", "artifact"],
+      "properties": {
+        "problem_hash": {"$ref": "#/$defs/sha256"},
+        "configuration_hash": {"$ref": "#/$defs/sha256"},
+        "artifact": {"$ref": "#/$defs/artifact"}
+      }
+    },
+    "targetCertificate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["problem_hash", "identity_hash", "artifact"],
+      "properties": {
+        "problem_hash": {"$ref": "#/$defs/sha256"},
+        "identity_hash": {"$ref": "#/$defs/sha256"},
+        "artifact": {"$ref": "#/$defs/artifact"}
+      }
+    },
+    "exactAnswer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "identity", "approximation", "branch_signature",
+        "configuration_certificate", "target_certificate"
+      ],
+      "properties": {
+        "identity": {"$ref": "#/$defs/algebraicIdentity"},
+        "approximation": {"$ref": "#/$defs/typedReal"},
+        "branch_signature": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/branchDecision"}
+        },
+        "configuration_certificate": {"$ref": "#/$defs/configurationCertificate"},
+        "target_certificate": {"$ref": "#/$defs/targetCertificate"}
+      }
+    },
     "validationEvidence": {
       "type": "object",
       "additionalProperties": false,
@@ -305,6 +383,15 @@
           "properties": {
             "kind": {"const": "provisional_answer"},
             "value": {"$ref": "#/$defs/provisionalAnswer"}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "value"],
+          "properties": {
+            "kind": {"const": "exact_answer"},
+            "value": {"$ref": "#/$defs/exactAnswer"}
           }
         }
       ]

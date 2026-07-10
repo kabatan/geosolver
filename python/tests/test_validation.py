@@ -2,10 +2,13 @@ from __future__ import annotations
 
 import base64
 import hashlib
+import json
 from copy import deepcopy
 from pathlib import Path
 
 import pytest
+from jsonschema import Draft202012Validator
+from jsonschema.exceptions import ValidationError
 from test_model import build_problem
 
 from geotarget import ProtocolValidationError, parse_json, validate_document
@@ -113,6 +116,60 @@ def test_bundled_schemas_are_byte_identical_to_canonical_sources() -> None:
     repository = Path(__file__).resolve().parents[2] / "schemas"
     for filename in SCHEMA_FILES.values():
         assert (bundled / filename).read_bytes() == (repository / filename).read_bytes()
+
+
+def test_checkpoint_verified_payload_schema_accepts_exact_answers() -> None:
+    schema = json.loads(
+        (schema_directory() / "checkpoint-v1.schema.json").read_text(encoding="utf-8")
+    )
+    payload_bytes = b"{}"
+    artifact = {
+        "scheme": "literal_linear_target_v1",
+        "media_type": "application/json",
+        "payload_base64": base64.b64encode(payload_bytes).decode("ascii"),
+        "digest": "sha256:" + hashlib.sha256(payload_bytes).hexdigest(),
+    }
+    digest = "sha256:" + "1" * 64
+    payload = {
+        "kind": "exact_answer",
+        "value": {
+            "identity": {
+                "coefficients": ["-3", "2"],
+                "isolating_interval": {
+                    "lower": {"numerator": "1", "denominator": "2"},
+                    "upper": {"numerator": "5", "denominator": "2"},
+                },
+                "real_root_index": 1,
+            },
+            "approximation": {
+                "kind": "binary_float",
+                "type": "Float64",
+                "bits": "3ff8000000000000",
+            },
+            "branch_signature": [],
+            "configuration_certificate": {
+                "problem_hash": digest,
+                "configuration_hash": "sha256:" + "2" * 64,
+                "artifact": artifact,
+            },
+            "target_certificate": {
+                "problem_hash": digest,
+                "identity_hash": "sha256:" + "3" * 64,
+                "artifact": artifact,
+            },
+        },
+    }
+    payload_schema = {
+        "$schema": schema["$schema"],
+        "$defs": schema["$defs"],
+        "$ref": "#/$defs/verifiedPayload",
+    }
+    validator = Draft202012Validator(payload_schema)
+    validator.validate(payload)
+
+    payload["kind"] = "provisional_answer"
+    with pytest.raises(ValidationError):
+        validator.validate(payload)
 
 
 def valid_manifest() -> dict[str, object]:

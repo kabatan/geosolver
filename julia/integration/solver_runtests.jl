@@ -206,13 +206,49 @@ end
         evidence_path=destination,
     )
     @test execution.loop_status == GeoTargetCore.LOOP_PAUSED
-    @test length(execution.result.provisional_answers) == 1
-    answer = only(execution.result.provisional_answers)
-    @test answer.target.lower <= BigFloat(3.5) <= answer.target.upper
+    @test isempty(execution.result.provisional_answers)
+    @test length(execution.result.exact_answers) == 1
+    answer = only(execution.result.exact_answers)
+    @test Tuple(coefficient.decimal for coefficient in answer.identity.coefficients) ==
+          ("-7", "2")
+    @test answer.approximation == 3.5
+    @test answer.configuration_certificate.problem == answer.target_certificate.problem
+    @test answer.target_certificate.identity == GeoTargetBase._identity_hash(answer.identity)
+    @test encode_solve_result_json(decode_solve_result_json(
+        encode_solve_result_json(execution.result),
+    )) == encode_solve_result_json(execution.result)
+
+    checkpoint_source = encode_checkpoint_json(SolveCheckpointArtifact(execution))
+    checkpoint = decode_checkpoint_json(checkpoint_source)
+    @test encode_checkpoint_json(checkpoint) == checkpoint_source
+    resumed = solve_execution(
+        constant_problem(),
+        registry;
+        options=short_options(),
+        max_actions=0,
+        checkpoint,
+    )
+    @test isempty(resumed.result.provisional_answers)
+    @test length(resumed.result.exact_answers) == 1
+    resumed_answer = only(resumed.result.exact_answers)
+    @test typeof(resumed_answer.approximation) === typeof(answer.approximation)
+    @test resumed_answer.approximation == answer.approximation
+    @test resumed_answer.target_certificate.identity == answer.target_certificate.identity
+
     @test execution.result.evidence_log.location == abspath(destination)
     @test read(destination, String) == execution.evidence_json
     @test content_hash(read(destination)) == execution.result.evidence_log.content
     rm(destination; force=true)
+
+    validated = solve_execution(
+        constant_problem(),
+        registry;
+        options=short_options(answer_level=:validated),
+    )
+    @test isempty(validated.result.exact_answers)
+    @test length(validated.result.provisional_answers) == 1
+    provisional = only(validated.result.provisional_answers)
+    @test provisional.target.lower <= BigFloat(3.5) <= provisional.target.upper
 end
 
 function _checkpoint_trace(execution::SolveExecution)

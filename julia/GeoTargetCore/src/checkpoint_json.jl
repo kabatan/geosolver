@@ -467,22 +467,75 @@ function _decode_checkpoint_provisional(raw, path)
     ))
 end
 
+function _checkpoint_exact_document(answer::ExactAnswer, path)
+    return Dict{String,Any}(
+        "identity" => _identity_document(answer.identity),
+        "approximation" => _checkpoint_real_document(
+            answer.approximation,
+            string(path, ".approximation"),
+        ),
+        "branch_signature" => _branch_document(answer.branch_signature),
+        "configuration_certificate" =>
+            _configuration_certificate_document(answer.configuration_certificate),
+        "target_certificate" => _target_certificate_document(answer.target_certificate),
+    )
+end
+
+function _decode_checkpoint_exact(raw, path)
+    object = _object(
+        raw,
+        (
+            "identity",
+            "approximation",
+            "branch_signature",
+            "configuration_certificate",
+            "target_certificate",
+        );
+        path,
+    )
+    return _construct(path, () -> ExactAnswer(
+        _decode_identity(object["identity"], string(path, ".identity")),
+        _decode_checkpoint_real(object["approximation"], string(path, ".approximation")),
+        _decode_branch_signature(
+            object["branch_signature"],
+            string(path, ".branch_signature"),
+        ),
+        _decode_configuration_certificate(
+            object["configuration_certificate"],
+            string(path, ".configuration_certificate"),
+        ),
+        _decode_target_certificate(
+            object["target_certificate"],
+            string(path, ".target_certificate"),
+        ),
+    ))
+end
+
 function _checkpoint_payload_document(payload, path)
     payload === nothing && return nothing
-    payload isa ProvisionalAnswer ||
-        _protocol_error(path, "only ProvisionalAnswer verified payloads are checkpointable")
-    return Dict{String,Any}(
-        "kind" => "provisional_answer",
-        "value" => _checkpoint_provisional_document(payload, string(path, ".value")),
-    )
+    if payload isa ProvisionalAnswer
+        return Dict{String,Any}(
+            "kind" => "provisional_answer",
+            "value" => _checkpoint_provisional_document(payload, string(path, ".value")),
+        )
+    elseif payload isa ExactAnswer
+        return Dict{String,Any}(
+            "kind" => "exact_answer",
+            "value" => _checkpoint_exact_document(payload, string(path, ".value")),
+        )
+    end
+    _protocol_error(path, "unsupported verified payload type $(typeof(payload))")
 end
 
 function _decode_checkpoint_payload(raw, path)
     raw === nothing && return nothing
     object = _object(raw, ("kind", "value"); path)
-    _string(object["kind"], string(path, ".kind")) == "provisional_answer" ||
-        _protocol_error(string(path, ".kind"), "unknown verified payload kind")
-    return _decode_checkpoint_provisional(object["value"], string(path, ".value"))
+    kind = _string(object["kind"], string(path, ".kind"))
+    kind == "provisional_answer" &&
+        return _decode_checkpoint_provisional(object["value"], string(path, ".value"))
+    kind == "exact_answer" &&
+        return _decode_checkpoint_exact(object["value"], string(path, ".value"))
+    _protocol_error(string(path, ".kind"), "unknown verified payload kind")
 end
 
 function _checkpoint_observation_document(observation::Observation, path)

@@ -588,6 +588,14 @@ function _provisional_answers(store::CandidateStore)
     return Tuple(answers)
 end
 
+function _exact_answers(store::CandidateStore)
+    answers = ExactAnswer[]
+    for verified in verified_answers(store), payload in verified.payloads
+        payload isa ExactAnswer && push!(answers, payload)
+    end
+    return Tuple(answers)
+end
+
 function _finish_execution(
     context::ExecutionContext,
     search::SearchLoopResult;
@@ -599,13 +607,14 @@ function _finish_execution(
     location = evidence_path === nothing ?
                "memory:$(string(digest))" : _write_evidence(evidence_path, evidence)
     provisional = _provisional_answers(context.workspace.candidates)
+    exact = _exact_answers(context.workspace.candidates)
     target_status = if target_image_override !== nothing
         target_image_override
     else
-        isempty(provisional) ? TARGET_IMAGE_UNKNOWN : TARGET_FINITE_OBSERVED
+        isempty(provisional) && isempty(exact) ? TARGET_IMAGE_UNKNOWN : TARGET_FINITE_OBSERVED
     end
     result = SolveResult(
-        (),
+        exact,
         provisional,
         _loop_search_status(search.status),
         target_status,
@@ -616,7 +625,106 @@ function _finish_execution(
     return SolveExecution(result, evidence, search.checkpoint, search.status)
 end
 
-function _constant_search!(context, compiled, options)
+function _literal_target_node(problem::ProblemSpecV1)
+    for node in problem.graph
+        node.id == problem.target || continue
+        return node isa LiteralNode ? node : nothing
+    end
+    return nothing
+end
+
+function _exact_literal_rational(value)
+    value isa Bool && return nothing
+    value isa Real && isfinite(value) || return nothing
+    return try
+        Rational{BigInt}(value)
+    catch error
+        error isa Union{ArgumentError,InexactError,MethodError,OverflowError} || rethrow()
+        nothing
+    end
+end
+
+function _rational_certificate_document(value::Rational{BigInt})
+    return Dict{String,Any}(
+        "denominator" => string(denominator(value)),
+        "numerator" => string(numerator(value)),
+    )
+end
+
+function _exact_constant_answer(
+    compiled::CompiledProblem,
+    validation::CandidateValidationResult,
+    options::SolveOptions,
+)
+    options.answer_level == ANSWER_EXACT_IF_AVAILABLE || return nothing
+    isempty(compiled.problem.variables) || return nothing
+    isempty(compiled.problem.relations) || return nothing
+    isempty(compiled.problem.guards) || return nothing
+    isempty(compiled.problem.domains) || return nothing
+    isempty(validation.canonical_observation.branches) || return nothing
+    literal = _literal_target_node(compiled.problem)
+    literal === nothing && return nothing
+    rational = _exact_literal_rational(literal.value)
+    rational === nothing && return nothing
+
+    numerator_value = numerator(rational)
+    denominator_value = denominator(rational)
+    lower = rational - 1
+    upper = rational + 1
+    identity = AlgebraicTargetIdentity(
+        (-numerator_value, denominator_value),
+        RationalInterval(lower, upper),
+        1,
+    )
+    configuration_payload = canonical_json(Dict{String,Any}(
+        "configuration" => string(validation.configuration),
+        "constraint_count" => 0,
+        "problem" => string(validation.problem),
+        "schema" => "geotarget.literal-configuration-certificate/v1",
+    ))
+    target_payload = canonical_json(Dict{String,Any}(
+        "isolating_interval" => Dict{String,Any}(
+            "lower" => _rational_certificate_document(lower),
+            "upper" => _rational_certificate_document(upper),
+        ),
+        "polynomial_ascending" => Any[string(-numerator_value), string(denominator_value)],
+        "problem" => string(validation.problem),
+        "real_root_index" => 1,
+        "schema" => "geotarget.literal-linear-target-certificate/v1",
+        "target" => _rational_certificate_document(rational),
+    ))
+    configuration_certificate = ConfigurationValidityCertificate(
+        validation.problem,
+        validation.configuration,
+        CertificateArtifact(
+            "literal_configuration_v1",
+            configuration_payload;
+            media_type="application/json",
+        ),
+    )
+    target_certificate = TargetIdentityCertificate(
+        validation.problem,
+        identity,
+        CertificateArtifact(
+            "literal_linear_target_v1",
+            target_payload;
+            media_type="application/json",
+        ),
+    )
+    return ExactAnswer(
+        identity,
+        literal.value,
+        (),
+        configuration_certificate,
+        target_certificate,
+    )
+end
+
+function _constant_search!(
+    context::ExecutionContext,
+    compiled::CompiledProblem,
+    options::SolveOptions,
+)
     if Float64(context.clock()) >= context.deadline
         return _finish_search(context, LOOP_DEADLINE_REACHED)
     end
@@ -627,18 +735,26 @@ function _constant_search!(context, compiled, options)
     _record_charge!(context, BudgetCharge(proposals=1))
     record_event!(context.events, EVENT_PROPOSED, proposal)
     validation = validate_candidate(compiled, Real[]; options=options._validation)
+    exact = validation.accepted ? _exact_constant_answer(compiled, validation, options) : nothing
+    payload = exact === nothing ? validation.provisional : exact
     target = validation.accepted ? _validation_target(validation) : nothing
+    target_identity = if !validation.accepted
+        nothing
+    elseif exact === nothing
+        "constant/$(string(validation.configuration))"
+    else
+        "exact/$(string(exact.target_certificate.identity))"
+    end
     observation = Observation(
         1,
         1;
         canonical_near_feasible=validation.accepted,
         canonical_valid=validation.accepted,
         target,
-        target_identity=validation.accepted ?
-                        "constant/$(string(validation.configuration))" : nothing,
+        target_identity,
         branch_signature=validation.accepted ? validation.provisional.branch_signature : (),
         verified=validation.accepted,
-        verified_payload=validation.accepted ? validation.provisional : nothing,
+        verified_payload=validation.accepted ? payload : nothing,
         residual_score=validation.accepted ? Float64(validation.provisional.canonical_residual_bound) : Inf,
         oracle_work=validation.oracle_work,
         endpoint=(),

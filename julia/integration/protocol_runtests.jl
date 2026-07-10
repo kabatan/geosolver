@@ -870,7 +870,9 @@ end
             stderr = IOBuffer(),
         ) == 0
         result = GeoTargetCore.decode_solve_result_json(String(take!(output)))
-        @test length(result.provisional_answers) == 1
+        @test isempty(result.provisional_answers)
+        @test length(result.exact_answers) == 1
+        @test string(only(result.exact_answers).approximation) == "1.5"
         @test result.environment_lock.graph ==
               GeoTargetCore.problem_hash(problem, PROBLEM_REGISTRY)
     end
