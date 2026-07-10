@@ -40,3 +40,14 @@ with an explicit C2 range/nullspace two-step map and an independently
 differentiated analytic control. Higher-depth singularities, manifolds,
 nonroots and regular close roots are mandatory non-promotion controls. S4 is
 still product-disconnected and has no locked inputs.
+
+`s4-protocol-amendment-a1.json` closes all numerical choices before input
+materialization. `src/s4_inputs.jl` is input-only: it defines the 12 groups and
+the exact three representations plus isolated analytic Jacobian and
+second-directional fixtures,
+but deliberately defines no `run_s4`, route, two-step map or evidence. The
+one-shot `prepare_s4_development.jl` refuses to run after candidate/control
+source exists and refuses to overwrite a frozen manifest. Candidate inputs do
+not embed Gold: all isolated configurations (including both regular-fold
+roots) and targets are written to the separately hashed, analysis-only
+`s4-development-gold.json`.
