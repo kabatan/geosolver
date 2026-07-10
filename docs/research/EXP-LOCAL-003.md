@@ -123,6 +123,12 @@ and ERT reduction strictly `> 0`. At least three families must count. These two
 positivity tests are strict even though all other frozen threshold equalities
 pass.
 
+Every primary family is critical: `SCALE-LADDER`, `CURVED-CHAIN`,
+`NEAR-RANK-DEFICIENT`, `REDUNDANT-OVERDETERMINED`,
+`TANGENT-CIRCLE-LINE`, `MULTIROOT-WARPED`, `STRICT-GUARD-BOUNDARY`, and
+`OPAQUE-TRANSCENDENTAL-C0`. No one of these eight may have descriptive recall
+delta below -0.02 at a mandatory prefix.
+
 Each start has hard caps of 250 local iterations and 2,000 local evaluations.
 C0 records the `LocalSolveOptions` source hash, both integers, and exact
 binary64 hexadecimal values of residual tolerance, step tolerance,
@@ -131,14 +137,20 @@ Every variant and representation receives identical values and the candidate
 mechanism cannot alter them. The 64 LR/LXR calibration observations are
 separate charged work and do not consume a start's 2,000-evaluation cap.
 
-ERT pools charged work and Gold-valid successes in selected group records and
-is `+Inf` at zero successes. At each prefix 8/16/32, every selected LR/LXR case
-charges one complete 64-observation calibration to that prefix's numerator;
-invalid observations still count and prefixes never amortize one another. L0
-and LX do not run calibration and charge zero. Common C1 point materialization
-is excluded from oracle-work ERT, counted once in the report-only end-to-end
-CPU metric, and therefore never double charged. Failures and full local budgets
-remain charged.
+For case `c`, let `L_c = compiled.logical_evaluation_cost > 0`. A Gold-valid
+start is charged the sum of reported `evaluation_cost` for every base, finite-
+difference, trial, and rejected-step compiled observation, plus one canonical
+replay. A non-Gold-valid start replaces its local sum by `2000*L_c`, then adds
+the canonical replay cost. At each prefix 8/16/32, LR/LXR additionally charge
+the reported costs of exactly 64 calibration observations per case; invalid
+observations still count and prefixes never amortize one another. L0/LX run no
+calibration. ERT pools this numerator and divides by Gold-valid starts, becoming
+`+Inf` when none succeeds.
+
+Factorization, compilation, allocations, input generation, and assessor-only
+Gold matching receive no invented oracle-work conversion. They are counted
+exactly once in process/end-to-end CPU and host-valid wall metrics. Common C1
+point materialization is therefore reported but never double charged.
 
 For reduction, let `B` be L0 ERT and `C` candidate ERT; finite `B` is strictly
 positive. The frozen extended-real result is `1-C/B` for finite/finite, `1` for
@@ -154,6 +166,13 @@ Nearest-rank items 5,000 and 95,000 are the one-sided 95% lower/upper bounds;
 all threshold comparisons are inclusive except the two explicitly strict
 family-positivity tests. Recall thresholds are absolute probability-point
 differences, while ERT thresholds are relative fractions.
+
+Family ordinals are the eight critical IDs in the order listed above. Each
+stage persists one byte stream: ASCII `GTLOCAL3BOOT1`, NUL, stage byte `D`/`L`,
+big-endian UInt32 values `(100000, 8, G)`, then UInt8 indexes in
+replicate-major, family-major, draw-minor order, where `G=2` for development
+and `G=4` for locked validation. SHA-256 covers header and payload. The same
+indexes pair every candidate, metric, and prefix.
 
 If multiple candidates pass, recall-path candidates outrank efficiency-only
 candidates. Recall-path ordering maximizes lower recall bound then minimizes
@@ -174,6 +193,8 @@ locked validation against L0, with no reselection.
 
 A C1–C3 protocol/infrastructure failure is terminal and authorizes no retry.
 Only a valid passing C3 can materialize 96 fresh locked cases (eight families ×
-four new latent groups × three representations). Replacement is allowed only
-for pre-outcome input invalidity. Once any locked outcome is visible, failure
-stands: no replacement, retry, reselection or threshold change.
+four new latent groups × three representations). Locked validation repeats the
+physical candidate/assessor split and one-shot seal/open sequence, running only
+the frozen champion against L0. Replacement is allowed only for pre-outcome
+input invalidity. Once any locked outcome is visible, failure stands: no
+replacement, retry, reselection or threshold change.

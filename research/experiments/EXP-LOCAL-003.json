@@ -7,7 +7,7 @@
   "failure_ids": ["F2", "F3", "F5", "F6", "F9", "F17"],
   "baseline_id": "RB0-IID-LMQR-1",
   "objective": "Test bounds-based variable coordinates and Gold-independent residual equilibration as local-model transformations while preserving the public black-box DSL, semantic residuals, canonical validation and target truth.",
-  "hypothesis": "Bounds midpoint/half-width coordinates and a frozen upper-quartile residual scale will improve fixed-start Gold recall or charged expected work on ill-scaled systems without changing semantic convergence or introducing representation-dependent decisions.",
+  "hypothesis": "Bounds midpoint/half-width coordinates and a frozen upper-quartile residual scale will improve fixed-start Gold recall or charged expected work on ill-scaled systems without changing semantic convergence or introducing decisions that depend on the three primary semantic-equivalent representations.",
   "scope": {
     "included": [
       "one-to-sixteen-variable C0 black-box square and overdetermined systems whose every physical bound is safe finite binary64 l < u with finite midpoint and positive half-width",
@@ -158,7 +158,7 @@
     "pairing": "Each of eight families has two latent groups and three semantic-equivalent representations, giving 48 cases. All variants share each case, start order, calibration block, local budget and canonical replay; representation replicates remain inside their latent-group cluster.",
     "tuning_round_limit": 0,
     "freeze_rule": "There is no tuning. Formulae, thresholds, case descriptors, order statistics, counter domains/seeds, fallbacks, budgets, bootstrap, champion ordering and assessment code freeze at C0 before the one-shot C1 materialization. A protocol or infrastructure failure at C1, C2 or C3 is terminal for this experiment and authorizes no retry.",
-    "locked_validation_rule": "Only a valid passing C3 may materialize four new latent groups per family with the same three primary representations, giving 96 locked cases. Replacement is allowed only for mechanically detected pre-outcome input invalidity before any locked outcome is visible. Once any locked outcome is visible, every failure stands: no replacement, retry, reselection or threshold change is allowed.",
+    "locked_validation_rule": "Only a valid passing C3 may materialize four new latent groups per family with the same three primary representations, giving 96 locked cases. Locked validation repeats the C1 physical split and C3 one-shot candidate-output seal followed by a separate assessor process, and runs only the frozen development champion against L0. Replacement is allowed only for mechanically detected pre-outcome input invalidity before any locked outcome is visible. Once any locked outcome is visible, every failure stands: no replacement, retry, reselection or threshold change is allowed.",
     "development_instances": 48,
     "locked_instances": 96,
     "notes": [
@@ -173,6 +173,8 @@
       "For ERT reduction let B be L0 ERT and C candidate ERT, with every finite B strictly positive. The frozen extended-real rule is 1-C/B when both are finite, 1 when B=+Inf and C is finite, -Inf when B is finite and C=+Inf, and 0 when both are +Inf. The corresponding candidate/L0 ratio is C/B when finite, 0 for B=+Inf with finite C, and +Inf whenever C=+Inf, including +Inf/+Inf, so the indeterminate case cannot pass the overhead gate. Numeric JSON forbids nonstandard numeric literals and encodes extended values as the tagged strings \"+Inf\" and \"-Inf\".",
       "Inference uses exactly 100000 deterministic paired family-stratified bootstrap replicates. Within each of eight families, resample that stage's latent groups with replacement, preserving each selected group's paired representations/starts. The persisted bootstrap index bytes and SHA-256 are authority.",
       "Bootstrap draw H=SHA-256(domain || seed || stage-byte || uint32be(replicate) || uint32be(family) || uint32be(draw) || uint32be(rejection)); stage-byte is ASCII D for development or L for locked, all indexes are zero-based, G is 2 development or 4 locked groups per family, n is the first uint64be word, limit=2^64-(2^64 mod G), n>=limit retries with rejection+1, otherwise index=n mod G. Domain is NUL-terminated ASCII geotarget.exp-local-003.bootstrap.counter.v1 and seed is SHA-256 of ASCII EXP-LOCAL-003-BOOTSTRAP-SEED-V1.",
+      "Bootstrap family ordinals are fixed as 0 SCALE-LADDER, 1 CURVED-CHAIN, 2 NEAR-RANK-DEFICIENT, 3 REDUNDANT-OVERDETERMINED, 4 TANGENT-CIRCLE-LINE, 5 MULTIROOT-WARPED, 6 STRICT-GUARD-BOUNDARY and 7 OPAQUE-TRANSCENDENTAL-C0. The same resample indexes pair every candidate, metric and prefix.",
+      "Persist one bootstrap-index file per stage. Its bytes are the 13 ASCII bytes GTLOCAL3BOOT1, one NUL byte, one ASCII stage byte D or L, uint32be(100000), uint32be(8), uint32be(G), then a headerless UInt8 payload ordered replicate outermost, family ordinal next and draw innermost. Payload shape is (100000,8,G), each byte is the selected within-family group index 0..G-1, and SHA-256 covers the complete header plus payload.",
       "A frozen replacement namespace may be consumed only inside the C1 or locked one-shot materialization transaction when the materializer detects a preregistered input invariant failure before sealing and before any outcome exists. It is recorded as input replacement, not an execution retry; no sealed input is replaced.",
       "A one-sided 95 percent lower bound is sorted bootstrap item 5000 and upper bound is item 95000, both one-indexed nearest-rank among 100000 replicates. Every gate threshold comparison is inclusive so exact equality passes, except the two explicitly strict family-positivity tests recall delta >0 and ERT reduction >0.",
       "If multiple candidates pass development, candidates passing the recall path outrank efficiency-only candidates. Recall-path order is descending lower recall bound, ascending charged ERT, then LX before LR before LXR. Efficiency-path order is descending lower ERT-reduction bound, descending recall effect, then the same simplicity order. This lexicographic rule selects exactly one candidate without tuning.",
@@ -183,6 +185,8 @@
       "Any nonfinite q=z/a is EVAL_NONFINITE and a model failure. It never satisfies semantic convergence, never replaces the last finite semantic observation and never becomes a candidate endpoint.",
       "The additional a_i and q_i never enter RelationObservation, protocol wire or checkpoints. Finite differences evaluate unchanged RelationObservation values and form J_z for z; only after differencing is J_q=diag(1/a)J_z formed. q and J_q are used only for model merit, LM step and predicted-versus-actual step acceptance; internal termination/convergence and endpoint replay use z. No finite-difference observation is rewritten and LX changes only internal coordinates before returning physical coordinates.",
       "At C0, capture the LocalSolveOptions source hash and the exact constructor result: integer max_iterations/max_evaluations and binary64 hexadecimal residual_tolerance, step_tolerance, finite_difference_step, initial_damping, damping_increase and damping_decrease. Every variant and representation receives those identical frozen values, and the candidate mechanism may not alter or reinterpret them.",
+      "For primary work let L_c be the positive compiled.logical_evaluation_cost of case c. A Gold-valid start is charged the sum of evaluation_cost over every compiled local observation, including base, finite-difference, trial and rejected-step observations, plus the evaluation_cost of its one evaluate_canonical replay. A non-Gold-valid start replaces that local sum by the full 2000*L_c budget and then adds its canonical-replay evaluation_cost. LR/LXR calibration adds the evaluation_cost of exactly 64 compiled observations per selected case and prefix; L0/LX add zero. The prefix numerator is calibration plus these start charges and ERT divides it by Gold-valid starts.",
+      "Factorization, compilation, allocations, input generation and assessor-only Gold matching have no invented oracle-work conversion. They are included exactly once in the appropriate process_cpu_seconds/end_to_end_cpu_seconds and host-valid wall records, not in primary ERT; rejected-step oracle calls and canonical replay are already included by the primary formula.",
       "The opaque unknown-plugin Float64-only C0 path is mandatory. Neither polynomial lowering nor analytic/automatic derivatives may be required by L0, LX, LR or LXR."
     ]
   },
@@ -255,7 +259,14 @@
       "status": "hypothesis",
       "rationale": "Maximum tolerated recall loss for an efficiency claim.",
       "tuning_domain": [0.02],
-      "freeze_rule": "Apply to every mandatory prefix and critical family."
+      "freeze_rule": "Apply to every mandatory prefix and every entry in critical_family_ids."
+    },
+    "critical_family_ids": {
+      "value": ["SCALE-LADDER", "CURVED-CHAIN", "NEAR-RANK-DEFICIENT", "REDUNDANT-OVERDETERMINED", "TANGENT-CIRCLE-LINE", "MULTIROOT-WARPED", "STRICT-GUARD-BOUNDARY", "OPAQUE-TRANSCENDENTAL-C0"],
+      "status": "hypothesis",
+      "rationale": "Forbids hiding a descriptive recall regression in any preregistered primary family.",
+      "tuning_domain": [["SCALE-LADDER", "CURVED-CHAIN", "NEAR-RANK-DEFICIENT", "REDUNDANT-OVERDETERMINED", "TANGENT-CIRCLE-LINE", "MULTIROOT-WARPED", "STRICT-GUARD-BOUNDARY", "OPAQUE-TRANSCENDENTAL-C0"]],
+      "freeze_rule": "The set is exactly all eight synthetic_families in the listed order and cannot be narrowed after outcomes."
     },
     "ert_reduction_fraction": {
       "value": 0.20,
@@ -283,7 +294,7 @@
     "wall_seconds": [60, 180],
     "launch_checkpoints": [8, 16, 32],
     "local_maxiters": 250,
-    "accounting": "Each start has hard caps of 250 local iterations and 2000 local evaluations. At every prefix independently charge exactly one complete 64-observation calibration for each selected LR/LXR case, including invalid calibration observations, plus residual/Jacobian calls, factorization, rejected steps, canonical replay, Gold assessment, compilation, allocations and full failed-start budgets; no prefix amortizes calibration from another prefix. Calibration observations are separate charged work and do not consume the per-start 2000-evaluation cap. L0 and LX perform no calibration and charge zero calibration observations. Primary ERT pools primal-equivalent oracle work and Gold-valid successes in selected latent-group records, using +Inf for zero successes. The common C1 input-point materialization itself is excluded from every variant's oracle-work ERT and counted once in end_to_end_cpu_seconds; process CPU and formal wall are secondary."
+    "accounting": "Each start has hard caps of 250 local iterations and 2000 local evaluations. Primary work follows the frozen L_c formula in design.notes: actual reported evaluation_cost for Gold-valid local observations and canonical replay; 2000*compiled.logical_evaluation_cost plus replay cost for every non-Gold-valid start; and one actual 64-observation calibration for each LR/LXR case at every prefix. L0/LX calibration is zero and prefixes never amortize. Factorization, compilation, allocations, input generation and assessor-only Gold matching are recorded in process/end-to-end CPU and host-valid wall only, with no fabricated oracle-work conversion."
   },
   "seeds": {
     "development_count": 16,
@@ -299,12 +310,12 @@
     "secondary": [
       {
         "id": "charged_ert_to_gold",
-        "definition": "For selected latent-group records, pooled charged primal-equivalent work divided by pooled Gold-valid successes. Each selected LR/LXR case charges its full 64-observation calibration independently at that prefix, including invalid observations; L0/LX charge zero calibration; +Inf applies when no success occurs.",
+        "definition": "For selected latent-group records, the exact design.notes primary-work numerator divided by pooled Gold-valid starts: actual evaluation_cost for successes, full 2000*L_c local budget for failures, canonical replay cost for both, and per-prefix LR/LXR calibration; +Inf applies when no success occurs.",
         "direction": "minimize"
       },
       {
         "id": "end_to_end_cpu_seconds",
-        "definition": "Report-only process CPU for one-shot input preparation, execution and assessment, counting common C1 input-point materialization exactly once; it is not included in oracle-work ERT.",
+        "definition": "Report-only process CPU for one-shot input preparation, compilation, factorization, allocations, execution, canonical replay and assessor-only Gold matching, counting each phase and common C1 materialization exactly once; it is not converted into oracle-work ERT.",
         "direction": "report_only"
       },
       {
@@ -370,7 +381,7 @@
     "mode": "all",
     "criteria": [
       "False-candidate, semantic/wire drift, Gold/identity leak, budget-overrun, primary-representation-disagreement and calibration-audit-failure counts are exactly zero.",
-      "At prefixes 8, 16 and 32, the candidate-minus-L0 overall recall-delta one-sided 95 percent lower bound is at least -0.02, inclusive, and no critical family has a descriptive point delta below -0.02.",
+      "At prefixes 8, 16 and 32, the candidate-minus-L0 overall recall-delta one-sided 95 percent lower bound is at least -0.02, inclusive, and none of the eight exact critical_family_ids has a descriptive point delta below -0.02.",
       "At prefix 32, one candidate either has recall point delta at least 0.05, recall-delta lower bound at least 0.00 and candidate/L0 charged-ERT ratio at most 1.10, or has recall-delta lower bound at least -0.02 and one-sided 95 percent lower bound on relative charged-ERT reduction at least 0.20. Equality passes every comparison.",
       "At prefix 32 the selected candidate has positive_family_count at least three of eight: a recall-path candidate counts only family recall delta >0; an efficiency-only candidate counts only family recall delta >=-0.02 together with family ERT reduction >0. The two >0 comparisons are strict; the count does not replace latent-group inference.",
       "The opaque C0 and strict-guard families pass without analytic/AD capability, family routing or semantic fallback.",
