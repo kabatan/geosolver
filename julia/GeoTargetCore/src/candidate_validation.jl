@@ -198,7 +198,12 @@ function _numeric_enclosure(
     )
     relative_error = type(options.enclosure_relative_error) * abs(center)
     roundoff = if center isa AbstractFloat
-        type(options.roundoff_multiplier) * eps(center)
+        # `eps(BigFloat(0))` is the smallest representable positive BigFloat;
+        # its exponent is near typemin and cannot be projected into the bounded
+        # fixed-decimal wire format. A unit-scale floor is also the conservative
+        # model needed when a computed zero may hide cancellation roundoff.
+        roundoff_reference = max(abs(center), one(center))
+        type(options.roundoff_multiplier) * eps(roundoff_reference)
     else
         zero(center)
     end

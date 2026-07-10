@@ -329,6 +329,38 @@ end
     @test from_attempt.oracle_work == from_attempt.canonical_observation.evaluation_cost
 end
 
+@testset "zero and tiny residual enclosures remain conservative and wire-bounded" begin
+    options = GeoTargetCore.CandidateValidationOptions(precision_bits = 256)
+
+    float_zero = GeoTargetCore._numeric_enclosure(0.0, options)
+    @test float_zero.lower <= 0.0 <= float_zero.upper
+    @test float_zero.lower == -8.0 * eps(1.0)
+    @test float_zero.upper == 8.0 * eps(1.0)
+
+    float_nonzero = GeoTargetCore._numeric_enclosure(4.0, options)
+    @test float_nonzero.lower <= 4.0 <= float_nonzero.upper
+    @test float_nonzero.upper - 4.0 >= 8.0 * eps(4.0)
+
+    setprecision(BigFloat, 256) do
+        unit_roundoff = BigFloat(8) * eps(BigFloat(1))
+        for center in (BigFloat(0), parse(BigFloat, "1e-5000"))
+            enclosure = GeoTargetCore._numeric_enclosure(center, options)
+            @test enclosure.lower <= center <= enclosure.upper
+            @test enclosure.upper - center >= unit_roundoff
+            bound = GeoTargetCore._enclosure_bound(enclosure)
+            decimal = GeoTargetCore._result_number_document(bound, "test.bound")
+            @test ncodeunits(decimal) <= 4096
+            @test GeoTargetCore._protocol_decimal(decimal, "test.bound") isa
+                  GeoTargetCore.ProtocolDecimal
+        end
+
+        nonzero = BigFloat(4)
+        enclosure = GeoTargetCore._numeric_enclosure(nonzero, options)
+        @test enclosure.lower <= nonzero <= enclosure.upper
+        @test enclosure.upper - nonzero >= BigFloat(8) * eps(nonzero)
+    end
+end
+
 @testset "C0-only paths use an explicit independent canonical second pass" begin
     registry = candidate_registry()
     problem = c0_only_problem()
