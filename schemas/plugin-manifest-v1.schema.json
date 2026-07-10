@@ -134,12 +134,13 @@
     "relationSpec": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "signatures", "residual_kernel", "truth_available", "documentation"],
+      "required": ["id", "signatures", "residual_kernel", "truth_available", "truth_policy", "documentation"],
       "properties": {
         "id": {"$ref": "#/$defs/qualifiedSymbol"},
         "signatures": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/signature"}},
         "residual_kernel": {"$ref": "#/$defs/kernel"},
         "truth_available": {"type": "boolean"},
+        "truth_policy": {"enum": ["required", "approximate_zero"]},
         "scale_hint": {"type": "number", "exclusiveMinimum": 0},
         "documentation": {"type": "string"}
       }

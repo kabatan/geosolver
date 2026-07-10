@@ -35,12 +35,12 @@ type_spec(plugin::PluginSpec, id::TypeId) = only(spec for spec in plugin.types i
     plugin = geometry_plugin()
     @test GeoTargetGeometry.abi_version() == v"1.0.0"
     @test plugin.core_abi == v"1.0.0"
-    @test plugin.version == v"0.1.1"
+    @test plugin.version == v"0.1.2"
     @test plugin === geometry_plugin()
     @test string(plugin.id) ==
           "5cba7841-765c-4ef1-987e-27fcb9985e3d/builtin_geometry"
     @test string(plugin.content) ==
-          "sha256:37a31a5b39c6f3d5be5ec4e200f5b6069b43f035f19d7946603b0064ac07e65f"
+          "sha256:819a583438dc13c64bab4f413b559687dc01577bc513b4b64a6f6cba89a50831"
     @test plugin_lock(plugin).content == GEOMETRY_CONTENT_HASH
     @test length(plugin.types) == 5
     @test length(plugin.primitives) == 4

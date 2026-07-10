@@ -114,12 +114,18 @@ struct PrimitiveSpec{S<:Tuple,K}
     end
 end
 
+@enum RelationTruthPolicy::UInt8 begin
+    RELATION_TRUTH_REQUIRED = 0
+    RELATION_TRUTH_APPROXIMATE_ZERO = 1
+end
+
 """An equality relation with separate optimization residual and truth predicate."""
 struct RelationSpec{S<:Tuple,K,T}
     id::PrimitiveId
     signatures::S
     residual_kernel::K
     truth::T
+    truth_policy::RelationTruthPolicy
     scale_hint::Union{Nothing,Float64}
     documentation::String
 
@@ -128,16 +134,24 @@ struct RelationSpec{S<:Tuple,K,T}
         signatures,
         residual_kernel::OperatorKernel;
         truth = nothing,
+        truth_policy::RelationTruthPolicy = RELATION_TRUTH_REQUIRED,
         scale_hint::Union{Nothing,Real} = nothing,
         documentation::AbstractString = "",
     )
         frozen_signatures = _freeze_signatures(signatures)
         frozen_scale = _validate_scale_hint(scale_hint)
+        truth === nothing && truth_policy != RELATION_TRUTH_REQUIRED && throw(
+            InvariantError(
+                :truth_policy_without_predicate,
+                "an approximate truth policy requires an explicit truth predicate",
+            ),
+        )
         return new{typeof(frozen_signatures),typeof(residual_kernel),typeof(truth)}(
             id,
             frozen_signatures,
             residual_kernel,
             truth,
+            truth_policy,
             frozen_scale,
             _documentation(documentation),
         )

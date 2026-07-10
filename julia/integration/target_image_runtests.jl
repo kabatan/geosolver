@@ -66,6 +66,7 @@ function target_image_fixture_plugin()
             (scalar_one,),
             generic_kernel(_zero_residual);
             truth = value -> iszero(value),
+            truth_policy = RELATION_TRUTH_APPROXIMATE_ZERO,
             scale_hint = 1.0,
         ),
         RelationSpec(
@@ -73,6 +74,7 @@ function target_image_fixture_plugin()
             (scalar_two,),
             generic_kernel(_sum_zero_residual);
             truth = (first, second) -> iszero(first + second),
+            truth_policy = RELATION_TRUTH_APPROXIMATE_ZERO,
             scale_hint = 1.0,
         ),
         RelationSpec(
@@ -80,6 +82,7 @@ function target_image_fixture_plugin()
             (scalar_one,),
             generic_kernel(_tiny_zero_residual);
             truth = value -> iszero(value),
+            truth_policy = RELATION_TRUTH_APPROXIMATE_ZERO,
             scale_hint = 1.0,
         ),
     )
@@ -299,6 +302,105 @@ function constant_target_problem()
     )
 end
 
+function high_order_unconstrained_problem()
+    variable = _diagnostic_variable("x", lower = -1.0e-3, upper = 1.0e-3)
+    graph = ConstructionGraph((
+        ReferenceNode(NodeId("x_ref"), variable.id),
+        CallNode(
+            NodeId("square_1"),
+            PrimitiveId(TARGET_IMAGE_FIXTURE_PLUGIN, "square"),
+            (NodeId("x_ref"),),
+        ),
+        CallNode(
+            NodeId("square_2"),
+            PrimitiveId(TARGET_IMAGE_FIXTURE_PLUGIN, "square"),
+            (NodeId("square_1"),),
+        ),
+        CallNode(
+            NodeId("target"),
+            PrimitiveId(TARGET_IMAGE_FIXTURE_PLUGIN, "square"),
+            (NodeId("square_2"),),
+        ),
+    ))
+    return ProblemSpecV1(
+        _diagnostic_locks(),
+        (variable,),
+        graph;
+        target = NodeId("target"),
+    )
+end
+
+function curved_constant_manifold_problem()
+    x = _diagnostic_variable("x")
+    y = _diagnostic_variable("y")
+    graph = ConstructionGraph((
+        ReferenceNode(NodeId("x_ref"), x.id),
+        ReferenceNode(NodeId("y_ref"), y.id),
+        CallNode(
+            NodeId("x_squared"),
+            PrimitiveId(TARGET_IMAGE_FIXTURE_PLUGIN, "square"),
+            (NodeId("x_ref"),),
+        ),
+        CallNode(
+            NodeId("target"),
+            PrimitiveId(TARGET_IMAGE_FIXTURE_PLUGIN, "sum"),
+            (NodeId("y_ref"), NodeId("x_squared")),
+        ),
+        CallNode(
+            NodeId("relation"),
+            PrimitiveId(TARGET_IMAGE_FIXTURE_PLUGIN, "zero"),
+            (NodeId("target"),),
+        ),
+    ))
+    return ProblemSpecV1(
+        _diagnostic_locks(),
+        (x, y),
+        graph;
+        relations = (RelationBinding(NodeId("relation")),),
+        target = NodeId("target"),
+    )
+end
+
+function high_multiplicity_root_problem(offset = 0.03120903309)
+    variable = _diagnostic_variable("x", lower = -1.0, upper = 1.0)
+    graph = ConstructionGraph((
+        ReferenceNode(NodeId("x_ref"), variable.id),
+        LiteralNode(NodeId("offset"), SCALAR_TYPE_ID, offset),
+        CallNode(
+            NodeId("shifted"),
+            PrimitiveId(TARGET_IMAGE_FIXTURE_PLUGIN, "sum"),
+            (NodeId("x_ref"), NodeId("offset")),
+        ),
+        CallNode(
+            NodeId("square_1"),
+            PrimitiveId(TARGET_IMAGE_FIXTURE_PLUGIN, "square"),
+            (NodeId("shifted"),),
+        ),
+        CallNode(
+            NodeId("square_2"),
+            PrimitiveId(TARGET_IMAGE_FIXTURE_PLUGIN, "square"),
+            (NodeId("square_1"),),
+        ),
+        CallNode(
+            NodeId("eighth"),
+            PrimitiveId(TARGET_IMAGE_FIXTURE_PLUGIN, "square"),
+            (NodeId("square_2"),),
+        ),
+        CallNode(
+            NodeId("relation"),
+            PrimitiveId(TARGET_IMAGE_FIXTURE_PLUGIN, "zero"),
+            (NodeId("eighth"),),
+        ),
+    ))
+    return ProblemSpecV1(
+        _diagnostic_locks(),
+        (variable,),
+        graph;
+        relations = (RelationBinding(NodeId("relation")),),
+        target = NodeId("x_ref"),
+    )
+end
+
 @testset "unconstrained first- and second-order target sensitivity" begin
     registry = target_image_registry()
     linear = GeoTargetCore.analyze_target_image(
@@ -315,7 +417,8 @@ end
 
     square_compiled = GeoTargetCore.compile_problem(unconstrained_problem("square"), registry)
     square = GeoTargetCore.analyze_target_image(square_compiled, [0.0])
-    @test square.classification == TARGET_LIKELY_CONTINUOUS
+    @test square.classification == GeoTargetCore.TARGET_IMAGE_INCONCLUSIVE
+    @test square.failure == GeoTargetCore.TARGET_IMAGE_UNRESOLVED_VARIATION
     @test abs(only(square.target_gradient)) <= 1.0e-12
     @test square.nullspace_target_sensitivity <= 1.0e-12
     @test square.max_probe_target_variation >= 1.0e-4 - 1.0e-12
@@ -346,7 +449,8 @@ end
         GeoTargetCore.compile_problem(manifold_problem(constant_target = true), registry),
         [0.0, 0.0],
     )
-    @test constant.classification == GeoTargetCore.TARGET_LOCALLY_CONSTANT_MANIFOLD
+    @test constant.classification == GeoTargetCore.TARGET_IMAGE_INCONCLUSIVE
+    @test constant.failure == GeoTargetCore.TARGET_IMAGE_UNRESOLVED_VARIATION
     @test constant.numerical_rank == 1
     @test constant.nullspace_target_sensitivity <= 1.0e-8
     @test constant.max_probe_target_variation <= 1.0e-8
@@ -378,6 +482,49 @@ end
     @test !dependency_fast_path.linearization_computed
     @test dependency_fast_path.numerical_rank === nothing
     @test dependency_fast_path.sampled_points == 1
+
+    high_order = GeoTargetCore.analyze_target_image(
+        GeoTargetCore.compile_problem(high_order_unconstrained_problem(), registry),
+        [0.0],
+    )
+    @test high_order.classification == GeoTargetCore.TARGET_IMAGE_INCONCLUSIVE
+    @test high_order.failure == GeoTargetCore.TARGET_IMAGE_UNRESOLVED_VARIATION
+    @test high_order.max_probe_target_variation > 0
+
+    curved_constant = GeoTargetCore.analyze_target_image(
+        GeoTargetCore.compile_problem(curved_constant_manifold_problem(), registry),
+        [0.0, 0.0],
+    )
+    @test curved_constant.classification == GeoTargetCore.TARGET_IMAGE_INCONCLUSIVE
+    @test curved_constant.failure == GeoTargetCore.TARGET_IMAGE_UNRESOLVED_VARIATION
+    @test curved_constant.nullspace_target_sensitivity <= 1.0e-8
+    @test curved_constant.max_probe_target_variation ≈
+          curved_constant.max_probe_relation_drift
+
+    high_order_execution = solve_execution(
+        high_order_unconstrained_problem(),
+        registry;
+        options = SolveOptions(preset = :fast, wall_seconds = 60.0, seed = 17),
+        max_actions = 2,
+    )
+    @test high_order_execution.result.target_image_status == TARGET_IMAGE_UNKNOWN
+    @test length(high_order_execution.result.provisional_answers) == 1
+    @test occursin("TARGET_IMAGE_INCONCLUSIVE", high_order_execution.evidence_json)
+
+    multiplicity_compiled = GeoTargetCore.compile_problem(
+        high_multiplicity_root_problem(),
+        registry,
+    )
+    multiplicity_observation = evaluate(multiplicity_compiled, [0.0])
+    @test maximum(abs(relation.scaled) for relation in multiplicity_observation.relations) < 1.0e-12
+    multiplicity_image = GeoTargetCore.analyze_target_image(multiplicity_compiled, [0.0])
+    correction = GeoTargetCore._candidate_root_correction(
+        multiplicity_image,
+        GeoTargetCore.CandidateValidationOptions(),
+    )
+    @test !correction.resolved
+    @test correction.normalized_step > 1.0e-3
+    @test correction.target_step > 1.0e-3
 end
 
 @testset "rank threshold and normalized one-sided bounds are explicit" begin

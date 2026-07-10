@@ -17,6 +17,11 @@ domain; larger exact integers and UInt64 seeds use canonical decimal strings in
 the fields that explicitly allow them. High-precision real strings use fixed
 decimal notation without exponent, trailing fractional zeroes or negative zero.
 
+Plugin relation manifests expose `truth_policy`. `required` is fail-closed;
+`approximate_zero` is an explicit ABI promise that a false exact predicate may
+be tolerated only at a nonzero residual that independently passes the numerical
+residual bound.
+
 The build carries byte-identical generated mirrors under
 `python/src/geotarget/_schemas`. Edit this directory only through schema sync;
 CI rejects drift from the canonical files here.

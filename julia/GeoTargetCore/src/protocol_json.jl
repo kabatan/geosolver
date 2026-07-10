@@ -1430,6 +1430,8 @@ function _operation_document(spec::RelationSpec)
     value = _operation_base(spec)
     value["residual_kernel"] = _kernel_document(spec.residual_kernel)
     value["truth_available"] = spec.truth !== nothing
+    value["truth_policy"] = spec.truth_policy == RELATION_TRUTH_REQUIRED ?
+                            "required" : "approximate_zero"
     spec.scale_hint === nothing || (value["scale_hint"] = spec.scale_hint)
     return value
 end

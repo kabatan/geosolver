@@ -44,6 +44,11 @@ residual_values(observation::OracleObservation) =
 scaled_residual_values(observation::OracleObservation) =
     Tuple(relation.scaled for relation in observation.relations)
 
+function _relation_truth_accepted(truth, raw, policy::RelationTruthPolicy)
+    truth !== false && return true
+    return policy == RELATION_TRUTH_APPROXIMATE_ZERO && !iszero(raw)
+end
+
 function canonical_feasible(observation::OracleObservation; residual_tolerance::Real)
     residual_tolerance >= 0 || throw(ArgumentError("residual_tolerance must be nonnegative"))
     observation.status == EVAL_OK || return false
@@ -51,4 +56,3 @@ function canonical_feasible(observation::OracleObservation; residual_tolerance::
     all(domain -> domain.valid, observation.domains) || return false
     return all(relation -> abs(relation.scaled) <= residual_tolerance, observation.relations)
 end
-

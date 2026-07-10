@@ -445,15 +445,10 @@ function _classify_candidate(
             node = relation.node,
         )
     end
-    for relation in canonical.relations
-        # A pointwise exact predicate such as `a == b` is normally false at a
-        # provisional numerical approximation. It is a hard contradiction at
-        # an exactly zero residual; otherwise the independently bounded raw
-        # residual is the provisional acceptance contract. Discrete validity
-        # belongs in domain/guard/branch channels.
-        relation.truth === false && iszero(relation.raw) && return _diagnostic(
+    for (relation, role) in zip(canonical.relations, compiled.relations)
+        _relation_truth_accepted(relation.truth, relation.raw, role.truth_policy) || return _diagnostic(
             CANDIDATE_RELATION_TRUTH_FAILED,
-            "relation truth predicate rejected an exactly zero canonical residual",
+            "relation truth predicate rejected the canonical configuration under $(role.truth_policy)",
             node = relation.node,
         )
     end

@@ -58,7 +58,7 @@ function candidate_fixture_plugin()
     false_truth = RelationSpec(
         PrimitiveId(CANDIDATE_FIXTURE_PLUGIN, "false_truth"),
         (scalar_signature,),
-        generic_kernel(value -> zero(value));
+        generic_kernel(value -> value * 1.0e-13);
         truth = value -> false,
         scale_hint = 1.0,
     )

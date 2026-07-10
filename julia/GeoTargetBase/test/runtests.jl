@@ -209,6 +209,7 @@ end
           PluginLock(TEST_PLUGIN, v"0.1.0", v"1.0.0", content_hash("plugin"))
     @test plugin.guards[1].default_strict
     @test plugin.relations[1].truth === iszero
+    @test plugin.relations[1].truth_policy == RELATION_TRUTH_REQUIRED
     @test plugin.domains[1].singularity === iszero
     @test plugin.branches[1].candidate_type == POINT_TYPE
     @test_throws InvariantError TypeSpec(SCALAR_TYPE, Float64; encoder = identity)
@@ -218,6 +219,12 @@ end
         (signature,),
         kernel;
         scale_hint = 0,
+    )
+    @test_throws InvariantError RelationSpec(
+        PrimitiveId(TEST_PLUGIN, "truthless_approximation"),
+        (signature,),
+        kernel;
+        truth_policy = RELATION_TRUTH_APPROXIMATE_ZERO,
     )
 
     foreign_primitive = PrimitiveSpec(

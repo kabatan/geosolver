@@ -47,6 +47,7 @@ struct CompiledRelationRole
     slot::Int
     scale::Float64
     truth::Any
+    truth_policy::RelationTruthPolicy
     argument_slots::Tuple
     keyword_slots::Tuple
 end
@@ -637,6 +638,7 @@ function compile_problem(
             slots[binding.node],
             Float64(something(binding.scale_override, spec.scale_hint, 1.0)),
             spec.truth,
+            spec.truth_policy,
             _slot_arguments(node.arguments, slots),
             _slot_keywords(node.keywords, slots),
         )

@@ -66,6 +66,7 @@ function problem_plugin()
         (binary,),
         _kernel(-);
         truth = (left, right) -> left == right,
+        truth_policy = RELATION_TRUTH_APPROXIMATE_ZERO,
         scale_hint = 1,
         documentation = "Equality residual",
     )
@@ -104,6 +105,7 @@ function manifest_plugin()
         (binary,),
         _kernel((left, right) -> left);
         truth = (left, right) -> left == right,
+        truth_policy = RELATION_TRUTH_APPROXIMATE_ZERO,
         scale_hint = 1,
         documentation = "Equality residual",
     )

@@ -17,6 +17,7 @@ const TargetImageClassification = Union{LocalTargetImageClassification,TargetIma
     TARGET_IMAGE_NONFINITE_LINEARIZATION = 6
     TARGET_IMAGE_INSUFFICIENT_PROBES = 7
     TARGET_IMAGE_SINGULAR_LINEARIZATION = 8
+    TARGET_IMAGE_UNRESOLVED_VARIATION = 9
 end
 
 @enum TargetDifferenceScheme::UInt8 begin
@@ -281,13 +282,13 @@ function _separated_branches(observation, tolerance)
     )
 end
 
-function _usable_target_image_base(observation, options)
+function _usable_target_image_base(observation, compiled, options)
     observation.status == EVAL_OK || return false
     observation.target isa Real && isfinite(observation.target) || return false
     canonical_feasible(observation; residual_tolerance = options.relation_tolerance) || return false
     all(
-        relation -> relation.truth !== false || !iszero(relation.raw),
-        observation.relations,
+        _relation_truth_accepted(relation.truth, relation.raw, role.truth_policy) for
+        (relation, role) in zip(observation.relations, compiled.relations)
     ) || return false
     return _separated_branches(observation, options.branch_margin_tolerance)
 end
@@ -415,16 +416,37 @@ function _target_image_svd(jacobian, options)
     numerical_rank = count(value -> value > threshold, singular_values)
     variable_count = size(jacobian, 2)
     right_vectors = Matrix{Float64}(factorization.Vt')
-    nullspace = numerical_rank < variable_count ?
-                right_vectors[:, (numerical_rank + 1):variable_count] :
-                zeros(Float64, variable_count, 0)
-    for column in axes(nullspace, 2)
-        vector = view(nullspace, :, column)
-        pivot = argmax(abs.(vector))
-        vector[pivot] < 0 && (vector .*= -1)
-    end
+    raw_nullspace = numerical_rank < variable_count ?
+                    right_vectors[:, (numerical_rank + 1):variable_count] :
+                    zeros(Float64, variable_count, 0)
+    nullspace = _canonical_nullspace_basis(raw_nullspace)
     condition = numerical_rank == 0 ? Inf : singular_values[1] / singular_values[numerical_rank]
     return singular_values, numerical_rank, threshold, nullspace, condition
+end
+
+function _canonical_nullspace_basis(raw::Matrix{Float64})
+    variable_count, nullity = size(raw)
+    nullity == 0 && return zeros(Float64, variable_count, 0)
+    projector = raw * raw'
+    selected = Vector{Vector{Float64}}()
+    threshold = 64 * eps(Float64) * max(1.0, opnorm(projector, Inf))
+    for axis in 1:variable_count
+        direction = copy(view(projector, :, axis))
+        for existing in selected
+            direction .-= dot(existing, direction) .* existing
+        end
+        magnitude = norm(direction)
+        magnitude > threshold || continue
+        direction ./= magnitude
+        pivot = argmax(abs.(direction))
+        direction[pivot] < 0 && (direction .*= -1)
+        push!(selected, direction)
+        length(selected) == nullity && break
+    end
+    length(selected) == nullity || throw(
+        LinearAlgebra.LAPACKException(1),
+    )
+    return hcat(selected...)
 end
 
 function _probe_target_nullspace!(work, nullspace)
@@ -515,15 +537,15 @@ function _analyze_target_image(compiled, coordinates, options)
     workspace = CompiledWorkspace(compiled)
     base = evaluate(compiled, coordinates; capability = options.capability, workspace)
     target_dependencies = compiled.sparsity.target_variables
-    if !_usable_target_image_base(base, options)
+    if !_usable_target_image_base(base, compiled, options)
         failure = if base.status in (EVAL_INVALID_DOMAIN, EVAL_INVALID_BRANCH, EVAL_AMBIGUOUS_BRANCH)
             TARGET_IMAGE_BASE_SEMANTICS_FAILED
         elseif base.status != EVAL_OK
             TARGET_IMAGE_BASE_EVALUATION_FAILED
         elseif any(
-            relation -> abs(relation.scaled) > options.relation_tolerance ||
-                        (relation.truth === false && iszero(relation.raw)),
-            base.relations,
+            abs(relation.scaled) > options.relation_tolerance ||
+            !_relation_truth_accepted(relation.truth, relation.raw, role.truth_policy) for
+            (relation, role) in zip(base.relations, compiled.relations)
         )
             TARGET_IMAGE_BASE_NOT_ON_RELATION
         else
@@ -599,8 +621,45 @@ function _analyze_target_image(compiled, coordinates, options)
         )
     end
 
-    singular_values, numerical_rank, rank_threshold, nullspace, condition =
+    if !all(isfinite, jacobian) || !all(isfinite, gradient)
+        return _target_image_result(
+            TARGET_IMAGE_INCONCLUSIVE,
+            base,
+            options,
+            target_dependencies;
+            failure = TARGET_IMAGE_NONFINITE_LINEARIZATION,
+            diagnostic = "finite-difference linearization contains a nonfinite value",
+            linearization_computed = true,
+            jacobian,
+            gradient,
+            schemes,
+            oracle_work = work.oracle_work,
+            sampled_points = work.sampled_points,
+            accepted_points = work.accepted_points,
+        )
+    end
+
+    factorization = try
         _target_image_svd(jacobian, options)
+    catch error
+        error isa LinearAlgebra.LAPACKException || rethrow()
+        return _target_image_result(
+            TARGET_IMAGE_INCONCLUSIVE,
+            base,
+            options,
+            target_dependencies;
+            failure = TARGET_IMAGE_NONFINITE_LINEARIZATION,
+            diagnostic = "SVD failed while analyzing the finite-difference linearization",
+            linearization_computed = true,
+            jacobian,
+            gradient,
+            schemes,
+            oracle_work = work.oracle_work,
+            sampled_points = work.sampled_points,
+            accepted_points = work.accepted_points,
+        )
+    end
+    singular_values, numerical_rank, rank_threshold, nullspace, condition = factorization
     projection = Vector{Float64}(nullspace' * gradient)
     sensitivity = norm(projection)
     if numerical_rank == length(compiled.variables)
@@ -657,8 +716,7 @@ function _analyze_target_image(compiled, coordinates, options)
     end
 
     target_scale = max(1.0, abs(Float64(base.target)))
-    continuous = sensitivity > options.target_sensitivity_tolerance * target_scale ||
-                 probe_variation > options.probe_target_tolerance * target_scale
+    continuous = sensitivity > options.target_sensitivity_tolerance * target_scale
     regular_manifold = isempty(base.relations) ||
                        numerical_rank == min(
         length(base.relations),
@@ -691,9 +749,35 @@ function _analyze_target_image(compiled, coordinates, options)
             accepted_points = work.accepted_points,
         )
     end
-    classification = continuous ? TARGET_LIKELY_CONTINUOUS : TARGET_LOCALLY_CONSTANT_MANIFOLD
+    if !continuous
+        return _target_image_result(
+            TARGET_IMAGE_INCONCLUSIVE,
+            base,
+            options,
+            target_dependencies;
+            failure = TARGET_IMAGE_UNRESOLVED_VARIATION,
+            diagnostic = "zero first-order target sensitivity and finite probes do not prove a locally constant target image",
+            linearization_computed = true,
+            jacobian,
+            gradient,
+            singular_values,
+            numerical_rank,
+            rank_threshold,
+            nullspace,
+            projection,
+            sensitivity,
+            probe_variation,
+            probe_relation_drift,
+            probe_coverage,
+            schemes,
+            condition,
+            oracle_work = work.oracle_work,
+            sampled_points = work.sampled_points,
+            accepted_points = work.accepted_points,
+        )
+    end
     return _target_image_result(
-        classification,
+        TARGET_LIKELY_CONTINUOUS,
         base,
         options,
         target_dependencies;
