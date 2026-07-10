@@ -30,7 +30,7 @@ from .models import (
 )
 
 
-ANALYZER_VERSION = "0.1.0"
+ANALYZER_VERSION = "0.2.0"
 DIAGNOSTICS_SCHEMA_VERSION = "geotarget.miss-diagnostics/v1"
 REPORT_SCHEMA_VERSION = "geotarget.miss-report/v1"
 
@@ -107,6 +107,7 @@ class DiagnosticBundle:
 class TraceObservation:
     sequence: int
     evidence_ref: str
+    observation_ref: str
     target: TargetInterval | None
     canonical_near_feasible: bool
     canonical_valid: bool
@@ -534,17 +535,35 @@ def _parse_observation(payload: Any, path: str, sequence: int) -> TraceObservati
         _string(observation["type"], f"{path}.type")
     _strict_keys(observation, fields, path)
     _integer(observation["oracle_work"], f"{path}.oracle_work")
+    target = _trace_target(observation["target"], f"{path}.target")
+    near_feasible = _boolean(
+        observation["canonical_near_feasible"],
+        f"{path}.canonical_near_feasible",
+    )
+    canonical_valid = _boolean(
+        observation["canonical_valid"], f"{path}.canonical_valid"
+    )
+    verified = _boolean(observation["verified"], f"{path}.verified")
+    if canonical_valid and not near_feasible:
+        raise MissInputError(f"{path}: canonical validity requires near-feasibility")
+    if target is not None and not near_feasible:
+        raise MissInputError(f"{path}: target requires near-feasibility")
+    if observation["target_identity"] is not None and target is None:
+        raise MissInputError(f"{path}: target identity requires a target")
+    if verified and (
+        not canonical_valid or target is None or observation["verified_payload"] is None
+    ):
+        raise MissInputError(
+            f"{path}: verified observation requires canonical validity, target and payload"
+        )
     return TraceObservation(
         sequence=sequence,
         evidence_ref=f"{path}.diagnostic",
-        target=_trace_target(observation["target"], f"{path}.target"),
-        canonical_near_feasible=_boolean(
-            observation["canonical_near_feasible"], f"{path}.canonical_near_feasible"
-        ),
-        canonical_valid=_boolean(
-            observation["canonical_valid"], f"{path}.canonical_valid"
-        ),
-        verified=_boolean(observation["verified"], f"{path}.verified"),
+        observation_ref=path,
+        target=target,
+        canonical_near_feasible=near_feasible,
+        canonical_valid=canonical_valid,
+        verified=verified,
         needs_refinement=_boolean(
             observation["needs_refinement"], f"{path}.needs_refinement"
         ),
@@ -747,6 +766,50 @@ def _trace_signals(
     return tuple(signals), unassociated_diagnostic
 
 
+def _archive_signals(
+    case: CaseInput,
+    trace: ParsedTrace,
+    missing_validated_targets: frozenset[str],
+) -> tuple[FailureSignal, ...]:
+    """Prove an archive/output loss from a final verified trace witness.
+
+    A verified observation is already past canonical configuration validation.
+    When its target enclosure associates with exactly one still-missing Gold
+    target, the trace itself is a witness that discovery and verification
+    succeeded before the result disappeared from the final answer set.  This
+    does not fire for exact-only shortfalls, ambiguous enclosures, provisional
+    observations, or targets already present in the reported validated set.
+    """
+
+    if not missing_validated_targets:
+        return ()
+    signals: list[FailureSignal] = []
+    for observation in trace.observations:
+        if (
+            not observation.verified
+            or not observation.canonical_valid
+            or observation.target is None
+        ):
+            continue
+        matched = tuple(
+            target_id
+            for target_id in _trace_matches(case, observation.target)
+            if target_id in missing_validated_targets
+        )
+        if len(matched) != 1:
+            continue
+        signals.append(
+            FailureSignal(
+                FactKind.ARCHIVE_WITNESS_LOST,
+                SubjectKind.TARGET,
+                matched[0],
+                FactSource.ARCHIVE_AUDIT.value,
+                f"{observation.observation_ref}.verified",
+            )
+        )
+    return tuple(signals)
+
+
 def _run_signals(
     case: CaseInput, run: RunInput, evaluation: RunEvaluation
 ) -> list[FailureSignal]:
@@ -886,6 +949,7 @@ def analyze_miss(
     for trace in (evidence_log, checkpoint):
         if trace is None:
             continue
+        signals.extend(_archive_signals(case, trace, frozenset(missing_validated)))
         derived, trace_unassociated = _trace_signals(case, trace, relevant_targets)
         signals.extend(derived)
         unassociated |= trace_unassociated

@@ -32,12 +32,12 @@ identify the responsible checkpoint.
 
 ## Implemented diagnostic coverage
 
-[Miss Analyzer v0.1](MISS_ANALYZER.md) implements a strict research-side
+[Miss Analyzer v0.2](MISS_ANALYZER.md) implements a strict research-side
 schema/API/CLI. It selects by checkpoint order in the chain above rather than by
 numeric F-ID order. A classification requires causal, target-relevant evidence;
 missing or unassociated telemetry yields `unknown`.
 
-| ID | v0.1 evidence accepted |
+| ID | v0.2 evidence accepted |
 |---|---|
 | F0 | Independent truth-audit fact only |
 | F1 | Reference/compiled differential fact only |
@@ -49,7 +49,7 @@ missing or unassociated telemetry yields `unknown`.
 | F7 | Run branch mismatch, target-associated canonical branch failure, or counterfactual fact |
 | F8 | Run guard/boundary mismatch, target-associated canonical guard failure, or counterfactual fact |
 | F9 | Target-associated singular/unresolved target-image diagnostic, or counterfactual fact |
-| F10 | Archive-audit fact only |
+| F10 | Archive-audit fact, or an automatic canonical-valid verified trace witness uniquely associated with a target missing from final validated output |
 | F11 | Scheduler-audit fact only |
 | F12 | Target-associated refinement/resource diagnostic, or counterfactual fact |
 | F13 | Run configuration invalidity or target-associated canonical semantic/certificate failure |
@@ -59,5 +59,5 @@ missing or unassociated telemetry yields `unknown`.
 | F17 | Determinism-audit fact only |
 | F18 | Same-budget performance-comparison fact only |
 
-Finite absence is never treated as F4, F11 or F16. See the v0.1 document for
+Finite absence is never treated as F4, F11 or F16. See the v0.2 document for
 the paths intentionally left unclassified.

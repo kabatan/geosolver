@@ -119,7 +119,11 @@ def diagnose(
 
 
 def evidence_observation(
-    diagnostic: str, *, target: float | None = 1.0, refine=False
+    diagnostic: str,
+    *,
+    target: float | None = 1.0,
+    refine: bool = False,
+    verified: bool = False,
 ) -> dict:
     target_document = (
         None
@@ -138,12 +142,12 @@ def evidence_observation(
                     "task_id": 1,
                     "configuration_id": 1,
                     "canonical_near_feasible": target is not None,
-                    "canonical_valid": False,
+                    "canonical_valid": verified,
                     "target": target_document,
                     "target_identity": None,
                     "branch_signature": [],
-                    "verified": False,
-                    "verified_payload": None,
+                    "verified": verified,
+                    "verified_payload": {"proof": "synthetic"} if verified else None,
                     "needs_refinement": refine,
                     "residual_score": 0.0,
                     "oracle_work": 4,
@@ -200,6 +204,56 @@ class CounterexampleTests(unittest.TestCase):
         self.assertEqual(report.outcome, MissOutcome.UNKNOWN)
         self.assertIsNone(report.failure_id)
         self.assertIn("missing_solver_trace", report.unclassified_reason_codes)
+
+    def test_verified_trace_witness_missing_from_output_is_archive_loss(self) -> None:
+        trace = parse_solver_trace(
+            evidence_observation(
+                "local_status=LOCAL_CONVERGED;validation=CANDIDATE_VALIDATION_NONE",
+                verified=True,
+            ),
+            origin="evidence",
+        )
+        report = diagnose(case_data(), run_data([]), evidence=trace)
+        self.assertEqual(report.outcome, MissOutcome.CLASSIFIED)
+        self.assertEqual(report.failure_id, "F10")
+        self.assertEqual(report.checkpoint, "archive")
+        self.assertEqual(report.evidence[0].subject_id, "target-neutral")
+        self.assertEqual(report.evidence[0].source, "archive_audit")
+        self.assertTrue(report.evidence[0].evidence_ref.endswith(".verified"))
+
+    def test_unverified_trace_witness_does_not_manufacture_archive_loss(self) -> None:
+        trace = parse_solver_trace(
+            evidence_observation(
+                "local_status=LOCAL_CONVERGED;validation=CANDIDATE_VALIDATION_NONE"
+            ),
+            origin="evidence",
+        )
+        report = diagnose(case_data(), run_data([]), evidence=trace)
+        self.assertEqual(report.outcome, MissOutcome.UNKNOWN)
+
+    def test_malformed_verified_trace_is_rejected(self) -> None:
+        document = evidence_observation(
+            "local_status=LOCAL_CONVERGED;validation=CANDIDATE_VALIDATION_NONE"
+        )
+        document["events"][0]["payload"]["verified"] = True
+        with self.assertRaisesRegex(MissInputError, "verified observation requires"):
+            parse_solver_trace(document, origin="evidence")
+
+    def test_exact_only_shortfall_is_not_archive_loss(self) -> None:
+        trace = parse_solver_trace(
+            evidence_observation(
+                "local_status=LOCAL_CONVERGED;validation=CANDIDATE_VALIDATION_NONE",
+                verified=True,
+            ),
+            origin="evidence",
+        )
+        report = diagnose(
+            case_data(),
+            run_data([answer_data(level="validated")]),
+            evidence=trace,
+        )
+        self.assertEqual(report.failure_id, "F14")
+        self.assertNotEqual(report.failure_id, "F10")
 
     def test_unassociated_domain_event_does_not_blame_domain(self) -> None:
         trace = parse_solver_trace(

@@ -1,4 +1,4 @@
-# Miss Analyzer v0.1
+# Miss Analyzer v0.2
 
 The Miss Analyzer is a research-side diagnostic tool. It does not change the
 solver, geometry ABI, public presets or answer-assurance semantics. Given one
@@ -24,9 +24,15 @@ Three optional evidence inputs are accepted:
 3. `geotarget.miss-diagnostics/v1`, containing separately audited causal facts.
 
 The first two inputs are parsed structurally and current `Observation`
-diagnostics are mapped by typed status values. A raw checkpoint should first be
-accepted by the Core checkpoint decoder when cryptographic content-hash
-authentication matters; the research parser does not replace that decoder.
+diagnostics are mapped by typed status values. Version 0.2 also performs one
+strict automatic archive audit: if a canonical-valid `verified` observation
+uniquely associates with a still-missing validated Gold target, the same trace
+proves that the witness passed verification before disappearing from the final
+answer set, so the run is classified as F10. Unverified observations, ambiguous
+target associations and exact-only shortfalls do not trigger that audit. A raw
+checkpoint should first be accepted by the Core checkpoint decoder when
+cryptographic content-hash authentication matters; the research parser does
+not replace that decoder.
 
 The sidecar diagnostic schema deliberately separates a fact from its source.
 For example, `gold_truth_invalid` is accepted only from an
@@ -95,10 +101,11 @@ Current automatic mappings include:
 
 Run evaluation independently identifies false guard/boundary/branch outputs,
 configuration-certificate failures, target-identity shortfalls, false outputs
-and false completeness claims. A wrong Gold table (F0), no-capture statement
-(F4), archive loss (F10), scheduler defect (F11) and same-budget overhead (F18)
-require the dedicated typed audit facts; they are not guessed from case names,
-primitive names, elapsed time, or absent events.
+and false completeness claims. The verified-trace/final-output comparison above
+is the only automatic F10 route. A wrong Gold table (F0), no-capture statement
+(F4), other archive claims, scheduler defect (F11) and same-budget overhead
+(F18) require dedicated typed audit facts; they are not guessed from case
+names, primitive names, elapsed time, or absent events.
 
 ## Known unclassified paths
 
@@ -112,8 +119,8 @@ is supplied:
 - zero observed capture events in a finite trace;
 - finite-lane counts offered as proof of asymptotic scheduler fairness or shell
   coverage;
-- a verified observation missing from final output when no archive audit can
-  distinguish F10 from F15;
+- a missing final answer when the trace has no uniquely target-associated
+  canonical-valid `verified` observation proving that the archive once held it;
 - target-image capability absence that does not itself identify singularity,
   refinement failure or semantic invalidity;
 - compilation, scaling and nondeterminism claims without a differential,

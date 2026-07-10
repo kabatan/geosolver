@@ -52,10 +52,11 @@ M9/M10 release gates are complete.
 
 ## Current RES-03 evidence
 
-The M3 Miss Analyzer has an implemented v0.1 vertical slice: strict diagnostic
+The M3 Miss Analyzer has an implemented v0.2 vertical slice: strict diagnostic
 and report schemas, a deterministic API/CLI, conservative adapters for current
-event/checkpoint `Observation` diagnostics, and counterexample/metamorphic
-tests. Coverage and deliberately unknown paths are recorded in
-`docs/research/MISS_ANALYZER.md`. RES-03 remains active and M3 is not declared
-complete here: automatic capture instrumentation, archive/scheduler causal
-audits and the listed unclassified paths still require later milestone work.
+event/checkpoint `Observation` diagnostics, automatic verified-witness archive
+loss detection, and counterexample/metamorphic tests. Coverage and deliberately
+unknown paths are recorded in `docs/research/MISS_ANALYZER.md`. RES-03 remains
+active and M3 is not declared complete here: automatic capture instrumentation,
+scheduler/counterfactual causal audits, other archive paths and the listed
+unclassified paths still require later milestone work.
