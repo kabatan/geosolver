@@ -37,6 +37,31 @@ function local_observation(x; root = 1.0, relation_scale = 1.0, guard_offset = 2
     )
 end
 
+function diagonal_observation(x; reject_combined = false)
+    if reject_combined && count(value -> !iszero(value), x) > 1
+        return OracleObservation(
+            (),
+            nothing,
+            (),
+            (),
+            (),
+            EVAL_INVALID_DOMAIN,
+            1,
+            "combined perturbation rejected",
+        )
+    end
+    relations = Tuple(
+        RelationObservation(
+            NodeId("diagonal_relation_$index"),
+            x[index] - 1.0,
+            1.0,
+            x[index] - 1.0,
+            x[index] == 1.0,
+        ) for index in eachindex(x)
+    )
+    return OracleObservation(relations, sum(x), (), (), (), EVAL_OK, 1, nothing)
+end
+
 @testset "scaled LM-QR local control" begin
     attempt = solve_local(
         x -> local_observation(x),
@@ -106,4 +131,103 @@ end
     )
     @test limited.status == LOCAL_MAX_EVALUATIONS
     @test !limited.accepted
+end
+
+@testset "compiler sparsity colors structurally orthogonal finite differences" begin
+    dimension = 8
+    origin = zeros(dimension)
+    scales = ones(dimension)
+    lower = fill(-2.0, dimension)
+    upper = fill(2.0, dimension)
+    base_residual = fill(-1.0, dimension)
+    step = LocalSolveOptions().finite_difference_step
+    entries = Tuple((index, index) for index in 1:dimension)
+    coloring = GeoTargetCore._local_jacobian_coloring(dimension, dimension, entries)
+    @test length(coloring.groups) == 1
+    @test only(coloring.groups) == Tuple(1:dimension)
+    @test coloring.structural_nonzeros == dimension
+
+    dense, dense_evaluations = GeoTargetCore._finite_difference_jacobian(
+        diagonal_observation,
+        origin,
+        base_residual,
+        origin,
+        scales,
+        lower,
+        upper,
+        step,
+    )
+    colored, colored_evaluations = GeoTargetCore._colored_finite_difference_jacobian(
+        diagonal_observation,
+        origin,
+        base_residual,
+        origin,
+        scales,
+        lower,
+        upper,
+        step,
+        coloring,
+    )
+    @test colored ≈ dense atol = 1.0e-12 rtol = 1.0e-12
+    @test dense_evaluations == 2dimension
+    @test colored_evaluations == 2
+
+    dense_attempt = solve_local(
+        diagonal_observation,
+        fill(-0.5, dimension);
+        lower,
+        upper,
+    )
+    colored_attempt = solve_local(
+        diagonal_observation,
+        fill(-0.5, dimension);
+        lower,
+        upper,
+        jacobian_entries = entries,
+    )
+    @test colored_attempt.accepted
+    @test collect(colored_attempt.final) ≈ collect(dense_attempt.final) atol = 1.0e-10 rtol = 1.0e-10
+    @test colored_attempt.evaluations < dense_attempt.evaluations
+
+    fallback, fallback_evaluations = GeoTargetCore._colored_finite_difference_jacobian(
+        x -> diagonal_observation(x; reject_combined = true),
+        origin,
+        base_residual,
+        origin,
+        scales,
+        lower,
+        upper,
+        step,
+        coloring,
+    )
+    @test fallback ≈ dense atol = 1.0e-12 rtol = 1.0e-12
+    @test fallback_evaluations == 2 + 2dimension
+
+    incomplete = GeoTargetCore._local_jacobian_coloring(
+        dimension,
+        dimension,
+        Tuple((index, index) for index in 1:(dimension - 1)),
+    )
+    incomplete_jacobian, _ = GeoTargetCore._colored_finite_difference_jacobian(
+        diagonal_observation,
+        origin,
+        base_residual,
+        origin,
+        scales,
+        lower,
+        upper,
+        step,
+        incomplete,
+    )
+    @test incomplete_jacobian != dense
+    @test_throws ArgumentError GeoTargetCore._local_jacobian_coloring(
+        dimension,
+        dimension,
+        ((1, 1), (1, 1)),
+    )
+    @test_throws ArgumentError GeoTargetCore._local_jacobian_coloring(
+        dimension,
+        dimension,
+        ((dimension + 1, 1),),
+    )
 end

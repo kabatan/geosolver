@@ -112,6 +112,109 @@ function _evaluate_local(evaluate_fn, u, origins, scales)
     return observation
 end
 
+struct LocalJacobianColoring{R<:Tuple,G<:Tuple}
+    row_supports::R
+    groups::G
+    structural_nonzeros::Int
+end
+
+function _local_jacobian_coloring(
+    residual_count::Integer,
+    variable_count::Integer,
+    entries;
+    order::Symbol=:natural,
+)
+    residual_count >= 0 || throw(ArgumentError("residual_count must be nonnegative"))
+    variable_count >= 0 || throw(ArgumentError("variable_count must be nonnegative"))
+    order in (:natural, :largest_first) || throw(
+        ArgumentError("color order must be natural or largest_first"),
+    )
+    supports = [BitSet() for _ in 1:variable_count]
+    seen = Set{Tuple{Int,Int}}()
+    for entry in entries
+        entry isa Tuple && length(entry) == 2 || throw(
+            ArgumentError("Jacobian sparsity entries must be (row, column) tuples"),
+        )
+        row, column = entry
+        row isa Integer && column isa Integer || throw(
+            ArgumentError("Jacobian sparsity indexes must be integers"),
+        )
+        1 <= row <= residual_count || throw(
+            ArgumentError("Jacobian sparsity row $row is out of bounds"),
+        )
+        1 <= column <= variable_count || throw(
+            ArgumentError("Jacobian sparsity column $column is out of bounds"),
+        )
+        key = (Int(row), Int(column))
+        key in seen && throw(ArgumentError("Jacobian sparsity entries must be unique"))
+        push!(seen, key)
+        push!(supports[Int(column)], Int(row))
+    end
+
+    columns = Int[column for column in 1:variable_count if !isempty(supports[column])]
+    if order == :largest_first
+        degree(column) = count(
+            other -> other != column && !isdisjoint(supports[column], supports[other]),
+            columns,
+        )
+        sort!(columns; by=column -> (-degree(column), column))
+    end
+    groups = Vector{Vector{Int}}()
+    occupied_rows = BitSet[]
+    for column in columns
+        destination = findfirst(rows -> isdisjoint(rows, supports[column]), occupied_rows)
+        if destination === nothing
+            push!(groups, [column])
+            push!(occupied_rows, copy(supports[column]))
+        else
+            push!(groups[destination], column)
+            union!(occupied_rows[destination], supports[column])
+        end
+    end
+    return LocalJacobianColoring(
+        Tuple(Tuple(sort!(collect(rows))) for rows in supports),
+        Tuple(Tuple(group) for group in groups),
+        length(seen),
+    )
+end
+
+function _finite_difference_column(
+    evaluate_fn,
+    u,
+    base_residual,
+    origins,
+    scales,
+    lower_u,
+    upper_u,
+    step_scale,
+    column,
+)
+    step = step_scale * max(1.0, abs(u[column]))
+    plus_u = copy(u)
+    minus_u = copy(u)
+    plus_u[column] = min(upper_u[column], u[column] + step)
+    minus_u[column] = max(lower_u[column], u[column] - step)
+    plus_step = plus_u[column] - u[column]
+    minus_step = u[column] - minus_u[column]
+    evaluations = 0
+    plus = plus_step > 0 ? _evaluate_local(evaluate_fn, plus_u, origins, scales) : nothing
+    plus_step > 0 && (evaluations += 1)
+    minus = minus_step > 0 ? _evaluate_local(evaluate_fn, minus_u, origins, scales) : nothing
+    minus_step > 0 && (evaluations += 1)
+    plus_valid = plus !== nothing && _usable_local_observation(plus)
+    minus_valid = minus !== nothing && _usable_local_observation(minus)
+    derivative = zeros(Float64, length(base_residual))
+    if plus_valid && minus_valid
+        derivative .= (_float_residual(plus) .- _float_residual(minus)) ./
+                      (plus_step + minus_step)
+    elseif plus_valid
+        derivative .= (_float_residual(plus) .- base_residual) ./ plus_step
+    elseif minus_valid
+        derivative .= (base_residual .- _float_residual(minus)) ./ minus_step
+    end
+    return derivative, evaluations
+end
+
 function _finite_difference_jacobian(
     evaluate_fn,
     u,
@@ -127,33 +230,108 @@ function _finite_difference_jacobian(
     jacobian = zeros(Float64, residual_count, variable_count)
     evaluations = 0
     for column in 1:variable_count
-        step = step_scale * max(1.0, abs(u[column]))
+        derivative, column_evaluations = _finite_difference_column(
+            evaluate_fn,
+            u,
+            base_residual,
+            origins,
+            scales,
+            lower_u,
+            upper_u,
+            step_scale,
+            column,
+        )
+        jacobian[:, column] .= derivative
+        evaluations += column_evaluations
+    end
+    return jacobian, evaluations
+end
+
+function _colored_finite_difference_jacobian(
+    evaluate_fn,
+    u,
+    base_residual,
+    origins,
+    scales,
+    lower_u,
+    upper_u,
+    step_scale,
+    coloring::LocalJacobianColoring,
+)
+    residual_count = length(base_residual)
+    variable_count = length(u)
+    jacobian = zeros(Float64, residual_count, variable_count)
+    evaluations = 0
+    for group in coloring.groups
         plus_u = copy(u)
         minus_u = copy(u)
-        plus_u[column] = min(upper_u[column], u[column] + step)
-        minus_u[column] = max(lower_u[column], u[column] - step)
-        plus_step = plus_u[column] - u[column]
-        minus_step = u[column] - minus_u[column]
+        plus_steps = zeros(Float64, variable_count)
+        minus_steps = zeros(Float64, variable_count)
+        for column in group
+            step = step_scale * max(1.0, abs(u[column]))
+            plus_u[column] = min(upper_u[column], u[column] + step)
+            minus_u[column] = max(lower_u[column], u[column] - step)
+            plus_steps[column] = plus_u[column] - u[column]
+            minus_steps[column] = u[column] - minus_u[column]
+        end
+        plus_attempted = any(column -> plus_steps[column] > 0, group)
+        minus_attempted = any(column -> minus_steps[column] > 0, group)
+        plus = plus_attempted ? _evaluate_local(evaluate_fn, plus_u, origins, scales) : nothing
+        plus_attempted && (evaluations += 1)
+        minus = minus_attempted ? _evaluate_local(evaluate_fn, minus_u, origins, scales) : nothing
+        minus_attempted && (evaluations += 1)
+        plus_valid = !plus_attempted || _usable_local_observation(plus)
+        minus_valid = !minus_attempted || _usable_local_observation(minus)
 
-        plus = plus_step > 0 ? _evaluate_local(evaluate_fn, plus_u, origins, scales) : nothing
-        plus_step > 0 && (evaluations += 1)
-        minus = minus_step > 0 ? _evaluate_local(evaluate_fn, minus_u, origins, scales) : nothing
-        minus_step > 0 && (evaluations += 1)
-        plus_valid = plus !== nothing && _usable_local_observation(plus)
-        minus_valid = minus !== nothing && _usable_local_observation(minus)
+        if !plus_valid || !minus_valid
+            for column in group
+                derivative, column_evaluations = _finite_difference_column(
+                    evaluate_fn,
+                    u,
+                    base_residual,
+                    origins,
+                    scales,
+                    lower_u,
+                    upper_u,
+                    step_scale,
+                    column,
+                )
+                jacobian[:, column] .= derivative
+                evaluations += column_evaluations
+            end
+            continue
+        end
 
-        if plus_valid && minus_valid
-            plus_residual = _float_residual(plus)
-            minus_residual = _float_residual(minus)
-            jacobian[:, column] .= (plus_residual .- minus_residual) ./ (plus_step + minus_step)
-        elseif plus_valid
-            jacobian[:, column] .= (_float_residual(plus) .- base_residual) ./ plus_step
-        elseif minus_valid
-            jacobian[:, column] .= (base_residual .- _float_residual(minus)) ./ minus_step
+        plus_residual = plus_attempted ? _float_residual(plus) : base_residual
+        minus_residual = minus_attempted ? _float_residual(minus) : base_residual
+        for column in group
+            rows = coloring.row_supports[column]
+            plus_step = plus_steps[column]
+            minus_step = minus_steps[column]
+            if plus_step > 0 && minus_step > 0
+                for row in rows
+                    jacobian[row, column] =
+                        (plus_residual[row] - minus_residual[row]) / (plus_step + minus_step)
+                end
+            elseif plus_step > 0
+                for row in rows
+                    jacobian[row, column] =
+                        (plus_residual[row] - base_residual[row]) / plus_step
+                end
+            elseif minus_step > 0
+                for row in rows
+                    jacobian[row, column] =
+                        (base_residual[row] - minus_residual[row]) / minus_step
+                end
+            end
         end
     end
     return jacobian, evaluations
 end
+
+_jacobian_evaluation_bound(::Nothing, variable_count) = 2 * variable_count
+_jacobian_evaluation_bound(coloring::LocalJacobianColoring, variable_count) =
+    2 * length(coloring.groups) + 2 * count(rows -> !isempty(rows), coloring.row_supports)
 
 function _lm_step(jacobian, residual, damping)
     variable_count = size(jacobian, 2)
@@ -224,6 +402,8 @@ function solve_local(
     options::LocalSolveOptions = LocalSolveOptions(),
     deadline_ns::UInt64 = typemax(UInt64),
     cancelled = () -> false,
+    jacobian_entries = nothing,
+    color_order::Symbol = :natural,
 )
     variable_count = length(x0)
     variable_count > 0 || throw(ArgumentError("a local solve needs at least one variable"))
@@ -261,6 +441,12 @@ function solve_local(
     end
 
     residual = _float_residual(observation)
+    coloring = jacobian_entries === nothing ? nothing : _local_jacobian_coloring(
+        length(residual),
+        variable_count,
+        jacobian_entries;
+        order=color_order,
+    )
     damping = options.initial_damping
     jacobian = empty_jacobian
     no_progress = 0
@@ -312,7 +498,8 @@ function solve_local(
                 options,
             )
         end
-        if evaluations + 2 * variable_count + 1 > options.max_evaluations
+        jacobian_evaluation_bound = _jacobian_evaluation_bound(coloring, variable_count)
+        if evaluations + jacobian_evaluation_bound + 1 > options.max_evaluations
             return _local_result(
                 start,
                 u,
@@ -328,16 +515,30 @@ function solve_local(
             )
         end
 
-        jacobian, jacobian_evaluations = _finite_difference_jacobian(
-            evaluate_fn,
-            u,
-            residual,
-            origin_values,
-            scale_values,
-            lower_u,
-            upper_u,
-            options.finite_difference_step,
-        )
+        jacobian, jacobian_evaluations = if coloring === nothing
+            _finite_difference_jacobian(
+                evaluate_fn,
+                u,
+                residual,
+                origin_values,
+                scale_values,
+                lower_u,
+                upper_u,
+                options.finite_difference_step,
+            )
+        else
+            _colored_finite_difference_jacobian(
+                evaluate_fn,
+                u,
+                residual,
+                origin_values,
+                scale_values,
+                lower_u,
+                upper_u,
+                options.finite_difference_step,
+                coloring,
+            )
+        end
         evaluations += jacobian_evaluations
         step = _lm_step(jacobian, residual, damping)
         if norm(step) <= options.step_tolerance * (1 + norm(u))
