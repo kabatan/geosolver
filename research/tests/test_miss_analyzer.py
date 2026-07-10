@@ -159,8 +159,10 @@ def evidence_observation(
     }
 
 
-def checkpoint_observation(diagnostic: str) -> dict:
-    observed = evidence_observation(diagnostic)["events"][0]["payload"]
+def checkpoint_observation(diagnostic: str, *, verified: bool = False) -> dict:
+    observed = evidence_observation(diagnostic, verified=verified)["events"][0][
+        "payload"
+    ]
     observed.pop("type")
     observed["target"] = {
         "lower": {
@@ -260,6 +262,18 @@ class CounterexampleTests(unittest.TestCase):
         document["events"][0]["payload"]["verified"] = True
         with self.assertRaisesRegex(MissInputError, "verified observation requires"):
             parse_solver_trace(document, origin="evidence")
+
+    def test_checkpoint_alone_cannot_prove_final_archive_loss(self) -> None:
+        checkpoint = parse_solver_trace(
+            checkpoint_observation(
+                "local_status=LOCAL_CONVERGED;validation=CANDIDATE_VALIDATION_NONE",
+                verified=True,
+            ),
+            origin="checkpoint",
+        )
+        report = diagnose(case_data(), run_data([]), checkpoint=checkpoint)
+        self.assertEqual(report.outcome, MissOutcome.UNKNOWN)
+        self.assertIsNone(report.failure_id)
 
     def test_exact_only_shortfall_is_not_archive_loss(self) -> None:
         trace = parse_solver_trace(

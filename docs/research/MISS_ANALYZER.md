@@ -25,11 +25,13 @@ Three optional evidence inputs are accepted:
 
 The first two inputs are parsed structurally and current `Observation`
 diagnostics are mapped by typed status values. Version 0.2 also performs one
-strict automatic archive audit: if a canonical-valid `verified` observation
-uniquely associates with a still-missing validated Gold target, the same trace
-proves that the witness passed verification before disappearing from the final
-answer set, so the run is classified as F10. Unverified observations, ambiguous
-target associations and exact-only shortfalls do not trigger that audit.
+strict automatic archive audit on the final evidence log: if a canonical-valid
+`verified` observation uniquely associates with a still-missing validated Gold
+target, the same final trace proves that the witness passed verification before
+disappearing from the answer set, so the run is classified as F10. A checkpoint
+alone cannot trigger this rule because `RunInput` v1 does not authenticate it as
+the prefix of that final output. Unverified observations, ambiguous target
+associations and exact-only shortfalls do not trigger the audit.
 Earlier failed attempts for that same target are not treated as causal once a
 later verified witness proves they were recovered; failures for other still
 missing validated targets remain eligible under the normal checkpoint order.

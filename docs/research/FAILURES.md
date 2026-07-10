@@ -49,7 +49,7 @@ missing or unassociated telemetry yields `unknown`.
 | F7 | Run branch mismatch, target-associated canonical branch failure, or counterfactual fact |
 | F8 | Run guard/boundary mismatch, target-associated canonical guard failure, or counterfactual fact |
 | F9 | Target-associated singular/unresolved target-image diagnostic, or counterfactual fact |
-| F10 | Archive-audit fact, or an automatic canonical-valid verified trace witness uniquely associated with a target missing from final validated output |
+| F10 | Archive-audit fact, or an automatic canonical-valid verified final-evidence-log witness uniquely associated with a target missing from final validated output |
 | F11 | Scheduler-audit fact only |
 | F12 | Target-associated refinement/resource diagnostic, or counterfactual fact |
 | F13 | Run configuration invalidity or target-associated canonical semantic/certificate failure |

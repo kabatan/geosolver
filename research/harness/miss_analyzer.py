@@ -950,7 +950,14 @@ def analyze_miss(
     for trace in (evidence_log, checkpoint):
         if trace is None:
             continue
-        archive = _archive_signals(case, trace, frozenset(missing_validated))
+        # Only the final evidence log is an output-side trace.  A checkpoint may
+        # be an earlier pause boundary and RunInput v1 has no authenticated
+        # field tying that checkpoint to the reported final answer set.
+        archive = (
+            _archive_signals(case, trace, frozenset(missing_validated))
+            if trace is evidence_log
+            else ()
+        )
         signals.extend(archive)
         recovered_before_loss = frozenset(
             signal.subject_id
