@@ -1,0 +1,85 @@
+{
+  "schema_version": "exp-jac-003-materialization-audit/v1",
+  "experiment_id": "EXP-JAC-003",
+  "partition": "development",
+  "execution": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python research/experiments/EXP-JAC-003/source/materialize_development.py",
+    "source_head": "cca74c379d255ad48fef18db1a967259f0b15d6f",
+    "exit_code": 0,
+    "observed_elapsed_seconds": 23.1,
+    "started_at_utc": null,
+    "start_time_capture_status": "The external command runner did not expose an exact start timestamp; approximately 2026-07-10T07:32:19Z is inferred from observed elapsed time and publication timestamps and is not gating evidence.",
+    "wrapper_pid": null,
+    "child_pid": null,
+    "pid_capture_status": "The one-shot run completed before PID telemetry was requested; no PID is fabricated. Source HEAD, command, exit, elapsed and filesystem publication time are retained.",
+    "published_at_utc": "2026-07-10T07:32:42.3946126Z"
+  },
+  "authority": {
+    "lock_path": "research/experiments/EXP-JAC-003/preimplementation-lock.json",
+    "lock_commit": "cca74c379d255ad48fef18db1a967259f0b15d6f",
+    "clean_exact_lock_head_verified": true,
+    "locked_file_count": 16,
+    "locked_file_hash_mismatch_count": 0,
+    "product_source_mismatch_count": 0,
+    "candidate_mechanism_present_before_run": false,
+    "provider_source_present_before_run": false,
+    "product_connection_present_before_run": false
+  },
+  "publication": {
+    "path": "research/experiments/EXP-JAC-003/development-inputs",
+    "case_count": 64,
+    "starts_per_case": 32,
+    "candidate_assessor_k0_join_equal": true,
+    "candidate_forbidden_key_count": 0,
+    "gzip_mtime_zero": true,
+    "staging_directories_remaining": 0,
+    "completion_marker_written_last": true,
+    "artifacts": {
+      "development-assessor-truth.json.gz": {
+        "bytes": 852486,
+        "sha256": "7be45e9be52cd772af3d9305e252532be7374ec69354978433ccfbbfa76909fd"
+      },
+      "development-candidate-inputs.json.gz": {
+        "bytes": 459825,
+        "sha256": "3856b80fcb31c1ac948428846a8171b0b2775f113f33d6e98258d0c0f0d1e463"
+      },
+      "development-k0-control-traces.json.gz": {
+        "bytes": 459869,
+        "sha256": "67cc52e5972f1d2c7437f2cedd0cb0918000f10700ac654ec2154610a97d0ebe"
+      },
+      "manifest.json": {
+        "bytes": 1793,
+        "sha256": "82d0f85ff69d23463844560b2114e0aac87761a3970632b71a6747e797e4e98e"
+      },
+      "ONE_SHOT_COMPLETE.json": {
+        "bytes": 229,
+        "sha256": "3d5fc645ca4e57f12eae957186088158ad6cf5db689b34ef8e7f0f2d9bd97aee"
+      },
+      "public-baseline-snapshot.json": {
+        "bytes": 4957,
+        "sha256": "06313027005a06067757d9726915a289b4c36d0b4df4c7f89bea65ce822c6c54"
+      }
+    }
+  },
+  "separation": {
+    "candidate_contains_family_or_gold_fields": false,
+    "assessor_artifact_is_separate": true,
+    "k0_control_artifact_is_separate": true,
+    "route_projection_contract_is_separate": true,
+    "gold_or_k0_outcome_content_interpreted_during_postcheck": false,
+    "postcheck_scope": "Schema, hashes, gzip header, cardinality, join equality and forbidden candidate fields only."
+  },
+  "rerun_negative_check": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python research/experiments/EXP-JAC-003/source/materialize_development.py",
+    "exit_code": 1,
+    "failure": "development output already exists; one-shot rerun refused",
+    "artifact_mutation_observed": false
+  },
+  "state": {
+    "development_inputs_materialized": true,
+    "development_outcomes_analyzed": false,
+    "candidate_mechanism_present": false,
+    "locked_inputs_materialized": false,
+    "product_connected": false
+  }
+}
