@@ -26,7 +26,7 @@ function _s4_synthetic_deflation_one()
         target,
         nothing,
     )
-    input = CandidateInput(oracle, [2.0^-80, -2.0^-82])
+    input = s4_candidate_input(CandidateInput(oracle, [2.0^-80, -2.0^-82]))
     analytic = ExperimentSingular001.S4AnalyticControlOracle(
         jacobian,
         second_directional,
@@ -64,7 +64,92 @@ function _s4_synthetic_nullity_two()
         target,
         nothing,
     )
-    return CandidateInput(oracle, [2.0^-70, -2.0^-72, 2.0^-75]),
+    return s4_candidate_input(CandidateInput(
+            oracle,
+            [2.0^-70, -2.0^-72, 2.0^-75],
+        )),
+        ExperimentSingular001.S4AnalyticControlOracle(jacobian, second_directional)
+end
+
+function _s4_synthetic_nullity_four()
+    function residual(z::AbstractVector{T}) where {T<:Real}
+        return T[z[5], z[1]^2, z[2]^2, z[3]^2, z[4]^2]
+    end
+    function target(z::AbstractVector{T}) where {T<:Real}
+        return sum(T(index) * z[index] / T(16) for index in eachindex(z))
+    end
+    function jacobian(z::AbstractVector{T}) where {T<:Real}
+        result = zeros(T, 5, 5)
+        result[1, 5] = one(T)
+        for index in 1:4
+            result[index + 1, index] = 2 * z[index]
+        end
+        return result
+    end
+    function second_directional(z::AbstractVector{T}, first, second) where {T<:Real}
+        return T[0, (2 * first[index] * second[index] for index in 1:4)...]
+    end
+    oracle = EndpointOracle(
+        "synthetic-s4-k4-unit",
+        "SYNTHETIC-UNIT",
+        "synthetic-s4-k4-group",
+        5,
+        5,
+        :C2,
+        residual,
+        target,
+        nothing,
+    )
+    endpoint = [2.0^-70, -2.0^-71, 2.0^-72, -2.0^-73, 2.0^-80]
+    return s4_candidate_input(CandidateInput(oracle, endpoint)),
+        ExperimentSingular001.S4AnalyticControlOracle(jacobian, second_directional)
+end
+
+function _s4_negative_fixture(mode::Symbol)
+    mode in (:higher_depth, :regular_fold, :manifold, :nonroot) ||
+        throw(ArgumentError("unsupported negative fixture"))
+    separation = 1.0e-7
+    inconsistency = 2.0^-50
+    function residual(z::AbstractVector{T}) where {T<:Real}
+        x, y = z
+        second = if mode === :higher_depth
+            x^3
+        elseif mode === :regular_fold
+            x^2 - T(separation)^2
+        elseif mode === :manifold
+            zero(T)
+        else
+            x^2 + T(inconsistency)
+        end
+        return T[y, second]
+    end
+    target(z::AbstractVector{T}) where {T<:Real} = z[1] / T(2) - z[2] / T(3)
+    function jacobian(z::AbstractVector{T}) where {T<:Real}
+        x, _ = z
+        derivative = mode === :higher_depth ? 3 * x^2 :
+                     mode === :manifold ? zero(T) : 2 * x
+        return T[0 1; derivative 0]
+    end
+    function second_directional(z::AbstractVector{T}, first, second) where {T<:Real}
+        x, _ = z
+        curvature = mode === :higher_depth ? 6 * x :
+                    mode === :manifold ? zero(T) : T(2)
+        return T[0, curvature * first[1] * second[1]]
+    end
+    endpoint = mode === :higher_depth ? [2.0^-20, 0.0] :
+               mode === :regular_fold ? [separation, 0.0] : [0.0, 0.0]
+    oracle = EndpointOracle(
+        "synthetic-s4-negative-$(mode)",
+        "SYNTHETIC-NEGATIVE",
+        "synthetic-s4-negative-$(mode)",
+        2,
+        2,
+        :C2,
+        residual,
+        target,
+        nothing,
+    )
+    return s4_candidate_input(CandidateInput(oracle, endpoint)),
         ExperimentSingular001.S4AnalyticControlOracle(jacobian, second_directional)
 end
 
@@ -117,6 +202,14 @@ end
     @test control.core.work.callbacks <= options.maximum_callbacks
     @test candidate.core.work.iterations == 4
     @test control.core.work.iterations == 4
+    @test candidate.core.work.callbacks == 488
+    @test candidate.core.work.factorization_calls == 122
+    @test candidate.core.work.target_calls == 24
+    @test candidate.core.work.jacobian_calls == 0
+    @test control.core.work.callbacks == 114
+    @test control.core.work.factorization_calls == 66
+    @test control.core.work.target_calls == 24
+    @test control.core.work.jacobian_calls == 38
 
     candidate_audit = candidate.diagnostics["applicability_audits"][1]
     @test candidate_audit["physical_reference"]["ell"] == 65
@@ -239,6 +332,16 @@ end
         )
     @test analytic_ledger.deadline_reached
 
+    snapshot_calls = Ref(0)
+    snapshot_clock = () -> begin
+        snapshot_calls[] += 1
+        return snapshot_calls[] == 1 ? UInt64(0) : UInt64(11_000_000_000)
+    end
+    snapshot_ledger = ExperimentSingular001._work_ledger(options, snapshot_clock)
+    @test_throws ExperimentSingular001.ExperimentBudgetExceeded
+        ExperimentSingular001._s4_checked_work_snapshot!(snapshot_ledger)
+    @test snapshot_ledger.deadline_reached
+
     spy_input, base_analytic = _s4_synthetic_deflation_one()
     events = Any[]
     spy_jacobian = point -> begin
@@ -270,6 +373,60 @@ end
     @test [event.kind for event in events] == [:jacobian, :second, :jacobian]
     @test events[2].point ≈ step.x_range
     @test events[3].point ≈ step.x_range
+end
+
+@testset "S4 maximum frozen nullity remains inside hard work budgets" begin
+    input, analytic = _s4_synthetic_nullity_four()
+    options = ExperimentOptions(
+        precision_ladder=(128, 256),
+        semantic_precision_bits=256,
+    )
+    candidate = run_s4(input; options)
+    control = run_s4_analytic_control(input, analytic; options)
+    @test candidate.core.status == :promoted
+    @test control.core.status == :promoted
+    @test candidate.core.root_evidence.nullity == 4
+    @test control.core.root_evidence.nullity == 4
+    @test candidate.core.work.callbacks <= 4096
+    @test control.core.work.callbacks <= 4096
+    @test candidate.core.work.iterations == 4
+    @test control.core.work.iterations == 4
+    @test candidate.core.work.elapsed_seconds <= 10.0
+    @test control.core.work.elapsed_seconds <= 10.0
+end
+
+@testset "S4 warm-up and per-group variant schedule are frozen" begin
+    s4_options = ExperimentOptions(
+        precision_ladder=(128, 256),
+        semantic_precision_bits=256,
+    )
+    warmup = ExperimentSingular001._run_s4_family_disjoint_warmup!(
+        s4_options,
+        ExperimentOptions(),
+    )
+    @test warmup["measured"] == false
+    @test length(warmup["fixtures"]) == 3
+    @test [fixture["nullity"] for fixture in warmup["fixtures"]] == [1, 2, 4]
+    @test all(
+        fixture["statuses"]["S4-C2-NULLSPACE-TWO-STEP"] == "promoted" &&
+        fixture["statuses"]["S4-ANALYTIC-TWO-STEP-CONTROL"] == "promoted" for
+        fixture in warmup["fixtures"]
+    )
+    variants = Set((
+        "S1-AP-LMQR",
+        "S4-C2-NULLSPACE-TWO-STEP",
+        "S4-ANALYTIC-TWO-STEP-CONTROL",
+    ))
+    for group_start in 1:3:36
+        orders = [
+            ExperimentSingular001._s4_counterbalanced_variant_order(index) for
+            index in group_start:(group_start + 2)
+        ]
+        @test all(Set(order) == variants for order in orders)
+        @test all(
+            Set(order[position] for order in orders) == variants for position in 1:3
+        )
+    end
 end
 
 @testset "S4 A3 common-mode final correction is charged to error" begin
@@ -311,12 +468,34 @@ end
     @test audit.document["final_correction_magnitude"] == BigFloat("1e-4")
 end
 
+@testset "S4 fail-closed negative mechanism controls" begin
+    options = ExperimentOptions(
+        precision_ladder=(128, 256),
+        semantic_precision_bits=256,
+    )
+    for mode in (:higher_depth, :regular_fold, :manifold, :nonroot)
+        input, analytic = _s4_negative_fixture(mode)
+        candidate = run_s4(input; options)
+        control = run_s4_analytic_control(input, analytic; options)
+        @test candidate.core.status == :unknown
+        @test control.core.status == :unknown
+        @test candidate.core.root_evidence === nothing
+        @test control.core.root_evidence === nothing
+        @test candidate.core.work.callbacks <= 4096
+        @test control.core.work.callbacks <= 4096
+    end
+end
+
 @testset "S4 development artifact conversion is Gold-side only" begin
     input, analytic = _s4_synthetic_deflation_one()
     @test ExperimentSingular001._s4_document_value(BigFloat("0.125")) == "0.125"
     @test ExperimentSingular001._s4_document_value(1 // 16) == "1//16"
     @test candidate_input(first(ExperimentSingular001.s4_development_cases())) isa
           CandidateInput
-    @test input.oracle.analytic_jacobian === nothing
+    @test input isa S4CandidateInput
+    @test !hasproperty(input.oracle, :analytic_jacobian)
+    @test !hasproperty(input.oracle, :id)
+    @test !hasproperty(input.oracle, :family)
+    @test !hasproperty(input.oracle, :metamorphic_group)
     @test analytic.analytic_jacobian !== nothing
 end

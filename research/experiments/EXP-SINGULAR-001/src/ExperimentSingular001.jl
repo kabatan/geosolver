@@ -16,6 +16,7 @@ include("s4_inputs.jl")
 include("s4/types.jl")
 include("s4/candidate.jl")
 include("s4/analytic_control.jl")
+include("s4/warmup.jl")
 include("s4/development.jl")
 include("development.jl")
 include("s2_development.jl")
@@ -63,6 +64,9 @@ export EXPERIMENT_ID,
     s3_development_summary,
     write_s3_development_results,
     S4VariantOutcome,
+    S4BlackBoxOracle,
+    S4CandidateInput,
+    s4_candidate_input,
     run_s4,
     run_s4_analytic_control,
     run_s4_development,

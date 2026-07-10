@@ -12,9 +12,9 @@ SVD split, principal-angle check, counter schedule, range solve, projected
 operator, null solve, trajectory, transport, convergence and error routines.
 They share only the frozen endpoint/oracle, work-ledger and canonical semantic
 replay types, confirmation-start formula, artifact vocabulary and final gate.
-The candidate receives only `CandidateInput`; only the control receives
-`S4AnalyticControlOracle`. Candidate source contains no case/family/group/Gold
-or analytic-fixture routing read.
+Both mechanisms receive only metadata-free `S4CandidateInput`; only the control
+separately receives `S4AnalyticControlOracle`. Candidate source and capability
+objects contain no case/family/group/Gold or analytic-fixture routing field.
 
 At every step, the split is computed at `x`. Its `U2`, `V2` and physical probe
 remain fixed through the range correction, derivative evaluation at `x_range`,
@@ -32,10 +32,21 @@ a factorization. One ledger covers route probes, both primary trajectories,
 two confirmations, every final audit, error propagation and semantic replay.
 
 Deadline checks occur both before and after every black-box callback, after
-each generic SVD and projected solve, and immediately before promotion. A call
-that starts before but returns after ten seconds therefore produces typed
-unknown with `deadline_reached=true`; it cannot be promoted. Public research
-entry points reject any option set differing from the frozen protocol.
+each generic SVD and projected solve, and in the single timestamp used to
+construct promotion work evidence. A call that starts before but returns after
+ten seconds therefore produces typed unknown with `deadline_reached=true`; it
+cannot be promoted. These are cooperative checks: an adversarial callback or
+factorization that never returns cannot be preempted in-process. The
+development fixtures are frozen, pure and trusted; no product hard-wall claim
+is made until worker-process isolation supplies an OS-enforced timeout. Public
+research entry points reject any option set differing from the frozen protocol.
+
+The formal runner first executes three family-disjoint, unmeasured synthetic
+warm-ups at nullity 1, 2 and 4, rotating which variant runs first. Within every
+three-representation metamorphic group, official variant order follows a
+frozen Latin schedule, with orientation reversed on alternating groups. Thus
+each variant occupies every position once per group and JIT/warm-cache order is
+not confounded with representation or variant.
 
 ## Static corrections A2 and A3
 

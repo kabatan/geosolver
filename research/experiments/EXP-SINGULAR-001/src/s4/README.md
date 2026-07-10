@@ -10,10 +10,11 @@ This directory is a sequencing guard, not a product package.
   `s4-input-freeze.json` names their parent manifest hash.
 - The input freeze must bind the preregistration, final A1, A2, generator
   scaffold commit/source and current manifest-builder source hashes.
-- The candidate may accept only `CandidateInput` and common controls. The
-  candidate's `EndpointOracle.analytic_jacobian` is `nothing`; analytic
+- The candidate and control accept only `S4CandidateInput`, whose
+  `S4BlackBoxOracle` physically has no id, family, metamorphic group, Gold,
+  generator parameter, analytic Jacobian, or Hessian fixture field. Analytic
   Jacobian and Hessian-direction fixtures stay in `S4DevelopmentCase` and are
-  available only to the separately coded control.
+  passed separately only to the independently coded control.
 - Candidate/control numerical helpers may not be shared. Only the work ledger,
   canonical semantic replay types, frozen input/counter data and final artifact
   predicates are common.
@@ -26,5 +27,8 @@ This directory is a sequencing guard, not a product package.
 - Every trajectory, precision and confirmation consumes the same endpoint-wide
   64-iteration/4,096-callback ledger for its variant.
 
-The next legal state transition is input materialization and an input-freeze
-commit. Until then no `run_s4` symbol is allowed.
+Development inputs were frozen at commit `3fb7480`; A3 and mechanism source
+were subsequently committed without executing a candidate or opening a Gold
+outcome. The next legal transition is synthetic/static verification followed
+by an implementation-freeze commit. The 36-case development split remains
+forbidden until that freeze exists and verifies exactly.

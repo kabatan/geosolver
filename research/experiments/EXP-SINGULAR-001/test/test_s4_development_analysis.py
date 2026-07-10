@@ -136,10 +136,14 @@ class AssessmentTests(unittest.TestCase):
         self.assertIn("final_correction_magnitude", MODULE.verify_error_audit(row))
 
     def test_principal_angle_is_basis_rotation_invariant(self) -> None:
-        reference = [[MODULE.Decimal(1), MODULE.Decimal(0), MODULE.Decimal(0)],
-                     [MODULE.Decimal(0), MODULE.Decimal(1), MODULE.Decimal(0)]]
-        rotated = [[MODULE.Decimal("0.6"), MODULE.Decimal("0.8"), MODULE.Decimal(0)],
-                   [MODULE.Decimal("-0.8"), MODULE.Decimal("0.6"), MODULE.Decimal(0)]]
+        reference = [
+            [MODULE.Decimal(1), MODULE.Decimal(0), MODULE.Decimal(0)],
+            [MODULE.Decimal(0), MODULE.Decimal(1), MODULE.Decimal(0)],
+        ]
+        rotated = [
+            [MODULE.Decimal("0.6"), MODULE.Decimal("0.8"), MODULE.Decimal(0)],
+            [MODULE.Decimal("-0.8"), MODULE.Decimal("0.6"), MODULE.Decimal(0)],
+        ]
         self.assertLess(MODULE.principal_angle_sine(reference, rotated), 1e-7)
 
 

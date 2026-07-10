@@ -282,6 +282,9 @@ function _s4c_probe_document(bits, radius, split, projected, probe)
         "direction" => collect(probe.direction),
         "gap_ratio" => boundary_ratio,
         "jacobian_radius_multiplier" => radius,
+        "left_null_basis" => Any[
+            collect(column) for column in eachcol(split.U2)
+        ],
         "ell" => probe.iteration,
         "nullity" => split.nullity,
         "precision_bits" => bits,
@@ -301,7 +304,7 @@ function _s4c_probe_document(bits, radius, split, projected, probe)
     )
 end
 
-function _s4c_initial_route!(ledger, input::CandidateInput, options::ExperimentOptions)
+function _s4c_initial_route!(ledger, input::S4CandidateInput, options::ExperimentOptions)
     oracle = input.oracle
     probes = Dict{Tuple{Int,Float64},Any}()
     documents = Any[]
@@ -343,18 +346,20 @@ function _s4c_initial_route!(ledger, input::CandidateInput, options::ExperimentO
                     radius,
                 )
                 projected = _s4c_projected_factor!(ledger, operator)
+                document = _s4c_probe_document(
+                    bits,
+                    radius,
+                    split,
+                    projected,
+                    local_probe,
+                )
+                document["residual_linf"] = norm(residual, Inf)
                 (
                     split=split,
                     projected=projected,
                     probe=local_probe,
                     residual_linf=BigFloat(norm(residual, Inf)),
-                    document=_s4c_probe_document(
-                        bits,
-                        radius,
-                        split,
-                        projected,
-                        local_probe,
-                    ),
+                    document=document,
                 )
             end
             probes[(bits, radius)] = probe
@@ -416,7 +421,7 @@ end
 
 function _s4c_step!(
     ledger,
-    input::CandidateInput,
+    input::S4CandidateInput,
     x::AbstractVector{T},
     bits::Int,
     nullity::Int,
@@ -499,7 +504,7 @@ end
 
 function _s4c_trajectory!(
     ledger,
-    input::CandidateInput,
+    input::S4CandidateInput,
     start,
     bits::Int,
     nullity::Int,
@@ -593,9 +598,63 @@ function _s4c_reference!(ledger, input, start, nullity::Int)
     end
 end
 
+function _s4c_order_and_null_decision(start_probe, final_probe, stage, bits, options)
+    return setprecision(BigFloat, bits) do
+        ratios = BigFloat.(final_probe.projected.spectrum) ./
+                 BigFloat.(start_probe.projected.spectrum)
+        order_passed = all(
+            ratio -> isfinite(ratio) && ratio >= BigFloat(_S4C_ORDER_MIN) &&
+                     ratio <= BigFloat(_S4C_ORDER_MAX),
+            ratios,
+        )
+        normalized_discarded = maximum(BigFloat.(
+            final_probe.split.singular_values[(final_probe.split.retained + 1):end],
+        )) / max(one(BigFloat), BigFloat(final_probe.split.singular_values[1]))
+        normalized_step = BigFloat(stage.last_step) /
+                          max(one(BigFloat), norm(BigFloat.(stage.endpoint), Inf))
+        null_bound = BigFloat(options.error_reserve_multiplier) *
+                     (normalized_step^2 + eps(BigFloat)^(BigFloat(2) / BigFloat(3)))
+        null_decay_passed = isfinite(normalized_discarded) &&
+                            normalized_discarded <= null_bound
+        return (
+            ratios=ratios,
+            order_passed=order_passed,
+            normalized_discarded=normalized_discarded,
+            normalized_step=normalized_step,
+            null_bound=null_bound,
+            null_decay_passed=null_decay_passed,
+        )
+    end
+end
+
+function _s4c_residual_decay_decision(start_probe, final_probe, stage, bits, options)
+    return setprecision(BigFloat, bits) do
+        start_residual = BigFloat(norm(start_probe.residual, Inf))
+        final_residual = BigFloat(norm(final_probe.residual, Inf))
+        start_scale = max(
+            one(BigFloat),
+            start_residual,
+            BigFloat(norm(start_probe.jacobian, Inf)) *
+            max(one(BigFloat), norm(BigFloat.(stage.start), Inf)),
+        )
+        residual_ratio = final_residual / start_scale
+        normalized_step = BigFloat(stage.last_step) /
+                          max(one(BigFloat), norm(BigFloat.(stage.endpoint), Inf))
+        bound = BigFloat(options.error_reserve_multiplier) *
+                (normalized_step^2 + eps(BigFloat)^(BigFloat(2) / BigFloat(3)))
+        return (
+            start_scale=start_scale,
+            residual_ratio=residual_ratio,
+            normalized_step=normalized_step,
+            bound=bound,
+            passed=isfinite(residual_ratio) && residual_ratio <= bound,
+        )
+    end
+end
+
 function _s4c_trajectory_audit!(
     ledger,
-    input::CandidateInput,
+    input::S4CandidateInput,
     stage,
     nullity::Int,
     options::ExperimentOptions,
@@ -640,38 +699,26 @@ function _s4c_trajectory_audit!(
             end
             start_probes[(bits, radius)] = start_probe
             final_probes[(bits, radius)] = final_probe
-            ratios = BigFloat.(final_probe.projected.spectrum) ./
-                     BigFloat.(start_probe.projected.spectrum)
-            order_passed = all(
-                ratio -> isfinite(ratio) &&
-                         ratio >= BigFloat(_S4C_ORDER_MIN) &&
-                         ratio <= BigFloat(_S4C_ORDER_MAX),
-                ratios,
+            decision = _s4c_order_and_null_decision(
+                start_probe,
+                final_probe,
+                stage,
+                bits,
+                options,
             )
-            normalized_discarded = maximum(BigFloat.(
-                final_probe.split.singular_values[(final_probe.split.retained + 1):end],
-            )) / max(one(BigFloat), BigFloat(final_probe.split.singular_values[1]))
-            normalized_step = BigFloat(stage.last_step) /
-                              max(one(BigFloat), norm(BigFloat.(stage.endpoint), Inf))
-            null_bound = setprecision(BigFloat, bits) do
-                BigFloat(options.error_reserve_multiplier) *
-                (normalized_step^2 + eps(BigFloat)^(BigFloat(2) / BigFloat(3)))
-            end
-            null_decay_passed = isfinite(normalized_discarded) &&
-                                normalized_discarded <= null_bound
-            all_passed &= order_passed && null_decay_passed
+            all_passed &= decision.order_passed && decision.null_decay_passed
             push!(documents, Dict{String,Any}(
                 "final" => final_probe.document,
                 "null_decay" => Dict{String,Any}(
-                    "bound" => null_bound,
-                    "decision" => null_decay_passed,
-                    "normalized_discarded_sigma" => normalized_discarded,
-                    "normalized_last_step" => normalized_step,
+                    "bound" => decision.null_bound,
+                    "decision" => decision.null_decay_passed,
+                    "normalized_discarded_sigma" => decision.normalized_discarded,
+                    "normalized_last_step" => decision.normalized_step,
                 ),
                 "order_persistence" => Dict{String,Any}(
-                    "decision" => order_passed,
+                    "decision" => decision.order_passed,
                     "lower_bound" => _S4C_ORDER_MIN,
-                    "ratios" => collect(ratios),
+                    "ratios" => collect(decision.ratios),
                     "upper_bound" => _S4C_ORDER_MAX,
                 ),
                 "precision_bits" => bits,
@@ -684,30 +731,21 @@ function _s4c_trajectory_audit!(
     for bits in _S4C_BITS
         start_probe = start_probes[(bits, 1.0)]
         final_probe = final_probes[(bits, 1.0)]
-        start_residual = BigFloat(norm(start_probe.residual, Inf))
-        final_residual = BigFloat(norm(final_probe.residual, Inf))
-        start_scale = max(
-            one(BigFloat),
-            start_residual,
-            BigFloat(norm(start_probe.jacobian, Inf)) *
-            max(one(BigFloat), norm(BigFloat.(stage.start), Inf)),
+        decision = _s4c_residual_decay_decision(
+            start_probe,
+            final_probe,
+            stage,
+            bits,
+            options,
         )
-        residual_ratio = final_residual / start_scale
-        normalized_step = BigFloat(stage.last_step) /
-                          max(one(BigFloat), norm(BigFloat.(stage.endpoint), Inf))
-        bound = setprecision(BigFloat, bits) do
-            BigFloat(options.error_reserve_multiplier) *
-            (normalized_step^2 + eps(BigFloat)^(BigFloat(2) / BigFloat(3)))
-        end
-        passed = isfinite(residual_ratio) && residual_ratio <= bound
-        all_passed &= passed
+        all_passed &= decision.passed
         push!(residual_documents, Dict{String,Any}(
-            "F_scale" => start_scale,
-            "bound" => bound,
-            "decision" => passed,
-            "normalized_last_step" => normalized_step,
+            "F_scale" => decision.start_scale,
+            "bound" => decision.bound,
+            "decision" => decision.passed,
+            "normalized_last_step" => decision.normalized_step,
             "precision_bits" => bits,
-            "residual_ratio" => residual_ratio,
+            "residual_ratio" => decision.residual_ratio,
         ))
     end
     all_passed || _s4c_fail("trajectory final applicability audit failed")
@@ -951,7 +989,7 @@ function _s4c_error_audit!(ledger, input, primary, confirmations, audits, option
 end
 
 function run_s4(
-    input::CandidateInput;
+    input::S4CandidateInput;
     options::ExperimentOptions=ExperimentOptions(
         precision_ladder=(128, 256),
         semantic_precision_bits=256,
@@ -1129,7 +1167,7 @@ function run_s4(
             true,
         )
         diagnostics["phase"] = "promoted"
-        _check_deadline!(ledger)
+        promotion_work = _s4_checked_work_snapshot!(ledger)
         core = ExperimentalOutcome(
             variant,
             route_name,
@@ -1137,7 +1175,7 @@ function run_s4(
             "S4 applicability and numerical-root evidence accepted",
             semantics[2],
             evidence,
-            _work_snapshot(ledger),
+            promotion_work,
         )
         return S4VariantOutcome(core, diagnostics)
     catch error

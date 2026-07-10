@@ -102,25 +102,42 @@ function _run_s4_development_case(
     s4_options,
     baseline_options,
     clock_ns,
+    variant_order=(
+        "S1-AP-LMQR",
+        "S4-C2-NULLSPACE-TWO-STEP",
+        "S4-ANALYTIC-TWO-STEP-CONTROL",
+    ),
 )
     rows = Any[]
-    input = candidate_input(case)
-    baseline = _s4_baseline_outcome(run_s1(
-        input;
-        options=baseline_options,
-        derivative_mode=:dense,
-        clock_ns,
+    frozen_variants = Set((
+        "S1-AP-LMQR",
+        "S4-C2-NULLSPACE-TWO-STEP",
+        "S4-ANALYTIC-TWO-STEP-CONTROL",
     ))
-    push!(rows, _s4_row(case, baseline, first_execution_index))
-    candidate = run_s4(input; options=s4_options, clock_ns)
-    push!(rows, _s4_row(case, candidate, first_execution_index + 1))
-    control = run_s4_analytic_control(
-        input,
-        case.analytic_control;
-        options=s4_options,
-        clock_ns,
-    )
-    push!(rows, _s4_row(case, control, first_execution_index + 2))
+    length(variant_order) == 3 && Set(variant_order) == frozen_variants ||
+        throw(ArgumentError("S4 case variant order must be one frozen permutation"))
+    input = candidate_input(case)
+    mechanism_input = s4_candidate_input(input)
+    for (offset, variant) in enumerate(variant_order)
+        outcome = if variant == "S1-AP-LMQR"
+            _s4_baseline_outcome(run_s1(
+                input;
+                options=baseline_options,
+                derivative_mode=:dense,
+                clock_ns,
+            ))
+        elseif variant == "S4-C2-NULLSPACE-TWO-STEP"
+            run_s4(mechanism_input; options=s4_options, clock_ns)
+        else
+            run_s4_analytic_control(
+                mechanism_input,
+                case.analytic_control;
+                options=s4_options,
+                clock_ns,
+            )
+        end
+        push!(rows, _s4_row(case, outcome, first_execution_index + offset - 1))
+    end
     return rows
 end
 
@@ -135,15 +152,32 @@ function run_s4_development(
 )
     rows = Any[]
     for (case_index, case) in enumerate(cases)
+        variant_order = _s4_counterbalanced_variant_order(case_index)
         append!(rows, _run_s4_development_case(
             case,
             3 * (case_index - 1) + 1;
             s4_options,
             baseline_options,
             clock_ns,
+            variant_order,
         ))
     end
     return rows
+end
+
+function _s4_counterbalanced_variant_order(case_index::Int)
+    case_index >= 1 || throw(ArgumentError("case index must be positive"))
+    variants = (
+        "S1-AP-LMQR",
+        "S4-C2-NULLSPACE-TWO-STEP",
+        "S4-ANALYTIC-TWO-STEP-CONTROL",
+    )
+    representation_index = mod(case_index - 1, 3)
+    group_index = fld(case_index - 1, 3)
+    if iseven(group_index)
+        return ntuple(position -> variants[mod1(position + representation_index, 3)], 3)
+    end
+    return ntuple(position -> variants[mod1(position - representation_index, 3)], 3)
 end
 
 function _s4_rows_for_variant(rows, variant)
@@ -247,9 +281,25 @@ function _s4_budget_violations(rows, s4_options, baseline_options)
     for row in rows
         options = row["variant"] == "S1-AP-LMQR" ? baseline_options : s4_options
         work = row["work"]
+        categorized_callbacks = work["residual_calls"] + work["target_calls"] +
+                                work["jacobian_calls"]
+        precision_callbacks = sum(
+            entry["callbacks"] for entry in work["calls_by_precision"],
+        )
+        precision_equivalent = sum(
+            entry["callbacks"] * cld(entry["precision_bits"], 53) for
+            entry in work["calls_by_precision"],
+        )
+        maximum_precision = isempty(work["calls_by_precision"]) ? 0 : maximum(
+            entry["precision_bits"] for entry in work["calls_by_precision"],
+        )
         if work["callbacks"] > options.maximum_callbacks ||
            work["iterations"] > options.maximum_iterations ||
            work["elapsed_seconds"] > options.wall_seconds ||
+           categorized_callbacks != work["callbacks"] ||
+           precision_callbacks != work["callbacks"] ||
+           precision_equivalent != work["precision_equivalent_oracle_work"] ||
+           maximum_precision != work["maximum_precision_bits"] ||
            (row["status"] == "promoted" &&
             (work["budget_exhausted"] || work["deadline_reached"]))
             push!(violations, Dict{String,Any}(
@@ -300,6 +350,9 @@ function s4_development_summary(
         semantic_precision_bits=256,
     ),
     baseline_options::ExperimentOptions=ExperimentOptions(),
+    checkpoint_manifest_sha256::AbstractString,
+    run_identity_sha256::AbstractString,
+    warmup_sha256::AbstractString,
 )
     variants = (
         "S1-AP-LMQR",
@@ -451,6 +504,8 @@ function write_s4_development_results(
     )
     environment = Dict{String,Any}(
         "baseline_options" => _s4_options_document(baseline_options),
+        "blas_threads" => BLAS.get_num_threads(),
+        "checkpoint_manifest_sha256" => String(checkpoint_manifest_sha256),
         "implementation_freeze_path" => replace(
             normpath(implementation_freeze_path),
             '\\' => '/',
@@ -461,9 +516,24 @@ function write_s4_development_results(
         "input_manifest_path" => replace(normpath(input_manifest_path), '\\' => '/'),
         "input_manifest_sha256" => bytes2hex(sha256(read(input_manifest_path))),
         "julia_version" => string(VERSION),
+        "julia_threads" => Threads.nthreads(),
+        "manifest_sha256" => bytes2hex(sha256(read(joinpath(
+            @__DIR__,
+            "..",
+            "..",
+            "Manifest.toml",
+        )))),
         "product_connected" => false,
+        "project_sha256" => bytes2hex(sha256(read(joinpath(
+            @__DIR__,
+            "..",
+            "..",
+            "Project.toml",
+        )))),
+        "run_identity_sha256" => String(run_identity_sha256),
         "schema" => "geotarget.singular-s4-development-environment/v1",
         "s4_options" => _s4_options_document(s4_options),
+        "warmup_sha256" => String(warmup_sha256),
     )
     raw_path = joinpath(result_directory, "raw.json")
     summary_path = joinpath(result_directory, "summary.json")
@@ -476,6 +546,7 @@ function write_s4_development_results(
         write(io, _s4_development_report(summary))
     end
     return Dict{String,Any}(
+        "checkpoint_manifest_sha256" => String(checkpoint_manifest_sha256),
         "environment_sha256" => bytes2hex(sha256(read(environment_path))),
         "raw_sha256" => bytes2hex(sha256(read(raw_path))),
         "report_sha256" => bytes2hex(sha256(read(report_path))),
