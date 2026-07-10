@@ -249,6 +249,30 @@ struct NumericalManifoldRootEvidence <: AbstractNumericalRootEvidence
     rank_stable::Bool
 end
 
+struct NumericalSingularRootEvidence <: AbstractNumericalRootEvidence
+    method::String
+    precision_bits::Int
+    precision_stages::Tuple
+    endpoint::Tuple
+    target::BigFloat
+    residual_linf::BigFloat
+    numerical_rank::Int
+    nullity::Int
+    condition_estimate::BigFloat
+    configuration_error_estimate::BigFloat
+    target_error_estimate::BigFloat
+    confirmation_endpoints::Tuple
+    confirmation_targets::Tuple
+    confirmation_residuals::Tuple
+    route_rank_signatures::Tuple
+    contraction_ratios::Tuple
+    secant_updates::Int
+    rank_stable::Bool
+    independent_confirmations_passed::Bool
+    canonical_confirmations_passed::Bool
+    linear_trace_passed::Bool
+end
+
 struct ExperimentalOutcome
     variant::String
     route::String

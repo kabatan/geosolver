@@ -82,6 +82,43 @@ function _root_document(evidence::NumericalManifoldRootEvidence)
     )
 end
 
+function _root_document(evidence::NumericalSingularRootEvidence)
+    return Dict{String,Any}(
+        "canonical_confirmations_passed" => evidence.canonical_confirmations_passed,
+        "condition_estimate" => _evidence_real(evidence.condition_estimate),
+        "configuration_error_estimate" =>
+            _evidence_real(evidence.configuration_error_estimate),
+        "confirmation_endpoints" => Any[
+            Any[_evidence_real(value) for value in endpoint] for
+            endpoint in evidence.confirmation_endpoints
+        ],
+        "confirmation_residuals" =>
+            Any[_evidence_real(value) for value in evidence.confirmation_residuals],
+        "confirmation_targets" =>
+            Any[_evidence_real(value) for value in evidence.confirmation_targets],
+        "contraction_ratios" =>
+            Any[_evidence_real(value) for value in evidence.contraction_ratios],
+        "endpoint" => Any[_evidence_real(value) for value in evidence.endpoint],
+        "independent_confirmations_passed" =>
+            evidence.independent_confirmations_passed,
+        "linear_trace_passed" => evidence.linear_trace_passed,
+        "method" => evidence.method,
+        "nullity" => evidence.nullity,
+        "numerical_rank" => evidence.numerical_rank,
+        "precision_bits" => evidence.precision_bits,
+        "precision_stages" => Any[evidence.precision_stages...],
+        "rank_stable" => evidence.rank_stable,
+        "residual_linf" => _evidence_real(evidence.residual_linf),
+        "route_rank_signatures" => Any[
+            Dict{String,Any}(String(key) => value for (key, value) in pairs(signature)) for
+            signature in evidence.route_rank_signatures
+        ],
+        "secant_updates" => evidence.secant_updates,
+        "target" => _evidence_real(evidence.target),
+        "target_error_estimate" => _evidence_real(evidence.target_error_estimate),
+    )
+end
+
 function outcome_document(case::GeneratedEndpoint, outcome::ExperimentalOutcome)
     return Dict{String,Any}(
         "case_checksum" => case.checksum,

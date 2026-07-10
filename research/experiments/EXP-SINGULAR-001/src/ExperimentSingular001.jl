@@ -13,6 +13,7 @@ include("harness.jl")
 include("artifacts.jl")
 include("development.jl")
 include("s2_development.jl")
+include("s3_development.jl")
 
 export EXPERIMENT_ID,
     HARNESS_VERSION,
@@ -26,6 +27,7 @@ export EXPERIMENT_ID,
     AbstractNumericalRootEvidence,
     NumericalRootEvidence,
     NumericalManifoldRootEvidence,
+    NumericalSingularRootEvidence,
     ExperimentalOutcome,
     GoldAssessment,
     fixed_control_cases,
@@ -36,6 +38,8 @@ export EXPERIMENT_ID,
     run_s0,
     run_s1,
     run_s2,
+    run_s3,
+    run_s3_analytic_control,
     assess_outcome,
     case_manifest_document,
     outcome_document,
@@ -49,6 +53,9 @@ export EXPERIMENT_ID,
     run_s2_development,
     s2_development_summary,
     write_s2_development_results,
+    run_s3_development,
+    s3_development_summary,
+    write_s3_development_results,
     write_json_artifact
 
 end

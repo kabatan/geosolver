@@ -1025,6 +1025,720 @@ function run_s2(
     end
 end
 
+struct _BroydenStageResult
+    precision_bits::Int
+    endpoint::Vector{BigFloat}
+    target::BigFloat
+    residual_linf::BigFloat
+    last_step_norm::BigFloat
+    converged::Bool
+    reason::String
+    residual_trace::Tuple
+    contraction_ratios::Tuple
+    secant_updates::Int
+    linear_trace_passed::Bool
+end
+
+function _s3_charge_iteration!(ledger::_WorkLedger, local_iteration::Int)
+    local_iteration <= ledger.options.maximum_iterations || throw(
+        AssertionError("trajectory index exceeded the endpoint-wide iteration cap"),
+    )
+    return _charge_iteration!(ledger)
+end
+
+function _s3_step_goal(::Type{T}, options::ExperimentOptions) where {T<:AbstractFloat}
+    return min(T(options.configuration_error_goal), T(options.target_error_goal)) /
+           (T(4) * T(options.error_reserve_multiplier))
+end
+
+function _s3_residual_goal(::Type{T}, options::ExperimentOptions) where {T<:AbstractFloat}
+    return T(options.semantic_residual_tolerance) /
+           (T(4) * T(options.error_reserve_multiplier))
+end
+
+function _s3_linear_trace_gate(ratios)
+    finite = BigFloat[value for value in ratios if isfinite(value) && value > 0]
+    length(finite) >= 4 || return false
+    tail = finite[max(1, end - 7):end]
+    all(value -> value < BigFloat("0.999"), tail) || return false
+    ordered = sort(copy(tail))
+    middle = length(ordered) ÷ 2
+    median = isodd(length(ordered)) ? ordered[middle + 1] :
+             (ordered[middle] + ordered[middle + 1]) / 2
+    return BigFloat("0.05") <= median <= BigFloat("0.99")
+end
+
+function _s3_candidate_route!(ledger, input::CandidateInput, options::ExperimentOptions)
+    oracle = input.oracle
+    signatures = NamedTuple[]
+    ranks = Int[]
+    conditions = BigFloat[]
+    residuals = BigFloat[]
+    for precision_bits in (128, 256)
+        setprecision(BigFloat, precision_bits) do
+            endpoint = BigFloat[BigFloat(value) for value in input.endpoint]
+            residual = BigFloat.(_evaluate_residual!(
+                ledger,
+                oracle,
+                endpoint,
+                precision_bits,
+            ))
+            push!(residuals, BigFloat(norm(residual, Inf)))
+            for radius_multiplier in (1.0, 0.5)
+                jacobian = BigFloat.(_dense_jacobian!(
+                    ledger,
+                    oracle,
+                    endpoint,
+                    precision_bits,
+                    options;
+                    radius_multiplier,
+                ))
+                factor = _rank_factorization!(ledger, jacobian, options)
+                push!(ranks, factor.rank)
+                push!(conditions, BigFloat(factor.condition_estimate))
+                push!(
+                    signatures,
+                    (
+                        precision_bits=precision_bits,
+                        radius_multiplier=radius_multiplier,
+                        rank=factor.rank,
+                        nullity=oracle.dimension - factor.rank,
+                        condition_estimate=string(factor.condition_estimate),
+                    ),
+                )
+            end
+        end
+    end
+    residual_ok = all(value -> value <= _residual_goal(BigFloat), residuals)
+    stable_rank = !isempty(ranks) && all(==(first(ranks)), ranks)
+    rank = stable_rank ? first(ranks) : -1
+    singular = stable_rank && 0 < rank < oracle.dimension
+    condition = isempty(conditions) ? BigFloat(Inf) : maximum(conditions)
+    accepted = residual_ok && singular
+    reason = !residual_ok ? "primary residual above strict numerical route goal" :
+             !stable_rank ? "rank unstable across precision or radius" :
+             !singular ? "stable endpoint is not rank-deficient" :
+             "stable singular route accepted"
+    return (
+        accepted=accepted,
+        reason=reason,
+        rank=rank,
+        condition=condition,
+        signatures=Tuple(signatures),
+    )
+end
+
+function _s3_control_route!(ledger, input::CandidateInput, options::ExperimentOptions)
+    oracle = input.oracle
+    signatures = NamedTuple[]
+    ranks = Int[]
+    conditions = BigFloat[]
+    residuals = BigFloat[]
+    for precision_bits in (128, 256)
+        setprecision(BigFloat, precision_bits) do
+            endpoint = BigFloat[BigFloat(value) for value in input.endpoint]
+            residual = BigFloat.(_evaluate_residual!(
+                ledger,
+                oracle,
+                endpoint,
+                precision_bits,
+            ))
+            push!(residuals, BigFloat(norm(residual, Inf)))
+            jacobian = BigFloat.(_evaluate_analytic_jacobian!(
+                ledger,
+                oracle,
+                endpoint,
+                precision_bits,
+            ))
+            factor = _rank_factorization!(ledger, jacobian, options)
+            push!(ranks, factor.rank)
+            push!(conditions, BigFloat(factor.condition_estimate))
+            push!(
+                signatures,
+                (
+                    precision_bits=precision_bits,
+                    radius_multiplier="analytic",
+                    rank=factor.rank,
+                    nullity=oracle.dimension - factor.rank,
+                    condition_estimate=string(factor.condition_estimate),
+                ),
+            )
+        end
+    end
+    residual_ok = all(value -> value <= _residual_goal(BigFloat), residuals)
+    stable_rank = !isempty(ranks) && all(==(first(ranks)), ranks)
+    rank = stable_rank ? first(ranks) : -1
+    singular = stable_rank && 0 < rank < oracle.dimension
+    condition = isempty(conditions) ? BigFloat(Inf) : maximum(conditions)
+    accepted = residual_ok && singular
+    reason = !residual_ok ? "primary residual above strict numerical route goal" :
+             !stable_rank ? "analytic rank unstable across precision" :
+             !singular ? "stable endpoint is not analytically rank-deficient" :
+             "stable analytic singular route accepted"
+    return (
+        accepted=accepted,
+        reason=reason,
+        rank=rank,
+        condition=condition,
+        signatures=Tuple(signatures),
+    )
+end
+
+function _s3_direct_broyden_stage!(
+    ledger,
+    input::CandidateInput,
+    start,
+    precision_bits::Int,
+    options::ExperimentOptions,
+)
+    oracle = input.oracle
+    return setprecision(BigFloat, precision_bits) do
+        x = BigFloat[BigFloat(value) for value in start]
+        residual = BigFloat.(_evaluate_residual!(ledger, oracle, x, precision_bits))
+        trace = BigFloat[BigFloat(norm(residual, Inf))]
+        last_step_norm = zero(BigFloat)
+        converged = trace[end] <= _residual_goal(BigFloat)
+        reason = converged ? "primary_residual_converged" : "maximum_iterations"
+        updates = 0
+        if !converged
+            broyden_matrix = BigFloat.(_dense_jacobian!(
+                ledger,
+                oracle,
+                x,
+                precision_bits,
+                options,
+            ))
+            for local_iteration in 1:options.maximum_iterations
+                _s3_charge_iteration!(ledger, local_iteration)
+                factor = _rank_factorization!(ledger, broyden_matrix, options)
+                if factor.rank != oracle.dimension
+                    reason = "secant_matrix_rank_deficient"
+                    break
+                end
+                step = BigFloat[factor.factorization \ (-residual)...]
+                all(isfinite, step) || begin
+                    reason = "nonfinite_secant_step"
+                    break
+                end
+                trial_x, trial_residual, accepted =
+                    _line_search!(ledger, oracle, x, residual, step, precision_bits)
+                if !accepted
+                    reason = "secant_no_progress"
+                    break
+                end
+                displacement = BigFloat[trial_x .- x...]
+                change = BigFloat[trial_residual .- residual...]
+                denominator = dot(displacement, displacement)
+                threshold = eps(BigFloat) * max(one(BigFloat), norm(displacement)^2)
+                if !(isfinite(denominator) && denominator > threshold)
+                    reason = "secant_update_degenerate"
+                    break
+                end
+                broyden_matrix .+=
+                    ((change .- broyden_matrix * displacement) * transpose(displacement)) ./
+                    denominator
+                updates += 1
+                x = BigFloat[trial_x...]
+                residual = BigFloat[trial_residual...]
+                last_step_norm = BigFloat(norm(displacement, Inf))
+                push!(trace, BigFloat(norm(residual, Inf)))
+                if trace[end] <= _s3_residual_goal(BigFloat, options) &&
+                   last_step_norm <= _s3_step_goal(BigFloat, options)
+                    converged = true
+                    reason = "converged"
+                    break
+                end
+                if updates % 4 == 0
+                    broyden_matrix = BigFloat.(_dense_jacobian!(
+                        ledger,
+                        oracle,
+                        x,
+                        precision_bits,
+                        options,
+                    ))
+                end
+            end
+        end
+        ratios = BigFloat[
+            trace[index - 1] > 0 ? trace[index] / trace[index - 1] : BigFloat(Inf) for
+            index in 2:length(trace)
+        ]
+        final_residual = BigFloat.(_evaluate_residual!(ledger, oracle, x, precision_bits))
+        final_target = BigFloat(_evaluate_target!(ledger, oracle, x, precision_bits))
+        return _BroydenStageResult(
+            precision_bits,
+            BigFloat[x...],
+            final_target,
+            BigFloat(norm(final_residual, Inf)),
+            last_step_norm,
+            converged,
+            reason,
+            Tuple(trace),
+            Tuple(ratios),
+            updates,
+            _s3_linear_trace_gate(ratios),
+        )
+    end
+end
+
+function _s3_control_backtrack!(ledger, oracle, x, residual, step, precision_bits)
+    current = norm(residual, 2)
+    scale = one(eltype(x))
+    for _ in 1:8
+        proposal = x .+ scale .* step
+        proposal_residual = BigFloat.(_evaluate_residual!(
+            ledger,
+            oracle,
+            proposal,
+            precision_bits,
+        ))
+        if norm(proposal_residual, 2) < current
+            return BigFloat[proposal...], proposal_residual, true
+        end
+        scale /= 2
+    end
+    return BigFloat[x...], BigFloat[residual...], false
+end
+
+function _s3_inverse_analytic_secant_stage!(
+    ledger,
+    input::CandidateInput,
+    start,
+    precision_bits::Int,
+    options::ExperimentOptions,
+)
+    oracle = input.oracle
+    return setprecision(BigFloat, precision_bits) do
+        x = BigFloat[BigFloat(value) for value in start]
+        residual = BigFloat.(_evaluate_residual!(ledger, oracle, x, precision_bits))
+        trace = BigFloat[BigFloat(norm(residual, Inf))]
+        last_step_norm = zero(BigFloat)
+        converged = trace[end] <= _residual_goal(BigFloat)
+        reason = converged ? "primary_residual_converged" : "maximum_iterations"
+        updates = 0
+        inverse_secant = nothing
+        if !converged
+            analytic = BigFloat.(_evaluate_analytic_jacobian!(
+                ledger,
+                oracle,
+                x,
+                precision_bits,
+            ))
+            factor = _rank_factorization!(ledger, analytic, options)
+            if factor.rank == oracle.dimension
+                inverse_secant = Matrix{BigFloat}(factor.factorization \ Matrix{BigFloat}(
+                    I,
+                    oracle.dimension,
+                    oracle.dimension,
+                ))
+            else
+                reason = "analytic_secant_seed_rank_deficient"
+            end
+        end
+        if inverse_secant !== nothing
+            for local_iteration in 1:options.maximum_iterations
+                _s3_charge_iteration!(ledger, local_iteration)
+                step = BigFloat[-(inverse_secant * residual)...]
+                all(isfinite, step) || begin
+                    reason = "nonfinite_inverse_secant_step"
+                    break
+                end
+                trial_x, trial_residual, accepted = _s3_control_backtrack!(
+                    ledger,
+                    oracle,
+                    x,
+                    residual,
+                    step,
+                    precision_bits,
+                )
+                if !accepted
+                    reason = "inverse_secant_no_progress"
+                    break
+                end
+                displacement = BigFloat[trial_x .- x...]
+                change = BigFloat[trial_residual .- residual...]
+                mapped_change = inverse_secant * change
+                denominator = dot(displacement, mapped_change)
+                threshold = eps(BigFloat) * max(
+                    one(BigFloat),
+                    norm(displacement) * norm(mapped_change),
+                )
+                if !(isfinite(denominator) && abs(denominator) > threshold)
+                    reason = "inverse_secant_update_degenerate"
+                    break
+                end
+                inverse_secant .+=
+                    ((displacement .- mapped_change) *
+                     (transpose(displacement) * inverse_secant)) ./ denominator
+                updates += 1
+                x = trial_x
+                residual = trial_residual
+                last_step_norm = BigFloat(norm(displacement, Inf))
+                push!(trace, BigFloat(norm(residual, Inf)))
+                if trace[end] <= _s3_residual_goal(BigFloat, options) &&
+                   last_step_norm <= _s3_step_goal(BigFloat, options)
+                    converged = true
+                    reason = "converged"
+                    break
+                end
+                if updates % 4 == 0
+                    analytic = BigFloat.(_evaluate_analytic_jacobian!(
+                        ledger,
+                        oracle,
+                        x,
+                        precision_bits,
+                    ))
+                    factor = _rank_factorization!(ledger, analytic, options)
+                    if factor.rank != oracle.dimension
+                        reason = "analytic_restart_rank_deficient"
+                        break
+                    end
+                    inverse_secant = Matrix{BigFloat}(
+                        factor.factorization \ Matrix{BigFloat}(
+                            I,
+                            oracle.dimension,
+                            oracle.dimension,
+                        ),
+                    )
+                end
+            end
+        end
+        ratios = BigFloat[
+            trace[index - 1] > 0 ? trace[index] / trace[index - 1] : BigFloat(Inf) for
+            index in 2:length(trace)
+        ]
+        final_residual = BigFloat.(_evaluate_residual!(ledger, oracle, x, precision_bits))
+        final_target = BigFloat(_evaluate_target!(ledger, oracle, x, precision_bits))
+        return _BroydenStageResult(
+            precision_bits,
+            BigFloat[x...],
+            final_target,
+            BigFloat(norm(final_residual, Inf)),
+            last_step_norm,
+            converged,
+            reason,
+            Tuple(trace),
+            Tuple(ratios),
+            updates,
+            _s3_linear_trace_gate(ratios),
+        )
+    end
+end
+
+function _s3_finalize_outcome!(
+    ledger,
+    input::CandidateInput,
+    options::ExperimentOptions,
+    variant::String,
+    route_name::String,
+    route,
+    primary_stages,
+    confirmations,
+    method::String,
+)
+    final_stage = primary_stages[end]
+    semantic = _semantic_replay!(
+        ledger,
+        input,
+        final_stage.endpoint,
+        final_stage.precision_bits,
+        options,
+    )
+    confirmations_converged = all(stage -> stage.converged, confirmations)
+    linear_trace_passed = confirmations_converged &&
+                          all(stage -> stage.linear_trace_passed, confirmations)
+    if !confirmations_converged || !linear_trace_passed
+        reason = !confirmations_converged ? "independent confirmation failed" :
+                 "linear convergence trace gate failed"
+        return ExperimentalOutcome(
+            variant,
+            route_name,
+            :unknown,
+            reason,
+            semantic,
+            nothing,
+            _work_snapshot(ledger),
+        )
+    end
+    confirmation_semantics = SemanticReplayEvidence[
+        _semantic_replay!(
+            ledger,
+            input,
+            stage.endpoint,
+            stage.precision_bits,
+            options,
+        ) for stage in confirmations
+    ]
+    canonical_confirmations_passed = all(evidence -> evidence.accepted, confirmation_semantics)
+    previous = primary_stages[end - 1]
+    stage_disagreement = norm(final_stage.endpoint .- previous.endpoint, Inf)
+    confirmation_disagreement = maximum(
+        norm(stage.endpoint .- final_stage.endpoint, Inf) for stage in confirmations
+    )
+    confirmation_target_disagreement = maximum(
+        abs(stage.target - final_stage.target) for stage in confirmations
+    )
+    precision_target_disagreement = abs(final_stage.target - previous.target)
+    target_gradient = setprecision(BigFloat, final_stage.precision_bits) do
+        _target_gradient!(
+            ledger,
+            input.oracle,
+            final_stage.endpoint,
+            final_stage.precision_bits,
+            options,
+        )
+    end
+    configuration_roundoff = setprecision(BigFloat, final_stage.precision_bits) do
+        eps(BigFloat) * max(one(BigFloat), norm(final_stage.endpoint, Inf))
+    end
+    target_roundoff = setprecision(BigFloat, final_stage.precision_bits) do
+        eps(BigFloat) * max(one(BigFloat), abs(final_stage.target))
+    end
+    raw_configuration_error = maximum((
+        final_stage.last_step_norm,
+        stage_disagreement,
+        confirmation_disagreement,
+        configuration_roundoff,
+    ))
+    configuration_error = BigFloat(options.error_reserve_multiplier) *
+                          raw_configuration_error
+    target_error = BigFloat(options.error_reserve_multiplier) * maximum((
+        precision_target_disagreement,
+        confirmation_target_disagreement,
+        norm(target_gradient, 1) * raw_configuration_error,
+        target_roundoff,
+    ))
+    ratios = Tuple(
+        ratio for stage in confirmations for ratio in stage.contraction_ratios
+    )
+    evidence = NumericalSingularRootEvidence(
+        method,
+        final_stage.precision_bits,
+        Tuple(stage.precision_bits for stage in primary_stages),
+        Tuple(final_stage.endpoint),
+        final_stage.target,
+        final_stage.residual_linf,
+        route.rank,
+        input.oracle.dimension - route.rank,
+        route.condition,
+        configuration_error,
+        target_error,
+        Tuple(Tuple(stage.endpoint) for stage in confirmations),
+        Tuple(stage.target for stage in confirmations),
+        Tuple(stage.residual_linf for stage in confirmations),
+        route.signatures,
+        ratios,
+        sum(stage.secant_updates for stage in confirmations; init=0),
+        true,
+        confirmations_converged,
+        canonical_confirmations_passed,
+        linear_trace_passed,
+    )
+    promotable = semantic.accepted && canonical_confirmations_passed &&
+                 final_stage.residual_linf <= _residual_goal(BigFloat) &&
+                 configuration_error <= options.configuration_error_goal &&
+                 target_error <= options.target_error_goal
+    return ExperimentalOutcome(
+        variant,
+        route_name,
+        promotable ? :promoted : :unknown,
+        promotable ? "singular numerical root evidence accepted" :
+        "singular numerical root evidence gate failed",
+        semantic,
+        evidence,
+        _work_snapshot(ledger),
+    )
+end
+
+function run_s3(
+    input::CandidateInput;
+    options::ExperimentOptions=ExperimentOptions(),
+    clock_ns=time_ns,
+)
+    variant = "S3-AP-BROYDEN"
+    route_name = "stable-singular-multiprecision-good-broyden"
+    ledger = _work_ledger(options, clock_ns)
+    if input.oracle.capability == :C0
+        return ExperimentalOutcome(
+            variant,
+            route_name,
+            :unknown,
+            "C2 capability unavailable",
+            nothing,
+            nothing,
+            _work_snapshot(ledger),
+        )
+    end
+    if input.oracle.dimension != input.oracle.residual_dimension
+        return ExperimentalOutcome(
+            variant,
+            route_name,
+            :unknown,
+            "good-Broyden route requires a square system",
+            nothing,
+            nothing,
+            _work_snapshot(ledger),
+        )
+    end
+    try
+        route = _s3_candidate_route!(ledger, input, options)
+        route.accepted || return ExperimentalOutcome(
+            variant,
+            route_name,
+            :unknown,
+            route.reason,
+            nothing,
+            nothing,
+            _work_snapshot(ledger),
+        )
+        primary_stages = _BroydenStageResult[
+            _s3_direct_broyden_stage!(ledger, input, input.endpoint, bits, options) for
+            bits in (128, 256)
+        ]
+        all(stage -> stage.converged, primary_stages) || return ExperimentalOutcome(
+            variant,
+            route_name,
+            :unknown,
+            "primary precision replay failed",
+            nothing,
+            nothing,
+            _work_snapshot(ledger),
+        )
+        confirmations = _BroydenStageResult[]
+        for index in 1:options.independent_confirmation_count
+            direction = _confirmation_direction(input.oracle.dimension, index)
+            start = input.endpoint .+
+                    options.confirmation_perturbation_radius .* direction
+            push!(
+                confirmations,
+                _s3_direct_broyden_stage!(ledger, input, start, 256, options),
+            )
+        end
+        return _s3_finalize_outcome!(
+            ledger,
+            input,
+            options,
+            variant,
+            route_name,
+            route,
+            primary_stages,
+            confirmations,
+            "multiprecision_good_broyden_singular_evidence_v1",
+        )
+    catch error
+        error isa ExperimentBudgetExceeded || rethrow()
+        return ExperimentalOutcome(
+            variant,
+            route_name,
+            :unknown,
+            string(error.reason),
+            nothing,
+            nothing,
+            _work_snapshot(ledger),
+        )
+    end
+end
+
+function run_s3_analytic_control(
+    input::CandidateInput;
+    options::ExperimentOptions=ExperimentOptions(),
+    clock_ns=time_ns,
+)
+    variant = "S3-ANALYTIC-SECANT-CONTROL"
+    route_name = "stable-singular-analytic-inverse-secant-control"
+    ledger = _work_ledger(options, clock_ns)
+    if input.oracle.capability == :C0 || input.oracle.analytic_jacobian === nothing
+        return ExperimentalOutcome(
+            variant,
+            route_name,
+            :unknown,
+            "analytic C2 capability unavailable",
+            nothing,
+            nothing,
+            _work_snapshot(ledger),
+        )
+    end
+    if input.oracle.dimension != input.oracle.residual_dimension
+        return ExperimentalOutcome(
+            variant,
+            route_name,
+            :unknown,
+            "analytic secant control requires a square system",
+            nothing,
+            nothing,
+            _work_snapshot(ledger),
+        )
+    end
+    try
+        route = _s3_control_route!(ledger, input, options)
+        route.accepted || return ExperimentalOutcome(
+            variant,
+            route_name,
+            :unknown,
+            route.reason,
+            nothing,
+            nothing,
+            _work_snapshot(ledger),
+        )
+        primary_stages = _BroydenStageResult[
+            _s3_inverse_analytic_secant_stage!(
+                ledger,
+                input,
+                input.endpoint,
+                bits,
+                options,
+            ) for bits in (128, 256)
+        ]
+        all(stage -> stage.converged, primary_stages) || return ExperimentalOutcome(
+            variant,
+            route_name,
+            :unknown,
+            "analytic primary precision replay failed",
+            nothing,
+            nothing,
+            _work_snapshot(ledger),
+        )
+        confirmations = _BroydenStageResult[]
+        for index in 1:options.independent_confirmation_count
+            direction = _confirmation_direction(input.oracle.dimension, index)
+            start = input.endpoint .+
+                    options.confirmation_perturbation_radius .* direction
+            push!(
+                confirmations,
+                _s3_inverse_analytic_secant_stage!(
+                    ledger,
+                    input,
+                    start,
+                    256,
+                    options,
+                ),
+            )
+        end
+        return _s3_finalize_outcome!(
+            ledger,
+            input,
+            options,
+            variant,
+            route_name,
+            route,
+            primary_stages,
+            confirmations,
+            "analytic_inverse_secant_singular_control_v1",
+        )
+    catch error
+        error isa ExperimentBudgetExceeded || rethrow()
+        return ExperimentalOutcome(
+            variant,
+            route_name,
+            :unknown,
+            string(error.reason),
+            nothing,
+            nothing,
+            _work_snapshot(ledger),
+        )
+    end
+end
+
 function assess_outcome(case::GeneratedEndpoint, outcome::ExperimentalOutcome)
     promoted = outcome.status == :promoted
     if !promoted
@@ -1057,7 +1771,8 @@ function assess_outcome(case::GeneratedEndpoint, outcome::ExperimentalOutcome)
             target_covered,
         )
     end
-    if case.gold.kind != :isolated_root || !(evidence isa NumericalRootEvidence)
+    if case.gold.kind != :isolated_root ||
+       !(evidence isa Union{NumericalRootEvidence,NumericalSingularRootEvidence})
         return GoldAssessment(
             case.input.oracle.id,
             outcome.variant,

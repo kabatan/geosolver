@@ -341,6 +341,182 @@ end
           [entry["checksum"] for entry in document["cases"]]
 end
 
+@testset "S3 good-Broyden evidence is typed and the frozen budget is fail-closed" begin
+    cases = s3_development_cases()
+    double_group = filter(
+        case -> case.input.oracle.metamorphic_group == "s3-isolated-m2-a",
+        cases,
+    )
+    @test length(double_group) == 3
+    for case in double_group
+        baseline = run_s1(candidate_input(case))
+        candidate = run_s3(candidate_input(case))
+        control = run_s3_analytic_control(candidate_input(case))
+        @test baseline.status == :unknown
+        @test candidate.status == :unknown
+        @test candidate.reason == "iterations"
+        @test candidate.work.iterations == ExperimentOptions().maximum_iterations
+        @test candidate.work.budget_exhausted
+        @test candidate.root_evidence === nothing
+        @test control.status == :unknown
+        @test control.reason == "iterations"
+        @test control.work.iterations == ExperimentOptions().maximum_iterations
+        @test control.work.budget_exhausted
+        @test control.root_evidence === nothing
+        @test candidate.work.callbacks <= ExperimentOptions().maximum_callbacks
+        @test candidate.work.iterations <= ExperimentOptions().maximum_iterations
+    end
+
+    # A non-gating diagnostic with a larger explicit budget exercises the typed
+    # evidence path and measures why the frozen 64-iteration gate rejected S3.
+    diagnostic_options = ExperimentOptions(maximum_iterations=80)
+    diagnostic_case = first(double_group)
+    diagnostic = run_s3(candidate_input(diagnostic_case); options=diagnostic_options)
+    diagnostic_control = run_s3_analytic_control(
+        candidate_input(diagnostic_case);
+        options=diagnostic_options,
+    )
+    @test diagnostic.status == :promoted
+    @test diagnostic_control.status == :promoted
+    @test diagnostic.work.iterations == 68
+    @test diagnostic_control.work.iterations == 68
+    @test diagnostic.root_evidence isa NumericalSingularRootEvidence
+    @test diagnostic.root_evidence.rank_stable
+    @test diagnostic.root_evidence.nullity == 1
+    @test diagnostic.root_evidence.independent_confirmations_passed
+    @test diagnostic.root_evidence.canonical_confirmations_passed
+    @test diagnostic.root_evidence.linear_trace_passed
+    @test length(diagnostic.root_evidence.route_rank_signatures) == 4
+    @test length(diagnostic_control.root_evidence.route_rank_signatures) == 2
+    @test diagnostic.root_evidence.configuration_error_estimate <= 1.0e-10
+    @test diagnostic.root_evidence.target_error_estimate <= 1.0e-12
+    @test assess_outcome(diagnostic_case, diagnostic).gold_success
+    @test assess_outcome(diagnostic_case, diagnostic_control).gold_success
+
+    quartic = first(filter(
+        case -> case.input.oracle.metamorphic_group == "s3-isolated-m4-stress",
+        cases,
+    ))
+    quartic_budget = run_s3(candidate_input(quartic))
+    @test quartic_budget.status == :unknown
+    @test quartic_budget.work.iterations <= ExperimentOptions().maximum_iterations
+    @test quartic_budget.work.budget_exhausted
+    @test quartic_budget.reason == "iterations"
+    @test run_s3_analytic_control(candidate_input(quartic)).status == :unknown
+
+    coalesced = first(filter(
+        case -> case.input.oracle.metamorphic_group == "s3-fold-coalesced",
+        cases,
+    ))
+    coalesced_outcome = run_s3(candidate_input(coalesced))
+    @test coalesced_outcome.status == :unknown
+    @test coalesced_outcome.reason == "iterations"
+    @test coalesced_outcome.work.iterations == ExperimentOptions().maximum_iterations
+
+    for group in (
+        "s3-manifold-constant",
+        "s3-manifold-varying",
+        "s3-nonroot-below-semantic",
+        "s3-nonroot-visible",
+        "s3-fold-separated",
+        "s3-fold-close",
+    )
+        case = first(filter(case -> case.input.oracle.metamorphic_group == group, cases))
+        candidate = run_s3(candidate_input(case))
+        @test candidate.status == :unknown
+        @test !assess_outcome(case, candidate).false_promotion
+    end
+
+    subtle_nonroot = first(filter(
+        case -> case.input.oracle.metamorphic_group == "s3-nonroot-below-semantic",
+        cases,
+    ))
+    @test run_s0(candidate_input(subtle_nonroot)).semantic_replay.accepted
+    @test run_s3(candidate_input(subtle_nonroot)).reason ==
+          "primary residual above strict numerical route goal"
+
+    callback_limited = run_s3(
+        candidate_input(first(double_group));
+        options=ExperimentOptions(maximum_callbacks=1),
+    )
+    @test callback_limited.status == :unknown
+    @test callback_limited.reason == "callbacks"
+    @test callback_limited.work.budget_exhausted
+    @test callback_limited.root_evidence === nothing
+
+    clock = FakeClock(0, 100)
+    deadline_limited = run_s3(
+        candidate_input(first(double_group));
+        options=ExperimentOptions(wall_seconds=1.0e-9),
+        clock_ns=clock,
+    )
+    @test deadline_limited.status == :unknown
+    @test deadline_limited.reason == "deadline"
+    @test deadline_limited.work.deadline_reached
+
+    document = outcome_document(diagnostic_case, diagnostic)
+    parsed = JSON3.read(JSON3.write(document; allow_inf=false))
+    @test parsed.root_evidence.method ==
+          "multiprecision_good_broyden_singular_evidence_v1"
+    @test parsed.root_evidence.linear_trace_passed
+    @test length(parsed.root_evidence.route_rank_signatures) == 4
+end
+
+@testset "S3 development gate remains research-only" begin
+    cases = s3_development_cases()
+    options = ExperimentOptions()
+    rows = run_s3_development(; cases, options)
+    summary = s3_development_summary(rows, cases; options)
+    @test length(rows) == 90
+    @test summary["development_instance_count"] == 30
+    @test summary["product_connected"] == false
+    @test summary["locked_validation"] == false
+    @test summary["false_promotions"] == 0
+    @test summary["semantic_replay_only_promotions"] == 0
+    @test summary["metamorphic_group_count"] == 10
+    @test summary["metamorphic_disagreement_groups"] == [
+        "S1-AP-LMQR:s3-fold-close",
+    ]
+    @test isempty(summary["analytic_control_disagreement_cases"])
+    @test isempty(summary["budget_limit_violation_rows"])
+    @test isempty(summary["noneligible_s3_promotion_cases"])
+    @test isempty(summary["evidence_gate_failure_cases"])
+    @test summary["variants"]["S1-AP-LMQR"]["eligible_gold_successes"] == 0
+    @test summary["variants"]["S3-AP-BROYDEN"]["eligible_gold_successes"] == 0
+    @test summary["variants"]["S3-ANALYTIC-SECANT-CONTROL"]["eligible_gold_successes"] == 0
+    @test summary["variants"]["S3-AP-BROYDEN"]["budget_exhaustions"] == 12
+    @test summary["variants"]["S3-ANALYTIC-SECANT-CONTROL"]["budget_exhaustions"] == 12
+    @test !summary["development_advancement_passed"]
+    @test summary["next_route"] === nothing
+    @test summary["status"] == "development-stop-s3"
+    @test !summary["advancement_criteria"]["recall_gain_at_least_0_50"]
+    @test !summary["advancement_criteria"]["s3_singular_recall_at_least_0_75"]
+    @test summary["advancement_criteria"]["false_promotions_zero"]
+    @test !summary["advancement_criteria"]["metamorphic_disagreements_zero"]
+    @test summary["advancement_criteria"]["budget_limit_violations_zero"]
+    duplicate_grid = vcat(rows[1:(end - 1)], rows[1:1])
+    @test_throws ArgumentError s3_development_summary(
+        duplicate_grid,
+        cases;
+        options,
+    )
+    mktempdir() do directory
+        write_s3_development_results(directory, rows, summary; options)
+        for filename in (
+            "attempts.json",
+            "development-report.md",
+            "environment.json",
+            "summary.json",
+        )
+            @test isfile(joinpath(directory, filename))
+        end
+        parsed = JSON3.read(read(joinpath(directory, "summary.json"), String))
+        @test !parsed.development_advancement_passed
+        @test !parsed.product_connected
+        @test !parsed.locked_validation
+    end
+end
+
 @testset "S2 metamorphic decisions agree" begin
     cases = s2_development_cases()
     for group in unique(case.input.oracle.metamorphic_group for case in cases)
