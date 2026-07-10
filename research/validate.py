@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 import re
 import sys
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -18,6 +19,7 @@ ENVELOPE = ROOT / "benchmarks" / "manifests" / "m0-m4-tested-envelope.json"
 EXAMPLE_DIR = ROOT / "research" / "examples"
 LITERATURE = ROOT / "docs" / "research" / "LITERATURE_MATRIX.md"
 FAILURES = ROOT / "docs" / "research" / "FAILURES.md"
+EVIDENCE = ROOT / "docs" / "research" / "EVIDENCE.md"
 
 
 class ValidationError(ValueError):
@@ -149,13 +151,38 @@ def validate_instance(
     return errors
 
 
-def validate_card_semantics(card: dict[str, Any], literature_text: str, failure_ids: set[str]) -> list[str]:
+def validate_card_semantics(
+    card: dict[str, Any], literature_text: str, failure_ids: set[str]
+) -> list[str]:
     errors: list[str] = []
     card_id = card["id"]
     if card["baseline_id"] != "RB0-IID-LMQR-1":
         errors.append(f"{card_id}: unexpected M0-M4 baseline")
-    if card["status"] == "preregistered" and card["decision"]["state"] != "pending":
-        errors.append(f"{card_id}: preregistered card must have a pending decision")
+    allowed_decisions = {
+        "preregistered": {"pending"},
+        "running": {"pending"},
+        "completed": {"promoted", "specialized", "rejected"},
+        "promoted": {"promoted", "specialized"},
+        "rejected": {"rejected"},
+    }
+    decision = card["decision"]
+    if decision["state"] not in allowed_decisions[card["status"]]:
+        errors.append(
+            f"{card_id}: status {card['status']} is inconsistent with "
+            f"decision {decision['state']}"
+        )
+    if decision["state"] == "pending":
+        if any(
+            decision[field] is not None
+            for field in ("selected_variant", "rationale", "decision_commit")
+        ):
+            errors.append(
+                f"{card_id}: pending decision must not contain a frozen outcome"
+            )
+    elif decision["rationale"] is None or decision["decision_commit"] is None:
+        errors.append(
+            f"{card_id}: final decision requires rationale and decision_commit"
+        )
     if "RES-01" not in card["requirements"] or "RES-02" not in card["requirements"]:
         errors.append(f"{card_id}: RES-01 and RES-02 are mandatory")
 
@@ -168,9 +195,13 @@ def validate_card_semantics(card: dict[str, Any], literature_text: str, failure_
             errors.append(f"{card_id}: unknown failure ID {failure_id}")
     for citation in card["literature"]:
         if citation["id"] not in literature_text:
-            errors.append(f"{card_id}: literature ID {citation['id']} missing from matrix")
+            errors.append(
+                f"{card_id}: literature ID {citation['id']} missing from matrix"
+            )
         if citation["url"] not in literature_text:
-            errors.append(f"{card_id}: literature URL {citation['url']} missing from matrix")
+            errors.append(
+                f"{card_id}: literature URL {citation['url']} missing from matrix"
+            )
     for name, parameter in card["hyperparameters"].items():
         if parameter["status"] != "hypothesis":
             errors.append(f"{card_id}: hyperparameter {name} is not marked hypothesis")
@@ -179,7 +210,9 @@ def validate_card_semantics(card: dict[str, Any], literature_text: str, failure_
     forbidden = ["known answer table", "route by case", "legacy import"]
     for phrase in forbidden:
         if phrase in joined:
-            errors.append(f"{card_id}: forbidden case-specific/retired coupling phrase {phrase!r}")
+            errors.append(
+                f"{card_id}: forbidden case-specific/retired coupling phrase {phrase!r}"
+            )
 
     if card_id == "EXP-DISC-001":
         invariants = " ".join(card["safety_invariants"]).lower()
@@ -202,7 +235,10 @@ def validate_envelope(envelope: dict[str, Any]) -> list[str]:
     unknown = {entry.get("id") for entry in envelope.get("unknown_levels", [])}
     if unknown != {f"U{i}" for i in range(1, 6)}:
         errors.append("envelope: unknown levels must be exactly U1-U5")
-    truth = {entry.get("id"): entry.get("eligible_for_p_full") for entry in envelope.get("truth_levels", [])}
+    truth = {
+        entry.get("id"): entry.get("eligible_for_p_full")
+        for entry in envelope.get("truth_levels", [])
+    }
     if truth.get("reference_only") is not False:
         errors.append("envelope: reference_only truth must be excluded from P_full")
     if not envelope.get("metamorphic_transforms"):
@@ -212,6 +248,40 @@ def validate_envelope(envelope: dict[str, Any]) -> list[str]:
 
 def failure_ids_from_markdown(text: str) -> set[str]:
     return set(re.findall(r"\| (F(?:[0-9]|1[0-8])) \|", text))
+
+
+def validate_evidence_links(ledger: dict[str, Any], evidence_text: str) -> list[str]:
+    """Keep the append-only evidence and negative-result registers referentially sound."""
+
+    errors: list[str] = []
+    evidence_ids = re.findall(r"\| (EVID-[0-9]{2,}) \|", evidence_text)
+    for evidence_id, count in Counter(evidence_ids).items():
+        if count != 1:
+            errors.append(f"evidence register: {evidence_id} occurs {count} times")
+    known = set(evidence_ids)
+    marker = "## Reproduced current evidence"
+    if marker not in evidence_text:
+        errors.append("evidence register: reproduced evidence section is missing")
+        reproduced: set[str] = set()
+    else:
+        reproduced = set(
+            re.findall(r"\| (EVID-[0-9]{2,}) \|", evidence_text.split(marker, 1)[1])
+        )
+
+    for entry in ledger["entries"]:
+        for evidence_id in entry["source_evidence_ids"]:
+            if evidence_id not in known:
+                errors.append(
+                    f"{entry['id']}: source evidence {evidence_id} is absent from the register"
+                )
+            if (
+                entry["evidence_state"] == "reproduced"
+                and evidence_id not in reproduced
+            ):
+                errors.append(
+                    f"{entry['id']}: reproduced result cites non-reproduced {evidence_id}"
+                )
+    return errors
 
 
 def main() -> int:
@@ -240,17 +310,26 @@ def main() -> int:
         )
     for path in card_paths:
         card = load_json(path)
-        errors.extend(f"{path}: {error}" for error in validate_instance(card, card_schema))
+        errors.extend(
+            f"{path}: {error}" for error in validate_instance(card, card_schema)
+        )
         errors.extend(validate_card_semantics(card, literature_text, known_failures))
 
     ledger = load_json(LEDGER)
     ledger_schema = schemas["negative-result-ledger.schema.json"]
-    errors.extend(f"{LEDGER}: {error}" for error in validate_instance(ledger, ledger_schema))
+    errors.extend(
+        f"{LEDGER}: {error}" for error in validate_instance(ledger, ledger_schema)
+    )
+    evidence_text = EVIDENCE.read_text(encoding="utf-8")
+    errors.extend(validate_evidence_links(ledger, evidence_text))
     envelope = load_json(ENVELOPE)
     errors.extend(validate_envelope(envelope))
 
     example_pairs = [
-        (EXAMPLE_DIR / "run-manifest.example.json", schemas["run-manifest.schema.json"]),
+        (
+            EXAMPLE_DIR / "run-manifest.example.json",
+            schemas["run-manifest.schema.json"],
+        ),
         (
             EXAMPLE_DIR / "benchmark-manifest.example.json",
             schemas["benchmark-manifest.schema.json"],
@@ -258,7 +337,9 @@ def main() -> int:
     ]
     for path, schema in example_pairs:
         instance = load_json(path)
-        errors.extend(f"{path}: {error}" for error in validate_instance(instance, schema))
+        errors.extend(
+            f"{path}: {error}" for error in validate_instance(instance, schema)
+        )
 
     if errors:
         for error in errors:

@@ -38,13 +38,52 @@ class SchemaSubsetTests(unittest.TestCase):
         self.assertEqual(VALIDATE.main(), 0)
 
     def test_post_m0_cards_do_not_remove_frozen_preregistrations(self) -> None:
-        card_stems = {
-            path.stem for path in (VALIDATE.CARD_DIR).glob("EXP-*.json")
-        }
+        card_stems = {path.stem for path in (VALIDATE.CARD_DIR).glob("EXP-*.json")}
         self.assertTrue(
             {"EXP-COMP-001", "EXP-LOCAL-001", "EXP-DISC-001"}.issubset(card_stems)
         )
         self.assertIn("EXP-LOCAL-002", card_stems)
+
+    def test_evidence_links_are_unique_and_state_aware(self) -> None:
+        evidence = """\
+| EVID-01 | prior | implication |
+
+## Reproduced current evidence
+
+| EVID-12 | reproduced | decision |
+"""
+        valid = {
+            "entries": [
+                {
+                    "id": "NEG-001",
+                    "evidence_state": "prior_unreproduced",
+                    "source_evidence_ids": ["EVID-01"],
+                },
+                {
+                    "id": "NEG-002",
+                    "evidence_state": "reproduced",
+                    "source_evidence_ids": ["EVID-12"],
+                },
+            ]
+        }
+        self.assertEqual(VALIDATE.validate_evidence_links(valid, evidence), [])
+
+        duplicate = evidence + "\n| EVID-12 | duplicate | invalid |\n"
+        errors = VALIDATE.validate_evidence_links(valid, duplicate)
+        self.assertTrue(any("occurs 2 times" in error for error in errors))
+
+        invalid = {
+            "entries": [
+                {
+                    "id": "NEG-003",
+                    "evidence_state": "reproduced",
+                    "source_evidence_ids": ["EVID-01", "EVID-99"],
+                }
+            ]
+        }
+        errors = VALIDATE.validate_evidence_links(invalid, evidence)
+        self.assertTrue(any("non-reproduced EVID-01" in error for error in errors))
+        self.assertTrue(any("EVID-99 is absent" in error for error in errors))
 
 
 if __name__ == "__main__":
