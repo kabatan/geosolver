@@ -1,0 +1,752 @@
+{
+    "case_count": 48,
+    "formal_label": "EXP-DEF-001-development-v2-retry1",
+    "cpu_name": "znver5",
+    "variants": [
+        "A0-ORDINARY-LMQR",
+        "A1-SHIFTED-RESIDUAL-DEF",
+        "A2-DGN-REFERENCE",
+        "D1-DGN-MIXED",
+        "D2-DGN-FAIR-RETRY"
+    ],
+    "source_provenance_sha256": "7de129a6393c05007206010509794e6330055480531d6365b377b761e7c94f63",
+    "formal": true,
+    "resumed_raw_file_count": 0,
+    "harness_freeze_v4_sha256": "ad1112db6fbc91902e62b21ff2302058acf638153efbabeb462cde29083a1f60",
+    "run_plan_commit": "f62b990aea47fbf492c2a0d1f6ebe6e1f6b6b3a5",
+    "gold_opened_by_runner": false,
+    "julia_version": "1.12.6",
+    "source_files": {
+        "research/experiments/EXP-DEF-001/Project.toml": "d45575e9336b5bb02192153e5553e4b0e35ee9edb8fed1608dcebe20a2c647b5",
+        "research/experiments/EXP-DEF-001/development-provenance-amendment-v3.json": "6a5cd1d767d1ead46af9a55c35ea25a218a1d158ae2562ca6d8b3d38328b3ee6",
+        "research/experiments/EXP-DEF-001/run_development.jl": "8c3d05cbce5140d9e3fa670416b4e75a1842878fdba0ab002bda54c01c63ae12",
+        "research/experiments/EXP-DEF-001/development-harness-freeze-v3.json": "18d6625166f69c0b9e7f82532c6836f4f65d18d0a410dcf74b43123914bce3f4",
+        "research/experiments/EXP-DEF-001/development_analysis.py": "96bf34804c29cafd050dd40f2e89d6b9d43834e04d10eba212f290a535452d10",
+        "research/experiments/EXP-DEF-001/src/steps.jl": "0eadbdf9ea8295931eca93ba251eed74e7fa4a3e35e803cfafbf00333ae8b508",
+        "julia/GeoTargetCore/src/local_solver.jl": "065fe65bee402443700b0ae89e36a453050a068170aa17689bf0332cae1cecd0",
+        "research/experiments/EXP-DEF-001/development_harness.jl": "7b970c6edbc3fbc1c852137109c06726d442abd455679411c9a4006bf757c232",
+        "research/experiments/EXP-DEF-001/derivative-route-amendment-v2.json": "344fcf84a752199eefc5a7831264b946d354d3a41bfed3054be0c7b5b578db15",
+        "research/harness/exclusive_run.py": "2437fcac4147cf0ef8a6abcbbe8431291d57f462e130f09a4d8427c564c6dd62",
+        "research/experiments/EXP-DEF-001/src/types.jl": "31c60ba986363a6a5c39804fcadb736870f3a743727014b794927edcd1f2eb21",
+        "research/experiments/EXP-DEF-001/src/solver.jl": "20b242bba222a4b6190b2f09bd6a08e1589d2b6247f8fe7e1410235504ba5dec",
+        "research/experiments/EXP-DEF-001/src/ExperimentDef001.jl": "96812346caa3bc0e420ad0287fbdc91a9fabf09ee7a694ce13b874b842dbb765",
+        "research/experiments/EXP-DEF-001/development-run-plan-v2.json": "da195268da3b271ba0750a7331cc5e43a88280681887fdfdd07f929e96b21e3d",
+        "research/experiments/EXP-DEF-001/Manifest.toml": "8e9cb5ef905b6745994f095f4e964c3fdd50eee494b2f9fb9266cb13d3d92836",
+        "research/experiments/EXP-DEF-001/implementation-freeze-v2.json": "c79b7f04af4d4a98da41dc3b475e85b54fab7c3f96b5fb741b04e562f972bd5f",
+        "research/experiments/EXP-DEF-001/development-path-amendment-v4.json": "33dad3bc3c6ecf027d7434b4a33b944632c5d47351c507613b2e8209cda86a7a",
+        "research/experiments/EXP-DEF-001/formal_preflight.py": "196ba13031972f2768617e2b5f98b04ea859ea51a84acbbda704ba1abf197f4f",
+        "research/experiments/EXP-DEF-001/development-harness-freeze-v4.json": "ad1112db6fbc91902e62b21ff2302058acf638153efbabeb462cde29083a1f60",
+        "research/experiments/EXP-DEF-001/development-inputs-v2/development-input-manifest.json": "8719b40da8f5fa06ed72e277312cbe3467d6361fff26aa6c46ad9281693ca959"
+    },
+    "runtime_provenance_sha256": "db145b41f4cdb99cbc21701bb1b5d187a0dead38d485704c9607fb8cbe35018c",
+    "runtime_source_files": {
+        "research/experiments/EXP-DEF-001/Project.toml": "d45575e9336b5bb02192153e5553e4b0e35ee9edb8fed1608dcebe20a2c647b5",
+        "research/experiments/EXP-DEF-001/src/types.jl": "31c60ba986363a6a5c39804fcadb736870f3a743727014b794927edcd1f2eb21",
+        "research/experiments/EXP-DEF-001/src/solver.jl": "20b242bba222a4b6190b2f09bd6a08e1589d2b6247f8fe7e1410235504ba5dec",
+        "research/experiments/EXP-DEF-001/src/steps.jl": "0eadbdf9ea8295931eca93ba251eed74e7fa4a3e35e803cfafbf00333ae8b508",
+        "research/experiments/EXP-DEF-001/src/ExperimentDef001.jl": "96812346caa3bc0e420ad0287fbdc91a9fabf09ee7a694ce13b874b842dbb765",
+        "julia/GeoTargetCore/src/local_solver.jl": "065fe65bee402443700b0ae89e36a453050a068170aa17689bf0332cae1cecd0",
+        "research/experiments/EXP-DEF-001/Manifest.toml": "8e9cb5ef905b6745994f095f4e964c3fdd50eee494b2f9fb9266cb13d3d92836"
+    },
+    "locked_inputs_materialized": false,
+    "input_manifest_sha256": "8719b40da8f5fa06ed72e277312cbe3467d6361fff26aa6c46ad9281693ca959",
+    "blas_threads": 1,
+    "harness_version": "0.1.0",
+    "stages": [
+        "mechanism-static-archive",
+        "empty-archive-sequential"
+    ],
+    "source_git_head": "ea7965949f9c2cc75d2037fba57de95951c73ddb",
+    "combined_input_sha256": "9ce0c7e9bb8a1e93c2619332a3915b98e1adb70215350371ad41f860a8723a7c",
+    "formal_child_command": [
+        "julia",
+        "--threads=1",
+        "--project=research/experiments/EXP-DEF-001",
+        "research/experiments/EXP-DEF-001/run_development.jl"
+    ],
+    "schema": "geotarget.exp-def-001-development-run-manifest/v2",
+    "row_count": 33976,
+    "production_connected": false,
+    "julia_threads": 1,
+    "execution_identity_sha256": "d969333395250e4c18bb258f647fc11819bfa21a3535feb0df7b3ba29aa6ce3b",
+    "starts_per_case": 64,
+    "formal_preflight_sha256": "0619bbafd6931c1e61c91c33dcf821b58dc79bf47506acb6b711e0608f1615b1",
+    "non_gating_preparation_warmup_seconds": 7.222764,
+    "raw_files": [
+        {
+            "case_id": "DEFDEV2-CLOSE_SIMPLE-G01-R0",
+            "sha256": "d6fbf6066511f91a2714658f6799769680c403dec69a7766ca3c7e829ac0cd13",
+            "rows": 338,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-CLOSE_SIMPLE-G01-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-CLOSE_SIMPLE-G01-R0",
+            "sha256": "0f4e06f646eef699c4782a29df3aaae7d595e4036b73ced9e056152230ec38cb",
+            "rows": 382,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-CLOSE_SIMPLE-G01-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-CLOSE_SIMPLE-G01-R1",
+            "sha256": "30742521813342e31d1bd66c4ebea290a3e020057b1c760a17fb1c82b0b1fd12",
+            "rows": 338,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-CLOSE_SIMPLE-G01-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-CLOSE_SIMPLE-G01-R1",
+            "sha256": "21cc955aabef1b0801ab2c951220fabdd88066aa668b09ca002aefefa561dab3",
+            "rows": 382,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-CLOSE_SIMPLE-G01-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-CLOSE_SIMPLE-G02-R0",
+            "sha256": "b46b6e4628c51ca21b81a871fb30c5d9edfebf8655956bcde9666c186df66758",
+            "rows": 335,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-CLOSE_SIMPLE-G02-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-CLOSE_SIMPLE-G02-R0",
+            "sha256": "b4229f6b63411c31a9df7eae8c6743cac86a10479352a46dffd31887e8949270",
+            "rows": 375,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-CLOSE_SIMPLE-G02-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-CLOSE_SIMPLE-G02-R1",
+            "sha256": "a33764994c870746de275cf9b5ae8905d7ea9a4b72bda6ee4f2ea1de7e1609cb",
+            "rows": 335,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-CLOSE_SIMPLE-G02-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-CLOSE_SIMPLE-G02-R1",
+            "sha256": "14da20d7c24523407316e058037f42bb972e36f63f7e18c0d4c2f35d81095d84",
+            "rows": 375,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-CLOSE_SIMPLE-G02-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-CLOSE_SIMPLE-G03-R0",
+            "sha256": "446138c209ef1527277a87206406d2738f70e5e1987003d6e7abe3b6eee50a1e",
+            "rows": 340,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-CLOSE_SIMPLE-G03-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-CLOSE_SIMPLE-G03-R0",
+            "sha256": "1d4d5a7857e661ecef2e944ca024fd37b22ffa0cd191b4a8ec0c7d989a562f8d",
+            "rows": 380,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-CLOSE_SIMPLE-G03-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-CLOSE_SIMPLE-G03-R1",
+            "sha256": "1a652e9a1e04c24d08a705cb04cdf44a6cdaf1920bce113d6738dddb376951f7",
+            "rows": 340,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-CLOSE_SIMPLE-G03-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-CLOSE_SIMPLE-G03-R1",
+            "sha256": "78116ca595f3440ae0255def05417e7664d36fd30787a1205a3d6b7281a67584",
+            "rows": 380,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-CLOSE_SIMPLE-G03-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-CLOSE_SIMPLE-G04-R0",
+            "sha256": "094d0d517a5f811c011e1470d11aa46d31bcaac296b15c6919c98a63e176574a",
+            "rows": 345,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-CLOSE_SIMPLE-G04-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-CLOSE_SIMPLE-G04-R0",
+            "sha256": "1445ba250f03aae6b6f50fc5391ca035f35cb31e158b6bd1706dcd015fc1f2c6",
+            "rows": 380,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-CLOSE_SIMPLE-G04-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-CLOSE_SIMPLE-G04-R1",
+            "sha256": "3d83f9ac1e6bea22f2a4491bbde47b254a0a4f823dbd7ef57438d6f9f00baeb2",
+            "rows": 345,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-CLOSE_SIMPLE-G04-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-CLOSE_SIMPLE-G04-R1",
+            "sha256": "69c8fa6080754b55d58ef4f78a088c03473bf0c5140b4b0b993f765106f15cb8",
+            "rows": 380,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-CLOSE_SIMPLE-G04-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-TARGET_COLLISION-G01-R0",
+            "sha256": "766daf3670a88d3abef45be76b9458092482c9dbf962cc722da0ec0a3f605f4c",
+            "rows": 327,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-TARGET_COLLISION-G01-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-TARGET_COLLISION-G01-R0",
+            "sha256": "b44053e541f16f0b084eade7480a0e9751fe16e2324ca08c8af180c7bb18d7ef",
+            "rows": 380,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-TARGET_COLLISION-G01-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-TARGET_COLLISION-G01-R1",
+            "sha256": "2152a3c483aafd534cb2c863546cd1022a678cc081d4071dc186aeed7b2dd6da",
+            "rows": 327,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-TARGET_COLLISION-G01-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-TARGET_COLLISION-G01-R1",
+            "sha256": "8751730c944f132fdab27fc0e773706176fa48765d645b89fc714b5df5af6433",
+            "rows": 380,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-TARGET_COLLISION-G01-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-TARGET_COLLISION-G02-R0",
+            "sha256": "31a1ede16481f8b2744b99d82aa1a395d60b496f5a327dac01632aa38e7b27ef",
+            "rows": 336,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-TARGET_COLLISION-G02-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-TARGET_COLLISION-G02-R0",
+            "sha256": "d045e8f75746307cd3a764198129917836d020ce1699521e295b5a8f4e095161",
+            "rows": 380,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-TARGET_COLLISION-G02-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-TARGET_COLLISION-G02-R1",
+            "sha256": "e3ca7c037c0c146a024b590e378b70f539f9d6666cc8e87c2fdb34910af65c89",
+            "rows": 336,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-TARGET_COLLISION-G02-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-TARGET_COLLISION-G02-R1",
+            "sha256": "e8b52f2a212df41c5e1d3946caf4131e7453b8824f4760bdab7ba5c5c2c4e709",
+            "rows": 380,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-TARGET_COLLISION-G02-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-TARGET_COLLISION-G03-R0",
+            "sha256": "fbe0d97d535288b116f7faae23d24bda1020ad1e0b44621460c1f2d963b26262",
+            "rows": 334,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-TARGET_COLLISION-G03-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-TARGET_COLLISION-G03-R0",
+            "sha256": "1c40080cfb9d8bb11777c3b83153f6f5178fc22bbe93a86ac13b2334fe73fb2e",
+            "rows": 380,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-TARGET_COLLISION-G03-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-TARGET_COLLISION-G03-R1",
+            "sha256": "5d82f0f09a3a2513e1ef63450e916415d90d1562daf7eec6c6db5df16f1c0173",
+            "rows": 334,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-TARGET_COLLISION-G03-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-TARGET_COLLISION-G03-R1",
+            "sha256": "451f67d3fe5b26d6b5de09c535dd1110998f9a0409df279b71f6e1ce2b819038",
+            "rows": 380,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-TARGET_COLLISION-G03-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-TARGET_COLLISION-G04-R0",
+            "sha256": "e780d245e075de798bbd17b46573b2d4f21b876ace5134e16cf02619bd91f127",
+            "rows": 342,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-TARGET_COLLISION-G04-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-TARGET_COLLISION-G04-R0",
+            "sha256": "82445b376aa255286752f2f87df61daa1d37dd1a0409198c27c54d7bc228d90c",
+            "rows": 380,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-TARGET_COLLISION-G04-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-TARGET_COLLISION-G04-R1",
+            "sha256": "8567a68e5f7c413dc6865a8094fee06ecd4761db391be2338b79841c08d430fc",
+            "rows": 342,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-TARGET_COLLISION-G04-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-TARGET_COLLISION-G04-R1",
+            "sha256": "ac9e2e8cf6246503b108d5a2c3dff1a4af08ba50339ad2ec3ea12c3feb429179",
+            "rows": 380,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-TARGET_COLLISION-G04-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-NONZERO_MINIMUM-G01-R0",
+            "sha256": "aa20cfe512364c0fa63821d9b5e7e54deec6dc9216cb718fb512657b3015d1cb",
+            "rows": 320,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-NONZERO_MINIMUM-G01-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-NONZERO_MINIMUM-G01-R0",
+            "sha256": "769493eee9abfdf0fcd5557a9211944f1b36b9c6a729fae19f997edf9593b134",
+            "rows": 320,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-NONZERO_MINIMUM-G01-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-NONZERO_MINIMUM-G01-R1",
+            "sha256": "0a06098219035606ef7d1cea30ad63d08a80b48f81b2a10761fb986c5a5e0bff",
+            "rows": 320,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-NONZERO_MINIMUM-G01-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-NONZERO_MINIMUM-G01-R1",
+            "sha256": "826f63cdeb7bb678c29205f99f77ed0af11e4fa8038a5a8098786e772a1e0e8e",
+            "rows": 320,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-NONZERO_MINIMUM-G01-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-NONZERO_MINIMUM-G02-R0",
+            "sha256": "c6b2e347c48af740280c0a26cf4a260a4086f123a8a72cccac9050cdecdf0381",
+            "rows": 320,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-NONZERO_MINIMUM-G02-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-NONZERO_MINIMUM-G02-R0",
+            "sha256": "86c0be3ca5add561dd43df7f68868ea78da9aaa6f892476b8cff1cf363c412bd",
+            "rows": 320,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-NONZERO_MINIMUM-G02-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-NONZERO_MINIMUM-G02-R1",
+            "sha256": "82f9b308bc4a9d25ba29a65ec17ad1b2a2032143fffa576e002008a6691c86d2",
+            "rows": 320,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-NONZERO_MINIMUM-G02-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-NONZERO_MINIMUM-G02-R1",
+            "sha256": "ccb8dd0106357d1a14489cfb4d2436654fb011032c77ef841d58888e02f80dd8",
+            "rows": 320,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-NONZERO_MINIMUM-G02-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-NONZERO_MINIMUM-G03-R0",
+            "sha256": "987c93bf2fb813be8f743a06602734911a7b3d7b3b4f0aefa0499d49b910d42f",
+            "rows": 320,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-NONZERO_MINIMUM-G03-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-NONZERO_MINIMUM-G03-R0",
+            "sha256": "b2bb16a0871b7b001e5093c91b5503582ce7470140373be3eb5e89d67a9d65c5",
+            "rows": 383,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-NONZERO_MINIMUM-G03-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-NONZERO_MINIMUM-G03-R1",
+            "sha256": "013dd5953dec46e8c41e728c0b61e575d62a204a00bf82108ed08cf3afdc7479",
+            "rows": 320,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-NONZERO_MINIMUM-G03-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-NONZERO_MINIMUM-G03-R1",
+            "sha256": "baff937aa9b89fce005615b727bf5677239af5b895f7e0c849424a8380a83ab6",
+            "rows": 383,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-NONZERO_MINIMUM-G03-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-NONZERO_MINIMUM-G04-R0",
+            "sha256": "88e2a89b551d4c63ae2270ede24e4eb34bce0780026c685275789ee5600001bb",
+            "rows": 320,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-NONZERO_MINIMUM-G04-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-NONZERO_MINIMUM-G04-R0",
+            "sha256": "7856df389941c58d6519e18145cc4a75f34275ab1cd6405956b6c3c147cf9a7f",
+            "rows": 383,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-NONZERO_MINIMUM-G04-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-NONZERO_MINIMUM-G04-R1",
+            "sha256": "9c1e709261627478e7d2d8c7add20c05689a4ae1c3335515042170c002180a2d",
+            "rows": 320,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-NONZERO_MINIMUM-G04-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-NONZERO_MINIMUM-G04-R1",
+            "sha256": "8f2595c7fea53d7f3e64e4b59d738c353290822475779dac433e84f55870085c",
+            "rows": 383,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-NONZERO_MINIMUM-G04-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-RANK_MANIFOLD-G01-R0",
+            "sha256": "ea5f326a5b107374d591416f686194c4da4737c8d57b97ffeba572e638872c50",
+            "rows": 320,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-RANK_MANIFOLD-G01-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-RANK_MANIFOLD-G01-R0",
+            "sha256": "dc2e9082f98ff496f82e6f7a11272c0bbad7c7392c053c2b024f274b8ccd70e2",
+            "rows": 320,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-RANK_MANIFOLD-G01-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-RANK_MANIFOLD-G01-R1",
+            "sha256": "afb5b2b3c4345e517d0b76969c4e6ff9631722b3b8ef8c19fcdc71faee21d098",
+            "rows": 320,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-RANK_MANIFOLD-G01-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-RANK_MANIFOLD-G01-R1",
+            "sha256": "be3d2fbee5f79eb68c0c08db6fc699db1ba58a6cdabbe941dfb3c0d5f8961627",
+            "rows": 320,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-RANK_MANIFOLD-G01-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-RANK_MANIFOLD-G02-R0",
+            "sha256": "90739f2b85d0c60dda5ae1c005bbc8547944b19ff002ef81ac240fadced0954c",
+            "rows": 320,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-RANK_MANIFOLD-G02-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-RANK_MANIFOLD-G02-R0",
+            "sha256": "39119beaa593d6df0a6237ccbb32d02b0472f6b387553dd541d6b64b6cfe81ee",
+            "rows": 320,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-RANK_MANIFOLD-G02-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-RANK_MANIFOLD-G02-R1",
+            "sha256": "1b9f3a64e2816b658f5f12ba52b1e5a12f4140ee8b3adf03e9641ffa5a837bb4",
+            "rows": 320,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-RANK_MANIFOLD-G02-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-RANK_MANIFOLD-G02-R1",
+            "sha256": "3605fa78d703562594a38748b8f5413fbb39fb5b2457ca6916e638bb962f028b",
+            "rows": 320,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-RANK_MANIFOLD-G02-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-RANK_MANIFOLD-G03-R0",
+            "sha256": "5965b049240020e4ef3fbb58457fbe5c9526a196c887bc59bc23569f7bbbb1a6",
+            "rows": 320,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-RANK_MANIFOLD-G03-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-RANK_MANIFOLD-G03-R0",
+            "sha256": "aa2c64e6c26cd03cb389e76675b7ccad4e7985a723a66ba55e9bab86edbb9962",
+            "rows": 350,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-RANK_MANIFOLD-G03-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-RANK_MANIFOLD-G03-R1",
+            "sha256": "caac20051735e651116c4fbad9fd5f39340c1e00d948c77322878036aadb297d",
+            "rows": 320,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-RANK_MANIFOLD-G03-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-RANK_MANIFOLD-G03-R1",
+            "sha256": "b63f5c2bbb6b7f13adbcddac345ce18f97f3136d943417c5160b873dd37c0975",
+            "rows": 350,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-RANK_MANIFOLD-G03-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-RANK_MANIFOLD-G04-R0",
+            "sha256": "7c3c89e7e4bb8b0752df8947b4691b14c94ea3ac1db0311e8c5f516dfb0685b1",
+            "rows": 320,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-RANK_MANIFOLD-G04-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-RANK_MANIFOLD-G04-R0",
+            "sha256": "84e0e02e53c665361750d42984cc825a39494272834d6f045484f90c7cdb2d69",
+            "rows": 341,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-RANK_MANIFOLD-G04-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-RANK_MANIFOLD-G04-R1",
+            "sha256": "83bb861d2660405d5040c97d6bc8531e46dfc4b7e77560635220c25cadf8a997",
+            "rows": 320,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-RANK_MANIFOLD-G04-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-RANK_MANIFOLD-G04-R1",
+            "sha256": "b2de5ea985791f236d5b1f3be1b72aa3617b07ce88275049c72c72297240fb79",
+            "rows": 341,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-RANK_MANIFOLD-G04-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-OPEN_WORLD_SEMANTICS-G01-R0",
+            "sha256": "861d7d0e0099e95fec612da44be4a24ee6f0fcbd6d430fe8f18d78350652b6aa",
+            "rows": 351,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-OPEN_WORLD_SEMANTICS-G01-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-OPEN_WORLD_SEMANTICS-G01-R0",
+            "sha256": "bc616e3537814744aa666939bf989e3dfb1a5ba11497a530766d0e0ed098276d",
+            "rows": 382,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-OPEN_WORLD_SEMANTICS-G01-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-OPEN_WORLD_SEMANTICS-G01-R1",
+            "sha256": "3c5fe3d90621357514641d25db12cf6f588db3791ece5569bc99286f99ce0d09",
+            "rows": 351,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-OPEN_WORLD_SEMANTICS-G01-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-OPEN_WORLD_SEMANTICS-G01-R1",
+            "sha256": "5e4212cc4a882317c3bf191d1c256b9cf42eb40aa708bb387891a321e0d54df0",
+            "rows": 382,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-OPEN_WORLD_SEMANTICS-G01-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-OPEN_WORLD_SEMANTICS-G02-R0",
+            "sha256": "928616c75650080b587ef4848133b0b48b08bce93af64ee4565611151c377fc7",
+            "rows": 342,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-OPEN_WORLD_SEMANTICS-G02-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-OPEN_WORLD_SEMANTICS-G02-R0",
+            "sha256": "26205c62846e813cb4dd074164d230a47883bcb8e4d3a2729ef9c2c8e8687f52",
+            "rows": 381,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-OPEN_WORLD_SEMANTICS-G02-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-OPEN_WORLD_SEMANTICS-G02-R1",
+            "sha256": "8d3ed8ee65fdb5829c26e2fcb79f95abf8207be3012d023e8480e01a0adfd5b7",
+            "rows": 342,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-OPEN_WORLD_SEMANTICS-G02-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-OPEN_WORLD_SEMANTICS-G02-R1",
+            "sha256": "577e25d04e074df4823a46d721071dd683387e570e888ca733a17650a3fb3e47",
+            "rows": 381,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-OPEN_WORLD_SEMANTICS-G02-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-OPEN_WORLD_SEMANTICS-G03-R0",
+            "sha256": "d87f955578fca4facda84571bc6655fc684db05c603f440577d61e1cbeb2b8b3",
+            "rows": 337,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-OPEN_WORLD_SEMANTICS-G03-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-OPEN_WORLD_SEMANTICS-G03-R0",
+            "sha256": "7ad51d0f5aade5040e87c0b167a41e8b5e78cdaac481c7fc6823e2ef845f78a0",
+            "rows": 382,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-OPEN_WORLD_SEMANTICS-G03-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-OPEN_WORLD_SEMANTICS-G03-R1",
+            "sha256": "1e7a17f19f53032dbfaf318c37406af326c22afa3b62d745362af0305f671f13",
+            "rows": 337,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-OPEN_WORLD_SEMANTICS-G03-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-OPEN_WORLD_SEMANTICS-G03-R1",
+            "sha256": "abf8719e0ef62f9012fb5560807321f87f2e9c97e85287f05eda71549fd92d32",
+            "rows": 382,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-OPEN_WORLD_SEMANTICS-G03-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-OPEN_WORLD_SEMANTICS-G04-R0",
+            "sha256": "66afec838bf6faab21ed507fb865a28a03ec47709b6eba4c5ea91b8614a95c38",
+            "rows": 335,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-OPEN_WORLD_SEMANTICS-G04-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-OPEN_WORLD_SEMANTICS-G04-R0",
+            "sha256": "94b8c4cd6652f363469f8622f7dc985cd380beeeafa5813f4b7e5f287338e366",
+            "rows": 379,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-OPEN_WORLD_SEMANTICS-G04-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-OPEN_WORLD_SEMANTICS-G04-R1",
+            "sha256": "90e1a755d5a31bdeb7ffcc87cfe70b57e0ba1fc0ab7c3ae10652b3d45328c783",
+            "rows": 335,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-OPEN_WORLD_SEMANTICS-G04-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-OPEN_WORLD_SEMANTICS-G04-R1",
+            "sha256": "7c76ba7d3f7a0e6983493c0d30d764a784553fb885dc85e30137b036b922fd5c",
+            "rows": 379,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-OPEN_WORLD_SEMANTICS-G04-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-REGULAR_OVERHEAD-G01-R0",
+            "sha256": "5c00ec4a40cadad8c437cfb762d1de38bd5eb5467551f8d48e598c998e1f7be3",
+            "rows": 384,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-REGULAR_OVERHEAD-G01-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-REGULAR_OVERHEAD-G01-R0",
+            "sha256": "e3ca46aa76fc823a9425324824a8b6487f6e018a5dbbdbb4d782e6b91ba33771",
+            "rows": 383,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-REGULAR_OVERHEAD-G01-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-REGULAR_OVERHEAD-G01-R1",
+            "sha256": "124b9b8f184723a5460cd1e0bc9311a08bf10cdd72c5b79a12ee1e3f5e7f586b",
+            "rows": 384,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-REGULAR_OVERHEAD-G01-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-REGULAR_OVERHEAD-G01-R1",
+            "sha256": "ac95830310b7769010ba492e9fafa17955b5433106d1eb653eb41ef2ab33c408",
+            "rows": 383,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-REGULAR_OVERHEAD-G01-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-REGULAR_OVERHEAD-G02-R0",
+            "sha256": "043a8f671eb05f0eea1222b759908be4af283058605ce269cf8304454df77b00",
+            "rows": 384,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-REGULAR_OVERHEAD-G02-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-REGULAR_OVERHEAD-G02-R0",
+            "sha256": "d2f8e0dd6391f11fe1812873a79e2cb3290c84eae3091e48a8f411feda788c3f",
+            "rows": 383,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-REGULAR_OVERHEAD-G02-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-REGULAR_OVERHEAD-G02-R1",
+            "sha256": "2355eedac9dbb8e1eec4e48ac443dcc6856907065327b273830d7add118f49b5",
+            "rows": 384,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-REGULAR_OVERHEAD-G02-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-REGULAR_OVERHEAD-G02-R1",
+            "sha256": "8ebf290cc1eb6576f9945a6a14998b71853603e531416abc7e663dae924009ea",
+            "rows": 383,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-REGULAR_OVERHEAD-G02-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-REGULAR_OVERHEAD-G03-R0",
+            "sha256": "624cbfb200c925fdf0caded8db7557a036b9ad9ba5f7ea8e15fe3bd98b5d0bcb",
+            "rows": 384,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-REGULAR_OVERHEAD-G03-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-REGULAR_OVERHEAD-G03-R0",
+            "sha256": "b94693a4bb5dd2755019b12ebd7675d4920e57d0b27278f15416dad0595164db",
+            "rows": 383,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-REGULAR_OVERHEAD-G03-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-REGULAR_OVERHEAD-G03-R1",
+            "sha256": "ef932585947a07c9aa3d0726fd3415be78452199378d18e93e157ea1f4326227",
+            "rows": 384,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-REGULAR_OVERHEAD-G03-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-REGULAR_OVERHEAD-G03-R1",
+            "sha256": "f7bb610874a3e7b016c39f83941192fc34d08c0b05486c22d99f74e343ae0001",
+            "rows": 383,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-REGULAR_OVERHEAD-G03-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-REGULAR_OVERHEAD-G04-R0",
+            "sha256": "89cedd41caaf6be2701103286559f030425aee591ba4922871c8d09f47f7f9fa",
+            "rows": 384,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-REGULAR_OVERHEAD-G04-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-REGULAR_OVERHEAD-G04-R0",
+            "sha256": "18118c82c2d7df9000e5c5ad007d883381c3cb763f9b50318322e4eeaddf0e44",
+            "rows": 383,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-REGULAR_OVERHEAD-G04-R0.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-REGULAR_OVERHEAD-G04-R1",
+            "sha256": "f3604621acb9655df28811b281bf9a9f846dbfd3c9b30e149d446e4320dc04be",
+            "rows": 384,
+            "stage": "mechanism-static-archive",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/mechanism-static-archive/DEFDEV2-REGULAR_OVERHEAD-G04-R1.jsonl"
+        },
+        {
+            "case_id": "DEFDEV2-REGULAR_OVERHEAD-G04-R1",
+            "sha256": "6df58cfcd46921cab3ef633fcc9cdf582164d2f6f6afbff7a225f417944703c7",
+            "rows": 383,
+            "stage": "empty-archive-sequential",
+            "path": "research/results/EXP-DEF-001/development-v2/raw/empty-archive-sequential/DEFDEV2-REGULAR_OVERHEAD-G04-R1.jsonl"
+        }
+    ],
+    "locked_inputs_accessed": false,
+    "experiment_id": "EXP-DEF-001",
+    "process_wall_seconds": 281.0051884
+}
