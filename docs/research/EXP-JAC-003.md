@@ -35,6 +35,10 @@ records, but the planned comparison was never reached.
 The raw launch receipts and partial bytes were preserved rather than repaired
 or republished.  Their hashes and the forensic claim boundary are recorded in
 [`development-failed-v0`](../../research/results/EXP-JAC-003/development-failed-v0/CLAIM_BOUNDARY.md).
+The authoritative hash-only closure is
+[`formal-failure-closure.json`](../../research/experiments/EXP-JAC-003/formal-failure-closure.json),
+with its compact governance decision in
+[`summary.json`](../../research/results/EXP-JAC-003/summary.json).
 
 ## Claim boundary
 
