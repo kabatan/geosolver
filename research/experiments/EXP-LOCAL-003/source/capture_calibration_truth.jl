@@ -12,6 +12,46 @@ export capture_calibration_truth, main
 const LOWER_MODEL_SCALE = 0x1.0p-40
 const UPPER_MODEL_SCALE = 0x1.0p+40
 const MINIMUM_VALID_VECTORS = 8
+const PRIMARY_REPRESENTATIONS = (
+    "base",
+    "signed-permutation",
+    "semantic-equivalent-row-rescaling",
+)
+const SAFETY_REPRESENTATION = "orthogonal-safety"
+
+function _stage_contract(candidate_version, assessor_version)
+    pair = (String(candidate_version), String(assessor_version))
+    if pair == (
+        "exp-local-003-candidate-inputs/v1",
+        "exp-local-003-generator-assessor-projection/v1",
+    )
+        return (;
+            stage = "development",
+            output_version = "exp-local-003-calibration-truth/v1",
+            case_count = 64,
+            latent_group_count = 16,
+            latent_groups = 0:1,
+            representations = (PRIMARY_REPRESENTATIONS..., SAFETY_REPRESENTATION),
+            safety_qz_audit_status = "checked",
+            safety_case_count = 16,
+        )
+    elseif pair == (
+        "exp-local-003-locked-candidate-inputs/v1",
+        "exp-local-003-locked-generator-assessor-projection/v1",
+    )
+        return (;
+            stage = "locked",
+            output_version = "exp-local-003-locked-calibration-truth/v1",
+            case_count = 96,
+            latent_group_count = 32,
+            latent_groups = 2:5,
+            representations = PRIMARY_REPRESENTATIONS,
+            safety_qz_audit_status = "not_applicable_locked",
+            safety_case_count = 0,
+        )
+    end
+    error("candidate and assessor projection versions do not form a supported stage pair")
+end
 
 _float_bits(value::Float64) =
     string("0x", string(reinterpret(UInt64, value); base = 16, pad = 16))
@@ -34,13 +74,22 @@ function _classify_calibration_observation(observation, residual_count::Int)
     return values, "valid"
 end
 
+function _has_nonfinite_q(vector, scales)
+    length(vector) == length(scales) ||
+        throw(ArgumentError("z and model-scale dimensions differ"))
+    return any(!isfinite(z / a) for (z, a) in zip(vector, scales))
+end
+
 function _calibration_record(
     z_vectors,
     residual_count::Int;
     q_nonfinite_count::Int = 0,
 )
-    0 <= q_nonfinite_count <= length(z_vectors) ||
-        throw(ArgumentError("q_nonfinite_count lies outside the calibration block"))
+    0 <= q_nonfinite_count <= Base.count(isnothing, z_vectors) || throw(
+        ArgumentError(
+            "pre-scale q_nonfinite_count exceeds discarded calibration vectors",
+        ),
+    )
     valid = Vector{Vector{Float64}}()
     for vector in z_vectors
         vector === nothing || push!(valid, vector)
@@ -79,6 +128,13 @@ function _calibration_record(
                 clamp_reasons[component] = "none"
             end
         end
+    end
+    # Invalid/nonfinite z observations are already included by the caller.
+    # Also execute q=z/a after the frozen joint scale is known: a finite z can
+    # still overflow this division, and such an observation is a model failure.
+    q_nonfinite_count += sum(z_vectors; init = 0) do vector
+        vector === nothing && return 0
+        return Int(_has_nonfinite_q(vector, scales))
     end
     rank_bits = _float_bits.(ranks)
     scale_bits = _float_bits.(scales)
@@ -553,6 +609,12 @@ function _capture_case(case_document, assessor_case, registry)
         residual_count;
         q_nonfinite_count,
     )
+    for (index, vector) in enumerate(z_vectors)
+        vector === nothing && continue
+        if _has_nonfinite_q(vector, scales)
+            observations[index]["classification"] = "nonfinite_q"
+        end
+    end
     gold_audit, gold_internal = _gold_audit(assessor_case, compiled)
     record = Dict{String,Any}(
         "opaque_case_key" => case_document["opaque_case_key"],
@@ -655,11 +717,9 @@ end
 function _audit_primary_gold_group!(truths, internal)
     primary = [truth for truth in truths if truth["expected_invariant"]]
     length(primary) == 3 || error("latent group must have exactly three primary cases")
-    Set(String(truth["representation"]) for truth in primary) == Set((
-        "base",
-        "signed-permutation",
-        "semantic-equivalent-row-rescaling",
-    )) || error("latent group has the wrong primary representation set")
+    Set(String(truth["representation"]) for truth in primary) ==
+        Set(PRIMARY_REPRESENTATIONS) ||
+        error("latent group has the wrong primary representation set")
     base_truth = only(truth for truth in primary if truth["representation"] == "base")
     base_gold = internal[String(base_truth["opaque_case_key"])].gold
     comparisons_checked = 0
@@ -706,33 +766,102 @@ function _grouped_truth(assessor_cases)
     return grouped
 end
 
+function _validate_stage_assessor_contract(assessor_cases, contract)
+    length(assessor_cases) == contract.case_count || error(
+        "$(contract.stage) assessor projection must contain exactly $(contract.case_count) cases",
+    )
+    expected_representations = Set(contract.representations)
+    expected_pairs = Set(
+        (family_ordinal, latent_group) for family_ordinal in 0:7 for
+        latent_group in contract.latent_groups
+    )
+    observed_pairs = Set{Tuple{Int,Int}}()
+    family_by_ordinal = Dict{Int,String}()
+    identities_by_pair = Dict{Tuple{Int,Int},Set{String}}()
+    for truth in assessor_cases
+        family_ordinal = Int(truth["family_ordinal"])
+        latent_group = Int(truth["latent_group"])
+        representation = String(truth["representation"])
+        family_id = String(truth["family_id"])
+        0 <= family_ordinal <= 7 || error("assessor family ordinal lies outside 0:7")
+        latent_group in contract.latent_groups || error(
+            "$(contract.stage) assessor latent group $latent_group lies outside $(first(contract.latent_groups)):$(last(contract.latent_groups))",
+        )
+        representation in expected_representations || error(
+            "$(contract.stage) assessor contains forbidden representation $representation",
+        )
+        expected_invariant = representation != SAFETY_REPRESENTATION
+        truth["expected_invariant"] === expected_invariant || error(
+            "assessor expected_invariant disagrees with representation $representation",
+        )
+        if haskey(family_by_ordinal, family_ordinal)
+            family_by_ordinal[family_ordinal] == family_id ||
+                error("one family ordinal maps to multiple family identifiers")
+        else
+            family_by_ordinal[family_ordinal] = family_id
+        end
+        pair = (family_ordinal, latent_group)
+        push!(observed_pairs, pair)
+        identity = String(truth["gold"]["identity_key"])
+        push!(get!(identities_by_pair, pair, Set{String}()), identity)
+    end
+    observed_pairs == expected_pairs ||
+        error("$(contract.stage) assessor does not cover the exact family/group product")
+    length(family_by_ordinal) == 8 && allunique(values(family_by_ordinal)) ||
+        error("assessor must carry eight one-to-one family ordinal identifiers")
+    all(length(identities) == 1 for identities in values(identities_by_pair)) ||
+        error("one declared family/group pair maps to multiple Gold identities")
+
+    grouped = _grouped_truth(assessor_cases)
+    length(grouped) == contract.latent_group_count || error(
+        "$(contract.stage) assessor must contain $(contract.latent_group_count) Gold identity groups",
+    )
+    for truths in values(grouped)
+        length(truths) == length(contract.representations) || error(
+            "$(contract.stage) Gold identity group has the wrong representation count",
+        )
+        labels = Set(
+            (Int(truth["family_ordinal"]), Int(truth["latent_group"])) for truth in truths
+        )
+        length(labels) == 1 || error("Gold identity key crosses declared latent groups")
+        representations = [String(truth["representation"]) for truth in truths]
+        length(unique(representations)) == length(representations) ||
+            error("Gold identity group repeats a representation")
+        Set(representations) == expected_representations || error(
+            "$(contract.stage) Gold identity group has the wrong representation set",
+        )
+    end
+    return grouped
+end
+
 """
-Capture authoritative C0 calibration truth without importing candidate outcomes.
+Capture authoritative development or locked C0 calibration truth without importing candidate outcomes.
 
 ``candidate_document`` and ``assessor_document`` remain separate inputs.  The
 assessor mapping is used only after every candidate problem has been compiled
 and evaluated, to reject malformed primary and Safety representation fixtures.
 """
 function capture_calibration_truth(candidate_document, assessor_document)
-    candidate_document["schema_version"] == "exp-local-003-candidate-inputs/v1" ||
-        error("unexpected candidate projection schema")
-    assessor_document["schema_version"] ==
-        "exp-local-003-generator-assessor-projection/v1" ||
-        error("unexpected generator assessor projection schema")
+    contract = _stage_contract(
+        candidate_document["schema_version"],
+        assessor_document["schema_version"],
+    )
     candidate_cases = candidate_document["cases"]
     assessor_cases = assessor_document["cases"]
-    length(candidate_cases) == length(assessor_cases) == 64 ||
-        error("development calibration capture requires exactly 64 cases")
+    length(candidate_cases) == length(assessor_cases) == contract.case_count || error(
+        "$(contract.stage) calibration capture requires exactly $(contract.case_count) cases",
+    )
     candidate_document["card_sha256"] == assessor_document["card_sha256"] ||
         error("candidate and assessor card hashes differ")
 
     assessor_keys = Set(String(case["opaque_case_key"]) for case in assessor_cases)
     candidate_keys = Set(String(case["opaque_case_key"]) for case in candidate_cases)
-    length(assessor_keys) == length(candidate_keys) == 64 ||
+    length(assessor_keys) == length(candidate_keys) == contract.case_count ||
         error("candidate or assessor projection contains duplicate case keys")
     candidate_keys == assessor_keys || error("candidate and assessor case-key sets differ")
     assessor_by_key =
         Dict(String(case["opaque_case_key"]) => case for case in assessor_cases)
+    grouped = _validate_stage_assessor_contract(assessor_cases, contract)
 
     registry = _registry()
     records = Dict{String,Any}[]
@@ -746,13 +875,8 @@ function capture_calibration_truth(candidate_document, assessor_document)
     end
     sort!(records; by = record -> String(record["opaque_case_key"]))
 
-    grouped = _grouped_truth(assessor_cases)
-    length(grouped) == 16 || error("assessor projection must contain 16 latent groups")
     primary_inverse_comparisons_checked = 0
     for truths in values(grouped)
-        length(truths) == 4 || error("each latent group must contain four representations")
-        length(Set((String(truth["family_id"]), Int(truth["latent_group"])) for truth in truths)) ==
-            1 || error("Gold identity key crosses declared latent groups")
         _audit_group!(truths, internal)
         primary_inverse_comparisons_checked += _audit_primary_gold_group!(truths, internal)
     end
@@ -760,7 +884,8 @@ function capture_calibration_truth(candidate_document, assessor_document)
         sum(Int(record["gold_audit"]["configuration_count"]) for record in records)
 
     return Dict{String,Any}(
-        "schema_version" => "exp-local-003-calibration-truth/v1",
+        "schema_version" => contract.output_version,
+        "stage" => contract.stage,
         "card_sha256" => candidate_document["card_sha256"],
         "candidate_projection_sha256" => string(canonical_json_hash(candidate_document)),
         "assessor_projection_sha256" => string(canonical_json_hash(assessor_document)),
@@ -771,6 +896,8 @@ function capture_calibration_truth(candidate_document, assessor_document)
                 primary_inverse_comparisons_checked,
             "primary_semantic_z_mismatch_count" => 0,
             "primary_scale_permutation_mismatch_count" => 0,
+            "safety_cases_checked" => contract.safety_case_count,
+            "safety_qz_audit_status" => contract.safety_qz_audit_status,
             "safety_qz_mismatch_count" => 0,
             "gold_configuration_index_coverage_failure_count" => 0,
             "gold_target_interval_overlap_failure_count" => 0,

@@ -93,6 +93,114 @@ end
     @test nonfinite_record["valid_vector_count"] == 0
     @test nonfinite_record["joint_fallback_reason"] == "insufficient_valid_vectors"
     @test nonfinite_scales == [1.0]
+    @test_throws ArgumentError Local3CalibrationTruth._calibration_record(
+        [Float64[1.0]],
+        1;
+        q_nonfinite_count = 1,
+    )
+
+    # Seven small values and one finite max value choose a tiny lower-clamped
+    # a, so the final q division overflows even though every input z is finite.
+    overflow_vectors = [Float64[Local3CalibrationTruth.LOWER_MODEL_SCALE / 2] for _ in 1:7]
+    push!(overflow_vectors, Float64[floatmax(Float64)])
+    overflow_record, overflow_scales =
+        Local3CalibrationTruth._calibration_record(overflow_vectors, 1)
+    @test overflow_record["valid_vector_count"] == 8
+    @test overflow_record["clamp_reasons"] == ["below_0x1.0p-40"]
+    @test overflow_scales == [Local3CalibrationTruth.LOWER_MODEL_SCALE]
+    @test overflow_record["q_nonfinite_count"] == 1
+    @test Local3CalibrationTruth._has_nonfinite_q(
+        Float64[floatmax(Float64)],
+        overflow_scales,
+    )
+    @test !Local3CalibrationTruth._has_nonfinite_q(
+        Float64[Local3CalibrationTruth.LOWER_MODEL_SCALE],
+        overflow_scales,
+    )
+end
+
+function _synthetic_stage_assessor_cases(contract)
+    cases = Dict{String,Any}[]
+    for family_ordinal in 0:7
+        for latent_group in contract.latent_groups
+            identity = string(family_ordinal * 6 + latent_group + 1; base = 16, pad = 64)
+            for representation in contract.representations
+                push!(
+                    cases,
+                    Dict{String,Any}(
+                        "family_id" => "synthetic-family-$family_ordinal",
+                        "family_ordinal" => family_ordinal,
+                        "latent_group" => latent_group,
+                        "representation" => representation,
+                        "expected_invariant" =>
+                            representation != Local3CalibrationTruth.SAFETY_REPRESENTATION,
+                        "gold" => Dict{String,Any}("identity_key" => identity),
+                    ),
+                )
+            end
+        end
+    end
+    return cases
+end
+
+@testset "development and locked capture stage contracts are closed without materializing locked inputs" begin
+    development = Local3CalibrationTruth._stage_contract(
+        "exp-local-003-candidate-inputs/v1",
+        "exp-local-003-generator-assessor-projection/v1",
+    )
+    @test development.stage == "development"
+    @test development.case_count == 64
+    @test development.latent_group_count == 16
+    @test collect(development.latent_groups) == [0, 1]
+    @test length(development.representations) == 4
+    @test development.safety_case_count == 16
+
+    locked = Local3CalibrationTruth._stage_contract(
+        "exp-local-003-locked-candidate-inputs/v1",
+        "exp-local-003-locked-generator-assessor-projection/v1",
+    )
+    @test locked.stage == "locked"
+    @test locked.output_version == "exp-local-003-locked-calibration-truth/v1"
+    @test locked.case_count == 96
+    @test locked.latent_group_count == 32
+    @test collect(locked.latent_groups) == [2, 3, 4, 5]
+    @test locked.representations == Local3CalibrationTruth.PRIMARY_REPRESENTATIONS
+    @test locked.safety_case_count == 0
+    @test locked.safety_qz_audit_status == "not_applicable_locked"
+    @test_throws ErrorException Local3CalibrationTruth._stage_contract(
+        "exp-local-003-candidate-inputs/v1",
+        "exp-local-003-locked-generator-assessor-projection/v1",
+    )
+
+    locked_cases = _synthetic_stage_assessor_cases(locked)
+    @test length(locked_cases) == 96
+    grouped = Local3CalibrationTruth._validate_stage_assessor_contract(locked_cases, locked)
+    @test length(grouped) == 32
+    @test all(length(truths) == 3 for truths in values(grouped))
+    @test all(
+        Set(truth["representation"] for truth in truths) ==
+            Set(Local3CalibrationTruth.PRIMARY_REPRESENTATIONS) for truths in values(grouped)
+    )
+
+    wrong_group = deepcopy(locked_cases)
+    wrong_group[1]["latent_group"] = 1
+    @test_throws ErrorException Local3CalibrationTruth._validate_stage_assessor_contract(
+        wrong_group,
+        locked,
+    )
+    forbidden_safety = deepcopy(locked_cases)
+    forbidden_safety[1]["representation"] = Local3CalibrationTruth.SAFETY_REPRESENTATION
+    forbidden_safety[1]["expected_invariant"] = false
+    @test_throws ErrorException Local3CalibrationTruth._validate_stage_assessor_contract(
+        forbidden_safety,
+        locked,
+    )
+    false_primary = deepcopy(locked_cases)
+    false_primary[1]["expected_invariant"] = false
+    @test_throws ErrorException Local3CalibrationTruth._validate_stage_assessor_contract(
+        false_primary,
+        locked,
+    )
 end
 
 @testset "all 64 calibration blocks capture independent C0 truth and metamorphic audits" begin
@@ -102,8 +210,11 @@ end
         bundle["assessor"],
     )
     @test truth["schema_version"] == "exp-local-003-calibration-truth/v1"
+    @test truth["stage"] == "development"
     @test length(truth["cases"]) == 64
     @test truth["audit"]["latent_groups_checked"] == 16
+    @test truth["audit"]["safety_cases_checked"] == 16
+    @test truth["audit"]["safety_qz_audit_status"] == "checked"
     @test truth["audit"]["gold_configurations_checked"] == sum(
         record["gold_audit"]["configuration_count"] for record in truth["cases"]
     )
@@ -156,6 +267,26 @@ end
     @test length(identity_counts) == 16
     @test all(==(4), values(identity_counts))
     @test isnothing(_validate_calibration_truth_schema(truth))
+
+    # Exercise only the locked output-schema branch. This reuses audited development
+    # records as synthetic schema fixtures and does not call build_locked_documents.
+    synthetic_locked_shape = deepcopy(truth)
+    synthetic_locked_shape["schema_version"] =
+        "exp-local-003-locked-calibration-truth/v1"
+    synthetic_locked_shape["stage"] = "locked"
+    synthetic_locked_shape["cases"] = [
+        truth["cases"][mod1(index, length(truth["cases"]))] for index in 1:96
+    ]
+    synthetic_locked_shape["audit"]["latent_groups_checked"] = 32
+    synthetic_locked_shape["audit"]["gold_configurations_checked"] = sum(
+        record["gold_audit"]["configuration_count"] for
+        record in synthetic_locked_shape["cases"]
+    )
+    synthetic_locked_shape["audit"]["primary_inverse_comparisons_checked"] = 64
+    synthetic_locked_shape["audit"]["safety_cases_checked"] = 0
+    synthetic_locked_shape["audit"]["safety_qz_audit_status"] =
+        "not_applicable_locked"
+    @test isnothing(_validate_calibration_truth_schema(synthetic_locked_shape))
     @test canonical_json(parse_protocol_json(canonical_json(truth))) == canonical_json(truth)
 
     malformed_assessor = deepcopy(bundle["assessor"])

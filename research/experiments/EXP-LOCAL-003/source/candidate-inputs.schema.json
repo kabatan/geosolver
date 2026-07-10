@@ -5,15 +5,27 @@
   "additionalProperties": false,
   "required": ["schema_version", "card_sha256", "cases"],
   "properties": {
-    "schema_version": {"const": "exp-local-003-candidate-inputs/v1"},
+    "schema_version": {
+      "enum": ["exp-local-003-candidate-inputs/v1", "exp-local-003-locked-candidate-inputs/v1"]
+    },
     "card_sha256": {"const": "0caae294a032f6d920c718219836e60e57f20c76fe5d790a615e554a95c6ee3c"},
     "cases": {
       "type": "array",
       "minItems": 64,
-      "maxItems": 64,
+      "maxItems": 96,
       "items": {"$ref": "#/$defs/case"}
     }
   },
+  "allOf": [
+    {
+      "if": {"properties": {"schema_version": {"const": "exp-local-003-candidate-inputs/v1"}}},
+      "then": {"properties": {"cases": {"minItems": 64, "maxItems": 64}}}
+    },
+    {
+      "if": {"properties": {"schema_version": {"const": "exp-local-003-locked-candidate-inputs/v1"}}},
+      "then": {"properties": {"cases": {"minItems": 96, "maxItems": 96}}}
+    }
+  ],
   "$defs": {
     "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
     "vector": {"type": "array", "minItems": 1, "maxItems": 16, "items": {"type": "number"}},

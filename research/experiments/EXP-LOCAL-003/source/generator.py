@@ -10,9 +10,12 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import hmac
 import json
 import math
+import re
 import struct
+from collections.abc import Mapping
 from dataclasses import dataclass
 from fractions import Fraction
 from pathlib import Path
@@ -80,13 +83,73 @@ PRIMARY_REPRESENTATIONS = (
     "semantic-equivalent-row-rescaling",
 )
 SAFETY_REPRESENTATION = "orthogonal-safety"
+DEVELOPMENT_GROUPS = (0, 1)
+LOCKED_GROUPS = (2, 3, 4, 5)
+DEVELOPMENT_REPRESENTATIONS = (*PRIMARY_REPRESENTATIONS, SAFETY_REPRESENTATION)
+LOCKED_REPRESENTATIONS = PRIMARY_REPRESENTATIONS
 
 CALIBRATION_DOMAIN = b"geotarget.exp-local-003.calibration.counter.v1\0"
 CALIBRATION_SEED = hashlib.sha256(b"EXP-LOCAL-003-CALIBRATION-SEED-V1").digest()
 START_DOMAIN = b"geotarget.exp-local-003.starts.counter.v1\0"
 START_SEED = hashlib.sha256(b"EXP-LOCAL-003-START-SEED-V1").digest()
-PRIVATE_SEED = hashlib.sha256(b"EXP-LOCAL-003-GENERATOR-PRIVATE-V1").digest()
-CASE_KEY_SEED = hashlib.sha256(b"EXP-LOCAL-003-OPAQUE-CASE-KEY-V1").digest()
+MASTER_SECRET_BYTES = 32
+TEST_ONLY_MASTER_SECRET = hashlib.sha256(
+    b"EXP-LOCAL-003-TEST-ONLY-DO-NOT-MATERIALIZE-V1"
+).digest()
+TEST_ONLY_ALTERNATE_SECRET = hmac.digest(
+    TEST_ONLY_MASTER_SECRET, b"alternate-test-only-secret", "sha256"
+)
+_TEST_SECRET_BY_VARIANT = {
+    "default": TEST_ONLY_MASTER_SECRET,
+    "alternate": TEST_ONLY_ALTERNATE_SECRET,
+}
+_TEST_ONLY_SECRETS = frozenset(_TEST_SECRET_BY_VARIANT.values())
+DEVELOPMENT_OPAQUE_DOMAIN = b"geotarget.exp-local-003.development.opaque-key.v1\0"
+DEVELOPMENT_CALIBRATION_KEY_DOMAIN = (
+    b"geotarget.exp-local-003.development.calibration-key.v1\0"
+)
+DEVELOPMENT_START_KEY_DOMAIN = b"geotarget.exp-local-003.development.start-key.v1\0"
+DEVELOPMENT_GROUP_IDENTITY_DOMAIN = (
+    b"geotarget.exp-local-003.development.group-identity.v1\0"
+)
+DEVELOPMENT_PARAMETER_KEY_DOMAIN = (
+    b"geotarget.exp-local-003.development.parameter-key.v1\0"
+)
+DEVELOPMENT_REPRESENTATION_KEY_DOMAIN = (
+    b"geotarget.exp-local-003.development.representation-key.v1\0"
+)
+DEVELOPMENT_GOLD_KEY_DOMAIN = b"geotarget.exp-local-003.development.gold-key.v1\0"
+LOCKED_OPAQUE_DOMAIN = b"geotarget.exp-local-003.locked.opaque-key.v1\0"
+LOCKED_CALIBRATION_KEY_DOMAIN = b"geotarget.exp-local-003.locked.calibration-key.v1\0"
+LOCKED_START_KEY_DOMAIN = b"geotarget.exp-local-003.locked.start-key.v1\0"
+LOCKED_GROUP_IDENTITY_DOMAIN = b"geotarget.exp-local-003.locked.group-identity.v1\0"
+LOCKED_PARAMETER_KEY_DOMAIN = b"geotarget.exp-local-003.locked.parameter-key.v1\0"
+LOCKED_REPRESENTATION_KEY_DOMAIN = (
+    b"geotarget.exp-local-003.locked.representation-key.v1\0"
+)
+LOCKED_GOLD_KEY_DOMAIN = b"geotarget.exp-local-003.locked.gold-key.v1\0"
+LOCKED_AUTHORIZATION_SCHEMA = (
+    "geotarget.exp-local-003.development-decision-record/v1"
+)
+LOCKED_AUTHORIZATION_FIELDS = frozenset(
+    {
+        "schema_version",
+        "experiment_id",
+        "card_sha256",
+        "development_gate_passed",
+        "selected_variant",
+        "selected_path",
+        "safety16_disagreement_count",
+        "candidate_input_sha256",
+        "development_assessment_sha256",
+        "decision_commit",
+    }
+)
+
+
+class GeneratorEntropyError(ValueError):
+    """Raised when a formal input build lacks caller-owned C1 entropy."""
+
 
 Expr = tuple[Any, ...]
 
@@ -317,11 +380,20 @@ def _opaque_state(value: Expr, *, loops: int, mixing: float, bias: float) -> Exp
     return ("opaque", value, int(loops), float(mixing), float(bias))
 
 
-def _family_case(family_ordinal: int, group: int) -> BaseCase:
+def _family_case_raw(family_ordinal: int, group: int) -> BaseCase:
+    if not 0 <= group <= 5:
+        raise ValueError("group index must lie in 0:5")
     if family_ordinal == 0:
         dimension = 4
         root = [-0.5, -0.25, 0.25, 0.5]
-        exponents = (0, 6, 12, 18) if group == 0 else (-6, 2, 10, 22)
+        exponents = (
+            (0, 6, 12, 18),
+            (-6, 2, 10, 22),
+            (-10, -2, 8, 20),
+            (-4, 4, 16, 24),
+            (-12, 0, 14, 26),
+            (-8, 6, 18, 28),
+        )[group]
         relations = tuple(
             _scaled(
                 _sub(_input(index), _constant(root[index])), math.ldexp(1.0, exponent)
@@ -342,7 +414,7 @@ def _family_case(family_ordinal: int, group: int) -> BaseCase:
 
     if family_ordinal == 1:
         dimension = 4
-        curvature = 32.0 if group == 0 else 256.0
+        curvature = (32.0, 256.0, 48.0, 96.0, 384.0, 768.0)[group]
         relations: list[Expr] = [_sub(_input(0), _constant(1.0))]
         for index in range(1, dimension):
             square = _mul(_input(index - 1), _input(index - 1))
@@ -360,7 +432,7 @@ def _family_case(family_ordinal: int, group: int) -> BaseCase:
         )
 
     if family_ordinal == 2:
-        epsilon = math.ldexp(1.0, -12 if group == 0 else -22)
+        epsilon = math.ldexp(1.0, (-12, -22, -14, -18, -26, -30)[group])
         operator = [
             [1.0, 1.0, 0.0],
             [1.0, 1.0 + epsilon, 0.0],
@@ -380,7 +452,14 @@ def _family_case(family_ordinal: int, group: int) -> BaseCase:
         )
 
     if family_ordinal == 3:
-        perturbation = math.ldexp(1.0, -18) if group else 0.0
+        perturbation = (
+            0.0,
+            math.ldexp(1.0, -18),
+            math.ldexp(1.0, -16),
+            math.ldexp(1.0, -20),
+            math.ldexp(1.0, -24),
+            math.ldexp(1.0, -14),
+        )[group]
         operator = [
             [1.0, 0.0, 0.0],
             [0.0, 1.0, 0.0],
@@ -403,8 +482,14 @@ def _family_case(family_ordinal: int, group: int) -> BaseCase:
         )
 
     if family_ordinal == 4:
-        radius = 1.0 if group == 0 else 0.75
-        ratio = 0.99 if group == 0 else 0.9999
+        radius, ratio = (
+            (1.0, 0.99),
+            (0.75, 0.9999),
+            (1.25, 0.975),
+            (0.625, 0.999),
+            (1.5, 0.99999),
+            (0.875, 0.9925),
+        )[group]
         height = radius * ratio
         horizontal = math.sqrt((radius - height) * (radius + height))
         circle = _sub(
@@ -427,9 +512,14 @@ def _family_case(family_ordinal: int, group: int) -> BaseCase:
         )
 
     if family_ordinal == 5:
-        roots = (-0.75, -0.125, 0.625) if group == 0 else (-0.625, 0.25, 0.75)
-        coefficient = 0.75 if group == 0 else 1.25
-        warp = 0.125 if group == 0 else 0.375
+        roots, coefficient, warp = (
+            ((-0.75, -0.125, 0.625), 0.75, 0.125),
+            ((-0.625, 0.25, 0.75), 1.25, 0.375),
+            ((-0.8, -0.3, 0.45), 0.625, 0.2),
+            ((-0.55, 0.05, 0.85), 1.5, 0.3),
+            ((-0.9, -0.05, 0.7), 0.9, 0.45),
+            ((-0.7, 0.35, 0.9), 1.1, 0.25),
+        )[group]
         polynomial = _product([_sub(_input(0), _constant(root)) for root in roots])
         dependent = _scaled(
             _add(_mul(_input(0), _input(0)), _scaled(_input(0), 0.2)),
@@ -461,8 +551,14 @@ def _family_case(family_ordinal: int, group: int) -> BaseCase:
         )
 
     if family_ordinal == 6:
-        boundary = 1.0 - math.ldexp(1.0, -20) if group == 0 else 1.0
-        coupling = 0.625 if group == 0 else 0.875
+        boundary, coupling = (
+            (1.0 - math.ldexp(1.0, -20), 0.625),
+            (1.0, 0.875),
+            (0.75, 0.55),
+            (1.0 + math.ldexp(1.0, -20), 0.7),
+            (1.5, 0.95),
+            (1.999, 0.8),
+        )[group]
         polynomial = _mul(
             _sub(_input(0), _constant(1.0)),
             _sub(_input(0), _constant(2.0)),
@@ -487,10 +583,14 @@ def _family_case(family_ordinal: int, group: int) -> BaseCase:
         )
 
     if family_ordinal == 7:
-        roots = (-0.75, 0.0, 0.75) if group == 0 else (-0.6, 0.15, 0.7)
-        loops = 5 if group == 0 else 7
-        mixing = 0.1 if group == 0 else 0.2
-        bias = 0.017 if group == 0 else 0.043
+        roots, loops, mixing, bias = (
+            ((-0.75, 0.0, 0.75), 5, 0.1, 0.017),
+            ((-0.6, 0.15, 0.7), 7, 0.2, 0.043),
+            ((-0.85, -0.2, 0.55), 4, 0.08, -0.031),
+            ((-0.7, 0.25, 0.85), 6, 0.14, 0.061),
+            ((-0.9, -0.05, 0.65), 8, 0.22, -0.047),
+            ((-0.5, 0.1, 0.9), 9, 0.18, 0.029),
+        )[group]
         opaque = _opaque_state(_input(0), loops=loops, mixing=mixing, bias=bias)
         polynomial = _product([_sub(_input(0), _constant(root)) for root in roots])
         first = _mul(polynomial, _add(_constant(1.0), _scaled(opaque, 0.05)))
@@ -516,13 +616,112 @@ def _family_case(family_ordinal: int, group: int) -> BaseCase:
     raise ValueError(f"unknown family ordinal: {family_ordinal}")
 
 
+def _secret_unit(key: bytes, domain: bytes, index: int) -> float:
+    digest = hmac.digest(key, domain + struct.pack(">I", index), "sha256")
+    top_52 = int.from_bytes(digest[:8], "big") >> 12
+    return (2 * top_52 + 1) * math.ldexp(1.0, -53)
+
+
+def _family_case(family_ordinal: int, group: int, parameter_key: bytes) -> BaseCase:
+    """Instantiate one template through a secret, frozen affine parameter map."""
+
+    if len(parameter_key) != 32:
+        raise ValueError("parameter_key must contain 32 bytes")
+    template = _family_case_raw(family_ordinal, group)
+    latent_inputs: list[Expr] = []
+    transformed_bounds: list[tuple[float, float]] = []
+    translations: list[float] = []
+    stretches: list[float] = []
+    for variable, (lower, upper) in enumerate(template.bounds):
+        _, halfwidth = _safe_midpoint_halfwidth(lower, upper)
+        translation_unit = _secret_unit(
+            parameter_key, b"parameter-affine-translation-v1\0", variable
+        )
+        stretch_unit = _secret_unit(
+            parameter_key, b"parameter-affine-stretch-v1\0", variable
+        )
+        translation = halfwidth * 0.125 * (2.0 * translation_unit - 1.0)
+        stretch = 0.875 + 0.25 * stretch_unit
+        translations.append(translation)
+        stretches.append(stretch)
+        transformed_bounds.append(
+            (translation + stretch * lower, translation + stretch * upper)
+        )
+        latent_inputs.append(
+            _div(_sub(_input(variable), _constant(translation)), _constant(stretch))
+        )
+
+    target_scale = 0.75 + 0.5 * _secret_unit(
+        parameter_key, b"parameter-target-scale-v1\0", 0
+    )
+    target_shift = 0.25 * (
+        2.0 * _secret_unit(parameter_key, b"parameter-target-shift-v1\0", 0) - 1.0
+    )
+    transformed_target = _add(
+        _scaled(_substitute(template.target, latent_inputs), target_scale),
+        _constant(target_shift),
+    )
+    transformed_gold = tuple(
+        tuple(
+            translations[index] + stretches[index] * coordinate
+            for index, coordinate in enumerate(configuration)
+        )
+        for configuration in template.gold_configurations
+    )
+
+    origins: list[float] = []
+    scales: list[float] = []
+    for variable, (lower, upper) in enumerate(transformed_bounds):
+        midpoint, halfwidth = _safe_midpoint_halfwidth(lower, upper)
+        origin_unit = _secret_unit(
+            parameter_key, b"declared-origin-coordinate-v1\0", variable
+        )
+        scale_unit = _secret_unit(
+            parameter_key, b"declared-scale-coordinate-v1\0", variable
+        )
+        offset = 0.5 * (origin_unit - 0.5)
+        scale_factor = 0.5 + 0.25 * scale_unit
+        origin = _fraction_fma(halfwidth, offset, midpoint)
+        scale = halfwidth * scale_factor
+        if not lower <= origin <= upper or not math.isfinite(scale) or scale <= 0.0:
+            raise AssertionError("declared semantic coordinates are invalid")
+        if struct.pack(">d", origin) == struct.pack(">d", midpoint) or struct.pack(
+            ">d", scale
+        ) == struct.pack(">d", halfwidth):
+            raise AssertionError(
+                "declared coordinates must differ from bounds coordinates"
+            )
+        origins.append(origin)
+        scales.append(scale)
+    return BaseCase(
+        tuple(transformed_bounds),
+        tuple(origins),
+        tuple(scales),
+        tuple(
+            _substitute(expression, latent_inputs) for expression in template.relations
+        ),
+        template.relation_scales,
+        transformed_target,
+        tuple(_substitute(expression, latent_inputs) for expression in template.guards),
+        tuple(
+            _substitute(expression, latent_inputs) for expression in template.domains
+        ),
+        transformed_gold,
+        template.outward_target_intervals,
+    )
+
+
 def _identity_matrix(rows: int) -> list[list[float]]:
     return [
         [1.0 if row == column else 0.0 for column in range(rows)] for row in range(rows)
     ]
 
 
-def _representation(base: BaseCase, group: int, name: str) -> Representation:
+def _representation(
+    base: BaseCase, group: int, name: str, representation_key: bytes
+) -> Representation:
+    if len(representation_key) != 32:
+        raise ValueError("representation_key must contain 32 bytes")
     dimension = len(base.bounds)
     residual_dimension = len(base.relations)
     if name == "base":
@@ -534,20 +733,37 @@ def _representation(base: BaseCase, group: int, name: str) -> Representation:
             True,
         )
     if name == "signed-permutation":
-        shift = 1 + group % max(1, dimension - 1)
+        shift = 1 + int(
+            _secret_unit(representation_key, b"variable-permutation-v1\0", 0)
+            * max(1, dimension - 1)
+        )
         variable_permutation = tuple(
             (index + shift) % dimension for index in range(dimension)
         )
-        variable_signs = tuple(
-            -1.0 if (index + group) % 2 else 1.0 for index in range(dimension)
-        )
+        signs = [
+            -1.0
+            if _secret_unit(representation_key, b"variable-sign-v1\0", index) < 0.5
+            else 1.0
+            for index in range(dimension)
+        ]
+        if all(sign > 0.0 for sign in signs):
+            signs[0] = -1.0
+        variable_signs = tuple(signs)
         residual_matrix = [
             [0.0] * residual_dimension for _ in range(residual_dimension)
         ]
-        residual_shift = 1 + group % max(1, residual_dimension - 1)
+        residual_shift = 1 + int(
+            _secret_unit(representation_key, b"residual-permutation-v1\0", 0)
+            * max(1, residual_dimension - 1)
+        )
         for base_row in range(residual_dimension):
             candidate_row = (base_row + residual_shift) % residual_dimension
-            sign = -1.0 if (base_row + group) % 2 else 1.0
+            sign = (
+                -1.0
+                if _secret_unit(representation_key, b"residual-sign-v1\0", base_row)
+                < 0.5
+                else 1.0
+            )
             residual_matrix[candidate_row][base_row] = sign
         return Representation(
             name,
@@ -558,9 +774,19 @@ def _representation(base: BaseCase, group: int, name: str) -> Representation:
         )
     if name == "semantic-equivalent-row-rescaling":
         matrix = [[0.0] * residual_dimension for _ in range(residual_dimension)]
+        exponents: list[int] = []
         for row in range(residual_dimension):
-            exponent = ((row + 2 * group) % 9) - 4
+            exponent = (
+                int(
+                    9
+                    * _secret_unit(representation_key, b"semantic-row-power-v1\0", row)
+                )
+                - 4
+            )
+            exponents.append(exponent)
             matrix[row][row] = math.ldexp(1.0, exponent)
+        if all(exponent == 0 for exponent in exponents):
+            matrix[0][0] = 2.0
         return Representation(
             name,
             tuple(range(dimension)),
@@ -571,10 +797,18 @@ def _representation(base: BaseCase, group: int, name: str) -> Representation:
     if name == SAFETY_REPRESENTATION:
         matrix = _identity_matrix(residual_dimension)
         for row in range(0, residual_dimension - 1, 2):
-            matrix[row][row] = 0.6
-            matrix[row][row + 1] = 0.8
-            matrix[row + 1][row] = -0.8
-            matrix[row + 1][row + 1] = 0.6
+            triples = ((0.6, 0.8), (5.0 / 13.0, 12.0 / 13.0), (8.0 / 17.0, 15.0 / 17.0))
+            triple_index = int(
+                len(triples)
+                * _secret_unit(representation_key, b"orthogonal-block-v1\0", row)
+            )
+            cosine, sine = triples[triple_index]
+            if _secret_unit(representation_key, b"orthogonal-sign-v1\0", row) < 0.5:
+                sine = -sine
+            matrix[row][row] = cosine
+            matrix[row][row + 1] = sine
+            matrix[row + 1][row] = -sine
+            matrix[row + 1][row + 1] = cosine
         return Representation(
             name,
             tuple(range(dimension)),
@@ -836,17 +1070,93 @@ def _base_to_candidate(
     return transformed
 
 
-def _opaque_key(source_ordinal: int) -> str:
-    return hashlib.sha256(CASE_KEY_SEED + struct.pack(">I", source_ordinal)).hexdigest()
+def _validated_master_secret(
+    master_secret: bytes | None, *, allow_test_secret: bool
+) -> bytes:
+    if master_secret is None:
+        raise GeneratorEntropyError(
+            "formal generation requires a caller-owned 32-byte C1 master secret"
+        )
+    if type(master_secret) is not bytes or len(master_secret) != MASTER_SECRET_BYTES:
+        raise GeneratorEntropyError("master_secret must be exactly 32 bytes")
+    if master_secret == bytes(MASTER_SECRET_BYTES):
+        raise GeneratorEntropyError("the all-zero master secret is forbidden")
+    if master_secret in _TEST_ONLY_SECRETS and not allow_test_secret:
+        raise GeneratorEntropyError(
+            "a deterministic test-only secret cannot authorize formal generation"
+        )
+    return master_secret
 
 
-def _private_key(label: bytes, latent_ordinal: int) -> bytes:
-    return hashlib.sha256(
-        PRIVATE_SEED + label + struct.pack(">I", latent_ordinal)
-    ).digest()
+def _derive_key(master_secret: bytes, domain: bytes, *indexes: int) -> bytes:
+    if not domain.endswith(b"\0"):
+        raise AssertionError("entropy domains must be NUL terminated")
+    context = b"".join(struct.pack(">I", index) for index in indexes)
+    return hmac.digest(master_secret, domain + context, "sha256")
 
 
-def _gold_document(base: BaseCase, representation: Representation) -> dict[str, object]:
+def _opaque_key(master_secret: bytes, domain: bytes, source_ordinal: int) -> str:
+    return _derive_key(master_secret, domain, source_ordinal).hex()
+
+
+def _descriptor_document(
+    family_ordinal: int,
+    group: int,
+    parameter_key: bytes,
+    representation_key: bytes,
+    gold_key: bytes,
+) -> dict[str, object]:
+    base = _family_case(family_ordinal, group, parameter_key)
+    representation = _representation(base, group, "base", representation_key)
+    problem, public = _build_problem(base, representation)
+    return {
+        "problem_sha256": canonical_document_hash(problem),
+        "gold_sha256": canonical_document_hash(
+            _gold_document(base, representation, gold_key)
+        ),
+        "public_numeric_metadata_sha256": canonical_document_hash(public),
+    }
+
+
+def build_test_locked_case_descriptor(
+    family_ordinal: int, group: int
+) -> dict[str, object]:
+    """Build one result-free locked descriptor; this never creates a locked bundle."""
+
+    if not 0 <= family_ordinal < len(FAMILIES):
+        raise ValueError("family_ordinal is outside the frozen family table")
+    if group not in range(2, 6):
+        raise ValueError("locked group must lie in 2:5")
+    parameter_key = _derive_key(
+        TEST_ONLY_MASTER_SECRET, LOCKED_PARAMETER_KEY_DOMAIN, family_ordinal, group
+    )
+    representation_key = _derive_key(
+        TEST_ONLY_MASTER_SECRET,
+        LOCKED_REPRESENTATION_KEY_DOMAIN,
+        family_ordinal,
+        group,
+        0,
+    )
+    gold_key = _derive_key(
+        TEST_ONLY_MASTER_SECRET, LOCKED_GOLD_KEY_DOMAIN, family_ordinal, group
+    )
+    return {
+        "entropy_mode": "test-only-deterministic:default",
+        "family_ordinal": family_ordinal,
+        "group": group,
+        **_descriptor_document(
+            family_ordinal,
+            group,
+            parameter_key,
+            representation_key,
+            gold_key,
+        ),
+    }
+
+
+def _gold_document(
+    base: BaseCase, representation: Representation, gold_identity_key: bytes
+) -> dict[str, object]:
     configurations = [
         _base_to_candidate(configuration, representation)
         for configuration in base.gold_configurations
@@ -873,7 +1183,11 @@ def _gold_document(base: BaseCase, representation: Representation) -> dict[str, 
                 "configuration_indexes": indexes,
             }
         )
-    return {"configurations": configurations, "targets": targets}
+    return {
+        "identity_key": gold_identity_key.hex(),
+        "configurations": configurations,
+        "targets": targets,
+    }
 
 
 def _inverse_mapping(representation: Representation) -> dict[str, object]:
@@ -901,33 +1215,94 @@ def _schema(name: str) -> dict[str, object]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def validate_projections(documents: dict[str, dict[str, object]]) -> None:
-    contracts = (
-        ("candidate", "candidate-inputs.schema.json"),
-        ("assessor", "generator-assessor-projection.schema.json"),
-        ("generator_private", "generator-private.schema.json"),
-    )
+def validate_projections(
+    documents: dict[str, dict[str, object]], *, stage: str = "development"
+) -> None:
+    contracts = {
+        "development": (
+            ("candidate", "candidate-inputs.schema.json"),
+            ("assessor", "generator-assessor-projection.schema.json"),
+            ("generator_private", "generator-private.schema.json"),
+        ),
+        "locked": (
+            ("candidate", "candidate-inputs.schema.json"),
+            ("assessor", "generator-assessor-projection.schema.json"),
+            ("generator_private", "generator-private.schema.json"),
+        ),
+    }.get(stage)
+    if contracts is None:
+        raise ValueError("stage must be development or locked")
     for projection, schema_name in contracts:
         Draft202012Validator(_schema(schema_name)).validate(documents[projection])
         canonical_document_bytes(documents[projection])
 
 
-def build_development_documents(
-    *, validate: bool = True
+def _build_stage_documents(
+    *,
+    stage: str,
+    groups: tuple[int, ...],
+    representations: tuple[str, ...],
+    master_secret: bytes,
+    entropy_mode: str,
+    locked_decision: dict[str, object] | None,
+    validate: bool,
 ) -> dict[str, dict[str, object]]:
-    """Build the frozen 48-primary + 16-Safety development allocation in memory."""
+    if stage == "development":
+        opaque_domain = DEVELOPMENT_OPAQUE_DOMAIN
+        calibration_key_domain = DEVELOPMENT_CALIBRATION_KEY_DOMAIN
+        start_key_domain = DEVELOPMENT_START_KEY_DOMAIN
+        group_identity_domain = DEVELOPMENT_GROUP_IDENTITY_DOMAIN
+        parameter_key_domain = DEVELOPMENT_PARAMETER_KEY_DOMAIN
+        representation_key_domain = DEVELOPMENT_REPRESENTATION_KEY_DOMAIN
+        gold_key_domain = DEVELOPMENT_GOLD_KEY_DOMAIN
+        candidate_version = "exp-local-003-candidate-inputs/v1"
+        assessor_version = "exp-local-003-generator-assessor-projection/v1"
+        private_version = "exp-local-003-generator-private/v1"
+    elif stage == "locked":
+        opaque_domain = LOCKED_OPAQUE_DOMAIN
+        calibration_key_domain = LOCKED_CALIBRATION_KEY_DOMAIN
+        start_key_domain = LOCKED_START_KEY_DOMAIN
+        group_identity_domain = LOCKED_GROUP_IDENTITY_DOMAIN
+        parameter_key_domain = LOCKED_PARAMETER_KEY_DOMAIN
+        representation_key_domain = LOCKED_REPRESENTATION_KEY_DOMAIN
+        gold_key_domain = LOCKED_GOLD_KEY_DOMAIN
+        candidate_version = "exp-local-003-locked-candidate-inputs/v1"
+        assessor_version = "exp-local-003-locked-generator-assessor-projection/v1"
+        private_version = "exp-local-003-locked-generator-private/v1"
+    else:
+        raise ValueError("stage must be development or locked")
 
     candidate_cases: list[dict[str, object]] = []
     assessor_cases: list[dict[str, object]] = []
     private_cases: list[dict[str, object]] = []
+    private_groups: list[dict[str, object]] = []
     source_ordinal = 0
 
     for family_ordinal, family_id in enumerate(FAMILIES):
-        for group in range(2):
-            latent_ordinal = family_ordinal * 2 + group
-            base = _family_case(family_ordinal, group)
-            calibration_key = _private_key(b"calibration", latent_ordinal)
-            start_key = _private_key(b"starts", latent_ordinal)
+        for group in groups:
+            calibration_key = _derive_key(
+                master_secret, calibration_key_domain, family_ordinal, group
+            )
+            start_key = _derive_key(
+                master_secret, start_key_domain, family_ordinal, group
+            )
+            latent_group_key = _derive_key(
+                master_secret, group_identity_domain, family_ordinal, group
+            )
+            parameter_key = _derive_key(
+                master_secret, parameter_key_domain, family_ordinal, group
+            )
+            gold_key = _derive_key(
+                master_secret, gold_key_domain, family_ordinal, group
+            )
+            base_representation_key = _derive_key(
+                master_secret,
+                representation_key_domain,
+                family_ordinal,
+                group,
+                0,
+            )
+            base = _family_case(family_ordinal, group, parameter_key)
             base_calibration = _counter_points(
                 base.bounds,
                 count=64,
@@ -942,12 +1317,44 @@ def build_development_documents(
                 seed=START_SEED,
                 key=start_key,
             )
-            for representation_name in (
-                *PRIMARY_REPRESENTATIONS,
-                SAFETY_REPRESENTATION,
+            descriptor_sha256 = canonical_document_hash(
+                _descriptor_document(
+                    family_ordinal,
+                    group,
+                    parameter_key,
+                    base_representation_key,
+                    gold_key,
+                )
+            )
+            private_groups.append(
+                {
+                    "latent_group_key": latent_group_key.hex(),
+                    "family_id": family_id,
+                    "family_ordinal": family_ordinal,
+                    "latent_group": group,
+                    "calibration_key_hex": calibration_key.hex(),
+                    "start_key_hex": start_key.hex(),
+                    "parameter_key_hex": parameter_key.hex(),
+                    "gold_key_hex": gold_key.hex(),
+                    "descriptor_sha256": descriptor_sha256,
+                }
+            )
+            for representation_ordinal, representation_name in enumerate(
+                representations
             ):
-                representation = _representation(base, group, representation_name)
-                opaque_case_key = _opaque_key(source_ordinal)
+                representation_key = _derive_key(
+                    master_secret,
+                    representation_key_domain,
+                    family_ordinal,
+                    group,
+                    representation_ordinal,
+                )
+                representation = _representation(
+                    base, group, representation_name, representation_key
+                )
+                opaque_case_key = _opaque_key(
+                    master_secret, opaque_domain, source_ordinal
+                )
                 problem, public_metadata = _build_problem(base, representation)
                 calibration_points = [
                     _base_to_candidate(point, representation)
@@ -984,7 +1391,7 @@ def build_development_documents(
                         "representation": representation.name,
                         "expected_invariant": representation.expected_invariant,
                         "inverse_mapping": _inverse_mapping(representation),
-                        "gold": _gold_document(base, representation),
+                        "gold": _gold_document(base, representation, gold_key),
                         "tolerances": {
                             "configuration_absolute": 1.0e-7,
                             "target_absolute": 1.0e-10,
@@ -996,11 +1403,9 @@ def build_development_documents(
                     {
                         "opaque_case_key": opaque_case_key,
                         "source_ordinal": source_ordinal,
-                        "family_id": family_id,
-                        "latent_group": group,
+                        "latent_group_key": latent_group_key.hex(),
                         "representation": representation.name,
-                        "calibration_key_hex": calibration_key.hex(),
-                        "start_key_hex": start_key.hex(),
+                        "representation_key_hex": representation_key.hex(),
                     }
                 )
                 source_ordinal += 1
@@ -1008,20 +1413,36 @@ def build_development_documents(
     candidate_cases.sort(key=lambda item: str(item["opaque_case_key"]))
     assessor_cases.sort(key=lambda item: str(item["opaque_case_key"]))
     private_cases.sort(key=lambda item: str(item["opaque_case_key"]))
+    private_groups.sort(key=lambda item: str(item["latent_group_key"]))
     documents: dict[str, dict[str, object]] = {
         "candidate": {
-            "schema_version": "exp-local-003-candidate-inputs/v1",
+            "schema_version": candidate_version,
             "card_sha256": CARD_SHA256,
             "cases": candidate_cases,
         },
         "assessor": {
-            "schema_version": "exp-local-003-generator-assessor-projection/v1",
+            "schema_version": assessor_version,
             "card_sha256": CARD_SHA256,
             "cases": assessor_cases,
         },
         "generator_private": {
-            "schema_version": "exp-local-003-generator-private/v1",
+            "schema_version": private_version,
             "card_sha256": CARD_SHA256,
+            "master_secret_hex": master_secret.hex(),
+            "entropy_contract": {
+                "algorithm": "HMAC-SHA-256",
+                "master_secret_bytes": MASTER_SECRET_BYTES,
+                "mode": entropy_mode,
+                "opaque_case_domain_hex": opaque_domain.hex(),
+                "calibration_key_domain_hex": calibration_key_domain.hex(),
+                "start_key_domain_hex": start_key_domain.hex(),
+                "group_identity_domain_hex": group_identity_domain.hex(),
+                "parameter_key_domain_hex": parameter_key_domain.hex(),
+                "representation_key_domain_hex": representation_key_domain.hex(),
+                "gold_key_domain_hex": gold_key_domain.hex(),
+                "context_encoding": "zero-based-uint32be",
+                "vault_boundary": "generator-private-only",
+            },
             "counter_contract": {
                 "calibration_domain_hex": CALIBRATION_DOMAIN.hex(),
                 "calibration_seed_hex": CALIBRATION_SEED.hex(),
@@ -1029,18 +1450,138 @@ def build_development_documents(
                 "start_seed_hex": START_SEED.hex(),
                 "binary64_fma": "exact-rational-then-roundTiesToEven",
             },
+            **(
+                {
+                    "locked_decision": locked_decision,
+                    "locked_decision_sha256": canonical_document_hash(locked_decision),
+                }
+                if locked_decision is not None
+                else {}
+            ),
+            "groups": private_groups,
             "cases": private_cases,
         },
     }
     if validate:
-        validate_projections(documents)
+        validate_projections(documents, stage=stage)
     return documents
+
+
+def build_development_documents(
+    *, master_secret: bytes | None = None, validate: bool = True
+) -> dict[str, dict[str, object]]:
+    """Build formal development inputs from caller-owned C1 entropy."""
+
+    secret = _validated_master_secret(master_secret, allow_test_secret=False)
+    return _build_stage_documents(
+        stage="development",
+        groups=DEVELOPMENT_GROUPS,
+        representations=DEVELOPMENT_REPRESENTATIONS,
+        master_secret=secret,
+        entropy_mode="formal-c1-caller-secret",
+        locked_decision=None,
+        validate=validate,
+    )
+
+
+def build_test_development_documents(
+    *, secret_variant: str = "default", validate: bool = True
+) -> dict[str, dict[str, object]]:
+    """Explicit deterministic C0-only API; its secrets are rejected by formal APIs."""
+
+    try:
+        secret = _TEST_SECRET_BY_VARIANT[secret_variant]
+    except KeyError as error:
+        raise ValueError("unknown deterministic test secret variant") from error
+    secret = _validated_master_secret(secret, allow_test_secret=True)
+    return _build_stage_documents(
+        stage="development",
+        groups=DEVELOPMENT_GROUPS,
+        representations=DEVELOPMENT_REPRESENTATIONS,
+        master_secret=secret,
+        entropy_mode=f"test-only-deterministic:{secret_variant}",
+        locked_decision=None,
+        validate=validate,
+    )
+
+
+def _validated_locked_decision(
+    locked_decision: Mapping[str, object] | None,
+) -> dict[str, object]:
+    if locked_decision is None:
+        raise ValueError("locked generation requires a sealed passing C3 decision")
+    if set(locked_decision) != LOCKED_AUTHORIZATION_FIELDS:
+        raise ValueError("locked_decision has an unexpected closed field set")
+    if locked_decision["schema_version"] != LOCKED_AUTHORIZATION_SCHEMA:
+        raise ValueError(
+            "locked_decision schema is not the frozen authorization contract"
+        )
+    if locked_decision["experiment_id"] != "EXP-LOCAL-003":
+        raise ValueError("locked_decision experiment identity mismatch")
+    if locked_decision["card_sha256"] != CARD_SHA256:
+        raise ValueError("locked_decision card hash mismatch")
+    if locked_decision["development_gate_passed"] is not True:
+        raise ValueError("locked generation requires a passing development gate")
+    if locked_decision["selected_variant"] not in (
+        "LX-BOUNDS",
+        "LR-MODEL",
+        "LXR-BOUNDS-MODEL",
+    ):
+        raise ValueError("locked_decision has no frozen development champion")
+    if locked_decision["selected_path"] not in ("recall", "efficiency"):
+        raise ValueError("locked_decision development path is invalid")
+    # Safety16 is recorded for the later product-connection gate. It is
+    # intentionally not an authorization predicate for locked materialization.
+    disagreement_count = locked_decision["safety16_disagreement_count"]
+    if (
+        not isinstance(disagreement_count, int)
+        or isinstance(disagreement_count, bool)
+        or disagreement_count < 0
+    ):
+        raise ValueError("locked_decision Safety16 disagreement count is invalid")
+    for field in (
+        "candidate_input_sha256",
+        "development_assessment_sha256",
+    ):
+        digest = locked_decision[field]
+        if (
+            not isinstance(digest, str)
+            or re.fullmatch(r"[0-9a-f]{64}", digest) is None
+        ):
+            raise ValueError(f"locked_decision {field} is invalid")
+    commit = locked_decision["decision_commit"]
+    if not isinstance(commit, str) or re.fullmatch(r"[0-9a-f]{40,64}", commit) is None:
+        raise ValueError("locked_decision commit identity is invalid")
+    decision = dict(locked_decision)
+    canonical_document_bytes(decision)
+    return decision
+
+
+def build_locked_documents(
+    *,
+    master_secret: bytes | None = None,
+    locked_decision: Mapping[str, object] | None = None,
+    validate: bool = True,
+) -> dict[str, dict[str, object]]:
+    """Build 96 generator-disjoint locked cases only after a sealed passing C3 decision."""
+
+    secret = _validated_master_secret(master_secret, allow_test_secret=False)
+    decision = _validated_locked_decision(locked_decision)
+    return _build_stage_documents(
+        stage="locked",
+        groups=LOCKED_GROUPS,
+        representations=LOCKED_REPRESENTATIONS,
+        master_secret=secret,
+        entropy_mode="formal-locked-caller-secret",
+        locked_decision=decision,
+        validate=validate,
+    )
 
 
 def build_smoke_bundle() -> dict[str, object]:
     """Return representative fixtures plus physically separate truth for Julia CI."""
 
-    documents = build_development_documents()
+    documents = build_test_development_documents()
     assessor_by_key = {
         str(case["opaque_case_key"]): case
         for case in documents["assessor"]["cases"]  # type: ignore[index]
@@ -1123,7 +1664,7 @@ def _main() -> int:
         print(canonical_json(build_fma_test_vectors()))
         return 0
     if args.emit_development_bundle_for_tests:
-        print(canonical_json(build_development_documents()))
+        print(canonical_json(build_test_development_documents()))
         return 0
     parser.error(
         "this C0 source does not materialize inputs; use --emit-smoke-bundle for tests"

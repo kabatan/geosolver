@@ -5,6 +5,7 @@
   "additionalProperties": false,
   "required": [
     "schema_version",
+    "stage",
     "card_sha256",
     "candidate_projection_sha256",
     "assessor_projection_sha256",
@@ -12,7 +13,13 @@
     "cases"
   ],
   "properties": {
-    "schema_version": {"const": "exp-local-003-calibration-truth/v1"},
+    "schema_version": {
+      "enum": [
+        "exp-local-003-calibration-truth/v1",
+        "exp-local-003-locked-calibration-truth/v1"
+      ]
+    },
+    "stage": {"enum": ["development", "locked"]},
     "card_sha256": {"const": "0caae294a032f6d920c718219836e60e57f20c76fe5d790a615e554a95c6ee3c"},
     "candidate_projection_sha256": {"$ref": "#/$defs/digest"},
     "assessor_projection_sha256": {"$ref": "#/$defs/digest"},
@@ -25,6 +32,8 @@
         "primary_inverse_comparisons_checked",
         "primary_semantic_z_mismatch_count",
         "primary_scale_permutation_mismatch_count",
+        "safety_cases_checked",
+        "safety_qz_audit_status",
         "safety_qz_mismatch_count",
         "gold_configuration_index_coverage_failure_count",
         "gold_target_interval_overlap_failure_count",
@@ -45,11 +54,13 @@
         "unsafe_midpoint_halfwidth_count"
       ],
       "properties": {
-        "latent_groups_checked": {"const": 16},
-        "gold_configurations_checked": {"type": "integer", "minimum": 64, "maximum": 192},
-        "primary_inverse_comparisons_checked": {"type": "integer", "minimum": 32, "maximum": 96},
+        "latent_groups_checked": {"enum": [16, 32]},
+        "gold_configurations_checked": {"type": "integer", "minimum": 64, "maximum": 288},
+        "primary_inverse_comparisons_checked": {"type": "integer", "minimum": 32, "maximum": 192},
         "primary_semantic_z_mismatch_count": {"const": 0},
         "primary_scale_permutation_mismatch_count": {"const": 0},
+        "safety_cases_checked": {"enum": [0, 16]},
+        "safety_qz_audit_status": {"enum": ["checked", "not_applicable_locked"]},
         "safety_qz_mismatch_count": {"const": 0},
         "gold_configuration_index_coverage_failure_count": {"const": 0},
         "gold_target_interval_overlap_failure_count": {"const": 0},
@@ -73,10 +84,56 @@
     "cases": {
       "type": "array",
       "minItems": 64,
-      "maxItems": 64,
+      "maxItems": 96,
       "items": {"$ref": "#/$defs/case"}
     }
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "schema_version": {"const": "exp-local-003-calibration-truth/v1"}
+        }
+      },
+      "then": {
+        "properties": {
+          "stage": {"const": "development"},
+          "audit": {
+            "properties": {
+              "latent_groups_checked": {"const": 16},
+              "gold_configurations_checked": {"maximum": 192},
+              "primary_inverse_comparisons_checked": {"maximum": 96},
+              "safety_cases_checked": {"const": 16},
+              "safety_qz_audit_status": {"const": "checked"}
+            }
+          },
+          "cases": {"minItems": 64, "maxItems": 64}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "schema_version": {"const": "exp-local-003-locked-calibration-truth/v1"}
+        }
+      },
+      "then": {
+        "properties": {
+          "stage": {"const": "locked"},
+          "audit": {
+            "properties": {
+              "latent_groups_checked": {"const": 32},
+              "gold_configurations_checked": {"minimum": 96, "maximum": 288},
+              "primary_inverse_comparisons_checked": {"minimum": 64, "maximum": 192},
+              "safety_cases_checked": {"const": 0},
+              "safety_qz_audit_status": {"const": "not_applicable_locked"}
+            }
+          },
+          "cases": {"minItems": 96, "maxItems": 96}
+        }
+      }
+    }
+  ],
   "$defs": {
     "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
     "raw_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
