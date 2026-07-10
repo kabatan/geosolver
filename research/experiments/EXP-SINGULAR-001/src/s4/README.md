@@ -24,11 +24,17 @@ This directory is a sequencing guard, not a product package.
   physical `v_ref` from its 256-bit start reference and transports it into every
   ell=65 start/final precision/radius basis before comparing B spectra or final
   corrections. Step-safety ell=1 and actual ell=1:64 steps retain local probes.
+- The primary endpoint selects the frozen nullity. A trajectory start inherits
+  that route and does not redetect it from its temporary perturbation gap;
+  every final audit does repeat the strict smallest-gap selection and must
+  recover the frozen nullity.
 - Every trajectory, precision and confirmation consumes the same endpoint-wide
   64-iteration/4,096-callback ledger for its variant.
 
-Development inputs were frozen at commit `3fb7480`; A3 and mechanism source
-were subsequently committed without executing a candidate or opening a Gold
-outcome. The next legal transition is synthetic/static verification followed
-by an implementation-freeze commit. The 36-case development split remains
-forbidden until that freeze exists and verifies exactly.
+Development inputs were frozen at commit `3fb7480`. A3/A4 preceded mechanism
+execution; A5 binds corrections found only on family-disjoint synthetic
+fixtures. Static tests reconstruct the already-frozen input/Gold documents,
+but no development mechanism outcome has been executed or assessed against
+Gold. The next legal transition is an implementation-freeze commit. The
+36-case development split remains forbidden until that freeze exists and
+verifies exactly.

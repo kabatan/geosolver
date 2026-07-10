@@ -1,9 +1,9 @@
 # EXP-SINGULAR-001 S4 implementation audit
 
-Status: source-only review before the first candidate, analytic-control, or
-development execution. Development inputs and the separate Gold artifact are
-already immutable at commit `3fb7480`; locked inputs do not exist and product
-code is disconnected.
+Status: source review and family-disjoint synthetic verification are complete;
+no development case has executed and no Gold outcome has been interpreted.
+Development inputs and the separate Gold artifact are immutable at commit
+`3fb7480`; locked inputs do not exist and product code is disconnected.
 
 ## Numerical map and independence
 
@@ -21,6 +21,10 @@ remain fixed through the range correction, derivative evaluation at `x_range`,
 projected `B`, and null correction. There is no SVD at `x_range`. Actual steps
 use the local `ell=1:64` counter; start/final audits use the per-trajectory
 `ell=65` physical reference transported into every accepted local basis.
+The eligible primary endpoint is the sole smallest-gap selector of `k`.
+Primary/confirmation starts inherit that frozen `k` while retaining all
+finite, retained-value, projected-rank, condition and subspace checks; every
+final probe repeats the smallest-gap selection and must agree with `k`.
 
 ## Fail-closed work accounting
 
@@ -48,7 +52,7 @@ frozen Latin schedule, with orientation reversed on alternating groups. Thus
 each variant occupies every position once per group and JIT/warm-cache order is
 not confounded with representation or variant.
 
-## Static corrections A2 and A3
+## Protocol corrections A2 through A5
 
 A2 is fully observable: each audit records `V2_ref`, `v_ref`, `c65`, every
 local `V2`, raw `c_local`, its norm, transported direction, projection loss,
@@ -63,6 +67,17 @@ configuration disagreement, gradient, uncertainty and target operand is
 persisted and independently reconstructed. Cross-precision aggregation is
 explicitly executed at 256-bit precision, independent of caller ambient
 precision.
+
+A4 narrows the numerical capability to metadata-free `S4CandidateInput`,
+binds exact runtime/checkpoint replay, counterbalances official execution and
+states the cooperative-deadline boundary. Synthetic verification then exposed
+two wiring errors without loading a development case: the new oracle lacked
+charged evaluator dispatch, and start-side A2 probes incorrectly redetected a
+gap despite A1 freezing `k` for the whole endpoint run. A5 binds the corrected
+source and distinguishes inherited start probes from strict final probes. It
+also corrects the synthetic ledger expectation: the two perturbed
+confirmations each need a root-reaching step and a second complete step to
+satisfy the normalized-last-step gate.
 
 ## Claim boundary
 

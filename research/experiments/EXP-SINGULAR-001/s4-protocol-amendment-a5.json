@@ -1,0 +1,79 @@
+{
+  "schema": "geotarget.singular-s4-protocol-amendment/v1",
+  "experiment_id": "EXP-SINGULAR-001",
+  "phase": "S4-C2-NULLSPACE-TWO-STEP-development",
+  "amendment_id": "A5",
+  "status": "frozen-after-synthetic-validation-before-first-development-outcome",
+  "temporal_boundary": {
+    "validated_source_commit": "da0e8b91b6e6ddcadf266b7e1d88113bd1beb172",
+    "family_disjoint_synthetic_mechanisms_executed": true,
+    "development_case_executed": false,
+    "development_outcome_observed": false,
+    "gold_outcome_interpreted": false,
+    "locked_inputs_materialized": false,
+    "product_connected": false
+  },
+  "bound_parents": {
+    "a4_sha256": "8694a9c66ec5aba638e35cf2e12be76a613595792f3cdc96dfb434da8ec27daa",
+    "input_freeze_sha256": "e20fa3db2c30a230a491738b45d9a5d39aaa82cc2d45a87c4fd2fe10d3903da9",
+    "input_manifest_sha256": "86dc3225544c551d9f2a8ae0e00ae445ea83f03564110be4a1696ef9bb2733c9",
+    "gold_artifact_sha256": "80def4e6bf1a53425854cbc7478d4bf003cd8f2ed270e8626420241c49835cfa"
+  },
+  "synthetic_findings": [
+    {
+      "id": "S4-A5-CAPABILITY-DISPATCH",
+      "finding": "The A4 metadata-free S4BlackBoxOracle capability could not reach the existing charged residual/target evaluators because those evaluators dispatched only on EndpointOracle. Every synthetic mechanism therefore failed before its first callback.",
+      "correction": "Add S4BlackBoxOracle-specific residual and target evaluator methods with the same pre-callback ledger charge, shape/finite validation and post-callback deadline path. The numerical mechanism still receives no id, family, group, stratum, mode, generated nullity, Gold or analytic field.",
+      "algorithm_or_threshold_changed": false
+    },
+    {
+      "id": "S4-A5-FROZEN-START-ROUTE",
+      "finding": "A2's physical reference and order-start probes were implemented as fresh smallest-gap route selections. For the frozen quadratic fixture, a confirmation perturbation of radius 1e-6 can have a temporary discarded-to-retained ratio above the 1e-6 endpoint route threshold, contradicting A1's rule that the eligible primary endpoint fixes k for the complete primary and confirmation run.",
+      "correction": "The initial primary endpoint remains the sole gap-based selector of k. Each primary or confirmation reference and order-start probe inherits that k and must still pass finite singular-value, retained-value cutoff, dimension, projected-rank, condition and subspace gates, but it does not redetect k from the temporary start gap. Every order-final probe continues to require a fresh smallest qualifying gap agreeing with the frozen k, in addition to the final null-decay, residual-decay, projected-order and error gates.",
+      "algorithm_or_threshold_changed": false
+    },
+    {
+      "id": "S4-A5-SYNTHETIC-WORK-EXPECTATION",
+      "finding": "The pre-execution unit-test ledger expected four total iterations. A perturbed confirmation first reaches the quadratic root and then requires a second complete step to demonstrate the frozen normalized-last-step stop condition, so two primary plus two two-step confirmations consume six iterations.",
+      "correction": "Correct only the synthetic test expectations. For the nullity-one fixture the candidate consumes 516 callbacks and 126 factorizations; the independent analytic control consumes 124 callbacks, 70 factorizations and 42 charged analytic-Jacobian calls. The observed increments exactly equal the two required confirmation steps.",
+      "algorithm_or_threshold_changed": false
+    },
+    {
+      "id": "S4-A5-JULIA-GENERATOR-SYNTAX",
+      "finding": "Julia 1.12.6 rejects trailing commas after unparenthesized generator expressions in three work-ledger reductions.",
+      "correction": "Remove only those trailing commas; the reductions, persisted fields and gate operands are unchanged.",
+      "algorithm_or_threshold_changed": false
+    }
+  ],
+  "source_bindings": {
+    "research/experiments/EXP-SINGULAR-001/src/s4/types.jl": "ffbb1e0d36e9673202699f0977c143e3dfeb0d9b3923021c7b07e74854d7e074",
+    "research/experiments/EXP-SINGULAR-001/src/s4/candidate.jl": "1714bad1947f1c7db7350ca091fb8bcf8e0798505f005c5c71ec76026005da56",
+    "research/experiments/EXP-SINGULAR-001/src/s4/analytic_control.jl": "aa5fc0cabd2fd98438cbd07260f18c0199175654abe9a3fa9dde99c56a514bba",
+    "research/experiments/EXP-SINGULAR-001/src/s4/development.jl": "752d03db5dde3d60d6647958baac8dafd3349342fe39d06cd9bee3d6cdea0ae3",
+    "research/experiments/EXP-SINGULAR-001/test/test_s4.jl": "b661dc33c9758f53cdd6c0eaba749201a6d9ef34de8d6f44d9d0dd77e7344f72"
+  },
+  "validation": {
+    "julia_version": "1.12.6",
+    "julia_threads": 1,
+    "input_scaffold_and_gold_document_static_tests_executed": true,
+    "development_case_mechanism_executed": false,
+    "development_outcome_assessed_against_gold": false,
+    "frozen_gold_artifact_outcome_interpreted": false,
+    "julia_assertions_passed": 870,
+    "python_analyzer_tests_passed": 6,
+    "ruff_check_passed": true,
+    "ruff_format_check_passed": true,
+    "research_validator_passed": true
+  },
+  "unchanged": {
+    "candidate_and_control_mathematical_maps": "unchanged",
+    "development_inputs_and_gold": "unchanged; no development outcome was executed or assessed against Gold",
+    "route_gap_and_rank_thresholds": "unchanged",
+    "projected_operator_and_error_thresholds": "unchanged",
+    "hard_callback_iteration_and_deadline_budgets": "unchanged",
+    "development_advancement_gate": "unchanged",
+    "candidate_tuning_rounds_remaining": 0,
+    "locked_inputs_materialized": false,
+    "product_connected": false
+  }
+}
