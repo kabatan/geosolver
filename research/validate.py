@@ -268,6 +268,10 @@ def validate_evidence_links(ledger: dict[str, Any], evidence_text: str) -> list[
             re.findall(r"\| (EVID-[0-9]{2,}) \|", evidence_text.split(marker, 1)[1])
         )
 
+    negative_ids = [entry["id"] for entry in ledger["entries"]]
+    for negative_id, count in Counter(negative_ids).items():
+        if count != 1:
+            errors.append(f"negative-result ledger: {negative_id} occurs {count} times")
     for entry in ledger["entries"]:
         for evidence_id in entry["source_evidence_ids"]:
             if evidence_id not in known:

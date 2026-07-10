@@ -85,6 +85,10 @@ class SchemaSubsetTests(unittest.TestCase):
         self.assertTrue(any("non-reproduced EVID-01" in error for error in errors))
         self.assertTrue(any("EVID-99 is absent" in error for error in errors))
 
+        duplicated_negative = {"entries": [valid["entries"][0], valid["entries"][0]]}
+        errors = VALIDATE.validate_evidence_links(duplicated_negative, evidence)
+        self.assertTrue(any("NEG-001 occurs 2 times" in error for error in errors))
+
 
 if __name__ == "__main__":
     unittest.main()
