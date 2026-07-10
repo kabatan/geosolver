@@ -167,6 +167,14 @@ def verify_frozen_closure(
             raise ValueError(f"S4 A9 frozen source path invalid: {relative}")
         if bytes_sha256(source.read_bytes()) != expected_sha256:
             raise ValueError(f"S4 A9 frozen source changed: {relative}")
+    for filename, key in (
+        ("s4-input-freeze.json", "input_freeze_sha256"),
+        ("s4-development-input-manifest.json", "input_manifest_sha256"),
+        ("s4-development-gold.json", "gold_artifact_sha256"),
+    ):
+        observed = bytes_sha256((EXPERIMENT_DIRECTORY / filename).read_bytes())
+        if observed != freeze[key]:
+            raise ValueError(f"S4 A9 direct freeze binding changed: {filename}")
 
 
 def main() -> int:
