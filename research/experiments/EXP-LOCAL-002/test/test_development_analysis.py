@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 from pathlib import Path
+import tempfile
 import unittest
 
 
@@ -24,6 +25,16 @@ class DevelopmentInputTests(unittest.TestCase):
             for stratum in value["strata"]
         }
         self.assertEqual(observed, set(analysis.STRATA))
+
+    def test_deterministic_gzip_json_round_trip(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            first = Path(directory) / "first.json.gz"
+            second = Path(directory) / "second.json.gz"
+            value = {"families": ["b", "a"], "indices": [[1, 0], [0, 0]]}
+            analysis.write_json_gzip(first, value)
+            analysis.write_json_gzip(second, value)
+            self.assertEqual(first.read_bytes(), second.read_bytes())
+            self.assertEqual(analysis.load_json_gzip(first), value)
 
 
 class BootstrapContractTests(unittest.TestCase):

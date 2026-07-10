@@ -119,11 +119,29 @@ def load_json(path: Path) -> dict[str, Any]:
     return value
 
 
+def load_json_gzip(path: Path) -> dict[str, Any]:
+    with gzip.open(path, "rt", encoding="utf-8") as stream:
+        value = json.load(stream)
+    if not isinstance(value, dict):
+        raise ArtifactValidationError(f"{path} does not contain a compressed JSON object")
+    return value
+
+
 def write_json(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="\n") as stream:
         json.dump(value, stream, indent=2, sort_keys=True, ensure_ascii=True)
         stream.write("\n")
+
+
+def write_json_gzip(path: Path, value: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = (json.dumps(value, indent=2, sort_keys=True, ensure_ascii=True) + "\n").encode(
+        "utf-8"
+    )
+    with path.open("wb") as binary:
+        with gzip.GzipFile(filename="", mode="wb", fileobj=binary, compresslevel=9, mtime=0) as stream:
+            stream.write(payload)
 
 
 def validate_input_manifest(manifest: Mapping[str, Any]) -> dict[str, dict[str, Any]]:
@@ -901,7 +919,7 @@ def validate_final_artifacts(output_directory: Path, input_manifest_path: Path =
     required = (
         "attempts.csv.gz",
         "aggregates.csv",
-        "bootstrap-plans.json",
+        "bootstrap-plans.json.gz",
         "paired-bootstrap.json",
         "environment.json",
         "summary.json",
@@ -928,7 +946,7 @@ def validate_final_artifacts(output_directory: Path, input_manifest_path: Path =
     artifact_checks = {
         "aggregates_csv_sha256": "aggregates.csv",
         "paired_bootstrap_sha256": "paired-bootstrap.json",
-        "bootstrap_plans_sha256": "bootstrap-plans.json",
+        "bootstrap_plans_gz_sha256": "bootstrap-plans.json.gz",
     }
     for checksum_key, filename in artifact_checks.items():
         if checksums.get(checksum_key) != sha256_file(output_directory / filename):
@@ -941,7 +959,7 @@ def validate_final_artifacts(output_directory: Path, input_manifest_path: Path =
         raise ArtifactValidationError("summary reports an actual budget overrun")
     if summary.get("nonbudget_exception_count") != 0:
         raise ArtifactValidationError("summary reports a non-budget adapter exception")
-    plan_set = load_json(output_directory / "bootstrap-plans.json")
+    plan_set = load_json_gzip(output_directory / "bootstrap-plans.json.gz")
     for raw in plan_set.get("plans", {}).values():
         plan = BootstrapPlan(
             version=raw["version"],
@@ -971,7 +989,7 @@ def analyze_worker_outputs(
     write_aggregate_csv(output_directory / "aggregates.csv", aggregates)
     paired, plans = paired_reports(rows, instances)
     write_json(output_directory / "paired-bootstrap.json", paired)
-    write_json(output_directory / "bootstrap-plans.json", plans)
+    write_json_gzip(output_directory / "bootstrap-plans.json.gz", plans)
     decisions = mechanical_decisions(aggregates, paired)
 
     with (output_directory / "cold.csv").open("w", encoding="utf-8", newline="") as stream:
@@ -1013,7 +1031,9 @@ def analyze_worker_outputs(
             "attempts_csv_gz_sha256": sha256_file(attempts_path),
             "aggregates_csv_sha256": sha256_file(output_directory / "aggregates.csv"),
             "paired_bootstrap_sha256": sha256_file(output_directory / "paired-bootstrap.json"),
-            "bootstrap_plans_sha256": sha256_file(output_directory / "bootstrap-plans.json"),
+            "bootstrap_plans_gz_sha256": sha256_file(
+                output_directory / "bootstrap-plans.json.gz"
+            ),
             "analysis_source_sha256": sha256_file(Path(__file__)),
             "development_julia_source_sha256": sha256_file(
                 EXPERIMENT_ROOT / "src" / "DevelopmentLocal002.jl"
