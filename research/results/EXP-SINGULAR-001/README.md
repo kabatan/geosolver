@@ -4,6 +4,8 @@
 - `development-s0-s1-v0/`: frozen 72-instance S0/S1 development execution.
 - `development-s2-v0/`: frozen 24-instance S2 development execution and independent recomputation.
 - `development-s3-v0/`: frozen 30-instance S3 development execution and independent recomputation.
+- `development-s4-v0/`: frozen 36-instance S4 execution, checkpoint replay,
+  exact independent closure and bounded-negative claim boundary.
 
 The S0/S1 development advancement gate passed, so the next research route is
 `S2-AP-CPQR-SUBSET`. This is not locked validation and `product_connected` is
@@ -24,3 +26,14 @@ not evidence or answers, with zero false promotions. The frozen S1 baseline
 also disagreed across the three equivalent `s3-fold-close` transforms (one
 promotion, two unknowns). S3 remains product-disconnected and is rejected as
 `EVID-18` / `NEG-012`; S4 requires a separate development gate.
+
+The S4 development gate also failed before locked validation. The black-box
+finite-difference candidate and independent analytic control made identical
+decisions and each recovered 11/15 eligible endpoints with zero S4 false
+promotions, but both failed the orthogonal representation in the same four
+groups while promoting the other two equivalent representations. Exact
+analysis also found that Float64 Gold/assessment could not support four S1
+coverage claims; this does not change the S4 recall/metamorphic failure. The
+authoritative closure is `development-s4-v0/independent-analysis.json` plus
+its A11 archival binding. S4 remains product-disconnected and is recorded as
+`EVID-20` / `NEG-014`.

@@ -18,6 +18,8 @@ The ledger prevents recurring mistakes including:
 5. using dynamic expression evaluation as a production numerical kernel.
 6. treating a singular route that only succeeds after relaxing its frozen
    endpoint-wide work budget as a development success.
+7. advancing a singular route whose final applicability decision changes under
+   an equivalent orthogonal coordinate representation.
 
 Rejected production code is deleted, while the card, counterexample generator,
 compact result, decision and artifact hashes remain.
