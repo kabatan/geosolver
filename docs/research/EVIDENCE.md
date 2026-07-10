@@ -1,8 +1,8 @@
-# Initial Evidence Priors
+# Evidence Register
 
-These observations were extracted before the clean rewrite. They are research
-priors, not accepted truth. Each must be independently reproduced in this
-repository before it may justify production policy.
+EVID-01 through EVID-11 were extracted before the clean rewrite and remain
+research priors, not accepted truth. New evidence produced in this repository
+is explicitly marked as reproduced and links to its replay artifacts.
 
 | ID | Prior observation | Initial implication |
 |---|---|---|
@@ -18,3 +18,4 @@ repository before it may justify production policy.
 | EVID-10 | Primitive registries/backends were fragmented and branch names leaked across layers. | Plugin conformance and Core/Geometry separation are gates. |
 | EVID-11 | Dynamic safe evaluation was materially slower and semantically brittle. | No eval/dynamic expression execution in production kernels. |
 | EVID-12 | The preregistered dimension/rank/condition LM/TR route improved development P_local_gold by 0.65 points with no truth regression, but its fully charged warm wall was 3.03 times the simple TR control. | Reject ROUTE-LMTR-A1 at the development freeze gate; do not materialize locked inputs. |
+| EVID-13 | **Reproduced:** EXP-JAC-001 found zero dense/colored mismatches and 43.81% sparse oracle-work reduction, but 14.78% dense warm overhead and 25.48% maximum cold-coloring fraction failed the registered gates. | Keep coloring dormant and production dense; see `research/results/EXP-JAC-001/summary.json`. |

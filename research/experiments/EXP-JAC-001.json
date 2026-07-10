@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "id": "EXP-JAC-001",
   "title": "Compiler-derived sparse finite-difference Jacobian coloring",
-  "status": "preregistered",
+  "status": "rejected",
   "requirements": ["GOAL-01", "GOAL-02", "GOAL-04", "GOAL-05", "ARCH-02", "ARCH-03", "RES-01", "RES-02", "RES-04", "RES-05", "RES-06"],
   "failure_ids": ["F2", "F3", "F5", "F9", "F17"],
   "baseline_id": "RB0-IID-LMQR-1",
@@ -184,5 +184,10 @@
     "result_path": "research/results/EXP-JAC-001/summary.json",
     "negative_result_path": "research/negative-results/ledger.json"
   },
-  "decision": {"state": "pending", "selected_variant": null, "rationale": null, "decision_commit": null}
+  "decision": {
+    "state": "rejected",
+    "selected_variant": null,
+    "rationale": "J1 was safe and reduced sparse-family oracle work by 43.81 percent (family-clustered one-sided 95 percent lower bound 28.39 percent), but dense warm overhead was 14.78 percent and the maximum cold-coloring fraction was 25.48 percent, violating the preregistered 5 percent and 1 percent gates. J2 did not meet its structural trigger; locked inputs were not inspected and production remains dense.",
+    "decision_commit": "7f74d1550b0f04d40fb56e521e43e438e443fb1c"
+  }
 }

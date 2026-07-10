@@ -60,6 +60,16 @@
       "observed_break_condition": "ROUTE-LMTR-A1 selected LM for only 11 of 1536 starts and gained 10 Gold-valid endpoints, while the diagnostic residuals and SVDs raised fully charged warm wall to 3.03 times the simple trust-region control.",
       "current_decision": "Reject ROUTE-LMTR-A1, stop EXP-LOCAL-002 after its single tuning round, and leave locked inputs unmaterialized.",
       "reopen_gate": "A new preregistered experiment must reuse solver-native Jacobian or progress state without a separate dense diagnostic and pass the same truth, work, and warm-wall gates."
+    },
+    {
+      "id": "NEG-007",
+      "title": "Sparse finite-difference coloring is not yet a general default",
+      "evidence_state": "reproduced",
+      "source_evidence_ids": ["EVID-13"],
+      "claim_not_supported": "Compiler-derived grouped finite differences should replace dense central differences as a general default solely because they reduce oracle callbacks on sparse graphs.",
+      "observed_break_condition": "EXP-JAC-001 preserved recall and had zero differential mismatches while reducing sparse-family oracle work by 43.81 percent, but dense-family warm overhead was 14.78 percent and cold coloring reached 25.48 percent of a 32-start run.",
+      "current_decision": "Keep coloring dormant and keep production dense; do not inspect the locked set or connect the candidate under the failed development gate.",
+      "reopen_gate": "A preregistered cached-coloring or applicability-routing experiment must retain the zero-mismatch fallback contract, pass the 5 percent dense and 1 percent cold-overhead gates, and then pass family-disjoint locked validation."
     }
   ]
 }
