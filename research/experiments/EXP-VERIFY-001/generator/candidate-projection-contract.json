@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0.0",
+  "experiment_id": "EXP-VERIFY-001",
+  "status": "projection_contract_only_no_manifest",
+  "required_case_keys": [
+    "case_id",
+    "problem_document",
+    "problem_hash",
+    "plugin_locks",
+    "proof_box",
+    "point_endpoint"
+  ],
+  "optional_case_keys": ["trial_id", "opaque_instruction_id"],
+  "proof_box": {
+    "coordinate_order": "Exact ordered variable IDs from the bound problem document.",
+    "endpoint_encodings": [
+      {
+        "kind": "protocol-decimal-text",
+        "payload": ["text", "provenance"],
+        "rule": "text must be the byte-exact canonical ProtocolDecimal.text token; future interval construction consumes text and never ProtocolDecimal.value"
+      },
+      {
+        "kind": "reduced-rational-text",
+        "payload": ["numerator_text", "denominator_text", "provenance"],
+        "rule": "signed numerator and positive denominator are canonical reduced integer text"
+      },
+      {
+        "kind": "binary64-pre-rounded-negative",
+        "payload": ["bits", "printed_text", "intended_decimal_text", "provenance"],
+        "rule": "mandatory ineligible negative; never converted into an exact decimal proof token"
+      }
+    ],
+    "interval_convention": "closed box; future construction rounds each exact endpoint outward",
+    "forbidden_payload": ["BigFloat approximation used as exact endpoint", "midpoint-plus-epsilon", "untyped JSON float claiming decimal intent"]
+  },
+  "point_endpoint": {
+    "encoding": "ordered binary64 hexadecimal bits",
+    "purpose": "paired numerical endpoint only",
+    "not_evidence_for": ["exact box endpoint", "interval extension", "configuration uniqueness"]
+  },
+  "forbidden_case_keys": [
+    "family",
+    "factors",
+    "fixture_descriptor_id",
+    "eligible",
+    "expected_outcome",
+    "gold",
+    "analytic_root",
+    "analytic_jacobian",
+    "rank",
+    "multiplicity",
+    "manifold_dimension",
+    "vref",
+    "mutation_kind"
+  ],
+  "checksum": "SHA-256 over the canonical candidate case document only. Assessor and generator-private material is not an input.",
+  "routing": "V1 must ignore case_id, primitive spelling, trial_id, and opaque_instruction_id. Only the external safety executor interprets opaque_instruction_id."
+}
