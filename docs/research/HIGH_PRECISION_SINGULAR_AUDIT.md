@@ -169,3 +169,34 @@ experiment to `S2-AP-CPQR-SUBSET`, not to locked validation or product use.
 - `julia --project=julia julia/integration/runtests.jl`: green, including the
   complete workspace, protocol differential corpus, checkpoint, CLI, proposal,
   compiler, candidate-validation and target-image suites.
+
+## S2/S3 development boundary
+
+S2 recovered 12/12 target-constant rank-deficient manifolds and rejected every
+varying-target manifold and inconsistent nonroot in its frozen development
+split. That result remains specialized manifold evidence; it does not establish
+configuration isolation.
+
+S3 then compared unchanged S1, restarted multiprecision good-Broyden, and an
+independently coded analytic inverse-secant control on 30 new endpoints (ten
+metamorphic groups). The 64-iteration limit is one endpoint-wide hard budget,
+shared by all primary and perturbation trajectories. The official result was:
+
+| Variant | Eligible Gold | Promoted | Budget exhaustion | False | Callbacks | Precision-equivalent work |
+|---|---:|---:|---:|---:|---:|---:|
+| S1 adaptive-precision LM-QR | 0/12 | 4 | 0 | 0 | 1,209 | 5,049 |
+| S3 restarted good-Broyden | 0/12 | 0 | 12 | 0 | 2,388 | 11,292 |
+| S3 analytic inverse-secant control | 0/12 | 0 | 12 | 0 | 1,311 | 6,327 |
+
+Every S3 exhaustion stopped at exactly 64 iterations as typed unknown with no
+root evidence. No manifold, inconsistent nonroot, or regular close-root control
+was promoted by S3. A deliberately non-gating 80-iteration unit diagnostic
+needed 68 iterations on one double-root case and exercised the typed evidence
+path, but it cannot relax or replace the registered 64-iteration result.
+
+The S1 baseline also changed its decision under equivalent signed transforms of
+the closest regular-root case: one form promoted and two remained unknown. This
+metamorphic disagreement independently fails the S3 card. Consequently S3 is
+rejected as `EVID-18` / `NEG-012`; no retuning, locked inspection, or product
+connection is permitted. A bordered-nullspace S4 study must start from a new
+frozen development gate.

@@ -9,13 +9,15 @@ moves to `reproduced` only after its problem generator, run manifest, compact
 result and checksum are recorded here. A locked-validation result is never
 silently converted into a tuning case.
 
-The ledger currently prevents five recurring mistakes:
+The ledger prevents recurring mistakes including:
 
 1. selecting starts only by screening residual;
 2. hard suppression of nearby basins;
 3. treating naive lifting/homotopy as universal improvements;
 4. confusing a barrier-near point with strict-guard validity; and
 5. using dynamic expression evaluation as a production numerical kernel.
+6. treating a singular route that only succeeds after relaxing its frozen
+   endpoint-wide work budget as a development success.
 
 Rejected production code is deleted, while the card, counterexample generator,
 compact result, decision and artifact hashes remain.
