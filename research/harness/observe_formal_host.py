@@ -8,18 +8,22 @@ lease, its owner process tree, and final audit metadata.
 from __future__ import annotations
 
 import argparse
+import base64
+import ctypes
 import hashlib
 import json
 import math
 import os
+import queue
 import shutil
 import subprocess
 import sys
+import threading
 import time
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Sequence
+from typing import IO, Any, Sequence
 
 try:
     import msvcrt
@@ -75,11 +79,76 @@ FORBIDDEN_NAMES = {
 }
 
 SUSPICIOUS_NEW_NAMES = {"cmd", "node"}
+OBSERVER_INFRA_NAMES = {"wmiprvse"}
+
+
+class _FileTime(ctypes.Structure):
+    _fields_ = [("low", ctypes.c_uint32), ("high", ctypes.c_uint32)]
+
+
+def _filetime_value(value: _FileTime) -> int:
+    return (value.high << 32) | value.low
+
+
+def _system_cpu_times() -> tuple[int, int, int]:
+    if os.name != "nt":
+        raise ObservationError("GetSystemTimes requires Windows")
+    idle, kernel, user = _FileTime(), _FileTime(), _FileTime()
+    function = ctypes.WinDLL("kernel32", use_last_error=True).GetSystemTimes
+    if not function(ctypes.byref(idle), ctypes.byref(kernel), ctypes.byref(user)):
+        raise ObservationError(f"GetSystemTimes failed: {ctypes.get_last_error()}")
+    return _filetime_value(idle), _filetime_value(kernel), _filetime_value(user)
+
 
 _SNAPSHOT_SCRIPT = r"""
 $ErrorActionPreference = 'Stop'
 $interval = __INTERVAL_MILLISECONDS__
+$eventWithin = __EVENT_WITHIN_SECONDS__
+$observerPid = __OBSERVER_PID__
 $frequency = [Diagnostics.Stopwatch]::Frequency
+$source = "geotarget-process-start-$PID"
+$selfProcess = Get-Process -Id $PID
+$parentCapability = ($null -ne $selfProcess.Parent -and $selfProcess.Parent.Id -eq $observerPid)
+Add-Type -AssemblyName System.Management
+$eventQuery = "SELECT * FROM __InstanceCreationEvent WITHIN $eventWithin " +
+  "WHERE TargetInstance ISA 'Win32_Process'"
+$watcher = [System.Management.ManagementEventWatcher]::new($eventQuery)
+$subscription = Register-ObjectEvent -InputObject $watcher `
+  -EventName EventArrived -SourceIdentifier $source
+$watcher.Start()
+
+function Read-StartEvents {
+  $rows = [Collections.Generic.List[object]]::new()
+  foreach ($event in @(Get-Event -SourceIdentifier $source -ErrorAction SilentlyContinue)) {
+    try {
+      $target = $event.SourceEventArgs.NewEvent['TargetInstance']
+      $created = 0
+      try {
+        $created = [System.Management.ManagementDateTimeConverter]::ToDateTime(
+          [string]$target.CreationDate).ToUniversalTime().Ticks
+      } catch {}
+      $rows.Add([ordered]@{
+        pid = [int]$target.ProcessId
+        parent_pid = [int]$target.ParentProcessId
+        name = [string]$target.Name
+        start_ticks = [int64]$created
+      })
+    } finally {
+      Remove-Event -EventIdentifier $event.EventIdentifier -ErrorAction SilentlyContinue
+    }
+  }
+  return $rows
+}
+
+$probe = Start-Process -FilePath (Join-Path $PSHOME 'pwsh.exe') `
+  -ArgumentList @('-NoLogo','-NoProfile','-NonInteractive','-Command',
+    'Start-Sleep -Milliseconds 750') -WindowStyle Hidden -PassThru
+$probePid = $probe.Id
+$probe.WaitForExit()
+Start-Sleep -Milliseconds ([math]::Ceiling($eventWithin * 1000) + 250)
+$pendingEvents = @(Read-StartEvents)
+$eventCapability = @($pendingEvents | Where-Object {
+  $_.pid -eq $probePid -and $_.start_ticks -gt 0 }).Count -eq 1
 while ($true) {
   $rows = [Collections.Generic.List[object]]::new()
   foreach ($p in [Diagnostics.Process]::GetProcesses()) {
@@ -105,12 +174,20 @@ while ($true) {
       })
     } catch {} finally { $p.Dispose() }
   }
+  $events = @($pendingEvents) + @(Read-StartEvents)
+  $pendingEvents = @()
   $doc = [ordered]@{
     observed_at_utc = [DateTime]::UtcNow.ToString(
       "yyyy-MM-dd'T'HH:mm:ss.ffffff'Z'",
       [Globalization.CultureInfo]::InvariantCulture)
     monotonic_ticks = [Diagnostics.Stopwatch]::GetTimestamp()
     monotonic_frequency = $frequency
+    parent_capability = $parentCapability
+    event_capability = $eventCapability
+    event_source = "System.Management __InstanceCreationEvent"
+    event_within_seconds = $eventWithin
+    capability_probe_pid = $probePid
+    start_events = $events
     processes = $rows
   }
   [Console]::Out.WriteLine(($doc | ConvertTo-Json -Compress -Depth 3))
@@ -169,21 +246,53 @@ class ProcessRecord:
 
 
 @dataclass(frozen=True)
+class ProcessStartEvent:
+    pid: int
+    parent_pid: int
+    name: str
+    start_ticks: int
+
+    @property
+    def identity(self) -> tuple[int, int]:
+        return self.pid, self.start_ticks
+
+
+@dataclass(frozen=True)
 class Inventory:
     observed_at_utc: str
     monotonic_ticks: int
     monotonic_frequency: int
     processes: tuple[ProcessRecord, ...]
+    start_events: tuple[ProcessStartEvent, ...] = ()
+    system_idle_100ns: int = 0
+    system_kernel_100ns: int = 0
+    system_user_100ns: int = 0
+    parent_capability: bool = False
+    event_capability: bool = False
+    event_source: str = ""
+    event_within_seconds: float = 0.0
+    capability_probe_pid: int = 0
 
     @classmethod
     def parse(cls, raw: bytes) -> "Inventory":
         value = json.loads(raw)
         rows = tuple(ProcessRecord(**row) for row in value["processes"])
+        events = tuple(ProcessStartEvent(**row) for row in value["start_events"])
+        idle, kernel, user = _system_cpu_times()
         return cls(
             observed_at_utc=value["observed_at_utc"],
             monotonic_ticks=int(value["monotonic_ticks"]),
             monotonic_frequency=int(value["monotonic_frequency"]),
             processes=rows,
+            start_events=events,
+            system_idle_100ns=idle,
+            system_kernel_100ns=kernel,
+            system_user_100ns=user,
+            parent_capability=value.get("parent_capability") is True,
+            event_capability=value.get("event_capability") is True,
+            event_source=str(value.get("event_source", "")),
+            event_within_seconds=float(value.get("event_within_seconds", 0.0)),
+            capability_probe_pid=int(value.get("capability_probe_pid", 0)),
         )
 
     def by_pid(self) -> dict[int, ProcessRecord]:
@@ -202,6 +311,49 @@ def descendant_pids(inventory: Inventory, root_pid: int | None) -> set[int]:
                 allowed.add(row.pid)
                 changed = True
     return allowed
+
+
+def extend_formal_identities(
+    inventory: Inventory,
+    root_pid: int | None,
+    known: set[tuple[int, int]],
+) -> set[tuple[int, int]]:
+    """Extend a formal tree without laundering PID reuse or orphaning."""
+
+    current = inventory.by_pid()
+    formal_pids = {
+        pid
+        for pid, start in known
+        if pid in current and current[pid].start_ticks == start
+    }
+    if root_pid is not None and root_pid in current:
+        formal_pids.add(root_pid)
+    changed = True
+    while changed:
+        changed = False
+        for row in inventory.processes:
+            if row.parent_pid in formal_pids and row.pid not in formal_pids:
+                formal_pids.add(row.pid)
+                changed = True
+    known.update(row.identity for row in inventory.processes if row.pid in formal_pids)
+    pending = list(inventory.start_events)
+    while pending:
+        next_pending: list[ProcessStartEvent] = []
+        changed = False
+        formal_event_pids = set(formal_pids)
+        for event in pending:
+            if event.start_ticks > 0 and (
+                event.pid == root_pid or event.parent_pid in formal_event_pids
+            ):
+                known.add(event.identity)
+                formal_pids.add(event.pid)
+                changed = True
+            else:
+                next_pending.append(event)
+        if not changed:
+            break
+        pending = next_pending
+    return known
 
 
 @dataclass(frozen=True)
@@ -290,20 +442,29 @@ class ContentionTracker:
         memory_heavy_bytes: int,
         memory_growth_bytes: int,
         max_poll_gap_seconds: float,
+        unexplained_cpu_cores: float,
+        capability_probe_pid: int = 0,
     ) -> None:
         self.own_pids = own_pids
         self.cpu_heavy_cores = cpu_heavy_cores
         self.memory_heavy_bytes = memory_heavy_bytes
         self.memory_growth_bytes = memory_growth_bytes
         self.max_poll_gap_seconds = max_poll_gap_seconds
+        self.unexplained_cpu_cores = unexplained_cpu_cores
+        self.capability_probe_pid = capability_probe_pid
         self.previous: Inventory | None = None
         self.events: dict[str, dict[str, Any]] = {}
         self.poll_gap_max_seconds = 0.0
+        self.unexplained_cpu_cores_max = 0.0
 
     def _event(self, key: str, **values: Any) -> None:
         self.events.setdefault(key, values)
 
-    def observe(self, inventory: Inventory, allowed_tree: set[int]) -> None:
+    def observe(
+        self,
+        inventory: Inventory,
+        formal_identities: set[tuple[int, int]],
+    ) -> None:
         previous = self.previous
         gap = 0.0
         old: dict[tuple[int, int], ProcessRecord] = {}
@@ -322,16 +483,22 @@ class ContentionTracker:
                         seconds=gap,
                     )
             old = {row.identity: row for row in previous.processes}
-        allowed = allowed_tree | self.own_pids
+        allowed_identities = formal_identities
         for row in inventory.processes:
-            if row.pid in allowed:
-                continue
             name = row.name.lower().removesuffix(".exe")
+            if (
+                row.identity in allowed_identities
+                or row.pid in self.own_pids
+                or name in OBSERVER_INFRA_NAMES
+            ):
+                continue
             reason: str | None = None
             prior = old.get(row.identity)
             if name in FORBIDDEN_NAMES:
                 reason = "forbidden process class"
-            elif prior is None and previous is not None and name in SUSPICIOUS_NEW_NAMES:
+            elif (
+                prior is None and previous is not None and name in SUSPICIOUS_NEW_NAMES
+            ):
                 reason = "new ambiguous build or package-manager host"
             elif row.working_set_bytes >= self.memory_heavy_bytes:
                 reason = "memory-heavy process"
@@ -350,6 +517,55 @@ class ContentionTracker:
                     name=row.name,
                     pid=row.pid,
                     reason=reason,
+                )
+        formal_pids = {pid for pid, _start in formal_identities}
+        for event in inventory.start_events:
+            if (
+                event.identity in formal_identities
+                or event.pid in self.own_pids
+                or event.pid == self.capability_probe_pid
+                or event.parent_pid in formal_pids
+            ):
+                continue
+            name = event.name.lower().removesuffix(".exe")
+            if name in FORBIDDEN_NAMES or name in SUSPICIOUS_NEW_NAMES:
+                self._event(
+                    f"start:{event.pid}:{event.start_ticks}",
+                    category="process_start",
+                    name=event.name,
+                    pid=event.pid,
+                    reason="forbidden or suspicious process-start event",
+                )
+        if previous is not None and gap > 0:
+            system_busy = (
+                inventory.system_kernel_100ns
+                - previous.system_kernel_100ns
+                + inventory.system_user_100ns
+                - previous.system_user_100ns
+                - inventory.system_idle_100ns
+                + previous.system_idle_100ns
+            )
+            accounted = 0
+            for row in inventory.processes:
+                prior = old.get(row.identity)
+                if prior is None:
+                    continue
+                name = row.name.lower().removesuffix(".exe")
+                if (
+                    row.identity in formal_identities
+                    or row.pid in self.own_pids
+                    or name in OBSERVER_INFRA_NAMES
+                ):
+                    accounted += max(0, row.cpu_100ns - prior.cpu_100ns)
+            unexplained = max(0, system_busy - accounted) / 10_000_000 / gap
+            self.unexplained_cpu_cores_max = max(
+                self.unexplained_cpu_cores_max, unexplained
+            )
+            if unexplained >= self.unexplained_cpu_cores:
+                self._event(
+                    f"aggregate-cpu:{inventory.monotonic_ticks}",
+                    category="aggregate_cpu",
+                    unexplained_cpu_cores=unexplained,
                 )
         self.previous = inventory
 
@@ -376,11 +592,12 @@ def validate_formal_metadata(
         not isinstance(segment_pids, list)
         or len(segment_pids) != segment_count
         or len(set(segment_pids)) != segment_count
-        or any(not isinstance(pid, int) or isinstance(pid, bool) or pid <= 0 for pid in segment_pids)
-    ):
-        raise ObservationError(
-            f"capture must bind {segment_count} unique segment PIDs"
+        or any(
+            not isinstance(pid, int) or isinstance(pid, bool) or pid <= 0
+            for pid in segment_pids
         )
+    ):
+        raise ObservationError(f"capture must bind {segment_count} unique segment PIDs")
     if _parse_utc(observation_start) > _parse_utc(outer.get("started_at_utc")):
         raise ObservationError("observation started after outer audit")
     if _parse_utc(observation_end) < _parse_utc(outer.get("ended_at_utc")):
@@ -388,16 +605,85 @@ def validate_formal_metadata(
     return outer_pid, segment_pids
 
 
-class PowerShellInventory:
-    def __init__(self, executable: str, poll_seconds: float) -> None:
-        script = _SNAPSHOT_SCRIPT.replace(
-            "__INTERVAL_MILLISECONDS__", str(max(100, round(poll_seconds * 1000)))
-        )
-        encoded = script.encode("utf-16-le")
-        import base64
+class _LineReader:
+    def __init__(self, stream: IO[bytes]) -> None:
+        self.items: queue.Queue[bytes | BaseException | None] = queue.Queue()
+        self.thread = threading.Thread(target=self._read, args=(stream,), daemon=True)
+        self.thread.start()
 
+    def _read(self, stream: IO[bytes]) -> None:
+        try:
+            while raw := stream.readline():
+                self.items.put(raw)
+        except BaseException as error:
+            self.items.put(error)
+        finally:
+            self.items.put(None)
+
+    def next(self, timeout: float) -> bytes:
+        try:
+            item = self.items.get(timeout=timeout)
+        except queue.Empty as error:
+            raise ObservationError("inventory backend stalled") from error
+        if item is None:
+            raise ObservationError("inventory backend ended")
+        if isinstance(item, BaseException):
+            raise ObservationError(f"inventory reader failed: {item}")
+        return item
+
+
+def _file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        while block := handle.read(1024 * 1024):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+class PowerShellInventory:
+    def __init__(
+        self,
+        executable: str,
+        poll_seconds: float,
+        event_within_seconds: float,
+    ) -> None:
+        self.executable = Path(executable).resolve(strict=True)
+        version = subprocess.run(
+            [
+                str(self.executable),
+                "-NoLogo",
+                "-NoProfile",
+                "-NonInteractive",
+                "-Command",
+                "$PSVersionTable.PSVersion.ToString()",
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=10,
+        ).stdout.strip()
+        try:
+            major = int(version.split(".", 1)[0])
+        except ValueError as error:
+            raise ObservationError(f"invalid PowerShell version: {version}") from error
+        if major < 7:
+            raise ObservationError("PowerShell 7 or newer is required")
+        self.version = version
+        script = (
+            _SNAPSHOT_SCRIPT.replace(
+                "__INTERVAL_MILLISECONDS__",
+                str(max(100, round(poll_seconds * 1000))),
+            )
+            .replace("__EVENT_WITHIN_SECONDS__", repr(event_within_seconds))
+            .replace("__OBSERVER_PID__", str(os.getpid()))
+        )
+        self.script_template_sha256 = hashlib.sha256(
+            _SNAPSHOT_SCRIPT.encode()
+        ).hexdigest()
+        self.script_sha256 = hashlib.sha256(script.encode()).hexdigest()
+        encoded = script.encode("utf-16-le")
         command = [
-            executable,
+            str(self.executable),
             "-NoLogo",
             "-NoProfile",
             "-NonInteractive",
@@ -410,12 +696,12 @@ class PowerShellInventory:
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
         )
-
-    def next(self) -> tuple[bytes, Inventory]:
         assert self.process.stdout is not None
-        raw = self.process.stdout.readline()
-        if not raw:
-            raise ObservationError("inventory child ended")
+        self.reader = _LineReader(self.process.stdout)
+        self.executable_sha256 = _file_sha256(self.executable)
+
+    def next(self, timeout: float) -> tuple[bytes, Inventory]:
+        raw = self.reader.next(timeout)
         try:
             return raw, Inventory.parse(raw)
         except (KeyError, TypeError, ValueError, json.JSONDecodeError) as error:
@@ -431,6 +717,51 @@ class PowerShellInventory:
                 self.process.wait()
 
 
+def observation_bindings(
+    arguments: argparse.Namespace,
+    worker: PowerShellInventory,
+    capability: Inventory,
+) -> dict[str, Any]:
+    return {
+        "settings": {
+            "schema_version": arguments.schema_version,
+            "capture_schema": arguments.capture_schema,
+            "segment_count": arguments.segment_count,
+            "label": arguments.label,
+            "observer": arguments.observer,
+            "poll_seconds": arguments.poll_seconds,
+            "max_poll_gap_seconds": arguments.max_poll_gap_seconds,
+            "cpu_heavy_cores": arguments.cpu_heavy_cores,
+            "memory_heavy_bytes": arguments.memory_heavy_bytes,
+            "memory_growth_bytes": arguments.memory_growth_bytes,
+            "unexplained_cpu_cores": arguments.unexplained_cpu_cores,
+            "event_within_seconds": arguments.event_within_seconds,
+            "backend_stall_seconds": arguments.backend_stall_seconds,
+            "timeout_seconds": arguments.timeout_seconds,
+        },
+        "paths": {
+            "lock": str(arguments.lock.resolve()),
+            "outer_audit": str(arguments.outer_audit.resolve()),
+            "capture": str(arguments.capture.resolve()),
+            "ready": str(arguments.ready.resolve()),
+            "output": str(arguments.output.resolve()),
+        },
+        "backend": {
+            "executable": str(worker.executable),
+            "executable_sha256": worker.executable_sha256,
+            "version": worker.version,
+            "script_template_sha256": worker.script_template_sha256,
+            "script_sha256": worker.script_sha256,
+            "parent_capability": capability.parent_capability,
+            "event_capability": capability.event_capability,
+            "event_source": capability.event_source,
+            "event_within_seconds": capability.event_within_seconds,
+            "capability_probe_pid": capability.capability_probe_pid,
+            "shared_infrastructure_process_names": sorted(OBSERVER_INFRA_NAMES),
+        },
+    }
+
+
 def _load_object(path: Path) -> dict[str, Any]:
     value = json.loads(path.read_bytes())
     if not isinstance(value, dict):
@@ -438,40 +769,95 @@ def _load_object(path: Path) -> dict[str, Any]:
     return value
 
 
+def remaining_before_deadline(
+    deadline: float, stall_seconds: float, *, now: float | None = None
+) -> float:
+    remaining = deadline - (time.monotonic() if now is None else now)
+    if remaining <= 0:
+        raise ObservationError("observer timeout")
+    return min(stall_seconds, remaining)
+
+
+def next_before_deadline(
+    worker: PowerShellInventory, deadline: float, stall_seconds: float
+) -> tuple[bytes, Inventory]:
+    timeout = remaining_before_deadline(deadline, stall_seconds)
+    try:
+        return worker.next(timeout)
+    except ObservationError as error:
+        if time.monotonic() >= deadline:
+            raise ObservationError("observer timeout") from error
+        raise
+
+
+def validate_pre_ready(arguments: argparse.Namespace) -> None:
+    paths = (
+        arguments.output.resolve(),
+        arguments.ready.resolve(),
+        arguments.outer_audit.resolve(),
+        arguments.capture.resolve(),
+    )
+    existing = [path for path in paths if os.path.lexists(path)]
+    if existing:
+        raise ObservationError(f"pre-READY path already exists: {existing}")
+    lease = read_lease(arguments.lock.resolve())
+    if lease.held is not False or lease.state == "running":
+        raise ObservationError("pre-READY lease is held, unreadable or active")
+
+
 def run_observer(arguments: argparse.Namespace) -> int:
     output = arguments.output.resolve()
     ready = arguments.ready.resolve()
-    if output.exists() or ready.exists():
-        raise ObservationError("output and ready receipt must not exist")
-    powershell = arguments.powershell or shutil.which("pwsh") or shutil.which("powershell")
+    validate_pre_ready(arguments)
+    powershell = arguments.powershell or shutil.which("pwsh")
     if os.name != "nt" or powershell is None:
-        raise ObservationError("the standard host inventory backend requires Windows PowerShell")
-    worker = PowerShellInventory(powershell, arguments.poll_seconds)
+        raise ObservationError(
+            "the host inventory backend requires PowerShell 7 on Windows"
+        )
+    worker = PowerShellInventory(
+        powershell, arguments.poll_seconds, arguments.event_within_seconds
+    )
     digest = hashlib.sha256()
     sample_count = 0
-    formal_seen: dict[int, set[int]] = {}
+    formal_identities: set[tuple[int, int]] = set()
     failures: list[str] = []
     outer: dict[str, Any] | None = None
     capture: dict[str, Any] | None = None
+    outer_sha256: str | None = None
+    capture_sha256: str | None = None
     outer_pid = 0
-    segment_pids = [0, 0, 0, 0]
+    segment_pids = [0] * arguments.segment_count
     started = ""
     ended = ""
     all_ended = False
     try:
-        raw, first = worker.next()
+        raw, first = worker.next(arguments.backend_stall_seconds)
         digest.update(raw)
         sample_count += 1
+        if not first.parent_capability or not first.event_capability:
+            raise ObservationError(
+                "PowerShell parent or process-start capability failed"
+            )
+        if not math.isclose(
+            first.event_within_seconds,
+            arguments.event_within_seconds,
+            rel_tol=0,
+            abs_tol=1e-12,
+        ):
+            raise ObservationError("process-start event interval drift")
         contention = ContentionTracker(
             own_pids={os.getpid(), worker.process.pid},
             cpu_heavy_cores=arguments.cpu_heavy_cores,
             memory_heavy_bytes=arguments.memory_heavy_bytes,
             memory_growth_bytes=arguments.memory_growth_bytes,
             max_poll_gap_seconds=arguments.max_poll_gap_seconds,
+            unexplained_cpu_cores=arguments.unexplained_cpu_cores,
+            capability_probe_pid=first.capability_probe_pid,
         )
         contention.observe(first, set())
         if contention.events:
             raise ObservationError("host baseline contains forbidden or heavy work")
+        bindings = observation_bindings(arguments, worker, first)
         started = _utc_now()
         write_json_exclusive(
             ready,
@@ -483,31 +869,55 @@ def run_observer(arguments: argparse.Namespace) -> int:
                 "observation_started_at_utc": started,
                 "outcomes_inspected": False,
                 "ready": True,
+                "bindings": bindings,
             },
         )
-        print(f"HOST-OBSERVER READY label={arguments.label} started={started}", flush=True)
+        ready_sha256 = _file_sha256(ready)
+        print(
+            f"HOST-OBSERVER READY label={arguments.label} started={started}", flush=True
+        )
         lease_tracker = LeaseTracker(arguments.label)
-        raw, inventory = worker.next()
-        digest.update(raw)
-        sample_count += 1
         deadline = time.monotonic() + arguments.timeout_seconds
-        while True:
+        try:
+            raw, inventory = next_before_deadline(
+                worker, deadline, arguments.backend_stall_seconds
+            )
+        except ObservationError as error:
+            failures.append(str(error))
+            ended = _utc_now()
+            inventory = first
+        else:
+            digest.update(raw)
+            sample_count += 1
+        while not failures:
+            try:
+                remaining_before_deadline(deadline, arguments.backend_stall_seconds)
+            except ObservationError as error:
+                failures.append(str(error))
+                ended = _utc_now()
+                break
+            if worker.process.poll() is not None:
+                failures.append("inventory backend exited")
+                ended = _utc_now()
+                break
+
             lease = read_lease(arguments.lock.resolve())
             lease_tracker.observe(lease, audit_exists=arguments.outer_audit.exists())
-            allowed = descendant_pids(inventory, lease_tracker.owner_pid)
-            contention.observe(inventory, allowed)
-            for row in inventory.processes:
-                if row.pid in allowed:
-                    formal_seen.setdefault(row.pid, set()).add(row.start_ticks)
+            extend_formal_identities(
+                inventory, lease_tracker.owner_pid, formal_identities
+            )
+            contention.observe(inventory, formal_identities)
 
             if outer is None and arguments.outer_audit.exists():
                 try:
                     outer = _load_object(arguments.outer_audit.resolve())
+                    outer_sha256 = _file_sha256(arguments.outer_audit.resolve())
                 except (OSError, json.JSONDecodeError, ObservationError) as error:
                     failures.append(f"outer audit: {error}")
             if capture is None and arguments.capture.exists():
                 try:
                     capture = _load_object(arguments.capture.resolve())
+                    capture_sha256 = _file_sha256(arguments.capture.resolve())
                 except (OSError, json.JSONDecodeError, ObservationError) as error:
                     failures.append(f"capture metadata: {error}")
 
@@ -527,16 +937,12 @@ def run_observer(arguments: argparse.Namespace) -> int:
                     if audit_runner != lease_tracker.owner_pid:
                         raise ObservationError("outer audit runner/lease PID mismatch")
                     required = [outer_pid, *segment_pids]
-                    if any(pid not in formal_seen for pid in required):
+                    formal_pids = {pid for pid, _start in formal_identities}
+                    if any(pid not in formal_pids for pid in required):
                         raise ObservationError("a formal PID was not observed live")
-                    current = inventory.by_pid()
-                    identities_live = any(
-                        pid in current
-                        and current[pid].start_ticks in formal_seen[pid]
-                        for pid in required
-                    )
-                    runner_live = lease_tracker.owner_pid in current
-                    if lease_tracker.phase == "released" and not identities_live and not runner_live:
+                    current_identities = {row.identity for row in inventory.processes}
+                    formal_live = bool(formal_identities & current_identities)
+                    if lease_tracker.phase == "released" and not formal_live:
                         ended = tentative_end
                         all_ended = True
                         break
@@ -552,12 +958,10 @@ def run_observer(arguments: argparse.Namespace) -> int:
                     ended = _utc_now()
                     break
 
-            if time.monotonic() >= deadline:
-                failures.append("observer timeout")
-                ended = _utc_now()
-                break
             try:
-                raw, inventory = worker.next()
+                raw, inventory = next_before_deadline(
+                    worker, deadline, arguments.backend_stall_seconds
+                )
             except ObservationError as error:
                 failures.append(str(error))
                 ended = _utc_now()
@@ -566,10 +970,29 @@ def run_observer(arguments: argparse.Namespace) -> int:
                 digest.update(raw)
                 sample_count += 1
 
+        for path, prior, label in (
+            (arguments.outer_audit.resolve(), outer_sha256, "outer audit"),
+            (arguments.capture.resolve(), capture_sha256, "capture metadata"),
+        ):
+            if path.exists():
+                final_hash = _file_sha256(path)
+                if prior is not None and final_hash != prior:
+                    failures.append(f"{label} changed after observation")
+                if label == "outer audit":
+                    outer_sha256 = final_hash
+                else:
+                    capture_sha256 = final_hash
         for index, reason in enumerate(failures):
             contention._event(
                 f"monitor:failure:{index}", category="monitor_failure", reason=reason
             )
+        identities_document = [
+            {"pid": pid, "start_ticks": start}
+            for pid, start in sorted(formal_identities)
+        ]
+        identities_payload = json.dumps(
+            identities_document, sort_keys=True, separators=(",", ":")
+        ).encode()
         document = {
             "schema_version": arguments.schema_version,
             "label": arguments.label,
@@ -596,13 +1019,27 @@ def run_observer(arguments: argparse.Namespace) -> int:
             "poll_gap_max_seconds": contention.poll_gap_max_seconds,
             "raw_process_inventory_sha256": digest.hexdigest(),
             "raw_process_inventory_sample_count": sample_count,
+            "unexplained_cpu_cores_max": contention.unexplained_cpu_cores_max,
             "contention_events": list(contention.events.values()),
             "lease_loss_events": lease_tracker.loss_events,
             "monitor_failures": failures,
             "inventory_child_pid": worker.process.pid,
+            "formal_process_identity_count": len(identities_document),
+            "formal_process_identities": identities_document,
+            "formal_process_identities_sha256": hashlib.sha256(
+                identities_payload
+            ).hexdigest(),
+            "bindings": bindings,
+            "ready_receipt_sha256": ready_sha256,
+            "outer_audit_sha256": outer_sha256,
+            "capture_metadata_sha256": capture_sha256,
         }
         write_json_exclusive(output, document)
-        return 0 if not failures and not contention.events and not lease_tracker.loss_events else 2
+        return (
+            0
+            if not failures and not contention.events and not lease_tracker.loss_events
+            else 2
+        )
     finally:
         worker.close()
 
@@ -627,6 +1064,9 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--cpu-heavy-cores", type=float, default=0.25)
     parser.add_argument("--memory-heavy-bytes", type=int, default=2_147_483_648)
     parser.add_argument("--memory-growth-bytes", type=int, default=536_870_912)
+    parser.add_argument("--unexplained-cpu-cores", type=float, default=1.0)
+    parser.add_argument("--event-within-seconds", type=float, default=0.1)
+    parser.add_argument("--backend-stall-seconds", type=float, default=15.0)
     parser.add_argument("--timeout-seconds", type=float, default=86_400.0)
     return parser
 
@@ -639,11 +1079,19 @@ def main(argv: Sequence[str] | None = None) -> int:
         arguments.cpu_heavy_cores,
         arguments.memory_heavy_bytes,
         arguments.memory_growth_bytes,
+        arguments.unexplained_cpu_cores,
+        arguments.event_within_seconds,
+        arguments.backend_stall_seconds,
         arguments.timeout_seconds,
         arguments.segment_count,
     )
-    if any(not isinstance(value, int | float) or not math.isfinite(value) or value <= 0 for value in positive):
-        raise SystemExit("observer intervals and thresholds must be finite and positive")
+    if any(
+        not isinstance(value, int | float) or not math.isfinite(value) or value <= 0
+        for value in positive
+    ):
+        raise SystemExit(
+            "observer intervals and thresholds must be finite and positive"
+        )
     try:
         return run_observer(arguments)
     except ObservationError as error:

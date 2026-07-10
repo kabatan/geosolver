@@ -94,12 +94,15 @@ the formal runner. Start it in terminal A and wait for both its `HOST-OBSERVER
 READY` line and exclusive ready receipt. Only then start `exclusive_run` in
 terminal B. Do not use either terminal for other work until observation ends.
 
-The Windows backend uses only Python's standard library and one persistent,
-low-rate PowerShell inventory child. It permits the exact lease-owner process
-tree, excludes the observer and inventory child, and fails closed on other
+The Windows backend uses only Python's standard library and one persistent
+PowerShell 7 inventory child. A capability-gated `System.Management`
+process-start subscription supplements low-rate snapshots so short-lived work
+cannot disappear between them. It permits the exact lease-owner process tree,
+excludes the observer and its declared monitoring infrastructure, and fails closed on other
 Julia/Python/compiler/benchmark/package-manager work, configured CPU or memory
-pressure, lease loss, excessive polling gaps, PID/topology mismatch, or output
-overwrite. It reads only the outer-run audit and `capture.json` metadata; it
+pressure, unexplained system-wide CPU, lease loss, excessive polling gaps,
+backend stall/exit, PID/topology mismatch, or output overwrite. It reads only
+the outer-run audit and `capture.json` metadata; it
 does not open segment traces or numerical outcomes.
 
 For EXP-JAC-003, run the observer from its independent worktree in terminal A;
@@ -119,15 +122,22 @@ C:\Users\bakat\miniforge3\python.exe -m research.harness.observe_formal_host `
   --lock "$env:LOCALAPPDATA/GeoTarget/formal-performance.lock" `
   --ready C:\solver-worktrees\exp-jac-003-inputs\research\results\EXP-JAC-003-development-host-observation.ready.json `
   --output C:\solver-worktrees\exp-jac-003-inputs\research\results\EXP-JAC-003-development-host-observation.json `
+  --powershell "C:\Program Files\PowerShell\7\pwsh.exe" `
   --poll-seconds 2 --max-poll-gap-seconds 5 `
   --cpu-heavy-cores 0.25 `
   --memory-heavy-bytes 2147483648 `
   --memory-growth-bytes 536870912 `
+  --unexplained-cpu-cores 1.0 `
+  --event-within-seconds 0.1 `
+  --backend-stall-seconds 15 `
   --timeout-seconds 86400
 ```
 
-The observer records fixed-width UTC times, the outer PID from the outer audit,
-the four ordered segment PIDs from capture metadata, maximum polling gap, a
-SHA-256 digest of every raw inventory sample, contention and lease-loss events,
-and confirmation that every formal PID ended after lease release. Any nonzero
+The ready and final receipts bind every threshold and interval, canonical input
+and output path, PowerShell executable/hash/version, snapshot script hash, and
+parent/event capabilities. The final receipt also binds the terminal
+outer/capture hashes, every observed formal `(PID, creation-time)` identity and
+its canonical digest, maximum polling gap, unexplained aggregate CPU maximum,
+and the raw inventory stream digest. Success requires every formal descendant,
+not only the outer and four segments, to end after lease release. Any nonzero
 event count makes the observation unusable by the frozen finalizer.
