@@ -221,6 +221,28 @@ class CounterexampleTests(unittest.TestCase):
         self.assertEqual(report.evidence[0].source, "archive_audit")
         self.assertTrue(report.evidence[0].evidence_ref.endswith(".verified"))
 
+    def test_recovered_earlier_attempt_failure_does_not_precede_archive_loss(
+        self,
+    ) -> None:
+        failed = evidence_observation(
+            "local_status=LOCAL_NO_PROGRESS;validation=not_run"
+        )["events"][0]
+        verified = evidence_observation(
+            "local_status=LOCAL_CONVERGED;validation=CANDIDATE_VALIDATION_NONE",
+            verified=True,
+        )["events"][0]
+        verified["sequence"] = 2
+        trace = parse_solver_trace(
+            {
+                "schema": "geotarget.evidence-log/v1",
+                "resume_identity": {},
+                "events": [failed, verified],
+            },
+            origin="evidence",
+        )
+        report = diagnose(case_data(), run_data([]), evidence=trace)
+        self.assertEqual(report.failure_id, "F10")
+
     def test_unverified_trace_witness_does_not_manufacture_archive_loss(self) -> None:
         trace = parse_solver_trace(
             evidence_observation(

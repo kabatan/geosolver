@@ -949,8 +949,19 @@ def analyze_miss(
     for trace in (evidence_log, checkpoint):
         if trace is None:
             continue
-        signals.extend(_archive_signals(case, trace, frozenset(missing_validated)))
-        derived, trace_unassociated = _trace_signals(case, trace, relevant_targets)
+        archive = _archive_signals(case, trace, frozenset(missing_validated))
+        signals.extend(archive)
+        recovered_before_loss = frozenset(
+            signal.subject_id
+            for signal in archive
+            if signal.subject_kind is SubjectKind.TARGET
+            and signal.subject_id is not None
+        )
+        derived, trace_unassociated = _trace_signals(
+            case,
+            trace,
+            relevant_targets - recovered_before_loss,
+        )
         signals.extend(derived)
         unassociated |= trace_unassociated
 
