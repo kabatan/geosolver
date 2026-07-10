@@ -101,6 +101,25 @@ struct SolveExecution
     loop_status::SearchLoopStatus
 end
 
+SolveCheckpointArtifact(execution::SolveExecution) = SolveCheckpointArtifact(
+    execution.checkpoint,
+    execution.result.target_image_status,
+)
+
+write_checkpoint(path::AbstractString, execution::SolveExecution) =
+    write_checkpoint(path, SolveCheckpointArtifact(execution))
+
+function _checkpoint_saw_inconclusive_image(checkpoint::SolveCheckpointArtifact)
+    return any(
+        record -> begin
+            diagnostic = record.observation.diagnostic
+            diagnostic !== nothing &&
+                occursin("target_image=TARGET_IMAGE_INCONCLUSIVE", diagnostic)
+        end,
+        checkpoint.snapshot.workspace.candidates.history,
+    )
+end
+
 mutable struct _CompiledAttemptRunner
     compiled::CompiledProblem
     workspace::CompiledWorkspace
@@ -639,6 +658,7 @@ function solve_execution(
     cancel::CancellationToken=CancellationToken(),
     evidence_path::Union{Nothing,AbstractString}=nothing,
     max_actions::Integer=typemax(Int),
+    checkpoint::Union{Nothing,SolveCheckpointArtifact}=nothing,
 )
     options.worker_count == 1 || throw(
         SolveConfigurationError(
@@ -652,29 +672,71 @@ function solve_execution(
     compiled = compile_problem(problem, registry; numeric_backend="Float64")
     resume = _solve_resume_identity(compiled, options)
     now = time()
-    workspace = SearchWorkspace(
-        adaptive_unbounded=any(
-            variable -> variable.lower === nothing || variable.upper === nothing,
-            problem.variables,
-        ),
-    )
-    context = ExecutionContext(
-        resume;
-        rng=(seed=options.seed,),
-        registry,
-        precision_bits=options._validation.precision_bits,
-        policy=options.policy,
-        workspace,
-        cancel,
-        clock=time,
-        deadline=max(deadline, now),
-        rng_checkpoint=Base.identity,
-    )
-    target_image_override = nothing
-    search = if now >= deadline
+    context = if checkpoint === nothing
+        workspace = SearchWorkspace(
+            adaptive_unbounded=any(
+                variable -> variable.lower === nothing || variable.upper === nothing,
+                problem.variables,
+            ),
+        )
+        ExecutionContext(
+            resume;
+            rng=(seed=options.seed,),
+            registry,
+            precision_bits=options._validation.precision_bits,
+            policy=options.policy,
+            workspace,
+            cancel,
+            clock=time,
+            deadline=max(deadline, now),
+            rng_checkpoint=Base.identity,
+        )
+    else
+        checkpoint.snapshot.rng_state == (seed=options.seed,) || throw(
+            SolveConfigurationError(
+                :checkpoint_seed_mismatch,
+                "checkpoint RNG seed does not match SolveOptions",
+            ),
+        )
+        elapsed = max(0.0, now - started)
+        remaining = max(0.0, checkpoint.snapshot.remaining_seconds - elapsed)
+        snapshot = CheckpointSnapshot(
+            checkpoint.snapshot.resume_identity,
+            checkpoint.snapshot.policy_version,
+            checkpoint.snapshot.budget,
+            checkpoint.snapshot.workspace,
+            checkpoint.snapshot.events,
+            checkpoint.snapshot.rng_state,
+            checkpoint.snapshot.precision_bits,
+            remaining,
+            checkpoint.snapshot.cancelled,
+        )
+        restore_execution_context(
+            snapshot,
+            resume;
+            registry,
+            policy=options.policy,
+            rng_restore=Base.identity,
+            rng_checkpoint=Base.identity,
+            cancel,
+            clock=time,
+        )
+    end
+    target_image_override = if checkpoint === nothing
+        nothing
+    elseif checkpoint.target_image_status == TARGET_LIKELY_CONTINUOUS
+        TARGET_LIKELY_CONTINUOUS
+    elseif _checkpoint_saw_inconclusive_image(checkpoint)
+        TARGET_IMAGE_UNKNOWN
+    else
+        nothing
+    end
+    search = if Float64(context.clock()) >= context.deadline
         _finish_search(context, LOOP_DEADLINE_REACHED; detail="compile consumed wall budget")
-    elseif isempty(problem.variables)
+    elseif isempty(problem.variables) && checkpoint === nothing
         _constant_search!(context, compiled, options)
+    elseif isempty(problem.variables)
+        _finish_search(context, LOOP_PAUSED; detail="constant problem was already evaluated")
     else
         engine = ProposalEngine(problem; seed=options.seed)
         runner = _CompiledAttemptRunner(
@@ -683,8 +745,8 @@ function solve_execution(
             options._local,
             options._validation,
             _solve_target_image_options(options),
-            false,
-            false,
+            target_image_override == TARGET_LIKELY_CONTINUOUS,
+            target_image_override == TARGET_IMAGE_UNKNOWN,
         )
         loop_result = run_search!(context, engine, runner; max_actions)
         if runner.saw_likely_continuous
@@ -703,6 +765,7 @@ function solve(
     options::SolveOptions=SolveOptions(),
     cancel::CancellationToken=CancellationToken(),
     evidence_path::Union{Nothing,AbstractString}=nothing,
+    checkpoint::Union{Nothing,SolveCheckpointArtifact}=nothing,
 )
     return solve_execution(
         problem,
@@ -710,5 +773,6 @@ function solve(
         options,
         cancel,
         evidence_path,
+        checkpoint,
     ).result
 end

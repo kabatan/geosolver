@@ -1536,6 +1536,8 @@ function validate_protocol_json(source, registry::FrozenPluginRegistry)
         decode_plugin_manifest_document(document, registry)
     elseif version == SOLVE_OPTIONS_WIRE_VERSION
         decode_solve_options_document(document)
+    elseif version == CHECKPOINT_WIRE_VERSION
+        decode_checkpoint_document(document)
     elseif version == SOLVE_RESULT_WIRE_VERSION
         decode_solve_result_document(document)
     else

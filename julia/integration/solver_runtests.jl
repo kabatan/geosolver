@@ -215,6 +215,115 @@ end
     rm(destination; force=true)
 end
 
+function _checkpoint_trace(execution::SolveExecution)
+    document = Any[
+        Dict{String,Any}(
+            "kind" => string(event.kind),
+            "payload" => GeoTargetCore._checkpoint_event_payload_document(
+                event,
+                "trace.payload",
+            ),
+        ) for event in execution.checkpoint.events if !(
+            event.kind === GeoTargetCore.EVENT_STATUS &&
+            event.payload.status === GeoTargetCore.LOOP_PAUSED
+        )
+    ]
+    return canonical_json(document)
+end
+
+function _result_without_evidence(result::SolveResult)
+    document = solve_result_document(result)
+    delete!(document, "evidence_log")
+    return canonical_json(document)
+end
+
+@testset "canonical checkpoint persistence resumes the deterministic trace" begin
+    registry = solve_registry()
+    problem = scalar_root_problem()
+    options = short_options()
+    uninterrupted = solve_execution(problem, registry; options, max_actions = 4)
+    prefix = solve_execution(problem, registry; options, max_actions = 2)
+
+    checkpoint = SolveCheckpointArtifact(prefix)
+    source = encode_checkpoint_json(checkpoint)
+    decoded = decode_checkpoint_json(source)
+    @test encode_checkpoint_json(decoded) == source
+    @test checkpoint_hash(decoded) == checkpoint_hash(checkpoint)
+    @test decoded.snapshot.resume_identity == prefix.result.environment_lock
+
+    resumed = solve_execution(
+        problem,
+        registry;
+        options,
+        max_actions = 2,
+        checkpoint = decoded,
+    )
+    @test _result_without_evidence(resumed.result) ==
+          _result_without_evidence(uninterrupted.result)
+    @test canonical_json(GeoTargetCore._checkpoint_workspace_document(
+        resumed.checkpoint.workspace,
+    )) == canonical_json(GeoTargetCore._checkpoint_workspace_document(
+        uninterrupted.checkpoint.workspace,
+    ))
+    @test isequal(resumed.checkpoint.budget, uninterrupted.checkpoint.budget)
+    @test isequal(_checkpoint_trace(resumed), _checkpoint_trace(uninterrupted))
+
+    pending_prefix = solve_execution(problem, registry; options, max_actions = 1)
+    @test length(pending_prefix.checkpoint.workspace.pending) == 1
+    pending_checkpoint = decode_checkpoint_json(
+        encode_checkpoint_json(SolveCheckpointArtifact(pending_prefix)),
+    )
+    pending_resumed = solve_execution(
+        problem,
+        registry;
+        options,
+        max_actions = 3,
+        checkpoint = pending_checkpoint,
+    )
+    @test _result_without_evidence(pending_resumed.result) ==
+          _result_without_evidence(uninterrupted.result)
+    @test canonical_json(GeoTargetCore._checkpoint_workspace_document(
+        pending_resumed.checkpoint.workspace,
+    )) == canonical_json(GeoTargetCore._checkpoint_workspace_document(
+        uninterrupted.checkpoint.workspace,
+    ))
+    @test isequal(pending_resumed.checkpoint.budget, uninterrupted.checkpoint.budget)
+    @test isequal(_checkpoint_trace(pending_resumed), _checkpoint_trace(uninterrupted))
+
+    mktempdir() do directory
+        path = joinpath(directory, "checkpoint.json")
+        @test write_checkpoint(path, prefix).content == checkpoint.content
+        @test read_checkpoint(path).content == checkpoint.content
+        write(path, "old checkpoint contents")
+        @test write_checkpoint(path, prefix).content == checkpoint.content
+        @test read_checkpoint(path).content == checkpoint.content
+        @test isempty(filter(name -> occursin(".tmp-", name), readdir(directory)))
+    end
+    @test_throws ArgumentError write_checkpoint("   ", prefix)
+
+    corrupted = parse_protocol_json(source)
+    corrupted["state"]["budget"]["proposals"] += 1
+    @test_throws ProtocolJsonError decode_checkpoint_document(corrupted)
+
+    invalid = parse_protocol_json(source)
+    invalid["state"]["budget"]["proposals"] = 10_000
+    payload = Dict{String,Any}(
+        "target_image_status" => invalid["target_image_status"],
+        "state" => invalid["state"],
+    )
+    invalid["content_hash"] = string(canonical_json_hash(payload))
+    @test_throws ProtocolJsonError decode_checkpoint_document(invalid)
+
+    mismatched_options = SolveOptions(preset = :fast, wall_seconds = 61.0, seed = 17)
+    @test_throws GeoTargetCore.SearchProtocolError solve_execution(
+        problem,
+        registry;
+        options = mismatched_options,
+        max_actions = 2,
+        checkpoint = decoded,
+    )
+end
+
 @testset "solve distinguishes continuous target images from constant manifolds" begin
     registry = solve_registry()
     continuous = solve_execution(
@@ -228,6 +337,18 @@ end
     @test isempty(continuous.result.provisional_answers)
     @test continuous.result.search_status == SEARCH_FINISHED_UNKNOWN
     @test occursin("TARGET_LIKELY_CONTINUOUS", continuous.evidence_json)
+
+    continuous_checkpoint = decode_checkpoint_json(
+        encode_checkpoint_json(SolveCheckpointArtifact(continuous)),
+    )
+    resumed_continuous = solve_execution(
+        unconstrained_target_problem(),
+        registry;
+        options = short_options(),
+        max_actions = 2,
+        checkpoint = continuous_checkpoint,
+    )
+    @test resumed_continuous.result.target_image_status == TARGET_LIKELY_CONTINUOUS
 
     constant_manifold = solve_execution(
         constant_manifold_problem(),

@@ -21,6 +21,7 @@ include("candidate_store.jl")
 include("search_policy.jl")
 include("search_loop.jl")
 include("proposal_engine.jl")
+include("checkpoint_json.jl")
 include("solver.jl")
 
 """Return the stable plugin ABI version understood by this Core build."""
@@ -129,6 +130,7 @@ export CORE_ABI_VERSION,
     PLUGIN_WIRE_VERSION,
     SOLVE_OPTIONS_WIRE_VERSION,
     SOLVE_RESULT_WIRE_VERSION,
+    CHECKPOINT_WIRE_VERSION,
     ProtocolJsonError,
     parse_protocol_json,
     canonical_json_bytes,
@@ -145,6 +147,14 @@ export CORE_ABI_VERSION,
     decode_solve_options_json,
     solve_options_document,
     encode_solve_options_json,
+    SolveCheckpointArtifact,
+    checkpoint_hash,
+    checkpoint_document,
+    encode_checkpoint_json,
+    decode_checkpoint_document,
+    decode_checkpoint_json,
+    write_checkpoint,
+    read_checkpoint,
     decode_solve_result_document,
     decode_solve_result_json,
     solve_result_document,

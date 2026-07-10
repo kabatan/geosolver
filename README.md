@@ -34,8 +34,9 @@ benchmarks/                Generated families, manifests and compact results
 scripts/                   Reproducible developer and CI entry points
 ```
 
+Operational protocol: [checkpoint and resume](docs/operations/CHECKPOINTS.md).
+
 ## License
 
 No public license has been granted. The repository is private/all rights
 reserved until the owner explicitly chooses a license.
-

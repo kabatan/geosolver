@@ -22,6 +22,7 @@ from geotarget.canonical import CanonicalJsonError, canonical_bytes, canonical_j
 from geotarget.identifiers import qualified_symbol
 
 SCHEMA_FILES: dict[str, str] = {
+    "geotarget.checkpoint/v1": "checkpoint-v1.schema.json",
     "geotarget.problem/v1": "problem-spec-v1.schema.json",
     "geotarget.plugin/v1": "plugin-manifest-v1.schema.json",
     "geotarget.solve-options/v1": "solve-options-v1.schema.json",
@@ -29,6 +30,7 @@ SCHEMA_FILES: dict[str, str] = {
 }
 
 SCHEMA_ALIASES: dict[str, str] = {
+    "checkpoint": "geotarget.checkpoint/v1",
     "problem": "geotarget.problem/v1",
     "plugin-manifest": "geotarget.plugin/v1",
     "solve-options": "geotarget.solve-options/v1",
@@ -670,6 +672,48 @@ def _options_semantic_issues(document: Mapping[str, object]) -> list[ValidationI
     return issues
 
 
+def _checkpoint_semantic_issues(document: Mapping[str, object]) -> list[ValidationIssue]:
+    """Validate invariants shared with the typed Julia checkpoint decoder."""
+
+    state = cast(Mapping[str, object], document["state"])
+    payload = {
+        "target_image_status": document["target_image_status"],
+        "state": state,
+    }
+    actual_hash = f"sha256:{hashlib.sha256(canonical_bytes(payload)).hexdigest()}"
+    issues: list[ValidationIssue] = []
+    if document["content_hash"] != actual_hash:
+        issues.append(ValidationIssue("content_hash", "checkpoint content hash mismatch"))
+
+    identity = cast(Mapping[str, object], state["resume_identity"])
+    issues.extend(_environment_lock_issues(identity, "state.resume_identity"))
+
+    uint64_fields = {"task_id", "configuration_id", "source_configuration", "next_task_id", "seed"}
+
+    def inspect_uint64(value: object, path: str) -> None:
+        if value is None:
+            return
+        if isinstance(value, str) and int(value) > _MAX_SEED:
+            issues.append(ValidationIssue(path, "decimal value exceeds UInt64"))
+
+    def walk(value: object, path: str) -> None:
+        if isinstance(value, Mapping):
+            for key, child in cast(Mapping[str, object], value).items():
+                child_path = f"{path}.{key}" if path else key
+                if key in uint64_fields:
+                    inspect_uint64(child, child_path)
+                walk(child, child_path)
+        elif isinstance(value, list):
+            for index, child in enumerate(value):
+                child_path = f"{path}.{index}"
+                if path.endswith("refinement_queue"):
+                    inspect_uint64(child, child_path)
+                walk(child, child_path)
+
+    walk(state, "state")
+    return issues
+
+
 def validate_document(
     document: object,
     *,
@@ -685,7 +729,9 @@ def validate_document(
     if issues:
         raise ProtocolValidationError(issues)
     issues = _jcs_issues(mapping)
-    if version == "geotarget.problem/v1":
+    if version == "geotarget.checkpoint/v1":
+        issues.extend(_checkpoint_semantic_issues(mapping))
+    elif version == "geotarget.problem/v1":
         issues.extend(_problem_semantic_issues(mapping))
     elif version == "geotarget.plugin/v1":
         issues.extend(_plugin_semantic_issues(mapping))

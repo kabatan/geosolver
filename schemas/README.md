@@ -6,10 +6,19 @@ These files are the canonical, versioned wire contracts for GeoTarget:
 - `plugin-manifest-v1.schema.json`
 - `solve-options-v1.schema.json`
 - `solve-result-v1.schema.json`
+- `checkpoint-v1.schema.json`
 
 JSON Schema validates the wire shape. The Python validator additionally checks
 graph-wide invariants that JSON Schema cannot express, including unique node
 IDs, valid references and locked plugin ownership of qualified operations.
+Checkpoint validation additionally verifies the canonical content hash, resume
+environment lock ordering, and every decimal-string UInt64 bound.
+
+Checkpoint v1 is a closed, code-free state format. It stores typed values,
+candidate history, pending work, the scheduler, budgets, evidence, RNG seed,
+precision and remaining wall time. Derived candidate views and task membership
+are rebuilt from history on restore. Plugin code is never serialized; callers
+must inject an explicit registry whose locks match `resume_identity`.
 
 Protocol identities use RFC 8785 JSON Canonicalization Scheme bytes followed by
 SHA-256. JSON integers are restricted to the interoperable binary64 integer

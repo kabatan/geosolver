@@ -249,6 +249,8 @@ function _decode_owned(document, registry)
     source = GeoTargetCore.canonical_json(document)
     if version == GeoTargetCore.PROBLEM_WIRE_VERSION
         return GeoTargetCore.decode_problem_json(source, registry)
+    elseif version == GeoTargetCore.CHECKPOINT_WIRE_VERSION
+        return GeoTargetCore.decode_checkpoint_json(source)
     elseif version == GeoTargetCore.PLUGIN_WIRE_VERSION
         return GeoTargetCore.decode_plugin_manifest_json(source, registry)
     elseif version == GeoTargetCore.SOLVE_OPTIONS_WIRE_VERSION
@@ -303,6 +305,16 @@ end
     )
     @test GeoTargetCore.encode_solve_options_json(options) ==
         GeoTargetCore.canonical_json(GeoTargetCore.parse_protocol_json(options_source))
+
+    checkpoint_source = _fixture("checkpoint-paused-v1.json")
+    checkpoint = GeoTargetCore.decode_checkpoint_json(checkpoint_source)
+    @test checkpoint.target_image_status == TARGET_IMAGE_UNKNOWN
+    @test checkpoint.snapshot.remaining_seconds == 60.0
+    @test checkpoint.snapshot.rng_state == (seed=UInt64(0),)
+    @test checkpoint.snapshot.events[end].kind == GeoTargetCore.EVENT_STATUS
+    @test checkpoint.snapshot.events[end].payload.status == GeoTargetCore.LOOP_PAUSED
+    @test GeoTargetCore.encode_checkpoint_json(checkpoint) ==
+        GeoTargetCore.canonical_json(GeoTargetCore.parse_protocol_json(checkpoint_source))
 end
 
 @testset "SolveOptionsV1 is strict, typed, and canonically encoded" begin
@@ -603,7 +615,7 @@ end
     end
 end
 
-@testset "CLI solve executes, persists evidence, and never fakes resume" begin
+@testset "CLI solve executes, persists evidence, and resumes canonical checkpoints" begin
     mktempdir() do directory
         registry = GeoTargetApp.default_registry()
         problem = _geometry_constant_problem()
@@ -725,18 +737,78 @@ end
         ) == 2
         @test occursin("parallel_execution_unavailable", String(take!(errors)))
 
-        lock = ResumeIdentity(
-            content_hash("problem"),
-            (),
-            content_hash("policy"),
-            content_hash("environment"),
-        )
-        checkpoint_path = joinpath(directory, "checkpoint-options.json")
+        checkpoint_file = joinpath(directory, "solve-checkpoint.json")
+        checkpoint_evidence = joinpath(directory, "checkpoint-prefix-evidence.json")
+        @test GeoTargetApp.main(
+            [
+                "solve",
+                problem_path,
+                "--options",
+                options_path,
+                "--evidence",
+                checkpoint_evidence,
+                "--checkpoint-out",
+                checkpoint_file,
+                "--max-actions",
+                "1",
+            ];
+            stdout = IOBuffer(),
+            stderr = IOBuffer(),
+        ) == 0
+        checkpoint = GeoTargetCore.read_checkpoint(checkpoint_file)
+        @test checkpoint.content == GeoTargetCore.checkpoint_hash(checkpoint)
+        @test checkpoint.snapshot.resume_identity.graph ==
+              GeoTargetCore.problem_hash(problem, registry)
+
+        checkpoint_options = joinpath(directory, "checkpoint-options.json")
         write(
-            checkpoint_path,
+            checkpoint_options,
             GeoTargetCore.encode_solve_options_json(GeoTargetCore.SolveOptionsV1(
                 wall_time_seconds = 60,
-                checkpoint = GeoTargetCore.SolveCheckpointV1("checkpoint.json", lock),
+                seed = 17,
+                preset = :fast,
+                answer_level = :validated,
+                checkpoint = GeoTargetCore.SolveCheckpointV1(
+                    checkpoint_file,
+                    checkpoint.snapshot.resume_identity,
+                ),
+            )),
+        )
+        resumed_checkpoint = joinpath(directory, "resumed-checkpoint.json")
+        output = IOBuffer()
+        @test GeoTargetApp.main(
+            [
+                "solve",
+                problem_path,
+                "--options",
+                checkpoint_options,
+                "--evidence",
+                joinpath(directory, "checkpoint-evidence.json"),
+                "--checkpoint-out",
+                resumed_checkpoint,
+                "--max-actions",
+                "1",
+            ];
+            stdout = output,
+            stderr = IOBuffer(),
+        ) == 0
+        resumed_result = GeoTargetCore.decode_solve_result_json(String(take!(output)))
+        @test length(resumed_result.provisional_answers) == 1
+        @test GeoTargetCore.read_checkpoint(resumed_checkpoint).snapshot.resume_identity ==
+              checkpoint.snapshot.resume_identity
+
+        mismatch_options = joinpath(directory, "mismatch-options.json")
+        mismatch_lock = ResumeIdentity(
+            content_hash("wrong-problem"),
+            (),
+            content_hash("wrong-policy"),
+            content_hash("wrong-environment"),
+        )
+        write(
+            mismatch_options,
+            GeoTargetCore.encode_solve_options_json(GeoTargetCore.SolveOptionsV1(
+                wall_time_seconds = 60,
+                checkpoint = GeoTargetCore.SolveCheckpointV1(checkpoint_file, mismatch_lock),
             )),
         )
         errors = IOBuffer()
@@ -745,14 +817,14 @@ end
                 "solve",
                 problem_path,
                 "--options",
-                checkpoint_path,
+                mismatch_options,
                 "--evidence",
-                joinpath(directory, "checkpoint-evidence.json"),
+                joinpath(directory, "mismatch-evidence.json"),
             ];
             stdout = IOBuffer(),
             stderr = errors,
         ) == 2
-        @test occursin("checkpoint_resume_unavailable", String(take!(errors)))
+        @test occursin("checkpoint_reference_mismatch", String(take!(errors)))
     end
 end
 

@@ -46,6 +46,7 @@ def _replace_pointer(document: object, pointer: str, value: object) -> None:
 @pytest.mark.parametrize(
     "filename",
     [
+        "checkpoint-paused-v1.json",
         "plugin-manifest-full-v1.json",
         "problem-open-world-v1.json",
         "solve-options-checkpoint-v1.json",

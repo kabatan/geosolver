@@ -123,24 +123,86 @@ function _plugin_info(id_text, registry, output)
     return 0
 end
 
-function _solve(problem_path, options_path, evidence_path, registry, output)
+function _solve(
+    problem_path,
+    options_path,
+    evidence_path,
+    registry,
+    output;
+    checkpoint_out = nothing,
+    max_actions::Int = typemax(Int),
+)
     isempty(strip(evidence_path)) && throw(ArgumentError("--evidence path must not be blank"))
+    if checkpoint_out !== nothing
+        isempty(strip(checkpoint_out)) &&
+            throw(ArgumentError("--checkpoint-out path must not be blank"))
+        abspath(checkpoint_out) == abspath(evidence_path) && throw(
+            ArgumentError("--checkpoint-out and --evidence must use different paths"),
+        )
+    end
     problem = GeoTargetCore.decode_problem_json(read(problem_path, String), registry)
     wire_options = GeoTargetCore.decode_solve_options_json(read(options_path, String))
-    wire_options.checkpoint === nothing || throw(
-        SolveConfigurationError(
-            :checkpoint_resume_unavailable,
-            "checkpoint resume is not implemented; the checkpoint request was not ignored",
-        ),
-    )
+    checkpoint = if wire_options.checkpoint === nothing
+        nothing
+    else
+        reference = wire_options.checkpoint
+        restored = GeoTargetCore.read_checkpoint(reference.path)
+        can_resume(reference.environment_lock, restored.snapshot.resume_identity) || throw(
+            SolveConfigurationError(
+                :checkpoint_reference_mismatch,
+                "SolveOptions checkpoint environment_lock does not match the checkpoint file",
+            ),
+        )
+        restored
+    end
     execution = solve_execution(
         problem,
         registry;
         options = SolveOptions(wire_options),
         evidence_path,
+        max_actions,
+        checkpoint,
     )
+    checkpoint_out === nothing || GeoTargetCore.write_checkpoint(checkpoint_out, execution)
     println(output, GeoTargetCore.encode_solve_result_json(execution.result))
     return 0
+end
+
+function _parse_max_actions(text::AbstractString)
+    occursin(r"^(?:0|[1-9][0-9]*)$", text) ||
+        throw(ArgumentError("--max-actions must be a canonical nonnegative integer"))
+    return try
+        parse(Int, text)
+    catch error
+        throw(ArgumentError("--max-actions does not fit Int: $(sprint(showerror, error))"))
+    end
+end
+
+function _solve_arguments(args)
+    length(args) >= 6 && iseven(length(args)) || throw(
+        ArgumentError(
+            "solve expects <problem.json> --options <options.json> --evidence <path> " *
+            "[--checkpoint-out <path>] [--max-actions <count>]",
+        ),
+    )
+    values = Dict{String,String}()
+    for index in 3:2:length(args)
+        flag = args[index]
+        flag in ("--options", "--evidence", "--checkpoint-out", "--max-actions") ||
+            throw(ArgumentError("unknown solve option $(repr(flag))"))
+        haskey(values, flag) && throw(ArgumentError("duplicate solve option $flag"))
+        values[flag] = args[index + 1]
+    end
+    haskey(values, "--options") || throw(ArgumentError("solve requires --options"))
+    haskey(values, "--evidence") || throw(ArgumentError("solve requires --evidence"))
+    return (
+        problem_path = args[2],
+        options_path = values["--options"],
+        evidence_path = values["--evidence"],
+        checkpoint_out = get(values, "--checkpoint-out", nothing),
+        max_actions = haskey(values, "--max-actions") ?
+                      _parse_max_actions(values["--max-actions"]) : typemax(Int),
+    )
 end
 
 function _usage(io)
@@ -148,7 +210,11 @@ function _usage(io)
     println(io, "  geotarget validate <document.json>")
     println(io, "  geotarget eval <problem.json> --x <comma-separated-values|JSON-array>")
     println(io, "  geotarget plugin-info [canonical-plugin-id]")
-    println(io, "  geotarget solve <problem.json> --options <options.json> --evidence <path>")
+    println(
+        io,
+        "  geotarget solve <problem.json> --options <options.json> --evidence <path> " *
+        "[--checkpoint-out <path>] [--max-actions <count>]",
+    )
 end
 
 function main(
@@ -171,14 +237,16 @@ function main(
             length(args) <= 2 || throw(ArgumentError("plugin-info accepts at most one plugin id"))
             return _plugin_info(length(args) == 2 ? args[2] : nothing, registry, stdout)
         elseif command == "solve"
-            length(args) == 6 || throw(
-                ArgumentError(
-                    "solve expects <problem.json> --options <options.json> --evidence <path>",
-                ),
+            parsed = _solve_arguments(args)
+            return _solve(
+                parsed.problem_path,
+                parsed.options_path,
+                parsed.evidence_path,
+                registry,
+                stdout;
+                checkpoint_out = parsed.checkpoint_out,
+                max_actions = parsed.max_actions,
             )
-            args[3] == "--options" || throw(ArgumentError("solve requires --options"))
-            args[5] == "--evidence" || throw(ArgumentError("solve requires --evidence"))
-            return _solve(args[2], args[4], args[6], registry, stdout)
         end
         throw(ArgumentError("unknown command $(repr(command))"))
     catch error

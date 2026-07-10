@@ -2,6 +2,14 @@
   "fixture_format": "geotarget.invalid-cases/v1",
   "cases": [
     {
+      "id": "checkpoint-content-hash-mismatch",
+      "base": "valid/checkpoint-paused-v1.json",
+      "patch": [
+        {"op": "replace", "path": "/state/budget/proposals", "value": 1}
+      ],
+      "expected": "content hash"
+    },
+    {
       "id": "plugin-derivative-without-c1",
       "base": "valid/plugin-manifest-full-v1.json",
       "patch": [
