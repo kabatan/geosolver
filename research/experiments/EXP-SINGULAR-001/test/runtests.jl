@@ -257,6 +257,21 @@ end
     @test count(case -> case.gold.kind == :finite_manifold_target, cases) == 12
     @test count(case -> case.gold.kind == :nonfinite_target_image, cases) == 6
     @test count(case -> case.gold.kind == :no_local_root, cases) == 6
+    input_document = s2_development_input_document(cases)
+    @test input_document["schema"] == "geotarget.singular-s2-development-input/v1"
+    @test input_document["development_instance_count"] == 24
+    @test input_document["parent_gate"] == "development-s0-s1-v0"
+    @test input_document["variants"] == [
+        "S1-AP-LMQR",
+        "S2-AP-CPQR-SUBSET",
+        "S2-ANALYTIC-SUBSET-CONTROL",
+    ]
+    s2_manifest_path = joinpath(@__DIR__, "..", "s2-development-input-manifest.json")
+    @test isfile(s2_manifest_path)
+    frozen_s2 = JSON3.read(read(s2_manifest_path, String))
+    @test frozen_s2.case_collection_sha256 == input_document["case_collection_sha256"]
+    @test [entry.checksum for entry in frozen_s2.cases] ==
+          [entry["checksum"] for entry in input_document["cases"]]
 
     constant_case = first(filter(
         case -> case.gold.kind == :finite_manifold_target,

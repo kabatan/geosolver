@@ -188,6 +188,35 @@ function development_input_document(
     )
 end
 
+function s2_development_input_document(
+    cases=s2_development_cases(),
+    options::ExperimentOptions=ExperimentOptions();
+    card_path=normpath(joinpath(@__DIR__, "..", "..", "EXP-SINGULAR-001.json")),
+)
+    case_document = case_manifest_document(cases)
+    collection_material = join((case.checksum for case in cases), '\n')
+    return Dict{String,Any}(
+        "card_path" => replace(
+            relpath(card_path, normpath(joinpath(@__DIR__, "..", "..", "..", ".."))),
+            '\\' => '/',
+        ),
+        "card_sha256" => bytes2hex(sha256(read(card_path))),
+        "case_collection_sha256" => bytes2hex(sha256(collection_material)),
+        "cases" => case_document["cases"],
+        "development_instance_count" => length(cases),
+        "experiment_id" => EXPERIMENT_ID,
+        "harness_version" => string(HARNESS_VERSION),
+        "options" => _options_document(options),
+        "parent_gate" => "development-s0-s1-v0",
+        "schema" => "geotarget.singular-s2-development-input/v1",
+        "variants" => Any[
+            "S1-AP-LMQR",
+            "S2-AP-CPQR-SUBSET",
+            "S2-ANALYTIC-SUBSET-CONTROL",
+        ],
+    )
+end
+
 function write_json_artifact(path::AbstractString, document)
     destination = abspath(String(path))
     mkpath(dirname(destination))
