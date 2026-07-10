@@ -33,3 +33,10 @@ julia --project=research/experiments/EXP-SINGULAR-001 `
 Each phase freezes and checksums its inputs before candidate outcomes. S3 failed
 its development gate at the global 64-iteration cap and remains rejected and
 product-disconnected. Locked S3 inputs were never materialized or opened.
+
+`s4-preregistration.json` freezes a separate S4 gate before any S4 input or
+candidate outcome exists. It replaces the generic bordered-nullspace label
+with an explicit C2 range/nullspace two-step map and an independently
+differentiated analytic control. Higher-depth singularities, manifolds,
+nonroots and regular close roots are mandatory non-promotion controls. S4 is
+still product-disconnected and has no locked inputs.
