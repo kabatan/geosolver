@@ -927,6 +927,7 @@ def analyze_miss(
         )
 
     relevant_targets = frozenset((*missing_validated, *missing_exact))
+    operationally_missing_targets = frozenset(missing_validated)
     signals = _run_signals(case, run, evaluation)
     ignored_noncausal = False
     for fact in facts:
@@ -960,7 +961,7 @@ def analyze_miss(
         derived, trace_unassociated = _trace_signals(
             case,
             trace,
-            relevant_targets - recovered_before_loss,
+            operationally_missing_targets - recovered_before_loss,
         )
         signals.extend(derived)
         unassociated |= trace_unassociated

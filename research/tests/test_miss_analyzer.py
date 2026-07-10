@@ -277,6 +277,18 @@ class CounterexampleTests(unittest.TestCase):
         self.assertEqual(report.failure_id, "F14")
         self.assertNotEqual(report.failure_id, "F10")
 
+    def test_exact_only_shortfall_ignores_recovered_local_failure(self) -> None:
+        trace = parse_solver_trace(
+            evidence_observation("local_status=LOCAL_NO_PROGRESS;validation=not_run"),
+            origin="evidence",
+        )
+        report = diagnose(
+            case_data(),
+            run_data([answer_data(level="validated")]),
+            evidence=trace,
+        )
+        self.assertEqual(report.failure_id, "F14")
+
     def test_unassociated_domain_event_does_not_blame_domain(self) -> None:
         trace = parse_solver_trace(
             evidence_observation(

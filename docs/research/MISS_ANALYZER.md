@@ -32,7 +32,9 @@ answer set, so the run is classified as F10. Unverified observations, ambiguous
 target associations and exact-only shortfalls do not trigger that audit.
 Earlier failed attempts for that same target are not treated as causal once a
 later verified witness proves they were recovered; failures for other still
-missing targets remain eligible under the normal checkpoint order. A raw
+missing validated targets remain eligible under the normal checkpoint order.
+Likewise, an exact-only shortfall is not blamed on an earlier local attempt once
+the final run contains the validated target. A raw
 checkpoint should first be accepted by the Core checkpoint decoder when
 cryptographic content-hash authentication matters; the research parser does
 not replace that decoder.
