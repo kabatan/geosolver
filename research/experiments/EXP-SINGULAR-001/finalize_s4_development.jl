@@ -2,7 +2,7 @@ include(joinpath(@__DIR__, "run_s4_development.jl"))
 
 const S4_FINALIZATION_AMENDMENT = joinpath(
     @__DIR__,
-    "s4-protocol-amendment-a7.json",
+    "s4-protocol-amendment-a8.json",
 )
 const S4_FAILED_FORMAL_AUDIT = normpath(joinpath(
     @__DIR__,
@@ -11,6 +11,14 @@ const S4_FAILED_FORMAL_AUDIT = normpath(joinpath(
     "results",
     "EXP-SINGULAR-001",
     "development-s4-v0-formal-run-audit.json",
+))
+const S4_FAILED_FINALIZATION_AUDIT = normpath(joinpath(
+    @__DIR__,
+    "..",
+    "..",
+    "results",
+    "EXP-SINGULAR-001",
+    "development-s4-v0-finalization-formal-run-audit.json",
 ))
 
 function _s4_checkpoint_collection_sha256(paths)
@@ -25,7 +33,7 @@ function _s4_verify_finalization_amendment()
     amendment_payload = read(S4_FINALIZATION_AMENDMENT)
     amendment_sha256 = bytes2hex(sha256(amendment_payload))
     amendment = JSON3.read(String(amendment_payload))
-    amendment.status == "frozen-after-complete-checkpoint-run-before-result-finalization" ||
+    amendment.status == "frozen-after-finalizer-world-age-failure-before-result-finalization" ||
         error("S4 finalization amendment has wrong status")
     _s4_sha(@__FILE__) == String(amendment.finalizer_source_sha256) ||
         error("S4 finalizer source hash mismatch")
@@ -39,10 +47,16 @@ function _s4_verify_finalization_amendment()
     failed_audit_sha256 ==
         String(amendment.failed_run_bindings.failed_formal_run_audit_sha256) ||
         error("S4 failed formal audit mismatch")
+    failed_finalization_payload = read(S4_FAILED_FINALIZATION_AUDIT)
+    failed_finalization_audit_sha256 = bytes2hex(sha256(failed_finalization_payload))
+    failed_finalization_audit_sha256 ==
+        String(amendment.failed_run_bindings.failed_finalization_audit_sha256) ||
+        error("S4 failed finalization audit mismatch")
     return (
         amendment_sha256=amendment_sha256,
         document=amendment,
         failed_audit_sha256=failed_audit_sha256,
+        failed_finalization_audit_sha256=failed_finalization_audit_sha256,
         implementation_freeze_sha256=implementation_freeze_sha256,
     )
 end
@@ -205,9 +219,9 @@ function _s4_install_frozen_writer_bindings!(provenance)
             error("S4 frozen writer binding already exists: $name")
         expression = Expr(:const, Expr(:(=), name, String(value)))
         Core.eval(ExperimentSingular001, expression)
-        isconst(ExperimentSingular001, name) ||
+        Base.invokelatest(isconst, ExperimentSingular001, name) ||
             error("S4 frozen writer binding is not constant: $name")
-        getfield(ExperimentSingular001, name) == String(value) ||
+        Base.invokelatest(getfield, ExperimentSingular001, name) == String(value) ||
             error("S4 frozen writer binding differs: $name")
     end
     return nothing
@@ -219,6 +233,9 @@ function _s4_reverify_approved_inputs!(approved, provenance, bindings)
         error("S4 finalization amendment changed before publication")
     _s4_sha(S4_FAILED_FORMAL_AUDIT) == approved.failed_audit_sha256 ||
         error("S4 failed formal audit changed before publication")
+    _s4_sha(S4_FAILED_FINALIZATION_AUDIT) ==
+        approved.failed_finalization_audit_sha256 ||
+        error("S4 failed finalization audit changed before publication")
     _s4_sha(S4_IMPLEMENTATION_FREEZE) == approved.implementation_freeze_sha256 ||
         error("S4 implementation freeze changed before publication")
     _s4_sha(S4_RUN_IDENTITY) == provenance.run_identity_sha256 ||
@@ -340,6 +357,8 @@ function main()
                 "bindings" => bindings,
                 "checkpoint_manifest_sha256" => provenance.checkpoint_manifest_sha256,
                 "failed_formal_run_audit_sha256" => approved.failed_audit_sha256,
+                "failed_finalization_audit_sha256" =>
+                    approved.failed_finalization_audit_sha256,
                 "finalization_amendment_sha256" => approved.amendment_sha256,
                 "implementation_freeze_sha256" => provenance.implementation_freeze_sha256,
                 "input_manifest_sha256" => provenance.input_manifest_sha256,
