@@ -47,6 +47,19 @@ residual/Jacobian scale and requires quadratic decay relative to the final
 step, with the same reserve, at both precisions for every primary and
 confirmation endpoint. This remains an applicability check, not a root proof.
 
+The mandatory higher-depth controls expose a different failure. For
+`F=(y,x^3)`, the two-step null update is `x_next=x/2`: it can meet the step,
+residual and error goals within 64 iterations, while the null- and
+residual-decay inequalities also pass. The projected operator `B=6x`, however,
+collapses toward zero instead of approaching the nonzero limiting operator
+assumed for a deflation-one root. Each primary/confirmation trajectory therefore
+compares sorted start/final projected spectra using the common reserved
+`ell=65` direction and requires every ratio in `[1/16,16]`. Candidate probes
+cover both precisions and both radii; the analytic control covers both
+precisions without a radius. This scale-cancelling gate reads no family, id or
+Gold and is independent of the regular-fold midpoint counterexample. It is an
+observable applicability predicate, not a deflation-depth proof.
+
 The candidate route makes four finite-difference probes (128/256 bits crossed
 with radius 1/0.5) and compares the other three left/right nullspaces to the
 fixed `(256, 0.5)` reference. The analytic control instead makes two analytic
@@ -62,12 +75,13 @@ step goals must pass. Residual/target callback domain or guard failure is typed
 unknown. `CandidateInput` has no declared-bound field and this S4 split freezes
 no finite configuration bounds, so the experiment does not claim a bound gate.
 
-The initial projected-operator audit uses coefficient counter `ell=1`. Actual
-trajectories use their local iteration in `1:64`; all final unapplied-correction
-audits use the reserved `ell=65`, regardless of trajectory length. Thus
-cross-precision/radius reserves never compare corrections built from different
-counter vectors. Audits charge oracle/factorization work but not a trajectory
-iteration, and their `ell`, `c` and `v` remain trace fields.
+The initial projected-operator step-safety audit uses coefficient counter
+`ell=1`. Actual trajectories use their local iteration in `1:64`; the
+order-persistence start audit and all final unapplied-correction/B audits use
+the reserved `ell=65`, regardless of trajectory length. Thus start/final and
+cross-precision/radius comparisons never use different counter vectors. Audits
+charge oracle/factorization work but not a trajectory iteration, and their
+`ell`, `c` and `v` remain trace fields.
 
 The final artifact also freezes the S3-style conservative error construction:
 configuration error is 16 times the maximum of both final steps, cross-precision
