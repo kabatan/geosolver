@@ -44,3 +44,24 @@ the frozen route.
 
 Locked inputs do not exist.  They may be specified by a result-blind author only
 after a complete development pass under the rule in the amendment.
+
+## Terminal formal-attempt appendix
+
+The text above records the frozen preimplementation state.  Candidate and
+formal-harness source were subsequently frozen and launched, but the development
+attempt terminated in the frozen safety assessor on a JSON numeric-representation
+contract mismatch before K0 preflight.  No K0 or K1 segment ran, the partial
+archive contains zero segment traces and no terminal capture receipt, and the
+independent host observation recorded contention and a monitor failure.
+
+The post-outcome safety-only replay under
+`research/results/EXP-JAC-003/development-failed-v0/` is forensic diagnosis only.
+Its numerical aggregate is not part of the experiment evidence register or
+negative-result claim.  It does not establish candidate correctness, formal
+safety, efficacy, speed, or algorithmic failure.
+
+`EXP-JAC-003` is terminal: no retry under this ID, no locked validation,
+`locked=false`, and `product_connected=false`.  Reopening the research question
+requires a new experiment ID with a preregistered serialization/assessor
+contract, a clean host receipt, successful safety and exact-K0 preflights, and a
+complete ABBA development run before any locked or product gate.

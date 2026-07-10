@@ -20,6 +20,8 @@ The ledger prevents recurring mistakes including:
    endpoint-wide work budget as a development success.
 7. advancing a singular route whose final applicability decision changes under
    an equivalent orthogonal coordinate representation.
+8. treating a post-outcome safety replay as a substitute for a formal run that
+   stopped before its control and ABBA segments.
 
 Rejected production code is deleted, while the card, counterexample generator,
 compact result, decision and artifact hashes remain.

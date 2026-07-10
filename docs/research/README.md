@@ -6,6 +6,7 @@
 - [Evidence priors](EVIDENCE.md)
 - [High-precision and singular-path audit](HIGH_PRECISION_SINGULAR_AUDIT.md)
 - [EXP-JAC-002 terminal protocol deviation](EXP-JAC-002.md)
+- [EXP-JAC-003 terminal formal-protocol failure](EXP-JAC-003.md)
 - [Failure taxonomy](FAILURES.md)
 - [Miss Analyzer v0.2](MISS_ANALYZER.md)
 - [QA-02 deterministic fuzz and metamorphic gate](QA02_FUZZ_METAMORPHIC.md)
