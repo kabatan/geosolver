@@ -430,15 +430,15 @@ function _dense_instance(partition, index, instance_seed, start_seed; locked=fal
 end
 
 function generated_instances(partition::Symbol)
-    count, prefix, instance_base, start_base = if partition === :development
-        (DEVELOPMENT_COUNT, "development", 110_000, 210_000)
+    family_counts, prefix, instance_base, start_base = if partition === :development
+        ((4, 3, 3), "development", 110_000, 210_000)
     elseif partition === :locked
-        (LOCKED_COUNT, "locked", 910_000, 1_010_000)
+        ((10, 10, 10), "locked", 910_000, 1_010_000)
     else
         throw(ArgumentError("partition must be development or locked"))
     end
     instances = GeneratedInstance[]
-    for family in 1:3, index in 1:count
+    for family in 1:3, index in 1:family_counts[family]
         instance_seed = instance_base + 10_000family + index
         start_seed = start_base + 10_000family + index
         generator = family == 1 ? _diagonal_instance : family == 2 ? _banded_instance : _dense_instance
@@ -453,6 +453,8 @@ function generated_instances(partition::Symbol)
             ),
         )
     end
+    length(instances) == (partition === :development ? DEVELOPMENT_COUNT : LOCKED_COUNT) ||
+        error("partition seed count drift")
     return instances
 end
 

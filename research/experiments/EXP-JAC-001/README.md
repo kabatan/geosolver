@@ -26,3 +26,7 @@ After committing the frozen inputs, the development orchestrator is run with
 individual fallback probes, trials, and canonical endpoint replay, is charged.
 The result artifact records compiler/color construction, allocations,
 factorizations, callback/oracle work, and cold/warm wall measurements.
+
+The card's seed counts are experiment totals: development has ten cases
+(4 block, 3 banded, 3 dense/branch, covering every declared factor level) and
+locked validation has thirty cases (10 per disjoint held-out family).
