@@ -187,12 +187,18 @@ function _s4_power(value::T, degree::Int, coefficient::T, reordered::Bool) where
     return result
 end
 
-function _s4_raw_residual(::Type{T}, local, spec, coupling, reordered::Bool) where {T}
+function _s4_raw_residual(
+    ::Type{T},
+    local_coordinates,
+    spec,
+    coupling,
+    reordered::Bool,
+) where {T}
     raw = zeros(T, spec.dimension)
     if spec.mode in (:isolated, :higher_depth, :regular_fold)
         nonlinear = zeros(T, spec.nullity)
         for column in 1:spec.nullity
-            value = local[spec.retained + column]
+            value = local_coordinates[spec.retained + column]
             coefficient = T(spec.coefficients[column])
             nonlinear[column] = _s4_power(
                 value,
@@ -208,7 +214,7 @@ function _s4_raw_residual(::Type{T}, local, spec, coupling, reordered::Bool) whe
             end
         end
         for row in 1:spec.retained
-            value = local[row]
+            value = local_coordinates[row]
             order = reordered ? (spec.nullity:-1:1) : (1:spec.nullity)
             for column in order
                 value += T(coupling[row, column]) * nonlinear[column]
@@ -219,7 +225,7 @@ function _s4_raw_residual(::Type{T}, local, spec, coupling, reordered::Bool) whe
     else
         for row in 1:spec.dimension
             coefficient = T(isodd(row) ? row : -row)
-            raw[row] = coefficient * local[1]
+            raw[row] = coefficient * local_coordinates[1]
         end
         if spec.mode === :nonroot
             raw[end] += T(spec.inconsistency)
@@ -228,7 +234,7 @@ function _s4_raw_residual(::Type{T}, local, spec, coupling, reordered::Bool) whe
     return raw
 end
 
-function _s4_raw_jacobian(::Type{T}, local, spec, coupling) where {T}
+function _s4_raw_jacobian(::Type{T}, local_coordinates, spec, coupling) where {T}
     jacobian = zeros(T, spec.dimension, spec.dimension)
     if spec.mode in (:isolated, :higher_depth, :regular_fold)
         for row in 1:spec.retained
@@ -236,7 +242,7 @@ function _s4_raw_jacobian(::Type{T}, local, spec, coupling) where {T}
         end
         for column in 1:spec.nullity
             local_index = spec.retained + column
-            value = local[local_index]
+            value = local_coordinates[local_index]
             derivative = T(spec.coefficients[column]) * T(spec.degree) *
                          value^(spec.degree - 1)
             jacobian[local_index, local_index] = derivative
@@ -252,13 +258,20 @@ function _s4_raw_jacobian(::Type{T}, local, spec, coupling) where {T}
     return jacobian
 end
 
-function _s4_raw_second_directional(::Type{T}, local, a, b, spec, coupling) where {T}
+function _s4_raw_second_directional(
+    ::Type{T},
+    local_coordinates,
+    a,
+    b,
+    spec,
+    coupling,
+) where {T}
     result = zeros(T, spec.dimension)
     spec.mode in (:isolated, :higher_depth, :regular_fold) || return result
     nonlinear = zeros(T, spec.nullity)
     for column in 1:spec.nullity
         local_index = spec.retained + column
-        value = local[local_index]
+        value = local_coordinates[local_index]
         nonlinear[column] = T(spec.coefficients[column]) * T(spec.degree) *
                             T(spec.degree - 1) * value^(spec.degree - 2) *
                             a[local_index] * b[local_index]
@@ -313,20 +326,20 @@ function _s4_system_case(spec, representation::AbstractString)
         length(z) == spec.dimension || throw(DimensionMismatch("S4 residual input"))
         q = _matrix_for_type(T, variable_transform)
         p = _matrix_for_type(T, residual_transform)
-        local = transpose(q) * z
-        raw = _s4_raw_residual(T, local, spec, coupling, reordered)
+        local_coordinates = transpose(q) * z
+        raw = _s4_raw_residual(T, local_coordinates, spec, coupling, reordered)
         return p * raw
     end
     function target(z::AbstractVector{T}) where {T<:Real}
         length(z) == spec.dimension || throw(DimensionMismatch("S4 target input"))
-        local = transpose(_matrix_for_type(T, variable_transform)) * z
+        local_coordinates = transpose(_matrix_for_type(T, variable_transform)) * z
         if spec.target_mode === :constant_manifold
-            return T(1) / T(8) + local[1]
+            return T(1) / T(8) + local_coordinates[1]
         elseif spec.target_mode === :varying_manifold
-            return local[end]
+            return local_coordinates[end]
         end
         return T(3) / T(8) + sum(
-            T(target_coefficients[index]) * local[index] for
+            T(target_coefficients[index]) * local_coordinates[index] for
             index in 1:spec.dimension
         )
     end
@@ -334,8 +347,8 @@ function _s4_system_case(spec, representation::AbstractString)
         length(z) == spec.dimension || throw(DimensionMismatch("S4 Jacobian input"))
         q = _matrix_for_type(T, variable_transform)
         p = _matrix_for_type(T, residual_transform)
-        local = transpose(q) * z
-        return p * _s4_raw_jacobian(T, local, spec, coupling) * transpose(q)
+        local_coordinates = transpose(q) * z
+        return p * _s4_raw_jacobian(T, local_coordinates, spec, coupling) * transpose(q)
     end
     function analytic_second_directional(
         z::AbstractVector{T},
@@ -351,12 +364,12 @@ function _s4_system_case(spec, representation::AbstractString)
         )
         q = _matrix_for_type(T, variable_transform)
         p = _matrix_for_type(T, residual_transform)
-        local = transpose(q) * z
+        local_coordinates = transpose(q) * z
         first_local = transpose(q) * T[first_direction...]
         second_local = transpose(q) * T[second_direction...]
         raw = _s4_raw_second_directional(
             T,
-            local,
+            local_coordinates,
             first_local,
             second_local,
             spec,
@@ -445,8 +458,8 @@ function _s4_system_case(spec, representation::AbstractString)
         ()
     end
     isolated_configurations = Tuple(
-        Tuple(Float64.(variable_transform) * local) for
-        local in local_isolated_configurations
+        Tuple(Float64.(variable_transform) * local_configuration) for
+        local_configuration in local_isolated_configurations
     )
     isolated_targets = Tuple(
         Float64(target(collect(configuration))) for
@@ -582,11 +595,12 @@ function s4_development_gold_document(cases=s4_development_cases())
     )
 end
 
-function _assert_s4_preimplementation_state()
+function _assert_s4_preimplementation_state(; source_directory::AbstractString=@__DIR__)
+    frozen_source_directory = normpath(String(source_directory))
     forbidden = (
-        normpath(joinpath(@__DIR__, "s4", "candidate.jl")),
-        normpath(joinpath(@__DIR__, "s4", "analytic_control.jl")),
-        normpath(joinpath(@__DIR__, "s4", "development.jl")),
+        normpath(joinpath(frozen_source_directory, "s4", "candidate.jl")),
+        normpath(joinpath(frozen_source_directory, "s4", "analytic_control.jl")),
+        normpath(joinpath(frozen_source_directory, "s4", "development.jl")),
     )
     for path in forbidden
         isfile(path) && error("S4 input freeze must precede candidate source: $path")
