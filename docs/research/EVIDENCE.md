@@ -17,5 +17,11 @@ is explicitly marked as reproduced and links to its replay artifacts.
 | EVID-09 | A direct typed kernel matched a reference to about 1e-15 and indicated large speed potential. | Compiler economics precede global-policy selection. |
 | EVID-10 | Primitive registries/backends were fragmented and branch names leaked across layers. | Plugin conformance and Core/Geometry separation are gates. |
 | EVID-11 | Dynamic safe evaluation was materially slower and semantically brittle. | No eval/dynamic expression execution in production kernels. |
+
+## Reproduced current evidence
+
+| ID | Reproduced observation | Decision |
+|---|---|---|
 | EVID-12 | The preregistered dimension/rank/condition LM/TR route improved development P_local_gold by 0.65 points with no truth regression, but its fully charged warm wall was 3.03 times the simple TR control. | Reject ROUTE-LMTR-A1 at the development freeze gate; do not materialize locked inputs. |
-| EVID-13 | **Reproduced:** EXP-JAC-001 found zero dense/colored mismatches and 43.81% sparse oracle-work reduction, but 14.78% dense warm overhead and 25.48% maximum cold-coloring fraction failed the registered gates. | Keep coloring dormant and production dense; see `research/results/EXP-JAC-001/summary.json`. |
+| EVID-13 | EXP-JAC-001 found zero dense/colored mismatches and 43.81% sparse oracle-work reduction, but 14.78% dense warm overhead and 25.48% maximum cold-coloring fraction failed the registered gates. | Keep coloring dormant and production dense; see `research/results/EXP-JAC-001/summary.json`. |
+| EVID-16 | In `EXP-SINGULAR-001`, C2 point replay accepted the fixed near-null residual at a target-wrong endpoint, while S0 correctly remained diagnostic-only. Charged adaptive-precision S1 recovered all 48/48 regular/near-rank development endpoints with zero false promotions, zero empirical error-undercoverage and zero metamorphic decision disagreements; four double-root diagnostics exhausted their bounded iteration budgets and were not promoted. | Point semantic replay is permanently insufficient for answer promotion. Continue to S2 under the recorded development gate; do not connect S1 to the product before later routes and locked validation. |

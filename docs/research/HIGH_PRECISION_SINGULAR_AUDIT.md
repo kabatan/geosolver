@@ -140,6 +140,26 @@ does not change discovery, archive, target deduplication, or exact algebraic
 promotion. A variant may be specialized to a diagnosed stratum; no universal
 singular rescue is assumed in advance.
 
+## S0/S1 development update
+
+The frozen 72-instance development grid was executed after the harness and
+input manifests were committed. This is an advancement gate only: locked
+validation is false and no product runner is connected.
+
+| Variant | Phase-A Gold success | Promoted | False promotions | Callbacks | Precision-equivalent work |
+|---|---:|---:|---:|---:|---:|
+| S0 point replay | 0/48 | 0 | 0 | 144 | 688 |
+| S1 adaptive-precision dense LM-QR | 48/48 | 48 | 0 | 5,442 | 26,204 |
+| Analytic-Jacobian lower bound | 48/48 | 48 | 0 | 2,616 | 11,367 |
+
+All promoted S1 configuration/target estimates contained Gold, and all twelve
+near-rank metamorphic groups agreed. Eight inconsistent nonroots, eight
+manifold controls and four C0 cases remained unpromoted. Four double-root
+diagnostics exhausted the declared iteration budget and remained unknown;
+therefore S1 does not resolve the singular-root objective by itself. The
+independent Python analysis reproduced the Julia summary and advanced the
+experiment to `S2-AP-CPQR-SUBSET`, not to locked validation or product use.
+
 ## Verification performed for the repair
 
 - `julia --project=julia julia/integration/solver_runtests.jl`: green, including
