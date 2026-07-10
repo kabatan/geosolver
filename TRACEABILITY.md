@@ -34,6 +34,22 @@ Every milestone records artifacts, quantitative results and a rollback point.
 Failure to pass a gate reverts to the prior champion; gates are never loosened to
 promote an implementation.
 
+## Current RES-06 / QA-02 evidence
+
+The deterministic generator and process runner in `julia/qa/` implement the
+10,000 graph-evaluation and 1,000 bounded-solve Nightly minimum.  Coverage
+includes reference/compiled C0 and C2 differential semantics, opaque values,
+domains, guards, finite branches, ordering, equivalent graph form, CSE, safe
+DCE, residual scaling, redundancy, branch order and target affine maps.  Solve
+cycles check generated analytic truth, canonical checkpoint resume, replay,
+budgets, RNG and precision isolation.  The frozen full-count rehearsal and its
+checksum are recorded in `docs/research/QA02_FUZZ_METAMORPHIC.md` and
+`research/results/QA-02/nightly-rehearsal-v1.json`.
+
+This is evidence for the QA-02 safety/count requirement and the listed RES-06
+metamorphisms only.  It is not evidence that locked benchmark recall or the
+M9/M10 release gates are complete.
+
 ## Current RES-03 evidence
 
 The M3 Miss Analyzer has an implemented v0.1 vertical slice: strict diagnostic
