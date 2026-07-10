@@ -164,6 +164,7 @@ def validate_card_semantics(
         "completed": {"promoted", "specialized", "rejected"},
         "promoted": {"promoted", "specialized"},
         "rejected": {"rejected"},
+        "terminated": {"inconclusive"},
     }
     decision = card["decision"]
     if decision["state"] not in allowed_decisions[card["status"]]:
@@ -183,6 +184,8 @@ def validate_card_semantics(
         errors.append(
             f"{card_id}: final decision requires rationale and decision_commit"
         )
+    if decision["state"] == "inconclusive" and decision["selected_variant"] is not None:
+        errors.append(f"{card_id}: inconclusive decision cannot select a variant")
     if "RES-01" not in card["requirements"] or "RES-02" not in card["requirements"]:
         errors.append(f"{card_id}: RES-01 and RES-02 are mandatory")
 

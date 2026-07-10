@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import copy
 import importlib.util
+import json
 import unittest
 from pathlib import Path
 
@@ -88,6 +90,84 @@ class SchemaSubsetTests(unittest.TestCase):
         duplicated_negative = {"entries": [valid["entries"][0], valid["entries"][0]]}
         errors = VALIDATE.validate_evidence_links(duplicated_negative, evidence)
         self.assertTrue(any("NEG-001 occurs 2 times" in error for error in errors))
+
+
+class ExperimentTerminalStateTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        card_path = VALIDATE.CARD_DIR / "EXP-JAC-003.json"
+        cls.base_card = json.loads(card_path.read_text(encoding="utf-8"))
+        cls.literature_text = VALIDATE.LITERATURE.read_text(encoding="utf-8")
+        cls.failure_ids = VALIDATE.failure_ids_from_markdown(
+            VALIDATE.FAILURES.read_text(encoding="utf-8")
+        )
+        cls.schema = VALIDATE.load_json(
+            VALIDATE.SCHEMA_DIR / "experiment-card.schema.json"
+        )
+
+    def terminal_card(self) -> dict[str, object]:
+        card = copy.deepcopy(self.base_card)
+        card["status"] = "terminated"
+        card["decision"] = {
+            "state": "inconclusive",
+            "selected_variant": None,
+            "rationale": "The frozen experiment ended before producing decision evidence.",
+            "decision_commit": "0123456789abcdef",
+        }
+        return card
+
+    def semantic_errors(self, card: dict[str, object]) -> list[str]:
+        return VALIDATE.validate_card_semantics(
+            card, self.literature_text, self.failure_ids
+        )
+
+    def test_terminated_inconclusive_is_schema_and_semantically_valid(self) -> None:
+        card = self.terminal_card()
+        self.assertEqual(
+            VALIDATE.validate_instance(card, self.schema, root_schema=self.schema), []
+        )
+        self.assertEqual(self.semantic_errors(card), [])
+
+    def test_terminated_allows_only_inconclusive_decision(self) -> None:
+        card = self.terminal_card()
+        card["decision"]["state"] = "rejected"
+        errors = self.semantic_errors(card)
+        self.assertTrue(
+            any(
+                "status terminated is inconsistent with decision rejected" in error
+                for error in errors
+            )
+        )
+
+    def test_inconclusive_is_allowed_only_for_terminated_status(self) -> None:
+        card = self.terminal_card()
+        card["status"] = "completed"
+        errors = self.semantic_errors(card)
+        self.assertTrue(
+            any(
+                "status completed is inconsistent with decision inconclusive" in error
+                for error in errors
+            )
+        )
+
+    def test_inconclusive_cannot_select_a_variant(self) -> None:
+        card = self.terminal_card()
+        card["decision"]["selected_variant"] = "JAC-CACHED"
+        errors = self.semantic_errors(card)
+        self.assertIn(
+            "EXP-JAC-003: inconclusive decision cannot select a variant", errors
+        )
+
+    def test_inconclusive_requires_rationale_and_decision_commit(self) -> None:
+        for missing_field in ("rationale", "decision_commit"):
+            with self.subTest(missing_field=missing_field):
+                card = self.terminal_card()
+                card["decision"][missing_field] = None
+                errors = self.semantic_errors(card)
+                self.assertIn(
+                    "EXP-JAC-003: final decision requires rationale and decision_commit",
+                    errors,
+                )
 
 
 if __name__ == "__main__":

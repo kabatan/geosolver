@@ -35,7 +35,14 @@
     "id": {"type": "string", "pattern": "^EXP-[A-Z]+-[0-9]{3}$"},
     "title": {"type": "string", "minLength": 8},
     "status": {
-      "enum": ["preregistered", "running", "completed", "promoted", "rejected"]
+      "enum": [
+        "preregistered",
+        "running",
+        "completed",
+        "promoted",
+        "rejected",
+        "terminated"
+      ]
     },
     "requirements": {
       "type": "array",
@@ -167,7 +174,15 @@
       "additionalProperties": false,
       "required": ["state", "selected_variant", "rationale", "decision_commit"],
       "properties": {
-        "state": {"enum": ["pending", "promoted", "specialized", "rejected"]},
+        "state": {
+          "enum": [
+            "pending",
+            "promoted",
+            "specialized",
+            "rejected",
+            "inconclusive"
+          ]
+        },
         "selected_variant": {"type": ["string", "null"]},
         "rationale": {"type": ["string", "null"]},
         "decision_commit": {"type": ["string", "null"]}
