@@ -41,13 +41,23 @@ differentiated analytic control. Higher-depth singularities, manifolds,
 nonroots and regular close roots are mandatory non-promotion controls. S4 is
 still product-disconnected and has no locked inputs.
 
-`s4-protocol-amendment-a1.json` closes all numerical choices before input
-materialization. `src/s4_inputs.jl` is input-only: it defines the 12 groups and
-the exact three representations plus isolated analytic Jacobian and
-second-directional fixtures,
+`s4-protocol-amendment-a1.json` closes the initial numerical choices before
+input materialization. A later static review of the already committed input
+scaffold found that SVD-basis rotation made its audit probe coordinate-dependent;
+`s4-protocol-amendment-a2.json` binds A1 and that scaffold, then replaces only
+the audit direction with a transported physical probe. No input, Gold, outcome
+or candidate implementation existed when A2 was frozen.
+
+`src/s4_inputs.jl` is input-only: it defines the 12 groups and the exact three
+representations plus isolated analytic Jacobian and second-directional fixtures,
 but deliberately defines no `run_s4`, route, two-step map or evidence. The
 one-shot `prepare_s4_development.jl` refuses to run after candidate/control
 source exists and refuses to overwrite a frozen manifest. Candidate inputs do
 not embed Gold: all isolated configurations (including both regular-fold
 roots) and targets are written to the separately hashed, analysis-only
 `s4-development-gold.json`.
+
+The future input manifest must bind the preregistration, final A1, A2, generator
+scaffold commit/source and current manifest-builder source hashes. Candidate or
+control implementation may begin only after that manifest and Gold artifact are
+committed together as the input freeze.

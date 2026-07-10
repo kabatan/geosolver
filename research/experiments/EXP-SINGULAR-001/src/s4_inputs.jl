@@ -601,7 +601,16 @@ function s4_development_input_document(
         "research/experiments/EXP-SINGULAR-001/s4-development-gold.json",
     card_path=normpath(joinpath(@__DIR__, "..", "..", "EXP-SINGULAR-001.json")),
     preregistration_path=normpath(joinpath(@__DIR__, "..", "s4-preregistration.json")),
-    amendment_path=normpath(joinpath(@__DIR__, "..", "s4-protocol-amendment-a1.json")),
+    amendment_a1_path=normpath(joinpath(
+        @__DIR__,
+        "..",
+        "s4-protocol-amendment-a1.json",
+    )),
+    amendment_a2_path=normpath(joinpath(
+        @__DIR__,
+        "..",
+        "s4-protocol-amendment-a2.json",
+    )),
     parent_summary_path=normpath(joinpath(
         @__DIR__,
         "..",
@@ -620,7 +629,8 @@ function s4_development_input_document(
         all(character -> character in "0123456789abcdef", frozen_gold_sha256) ||
         throw(ArgumentError("Gold artifact SHA-256 must contain 64 hex digits"))
     return Dict{String,Any}(
-        "amendment_sha256" => bytes2hex(sha256(read(amendment_path))),
+        "amendment_a1_sha256" => bytes2hex(sha256(read(amendment_a1_path))),
+        "amendment_a2_sha256" => bytes2hex(sha256(read(amendment_a2_path))),
         "analytic_control_fixture" => "analytic_second_directional(x,v,w)",
         "candidate_implementation_present" => false,
         "card_path" => replace(relpath(card_path, repo_root), '\\' => '/'),
@@ -632,6 +642,10 @@ function s4_development_input_document(
         "gold_artifact_path" => String(gold_artifact_path),
         "gold_artifact_sha256" => frozen_gold_sha256,
         "gold_values_embedded" => false,
+        "generator_scaffold_commit" =>
+            "658f9f6bd0a889e68c6fbcab6d737449e91c92ec",
+        "generator_scaffold_source_sha256" =>
+            "b364801483a338787b80558a3dabe197bcea40ef49049e4072b747e506f04593",
         "harness_version" => string(HARNESS_VERSION),
         "input_source_sha256" => bytes2hex(sha256(read(@__FILE__))),
         "locked_inputs_materialized" => false,

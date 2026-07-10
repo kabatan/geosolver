@@ -60,6 +60,17 @@ precisions without a radius. This scale-cancelling gate reads no family, id or
 Gold and is independent of the regular-fold midpoint counterexample. It is an
 observable applicability predicate, not a deflation-depth proof.
 
+After the input-only generator scaffold was committed, a further static audit
+found that reusing the same coordinate vector `c65` in independently chosen SVD
+bases does not fix the same physical direction. A2 records this chronology and
+changes only audit probes: each trajectory constructs `v_ref` from its frozen
+256-bit start reference, then projects and renormalizes that physical direction
+inside each accepted start/final basis. The subspace angle and projection loss
+are traced and fail closed. Sorted B spectra are then invariant to orthogonal
+left/right basis rotations. Actual iteration probes remain unchanged. No input,
+Gold artifact, candidate/control implementation or outcome existed at the A2
+boundary, and generator strata/values did not change.
+
 The candidate route makes four finite-difference probes (128/256 bits crossed
 with radius 1/0.5) and compares the other three left/right nullspaces to the
 fixed `(256, 0.5)` reference. The analytic control instead makes two analytic
