@@ -1,4 +1,4 @@
-const SOLVE_API_VERSION = v"1.2.0"
+const SOLVE_API_VERSION = v"1.3.0"
 
 struct SolveConfigurationError <: CoreError
     code::Symbol
@@ -734,15 +734,25 @@ end
 function _finish_execution(
     context::ExecutionContext,
     search::SearchLoopResult;
+    compiled::CompiledProblem,
     evidence_path::Union{Nothing,AbstractString}=nothing,
     target_image_override::Union{Nothing,TargetImageStatus}=nothing,
 )
+    provisional = _provisional_answers(context.workspace.candidates)
+    exact = _exact_answers(context.workspace.candidates)
+    for answer in exact
+        verification = verify_exact_answer(compiled, answer)
+        verification.accepted || throw(
+            SolveConfigurationError(
+                :exact_certificate_replay_failed,
+                "stored exact answer failed independent replay: $(verification.failure): $(verification.detail)",
+            ),
+        )
+    end
     evidence = _evidence_json(context)
     digest = content_hash(evidence)
     location = evidence_path === nothing ?
                "memory:$(string(digest))" : _write_evidence(evidence_path, evidence)
-    provisional = _provisional_answers(context.workspace.candidates)
-    exact = _exact_answers(context.workspace.candidates)
     target_status = if target_image_override !== nothing
         target_image_override
     else
@@ -786,6 +796,13 @@ function _rational_certificate_document(value::Rational{BigInt})
     )
 end
 
+const _LITERAL_CONFIGURATION_CERTIFICATE_SCHEME = "literal_configuration_v1"
+const _LITERAL_CONFIGURATION_CERTIFICATE_SCHEMA =
+    "geotarget.literal-configuration-certificate/v1"
+const _LITERAL_TARGET_CERTIFICATE_SCHEME = "literal_linear_target_v1"
+const _LITERAL_TARGET_CERTIFICATE_SCHEMA =
+    "geotarget.literal-linear-target-certificate/v1"
+
 function _exact_constant_answer(
     compiled::CompiledProblem,
     validation::CandidateValidationResult,
@@ -815,7 +832,7 @@ function _exact_constant_answer(
         "configuration" => string(validation.configuration),
         "constraint_count" => 0,
         "problem" => string(validation.problem),
-        "schema" => "geotarget.literal-configuration-certificate/v1",
+        "schema" => _LITERAL_CONFIGURATION_CERTIFICATE_SCHEMA,
     ))
     target_payload = canonical_json(Dict{String,Any}(
         "isolating_interval" => Dict{String,Any}(
@@ -825,14 +842,14 @@ function _exact_constant_answer(
         "polynomial_ascending" => Any[string(-numerator_value), string(denominator_value)],
         "problem" => string(validation.problem),
         "real_root_index" => 1,
-        "schema" => "geotarget.literal-linear-target-certificate/v1",
+        "schema" => _LITERAL_TARGET_CERTIFICATE_SCHEMA,
         "target" => _rational_certificate_document(rational),
     ))
     configuration_certificate = ConfigurationValidityCertificate(
         validation.problem,
         validation.configuration,
         CertificateArtifact(
-            "literal_configuration_v1",
+            _LITERAL_CONFIGURATION_CERTIFICATE_SCHEME,
             configuration_payload;
             media_type="application/json",
         ),
@@ -841,7 +858,7 @@ function _exact_constant_answer(
         validation.problem,
         identity,
         CertificateArtifact(
-            "literal_linear_target_v1",
+            _LITERAL_TARGET_CERTIFICATE_SCHEME,
             target_payload;
             media_type="application/json",
         ),
@@ -871,6 +888,10 @@ function _constant_search!(
     record_event!(context.events, EVENT_PROPOSED, proposal)
     validation = validate_candidate(compiled, Real[]; options=options._validation)
     exact = validation.accepted ? _exact_constant_answer(compiled, validation, options) : nothing
+    exact_verification = exact === nothing ? nothing : verify_exact_answer(compiled, exact)
+    if exact_verification !== nothing && !exact_verification.accepted
+        exact = nothing
+    end
     payload = exact === nothing ? validation.provisional : exact
     target = validation.accepted ? _validation_target(validation) : nothing
     target_identity = if !validation.accepted
@@ -893,7 +914,12 @@ function _constant_search!(
         residual_score=validation.accepted ? Float64(validation.provisional.canonical_residual_bound) : Inf,
         oracle_work=validation.oracle_work,
         endpoint=(),
-        diagnostic=validation.accepted ? "constant canonical validation" : string(validation.failure),
+        diagnostic=validation.accepted ? string(
+            "constant canonical validation;exact_verification=",
+            exact_verification === nothing ?
+            "not_requested" : exact_verification.accepted ?
+            "accepted" : string("rejected:", exact_verification.failure),
+        ) : string(validation.failure),
     )
     _record_charge!(context, BudgetCharge(oracle_work=validation.oracle_work))
     insert_candidate!(context.workspace.candidates, proposal, observation)
@@ -1007,7 +1033,13 @@ function solve_execution(
         end
         loop_result
     end
-    return _finish_execution(context, search; evidence_path, target_image_override)
+    return _finish_execution(
+        context,
+        search;
+        compiled,
+        evidence_path,
+        target_image_override,
+    )
 end
 
 function solve(

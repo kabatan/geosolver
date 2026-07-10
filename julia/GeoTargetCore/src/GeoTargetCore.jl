@@ -23,6 +23,7 @@ include("search_loop.jl")
 include("proposal_engine.jl")
 include("checkpoint_json.jl")
 include("solver.jl")
+include("exact_verification.jl")
 
 """Return the stable plugin ABI version understood by this Core build."""
 abi_version() = CORE_ABI_VERSION
@@ -184,6 +185,15 @@ export CORE_ABI_VERSION,
     CandidateValidationDiagnostic,
     CandidateValidationOptions,
     CandidateValidationResult,
-    validate_candidate
+    validate_candidate,
+    ExactVerificationFailure,
+    EXACT_VERIFICATION_NONE,
+    EXACT_VERIFICATION_UNSUPPORTED_SCHEME,
+    EXACT_VERIFICATION_PROBLEM_MISMATCH,
+    EXACT_VERIFICATION_CONFIGURATION_MISMATCH,
+    EXACT_VERIFICATION_TARGET_MISMATCH,
+    EXACT_VERIFICATION_ARTIFACT_INVALID,
+    ExactVerificationResult,
+    verify_exact_answer
 
 end
