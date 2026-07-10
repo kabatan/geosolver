@@ -1,0 +1,367 @@
+{
+  "schema_version": "1.0.0",
+  "id": "EXP-JAC-003",
+  "title": "Research-only cached Jacobian provider with end-to-end routing",
+  "status": "preregistered",
+  "requirements": [
+    "GOAL-01",
+    "GOAL-02",
+    "GOAL-04",
+    "GOAL-05",
+    "ARCH-02",
+    "ARCH-03",
+    "RES-01",
+    "RES-02",
+    "RES-04",
+    "RES-05",
+    "RES-06"
+  ],
+  "failure_ids": ["F1", "F2", "F3", "F5", "F7", "F9", "F17", "F18"],
+  "baseline_id": "RB0-IID-LMQR-1",
+  "objective": "Test whether compiler-derived coloring cached behind an unexported research-only Jacobian-provider seam and selected by a frozen identity-free structural route improves fully charged end-to-end local-solver performance without changing the public solver surface, canonical semantics, recall, fallback safety or black-box DSL expressivity.",
+  "hypothesis": "Against the unchanged public dense solve_local control, a research-only cached-and-routed provider will reduce fully charged end-to-end wall by at least ten percent and oracle work by at least twenty percent on three new unrelated sparse black-box families, while keeping dense controls within five percent overhead and preserving zero semantic and recall regressions.",
+  "scope": {
+    "included": [
+      "The unchanged exported solve_local dense finite-difference control",
+      "Removal of the EXP-JAC-002 prepared_coloring public keyword before any candidate run",
+      "One behavior-preserving unexported internal Jacobian-provider kernel shared by the public dense path and research extension",
+      "A sealed immutable compiler-derived natural coloring constructed once per compiled research runner",
+      "The unchanged JAC002 structural-only route formula over n, residual count, structural nonzeros and color count",
+      "Central grouped probes, one-sided bound handling, every affected-column fallback and unchanged canonical endpoint replay",
+      "Counterbalanced host-exclusive fresh-process wall measurement including compile, provider construction and all 32 starts"
+    ],
+    "excluded": [
+      "Any EXP-JAC-002 graph, matrix, start, seed, family or serialized input as a development or locked observation",
+      "Any exported Jacobian-provider type, function, keyword or public solve option",
+      "Any _CompiledAttemptRunner, solve protocol, SOLVE_API_VERSION, wire schema or checkpoint identity connection before locked pass",
+      "Retuning the route formula, finite-difference step, local stopping policy or recall tolerance from observed outcomes",
+      "Automatic differentiation, analytic Jacobians, Hessian coloring or sampled sparsity discovery",
+      "Using cache-only microbenchmarks as promotion or kill criteria"
+    ]
+  },
+  "literature": [
+    {
+      "id": "LIT-COLEMAN-MORE-COLORING",
+      "url": "https://doi.org/10.1137/0720013",
+      "claim": "Structurally noninterfering finite-difference Jacobian columns can be grouped through coloring of the column-intersection graph.",
+      "assumptions": "The structural sparsity pattern conservatively contains every represented derivative and decompression maps each entry to the correct column.",
+      "break_conditions": "An omitted dependency or overlapping same-color support silently corrupts a derivative."
+    },
+    {
+      "id": "LIT-SPARSE-PRECOMPUTED-COLORVEC",
+      "url": "https://docs.sciml.ai/SparseDiffTools/stable/sparsedifftools/",
+      "claim": "A precomputed color vector can separate reusable structural preparation from repeated sparse derivative evaluations.",
+      "assumptions": "The structure and color vector remain immutable and belong to exactly one compiled problem.",
+      "break_conditions": "Cross-problem reuse, mutable supports or per-attempt reconstruction invalidates semantics or economics."
+    },
+    {
+      "id": "LIT-JULIA-PERF",
+      "url": "https://docs.julialang.org/en/v1/manual/performance-tips/",
+      "claim": "Julia performance measurements must distinguish compilation and specialization effects from warm kernel execution and use deliberate function barriers.",
+      "assumptions": "Compilation, allocation and runtime costs are all recorded under the target Julia version.",
+      "break_conditions": "First-use compilation or tuple-length specialization is omitted from the claimed end-to-end cost."
+    }
+  ],
+  "controls": [
+    {
+      "id": "K0-DENSE-PUBLIC",
+      "role": "control",
+      "description": "The exported solve_local public path with normalized column-wise central finite differences and no research provider.",
+      "differences_from_baseline": []
+    },
+    {
+      "id": "KA-REBUILD-ATTRIBUTION",
+      "role": "control",
+      "description": "A report-only research attribution probe that reconstructs coloring per attempt on one frozen case and eight starts per eligible family.",
+      "differences_from_baseline": [
+        "Research-only grouped probes",
+        "Per-attempt coloring",
+        "Non-gating fixed attribution subset"
+      ]
+    },
+    {
+      "id": "KNEG-INCOMPLETE-PATTERN",
+      "role": "negative_control",
+      "description": "A test-only omitted compiler dependency that must be detected by frozen dense differential comparison.",
+      "differences_from_baseline": ["Deliberately incomplete research-only pattern"]
+    }
+  ],
+  "candidates": [
+    {
+      "id": "K1-CACHED-ROUTED",
+      "role": "candidate",
+      "description": "A sealed cached natural coloring supplied only through the unexported provider kernel and selected by the frozen structural-only route.",
+      "differences_from_baseline": [
+        "One immutable verified coloring per compiled research runner",
+        "Identity-free static route",
+        "Grouped finite-difference probes on eligible structures",
+        "Individual-column fallback on every unusable group"
+      ]
+    }
+  ],
+  "synthetic_families": [
+    {
+      "id": "JAC3-TRIG-TREE",
+      "purpose": "Exercise arbitrary differentiable black-box plugin primitives on shuffled tree dependencies with bounded color count.",
+      "factors": {
+        "branching_factor": [2, 3],
+        "depth": [2, 3, 4],
+        "trig_amplitude": [0.02, 0.2]
+      },
+      "gold_source": "Independent analytic roots and Jacobians for a new sine-and-cosine tree plugin",
+      "counterexample_for": [
+        "Polynomial-only assumptions",
+        "One-dimensional band assumptions",
+        "Loss of black-box DSL expressivity"
+      ]
+    },
+    {
+      "id": "JAC3-RATIONAL-HYPERGRAPH",
+      "purpose": "Measure coloring and fallback on smooth safe-rational residuals with irregular overlapping hyperedges.",
+      "factors": {
+        "dimension": [7, 13, 23],
+        "hyperedge_width": [2, 3, 5],
+        "denominator_margin": [1.0, 10.0],
+        "overlap": ["balanced", "skewed"]
+      },
+      "gold_source": "Materialized analytic rational systems with denominators independently bounded away from zero",
+      "counterexample_for": [
+        "Block-diagonal-only gains",
+        "Regular-grid-only routing",
+        "Dynamic sampled sparsity"
+      ]
+    },
+    {
+      "id": "JAC3-HEX-RING-STENCIL",
+      "purpose": "Test two-dimensional nonrectangular local coupling and natural coloring on hexagonal rings and wrapped seams.",
+      "factors": {
+        "ring_count": [1, 2, 3],
+        "stencil": ["axial", "alternating"],
+        "curvature": [0.05, 5.0]
+      },
+      "gold_source": "Independent axial-coordinate roots and sparse analytic Jacobians from a new hex-ring generator",
+      "counterexample_for": [
+        "Rectangular-grid memorization",
+        "Dimension-only route selection",
+        "Single topology generalization"
+      ]
+    },
+    {
+      "id": "JAC3-DENSE-BRANCH-CONTROL",
+      "purpose": "Force the identity-free route to retain dense finite differences on dense, marginal-color, bound and branch-chart cases.",
+      "factors": {
+        "dimension": [5, 9, 15],
+        "density": [0.65, 0.85, 1.0],
+        "boundary_distance": [0.0, 1e-08, 0.03],
+        "branch_chart": ["smooth-switch", "piecewise"]
+      },
+      "gold_source": "Independent analytic roots, branch labels and dense Jacobians from new switch and piecewise plugin primitives",
+      "counterexample_for": [
+        "Unconditional coloring",
+        "Sparse-family-only wall claims",
+        "Smooth-interior-only safety"
+      ]
+    }
+  ],
+  "design": {
+    "execution_order": [
+      "Commit this card before generator or mechanism work",
+      "Create and checksum entirely new development generators, typed graphs, starts, truth, dense Jacobian traces and pre-refactor public-control traces",
+      "Freeze the card copy and development inputs before numerical mechanism implementation",
+      "Remove prepared_coloring from the exported solve_local signature and prove the public dense surface, SOLVE_API_VERSION and checkpoint identity match the pre-EXP-JAC-002 baseline",
+      "Extract one unexported provider kernel without duplicating the local iteration loop, then implement the sealed provider only in the research extension",
+      "Run safety differential, negative, fallback, public-surface and frozen-control replay tests",
+      "Run K0/K1/K1/K0 in fresh single-thread processes under one cross-worktree exclusive audit; run KA only on its fixed report-only subset",
+      "If and only if every development criterion passes, create and freeze new generator-family-disjoint locked inputs",
+      "Run the frozen candidate on locked inputs under the same exclusive audit and connect product only after every locked criterion passes"
+    ],
+    "pairing": "K0 and K1 receive byte-identical graphs, starts, bounds, local budgets and canonical validators. The counterbalanced K0/K1/K1/K0 fresh-process order is fixed. Fully charged totals include graph compilation, provider construction, routing, every grouped and fallback callback, decompression, factorization, allocations and endpoint replay.",
+    "tuning_round_limit": 0,
+    "freeze_rule": "Generators, seeds, route, provider lifetime, run order, attribution subset, thresholds and analysis code freeze before mechanism implementation; any development miss is terminal rather than a tuning round.",
+    "locked_validation_rule": "Locked generators do not exist until development passes. Once frozen they remain untouched; any inspected mismatch burns the affected family block and production remains disconnected."
+  },
+  "hyperparameters": {
+    "public_surface_baseline": {
+      "value": "pre-EXP-JAC-002 exported solve_local signature with no prepared_coloring keyword",
+      "status": "hypothesis",
+      "rationale": "The successor must repair the protocol deviation before measuring a candidate.",
+      "tuning_domain": ["exact-method-and-export snapshot"],
+      "freeze_rule": "Any public method, export, solve option, API version or checkpoint identity drift kills the experiment."
+    },
+    "research_seam": {
+      "value": "unexported shared jacobian-provider kernel plus research extension provider",
+      "status": "hypothesis",
+      "rationale": "A shared internal loop avoids solver duplication while keeping provider construction off the public callable surface.",
+      "tuning_domain": ["one unexported provider kernel"],
+      "freeze_rule": "No exported type, function or keyword and no _CompiledAttemptRunner connection is allowed before locked pass."
+    },
+    "routing_formula": {
+      "value": "colored iff c<n and 2c+nnz/(4n)<=0.8*(2n)",
+      "status": "hypothesis",
+      "rationale": "This formula was frozen before JAC002 outcomes and is carried forward without outcome-based retuning.",
+      "tuning_domain": ["jac2-static-cost-v1 unchanged"],
+      "freeze_rule": "No coefficient, threshold or input changes are allowed in EXP-JAC-003."
+    },
+    "cache_lifetime": {
+      "value": "one sealed immutable provider per compiled research runner",
+      "status": "hypothesis",
+      "rationale": "Compiler structure is immutable for one compiled problem and must never cross problem identity.",
+      "tuning_domain": ["compiled-runner-lifetime"],
+      "freeze_rule": "No per-attempt rebuild in K1 and no cross-problem cache reuse."
+    },
+    "measurement_order": {
+      "value": ["K0-DENSE-PUBLIC", "K1-CACHED-ROUTED", "K1-CACHED-ROUTED", "K0-DENSE-PUBLIC"],
+      "status": "hypothesis",
+      "rationale": "A counterbalanced order reduces monotonic host and compilation drift without choosing an order after outcomes.",
+      "tuning_domain": [["K0", "K1", "K1", "K0"]],
+      "freeze_rule": "Every formal development and locked run uses this exact order in fresh processes."
+    },
+    "fixed_starts_per_instance": {
+      "value": 32,
+      "status": "hypothesis",
+      "rationale": "Fixed prefixes retain paired anytime and fully charged compiled-runner comparisons.",
+      "tuning_domain": [32],
+      "freeze_rule": "All starts are materialized and checksummed before mechanism implementation."
+    },
+    "attribution_subset": {
+      "value": "lowest canonical case_id in each eligible family, starts 1 through 8",
+      "status": "hypothesis",
+      "rationale": "A small report-only rebuild control can diagnose construction effects without dominating or gating the main comparison.",
+      "tuning_domain": ["one case times eight starts per eligible family"],
+      "freeze_rule": "KA never selects, promotes, rejects or changes K1 and is not run on locked inputs."
+    }
+  },
+  "budgets": {
+    "wall_seconds": [60, 180],
+    "launch_checkpoints": [8, 16, 32],
+    "local_maxiters": 250,
+    "accounting": "Charge graph compilation, public-control or provider setup, route decisions, all grouped failures and column fallback, decompression, factorization, allocations, canonical replay and the complete 32-start wall. Execute under the cross-worktree exclusive lease and preserve its atomic audit."
+  },
+  "seeds": {
+    "development_count": 16,
+    "locked_count": 48,
+    "generation": "Development uses new generator namespace jac3-v1 with instance seeds 2730000+family*100+index and start seeds 2830000+family*100+index. It may not import InputJac002, copy any JAC002 materialized object, or use a JAC001/JAC002 seed. Locked namespaces and generator families are created only after development passes and must be disjoint from every prior family and seed."
+  },
+  "metrics": {
+    "primary": {
+      "id": "fully_charged_end_to_end_wall",
+      "definition": "Counterbalanced fresh-process wall from graph compilation through provider setup, all 32 local attempts and canonical endpoint replay, aggregated without subtracting cache or compilation costs.",
+      "direction": "minimize"
+    },
+    "secondary": [
+      {
+        "id": "oracle_work_per_local_attempt",
+        "definition": "Primal-equivalent oracle work including grouped failures, every fallback column and canonical validation replay.",
+        "direction": "minimize"
+      },
+      {
+        "id": "p_local_gold",
+        "definition": "Fraction of starts reaching a canonical-valid independently matched Gold configuration and target.",
+        "direction": "maximize"
+      },
+      {
+        "id": "colored_route_fraction",
+        "definition": "Fraction of attempts routed to the research provider by frozen structural stratum.",
+        "direction": "report_only"
+      },
+      {
+        "id": "cache_construction_fraction",
+        "definition": "Provider construction divided by the fully charged compiled-runner wall, reported diagnostically and never gated.",
+        "direction": "report_only"
+      },
+      {
+        "id": "rebuild_attribution_wall",
+        "definition": "Fixed-subset K1 versus per-attempt rebuild timing reported for mechanism attribution only.",
+        "direction": "report_only"
+      },
+      {
+        "id": "fallback_fraction",
+        "definition": "Fraction of colored groups that retry individual columns.",
+        "direction": "minimize"
+      }
+    ],
+    "safety": [
+      {
+        "id": "dense_colored_mismatch_count",
+        "definition": "Research-provider entries outside frozen dense tolerance or dense nonzeros outside compiler structure.",
+        "direction": "zero_required"
+      },
+      {
+        "id": "false_candidate_count",
+        "definition": "Accepted endpoints outside canonical replay or independent Gold truth.",
+        "direction": "zero_required"
+      },
+      {
+        "id": "budget_overrun_count",
+        "definition": "Any callback, iteration or attempt wall beyond a declared hard budget.",
+        "direction": "zero_required"
+      },
+      {
+        "id": "identity_routing_input_count",
+        "definition": "Any route access to IDs, names, values, targets, Gold data or prior outcomes.",
+        "direction": "zero_required"
+      },
+      {
+        "id": "public_surface_drift_count",
+        "definition": "Any exported method, keyword, option, SOLVE_API_VERSION, wire schema or checkpoint identity difference from the frozen public baseline.",
+        "direction": "zero_required"
+      },
+      {
+        "id": "frozen_control_replay_mismatch_count",
+        "definition": "Any public dense status, endpoint, evaluation or canonical decision drift from pre-implementation frozen traces.",
+        "direction": "zero_required"
+      },
+      {
+        "id": "host_contention_event_count",
+        "definition": "Any overlapping formal lease owner or observed non-experiment CPU or memory heavy process during a wall run.",
+        "direction": "zero_required"
+      }
+    ]
+  },
+  "promotion_gate": {
+    "mode": "all",
+    "criteria": [
+      "Every safety metric is zero, every incomplete-pattern negative is detected and every forced unusable group retries all affected columns.",
+      "The exported solve_local signature has no prepared_coloring keyword, the dense public path replays every frozen control trace, and SOLVE_API_VERSION, wire schemas and checkpoint identity are unchanged.",
+      "K1 loses no more than two P_local_gold points overall or in any family, branch, boundary or generator stratum.",
+      "K1 reduces eligible-family oracle work by at least twenty percent with a family-clustered one-sided 95 percent lower bound above zero in all three unrelated eligible families.",
+      "K1 improves fully charged counterbalanced end-to-end wall by at least ten percent overall with a family-clustered one-sided 95 percent lower bound above zero, and neither K1 repetition has an overall wall regression.",
+      "The dense/branch control family has at most five percent fully charged wall overhead without recall gain, and every case with color_count divided by variable_count at least 0.8 routes to dense.",
+      "The exclusive-run audit covers the complete K0/K1/K1/K0 sequence with zero host-contention events and all checksummed staging artifacts are atomically published."
+    ]
+  },
+  "kill_gate": {
+    "mode": "any",
+    "criteria": [
+      "Any public-surface, frozen-control, dense differential, false-candidate, budget, identity-routing or fallback safety count is nonzero.",
+      "Any formal worker overlaps another lease owner, CI, compiler experiment, benchmark or CPU or memory heavy process.",
+      "P_local_gold loses more than two points in any required stratum.",
+      "Eligible-family oracle-work reduction is below ten percent after fallback in any eligible family.",
+      "Fully charged K1 end-to-end wall exceeds K0 overall, or dense/branch overhead exceeds five percent without recall gain.",
+      "Any JAC001 or JAC002 graph, seed, family, start, matrix or serialized input enters development or locked evaluation."
+    ]
+  },
+  "safety_invariants": [
+    "JAC001 and JAC002 inputs and outcomes are pilot-only and unavailable to formal JAC003 development or locked evaluation.",
+    "The public solve_local signature is restored before candidate execution and no provider is exported or passed through public kwargs.",
+    "The only pre-locked core refactor authorized after input freeze is a behavior-preserving unexported provider kernel shared with the unchanged public dense path.",
+    "The sealed provider validates immutable supports, exact structural nonzero count, complete unique column partition and pairwise-disjoint same-color rows once at construction.",
+    "Only compiler-transitive dependencies construct the provider and the route receives only n, residual count, structural nonzeros and color count.",
+    "Every unusable group retries every affected column or fails closed within budget.",
+    "Every endpoint is replayed through the unchanged canonical validation pipeline.",
+    "Cache construction and route work are never subtracted from end-to-end wall; cache micro metrics are report-only.",
+    "No _CompiledAttemptRunner, solve protocol, SOLVE_API_VERSION, wire schema or checkpoint change occurs before a generator-disjoint locked pass."
+  ],
+  "artifacts": {
+    "run_manifest_schema": "research/schemas/run-manifest.schema.json",
+    "benchmark_manifest_schema": "research/schemas/benchmark-manifest.schema.json",
+    "result_path": "research/results/EXP-JAC-003/summary.json",
+    "negative_result_path": "research/negative-results/ledger.json"
+  },
+  "decision": {
+    "state": "pending",
+    "selected_variant": null,
+    "rationale": null,
+    "decision_commit": null
+  }
+}

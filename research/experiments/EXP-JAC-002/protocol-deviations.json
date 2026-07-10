@@ -1,0 +1,73 @@
+{
+  "schema_version": "exp-jac-002-protocol-deviations/v1",
+  "experiment_id": "EXP-JAC-002",
+  "deviations": [
+    {
+      "id": "PROTO-JAC002-001",
+      "classification": "protocol_deviation",
+      "infrastructure_failure": false,
+      "terminal_state": "nonpromotable",
+      "card_commit": "8dbe44b4345b4bab1b9f60222f25ff8c3180fe08",
+      "violated_invariant": "Product code, solve API and checkpoint identity remain unchanged until locked validation passes.",
+      "deviation_commits": [
+        "efe5dea30fe8a066747f792e0bccb3af06756627",
+        "4a179b8170190e4f883aefee736ae1145f1afc6e"
+      ],
+      "deviation": "The commits added and validated a prepared_coloring keyword on GeoTargetCore.solve_local. solve_local is exported by GeoTargetCore, and the ProblemSpec overload forwards arbitrary keyword arguments, so this changed the product/public callable surface before locked validation.",
+      "unchanged_but_insufficient": [
+        "The default _CompiledAttemptRunner remained on dense finite differences.",
+        "SOLVE_API_VERSION remained 1.3.0.",
+        "Checkpoint identity and wire schemas remained unchanged."
+      ],
+      "historical_audit": "Commit d7ad9ba added the earlier jacobian_entries experimental seam before EXP-JAC-001, whose card did not contain the JAC002 product-unchanged invariant. That precedent cannot narrow the later explicit EXP-JAC-002 invariant, and no preregistered amendment or ADR did so.",
+      "discovery_point": "Discovered by static card-to-code audit during the exclusive formal development rerun, after J0 had been staged and J1 had started, before staging verification, official publication, or formal outcome inspection.",
+      "formal_rerun": {
+        "label": "EXP-JAC-002-development-rerun-1",
+        "runner_commit": "5a7c764e1d299d073f3aa5c4924dbcc38c259174",
+        "audit": "research/results/EXP-JAC-002/formal-run-audit.json",
+        "audit_sha256": "c30c48664208f41f4e15a18fe10acd0cb0e324b46528340fe7a29912b9479da2",
+        "wrapper_pid": 97092,
+        "child_pid": 102112,
+        "started_at_utc": "2026-07-10T05:34:03.033176Z",
+        "ended_at_utc": "2026-07-10T05:38:08.516300Z",
+        "child_exit_code": 4294967295,
+        "operator_aborted": true,
+        "official_outcome_inspected": false,
+        "official_result_published": false,
+        "partial_artifacts": [
+          {
+            "artifact_name": "development-j0.json.gz",
+            "integration_state": "not_integrated_non_gating",
+            "sha256": "747f20b3d2968cc6e5a389dec6d4011e21bf36e54c002bc8cea48e69dceed43d",
+            "outcome_inspected": false
+          },
+          {
+            "artifact_name": "development-j0.stderr.txt",
+            "integration_state": "not_integrated_non_gating",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "outcome_inspected": false
+          },
+          {
+            "artifact_name": "development-j0.stdout.txt",
+            "integration_state": "not_integrated_non_gating",
+            "sha256": "25edca0987a69243d8f9145294852703232bcd6726f3f634634acbd773643b77",
+            "outcome_inspected": false
+          }
+        ]
+      },
+      "prior_contaminated_run": {
+        "invalidation_id": "INFRA-JAC002-002",
+        "summary_inspected": true,
+        "summary_sha256": "1b1e91a782a0fa3aecc70b28ddabb345a23240d3b1c6174c397495a7d1fd6205",
+        "integration_state": "not_integrated_non_gating",
+        "formal_result_eligible": false
+      },
+      "locked_generated": false,
+      "locked_opened": false,
+      "production_connected": false,
+      "evidence_or_negative_result_id_assigned": false,
+      "decision": "Terminate EXP-JAC-002 as nonpromotable. Do not interpret it as a formal algorithm rejection or promotion, do not open locked inputs, and do not merge its prepared_coloring product commits.",
+      "remediation": "Remove prepared_coloring from product code, move any future cached-coloring mechanism behind a research-only seam, and preregister a new experiment with new development generators and seeds before measuring it."
+    }
+  ]
+}
