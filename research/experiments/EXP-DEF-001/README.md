@@ -5,7 +5,8 @@ search lane layered on the existing multistart solver. It does not replace the
 geometry DSL, canonical oracle, ordinary LM-QR lane, CandidateStore, evidence
 log or final validator.
 
-The card was committed before formal input materialization. The already
+The card and ordinary-control source hashes are frozen in
+`preregistration-lock.json` before formal input materialization. The already
 inspected `EXP-LOCAL-002` close-root cases are excluded from every gate: they
 may explain why this experiment exists, but they may not tune it or support a
 decision.
