@@ -20,5 +20,9 @@ The next research commits must occur in this order:
 5. either record a bounded negative result or freeze one candidate before
    generating any family-disjoint locked input.
 
-`EVID-19` and `NEG-013` are reserved for the eventual formal decision. No
-production dependency or public policy change is authorized by preregistration.
+The corrected formal retry completed and the frozen independent analyzer
+recorded `bounded-negative-stop-before-locked`. Neither candidate advanced or
+qualified for the one allowed retune. `EVID-19` and `NEG-013` bind that result;
+the detailed artifacts are indexed under `research/results/EXP-DEF-001/`.
+Locked inputs were neither materialized nor opened, and no production dependency
+or public policy changed.

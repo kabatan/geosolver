@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "id": "EXP-DEF-001",
   "title": "Archive-coupled deflated Gauss-Newton for distinct-root recovery",
-  "status": "preregistered",
+  "status": "rejected",
   "requirements": ["GOAL-01", "GOAL-02", "GOAL-03", "GOAL-04", "GOAL-05", "GOAL-06", "ANS-04", "ARCH-02", "ARCH-04", "ARCH-05", "ARCH-08", "RES-01", "RES-02", "RES-03", "RES-04", "RES-05", "RES-06"],
   "failure_ids": ["F2", "F4", "F5", "F6", "F9", "F10", "F11", "F18"],
   "baseline_id": "RB0-IID-LMQR-1",
@@ -156,7 +156,7 @@
     "development_instances": 48,
     "locked_instances": 96,
     "notes": [
-      "EVID-19 and NEG-013 are reserved for the eventual formal decision.",
+      "EVID-19 and NEG-013 record the bounded-negative formal development decision.",
       "The candidate archive is a search structure only; public answers retain the existing non-merging semantics.",
       "Attempt-prefix and oracle-work-prefix results are both mandatory because retry policies do not consume equal work per start.",
       "The ordinary LM-QR lane remains nonvanishing in every promotable candidate.",
@@ -287,5 +287,10 @@
     "result_path": "research/results/EXP-DEF-001/summary.json",
     "negative_result_path": "research/negative-results/ledger.json"
   },
-  "decision": {"state": "pending", "selected_variant": null, "rationale": null, "decision_commit": null}
+  "decision": {
+    "state": "rejected",
+    "selected_variant": null,
+    "rationale": "The frozen ideal-analytic-Jacobian v2 run completed, but neither D1 nor D2 passed the zero-required safety gate, produced a positive prefix-64 target-recall effect, repeated a gain across families, or qualified for the single retune. D1 preparation would break even only after about 6176 selected starts and D2 had negative per-start preparation savings. The mechanical result is bounded-negative-stop-before-locked; locked inputs were neither materialized nor accessed and production remains disconnected.",
+    "decision_commit": "35819e720c651c9644182fbe721ffb7e0c0a1a92"
+  }
 }
