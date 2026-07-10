@@ -1,0 +1,54 @@
+{
+  "schema": "geotarget.singular-s3-implementation-freeze/v1",
+  "experiment_id": "EXP-SINGULAR-001",
+  "phase": "S3-AP-BROYDEN-development",
+  "status": "frozen-before-valid-development-run",
+  "input_manifest_sha256": "25b79616c5ea612232f80c6780de8a384e18e8fa50c906b1aae93a8918564012",
+  "audit_correction": {
+    "finding": "An implementation pilot counted the 64-iteration limit per confirmation trajectory instead of as one endpoint-wide hard budget.",
+    "disposition": "The pilot is invalid, is not persisted, and cannot affect the development gate.",
+    "corrected_contract": "Every candidate, primary replay, perturbation confirmation, restart and fallback shares the existing endpoint-wide WorkLedger maximum_iterations=64 hard cap; crossing it returns typed unknown with budget_exhausted=true."
+  },
+  "candidate_algorithm": {
+    "id": "S3-AP-BROYDEN",
+    "jacobian_seed": "charged central finite differences at the current precision",
+    "update": "direct good-Broyden rank-one secant update",
+    "restart_interval_accepted_updates": 4,
+    "restart_rule": "After every fourth accepted secant update, recompute the charged finite-difference Jacobian at the current point; no family, id, Gold or target identity is read.",
+    "restart_rationale": "A fixed restart bounds linear-convergence stagnation while preserving the good-Broyden lane and exposing all derivative work to the common callback/deadline budget.",
+    "route": "C2/C3V square systems with strict canonical residual and the same rank deficiency/nullity at 128 and 256 bits and at finite-difference radius multipliers 1 and 0.5.",
+    "confirmation": "two independently seeded perturbation trajectories, sharing the endpoint-wide hard budget",
+    "promotion": "stable route, canonical primary and confirmation replay, linear trace, and typed configuration/target error evidence"
+  },
+  "control_algorithm": {
+    "id": "S3-ANALYTIC-SECANT-CONTROL",
+    "implementation": "independent inverse-secant update seeded and restarted from the analytic Jacobian",
+    "restart_interval_accepted_updates": 4,
+    "shared_items": [
+      "frozen endpoints",
+      "confirmation seeds",
+      "semantic and evidence gates",
+      "endpoint-wide work ledger"
+    ],
+    "not_shared_with_candidate": [
+      "finite-difference Jacobian implementation",
+      "direct Broyden matrix update",
+      "linear solve state"
+    ]
+  },
+  "hard_budgets": {
+    "maximum_iterations_endpoint_total": 64,
+    "maximum_callbacks_endpoint_total": 4096,
+    "maximum_precision_bits": 1024,
+    "wall_seconds_endpoint_total": 10.0,
+    "restart_callbacks_charged": true,
+    "confirmation_callbacks_charged": true,
+    "factorizations_charged": true
+  },
+  "claim_boundary": {
+    "locked_validation": false,
+    "product_connected": false,
+    "pass_action": "advance only to S4 development",
+    "unopened_locked_inputs": true
+  }
+}
