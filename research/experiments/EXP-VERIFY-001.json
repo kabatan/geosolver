@@ -1,0 +1,352 @@
+{
+  "schema_version": "1.0.0",
+  "id": "EXP-VERIFY-001",
+  "title": "Open-plugin validated-box configuration verification",
+  "status": "preregistered",
+  "requirements": [
+    "GOAL-01",
+    "GOAL-02",
+    "GOAL-04",
+    "GOAL-05",
+    "GOAL-06",
+    "DSL-01",
+    "DSL-04",
+    "DSL-05",
+    "DSL-07",
+    "DSL-08",
+    "ANS-03",
+    "ANS-07",
+    "ARCH-01",
+    "ARCH-02",
+    "ARCH-06",
+    "ARCH-07",
+    "RES-01",
+    "RES-02",
+    "RES-04",
+    "RES-05",
+    "RES-06"
+  ],
+  "failure_ids": ["F1", "F2", "F7", "F8", "F9", "F12", "F13", "F17", "F18"],
+  "baseline_id": "RB0-IID-LMQR-1",
+  "objective": "Determine whether an optional validated-box evaluator and independently replayable Krawczyk certificate can prove existence and uniqueness of regular local configurations reached by the numerical solver without polynomial lowering, primitive-name routing, silent C2 fallback, branch midpoint selection or target-identity conflation.",
+  "hypothesis": "For bounded square regular roots whose entire candidate box follows one guaranteed continuous C3V plugin path, a charged adaptive interval Krawczyk verifier will certify at least ninety percent of eligible development boxes with zero false certificates, while every singular, manifold, domain-crossing, branch-crossing, non-guaranteed and tampered control remains typed unknown.",
+  "scope": {
+    "included": [
+      "Local boxes around numerically discovered bounded square regular roots",
+      "Exact rational or decimal-text box construction with outward rounding",
+      "Content-locked open-world C3V primitive, relation, guard, domain, branch, selector and target callbacks",
+      "Guaranteed decorated interval residual and Jacobian evaluation",
+      "Float64 intervals with charged 128- and 256-bit interval escalation",
+      "A separately replayed configuration existence-and-uniqueness artifact",
+      "A separate validated target enclosure that never becomes algebraic identity proof"
+    ],
+    "excluded": [
+      "Global interval branch-and-bound or finite-time all-root completeness",
+      "Certification of singular roots, positive-dimensional feasible sets or arbitrary discontinuities",
+      "Treating C0, C1, C2, finite differences, BigFloat point replay or inflated point values as interval extensions",
+      "Protection against malicious content-locked plugin code that falsely attests an enclosure",
+      "Algebraic target recognition or C3A proof",
+      "Product connection before family-disjoint locked validation"
+    ]
+  },
+  "literature": [
+    {
+      "id": "LIT-RUMP-VERIFICATION",
+      "url": "https://doi.org/10.1017/S096249291000005X",
+      "claim": "Validated numerics can turn floating-point computations into mathematical existence and uniqueness statements when outward interval extensions and every theorem assumption are checked.",
+      "assumptions": "Directed-rounding interval operations and required derivative enclosures soundly represent the executed function over the full box.",
+      "break_conditions": "Point replay, an unsound plugin extension, a singular preconditioner or an unchecked branch and domain boundary invalidates the proof."
+    },
+    {
+      "id": "LIT-KRAWCZYK",
+      "url": "https://arxiv.org/abs/2011.05000",
+      "claim": "An interval Krawczyk inclusion can certify an isolated nonsingular root in a candidate box.",
+      "assumptions": "The system is square, the interval Jacobian is sound and the Krawczyk inclusion test holds for the stated box.",
+      "break_conditions": "Singular or manifold roots and arbitrary opaque callbacks without interval extensions do not inherit the conclusion."
+    },
+    {
+      "id": "LIT-JULIA-INTERVALS",
+      "url": "https://juliaintervals.github.io/IntervalArithmetic.jl/stable/",
+      "claim": "IntervalArithmetic.jl documents outward interval enclosures, decorations, a guarantee flag and IEEE 1788-2015 conformance.",
+      "assumptions": "Inputs are constructed without prior binary-rounding loss and all operations preserve a guaranteed safe decoration.",
+      "break_conditions": "A binary literal may miss the intended exact decimal; non-guaranteed, trivial or ill-formed intervals cannot support validation."
+    },
+    {
+      "id": "LIT-INTERVAL-ROOTS",
+      "url": "https://juliaintervals.github.io/IntervalRootFinding.jl/latest/roots/",
+      "claim": "The official Julia interface provides Newton and Krawczyk contractors that can report a unique root for differentiable interval functions.",
+      "assumptions": "The interval function and its explicit or automatic Jacobian satisfy the package contract and iteration is bounded.",
+      "break_conditions": "An unknown status, excessive tolerance, unavailable derivative or package result without independent artifact replay is not a certificate."
+    }
+  ],
+  "controls": [
+    {
+      "id": "V0-C2-POINT-REPLAY",
+      "role": "control",
+      "description": "The unchanged canonical C2 point replay and numerical error enclosure, which is never allowed to emit a validated configuration certificate.",
+      "differences_from_baseline": []
+    },
+    {
+      "id": "VREF-INDEPENDENT-KRAWCZYK",
+      "role": "control",
+      "description": "A separately coded analytic interval residual and Jacobian control using the pinned IntervalRootFinding Krawczyk contractor.",
+      "differences_from_baseline": ["Independent analytic interval functions", "Package contractor", "No compiled plugin graph"]
+    },
+    {
+      "id": "VNEG-POINT-INFLATION",
+      "role": "negative_control",
+      "description": "A deliberately unsound midpoint-plus-epsilon pseudo-interval path that must fail artifact and capability checks and can never certify.",
+      "differences_from_baseline": ["No directed rounding", "No interval Jacobian", "Negative control only"]
+    }
+  ],
+  "candidates": [
+    {
+      "id": "V1-C3V-KRAWCZYK",
+      "role": "candidate",
+      "description": "An owned optional validated-box evaluator over the canonical plugin graph followed by adaptive-precision Krawczyk inclusion and independent artifact replay.",
+      "differences_from_baseline": [
+        "Raw graph trace interpreted as a validated box",
+        "Explicit all-path C3V callbacks",
+        "Guaranteed decorated interval residual and Jacobian",
+        "Adaptive interval precision",
+        "Replayable configuration certificate artifact"
+      ]
+    }
+  ],
+  "synthetic_families": [
+    {
+      "id": "VERIFY-REGULAR-COMPOSED",
+      "purpose": "Measure certification on transformed regular roots composed from open scalar and opaque geometric plugin calls.",
+      "factors": {
+        "dimension": [1, 2, 4, 8],
+        "condition": [1.0, 10000.0, 100000000.0],
+        "normalized_box_radius": [0.00390625, 0.0000152587890625, 5.960464477539063e-08],
+        "representation": ["scalar-chain", "opaque-point", "orthogonal-transform"]
+      },
+      "gold_source": "Independent analytic roots, Jacobians and rational interval bounds",
+      "counterexample_for": ["Polynomial-only validation", "Primitive-name routing", "One precision fits every condition"]
+    },
+    {
+      "id": "VERIFY-DOMAIN-GUARD-BRANCH",
+      "purpose": "Require a proof box to remain wholly inside one continuous domain, strict guard and stable branch chart.",
+      "factors": {
+        "box_state": ["strictly-inside", "touching", "crossing"],
+        "surface": ["division-domain", "square-root-domain", "strict-guard", "two-choice-selector"],
+        "margin_scale": [1.0, 1e-08, 1e-12]
+      },
+      "gold_source": "Analytic interval margins and exact branch keys",
+      "counterexample_for": ["Midpoint branch selection", "Point-only guard validation", "Ignoring interval decorations"]
+    },
+    {
+      "id": "VERIFY-SINGULAR-MANIFOLD",
+      "purpose": "Prevent local convergence or a zero residual from being misreported as an isolated unique configuration.",
+      "factors": {
+        "root_kind": ["double", "cubic", "constant-target-manifold", "varying-target-manifold"],
+        "nullity": [1, 2],
+        "dimension": [2, 4]
+      },
+      "gold_source": "Exact symbolic rank, multiplicity and feasible-set dimension used only by the independent assessor",
+      "counterexample_for": ["Zero residual proves uniqueness", "Krawczyk on a singular preconditioner", "Finite target inferred from a manifold"]
+    },
+    {
+      "id": "VERIFY-INPUT-AND-ARTIFACT",
+      "purpose": "Exercise exact decimal construction, guarantee/decorations, capability loss and certificate tampering.",
+      "factors": {
+        "input": ["decimal-0.1", "large-rational", "subnormal-neighborhood", "binary-pre-rounded"],
+        "interval_state": ["guaranteed-common", "non-guaranteed", "trivial", "ill-formed"],
+        "artifact_mutation": ["none", "box", "plugin-lock", "jacobian", "krawczyk-image", "configuration-hash"]
+      },
+      "gold_source": "Exact rational construction and independently recomputed artifact hashes",
+      "counterexample_for": ["Trusting serialized floats", "Ignoring the guarantee flag", "Self-authenticating certificates"]
+    }
+  ],
+  "real_problem_policy": "Development may use only independently audited C3V-capable open plugins and Gold-readable cases. C3V absence is a typed applicability result. Locked families, plugin compositions and seeds are created only after development passes and remain disjoint from every development family.",
+  "design": {
+    "execution_order": [
+      "Commit ADR-0004 and this card before generator, dependency or mechanism work",
+      "Create and checksum development graphs, exact boxes, plugin locks, analytic controls and Gold assessments before implementing V1",
+      "Refactor one capability-neutral raw graph trace without changing point semantics or the graph and JSON protocols",
+      "Implement the optional validated package, explicit C3V path, artifact encoder and separate verifier",
+      "Differential-test reference and compiled validated traces before any timing or certification rate is inspected",
+      "Run V0, V1, VREF and negative controls on the frozen development split under hard budgets",
+      "If and only if every development criterion passes, freeze the backend, applicability predicate and a new family-disjoint locked split",
+      "Connect candidate-seeded product verification only after the untouched locked split passes"
+    ],
+    "pairing": "V0 and V1 receive the same problem, numerical endpoint and declared candidate box. VREF receives the independently coded analytic interval system for that case. Gold, family IDs and expected decisions are unavailable to V1 routing and artifact creation.",
+    "tuning_round_limit": 0,
+    "freeze_rule": "Backend manifest, exact input codec, safe decoration, precision ladder, radius grid, inclusion predicate, contraction cap, budgets and artifact schema freeze before V1 outcomes.",
+    "locked_validation_rule": "Locked generators and plugins do not exist until development passes. Any inspected mismatch burns that family block; no threshold or implementation change is evaluated on the same locked material.",
+    "development_instances": 48,
+    "locked_instances": 96,
+    "notes": [
+      "EVID-22 and NEG-016 are reserved for the eventual formal decision.",
+      "A C3V plugin is trusted content-locked code; generic detection of a malicious false enclosure is outside this experiment."
+    ]
+  },
+  "hyperparameters": {
+    "backend": {
+      "value": "Manifest-pinned IntervalArithmetic with an owned Krawczyk implementation",
+      "status": "hypothesis",
+      "rationale": "Use a current IEEE-1788-oriented backend while keeping package-specific objects outside the stable graph and JSON protocols.",
+      "tuning_domain": ["IntervalArithmetic-owned-Krawczyk"],
+      "freeze_rule": "Package versions and configuration freeze before development input execution."
+    },
+    "safe_interval_state": {
+      "value": "isguaranteed=true and decoration=com on every bounded executed proof value",
+      "status": "hypothesis",
+      "rationale": "A bounded proof box requires guaranteed, defined, continuous and bounded propagation across its complete path.",
+      "tuning_domain": ["guaranteed-common-only"],
+      "freeze_rule": "Never weakened after an unknown result."
+    },
+    "precision_ladder": {
+      "value": [53, 128, 256],
+      "status": "hypothesis",
+      "rationale": "Attempt fast Float64 intervals first and charge escalation only when inclusion is inconclusive.",
+      "tuning_domain": [[53, 128, 256]],
+      "freeze_rule": "No per-family precision routing or post-outcome extension."
+    },
+    "normalized_box_radii": {
+      "value": [0.00390625, 0.0000152587890625, 5.960464477539063e-08],
+      "status": "hypothesis",
+      "rationale": "Exercise broad, medium and local boxes without deriving a radius from Gold truth.",
+      "tuning_domain": [[0.00390625, 0.0000152587890625, 5.960464477539063e-08]],
+      "freeze_rule": "Materialized with endpoints before V1 implementation."
+    },
+    "inclusion_rule": {
+      "value": "K(X) is a strict interior subset of X in every coordinate",
+      "status": "hypothesis",
+      "rationale": "Use an explicit sufficient uniqueness condition rather than a package success label.",
+      "tuning_domain": ["strict-interior-componentwise"],
+      "freeze_rule": "No tolerance-based relaxation."
+    },
+    "maximum_contractions": {
+      "value": 32,
+      "status": "hypothesis",
+      "rationale": "Bound local verification without turning it into global branch-and-bound.",
+      "tuning_domain": [32],
+      "freeze_rule": "A cap hit is typed unknown."
+    }
+  },
+  "budgets": {
+    "wall_seconds": [1, 5],
+    "launch_checkpoints": [1, 16, 48],
+    "local_maxiters": 32,
+    "accounting": "Charge exact box construction, raw reference and compiled interval traces, interval residual and Jacobian work, factorization, each precision stage, contraction, target enclosure, artifact encoding and independent replay."
+  },
+  "seeds": {
+    "development_count": 12,
+    "locked_count": 30,
+    "generation": "Graph, transform, endpoint, box and artifact-mutation seeds use separate VERIFY-v1 namespaces. Locked generators, plugin compositions and seed ranges are family-disjoint and created only after development passes."
+  },
+  "metrics": {
+    "primary": {
+      "id": "p_unique_configuration_certified",
+      "definition": "Fraction of independently eligible regular candidate boxes receiving a replayed existence-and-uniqueness configuration certificate.",
+      "direction": "maximize"
+    },
+    "secondary": [
+      {
+        "id": "verification_wall_seconds",
+        "definition": "Fully charged wall through independent artifact replay by dimension, condition, radius and precision stage.",
+        "direction": "minimize"
+      },
+      {
+        "id": "interval_oracle_work",
+        "definition": "Primal-equivalent validated plugin, residual, Jacobian and target work including failed precision stages.",
+        "direction": "minimize"
+      },
+      {
+        "id": "certified_box_width",
+        "definition": "Maximum normalized coordinate width of the independently replayed root box.",
+        "direction": "minimize"
+      },
+      {
+        "id": "validated_target_width",
+        "definition": "Width of the separately evaluated target interval, with no algebraic identity implication.",
+        "direction": "minimize"
+      },
+      {
+        "id": "typed_unknown_rate",
+        "definition": "Unknown outcomes partitioned by capability, input, guarantee, decoration, domain, guard, branch, rank, inclusion, budget and replay failure.",
+        "direction": "report_only"
+      }
+    ],
+    "safety": [
+      {
+        "id": "false_unique_certificate_count",
+        "definition": "A certificate whose box lacks exactly one independently verified regular root.",
+        "direction": "zero_required"
+      },
+      {
+        "id": "unsafe_interval_acceptance_count",
+        "definition": "A certificate using a non-guaranteed, non-common, ill-formed, binary-pre-rounded or otherwise ineligible proof interval.",
+        "direction": "zero_required"
+      },
+      {
+        "id": "domain_guard_branch_crossing_acceptance_count",
+        "definition": "A certificate whose box touches or crosses a required domain, strict guard or branch chart boundary.",
+        "direction": "zero_required"
+      },
+      {
+        "id": "singular_or_manifold_certificate_count",
+        "definition": "A unique-root certificate emitted on a singular, multiple or positive-dimensional control.",
+        "direction": "zero_required"
+      },
+      {
+        "id": "artifact_replay_mismatch_count",
+        "definition": "Any accepted artifact whose independent replay changes or rejects its problem, plugin, box, inclusion or configuration binding.",
+        "direction": "zero_required"
+      },
+      {
+        "id": "silent_capability_fallback_count",
+        "definition": "Any C0, C1, C2, finite-difference or point-inflation path represented as C3V evidence.",
+        "direction": "zero_required"
+      }
+    ]
+  },
+  "promotion_gate": {
+    "mode": "all",
+    "criteria": [
+      "Every safety metric is zero; all artifact mutations, point-inflation negatives and non-guaranteed interval controls are rejected.",
+      "V1 certifies at least ninety percent of eligible regular boxes overall and at least eighty percent in every required condition, radius, dimension and opaque-plugin stratum.",
+      "V1 never certifies a singular, multiple, manifold, domain-crossing, guard-touching or branch-crossing control.",
+      "Every V1 certificate agrees with independent analytic Gold and VREF uniqueness; VREF may certify additional boxes but no V1-only disagreement is allowed.",
+      "Reference and compiled validated traces have zero value, decoration, guarantee, domain, guard, branch, residual, Jacobian and target mismatches.",
+      "Every accepted artifact independently replays to the same strict inclusion and configuration hash, and every separately validated target interval contains development Gold.",
+      "Median fully charged verification is at most 0.1 seconds and p95 at most 1 second for dimension at most eight; every case respects the five-second hard cap."
+    ]
+  },
+  "kill_gate": {
+    "mode": "any",
+    "criteria": [
+      "Any false unique, unsafe interval, crossing, singular/manifold, replay, semantic or silent-fallback count is nonzero.",
+      "A plugin lacking an explicit C3V callback reaches a validated evaluator or certificate path.",
+      "A binary-pre-rounded intended decimal, trivial decoration or non-guaranteed enclosure is accepted as exact proof input.",
+      "The candidate trusts a serialized Krawczyk image or package status without independent recomputation.",
+      "Regular eligible certification falls below seventy-five percent overall or median verification exceeds one second at dimension at most eight."
+    ]
+  },
+  "safety_invariants": [
+    "The graph and DSL remain Literal, Reference, plugin-qualified Call and Select; validation never requires polynomial lowering.",
+    "C3V is an explicit content-locked plugin promise and never inferred from C2 or generic point execution.",
+    "Point OracleObservation and validated-box evidence are separate interpretations of one raw canonical graph trace.",
+    "Every proof box stays in one guaranteed continuous domain, strict guard and stable branch chart.",
+    "A sound interval Jacobian is required; finite differences and BigFloat point agreement are not derivative enclosures.",
+    "Krawczyk failure is typed unknown and never a no-root or completeness proof.",
+    "Configuration uniqueness, validated target enclosure and algebraic target identity remain separate artifacts.",
+    "Every certificate binds problem, graph, plugin locks, exact box, backend environment, inclusion and configuration hash and is independently replayed.",
+    "Product discovery, archive, scheduler, public presets and exact-answer logic remain unchanged until locked pass."
+  ],
+  "artifacts": {
+    "run_manifest_schema": "research/schemas/run-manifest.schema.json",
+    "benchmark_manifest_schema": "research/schemas/benchmark-manifest.schema.json",
+    "result_path": "research/results/EXP-VERIFY-001/summary.json",
+    "negative_result_path": "research/negative-results/ledger.json"
+  },
+  "decision": {
+    "state": "pending",
+    "selected_variant": null,
+    "rationale": null,
+    "decision_commit": null
+  }
+}
