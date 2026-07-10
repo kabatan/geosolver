@@ -558,13 +558,11 @@ class ContentionTracker:
                     pid=row.pid,
                     reason=reason,
                 )
-        formal_pids = {pid for pid, _start in formal_identities}
         for event in inventory.start_events:
             if (
                 event.identity in formal_identities
                 or event.pid in self.own_pids
                 or event.pid == self.capability_probe_pid
-                or event.parent_pid in formal_pids
             ):
                 continue
             name = event.name.lower().removesuffix(".exe")
