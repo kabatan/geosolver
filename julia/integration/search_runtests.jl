@@ -607,6 +607,89 @@ end
         snapshot,
         resume_identity("different"),
     )
+
+    restored = S.restore_execution_context(
+        snapshot,
+        resume_identity();
+        registry=:frozen_test_registry,
+        policy=S.fast_policy(),
+        clock=FakeClock(0.0),
+    )
+    restored_snapshot = S.checkpoint_snapshot(restored)
+    @test isequal(restored_snapshot.budget, snapshot.budget)
+    @test isequal(restored_snapshot.workspace, snapshot.workspace)
+    @test isequal(restored_snapshot.events, snapshot.events)
+    @test restored_snapshot.rng_state == snapshot.rng_state
+    @test restored_snapshot.remaining_seconds == snapshot.remaining_seconds
+
+    original_continuation = S.run_search!(
+        context,
+        (context, decision) -> proposal_for(decision),
+        (context, proposal) -> empty_observation(proposal);
+        max_actions=200,
+    )
+    restored_continuation = S.run_search!(
+        restored,
+        (context, decision) -> proposal_for(decision),
+        (context, proposal) -> empty_observation(proposal);
+        max_actions=200,
+    )
+    @test isequal(original_continuation.candidates, restored_continuation.candidates)
+    @test isequal(
+        original_continuation.checkpoint.workspace,
+        restored_continuation.checkpoint.workspace,
+    )
+    @test isequal(
+        original_continuation.checkpoint.budget,
+        restored_continuation.checkpoint.budget,
+    )
+    @test isequal(
+        original_continuation.checkpoint.events,
+        restored_continuation.checkpoint.events,
+    )
+
+    @test_throws S.SearchProtocolError S.restore_execution_context(
+        snapshot,
+        resume_identity();
+        registry=:frozen_test_registry,
+        policy=S.standard_policy(),
+        clock=FakeClock(0.0),
+    )
+    @test_throws S.SearchProtocolError S.restore_execution_context(
+        snapshot,
+        resume_identity();
+        registry=:frozen_test_registry,
+        policy=S.fast_policy(),
+        rng_restore=state -> FakeRNG(0),
+        clock=FakeClock(0.0),
+    )
+
+    over_limit_budget = S.BudgetSnapshot(
+        snapshot.budget.limits,
+        something(snapshot.budget.limits.proposals, 0) + 1,
+        snapshot.budget.local_attempts,
+        snapshot.budget.refinements,
+        snapshot.budget.oracle_work,
+    )
+    corrupt = S.CheckpointSnapshot(
+        snapshot.resume_identity,
+        snapshot.policy_version,
+        over_limit_budget,
+        snapshot.workspace,
+        snapshot.events,
+        snapshot.rng_state,
+        snapshot.precision_bits,
+        snapshot.remaining_seconds,
+        snapshot.cancelled,
+    )
+    @test_throws S.SearchProtocolError S.restore_execution_context(
+        corrupt,
+        resume_identity();
+        registry=:frozen_test_registry,
+        policy=S.fast_policy(),
+        clock=FakeClock(0.0),
+    )
+
     captured_event_count = length(snapshot.events)
     S.record_event!(context.events, S.EVENT_STATUS, (; status=:after_snapshot))
     @test length(snapshot.events) == captured_event_count

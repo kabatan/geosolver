@@ -109,6 +109,7 @@ function ExecutionContext(
     cancel::CancellationToken=CancellationToken(),
     clock=time,
     deadline=nothing,
+    remaining_seconds=nothing,
     mode::ExecutionMode=DETERMINISTIC_REPLAY,
     performance_hook=nothing,
     rng_checkpoint=identity,
@@ -116,7 +117,20 @@ function ExecutionContext(
     precision_bits >= 2 || throw(ArgumentError("precision_bits must be at least two"))
     now = Float64(clock())
     isfinite(now) || throw(ArgumentError("clock must return a finite real time"))
-    stop_time = deadline === nothing ? now + policy.wall_seconds : Float64(deadline)
+    deadline !== nothing && remaining_seconds !== nothing && throw(
+        ArgumentError("deadline and remaining_seconds are mutually exclusive"),
+    )
+    remaining = remaining_seconds === nothing ? nothing : Float64(remaining_seconds)
+    remaining === nothing || isfinite(remaining) && remaining >= 0 || throw(
+        ArgumentError("remaining_seconds must be finite and nonnegative"),
+    )
+    stop_time = if remaining !== nothing
+        now + remaining
+    elseif deadline === nothing
+        now + policy.wall_seconds
+    else
+        Float64(deadline)
+    end
     isfinite(stop_time) || throw(ArgumentError("deadline must be finite"))
     stop_time >= now || throw(ArgumentError("deadline must not precede context creation"))
     selected_budget = budget === nothing ? BudgetLedger(policy.budget_limits) : budget
@@ -186,6 +200,247 @@ function assert_resume_identity(
         ),
     )
     return snapshot
+end
+
+_checkpoint_failure(code::Symbol, message::AbstractString) =
+    throw(SearchProtocolError(code, String(message)))
+
+function _same_budget_limits(left::BudgetLimits, right::BudgetLimits)
+    return left.proposals == right.proposals &&
+           left.local_attempts == right.local_attempts &&
+           left.refinements == right.refinements &&
+           left.oracle_work == right.oracle_work
+end
+
+function _restore_budget(snapshot::BudgetSnapshot, policy::SolvePolicy)
+    _same_budget_limits(snapshot.limits, policy.budget_limits) || _checkpoint_failure(
+        :resume_policy_mismatch,
+        "checkpoint budget limits do not match the active solve policy",
+    )
+    counts = (
+        snapshot.proposals,
+        snapshot.local_attempts,
+        snapshot.refinements,
+        snapshot.oracle_work,
+    )
+    all(count -> count >= 0, counts) || _checkpoint_failure(
+        :corrupt_checkpoint,
+        "checkpoint contains a negative budget counter",
+    )
+    limits = (
+        snapshot.limits.proposals,
+        snapshot.limits.local_attempts,
+        snapshot.limits.refinements,
+        snapshot.limits.oracle_work,
+    )
+    all(
+        pair -> last(pair) === nothing || first(pair) <= last(pair),
+        zip(counts, limits),
+    ) || _checkpoint_failure(
+        :corrupt_checkpoint,
+        "checkpoint budget counters exceed their hard limits",
+    )
+    ledger = BudgetLedger(snapshot.limits)
+    ledger.proposals = snapshot.proposals
+    ledger.local_attempts = snapshot.local_attempts
+    ledger.refinements = snapshot.refinements
+    ledger.oracle_work = snapshot.oracle_work
+    return ledger
+end
+
+function _restore_events(events::Tuple)
+    log = EvidenceLog()
+    for (sequence, event) in enumerate(events)
+        event isa EvidenceEvent || _checkpoint_failure(
+            :corrupt_checkpoint,
+            "checkpoint evidence contains a non-event payload",
+        )
+        event.sequence == sequence || _checkpoint_failure(
+            :corrupt_checkpoint,
+            "checkpoint evidence sequence is not contiguous",
+        )
+        restored = record_event!(log, event.kind, event.payload)
+        isequal(restored.payload, event.payload) || _checkpoint_failure(
+            :corrupt_checkpoint,
+            "checkpoint evidence payload changed while being frozen",
+        )
+    end
+    return log
+end
+
+function _restore_candidate_store(snapshot::CandidateStoreSnapshot)
+    store = CandidateStore()
+    for record in snapshot.history
+        record isa CandidateRecord || _checkpoint_failure(
+            :corrupt_checkpoint,
+            "checkpoint candidate history contains a non-record payload",
+        )
+        restored = try
+            insert_candidate!(store, record.proposal, record.observation)
+        catch error
+            error isa SearchProtocolError || rethrow()
+            _checkpoint_failure(
+                :corrupt_checkpoint,
+                "checkpoint candidate history cannot be replayed: $(sprint(showerror, error))",
+            )
+        end
+        restored.revision == record.revision || _checkpoint_failure(
+            :corrupt_checkpoint,
+            "checkpoint candidate revision is inconsistent with its history",
+        )
+    end
+    isequal(candidate_snapshot(store), snapshot) || _checkpoint_failure(
+        :corrupt_checkpoint,
+        "checkpoint candidate derived views do not match replayed history",
+    )
+    return store
+end
+
+function _restore_scheduler(snapshot::SchedulerSnapshot)
+    all(count -> count >= 0, snapshot.served) || _checkpoint_failure(
+        :corrupt_checkpoint,
+        "checkpoint scheduler contains a negative served counter",
+    )
+    served_total = sum(UInt128(count) for count in snapshot.served)
+    served_total <= typemax(Int) || _checkpoint_failure(
+        :corrupt_checkpoint,
+        "checkpoint scheduler counters overflow the supported action range",
+    )
+    snapshot.total_actions == Int(served_total) || _checkpoint_failure(
+        :corrupt_checkpoint,
+        "checkpoint scheduler total does not equal its lane counters",
+    )
+    snapshot.shell_ticks == snapshot.served[_lane_index(LANE_SHELL)] ||
+        _checkpoint_failure(
+            :corrupt_checkpoint,
+            "checkpoint shell counter does not equal scheduled shell work",
+        )
+    proposal_actions = sum(
+        UInt128(snapshot.served[_lane_index(lane)]) for lane in _PROPOSAL_LANES
+    )
+    expected_next = proposal_actions + UInt128(1)
+    expected_next <= typemax(UInt64) || _checkpoint_failure(
+        :corrupt_checkpoint,
+        "checkpoint scheduler task counter overflowed",
+    )
+    snapshot.next_task_id == UInt64(expected_next) || _checkpoint_failure(
+        :corrupt_checkpoint,
+        "checkpoint next task ID is inconsistent with scheduled proposal work",
+    )
+    scheduler = FairScheduler()
+    scheduler.served .= snapshot.served
+    scheduler.total_actions = snapshot.total_actions
+    scheduler.next_task_id = snapshot.next_task_id
+    scheduler.shell_ticks = snapshot.shell_ticks
+    return scheduler
+end
+
+function _restore_workspace(snapshot::WorkspaceSnapshot)
+    candidates = _restore_candidate_store(snapshot.candidates)
+    scheduler = _restore_scheduler(snapshot.scheduler)
+    all(proposal -> proposal isa Proposal, snapshot.pending) || _checkpoint_failure(
+        :corrupt_checkpoint,
+        "checkpoint pending queue contains a non-proposal payload",
+    )
+    pending = Proposal[snapshot.pending...]
+    pending_ids = UInt64[proposal.task_id for proposal in pending]
+    allunique(pending_ids) || _checkpoint_failure(
+        :corrupt_checkpoint,
+        "checkpoint pending queue contains duplicate task IDs",
+    )
+    seen_ids = UInt64[snapshot.seen_task_ids...]
+    issorted(seen_ids) && allunique(seen_ids) || _checkpoint_failure(
+        :corrupt_checkpoint,
+        "checkpoint seen task IDs must be sorted and unique",
+    )
+    observed_ids = UInt64[record.proposal.task_id for record in snapshot.candidates.history]
+    sort!(vcat(observed_ids, pending_ids)) == seen_ids || _checkpoint_failure(
+        :corrupt_checkpoint,
+        "checkpoint seen task IDs do not match observed and pending work",
+    )
+    queue = UInt64[snapshot.refinement_queue...]
+    allunique(queue) || _checkpoint_failure(
+        :corrupt_checkpoint,
+        "checkpoint refinement queue contains duplicate configurations",
+    )
+    latest_configurations = Set(
+        record.proposal.configuration_id for record in snapshot.candidates.latest
+    )
+    all(configuration -> configuration in latest_configurations, queue) ||
+        _checkpoint_failure(
+            :corrupt_checkpoint,
+            "checkpoint refinement queue references an unknown configuration",
+        )
+
+    workspace = SearchWorkspace(; adaptive_unbounded=snapshot.adaptive_unbounded)
+    workspace.candidates = candidates
+    workspace.scheduler = scheduler
+    workspace.pending = pending
+    workspace.refinement_queue = queue
+    workspace.refinement_members = Set(queue)
+    workspace.seen_task_ids = Set(seen_ids)
+    return workspace
+end
+
+"""
+Restore a search context from an immutable checkpoint after validating all
+identity, policy, derived-state, event, budget and RNG invariants.
+
+Cancellation is intentionally supplied by the caller: a checkpoint records
+whether the previous invocation was cancelled, but a new invocation receives a
+fresh token unless an already-cancelled token is explicitly passed.
+"""
+function restore_execution_context(
+    snapshot::CheckpointSnapshot,
+    current::ResumeIdentity;
+    registry,
+    policy::SolvePolicy,
+    rng_restore=identity,
+    rng_checkpoint=identity,
+    cancel::CancellationToken=CancellationToken(),
+    clock=time,
+    mode::ExecutionMode=DETERMINISTIC_REPLAY,
+    performance_hook=nothing,
+)
+    assert_resume_identity(snapshot, current)
+    snapshot.policy_version == policy.version || _checkpoint_failure(
+        :resume_policy_mismatch,
+        "checkpoint policy version does not match the active solve policy",
+    )
+    snapshot.precision_bits >= 2 || _checkpoint_failure(
+        :corrupt_checkpoint,
+        "checkpoint precision is invalid",
+    )
+    isfinite(snapshot.remaining_seconds) && snapshot.remaining_seconds >= 0 ||
+        _checkpoint_failure(
+            :corrupt_checkpoint,
+            "checkpoint remaining wall budget is invalid",
+        )
+    budget = _restore_budget(snapshot.budget, policy)
+    events = _restore_events(snapshot.events)
+    workspace = _restore_workspace(snapshot.workspace)
+    rng = rng_restore(snapshot.rng_state)
+    restored_rng_state = _freeze_search_value(rng_checkpoint(rng))
+    isequal(restored_rng_state, snapshot.rng_state) || _checkpoint_failure(
+        :resume_rng_mismatch,
+        "restored RNG state does not match the checkpoint",
+    )
+    return ExecutionContext(
+        current;
+        rng,
+        registry,
+        precision_bits=snapshot.precision_bits,
+        policy,
+        budget,
+        events,
+        workspace,
+        cancel,
+        clock,
+        remaining_seconds=snapshot.remaining_seconds,
+        mode,
+        performance_hook,
+        rng_checkpoint,
+    )
 end
 
 struct SearchLoopResult
