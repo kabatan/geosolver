@@ -1,0 +1,142 @@
+{
+  "schema_version": "exp-jac-003-formal-publication-binding-amendment-a2/v1",
+  "experiment_id": "EXP-JAC-003",
+  "status": "frozen-outcome-blind-before-formal-run",
+  "purpose": "Supplement immutable v1 with no-replace receipts, complete untracked/ignored hygiene, an opaque staging seal, an external publication anchor, exact direct-child finalizer execution, and a fail-closed archive receipt before assessment.",
+  "authority_repository_root": "C:\\solver",
+  "frozen_repository_root": "C:\\solver-worktrees\\exp-jac-003-inputs",
+  "amendment_relative_path": "research/experiments/EXP-JAC-003/formal-publication-binding-amendment-a2.json",
+  "checker": {
+    "relative_path": "research/experiments/EXP-JAC-003/source/formal_publication_guard_a2.py",
+    "sha256": "f499e5c3b7bd1b2ba9ff7ef89f225b639f0818f070f66d3ee61363f5c1163699",
+    "role": "Three-phase outcome-blind publication authority. It never wraps, parents, replaces or retries formal_abba.py. It launches only the already-frozen finalizer after the completed formal runner has exited."
+  },
+  "v1_authority": {
+    "amendment_relative_path": "research/experiments/EXP-JAC-003/formal-binding-amendment.json",
+    "amendment_sha256": "516328a7c068e097adf199ace7433da3e60e2e044f46b3c0231f521098886fe2",
+    "checker_relative_path": "research/experiments/EXP-JAC-003/source/formal_binding_guard.py",
+    "checker_sha256": "7e478d57854f2f42b722304ea722e42ca65905353e03e522fc530924c2ff5329",
+    "immutability_rule": "A2 imports the approved v1 checker bytes and calls build_pre_audit/build_post_audit. Neither v1 file may be edited, replaced or rehashed to accept drift."
+  },
+  "frozen_lineage": {
+    "head_commit": "2601dce271368e67ecafe57f4465de9415151cae",
+    "source_commit": "0494e656fe714828ed8cf580b4262941ff9c9d8b",
+    "source_lock_sha256": "7d2059ee4dedc26975b7a0a5f94297a5fdcd8c719c5f3ce08dedfd3f82c8b354",
+    "locked_file_count": 58,
+    "official_input_count": 4
+  },
+  "execution": {
+    "python_executable": "C:\\Users\\bakat\\miniforge3\\python.exe",
+    "finalizer_relative_path": "research/experiments/EXP-JAC-003/source/finalize_abba.py",
+    "staging_relative_path": "research/results/EXP-JAC-003-development-abba-staging",
+    "partial_relative_path": "research/results/.EXP-JAC-003-development-abba-staging.partial",
+    "official_relative_path": "research/results/EXP-JAC-003/development-abba-v0",
+    "outer_audit_relative_path": "research/results/EXP-JAC-003-development-formal-run-audit.json",
+    "host_observation_relative_path": "research/results/EXP-JAC-003-development-host-observation.json",
+    "source_observation_relative_path": "research/results/EXP-JAC-003-development-source-observation.json",
+    "v1_pre_audit_path": "C:\\solver\\research\\results\\EXP-JAC-003\\pre-binding-audit.json",
+    "v1_post_audit_filename": "formal-binding-post-audit.json",
+    "seal_filename": "formal-publication-seal-a2.json",
+    "anchor_path": "C:\\solver\\research\\results\\EXP-JAC-003\\publication-anchor-a2.json",
+    "execution_audit_path": "C:\\solver\\research\\results\\EXP-JAC-003\\finalizer-execution-audit-a2.json",
+    "archive_receipt_filename": "formal-archive-receipt-a2.json",
+    "finalizer_environment_policy": {
+      "fixed_overrides": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONHASHSEED": "0",
+        "PYTHONNOUSERSITE": "1"
+      },
+      "removed_variables": [
+        "PYTHONHOME",
+        "PYTHONPATH"
+      ]
+    },
+    "exact_finalizer_command_tokens": [
+      "C:\\Users\\bakat\\miniforge3\\python.exe",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\source\\finalize_abba.py",
+      "--repo",
+      "C:\\solver-worktrees\\exp-jac-003-inputs",
+      "--source-lock",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\experiments\\EXP-JAC-003\\development-source-lock.json",
+      "--staging",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-abba-staging",
+      "--official",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003\\development-abba-v0",
+      "--outer-audit",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-formal-run-audit.json",
+      "--host-observation",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-host-observation.json",
+      "--source-observation",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003-development-source-observation.json"
+    ],
+    "exact_pre_command_tokens": [
+      "C:\\Users\\bakat\\miniforge3\\python.exe",
+      "C:\\solver\\research\\experiments\\EXP-JAC-003\\source\\formal_publication_guard_a2.py",
+      "pre",
+      "--amendment",
+      "C:\\solver\\research\\experiments\\EXP-JAC-003\\formal-publication-binding-amendment-a2.json",
+      "--output",
+      "C:\\solver\\research\\results\\EXP-JAC-003\\pre-binding-audit.json"
+    ],
+    "exact_publish_command_tokens": [
+      "C:\\Users\\bakat\\miniforge3\\python.exe",
+      "C:\\solver\\research\\experiments\\EXP-JAC-003\\source\\formal_publication_guard_a2.py",
+      "publish",
+      "--amendment",
+      "C:\\solver\\research\\experiments\\EXP-JAC-003\\formal-publication-binding-amendment-a2.json",
+      "--pre-audit",
+      "C:\\solver\\research\\results\\EXP-JAC-003\\pre-binding-audit.json"
+    ],
+    "exact_archive_command_tokens": [
+      "C:\\Users\\bakat\\miniforge3\\python.exe",
+      "C:\\solver\\research\\experiments\\EXP-JAC-003\\source\\formal_publication_guard_a2.py",
+      "archive",
+      "--amendment",
+      "C:\\solver\\research\\experiments\\EXP-JAC-003\\formal-publication-binding-amendment-a2.json",
+      "--anchor",
+      "C:\\solver\\research\\results\\EXP-JAC-003\\publication-anchor-a2.json",
+      "--execution-audit",
+      "C:\\solver\\research\\results\\EXP-JAC-003\\finalizer-execution-audit-a2.json",
+      "--output",
+      "C:\\solver-worktrees\\exp-jac-003-inputs\\research\\results\\EXP-JAC-003\\development-abba-v0\\formal-archive-receipt-a2.json"
+    ]
+  },
+  "phase_contract": {
+    "pre": [
+      "Verify A2 joint committed authority and exact v1 hashes before importing approved v1 bytes.",
+      "Require the frozen worktree to have zero tracked changes and zero ordinary or ignored untracked files, including sensitive source roots.",
+      "Call v1 build_pre_audit, embed A2 authority and hygiene, and publish once at the v1 fixed pre path using hard-link no-replace semantics."
+    ],
+    "publish": [
+      "Require exact staging-subtree plus exact outer/host/source files to be the only ordinary or ignored untracked paths.",
+      "Snapshot all source-lock files, source lock, Julia Manifest and exclusive runner before and after v1 build_post_audit.",
+      "Publish the v1 post receipt once, inventory every staging regular file as opaque bytes while rejecting symlink/reparse entries, and publish a staging seal once.",
+      "Publish an external anchor once that binds the seal, inventory root, outer/capture/host/source/post hashes and exact finalizer launch intent.",
+      "Launch the exact frozen finalizer tokens once as A2's direct child with the fixed Python environment policy and publish its PID/command/exit/times in an external no-replace execution audit. A crash, nonzero exit, partial archive or existing path is terminal and numerical rerun is forbidden."
+    ],
+    "archive": [
+      "Treat the external anchor and execution audit as the trust root, require exact finalizer command/cwd/PID/success and unchanged seal.",
+      "Rehash every prepublication inventory member, the v1 post receipt, capture metadata, audit copies, external observations, formal-run-manifest and every segment trace as opaque bytes without parsing segment JSON.",
+      "Require exact archive membership and publish one no-replace archive receipt. Assessment remains forbidden until that receipt says passed and assessment_authorized=true."
+    ]
+  },
+  "outcome_blind_attestation": {
+    "recorded_before_formal_run": true,
+    "formal_run_started": false,
+    "gold_outcome_opened": false,
+    "k0_outcome_opened": false,
+    "k1_outcome_opened": false,
+    "segment_json_opened_or_parsed": false,
+    "any_outcome_opened": false,
+    "allowed_observation": "Canonical paths, Git state, byte counts, opaque SHA-256 values, process IDs, commands, environment policy, timestamps and non-outcome topology metadata only."
+  },
+  "terminal_stop_conditions": [
+    "Any authority, v1 hash, lineage, tracked, source, official-input, path, command, environment, PID or receipt mismatch",
+    "Any ignored or ordinary untracked path outside the phase-exact allowlist",
+    "Any symlink, junction, reparse, nonregular inventory entry, changed inventory member or unexpected archive member",
+    "Any existing receipt/output, no-replace race, crash, partial run, nonzero finalizer exit or missing official archive",
+    "Any attempt to retry publish/finalizer, resume or concatenate a numerical run, replace a receipt, edit v1, parse segment JSON or assess before the archive receipt"
+  ],
+  "publication_rule": "Only a passed A2 archive receipt authorizes the still-result-blind assessor phase. It does not authorize product connection.",
+  "change_rule": "A2 amendment and checker are immutable after their joint pre-outcome commit. Any later correction requires a new numbered supplement and must never edit v1 or A2 expected hashes to accept drift."
+}
