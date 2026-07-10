@@ -10,6 +10,8 @@ function case_by_id(cases, id)
     return only(filter(case -> case.input.oracle.id == id, cases))
 end
 
+include(joinpath(@__DIR__, "test_s4.jl"))
+
 @testset "S4 input scaffold is frozen before mechanism code" begin
     cases = ExperimentSingular001.s4_development_cases()
     @test length(cases) == 36
