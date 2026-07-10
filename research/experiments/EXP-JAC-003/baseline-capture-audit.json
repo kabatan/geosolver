@@ -1,0 +1,57 @@
+{
+  "schema_version": "exp-jac-003-baseline-capture-audit/v1",
+  "experiment_id": "EXP-JAC-003",
+  "recorded_at_utc": "2026-07-10T07:29:03.8360129Z",
+  "attempts": [
+    {
+      "sequence": 1,
+      "outcome": "failed_before_package_load",
+      "exit_code": 1,
+      "command": "julia --startup-file=no --project=research/experiments/EXP-JAC-003 research/experiments/EXP-JAC-003/source/capture_public_baseline.jl research/experiments/EXP-JAC-003/baseline-contract.json research/experiments/EXP-JAC-003/public-baseline-snapshot.json",
+      "failure": "GeoTargetBase path dependency was declared but the new experiment environment had not been instantiated.",
+      "candidate_input_generated": false,
+      "assessor_input_generated": false,
+      "control_trace_generated": false,
+      "baseline_snapshot_generated": false,
+      "outcome_data_accessed": false
+    },
+    {
+      "sequence": 2,
+      "outcome": "environment_instantiated",
+      "exit_code": 0,
+      "command": "julia --startup-file=no --project=research/experiments/EXP-JAC-003 -e 'using Pkg; Pkg.instantiate()'",
+      "reason": "Resolve and pin the already declared local path dependencies before retrying baseline capture.",
+      "project_sha256": "079800f27209e3a9604c0ecff8897017e32e16005eadf1ce90df958c00b42c24",
+      "manifest_sha256": "c09c0387638fdb3b93b6cd2080c47514c0eae3ef05988569009183b3ba1855cf",
+      "local_path_provenance": {
+        "GeoTargetBase": "../../../julia/GeoTargetBase",
+        "GeoTargetCore": "../../../julia/GeoTargetCore",
+        "GeoTargetGeometry": "../../../julia/GeoTargetGeometry"
+      }
+    },
+    {
+      "sequence": 3,
+      "outcome": "baseline_captured",
+      "exit_code": 0,
+      "snapshot_sha256": "06313027005a06067757d9726915a289b4c36d0b4df4c7f89bea65ce822c6c54",
+      "checkpoint_content_hash": "sha256:b475bf23b47b11208a036e9e30886a99fbbeee25a507f25c67871f55c480a9f5",
+      "checkpoint_canonical_json_sha256": "1958a8d87ad2631625c8b783600a164ecd3d0cab224a38d2922ef6732bea4099",
+      "round_trip_identical": true
+    },
+    {
+      "sequence": 4,
+      "outcome": "deterministic_replay_matched",
+      "exit_code": 0,
+      "replay_snapshot_sha256": "06313027005a06067757d9726915a289b4c36d0b4df4c7f89bea65ce822c6c54",
+      "byte_identical_to_primary": true,
+      "replay_artifact_retained": false
+    }
+  ],
+  "publication": {
+    "canonical_snapshot": "research/experiments/EXP-JAC-003/public-baseline-snapshot.json",
+    "snapshot_sha256": "06313027005a06067757d9726915a289b4c36d0b4df4c7f89bea65ce822c6c54",
+    "candidate_mechanism_present": false,
+    "development_inputs_materialized": false,
+    "locked_inputs_materialized": false
+  }
+}
