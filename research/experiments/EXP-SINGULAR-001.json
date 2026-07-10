@@ -1,0 +1,369 @@
+{
+  "schema_version": "1.0.0",
+  "id": "EXP-SINGULAR-001",
+  "title": "Adaptive-precision root evidence and singular endpoint refinement",
+  "status": "preregistered",
+  "requirements": ["GOAL-01", "GOAL-02", "GOAL-03", "GOAL-04", "GOAL-05", "GOAL-06", "DSL-01", "DSL-05", "DSL-07", "DSL-08", "ANS-01", "ANS-03", "ANS-05", "ANS-07", "ANS-08", "ARCH-02", "ARCH-04", "ARCH-05", "ARCH-06", "ARCH-08", "RES-01", "RES-02", "RES-03", "RES-04", "RES-05", "RES-06", "QA-01", "QA-03"],
+  "failure_ids": ["F3", "F5", "F6", "F8", "F9", "F12", "F13", "F17", "F18"],
+  "baseline_id": "RB0-IID-LMQR-1",
+  "objective": "Determine which charged high-precision refinement and root-evidence mechanisms can safely recover accurate targets from fixed near-rank or singular local endpoints without changing discovery, requiring polynomial lowering, or treating point replay as a root certificate.",
+  "hypothesis": "A capability-routed precision ladder with stable rank diagnostics, explicit configuration and target error evidence, and a separately validated C3V path will repair many near-rank endpoints; singular-specific Broyden or bordered-nullspace lanes will help only identifiable strata and must otherwise remain unknown.",
+  "scope": {
+    "included": [
+      "fixed Float64 endpoints emitted by the frozen local champion",
+      "C2 numeric-generic black-box relation and target evaluation",
+      "regular ill-conditioned, rank-transition and isolated singular roots",
+      "regular and singular feasible manifolds as non-promotion controls",
+      "optional C3V interval configuration verification when every executed path declares the capability",
+      "separate semantic replay, numerical root evidence and validated root evidence artifacts"
+    ],
+    "excluded": [
+      "global start generation, archive policy, scheduler policy or target deduplication changes",
+      "whole-system Groebner, RUR, polynomial homotopy or mandatory symbolic lowering",
+      "exact target algebraic identity promotion",
+      "general singular-root certification without a declared numerical or validated evidence contract",
+      "nondeterministic callbacks and arbitrary discontinuities"
+    ]
+  },
+  "literature": [
+    {
+      "id": "LIT-ADAPTIVE-MULTIPRECISION",
+      "url": "https://doi.org/10.1137/060658862",
+      "claim": "Adaptive multiprecision can allocate digits from local conditioning and requested accuracy instead of paying high precision along an entire numerical path.",
+      "assumptions": "The function and Jacobian are evaluable at the requested precision and condition estimates are useful with safety margins.",
+      "break_conditions": "The result concerns homotopy path tracking and does not prove that an arbitrary least-squares endpoint is a root or isolated."
+    },
+    {
+      "id": "LIT-NEWTON-FLOATING-POINT",
+      "url": "https://doi.org/10.1137/S0895479899359837",
+      "claim": "Residual evaluation, Jacobian and linear-solve error, and update rounding jointly limit Newton residual and forward accuracy even when residuals use extended precision.",
+      "assumptions": "The local Newton model and its regularity/error assumptions match the executed system.",
+      "break_conditions": "Poor conditioning separates residual size from forward accuracy and singular roots invalidate a regular inverse bound."
+    },
+    {
+      "id": "LIT-RANK-DEFICIENT-NLS",
+      "url": "https://doi.org/10.1137/090780882",
+      "claim": "For rank-deficient nonlinear least squares with nonzero residual, truncated SVD substitution can be unstable and column subset selection is recommended for the studied setting.",
+      "assumptions": "The problem is locally described by the rank-deficient nonlinear least-squares model in the paper.",
+      "break_conditions": "A noisy numerical rank transition or zero-residual singular root does not inherit the nonzero-residual result."
+    },
+    {
+      "id": "LIT-SINGULAR-BROYDEN",
+      "url": "https://doi.org/10.1137/0722034",
+      "claim": "Broyden iteration converges linearly for a stated class of roots with singular Jacobian when initialized in a special local region.",
+      "assumptions": "The singularity class and initial-region hypotheses hold.",
+      "break_conditions": "The result is local, class-specific and neither distinguishes a manifold nor gives all-root coverage."
+    },
+    {
+      "id": "LIT-NULLSPACE-NEWTON",
+      "url": "https://doi.org/10.1016/j.apnum.2004.09.029",
+      "claim": "Approximate left and right nullspaces can form bordered systems with quadratic local convergence near generalized regular singularities.",
+      "assumptions": "An isolated generalized-regular singular root and reliable rank/nullspace estimates are available.",
+      "break_conditions": "Manifolds, changing rank, unavailable derivatives or a wrong nullity estimate invalidate the route."
+    },
+    {
+      "id": "LIT-RUMP-VERIFICATION",
+      "url": "https://doi.org/10.1017/S096249291000005X",
+      "claim": "Rigorous numerical verification checks theorem assumptions with directed-rounding enclosures rather than relying on a higher-precision point value.",
+      "assumptions": "Sound interval extensions and the derivative enclosures required by the selected test are available.",
+      "break_conditions": "Opaque point-only callbacks or a singular interval Jacobian cannot silently satisfy a standard regular-root verification test."
+    },
+    {
+      "id": "LIT-KRAWCZYK",
+      "url": "https://arxiv.org/abs/2011.05000",
+      "claim": "Interval Krawczyk methods can certify isolated nonsingular roots when a sound interval model is available.",
+      "assumptions": "The system has an isolated nonsingular root and every operation supplies a sound interval extension over the candidate box.",
+      "break_conditions": "Singular roots, feasible manifolds and C0/C2-only black boxes do not satisfy this certificate path."
+    }
+  ],
+  "controls": [
+    {
+      "id": "S0-POINT-REPLAY",
+      "role": "control",
+      "description": "Current unchanged-coordinate C2 canonical point replay after the solver-side inconclusive-image fail-closed repair.",
+      "differences_from_baseline": ["No coordinate refinement", "No root-existence or forward-error evidence"]
+    },
+    {
+      "id": "SNEG-NEAR-NULL-FALSE-ROOT",
+      "role": "negative_control",
+      "description": "Fixed identity-free ill-conditioned systems whose residual-qualified endpoints are far from their unique Gold root.",
+      "differences_from_baseline": ["Adversarial near-null endpoint supplied directly to the refinement stage"]
+    },
+    {
+      "id": "SLB-ANALYTIC-DERIVATIVES",
+      "role": "lower_bound",
+      "description": "Generated-family refinements using independently coded analytic Jacobian and higher directional derivative information.",
+      "differences_from_baseline": ["Gold-independent analytic derivatives available only to bound derivative-estimation loss"]
+    }
+  ],
+  "candidates": [
+    {
+      "id": "S1-AP-LMQR",
+      "role": "candidate",
+      "description": "Adaptive-precision normalized LM-QR re-refinement with precision/radius rank stability, correction-based configuration error and propagated target error estimates.",
+      "differences_from_baseline": ["C2 precision ladder", "BigFloat finite-difference Jacobian", "Independent confirmation", "Typed numerical root evidence"]
+    },
+    {
+      "id": "S2-AP-CPQR-SUBSET",
+      "role": "candidate",
+      "description": "The S1 ladder with pivoted-QR column subset selection when rank is stable but the nonzero-residual local model is rank deficient.",
+      "differences_from_baseline": ["Rank-revealing column subset model", "Explicit discarded-direction evidence", "No truncated-SVD answer predicate"]
+    },
+    {
+      "id": "S3-AP-BROYDEN",
+      "role": "candidate",
+      "description": "Multiprecision good-Broyden refinement, routed only after stable singular diagnostics and independently confirmed from fixed perturbations.",
+      "differences_from_baseline": ["Secant Jacobian updates", "Singular-stratum route", "Linear-convergence trace gate"]
+    },
+    {
+      "id": "S4-AP-BORDERED-NULLSPACE",
+      "role": "candidate",
+      "description": "Multiprecision bordered left/right-nullspace correction for stable generalized-regular isolated singular candidates.",
+      "differences_from_baseline": ["Bordered singular system", "Nullspace and nullity stability gate", "Directional derivative work fully charged"]
+    },
+    {
+      "id": "S5-C3V-KRAWCZYK",
+      "role": "candidate",
+      "description": "Capability-gated interval Krawczyk configuration verification for isolated measured-regular candidates after numeric refinement.",
+      "differences_from_baseline": ["C3V interval box evaluation", "Directed-rounding root-existence certificate", "Typed unavailable outcome without fallback"]
+    }
+  ],
+  "synthetic_families": [
+    {
+      "id": "SING-NEAR-NULL-FULL-RANK",
+      "purpose": "Measure residual-versus-forward-error failure and adaptive digit demand without an exactly singular Jacobian.",
+      "factors": {"dimension": [2, 4, 8, 16], "singular_value_ratio": [0.0001, 1e-08, 1e-12, 1e-16], "endpoint_normalized_error": [1e-12, 1e-06, 0.1, 1.0], "representation": ["dense_rotation", "sparse_chain", "opaque_composition"]},
+      "gold_source": "Constructed orthogonal factors, analytic unique root and independently evaluated target",
+      "counterexample_for": ["residual-only validation", "fixed Float64 rank threshold", "precision-unaware stopping"]
+    },
+    {
+      "id": "SING-ISOLATED-MULTIPLE",
+      "purpose": "Compare generic and singular-specific refiners on isolated roots with stable Jacobian nullspaces.",
+      "factors": {"dimension": [1, 2, 4, 8], "multiplicity": [2, 3, 4, 6], "breadth": [1, 2], "affine_condition": [1.0, 10000.0, 100000000.0]},
+      "gold_source": "Analytic multiple roots and independently coded derivative tensors",
+      "counterexample_for": ["regular Newton correction", "one universal singular route", "residual contraction as isolation proof"]
+    },
+    {
+      "id": "SING-MANIFOLD-CONTROLS",
+      "purpose": "Prevent isolated-singular heuristics from promoting feasible manifolds or locally flat target variation as finite answers.",
+      "factors": {"relation_rank": [0, 1, 2], "target_mode": ["varying_first_order", "varying_high_order", "structurally_constant", "curved_constant_on_manifold"], "codimension": [1, 2]},
+      "gold_source": "Parameterized analytic manifolds and exact target restrictions",
+      "counterexample_for": ["rank-deficient means isolated singular", "finite probes prove constant target", "exact-zero residual means promotable"]
+    },
+    {
+      "id": "SING-TANGENCY-AND-CLOSE-ROOTS",
+      "purpose": "Separate an ill-conditioned regular pair from a coalesced singular root and preserve distinct target recall.",
+      "factors": {"tangent_ratio": [0.9, 0.9999, 0.99999999, 1.0], "root_separation": [0.1, 0.001, 1e-06, 0.0], "target_scale": [1.0, 1e-06]},
+      "gold_source": "Closed-form circle-line and polynomial-fold roots with independent target descriptors",
+      "counterexample_for": ["one rank cutoff across coalescence", "target-stability-only confirmation"]
+    },
+    {
+      "id": "SING-NONROOT-STATIONARY",
+      "purpose": "Reject least-squares stationary points and inconsistent redundant systems despite package success or stable iterates.",
+      "factors": {"dimension": [2, 4, 8], "redundancy": [1, 2, 4], "inconsistency": [1e-14, 1e-10, 1e-06], "condition": [1.0, 100000000.0]},
+      "gold_source": "Analytic proof of no zero in the endpoint neighborhood plus exhaustive low-dimensional interval control",
+      "counterexample_for": ["package retcode", "stable nonzero residual", "subset selection without canonical residual"]
+    },
+    {
+      "id": "SING-CAPABILITY-SEMANTICS",
+      "purpose": "Verify explicit C0/C2/C3V routing across opaque compositions, guards, domains and stable branches.",
+      "factors": {"capability": ["C0", "C2", "C3V"], "guard_margin": [0.0, 1e-12, 0.01], "branch_margin": [0.0, 1e-12, 0.01], "domain_distance": [0.0, 1e-12, 0.01]},
+      "gold_source": "Audited plugin semantics and independently materialized valid/invalid configurations",
+      "counterexample_for": ["silent precision downcast", "interval capability inferred from C2", "refinement bypasses canonical semantics"]
+    }
+  ],
+  "real_problem_policy": "Only independently audited Gold endpoints may affect selection. Production routing cannot see family, problem, primitive, file or target identity; translated problems are timing-only until separately audited.",
+  "design": {
+    "execution_order": [
+      "Materialize and checksum endpoints, Gold roots, transformations and capability reports before candidate implementation",
+      "Run the fixed P1 false-root and manifold controls against every evidence constructor before any performance pilot",
+      "Run a non-gating adapter pilot and discard implementations that violate budgets, precision isolation or canonical semantics",
+      "Compare S0, S1 and S2 on paired regular and near-rank development endpoints",
+      "Compare S1, S3 and S4 only on stable-rank-deficient isolated-singular development endpoints",
+      "Run S5 on the C3V-eligible regular subset and require an explicit unavailable result elsewhere",
+      "Use at most one development tuning round, then freeze precision, rank, confirmation and route rules",
+      "Run one generator-disjoint locked validation and select promote, specialize or reject per route"
+    ],
+    "pairing": "Every variant receives the identical frozen endpoint, normalized scales, deadline, capability lock, Gold-hidden oracle, perturbation stream and canonical semantic replay; all failed probes and fallbacks are charged.",
+    "tuning_round_limit": 1,
+    "freeze_rule": "Precision ladder, derivative stencil, rank stability rule, error reserve, route order and evidence constructors freeze together before locked validation.",
+    "locked_validation_rule": "Inspecting a locked endpoint burns its complete generator/transform seed block and requires a generator-disjoint replacement before another locked run.",
+    "development_instances": 72,
+    "locked_instances": 144,
+    "notes": [
+      "Fixed endpoints isolate F9/F12/F13 from global discovery and archive effects.",
+      "SemanticReplayEvidence cannot construct a public answer without NumericalRootEvidence or ValidatedRootEvidence.",
+      "C2 error envelopes are empirical provisional evidence and must never be described as rigorous interval certificates.",
+      "A singular lane may be specialized to a diagnosed stratum; failure to find a universal winner is an expected valid result."
+    ]
+  },
+  "hyperparameters": {
+    "precision_ladder_bits": {
+      "value": [128, 256, 512, 1024],
+      "status": "hypothesis",
+      "rationale": "Covers the fixed 1e-16 near-null factor while bounding arbitrary-precision cost.",
+      "tuning_domain": [[128, 256, 512], [128, 256, 512, 1024]],
+      "freeze_rule": "One development comparison; never extend after a locked failure."
+    },
+    "required_precision_guard_bits": {
+      "value": 32,
+      "status": "hypothesis",
+      "rationale": "Adds a safety reserve beyond requested target bits and estimated condition loss.",
+      "tuning_domain": [24, 32, 48],
+      "freeze_rule": "Choose once from development undercoverage and cost, then freeze."
+    },
+    "maximum_refinement_iterations": {
+      "value": 64,
+      "status": "hypothesis",
+      "rationale": "Allows slowly convergent singular traces without unbounded endpoint work.",
+      "tuning_domain": [32, 64],
+      "freeze_rule": "Identical hard limit for every C2 candidate."
+    },
+    "per_endpoint_oracle_limit": {
+      "value": 4096,
+      "status": "hypothesis",
+      "rationale": "Bounds finite-difference, confirmation and fallback work at all precisions.",
+      "tuning_domain": [2048, 4096],
+      "freeze_rule": "No route-specific increase after development."
+    },
+    "central_difference_epsilon_exponent": {
+      "value": 0.3333333333333333,
+      "status": "hypothesis",
+      "rationale": "Balances central-difference roundoff and truncation for smooth black-box functions.",
+      "tuning_domain": [0.3333333333333333, 0.4],
+      "freeze_rule": "Compare only against analytic derivative controls on development."
+    },
+    "rank_roundoff_multiplier": {
+      "value": 32,
+      "status": "hypothesis",
+      "rationale": "Separates numerical noise from stable rank while requiring agreement across precisions and radii.",
+      "tuning_domain": [16, 32, 64],
+      "freeze_rule": "A single multiplier applies without family or identity exceptions."
+    },
+    "rank_stability_radius_count": {
+      "value": 2,
+      "status": "hypothesis",
+      "rationale": "One stencil cannot distinguish truncation error from a true near-null direction.",
+      "tuning_domain": [2, 3],
+      "freeze_rule": "Same count for every route and capability."
+    },
+    "independent_confirmation_count": {
+      "value": 2,
+      "status": "hypothesis",
+      "rationale": "Independent perturbation/refinement traces expose stable nonroot stationary points and route sensitivity.",
+      "tuning_domain": [2, 3],
+      "freeze_rule": "Confirmation endpoints and counter seeds are materialized before execution."
+    },
+    "confirmation_perturbation_radius": {
+      "value": 1e-06,
+      "status": "hypothesis",
+      "rationale": "Tests a local capture neighborhood without rerunning global discovery.",
+      "tuning_domain": [1e-08, 1e-06, 0.0001],
+      "freeze_rule": "Choose on development regular/singular capture curves, not per instance."
+    },
+    "error_reserve_multiplier": {
+      "value": 16,
+      "status": "hypothesis",
+      "rationale": "Combines last correction, precision disagreement and target propagation into a conservative provisional envelope.",
+      "tuning_domain": [8, 16, 32],
+      "freeze_rule": "Any development undercoverage eliminates the tested value rather than widening after locked results."
+    },
+    "target_error_goal": {
+      "value": 1e-12,
+      "status": "hypothesis",
+      "rationale": "Matches the current validated target consistency scale while measuring stricter Gold error separately.",
+      "tuning_domain": [1e-12],
+      "freeze_rule": "Safety threshold; never relaxed from observed failures."
+    },
+    "c3v_initial_box_multiplier": {
+      "value": 4,
+      "status": "hypothesis",
+      "rationale": "Seeds interval verification from the numerical configuration-error estimate with bounded inflation.",
+      "tuning_domain": [2, 4, 8],
+      "freeze_rule": "Choose once on development certificate success and width."
+    },
+    "singular_route_trigger": {
+      "value": "rank_deficiency_stable_at_two_precisions_and_two_radii",
+      "status": "hypothesis",
+      "rationale": "Avoids routing from one Float64 SVD cutoff or problem identity.",
+      "tuning_domain": ["rank_deficiency_stable_at_two_precisions_and_two_radii"],
+      "freeze_rule": "Structural safety rule; not tunable."
+    }
+  },
+  "budgets": {
+    "wall_seconds": [60, 180, 420],
+    "launch_checkpoints": [16, 32, 64],
+    "local_maxiters": 64,
+    "accounting": "Charge every C0/C2/C3V callback, failed stencil, confirmation perturbation, Jacobian or directional derivative, factorization, rank diagnostic, semantic replay, certificate replay, compilation and cold/warm wall time. Report raw callbacks and precision-equivalent oracle work using callback_cost * ceil(bits/53); hard deadline and oracle limits apply inside every route and fallback."
+  },
+  "seeds": {
+    "development_count": 12,
+    "locked_count": 30,
+    "generation": "Problem, affine transform, endpoint perturbation, confirmation and execution-order seeds use separate namespaces; full materialized inputs and checksums are frozen before candidate runs."
+  },
+  "metrics": {
+    "primary": {"id": "p_refinement_gold", "definition": "Fraction of fixed endpoints producing required root evidence, a canonical-valid configuration and a target enclosure containing the independent Gold target.", "direction": "maximize"},
+    "secondary": [
+      {"id": "p_promotable_gold", "definition": "Fraction of Gold endpoints eligible for a public provisional or validated answer after every evidence gate.", "direction": "maximize"},
+      {"id": "configuration_error_coverage", "definition": "Fraction of promoted C2 endpoints whose declared configuration-error estimate contains the Gold configuration distance.", "direction": "maximize"},
+      {"id": "target_error_coverage", "definition": "Fraction of promoted endpoints whose target enclosure contains the independent Gold target.", "direction": "maximize"},
+      {"id": "precision_equivalent_oracle_work", "definition": "Charged callbacks weighted by ceil(precision_bits divided by 53) through root evidence or typed unknown.", "direction": "minimize"},
+      {"id": "time_to_root_evidence", "definition": "Cold and warm wall time from fixed endpoint to accepted root evidence, reported separately.", "direction": "minimize"},
+      {"id": "unknown_rate_by_failure", "definition": "Typed unknown outcomes partitioned by capability, unstable rank, singular class, guard, branch, budget and certificate failure.", "direction": "report_only"},
+      {"id": "metamorphic_route_agreement", "definition": "Fraction of equivalent coordinate, residual and graph transforms selecting equivalent routes and answer decisions.", "direction": "maximize"}
+    ],
+    "safety": [
+      {"id": "false_provisional_count", "definition": "Public provisional answers whose configuration or target fails independent Gold truth.", "direction": "zero_required"},
+      {"id": "semantic_replay_only_answer_count", "definition": "Answers constructed from point semantic replay without numerical or validated root evidence.", "direction": "zero_required"},
+      {"id": "inconclusive_image_answer_count", "definition": "Verified payloads or public answers emitted from TARGET_IMAGE_INCONCLUSIVE diagnostics.", "direction": "zero_required"},
+      {"id": "silent_capability_fallback_count", "definition": "C2 or C3V unavailability that silently downcasts or changes the assurance claim.", "direction": "zero_required"},
+      {"id": "budget_overrun_count", "definition": "Endpoints exceeding declared callback, iteration, precision or wall deadlines including fallback work.", "direction": "zero_required"}
+    ]
+  },
+  "promotion_gate": {
+    "mode": "all",
+    "criteria": [
+      "False-provisional, semantic-replay-only, inconclusive-image, silent-capability-fallback and budget-overrun counts are zero on fixed controls, development and locked validation.",
+      "Every public provisional answer carries both SemanticReplayEvidence and NumericalRootEvidence, or SemanticReplayEvidence and independently replayable ValidatedRootEvidence.",
+      "P_refinement_gold improves by at least 15 percentage points overall or precision-equivalent work drops by at least 20 percent at equal P_refinement_gold.",
+      "Near-rank and isolated-singular strata each improve by at least 10 percentage points for any promoted general or specialized route, with a family-clustered one-sided 95 percent lower bound above zero.",
+      "No regular well-conditioned, manifold, close-root, strict-guard or stable-branch critical stratum loses more than 2 P_promotable_gold points.",
+      "Every promoted locked C2 endpoint has Gold-contained configuration and target error estimates; every promoted C3V endpoint replays an existence/uniqueness certificate independently.",
+      "Equivalent variable rotations, residual-row transformations, scale-preserving reformulations, redundant relations and graph reorderings produce zero answer-decision disagreements.",
+      "Warm regular-endpoint overhead is at most 10 percent and cold setup breaks even within 32 eligible endpoints unless a critical-stratum recall gain of at least 10 points remains.",
+      "The gain repeats in at least three unrelated families after the single declared tuning round."
+    ]
+  },
+  "kill_gate": {
+    "mode": "any",
+    "criteria": [
+      "The fixed near-null false-root, nonroot stationary or feasible-manifold control produces a verified payload or public answer.",
+      "Point BigFloat agreement, a package return code, a residual threshold or one numerical rank cutoff is used as an answer predicate.",
+      "Any promoted C2 configuration or target error estimate excludes its locked Gold value.",
+      "A coordinate rotation, equivalent residual transformation or graph rewrite changes a promotion decision.",
+      "C2 or C3V capability failure silently falls back while retaining the stronger assurance label.",
+      "All singular-specific candidates improve P_refinement_gold by less than 5 points after precision, derivative, fallback and confirmation work are charged.",
+      "Regular-family warm overhead exceeds 10 percent without a critical recall gain, or cold cost does not break even within 128 endpoints.",
+      "The selected gain fails to reproduce after the one permitted development tuning round."
+    ]
+  },
+  "safety_invariants": [
+    "Canonical relation, truth, domain, guard, branch and target semantics remain the only final semantic replay.",
+    "SemanticReplayEvidence alone can never construct a public answer.",
+    "TARGET_IMAGE_INCONCLUSIVE remains diagnostic and refinement-only regardless of residual or precision agreement.",
+    "Exact-zero residual does not imply that a root is isolated or that a finite target image exists.",
+    "Routing uses only capabilities, dimension, scale, charged progress, residual, stable rank/condition and margin diagnostics.",
+    "No route reads problem, family, primitive, file, configuration or target identity.",
+    "C3V verification requires sound interval support on every executed path and never silently degrades to C2.",
+    "Surrogate, subset, secant and bordered systems only propose refinements; unchanged canonical semantics decide validity.",
+    "Every callback, precision increase, failed probe, confirmation and fallback is charged before deadline checks return control.",
+    "The open Literal, Reference, Call and Select graph plus PluginSpec ABI is unchanged by the experiment."
+  ],
+  "artifacts": {
+    "run_manifest_schema": "research/schemas/run-manifest.schema.json",
+    "benchmark_manifest_schema": "research/schemas/benchmark-manifest.schema.json",
+    "result_path": "research/results/EXP-SINGULAR-001/summary.json",
+    "negative_result_path": "research/negative-results/ledger.json"
+  },
+  "decision": {"state": "pending", "selected_variant": null, "rationale": null, "decision_commit": null}
+}
