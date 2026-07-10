@@ -200,16 +200,18 @@ end
     @test control.diagnostics["phase"] == "promoted"
     @test candidate.core.work.callbacks <= options.maximum_callbacks
     @test control.core.work.callbacks <= options.maximum_callbacks
-    @test candidate.core.work.iterations == 4
-    @test control.core.work.iterations == 4
-    @test candidate.core.work.callbacks == 488
-    @test candidate.core.work.factorization_calls == 122
+    # Each perturbed confirmation first reaches the root, then performs a
+    # second complete step to satisfy the frozen normalized-last-step gate.
+    @test candidate.core.work.iterations == 6
+    @test control.core.work.iterations == 6
+    @test candidate.core.work.callbacks == 516
+    @test candidate.core.work.factorization_calls == 126
     @test candidate.core.work.target_calls == 24
     @test candidate.core.work.jacobian_calls == 0
-    @test control.core.work.callbacks == 114
-    @test control.core.work.factorization_calls == 66
+    @test control.core.work.callbacks == 124
+    @test control.core.work.factorization_calls == 70
     @test control.core.work.target_calls == 24
-    @test control.core.work.jacobian_calls == 38
+    @test control.core.work.jacobian_calls == 42
 
     candidate_audit = candidate.diagnostics["applicability_audits"][1]
     @test candidate_audit["physical_reference"]["ell"] == 65
@@ -266,6 +268,44 @@ end
     @test candidate_128.core.root_evidence.target_error_estimate ==
           candidate_512.core.root_evidence.target_error_estimate
 
+    # A confirmation start inherits k from the eligible primary endpoint.
+    # Its retained direction must remain valid, but its temporary gap need
+    # not independently satisfy the endpoint routing threshold.  Final audits
+    # still invoke the strict branch exercised by the throwing assertions.
+    above_gap = BigFloat[1 0; 0 BigFloat("2e-6")]
+    candidate_route_ledger = ExperimentSingular001._work_ledger(options, () -> UInt64(0))
+    inherited_candidate = ExperimentSingular001._s4c_split!(
+        candidate_route_ledger,
+        above_gap;
+        fixed_nullity=1,
+        require_route_selection=false,
+    )
+    @test inherited_candidate.nullity == 1
+    @test_throws ExperimentSingular001._S4CandidateReject begin
+        ExperimentSingular001._s4c_split!(
+            candidate_route_ledger,
+            above_gap;
+            fixed_nullity=1,
+            require_route_selection=true,
+        )
+    end
+    control_route_ledger = ExperimentSingular001._work_ledger(options, () -> UInt64(0))
+    inherited_control = ExperimentSingular001._s4a_split!(
+        control_route_ledger,
+        above_gap;
+        fixed_nullity=1,
+        require_route_selection=false,
+    )
+    @test inherited_control.nullity == 1
+    @test_throws ExperimentSingular001._S4ControlReject begin
+        ExperimentSingular001._s4a_split!(
+            control_route_ledger,
+            above_gap;
+            fixed_nullity=1,
+            require_route_selection=true,
+        )
+    end
+
     ledger = ExperimentSingular001._work_ledger(options, () -> UInt64(0))
     reference_basis = BigFloat[1 0; 0 1; 0 0]
     angle = BigFloat(3) / BigFloat(5)
@@ -302,27 +342,29 @@ end
         return calls[] <= 2 ? UInt64(0) : UInt64(11_000_000_000)
     end
     crossing_ledger = ExperimentSingular001._work_ledger(options, crossing_clock)
-    @test_throws ExperimentSingular001.ExperimentBudgetExceeded
+    @test_throws ExperimentSingular001.ExperimentBudgetExceeded begin
         ExperimentSingular001._s4c_residual!(
             crossing_ledger,
             input.oracle,
             BigFloat.(input.endpoint),
             128,
         )
+    end
     @test crossing_ledger.deadline_reached
 
     calls[] = 0
     factor_ledger = ExperimentSingular001._work_ledger(options, crossing_clock)
-    @test_throws ExperimentSingular001.ExperimentBudgetExceeded
+    @test_throws ExperimentSingular001.ExperimentBudgetExceeded begin
         ExperimentSingular001._s4c_split!(
             factor_ledger,
             BigFloat[1 0; 0 0],
         )
+    end
     @test factor_ledger.deadline_reached
 
     calls[] = 0
     analytic_ledger = ExperimentSingular001._work_ledger(options, crossing_clock)
-    @test_throws ExperimentSingular001.ExperimentBudgetExceeded
+    @test_throws ExperimentSingular001.ExperimentBudgetExceeded begin
         ExperimentSingular001._s4a_jacobian!(
             analytic_ledger,
             analytic,
@@ -330,6 +372,7 @@ end
             BigFloat.(input.endpoint),
             128,
         )
+    end
     @test analytic_ledger.deadline_reached
 
     snapshot_calls = Ref(0)
@@ -338,8 +381,9 @@ end
         return snapshot_calls[] == 1 ? UInt64(0) : UInt64(11_000_000_000)
     end
     snapshot_ledger = ExperimentSingular001._work_ledger(options, snapshot_clock)
-    @test_throws ExperimentSingular001.ExperimentBudgetExceeded
+    @test_throws ExperimentSingular001.ExperimentBudgetExceeded begin
         ExperimentSingular001._s4_checked_work_snapshot!(snapshot_ledger)
+    end
     @test snapshot_ledger.deadline_reached
 
     spy_input, base_analytic = _s4_synthetic_deflation_one()
@@ -389,8 +433,8 @@ end
     @test control.core.root_evidence.nullity == 4
     @test candidate.core.work.callbacks <= 4096
     @test control.core.work.callbacks <= 4096
-    @test candidate.core.work.iterations == 4
-    @test control.core.work.iterations == 4
+    @test candidate.core.work.iterations == 6
+    @test control.core.work.iterations == 6
     @test candidate.core.work.elapsed_seconds <= 10.0
     @test control.core.work.elapsed_seconds <= 10.0
 end

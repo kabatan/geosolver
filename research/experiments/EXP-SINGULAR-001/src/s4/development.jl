@@ -284,14 +284,14 @@ function _s4_budget_violations(rows, s4_options, baseline_options)
         categorized_callbacks = work["residual_calls"] + work["target_calls"] +
                                 work["jacobian_calls"]
         precision_callbacks = sum(
-            entry["callbacks"] for entry in work["calls_by_precision"],
+            entry["callbacks"] for entry in work["calls_by_precision"]
         )
         precision_equivalent = sum(
             entry["callbacks"] * cld(entry["precision_bits"], 53) for
-            entry in work["calls_by_precision"],
+            entry in work["calls_by_precision"]
         )
         maximum_precision = isempty(work["calls_by_precision"]) ? 0 : maximum(
-            entry["precision_bits"] for entry in work["calls_by_precision"],
+            entry["precision_bits"] for entry in work["calls_by_precision"]
         )
         if work["callbacks"] > options.maximum_callbacks ||
            work["iterations"] > options.maximum_iterations ||

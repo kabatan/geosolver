@@ -538,7 +538,10 @@ function _s4a_reference!(ledger, input, analytic, start, nullity::Int)
             ledger,
             jacobian;
             fixed_nullity=nullity,
-            require_route_selection=true,
+            # The initial endpoint has already selected k.  A perturbed
+            # trajectory start supplies a basis for that frozen route; it is
+            # not a second gap-based routing decision.
+            require_route_selection=false,
         )
         coefficients = _s4a_coefficients(BigFloat, nullity, _S4A_AUDIT_ITERATION)
         direction = split.V2 * coefficients
@@ -633,7 +636,9 @@ function _s4a_trajectory_audit!(
                     _S4A_AUDIT_ITERATION;
                     reference=reference,
                     compute_correction=false,
-                    require_route_selection=true,
+                    # Start-side order probes inherit the frozen route.  The
+                    # final-side probe below deliberately rechecks the gap.
+                    require_route_selection=false,
                 ),
                 _s4a_step!(
                     ledger,

@@ -34,6 +34,24 @@ struct S4BlackBoxOracle{R,T}
     end
 end
 
+function _evaluate_residual!(ledger, oracle::S4BlackBoxOracle, x, precision_bits)
+    _charge_callback!(ledger, :residual, precision_bits)
+    return _finite_vector(
+        oracle.residual(x),
+        oracle.residual_dimension,
+        "S4 residual callback",
+    )
+end
+
+function _evaluate_target!(ledger, oracle::S4BlackBoxOracle, x, precision_bits)
+    _charge_callback!(ledger, :target, precision_bits)
+    value = oracle.target(x)
+    value isa Real && isfinite(value) || throw(
+        ArgumentError("S4 target callback must return a finite real"),
+    )
+    return value
+end
+
 """S4 input capability with no id, family, group, Gold, or derivative fixture."""
 struct S4CandidateInput{O<:S4BlackBoxOracle}
     oracle::O
