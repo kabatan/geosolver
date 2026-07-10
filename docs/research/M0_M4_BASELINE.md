@@ -104,8 +104,20 @@ certificate.
    typed-plan control.
 4. **M3:** the single event loop and `RB0-IID-LMQR-1` produce deterministic,
    replayable traces.
-5. **M4:** `EXP-LOCAL-001` freezes a local champion; only then does
-   `EXP-DISC-001` compare discovery policies with that same champion.
+5. **M4:** The terminal `EXP-LOCAL-001` pilot is diagnostic only and freezes no
+   champion. The prospective `EXP-DISC-001-A3` dependency chain first completes
+   or terminally closes `EXP-LOCAL-003` and freezes its locked-passing scaling
+   policy or explicit `L0-SEMANTIC`. It then preregisters and runs the separate
+   current-core native-globalization study `EXP-LOCAL-004` with that frozen
+   scaling policy. After `EXP-LOCAL-004` terminates, an outcome-bound record
+   freezes exactly one complete local pipeline; a rejected, inconclusive,
+   protocol-failed or infrastructure-failed study falls back explicitly to the
+   current production `L0-SEMANTIC` pipeline, never to a non-gating pilot.
+6. **M4 discovery gate:** `EXP-DISC-001` may materialize candidate/assessor
+   inputs or proposal matrices only after that record binds the original card,
+   A1, A2, A3, the exact champion source, canonical options, ABI/compiler and
+   environment hashes. Every discovery policy is then compared with that same
+   immutable local pipeline.
 
 The old implementation may provide a hypothesis or timing reference, but it is
 never a Gold oracle, imported runtime dependency or source of accepted truth.
