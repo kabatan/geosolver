@@ -21,15 +21,53 @@
       "additionalProperties": false,
       "required": [
         "latent_groups_checked",
+        "gold_configurations_checked",
+        "primary_inverse_comparisons_checked",
         "primary_semantic_z_mismatch_count",
         "primary_scale_permutation_mismatch_count",
-        "safety_qz_mismatch_count"
+        "safety_qz_mismatch_count",
+        "gold_configuration_index_coverage_failure_count",
+        "gold_target_interval_overlap_failure_count",
+        "gold_canonical_status_failure_count",
+        "gold_validation_rejection_count",
+        "gold_residual_tolerance_failure_count",
+        "gold_target_tolerance_failure_count",
+        "gold_canonical_replay_mismatch_count",
+        "primary_inverse_configuration_mismatch_count",
+        "primary_inverse_canonical_decision_mismatch_count",
+        "public_numeric_metadata_bit_mismatch_count",
+        "calibration_row_dimension_mismatch_count",
+        "start_row_dimension_mismatch_count",
+        "calibration_nonfinite_coordinate_count",
+        "start_nonfinite_coordinate_count",
+        "calibration_out_of_bounds_coordinate_count",
+        "start_out_of_bounds_coordinate_count",
+        "unsafe_midpoint_halfwidth_count"
       ],
       "properties": {
         "latent_groups_checked": {"const": 16},
+        "gold_configurations_checked": {"type": "integer", "minimum": 64, "maximum": 192},
+        "primary_inverse_comparisons_checked": {"type": "integer", "minimum": 32, "maximum": 96},
         "primary_semantic_z_mismatch_count": {"const": 0},
         "primary_scale_permutation_mismatch_count": {"const": 0},
-        "safety_qz_mismatch_count": {"const": 0}
+        "safety_qz_mismatch_count": {"const": 0},
+        "gold_configuration_index_coverage_failure_count": {"const": 0},
+        "gold_target_interval_overlap_failure_count": {"const": 0},
+        "gold_canonical_status_failure_count": {"const": 0},
+        "gold_validation_rejection_count": {"const": 0},
+        "gold_residual_tolerance_failure_count": {"const": 0},
+        "gold_target_tolerance_failure_count": {"const": 0},
+        "gold_canonical_replay_mismatch_count": {"const": 0},
+        "primary_inverse_configuration_mismatch_count": {"const": 0},
+        "primary_inverse_canonical_decision_mismatch_count": {"const": 0},
+        "public_numeric_metadata_bit_mismatch_count": {"const": 0},
+        "calibration_row_dimension_mismatch_count": {"const": 0},
+        "start_row_dimension_mismatch_count": {"const": 0},
+        "calibration_nonfinite_coordinate_count": {"const": 0},
+        "start_nonfinite_coordinate_count": {"const": 0},
+        "calibration_out_of_bounds_coordinate_count": {"const": 0},
+        "start_out_of_bounds_coordinate_count": {"const": 0},
+        "unsafe_midpoint_halfwidth_count": {"const": 0}
       }
     },
     "cases": {
@@ -41,7 +79,151 @@
   },
   "$defs": {
     "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "raw_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "bits": {"type": "string", "pattern": "^0x[0-9a-f]{16}$"},
+    "zero_count": {"const": 0},
+    "compiled_variable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "variable_index",
+        "lower_bits",
+        "upper_bits",
+        "origin_bits",
+        "scale_bits",
+        "safe_midpoint_bits",
+        "safe_halfwidth_bits"
+      ],
+      "properties": {
+        "variable_index": {"type": "integer", "minimum": 0, "maximum": 15},
+        "lower_bits": {"$ref": "#/$defs/bits"},
+        "upper_bits": {"$ref": "#/$defs/bits"},
+        "origin_bits": {"$ref": "#/$defs/bits"},
+        "scale_bits": {"$ref": "#/$defs/bits"},
+        "safe_midpoint_bits": {"$ref": "#/$defs/bits"},
+        "safe_halfwidth_bits": {"$ref": "#/$defs/bits"}
+      }
+    },
+    "compiled_numeric_metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["variables", "relation_semantic_scale_bits"],
+      "properties": {
+        "variables": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {"$ref": "#/$defs/compiled_variable"}
+        },
+        "relation_semantic_scale_bits": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {"$ref": "#/$defs/bits"}
+        }
+      }
+    },
+    "candidate_input_audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "calibration_rows_checked",
+        "start_rows_checked",
+        "calibration_row_dimension_mismatch_count",
+        "start_row_dimension_mismatch_count",
+        "calibration_nonfinite_coordinate_count",
+        "start_nonfinite_coordinate_count",
+        "calibration_out_of_bounds_coordinate_count",
+        "start_out_of_bounds_coordinate_count",
+        "public_numeric_metadata_bit_mismatch_count",
+        "unsafe_midpoint_halfwidth_count"
+      ],
+      "properties": {
+        "calibration_rows_checked": {"const": 64},
+        "start_rows_checked": {"const": 32},
+        "calibration_row_dimension_mismatch_count": {"$ref": "#/$defs/zero_count"},
+        "start_row_dimension_mismatch_count": {"$ref": "#/$defs/zero_count"},
+        "calibration_nonfinite_coordinate_count": {"$ref": "#/$defs/zero_count"},
+        "start_nonfinite_coordinate_count": {"$ref": "#/$defs/zero_count"},
+        "calibration_out_of_bounds_coordinate_count": {"$ref": "#/$defs/zero_count"},
+        "start_out_of_bounds_coordinate_count": {"$ref": "#/$defs/zero_count"},
+        "public_numeric_metadata_bit_mismatch_count": {"$ref": "#/$defs/zero_count"},
+        "unsafe_midpoint_halfwidth_count": {"$ref": "#/$defs/zero_count"}
+      }
+    },
+    "gold_configuration_audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "configuration_index",
+        "target_interval_index",
+        "canonical_status",
+        "validation_accepted",
+        "validation_method",
+        "max_abs_scaled_residual_bits",
+        "canonical_target_bits",
+        "target_interval_distance_bits",
+        "residual_within_tolerance",
+        "target_within_interval_tolerance",
+        "canonical_replay_agrees",
+        "canonical_decision_sha256"
+      ],
+      "properties": {
+        "configuration_index": {"type": "integer", "minimum": 0},
+        "target_interval_index": {"type": "integer", "minimum": 0},
+        "canonical_status": {"const": "EVAL_OK"},
+        "validation_accepted": {"const": true},
+        "validation_method": {"const": "canonical_c0_second_pass"},
+        "max_abs_scaled_residual_bits": {"$ref": "#/$defs/bits"},
+        "canonical_target_bits": {"$ref": "#/$defs/bits"},
+        "target_interval_distance_bits": {"$ref": "#/$defs/bits"},
+        "residual_within_tolerance": {"const": true},
+        "target_within_interval_tolerance": {"const": true},
+        "canonical_replay_agrees": {"const": true},
+        "canonical_decision_sha256": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "gold_audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gold_identity_key",
+        "configuration_count",
+        "target_interval_count",
+        "configuration_absolute_tolerance_bits",
+        "target_absolute_tolerance_bits",
+        "canonical_residual_tolerance_bits",
+        "configuration_index_coverage_exact",
+        "target_intervals_distinct_nonoverlapping",
+        "canonical_eval_ok_count",
+        "validation_accepted_count",
+        "residual_within_tolerance_count",
+        "target_within_interval_tolerance_count",
+        "canonical_replay_agreement_count",
+        "configurations"
+      ],
+      "properties": {
+        "gold_identity_key": {"$ref": "#/$defs/raw_digest"},
+        "configuration_count": {"type": "integer", "minimum": 1, "maximum": 16},
+        "target_interval_count": {"type": "integer", "minimum": 1, "maximum": 16},
+        "configuration_absolute_tolerance_bits": {"$ref": "#/$defs/bits"},
+        "target_absolute_tolerance_bits": {"$ref": "#/$defs/bits"},
+        "canonical_residual_tolerance_bits": {"$ref": "#/$defs/bits"},
+        "configuration_index_coverage_exact": {"const": true},
+        "target_intervals_distinct_nonoverlapping": {"const": true},
+        "canonical_eval_ok_count": {"type": "integer", "minimum": 1, "maximum": 16},
+        "validation_accepted_count": {"type": "integer", "minimum": 1, "maximum": 16},
+        "residual_within_tolerance_count": {"type": "integer", "minimum": 1, "maximum": 16},
+        "target_within_interval_tolerance_count": {"type": "integer", "minimum": 1, "maximum": 16},
+        "canonical_replay_agreement_count": {"type": "integer", "minimum": 1, "maximum": 16},
+        "configurations": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {"$ref": "#/$defs/gold_configuration_audit"}
+        }
+      }
+    },
     "case": {
       "type": "object",
       "additionalProperties": false,
@@ -49,19 +231,27 @@
         "opaque_case_key",
         "problem_sha256",
         "calibration_points_sha256",
+        "starts_sha256",
         "variable_count",
         "residual_count",
         "logical_evaluation_cost",
+        "compiled_numeric_metadata",
+        "candidate_input_audit",
+        "gold_audit",
         "observations",
         "calibration"
       ],
       "properties": {
-        "opaque_case_key": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "opaque_case_key": {"$ref": "#/$defs/raw_digest"},
         "problem_sha256": {"$ref": "#/$defs/digest"},
         "calibration_points_sha256": {"$ref": "#/$defs/digest"},
+        "starts_sha256": {"$ref": "#/$defs/digest"},
         "variable_count": {"type": "integer", "minimum": 1, "maximum": 16},
         "residual_count": {"type": "integer", "minimum": 1, "maximum": 64},
         "logical_evaluation_cost": {"type": "integer", "minimum": 1},
+        "compiled_numeric_metadata": {"$ref": "#/$defs/compiled_numeric_metadata"},
+        "candidate_input_audit": {"$ref": "#/$defs/candidate_input_audit"},
+        "gold_audit": {"$ref": "#/$defs/gold_audit"},
         "observations": {
           "type": "array",
           "minItems": 64,
@@ -69,7 +259,7 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["status", "evaluation_cost", "z_bits"],
+            "required": ["status", "evaluation_cost", "classification", "z_bits"],
             "properties": {
               "status": {
                 "enum": [
@@ -83,6 +273,9 @@
                 ]
               },
               "evaluation_cost": {"type": "integer", "minimum": 0},
+              "classification": {
+                "enum": ["valid", "invalid_status", "residual_dimension_mismatch", "nonfinite_q"]
+              },
               "z_bits": {"type": "array", "items": {"$ref": "#/$defs/bits"}}
             }
           }
@@ -96,6 +289,7 @@
             "r_bits",
             "a_bits",
             "a_vector_sha256",
+            "q_nonfinite_count",
             "joint_fallback_reason",
             "clamp_reasons"
           ],
@@ -105,6 +299,7 @@
             "r_bits": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/bits"}},
             "a_bits": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/bits"}},
             "a_vector_sha256": {"$ref": "#/$defs/digest"},
+            "q_nonfinite_count": {"type": "integer", "minimum": 0, "maximum": 64},
             "joint_fallback_reason": {
               "type": ["string", "null"],
               "enum": [null, "insufficient_valid_vectors", "nonpositive_or_nonfinite_nearest_rank"]
