@@ -37,6 +37,16 @@ step vanishes; this is a fail-closed empirical discriminator, not a proof of
 multiplicity or isolation. These definitions do not change a stratum, budget,
 advancement gate or allowed claim.
 
+A second counterexample requires a separate residual-decay gate. If a regular
+fold `F=(y,x^2-a^2)` is deliberately admitted by the small-gap route, the
+two-step map can move the exact root `x=a` to the stationary midpoint `x=0`.
+There the discarded singular value and next step vanish even though the
+residual is `a^2`; both the stop tolerance and null-decay gate can pass when
+`a` is small. S4 therefore normalizes the final residual by the frozen route
+residual/Jacobian scale and requires quadratic decay relative to the final
+step, with the same reserve, at both precisions for every primary and
+confirmation endpoint. This remains an applicability check, not a root proof.
+
 The candidate route makes four finite-difference probes (128/256 bits crossed
 with radius 1/0.5) and compares the other three left/right nullspaces to the
 fixed `(256, 0.5)` reference. The analytic control instead makes two analytic
@@ -48,8 +58,16 @@ projected operator are rechecked.
 Every accepted iteration is one undamped, unclipped range-plus-null step. No
 line search, trust adjustment, projection or fallback is allowed. At least one
 complete step is mandatory, after which both the frozen residual and normalized
-step goals must pass. A domain, guard or declared-bound violation is typed
-unknown.
+step goals must pass. Residual/target callback domain or guard failure is typed
+unknown. `CandidateInput` has no declared-bound field and this S4 split freezes
+no finite configuration bounds, so the experiment does not claim a bound gate.
+
+The initial projected-operator audit uses coefficient counter `ell=1`. Actual
+trajectories use their local iteration in `1:64`; all final unapplied-correction
+audits use the reserved `ell=65`, regardless of trajectory length. Thus
+cross-precision/radius reserves never compare corrections built from different
+counter vectors. Audits charge oracle/factorization work but not a trajectory
+iteration, and their `ell`, `c` and `v` remain trace fields.
 
 The final artifact also freezes the S3-style conservative error construction:
 configuration error is 16 times the maximum of both final steps, cross-precision
@@ -57,7 +75,7 @@ and confirmation disagreement, and a charged radius/precision finite-difference
 reserve. Target error is 16 times the maximum of target disagreement, the
 256-bit radius-1 target-gradient propagation, a charged gradient reserve and
 target roundoff. Promotion requires the original `1e-10`/`1e-12` limits and all
-route, null-decay, semantic and budget gates.
+route, null-decay, residual-decay, semantic and budget gates.
 
 The phrase that the analytic control may share "only" ledger and semantic
 types is impossible literally because a paired control must consume the same
