@@ -326,6 +326,28 @@ class FailureCoverageTests(unittest.TestCase):
             diagnose(case_data(), run_data([]), checkpoint=refinement).failure_id, "F12"
         )
 
+        local = parse_solver_trace(
+            evidence_observation(
+                "local_status=LOCAL_NO_PROGRESS;validation=not_run;"
+                "target_image_failure=not_run"
+            ),
+            origin="evidence",
+        )
+        bare_resource = parse_solver_trace(
+            evidence_observation(
+                "local_status=LOCAL_CONVERGED;validation=not_run;"
+                "target_image_failure=not_run;deadline_before_canonical_validation"
+            ),
+            origin="evidence",
+        )
+        self.assertEqual(
+            diagnose(case_data(), run_data([]), evidence=local).failure_id, "F5"
+        )
+        self.assertEqual(
+            diagnose(case_data(), run_data([]), evidence=bare_resource).failure_id,
+            "F12",
+        )
+
     def test_archive_scheduler_output_and_overhead(self) -> None:
         for kind, source, expected in (
             ("archive_witness_lost", "archive_audit", "F10"),

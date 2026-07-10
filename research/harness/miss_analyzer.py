@@ -344,21 +344,23 @@ def parse_diagnostic_bundle(value: Any) -> DiagnosticBundle:
     facts: list[DiagnosticFact] = []
     for index, raw in enumerate(raw_facts):
         path = f"diagnostics.facts[{index}]"
-        fact = _mapping(raw, path)
+        fact_data = _mapping(raw, path)
         _strict_keys(
-            fact,
+            fact_data,
             {"kind", "subject_kind", "subject_id", "source", "evidence_ref", "causal"},
             path,
         )
-        subject_kind = _enum(SubjectKind, fact["subject_kind"], f"{path}.subject_kind")
-        subject_id = fact["subject_id"]
+        subject_kind = _enum(
+            SubjectKind, fact_data["subject_kind"], f"{path}.subject_kind"
+        )
+        subject_id = fact_data["subject_id"]
         if subject_kind is SubjectKind.RUN:
             if subject_id is not None:
                 raise MissInputError(f"{path}.subject_id: run facts require null")
         else:
             subject_id = _string(subject_id, f"{path}.subject_id")
-        kind = _enum(FactKind, fact["kind"], f"{path}.kind")
-        source = _enum(FactSource, fact["source"], f"{path}.source")
+        kind = _enum(FactKind, fact_data["kind"], f"{path}.kind")
+        source = _enum(FactSource, fact_data["source"], f"{path}.source")
         allowed = _ALLOWED_SOURCES.get(kind)
         if allowed is not None and source not in allowed:
             raise MissInputError(
@@ -370,8 +372,8 @@ def parse_diagnostic_bundle(value: Any) -> DiagnosticBundle:
                 subject_kind,
                 subject_id,
                 source,
-                _string(fact["evidence_ref"], f"{path}.evidence_ref"),
-                _boolean(fact["causal"], f"{path}.causal"),
+                _string(fact_data["evidence_ref"], f"{path}.evidence_ref"),
+                _boolean(fact_data["causal"], f"{path}.causal"),
             )
         )
     keys = [
@@ -486,8 +488,21 @@ def _diagnostic_fields(value: Any, path: str) -> tuple[tuple[str, str], ...]:
     fields: dict[str, str] = {}
     for index, part in enumerate(text.split(";")):
         if "=" not in part:
-            raise MissInputError(f"{path}: field {index} is not key=value")
-        key, entry = part.split("=", 1)
+            if (
+                part
+                not in {
+                    "cancelled_before_canonical_validation",
+                    "deadline_before_canonical_validation",
+                    "oracle_budget_before_canonical_validation",
+                }
+                or "resource" in fields
+            ):
+                raise MissInputError(
+                    f"{path}: field {index} is not a known typed token"
+                )
+            key, entry = "resource", part
+        else:
+            key, entry = part.split("=", 1)
         if not key or not entry or key in fields:
             raise MissInputError(
                 f"{path}: malformed or duplicate diagnostic field {key!r}"
@@ -623,7 +638,13 @@ def _trace_matches(case: CaseInput, interval: TargetInterval) -> tuple[str, ...]
     matches: list[str] = []
     for target in case.gold_targets:
         if case.matching.mode is MatchMode.CERTIFIED_INTERVAL:
-            matched = interval.overlaps(target.interval)
+            # A non-certified trace enclosure may associate with a certified
+            # Gold target only by containment. Mere overlap would let a broad
+            # interval spanning unrelated values manufacture causality.
+            matched = (
+                target.interval.lower <= interval.lower
+                and interval.upper <= target.interval.upper
+            )
         else:
             tolerance = case.matching.tolerance
             assert tolerance is not None
@@ -662,6 +683,12 @@ _RESOURCE_IMAGE_FAILURES = {
     "TARGET_IMAGE_DEADLINE_REACHED",
     "TARGET_IMAGE_ORACLE_BUDGET_EXHAUSTED",
 }
+_RESOURCE_DIAGNOSTICS = {
+    "cancelled_before_canonical_validation",
+    "deadline_before_canonical_validation",
+    "oracle_budget_before_canonical_validation",
+    "oracle_budget_exhausted",
+}
 _LOCAL_FAILURES = {
     "LOCAL_MAX_ITERATIONS",
     "LOCAL_MAX_EVALUATIONS",
@@ -699,7 +726,11 @@ def _trace_signals(
             kind = _VALIDATION_FACTS[validation]
         elif image_failure in _SINGULAR_IMAGE_FAILURES:
             kind = FactKind.SINGULAR_OR_MANIFOLD_INCONCLUSIVE
-        elif image_failure in _RESOURCE_IMAGE_FAILURES or observation.needs_refinement:
+        elif (
+            image_failure in _RESOURCE_IMAGE_FAILURES
+            or fields.get("resource") in _RESOURCE_DIAGNOSTICS
+            or observation.needs_refinement
+        ):
             kind = FactKind.REFINEMENT_FAILED
         elif local_status in _LOCAL_FAILURES and observation.canonical_near_feasible:
             kind = FactKind.LOCAL_SOLVER_FAILED
