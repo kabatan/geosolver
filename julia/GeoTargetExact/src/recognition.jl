@@ -339,19 +339,19 @@ function _recognize_sample(value, degree_limit, height_bits, precision_bits)
         rational === nothing && return nothing, "bounded_rational_reconstruction"
         return descriptor_from_root(rational), "bounded_rational_reconstruction"
     end
-    relation = nemo_lll_relation(
+    result = pslq_relation(
         value,
         degree_limit,
         height_bits;
         precision_bits,
     )
-    relation === nothing && return nothing, "nemo_lll_relation"
+    result.relation === nothing && return nothing, "owned_pslq_v1"
     return descriptor_from_relation(
-        relation,
+        result.relation,
         value;
         precision_bits,
         height_bits,
-    ), "nemo_lll_relation"
+    ), "owned_pslq_v1"
 end
 
 function _recognize_at(provider, degree_limit, height_bits, options, cache)

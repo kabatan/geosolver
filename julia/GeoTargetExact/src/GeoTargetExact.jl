@@ -3,6 +3,7 @@ module GeoTargetExact
 using Nemo
 
 include("algebraic_real.jl")
+include("pslq.jl")
 include("recognition.jl")
 include("certificates.jl")
 include("c3a_stub.jl")
@@ -13,6 +14,15 @@ export AlgebraicReal,
     AlgebraicDescriptor,
     RecognitionCandidate,
     RecognitionOptions,
+    PSLQFailure,
+    PSLQ_NONE,
+    PSLQ_INVALID_INPUT,
+    PSLQ_INSUFFICIENT_PRECISION,
+    PSLQ_COEFFICIENT_LIMIT,
+    PSLQ_MAX_ITERATIONS,
+    PSLQ_NUMERICAL_BREAKDOWN,
+    PSLQResult,
+    pslq_relation,
     working_precision,
     bounded_rational_reconstruction,
     nemo_lll_relation,

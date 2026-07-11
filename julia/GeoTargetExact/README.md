@@ -8,12 +8,14 @@ Phase A contains:
 - an exact `AlgebraicReal <: Real` wrapper over Nemo `QQBar`;
 - bounded rational reconstruction;
 - the degree/height/precision recognition ladder;
-- Nemo's heuristic LLL integer-relation comparator;
+- an owned Ferguson-Bailey-Arno PSLQ candidate generator;
+- Nemo's heuristic LLL integer-relation diagnostic comparator;
 - primitive/irreducible factor selection and exact real-root isolation;
 - fail-closed certificate descriptor reconstruction.
 
-Nemo 0.56.1 does not expose PSLQ. The implemented relation generator is named
-`nemo_lll_relation` in code and evidence and must not be reported as PSLQ.
+Nemo 0.56.1 does not expose PSLQ. Production recognition therefore uses the
+owned `pslq_relation` implementation and records `owned_pslq_v1`. The separate
+`nemo_lll_relation` routine is diagnostic-only and must not be reported as PSLQ.
 Recognition only proposes a candidate; it never establishes an `ExactAnswer`.
 Core integration and original-graph C3A substitution intentionally return a
 typed unsupported result until Phase B.

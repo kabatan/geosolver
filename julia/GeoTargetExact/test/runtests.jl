@@ -88,6 +88,80 @@ end
     @test reconstruct_descriptor(candidate.descriptor) == AlgebraicReal(3 // 7)
 end
 
+@testset "owned PSLQ typed contract" begin
+    sqrt_two = bigfloat_provider(() -> sqrt(BigFloat(2)))(256)
+    first = pslq_relation(sqrt_two, 2, 8; precision_bits=256)
+    second = pslq_relation(sqrt_two, 2, 8; precision_bits=256)
+    @test first.failure == PSLQ_NONE
+    @test first.relation == (-2, 0, 1)
+    @test first.iterations == second.iterations
+    @test first.relation == second.relation
+    @test first.residual == second.residual
+
+    rational = bigfloat_provider(() -> BigFloat(3) / BigFloat(7))(256)
+    rational_result = pslq_relation(rational, 2, 8; precision_bits=256)
+    @test rational_result.failure == PSLQ_NONE
+    @test rational_result.relation == (-3, 7)
+
+    lll_relation = nemo_lll_relation(sqrt_two, 2, 8; precision_bits=256)
+    @test lll_relation == first.relation
+
+    pi_value = bigfloat_provider(() -> BigFloat(pi))(256)
+    false_result = pslq_relation(
+        pi_value,
+        4,
+        8;
+        precision_bits=256,
+        max_iterations=2_000,
+    )
+    @test false_result.relation === nothing
+    @test false_result.failure != PSLQ_NONE
+
+    short_result = pslq_relation(
+        pi_value,
+        4,
+        8;
+        precision_bits=256,
+        max_iterations=1,
+    )
+    @test short_result.failure == PSLQ_MAX_ITERATIONS
+
+    low_precision = bigfloat_provider(() -> sqrt(BigFloat(2)))(128)
+    low_precision_result = pslq_relation(
+        low_precision,
+        8,
+        8;
+        precision_bits=128,
+    )
+    @test low_precision_result.failure == PSLQ_INSUFFICIENT_PRECISION
+    @test low_precision_result.relation === nothing
+
+    height_overflow_value = bigfloat_provider(() -> sqrt(BigFloat(257)))(256)
+    height_overflow = pslq_relation(
+        height_overflow_value,
+        2,
+        8;
+        precision_bits=256,
+        max_iterations=2_000,
+    )
+    @test height_overflow.failure == PSLQ_COEFFICIENT_LIMIT
+    @test height_overflow.relation === nothing
+
+    oversized = big(typemax(Int)) + 1
+    invalid_contracts = (
+        pslq_relation(sqrt_two, true, 8; precision_bits=256),
+        pslq_relation(sqrt_two, 2, true; precision_bits=256),
+        pslq_relation(sqrt_two, oversized, 8; precision_bits=256),
+        pslq_relation(sqrt_two, 2, oversized; precision_bits=256),
+        pslq_relation(sqrt_two, 2, 8; precision_bits=oversized),
+        pslq_relation(sqrt_two, 2, 8; precision_bits=256, max_iterations=oversized),
+        pslq_relation(sqrt_two, typemax(Int), typemax(Int); precision_bits=256),
+    )
+    @test all(result -> result.failure == PSLQ_INVALID_INPUT, invalid_contracts[1:6])
+    @test invalid_contracts[7].failure == PSLQ_INSUFFICIENT_PRECISION
+    @test all(result -> result.relation === nothing, invalid_contracts)
+end
+
 @testset "dual-precision algebraic recognition" begin
     sqrt_two = sqrt(TEST_QQBAR(2))
     degree_five = only(filter(isreal, roots(TEST_QQBAR, TEST_X^5 - TEST_X - 1)))
@@ -103,7 +177,7 @@ end
     for (exact_value, coefficients, root_index) in fixtures
         candidate = recognize_algebraic(algebraic_provider(exact_value); options=FAST_OPTIONS)
         @test candidate !== nothing
-        @test candidate.method == "nemo_lll_relation"
+        @test candidate.method == "owned_pslq_v1"
         @test candidate.descriptor.coefficients == coefficients
         @test candidate.descriptor.root_index == root_index
         reconstructed = reconstruct_descriptor(candidate.descriptor)
