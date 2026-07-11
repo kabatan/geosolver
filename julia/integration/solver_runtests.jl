@@ -448,6 +448,29 @@ end
         CandidateValidationOptions(),
     )
     @test full_rank_correction.resolved
+    half_rank_image = analyze_target_image(
+        full_rank,
+        [1.0e-13, -1.0e-13];
+        options=GeoTargetCore._half_radius_target_image_options(
+            TargetImageDiagnosticOptions(),
+        ),
+    )
+    compared_correction = GeoTargetCore._candidate_root_correction(
+        full_rank_image,
+        CandidateValidationOptions(),
+        half_rank_image,
+    )
+    @test compared_correction.resolved
+    @test compared_correction.jacobian_relative_disagreement <= 1.0e-8
+    @test compared_correction.linear_solve_relative_disagreement <= 1.0e-10
+    corrected = GeoTargetCore._corrected_endpoint(
+        full_rank,
+        [1.0e-13, -1.0e-13],
+        compared_correction.normalized_correction,
+    )
+    @test corrected !== nothing
+    @test GeoTargetCore._residual_score(evaluate(full_rank, corrected)) <
+          GeoTargetCore._residual_score(full_rank_image.base_observation)
 end
 
 @testset "replay is deterministic and longer action prefixes retain answers" begin
@@ -746,7 +769,7 @@ end
     default_policy = GeoTargetCore._solve_policy_document(options)
     default_hash = canonical_json_hash(default_policy)
     @test string(default_hash) ==
-          "sha256:a044a7d49e912bf17ed747f7160f2f8d0f2f5e346b83516752f478be82581ede"
+          "sha256:b4e94a13354d7c5e4ee72b5e50a68b448de5ef41feedecfbec6f32bdb6ea5a76"
 
     proposal_factory_calls = Ref(0)
     local_solver_calls = Ref(0)

@@ -1,4 +1,4 @@
-const SOLVE_API_VERSION = v"1.3.0"
+const SOLVE_API_VERSION = v"1.4.0"
 
 struct SolveConfigurationError <: CoreError
     code::Symbol
@@ -295,24 +295,34 @@ end
 function _candidate_root_correction(
     image::TargetImageDiagnostic,
     validation::CandidateValidationOptions,
+    half_radius_image::Union{Nothing,TargetImageDiagnostic}=nothing,
 )
     residual = Float64[relation.scaled for relation in image.base_observation.relations]
     isempty(residual) && return (
         resolved=true,
         normalized_step=0.0,
         target_step=0.0,
+        normalized_correction=(),
+        jacobian_relative_disagreement=0.0,
+        linear_solve_relative_disagreement=0.0,
         detail="no_relations",
     )
     all(iszero, residual) && return (
         resolved=true,
         normalized_step=0.0,
         target_step=0.0,
+        normalized_correction=Tuple(zeros(Float64, size(image.scaled_relation_jacobian, 2))),
+        jacobian_relative_disagreement=0.0,
+        linear_solve_relative_disagreement=0.0,
         detail="exact_zero_residual",
     )
     image.linearization_computed || return (
         resolved=false,
         normalized_step=Inf,
         target_step=Inf,
+        normalized_correction=(),
+        jacobian_relative_disagreement=Inf,
+        linear_solve_relative_disagreement=Inf,
         detail="linearization_unavailable",
     )
     rank = image.numerical_rank
@@ -321,6 +331,9 @@ function _candidate_root_correction(
             resolved=false,
             normalized_step=Inf,
             target_step=Inf,
+            normalized_correction=(),
+            jacobian_relative_disagreement=Inf,
+            linear_solve_relative_disagreement=Inf,
             detail="rank_unresolved_nonzero_residual",
         )
     end
@@ -330,8 +343,59 @@ function _candidate_root_correction(
             resolved=false,
             normalized_step=Inf,
             target_step=Inf,
+            normalized_correction=(),
+            jacobian_relative_disagreement=Inf,
+            linear_solve_relative_disagreement=Inf,
             detail="rank_deficient_nonzero_residual",
         )
+    end
+    gradient = image.target_gradient
+    jacobian_disagreement = 0.0
+    if half_radius_image !== nothing
+        comparison = half_radius_image::TargetImageDiagnostic
+        compatible = comparison.linearization_computed &&
+                     comparison.numerical_rank == image.numerical_rank &&
+                     size(comparison.scaled_relation_jacobian) == size(jacobian) &&
+                     comparison.difference_schemes == image.difference_schemes
+        compatible || return (
+            resolved=false,
+            normalized_step=Inf,
+            target_step=Inf,
+            normalized_correction=(),
+            jacobian_relative_disagreement=Inf,
+            linear_solve_relative_disagreement=Inf,
+            detail="h_half_linearization_mismatch",
+        )
+        half_jacobian = comparison.scaled_relation_jacobian
+        jacobian_disagreement = norm(half_jacobian - jacobian, Inf) /
+                                max(1.0, norm(half_jacobian, Inf))
+        condition = something(image.condition_estimate, Inf)
+        stability_limit = max(
+            1.0e-8,
+            min(1.0e-3, 64 * sqrt(eps(Float64)) * sqrt(max(1.0, condition))),
+        )
+        isfinite(jacobian_disagreement) && jacobian_disagreement <= stability_limit || return (
+            resolved=false,
+            normalized_step=Inf,
+            target_step=Inf,
+            normalized_correction=(),
+            jacobian_relative_disagreement=jacobian_disagreement,
+            linear_solve_relative_disagreement=Inf,
+            detail="h_half_jacobian_unstable",
+        )
+        # Richardson extrapolation is column-wise because a boundary may force
+        # a first-order one-sided stencil while interior columns remain central.
+        extrapolated = similar(jacobian)
+        extrapolated_gradient = similar(gradient)
+        for column in axes(jacobian, 2)
+            factor = image.difference_schemes[column] == TARGET_DIFFERENCE_CENTRAL ? 4.0 : 2.0
+            extrapolated[:, column] .=
+                (factor .* half_jacobian[:, column] .- jacobian[:, column]) ./ (factor - 1)
+            extrapolated_gradient[column] =
+                (factor * comparison.target_gradient[column] - gradient[column]) / (factor - 1)
+        end
+        jacobian = extrapolated
+        gradient = extrapolated_gradient
     end
     factorization = svd(jacobian; full=false)
     retained = min(rank::Int, length(factorization.S))
@@ -342,13 +406,42 @@ function _candidate_root_correction(
             resolved=false,
             normalized_step=Inf,
             target_step=Inf,
+            normalized_correction=(),
+            jacobian_relative_disagreement=jacobian_disagreement,
+            linear_solve_relative_disagreement=Inf,
             detail="nonfinite_root_correction",
         )
         coefficient = dot(view(factorization.U, :, index), residual) / singular
         correction .-= coefficient .* view(factorization.V, :, index)
     end
+    qr_correction = try
+        qr(jacobian, ColumnNorm()) \ (-residual)
+    catch error
+        error isa Union{LinearAlgebra.LAPACKException,SingularException,DimensionMismatch} ||
+            rethrow()
+        nothing
+    end
+    solve_disagreement = qr_correction === nothing ? Inf :
+                         norm(qr_correction - correction, Inf) /
+                         max(eps(Float64), norm(correction, Inf))
+    if half_radius_image !== nothing
+        condition = something(image.condition_estimate, Inf)
+        solve_limit = max(
+            1.0e-10,
+            min(1.0e-5, 128 * eps(Float64) * max(1.0, condition)),
+        )
+        isfinite(solve_disagreement) && solve_disagreement <= solve_limit || return (
+            resolved=false,
+            normalized_step=norm(correction, Inf),
+            target_step=Inf,
+            normalized_correction=Tuple(correction),
+            jacobian_relative_disagreement=jacobian_disagreement,
+            linear_solve_relative_disagreement=solve_disagreement,
+            detail="svd_cpqr_correction_disagreement",
+        )
+    end
     normalized_step = norm(correction, Inf)
-    target_step = abs(dot(image.target_gradient, correction))
+    target_step = abs(dot(gradient, correction))
     configuration_tolerance = sqrt(validation.residual_tolerance)
     resolved = isfinite(normalized_step) && isfinite(target_step) &&
                normalized_step <= configuration_tolerance &&
@@ -357,15 +450,210 @@ function _candidate_root_correction(
         resolved,
         normalized_step,
         target_step,
+        normalized_correction=Tuple(correction),
+        jacobian_relative_disagreement=jacobian_disagreement,
+        linear_solve_relative_disagreement=solve_disagreement,
         detail=join(
             (
                 "resolved=$(resolved)",
                 "normalized_step=$(normalized_step)",
                 "target_step=$(target_step)",
+                "jacobian_relative_disagreement=$(jacobian_disagreement)",
+                "linear_solve_relative_disagreement=$(solve_disagreement)",
             ),
             ',',
         ),
     )
+end
+
+const _ROOT_CORRECTION_RESOURCE_FAILURES = (
+    TARGET_IMAGE_CANCELLED,
+    TARGET_IMAGE_DEADLINE_REACHED,
+    TARGET_IMAGE_ORACLE_BUDGET_EXHAUSTED,
+)
+
+function _half_radius_target_image_options(options::TargetImageDiagnosticOptions)
+    return TargetImageDiagnosticOptions(
+        finite_difference_radius=options.finite_difference_radius / 2,
+        probe_radii=options.probe_radii,
+        relation_tolerance=options.relation_tolerance,
+        rank_absolute_tolerance=options.rank_absolute_tolerance,
+        rank_relative_tolerance=options.rank_relative_tolerance,
+        target_sensitivity_tolerance=options.target_sensitivity_tolerance,
+        probe_target_tolerance=options.probe_target_tolerance,
+        branch_margin_tolerance=options.branch_margin_tolerance,
+        capability=options.capability,
+        precision_bits=options.precision_bits,
+    )
+end
+
+function _corrected_endpoint(compiled, endpoint, normalized_correction)
+    length(normalized_correction) == length(endpoint) || return nothing
+    corrected = Float64[]
+    for (index, delta) in enumerate(normalized_correction)
+        variable = compiled.variables[index].spec
+        value = Float64(endpoint[index]) + Float64(variable.scale) * Float64(delta)
+        isfinite(value) || return nothing
+        variable.lower !== nothing && value < variable.lower && return nothing
+        variable.upper !== nothing && value > variable.upper && return nothing
+        push!(corrected, value)
+    end
+    return corrected
+end
+
+function _correction_summary(correction, steps::Int, suffix::AbstractString)
+    return (
+        resolved=correction.resolved,
+        normalized_step=correction.normalized_step,
+        target_step=correction.target_step,
+        normalized_correction=correction.normalized_correction,
+        jacobian_relative_disagreement=correction.jacobian_relative_disagreement,
+        linear_solve_relative_disagreement=correction.linear_solve_relative_disagreement,
+        detail=string(correction.detail, ",actual_steps=", steps, ",", suffix),
+    )
+end
+
+function _refine_candidate_endpoint(
+    runner::_CompiledAttemptRunner,
+    context::ExecutionContext,
+    endpoint,
+    initial_image::TargetImageDiagnostic,
+    oracle_work::Base.RefValue{Int},
+    logical_evaluation_cost::Int;
+    max_corrections::Int=3,
+)
+    max_corrections >= 0 || throw(ArgumentError("max_corrections must be nonnegative"))
+    current = collect(Float64, endpoint)
+    image = initial_image
+    steps = 0
+    half_options = _half_radius_target_image_options(runner.image_options)
+    while true
+        preliminary = _candidate_root_correction(image, runner.validation_options)
+        if !preliminary.resolved || isempty(preliminary.normalized_correction) ||
+           preliminary.normalized_step == 0
+            suffix = preliminary.resolved ? "no_correction_required" : "precheck_rejected"
+            return (
+                endpoint=current,
+                image,
+                correction=_correction_summary(preliminary, steps, suffix),
+                resource_failure=TARGET_IMAGE_DIAGNOSTIC_NONE,
+            )
+        end
+        remaining = max(
+            0,
+            _remaining_oracle_work(context, oracle_work[]) - logical_evaluation_cost,
+        )
+        half_image = analyze_target_image(
+            runner.compiled,
+            current;
+            options=half_options,
+            deadline_ns=_remaining_deadline_ns(context),
+            cancelled=() -> is_cancelled(context.cancel),
+            remaining_oracle_work=remaining,
+        )
+        oracle_work[] += half_image.oracle_work
+        if half_image.failure in _ROOT_CORRECTION_RESOURCE_FAILURES
+            return (
+                endpoint=current,
+                image,
+                correction=(
+                    resolved=false,
+                    normalized_step=Inf,
+                    target_step=Inf,
+                    normalized_correction=(),
+                    jacobian_relative_disagreement=Inf,
+                    linear_solve_relative_disagreement=Inf,
+                    detail="h_half_resource_stop",
+                ),
+                resource_failure=half_image.failure,
+            )
+        end
+        correction = _candidate_root_correction(
+            image,
+            runner.validation_options,
+            half_image,
+        )
+        correction.resolved || return (
+            endpoint=current,
+            image,
+            correction=_correction_summary(correction, steps, "rejected"),
+            resource_failure=TARGET_IMAGE_DIAGNOSTIC_NONE,
+        )
+        isempty(correction.normalized_correction) && return (
+            endpoint=current,
+            image,
+            correction=_correction_summary(correction, steps, "no_relations"),
+            resource_failure=TARGET_IMAGE_DIAGNOSTIC_NONE,
+        )
+        correction.normalized_step <= 32 * eps(Float64) && return (
+            endpoint=current,
+            image,
+            correction=_correction_summary(correction, steps, "step_below_roundoff"),
+            resource_failure=TARGET_IMAGE_DIAGNOSTIC_NONE,
+        )
+        steps >= max_corrections && return (
+            endpoint=current,
+            image,
+            correction=_correction_summary(correction, steps, "maximum_reached"),
+            resource_failure=TARGET_IMAGE_DIAGNOSTIC_NONE,
+        )
+        trial = _corrected_endpoint(
+            runner.compiled,
+            current,
+            correction.normalized_correction,
+        )
+        trial === nothing && return (
+            endpoint=current,
+            image,
+            correction=_correction_summary(correction, steps, "trial_outside_bounds"),
+            resource_failure=TARGET_IMAGE_DIAGNOSTIC_NONE,
+        )
+        remaining = max(
+            0,
+            _remaining_oracle_work(context, oracle_work[]) - logical_evaluation_cost,
+        )
+        trial_image = analyze_target_image(
+            runner.compiled,
+            trial;
+            options=runner.image_options,
+            deadline_ns=_remaining_deadline_ns(context),
+            cancelled=() -> is_cancelled(context.cancel),
+            remaining_oracle_work=remaining,
+        )
+        oracle_work[] += trial_image.oracle_work
+        if trial_image.failure in _ROOT_CORRECTION_RESOURCE_FAILURES
+            return (
+                endpoint=current,
+                image,
+                correction=_correction_summary(correction, steps, "trial_resource_stop"),
+                resource_failure=trial_image.failure,
+            )
+        end
+        old_score = _residual_score(image.base_observation)
+        new_score = _residual_score(trial_image.base_observation)
+        branch_stable = _same_branch_signature(
+            image.base_observation,
+            trial_image.base_observation,
+        )
+        if !branch_stable || !isfinite(new_score) || new_score >= old_score
+            suffix = !branch_stable ? "branch_changed" : "no_strict_improvement"
+            return (
+                endpoint=current,
+                image,
+                correction=_correction_summary(correction, steps, suffix),
+                resource_failure=TARGET_IMAGE_DIAGNOSTIC_NONE,
+            )
+        end
+        current = trial
+        image = trial_image
+        steps += 1
+        new_score <= 32 * eps(Float64) && return (
+            endpoint=current,
+            image,
+            correction=_correction_summary(correction, steps, "residual_below_roundoff"),
+            resource_failure=TARGET_IMAGE_DIAGNOSTIC_NONE,
+        )
+    end
 end
 
 function _zero_relation_attempt(runner, proposal, evaluate_for_local)
@@ -473,8 +761,6 @@ function (runner::_CompiledAttemptRunner)(
         ),
     )
     oracle_work[] += image.oracle_work
-    inconclusive_image = image.classification == TARGET_IMAGE_INCONCLUSIVE
-    runner.saw_inconclusive_image |= inconclusive_image
     if image.failure in (
         TARGET_IMAGE_CANCELLED,
         TARGET_IMAGE_DEADLINE_REACHED,
@@ -494,18 +780,52 @@ function (runner::_CompiledAttemptRunner)(
             diagnostic=_local_diagnostic(attempt, nothing, image),
         )
     end
-    correction = _candidate_root_correction(image, runner.validation_options)
+    refinement = _refine_candidate_endpoint(
+        runner,
+        context,
+        collect(attempt.final),
+        image,
+        oracle_work,
+        logical_evaluation_cost,
+    )
+    endpoint = refinement.endpoint
+    image = refinement.image
+    correction = refinement.correction
+    fast_observation = image.base_observation
+    score = _residual_score(fast_observation)
+    if refinement.resource_failure in _ROOT_CORRECTION_RESOURCE_FAILURES
+        runner.saw_inconclusive_image = true
+        return Observation(
+            proposal.task_id,
+            proposal.configuration_id;
+            canonical_near_feasible=true,
+            target=_candidate_target(fast_observation),
+            branch_signature=Tuple(
+                branch.decision for branch in fast_observation.branches
+            ),
+            needs_refinement=refinement.resource_failure ==
+                             TARGET_IMAGE_ORACLE_BUDGET_EXHAUSTED,
+            residual_score=score,
+            oracle_work=oracle_work[],
+            endpoint=Tuple(endpoint),
+            diagnostic=_local_diagnostic(attempt, nothing, image, correction),
+        )
+    end
+    inconclusive_image = image.classification == TARGET_IMAGE_INCONCLUSIVE
+    runner.saw_inconclusive_image |= inconclusive_image
     if !correction.resolved
         return Observation(
             proposal.task_id,
             proposal.configuration_id;
             canonical_near_feasible=true,
-            target=_candidate_target(attempt.observation),
-            branch_signature=Tuple(branch.decision for branch in attempt.observation.branches),
+            target=_candidate_target(fast_observation),
+            branch_signature=Tuple(
+                branch.decision for branch in fast_observation.branches
+            ),
             needs_refinement=true,
             residual_score=score,
             oracle_work=oracle_work[],
-            endpoint=attempt.final,
+            endpoint=Tuple(endpoint),
             diagnostic=_local_diagnostic(attempt, nothing, image, correction),
         )
     end
@@ -526,12 +846,14 @@ function (runner::_CompiledAttemptRunner)(
             proposal.task_id,
             proposal.configuration_id;
             canonical_near_feasible=true,
-            target=_candidate_target(attempt.observation),
-            branch_signature=Tuple(branch.decision for branch in attempt.observation.branches),
+            target=_candidate_target(fast_observation),
+            branch_signature=Tuple(
+                branch.decision for branch in fast_observation.branches
+            ),
             needs_refinement=budget_before_validation,
             residual_score=score,
             oracle_work=oracle_work[],
-            endpoint=attempt.final,
+            endpoint=Tuple(endpoint),
             diagnostic=string(
                 _local_diagnostic(attempt, nothing, image, correction),
                 ';',
@@ -541,8 +863,9 @@ function (runner::_CompiledAttemptRunner)(
     end
     validation = validate_candidate(
         runner.compiled,
-        attempt;
+        endpoint;
         options=runner.validation_options,
+        fast_observation,
     )
     _check_logical_evaluation_bound(runner.compiled, validation.canonical_observation)
     oracle_work[] += validation.oracle_work
@@ -551,12 +874,14 @@ function (runner::_CompiledAttemptRunner)(
             proposal.task_id,
             proposal.configuration_id;
             canonical_near_feasible=true,
-            target=_candidate_target(attempt.observation),
-            branch_signature=Tuple(branch.decision for branch in attempt.observation.branches),
+            target=_candidate_target(fast_observation),
+            branch_signature=Tuple(
+                branch.decision for branch in fast_observation.branches
+            ),
             needs_refinement=true,
             residual_score=score,
             oracle_work=oracle_work[],
-            endpoint=attempt.final,
+            endpoint=Tuple(endpoint),
             diagnostic=_local_diagnostic(attempt, validation, image, correction),
         )
     end
@@ -574,7 +899,7 @@ function (runner::_CompiledAttemptRunner)(
             needs_refinement=false,
             residual_score=Float64(validation.provisional.canonical_residual_bound),
             oracle_work=oracle_work[],
-            endpoint=attempt.final,
+            endpoint=Tuple(endpoint),
             diagnostic=_local_diagnostic(attempt, validation, image, correction),
         )
     end
@@ -599,7 +924,7 @@ function (runner::_CompiledAttemptRunner)(
             needs_refinement=true,
             residual_score=Float64(provisional.canonical_residual_bound),
             oracle_work=oracle_work[],
-            endpoint=attempt.final,
+            endpoint=Tuple(endpoint),
             diagnostic=_local_diagnostic(attempt, validation, image, correction),
         )
     end
@@ -616,7 +941,7 @@ function (runner::_CompiledAttemptRunner)(
         needs_refinement=false,
         residual_score=Float64(provisional.canonical_residual_bound),
         oracle_work=oracle_work[],
-        endpoint=attempt.final,
+        endpoint=Tuple(endpoint),
         diagnostic=_local_diagnostic(attempt, validation, image, correction),
     )
 end

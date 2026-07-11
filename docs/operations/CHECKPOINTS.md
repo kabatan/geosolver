@@ -34,6 +34,11 @@ checkpoint's problem, plugin, policy and environment hashes must match both the
 options reference and the newly compiled problem. Seed and policy version must
 also match. Any mismatch fails closed before search continues.
 
+The h/h2 endpoint-correction rollout uses solve API `1.4.0` and policy
+`1.1.0`. Checkpoints created by the earlier measurement-only correction path
+are intentionally not resume-compatible, although the checkpoint JSON schema
+remains v1.
+
 ## Persistence and validation
 
 The writer creates a temporary sibling and atomically replaces the destination.
