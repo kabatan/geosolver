@@ -1,0 +1,23 @@
+{
+  "schema": "geotarget-experiment-card-v1",
+  "experiment_id": "EXP-EXACT-001",
+  "state": "development-scaffold-no-outcome",
+  "question": "Does the frozen production solver return independently replayable exact answers without false exact promotion on the exact-eligible corpus?",
+  "change_axis": "measurement-and-corpus-only",
+  "production_algorithm_change": false,
+  "formal_x1_open": false,
+  "u4_materialized": false,
+  "truth_boundary": {
+    "runtime_inputs": ["ProblemSpecV1", "FrozenPluginRegistry", "SolveOptions", "NemoExactBackend"],
+    "forbidden_runtime_inputs": ["family label", "case id", "Gold", "known root", "expected target"],
+    "assessment_only": ["family label", "expected exact target set", "safety-control expectation"]
+  },
+  "dependencies": ["GeoTargetBase", "GeoTargetCore", "GeoTargetExact"],
+  "non_goals": [
+    "new permanent campaign service",
+    "case-specific solver routes",
+    "reuse of EXP-VERIFY-001 as exact evidence",
+    "formal result generation during development"
+  ]
+}
+
