@@ -1,0 +1,76 @@
+{
+  "artifact": {
+    "path": "benchmarks/results/raw/exp-local-004-t2-linux.json",
+    "sha256": "24016e691e32b66b03f397b5fc65161b36d6df0d69d26c8ac514e3ae3bc67bb4",
+    "source_revision": "57198da1d9cd7cbe24ff51f105c55cd0efc6ddb1"
+  },
+  "audit": {
+    "attempt_count": 4608,
+    "canonical_rescore_mismatches": 0,
+    "independent_raw_reaggregation": true,
+    "input_manifest_sha256": "aa5da6b9655ebe97f5ae8832911cc253301cb64916e0f23f5637b645905bcd81",
+    "reaggregation_mismatches": 0,
+    "source_hashes_matched": 22,
+    "status": "pass",
+    "summary_count": 432
+  },
+  "decision": {
+    "action": "reject-this-external-tr-configuration-before-native-port",
+    "candidate": "NLS-TR",
+    "native_tr_authorized": false,
+    "production_promotion": false,
+    "trust_region_family_rejected": false
+  },
+  "evaluation": {
+    "candidate_vs_primary_control": {
+      "accepted_ambiguous": 59,
+      "accepted_canonical_invalid": 0,
+      "accepted_gold_inconsistent": 62,
+      "accepted_numeric_target_only": 0,
+      "callback_work_ratio": 1.3793222829578282,
+      "critical_strict_guard_safe_full_delta": -0.16666666666666663,
+      "family_equal_safe_full_delta": 0.10416666666666663,
+      "safe_full_improved_families": 2
+    },
+    "metrics": {
+      "NLS-TR": {
+        "assessor_all_target_cases": 43,
+        "assessor_qualified_targets_found": 77,
+        "assessor_safe_full_cases": 42,
+        "callback_evaluations": 358570,
+        "case_count": 48,
+        "target_count": 88
+      },
+      "prod-options-250x2000": {
+        "assessor_all_target_cases": 41,
+        "assessor_qualified_targets_found": 73,
+        "assessor_safe_full_cases": 39,
+        "callback_evaluations": 547581,
+        "case_count": 48,
+        "target_count": 88
+      },
+      "prod-tol-120x600": {
+        "assessor_all_target_cases": 39,
+        "assessor_qualified_targets_found": 71,
+        "assessor_safe_full_cases": 37,
+        "callback_evaluations": 259961,
+        "case_count": 48,
+        "target_count": 88
+      }
+    },
+    "prefix": 32
+  },
+  "experiment_id": "EXP-LOCAL-004-T2-DECISION",
+  "kill_reasons": [
+    "The candidate returned 62 accepted endpoints inconsistent with the fixed Gold assessor, including 59 numerically ambiguous close-target endpoints; the zero-safety gate failed.",
+    "Strict guard/boundary safe-full fell from 6/6 to 5/6, exceeding the allowed two-point critical-stratum regression.",
+    "Against the primary production-tolerance control, callback work increased by 37.93 percent instead of staying within the 1.2 ratio required by the recall path.",
+    "Safe-full improved strictly in only two unrelated families, below the required three-family repeat gate."
+  ],
+  "next_general_mechanisms": [
+    "Apply the already planned condition-aware h/h2 endpoint correction and target-image gate uniformly rather than adding case routes.",
+    "Require independent 512/768-bit root confirmation before any endpoint becomes a public answer.",
+    "Continue the local research queue with a separately frozen Powell-hybrid or other general globalization comparator; do not port this TR configuration natively."
+  ],
+  "schema": "geotarget-research-decision/v1"
+}
