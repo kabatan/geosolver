@@ -603,14 +603,30 @@ end
 
 @testset "truth-blind solver experiment runner" begin
     problem = solver_lab_collision_problem()
+    other_problem = generate(CurvedChainParams(start_count=4))
+    first_case = GeoTargetBenchmarks._truth_blind_case(problem, 4)
+    second_case = GeoTargetBenchmarks._truth_blind_case(other_problem, 4)
+    try
+        @test typeof(first_case) == typeof(second_case)
+        @test typeof(first_case._evaluate) == typeof(second_case._evaluate)
+        @test fieldnames(typeof(first_case._evaluate)) == (:token,)
+        @test all(
+            !(getfield(first_case._evaluate, index) isa Function) for
+            index in 1:fieldcount(typeof(first_case._evaluate))
+        )
+    finally
+        GeoTargetBenchmarks._release_solver_case_oracle!(first_case._evaluate)
+        GeoTargetBenchmarks._release_solver_case_oracle!(second_case._evaluate)
+    end
     saw_truth_blind_case = Ref(false)
     identity = SolverVariant("identity") do case, start
         @test !hasproperty(case, :gold_targets)
         @test !hasproperty(case, :gold_configurations)
         @test !hasproperty(case, :family_id)
         @test !hasproperty(case, :instance_id)
+        @test fieldnames(typeof(case._evaluate)) == (:token,)
         @test all(
-            !(getfield(case._evaluate, index) isa DirectAnalyticProblem) for
+            !(getfield(case._evaluate, index) isa Union{Function,DirectAnalyticProblem}) for
             index in 1:fieldcount(typeof(case._evaluate))
         )
         evaluation = evaluate_case(case, start)

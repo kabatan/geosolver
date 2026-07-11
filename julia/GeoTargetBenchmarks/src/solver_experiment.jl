@@ -54,6 +54,52 @@ struct _SolverCaseOracle{R,T}
     budget_exhausted::Base.RefValue{Bool}
 end
 
+# A variant must not receive the concrete residual/target closures.  Besides
+# exposing captured analytic roots through Julia reflection, those closures
+# allowed direct calls that bypassed the callback counter.  The public case now
+# carries one uniform, token-only callable; only the scorer resolves the token
+# to the concrete oracle.  This is an in-process research boundary rather than
+# a hostile-code sandbox, so candidate source is still audited against private
+# module access.
+struct _OpaqueSolverCaseEvaluator
+    token::UInt128
+end
+
+const _SOLVER_CASE_ORACLE_LOCK = ReentrantLock()
+const _SOLVER_CASE_ORACLES = Dict{UInt128,Any}()
+
+function _register_solver_case_oracle(oracle::_SolverCaseOracle)
+    evaluator = lock(_SOLVER_CASE_ORACLE_LOCK) do
+        token = rand(RandomDevice(), UInt128)
+        while haskey(_SOLVER_CASE_ORACLES, token)
+            token = rand(RandomDevice(), UInt128)
+        end
+        _SOLVER_CASE_ORACLES[token] = oracle
+        _OpaqueSolverCaseEvaluator(token)
+    end
+    return evaluator
+end
+
+function _solver_case_oracle(evaluator::_OpaqueSolverCaseEvaluator)
+    return lock(_SOLVER_CASE_ORACLE_LOCK) do
+        get(_SOLVER_CASE_ORACLES, evaluator.token, nothing)
+    end
+end
+
+function _release_solver_case_oracle!(evaluator::_OpaqueSolverCaseEvaluator)
+    lock(_SOLVER_CASE_ORACLE_LOCK) do
+        pop!(_SOLVER_CASE_ORACLES, evaluator.token, nothing)
+    end
+    return nothing
+end
+
+
+function (evaluator::_OpaqueSolverCaseEvaluator)(input)
+    oracle = _solver_case_oracle(evaluator)
+    oracle === nothing && throw(ArgumentError("solver experiment case is no longer active"))
+    return oracle(input)
+end
+
 function (oracle::_SolverCaseOracle)(input)
     if oracle.evaluation_count[] >= oracle.evaluation_limit
         oracle.budget_exhausted[] = true
@@ -287,6 +333,7 @@ function _truth_blind_case(problem::DirectAnalyticProblem, evaluation_limit::Int
         evaluation_limit,
         Ref(false),
     )
+    evaluator = _register_solver_case_oracle(oracle)
     return SolverExperimentCase(
         problem.dimension,
         problem.residual_dimension,
@@ -294,7 +341,7 @@ function _truth_blind_case(problem::DirectAnalyticProblem, evaluation_limit::Int
         Tuple(problem.upper_bounds),
         Tuple(problem.variable_scales),
         Tuple(problem.residual_scales),
-        oracle,
+        evaluator,
     )
 end
 
@@ -394,7 +441,8 @@ function _run_solver_attempt(
     start = Tuple(problem.saved_starts[:, start_index])
     outcome = nothing
     exception = nothing
-    oracle = case._evaluate
+    oracle = _solver_case_oracle(case._evaluate)
+    oracle === nothing && error("solver experiment oracle was released before its attempt")
     oracle.evaluation_count[] = 0
     oracle.budget_exhausted[] = false
     started = clock_ns()
@@ -679,21 +727,25 @@ function run_solver_experiment(
     first_attempt = Dict(variant.name => true for variant in variants)
     for variant in variants, problem in problems
         case = _truth_blind_case(problem, Int(evaluation_limit))
-        for start_index in 1:maximum_prefix
-            phase = first_attempt[variant.name] ? :cold_first_use : :warm
-            push!(
-                attempts,
-                _run_solver_attempt(
-                    problem,
-                    case,
-                    variant,
-                    start_index,
-                    phase,
-                    tolerances,
-                    clock_ns,
-                ),
-            )
-            first_attempt[variant.name] = false
+        try
+            for start_index in 1:maximum_prefix
+                phase = first_attempt[variant.name] ? :cold_first_use : :warm
+                push!(
+                    attempts,
+                    _run_solver_attempt(
+                        problem,
+                        case,
+                        variant,
+                        start_index,
+                        phase,
+                        tolerances,
+                        clock_ns,
+                    ),
+                )
+                first_attempt[variant.name] = false
+            end
+        finally
+            _release_solver_case_oracle!(case._evaluate)
         end
     end
     suffix_stable_work = Dict(
