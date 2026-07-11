@@ -13,6 +13,40 @@ Base.showerror(io::IO, error::SolveConfigurationError) =
     ANSWER_EXACT_IF_AVAILABLE = 1
 end
 
+"""
+Explicitly unstable, Julia-only hooks for numerical algorithm experiments.
+
+This type is deliberately absent from the wire protocol and is not part of the
+stable plugin ABI. `proposal_factory(compiled, options)` must return a proposal
+emitter accepted by `run_search!`. `local_solver(compiled, evaluate_fn, start;
+kwargs...)` must return a `LocalAttempt` and must route every charged oracle
+evaluation through `evaluate_fn`; `compiled` is supplied for immutable metadata
+such as dependency sparsity. Experimental executions cannot resume from or
+produce a continuation compatible with a production checkpoint.
+"""
+struct UnstableResearchStrategy{P,L}
+    id::String
+    proposal_factory::P
+    local_solver::L
+
+    function UnstableResearchStrategy(
+        id::AbstractString,
+        proposal_factory::P,
+        local_solver::L,
+    ) where {P,L}
+        frozen_id = String(id)
+        occursin(r"^[a-z0-9][a-z0-9._/-]{0,127}$", frozen_id) || throw(
+            ArgumentError(
+                "unstable research strategy id must be a lowercase versioned identifier",
+            ),
+        )
+        proposal_factory === nothing &&
+            throw(ArgumentError("proposal_factory must be callable"))
+        local_solver === nothing && throw(ArgumentError("local_solver must be callable"))
+        return new{P,L}(frozen_id, proposal_factory, local_solver)
+    end
+end
+
 """Stable public solve controls; experimental knobs remain inside versioned presets."""
 struct SolveOptions
     version::VersionNumber
@@ -120,14 +154,43 @@ function _checkpoint_saw_inconclusive_image(checkpoint::SolveCheckpointArtifact)
     )
 end
 
-mutable struct _CompiledAttemptRunner{I<:TargetImageDiagnosticOptions}
+mutable struct _CompiledAttemptRunner{I<:TargetImageDiagnosticOptions,L}
     compiled::CompiledProblem
     workspace::CompiledWorkspace
     local_options::LocalSolveOptions
     validation_options::CandidateValidationOptions
     image_options::I
+    local_solver::L
     saw_likely_continuous::Bool
     saw_inconclusive_image::Bool
+end
+
+_default_proposal_factory(compiled::CompiledProblem, options::SolveOptions) =
+    ProposalEngine(compiled.problem; seed=options.seed)
+
+function _default_compiled_local_solver(
+    ::CompiledProblem,
+    evaluate_fn,
+    start;
+    origins,
+    scales,
+    lower,
+    upper,
+    options,
+    deadline_ns,
+    cancelled,
+)
+    return solve_local(
+        evaluate_fn,
+        start;
+        origins,
+        scales,
+        lower,
+        upper,
+        options,
+        deadline_ns,
+        cancelled,
+    )
 end
 
 function _remaining_deadline_ns(context::ExecutionContext)
@@ -361,7 +424,8 @@ function (runner::_CompiledAttemptRunner)(
     attempt = if isempty(problem.relations)
         _zero_relation_attempt(runner, proposal, evaluate_for_local)
     else
-        solve_local(
+        runner.local_solver(
+            runner.compiled,
             evaluate_for_local,
             collect(proposal.coordinates);
             origins,
@@ -373,6 +437,12 @@ function (runner::_CompiledAttemptRunner)(
             cancelled=() -> is_cancelled(context.cancel),
         )
     end
+    attempt isa LocalAttempt || throw(
+        SolveConfigurationError(
+            :invalid_research_local_result,
+            "compiled-aware local solver must return LocalAttempt",
+        ),
+    )
     score = _residual_score(attempt.observation)
     near = _near_feasible(attempt.observation, runner.local_options.residual_tolerance)
     if !attempt.accepted || is_cancelled(context.cancel) ||
@@ -551,13 +621,16 @@ function (runner::_CompiledAttemptRunner)(
     )
 end
 
-function _solve_policy_document(options::SolveOptions)
+function _solve_policy_document(
+    options::SolveOptions,
+    research_strategy::Union{Nothing,UnstableResearchStrategy}=nothing,
+)
     limits = options.policy.budget_limits
     local_fields = Dict{String,Any}(
         String(name) => getfield(options._local, name) for
         name in fieldnames(LocalSolveOptions)
     )
-    return Dict{String,Any}(
+    document = Dict{String,Any}(
         "answer_level" => string(options.answer_level),
         "budget_limits" => Dict{String,Any}(
             "local_attempts" => limits.local_attempts,
@@ -576,6 +649,9 @@ function _solve_policy_document(options::SolveOptions)
         "wall_seconds" => options.wall_seconds,
         "worker_count" => options.worker_count,
     )
+    research_strategy === nothing ||
+        (document["unstable_research_strategy_id"] = research_strategy.id)
+    return document
 end
 
 _solve_target_image_options(options::SolveOptions) = TargetImageDiagnosticOptions(
@@ -610,12 +686,16 @@ function _solve_environment_document(compiled::CompiledProblem)
     )
 end
 
-function _solve_resume_identity(compiled::CompiledProblem, options::SolveOptions)
+function _solve_resume_identity(
+    compiled::CompiledProblem,
+    options::SolveOptions,
+    research_strategy::Union{Nothing,UnstableResearchStrategy}=nothing,
+)
     problem_digest, _ = _candidate_problem_identity(compiled)
     return ResumeIdentity(
         problem_digest,
         compiled.problem.plugin_locks,
-        canonical_json_hash(_solve_policy_document(options)),
+        canonical_json_hash(_solve_policy_document(options, research_strategy)),
         canonical_json_hash(_solve_environment_document(compiled)),
     )
 end
@@ -936,6 +1016,7 @@ function solve_execution(
     evidence_path::Union{Nothing,AbstractString}=nothing,
     max_actions::Integer=typemax(Int),
     checkpoint::Union{Nothing,SolveCheckpointArtifact}=nothing,
+    research_strategy::Union{Nothing,UnstableResearchStrategy}=nothing,
 )
     options.worker_count == 1 || throw(
         SolveConfigurationError(
@@ -944,10 +1025,16 @@ function solve_execution(
         ),
     )
     max_actions >= 0 || throw(ArgumentError("max_actions must be nonnegative"))
+    research_strategy !== nothing && checkpoint !== nothing && throw(
+        SolveConfigurationError(
+            :research_strategy_checkpoint_unsupported,
+            "unstable research strategies cannot resume from a checkpoint",
+        ),
+    )
     started = time()
     deadline = started + options.wall_seconds
     compiled = compile_problem(problem, registry; numeric_backend="Float64")
-    resume = _solve_resume_identity(compiled, options)
+    resume = _solve_resume_identity(compiled, options, research_strategy)
     now = time()
     context = if checkpoint === nothing
         workspace = SearchWorkspace(
@@ -1015,13 +1102,18 @@ function solve_execution(
     elseif isempty(problem.variables)
         _finish_search(context, LOOP_PAUSED; detail="constant problem was already evaluated")
     else
-        engine = ProposalEngine(problem; seed=options.seed)
+        proposal_factory = research_strategy === nothing ?
+                           _default_proposal_factory : research_strategy.proposal_factory
+        local_solver = research_strategy === nothing ?
+                       _default_compiled_local_solver : research_strategy.local_solver
+        engine = proposal_factory(compiled, options)
         runner = _CompiledAttemptRunner(
             compiled,
             CompiledWorkspace(compiled),
             options._local,
             options._validation,
             _solve_target_image_options(options),
+            local_solver,
             target_image_override == TARGET_LIKELY_CONTINUOUS,
             target_image_override == TARGET_IMAGE_UNKNOWN,
         )

@@ -739,4 +739,61 @@ end
     )
 end
 
+@testset "unstable research strategy injects only numerical components" begin
+    registry = solve_registry()
+    problem = scalar_root_problem()
+    options = short_options()
+    default_policy = GeoTargetCore._solve_policy_document(options)
+    default_hash = canonical_json_hash(default_policy)
+    @test string(default_hash) ==
+          "sha256:a044a7d49e912bf17ed747f7160f2f8d0f2f5e346b83516752f478be82581ede"
+
+    proposal_factory_calls = Ref(0)
+    local_solver_calls = Ref(0)
+    observed_sparsity = Ref{Any}(nothing)
+    strategy = UnstableResearchStrategy(
+        "integration/default-components-v1",
+        (compiled, solve_options) -> begin
+            proposal_factory_calls[] += 1
+            ProposalEngine(compiled.problem; seed=solve_options.seed)
+        end,
+        (compiled, evaluate_fn, start; kwargs...) -> begin
+            local_solver_calls[] += 1
+            observed_sparsity[] = compiled.sparsity.jacobian_entries
+            solve_local(evaluate_fn, start; kwargs...)
+        end,
+    )
+    strategy_policy = GeoTargetCore._solve_policy_document(options, strategy)
+    @test strategy_policy["unstable_research_strategy_id"] == strategy.id
+    @test canonical_json_hash(strategy_policy) != default_hash
+
+    execution = solve_execution(
+        problem,
+        registry;
+        options,
+        max_actions=2,
+        research_strategy=strategy,
+    )
+    @test proposal_factory_calls[] == 1
+    @test local_solver_calls[] == 1
+    @test observed_sparsity[] == ((1, 1),)
+    @test length(execution.result.provisional_answers) == 1
+    @test execution.result.environment_lock.policy == canonical_json_hash(strategy_policy)
+
+    default_execution = solve_execution(problem, registry; options, max_actions=2)
+    @test default_execution.result.environment_lock.policy == default_hash
+    @test_throws SolveConfigurationError solve_execution(
+        problem,
+        registry;
+        options,
+        checkpoint=SolveCheckpointArtifact(default_execution),
+        research_strategy=strategy,
+    )
+    @test_throws ArgumentError UnstableResearchStrategy(
+        "Unversioned Strategy",
+        strategy.proposal_factory,
+        strategy.local_solver,
+    )
+end
+
 end

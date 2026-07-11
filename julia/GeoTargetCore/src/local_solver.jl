@@ -505,18 +505,22 @@ function _sealed_probe(
     scales,
     residual_count,
     deadline_ns,
-    cancelled,
+    cancelled;
+    require_finite_shape::Bool=true,
 )
     cancelled() && return nothing, false, 0, LOCAL_CANCELLED
     time_ns() >= deadline_ns && return nothing, false, 0, LOCAL_DEADLINE
     observation = _evaluate_local(evaluate_fn, u, origins, scales)
     evaluations = 1
+    cancelled() && return observation, false, evaluations, LOCAL_CANCELLED
     if time_ns() >= deadline_ns
         return observation, false, evaluations, LOCAL_DEADLINE
     end
-    usable = _usable_local_observation(observation) &&
-             length(observation.relations) == residual_count &&
-             all(relation -> isfinite(relation.scaled), observation.relations)
+    usable = _usable_local_observation(observation) && (
+        !require_finite_shape ||
+        length(observation.relations) == residual_count &&
+        all(relation -> isfinite(relation.scaled), observation.relations)
+    )
     return observation, usable, evaluations, nothing
 end
 
@@ -531,7 +535,9 @@ function _sealed_finite_difference_column(
     step_scale,
     column,
     deadline_ns,
-    cancelled,
+    cancelled;
+    fail_on_unusable::Bool=true,
+    require_finite_shape::Bool=true,
 )
     residual_count = length(base_residual)
     step = step_scale * max(1.0, abs(u[column]))
@@ -544,7 +550,7 @@ function _sealed_finite_difference_column(
     plus_step > 0 || minus_step > 0 || return (
         zeros(Float64, residual_count),
         0,
-        LOCAL_EVALUATION_FAILED,
+        fail_on_unusable ? LOCAL_EVALUATION_FAILED : nothing,
     )
 
     plus = nothing
@@ -560,7 +566,8 @@ function _sealed_finite_difference_column(
             scales,
             residual_count,
             deadline_ns,
-            cancelled,
+            cancelled;
+            require_finite_shape,
         )
         evaluations += used
         terminal === nothing || return zeros(Float64, residual_count), evaluations, terminal
@@ -573,7 +580,8 @@ function _sealed_finite_difference_column(
             scales,
             residual_count,
             deadline_ns,
-            cancelled,
+            cancelled;
+            require_finite_shape,
         )
         evaluations += used
         terminal === nothing || return zeros(Float64, residual_count), evaluations, terminal
@@ -581,7 +589,7 @@ function _sealed_finite_difference_column(
     plus_valid || minus_valid || return (
         zeros(Float64, residual_count),
         evaluations,
-        LOCAL_EVALUATION_FAILED,
+        fail_on_unusable ? LOCAL_EVALUATION_FAILED : nothing,
     )
 
     derivative = zeros(Float64, residual_count)
@@ -596,7 +604,46 @@ function _sealed_finite_difference_column(
     return derivative, evaluations, nothing
 end
 
-function _sealed_colored_finite_difference_jacobian(
+function _guarded_finite_difference_jacobian(
+    evaluate_fn,
+    u,
+    base_residual,
+    origins,
+    scales,
+    lower_u,
+    upper_u,
+    step_scale;
+    deadline_ns,
+    cancelled,
+)
+    residual_count = length(base_residual)
+    variable_count = length(u)
+    jacobian = zeros(Float64, residual_count, variable_count)
+    evaluations = 0
+    for column in 1:variable_count
+        derivative, used, terminal = _sealed_finite_difference_column(
+            evaluate_fn,
+            u,
+            base_residual,
+            origins,
+            scales,
+            lower_u,
+            upper_u,
+            step_scale,
+            column,
+            deadline_ns,
+            cancelled;
+            fail_on_unusable=false,
+            require_finite_shape=false,
+        )
+        evaluations += used
+        terminal === nothing || return jacobian, evaluations, terminal
+        jacobian[:, column] .= derivative
+    end
+    return jacobian, evaluations, nothing
+end
+
+function _guarded_colored_finite_difference_jacobian(
     evaluate_fn,
     u,
     base_residual,
@@ -605,12 +652,12 @@ function _sealed_colored_finite_difference_jacobian(
     lower_u,
     upper_u,
     step_scale,
-    provider::_SealedLocalJacobianProvider;
+    coloring::LocalJacobianColoring;
     deadline_ns,
     cancelled,
     group_observer=nothing,
+    sealed_semantics::Bool=false,
 )
-    coloring = provider.coloring
     residual_count = length(base_residual)
     variable_count = length(u)
     jacobian = zeros(Float64, residual_count, variable_count)
@@ -629,11 +676,9 @@ function _sealed_colored_finite_difference_jacobian(
         end
         plus_attempted = any(column -> plus_steps[column] > 0, group)
         minus_attempted = any(column -> minus_steps[column] > 0, group)
-        plus_attempted || minus_attempted || return (
-            jacobian,
-            evaluations,
-            LOCAL_EVALUATION_FAILED,
-        )
+        if !plus_attempted && !minus_attempted && sealed_semantics
+            return jacobian, evaluations, LOCAL_EVALUATION_FAILED
+        end
 
         plus = nothing
         plus_valid = !plus_attempted
@@ -648,7 +693,8 @@ function _sealed_colored_finite_difference_jacobian(
                 scales,
                 residual_count,
                 deadline_ns,
-                cancelled,
+                cancelled;
+                require_finite_shape=sealed_semantics,
             )
             evaluations += used
             grouped_evaluations += used
@@ -662,7 +708,8 @@ function _sealed_colored_finite_difference_jacobian(
                 scales,
                 residual_count,
                 deadline_ns,
-                cancelled,
+                cancelled;
+                require_finite_shape=sealed_semantics,
             )
             evaluations += used
             grouped_evaluations += used
@@ -683,7 +730,9 @@ function _sealed_colored_finite_difference_jacobian(
                     step_scale,
                     column,
                     deadline_ns,
-                    cancelled,
+                    cancelled;
+                    fail_on_unusable=sealed_semantics,
+                    require_finite_shape=sealed_semantics,
                 )
                 evaluations += used
                 fallback_evaluations += used
@@ -699,13 +748,25 @@ function _sealed_colored_finite_difference_jacobian(
                 end
                 jacobian[:, column] .= derivative
             end
-            group_observer === nothing || group_observer((
-                columns = Tuple(group),
-                grouped_evaluations = grouped_evaluations,
-                fallback = true,
-                fallback_evaluations = fallback_evaluations,
-                completed_fallback_columns = length(group),
-            ))
+            if group_observer !== nothing
+                event = if sealed_semantics
+                    (
+                        columns = Tuple(group),
+                        grouped_evaluations = grouped_evaluations,
+                        fallback = true,
+                        fallback_evaluations = fallback_evaluations,
+                        completed_fallback_columns = length(group),
+                    )
+                else
+                    (
+                        columns = Tuple(group),
+                        grouped_evaluations = grouped_evaluations,
+                        fallback = true,
+                        fallback_evaluations = fallback_evaluations,
+                    )
+                end
+                group_observer(event)
+            end
             continue
         end
 
@@ -731,18 +792,62 @@ function _sealed_colored_finite_difference_jacobian(
                         (base_residual[row] - minus_residual[row]) / minus_step
                 end
             else
-                return jacobian, evaluations, LOCAL_EVALUATION_FAILED
+                sealed_semantics &&
+                    return jacobian, evaluations, LOCAL_EVALUATION_FAILED
             end
         end
-        group_observer === nothing || group_observer((
-            columns = Tuple(group),
-            grouped_evaluations = grouped_evaluations,
-            fallback = false,
-            fallback_evaluations = 0,
-            completed_fallback_columns = 0,
-        ))
+        if group_observer !== nothing
+            event = if sealed_semantics
+                (
+                    columns = Tuple(group),
+                    grouped_evaluations = grouped_evaluations,
+                    fallback = false,
+                    fallback_evaluations = 0,
+                    completed_fallback_columns = 0,
+                )
+            else
+                (
+                    columns = Tuple(group),
+                    grouped_evaluations = grouped_evaluations,
+                    fallback = false,
+                    fallback_evaluations = 0,
+                )
+            end
+            group_observer(event)
+        end
     end
     return jacobian, evaluations, nothing
+end
+
+function _sealed_colored_finite_difference_jacobian(
+    evaluate_fn,
+    u,
+    base_residual,
+    origins,
+    scales,
+    lower_u,
+    upper_u,
+    step_scale,
+    provider::_SealedLocalJacobianProvider;
+    deadline_ns,
+    cancelled,
+    group_observer=nothing,
+)
+    return _guarded_colored_finite_difference_jacobian(
+        evaluate_fn,
+        u,
+        base_residual,
+        origins,
+        scales,
+        lower_u,
+        upper_u,
+        step_scale,
+        provider.coloring;
+        deadline_ns,
+        cancelled,
+        group_observer,
+        sealed_semantics=true,
+    )
 end
 
 _jacobian_evaluation_bound(::Nothing, variable_count) = 2 * variable_count
@@ -927,7 +1032,7 @@ function _solve_local_kernel(
         end
 
         jacobian, jacobian_evaluations, jacobian_failure = if coloring === nothing
-            dense_jacobian, dense_evaluations = _finite_difference_jacobian(
+            _guarded_finite_difference_jacobian(
                 evaluate_fn,
                 u,
                 residual,
@@ -935,9 +1040,10 @@ function _solve_local_kernel(
                 scale_values,
                 lower_u,
                 upper_u,
-                options.finite_difference_step,
+                options.finite_difference_step;
+                deadline_ns,
+                cancelled,
             )
-            dense_jacobian, dense_evaluations, nothing
         elseif coloring isa _SealedLocalJacobianProvider
             _sealed_colored_finite_difference_jacobian(
                 evaluate_fn,
@@ -954,7 +1060,7 @@ function _solve_local_kernel(
                 group_observer=color_group_observer,
             )
         else
-            colored_jacobian, colored_evaluations = _colored_finite_difference_jacobian(
+            _guarded_colored_finite_difference_jacobian(
                 evaluate_fn,
                 u,
                 residual,
@@ -963,10 +1069,11 @@ function _solve_local_kernel(
                 lower_u,
                 upper_u,
                 options.finite_difference_step,
-                coloring,
-                group_observer = color_group_observer,
+                coloring;
+                deadline_ns,
+                cancelled,
+                group_observer=color_group_observer,
             )
-            colored_jacobian, colored_evaluations, nothing
         end
         evaluations += jacobian_evaluations
         jacobian_observer === nothing || jacobian_observer((

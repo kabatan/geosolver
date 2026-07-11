@@ -125,6 +125,72 @@ end
     @test failed.status == LOCAL_EVALUATION_FAILED
 end
 
+@testset "finite-difference probes observe cancellation between callbacks" begin
+    function interrupted_attempt(; colored)
+        calls = Ref(0)
+        evaluator = function (x)
+            calls[] += 1
+            return diagonal_observation(x)
+        end
+        entries = colored ? ((1, 1), (2, 2)) : nothing
+        attempt = solve_local(
+            evaluator,
+            [0.0, 0.0];
+            lower=[-2.0, -2.0],
+            upper=[2.0, 2.0],
+            jacobian_entries=entries,
+            cancelled=() -> calls[] >= 2,
+        )
+        return attempt, calls[]
+    end
+
+    dense, dense_calls = interrupted_attempt(; colored=false)
+    @test dense.status == LOCAL_CANCELLED
+    @test dense.evaluations == 2
+    @test dense_calls == 2
+
+    colored, colored_calls = interrupted_attempt(; colored=true)
+    @test colored.status == LOCAL_CANCELLED
+    @test colored.evaluations == 2
+    @test colored_calls == 2
+
+    one_sided_calls = Ref(0)
+    one_sided = solve_local(
+        x -> begin
+            one_sided_calls[] += 1
+            local_observation(x)
+        end,
+        [-2.0];
+        lower=[-2.0],
+        upper=[2.0],
+        cancelled=() -> one_sided_calls[] >= 2,
+    )
+    @test one_sided.status == LOCAL_CANCELLED
+    @test one_sided.evaluations == 2
+    @test one_sided_calls[] == 2
+
+    expired_calls = Ref(0)
+    expired, used, failure = GeoTargetCore._guarded_finite_difference_jacobian(
+        x -> begin
+            expired_calls[] += 1
+            diagonal_observation(x)
+        end,
+        [0.0, 0.0],
+        [-1.0, -1.0],
+        [0.0, 0.0],
+        [1.0, 1.0],
+        [-2.0, -2.0],
+        [2.0, 2.0],
+        LocalSolveOptions().finite_difference_step;
+        deadline_ns=UInt64(0),
+        cancelled=() -> false,
+    )
+    @test size(expired) == (2, 2)
+    @test used == 0
+    @test failure == LOCAL_DEADLINE
+    @test expired_calls[] == 0
+end
+
 @testset "local options and budgets fail closed" begin
     @test_throws ArgumentError LocalSolveOptions(max_iterations = 0)
     @test_throws ArgumentError LocalSolveOptions(damping_increase = 1.0)
