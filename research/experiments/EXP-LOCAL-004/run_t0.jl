@@ -16,6 +16,7 @@ function usage()
       research/experiments/EXP-LOCAL-004/run_t0.jl [options]
 
       --prefixes=2,4,8   Sorted saved-start prefixes (default: 2,4,8)
+      --suite=t0|t1      Five-case screen or representative nine cases (default: t0)
       --output=PATH      Output JSON (default: benchmarks/results/raw/exp-local-004-t0.json)
       --help             Show this message
     """
@@ -30,6 +31,7 @@ end
 function parse_arguments(arguments)
     options = Dict{Symbol,Any}(
         :prefixes => [2, 4, 8],
+        :suite => :t0,
         :output => joinpath(
             REPOSITORY_ROOT,
             "benchmarks",
@@ -43,6 +45,10 @@ function parse_arguments(arguments)
         if startswith(argument, "--prefixes=")
             raw = split(argument[length("--prefixes=") + 1:end], ',')
             options[:prefixes] = [parse_positive(value, "prefix") for value in raw]
+        elseif startswith(argument, "--suite=")
+            suite = Symbol(argument[length("--suite=") + 1:end])
+            suite in (:t0, :t1) || error("suite must be t0 or t1")
+            options[:suite] = suite
         elseif startswith(argument, "--output=")
             output = argument[length("--output=") + 1:end]
             isempty(output) && error("output path must be nonempty")
@@ -73,17 +79,30 @@ function t0_problems(start_count)
     return problems
 end
 
-function variants()
-    return SolverVariant[
+function selected_problems(suite::Symbol, start_count)
+    suite === :t0 && return t0_problems(start_count)
+    suite === :t1 || throw(ArgumentError("suite must be t0 or t1"))
+    problems = representative_problems(; start_count)
+    length(problems) == 9 || error("T1 must contain the nine representative cases")
+    return problems
+end
+
+function variants(suite::Symbol)
+    controls = SolverVariant[
         core_lmqr_control(:legacy_lab_120x600),
         core_lmqr_control(:prod_tol_120x600),
         core_lmqr_control(:prod_options_250x2000),
-        nls_tr_variant(),
-        nls_lm_variant(),
+    ]
+    suite === :t1 && return [controls; nls_tr_variant()]
+    suite === :t0 || throw(ArgumentError("suite must be t0 or t1"))
+    return [
+        controls;
+        nls_tr_variant();
+        nls_lm_variant();
         native_safeguarded_lm_variant(
             max_iterations=250,
             max_evaluations=2_000,
-        ),
+        );
     ]
 end
 
@@ -122,13 +141,14 @@ function main(arguments=ARGS)
         return nothing
     end
     run = run_solver_experiment(
-        t0_problems(last(options[:prefixes])),
-        variants();
+        selected_problems(options[:suite], last(options[:prefixes])),
+        variants(options[:suite]);
         prefixes=options[:prefixes],
         evaluation_limit=ExperimentLocal004.DEFAULT_MAX_EVALUATIONS,
     )
     document = solver_experiment_document(run)
     document["experiment_id"] = EXPERIMENT_ID
+    document["suite"] = String(options[:suite])
     document["environment"] = Dict{String,Any}(
         "julia_threads" => Threads.nthreads(),
         "julia_version" => string(VERSION),

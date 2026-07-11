@@ -32,3 +32,14 @@ julia +1.12.6 --startup-file=no --history-file=no \
   --project=research/experiments/EXP-LOCAL-002 \
   research/experiments/EXP-LOCAL-004/run_t0.jl
 ```
+
+The frozen T0 decision is in `t0-decision.json`. Run the representative
+nine-case T1 screen with only the three controls and the promoted NLS-TR
+candidate:
+
+```console
+julia +1.12.6 --startup-file=no --history-file=no \
+  --project=research/experiments/EXP-LOCAL-002 \
+  research/experiments/EXP-LOCAL-004/run_t0.jl --suite=t1 \
+  --output=benchmarks/results/raw/exp-local-004-t1-linux.json
+```
