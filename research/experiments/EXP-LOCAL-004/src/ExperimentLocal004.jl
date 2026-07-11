@@ -87,6 +87,11 @@ function _diagnostic(
     retcode::AbstractString,
     stats=nothing,
     exception=nothing,
+    retcode_success=nothing,
+    screening_residual_linf=nothing,
+    screening_finite=nothing,
+    screening_in_bounds=nothing,
+    screening_accepted=nothing,
 )
     fields = String[
         "retcode=$retcode",
@@ -105,8 +110,31 @@ function _diagnostic(
         "bounds_half_range=$(_vector_text(half_ranges))",
         "normalized_bounds=[-1.0,1.0]",
     ]
+    retcode_success === nothing || push!(fields, "retcode_success=$retcode_success")
+    screening_residual_linf === nothing ||
+        push!(fields, "screening_residual_linf=$screening_residual_linf")
+    screening_finite === nothing || push!(fields, "screening_finite=$screening_finite")
+    screening_in_bounds === nothing ||
+        push!(fields, "screening_in_bounds=$screening_in_bounds")
+    screening_accepted === nothing ||
+        push!(fields, "screening_accepted=$screening_accepted")
     exception === nothing || push!(fields, "exception=$(sprint(showerror, exception))")
     return join(fields, ';')
+end
+
+function _scaled_evaluation(case, input, residual_scales, counter::CallbackCounter)
+    if counter.calls >= counter.limit
+        counter.exhausted = true
+        throw(CallbackBudgetExceeded(counter.limit))
+    end
+    evaluation = evaluate_case(case, input)
+    counter.calls += 1
+    scaled = Float64[
+        evaluation.residuals[index] / residual_scales[index] for
+        index in eachindex(residual_scales)
+    ]
+    counter.nonfinite_calls += !evaluation.finite || !all(isfinite, scaled)
+    return evaluation, scaled
 end
 
 function _failed_outcome(
@@ -157,19 +185,11 @@ function _run_candidate(
             throw(ArgumentError("residual scales must be finite and positive"))
 
         function scaled_residual!(output, u, _)
-            if counter.calls >= counter.limit
-                counter.exhausted = true
-                throw(CallbackBudgetExceeded(counter.limit))
-            end
             outside = any(u .< lower_u) || any(u .> upper_u)
             counter.outside_bounds_calls += outside
             x = origins .+ half_ranges .* u
-            evaluation = evaluate_case(case, x)
-            counter.calls += 1
-            for index in eachindex(output)
-                output[index] = evaluation.residuals[index] / residual_scales[index]
-            end
-            counter.nonfinite_calls += !evaluation.finite || !all(isfinite, output)
+            _, scaled = _scaled_evaluation(case, x, residual_scales, counter)
+            output .= scaled
             return output
         end
 
@@ -207,13 +227,31 @@ function _run_candidate(
         end
         normalized_endpoint = collect(Float64, solution.u)
         endpoint = origins .+ half_ranges .* normalized_endpoint
-        reported_success = NonlinearSolve.SciMLBase.successful_retcode(solution.retcode)
+        retcode_success = NonlinearSolve.SciMLBase.successful_retcode(solution.retcode)
+        endpoint_finite = all(isfinite, endpoint)
+        endpoint_in_bounds = endpoint_finite && all(
+            case.lower_bounds[index] <= endpoint[index] <= case.upper_bounds[index] for
+            index in eachindex(endpoint)
+        )
+        screening_residual_linf = Inf
+        screening_finite = false
+        reported_accepted = false
+        if endpoint_in_bounds
+            screening_evaluation, scaled_endpoint_residual =
+                _scaled_evaluation(case, endpoint, residual_scales, counter)
+            screening_finite = screening_evaluation.finite &&
+                               all(isfinite, scaled_endpoint_residual)
+            screening_residual_linf =
+                maximum(abs, scaled_endpoint_residual; init=0.0)
+            reported_accepted = screening_finite &&
+                                screening_residual_linf <= ABSOLUTE_TOLERANCE
+        end
         iterations = max(0, _stat(solution.stats, :nsteps))
         return SolverAttemptOutcome(
             endpoint;
             status=string(solution.retcode),
-            reported_converged=reported_success,
-            reported_accepted=reported_success,
+            reported_converged=retcode_success,
+            reported_accepted,
             evaluations=counter.calls,
             iterations,
             diagnostic=_diagnostic(
@@ -222,6 +260,11 @@ function _run_candidate(
                 half_ranges;
                 retcode=string(solution.retcode),
                 stats=solution.stats,
+                retcode_success,
+                screening_residual_linf,
+                screening_finite,
+                screening_in_bounds=endpoint_in_bounds,
+                screening_accepted=reported_accepted,
             ),
         )
     catch error
@@ -265,7 +308,8 @@ function nonlinear_solve_variant(
         max_iterations=Int(max_iterations),
         max_evaluations=Int(max_evaluations),
         endpoint_policy="solution.u-only",
-        reported_acceptance="library-retcode-diagnostic-only",
+        reported_acceptance="finite-bounds-scaled-residual-linf",
+        acceptance_residual_tolerance=ABSOLUTE_TOLERANCE,
         geodesic_acceleration=kind === :lm ? "enabled" : "not-applicable",
         geodesic_finite_difference_step=kind === :lm ? 0.1 : 0.0,
         geodesic_alpha=kind === :lm ? 0.75 : 0.0,

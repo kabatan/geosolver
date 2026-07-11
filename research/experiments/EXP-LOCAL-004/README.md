@@ -4,8 +4,11 @@ This experiment-local adapter exposes pinned NonlinearSolve 4.20.2
 `TrustRegion` (`NLS-TR`) and `LevenbergMarquardt` (`NLS-LM`) as truth-blind
 solver-lab variants scored by the common schema-v2 assessor. Both use midpoint/half-range coordinates, declared
 residual scaling, central finite differences, and an external hard callback
-cap. Library return codes are diagnostics; the shared solver-lab assessor owns
-endpoint qualification.
+cap. Library return codes are convergence diagnostics only. Reported acceptance
+uses the general truth-blind screen: a finite endpoint inside its declared
+bounds with scaled residual L-infinity norm at most `1e-12`. The screening
+evaluation uses the same counted callback budget; the shared solver-lab
+assessor still owns independent endpoint qualification.
 
 The LM comparator explicitly preserves NonlinearSolve's geodesic acceleration
 (`step=0.1`, `alpha=0.75`); these extra residual calls are included by the

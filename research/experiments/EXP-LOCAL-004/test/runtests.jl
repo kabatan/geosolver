@@ -71,7 +71,8 @@ const CANDIDATE_BUILDERS = (nls_tr_variant, nls_lm_variant)
         @test config.max_iterations == 250
         @test config.max_evaluations == 2_000
         @test config.endpoint_policy == "solution.u-only"
-        @test config.reported_acceptance == "library-retcode-diagnostic-only"
+        @test config.reported_acceptance == "finite-bounds-scaled-residual-linf"
+        @test config.acceptance_residual_tolerance == 1.0e-12
     end
     @test variants[1].configuration.geodesic_acceleration == "not-applicable"
     @test variants[2].configuration.geodesic_acceleration == "enabled"
@@ -117,6 +118,8 @@ end
             regular_outcome.diagnostic,
         )
         @test occursin("nf=", regular_outcome.diagnostic)
+        @test occursin("screening_accepted=true", regular_outcome.diagnostic)
+        @test occursin("screening_residual_linf=", regular_outcome.diagnostic)
 
         over_outcome = build(max_evaluations=300).run(overdetermined, [0.0, 0.0])
         @test over_outcome.endpoint !== nothing
@@ -188,6 +191,43 @@ end
         @test nonfinite_outcome.evaluations <= 30
         @test occursin("nonfinite_callbacks=", nonfinite_outcome.diagnostic)
         @test !occursin("nonfinite_callbacks=0", nonfinite_outcome.diagnostic)
+
+        target_nonfinite_calls = Ref(0)
+        target_nonfinite = fixture_case(
+            1,
+            1,
+            [-1.0],
+            [1.0],
+            [1.0],
+            input -> (input[1],);
+            target=input -> NaN,
+            calls=target_nonfinite_calls,
+        )
+        target_nonfinite_outcome =
+            build(max_evaluations=100).run(target_nonfinite, [0.0])
+        @test target_nonfinite_outcome.endpoint !== nothing
+        @test !target_nonfinite_outcome.reported_accepted
+        @test target_nonfinite_outcome.evaluations == target_nonfinite_calls[]
+        @test occursin("screening_finite=false", target_nonfinite_outcome.diagnostic)
+        @test !occursin("nonfinite_callbacks=0", target_nonfinite_outcome.diagnostic)
+
+        stationary_calls = Ref(0)
+        positive_stationary = fixture_case(
+            1,
+            2,
+            [-2.0],
+            [4.0],
+            [1.0, 1.0],
+            input -> (input[1], input[1] - 2.0);
+            calls=stationary_calls,
+        )
+        stationary_outcome = build().run(positive_stationary, [1.0])
+        @test stationary_outcome.status == "StalledSuccess"
+        @test stationary_outcome.reported_converged
+        @test !stationary_outcome.reported_accepted
+        @test stationary_outcome.evaluations == stationary_calls[]
+        @test occursin("retcode_success=true", stationary_outcome.diagnostic)
+        @test occursin("screening_accepted=false", stationary_outcome.diagnostic)
 
         observed = Ref(0)
         budget_case = fixture_case(
