@@ -87,7 +87,11 @@ function _pslq_residual(relation, values, precision_bits, height_bits)
             residual += term
             scale += abs(term)
         end
-        guard_bits = height_bits + ceil(Int, log2(length(values))) + 32
+        # Core's provider guarantees adaptive root/target gates with a 96-bit
+        # accuracy reserve, not a correctly rounded algebraic value at every
+        # requested bit. Keep the recognition residual inside the 128-bit
+        # working-precision safety reserve required by the degree/height rule.
+        guard_bits = max(128, height_bits + ceil(Int, log2(length(values))) + 32)
         reliable_bits = max(32, precision_bits - guard_bits)
         tolerance = ldexp(max(one(BigFloat), scale), -reliable_bits)
         residual, tolerance
@@ -167,13 +171,19 @@ function _pslq_best_candidate(B, values, precision_bits, height_bits)
         residual, _ = _pslq_residual(relation, values, precision_bits, height_bits)
         abs(residual)
     end)
+    overheight_relation = nothing
+    overheight_residual = nothing
     for column in ordered_columns
         relation, residual, within_height =
             _pslq_candidate(B, column, values, precision_bits, height_bits)
         relation === nothing && continue
-        return relation, residual, within_height
+        within_height && return relation, residual, true
+        if overheight_relation === nothing
+            overheight_relation = relation
+            overheight_residual = residual
+        end
     end
-    return nothing, nothing, false
+    return overheight_relation, overheight_residual, false
 end
 
 function _pslq_iterate!(y, H, B)
@@ -294,18 +304,11 @@ function pslq_relation(
         )
         y, H, B = state
         relation, residual, within_height = _pslq_best_candidate(B, values, bits, height)
-        if relation !== nothing
-            return within_height ?
-                   _pslq_success(relation, 0, bits, height, residual) :
-                   _pslq_failure(
-                PSLQ_COEFFICIENT_LIMIT,
-                0,
-                bits,
-                height,
-                "a verified numerical relation exceeds the coefficient-height limit";
-                residual,
-            )
-        end
+        relation !== nothing && within_height &&
+            return _pslq_success(relation, 0, bits, height, residual)
+        first_overheight_iteration = relation === nothing ? nothing : 0
+        last_overheight_residual = relation === nothing ? nothing : residual
+        overheight_grace = max(8, 4 * length(values))
 
         precision_floor = ldexp(one(BigFloat), -max(32, bits - height - 32))
         for iteration in 1:iterations_limit
@@ -318,25 +321,49 @@ function pslq_relation(
             )
             relation, residual, within_height = _pslq_best_candidate(B, values, bits, height)
             if relation !== nothing
-                return within_height ?
-                       _pslq_success(relation, iteration, bits, height, residual) :
-                       _pslq_failure(
-                    PSLQ_COEFFICIENT_LIMIT,
+                within_height &&
+                    return _pslq_success(relation, iteration, bits, height, residual)
+                first_overheight_iteration === nothing &&
+                    (first_overheight_iteration = iteration)
+                last_overheight_residual = residual
+                iteration - first_overheight_iteration >= overheight_grace &&
+                    return _pslq_failure(
+                        PSLQ_COEFFICIENT_LIMIT,
+                        iteration,
+                        bits,
+                        height,
+                        "only verified relations above the coefficient-height limit persisted";
+                        residual=last_overheight_residual,
+                    )
+            end
+            if minimum(abs, y) <= precision_floor
+                if first_overheight_iteration !== nothing
+                    return _pslq_failure(
+                        PSLQ_COEFFICIENT_LIMIT,
+                        iteration,
+                        bits,
+                        height,
+                        "PSLQ found only verified relations above the coefficient-height limit";
+                        residual=last_overheight_residual,
+                    )
+                end
+                return _pslq_failure(
+                    PSLQ_INSUFFICIENT_PRECISION,
                     iteration,
                     bits,
                     height,
-                    "a verified numerical relation exceeds the coefficient-height limit";
-                    residual,
+                    "PSLQ exhausted reliable digits before finding an admissible relation",
                 )
             end
-            minimum(abs, y) <= precision_floor && return _pslq_failure(
-                PSLQ_INSUFFICIENT_PRECISION,
-                iteration,
-                bits,
-                height,
-                "PSLQ exhausted reliable digits before finding an admissible relation",
-            )
         end
+        first_overheight_iteration !== nothing && return _pslq_failure(
+            PSLQ_COEFFICIENT_LIMIT,
+            iterations_limit,
+            bits,
+            height,
+            "PSLQ found only verified relations above the coefficient-height limit";
+            residual=last_overheight_residual,
+        )
         return _pslq_failure(
             PSLQ_MAX_ITERATIONS,
             iterations_limit,

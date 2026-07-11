@@ -87,7 +87,10 @@ end
 
 function _relation_tolerance(value::BigFloat, precision_bits::Int, height_bits::Int, degree::Int)
     return setprecision(BigFloat, max(precision_bits, precision(value))) do
-        guard_bits = height_bits + ceil(Int, log2(degree + 1)) + 32
+        # Match the 128-bit safety reserve in `working_precision`. Samples from
+        # Core satisfy independent adaptive gates but need not be correctly
+        # rounded to every requested bit.
+        guard_bits = max(128, height_bits + ceil(Int, log2(degree + 1)) + 32)
         reliable_bits = max(32, precision_bits - guard_bits)
         ldexp(max(one(value), abs(value)) ^ max(degree, 1), -reliable_bits)
     end

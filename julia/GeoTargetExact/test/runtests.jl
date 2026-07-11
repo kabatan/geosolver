@@ -322,5 +322,7 @@ end
 @testset "Phase B C3A boundary is explicit" begin
     unsupported = replay_c3a(:fixture)
     @test unsupported isa C3AReplayUnsupported
-    @test occursin("Phase B", unsupported.detail)
+    @test occursin("CompiledProblem", unsupported.detail)
 end
+
+include("c3a_runtests.jl")

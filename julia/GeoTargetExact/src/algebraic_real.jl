@@ -94,9 +94,9 @@ Base.show(io::IO, value::AlgebraicReal) = print(io, "AlgebraicReal(", value.valu
 """
 Return true only when a value tree contains no floating-point leaf.
 
-This is a defensive Phase-A primitive for the future C3A interpreter. Nemo
-algebraic values and `AlgebraicReal` are exact leaves; arbitrary floats are
-rejected even when their displayed decimal happens to look algebraic.
+This is a defensive primitive for the C3A interpreter. Nemo algebraic values
+and `AlgebraicReal` are exact leaves; arbitrary floats are rejected even when
+their displayed decimal happens to look algebraic.
 """
 function exact_leaf_safe(value)
     return _exact_leaf_safe(value, IdDict{Any,Nothing}())

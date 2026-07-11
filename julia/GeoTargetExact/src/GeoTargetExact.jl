@@ -1,12 +1,17 @@
 module GeoTargetExact
 
+using GeoTargetBase
+using GeoTargetCore
+using JSON3
 using Nemo
 
 include("algebraic_real.jl")
 include("pslq.jl")
 include("recognition.jl")
 include("certificates.jl")
-include("c3a_stub.jl")
+include("c3a_replay.jl")
+include("exact_artifacts.jl")
+include("backend.jl")
 
 export AlgebraicReal,
     algebraic_value,
@@ -35,7 +40,40 @@ export AlgebraicReal,
     recognize_at,
     recognize_algebraic,
     same_algebraic_identity,
+    C3AReplayFailure,
+    C3A_REPLAY_NONE,
+    C3A_REPLAY_CAPABILITY_MISSING,
+    C3A_REPLAY_LITERAL_UNSUPPORTED,
+    C3A_REPLAY_CALLBACK_FAILED,
+    C3A_REPLAY_NONEXACT_VALUE,
+    C3A_REPLAY_TYPE_MISMATCH,
+    C3A_REPLAY_BOUNDS_FAILED,
+    C3A_REPLAY_RELATION_FAILED,
+    C3A_REPLAY_GUARD_FAILED,
+    C3A_REPLAY_DOMAIN_FAILED,
+    C3A_REPLAY_BRANCH_FAILED,
+    C3A_REPLAY_BRANCH_MISMATCH,
+    C3A_REPLAY_TARGET_FAILED,
     C3AReplayUnsupported,
-    replay_c3a
+    C3ARelationProof,
+    C3AMarginProof,
+    C3ABranchProof,
+    C3AReplayEvidence,
+    C3AReplayResult,
+    replay_c3a,
+    C3AVerificationFailure,
+    C3A_VERIFY_NONE,
+    C3A_VERIFY_UNSUPPORTED_SCHEME,
+    C3A_VERIFY_ARTIFACT_INVALID,
+    C3A_VERIFY_PROBLEM_MISMATCH,
+    C3A_VERIFY_CONFIGURATION_MISMATCH,
+    C3A_VERIFY_BRANCH_MISMATCH,
+    C3A_VERIFY_REPLAY_FAILED,
+    C3A_VERIFY_TARGET_MISMATCH,
+    C3AVerificationResult,
+    verify_c3a_exact_answer,
+    NemoExactBackend,
+    exact_backend_descriptor,
+    exactify_candidate
 
 end
