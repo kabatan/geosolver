@@ -18,6 +18,9 @@ from research.harness.bootstrap import (
 from research.harness.matching import RunEvaluation, evaluate_run
 from research.harness.metrics import (
     aggregate_metrics,
+    assess_zero_answer_safety_controls,
+    exact_prefix_monotonicity,
+    exact_stability_27_of_30,
     prefix_monotonicity,
     stability_27_of_30,
 )
@@ -283,6 +286,37 @@ class MetricTests(unittest.TestCase):
         self.assertEqual(missing_case.missing_seeds, tuple(range(30)))
         self.assertFalse(entirely_missing.release_pass)
 
+    def test_exact_stability_uses_full_exact_and_requires_exact_eligibility(
+        self,
+    ) -> None:
+        base = evaluated(
+            answers=[answer_data(level="exact", target_identity_certified=True)]
+        )
+        runs = [replace(base, run_id=f"run-{seed}", seed=seed) for seed in range(30)]
+        for index in range(3):
+            runs[index] = replace(
+                runs[index],
+                covered_exact_targets=frozenset(),
+                full_exact=False,
+            )
+
+        report = exact_stability_27_of_30(runs)
+        self.assertEqual(report.cases[0].success_count, 27)
+        self.assertTrue(report.cases[0].stable_27_of_30)
+        self.assertTrue(report.release_pass)
+
+        four_misses = list(runs)
+        four_misses[3] = replace(
+            four_misses[3],
+            covered_exact_targets=frozenset(),
+            full_exact=False,
+        )
+        self.assertFalse(exact_stability_27_of_30(four_misses).release_pass)
+
+        nonexact = replace(base, exact_eligible=False, full_exact=False)
+        with self.assertRaisesRegex(ValueError, "exact-eligible"):
+            exact_stability_27_of_30([nonexact])
+
     def test_prefix_reports_losses_and_recovers_short_budget_misses(self) -> None:
         full_short = evaluated(answers=[answer_data()], run_id="short-a")
         lost_long = replace(
@@ -314,6 +348,112 @@ class MetricTests(unittest.TestCase):
 
         clean = prefix_monotonicity([miss_short, recovered_long])
         self.assertTrue(clean.release_pass)
+
+    def test_exact_prefix_uses_exact_sets_and_full_exact_recovery(self) -> None:
+        full_short = evaluated(
+            answers=[answer_data(level="exact", target_identity_certified=True)],
+            run_id="short-a",
+        )
+        lost_long = replace(
+            full_short,
+            run_id="long-a",
+            budget_seconds=420,
+            covered_exact_targets=frozenset(),
+            full_exact=False,
+        )
+        miss_short = replace(
+            full_short,
+            run_id="short-b",
+            case_id="case-2",
+            family_id="family-2",
+            covered_exact_targets=frozenset(),
+            full_exact=False,
+        )
+        recovered_long = replace(
+            miss_short,
+            run_id="long-b",
+            budget_seconds=420,
+            covered_exact_targets=miss_short.gold_target_ids,
+            full_exact=True,
+        )
+
+        report = exact_prefix_monotonicity(
+            [full_short, lost_long, miss_short, recovered_long]
+        )
+        self.assertEqual(report.remaining_short_exact_misses, 1)
+        self.assertEqual(report.recovered_short_exact_misses, 1)
+        self.assertEqual(report.recovered_fraction, 1.0)
+        self.assertEqual(report.exact_losses[0].lost_target_ids, ("target-1",))
+        self.assertFalse(report.release_pass)
+
+        clean = exact_prefix_monotonicity([miss_short, recovered_long])
+        self.assertTrue(clean.no_exact_answer_loss)
+        self.assertTrue(clean.release_pass)
+
+    def test_zero_answer_controls_are_safety_only_and_require_no_output(self) -> None:
+        safe = evaluated(answers=[], run_id="safe", seed=0)
+        safe_report = assess_zero_answer_safety_controls([safe], budget_seconds=180)
+        self.assertEqual(safe_report.control_run_count, 1)
+        self.assertEqual(safe_report.completion_denominator_count, 0)
+        self.assertEqual(safe_report.reported_answer_count, 0)
+        self.assertTrue(safe_report.release_pass)
+
+        false_exact = evaluated(
+            answers=[
+                answer_data(
+                    level="exact",
+                    target_identity_certified=True,
+                    value_interval=interval("9"),
+                )
+            ],
+            run_id="false-exact",
+            seed=1,
+        )
+        branch_case = case_data(
+            targets=[
+                {
+                    "target_id": "target-1",
+                    "interval": interval("1"),
+                    "allowed_branches": ["left"],
+                }
+            ]
+        )
+        false_validated = evaluated(
+            branch_case,
+            [answer_data(branch="right", boundary_valid=False)],
+            run_id="false-validated",
+            seed=2,
+        )
+        false_complete = evaluated(
+            answers=[], run_id="false-complete", seed=3, claims_complete=True
+        )
+        unsafe = assess_zero_answer_safety_controls(
+            [false_exact, false_validated, false_complete],
+            budget_seconds=180,
+        )
+        self.assertEqual(unsafe.reported_answer_count, 2)
+        self.assertEqual(unsafe.false_exact_count, 1)
+        self.assertEqual(unsafe.false_validated_count, 1)
+        self.assertEqual(unsafe.false_branch_count, 1)
+        self.assertEqual(unsafe.false_boundary_count, 1)
+        self.assertEqual(unsafe.false_complete_count, 1)
+        self.assertFalse(unsafe.release_pass)
+
+        accepted = evaluated(
+            answers=[answer_data(level="exact", target_identity_certified=True)],
+            run_id="accepted",
+            seed=4,
+        )
+        accepted_report = assess_zero_answer_safety_controls(
+            [accepted], budget_seconds=180
+        )
+        self.assertEqual(accepted_report.false_exact_count, 0)
+        self.assertEqual(accepted_report.reported_answer_count, 1)
+        self.assertFalse(accepted_report.release_pass)
+
+        self.assertFalse(
+            assess_zero_answer_safety_controls([], budget_seconds=180).release_pass
+        )
 
 
 class BootstrapTests(unittest.TestCase):
