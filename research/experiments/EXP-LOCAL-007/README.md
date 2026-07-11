@@ -1,6 +1,6 @@
 # EXP-LOCAL-007 — square-system Powell hybrid comparator
 
-Status: **preregistered; implementation-only; no T0 outcome exists**
+Status: **clean T0 survived; representative-nine T1 preregistered; no T1 outcome exists**
 
 This experiment-local candidate evaluates SciPy 1.18.0
 `scipy.optimize.root(method="hybr")`, the MINPACK HYBRD modified Powell hybrid
@@ -94,6 +94,58 @@ only authorizes a separately preregistered T1 comparison; it cannot authorize a
 native implementation, production route, T2, or champion claim. There are no
 tuning rounds in EXP-LOCAL-007.
 
+## Audited T0 decision
+
+Five clean detached-HEAD shards at revision
+`949386bf4b89fe500cb0790d299e4cfc89d9f1ae` ran on distinct physical cores
+with one Julia/BLAS/OpenMP/MKL thread each. At the 4,800-callback threshold,
+`SCIPY-HYBR` preserved assessor-qualified target recovery at `4/10`, improved
+assessor-safe-full from `2/5` to `3/5`, and used 24,297 callbacks versus 25,286
+for `prod-tol-120x600` (ratio `0.9608874475994622`). Candidate accepted-endpoint
+safety, assessor inconsistency, count mismatch, runner-cap, and exception
+counts were all zero. Curved, NearRank, Tangent, and combined Warped target
+recovery were all noninferior.
+
+The 653 attempts and 60 summaries were independently rebuilt from the raw
+artifacts. Callback-role sums, exact paired starts, replay checksums, threshold
+crossings, overshoot, and suffix-stable work all matched. The authoritative
+hash-bound record is [`t0-decision.json`](t0-decision.json). This result
+authorizes only the preregistered T1 screen below.
+
+## Frozen representative-nine T1
+
+[`t1-preregistration.json`](t1-preregistration.json) freezes the existing
+`representative_problems` nine-case corpus, all 512 saved starts and replay
+checksums, the same case-cumulative callback thresholds
+`600/1200/2400/4800`, and the unchanged three variants. No T1 outcome was
+observed while defining the runner or gate.
+
+Eight cases satisfy HYBR's public `residual_dimension == dimension`
+applicability predicate. The redundant overdetermined case remains in the
+corpus and must produce `INAPPLICABLE_NONSQUARE` with zero callbacks on the
+first paired start. `run_t1.jl` records this as an explicit terminal snapshot
+at each threshold label with `threshold_reached=false`; it is not credited as
+performance or silently discarded. Applicable-family metrics therefore cannot
+support a production-default claim for nonsquare problems.
+
+T1 can authorize a separately frozen T2 study only when all safety and
+generality gates pass. Family-equal assessor-safe-full must either improve by
+at least 5 percentage points with callback work at most 1.2x, or remain within
+1 point while callback work or confirmed end-to-end wall falls by at least
+20%. Callback work here is per-case suffix-stable common-assessor safe-full
+work, with a miss right-censored at 4,800 callbacks; it is not the nearly fixed cost of forcing
+both streams through the final reporting threshold. Every preregistered
+critical-stratum delta must be at least -2 points,
+the signal must repeat in at least three unrelated applicable families, and
+all safety/truth/accounting violations must be zero. A wall-only efficiency
+claim additionally requires two clean one-thread AB/BA process-order
+replicates. T1 is not a production or native-port gate.
+
+The zero-violation gate is candidate-only across every applicable case and
+every recorded prefix; truth leak is checked from candidate/runner source.
+Control violations remain part of the control safe-full and work baseline but
+are not added to the candidate's zero count. This matches the audited T0 gate.
+
 ## Locked environment and targeted tests
 
 Python 3.12.11 and SciPy 1.18.0 are locked by `python/uv.lock`; Julia 1.12.6 and
@@ -111,7 +163,7 @@ env JULIA_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \
   research/experiments/EXP-LOCAL-007/test/runtests.jl
 ```
 
-## Formal T0 runner — do not launch before review and commit
+## Formal T0 runner — completed and retained for audit
 
 Each `(case, variant)` consumes the same paired saved-start order once and
 snapshots after the first completed attempt crossing cumulative observed
@@ -120,7 +172,7 @@ overshoot is recorded. Replay material is verified before sharding,
 suffix-stable work is computed from the completed stream, and every shard
 requires a clean worktree plus one Julia/BLAS/OpenMP/MKL thread.
 
-After root review and a clean commit, the formal command is:
+The completed T0 used the following command shape:
 
 ```bash
 env JULIA_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \
@@ -131,9 +183,29 @@ env JULIA_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \
 ```
 
 Launch each zero-based case shard exactly once; this implementation creates no
-T1 runner or outcome.
+additional T0 outcome.
 
-If T0 rejects the candidate, delete the adapter, bridge, dependency locks, and
-candidate-specific knobs. Retain only the compact audited decision, artifact
+## Formal T1 runner — preregistered, not yet launched
+
+The first T1 outcome must come from a clean commit containing this README,
+`t0-decision.json`, `t1-preregistration.json`, `run_t1.jl`, and
+`src/T1Policy.jl`. For one shard, use:
+
+```bash
+env JULIA_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \
+  MKL_NUM_THREADS=1 taskset -c 0 julia +1.12.6 \
+  --startup-file=no --history-file=no \
+  --project=research/experiments/EXP-LOCAL-007 \
+  research/experiments/EXP-LOCAL-007/run_t1.jl \
+  --shard-index=0 --shard-count=9
+```
+
+Launch indices `0..8` exactly once on distinct physical cores with the same
+thread settings and separate output paths. Before any decision, an agent that
+did not implement the candidate must reconstruct all metrics and gates from
+the nine raw artifacts.
+
+If T1 rejects the candidate, delete the adapter, bridge, dependency locks, and
+candidate-specific knobs. Retain only the compact audited decisions, artifact
 hashes, bounded negative-result entry, and the mathematical counterexample
 needed to prevent repetition.

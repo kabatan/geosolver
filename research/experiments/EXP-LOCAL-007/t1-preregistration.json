@@ -1,0 +1,205 @@
+{
+  "schema": "geotarget.exp-local-007.t1-preregistration/v1",
+  "experiment_id": "EXP-LOCAL-007-T1",
+  "state": "preregistered-no-outcome",
+  "candidate": "SCIPY-HYBR",
+  "primary_control": "prod-tol-120x600",
+  "secondary_control": "prod-options-250x2000",
+  "t0_decision": {
+    "path": "research/experiments/EXP-LOCAL-007/t0-decision.json",
+    "sha256": "3e16a185c306a1324824c057a328ef73f8ffb8a48f170a3db18d662f82176862",
+    "source_revision": "949386bf4b89fe500cb0790d299e4cfc89d9f1ae",
+    "passed": true
+  },
+  "freeze": {
+    "outcome_must_use_first_clean_commit_containing_this_preregistration": true,
+    "dirty_run_allowed": false,
+    "result_seen_before_freeze": false,
+    "tuning_rounds_used": 0,
+    "maximum_tuning_rounds": 2,
+    "core_baseline_source_at_t0_sha256": "87741bf84a0d3023e3cc9ff11aa93e5a0c2d838966fcedda23b4e365237eaf12",
+    "benchmark_module_entry_at_t0_sha256": "ee98d20471558165b0f72b555f7d8cb7cddc7e29699f4f67be2cb2cb683635e2",
+    "required_tracked_paths": [
+      "research/experiments/EXP-LOCAL-007/README.md",
+      "research/experiments/EXP-LOCAL-007/t0-decision.json",
+      "research/experiments/EXP-LOCAL-007/t1-preregistration.json",
+      "research/experiments/EXP-LOCAL-007/run_t0.jl",
+      "research/experiments/EXP-LOCAL-007/run_t1.jl",
+      "research/experiments/EXP-LOCAL-007/src/ExperimentLocal007.jl",
+      "research/experiments/EXP-LOCAL-007/src/T1Policy.jl",
+      "research/experiments/EXP-LOCAL-007/python/geotarget_scipy_hybr_bridge.py",
+      "research/experiments/EXP-LOCAL-007/python/uv.lock"
+    ]
+  },
+  "corpus": {
+    "source": "benchmarks/solver_lab/CoreBaseline.jl:representative_problems",
+    "case_count": 9,
+    "public_square_applicable_case_count": 8,
+    "typed_nonsquare_inapplicable_case_count": 1,
+    "saved_starts_per_case": 512,
+    "cases": [
+      {
+        "family_id": "SCALE-LADDER",
+        "instance_id": "scale-ladder-d4-spread1.0e12-i101-s1001",
+        "dimension": 4,
+        "residual_dimension": 4,
+        "replay_checksum": "3ab44bedf2890ef0307318d3a012aeec5319b88a1e9cfed8d4b661e52d7f37c2"
+      },
+      {
+        "family_id": "CURVED-CHAIN",
+        "instance_id": "curved-chain-d4-curve10000.0-i102-s1002",
+        "dimension": 4,
+        "residual_dimension": 4,
+        "replay_checksum": "8a56042f6ddef9cc097cd1f13fe22b3eb1f376e4ed6a13b7cd70a16f0e566d74"
+      },
+      {
+        "family_id": "NEAR-RANK-DEFICIENT",
+        "instance_id": "near-rank-d4-ratio1.0e-8-o103-s1003",
+        "dimension": 4,
+        "residual_dimension": 4,
+        "replay_checksum": "a55330b98965a2a65dc18d93955458ec88b34e14445cff69ff830db028552145"
+      },
+      {
+        "family_id": "REDUNDANT-OVERDETERMINED",
+        "instance_id": "redundant-d4-r2-error1.0e-8-i104-s1004",
+        "dimension": 4,
+        "residual_dimension": 12,
+        "replay_checksum": "0da6d36f2c1d6faf115c4875fef01bab41dceca02f3e7921c862abb1589218fb",
+        "candidate_expected_status": "INAPPLICABLE_NONSQUARE",
+        "candidate_expected_callbacks": 0
+      },
+      {
+        "family_id": "TANGENT-CIRCLE-LINE",
+        "instance_id": "tangent-circle-r1.0-ratio0.999999-i105-s1005",
+        "dimension": 2,
+        "residual_dimension": 2,
+        "replay_checksum": "0eab38a9ca7da57f68106a9daeb24f06122433b60362f01b3dafe157e3d557ac"
+      },
+      {
+        "family_id": "MULTIROOT-WARPED",
+        "instance_id": "multiroot-d4-n4-sep0.001-condition10000.0-warp0.5-targetz1-c106-s1006",
+        "dimension": 4,
+        "residual_dimension": 4,
+        "replay_checksum": "3e012859175cd8291ffd03db916e618142f449df8a7aa03f1c0c7fe7159b48c9"
+      },
+      {
+        "family_id": "MULTIROOT-WARPED",
+        "instance_id": "multiroot-d4-n4-sep0.001-condition10000.0-warp0.5-targetz1_squared-c106-s1006",
+        "dimension": 4,
+        "residual_dimension": 4,
+        "replay_checksum": "1fce84f2621b79af38bef92cd519f1569691f8bd22c6988bf9bde413d81f2cee"
+      },
+      {
+        "family_id": "STRICT-GUARD-BOUNDARY",
+        "instance_id": "strict-guard-on_boundary-margin0.0-i108-s1008",
+        "dimension": 2,
+        "residual_dimension": 2,
+        "replay_checksum": "8a3ae1e490fa272ca26b5903b8ff7d956ceb15eaf41d13e526676e71f42cbc13"
+      },
+      {
+        "family_id": "OPAQUE-TRANSCENDENTAL-C0",
+        "instance_id": "opaque-transcendental-n3-loops8-phase0.0-mix0.1-i109-s1009",
+        "dimension": 2,
+        "residual_dimension": 2,
+        "replay_checksum": "d6f0cbdd96e75e405d3e9e6db3dec7d3c822112646610c8655663ac204c10b38"
+      }
+    ]
+  },
+  "execution": {
+    "callback_prefixes": [600, 1200, 2400, 4800],
+    "prefix_unit": "case-cumulative-observed-callbacks",
+    "snapshot_boundary": "first-completed-attempt-reaching-threshold",
+    "attempts_split_at_threshold": false,
+    "paired_saved_start_order": true,
+    "replay_verification_required_before_sharding": true,
+    "suffix_stable_work_required": true,
+    "candidate_attempt_callback_hard_limit": 600,
+    "candidate_algorithm_callback_limit": 599,
+    "candidate_endpoint_screen_reservation": 1,
+    "runner_attempt_hard_limit": 4800,
+    "outer_parallelism": "independent-case-shards-only",
+    "recommended_shard_count": 9,
+    "julia_threads_per_shard": 1,
+    "blas_threads_per_shard": 1,
+    "openmp_threads_per_shard": 1,
+    "mkl_threads_per_shard": 1,
+    "typed_inapplicability": {
+      "public_predicate": "residual_dimension!=dimension",
+      "terminal_after_first_paired_start": true,
+      "callbacks": 0,
+      "threshold_reached": false,
+      "included_in_corpus_report": true,
+      "excluded_from_applicable_performance_denominator": true,
+      "cannot_support_production_default_claim": true
+    }
+  },
+  "metrics": {
+    "primary": "family-equal assessor-safe-full over public-square-applicable cases",
+    "work": "sum of per-case suffix-stable common-assessor safe-full callback work, right-censored at 4800 for each miss",
+    "work_case_rule": "hit=min(suffix_stable_evaluations_to_assessor_safe_full,4800); miss_or_null=4800; applicable cases only",
+    "wall": "sum of attempt wall including one cold first-use per variant and case shard",
+    "safety": "candidate-only common-assessor and accepted-endpoint violations over every applicable case and recorded prefix",
+    "control_safety_role": "control violations affect control safe-full/work metrics but are not added to the candidate zero-violation gate",
+    "family_equal_rule": "compute each applicable family's safe-full case rate, then take the unweighted mean over seven unrelated families",
+    "multiroot_rule": "the two MULTIROOT-WARPED target maps form one family rate",
+    "wall_only_confirmation": "wall alone may pass efficiency only after two clean one-thread AB/BA process-order replicates each show at least 20 percent reduction"
+  },
+  "promotion_gate": {
+    "performance_path_a": {
+      "minimum_family_equal_safe_full_delta": 0.05,
+      "maximum_callback_work_ratio": 1.2,
+      "callback_work_definition": "right-censored suffix-stable common-assessor safe-full work"
+    },
+    "performance_path_b": {
+      "minimum_family_equal_safe_full_delta": -0.01,
+      "maximum_callback_work_ratio_or_confirmed_end_to_end_wall_ratio": 0.8,
+      "callback_work_definition": "right-censored suffix-stable common-assessor safe-full work"
+    },
+    "critical_strata": {
+      "S1-regular-curved": ["CURVED-CHAIN"],
+      "S2-S5-close-root-target-collision": ["MULTIROOT-WARPED"],
+      "S3-singular-tangent-rank-deficient": ["NEAR-RANK-DEFICIENT", "TANGENT-CIRCLE-LINE"],
+      "S4-guard-boundary-domain": ["STRICT-GUARD-BOUNDARY"],
+      "S6-opaque-transcendental": ["OPAQUE-TRANSCENDENTAL-C0"],
+      "S8-extreme-scale": ["SCALE-LADDER"]
+    },
+    "minimum_critical_stratum_safe_full_delta": -0.02,
+    "minimum_unrelated_supporting_families": 3,
+    "path_a_support_definition": "strictly positive per-family safe-full delta",
+    "path_b_support_definition": "per-family safe-full delta at least -0.01 and callback or confirmed wall ratio at most 0.8",
+    "zero_required": [
+      "reported-accepted-canonical-invalid",
+      "reported-accepted-gold-inconsistent",
+      "reported-accepted-numeric-target-only",
+      "reported-accepted-ambiguous",
+      "assessor-qualified-gold-inconsistent",
+      "evaluation-count-mismatch",
+      "runner-cap-violation",
+      "unhandled-exception",
+      "truth-leak"
+    ],
+    "zero_required_scope": "SCIPY-HYBR candidate streams across all applicable cases and all recorded prefixes; truth-leak is a candidate source/runner audit",
+    "numeric_comparison_epsilon": 1e-12,
+    "all_required": [
+      "performance path A or B",
+      "every critical stratum delta at least -0.02",
+      "at least three unrelated supporting applicable families",
+      "all zero-required counts equal zero",
+      "at most two tuning rounds"
+    ],
+    "promotion_meaning": "authorize separately frozen T2 generalization study only",
+    "production_promotion": false,
+    "native_port_authorized": false
+  },
+  "independent_audit_required": [
+    "artifact shard hashes and clean revision",
+    "complete and disjoint nine-case shard set",
+    "all replay checksums and exact paired starts",
+    "callback diagnostic ledger against observed and reported counts",
+    "every threshold crossing, overshoot and terminal inapplicability",
+    "suffix-stable safe-full work",
+    "all common-assessor metrics from raw attempts",
+    "family-equal, critical-stratum and three-family gates",
+    "zero truth leak and safety/accounting violations"
+  ]
+}

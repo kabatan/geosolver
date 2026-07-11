@@ -3,8 +3,9 @@ using Test
 
 const REPOSITORY_ROOT = normpath(joinpath(@__DIR__, "..", "..", "..", ".."))
 
-include(joinpath(@__DIR__, "..", "run_t0.jl"))
+include(joinpath(@__DIR__, "..", "run_t1.jl"))
 using .ExperimentLocal007
+using .ExperimentLocal007T1Policy
 
 function fixture_case(
     dimension,
@@ -38,6 +39,51 @@ function fixture_case(
         Tuple(Float64.(residual_scales)),
         evaluator,
     )
+end
+
+function assessor_attempt(
+    start_index,
+    target,
+    evaluations;
+    qualified=true,
+    gold=true,
+    ambiguous=false,
+)
+    return (;
+        start_index,
+        evaluations,
+        assessor_qualified=qualified,
+        assessor_gold_matched=gold,
+        assessor_target_ambiguous=ambiguous,
+        assessor_matched_target_id=target,
+    )
+end
+
+@testset "common-assessor suffix work and right censoring" begin
+    reached = [
+        assessor_attempt(1, "target-a", 100),
+        assessor_attempt(2, "target-b", 200),
+    ]
+    @test _suffix_stable_assessor_work_from_sequence(reached, 2) == 300
+
+    later_unqualified = [
+        reached...,
+        assessor_attempt(3, nothing, 50; qualified=false, gold=false),
+    ]
+    @test _suffix_stable_assessor_work_from_sequence(later_unqualified, 2) == 300
+
+    later_inconsistent = [
+        reached...,
+        assessor_attempt(3, nothing, 50; qualified=true, gold=false),
+    ]
+    @test _suffix_stable_assessor_work_from_sequence(later_inconsistent, 2) === nothing
+
+    observed = _right_censored_assessor_work(300, 4_800)
+    @test observed == (work=300, event=true)
+    late = _right_censored_assessor_work(5_100, 4_800)
+    @test late == (work=4_800, event=false)
+    miss = _right_censored_assessor_work(nothing, 4_800)
+    @test miss == (work=4_800, event=false)
 end
 
 function diagnostic_fields(text)
@@ -322,4 +368,181 @@ end
     @test occursin("overshoot_callbacks", runner)
     @test occursin("single-stream-attempt-boundary-snapshots-no-reruns", runner)
     @test !isdir(joinpath(@__DIR__, "..", "results"))
+end
+
+@testset "audited T0 decision and representative-nine T1 freeze" begin
+    decision = read(joinpath(@__DIR__, "..", "t0-decision.json"), String)
+    @test occursin("949386bf4b89fe500cb0790d299e4cfc89d9f1ae", decision)
+    @test occursin("e4353b76ca716bd02164fbbfaff584f80a10b0cf5106bd68e3dec07c2a998d3b", decision)
+    @test occursin("896cba794bb6968ac6296a452bf295eb1472a93aefaeb2b5ceab844d3e525d21", decision)
+    @test occursin("\"callback_work_ratio\": 0.9608874475994622", decision)
+    @test occursin("\"passed\": true", decision)
+    @test occursin("advance-scipy-hybr-to-preregistered-t1", decision)
+
+    preregistration = read(
+        joinpath(@__DIR__, "..", "t1-preregistration.json"),
+        String,
+    )
+    @test occursin("\"state\": \"preregistered-no-outcome\"", preregistration)
+    @test occursin("\"case_count\": 9", preregistration)
+    @test occursin("\"callback_prefixes\": [600, 1200, 2400, 4800]", preregistration)
+    @test occursin("\"minimum_family_equal_safe_full_delta\": 0.05", preregistration)
+    @test occursin("\"minimum_family_equal_safe_full_delta\": -0.01", preregistration)
+    @test occursin("\"minimum_critical_stratum_safe_full_delta\": -0.02", preregistration)
+    @test occursin("\"minimum_unrelated_supporting_families\": 3", preregistration)
+    @test occursin("INAPPLICABLE_NONSQUARE", preregistration)
+    @test occursin("candidate streams across all applicable cases", preregistration)
+    @test occursin("control violations affect control safe-full", preregistration)
+    @test occursin("suffix-stable common-assessor safe-full callback work", preregistration)
+    @test occursin("miss_or_null=4800", preregistration)
+    @test !occursin("t1-decision", preregistration)
+
+    problems = GeoTargetSolverLab.representative_problems(start_count=512)
+    @test length(problems) == 9
+    @test all(verify_replay_material, problems)
+    @test all(problem -> size(problem.saved_starts, 2) == 512, problems)
+    square = filter(problem -> problem.dimension == problem.residual_dimension, problems)
+    nonsquare = filter(problem -> problem.dimension != problem.residual_dimension, problems)
+    @test length(square) == 8
+    @test length(nonsquare) == 1
+    @test Set(problem.family_id for problem in square) == Set(APPLICABLE_FAMILIES)
+    @test Set(problem.family_id for problem in nonsquare) ==
+          Set(EXPECTED_INAPPLICABLE_FAMILIES)
+    expected = Dict(entry.instance_id => entry for entry in EXPECTED_CORPUS)
+    @test Set(problem.instance_id for problem in problems) == Set(keys(expected))
+    @test all(
+        problem -> replay_checksum(problem) == expected[problem.instance_id].replay_checksum,
+        problems,
+    )
+
+    runner = read(joinpath(@__DIR__, "..", "run_t1.jl"), String)
+    @test Meta.parseall(runner) isa Expr
+    @test occursin("representative_problems", runner)
+    @test occursin("verify_replay_material", runner)
+    @test occursin("_suffix_stable_evaluations_to_lab_safe_full", runner)
+    @test occursin("formal T1 requires a clean committed worktree", runner)
+    @test occursin("BLAS.get_num_threads() == 1", read(joinpath(@__DIR__, "..", "run_t0.jl"), String))
+    @test occursin("typed-inapplicable-zero-callback-terminal", runner)
+    @test occursin("threshold_reached", runner)
+    @test occursin("single-stream-attempt-boundary-snapshots-no-reruns", runner)
+    @test occursin(
+        "suffix-stable-assessor-safe-full-callbacks-right-censored-at-4800",
+        runner,
+    )
+    @test occursin("_assessor_metrics", runner)
+    @test occursin("right_censored_assessor_safe_full_work", runner)
+    @test occursin("assessor_safe_full_event_by_4800", runner)
+end
+
+function promotion_fixture(;
+    candidate_safe_delta=0.0,
+    improved_families=String[],
+    candidate_work_ratio=0.7,
+    candidate_wall_ratio=1.0,
+    critical_delta=0.0,
+    safety_violation_count=0,
+    wall_confirmation_passed=false,
+)
+    control_safe = Dict(family => 0.5 for family in APPLICABLE_FAMILIES)
+    candidate_safe = Dict(
+        family => control_safe[family] +
+                  (family in improved_families ? candidate_safe_delta : 0.0) for
+        family in APPLICABLE_FAMILIES
+    )
+    control_work = Dict(family => 100.0 for family in APPLICABLE_FAMILIES)
+    candidate_work = Dict(
+        family => 100.0 * candidate_work_ratio for family in APPLICABLE_FAMILIES
+    )
+    control_wall = Dict(family => 10.0 for family in APPLICABLE_FAMILIES)
+    candidate_wall = Dict(
+        family => 10.0 * candidate_wall_ratio for family in APPLICABLE_FAMILIES
+    )
+    control_critical = Dict(stratum => 0.5 for stratum in CRITICAL_STRATA)
+    candidate_critical = Dict(stratum => 0.5 for stratum in CRITICAL_STRATA)
+    candidate_critical[first(CRITICAL_STRATA)] += critical_delta
+    return evaluate_promotion_gate(;
+        control_family_safe_full=control_safe,
+        candidate_family_safe_full=candidate_safe,
+        control_family_callback_work=control_work,
+        candidate_family_callback_work=candidate_work,
+        control_family_end_to_end_wall=control_wall,
+        candidate_family_end_to_end_wall=candidate_wall,
+        control_critical_safe_full=control_critical,
+        candidate_critical_safe_full=candidate_critical,
+        control_callback_work=700.0,
+        candidate_callback_work=700.0 * candidate_work_ratio,
+        control_end_to_end_wall=70.0,
+        candidate_end_to_end_wall=70.0 * candidate_wall_ratio,
+        safety_violation_count,
+        wall_confirmation_passed,
+    )
+end
+
+@testset "T1-to-T2 numerical promotion gate" begin
+    families = collect(APPLICABLE_FAMILIES)
+    path_a = promotion_fixture(
+        candidate_safe_delta=0.2,
+        improved_families=families[1:3],
+        candidate_work_ratio=1.0,
+    )
+    @test path_a["performance_path_a"]
+    @test length(path_a["path_a_supporting_families"]) == 3
+    @test path_a["passed"]
+
+    path_b = promotion_fixture(candidate_work_ratio=0.79)
+    @test path_b["performance_path_b"]
+    @test length(path_b["path_b_supporting_families"]) == 7
+    @test path_b["passed"]
+
+    unsafe = promotion_fixture(candidate_work_ratio=0.79, safety_violation_count=1)
+    @test !unsafe["safety_gate"]
+    @test !unsafe["passed"]
+
+    critical_regression = promotion_fixture(
+        candidate_work_ratio=0.79,
+        critical_delta=-0.03,
+    )
+    @test !critical_regression["critical_gate"]
+    @test !critical_regression["passed"]
+
+    unconfirmed_wall = promotion_fixture(
+        candidate_work_ratio=1.0,
+        candidate_wall_ratio=0.79,
+    )
+    @test !unconfirmed_wall["performance_path_b"]
+    @test !unconfirmed_wall["passed"]
+    confirmed_wall = promotion_fixture(
+        candidate_work_ratio=1.0,
+        candidate_wall_ratio=0.79,
+        wall_confirmation_passed=true,
+    )
+    @test confirmed_wall["confirmed_wall_efficiency"]
+    @test confirmed_wall["performance_path_b"]
+    @test confirmed_wall["passed"]
+
+    contract = promotion_gate_contract()
+    @test contract["performance_path_a"]["minimum_family_equal_safe_full_delta"] == 0.05
+    @test contract["performance_path_b"]["minimum_family_equal_safe_full_delta"] == -0.01
+    @test contract["minimum_critical_stratum_safe_full_delta"] == -0.02
+    @test contract["minimum_unrelated_supporting_families"] == 3
+    @test contract["callback_work_miss_value"] == 4_800
+    @test occursin("suffix-stable", contract["callback_work"])
+    @test occursin("candidate-only", contract["zero_required_scope"])
+    @test contract["actual_tuning_rounds"] == 0
+
+    @test_throws ArgumentError evaluate_promotion_gate(;
+        control_family_safe_full=Dict(family => 0.5 for family in APPLICABLE_FAMILIES),
+        candidate_family_safe_full=Dict(family => 0.5 for family in APPLICABLE_FAMILIES),
+        control_family_callback_work=Dict(family => 100.0 for family in APPLICABLE_FAMILIES),
+        candidate_family_callback_work=Dict(family => 100.0 for family in APPLICABLE_FAMILIES),
+        control_family_end_to_end_wall=Dict(family => 10.0 for family in APPLICABLE_FAMILIES),
+        candidate_family_end_to_end_wall=Dict(family => 10.0 for family in APPLICABLE_FAMILIES),
+        control_critical_safe_full=Dict(stratum => 0.5 for stratum in CRITICAL_STRATA),
+        candidate_critical_safe_full=Dict(stratum => 0.5 for stratum in CRITICAL_STRATA),
+        control_callback_work=701.0,
+        candidate_callback_work=700.0,
+        control_end_to_end_wall=70.0,
+        candidate_end_to_end_wall=70.0,
+        safety_violation_count=0,
+    )
 end
