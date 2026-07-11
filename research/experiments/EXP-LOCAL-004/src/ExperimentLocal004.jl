@@ -91,6 +91,7 @@ function _diagnostic(
     screening_residual_linf=nothing,
     screening_finite=nothing,
     screening_in_bounds=nothing,
+    screening_semantics_valid=nothing,
     screening_accepted=nothing,
 )
     fields = String[
@@ -116,6 +117,8 @@ function _diagnostic(
     screening_finite === nothing || push!(fields, "screening_finite=$screening_finite")
     screening_in_bounds === nothing ||
         push!(fields, "screening_in_bounds=$screening_in_bounds")
+    screening_semantics_valid === nothing ||
+        push!(fields, "screening_semantics_valid=$screening_semantics_valid")
     screening_accepted === nothing ||
         push!(fields, "screening_accepted=$screening_accepted")
     exception === nothing || push!(fields, "exception=$(sprint(showerror, exception))")
@@ -235,15 +238,17 @@ function _run_candidate(
         )
         screening_residual_linf = Inf
         screening_finite = false
+        screening_semantics_valid = false
         reported_accepted = false
         if endpoint_in_bounds
             screening_evaluation, scaled_endpoint_residual =
                 _scaled_evaluation(case, endpoint, residual_scales, counter)
             screening_finite = screening_evaluation.finite &&
                                all(isfinite, scaled_endpoint_residual)
+            screening_semantics_valid = screening_evaluation.semantics_valid
             screening_residual_linf =
                 maximum(abs, scaled_endpoint_residual; init=0.0)
-            reported_accepted = screening_finite &&
+            reported_accepted = screening_finite && screening_semantics_valid &&
                                 screening_residual_linf <= ABSOLUTE_TOLERANCE
         end
         iterations = max(0, _stat(solution.stats, :nsteps))
@@ -264,6 +269,7 @@ function _run_candidate(
                 screening_residual_linf,
                 screening_finite,
                 screening_in_bounds=endpoint_in_bounds,
+                screening_semantics_valid,
                 screening_accepted=reported_accepted,
             ),
         )
@@ -308,8 +314,9 @@ function nonlinear_solve_variant(
         max_iterations=Int(max_iterations),
         max_evaluations=Int(max_evaluations),
         endpoint_policy="solution.u-only",
-        reported_acceptance="finite-bounds-scaled-residual-linf",
+        reported_acceptance="finite-bounds-semantics-scaled-residual-linf",
         acceptance_residual_tolerance=ABSOLUTE_TOLERANCE,
+        acceptance_requires_semantics_valid=true,
         geodesic_acceleration=kind === :lm ? "enabled" : "not-applicable",
         geodesic_finite_difference_step=kind === :lm ? 0.1 : 0.0,
         geodesic_alpha=kind === :lm ? 0.75 : 0.0,

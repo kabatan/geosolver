@@ -71,8 +71,10 @@ const CANDIDATE_BUILDERS = (nls_tr_variant, nls_lm_variant)
         @test config.max_iterations == 250
         @test config.max_evaluations == 2_000
         @test config.endpoint_policy == "solution.u-only"
-        @test config.reported_acceptance == "finite-bounds-scaled-residual-linf"
+        @test config.reported_acceptance ==
+              "finite-bounds-semantics-scaled-residual-linf"
         @test config.acceptance_residual_tolerance == 1.0e-12
+        @test config.acceptance_requires_semantics_valid
     end
     @test variants[1].configuration.geodesic_acceleration == "not-applicable"
     @test variants[2].configuration.geodesic_acceleration == "enabled"
@@ -119,6 +121,7 @@ end
         )
         @test occursin("nf=", regular_outcome.diagnostic)
         @test occursin("screening_accepted=true", regular_outcome.diagnostic)
+        @test occursin("screening_semantics_valid=true", regular_outcome.diagnostic)
         @test occursin("screening_residual_linf=", regular_outcome.diagnostic)
 
         over_outcome = build(max_evaluations=300).run(overdetermined, [0.0, 0.0])
@@ -228,6 +231,29 @@ end
         @test stationary_outcome.evaluations == stationary_calls[]
         @test occursin("retcode_success=true", stationary_outcome.diagnostic)
         @test occursin("screening_accepted=false", stationary_outcome.diagnostic)
+
+        guard_invalid_calls = Ref(0)
+        guard_invalid = fixture_case(
+            1,
+            1,
+            [-1.0],
+            [1.0],
+            [1.0],
+            input -> (input[1],);
+            semantics=input -> false,
+            calls=guard_invalid_calls,
+        )
+        guard_invalid_outcome = build().run(guard_invalid, [0.0])
+        @test guard_invalid_outcome.endpoint !== nothing
+        @test guard_invalid_outcome.reported_converged
+        @test !guard_invalid_outcome.reported_accepted
+        @test guard_invalid_outcome.evaluations == guard_invalid_calls[]
+        @test occursin(
+            "screening_semantics_valid=false",
+            guard_invalid_outcome.diagnostic,
+        )
+        @test occursin("screening_residual_linf=0.0", guard_invalid_outcome.diagnostic)
+        @test occursin("screening_accepted=false", guard_invalid_outcome.diagnostic)
 
         observed = Ref(0)
         budget_case = fixture_case(
