@@ -72,6 +72,13 @@ Wall-clock experiments must be launched through
 `python -m research.harness.exclusive_run`. The wrapper takes one advisory host
 lease shared across worktrees, streams a heartbeat, and writes an atomic JSON
 audit containing the command, child PID, timestamps, platform and exit state.
+On the primary Linux host, `--timeout-seconds` is a strict monotonic outer
+deadline: success is accepted only when the direct child and every tracked
+descendant have exited before the deadline. The runner becomes a child
+subreaper and tracks PID/start-time identities, so an orphan or a descendant
+that starts a new session cannot escape timeout cleanup. SIGINT and SIGTERM are
+deferred until that cleanup and the audit write finish. SIGKILL and host failure
+remain explicitly outside an in-process cleanup guarantee.
 For example:
 
 ```powershell
@@ -86,6 +93,10 @@ host is otherwise idle. While it is held, do not start CI, benchmarks, Julia
 tests, compilation, package installation, or other CPU/memory-heavy work. A run
 with overlapping host work is infrastructure-invalid for wall-time gates even
 when its semantic and oracle-work artifacts remain useful diagnostics.
+
+Linux is the release hard-wall authority. The Windows `taskkill /T` path remains
+a platform-gated correctness aid and records whether termination was confirmed;
+it is not accepted as evidence for the 60/180/420-second release wall gate.
 
 ### Independent host observation
 

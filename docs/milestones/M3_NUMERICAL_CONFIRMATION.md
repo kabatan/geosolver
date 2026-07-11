@@ -9,7 +9,7 @@ Numerical implementation: `c79f0df`
 
 Exact production connection: `f468b5f`
 
-Outer process-tree hard timeout: `525f9d7`
+Outer process-tree hard timeout: `525f9d7`, Linux custody hardening: `cc99491`
 
 Owned PSLQ: `c157254`
 
@@ -42,9 +42,11 @@ or algebraic exactness.
   solve, multiple-root exact-only promotion and checkpoint tamper rejection.
 - Complete one-thread Julia integration after the exact production connection:
   green.
-- Formal-run hard-timeout tests: normal completion, timeout exit 124,
-  SIGTERM-ignoring grandchild cleanup and interrupt cleanup green on Linux;
-  Windows process-tree cases remain platform-gated.
+- Formal-run hard-timeout tests: normal completion, timeout exit 124, orphan
+  and new-session descendant custody, strict deadline observation, raw-fork
+  zombie reaping, repeated interrupt/SIGTERM cleanup and audit-finalization
+  signal handling green on Linux. Windows remains correctness-only and
+  platform-gated for this mechanism.
 - Independent owned-PSLQ probe: `x^d-p` for `d = 2,3,4,5,6,8,10,12` and
   `p = 2,3`, with identical relations at the base and `+256`-bit precisions.
 
@@ -104,8 +106,12 @@ remain mandatory.
 - Synchronous plugin, Nemo and FLINT calls can only poll cooperatively. Formal
   release runs must therefore invoke each case process through
   `research/harness/exclusive_run.py --timeout-seconds ...`. It terminates the
-  process tree and records timeout exit 124; the in-process API still makes no
-  preemption claim.
+  Linux process tree under subreaper custody and records timeout exit 124;
+  success is accepted only when full-tree exit is observed strictly before the
+  monotonic deadline. The in-process API still makes no preemption claim.
+  SIGINT/SIGTERM are cleanup-safe; SIGKILL and host failure are outside the
+  guarantee. Windows correctness runs remain required, but its `taskkill /T`
+  fallback is not release hard-wall evidence.
 - Run the frozen exact-eligible corpus and holdouts at the release budgets and
   demonstrate `P_full_exact(180s) >= 95%` with zero false exact answer.
 - Add capability-backed interval or exact local-dimension proof only if a
