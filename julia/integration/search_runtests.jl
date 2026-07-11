@@ -354,7 +354,7 @@ end
     @test all(answer -> answer.target.lower isa BigFloat, S.verified_answers(store))
 end
 
-@testset "blocked pending or refinement work stops instead of accumulating" begin
+@testset "blocked pending stops while exhausted refinement preserves discovery" begin
     no_attempt_budget = S.BudgetLedger(
         S.BudgetLimits(proposals=10, local_attempts=0, refinements=10, oracle_work=100),
     )
@@ -396,8 +396,16 @@ end
         (context, proposal) -> empty_observation(proposal; needs_refinement=true),
     )
     @test refinement_result.status === S.LOOP_BUDGET_EXHAUSTED
-    @test refinement_context.budget.proposals == 1
-    @test refinement_context.workspace.refinement_queue == [UInt64(1)]
+    @test refinement_context.budget.proposals == 10
+    @test refinement_context.budget.local_attempts == 10
+    @test refinement_context.budget.refinements == 0
+    @test isempty(refinement_context.workspace.pending)
+    @test refinement_context.workspace.refinement_queue == collect(UInt64, 1:10)
+    proposal_decisions = [
+        event.payload for event in S.evidence_events(refinement_context.events) if
+        event.kind === S.EVENT_SCHEDULED && event.payload.lane !== S.LANE_PENDING
+    ]
+    @test S.iid_prefix_invariant(proposal_decisions, refinement_context.policy._h0.iid_cadence)
 end
 
 @testset "duplicate tasks are rejected before a second launch" begin

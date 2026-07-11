@@ -611,10 +611,12 @@ function run_search!(
             BudgetCharge(proposals=1, refinements=1),
         )
         pending_blocked = !isempty(context.workspace.pending) && pending_task_id === nothing
-        refinement_blocked = !isempty(context.workspace.refinement_queue) &&
-                             !refinement_budget_available
-        allow_new = proposal_budget_available && !pending_blocked && !refinement_blocked
-        refinement_configuration = if allow_new && !isempty(context.workspace.refinement_queue)
+        # Exhausting the optional refinement lane must not starve fresh global
+        # proposals. In particular, the bounded-gap IID insurance lane remains
+        # serviceable until the proposal or local-attempt budget is exhausted.
+        allow_new = proposal_budget_available && !pending_blocked
+        refinement_configuration = if allow_new && refinement_budget_available &&
+                                      !isempty(context.workspace.refinement_queue)
             first(context.workspace.refinement_queue)
         else
             nothing

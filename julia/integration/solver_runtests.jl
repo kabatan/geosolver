@@ -830,7 +830,7 @@ end
     default_policy = GeoTargetCore._solve_policy_document(options)
     default_hash = canonical_json_hash(default_policy)
     @test string(default_hash) ==
-          "sha256:dd1b92e415eeadc42b6a3f6c3e6e540edcde2bf106ee411e19e58c583e7a8503"
+          "sha256:a2c8222024d7c4f2aef1371fd0c0e4ae59eed996ac044c99a51e55a20143fa75"
 
     proposal_factory_calls = Ref(0)
     local_solver_calls = Ref(0)
