@@ -226,19 +226,18 @@ end
 
 function _build_c3a_exact_answer(
     compiled::GeoTargetCore.CompiledProblem,
-    validation::CandidateValidationResult,
+    problem_digest::ContentHash,
     candidates,
     replay::C3AReplayEvidence;
     checkpoint=() -> nothing,
-    approximation=validation.canonical_observation.target,
+    approximation,
 )
     checkpoint()
     branches = Tuple(proof.decision for proof in replay.branches)
     claim = _configuration_claim_document(compiled.problem, candidates, branches)
     configuration_digest = _configuration_hash(claim)
-    # Bind the same canonical identity already established by Core candidate
-    # validation. A structural compiler-cache identity is not a substitute.
-    problem_digest = validation.problem
+    # Bind the canonical problem identity established by Core. A structural
+    # compiler-cache identity is not a substitute.
     configuration_document = Dict{String,Any}(
         "claim" => claim,
         "configuration" => string(configuration_digest),

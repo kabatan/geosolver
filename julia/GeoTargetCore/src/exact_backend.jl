@@ -1,4 +1,4 @@
-const EXACT_BACKEND_ABI_VERSION = v"1.1.0"
+const EXACT_BACKEND_ABI_VERSION = v"1.2.0"
 const _MAX_EXACT_SAMPLE_PRECISION_BITS = 4096
 
 """Optional exactification implementation. Concrete backends live outside Core."""
@@ -190,9 +190,136 @@ struct ExactificationCheckpoint
     end
 end
 
+@enum ExactificationSeedKind::UInt8 begin
+    EXACT_SEED_VALIDATED_REGULAR = 0
+    EXACT_SEED_RANK_DEFICIENT_HYPOTHESIS = 1
+end
+
+"""
+Truth-blind starting witness for optional exactification.
+
+The rank-deficient kind is only a hypothesis: it never asserts isolation or
+creates a numerical answer. Independent reference samples plus exact C3A replay
+remain the sole promotion authority. `kind` is informational provenance, not
+an authorization token; callers must never use it to permit a numerical answer
+or a fallback that was not already authorized outside this seed.
+"""
+struct ExactificationSeed
+    kind::ExactificationSeedKind
+    problem::ContentHash
+    problem_hash_method::String
+    start::Tuple
+    branch_signature::Tuple
+    start_configuration::ContentHash
+end
+
+function _exactification_seed_start_issue(compiled::CompiledProblem, start)
+    length(start) == length(compiled.variables) || return (
+        "exactification seed coordinate count differs from the compiled problem"
+    )
+    for (index, variable) in enumerate(compiled.variables)
+        value = start[index]
+        value isa Bool && return "exactification seed coordinate $index cannot be Bool"
+        value isa Real && isfinite(value) || return (
+            "exactification seed coordinate $index is not a finite real"
+        )
+        bounded = try
+            (variable.spec.lower === nothing || value >= variable.spec.lower) &&
+            (variable.spec.upper === nothing || value <= variable.spec.upper)
+        catch
+            false
+        end
+        bounded || return "exactification seed coordinate $index violates its bounds"
+    end
+    return nothing
+end
+
+function _make_exactification_seed(
+    compiled::CompiledProblem,
+    start,
+    branches,
+    kind::ExactificationSeedKind,
+)
+    frozen_start = Tuple(deepcopy(value) for value in start)
+    issue = _exactification_seed_start_issue(compiled, frozen_start)
+    issue === nothing || throw(ArgumentError(issue))
+    canonical_branches = _canonical_exact_branches(branches)
+    canonical_branches === nothing && throw(
+        ArgumentError("exactification seed branch signature is invalid"),
+    )
+    problem, hash_method = _candidate_problem_identity(compiled)
+    return ExactificationSeed(
+        kind,
+        problem,
+        hash_method,
+        frozen_start,
+        canonical_branches,
+        _candidate_configuration_hash(compiled, collect(frozen_start)),
+    )
+end
+
+function exactification_seed(
+    compiled::CompiledProblem,
+    validation::CandidateValidationResult,
+)
+    validation.accepted || throw(
+        ArgumentError("regular exactification seed requires an accepted validation"),
+    )
+    validation.failure == CANDIDATE_VALIDATION_NONE || throw(
+        ArgumentError("regular exactification seed requires numerical confirmation"),
+    )
+    validation.problem == first(_candidate_problem_identity(compiled)) || throw(
+        ArgumentError("candidate validation belongs to a different problem"),
+    )
+    return _make_exactification_seed(
+        compiled,
+        validation.canonical_coordinates,
+        Tuple(branch.decision for branch in validation.canonical_observation.branches),
+        EXACT_SEED_VALIDATED_REGULAR,
+    )
+end
+
+function rank_deficient_exactification_seed(
+    compiled::CompiledProblem,
+    start,
+    observation::OracleObservation;
+    residual_tolerance::Real=max(1.0e-8, sqrt(eps(Float64))),
+)
+    residual_tolerance isa Bool && throw(
+        ArgumentError("rank-deficient seed tolerance cannot be Bool"),
+    )
+    isfinite(residual_tolerance) || throw(
+        ArgumentError("rank-deficient seed tolerance must be finite"),
+    )
+    residual_tolerance >= 0 || throw(
+        ArgumentError("rank-deficient seed tolerance must be nonnegative"),
+    )
+    canonical_feasible(observation; residual_tolerance) || throw(
+        ArgumentError("rank-deficient seed observation is not canonically near-feasible"),
+    )
+    observation.target isa Real && isfinite(observation.target) || throw(
+        ArgumentError("rank-deficient seed observation has no finite real target"),
+    )
+    all(
+        branch -> branch.validity_margin isa Real &&
+                  branch.selector_margin isa Real &&
+                  isfinite(branch.validity_margin) &&
+                  isfinite(branch.selector_margin) &&
+                  branch.validity_margin > 0 &&
+                  branch.selector_margin > 0,
+        observation.branches,
+    ) || throw(ArgumentError("rank-deficient seed branch margins are not separated"))
+    return _make_exactification_seed(
+        compiled,
+        start,
+        Tuple(branch.decision for branch in observation.branches),
+        EXACT_SEED_RANK_DEFICIENT_HYPOTHESIS,
+    )
+end
+
 mutable struct ExactSampleProvider{C}
     compiled::CompiledProblem
-    validation::CandidateValidationResult
+    seed::ExactificationSeed
     start::Tuple
     deadline_ns::UInt64
     cancelled::C
@@ -230,22 +357,14 @@ end
 
 function ExactSampleProvider(
     compiled::CompiledProblem,
-    validation::CandidateValidationResult;
+    seed::ExactificationSeed;
     deadline_ns::Integer=typemax(UInt64),
     cancelled=() -> false,
     remaining_oracle_work::Integer=typemax(Int),
     max_iterations::Integer=24,
 )
-    validation.accepted || throw(ArgumentError("exact sampling requires an accepted candidate"))
-    validation.failure == CANDIDATE_VALIDATION_NONE || throw(
-        ArgumentError("exact sampling requires a numerically confirmed candidate"),
-    )
-    length(validation.canonical_coordinates) == length(compiled.variables) || throw(
-        ArgumentError("candidate coordinates do not match the compiled problem"),
-    )
-    validation.problem == first(_candidate_problem_identity(compiled)) || throw(
-        ArgumentError("candidate validation belongs to a different problem"),
-    )
+    issue = _exactification_seed_issue(compiled, seed)
+    issue === nothing || throw(ArgumentError(issue))
     frozen_deadline, frozen_work, frozen_iterations = _validate_exact_sampling_parameters(
         deadline_ns,
         remaining_oracle_work,
@@ -253,8 +372,8 @@ function ExactSampleProvider(
     )
     return ExactSampleProvider(
         compiled,
-        validation,
-        Tuple(deepcopy(value) for value in validation.canonical_coordinates),
+        deepcopy(seed),
+        Tuple(deepcopy(value) for value in seed.start),
         frozen_deadline,
         cancelled,
         frozen_work,
@@ -268,6 +387,12 @@ function ExactSampleProvider(
         Dict{Tuple{Int,Symbol},ExactPrecisionSample}(),
     )
 end
+
+ExactSampleProvider(
+    compiled::CompiledProblem,
+    validation::CandidateValidationResult;
+    kwargs...,
+) = ExactSampleProvider(compiled, exactification_seed(compiled, validation); kwargs...)
 
 function exact_sample_provider_snapshot(provider::ExactSampleProvider)
     return ExactSampleProviderSnapshot(
@@ -445,7 +570,7 @@ end
 """
 Return a compiled or independent-reference sample at `precision_bits`.
 
-Every cache miss starts from the accepted validation's canonical coordinates;
+Every cache miss starts from the immutable exactification seed coordinates;
 samples at different precisions never seed each other. Only successful samples
 are cached. Deadline, cancellation and weighted oracle work remain Core-owned.
 """
@@ -556,11 +681,11 @@ function exact_sample(
             work=work,
         )
     end
-    _branch_keys_match(
-        provider.validation.canonical_observation,
-        refinement.evidence.observation,
-    ) || begin
-        detail = "arbitrary-precision sample changed the validated branch signature"
+    observed_branches = _canonical_exact_branches(
+        Tuple(branch.decision for branch in refinement.evidence.observation.branches),
+    )
+    observed_branches == provider.seed.branch_signature || begin
+        detail = "arbitrary-precision sample changed the exactification seed branch signature"
         _set_exact_sample_fatal!(provider, EXACT_SAMPLE_BRANCH_MISMATCH, detail)
         return _exact_sample_failure(EXACT_SAMPLE_BRANCH_MISMATCH, detail, work=work)
     end
@@ -739,17 +864,34 @@ function _empty_exact_sample_snapshot(oracle_work_limit::Int)
     return ExactSampleProviderSnapshot(0, 0, 0, 0, 0, oracle_work_limit, EXACT_SAMPLE_NONE)
 end
 
-function _exactification_candidate_issue(
+function _exactification_seed_issue(
+    compiled::CompiledProblem,
+    seed::ExactificationSeed,
+)
+    expected_problem, expected_hash_method = _candidate_problem_identity(compiled)
+    seed.problem == expected_problem || return "exactification seed belongs to a different problem"
+    seed.problem_hash_method == expected_hash_method || return (
+        "exactification seed problem hash method is inconsistent"
+    )
+    issue = _exactification_seed_start_issue(compiled, seed.start)
+    issue === nothing || return issue
+    canonical_branches = _canonical_exact_branches(seed.branch_signature)
+    canonical_branches == seed.branch_signature || return (
+        "exactification seed branch signature is not canonical"
+    )
+    seed.start_configuration == _candidate_configuration_hash(compiled, collect(seed.start)) ||
+        return "exactification seed configuration hash is inconsistent"
+    return nothing
+end
+
+function _candidate_validation_seed_issue(
     compiled::CompiledProblem,
     validation::CandidateValidationResult,
 )
     validation.accepted || return "exactification requires an accepted candidate validation"
     validation.failure == CANDIDATE_VALIDATION_NONE ||
         return "exactification requires a numerically confirmed candidate"
-    length(validation.canonical_coordinates) == length(compiled.variables) ||
-        return "candidate coordinates do not match the compiled problem"
-    expected_problem = first(_candidate_problem_identity(compiled))
-    validation.problem == expected_problem ||
+    validation.problem == first(_candidate_problem_identity(compiled)) ||
         return "candidate validation belongs to a different problem"
     return nothing
 end
@@ -768,7 +910,7 @@ returned outcome is untrusted and never participates in Core accounting.
 function exactify_candidate(
     ::AbstractExactBackend,
     ::CompiledProblem,
-    ::CandidateValidationResult,
+    ::ExactificationSeed,
     ::ExactSampleProvider,
 )
     return ExactBackendOutcome(
@@ -810,7 +952,7 @@ end
 
 function _exact_answer_contract_issue(
     descriptor::ExactBackendDescriptor,
-    validation::CandidateValidationResult,
+    seed::ExactificationSeed,
     answer::ExactAnswer,
 )
     answer.configuration_certificate.artifact.scheme in
@@ -819,17 +961,15 @@ function _exact_answer_contract_issue(
     )
     answer.target_certificate.artifact.scheme in descriptor.target_certificate_schemes ||
         return "target certificate scheme is not declared by the exact backend"
-    answer.configuration_certificate.problem == validation.problem || return (
+    answer.configuration_certificate.problem == seed.problem || return (
         "configuration certificate belongs to a different problem"
     )
-    answer.target_certificate.problem == validation.problem || return (
+    answer.target_certificate.problem == seed.problem || return (
         "target certificate belongs to a different problem"
     )
     answer.target_certificate.identity == GeoTargetBase._identity_hash(answer.identity) ||
         return "target certificate identity hash differs from the exact answer"
-    expected = _canonical_exact_branches(
-        Tuple(branch.decision for branch in validation.canonical_observation.branches),
-    )
+    expected = seed.branch_signature
     observed = _canonical_exact_branches(answer.branch_signature)
     expected !== nothing && observed !== nothing && expected == observed || return (
         "exact answer branch signature differs from numerical confirmation"
@@ -869,7 +1009,7 @@ end
 function run_exactification(
     backend::AbstractExactBackend,
     compiled::CompiledProblem,
-    validation::CandidateValidationResult;
+    candidate::Union{ExactificationSeed,CandidateValidationResult};
     deadline_ns::Integer=typemax(UInt64),
     cancelled=() -> false,
     remaining_oracle_work::Integer=typemax(Int),
@@ -900,17 +1040,30 @@ function run_exactification(
         nothing,
         empty_snapshot,
     )
-    candidate_issue = _exactification_candidate_issue(compiled, validation)
-    candidate_issue === nothing || return _exactification_result(
+    seed = if candidate isa CandidateValidationResult
+        validation_issue = _candidate_validation_seed_issue(compiled, candidate)
+        validation_issue === nothing || return _exactification_result(
+            nothing,
+            EXACTIFICATION_INVALID_CANDIDATE,
+            validation_issue,
+            descriptor,
+            empty_snapshot,
+        )
+        exactification_seed(compiled, candidate)
+    else
+        candidate
+    end
+    seed_issue = _exactification_seed_issue(compiled, seed)
+    seed_issue === nothing || return _exactification_result(
         nothing,
         EXACTIFICATION_INVALID_CANDIDATE,
-        candidate_issue,
+        seed_issue,
         descriptor,
         empty_snapshot,
     )
     provider = ExactSampleProvider(
         compiled,
-        validation;
+        seed;
         deadline_ns=frozen_deadline,
         cancelled,
         remaining_oracle_work=frozen_work,
@@ -925,7 +1078,7 @@ function run_exactification(
         provider,
     )
     outcome = try
-        exactify_candidate(backend, compiled, validation, provider)
+        exactify_candidate(backend, compiled, seed, provider)
     catch error
         error isa InterruptException && rethrow()
         checkpoint = exactification_checkpoint(provider)
@@ -999,7 +1152,7 @@ function run_exactification(
     end
     if outcome.answer !== nothing
         answer = outcome.answer::ExactAnswer
-        contract_issue = _exact_answer_contract_issue(descriptor, validation, answer)
+        contract_issue = _exact_answer_contract_issue(descriptor, seed, answer)
         contract_issue === nothing || return _exactification_result(
             nothing,
             EXACTIFICATION_VERIFICATION_FAILED,

@@ -155,7 +155,7 @@ end
 function GeoTargetCore.exactify_candidate(
     backend::NemoExactBackend,
     compiled::GeoTargetCore.CompiledProblem,
-    validation::CandidateValidationResult,
+    seed::ExactificationSeed,
     provider::ExactSampleProvider,
 )
     supports(GeoTargetCore.capabilities(compiled), C3A) || return _backend_failure(
@@ -194,7 +194,7 @@ function GeoTargetCore.exactify_candidate(
     replay = replay_c3a(
         compiled,
         coordinates;
-        expected_branches=validation.canonical_observation.branches,
+        expected_branches=seed.branch_signature,
         checkpoint=() -> _checkpoint_provider(provider),
     )
     replay isa C3AReplayResult && replay.accepted || return _backend_failure(
@@ -207,7 +207,7 @@ function GeoTargetCore.exactify_candidate(
         isempty(reference_samples) && error("exactification has no reference approximation")
         _build_c3a_exact_answer(
             compiled,
-            validation,
+            seed.problem,
             candidates,
             replay.evidence;
             checkpoint=() -> _checkpoint_provider(provider),

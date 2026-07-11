@@ -33,6 +33,7 @@ function c3a_fixture_plugin(mode::Symbol=:valid)
         :branch_tie,
         :forged_validity_margin,
         :close_roots,
+        :multiple_root,
         :structured_literal,
     )
     mode in supported_modes || throw(ArgumentError("unsupported C3A fixture mode"))
@@ -44,9 +45,13 @@ function c3a_fixture_plugin(mode::Symbol=:valid)
     box_signature = SignatureSpec((C3A_BOX, C3A_SCALAR), C3A_SCALAR)
 
     close_delta = 1 // (BigInt(1) << 20)
-    numeric_relation = mode == :close_roots ?
-                       (x, _) -> (x - one(x)) * (x - (one(x) + close_delta)) :
-                       (x, two) -> x * x - two
+    numeric_relation = if mode == :close_roots
+        (x, _) -> (x - one(x)) * (x - (one(x) + close_delta))
+    elseif mode == :multiple_root
+        (x, _) -> (x - one(x)) * (x - one(x))
+    else
+        (x, two) -> x * x - two
+    end
     exact_relation = if mode == :nonexact_callback
         (x, two) -> Float64(x * x - two)
     elseif mode == :false_relation
@@ -137,12 +142,16 @@ function c3a_fixture_plugin(mode::Symbol=:valid)
     )
 end
 
-function c3a_fixture(mode::Symbol=:valid; two_variables::Bool=false)
+function c3a_fixture(
+    mode::Symbol=:valid;
+    two_variables::Bool=false,
+    expect_validation::Bool=true,
+)
     plugin = c3a_fixture_plugin(mode)
     builder = RegistryBuilder(allowlist=(plugin.id,))
     register!(builder, plugin)
     registry = freeze(builder)
-    start_x = mode == :close_roots ? 1.0 : 1.4
+    start_x = mode in (:close_roots, :multiple_root) ? 1.0 : 1.4
     variable = VariableSpec(
         VariableId("x"),
         C3A_SCALAR,
@@ -231,7 +240,7 @@ function c3a_fixture(mode::Symbol=:valid; two_variables::Bool=false)
     )
     compiled = compile_problem(problem, registry)
     validation = validate_candidate(compiled, starts)
-    @test validation.accepted
+    expect_validation ? (@test validation.accepted) : (@test !validation.accepted)
     return compiled, validation
 end
 
@@ -260,7 +269,7 @@ GeoTargetCore.exact_backend_descriptor(backend::C3ACrossSolutionBackend) =
 function GeoTargetCore.exactify_candidate(
     backend::C3ACrossSolutionBackend,
     ::GeoTargetCore.CompiledProblem,
-    ::CandidateValidationResult,
+    ::ExactificationSeed,
     provider::ExactSampleProvider,
 )
     exact_sample(provider, 768; pass=:reference).accepted || error("768-bit sample failed")
@@ -294,7 +303,7 @@ GeoTargetCore.exact_backend_descriptor(::C3ACheckpointTriggerBackend) =
 function GeoTargetCore.exactify_candidate(
     backend::C3ACheckpointTriggerBackend,
     ::GeoTargetCore.CompiledProblem,
-    ::CandidateValidationResult,
+    ::ExactificationSeed,
     provider::ExactSampleProvider,
 )
     if backend.mode == :cancel
@@ -376,6 +385,33 @@ end
     @test only(replay.evidence.guards).margin > zero(AlgebraicReal)
     @test only(replay.evidence.domains).margin > zero(AlgebraicReal)
     @test only(replay.evidence.branches).selector_margin > zero(AlgebraicReal)
+end
+
+@testset "rank-deficient hypothesis is exact-only and independently replayed" begin
+    compiled, rejected = c3a_fixture(:multiple_root; expect_validation=false)
+    @test rejected.provisional === nothing
+    observation = GeoTargetCore.evaluate(compiled, [1.0]; capability=C0)
+    seed = rank_deficient_exactification_seed(
+        compiled,
+        [1.0],
+        observation;
+        residual_tolerance=1.0e-12,
+    )
+    @test seed.kind == EXACT_SEED_RANK_DEFICIENT_HYPOTHESIS
+    @test seed.branch_signature == Tuple(
+        branch.decision for branch in observation.branches
+    )
+
+    result = run_exactification(
+        NemoExactBackend(recognition_options=C3A_TEST_RECOGNITION_OPTIONS),
+        compiled,
+        seed;
+        remaining_oracle_work=500_000,
+    )
+    @test result.accepted
+    @test result.answer isa ExactAnswer
+    @test verify_c3a_exact_answer(compiled, result.answer).accepted
+    @test result.answer.approximation == 1.0
 end
 
 @testset "C3A replay fails closed on callbacks and exact semantics" begin
@@ -545,9 +581,10 @@ end
     @test replay.accepted
     alternate_answer = GeoTargetExact._build_c3a_exact_answer(
         compiled,
-        validation,
+        validation.problem,
         (candidate,),
         replay.evidence,
+        approximation=validation.canonical_observation.target,
     )
     # The deliberately coarse isolating interval overlaps the numerical root,
     # so ordinary artifact replay alone cannot detect this cross-solution swap.
