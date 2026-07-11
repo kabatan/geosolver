@@ -1,5 +1,12 @@
 # High-Precision and Singular-Path Audit
 
+> Historical audit note (2026-07-12): the point-replay implementation audited
+> below has been superseded by Phase M3. The current path performs compiled C2
+> refinement at 512 bits, an independent reference-interpreter refinement and
+> fresh replay at 768 bits, and `1e-100` residual/configuration/target gates.
+> The historical findings and experiment decisions remain unchanged evidence;
+> the replacement is recorded by the Phase M3 integration evidence.
+
 Status: **audited; safety repair committed; next experiment preregistered**
 Date: 2026-07-10
 Repair source commit: `07b15b8`  

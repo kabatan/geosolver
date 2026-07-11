@@ -13,3 +13,8 @@ certificate. PSLQ/minimal-polynomial recognition is only a proposal step.
 Search coverage, configuration validity, and target exactness are independent
 claims and are represented independently in the result schema.
 
+As of Phase M3 (2026-07-12), the numerical recheck means a 512-bit compiled C2
+refinement plus an independently restarted 768-bit reference refinement and
+fresh canonical replay. It requires `1e-100` residual, coordinate and target
+agreement. This remains numerical evidence; C3V interval evidence and C3A
+exact proof retain their separate assurance levels.

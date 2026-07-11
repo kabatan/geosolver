@@ -101,10 +101,14 @@ those two flags for performance measurements or substantial solves.
 julia +1.12.6 --compile=min -O0 --startup-file=no --history-file=no --project=julia examples/open_world_plugin/geotarget_custom.jl solve examples/open_world_plugin/problem.json --options examples/open_world_plugin/options.json --evidence evidence.json --max-actions 2
 ```
 
-The canonical result contains a provisional enclosure around `1` whose
-configuration received an independent canonical C2 point replay;
-`evidence.json` contains that replay artifact and the deterministic event
-trace. This replay is not a root-existence or forward-error proof.
+The canonical result contains a provisional enclosure around `1`. The endpoint
+is refined through the compiled C2 plan at 512 bits, independently refined from
+the original endpoint through the reference interpreter at 768 bits, and then
+freshly replayed by that interpreter. Scaled residual, normalized coordinate
+agreement and target agreement must all pass the `1e-100` confirmation gates.
+`evidence.json` contains the two refinement records, canonical replay and the
+deterministic event trace. This numerical agreement is not an interval
+root-existence proof or an exactness proof.
 `--max-actions 2` deliberately stops at a short reproducible prefix.
 `search_status: "finished_unknown"` and
 `target_image_status: "finite_observed"` do not certify that the search found
@@ -141,11 +145,14 @@ Before relying on a custom plugin:
 - There is no dynamic plugin package loader or generated Python wrapper layer.
   Custom applications inject a `FrozenPluginRegistry` as shown above.
 - The production runner currently requires `worker_count = 1`.
-- `validate_candidate` and its current C2 replay are point checks, not
-  root-existence, forward-error or all-roots proofs. The solve path also
-  requires a usable target-image classification and does not promote an
-  inconclusive image. Exact answers require separately supported proof paths;
-  capability metadata alone never promotes an answer.
+- `validate_candidate` requires all-path C2 support for a numerical answer.
+  C0-only plugins remain usable for discovery, but their candidates cannot
+  become `ProvisionalAnswer`s. The 512/768-bit refinement and agreement gates
+  are strong numerical confirmation, not interval existence/uniqueness or
+  all-roots proofs. The solve path also requires a usable target-image
+  classification and does not promote an inconclusive image. Exact answers
+  require separately supported proof paths; capability metadata alone never
+  promotes an answer.
 
 The example is protected by Python artifact tests and a Julia custom-registry
 CLI solve test in the normal integration suite.

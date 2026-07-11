@@ -15,6 +15,7 @@ include("compiled_oracle.jl")
 include("target_image.jl")
 include("local_solver.jl")
 include("protocol_json.jl")
+include("high_precision_refinement.jl")
 include("candidate_validation.jl")
 include("events.jl")
 include("candidate_store.jl")
@@ -183,6 +184,16 @@ export CORE_ABI_VERSION,
     CANDIDATE_BRANCH_VALIDITY_FAILED,
     CANDIDATE_BRANCH_SELECTOR_UNSEPARATED,
     CANDIDATE_TARGET_INCONSISTENT,
+    CANDIDATE_HIGH_PRECISION_CAPABILITY_MISSING,
+    CANDIDATE_PRIMARY_REFINEMENT_FAILED,
+    CANDIDATE_REFERENCE_REFINEMENT_FAILED,
+    CANDIDATE_PRECISION_COORDINATE_MISMATCH,
+    CANDIDATE_PRECISION_TARGET_MISMATCH,
+    CANDIDATE_PRECISION_BRANCH_MISMATCH,
+    CANDIDATE_VALIDATION_CANCELLED,
+    CANDIDATE_VALIDATION_DEADLINE_REACHED,
+    CANDIDATE_VALIDATION_ORACLE_BUDGET_EXHAUSTED,
+    CANDIDATE_HIGH_PRECISION_DOWNGRADE,
     CandidateValidationDiagnostic,
     CandidateValidationOptions,
     CandidateValidationResult,

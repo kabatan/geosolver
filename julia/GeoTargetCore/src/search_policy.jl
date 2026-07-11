@@ -1,4 +1,4 @@
-const SOLVE_POLICY_VERSION = v"1.1.0"
+const SOLVE_POLICY_VERSION = v"1.2.0"
 const _LANE_ORDER = (
     LANE_IID,
     LANE_HEURISTIC,

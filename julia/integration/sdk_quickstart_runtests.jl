@@ -69,7 +69,7 @@ using .BlackBoxCirclePlugin
         target_lower = parse(BigFloat, string(answer.target.lower))
         target_upper = parse(BigFloat, string(answer.target.upper))
         @test target_lower <= BigFloat(1) <= target_upper
-        @test answer.validation.method == "canonical_bigfloat_recheck"
+        @test answer.validation.method == "compiled512_reference768_confirmation"
         @test isfile(evidence)
     end
 end

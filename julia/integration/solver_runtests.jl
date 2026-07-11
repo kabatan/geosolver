@@ -229,6 +229,30 @@ function constant_problem(value=3.5)
     )
 end
 
+function evaluated_constant_problem()
+    plugin = geometry_plugin()
+    graph = ConstructionGraph((
+        LiteralNode(NodeId("constant-zero-a"), SCALAR_TYPE_ID, 0.0),
+        LiteralNode(NodeId("constant-zero-b"), SCALAR_TYPE_ID, 0.0),
+        CallNode(
+            NodeId("constant-point"),
+            PrimitiveId(plugin.id, "point2"),
+            (NodeId("constant-zero-a"), NodeId("constant-zero-b")),
+        ),
+        CallNode(
+            NodeId("constant-target"),
+            PrimitiveId(plugin.id, "distance"),
+            (NodeId("constant-point"), NodeId("constant-point")),
+        ),
+    ))
+    return ProblemSpecV1(
+        (plugin_lock(plugin),),
+        (),
+        graph;
+        target=NodeId("constant-target"),
+    )
+end
+
 function unconstrained_target_problem()
     plugin = geometry_plugin()
     variable = VariableSpec(
@@ -349,8 +373,8 @@ end
     @test length(result.provisional_answers) == 1
     answer = only(result.provisional_answers)
     @test answer.target.lower <= BigFloat(1) <= answer.target.upper
-    @test answer.validation.method == "canonical_bigfloat_recheck"
-    @test answer.validation.precision_bits == 256
+    @test answer.validation.method == "compiled512_reference768_confirmation"
+    @test answer.validation.precision_bits == 768
     @test answer.exact_failure == EXACT_CAPABILITY_MISSING
     @test result.coverage.proposed_tasks == 1
     @test result.coverage.completed_tasks == 1
@@ -390,14 +414,16 @@ end
     @test singular_image.numerical_rank == 1
     singular_correction = GeoTargetCore._candidate_root_correction(
         singular_image,
-        CandidateValidationOptions(),
+        LocalSolveOptions(),
     )
     @test !singular_correction.resolved
     @test singular_correction.detail == "rank_deficient_nonzero_residual"
 
     direct_validation = validate_candidate(singular, attempt)
     @test direct_validation.accepted
-    @test direct_validation.provisional.target.lower > BigFloat(0.9)
+    @test direct_validation.provisional.target.lower <= BigFloat(0) <=
+          direct_validation.provisional.target.upper
+    @test maximum(abs, direct_validation.canonical_coordinates) <= big"1e-100"
 
     execution = solve_execution(
         near_rank_problem(1.0e-13),
@@ -424,7 +450,7 @@ end
     )
     @test isempty(exact_zero_execution.result.provisional_answers)
     exact_zero_record = only(exact_zero_execution.checkpoint.workspace.candidates.history)
-    @test exact_zero_record.observation.canonical_valid
+    @test !exact_zero_record.observation.canonical_valid
     @test !exact_zero_record.observation.verified
     @test exact_zero_record.observation.verified_payload === nothing
     @test exact_zero_record.observation.needs_refinement
@@ -434,7 +460,7 @@ end
     exact_zero_image = analyze_target_image(singular, [0.0, 0.0])
     exact_zero_correction = GeoTargetCore._candidate_root_correction(
         exact_zero_image,
-        CandidateValidationOptions(),
+        LocalSolveOptions(),
     )
     @test exact_zero_correction.resolved
     @test exact_zero_correction.detail == "exact_zero_residual"
@@ -445,7 +471,7 @@ end
     @test full_rank_image.numerical_rank == 2
     full_rank_correction = GeoTargetCore._candidate_root_correction(
         full_rank_image,
-        CandidateValidationOptions(),
+        LocalSolveOptions(),
     )
     @test full_rank_correction.resolved
     half_rank_image = analyze_target_image(
@@ -457,7 +483,7 @@ end
     )
     compared_correction = GeoTargetCore._candidate_root_correction(
         full_rank_image,
-        CandidateValidationOptions(),
+        LocalSolveOptions(),
         half_rank_image,
     )
     @test compared_correction.resolved
@@ -577,6 +603,42 @@ end
     @test length(validated.result.provisional_answers) == 1
     provisional = only(validated.result.provisional_answers)
     @test provisional.target.lower <= BigFloat(3.5) <= provisional.target.upper
+end
+
+@testset "constant confirmation obeys oracle, cancellation and deadline budgets" begin
+    registry = solve_registry()
+    problem = evaluated_constant_problem()
+    compiled = compile_problem(problem, registry)
+    limited = solve_execution(
+        problem,
+        registry;
+        options=options_with_oracle_budget(compiled.logical_evaluation_cost),
+    )
+    @test isempty(limited.result.provisional_answers)
+    @test isempty(limited.result.exact_answers)
+    @test limited.checkpoint.budget.oracle_work <= compiled.logical_evaluation_cost
+    @test occursin("CANDIDATE_VALIDATION_ORACLE_BUDGET_EXHAUSTED", limited.evidence_json)
+
+    token = CancellationToken()
+    cancel!(token)
+    cancelled = solve_execution(
+        problem,
+        registry;
+        options=short_options(),
+        cancel=token,
+    )
+    @test cancelled.loop_status == GeoTargetCore.LOOP_CANCELLED
+    @test cancelled.result.search_status == SEARCH_CANCELLED
+    @test isempty(cancelled.result.provisional_answers)
+
+    deadline = solve_execution(
+        problem,
+        registry;
+        options=SolveOptions(preset=:fast, wall_seconds=1.0e-9),
+    )
+    @test deadline.loop_status == GeoTargetCore.LOOP_DEADLINE_REACHED
+    @test deadline.result.search_status == SEARCH_DEADLINE_REACHED
+    @test isempty(deadline.result.provisional_answers)
 end
 
 function _checkpoint_trace(execution::SolveExecution)
@@ -720,11 +782,10 @@ end
         options=short_options(),
         max_actions=2,
     )
-    @test constant_manifold.result.target_image_status == TARGET_FINITE_OBSERVED
-    @test length(constant_manifold.result.provisional_answers) == 1
-    answer = only(constant_manifold.result.provisional_answers)
-    @test answer.target.lower <= BigFloat(7) <= answer.target.upper
+    @test constant_manifold.result.target_image_status == TARGET_IMAGE_UNKNOWN
+    @test isempty(constant_manifold.result.provisional_answers)
     @test occursin("TARGET_LOCALLY_CONSTANT_MANIFOLD", constant_manifold.evidence_json)
+    @test occursin("CANDIDATE_PRIMARY_REFINEMENT_FAILED", constant_manifold.evidence_json)
 end
 
 @testset "target-image work respects the enclosing oracle budget" begin
@@ -769,7 +830,7 @@ end
     default_policy = GeoTargetCore._solve_policy_document(options)
     default_hash = canonical_json_hash(default_policy)
     @test string(default_hash) ==
-          "sha256:b4e94a13354d7c5e4ee72b5e50a68b448de5ef41feedecfbec6f32bdb6ea5a76"
+          "sha256:dd1b92e415eeadc42b6a3f6c3e6e540edcde2bf106ee411e19e58c583e7a8503"
 
     proposal_factory_calls = Ref(0)
     local_solver_calls = Ref(0)

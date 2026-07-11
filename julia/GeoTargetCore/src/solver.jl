@@ -1,4 +1,4 @@
-const SOLVE_API_VERSION = v"1.4.0"
+const SOLVE_API_VERSION = v"1.5.0"
 
 struct SolveConfigurationError <: CoreError
     code::Symbol
@@ -105,7 +105,9 @@ function SolveOptions(
         SolveConfigurationError(:invalid_worker_count, "worker_count must be positive"),
     )
     validation = CandidateValidationOptions()
-    local_options = LocalSolveOptions(residual_tolerance=validation.residual_tolerance)
+    # Float64 discovery convergence is deliberately separate from the
+    # 1e-100 high-precision answer gate.
+    local_options = LocalSolveOptions(residual_tolerance=1.0e-12)
     return SolveOptions(
         SOLVE_API_VERSION,
         canonical_preset,
@@ -294,7 +296,7 @@ end
 
 function _candidate_root_correction(
     image::TargetImageDiagnostic,
-    validation::CandidateValidationOptions,
+    local_options::LocalSolveOptions,
     half_radius_image::Union{Nothing,TargetImageDiagnostic}=nothing,
 )
     residual = Float64[relation.scaled for relation in image.base_observation.relations]
@@ -442,10 +444,10 @@ function _candidate_root_correction(
     end
     normalized_step = norm(correction, Inf)
     target_step = abs(dot(gradient, correction))
-    configuration_tolerance = sqrt(validation.residual_tolerance)
+    configuration_tolerance = sqrt(local_options.residual_tolerance)
     resolved = isfinite(normalized_step) && isfinite(target_step) &&
                normalized_step <= configuration_tolerance &&
-               target_step <= validation.target_consistency_tolerance
+               target_step <= local_options.residual_tolerance
     return (
         resolved,
         normalized_step,
@@ -528,7 +530,7 @@ function _refine_candidate_endpoint(
     steps = 0
     half_options = _half_radius_target_image_options(runner.image_options)
     while true
-        preliminary = _candidate_root_correction(image, runner.validation_options)
+        preliminary = _candidate_root_correction(image, runner.local_options)
         if !preliminary.resolved || isempty(preliminary.normalized_correction) ||
            preliminary.normalized_step == 0
             suffix = preliminary.resolved ? "no_correction_required" : "precheck_rejected"
@@ -570,7 +572,7 @@ function _refine_candidate_endpoint(
         end
         correction = _candidate_root_correction(
             image,
-            runner.validation_options,
+            runner.local_options,
             half_image,
         )
         correction.resolved || return (
@@ -829,18 +831,33 @@ function (runner::_CompiledAttemptRunner)(
             diagnostic=_local_diagnostic(attempt, nothing, image, correction),
         )
     end
+    if image.classification == TARGET_LIKELY_CONTINUOUS
+        runner.saw_likely_continuous = true
+        return Observation(
+            proposal.task_id,
+            proposal.configuration_id;
+            canonical_near_feasible=true,
+            target=_candidate_target(fast_observation),
+            branch_signature=Tuple(
+                branch.decision for branch in fast_observation.branches
+            ),
+            verified=false,
+            needs_refinement=false,
+            residual_score=score,
+            oracle_work=oracle_work[],
+            endpoint=Tuple(endpoint),
+            diagnostic=_local_diagnostic(attempt, nothing, image, correction),
+        )
+    end
     validation_capacity = _remaining_oracle_work(context, oracle_work[])
     cancelled_before_validation = is_cancelled(context.cancel)
     deadline_before_validation = Float64(context.clock()) >= context.deadline
-    budget_before_validation = validation_capacity < logical_evaluation_cost
-    if cancelled_before_validation || deadline_before_validation || budget_before_validation
+    if cancelled_before_validation || deadline_before_validation
         runner.saw_inconclusive_image = true
         resource = if cancelled_before_validation
             "cancelled_before_canonical_validation"
-        elseif deadline_before_validation
-            "deadline_before_canonical_validation"
         else
-            "oracle_budget_before_canonical_validation"
+            "deadline_before_canonical_validation"
         end
         return Observation(
             proposal.task_id,
@@ -850,7 +867,7 @@ function (runner::_CompiledAttemptRunner)(
             branch_signature=Tuple(
                 branch.decision for branch in fast_observation.branches
             ),
-            needs_refinement=budget_before_validation,
+            needs_refinement=false,
             residual_score=score,
             oracle_work=oracle_work[],
             endpoint=Tuple(endpoint),
@@ -866,10 +883,20 @@ function (runner::_CompiledAttemptRunner)(
         endpoint;
         options=runner.validation_options,
         fast_observation,
+        deadline_ns=_remaining_deadline_ns(context),
+        cancelled=() -> is_cancelled(context.cancel),
+        remaining_oracle_work=validation_capacity,
     )
     _check_logical_evaluation_bound(runner.compiled, validation.canonical_observation)
-    oracle_work[] += validation.oracle_work
+    oracle_work[] = Base.checked_add(oracle_work[], validation.oracle_work)
     if !validation.accepted
+        retryable = validation.failure ∉ (
+            CANDIDATE_HIGH_PRECISION_CAPABILITY_MISSING,
+            CANDIDATE_HIGH_PRECISION_DOWNGRADE,
+            CANDIDATE_VALIDATION_CANCELLED,
+            CANDIDATE_VALIDATION_DEADLINE_REACHED,
+            CANDIDATE_VALIDATION_ORACLE_BUDGET_EXHAUSTED,
+        )
         return Observation(
             proposal.task_id,
             proposal.configuration_id;
@@ -878,31 +905,15 @@ function (runner::_CompiledAttemptRunner)(
             branch_signature=Tuple(
                 branch.decision for branch in fast_observation.branches
             ),
-            needs_refinement=true,
+            needs_refinement=retryable,
             residual_score=score,
             oracle_work=oracle_work[],
-            endpoint=Tuple(endpoint),
+            endpoint=validation.canonical_coordinates,
             diagnostic=_local_diagnostic(attempt, validation, image, correction),
         )
     end
 
-    if image.classification == TARGET_LIKELY_CONTINUOUS
-        runner.saw_likely_continuous = true
-        return Observation(
-            proposal.task_id,
-            proposal.configuration_id;
-            canonical_near_feasible=true,
-            canonical_valid=true,
-            target=_validation_target(validation),
-            branch_signature=validation.provisional.branch_signature,
-            verified=false,
-            needs_refinement=false,
-            residual_score=Float64(validation.provisional.canonical_residual_bound),
-            oracle_work=oracle_work[],
-            endpoint=Tuple(endpoint),
-            diagnostic=_local_diagnostic(attempt, validation, image, correction),
-        )
-    end
+    confirmed_endpoint = validation.canonical_coordinates
 
     provisional = validation.provisional::ProvisionalAnswer
     target = _validation_target(validation)
@@ -924,7 +935,7 @@ function (runner::_CompiledAttemptRunner)(
             needs_refinement=true,
             residual_score=Float64(provisional.canonical_residual_bound),
             oracle_work=oracle_work[],
-            endpoint=Tuple(endpoint),
+            endpoint=confirmed_endpoint,
             diagnostic=_local_diagnostic(attempt, validation, image, correction),
         )
     end
@@ -941,7 +952,7 @@ function (runner::_CompiledAttemptRunner)(
         needs_refinement=false,
         residual_score=Float64(provisional.canonical_residual_bound),
         oracle_work=oracle_work[],
-        endpoint=Tuple(endpoint),
+        endpoint=confirmed_endpoint,
         diagnostic=_local_diagnostic(attempt, validation, image, correction),
     )
 end
@@ -980,7 +991,7 @@ function _solve_policy_document(
 end
 
 _solve_target_image_options(options::SolveOptions) = TargetImageDiagnosticOptions(
-    relation_tolerance=options._validation.residual_tolerance,
+    relation_tolerance=options._local.residual_tolerance,
 )
 
 function _target_image_options_document(options::TargetImageDiagnosticOptions)
@@ -1282,6 +1293,9 @@ function _constant_search!(
     compiled::CompiledProblem,
     options::SolveOptions,
 )
+    if is_cancelled(context.cancel)
+        return _finish_search(context, LOOP_CANCELLED)
+    end
     if Float64(context.clock()) >= context.deadline
         return _finish_search(context, LOOP_DEADLINE_REACHED)
     end
@@ -1291,7 +1305,14 @@ function _constant_search!(
     enqueue_proposal!(context.workspace, proposal)
     _record_charge!(context, BudgetCharge(proposals=1))
     record_event!(context.events, EVENT_PROPOSED, proposal)
-    validation = validate_candidate(compiled, Real[]; options=options._validation)
+    validation = validate_candidate(
+        compiled,
+        Real[];
+        options=options._validation,
+        deadline_ns=_remaining_deadline_ns(context),
+        cancelled=() -> is_cancelled(context.cancel),
+        remaining_oracle_work=_remaining_oracle_work(context),
+    )
     exact = validation.accepted ? _exact_constant_answer(compiled, validation, options) : nothing
     exact_verification = exact === nothing ? nothing : verify_exact_answer(compiled, exact)
     if exact_verification !== nothing && !exact_verification.accepted

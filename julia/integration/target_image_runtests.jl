@@ -520,7 +520,7 @@ end
     @test high_order_execution.result.target_image_status == TARGET_IMAGE_UNKNOWN
     @test isempty(high_order_execution.result.provisional_answers)
     high_order_record = only(high_order_execution.checkpoint.workspace.candidates.history)
-    @test high_order_record.observation.canonical_valid
+    @test !high_order_record.observation.canonical_valid
     @test !high_order_record.observation.verified
     @test high_order_record.observation.verified_payload === nothing
     @test high_order_record.observation.needs_refinement
@@ -535,7 +535,7 @@ end
     multiplicity_image = GeoTargetCore.analyze_target_image(multiplicity_compiled, [0.0])
     correction = GeoTargetCore._candidate_root_correction(
         multiplicity_image,
-        GeoTargetCore.CandidateValidationOptions(),
+        GeoTargetCore.LocalSolveOptions(),
     )
     @test !correction.resolved
     @test correction.normalized_step > 1.0e-3
