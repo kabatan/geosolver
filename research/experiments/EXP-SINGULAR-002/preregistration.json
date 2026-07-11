@@ -1,0 +1,224 @@
+{
+  "schema": "geotarget.singular-s5-preregistration/v2",
+  "experiment_id": "EXP-SINGULAR-002",
+  "phase": "S5-INVARIANT-TENSOR-TR-design",
+  "status": "revision-a1-approved-for-preregistration-no-input-or-outcome-materialized",
+  "parent_negative_result": {
+    "id": "NEG-014",
+    "evidence_id": "EVID-20",
+    "bounded_observation": "The frozen S4 finite-difference candidate and independent analytic control each recovered 11/15 eligible endpoints with zero S4 false promotions, but both failed the same four orthogonal representations at the shared final applicability audit.",
+    "interpretation": "The successor must replace the shared representation-dependent rank/stop/audit model. The result does not justify a case-specific route, an epsilon-only retune, or rejection of two-step and tensor singular methods in general."
+  },
+  "review_barrier": {
+    "root_card_review_required": false,
+    "candidate_map_approved_for_preregistration": true,
+    "approval_boundary": "Root A1 review found the finite K-eigenline, paired B(v), all-sign reconciliation, barycenter and common safeguard map mathematically coherent with Algorithm 1 of arXiv:2305.10803 and approved it for preregistration. This is not efficacy evidence, locked-validation approval, or product approval.",
+    "review_history": "The first root review approved the metric-normalized Jacobian/Weyl/projector seam and rejected the v1 lifted Sym^2 tensor-Gauss-Newton correction because full row rank of C does not imply a usable rank-one step and unresolved-eigenspace enumeration is not finite. Revision A1 replaced it with simple covariant K eigenlines, paired Weyl B(v) gates, both signs of every robust line, all-endpoint reconciliation, and one common finite safeguard. The second root review approved that finite map for preregistration before any corpus or outcome existed.",
+    "before_review_allowed": [
+      "static algebra and covariance primitives",
+      "synthetic representation-invariance tests with no frozen case inputs",
+      "fail-closed API and source audits"
+    ],
+    "before_review_forbidden": [
+      "development or holdout input generation",
+      "Gold materialization or reading",
+      "candidate outcome execution",
+      "threshold tuning from case results",
+      "product connection"
+    ]
+  },
+  "claim_boundary": {
+    "allowed_claim": "A family-disjoint development test of a metric-normalized, uncertainty-aware tensor refinement lane for sufficiently close C2 square endpoints whose limiting Jacobian has a stable nonzero corank and whose projected quadratic model passes preregistered applicability checks.",
+    "forbidden_claims": [
+      "general singular-root certification",
+      "existence, isolation, multiplicity, or completeness inferred from convergence",
+      "support for arbitrary C0 or C1 plugins",
+      "support for manifolds, higher deflation depth, or a wrong numerical nullity",
+      "product readiness from development outcomes",
+      "a result about unopened family-disjoint holdout inputs"
+    ]
+  },
+  "literature_and_mechanism": [
+    {
+      "id": "LIT-TWO-STEP-SINGULAR",
+      "url": "https://doi.org/10.1016/j.jsc.2023.102278",
+      "use": "Retain the range/nullspace decomposition and local deflation-one motivation, but do not retain an arbitrary null-basis coefficient direction or the S4 final audit.",
+      "assumption_gap": "The theorem assumes a sufficiently close isolated deflation-one zero and a suitable invertible projected Hessian-direction operator; GeoTarget must test applicability and cannot infer those assumptions from convergence."
+    },
+    {
+      "id": "LIT-NULLSPACE-NEWTON",
+      "url": "https://doi.org/10.1016/j.apnum.2004.09.029",
+      "use": "Use stable left/right singular subspaces only under an explicit rank uncertainty and subspace stability gate.",
+      "assumption_gap": "Generalized regularity, correct rank, and locality are not guaranteed for black-box endpoints."
+    },
+    {
+      "id": "LIT-RANK-DEFICIENT-NLS",
+      "url": "https://doi.org/10.1137/090780882",
+      "use": "Treat the Jacobian as an uncertain sampled operator and refuse ambiguous numerical rank rather than selecting one fixed cutoff.",
+      "assumption_gap": "A stable interval around sampled singular values is empirical evidence, not a proof of limiting rank."
+    },
+    {
+      "id": "LIT-ADAPTIVE-MULTIPRECISION",
+      "url": "https://doi.org/10.1137/060658862",
+      "use": "Compare 128- and 256-bit rank, projector, tensor, and endpoint evidence under charged work.",
+      "assumption_gap": "Path-tracking precision rules do not by themselves validate an arbitrary local black-box root."
+    },
+    {
+      "id": "LIT-RNC-LM-2026",
+      "url": "https://arxiv.org/abs/2607.07623",
+      "use": "Higher directional corrections are a contemporary comparator motivation only; every extra directional callback remains charged and the candidate does not claim the paper's Riemann-normal-coordinate construction.",
+      "assumption_gap": "Smooth residual geometry and a valid curved line search do not provide a general singular-root guarantee."
+    }
+  ],
+  "invariant_model": {
+    "declared_metrics": "For physical increment dx and residual r, the public numerical profile supplies positive-definite metrics Gx and Gr. With Lx' Lx=Gx and Lr' Lr=Gr, normalized coordinates use dx=Lx^{-1} dz and normalized residual Lr r. Identity is used only when the profile explicitly declares identity scaling.",
+    "jacobian_pair": "At one endpoint and precision, acquire central-difference normalized Jacobians A_h and A_h2 with h and h/2. Define delta_J=||A_h2-A_h||_2 and eta_J=2*delta_J+eta_round, with eta_round=16*eps(T)*sqrt(n)*max(1,max sampled normalized residual norm)/(h/2).",
+    "weyl_rank_interval": "For each singular value sigma_i(A_h2), use [max(0,sigma_i-eta_J),sigma_i+eta_J]. Candidate boundaries require a retained lower endpoint above 8*eta_J and a next upper endpoint divided by that lower endpoint at most 1e-6. Choose the unique maximum robust-gap score; if the best score is less than 16 times the runner-up, return unknown.",
+    "projector_gate": "Rank/nullity must agree for h and h/2 and at 128/256 bits. Compare right and left orthogonal projectors in their normalized metrics. Each distance is a spectral norm and must be no larger than both 0.25 and four times the combined Jacobian uncertainty divided by the certified retained/null interval separation, with a 32-eps numerical floor.",
+    "projected_hessian_tensor": "In paired radii and at each precision, use one common fine-radius left/right null basis and acquire T_{alpha,i,j}=u_alpha' D2F(x_R)[v_i,v_j], symmetric in i,j. The flattened C:Sym^2(N)->L spectrum is retained only as a diagnostic and counterexample trace. Full row rank of C is explicitly insufficient for a step and cannot promote or rescue a route.",
+    "covariant_line_contraction": "Define K_{i,j}=sum_{alpha,k} T_{alpha,i,k} T_{alpha,j,k}. Under left-null rotation S and right-null rotation R, K transforms by R' K R. For paired radii use eta_K=2*||K_h2-K_h||_2 plus the charged arithmetic floor and Weyl eigenvalue intervals. Every retained eigenvalue must be above 8*eta_K, adjacent ordered intervals must be disjoint, and radius/precision ambient eigenline projectors must satisfy the uncertainty-derived spectral bound. Repeated or uncertainty-overlapping eigenvalues return unknown; no basis vector is selected inside a degenerate eigenspace.",
+    "paper_B_gate": "For each uncertainty-simple unit eigenline q of K and both representatives q and -q, define B(q)_{alpha,j}=sum_i T_{alpha,i,j}q_i. At h/h2 and 128/256 bits use eta_B=2*||B_h2(q)-B_h(q)||_2 plus the arithmetic floor. A line is robust only when the lower Weyl endpoint of every singular value exceeds 8*eta_B, the condition upper bound is at most 1e12, and the ordered singular intervals and decision agree across precision. Lines failing B are persisted but excluded; if no line remains, return unknown.",
+    "approved_finite_correction_map": "At each outer iteration first take the retained-range pseudoinverse correction x_R. For every robust K eigenline and both signs, solve the paper-style finite system B(q) delta(q)=-U2' J(x_R) V2 q and form y(q)=x_R+V2 delta(q). Every solve and both signs are charged. All y(q) must have valid canonical branch/guard/domain semantics and every pair must agree in normalized 2-norm within 6.25e-12. Otherwise return unknown. With agreement, use the Euclidean barycenter y_bar, which is covariant and does not prefer a line or sign. Apply one common safeguard alpha from the finite ordered set [1,1/2,1/4,1/8] to x_R+alpha*(y_bar-x_R); accept the first alpha whose original canonical residual decreases and whose actual/predicted reduction ratio is at least 1e-4. If none passes, return unknown. Recompute all diagnostics at the next iteration. No arbitrary tie-break, coordinate counter, unresolved-eigenspace enumeration, or case route is permitted.",
+    "multiple_line_reconciliation": "Robust means that the K eigenline and its B(q) pass every radius and precision gate. Both signs of every robust line are always evaluated. All resulting unscaled canonical endpoints must agree; taking only the best-residual line, the first eigenline, or a post-outcome subset is forbidden. The barycenter is used only after agreement and all individual endpoints remain in the artifact.",
+    "acceptance": "Every individual line/sign endpoint and the safeguarded barycenter step must reduce the original charged canonical residual or remain a typed diagnostic; invalid semantics cannot be assigned a finite merit. Final promotion additionally requires independent 128/256 trajectories, two symmetric confirmations, an unapplied ensemble correction bound, canonical semantic replay, and separate configuration and target error evidence.",
+    "stopping": "Use normalized Euclidean residual, ensemble step and unapplied correction, maximum line/sign disagreement, precision and confirmation disagreement, eta_J, eta_K, eta_B, and target-sensitivity terms. Do not use raw-coordinate infinity norms or a step-squared-only floor."
+  },
+  "routing_contract": {
+    "allowed_inputs": [
+      "declared C2 capability",
+      "square dimensions and public normalized metrics",
+      "canonical residual and target callback values",
+      "public bounds, domain, guard, and branch semantics",
+      "charged Jacobian and second-directional observations",
+      "Weyl rank intervals, projector distances, tensor spectra, model agreement, and progress"
+    ],
+    "forbidden_inputs": [
+      "case, file, family, stratum, or representation id",
+      "Gold configuration or target",
+      "generator parameters or latent multiplicity labels",
+      "primitive or geometry names",
+      "known transform matrices",
+      "post-outcome threshold selection"
+    ],
+    "fail_closed": "Missing C2/metric capability, an invalid callback, ambiguous rank, projector instability, tensor interval rank loss, degenerate model tie, invalid branch/guard/domain, precision disagreement, callback or weighted-work exhaustion, or deadline expiry returns typed unknown. No fallback result is reported as S5 evidence."
+  },
+  "variants": [
+    {
+      "id": "S1-AP-LMQR",
+      "role": "paired regular baseline",
+      "rule": "unchanged implementation, endpoint, semantics, and global work accounting"
+    },
+    {
+      "id": "S4-C2-NULLSPACE-TWO-STEP",
+      "role": "frozen standard two-step control",
+      "rule": "verbatim frozen S4 mechanism rerun on the new inputs; it may not share S5 helpers"
+    },
+    {
+      "id": "S5-COVARIANT-LINE-TWO-STEP",
+      "role": "candidate",
+      "rule": "C2 finite-difference invariant rank/projector diagnosis, uncertainty-simple K eigenlines, paired Weyl B(v) gates, all-line/all-sign paper steps, endpoint reconciliation, and one common finite trust safeguard"
+    },
+    {
+      "id": "S5-ANALYTIC-COVARIANT-LINE-CONTROL",
+      "role": "independent derivative control",
+      "rule": "separately coded analytic Jacobian and Hessian implementation of the same K, B(v), all-sign reconciliation, and safeguard map; shares only input, ledger, semantic replay, and final gate vocabulary"
+    },
+    {
+      "id": "S5-ISOTROPIC-NULL-CONTROL",
+      "role": "mechanism control",
+      "rule": "same normalized trust-region budget but isotropic null perturbations and no tensor-derived model starts; never eligible to justify the tensor mechanism by itself"
+    }
+  ],
+  "frozen_options_after_root_review": {
+    "precision_bits": [128, 256],
+    "jacobian_radius_multipliers": [1.0, 0.5],
+    "jacobian_uncertainty_multiplier": 2.0,
+    "arithmetic_roundoff_multiplier": 16.0,
+    "robust_gap_ratio_max": 1e-6,
+    "retained_uncertainty_multiplier_min": 8.0,
+    "rank_gap_winner_ratio_min": 16.0,
+    "projector_uncertainty_multiplier": 4.0,
+    "projector_distance_max": 0.25,
+    "diagnostic_projected_tensor_condition_max": 1e12,
+    "covariant_contraction_uncertainty_multiplier": 2.0,
+    "covariant_eigenvalue_uncertainty_multiplier_min": 8.0,
+    "contracted_B_uncertainty_multiplier": 2.0,
+    "contracted_B_uncertainty_multiplier_min": 8.0,
+    "contracted_B_condition_max": 1e12,
+    "line_reconciliation_tolerance": 6.25e-12,
+    "common_safeguard_alphas": [1.0, 0.5, 0.25, 0.125],
+    "actual_predicted_reduction_ratio_min": 1e-4,
+    "maximum_nullity": 4,
+    "maximum_global_iterations": 64,
+    "maximum_callbacks": 4096,
+    "maximum_precision_equivalent_oracle_work": 16384,
+    "wall_seconds": 10.0,
+    "independent_confirmation_count": 2,
+    "configuration_error_goal": 1e-10,
+    "target_error_goal": 1e-12,
+    "semantic_residual_tolerance": 1e-12,
+    "candidate_tuning_rounds": 0
+  },
+  "work_contract": {
+    "ledger_scope": "One endpoint-global ledger per variant covers route diagnosis, all precisions and radii, every trajectory and confirmation, tensor probes, audits, target sensitivity, and semantic replay.",
+    "callback_charge": "Every residual, target, Jacobian, analytic derivative, and directional derivative callback is charged. A failed or invalid callback consumes its work.",
+    "parallel_policy": "A single solve remains single-threaded. Independent cases or seeds may run on separate physical cores, with one Julia/BLAS/OMP thread per process; this changes experiment throughput, not per-case budget or solver evidence.",
+    "matched_comparison": "All candidate/control comparisons use common callback and precision-equivalent-work prefixes. A wall-only win cannot promote a mechanism."
+  },
+  "static_kill_gates_before_input_materialization": [
+    "For deterministic synthetic operators of nullity 1 through 4, at least 100 independent orthogonal variable/residual replicas preserve rank/nullity, K eigenvalue/eigenline, B(v) full-rank, and diagnostic C-spectrum decisions to the declared arithmetic tolerance.",
+    "Right and left null projectors transform covariantly under those replicas; signed permutations and metric-covariant anisotropic scalings satisfy the same test.",
+    "For nonlinear finite-difference replicas, paired Weyl intervals overlap and route decisions agree; exact diagnostic equality is not required.",
+    "A full-row-rank C with degenerate K and a full-row-rank C whose every K eigenline has singular B(v) both return unknown, demonstrating that C does not imply a usable paper step.",
+    "K eigenvalue degeneracy, B(v) rank loss, line/sign endpoint disagreement, ambiguous Jacobian rank, higher-depth tensor collapse, manifolds, inconsistent nonroots, metric loss, nonfinite callbacks, and budget exhaustion all fail closed.",
+    "Source audit finds no case/family/Gold/representation routing and no arbitrary null-basis counter direction."
+  ],
+  "development_and_holdout_design": {
+    "materialized": false,
+    "development_namespace": "singular-s5-development-v0",
+    "locked_namespace": "singular-s5-family-disjoint-holdout-v0",
+    "family_disjoint_from": [
+      "EXP-SINGULAR-001 development-s0-s4",
+      "EXP-SINGULAR-002 locked holdout"
+    ],
+    "latent_groups": [
+      {"stratum": "isolated-deflation-one", "development_groups": 6, "minimum_unrelated_mechanism_families": 3},
+      {"stratum": "higher-deflation-depth-controls", "development_groups": 3},
+      {"stratum": "manifold-controls", "development_groups": 2},
+      {"stratum": "inconsistent-nonroots", "development_groups": 2},
+      {"stratum": "regular-close-root-controls", "development_groups": 2},
+      {"stratum": "rank-transition-controls", "development_groups": 2}
+    ],
+    "representations_per_group": [
+      "identity normalized chart",
+      "independent orthogonal variable and residual transforms",
+      "independent signed permutations",
+      "metric-covariant anisotropic scale plus orthogonal transform",
+      "equivalent shared-DAG reordering"
+    ],
+    "gold_contract": "Gold is stored separately from candidate inputs, evaluated with exact algebraic data when available and otherwise at no less than 512 bits, then transformed without Float64 narrowing. Assessment uses the declared normalized 2-norm and target error bounds. The runtime never receives Gold or the representation transform.",
+    "locked_rule": "The family-disjoint locked corpus is generated and hash-frozen before the development result is opened, but remains unopened unless every development gate passes."
+  },
+  "development_advancement_gate": {
+    "mode": "all",
+    "criteria": [
+      "false, semantic-only, noneligible, wrong-branch, strict-boundary, budget/deadline, and truth-leak promotions are zero",
+      "candidate route, promotion, and Gold-success decisions have zero disagreement across every representation of every latent group",
+      "all higher-depth, manifold, inconsistent, regular-close-root, and ambiguous-rank controls remain unpromoted by S5",
+      "finite-difference candidate and independent analytic control make identical route and promotion decisions on every case",
+      "S5 succeeds on at least 80 percent of isolated-deflation-one instances and on every representation of at least three unrelated mechanism families",
+      "S5 improves family-equal safe success by at least 10 percentage points over frozen S4 on the new split, with callback and precision-equivalent work no more than 1.2 times S4 at matched success",
+      "S5 beats the isotropic control on at least three unrelated families, establishing tensor-specific rather than generic extra-probe signal",
+      "every promoted configuration and target error estimate contains non-narrowed Gold and all Jacobian Weyl, projector, K eigenline, B(v), all-sign reconciliation, confirmation, and semantic gates pass",
+      "independent reconstruction from raw artifacts exactly reproduces decisions, work, intervals, projectors, K contractions/eigenlines, every B(v), every signed endpoint, safeguard choice, diagnostic C spectra, and errors"
+    ],
+    "pass_action": "Freeze source, options, metrics, and applicability for unopened family-disjoint validation; keep product disconnected.",
+    "fail_action": "Record a bounded negative result and stop without retuning this experiment or opening the holdout."
+  },
+  "release_boundary": {
+    "development_pass_is_not_product_promotion": true,
+    "locked_validation_required": true,
+    "unknown_composition_family_plugin_required_before_product": true,
+    "production_route_may_not_use_case_or_family_identity": true
+  }
+}
