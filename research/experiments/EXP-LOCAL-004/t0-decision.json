@@ -1,15 +1,15 @@
 {
   "artifact": {
     "path": "benchmarks/results/raw/exp-local-004-t0-linux.json",
-    "sha256": "70ee7abc3877289ab71bc89947dc5c1a86428995ca5f24b1f45a114492fc5d03",
-    "source_revision": "f8eecd555b5f16a1c3aa998f68390483e955b634"
+    "sha256": "c136b27e4ae820d070365b5ce57ed315d452bcdde770d63d2025af11b77d8b95",
+    "source_revision": "28a37b1d34de8ae5aa4e10d358663e6eeb6c6b22"
   },
   "decision": {
     "promote_to_t1": [
       "NLS-TR"
     ],
     "reject_after_t0": {
-      "NLS-LM": "No assessor target-recall advantage over NLS-TR; lower safe-full count and 1.88 times its callback work.",
+      "NLS-LM": "No assessor target-recall advantage over NLS-TR; lower safe-full count, an accepted-endpoint safety violation, and 1.87 times its callback work.",
       "native-safeguarded-lm": "Lower assessor target recall than NLS-TR and 5.66 times its callback work."
     }
   },
@@ -22,14 +22,16 @@
       "NLS-TR": {
         "assessor_qualified_targets_found": 7,
         "assessor_safe_full_cases": 3,
-        "callback_evaluations": 6634,
+        "accepted_endpoint_safety_violations": 0,
+        "callback_evaluations": 6674,
         "evaluation_count_mismatches": 0,
         "runner_budget_exhausted": 0
       },
       "NLS-LM": {
         "assessor_qualified_targets_found": 7,
         "assessor_safe_full_cases": 2,
-        "callback_evaluations": 12459,
+        "accepted_endpoint_safety_violations": 1,
+        "callback_evaluations": 12499,
         "evaluation_count_mismatches": 0,
         "runner_budget_exhausted": 0
       },
@@ -48,7 +50,7 @@
         "runner_budget_exhausted": 0
       }
     },
-    "nls_tr_callback_work_ratio_vs_control": 0.4902815756411204
+    "nls_tr_callback_work_ratio_vs_control": 0.4932377503510457
   },
   "experiment_id": "EXP-LOCAL-004-T0-DECISION",
   "rationale": "NLS-TR improves fixed-assessor target recall from 4/10 to 7/10 and safe-full cases from 2/5 to 3/5 while using less than half the callback work of the production-tolerance control. The decision depends only on the predeclared T0 strata and common assessor, not on named-case routing.",

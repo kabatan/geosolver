@@ -37,7 +37,8 @@ julia +1.12.6 --startup-file=no --history-file=no \
   research/experiments/EXP-LOCAL-004/run_t0.jl
 ```
 
-The frozen T0 decision is in `t0-decision.json`. Run the representative
+The frozen T0 and T1 decisions are in `t0-decision.json` and
+`t1-decision.json`. Run the representative
 nine-case T1 screen with only the three controls and the promoted NLS-TR
 candidate:
 
