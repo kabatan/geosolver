@@ -30,6 +30,24 @@ julia +1.12.6 --startup-file=no --history-file=no --project=julia `
   --output=benchmarks/results/raw/solver-lab-smoke.json
 ```
 
+For paired algorithm experiments, construct the frozen local-only controls by
+name (they deliberately do not include production root correction, target-image
+analysis, or candidate validation):
+
+```julia
+controls = (
+    core_lmqr_control(:legacy_lab_120x600),
+    core_lmqr_control(:prod_tol_120x600),
+    core_lmqr_control(:prod_options_250x2000),
+)
+```
+
+The first preserves the historical 120/600 and `sqrt(eps(Float64))` baseline,
+the second changes only the residual tolerance to `1e-12`, and the third uses
+the nominal production local limits of 250/2000 with that tolerance. Each
+variant manifest records the residual tolerance, initial damping, and finite
+difference step explicitly.
+
 ## Adding a candidate
 
 Construct another `SolverVariant` whose callable accepts `(case, start)` and

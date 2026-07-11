@@ -444,7 +444,18 @@ end
     @test occursin("\"case_id\":\"M0-ANALYTIC-047\"", generated)
 end
 
-function solver_lab_collision_problem()
+@testset "platform-sensitive diagnostics do not enter replay artifacts" begin
+    for problem in (
+        generate(TangentCircleLineParams()),
+        generate(MultiRootWarpedParams()),
+    )
+        @test haskey(problem.metadata, :observed_root_conditions)
+        @test all(artifact -> artifact.name !== :root_conditions, problem.artifacts)
+        @test verify_replay_material(problem)
+    end
+end
+
+function solver_lab_collision_problem(; starts=[-2.0, -2.0, -1.0, 1.0])
     residual!(output, input) = (output[1] = (input[1]^2 - 1) * (input[1]^2 - 4); output)
     jacobian!(output, input) = (output[1, 1] = 4input[1]^3 - 10input[1]; output)
     target(input) = input[1]^2
@@ -453,12 +464,12 @@ function solver_lab_collision_problem()
         ExactGoldTarget("squared-four", 4.0, "x^2 = 4", [1, 4]),
         ExactGoldTarget("squared-one", 1.0, "x^2 = 1", [2, 3]),
     ]
-    starts = reshape([-2.0, -2.0, -1.0, 1.0], 1, :)
+    saved = reshape(Float64[starts...], 1, :)
     return DirectAnalyticProblem(
         "solver-lab-collision",
         "SOLVER-LAB-COLLISION",
         (:S5,),
-        (start_count=4,),
+        (start_count=length(starts),),
         1,
         1,
         residual!,
@@ -470,9 +481,95 @@ function solver_lab_collision_problem()
         [1.0],
         configurations,
         targets,
-        starts,
+        saved,
         [MaterializedArtifact(:parameters, reshape([4.0], 1, 1))],
         Dict{Symbol,Any}(:generator_role => :solver_lab_test),
+    )
+end
+
+function solver_lab_false_endpoint_problem(; starts=[-1.0])
+    residual!(output, input) = (output[1] = input[1]^2 - 1; output)
+    jacobian!(output, input) = (output[1, 1] = 2input[1]; output)
+    target(input) = input[1]
+    return DirectAnalyticProblem(
+        "solver-lab-false-endpoint",
+        "SOLVER-LAB-FALSE-ENDPOINT",
+        (:S5,),
+        (start_count=length(starts),),
+        1,
+        1,
+        residual!,
+        jacobian!,
+        target,
+        [-2.0],
+        [2.0],
+        [2.0],
+        [1.0],
+        reshape([1.0], 1, :),
+        AbstractGoldTargetDescriptor[
+            ExactGoldTarget("positive-one", 1.0, "target = 1", [1]),
+        ],
+        reshape(Float64[starts...], 1, :),
+        [MaterializedArtifact(:parameters, reshape([1.0], 1, 1))],
+        Dict{Symbol,Any}(:generator_role => :solver_lab_false_endpoint_test),
+    )
+end
+
+function solver_lab_inconsistent_target_problem()
+    residual!(output, input) = (output[1] = input[1]^2 - 1; output)
+    jacobian!(output, input) = (output[1, 1] = 2input[1]; output)
+    target(_) = 7.0
+    return DirectAnalyticProblem(
+        "solver-lab-inconsistent-target",
+        "SOLVER-LAB-INCONSISTENT-TARGET",
+        (:S5,),
+        (start_count=1,),
+        1,
+        1,
+        residual!,
+        jacobian!,
+        target,
+        [-2.0],
+        [2.0],
+        [2.0],
+        [1.0],
+        reshape([-1.0, 1.0], 1, :),
+        AbstractGoldTargetDescriptor[
+            ExactGoldTarget("seven", 7.0, "target = 7", [1]),
+            ExactGoldTarget("eight", 8.0, "target = 8", [2]),
+        ],
+        reshape([1.0], 1, :),
+        [MaterializedArtifact(:parameters, reshape([2.0], 1, 1))],
+        Dict{Symbol,Any}(:generator_role => :solver_lab_inconsistent_target_test),
+    )
+end
+
+function solver_lab_ambiguous_target_problem()
+    residual!(output, input) = (output[1] = input[1]^2 - 1; output)
+    jacobian!(output, input) = (output[1, 1] = 2input[1]; output)
+    target(_) = 0.0
+    return DirectAnalyticProblem(
+        "solver-lab-ambiguous-target",
+        "SOLVER-LAB-AMBIGUOUS-TARGET",
+        (:S5,),
+        (start_count=1,),
+        1,
+        1,
+        residual!,
+        jacobian!,
+        target,
+        [-2.0],
+        [2.0],
+        [2.0],
+        [1.0],
+        reshape([-1.0, 1.0], 1, :),
+        AbstractGoldTargetDescriptor[
+            ValidatedGoldTarget("left", -0.5, 0.5, "fixture interval", [1]),
+            ValidatedGoldTarget("right", -0.25, 0.25, "fixture interval", [2]),
+        ],
+        reshape([-1.0], 1, :),
+        [MaterializedArtifact(:parameters, reshape([2.0], 1, 1))],
+        Dict{Symbol,Any}(:generator_role => :solver_lab_ambiguous_target_test),
     )
 end
 
@@ -553,12 +650,33 @@ end
     @test fourth_prefix.duplicate_configuration_hits == 1
     @test fourth_prefix.duplicate_target_hits == 2
     @test fourth_prefix.evaluations == 4
+    # Target coverage first becomes safe at start 3 even though 3 is not a
+    # requested reporting prefix.  Work-to-success must not depend on prefix
+    # coarseness.
+    @test fourth_prefix.reported_accepted_targets_found == 2
+    @test fourth_prefix.reported_accepted_target_recall == 1.0
+    @test fourth_prefix.lab_safe_all_targets
+    @test fourth_prefix.assessor_all_targets
+    @test fourth_prefix.assessor_safe_all_targets
+    @test fourth_prefix.suffix_stable_evaluations_to_lab_safe_full == 3
+    @test fourth_prefix.evaluation_count_mismatches == 0
 
     document = solver_experiment_document(run)
     @test document["schema"] == SOLVER_EXPERIMENT_SCHEMA_VERSION
+    @test document["schema"] == "geotarget.solver-experiment/v2"
     @test document["variants"] == ["identity"]
     @test length(document["attempts"]) == 4
     @test document["summaries"][end]["target_recall"] == 1.0
+    @test document["assessor_manifest"] == Dict{String,Any}(
+        "configuration_tolerance" => 1.0e-6,
+        "qualification_predicate" =>
+            "endpoint_present_finite_in_bounds_semantics_valid_scaled_residual_linf",
+        "coverage_predicate" => "qualified_unique_gold_consistent_target_id",
+        "residual_linf_tolerance" => 1.0e-12,
+        "safety_predicate" =>
+            "all_qualified_endpoints_gold_consistent_and_unambiguous",
+        "target_tolerance" => 1.0e-6,
+    )
 end
 
 
@@ -585,12 +703,215 @@ end
     @test !attempt.false_target
     @test attempt.evaluations == 2
     @test attempt.reported_evaluations == 0
+    @test attempt.evaluation_count_mismatch
+    @test attempt.evaluation_count_difference == 2
+    @test !attempt.assessor_qualified
 
     summary = only(run.prefixes)
     @test summary.configuration_recall == 0.0
     @test summary.target_recall == 0.0
     @test !summary.all_targets
     @test summary.numeric_target_only_hits == 1
+    @test summary.reported_accepted_numeric_target_only == 1
+    @test summary.reported_accepted_gold_inconsistent == 1
+    @test !summary.lab_safe_all_targets
+    @test summary.assessor_qualified == 0
+    @test summary.assessor_qualified_target_recall == 0.0
+    @test summary.evaluation_count_mismatches == 1
+    @test solver_experiment_document(run)["attempts"][1]["evaluation_count_difference"] == 2
+end
+
+@testset "solver experiment v2 accepted and assessor fixtures" begin
+    # 1. A rejected Gold endpoint remains in the legacy endpoint diagnostic,
+    # but never enters solver-reported accepted recall.  The frozen assessor is
+    # deliberately independent of that self-report.
+    collision = solver_lab_collision_problem()
+    rejected_gold = SolverVariant("rejected-gold") do _, start
+        SolverAttemptOutcome(
+            start;
+            status="rejected",
+            reported_converged=true,
+            reported_accepted=false,
+        )
+    end
+    rejected_gold_run = run_solver_experiment(
+        [collision],
+        [rejected_gold];
+        prefixes=(1,),
+    )
+    rejected_gold_summary = only(rejected_gold_run.prefixes)
+    @test rejected_gold_summary.targets_found == 1
+    @test rejected_gold_summary.reported_accepted_targets_found == 0
+    @test rejected_gold_summary.reported_accepted_target_recall == 0.0
+    @test rejected_gold_summary.assessor_qualified_targets_found == 1
+    @test rejected_gold_summary.assessor_qualified_target_recall == 0.5
+
+    # 2. An accepted canonical-invalid endpoint is an explicit safety failure.
+    accepted_invalid = SolverVariant("accepted-invalid") do _, _
+        SolverAttemptOutcome(
+            [0.0];
+            status="accepted-invalid",
+            reported_accepted=true,
+        )
+    end
+    invalid_run = run_solver_experiment(
+        [collision],
+        [accepted_invalid];
+        prefixes=(1,),
+    )
+    invalid_summary = only(invalid_run.prefixes)
+    @test invalid_summary.reported_accepted_canonical_invalid == 1
+    @test invalid_summary.reported_accepted_gold_inconsistent == 1
+    @test !invalid_summary.lab_safe_all_targets
+
+    # 3. A residual-qualified endpoint outside the Gold configuration/target
+    # relation is Gold-inconsistent when the solver reports it as accepted.
+    false_problem = solver_lab_false_endpoint_problem()
+    accepted_false = SolverVariant("accepted-false") do _, start
+        SolverAttemptOutcome(
+            start;
+            status="accepted-false",
+            reported_accepted=true,
+        )
+    end
+    accepted_false_run = run_solver_experiment(
+        [false_problem],
+        [accepted_false];
+        prefixes=(1,),
+    )
+    accepted_false_attempt = only(accepted_false_run.attempts)
+    accepted_false_summary = only(accepted_false_run.prefixes)
+    @test accepted_false_attempt.canonical_valid
+    @test accepted_false_attempt.false_candidate
+    @test accepted_false_attempt.false_target
+    @test accepted_false_attempt.assessor_qualified
+    @test accepted_false_summary.reported_accepted_gold_inconsistent == 1
+    @test accepted_false_summary.assessor_qualified_gold_inconsistent == 1
+    @test !accepted_false_summary.assessor_safe_all_targets
+
+    # 4. A numeric target coincidence with the wrong configuration descriptor
+    # gets its own counter and is never accepted as a consistent target witness.
+    inconsistent_problem = solver_lab_inconsistent_target_problem()
+    accepted_numeric_only = SolverVariant("accepted-numeric-only") do _, start
+        SolverAttemptOutcome(
+            start;
+            status="accepted-numeric-only",
+            reported_accepted=true,
+        )
+    end
+    numeric_only_run = run_solver_experiment(
+        [inconsistent_problem],
+        [accepted_numeric_only];
+        prefixes=(1,),
+    )
+    numeric_only_attempt = only(numeric_only_run.attempts)
+    numeric_only_summary = only(numeric_only_run.prefixes)
+    @test numeric_only_attempt.configuration_matched
+    @test numeric_only_attempt.numeric_target_matched
+    @test !numeric_only_attempt.gold_matched
+    @test numeric_only_summary.reported_accepted_numeric_target_only == 1
+    @test numeric_only_summary.reported_accepted_gold_inconsistent == 1
+    @test numeric_only_summary.reported_accepted_targets_found == 0
+
+    # 5. The same false endpoint is still a legacy diagnostic when rejected,
+    # while every reported-accepted safety count remains zero.
+    rejected_false = SolverVariant("rejected-false") do _, start
+        SolverAttemptOutcome(
+            start;
+            status="rejected-false",
+            reported_accepted=false,
+        )
+    end
+    rejected_false_run = run_solver_experiment(
+        [false_problem],
+        [rejected_false];
+        prefixes=(1,),
+    )
+    rejected_false_attempt = only(rejected_false_run.attempts)
+    rejected_false_summary = only(rejected_false_run.prefixes)
+    @test rejected_false_attempt.false_candidate
+    @test rejected_false_attempt.false_target
+    @test rejected_false_summary.reported_accepted_canonical_invalid == 0
+    @test rejected_false_summary.reported_accepted_gold_inconsistent == 0
+    @test rejected_false_summary.reported_accepted_numeric_target_only == 0
+    @test rejected_false_summary.reported_accepted_ambiguous == 0
+
+    assessor_mixed_problem = solver_lab_false_endpoint_problem(; starts=[1.0, -1.0])
+    assessor_mixed_run = run_solver_experiment(
+        [assessor_mixed_problem],
+        [rejected_false];
+        prefixes=(2,),
+    )
+    assessor_mixed_summary = only(assessor_mixed_run.prefixes)
+    @test assessor_mixed_summary.assessor_all_targets
+    @test assessor_mixed_summary.assessor_qualified_gold_inconsistent == 1
+    @test !assessor_mixed_summary.assessor_safe_all_targets
+
+    # 6. Complete accepted coverage is not safe-full when any later accepted
+    # endpoint is inconsistent; the earlier success is not suffix-stable.
+    unsafe_late = SolverVariant("unsafe-late") do _, start
+        endpoint = start[1] == 1.0 ? [0.0] : start
+        SolverAttemptOutcome(
+            endpoint;
+            status="unsafe-late",
+            reported_accepted=true,
+        )
+    end
+    unsafe_late_run = run_solver_experiment(
+        [collision],
+        [unsafe_late];
+        prefixes=(3, 4),
+    )
+    safe_prefix, unsafe_prefix = unsafe_late_run.prefixes
+    @test safe_prefix.lab_safe_all_targets
+    @test safe_prefix.suffix_stable_evaluations_to_lab_safe_full === nothing
+    @test unsafe_prefix.reported_accepted_targets_found == 2
+    @test unsafe_prefix.reported_accepted_canonical_invalid == 1
+    @test !unsafe_prefix.lab_safe_all_targets
+    @test unsafe_prefix.suffix_stable_evaluations_to_lab_safe_full === nothing
+
+    # 7. Two different Gold configurations witnessing one collision target are
+    # counted once in the accepted target set.
+    target_collision = solver_lab_collision_problem(; starts=[-2.0, 2.0])
+    accepted_collision = SolverVariant("accepted-collision") do _, start
+        SolverAttemptOutcome(
+            start;
+            status="accepted-collision",
+            reported_accepted=true,
+        )
+    end
+    collision_run = run_solver_experiment(
+        [target_collision],
+        [accepted_collision];
+        prefixes=(2,),
+    )
+    collision_summary = only(collision_run.prefixes)
+    @test collision_summary.gold_matched == 2
+    @test collision_summary.reported_accepted_targets_found == 1
+    @test collision_summary.reported_accepted_target_recall == 0.5
+    @test collision_summary.duplicate_target_hits == 1
+
+    # Ambiguity is also exposed independently rather than being hidden in the
+    # aggregate Gold-inconsistent count.
+    ambiguous_problem = solver_lab_ambiguous_target_problem()
+    accepted_ambiguous = SolverVariant("accepted-ambiguous") do _, start
+        SolverAttemptOutcome(
+            start;
+            status="accepted-ambiguous",
+            reported_accepted=true,
+        )
+    end
+    ambiguous_run = run_solver_experiment(
+        [ambiguous_problem],
+        [accepted_ambiguous];
+        prefixes=(1,),
+    )
+    ambiguous_attempt = only(ambiguous_run.attempts)
+    ambiguous_summary = only(ambiguous_run.prefixes)
+    @test ambiguous_attempt.target_ambiguous
+    @test ambiguous_attempt.assessor_target_ambiguous
+    @test ambiguous_summary.reported_accepted_ambiguous == 1
+    @test ambiguous_summary.assessor_qualified_gold_inconsistent == 1
 end
 
 @testset "solver experiment failures and contracts are explicit" begin
@@ -621,9 +942,33 @@ end
     @test budget_attempt.budget_exhausted
     @test budget_attempt.evaluations == 2
     @test budget_attempt.reported_evaluations == 0
+    @test budget_attempt.evaluation_count_mismatch
+    @test budget_attempt.evaluation_count_difference == 2
     @test occursin("evaluation budget 2 exhausted", budget_attempt.exception)
-    @test only(budget_run.prefixes).budget_exhausted == 1
+    budget_summary = only(budget_run.prefixes)
+    @test budget_summary.budget_exhausted == 1
+    @test budget_summary.runner_budget_exhausted == 1
+    @test budget_summary.local_max_evaluations == 0
+    @test budget_summary.evaluation_count_mismatches == 1
+    @test Dict(budget_summary.status_counts)["evaluation_budget_exhausted"] == 1
     @test solver_experiment_document(budget_run)["evaluation_limit"] == 2
+
+    local_cap = SolverVariant("local-cap") do _, start
+        SolverAttemptOutcome(
+            start;
+            status="LOCAL_MAX_EVALUATIONS",
+            evaluations=0,
+        )
+    end
+    local_cap_run = run_solver_experiment(
+        [problem],
+        [local_cap];
+        prefixes=(1,),
+    )
+    local_cap_summary = only(local_cap_run.prefixes)
+    @test local_cap_summary.local_max_evaluations == 1
+    @test local_cap_summary.runner_budget_exhausted == 0
+    @test Dict(local_cap_summary.status_counts)["LOCAL_MAX_EVALUATIONS"] == 1
 
     @test_throws ArgumentError run_solver_experiment([problem], [failing]; prefixes=(2, 1))
     @test_throws ArgumentError run_solver_experiment(

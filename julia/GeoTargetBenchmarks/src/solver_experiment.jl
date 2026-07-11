@@ -1,4 +1,4 @@
-const SOLVER_EXPERIMENT_SCHEMA_VERSION = "geotarget.solver-experiment/v1"
+const SOLVER_EXPERIMENT_SCHEMA_VERSION = "geotarget.solver-experiment/v2"
 
 """Independent scoring tolerances for the lightweight solver laboratory."""
 struct SolverExperimentTolerances
@@ -17,6 +17,15 @@ struct SolverExperimentTolerances
         return new(values...)
     end
 end
+
+# This card is deliberately independent of both a variant's retcode/acceptance
+# and the configurable legacy endpoint tolerances above.  It is the common
+# endpoint assessor used to compare every solver variant.
+const _SOLVER_EXPERIMENT_ASSESSOR_TOLERANCES = SolverExperimentTolerances(
+    residual=1.0e-12,
+    configuration=1.0e-6,
+    target=1.0e-6,
+)
 
 """One black-box evaluation exposed to an algorithm, with no benchmark truth."""
 struct SolverCaseEvaluation
@@ -178,8 +187,17 @@ struct SolverExperimentAttempt
     target_value::Union{Nothing,Float64}
     scaled_residual_linf::Union{Nothing,Float64}
     normalized_configuration_distance::Union{Nothing,Float64}
+    assessor_qualified::Bool
+    assessor_configuration_matched::Bool
+    assessor_numeric_target_matched::Bool
+    assessor_gold_matched::Bool
+    assessor_target_ambiguous::Bool
+    assessor_matched_configuration::Union{Nothing,Int}
+    assessor_matched_target_id::Union{Nothing,String}
     evaluations::Int
     reported_evaluations::Int
+    evaluation_count_mismatch::Bool
+    evaluation_count_difference::Int
     iterations::Int
     budget_exhausted::Bool
     wall_seconds::Float64
@@ -215,6 +233,23 @@ struct SolverExperimentPrefix
     wall_seconds::Float64
     warm_wall_seconds::Float64
     status_counts::Tuple
+    reported_accepted_targets_found::Int
+    reported_accepted_target_recall::Float64
+    lab_safe_all_targets::Bool
+    reported_accepted_canonical_invalid::Int
+    reported_accepted_gold_inconsistent::Int
+    reported_accepted_numeric_target_only::Int
+    reported_accepted_ambiguous::Int
+    assessor_qualified::Int
+    assessor_qualified_targets_found::Int
+    assessor_qualified_target_recall::Float64
+    assessor_qualified_gold_inconsistent::Int
+    assessor_all_targets::Bool
+    assessor_safe_all_targets::Bool
+    local_max_evaluations::Int
+    runner_budget_exhausted::Int
+    evaluation_count_mismatches::Int
+    suffix_stable_evaluations_to_lab_safe_full::Union{Nothing,Int}
 end
 
 struct SolverExperimentRun
@@ -384,6 +419,11 @@ function _run_solver_attempt(
         )
     end
     score = _score_endpoint(problem, outcome.endpoint, tolerances)
+    assessor_score = _score_endpoint(
+        problem,
+        outcome.endpoint,
+        _SOLVER_EXPERIMENT_ASSESSOR_TOLERANCES,
+    )
     diagnostic = outcome.diagnostic === nothing ? score.diagnostic : outcome.diagnostic
     return SolverExperimentAttempt(
         variant.name,
@@ -409,8 +449,17 @@ function _run_solver_attempt(
         score.target_value,
         score.residual_linf,
         score.configuration_distance,
+        assessor_score.canonical_valid,
+        assessor_score.configuration_matched,
+        assessor_score.numeric_target_matched,
+        assessor_score.gold_matched,
+        assessor_score.target_ambiguous,
+        assessor_score.configuration,
+        assessor_score.target_id,
         observed_evaluations,
         outcome.evaluations,
+        observed_evaluations != outcome.evaluations,
+        observed_evaluations - outcome.evaluations,
         outcome.iterations,
         budget_exhausted,
         wall_seconds,
@@ -419,18 +468,103 @@ function _run_solver_attempt(
     )
 end
 
-function _prefix_summary(
+function _selected_attempts(
     problem::DirectAnalyticProblem,
     variant::SolverVariant,
     attempts,
     prefix::Int,
 )
-    selected = filter(
+    return filter(
         attempt -> attempt.variant == variant.name &&
                    attempt.instance_id == problem.instance_id &&
                    attempt.start_index <= prefix,
         attempts,
     )
+end
+
+_reported_accepted_safe(attempt::SolverExperimentAttempt) =
+    !attempt.reported_accepted ||
+    (attempt.canonical_valid && attempt.gold_matched && !attempt.target_ambiguous)
+
+function _reported_acceptance_metrics(selected, target_count::Int)
+    accepted_targets = Set(
+        attempt.matched_target_id for attempt in selected if
+        attempt.reported_accepted && attempt.gold_matched
+    )
+    return (
+        targets_found=length(accepted_targets),
+        target_recall=length(accepted_targets) / target_count,
+        safe_all_targets=length(accepted_targets) == target_count &&
+                         all(_reported_accepted_safe, selected),
+        canonical_invalid=count(
+            attempt -> attempt.reported_accepted && !attempt.canonical_valid,
+            selected,
+        ),
+        gold_inconsistent=count(
+            attempt -> attempt.reported_accepted && !attempt.gold_matched,
+            selected,
+        ),
+        numeric_target_only=count(
+            attempt -> attempt.reported_accepted &&
+                       attempt.numeric_target_matched && !attempt.gold_matched,
+            selected,
+        ),
+        ambiguous=count(
+            attempt -> attempt.reported_accepted && attempt.target_ambiguous,
+            selected,
+        ),
+    )
+end
+
+function _assessor_metrics(selected, target_count::Int)
+    qualified_targets = Set(
+        attempt.assessor_matched_target_id for attempt in selected if
+        attempt.assessor_qualified && attempt.assessor_gold_matched
+    )
+    gold_inconsistent = count(
+        attempt -> attempt.assessor_qualified &&
+                   (!attempt.assessor_gold_matched || attempt.assessor_target_ambiguous),
+        selected,
+    )
+    all_targets = length(qualified_targets) == target_count
+    return (
+        qualified=count(attempt -> attempt.assessor_qualified, selected),
+        targets_found=length(qualified_targets),
+        target_recall=length(qualified_targets) / target_count,
+        gold_inconsistent,
+        all_targets,
+        safe_all_targets=all_targets && gold_inconsistent == 0,
+    )
+end
+
+function _suffix_stable_evaluations_to_lab_safe_full(
+    problem::DirectAnalyticProblem,
+    variant::SolverVariant,
+    attempts,
+    maximum_start::Int,
+)
+    sequence = _selected_attempts(problem, variant, attempts, maximum_start)
+    length(sequence) == maximum_start || error("solver experiment sequence is incomplete")
+    sort!(sequence; by=attempt -> attempt.start_index)
+    target_count = length(problem.gold_targets)
+    for start_index in eachindex(sequence)
+        prefix_attempts = @view sequence[1:start_index]
+        metrics = _reported_acceptance_metrics(prefix_attempts, target_count)
+        metrics.safe_all_targets || continue
+        all(_reported_accepted_safe, @view(sequence[start_index + 1:end])) || continue
+        return sum(attempt.evaluations for attempt in prefix_attempts)
+    end
+    return nothing
+end
+
+function _prefix_summary(
+    problem::DirectAnalyticProblem,
+    variant::SolverVariant,
+    attempts,
+    prefix::Int,
+    suffix_stable_evaluations::Union{Nothing,Int},
+)
+    selected = _selected_attempts(problem, variant, attempts, prefix)
     length(selected) == prefix || error("solver experiment prefix is incomplete")
     matched_configurations = filter(attempt -> attempt.configuration_matched, selected)
     matched_targets = filter(attempt -> attempt.gold_matched, selected)
@@ -440,8 +574,12 @@ function _prefix_summary(
     targets = Set(attempt.matched_target_id for attempt in matched_targets)
     configuration_count = size(problem.gold_configurations, 2)
     target_count = length(problem.gold_targets)
+    reported = _reported_acceptance_metrics(selected, target_count)
+    assessor = _assessor_metrics(selected, target_count)
     statuses = sort!(unique(attempt.status for attempt in selected))
-    status_counts = Tuple(status => count(attempt -> attempt.status == status, selected) for status in statuses)
+    status_counts = Tuple(
+        status => count(attempt -> attempt.status == status, selected) for status in statuses
+    )
     return SolverExperimentPrefix(
         variant.name,
         problem.instance_id,
@@ -477,6 +615,23 @@ function _prefix_summary(
             init=0.0,
         ),
         status_counts,
+        reported.targets_found,
+        reported.target_recall,
+        reported.safe_all_targets,
+        reported.canonical_invalid,
+        reported.gold_inconsistent,
+        reported.numeric_target_only,
+        reported.ambiguous,
+        assessor.qualified,
+        assessor.targets_found,
+        assessor.target_recall,
+        assessor.gold_inconsistent,
+        assessor.all_targets,
+        assessor.safe_all_targets,
+        count(attempt -> attempt.status == "LOCAL_MAX_EVALUATIONS", selected),
+        count(attempt -> attempt.budget_exhausted, selected),
+        count(attempt -> attempt.evaluation_count_mismatch, selected),
+        suffix_stable_evaluations,
     )
 end
 
@@ -487,7 +642,10 @@ Variants receive only a `SolverExperimentCase`; Gold truth and benchmark
 identity remain in the runner. Wall time is diagnostic. Evaluation/action
 counts observed at the truth-blind callback are the primary matched-budget
 comparison. `evaluation_limit` is enforced by that callback for every attempt;
-a variant's self-reported count is retained only as a diagnostic.
+a variant's self-reported count is retained only as a diagnostic. Likewise,
+`reported_accepted` is a local-solver screening proxy, not production answer
+promotion. The fixed assessor replays every endpoint independently of both
+solver status and acceptance.
 """
 function run_solver_experiment(
     problems::AbstractVector{<:DirectAnalyticProblem},
@@ -538,8 +696,23 @@ function run_solver_experiment(
             first_attempt[variant.name] = false
         end
     end
+    suffix_stable_work = Dict(
+        (variant.name, problem.instance_id) =>
+            _suffix_stable_evaluations_to_lab_safe_full(
+                problem,
+                variant,
+                attempts,
+                maximum_prefix,
+            ) for variant in variants for problem in problems
+    )
     summaries = SolverExperimentPrefix[
-        _prefix_summary(problem, variant, attempts, prefix) for
+        _prefix_summary(
+            problem,
+            variant,
+            attempts,
+            prefix,
+            suffix_stable_work[(variant.name, problem.instance_id)],
+        ) for
         variant in variants for problem in problems for prefix in requested_prefixes
     ]
     manifest = Tuple((
@@ -567,6 +740,13 @@ _document_float(value::Union{Nothing,Float64}) =
 
 function _attempt_document(attempt::SolverExperimentAttempt)
     return Dict{String,Any}(
+        "assessor_configuration_matched" => attempt.assessor_configuration_matched,
+        "assessor_gold_matched" => attempt.assessor_gold_matched,
+        "assessor_matched_configuration" => attempt.assessor_matched_configuration,
+        "assessor_matched_target_id" => attempt.assessor_matched_target_id,
+        "assessor_numeric_target_matched" => attempt.assessor_numeric_target_matched,
+        "assessor_qualified" => attempt.assessor_qualified,
+        "assessor_target_ambiguous" => attempt.assessor_target_ambiguous,
         "canonical_valid" => attempt.canonical_valid,
         "budget_exhausted" => attempt.budget_exhausted,
         "configuration_matched" => attempt.configuration_matched,
@@ -575,6 +755,9 @@ function _attempt_document(attempt::SolverExperimentAttempt)
             isfinite(value) ? value : nothing for value in attempt.endpoint
         ],
         "evaluations" => attempt.evaluations,
+        "evaluation_count_difference" => attempt.evaluation_count_difference,
+        "evaluation_count_mismatch" => attempt.evaluation_count_mismatch,
+        "observed_minus_reported_evaluations" => attempt.evaluation_count_difference,
         "exception" => attempt.exception,
         "false_candidate" => attempt.false_candidate,
         "false_target" => attempt.false_target,
@@ -590,6 +773,7 @@ function _attempt_document(attempt::SolverExperimentAttempt)
         "reported_accepted" => attempt.reported_accepted,
         "reported_converged" => attempt.reported_converged,
         "reported_evaluations" => attempt.reported_evaluations,
+        "observed_evaluations" => attempt.evaluations,
         "scaled_residual_linf" => _document_float(attempt.scaled_residual_linf),
         "start" => collect(attempt.start),
         "start_index" => attempt.start_index,
@@ -606,12 +790,20 @@ end
 function _prefix_document(prefix::SolverExperimentPrefix)
     return Dict{String,Any}(
         "all_targets" => prefix.all_targets,
+        "assessor_all_targets" => prefix.assessor_all_targets,
+        "assessor_qualified" => prefix.assessor_qualified,
+        "assessor_qualified_gold_inconsistent" =>
+            prefix.assessor_qualified_gold_inconsistent,
+        "assessor_qualified_target_recall" => prefix.assessor_qualified_target_recall,
+        "assessor_qualified_targets_found" => prefix.assessor_qualified_targets_found,
+        "assessor_safe_all_targets" => prefix.assessor_safe_all_targets,
         "configuration_count" => prefix.configuration_count,
         "configuration_recall" => prefix.configuration_recall,
         "configurations_found" => prefix.configurations_found,
         "duplicate_configuration_hits" => prefix.duplicate_configuration_hits,
         "duplicate_target_hits" => prefix.duplicate_target_hits,
         "evaluations" => prefix.evaluations,
+        "evaluation_count_mismatches" => prefix.evaluation_count_mismatches,
         "exceptions" => prefix.exceptions,
         "false_candidates" => prefix.false_candidates,
         "false_targets" => prefix.false_targets,
@@ -622,13 +814,27 @@ function _prefix_document(prefix::SolverExperimentPrefix)
         "gold_matched" => prefix.gold_matched,
         "instance_id" => prefix.instance_id,
         "iterations" => prefix.iterations,
+        "lab_safe_all_targets" => prefix.lab_safe_all_targets,
+        "local_max_evaluations" => prefix.local_max_evaluations,
         "prefix" => prefix.prefix,
         "reported_accepted" => prefix.reported_accepted,
+        "reported_accepted_ambiguous" => prefix.reported_accepted_ambiguous,
+        "reported_accepted_canonical_invalid" =>
+            prefix.reported_accepted_canonical_invalid,
+        "reported_accepted_gold_inconsistent" =>
+            prefix.reported_accepted_gold_inconsistent,
+        "reported_accepted_numeric_target_only" =>
+            prefix.reported_accepted_numeric_target_only,
+        "reported_accepted_target_recall" => prefix.reported_accepted_target_recall,
+        "reported_accepted_targets_found" => prefix.reported_accepted_targets_found,
         "reported_converged" => prefix.reported_converged,
+        "runner_budget_exhausted" => prefix.runner_budget_exhausted,
         "status_counts" => Dict(String(status) => count for (status, count) in prefix.status_counts),
         "target_count" => prefix.target_count,
         "target_recall" => prefix.target_recall,
         "targets_found" => prefix.targets_found,
+        "suffix_stable_evaluations_to_lab_safe_full" =>
+            prefix.suffix_stable_evaluations_to_lab_safe_full,
         "variant" => prefix.variant,
         "wall_seconds" => prefix.wall_seconds,
         "warm_wall_seconds" => prefix.warm_wall_seconds,
@@ -651,6 +857,19 @@ end
 """Convert a run to a JSON-compatible document without adding a JSON dependency."""
 function solver_experiment_document(run::SolverExperimentRun)
     return Dict{String,Any}(
+        "assessor_manifest" => Dict{String,Any}(
+            "configuration_tolerance" =>
+                _SOLVER_EXPERIMENT_ASSESSOR_TOLERANCES.configuration,
+            "qualification_predicate" =>
+                "endpoint_present_finite_in_bounds_semantics_valid_scaled_residual_linf",
+            "coverage_predicate" =>
+                "qualified_unique_gold_consistent_target_id",
+            "residual_linf_tolerance" =>
+                _SOLVER_EXPERIMENT_ASSESSOR_TOLERANCES.residual,
+            "safety_predicate" =>
+                "all_qualified_endpoints_gold_consistent_and_unambiguous",
+            "target_tolerance" => _SOLVER_EXPERIMENT_ASSESSOR_TOLERANCES.target,
+        ),
         "attempts" => Any[_attempt_document(attempt) for attempt in run.attempts],
         "evaluation_limit" => run.evaluation_limit,
         "package_version" => string(PACKAGE_VERSION),

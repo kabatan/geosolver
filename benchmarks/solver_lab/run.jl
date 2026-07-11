@@ -13,6 +13,7 @@ function _usage()
 
       --prefixes=2,4,8          Sorted saved-start prefixes (default: 2,4,8)
       --families=ID,ID          Optional family filter
+      --controls=NAME,NAME      Frozen LM controls; may not be mixed with custom solver options
       --max-iterations=N        Per-start local iteration cap (default: 120)
       --max-evaluations=N       Per-start local evaluation cap (default: 600)
       --coordinate-scaling=MODE bounds, declared, or raw (default: bounds)
@@ -32,6 +33,8 @@ function _parse_args(arguments)
     options = Dict{Symbol,Any}(
         :prefixes => [2, 4, 8],
         :families => nothing,
+        :controls => nothing,
+        :custom_solver_options => false,
         :max_iterations => 120,
         :max_evaluations => 600,
         :coordinate_scaling => :bounds,
@@ -46,7 +49,11 @@ function _parse_args(arguments)
     )
     for argument in arguments
         argument == "--help" && return nothing
-        argument == "--raw-residuals" && (options[:residual_scaling] = false; continue)
+        if argument == "--raw-residuals"
+            options[:residual_scaling] = false
+            options[:custom_solver_options] = true
+            continue
+        end
         if startswith(argument, "--prefixes=")
             values = split(argument[length("--prefixes=") + 1:end], ',')
             options[:prefixes] = [_parse_positive(value, "prefix") for value in values]
@@ -54,17 +61,26 @@ function _parse_args(arguments)
             values = filter(!isempty, split(argument[length("--families=") + 1:end], ','))
             isempty(values) && error("family filter must be nonempty")
             options[:families] = Set(values)
+        elseif startswith(argument, "--controls=")
+            values = filter(!isempty, split(argument[length("--controls=") + 1:end], ','))
+            isempty(values) && error("controls must be nonempty")
+            controls = String[core_lmqr_control(value).name for value in values]
+            allunique(controls) || error("controls must be unique")
+            options[:controls] = controls
         elseif startswith(argument, "--max-iterations=")
+            options[:custom_solver_options] = true
             options[:max_iterations] = _parse_positive(
                 argument[length("--max-iterations=") + 1:end],
                 "max iterations",
             )
         elseif startswith(argument, "--max-evaluations=")
+            options[:custom_solver_options] = true
             options[:max_evaluations] = _parse_positive(
                 argument[length("--max-evaluations=") + 1:end],
                 "max evaluations",
             )
         elseif startswith(argument, "--coordinate-scaling=")
+            options[:custom_solver_options] = true
             mode = Symbol(argument[length("--coordinate-scaling=") + 1:end])
             mode in (:bounds, :declared, :raw) ||
                 error("coordinate scaling must be bounds, declared, or raw")
@@ -79,13 +95,16 @@ function _parse_args(arguments)
     end
     prefixes = options[:prefixes]
     issorted(prefixes) && allunique(prefixes) || error("prefixes must be sorted and unique")
+    options[:controls] !== nothing && options[:custom_solver_options] && error(
+        "--controls cannot be combined with custom iteration, evaluation, scaling, or residual options",
+    )
     return options
 end
 
 function _print_summary(run)
     final_prefix = last(run.requested_prefixes)
     println(
-        "instance,family,target_recall,all_targets,false_candidates,false_targets," *
+        "variant,instance,family,target_recall,all_targets,false_candidates,false_targets," *
         "budget_exhausted,duplicate_targets,evaluations",
     )
     for summary in run.prefixes
@@ -93,6 +112,7 @@ function _print_summary(run)
         println(
             join(
                 (
+                    summary.variant,
                     summary.instance_id,
                     summary.family_id,
                     "$(summary.targets_found)/$(summary.target_count)",
@@ -132,17 +152,24 @@ function main(arguments=ARGS)
         found = Set(problem.family_id for problem in problems)
         found == requested || error("unknown family IDs: $(join(sort!(collect(setdiff(requested, found))), ','))")
     end
-    variant = core_lmqr_variant(
-        coordinate_scaling=options[:coordinate_scaling],
-        residual_scaling=options[:residual_scaling],
-        max_iterations=options[:max_iterations],
-        max_evaluations=options[:max_evaluations],
+    variants = if options[:controls] === nothing
+        [core_lmqr_variant(
+            coordinate_scaling=options[:coordinate_scaling],
+            residual_scaling=options[:residual_scaling],
+            max_iterations=options[:max_iterations],
+            max_evaluations=options[:max_evaluations],
+        )]
+    else
+        [core_lmqr_control(name) for name in options[:controls]]
+    end
+    hard_evaluation_limit = maximum(
+        variant.configuration.max_evaluations for variant in variants
     )
     run = run_solver_experiment(
         problems,
-        [variant];
+        variants;
         prefixes=options[:prefixes],
-        evaluation_limit=options[:max_evaluations],
+        evaluation_limit=hard_evaluation_limit,
     )
     document = solver_experiment_document(run)
     document["environment"] = Dict{String,Any}(
@@ -155,6 +182,8 @@ function main(arguments=ARGS)
         "max_evaluations" => options[:max_evaluations],
         "max_iterations" => options[:max_iterations],
         "residual_scaling" => options[:residual_scaling],
+        "controls" => options[:controls],
+        "runner_hard_evaluation_limit" => hard_evaluation_limit,
     )
     document["revision"] = _git_revision()
     output = abspath(options[:output])

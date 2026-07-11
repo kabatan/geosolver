@@ -57,10 +57,16 @@ function core_lmqr_variant(;
     residual_scaling::Bool=true,
     max_iterations::Integer=120,
     max_evaluations::Integer=600,
+    residual_tolerance::Real=sqrt(eps(Float64)),
+    initial_damping::Real=1.0e-3,
+    finite_difference_step::Real=cbrt(eps(Float64)),
 )
     options = LocalSolveOptions(
         max_iterations=max_iterations,
         max_evaluations=max_evaluations,
+        residual_tolerance=residual_tolerance,
+        initial_damping=initial_damping,
+        finite_difference_step=finite_difference_step,
     )
     variant_name = name === nothing ? string(
         "core-lmqr-",
@@ -70,8 +76,11 @@ function core_lmqr_variant(;
     configuration = (;
         coordinate_scaling,
         residual_scaling,
-        max_iterations=Int(max_iterations),
-        max_evaluations=Int(max_evaluations),
+        max_iterations=options.max_iterations,
+        max_evaluations=options.max_evaluations,
+        residual_tolerance=options.residual_tolerance,
+        initial_damping=options.initial_damping,
+        finite_difference_step=options.finite_difference_step,
     )
     runner = function (case, start)
         origins, scales = _coordinates(case, coordinate_scaling)
@@ -102,6 +111,50 @@ function core_lmqr_variant(;
         )
     end
     return SolverVariant(variant_name, runner; configuration)
+end
+
+"""
+Build one of the three frozen LM-QR laboratory controls.
+
+Accepted names are `:legacy_lab_120x600`, `:prod_tol_120x600`, and
+`:prod_options_250x2000` (hyphenated strings are accepted as well). These are
+local-solver controls only; none includes production target-image analysis,
+root correction, or candidate validation.
+"""
+function core_lmqr_control(control::Union{Symbol,AbstractString})
+    control_name = replace(String(control), '_' => '-')
+    if control_name == "legacy-lab-120x600"
+        return core_lmqr_variant(
+            name=control_name,
+            max_iterations=120,
+            max_evaluations=600,
+            residual_tolerance=sqrt(eps(Float64)),
+            initial_damping=1.0e-3,
+            finite_difference_step=cbrt(eps(Float64)),
+        )
+    elseif control_name == "prod-tol-120x600"
+        return core_lmqr_variant(
+            name=control_name,
+            max_iterations=120,
+            max_evaluations=600,
+            residual_tolerance=1.0e-12,
+            initial_damping=1.0e-3,
+            finite_difference_step=cbrt(eps(Float64)),
+        )
+    elseif control_name == "prod-options-250x2000"
+        return core_lmqr_variant(
+            name=control_name,
+            max_iterations=250,
+            max_evaluations=2_000,
+            residual_tolerance=1.0e-12,
+            initial_damping=1.0e-3,
+            finite_difference_step=cbrt(eps(Float64)),
+        )
+    end
+    throw(ArgumentError(
+        "LM-QR control must be legacy-lab-120x600, prod-tol-120x600, or " *
+        "prod-options-250x2000",
+    ))
 end
 
 """One deterministic instance per family plus a distinct-target collision companion."""
@@ -186,6 +239,6 @@ function representative_problems(; start_count::Integer=8)
     ]
 end
 
-export core_lmqr_variant, representative_problems
+export core_lmqr_control, core_lmqr_variant, representative_problems
 
 end
