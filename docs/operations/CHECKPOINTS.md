@@ -34,10 +34,12 @@ checkpoint's problem, plugin, policy and environment hashes must match both the
 options reference and the newly compiled problem. Seed and policy version must
 also match. Any mismatch fails closed before search continues.
 
-The h/h2 endpoint-correction rollout uses solve API `1.4.0` and policy
-`1.1.0`. Checkpoints created by the earlier measurement-only correction path
-are intentionally not resume-compatible, although the checkpoint JSON schema
-remains v1.
+The exact-backend rollout uses solve API `1.6.0`, exact backend ABI `1.4.0` and
+policy `1.1.0`. Checkpoints created by earlier solve-policy identities are
+intentionally not resume-compatible, although the checkpoint JSON schema
+remains v1. When exactification is enabled, the backend policy and environment
+digests are part of `ResumeIdentity`; resuming without that backend, or with a
+different build or recognition policy, fails closed.
 
 ## Persistence and validation
 
@@ -51,8 +53,17 @@ The snapshot contains candidate history, pending proposals, refinement work,
 scheduler counters, budget limits and charges, evidence events, the production
 counter seed, precision, cancellation state and remaining wall time. Derived
 candidate views and seen-task membership are reconstructed and checked from
-history. Corrupt event sequences, impossible scheduler counters, inconsistent
-budgets and unknown references are rejected.
+history. Every proposed/observed event is also matched one-for-one to pending
+work or candidate history, including its complete answer payload. Corrupt event
+sequences, event/workspace disagreement, impossible scheduler counters,
+inconsistent budgets and unknown references are rejected.
+
+Before a restored `ExactAnswer` is returned, Core replays its built-in
+certificate or dispatches to the bound optional backend. The C3A backend
+reconstructs the algebraic coordinates and target, replays the original graph,
+and checks the stored approximation, endpoint, branch, target identity and
+target enclosure at 768 bits against the `1e-100` contract. A checkpoint hash
+is an integrity checksum, not authority to skip this replay.
 
 Only built-in protocol payload types are accepted. Adding a custom plugin does
 not extend the checkpoint decoder or install executable code; plugin execution
