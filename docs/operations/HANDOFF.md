@@ -138,21 +138,24 @@ control and multi-root discovery the first concrete research targets.
 
 Environment contract:
 
-```powershell
-powershell -File scripts/doctor.ps1
+```console
+python3.12 scripts/doctor.py
 ```
 
 The complete repository gate is:
 
-```powershell
-powershell -File scripts/ci.ps1
+```console
+python3.12 scripts/ci.py
 ```
 
 For a quicker repository smoke gate:
 
-```powershell
-powershell -File scripts/ci.ps1 -Tier Smoke
+```console
+python3.12 scripts/ci.py --tier Smoke
 ```
+
+On Windows, `scripts/doctor.ps1` and `scripts/ci.ps1` remain thin wrappers for
+these Python entry points.
 
 Run the focused algorithm smoke:
 

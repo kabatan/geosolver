@@ -192,7 +192,6 @@ function generate(parameters::MultiRootWarpedParams)
         MaterializedArtifact(:latent_roots, reshape(latent_roots, :, 1)),
         MaterializedArtifact(:warp_coefficients, reshape(coefficients, :, 1)),
         MaterializedArtifact(:row_scales, reshape(row_scales, :, 1)),
-        MaterializedArtifact(:root_conditions, reshape(conditions, :, 1)),
     ]
     metadata = Dict{Symbol,Any}(
         :root_count => root_count,

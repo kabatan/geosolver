@@ -58,10 +58,21 @@ algorithm/repository handoff is indexed at
 The Python `geotarget` command authors and validates protocol documents; it
 does not launch Julia. The Julia application entry point is explicit:
 
-```powershell
+```console
 uv run --project python geotarget validate problem.json
 julia +1.12.6 --startup-file=no --history-file=no --project=julia julia/app/geotarget.jl solve problem.json --options options.json --evidence evidence.json
 ```
+
+The cross-platform developer entry points are:
+
+```console
+python3.12 scripts/doctor.py
+python3.12 scripts/ci.py --tier Smoke
+```
+
+The repository pins Julia 1.12.6, Python 3.12.11, and uv 0.11.24 in
+`toolchain.toml`. PowerShell users may invoke the thin `doctor.ps1` and
+`ci.ps1` wrappers instead.
 
 The default Julia application allowlists only the built-in geometry plugin.
 Custom applications inject a frozen registry as demonstrated by the

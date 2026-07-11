@@ -1037,6 +1037,11 @@ function solve_execution(
     resume = _solve_resume_identity(compiled, options, research_strategy)
     now = time()
     context = if checkpoint === nothing
+        # Pass a duration instead of an absolute deadline.  A zero (or nearly
+        # exhausted) budget can otherwise become stale between `now` above and
+        # the clock read inside `ExecutionContext`, which made immediate-
+        # deadline solves platform/clock-resolution dependent.
+        remaining = max(0.0, deadline - now)
         workspace = SearchWorkspace(
             adaptive_unbounded=any(
                 variable -> variable.lower === nothing || variable.upper === nothing,
@@ -1052,7 +1057,7 @@ function solve_execution(
             workspace,
             cancel,
             clock=time,
-            deadline=max(deadline, now),
+            remaining_seconds=remaining,
             rng_checkpoint=Base.identity,
         )
     else

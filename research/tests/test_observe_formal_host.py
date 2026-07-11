@@ -217,6 +217,9 @@ class ProcessObservationTests(unittest.TestCase):
         lost.observe(LeaseView("other", 20, "running", True), audit_exists=False)
         self.assertEqual(len(lost.loss_events), 1)
 
+    @unittest.skipUnless(
+        os.name == "nt", "formal-host lease observation is Windows-only"
+    )
     def test_real_temporary_lease_reports_owner_and_byte_lock(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "formal.lock"
@@ -253,6 +256,9 @@ class ProcessObservationTests(unittest.TestCase):
 
 
 class FinalizationTests(unittest.TestCase):
+    @unittest.skipUnless(
+        os.name == "nt", "formal-host lease observation is Windows-only"
+    )
     def test_pre_ready_rejects_existing_artifact_and_held_lease(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

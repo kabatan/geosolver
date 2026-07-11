@@ -83,7 +83,6 @@ function generate(parameters::TangentCircleLineParams)
             parameters.start_seed,
             parameters.start_count,
         ),
-        MaterializedArtifact(:root_conditions, reshape(conditions, :, 1)),
     ]
     metadata = Dict{Symbol,Any}(
         :height => height,
