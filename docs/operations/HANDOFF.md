@@ -8,6 +8,15 @@ shorter and more authoritative than the accumulated experiment history. The
 solver is a research preview, not complete, and no completeness claim has been
 made.
 
+The detailed Japanese handoff package is
+[`docs/handoff/2026-07-11/README_ja.md`](../handoff/2026-07-11/README_ja.md).
+It records the owner's full correction history, the production-versus-lab
+measurement caveats, the algorithm experiment roadmap, completion gates and
+the next-agent checklist. Where this short note recommends a new branch, the
+detailed owner directive takes precedence: keep `main` as the only long-lived
+branch and use a short-lived `codex/exp-*` branch only when edit isolation is
+actually needed.
+
 ## Owner direction
 
 The next work must prioritize the solver algorithm and measured fixed-budget
@@ -30,7 +39,10 @@ The intended development loop is deliberately small:
 2. classify misses, duplicates, false accepts and time allocation;
 3. implement one mechanism behind an existing seam;
 4. compare matched budget curves and retain it only when it helps;
-5. keep the independent IID/full-support lane and black-box DSL route intact.
+5. preserve non-starvation of the insurance lane and black-box DSL route;
+   establish a materialized independent-uniform D0 control before attaching an
+   IID capture claim, because the current `iid`-labelled counter stream has no
+   documented joint-IID proof.
 
 ## Current implementation map
 
@@ -148,7 +160,8 @@ Run the focused algorithm smoke:
 julia +1.12.6 --startup-file=no --history-file=no --project=julia `
   benchmarks/solver_lab/run.jl `
   --families=TANGENT-CIRCLE-LINE,MULTIROOT-WARPED `
-  --prefixes=2,4,8
+  --prefixes=2,4,8 `
+  --output=benchmarks/results/raw/handoff-smoke.json
 ```
 
 The complete gate includes long-running research and QA work. During the short

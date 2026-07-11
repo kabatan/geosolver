@@ -49,7 +49,9 @@ scripts/                   Reproducible developer and CI entry points
 
 Operational protocol: [checkpoint and resume](docs/operations/CHECKPOINTS.md).
 The current maintainer handoff and restart boundary are recorded in
-[docs/operations/HANDOFF.md](docs/operations/HANDOFF.md).
+[docs/operations/HANDOFF.md](docs/operations/HANDOFF.md). The detailed Japanese
+algorithm/repository handoff is indexed at
+[docs/handoff/2026-07-11/README_ja.md](docs/handoff/2026-07-11/README_ja.md).
 
 ## Source-tree commands
 

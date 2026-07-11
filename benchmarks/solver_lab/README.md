@@ -26,7 +26,8 @@ compact final-prefix table. A focused fast run is:
 julia +1.12.6 --startup-file=no --history-file=no --project=julia `
   benchmarks/solver_lab/run.jl `
   --families=TANGENT-CIRCLE-LINE,MULTIROOT-WARPED `
-  --prefixes=2,4,8
+  --prefixes=2,4,8 `
+  --output=benchmarks/results/raw/solver-lab-smoke.json
 ```
 
 ## Adding a candidate
