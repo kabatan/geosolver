@@ -44,6 +44,8 @@ scripts/                   Reproducible developer and CI entry points
 ```
 
 Operational protocol: [checkpoint and resume](docs/operations/CHECKPOINTS.md).
+The current maintainer handoff and restart boundary are recorded in
+[docs/operations/HANDOFF.md](docs/operations/HANDOFF.md).
 
 ## Source-tree commands
 
