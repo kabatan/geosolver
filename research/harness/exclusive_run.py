@@ -8,6 +8,7 @@ Correctness-only tests need not use it unless their timing is part of a claim.
 from __future__ import annotations
 
 import argparse
+import ctypes
 import json
 import math
 import os
@@ -29,6 +30,9 @@ DEFAULT_LOCK_ENV = "GEOTARGET_FORMAL_RUN_LOCK"
 HARD_TIMEOUT_EXIT_CODE = 124
 TERMINATION_GRACE_SECONDS = 0.5
 TERMINATION_WAIT_SECONDS = 5.0
+INTERRUPT_POLL_SECONDS = 0.05
+_LINUX_PR_SET_CHILD_SUBREAPER = 36
+_LINUX_PR_GET_CHILD_SUBREAPER = 37
 
 
 class FormalRunError(RuntimeError):
@@ -45,6 +49,50 @@ class FormalRunBusy(FormalRunError):
             json.dumps(owner, sort_keys=True) if owner else "owner metadata unavailable"
         )
         super().__init__(f"formal performance host is busy at {lock_path}: {detail}")
+
+
+class _DeferredTerminationSignals:
+    """Defer SIGINT/SIGTERM delivery until process-tree cleanup is complete."""
+
+    def __init__(self) -> None:
+        self.counts: dict[int, int] = {}
+        self._previous: dict[int, Any] = {}
+
+    @property
+    def count(self) -> int:
+        return self.counts.get(signal.SIGINT, 0)
+
+    @property
+    def termination_count(self) -> int:
+        return self.counts.get(signal.SIGTERM, 0)
+
+    def _receive(self, signum: int, _frame: object) -> None:
+        self.counts[signum] = self.counts.get(signum, 0) + 1
+
+    def __enter__(self) -> _DeferredTerminationSignals:
+        try:
+            for signum in (signal.SIGINT, signal.SIGTERM):
+                self._previous[signum] = signal.getsignal(signum)
+                signal.signal(signum, self._receive)
+        except ValueError:
+            # Python only permits signal-handler changes on the main thread.
+            # A formal CLI run is main-threaded; a library call from another
+            # thread retains normal platform signal behavior.
+            for signum, previous in self._previous.items():
+                signal.signal(signum, previous)
+            self._previous.clear()
+        return self
+
+    def raise_if_pending(self) -> None:
+        if self.counts.get(signal.SIGINT, 0):
+            raise KeyboardInterrupt
+        if self.counts.get(signal.SIGTERM, 0):
+            raise SystemExit(128 + signal.SIGTERM)
+
+    def __exit__(self, _type: object, _value: object, _traceback: object) -> None:
+        for signum, previous in self._previous.items():
+            signal.signal(signum, previous)
+        self._previous.clear()
 
 
 def _utc_now() -> str:
@@ -227,10 +275,13 @@ def _positive_seconds_argument(value: str) -> float:
 
 
 def _termination_document(reason: str | None = None) -> dict[str, Any]:
+    strategy = "windows_process_tree" if os.name == "nt" else "posix_process_group"
+    if sys.platform.startswith("linux"):
+        strategy = "linux_subreaper_process_tree"
     return {
         "attempted": reason is not None,
         "reason": reason,
-        "strategy": ("windows_process_tree" if os.name == "nt" else "posix_process_group"),
+        "strategy": strategy,
         "grace_seconds": TERMINATION_GRACE_SECONDS,
         "term_sent": False,
         "kill_sent": False,
@@ -238,6 +289,198 @@ def _termination_document(reason: str | None = None) -> dict[str, Any]:
         "child_returncode": None,
         "errors": [],
     }
+
+
+@dataclass(frozen=True)
+class _LinuxProcessRecord:
+    pid: int
+    parent_pid: int
+    state: str
+    start_ticks: int
+
+    @property
+    def identity(self) -> tuple[int, int]:
+        return self.pid, self.start_ticks
+
+
+def _linux_process_table() -> dict[int, _LinuxProcessRecord]:
+    """Return a PID-reuse-safe snapshot from procfs.
+
+    Linux ``/proc/<pid>/stat`` may contain spaces and closing parentheses in
+    ``comm``.  Splitting only after its final closing parenthesis keeps the
+    state, parent PID, and start-time fields aligned.
+    """
+
+    table: dict[int, _LinuxProcessRecord] = {}
+    for entry in Path("/proc").iterdir():
+        if not entry.name.isdecimal():
+            continue
+        try:
+            payload = (entry / "stat").read_text(encoding="utf-8")
+            close = payload.rfind(")")
+            fields = payload[close + 2 :].split()
+            if close < 0 or len(fields) < 20:
+                continue
+            pid = int(entry.name)
+            table[pid] = _LinuxProcessRecord(
+                pid=pid,
+                parent_pid=int(fields[1]),
+                state=fields[0],
+                start_ticks=int(fields[19]),
+            )
+        except (FileNotFoundError, PermissionError, ProcessLookupError, ValueError):
+            continue
+    return table
+
+
+def _enable_linux_subreaper() -> None:
+    """Make escaped/orphaned descendants observable by this formal runner."""
+
+    try:
+        libc = ctypes.CDLL(None, use_errno=True)
+        current = ctypes.c_int()
+        if libc.prctl(
+            _LINUX_PR_GET_CHILD_SUBREAPER,
+            ctypes.byref(current),
+            0,
+            0,
+            0,
+        ) != 0:
+            raise OSError(ctypes.get_errno(), "PR_GET_CHILD_SUBREAPER failed")
+        if current.value == 0 and libc.prctl(
+            _LINUX_PR_SET_CHILD_SUBREAPER,
+            1,
+            0,
+            0,
+            0,
+        ) != 0:
+            raise OSError(ctypes.get_errno(), "PR_SET_CHILD_SUBREAPER failed")
+    except (AttributeError, OSError) as error:
+        raise FormalRunError(
+            "Linux formal runs require PR_SET_CHILD_SUBREAPER process-tree custody"
+        ) from error
+
+
+class _LinuxProcessTree:
+    """Track descendants even after session changes or intermediate-parent exit."""
+
+    def __init__(
+        self,
+        root_pid: int,
+        root_start_ticks: int,
+        baseline_children: set[tuple[int, int]],
+    ) -> None:
+        self.root_identity = (root_pid, root_start_ticks)
+        self.runner_pid = os.getpid()
+        self.baseline_children = set(baseline_children)
+        self.known: set[tuple[int, int]] = {self.root_identity}
+        self.maximum_live_count = 1
+
+    def _same_known_records(
+        self, table: dict[int, _LinuxProcessRecord]
+    ) -> dict[int, _LinuxProcessRecord]:
+        return {
+            pid: record
+            for pid, record in table.items()
+            if record.identity in self.known
+        }
+
+    def refresh(self) -> tuple[_LinuxProcessRecord, ...]:
+        table = _linux_process_table()
+        discovered = self._same_known_records(table)
+
+        # Discover descendants while their ancestry is intact.
+        parents = set(discovered)
+        changed = True
+        while changed:
+            changed = False
+            for record in table.values():
+                if record.parent_pid in parents and record.pid not in parents:
+                    discovered[record.pid] = record
+                    parents.add(record.pid)
+                    changed = True
+
+        # PR_SET_CHILD_SUBREAPER reparents an escaped tree to the runner.  A
+        # child absent from the pre-launch baseline therefore still belongs to
+        # this command.  Formal run_command is deliberately single-launch and
+        # does not permit concurrent child creation in the runner process.
+        for record in table.values():
+            if (
+                record.parent_pid == self.runner_pid
+                and record.identity not in self.baseline_children
+            ):
+                discovered[record.pid] = record
+
+        self.known.update(record.identity for record in discovered.values())
+        live = tuple(
+            sorted(
+                (record for record in discovered.values() if record.state != "Z"),
+                key=lambda record: record.pid,
+            )
+        )
+        self.maximum_live_count = max(self.maximum_live_count, len(live))
+        return live
+
+    def descendants_live(self) -> tuple[_LinuxProcessRecord, ...]:
+        root = self.root_identity
+        records = self.refresh()
+        self.reap_adopted(root[0])
+        # The first refresh can be the operation that discovers a newly
+        # adopted zombie.  Reap once more after a second snapshot so repeated
+        # library calls do not accumulate already-dead descendants.
+        records = self.refresh()
+        self.reap_adopted(root[0])
+        return tuple(record for record in records if record.identity != root)
+
+    def signal_live(self, signum: int, document: dict[str, Any], stage: str) -> int:
+        sent = 0
+        for record in reversed(self.refresh()):
+            current = _linux_process_table().get(record.pid)
+            if current is None or current.identity != record.identity:
+                continue
+            try:
+                os.kill(record.pid, signum)
+                sent += 1
+            except ProcessLookupError:
+                continue
+            except OSError as error:
+                _record_termination_error(document, f"{stage}[{record.pid}]", error)
+        return sent
+
+    def reap_adopted(self, direct_pid: int) -> None:
+        for pid, _start_ticks in tuple(self.known):
+            if pid == direct_pid:
+                continue
+            try:
+                os.waitpid(pid, os.WNOHANG)
+            except (ChildProcessError, ProcessLookupError):
+                continue
+
+
+def _prepare_linux_process_tree() -> set[tuple[int, int]] | None:
+    if not sys.platform.startswith("linux"):
+        return None
+    _enable_linux_subreaper()
+    return {
+        record.identity
+        for record in _linux_process_table().values()
+        if record.parent_pid == os.getpid()
+    }
+
+
+def _start_linux_process_tree(
+    process: subprocess.Popen[bytes],
+    baseline_children: set[tuple[int, int]] | None,
+) -> _LinuxProcessTree | None:
+    if baseline_children is None:
+        return None
+    record = _linux_process_table().get(process.pid)
+    if record is None:
+        # A command may exit before the first snapshot.  Any surviving child is
+        # still adopted by the subreaper and discovered relative to the empty
+        # synthetic root identity.
+        return _LinuxProcessTree(process.pid, -1, baseline_children)
+    return _LinuxProcessTree(process.pid, record.start_ticks, baseline_children)
 
 
 def _record_termination_error(document: dict[str, Any], stage: str, error: object) -> None:
@@ -262,6 +505,64 @@ def _wait_for_group_exit(process_group: int, seconds: float) -> bool:
             return False
         time.sleep(min(0.05, remaining))
     return True
+
+
+def _wait_for_linux_tree_exit(
+    tree: _LinuxProcessTree,
+    direct_pid: int,
+    seconds: float,
+) -> bool:
+    deadline = time.monotonic() + seconds
+    while True:
+        tree.reap_adopted(direct_pid)
+        if not tree.refresh():
+            return True
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            return False
+        time.sleep(min(0.02, remaining))
+
+
+def _terminate_linux_process_tree(
+    process: subprocess.Popen[bytes],
+    tree: _LinuxProcessTree,
+    document: dict[str, Any],
+) -> None:
+    document["tracked_identity_count"] = len(tree.known)
+    document["term_sent"] = tree.signal_live(signal.SIGTERM, document, "SIGTERM") > 0
+    tree_exited = _wait_for_linux_tree_exit(
+        tree,
+        process.pid,
+        TERMINATION_GRACE_SECONDS,
+    )
+    if not tree_exited:
+        document["kill_sent"] = tree.signal_live(
+            signal.SIGKILL,
+            document,
+            "SIGKILL",
+        ) > 0
+        tree_exited = _wait_for_linux_tree_exit(
+            tree,
+            process.pid,
+            TERMINATION_WAIT_SECONDS,
+        )
+
+    try:
+        process.wait(timeout=TERMINATION_WAIT_SECONDS)
+    except subprocess.TimeoutExpired as error:
+        _record_termination_error(document, "wait_after_tree_kill", error)
+        try:
+            process.kill()
+            document["kill_sent"] = True
+            process.wait(timeout=TERMINATION_WAIT_SECONDS)
+        except (OSError, subprocess.TimeoutExpired) as kill_error:
+            _record_termination_error(document, "direct_child_kill", kill_error)
+
+    tree.reap_adopted(process.pid)
+    document["child_returncode"] = process.returncode
+    document["tracked_identity_count"] = len(tree.known)
+    document["maximum_live_process_count"] = tree.maximum_live_count
+    document["tree_kill_confirmed"] = bool(tree_exited and not tree.refresh())
 
 
 def _terminate_posix_process_group(
@@ -342,10 +643,17 @@ def _terminate_windows_process_tree(
     document["tree_kill_confirmed"] = bool(taskkill_succeeded and process.returncode is not None)
 
 
-def _terminate_process_tree(process: subprocess.Popen[bytes], *, reason: str) -> dict[str, Any]:
+def _terminate_process_tree(
+    process: subprocess.Popen[bytes],
+    *,
+    reason: str,
+    linux_tree: _LinuxProcessTree | None = None,
+) -> dict[str, Any]:
     document = _termination_document(reason)
     if os.name == "nt":
         _terminate_windows_process_tree(process, document)
+    elif linux_tree is not None:
+        _terminate_linux_process_tree(process, linux_tree, document)
     else:
         _terminate_posix_process_group(process, document)
     return document
@@ -393,106 +701,175 @@ def run_command(
         None if configured_timeout is None else started_ns + int(configured_timeout * 1_000_000_000)
     )
     process: subprocess.Popen[bytes] | None = None
+    linux_tree: _LinuxProcessTree | None = None
     exit_code: int | None = None
     outcome = "runner_error"
     error_text: str | None = None
     timed_out = False
     termination = _termination_document()
+    interrupts = _DeferredTerminationSignals()
 
     with FormalRunLease(label, lock_path) as lease:
+        interrupts.__enter__()
         print(
             f"FORMAL-RUN START label={label} pid={os.getpid()} lock={lease.lock_path}",
             flush=True,
         )
         try:
+            baseline_children = _prepare_linux_process_tree()
             process = subprocess.Popen(
                 frozen_command,
                 **_popen_options(working_directory),
             )
+            linux_tree = _start_linux_process_tree(process, baseline_children)
+            next_heartbeat_ns = started_ns + int(heartbeat_seconds * 1_000_000_000)
             while True:
-                polled = process.poll()
-                if polled is not None:
-                    exit_code = polled
-                    termination["child_returncode"] = polled
-                    break
+                interrupts.raise_if_pending()
                 now_ns = time.monotonic_ns()
                 if deadline_ns is not None and now_ns >= deadline_ns:
                     timed_out = True
                     termination = _terminate_process_tree(
                         process,
                         reason="hard_timeout",
+                        linux_tree=linux_tree,
                     )
                     exit_code = HARD_TIMEOUT_EXIT_CODE
                     outcome = "hard_timeout"
                     return HARD_TIMEOUT_EXIT_CODE
-                wait_seconds = heartbeat_seconds
-                if deadline_ns is not None:
-                    wait_seconds = min(
-                        wait_seconds,
-                        max(0.0, (deadline_ns - now_ns) / 1_000_000_000),
-                    )
-                try:
-                    exit_code = process.wait(timeout=wait_seconds)
-                    termination["child_returncode"] = exit_code
-                    break
-                except subprocess.TimeoutExpired:
-                    if deadline_ns is not None and time.monotonic_ns() >= deadline_ns:
-                        continue
-                    elapsed = (time.monotonic_ns() - started_ns) / 1_000_000_000
+
+                polled = process.poll()
+                if polled is not None:
+                    exit_code = polled
+                    termination["child_returncode"] = polled
+                    descendants_live = False
+                    if linux_tree is not None:
+                        linux_tree.reap_adopted(process.pid)
+                        descendants_live = bool(linux_tree.descendants_live())
+                    if not descendants_live:
+                        # Polling and procfs custody checks take nonzero time.
+                        # A completion is accepted only if that entire check
+                        # finished before the hard monotonic deadline.
+                        if deadline_ns is not None and time.monotonic_ns() >= deadline_ns:
+                            timed_out = True
+                            termination = _terminate_process_tree(
+                                process,
+                                reason="hard_timeout",
+                                linux_tree=linux_tree,
+                            )
+                            exit_code = HARD_TIMEOUT_EXIT_CODE
+                            outcome = "hard_timeout"
+                            return HARD_TIMEOUT_EXIT_CODE
+                        break
+
+                if now_ns >= next_heartbeat_ns:
+                    elapsed = (now_ns - started_ns) / 1_000_000_000
                     print(
                         f"FORMAL-RUN HEARTBEAT label={label} child={process.pid} "
                         f"elapsed_seconds={elapsed:.1f}",
                         flush=True,
                     )
+                    next_heartbeat_ns = now_ns + int(
+                        heartbeat_seconds * 1_000_000_000
+                    )
+
+                wait_seconds = INTERRUPT_POLL_SECONDS
+                if deadline_ns is not None:
+                    wait_seconds = min(
+                        wait_seconds,
+                        max(0.0, (deadline_ns - now_ns) / 1_000_000_000),
+                    )
+                if polled is None:
+                    try:
+                        process.wait(timeout=wait_seconds)
+                    except subprocess.TimeoutExpired:
+                        pass
+                else:
+                    time.sleep(wait_seconds)
             outcome = "completed" if exit_code == 0 else "child_failed"
             return exit_code
         except BaseException as error:
             error_text = f"{type(error).__name__}: {error}"
             outcome = (
                 "interrupted"
-                if isinstance(error, KeyboardInterrupt)
+                if isinstance(error, (KeyboardInterrupt, SystemExit))
+                and (interrupts.count or interrupts.termination_count)
                 else "runner_error"
             )
-            if process is not None and process.poll() is None:
-                termination = _terminate_process_tree(process, reason=outcome)
+            if process is not None:
+                termination = _terminate_process_tree(
+                    process,
+                    reason=outcome,
+                    linux_tree=linux_tree,
+                )
             exit_code = None if process is None else process.returncode
             raise
         finally:
-            ended_ns = time.monotonic_ns()
-            audit = {
-                "schema": SCHEMA_VERSION,
-                "label": label,
-                "outcome": outcome,
-                "command": list(frozen_command),
-                "cwd": str(working_directory),
-                "runner_pid": os.getpid(),
-                "child_pid": None if process is None else process.pid,
-                "exit_code": exit_code,
-                "started_at_utc": started_wall,
-                "ended_at_utc": _utc_now(),
-                "elapsed_seconds": (ended_ns - started_ns) / 1_000_000_000,
-                "hostname": socket.gethostname(),
-                "platform": platform.platform(),
-                "python": platform.python_version(),
-                "logical_cpu_count": os.cpu_count(),
-                "lock_path": str(lease.lock_path),
-                "configured_timeout_seconds": configured_timeout,
-                "timed_out": timed_out,
-                "termination": termination,
-                "timeout_boundary": (
-                    "outer child process tree only; no in-process preemption claim"
-                ),
-                "cooperation_boundary": (
-                    "advisory lock; unrelated uncooperative host work remains forbidden"
-                ),
-                "error": error_text,
-            }
-            _write_json_atomic(audit_path, audit)
-            print(
-                f"FORMAL-RUN END label={label} outcome={outcome} "
-                f"exit_code={exit_code} audit={audit_path}",
-                flush=True,
-            )
+            try:
+                while True:
+                    signal_snapshot = (
+                        interrupts.count,
+                        interrupts.termination_count,
+                    )
+                    if any(signal_snapshot) and outcome in ("completed", "child_failed"):
+                        outcome = "interrupted"
+                        error_text = error_text or "termination signal during finalization"
+                        termination["finalization_signal_observed"] = True
+                    ended_ns = time.monotonic_ns()
+                    audit = {
+                        "schema": SCHEMA_VERSION,
+                        "label": label,
+                        "outcome": outcome,
+                        "command": list(frozen_command),
+                        "cwd": str(working_directory),
+                        "runner_pid": os.getpid(),
+                        "child_pid": None if process is None else process.pid,
+                        "exit_code": exit_code,
+                        "started_at_utc": started_wall,
+                        "ended_at_utc": _utc_now(),
+                        "elapsed_seconds": (ended_ns - started_ns) / 1_000_000_000,
+                        "hostname": socket.gethostname(),
+                        "platform": platform.platform(),
+                        "python": platform.python_version(),
+                        "logical_cpu_count": os.cpu_count(),
+                        "lock_path": str(lease.lock_path),
+                        "configured_timeout_seconds": configured_timeout,
+                        "timed_out": timed_out,
+                        "interrupt_signal_count": signal_snapshot[0],
+                        "termination_signal_count": signal_snapshot[1],
+                        "termination": termination,
+                        "timeout_boundary": (
+                            "outer child process tree only; success is accepted only "
+                            "when observed strictly before the monotonic deadline; no "
+                            "in-process preemption claim"
+                        ),
+                        "process_tree_boundary": (
+                            "Linux PR_SET_CHILD_SUBREAPER plus PID/start-time procfs "
+                            "custody; other platforms retain their recorded strategy"
+                        ),
+                        "runner_kill_boundary": (
+                            "SIGINT and SIGTERM are deferred through cleanup; SIGKILL "
+                            "or host failure cannot be handled in-process"
+                        ),
+                        "cooperation_boundary": (
+                            "advisory lock; unrelated uncooperative host work remains "
+                            "forbidden"
+                        ),
+                        "error": error_text,
+                    }
+                    _write_json_atomic(audit_path, audit)
+                    print(
+                        f"FORMAL-RUN END label={label} outcome={outcome} "
+                        f"exit_code={exit_code} audit={audit_path}",
+                        flush=True,
+                    )
+                    if signal_snapshot == (
+                        interrupts.count,
+                        interrupts.termination_count,
+                    ):
+                        break
+            finally:
+                interrupts.__exit__(None, None, None)
+            interrupts.raise_if_pending()
 
 
 def _parser() -> argparse.ArgumentParser:
