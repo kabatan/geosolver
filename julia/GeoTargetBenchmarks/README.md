@@ -60,3 +60,11 @@ Tests independently evaluate every declared root, central-difference every
 analytic Jacobian at every root, distinguish target values from configuration
 count, replay the generated manifest, and check that Gold truth cannot affect
 saved-start generation or production routing APIs.
+
+## Solver algorithm laboratory
+
+The package also owns a dependency-light, truth-blind variant/metric API in
+`src/solver_experiment.jl`. It still does not depend on `GeoTargetCore`; the
+root-level [solver lab](../../benchmarks/solver_lab/README.md) supplies the thin
+Core adapter and executable command. This keeps Gold scoring out of the solver
+callback while avoiding a second production execution path.

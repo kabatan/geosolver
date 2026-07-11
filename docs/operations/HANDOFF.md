@@ -1,7 +1,7 @@
 # Maintainer Handoff
 
 Updated: 2026-07-11 (Asia/Tokyo)
-Checkpoint: `main` at `ab3866a` before this handoff-only commit
+Checkpoint: annotated tag `algorithm-lab-ready-2026-07-11`
 
 This is the restart boundary for the next maintainer. It is intentionally
 shorter and more authoritative than the accumulated experiment history. The
@@ -45,23 +45,33 @@ The end-to-end path already exists:
    `evaluate_canonical`).
 5. Proposal scheduling: `proposal_engine.jl`, `search_policy.jl` and
    `search_loop.jl`.
-6. Local numerical solve: `local_solver.jl` (`solve_local`, scaled LM/QR and
-   finite-difference Jacobian seams).
+6. Local numerical solve: `local_solver.jl` (`solve_local`, scaled LM/QR,
+   finite-difference Jacobian seams and callback-level interruption checks).
 7. Validation and distinct-target archive: `candidate_validation.jl`,
    `candidate_store.jl` and `target_image.jl`.
-8. Public orchestration: `solver.jl` (`solve`).
+8. Public orchestration: `solver.jl` (`solve`). Julia-only experiments may use
+   `UnstableResearchStrategy` to replace only the proposal factory and compiled-
+   aware local solver; the wire protocol and plugin ABI are unchanged.
 
 The compact synthetic benchmark families are in
 `julia/GeoTargetBenchmarks/src/`. The existing failure vocabulary is
 `docs/research/FAILURES.md`; use only the telemetry needed for the current
 comparison rather than extending every diagnostic category first.
 
-There is not yet a compact end-to-end all-target recall runner. The existing
-compiler microbenchmark is not a solver benchmark. Build the first runner as a
-small development tool around the analytic families and their saved starts;
-do not create another formal evidence system. Report configuration recall and
-distinct-target recall separately. In particular, audit whether configurations
-that map to the same target value survive public aggregation as duplicates.
+The compact algorithm runner is `benchmarks/solver_lab/run.jl`; its reusable,
+dependency-light truth/metric layer is
+`julia/GeoTargetBenchmarks/src/solver_experiment.jl`. A variant receives only a
+black-box evaluation case, bounds and scales. The runner withholds problem
+identity, Gold, and saved-start collections; counts callback evaluations itself;
+enforces a per-attempt evaluation limit; and uses Gold only after an attempt for
+scoring. It records configuration
+recall, distinct-target recall from consistent configuration witnesses,
+all-target success, false candidates/targets, numerical target-only matches,
+duplicate hits, statuses, evaluation/iteration work, and cold/warm wall time.
+
+The default suite has one deterministic case from every family plus a paired
+four-configuration/two-target collision case. `GeoTargetBenchmarks` still has no
+dependency on `GeoTargetCore`; the root-level adapter is the only bridge.
 
 ## Frozen/deferred work
 
@@ -85,12 +95,12 @@ does not already contain an equivalent integrated version.
 
 ## Recommended restart
 
-Start from a new `codex/` branch at this handoff commit. Before changing policy,
-produce a lightweight baseline table over the existing benchmark families with
-multiple seeds and at least three increasing time or evaluation budgets. Record
-per-target recall, all-target success, false-answer count, duplicate work and
-runtime. Then choose the largest observed failure class, not a preselected
-algorithm name.
+Start from a new `codex/` branch at the ready tag. Run the existing laboratory,
+then add a second `SolverVariant` following
+`benchmarks/solver_lab/README.md`. Compare paired saved-start prefixes at equal
+runner-counted black-box evaluation budgets. Expand to multiple generated seeds
+only after the mechanism works on the representative suite. Then choose the
+largest observed failure class, not a preselected algorithm name.
 
 Likely low-cost seams for the first comparisons are proposal allocation and
 refinement in `proposal_engine.jl`/`search_policy.jl`, local model/step control
@@ -101,6 +111,16 @@ they must not require polynomial extraction or benchmark truth at runtime.
 Do not start with a Rust/Julia rewrite, another proof protocol, or broad
 refactoring. The numerical core is already Julia. Refactor only around a
 measured algorithm change, and keep a single production path after selection.
+
+The current focused 8-start baseline is already diagnostic:
+
+- the near-tangent family recovers 2/2 target values but also exposes four
+  residual-qualified non-Gold configurations and five target mismatches;
+- both four-root warped target maps recover 0 targets, consume 4,192 observed
+  black-box evaluations, and expose one false candidate/target each.
+
+These are starting measurements, not claims. They make local stopping/error
+control and multi-root discovery the first concrete research targets.
 
 ## Reproduction and checks
 
@@ -122,6 +142,15 @@ For a quicker repository smoke gate:
 powershell -File scripts/ci.ps1 -Tier Smoke
 ```
 
+Run the focused algorithm smoke:
+
+```powershell
+julia +1.12.6 --startup-file=no --history-file=no --project=julia `
+  benchmarks/solver_lab/run.jl `
+  --families=TANGENT-CIRCLE-LINE,MULTIROOT-WARPED `
+  --prefixes=2,4,8
+```
+
 The complete gate includes long-running research and QA work. During the short
 algorithm loop, run the directly affected Julia integration test plus the
 benchmark package tests, then run the full gate before a release checkpoint.
@@ -135,4 +164,5 @@ Repository facts at handoff:
   to annotated archive tags, leaving only `main`;
 - local virtual environments may be retained, but generated test/cache
   directories are ignored and were cleared;
-- the annotated tag `handoff-2026-07-11` names this restart point.
+- `handoff-2026-07-11` preserves the earlier protocol-only handoff and
+  `algorithm-lab-ready-2026-07-11` names the algorithm-ready restart point.

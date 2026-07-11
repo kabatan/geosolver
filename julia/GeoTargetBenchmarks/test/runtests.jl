@@ -443,3 +443,199 @@ end
     @test length(findall("\"family_id\":\"OPAQUE-TRANSCENDENTAL-C0\"", generated)) == 20
     @test occursin("\"case_id\":\"M0-ANALYTIC-047\"", generated)
 end
+
+function solver_lab_collision_problem()
+    residual!(output, input) = (output[1] = (input[1]^2 - 1) * (input[1]^2 - 4); output)
+    jacobian!(output, input) = (output[1, 1] = 4input[1]^3 - 10input[1]; output)
+    target(input) = input[1]^2
+    configurations = reshape([-2.0, -1.0, 1.0, 2.0], 1, :)
+    targets = AbstractGoldTargetDescriptor[
+        ExactGoldTarget("squared-four", 4.0, "x^2 = 4", [1, 4]),
+        ExactGoldTarget("squared-one", 1.0, "x^2 = 1", [2, 3]),
+    ]
+    starts = reshape([-2.0, -2.0, -1.0, 1.0], 1, :)
+    return DirectAnalyticProblem(
+        "solver-lab-collision",
+        "SOLVER-LAB-COLLISION",
+        (:S5,),
+        (start_count=4,),
+        1,
+        1,
+        residual!,
+        jacobian!,
+        target,
+        [-3.0],
+        [3.0],
+        [3.0],
+        [1.0],
+        configurations,
+        targets,
+        starts,
+        [MaterializedArtifact(:parameters, reshape([4.0], 1, 1))],
+        Dict{Symbol,Any}(:generator_role => :solver_lab_test),
+    )
+end
+
+function solver_lab_target_only_problem()
+    residual!(output, input) = (output[1] = 1.0e-10 * (input[1] - 1); output)
+    jacobian!(output, _) = (output[1, 1] = 1.0e-10; output)
+    target(_) = 7.0
+    return DirectAnalyticProblem(
+        "solver-lab-target-only",
+        "SOLVER-LAB-TARGET-ONLY",
+        (:S5,),
+        (start_count=1,),
+        1,
+        1,
+        residual!,
+        jacobian!,
+        target,
+        [-2.0],
+        [2.0],
+        [2.0],
+        [1.0],
+        reshape([1.0], 1, :),
+        AbstractGoldTargetDescriptor[
+            ExactGoldTarget("seven", 7.0, "target = 7", [1]),
+        ],
+        reshape([0.0], 1, :),
+        [MaterializedArtifact(:parameters, reshape([1.0], 1, 1))],
+        Dict{Symbol,Any}(:generator_role => :solver_lab_target_only_test),
+    )
+end
+
+@testset "truth-blind solver experiment runner" begin
+    problem = solver_lab_collision_problem()
+    saw_truth_blind_case = Ref(false)
+    identity = SolverVariant("identity") do case, start
+        @test !hasproperty(case, :gold_targets)
+        @test !hasproperty(case, :gold_configurations)
+        @test !hasproperty(case, :family_id)
+        @test !hasproperty(case, :instance_id)
+        @test all(
+            !(getfield(case._evaluate, index) isa DirectAnalyticProblem) for
+            index in 1:fieldcount(typeof(case._evaluate))
+        )
+        evaluation = evaluate_case(case, start)
+        @test evaluation.finite
+        saw_truth_blind_case[] = true
+        return SolverAttemptOutcome(
+            start;
+            status="identity",
+            reported_converged=true,
+            reported_accepted=true,
+            evaluations=1,
+            iterations=0,
+        )
+    end
+    ticks = Ref(UInt64(0))
+    clock_ns() = (ticks[] += UInt64(1_000_000))
+    run = run_solver_experiment(
+        [problem],
+        [identity];
+        prefixes=(1, 2, 4),
+        clock_ns,
+    )
+    @test saw_truth_blind_case[]
+    @test length(run.attempts) == 4
+    @test all(attempt -> attempt.gold_matched, run.attempts)
+    @test all(attempt -> attempt.evaluations == attempt.reported_evaluations == 1, run.attempts)
+    @test all(attempt -> attempt.wall_seconds == 0.001, run.attempts)
+
+    first_prefix, second_prefix, fourth_prefix = run.prefixes
+    @test (first_prefix.targets_found, first_prefix.configurations_found) == (1, 1)
+    @test !first_prefix.all_targets
+    @test second_prefix.duplicate_configuration_hits == 1
+    @test second_prefix.duplicate_target_hits == 1
+    @test fourth_prefix.targets_found == fourth_prefix.target_count == 2
+    @test fourth_prefix.configurations_found == 3
+    @test fourth_prefix.all_targets
+    @test fourth_prefix.duplicate_configuration_hits == 1
+    @test fourth_prefix.duplicate_target_hits == 2
+    @test fourth_prefix.evaluations == 4
+
+    document = solver_experiment_document(run)
+    @test document["schema"] == SOLVER_EXPERIMENT_SCHEMA_VERSION
+    @test document["variants"] == ["identity"]
+    @test length(document["attempts"]) == 4
+    @test document["summaries"][end]["target_recall"] == 1.0
+end
+
+
+@testset "target-only numeric coincidence is not all-target recall" begin
+    problem = solver_lab_target_only_problem()
+    variant = SolverVariant("target-only") do case, start
+        evaluate_case(case, start)
+        evaluate_case(case, start)
+        SolverAttemptOutcome(
+            start;
+            status="misreported-count",
+            reported_converged=true,
+            reported_accepted=true,
+            evaluations=0,
+        )
+    end
+    run = run_solver_experiment([problem], [variant]; prefixes=(1,))
+    attempt = only(run.attempts)
+    @test attempt.canonical_valid
+    @test !attempt.configuration_matched
+    @test attempt.numeric_target_matched
+    @test !attempt.gold_matched
+    @test attempt.false_candidate
+    @test !attempt.false_target
+    @test attempt.evaluations == 2
+    @test attempt.reported_evaluations == 0
+
+    summary = only(run.prefixes)
+    @test summary.configuration_recall == 0.0
+    @test summary.target_recall == 0.0
+    @test !summary.all_targets
+    @test summary.numeric_target_only_hits == 1
+end
+
+@testset "solver experiment failures and contracts are explicit" begin
+    problem = solver_lab_collision_problem()
+    failing = SolverVariant("failing") do _, _
+        error("intentional variant failure")
+    end
+    run = run_solver_experiment([problem], [failing]; prefixes=(1,))
+    attempt = only(run.attempts)
+    @test attempt.exception == "intentional variant failure"
+    @test !attempt.canonical_valid
+    @test !attempt.false_candidate
+    @test only(run.prefixes).exceptions == 1
+
+    over_budget = SolverVariant("over-budget") do case, start
+        for _ in 1:3
+            case._evaluate(start)
+        end
+        SolverAttemptOutcome(start; status="unreachable", evaluations=0)
+    end
+    budget_run = run_solver_experiment(
+        [problem],
+        [over_budget];
+        prefixes=(1,),
+        evaluation_limit=2,
+    )
+    budget_attempt = only(budget_run.attempts)
+    @test budget_attempt.budget_exhausted
+    @test budget_attempt.evaluations == 2
+    @test budget_attempt.reported_evaluations == 0
+    @test occursin("evaluation budget 2 exhausted", budget_attempt.exception)
+    @test only(budget_run.prefixes).budget_exhausted == 1
+    @test solver_experiment_document(budget_run)["evaluation_limit"] == 2
+
+    @test_throws ArgumentError run_solver_experiment([problem], [failing]; prefixes=(2, 1))
+    @test_throws ArgumentError run_solver_experiment(
+        [problem],
+        [failing];
+        prefixes=(1,),
+        evaluation_limit=0,
+    )
+    @test_throws ArgumentError run_solver_experiment(
+        [problem],
+        [failing, SolverVariant("failing", (_, _) -> nothing)];
+        prefixes=(1,),
+    )
+    @test_throws ArgumentError SolverExperimentTolerances(residual=-1)
+end

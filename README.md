@@ -27,6 +27,10 @@ continue through preregistered experiments. No solver-completeness claim is
 made: ordinary numerical results remain finite observations, not a proof that
 all target values were found.
 
+The lightweight [solver algorithm lab](benchmarks/solver_lab/README.md) runs
+truth-blind Julia variants on paired saved starts and independently measures
+configuration recall, distinct-target recall, false candidates and work.
+
 Start with the executable [SDK and plugin quickstart](docs/SDK_AND_PLUGIN_QUICKSTART.md).
 It shows a plugin-private differentiable geometric object, Python problem
 authoring, registry validation, evaluation and the Julia CLI solve handoff.

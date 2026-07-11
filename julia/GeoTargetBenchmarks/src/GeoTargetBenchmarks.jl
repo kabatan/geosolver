@@ -18,6 +18,7 @@ include("tangent_circle_line.jl")
 include("multiroot_warped.jl")
 include("strict_guard_boundary.jl")
 include("opaque_transcendental.jl")
+include("solver_experiment.jl")
 
 export PACKAGE_VERSION,
     REPLAY_FORMAT_VERSION,
@@ -44,6 +45,19 @@ export PACKAGE_VERSION,
     StrictGuardBoundaryParams,
     OpaqueTranscendentalParams,
     strict_guard_margin,
-    strict_guard_valid
+    strict_guard_valid,
+    SOLVER_EXPERIMENT_SCHEMA_VERSION,
+    SolverExperimentTolerances,
+    SolverExperimentBudgetExceeded,
+    SolverCaseEvaluation,
+    SolverExperimentCase,
+    evaluate_case,
+    SolverVariant,
+    SolverAttemptOutcome,
+    SolverExperimentAttempt,
+    SolverExperimentPrefix,
+    SolverExperimentRun,
+    run_solver_experiment,
+    solver_experiment_document
 
 end
