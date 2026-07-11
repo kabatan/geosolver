@@ -251,6 +251,37 @@ const C3A_TEST_RECOGNITION_OPTIONS = RecognitionOptions(
     confirmation_extra_bits=256,
 )
 
+const C3A_LOW_PRECISION_OPTIONS = RecognitionOptions(
+    degree_limits=(1, 2, 4, 8),
+    height_bits=(8,),
+    base_precision_bits=256,
+    confirmation_extra_bits=128,
+)
+
+function _shift_checkpoint_bigfloat!(document, delta::BigFloat)
+    document["kind"] == "bigfloat" || error("fixture expected a BigFloat checkpoint real")
+    bits = Int(document["precision_bits"])
+    document["decimal"] = setprecision(BigFloat, bits) do
+        string(parse(BigFloat, String(document["decimal"])) + BigFloat(delta))
+    end
+    return document
+end
+
+function _tamper_c3a_checkpoint(mutate!::Function, source::AbstractString)
+    document = GeoTargetCore.parse_protocol_json(source)
+    observed = only(
+        event for event in document["state"]["events"] if event["kind"] == "observed"
+    )
+    mutate!(document["state"]["workspace"]["history"][1]["observation"])
+    mutate!(observed["payload"])
+    payload = Dict{String,Any}(
+        "state" => document["state"],
+        "target_image_status" => document["target_image_status"],
+    )
+    document["content_hash"] = string(GeoTargetCore.canonical_json_hash(payload))
+    return GeoTargetCore.decode_checkpoint_document(document)
+end
+
 struct C3ACheckpointTriggerBackend <: AbstractExactBackend
     mode::Symbol
     cancelled::Base.RefValue{Bool}
@@ -259,6 +290,35 @@ end
 struct C3ACrossSolutionBackend <: AbstractExactBackend
     answer::ExactAnswer
     recognition_options::RecognitionOptions
+end
+
+struct C3ARejectingSolverBackend <: AbstractExactBackend
+    calls::Base.RefValue{Int}
+end
+
+GeoTargetCore.exact_backend_descriptor(::C3ARejectingSolverBackend) =
+    ExactBackendDescriptor(
+        "c3a-rejecting-solver-test",
+        v"1.0.0",
+        "reject-every-seed";
+        configuration_certificate_schemes=("c3a_rejecting_configuration_v1",),
+        target_certificate_schemes=("c3a_rejecting_target_v1",),
+        policy_identity=content_hash("c3a-rejecting-solver-policy"),
+        environment_identity=content_hash("c3a-rejecting-solver-environment"),
+    )
+
+function GeoTargetCore.exactify_candidate(
+    backend::C3ARejectingSolverBackend,
+    ::GeoTargetCore.CompiledProblem,
+    ::ExactificationSeed,
+    ::ExactSampleProvider,
+)
+    backend.calls[] += 1
+    return ExactBackendOutcome(
+        nothing,
+        EXACTIFICATION_RECOGNITION_FAILED,
+        "fixture rejects every seed",
+    )
 end
 
 GeoTargetCore.exact_backend_descriptor(backend::C3ACrossSolutionBackend) =
@@ -357,11 +417,15 @@ end
     @test result.answer isa ExactAnswer
     @test result.samples.requests == 4
     @test result.samples.cache_entries == 2
+    @test length(result.reference_samples) == 2
+    @test map(sample -> sample.precision_bits, result.reference_samples) == (768, 1024)
+    @test all(sample -> sample.pass == :reference, result.reference_samples)
     @test result.oracle_work > 0
     @test result.backend == GeoTargetCore.exact_backend_descriptor(backend)
     @test result.backend.configuration_certificate_schemes ==
           ("geotarget-c3a-configuration-v1",)
     @test result.backend.target_certificate_schemes == ("geotarget-c3a-target-v1",)
+    @test verify_stored_exact_answer(backend, compiled, result.answer).accepted
     descriptor = GeoTargetExact._descriptor_from_identity(result.answer.identity)
     @test descriptor.coefficients == (-2, 0, 1)
     @test verify_c3a_exact_answer(compiled, result.answer).accepted
@@ -412,6 +476,151 @@ end
     @test result.answer isa ExactAnswer
     @test verify_c3a_exact_answer(compiled, result.answer).accepted
     @test result.answer.approximation == 1.0
+end
+
+@testset "production solver promotes regular and singular candidates through C3A" begin
+    options = SolveOptions(preset=:fast, wall_seconds=60.0, seed=0)
+    backend = NemoExactBackend(recognition_options=C3A_TEST_RECOGNITION_OPTIONS)
+
+    regular_compiled, _ = c3a_fixture(:valid)
+    regular = solve_execution(
+        regular_compiled.problem,
+        regular_compiled.registry;
+        options,
+        max_actions=2,
+        exact_backend=backend,
+    )
+    @test isempty(regular.result.provisional_answers)
+    @test length(regular.result.exact_answers) == 1
+    @test occursin("promotion=exact_regular", regular.evidence_json)
+    @test verify_stored_exact_answer(
+        backend,
+        regular_compiled,
+        only(regular.result.exact_answers),
+    ).accepted
+    checkpoint_source = encode_checkpoint_json(SolveCheckpointArtifact(regular))
+    resumed_regular = solve_execution(
+        regular_compiled.problem,
+        regular_compiled.registry;
+        options,
+        max_actions=0,
+        checkpoint=decode_checkpoint_json(checkpoint_source),
+        exact_backend=backend,
+    )
+    @test only(resumed_regular.result.exact_answers).identity ==
+          only(regular.result.exact_answers).identity
+
+    shifted_endpoint = _tamper_c3a_checkpoint(checkpoint_source) do observation
+        _shift_checkpoint_bigfloat!(observation["endpoint"][1], big"1e-6")
+    end
+    @test_throws SolveConfigurationError solve_execution(
+        regular_compiled.problem,
+        regular_compiled.registry;
+        options,
+        max_actions=0,
+        checkpoint=shifted_endpoint,
+        exact_backend=backend,
+    )
+
+    widened_target = _tamper_c3a_checkpoint(checkpoint_source) do observation
+        _shift_checkpoint_bigfloat!(observation["target"]["lower"], -big"1e-6")
+        _shift_checkpoint_bigfloat!(observation["target"]["upper"], big"1e-6")
+    end
+    @test_throws SolveConfigurationError solve_execution(
+        regular_compiled.problem,
+        regular_compiled.registry;
+        options,
+        max_actions=0,
+        checkpoint=widened_target,
+        exact_backend=backend,
+    )
+
+    shifted_target = _tamper_c3a_checkpoint(checkpoint_source) do observation
+        _shift_checkpoint_bigfloat!(
+            observation["verified_payload"]["value"]["approximation"],
+            big"1e-6",
+        )
+        _shift_checkpoint_bigfloat!(observation["target"]["lower"], big"1e-6")
+        _shift_checkpoint_bigfloat!(observation["target"]["upper"], big"1e-6")
+    end
+    @test_throws SolveConfigurationError solve_execution(
+        regular_compiled.problem,
+        regular_compiled.registry;
+        options,
+        max_actions=0,
+        checkpoint=shifted_target,
+        exact_backend=backend,
+    )
+
+    singular_compiled, rejected = c3a_fixture(:multiple_root; expect_validation=false)
+    @test rejected.provisional === nothing
+    singular = solve_execution(
+        singular_compiled.problem,
+        singular_compiled.registry;
+        options,
+        max_actions=2,
+        exact_backend=backend,
+    )
+    @test isempty(singular.result.provisional_answers)
+    @test length(singular.result.exact_answers) == 1
+    @test singular.result.target_image_status == TARGET_FINITE_OBSERVED
+    singular_record = only(singular.checkpoint.workspace.candidates.history)
+    @test singular_record.observation.verified
+    @test singular_record.observation.verified_payload isa ExactAnswer
+    @test singular_record.observation.target.lower <= BigFloat(1) <=
+          singular_record.observation.target.upper
+    @test abs(only(singular_record.observation.endpoint) - BigFloat(1)) <= big"1e-100"
+    @test occursin(
+        "promotion=exact_only_numerically_unresolved",
+        singular_record.observation.diagnostic,
+    )
+
+    rejecting = C3ARejectingSolverBackend(Ref(0))
+    exact_only_failure = solve_execution(
+        singular_compiled.problem,
+        singular_compiled.registry;
+        options,
+        max_actions=2,
+        exact_backend=rejecting,
+    )
+    @test rejecting.calls[] == 1
+    @test isempty(exact_only_failure.result.exact_answers)
+    @test isempty(exact_only_failure.result.provisional_answers)
+    failed_record = only(exact_only_failure.checkpoint.workspace.candidates.history)
+    @test !failed_record.observation.verified
+    @test failed_record.observation.verified_payload === nothing
+    @test failed_record.observation.needs_refinement
+    @test occursin("EXACTIFICATION_RECOGNITION_FAILED", failed_record.observation.diagnostic)
+
+    singular_observation = GeoTargetCore.evaluate(
+        singular_compiled,
+        [1.0];
+        capability=C0,
+    )
+    rank_seed = rank_deficient_exactification_seed(
+        singular_compiled,
+        [1.0],
+        singular_observation;
+        residual_tolerance=1.0e-12,
+    )
+    relabelled = ExactificationSeed(
+        EXACT_SEED_VALIDATED_REGULAR,
+        rank_seed.problem,
+        rank_seed.problem_hash_method,
+        rank_seed.start,
+        rank_seed.branch_signature,
+        rank_seed.start_configuration,
+    )
+    relabelled_result = run_exactification(
+        rejecting,
+        singular_compiled,
+        relabelled;
+        remaining_oracle_work=500_000,
+    )
+    @test relabelled.kind == EXACT_SEED_VALIDATED_REGULAR
+    @test !relabelled_result.accepted
+    @test relabelled_result.answer === nothing
+    @test isempty(exact_only_failure.result.provisional_answers)
 end
 
 @testset "C3A replay fails closed on callbacks and exact semantics" begin
@@ -613,6 +822,14 @@ end
         source_answer.target_certificate,
     )
     @test verify_c3a_exact_answer(shifted_compiled, shifted_answer).accepted
+    stored_shifted = verify_stored_exact_answer(
+        NemoExactBackend(recognition_options=C3A_TEST_RECOGNITION_OPTIONS),
+        shifted_compiled,
+        shifted_answer,
+    )
+    @test !stored_shifted.accepted
+    @test stored_shifted.failure == EXACT_VERIFICATION_TARGET_MISMATCH
+    @test occursin("approximation", stored_shifted.detail)
     shifted_result = run_exactification(
         C3ACrossSolutionBackend(
             shifted_answer,
@@ -649,7 +866,7 @@ end
     @test cancelled.failure == EXACTIFICATION_CANCELLED
     @test cancelled.oracle_work == 0
 
-    low_precision_backend = NemoExactBackend(recognition_options=FAST_OPTIONS)
+    low_precision_backend = NemoExactBackend(recognition_options=C3A_LOW_PRECISION_OPTIONS)
     low_precision = run_exactification(
         low_precision_backend,
         compiled,

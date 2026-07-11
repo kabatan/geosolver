@@ -1,8 +1,45 @@
-const EXACT_BACKEND_ABI_VERSION = v"1.2.0"
+const EXACT_BACKEND_ABI_VERSION = v"1.4.0"
 const _MAX_EXACT_SAMPLE_PRECISION_BITS = 4096
 
 """Optional exactification implementation. Concrete backends live outside Core."""
 abstract type AbstractExactBackend end
+
+"""Canonical numerical evidence that a restored exact answer must explain."""
+struct StoredExactObservation
+    target_lower::Real
+    target_upper::Real
+    target_identity::String
+    branch_signature::Tuple
+    endpoint::Tuple
+
+    function StoredExactObservation(
+        target_lower::Real,
+        target_upper::Real,
+        target_identity::AbstractString,
+        branch_signature::Tuple,
+        endpoint::Tuple,
+    )
+        all(value -> isfinite(value), (target_lower, target_upper)) || throw(
+            ArgumentError("stored exact target bounds must be finite"),
+        )
+        target_lower <= target_upper || throw(
+            ArgumentError("stored exact target bounds must be ordered"),
+        )
+        identity = String(target_identity)
+        isempty(identity) && throw(ArgumentError("stored exact target identity cannot be empty"))
+        coordinates = Tuple(deepcopy(value) for value in endpoint)
+        all(value -> value isa Real && isfinite(value), coordinates) || throw(
+            ArgumentError("stored exact endpoint coordinates must be finite real values"),
+        )
+        return new(
+            deepcopy(target_lower),
+            deepcopy(target_upper),
+            identity,
+            Tuple(deepcopy(value) for value in branch_signature),
+            coordinates,
+        )
+    end
+end
 
 """Stable identity reported by an optional exactification backend."""
 struct ExactBackendDescriptor
@@ -193,16 +230,18 @@ end
 @enum ExactificationSeedKind::UInt8 begin
     EXACT_SEED_VALIDATED_REGULAR = 0
     EXACT_SEED_RANK_DEFICIENT_HYPOTHESIS = 1
+    EXACT_SEED_NUMERICALLY_UNRESOLVED_HYPOTHESIS = 2
 end
 
 """
 Truth-blind starting witness for optional exactification.
 
-The rank-deficient kind is only a hypothesis: it never asserts isolation or
-creates a numerical answer. Independent reference samples plus exact C3A replay
-remain the sole promotion authority. `kind` is informational provenance, not
-an authorization token; callers must never use it to permit a numerical answer
-or a fallback that was not already authorized outside this seed.
+The rank-deficient and numerically-unresolved kinds are only hypotheses: they
+never assert isolation or create a numerical answer. Independent reference
+samples plus exact C3A replay remain the sole promotion authority. `kind` is
+informational provenance, not an authorization token; callers must never use it
+to permit a numerical answer or fallback not already authorized outside this
+seed.
 """
 struct ExactificationSeed
     kind::ExactificationSeedKind
@@ -279,10 +318,11 @@ function exactification_seed(
     )
 end
 
-function rank_deficient_exactification_seed(
+function _hypothesis_exactification_seed(
     compiled::CompiledProblem,
     start,
     observation::OracleObservation;
+    kind::ExactificationSeedKind,
     residual_tolerance::Real=max(1.0e-8, sqrt(eps(Float64))),
 )
     residual_tolerance isa Bool && throw(
@@ -313,7 +353,38 @@ function rank_deficient_exactification_seed(
         compiled,
         start,
         Tuple(branch.decision for branch in observation.branches),
-        EXACT_SEED_RANK_DEFICIENT_HYPOTHESIS,
+        kind,
+    )
+end
+
+function rank_deficient_exactification_seed(
+    compiled::CompiledProblem,
+    start,
+    observation::OracleObservation;
+    residual_tolerance::Real=max(1.0e-8, sqrt(eps(Float64))),
+)
+    return _hypothesis_exactification_seed(
+        compiled,
+        start,
+        observation;
+        kind=EXACT_SEED_RANK_DEFICIENT_HYPOTHESIS,
+        residual_tolerance,
+    )
+end
+
+"""Exact-only seed for a near-feasible endpoint whose root correction is unresolved."""
+function unresolved_exactification_seed(
+    compiled::CompiledProblem,
+    start,
+    observation::OracleObservation;
+    residual_tolerance::Real=max(1.0e-8, sqrt(eps(Float64))),
+)
+    return _hypothesis_exactification_seed(
+        compiled,
+        start,
+        observation;
+        kind=EXACT_SEED_NUMERICALLY_UNRESOLVED_HYPOTHESIS,
+        residual_tolerance,
     )
 end
 
@@ -545,8 +616,8 @@ function _exact_sample_metadata_ok(compiled, refinement, bits, pass, gates)
     evidence.precision_bits == bits || return false
     evidence.work.precision_bits == bits || return false
     expected_method = pass == :compiled ?
-                      "compiled_c2_rank_general_lm_5point_v1" :
-                      "reference_c2_rank_general_lm_5point_v1"
+                      "compiled_c2_rank_general_lm_5point_geometric_v2" :
+                      "reference_c2_rank_general_lm_5point_geometric_v2"
     evidence.method == expected_method || return false
     _high_precision_observation_precision_ok(compiled, evidence.observation, bits) || return false
     all(value -> !(value isa AbstractFloat) || precision(value) >= bits, evidence.coordinates) ||
@@ -777,6 +848,7 @@ struct ExactificationResult
     oracle_work::Int
     backend_reported_oracle_work::Int
     samples::ExactSampleProviderSnapshot
+    reference_samples::Tuple
 
     function ExactificationResult(
         accepted::Bool,
@@ -787,6 +859,7 @@ struct ExactificationResult
         oracle_work::Int,
         backend_reported_oracle_work::Int,
         samples::ExactSampleProviderSnapshot,
+        reference_samples,
     )
         accepted == (answer !== nothing) || throw(
             InvariantError(:exactification_answer_mismatch, "exactification status and answer disagree"),
@@ -806,6 +879,20 @@ struct ExactificationResult
         oracle_work == samples.oracle_work || throw(
             InvariantError(:exactification_work_mismatch, "official work must equal the Core provider ledger"),
         )
+        frozen_reference = Tuple(deepcopy(sample) for sample in reference_samples)
+        all(sample -> sample isa ExactPrecisionSample && sample.pass == :reference, frozen_reference) ||
+            throw(
+                InvariantError(
+                    :invalid_exactification_reference_evidence,
+                    "exactification reference evidence has an invalid sample",
+                ),
+            )
+        accepted && length(frozen_reference) < 2 && throw(
+            InvariantError(
+                :missing_exactification_reference_evidence,
+                "accepted exactification requires two reference samples",
+            ),
+        )
         return new(
             accepted,
             answer,
@@ -815,6 +902,7 @@ struct ExactificationResult
             oracle_work,
             backend_reported_oracle_work,
             samples,
+            frozen_reference,
         )
     end
 end
@@ -828,6 +916,7 @@ function _exactification_result(
     backend_reported_oracle_work=0,
 )
     snapshot = exact_sample_provider_snapshot(provider)
+    reference_samples = exact_sample_provider_samples(provider; pass=:reference)
     return ExactificationResult(
         answer !== nothing,
         answer,
@@ -837,6 +926,7 @@ function _exactification_result(
         snapshot.oracle_work,
         Int(backend_reported_oracle_work),
         snapshot,
+        reference_samples,
     )
 end
 
@@ -857,6 +947,7 @@ function _exactification_result(
         snapshot.oracle_work,
         Int(backend_reported_oracle_work),
         snapshot,
+        (),
     )
 end
 
@@ -937,6 +1028,30 @@ function verify_exactified_answer(
         false,
         EXACT_VERIFICATION_UNSUPPORTED_SCHEME,
         "the exact backend does not implement independent answer verification",
+    )
+end
+
+"""
+Provider-free replay for an exact answer restored from solver state.
+
+This hook must reconstruct the certificate artifacts and replay the original
+problem without trusting the prior exactification process. When `observation`
+is supplied, it must also bind the restored target enclosure, target identity,
+branch signature, and endpoint to an independently evaluated exact artifact.
+"""
+function verify_stored_exact_answer(
+    ::AbstractExactBackend,
+    ::CompiledProblem,
+    ::ExactAnswer,
+    ;
+    observation::Union{Nothing,StoredExactObservation}=nothing,
+    checkpoint=() -> nothing,
+)
+    checkpoint()
+    return ExactVerificationResult(
+        false,
+        EXACT_VERIFICATION_UNSUPPORTED_SCHEME,
+        "the exact backend does not implement stored-answer verification",
     )
 end
 

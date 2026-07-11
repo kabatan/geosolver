@@ -270,7 +270,7 @@ function _sample_consistency_failure(
     for sample in samples
         _checkpoint_provider(provider)
         bits = sample.precision_bits
-        coordinate_error, target_error, approximation_error = setprecision(BigFloat, bits) do
+        coordinate_error, target_error, approximation_error, reliable_tolerance = setprecision(BigFloat, bits) do
             exact_coordinates = BigFloat[
                 _root_approximation(coordinate.value, bits) for
                 coordinate in evidence.coordinates
@@ -300,21 +300,117 @@ function _sample_consistency_failure(
                 BigFloat(Inf)
             end
             approximation_disagreement = abs(exact_target - approximation) / target_scale
-            coordinate_disagreement, target_disagreement, approximation_disagreement
+            coordinate_disagreement,
+            target_disagreement,
+            approximation_disagreement,
+            ldexp(one(BigFloat), -max(333, fld(3 * bits, 4)))
         end
-        coordinate_error <= sample.gates.correction_tolerance || return (
+        # Singular corrections can be much smaller than their actual root
+        # error. Compare the recognized root through a conservative 3/4-bit
+        # window, never looser than the public 100-decimal-digit contract.
+        coordinate_tolerance = max(sample.gates.correction_tolerance, reliable_tolerance)
+        target_tolerance = max(sample.gates.target_tolerance, reliable_tolerance)
+        coordinate_error <= coordinate_tolerance || return (
             EXACT_VERIFICATION_CONFIGURATION_MISMATCH,
             "exact artifact coordinates disagree with the $(bits)-bit reference sample",
         )
-        target_error <= sample.gates.target_tolerance || return (
+        target_error <= target_tolerance || return (
             EXACT_VERIFICATION_TARGET_MISMATCH,
             "exact artifact target disagrees with the $(bits)-bit reference sample",
         )
-        approximation_error <= sample.gates.target_tolerance || return (
+        approximation_error <= target_tolerance || return (
             EXACT_VERIFICATION_TARGET_MISMATCH,
             "exact answer approximation disagrees with the $(bits)-bit reference sample",
         )
     end
+    return nothing
+end
+
+function _stored_answer_consistency_failure(
+    compiled::GeoTargetCore.CompiledProblem,
+    answer::ExactAnswer,
+    evidence::C3AReplayEvidence,
+    observation::Union{Nothing,GeoTargetCore.StoredExactObservation};
+    checkpoint=() -> nothing,
+)
+    bits = 768
+    checkpoint()
+    exact_coordinates, exact_target, approximation, tolerance = setprecision(BigFloat, bits) do
+        coordinates = BigFloat[]
+        for coordinate in evidence.coordinates
+            checkpoint()
+            push!(coordinates, _root_approximation(coordinate.value, bits))
+        end
+        checkpoint()
+        target = _root_approximation(evidence.target.value, bits)
+        stored_approximation = try
+            answer.approximation isa BigFloat ? BigFloat(answer.approximation) :
+            parse(BigFloat, string(answer.approximation))
+        catch
+            BigFloat(Inf)
+        end
+        coordinates, target, stored_approximation, parse(BigFloat, "1e-100")
+    end
+    target_scale = max(one(BigFloat), abs(exact_target))
+    abs(exact_target - approximation) / target_scale <= tolerance || return (
+        EXACT_VERIFICATION_TARGET_MISMATCH,
+        "stored exact answer approximation disagrees with its 768-bit exact target",
+    )
+    observation === nothing && return nothing
+
+    observation.target_identity ==
+    "exact/$(string(answer.target_certificate.identity))" || return (
+        EXACT_VERIFICATION_TARGET_MISMATCH,
+        "stored observation target identity differs from its exact target certificate",
+    )
+    observation.branch_signature == answer.branch_signature || return (
+        EXACT_VERIFICATION_CONFIGURATION_MISMATCH,
+        "stored observation branch differs from its exact answer",
+    )
+    replay_branches = Tuple(proof.decision for proof in evidence.branches)
+    observation.branch_signature == replay_branches || return (
+        EXACT_VERIFICATION_CONFIGURATION_MISMATCH,
+        "stored observation branch differs from independent exact replay",
+    )
+    length(observation.endpoint) == length(exact_coordinates) || return (
+        EXACT_VERIFICATION_CONFIGURATION_MISMATCH,
+        "stored observation endpoint dimension differs from the exact configuration",
+    )
+    checkpoint()
+    coordinate_error = setprecision(BigFloat, bits) do
+        largest = BigFloat(0)
+        for index in eachindex(exact_coordinates)
+            checkpoint()
+            error = abs(BigFloat(observation.endpoint[index]) - exact_coordinates[index]) /
+                    abs(BigFloat(compiled.variables[index].spec.scale))
+            largest = max(largest, error)
+        end
+        largest
+    end
+    coordinate_error <= tolerance || return (
+        EXACT_VERIFICATION_CONFIGURATION_MISMATCH,
+        "stored observation endpoint disagrees with the 768-bit exact configuration",
+    )
+    checkpoint()
+    target_contained = setprecision(BigFloat, bits) do
+        BigFloat(observation.target_lower) <= exact_target <= BigFloat(observation.target_upper)
+    end
+    target_contained || return (
+        EXACT_VERIFICATION_TARGET_MISMATCH,
+        "stored observation target enclosure excludes the 768-bit exact target",
+    )
+    target_radius_ok = setprecision(BigFloat, bits) do
+        scale = max(one(BigFloat), abs(exact_target))
+        rounding_allowance = ldexp(one(BigFloat), -700)
+        max(
+            abs(BigFloat(observation.target_lower) - exact_target),
+            abs(BigFloat(observation.target_upper) - exact_target),
+        ) / scale <= tolerance + rounding_allowance
+    end
+    target_radius_ok || return (
+        EXACT_VERIFICATION_TARGET_MISMATCH,
+        "stored observation target enclosure is wider than the 100-digit exact-target gate",
+    )
     return nothing
 end
 
@@ -351,6 +447,42 @@ function GeoTargetCore.verify_exactified_answer(
     return ExactVerificationResult(
         verification.accepted,
         failure,
+        verification.detail,
+    )
+end
+
+function GeoTargetCore.verify_stored_exact_answer(
+    ::NemoExactBackend,
+    compiled::GeoTargetCore.CompiledProblem,
+    answer::ExactAnswer,
+    ;
+    observation::Union{Nothing,GeoTargetCore.StoredExactObservation}=nothing,
+    checkpoint=() -> nothing,
+)
+    verification = verify_c3a_exact_answer(compiled, answer; checkpoint)
+    if verification.accepted
+        evidence = _reconstruct_verified_c3a_evidence(compiled, answer; checkpoint)
+        evidence === nothing && return ExactVerificationResult(
+            false,
+            EXACT_VERIFICATION_ARTIFACT_INVALID,
+            "verified C3A artifacts could not be reconstructed for stored-answer comparison",
+        )
+        consistency = _stored_answer_consistency_failure(
+            compiled,
+            answer,
+            evidence,
+            observation;
+            checkpoint,
+        )
+        consistency === nothing || return ExactVerificationResult(
+            false,
+            first(consistency),
+            last(consistency),
+        )
+    end
+    return ExactVerificationResult(
+        verification.accepted,
+        _core_verification_failure(verification.failure),
         verification.detail,
     )
 end

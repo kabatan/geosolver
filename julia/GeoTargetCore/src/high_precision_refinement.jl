@@ -446,6 +446,41 @@ function _high_precision_line_search!(
     return nothing
 end
 
+function _high_precision_geometric_extrapolation!(
+    work::_HighPrecisionWork,
+    normalized,
+    base::OracleObservation,
+    trial,
+    previous_step,
+)
+    step = BigFloat[(trial.normalized .- normalized)...]
+    previous_step === nothing && return trial, step, false
+    denominator = dot(previous_step, previous_step)
+    denominator > eps(BigFloat) || return trial, step, false
+    ratio = dot(step, previous_step) / denominator
+    isfinite(ratio) && BigFloat(0.05) <= ratio <= BigFloat(0.95) || return (
+        trial,
+        step,
+        false,
+    )
+    aligned_error = norm(step .- ratio .* previous_step, Inf)
+    aligned_scale = max(norm(step, Inf), eps(BigFloat))
+    aligned_error <= BigFloat(0.125) * aligned_scale || return trial, step, false
+    extrapolated = trial.normalized .+ (ratio / (one(BigFloat) - ratio)) .* step
+    accelerated = _high_precision_sample!(work, extrapolated, base)
+    work.stop_failure == HIGH_PRECISION_REFINEMENT_NONE || return trial, step, false
+    accelerated === nothing && return trial, step, false
+    trial_merit = isempty(trial.residual) ? BigFloat(0) : sum(abs2, trial.residual)
+    accelerated_merit = isempty(accelerated.residual) ?
+                        BigFloat(0) : sum(abs2, accelerated.residual)
+    accelerated_merit <= trial_merit / BigFloat(4) || return trial, step, false
+    return (
+        normalized=BigFloat[extrapolated...],
+        observation=accelerated.observation,
+        residual=accelerated.residual,
+    ), nothing, true
+end
+
 function _high_precision_lm_step(jacobian, residual)
     variable_count = size(jacobian, 2)
     damping = sqrt(eps(BigFloat)) * max(one(BigFloat), norm(jacobian, Inf)^2)
@@ -581,8 +616,8 @@ function _run_high_precision_refinement(
     )
     method = if allow_rank_deficient
         evaluator_kind == :compiled ?
-        "compiled_c2_rank_general_lm_5point_v1" :
-        "reference_c2_rank_general_lm_5point_v1"
+        "compiled_c2_rank_general_lm_5point_geometric_v2" :
+        "reference_c2_rank_general_lm_5point_geometric_v2"
     else
         evaluator_kind == :compiled ?
         "compiled_c2_cpqr_5point_v1" : "reference_c2_cpqr_5point_v1"
@@ -691,6 +726,7 @@ function _run_high_precision_refinement(
         last_condition = BigFloat(Inf)
         last_correction = BigFloat(Inf)
         last_target_error = BigFloat(Inf)
+        previous_step = nothing
 
         for iteration in 0:Int(max_iterations)
             if !_check_high_precision_resources!(work; reserve_evaluation=false)
@@ -913,6 +949,15 @@ function _run_high_precision_refinement(
                 condition_estimate=last_condition,
                 iterations=iteration,
             )
+            if allow_rank_deficient
+                trial, previous_step, _ = _high_precision_geometric_extrapolation!(
+                    work,
+                    normalized,
+                    base,
+                    trial,
+                    previous_step,
+                )
+            end
             normalized = trial.normalized
             coordinates = _high_precision_coordinates(compiled, normalized)
             base = trial.observation

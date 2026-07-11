@@ -223,7 +223,7 @@ end
     reference = exact_sample(provider, 640; pass=:reference)
     @test reference.accepted
     @test reference.sample.pass == :reference
-    @test reference.sample.method == "reference_c2_rank_general_lm_5point_v1"
+    @test reference.sample.method == "reference_c2_rank_general_lm_5point_geometric_v2"
     @test reference.sample.coordinates == sample.coordinates
     snapshot = exact_sample_provider_snapshot(provider)
     @test snapshot.requests == 3
@@ -284,6 +284,15 @@ end
     @test hypothesis.problem == seed.problem
     @test hypothesis.start == seed.start
     @test hypothesis.branch_signature == seed.branch_signature
+    unresolved = unresolved_exactification_seed(
+        compiled,
+        seed.start,
+        observation;
+        residual_tolerance=1.0e-12,
+    )
+    @test unresolved.kind == EXACT_SEED_NUMERICALLY_UNRESOLVED_HYPOTHESIS
+    @test unresolved.problem == hypothesis.problem
+    @test unresolved.start_configuration == hypothesis.start_configuration
     @test_throws ArgumentError rank_deficient_exactification_seed(
         compiled,
         seed.start,

@@ -43,6 +43,52 @@ function replace_configuration_artifact(answer, artifact; problem=answer.configu
     )
 end
 
+function widen_literal_checkpoint(source::AbstractString)
+    document = parse_protocol_json(source)
+    observed = only(
+        event for event in document["state"]["events"] if event["kind"] == "observed"
+    )
+    observations = (
+        document["state"]["workspace"]["history"][1]["observation"],
+        observed["payload"],
+    )
+    for observation in observations
+        for (bound, delta) in (("lower", -big"1e6"), ("upper", big"1e6"))
+            encoded = observation["target"][bound]
+            @assert encoded["kind"] == "bigfloat"
+            bits = Int(encoded["precision_bits"])
+            encoded["decimal"] = setprecision(BigFloat, bits) do
+                string(parse(BigFloat, String(encoded["decimal"])) + delta)
+            end
+        end
+    end
+    payload = Dict{String,Any}(
+        "state" => document["state"],
+        "target_image_status" => document["target_image_status"],
+    )
+    document["content_hash"] = string(canonical_json_hash(payload))
+    return decode_checkpoint_document(document)
+end
+
+function forge_literal_observed_event(source::AbstractString)
+    document = parse_protocol_json(source)
+    observed = only(
+        event for event in document["state"]["events"] if event["kind"] == "observed"
+    )
+    approximation = observed["payload"]["verified_payload"]["value"]["approximation"]
+    @assert approximation["kind"] == "bigfloat"
+    bits = Int(approximation["precision_bits"])
+    approximation["decimal"] = setprecision(BigFloat, bits) do
+        string(parse(BigFloat, String(approximation["decimal"])) + big"0.25")
+    end
+    payload = Dict{String,Any}(
+        "state" => document["state"],
+        "target_image_status" => document["target_image_status"],
+    )
+    document["content_hash"] = string(canonical_json_hash(payload))
+    return decode_checkpoint_document(document)
+end
+
 @testset "literal exact certificates replay independently" begin
     registry = exact_registry()
     problem = literal_problem()
@@ -70,6 +116,20 @@ end
         checkpoint,
     )
     @test verify_exact_answer(problem, registry, only(resumed.result.exact_answers)).accepted
+    @test_throws SolveConfigurationError solve_execution(
+        problem,
+        registry;
+        options=SolveOptions(wall_seconds=60),
+        max_actions=0,
+        checkpoint=widen_literal_checkpoint(encode_checkpoint_json(checkpoint)),
+    )
+    @test_throws GeoTargetCore.SearchProtocolError solve_execution(
+        problem,
+        registry;
+        options=SolveOptions(wall_seconds=60),
+        max_actions=0,
+        checkpoint=forge_literal_observed_event(encode_checkpoint_json(checkpoint)),
+    )
 
     configuration_document = parse_protocol_json(
         answer.configuration_certificate.artifact.payload,
@@ -141,6 +201,20 @@ end
     invalid_target_result = verify_exact_answer(problem, registry, invalid_target)
     @test !invalid_target_result.accepted
     @test invalid_target_result.failure == EXACT_VERIFICATION_TARGET_MISMATCH
+
+    shifted_approximation = ExactAnswer(
+        answer.identity,
+        BigFloat(answer.approximation) + big"0.25",
+        answer.branch_signature,
+        answer.configuration_certificate,
+        answer.target_certificate,
+    )
+    @test answer.identity.isolating_interval.lower <
+          ExactRational(15, 4) < answer.identity.isolating_interval.upper
+    shifted_result = verify_exact_answer(problem, registry, shifted_approximation)
+    @test !shifted_result.accepted
+    @test shifted_result.failure == EXACT_VERIFICATION_TARGET_MISMATCH
+    @test occursin("approximation", shifted_result.detail)
 end
 
 end

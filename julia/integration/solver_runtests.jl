@@ -356,6 +356,106 @@ function options_with_oracle_budget(limit::Integer)
     )
 end
 
+struct SolverFixtureExactBackend <: AbstractExactBackend
+    promote::Bool
+    descriptor_tag::String
+    exact_calls::Base.RefValue{Int}
+    stored_verify_calls::Base.RefValue{Int}
+end
+
+function solver_fixture_exact_backend(; promote=true, descriptor_tag="v1")
+    return SolverFixtureExactBackend(
+        promote,
+        String(descriptor_tag),
+        Ref(0),
+        Ref(0),
+    )
+end
+
+GeoTargetCore.exact_backend_descriptor(backend::SolverFixtureExactBackend) =
+    ExactBackendDescriptor(
+        "solver-fixture-exact",
+        v"1.0.0",
+        "two-reference-fixture";
+        configuration_certificate_schemes=("solver_fixture_configuration_v1",),
+        target_certificate_schemes=("solver_fixture_target_v1",),
+        policy_identity=content_hash("solver-fixture-policy-$(backend.descriptor_tag)"),
+        environment_identity=content_hash("solver-fixture-environment-v1"),
+    )
+
+function GeoTargetCore.exactify_candidate(
+    backend::SolverFixtureExactBackend,
+    ::GeoTargetCore.CompiledProblem,
+    seed::ExactificationSeed,
+    provider::ExactSampleProvider,
+)
+    backend.exact_calls[] += 1
+    backend.promote || return ExactBackendOutcome(
+        nothing,
+        EXACTIFICATION_RECOGNITION_FAILED,
+        "fixture exactification was intentionally rejected",
+    )
+    first = exact_sample(provider, 512; pass=:reference)
+    first.accepted || return ExactBackendOutcome(
+        nothing,
+        EXACTIFICATION_SAMPLE_FAILED,
+        first.detail,
+    )
+    second = exact_sample(provider, 768; pass=:reference)
+    second.accepted || return ExactBackendOutcome(
+        nothing,
+        EXACTIFICATION_SAMPLE_FAILED,
+        second.detail,
+    )
+    identity = AlgebraicTargetIdentity((-1, 1), RationalInterval(0 // 1, 2 // 1), 1)
+    configuration = ConfigurationValidityCertificate(
+        seed.problem,
+        seed.start_configuration,
+        CertificateArtifact(
+            "solver_fixture_configuration_v1",
+            "{}";
+            media_type="application/json",
+        ),
+    )
+    target = TargetIdentityCertificate(
+        seed.problem,
+        identity,
+        CertificateArtifact(
+            "solver_fixture_target_v1",
+            "{}";
+            media_type="application/json",
+        ),
+    )
+    answer = ExactAnswer(
+        identity,
+        second.sample.target,
+        seed.branch_signature,
+        configuration,
+        target,
+    )
+    return ExactBackendOutcome(answer, EXACTIFICATION_NONE, "")
+end
+
+GeoTargetCore.verify_exactified_answer(
+    ::SolverFixtureExactBackend,
+    ::GeoTargetCore.CompiledProblem,
+    ::ExactAnswer,
+    ::ExactSampleProvider,
+) = ExactVerificationResult(true, EXACT_VERIFICATION_NONE, "")
+
+function GeoTargetCore.verify_stored_exact_answer(
+    backend::SolverFixtureExactBackend,
+    ::GeoTargetCore.CompiledProblem,
+    ::ExactAnswer,
+    ;
+    observation::Union{Nothing,GeoTargetCore.StoredExactObservation}=nothing,
+    checkpoint=() -> nothing,
+)
+    checkpoint()
+    backend.stored_verify_calls[] += 1
+    return ExactVerificationResult(true, EXACT_VERIFICATION_NONE, "")
+end
+
 @testset "public solve path returns canonical provisional evidence" begin
     registry = solve_registry()
     problem = scalar_root_problem()
@@ -392,6 +492,128 @@ end
     decoded = decode_solve_result_json(encoded)
     @test encode_solve_result_json(decoded) == encoded
     @test decoded.search_status == SEARCH_FINISHED_UNKNOWN
+end
+
+@testset "optional exact backend is budgeted, replayed, and resume-bound" begin
+    registry = solve_registry()
+    problem = scalar_root_problem()
+    options = short_options()
+    numerical = solve_execution(problem, registry; options, max_actions=2)
+
+    backend = solver_fixture_exact_backend()
+    exact = solve_execution(
+        problem,
+        registry;
+        options,
+        max_actions=2,
+        exact_backend=backend,
+    )
+    @test isempty(exact.result.provisional_answers)
+    @test length(exact.result.exact_answers) == 1
+    @test backend.exact_calls[] == 1
+    @test backend.stored_verify_calls[] == 0
+    @test exact.checkpoint.budget.oracle_work > numerical.checkpoint.budget.oracle_work
+    @test occursin("exactification=accepted", exact.evidence_json)
+    @test occursin("promotion=exact_regular", exact.evidence_json)
+    @test exact.result.environment_lock.policy != numerical.result.environment_lock.policy
+    @test exact.result.environment_lock.environment != numerical.result.environment_lock.environment
+
+    resumed = solve_execution(
+        problem,
+        registry;
+        options,
+        max_actions=0,
+        checkpoint=SolveCheckpointArtifact(exact),
+        exact_backend=backend,
+    )
+    @test only(resumed.result.exact_answers).identity ==
+          only(exact.result.exact_answers).identity
+    @test backend.stored_verify_calls[] == 1
+    @test_throws GeoTargetCore.SearchProtocolError solve_execution(
+        problem,
+        registry;
+        options,
+        max_actions=0,
+        checkpoint=SolveCheckpointArtifact(exact),
+    )
+    @test_throws GeoTargetCore.SearchProtocolError solve_execution(
+        problem,
+        registry;
+        options,
+        max_actions=0,
+        checkpoint=SolveCheckpointArtifact(exact),
+        exact_backend=solver_fixture_exact_backend(descriptor_tag="different"),
+    )
+    cancelled_token = CancellationToken()
+    cancel!(cancelled_token)
+    @test_throws SolveConfigurationError solve_execution(
+        problem,
+        registry;
+        options,
+        cancel=cancelled_token,
+        max_actions=0,
+        checkpoint=SolveCheckpointArtifact(exact),
+        exact_backend=backend,
+    )
+    snapshot = exact.checkpoint
+    expired_snapshot = GeoTargetCore.CheckpointSnapshot(
+        snapshot.resume_identity,
+        snapshot.policy_version,
+        snapshot.budget,
+        snapshot.workspace,
+        snapshot.events,
+        snapshot.rng_state,
+        snapshot.precision_bits,
+        0.0,
+        snapshot.cancelled,
+    )
+    expired = SolveCheckpointArtifact(
+        expired_snapshot,
+        exact.result.target_image_status,
+    )
+    @test_throws SolveConfigurationError solve_execution(
+        problem,
+        registry;
+        options,
+        max_actions=0,
+        checkpoint=expired,
+        exact_backend=backend,
+    )
+
+    rejected_backend = solver_fixture_exact_backend(promote=false)
+    fallback = solve_execution(
+        problem,
+        registry;
+        options,
+        max_actions=2,
+        exact_backend=rejected_backend,
+    )
+    @test isempty(fallback.result.exact_answers)
+    @test length(fallback.result.provisional_answers) == 1
+    fallback_answer = only(fallback.result.provisional_answers)
+    @test fallback_answer.exact_failure == EXACT_RECOGNITION_FAILED
+    @test occursin("intentionally rejected", fallback_answer.exact_failure_detail)
+    @test rejected_backend.exact_calls[] == 1
+    @test rejected_backend.stored_verify_calls[] == 0
+    @test occursin("EXACTIFICATION_RECOGNITION_FAILED", fallback.evidence_json)
+    @test occursin("promotion=validated_numerical", fallback.evidence_json)
+
+    validated_backend = solver_fixture_exact_backend()
+    validated_options = short_options(answer_level=:validated)
+    validated_only = solve_execution(
+        problem,
+        registry;
+        options=validated_options,
+        max_actions=2,
+        exact_backend=validated_backend,
+    )
+    @test isempty(validated_only.result.exact_answers)
+    @test length(validated_only.result.provisional_answers) == 1
+    @test validated_backend.exact_calls[] == 0
+    @test validated_backend.stored_verify_calls[] == 0
+    @test validated_only.result.environment_lock.policy ==
+          canonical_json_hash(GeoTargetCore._solve_policy_document(validated_options))
+    @test !haskey(GeoTargetCore._solve_policy_document(validated_options), "exact_backend")
 end
 
 @testset "singular nonzero residuals fail closed before answer promotion" begin
@@ -830,7 +1052,7 @@ end
     default_policy = GeoTargetCore._solve_policy_document(options)
     default_hash = canonical_json_hash(default_policy)
     @test string(default_hash) ==
-          "sha256:a2c8222024d7c4f2aef1371fd0c0e4ae59eed996ac044c99a51e55a20143fa75"
+          "sha256:d02351d7dd936e891096b7abccf4f7bac62f4c6564efb0e2131b66f7acd3a5ee"
 
     proposal_factory_calls = Ref(0)
     local_solver_calls = Ref(0)

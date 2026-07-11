@@ -258,6 +258,21 @@ end
             confirmation_extra_bits=128,
         ),
     ) === nothing
+
+    fixed_tail_provider = bits -> setprecision(BigFloat, bits) do
+        one(BigFloat) + ldexp(one(BigFloat), -600)
+    end
+    @test recognize_at(
+        fixed_tail_provider,
+        1,
+        8;
+        options=RecognitionOptions(
+            degree_limits=(1,),
+            height_bits=(8,),
+            base_precision_bits=768,
+            confirmation_extra_bits=256,
+        ),
+    ) === nothing
 end
 
 @testset "certificate interval and root-index tampering fail closed" begin

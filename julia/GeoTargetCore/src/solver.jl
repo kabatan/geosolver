@@ -1,4 +1,4 @@
-const SOLVE_API_VERSION = v"1.5.0"
+const SOLVE_API_VERSION = v"1.6.0"
 
 struct SolveConfigurationError <: CoreError
     code::Symbol
@@ -163,6 +163,9 @@ mutable struct _CompiledAttemptRunner{I<:TargetImageDiagnosticOptions,L}
     validation_options::CandidateValidationOptions
     image_options::I
     local_solver::L
+    exact_backend::Union{Nothing,AbstractExactBackend}
+    exact_descriptor::Union{Nothing,ExactBackendDescriptor}
+    answer_level::SolveAnswerLevel
     saw_likely_continuous::Bool
     saw_inconclusive_image::Bool
 end
@@ -291,6 +294,215 @@ function _local_diagnostic(attempt, validation=nothing, image=nothing, correctio
             "root_correction=$correction_text",
         ),
         ';',
+    )
+end
+
+function _exactification_detail(result::ExactificationResult)
+    result.accepted && return "accepted"
+    isempty(result.detail) && return string(result.failure)
+    return string(result.failure, ':', result.detail)
+end
+
+function _attempt_exactification!(
+    runner::_CompiledAttemptRunner,
+    context::ExecutionContext,
+    candidate::Union{ExactificationSeed,CandidateValidationResult},
+    oracle_work::Base.RefValue{Int},
+)
+    backend = runner.exact_backend
+    descriptor = runner.exact_descriptor
+    if runner.answer_level != ANSWER_EXACT_IF_AVAILABLE || backend === nothing ||
+       descriptor === nothing
+        return (
+            answer=nothing,
+            failure=nothing,
+            detail="not_requested",
+            reference_sample=nothing,
+        )
+    end
+    result = run_exactification(
+        backend,
+        runner.compiled,
+        candidate;
+        deadline_ns=_remaining_deadline_ns(context),
+        cancelled=() -> is_cancelled(context.cancel),
+        remaining_oracle_work=_remaining_oracle_work(context, oracle_work[]),
+    )
+    oracle_work[] = Base.checked_add(oracle_work[], result.oracle_work)
+    observed_descriptor = result.backend
+    if observed_descriptor === nothing ||
+       !_same_exact_backend_descriptor(descriptor, observed_descriptor)
+        return (
+            answer=nothing,
+            failure=EXACTIFICATION_BACKEND_PROTOCOL_FAILED,
+            detail="backend_descriptor_changed",
+            reference_sample=nothing,
+        )
+    end
+    result.accepted || return (
+        answer=nothing,
+        failure=result.failure,
+        detail=_exactification_detail(result),
+        reference_sample=nothing,
+    )
+    reference_sample = last(result.reference_samples)
+    return (
+        answer=result.answer::ExactAnswer,
+        failure=EXACTIFICATION_NONE,
+        detail="accepted",
+        reference_sample,
+    )
+end
+
+function _promotion_failure(failure::ExactificationFailure)
+    failure == EXACTIFICATION_CAPABILITY_MISSING && return EXACT_CAPABILITY_MISSING
+    failure == EXACTIFICATION_RECOGNITION_FAILED && return EXACT_RECOGNITION_FAILED
+    failure in (
+        EXACTIFICATION_CANCELLED,
+        EXACTIFICATION_DEADLINE_REACHED,
+        EXACTIFICATION_ORACLE_BUDGET_EXHAUSTED,
+    ) && return EXACT_BUDGET_EXHAUSTED
+    failure == EXACTIFICATION_SAMPLE_FAILED && return EXACT_SINGULAR
+    failure in (
+        EXACTIFICATION_REPLAY_FAILED,
+        EXACTIFICATION_INVALID_CANDIDATE,
+    ) && return EXACT_CONFIGURATION_CERT_FAILED
+    failure in (
+        EXACTIFICATION_CERTIFICATE_FAILED,
+        EXACTIFICATION_VERIFICATION_FAILED,
+    ) && return EXACT_TARGET_CERT_FAILED
+    return EXACT_UNSUPPORTED
+end
+
+function _provisional_after_exactification(
+    provisional::ProvisionalAnswer,
+    exactification,
+)
+    failure = exactification.failure
+    failure === nothing && return provisional
+    return ProvisionalAnswer(
+        provisional.target,
+        provisional.canonical_residual_bound,
+        provisional.branch_signature,
+        provisional.validation;
+        guard_enclosures=provisional.guard_enclosures,
+        exact_failure=_promotion_failure(failure),
+        exact_failure_detail=exactification.detail,
+    )
+end
+
+function _unresolved_exactification_attempt!(
+    runner::_CompiledAttemptRunner,
+    context::ExecutionContext,
+    endpoint,
+    observation::OracleObservation,
+    image::TargetImageDiagnostic,
+    oracle_work::Base.RefValue{Int},
+    ;
+    allow_unresolved_correction::Bool=false,
+)
+    runner.answer_level == ANSWER_EXACT_IF_AVAILABLE || return (
+        answer=nothing,
+        failure=nothing,
+        detail="not_requested",
+        reference_sample=nothing,
+    )
+    runner.exact_backend === nothing && return (
+        answer=nothing,
+        failure=nothing,
+        detail="not_requested",
+        reference_sample=nothing,
+    )
+    supports(capabilities(runner.compiled), C3A) || return (
+        answer=nothing,
+        failure=EXACTIFICATION_CAPABILITY_MISSING,
+        detail="c3a_capability_missing",
+        reference_sample=nothing,
+    )
+    image.classification == TARGET_LIKELY_CONTINUOUS && return (
+        answer=nothing,
+        failure=EXACTIFICATION_INVALID_CANDIDATE,
+        detail="likely_continuous",
+        reference_sample=nothing,
+    )
+    image.linearization_computed || return (
+        answer=nothing,
+        failure=EXACTIFICATION_INVALID_CANDIDATE,
+        detail="rank_unavailable",
+        reference_sample=nothing,
+    )
+    rank = image.numerical_rank
+    rank === nothing && return (
+        answer=nothing,
+        failure=EXACTIFICATION_INVALID_CANDIDATE,
+        detail="rank_unavailable",
+        reference_sample=nothing,
+    )
+    rank < length(runner.compiled.variables) || allow_unresolved_correction || return (
+        answer=nothing,
+        failure=EXACTIFICATION_INVALID_CANDIDATE,
+        detail="full_variable_rank",
+        reference_sample=nothing,
+    )
+    seed = try
+        seed_factory = allow_unresolved_correction ?
+                       unresolved_exactification_seed :
+                       rank_deficient_exactification_seed
+        seed_factory(
+            runner.compiled,
+            endpoint,
+            observation;
+            residual_tolerance=max(
+                100 * runner.local_options.residual_tolerance,
+                sqrt(eps(Float64)),
+            ),
+        )
+    catch error
+        error isa InterruptException && rethrow()
+        error isa ArgumentError || rethrow()
+        return (
+            answer=nothing,
+            failure=EXACTIFICATION_INVALID_CANDIDATE,
+            detail="seed_rejected:$(sprint(showerror, error))",
+            reference_sample=nothing,
+        )
+    end
+    # `seed.kind` is intentionally not consulted. Numerically unresolved
+    # promotion is exact-only here, regardless of any relabelled provenance.
+    return _attempt_exactification!(runner, context, seed, oracle_work)
+end
+
+_exact_target_identity(answer::ExactAnswer) =
+    "exact/$(string(answer.target_certificate.identity))"
+
+function _exact_only_observation(
+    proposal::Proposal,
+    oracle_work::Int,
+    answer::ExactAnswer,
+    reference::ExactPrecisionSample,
+    diagnostic::AbstractString,
+)
+    target = setprecision(BigFloat, reference.precision_bits) do
+        center = BigFloat(reference.target)
+        scale = max(one(BigFloat), abs(center))
+        radius = max(BigFloat(reference.target_error_bound), parse(BigFloat, "1e-100") * scale)
+        TargetEnclosure(center - radius, center + radius)
+    end
+    return Observation(
+        proposal.task_id,
+        proposal.configuration_id;
+        canonical_near_feasible=true,
+        canonical_valid=true,
+        target,
+        target_identity=_exact_target_identity(answer),
+        branch_signature=answer.branch_signature,
+        verified=true,
+        verified_payload=answer,
+        needs_refinement=false,
+        residual_score=Float64(reference.residual_bound),
+        oracle_work,
+        endpoint=reference.coordinates,
+        diagnostic=String(diagnostic),
     )
 end
 
@@ -816,6 +1028,29 @@ function (runner::_CompiledAttemptRunner)(
     inconclusive_image = image.classification == TARGET_IMAGE_INCONCLUSIVE
     runner.saw_inconclusive_image |= inconclusive_image
     if !correction.resolved
+        exactification = _unresolved_exactification_attempt!(
+            runner,
+            context,
+            endpoint,
+            fast_observation,
+            image,
+            oracle_work,
+            allow_unresolved_correction=true,
+        )
+        if exactification.answer !== nothing
+            return _exact_only_observation(
+                proposal,
+                oracle_work[],
+                exactification.answer,
+                exactification.reference_sample,
+                string(
+                    _local_diagnostic(attempt, nothing, image, correction),
+                    ";exactification=",
+                    exactification.detail,
+                    ";promotion=exact_only_numerically_unresolved",
+                ),
+            )
+        end
         return Observation(
             proposal.task_id,
             proposal.configuration_id;
@@ -828,7 +1063,11 @@ function (runner::_CompiledAttemptRunner)(
             residual_score=score,
             oracle_work=oracle_work[],
             endpoint=Tuple(endpoint),
-            diagnostic=_local_diagnostic(attempt, nothing, image, correction),
+            diagnostic=string(
+                _local_diagnostic(attempt, nothing, image, correction),
+                ";exactification=",
+                exactification.detail,
+            ),
         )
     end
     if image.classification == TARGET_LIKELY_CONTINUOUS
@@ -890,6 +1129,28 @@ function (runner::_CompiledAttemptRunner)(
     _check_logical_evaluation_bound(runner.compiled, validation.canonical_observation)
     oracle_work[] = Base.checked_add(oracle_work[], validation.oracle_work)
     if !validation.accepted
+        exactification = _unresolved_exactification_attempt!(
+            runner,
+            context,
+            endpoint,
+            fast_observation,
+            image,
+            oracle_work,
+        )
+        if exactification.answer !== nothing
+            return _exact_only_observation(
+                proposal,
+                oracle_work[],
+                exactification.answer,
+                exactification.reference_sample,
+                string(
+                    _local_diagnostic(attempt, validation, image, correction),
+                    ";exactification=",
+                    exactification.detail,
+                    ";promotion=exact_only_numerically_unresolved",
+                ),
+            )
+        end
         retryable = validation.failure ∉ (
             CANDIDATE_HIGH_PRECISION_CAPABILITY_MISSING,
             CANDIDATE_HIGH_PRECISION_DOWNGRADE,
@@ -909,7 +1170,11 @@ function (runner::_CompiledAttemptRunner)(
             residual_score=score,
             oracle_work=oracle_work[],
             endpoint=validation.canonical_coordinates,
-            diagnostic=_local_diagnostic(attempt, validation, image, correction),
+            diagnostic=string(
+                _local_diagnostic(attempt, validation, image, correction),
+                ";exactification=",
+                exactification.detail,
+            ),
         )
     end
 
@@ -939,6 +1204,22 @@ function (runner::_CompiledAttemptRunner)(
             diagnostic=_local_diagnostic(attempt, validation, image, correction),
         )
     end
+    exactification = _attempt_exactification!(runner, context, validation, oracle_work)
+    if exactification.answer !== nothing
+        return _exact_only_observation(
+            proposal,
+            oracle_work[],
+            exactification.answer,
+            exactification.reference_sample,
+            string(
+                _local_diagnostic(attempt, validation, image, correction),
+                ";exactification=",
+                exactification.detail,
+                ";promotion=exact_regular",
+            ),
+        )
+    end
+    provisional = _provisional_after_exactification(provisional, exactification)
     return Observation(
         proposal.task_id,
         proposal.configuration_id;
@@ -953,13 +1234,77 @@ function (runner::_CompiledAttemptRunner)(
         residual_score=Float64(provisional.canonical_residual_bound),
         oracle_work=oracle_work[],
         endpoint=confirmed_endpoint,
-        diagnostic=_local_diagnostic(attempt, validation, image, correction),
+        diagnostic=string(
+            _local_diagnostic(attempt, validation, image, correction),
+            ";exactification=",
+            exactification.detail,
+            ";promotion=",
+            "validated_numerical",
+        ),
+    )
+end
+
+function _solve_exact_backend_descriptor(backend::AbstractExactBackend)
+    descriptor = try
+        exact_backend_descriptor(backend)
+    catch error
+        error isa InterruptException && rethrow()
+        throw(
+            SolveConfigurationError(
+                :exact_backend_descriptor_failed,
+                "exact backend descriptor failed: $(sprint(showerror, error))",
+            ),
+        )
+    end
+    descriptor isa ExactBackendDescriptor || throw(
+        SolveConfigurationError(
+            :invalid_exact_backend_descriptor,
+            "exact backend descriptor returned $(typeof(descriptor))",
+        ),
+    )
+    return descriptor
+end
+
+function _same_exact_backend_descriptor(
+    left::ExactBackendDescriptor,
+    right::ExactBackendDescriptor,
+)
+    return left.id == right.id &&
+           left.version == right.version &&
+           left.method == right.method &&
+           left.backend_abi_version == right.backend_abi_version &&
+           left.configuration_certificate_schemes == right.configuration_certificate_schemes &&
+           left.target_certificate_schemes == right.target_certificate_schemes &&
+           left.policy_identity == right.policy_identity &&
+           left.environment_identity == right.environment_identity
+end
+
+function _exact_backend_policy_document(descriptor::ExactBackendDescriptor)
+    return Dict{String,Any}(
+        "backend_abi_version" => string(descriptor.backend_abi_version),
+        "configuration_certificate_schemes" =>
+            Any[descriptor.configuration_certificate_schemes...],
+        "id" => descriptor.id,
+        "method" => descriptor.method,
+        "policy_identity" => string(descriptor.policy_identity),
+        "target_certificate_schemes" => Any[descriptor.target_certificate_schemes...],
+        "version" => string(descriptor.version),
+    )
+end
+
+function _exact_backend_environment_document(descriptor::ExactBackendDescriptor)
+    return Dict{String,Any}(
+        "backend_abi_version" => string(descriptor.backend_abi_version),
+        "environment_identity" => string(descriptor.environment_identity),
+        "id" => descriptor.id,
+        "version" => string(descriptor.version),
     )
 end
 
 function _solve_policy_document(
     options::SolveOptions,
     research_strategy::Union{Nothing,UnstableResearchStrategy}=nothing,
+    exact_descriptor::Union{Nothing,ExactBackendDescriptor}=nothing,
 )
     limits = options.policy.budget_limits
     local_fields = Dict{String,Any}(
@@ -987,6 +1332,8 @@ function _solve_policy_document(
     )
     research_strategy === nothing ||
         (document["unstable_research_strategy_id"] = research_strategy.id)
+    exact_descriptor === nothing ||
+        (document["exact_backend"] = _exact_backend_policy_document(exact_descriptor))
     return document
 end
 
@@ -1009,8 +1356,11 @@ function _target_image_options_document(options::TargetImageDiagnosticOptions)
     )
 end
 
-function _solve_environment_document(compiled::CompiledProblem)
-    return Dict{String,Any}(
+function _solve_environment_document(
+    compiled::CompiledProblem,
+    exact_descriptor::Union{Nothing,ExactBackendDescriptor}=nothing,
+)
+    document = Dict{String,Any}(
         "architecture" => Sys.MACHINE,
         "blas" => sprint(show, LinearAlgebra.BLAS.get_config()),
         "compiled_backend" => compiled.cache_identity.numeric_backend,
@@ -1020,19 +1370,25 @@ function _solve_environment_document(compiled::CompiledProblem)
         "julia_version" => string(VERSION),
         "word_size" => Sys.WORD_SIZE,
     )
+    exact_descriptor === nothing ||
+        (document["exact_backend"] = _exact_backend_environment_document(exact_descriptor))
+    return document
 end
 
 function _solve_resume_identity(
     compiled::CompiledProblem,
     options::SolveOptions,
     research_strategy::Union{Nothing,UnstableResearchStrategy}=nothing,
+    exact_descriptor::Union{Nothing,ExactBackendDescriptor}=nothing,
 )
     problem_digest, _ = _candidate_problem_identity(compiled)
     return ResumeIdentity(
         problem_digest,
         compiled.problem.plugin_locks,
-        canonical_json_hash(_solve_policy_document(options, research_strategy)),
-        canonical_json_hash(_solve_environment_document(compiled)),
+        canonical_json_hash(
+            _solve_policy_document(options, research_strategy, exact_descriptor),
+        ),
+        canonical_json_hash(_solve_environment_document(compiled, exact_descriptor)),
     )
 end
 
@@ -1147,17 +1503,169 @@ function _exact_answers(store::CandidateStore)
     return Tuple(answers)
 end
 
-function _finish_execution(
-    context::ExecutionContext,
-    search::SearchLoopResult;
+function _verify_solver_exact_answer(
     compiled::CompiledProblem,
-    evidence_path::Union{Nothing,AbstractString}=nothing,
-    target_image_override::Union{Nothing,TargetImageStatus}=nothing,
+    answer::ExactAnswer,
+    exact_backend::Union{Nothing,AbstractExactBackend},
+    ;
+    observation::Union{Nothing,StoredExactObservation}=nothing,
+    checkpoint=() -> nothing,
 )
-    provisional = _provisional_answers(context.workspace.candidates)
-    exact = _exact_answers(context.workspace.candidates)
-    for answer in exact
-        verification = verify_exact_answer(compiled, answer)
+    checkpoint()
+    builtin = verify_exact_answer(compiled, answer)
+    checkpoint()
+    builtin.accepted && return builtin
+    builtin.failure == EXACT_VERIFICATION_UNSUPPORTED_SCHEME || return builtin
+    exact_backend === nothing && return builtin
+    verification = try
+        verify_stored_exact_answer(
+            exact_backend,
+            compiled,
+            answer;
+            observation,
+            checkpoint,
+        )
+    catch error
+        error isa InterruptException && rethrow()
+        throw(
+            SolveConfigurationError(
+                :exact_certificate_replay_failed,
+                "stored exact backend verifier raised an exception: $(sprint(showerror, error))",
+            ),
+        )
+    end
+    verification isa ExactVerificationResult || throw(
+        SolveConfigurationError(
+            :invalid_exact_backend_verifier,
+            "stored exact backend verifier returned $(typeof(verification))",
+        ),
+    )
+    return verification
+end
+
+function _solver_exact_verification_checkpoint(context::ExecutionContext)
+    is_cancelled(context.cancel) && throw(
+        SolveConfigurationError(
+            :stored_exact_verification_cancelled,
+            "stored exact-answer verification was cancelled",
+        ),
+    )
+    Float64(context.clock()) < context.deadline || throw(
+        SolveConfigurationError(
+            :stored_exact_verification_deadline,
+            "stored exact-answer verification reached the solve deadline",
+        ),
+    )
+    return nothing
+end
+
+function _verify_exact_store!(
+    context::ExecutionContext,
+    compiled::CompiledProblem,
+    exact_backend::Union{Nothing,AbstractExactBackend},
+)
+    checkpoint = () -> _solver_exact_verification_checkpoint(context)
+    for record in candidate_records(context.workspace.candidates)
+        stored = record.observation
+        answer = stored.verified_payload
+        answer isa ExactAnswer || continue
+        expected_identity = _exact_target_identity(answer)
+        stored.verified && stored.canonical_valid || throw(
+            SolveConfigurationError(
+                :exact_observation_binding_failed,
+                "stored exact answer is not attached to a canonically valid observation",
+            ),
+        )
+        stored.target !== nothing || throw(
+            SolveConfigurationError(
+                :exact_observation_binding_failed,
+                "stored exact answer has no target enclosure",
+            ),
+        )
+        stored.target_identity == expected_identity || throw(
+            SolveConfigurationError(
+                :exact_observation_binding_failed,
+                "stored exact target identity differs from its certificate identity",
+            ),
+        )
+        stored.branch_signature == answer.branch_signature || throw(
+            SolveConfigurationError(
+                :exact_observation_binding_failed,
+                "stored exact branch signature differs from its certified branch",
+            ),
+        )
+        stored.endpoint !== nothing || throw(
+            SolveConfigurationError(
+                :exact_observation_binding_failed,
+                "stored exact answer has no endpoint evidence",
+            ),
+        )
+        stored.needs_refinement && throw(
+            SolveConfigurationError(
+                :exact_observation_binding_failed,
+                "stored exact answer is still marked as needing refinement",
+            ),
+        )
+        length(stored.endpoint) == length(compiled.variables) || throw(
+            SolveConfigurationError(
+                :exact_observation_binding_failed,
+                "stored exact endpoint dimension differs from the compiled problem",
+            ),
+        )
+        all(zip(stored.endpoint, compiled.variables)) do (value, variable)
+            (variable.spec.lower === nothing || value >= variable.spec.lower) &&
+                (variable.spec.upper === nothing || value <= variable.spec.upper)
+        end || throw(
+            SolveConfigurationError(
+                :exact_observation_binding_failed,
+                "stored exact endpoint lies outside the declared variable bounds",
+            ),
+        )
+        approximation_contained, target_radius_valid = try
+            setprecision(BigFloat, 768) do
+                approximation = answer.approximation isa BigFloat ?
+                                BigFloat(answer.approximation) :
+                                parse(BigFloat, string(answer.approximation))
+                lower = BigFloat(stored.target.lower)
+                upper = BigFloat(stored.target.upper)
+                scale = max(one(BigFloat), abs(approximation))
+                tolerance = parse(BigFloat, "1e-100") + ldexp(one(BigFloat), -700)
+                (
+                    lower <= approximation <= upper,
+                    max(abs(lower - approximation), abs(upper - approximation)) / scale <=
+                    tolerance,
+                )
+            end
+        catch error
+            error isa ArgumentError || rethrow()
+            (false, false)
+        end
+        approximation_contained || throw(
+            SolveConfigurationError(
+                :exact_observation_binding_failed,
+                "stored exact target enclosure excludes the answer approximation",
+            ),
+        )
+        target_radius_valid || throw(
+            SolveConfigurationError(
+                :exact_observation_binding_failed,
+                "stored exact target enclosure is wider than the 100-digit answer gate",
+            ),
+        )
+        binding = StoredExactObservation(
+            stored.target.lower,
+            stored.target.upper,
+            expected_identity,
+            stored.branch_signature,
+            stored.endpoint,
+        )
+        verification = _verify_solver_exact_answer(
+            compiled,
+            answer,
+            exact_backend;
+            observation=binding,
+            checkpoint,
+        )
         verification.accepted || throw(
             SolveConfigurationError(
                 :exact_certificate_replay_failed,
@@ -1165,6 +1673,21 @@ function _finish_execution(
             ),
         )
     end
+    return nothing
+end
+
+function _finish_execution(
+    context::ExecutionContext,
+    search::SearchLoopResult;
+    compiled::CompiledProblem,
+    exact_backend::Union{Nothing,AbstractExactBackend}=nothing,
+    verify_exact_store::Bool=true,
+    evidence_path::Union{Nothing,AbstractString}=nothing,
+    target_image_override::Union{Nothing,TargetImageStatus}=nothing,
+)
+    provisional = _provisional_answers(context.workspace.candidates)
+    exact = _exact_answers(context.workspace.candidates)
+    verify_exact_store && _verify_exact_store!(context, compiled, exact_backend)
     evidence = _evidence_json(context)
     digest = content_hash(evidence)
     location = evidence_path === nothing ?
@@ -1281,7 +1804,9 @@ function _exact_constant_answer(
     )
     return ExactAnswer(
         identity,
-        literal.value,
+        setprecision(BigFloat, 768) do
+            BigFloat(numerator_value) / BigFloat(denominator_value)
+        end,
         (),
         configuration_certificate,
         target_certificate,
@@ -1363,6 +1888,7 @@ function solve_execution(
     max_actions::Integer=typemax(Int),
     checkpoint::Union{Nothing,SolveCheckpointArtifact}=nothing,
     research_strategy::Union{Nothing,UnstableResearchStrategy}=nothing,
+    exact_backend::Union{Nothing,AbstractExactBackend}=nothing,
 )
     options.worker_count == 1 || throw(
         SolveConfigurationError(
@@ -1379,8 +1905,17 @@ function solve_execution(
     )
     started = time()
     deadline = started + options.wall_seconds
+    effective_exact_backend = options.answer_level == ANSWER_EXACT_IF_AVAILABLE ?
+                              exact_backend : nothing
+    exact_descriptor = effective_exact_backend === nothing ?
+                       nothing : _solve_exact_backend_descriptor(effective_exact_backend)
     compiled = compile_problem(problem, registry; numeric_backend="Float64")
-    resume = _solve_resume_identity(compiled, options, research_strategy)
+    resume = _solve_resume_identity(
+        compiled,
+        options,
+        research_strategy,
+        exact_descriptor,
+    )
     now = time()
     context = if checkpoint === nothing
         # Pass a duration instead of an absolute deadline.  A zero (or nearly
@@ -1437,6 +1972,11 @@ function solve_execution(
             clock=time,
         )
     end
+    checkpoint === nothing || _verify_exact_store!(
+        context,
+        compiled,
+        effective_exact_backend,
+    )
     target_image_override = if checkpoint === nothing
         nothing
     elseif checkpoint.target_image_status == TARGET_LIKELY_CONTINUOUS
@@ -1465,6 +2005,9 @@ function solve_execution(
             options._validation,
             _solve_target_image_options(options),
             local_solver,
+            effective_exact_backend,
+            exact_descriptor,
+            options.answer_level,
             target_image_override == TARGET_LIKELY_CONTINUOUS,
             target_image_override == TARGET_IMAGE_UNKNOWN,
         )
@@ -1480,6 +2023,8 @@ function solve_execution(
         context,
         search;
         compiled,
+        exact_backend=effective_exact_backend,
+        verify_exact_store=false,
         evidence_path,
         target_image_override,
     )
@@ -1492,6 +2037,7 @@ function solve(
     cancel::CancellationToken=CancellationToken(),
     evidence_path::Union{Nothing,AbstractString}=nothing,
     checkpoint::Union{Nothing,SolveCheckpointArtifact}=nothing,
+    exact_backend::Union{Nothing,AbstractExactBackend}=nothing,
 )
     return solve_execution(
         problem,
@@ -1500,5 +2046,6 @@ function solve(
         cancel,
         evidence_path,
         checkpoint,
+        exact_backend,
     ).result
 end

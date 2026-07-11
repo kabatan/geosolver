@@ -132,7 +132,19 @@ end
     @test exact_sample.accepted
     @test exact_sample.evidence.numerical_rank == 0
     @test exact_sample.evidence.rank_stable
-    @test exact_sample.evidence.method == "reference_c2_rank_general_lm_5point_v1"
+    @test exact_sample.evidence.method ==
+          "reference_c2_rank_general_lm_5point_geometric_v2"
+
+    offset_sample = run_hp_refinement(
+        compiled,
+        [2.898528212166728e-7];
+        kind=:reference,
+        allow_rank_deficient=true,
+    )
+    @test offset_sample.accepted
+    @test offset_sample.evidence.iterations <= 4
+    @test offset_sample.evidence.residual_bound <= big"1e-110"
+    @test abs(only(offset_sample.evidence.coordinates)) <= big"1e-100"
 end
 
 @testset "five-point BigFloat CPQR refinement and independent reference run" begin

@@ -220,6 +220,23 @@ function _verify_literal_target_certificate(
         EXACT_VERIFICATION_TARGET_MISMATCH,
         "target artifact rational differs from the literal target",
     )
+    approximation_matches = try
+        setprecision(BigFloat, 768) do
+            exact_target = BigFloat(numerator(rational)) / BigFloat(denominator(rational))
+            approximation = answer.approximation isa BigFloat ?
+                            BigFloat(answer.approximation) :
+                            parse(BigFloat, string(answer.approximation))
+            scale = max(one(BigFloat), abs(exact_target))
+            abs(exact_target - approximation) / scale <= parse(BigFloat, "1e-100")
+        end
+    catch error
+        error isa ArgumentError || rethrow()
+        false
+    end
+    approximation_matches || return _exact_verification_failure(
+        EXACT_VERIFICATION_TARGET_MISMATCH,
+        "answer approximation disagrees with the exact literal target",
+    )
     try
         _string(object["schema"], "target_certificate.artifact.schema") ==
         _LITERAL_TARGET_CERTIFICATE_SCHEMA || return _exact_verification_failure(

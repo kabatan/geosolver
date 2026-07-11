@@ -268,6 +268,103 @@ function _restore_events(events::Tuple)
     return log
 end
 
+function _event_payloads_by_task(
+    events::EvidenceLog,
+    kind::SearchEventKind,
+    payload_type::Type,
+    role::AbstractString,
+)
+    payloads = Dict{UInt64,Any}()
+    for event in evidence_events(events)
+        event.kind === kind || continue
+        event.payload isa payload_type || _checkpoint_failure(
+            :corrupt_checkpoint,
+            "checkpoint $role event has the wrong payload type",
+        )
+        task_id = event.payload.task_id
+        haskey(payloads, task_id) && _checkpoint_failure(
+            :corrupt_checkpoint,
+            "checkpoint contains duplicate $role events for task $task_id",
+        )
+        payloads[task_id] = event.payload
+    end
+    return payloads
+end
+
+function _checkpoint_payload_equal(left, right)
+    typeof(left) === typeof(right) || return false
+    left === right && return true
+    left isa Union{Number,AbstractString,Symbol,Enum,VersionNumber} &&
+        return isequal(left, right)
+    if left isa Tuple
+        length(left) == length(right) || return false
+        return all(
+            index -> _checkpoint_payload_equal(left[index], right[index]),
+            eachindex(left),
+        )
+    end
+    if left isa Pair
+        return _checkpoint_payload_equal(first(left), first(right)) &&
+               _checkpoint_payload_equal(last(left), last(right))
+    end
+    fieldcount(typeof(left)) == 0 && return isequal(left, right)
+    return all(
+        index -> _checkpoint_payload_equal(getfield(left, index), getfield(right, index)),
+        1:fieldcount(typeof(left)),
+    )
+end
+
+function _validate_workspace_event_consistency(
+    events::EvidenceLog,
+    workspace::SearchWorkspace,
+)
+    expected_proposals = Dict{UInt64,Proposal}()
+    expected_observations = Dict{UInt64,Observation}()
+    for record in candidate_records(workspace.candidates)
+        expected_proposals[record.proposal.task_id] = record.proposal
+        expected_observations[record.observation.task_id] = record.observation
+    end
+    for proposal in workspace.pending
+        haskey(expected_proposals, proposal.task_id) && _checkpoint_failure(
+            :corrupt_checkpoint,
+            "checkpoint task appears in both candidate history and pending work",
+        )
+        expected_proposals[proposal.task_id] = proposal
+    end
+
+    proposed = _event_payloads_by_task(events, EVENT_PROPOSED, Proposal, "proposed")
+    observed = _event_payloads_by_task(events, EVENT_OBSERVED, Observation, "observed")
+    Set(keys(proposed)) == Set(keys(expected_proposals)) || _checkpoint_failure(
+        :corrupt_checkpoint,
+        "checkpoint proposed events do not match candidate history and pending work",
+    )
+    Set(keys(observed)) == Set(keys(expected_observations)) || _checkpoint_failure(
+        :corrupt_checkpoint,
+        "checkpoint observed events do not match candidate history",
+    )
+    all(
+        task_id -> _checkpoint_payload_equal(
+            proposed[task_id],
+            expected_proposals[task_id],
+        ),
+        keys(expected_proposals),
+    ) || _checkpoint_failure(
+        :corrupt_checkpoint,
+        "checkpoint proposed event payload differs from workspace state",
+    )
+    all(
+        task_id -> _checkpoint_payload_equal(
+            observed[task_id],
+            expected_observations[task_id],
+        ),
+        keys(expected_observations),
+    ) || _checkpoint_failure(
+        :corrupt_checkpoint,
+        "checkpoint observed event payload differs from candidate history",
+    )
+    return nothing
+end
+
 function _restore_candidate_store(snapshot::CandidateStoreSnapshot)
     store = CandidateStore()
     for record in snapshot.history
@@ -419,6 +516,7 @@ function restore_execution_context(
     budget = _restore_budget(snapshot.budget, policy)
     events = _restore_events(snapshot.events)
     workspace = _restore_workspace(snapshot.workspace)
+    _validate_workspace_event_consistency(events, workspace)
     rng = rng_restore(snapshot.rng_state)
     restored_rng_state = _freeze_search_value(rng_checkpoint(rng))
     isequal(restored_rng_state, snapshot.rng_state) || _checkpoint_failure(

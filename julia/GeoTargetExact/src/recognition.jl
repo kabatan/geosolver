@@ -90,7 +90,16 @@ function _relation_tolerance(value::BigFloat, precision_bits::Int, height_bits::
         # Match the 128-bit safety reserve in `working_precision`. Samples from
         # Core satisfy independent adaptive gates but need not be correctly
         # rounded to every requested bit.
-        guard_bits = max(128, height_bits + ceil(Int, log2(degree + 1)) + 32)
+        # Rank-general singular refinement can prove the 100-digit Core gates
+        # while losing a precision-proportional tail to a vanishing Jacobian.
+        # Retain at least three quarters of the requested bits. Dual-precision
+        # identity agreement, reference-sample consistency, and exact C3A
+        # replay remain mandatory before this proposal can become an answer.
+        guard_bits = max(
+            128,
+            cld(precision_bits, 4),
+            height_bits + ceil(Int, log2(degree + 1)) + 32,
+        )
         reliable_bits = max(32, precision_bits - guard_bits)
         ldexp(max(one(value), abs(value)) ^ max(degree, 1), -reliable_bits)
     end
@@ -109,8 +118,9 @@ end
 """
 Recover a rational whose numerator and denominator each fit `height_bits`.
 
-Only a convergent agreeing to essentially the supplied working precision is
-returned. Merely being the best small-denominator approximation is insufficient.
+Only a height-bounded convergent agreeing through the conservative reliable-bit
+window is returned. Merely being the best small-denominator approximation is
+insufficient; dual-precision agreement and exact replay are separate gates.
 """
 function bounded_rational_reconstruction(
     value::BigFloat,
@@ -143,7 +153,12 @@ function bounded_rational_reconstruction(
             candidate = (sign_value * numerator) // denominator
             approximation = BigFloat(numerator) / BigFloat(denominator)
             error = abs(magnitude - approximation)
-            tolerance = ldexp(max(one(magnitude), magnitude), -max(32, Int(precision_bits) - 16))
+            tolerance = _relation_tolerance(
+                magnitude,
+                Int(precision_bits),
+                Int(height_bits),
+                1,
+            )
             error <= tolerance && (best = candidate)
 
             remainder = y - BigFloat(integer_part)

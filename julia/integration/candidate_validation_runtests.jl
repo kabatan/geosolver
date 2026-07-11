@@ -548,7 +548,7 @@ end
     @test exactification_sample.evidence.numerical_rank == 0
     @test exactification_sample.evidence.rank_stable
     @test exactification_sample.evidence.method ==
-          "reference_c2_rank_general_lm_5point_v1"
+          "reference_c2_rank_general_lm_5point_geometric_v2"
 end
 
 @testset "candidate resource limits include weighted high-precision work" begin

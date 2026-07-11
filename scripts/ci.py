@@ -16,6 +16,7 @@ from doctor import DoctorError, Environment, check_environment
 ROOT = Path(__file__).resolve().parents[1]
 JULIA_PROJECT = ROOT / "julia"
 BENCHMARK_PROJECT = JULIA_PROJECT / "GeoTargetBenchmarks"
+EXACT_PROJECT = JULIA_PROJECT / "GeoTargetExact"
 TIERS = ("Smoke", "Pr", "Nightly")
 
 
@@ -110,6 +111,16 @@ def run_ci(tier: str) -> None:
             str(JULIA_PROJECT / "integration" / "runtests.jl"),
         ),
         label="Julia tests",
+        environment=environment,
+    )
+    _run(
+        _julia_command(
+            tools,
+            f"--project={EXACT_PROJECT}",
+            "-e",
+            "using Pkg; Pkg.instantiate(); Pkg.test()",
+        ),
+        label="Optional exact-backend tests",
         environment=environment,
     )
 
