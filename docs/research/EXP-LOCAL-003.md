@@ -1,7 +1,9 @@
 # EXP-LOCAL-003 — semantic-preserving local model scaling
 
-Status: **card-only preregistration**. No generator, mechanism source, input or
-result exists at this commit. The machine-readable authority is
+Status: **C0 protocol implementation, pre-freeze**. The result-blind generator,
+assessor, materializers, schemas, environment capture and immutable authority
+replay exist; no C1 input, C2 mechanism source, candidate outcome or result has
+been created. The machine-readable authority is
 [`EXP-LOCAL-003.json`](../../research/experiments/EXP-LOCAL-003.json).
 
 ## Semantic boundary
@@ -186,12 +188,23 @@ locked validation against L0, with no reselection.
 2. `C0`: generator, materializer, assessor, schemas, environment and numeric
    JSON-domain fixture; no mechanism.
 3. `C1`: exactly one candidate/Gold development materialization and hash seal.
-4. `C2`: mechanism, tests and exact L0 default-equivalence evidence.
+4. `C2`: mechanism, tests and exact L0 default-equivalence evidence; the C0
+   capture runs the future Julia test as a fifth fresh no-capability,
+   one-process AppContainer and binds its command, closed read grants, streams,
+   exit/job/ACL/read-identity attestations, so no ambient host test is run.
 5. `C3`: exactly one candidate-only formal development execution; hash and
    seal its complete raw output, close that process, then open the assessor tree
    in a separate process, verify the seal and assess the frozen decision.
+6. `C4`: only after a passing C3, materialize and atomically commit fresh locked
+   candidate/assessor/private inputs without exposing development authorities to
+   the candidate tree.
+7. `C5`: add only the locked stage execution lock, preserving the C2 runtime
+   source blobs and every C0–C4 authority byte.
+8. `C6`: run one locked candidate and separate assessor, persist the locked
+   assessment and its single-child final connection, and commit the terminal
+   final-connection anchor whether product connection passes or fails.
 
-A C1–C3 protocol/infrastructure failure is terminal and authorizes no retry.
+A C1–C6 protocol/infrastructure failure is terminal and authorizes no retry.
 Only a valid passing C3 can materialize 96 fresh locked cases (eight families ×
 four new latent groups × three representations). Locked validation repeats the
 physical candidate/assessor split and one-shot seal/open sequence, running only

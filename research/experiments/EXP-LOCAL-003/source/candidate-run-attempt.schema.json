@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geotarget.invalid/research/EXP-LOCAL-003/candidate-run-attempt.schema.json",
+  "title": "EXP-LOCAL-003 C0-observer-owned candidate-run attempt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "experiment_id", "card_sha256", "stage", "candidate_input_sha256", "stage_input_anchor", "candidate_execution_lock", "execution_source", "launcher_claim", "launcher_authority", "observer_authority", "sandbox_broker_authority", "sandbox_request", "rerun_permitted", "prelaunch_state"],
+  "properties": {
+    "schema_version": {"const": "geotarget.exp-local-003.candidate-run-attempt/v2"},
+    "experiment_id": {"const": "EXP-LOCAL-003"},
+    "card_sha256": {"const": "0caae294a032f6d920c718219836e60e57f20c76fe5d790a615e554a95c6ee3c"},
+    "stage": {"enum": ["development", "locked"]},
+    "candidate_input_sha256": {"$ref": "#/$defs/sha256"},
+    "stage_input_anchor": {"$ref": "#/$defs/external_file"},
+    "candidate_execution_lock": {"$ref": "#/$defs/external_file"},
+    "execution_source": {"$ref": "#/$defs/commit_tree"},
+    "launcher_claim": {"$ref": "#/$defs/launcher_claim"},
+    "launcher_authority": {"$ref": "#/$defs/external_file"},
+    "observer_authority": {"$ref": "#/$defs/external_file"},
+    "sandbox_broker_authority": {"$ref": "#/$defs/external_file"},
+    "sandbox_request": {"$ref": "#/$defs/sandbox_request"},
+    "rerun_permitted": {"const": false},
+    "prelaunch_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["launch_not_started", "candidate_process_created", "repository_control", "runner_evaluated_by_observer", "assessor_started", "assessor_vault_opened", "generator_private_vault_opened"],
+      "properties": {
+        "launch_not_started": {"const": true},
+        "candidate_process_created": {"const": false},
+        "repository_control": {"const": "c0-observer"},
+        "runner_evaluated_by_observer": {"const": false},
+        "assessor_started": {"const": false},
+        "assessor_vault_opened": {"const": false},
+        "generator_private_vault_opened": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "git_oid": {"type": "string", "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$"},
+    "decimal": {"type": "string", "pattern": "^(?:0|[1-9][0-9]*)$"},
+    "relative_path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*\\\\)(?!.*//)(?!.*\\/$).+$"},
+    "absolute_path": {"type": "string", "minLength": 1},
+    "file": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "sha256", "byte_length"],
+      "properties": {"path": {"$ref": "#/$defs/relative_path"}, "sha256": {"$ref": "#/$defs/sha256"}, "byte_length": {"type": "integer", "minimum": 0}}
+    },
+    "external_file": {
+      "type": "object", "additionalProperties": false,
+      "required": ["commit", "tree", "file"],
+      "properties": {"commit": {"$ref": "#/$defs/git_oid"}, "tree": {"$ref": "#/$defs/git_oid"}, "file": {"$ref": "#/$defs/file"}}
+    },
+    "commit_tree": {
+      "type": "object", "additionalProperties": false,
+      "required": ["commit", "tree"],
+      "properties": {"commit": {"$ref": "#/$defs/git_oid"}, "tree": {"$ref": "#/$defs/git_oid"}}
+    },
+    "launcher_claim": {
+      "type": "object", "additionalProperties": false,
+      "required": ["file", "nonce_sha256", "filesystem_identity"],
+      "properties": {
+        "file": {"$ref": "#/$defs/file"},
+        "nonce_sha256": {"$ref": "#/$defs/sha256"},
+        "filesystem_identity": {
+          "type": "object", "additionalProperties": false,
+          "required": ["device_decimal", "inode_decimal", "empty_claim_ctime_nanoseconds_decimal", "link_count"],
+          "properties": {
+            "device_decimal": {"$ref": "#/$defs/decimal"},
+            "inode_decimal": {"$ref": "#/$defs/decimal"},
+            "empty_claim_ctime_nanoseconds_decimal": {"$ref": "#/$defs/decimal"},
+            "link_count": {"const": 1}
+          }
+        }
+      }
+    },
+    "name_value": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "value"],
+      "properties": {"name": {"type": "string", "minLength": 1}, "value": {"type": "string"}}
+    },
+    "read_grant": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "recursive"],
+      "properties": {"path": {"$ref": "#/$defs/absolute_path"}, "recursive": {"type": "boolean"}}
+    },
+    "access_probe": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "expected"],
+      "properties": {"path": {"$ref": "#/$defs/absolute_path"}, "expected": {"enum": ["allowed", "denied"]}}
+    },
+    "sandbox_request": {
+      "type": "object", "additionalProperties": false,
+      "required": ["backend", "claim_reference", "expected_read_identity_manifest_sha256", "command", "command_sha256", "working_directory", "environment", "environment_sha256", "allowed_read", "allowed_read_manifest_sha256", "access_probes", "access_probe_manifest_sha256", "capabilities", "network_capabilities", "timeout_seconds", "stdout_limit_bytes", "stderr_limit_bytes", "preexit_payload_limit_bytes", "job"],
+      "properties": {
+        "backend": {"const": "windows-classic-appcontainer"},
+        "claim_reference": {"$ref": "#/$defs/sha256"},
+        "expected_read_identity_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "command": {"type": "array", "minItems": 11, "maxItems": 11, "items": {"type": "string", "minLength": 1}},
+        "command_sha256": {"$ref": "#/$defs/sha256"},
+        "working_directory": {"$ref": "#/$defs/absolute_path"},
+        "environment": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/name_value"}},
+        "environment_sha256": {"$ref": "#/$defs/sha256"},
+        "allowed_read": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/read_grant"}},
+        "allowed_read_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "access_probes": {"type": "array", "minItems": 9, "maxItems": 9, "uniqueItems": true, "items": {"$ref": "#/$defs/access_probe"}},
+        "access_probe_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "capabilities": {"const": []},
+        "network_capabilities": {"const": []},
+        "timeout_seconds": {"const": 21600},
+        "stdout_limit_bytes": {"const": 268435456},
+        "stderr_limit_bytes": {"const": 1048576},
+        "preexit_payload_limit_bytes": {"const": 268435448},
+        "job": {
+          "type": "object", "additionalProperties": false,
+          "required": ["assigned_at_creation", "breakaway_allowed", "child_process_policy", "kill_on_close", "max_processes"],
+          "properties": {"assigned_at_creation": {"const": true}, "breakaway_allowed": {"const": false}, "child_process_policy": {"const": "restricted-no-descendants"}, "kill_on_close": {"const": true}, "max_processes": {"const": 1}}
+        }
+      }
+    }
+  }
+}

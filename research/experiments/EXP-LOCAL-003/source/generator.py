@@ -128,9 +128,7 @@ LOCKED_REPRESENTATION_KEY_DOMAIN = (
     b"geotarget.exp-local-003.locked.representation-key.v1\0"
 )
 LOCKED_GOLD_KEY_DOMAIN = b"geotarget.exp-local-003.locked.gold-key.v1\0"
-LOCKED_AUTHORIZATION_SCHEMA = (
-    "geotarget.exp-local-003.development-decision-record/v1"
-)
+LOCKED_AUTHORIZATION_SCHEMA = "geotarget.exp-local-003.development-decision-record/v1"
 LOCKED_AUTHORIZATION_FIELDS = frozenset(
     {
         "schema_version",
@@ -1544,13 +1542,13 @@ def _validated_locked_decision(
         "development_assessment_sha256",
     ):
         digest = locked_decision[field]
-        if (
-            not isinstance(digest, str)
-            or re.fullmatch(r"[0-9a-f]{64}", digest) is None
-        ):
+        if not isinstance(digest, str) or re.fullmatch(r"[0-9a-f]{64}", digest) is None:
             raise ValueError(f"locked_decision {field} is invalid")
     commit = locked_decision["decision_commit"]
-    if not isinstance(commit, str) or re.fullmatch(r"[0-9a-f]{40,64}", commit) is None:
+    if (
+        not isinstance(commit, str)
+        or re.fullmatch(r"(?:[0-9a-f]{40}|[0-9a-f]{64})", commit) is None
+    ):
         raise ValueError("locked_decision commit identity is invalid")
     decision = dict(locked_decision)
     canonical_document_bytes(decision)

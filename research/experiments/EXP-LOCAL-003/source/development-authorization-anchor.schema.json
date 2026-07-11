@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geotarget.invalid/research/EXP-LOCAL-003/development-authorization-anchor.schema.json",
+  "title": "EXP-LOCAL-003 post-C3 development authorization anchor",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "experiment_id", "card_sha256", "stage", "stage_input_anchor", "c2_source_commit", "candidate_evidence", "assessor_output", "rerun_permitted"],
+  "properties": {
+    "schema_version": {"const": "geotarget.exp-local-003.development-authorization-anchor/v1"},
+    "experiment_id": {"const": "EXP-LOCAL-003"},
+    "card_sha256": {"const": "0caae294a032f6d920c718219836e60e57f20c76fe5d790a615e554a95c6ee3c"},
+    "stage": {"const": "development"},
+    "stage_input_anchor": {"$ref": "#/$defs/external_file"},
+    "c2_source_commit": {"$ref": "#/$defs/git_oid"},
+    "candidate_evidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["commit", "tree", "authority"],
+      "properties": {"commit": {"$ref": "#/$defs/git_oid"}, "tree": {"$ref": "#/$defs/git_oid"}, "authority": {"$ref": "#/$defs/file"}}
+    },
+    "assessor_output": {
+      "type": "object", "additionalProperties": false,
+      "required": ["assessment_commit", "assessment_tree", "assessment_file", "authority_file", "decision_commit", "decision_tree", "decision_file"],
+      "properties": {
+        "assessment_commit": {"$ref": "#/$defs/git_oid"},
+        "assessment_tree": {"$ref": "#/$defs/git_oid"},
+        "assessment_file": {"$ref": "#/$defs/file"},
+        "authority_file": {"$ref": "#/$defs/file"},
+        "decision_commit": {"$ref": "#/$defs/git_oid"},
+        "decision_tree": {"$ref": "#/$defs/git_oid"},
+        "decision_file": {"$ref": "#/$defs/file"}
+      }
+    },
+    "rerun_permitted": {"const": false}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "git_oid": {"type": "string", "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$"},
+    "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*\\\\)(?!.*//)(?!.*\\/$).+$"},
+    "file": {"type": "object", "additionalProperties": false, "required": ["path", "sha256", "byte_length"], "properties": {"path": {"$ref": "#/$defs/path"}, "sha256": {"$ref": "#/$defs/sha256"}, "byte_length": {"type": "integer", "minimum": 1}}},
+    "external_file": {"type": "object", "additionalProperties": false, "required": ["commit", "tree", "file"], "properties": {"commit": {"$ref": "#/$defs/git_oid"}, "tree": {"$ref": "#/$defs/git_oid"}, "file": {"$ref": "#/$defs/file"}}}
+  }
+}

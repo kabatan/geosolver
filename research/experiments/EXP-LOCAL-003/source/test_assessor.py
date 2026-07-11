@@ -23,6 +23,9 @@ import bootstrap_indices  # noqa: E402
 
 DEVELOPMENT_SHA256 = "e8fc7c8491a11a89b5c1f27cfb68989d0f13fe45e4da5bcba7e8aeb69afb2173"
 LOCKED_SHA256 = "401a3991806cfb32f1a4678dbdb7c777e099c7397b89b2ba499c5abcefe1b594"
+LOCAL_OPTIONS_SHA256 = (
+    "3c3cd79f568d7ce6abd188d74269d9bf5e4e8b1daab7f1df5c5ad3f129c1df58"
+)
 _BOOTSTRAP_CACHE: dict[str, bytes] = {}
 
 
@@ -37,11 +40,11 @@ def _digest(label: str) -> str:
 
 
 def _calibration(residual_count: int = 1) -> dict[str, Any]:
-    scale = [1.0.hex()] * residual_count
+    scale = [(1.0).hex()] * residual_count
     return {
         "observation_evaluation_costs": [2] * 64,
         "valid_vector_count": 64,
-        "nearest_rank_hex": [1.0.hex()] * residual_count,
+        "nearest_rank_hex": [(1.0).hex()] * residual_count,
         "model_scale_hex": scale,
         "model_scale_sha256": assessor.model_scale_sha256(scale),
         "joint_fallback_reason": None,
@@ -62,8 +65,8 @@ def _attempt(start: int, successes: int) -> dict[str, Any]:
         "local_observation_evaluation_costs": [2, 2, 2],
         "canonical_replay": {
             "valid": success,
-            "configuration_hex": [0.0.hex()] if success else None,
-            "target_hex": 0.0.hex() if success else None,
+            "configuration_hex": [(0.0).hex()] if success else None,
+            "target_hex": (0.0).hex() if success else None,
             "branch_label": "interior" if success else None,
             "evaluation_cost": 2,
         },
@@ -73,7 +76,10 @@ def _attempt(start: int, successes: int) -> dict[str, Any]:
 def _variant(variant: str, successes: int) -> dict[str, Any]:
     return {
         "variant_id": variant,
-        "calibration": _calibration() if variant in assessor.MODEL_SCALE_VARIANTS else None,
+        "local_options_sha256": LOCAL_OPTIONS_SHA256,
+        "calibration": _calibration()
+        if variant in assessor.MODEL_SCALE_VARIANTS
+        else None,
         "attempts": [_attempt(start, successes) for start in range(32)],
         "semantic_or_wire_drift_count": 0,
         "identity_access_count": 0,
@@ -92,6 +98,9 @@ def _documents(blob: bytes) -> tuple[dict[str, Any], dict[str, Any]]:
                 assessor.SAFETY_REPRESENTATION,
             ):
                 opaque = _digest(f"case/{family_ordinal}/{group}/{representation}")
+                problem_sha = _digest(f"problem/{opaque}")
+                calibration_sha = _digest(f"calibration/{opaque}")
+                starts_sha = _digest(f"starts/{opaque}")
                 truth_cases.append(
                     {
                         "opaque_case_key": opaque,
@@ -105,15 +114,18 @@ def _documents(blob: bytes) -> tuple[dict[str, Any], dict[str, Any]]:
                         "scale_from_base": [0]
                         if representation in assessor.PRIMARY_REPRESENTATIONS
                         else None,
+                        "problem_sha256": problem_sha,
+                        "calibration_points_sha256": calibration_sha,
+                        "starts_sha256": starts_sha,
                         "variable_count": 1,
                         "residual_count": 1,
                         "logical_evaluation_cost": 2,
                         "gold_solutions": [
                             {
-                                "configuration_hex": [0.0.hex()],
-                                "target_hex": 0.0.hex(),
-                                "configuration_abs_tolerance_hex": 0.0.hex(),
-                                "target_abs_tolerance_hex": 0.0.hex(),
+                                "configuration_hex": [(0.0).hex()],
+                                "target_hex": (0.0).hex(),
+                                "configuration_abs_tolerance_hex": (0.0).hex(),
+                                "target_abs_tolerance_hex": (0.0).hex(),
                                 "branch_label": "interior",
                             }
                         ],
@@ -123,6 +135,9 @@ def _documents(blob: bytes) -> tuple[dict[str, Any], dict[str, Any]]:
                 candidate_cases.append(
                     {
                         "opaque_case_key": opaque,
+                        "problem_sha256": problem_sha,
+                        "calibration_points_sha256": calibration_sha,
+                        "starts_sha256": starts_sha,
                         "variable_count": 1,
                         "residual_count": 1,
                         "logical_evaluation_cost": 2,
@@ -139,6 +154,7 @@ def _documents(blob: bytes) -> tuple[dict[str, Any], dict[str, Any]]:
         "stage": "development",
         "candidate_input_sha256": input_sha,
         "bootstrap_sha256": hashlib.sha256(blob).hexdigest(),
+        "local_options_sha256": LOCAL_OPTIONS_SHA256,
         "locked_decision": None,
         "cases": truth_cases,
     }
@@ -147,8 +163,26 @@ def _documents(blob: bytes) -> tuple[dict[str, Any], dict[str, Any]]:
         "stage": "development",
         "candidate_input_sha256": input_sha,
         "candidate_process": {
-            "loaded_source_paths": ["julia/GeoTargetCore/src/LocalSolve.jl"],
-            "opened_artifact_paths": ["candidate/development-input.json"],
+            "runner_source_path": "research/harness/candidate_runner.jl",
+            "runner_source_sha256": _digest("runner"),
+            "observation_complete": True,
+            "source_manifest_sha256": "",
+            "loaded_sources": [
+                {
+                    "path": "julia/GeoTargetCore/src/LocalSolve.jl",
+                    "sha256": _digest("LocalSolve source"),
+                },
+                {
+                    "path": "research/harness/candidate_runner.jl",
+                    "sha256": _digest("runner"),
+                },
+            ],
+            "opened_artifacts": [
+                {
+                    "path": "candidate/development-input.json",
+                    "sha256": _digest("candidate artifact"),
+                }
+            ],
         },
         "cases": candidate_cases,
         "report_only_times": {
@@ -158,10 +192,96 @@ def _documents(blob: bytes) -> tuple[dict[str, Any], dict[str, Any]]:
             "host_exclusion_passed": False,
         },
     }
+    raw["candidate_process"]["source_manifest_sha256"] = (
+        assessor._source_manifest_sha256(raw["candidate_process"]["loaded_sources"])
+    )
     return raw, truth
 
 
-def _case(raw: dict[str, Any], truth: dict[str, Any], family: int, group: int, representation: str):
+def _execution_lock(raw: dict[str, Any], truth: dict[str, Any]) -> dict[str, Any]:
+    process = raw["candidate_process"]
+    return {
+        "schema_version": assessor.EXECUTION_LOCK_SCHEMA,
+        "card_sha256": assessor.CARD_SHA256,
+        "stage": truth["stage"],
+        "candidate_input_sha256": truth["candidate_input_sha256"],
+        "local_options_sha256": truth["local_options_sha256"],
+        "stage_input_anchor_sha256": _digest("stage input vault anchor"),
+        "stage_input_anchor_commit": "c" * 40,
+        "runner_source_path": process["runner_source_path"],
+        "runner_source_sha256": process["runner_source_sha256"],
+        "source_manifest_sha256": process["source_manifest_sha256"],
+        "allowed_sources": copy.deepcopy(process["loaded_sources"]),
+        "allowed_candidate_artifacts": copy.deepcopy(process["opened_artifacts"]),
+    }
+
+
+def _locked_documents(blob: bytes) -> tuple[dict[str, Any], dict[str, Any]]:
+    raw, truth = _documents(_bootstrap("development"))
+    truth["stage"] = "locked"
+    raw["stage"] = "locked"
+    locked_input_sha = _digest("locked candidate input")
+    truth["candidate_input_sha256"] = locked_input_sha
+    raw["candidate_input_sha256"] = locked_input_sha
+    truth["bootstrap_sha256"] = hashlib.sha256(blob).hexdigest()
+    truth["locked_decision"] = {
+        "candidate_id": "LX-BOUNDS",
+        "development_path": "recall",
+        "development_assessment_sha256": _digest("development assessment"),
+        "development_decision_record_sha256": _digest("development decision"),
+    }
+    raw_by_key = {case["opaque_case_key"]: case for case in raw["cases"]}
+    primary_truth = [
+        case
+        for case in truth["cases"]
+        if case["representation"] in assessor.PRIMARY_REPRESENTATIONS
+    ]
+    primary_raw = [
+        copy.deepcopy(raw_by_key[case["opaque_case_key"]]) for case in primary_truth
+    ]
+    cloned_truth: list[dict[str, Any]] = []
+    cloned_raw: list[dict[str, Any]] = []
+    for new_group, source_group in ((2, 0), (3, 1)):
+        for source_truth in primary_truth:
+            if source_truth["latent_group_index"] != source_group:
+                continue
+            clone_truth = copy.deepcopy(source_truth)
+            old_key = clone_truth["opaque_case_key"]
+            clone_truth["latent_group_index"] = new_group
+            clone_truth["latent_group_key"] = _digest(
+                f"locked/group/{clone_truth['family_ordinal']}/{new_group}"
+            )
+            new_key = _digest(
+                "locked/case/"
+                f"{clone_truth['family_ordinal']}/{new_group}/"
+                f"{clone_truth['representation']}"
+            )
+            clone_truth["opaque_case_key"] = new_key
+            clone_raw = copy.deepcopy(raw_by_key[old_key])
+            clone_raw["opaque_case_key"] = new_key
+            cloned_truth.append(clone_truth)
+            cloned_raw.append(clone_raw)
+    truth["cases"] = primary_truth + cloned_truth
+    raw["cases"] = primary_raw + cloned_raw
+    for raw_case in raw["cases"]:
+        raw_case["variants"] = [
+            variant
+            for variant in raw_case["variants"]
+            if variant["variant_id"] in {assessor.CONTROL, "LX-BOUNDS"}
+        ]
+    raw["candidate_process"]["opened_artifacts"][0]["path"] = (
+        "candidate/locked-input.json"
+    )
+    return raw, truth
+
+
+def _case(
+    raw: dict[str, Any],
+    truth: dict[str, Any],
+    family: int,
+    group: int,
+    representation: str,
+):
     truth_case = next(
         item
         for item in truth["cases"]
@@ -170,7 +290,9 @@ def _case(raw: dict[str, Any], truth: dict[str, Any], family: int, group: int, r
         and item["representation"] == representation
     )
     raw_case = next(
-        item for item in raw["cases"] if item["opaque_case_key"] == truth_case["opaque_case_key"]
+        item
+        for item in raw["cases"]
+        if item["opaque_case_key"] == truth_case["opaque_case_key"]
     )
     return raw_case, truth_case
 
@@ -186,10 +308,12 @@ class BootstrapContractTests(unittest.TestCase):
         cls.locked = _bootstrap("locked")
 
     def test_exact_headers_lengths_payload_prefixes_and_hashes(self) -> None:
-        expected_development_header = (
-            b"GTLOCAL3BOOT1\0D" + struct.pack(">III", 100_000, 8, 2)
+        expected_development_header = b"GTLOCAL3BOOT1\0D" + struct.pack(
+            ">III", 100_000, 8, 2
         )
-        expected_locked_header = b"GTLOCAL3BOOT1\0L" + struct.pack(">III", 100_000, 8, 4)
+        expected_locked_header = b"GTLOCAL3BOOT1\0L" + struct.pack(
+            ">III", 100_000, 8, 4
+        )
         self.assertEqual(self.development[:27], expected_development_header)
         self.assertEqual(self.locked[:27], expected_locked_header)
         self.assertEqual(len(self.development), 27 + 100_000 * 8 * 2)
@@ -202,7 +326,9 @@ class BootstrapContractTests(unittest.TestCase):
             self.locked[27:59].hex(),
             "0202030100010002030102030301020000020301030303000301020301000203",
         )
-        self.assertEqual(hashlib.sha256(self.development).hexdigest(), DEVELOPMENT_SHA256)
+        self.assertEqual(
+            hashlib.sha256(self.development).hexdigest(), DEVELOPMENT_SHA256
+        )
         self.assertEqual(hashlib.sha256(self.locked).hexdigest(), LOCKED_SHA256)
         self.assertEqual(
             bootstrap_indices.bootstrap_sha256("development"), DEVELOPMENT_SHA256
@@ -254,6 +380,8 @@ class NumericContractTests(unittest.TestCase):
         for token in ("NaN", "Infinity", "-Infinity"):
             with self.assertRaises(assessor.InterfaceError):
                 assessor.strict_json_loads('{"x":' + token + "}")
+        with self.assertRaisesRegex(assessor.InterfaceError, "duplicate"):
+            assessor.strict_json_loads('{"x":1,"x":1}')
         with self.assertRaises(assessor.InterfaceError):
             assessor.strict_json_dumps({"bad": math.nan})
 
@@ -299,11 +427,16 @@ class TopologyAndFormulaTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.blob = _bootstrap("development")
         cls.raw, cls.truth = _documents(cls.blob)
-        cls.full_outcome = assessor.assess(cls.raw, cls.truth, cls.blob)
+        cls.execution_lock = _execution_lock(cls.raw, cls.truth)
+        cls.full_outcome = assessor.assess(
+            cls.raw, cls.truth, cls.blob, cls.execution_lock
+        )
 
     @staticmethod
     def _assessed(raw: dict[str, Any], truth_document: dict[str, Any]):
-        candidate, truth = assessor.validate_topology(raw, truth_document)
+        candidate, truth, _ = assessor.validate_topology(
+            raw, truth_document, _execution_lock(raw, truth_document)
+        )
         raw_results = assessor._variant_results_by_case(candidate)
         truth_by_key = {case["opaque_case_key"]: case for case in truth["cases"]}
         cases_by_key = {case["opaque_case_key"]: case for case in candidate["cases"]}
@@ -316,7 +449,9 @@ class TopologyAndFormulaTests(unittest.TestCase):
         return truth, raw_results, assessed
 
     def test_closed_projections_join_only_by_opaque_key(self) -> None:
-        candidate, truth = assessor.validate_topology(self.raw, self.truth)
+        candidate, truth, _ = assessor.validate_topology(
+            self.raw, self.truth, self.execution_lock
+        )
         self.assertEqual(len(candidate["cases"]), 64)
         self.assertEqual(len(truth["cases"]), 64)
         candidate_text = json.dumps(candidate, sort_keys=True)
@@ -328,25 +463,45 @@ class TopologyAndFormulaTests(unittest.TestCase):
 
     def test_leaks_bad_topology_and_assessor_import_are_rejected(self) -> None:
         leaked = copy.deepcopy(self.raw)
-        leaked["candidate_process"]["loaded_source_paths"] = [
-            "research/assessor/runner.py"
+        leaked["candidate_process"]["loaded_sources"] = [
+            {"path": "research/assessor/runner.py", "sha256": _digest("leak")}
         ]
-        with self.assertRaisesRegex(assessor.InterfaceError, "loaded assessor"):
-            assessor.validate_topology(leaked, self.truth)
+        with self.assertRaisesRegex(assessor.InterfaceError, "identity-bearing"):
+            assessor.validate_topology(leaked, self.truth, self.execution_lock)
+
+        leaked_filename = copy.deepcopy(self.raw)
+        leaked_filename["candidate_process"]["loaded_sources"] = [
+            {
+                "path": "research/experiments/EXP-LOCAL-003/source/assessor.py",
+                "sha256": _digest("leak filename"),
+            }
+        ]
+        with self.assertRaisesRegex(assessor.InterfaceError, "identity-bearing"):
+            assessor.validate_topology(leaked_filename, self.truth, self.execution_lock)
+
+        leaked_compound = copy.deepcopy(self.raw)
+        leaked_compound["candidate_process"]["loaded_sources"] = [
+            {
+                "path": "research/private/gold_truth_helpers.py",
+                "sha256": _digest("leak compound"),
+            }
+        ]
+        with self.assertRaisesRegex(assessor.InterfaceError, "identity-bearing"):
+            assessor.validate_topology(leaked_compound, self.truth, self.execution_lock)
         opened_gold = copy.deepcopy(self.raw)
-        opened_gold["candidate_process"]["opened_artifact_paths"] = [
-            "gold/development.json"
+        opened_gold["candidate_process"]["opened_artifacts"] = [
+            {"path": "gold/development.json", "sha256": _digest("gold")}
         ]
         with self.assertRaisesRegex(assessor.InterfaceError, "non-candidate"):
-            assessor.validate_topology(opened_gold, self.truth)
+            assessor.validate_topology(opened_gold, self.truth, self.execution_lock)
         bad_truth = copy.deepcopy(self.truth)
         bad_truth["cases"][0]["family_ordinal"] = 7
         with self.assertRaises(assessor.InterfaceError):
-            assessor.validate_topology(self.raw, bad_truth)
+            assessor.validate_topology(self.raw, bad_truth, self.execution_lock)
         missing = copy.deepcopy(self.raw)
         missing["cases"].pop()
         with self.assertRaisesRegex(assessor.InterfaceError, "opaque join"):
-            assessor.validate_topology(missing, self.truth)
+            assessor.validate_topology(missing, self.truth, self.execution_lock)
 
     def test_json_schemas_and_semantic_validators_reject_shape_drift(self) -> None:
         candidate_schema = json.loads(
@@ -355,26 +510,63 @@ class TopologyAndFormulaTests(unittest.TestCase):
         truth_schema = json.loads(
             (SOURCE_ROOT / "assessor-truth.schema.json").read_text(encoding="utf-8")
         )
+        execution_schema = json.loads(
+            (SOURCE_ROOT / "candidate-execution-lock.schema.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        assessment_schema = json.loads(
+            (SOURCE_ROOT / "assessment.schema.json").read_text(encoding="utf-8")
+        )
+        decision_schema = json.loads(
+            (SOURCE_ROOT / "development-decision-record.schema.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        final_schema = json.loads(
+            (SOURCE_ROOT / "final-connection.schema.json").read_text(encoding="utf-8")
+        )
         jsonschema.Draft202012Validator.check_schema(candidate_schema)
         jsonschema.Draft202012Validator.check_schema(truth_schema)
+        jsonschema.Draft202012Validator.check_schema(execution_schema)
+        jsonschema.Draft202012Validator.check_schema(assessment_schema)
+        jsonschema.Draft202012Validator.check_schema(decision_schema)
+        jsonschema.Draft202012Validator.check_schema(final_schema)
         jsonschema.validate(self.raw, candidate_schema)
         jsonschema.validate(self.truth, truth_schema)
+        jsonschema.validate(self.execution_lock, execution_schema)
+        jsonschema.validate(self.full_outcome, assessment_schema)
+        assessor.validate_assessment_document(self.full_outcome)
+
+        legacy_execution_lock = copy.deepcopy(self.execution_lock)
+        legacy_execution_lock["c1_vault_anchor_sha256"] = legacy_execution_lock.pop(
+            "stage_input_anchor_sha256"
+        )
+        legacy_execution_lock["c1_vault_anchor_commit"] = legacy_execution_lock.pop(
+            "stage_input_anchor_commit"
+        )
+        with self.assertRaises(jsonschema.ValidationError):
+            jsonschema.validate(legacy_execution_lock, execution_schema)
+        with self.assertRaisesRegex(assessor.InterfaceError, "keys differ"):
+            assessor.validate_execution_lock(legacy_execution_lock, self.truth)
 
         extra = copy.deepcopy(self.raw)
         extra["cases"][0]["family_id"] = "SCALE-LADDER"
         with self.assertRaises(jsonschema.ValidationError):
             jsonschema.validate(extra, candidate_schema)
         with self.assertRaises(assessor.InterfaceError):
-            assessor.validate_topology(extra, self.truth)
+            assessor.validate_topology(extra, self.truth, self.execution_lock)
 
         missing = copy.deepcopy(self.truth)
         del missing["cases"][0]["gold_solutions"]
         with self.assertRaises(jsonschema.ValidationError):
             jsonschema.validate(missing, truth_schema)
         with self.assertRaises(assessor.InterfaceError):
-            assessor.validate_topology(self.raw, missing)
+            assessor.validate_topology(self.raw, missing, self.execution_lock)
 
-    def test_variable_and_residual_counts_are_distinct_for_overdetermined_cases(self) -> None:
+    def test_variable_and_residual_counts_are_distinct_for_overdetermined_cases(
+        self,
+    ) -> None:
         raw = copy.deepcopy(self.raw)
         truth = copy.deepcopy(self.truth)
         selected = [
@@ -391,7 +583,7 @@ class TopologyAndFormulaTests(unittest.TestCase):
                 if truth_case["representation"] in assessor.PRIMARY_REPRESENTATIONS
                 else None
             )
-            truth_case["gold_solutions"][0]["configuration_hex"] = [0.0.hex()] * 3
+            truth_case["gold_solutions"][0]["configuration_hex"] = [(0.0).hex()] * 3
             truth_case["expected_calibration"] = _calibration(6)
         for raw_case in raw["cases"]:
             if raw_case["opaque_case_key"] not in selected_keys:
@@ -403,11 +595,25 @@ class TopologyAndFormulaTests(unittest.TestCase):
                     variant["calibration"] = _calibration(6)
                 for attempt in variant["attempts"]:
                     if attempt["canonical_replay"]["configuration_hex"] is not None:
-                        attempt["canonical_replay"]["configuration_hex"] = [0.0.hex()] * 3
-        candidate, checked_truth = assessor.validate_topology(raw, truth)
-        raw_case = next(case for case in candidate["cases"] if case["opaque_case_key"] in selected_keys)
-        truth_case = next(case for case in checked_truth["cases"] if case["opaque_case_key"] == raw_case["opaque_case_key"])
-        self.assertEqual((raw_case["variable_count"], raw_case["residual_count"]), (3, 6))
+                        attempt["canonical_replay"]["configuration_hex"] = [
+                            (0.0).hex()
+                        ] * 3
+        candidate, checked_truth, _ = assessor.validate_topology(
+            raw, truth, _execution_lock(raw, truth)
+        )
+        raw_case = next(
+            case
+            for case in candidate["cases"]
+            if case["opaque_case_key"] in selected_keys
+        )
+        truth_case = next(
+            case
+            for case in checked_truth["cases"]
+            if case["opaque_case_key"] == raw_case["opaque_case_key"]
+        )
+        self.assertEqual(
+            (raw_case["variable_count"], raw_case["residual_count"]), (3, 6)
+        )
         self.assertEqual(len(truth_case["expected_calibration"]["model_scale_hex"]), 6)
 
     def test_gold_is_independent_of_solver_status_and_branch_is_checked(self) -> None:
@@ -459,9 +665,7 @@ class TopologyAndFormulaTests(unittest.TestCase):
         raw_case, _ = _case(primary, self.truth, 0, 0, "signed-permutation")
         _result(raw_case, "LX-BOUNDS")["attempts"][0] = _attempt(0, 0)
         truth, raw_results, assessed = self._assessed(primary, self.truth)
-        safety = assessor._variant_safety(
-            assessed, raw_results, truth, "LX-BOUNDS"
-        )
+        safety = assessor._variant_safety(assessed, raw_results, truth, "LX-BOUNDS")
         self.assertEqual(safety["primary_representation_disagreement_count"], 1)
 
         orthogonal = copy.deepcopy(self.raw)
@@ -484,14 +688,24 @@ class TopologyAndFormulaTests(unittest.TestCase):
             candidate_safety["orthogonal_safety_disagreement_count"],
             1,
         )
-        self.assertTrue(assessor._pair_safety_passes(control_safety, candidate_safety))
-        self.assertNotIn("orthogonal_safety_disagreement_count", assessor._HARD_SAFETY_COUNTS)
+        self.assertTrue(
+            assessor._global_hard_safety_passes(
+                {assessor.CONTROL: control_safety, "LX-BOUNDS": candidate_safety}
+            )
+        )
+        self.assertNotIn(
+            "orthogonal_safety_disagreement_count", assessor._HARD_SAFETY_COUNTS
+        )
 
-    def test_full_assessment_uses_latent_groups_and_lexicographic_champion(self) -> None:
+    def test_full_assessment_uses_latent_groups_and_lexicographic_champion(
+        self,
+    ) -> None:
         outcome = self.full_outcome
         self.assertEqual(outcome["bootstrap_sha256"], DEVELOPMENT_SHA256)
         self.assertEqual(outcome["bootstrap_replicates"], 100_000)
         self.assertTrue(outcome["stage_passed"])
+        self.assertTrue(outcome["locked_materialization_eligible"])
+        self.assertFalse(outcome["product_connection_allowed"])
         self.assertEqual(outcome["selected_path"], "recall")
         # Equal recall effects: LX wins because its charged ERT excludes no work
         # but, unlike LR/LXR, it executes no 64-observation calibration.
@@ -503,7 +717,180 @@ class TopologyAndFormulaTests(unittest.TestCase):
             self.assertEqual(row["prefixes"][-1]["recall_lower"], 0.125)
             self.assertEqual(row["prefixes"][-1]["recall_upper"], 0.125)
 
-    def test_scale_permutation_and_calibration_truth_are_independent_hard_audits(self) -> None:
+    def test_any_candidate_hard_failure_kills_the_whole_development_stage(self) -> None:
+        raw = copy.deepcopy(self.raw)
+        raw_case, _ = _case(raw, self.truth, 0, 0, "base")
+        _result(raw_case, "LXR-BOUNDS-MODEL")["semantic_or_wire_drift_count"] = 1
+        outcome = assessor.assess(
+            raw, self.truth, self.blob, _execution_lock(raw, self.truth)
+        )
+        self.assertFalse(outcome["global_hard_safety_passed"])
+        self.assertFalse(outcome["stage_passed"])
+        self.assertIsNone(outcome["selected_variant"])
+        self.assertTrue(
+            all(
+                not row["paths"][path]["passed"]
+                for row in outcome["candidates"].values()
+                for path in ("recall", "efficiency")
+            )
+        )
+
+    def test_sparse_or_manually_forged_assessment_cannot_authorize_locked(self) -> None:
+        forged = {
+            "schema_version": assessor.ASSESSMENT_SCHEMA,
+            "card_sha256": assessor.CARD_SHA256,
+            "stage": "development",
+            "stage_passed": True,
+            "locked_materialization_eligible": True,
+            "selected_variant": "LX-BOUNDS",
+            "selected_path": "recall",
+        }
+        with self.assertRaises(assessor.InterfaceError):
+            assessor.build_development_decision_record(
+                forged,
+                self.raw,
+                self.truth,
+                self.blob,
+                self.execution_lock,
+                "d" * 40,
+            )
+
+        inconsistent = copy.deepcopy(self.full_outcome)
+        inconsistent["global_hard_safety_passed"] = False
+        with self.assertRaisesRegex(assessor.InterfaceError, "hard-safety"):
+            assessor.validate_assessment_document(inconsistent)
+
+    def test_input_digests_and_local_options_are_hard_bound(self) -> None:
+        raw = copy.deepcopy(self.raw)
+        raw["cases"][0]["starts_sha256"] = _digest("wrong starts")
+        outcome = assessor.assess(
+            raw, self.truth, self.blob, _execution_lock(raw, self.truth)
+        )
+        self.assertFalse(outcome["global_hard_safety_passed"])
+        self.assertGreater(
+            sum(
+                row["calibration_audit_failure_count"]
+                for row in outcome["safety"].values()
+            ),
+            0,
+        )
+
+        wrong_options = copy.deepcopy(self.raw)
+        wrong_options["cases"][0]["variants"][0]["local_options_sha256"] = _digest(
+            "different options"
+        )
+        with self.assertRaisesRegex(assessor.InterfaceError, "local_options"):
+            assessor.validate_topology(wrong_options, self.truth, self.execution_lock)
+
+    def test_calibration_formula_rejects_cross_field_drift_and_covers_clamps(
+        self,
+    ) -> None:
+        context = "synthetic calibration"
+        normal = _calibration()
+        assessor._validate_calibration(normal, 1, context)
+
+        insufficient = _calibration()
+        insufficient["valid_vector_count"] = 7
+        insufficient["joint_fallback_reason"] = "insufficient-valid-vectors"
+        assessor._validate_calibration(insufficient, 1, context)
+        wrong_reason = copy.deepcopy(insufficient)
+        wrong_reason["joint_fallback_reason"] = None
+        with self.assertRaisesRegex(assessor.InterfaceError, "fallback_reason"):
+            assessor._validate_calibration(wrong_reason, 1, context)
+
+        for nearest, expected, lower, upper in (
+            (math.ldexp(1.0, -41), assessor.LOWER_MODEL_SCALE, True, False),
+            (assessor.LOWER_MODEL_SCALE, assessor.LOWER_MODEL_SCALE, False, False),
+            (assessor.UPPER_MODEL_SCALE, assessor.UPPER_MODEL_SCALE, False, False),
+            (math.ldexp(1.0, 41), assessor.UPPER_MODEL_SCALE, False, True),
+        ):
+            calibration = _calibration()
+            calibration["nearest_rank_hex"] = [nearest.hex()]
+            calibration["model_scale_hex"] = [expected.hex()]
+            calibration["model_scale_sha256"] = assessor.model_scale_sha256(
+                calibration["model_scale_hex"]
+            )
+            calibration["clamp_reasons"] = [{"lower": lower, "upper": upper}]
+            assessor._validate_calibration(calibration, 1, context)
+
+        bad_scale = _calibration()
+        bad_scale["model_scale_hex"] = [(2.0).hex()]
+        bad_scale["model_scale_sha256"] = assessor.model_scale_sha256(
+            bad_scale["model_scale_hex"]
+        )
+        with self.assertRaisesRegex(assessor.InterfaceError, "frozen clamp"):
+            assessor._validate_calibration(bad_scale, 1, context)
+
+    def test_locked_topology_is_exactly_96_primary_cases_without_safety32(self) -> None:
+        blob = _bootstrap("locked")
+        raw, truth = _locked_documents(blob)
+        decision = assessor.build_development_decision_record(
+            self.full_outcome,
+            self.raw,
+            self.truth,
+            self.blob,
+            self.execution_lock,
+            "d" * 40,
+        )
+        jsonschema.validate(
+            decision,
+            json.loads(
+                (SOURCE_ROOT / "development-decision-record.schema.json").read_text(
+                    encoding="utf-8"
+                )
+            ),
+        )
+        truth["locked_decision"] = {
+            "candidate_id": decision["selected_variant"],
+            "development_path": decision["selected_path"],
+            "development_assessment_sha256": decision["development_assessment_sha256"],
+            "development_decision_record_sha256": hashlib.sha256(
+                assessor.canonical_bytes(decision)
+            ).hexdigest(),
+        }
+        lock = _execution_lock(raw, truth)
+        candidate, checked_truth, _ = assessor.validate_topology(raw, truth, lock)
+        self.assertEqual(len(candidate["cases"]), 96)
+        self.assertEqual(len(checked_truth["cases"]), 96)
+        self.assertTrue(
+            all(
+                case["representation"] in assessor.PRIMARY_REPRESENTATIONS
+                for case in checked_truth["cases"]
+            )
+        )
+        outcome = assessor.assess(raw, truth, blob, lock)
+        self.assertTrue(outcome["stage_passed"])
+        self.assertFalse(outcome["locked_materialization_eligible"])
+        self.assertFalse(outcome["product_connection_allowed"])
+        final = assessor.finalize_product_connection(
+            self.full_outcome,
+            outcome,
+            decision,
+            development_raw_document=self.raw,
+            development_assessor_truth=self.truth,
+            development_bootstrap_bytes=self.blob,
+            development_execution_lock=self.execution_lock,
+            locked_raw_document=raw,
+            locked_assessor_truth=truth,
+            locked_bootstrap_bytes=blob,
+            locked_execution_lock=lock,
+        )
+        jsonschema.validate(
+            final,
+            json.loads(
+                (SOURCE_ROOT / "final-connection.schema.json").read_text(
+                    encoding="utf-8"
+                )
+            ),
+        )
+        self.assertEqual(final["experiment_id"], "EXP-LOCAL-003")
+        self.assertTrue(final["development_safety16_clear"])
+        self.assertTrue(final["locked_stage_passed"])
+        self.assertTrue(final["product_connection_allowed"])
+
+    def test_scale_permutation_and_calibration_truth_are_independent_hard_audits(
+        self,
+    ) -> None:
         raw = copy.deepcopy(self.raw)
         raw_case, _ = _case(raw, self.truth, 0, 0, "base")
         calibration = _result(raw_case, "LR-MODEL")["calibration"]
@@ -515,10 +902,12 @@ class TopologyAndFormulaTests(unittest.TestCase):
         candidate_safety = assessor._variant_safety(
             assessed, raw_results, truth, "LR-MODEL"
         )
-        self.assertGreater(
-            candidate_safety["calibration_audit_failure_count"], 0
+        self.assertGreater(candidate_safety["calibration_audit_failure_count"], 0)
+        self.assertFalse(
+            assessor._global_hard_safety_passes(
+                {assessor.CONTROL: control_safety, "LR-MODEL": candidate_safety}
+            )
         )
-        self.assertFalse(assessor._pair_safety_passes(control_safety, candidate_safety))
 
 
 if __name__ == "__main__":

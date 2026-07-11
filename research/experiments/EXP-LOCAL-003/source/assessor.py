@@ -16,6 +16,7 @@ import hashlib
 import json
 import math
 import posixpath
+import re
 import struct
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
@@ -36,7 +37,12 @@ Path = Literal["recall", "efficiency"]
 
 CANDIDATE_OUTPUT_SCHEMA: Final = "geotarget.exp-local-003.candidate-output/v1"
 ASSESSOR_TRUTH_SCHEMA: Final = "geotarget.exp-local-003.assessor-truth/v1"
+EXECUTION_LOCK_SCHEMA: Final = "geotarget.exp-local-003.candidate-execution-lock/v1"
 ASSESSMENT_SCHEMA: Final = "geotarget.exp-local-003.assessment/v1"
+DEVELOPMENT_DECISION_SCHEMA: Final = (
+    "geotarget.exp-local-003.development-decision-record/v1"
+)
+FINAL_CONNECTION_SCHEMA: Final = "geotarget.exp-local-003.final-connection/v1"
 CARD_SHA256: Final = "0caae294a032f6d920c718219836e60e57f20c76fe5d790a615e554a95c6ee3c"
 
 CONTROL: Final = "L0-SEMANTIC"
@@ -58,6 +64,9 @@ START_COUNT: Final = 32
 MAX_LOCAL_ITERATIONS: Final = 250
 MAX_LOCAL_EVALUATIONS: Final = 2_000
 CALIBRATION_OBSERVATIONS: Final = 64
+MINIMUM_VALID_CALIBRATION_VECTORS: Final = 8
+LOWER_MODEL_SCALE: Final = float.fromhex("0x1.0p-40")
+UPPER_MODEL_SCALE: Final = float.fromhex("0x1.0p+40")
 RECALL_NONINFERIORITY: Final = -0.02
 RECALL_GAIN: Final = 0.05
 ERT_REDUCTION: Final = 0.20
@@ -66,7 +75,9 @@ MINIMUM_POSITIVE_FAMILIES: Final = 3
 SIMPLICITY_ORDER: Final = {variant: index for index, variant in enumerate(CANDIDATES)}
 
 _HEX64 = frozenset("0123456789abcdef")
-_FORBIDDEN_PATH_PARTS = frozenset(("assessor", "gold", "truth"))
+_FORBIDDEN_PATH_PARTS = frozenset(
+    ("assessor", "gold", "truth", "generator", "materializer", "private")
+)
 _FORBIDDEN_CANDIDATE_STRINGS = frozenset(
     (
         *FAMILY_IDS,
@@ -159,8 +170,10 @@ def model_scale_bytes(values_hex: Sequence[str]) -> bytes:
         parse_finite_binary64_hex(value, f"model_scale[{index}]")
         for index, value in enumerate(values_hex)
     ]
-    return b"GTLOCAL3AVEC1\0" + struct.pack(">I", len(values)) + b"".join(
-        struct.pack(">d", value) for value in values
+    return (
+        b"GTLOCAL3AVEC1\0"
+        + struct.pack(">I", len(values))
+        + b"".join(struct.pack(">d", value) for value in values)
     )
 
 
@@ -204,13 +217,25 @@ def _json_ready(value: Any) -> Any:
 
 
 def strict_json_loads(payload: str | bytes) -> Any:
-    """Load RFC JSON while rejecting NaN/Infinity numeric extensions."""
+    """Load RFC JSON while rejecting duplicate keys and numeric extensions."""
 
     def reject_constant(token: str) -> None:
         raise InterfaceError(f"nonstandard JSON numeric literal {token!r} is forbidden")
 
+    def unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        result: dict[str, Any] = {}
+        for key, value in pairs:
+            if key in result:
+                raise InterfaceError(f"duplicate JSON object key {key!r} is forbidden")
+            result[key] = value
+        return result
+
     try:
-        return json.loads(payload, parse_constant=reject_constant)
+        return json.loads(
+            payload,
+            parse_constant=reject_constant,
+            object_pairs_hook=unique_object,
+        )
     except json.JSONDecodeError as error:
         raise InterfaceError("invalid JSON") from error
 
@@ -270,36 +295,174 @@ def _normal_relative_path(value: Any, context: str) -> str:
     if not isinstance(value, str) or not value or "\\" in value:
         raise InterfaceError(f"{context} must be a nonempty POSIX relative path")
     normalized = posixpath.normpath(value)
-    if normalized != value or value.startswith("/") or normalized == ".." or normalized.startswith("../"):
+    if (
+        normalized != value
+        or value.startswith("/")
+        or normalized == ".."
+        or normalized.startswith("../")
+    ):
         raise InterfaceError(f"{context} must be a normalized relative path")
     return value
 
 
-def _validate_process_boundary(value: Any) -> None:
+def _path_identity_tokens(path: str) -> set[str]:
+    """Return filename-aware tokens such as ``assessor`` from ``assessor.py``."""
+
+    return {
+        token
+        for component in path.lower().split("/")
+        for token in re.split(r"[^a-z0-9]+", component)
+        if token
+    }
+
+
+def _validate_file_records(
+    value: Any,
+    *,
+    context: str,
+    candidate_artifacts: bool,
+) -> list[dict[str, str]]:
+    records = _list(value, context)
+    if not records:
+        raise InterfaceError(f"{context} must not be empty")
+    checked: list[dict[str, str]] = []
+    for index, item in enumerate(records):
+        record = _mapping(item, f"{context}[{index}]")
+        _exact_keys(record, {"path", "sha256"}, f"{context}[{index}]")
+        path = _normal_relative_path(record["path"], f"{context}[{index}].path")
+        digest = _sha256(record["sha256"], f"{context}[{index}].sha256")
+        if candidate_artifacts:
+            if path.split("/")[0] != "candidate":
+                raise InterfaceError(
+                    f"{context} contains a non-candidate artifact root"
+                )
+        if _path_identity_tokens(path) & _FORBIDDEN_PATH_PARTS:
+            raise InterfaceError(f"{context} contains identity-bearing source {path}")
+        checked.append({"path": path, "sha256": digest})
+    if checked != sorted(checked, key=lambda record: record["path"]):
+        raise InterfaceError(f"{context} must be sorted by path")
+    paths = [record["path"] for record in checked]
+    if len(paths) != len(set(paths)):
+        raise InterfaceError(f"{context} paths must be unique")
+    return checked
+
+
+def _source_manifest_sha256(records: Sequence[Mapping[str, str]]) -> str:
+    return hashlib.sha256(canonical_bytes(list(records))).hexdigest()
+
+
+def validate_execution_lock(
+    document: Any, assessor_truth: Mapping[str, Any]
+) -> Mapping[str, Any]:
+    lock = _mapping(document, "candidate execution lock")
+    _exact_keys(
+        lock,
+        {
+            "schema_version",
+            "card_sha256",
+            "stage",
+            "candidate_input_sha256",
+            "local_options_sha256",
+            "stage_input_anchor_sha256",
+            "stage_input_anchor_commit",
+            "runner_source_path",
+            "runner_source_sha256",
+            "source_manifest_sha256",
+            "allowed_sources",
+            "allowed_candidate_artifacts",
+        },
+        "candidate execution lock",
+    )
+    if lock["schema_version"] != EXECUTION_LOCK_SCHEMA:
+        raise InterfaceError("candidate execution lock schema mismatch")
+    if lock["card_sha256"] != CARD_SHA256:
+        raise InterfaceError("candidate execution lock card mismatch")
+    for field in ("stage", "candidate_input_sha256", "local_options_sha256"):
+        if lock[field] != assessor_truth[field]:
+            raise InterfaceError(f"candidate execution lock {field} mismatch")
+    _sha256(lock["stage_input_anchor_sha256"], "stage_input_anchor_sha256")
+    if (
+        not isinstance(lock["stage_input_anchor_commit"], str)
+        or re.fullmatch(
+            r"(?:[0-9a-f]{40}|[0-9a-f]{64})", lock["stage_input_anchor_commit"]
+        )
+        is None
+    ):
+        raise InterfaceError("candidate execution lock anchor commit is invalid")
+    runner_path = _normal_relative_path(
+        lock["runner_source_path"], "runner_source_path"
+    )
+    runner_sha = _sha256(lock["runner_source_sha256"], "runner_source_sha256")
+    allowed_sources = _validate_file_records(
+        lock["allowed_sources"],
+        context="allowed_sources",
+        candidate_artifacts=False,
+    )
+    allowed_artifacts = _validate_file_records(
+        lock["allowed_candidate_artifacts"],
+        context="allowed_candidate_artifacts",
+        candidate_artifacts=True,
+    )
+    expected_manifest = _source_manifest_sha256(allowed_sources)
+    if (
+        _sha256(lock["source_manifest_sha256"], "source_manifest_sha256")
+        != expected_manifest
+    ):
+        raise InterfaceError("candidate source manifest hash is not canonical")
+    runner_records = [
+        record
+        for record in allowed_sources
+        if record["path"] == runner_path and record["sha256"] == runner_sha
+    ]
+    if len(runner_records) != 1:
+        raise InterfaceError("candidate runner is not bound in allowed_sources")
+    canonical_bytes(allowed_artifacts)
+    return lock
+
+
+def _validate_process_boundary(value: Any, execution_lock: Mapping[str, Any]) -> None:
     boundary = _mapping(value, "candidate_process")
     _exact_keys(
         boundary,
-        {"loaded_source_paths", "opened_artifact_paths"},
+        {
+            "runner_source_sha256",
+            "runner_source_path",
+            "observation_complete",
+            "source_manifest_sha256",
+            "loaded_sources",
+            "opened_artifacts",
+        },
         "candidate_process",
     )
-    loaded = _list(boundary["loaded_source_paths"], "loaded_source_paths")
-    opened = _list(boundary["opened_artifact_paths"], "opened_artifact_paths")
-    if not loaded:
-        raise InterfaceError("candidate process must report at least one loaded source")
-    for index, item in enumerate(loaded):
-        path = _normal_relative_path(item, f"loaded_source_paths[{index}]")
-        lowered_parts = {part.lower() for part in path.split("/")}
-        if lowered_parts & _FORBIDDEN_PATH_PARTS:
-            raise InterfaceError("candidate process loaded assessor/Gold/truth source")
-    if not opened:
-        raise InterfaceError("candidate process must report its opened candidate artifacts")
-    for index, item in enumerate(opened):
-        path = _normal_relative_path(item, f"opened_artifact_paths[{index}]")
-        parts = path.split("/")
-        if parts[0] != "candidate":
-            raise InterfaceError("candidate process opened a non-candidate artifact root")
-        if {part.lower() for part in parts} & _FORBIDDEN_PATH_PARTS:
-            raise InterfaceError("candidate process opened assessor/Gold/truth artifact")
+    if boundary["observation_complete"] is not True:
+        raise InterfaceError("candidate process observation is not complete")
+    for field in (
+        "runner_source_path",
+        "runner_source_sha256",
+        "source_manifest_sha256",
+    ):
+        if boundary[field] != execution_lock[field]:
+            raise InterfaceError(
+                f"candidate process {field} differs from execution lock"
+            )
+    loaded = _validate_file_records(
+        boundary["loaded_sources"],
+        context="loaded_sources",
+        candidate_artifacts=False,
+    )
+    opened = _validate_file_records(
+        boundary["opened_artifacts"],
+        context="opened_artifacts",
+        candidate_artifacts=True,
+    )
+    if loaded != execution_lock["allowed_sources"]:
+        raise InterfaceError(
+            "candidate process source set differs from frozen allowlist"
+        )
+    if opened != execution_lock["allowed_candidate_artifacts"]:
+        raise InterfaceError(
+            "candidate process artifact set differs from frozen allowlist"
+        )
 
 
 def _walk_strings(value: Any) -> Iterable[str]:
@@ -314,7 +477,9 @@ def _walk_strings(value: Any) -> Iterable[str]:
             yield from _walk_strings(child)
 
 
-def _validate_clamp_reasons(value: Any, residual_count: int, context: str) -> list[dict[str, bool]]:
+def _validate_clamp_reasons(
+    value: Any, residual_count: int, context: str
+) -> list[dict[str, bool]]:
     rows = _list(value, context)
     if len(rows) != residual_count:
         raise InterfaceError(f"{context} length differs from residual_count")
@@ -335,7 +500,9 @@ _FALLBACK_REASONS = frozenset(
 )
 
 
-def _validate_calibration(value: Any, residual_count: int, context: str) -> Mapping[str, Any]:
+def _validate_calibration(
+    value: Any, residual_count: int, context: str
+) -> Mapping[str, Any]:
     calibration = _mapping(value, context)
     _exact_keys(
         calibration,
@@ -364,8 +531,10 @@ def _validate_calibration(value: Any, residual_count: int, context: str) -> Mapp
     scales = _list(calibration["model_scale_hex"], f"{context}.model_scale_hex")
     if len(nearest) != residual_count or len(scales) != residual_count:
         raise InterfaceError(f"{context} vector length differs from residual_count")
-    for index, item in enumerate(nearest):
+    parsed_nearest = [
         parse_finite_binary64_hex(item, f"{context}.nearest_rank_hex[{index}]")
+        for index, item in enumerate(nearest)
+    ]
     parsed_scales = [
         parse_finite_binary64_hex(item, f"{context}.model_scale_hex[{index}]")
         for index, item in enumerate(scales)
@@ -373,7 +542,10 @@ def _validate_calibration(value: Any, residual_count: int, context: str) -> Mapp
     if any(item <= 0.0 for item in parsed_scales):
         raise InterfaceError(f"{context}.model_scale values must be positive")
     expected_digest = model_scale_sha256(scales)
-    if _sha256(calibration["model_scale_sha256"], f"{context}.model_scale_sha256") != expected_digest:
+    if (
+        _sha256(calibration["model_scale_sha256"], f"{context}.model_scale_sha256")
+        != expected_digest
+    ):
         raise InterfaceError(f"{context}.model_scale_sha256 is not canonical")
     reason = calibration["joint_fallback_reason"]
     if reason is not None and reason not in _FALLBACK_REASONS:
@@ -381,11 +553,43 @@ def _validate_calibration(value: Any, residual_count: int, context: str) -> Mapp
     reasons = _validate_clamp_reasons(
         calibration["clamp_reasons"], residual_count, f"{context}.clamp_reasons"
     )
-    if reason is not None:
+    if valid_count < MINIMUM_VALID_CALIBRATION_VECTORS:
+        expected_reason = "insufficient-valid-vectors"
+    elif any(item <= 0.0 for item in parsed_nearest):
+        expected_reason = "nonpositive-nearest-rank"
+    else:
+        expected_reason = None
+    if reason == "nonfinite-nearest-rank":
+        raise InterfaceError(
+            f"{context} nonfinite nearest rank is unreachable after finite-vector filtering"
+        )
+    if reason != expected_reason:
+        raise InterfaceError(f"{context}.joint_fallback_reason disagrees with K/r")
+    if expected_reason is not None:
         if any(item != 1.0 for item in parsed_scales) or any(
             row["lower"] or row["upper"] for row in reasons
         ):
-            raise InterfaceError(f"{context} joint fallback must produce unclamped all-ones")
+            raise InterfaceError(
+                f"{context} joint fallback must produce unclamped all-ones"
+            )
+    else:
+        for index, nearest_value in enumerate(parsed_nearest):
+            expected_scale = min(
+                max(nearest_value, LOWER_MODEL_SCALE), UPPER_MODEL_SCALE
+            )
+            if parsed_scales[index] != expected_scale:
+                raise InterfaceError(
+                    f"{context}.model_scale_hex[{index}] is not the frozen clamp"
+                )
+            expected_lower = nearest_value < LOWER_MODEL_SCALE
+            expected_upper = nearest_value > UPPER_MODEL_SCALE
+            if reasons[index] != {
+                "lower": expected_lower,
+                "upper": expected_upper,
+            }:
+                raise InterfaceError(
+                    f"{context}.clamp_reasons[{index}] disagrees with the frozen clamp"
+                )
     _integer(calibration["nonfinite_q_count"], f"{context}.nonfinite_q_count")
     _integer(
         calibration["nonfinite_q_misclassification_count"],
@@ -394,7 +598,9 @@ def _validate_calibration(value: Any, residual_count: int, context: str) -> Mapp
     return calibration
 
 
-def _validate_canonical(value: Any, variable_count: int, context: str) -> Mapping[str, Any]:
+def _validate_canonical(
+    value: Any, variable_count: int, context: str
+) -> Mapping[str, Any]:
     canonical = _mapping(value, context)
     _exact_keys(
         canonical,
@@ -408,20 +614,28 @@ def _validate_canonical(value: Any, variable_count: int, context: str) -> Mappin
     if configuration is not None:
         vector = _list(configuration, f"{context}.configuration_hex")
         if len(vector) != variable_count:
-            raise InterfaceError(f"{context} configuration length differs from variable_count")
+            raise InterfaceError(
+                f"{context} configuration length differs from variable_count"
+            )
         for index, item in enumerate(vector):
             parse_finite_binary64_hex(item, f"{context}.configuration_hex[{index}]")
     if target is not None:
         parse_finite_binary64_hex(target, f"{context}.target_hex")
     if canonical["valid"] and (configuration is None or target is None):
-        raise InterfaceError(f"{context} valid replay requires configuration and target")
-    if canonical["branch_label"] is not None and not isinstance(canonical["branch_label"], str):
+        raise InterfaceError(
+            f"{context} valid replay requires configuration and target"
+        )
+    if canonical["branch_label"] is not None and not isinstance(
+        canonical["branch_label"], str
+    ):
         raise InterfaceError(f"{context}.branch_label must be string or null")
     _integer(canonical["evaluation_cost"], f"{context}.evaluation_cost")
     return canonical
 
 
-def _validate_attempt(value: Any, variable_count: int, context: str) -> Mapping[str, Any]:
+def _validate_attempt(
+    value: Any, variable_count: int, context: str
+) -> Mapping[str, Any]:
     attempt = _mapping(value, context)
     _exact_keys(
         attempt,
@@ -456,6 +670,7 @@ def _validate_variant_result(
     value: Any,
     variable_count: int,
     residual_count: int,
+    local_options_sha256: str,
     context: str,
 ) -> Mapping[str, Any]:
     result = _mapping(value, context)
@@ -463,6 +678,7 @@ def _validate_variant_result(
         result,
         {
             "variant_id",
+            "local_options_sha256",
             "calibration",
             "attempts",
             "semantic_or_wire_drift_count",
@@ -473,6 +689,11 @@ def _validate_variant_result(
     variant = result["variant_id"]
     if variant not in ALL_VARIANTS:
         raise InterfaceError(f"{context}.variant_id is unsupported")
+    if (
+        _sha256(result["local_options_sha256"], f"{context}.local_options_sha256")
+        != local_options_sha256
+    ):
+        raise InterfaceError(f"{context}.local_options_sha256 differs from C0 freeze")
     if variant in MODEL_SCALE_VARIANTS:
         if result["calibration"] is None:
             raise InterfaceError(f"{context} model-scale variant requires calibration")
@@ -492,17 +713,28 @@ def _validate_variant_result(
         indexes.append(checked["start_index"])
     if sorted(indexes) != list(range(START_COUNT)):
         raise InterfaceError(f"{context} start indexes must be exactly 0..31")
-    _integer(result["semantic_or_wire_drift_count"], f"{context}.semantic_or_wire_drift_count")
+    _integer(
+        result["semantic_or_wire_drift_count"],
+        f"{context}.semantic_or_wire_drift_count",
+    )
     _integer(result["identity_access_count"], f"{context}.identity_access_count")
     return result
 
 
-def _validate_candidate_case(value: Any, expected_variants: set[str], context: str) -> Mapping[str, Any]:
+def _validate_candidate_case(
+    value: Any,
+    expected_variants: set[str],
+    local_options_sha256: str,
+    context: str,
+) -> Mapping[str, Any]:
     case = _mapping(value, context)
     _exact_keys(
         case,
         {
             "opaque_case_key",
+            "problem_sha256",
+            "calibration_points_sha256",
+            "starts_sha256",
             "variable_count",
             "residual_count",
             "logical_evaluation_cost",
@@ -511,19 +743,28 @@ def _validate_candidate_case(value: Any, expected_variants: set[str], context: s
         context,
     )
     _opaque_key(case["opaque_case_key"], f"{context}.opaque_case_key")
+    _sha256(case["problem_sha256"], f"{context}.problem_sha256")
+    _sha256(
+        case["calibration_points_sha256"],
+        f"{context}.calibration_points_sha256",
+    )
+    _sha256(case["starts_sha256"], f"{context}.starts_sha256")
     variable_count = _integer(
         case["variable_count"], f"{context}.variable_count", minimum=1
     )
     residual_count = _integer(
         case["residual_count"], f"{context}.residual_count", minimum=1
     )
-    _integer(case["logical_evaluation_cost"], f"{context}.logical_evaluation_cost", minimum=1)
+    _integer(
+        case["logical_evaluation_cost"], f"{context}.logical_evaluation_cost", minimum=1
+    )
     variants = _list(case["variants"], f"{context}.variants")
     checked = [
         _validate_variant_result(
             item,
             variable_count,
             residual_count,
+            local_options_sha256,
             f"{context}.variants[{index}]",
         )
         for index, item in enumerate(variants)
@@ -540,15 +781,36 @@ def _expected_variants(stage: Stage, truth: Mapping[str, Any]) -> set[str]:
             raise InterfaceError("development truth must have null locked_decision")
         return set(ALL_VARIANTS)
     decision = _mapping(truth["locked_decision"], "locked_decision")
-    _exact_keys(decision, {"candidate_id", "development_path"}, "locked_decision")
+    _exact_keys(
+        decision,
+        {
+            "candidate_id",
+            "development_path",
+            "development_assessment_sha256",
+            "development_decision_record_sha256",
+        },
+        "locked_decision",
+    )
     if decision["candidate_id"] not in CANDIDATES:
         raise InterfaceError("locked candidate_id is unsupported")
     if decision["development_path"] not in ("recall", "efficiency"):
         raise InterfaceError("locked development_path is unsupported")
+    _sha256(
+        decision["development_assessment_sha256"],
+        "locked_decision.development_assessment_sha256",
+    )
+    _sha256(
+        decision["development_decision_record_sha256"],
+        "locked_decision.development_decision_record_sha256",
+    )
     return {CONTROL, decision["candidate_id"]}
 
 
-def validate_candidate_raw(document: Any, assessor_truth: Mapping[str, Any]) -> Mapping[str, Any]:
+def validate_candidate_raw(
+    document: Any,
+    assessor_truth: Mapping[str, Any],
+    execution_lock: Mapping[str, Any],
+) -> Mapping[str, Any]:
     """Validate the closed raw interface and candidate/assessor physical split."""
 
     candidate = _mapping(document, "candidate raw document")
@@ -569,13 +831,21 @@ def validate_candidate_raw(document: Any, assessor_truth: Mapping[str, Any]) -> 
     stage = candidate["stage"]
     if stage not in ("development", "locked") or stage != assessor_truth["stage"]:
         raise InterfaceError("candidate/assessor stage mismatch")
-    if _sha256(candidate["candidate_input_sha256"], "candidate_input_sha256") != assessor_truth["candidate_input_sha256"]:
+    if (
+        _sha256(candidate["candidate_input_sha256"], "candidate_input_sha256")
+        != assessor_truth["candidate_input_sha256"]
+    ):
         raise InterfaceError("candidate/assessor input digest mismatch")
-    _validate_process_boundary(candidate["candidate_process"])
+    _validate_process_boundary(candidate["candidate_process"], execution_lock)
     times = _mapping(candidate["report_only_times"], "report_only_times")
     _exact_keys(
         times,
-        {"process_cpu_seconds", "end_to_end_cpu_seconds", "formal_wall_seconds", "host_exclusion_passed"},
+        {
+            "process_cpu_seconds",
+            "end_to_end_cpu_seconds",
+            "formal_wall_seconds",
+            "host_exclusion_passed",
+        },
         "report_only_times",
     )
     _finite_number(times["process_cpu_seconds"], "process_cpu_seconds")
@@ -587,7 +857,12 @@ def validate_candidate_raw(document: Any, assessor_truth: Mapping[str, Any]) -> 
     expected_variants = _expected_variants(stage, assessor_truth)
     cases = _list(candidate["cases"], "candidate cases")
     checked = [
-        _validate_candidate_case(item, expected_variants, f"candidate cases[{index}]")
+        _validate_candidate_case(
+            item,
+            expected_variants,
+            assessor_truth["local_options_sha256"],
+            f"candidate cases[{index}]",
+        )
         for index, item in enumerate(cases)
     ]
     keys = [item["opaque_case_key"] for item in checked]
@@ -596,13 +871,15 @@ def validate_candidate_raw(document: Any, assessor_truth: Mapping[str, Any]) -> 
 
     # Closed schemas prevent secret key names; this value check also catches a
     # family/group/representation label smuggled into an otherwise string field.
-    truth_group_keys = {
-        item["latent_group_key"] for item in assessor_truth["cases"]
-    }
+    truth_group_keys = {item["latent_group_key"] for item in assessor_truth["cases"]}
     forbidden_values = _FORBIDDEN_CANDIDATE_STRINGS | truth_group_keys
-    leaked = sorted({value for value in _walk_strings(candidate) if value in forbidden_values})
+    leaked = sorted(
+        {value for value in _walk_strings(candidate) if value in forbidden_values}
+    )
     if leaked:
-        raise InterfaceError(f"assessor-only identity leaked into candidate raw: {leaked}")
+        raise InterfaceError(
+            f"assessor-only identity leaked into candidate raw: {leaked}"
+        )
     return candidate
 
 
@@ -623,7 +900,9 @@ def _validate_gold_solution(
     )
     configuration = _list(solution["configuration_hex"], f"{context}.configuration_hex")
     if len(configuration) != variable_count:
-        raise InterfaceError(f"{context} configuration length differs from variable_count")
+        raise InterfaceError(
+            f"{context} configuration length differs from variable_count"
+        )
     for index, item in enumerate(configuration):
         parse_finite_binary64_hex(item, f"{context}.configuration_hex[{index}]")
     parse_finite_binary64_hex(solution["target_hex"], f"{context}.target_hex")
@@ -637,7 +916,9 @@ def _validate_gold_solution(
     )
     if configuration_tolerance < 0.0 or target_tolerance < 0.0:
         raise InterfaceError(f"{context} tolerances must be nonnegative")
-    if solution["branch_label"] is not None and not isinstance(solution["branch_label"], str):
+    if solution["branch_label"] is not None and not isinstance(
+        solution["branch_label"], str
+    ):
         raise InterfaceError(f"{context}.branch_label must be string or null")
     return solution
 
@@ -663,6 +944,9 @@ def _validate_truth_case(value: Any, context: str) -> Mapping[str, Any]:
             "representation",
             "expected_invariant",
             "scale_from_base",
+            "problem_sha256",
+            "calibration_points_sha256",
+            "starts_sha256",
             "variable_count",
             "residual_count",
             "logical_evaluation_cost",
@@ -687,23 +971,37 @@ def _validate_truth_case(value: Any, context: str) -> Mapping[str, Any]:
     if not isinstance(expected_invariant, bool):
         raise InterfaceError(f"{context}.expected_invariant must be boolean")
     if expected_invariant != (representation in PRIMARY_REPRESENTATIONS):
-        raise InterfaceError(f"{context}.expected_invariant disagrees with representation")
+        raise InterfaceError(
+            f"{context}.expected_invariant disagrees with representation"
+        )
     variable_count = _integer(
         case["variable_count"], f"{context}.variable_count", minimum=1
     )
     residual_count = _integer(
         case["residual_count"], f"{context}.residual_count", minimum=1
     )
-    _integer(case["logical_evaluation_cost"], f"{context}.logical_evaluation_cost", minimum=1)
+    _integer(
+        case["logical_evaluation_cost"], f"{context}.logical_evaluation_cost", minimum=1
+    )
     permutation = case["scale_from_base"]
     if representation in PRIMARY_REPRESENTATIONS:
         values = _list(permutation, f"{context}.scale_from_base")
-        if len(values) != residual_count or sorted(values) != list(range(residual_count)):
+        if len(values) != residual_count or sorted(values) != list(
+            range(residual_count)
+        ):
             raise InterfaceError(
                 f"{context}.scale_from_base must permute residual_count rows"
             )
     elif permutation is not None:
-        raise InterfaceError(f"{context} Safety representation has no hard scale permutation")
+        raise InterfaceError(
+            f"{context} Safety representation has no hard scale permutation"
+        )
+    _sha256(case["problem_sha256"], f"{context}.problem_sha256")
+    _sha256(
+        case["calibration_points_sha256"],
+        f"{context}.calibration_points_sha256",
+    )
+    _sha256(case["starts_sha256"], f"{context}.starts_sha256")
     solutions = _list(case["gold_solutions"], f"{context}.gold_solutions")
     if not solutions:
         raise InterfaceError(f"{context} must contain at least one Gold solution")
@@ -730,6 +1028,7 @@ def validate_assessor_truth(document: Any) -> Mapping[str, Any]:
             "stage",
             "candidate_input_sha256",
             "bootstrap_sha256",
+            "local_options_sha256",
             "locked_decision",
             "cases",
         },
@@ -742,10 +1041,16 @@ def validate_assessor_truth(document: Any) -> Mapping[str, Any]:
         raise InterfaceError("assessor stage is unsupported")
     _sha256(truth["candidate_input_sha256"], "candidate_input_sha256")
     _sha256(truth["bootstrap_sha256"], "bootstrap_sha256")
+    _sha256(truth["local_options_sha256"], "local_options_sha256")
     _expected_variants(stage, truth)
     groups = 2 if stage == "development" else 4
     cases = _list(truth["cases"], "truth cases")
-    expected_case_count = len(FAMILY_IDS) * groups * 4
+    stage_representations = (
+        (*PRIMARY_REPRESENTATIONS, SAFETY_REPRESENTATION)
+        if stage == "development"
+        else PRIMARY_REPRESENTATIONS
+    )
+    expected_case_count = len(FAMILY_IDS) * groups * len(stage_representations)
     if len(cases) != expected_case_count:
         raise InterfaceError(
             f"truth case count {len(cases)} != frozen {expected_case_count}"
@@ -765,15 +1070,15 @@ def validate_assessor_truth(document: Any) -> Mapping[str, Any]:
             raise InterfaceError("latent_group_index exceeds stage allocation")
         topology.setdefault((case["family_id"], group_index), []).append(case)
     expected_groups = {
-        (family, group_index)
-        for family in FAMILY_IDS
-        for group_index in range(groups)
+        (family, group_index) for family in FAMILY_IDS for group_index in range(groups)
     }
     if set(topology) != expected_groups:
-        raise InterfaceError("family/latent-group allocation differs from frozen topology")
+        raise InterfaceError(
+            "family/latent-group allocation differs from frozen topology"
+        )
     for key, rows in topology.items():
-        representations = [row["representation"] for row in rows]
-        if sorted(representations) != sorted((*PRIMARY_REPRESENTATIONS, SAFETY_REPRESENTATION)):
+        observed_representations = [row["representation"] for row in rows]
+        if sorted(observed_representations) != sorted(stage_representations):
             raise InterfaceError(f"representation allocation differs for {key}")
         group_keys = {row["latent_group_key"] for row in rows}
         if len(group_keys) != 1:
@@ -790,17 +1095,24 @@ def validate_assessor_truth(document: Any) -> Mapping[str, Any]:
     return truth
 
 
-def validate_topology(candidate_raw: Any, assessor_truth: Any) -> tuple[Mapping[str, Any], Mapping[str, Any]]:
+def validate_topology(
+    candidate_raw: Any,
+    assessor_truth: Any,
+    execution_lock: Any,
+) -> tuple[Mapping[str, Any], Mapping[str, Any], Mapping[str, Any]]:
     """Strictly validate both projections and their opaque-key-only join."""
 
     truth = validate_assessor_truth(assessor_truth)
-    candidate = validate_candidate_raw(candidate_raw, truth)
+    lock = validate_execution_lock(execution_lock, truth)
+    candidate = validate_candidate_raw(candidate_raw, truth, lock)
     candidate_keys = {case["opaque_case_key"] for case in candidate["cases"]}
     truth_keys = {case["opaque_case_key"] for case in truth["cases"]}
     if candidate_keys != truth_keys:
         missing = len(truth_keys - candidate_keys)
         extra = len(candidate_keys - truth_keys)
-        raise InterfaceError(f"candidate/Gold opaque join differs; missing={missing}, extra={extra}")
+        raise InterfaceError(
+            f"candidate/Gold opaque join differs; missing={missing}, extra={extra}"
+        )
     candidate_cases = {case["opaque_case_key"]: case for case in candidate["cases"]}
     for index, truth_case in enumerate(truth["cases"]):
         candidate_case = candidate_cases[truth_case["opaque_case_key"]]
@@ -810,8 +1122,10 @@ def validate_topology(candidate_raw: Any, assessor_truth: Any) -> tuple[Mapping[
             "logical_evaluation_cost",
         ):
             if candidate_case[field] != truth_case[field]:
-                raise InterfaceError(f"candidate/Gold {field} differs at truth case {index}")
-    return candidate, truth
+                raise InterfaceError(
+                    f"candidate/Gold {field} differs at truth case {index}"
+                )
+    return candidate, truth, lock
 
 
 def _hex_vector(value: Sequence[str], context: str) -> list[float]:
@@ -831,10 +1145,14 @@ def _gold_valid(attempt: Mapping[str, Any], truth_case: Mapping[str, Any]) -> bo
         return False
     if canonical["configuration_hex"] is None or canonical["target_hex"] is None:
         return False
-    configuration = _hex_vector(canonical["configuration_hex"], "canonical configuration")
+    configuration = _hex_vector(
+        canonical["configuration_hex"], "canonical configuration"
+    )
     target = parse_finite_binary64_hex(canonical["target_hex"], "canonical target")
     for solution in truth_case["gold_solutions"]:
-        gold_configuration = _hex_vector(solution["configuration_hex"], "Gold configuration")
+        gold_configuration = _hex_vector(
+            solution["configuration_hex"], "Gold configuration"
+        )
         gold_target = parse_finite_binary64_hex(solution["target_hex"], "Gold target")
         configuration_tolerance = parse_finite_binary64_hex(
             solution["configuration_abs_tolerance_hex"], "configuration tolerance"
@@ -849,7 +1167,9 @@ def _gold_valid(attempt: Mapping[str, Any], truth_case: Mapping[str, Any]) -> bo
         if (
             max(
                 abs(actual - expected)
-                for actual, expected in zip(configuration, gold_configuration, strict=True)
+                for actual, expected in zip(
+                    configuration, gold_configuration, strict=True
+                )
             )
             <= configuration_tolerance
             and abs(target - gold_target) <= target_tolerance
@@ -903,7 +1223,9 @@ class GroupRecord:
     candidate_pool: Pool
 
 
-def _calibration_differences(actual: Mapping[str, Any], expected: Mapping[str, Any]) -> int:
+def _calibration_differences(
+    actual: Mapping[str, Any], expected: Mapping[str, Any]
+) -> int:
     fields = (
         "observation_evaluation_costs",
         "valid_vector_count",
@@ -923,14 +1245,18 @@ def _assess_case_variant(
     result: Mapping[str, Any],
 ) -> CaseVariantAssessment:
     logical_cost = candidate_case["logical_evaluation_cost"]
-    attempts_by_index = {attempt["start_index"]: attempt for attempt in result["attempts"]}
+    attempts_by_index = {
+        attempt["start_index"]: attempt for attempt in result["attempts"]
+    }
     assessments: list[AttemptAssessment] = []
     for start_index in range(START_COUNT):
         attempt = attempts_by_index[start_index]
         canonical = attempt["canonical_replay"]
         gold_valid = _gold_valid(attempt, truth_case)
         replay_cost = canonical["evaluation_cost"]
-        successful_work = sum(attempt["local_observation_evaluation_costs"]) + replay_cost
+        successful_work = (
+            sum(attempt["local_observation_evaluation_costs"]) + replay_cost
+        )
         failure_work = MAX_LOCAL_EVALUATIONS * logical_cost + replay_cost
         assessments.append(
             AttemptAssessment(
@@ -947,17 +1273,22 @@ def _assess_case_variant(
             )
         )
     calibration_work = 0
-    calibration_failures = 0
+    calibration_failures = sum(
+        candidate_case[field] != truth_case[field]
+        for field in (
+            "problem_sha256",
+            "calibration_points_sha256",
+            "starts_sha256",
+        )
+    )
     nonfinite_misclassification = 0
     if result["variant_id"] in MODEL_SCALE_VARIANTS:
         calibration = result["calibration"]
         calibration_work = sum(calibration["observation_evaluation_costs"])
-        calibration_failures = _calibration_differences(
+        calibration_failures += _calibration_differences(
             calibration, truth_case["expected_calibration"]
         )
-        nonfinite_misclassification = calibration[
-            "nonfinite_q_misclassification_count"
-        ]
+        nonfinite_misclassification = calibration["nonfinite_q_misclassification_count"]
     return CaseVariantAssessment(
         attempts=tuple(assessments),
         calibration_work=calibration_work,
@@ -1052,12 +1383,8 @@ def _bootstrap_statistics(
                 recall_sum += record.recall_effect
                 baseline_pool += record.baseline_pool
                 candidate_pool += record.candidate_pool
-        recall_values.append(
-            recall_sum / (len(FAMILY_IDS) * groups_per_family)
-        )
-        reduction_values.append(
-            ert_reduction(baseline_pool.ert, candidate_pool.ert)
-        )
+        recall_values.append(recall_sum / (len(FAMILY_IDS) * groups_per_family))
+        reduction_values.append(ert_reduction(baseline_pool.ert, candidate_pool.ert))
     recall_lower, recall_upper = nearest_rank_bounds(recall_values)
     reduction_lower, reduction_upper = nearest_rank_bounds(reduction_values)
     return {
@@ -1079,11 +1406,11 @@ def _prefix_statistics(
     point_recall = sum(record.recall_effect for record in groups.values()) / len(groups)
     baseline_pool = _sum_pools(groups.values(), "baseline_pool")
     candidate_pool = _sum_pools(groups.values(), "candidate_pool")
+    denominator = len(groups) * len(PRIMARY_REPRESENTATIONS) * prefix
     family_rows: list[dict[str, Any]] = []
     for family_ordinal, family_id in enumerate(FAMILY_IDS):
         selected = [
-            groups[(family_ordinal, group)]
-            for group in range(table.groups_per_family)
+            groups[(family_ordinal, group)] for group in range(table.groups_per_family)
         ]
         family_recall = sum(record.recall_effect for record in selected) / len(selected)
         family_baseline = _sum_pools(selected, "baseline_pool")
@@ -1102,6 +1429,8 @@ def _prefix_statistics(
     result = {
         "prefix": prefix,
         "recall_delta": point_recall,
+        "baseline_gold_recall": baseline_pool.successes / denominator,
+        "candidate_gold_recall": candidate_pool.successes / denominator,
         "baseline_ert": baseline_pool.ert,
         "candidate_ert": candidate_pool.ert,
         "ert_ratio": ert_ratio(baseline_pool.ert, candidate_pool.ert),
@@ -1112,7 +1441,9 @@ def _prefix_statistics(
     return result
 
 
-def _variant_results_by_case(candidate: Mapping[str, Any]) -> dict[tuple[str, str], Mapping[str, Any]]:
+def _variant_results_by_case(
+    candidate: Mapping[str, Any],
+) -> dict[tuple[str, str], Mapping[str, Any]]:
     result: dict[tuple[str, str], Mapping[str, Any]] = {}
     for case in candidate["cases"]:
         for variant in case["variants"]:
@@ -1137,9 +1468,9 @@ def _primary_disagreements(
         by_representation = {case["representation"]: case for case in cases}
         for start in range(START_COUNT):
             decisions = {
-                representation: assessed[(case["opaque_case_key"], variant)].attempts[
-                    start
-                ].decision
+                representation: assessed[(case["opaque_case_key"], variant)]
+                .attempts[start]
+                .decision
                 for representation, case in by_representation.items()
             }
             if len(set(decisions.values())) != 1:
@@ -1157,9 +1488,9 @@ def _primary_disagreements(
                 "calibration"
             ]["model_scale_hex"]
             for representation, case in by_representation.items():
-                actual = raw_results[(case["opaque_case_key"], variant)][
-                    "calibration"
-                ]["model_scale_hex"]
+                actual = raw_results[(case["opaque_case_key"], variant)]["calibration"][
+                    "model_scale_hex"
+                ]
                 expected = [base_scale[index] for index in case["scale_from_base"]]
                 if actual != expected:
                     disagreements.append(
@@ -1180,11 +1511,13 @@ def _orthogonal_safety_disagreements(
 ) -> list[dict[str, int]]:
     groups: dict[tuple[int, int], dict[str, Mapping[str, Any]]] = {}
     for case in truth["cases"]:
-        groups.setdefault(
-            (case["family_ordinal"], case["latent_group_index"]), {}
-        )[case["representation"]] = case
+        groups.setdefault((case["family_ordinal"], case["latent_group_index"]), {})[
+            case["representation"]
+        ] = case
     disagreements: list[dict[str, int]] = []
     for (family, group), cases in sorted(groups.items()):
+        if SAFETY_REPRESENTATION not in cases:
+            continue
         base = assessed[(cases["base"]["opaque_case_key"], variant)]
         safety = assessed[(cases[SAFETY_REPRESENTATION]["opaque_case_key"], variant)]
         for start in range(START_COUNT):
@@ -1205,9 +1538,7 @@ def _variant_safety(
     truth: Mapping[str, Any],
     variant: str,
 ) -> dict[str, Any]:
-    records = [
-        assessed[(case["opaque_case_key"], variant)] for case in truth["cases"]
-    ]
+    records = [assessed[(case["opaque_case_key"], variant)] for case in truth["cases"]]
     false_candidates = sum(
         attempt.accepted and (not attempt.canonical_valid or not attempt.gold_valid)
         for record in records
@@ -1233,6 +1564,14 @@ def _variant_safety(
             + record.nonfinite_q_misclassification_count
             for record in records
         ),
+        "calibration_fallback_count": sum(
+            raw_results[(case["opaque_case_key"], variant)]["calibration"][
+                "joint_fallback_reason"
+            ]
+            is not None
+            for case in truth["cases"]
+            if variant in MODEL_SCALE_VARIANTS
+        ),
         "orthogonal_safety_disagreement_count": len(orthogonal),
         "orthogonal_safety_disagreements": orthogonal,
     }
@@ -1248,8 +1587,10 @@ _HARD_SAFETY_COUNTS = (
 )
 
 
-def _pair_safety_passes(control: Mapping[str, Any], candidate: Mapping[str, Any]) -> bool:
-    return all(control[key] == 0 and candidate[key] == 0 for key in _HARD_SAFETY_COUNTS)
+def _global_hard_safety_passes(safety: Mapping[str, Mapping[str, Any]]) -> bool:
+    return all(
+        row[count] == 0 for row in safety.values() for count in _HARD_SAFETY_COUNTS
+    )
 
 
 def _common_noninferiority(prefix_rows: Sequence[Mapping[str, Any]]) -> bool:
@@ -1296,9 +1637,7 @@ def _evaluate_paths(
         common and recall_core and recall_positive >= MINIMUM_POSITIVE_FAMILIES
     )
     efficiency_passed = (
-        common
-        and efficiency_core
-        and efficiency_positive >= MINIMUM_POSITIVE_FAMILIES
+        common and efficiency_core and efficiency_positive >= MINIMUM_POSITIVE_FAMILIES
     )
     return {
         "common_noninferiority_passed": _common_noninferiority(prefix_rows),
@@ -1316,7 +1655,9 @@ def _evaluate_paths(
     }
 
 
-def _select_development_champion(candidate_rows: Mapping[str, Mapping[str, Any]]) -> tuple[str | None, str | None]:
+def _select_development_champion(
+    candidate_rows: Mapping[str, Mapping[str, Any]],
+) -> tuple[str | None, str | None]:
     recall = [
         (variant, row)
         for variant, row in candidate_rows.items()
@@ -1352,6 +1693,7 @@ def assess(
     raw_document: Any,
     assessor_truth: Any,
     bootstrap_bytes: bytes,
+    execution_lock: Any,
 ) -> dict[str, Any]:
     """Assess one sealed candidate output against physically separate Gold.
 
@@ -1359,7 +1701,9 @@ def assess(
     extended-real values are the JSON-safe strings ``+Inf``/``-Inf``.
     """
 
-    candidate, truth = validate_topology(raw_document, assessor_truth)
+    candidate, truth, checked_execution_lock = validate_topology(
+        raw_document, assessor_truth, execution_lock
+    )
     stage: Stage = truth["stage"]
     table = parse_bootstrap_index_bytes(
         bootstrap_bytes,
@@ -1384,17 +1728,21 @@ def assess(
         variant: _variant_safety(assessed, raw_results, truth, variant)
         for variant in sorted(expected_variants, key=ALL_VARIANTS.index)
     }
-    tested_candidates = [variant for variant in CANDIDATES if variant in expected_variants]
+    global_hard_safety_passed = _global_hard_safety_passes(safety)
+    tested_candidates = [
+        variant for variant in CANDIDATES if variant in expected_variants
+    ]
     candidate_rows: dict[str, dict[str, Any]] = {}
     for variant in tested_candidates:
         prefix_rows = [
             _prefix_statistics(assessed, truth, variant, prefix, table)
             for prefix in PREFIXES
         ]
-        pair_safety = _pair_safety_passes(safety[CONTROL], safety[variant])
         candidate_rows[variant] = {
             "prefixes": prefix_rows,
-            "paths": _evaluate_paths(prefix_rows, hard_safety_passed=pair_safety),
+            "paths": _evaluate_paths(
+                prefix_rows, hard_safety_passed=global_hard_safety_passed
+            ),
         }
 
     selected_variant: str | None
@@ -1406,7 +1754,9 @@ def assess(
         locked = truth["locked_decision"]
         selected_variant = locked["candidate_id"]
         selected_path = locked["development_path"]
-        stage_passed = candidate_rows[selected_variant]["paths"][selected_path]["passed"]
+        stage_passed = candidate_rows[selected_variant]["paths"][selected_path][
+            "passed"
+        ]
 
     # Orthogonal Safety is deliberately outside selection, but every observed
     # disagreement blocks a later product connection.
@@ -1417,6 +1767,25 @@ def assess(
         "schema_version": ASSESSMENT_SCHEMA,
         "card_sha256": CARD_SHA256,
         "stage": stage,
+        "candidate_input_sha256": truth["candidate_input_sha256"],
+        "candidate_output_sha256": hashlib.sha256(
+            canonical_bytes(candidate)
+        ).hexdigest(),
+        "assessor_truth_sha256": hashlib.sha256(canonical_bytes(truth)).hexdigest(),
+        "candidate_execution_lock_sha256": hashlib.sha256(
+            canonical_bytes(checked_execution_lock)
+        ).hexdigest(),
+        "local_options_sha256": truth["local_options_sha256"],
+        "bound_development_assessment_sha256": (
+            truth["locked_decision"]["development_assessment_sha256"]
+            if stage == "locked"
+            else None
+        ),
+        "bound_development_decision_record_sha256": (
+            truth["locked_decision"]["development_decision_record_sha256"]
+            if stage == "locked"
+            else None
+        ),
         "bootstrap_sha256": table.sha256,
         "bootstrap_replicates": REPLICATE_COUNT,
         "safety": safety,
@@ -1424,13 +1793,415 @@ def assess(
         "selected_variant": selected_variant,
         "selected_path": selected_path,
         "stage_passed": stage_passed,
+        "global_hard_safety_passed": global_hard_safety_passed,
         "orthogonal_safety_disagreement_count": orthogonal_total,
-        "product_connection_allowed": stage_passed and orthogonal_total == 0,
+        "locked_materialization_eligible": (stage == "development" and stage_passed),
+        # Final product connection requires a later closure that joins the
+        # bound development Safety16 result to this locked assessment.  A
+        # stage-local assessor must never claim that authority by itself.
+        "product_connection_allowed": False,
         "report_only_times": candidate["report_only_times"],
     }
     # Round-trip through strict JSON makes tagged extended values part of the
     # function contract and proves no nonstandard numeric literal escaped.
-    return strict_json_loads(strict_json_dumps(result))
+    persisted = strict_json_loads(strict_json_dumps(result))
+    validate_assessment_document(persisted)
+    return persisted
+
+
+_ASSESSMENT_KEYS = frozenset(
+    (
+        "schema_version",
+        "card_sha256",
+        "stage",
+        "candidate_input_sha256",
+        "candidate_output_sha256",
+        "assessor_truth_sha256",
+        "candidate_execution_lock_sha256",
+        "local_options_sha256",
+        "bound_development_assessment_sha256",
+        "bound_development_decision_record_sha256",
+        "bootstrap_sha256",
+        "bootstrap_replicates",
+        "safety",
+        "candidates",
+        "selected_variant",
+        "selected_path",
+        "stage_passed",
+        "global_hard_safety_passed",
+        "orthogonal_safety_disagreement_count",
+        "locked_materialization_eligible",
+        "product_connection_allowed",
+        "report_only_times",
+    )
+)
+_SAFETY_KEYS = frozenset(
+    (
+        "false_candidate_count",
+        "semantic_or_wire_drift_count",
+        "gold_or_identity_leak_count",
+        "budget_overrun_count",
+        "primary_representation_disagreement_count",
+        "primary_representation_disagreements",
+        "calibration_audit_failure_count",
+        "calibration_fallback_count",
+        "orthogonal_safety_disagreement_count",
+        "orthogonal_safety_disagreements",
+    )
+)
+
+
+def validate_assessment_document(document: Any) -> Mapping[str, Any]:
+    """Validate a persisted assessment before it can authorize another stage."""
+
+    assessment = _mapping(document, "assessment")
+    _exact_keys(assessment, set(_ASSESSMENT_KEYS), "assessment")
+    if assessment["schema_version"] != ASSESSMENT_SCHEMA:
+        raise InterfaceError("assessment schema mismatch")
+    if assessment["card_sha256"] != CARD_SHA256:
+        raise InterfaceError("assessment card mismatch")
+    stage = assessment["stage"]
+    if stage not in ("development", "locked"):
+        raise InterfaceError("assessment stage is unsupported")
+    for field in (
+        "candidate_input_sha256",
+        "candidate_output_sha256",
+        "assessor_truth_sha256",
+        "candidate_execution_lock_sha256",
+        "local_options_sha256",
+        "bootstrap_sha256",
+    ):
+        _sha256(assessment[field], f"assessment.{field}")
+    if assessment["bootstrap_replicates"] != REPLICATE_COUNT:
+        raise InterfaceError("assessment bootstrap replicate count drift")
+    for field in (
+        "stage_passed",
+        "global_hard_safety_passed",
+        "locked_materialization_eligible",
+        "product_connection_allowed",
+    ):
+        if not isinstance(assessment[field], bool):
+            raise InterfaceError(f"assessment.{field} must be boolean")
+    if assessment["product_connection_allowed"]:
+        raise InterfaceError(
+            "stage-local assessment cannot authorize product connection"
+        )
+
+    safety = _mapping(assessment["safety"], "assessment.safety")
+    if stage == "development":
+        expected_safety = set(ALL_VARIANTS)
+    else:
+        selected = assessment["selected_variant"]
+        if selected not in CANDIDATES:
+            raise InterfaceError("locked assessment candidate is unsupported")
+        expected_safety = {CONTROL, selected}
+    if set(safety) != expected_safety:
+        raise InterfaceError("assessment safety variant set differs from stage")
+    for variant, raw_row in safety.items():
+        row = _mapping(raw_row, f"assessment.safety.{variant}")
+        _exact_keys(row, set(_SAFETY_KEYS), f"assessment.safety.{variant}")
+        for field in (*_HARD_SAFETY_COUNTS, "calibration_fallback_count"):
+            _integer(row[field], f"assessment.safety.{variant}.{field}")
+        for field in (
+            "primary_representation_disagreements",
+            "orthogonal_safety_disagreements",
+        ):
+            _list(row[field], f"assessment.safety.{variant}.{field}")
+        if row["primary_representation_disagreement_count"] != len(
+            row["primary_representation_disagreements"]
+        ):
+            raise InterfaceError("primary disagreement count/list mismatch")
+        if row["orthogonal_safety_disagreement_count"] != len(
+            row["orthogonal_safety_disagreements"]
+        ):
+            raise InterfaceError("orthogonal disagreement count/list mismatch")
+    global_hard = _global_hard_safety_passes(safety)
+    if assessment["global_hard_safety_passed"] != global_hard:
+        raise InterfaceError("assessment global hard-safety decision is inconsistent")
+    orthogonal_total = sum(
+        row["orthogonal_safety_disagreement_count"] for row in safety.values()
+    )
+    if assessment["orthogonal_safety_disagreement_count"] != orthogonal_total:
+        raise InterfaceError("assessment orthogonal-safety total is inconsistent")
+
+    candidates = _mapping(assessment["candidates"], "assessment.candidates")
+    expected_candidates = (
+        set(CANDIDATES) if stage == "development" else {assessment["selected_variant"]}
+    )
+    if set(candidates) != expected_candidates:
+        raise InterfaceError("assessment candidate set differs from stage")
+    normalized: dict[str, dict[str, Any]] = {}
+    for variant, raw_row in candidates.items():
+        row = _mapping(raw_row, f"assessment.candidates.{variant}")
+        _exact_keys(row, {"prefixes", "paths"}, f"assessment.candidates.{variant}")
+        prefixes = _list(row["prefixes"], f"assessment.candidates.{variant}.prefixes")
+        if [prefix.get("prefix") for prefix in prefixes] != list(PREFIXES):
+            raise InterfaceError("assessment prefix allocation differs from 8/16/32")
+        paths = _mapping(row["paths"], f"assessment.candidates.{variant}.paths")
+        _exact_keys(
+            paths,
+            {
+                "common_noninferiority_passed",
+                "hard_safety_passed",
+                "recall",
+                "efficiency",
+            },
+            f"assessment.candidates.{variant}.paths",
+        )
+        if paths["hard_safety_passed"] != global_hard:
+            raise InterfaceError("candidate path hard-safety flag is inconsistent")
+        for path in ("recall", "efficiency"):
+            path_row = _mapping(paths[path], f"assessment path {variant}/{path}")
+            _exact_keys(
+                path_row,
+                {"core_passed", "positive_family_count", "passed"},
+                f"assessment path {variant}/{path}",
+            )
+            if not isinstance(path_row["passed"], bool):
+                raise InterfaceError("assessment path passed flag must be boolean")
+            if path_row["passed"] and not global_hard:
+                raise InterfaceError("hard-unsafe candidate path cannot pass")
+        final_prefix = dict(prefixes[-1])
+        for field in (
+            "recall_lower",
+            "candidate_ert",
+            "ert_reduction_lower",
+            "recall_delta",
+        ):
+            final_prefix[field] = decode_extended_real(
+                final_prefix[field], f"assessment {variant} {field}"
+            )
+        normalized[variant] = {
+            "prefixes": [*prefixes[:-1], final_prefix],
+            "paths": paths,
+        }
+
+    if stage == "development":
+        expected_variant, expected_path = _select_development_champion(normalized)
+    else:
+        expected_variant = assessment["selected_variant"]
+        expected_path = assessment["selected_path"]
+        if expected_path not in ("recall", "efficiency"):
+            raise InterfaceError("locked assessment path is unsupported")
+        expected_pass = candidates[expected_variant]["paths"][expected_path]["passed"]
+    if stage == "development":
+        expected_pass = expected_variant is not None
+    if (
+        assessment["selected_variant"] != expected_variant
+        or assessment["selected_path"] != expected_path
+        or assessment["stage_passed"] != expected_pass
+    ):
+        raise InterfaceError("assessment selection/stage decision is inconsistent")
+    if assessment["locked_materialization_eligible"] != (
+        stage == "development" and expected_pass
+    ):
+        raise InterfaceError(
+            "assessment locked-materialization decision is inconsistent"
+        )
+    if stage == "development":
+        if (
+            assessment["bound_development_assessment_sha256"] is not None
+            or assessment["bound_development_decision_record_sha256"] is not None
+        ):
+            raise InterfaceError("development assessment has locked-only bindings")
+    else:
+        _sha256(
+            assessment["bound_development_assessment_sha256"],
+            "bound development assessment",
+        )
+        _sha256(
+            assessment["bound_development_decision_record_sha256"],
+            "bound development decision",
+        )
+    times = _mapping(assessment["report_only_times"], "assessment.report_only_times")
+    _exact_keys(
+        times,
+        {
+            "process_cpu_seconds",
+            "end_to_end_cpu_seconds",
+            "formal_wall_seconds",
+            "host_exclusion_passed",
+        },
+        "assessment.report_only_times",
+    )
+    _finite_number(times["process_cpu_seconds"], "assessment process CPU")
+    _finite_number(times["end_to_end_cpu_seconds"], "assessment end-to-end CPU")
+    if times["formal_wall_seconds"] is not None:
+        _finite_number(times["formal_wall_seconds"], "assessment formal wall")
+    if not isinstance(times["host_exclusion_passed"], bool):
+        raise InterfaceError("assessment host-exclusion flag must be boolean")
+    canonical_bytes(assessment)
+    return assessment
+
+
+def _verified_assessment(
+    assessment_document: Any,
+    raw_document: Any,
+    assessor_truth: Any,
+    bootstrap_bytes: bytes,
+    execution_lock: Any,
+) -> Mapping[str, Any]:
+    assessment = validate_assessment_document(assessment_document)
+    recomputed = assess(raw_document, assessor_truth, bootstrap_bytes, execution_lock)
+    if assessment != recomputed:
+        raise InterfaceError(
+            "persisted assessment differs from authority recomputation"
+        )
+    return assessment
+
+
+def _decision_record_from_verified(
+    assessment: Mapping[str, Any], decision_commit: str
+) -> dict[str, Any]:
+    if assessment["stage"] != "development":
+        raise InterfaceError("decision record requires a development assessment")
+    if not assessment.get("stage_passed") or not assessment.get(
+        "locked_materialization_eligible"
+    ):
+        raise InterfaceError(
+            "failed development cannot authorize locked materialization"
+        )
+    candidate = assessment.get("selected_variant")
+    path = assessment.get("selected_path")
+    if candidate not in CANDIDATES or path not in ("recall", "efficiency"):
+        raise InterfaceError("development selection is incomplete")
+    if (
+        not isinstance(decision_commit, str)
+        or re.fullmatch(r"(?:[0-9a-f]{40}|[0-9a-f]{64})", decision_commit) is None
+    ):
+        raise InterfaceError("decision_commit must be a lowercase Git authority")
+    return {
+        "schema_version": DEVELOPMENT_DECISION_SCHEMA,
+        "experiment_id": "EXP-LOCAL-003",
+        "card_sha256": CARD_SHA256,
+        "development_gate_passed": True,
+        "selected_variant": candidate,
+        "selected_path": path,
+        "safety16_disagreement_count": assessment[
+            "orthogonal_safety_disagreement_count"
+        ],
+        "candidate_input_sha256": assessment["candidate_input_sha256"],
+        "development_assessment_sha256": hashlib.sha256(
+            canonical_bytes(assessment)
+        ).hexdigest(),
+        "decision_commit": decision_commit,
+    }
+
+
+def build_development_decision_record(
+    development_assessment: Any,
+    raw_document: Any,
+    assessor_truth: Any,
+    bootstrap_bytes: bytes,
+    execution_lock: Any,
+    decision_commit: str,
+) -> dict[str, Any]:
+    """Create the only record that may authorize locked input materialization."""
+
+    assessment = _verified_assessment(
+        development_assessment,
+        raw_document,
+        assessor_truth,
+        bootstrap_bytes,
+        execution_lock,
+    )
+    return _decision_record_from_verified(assessment, decision_commit)
+
+
+def finalize_product_connection(
+    development_assessment: Any,
+    locked_assessment: Any,
+    development_decision_record: Any,
+    *,
+    development_raw_document: Any,
+    development_assessor_truth: Any,
+    development_bootstrap_bytes: bytes,
+    development_execution_lock: Any,
+    locked_raw_document: Any,
+    locked_assessor_truth: Any,
+    locked_bootstrap_bytes: bytes,
+    locked_execution_lock: Any,
+) -> dict[str, Any]:
+    """Join development Safety16 and locked efficacy without reselecting."""
+
+    development = _verified_assessment(
+        development_assessment,
+        development_raw_document,
+        development_assessor_truth,
+        development_bootstrap_bytes,
+        development_execution_lock,
+    )
+    locked = _verified_assessment(
+        locked_assessment,
+        locked_raw_document,
+        locked_assessor_truth,
+        locked_bootstrap_bytes,
+        locked_execution_lock,
+    )
+    decision = _mapping(development_decision_record, "development decision record")
+    _exact_keys(
+        decision,
+        {
+            "schema_version",
+            "experiment_id",
+            "card_sha256",
+            "development_gate_passed",
+            "selected_variant",
+            "selected_path",
+            "safety16_disagreement_count",
+            "candidate_input_sha256",
+            "development_assessment_sha256",
+            "decision_commit",
+        },
+        "development decision record",
+    )
+    expected_decision = _decision_record_from_verified(
+        development, decision["decision_commit"]
+    )
+    if decision != expected_decision:
+        raise InterfaceError("development decision record does not match assessment")
+    if (
+        locked.get("schema_version") != ASSESSMENT_SCHEMA
+        or locked.get("stage") != "locked"
+    ):
+        raise InterfaceError("final connection requires one locked assessment")
+    if locked.get("card_sha256") != CARD_SHA256:
+        raise InterfaceError("locked assessment card mismatch")
+    development_sha = hashlib.sha256(canonical_bytes(development)).hexdigest()
+    decision_sha = hashlib.sha256(canonical_bytes(decision)).hexdigest()
+    locked_sha = hashlib.sha256(canonical_bytes(locked)).hexdigest()
+    if locked.get("bound_development_assessment_sha256") != development_sha:
+        raise InterfaceError("locked assessment does not bind development assessment")
+    if locked.get("bound_development_decision_record_sha256") != decision_sha:
+        raise InterfaceError("locked assessment does not bind development decision")
+    if (
+        locked.get("selected_variant") != decision["selected_variant"]
+        or locked.get("selected_path") != decision["selected_path"]
+    ):
+        raise InterfaceError("locked assessment changed the development selection")
+    allowed = bool(
+        development.get("stage_passed")
+        and development.get("global_hard_safety_passed")
+        and development.get("orthogonal_safety_disagreement_count") == 0
+        and locked.get("stage_passed")
+        and locked.get("global_hard_safety_passed")
+    )
+    return {
+        "schema_version": FINAL_CONNECTION_SCHEMA,
+        "experiment_id": "EXP-LOCAL-003",
+        "card_sha256": CARD_SHA256,
+        "development_assessment_sha256": development_sha,
+        "development_decision_record_sha256": decision_sha,
+        "locked_assessment_sha256": locked_sha,
+        "selected_variant": decision["selected_variant"],
+        "selected_path": decision["selected_path"],
+        "development_safety16_clear": development.get(
+            "orthogonal_safety_disagreement_count"
+        )
+        == 0,
+        "locked_stage_passed": bool(locked.get("stage_passed")),
+        "product_connection_allowed": allowed,
+    }
 
 
 if __name__ == "__main__":

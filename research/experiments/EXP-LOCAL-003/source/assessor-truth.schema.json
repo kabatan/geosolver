@@ -9,6 +9,7 @@
     "stage",
     "candidate_input_sha256",
     "bootstrap_sha256",
+    "local_options_sha256",
     "locked_decision",
     "cases"
   ],
@@ -17,6 +18,7 @@
     "stage": {"enum": ["development", "locked"]},
     "candidate_input_sha256": {"$ref": "#/$defs/sha256"},
     "bootstrap_sha256": {"$ref": "#/$defs/sha256"},
+    "local_options_sha256": {"$ref": "#/$defs/sha256"},
     "locked_decision": {
       "oneOf": [
         {"type": "null"},
@@ -41,12 +43,19 @@
     "locked_decision": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["candidate_id", "development_path"],
+      "required": [
+        "candidate_id",
+        "development_path",
+        "development_assessment_sha256",
+        "development_decision_record_sha256"
+      ],
       "properties": {
         "candidate_id": {
           "enum": ["LX-BOUNDS", "LR-MODEL", "LXR-BOUNDS-MODEL"]
         },
-        "development_path": {"enum": ["recall", "efficiency"]}
+        "development_path": {"enum": ["recall", "efficiency"]},
+        "development_assessment_sha256": {"$ref": "#/$defs/sha256"},
+        "development_decision_record_sha256": {"$ref": "#/$defs/sha256"}
       }
     },
     "case": {
@@ -61,6 +70,9 @@
         "representation",
         "expected_invariant",
         "scale_from_base",
+        "problem_sha256",
+        "calibration_points_sha256",
+        "starts_sha256",
         "variable_count",
         "residual_count",
         "logical_evaluation_cost",
@@ -103,6 +115,9 @@
             {"type": "null"}
           ]
         },
+        "problem_sha256": {"$ref": "#/$defs/sha256"},
+        "calibration_points_sha256": {"$ref": "#/$defs/sha256"},
+        "starts_sha256": {"$ref": "#/$defs/sha256"},
         "variable_count": {"type": "integer", "minimum": 1},
         "residual_count": {"type": "integer", "minimum": 1},
         "logical_evaluation_cost": {"type": "integer", "minimum": 1},

@@ -1,6 +1,8 @@
+using CodecZlib
 using GeoTargetBase
 using GeoTargetCore
 using GeoTargetGeometry
+using JSON3
 using Test
 
 const REPOSITORY_ROOT = normpath(joinpath(@__DIR__, "..", ".."))
@@ -17,6 +19,25 @@ end
         String,
     )
     @test !occursin("GeoTargetGeometry", core_source)
+end
+
+@testset "Root environment decodes deterministic gzip candidate input" begin
+    fixture = hex2bytes(
+        "1f8b08000000000002ffab56cacecc4b51b2522aa82cc9c8cfd34d492d492d" *
+        "cacdcccb2c2ec94c56d2512a4bcc294d55b23234ac0500b6eb75ec2a000000",
+    )
+    @test fixture[1:10] ==
+          UInt8[0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff]
+
+    decoded = transcode(GzipDecompressor, fixture)
+    expected = Vector{UInt8}(
+        codeunits("{\"kind\":\"python-deterministic\",\"value\":11}"),
+    )
+    @test decoded == expected
+
+    document = JSON3.read(decoded)
+    @test String(document.kind) == "python-deterministic"
+    @test document.value == 11
 end
 
 @testset "Open-world plugins pass through Core without special cases" begin

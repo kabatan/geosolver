@@ -45,21 +45,47 @@
     "candidate_process": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["loaded_source_paths", "opened_artifact_paths"],
+      "required": [
+        "runner_source_path",
+        "runner_source_sha256",
+        "observation_complete",
+        "source_manifest_sha256",
+        "loaded_sources",
+        "opened_artifacts"
+      ],
       "properties": {
-        "loaded_source_paths": {
+        "runner_source_path": {"$ref": "#/$defs/path"},
+        "runner_source_sha256": {"$ref": "#/$defs/sha256"},
+        "observation_complete": {"const": true},
+        "source_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "loaded_sources": {
           "type": "array",
           "minItems": 1,
-          "items": {"$ref": "#/$defs/path"}
+          "items": {"$ref": "#/$defs/file_record"}
         },
-        "opened_artifact_paths": {
+        "opened_artifacts": {
           "type": "array",
           "minItems": 1,
-          "items": {
-            "type": "string",
-            "pattern": "^candidate/(?:[^\\\\]+/?)+$"
-          }
+          "items": {"$ref": "#/$defs/candidate_artifact"}
         }
+      }
+    },
+    "file_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"$ref": "#/$defs/path"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "candidate_artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "pattern": "^candidate/(?:[^\\\\]+/?)+$"},
+        "sha256": {"$ref": "#/$defs/sha256"}
       }
     },
     "report_only_times": {
@@ -88,6 +114,9 @@
       "additionalProperties": false,
       "required": [
         "opaque_case_key",
+        "problem_sha256",
+        "calibration_points_sha256",
+        "starts_sha256",
         "variable_count",
         "residual_count",
         "logical_evaluation_cost",
@@ -95,6 +124,9 @@
       ],
       "properties": {
         "opaque_case_key": {"$ref": "#/$defs/sha256"},
+        "problem_sha256": {"$ref": "#/$defs/sha256"},
+        "calibration_points_sha256": {"$ref": "#/$defs/sha256"},
+        "starts_sha256": {"$ref": "#/$defs/sha256"},
         "variable_count": {"type": "integer", "minimum": 1},
         "residual_count": {"type": "integer", "minimum": 1},
         "logical_evaluation_cost": {"type": "integer", "minimum": 1},
@@ -111,6 +143,7 @@
       "additionalProperties": false,
       "required": [
         "variant_id",
+        "local_options_sha256",
         "calibration",
         "attempts",
         "semantic_or_wire_drift_count",
@@ -120,6 +153,7 @@
         "variant_id": {
           "enum": ["L0-SEMANTIC", "LX-BOUNDS", "LR-MODEL", "LXR-BOUNDS-MODEL"]
         },
+        "local_options_sha256": {"$ref": "#/$defs/sha256"},
         "calibration": {
           "oneOf": [
             {"$ref": "#/$defs/calibration"},

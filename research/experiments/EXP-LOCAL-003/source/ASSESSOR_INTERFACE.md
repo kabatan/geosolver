@@ -7,16 +7,17 @@ It contains no problem generator and no candidate solver mechanism.
 The C2 runner writes a sealed document accepted by
 `candidate-output.schema.json`. A physically separate assessor process receives
 that document, the C1 Gold document accepted by
-`assessor-truth.schema.json`, and the persisted bootstrap-index bytes. Its only
-entry point is:
+`assessor-truth.schema.json`, the persisted bootstrap-index bytes, and the
+independently frozen C2/C3 source/artifact allowlist accepted by
+`candidate-execution-lock.schema.json`. Its only entry point is:
 
 ```python
-assess(raw_document, assessor_truth, bootstrap_bytes) -> json_safe_document
+assess(raw_document, assessor_truth, bootstrap_bytes, execution_lock) -> json_safe_document
 ```
 
 `assessor.py` is authoritative for cross-field rules that JSON Schema cannot
 express. In particular it checks exact keys, the stage-specific variant set,
-64/128-case topology, unique opaque joins, family/group/representation
+64/96-case topology, unique opaque joins, family/group/representation
 allocation, vector lengths, permutations, calibration hashes, and the physical
 candidate/assessor access boundary. The JSON schemas are the structural/type
 boundary and reject unknown properties.
@@ -26,35 +27,48 @@ boundary and reject unknown properties.
 Candidate raw cases carry only:
 
 - a random 64-hex `opaque_case_key`;
+- exact problem, calibration-point and ordered-start digests recorded by the
+  independent runner;
 - `variable_count`, `residual_count`, and positive
   `logical_evaluation_cost` public execution metadata;
 - L0/LX/LR/LXR result records (or L0 plus the frozen candidate for locked
   validation).
 
 They never carry family, latent-group, representation, expected-invariant,
-Gold, tolerance, or assessor fields. `candidate_process.loaded_source_paths`
-must not contain an assessor/Gold/truth component, and every captured
-`opened_artifact_paths` entry must be below the `candidate/` root. These lists
-must come from the C3 execution boundary, not from a post-hoc candidate claim.
-The process must never import this module.
+Gold, tolerance, or assessor fields. The execution lock freezes sorted
+`{path, sha256}` source and candidate-artifact allowlists plus the Julia
+runner path/hash. Its `stage_input_anchor_sha256` and
+`stage_input_anchor_commit` bind development or locked execution to that
+stage's exact pre-outcome input anchor. The runner's complete `loaded_sources`
+and `opened_artifacts` records must equal those lists and are cross-checked by
+the immutable C0 observer. Assessor, Gold, truth,
+generator, materializer and private identity tokens are forbidden even in a
+filename such as `assessor.py`; every artifact remains below the `candidate/`
+root. These records come from the C3 process boundary, never candidate
+self-attestation. The candidate process never receives this module, the Gold
+vault, generator/materializer source, or repository history.
 
 Assessor truth owns the family ordinal, latent-group index/key,
 representation, Gold configurations/targets/tolerances, and expected
 calibration audit. Candidate and truth join only on `opaque_case_key`; their
-input digest, variable/residual counts, logical cost, stage, and complete key
-sets must agree.
+input, problem, point, start and local-options digests, variable/residual
+counts, logical cost, stage, and complete key sets must agree.
 
 There are four truth rows per family/group: three hard primary
 representations and one `orthogonal-safety` row with
 `expected_invariant=false`. Thus development has 8×2×4 = 64 raw/Gold cases,
-of which only 48 enter efficacy statistics. Locked validation has 8×4×4 = 128
-cases, of which 96 enter efficacy. Orthogonal disagreements are reported and
-block product connection, but do not select the development champion.
+of which only 48 enter efficacy statistics. Locked validation contains four
+fresh groups and only the three primary representations: 8×4×3 = 96 cases.
+Development Safety16 disagreements block final product connection, but neither
+select a champion nor block preregistered locked materialization. A later
+closure must join the bound development Safety16 result to the locked result;
+neither stage-local assessment can authorize product connection alone.
 
 ## Raw result grammar
 
-Every case has one result for each stage-required variant. Every result has
-exactly 32 attempts with unique `start_index` 0…31. An attempt records:
+Every case has one result for each stage-required variant. Every result binds
+the exact frozen `LocalSolveOptions` digest and has exactly 32 attempts with
+unique `start_index` 0…31. An attempt records:
 
 - `iterations` (kept assessable above 250 so it becomes a hard budget event);
 - `accepted`;
@@ -100,8 +114,10 @@ canonical-invalid endpoint is a hard false-candidate event.
 For every variant/start, `(accepted, canonical-valid, Gold-valid)` must agree
 across the three primary representations. LR/LXR scales must additionally equal
 the truth audit and the assessor-only residual permutation of the base scale.
-These are hard failures. The same decision comparison against the orthogonal
-row is report-only Safety16/Safety32.
+These are hard failures. A hard failure in *any* development variant kills the
+whole development stage; a safe candidate cannot hide another candidate's
+violation. The same decision comparison against the orthogonal row is
+report-only development Safety16. There is no unregistered locked Safety32.
 
 ## Work and statistics
 
@@ -137,4 +153,8 @@ outranks an efficiency-only candidate. Recall candidates sort by decreasing
 recall lower bound, increasing candidate ERT, then LX/LR/LXR simplicity.
 Efficiency candidates sort by decreasing ERT-reduction lower bound, decreasing
 recall effect, then the same simplicity order. Locked truth freezes one
-candidate and its development path; locked assessment never reselects.
+candidate and its development path and binds the development assessment and
+decision-record hashes; locked assessment never reselects. Assessment output
+binds the candidate input/output, truth, bootstrap, local-options and
+execution-lock digests and reports absolute L0/candidate Gold recall and
+calibration fallback counts as well as deltas and ERT.
