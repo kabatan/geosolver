@@ -1,0 +1,26 @@
+{
+  "schema": "geotarget-research-negative-decision/v1",
+  "decision_id": "EXP-SINGULAR-002-S5-V4-NEGATIVE",
+  "experiment_id": "EXP-SINGULAR-002",
+  "candidate": "S5 invariant singular-root refinement v4",
+  "decision": "formal-reject-remove-candidate",
+  "claim_not_supported": "Finite C2 black-box samples can certify that a returned singular root is locally isolated.",
+  "audit": {
+    "id": "audit_singular_s5_fixed",
+    "status": "formal_reject",
+    "result": "A general C-infinity bump construction preserves every value, Jacobian, directional-Hessian, semantic and target observation in any finite adaptive transcript while changing local isolation."
+  },
+  "counterexample_structure": "After any finite query transcript, choose a punctured neighborhood of the candidate containing no queried point other than the candidate. A locally finite sum of compactly supported C-infinity bumps, flat through every observed C2 jet, can create roots accumulating at the candidate while leaving the complete finite transcript identical to an isolated-root oracle. The two indistinguishable oracles require opposite isolation decisions, so no finite sampled C2 gate can safely promote isolation.",
+  "rejected_evidence_hashes": {
+    "algorithm": "sha256",
+    "tree": "be8ac114fbfc54e05a64e2c1a88b092a8d3e29156eb090a5cd3db3d284ab8f0e",
+    "patch": "6a9fdfd1989852d1887da09176251e3c56195f5321a9585ccfa9bafb341afd49",
+    "preregistration": "5561dd120a9c3a3c0826feab985936ae57d33dc221f8e9c3d6a4103ff19e3450"
+  },
+  "source_revision_before_decision": "3b3c62088a939ce86f9353e435ed4144f7ffad3f",
+  "current_decision": "Remove the rejected implementation, tests, dependency and runtime knobs. Preserve only this bounded negative decision. The mechanism may generate research proposals but has no numerical-confirmation, exact-answer or promotion authority.",
+  "proposal_only_reopen_gate": "Promotion requires independent neighborhood-wide isolation authority: a validated derivative-remainder bound with interval exclusion, or a C3A exact local-dimension/root-isolation proof. Finite point samples, higher precision replay, PSLQ, tensor spectra and repeated local convergence are insufficient.",
+  "formal_outcome_executed": false,
+  "locked_inputs_opened": false,
+  "product_connected": false
+}
