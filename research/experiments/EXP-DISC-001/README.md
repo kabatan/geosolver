@@ -45,3 +45,28 @@ EXP-DISC-001 proposal matrix, formal input or outcome existed or was inspected
 while either amendment's choices were written. A3 preserves every discovery
 method, threshold, budget, control and gate from the original card, A1 and A2,
 and has no product connection.
+
+## 2026 Linux implementation checkpoint
+
+The experiment-local Julia project now pins QuasiMonteCarlo and implements the
+Stage-A materialization seam, but it deliberately does not contain a proposal
+matrix or solver outcome. `run_t0.jl` checks A3 before it loads a corpus,
+generates a point, creates an output directory, or invokes a solver. In the
+current repository state it therefore stops with
+`missing_local_champion_freeze`: EXP-LOCAL-006 is still researching the local
+pipeline and no outcome-bound champion record exists.
+
+The seam supports the preregistered D0 IID, deterministic Sobol, contiguous
+production Halton, current raw counter/Halton mix, Owen- and
+Matousek-scrambled Sobol, and the fixed 25% IID / 75% Owen stream. Every method
+is specified as one 128-column maximum matrix; checkpoints 8/16/32/64/128 are
+leading views of the persisted lossless Float64-bit artifact. The mixed stream
+can only consume separately persisted D0 and Owen artifacts. It cannot
+regenerate either source.
+
+The current raw mix is an attribution stream, not a replacement for the
+mandatory adaptive `D-H0-CURRENT` control. Outcome execution remains disabled
+until the champion freeze and a pipeline audit bind the common local solver,
+512/768-bit confirmation, scorer, callback accounting, and the complete H0
+control. Tests use only a small fixed matrix fixture; they never call a stream
+generator or inspect a locked/blind partition.
