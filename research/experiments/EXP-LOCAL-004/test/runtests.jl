@@ -1,8 +1,21 @@
 using GeoTargetBenchmarks
+using GeoTargetCore
 using Test
 
 include(joinpath(@__DIR__, "..", "src", "ExperimentLocal004.jl"))
 using .ExperimentLocal004
+
+const T2_TEST_REPOSITORY_ROOT = normpath(joinpath(@__DIR__, "..", "..", "..", ".."))
+const T2_TEST_EXP_LOCAL_002 = joinpath(
+    T2_TEST_REPOSITORY_ROOT,
+    "research",
+    "experiments",
+    "EXP-LOCAL-002",
+)
+include(joinpath(T2_TEST_EXP_LOCAL_002, "src", "ExperimentLocal002.jl"))
+include(joinpath(T2_TEST_EXP_LOCAL_002, "src", "DevelopmentLocal002.jl"))
+include(joinpath(@__DIR__, "..", "src", "T2Corpus.jl"))
+using .T2Corpus
 
 function fixture_case(
     dimension,
@@ -36,6 +49,120 @@ function fixture_case(
         Tuple(Float64.(residual_scales)),
         evaluator,
     )
+end
+
+@testset "EXP-LOCAL-004 T2 development corpus contract" begin
+    problems = t2_problems()
+    @test validate_t2_grid(problems)
+    @test length(problems) == T2_INSTANCE_COUNT == 48
+    @test T2_START_COUNT == 32
+    @test T2_PREFIXES == (8, 16, 32)
+    @test T2_RUNNER_EVALUATION_LIMIT == 2_000
+    @test all(verify_replay_material, problems)
+    @test all(problem -> size(problem.saved_starts, 2) == 32, problems)
+    @test length(unique(
+        only(filter(artifact -> artifact.name === :saved_starts, problem.artifacts)).sha256 for
+        problem in problems
+    )) == 48
+    family_counts = Dict(
+        family => count(problem -> problem.family_id == family, problems) for
+        family in T2_FAMILIES
+    )
+    @test all(==(6), values(family_counts))
+    for stratum in (Symbol("S$index") for index in 1:8)
+        @test count(problem -> stratum in problem.strata, problems) >= 6
+    end
+
+    manifest = t2_input_manifest(problems)
+    @test manifest["schema_version"] == T2_SCHEMA_VERSION
+    @test manifest["partition"] == "development"
+    @test manifest["locked_validation"] == false
+    @test manifest["instance_count"] == 48
+    @test manifest["instances_per_family"] == 6
+    @test manifest["starts_per_instance"] == 32
+    @test Tuple(manifest["prefixes"]) == (8, 16, 32)
+    @test manifest["runner_evaluation_limit"] == 2_000
+    @test manifest["solver_experiment_schema"] == SOLVER_EXPERIMENT_SCHEMA_VERSION
+    @test manifest["assessor_manifest"] == fixed_assessor_manifest()
+    @test manifest["holdout_separation"]["contains_holdout_inputs"] == false
+    @test manifest["holdout_separation"]["historical_locked_recipe_loaded"] == false
+    @test manifest["holdout_separation"]["reserved_partitions"] ==
+          ["U1", "U2", "U3", "U4"]
+    @test manifest["seed_contract"] == Dict{String,Any}(
+        "instance_formula" => "10000 + 100*family_index + instance_index",
+        "instance_namespace" => 10_000,
+        "start_formula" => "20000 + 100*family_index + instance_index",
+        "start_namespace" => 20_000,
+    )
+    @test length(manifest["instances"]) == 48
+    @test all(record -> record["saved_starts_shape"][2] == 32, manifest["instances"])
+    @test all(record -> length(record["saved_starts_checksum"]) == 64, manifest["instances"])
+    @test all(record -> length(record["replay_checksum"]) == 64, manifest["instances"])
+    @test all(value -> length(value) == 64, values(manifest["source_sha256"]))
+    @test haskey(
+        manifest["source_sha256"],
+        "julia/GeoTargetBenchmarks/src/GeoTargetBenchmarks.jl",
+    )
+    @test haskey(
+        manifest["source_sha256"],
+        "research/experiments/EXP-LOCAL-002/src/ExperimentLocal002.jl",
+    )
+    @test manifest["variant_contract"] == t2_variant_contract()
+    @test [(entry["name"], entry["max_evaluations"]) for
+           entry in manifest["variant_contract"]] == [
+        ("prod-tol-120x600", 600),
+        ("prod-options-250x2000", 2_000),
+        ("NLS-TR", 2_000),
+    ]
+
+    short = DevelopmentLocal002.development_problems(start_count=8)
+    @test all(
+        short[index].saved_starts == problems[index].saved_starts[:, 1:8] for
+        index in eachindex(problems)
+    )
+
+    source = read(joinpath(@__DIR__, "..", "src", "T2Corpus.jl"), String)
+    @test !occursin("validate_development_input_manifest", source)
+    @test !occursin("development-input-manifest.json", source)
+    @test !occursin("routing-amendment", source)
+end
+
+@testset "EXP-LOCAL-004 T2 manifest preparation and exact validation" begin
+    problems = t2_problems()
+    mktempdir() do directory
+        path = joinpath(directory, "t2-input-manifest.json")
+        checksum = prepare_t2_input_manifest(path; problems)
+        @test isfile(path)
+        @test length(checksum) == 64
+        @test manifest_file_sha256(path) == checksum
+        @test validate_t2_input_manifest(path, problems) == checksum
+        @test read(path, String) == canonical_json(t2_input_manifest(problems)) * "\n"
+        @test_throws ErrorException prepare_t2_input_manifest(path; problems)
+        write(path, read(path, String) * " ")
+        @test_throws ErrorException validate_t2_input_manifest(path, problems)
+    end
+end
+
+@testset "EXP-LOCAL-004 T2 runner is manifest-gated and fixed" begin
+    runner = joinpath(@__DIR__, "..", "run_t2.jl")
+    source = read(runner, String)
+    @test occursin("problems = t2_problems()", source)
+    @test occursin("validate_t2_input_manifest", source)
+    @test occursin("prefixes=T2_PREFIXES", source)
+    @test occursin("evaluation_limit=T2_RUNNER_EVALUATION_LIMIT", source)
+    @test occursin("core_lmqr_control(:prod_tol_120x600)", source)
+    @test occursin("core_lmqr_control(:prod_options_250x2000)", source)
+    @test occursin("nls_tr_variant(max_iterations=250, max_evaluations=2_000)", source)
+    @test occursin("input_manifest_sha256", source)
+    @test !occursin("validate_development_input_manifest", source)
+    @test !occursin("run_attempt(", source)
+
+    project = T2_TEST_EXP_LOCAL_002
+    command = `$(Base.julia_cmd()) --startup-file=no --history-file=no --project=$project $runner --help`
+    help = read(command, String)
+    @test occursin("48 development cases", help)
+    @test occursin("prefixes 8/16/32", help)
+    @test occursin("runner hard cap of 2000", help)
 end
 
 const CANDIDATE_BUILDERS = (nls_tr_variant, nls_lm_variant)

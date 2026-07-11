@@ -48,3 +48,34 @@ julia +1.12.6 --startup-file=no --history-file=no \
   research/experiments/EXP-LOCAL-004/run_t0.jl --suite=t1 \
   --output=benchmarks/results/raw/exp-local-004-t1-linux.json
 ```
+
+## Frozen T2 generalization screen
+
+T2 reuses the open `DevelopmentLocal002` generator but does not read its
+historical input manifest, routing amendment, or any U1--U4 holdout material.
+It materializes the fixed 8-family x 6-instance development corpus with 32
+saved starts per instance once, then compares only `prod-tol-120x600`,
+`prod-options-250x2000`, and the T1 survivor `NLS-TR` at prefixes 8/16/32.
+Every attempt remains subject to the common runner hard cap of 2000 callbacks.
+
+First freeze the new input manifest. Creation refuses to overwrite any
+existing path; later runs regenerate the development material in memory and
+require a byte-for-byte match, so either input or source tampering is rejected.
+Run preparation and execution with one Julia thread and one BLAS thread:
+
+```console
+JULIA_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
+  julia +1.12.6 --startup-file=no --history-file=no \
+  --project=research/experiments/EXP-LOCAL-002 \
+  research/experiments/EXP-LOCAL-004/prepare_t2.jl
+
+JULIA_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
+  julia +1.12.6 --startup-file=no --history-file=no \
+  --project=research/experiments/EXP-LOCAL-002 \
+  research/experiments/EXP-LOCAL-004/run_t2.jl
+```
+
+The tracked `t2-input-manifest.json` is development-only and explicitly
+reserves U1, U2, U3, and U4 for later blind validation. Its source hash table
+includes the benchmark module entry point, every included benchmark family,
+the legacy generator modules, the shared scorer, and the candidate adapter.
