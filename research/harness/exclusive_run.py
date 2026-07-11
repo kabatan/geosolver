@@ -9,21 +9,26 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import platform
+import signal
 import socket
 import subprocess
 import sys
 import tempfile
 import time
+from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import IO, Any, Sequence
-
+from typing import IO, Any
 
 SCHEMA_VERSION = "geotarget.formal-performance-run/v1"
 DEFAULT_LOCK_ENV = "GEOTARGET_FORMAL_RUN_LOCK"
+HARD_TIMEOUT_EXIT_CODE = 124
+TERMINATION_GRACE_SECONDS = 0.5
+TERMINATION_WAIT_SECONDS = 5.0
 
 
 class FormalRunError(RuntimeError):
@@ -124,7 +129,7 @@ class FormalRunLease:
             raise FormalRunError("formal performance lease is not held")
         return dict(self._owner)
 
-    def acquire(self) -> "FormalRunLease":
+    def acquire(self) -> FormalRunLease:
         if self._handle is not None:
             raise FormalRunError("formal performance lease is already held")
         label = self.label.strip()
@@ -177,7 +182,7 @@ class FormalRunLease:
             self._handle = None
             self._owner = None
 
-    def __enter__(self) -> "FormalRunLease":
+    def __enter__(self) -> FormalRunLease:
         return self.acquire()
 
     def __exit__(self, _type: object, _value: object, _traceback: object) -> None:
@@ -202,6 +207,162 @@ def _write_json_atomic(path: Path, document: dict[str, Any]) -> None:
         temporary.unlink(missing_ok=True)
 
 
+def _finite_positive(value: float, name: str) -> float:
+    if isinstance(value, bool):
+        raise ValueError(f"{name} must be finite and positive")
+    try:
+        numeric = float(value)
+    except (TypeError, ValueError, OverflowError) as error:
+        raise ValueError(f"{name} must be finite and positive") from error
+    if not math.isfinite(numeric) or numeric <= 0:
+        raise ValueError(f"{name} must be finite and positive")
+    return numeric
+
+
+def _positive_seconds_argument(value: str) -> float:
+    try:
+        return _finite_positive(value, "seconds")
+    except ValueError as error:
+        raise argparse.ArgumentTypeError(str(error)) from error
+
+
+def _termination_document(reason: str | None = None) -> dict[str, Any]:
+    return {
+        "attempted": reason is not None,
+        "reason": reason,
+        "strategy": ("windows_process_tree" if os.name == "nt" else "posix_process_group"),
+        "grace_seconds": TERMINATION_GRACE_SECONDS,
+        "term_sent": False,
+        "kill_sent": False,
+        "tree_kill_confirmed": False,
+        "child_returncode": None,
+        "errors": [],
+    }
+
+
+def _record_termination_error(document: dict[str, Any], stage: str, error: object) -> None:
+    document["errors"].append(f"{stage}: {type(error).__name__}: {error}")
+
+
+def _posix_group_exists(process_group: int) -> bool:
+    try:
+        os.killpg(process_group, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    return True
+
+
+def _wait_for_group_exit(process_group: int, seconds: float) -> bool:
+    deadline = time.monotonic() + seconds
+    while _posix_group_exists(process_group):
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            return False
+        time.sleep(min(0.05, remaining))
+    return True
+
+
+def _terminate_posix_process_group(
+    process: subprocess.Popen[bytes], document: dict[str, Any]
+) -> None:
+    process_group = process.pid
+    try:
+        os.killpg(process_group, signal.SIGTERM)
+        document["term_sent"] = True
+    except ProcessLookupError:
+        pass
+    except OSError as error:
+        _record_termination_error(document, "SIGTERM", error)
+
+    group_exited = _wait_for_group_exit(process_group, TERMINATION_GRACE_SECONDS)
+    if not group_exited:
+        try:
+            os.killpg(process_group, signal.SIGKILL)
+            document["kill_sent"] = True
+        except ProcessLookupError:
+            pass
+        except OSError as error:
+            _record_termination_error(document, "SIGKILL", error)
+
+    try:
+        process.wait(timeout=TERMINATION_WAIT_SECONDS)
+    except subprocess.TimeoutExpired as error:
+        _record_termination_error(document, "wait_after_group_kill", error)
+        try:
+            process.kill()
+            document["kill_sent"] = True
+            process.wait(timeout=TERMINATION_WAIT_SECONDS)
+        except (OSError, subprocess.TimeoutExpired) as kill_error:
+            _record_termination_error(document, "direct_child_kill", kill_error)
+
+    document["child_returncode"] = process.returncode
+    document["tree_kill_confirmed"] = _wait_for_group_exit(process_group, 0.5)
+
+
+def _terminate_windows_process_tree(
+    process: subprocess.Popen[bytes], document: dict[str, Any]
+) -> None:
+    # taskkill /T is the strongest process-tree primitive available in the
+    # supported standard Windows installation without introducing a resident
+    # broker.  A nonzero result is recorded as unconfirmed rather than silently
+    # narrowing the claim to the direct child.
+    taskkill_succeeded = False
+    try:
+        completed = subprocess.run(
+            ["taskkill", "/PID", str(process.pid), "/T", "/F"],
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
+            timeout=TERMINATION_WAIT_SECONDS,
+            check=False,
+            shell=False,
+        )
+        document["kill_sent"] = True
+        taskkill_succeeded = completed.returncode == 0
+        if not taskkill_succeeded:
+            detail = completed.stderr.decode("utf-8", errors="replace").strip()
+            document["errors"].append(f"taskkill: returncode={completed.returncode}: {detail}")
+    except (OSError, subprocess.TimeoutExpired) as error:
+        _record_termination_error(document, "taskkill", error)
+
+    if process.poll() is None:
+        try:
+            process.kill()
+            document["kill_sent"] = True
+        except OSError as error:
+            _record_termination_error(document, "direct_child_kill", error)
+    try:
+        process.wait(timeout=TERMINATION_WAIT_SECONDS)
+    except subprocess.TimeoutExpired as error:
+        _record_termination_error(document, "wait_after_taskkill", error)
+
+    document["child_returncode"] = process.returncode
+    document["tree_kill_confirmed"] = bool(taskkill_succeeded and process.returncode is not None)
+
+
+def _terminate_process_tree(process: subprocess.Popen[bytes], *, reason: str) -> dict[str, Any]:
+    document = _termination_document(reason)
+    if os.name == "nt":
+        _terminate_windows_process_tree(process, document)
+    else:
+        _terminate_posix_process_group(process, document)
+    return document
+
+
+def _popen_options(working_directory: Path) -> dict[str, Any]:
+    options: dict[str, Any] = {
+        "cwd": working_directory,
+        "shell": False,
+    }
+    if os.name == "nt":
+        options["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
+    else:
+        options["start_new_session"] = True
+    return options
+
+
 def run_command(
     command: Sequence[str],
     *,
@@ -210,21 +371,33 @@ def run_command(
     lock_path: Path | None = None,
     cwd: Path | None = None,
     heartbeat_seconds: float = 30.0,
+    timeout_seconds: float | None = None,
 ) -> int:
-    """Run one command under the formal host lease and persist its audit record."""
+    """Run one command under the formal host lease and persist its audit record.
+
+    ``timeout_seconds`` is an outer process-tree deadline.  It does not make an
+    in-process solver call asynchronously preemptible.
+    """
 
     frozen_command = tuple(str(part) for part in command)
     if not frozen_command:
         raise ValueError("formal run command cannot be empty")
-    if not (heartbeat_seconds > 0 and heartbeat_seconds < float("inf")):
-        raise ValueError("heartbeat_seconds must be finite and positive")
+    heartbeat_seconds = _finite_positive(heartbeat_seconds, "heartbeat_seconds")
+    configured_timeout = (
+        None if timeout_seconds is None else _finite_positive(timeout_seconds, "timeout_seconds")
+    )
     working_directory = Path.cwd() if cwd is None else cwd.expanduser().resolve()
     started_wall = _utc_now()
     started_ns = time.monotonic_ns()
+    deadline_ns = (
+        None if configured_timeout is None else started_ns + int(configured_timeout * 1_000_000_000)
+    )
     process: subprocess.Popen[bytes] | None = None
     exit_code: int | None = None
     outcome = "runner_error"
     error_text: str | None = None
+    timed_out = False
+    termination = _termination_document()
 
     with FormalRunLease(label, lock_path) as lease:
         print(
@@ -232,12 +405,39 @@ def run_command(
             flush=True,
         )
         try:
-            process = subprocess.Popen(frozen_command, cwd=working_directory)
+            process = subprocess.Popen(
+                frozen_command,
+                **_popen_options(working_directory),
+            )
             while True:
+                polled = process.poll()
+                if polled is not None:
+                    exit_code = polled
+                    termination["child_returncode"] = polled
+                    break
+                now_ns = time.monotonic_ns()
+                if deadline_ns is not None and now_ns >= deadline_ns:
+                    timed_out = True
+                    termination = _terminate_process_tree(
+                        process,
+                        reason="hard_timeout",
+                    )
+                    exit_code = HARD_TIMEOUT_EXIT_CODE
+                    outcome = "hard_timeout"
+                    return HARD_TIMEOUT_EXIT_CODE
+                wait_seconds = heartbeat_seconds
+                if deadline_ns is not None:
+                    wait_seconds = min(
+                        wait_seconds,
+                        max(0.0, (deadline_ns - now_ns) / 1_000_000_000),
+                    )
                 try:
-                    exit_code = process.wait(timeout=heartbeat_seconds)
+                    exit_code = process.wait(timeout=wait_seconds)
+                    termination["child_returncode"] = exit_code
                     break
                 except subprocess.TimeoutExpired:
+                    if deadline_ns is not None and time.monotonic_ns() >= deadline_ns:
+                        continue
                     elapsed = (time.monotonic_ns() - started_ns) / 1_000_000_000
                     print(
                         f"FORMAL-RUN HEARTBEAT label={label} child={process.pid} "
@@ -254,12 +454,7 @@ def run_command(
                 else "runner_error"
             )
             if process is not None and process.poll() is None:
-                process.terminate()
-                try:
-                    process.wait(timeout=5.0)
-                except subprocess.TimeoutExpired:
-                    process.kill()
-                    process.wait()
+                termination = _terminate_process_tree(process, reason=outcome)
             exit_code = None if process is None else process.returncode
             raise
         finally:
@@ -281,6 +476,12 @@ def run_command(
                 "python": platform.python_version(),
                 "logical_cpu_count": os.cpu_count(),
                 "lock_path": str(lease.lock_path),
+                "configured_timeout_seconds": configured_timeout,
+                "timed_out": timed_out,
+                "termination": termination,
+                "timeout_boundary": (
+                    "outer child process tree only; no in-process preemption claim"
+                ),
                 "cooperation_boundary": (
                     "advisory lock; unrelated uncooperative host work remains forbidden"
                 ),
@@ -302,7 +503,8 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--audit", required=True, type=Path)
     parser.add_argument("--lock", type=Path)
     parser.add_argument("--cwd", type=Path)
-    parser.add_argument("--heartbeat-seconds", type=float, default=30.0)
+    parser.add_argument("--heartbeat-seconds", type=_positive_seconds_argument, default=30.0)
+    parser.add_argument("--timeout-seconds", type=_positive_seconds_argument)
     parser.add_argument("command", nargs=argparse.REMAINDER)
     return parser
 
@@ -323,6 +525,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             lock_path=arguments.lock,
             cwd=arguments.cwd,
             heartbeat_seconds=arguments.heartbeat_seconds,
+            timeout_seconds=arguments.timeout_seconds,
         )
     except FormalRunBusy as error:
         print(str(error), file=sys.stderr, flush=True)
