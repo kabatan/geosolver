@@ -3,6 +3,7 @@
 - [M0-M4 numerical baseline](M0_M4_BASELINE.md)
 - [Primary-source literature matrix](LITERATURE_MATRIX.md)
 - [Experiment-card contract](EXPERIMENT_TEMPLATE.md)
+- [Experimental case parallelism](EXPERIMENT_PARALLELISM.md)
 - [Evidence priors](EVIDENCE.md)
 - [High-precision and singular-path audit](HIGH_PRECISION_SINGULAR_AUDIT.md)
 - [EXP-JAC-002 terminal protocol deviation](EXP-JAC-002.md)
