@@ -1,4 +1,4 @@
-const EXACT_BACKEND_ABI_VERSION = v"1.0.0"
+const EXACT_BACKEND_ABI_VERSION = v"1.1.0"
 const _MAX_EXACT_SAMPLE_PRECISION_BITS = 4096
 
 """Optional exactification implementation. Concrete backends live outside Core."""
@@ -163,6 +163,33 @@ struct ExactSampleProviderSnapshot
     fatal_failure::ExactSampleFailure
 end
 
+"""Zero-work cooperative resource checkpoint for optional exact backends."""
+struct ExactificationCheckpoint
+    ready::Bool
+    failure::ExactSampleFailure
+    detail::String
+
+    function ExactificationCheckpoint(
+        ready::Bool,
+        failure::ExactSampleFailure,
+        detail::AbstractString,
+    )
+        ready == (failure == EXACT_SAMPLE_NONE) || throw(
+            InvariantError(
+                :exactification_checkpoint_status_mismatch,
+                "exactification checkpoint status and failure disagree",
+            ),
+        )
+        ready == isempty(detail) || throw(
+            InvariantError(
+                :exactification_checkpoint_detail_mismatch,
+                "only failed exactification checkpoints carry detail",
+            ),
+        )
+        return new(ready, failure, String(detail))
+    end
+end
+
 mutable struct ExactSampleProvider{C}
     compiled::CompiledProblem
     validation::CandidateValidationResult
@@ -252,6 +279,42 @@ function exact_sample_provider_snapshot(provider::ExactSampleProvider)
         provider.oracle_work_limit,
         provider.fatal_failure,
     )
+end
+
+"""Return immutable successful samples for backend-side certificate comparison."""
+function exact_sample_provider_samples(
+    provider::ExactSampleProvider;
+    pass::Symbol=:reference,
+)
+    pass in (:compiled, :reference) || throw(
+        ArgumentError("sample pass must be :compiled or :reference"),
+    )
+    samples = ExactPrecisionSample[
+        deepcopy(sample) for ((_, kind), sample) in provider.cache if kind == pass
+    ]
+    sort!(samples; by=sample -> sample.precision_bits)
+    return Tuple(samples)
+end
+
+"""
+Poll cancellation and deadline state without requesting a numerical sample.
+
+The first resource failure is irreversible for the provider. Backends should
+call this at bounded intervals around recognition, CAS, replay, and artifact
+work; Core performs a final checkpoint before accepting any answer.
+"""
+function exactification_checkpoint(provider::ExactSampleProvider)
+    if provider.fatal_failure != EXACT_SAMPLE_NONE
+        return ExactificationCheckpoint(
+            false,
+            provider.fatal_failure,
+            provider.fatal_detail,
+        )
+    end
+    failure, detail = _exact_provider_resource_failure(provider)
+    return failure == EXACT_SAMPLE_NONE ?
+           ExactificationCheckpoint(true, EXACT_SAMPLE_NONE, "") :
+           ExactificationCheckpoint(false, failure, detail)
 end
 
 _empty_exact_sample_work() = ExactSampleWork(0, 0, 0)
@@ -356,8 +419,9 @@ function _exact_sample_metadata_ok(compiled, refinement, bits, pass, gates)
     evidence = refinement.evidence
     evidence.precision_bits == bits || return false
     evidence.work.precision_bits == bits || return false
-    expected_method = pass == :compiled ? "compiled_c2_cpqr_5point_v1" :
-                      "reference_c2_cpqr_5point_v1"
+    expected_method = pass == :compiled ?
+                      "compiled_c2_rank_general_lm_5point_v1" :
+                      "reference_c2_rank_general_lm_5point_v1"
     evidence.method == expected_method || return false
     _high_precision_observation_precision_ok(compiled, evidence.observation, bits) || return false
     all(value -> !(value isa AbstractFloat) || precision(value) >= bits, evidence.coordinates) ||
@@ -460,6 +524,7 @@ function exact_sample(
             cancelled=provider.cancelled,
             remaining_oracle_work=remaining,
             max_iterations=provider.max_iterations,
+            allow_rank_deficient=true,
         )
     catch error
         error isa InterruptException && rethrow()
@@ -548,6 +613,7 @@ end
     EXACTIFICATION_SAMPLE_FAILED = 10
     EXACTIFICATION_BACKEND_PROTOCOL_FAILED = 11
     EXACTIFICATION_BACKEND_ERROR = 12
+    EXACTIFICATION_VERIFICATION_FAILED = 13
 end
 
 """Untrusted typed outcome returned by an optional backend extension."""
@@ -712,6 +778,85 @@ function exactify_candidate(
     )
 end
 
+"""
+Mandatory independent verifier hook for optional exactification backends.
+
+Core never accepts a backend-produced `ExactAnswer` from backend self-checking
+alone. Concrete backends must reconstruct their artifacts and replay the
+original graph here; the default is a typed rejection.
+"""
+function verify_exactified_answer(
+    ::AbstractExactBackend,
+    ::CompiledProblem,
+    ::ExactAnswer,
+    ::ExactSampleProvider,
+)
+    return ExactVerificationResult(
+        false,
+        EXACT_VERIFICATION_UNSUPPORTED_SCHEME,
+        "the exact backend does not implement independent answer verification",
+    )
+end
+
+function _canonical_exact_branches(signature)
+    all(branch -> branch isa BranchDecision, signature) || return nothing
+    branches = BranchDecision[
+        BranchDecision(branch.choice_node, branch.key) for branch in signature
+    ]
+    allunique(branch.choice_node for branch in branches) || return nothing
+    sort!(branches; by=branch -> string(branch.choice_node))
+    return Tuple(branches)
+end
+
+function _exact_answer_contract_issue(
+    descriptor::ExactBackendDescriptor,
+    validation::CandidateValidationResult,
+    answer::ExactAnswer,
+)
+    answer.configuration_certificate.artifact.scheme in
+        descriptor.configuration_certificate_schemes || return (
+        "configuration certificate scheme is not declared by the exact backend"
+    )
+    answer.target_certificate.artifact.scheme in descriptor.target_certificate_schemes ||
+        return "target certificate scheme is not declared by the exact backend"
+    answer.configuration_certificate.problem == validation.problem || return (
+        "configuration certificate belongs to a different problem"
+    )
+    answer.target_certificate.problem == validation.problem || return (
+        "target certificate belongs to a different problem"
+    )
+    answer.target_certificate.identity == GeoTargetBase._identity_hash(answer.identity) ||
+        return "target certificate identity hash differs from the exact answer"
+    expected = _canonical_exact_branches(
+        Tuple(branch.decision for branch in validation.canonical_observation.branches),
+    )
+    observed = _canonical_exact_branches(answer.branch_signature)
+    expected !== nothing && observed !== nothing && expected == observed || return (
+        "exact answer branch signature differs from numerical confirmation"
+    )
+    return nothing
+end
+
+function _exact_reference_evidence_issue(provider::ExactSampleProvider)
+    reference = exact_sample_provider_samples(provider; pass=:reference)
+    bits = unique(sample.precision_bits for sample in reference)
+    length(bits) >= 2 || return (
+        "exactification requires two independent reference samples at distinct precisions"
+    )
+    first(bits) >= 512 || return "reference evidence is below 512 bits"
+    last(bits) >= 768 || return "reference evidence never reaches 768 bits"
+    last(bits) - first(bits) >= 256 || return (
+        "reference evidence precisions must differ by at least 256 bits"
+    )
+    all(sample -> sample.rank_stable, reference) || return (
+        "reference sample rank is not stable"
+    )
+    length(unique(sample.numerical_rank for sample in reference)) == 1 || return (
+        "reference sample numerical rank changes across precisions"
+    )
+    return nothing
+end
+
 function _exactification_resource_failure(failure::ExactSampleFailure)
     failure == EXACT_SAMPLE_CANCELLED && return EXACTIFICATION_CANCELLED
     failure == EXACT_SAMPLE_DEADLINE_REACHED && return EXACTIFICATION_DEADLINE_REACHED
@@ -783,6 +928,14 @@ function run_exactification(
         exactify_candidate(backend, compiled, validation, provider)
     catch error
         error isa InterruptException && rethrow()
+        checkpoint = exactification_checkpoint(provider)
+        checkpoint.ready || return _exactification_result(
+            nothing,
+            _exactification_resource_failure(checkpoint.failure),
+            checkpoint.detail,
+            descriptor,
+            provider,
+        )
         return _exactification_result(
             nothing,
             EXACTIFICATION_BACKEND_ERROR,
@@ -791,6 +944,16 @@ function run_exactification(
             provider,
         )
     end
+    checkpoint = exactification_checkpoint(provider)
+    checkpoint.ready || return _exactification_result(
+        nothing,
+        _exactification_resource_failure(checkpoint.failure),
+        checkpoint.detail,
+        descriptor,
+        provider,
+        backend_reported_oracle_work=outcome isa ExactBackendOutcome ?
+                                     outcome.reported_oracle_work : 0,
+    )
     outcome isa ExactBackendOutcome || return _exactification_result(
         nothing,
         EXACTIFICATION_BACKEND_PROTOCOL_FAILED,
@@ -829,6 +992,92 @@ function run_exactification(
             nothing,
             _exactification_resource_failure(provider.fatal_failure),
             provider.fatal_detail,
+            descriptor,
+            provider,
+            backend_reported_oracle_work=outcome.reported_oracle_work,
+        )
+    end
+    if outcome.answer !== nothing
+        answer = outcome.answer::ExactAnswer
+        contract_issue = _exact_answer_contract_issue(descriptor, validation, answer)
+        contract_issue === nothing || return _exactification_result(
+            nothing,
+            EXACTIFICATION_VERIFICATION_FAILED,
+            contract_issue,
+            descriptor,
+            provider,
+            backend_reported_oracle_work=outcome.reported_oracle_work,
+        )
+        evidence_issue = _exact_reference_evidence_issue(provider)
+        evidence_issue === nothing || return _exactification_result(
+            nothing,
+            EXACTIFICATION_VERIFICATION_FAILED,
+            evidence_issue,
+            descriptor,
+            provider,
+            backend_reported_oracle_work=outcome.reported_oracle_work,
+        )
+        checkpoint = exactification_checkpoint(provider)
+        checkpoint.ready || return _exactification_result(
+            nothing,
+            _exactification_resource_failure(checkpoint.failure),
+            checkpoint.detail,
+            descriptor,
+            provider,
+            backend_reported_oracle_work=outcome.reported_oracle_work,
+        )
+        verification = try
+            verify_exactified_answer(backend, compiled, answer, provider)
+        catch error
+            error isa InterruptException && rethrow()
+            checkpoint = exactification_checkpoint(provider)
+            checkpoint.ready || return _exactification_result(
+                nothing,
+                _exactification_resource_failure(checkpoint.failure),
+                checkpoint.detail,
+                descriptor,
+                provider,
+                backend_reported_oracle_work=outcome.reported_oracle_work,
+            )
+            return _exactification_result(
+                nothing,
+                EXACTIFICATION_BACKEND_ERROR,
+                "exact backend verifier raised an exception: $(sprint(showerror, error))",
+                descriptor,
+                provider,
+                backend_reported_oracle_work=outcome.reported_oracle_work,
+            )
+        end
+        checkpoint = exactification_checkpoint(provider)
+        checkpoint.ready || return _exactification_result(
+            nothing,
+            _exactification_resource_failure(checkpoint.failure),
+            checkpoint.detail,
+            descriptor,
+            provider,
+            backend_reported_oracle_work=outcome.reported_oracle_work,
+        )
+        verification isa ExactVerificationResult || return _exactification_result(
+            nothing,
+            EXACTIFICATION_BACKEND_PROTOCOL_FAILED,
+            "exact backend verifier returned the wrong result type",
+            descriptor,
+            provider,
+            backend_reported_oracle_work=outcome.reported_oracle_work,
+        )
+        checkpoint = exactification_checkpoint(provider)
+        checkpoint.ready || return _exactification_result(
+            nothing,
+            _exactification_resource_failure(checkpoint.failure),
+            checkpoint.detail,
+            descriptor,
+            provider,
+            backend_reported_oracle_work=outcome.reported_oracle_work,
+        )
+        verification.accepted || return _exactification_result(
+            nothing,
+            EXACTIFICATION_VERIFICATION_FAILED,
+            "independent exact verification failed: $(verification.failure): $(verification.detail)",
             descriptor,
             provider,
             backend_reported_oracle_work=outcome.reported_oracle_work,

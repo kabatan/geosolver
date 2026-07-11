@@ -2,16 +2,32 @@ struct NemoExactBackend <: GeoTargetCore.AbstractExactBackend
     recognition_options::RecognitionOptions
 end
 
-NemoExactBackend(; recognition_options::RecognitionOptions=RecognitionOptions()) =
-    NemoExactBackend(recognition_options)
-
-struct _ExactSampleAbort <: Exception
-    failure::ExactSampleFailure
-    detail::String
+function NemoExactBackend(; recognition_options::RecognitionOptions=RecognitionOptions())
+    maximum(recognition_options.degree_limits) <= 12 || throw(
+        ArgumentError("production exactification degree limit cannot exceed 12"),
+    )
+    maximum(recognition_options.height_bits) <= 64 || throw(
+        ArgumentError("production exactification coefficient height cannot exceed 64 bits"),
+    )
+    maximum(
+        working_precision(
+            degree,
+            height;
+            base_precision_bits=recognition_options.base_precision_bits,
+        ) + recognition_options.confirmation_extra_bits for
+        degree in recognition_options.degree_limits for
+        height in recognition_options.height_bits
+    ) <= GeoTargetCore._MAX_EXACT_SAMPLE_PRECISION_BITS || throw(
+        ArgumentError("exactification recognition ladder exceeds Core's precision limit"),
+    )
+    return NemoExactBackend(recognition_options)
 end
 
-Base.showerror(io::IO, error::_ExactSampleAbort) =
-    print(io, "exact sample ", error.failure, ": ", error.detail)
+function _checkpoint_provider(provider::ExactSampleProvider)
+    checkpoint = GeoTargetCore.exactification_checkpoint(provider)
+    checkpoint.ready || throw(_ExactSampleAbort(checkpoint.failure, checkpoint.detail))
+    return nothing
+end
 
 function _recognition_options_document(options::RecognitionOptions)
     return Dict{String,Any}(
@@ -24,12 +40,38 @@ function _recognition_options_document(options::RecognitionOptions)
     )
 end
 
+function _exact_backend_source_identity()
+    names = (
+        "GeoTargetExact.jl",
+        "algebraic_real.jl",
+        "backend.jl",
+        "c3a_replay.jl",
+        "certificates.jl",
+        "exact_artifacts.jl",
+        "pslq.jl",
+        "recognition.jl",
+    )
+    document = join(
+        (string(name, ':', content_hash(read(joinpath(@__DIR__, name), String))) for name in names),
+        '\n',
+    )
+    return content_hash(document)
+end
+
+function _exact_backend_manifest_identity()
+    manifest = normpath(joinpath(@__DIR__, "..", "Manifest.toml"))
+    return content_hash(read(manifest, String))
+end
+
 function GeoTargetCore.exact_backend_descriptor(backend::NemoExactBackend)
     policy = GeoTargetCore.canonical_json(_recognition_options_document(
         backend.recognition_options,
     ))
     environment = GeoTargetCore.canonical_json(Dict{String,Any}(
+        "geotarget_exact" => string(Base.pkgversion(@__MODULE__)),
+        "implementation" => string(_exact_backend_source_identity()),
         "julia" => string(VERSION),
+        "manifest" => string(_exact_backend_manifest_identity()),
         "nemo" => string(Base.pkgversion(Nemo)),
         "qqbar" => "Nemo.QQBar",
     ))
@@ -91,15 +133,21 @@ function _recognized_configuration(
 )
     candidates = RecognitionCandidate[]
     for index in eachindex(compiled.problem.variables)
+        _checkpoint_provider(provider)
         candidate = recognize_algebraic(
             _sample_coordinate_provider(provider, index);
             options=backend.recognition_options,
+            checkpoint=() -> _checkpoint_provider(provider),
         )
         candidate === nothing && return nothing,
             "free variable $index has no stable bounded-degree/height algebraic identity"
-        reconstruct_descriptor(candidate.descriptor) === nothing && return nothing,
+        reconstruct_descriptor(
+            candidate.descriptor;
+            checkpoint=() -> _checkpoint_provider(provider),
+        ) === nothing && return nothing,
             "free variable $index recognition descriptor cannot be reconstructed"
         push!(candidates, candidate)
+        _checkpoint_provider(provider)
     end
     return Tuple(candidates), ""
 end
@@ -137,19 +185,34 @@ function GeoTargetCore.exactify_candidate(
         recognition_detail,
     )
     coordinates = Tuple(
-        reconstruct_descriptor(candidate.descriptor)::AlgebraicReal for candidate in candidates
+        reconstruct_descriptor(
+            candidate.descriptor;
+            checkpoint=() -> _checkpoint_provider(provider),
+        )::AlgebraicReal for candidate in candidates
     )
+    _checkpoint_provider(provider)
     replay = replay_c3a(
         compiled,
         coordinates;
         expected_branches=validation.canonical_observation.branches,
+        checkpoint=() -> _checkpoint_provider(provider),
     )
     replay isa C3AReplayResult && replay.accepted || return _backend_failure(
         EXACTIFICATION_REPLAY_FAILED,
         replay isa C3AReplayResult ? replay.detail : "C3A replay returned an invalid result",
     )
     answer = try
-        _build_c3a_exact_answer(compiled, validation, candidates, replay.evidence)
+        _checkpoint_provider(provider)
+        reference_samples = exact_sample_provider_samples(provider; pass=:reference)
+        isempty(reference_samples) && error("exactification has no reference approximation")
+        _build_c3a_exact_answer(
+            compiled,
+            validation,
+            candidates,
+            replay.evidence;
+            checkpoint=() -> _checkpoint_provider(provider),
+            approximation=last(reference_samples).target,
+        )
     catch error
         error isa InterruptException && rethrow()
         return _backend_failure(
@@ -158,7 +221,12 @@ function GeoTargetCore.exactify_candidate(
         )
     end
     verification = try
-        verify_c3a_exact_answer(compiled, answer)
+        _checkpoint_provider(provider)
+        verify_c3a_exact_answer(
+            compiled,
+            answer;
+            checkpoint=() -> _checkpoint_provider(provider),
+        )
     catch error
         error isa InterruptException && rethrow()
         return _backend_failure(
@@ -175,5 +243,114 @@ function GeoTargetCore.exactify_candidate(
         EXACTIFICATION_NONE,
         "";
         reported_oracle_work=0,
+    )
+end
+
+function _core_verification_failure(failure::C3AVerificationFailure)
+    failure == C3A_VERIFY_NONE && return EXACT_VERIFICATION_NONE
+    failure == C3A_VERIFY_UNSUPPORTED_SCHEME &&
+        return EXACT_VERIFICATION_UNSUPPORTED_SCHEME
+    failure == C3A_VERIFY_ARTIFACT_INVALID && return EXACT_VERIFICATION_ARTIFACT_INVALID
+    failure == C3A_VERIFY_PROBLEM_MISMATCH && return EXACT_VERIFICATION_PROBLEM_MISMATCH
+    failure == C3A_VERIFY_TARGET_MISMATCH && return EXACT_VERIFICATION_TARGET_MISMATCH
+    return EXACT_VERIFICATION_CONFIGURATION_MISMATCH
+end
+
+function _sample_consistency_failure(
+    compiled::GeoTargetCore.CompiledProblem,
+    provider::ExactSampleProvider,
+    answer::ExactAnswer,
+    evidence::C3AReplayEvidence,
+)
+    samples = exact_sample_provider_samples(provider; pass=:reference)
+    length(evidence.coordinates) == length(compiled.variables) || return (
+        EXACT_VERIFICATION_CONFIGURATION_MISMATCH,
+        "exact artifact coordinate count differs from the compiled problem",
+    )
+    for sample in samples
+        _checkpoint_provider(provider)
+        bits = sample.precision_bits
+        coordinate_error, target_error, approximation_error = setprecision(BigFloat, bits) do
+            exact_coordinates = BigFloat[
+                _root_approximation(coordinate.value, bits) for
+                coordinate in evidence.coordinates
+            ]
+            exact_normalized = BigFloat[
+                (exact_coordinates[index] - BigFloat(variable.spec.origin)) /
+                BigFloat(variable.spec.scale) for
+                (index, variable) in enumerate(compiled.variables)
+            ]
+            sample_normalized = BigFloat[
+                (BigFloat(sample.coordinates[index]) - BigFloat(variable.spec.origin)) /
+                BigFloat(variable.spec.scale) for
+                (index, variable) in enumerate(compiled.variables)
+            ]
+            coordinate_disagreement = maximum(
+                abs,
+                exact_normalized - sample_normalized;
+                init=BigFloat(0),
+            )
+            exact_target = _root_approximation(evidence.target.value, bits)
+            target_scale = max(one(BigFloat), abs(exact_target), abs(sample.target))
+            target_disagreement = abs(exact_target - sample.target) / target_scale
+            approximation = try
+                answer.approximation isa BigFloat ? BigFloat(answer.approximation) :
+                parse(BigFloat, string(answer.approximation))
+            catch
+                BigFloat(Inf)
+            end
+            approximation_disagreement = abs(exact_target - approximation) / target_scale
+            coordinate_disagreement, target_disagreement, approximation_disagreement
+        end
+        coordinate_error <= sample.gates.correction_tolerance || return (
+            EXACT_VERIFICATION_CONFIGURATION_MISMATCH,
+            "exact artifact coordinates disagree with the $(bits)-bit reference sample",
+        )
+        target_error <= sample.gates.target_tolerance || return (
+            EXACT_VERIFICATION_TARGET_MISMATCH,
+            "exact artifact target disagrees with the $(bits)-bit reference sample",
+        )
+        approximation_error <= sample.gates.target_tolerance || return (
+            EXACT_VERIFICATION_TARGET_MISMATCH,
+            "exact answer approximation disagrees with the $(bits)-bit reference sample",
+        )
+    end
+    return nothing
+end
+
+function GeoTargetCore.verify_exactified_answer(
+    ::NemoExactBackend,
+    compiled::GeoTargetCore.CompiledProblem,
+    answer::ExactAnswer,
+    provider::ExactSampleProvider,
+)
+    verification = verify_c3a_exact_answer(
+        compiled,
+        answer;
+        checkpoint=() -> _checkpoint_provider(provider),
+    )
+    if verification.accepted
+        evidence = _reconstruct_verified_c3a_evidence(
+            compiled,
+            answer;
+            checkpoint=() -> _checkpoint_provider(provider),
+        )
+        evidence === nothing && return ExactVerificationResult(
+            false,
+            EXACT_VERIFICATION_ARTIFACT_INVALID,
+            "verified C3A artifacts could not be reconstructed for sample comparison",
+        )
+        consistency = _sample_consistency_failure(compiled, provider, answer, evidence)
+        consistency === nothing || return ExactVerificationResult(
+            false,
+            first(consistency),
+            last(consistency),
+        )
+    end
+    failure = _core_verification_failure(verification.failure)
+    return ExactVerificationResult(
+        verification.accepted,
+        failure,
+        verification.detail,
     )
 end

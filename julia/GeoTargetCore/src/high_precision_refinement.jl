@@ -563,6 +563,7 @@ function _run_high_precision_refinement(
     cancelled=() -> false,
     remaining_oracle_work::Integer=typemax(Int),
     max_iterations::Integer=16,
+    allow_rank_deficient::Bool=false,
 )
     evaluator_kind in (:compiled, :reference) || throw(
         ArgumentError("evaluator_kind must be :compiled or :reference"),
@@ -578,8 +579,14 @@ function _run_high_precision_refinement(
     length(start) == length(compiled.variables) || throw(
         ArgumentError("high-precision refinement received the wrong coordinate count"),
     )
-    method = evaluator_kind == :compiled ?
-             "compiled_c2_cpqr_5point_v1" : "reference_c2_cpqr_5point_v1"
+    method = if allow_rank_deficient
+        evaluator_kind == :compiled ?
+        "compiled_c2_rank_general_lm_5point_v1" :
+        "reference_c2_rank_general_lm_5point_v1"
+    else
+        evaluator_kind == :compiled ?
+        "compiled_c2_cpqr_5point_v1" : "reference_c2_cpqr_5point_v1"
+    end
 
     return setprecision(BigFloat, Int(precision_bits)) do
         workspace = evaluator_kind == :compiled ? CompiledWorkspace(compiled) : nothing
@@ -721,19 +728,23 @@ function _run_high_precision_refinement(
             # free-variable direction. Full row rank is insufficient for an
             # underdetermined manifold even when its target appears constant.
             required_rank = size(jacobian, 2)
-            factor.rank == required_rank || return _high_precision_failure_result(
-                work,
-                method,
-                coordinates,
-                base,
-                HIGH_PRECISION_REFINEMENT_RANK_DEFICIENT,
-                "the five-point Jacobian is rank deficient for a nonzero residual",
-                residual_bound=residual_bound,
-                numerical_rank=last_rank,
-                condition_estimate=last_condition,
-                iterations=iteration,
-            )
-            correction = _high_precision_linear_step(factor.factorization, residual)
+            if factor.rank != required_rank && !allow_rank_deficient
+                return _high_precision_failure_result(
+                    work,
+                    method,
+                    coordinates,
+                    base,
+                    HIGH_PRECISION_REFINEMENT_RANK_DEFICIENT,
+                    "the five-point Jacobian is rank deficient for an isolated numerical claim",
+                    residual_bound=residual_bound,
+                    numerical_rank=last_rank,
+                    condition_estimate=last_condition,
+                    iterations=iteration,
+                )
+            end
+            correction = factor.rank == required_rank ?
+                         _high_precision_linear_step(factor.factorization, residual) :
+                         _high_precision_lm_step(jacobian, residual)
             correction === nothing && return _high_precision_failure_result(
                 work,
                 method,
@@ -782,7 +793,9 @@ function _run_high_precision_refinement(
                     second_jacobian;
                     uncertainty,
                 )
-                rank_stable = first_confirmed.rank == second_factor.rank == required_rank
+                confirmed_rank = min(first_confirmed.rank, second_factor.rank)
+                rank_stable = first_confirmed.rank == second_factor.rank &&
+                              (allow_rank_deficient || confirmed_rank == required_rank)
                 rank_stable || return _high_precision_failure_result(
                     work,
                     method,
@@ -797,14 +810,16 @@ function _run_high_precision_refinement(
                     condition_estimate=max(first_confirmed.condition, second_factor.condition),
                     iterations=iteration,
                 )
-                first_correction = _high_precision_linear_step(
+                first_correction = first_confirmed.rank == required_rank ?
+                                   _high_precision_linear_step(
                     first_confirmed.factorization,
                     residual,
-                )
-                second_correction = _high_precision_linear_step(
+                ) : _high_precision_lm_step(jacobian, residual)
+                second_correction = second_factor.rank == required_rank ?
+                                    _high_precision_linear_step(
                     second_factor.factorization,
                     residual,
-                )
+                ) : _high_precision_lm_step(second_jacobian, residual)
                 if first_correction === nothing || second_correction === nothing
                     return _high_precision_failure_result(
                         work,
@@ -814,7 +829,7 @@ function _run_high_precision_refinement(
                         HIGH_PRECISION_REFINEMENT_LINEAR_SOLVE_FAILED,
                         "the h/h2 confirmation corrections failed",
                         residual_bound=residual_bound,
-                        numerical_rank=required_rank,
+                        numerical_rank=confirmed_rank,
                         condition_estimate=max(
                             first_confirmed.condition,
                             second_factor.condition,
@@ -843,7 +858,7 @@ function _run_high_precision_refinement(
                             residual_bound=residual_bound,
                             correction_bound=correction_bound,
                             target_error_bound=target_error_bound,
-                            numerical_rank=required_rank,
+                            numerical_rank=confirmed_rank,
                             condition_estimate=max(
                                 first_confirmed.condition,
                                 second_factor.condition,
@@ -860,7 +875,7 @@ function _run_high_precision_refinement(
                         residual_bound,
                         correction_bound,
                         target_error_bound,
-                        required_rank,
+                        confirmed_rank,
                         max(first_confirmed.condition, second_factor.condition),
                         true,
                         iteration,

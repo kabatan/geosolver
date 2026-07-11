@@ -32,6 +32,7 @@ function c3a_fixture_plugin(mode::Symbol=:valid)
         :strict_boundary,
         :branch_tie,
         :forged_validity_margin,
+        :close_roots,
         :structured_literal,
     )
     mode in supported_modes || throw(ArgumentError("unsupported C3A fixture mode"))
@@ -42,7 +43,10 @@ function c3a_fixture_plugin(mode::Symbol=:valid)
     selector_signature = SignatureSpec((C3A_CHOICE,), C3A_SCALAR)
     box_signature = SignatureSpec((C3A_BOX, C3A_SCALAR), C3A_SCALAR)
 
-    numeric_relation(x, two) = x * x - two
+    close_delta = 1 // (BigInt(1) << 20)
+    numeric_relation = mode == :close_roots ?
+                       (x, _) -> (x - one(x)) * (x - (one(x) + close_delta)) :
+                       (x, two) -> x * x - two
     exact_relation = if mode == :nonexact_callback
         (x, two) -> Float64(x * x - two)
     elseif mode == :false_relation
@@ -73,7 +77,7 @@ function c3a_fixture_plugin(mode::Symbol=:valid)
         PrimitiveId(C3A_FIXTURE_PLUGIN, "root_relation"),
         (scalar_binary,),
         c3a_fixture_kernel(numeric_relation, exact_relation; enabled);
-        truth=(x, two) -> iszero(x * x - two),
+        truth=(x, two) -> iszero(numeric_relation(x, two)),
         truth_policy=RELATION_TRUTH_APPROXIMATE_ZERO,
         scale_hint=1.0,
     )
@@ -138,10 +142,11 @@ function c3a_fixture(mode::Symbol=:valid; two_variables::Bool=false)
     builder = RegistryBuilder(allowlist=(plugin.id,))
     register!(builder, plugin)
     registry = freeze(builder)
+    start_x = mode == :close_roots ? 1.0 : 1.4
     variable = VariableSpec(
         VariableId("x"),
         C3A_SCALAR,
-        1.4,
+        start_x,
         1.0;
         lower=0.0,
         upper=2.0,
@@ -177,7 +182,7 @@ function c3a_fixture(mode::Symbol=:valid; two_variables::Bool=false)
         ),
     ]
     relation_bindings = RelationBinding[RelationBinding(NodeId("relation"))]
-    starts = [1.4]
+    starts = [start_x]
     if two_variables
         second = VariableSpec(
             VariableId("y"),
@@ -236,6 +241,72 @@ const C3A_TEST_RECOGNITION_OPTIONS = RecognitionOptions(
     base_precision_bits=768,
     confirmation_extra_bits=256,
 )
+
+struct C3ACheckpointTriggerBackend <: AbstractExactBackend
+    mode::Symbol
+    cancelled::Base.RefValue{Bool}
+end
+
+struct C3ACrossSolutionBackend <: AbstractExactBackend
+    answer::ExactAnswer
+    recognition_options::RecognitionOptions
+end
+
+GeoTargetCore.exact_backend_descriptor(backend::C3ACrossSolutionBackend) =
+    exact_backend_descriptor(NemoExactBackend(
+        recognition_options=backend.recognition_options,
+    ))
+
+function GeoTargetCore.exactify_candidate(
+    backend::C3ACrossSolutionBackend,
+    ::GeoTargetCore.CompiledProblem,
+    ::CandidateValidationResult,
+    provider::ExactSampleProvider,
+)
+    exact_sample(provider, 768; pass=:reference).accepted || error("768-bit sample failed")
+    exact_sample(provider, 1024; pass=:reference).accepted || error("1024-bit sample failed")
+    return ExactBackendOutcome(backend.answer, EXACTIFICATION_NONE, "")
+end
+
+GeoTargetCore.verify_exactified_answer(
+    backend::C3ACrossSolutionBackend,
+    compiled::GeoTargetCore.CompiledProblem,
+    answer::ExactAnswer,
+    provider::ExactSampleProvider,
+) = GeoTargetCore.verify_exactified_answer(
+    NemoExactBackend(recognition_options=backend.recognition_options),
+    compiled,
+    answer,
+    provider,
+)
+
+GeoTargetCore.exact_backend_descriptor(::C3ACheckpointTriggerBackend) =
+    ExactBackendDescriptor(
+        "c3a-checkpoint-trigger-test",
+        v"1.0.0",
+        "trigger-resource-checkpoint";
+        configuration_certificate_schemes=("test_configuration_v1",),
+        target_certificate_schemes=("test_target_v1",),
+        policy_identity=content_hash("c3a-checkpoint-trigger-policy"),
+        environment_identity=content_hash("c3a-checkpoint-trigger-environment"),
+    )
+
+function GeoTargetCore.exactify_candidate(
+    backend::C3ACheckpointTriggerBackend,
+    ::GeoTargetCore.CompiledProblem,
+    ::CandidateValidationResult,
+    provider::ExactSampleProvider,
+)
+    if backend.mode == :cancel
+        backend.cancelled[] = true
+    elseif backend.mode == :deadline
+        provider.deadline_ns = 0
+    else
+        error("unsupported checkpoint trigger mode")
+    end
+    GeoTargetExact._checkpoint_provider(provider)
+    error("resource checkpoint unexpectedly returned")
+end
 
 function successful_c3a_result()
     compiled, validation = c3a_fixture(:valid; two_variables=true)
@@ -453,6 +524,72 @@ end
     @test noncanonical_verification.failure == GeoTargetExact.C3A_VERIFY_ARTIFACT_INVALID
 end
 
+@testset "C3A exact answer is bound to both reference precision samples" begin
+    compiled, validation = c3a_fixture(:close_roots)
+    delta = 1 // (BigInt(1) << 20)
+    alternate = AlgebraicReal(one(BigInt) + delta)
+    descriptor = descriptor_from_root(alternate)
+    candidate = RecognitionCandidate(
+        descriptor,
+        1,
+        64,
+        768,
+        1024,
+        "test_alternate_root",
+    )
+    replay = replay_c3a(
+        compiled,
+        (alternate,);
+        expected_branches=validation.canonical_observation.branches,
+    )
+    @test replay.accepted
+    alternate_answer = GeoTargetExact._build_c3a_exact_answer(
+        compiled,
+        validation,
+        (candidate,),
+        replay.evidence,
+    )
+    # The deliberately coarse isolating interval overlaps the numerical root,
+    # so ordinary artifact replay alone cannot detect this cross-solution swap.
+    @test verify_c3a_exact_answer(compiled, alternate_answer).accepted
+
+    result = run_exactification(
+        C3ACrossSolutionBackend(
+            alternate_answer,
+            C3A_TEST_RECOGNITION_OPTIONS,
+        ),
+        compiled,
+        validation;
+        remaining_oracle_work=500_000,
+    )
+    @test !result.accepted
+    @test result.failure == EXACTIFICATION_VERIFICATION_FAILED
+    @test occursin("reference sample", result.detail)
+
+    shifted_compiled, shifted_validation, _, shifted_source = successful_c3a_result()
+    source_answer = shifted_source.answer
+    shifted_answer = ExactAnswer(
+        source_answer.identity,
+        BigFloat(source_answer.approximation) + big"1e-6",
+        source_answer.branch_signature,
+        source_answer.configuration_certificate,
+        source_answer.target_certificate,
+    )
+    @test verify_c3a_exact_answer(shifted_compiled, shifted_answer).accepted
+    shifted_result = run_exactification(
+        C3ACrossSolutionBackend(
+            shifted_answer,
+            C3A_TEST_RECOGNITION_OPTIONS,
+        ),
+        shifted_compiled,
+        shifted_validation;
+        remaining_oracle_work=500_000,
+    )
+    @test !shifted_result.accepted
+    @test shifted_result.failure == EXACTIFICATION_VERIFICATION_FAILED
+    @test occursin("approximation", shifted_result.detail)
+end
+
 @testset "C3A backend resources and precision requests fail closed" begin
     compiled, validation = c3a_fixture(:valid)
     backend = NemoExactBackend(recognition_options=C3A_TEST_RECOGNITION_OPTIONS)
@@ -485,4 +622,68 @@ end
     @test !low_precision.accepted
     @test low_precision.failure == EXACTIFICATION_SAMPLE_FAILED
     @test occursin("precision_bits", low_precision.detail)
+
+    cancel_flag = Ref(false)
+    mid_cancel = run_exactification(
+        C3ACheckpointTriggerBackend(:cancel, cancel_flag),
+        compiled,
+        validation;
+        cancelled=() -> cancel_flag[],
+        remaining_oracle_work=500_000,
+    )
+    @test mid_cancel.failure == EXACTIFICATION_CANCELLED
+    @test mid_cancel.answer === nothing
+
+    deadline_flag = Ref(false)
+    mid_deadline = run_exactification(
+        C3ACheckpointTriggerBackend(:deadline, deadline_flag),
+        compiled,
+        validation;
+        remaining_oracle_work=500_000,
+    )
+    @test mid_deadline.failure == EXACTIFICATION_DEADLINE_REACHED
+    @test mid_deadline.answer === nothing
+
+    poll_count = Ref(0)
+    stop_poll() = begin
+        poll_count[] += 1
+        poll_count[] >= 4 && throw(
+            GeoTargetExact._ExactSampleAbort(EXACT_SAMPLE_CANCELLED, "test stop"),
+        )
+        nothing
+    end
+    pi_value = setprecision(BigFloat, 768) do
+        BigFloat(pi)
+    end
+    @test_throws GeoTargetExact._ExactSampleAbort pslq_relation(
+        pi_value,
+        4,
+        8;
+        precision_bits=768,
+        checkpoint=stop_poll,
+    )
+    @test poll_count[] == 4
+
+    replay_polls = Ref(0)
+    @test_throws GeoTargetExact._ExactSampleAbort replay_c3a(
+        compiled,
+        (sqrt(AlgebraicReal(2)),);
+        expected_branches=validation.canonical_observation.branches,
+        checkpoint=() -> begin
+            replay_polls[] += 1
+            replay_polls[] == 3 && throw(
+                GeoTargetExact._ExactSampleAbort(EXACT_SAMPLE_CANCELLED, "replay stop"),
+            )
+            nothing
+        end,
+    )
+
+    verified_compiled, _, _, verified_result = successful_c3a_result()
+    @test_throws GeoTargetExact._ExactSampleAbort verify_c3a_exact_answer(
+        verified_compiled,
+        verified_result.answer;
+        checkpoint=() -> throw(
+            GeoTargetExact._ExactSampleAbort(EXACT_SAMPLE_CANCELLED, "verify stop"),
+        ),
+    )
 end

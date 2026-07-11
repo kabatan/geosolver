@@ -253,7 +253,9 @@ function pslq_relation(
     height_bits::Integer;
     precision_bits::Integer=precision(value),
     max_iterations::Integer=10_000,
+    checkpoint=() -> nothing,
 )
+    checkpoint()
     degree = _pslq_contract_int(degree_limit)
     height = _pslq_contract_int(height_bits)
     bits = _pslq_contract_int(precision_bits)
@@ -293,6 +295,7 @@ function pslq_relation(
     end
 
     return setprecision(BigFloat, bits) do
+        checkpoint()
         values = _pslq_values(value, degree, bits)
         state = _pslq_initial_state(values, bits)
         state === nothing && return _pslq_failure(
@@ -312,6 +315,7 @@ function pslq_relation(
 
         precision_floor = ldexp(one(BigFloat), -max(32, bits - height - 32))
         for iteration in 1:iterations_limit
+            checkpoint()
             _pslq_iterate!(y, H, B) || return _pslq_failure(
                 PSLQ_NUMERICAL_BREAKDOWN,
                 iteration,
@@ -356,6 +360,7 @@ function pslq_relation(
                 )
             end
         end
+        checkpoint()
         first_overheight_iteration !== nothing && return _pslq_failure(
             PSLQ_COEFFICIENT_LIMIT,
             iterations_limit,

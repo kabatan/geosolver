@@ -96,6 +96,63 @@ GeoTargetCore.exactify_candidate(
     ::ExactSampleProvider,
 ) = :not_a_typed_outcome
 
+struct NoSampleAnswerBackend <: AbstractExactBackend
+    scheme_matches::Bool
+end
+
+GeoTargetCore.exact_backend_descriptor(::NoSampleAnswerBackend) =
+    test_backend_descriptor("no-sample-answer-test", "forged-answer")
+
+function forged_exact_answer(validation, scheme_matches::Bool=true)
+    identity = AlgebraicTargetIdentity(
+        (-1, 1),
+        RationalInterval(0 // 1, 2 // 1),
+        1,
+    )
+    configuration_scheme = scheme_matches ? "test_configuration_v1" : "wrong_configuration_v1"
+    configuration = ConfigurationValidityCertificate(
+        validation.problem,
+        validation.configuration,
+        CertificateArtifact(configuration_scheme, "{}"; media_type="application/json"),
+    )
+    target = TargetIdentityCertificate(
+        validation.problem,
+        identity,
+        CertificateArtifact("test_target_v1", "{}"; media_type="application/json"),
+    )
+    return ExactAnswer(identity, 1.0, (), configuration, target)
+end
+
+GeoTargetCore.exactify_candidate(
+    backend::NoSampleAnswerBackend,
+    ::GeoTargetCore.CompiledProblem,
+    validation::CandidateValidationResult,
+    ::ExactSampleProvider,
+) = ExactBackendOutcome(
+    forged_exact_answer(validation, backend.scheme_matches),
+    EXACTIFICATION_NONE,
+    "",
+)
+
+struct SampledUnverifiedBackend <: AbstractExactBackend end
+GeoTargetCore.exact_backend_descriptor(::SampledUnverifiedBackend) =
+    test_backend_descriptor("sampled-unverified-test", "sample-then-forge")
+
+function GeoTargetCore.exactify_candidate(
+    ::SampledUnverifiedBackend,
+    ::GeoTargetCore.CompiledProblem,
+    validation::CandidateValidationResult,
+    provider::ExactSampleProvider,
+)
+    exact_sample(provider, 512; pass=:reference).accepted || error("512-bit sample failed")
+    exact_sample(provider, 768; pass=:reference).accepted || error("768-bit sample failed")
+    return ExactBackendOutcome(
+        forged_exact_answer(validation),
+        EXACTIFICATION_NONE,
+        "",
+    )
+end
+
 @testset "Core-owned arbitrary-precision exact sample provider" begin
     compiled, validation = exact_backend_fixture()
     provider = ExactSampleProvider(
@@ -127,7 +184,7 @@ GeoTargetCore.exactify_candidate(
     reference = exact_sample(provider, 640; pass=:reference)
     @test reference.accepted
     @test reference.sample.pass == :reference
-    @test reference.sample.method == "reference_c2_cpqr_5point_v1"
+    @test reference.sample.method == "reference_c2_rank_general_lm_5point_v1"
     @test reference.sample.coordinates == sample.coordinates
     snapshot = exact_sample_provider_snapshot(provider)
     @test snapshot.requests == 3
@@ -162,6 +219,9 @@ end
     @test exact_sample(invalid_cancel, 640).failure == EXACT_SAMPLE_INTERNAL_ERROR
 
     request_provider = ExactSampleProvider(compiled, validation)
+    checkpoint = exactification_checkpoint(request_provider)
+    @test checkpoint.ready
+    @test checkpoint.failure == EXACT_SAMPLE_NONE
     @test exact_sample(request_provider, true).failure == EXACT_SAMPLE_INVALID_REQUEST
     @test exact_sample(request_provider, big(typemax(Int)) + 1).failure ==
           EXACT_SAMPLE_INVALID_REQUEST
@@ -188,6 +248,42 @@ end
     rejected = validate_candidate(compiled, [0.8]; remaining_oracle_work=0)
     @test !rejected.accepted
     @test_throws ArgumentError ExactSampleProvider(compiled, rejected)
+end
+
+@testset "backend answers require Core evidence and independent verification" begin
+    compiled, validation = exact_backend_fixture("_verification")
+
+    no_samples = run_exactification(
+        NoSampleAnswerBackend(true),
+        compiled,
+        validation;
+        remaining_oracle_work=100_000,
+    )
+    @test !no_samples.accepted
+    @test no_samples.failure == EXACTIFICATION_VERIFICATION_FAILED
+    @test occursin("two independent reference samples", no_samples.detail)
+    @test no_samples.samples.requests == 0
+
+    wrong_scheme = run_exactification(
+        NoSampleAnswerBackend(false),
+        compiled,
+        validation;
+        remaining_oracle_work=100_000,
+    )
+    @test !wrong_scheme.accepted
+    @test wrong_scheme.failure == EXACTIFICATION_VERIFICATION_FAILED
+    @test occursin("scheme", wrong_scheme.detail)
+
+    unverified = run_exactification(
+        SampledUnverifiedBackend(),
+        compiled,
+        validation;
+        remaining_oracle_work=100_000,
+    )
+    @test !unverified.accepted
+    @test unverified.failure == EXACTIFICATION_VERIFICATION_FAILED
+    @test occursin("independent exact verification failed", unverified.detail)
+    @test unverified.samples.cache_entries == 2
 end
 
 @testset "backend work reports never affect the Core ledger" begin

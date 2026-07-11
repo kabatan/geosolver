@@ -3,10 +3,40 @@ using GeoTargetCore
 using GeoTargetGeometry
 using Test
 
-function hp_refinement_problem(; underdetermined::Bool=false)
+const HP_MULTIPLE_ROOT_PLUGIN =
+    parse(PluginId, "afe072d9-27eb-4aab-95db-85f4fc942b59/hp_multiple_root_fixture")
+
+function hp_multiple_root_plugin()
+    signature = SignatureSpec((SCALAR_TYPE_ID,), SCALAR_TYPE_ID)
+    relation = RelationSpec(
+        PrimitiveId(HP_MULTIPLE_ROOT_PLUGIN, "square_zero"),
+        (signature,),
+        OperatorKernel(
+            x -> x * x;
+            capabilities=CapabilitySet(C0, C2),
+            generic_numeric=true,
+            smoothness=SMOOTH_C1,
+        );
+        truth=x -> iszero(x * x),
+        scale_hint=1.0,
+    )
+    return PluginSpec(
+        HP_MULTIPLE_ROOT_PLUGIN,
+        v"0.1.0",
+        GeoTargetCore.CORE_ABI_VERSION,
+        content_hash("hp-multiple-root-fixture-v1");
+        relations=(relation,),
+    )
+end
+
+function hp_refinement_problem(; underdetermined::Bool=false, multiple_root::Bool=false)
+    underdetermined && multiple_root && throw(
+        ArgumentError("fixture modes are mutually exclusive"),
+    )
     plugin = geometry_plugin()
-    builder = RegistryBuilder(allowlist=(plugin.id,))
-    register!(builder, plugin)
+    plugins = multiple_root ? (plugin, hp_multiple_root_plugin()) : (plugin,)
+    builder = RegistryBuilder(allowlist=Tuple(item.id for item in plugins))
+    foreach(item -> register!(builder, item), plugins)
     registry = freeze(builder)
     x = VariableSpec(
         VariableId("hp_x"),
@@ -33,20 +63,38 @@ function hp_refinement_problem(; underdetermined::Bool=false)
     end
     nodes = AbstractGraphNode[
         ReferenceNode(NodeId("hp_x_ref"), x.id),
-        LiteralNode(NodeId("hp_one"), SCALAR_TYPE_ID, underdetermined ? 0.0 : 1.0),
-        CallNode(
-            NodeId("hp_relation"),
-            PrimitiveId(GEOMETRY_PLUGIN_ID, "scalar_equality"),
-            (NodeId("hp_x_ref"), NodeId("hp_one")),
+        LiteralNode(
+            NodeId("hp_one"),
+            SCALAR_TYPE_ID,
+            underdetermined || multiple_root ? 0.0 : 1.0,
         ),
     ]
+    if multiple_root
+        push!(
+            nodes,
+            CallNode(
+                NodeId("hp_relation"),
+                PrimitiveId(HP_MULTIPLE_ROOT_PLUGIN, "square_zero"),
+                (NodeId("hp_x_ref"),),
+            ),
+        )
+    else
+        push!(
+            nodes,
+            CallNode(
+                NodeId("hp_relation"),
+                PrimitiveId(GEOMETRY_PLUGIN_ID, "scalar_equality"),
+                (NodeId("hp_x_ref"), NodeId("hp_one")),
+            ),
+        )
+    end
     target = NodeId("hp_x_ref")
     if underdetermined
         push!(nodes, ReferenceNode(NodeId("hp_y_ref"), variables[2].id))
         target = NodeId("hp_y_ref")
     end
     problem = ProblemSpecV1(
-        (plugin_lock(plugin),),
+        Tuple(sort(PluginLock[plugin_lock(item) for item in plugins]; by=lock -> string(lock.id))),
         variables,
         ConstructionGraph(Tuple(nodes));
         relations=(RelationBinding(NodeId("hp_relation")),),
@@ -66,6 +114,25 @@ function run_hp_refinement(compiled, start; bits=512, kind=:compiled, kwargs...)
         target_tolerance=1.0e-100,
         kwargs...,
     )
+end
+
+@testset "rank-general exact sampling accepts an isolated multiple root" begin
+    compiled = hp_refinement_problem(multiple_root=true)
+    numerical = run_hp_refinement(compiled, [0.0]; kind=:reference)
+    @test !numerical.accepted
+    @test numerical.failure == GeoTargetCore.HIGH_PRECISION_REFINEMENT_RANK_DEFICIENT
+    @test numerical.evidence.numerical_rank == 0
+
+    exact_sample = run_hp_refinement(
+        compiled,
+        [0.0];
+        kind=:reference,
+        allow_rank_deficient=true,
+    )
+    @test exact_sample.accepted
+    @test exact_sample.evidence.numerical_rank == 0
+    @test exact_sample.evidence.rank_stable
+    @test exact_sample.evidence.method == "reference_c2_rank_general_lm_5point_v1"
 end
 
 @testset "five-point BigFloat CPQR refinement and independent reference run" begin

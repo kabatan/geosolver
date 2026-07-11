@@ -5,6 +5,14 @@ using GeoTargetCore
 using JSON3
 using Nemo
 
+struct _ExactSampleAbort <: Exception
+    failure::ExactSampleFailure
+    detail::String
+end
+
+Base.showerror(io::IO, error::_ExactSampleAbort) =
+    print(io, "exact sample ", error.failure, ": ", error.detail)
+
 include("algebraic_real.jl")
 include("pslq.jl")
 include("recognition.jl")

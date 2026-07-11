@@ -233,7 +233,9 @@ function replay_c3a(
     compiled::GeoTargetCore.CompiledProblem,
     coordinates;
     expected_branches=nothing,
+    checkpoint=() -> nothing,
 )
+    checkpoint()
     supports(GeoTargetCore.capabilities(compiled), C3A) || return _c3a_failure(
         C3A_REPLAY_CAPABILITY_MISSING,
         "compiled problem does not have all-path C3A capability",
@@ -257,6 +259,7 @@ function replay_c3a(
     exact_coordinates = AlgebraicReal[]
     variable_values = Dict{VariableId,Any}()
     for (index, variable) in enumerate(problem.variables)
+        checkpoint()
         exact = _c3a_scalar(coordinates[index])
         exact === nothing && return _c3a_failure(
             C3A_REPLAY_NONEXACT_VALUE,
@@ -292,6 +295,7 @@ function replay_c3a(
     values = Dict{NodeId,Any}()
     branch_proofs = C3ABranchProof[]
     for node in problem.graph
+        checkpoint()
         runtime_type = _c3a_runtime_type(registry, report, node)
         runtime_type === nothing && return _c3a_failure(
             C3A_REPLAY_TYPE_MISMATCH,
@@ -402,10 +406,12 @@ function replay_c3a(
             push!(branch_proofs, C3ABranchProof(decision, validity, selector_margin))
             values[node.id] = exact
         end
+        checkpoint()
     end
 
     relations = C3ARelationProof[]
     for binding in problem.relations
+        checkpoint()
         value = _c3a_scalar(values[binding.node])
         value === nothing && return _c3a_failure(
             C3A_REPLAY_NONEXACT_VALUE,
@@ -420,6 +426,7 @@ function replay_c3a(
 
     guards = C3AMarginProof[]
     for binding in problem.guards
+        checkpoint()
         margin = _c3a_scalar(values[binding.node])
         margin === nothing && return _c3a_failure(
             C3A_REPLAY_NONEXACT_VALUE,
@@ -435,6 +442,7 @@ function replay_c3a(
 
     domains = C3AMarginProof[]
     for binding in problem.domains
+        checkpoint()
         margin = _c3a_scalar(values[binding.node])
         margin === nothing && return _c3a_failure(
             C3A_REPLAY_NONEXACT_VALUE,
@@ -462,6 +470,7 @@ function replay_c3a(
             "exact branch keys differ from the numerically confirmed signature",
         )
 
+    checkpoint()
     target = _c3a_scalar(values[problem.target])
     target === nothing && return _c3a_failure(
         C3A_REPLAY_TARGET_FAILED,
@@ -475,6 +484,7 @@ function replay_c3a(
         Tuple(domains),
         Tuple(sort(branch_proofs; by=proof -> string(proof.decision.choice_node))),
     )
+    checkpoint()
     return _c3a_success(evidence)
 end
 

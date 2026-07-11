@@ -47,7 +47,8 @@ Returning `nothing` is intentional fail-closed behavior: canonical text,
 primitive irreducible polynomial form, interval isolation, and root index are
 all rechecked instead of trusting the supplied certificate fields.
 """
-function descriptor_from_document(document)
+function descriptor_from_document(document; checkpoint=() -> nothing)
+    checkpoint()
     document isa AbstractDict || return nothing
     Set(keys(document)) == Set(("coefficients", "isolating_interval", "real_root_index")) ||
         return nothing
@@ -74,6 +75,7 @@ function descriptor_from_document(document)
     catch
         return nothing
     end
-    reconstruct_descriptor(descriptor) === nothing && return nothing
+    reconstruct_descriptor(descriptor; checkpoint) === nothing && return nothing
+    checkpoint()
     return descriptor
 end

@@ -116,7 +116,9 @@ function bounded_rational_reconstruction(
     value::BigFloat,
     height_bits::Integer;
     precision_bits::Integer=precision(value),
+    checkpoint=() -> nothing,
 )
+    checkpoint()
     isfinite(value) || return nothing
     height_bits > 0 || throw(ArgumentError("height_bits must be positive"))
     precision_bits >= 32 || throw(ArgumentError("precision_bits must be at least 32"))
@@ -132,6 +134,7 @@ function bounded_rational_reconstruction(
         max_steps = max(64, 2 * Int(precision_bits))
 
         for _ in 1:max_steps
+            checkpoint()
             integer_part = floor(BigInt, y)
             numerator = integer_part * p_previous + p_previous_previous
             denominator = integer_part * q_previous + q_previous_previous
@@ -215,9 +218,10 @@ function _real_roots(polynomial)
     return roots_exact
 end
 
-function _isolating_interval(root::QQBarFieldElem, real_roots)
+function _isolating_interval(root::QQBarFieldElem, real_roots; checkpoint=() -> nothing)
     approximation = _root_approximation(root, 512)
     for denominator_bits in (16, 32, 64, 128, 256, 512, 1024, 2048, 4096)
+        checkpoint()
         denominator = BigInt(1) << denominator_bits
         midpoint = round(BigInt, ldexp(approximation, denominator_bits))
         lower = (midpoint - 1) // denominator
@@ -231,29 +235,35 @@ function _isolating_interval(root::QQBarFieldElem, real_roots)
     return nothing
 end
 
-function descriptor_from_root(root::QQBarFieldElem)
+function descriptor_from_root(root::QQBarFieldElem; checkpoint=() -> nothing)
+    checkpoint()
     isreal(root) || return nothing
     polynomial = minpoly(_ZZX, root)
+    checkpoint()
     coefficients = normalize_polynomial(_polynomial_coefficients(polynomial))
     coefficients === nothing && return nothing
     canonical_polynomial = _polynomial(coefficients)
     real_roots = _real_roots(canonical_polynomial)
+    checkpoint()
     root_index = findfirst(candidate -> candidate == root, real_roots)
     root_index === nothing && return nothing
-    interval = _isolating_interval(root, real_roots)
+    interval = _isolating_interval(root, real_roots; checkpoint)
     interval === nothing && return nothing
     return AlgebraicDescriptor(coefficients, interval[1], interval[2], root_index)
 end
 
-descriptor_from_root(root::AlgebraicReal) = descriptor_from_root(root.value)
-descriptor_from_root(root::Union{Integer,Rational}) = descriptor_from_root(_QQBAR(root))
+descriptor_from_root(root::AlgebraicReal; kwargs...) = descriptor_from_root(root.value; kwargs...)
+descriptor_from_root(root::Union{Integer,Rational}; kwargs...) =
+    descriptor_from_root(_QQBAR(root); kwargs...)
 
 function descriptor_from_relation(
     coefficients,
     approximation::BigFloat;
     precision_bits::Integer=precision(approximation),
     height_bits::Integer=64,
+    checkpoint=() -> nothing,
 )
+    checkpoint()
     canonical = normalize_polynomial(coefficients)
     canonical === nothing && return nothing
     _within_height(canonical, Int(height_bits)) || return nothing
@@ -264,6 +274,7 @@ function descriptor_from_relation(
     catch
         return nothing
     end
+    checkpoint()
     tolerance = _relation_tolerance(
         approximation,
         Int(precision_bits),
@@ -271,7 +282,9 @@ function descriptor_from_relation(
         length(canonical) - 1,
     )
     for (irreducible, _) in factorization
+        checkpoint()
         for root in _real_roots(irreducible)
+            checkpoint()
             close = setprecision(BigFloat, max(Int(precision_bits), precision(approximation))) do
                 root_approximation = _root_approximation(root, Int(precision_bits))
                 abs(root_approximation - approximation) <= tolerance
@@ -280,20 +293,24 @@ function descriptor_from_relation(
         end
     end
     length(possible) == 1 || return nothing
-    return descriptor_from_root(only(possible))
+    checkpoint()
+    return descriptor_from_root(only(possible); checkpoint)
 end
 
-function _reconstruct_descriptor(descriptor::AlgebraicDescriptor)
+function _reconstruct_descriptor(descriptor::AlgebraicDescriptor; checkpoint=() -> nothing)
+    checkpoint()
     canonical = normalize_polynomial(descriptor.coefficients)
     canonical == descriptor.coefficients || return nothing
     polynomial = _polynomial(canonical)
     factorization = factor(polynomial)
+    checkpoint()
     length(factorization) == 1 || return nothing
     factor_entry = only(collect(factorization))
     irreducible, exponent = factor_entry
     exponent == 1 || return nothing
     _polynomial_coefficients(irreducible) == descriptor.coefficients || return nothing
     real_roots = _real_roots(polynomial)
+    checkpoint()
     descriptor.root_index <= length(real_roots) || return nothing
     selected = real_roots[descriptor.root_index]
     lower = _QQBAR(descriptor.lower)
@@ -304,19 +321,25 @@ function _reconstruct_descriptor(descriptor::AlgebraicDescriptor)
     return AlgebraicReal(selected)
 end
 
-function reconstruct_descriptor(descriptor::AlgebraicDescriptor)
+function reconstruct_descriptor(descriptor::AlgebraicDescriptor; checkpoint=() -> nothing)
     return try
-        _reconstruct_descriptor(descriptor)
-    catch
+        _reconstruct_descriptor(descriptor; checkpoint)
+    catch error
+        error isa _ExactSampleAbort && rethrow()
         nothing
     end
 end
 
-function same_algebraic_identity(left::AlgebraicDescriptor, right::AlgebraicDescriptor)
+function same_algebraic_identity(
+    left::AlgebraicDescriptor,
+    right::AlgebraicDescriptor;
+    checkpoint=() -> nothing,
+)
+    checkpoint()
     left.coefficients == right.coefficients || return false
     left.root_index == right.root_index || return false
-    left_value = reconstruct_descriptor(left)
-    right_value = reconstruct_descriptor(right)
+    left_value = reconstruct_descriptor(left; checkpoint)
+    right_value = reconstruct_descriptor(right; checkpoint)
     left_value === nothing && return false
     right_value === nothing && return false
     return left_value == right_value
@@ -332,32 +355,52 @@ function _provider_value(provider, bits::Int)
     return value
 end
 
-function _recognize_sample(value, degree_limit, height_bits, precision_bits)
+function _recognize_sample(
+    value,
+    degree_limit,
+    height_bits,
+    precision_bits;
+    checkpoint=() -> nothing,
+)
+    checkpoint()
     if degree_limit == 1
         rational = bounded_rational_reconstruction(
             value,
             height_bits;
             precision_bits,
+            checkpoint,
         )
         rational === nothing && return nothing, "bounded_rational_reconstruction"
-        return descriptor_from_root(rational), "bounded_rational_reconstruction"
+        checkpoint()
+        return descriptor_from_root(rational; checkpoint), "bounded_rational_reconstruction"
     end
     result = pslq_relation(
         value,
         degree_limit,
         height_bits;
         precision_bits,
+        checkpoint,
     )
     result.relation === nothing && return nothing, "owned_pslq_v1"
+    checkpoint()
     return descriptor_from_relation(
         result.relation,
         value;
         precision_bits,
         height_bits,
+        checkpoint,
     ), "owned_pslq_v1"
 end
 
-function _recognize_at(provider, degree_limit, height_bits, options, cache)
+function _recognize_at(
+    provider,
+    degree_limit,
+    height_bits,
+    options,
+    cache;
+    checkpoint=() -> nothing,
+)
+    checkpoint()
     precision_bits = working_precision(
         degree_limit,
         height_bits;
@@ -371,18 +414,21 @@ function _recognize_at(provider, degree_limit, height_bits, options, cache)
         sample(precision_bits),
         degree_limit,
         height_bits,
-        precision_bits,
+        precision_bits;
+        checkpoint,
     )
     first_descriptor === nothing && return nothing
+    checkpoint()
     second_descriptor, second_method = _recognize_sample(
         sample(confirmation_bits),
         degree_limit,
         height_bits,
-        confirmation_bits,
+        confirmation_bits;
+        checkpoint,
     )
     second_descriptor === nothing && return nothing
     method == second_method || return nothing
-    same_algebraic_identity(first_descriptor, second_descriptor) || return nothing
+    same_algebraic_identity(first_descriptor, second_descriptor; checkpoint) || return nothing
     return RecognitionCandidate(
         first_descriptor,
         Int(degree_limit),
@@ -398,15 +444,35 @@ function recognize_at(
     degree_limit::Integer,
     height_bits::Integer;
     options::RecognitionOptions=RecognitionOptions(),
+    checkpoint=() -> nothing,
 )
-    return _recognize_at(provider, Int(degree_limit), Int(height_bits), options, Dict{Int,BigFloat}())
+    return _recognize_at(
+        provider,
+        Int(degree_limit),
+        Int(height_bits),
+        options,
+        Dict{Int,BigFloat}();
+        checkpoint,
+    )
 end
 
-function recognize_algebraic(provider; options::RecognitionOptions=RecognitionOptions())
+function recognize_algebraic(
+    provider;
+    options::RecognitionOptions=RecognitionOptions(),
+    checkpoint=() -> nothing,
+)
     cache = Dict{Int,BigFloat}()
     for degree_limit in options.degree_limits
         for height_bits in options.height_bits
-            candidate = _recognize_at(provider, degree_limit, height_bits, options, cache)
+            checkpoint()
+            candidate = _recognize_at(
+                provider,
+                degree_limit,
+                height_bits,
+                options,
+                cache;
+                checkpoint,
+            )
             candidate === nothing || return candidate
         end
     end

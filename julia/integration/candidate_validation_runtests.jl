@@ -529,6 +529,26 @@ end
     )
     @test !manifold.accepted
     @test manifold.failure == CANDIDATE_PRIMARY_REFINEMENT_FAILED
+
+    manifold_compiled = compile_problem(
+        geometry_validation_problem(relation=:self, guard=:none),
+        registry,
+    )
+    exactification_sample = GeoTargetCore._run_high_precision_refinement(
+        manifold_compiled,
+        [1.0];
+        precision_bits=512,
+        evaluator_kind=:reference,
+        residual_goal=big"1e-110",
+        configuration_tolerance=big"1e-100",
+        target_tolerance=big"1e-100",
+        allow_rank_deficient=true,
+    )
+    @test exactification_sample.accepted
+    @test exactification_sample.evidence.numerical_rank == 0
+    @test exactification_sample.evidence.rank_stable
+    @test exactification_sample.evidence.method ==
+          "reference_c2_rank_general_lm_5point_v1"
 end
 
 @testset "candidate resource limits include weighted high-precision work" begin
