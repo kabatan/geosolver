@@ -18,7 +18,7 @@ RAW_SCHEMA = "geotarget.discovery-stagec-soft-tgo-t0-raw/v1"
 PREARM_SCHEMA = "geotarget.discovery-stagec-soft-tgo-t0-prearm/v1"
 OUTPUT_SCHEMA = "geotarget.discovery-stagec-soft-tgo-t0-aggregate/v1"
 PROPOSAL_SCHEMA = "geotarget.discovery-proposal-matrix/v1"
-RUNNER_SHA = "dd3e6a539fd58129e343f13a79a2107fd215e5e7bb7e141867f9cb01b0abc763"
+RUNNER_SHA = "c2606ed4d9b6a7b656fd917a6f706bd991cb71f30f025ed44081d7bada4a90bb"
 PREREG_SHA = "b473e47b67f0c270e9eb2f9b9fa93c9187d1121e04c01f44ba3dbb6086ed7cf1"
 SOURCE_MANIFEST = "research/experiments/EXP-LOCAL-004/t2-input-manifest.json"
 SOURCE_MANIFEST_SHA = "aa5da6b9655ebe97f5ae8832911cc253301cb64916e0f23f5637b645905bcd81"
@@ -277,7 +277,10 @@ def _validate_prearm(document: dict[str, Any], case: dict[str, Any], proposal: d
         matrices[name] = matrix_bits
     return {"schedules": global_schedules, "matrices": matrices, "matrix_sha": matrix_sha, "batch_sha": document["batch_schedule_sha256"]}
 def _fingerprint(attempt: dict[str, Any]) -> str:
-    return canonical_json({key: value for key, value in attempt.items() if key not in {"start_index", "timing_phase", "wall_seconds"}})
+    return canonical_json({key: value for key, value in attempt.items() if key not in {"replay_checksum", "start_index", "timing_phase", "wall_seconds"}})
+def _validate_arm_replay(attempts: list[dict[str, Any]]) -> None:
+    checksums = {row.get("replay_checksum") for row in attempts}
+    if len(checksums) != 1 or not stageb._sha_text(next(iter(checksums), None)): raise ValueError("arm replay checksum differs")
 def _expected_ledger(arms: list[dict[str, Any]], prescore: dict[str, Any]) -> dict[str, Any]:
     logical, charged = {}, {}
     for arm in arms:
@@ -342,6 +345,7 @@ def aggregate_documents(input_document: dict[str, Any], preregistration: dict[st
             _exact_keys(arm.get("terminal"), {"attempt_count", "callback_cap_violations", "callback_work", "evaluation_count_mismatches", "exceptions", "runner_budget_exhausted"}, "raw terminal")
             name, schedule, attempts = arm["name"], prearm["schedules"][arm["name"]], arm.get("attempts")
             if arm.get("source_ordinals") != schedule or arm.get("matrix_sha256") != prearm["matrix_sha"][name] or [row.get("source_ordinal") for row in attempts] != schedule: raise ValueError("raw arm schedule/matrix differs")
+            _validate_arm_replay(attempts)
             counts = stageb._validate_attempts(attempts, prearm["matrices"][name], int(case["dimension"]), name)
             if stageb._validate_terminal(arm.get("terminal"), attempts, COLUMNS): raise ValueError("raw terminal accounting differs")
             current = {int(row["source_ordinal"]): _fingerprint(row) for row in attempts}
@@ -451,6 +455,14 @@ def self_test() -> dict[str, Any]:
     narrow_orders, narrow_diagnostics = _batch_orders(narrow, [1.0e16], [1.0e16 + 2.0], False)
     assert narrow_orders["SOFT_TGO"] == list(range(1, 17)) and not narrow_diagnostics["SOFT_TGO"]["normalization_well_resolved"]
     assert detected == 4
+    replay_a = {"replay_checksum": "a" * 64, "source_ordinal": 1, "status": "ok"}
+    replay_b = {**replay_a, "replay_checksum": "b" * 64}
+    assert _fingerprint(replay_a) == _fingerprint(replay_b)
+    _validate_arm_replay([replay_a, replay_a]); replay_tampers = 0
+    for fixture in ([replay_a, replay_b], [{**replay_a, "replay_checksum": "bad"}]):
+        try: _validate_arm_replay(fixture)
+        except ValueError: replay_tampers += 1
+    assert replay_tampers == 2
     schema_tampers = 0
     bad_prearm = {key: None for key in PREARM_KEYS}; bad_prearm["note"] = "secret"
     try: _validate_prearm(bad_prearm, {}, {}, [], "", {}, {})
@@ -505,7 +517,7 @@ def self_test() -> dict[str, Any]:
     attempts = [{"observed_evaluations": 37} for _ in range(128)]
     selected, work = _ledger_prefix(attempts, 600, 16)
     assert work <= 600 and len(selected) == 15
-    return {"algorithm_fixture": True, "dependency_omissions_detected": omissions, "formal_raw_required": False, "outcomes_executed": False, "proposal_schema_tampers_detected": proposal_schema_tampers, "proposal_truth_tampers_detected": proposal_truth_tampers, "schema_tampers_detected": schema_tampers, "schema_version": "geotarget.discovery-stagec-soft-tgo-t0-aggregate-self-test/v1", "source_authority_tampers_detected": source_tampers, "tamper_fixtures_detected": detected}
+    return {"algorithm_fixture": True, "dependency_omissions_detected": omissions, "formal_raw_required": False, "outcomes_executed": False, "proposal_schema_tampers_detected": proposal_schema_tampers, "proposal_truth_tampers_detected": proposal_truth_tampers, "replay_identity_tampers_detected": replay_tampers, "schema_tampers_detected": schema_tampers, "schema_version": "geotarget.discovery-stagec-soft-tgo-t0-aggregate-self-test/v1", "source_authority_tampers_detected": source_tampers, "tamper_fixtures_detected": detected}
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__); parser.add_argument("--self-test", action="store_true"); parser.add_argument("--proposal-smoke", action="store_true"); parser.add_argument("--input-manifest", type=Path); parser.add_argument("--authorization", type=Path); parser.add_argument("--output", type=Path); parser.add_argument("shards", nargs="*", type=Path); args = parser.parse_args()
     if args.self_test:

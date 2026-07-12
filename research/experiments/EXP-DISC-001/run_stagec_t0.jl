@@ -395,10 +395,19 @@ function _stagec_run_arm(problem, matrix, source_ordinals, variant)
     return (; attempts, serialized, terminal=_stagec_terminal(attempts))
 end
 function _stagec_attempt_fingerprint(document)
-    ignored = Set(("start_index", "timing_phase", "wall_seconds"))
+    # The experiment replay checksum includes the arm's reordered saved-start
+    # matrix.  Ordered matrices are hash-bound separately, so this container
+    # identity is not a per-source solver outcome.
+    ignored = Set(("replay_checksum", "start_index", "timing_phase", "wall_seconds"))
     return canonical_json(Dict(key => value for (key, value) in document if !(key in ignored)))
 end
 function _stagec_assert_paired(arms)
+    for arm in arms
+        checksums = unique(attempt["replay_checksum"] for attempt in arm["attempts"])
+        length(checksums) == 1 && only(checksums) isa AbstractString &&
+            occursin(r"^[0-9a-f]{64}$", only(checksums)) ||
+            error("arm replay checksum drifted")
+    end
     reference = Dict(
         attempt["source_ordinal"] => _stagec_attempt_fingerprint(attempt) for
         attempt in arms[1]["attempts"]
