@@ -1,0 +1,120 @@
+{
+  "schema_version": "geotarget.discovery-stage-d-emitter-t0-decision/v1",
+  "experiment_id": "EXP-DISC-001",
+  "stage": "stage-d-emitter-t0",
+  "written_on": "2026-07-12",
+  "status": "FROZEN_POINT_EMITTER_T0_NEGATIVE",
+  "nonpromotional_t0": true,
+  "bindings": {
+    "execution_revision": "2c7907f249d84d128752ae678c8f364bc3895a00",
+    "candidate_freeze_revision": "30c6063f6216ebaefc07c715a471e6763f69fd24",
+    "preregistration_sha256": "078a0118873b3d4b5a712c6d7a738043ea929d60453f991ab9bfa409efe0e2da",
+    "runner_source_sha256": "4cd5511657ae65ab5f1220119a5e4af670315a238d532d76cbade5ff9ba88b1d",
+    "aggregator_source_sha256": "022eb0e850f3f533cf1e664dc15990c97c2244744fc062b7d1595ec7fe395d3c",
+    "aggregate_sha256": "9e87e4cf0cab145223e03a25b8bc0b11cee7ae48e8995e20fbd6b8e52692d828",
+    "raw_ordered_sha256_list_sha256": "b94d7246fb02660e636de59edb2a3a9ebd1838edd9bf4eeaf9e2287da812db1e",
+    "raw_ordered_binary_digest_sha256": "6dc67464824053bd6994dff0013cce03b14f85e5b3391997489555a33ed7555a"
+  },
+  "candidate_implementation_hashes": {
+    "DIRECT_RECT_EMIT": {
+      "source_sha256": "b8855c647b008e71b931c60123102209ae25e18502e659d7cb2e8a708b6693e9",
+      "test_sha256": "9bf7e43d8ade34fcf7f4acbf3715ba9a9b7f895fc5f1347b39f2ffcb788383bd",
+      "mechanism_note_sha256": "2f4f8d8c5467c8af378795baa8cc9f6be6bd32a44adc4f32c1e49ea5f8461874"
+    },
+    "SIMPLICIAL_STAR_EMIT": {
+      "source_sha256": "a963824abb8479e65d36dd602ee41d6cecab5b15a661dd24aed42cb516475ecf",
+      "test_sha256": "74984b95801bf6f604182fc3aca1bb290f262e2a0561d3e47376c050eebbba56",
+      "mechanism_note_sha256": "8325820d3f49cd1980479ae949f886a62552705694891719c97c6f349d95abbd"
+    },
+    "ECP_LB_FULL": {
+      "source_sha256": "7ef863591ee5546b9e460ba610b7cec4c558dcac29df6c7668e7fe432fbc3d37",
+      "test_sha256": "7458c682ae2b8834819440e3beffc6f89bd78fd945765138d0686b4700c61b0e",
+      "mechanism_note_sha256": "b8c0da4b46f1d186f2eebc24f5619a656c73232c0a35f7dcd707632ecbd6fadb"
+    }
+  },
+  "audit": {
+    "independent_raw_reaggregation": true,
+    "aggregate_byte_identical": true,
+    "case_count": 12,
+    "family_count": 6,
+    "target_count": 34,
+    "configuration_count": 42,
+    "arm_count": 6,
+    "logical_prescreen_callbacks": 4608,
+    "local_attempt_count": 4608,
+    "physical_prescreen_callbacks": 4527,
+    "physical_oracle_mismatches": 0,
+    "ecp_raw_draws": 786432,
+    "ecp_accepted": 44,
+    "ecp_rejected_unscored": 786388,
+    "ecp_typed_iid_fallbacks": 532,
+    "reaggregation_mismatches": 0
+  },
+  "safety_and_accounting": {
+    "assessor_false_targets": 0,
+    "assessor_unsafe": 0,
+    "callback_cap_violations": 0,
+    "evaluation_count_mismatches": 0,
+    "exceptions": 0,
+    "reported_safety": 0,
+    "runner_budget_exhausted": 0
+  },
+  "terminal_observation": {
+    "D0_PRESCORED_64": {"distinct_targets": 25, "safe_full_cases": 9, "callback_work": 202741},
+    "RECT_ORBIT_BREADTH": {"distinct_targets": 24, "safe_full_cases": 8, "callback_work": 182765},
+    "DIRECT_RECT_EMIT": {"distinct_targets": 24, "safe_full_cases": 8, "callback_work": 180860},
+    "SIMPLICIAL_UNGUIDED": {"distinct_targets": 24, "safe_full_cases": 8, "callback_work": 203922},
+    "SIMPLICIAL_STAR_EMIT": {"distinct_targets": 24, "safe_full_cases": 8, "callback_work": 206689},
+    "ECP_LB_FULL": {"distinct_targets": 24, "safe_full_cases": 8, "callback_work": 203872},
+    "unresolved_general_strata": [
+      {"family": "NEAR-RANK-DEFICIENT", "dimension": 8, "targets_found": 0, "target_count": 1},
+      {"family": "MULTIROOT-WARPED", "dimension": 8, "targets_found": 0, "target_count": 4},
+      {"family": "MULTIROOT-WARPED", "dimension": 4, "targets_found": 0, "target_count": 4}
+    ]
+  },
+  "candidate_decisions": {
+    "DIRECT_RECT_EMIT": {
+      "status": "REJECT_AFTER_NEGATIVE_T0",
+      "pooled_distinct_targets": {"candidate": 24, "D0_PRESCORED_64": 25, "RECT_ORBIT_BREADTH": 24},
+      "strict_terminal_win_cases": [],
+      "terminal_loss_cases": [2],
+      "equal_work_win_cases": [],
+      "equal_work_loss_cases": [3, 12],
+      "advance_to_multireplicate": false
+    },
+    "SIMPLICIAL_STAR_EMIT": {
+      "status": "REJECT_AFTER_NEGATIVE_T0",
+      "eligible_case_count": 9,
+      "pooled_distinct_targets": {"candidate": 24, "D0_PRESCORED_64": 24, "SIMPLICIAL_UNGUIDED": 24},
+      "strict_terminal_win_cases": [],
+      "terminal_loss_cases": [],
+      "equal_work_win_cases": [],
+      "equal_work_loss_cases": [12],
+      "advance_to_multireplicate": false
+    },
+    "ECP_LB_FULL": {
+      "status": "REJECT_AFTER_NEGATIVE_T0",
+      "pooled_distinct_targets": {"candidate": 24, "D0_PRESCORED_64": 25},
+      "strict_terminal_win_cases": [],
+      "terminal_loss_cases": [2],
+      "equal_work_win_cases": [],
+      "equal_work_loss_cases": [12],
+      "advance_to_multireplicate": false
+    }
+  },
+  "decision": {
+    "selected_discovery_source": "D0_PRESCORED_64_WITH_BOUNDED_GAP_IID_INSURANCE",
+    "production_algorithm_changed": false,
+    "advance_any_point_emitter": false,
+    "tune_from_this_one_replicate_t0": false,
+    "reject_direct_family_as_a_class": false,
+    "reject_simplicial_or_shgo_family_as_a_class": false,
+    "reject_ecp_family_as_a_class": false,
+    "delete_rejected_experiment_local_code": true,
+    "retain": "aggregate, this decision, candidate/source/executable hashes, and ignored raw artifacts",
+    "next_general_failure_class": "hard local convergence and rank instability under the fixed 600-callback cap",
+    "next_axis": "compare preregistered budget-reserved rank-aware Float64 correction and condition-triggered adaptive-precision correction against unchanged E4 on parameterized NearRank, Curved, and MultiRoot strata before changing discovery again",
+    "case_specific_routing": false
+  },
+  "general_conclusion": "Under identical E4 local solves, 64 logical starts, bounded-gap independent-uniform insurance, and fixed callback accounting, none of the three genuinely point-generating mechanisms produced a terminal or equal-work target-recovery win. DIRECT and ECP each lost the difficult Curved d8 witness recovered by D0, while all arms still missed the high-dimensional NearRank instance and both close-root MultiRoot instances. The mechanisms are not promoted or tuned on these cases. D0 remains the discovery source, and the next research cycle changes only the general hard-local-convergence/rank-stability axis."
+}
