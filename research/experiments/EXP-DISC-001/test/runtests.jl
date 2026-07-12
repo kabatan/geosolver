@@ -359,3 +359,15 @@ end
     @test all(method -> stream_contract(method)["column_count"] == 128, methods)
     @test all(method -> stream_contract(method)["prefixes"] == [8, 16, 32, 64, 128], methods)
 end
+
+module StageDDirectEmitterTests
+include("direct_rect_emitter.jl")
+end
+
+module StageDSimplicialEmitterTests
+include("stage_next_simplicial_star.jl")
+end
+
+module StageDECPEmitterTests
+include("ecp_acceptance_emitter.jl")
+end
