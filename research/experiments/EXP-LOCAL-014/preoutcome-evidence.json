@@ -1,0 +1,33 @@
+{
+  "schema": "geotarget.preoutcome-evidence/v1",
+  "experiment_id": "EXP-LOCAL-014",
+  "status": "pending-independent-reaudit",
+  "outcome_observed": false,
+  "independent_static_audit_blockers": 7,
+  "candidates": [
+    "E3-FD2-GUARD-CHART-CPQR3",
+    "E4-EXP-GUARD-SLACK-CPQR"
+  ],
+  "expected_runtime": {
+    "julia": "1.12.6",
+    "python": "3.12.11",
+    "uv": "0.11.24"
+  },
+  "frozen_test_contracts": {
+    "research/experiments/EXP-LOCAL-012/src/ExperimentLocal012.jl": "2b5d36480c17a1dfd7c216b5158251cc910ee9089d0fd5fb766878d963101579",
+    "research/experiments/EXP-LOCAL-012/test/runtests.jl": "5927249fe5ca414dc7c7f71cfdbbc9b760762d6b73b227a1fc38bb5128ed6c0f",
+    "research/experiments/EXP-LOCAL-013/src/ExperimentLocal013.jl": "b273d1c409df75146d43f9cea52ebaf876cc96a29790ba7dcdf8e0d9f8189637",
+    "research/experiments/EXP-LOCAL-013/test/runtests.jl": "5a3b35ad07b50606faec59a0817c29f2e9e5cf0f20716c39ebd821347ad0e70d",
+    "research/experiments/EXP-LOCAL-014/aggregate_wave.py": "9f2cc5903fdfe78b0294b7843a554a5ad22dab7a2b35fdd495d7f23b87bdc527",
+    "research/experiments/EXP-LOCAL-014/run_wave.jl": "12592f0733e8f213ae3eef71648a142db0a39a466a47787dfaaf6facf30fe5de",
+    "research/experiments/EXP-LOCAL-014/test/runtests.jl": "dbb6ee4746b0cbc7002e11d3e14620d5c1afffc697bbaf0b510a2c22cd33356e",
+    "research/experiments/EXP-LOCAL-014/test/test_aggregate_wave.py": "601c9ff86c9cc219f694d823e921e0da7b195c858a643b00d7e293b468934e8f"
+  },
+  "required_commands": [
+    "Julia targeted EXP-LOCAL-012",
+    "Julia targeted EXP-LOCAL-013",
+    "Julia preflight EXP-LOCAL-014",
+    "uv Python 3.12 aggregate synthetic tests",
+    "independent static audit with no case outcome"
+  ]
+}
