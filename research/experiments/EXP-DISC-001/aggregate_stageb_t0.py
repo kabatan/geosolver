@@ -65,6 +65,50 @@ def _digest_document(document: Any) -> str:
     return hashlib.sha256(canonical_json(document).encode("utf-8")).hexdigest()
 
 
+_RUNNER_FLOAT_LITERALS = {
+    struct.pack(">d", 2.0**-20).hex(): "9.5367431640625e-7",
+    struct.pack(">d", 2.0**-14).hex(): "0.00006103515625",
+    struct.pack(">d", 2.0**-8).hex(): "0.00390625",
+    struct.pack(">d", 2.0**-2).hex(): "0.25",
+}
+_RUNNER_FLOAT_SENTINEL = "__GEOTARGET_STAGEB_RAW_FLOAT_"
+
+
+def _runner_digest(document: Any) -> str:
+    """Reproduce JSON3's frozen radius spelling without invoking Julia."""
+    replacements: dict[str, str] = {}
+
+    def normalize(value: Any) -> Any:
+        if isinstance(value, float):
+            bits = struct.pack(">d", value).hex()
+            literal = _RUNNER_FLOAT_LITERALS.get(bits)
+            if literal is None:
+                raise ValueError("runner digest contains an unregistered Float64")
+            token = f"{_RUNNER_FLOAT_SENTINEL}{bits}__"
+            replacements[json.dumps(token)] = literal
+            return token
+        if isinstance(value, str):
+            if value.startswith(_RUNNER_FLOAT_SENTINEL):
+                raise ValueError("runner digest sentinel occurs in source text")
+            return value
+        if isinstance(value, list):
+            return [normalize(child) for child in value]
+        if isinstance(value, dict):
+            if any(str(key).startswith(_RUNNER_FLOAT_SENTINEL) for key in value):
+                raise ValueError("runner digest sentinel occurs in a source key")
+            return {str(key): normalize(child) for key, child in value.items()}
+        if value is None or isinstance(value, (bool, int)):
+            return value
+        raise ValueError("runner digest contains an unsupported JSON value")
+
+    serialized = canonical_json(normalize(document))
+    for token, literal in replacements.items():
+        serialized = serialized.replace(token, literal)
+    if _RUNNER_FLOAT_SENTINEL in serialized:
+        raise ValueError("runner Float64 sentinel replacement was incomplete")
+    return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
+
+
 def _sha_text(value: Any) -> bool:
     return (
         isinstance(value, str)
@@ -542,13 +586,13 @@ def _validate_prearm(
         if parent > SOURCE_ATTEMPTS or quartet.get("parent_generation") != 0:
             raise ValueError("quartet provenance is not from a generation-zero source")
         _validate_quartet_geometry(quartet, lower_bits, upper_bits, dimension)
-    if geometry.get("quartet_provenance_sha256") != _digest_document(raw_quartets):
+    if geometry.get("quartet_provenance_sha256") != _runner_digest(raw_quartets):
         raise ValueError("pre-arm quartet provenance digest differs")
 
     schedule = document.get("schedule")
     if not isinstance(schedule, list) or len(schedule) != ARM_ATTEMPTS:
         raise ValueError("pre-arm schedule must contain 64 slots")
-    if document.get("schedule_sha256") != _digest_document(schedule):
+    if document.get("schedule_sha256") != _runner_digest(schedule):
         raise ValueError("pre-arm schedule digest differs")
     geometry_groups: dict[int, list[dict[str, Any]]] = defaultdict(list)
     for ordinal, slot in enumerate(schedule, start=1):
@@ -1489,10 +1533,10 @@ def self_test() -> dict[str, Any]:
                 "callback_count": 10,
                 "quartet_count": 1,
                 "quartets": [quartet_document],
-                "quartet_provenance_sha256": _digest_document([quartet_document]),
+                "quartet_provenance_sha256": _runner_digest([quartet_document]),
             },
             "schedule": schedule,
-            "schedule_sha256": _digest_document(schedule),
+            "schedule_sha256": _runner_digest(schedule),
             "arm_matrices": matrices,
         }
         prearm_sha = _digest_document({"prearm_fixture": index})
@@ -1651,7 +1695,7 @@ def self_test() -> dict[str, Any]:
         artifact["geometry"]["quartets"][0]["weak_direction_float64_bits"] = [
             bits(0.0), bits(1.0)
         ]
-        digest = _digest_document(artifact["geometry"]["quartets"])
+        digest = _runner_digest(artifact["geometry"]["quartets"])
         artifact["geometry"]["quartet_provenance_sha256"] = digest
         raw[0]["prearm"]["quartet_provenance_sha256"] = digest
 
@@ -1681,6 +1725,9 @@ def self_test() -> dict[str, Any]:
         prearm_documents=prearm_documents,
     )
     safety_hard_kill = unsafe_result["decision"]["status"] == "HARD_KILL"
+    runner_float_digest = _runner_digest(
+        [{"radius": 2.0**-20}, {"radius": 2.0**-14}]
+    ) == "647c497dd63b506bc75203f1bb187e0305617da3ff055fa0d0e685f67add7275"
     assert (
         start_tamper
         and pairing_tamper
@@ -1689,6 +1736,7 @@ def self_test() -> dict[str, Any]:
         and recursive_tamper
         and iid_tamper
         and safety_hard_kill
+        and runner_float_digest
     )
     return {
         "aggregate_success": True,
@@ -1700,6 +1748,7 @@ def self_test() -> dict[str, Any]:
         "pairing_tamper_detected": pairing_tamper,
         "quartet_math_tamper_detected": quartet_math_tamper,
         "recursive_tamper_detected": recursive_tamper,
+        "runner_float_digest_matched": runner_float_digest,
         "safety_hard_kill_detected": safety_hard_kill,
         "schema_version": SELF_TEST_SCHEMA,
         "start_bit_tamper_detected": start_tamper,
