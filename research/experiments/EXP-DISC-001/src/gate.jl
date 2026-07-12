@@ -3,6 +3,7 @@ const _A1_PATH = joinpath(EXPERIMENT_ROOT, "current-policy-amendment.json")
 const _A2_PATH = joinpath(EXPERIMENT_ROOT, "qmc-prefix-amendment.json")
 const _A3_PATH = joinpath(EXPERIMENT_ROOT, "local-champion-dependency-amendment.json")
 const _A4_PATH = joinpath(EXPERIMENT_ROOT, "local-finalist-amendment.json")
+const _A5_PATH = joinpath(EXPERIMENT_ROOT, "execution-environment-amendment.json")
 const DEFAULT_CHAMPION_FREEZE_PATH = joinpath(
     EXPERIMENT_ROOT,
     "local-champion-freeze-record.json",
@@ -33,6 +34,7 @@ function preregistration_bindings()
         "a2" => _A2_PATH,
         "a3" => _A3_PATH,
         "a4" => _A4_PATH,
+        "a5" => _A5_PATH,
     )
     for (label, path) in paths
         isfile(path) || throw(
@@ -104,7 +106,7 @@ function _validate_preregistration_bindings(record)
     Set(String.(keys(observed_raw))) == Set(keys(expected)) || throw(
         DiscoveryGateError(
             :preregistration_binding_mismatch,
-            "freeze record must bind exactly original, a1, a2, a3 and a4",
+            "freeze record must bind exactly original, a1, a2, a3, a4 and a5",
         ),
     )
     for (label, digest) in expected

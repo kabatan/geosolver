@@ -35,10 +35,17 @@ only a public numerical capability count. A4 preserves the EXP-LOCAL-003/004
 fallback decisions as upstream evidence and does not change a proposal stream,
 budget, metric, gate or tuning round.
 
-The original card and all four amendments form one preregistration bundle.
+`execution-environment-amendment.json` (A5) adds the already-pinned
+`GeoTargetBase` package as a direct project dependency before any proposal
+materialization. No package or algorithm version changes. This lets the T0
+runner reuse the audited DISC artifact/corpus code and the frozen E1/E4 source
+in one environment instead of maintaining a duplicate cross-environment
+reader.
+
+The original card and all five amendments form one preregistration bundle.
 No EXP-DISC-001 candidate input, assessor input or proposal matrix may be
 materialized until the champion freeze record exists. Every downstream
-artifact must record the original, A1, A2, A3, A4 and champion-record hashes plus
+artifact must record the original, A1, A2, A3, A4, A5 and champion-record hashes plus
 the exact selected local-solver source and canonical-options hashes.
 
 The amendment was written after a small non-gating six-instance diagnostic.
