@@ -1,0 +1,112 @@
+{
+  "schema_version": "geotarget.discovery-t0-preregistration/v1",
+  "experiment_id": "EXP-DISC-001",
+  "stage": "t0-source-screen",
+  "status": "preregistered",
+  "materialization_authorized": true,
+  "outcome_execution_authorized": false,
+  "written_on": "2026-07-12",
+  "source_revision": "bd6a861ab350e7d5ec256e4d583b506db220a56a",
+  "evidence_boundary": {
+    "proposal_matrices_exist": false,
+    "input_manifest_exists": false,
+    "solver_outcomes_observed": false,
+    "purpose": "One-replicate implementation and mechanism screen only; no source selection or production promotion."
+  },
+  "local_freeze_sha256": "1f61c9fcd51b598b9696d4d153fe026db43faa25e673e8f7176af5ee2c0de673",
+  "root_seed": "743883355336172525",
+  "root_seed_derivation": {
+    "phrase": "EXP-DISC-001/T0/preoutcome-v1",
+    "sha256": "0a52cdf86d2363ed80ba793af527f59f2d43654fea8feb75aced1073ccc824f1",
+    "conversion": "unsigned big-endian integer from the first eight digest bytes"
+  },
+  "replicate_count": 1,
+  "methods": [
+    "D0-IID-ALL",
+    "D1-SOBOL-ALL",
+    "D-HALTON-ALL",
+    "D-CURRENT-COUNTER-HALTON-MIX",
+    "D2O-RQMC-OWEN-ALL",
+    "D2M-RQMC-MATOUSEK-ALL",
+    "D3-OWEN-MIXED-25IID-75RQMC"
+  ],
+  "design": {
+    "case_count": 6,
+    "family_count": 1,
+    "configuration_count": 30,
+    "target_count": 17,
+    "proposal_columns": 128,
+    "proposal_prefixes": [8, 16, 32, 64, 128],
+    "callback_thresholds": [600, 1200, 2400, 4800],
+    "attempt_callback_cap": 600,
+    "local_policy": "frozen E4 with static E1 guardless route",
+    "proposal_only_difference": true,
+    "truth_visible_to_proposal_or_local_runtime": false,
+    "lab_confirmation_512_768": false,
+    "complete_adaptive_h0_control_in_scope": false
+  },
+  "case_sources": [
+    {"case_id": "M0-ANALYTIC-006", "path": "benchmarks/generated/m0-analytic-seed-manifest.json", "index": 6},
+    {"case_id": "M0-ANALYTIC-007", "path": "benchmarks/generated/m0-analytic-seed-manifest.json", "index": 7},
+    {"case_id": "MULTIROOT-WARPED-development-01", "path": "research/experiments/EXP-LOCAL-004/t2-input-manifest.json", "index": 31},
+    {"case_id": "MULTIROOT-WARPED-development-02", "path": "research/experiments/EXP-LOCAL-004/t2-input-manifest.json", "index": 32},
+    {"case_id": "MULTIROOT-WARPED-development-03", "path": "research/experiments/EXP-LOCAL-004/t2-input-manifest.json", "index": 33},
+    {"case_id": "MULTIROOT-WARPED-development-05", "path": "research/experiments/EXP-LOCAL-004/t2-input-manifest.json", "index": 35}
+  ],
+  "qmc_claim_boundary": {
+    "D1-SOBOL-ALL": "The pinned implementation takes an aligned power-of-two Sobol block. Every recorded prefix must pass an independent minimal-t audit before a net label is used.",
+    "D2O-RQMC-OWEN-ALL": "Finite-n nested-uniform-scramble gain claims are conditional on implementation fit and the per-prefix minimal-t audit; no claim that RQMC beats IID is made.",
+    "D2M-RQMC-MATOUSEK-ALL": "Per-prefix net balance is audited, but nested-uniform Owen variance claims are not transferred automatically.",
+    "D3-OWEN-MIXED-25IID-75RQMC": "The 96-point RQMC subset is not a power-of-two net and receives no digital-net or gain-coefficient claim."
+  },
+  "decision_boundary": {
+    "safety_kill": "Any false target, assessor unsafe result, callback/report mismatch, callback-cap violation, exception, prefix/checksum drift or IID-service violation blocks that implementation from the formal Stage-A run.",
+    "performance_role": "Recall and work are diagnostic signals only. One randomized replicate and one family cannot promote, reject for efficacy, tune or select a source.",
+    "formal_next_gate": "A source comparison requires the original 10 development replicates, unrelated families, frozen maximum-prefix matrices and the existing promotion/noninferiority gates.",
+    "tuning_rounds_consumed": 0
+  },
+  "execution_contract": {
+    "one_case_per_process": true,
+    "maximum_case_processes": 16,
+    "assigned_cpus": "case i uses physical CPU (i-1) mod 16",
+    "julia_threads": 1,
+    "blas_threads": 1,
+    "omp_threads": 1,
+    "mkl_threads": 1,
+    "solver_worker_count": 1,
+    "within_case_parallelism": false,
+    "wall_time_role": "diagnostic only"
+  },
+  "source_sha256": {
+    "benchmarks/generated/m0-analytic-seed-manifest.json": "dc6888deed46096d1f62284eb9dddf54aa9fe0eac8c5cf7958293b2c52cae667",
+    "julia/GeoTargetBenchmarks/src/GeoTargetBenchmarks.jl": "89da16265916699e68fb650fe9d85d577c2553fe0e9a7c35394ffa5bf9f6ebb9",
+    "julia/GeoTargetBenchmarks/src/common.jl": "8764571a4466257d8ac6efea12f5eb54fa669889e034502a83a40891bcafa67c",
+    "julia/GeoTargetBenchmarks/src/multiroot_warped.jl": "7ad879486518dd381f5f9947211fd973979b9f8f84d5fe70aed0dd94f5320a72",
+    "julia/GeoTargetBenchmarks/src/replay.jl": "8a558f282b44740f0a12ca75ffeee0e38063684270d8b7feba8d06f54f1321dc",
+    "julia/GeoTargetBenchmarks/src/solver_experiment.jl": "caeec1f0f802d5a5095141394a38b5b90c886c05c1d81f9c31a71055a09c08a5",
+    "julia/GeoTargetBenchmarks/src/types.jl": "ae57ce68b655a014a24ec07c0cf5c37eda9f53022f0495449ccab3b5a37027b6",
+    "julia/GeoTargetCore/src/GeoTargetCore.jl": "973c8f0126eadf42fabaf58e3f51ca9aeb55bd73f2f239fa1c2b506299af7339",
+    "julia/GeoTargetCore/src/local_solver.jl": "1e30c0b0db562fbbba8958f0813c026702da9894ca0074f7a5d94933cfbc53c0",
+    "julia/GeoTargetCore/src/oracle.jl": "902c5ef09686e4fa3f9ba1bbcd3e2e92fe8c52f9973048a579ac84f99cea68c2",
+    "julia/GeoTargetCore/src/proposal_engine.jl": "8b5d8718a810b9af1db3356d12651e1b2ed46455dd897c5a228035a61a34b66b",
+    "julia/GeoTargetCore/src/search_policy.jl": "161f76e82113f4bffb529ca7faa285132f3e070403ea58e9103d1097a0fea595",
+    "research/experiments/EXP-DISC-001/Manifest.toml": "8bc02c1e18ae14bddb253b66f7e4ee9304c9a1e923d90ba76a24737c33e3c052",
+    "research/experiments/EXP-DISC-001/Project.toml": "25debd02278172936bc6974e5e041751e1441c9687bfb8f449f8ed14b46d125d",
+    "research/experiments/EXP-DISC-001/aggregate_t0.py": "1c36917a53702e8feb300dab5c3f06652ea8d12262922391b8a32f629bc26944",
+    "research/experiments/EXP-DISC-001/local-champion-freeze-record.json": "1f61c9fcd51b598b9696d4d153fe026db43faa25e673e8f7176af5ee2c0de673",
+    "research/experiments/EXP-DISC-001/materialize_t0.jl": "aa94916ac97363d87de199d66e64f0b8961f873fc1beb7de2bde355da0f1646c",
+    "research/experiments/EXP-DISC-001/run_t0_outcomes.jl": "2908c4763de14c12fb165589a38636cd3b2c6c88b11dd1c9454b67026adb1c3b",
+    "research/experiments/EXP-DISC-001/src/ExperimentDisc001.jl": "65e6bbfe0246819ae086c2b03267d2623fd01998a2b0cfc1690b9f5fde2a3faa",
+    "research/experiments/EXP-DISC-001/src/gate.jl": "dac5b7931c5ced2f2a146192af0d49f75b58f0c6a3b56dc5c66b066a09283538",
+    "research/experiments/EXP-DISC-001/src/matrix_artifact.jl": "d378b4ba2fa2576a19154207e0f81d8beaee87fe0c2a717e708b9e9bb3e0e199",
+    "research/experiments/EXP-DISC-001/src/runner_contract.jl": "c7a6f41ad40f787d8da7a4a03e489d2707964e8771e9698da404ff95d4b1d068",
+    "research/experiments/EXP-DISC-001/src/streams.jl": "62d18d7455c33d0e3367dfccfeb0b0c5dea1b24d26a5b4d084b0d25e0c977f77",
+    "research/experiments/EXP-DISC-001/src/t0_corpus.jl": "7f75f613d52350e2aca8ff0a4349aa5095ef9466ec2740fd1c08d152132aab18",
+    "research/experiments/EXP-DISC-001/src/t0_materialization.jl": "a346e59fb9f4741ea1743294547543f9f97509c2019338e13f930390c5fa4b3f",
+    "research/experiments/EXP-DISC-001/test/runtests.jl": "716eb45973080b3ce225d1bf53d51aca427a21e16a480e0e4566197ae53aa953",
+    "research/experiments/EXP-LOCAL-004/t2-input-manifest.json": "aa5da6b9655ebe97f5ae8832911cc253301cb64916e0f23f5637b645905bcd81",
+    "research/experiments/EXP-LOCAL-010/src/ExperimentLocal010.jl": "7be8b04852371b7b7846713b3f6066324c84c9bfcef1ec82ceb5a677e7b29950",
+    "research/experiments/EXP-LOCAL-013/src/ExperimentLocal013.jl": "b273d1c409df75146d43f9cea52ebaf876cc96a29790ba7dcdf8e0d9f8189637"
+  },
+  "production_connection": false
+}
