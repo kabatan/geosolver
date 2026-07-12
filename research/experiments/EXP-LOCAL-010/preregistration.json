@@ -1,0 +1,89 @@
+{
+  "schema": "geotarget.algorithm-preregistration/v1",
+  "experiment_id": "EXP-LOCAL-010-011-T0",
+  "state": "preregistered-no-outcome",
+  "outcome_execution_authorized": false,
+  "research_question": "Does a two-resolution, certified endpoint correction improve the fixed common-assessor result, rather than merely adding callback work after the same LM-QR trajectory?",
+  "common_base": {
+    "variant": "prod-tol-120x600",
+    "max_iterations": 120,
+    "total_callback_cap_per_attempt": 600,
+    "residual_tolerance": 1e-12,
+    "reuse_base_observation": true
+  },
+  "variants": [
+    "prod-tol-120x600",
+    "E1-FD2-CPQR3",
+    "E1-FD2-CPQR3-SHADOW",
+    "E2-FD2-SVD3",
+    "E2-FD2-SVD3-SHADOW"
+  ],
+  "cpqr_candidate": {
+    "eligibility": "finite, in bounds, semantics valid, and declared-scale residual linf <=1e-12",
+    "coordinates": "finite-box midpoint/half-range normalized u",
+    "step": "cbrt(eps(Float64))*max(1,abs(u_j))",
+    "jacobians": "h and h/2; central or a common second-order same-side one-sided stencil",
+    "stencil_failure": "UNKNOWN and drop the otherwise qualified endpoint",
+    "eta": "opnorm(J_h-J_h2,2) plus a floating-rounding bound",
+    "rank_gate": "m>=n and min(sigma_min(J_h),sigma_min(J_h2))>2eta",
+    "linear_solve": "column-pivoted QR at both resolutions",
+    "backward_error_gate": "max(norm(p_h),norm(p_h2),norm(p_h-p_h2))<=1e-6",
+    "line_search": "finer step with alpha in [1,1/2,1/4,1/8], bounds/semantics-valid Armijo",
+    "maximum_corrections": 3,
+    "final_gate": "after any accepted correction repeat the h/h2 proof; when the endpoint is unchanged the current proof is the final proof; always explicitly recheck finite/bounds/semantics-signature/residual-linf",
+    "unknown_policy": "drop residual-qualified base endpoint",
+    "noneligible_policy": "pass through base endpoint"
+  },
+  "shadow_contract": "Each shadow executes the identical base/correction trajectory and callback work but returns the original LM-QR endpoint.",
+  "corpus": {
+    "source": "GeoTargetSolverLab.representative_problems",
+    "case_count": 9,
+    "maximum_saved_starts": 64,
+    "paired_start_order": true
+  },
+  "execution": {
+    "case_cumulative_callback_thresholds": [600, 1200, 2400, 4800],
+    "threshold_policy": "snapshot after the first completed attempt crossing each threshold",
+    "stop_policy": "stop a case/variant at cumulative callbacks >=4800 or 64 starts",
+    "primary_work": "earliest suffix-stable common-assessor safe-full callbacks; miss or >4800 right-censored to 4800",
+    "sharding": "one representative case per process; --case-index=1..9; at most 9 processes pinned to CPU 0..8",
+    "case_internal_threads": 1,
+    "wall_time_role": "diagnostic only"
+  },
+  "promotion_gate": {
+    "candidate_vs_own_shadow": {
+      "callback_identity": "all paired attempts must report identical observed callback counts",
+      "cpqr_safety": "CPQR must have fewer unsafe common-assessor endpoints than its shadow, or both must have zero",
+      "svd_safety": "SVD must have zero unsafe endpoints and must strictly remove at least one unsafe endpoint returned by its shadow, as required by EXP-LOCAL-011",
+      "safe_full": "candidate must be noninferior"
+    },
+    "candidate_vs_primary_control": {
+      "qualified_target_recall_delta_minimum": -0.02,
+      "right_censored_callback_work_ratio_maximum": 1.2,
+      "critical_family_target_recall_delta_minimum": -0.02
+    },
+    "minimum_unrelated_structures_with_same_direction": 3,
+    "active_structure_definition": "a family counts only if at least one paired candidate endpoint differs from its shadow and either drops an unsafe shadow endpoint or remains common-assessor qualified, Gold-consistent, unambiguous, and matched to the same target as the shadow",
+    "critical_families": ["NEAR-RANK-DEFICIENT", "TANGENT-CIRCLE-LINE", "MULTIROOT-WARPED", "STRICT-GUARD-BOUNDARY"],
+    "cpqr_svd_disagreement": "report every endpoint class, safety, recall, or work disagreement; do not silently select by result",
+    "zero_required": "all global zero-required safety/accounting conditions"
+  },
+  "counterexamples": [
+    "singular Jacobian",
+    "positive-dimensional manifold",
+    "strict-guard semantics-validity stencil instability",
+    "invalid strict-boundary base pass-through",
+    "declared row scaling",
+    "signed coordinate permutation",
+    "callback-cap exhaustion"
+  ],
+  "zero_required": [
+    "assessor-qualified Gold inconsistency",
+    "reported-accepted canonical invalid",
+    "evaluation-count mismatch",
+    "callback-cap violation",
+    "unhandled exception",
+    "truth leak"
+  ],
+  "promotion_scope": "A passing T0 authorizes only a separately frozen T1/T2 decision; it is not production promotion."
+}
