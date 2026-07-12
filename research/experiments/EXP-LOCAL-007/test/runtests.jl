@@ -3,9 +3,11 @@ using Test
 
 const REPOSITORY_ROOT = normpath(joinpath(@__DIR__, "..", "..", "..", ".."))
 
-include(joinpath(@__DIR__, "..", "run_t1.jl"))
+include(joinpath(@__DIR__, "..", "run_t2.jl"))
 using .ExperimentLocal007
 using .ExperimentLocal007T1Policy
+using .ExperimentLocal007T2Corpus
+using .ExperimentLocal007T2Policy
 
 function fixture_case(
     dimension,
@@ -41,6 +43,158 @@ function fixture_case(
     )
 end
 
+function t2_gate_fixture(;
+    candidate_safe_delta=0.0,
+    improved_families=String[],
+    candidate_work_ratio=0.7,
+    critical_delta=0.0,
+    safety_violation_count=0,
+    nonsquare_violation_count=0,
+)
+    families = collect(T2_APPLICABLE_FAMILIES)
+    control_safe = Dict(family => 0.5 for family in families)
+    candidate_safe = Dict(
+        family => control_safe[family] +
+                  (family in improved_families ? candidate_safe_delta : 0.0) for
+        family in families
+    )
+    control_work = Dict(family => 100.0 for family in families)
+    candidate_work = Dict(family => 100.0 * candidate_work_ratio for family in families)
+    control_critical = Dict(stratum => 0.5 for stratum in T2_CRITICAL_STRATA)
+    candidate_critical = copy(control_critical)
+    candidate_critical[first(T2_CRITICAL_STRATA)] += critical_delta
+    return evaluate_t2_promotion_gate(;
+        control_family_safe_full=control_safe,
+        candidate_family_safe_full=candidate_safe,
+        control_family_callback_work=control_work,
+        candidate_family_callback_work=candidate_work,
+        control_critical_safe_full=control_critical,
+        candidate_critical_safe_full=candidate_critical,
+        control_callback_work=700.0,
+        candidate_callback_work=700.0 * candidate_work_ratio,
+        candidate_safety_violation_count=safety_violation_count,
+        nonsquare_inapplicability_violation_count=nonsquare_violation_count,
+    )
+end
+
+@testset "lightweight T2 corpus, runner and promotion gate" begin
+    problems = t2_problems()
+    @test length(problems) == 48
+    @test T2_INSTANCES_PER_FAMILY == 6
+    @test T2_START_COUNT == 32
+    @test T2_START_PREFIXES == (8, 16, 32)
+    @test validate_t2_grid(problems)
+    @test validate_t2_corpus_checksum(problems) == T2_CORPUS_SHA256
+    @test validate_t2_historical_records(problems) == T2_HISTORICAL_MANIFEST_SHA256
+    @test count(p -> p.dimension == p.residual_dimension, problems) == 42
+    @test count(p -> p.dimension != p.residual_dimension, problems) == 6
+    @test sum(length(problem.gold_targets) for problem in problems) == 88
+    @test [only(shard_problems(problems, index, 48)).instance_id for index in 0:47] ==
+          [problem.instance_id for problem in problems]
+
+    mktempdir() do directory
+        output = joinpath(directory, "shard.json")
+        parsed = parse_t2_arguments([
+            "--shard-index=47",
+            "--shard-count=48",
+            "--output=$output",
+        ])
+        @test parsed[:shard_index] == 47
+        @test parsed[:shard_count] == 48
+        @test parsed[:output] == output
+    end
+    @test_throws ErrorException parse_t2_arguments(String[])
+    @test_throws ErrorException parse_t2_arguments(["--shard-index=48", "--output=x"])
+    @test_throws ErrorException parse_t2_arguments([
+        "--shard-index=0",
+        "--shard-count=47",
+        "--output=x",
+    ])
+    @test Tuple(variant.name for variant in t2_variants()) ==
+          ("prod-tol-120x600", "prod-options-250x2000", "SCIPY-HYBR")
+
+    families = collect(T2_APPLICABLE_FAMILIES)
+    path_a = t2_gate_fixture(
+        candidate_safe_delta=0.2,
+        improved_families=families[1:3],
+        candidate_work_ratio=1.0,
+    )
+    @test path_a["performance_path_a"]
+    @test length(path_a["path_a_supporting_families"]) == 3
+    @test path_a["passed"]
+    path_b = t2_gate_fixture(candidate_work_ratio=0.79)
+    @test path_b["performance_path_b"]
+    @test path_b["passed"]
+    @test t2_promotion_gate_contract()["callback_work_miss_value"] == 4_800
+    @test !t2_gate_fixture(
+        candidate_work_ratio=0.79,
+        critical_delta=-0.03,
+    )["passed"]
+    @test !t2_gate_fixture(
+        candidate_work_ratio=0.79,
+        safety_violation_count=1,
+    )["passed"]
+    @test !t2_gate_fixture(
+        candidate_work_ratio=0.79,
+        nonsquare_violation_count=1,
+    )["passed"]
+
+    preregistration = parse_protocol_json(read(T2_PREREGISTRATION_PATH, String))
+    @test preregistration["state"] == "preregistered-no-outcome"
+    @test preregistration["corpus"]["corpus_sha256"] == T2_CORPUS_SHA256
+    @test preregistration["execution"]["maximum_concurrent_processes"] == 16
+    @test preregistration["execution"]["saved_start_prefixes"] == [8, 16, 32]
+    @test !isfile(joinpath(@__DIR__, "..", "formal-environment.json"))
+    @test !isfile(joinpath(@__DIR__, "..", "run_t2_formal.py"))
+end
+
+function fixture_t2_variant(name; inapplicable=false)
+    return SolverVariant(name, (case, start) -> SolverAttemptOutcome(
+        nothing;
+        status=inapplicable ? "INAPPLICABLE_NONSQUARE" : "FIXTURE_NO_ENDPOINT",
+        evaluations=0,
+    ))
+end
+
+@testset "T2 one-case paired-start and typed nonsquare contract" begin
+    problem = generate(RedundantOverdeterminedParams(
+        dimension=2,
+        redundancy=1,
+        dependency_error=0.0,
+        dependency_seed=91_001,
+        start_seed=91_002,
+        start_count=32,
+    ))
+    fixture_variants = SolverVariant[
+        fixture_t2_variant("prod-tol-120x600"),
+        fixture_t2_variant("prod-options-250x2000"),
+        fixture_t2_variant("SCIPY-HYBR"; inapplicable=true),
+    ]
+    run = run_solver_experiment(
+        [problem],
+        fixture_variants;
+        prefixes=T2_START_PREFIXES,
+        evaluation_limit=T2_RUNNER_EVALUATION_LIMIT,
+    )
+    contract = validate_t2_shard_contract(run)
+    @test contract["attempt_count"] == contract["pairing_count"] == 96
+    @test contract["summary_count"] == 9
+    @test contract["all_variant_accounting_valid"]
+    document = solver_experiment_document(run)
+    attach_t2_assessor_work!(document, problem, fixture_variants, run.attempts)
+    @test all(
+        summary -> summary["right_censored_assessor_safe_full_work"] == 4_800,
+        filter(summary -> summary["prefix"] == 32, document["summaries"]),
+    )
+    @test all(
+        summary -> summary["assessor_safe_full_event_by_4800"] == false,
+        filter(summary -> summary["prefix"] == 32, document["summaries"]),
+    )
+    @test all(
+        summary -> !haskey(summary, "right_censored_assessor_safe_full_work"),
+        filter(summary -> summary["prefix"] != 32, document["summaries"]),
+    )
+end
 function assessor_attempt(
     start_index,
     target,

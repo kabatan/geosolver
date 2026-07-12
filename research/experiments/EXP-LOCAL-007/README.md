@@ -1,6 +1,6 @@
 # EXP-LOCAL-007 — square-system Powell hybrid comparator
 
-Status: **clean T0 survived; representative-nine T1 preregistered; no T1 outcome exists**
+Status: **clean T1 survived; lightweight 48-case T2 preregistered; no T2 outcome exists**
 
 This experiment-local candidate evaluates SciPy 1.18.0
 `scipy.optimize.root(method="hybr")`, the MINPACK HYBRD modified Powell hybrid
@@ -146,6 +146,22 @@ every recorded prefix; truth leak is checked from candidate/runner source.
 Control violations remain part of the control safe-full and work baseline but
 are not added to the candidate's zero count. This matches the audited T0 gate.
 
+## Audited T1 decision
+
+Nine clean one-case shards at revision
+`b37f6bb60ed8682aed41db7153db376fc23236e6` produced 2,997 attempts and 108
+summaries. Independent reconstruction found no safety, accounting, runner-cap
+or typed-inapplicability violation. On the eight square-applicable cases,
+family-equal common-assessor safe-full rose from `0.5714285714` to
+`0.8571428571`; right-censored callback work fell from 19,675 to 9,834, a
+ratio of `0.4998221093`. Callback-only Path B repeated in six unrelated
+families with no critical-stratum regression.
+
+The authoritative record is [`t1-decision.json`](t1-decision.json). It
+authorizes only the frozen T2 generalization study. Both variants still found
+zero of the six MultiRoot targets, and HYBR remained typed-inapplicable on the
+public nonsquare case; neither limitation is hidden by the T1 decision.
+
 ## Locked environment and targeted tests
 
 Python 3.12.11 and SciPy 1.18.0 are locked by `python/uv.lock`; Julia 1.12.6 and
@@ -185,11 +201,9 @@ env JULIA_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \
 Launch each zero-based case shard exactly once; this implementation creates no
 additional T0 outcome.
 
-## Formal T1 runner — preregistered, not yet launched
+## T1 runner — completed and retained for audit
 
-The first T1 outcome must come from a clean commit containing this README,
-`t0-decision.json`, `t1-preregistration.json`, `run_t1.jl`, and
-`src/T1Policy.jl`. For one shard, use:
+The completed T1 used this one-case shard command shape:
 
 ```bash
 env JULIA_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \
@@ -200,12 +214,49 @@ env JULIA_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \
   --shard-index=0 --shard-count=9
 ```
 
-Launch indices `0..8` exactly once on distinct physical cores with the same
-thread settings and separate output paths. Before any decision, an agent that
-did not implement the candidate must reconstruct all metrics and gates from
-the nine raw artifacts.
+Indices `0..8` ran on distinct physical cores with the same thread settings and
+separate output paths. An agent that did not implement the candidate rebuilt
+the metrics and gate from the nine raw artifacts.
 
-If T1 rejects the candidate, delete the adapter, bridge, dependency locks, and
+## Lightweight 48-case T2
+
+[`t2-preregistration.json`](t2-preregistration.json) fixes eight existing
+development families, six cases per family, 32 paired starts, saved-start
+prefixes `8/16/32`, and the three unchanged variants. The canonical corpus
+checksum is
+`9b17d99a33b076833902b14d19c9b7a8f490f78d15e600c47fe068668d139e26`;
+all 48 cases also match the pre-T1 EXP-LOCAL-004 manifest. The six redundant
+overdetermined cases remain explicit typed-inapplicability checks outside the
+square performance denominator. MultiRoot remains both a critical stratum and
+an independently reported diagnostic.
+
+`run_t2.jl` owns exactly one case and records 96 variant-start attempts plus
+nine prefix summaries. `run_t2_campaign.py` is the only outer driver and
+aggregator: it runs at most 16 independent processes pinned to physical cores
+0–15, with Julia, BLAS, OpenMP and MKL fixed to one thread. It verifies the 48
+disjoint shards, callback caps, paired starts, safe-full, target recall,
+nonsquare behavior and the preregistered callback-only promotion gate. Wall
+time remains diagnostic. It rebuilds safe-full, target recall and primary work
+from raw attempts and rejects disagreement with the Julia summaries. Primary
+work is per-case suffix-stable common-assessor safe-full callback work, with
+misses right-censored at 4,800; it is not the total cost of forcing all 32
+starts. A short independent source audit supplies only the truth-leak pass/fail
+input; there is no source-authorization protocol, runtime tree seal,
+artifact-custody service or publication launcher.
+
+After these files are committed, run the campaign and aggregation as follows:
+
+```bash
+python3 research/experiments/EXP-LOCAL-007/run_t2_campaign.py run --jobs=16
+python3 research/experiments/EXP-LOCAL-007/run_t2_campaign.py aggregate \
+  --truth-leak-audit=pass
+```
+
+T2 may promote HYBR only as a square-capability local mechanism study. It does
+not itself authorize a production dependency or claim to solve global
+MultiRoot discovery. A passing T2 triggers a native implementation wave.
+
+If T2 rejects the candidate, delete the adapter, bridge, dependency locks, and
 candidate-specific knobs. Retain only the compact audited decisions, artifact
 hashes, bounded negative-result entry, and the mathematical counterexample
 needed to prevent repetition.
