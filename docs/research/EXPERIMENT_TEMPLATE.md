@@ -15,11 +15,20 @@ explicit `hypothesis` hyperparameter. Promotion and kill criteria are arrays of
 independently checkable statements; a prose claim such as "looks faster" is not
 a gate.
 
-Required sequence: literature/assumption matrix, preregistration, minimum
-success and counterexample cases, factorial family, paired same-budget run,
-ablation, development tuning (at most twice), parameter freeze, one locked
-validation, then promote/specialize/reject. Rejected code is deleted; its card,
-compact results, checksums and counterexamples remain.
+Required sequence: literature/assumption matrix, a source-to-code conformance
+trace, reference/adapted/control separation, minimum-success and activation
+fixtures, preregistration, counterexample cases, factorial family, paired
+same-budget run, ablation, development tuning (at most twice), parameter
+freeze, one locked validation, then promote, specialize or causally classify.
+
+A failed performance gate stops promotion but does not by itself reject the
+mechanism. Before cleanup, an independent reviewer must distinguish an invalid
+run, implementation defect, unexercised mechanism, limited applicability,
+budget/parameter limitation, bounded mechanism negative, or an inconclusive
+result. Only an independently reproduced bounded mechanism negative authorizes
+deletion of its implementation. Other classifications retain a versioned
+repair or an explicit reopen gate. The compact result, classification, source
+hashes and counterexamples always remain.
 
 The first three canonical cards are:
 

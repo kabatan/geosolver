@@ -6,8 +6,11 @@ The machine-readable ledger is
 Initial entries are explicitly marked `prior_unreproduced`: they motivate
 counterexamples but are not accepted truth in the clean repository. An entry
 moves to `reproduced` only after its problem generator, run manifest, compact
-result and checksum are recorded here. A locked-validation result is never
-silently converted into a tuning case.
+result and checksum are recorded here. A reproduced performance loss remains
+scoped to the frozen adapter and configuration until causal closure also
+verifies source/official conformance, mechanism activation, applicability,
+fair budget/parameterization and scorer/accounting validity. A
+locked-validation result is never silently converted into a tuning case.
 
 The ledger prevents recurring mistakes including:
 
@@ -23,5 +26,11 @@ The ledger prevents recurring mistakes including:
 8. treating a post-outcome safety replay as a substitute for a formal run that
    stopped before its control and ABBA segments.
 
-Rejected production code is deleted, while the card, counterexample generator,
-compact result, decision and artifact hashes remain.
+Production promotion stops immediately on a safety or performance gate. Code
+is deleted only after the result is independently classified as a bounded
+mechanism negative. Implementation defects are repaired under a new version;
+unexercised, applicability-limited and inconclusive candidates keep explicit
+reopen gates. The ledger must never expand a frozen-configuration result into
+a method-family rejection. After authorized cleanup, the card, counterexample
+generator, compact result, causal classification, source hashes and artifact
+hashes remain.

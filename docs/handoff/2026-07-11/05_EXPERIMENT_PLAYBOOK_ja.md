@@ -361,6 +361,9 @@ Failure observation:
 Hypothesis:
 Control:
 Candidate and single changed mechanism:
+Primary/official source and source-to-code trace:
+Reference / GeoTarget-adapted / mechanism-off control:
+Minimum-success and mechanism-activation fixtures:
 Runtime-visible inputs:
 Cases / latent clusters:
 Prefixes / budgets / seeds:
@@ -371,7 +374,11 @@ Promotion gate:
 Maximum tuning rounds: 2
 Raw artifact path and SHA-256:
 Result:
-Decision: reject / retain diagnostic / advance
+Cause classification: invalid run / implementation defect / unexercised /
+  applicability limited / budget-parameter limited / bounded negative /
+  inconclusive / advance
+Independent causal audit:
+Decision: repair / retain diagnostic with reopen gate / bounded reject / advance
 Code removed or promoted:
 ```
 
@@ -390,15 +397,16 @@ Code removed or promoted:
 5. `feat(research): add truth-blind TR reference variant`
 6. clean HEAD で T0/T1 run
 7. `research(alg): record ALG-LAB-001 T1 decision`
-8. reject なら candidate/dependency を削除する cleanup commit、advance なら T2 card update
+8. performance 不振なら independent causal-closure commit、advance なら T2 card update
+9. bounded mechanism negative と確定した場合だけ candidate/dependency を削除する cleanup commit
 
 harness change と solver mechanism change を同 commit にしない。gating run は clean HEAD で行う。
 
 parallel work:
 
-- agent A: literature/assumptions、read-only
-- agent B: candidate implementation + targeted tests
-- agent C: scorer/analysis independent review
+- agent A: literature/assumptions、reference conformance、read-only
+- agent B: candidate implementation + minimum-success/activation tests
+- agent C: scorer/analysis と outcome 後の independent causal review
 - root: integration、run、decision
 
 同 file の同時 edit は避ける。短命 branch/worktree が必要なら `codex/alg-lab-001-*` とし、統合後削除する。
@@ -464,7 +472,12 @@ powershell -File scripts/ci.ps1
 ## 16. rollback
 
 - candidate は control の public default を直接上書きせず、research variant として始める。
-- negative なら code/dependency/knob を削除し、decision と raw hash だけ残す。
+- performance gate 不通過だけでは code を削除しない。source/official conformance、
+  mechanism activation、applicability、budget/parameter、measurement を独立監査する。
+- bounded mechanism negative の場合だけ code/dependency/knob を削除し、decision、
+  causal classification、source/raw hash、counterexample を残す。
+- implementation defect は新 version で修復し、unexercised/applicability-limited/
+  inconclusive は family rejection にせず reopen gate を残す。
 - production integration は一 commit に閉じ、直前 tag へ容易に戻せるようにする。
 - public result schema/DSL/plugin ABI を変更する candidate は停止し、owner へ design decision を提示する。
 - `EXP-LOCAL-003` formal/AppContainer はこの playbook の依存ではない。
