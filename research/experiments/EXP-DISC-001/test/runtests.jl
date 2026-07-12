@@ -1,4 +1,5 @@
 using ExperimentDisc001
+using GeoTargetBenchmarks
 using GeoTargetCore
 using JSON3
 using SHA
@@ -166,6 +167,68 @@ end
     @test !occursin("instance_id", lowercase(source))
 end
 
+@testset "frozen MultiRoot T0 corpus and proposal replacement" begin
+    problems = t0_problems()
+    @test length(problems) == 6
+    @test sum(length(problem.gold_targets) for problem in problems) == 17
+    @test [problem.dimension for problem in problems] == [4, 4, 2, 4, 8, 4]
+    @test [length(problem.gold_targets) for problem in problems] == [4, 2, 1, 2, 4, 4]
+    @test [recipe.source_index for recipe in ExperimentDisc001.T0_RECIPE] ==
+          [6, 7, 31, 32, 33, 35]
+
+    problem = first(problems)
+    domain = t0_proposal_domain(problem)
+    @test domain.lower == Tuple(problem.lower_bounds)
+    @test domain.upper == Tuple(problem.upper_bounds)
+    midpoint = (problem.lower_bounds .+ problem.upper_bounds) ./ 2
+    proposals = repeat(reshape(midpoint, :, 1), 1, MATRIX_COLUMN_COUNT)
+    replacement = t0_problem_with_proposals(problem, proposals)
+    @test replacement.saved_starts == proposals
+    @test GeoTargetBenchmarks.verify_replay_material(replacement)
+    @test GeoTargetBenchmarks.replay_checksum(replacement) !=
+          GeoTargetBenchmarks.replay_checksum(problem)
+    @test size(problem.saved_starts, 2) == 32
+end
+
+@testset "T0 materialization contract is pre-outcome and side-effect free" begin
+    mktempdir() do directory
+        source_relative = "research/experiments/EXP-DISC-001/src/t0_corpus.jl"
+        registration = Dict{String,Any}(
+            "schema_version" => "geotarget.discovery-t0-preregistration/v1",
+            "materialization_authorized" => true,
+            "outcome_execution_authorized" => false,
+            "local_freeze_sha256" => file_sha(
+                ExperimentDisc001.DEFAULT_CHAMPION_FREEZE_PATH,
+            ),
+            "root_seed" => string(ExperimentDisc001.T0_ROOT_SEED),
+            "replicate_count" => ExperimentDisc001.T0_REPLICATE_COUNT,
+            "methods" => [
+                ExperimentDisc001._METHOD_WIRE[method] for
+                method in ExperimentDisc001.T0_METHODS
+            ],
+            "source_sha256" => Dict(
+                source_relative => file_sha(joinpath(
+                    REPO_ROOT,
+                    split(source_relative, '/')...,
+                )),
+            ),
+        )
+        registration_path = joinpath(directory, "registration.json")
+        write(registration_path, GeoTargetCore.canonical_json(registration) * "\n")
+        proposal_root = joinpath(directory, "proposals")
+        input_manifest = joinpath(directory, "input.json")
+        preflight = t0_materialization_preflight(
+            ; preregistration_path=registration_path,
+            proposal_root,
+            input_manifest_path=input_manifest,
+        )
+        @test length(preflight.problems) == 6
+        @test length(preflight.destinations) == 42
+        @test !ispath(proposal_root)
+        @test !ispath(input_manifest)
+    end
+end
+
 @testset "fixed lossless maximum-prefix fixture" begin
     artifact = fixed_matrix_fixture()
     audit = static_prefix_audit(artifact)
@@ -206,6 +269,69 @@ end
     @test !failed.bounded_gap
     @test failed.starvation_count == 1
     @test !isempty(failed.violation_prefixes)
+end
+
+@testset "base-2 digital-net t audit" begin
+    centered = reshape([(index + 0.5) / 8 for index in 0:7], 1, :)
+    @test digital_net_minimal_t(centered) == 0
+    duplicated = repeat(centered[:, 1:1], 1, 8)
+    @test digital_net_minimal_t(duplicated) == 3
+    @test_throws ArgumentError digital_net_minimal_t(centered[:, 1:7])
+    @test_throws ArgumentError digital_net_minimal_t(ones(1, 8))
+end
+
+@testset "all T0 proposal sources materialize before outcomes" begin
+    authority = materialization_preflight()
+    domain = t0_proposal_domain(first(t0_problems()))
+    mktempdir() do directory
+        paths = Dict{DiscoveryMethod,String}()
+        artifacts = Dict{DiscoveryMethod,ProposalMatrixArtifact}()
+        for method in ExperimentDisc001.T0_METHODS[1:end - 1]
+            path = joinpath(directory, "$(Int(method)).json")
+            seed = derive_seed(
+                ExperimentDisc001.T0_ROOT_SEED,
+                method,
+                1,
+                1,
+                "t0-proposal",
+            )
+            artifacts[method] = materialize_stream_once(
+                authority,
+                method,
+                domain,
+                path;
+                replicate_seed=seed,
+            )
+            paths[method] = path
+            @test static_prefix_audit(artifacts[method]).valid
+        end
+        mixed = D3_OWEN_MIXED
+        mixed_path = joinpath(directory, "mixed.json")
+        artifacts[mixed] = materialize_stream_once(
+            authority,
+            mixed,
+            domain,
+            mixed_path;
+            replicate_seed=derive_seed(
+                ExperimentDisc001.T0_ROOT_SEED,
+                mixed,
+                1,
+                1,
+                "t0-proposal",
+            ),
+            iid_source_path=paths[D0_IID_ALL],
+            rqmc_source_path=paths[D2O_OWEN_ALL],
+        )
+        @test length(artifacts) == 7
+        @test iid_bounded_gap_audit(
+            artifacts[D_CURRENT_COUNTER_HALTON].lane_schedule,
+        ).bounded_gap
+        @test iid_bounded_gap_audit(artifacts[mixed].lane_schedule).bounded_gap
+        @test all(
+            !isnothing(digital_net_prefix_audit(artifacts[method])) for
+            method in (D1_SOBOL_ALL, D2O_OWEN_ALL, D2M_MATOUSEK_ALL)
+        )
+    end
 end
 
 @testset "seed namespaces and case sharding" begin

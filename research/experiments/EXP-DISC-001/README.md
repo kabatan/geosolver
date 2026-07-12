@@ -82,8 +82,28 @@ can only consume separately persisted D0 and Owen artifacts. It cannot
 regenerate either source.
 
 The current raw mix is an attribution stream, not a replacement for the
-mandatory adaptive `D-H0-CURRENT` control. Outcome execution remains disabled
-until the champion freeze and a pipeline audit bind the common local solver,
-512/768-bit confirmation, scorer, callback accounting, and the complete H0
-control. Tests use only a small fixed matrix fixture; they never call a stream
-generator or inspect a locked/blind partition.
+mandatory adaptive `D-H0-CURRENT` control. The fixed-source screen may proceed
+after its local freeze, input checksum manifest, scorer/accounting audit and
+explicit outcome authorization are committed. The complete adaptive H0 and
+512/768-bit production comparisons remain later gates; T0 cannot substitute
+for either one. Targeted tests materialize all seven sources only in temporary
+directories and never inspect a locked/blind partition.
+
+## Stage-A T0 source screen
+
+The first source screen is deliberately non-promotional: six frozen MultiRoot
+development cases, one preregistered replicate, seven point sources, and all
+128 starts. It records proposal prefixes `8/16/32/64/128` and independently
+recomputes the first completed-attempt crossings of callback work
+`600/1200/2400/4800`. A favorable T0 row is only a mechanism signal; formal
+selection still requires the preregistered multi-replicate, unrelated-family
+development comparison.
+
+`materialize_t0.jl` writes one lossless maximum-prefix artifact per
+case/source and a small committed checksum manifest before outcomes.
+`run_t0_outcomes.jl` then connects those starts to the frozen E1/E4 policy in
+one thread per pinned case process. `aggregate_t0.py` independently rescans raw
+attempts. The DirectAnalytic T0 laboratory cannot perform production C2
+512/768-bit replay, so every T0 artifact states `lab_confirmation_512_768=false`
+and cannot promote a public answer. The selected source must later pass the
+compiled production integration and its existing 512/768-bit authority.

@@ -15,6 +15,8 @@ include("gate.jl")
 include("matrix_artifact.jl")
 include("streams.jl")
 include("runner_contract.jl")
+include("t0_corpus.jl")
+include("t0_materialization.jl")
 
 export CHECKPOINT_COLUMNS,
     MATRIX_COLUMN_COUNT,
@@ -33,9 +35,12 @@ export CHECKPOINT_COLUMNS,
     artifact_document,
     artifact_sha256,
     derive_seed,
+    digital_net_minimal_t,
+    digital_net_prefix_audit,
     iid_bounded_gap_audit,
     leading_prefix,
     materialization_preflight,
+    materialize_t0_inputs,
     materialize_stream_once,
     matrix_from_document,
     parse_runner_arguments,
@@ -45,6 +50,10 @@ export CHECKPOINT_COLUMNS,
     shard_ordinals,
     static_prefix_audit,
     stream_contract,
+    t0_materialization_preflight,
+    t0_problem_with_proposals,
+    t0_problems,
+    t0_proposal_domain,
     truth_blind_domain,
     write_matrix_once
 

@@ -45,15 +45,15 @@ function stream_contract(method::DiscoveryMethod)
     difference = if method === D0_IID_ALL
         "Random.Xoshiro independent-uniform experimental model; every point launched"
     elseif method === D1_SOBOL_ALL
-        "QuasiMonteCarlo SobolSample(NoRand), one maximum matrix"
+        "QuasiMonteCarlo SobolSample(NoRand), one aligned and prefix-audited maximum block"
     elseif method === D_HALTON_ALL
         "production task-indexed contiguous Halton source through dimension 64"
     elseif method === D_CURRENT_COUNTER_HALTON
         "production counter-IID and Halton raw-source schedule with H0 weights/cadence"
     elseif method === D2O_OWEN_ALL
-        "one deterministic Sobol maximum matrix, then one Owen scramble"
+        "one aligned Sobol maximum block, then one Owen scramble and prefix t audit"
     elseif method === D2M_MATOUSEK_ALL
-        "one deterministic Sobol maximum matrix, then one Matousek scramble"
+        "one aligned Sobol maximum block, then one Matousek scramble and prefix t audit"
     else
         "fixed 1-in-4 IID schedule consuming persisted D0 and Owen source prefixes"
     end
@@ -107,9 +107,9 @@ end
 function _counter_unit(seed::UInt64, task_id::UInt64, dimension::Int)
     mix64 = getfield(GeoTargetCore, :_mix64)
     word = mix64(
-        seed ⊛
-        (task_id * 0xd2b74407b1ce6e93) ⊛
-        (UInt64(dimension) * 0xca5a826395121157) ⊛
+        seed ⊻
+        (task_id * 0xd2b74407b1ce6e93) ⊻
+        (UInt64(dimension) * 0xca5a826395121157) ⊻
         (UInt64(0x11) * 0x9e3779b97f4a7c15),
     )
     mantissa = word >> 12
@@ -178,6 +178,76 @@ function _deterministic_sobol_unit(dimension::Int)
     )
     size(unit) == (dimension, MATRIX_COLUMN_COUNT) || error("Sobol shape drifted")
     return Matrix{Float64}(unit)
+end
+
+function _digital_exponent_compositions!(result, prefix, remaining, slots)
+    if slots == 1
+        push!(result, Tuple(vcat(prefix, remaining)))
+        return result
+    end
+    for exponent in 0:remaining
+        _digital_exponent_compositions!(
+            result,
+            vcat(prefix, exponent),
+            remaining - exponent,
+            slots - 1,
+        )
+    end
+    return result
+end
+
+function _digital_exponent_compositions(total::Int, dimension::Int)
+    result = Tuple[]
+    return _digital_exponent_compositions!(result, Int[], total, dimension)
+end
+
+function _is_base2_t_net(points::Matrix{Float64}, t::Int, m::Int)
+    dimension, count = size(points)
+    count == 1 << m || return false
+    0 <= t <= m || return false
+    expected_per_cell = 1 << t
+    expected_cells = 1 << (m - t)
+    for exponents in _digital_exponent_compositions(m - t, dimension)
+        counts = Dict{Tuple,Int}()
+        for column in axes(points, 2)
+            key = Tuple(
+                floor(Int, ldexp(points[row, column], exponents[row])) for
+                row in axes(points, 1)
+            )
+            counts[key] = get(counts, key, 0) + 1
+        end
+        length(counts) == expected_cells || return false
+        all(==(expected_per_cell), values(counts)) || return false
+    end
+    return true
+end
+
+"""Return the smallest verified `t` for one base-2, power-of-two point block."""
+function digital_net_minimal_t(unit_points::AbstractMatrix{<:Real})
+    points = Matrix{Float64}(unit_points)
+    dimension, count = size(points)
+    dimension > 0 && count > 0 && ispow2(count) || throw(
+        ArgumentError("digital-net audit requires a nonempty power-of-two matrix"),
+    )
+    all(value -> isfinite(value) && 0.0 <= value < 1.0, points) || throw(
+        ArgumentError("digital-net audit requires unit coordinates in [0,1)"),
+    )
+    m = trailing_zeros(count)
+    for t in 0:m
+        _is_base2_t_net(points, t, m) && return t
+    end
+    error("every finite block must satisfy the trivial t=m condition")
+end
+
+function digital_net_prefix_audit(artifact::ProposalMatrixArtifact)
+    artifact.method in (D1_SOBOL_ALL, D2O_OWEN_ALL, D2M_MATOUSEK_ALL) || throw(
+        ArgumentError("digital-net prefix audit applies only to Sobol-based streams"),
+    )
+    return Dict(
+        string(prefix) => digital_net_minimal_t(
+            @view(artifact.unit_points[:, 1:prefix]),
+        ) for prefix in CHECKPOINT_COLUMNS
+    )
 end
 
 function _scrambled_sobol_unit(
@@ -273,6 +343,10 @@ function _standalone_artifact(
         unit = _deterministic_sobol_unit(dimension)
         lanes, source_columns = _default_trace(method)
         metadata["sampler"] = "QuasiMonteCarlo.SobolSample(NoRand)"
+        metadata["deterministic_block_construction"] =
+            "Sobol.skip!(n=128), then 128 next! calls under the pinned implementation"
+        metadata["theory_boundary"] =
+            "deterministic net only after the recorded per-prefix minimal-t audit"
     elseif method === D_HALTON_ALL
         unit = _halton_unit(dimension)
         lanes, source_columns = _default_trace(method)
@@ -290,6 +364,11 @@ function _standalone_artifact(
         metadata["pad"] = _QMC_PAD
         metadata["rng"] = "Random.Xoshiro"
         metadata["sampler"] = "QuasiMonteCarlo.SobolSample(NoRand), post-generation scramble"
+        metadata["deterministic_block_construction"] =
+            "Sobol.skip!(n=128), then 128 next! calls under the pinned implementation"
+        metadata["theory_boundary"] = method === D2O_OWEN_ALL ?
+            "finite-n nested-uniform-scramble claims require implementation fit plus per-prefix t audit" :
+            "net balance is audited; nested-uniform-scramble gain claims do not transfer to Matousek automatically"
         metadata["deterministic_first_column_float64_bits"] =
             [_float64_hex(value) for value in deterministic[:, 1]]
     else

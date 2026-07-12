@@ -3,31 +3,37 @@ const T0_RECIPE = (
     (
         source="benchmarks/generated/m0-analytic-seed-manifest.json",
         case_id="M0-ANALYTIC-006",
+        source_index=6,
         role="close-root distinct-target MultiRoot development control",
     ),
     (
         source="benchmarks/generated/m0-analytic-seed-manifest.json",
         case_id="M0-ANALYTIC-007",
+        source_index=7,
         role="well-separated target-collision MultiRoot development control",
     ),
     (
         source="research/experiments/EXP-LOCAL-004/t2-input-manifest.json",
         case_id="MULTIROOT-WARPED-development-01",
+        source_index=31,
         role="well-separated target-collision control",
     ),
     (
         source="research/experiments/EXP-LOCAL-004/t2-input-manifest.json",
         case_id="MULTIROOT-WARPED-development-02",
+        source_index=32,
         role="1e-3 close-root target-collision control",
     ),
     (
         source="research/experiments/EXP-LOCAL-004/t2-input-manifest.json",
         case_id="MULTIROOT-WARPED-development-03",
+        source_index=33,
         role="1e-6 close-root target-collision control",
     ),
     (
         source="research/experiments/EXP-LOCAL-004/t2-input-manifest.json",
         case_id="MULTIROOT-WARPED-development-05",
+        source_index=35,
         role="1e-6 close-root target-collision condition control",
     ),
 )
