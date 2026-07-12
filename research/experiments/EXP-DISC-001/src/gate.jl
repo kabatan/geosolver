@@ -2,6 +2,7 @@ const _ORIGINAL_CARD_PATH = joinpath(EXPERIMENT_ROOT, "..", "EXP-DISC-001.json")
 const _A1_PATH = joinpath(EXPERIMENT_ROOT, "current-policy-amendment.json")
 const _A2_PATH = joinpath(EXPERIMENT_ROOT, "qmc-prefix-amendment.json")
 const _A3_PATH = joinpath(EXPERIMENT_ROOT, "local-champion-dependency-amendment.json")
+const _A4_PATH = joinpath(EXPERIMENT_ROOT, "local-finalist-amendment.json")
 const DEFAULT_CHAMPION_FREEZE_PATH = joinpath(
     EXPERIMENT_ROOT,
     "local-champion-freeze-record.json",
@@ -31,6 +32,7 @@ function preregistration_bindings()
         "a1" => _A1_PATH,
         "a2" => _A2_PATH,
         "a3" => _A3_PATH,
+        "a4" => _A4_PATH,
     )
     for (label, path) in paths
         isfile(path) || throw(
@@ -102,7 +104,7 @@ function _validate_preregistration_bindings(record)
     Set(String.(keys(observed_raw))) == Set(keys(expected)) || throw(
         DiscoveryGateError(
             :preregistration_binding_mismatch,
-            "freeze record must bind exactly original, a1, a2 and a3",
+            "freeze record must bind exactly original, a1, a2, a3 and a4",
         ),
     )
     for (label, digest) in expected
@@ -246,7 +248,7 @@ function _validate_confirmation_contract(record)
 end
 
 """
-Validate the A3 outcome-bound local champion record before any proposal bytes
+Validate the A3/A4 outcome-bound local champion record before any proposal bytes
 or benchmark truth are materialized. Missing or drifting authority is a typed
 stop; this function performs no sampling and creates no files.
 """

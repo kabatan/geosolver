@@ -26,10 +26,19 @@ globalization study without a locked-passing candidate falls back to current
 LM-QR while retaining any independently locked-passing scaling policy. The
 chain never selects a non-gating pilot or development-only winner.
 
-The original card and all three amendments form one preregistration bundle.
+`local-finalist-amendment.json` (A4) was written after the independent local
+wave selected `E4-EXP-GUARD-SLACK-CPQR`, but before any discovery input,
+proposal matrix or outcome existed. It changes only the common local pipeline
+used by every discovery arm: `prod-tol-120x600` LM-QR, E1 on guardless
+endpoints, and E4 on endpoints exposing public strict guards. The route uses
+only a public numerical capability count. A4 preserves the EXP-LOCAL-003/004
+fallback decisions as upstream evidence and does not change a proposal stream,
+budget, metric, gate or tuning round.
+
+The original card and all four amendments form one preregistration bundle.
 No EXP-DISC-001 candidate input, assessor input or proposal matrix may be
 materialized until the champion freeze record exists. Every downstream
-artifact must record the original, A1, A2, A3 and champion-record hashes plus
+artifact must record the original, A1, A2, A3, A4 and champion-record hashes plus
 the exact selected local-solver source and canonical-options hashes.
 
 The amendment was written after a small non-gating six-instance diagnostic.
@@ -42,7 +51,7 @@ The A2 audit inspected committed source and primary or official documentation
 only. A3 inspected the terminal EXP-LOCAL-001 governance record and the
 preregistered EXP-LOCAL-003 card as upstream dependency evidence. No
 EXP-DISC-001 proposal matrix, formal input or outcome existed or was inspected
-while either amendment's choices were written. A3 preserves every discovery
+while either amendment's choices were written. A3 and A4 preserve every discovery
 method, threshold, budget, control and gate from the original card, A1 and A2,
 and has no product connection.
 
@@ -50,11 +59,10 @@ and has no product connection.
 
 The experiment-local Julia project now pins QuasiMonteCarlo and implements the
 Stage-A materialization seam, but it deliberately does not contain a proposal
-matrix or solver outcome. `run_t0.jl` checks A3 before it loads a corpus,
-generates a point, creates an output directory, or invokes a solver. In the
-current repository state it therefore stops with
-`missing_local_champion_freeze`: EXP-LOCAL-006 is still researching the local
-pipeline and no outcome-bound champion record exists.
+matrix or solver outcome. `run_t0.jl` checks the full preregistration chain
+before it loads a corpus, generates a point, creates an output directory, or
+invokes a solver. The local finalist is now selected; the next checkpoint is
+the outcome-bound freeze record followed by proposal-matrix materialization.
 
 The seam supports the preregistered D0 IID, deterministic Sobol, contiguous
 production Halton, current raw counter/Halton mix, Owen- and
