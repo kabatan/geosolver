@@ -61,8 +61,10 @@ The experiment-local Julia project now pins QuasiMonteCarlo and implements the
 Stage-A materialization seam, but it deliberately does not contain a proposal
 matrix or solver outcome. `run_t0.jl` checks the full preregistration chain
 before it loads a corpus, generates a point, creates an output directory, or
-invokes a solver. The local finalist is now selected; the next checkpoint is
-the outcome-bound freeze record followed by proposal-matrix materialization.
+invokes a solver. `local-champion-freeze-record.json` now binds the selected
+local source, every local option, and the unchanged 512/768-bit authority. The
+next checkpoint is proposal-matrix materialization followed by the single
+pipeline audit required before outcome execution.
 
 The seam supports the preregistered D0 IID, deterministic Sobol, contiguous
 production Halton, current raw counter/Halton mix, Owen- and
