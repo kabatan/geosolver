@@ -1,4 +1,5 @@
 using GeoTargetBenchmarks
+using GeoTargetCore
 using LinearAlgebra
 using SHA
 

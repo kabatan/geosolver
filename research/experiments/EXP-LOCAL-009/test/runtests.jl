@@ -413,6 +413,7 @@ end
     @test occursin("\"tuning_rounds\": 0", preregistration)
 
     runner = read(joinpath(@__DIR__, "..", "run_t0.jl"), String)
+    @test isdefined(Main, :canonical_json)
     @test occursin("T0 requires a clean committed worktree", runner)
     @test occursin("case-cumulative-observed-callbacks", runner)
     @test occursin("_suffix_stable_evaluations_to_lab_safe_full", runner)

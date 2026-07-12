@@ -255,7 +255,7 @@ def _gate(control: dict[str, Any], candidate: dict[str, Any], *,
     }
 
 
-def _load_experiment(experiment: str, output_dir: Path, head: str,
+def _load_experiment(experiment: str, output_dir: Path, aggregation_head: str,
                      truth_audit: str, mechanism_tests: str) -> dict[str, Any]:
     config = CONFIGS[experiment]
     prereg_hash = _sha256(config["preregistration"])
@@ -281,8 +281,8 @@ def _load_experiment(experiment: str, output_dir: Path, head: str,
         }:
             raise ValueError(f"EXP-LOCAL-{experiment} shard {index}: summary grid drift")
         revision = document["revision"]
-        if revision["git_head"] != head or revision["preregistration_sha256"] != prereg_hash:
-            raise ValueError(f"EXP-LOCAL-{experiment} shard {index}: freeze drift")
+        if revision["preregistration_sha256"] != prereg_hash:
+            raise ValueError(f"EXP-LOCAL-{experiment} shard {index}: preregistration drift")
         environment = document["environment"]
         if environment["julia_threads"] != 1 or environment.get(
             "julia_blas_threads", environment.get("blas_threads")
@@ -293,6 +293,18 @@ def _load_experiment(experiment: str, output_dir: Path, head: str,
         )):
             raise ValueError(f"EXP-LOCAL-{experiment} shard {index}: native thread drift")
         documents.append(document)
+
+    execution_heads = {document["revision"]["git_head"] for document in documents}
+    if len(execution_heads) != 1:
+        raise ValueError(f"EXP-LOCAL-{experiment}: execution revisions disagree")
+    execution_head = next(iter(execution_heads))
+    ancestry = subprocess.run(
+        ["git", "-C", str(ROOT), "merge-base", "--is-ancestor",
+         execution_head, aggregation_head],
+        check=False,
+    )
+    if ancestry.returncode != 0:
+        raise ValueError(f"EXP-LOCAL-{experiment}: execution revision is not an ancestor")
 
     problems = [document["problem_manifest"][0] for document in documents]
     if len({problem["instance_id"] for problem in problems}) != SHARDS:
@@ -379,6 +391,7 @@ def _load_experiment(experiment: str, output_dir: Path, head: str,
     return {
         "experiment_id": config["experiment_id"],
         "candidate": config["candidate"],
+        "execution_revision": execution_head,
         "preregistration_sha256": prereg_hash,
         "shard_count": len(documents),
         "attempt_count": sum(len(document["attempts"]) for document in documents),
