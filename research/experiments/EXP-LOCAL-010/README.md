@@ -21,6 +21,11 @@ recomputes callback accounting, suffix-stable work, common-assessor safety,
 candidate/shadow callback identity, reported-acceptance safety, active-family
 support, and the preregistered gates from the nine raw shards.
 
+Both candidates passed T0 and are frozen unchanged for the 48-case T2 in
+`t2-preregistration.json`. `run_t2.jl` executes one case per process, while
+`aggregate_t2.py` applies the T2-only gate and the preregistered single-finalist
+tie-break.
+
 Targeted tests:
 
 ```bash
