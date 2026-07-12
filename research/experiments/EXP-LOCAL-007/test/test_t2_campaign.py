@@ -161,6 +161,37 @@ class CampaignTests(unittest.TestCase):
         )
         self.assertIsNone(CAMPAIGN._suffix_stable_assessor_work(sequence, 1))
 
+    def test_raw_case_reaggregation_uses_solver_manifest_targets_key(self):
+        attempts = []
+        for variant in CAMPAIGN.VARIANTS:
+            for start_index in range(1, 33):
+                attempts.append(
+                    {
+                        "variant": variant,
+                        "start_index": start_index,
+                        "evaluations": 1,
+                        "assessor_qualified": start_index == 1,
+                        "assessor_gold_matched": start_index == 1,
+                        "assessor_target_ambiguous": False,
+                        "assessor_matched_target_id": "target-1"
+                        if start_index == 1
+                        else None,
+                    }
+                )
+        document = {
+            "problem_manifest": [
+                {
+                    "instance_id": "fixture",
+                    "family_id": "SCALE-LADDER",
+                    "targets": 1,
+                }
+            ],
+            "attempts": attempts,
+        }
+        records = CAMPAIGN._raw_case_summaries(document)
+        self.assertEqual(len(records), 9)
+        self.assertTrue(all(record["target_count"] == 1 for record in records))
+
 
 if __name__ == "__main__":
     unittest.main()

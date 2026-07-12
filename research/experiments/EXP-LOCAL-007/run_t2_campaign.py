@@ -305,6 +305,7 @@ def _suffix_stable_assessor_work(
 
 def _raw_case_summaries(document: dict[str, Any]) -> list[dict[str, Any]]:
     problem = document["problem_manifest"][0]
+    target_count = problem["targets"]
     records: list[dict[str, Any]] = []
     for variant in VARIANTS:
         sequence = sorted(
@@ -313,17 +314,17 @@ def _raw_case_summaries(document: dict[str, Any]) -> list[dict[str, Any]]:
         )
         if [a["start_index"] for a in sequence] != list(range(1, 33)):
             raise ValueError("raw reaggregation received an incomplete start stream")
-        suffix_work = _suffix_stable_assessor_work(sequence, problem["target_count"])
+        suffix_work = _suffix_stable_assessor_work(sequence, target_count)
         event = suffix_work is not None and suffix_work <= CALLBACK_WORK_CENSOR
         censored_work = suffix_work if event else CALLBACK_WORK_CENSOR
         for prefix in PREFIXES:
-            snapshot = _assessor_snapshot(sequence, problem["target_count"], prefix)
+            snapshot = _assessor_snapshot(sequence, target_count, prefix)
             record = {
                 "variant": variant,
                 "instance_id": problem["instance_id"],
                 "family_id": problem["family_id"],
                 "prefix": prefix,
-                "target_count": problem["target_count"],
+                "target_count": target_count,
                 **snapshot,
             }
             if prefix == PREFIXES[-1]:
@@ -462,8 +463,15 @@ def aggregate(output_dir: Path, summary_path: Path, truth_leak_audit: str) -> di
     case_ids = [d["problem_manifest"][0]["instance_id"] for d in documents]
     replay_ids = [d["problem_manifest"][0]["replay_checksum"] for d in documents]
     family_ids = [d["problem_manifest"][0]["family_id"] for d in documents]
-    if heads != {current_head} or preregistrations != {preregistration_sha256}:
-        raise ValueError("shards do not match the current clean commit/preregistration")
+    if len(heads) != 1 or preregistrations != {preregistration_sha256}:
+        raise ValueError("shards disagree on execution commit or preregistration")
+    execution_head = next(iter(heads))
+    ancestry = subprocess.run(
+        ["git", "-C", str(ROOT), "merge-base", "--is-ancestor", execution_head, current_head],
+        check=False,
+    )
+    if ancestry.returncode != 0:
+        raise ValueError("T2 execution commit is not an ancestor of the aggregator commit")
     if len(set(case_ids)) != SHARD_COUNT:
         raise ValueError("T2 shard set has duplicate cases")
     if len(set(replay_ids)) != SHARD_COUNT:
@@ -558,7 +566,9 @@ def aggregate(output_dir: Path, summary_path: Path, truth_leak_audit: str) -> di
     result = {
         "experiment_id": "EXP-LOCAL-007-T2",
         "state": "complete" if truth_leak_audit == "pass" else "awaiting-source-audit",
-        "revision": current_head,
+        "revision": execution_head,
+        "execution_revision": execution_head,
+        "aggregation_revision": current_head,
         "corpus_sha256": CORPUS_SHA256,
         "preregistration_sha256": preregistration_sha256,
         "shard_count": len(documents),

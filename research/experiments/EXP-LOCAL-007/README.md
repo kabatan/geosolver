@@ -244,6 +244,11 @@ starts. A short independent source audit supplies only the truth-leak pass/fail
 input; there is no source-authorization protocol, runtime tree seal,
 artifact-custody service or publication launcher.
 
+If an outcome-independent aggregation bug is repaired after shard execution,
+the summary records both the immutable shard execution revision and the clean
+descendant aggregation revision; raw shards and the preregistration hash remain
+unchanged.
+
 After these files are committed, run the campaign and aggregation as follows:
 
 ```bash
