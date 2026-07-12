@@ -1,6 +1,6 @@
 # EXP-LOCAL-014 — guard-aware local successor wave
 
-Status: **preregistered; no outcome execution authorized**.
+Status: **frozen and independently audited; G0 outcome execution authorized**.
 
 This experiment compares the two frozen successors to the rejected E1 endpoint
 filter without changing the local base solver, start prefix, scorer, callback

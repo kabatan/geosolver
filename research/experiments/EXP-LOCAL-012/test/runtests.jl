@@ -318,7 +318,7 @@ end
     @test occursin("public_guards", source)
     @test occursin("branch_token", source)
     @test occursin("result_level=heuristic-not-validated", source)
-    @test occursin("\"outcome_execution_authorized\": false", preregistration)
+    @test occursin("\"outcome_execution_authorized\": true", preregistration)
     @test occursin("\"strict_guard_dropped_witnesses\": 42", preregistration)
     @test occursin("\"near_rank_unsafe_shadow_endpoints_rejected\": 8", preregistration)
 end

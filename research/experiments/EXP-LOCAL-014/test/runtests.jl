@@ -3,10 +3,10 @@ using Test
 
 include(joinpath(@__DIR__, "..", "run_wave.jl"))
 
-@testset "G0 runner is frozen and outcome-disabled" begin
+@testset "G0 runner is frozen and outcome-authorized" begin
     preflight = wave_preflight_document("g0")
     @test preflight["active_stage"] == "g0"
-    @test !preflight["authorized"]
+    @test preflight["authorized"]
     @test preflight["case_count"] == 12
     @test preflight["maximum_starts"] == 32
     @test preflight["case_work_stop"] == 4_800
@@ -23,7 +23,7 @@ include(joinpath(@__DIR__, "..", "run_wave.jl"))
         "E4-EXP-GUARD-SLACK-CPQR",
         "E4-EXP-GUARD-SLACK-CPQR-SHADOW",
     ]
-    @test !_wave_authorized(_wave_registration(), "g0")
+    @test _wave_authorized(_wave_registration(), "g0")
     @test_throws ErrorException _execution_host_contract(1, 1)
     slot = _acquire_cpu_slot(15)
     try
