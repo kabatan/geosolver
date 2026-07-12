@@ -708,6 +708,8 @@ end
         @test root.semantics_valid
         @test !boundary.semantics_valid
         @test root.branch_token === nothing
+        @test case.public_guard_count == 1
+        @test !case.has_branch_token
         @test length(root.public_guards) == length(boundary.public_guards) == 1
         root_guard = only(root.public_guards)
         boundary_guard = only(boundary.public_guards)
@@ -722,6 +724,17 @@ end
         GeoTargetBenchmarks._release_solver_case_oracle!(case._evaluate)
     end
     @test_throws ArgumentError SolverPublicGuardObservation(1, 0.0, 0.0, true)
+
+    plain_case = GeoTargetBenchmarks._truth_blind_case(
+        generate(CurvedChainParams(start_count=1)),
+        1,
+    )
+    try
+        @test plain_case.public_guard_count == 0
+        @test !plain_case.has_branch_token
+    finally
+        GeoTargetBenchmarks._release_solver_case_oracle!(plain_case._evaluate)
+    end
 end
 
 

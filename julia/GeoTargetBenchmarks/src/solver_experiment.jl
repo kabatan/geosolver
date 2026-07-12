@@ -182,8 +182,30 @@ struct SolverExperimentCase{F}
     upper_bounds::Tuple
     variable_scales::Tuple
     residual_scales::Tuple
+    public_guard_count::Int
+    has_branch_token::Bool
     _evaluate::F
 end
+
+SolverExperimentCase(
+    dimension,
+    residual_dimension,
+    lower_bounds,
+    upper_bounds,
+    variable_scales,
+    residual_scales,
+    evaluate,
+) = SolverExperimentCase(
+    dimension,
+    residual_dimension,
+    lower_bounds,
+    upper_bounds,
+    variable_scales,
+    residual_scales,
+    0,
+    false,
+    evaluate,
+)
 
 function evaluate_case(case::SolverExperimentCase, input::AbstractVector)
     length(input) == case.dimension || throw(DimensionMismatch("input has wrong dimension"))
@@ -387,6 +409,8 @@ function _truth_blind_case(problem::DirectAnalyticProblem, evaluation_limit::Int
         Tuple(problem.upper_bounds),
         Tuple(problem.variable_scales),
         Tuple(problem.residual_scales),
+        strict_guard_boundary === nothing ? 0 : 1,
+        false,
         evaluator,
     )
 end
