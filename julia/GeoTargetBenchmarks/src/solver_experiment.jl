@@ -27,13 +27,41 @@ const _SOLVER_EXPERIMENT_ASSESSOR_TOLERANCES = SolverExperimentTolerances(
     target=1.0e-6,
 )
 
+"""One public strict-guard value, identified only within the active case."""
+struct SolverPublicGuardObservation
+    token::UInt64
+    margin::Float64
+    scale::Float64
+    strict::Bool
+
+    function SolverPublicGuardObservation(
+        token::Integer,
+        margin::Real,
+        scale::Real,
+        strict::Bool,
+    )
+        0 <= token <= typemax(UInt64) || throw(ArgumentError("guard token must fit UInt64"))
+        numeric_margin = Float64(margin)
+        numeric_scale = Float64(scale)
+        isfinite(numeric_margin) || throw(ArgumentError("guard margin must be finite"))
+        isfinite(numeric_scale) && numeric_scale > 0 ||
+            throw(ArgumentError("guard scale must be finite and positive"))
+        return new(UInt64(token), numeric_margin, numeric_scale, strict)
+    end
+end
+
 """One black-box evaluation exposed to an algorithm, with no benchmark truth."""
 struct SolverCaseEvaluation
     residuals::Tuple
     target::Union{Nothing,Float64}
     semantics_valid::Bool
     finite::Bool
+    public_guards::Tuple
+    branch_token::Union{Nothing,UInt64}
 end
+
+SolverCaseEvaluation(residuals, target, semantics_valid, finite) =
+    SolverCaseEvaluation(residuals, target, semantics_valid, finite, (), nothing)
 
 struct SolverExperimentBudgetExceeded <: Exception
     limit::Int
@@ -49,6 +77,7 @@ struct _SolverCaseOracle{R,T}
     lower_bounds::Tuple
     upper_bounds::Tuple
     strict_guard_boundary::Union{Nothing,Float64}
+    public_guard_token::Union{Nothing,UInt64}
     evaluation_count::Base.RefValue{Int}
     evaluation_limit::Int
     budget_exhausted::Base.RefValue{Bool}
@@ -117,11 +146,25 @@ function (oracle::_SolverCaseOracle)(input)
     )
     guard_valid = oracle.strict_guard_boundary === nothing ||
                   input[1] > oracle.strict_guard_boundary
+    public_guards = if oracle.strict_guard_boundary === nothing
+        ()
+    else
+        (
+            SolverPublicGuardObservation(
+                something(oracle.public_guard_token),
+                input[1] - oracle.strict_guard_boundary,
+                1.0,
+                true,
+            ),
+        )
+    end
     return SolverCaseEvaluation(
         Tuple(residual),
         finite ? target : nothing,
         finite && within_bounds && guard_valid,
         finite,
+        public_guards,
+        nothing,
     )
 end
 
@@ -322,6 +365,8 @@ end
 function _truth_blind_case(problem::DirectAnalyticProblem, evaluation_limit::Int)
     strict_guard_boundary = problem.parameters isa StrictGuardBoundaryParams ?
                             Float64(problem.metadata[:guard_boundary]) : nothing
+    public_guard_token = strict_guard_boundary === nothing ? nothing :
+                         rand(RandomDevice(), UInt64)
     oracle = _SolverCaseOracle(
         problem.residual!,
         problem.target,
@@ -329,6 +374,7 @@ function _truth_blind_case(problem::DirectAnalyticProblem, evaluation_limit::Int
         Tuple(problem.lower_bounds),
         Tuple(problem.upper_bounds),
         strict_guard_boundary,
+        public_guard_token,
         Ref(0),
         evaluation_limit,
         Ref(false),

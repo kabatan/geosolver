@@ -695,6 +695,35 @@ end
     )
 end
 
+@testset "truth-blind public guard margins" begin
+    problem = generate(StrictGuardBoundaryParams(
+        boundary_case=:near_boundary,
+        guard_margin=1.0e-12,
+        start_count=1,
+    ))
+    case = GeoTargetBenchmarks._truth_blind_case(problem, 4)
+    try
+        root = evaluate_case(case, [1.0, 0.5])
+        boundary = evaluate_case(case, [1.0 - 1.0e-12, 0.5])
+        @test root.semantics_valid
+        @test !boundary.semantics_valid
+        @test root.branch_token === nothing
+        @test length(root.public_guards) == length(boundary.public_guards) == 1
+        root_guard = only(root.public_guards)
+        boundary_guard = only(boundary.public_guards)
+        @test root_guard.token == boundary_guard.token
+        @test root_guard.strict
+        @test root_guard.scale == 1.0
+        @test root_guard.margin > 0
+        @test boundary_guard.margin <= 0
+        @test !hasproperty(root_guard, :node)
+        @test !hasproperty(root_guard, :family_id)
+    finally
+        GeoTargetBenchmarks._release_solver_case_oracle!(case._evaluate)
+    end
+    @test_throws ArgumentError SolverPublicGuardObservation(1, 0.0, 0.0, true)
+end
+
 
 @testset "target-only numeric coincidence is not all-target recall" begin
     problem = solver_lab_target_only_problem()
