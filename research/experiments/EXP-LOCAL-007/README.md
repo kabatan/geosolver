@@ -1,6 +1,6 @@
 # EXP-LOCAL-007 — square-system Powell hybrid comparator
 
-Status: **clean T1 survived; lightweight 48-case T2 preregistered; no T2 outcome exists**
+Status: **48-case T2 rejected SCIPY-HYBR; native port and production promotion forbidden**
 
 This experiment-local candidate evaluates SciPy 1.18.0
 `scipy.optimize.root(method="hybr")`, the MINPACK HYBRD modified Powell hybrid
@@ -260,6 +260,22 @@ python3 research/experiments/EXP-LOCAL-007/run_t2_campaign.py aggregate \
 T2 may promote HYBR only as a square-capability local mechanism study. It does
 not itself authorize a production dependency or claim to solve global
 MultiRoot discovery. A passing T2 triggers a native implementation wave.
+
+## Audited T2 decision
+
+The clean 48-case execution produced 4,608 attempts and 432 summaries. An
+independent raw reaggregation matched every prefix and aggregate metric. The
+candidate tied the primary control at family-equal safe-full `0.738095`, used
+`0.905336` times its right-censored suffix-stable callback work, regressed
+StrictGuard from `6/6` to `3/6` and MultiRoot from `2/6` to `1/6`, and produced
+five common-assessor Gold-inconsistent close-root endpoints. It therefore
+failed both performance paths, the critical gate, generality gate and safety
+gate.
+
+[`t2-decision.json`](t2-decision.json) is authoritative. No native HYBR port is
+authorized. The next local wave tests general feasibility restoration and a
+distinct OrthoMADS extreme-barrier mechanism; MultiRoot remains a separate
+all-target discovery problem.
 
 If T2 rejects the candidate, delete the adapter, bridge, dependency locks, and
 candidate-specific knobs. Retain only the compact audited decisions, artifact
