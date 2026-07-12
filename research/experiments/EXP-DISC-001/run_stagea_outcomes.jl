@@ -63,7 +63,15 @@ function stagea_iid_document(method, artifact)
     )
 end
 
-function stagea_load_inputs(path; artifacts=true)
+function stagea_load_inputs(
+    path;
+    artifacts=true,
+    selected_case::Union{Nothing,Int}=nothing,
+    selected_replicate::Union{Nothing,Int}=nothing,
+)
+    selected_case === nothing || 1 <= selected_case <= 24 || error("selected case must lie in 1:24")
+    selected_replicate === nothing || 1 <= selected_replicate <= 10 ||
+        error("selected replicate must lie in 1:10")
     committed(path, "Stage A input manifest")
     document = json_document(path, "Stage A input manifest")
     get(document, "schema_version", nothing) == "geotarget.discovery-stagea-input/v1" ||
@@ -141,7 +149,10 @@ function stagea_load_inputs(path; artifacts=true)
             pair = (method, replicate)
             pair in expected_pairs && !(pair in observed_pairs) || error("proposal identity drifted")
             push!(observed_pairs, pair)
-            artifacts || continue
+            load_artifact = artifacts &&
+                (selected_case === nothing || selected_case == case_index) &&
+                (selected_replicate === nothing || selected_replicate == replicate)
+            load_artifact || continue
             artifact_path = repo_path(entry["path"])
             sha256_text(entry["file_sha256"]) && sha256_file(artifact_path) == entry["file_sha256"] ||
                 error("proposal file hash drifted")
@@ -176,8 +187,10 @@ function stagea_load_inputs(path; artifacts=true)
             loaded[case_index][pair] = (artifact=artifact, manifest=entry)
         end
         observed_pairs == expected_pairs || error("one or more proposal streams are absent")
-        artifacts || continue
-        for replicate in 1:StageAInputs.STAGEA_REPLICATES
+        artifacts && (selected_case === nothing || selected_case == case_index) || continue
+        replicates = selected_replicate === nothing ?
+            (1:StageAInputs.STAGEA_REPLICATES) : (selected_replicate:selected_replicate)
+        for replicate in replicates
             mixed = loaded[case_index][(T0O_METHODS[7], replicate)]
             iid = loaded[case_index][(T0O_METHODS[1], replicate)]
             rqmc = loaded[case_index][(T0O_METHODS[5], replicate)]
@@ -331,7 +344,11 @@ function stagea_execute(input, auth_path, output, case_index, replicate, cpu)
     auth = stagea_authorize(auth_path, input, sha256_file(input), prereg)
     host, slot = stagea_execution_host(case_index, replicate, cpu), stagea_acquire_cpu(cpu)
     try
-        bundle = stagea_load_inputs(input)
+        bundle = stagea_load_inputs(
+            input;
+            selected_case=case_index,
+            selected_replicate=replicate,
+        )
         variant, problem = local_variant(bundle.freeze), bundle.problems[case_index]
         methods, streams = stagea_expected_methods(replicate), Dict{String,Any}[]
         for method in methods
