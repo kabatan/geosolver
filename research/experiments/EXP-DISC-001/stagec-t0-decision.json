@@ -1,0 +1,124 @@
+{
+  "schema_version": "geotarget.discovery-stagec-soft-tgo-t0-decision/v1",
+  "experiment_id": "EXP-DISC-001",
+  "stage": "stage-c-soft-tgo-t0",
+  "written_on": "2026-07-12",
+  "status": "FROZEN_DESIGN_NEGATIVE",
+  "nonpromotional_t0": true,
+  "bindings": {
+    "execution_revision": "427b972602ea186c7af391ed5a69081160559189",
+    "preregistration_sha256": "b473e47b67f0c270e9eb2f9b9fa93c9187d1121e04c01f44ba3dbb6086ed7cf1",
+    "input_manifest_sha256": "43c75f22583d08ce9a4fa6925039d622f11e108a5f01518e8e4ceb2382df524f",
+    "outcome_authorization_sha256": "caa4c3ae69face810075d7709dd42167fe7296f094f2e9ebb16b00e11a1cc64f",
+    "runner_source_sha256": "c2606ed4d9b6a7b656fd917a6f706bd991cb71f30f025ed44081d7bada4a90bb",
+    "aggregator_source_sha256": "8379ee2979b9d91ec1b3ee86bd6d8220c24421bee5fa6d75568e16d8e964651c",
+    "aggregate_sha256": "9bd3da66fad17eceda049693a605d7422491c68fcb2d6391983945d4b2982ef1",
+    "raw_sorted_sha_list_sha256": "e39089fe8182353e62ce14f22e54251060abe795f5093c86f0aaa48231e2bfef",
+    "prearm_sorted_sha_list_sha256": "0c65dbcac037c5615c3f4a18ddff75ad8b4e3bcb1f78240c82b846c1e363306e"
+  },
+  "measurement_amendments": [
+    {
+      "authorization_revision": 2,
+      "superseded_authorization_sha256": "54505ae299129bc461976bbca079192d2781650c963ac60e1ab7c4a7ed6fee04",
+      "reason": "The prearm bounds dictionary required a heterogeneous value type before adding its SHA-256 string.",
+      "algorithm_or_input_changed": false,
+      "local_arm_outcomes_observed_before_amendment": false
+    },
+    {
+      "authorization_revision": 3,
+      "superseded_authorization_sha256": "c983c0d832788398e18dcc16d1ecdb435e5d72a491b5784671192be1690e2223",
+      "reason": "Each arm replay checksum intentionally includes that arm's reordered saved-start matrix. It is validated within an arm but is not a per-source solver-outcome field.",
+      "algorithm_or_input_changed": false,
+      "local_arm_outcomes_executed_before_amendment": true,
+      "performance_metrics_or_values_observed_before_amendment": false,
+      "raw_artifacts_created_before_amendment": 0
+    }
+  ],
+  "preregistered_gate": {
+    "headroom_case_count": 5,
+    "headroom_family_count": 4,
+    "strict_win_case_count": 0,
+    "strict_win_family_count": 0,
+    "outside_tangent_multiroot_headroom": true,
+    "critical_family_nonregression": true,
+    "terminal_identity": true,
+    "formal_progression_authorized": false
+  },
+  "safety_accounting": {
+    "assessor_ambiguity": 0,
+    "assessor_false_or_unsafe": 0,
+    "callback_cap_violations": 0,
+    "evaluation_count_mismatches": 0,
+    "exceptions": 0,
+    "reported_accepted_ambiguous": 0,
+    "reported_accepted_canonical_invalid": 0,
+    "reported_accepted_gold_inconsistent": 0,
+    "reported_accepted_numeric_target_only": 0,
+    "runner_budget_exhausted": 0,
+    "terminal_mismatches": 0
+  },
+  "terminal_observation": {
+    "case_count": 12,
+    "safe_full_cases_by_arm": {
+      "FIFO_UNSCORED": 9,
+      "FIFO_SCORED": 9,
+      "RESIDUAL_ONLY": 9,
+      "SOFT_TGO": 9
+    },
+    "distinct_targets_by_arm": {
+      "FIFO_UNSCORED": 25,
+      "FIFO_SCORED": 25,
+      "RESIDUAL_ONLY": 25,
+      "SOFT_TGO": 25
+    },
+    "target_total": 34,
+    "terminal_miss_strata": [
+      {
+        "family": "NEAR-RANK-DEFICIENT",
+        "dimension": 8,
+        "targets_found": 0,
+        "target_count": 1
+      },
+      {
+        "family": "MULTIROOT-WARPED",
+        "dimension": 8,
+        "targets_found": 0,
+        "target_count": 4
+      },
+      {
+        "family": "MULTIROOT-WARPED",
+        "dimension": 4,
+        "targets_found": 0,
+        "target_count": 4
+      }
+    ]
+  },
+  "mechanism_observation": {
+    "soft_tgo_minus_residual_distinct_target_delta_at_all_48_case_threshold_pairs": 0,
+    "residual_only_checkpoint_signal": {
+      "at_600_callbacks": {
+        "safe_full_cases": 6,
+        "distinct_targets": 21,
+        "fifo_scored_safe_full_cases": 4,
+        "fifo_scored_distinct_targets": 17
+      },
+      "at_1200_callbacks": {
+        "safe_full_cases": 8,
+        "distinct_targets": 24,
+        "fifo_scored_safe_full_cases": 6,
+        "fifo_scored_distinct_targets": 22
+      },
+      "authority": "hypothesis only; this T0 did not preregister promotion of RESIDUAL_ONLY"
+    },
+    "general_conclusion": "The topograph-minimum layer added no target-recovery signal beyond branch-local residual ordering at any fixed callback threshold. Because every arm drained the same 128 starts, no ordering mechanism changed the terminal target set. The remaining misses require a point-generating global-basin mechanism and, for the high-dimensional near-rank stratum, a separately ablated conditioning mechanism."
+  },
+  "decision": {
+    "advance_soft_tgo_to_formal_multireplicate": false,
+    "reject_scope": "this frozen branch-local k-neighborhood SOFT_TGO augmentation",
+    "reject_topographical_methods_as_a_class": false,
+    "promote_residual_only_from_this_t0": false,
+    "production_algorithm_changed": false,
+    "tuning_from_this_outcome": false,
+    "next_axis": "Point-generating global basin coverage: DIRECT-RECT-EMIT versus RECT-BREADTH-FIRST, and low-dimensional SIMPLICIAL-STAR-EMIT versus SIMPLICIAL-UNGUIDED, all with permanent bounded-gap IID insurance."
+  }
+}
