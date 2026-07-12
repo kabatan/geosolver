@@ -1,0 +1,107 @@
+{
+  "schema_version": "geotarget.discovery-stagea-decision/v1",
+  "experiment_id": "EXP-DISC-001",
+  "stage": "stage-a-source-ablation",
+  "state": "d0-selected-by-preregistered-tie-rule",
+  "written_on": "2026-07-12",
+  "execution_revision": "a4e5c4c0e7fa903ba187e853a4d79efe8dbf1ead",
+  "preregistration": {
+    "path": "research/experiments/EXP-DISC-001/stagea-preregistration.json",
+    "sha256": "64c3975f7653e3905031096e026ea05975fab5f4741102ea056c73a3dd899d15"
+  },
+  "input_manifest": {
+    "path": "research/experiments/EXP-DISC-001/stagea-input-manifest.json",
+    "sha256": "b3104a38a38ee90683bcf7b55151460c66ff9d228a6cad8a47eae72b17b49863"
+  },
+  "authorization": {
+    "path": "research/experiments/EXP-DISC-001/stagea-outcome-authorization.json",
+    "sha256": "2298eb00d076bb26c7037545383e1dd73e809937644277acb31a56c6746bd24d"
+  },
+  "raw_artifacts": {
+    "shard_count": 240,
+    "stream_count": 1248,
+    "attempt_count": 159744,
+    "sorted_sha256_list_digest": "3878054d5b3a576068770a3006ef5078dcfb75a1d49021d98d817a8c0ce2eb08",
+    "summary_path": "benchmarks/results/raw/exp-disc-001-stagea-summary.json",
+    "summary_sha256": "52f00122ce6ec93ddf9bc46ec409f5b3af25127497b28f6c98ddbcb64990d669"
+  },
+  "scope": {
+    "family_count": 4,
+    "case_count": 24,
+    "randomized_replicate_count": 10,
+    "target_count": 64,
+    "primary_callback_threshold": 4800,
+    "lab_confirmation_512_768": false
+  },
+  "safety_accounting": {
+    "assessor_ambiguity": 0,
+    "assessor_false_targets": 0,
+    "assessor_unsafe": 0,
+    "callback_cap_violations": 0,
+    "callback_snapshot_mismatches": 0,
+    "evaluation_count_mismatches": 0,
+    "exceptions": 0,
+    "iid_bounded_gap_violations": 0,
+    "iid_starvation_count": 0,
+    "proposal_summary_mismatches": 0,
+    "reported_accepted_unsafe": 0,
+    "runner_budget_exhausted": 0,
+    "terminal_mismatches": 0,
+    "truth_separation_violations": 0,
+    "independent_reaggregation_mismatches": 0
+  },
+  "primary_control": {
+    "method": "D0-IID-ALL",
+    "family_equal_safe_full": 0.8041666666666667,
+    "family_equal_target_recall": 0.81875,
+    "family_equal_right_censored_work": 1187.7
+  },
+  "promotion_candidate": {
+    "method": "D3-OWEN-MIXED-25IID-75RQMC",
+    "family_equal_safe_full": 0.8083333333333333,
+    "family_equal_target_recall": 0.8208333333333333,
+    "family_equal_right_censored_work": 1130.2875000000001,
+    "safe_full_delta_vs_d0": 0.004166666666666652,
+    "work_ratio_vs_d0": 0.9516607729224552,
+    "families_positive_recall": 1,
+    "families_efficiency_favorable": 4,
+    "critical_strata_noninferior": true,
+    "bootstrap": {
+      "seed": 2002,
+      "resamples": 10000,
+      "draw_sha256": "9f1079777d4c57c91e44cc8a88fa190beaa59406c4fb624c0f883cefd052665f",
+      "safe_full_delta_lower_95": 0.0,
+      "safe_full_delta_upper_95": 0.016666666666666673,
+      "work_ratio_lower_95": 0.6801323034104432,
+      "work_ratio_upper_95": 0.9937364714094239
+    },
+    "path_a_pass": false,
+    "path_b_pass": false,
+    "d0_within_five_percent_tie": true,
+    "promotion_gate_pass": false
+  },
+  "diagnostic_only": {
+    "best_point_method": "D2M-RQMC-MATOUSEK-ALL",
+    "family_equal_safe_full": 0.8125,
+    "family_equal_target_recall": 0.8229166666666666,
+    "family_equal_right_censored_work": 1101.5708333333332,
+    "promotion_authority": false,
+    "reason": "Pure QMC has no permanent IID insurance and was preregistered as diagnostic only. Its aggregate row cannot promote it or tune a mixed policy post hoc."
+  },
+  "remaining_general_failure": {
+    "family": "MULTIROOT-WARPED",
+    "d0_safe_full_runs": 13,
+    "run_count": 60,
+    "cases_with_zero_safe_full_for_all_sources_and_replicates": [8, 9, 10, 11],
+    "interpretation": "Changing only the initial source does not recover four hard basins; proceed to the separately preregistered local numerical-geometry mechanism."
+  },
+  "decision": {
+    "selected_stageb_source": "D0-IID-ALL",
+    "qmc_promoted": false,
+    "raw_current_promoted": false,
+    "source_tuning_rounds_consumed": 0,
+    "production_promotion": false,
+    "authorized_next_stage": "Stage B stable weak-subspace versus paired isotropic and source-continuation controls"
+  },
+  "reporting_note": "callback_threshold_aggregates marks every 4800 row as threshold-authoritative; method eligibility and actual promotion authority reside only in the preregistered D3-vs-D0 comparison."
+}
