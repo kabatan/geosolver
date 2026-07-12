@@ -144,22 +144,13 @@ function stagea_load_inputs(
         proposals = get(case, "proposals", Any[])
         length(proposals) == 52 || error("case proposal count drifted")
         observed_pairs = Set{Tuple{String,Int}}()
+        manifest_by_pair = Dict{Tuple{String,Int},Any}()
         for entry in proposals
             method, replicate = String(entry["method"]), Int(entry["replicate"])
             pair = (method, replicate)
             pair in expected_pairs && !(pair in observed_pairs) || error("proposal identity drifted")
             push!(observed_pairs, pair)
-            load_artifact = artifacts &&
-                (selected_case === nothing || selected_case == case_index) &&
-                (selected_replicate === nothing || selected_replicate == replicate)
-            load_artifact || continue
-            artifact_path = repo_path(entry["path"])
-            sha256_text(entry["file_sha256"]) && sha256_file(artifact_path) == entry["file_sha256"] ||
-                error("proposal file hash drifted")
-            artifact = read_matrix_artifact(artifact_path)
-            StageAInputs._assert_truth_free_artifact(artifact)
-            artifact.method == T0O_METHOD_ENUM[method] && artifact_sha256(artifact) == entry["artifact_sha256"] ||
-                error("proposal artifact binding drifted")
+            manifest_by_pair[pair] = entry
             expected_seed = derive_seed(
                 StageAInputs.STAGEA_ROOT_SEED,
                 T0O_METHOD_ENUM[method],
@@ -169,6 +160,26 @@ function stagea_load_inputs(
             )
             parse(UInt64, String(entry["replicate_seed"])) == expected_seed ||
                 error("proposal seed derivation drifted")
+            artifact_path = repo_path(entry["path"])
+            expected_path = StageAInputs._stagea_artifact_path(
+                abspath(StageAInputs.DEFAULT_STAGEA_PROPOSAL_ROOT),
+                case_index,
+                T0O_METHOD_ENUM[method],
+                replicate,
+            )
+            artifact_path == expected_path || error("proposal path derivation drifted")
+            sha256_text(entry["file_sha256"]) && sha256_text(entry["artifact_sha256"]) ||
+                error("proposal hash binding is malformed")
+            load_artifact = artifacts &&
+                (selected_case === nothing || selected_case == case_index) &&
+                (selected_replicate === nothing || selected_replicate == replicate)
+            load_artifact || continue
+            sha256_text(entry["file_sha256"]) && sha256_file(artifact_path) == entry["file_sha256"] ||
+                error("proposal file hash drifted")
+            artifact = read_matrix_artifact(artifact_path)
+            StageAInputs._assert_truth_free_artifact(artifact)
+            artifact.method == T0O_METHOD_ENUM[method] && artifact_sha256(artifact) == entry["artifact_sha256"] ||
+                error("proposal artifact binding drifted")
             artifact.authority_sha256 == freeze_sha &&
                 artifact.replicate_seed == expected_seed ||
                 error("proposal authority or seed drifted")
@@ -187,6 +198,19 @@ function stagea_load_inputs(
             loaded[case_index][pair] = (artifact=artifact, manifest=entry)
         end
         observed_pairs == expected_pairs || error("one or more proposal streams are absent")
+        for replicate in 1:StageAInputs.STAGEA_REPLICATES
+            mixed = manifest_by_pair[(T0O_METHODS[7], replicate)]
+            sources = get(mixed, "mixed_sources", nothing)
+            sources isa AbstractDict && Set(String.(keys(sources))) == Set(("iid", "rqmc")) ||
+                error("mixed source bindings are absent")
+            for (key, method) in (("iid", T0O_METHODS[1]), ("rqmc", T0O_METHODS[5]))
+                source, expected = sources[key], manifest_by_pair[(method, replicate)]
+                source isa AbstractDict && source["path"] == expected["path"] &&
+                    source["file_sha256"] == expected["file_sha256"] &&
+                    source["artifact_sha256"] == expected["artifact_sha256"] ||
+                    error("mixed source manifest binding drifted")
+            end
+        end
         artifacts && (selected_case === nothing || selected_case == case_index) || continue
         replicates = selected_replicate === nothing ?
             (1:StageAInputs.STAGEA_REPLICATES) : (selected_replicate:selected_replicate)
