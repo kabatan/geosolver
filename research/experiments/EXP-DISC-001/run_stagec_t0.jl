@@ -335,7 +335,7 @@ function _stagec_prearm(input_sha, prereg, authorization, proposal, artifact, pr
         ))
     end
     batch_sha = bytes2hex(sha256(codeunits(canonical_json(schedule.batches))))
-    bounds = Dict(
+    bounds = Dict{String,Any}(
         "lower_float64_bits" => _stagec_vector_bits(problem.lower_bounds),
         "upper_float64_bits" => _stagec_vector_bits(problem.upper_bounds),
     )
