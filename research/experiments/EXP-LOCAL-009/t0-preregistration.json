@@ -1,0 +1,131 @@
+{
+  "schema": "geotarget-research-preregistration/v1",
+  "experiment_id": "EXP-LOCAL-009-T0",
+  "state": "preregistered-no-outcome",
+  "outcome_execution_authorized": false,
+  "research_question": "Can one truth-blind bound-aware feasibility-restoring line-search Gauss-Newton mechanism improve common-assessor local recovery without a safety, stratum, or callback-work regression?",
+  "failure_class": "guard-branch-domain-invalid-local-trials",
+  "candidate": {
+    "name": "RESTORING-GN-CPQR",
+    "implementation": "experiment-local-restoring-line-search-gn-cpqr-v1",
+    "identity_routing": false,
+    "result_dependent_solver_fallback": false,
+    "fixed_damping": false,
+    "coordinates": "direct midpoint/half-range normalization to the closed [-1,1]^n box",
+    "residual": "declared-scale residual",
+    "initial_feasibility": "if the start is invalid, require a valid normalized box center and bisect the center-to-start segment until its bracket is no wider than the finite-difference step",
+    "jacobian": "preferred forward one-sided difference; use the symmetric opposite-sign point after an invalid or unavailable side and halve the radius up to 16 times",
+    "linear_step": "column-pivoted QR with leading numerical rank threshold max(m,n)*eps*max(abs(diag(R))); truncate rather than add fixed damping",
+    "bound_step": "clip the proposed normalized point and form all model tests with the resulting effective step",
+    "globalization": "backtracking factor 0.5; Armijo coefficient 1e-4; actual/predicted reduction floor 1e-4; at most 24 trials",
+    "invalid_trial": "charge callback, reject, and continue the same radius/line-search backoff; never synthesize a penalty residual",
+    "termination": {
+      "scaled_residual_linf": 1e-12,
+      "step_linf": "eps(Float64)^(4/5)",
+      "max_iterations": 120,
+      "max_callbacks": 600
+    },
+    "authority": "candidate convergence and acceptance flags are diagnostic; the common assessor owns qualification and safety"
+  },
+  "controls": [
+    "prod-tol-120x600",
+    "prod-options-250x2000"
+  ],
+  "primary_control": "prod-tol-120x600",
+  "corpus": {
+    "case_count": 6,
+    "target_count": 11,
+    "paired_start_count_per_case": 512,
+    "description": "the unchanged five-case local T0 plus the existing on-boundary strict-guard counterexample",
+    "instances": [
+      {
+        "instance_id": "curved-chain-d4-curve10000.0-i102-s1002",
+        "family_id": "CURVED-CHAIN",
+        "replay_checksum": "8a56042f6ddef9cc097cd1f13fe22b3eb1f376e4ed6a13b7cd70a16f0e566d74",
+        "target_count": 1
+      },
+      {
+        "instance_id": "near-rank-d4-ratio1.0e-8-o103-s1003",
+        "family_id": "NEAR-RANK-DEFICIENT",
+        "replay_checksum": "a55330b98965a2a65dc18d93955458ec88b34e14445cff69ff830db028552145",
+        "target_count": 1
+      },
+      {
+        "instance_id": "tangent-circle-r1.0-ratio0.999999-i105-s1005",
+        "family_id": "TANGENT-CIRCLE-LINE",
+        "replay_checksum": "0eab38a9ca7da57f68106a9daeb24f06122433b60362f01b3dafe157e3d557ac",
+        "target_count": 2
+      },
+      {
+        "instance_id": "multiroot-d4-n4-sep0.001-condition10000.0-warp0.5-targetz1-c106-s1006",
+        "family_id": "MULTIROOT-WARPED",
+        "replay_checksum": "3e012859175cd8291ffd03db916e618142f449df8a7aa03f1c0c7fe7159b48c9",
+        "target_count": 4
+      },
+      {
+        "instance_id": "multiroot-d4-n4-sep0.001-condition10000.0-warp0.5-targetz1_squared-c106-s1006",
+        "family_id": "MULTIROOT-WARPED",
+        "replay_checksum": "1fce84f2621b79af38bef92cd519f1569691f8bd22c6988bf9bde413d81f2cee",
+        "target_count": 2
+      },
+      {
+        "instance_id": "strict-guard-on_boundary-margin0.0-i108-s1008",
+        "family_id": "STRICT-GUARD-BOUNDARY",
+        "replay_checksum": "8a3ae1e490fa272ca26b5903b8ff7d956ceb15eaf41d13e526676e71f42cbc13",
+        "target_count": 1
+      }
+    ]
+  },
+  "execution": {
+    "callback_prefixes": [600, 1200, 2400, 4800],
+    "prefix_policy": "one paired-start stream per case/variant; snapshot only after the first completed attempt crossing each threshold; do not rerun prefixes",
+    "prefix_overshoot_role": "recorded diagnostic only; cumulative threshold-crossing work is not the promotion work metric",
+    "primary_work": "for each case, earliest suffix-stable common-assessor safe-full callback work from raw attempts; miss or value above 4800 is right-censored to 4800; aggregate by summing cases",
+    "lab_suffix_work_role": "diagnostic only; never gate authority",
+    "runner_attempt_hard_limit": 4800,
+    "candidate_attempt_hard_limit": 600,
+    "case_parallelism": "one case per process; at most 6 processes for this T0",
+    "case_internal_threads": 1,
+    "julia_blas_omp_mkl_threads": 1,
+    "wall_time_role": "diagnostic-only",
+    "precondition": "commit these sources and run from a clean worktree only after root approval"
+  },
+  "promotion_gate": {
+    "authority_prefix": 4800,
+    "aggregate_assessor_qualified_target_count": "candidate >= primary control",
+    "aggregate_assessor_safe_full_case_count": "candidate >= primary control",
+    "primary_work": "sum of per-case suffix-stable common-assessor safe-full callback work, right-censored at 4800",
+    "path_a": "target and safe-full noninferior, at least one strictly higher, and right-censored common-assessor work ratio <= 1.20",
+    "path_b": "target and safe-full noninferior and right-censored common-assessor work ratio <= 0.80",
+    "exact_stratum_target_noninferiority": [
+      "CURVED-CHAIN",
+      "NEAR-RANK-DEFICIENT",
+      "TANGENT-CIRCLE-LINE",
+      "MULTIROOT-WARPED",
+      "STRICT-GUARD-BOUNDARY"
+    ],
+    "strict_guard_counterexample": "candidate common-assessor safe-full is true and at least one assessor-qualified endpoint follows a diagnostic-recorded restored start, FD sign reversal, invalid FD trial, or invalid line-search trial",
+    "zero_required": [
+      "reported-accepted canonical invalid",
+      "reported-accepted Gold inconsistent",
+      "reported-accepted numeric-target-only",
+      "reported-accepted ambiguous",
+      "assessor-qualified Gold inconsistent",
+      "evaluation-count mismatch",
+      "candidate or runner callback-cap violation",
+      "unhandled exception",
+      "truth leak"
+    ],
+    "tuning_rounds": 0,
+    "passing_scope": "authorizes only a separately preregistered T1; not production integration"
+  },
+  "pre_outcome_counterexamples": [
+    "invalid initial point with valid box-center segment anchor",
+    "invalid midpoint causing typed initial-infeasible termination",
+    "throwing domain side causing charged FD sign reversal",
+    "invalid full Gauss-Newton trial restored by backtracking",
+    "rank-one system handled by truncated CPQR",
+    "rank-zero model causing typed rank-stalled termination",
+    "candidate callback cap reached without overdraw"
+  ]
+}
