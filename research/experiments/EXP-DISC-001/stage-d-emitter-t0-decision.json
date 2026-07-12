@@ -3,7 +3,7 @@
   "experiment_id": "EXP-DISC-001",
   "stage": "stage-d-emitter-t0",
   "written_on": "2026-07-12",
-  "status": "FROZEN_POINT_EMITTER_T0_NEGATIVE",
+  "status": "FROZEN_POINT_EMITTER_T0_PERFORMANCE_NEGATIVE_CAUSALLY_CLASSIFIED",
   "nonpromotional_t0": true,
   "bindings": {
     "execution_revision": "2c7907f249d84d128752ae678c8f364bc3895a00",
@@ -50,6 +50,26 @@
     "ecp_typed_iid_fallbacks": 532,
     "reaggregation_mismatches": 0
   },
+  "causal_closure": {
+    "protocol": "reference-adapted-control/v1",
+    "independent_source_and_raw_audit": true,
+    "implementation_defect_found": false,
+    "measurement_or_accounting_defect_found": false,
+    "control_headroom_cases": [4, 7, 8],
+    "actionable_headroom_cases": [],
+    "actionable_candidate_contrast_count": {
+      "DIRECT_RECT_EMIT": 0,
+      "SIMPLICIAL_STAR_EMIT": 0,
+      "ECP_LB_FULL": 0
+    },
+    "classification_rule": "A frozen adapter may remain nonpromoted, but efficacy is not called negative unless the mechanism differs from its matched control on an actionable headroom case whose independent near-basin starts are solvable by the fixed local pipeline.",
+    "shared_local_barrier": {
+      "classification": "HARD_LOCAL_CONVERGENCE_AND_RANK_PRECISION_BARRIER",
+      "near_rank_d8": "All arms exhausted essentially 600 callbacks; residuals near 1e-12 still had large forward error and no complete h/h2 correction reserve.",
+      "multiroot_d4_d8": "Float64 rank evidence cannot resolve the approximately 1e-40 to 1e-38 weak derivative; very small residual stationary nonroots remain unsafe.",
+      "next_axis": "condition-triggered rank-revealing adaptive-precision endpoint rescue before another discovery efficacy run"
+    }
+  },
   "safety_and_accounting": {
     "assessor_false_targets": 0,
     "assessor_unsafe": 0,
@@ -74,32 +94,60 @@
   },
   "candidate_decisions": {
     "DIRECT_RECT_EMIT": {
-      "status": "REJECT_AFTER_NEGATIVE_T0",
+      "status": "FROZEN_GLOBAL_TIE_FALLBACK_CONFIG_NEGATIVE",
+      "efficacy_classification": "INCONCLUSIVE_NO_ACTIONABLE_CONTRAST",
       "pooled_distinct_targets": {"candidate": 24, "D0_PRESCORED_64": 25, "RECT_ORBIT_BREADTH": 24},
+      "mechanism_activation": {
+        "matrix_differs_from_control_cases": 8,
+        "matrix_identical_cases": [1, 2, 7, 8],
+        "completed_splits_total": 78,
+        "cause": "Any exact division-score tie invokes the global orbit fallback, so the MultiRoot headroom cases are bit-identical to the geometry-only control."
+      },
       "strict_terminal_win_cases": [],
       "terminal_loss_cases": [2],
       "equal_work_win_cases": [],
       "equal_work_loss_cases": [3, 12],
-      "advance_to_multireplicate": false
+      "advance_to_multireplicate": false,
+      "method_family_rejected": false,
+      "reopen_gate": "Use a new ID with set-valued tie-equivariant simultaneous processing; pass signed-permutation and orthogonal set-covariance, show source contrast on actionable headroom, then compare at frozen 48/96/192 emitter work."
     },
     "SIMPLICIAL_STAR_EMIT": {
-      "status": "REJECT_AFTER_NEGATIVE_T0",
+      "status": "FROZEN_48_SLOT_CUBE_STAR_APPLICABILITY_LIMITED",
+      "efficacy_classification": "INCONCLUSIVE_NO_ACTIONABLE_CONTRAST",
       "eligible_case_count": 9,
+      "effective_applicable_case_count": 7,
       "pooled_distinct_targets": {"candidate": 24, "D0_PRESCORED_64": 24, "SIMPLICIAL_UNGUIDED": 24},
+      "mechanism_activation": {
+        "matrix_differs_from_control_cases": 7,
+        "matrix_identical_cases": [1, 2, 4, 7, 8],
+        "cause": "The 2^d+1 cube-corner base is typed inapplicable at d8; in two formally applicable d4 cases no complete invariant refinement shell fits the remaining 31 slots."
+      },
       "strict_terminal_win_cases": [],
       "terminal_loss_cases": [],
       "equal_work_win_cases": [],
       "equal_work_loss_cases": [12],
-      "advance_to_multireplicate": false
+      "advance_to_multireplicate": false,
+      "method_family_rejected": false,
+      "reopen_gate": "Define effective applicability as at least one complete refinement shell and candidate/control source contrast; a d8 successor must use a separately specified polynomial-size symmetric base such as a 2d+1 cross-polytope."
     },
     "ECP_LB_FULL": {
-      "status": "REJECT_AFTER_NEGATIVE_T0",
+      "status": "FROZEN_PARAMETER_RAW_CAP_STARVATION",
+      "efficacy_classification": "INCONCLUSIVE_FALLBACK_CONTROL_CONFOUNDED",
       "pooled_distinct_targets": {"candidate": 24, "D0_PRESCORED_64": 25},
+      "mechanism_activation": {
+        "raw_draws": 786432,
+        "accepted_candidate_points": 44,
+        "fallback_slots": 532,
+        "fallback_fraction": 0.9236111111111112,
+        "cause": "Every case reached the raw cap. Most source contrast against D0 came from a different fresh-IID fallback namespace rather than accepted ECP points."
+      },
       "strict_terminal_win_cases": [],
       "terminal_loss_cases": [2],
       "equal_work_win_cases": [],
       "equal_work_loss_cases": [12],
-      "advance_to_multireplicate": false
+      "advance_to_multireplicate": false,
+      "method_family_rejected": false,
+      "reopen_gate": "First reproduce the paper/official trace, calibrate raw-cap and epsilon/tau/C fill curves without Gold, require typed parameter-inapplicability when 48 accepted screens cannot be filled, and compare accepted-slot replacement against an all-fallback-IID control."
     }
   },
   "decision": {
@@ -110,11 +158,12 @@
     "reject_direct_family_as_a_class": false,
     "reject_simplicial_or_shgo_family_as_a_class": false,
     "reject_ecp_family_as_a_class": false,
-    "delete_rejected_experiment_local_code": true,
-    "retain": "aggregate, this decision, candidate/source/executable hashes, and ignored raw artifacts",
+    "frozen_adapter_code_removed_from_main": true,
+    "code_deletion_implies_method_family_rejection": false,
+    "retain": "aggregate, causal classification, reopen gates, candidate/source/executable hashes, ignored raw artifacts, and recoverable candidate commits",
     "next_general_failure_class": "hard local convergence and rank instability under the fixed 600-callback cap",
     "next_axis": "compare preregistered budget-reserved rank-aware Float64 correction and condition-triggered adaptive-precision correction against unchanged E4 on parameterized NearRank, Curved, and MultiRoot strata before changing discovery again",
     "case_specific_routing": false
   },
-  "general_conclusion": "Under identical E4 local solves, 64 logical starts, bounded-gap independent-uniform insurance, and fixed callback accounting, none of the three genuinely point-generating mechanisms produced a terminal or equal-work target-recovery win. DIRECT and ECP each lost the difficult Curved d8 witness recovered by D0, while all arms still missed the high-dimensional NearRank instance and both close-root MultiRoot instances. The mechanisms are not promoted or tuned on these cases. D0 remains the discovery source, and the next research cycle changes only the general hard-local-convergence/rank-stability axis."
+  "general_conclusion": "The Stage-D performance result is valid and none of the three frozen adapters advances to production. It is not an efficacy rejection of DIRECT, simplicial/SHGO, or ECP as method families: the actionable headroom set contained no case with candidate-specific treatment contrast and a locally solvable basin. DIRECT was neutralized by its global exact-tie fallback, the 48-slot cube-star was ineffective or inapplicable on all headroom cases, and ECP was dominated by raw-cap starvation plus a confounded fresh-IID fallback. D0 remains the discovery source. The next research cycle repairs the common hard-local-convergence/rank-precision barrier; discovery successors may reopen only through the recorded mechanism-specific gates."
 }
