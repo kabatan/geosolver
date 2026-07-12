@@ -131,13 +131,13 @@ function _stagec_authorize(path, input, input_sha, prereg)
         authorization["aggregator_source_sha256"] == sha256_file(STAGEC_AGGREGATOR) ||
         error("authorized executable source drifted")
     dependencies = authorization["dependency_source_sha256"]
-    for source in (
-        joinpath(STAGEC_ROOT, "run_t0_outcomes.jl"),
-        joinpath(STAGEC_ROOT, "run_stagea_outcomes.jl"),
-        joinpath(STAGEC_ROOT, "src", "stagec_t0_inputs.jl"),
-        joinpath(STAGEC_ROOT, "src", "soft_tgo_ordering.jl"),
+    for relative in (
+        "research/experiments/EXP-DISC-001/run_t0_outcomes.jl", "research/experiments/EXP-DISC-001/run_stagea_outcomes.jl", "research/experiments/EXP-DISC-001/src/ExperimentDisc001.jl", "research/experiments/EXP-DISC-001/src/gate.jl", "research/experiments/EXP-DISC-001/src/stagec_t0_inputs.jl", "research/experiments/EXP-DISC-001/src/soft_tgo_ordering.jl", "research/experiments/EXP-DISC-001/aggregate_t0.py",
+        "research/experiments/EXP-DISC-001/aggregate_stageb_t0.py", "research/experiments/EXP-DISC-001/src/stagea_corpus.jl", "research/experiments/EXP-DISC-001/src/stageb_t0_inputs.jl", "julia/GeoTargetBenchmarks/src/GeoTargetBenchmarks.jl", "julia/GeoTargetBenchmarks/src/types.jl",
+        "julia/GeoTargetBenchmarks/src/replay.jl", "julia/GeoTargetBenchmarks/src/common.jl", "julia/GeoTargetBenchmarks/src/solver_experiment.jl", "julia/GeoTargetBenchmarks/src/curved_chain.jl", "julia/GeoTargetBenchmarks/src/near_rank_deficient.jl",
+        "julia/GeoTargetBenchmarks/src/tangent_circle_line.jl", "julia/GeoTargetBenchmarks/src/multiroot_warped.jl", "julia/GeoTargetBenchmarks/src/strict_guard_boundary.jl", "julia/GeoTargetBenchmarks/src/opaque_transcendental.jl",
     )
-        get(dependencies, repo_relative(source), nothing) == sha256_file(source) ||
+        source = repo_path(relative); get(dependencies, repo_relative(source), nothing) == sha256_file(source) ||
             error("authorized dependency drifted: $(basename(source))")
     end
     return (; document=authorization, sha256=sha256_file(path))
