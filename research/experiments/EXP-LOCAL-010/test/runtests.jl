@@ -265,6 +265,6 @@ end
     @test occursin("\"case_index\" => Int(case_index)", runner)
     @test occursin("SVD_PREREGISTRATION", runner)
     @test occursin("registrations", runner)
-    @test occursin("\"outcome_execution_authorized\": false", preregistration)
+    @test occursin("\"outcome_execution_authorized\": true", preregistration)
     @test occursin("\"qualified_target_recall_delta_minimum\": -0.02", preregistration)
 end

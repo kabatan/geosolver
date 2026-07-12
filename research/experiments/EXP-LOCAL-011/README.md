@@ -1,6 +1,6 @@
 # EXP-LOCAL-011 — h/h2 full-rank SVD endpoint correction
 
-Status: **implementation and T0 preregistration frozen; no outcome run**
+Status: **implementation frozen at `2e5e353`; T0 outcome run authorized**
 
 This experiment isolates endpoint correction from local globalization. Every
 variant starts with the unchanged `prod-tol-120x600` LM-QR trajectory. Only a
