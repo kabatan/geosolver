@@ -3,25 +3,23 @@ using Test
 
 include(joinpath(@__DIR__, "..", "run_wave.jl"))
 
-@testset "R1 runner is predecessor-bound and outcome-authorized" begin
-    preflight = wave_preflight_document("r1")
-    @test preflight["active_stage"] == "r1"
+@testset "T2 runner is predecessor-bound and outcome-authorized" begin
+    preflight = wave_preflight_document("t2")
+    @test preflight["active_stage"] == "t2"
     @test preflight["authorized"]
-    @test preflight["case_count"] == 9
-    @test preflight["maximum_starts"] == 64
+    @test preflight["case_count"] == 48
+    @test preflight["maximum_starts"] == 32
     @test preflight["case_work_stop"] == 4_800
     @test preflight["maximum_case_processes"] == 16
     @test preflight["runtime_versions"]["julia"] == "1.12.6"
-    @test preflight["source_case_indices"] == collect(1:9)
+    @test preflight["source_case_indices"] == collect(1:48)
     @test preflight["variant_names"] == [
         "prod-tol-120x600",
         "E1-FD2-CPQR3",
-        "E3-FD2-GUARD-CHART-CPQR3",
-        "E3-FD2-GUARD-CHART-CPQR3-SHADOW",
         "E4-EXP-GUARD-SLACK-CPQR",
         "E4-EXP-GUARD-SLACK-CPQR-SHADOW",
     ]
-    @test _wave_authorized(_wave_registration(), "r1")
+    @test _wave_authorized(_wave_registration(), "t2")
     @test_throws ErrorException _execution_host_contract(1, 1)
     slot = _acquire_cpu_slot(15)
     try
@@ -31,9 +29,9 @@ include(joinpath(@__DIR__, "..", "run_wave.jl"))
     end
 end
 
-@testset "R1 manifest is frozen and predecessor-bound" begin
+@testset "T2 is R1-bound and the R1 manifest remains frozen" begin
     registration = _wave_registration()
-    @test _validate_predecessor(registration, "r1")
+    @test _validate_predecessor(registration, "t2")
     spec = _wave_stage("r1")
     expected = registration["stages"]["r1"]
     @test length(spec.problems) == length(expected["instances"]) == 9

@@ -1,0 +1,94 @@
+{
+  "schema": "geotarget.local-successor-decision/v1",
+  "experiment_id": "EXP-LOCAL-014",
+  "stage": "r1",
+  "state": "selected-finalist",
+  "revision": "f36651ff9117d7c9482a812d44da35824fb52525",
+  "summary": {
+    "path": "benchmarks/results/raw/exp-local-014-r1-summary.json",
+    "sha256": "e00639ff048e0e861f975abd4838302bc0b6875b705ffa31b54e87dee9112f0b"
+  },
+  "raw_sha256_manifest": {
+    "path": "benchmarks/results/raw/exp-local-014-r1-raw-sha256.txt",
+    "sha256": "23e643cb64cfb2a3b3cacc7049b5db6013c0bf48747db886cee2f24d015e748a",
+    "shard_count": 9
+  },
+  "accounting_violations": 0,
+  "primary_control": {
+    "name": "prod-tol-120x600",
+    "targets_found": 10,
+    "target_count": 16,
+    "safe_full_cases": 6,
+    "case_count": 9,
+    "assessor_unsafe": 11,
+    "right_censored_callback_work": 14981
+  },
+  "work_comparator": {
+    "name": "E1-FD2-CPQR3",
+    "targets_found": 10,
+    "target_count": 16,
+    "safe_full_cases": 7,
+    "assessor_unsafe": 0,
+    "right_censored_callback_work": 10911
+  },
+  "candidates": {
+    "E3-FD2-GUARD-CHART-CPQR3": {
+      "passes_r1": true,
+      "targets_found": 10,
+      "target_count": 16,
+      "safe_full_cases": 7,
+      "assessor_unsafe": 0,
+      "reported_unsafe": 0,
+      "candidate_shadow_callback_mismatches": 0,
+      "candidate_shadow_trajectory_mismatches": 0,
+      "right_censored_callback_work": 10917,
+      "right_censored_work_ratio_vs_e1": 1.0005499037668408,
+      "support_family_count": 6,
+      "mean_family_safe_full_rate": 0.875,
+      "target_recall": 0.625
+    },
+    "E4-EXP-GUARD-SLACK-CPQR": {
+      "passes_r1": true,
+      "targets_found": 10,
+      "target_count": 16,
+      "safe_full_cases": 7,
+      "assessor_unsafe": 0,
+      "reported_unsafe": 0,
+      "candidate_shadow_callback_mismatches": 0,
+      "candidate_shadow_trajectory_mismatches": 0,
+      "right_censored_callback_work": 10911,
+      "right_censored_work_ratio_vs_e1": 1.0,
+      "support_family_count": 6,
+      "mean_family_safe_full_rate": 0.875,
+      "target_recall": 0.625
+    }
+  },
+  "critical_family_target_recall_deltas_vs_primary": {
+    "MULTIROOT-WARPED": 0.0,
+    "NEAR-RANK-DEFICIENT": 0.0,
+    "STRICT-GUARD-BOUNDARY": 0.0,
+    "TANGENT-CIRCLE-LINE": 0.0
+  },
+  "general_failure_observation": {
+    "multiroot_targets_found": 0,
+    "multiroot_target_count": 6,
+    "interpretation": "both local endpoint policies are safe and general across six active families, but neither changes global basin discovery"
+  },
+  "tie_break_application": [
+    "mean-family safe-full tied at 0.875",
+    "target recall tied at 0.625",
+    "E4 won lower right-censored work, 10911 versus 10917",
+    "the six-callback difference is recorded and no tuning was performed"
+  ],
+  "independent_raw_audit": {
+    "used_campaign_aggregator": false,
+    "mismatches": 0,
+    "truth_leak": 0
+  },
+  "survivors": [
+    "E4-EXP-GUARD-SLACK-CPQR"
+  ],
+  "selected_finalist": "E4-EXP-GUARD-SLACK-CPQR",
+  "authorized_next_stage": "t2",
+  "tuning_rounds": 0
+}
