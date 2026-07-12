@@ -1,0 +1,115 @@
+{
+  "schema": "geotarget.algorithm-preregistration/v1",
+  "experiment_id": "EXP-LOCAL-013",
+  "state": "preregistered-no-outcome",
+  "outcome_execution_authorized": false,
+  "candidate": "E4-EXP-GUARD-SLACK-CPQR",
+  "same_work_shadow": "E4-EXP-GUARD-SLACK-CPQR-SHADOW",
+  "failure_class": "residual-qualified endpoint near one or more public strict guards where an unconstrained endpoint correction can cross the public semantic boundary",
+  "research_basis": [
+    {
+      "topic": "constrained Gauss-Newton",
+      "source": "https://link.springer.com/article/10.1007/s10589-026-00801-4",
+      "geotarget_limit": "GeoTarget supplies black-box finite differences and branch/guard discontinuities, so smooth constrained convergence assumptions are not presumed"
+    },
+    {
+      "topic": "bound-aware trust region",
+      "source": "https://www.sciencedirect.com/science/article/pii/S0168927402001708",
+      "geotarget_limit": "the experiment uses only a small local trust safeguard and makes no theorem-level convergence claim"
+    },
+    {
+      "topic": "finite-difference error",
+      "source": "https://epubs.siam.org/doi/10.1137/21M1452470",
+      "geotarget_limit": "h/h2 disagreement and rounding envelopes are diagnostics, not a bound on unsampled derivatives or remainders"
+    },
+    {
+      "topic": "Krawczyk certification",
+      "source": "https://arxiv.org/abs/2011.05000",
+      "geotarget_limit": "E4 has no interval derivative enclosure and is explicitly weaker than validated existence or guard-separation certification"
+    }
+  ],
+  "implementation": {
+    "base": "unchanged prod-tol-120x600 LM-QR endpoint",
+    "total_callback_cap": 600,
+    "maximum_accepted_corrections": 3,
+    "capability_route": "public_guard_count==0 delegates immediately and exactly to the injected matching frozen E1 candidate/shadow; public_guard_count>0 enters E4 without outcome-dependent rerouting",
+    "fallback_injection_contract": "factory requires the exact frozen E1 name and complete ordered configuration: base=prod-tol-120x600, callback_cap=600, proof_step=cbrt(eps(Float64)), proof_radius=1e-6, maximum_corrections=3, and matching shadow; altered, omitted, reordered, or extra fields are rejected",
+    "base_qualification": "finite in-box base endpoint, valid canonical semantics, and scaled original residual infinity norm at most 1e-12",
+    "coordinates": "midpoint/half-range u in [-1,1]^n; equality residuals and public strict guards use their declared positive scales",
+    "guard_contract": "exact declared count of distinct strict public guard tokens, positive finite normalized base slacks, positive finite declared scales, and exact opaque branch-token stability; a declared branch capability requires a non-null base token",
+    "lifted_system": "H(u,z)=[F(u); g_i(u)/s_i-exp(z_i)] with s_i=g_i(u0)>0 and z_i=0 initially",
+    "exponential_policy": "nonfinite, overflowed, underflowed, or zero exp(z_i) is invalid; no z threshold is an acceptance gate",
+    "fd_step": "h=cbrt(eps(Float64)) in normalized coordinates with paired h and h/2 Jacobians",
+    "fd_stencil": "central when both sides at h and h/2 preserve the exact guard-token set, strict feasibility, semantics, and branch token; otherwise one direction must preserve them at h/2,h,2h and the direction with maximal minimum normalized guard slack is used for both resolutions",
+    "jacobian": "finite-difference u columns for scaled F and g/s plus analytic diagonal -exp(z) columns",
+    "rank_error_gate": "on the original residual u block, eta=opnorm(abs(Jh-Jh2)+rounding_h+rounding_h2) and min(sigma_min(Jh),sigma_min(Jh2))>2eta",
+    "linear_solve": "full-column-rank, column-scaled CPQR at h and h/2; nonfinite, rank-deficient, or solve failure is UNKNOWN",
+    "trust_region": "initial radius 1, maximum 4, Euclidean lifted step clipping, fixed alphas [1,1/2,1/4,1/8], Armijo decrease, and actual/predicted reduction ratio strictly greater than 1e-4; radius expansion uses the norm of the accepted effective alpha-times-clipped step, never the pre-backtracking step norm",
+    "final_gate": "original and lifted infinity residual at most 1e-12, plus a positive heuristic guard-and-box separation lower model; never a z cutoff",
+    "base_nonqualified_pass_through": "E4 does not start; preserve the base endpoint, base status, convergence/acceptance flags, evaluation count, and iteration count exactly, with reason=base-pass-through in the experiment diagnostic",
+    "result_type": "a guarded residual-qualified endpoint yields E4_HEURISTIC_GUARD_SEPARATED or E4_HEURISTIC_UNKNOWN; a guarded nonqualified endpoint preserves its base result/status and is not reclassified as an E4 result; never certified, validated, provisional numerical, exact, or an answer authority",
+    "answer_authority": "unchanged 512-bit refinement and independent 768-bit canonical replay remain mandatory",
+    "shadow": "same callbacks, cache, FD stencils, CPQR proofs, trust trials, correction count, and separation model; return the original base endpoint"
+  },
+  "accounting_contract": {
+    "fd_calls": "newly charged callbacks requested by an FD stencil",
+    "trial_calls": "newly charged callbacks requested by a trust/Armijo alpha",
+    "invalid_fd": "charged FD callbacks rejected for callback failure, nonfiniteness, semantics, strict feasibility, guard-token mismatch, or branch mismatch; out-of-box offsets and cache hits do not increment",
+    "invalid_trials": "out-of-box alpha without callback, charged trial callback rejected by the public contract, or invalid exponential after a newly evaluated or cached valid-u trial sample; a valid sample rejected only by Armijo/model ratio does not increment",
+    "cache": "a cache hit itself causes no new callback and increments no call or invalid counter; subsequent exp(z) validation is independent, and an invalid exponential paired with cached valid u increments invalid_trials",
+    "reported_evaluations": "base evaluations plus newly charged FD/trial callbacks and never above 600"
+  },
+  "truth_blind_inputs": [
+    "dimension and residual dimension",
+    "finite bounds and declared variable/residual scales",
+    "scaled residual values",
+    "public guard count and public token/margin/scale/strict observations",
+    "optional opaque branch token",
+    "h/h2 Jacobian spectrum, model agreement, and callback budget"
+  ],
+  "forbidden_runtime_inputs": [
+    "case, family, file, primitive, or plugin identity",
+    "Gold configurations or targets",
+    "known roots or expected branch",
+    "fixture or failure labels",
+    "candidate outcome when selecting the capability lane"
+  ],
+  "pre_outcome_t0": {
+    "execution_state": "targeted fixtures only; no T0 runner or outcome execution is authorized",
+    "controls": [
+      "frozen E1-FD2-CPQR3 behavior for public_guard_count==0",
+      "E4-EXP-GUARD-SLACK-CPQR",
+      "E4-EXP-GUARD-SLACK-CPQR-SHADOW"
+    ],
+    "parameterized_fixtures": [
+      "true normalized strict margins 1e-6, 1e-8, and 1e-12",
+      "strict-boundary ghost F(t)=t and g(t)=t",
+      "flat, curved, and two-guard charts",
+      "positive guard margin/scale replicas 1e-12, 1, and 1e12",
+      "public guard tuple reorder",
+      "opaque public guard-token relabel",
+      "residual raw value and matching declared scale multiplied by the same positive factor",
+      "signed coordinate permutation",
+      "exp(z) underflow",
+      "opaque branch-token instability",
+      "NearRank guard-crossing fixture: bounds [-1,1]^2, start (0.25,0.9), F=(x-0.25,5e-13*(y+0.25)), and strict g=y; the base residual 5.75e-13 is qualified but the weak-direction correction is 1.15 and the unique root y=-0.25 is strict-infeasible, so candidate must be UNKNOWN/drop and shadow must execute identical work"
+    ],
+    "same_work_requirement": "candidate and shadow must report identical total callbacks and identical FD/trial/proof/correction/separation diagnostics; only returned endpoint/acceptance role and shadow flag may differ",
+    "future_direct_chart_A_comparator": "required later if a direct feasible-chart implementation is frozen; absent and unauthorized here",
+    "future_exp_vs_linear_slack_ablation": "if E4 survives targeted T0 and a numerically safe linear-slack formulation is feasible, compare with identical starts, base endpoints, cap, FD stencils, correction count, assessor, and same-work shadow",
+    "orthogonal_replica_boundary": "axis-aligned FD does not imply an identical trajectory after a general orthogonal transform; require only answer-class invariance in the later campaign, not targeted-T0 trajectory equality"
+  },
+  "pre_outcome_kill_gates": [
+    "any false acceptance of the strict-boundary ghost",
+    "any loss of a true positive-margin root at 1e-6, 1e-8, or 1e-12 in the parameterized fixtures",
+    "any answer-class change under positive raw guard margin/scale multiplication, guard tuple reorder, opaque guard-token relabel, residual raw-value/declared-scale co-scaling, or signed coordinate permutation",
+    "any accepted point with changed branch token, changed guard-token set, invalid strict guard, invalid semantics, or invalid exponential",
+    "any candidate endpoint or accepted report on the frozen qualified NearRank guard-crossing fixture, or any candidate/shadow work mismatch there",
+    "any candidate/shadow callback or trajectory mismatch",
+    "any reported/observed callback mismatch or total above 600",
+    "any runtime use of case/family/plugin identity, Gold, or known roots",
+    "any certified, validated, provisional-answer, or exact-answer claim from this heuristic"
+  ],
+  "promotion_boundary": "Passing targeted T0 only permits an equal-work comparison with the direct feasible-chart and linear-slack controls. It does not authorize a corpus outcome, Core integration, production dependency, or answer-status change.",
+  "nonproof_boundary": "Without validated derivative and remainder bounds, finite h/h2 samples cannot exclude between-sample oscillation, nonsmoothness, an unseen branch boundary, or loss of strict feasibility. The 512/768-bit canonical validation pipeline remains the answer authority."
+}
