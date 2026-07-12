@@ -1,6 +1,6 @@
 # EXP-LOCAL-013 — exponential strict-guard slack CPQR heuristic
 
-Status: **frozen; EXP-LOCAL-014 G0 outcome execution authorized**.
+Status: **frozen; EXP-LOCAL-014 G0 passed and R1 outcome execution authorized**.
 
 `E4-EXP-GUARD-SLACK-CPQR` is an experiment-local endpoint-correction
 candidate for residual-qualified endpoints with public strict guards.  It is

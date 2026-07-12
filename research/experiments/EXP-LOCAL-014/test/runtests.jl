@@ -3,18 +3,16 @@ using Test
 
 include(joinpath(@__DIR__, "..", "run_wave.jl"))
 
-@testset "G0 runner is frozen and outcome-authorized" begin
-    preflight = wave_preflight_document("g0")
-    @test preflight["active_stage"] == "g0"
+@testset "R1 runner is predecessor-bound and outcome-authorized" begin
+    preflight = wave_preflight_document("r1")
+    @test preflight["active_stage"] == "r1"
     @test preflight["authorized"]
-    @test preflight["case_count"] == 12
-    @test preflight["maximum_starts"] == 32
+    @test preflight["case_count"] == 9
+    @test preflight["maximum_starts"] == 64
     @test preflight["case_work_stop"] == 4_800
     @test preflight["maximum_case_processes"] == 16
     @test preflight["runtime_versions"]["julia"] == "1.12.6"
-    @test preflight["source_case_indices"] == [
-        13, 14, 15, 16, 17, 18, 37, 38, 39, 40, 41, 42,
-    ]
+    @test preflight["source_case_indices"] == collect(1:9)
     @test preflight["variant_names"] == [
         "prod-tol-120x600",
         "E1-FD2-CPQR3",
@@ -23,7 +21,7 @@ include(joinpath(@__DIR__, "..", "run_wave.jl"))
         "E4-EXP-GUARD-SLACK-CPQR",
         "E4-EXP-GUARD-SLACK-CPQR-SHADOW",
     ]
-    @test _wave_authorized(_wave_registration(), "g0")
+    @test _wave_authorized(_wave_registration(), "r1")
     @test_throws ErrorException _execution_host_contract(1, 1)
     slot = _acquire_cpu_slot(15)
     try
@@ -33,9 +31,9 @@ include(joinpath(@__DIR__, "..", "run_wave.jl"))
     end
 end
 
-@testset "future R1 is frozen and predecessor-gated" begin
+@testset "R1 manifest is frozen and predecessor-bound" begin
     registration = _wave_registration()
-    @test_throws ErrorException _validate_predecessor(registration, "r1")
+    @test _validate_predecessor(registration, "r1")
     spec = _wave_stage("r1")
     expected = registration["stages"]["r1"]
     @test length(spec.problems) == length(expected["instances"]) == 9

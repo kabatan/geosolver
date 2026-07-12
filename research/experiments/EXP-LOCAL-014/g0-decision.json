@@ -1,0 +1,95 @@
+{
+  "schema": "geotarget.local-successor-decision/v1",
+  "experiment_id": "EXP-LOCAL-014",
+  "stage": "g0",
+  "state": "accepted-survivors",
+  "revision": "4eee5bb60884804381fe282a69bfae380c4806df",
+  "summary": {
+    "path": "benchmarks/results/raw/exp-local-014-g0-summary.json",
+    "sha256": "54ac337be34a36ec463abb4266672e4b917c10ad768dff3ae83e871604226976"
+  },
+  "raw_sha256_manifest": {
+    "path": "benchmarks/results/raw/exp-local-014-g0-raw-sha256.txt",
+    "sha256": "0e72f3d805def3be089d5f498b4b2d37706ab176fdadda6cdb98ff0b3bd01810",
+    "shard_count": 12
+  },
+  "accounting": {
+    "callback_cap_violations": 0,
+    "reported_observed_mismatches": 0,
+    "exceptions": 0,
+    "runner_budget_exhausted": 0,
+    "stream_stop_violations": 0,
+    "terminal_mismatches": 0,
+    "threshold_snapshot_mismatches": 0
+  },
+  "primary_control": {
+    "name": "prod-tol-120x600",
+    "targets_found": 15,
+    "target_count": 17,
+    "safe_full_cases": 8,
+    "case_count": 12,
+    "assessor_unsafe": 9,
+    "right_censored_callback_work": 20036
+  },
+  "work_comparator": {
+    "name": "E1-FD2-CPQR3",
+    "targets_found": 12,
+    "target_count": 17,
+    "safe_full_cases": 7,
+    "assessor_unsafe": 0,
+    "right_censored_callback_work": 26532
+  },
+  "candidates": {
+    "E3-FD2-GUARD-CHART-CPQR3": {
+      "passes_g0": true,
+      "targets_found": 15,
+      "target_count": 17,
+      "safe_full_cases": 10,
+      "assessor_unsafe": 0,
+      "reported_unsafe": 0,
+      "strict_guard_targets_found": 11,
+      "strict_guard_target_count": 11,
+      "near_rank_candidate_unsafe": 0,
+      "near_rank_shadow_unsafe": 8,
+      "candidate_shadow_callback_mismatches": 0,
+      "candidate_shadow_trajectory_mismatches": 0,
+      "right_censored_callback_work": 12638,
+      "right_censored_work_ratio_vs_e1": 0.4763304688677823
+    },
+    "E4-EXP-GUARD-SLACK-CPQR": {
+      "passes_g0": true,
+      "targets_found": 15,
+      "target_count": 17,
+      "safe_full_cases": 10,
+      "assessor_unsafe": 0,
+      "reported_unsafe": 0,
+      "strict_guard_targets_found": 11,
+      "strict_guard_target_count": 11,
+      "near_rank_candidate_unsafe": 0,
+      "near_rank_shadow_unsafe": 8,
+      "candidate_shadow_callback_mismatches": 0,
+      "candidate_shadow_trajectory_mismatches": 0,
+      "right_censored_callback_work": 12680,
+      "right_censored_work_ratio_vs_e1": 0.47791346298808984
+    }
+  },
+  "general_failure_observation": {
+    "near_rank_targets_found_by_each_candidate": 4,
+    "near_rank_target_count": 6,
+    "shared_miss_source_case_indices": [16, 18],
+    "interpretation": "guard-aware endpoint mechanisms remove unsafe qualified endpoints and recover all strict-guard targets, but do not solve the two hardest ratio-1e-12 local convergence misses"
+  },
+  "independent_raw_audit": {
+    "implementation_independent_of_candidates": true,
+    "used_campaign_aggregator": false,
+    "mismatches": 0,
+    "truth_leak": 0
+  },
+  "survivors": [
+    "E3-FD2-GUARD-CHART-CPQR3",
+    "E4-EXP-GUARD-SLACK-CPQR"
+  ],
+  "selected_finalist": null,
+  "authorized_next_stage": "r1",
+  "tuning_rounds": 0
+}

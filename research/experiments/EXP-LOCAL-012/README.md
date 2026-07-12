@@ -1,6 +1,6 @@
 # EXP-LOCAL-012 — guard-chart CPQR endpoint heuristic
 
-Status: **frozen; EXP-LOCAL-014 G0 outcome execution authorized**.
+Status: **frozen; EXP-LOCAL-014 G0 passed and R1 outcome execution authorized**.
 
 `E3-FD2-GUARD-CHART-CPQR3` is the narrow successor to the rejected E1
 endpoint filter. It changes only a typed central-stencil failure caused by a
