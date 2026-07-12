@@ -40,7 +40,7 @@ JULIA_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
   --project=research/experiments/EXP-LOCAL-002 \
   research/experiments/EXP-LOCAL-015/run_t0.jl \
   --case-index 1 \
-  --registration research/experiments/EXP-LOCAL-015/preregistration-t0.json \
+  --registration research/experiments/EXP-LOCAL-015/preregistration-t0-r2.json \
   --output artifacts/raw/EXP-LOCAL-015/case-001.json
 ```
 
@@ -50,6 +50,12 @@ one physical core; SMT siblings are not used.  The raw shard records and the
 scorer checks Julia/BLAS/solver thread counts, the active Project/Manifest
 hashes, clean revision, corpus checksum, registration hash, and independent
 physical callback ledgers.  A direct `./run_t0.jl` invocation is not valid.
+
+The original `preregistration-t0.json` campaign stopped before aggregation due
+to a runner result-contract defect and is permanently invalidated by
+`invalid-run-cb81114.json`.  Revision r2 adds the missing typed-false activation
+fields and an all-safety-path fixture; it does not change candidate mechanics,
+parameters, corpus, or decision gates.
 
 Formal aggregation uses the locked Python 3.12.11 environment; importing the
 module for unit tests remains version-independent:

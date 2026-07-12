@@ -65,4 +65,50 @@ include(joinpath(@__DIR__, "..", "run_t0.jl"))
     @test row["observed_weighted_work"] == row["reported_weighted_work"] == 8
     @test row["shared_observed_precision_counts"] == Dict("float64" => 9)
     @test row["shared_observed_callback_count"] == row["shared_callback_count"] == 9
+
+    for kind in (
+        :stationary_nonroot,
+        :even_multiple_root,
+        :constant_manifold,
+        :varying_manifold,
+        :branch_crossing,
+        :guard_crossing,
+    )
+        safety_record = FIX.make_safety_fixture(kind)
+        safety = FIX.candidate_view(safety_record)
+        safety_endpoint = safety.starts[1]
+        safety_shared = Dict{String,Int}()
+        safety_prefilter = LAB.acquire_shared_prefilter(
+            safety,
+            safety_endpoint;
+            observe_callback=bits -> _observe_precision!(safety_shared, bits),
+        )
+        safety_input = _candidate_input(safety, safety_prefilter)
+        for (arm, lane) in (
+            (LAB.WEAK_ARM, :weak),
+            (LAB.ISOTROPIC_ARM, :isotropic),
+            (LAB.WEAK_NO_EMIT_ARM, :no_bracket),
+        )
+            safety_row = _row(
+                arm,
+                1,
+                safety_input,
+                safety_prefilter,
+                safety_shared,
+                safety_record,
+                safety_endpoint,
+                observer -> LAB.run_weak_arm(
+                    safety,
+                    safety_prefilter;
+                    lane,
+                    observe_callback=observer,
+                ),
+            )
+            @test safety_row["exception"] === nothing
+            @test Set(keys(safety_row["activation_observables"])) == Set((
+                "rank_evidence_activated",
+                "strict_bracket_detected",
+            ))
+        end
+    end
 end

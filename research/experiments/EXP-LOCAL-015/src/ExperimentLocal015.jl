@@ -546,6 +546,31 @@ function _fixed_isotropic_direction(dimension::Int, endpoint_ordinal::Int)
     return direction ./ magnitude
 end
 
+function _empty_weak_arm(arm::String, reason::Symbol, lane::Symbol)
+    return ArmTrialResult(
+        arm,
+        :unknown,
+        reason,
+        0,
+        0,
+        0,
+        false,
+        0,
+        Tuple[],
+        WEAK.RefinementSeed[],
+        Dict{String,Int}(),
+        (;
+            lane,
+            required_callbacks=2length(WEAK.BRACKET_RADII),
+            rank_evidence_activated=false,
+            strict_bracket_detected=false,
+            detected_bracket_count=0,
+            diagnostic_reason=reason,
+            probe_reason=reason,
+        ),
+    )
+end
+
 function run_weak_arm(
     fixture,
     prefilter;
@@ -559,48 +584,21 @@ function run_weak_arm(
           lane == :no_bracket ? WEAK_NO_EMIT_ARM :
           throw(ArgumentError("unsupported weak arm lane"))
     anchor = prefilter.anchor
-    anchor isa WEAK.RescueEvaluation || return ArmTrialResult(
+    anchor isa WEAK.RescueEvaluation || return _empty_weak_arm(
         arm,
-        :unknown,
         :shared_anchor_unavailable,
-        0,
-        0,
-        0,
-        false,
-        0,
-        Tuple[],
-        WEAK.RefinementSeed[],
-        Dict{String,Int}(),
-        (; lane),
+        lane,
     )
     context = prefilter.weak_probe_context
-    context isa SharedWeakProbeContext || return ArmTrialResult(
+    context isa SharedWeakProbeContext || return _empty_weak_arm(
         arm,
-        :unknown,
         :shared_weak_probe_context_unavailable,
-        0,
-        0,
-        0,
-        false,
-        0,
-        Tuple[],
-        WEAK.RefinementSeed[],
-        Dict{String,Int}(),
-        (; lane),
+        lane,
     )
-    fixture.evaluate_float64 === context.evaluate_float64 || return ArmTrialResult(
+    fixture.evaluate_float64 === context.evaluate_float64 || return _empty_weak_arm(
         arm,
-        :unknown,
         :shared_weak_probe_source_mismatch,
-        0,
-        0,
-        0,
-        false,
-        0,
-        Tuple[],
-        WEAK.RefinementSeed[],
-        Dict{String,Int}(),
-        (; lane),
+        lane,
     )
     counter = Ref(0)
     evaluator = point -> begin
