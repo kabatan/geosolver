@@ -447,9 +447,13 @@ function weak_geometry_plan(
     upper::AbstractVector;
     seed::Integer,
     derived_from_probe::Bool=false,
+    maximum_comparisons::Integer=WEAK_MAX_COMPARISONS,
 )
     derived_from_probe && return _inapplicable(:probe_derived_endpoint)
     0 <= seed <= typemax(UInt64) || return _inapplicable(:invalid_seed)
+    0 <= maximum_comparisons <= WEAK_MAX_COMPARISONS ||
+        return _inapplicable(:invalid_comparison_budget)
+    maximum_comparisons == 0 && return _inapplicable(:comparison_budget_empty)
     n = length(endpoint)
     n >= 2 || return _inapplicable(:dimension_below_two)
     length(lower) == n && length(upper) == n || return _inapplicable(:box_dimension_mismatch)
@@ -581,6 +585,7 @@ function weak_geometry_plan(
             paired_probe_directions(average_projector, z)
         end
         for radius in WEAK_RADII
+            attempted >= maximum_comparisons && break
             attempted += 1
             if paired === nothing
                 rejected += 1
@@ -608,8 +613,9 @@ function weak_geometry_plan(
                 push!(quartets, quartet)
             end
         end
+        attempted >= maximum_comparisons && break
     end
-    attempted <= WEAK_MAX_COMPARISONS || error("frozen comparison bound drifted")
+    attempted <= maximum_comparisons || error("comparison budget drifted")
     isempty(quartets) && return _inapplicable(
         :no_jointly_valid_probe_quartet;
         callbacks=callback_count,

@@ -399,6 +399,31 @@ end
             dot(isotropic_point, quartet.isotropic_direction) * slot.sign > 0
     end for slot in result.launch_slots if slot.lane == :geometry)
     @test result.callback_count == 1 + 4 * 4 + 4 * 24
+
+    limited = weak_geometry_plan(
+        linear_observer(Matrix(matrix), box_normalization(fill(-1.0, 4), fill(1.0, 4))),
+        zeros(4),
+        fill(-1.0, 4),
+        fill(1.0, 4);
+        seed=0x5eed,
+        maximum_comparisons=4,
+    )
+    @test limited.status == :applicable
+    @test limited.attempted_comparisons == length(limited.quartets) == 4
+    @test count(slot -> slot.lane == :geometry, limited.launch_slots) == 8
+    @test count(slot -> slot.lane == :continuation, limited.launch_slots) == 40
+    @test limited.callback_count == 1 + 4 * 4 + 4 * 4
+
+    empty_budget = weak_geometry_plan(
+        point -> WeakPointEvaluation(zeros(4)),
+        zeros(4),
+        fill(-1.0, 4),
+        fill(1.0, 4);
+        seed=1,
+        maximum_comparisons=0,
+    )
+    @test empty_budget.reason == :comparison_budget_empty
+    @test empty_budget.callback_count == 0
 end
 
 @testset "joint split minimizes padded ratio with weak-dimension tie break" begin
