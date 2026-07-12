@@ -49,6 +49,8 @@ REQUIRED_DEPENDENCIES = frozenset({
 OPERATIONAL_FIELDS = ("callback_cap_violations", "evaluation_count_mismatches", "exceptions", "runner_budget_exhausted")
 EPS, FLOAT_MIN, SUBNORMAL_MIN = 2.0**-52, sys.float_info.min, math.ulp(0.0)
 SOURCE_INDICES = (11, 12, 17, 18, 29, 30, 33, 35, 40, 41, 46, 47)
+PROPOSAL_METADATA_KEYS = frozenset({"authority_freeze_sha256", "confirmation_contract_sha256", "domain_dimension", "domain_lower_float64_bits", "domain_upper_float64_bits", "experiment_source_sha256", "independence_model", "julia_version", "local_options_sha256", "local_source_sha256", "manifest_sha256", "preregistration_sha256", "proposal_engine_sha256", "proposal_engine_version", "quasi_monte_carlo_version", "rng", "stream_contract"})
+PROPOSAL_TRUTH_FIELDS = frozenset({"artifact_checksums", "base_orthogonal", "boundary_case", "candidate_configurations", "candidate_guard_margins", "candidate_strict_validity", "capability_contract", "case_id", "coefficient_seed", "condition", "configuration_count", "curvature", "dependency_error", "dependency_seed", "expected_target_values", "family_id", "formal_case_id", "gold_configurations", "gold_configurations_checksum", "gold_targets", "guard_contract", "guard_margin", "height_radius_ratio", "instance_id", "instance_seed", "latent_roots", "left_orthogonal", "linear_operator", "loop_count", "minimum_separation", "mixing", "opaque_callback_values", "opaque_contract", "orientation_seed", "overdetermined_operator", "parameters", "parameters_checksum", "phase", "radius", "redundancy", "replay_checksum", "residual_dimension", "residual_scale_spread", "right_orthogonal", "root_count", "root_jacobian", "row_scales", "saved_starts", "saved_starts_checksum", "saved_starts_shape", "scales", "singular_value_ratio", "singular_values", "source_index", "start_count", "start_seed", "strata", "target_affine_scale", "target_count", "target_map", "warp", "warp_coefficients"})
 PREARM_KEYS = frozenset({"arm_order", "arms", "authorization", "batch_schedule", "batch_schedule_sha256", "bounds", "branch_capability", "experiment_id", "input_manifest_sha256", "prescore_records", "preregistration", "schema_version", "source_artifact", "source_matrix", "stage", "truth_free"})
 RECORD_KEYS = frozenset({"branch_fallback", "branch_partition_ordinal", "canonical_valid", "scaled_residual_float64_bits", "score_float64_bits", "source_ordinal", "start_float64_bits"})
 RAW_KEYS = frozenset({"arm_order", "arms", "authorization", "case_index", "experiment_id", "input_manifest", "lab_confirmation_512_768", "nonpromotional_t0", "prearm", "prescore_attempt", "preregistration", "revision", "schema_version", "stage", "thread_contract", "work_ledger"})
@@ -81,6 +83,18 @@ def _inspect_truth_free(value: Any) -> None:
             _inspect_truth_free(child)
     elif isinstance(value, list):
         for child in value: _inspect_truth_free(child)
+def _inspect_proposal_metadata(value: Any) -> None:
+    metadata = _exact_keys(value, PROPOSAL_METADATA_KEYS, "D0 public metadata")
+    serialized = canonical_json(value).lower()
+    leaked = sorted(field for field in PROPOSAL_TRUTH_FIELDS if field in serialized)
+    if leaked: raise ValueError(f"D0 metadata leaks {','.join(leaked)}")
+    stream = _exact_keys(metadata.get("stream_contract"), {"column_count", "method", "only_difference", "prefixes", "runtime_inputs", "truth_fields_visible"}, "D0 stream contract")
+    if stream.get("column_count") != COLUMNS or stream.get("method") != "D0-IID-ALL" or stream.get("prefixes") != [8, 16, 32, 64, 128] or stream.get("runtime_inputs") != ["dimension", "finite_bounds", "numeric_seed"] or stream.get("truth_fields_visible") is not False or not isinstance(stream.get("only_difference"), str): raise ValueError("D0 stream contract differs")
+    for name in ("experiment_source_sha256", "local_source_sha256", "preregistration_sha256"):
+        mapping = metadata.get(name)
+        if not isinstance(mapping, dict) or not mapping or not all(isinstance(key, str) and stageb._sha_text(item) for key, item in mapping.items()): raise ValueError(f"D0 {name} map differs")
+    for name in ("authority_freeze_sha256", "confirmation_contract_sha256", "local_options_sha256", "manifest_sha256", "proposal_engine_sha256"):
+        if not stageb._sha_text(metadata.get(name)): raise ValueError(f"D0 {name} differs")
 def _score(residual_bits: Any) -> tuple[float | None, str | None]:
     if not isinstance(residual_bits, list): raise ValueError("residual bits must be a list")
     values = [_number(value) for value in residual_bits]
@@ -212,8 +226,7 @@ def _validate_proposal(case: dict[str, Any], document: dict[str, Any], file_sha:
     bits = stageb._validate_bits_matrix(document.get("coordinate_float64_bits_by_column"), case["dimension"], COLUMNS, "D0 source")
     if document.get("lane_schedule") != ["iid"] * COLUMNS or document.get("source_columns") != list(range(1, COLUMNS + 1)): raise ValueError("D0 artifact is not all-IID")
     metadata = document.get("metadata")
-    if not isinstance(metadata, dict): raise ValueError("D0 public metadata absent")
-    _inspect_truth_free(metadata)
+    _inspect_proposal_metadata(metadata)
     return bits
 def _validate_prearm(document: dict[str, Any], case: dict[str, Any], proposal: dict[str, Any], proposal_bits: list[list[str]], input_sha: str, prereg: dict[str, Any], auth: dict[str, Any]) -> dict[str, Any]:
     _exact_keys(document, PREARM_KEYS, "prearm")
@@ -374,6 +387,20 @@ def aggregate_documents(input_document: dict[str, Any], preregistration: dict[st
     status = "INCONCLUSIVE_NO_HEADROOM" if not headroom_signal else "FAVORABLE_NONPROMOTIONAL_T0" if favorable else "NEGATIVE_NONPROMOTIONAL_T0"
     return {"accounting": dict(sorted(accounting.items())), "authorization_sha256": authorization_sha, "case_rows": rows, "checkpoint_rows": checkpoints, "decision": {"accounting_violations": operational, "critical_family_nonregression": family_nonregression, "headroom_case_indices": [index for index, _ in headroom], "headroom_signal": headroom_signal, "performance_authority": False, "promotion": False, "safety_violations": safety, "status": status, "strict_win_cases": [{"case_index": index, "thresholds": thresholds} for index, _, thresholds in strict_cases], "strict_win_signal": strict_signal, "terminal_identity": terminal_identity, "tuning_allowed": False}, "experiment_id": EXPERIMENT, "input_manifest_sha256": input_sha, "preregistration_sha256": prereg_sha, "revision": revisions.pop(), "schema_version": OUTPUT_SCHEMA, "source_manifest_sha256": source_sha, "stage": "stage-c-soft-tgo-t0"}
 def _load_relative(root: Path, relative: Any, label: str) -> Path: return stageb._load_relative(root, relative, label)
+def validate_formal_proposals(input_path: Path) -> dict[str, Any]:
+    root = Path(__file__).resolve().parents[3]; document = json.loads(input_path.read_text()); cases = _validate_input(document)
+    validated, rejected = 0, 0
+    for case in cases:
+        path = _load_relative(root, case["proposal"]["path"], "formal D0 proposal"); proposal = json.loads(path.read_text())
+        _validate_proposal(case, proposal, sha256(path), document["local_freeze_sha256"]); validated += 1
+        if validated == 1:
+            for field in ("parameters", "parameters_checksum", "replay_checksum", "residual_dimension", "strata", "saved_starts", "saved_starts_checksum"):
+                poisoned = copy.deepcopy(proposal); poisoned["metadata"]["local_source_sha256"]["note"] = field; payload = dict(poisoned); payload.pop("sha256"); poisoned["sha256"] = digest(payload)
+                poisoned_case = copy.deepcopy(case); poisoned_case["proposal"]["artifact_sha256"] = poisoned["sha256"]; poisoned_case["proposal"]["file_sha256"] = "f" * 64
+                try: _validate_proposal(poisoned_case, poisoned, "f" * 64, document["local_freeze_sha256"])
+                except ValueError as error: rejected += str(error).startswith("D0 metadata leaks ")
+    if validated != CASE_COUNT or rejected != 7: raise ValueError("formal D0 proposal smoke is incomplete")
+    return {"formal_proposals_validated": validated, "outcomes_executed": False, "schema_version": "geotarget.discovery-stagec-soft-tgo-t0-proposal-smoke/v1", "truth_tampers_rejected": rejected}
 def aggregate_files(input_path: Path, auth_path: Path, shard_paths: Sequence[Path]) -> dict[str, Any]:
     root = Path(__file__).resolve().parents[3]; input_document = json.loads(input_path.read_text()); authorization = json.loads(auth_path.read_text()); shards = [json.loads(path.read_text()) for path in shard_paths]
     input_binding = authorization.get("input_manifest", {}); bound_input = _load_relative(root, input_binding.get("path"), "authorized input")
@@ -438,6 +465,24 @@ def self_test() -> dict[str, Any]:
     except ValueError as error:
         schema_tampers += str(error) == "raw shard keys differ"
     assert schema_tampers == 3
+    allowed_metadata = {key: "value" for key in PROPOSAL_METADATA_KEYS}; allowed_metadata.update({"authority_freeze_sha256": "0" * 64, "confirmation_contract_sha256": "0" * 64, "domain_dimension": 1, "domain_lower_float64_bits": [_bits(-1.0)], "domain_upper_float64_bits": [_bits(1.0)], "experiment_source_sha256": {"source.jl": "0" * 64}, "local_options_sha256": "0" * 64, "local_source_sha256": {"julia/GeoTargetBase/src/GeoTargetBase.jl": "0" * 64}, "manifest_sha256": "0" * 64, "preregistration_sha256": {"original": "0" * 64}, "proposal_engine_sha256": "0" * 64, "stream_contract": {"column_count": COLUMNS, "method": "D0-IID-ALL", "only_difference": "every point launched", "prefixes": [8, 16, 32, 64, 128], "runtime_inputs": ["dimension", "finite_bounds", "numeric_seed"], "truth_fields_visible": False}}); _inspect_proposal_metadata(allowed_metadata)
+    proposal_truth_tampers = 0
+    for field in PROPOSAL_TRUTH_FIELDS:
+        for poisoned in ({**copy.deepcopy(allowed_metadata), "independence_model": f"contains {field}"}, copy.deepcopy(allowed_metadata)):
+            if poisoned["independence_model"] == allowed_metadata["independence_model"]: poisoned["local_source_sha256"][field] = "0" * 64
+            try: _inspect_proposal_metadata(poisoned)
+            except ValueError as error: proposal_truth_tampers += str(error).startswith("D0 metadata leaks ")
+    assert proposal_truth_tampers == 2 * len(PROPOSAL_TRUTH_FIELDS)
+    proposal_schema_tampers = 0
+    schema_fixtures = []
+    fixture = copy.deepcopy(allowed_metadata); fixture["note"] = "secret"; schema_fixtures.append(fixture)
+    fixture = copy.deepcopy(allowed_metadata); fixture["stream_contract"]["note"] = "secret"; schema_fixtures.append(fixture)
+    fixture = copy.deepcopy(allowed_metadata); fixture["stream_contract"]["runtime_inputs"].append("extra"); schema_fixtures.append(fixture)
+    fixture = copy.deepcopy(allowed_metadata); fixture["local_source_sha256"]["source.jl"] = "bad"; schema_fixtures.append(fixture)
+    for fixture in schema_fixtures:
+        try: _inspect_proposal_metadata(fixture)
+        except ValueError: proposal_schema_tampers += 1
+    assert proposal_schema_tampers == 4
     authorization = {"schema_version": AUTH_SCHEMA, "outcome_execution_authorized": True, "nonpromotional_t0": True, "input_manifest": {"sha256": "i"}, "preregistration": {"sha256": "p"}, "aggregator_source_sha256": "a", "runner_source_sha256": RUNNER_SHA, "dependency_source_sha256": {path: "0" * 64 for path in REQUIRED_DEPENDENCIES}}
     _validate_authorization(authorization, "i", "p", "a"); omissions = 0
     for path in REQUIRED_DEPENDENCIES:
@@ -460,12 +505,15 @@ def self_test() -> dict[str, Any]:
     attempts = [{"observed_evaluations": 37} for _ in range(128)]
     selected, work = _ledger_prefix(attempts, 600, 16)
     assert work <= 600 and len(selected) == 15
-    return {"algorithm_fixture": True, "dependency_omissions_detected": omissions, "formal_raw_required": False, "outcomes_executed": False, "schema_tampers_detected": schema_tampers, "schema_version": "geotarget.discovery-stagec-soft-tgo-t0-aggregate-self-test/v1", "source_authority_tampers_detected": source_tampers, "tamper_fixtures_detected": detected}
+    return {"algorithm_fixture": True, "dependency_omissions_detected": omissions, "formal_raw_required": False, "outcomes_executed": False, "proposal_schema_tampers_detected": proposal_schema_tampers, "proposal_truth_tampers_detected": proposal_truth_tampers, "schema_tampers_detected": schema_tampers, "schema_version": "geotarget.discovery-stagec-soft-tgo-t0-aggregate-self-test/v1", "source_authority_tampers_detected": source_tampers, "tamper_fixtures_detected": detected}
 def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__); parser.add_argument("--self-test", action="store_true"); parser.add_argument("--input-manifest", type=Path); parser.add_argument("--authorization", type=Path); parser.add_argument("--output", type=Path); parser.add_argument("shards", nargs="*", type=Path); args = parser.parse_args()
+    parser = argparse.ArgumentParser(description=__doc__); parser.add_argument("--self-test", action="store_true"); parser.add_argument("--proposal-smoke", action="store_true"); parser.add_argument("--input-manifest", type=Path); parser.add_argument("--authorization", type=Path); parser.add_argument("--output", type=Path); parser.add_argument("shards", nargs="*", type=Path); args = parser.parse_args()
     if args.self_test:
-        if args.input_manifest or args.authorization or args.output or args.shards: parser.error("--self-test is exclusive")
+        if args.proposal_smoke or args.input_manifest or args.authorization or args.output or args.shards: parser.error("--self-test is exclusive")
         print(canonical_json(self_test())); return
+    if args.proposal_smoke:
+        if not args.input_manifest or args.authorization or args.output or args.shards: parser.error("--proposal-smoke requires only --input-manifest")
+        print(canonical_json(validate_formal_proposals(args.input_manifest))); return
     if not args.input_manifest or not args.authorization or not args.output or len(args.shards) != CASE_COUNT: parser.error("normal aggregation requires named paths and 12 shards")
     result = aggregate_files(args.input_manifest, args.authorization, args.shards); args.output.parent.mkdir(parents=True, exist_ok=True); args.output.write_text(canonical_json(result) + "\n")
 if __name__ == "__main__": main()
