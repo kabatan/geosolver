@@ -1,0 +1,67 @@
+{
+  "schema": "geotarget.algorithm-decision/v1",
+  "experiment_id": "EXP-LOCAL-010-011-T0",
+  "decision": "advance_both_candidates_unchanged_to_48_case_t2",
+  "production_promotion": false,
+  "execution": {
+    "revision": "24df0d8c0eac23f72e51f9dd8029d6b8ef6488a0",
+    "implementation_freeze_commit": "2e5e353a23b57a4f62a307cf1c86c553da11128c",
+    "case_count": 9,
+    "attempt_count": 1869,
+    "raw_filename_sha256_manifest": "61386964f50467d209f4a27340feaa14f29b4796123552a2756b2ba3ddfc7dc2",
+    "summary_sha256": "03fb1dd3937a9fc8b88583738316d6035b455b89bdfb0dec1da95b233b3bb334"
+  },
+  "accounting": {
+    "attempt_callback_cap_violations": 0,
+    "candidate_shadow_callback_mismatches": 0,
+    "evaluation_count_mismatches": 0,
+    "exceptions": 0,
+    "first_crossing_stop_violations": 0,
+    "runner_budget_exhausted": 0,
+    "terminal_mismatches": 0
+  },
+  "metrics": {
+    "prod-tol-120x600": {
+      "assessor_targets_found": 10,
+      "assessor_target_count": 16,
+      "assessor_safe_full_cases": 6,
+      "assessor_unsafe": 11,
+      "reported_unsafe": 11,
+      "right_censored_callback_work": 14981
+    },
+    "E1-FD2-CPQR3": {
+      "assessor_targets_found": 10,
+      "assessor_target_count": 16,
+      "assessor_safe_full_cases": 7,
+      "assessor_unsafe": 0,
+      "reported_unsafe": 0,
+      "right_censored_callback_work": 10911,
+      "work_ratio_to_control": 0.7283225418863894,
+      "support_families": 6,
+      "passes_all_t0_gates": true
+    },
+    "E2-FD2-SVD3": {
+      "assessor_targets_found": 10,
+      "assessor_target_count": 16,
+      "assessor_safe_full_cases": 7,
+      "assessor_unsafe": 0,
+      "reported_unsafe": 0,
+      "right_censored_callback_work": 11016,
+      "work_ratio_to_control": 0.7353314197984113,
+      "support_families": 7,
+      "passes_all_t0_gates": true
+    }
+  },
+  "failure_structure": {
+    "control_unsafe_endpoints": "all 11 common-assessor unsafe endpoints occur in NEAR-RANK-DEFICIENT; both candidates reject them without target loss",
+    "unresolved": "both MULTIROOT-WARPED maps remain at 0/6 targets; endpoint correction is a safety mechanism and does not repair global basin coverage",
+    "candidate_difference": "204 CPQR/SVD differences are safe coordinate corrections with the same endpoint class; the only four class differences are OPAQUE-TRANSCENDENTAL-C0 starts 7,20,25,30, where CPQR safely retains target-003 and SVD drops it; final recall is unchanged"
+  },
+  "independent_audit": {
+    "used_campaign_aggregator": false,
+    "used_runner_terminals_or_gates": false,
+    "result": "deep-equal to the frozen aggregate for accounting, metrics, gates, shadow differences, and CPQR/SVD differences",
+    "temporary_files_or_edits": false
+  },
+  "next_step": "run both unchanged candidates and their same-work shadows on the frozen 48-case, 8-family T2 corpus; select at most one finalist by the preregistered outcome-independent tie-break"
+}

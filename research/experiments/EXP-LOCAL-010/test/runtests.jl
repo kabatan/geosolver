@@ -268,3 +268,22 @@ end
     @test occursin("\"outcome_execution_authorized\": true", preregistration)
     @test occursin("\"qualified_target_recall_delta_minimum\": -0.02", preregistration)
 end
+
+@testset "unchanged-candidate T2 is frozen but outcome-disabled" begin
+    runner = read(joinpath(@__DIR__, "..", "run_t2.jl"), String)
+    preregistration = read(joinpath(@__DIR__, "..", "t2-preregistration.json"), String)
+    @test occursin("T2Corpus.t2_problems()", runner)
+    @test occursin(
+        "aa5da6b9655ebe97f5ae8832911cc253301cb64916e0f23f5637b645905bcd81",
+        runner,
+    )
+    @test occursin("maximum_starts=32", runner)
+    @test occursin("\"saved_starts_checksum\"", runner)
+    @test occursin("\"suite\" => \"t2\"", runner)
+    @test occursin("--case-index=1..48 is required", runner)
+    @test occursin("\"outcome_execution_authorized\": false", preregistration)
+    @test occursin("\"tuning_rounds\": 0", preregistration)
+    @test occursin("\"aggregate_target_recall_delta_minimum_vs_control\": -0.01", preregistration)
+    @test occursin("\"right_censored_work_ratio_maximum_vs_control\": 1.2", preregistration)
+    @test occursin("on an exact remaining tie choose CPQR", preregistration)
+end

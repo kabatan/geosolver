@@ -76,14 +76,17 @@ function _snapshot(variant, problem, threshold, cumulative, attempt_count, attem
     )
 end
 
-function _run_case(variant, problem)
+function _run_case(variant, problem; maximum_starts::Integer=MAXIMUM_STARTS)
+    maximum_starts > 0 || throw(ArgumentError("maximum starts must be positive"))
+    size(problem.saved_starts, 2) >= maximum_starts ||
+        throw(ArgumentError("problem has fewer saved starts than requested"))
     case = GeoTargetBenchmarks._truth_blind_case(problem, ATTEMPT_CALLBACK_CAP)
     attempts = SolverExperimentAttempt[]
     snapshots = Dict{String,Any}[]
     cumulative = 0
     next_threshold = 1
     try
-        for start_index in 1:MAXIMUM_STARTS
+        for start_index in 1:maximum_starts
             attempt = GeoTargetBenchmarks._run_solver_attempt(
                 problem,
                 case,
@@ -127,7 +130,7 @@ function _run_case(variant, problem)
         "exceptions" => count(attempt -> attempt.exception !== nothing, attempts),
         "family_id" => problem.family_id,
         "instance_id" => problem.instance_id,
-        "maximum_start_reached" => length(attempts) == MAXIMUM_STARTS,
+        "maximum_start_reached" => length(attempts) == maximum_starts,
         "right_censored_suffix_stable_work" => authoritative_event ? suffix_work : 4_800,
         "runner_budget_exhausted" => count(attempt -> attempt.budget_exhausted, attempts),
         "suffix_stable_event_by_4800" => authoritative_event,
