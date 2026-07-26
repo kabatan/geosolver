@@ -20,3 +20,7 @@ The selected arm is the 2026-07-22 `champion_v2_poc_preloaded` run:
 `CHAMPION_CLOSURE_MANIFEST.json` is extracted unchanged from the recorded
 execution plan and is the authority for the frozen transitive implementation.
 
+The one-time product acceptance evidence is indexed under
+`product-validation/`. It records the observed failure of the 145-case
+reproducibility gate as well as the checksums for raw evidence kept outside
+Git. It is an audit result, not a replacement for the frozen champion record.
