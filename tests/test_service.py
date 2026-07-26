@@ -40,10 +40,11 @@ def test_python_service_normalizes_exact_result(problem: dict) -> None:
     assert result.answers[0].selected_real_root_index == 0
 
 
-def test_unsupported_parallelism_is_an_explicit_resource_error(problem: dict) -> None:
+def test_supported_parallelism_is_reported_without_downgrade(problem: dict) -> None:
     result = solve(problem, SolveOptions(cores=2), engine=FakeEngine())
-    assert result.status == "resource_error"
-    assert "cores=1 only" in (result.detail or "")
+    assert result.status == "exact_complete"
+    assert result.requested_resources.cores == 2
+    assert result.used_resources.cores == 2
 
 
 def test_cancelled_engine_is_reported_as_cancelled(problem: dict) -> None:

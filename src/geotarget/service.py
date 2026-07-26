@@ -123,7 +123,10 @@ def solve(
         )
     answers = extract_answers(raw)
     raw_status = str(raw.get("status", ""))
-    if answers and raw_status == "EXACT_SYMBOLIC_TARGET_READY":
+    if answers and raw_status in {
+        "EXACT_SYMBOLIC_TARGET_READY",
+        "ZERO_DIMENSIONAL_SOURCE_EXACT_COMPLETE",
+    }:
         status = ResultStatus.EXACT_COMPLETE
     elif answers:
         status = ResultStatus.ANSWERS_FOUND
@@ -132,8 +135,8 @@ def solve(
         status = ResultStatus.NO_ANSWER
         warnings.append("No accepted answer was found; this is not a proof that no solution exists")
     used = ResourceUsage(
-        time_limit_seconds=min(180.0, parsed_options.time_limit_seconds),
-        cores=1,
+        time_limit_seconds=min(parsed_options.time_limit_seconds, 180.0 * (checkpoint.window + 1)),
+        cores=parsed_options.cores,
         seed=parsed_options.seed,
     )
     return SolveResult(

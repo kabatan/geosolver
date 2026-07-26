@@ -14,6 +14,8 @@ from contextlib import suppress
 from pathlib import Path
 from typing import Any, Protocol
 
+import psutil
+
 from geotarget.models import ExactAnswer, SolveOptions, WorkCheckpoint
 from geotarget.resources import ResourceReservation
 
@@ -27,6 +29,25 @@ class EngineFailure(RuntimeError):
 
 class EngineCancelled(EngineFailure):
     pass
+
+
+def _terminate_process_tree(pid: int) -> None:
+    """Terminate descendants even when the frozen runtime created new sessions."""
+
+    try:
+        root = psutil.Process(pid)
+        descendants = root.children(recursive=True)
+    except psutil.Error:
+        descendants = []
+    for process in reversed(descendants):
+        with suppress(psutil.Error):
+            process.terminate()
+    with suppress(ProcessLookupError):
+        os.killpg(pid, signal.SIGTERM)
+    _gone, alive = psutil.wait_procs(descendants, timeout=5)
+    for process in alive:
+        with suppress(psutil.Error):
+            process.kill()
 
 
 class SolverEngine(Protocol):
@@ -44,8 +65,14 @@ def engine_root() -> Path:
     return Path(__file__).resolve().parent / "_engine"
 
 
+def julia_project_root() -> Path:
+    packaged = Path(__file__).resolve().parent / "_julia"
+    return packaged if packaged.is_dir() else Path(__file__).resolve().parents[2] / "julia"
+
+
 def verify_engine() -> list[str]:
     root = Path(__file__).resolve().parents[2]
+    package_root = Path(__file__).resolve().parent
     manifest_path = engine_root() / "product-manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     errors: list[str] = []
@@ -53,6 +80,9 @@ def verify_engine() -> list[str]:
         errors.append("product manifest identity does not match the compiled authority")
     for item in manifest.get("files", []):
         path = root / item["product_path"]
+        if not path.is_file():
+            relative = Path(item["product_path"]).relative_to("src/geotarget")
+            path = package_root / relative
         if not path.is_file():
             errors.append(f"missing engine file: {item['product_path']}")
             continue
@@ -94,14 +124,25 @@ def extract_answers(raw: Mapping[str, Any]) -> list[ExactAnswer]:
             continue
         seen.add(key)
         interval_value = node.get("isolating_interval") or []
-        interval = (
-            [str(part) for part in interval_value] if isinstance(interval_value, list) else []
+        if isinstance(interval_value, list):
+            interval = [str(part) for part in interval_value]
+        elif isinstance(interval_value, Mapping):
+            left = interval_value.get("left")
+            right = interval_value.get("right")
+            interval = [str(left), str(right)] if left is not None and right is not None else []
+        else:
+            interval = []
+        exact_rational = (
+            interval_value.get("exact_rational_root")
+            if isinstance(interval_value, Mapping)
+            else None
         )
         decimal = str(
             node.get("target_1024")
             or node.get("target_768")
             or node.get("target_512")
             or node.get("decimal")
+            or exact_rational
             or ""
         )
         answers.append(
@@ -110,8 +151,10 @@ def extract_answers(raw: Mapping[str, Any]) -> list[ExactAnswer]:
                 selected_real_root_index=root_index,
                 isolating_interval=interval,
                 decimal=decimal,
-                exact_authority_kind=str(node.get("exact_authority_kind"))
-                if node.get("exact_authority_kind")
+                exact_authority_kind=str(
+                    node.get("exact_authority_kind") or node.get("authority_kind")
+                )
+                if node.get("exact_authority_kind") or node.get("authority_kind")
                 else None,
                 approximate_witness=witness,
             )
@@ -130,8 +173,7 @@ class ChampionSubprocessEngine:
         with self._lock:
             process = self._process
         if process and process.poll() is None:
-            with suppress(ProcessLookupError):
-                os.killpg(process.pid, signal.SIGTERM)
+            _terminate_process_tree(process.pid)
 
     def _invoke(
         self, command: list[str], environment: dict[str, str], timeout: float
@@ -150,12 +192,21 @@ class ChampionSubprocessEngine:
         try:
             stdout, stderr = process.communicate(timeout=timeout)
         except subprocess.TimeoutExpired as error:
-            os.killpg(process.pid, signal.SIGTERM)
+            _terminate_process_tree(process.pid)
             try:
                 process.wait(timeout=5)
             except subprocess.TimeoutExpired:
                 os.killpg(process.pid, signal.SIGKILL)
             raise EngineFailure("frozen engine exceeded its protected wall-time reserve") from error
+        except BaseException:
+            if process.poll() is None:
+                _terminate_process_tree(process.pid)
+                try:
+                    process.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    with suppress(ProcessLookupError):
+                        os.killpg(process.pid, signal.SIGKILL)
+            raise
         finally:
             with self._lock:
                 self._process = None
@@ -180,11 +231,6 @@ class ChampionSubprocessEngine:
             raise EngineFailure("; ".join(errors))
         started = time.monotonic()
         warnings: list[str] = []
-        if options.time_limit_seconds > 180:
-            warnings.append(
-                "the frozen 2026-07-22 worker exposed no resumable pending-item checkpoint; "
-                "the reference window completed without inventing additional work"
-            )
         runtime = engine_root() / "runtime"
         worker = (
             runtime
@@ -196,8 +242,10 @@ class ChampionSubprocessEngine:
         if environment.get("PYTHONPATH"):
             python_path.append(environment["PYTHONPATH"])
         environment["PYTHONPATH"] = os.pathsep.join(python_path)
-        environment["JULIA_PROJECT"] = str(Path(__file__).resolve().parents[2] / "julia")
-        cpu = reservation.physical_cpus[0]
+        environment["JULIA_PROJECT"] = str(julia_project_root())
+        environment["GEOTARGET_PRODUCT_PYTHON"] = sys.executable
+        cpus = reservation.physical_cpus
+        cpu = cpus[0]
         with tempfile.TemporaryDirectory(prefix="geotarget-") as temp:
             directory = Path(temp)
             source = directory / "problem.json"
@@ -208,12 +256,22 @@ class ChampionSubprocessEngine:
             source.write_text(payload, encoding="utf-8")
             source_sha = hashlib.sha256(source.read_bytes()).hexdigest()
             output = directory / "engine-output"
+            worker_command = (
+                [sys.executable, str(worker)]
+                if len(cpus) == 1
+                else [
+                    sys.executable,
+                    "-m",
+                    "geotarget.parallel_entrypoint",
+                    "--product-cpus",
+                    ",".join(str(value) for value in cpus),
+                ]
+            )
             base_command = [
                 "taskset",
                 "--cpu-list",
                 str(cpu),
-                sys.executable,
-                str(worker),
+                *worker_command,
                 "--source",
                 str(source),
                 "--source-sha256",
@@ -241,13 +299,91 @@ class ChampionSubprocessEngine:
             self._invoke(
                 [*base_command, "--execute", "--plan-sha256", plan_sha], environment, timeout=240
             )
-            result_path = output / "RESULT.json"
+            active_output = output
+            remaining = options.time_limit_seconds - 180.0
+            window = 0
+            initial_result_path = output / "RESULT.json"
+            initial_result = json.loads(initial_result_path.read_text(encoding="utf-8"))
+            zero_dimensional_complete = (
+                initial_result.get("status") == "ZERO_DIMENSIONAL_SOURCE_EXACT_COMPLETE"
+            )
+            while remaining >= 6.0 and not zero_dimensional_complete:
+                window += 1
+                window_seconds = min(180.0, remaining)
+                continuation_output = directory / f"continuation-{window:03d}"
+                self._invoke(
+                    [
+                        "taskset",
+                        "--cpu-list",
+                        str(cpu),
+                        sys.executable,
+                        "-m",
+                        "geotarget.continuation",
+                        "--runtime",
+                        str(runtime),
+                        "--source",
+                        str(source),
+                        "--source-sha256",
+                        source_sha,
+                        "--initial-output",
+                        str(active_output),
+                        "--output",
+                        str(continuation_output),
+                        "--seconds",
+                        str(window_seconds),
+                        "--cpu",
+                        str(cpu),
+                        "--cpus",
+                        ",".join(str(value) for value in cpus),
+                        "--seed",
+                        str(options.seed),
+                    ],
+                    environment,
+                    timeout=window_seconds + 30.0,
+                )
+                active_output = continuation_output
+                remaining -= window_seconds
+                continued = json.loads((active_output / "RESULT.json").read_text(encoding="utf-8"))
+                schedule = continued.get("hp_schedule")
+                continuation = continued.get("continuation")
+                has_deferred = isinstance(schedule, Mapping) and bool(
+                    schedule.get("deferred_record_ids")
+                )
+                has_pending_starts = isinstance(continuation, Mapping) and bool(
+                    continuation.get("pending_start_ordinals")
+                )
+                if not has_deferred and not has_pending_starts:
+                    break
+            if 0 < remaining < 6.0:
+                warnings.append(
+                    "remaining time was below the frozen HP/finalization safety reserve; "
+                    "the last consistent checkpoint was returned"
+                )
+            result_path = active_output / "RESULT.json"
             if not result_path.is_file():
                 raise EngineFailure("frozen engine did not write RESULT.json")
             raw = json.loads(result_path.read_text(encoding="utf-8"))
+            search_path = active_output / "search.json"
+            if not search_path.is_file():
+                search_path = output / "search.json"
+            search = (
+                json.loads(search_path.read_text(encoding="utf-8")) if search_path.is_file() else {}
+            )
+        schedule = raw.get("hp_schedule")
+        schedule = schedule if isinstance(schedule, Mapping) else {}
+        work = search.get("work") if isinstance(search, Mapping) else {}
+        lanes_started = int(work.get("lanes_started", 0)) if isinstance(work, Mapping) else 0
+        zero_dimensional_complete = raw.get("status") == "ZERO_DIMENSIONAL_SOURCE_EXACT_COMPLETE"
+        completed_starts = [] if zero_dimensional_complete else list(range(min(256, lanes_started)))
         checkpoint = WorkCheckpoint(
-            window=0,
-            completed_start_ordinals=list(range(256)),
+            window=window,
+            completed_start_ordinals=completed_starts,
+            pending_start_ordinals=(
+                [] if zero_dimensional_complete else list(range(len(completed_starts), 256))
+            ),
+            pending_reservoir_records=[
+                str(value) for value in schedule.get("deferred_record_ids", ())
+            ],
             plan_sha256=plan_sha,
         )
         return raw, time.monotonic() - started, checkpoint, warnings

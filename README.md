@@ -24,10 +24,10 @@ checksummed freeze archive described on that branch.
 
 ## Frozen-engine resource boundary
 
-The copied champion exposes the original single-core 180-second reference
-window, but does not expose a resumable pending-work checkpoint or a stable
-work-item sharding interface. GeoTarget therefore accepts longer requested
-limits while reporting the actually used 180-second window, and rejects
-`cores > 1` explicitly. It does not simulate continuation or parallelism in a
-way that would change the selected algorithm. These two capabilities remain
-blocked until they can be extracted byte-for-byte from frozen evidence.
+`cores=1,time_limit_seconds=180` invokes the frozen entrypoint byte-for-byte.
+Longer limits first finish that reference window, then resume only record IDs
+listed by the champion's own deferred-reservoir ledger; starts remain 0–255
+and no seed lane is added. Multi-core mode keeps the frozen search on one core
+and shards only the already-fixed HP/alternate/restoration wave ordinals,
+merging attempts and exact descriptors in ordinal order. Requests that cannot
+reserve the declared physical cores and memory fail instead of downgrading.

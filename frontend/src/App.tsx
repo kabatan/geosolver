@@ -22,6 +22,7 @@ import {
   SlidersHorizontal,
   Stop,
   Target,
+  X,
 } from "@phosphor-icons/react";
 import { ChangeEvent, MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 
@@ -53,6 +54,10 @@ type ApiResult = {
   answers: ExactAnswer[];
   detail?: string;
 };
+
+type DslCategory = { id: string; label_ja: string; label_en: string };
+type DslTool = { id: string; category: string; label_ja: string; signature: string };
+type DslCatalog = { version: string; categories: DslCategory[]; tools: DslTool[] };
 
 const INITIAL_PROBLEM: Problem = {
   task: "solve",
@@ -93,12 +98,11 @@ const SAMPLE_RESULT: ApiResult = {
   ],
 };
 
-const COMMANDS = [
-  ["Distance", "Distance(point, point)"],
-  ["Distance", "Distance(point, line)"],
-  ["Distance", "Distance(line, line)"],
-  ["Distance", "Distance(point, circle)"],
-];
+const FALLBACK_CATALOG: DslCatalog = {
+  version: "V15",
+  categories: [{ id: "points", label_ja: "点", label_en: "Points" }],
+  tools: [{ id: "Point", category: "points", label_ja: "点", signature: "Point(x, y)" }],
+};
 
 const points = {
   A: { x: 242, y: 154, label: "A", detail: "(-2, 4)" },
@@ -131,6 +135,13 @@ export function App() {
   const [selected, setSelected] = useState("C");
   const [tool, setTool] = useState("select");
   const [showToolMenu, setShowToolMenu] = useState(false);
+  const [catalog, setCatalog] = useState<DslCatalog>(FALLBACK_CATALOG);
+  const [toolSearch, setToolSearch] = useState("");
+  const [objectSearch, setObjectSearch] = useState("");
+  const [selectedCatalogTool, setSelectedCatalogTool] = useState<DslTool>();
+  const [newObjectName, setNewObjectName] = useState("P1");
+  const [newExpression, setNewExpression] = useState("Point(0, 0)");
+  const [constraintDraft, setConstraintDraft] = useState("");
   const [activeEditor, setActiveEditor] = useState<"command" | "json" | "log">("command");
   const [command, setCommand] = useState("Distance(A, C)");
   const [commandFocused, setCommandFocused] = useState(true);
@@ -156,15 +167,52 @@ export function App() {
   }, [problem]);
 
   useEffect(() => {
+    fetch("/api/v1/dsl/catalog", { credentials: "same-origin" })
+      .then((response) => {
+        if (!response.ok) throw new Error("catalog unavailable");
+        return response.json() as Promise<DslCatalog>;
+      })
+      .then(setCatalog)
+      .catch(() => setCatalog(FALLBACK_CATALOG));
+  }, []);
+
+  useEffect(() => {
     if (phase !== "running") return;
     const timer = window.setInterval(() => setElapsed((value) => value + 1), 1000);
     return () => window.clearInterval(timer);
   }, [phase]);
 
   const filteredCommands = useMemo(
-    () => COMMANDS.filter(([name]) => name.toLowerCase().includes(command.split("(")[0].toLowerCase())).slice(0, 4),
-    [command],
+    () => catalog.tools.filter((item) => item.id.toLowerCase().includes(command.split("(")[0].toLowerCase())).slice(0, 6),
+    [catalog, command],
   );
+
+  const visibleConstructions = useMemo(() => {
+    const query = objectSearch.trim().toLowerCase();
+    if (!query) return problem.construction;
+    return problem.construction.filter((item) => `${item.name} ${item.expr}`.toLowerCase().includes(query));
+  }, [objectSearch, problem.construction]);
+
+  const visibleCatalog = useMemo(() => {
+    const query = toolSearch.trim().toLowerCase();
+    if (!query) return catalog.tools;
+    return catalog.tools.filter((item) => `${item.id} ${item.label_ja} ${item.signature}`.toLowerCase().includes(query));
+  }, [catalog.tools, toolSearch]);
+
+  const canvasPoints = useMemo(() => problem.construction.flatMap((item) => {
+    const fixed = points[item.name as keyof typeof points];
+    if (fixed) return [fixed];
+    const match = /^Point\(\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*\)$/.exec(item.expr);
+    if (!match) return [];
+    const x = Number(match[1]);
+    const y = Number(match[2]);
+    return [{
+      x: ((x + 7) / 14) * 760,
+      y: ((6 - y) / 12) * 560,
+      label: item.name,
+      detail: `(${x.toFixed(3)}, ${y.toFixed(3)})`,
+    }];
+  }), [problem.construction]);
 
   function commit(next: Problem) {
     setHistory((items) => [...items.slice(-49), problem]);
@@ -194,6 +242,31 @@ export function App() {
       next.has(name) ? next.delete(name) : next.add(name);
       return next;
     });
+  }
+
+  function openCatalogTool(id: string) {
+    const item = catalog.tools.find((candidate) => candidate.id === id) || catalog.tools[0];
+    if (!item) return;
+    setSelectedCatalogTool(item);
+    setNewObjectName(`${item.id.slice(0, 1)}${problem.construction.length + 1}`);
+    setNewExpression(item.signature);
+    setShowToolMenu(false);
+  }
+
+  function addCatalogObject() {
+    if (!selectedCatalogTool || !newObjectName.trim() || !newExpression.trim()) return;
+    commit({
+      ...problem,
+      construction: [...problem.construction, { name: newObjectName.trim(), expr: newExpression.trim() }],
+    });
+    setSelected(newObjectName.trim());
+    setSelectedCatalogTool(undefined);
+  }
+
+  function addConstraint() {
+    if (!constraintDraft.trim()) return;
+    commit({ ...problem, constraints: [...problem.constraints, { def: constraintDraft.trim(), value: 0 }] });
+    setConstraintDraft("");
   }
 
   function canvasClick(event: MouseEvent<SVGSVGElement>) {
@@ -295,14 +368,14 @@ export function App() {
       <main className="workspace">
         <aside className="model-pane" aria-label="構成シーケンス">
           <div className="pane-heading"><h1>構成シーケンス</h1></div>
-          <label className="search-field"><MagnifyingGlass /><input aria-label="コマンドを検索" placeholder="コマンドを検索" /></label>
+          <label className="search-field"><MagnifyingGlass /><input aria-label="構成を検索" placeholder="構成を検索" value={objectSearch} onChange={(event) => setObjectSearch(event.target.value)} /></label>
           <div className="sequence-header"><span>表示</span><span>ID</span><span>種別</span><span>式（定義）</span></div>
           <div className="sequence-list" role="tree" aria-label="作図オブジェクト">
-            {problem.construction.map((item) => {
+            {visibleConstructions.map((item) => {
               const type = problem.variables.names.includes(item.name) ? "Free" : item.expr.startsWith("Point(") ? "Fixed" : "Derived";
               const isHidden = hidden.has(item.name);
               return (
-                <div className={`sequence-row ${selected === item.name ? "selected" : ""}`} role="treeitem" aria-selected={selected === item.name} key={item.name} onClick={() => setSelected(item.name)}>
+                <div className={`sequence-row ${selected === item.name ? "selected" : ""}`} role="treeitem" aria-selected={selected === item.name} tabIndex={0} key={item.name} onClick={() => setSelected(item.name)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") setSelected(item.name); }}>
                   <button type="button" className="visibility" aria-label={`${item.name}を${isHidden ? "表示" : "非表示"}`} onClick={(event) => { event.stopPropagation(); toggleVisibility(item.name); }}>{isHidden ? <EyeSlash /> : <Eye />}</button>
                   <strong>{item.name === "omega" ? "ω" : item.name}</strong>
                   <span>{type}</span>
@@ -321,14 +394,14 @@ export function App() {
           </div>
           <section className="fold-section">
             <button type="button" onClick={() => setExpandedConstraints(!expandedConstraints)}><span>制約セット ({problem.constraints.length})</span><CaretDown className={expandedConstraints ? "" : "collapsed"} /></button>
-            {expandedConstraints && <div className="constraint-list">{problem.constraints.map((constraint, index) => <div key={constraint.def}><span>c{index + 1}</span><code>{constraint.def}</code><Check weight="bold" /></div>)}</div>}
+            {expandedConstraints && <div className="constraint-list">{problem.constraints.map((constraint, index) => <div key={`${constraint.def}-${index}`}><span>c{index + 1}</span><input aria-label={`制約 c${index + 1}`} value={constraint.def} onChange={(event) => commit({ ...problem, constraints: problem.constraints.map((item, itemIndex) => itemIndex === index ? { ...item, def: event.target.value } : item) })} /><button type="button" aria-label={`制約 c${index + 1}を削除`} onClick={() => commit({ ...problem, constraints: problem.constraints.filter((_, itemIndex) => itemIndex !== index) })}><X /></button></div>)}<form className="constraint-add" onSubmit={(event) => { event.preventDefault(); addConstraint(); }}><input aria-label="制約を追加" placeholder="例: OnCircle(P, omega)" value={constraintDraft} onChange={(event) => setConstraintDraft(event.target.value)} /><button type="submit" aria-label="制約を追加"><Plus /></button></form></div>}
           </section>
           <section className="fold-section target-section">
             <button type="button" onClick={() => setExpandedTarget(!expandedTarget)}><span>目標 (1)</span><CaretDown className={expandedTarget ? "" : "collapsed"} /></button>
             {expandedTarget && <div className="target-row"><Target /><span>T1</span><code>{problem.answer}</code></div>}
           </section>
           <div className="tool-launcher">
-            {showToolMenu && <div className="tool-menu" role="menu"><button role="menuitem" onClick={() => { setTool("point"); setShowToolMenu(false); }}>点を追加</button><button role="menuitem">直線・線分</button><button role="menuitem">円・円弧</button><button role="menuitem">高度な構成…</button></div>}
+            {showToolMenu && <div className="tool-menu" role="menu"><button role="menuitem" onClick={() => { setTool("point"); setShowToolMenu(false); }}>キャンバスに点を置く</button><button role="menuitem" onClick={() => openCatalogTool("Line")}>直線を定義</button><button role="menuitem" onClick={() => openCatalogTool("Circle")}>円を定義</button><button role="menuitem" onClick={() => openCatalogTool("RadicalAxis")}>高度な構成を開く…</button></div>}
             <button type="button" onClick={() => setShowToolMenu(!showToolMenu)}><SlidersHorizontal />作図ツール</button>
           </div>
         </aside>
@@ -338,9 +411,9 @@ export function App() {
             <div className="tool-group">
               <button className={tool === "select" ? "active" : ""} type="button" aria-label="選択" onClick={() => setTool("select")}><Cursor /></button>
               <button className={tool === "point" ? "active" : ""} type="button" aria-label="点" onClick={() => setTool("point")}><Circle weight="fill" /></button>
-              <button type="button" aria-label="線分"><LineSegment /></button>
-              <button type="button" aria-label="円"><Circle /></button>
-              <button type="button" aria-label="多角形"><Pentagon /></button>
+              <button type="button" aria-label="線分" onClick={() => openCatalogTool("Segment")}><LineSegment /></button>
+              <button type="button" aria-label="円" onClick={() => openCatalogTool("Circle")}><Circle /></button>
+              <button type="button" aria-label="多角形" onClick={() => openCatalogTool("Polygon")}><Pentagon /></button>
             </div>
             <div className="tool-group toolbar-right">
               <button type="button" aria-label="元に戻す" disabled={!history.length} onClick={undo}><ArrowCounterClockwise /></button>
@@ -359,7 +432,7 @@ export function App() {
               <polyline points="242,154 205,356 520,400 554,206 242,154" className="primary-shape" />
               <line x1="440" y1="0" x2="680" y2="560" className="witness-line" />
               {overlay && <><line x1="390" y1="286" x2="554" y2="206" className="witness-guide" /><line x1="390" y1="286" x2="520" y2="400" className="witness-guide" /><path d="M 546 210 l 7 14 l 14 -7" className="right-angle" /></>}
-              {Object.values(points).map((point) => <g key={point.label} className={`point-group ${selected === point.label ? "selected-point" : ""}`} tabIndex={0} role="button" aria-label={`点${point.label} ${point.detail}`} onClick={(event) => { event.stopPropagation(); setSelected(point.label); }}><circle cx={point.x} cy={point.y} r="5" /><text x={point.x + 12} y={point.y - 12}>{point.label}</text>{point.detail && <text className="point-detail" x={point.x + 12} y={point.y + 11}>{point.detail}</text>}</g>)}
+              {canvasPoints.map((point) => <g key={point.label} className={`point-group ${selected === point.label ? "selected-point" : ""}`} tabIndex={0} role="button" aria-label={`点${point.label} ${point.detail}`} onClick={(event) => { event.stopPropagation(); setSelected(point.label); }} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") setSelected(point.label); }}><circle cx={point.x} cy={point.y} r="5" /><text x={point.x + 12} y={point.y - 12}>{point.label}</text>{point.detail && <text className="point-detail" x={point.x + 12} y={point.y + 11}>{point.detail}</text>}</g>)}
               <text x="467" y="45" className="tangent-label">t</text><text x="650" y="510" className="scale-label">2 units</text><line x1="610" y1="520" x2="700" y2="520" className="scale-line" />
             </svg>
             <div className="zoom-controls"><button type="button" aria-label="拡大" onClick={() => setZoom(Math.min(1.4, zoom + 0.1))}><Plus /></button><button type="button" aria-label="縮小" onClick={() => setZoom(Math.max(0.8, zoom - 0.1))}><Minus /></button></div>
@@ -370,7 +443,7 @@ export function App() {
               <button role="tab" aria-selected={activeEditor === "json"} onClick={() => setActiveEditor("json")}>JSON</button>
               <button role="tab" aria-selected={activeEditor === "log"} onClick={() => setActiveEditor("log")}>ログ</button>
             </div>
-            {activeEditor === "command" && <div className="command-area"><span className="line-number">1</span><div className="command-stack"><div className="command-row"><input value={command} onChange={(event) => setCommand(event.target.value)} onFocus={() => setCommandFocused(true)} aria-label="V15コマンド" /><button type="button" onClick={() => commit({ ...problem, answer: command })}><Play weight="fill" />実行<CaretDown /></button></div>{commandFocused && <div className="autocomplete">{filteredCommands.map(([name, signature]) => <button key={signature} type="button" onMouseDown={() => { setCommand(`${name}(`); setCommandFocused(false); }}><strong>{name}</strong><span>{signature.slice(name.length)}</span></button>)}</div>}</div><span className="enter-hint">Enter で実行</span></div>}
+            {activeEditor === "command" && <div className="command-area"><span className="line-number">1</span><div className="command-stack"><div className="command-row"><input value={command} onChange={(event) => setCommand(event.target.value)} onFocus={() => setCommandFocused(true)} onKeyDown={(event) => { if (event.key === "Enter") commit({ ...problem, answer: command }); }} aria-label="V15コマンド" /><button type="button" onClick={() => commit({ ...problem, answer: command })}><Play weight="fill" />目標に設定<CaretDown /></button></div>{commandFocused && <div className="autocomplete">{filteredCommands.map((item) => <button key={item.signature} type="button" onMouseDown={() => { setCommand(item.signature); setCommandFocused(false); }}><strong>{item.id}</strong><span>{item.signature.slice(item.id.length)}</span></button>)}</div>}</div><span className="enter-hint">Enter で目標に設定</span></div>}
             {activeEditor === "json" && <div className="json-editor"><textarea value={jsonText} onChange={(event) => updateJson(event.target.value)} aria-label="V15 JSON" spellCheck={false} />{jsonError && <p>{jsonError} — raw JSONは保持されています。</p>}</div>}
             {activeEditor === "log" && <div className="log-view"><code>{phase === "running" ? `[${elapsed}s] champion reference window: running` : `[ready] project ${problem.id} validated locally`}</code></div>}
           </div>
@@ -379,7 +452,7 @@ export function App() {
         <aside className="solver-pane" aria-label="ターゲットとリソース">
           <section className="inspector-section resource-section">
             <h2>ターゲットとリソース</h2>
-            <label>ターゲット<div className="select-like"><span>T1</span><code>{problem.answer}</code><CaretDown /></div></label>
+            <label>ターゲット<div className="select-like"><span>T1</span><input aria-label="ターゲット式" value={problem.answer} onChange={(event) => commit({ ...problem, answer: event.target.value })} /></div></label>
             <h3>リソース設定</h3>
             <div className="resource-grid"><label>時間制限 (秒)<input type="number" min={180} value={timeLimit} onChange={(event) => setTimeLimit(Number(event.target.value))} /></label><label>コア数<input type="number" min={1} value={cores} onChange={(event) => setCores(Number(event.target.value))} /></label><label>シード<input type="number" value={seed} onChange={(event) => setSeed(Number(event.target.value))} /></label></div>
           </section>
@@ -397,6 +470,7 @@ export function App() {
           <section className="disclosure"><span>オーバーレイ設定</span><CaretDown /></section>
         </aside>
       </main>
+      {selectedCatalogTool && <div className="tool-dialog-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setSelectedCatalogTool(undefined); }}><section className="tool-dialog" role="dialog" aria-modal="true" aria-labelledby="tool-dialog-title"><header><div><span>{catalog.categories.find((item) => item.id === selectedCatalogTool.category)?.label_ja}</span><h2 id="tool-dialog-title">{selectedCatalogTool.label_ja}</h2></div><button type="button" aria-label="閉じる" onClick={() => setSelectedCatalogTool(undefined)}><X /></button></header><label className="catalog-search"><MagnifyingGlass /><input value={toolSearch} onChange={(event) => setToolSearch(event.target.value)} placeholder="V15ツールを検索" /></label><div className="catalog-layout"><nav aria-label="V15ツール一覧">{catalog.categories.map((category) => <section key={category.id}><h3>{category.label_ja}</h3>{visibleCatalog.filter((item) => item.category === category.id).map((item) => <button className={item.id === selectedCatalogTool.id ? "selected" : ""} type="button" key={item.id} onClick={() => { setSelectedCatalogTool(item); setNewExpression(item.signature); }}><span>{item.label_ja}</span><code>{item.id}</code></button>)}</section>)}</nav><div className="tool-form"><p>V15の式をそのまま保存します。見た目から条件や分岐を推測しません。</p><label>オブジェクトID<input value={newObjectName} onChange={(event) => setNewObjectName(event.target.value)} /></label><label>定義式<textarea value={newExpression} onChange={(event) => setNewExpression(event.target.value)} spellCheck={false} /></label><code className="signature-hint">{selectedCatalogTool.signature}</code><div className="dialog-actions"><button type="button" onClick={() => setSelectedCatalogTool(undefined)}>キャンセル</button><button className="primary-action" type="button" onClick={addCatalogObject}>構成へ追加</button></div></div></div></section></div>}
     </div>
   );
 }

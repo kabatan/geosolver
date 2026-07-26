@@ -51,15 +51,12 @@ def reserve(options: SolveOptions) -> ResourceReservation:
         raise ResourceError(
             f"requested cores require {required} bytes, but only {available} bytes are available"
         )
-    # Frozen reference mode is the only execution implementation in v1. Refuse
-    # unsupported sharding instead of silently changing or duplicating work.
-    if options.cores != 1:
-        raise ResourceError(
-            "the frozen champion currently supports cores=1 only; no silent downgrade was applied"
-        )
     compatible = tuple(cpu for cpu in physical if 0 <= cpu < 16)
-    if not compatible:
+    if len(compatible) < options.cores:
         raise ResourceError(
-            "no available physical CPU satisfies the frozen [0,15] affinity contract"
+            f"requested {options.cores} cores, but only {len(compatible)} satisfy "
+            "the frozen [0,15] affinity contract"
         )
-    return ResourceReservation(physical_cpus=(compatible[0],), available_memory_bytes=available)
+    return ResourceReservation(
+        physical_cpus=compatible[: options.cores], available_memory_bytes=available
+    )

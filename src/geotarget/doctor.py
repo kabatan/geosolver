@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -9,7 +10,7 @@ from typing import Any
 
 import psutil
 
-from geotarget.engine import ENGINE_HASH, ENGINE_ID, verify_engine
+from geotarget.engine import ENGINE_HASH, ENGINE_ID, julia_project_root, verify_engine
 from geotarget.resources import physical_cpu_ids
 
 
@@ -30,7 +31,7 @@ def diagnose() -> dict[str, Any]:
             errors.append(f"Julia 1.12.6 required; found {julia_version or 'unknown'}")
     else:
         errors.append("Julia executable not found")
-    manifest = Path(__file__).resolve().parents[2] / "julia/Manifest.toml"
+    manifest = julia_project_root() / "Manifest.toml"
     nemo_ok = manifest.is_file() and 'version = "0.56.1"' in manifest.read_text(encoding="utf-8")
     if not nemo_ok:
         errors.append("locked Nemo 0.56.1 manifest not found")
@@ -43,6 +44,9 @@ def diagnose() -> dict[str, Any]:
         errors.append("less than 1.5 GB memory available")
     if len(cpus) > len(compatible):
         warnings.append("only physical CPUs in [0,15] are compatible with the frozen worker")
+    launcher = Path(__file__).resolve().parent / "_engine/runtime/solver/python/.venv/bin/python"
+    if not launcher.is_file() or not os.access(launcher, os.X_OK):
+        errors.append("frozen subprocess Python launcher is missing or not executable")
     return {
         "ok": not errors,
         "engine_id": ENGINE_ID,
