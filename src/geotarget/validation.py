@@ -1,0 +1,103 @@
+from __future__ import annotations
+
+import json
+import re
+from typing import Any
+
+from pydantic import ValidationError
+
+from geotarget.models import V15Problem, ValidationIssue, ValidationReport
+
+_IDENTIFIER = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+_DANGEROUS = re.compile(
+    r"(__|\b(?:import|exec|eval|open|compile|globals|locals|subprocess|os|sys)\b|[;`{}])",
+    re.IGNORECASE,
+)
+
+
+def _expressions(problem: V15Problem) -> list[tuple[str, str]]:
+    values = [
+        (f"construction[{index}].expr", item.expr)
+        for index, item in enumerate(problem.construction)
+    ]
+    values.extend(
+        (f"constraints[{index}].def", item.definition)
+        for index, item in enumerate(problem.constraints)
+    )
+    values.extend((f"guards[{index}]", item) for index, item in enumerate(problem.guards))
+    values.append(("answer", problem.answer))
+    if problem.post_process:
+        values.append(("post_process", problem.post_process))
+    return values
+
+
+def validate(problem: V15Problem | dict[str, Any]) -> ValidationReport:
+    try:
+        parsed = problem if isinstance(problem, V15Problem) else V15Problem.model_validate(problem)
+    except ValidationError as error:
+        issues = [
+            ValidationIssue(
+                path=".".join(str(part) for part in item["loc"]),
+                code=str(item["type"]),
+                message=str(item["msg"]),
+            )
+            for item in error.errors(include_url=False)
+        ]
+        return ValidationReport(valid=False, issues=issues)
+
+    issues: list[ValidationIssue] = []
+    names = parsed.variables.names
+    if len(names) != len(set(names)):
+        issues.append(
+            ValidationIssue(
+                path="variables.names", code="duplicate", message="variable names must be unique"
+            )
+        )
+    construction_names = [item.name for item in parsed.construction]
+    if len(construction_names) != len(set(construction_names)):
+        issues.append(
+            ValidationIssue(
+                path="construction", code="duplicate", message="construction names must be unique"
+            )
+        )
+    for index, name in enumerate([*names, *construction_names]):
+        if not _IDENTIFIER.fullmatch(name):
+            issues.append(
+                ValidationIssue(
+                    path=f"identifiers[{index}]",
+                    code="identifier",
+                    message=f"invalid identifier: {name}",
+                )
+            )
+    for path, expression in _expressions(parsed):
+        if len(expression) > 16_384:
+            issues.append(
+                ValidationIssue(
+                    path=path, code="too_long", message="expression exceeds 16384 characters"
+                )
+            )
+        if _DANGEROUS.search(expression):
+            issues.append(
+                ValidationIssue(
+                    path=path,
+                    code="unsafe_expression",
+                    message="expression contains a forbidden token",
+                )
+            )
+        if expression.count("(") != expression.count(")"):
+            issues.append(
+                ValidationIssue(
+                    path=path,
+                    code="unbalanced_parentheses",
+                    message="expression parentheses are unbalanced",
+                )
+            )
+    normalized = parsed.native_document()
+    # A JSON round trip catches non-finite values and asserts the native wire shape.
+    try:
+        json.dumps(normalized, allow_nan=False)
+    except ValueError as error:
+        issues.append(ValidationIssue(path="$", code="non_finite", message=str(error)))
+    return ValidationReport(
+        valid=not issues, issues=issues, normalized_problem=normalized if not issues else None
+    )

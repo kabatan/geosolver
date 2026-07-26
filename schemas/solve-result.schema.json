@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geotarget.local/schemas/solve-result.schema.json",
+  "title": "GeoTarget Solve Result",
+  "type": "object",
+  "required": ["status", "engine_id", "engine_hash", "problem_sha256", "answers", "warnings"],
+  "properties": {
+    "status": {"enum": ["exact_complete", "answers_found_completeness_unknown", "no_answer_found", "cancelled", "invalid_problem", "resource_error", "engine_error"]},
+    "engine_id": {"type": "string"},
+    "engine_hash": {"type": "string"},
+    "problem_sha256": {"type": "string"},
+    "answers": {"type": "array"},
+    "warnings": {"type": "array", "items": {"type": "string"}}
+  }
+}

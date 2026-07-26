@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "geotarget"
+version = "1.0.0"
+description = "Frozen-champion numerical geometry solver"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "fastapi==0.116.1",
+  "jsonschema==4.25.1",
+  "mpmath==1.3.0",
+  "numpy==2.5.1",
+  "psutil==7.0.0",
+  "pydantic==2.11.7",
+  "scipy==1.18.0",
+  "sympy==1.14.0",
+  "typer==0.16.1",
+  "uvicorn==0.35.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "httpx==0.28.1",
+  "pytest==8.4.1",
+  "pytest-cov==6.2.1",
+  "ruff==0.12.8",
+]
+
+[project.scripts]
+geotarget = "geotarget.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/geotarget"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+exclude = ["src/geotarget/_engine/runtime"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]

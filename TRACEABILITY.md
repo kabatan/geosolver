@@ -1,62 +1,14 @@
-# Requirement Traceability
+# Traceability
 
-CI validates this table mechanically once the bootstrap checker lands. `Owner`
-is a component owner, not a person-specific permanent assignment.
+| Product authority | Frozen evidence |
+|---|---|
+| Engine ID | `champion-v2-poc-preloaded-20260722` |
+| Entrypoint SHA-256 | `e1405739201b0cb1d72e8f9ab6ca402b5e71918e569888993c4fdd13022c7301` |
+| Precision preload SHA-256 | `1139fa3ae5f4805b4791bc3f99fb6dd89b38f0cdc778c29871eb7d3469e3c403` |
+| Transitive closure | 503 files / `9fa23aecdb9372dfd961b46224b88937c3317eaeb56796a05142563f26078f15` |
+| Selection result | 131/145 accepted exact sets, extra 0 |
+| Evidence location | branch `experiment`, tag `champion-v2-poc-preloaded-20260722` |
 
-| Requirement group | Milestones | Verification | Owner |
-|---|---|---|---|
-| GOAL-01..05 | M3-M9 | family-disjoint anytime benchmark and Miss Analyzer | Core/Search |
-| GOAL-06 | M0-M10 | architecture fitness, review and drift report | Root |
-| DSL-01..09 | M1, M2, M7 | ABI conformance, differential and external-plugin tests | Base/SDK |
-| ANS-01..08 | M1, M3, M6, M8 | schema, replay, guard, interval and exact-proof tests | Verification |
-| ARCH-01..08 | M0-M3 | dependency and architecture fitness tests | Root/Core |
-| RES-01..06 | M0, M3-M9 | experiment-card and benchmark-manifest checks | Research |
-| QA-01..03 | M0-M10 | PR/nightly/weekly/release CI tiers | QA |
-
-## Milestone chain
-
-| Milestone | Deliverable | Exit condition |
-|---|---|---|
-| M-1 | Independent clean repository | `main`, no remote, no imported legacy code/history, root checkpoint. |
-| M0 | Governance and reproducible toolchain | Charter, requirements, ADRs, research protocol, pinned Julia/Python, CI smoke green. |
-| M1 | Plugin ABI vertical slice | Opaque custom call, branch Choice, strict guard, C0 and exact-capable example pass end-to-end. |
-| M2 | Canonical compiler/oracle | Reference differential mismatch 0; compiler performance experiment completed. |
-| M3 | Research-ready baseline | Single event/store/log, deterministic replay, full-support baseline, Miss Analyzer. |
-| M4 | Local solve and scaling | Fixed-start factorial study; robust promoted champion or minimal baseline retained. |
-| M5 | Discovery/archive/scheduler | Separate paired ablations and fair anytime coordinator. |
-| M6 | Branch/guard/singular/unbounded | Critical failure-family suites and continuous-image detection pass. |
-| M7 | Built-ins and SDK | Required primitives migrated; an external plugin can be authored from public docs. |
-| M8 | High precision and exactness | Config validity and target identity certificates replay independently. |
-| M9 | Generalization loop | Frozen 95/90/95 gates and all safety gates pass. |
-| M10 | Hardening/release | Isolation, parallel/replay, cross-platform, soak, beta and four-week RC complete. |
-
-Every milestone records artifacts, quantitative results and a rollback point.
-Failure to pass a gate reverts to the prior champion; gates are never loosened to
-promote an implementation.
-
-## Current RES-06 / QA-02 evidence
-
-The deterministic generator and process runner in `julia/qa/` implement the
-10,000 graph-evaluation and 1,000 bounded-solve Nightly minimum.  Coverage
-includes reference/compiled C0 and C2 differential semantics, opaque values,
-domains, guards, finite branches, ordering, equivalent graph form, CSE, safe
-DCE, residual scaling, redundancy, branch order and target affine maps.  Solve
-cycles check generated analytic truth, canonical checkpoint resume, replay,
-budgets, RNG and precision isolation.  The frozen full-count rehearsal and its
-checksum are recorded in `docs/research/QA02_FUZZ_METAMORPHIC.md` and
-`research/results/QA-02/nightly-rehearsal-v1.json`.
-
-This is evidence for the QA-02 safety/count requirement and the listed RES-06
-metamorphisms only.  It is not evidence that locked benchmark recall or the
-M9/M10 release gates are complete.
-
-## Current RES-03 evidence
-
-The M3 Miss Analyzer has an implemented v0.2 vertical slice: strict diagnostic
-and report schemas, a deterministic API/CLI, conservative adapters for current
-event/checkpoint `Observation` diagnostics, automatic verified-witness archive
-loss detection, and counterexample/metamorphic tests. Coverage and deliberately
-unknown paths are recorded in `docs/research/MISS_ANALYZER.md`. RES-03 remains
-active and M3 is not declared complete here: automatic capture instrumentation,
-scheduler/counterfactual causal audits, other archive paths and the listed
-unclassified paths still require later milestone work.
+`src/geotarget/_engine/product-manifest.json` maps every frozen source path and
+hash to its product path. `geotarget doctor` is the executable enforcement
+point.
