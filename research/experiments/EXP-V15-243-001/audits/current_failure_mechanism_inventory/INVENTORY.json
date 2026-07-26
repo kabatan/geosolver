@@ -1,0 +1,245 @@
+{
+  "schema_version": "geotarget.exp-v15-243.current-development-failure-inventory/v1",
+  "audit_date": "2026-07-18",
+  "status": "COMPLETE_READ_ONLY",
+  "scope": {
+    "partition": "development",
+    "case_count": 145,
+    "validation_or_sealed_inspected": false,
+    "long_solver_jobs_run": false,
+    "solver_or_routing_modified": false,
+    "active_or_incomplete_candidate_runs_used_as_evidence": false,
+    "formal_current_score_authority": "champion_v1 development145, 180 seconds, seed 0",
+    "formal_exact_set_equal": 131,
+    "formal_missing": 13,
+    "formal_extra": 1,
+    "formal_source_valid_case_count": 136
+  },
+  "evidence_levels": {
+    "FORMAL_FULL_DEVELOPMENT": "complete frozen 145-case run",
+    "ACTUAL_FULL_CASE": "fresh top-level worker result for the named development case, but not a full development run",
+    "ACTUAL_STORED_ENDPOINT": "real development source/endpoint replay or HP authority result; not a fresh full-case result",
+    "ACTUAL_SEARCH_ONLY": "real source-search result with target/exactification disabled",
+    "GENERATED_ONLY": "generated/property evidence; never counted as a development recovery",
+    "PROJECTION": "not accepted as measured evidence in this inventory"
+  },
+  "categories": {
+    "source_valid_not_found": {
+      "formal_case_count": 8,
+      "cases": [
+        {
+          "problem_id": "OMCE002(E)",
+          "submechanism": "WALL_COST_START_STARVATION",
+          "formal_evidence": {"lanes_started": 1, "callbacks": 42, "best_raw_residual": 0.372},
+          "later_actual_evidence": [
+            {"level": "ACTUAL_SEARCH_ONLY", "component": "deep_scheduler_wave2", "result": "accepted artifact, 0 safe endpoints; not recovered"},
+            {"level": "ACTUAL_SEARCH_ONLY", "component": "wall_normalized_multistart_wave3", "result": "candidate source_solved=false; not recovered"}
+          ]
+        },
+        {
+          "problem_id": "OMC021(D)",
+          "submechanism": "WALL_COST_START_STARVATION",
+          "formal_evidence": {"lanes_started": 2, "callbacks": 220, "best_raw_residual": 0.895},
+          "later_actual_evidence": [
+            {"level": "ACTUAL_SEARCH_ONLY", "component": "deep_scheduler_wave2", "result": "5 endpoints validated, 0 safe; not recovered"}
+          ]
+        },
+        {
+          "problem_id": "OMC168(E)",
+          "submechanism": "WALL_COST_START_STARVATION",
+          "formal_evidence": {"lanes_started": 1, "callbacks": 16, "best_raw_residual": 0.00118},
+          "later_actual_evidence": [
+            {"level": "ACTUAL_SEARCH_ONLY", "component": "deep_scheduler_wave2", "result": "accepted artifact, 0 safe endpoints; not recovered"},
+            {"level": "ACTUAL_SEARCH_ONLY", "component": "wall_normalized_multistart_wave3", "result": "both arms timed out and source_solved=false; not recovered"}
+          ]
+        },
+        {
+          "problem_id": "OMCE011(E)",
+          "submechanism": "GUARD_EXCLUDED_EQUALITY_ROOT_ATTRACTOR",
+          "formal_evidence": {"lanes_started": 120, "callbacks": 24386, "best_raw_residual": 1.78e-15, "guard_failed_fraction": 1.0},
+          "later_actual_evidence": []
+        },
+        {
+          "problem_id": "OMC035(D)",
+          "submechanism": "GUARD_EXCLUDED_EQUALITY_ROOT_ATTRACTOR",
+          "formal_evidence": {"lanes_started": 248, "callbacks": 35214, "best_raw_residual": 1.56e-11, "guard_failed_fraction": 1.0},
+          "later_actual_evidence": [
+            {"level": "ACTUAL_SEARCH_ONLY", "component": "wall_normalized_multistart_wave3", "result": "both arms source_solved=false; not recovered"}
+          ]
+        },
+        {
+          "problem_id": "OMC048(F)",
+          "submechanism": "GUARD_EXCLUDED_EQUALITY_ROOT_ATTRACTOR",
+          "formal_evidence": {"lanes_started": 59, "callbacks": 9088, "best_raw_residual": 5.55e-16, "guard_failed_fraction": 1.0},
+          "later_actual_evidence": []
+        },
+        {
+          "problem_id": "OMCE010(E)",
+          "submechanism": "RAW_RESIDUAL_HARD_OR_BROAD_BASIN",
+          "formal_evidence": {"lanes_started": 108, "best_raw_residual": 0.0573, "guard_failed_fraction": 0.774, "trust_clipped_fraction": 0.846},
+          "later_actual_evidence": []
+        },
+        {
+          "problem_id": "OMC060(C)",
+          "submechanism": "RAW_RESIDUAL_HARD_OR_BROAD_BASIN",
+          "formal_evidence": {"lanes_started": 81, "best_raw_residual": 1.272, "guard_failed_fraction": 0.983, "trust_clipped_fraction": 0.724},
+          "later_actual_evidence": []
+        }
+      ],
+      "generic_components": [
+        {
+          "component": "source-authorized bounded/periodic proposal cover",
+          "role": "increase basin coverage without inferred coordinate bounds",
+          "actual_evidence": "search-only balanced24: 14 to 18 source-solved, +4/-0, but the frozen aggregate does not identify a named champion_v1 failure gain and has no exact authority",
+          "promotion_state": "candidate-local exact comparison pending"
+        },
+        {
+          "component": "wall-normalized scheduling with absolute replay/finalize reserve",
+          "role": "prevent one expensive local call from consuming the case and preserve an auditable artifact",
+          "actual_evidence": "deep scheduler wave2 fixed artifact finalization but recovered 0/4 starvation cases; wall-normalized wave3 recovered no named failure",
+          "promotion_state": "search-performance lineage STOP; retain lifecycle lessons only"
+        },
+        {
+          "component": "generic basin-changing/globalization lane",
+          "role": "address guard-excluded attractors and residual-hard basins rather than merely deepen the same local solve",
+          "actual_evidence": "no named champion_v1 source-valid failure has an actual exact recovery in frozen later artifacts",
+          "promotion_state": "unresolved mechanism"
+        }
+      ],
+      "actual_exact_recovered_cases": []
+    },
+    "ordinary_hp_or_replay_failure": {
+      "formal_case_count": 4,
+      "cases": [
+        {
+          "problem_id": "OMC009(C)",
+          "submechanism": "ZERO_DIMENSIONAL_EMPTY_ENDPOINT_WRAPPER_REJECTION",
+          "generic_component": "source-exact zero-dimensional bypass plus numeric replay parity",
+          "actual_evidence": {
+            "level": "ACTUAL_FULL_CASE",
+            "result": "champion_v2 emitted exact descriptor ([29,-81], root 0) in 0.454173668 s",
+            "measured_recovery": true
+          }
+        },
+        {
+          "problem_id": "OMC138(E)",
+          "submechanism": "CIRCLE_THROUGH_THREE_POINTS_FLOAT_LITERAL_HP_CONTAMINATION",
+          "generic_component": "primitive-wide Float64/MP semantic parity with exact literal lifting",
+          "actual_evidence": {
+            "level": "ACTUAL_STORED_ENDPOINT",
+            "result": "real endpoint reached TARGET_AUTHORITY_READY and offline exact descriptor match ([11,-74], root 0) in 1.458558875 s",
+            "measured_recovery": false,
+            "limitation": "not a fresh full top-level case run"
+          }
+        },
+        {
+          "problem_id": "OMCB036(F)",
+          "submechanism": "POINT_ON_CIRCLE_PERIODIC_SOURCE_DOMAIN_MISMATCH",
+          "generic_component": "treat PointOnCircle phase as real period-1 source semantics; do not impose an unproved [0,1] hard domain",
+          "actual_evidence": {
+            "level": "ACTUAL_FULL_CASE",
+            "result": "same-CPU 180 s paired full worker: control missing, candidate exact descriptor ([1,-1200], root 0); unrelated periodic control retained; false/extra/wrong=0",
+            "measured_recovery": true
+          }
+        },
+        {
+          "problem_id": "OMC118(F)",
+          "submechanism": "HP_REFINEMENT_TO_STRICT_BOUNDARY",
+          "generic_component": "source-root/guard certified authority plus a basin or chart that reaches an interior root",
+          "actual_evidence": {
+            "level": "ACTUAL_FULL_CASE",
+            "result": "all H0/H1/H2 and F0/F1/F2 30 s adaptive-HP arms remained MISSING",
+            "measured_recovery": false
+          }
+        }
+      ],
+      "actual_full_case_recovered_cases": ["OMC009(C)", "OMCB036(F)"],
+      "actual_endpoint_only_recovered_cases": ["OMC138(E)"],
+      "unresolved_cases": ["OMC118(F)"]
+    },
+    "exact_recognition_failure": {
+      "formal_case_count": 0,
+      "cases": [],
+      "finding": "No champion_v1 development failure reached stable source/HP authority and then failed only polynomial/root recognition. Recognition degree/height tuning is therefore not a response to a measured current failure.",
+      "generic_components": [
+        {
+          "component": "exact-coordinate QQBar replay fallback",
+          "role": "sound authority when all coordinates can be recognized and exactly replayed",
+          "actual_evidence": "generated 48/48 positives accepted and 72/72 negative/near-miss rejected; six actual-process algebraic root-order fixtures passed",
+          "development_recovery_evidence": "none"
+        }
+      ]
+    },
+    "timeout_or_process_failure": {
+      "formal_case_count": 1,
+      "cases": [
+        {
+          "problem_id": "OMC135(E)",
+          "submechanism": "NON_COOPERATIVE_LOCAL_CALL_EXCEEDED_SEARCH_DEADLINE",
+          "formal_evidence": "search child terminated around 150.027 s without accepted search.json",
+          "generic_component": "absolute child deadline, cooperative local stop, resource lock/deferred requeue, and atomic partial artifact",
+          "later_actual_evidence": [
+            {"level": "ACTUAL_SEARCH_ONLY", "component": "deep_scheduler_wave2", "result": "auditable accepted result produced, but 0 validated/safe endpoints; lifecycle recovered, solve not recovered"},
+            {"level": "ACTUAL_SEARCH_ONLY", "component": "bounded_periodic_cover balanced24", "result": "the sole periodic_mixed case had a common setup timeout in all arms; proposal cover could not act"}
+          ]
+        }
+      ],
+      "actual_exact_recovered_cases": []
+    },
+    "extra_or_semantic_unsoundness": {
+      "formal_case_count": 1,
+      "cases": [
+        {
+          "problem_id": "OMCE014(F)",
+          "submechanism": "STRICT_ACUTE_GUARD_COLLAPSED_RIGHT_ANGLE_BOUNDARY_TO_ZERO_PENALTY",
+          "formal_evidence": "champion_v1 returned expected target plus one boundary target; status EXTRA",
+          "generic_components": [
+            "typed strict triangle-class predicate",
+            "exact-coordinate source replay when available",
+            "otherwise certified source root enclosure + typed guard obligations + independent exact source-to-target link"
+          ],
+          "later_actual_evidence": [
+            {"level": "ACTUAL_STORED_ENDPOINT", "component": "strict_triangle_guard_semantics", "result": "stored good endpoint stayed TARGET_AUTHORITY_READY; stored right-boundary endpoint changed to fail-closed"},
+            {"level": "ACTUAL_STORED_ENDPOINT", "component": "certified_source_authority", "result": "stored good root+guards certified; stored bad boundary failed closed"}
+          ],
+          "measured_full_case_extra_removal": false
+        }
+      ],
+      "systemic_warning": "The ordinary target-only HP authority remains unsound for flat roots and even tiny constant contradictions if it relies only on small residual and approximate Boolean guard replay. The triangle fix removes the observed boundary bug but is not a complete authority proof.",
+      "actual_full_case_recovered_cases": []
+    }
+  },
+  "measured_case_level_delta_available_now": {
+    "formal_score_remains": "131/145 with one EXTRA until a frozen integrated full-development run exists",
+    "actual_full_case_recoveries_outside_full_development": ["OMC009(C)", "OMCB036(F)"],
+    "actual_real_endpoint_authority_recovery_only": ["OMC138(E)"],
+    "actual_real_endpoint_false_authority_rejection_only": ["OMCE014(F)"],
+    "no_projection_added_to_score": true
+  },
+  "research_priority": [
+    "Make exact output authority sound: exact coordinate replay, or certified source root+guards joined to an exact target link.",
+    "Integrate already-measured generic HP semantic repairs without counting endpoint-only evidence as a full-case solve.",
+    "Use source-authorized proposal cover as the leading search candidate; require a same-CPU exact panel before promotion.",
+    "Treat wall scheduling as lifecycle containment, not as a solved-coverage component, after two zero-gain waves.",
+    "Develop a genuinely basin-changing generic mechanism for the eight unresolved source-valid-not-found cases."
+  ],
+  "authority_files": [
+    {"path": "results/champion-v1-development145-180s-seed0-v1/RESULT.json", "sha256": "3d6cce4d541757826924a88d64bcd71051c08f02761d0dd9c1f5123a60dc3206"},
+    {"path": "results/champion-v1-development145-180s-seed0-v1/OFFLINE_SCORE.json", "sha256": "cf22ab89528ee84548551f01db6266a65faf025fd78d72419635682210096aed"},
+    {"path": "analysis/development145_failure_reclassification/REPORT.md", "sha256": "952b1eac20df278ae828b8dc783f8687bc9bf2a73823dba475895f92c5fe5382"},
+    {"path": "results/champion-v2-zero-smoke-omc009/RESULT.json", "sha256": "b28b0b3a8d6bf6cf80f419fa698674958135eaa37f3ba364c5155f11fc28bfbb"},
+    {"path": "candidates/hp_semantic_parity/results/full_authority_screen_12s/SUMMARY.json", "sha256": "04556350d72ae56fe8975bf6442f331cd2d6ad4679260f50926d9f6451474bea"},
+    {"path": "candidates/hp_semantic_parity/results/full_authority_screen_12s/OFFLINE_SCORE.json", "sha256": "d5580ef441b4f24b718e984110cabd94f8ff7d996c3724780d1323ca29881bcf"},
+    {"path": "candidates/point_on_circle_periodic_semantics/FULL_WORKER_SMOKE_RESULT.json", "sha256": "63887b5ed36d50f09788562ee1f1a3f90b10def36322020d2915a2052bf82164"},
+    {"path": "candidates/adaptive_hp/future_targeted_hp_30s/b4-latin-hp_failure_paired14-30s-seed0/GROUP_RESULT.json", "sha256": "285526ce5ce04906425583a4acb2f7117818a61aa82e299b81d79f67bbcae484"},
+    {"path": "candidates/adaptive_hp/future_targeted_hp_30s/b6-latin-hp_failure_paired14-30s-seed0/GROUP_RESULT.json", "sha256": "f7da1a34342dce5b1fa84196d0d920344fe81c5afbca8f4713593287870cff89"},
+    {"path": "candidates/deep_scheduler_wave2/results/deep-scheduler-wave2-dev8-search146s-seed0-v1/PAIRED_RESULTS.json", "sha256": "2aa455a5f10268503dba38ec64375a4c059cbd9f86535e1df4e7ba98f65ba149"},
+    {"path": "candidates/deep_scheduler_wave2/results/deep-scheduler-wave2-dev8-search146s-seed0-v1/RESULT_ANALYSIS.md", "sha256": "4140ce098d8a2e2b28fe4a7f85a3b4fec1a233db048b0889aaca0fb29f8fe389"},
+    {"path": "candidates/wall_normalized_multistart/results/screen24-wave3-5s-seed0-v1/SUMMARY.json", "sha256": "6cfe078ee70ff73a3d2e0ed344f26820e1aa4a361bdaa9de1c5592dee7b7b557"},
+    {"path": "candidates/bounded_periodic_cover/BALANCED24_ANALYSIS.json", "sha256": "04927ba7d5eadaebb36cdb4977c8de78c1fcd2bc7667f818089255dad5b207ff"},
+    {"path": "candidates/strict_triangle_guard_semantics/ALGORITHM_CARD.md", "sha256": "9d753f7b900cf7f88fee7ae731c294a53140e636b6198cb07739dec29ce3b585"},
+    {"path": "candidates/certified_source_authority/REAL_MICRO_RESULT.json", "sha256": "0af81b79b1c8de130d8492d57f57768b93bc6e1483c6d71f8433007c697047b6"},
+    {"path": "candidates/exact_coordinate_replay/GENERATED_RESULT.json", "sha256": "20f25f3c69462305d16fc311b6141d58228ec50494eefd25fe84968224a753cf"},
+    {"path": "candidates/exact_coordinate_replay/FINAL_ROOT_ORDINAL_BOUNDARY_AUDIT.json", "sha256": "fa133c7243b9f455bbb4f80de1613efc53bc590ffc8556ec8ea4eee2377c3566"}
+  ]
+}
