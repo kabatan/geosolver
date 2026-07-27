@@ -31,3 +31,13 @@ def test_dangerous_expression_is_rejected(problem: dict) -> None:
 def test_time_limit_is_finite_and_at_least_180(value: float) -> None:
     with pytest.raises(ValidationError):
         SolveOptions(time_limit_seconds=value)
+
+
+def test_validation_preserves_native_json_scalar_types(problem: dict) -> None:
+    problem["constraints"].append({"def": "Distance(A, B)", "value": 4})
+
+    report = validate(problem)
+
+    assert report.valid
+    assert report.normalized_problem == problem
+    assert type(report.normalized_problem["constraints"][0]["value"]) is int

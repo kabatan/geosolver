@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+from copy import deepcopy
 from typing import Any
 
 from pydantic import ValidationError
@@ -92,12 +93,16 @@ def validate(problem: V15Problem | dict[str, Any]) -> ValidationReport:
                     message="expression parentheses are unbalanced",
                 )
             )
-    normalized = parsed.native_document()
-    # A JSON round trip catches non-finite values and asserts the native wire shape.
+    # Validation must not become a source transformation. In particular,
+    # Pydantic's ``float | str`` parsing turns JSON integers into floats; that
+    # changed the source SHA seen by champion's exact replay authority. Preserve
+    # every caller-provided JSON scalar and use the model only for validation.
+    native = parsed.native_document() if isinstance(problem, V15Problem) else deepcopy(problem)
+    # This catches non-finite values while retaining the original wire shape.
     try:
-        json.dumps(normalized, allow_nan=False)
+        json.dumps(native, allow_nan=False)
     except ValueError as error:
         issues.append(ValidationIssue(path="$", code="non_finite", message=str(error)))
     return ValidationReport(
-        valid=not issues, issues=issues, normalized_problem=normalized if not issues else None
+        valid=not issues, issues=issues, normalized_problem=native if not issues else None
     )

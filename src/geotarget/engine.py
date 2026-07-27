@@ -22,6 +22,30 @@ from geotarget.resources import ResourceReservation
 ENGINE_ID = "champion-v2-poc-preloaded-20260722"
 ENGINE_HASH = "9fa23aecdb9372dfd961b46224b88937c3317eaeb56796a05142563f26078f15"
 
+# This is part of the frozen 2026-07-22 execution contract, not a product
+# tuning surface. Leaving native-library defaults inherited from the host
+# changes how much of the fixed work order fits into the 146-second window.
+FROZEN_THREAD_ENVIRONMENT = {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONHASHSEED": "0",
+    "OMP_NUM_THREADS": "1",
+    "OMP_THREAD_LIMIT": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "BLIS_NUM_THREADS": "1",
+    "GOTO_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "JULIA_NUM_THREADS": "1",
+    "JULIA_NUM_PRECOMPILE_TASKS": "1",
+    "JULIA_PKG_PRECOMPILE_AUTO": "0",
+    "RAYON_NUM_THREADS": "1",
+    "CMAKE_BUILD_PARALLEL_LEVEL": "1",
+    "MAKEFLAGS": "-j1",
+    "MALLOC_ARENA_MAX": "2",
+    "GEOTARGET_GLOBAL_RSS_RESERVATION_BYTES": str(8 * 1024**3),
+}
+
 
 class EngineFailure(RuntimeError):
     pass
@@ -237,7 +261,7 @@ class ChampionSubprocessEngine:
             / "solver/research/experiments/EXP-V15-243-001"
             / "repro_20260722/workers/champion_v2_poc_preloaded.py"
         )
-        environment = os.environ.copy()
+        environment = {**os.environ, **FROZEN_THREAD_ENVIRONMENT}
         python_path = [str(runtime / "geosolver/src"), str(runtime / "solver")]
         if environment.get("PYTHONPATH"):
             python_path.append(environment["PYTHONPATH"])
@@ -293,11 +317,42 @@ class ChampionSubprocessEngine:
                 "--output",
                 str(output),
             ]
-            self._invoke(base_command, environment, timeout=60)
+            dry_status = directory / "outer-dry-status.json"
+            self._invoke(
+                [
+                    sys.executable,
+                    "-m",
+                    "geotarget.reference_entrypoint",
+                    "--phase",
+                    "dry",
+                    "--status",
+                    str(dry_status),
+                    "--",
+                    *base_command,
+                ],
+                environment,
+                timeout=60,
+            )
             plan_path = output / "PLAN.json"
             plan_sha = hashlib.sha256(plan_path.read_bytes()).hexdigest()
+            execute_status = directory / "outer-execute-status.json"
             self._invoke(
-                [*base_command, "--execute", "--plan-sha256", plan_sha], environment, timeout=240
+                [
+                    sys.executable,
+                    "-m",
+                    "geotarget.reference_entrypoint",
+                    "--phase",
+                    "execute",
+                    "--status",
+                    str(execute_status),
+                    "--",
+                    *base_command,
+                    "--execute",
+                    "--plan-sha256",
+                    plan_sha,
+                ],
+                environment,
+                timeout=240,
             )
             active_output = output
             remaining = options.time_limit_seconds - 180.0

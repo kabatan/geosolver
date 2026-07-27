@@ -2,7 +2,13 @@ import os
 from pathlib import Path
 
 from geotarget.doctor import diagnose
-from geotarget.engine import ENGINE_HASH, engine_root, extract_answers, verify_engine
+from geotarget.engine import (
+    ENGINE_HASH,
+    FROZEN_THREAD_ENVIRONMENT,
+    engine_root,
+    extract_answers,
+    verify_engine,
+)
 
 
 def test_frozen_product_manifest_matches_every_engine_file() -> None:
@@ -20,6 +26,30 @@ def test_frozen_subprocess_python_launcher_is_executable() -> None:
     launcher = engine_root() / "runtime/solver/python/.venv/bin/python"
     assert launcher.is_file()
     assert os.access(Path(launcher), os.X_OK)
+
+
+def test_reference_runtime_freezes_native_thread_environment() -> None:
+    expected = {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONHASHSEED": "0",
+        "OMP_NUM_THREADS": "1",
+        "OMP_THREAD_LIMIT": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "BLIS_NUM_THREADS": "1",
+        "GOTO_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "NUMEXPR_NUM_THREADS": "1",
+        "JULIA_NUM_THREADS": "1",
+        "JULIA_NUM_PRECOMPILE_TASKS": "1",
+        "JULIA_PKG_PRECOMPILE_AUTO": "0",
+        "RAYON_NUM_THREADS": "1",
+        "CMAKE_BUILD_PARALLEL_LEVEL": "1",
+        "MAKEFLAGS": "-j1",
+        "MALLOC_ARENA_MAX": "2",
+        "GEOTARGET_GLOBAL_RSS_RESERVATION_BYTES": str(8 * 1024**3),
+    }
+    assert expected == FROZEN_THREAD_ENVIRONMENT
 
 
 def test_exact_descriptor_mapping_is_exposed_without_losing_its_interval() -> None:
