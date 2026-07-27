@@ -16,7 +16,8 @@ callback limit, precision, restoration rule, or exact-authority rule changed.
 ## Verification
 
 - Product solver commit under test: `6c22b09fc5e4a977e312ee98dd94a163d5f7a717`
-- Final main commit adds only the regression test after that run.
+- Subsequent main commits add only the regression test and documentation after
+  that run; the solver execution path is unchanged.
 - 145/145 processes accepted; timeout/crash: 0.
 - Seven-lane one-shot truth score: 130/145; false/extra exact: 0.
 - One-shot descriptor sets equal to the archived frozen run: 138/145.
