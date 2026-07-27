@@ -24,3 +24,8 @@ The one-time product acceptance evidence is indexed under
 `product-validation/`. It records the observed failure of the 145-case
 reproducibility gate as well as the checksums for raw evidence kept outside
 Git. It is an audit result, not a replacement for the frozen champion record.
+
+`product-validation-v4/` supersedes that first product attempt. It records the
+native-source coercion defect, its correction, the new 145-case truth score,
+and the reference-isolation audit that reproduced every archived champion
+descriptor.
