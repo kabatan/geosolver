@@ -32,6 +32,14 @@ class CancelledEngine(FakeEngine):
         raise EngineCancelled("solve was cancelled")
 
 
+class RecordingEngine(FakeEngine):
+    received_problem = None
+
+    def execute(self, problem, options, reservation):
+        self.received_problem = problem
+        return super().execute(problem, options, reservation)
+
+
 def test_python_service_normalizes_exact_result(problem: dict) -> None:
     result = solve(problem, SolveOptions(), engine=FakeEngine())
     assert result.status == "exact_complete"
@@ -51,3 +59,13 @@ def test_cancelled_engine_is_reported_as_cancelled(problem: dict) -> None:
     result = solve(problem, SolveOptions(), engine=CancelledEngine())
     assert result.status == "cancelled"
     assert result.detail == "solve was cancelled"
+
+
+def test_service_passes_native_json_scalars_to_engine_unchanged(problem: dict) -> None:
+    problem["constraints"].append({"def": "Distance(A, B)", "value": 4})
+    engine = RecordingEngine()
+
+    solve(problem, SolveOptions(), engine=engine)
+
+    assert engine.received_problem == problem
+    assert type(engine.received_problem["constraints"][0]["value"]) is int
