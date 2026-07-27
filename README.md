@@ -18,6 +18,10 @@ The default and minimum time limit is 180 seconds. `no_answer_found` is not a
 proof that the source geometry has no solution. See `CHARTER.md` and
 `docs/V15_GEOMETRY_DSL_AUTHORING_MANUAL_ja.md`.
 
+Validation is non-coercing: the original JSON scalar types are preserved when
+the document is materialized for the engine because the champion's exact
+replay authority binds to those native source bytes.
+
 The experiment evidence is preserved on branch `experiment` and tag
 `champion-v2-poc-preloaded-20260722`. Raw artifacts are outside Git in the
 checksummed freeze archive described on that branch.
