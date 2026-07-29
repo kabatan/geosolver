@@ -463,6 +463,9 @@ type PendingPoint = {
   expression: string;
   position: Vec2;
 };
+type PointNaming = {
+  generatedName: string;
+};
 type PaletteTool = {
   id: string;
   label: string;
@@ -479,6 +482,16 @@ function renderedPointSize(style?: ObjectStyle): number {
     1.5,
     Math.min(MAX_POINT_SIZE, style?.pointSize ?? DEFAULT_POINT_SIZE),
   );
+}
+
+function displayedObjectLabel(
+  item: SceneItem,
+  style?: ObjectStyle,
+): string {
+  if (style?.label === "hidden") return "";
+  if (style?.label === "caption") return style.caption || item.name;
+  if (style?.label === "name") return item.name;
+  return item.kind === "point" ? item.name : "";
 }
 
 type CanvasLabelPlacement = Readonly<{
@@ -545,14 +558,12 @@ function canvasLabelLayout(
   const ordered = [...items]
     .filter(
       (item) =>
-        !hidden.has(item.name) && styles[item.name]?.label !== "hidden",
+        !hidden.has(item.name) &&
+        displayedObjectLabel(item, styles[item.name]) !== "",
     )
     .sort((a, b) => Number(b.kind === "point") - Number(a.kind === "point"));
   for (const item of ordered) {
-    const label =
-      styles[item.name]?.label === "caption"
-        ? styles[item.name]?.caption || item.name
-        : item.name;
+    const label = displayedObjectLabel(item, styles[item.name]);
     const width = Math.min(150, Math.max(28, 16 + Array.from(label).length * 9));
     const height = 26;
     const anchor = canvasLabelAnchor(item, viewport);
@@ -1373,12 +1384,7 @@ function SceneShape({
       : objectStyle?.lineDash === "dotted"
         ? "2 5"
         : undefined;
-  const label =
-    objectStyle?.label === "hidden"
-      ? ""
-      : objectStyle?.label === "caption"
-        ? objectStyle.caption || item.name
-        : item.name;
+  const label = displayedObjectLabel(item, objectStyle);
   if (item.kind === "point") {
     const point = worldToScreen(item.position, viewport);
     const pointSize = renderedPointSize(objectStyle);
@@ -1769,6 +1775,8 @@ export function App() {
   const [tool, setTool] = useState<ToolMode>("select");
   const [toolPoints, setToolPoints] = useState<string[]>([]);
   const [pendingPoints, setPendingPoints] = useState<PendingPoint[]>([]);
+  const [pointNaming, setPointNaming] = useState<PointNaming>();
+  const [pointNameDraft, setPointNameDraft] = useState("");
   const [leftMode, setLeftMode] = useState<"algebra" | "tools">("tools");
   const [layoutSizes, setLayoutSizes] = useState<LayoutSizes>(loadLayoutSizes);
   const [viewportWidth, setViewportWidth] = useState(() =>
@@ -1847,6 +1855,7 @@ export function App() {
   const [activeAnswer, setActiveAnswer] = useState(0);
   const importRef = useRef<HTMLInputElement>(null);
   const dialogInputRef = useRef<HTMLInputElement>(null);
+  const pointNameInputRef = useRef<HTMLInputElement>(null);
   const mathTargetRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(
     null,
   );
@@ -2350,6 +2359,83 @@ export function App() {
     setJsonDirty(false);
     setUiError("");
   }
+  function beginPointNaming(generatedName: string) {
+    setObjectStyles((current) => ({
+      ...current,
+      [generatedName]: {
+        ...current[generatedName],
+        label: "hidden",
+      },
+    }));
+    setPointNameDraft("");
+    setPointNaming({ generatedName });
+    window.setTimeout(() => pointNameInputRef.current?.focus(), 0);
+  }
+  function finishPointNaming() {
+    if (!pointNaming) return;
+    const previousName = pointNaming.generatedName;
+    const nextName = pointNameDraft.trim();
+    if (!nextName) {
+      setPointNaming(undefined);
+      window.setTimeout(() => canvasRef.current?.focus(), 0);
+      return;
+    }
+    if (!validIdentifier(nextName)) {
+      setUiError("名前は英字または_で始め、英数字と_だけを使ってください");
+      return;
+    }
+    if (
+      allNames(problem).some(
+        (name) => name !== previousName && name === nextName,
+      ) ||
+      measurements.some((item) => item.name === nextName)
+    ) {
+      setUiError(`${nextName} は既に使われています`);
+      return;
+    }
+    const replace = (source: string) =>
+      replaceIdentifier(source, previousName, nextName);
+    const next: Problem = {
+      ...problem,
+      construction: problem.construction.map((item) => ({
+        name: item.name === previousName ? nextName : item.name,
+        expr: replace(item.expr),
+      })),
+      constraints: problem.constraints.map((item) => ({
+        def: replace(item.def),
+        value:
+          typeof item.value === "string" ? replace(item.value) : item.value,
+      })),
+      guards: problem.guards.map(replace),
+      answer: replace(problem.answer),
+      post_process: replace(problem.post_process),
+    };
+    problemRef.current = next;
+    setProblem(next);
+    setMeasurements((items) =>
+      items.map((item) => ({ ...item, expr: replace(item.expr) })),
+    );
+    setObjectStyles((current) => {
+      const styles = {
+        ...current,
+        [nextName]: { ...current[previousName], label: "name" as const },
+      };
+      delete styles[previousName];
+      return styles;
+    });
+    setHidden((current) => {
+      if (!current.has(previousName)) return current;
+      const renamed = new Set(current);
+      renamed.delete(previousName);
+      renamed.add(nextName);
+      return renamed;
+    });
+    setSelected(nextName);
+    setJsonDirty(false);
+    setUiError("");
+    setPointNaming(undefined);
+    window.setTimeout(() => canvasRef.current?.focus(), 0);
+  }
   function cancelDraft(): boolean {
     if (!guided?.names.length && !toolPoints.length && !pendingPoints.length)
       return false;
@@ -2443,6 +2529,7 @@ export function App() {
       });
     }
     setSelected(name);
+    beginPointNaming(name);
     return name;
   }
   function axisPlacementNear(point: Vec2): "origin" | "x" | "y" | undefined {
@@ -2486,6 +2573,7 @@ export function App() {
       [coordinate]: value,
     });
     setSelected(name);
+    beginPointNaming(name);
     return true;
   }
   function makePendingPoint(point: Vec2, prior = pendingPoints): PendingPoint {
@@ -2692,6 +2780,7 @@ export function App() {
       [variable]: parameter,
     });
     setSelected(outputName);
+    beginPointNaming(outputName);
   }
   function defaultPointOnCarrier(item: SceneItem): Vec2 | undefined {
     if (item.kind === "circle")
@@ -2748,6 +2837,7 @@ export function App() {
       ],
     });
     setSelected(outputName);
+    beginPointNaming(outputName);
     setIntersectionHint(undefined);
   }
   function endpointNames(
@@ -2959,6 +3049,7 @@ export function App() {
       [variable]: parameter,
     });
     setSelected(outputName);
+    beginPointNaming(outputName);
     setIntersectionHint(undefined);
     return true;
   }
@@ -5823,7 +5914,12 @@ export function App() {
                     <label>
                       ラベル
                       <select
-                        value={selectedStyle.label ?? "name"}
+                        value={
+                          selectedStyle.label ??
+                          (selectedSceneItem?.kind === "point"
+                            ? "name"
+                            : "hidden")
+                        }
                         onChange={(event) =>
                           updateSelectedStyle({
                             label: event.target.value as ObjectStyle["label"],
@@ -6361,6 +6457,56 @@ export function App() {
             onClose={closeMathKeyboard}
           />
         </>
+      )}
+      {pointNaming && (
+        <form
+          className="point-name-card"
+          role="dialog"
+          aria-modal="false"
+          aria-labelledby="point-name-title"
+          onSubmit={(event) => {
+            event.preventDefault();
+            finishPointNaming();
+          }}
+          onKeyDown={(event) => {
+            if (event.key === "Escape") {
+              event.preventDefault();
+              event.stopPropagation();
+              setPointNameDraft("");
+              setPointNaming(undefined);
+              window.setTimeout(() => canvasRef.current?.focus(), 0);
+            }
+          }}
+        >
+          <div>
+            <strong id="point-name-title">点の名前</strong>
+            <span>任意</span>
+          </div>
+          <p>名前を表示する場合だけ入力してください。</p>
+          <input
+            ref={pointNameInputRef}
+            aria-label="新しい点の名前"
+            value={pointNameDraft}
+            onChange={(event) => setPointNameDraft(event.target.value)}
+            placeholder="例: P"
+            autoComplete="off"
+          />
+          <div>
+            <button
+              type="button"
+              onClick={() => {
+                setPointNameDraft("");
+                setPointNaming(undefined);
+                window.setTimeout(() => canvasRef.current?.focus(), 0);
+              }}
+            >
+              名前なし
+            </button>
+            <button type="submit" className="primary-action">
+              確定
+            </button>
+          </div>
+        </form>
       )}
       {uiError && (
         <div className="toast" role="alert">

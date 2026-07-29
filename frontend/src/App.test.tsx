@@ -575,6 +575,59 @@ describe("GeoTarget workbench", () => {
     expect(document.querySelector('[data-object="s"] .geometry-object-hit')).toHaveAttribute("class", "geometry-object-hit");
   });
 
+  it("asks for a new point name and keeps blank names visually hidden", async () => {
+    render(<App />);
+    await userEvent.click(screen.getByRole("button", { name: "作図ツール 点" }));
+    const canvas = screen.getByRole("application", { name: /幾何作図キャンバス/ });
+    Object.defineProperty(canvas, "getBoundingClientRect", { value: () => ({ left: 0, top: 0, width: 1000, height: 700, right: 1000, bottom: 700, x: 0, y: 0, toJSON() {} }) });
+
+    fireEvent.pointerDown(canvas.querySelector(".canvas-hit")!, { clientX: 700, clientY: 300, pointerId: 101, button: 0 });
+    const nameInput = screen.getByRole("textbox", { name: "新しい点の名前" });
+    await waitFor(() => expect(nameInput).toHaveFocus());
+    await userEvent.type(nameInput, "Q{Enter}");
+
+    expect(document.querySelector('[data-object="P"]')).not.toBeInTheDocument();
+    expect(document.querySelector('[data-object="Q"] .canvas-math-label')).toBeInTheDocument();
+
+    fireEvent.pointerDown(canvas.querySelector(".canvas-hit")!, { clientX: 760, clientY: 260, pointerId: 102, button: 0 });
+    const blankNameInput = screen.getByRole("textbox", { name: "新しい点の名前" });
+    await userEvent.type(blankNameInput, "{Enter}");
+
+    expect(document.querySelector('[data-object="P"]')).toBeInTheDocument();
+    expect(document.querySelector('[data-object="P"] .canvas-math-label')).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "元に戻す" }));
+    expect(document.querySelector('[data-object="P"]')).not.toBeInTheDocument();
+    expect(document.querySelector('[data-object="Q"]')).toBeInTheDocument();
+  });
+
+  it("hides line and circle labels until the user explicitly enables them", async () => {
+    render(<App />);
+    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
+    const labeledObjects = {
+      task: "solve", id: "default-object-labels", variables: { names: [] },
+      construction: [
+        { name: "A", expr: "Point(0, 0)" },
+        { name: "B", expr: "Point(2, 0)" },
+        { name: "l", expr: "Line(A, B)" },
+        { name: "c", expr: "CircleThroughPoint(A, B)" },
+      ],
+      constraints: [], guards: [], answer: "Distance(A, B)", post_process: "",
+    };
+    fireEvent.change(screen.getByRole("textbox", { name: "V15 JSON" }), { target: { value: JSON.stringify(labeledObjects) } });
+    await userEvent.click(screen.getByRole("button", { name: "JSONを適用" }));
+
+    expect(document.querySelector('[data-object="A"] .canvas-math-label')).toBeInTheDocument();
+    expect(document.querySelector('[data-object="l"] .canvas-math-label')).not.toBeInTheDocument();
+    expect(document.querySelector('[data-object="c"] .canvas-math-label')).not.toBeInTheDocument();
+
+    fireEvent.click(document.querySelector('[data-object="l"]')!);
+    await userEvent.click(screen.getByRole("tab", { name: "スタイル" }));
+    expect(screen.getByLabelText("ラベル")).toHaveValue("hidden");
+    await userEvent.selectOptions(screen.getByLabelText("ラベル"), "name");
+    expect(document.querySelector('[data-object="l"] .canvas-math-label')).toBeInTheDocument();
+  });
+
   it("creates blank-click endpoint points and their segment as one undoable construction", async () => {
     render(<App />);
     const canvas = screen.getByRole("application", { name: /幾何作図キャンバス/ });

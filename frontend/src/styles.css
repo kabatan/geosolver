@@ -265,6 +265,60 @@ polygon.geometry-object { fill: rgba(52,89,217,.06); }.zoom-controls { position:
 .property-form .expression-autocomplete > textarea { margin-top: 5px; }
 .tool-form .expression-autocomplete > textarea { margin-top: 5px; }
 
+.point-name-card {
+  position: fixed;
+  z-index: 45;
+  left: 50%;
+  bottom: 24px;
+  width: min(360px, calc(100vw - 32px));
+  transform: translateX(-50%);
+  padding: 14px;
+  border: 1px solid #cbd4e5;
+  border-radius: 9px;
+  background: rgba(255,255,255,.98);
+  box-shadow: 0 16px 42px rgba(23,32,51,.2);
+}
+.point-name-card > div:first-child,
+.point-name-card > div:last-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.point-name-card strong { color: #25395f; font-size: 13px; }
+.point-name-card > div:first-child span {
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: #f0f3f9;
+  color: #667085;
+  font-size: 9px;
+}
+.point-name-card p {
+  margin: 5px 0 9px;
+  color: #667085;
+  font-size: 10px;
+}
+.point-name-card input {
+  width: 100%;
+  height: 38px;
+  margin-bottom: 10px;
+  padding: 0 10px;
+  border: 1px solid #bfc9dc;
+  border-radius: 6px;
+  font-size: 13px;
+}
+.point-name-card button {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid #cbd3df;
+  border-radius: 6px;
+  background: #fff;
+}
+.point-name-card button.primary-action {
+  border-color: var(--blue);
+  background: var(--blue);
+}
+
 @media (max-width: 620px) {
   .command-area > .primary-action { min-height: 40px; }
   .adaptive-resource-grid { grid-template-columns: 1fr 1fr; }
