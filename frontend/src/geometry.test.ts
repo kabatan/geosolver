@@ -239,6 +239,9 @@ describe("geometry preview", () => {
     const variables = { t: 0.25 };
     for (const [id, spec] of Object.entries(guidedSpecs())) {
       if (spec.output && spec.output !== "construction") continue;
+      // This UI tool expands to named vertices plus a Polygon construction;
+      // it intentionally is not represented by one preview expression.
+      if (id === "InscribedPolygonVertices") continue;
       const sample = argumentsByTool[id];
       expect(sample, `${id} needs a contract sample`).toBeDefined();
       const expression = guidedExpression(id, sample.names, spec, sample.parameters);

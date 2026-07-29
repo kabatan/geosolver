@@ -1809,6 +1809,7 @@ export function App() {
   const [catalogSearch, setCatalogSearch] = useState("");
   const [catalogTool, setCatalogTool] = useState<DslTool>();
   const [guided, setGuided] = useState<GuidedSelection>();
+  const [guidedPointReady, setGuidedPointReady] = useState<string>();
   const [newName, setNewName] = useState("");
   const [newExpression, setNewExpression] = useState("");
   const [newConditionOpen, setNewConditionOpen] = useState(false);
@@ -1946,6 +1947,11 @@ export function App() {
       ),
     [problem.construction, problem.constraints, problem.variables.names, variablePreview],
   );
+  useEffect(() => {
+    if (!guidedPointReady || !scene.byName.has(guidedPointReady)) return;
+    setGuidedPointReady(undefined);
+    chooseObject(guidedPointReady);
+  }, [guidedPointReady, scene]);
   const pointNames = useMemo(
     () => scene.items.filter((item) => item.kind === "point").map((item) => item.name),
     [scene.items],
@@ -2430,6 +2436,16 @@ export function App() {
       renamed.add(nextName);
       return renamed;
     });
+    setToolPoints((current) =>
+      current.map((name) => (name === previousName ? nextName : name)),
+    );
+    setPendingPoints((current) =>
+      current.map((item) =>
+        item.name === previousName
+          ? { ...item, name: nextName }
+          : item,
+      ),
+    );
     setSelected(nextName);
     setJsonDirty(false);
     setUiError("");
@@ -2542,18 +2558,20 @@ export function App() {
   function createAxisPointNear(
     hitPoint: Vec2,
     placementPoint = hitPoint,
-  ): boolean {
+  ): string | undefined {
     const placement = axisPlacementNear(hitPoint);
-    if (!placement) return false;
+    if (!placement) return undefined;
     if (placement === "origin") {
       const existing = scene.items.find(
         (item) =>
           item.kind === "point" &&
           Math.hypot(item.position.x, item.position.y) < 1e-10,
       );
-      if (existing) setSelected(existing.name);
-      else addPointAt({ x: 0, y: 0 }, "fixed");
-      return true;
+      if (existing) {
+        setSelected(existing.name);
+        return existing.name;
+      }
+      return addPointAt({ x: 0, y: 0 }, "fixed");
     }
     const name = uniqueName(allNames(problem), "P");
     const coordinate = uniqueIdentifier(
@@ -2574,7 +2592,7 @@ export function App() {
     });
     setSelected(name);
     beginPointNaming(name);
-    return true;
+    return name;
   }
   function makePendingPoint(point: Vec2, prior = pendingPoints): PendingPoint {
     const reserved = [
@@ -2684,6 +2702,7 @@ export function App() {
     setPendingPoints(drafts);
     setToolPoints(names);
     setSelected(draft.name);
+    beginPointNaming(draft.name);
     if (tool === "segment" && names.length === 2)
       finishObject("Segment", names, drafts);
     else if (tool === "line" && names.length === 2)
@@ -2716,7 +2735,7 @@ export function App() {
     const magnitude = Math.hypot(vector.x, vector.y);
     if (magnitude < 1e-12) return undefined;
     const direction = { x: vector.x / magnitude, y: vector.y / magnitude };
-    if (carrier.kind === "segment")
+    if (carrier.kind === "segment" || carrier.kind === "vector")
       return Math.max(
         0,
         Math.min(
@@ -2735,16 +2754,16 @@ export function App() {
     };
     return (point.x - base.x) * direction.x + (point.y - base.y) * direction.y;
   }
-  function addPointOnObject(name: string, point: Vec2) {
+  function addPointOnObject(name: string, point: Vec2): string | undefined {
     const item = scene.byName.get(name);
     const construction = problem.construction.find(
       (entry) => entry.name === name,
     );
-    if (!item || !construction) return;
+    if (!item || !construction) return undefined;
     const outputName = uniqueName(allNames(problem), "P");
     const variable = uniqueIdentifier(allNames(problem), `t${outputName}`);
     let expression: string | undefined;
-    let bound = false;
+    const addedGuards: string[] = [];
     if (item.kind === "circle")
       expression = `PointOnCircle(${name}, ${variable})`;
     else if (item.kind === "line")
@@ -2756,13 +2775,30 @@ export function App() {
         );
       if (endpoints) {
         expression = `PointOnSegment(${endpoints[1]}, ${endpoints[2]}, ${variable})`;
-        bound = true;
+        addedGuards.push(`Bound(${variable}, (0, 1))`);
+      }
+    } else if (item.kind === "ray") {
+      const endpoints = endpointNames(name, "Ray");
+      if (endpoints) {
+        expression = `PointOnLine(Line(${endpoints[0]}, ${endpoints[1]}), ${variable})`;
+        addedGuards.push(
+          `AssumeGe(Dot(Vector(${endpoints[0]}, ${outputName}), Vector(${endpoints[0]}, ${endpoints[1]})), 0)`,
+        );
+      }
+    } else if (item.kind === "vector") {
+      const endpoints =
+        /^\s*Vector\(\s*([A-Za-z_][A-Za-z0-9_]*)\s*,\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)\s*$/.exec(
+          construction.expr,
+        );
+      if (endpoints) {
+        expression = `PointOnSegment(${endpoints[1]}, ${endpoints[2]}, ${variable})`;
+        addedGuards.push(`Bound(${variable}, (0, 1))`);
       }
     }
     const parameter = parameterAt(item, point);
     if (!expression || parameter === undefined) {
       setUiError("点は直線・線分・円の上に配置できます");
-      return;
+      return undefined;
     }
     const next = {
       ...problem,
@@ -2771,9 +2807,7 @@ export function App() {
         ...problem.construction,
         { name: outputName, expr: expression },
       ],
-      guards: bound
-        ? [...problem.guards, `Bound(${variable}, (0, 1))`]
-        : problem.guards,
+      guards: [...problem.guards, ...addedGuards],
     };
     commit(next, {
       ...completeVariablePreview(next, variablePreview),
@@ -2781,6 +2815,7 @@ export function App() {
     });
     setSelected(outputName);
     beginPointNaming(outputName);
+    return outputName;
   }
   function defaultPointOnCarrier(item: SceneItem): Vec2 | undefined {
     if (item.kind === "circle")
@@ -2839,6 +2874,7 @@ export function App() {
     setSelected(outputName);
     beginPointNaming(outputName);
     setIntersectionHint(undefined);
+    return outputName;
   }
   function endpointNames(
     name: string,
@@ -2963,12 +2999,12 @@ export function App() {
   function addRelationalIntersection(
     candidate: IntersectionCandidate,
     excludePoint?: string,
-  ): boolean {
+  ): string | undefined {
     const first = scene.byName.get(candidate.first);
     const second = scene.byName.get(candidate.second);
     if (!first || !second) {
       setUiError("交点を構成する図形を確認できません");
-      return true;
+      return undefined;
     }
     const priority = (item: SceneItem) =>
       item.kind === "circle"
@@ -2987,7 +3023,7 @@ export function App() {
     const parameter = parameterAt(driver, candidate.position);
     if (parameter === undefined) {
       setUiError("交点の初期表示位置を保存できませんでした");
-      return true;
+      return undefined;
     }
     let expression: string | undefined;
     const addedGuards: string[] = [];
@@ -3030,7 +3066,7 @@ export function App() {
     }
     if (!expression || !membership) {
       setUiError("この図形の交点所属をV15で表現できません");
-      return true;
+      return undefined;
     }
     if (excludePoint)
       addedGuards.push(`AssumeNe(Distance(${outputName}, ${excludePoint}), 0)`);
@@ -3051,9 +3087,9 @@ export function App() {
     setSelected(outputName);
     beginPointNaming(outputName);
     setIntersectionHint(undefined);
-    return true;
+    return outputName;
   }
-  function createIntersection(candidate: IntersectionCandidate): boolean {
+  function createIntersection(candidate: IntersectionCandidate): string | undefined {
     const exactExisting = scene.items.find(
       (item) =>
         item.kind === "point" &&
@@ -3069,7 +3105,7 @@ export function App() {
     if (exactExisting) {
       setSelected(exactExisting.name);
       setIntersectionHint(undefined);
-      return true;
+      return exactExisting.name;
     }
     const first = scene.byName.get(candidate.first);
     const second = scene.byName.get(candidate.second);
@@ -3080,19 +3116,46 @@ export function App() {
       second?.kind === "ray";
     const shared = provenSharedIntersection(candidate);
     if (shared && !finiteCarrier) {
-      addIntersection(candidate, `exclude=${shared}`);
-      return true;
+      return addIntersection(candidate, `exclude=${shared}`);
     }
     if (shared) return addRelationalIntersection(candidate, shared);
     if (candidate.alternatives.length <= 1 && !finiteCarrier) {
-      addIntersection(candidate);
-      return true;
+      return addIntersection(candidate);
     }
     return addRelationalIntersection(candidate);
   }
-  function createIntersectionNear(point: Vec2): boolean {
+  function createIntersectionNear(point: Vec2): string | undefined {
     const candidate = intersectionNear(point);
-    return candidate ? createIntersection(candidate) : false;
+    return candidate ? createIntersection(candidate) : undefined;
+  }
+
+  function collectSmartPointAt(
+    hitPoint: Vec2,
+    placementPoint = hitPoint,
+    carrierName?: string,
+  ) {
+    const existing = scene.items.find(
+      (item) =>
+        item.kind === "point" &&
+        Math.hypot(
+          item.position.x - hitPoint.x,
+          item.position.y - hitPoint.y,
+        ) <=
+          8 / camera.pixelsPerUnit,
+    );
+    if (existing) {
+      collectSimplePoint(existing.name);
+      return;
+    }
+    const created =
+      createIntersectionNear(hitPoint) ??
+      (!carrierName
+        ? createAxisPointNear(hitPoint, placementPoint)
+        : undefined) ??
+      (carrierName
+        ? addPointOnObject(carrierName, placementPoint)
+        : addPointAt(placementPoint, "free"));
+    if (created) collectSimplePoint(created);
   }
   function acceptsGuidedSelection(
     selection: GuidedSelection,
@@ -3100,6 +3163,11 @@ export function App() {
   ): boolean {
     const slot = selection.spec.slots[selection.names.length];
     if (!slot) return false;
+    if (
+      slot.kind === "point" &&
+      ["line", "segment", "ray", "vector", "circle"].includes(item.kind)
+    )
+      return true;
     // PointOnLine owns a draggable point whose carrier must remain a named
     // line. The contextual Point tool is the natural route for segments.
     if (selection.tool.id === "PointOnLine" && slot.kind === "line")
@@ -3127,6 +3195,79 @@ export function App() {
     ]);
     setUiError("");
     setLeftMode("algebra");
+    return true;
+  }
+  function addInscribedPolygon(
+    circleName: string,
+    vertexCount: number,
+    polygonName: string,
+  ): boolean {
+    const circle = scene.byName.get(circleName);
+    if (circle?.kind !== "circle") {
+      setUiError("円に内接する多角形には円を選択してください");
+      return false;
+    }
+    if (!Number.isInteger(vertexCount) || vertexCount < 3) {
+      setUiError("頂点数は3以上の整数にしてください");
+      return false;
+    }
+    const reserved = new Set(allNames(problem));
+    reserved.add(polygonName);
+    const vertices: string[] = [];
+    const variables: string[] = [];
+    const constructions: Construction[] = [];
+    const preview: Record<string, number> = {};
+    for (let index = 0; index < vertexCount; index += 1) {
+      const vertex = uniqueName(reserved, "P");
+      reserved.add(vertex);
+      vertices.push(vertex);
+      if (index === 0) {
+        constructions.push({
+          name: vertex,
+          expr: `PointOnCircle(${circleName}, 0.25)`,
+        });
+        continue;
+      }
+      const parameter = uniqueIdentifier(reserved, `t${vertex}`);
+      reserved.add(parameter);
+      variables.push(parameter);
+      preview[parameter] = (0.25 + index / vertexCount) % 1;
+      constructions.push({
+        name: vertex,
+        expr: `PointOnCircle(${circleName}, ${parameter})`,
+      });
+    }
+    const next: Problem = {
+      ...problem,
+      variables: { names: [...problem.variables.names, ...variables] },
+      construction: [
+        ...problem.construction,
+        ...constructions,
+        { name: polygonName, expr: `Polygon([${vertices.join(", ")}])` },
+      ],
+    };
+    const dryScene = evaluateScene(next.construction, {
+      ...completeVariablePreview(next, variablePreview),
+      ...preview,
+    });
+    if (!dryScene.byName.has(polygonName)) {
+      setUiError("選択した円から内接多角形を作図できませんでした");
+      return false;
+    }
+    commit(next, {
+      ...completeVariablePreview(next, variablePreview),
+      ...preview,
+    });
+    setObjectStyles((current) => ({
+      ...current,
+      ...Object.fromEntries(
+        vertices.map((name) => [
+          name,
+          { ...current[name], label: "hidden" as const },
+        ]),
+      ),
+    }));
+    setSelected(polygonName);
     return true;
   }
   function revealConditions() {
@@ -3163,6 +3304,17 @@ export function App() {
     if (guided) {
       const item = scene.byName.get(name);
       const slot = guided.spec.slots[guided.names.length];
+      if (
+        item &&
+        slot?.kind === "point" &&
+        item.kind !== "point" &&
+        point
+      ) {
+        const created =
+          createIntersectionNear(point) ?? addPointOnObject(name, point);
+        if (created) setGuidedPointReady(created);
+        return;
+      }
       if (!item || !slot || !acceptsGuidedSelection(guided, item)) {
         setUiError(
           `${slot?.label ?? "引数"}には${guided.tool.id === "PointOnLine" ? "直線" : slot?.kind === "line" ? "直線・線分・半直線・ベクトル" : slot?.kind === "line-or-circle" ? "直線・線分・半直線・ベクトル・円" : slot?.kind === "point-or-line" ? "点・直線・線分・半直線・ベクトル" : slot?.kind === "segment" ? "線分" : slot?.kind === "point" ? "点" : "対応するオブジェクト"}を選択してください`,
@@ -3171,6 +3323,14 @@ export function App() {
       }
       const names = [...guided.names, name];
       if (names.length === guided.spec.slots.length) {
+        if (guided.tool.id === "InscribedPolygonVertices") {
+          const vertexCount = Number(guided.choices?.n ?? "3");
+          if (!addInscribedPolygon(names[0], vertexCount, guided.outputName))
+            return;
+          setGuided(undefined);
+          setTool("select");
+          return;
+        }
         if (guided.tool.id === "TangentAtPoint") {
           const point = scene.byName.get(names[0]);
           const circle = scene.byName.get(names[1]);
@@ -3316,13 +3476,30 @@ export function App() {
       return;
     }
     const sceneItem = scene.byName.get(name);
-    if (sceneItem?.kind !== "point") return;
-    if (["segment", "line", "circle", "polygon"].includes(tool))
-      collectSimplePoint(name);
+    if (["segment", "line", "circle", "polygon"].includes(tool)) {
+      if (sceneItem?.kind === "point") collectSimplePoint(name);
+      else if (sceneItem && point)
+        collectSmartPointAt(point, point, sceneItem.name);
+    }
   }
   function canvasPointerDown(event: ReactPointerEvent<SVGSVGElement>) {
     if (event.button !== 0) return;
     if ((event.target as Element).closest("[data-object]")) return;
+    const guidedSlot = guided?.spec.slots[guided.names.length];
+    if (guided && guidedSlot?.kind === "point") {
+      const hitPoint = worldPointFromClient(
+        event.clientX,
+        event.clientY,
+        false,
+      );
+      const placementPoint = worldPointFromClient(event.clientX, event.clientY);
+      const created =
+        createIntersectionNear(hitPoint) ??
+        createAxisPointNear(hitPoint, placementPoint) ??
+        addPointAt(placementPoint, "free");
+      if (created) setGuidedPointReady(created);
+      return;
+    }
     if (tool === "free-point" || tool === "fixed-point") {
       const rawPoint = worldPointFromClient(
         event.clientX,
@@ -3344,7 +3521,17 @@ export function App() {
       return;
     }
     if (["segment", "line", "circle", "polygon"].includes(tool)) {
-      collectBlankPoint(worldPointFromClient(event.clientX, event.clientY));
+      const hitPoint = worldPointFromClient(
+        event.clientX,
+        event.clientY,
+        false,
+      );
+      const placementPoint = worldPointFromClient(event.clientX, event.clientY);
+      const created =
+        createIntersectionNear(hitPoint) ??
+        createAxisPointNear(hitPoint, placementPoint);
+      if (created) collectSimplePoint(created);
+      else collectBlankPoint(placementPoint);
       return;
     }
     if (tool === "pan" || tool === "select") {
@@ -5245,15 +5432,17 @@ export function App() {
                       style={{ fill: "transparent", stroke: "transparent" }}
                     />
                     <circle cx={point.x} cy={point.y} r={DEFAULT_POINT_SIZE} />
-                    <CanvasMathLabel
-                      source={item.name}
-                      placement={{
-                        x: point.x + 8,
-                        y: point.y - 31,
-                        width: 60,
-                        height: 26,
-                      }}
-                    />
+                    {objectStyles[item.name]?.label !== "hidden" && (
+                      <CanvasMathLabel
+                        source={item.name}
+                        placement={{
+                          x: point.x + 8,
+                          y: point.y - 31,
+                          width: 60,
+                          height: 26,
+                        }}
+                      />
+                    )}
                   </g>
                 );
               })}
@@ -6443,8 +6632,16 @@ export function App() {
             if (event.key === "Escape") {
               event.preventDefault();
               event.stopPropagation();
+              const cancelsConstruction = pendingPoints.some(
+                (item) => item.name === pointNaming.generatedName,
+              );
               setPointNameDraft("");
               setPointNaming(undefined);
+              if (cancelsConstruction) {
+                setToolPoints([]);
+                setPendingPoints([]);
+                setTool("select");
+              }
               window.setTimeout(() => canvasRef.current?.focus(), 0);
             }
           }}

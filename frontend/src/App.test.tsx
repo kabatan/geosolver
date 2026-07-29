@@ -10,6 +10,7 @@ const catalog = {
   categories: [
     { id: "points", label_ja: "点", label_en: "Points" },
     { id: "lines", label_ja: "線", label_en: "Lines" },
+    { id: "polygons", label_ja: "多角形", label_en: "Polygons" },
     { id: "measurements", label_ja: "測定", label_en: "Measurements" },
     { id: "relations", label_ja: "平行・垂直・接線", label_en: "Relations" },
     { id: "constraints", label_ja: "制約", label_en: "Constraints" },
@@ -21,6 +22,7 @@ const catalog = {
     { id: "PointOnSegment", category: "points", label_ja: "線分上の点", signature: "PointOnSegment(A, B, t)", authoring_status: "supported" },
     { id: "Center", category: "points", label_ja: "円の中心", signature: "Center(c)", authoring_status: "supported" },
     { id: "Segment", category: "lines", label_ja: "線分", signature: "Segment(A, B)", authoring_status: "supported" },
+    { id: "InscribedPolygonVertices", category: "polygons", label_ja: "円に内接する多角形", signature: "円を選択し、頂点数を指定", authoring_status: "supported" },
     { id: "FootOfPerpendicular", category: "lines", label_ja: "垂線の足", signature: "FootOfPerpendicular(P, line)", authoring_status: "supported" },
     { id: "Angle", category: "measurements", label_ja: "角度", signature: "Angle(A, B, C)", authoring_status: "supported" },
     { id: "Distance", category: "measurements", label_ja: "距離", signature: "Distance(A, B)", authoring_status: "supported" },
@@ -684,8 +686,9 @@ describe("GeoTarget workbench", () => {
 
     await userEvent.click(screen.getByRole("button", { name: "作図ツール 多角形" }));
     canvas.focus(); for (const key of ["Enter", "ArrowRight", "Enter", "ArrowUp", "Enter"]) fireEvent.keyDown(canvas, { key });
+    expect(document.querySelectorAll("[data-pending-point]")).toHaveLength(2);
     const firstPoint = screen.getByRole("button", { name: /^自由点 P / });
-    firstPoint.focus(); await userEvent.keyboard("{Enter}");
+    fireEvent.keyDown(firstPoint, { key: "Enter" });
     expect(document.querySelector('[data-object^="poly"]')).toBeInTheDocument();
   });
 
@@ -838,6 +841,60 @@ describe("GeoTarget workbench", () => {
     await userEvent.click(screen.getByRole("button", { name: "代数" }));
     await userEvent.click(screen.getByText("条件と変数"));
     expect(screen.getByDisplayValue("0 ≤ tP2 ≤ 1")).toBeInTheDocument();
+  });
+
+  it("uses the same smart point acquisition and naming inside another construction tool", async () => {
+    render(<App />);
+    const canvas = screen.getByRole("application", { name: /幾何作図キャンバス/ });
+    Object.defineProperty(canvas, "getBoundingClientRect", { value: () => ({ left: 0, top: 0, width: 1000, height: 700, right: 1000, bottom: 700, x: 0, y: 0, toJSON() {} }) });
+    await userEvent.click(screen.getByRole("button", { name: "作図ツール 中心と1点で円" }));
+    await userEvent.click(screen.getByRole("button", { name: /^固定点 A/ }));
+    await userEvent.click(screen.getByRole("button", { name: /^固定点 B/ }));
+    await userEvent.click(screen.getByRole("button", { name: "作図ツール 線分" }));
+    fireEvent.click(document.querySelector('[data-object="c"]')!, { clientX: 760, clientY: 350 });
+    expect(screen.getByDisplayValue("PointOnCircle(c, tP)")).toBeInTheDocument();
+    await userEvent.type(screen.getByRole("textbox", { name: "新しい点の名前" }), "Q");
+    await userEvent.click(screen.getByRole("button", { name: "確定" }));
+    await userEvent.click(screen.getByRole("button", { name: /^固定点 A/ }));
+    expect(screen.getByDisplayValue("Segment(Q, A)")).toBeInTheDocument();
+  });
+
+  it("supplies smart-created points to guided construction point arguments", async () => {
+    render(<App />);
+    await userEvent.click(screen.getByRole("button", { name: "作図ツール 中心と1点で円" }));
+    await userEvent.click(screen.getByRole("button", { name: /^固定点 A/ }));
+    await userEvent.click(screen.getByRole("button", { name: /^固定点 B/ }));
+    await userEvent.click(screen.getByRole("button", { name: "すべてのV15ツールを開く" }));
+    await userEvent.click(screen.getByRole("button", { name: /中点/ }));
+    await userEvent.click(screen.getByRole("button", { name: "図から引数を選ぶ" }));
+    fireEvent.click(document.querySelector('[data-object="c"]')!, { clientX: 760, clientY: 350 });
+    await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent("2点目を図から選択"));
+    await userEvent.click(screen.getByRole("button", { name: /^固定点 A/ }));
+    expect(screen.getByDisplayValue("Midpoint(P, A)")).toBeInTheDocument();
+    await userEvent.type(screen.getByRole("textbox", { name: "新しい点の名前" }), "Q");
+    await userEvent.click(screen.getByRole("button", { name: "確定" }));
+    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
+    expect((screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement).value).toContain('"expr": "Midpoint(Q, A)"');
+  });
+
+  it("builds an inscribed polygon from only a circle and vertex count", async () => {
+    render(<App />);
+    await userEvent.click(screen.getByRole("button", { name: "作図ツール 中心と1点で円" }));
+    await userEvent.click(screen.getByRole("button", { name: /^固定点 A/ }));
+    await userEvent.click(screen.getByRole("button", { name: /^固定点 B/ }));
+    await userEvent.click(screen.getByRole("button", { name: "すべてのV15ツールを開く" }));
+    await userEvent.click(screen.getByRole("button", { name: /円に内接する多角形/ }));
+    await userEvent.selectOptions(screen.getByRole("combobox", { name: "頂点数" }), "5");
+    await userEvent.click(screen.getByRole("button", { name: "図から引数を選ぶ" }));
+    await userEvent.click(document.querySelector('[data-object="c"]')!);
+
+    expect(screen.getByDisplayValue("Polygon([P, P2, P3, P4, P5])")).toBeInTheDocument();
+    expect(document.querySelector('[data-object="i"]')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
+    const source = (screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement).value;
+    expect(source).toContain('"expr": "PointOnCircle(c, 0.25)"');
+    expect(source.match(/PointOnCircle\(c, tP/g)).toHaveLength(4);
+    expect(source).toContain('"expr": "Polygon([P, P2, P3, P4, P5])"');
   });
 
   it("creates a construction by selecting its arguments on the diagram", async () => {

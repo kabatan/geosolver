@@ -34,6 +34,19 @@ const GUIDED_SPECS: Readonly<Record<string, GuidedSpec>> = {
     { name: "n", label: "頂点数", defaultValue: "3", positional: true, options: [3, 4, 5, 6, 7, 8, 9, 10, 12].map((value) => ({ value: String(value), label: String(value) })) },
     { name: "ccw", label: "向き", defaultValue: "True", options: [{ value: "True", label: "反時計回り" }, { value: "False", label: "時計回り" }] },
   ] },
+  InscribedPolygonVertices: {
+    slots: [{ kind: "circle", label: "外接円" }],
+    choices: [{
+      name: "n",
+      label: "頂点数",
+      defaultValue: "3",
+      positional: true,
+      options: [3, 4, 5, 6, 7, 8, 9, 10, 12].map((value) => ({
+        value: String(value),
+        label: String(value),
+      })),
+    }],
+  },
   Intersect: { slots: [{ kind: "line", label: "1本目" }, { kind: "line", label: "2本目" }] },
   Intersection: { slots: [{ kind: "line", label: "1本目" }, { kind: "line", label: "2本目" }] },
   IntersectLines: { slots: [{ kind: "line", label: "1本目" }, { kind: "line", label: "2本目" }] },
