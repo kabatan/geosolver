@@ -5146,35 +5146,6 @@ export function App() {
                   </g>
                 );
               })()}
-              {!guided &&
-                [
-                  "free-point",
-                  "fixed-point",
-                  "segment",
-                  "line",
-                  "circle",
-                  "polygon",
-                ].includes(tool) &&
-                (() => {
-                  const point = worldToScreen(keyboardPoint, viewport);
-                  return (
-                    <g className="keyboard-cursor" aria-hidden="true">
-                      <circle cx={point.x} cy={point.y} r="9" />
-                      <line
-                        x1={point.x - 14}
-                        y1={point.y}
-                        x2={point.x + 14}
-                        y2={point.y}
-                      />
-                      <line
-                        x1={point.x}
-                        y1={point.y - 14}
-                        x2={point.x}
-                        y2={point.y + 14}
-                      />
-                    </g>
-                  );
-                })()}
               {scene.items
                 .filter((item) => item.kind !== "point")
                 .map((item) => {
