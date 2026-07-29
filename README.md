@@ -1,8 +1,10 @@
 # GeoTarget
 
-GeoTarget turns a V15 geometry problem into exact target descriptors by running
-the frozen 2026-07-22 champion in an isolated subprocess. It includes a Python
-API, CLI, loopback FastAPI service, and a React/SVG construction workbench.
+GeoTarget turns a V15 geometry problem into exact target descriptors with the
+2026-07-22 champion algorithm. The product keeps a byte-identical frozen
+reference engine and permits a separately qualified optimized engine. It
+includes a Python API, CLI, loopback FastAPI service, and a React/SVG
+construction workbench.
 
 ```bash
 uv sync --frozen
@@ -14,9 +16,13 @@ uv run geotarget solve examples/problem.json --output result.json
 uv run geotarget ui
 ```
 
-The default and minimum time limit is 180 seconds. `no_answer_found` is not a
-proof that the source geometry has no solution. See `CHARTER.md` and
-`docs/V15_GEOMETRY_DSL_AUTHORING_MANUAL_ja.md`.
+The qualified default is the `optimized` engine in adaptive mode, with a
+900-second safety cap and automatic physical-core selection. Its stable engine
+hash is `07de7a00b83ce7539d4b283bf9975bc998fc13c3ff6b064052e6581388e2c287`.
+The byte-identical `reference` engine remains available for the frozen
+one-core, 180-second reproduction mode.
+`no_answer_found` is not a proof that the source geometry has no solution. See
+`CHARTER.md` and `docs/V15_GEOMETRY_DSL_AUTHORING_MANUAL_ja.md`.
 
 Validation is non-coercing: the original JSON scalar types are preserved when
 the document is materialized for the engine because the champion's exact
@@ -26,12 +32,38 @@ The experiment evidence is preserved on branch `experiment` and tag
 `champion-v2-poc-preloaded-20260722`. Raw artifacts are outside Git in the
 checksummed freeze archive described on that branch.
 
-## Frozen-engine resource boundary
+## Two-engine resource boundary
 
-`cores=1,time_limit_seconds=180` invokes the frozen entrypoint byte-for-byte.
-Longer limits first finish that reference window, then resume only record IDs
-listed by the champion's own deferred-reservoir ledger; starts remain 0–255
-and no seed lane is added. Multi-core mode keeps the frozen search on one core
-and shards only the already-fixed HP/alternate/restoration wave ordinals,
-merging attempts and exact descriptors in ordinal order. Requests that cannot
-reserve the declared physical cores and memory fail instead of downgrading.
+The frozen reference engine remains byte-identical, including its execution
+order. A qualified optimized engine may change only an equivalent
+implementation or scheduling. In both engines the champion thresholds,
+optimizer, 600 callbacks per start, proposals, high-precision policy,
+restoration, exact authority, and PointOnCircle semantics remain fixed.
+
+The optimized engine has one search-budget exception: only when the first 256
+starts produce zero accepted answers may it add deterministic batches of 64
+starts, with `stability=2` and a `max_time_seconds` safety cap no greater than
+900. Extension start ordinals have no numeric upper bound; only starts that fit
+before the time cap may run. Finding an answer within the first 256 starts
+disables this extension. No other proposal or seed lane may be introduced.
+
+Resource coordination may shard only qualified equivalent work and must merge
+attempts and exact descriptors deterministically. Requests that cannot reserve
+the declared physical cores and memory fail instead of downgrading.
+`no_answer_found`, including after the extension, means only that the bounded
+run found no accepted answer. The existing `exact_complete` route remains
+available only when the unchanged exact authority establishes completeness in
+its supported scope; optimization and extension provide no new completeness
+proof.
+
+The optimized callback path compiles supported V15 DAGs as a whole problem.
+For every other V15 program it still fuses the reference-semantics guard and
+hard-feasibility snapshot, so unknown problems do not lose the general
+speedup. The fusion is independent of problem identity and was bit-identical
+on 725 differential probes over the frozen 145-case set.
+
+The final qualification completed all 145 cases with zero lost reference
+descriptors, zero truth-external exact descriptors and zero failures. Median
+reported time was 55.66 seconds versus 136.28 seconds for the frozen reference;
+p95 was 177.38 seconds versus 178.17 seconds. The full report remains outside
+main and is checksum-bound by `src/geotarget/qualification.json`.

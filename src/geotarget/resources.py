@@ -19,6 +19,10 @@ class ResourceReservation:
     available_memory_bytes: int
 
 
+BYTES_PER_WORKER = 1_500_000_000
+AUTO_MEMORY_RESERVE_BYTES = 4 * 1024**3
+
+
 def physical_cpu_ids() -> tuple[int, ...]:
     allowed = (
         set(os.sched_getaffinity(0))
@@ -39,24 +43,38 @@ def physical_cpu_ids() -> tuple[int, ...]:
 
 def reserve(options: SolveOptions) -> ResourceReservation:
     physical = physical_cpu_ids()
-    if options.cores > len(physical):
+    compatible = tuple(cpu for cpu in physical if 0 <= cpu < 16)
+    available = psutil.virtual_memory().available
+    if options.engine == "reference":
+        if options.cores != 1:
+            raise ResourceError("the byte-identical reference engine requires exactly one core")
+        resolved_cores = 1
+    elif options.cores == "auto":
+        cpu_capacity = len(compatible) - 1
+        memory_capacity = (available - AUTO_MEMORY_RESERVE_BYTES) // BYTES_PER_WORKER
+        resolved_cores = min(cpu_capacity, memory_capacity)
+        if resolved_cores < 1:
+            raise ResourceError(
+                "automatic core selection cannot reserve one physical core and 4 GiB of memory"
+            )
+    else:
+        resolved_cores = options.cores
+    if resolved_cores > len(physical):
         message = (
-            f"requested {options.cores} cores, but only "
+            f"requested {resolved_cores} cores, but only "
             f"{len(physical)} physical cores are available"
         )
         raise ResourceError(message)
-    required = options.cores * 1_500_000_000
-    available = psutil.virtual_memory().available
+    required = resolved_cores * BYTES_PER_WORKER
     if available < required:
         raise ResourceError(
             f"requested cores require {required} bytes, but only {available} bytes are available"
         )
-    compatible = tuple(cpu for cpu in physical if 0 <= cpu < 16)
-    if len(compatible) < options.cores:
+    if len(compatible) < resolved_cores:
         raise ResourceError(
-            f"requested {options.cores} cores, but only {len(compatible)} satisfy "
+            f"requested {resolved_cores} cores, but only {len(compatible)} satisfy "
             "the frozen [0,15] affinity contract"
         )
     return ResourceReservation(
-        physical_cpus=compatible[: options.cores], available_memory_bytes=available
+        physical_cpus=compatible[:resolved_cores], available_memory_bytes=available
     )

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import json
 import re
 from copy import deepcopy
@@ -25,6 +26,11 @@ def _expressions(problem: V15Problem) -> list[tuple[str, str]]:
         (f"constraints[{index}].def", item.definition)
         for index, item in enumerate(problem.constraints)
     )
+    values.extend(
+        (f"constraints[{index}].value", item.value)
+        for index, item in enumerate(problem.constraints)
+        if isinstance(item.value, str)
+    )
     values.extend((f"guards[{index}]", item) for index, item in enumerate(problem.guards))
     values.append(("answer", problem.answer))
     if problem.post_process:
@@ -47,6 +53,7 @@ def validate(problem: V15Problem | dict[str, Any]) -> ValidationReport:
         return ValidationReport(valid=False, issues=issues)
 
     issues: list[ValidationIssue] = []
+    warnings: list[ValidationIssue] = []
     names = parsed.variables.names
     if len(names) != len(set(names)):
         issues.append(
@@ -61,6 +68,15 @@ def validate(problem: V15Problem | dict[str, Any]) -> ValidationReport:
                 path="construction", code="duplicate", message="construction names must be unique"
             )
         )
+    overlap = sorted(set(names) & set(construction_names))
+    if overlap:
+        issues.append(
+            ValidationIssue(
+                path="variables.names",
+                code="name_collision",
+                message=f"variables and construction names overlap: {', '.join(overlap)}",
+            )
+        )
     for index, name in enumerate([*names, *construction_names]):
         if not _IDENTIFIER.fullmatch(name):
             issues.append(
@@ -71,6 +87,15 @@ def validate(problem: V15Problem | dict[str, Any]) -> ValidationReport:
                 )
             )
     for path, expression in _expressions(parsed):
+        if not expression.strip():
+            issues.append(
+                ValidationIssue(
+                    path=path,
+                    code="empty_expression",
+                    message="expression must not be empty",
+                )
+            )
+            continue
         if len(expression) > 16_384:
             issues.append(
                 ValidationIssue(
@@ -93,6 +118,39 @@ def validate(problem: V15Problem | dict[str, Any]) -> ValidationReport:
                     message="expression parentheses are unbalanced",
                 )
             )
+        try:
+            ast.parse(expression, mode="eval")
+        except SyntaxError as error:
+            issues.append(
+                ValidationIssue(
+                    path=path,
+                    code="expression_syntax",
+                    message=f"invalid expression syntax at column {error.offset or 0}",
+                )
+            )
+    for index, guard in enumerate(parsed.guards):
+        try:
+            node = ast.parse(guard, mode="eval").body
+        except SyntaxError:
+            continue
+        if (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Name)
+            and node.func.id == "AssumeEq"
+            and len(node.args) == 2
+            and not node.keywords
+        ):
+            warnings.append(
+                ValidationIssue(
+                    path=f"guards[{index}]",
+                    code="equation_as_guard",
+                    message=(
+                        "AssumeEqは厳密な採用条件であり、数値最適化の方程式には"
+                        "追加されません。通常の等式はconstraintsへ移し、AssumeEqは"
+                        "意図的な厳密分岐・採用判定にだけ使用してください。"
+                    ),
+                )
+            )
     # Validation must not become a source transformation. In particular,
     # Pydantic's ``float | str`` parsing turns JSON integers into floats; that
     # changed the source SHA seen by champion's exact replay authority. Preserve
@@ -104,5 +162,8 @@ def validate(problem: V15Problem | dict[str, Any]) -> ValidationReport:
     except ValueError as error:
         issues.append(ValidationIssue(path="$", code="non_finite", message=str(error)))
     return ValidationReport(
-        valid=not issues, issues=issues, normalized_problem=native if not issues else None
+        valid=not issues,
+        issues=issues,
+        warnings=warnings,
+        normalized_problem=native if not issues else None,
     )

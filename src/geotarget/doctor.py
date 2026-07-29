@@ -11,6 +11,7 @@ from typing import Any
 import psutil
 
 from geotarget.engine import ENGINE_HASH, ENGINE_ID, julia_project_root, verify_engine
+from geotarget.qualification import policy
 from geotarget.resources import physical_cpu_ids
 
 
@@ -59,6 +60,7 @@ def diagnose() -> dict[str, Any]:
         "available_memory_bytes": memory,
         "errors": errors,
         "warnings": warnings,
+        "optimized_qualification": policy(),
     }
 
 

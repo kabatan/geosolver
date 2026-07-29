@@ -3,13 +3,128 @@
   "$id": "https://geotarget.local/schemas/solve-result.schema.json",
   "title": "GeoTarget Solve Result",
   "type": "object",
-  "required": ["status", "engine_id", "engine_hash", "problem_sha256", "answers", "warnings"],
+  "additionalProperties": false,
+  "required": [
+    "status", "engine_id", "engine_hash", "problem_sha256",
+    "requested_resources", "used_resources", "elapsed_seconds", "work_checkpoint"
+  ],
   "properties": {
-    "status": {"enum": ["exact_complete", "answers_found_completeness_unknown", "no_answer_found", "cancelled", "invalid_problem", "resource_error", "engine_error"]},
+    "status": {"$ref": "#/$defs/resultStatus"},
     "engine_id": {"type": "string"},
     "engine_hash": {"type": "string"},
     "problem_sha256": {"type": "string"},
-    "answers": {"type": "array"},
-    "warnings": {"type": "array", "items": {"type": "string"}}
+    "requested_resources": {"$ref": "#/$defs/resourceUsage"},
+    "used_resources": {"$ref": "#/$defs/resourceUsage"},
+    "elapsed_seconds": {"type": "number"},
+    "work_checkpoint": {"$ref": "#/$defs/workCheckpoint"},
+    "warnings": {"type": "array", "items": {"type": "string"}, "default": []},
+    "answers": {"type": "array", "items": {"$ref": "#/$defs/exactAnswer"}, "default": []},
+    "detail": {"type": ["string", "null"], "default": null},
+    "engine_variant": {"enum": ["optimized", "reference"], "default": "reference"},
+    "termination_reason": {
+      "anyOf": [{"$ref": "#/$defs/terminationReason"}, {"type": "null"}],
+      "default": null
+    },
+    "phase_metadata": {"$ref": "#/$defs/phaseMetadata"},
+    "work_metadata": {"$ref": "#/$defs/workMetadata"},
+    "cache_metadata": {"$ref": "#/$defs/cacheMetadata"}
+  },
+  "$defs": {
+    "resultStatus": {
+      "type": "string",
+      "enum": [
+        "exact_complete", "answers_found_completeness_unknown", "no_answer_found",
+        "cancelled", "invalid_problem", "resource_error", "engine_error"
+      ]
+    },
+    "terminationReason": {
+      "type": "string",
+      "enum": [
+        "initial_work_answered", "extension_stable", "safety_cap",
+        "exact_complete", "cancelled", "engine_error"
+      ]
+    },
+    "resourceUsage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["time_limit_seconds", "cores", "seed"],
+      "properties": {
+        "time_limit_seconds": {"type": "number"},
+        "cores": {"anyOf": [{"const": "auto"}, {"type": "integer"}]},
+        "seed": {"type": "integer"},
+        "max_time_seconds": {"type": ["number", "null"], "default": null}
+      }
+    },
+    "workCheckpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "window": {"type": "integer", "default": 0},
+        "phase": {"type": "string", "default": "initial"},
+        "completed_start_ordinals": {"type": "array", "items": {"type": "integer"}, "default": []},
+        "pending_start_ordinals": {"type": "array", "items": {"type": "integer"}, "default": []},
+        "pending_reservoir_records": {"type": "array", "items": {"type": "string"}, "default": []},
+        "pending_hp_alternates": {"type": "array", "items": {"type": "string"}, "default": []},
+        "pending_restoration": {"type": "array", "items": {"type": "string"}, "default": []},
+        "plan_sha256": {"type": ["string", "null"], "default": null},
+        "extension_batches_completed": {"type": "integer", "default": 0},
+        "consecutive_empty_extension_batches": {"type": "integer", "default": 0},
+        "descriptors_before_extension": {"type": "integer", "default": 0},
+        "descriptors_after_extension": {"type": "integer", "default": 0},
+        "termination_reason": {
+          "anyOf": [{"$ref": "#/$defs/terminationReason"}, {"type": "null"}],
+          "default": null
+        },
+        "phase_elapsed_seconds": {"type": "object", "additionalProperties": {"type": "number"}, "default": {}}
+      }
+    },
+    "exactAnswer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "minimal_polynomial_high_to_low", "selected_real_root_index",
+        "isolating_interval", "decimal"
+      ],
+      "properties": {
+        "minimal_polynomial_high_to_low": {
+          "type": "array", "items": {"type": ["integer", "string"]}
+        },
+        "selected_real_root_index": {"type": "integer"},
+        "isolating_interval": {"type": "array", "items": {"type": "string"}},
+        "decimal": {"type": "string"},
+        "exact_authority_kind": {"type": ["string", "null"], "default": null},
+        "approximate_witness": {"type": ["object", "null"], "default": null}
+      }
+    },
+    "phaseMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "current": {"type": ["string", "null"], "default": null},
+        "completed": {"type": "array", "items": {"type": "string"}, "default": []},
+        "elapsed_seconds": {"type": "object", "additionalProperties": {"type": "number"}, "default": {}}
+      }
+    },
+    "workMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "completed_items": {"type": "integer", "default": 0},
+        "pending_items": {"type": "integer", "default": 0},
+        "total_items": {"type": ["integer", "null"], "default": null}
+      }
+    },
+    "cacheMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "hits": {"type": "integer", "default": 0},
+        "misses": {"type": "integer", "default": 0},
+        "writes": {"type": "integer", "default": 0},
+        "runtime_generation": {"type": "integer", "default": 0},
+        "runtime_warm": {"type": "boolean", "default": false},
+        "hp_preloader_warm": {"type": "boolean", "default": false}
+      }
+    }
   }
 }

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import atexit
 import hashlib
 import json
 import os
@@ -9,18 +10,129 @@ import sys
 import tempfile
 import threading
 import time
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from contextlib import suppress
 from pathlib import Path
 from typing import Any, Protocol
 
 import psutil
 
-from geotarget.models import ExactAnswer, SolveOptions, WorkCheckpoint
+from geotarget.adaptive_continuation import (
+    extension_batch_end,
+    has_safe_extension_window,
+    update_extension_stability,
+)
+from geotarget.hp_wave_checkpoint import validate as validate_wave_checkpoint
+from geotarget.models import ExactAnswer, SolveOptions, TerminationReason, WorkCheckpoint
 from geotarget.resources import ResourceReservation
+from geotarget.runtime_broker import ProductRuntimeBroker
 
 ENGINE_ID = "champion-v2-poc-preloaded-20260722"
 ENGINE_HASH = "9fa23aecdb9372dfd961b46224b88937c3317eaeb56796a05142563f26078f15"
+OPTIMIZED_ENGINE_ID = "champion-v2-poc-preloaded-optimized-v1"
+INITIAL_ALGORITHM_SECONDS = 180.0
+# The frozen process establishes PROCESS_STARTED only after the interpreter and
+# optimized adapter imports.  These are watchdog allowances, not algorithm
+# work budgets; the frozen 180-second deadline remains unchanged.
+OPTIMIZED_STARTUP_GRACE_SECONDS = 30.0
+OPTIMIZED_FINALIZE_GRACE_SECONDS = 12.0
+
+
+def _pending_hp_wave(schedule: Mapping[str, Any] | None) -> dict[str, Any] | None:
+    """Return the integrity-checked unfinished product wave, if one exists."""
+
+    if not isinstance(schedule, Mapping):
+        return None
+    direct = schedule.get("durable_wave_checkpoint")
+    if direct is not None:
+        checkpoint = validate_wave_checkpoint(direct)
+        return checkpoint if checkpoint is not None and checkpoint["stage"] != "complete" else None
+    batches = schedule.get("reservoir_batches")
+    if isinstance(batches, list):
+        for batch in reversed(batches):
+            if isinstance(batch, Mapping) and batch.get("durable_wave_checkpoint") is not None:
+                checkpoint = validate_wave_checkpoint(batch["durable_wave_checkpoint"])
+                if checkpoint is not None and checkpoint["stage"] != "complete":
+                    return checkpoint
+    return None
+
+
+def optimized_engine_hash() -> str:
+    digest = hashlib.sha256()
+    digest.update(ENGINE_HASH.encode("ascii"))
+    for name in (
+        "engine.py",
+        "reference_entrypoint.py",
+        "continuation.py",
+        "hp_wave_checkpoint.py",
+        "reservoir_checkpoint.py",
+        "compiled_evaluator.py",
+        "fused_evaluation.py",
+        "lazy_symbolic_geometry.py",
+        "typed_refnum_ir.py",
+        "typed_refnum_intersections.py",
+        "raw_libmp_backend.py",
+        "flat_tape_backend.py",
+        "deferred_scalar_tape.py",
+        "resume_search_entrypoint.py",
+        "optimized_entrypoint.py",
+        "optimized_search.py",
+        "search_full_prefix_entrypoint.py",
+        "search_pool_worker_entrypoint.py",
+        "adaptive_continuation.py",
+        "parallel.py",
+        "hp_slot_entrypoint.py",
+        "hp_preloader.py",
+        "runtime_broker.py",
+    ):
+        path = Path(__file__).resolve().parent / name
+        digest.update(name.encode("utf-8") + b"\0")
+        digest.update(path.read_bytes())
+    return digest.hexdigest()
+
+
+def evaluator_execution_metadata(
+    search: Mapping[str, Any], *, reference: bool
+) -> dict[str, Any]:
+    """Describe the evaluator selected by the structural capability gate."""
+
+    compiled = search.get("compiled_evaluator")
+    compiled_record = dict(compiled) if isinstance(compiled, Mapping) else None
+    enabled = bool(
+        not reference
+        and isinstance(compiled, Mapping)
+        and compiled.get("enabled") is True
+    )
+    fused = bool(
+        not reference
+        and isinstance(compiled, Mapping)
+        and isinstance(compiled.get("fused_evaluation"), Mapping)
+        and compiled["fused_evaluation"].get("enabled") is True
+    )
+    if reference:
+        mode = "frozen_reference"
+        gate = "reference_engine_requested"
+    elif enabled:
+        mode = "typed_compiled_whole_problem"
+        gate = "bitwise_equivalence_established"
+    elif fused:
+        mode = "fused_reference_semantics"
+        gate = "bitwise_equivalent_callback_fusion"
+    else:
+        mode = "reference_full_problem_fallback"
+        gate = (
+            str(compiled.get("fallback_reason"))
+            if isinstance(compiled, Mapping)
+            else "compiled_evaluator_metadata_missing"
+        )
+    return {
+        "evaluator_mode": mode,
+        "typed_kernel_enabled": enabled,
+        "fused_evaluation_enabled": fused,
+        "typed_kernel_gate": gate,
+        "compiled_evaluator": compiled_record,
+    }
+
 
 # This is part of the frozen 2026-07-22 execution contract, not a product
 # tuning surface. Leaving native-library defaults inherited from the host
@@ -46,6 +158,34 @@ FROZEN_THREAD_ENVIRONMENT = {
     "GEOTARGET_GLOBAL_RSS_RESERVATION_BYTES": str(8 * 1024**3),
 }
 
+_RUNTIME_BROKER: ProductRuntimeBroker | None = None
+_RUNTIME_BROKER_LOCK = threading.Lock()
+
+
+def _product_runtime_broker() -> ProductRuntimeBroker:
+    """Create the optimized-only broker once for this API/CLI process."""
+    global _RUNTIME_BROKER
+    with _RUNTIME_BROKER_LOCK:
+        if _RUNTIME_BROKER is not None:
+            return _RUNTIME_BROKER
+        runtime = engine_root() / "runtime"
+        solver_root = runtime / "solver"
+        hp_worker = (
+            solver_root
+            / "research/experiments/EXP-V15-243-001/candidates"
+            / "point_on_circle_periodic_semantics/champion_composition_worker_no_1280.py"
+        )
+        cpus = tuple(sorted(cpu for cpu in os.sched_getaffinity(0) if 0 <= cpu < 16))
+        if not cpus:
+            raise EngineFailure("no frozen-compatible CPU is available for optimized runtime")
+        _RUNTIME_BROKER = ProductRuntimeBroker(
+            cpus=cpus,
+            hp_worker=hp_worker,
+            hp_environment=FROZEN_THREAD_ENVIRONMENT,
+        )
+        atexit.register(_RUNTIME_BROKER.close)
+        return _RUNTIME_BROKER
+
 
 class EngineFailure(RuntimeError):
     pass
@@ -53,6 +193,14 @@ class EngineFailure(RuntimeError):
 
 class EngineCancelled(EngineFailure):
     pass
+
+
+def _should_continue_initial_work(
+    *, has_pending_starts: bool, has_deferred_candidates: bool, descriptor_count: int
+) -> bool:
+    """Finish the frozen prefix, but do not drain HP after it already answered."""
+
+    return has_pending_starts or (has_deferred_candidates and descriptor_count == 0)
 
 
 def _terminate_process_tree(pid: int) -> None:
@@ -113,6 +261,23 @@ def verify_engine() -> list[str]:
         digest = hashlib.sha256(path.read_bytes()).hexdigest()
         if digest != item["source_sha256"]:
             errors.append(f"engine hash mismatch: {item['product_path']}")
+    optimized_manifest_path = package_root / "optimized-manifest.json"
+    try:
+        optimized_manifest = json.loads(optimized_manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        errors.append("optimized product manifest is missing or invalid")
+        return errors
+    if optimized_manifest.get("engine_id") != OPTIMIZED_ENGINE_ID:
+        errors.append("optimized product manifest identity is invalid")
+    if optimized_manifest.get("closure_sha256") != optimized_engine_hash():
+        errors.append("optimized product manifest closure hash is stale")
+    for item in optimized_manifest.get("files", []):
+        path = root / str(item.get("product_path", ""))
+        if not path.is_file():
+            errors.append(f"missing optimized engine file: {item.get('product_path')}")
+            continue
+        if hashlib.sha256(path.read_bytes()).hexdigest() != item.get("sha256"):
+            errors.append(f"optimized engine hash mismatch: {item.get('product_path')}")
     return errors
 
 
@@ -187,13 +352,24 @@ def extract_answers(raw: Mapping[str, Any]) -> list[ExactAnswer]:
 
 
 class ChampionSubprocessEngine:
-    def __init__(self) -> None:
+    def __init__(self, progress_callback: Callable[[dict[str, Any]], None] | None = None) -> None:
         self._lock = threading.Lock()
         self._process: subprocess.Popen[str] | None = None
         self._cancel_requested = threading.Event()
+        self._progress_callback = progress_callback
+        self._runtime_broker: ProductRuntimeBroker | None = None
+        self._runtime_session: str | None = None
+        self._runtime_environment: dict[str, str] = {}
+
+    def _emit_progress(self, **payload: Any) -> None:
+        if self._progress_callback is not None:
+            self._progress_callback(dict(payload))
 
     def cancel(self) -> None:
         self._cancel_requested.set()
+        if self._runtime_broker is not None and self._runtime_session is not None:
+            with suppress(KeyError):
+                self._runtime_broker.cancel_session(self._runtime_session)
         with self._lock:
             process = self._process
         if process and process.poll() is None:
@@ -249,12 +425,37 @@ class ChampionSubprocessEngine:
         options: SolveOptions,
         reservation: ResourceReservation,
     ) -> tuple[dict[str, Any], float, WorkCheckpoint, list[str]]:
+        if options.engine == "reference":
+            return self._execute(problem, options, reservation)
+        broker = _product_runtime_broker()
+        token = broker.begin_session(reservation.physical_cpus)
+        self._runtime_broker = broker
+        self._runtime_session = token
+        self._runtime_environment = broker.session_environment(token)
+        try:
+            raw, elapsed, checkpoint, warnings = self._execute(problem, options, reservation)
+            product = raw.setdefault("geotarget_product", {})
+            if isinstance(product, dict):
+                product["runtime_cache"] = broker.session_metadata(token)
+            return raw, elapsed, checkpoint, warnings
+        finally:
+            broker.end_session(token)
+            self._runtime_session = None
+            self._runtime_environment = {}
+
+    def _execute(
+        self,
+        problem: Mapping[str, Any],
+        options: SolveOptions,
+        reservation: ResourceReservation,
+    ) -> tuple[dict[str, Any], float, WorkCheckpoint, list[str]]:
         self._cancel_requested.clear()
         errors = verify_engine()
         if errors:
             raise EngineFailure("; ".join(errors))
         started = time.monotonic()
         warnings: list[str] = []
+        phase_elapsed: dict[str, float] = {}
         runtime = engine_root() / "runtime"
         worker = (
             runtime
@@ -270,6 +471,28 @@ class ChampionSubprocessEngine:
         environment["GEOTARGET_PRODUCT_PYTHON"] = sys.executable
         cpus = reservation.physical_cpus
         cpu = cpus[0]
+        reference = options.engine == "reference"
+        if not reference:
+            environment.update(self._runtime_environment)
+        hard_limit = INITIAL_ALGORITHM_SECONDS if reference else options.max_time_seconds
+
+        def invoke_phase(
+            name: str, command: list[str], *, timeout: float
+        ) -> subprocess.CompletedProcess[str]:
+            phase_started = time.monotonic()
+            self._emit_progress(
+                phase=name,
+                elapsed_seconds=time.monotonic() - started,
+                max_time_seconds=hard_limit,
+                used_cores=len(cpus),
+            )
+            try:
+                return self._invoke(command, environment, timeout=timeout)
+            finally:
+                phase_elapsed[name] = phase_elapsed.get(name, 0.0) + (
+                    time.monotonic() - phase_started
+                )
+
         with tempfile.TemporaryDirectory(prefix="geotarget-") as temp:
             directory = Path(temp)
             source = directory / "problem.json"
@@ -282,11 +505,11 @@ class ChampionSubprocessEngine:
             output = directory / "engine-output"
             worker_command = (
                 [sys.executable, str(worker)]
-                if len(cpus) == 1
+                if reference
                 else [
                     sys.executable,
                     "-m",
-                    "geotarget.parallel_entrypoint",
+                    "geotarget.optimized_entrypoint",
                     "--product-cpus",
                     ",".join(str(value) for value in cpus),
                 ]
@@ -301,7 +524,7 @@ class ChampionSubprocessEngine:
                 "--source-sha256",
                 source_sha,
                 "--total-seconds",
-                "180",
+                str(int(INITIAL_ALGORITHM_SECONDS)),
                 "--search-seconds",
                 "146",
                 "--starts",
@@ -318,7 +541,8 @@ class ChampionSubprocessEngine:
                 str(output),
             ]
             dry_status = directory / "outer-dry-status.json"
-            self._invoke(
+            invoke_phase(
+                "dry_plan",
                 [
                     sys.executable,
                     "-m",
@@ -330,13 +554,32 @@ class ChampionSubprocessEngine:
                     "--",
                     *base_command,
                 ],
-                environment,
                 timeout=60,
             )
             plan_path = output / "PLAN.json"
             plan_sha = hashlib.sha256(plan_path.read_bytes()).hexdigest()
             execute_status = directory / "outer-execute-status.json"
-            self._invoke(
+            execute_guard_options = (
+                []
+                if reference
+                else [
+                    "--rss-mib",
+                    str(min(8192.0, max(512.0, len(cpus) * 384.0))),
+                    "--algorithm-seconds",
+                    str(INITIAL_ALGORITHM_SECONDS),
+                    "--startup-grace-seconds",
+                    str(OPTIMIZED_STARTUP_GRACE_SECONDS),
+                    "--finalize-grace-seconds",
+                    str(OPTIMIZED_FINALIZE_GRACE_SECONDS),
+                    "--accept-committed-on-timeout",
+                ]
+            )
+            # Setup/doctor/dry-plan telemetry is reported in total elapsed time,
+            # but the declared solve budget begins once immediately before the
+            # execute child and remains the sole authority for continuation.
+            budget_started = time.monotonic()
+            invoke_phase(
+                "initial_champion",
                 [
                     sys.executable,
                     "-m",
@@ -345,73 +588,317 @@ class ChampionSubprocessEngine:
                     "execute",
                     "--status",
                     str(execute_status),
+                    *execute_guard_options,
                     "--",
                     *base_command,
                     "--execute",
                     "--plan-sha256",
                     plan_sha,
                 ],
-                environment,
                 timeout=240,
             )
             active_output = output
-            remaining = options.time_limit_seconds - 180.0
             window = 0
             initial_result_path = output / "RESULT.json"
             initial_result = json.loads(initial_result_path.read_text(encoding="utf-8"))
+            try:
+                execute_guard = json.loads(execute_status.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                execute_guard = {}
+            if execute_guard.get("classification") == "TIMEOUT":
+                warnings.append(
+                    "the process watchdog expired after an atomic engine result was committed; "
+                    "the committed exact-authority checkpoint was retained"
+                )
             zero_dimensional_complete = (
                 initial_result.get("status") == "ZERO_DIMENSIONAL_SOURCE_EXACT_COMPLETE"
             )
-            while remaining >= 6.0 and not zero_dimensional_complete:
-                window += 1
-                window_seconds = min(180.0, remaining)
-                continuation_output = directory / f"continuation-{window:03d}"
-                self._invoke(
-                    [
-                        "taskset",
-                        "--cpu-list",
-                        str(cpu),
-                        sys.executable,
-                        "-m",
-                        "geotarget.continuation",
-                        "--runtime",
-                        str(runtime),
-                        "--source",
-                        str(source),
-                        "--source-sha256",
-                        source_sha,
-                        "--initial-output",
-                        str(active_output),
-                        "--output",
-                        str(continuation_output),
-                        "--seconds",
-                        str(window_seconds),
-                        "--cpu",
-                        str(cpu),
-                        "--cpus",
-                        ",".join(str(value) for value in cpus),
-                        "--seed",
-                        str(options.seed),
-                    ],
-                    environment,
-                    timeout=window_seconds + 30.0,
+            initial_descriptor_count = len(extract_answers(initial_result))
+            initial_search_path = output / "search.json"
+            initial_search = (
+                json.loads(initial_search_path.read_text(encoding="utf-8"))
+                if initial_search_path.is_file()
+                else {}
+            )
+            initial_work = (
+                initial_search.get("work")
+                if isinstance(initial_search.get("work"), Mapping)
+                else {}
+            )
+            self._emit_progress(
+                phase="initial",
+                completed_starts=int(initial_work.get("lanes_started", 0)),
+                total_starts=256,
+                extension_batches_completed=0,
+                consecutive_empty_extension_batches=0,
+                elapsed_seconds=time.monotonic() - started,
+                max_time_seconds=hard_limit,
+                used_cores=len(cpus),
+            )
+            reported_initial_elapsed = initial_result.get("elapsed_wall_seconds")
+            initial_budget_elapsed = (
+                max(0.0, float(reported_initial_elapsed))
+                if isinstance(reported_initial_elapsed, int | float)
+                else time.monotonic() - budget_started
+            )
+            post_initial_started = time.monotonic()
+
+            def remaining_algorithm_budget() -> float:
+                return (
+                    hard_limit - initial_budget_elapsed - (time.monotonic() - post_initial_started)
                 )
-                active_output = continuation_output
-                remaining -= window_seconds
-                continued = json.loads((active_output / "RESULT.json").read_text(encoding="utf-8"))
-                schedule = continued.get("hp_schedule")
-                continuation = continued.get("continuation")
-                has_deferred = isinstance(schedule, Mapping) and bool(
+
+            def state(path: Path) -> tuple[dict[str, Any], dict[str, Any], bool, bool]:
+                result = json.loads((path / "RESULT.json").read_text(encoding="utf-8"))
+                search_path = path / "search.json"
+                if not search_path.is_file():
+                    search_path = output / "search.json"
+                search = (
+                    json.loads(search_path.read_text(encoding="utf-8"))
+                    if search_path.is_file()
+                    else {}
+                )
+                work = search.get("work") if isinstance(search, Mapping) else {}
+                lanes = int(work.get("lanes_started", 0)) if isinstance(work, Mapping) else 0
+                schedule = result.get("hp_schedule")
+                deferred = isinstance(schedule, Mapping) and bool(
                     schedule.get("deferred_record_ids")
                 )
-                has_pending_starts = isinstance(continuation, Mapping) and bool(
+                deferred = deferred or _pending_hp_wave(schedule) is not None
+                continuation = result.get("continuation")
+                pending = isinstance(continuation, Mapping) and bool(
                     continuation.get("pending_start_ordinals")
                 )
-                if not has_deferred and not has_pending_starts:
-                    break
-            if 0 < remaining < 6.0:
+                return result, search, deferred, pending or lanes < 256
+
+            # Finish only work already belonging to the original 256-start graph.
+            if not reference and not zero_dimensional_complete:
+                remaining = remaining_algorithm_budget()
+                _before_raw, _before_search, has_deferred, has_pending_starts = state(active_output)
+                should_continue_initial = _should_continue_initial_work(
+                    has_pending_starts=has_pending_starts,
+                    has_deferred_candidates=has_deferred,
+                    descriptor_count=initial_descriptor_count,
+                )
+                if remaining >= 12.0 and should_continue_initial:
+                    continuation_output = directory / "continuation-controller"
+                    invoke_phase(
+                        "initial_continuation",
+                        [
+                            "taskset",
+                            "--cpu-list",
+                            str(cpu),
+                            sys.executable,
+                            "-m",
+                            "geotarget.continuation",
+                            "--controller",
+                            "--runtime",
+                            str(runtime),
+                            "--source",
+                            str(source),
+                            "--source-sha256",
+                            source_sha,
+                            "--initial-output",
+                            str(active_output),
+                            "--output",
+                            str(continuation_output),
+                            "--seconds",
+                            str(min(180.0, remaining)),
+                            "--cpu",
+                            str(cpu),
+                            "--cpus",
+                            ",".join(str(value) for value in cpus),
+                            "--seed",
+                            str(options.seed),
+                        ],
+                        timeout=min(180.0, remaining) + 30.0,
+                    )
+                    controller_state_path = continuation_output / "controller-state.json"
+                    controller_state = json.loads(controller_state_path.read_text(encoding="utf-8"))
+                    if controller_state.get("status") != "completed":
+                        raise EngineFailure("continuation controller did not commit completion")
+                    candidate_output = Path(str(controller_state["active_output"])).resolve()
+                    allowed_root = continuation_output.resolve()
+                    if candidate_output != output.resolve() and not candidate_output.is_relative_to(
+                        allowed_root
+                    ):
+                        raise EngineFailure("continuation controller output escaped its root")
+                    if not (candidate_output / "RESULT.json").is_file():
+                        raise EngineFailure("continuation controller checkpoint is incomplete")
+                    active_output = candidate_output
+                    window = int(controller_state.get("windows_completed", 0))
+                    controller_windows = controller_state.get("windows")
+                    if isinstance(controller_windows, list):
+                        stalled_pending = any(
+                            isinstance(item, Mapping)
+                            and bool(item.get("stalled"))
+                            and bool(item.get("pending_starts_before_window"))
+                            for item in controller_windows
+                        )
+                        stalled_deferred = any(
+                            isinstance(item, Mapping)
+                            and bool(item.get("stalled"))
+                            and not bool(item.get("pending_starts_before_window"))
+                            for item in controller_windows
+                        )
+                        if stalled_pending:
+                            warnings.append(
+                                "an unfinished start made no checkpoint progress in one window; "
+                                "the same ordinal was retried within the safety cap"
+                            )
+                        if stalled_deferred:
+                            warnings.append(
+                                "the frozen candidate continuation made no progress; "
+                                "the last consistent checkpoint was returned"
+                            )
+                    _after_raw, after_search, _after_deferred, _after_pending = state(active_output)
+                    after_work = (
+                        after_search.get("work")
+                        if isinstance(after_search.get("work"), Mapping)
+                        else {}
+                    )
+                    self._emit_progress(
+                        phase="initial_continuation",
+                        completed_starts=int(after_work.get("lanes_started", 0)),
+                        total_starts=256,
+                        continuation_windows=window,
+                        elapsed_seconds=time.monotonic() - started,
+                        max_time_seconds=hard_limit,
+                        used_cores=len(cpus),
+                    )
+            raw, search, has_deferred, has_pending_starts = state(active_output)
+            original_work = search.get("work") if isinstance(search, Mapping) else {}
+            original_lanes_started = (
+                int(original_work.get("lanes_started", 0))
+                if isinstance(original_work, Mapping)
+                else 0
+            )
+            extension_batches = 0
+            empty_extension_batches = 0
+            extension_found_answer = False
+            extension_completed_ordinals: list[int] = []
+            extension_pending_ordinals: list[int] = []
+            next_start = 256
+            termination = TerminationReason.SAFETY_CAP
+
+            if zero_dimensional_complete:
+                termination = TerminationReason.EXACT_COMPLETE
+            elif (
+                options.run_mode == "adaptive"
+                and not has_deferred
+                and not has_pending_starts
+                and not extract_answers(raw)
+            ):
+                # The only permitted work-graph extension: zero accepted answers
+                # after the complete frozen 256-start prefix.
+                while True:
+                    batch_start = next_start
+                    batch_end = extension_batch_end(batch_start)
+                    batch_cursor = batch_start
+                    before_count = len(extract_answers(raw))
+                    extension_window = 0
+                    while batch_cursor < batch_end:
+                        remaining = remaining_algorithm_budget()
+                        if not has_safe_extension_window(remaining):
+                            break
+                        extension_window += 1
+                        batch_output = directory / (
+                            f"adaptive-{extension_batches + 1:03d}-window-{extension_window:03d}"
+                        )
+                        invoke_phase(
+                            "adaptive_extension",
+                            [
+                                sys.executable,
+                                "-m",
+                                "geotarget.adaptive_continuation",
+                                "--runtime",
+                                str(runtime),
+                                "--source",
+                                str(source),
+                                "--source-sha256",
+                                source_sha,
+                                "--initial-output",
+                                str(active_output),
+                                "--output",
+                                str(batch_output),
+                                "--seconds",
+                                str(min(180.0, remaining)),
+                                "--cpus",
+                                ",".join(str(value) for value in cpus),
+                                "--seed",
+                                str(options.seed),
+                                "--ordinal-start",
+                                str(batch_cursor),
+                                "--ordinal-end",
+                                str(batch_end),
+                            ],
+                            timeout=min(180.0, remaining) + 30.0,
+                        )
+                        active_output = batch_output
+                        raw, search, _deferred, _pending = state(active_output)
+                        optimized_search = (
+                            search.get("optimized_parallel_search")
+                            if isinstance(search, Mapping)
+                            else None
+                        )
+                        accepted_end = batch_cursor
+                        if isinstance(optimized_search, Mapping):
+                            accepted_end = int(
+                                optimized_search.get("accepted_prefix_end", batch_cursor)
+                            )
+                            extension_completed_ordinals.extend(
+                                int(value)
+                                for value in optimized_search.get("completed_start_ordinals", ())
+                                if isinstance(value, int)
+                            )
+                        if not batch_cursor < accepted_end <= batch_end:
+                            break
+                        batch_cursor = accepted_end
+                    if batch_cursor != batch_end:
+                        warnings.append(
+                            "the safety cap interrupted an extension batch; "
+                            "the last exact-authority checkpoint was returned"
+                        )
+                        next_start = batch_cursor
+                        extension_pending_ordinals = list(range(batch_cursor, batch_end))
+                        break
+                    extension_batches += 1
+                    next_start = batch_end
+                    after_count = len(extract_answers(raw))
+                    (
+                        extension_found_answer,
+                        empty_extension_batches,
+                        extension_stable,
+                    ) = update_extension_stability(
+                        descriptors_before=before_count,
+                        descriptors_after=after_count,
+                        answer_found=extension_found_answer,
+                        consecutive_empty_batches=empty_extension_batches,
+                    )
+                    self._emit_progress(
+                        phase="extension",
+                        completed_starts=256 + len(set(extension_completed_ordinals)),
+                        total_starts=next_start,
+                        extension_batches_completed=extension_batches,
+                        consecutive_empty_extension_batches=empty_extension_batches,
+                        elapsed_seconds=time.monotonic() - started,
+                        max_time_seconds=hard_limit,
+                        used_cores=len(cpus),
+                    )
+                    if extension_stable:
+                        termination = TerminationReason.EXTENSION_STABLE
+                        break
+            elif extract_answers(raw):
+                termination = (
+                    TerminationReason.EXACT_COMPLETE
+                    if raw.get("status") == "ZERO_DIMENSIONAL_SOURCE_EXACT_COMPLETE"
+                    else TerminationReason.INITIAL_WORK_ANSWERED
+                )
+
+            remaining = remaining_algorithm_budget()
+            if 0.0 < remaining < 12.0 and termination == TerminationReason.SAFETY_CAP:
                 warnings.append(
-                    "remaining time was below the frozen HP/finalization safety reserve; "
+                    "remaining time was below the HP/finalization safety reserve; "
                     "the last consistent checkpoint was returned"
                 )
             result_path = active_output / "RESULT.json"
@@ -424,21 +911,74 @@ class ChampionSubprocessEngine:
             search = (
                 json.loads(search_path.read_text(encoding="utf-8")) if search_path.is_file() else {}
             )
+            evaluator_metadata = evaluator_execution_metadata(search, reference=reference)
+            raw["geotarget_product"] = {
+                "engine_variant": "reference" if reference else "optimized",
+                "engine_id": ENGINE_ID if reference else OPTIMIZED_ENGINE_ID,
+                "engine_hash": ENGINE_HASH if reference else optimized_engine_hash(),
+                "termination_reason": termination.value,
+                "initial_descriptor_count": initial_descriptor_count,
+                "extension_batches_completed": extension_batches,
+                "consecutive_empty_extension_batches": empty_extension_batches,
+                "phase_elapsed_seconds": phase_elapsed,
+                "requested_max_time_seconds": hard_limit,
+                "used_physical_cpus": list(cpus),
+                **evaluator_metadata,
+            }
         schedule = raw.get("hp_schedule")
         schedule = schedule if isinstance(schedule, Mapping) else {}
-        work = search.get("work") if isinstance(search, Mapping) else {}
-        lanes_started = int(work.get("lanes_started", 0)) if isinstance(work, Mapping) else 0
+        pending_wave = _pending_hp_wave(schedule)
         zero_dimensional_complete = raw.get("status") == "ZERO_DIMENSIONAL_SOURCE_EXACT_COMPLETE"
-        completed_starts = [] if zero_dimensional_complete else list(range(min(256, lanes_started)))
+        optimized_search_meta = (
+            search.get("optimized_parallel_search") if isinstance(search, Mapping) else None
+        )
+        explicit_initial_ordinals = (
+            sorted(
+                {
+                    int(value)
+                    for value in optimized_search_meta.get("completed_start_ordinals", ())
+                    if isinstance(value, int) and 0 <= value < 256
+                }
+            )
+            if isinstance(optimized_search_meta, Mapping)
+            else list(range(min(256, original_lanes_started)))
+        )
+        completed_starts = (
+            []
+            if zero_dimensional_complete
+            else explicit_initial_ordinals + sorted(set(extension_completed_ordinals))
+        )
         checkpoint = WorkCheckpoint(
             window=window,
+            phase=("extension" if extension_batches else "initial"),
             completed_start_ordinals=completed_starts,
             pending_start_ordinals=(
-                [] if zero_dimensional_complete else list(range(len(completed_starts), 256))
+                []
+                if zero_dimensional_complete
+                else (
+                    sorted(set(range(256)) - set(explicit_initial_ordinals))
+                    + extension_pending_ordinals
+                )
             ),
             pending_reservoir_records=[
                 str(value) for value in schedule.get("deferred_record_ids", ())
             ],
+            pending_hp_alternates=(
+                list(pending_wave["pending_alternate_record_ids"])
+                if pending_wave is not None
+                else []
+            ),
+            pending_restoration=(
+                list(pending_wave["pending_restoration_record_ids"])
+                if pending_wave is not None
+                else []
+            ),
             plan_sha256=plan_sha,
+            extension_batches_completed=extension_batches,
+            consecutive_empty_extension_batches=empty_extension_batches,
+            descriptors_before_extension=initial_descriptor_count,
+            descriptors_after_extension=len(extract_answers(raw)),
+            termination_reason=termination,
+            phase_elapsed_seconds=phase_elapsed,
         )
         return raw, time.monotonic() - started, checkpoint, warnings
