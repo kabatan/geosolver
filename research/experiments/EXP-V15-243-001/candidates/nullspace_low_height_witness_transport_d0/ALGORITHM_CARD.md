@@ -51,3 +51,26 @@ development-score improvement.  The next experiment should connect the same
 rank gate and rational-slice proposals to an existing source-only proof replay;
 the ordinary numerical lane must retain at least 75%.  Do not tune denominator,
 rank threshold, or slice radius on case outcomes.
+
+## Exact adversary / Repair A
+
+The float-only D0 boundary is not authority-safe.  In 1,008 randomized generic
+instances it made 337 low-height claims whose residual passed numerically but
+whose proposed algebraic coordinates failed exact source substitution.  A
+minimal example has residuals `x+y` and `x+y+10^-12*x`: the float point near
+`(1,-1)` has residual about `5e-13`, while exact substitution leaves the second
+residual equal to `10^-12`.
+
+Repair A changes the range correction rather than a tolerance.  It first checks
+the polynomial Jacobian rank exactly.  For a rank-deficient source it fixes the
+rational slice in `QQ`, reduces every source polynomial to the dependent
+univariate fiber, computes their polynomial GCD and real algebraic roots, and
+uses float Newton only to select a branch.  The chosen root must pass exact
+source and strict-guard substitution and square-free minimal-polynomial replay.
+Two distinct exact slice witnesses are required; otherwise the entire 25%
+side lane falls back to its frozen IID/Cauchy proposals.
+
+Across 1,008 instances / 2,016 arm traces, Repair A has exact false authority 0,
+fallback mismatch 0, row metamorphic failure 0, and retains gains in all three
+primary families.  Unsupported non-polynomial input fails closed.  The repaired
+mechanism, not the float recognizer, is the only authority-capable handoff.
