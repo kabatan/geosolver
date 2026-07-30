@@ -62,7 +62,7 @@ def _rank_by_verified_diversity(
     }
     target_novelty = {
         ordinal: min(
-            base._normalized_target_distance(candidate, accepted)
+            abs(candidate.provisional_target - accepted.provisional_target)
             for accepted in authoritative
         )
         for ordinal, candidate in ordered
