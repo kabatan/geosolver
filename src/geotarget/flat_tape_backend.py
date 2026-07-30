@@ -50,9 +50,7 @@ from geotarget.typed_refnum_ir import (
 )
 
 FLAT_TAPE_ABI = "geotarget.flat-ssa-tape/sympy-1.14-bf53-v1"
-FLAT_TAPE_QUALIFICATION_GATE = (
-    "permanent_generated_bitwise_deep_fanout_optimizer_replay_v1"
-)
+FLAT_TAPE_QUALIFICATION_GATE = "permanent_generated_bitwise_deep_fanout_optimizer_replay_v1"
 
 
 class UnsupportedFlatTapeBackend(RuntimeError):
@@ -245,21 +243,33 @@ class FlatTapeProgram:
         variable_names: tuple[str, ...],
         slot_counts: tuple[int, int, int, int],
         construction_tape: tuple[_Instruction, ...],
+        construction_names: tuple[str, ...],
+        construction_roots: tuple[_Ref, ...],
         constraint_tapes: tuple[tuple[tuple[_Instruction, ...], _Ref, _Ref], ...],
         admission: _FlatTapeAdmission,
     ) -> None:
         self.variable_names = variable_names
         self.slot_counts = slot_counts
         self.construction_tape = construction_tape
+        self.construction_names = construction_names
+        self.construction_roots = construction_roots
         self.constraint_tapes = constraint_tapes
         self.admission = admission
         self._thread_local = threading.local()
+        self._hard_thread_local = threading.local()
 
     def _buffers(self) -> _Buffers:
         buffers = getattr(self._thread_local, "buffers", None)
         if buffers is None:
             buffers = _Buffers(self.slot_counts)
             self._thread_local.buffers = buffers
+        return buffers
+
+    def _hard_buffers(self) -> _Buffers:
+        buffers = getattr(self._hard_thread_local, "buffers", None)
+        if buffers is None:
+            buffers = _Buffers(self.slot_counts)
+            self._hard_thread_local.buffers = buffers
         return buffers
 
     @property
@@ -271,11 +281,7 @@ class FlatTapeProgram:
     def metadata(self) -> dict[str, Any]:
         instructions = [
             *self.construction_tape,
-            *(
-                instruction
-                for tape, _left, _right in self.constraint_tapes
-                for instruction in tape
-            ),
+            *(instruction for tape, _left, _right in self.constraint_tapes for instruction in tape),
         ]
         scalar_count, point_count, line_count, circle_count = self.slot_counts
         return {
@@ -293,6 +299,7 @@ class FlatTapeProgram:
             "opcodes": sorted({instruction.op.name for instruction in instructions}),
             "preallocated_slots": True,
             "scratch_isolation": "thread_local_reused_per_thread",
+            "numeric_lanes_share_values": False,
             "subnormal_input_policy": "raw_semantic_gate_value_class_fallback",
             "recursive_callback_dispatch": False,
             "whole_problem_admission": True,
@@ -475,9 +482,7 @@ class FlatTapeProgram:
         # Delegate only this input value class; the decision is independent of
         # source identity and applies to every admitted V15 program.
         if any(
-            math.isfinite(value)
-            and value != 0.0
-            and abs(value) <= sys.float_info.min
+            math.isfinite(value) and value != 0.0 and abs(value) <= sys.float_info.min
             for value in raw_values
         ):
             return self.admission.raw_semantic_gate.evaluate(raw_values)
@@ -491,12 +496,49 @@ class FlatTapeProgram:
             try:
                 self._execute(tape, raw_values, buffers)
                 residuals.append(
-                    _as_float(buffers.scalars[left.index])
-                    - _as_float(buffers.scalars[right.index])
+                    _as_float(buffers.scalars[left.index]) - _as_float(buffers.scalars[right.index])
                 )
             except Exception:
                 residuals.append(float("nan"))
         return residuals
+
+    def evaluate_hard_point_lane(
+        self,
+        raw_values: list[float],
+        required_names: frozenset[str],
+    ) -> dict[str, tuple[float, float]] | None:
+        """Evaluate required point constructions in an isolated float lane.
+
+        Returning ``None`` requests whole-callback fallback. The method never
+        exposes residual-lane buffers and therefore cannot share values across
+        the BF53 residual and float hard-feasibility boundaries.
+        """
+
+        if len(raw_values) != len(self.variable_names) or any(
+            not math.isfinite(value) or (value != 0.0 and abs(value) <= sys.float_info.min)
+            for value in raw_values
+        ):
+            return None
+        buffers = self._hard_buffers()
+        try:
+            self._execute(self.construction_tape, raw_values, buffers)
+            points: dict[str, tuple[float, float]] = {}
+            for name, root in zip(
+                self.construction_names,
+                self.construction_roots,
+                strict=True,
+            ):
+                if name not in required_names:
+                    continue
+                if root.kind is not _Kind.POINT:
+                    return None
+                points[name] = (
+                    _as_float(buffers.point_x[root.index]),
+                    _as_float(buffers.point_y[root.index]),
+                )
+            return points if len(points) == len(required_names) else None
+        except Exception:
+            return None
 
 
 def _authorize_flat_tape_specialization(
@@ -610,17 +652,18 @@ def compile_flat_tape_program(
                     f"unsupported typed signature: {node.opcode}->{node.result_type}"
                 )
             if node.opcode == "AreaPoints":
-                if len(node.operands) < 3 or any(
-                    child.result_type != "point2" for child in node.operands
-                ) or node.result_type != "scalar":
+                if (
+                    len(node.operands) < 3
+                    or any(child.result_type != "point2" for child in node.operands)
+                    or node.result_type != "scalar"
+                ):
                     raise UnsupportedFlatTapeBackend("invalid AreaPoints typed signature")
             else:
                 signature = _SIGNATURES.get(node.opcode)
                 observed = tuple(child.result_type for child in node.operands)
                 if signature is None or signature != (observed, node.result_type):
                     raise UnsupportedFlatTapeBackend(
-                        "invalid typed signature: "
-                        f"{node.opcode}{observed}->{node.result_type}"
+                        f"invalid typed signature: {node.opcode}{observed}->{node.result_type}"
                     )
             if node.opcode == "ExactInt" and (
                 not isinstance(node.payload, int) or isinstance(node.payload, bool)
@@ -651,9 +694,7 @@ def compile_flat_tape_program(
         return tuple(tape), outputs, memo
 
     construction_nodes = tuple(node for _name, node in program.constructions)
-    construction_tape, _construction_roots, construction_memo = compile_nodes(
-        construction_nodes, {}
-    )
+    construction_tape, construction_roots, construction_memo = compile_nodes(construction_nodes, {})
     constraint_tapes = []
     for left, right in program.constraints:
         tape, outputs, _memo = compile_nodes((left, right), construction_memo)
@@ -664,6 +705,8 @@ def compile_flat_tape_program(
         variable_names=program.variable_names,
         slot_counts=tuple(counter.value for counter in counters),  # type: ignore[arg-type]
         construction_tape=construction_tape,
+        construction_names=tuple(name for name, _node in program.constructions),
+        construction_roots=construction_roots,
         constraint_tapes=tuple(constraint_tapes),
         admission=admission,
     )

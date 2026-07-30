@@ -25,9 +25,7 @@ import numpy as np
 from mpmath import mp
 
 FUSION_SCHEMA_VERSION = "geotarget.fused-evaluation-budget/v1"
-REFERENCE_CALL_SHA256 = (
-    "6d96f00d46c51d2b6921534b1aa958150c1c098353e9f4e5603a10c52eaaa533"
-)
+REFERENCE_CALL_SHA256 = "6d96f00d46c51d2b6921534b1aa958150c1c098353e9f4e5603a10c52eaaa533"
 REFERENCE_SOURCE_SUFFIX = (
     "solver/research/experiments/EXP-REAL61-007/"
     "provisional_numerical_architecture/source_only_runtime.py"
@@ -56,9 +54,7 @@ def _attest_budget_class(budget_class: type[Any]) -> Any:
     if _source_sha256(original) != REFERENCE_CALL_SHA256:
         raise RuntimeError("frozen EvaluationBudget.__call__ hash mismatch")
     source_file = inspect.getsourcefile(original)
-    if source_file is None or not Path(source_file).as_posix().endswith(
-        REFERENCE_SOURCE_SUFFIX
-    ):
+    if source_file is None or not Path(source_file).as_posix().endswith(REFERENCE_SOURCE_SUFFIX):
         raise RuntimeError("frozen EvaluationBudget source path mismatch")
     return opaque_evaluation
 
@@ -87,7 +83,13 @@ def _fused_call_factory(opaque_evaluation: Any):
         try:
             evaluator = self.evaluator
             raw_values = values.tolist()
-            observation = evaluator.evaluate_float_residual(raw_values)
+            snapshot = getattr(evaluator, "compiled_callback_snapshot", None)
+            snapshot_result = snapshot.evaluate(raw_values) if snapshot is not None else None
+            observation = (
+                snapshot_result.residual_observation
+                if snapshot_result is not None
+                else evaluator.evaluate_float_residual(raw_values)
+            )
             residual = np.asarray(observation.residual_vector, dtype=float)
             finite = bool(
                 observation.is_finite
@@ -95,54 +97,60 @@ def _fused_call_factory(opaque_evaluation: Any):
                 and np.all(np.isfinite(residual))
             )
 
-            target_dps = max(int(mp.dps), MIN_PRECISION, 80)
-            with mp.workdps(target_dps):
-                context = _build_guard_context(
-                    evaluator.bundle.spec,
-                    list(evaluator.bundle.var_names),
-                    raw_values,
-                    dict(evaluator.bundle.base_context),
-                )
-                violations: list[str] = []
-                guard_penalty_mpf = mp.mpf("0")
-                guard_vector_values: list[float] = []
-                guard_vector_failed = False
-                for index, guard in enumerate(evaluator.compiled_guards):
-                    try:
-                        if not guard_hard_satisfied(guard, context):
-                            violations.append(f"guard[{index}] returned False")
-                    except Exception as error:
-                        violations.append(f"guard[{index}] raised: {error}")
-                    try:
-                        value = guard_violation_value(guard, context)
-                        if mp.isfinite(value):
-                            guard_penalty_mpf += value
-                            guard_vector_values.append(float(value))
-                        else:
+            if snapshot_result is not None:
+                violations = list(snapshot_result.guard_violations)
+                guard_penalty = snapshot_result.guard_penalty
+                guard_vector = np.asarray(snapshot_result.guard_vector, dtype=float)
+                hard = snapshot_result.hard_feasibility
+            else:
+                target_dps = max(int(mp.dps), MIN_PRECISION, 80)
+                with mp.workdps(target_dps):
+                    context = _build_guard_context(
+                        evaluator.bundle.spec,
+                        list(evaluator.bundle.var_names),
+                        raw_values,
+                        dict(evaluator.bundle.base_context),
+                    )
+                    violations = []
+                    guard_penalty_mpf = mp.mpf("0")
+                    guard_vector_values: list[float] = []
+                    guard_vector_failed = False
+                    for index, guard in enumerate(evaluator.compiled_guards):
+                        try:
+                            if not guard_hard_satisfied(guard, context):
+                                violations.append(f"guard[{index}] returned False")
+                        except Exception as error:
+                            violations.append(f"guard[{index}] raised: {error}")
+                        try:
+                            value = guard_violation_value(guard, context)
+                            if mp.isfinite(value):
+                                guard_penalty_mpf += value
+                                guard_vector_values.append(float(value))
+                            else:
+                                guard_penalty_mpf += mp.mpf("1")
+                                guard_vector_values.append(1.0)
+                        except Exception:
                             guard_penalty_mpf += mp.mpf("1")
+                            guard_vector_failed = True
                             guard_vector_values.append(1.0)
-                    except Exception:
-                        guard_penalty_mpf += mp.mpf("1")
-                        guard_vector_failed = True
-                        guard_vector_values.append(1.0)
 
+                guard_penalty = float(guard_penalty_mpf)
+                guard_vector = (
+                    np.ones(len(evaluator.compiled_guards), dtype=float)
+                    if guard_vector_failed
+                    else np.asarray(guard_vector_values, dtype=float)
+                )
+                hard = evaluate_hard_feasibility(
+                    bundle=evaluator.bundle,
+                    checks=evaluator.bundle.hard_feasibility_checks,
+                    values=raw_values,
+                    eval_expr=safe_eval_expr,
+                    cast_value=float,
+                    allow_float=True,
+                    guard_ok=not violations,
+                    guard_violations=tuple(violations),
+                )
             guard_ok = len(violations) == 0
-            guard_penalty = float(guard_penalty_mpf)
-            guard_vector = (
-                np.ones(len(evaluator.compiled_guards), dtype=float)
-                if guard_vector_failed
-                else np.asarray(guard_vector_values, dtype=float)
-            )
-            hard = evaluate_hard_feasibility(
-                bundle=evaluator.bundle,
-                checks=evaluator.bundle.hard_feasibility_checks,
-                values=raw_values,
-                eval_expr=safe_eval_expr,
-                cast_value=float,
-                allow_float=True,
-                guard_ok=guard_ok,
-                guard_violations=tuple(violations),
-            )
             semantics = bool(guard_ok and hard.hard_feasible)
             hard_penalty = 0.0
             if not hard.hard_feasible:
@@ -164,9 +172,7 @@ def _fused_call_factory(opaque_evaluation: Any):
             violation_vector = np.ones(1, dtype=float)
         if finite:
             self.finite += 1
-            self.best_norm = min(
-                self.best_norm, float(np.linalg.norm(residual, ord=np.inf))
-            )
+            self.best_norm = min(self.best_norm, float(np.linalg.norm(residual, ord=np.inf)))
         else:
             self.invalid += 1
         if finite and not semantics:
