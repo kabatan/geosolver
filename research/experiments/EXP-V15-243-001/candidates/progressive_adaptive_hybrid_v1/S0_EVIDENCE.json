@@ -1,0 +1,100 @@
+{
+  "base_metamorphic_harness_sha256": "f55683bebc95b54b5f90a4e028f564ad708bfc0d9c9a05d0d5417002df532ad8",
+  "benchmark_truth_used": false,
+  "candidate_sha256": "9a449d370a2a87dea50bf3aa9cd0a3cc3d1484491e48829fd89cbdd1c82b7972",
+  "demonstrated_starvation_handoff": {
+    "deep_handoff_wall_cap_seconds": 4.0,
+    "demonstrated_starvation_remains_capped": true,
+    "rungs": [
+      64,
+      600
+    ],
+    "start_ordinal": 7,
+    "useful_preempted_probe_not_discarded": true
+  },
+  "external_case_family_problem_id_or_target_inputs": false,
+  "formal_or_benchmark_truth_used": false,
+  "generated_only": true,
+  "profiles": {
+    "64-600-adaptive-hybrid": {
+      "all_start_first_service": true,
+      "base_decision_trace_sha256": "428ea1ceba0cbad7ff70a9f5146557a413378426f1feccc28a2d7f7cfaf4be3e",
+      "callbacks_reconciled": true,
+      "callbacks_used": 48,
+      "each_iid_regular_source_stream_has_deep_solve": true,
+      "first_service_count": 32,
+      "hybrid_reopen_gate": {
+        "baseline_handoff_selected": 4,
+        "completed_probe_handoffs_uncapped": true,
+        "counter_cauchy_service_floor_holds": true,
+        "handoff_selected_count": 16,
+        "insurance_handoff_selected": 4,
+        "target_deep_service_not_limited_to_probe_wall_cap": true,
+        "target_direct_rungs": [
+          64,
+          600
+        ],
+        "target_handoff_reason": true
+      },
+      "iid_regular_first_service_complete": true,
+      "iid_regular_first_service_count": 24,
+      "iid_regular_source_stream_count": 3,
+      "iid_regular_source_streams_with_deep_solve": 3,
+      "insurance_prefix_floor_holds": true,
+      "insurance_service_fraction": 0.25,
+      "insurance_services": 12,
+      "metamorphic": {
+        "affine_scale": {
+          "decision_trace_equal": true,
+          "decision_trace_sha256": "428ea1ceba0cbad7ff70a9f5146557a413378426f1feccc28a2d7f7cfaf4be3e"
+        },
+        "residual_permutation": {
+          "decision_trace_equal": true,
+          "decision_trace_sha256": "428ea1ceba0cbad7ff70a9f5146557a413378426f1feccc28a2d7f7cfaf4be3e"
+        },
+        "variable_permutation": {
+          "decision_trace_equal": true,
+          "decision_trace_sha256": "428ea1ceba0cbad7ff70a9f5146557a413378426f1feccc28a2d7f7cfaf4be3e"
+        }
+      },
+      "narrow_basin_radius": 1e-12,
+      "narrow_basin_start_ordinal": 31,
+      "narrow_basin_start_reached_deepest_rung": true,
+      "off_basin_residual_floor": 1000000.0,
+      "preemption_repromotion": {
+        "partial_evidence_repromoted": true,
+        "preempted_start_ordinal": 7,
+        "rungs": [
+          64,
+          600
+        ],
+        "services_after_partial_evidence": 1
+      },
+      "rungs": [
+        64,
+        600
+      ],
+      "service_count": 48,
+      "start_count": 32,
+      "starvation": {
+        "deadline_rejected_services": 1,
+        "first_attempt_wall_cap_seconds": 3.75,
+        "first_service_count": 16,
+        "later_start_serviced": true,
+        "start_count": 16
+      },
+      "work_accounting_failure_taxonomy": {
+        "callback_overcharge": "ValueError:rung callback charge is outside its allowance",
+        "insurance_prefix_mismatch": "ValueError:insurance proposal lost its counter-Cauchy source",
+        "malformed_endpoint": "ValueError:rung returned a malformed endpoint",
+        "negative_callback_charge": "ValueError:rung callback charge is outside its allowance",
+        "proposal_prefix_mutation": "AssertionError:scheduler mutated the proposal prefix",
+        "zero_charge_completed_service": "ValueError:rung callback charge is outside its allowance"
+      }
+    }
+  },
+  "schema_version": "geotarget.progressive-adaptive-hybrid-metamorphic-s0/v1",
+  "status": "PASS",
+  "synthetic_target_generated_in_harness": true,
+  "truth_used": false
+}
