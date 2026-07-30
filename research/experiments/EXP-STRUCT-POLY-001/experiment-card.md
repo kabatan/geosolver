@@ -72,3 +72,35 @@ This satisfies the applicability portion of the `EXP-POLY-001` reopen gate but
 does not establish recall or speed. The next admissible step is a common-worker
 development screen with an existing numerical template, full callback/source
 replay accounting, and the same caps. Formal promotion remains unauthorized.
+
+## Frozen full-v15 proposal-only arm
+
+The common arm now loads the pinned champion worker only for combined-
+applicable source formulations. Baseline search starts, callback limits, and
+endpoint order are unchanged. A single generated side attempt uses the first
+finite baseline endpoint as its anonymous template, runs for at most two
+seconds, touches at most four strict blocks, and emits at most 32 Cartesian
+proposals. Original endpoints precede every added proposal, so the side lane
+cannot reorder or remove search discoveries.
+
+The overlay is installed at the input of the champion's existing
+`_fresh_replay_candidates`. The local symbolic route is explicitly given no
+acceptance authority. The worker asserts that the original HP, restoration,
+authority-descriptor, and descriptor-key function objects are unchanged after
+installation. Source residual replay, guards, HP exactification, PSLQ/source
+confirmation, and exact descriptor construction therefore remain the frozen
+champion's responsibility.
+
+An actual frozen-module generated smoke produced two symbolic proposals. Both
+were presented to original source replay, which retained only the one
+full-dimensional near root; local verified count remained zero. No baseline
+endpoint was removed or reordered, and the side attempt remained under its
+two-second cap.
+
+A non-applicable generated dry run matched direct-frozen PLAN, stdout, and
+stderr bytes. The formulation with source SHA prefix `63fb3e` is BTF-
+irreducible and thus also follows exact frozen passthrough. Its 15-second safety
+regression reproduced the missing search artifact (`TIMEOUT`) while completing
+normally, preserving source bytes and total-wall compliance, with zero HP
+attempts and no candidate telemetry. The common screen24 arm contract passed in
+dry mode with no truth passed to the worker. No formal screen or scorer ran.
