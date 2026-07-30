@@ -38,6 +38,42 @@ immutable search plan, checkpoint content digest, and exact endpoint prefix
 match.  Backlog, previously unobserved endpoints, and the appended suffix are
 still semantically replayed; no answer or exact descriptor is cached.
 
+## Common-control integration audit
+
+The frozen entrypoint is the exact selected common-control worker, not the
+lower `finalist_numeric_worker_v15` alone:
+
+```text
+/home/kabatan/work/solver-experiment-runtime/solver/research/experiments/
+EXP-V15-243-001/repro_20260722/workers/champion_v2_poc_preloaded.py
+SHA-256 e1405739201b0cb1d72e8f9ab6ca402b5e71918e569888993c4fdd13022c7301
+```
+
+The path is hash-checked before import.  Its loaded composition is
+`precision_runtime_preload -> champion_v2_poc wrapper -> champion_v2
+zero-dimensional authority -> POC champion_v1 wrapper/approved HP bridge ->
+champion_v1 -> champion_v0 -> finalist_numeric_worker_v15`.  Thus both the
+champion-v2 exact-source layer and the champion-v1/PointOnCircle periodic
+semantic layer remain active.  The frozen selection card names this same path
+as the common control.
+
+Two direct-entrypoint differentials were run without truth or scoring:
+
+- On a zero-dimensional source, wrapper and direct-control plans differed only
+  in `output`.  Results differed only in wall time and the numeric replay
+  artifact hash.  A second direct-control invocation changed those same two
+  fields, confirming that the replay hash binds volatile backend process
+  telemetry.  Exact descriptors, champion-v2 authority, POC/champion-v1 safety
+  fields, status, schema, and every other result field were equal.
+- On a positive-dimensional `14s/2s` wrapper fail-close (the exact control
+  received its corresponding `11s/2s` internal budget), plans again differed
+  only in `output`.  Results differed only in wall time: both were accepted by
+  the common runner predicate, returned the same empty exact set, and retained
+  identical `SEARCH_DEADLINE_REACHED` / search-timeout / safety semantics.
+
+Consequently no control-stack rebind is required before screening.  The arm
+changes custody only after the exact common-control initial phase completes.
+
 ## S0 evidence
 
 All raw artifacts are outside Git under
