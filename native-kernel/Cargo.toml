@@ -1,0 +1,19 @@
+[package]
+name = "geotarget-native-kernel"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.97"
+publish = false
+
+[lib]
+name = "_native_kernel"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "=0.29.0", features = ["extension-module", "abi3-py312"] }
+
+[profile.release]
+codegen-units = 1
+lto = "thin"
+panic = "abort"
+strip = "symbols"

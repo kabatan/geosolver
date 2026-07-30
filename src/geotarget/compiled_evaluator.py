@@ -330,6 +330,7 @@ class CompiledResidualPlan:
     symbols: tuple[Symbol, ...]
     sides: tuple[tuple[Any, Any], ...]
     operators: tuple[str, ...]
+    native_program: Any | None = None
     flat_tape_program: Any | None = None
     raw_libmp_program: Any | None = None
     point_distance_program: PointDistanceProgram | None = None
@@ -346,6 +347,7 @@ class CompiledResidualPlan:
             len(self.variable_names)
             if (
                 self.flat_tape_program is not None
+                or self.native_program is not None
                 or self.raw_libmp_program is not None
                 or self.point_distance_program is not None
                 or self.typed_refnum_program is not None
@@ -354,6 +356,8 @@ class CompiledResidualPlan:
         )
         if len(values) != expected_dimension:
             raise ValueError("compiled evaluator dimension mismatch")
+        if self.native_program is not None:
+            return self.native_program.evaluate(values)
         if self.flat_tape_program is not None:
             return self.flat_tape_program.evaluate(values)
         if self.raw_libmp_program is not None:
@@ -381,7 +385,9 @@ class CompiledResidualPlan:
         return {
             "schema_version": SCHEMA_VERSION,
             "mode": (
-                "flat_tape_bf53"
+                "native_flat_tape_bf53"
+                if self.native_program is not None
+                else "flat_tape_bf53"
                 if self.flat_tape_program is not None
                 else "raw_libmp_bf53"
                 if self.raw_libmp_program is not None
@@ -398,6 +404,10 @@ class CompiledResidualPlan:
             "refnum_point_distance": self.point_distance_program is not None,
             "typed_refnum_ir": self.typed_refnum_program is not None,
             "flat_tape": self.flat_tape_program is not None,
+            "native_kernel": self.native_program is not None,
+            "native_kernel_metadata": (
+                self.native_program.metadata() if self.native_program is not None else None
+            ),
             "flat_tape_metadata": (
                 self.flat_tape_program.metadata() if self.flat_tape_program is not None else None
             ),
@@ -555,9 +565,7 @@ def compile_residual_plan(evaluator: Any, *, source_sha256: str) -> CompilationR
         except RecursionError:
             return CompilationResult(
                 plan=None,
-                fallback_reason=(
-                    "raw semantic gate resource fallback: recursion depth exceeded"
-                ),
+                fallback_reason=("raw semantic gate resource fallback: recursion depth exceeded"),
                 attempted_ast_opcode_set=typed_opcodes,
                 attempted_operand_result_type_set=typed_types,
                 attempted_selector_kind_set=typed_selectors,
@@ -596,9 +604,7 @@ def compile_residual_plan(evaluator: Any, *, source_sha256: str) -> CompilationR
         flat_program = None
         flat_fallback_reason = None
         try:
-            candidate = compile_flat_tape_program(
-                typed_program, raw_semantic_gate=raw_program
-            )
+            candidate = compile_flat_tape_program(typed_program, raw_semantic_gate=raw_program)
             if candidate.semantic_abi not in qualified_flat_abis:
                 raise UnsupportedFlatTapeBackend(
                     f"unqualified flat tape ABI: {candidate.semantic_abi}"
@@ -611,6 +617,10 @@ def compile_residual_plan(evaluator: Any, *, source_sha256: str) -> CompilationR
 
         if flat_program is not None:
             flat_metadata = flat_program.metadata()
+            from geotarget.native_kernel import compile_native_program
+
+            native_program = compile_native_program(flat_program)
+            native_metadata = native_program.metadata() if native_program is not None else None
             flat_semantic_metadata = {
                 key: value
                 for key, value in flat_metadata.items()
@@ -630,7 +640,13 @@ def compile_residual_plan(evaluator: Any, *, source_sha256: str) -> CompilationR
                 # Wall timing is reported at runtime but is not part of the
                 # deterministic semantic/product plan identity.
                 "flat_support": flat_semantic_metadata,
-                "backend_selection_chain": ["typed", "raw_semantic_gate", "flat_tape"],
+                "native_support": native_metadata,
+                "backend_selection_chain": [
+                    "typed",
+                    "raw_semantic_gate",
+                    "flat_tape",
+                    *(["native_kernel"] if native_program is not None else []),
+                ],
             }
             return CompilationResult(
                 plan=CompiledResidualPlan(
@@ -641,10 +657,16 @@ def compile_residual_plan(evaluator: Any, *, source_sha256: str) -> CompilationR
                     symbols=(),
                     sides=(),
                     operators=tuple(flat_metadata["opcodes"]),
+                    native_program=native_program,
                     flat_tape_program=flat_program,
                     typed_refnum_program=typed_program,
                     semantic_abi_version=flat_program.semantic_abi,
-                    backend_selection_chain=("typed", "raw_semantic_gate", "flat_tape"),
+                    backend_selection_chain=(
+                        "typed",
+                        "raw_semantic_gate",
+                        "flat_tape",
+                        *(("native_kernel",) if native_program is not None else ()),
+                    ),
                     raw_semantic_gate_metadata=raw_metadata,
                 ),
                 fallback_reason=None,

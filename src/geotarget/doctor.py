@@ -11,6 +11,7 @@ from typing import Any
 import psutil
 
 from geotarget.engine import ENGINE_HASH, ENGINE_ID, julia_project_root, verify_engine
+from geotarget.native_kernel import native_capability
 from geotarget.qualification import policy
 from geotarget.resources import physical_cpu_ids
 
@@ -48,6 +49,7 @@ def diagnose() -> dict[str, Any]:
     launcher = Path(__file__).resolve().parent / "_engine/runtime/solver/python/.venv/bin/python"
     if not launcher.is_file() or not os.access(launcher, os.X_OK):
         errors.append("frozen subprocess Python launcher is missing or not executable")
+    native = {key: value for key, value in native_capability().items() if key != "module"}
     return {
         "ok": not errors,
         "engine_id": ENGINE_ID,
@@ -60,6 +62,7 @@ def diagnose() -> dict[str, Any]:
         "available_memory_bytes": memory,
         "errors": errors,
         "warnings": warnings,
+        "native_kernel": native,
         "optimized_qualification": policy(),
     }
 
