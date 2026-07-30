@@ -127,6 +127,8 @@ def _integration_ledger() -> dict[str, object]:
         ),
         "positive_dimensional_ordinary_authority_can_bypass_exact_outer": False,
         "zero_dimensional_route_uses_existing_source_exact_authority": True,
+        "historical_search_and_hp_children_same_group_contained": True,
+        "historical_child_lifecycle": SCHEDULER.LIFECYCLE.manifest(),
         "case_family_truth_target_count_or_outcome_routing": False,
     }
 

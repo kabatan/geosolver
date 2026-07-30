@@ -30,6 +30,10 @@ RESOURCE_POLICY = (
     / "research/experiments/EXP-V15-243-001/candidates/"
     "hp_lock_scheduler/policy.py"
 )
+CONTAINED_LIFECYCLE = (
+    CAMPAIGN_CANDIDATES
+    / "archive_champion_v2_poc_exact_outer_v1/contained_lifecycle.py"
+)
 
 EXPECTED_DEPENDENCY_SHA256 = {
     PROGRESSIVE_WRAPPER: (
@@ -94,6 +98,10 @@ POLICY = _load(
     "geotarget_archive_progressive_exact_outer_resource_policy",
     RESOURCE_POLICY,
 )
+LIFECYCLE = _load(
+    "geotarget_archive_progressive_contained_lifecycle",
+    CONTAINED_LIFECYCLE,
+)
 SEARCH_POLICY = _load(
     "geotarget_archive_progressive_exact_outer_search_policy",
     SEARCH_CANDIDATE,
@@ -106,6 +114,7 @@ PROGRESSIVE._verify_control_stack(CONTROL)
 BASE = CONTROL.CHAMPION.BASE
 ZERO = CONTROL.CHAMPION.ZERO
 V1 = CONTROL.CHAMPION.V1
+LIFECYCLE.install(BASE)
 _HISTORICAL_HP = BASE._run_hp_candidate
 _HISTORICAL_PLAN = BASE._plan
 _HISTORICAL_AUTHORITY = {
@@ -214,6 +223,7 @@ def _plan(**kwargs) -> dict[str, object]:
             "zero_dimensional_source_exact_authority_preserved": True,
             "resource_runtime_role": "exact-child per-core lease only",
             "resource_runtime_installed_on_ordinary_hp": False,
+            "historical_child_lifecycle": LIFECYCLE.manifest(),
             "progressive_exact_dependency_sha256": verify_dependencies(),
             "archive_progressive_scheduler_shim_sha256": _sha256(Path(__file__)),
             "case_family_truth_target_count_or_outcome_routing": False,
@@ -227,6 +237,7 @@ BASE._plan = _plan
 
 def main() -> None:
     _assert_binding()
+    LIFECYCLE.arm_formal_root()
     HISTORICAL.main()
 
 

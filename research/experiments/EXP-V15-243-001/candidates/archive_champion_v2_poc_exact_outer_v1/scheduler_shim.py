@@ -37,6 +37,7 @@ POC_MANIFEST = POC_ROOT / "champion_closure_manifest.py"
 POC_HP_BRIDGE = POC_ROOT / "approved_hp_bridge_v5.py"
 CHAMPION_V2 = CAMPAIGN_ROOT / "champion_v2/worker.py"
 RESOURCE_POLICY = CAMPAIGN_ROOT / "candidates/hp_lock_scheduler/policy.py"
+CONTAINED_LIFECYCLE = HERE / "contained_lifecycle.py"
 
 EXPECTED_DEPENDENCY_SHA256 = {
     HISTORICAL_WORKER: (
@@ -111,6 +112,10 @@ POLICY = _load(
     "geotarget_archive_exact_outer_resource_policy",
     RESOURCE_POLICY,
 )
+LIFECYCLE = _load(
+    "geotarget_archive_exact_outer_contained_lifecycle",
+    CONTAINED_LIFECYCLE,
+)
 HISTORICAL = _load(
     "geotarget_archive_exact_outer_champion_v2_poc_preloaded",
     HISTORICAL_WORKER,
@@ -119,6 +124,7 @@ CHAMPION = HISTORICAL.CHAMPION
 BASE = CHAMPION.BASE
 ZERO = CHAMPION.ZERO
 V1 = CHAMPION.V1
+LIFECYCLE.install(BASE)
 
 # exact_outer needs only these three lease attributes.  Deliberately do not
 # call hp_lock_scheduler.adapter.install(): ordinary HP/reservoir scheduling
@@ -157,6 +163,7 @@ def _plan(**kwargs) -> dict[str, object]:
             "zero_dimensional_source_exact_authority_preserved": True,
             "resource_runtime_role": "exact-child per-core lease only",
             "resource_runtime_installed_on_ordinary_hp": False,
+            "historical_child_lifecycle": LIFECYCLE.manifest(),
             "case_family_truth_target_count_or_outcome_routing": False,
             "archive_scheduler_shim_sha256": _sha256(Path(__file__)),
         }
@@ -169,6 +176,7 @@ BASE._plan = _plan
 
 def main() -> None:
     verify_dependencies()
+    LIFECYCLE.arm_formal_root()
     HISTORICAL.main()
 
 
