@@ -68,7 +68,12 @@ def merge_block_proposals(
     if not starts:
         audit["proposal_skip_reason"] = "NO_FINITE_CHAMPION_ENDPOINT_START"
         return original, audit
-    proposals = proposal_factory(document, plan, starts, hard_deadline)
+    try:
+        proposals = proposal_factory(document, plan, starts, hard_deadline)
+    except Exception as error:
+        # A research proposal generator cannot take the champion baseline down.
+        audit["proposal_skip_reason"] = f"PROPOSAL_FACTORY_FAILED:{type(error).__name__}"
+        return original, audit
     accepted_shape: list[dict[str, object]] = []
     seen = set(starts)
     for raw in proposals:
@@ -88,6 +93,8 @@ def merge_block_proposals(
         # Keep the exact raw endpoint wire shape consumed by the champion.
         accepted_shape.append({"point": list(point)})
     audit["block_proposals_presented_to_source_replay"] = len(accepted_shape)
+    if not accepted_shape:
+        audit["proposal_skip_reason"] = "NO_FINITE_SHAPE_VALID_BLOCK_PROPOSAL"
     return (*original, *accepted_shape), audit
 
 

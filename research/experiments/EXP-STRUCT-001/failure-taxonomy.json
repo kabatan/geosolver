@@ -1,0 +1,72 @@
+{
+  "schema_version": "geotarget.exp-struct-001-failure-taxonomy/v1",
+  "default_disposition": "BASELINE_ONLY",
+  "categories": [
+    {
+      "id": "STRUCTURE-NON-SQUARE",
+      "observable": "relation_count differs from variable_count",
+      "classification": "APPLICABILITY_LIMITED",
+      "disposition": "BASELINE_ONLY"
+    },
+    {
+      "id": "STRUCTURE-CONSTANT-RELATION",
+      "observable": "at least one residual has empty structural support",
+      "classification": "APPLICABILITY_LIMITED",
+      "disposition": "BASELINE_ONLY"
+    },
+    {
+      "id": "STRUCTURE-NO-PERFECT-MATCHING",
+      "observable": "maximum structural matching does not cover all residuals and variables",
+      "classification": "APPLICABILITY_LIMITED",
+      "disposition": "BASELINE_ONLY"
+    },
+    {
+      "id": "STRUCTURE-IRREDUCIBLE",
+      "observable": "matched dependency graph has one SCC",
+      "classification": "MECHANISM_UNEXERCISED",
+      "disposition": "BASELINE_ONLY"
+    },
+    {
+      "id": "DETECTOR-UNSUPPORTED-SYNTAX",
+      "observable": "AST parse failure, unknown value reference, forward reference, or malformed formulation",
+      "classification": "APPLICABILITY_LIMITED",
+      "disposition": "EXACT_FROZEN_WORKER_EXEC_PASSTHROUGH"
+    },
+    {
+      "id": "PROPOSAL-NO-FINITE-START",
+      "observable": "champion endpoint stream has no finite point of the declared dimension",
+      "classification": "MECHANISM_UNEXERCISED",
+      "disposition": "ORIGINAL_ENDPOINT_STREAM_UNCHANGED"
+    },
+    {
+      "id": "PROPOSAL-FACTORY-FAILURE",
+      "observable": "proposal factory raises an Exception",
+      "classification": "IMPLEMENTATION_DEFECT",
+      "disposition": "ORIGINAL_ENDPOINT_STREAM_UNCHANGED"
+    },
+    {
+      "id": "PROPOSAL-INVALID-SHAPE",
+      "observable": "wrong dimension, nonfinite coordinate, duplicate, or proposal cap overflow",
+      "classification": "IMPLEMENTATION_DEFECT",
+      "disposition": "DROP_ONLY_INVALID_PROPOSAL_KEEP_BASELINE"
+    },
+    {
+      "id": "PROPOSAL-SOURCE-REPLAY-REJECTED",
+      "observable": "original champion residual, guard, or hard-feasibility replay rejects a block endpoint",
+      "classification": "BOUNDED_MECHANISM_NEGATIVE",
+      "disposition": "DROP_ONLY_BLOCK_PROPOSAL_KEEP_BASELINE"
+    },
+    {
+      "id": "PROPOSAL-EXACT-AUTHORITY-REJECTED",
+      "observable": "original HP replay or exact descriptor authority rejects the endpoint",
+      "classification": "BOUNDED_MECHANISM_NEGATIVE",
+      "disposition": "NO_ANSWER_EMITTED_KEEP_BASELINE_AUTHORITIES"
+    }
+  ],
+  "safety_invariants": [
+    "No category removes or reorders a baseline endpoint.",
+    "No detector or proposal outcome can emit an answer.",
+    "Unsupported dependency information is never treated as an empty dependency.",
+    "Case identity, family, target, answer, and known target count are absent from classification."
+  ]
+}

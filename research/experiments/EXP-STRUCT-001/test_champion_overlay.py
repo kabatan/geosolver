@@ -93,6 +93,38 @@ class ChampionOverlayTests(unittest.TestCase):
         self.assertEqual(merged, endpoints)
         self.assertFalse(audit["applicable"])
 
+    def test_proposal_failure_falls_back_to_original_endpoints(self):
+        endpoints = ({"point": [0.0, 0.0]},)
+
+        def broken_factory(*_args):
+            raise RuntimeError("generated counterexample")
+
+        merged, audit = merge_block_proposals(
+            FORMULATION,
+            endpoints,
+            hard_deadline=10.0,
+            proposal_factory=broken_factory,
+        )
+        self.assertEqual(merged, endpoints)
+        self.assertEqual(
+            audit["proposal_skip_reason"],
+            "PROPOSAL_FACTORY_FAILED:RuntimeError",
+        )
+
+    def test_invalid_proposal_shape_falls_back(self):
+        endpoints = ({"point": [0.0, 0.0]},)
+        merged, audit = merge_block_proposals(
+            FORMULATION,
+            endpoints,
+            hard_deadline=10.0,
+            proposal_factory=lambda *_args: ((float("nan"), 2.0), (1.0,), (0.0, 0.0)),
+        )
+        self.assertEqual(merged, endpoints)
+        self.assertEqual(
+            audit["proposal_skip_reason"],
+            "NO_FINITE_SHAPE_VALID_BLOCK_PROPOSAL",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -26,6 +26,7 @@ Run the generated S0 tests and summary with:
 cd research/experiments/EXP-STRUCT-001
 python3 -m unittest -v test_block_structure.py
 python3 run_s0.py
+python3 run_metamorphic_s0.py
 python3 analyze_development.py /path/to/development145.jsonl
 ```
 

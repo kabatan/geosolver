@@ -397,9 +397,43 @@ def solve_candidate(
     return NumericalAttempt(tuple(point), accepted, route, evaluations, linear_work, failure)
 
 
-def _names(expression: str) -> set[str]:
+def _referenced_names(expression: str) -> set[str]:
+    """Return value references, excluding direct DSL operation names.
+
+    ``Point(A, x)`` depends on ``A`` and ``x``, not on the registry operation
+    named ``Point``.  Unknown names in every other position fail closed in the
+    caller instead of silently under-approximating the dependency graph.
+    """
+
     tree = ast.parse(expression, mode="eval")
-    return {node.id for node in ast.walk(tree) if isinstance(node, ast.Name)}
+    direct_call_names = {
+        node.func.id
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
+    }
+    return {
+        node.id
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Name) and node.id not in direct_call_names
+    }
+
+
+def _dependency_support(
+    expression: str,
+    dependencies: Mapping[str, set[int]],
+    *,
+    constants: frozenset[str] = frozenset(("pi", "e")),
+) -> set[int]:
+    support: set[int] = set()
+    unknown: list[str] = []
+    for symbol in _referenced_names(expression):
+        if symbol in dependencies:
+            support.update(dependencies[symbol])
+        elif symbol not in constants:
+            unknown.append(symbol)
+    if unknown:
+        raise ValueError("unknown value reference in formulation expression")
+    return support
 
 
 def _scalar_polynomial(expression: str, variables: set[str]) -> bool:
@@ -460,10 +494,7 @@ def extract_v15_structure(formulation: Mapping[str, object]) -> V15Structure:
         expression = binding.get("expr")
         if not isinstance(name, str) or not isinstance(expression, str):
             raise ValueError("construction binding needs string name and expr")
-        support: set[int] = set()
-        for symbol in _names(expression):
-            support.update(dependencies.get(symbol, ()))
-        dependencies[name] = support
+        dependencies[name] = _dependency_support(expression, dependencies)
 
     constraints = formulation.get("constraints", [])
     if not isinstance(constraints, list):
@@ -481,8 +512,7 @@ def extract_v15_structure(formulation: Mapping[str, object]) -> V15Structure:
                 expressions.append(value)
         support: set[int] = set()
         for expression in expressions:
-            for symbol in _names(expression):
-                support.update(dependencies.get(symbol, ()))
+            support.update(_dependency_support(expression, dependencies))
         relation_supports.append(tuple(sorted(support)))
         polynomial = polynomial and bool(expressions) and all(
             _scalar_polynomial(expression, scalar_variables) for expression in expressions
@@ -495,9 +525,7 @@ def extract_v15_structure(formulation: Mapping[str, object]) -> V15Structure:
     for guard in guards:
         if not isinstance(guard, str):
             raise ValueError("guard must be a string")
-        support: set[int] = set()
-        for symbol in _names(guard):
-            support.update(dependencies.get(symbol, ()))
+        support = _dependency_support(guard, dependencies)
         guard_supports.append(tuple(sorted(support)))
 
     plan = analyze_relation_supports(relation_supports, len(variable_names))
