@@ -8,3 +8,23 @@
 - Nearest prior mechanism: generic exact QQBar replay. Reopen gate is satisfied by the aggregate evidence that Repair A raises anonymous eligible coverage from 6 attempts/1 cluster to 10 attempts/2 clusters while leaving unknown and out-of-route Qbar equality rejected.
 - D0: 7/7 positive, 17/17 negative/near-miss, 5/5 metamorphic; executable Julia QQBar affine replay and containment tests pass.
 - Formal status: not run in this lane. Root benchmark owner must perform all corpus/scorer/truth evaluation.
+
+## Repair-A no-gain disposition
+
+Root's aggregate-only debug ran the connector once and the side once without
+exception, but returned the byte-identical baseline rejection `scalar is not
+an exact angle expression`.  The source-AST occurrence scanner then covered
+synthetic and explicit add/subtraction, exact integer angle scaling, scalar
+comparison and lowered `Assume*`, and `min/max`, which are every generic
+`as_angle` entry in the current extended worker.  On that source it found
+three Repair-A-selected relation roots, zero selected rejecting roots, and
+zero rejecting occurrences in construction, constraint operands/synthetic
+roots, guards, bounds, or the raw answer.
+
+Thus the eligible equalities were unrelated to the actual runtime rejection,
+and no source-generic exact typed replacement was identified.  Repair B is
+`STOP_NO_EXACT_REJECTING_OCCURRENCE`; no threshold, radius, seed, or budget
+tuning is permitted.  Reopen only if a source-only trace identifies the
+rejecting semantic occurrence and supplies an exact, typed, domain-preserving
+replacement.  No individual debug row, scorer, truth, 98-case, validation, or
+sealed artifact was accessed in this analysis.
