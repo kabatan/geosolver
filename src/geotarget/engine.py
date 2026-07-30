@@ -68,6 +68,7 @@ def optimized_engine_hash() -> str:
         "reservoir_checkpoint.py",
         "compiled_evaluator.py",
         "fused_evaluation.py",
+        "callback_snapshot.py",
         "lazy_symbolic_geometry.py",
         "typed_refnum_ir.py",
         "typed_refnum_intersections.py",
