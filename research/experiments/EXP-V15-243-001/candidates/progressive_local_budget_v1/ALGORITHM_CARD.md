@@ -34,3 +34,10 @@ ledger, HP/exactification and canonical verification are unchanged.
 Reject a profile if minimum-service activation fails, if it creates any source
 safety regression, or if prefix reexecution overhead dominates without a
 starts-serviced or safe-endpoint gain on an outcome-blind development screen.
+
+## Full-v15 S1 entrypoints
+
+`arms/profile64/arm.json` and `arms/profile96/arm.json` bind separate full-v15
+entrypoints.  Each hash-loads the frozen finalist numeric worker and replaces
+only its discovery seam.  Source replay, HP/restoration, canonical authority,
+exact descriptor deduplication, and the final result schema remain frozen.
