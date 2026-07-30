@@ -10,8 +10,8 @@ recover targets without changing canonical authority.
 
 ## Mechanism and applicability
 
-- Require 28 seconds after discovery in formal 180/146 runs; allow an explicit
-  smaller minimum only for short S0.
+- Require 28 seconds after discovery in formal 180/146 runs; common short
+  30/20 runs automatically retain their full 10-second tail.
 - Expand fresh source-replay reservoir selection from one to three seconds.
 - Reserve six seconds outside primary tranche sizing for alternate/restoration
   work, with a three-second restoration sub-reserve after primary failure.
@@ -28,6 +28,8 @@ recover targets without changing canonical authority.
   `330e52c75b98d3c58a1422cec415b5a53673ebafb7e90789a271df34a308309d`.
 - Discovery worker, original-source replay, HP bridge, restoration worker,
   descriptor authority, and canonical source replay are unmodified.
+- Final results retain schema `geotarget.exp008-finalist-numeric-worker-v15/v1`;
+  overlay provenance remains in `PLAN.json` and `hp_schedule`.
 - Deferred candidates remain unknown and no completeness claim is made.
 
 ## S0 evidence
@@ -44,6 +46,9 @@ recover targets without changing canonical authority.
 - After the smoke, only dry-plan provenance fields were added; scheduling did
   not change. The raw result records the executed scheduler digest explicitly.
 - No truth, scorer, validation, sealed, screen24, or heavy formal run was used.
+- Common frozen `run_dataset.py` two-phase acceptance smoke: 1/1 accepted,
+  outer status `COMPLETE`, process `SUCCESS`, v15 result schema preserved,
+  source bytes unchanged, and 20.5022 seconds within the 30-second budget.
 
 ## Reopen/stop gate
 

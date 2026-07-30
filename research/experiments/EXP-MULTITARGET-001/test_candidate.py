@@ -180,7 +180,7 @@ def test_frozen_worker_is_hash_bound_and_overlay_is_truth_blind() -> None:
     assert '["known_target_count"]' not in source
 
 
-def test_short_tail_requires_explicit_s0_override(monkeypatch) -> None:
+def test_explicit_formal_tail_rejects_short_run(monkeypatch) -> None:
     monkeypatch.setattr(
         sys,
         "argv",
@@ -190,6 +190,8 @@ def test_short_tail_requires_explicit_s0_override(monkeypatch) -> None:
             "30",
             "--search-seconds",
             "20",
+            "--minimum-tail-seconds",
+            "28",
             "--source",
             "unused.json",
             "--source-sha256",
@@ -200,6 +202,17 @@ def test_short_tail_requires_explicit_s0_override(monkeypatch) -> None:
     )
     with pytest.raises(SystemExit, match="post-search tail"):
         worker.main()
+
+
+def test_default_tail_adapts_to_common_short_and_formal_protocols() -> None:
+    assert worker._effective_minimum_tail(30.0, 20.0, None) == 10.0
+    assert worker._effective_minimum_tail(180.0, 146.0, None) == 28.0
+    assert worker._effective_minimum_tail(30.0, 20.0, 8.0) == 8.0
+
+
+def test_result_schema_is_left_to_frozen_v15_authority() -> None:
+    source = (HERE / "worker.py").read_text(encoding="utf-8")
+    assert "base.SCHEMA =" not in source
 
 
 def test_experiment_python_keeps_venv_entrypoint() -> None:
