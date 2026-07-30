@@ -43,6 +43,12 @@ callbacks, seeds 0–4, first with jobs=1 ABBA and then jobs=7 throughput.
 `OFFLINE_SCORE.json` is assessor-only development evidence.  Raw result roots
 must remain outside the repository.
 
+For `jobs=1`, telemetry reports per-case `outer_cpu_seconds` from serialized
+`RUSAGE_CHILDREN` deltas and `peak_rss_bytes` from the guarded process-group
+monitor, including deadline-censored or malformed-result cases.  Because the
+CPU counter is process-global, `jobs>1` deliberately reports CPU as unavailable
+instead of emitting overlapping deltas; process-group peak RSS remains usable.
+
 Paired runs are compared with `compare_runs.py`.  Repeat `--control` and
 `--candidate` once per seed.  The report includes exact McNemar/binomial
 probabilities, 10,000-resample family-clustered recall intervals, and paired

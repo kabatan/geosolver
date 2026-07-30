@@ -9,16 +9,20 @@ after all worker processes have exited.
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
 import fcntl
 import hashlib
 import importlib.util
 import json
+import math
 import os
 from pathlib import Path
 import re
+import resource
 import subprocess
 import sys
 import tempfile
+import threading
 from typing import Mapping, Sequence
 
 
@@ -82,6 +86,16 @@ def sha256_file(path: Path) -> str:
 
 def load_json(path: Path) -> object:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def load_optional_mapping(path: Path) -> Mapping[str, object]:
+    """Read optional worker telemetry without losing outer measurements."""
+
+    try:
+        document = load_json(path)
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return {}
+    return document if isinstance(document, Mapping) else {}
 
 
 def atomic_json(path: Path, payload: object) -> None:
@@ -291,6 +305,100 @@ def invoke(module, arguments: Sequence[str]) -> None:
         sys.argv = previous
 
 
+def _child_cpu_seconds() -> float:
+    usage = resource.getrusage(resource.RUSAGE_CHILDREN)
+    return float(usage.ru_utime) + float(usage.ru_stime)
+
+
+def _metric_slug(status_path: object) -> str | None:
+    if not isinstance(status_path, (str, os.PathLike)):
+        return None
+    path = Path(status_path)
+    return path.parent.name or None
+
+
+@contextmanager
+def capture_runner_metrics(runner: object, jobs: int):
+    """Capture per-case child CPU and process-group RSS around run_guarded.
+
+    RUSAGE_CHILDREN is process-global, so deltas are attributable only when
+    the frozen runner serializes cases.  Concurrent runs still retain the
+    per-process-group RSS reported by run_guarded, but CPU is explicitly
+    unavailable instead of being assigned a contaminated delta.
+    """
+
+    original = runner.run_guarded
+    metrics: dict[str, dict[str, object]] = {}
+    lock = threading.Lock()
+    serial_cpu = jobs == 1
+
+    def measured(*args, **kwargs):
+        slug = _metric_slug(kwargs.get("status_path"))
+        before: float | None = None
+        cpu_error = False
+        if serial_cpu:
+            try:
+                before = _child_cpu_seconds()
+            except (OSError, ValueError):
+                cpu_error = True
+        outcome = None
+        try:
+            outcome = original(*args, **kwargs)
+            return outcome
+        finally:
+            delta: float | None = None
+            if serial_cpu and before is not None and not cpu_error:
+                try:
+                    after = _child_cpu_seconds()
+                    observed = after - before
+                    if math.isfinite(observed) and observed >= 0.0:
+                        delta = observed
+                    else:
+                        cpu_error = True
+                except (OSError, ValueError):
+                    cpu_error = True
+            peak = getattr(outcome, "peak_process_group_rss_bytes", None)
+            peak = peak if isinstance(peak, int) and peak >= 0 else None
+            if slug is not None:
+                with lock:
+                    row = metrics.setdefault(
+                        slug,
+                        {
+                            "outer_cpu_seconds": 0.0 if serial_cpu else None,
+                            "outer_cpu_measurement_status": (
+                                "available_serial_rusage_children"
+                                if serial_cpu
+                                else "unavailable_concurrent_jobs"
+                            ),
+                            "peak_rss_bytes": None,
+                            "guarded_process_count": 0,
+                        },
+                    )
+                    row["guarded_process_count"] = (
+                        int(row["guarded_process_count"]) + 1
+                    )
+                    if delta is not None and row["outer_cpu_seconds"] is not None:
+                        row["outer_cpu_seconds"] = (
+                            float(row["outer_cpu_seconds"]) + delta
+                        )
+                    elif serial_cpu:
+                        row["outer_cpu_seconds"] = None
+                        row["outer_cpu_measurement_status"] = (
+                            "unavailable_rusage_error"
+                        )
+                    old_peak = row["peak_rss_bytes"]
+                    if peak is not None and (
+                        old_peak is None or peak > int(old_peak)
+                    ):
+                        row["peak_rss_bytes"] = peak
+
+    runner.run_guarded = measured
+    try:
+        yield metrics
+    finally:
+        runner.run_guarded = original
+
+
 def scalar_telemetry(document: Mapping[str, object]) -> dict[str, object]:
     telemetry: dict[str, object] = {}
 
@@ -314,7 +422,12 @@ def scalar_telemetry(document: Mapping[str, object]) -> dict[str, object]:
     return telemetry
 
 
-def write_truth_free_telemetry(output: Path) -> None:
+def write_truth_free_telemetry(
+    output: Path,
+    outer_metrics: Mapping[str, Mapping[str, object]] | None = None,
+    *,
+    jobs: int = 1,
+) -> None:
     run = load_json(output / "RESULT.json")
     rows = run.get("rows") if isinstance(run, Mapping) else None
     if not isinstance(rows, list):
@@ -335,16 +448,38 @@ def write_truth_free_telemetry(output: Path) -> None:
         slug = str(row.get("slug", ""))
         result_path = output / "artifacts" / slug / "RESULT.json"
         search_path = output / "artifacts" / slug / "search.json"
-        worker = load_json(result_path) if result_path.is_file() else {}
-        search = load_json(search_path) if search_path.is_file() else {}
-        worker = worker if isinstance(worker, Mapping) else {}
-        search = search if isinstance(search, Mapping) else {}
+        worker = load_optional_mapping(result_path) if result_path.is_file() else {}
+        search = load_optional_mapping(search_path) if search_path.is_file() else {}
+        metric = outer_metrics.get(slug, {}) if outer_metrics is not None else {}
+        outer_cpu = metric.get("outer_cpu_seconds")
+        if not isinstance(outer_cpu, (int, float)) or not math.isfinite(
+            float(outer_cpu)
+        ) or float(outer_cpu) < 0.0:
+            outer_cpu = None
+        peak_rss = metric.get("peak_rss_bytes")
+        if not isinstance(peak_rss, int) or peak_rss < 0:
+            fallback_peak = row.get("peak_outer_worker_rss_bytes")
+            peak_rss = (
+                fallback_peak
+                if isinstance(fallback_peak, int) and fallback_peak >= 0
+                else None
+            )
+        cpu_status = metric.get("outer_cpu_measurement_status")
+        if not isinstance(cpu_status, str):
+            cpu_status = (
+                "unavailable_no_child_measurement"
+                if jobs == 1
+                else "unavailable_concurrent_jobs"
+            )
         emitted.append(
             {
                 "ordinal": row.get("index"),
                 "source_sha256": source_sha_by_slug.get(slug),
                 "accepted": row.get("accepted"),
                 "outer_elapsed_seconds": row.get("outer_elapsed_seconds"),
+                "outer_cpu_seconds": outer_cpu,
+                "outer_cpu_measurement_status": cpu_status,
+                "peak_rss_bytes": peak_rss,
                 "worker_elapsed_seconds": row.get("elapsed_wall_seconds"),
                 "returned_exact_target_count": row.get("exact_target_count"),
                 "worker": scalar_telemetry(worker),
@@ -354,9 +489,27 @@ def write_truth_free_telemetry(output: Path) -> None:
     atomic_json(
         output / "TELEMETRY.json",
         {
-            "schema_version": "geotarget.exp-global-001-telemetry/v1",
+            "schema_version": "geotarget.exp-global-001-telemetry/v2",
             "truth_included": False,
             "case_count": len(emitted),
+            "outer_cpu_measurement": {
+                "unit": "seconds",
+                "scope": "dry-plan and execute child process trees per case",
+                "method": (
+                    "resource.getrusage(RUSAGE_CHILDREN) deltas"
+                    if jobs == 1
+                    else "unavailable"
+                ),
+                "available": jobs == 1,
+                "unavailable_reason": (
+                    None if jobs == 1 else "process-global deltas overlap for jobs>1"
+                ),
+            },
+            "peak_rss_measurement": {
+                "unit": "bytes",
+                "scope": "maximum guarded process-group RSS per case",
+                "method": "run_guarded peak_process_group_rss_bytes",
+            },
             "rows": emitted,
         },
     )
@@ -482,32 +635,33 @@ def main() -> int:
                 **runner.THREAD_ENVIRONMENT,
                 **THREAD_ENVIRONMENT,
             }
-            invoke(
-                runner,
-                [
-                    "--execute",
-                    "--dataset",
-                    str(subset),
-                    "--jobs",
-                    str(arguments.jobs),
-                    "--cpus",
-                    arguments.cpus,
-                    "--total-seconds",
-                    str(arguments.total_seconds),
-                    "--search-seconds",
-                    str(arguments.search_seconds),
-                    "--starts",
-                    str(arguments.starts),
-                    "--callbacks-per-start",
-                    str(arguments.callbacks_per_start),
-                    "--aggregate-callback-cap",
-                    str(arguments.aggregate_callback_cap),
-                    "--seed",
-                    str(arguments.seed),
-                    "--output",
-                    str(output),
-                ],
-            )
+            with capture_runner_metrics(runner, arguments.jobs) as outer_metrics:
+                invoke(
+                    runner,
+                    [
+                        "--execute",
+                        "--dataset",
+                        str(subset),
+                        "--jobs",
+                        str(arguments.jobs),
+                        "--cpus",
+                        arguments.cpus,
+                        "--total-seconds",
+                        str(arguments.total_seconds),
+                        "--search-seconds",
+                        str(arguments.search_seconds),
+                        "--starts",
+                        str(arguments.starts),
+                        "--callbacks-per-start",
+                        str(arguments.callbacks_per_start),
+                        "--aggregate-callback-cap",
+                        str(arguments.aggregate_callback_cap),
+                        "--seed",
+                        str(arguments.seed),
+                        "--output",
+                        str(output),
+                    ],
+                )
             subprocess.run(
                 [str(python), str(scorer_path), "--dataset", str(subset), "--run", str(output)],
                 cwd=frozen_root,
@@ -515,7 +669,11 @@ def main() -> int:
                 check=True,
             )
         atomic_json(output / "CAMPAIGN_PLAN.json", plan)
-        write_truth_free_telemetry(output)
+        write_truth_free_telemetry(
+            output,
+            outer_metrics,
+            jobs=arguments.jobs,
+        )
     print(output / "OFFLINE_SCORE.json")
     return 0
 
