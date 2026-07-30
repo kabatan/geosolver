@@ -9,6 +9,7 @@ the only root authorities.
 from __future__ import annotations
 
 from dataclasses import replace
+import ast
 import hashlib
 import importlib.util
 import json
@@ -100,9 +101,123 @@ def _ad_relation(program: object, point: np.ndarray) -> tuple[np.ndarray, np.nda
         values[index] = float(row.value)
         jacobian[index] = derivative
         supported[index] = True
-    if not np.any(supported):
-        raise _UnsupportedSideLane("fully opaque relation")
     return values, jacobian, supported
+
+
+_SMOOTH_SOURCE_CALLS = frozenset({
+    "Point", "Line", "Circle", "Polygon", "Midpoint", "Radius", "Vector", "Dot",
+    "Collinear", "Parallel", "ParallelismMeasure", "Perpendicular",
+    "PowerOfPoint", "Slope", "SquaredDistance",
+    "sqrt", "sin", "cos", "tan", "asin", "acos", "atan", "exp", "log",
+})
+_SMOOTH_SOURCE_METHODS = frozenset({"dot", "cross"})
+_SMOOTH_SOURCE_ATTRIBUTES = frozenset({"x", "y", "a", "b", "c", "center", "radius"})
+_SMOOTH_AST_NODES = (
+    ast.Expression, ast.BinOp, ast.UnaryOp, ast.Add, ast.Sub, ast.Mult, ast.Div,
+    ast.Pow, ast.UAdd, ast.USub, ast.Constant, ast.Name, ast.Load, ast.Call,
+    ast.Attribute, ast.Tuple, ast.List,
+)
+
+
+def _smooth_fd_capability(program: object) -> bool:
+    """Fail-closed, identity-blind source gate for the all-FD fallback."""
+    expressions: list[str] = []
+    construction = getattr(program, "construction", None)
+    constraints = getattr(program, "constraints", None)
+    if construction is None or constraints is None:
+        return False
+    for item in tuple(construction):
+        if not isinstance(item, (tuple, list)) or len(item) != 2:
+            return False
+        _name, expression = item
+        if isinstance(expression, str):
+            expressions.append(expression)
+        else:
+            return False
+    for item in tuple(constraints):
+        if not isinstance(item, (tuple, list)) or len(item) != 2:
+            return False
+        left, right = item
+        if isinstance(left, str):
+            expressions.append(left)
+        elif not isinstance(left, (int, float)) or isinstance(left, bool):
+            return False
+        if isinstance(right, str):
+            expressions.append(right)
+        elif not isinstance(right, (int, float)) or isinstance(right, bool):
+            return False
+    if not expressions:
+        return False
+    for expression in expressions:
+        try:
+            tree = ast.parse(expression, mode="eval")
+        except (SyntaxError, TypeError, ValueError):
+            return False
+        for node in ast.walk(tree):
+            if not isinstance(node, _SMOOTH_AST_NODES):
+                return False
+            if isinstance(node, ast.Constant) and (
+                isinstance(node.value, bool) or not isinstance(node.value, (int, float))
+            ):
+                return False
+            if isinstance(node, ast.Attribute) and node.attr not in (
+                _SMOOTH_SOURCE_ATTRIBUTES | _SMOOTH_SOURCE_METHODS
+            ):
+                return False
+            if isinstance(node, ast.Call):
+                if node.keywords:
+                    return False
+                if isinstance(node.func, ast.Name):
+                    if node.func.id not in _SMOOTH_SOURCE_CALLS:
+                        return False
+                elif isinstance(node.func, ast.Attribute):
+                    if node.func.attr not in _SMOOTH_SOURCE_METHODS:
+                        return False
+                else:
+                    return False
+            if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Pow):
+                if not isinstance(node.right, ast.Constant) or (
+                    isinstance(node.right.value, bool)
+                    or not isinstance(node.right.value, (int, float))
+                ):
+                    return False
+    return True
+
+
+def _charged_one_sided_fd_rows(
+    base_case: object,
+    point: np.ndarray,
+    residual: np.ndarray,
+    chart: np.ndarray | None,
+    rows: np.ndarray,
+    *,
+    require_semantic: bool,
+) -> np.ndarray:
+    if chart is None:
+        raise _UnsupportedSideLane("hybrid FD has no chart")
+    jacobian = np.empty((rows.size, point.size), dtype=float)
+    for column in range(point.size):
+        step = 2e-7 * max(1.0, abs(float(point[column])), float(chart[column]))
+        trial = point.copy()
+        trial[column] = min(float(base_case.upper[column]), float(point[column] + step))
+        if trial[column] == point[column]:
+            trial[column] = max(float(base_case.lower[column]), float(point[column] - step))
+        delta = trial[column] - point[column]
+        if delta == 0.0:
+            if require_semantic:
+                raise _UnsupportedSideLane("full FD has no bounded side sample")
+            jacobian[:, column] = 0.0
+            continue
+        trial_observation = base_case.evaluate(trial)
+        trial_residual = np.asarray(trial_observation.residual, dtype=float)
+        if trial_residual.shape != residual.shape or not (
+            bool(trial_observation.finite) and np.all(np.isfinite(trial_residual))
+        ):
+            raise _UnsupportedSideLane("nonfinite charged FD")
+        if require_semantic and not bool(trial_observation.semantics_valid):
+            raise _UnsupportedSideLane("charged FD semantic/branch parity unknown")
+        jacobian[:, column] = (trial_residual[rows] - residual[rows]) / delta
+    return jacobian
 
 
 def _observe(
@@ -120,40 +235,34 @@ def _observe(
     ):
         raise _UnsupportedSideLane("opaque/nonfinite evaluator")
     if not need_jacobian:
-        return residual, None, bool(observation.semantics_valid), 0
+        return residual, None, bool(observation.semantics_valid), 0, 0
 
     ad_values, jacobian, supported = _ad_relation(program, point)
+    raw_supported = supported.copy()
     tolerance = 2e-10 + 2e-8 * np.maximum(1.0, np.abs(residual))
-    supported &= np.abs(ad_values - residual) <= tolerance
+    parity_ok = np.abs(ad_values - residual) <= tolerance
+    if np.any(raw_supported & ~parity_ok):
+        raise _UnsupportedSideLane("analytic relation parity failed")
+    supported &= parity_ok
     analytic_count = int(np.count_nonzero(supported))
-    if analytic_count == 0:
-        raise _UnsupportedSideLane("fully opaque/parity-failed relation")
+    full_fd = analytic_count == 0
+    if full_fd and (
+        not bool(observation.semantics_valid) or not _smooth_fd_capability(program)
+    ):
+        raise _UnsupportedSideLane("opaque/nonsmooth source capability")
     unsupported = np.flatnonzero(~supported)
     if unsupported.size:
-        if chart is None:
-            raise _UnsupportedSideLane("hybrid FD has no chart")
-        for column in range(point.size):
-            step = 2e-7 * max(1.0, abs(float(point[column])), float(chart[column]))
-            trial = point.copy()
-            trial[column] = min(float(base_case.upper[column]), float(point[column] + step))
-            if trial[column] == point[column]:
-                trial[column] = max(float(base_case.lower[column]), float(point[column] - step))
-            delta = trial[column] - point[column]
-            if delta == 0.0:
-                jacobian[unsupported, column] = 0.0
-                continue
-            trial_observation = base_case.evaluate(trial)
-            trial_residual = np.asarray(trial_observation.residual, dtype=float)
-            if trial_residual.shape != residual.shape or not (
-                bool(trial_observation.finite) and np.all(np.isfinite(trial_residual))
-            ):
-                raise _UnsupportedSideLane("nonfinite charged FD")
-            jacobian[unsupported, column] = (
-                trial_residual[unsupported] - residual[unsupported]
-            ) / delta
+        jacobian[unsupported, :] = _charged_one_sided_fd_rows(
+            base_case,
+            point,
+            residual,
+            chart,
+            unsupported,
+            require_semantic=full_fd,
+        )
     if not np.all(np.isfinite(jacobian)):
         raise _UnsupportedSideLane("nonfinite hybrid Jacobian")
-    return residual, jacobian, bool(observation.semantics_valid), analytic_count
+    return residual, jacobian, bool(observation.semantics_valid), analytic_count, int(unsupported.size)
 
 
 def _transport_group(
@@ -161,12 +270,12 @@ def _transport_group(
     program: object,
     originals: Sequence[np.ndarray],
     deadline: float,
-) -> tuple[list[np.ndarray], int]:
+) -> tuple[list[np.ndarray], int, int, int]:
     particles = np.asarray(originals, dtype=float).copy()
     if not 4 <= len(particles) <= 8 or particles.ndim != 2:
         raise _UnsupportedSideLane("few-particle group size")
     chart = np.median(np.maximum(1.0, np.abs(particles)), axis=0)
-    anchor_residual, anchor_jacobian, anchor_semantic, analytic_count = _observe(
+    anchor_residual, anchor_jacobian, anchor_semantic, analytic_count, fd_rows = _observe(
         base_case, program, particles[0], chart=chart
     )
     row_scale = np.linalg.norm(anchor_jacobian * chart[np.newaxis, :], axis=1)
@@ -183,7 +292,7 @@ def _transport_group(
         if index == 0:
             residual, semantic = anchor_residual, anchor_semantic
         else:
-            residual, _jacobian, semantic, _analytic = _observe(
+            residual, _jacobian, semantic, _analytic, _fd_rows = _observe(
                 base_case, program, particle, need_jacobian=False
             )
             calls += 1
@@ -208,11 +317,12 @@ def _transport_group(
         next_particles = particles.copy()
         next_energies = np.full(len(particles), np.inf)
         for index, particle in enumerate(particles):
-            residual, jacobian, _semantic, current_analytic = _observe(
+            residual, jacobian, _semantic, current_analytic, current_fd_rows = _observe(
                 base_case, program, particle, chart=chart
             )
             calls += 1
             analytic_count = min(analytic_count, current_analytic)
+            fd_rows = max(fd_rows, current_fd_rows)
             fn = residual / row_scale
             jz = jacobian * chart[np.newaxis, :] / row_scale[:, np.newaxis]
             displacement = (particle - consensus) / chart
@@ -228,7 +338,7 @@ def _transport_group(
             trial = particle + chart * dz
             if np.any(trial < base_case.lower) or np.any(trial > base_case.upper):
                 trial = particle
-            trial_residual, _trial_jacobian, semantic, _trial_analytic = _observe(
+            trial_residual, _trial_jacobian, semantic, _trial_analytic, _trial_fd_rows = _observe(
                 base_case, program, trial, need_jacobian=False
             )
             calls += 1
@@ -244,7 +354,7 @@ def _transport_group(
         reservoirs[i].copy() if reservoir_semantic[i] else np.asarray(originals[i], dtype=float).copy()
         for i in range(len(originals))
     ]
-    return emitted, calls, analytic_count
+    return emitted, calls, analytic_count, fd_rows
 
 
 def _candidate_prefix(base_case: object, program: object, prefix: object, deadline: float):
@@ -255,16 +365,18 @@ def _candidate_prefix(base_case: object, program: object, prefix: object, deadli
     points = [point.copy() for point in original]
     total_calls = 0
     groups = 0
+    maximum_fd_rows = 0
     try:
         for offset in range(0, len(side), GROUP_SIZE):
             indices = side[offset : offset + GROUP_SIZE]
             if len(indices) < 4:
                 continue
-            emitted, calls, analytic_count = _transport_group(
+            emitted, calls, analytic_count, fd_rows = _transport_group(
                 base_case, program, [original[index] for index in indices], deadline
             )
             total_calls += calls
             groups += 1
+            maximum_fd_rows = max(maximum_fd_rows, fd_rows)
             for index, point in zip(indices, emitted, strict=True):
                 points[index] = point
     except Exception as error:
@@ -290,6 +402,8 @@ def _candidate_prefix(base_case: object, program: object, prefix: object, deadli
         "particle_count_max": 8,
         "particle_evaluator_callbacks": total_calls,
         "particle_min_analytic_relation_rows": analytic_count,
+        "particle_max_charged_fd_relation_rows": maximum_fd_rows,
+        "particle_full_fd_fallback_used": bool(analytic_count == 0 and maximum_fd_rows > 0),
         "baseline_prefix_fraction": sum(i % SIDE_PERIOD != 0 for i in range(len(points))) / len(points),
         "baseline_prefix_bitwise_identical": True,
         "fresh_canonical_endpoint_replay_unchanged": True,

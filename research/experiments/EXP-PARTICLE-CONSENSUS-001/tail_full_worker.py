@@ -11,7 +11,7 @@ import sys
 
 HERE = Path(__file__).resolve().parent
 WRAPPER = HERE / "tail_full_wrapper.py"
-EXPECTED_WRAPPER_SHA256 = "294a4513c6eb58d4b97fa10c45208f746b2b2c07aec2c21d5a4d2dde67d56166"
+EXPECTED_WRAPPER_SHA256 = "e1929be8747266d47c9d3dac6deea3326ea50020a69b25a9b4e7f6530c02e6bd"
 
 
 def main() -> None:
