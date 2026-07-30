@@ -1,0 +1,87 @@
+{
+  "schema_version": "geotarget.exp-global-001-s1-s2-summary/v1",
+  "generated_at": "2026-07-31T02:15:00+09:00",
+  "control": {
+    "arm_id": "frozen-champion-v2-poc-preloaded",
+    "entrypoint_sha256": "e1405739201b0cb1d72e8f9ab6ca402b5e71918e569888993c4fdd13022c7301"
+  },
+  "candidate": {
+    "arm_id": "progressive-adaptive-hybrid-v1",
+    "base_commit": "0967ff1cde5c2435fe0207da65e8779ff24a6da6",
+    "mechanism_hash": "7d6f168d8679732c672842e6b7a44573d190449ad0fbe4cc09a7b9112ddc9500",
+    "disposition": "S2 survivor; freeze for S3 after CPU/RSS telemetry preflight"
+  },
+  "conditions": {
+    "total_seconds": 30,
+    "search_seconds": 20,
+    "starts": 256,
+    "callbacks_per_start": 600,
+    "aggregate_callback_cap": 153600,
+    "jobs": 1,
+    "cpu": 0
+  },
+  "s1_screen24": {
+    "seeds": [0, 1, 2],
+    "case_count_per_seed": 24,
+    "control_exact": [16, 16, 17],
+    "candidate_exact": [18, 18, 16],
+    "wins": [2, 3, 2],
+    "losses": [0, 1, 3],
+    "net": [2, 2, -1],
+    "candidate_over_control_wall_geometric_mean": [
+      0.9584324321380692,
+      0.9397243020156136,
+      0.9301231128042674
+    ],
+    "candidate_over_control_wall_p95": [
+      1.000366567177899,
+      0.9936519337404313,
+      1.0032438750310788
+    ],
+    "candidate_safety_failures": 0,
+    "disposition": "survived S1: positive net in two of three seeds with zero safety failures"
+  },
+  "s2_development145_seed0": {
+    "disjoint_partition_case_counts": [24, 36, 85],
+    "control_exact_by_partition": [16, 26, 71],
+    "candidate_exact_by_partition": [18, 26, 72],
+    "control_exact_total": 113,
+    "candidate_exact_total": 116,
+    "wins": 5,
+    "losses": 2,
+    "ties": 138,
+    "net": 3,
+    "candidate_over_control_wall_geometric_mean": 0.9626974328113882,
+    "candidate_safety_failures": 0,
+    "family_disjoint_folds": {
+      "case_counts": [49, 48, 48],
+      "family_cluster_counts": [42, 42, 42],
+      "nets": [2, 1, 0],
+      "wins_exceed_losses_fold_count": 2,
+      "required_fold_count": 2,
+      "gate_passed": true,
+      "assignment_uses_outcome_or_timing": false,
+      "assignment_fingerprint_sha256": "a2655db4b2ffa08b83e6719e0844e4e81a480cffe044bbb9fd0296f26080b36b"
+    },
+    "disposition": "passed the preregistered S2 family-disjoint cross-check"
+  },
+  "artifact_hashes": {
+    "s1_paired_comparison": "66a482a38814df73c22960b4435ced0636326f04fca3c344c93023368e6b4829",
+    "s2_screen60_extra_comparison": "136dbae7bf97b7a582a1e4b196c7336acac2ec310988b56205d256d25178b4d8",
+    "s2_development_extra_comparison": "0c23986a67c1ac6409dc9c9ca9b2257af323998c1b5b403e16d1783bd160f68c",
+    "s2_development145_partition_comparison": "c0f587cbc65a2f20c251b9341bd859c63d782c5da8c4630870eb6e0376c4b37c",
+    "s2_development145_fold_analysis": "77ab57fd9ff665b2859a274a4f43374c0fa8369aba1e489dbdbe7f84506dc513"
+  },
+  "external_artifact_roots": {
+    "s1_comparison": "/home/kabatan/work/solver-experiment-results/s1-scheduler-hybrid-vs-control-seeds0-2.json",
+    "s2_screen60_extra_comparison": "/home/kabatan/work/solver-experiment-results/s2-scheduler-hybrid-vs-control-screen60-extra-seed0.json",
+    "s2_development_extra_control": "/home/kabatan/work/solver-experiment-results/s2-control-development-extra-30s-seed0-jobs1-v1",
+    "s2_development_extra_candidate": "/home/kabatan/work/solver-experiment-results/s2-scheduler-hybrid-development-extra-30s-seed0-jobs1-v1",
+    "s2_development145_fold_analysis": "/home/kabatan/work/solver-experiment-results/s2-scheduler-hybrid-vs-control-development145-seed0-folds.json"
+  },
+  "known_measurement_limitations": [
+    "S1/S2 worker telemetry did not emit usable CPU seconds; wall comparisons are valid, CPU comparison is deferred to the S3 preflight fix.",
+    "This is development evidence only and is not a final five-seed recall promotion result."
+  ],
+  "holdout_opened": false
+}
