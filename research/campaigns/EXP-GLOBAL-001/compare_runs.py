@@ -70,6 +70,22 @@ def load_run(root: Path) -> dict[str, dict[str, object]]:
     rows = score.get("rows") if isinstance(score, Mapping) else None
     if not isinstance(rows, list):
         raise ValueError(f"{root}: OFFLINE_SCORE.json has no rows")
+    telemetry = load_json(root / "TELEMETRY.json")
+    telemetry_rows = telemetry.get("rows") if isinstance(telemetry, Mapping) else None
+    if not isinstance(telemetry_rows, list):
+        raise ValueError(f"{root}: TELEMETRY.json has no rows")
+    outer_seconds_by_ordinal: dict[int, float] = {}
+    for telemetry_row in telemetry_rows:
+        if not isinstance(telemetry_row, Mapping):
+            raise ValueError(f"{root}: malformed telemetry row")
+        try:
+            ordinal = int(telemetry_row["ordinal"])
+            outer_seconds = float(telemetry_row["outer_elapsed_seconds"])
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError(f"{root}: malformed telemetry timing") from exc
+        if ordinal in outer_seconds_by_ordinal or outer_seconds <= 0.0:
+            raise ValueError(f"{root}: invalid telemetry timing")
+        outer_seconds_by_ordinal[ordinal] = outer_seconds
     result: dict[str, dict[str, object]] = {}
     for row in rows:
         if not isinstance(row, Mapping) or not isinstance(row.get("problem_id"), str):
@@ -77,7 +93,22 @@ def load_run(root: Path) -> dict[str, dict[str, object]]:
         problem_id = str(row["problem_id"])
         if problem_id in result:
             raise ValueError(f"{root}: duplicate problem id")
-        result[problem_id] = dict(row)
+        copied = dict(row)
+        try:
+            worker_seconds = float(copied.get("worker_elapsed_wall_seconds") or 0.0)
+            ordinal = int(copied["index"])
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError(f"{root}: malformed score timing") from exc
+        if worker_seconds > 0.0:
+            copied["_comparison_elapsed_seconds"] = worker_seconds
+            copied["_comparison_time_source"] = "worker"
+        else:
+            outer_seconds = outer_seconds_by_ordinal.get(ordinal, 0.0)
+            if outer_seconds <= 0.0:
+                raise ValueError(f"{root}: missing/non-positive censored time")
+            copied["_comparison_elapsed_seconds"] = outer_seconds
+            copied["_comparison_time_source"] = "outer_censored"
+        result[problem_id] = copied
     return result
 
 
@@ -151,8 +182,8 @@ def compare_pair(
             losses += 1
         else:
             ties += 1
-        left_time = float(left.get("worker_elapsed_wall_seconds") or 0.0)
-        right_time = float(right.get("worker_elapsed_wall_seconds") or 0.0)
+        left_time = float(left["_comparison_elapsed_seconds"])
+        right_time = float(right["_comparison_elapsed_seconds"])
         if left_time <= 0.0 or right_time <= 0.0:
             raise ValueError("paired run has a missing/non-positive worker time")
         control_times.append(left_time)
@@ -167,6 +198,8 @@ def compare_pair(
                 "delta": delta,
                 "control_seconds": left_time,
                 "candidate_seconds": right_time,
+                "control_time_source": left["_comparison_time_source"],
+                "candidate_time_source": right["_comparison_time_source"],
             }
         )
     count = len(control)

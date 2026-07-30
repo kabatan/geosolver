@@ -2,8 +2,10 @@ from __future__ import annotations
 
 from copy import deepcopy
 import importlib.util
+import json
 from pathlib import Path
 import sys
+import tempfile
 import unittest
 
 
@@ -99,6 +101,42 @@ class CampaignHarnessTests(unittest.TestCase):
         )
         self.assertGreaterEqual(bootstrap["lower_95"], 0.0)
         self.assertGreater(bootstrap["point_estimate"], 0.0)
+
+    def test_rejected_case_uses_outer_censored_time(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / "OFFLINE_SCORE.json").write_text(
+                json.dumps(
+                    {
+                        "rows": [
+                            {
+                                "index": 1,
+                                "problem_id": "generated(A)",
+                                "worker_elapsed_wall_seconds": None,
+                                "status": "WORKER_NOT_ACCEPTED",
+                                "exact_set_equal": False,
+                            }
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (root / "TELEMETRY.json").write_text(
+                json.dumps(
+                    {
+                        "rows": [
+                            {
+                                "ordinal": 1,
+                                "outer_elapsed_seconds": 3.25,
+                            }
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            loaded = COMPARE.load_run(root)["generated(A)"]
+            self.assertEqual(loaded["_comparison_elapsed_seconds"], 3.25)
+            self.assertEqual(loaded["_comparison_time_source"], "outer_censored")
 
 
 if __name__ == "__main__":
