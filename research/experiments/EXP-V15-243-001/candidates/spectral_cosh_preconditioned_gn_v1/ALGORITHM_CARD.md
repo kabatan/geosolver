@@ -34,3 +34,41 @@
   formula motivate the RHS; the spectral frame and trust-radius scale are this
   campaign's orthogonal-invariance adaptation.
 
+## Current campaign connection
+
+Status: `CURRENT_CAMPAIGN_SOURCE_SEAM_PASS; FORMAL_OWNER_SCREEN_REQUIRED`.
+
+- Arm: `spectral-cosh-current-campaign-v1`.
+- Entrypoint: `integrated_worker.py`.
+- Entrypoint SHA-256:
+  `885151dafe4b7592848c47cba71215bbe5460f85e3f9820ad734ab37057d57d0`.
+- Current progressive-adaptive wrapper SHA-256:
+  `4c4640a3bce5719d66f577c0093eabe93916476e319b8a595003a16f73dfb9b4`.
+
+The entrypoint loads the hash-pinned current `64 -> 600` adaptive full worker
+and changes only its search executable. In the search child it retains the
+current scheduler, proposal prefix, callback ledger, process deadline, source
+evaluator, guards and replay. Immediately before each isolated rung, the
+already available original start ordinal selects the local module: ordinals
+congruent to 3 modulo 4 use the spectral-cosh RHS wrapper; all others keep the
+frozen local module. Probe and handoff reexecutions of the same original start
+therefore use the same route. HP, restoration, exact descriptors and final
+authority remain the current worker's original objects.
+
+The candidate module exposes the parent's original configuration. If every
+attempted spectral transform fails closed, it passes the exact original RHS at
+every linearization and removes only the three candidate telemetry keys. The
+resulting endpoint/status/counter serialization is byte-identical to the
+baseline seam result. Rank deficiency, repeated eigenframes, nonsmooth/branch
+source tokens, nonfinite models and negligible transforms all take this
+fallback.
+
+The short CPU-31 source seam suite passed `14/14`. It verifies the 3/4 baseline
+quota, stable original-ordinal routing, dependency hashes, unchanged guarded
+case/source program/literal prefix/deadline object custody, current HP/final
+authority custody, smooth/branch source gating, rank/eigenframe fallback and
+byte-identical zero-activation serialization. The original generated D0
+reproduced unchanged: 37 generated systems, `17` wins, `0` losses, `0` false,
+`0` extra, and 75/25 routing. No benchmark truth, scorer, case outcome,
+validation, sealed or holdout data was read. No formal score or speed claim is
+made here.
