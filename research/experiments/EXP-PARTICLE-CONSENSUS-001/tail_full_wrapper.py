@@ -30,7 +30,7 @@ PARTICLE_ADAPTER = HERE / "real_adapter.py"
 PARTICLE_CANDIDATE = HERE / "candidate.py"
 EXPECTED_PARTICLE_SHA256 = {
     "real_search_worker.py": "91d7469ba3792e11d2c6b023178d50fc89859616f01293fe4fa72e423f778d00",
-    "real_adapter.py": "44d3fdb73a97f8fc4cdddf2c5f5decd486c47b3b8ac11184fc3a108e7839d676",
+    "real_adapter.py": "e9e3600e1ba9830e70cbdad11886e3bca043f12c7d7c0441e23431bbdb2caaae",
     "candidate.py": "1d24ab131de635ef47c5f9f2230822f3d62a6d7b5787be95e26089d59c924a4e",
 }
 PARTICLE_ARM = "few_particle_equality_forced_prefix_25pct"

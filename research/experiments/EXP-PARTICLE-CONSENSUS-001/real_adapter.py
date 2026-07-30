@@ -83,6 +83,22 @@ class _UnsupportedSideLane(RuntimeError):
     pass
 
 
+_MISSING_BRANCH_TOKEN = object()
+
+
+def _branch_token(observation: object) -> object:
+    return getattr(observation, "branch_token", _MISSING_BRANCH_TOKEN)
+
+
+def _same_branch_token(left: object, right: object) -> bool:
+    if left is _MISSING_BRANCH_TOKEN or right is _MISSING_BRANCH_TOKEN:
+        return left is right
+    try:
+        return bool(left == right)
+    except Exception:
+        return False
+
+
 def _ad_relation(program: object, point: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     rows = tuple(program.relation_rows(point))
     if not rows:
@@ -191,7 +207,7 @@ def _charged_one_sided_fd_rows(
     chart: np.ndarray | None,
     rows: np.ndarray,
     *,
-    require_semantic: bool,
+    branch_token: object,
 ) -> np.ndarray:
     if chart is None:
         raise _UnsupportedSideLane("hybrid FD has no chart")
@@ -204,17 +220,16 @@ def _charged_one_sided_fd_rows(
             trial[column] = max(float(base_case.lower[column]), float(point[column] - step))
         delta = trial[column] - point[column]
         if delta == 0.0:
-            if require_semantic:
-                raise _UnsupportedSideLane("full FD has no bounded side sample")
-            jacobian[:, column] = 0.0
-            continue
+            raise _UnsupportedSideLane("full FD has no bounded side sample")
         trial_observation = base_case.evaluate(trial)
         trial_residual = np.asarray(trial_observation.residual, dtype=float)
         if trial_residual.shape != residual.shape or not (
             bool(trial_observation.finite) and np.all(np.isfinite(trial_residual))
         ):
             raise _UnsupportedSideLane("nonfinite charged FD")
-        if require_semantic and not bool(trial_observation.semantics_valid):
+        if not bool(trial_observation.semantics_valid) or not _same_branch_token(
+            branch_token, _branch_token(trial_observation)
+        ):
             raise _UnsupportedSideLane("charged FD semantic/branch parity unknown")
         jacobian[:, column] = (trial_residual[rows] - residual[rows]) / delta
     return jacobian
@@ -227,6 +242,7 @@ def _observe(
     *,
     chart: np.ndarray | None = None,
     need_jacobian: bool = True,
+    expected_branch_token: object = _MISSING_BRANCH_TOKEN,
 ):
     observation = base_case.evaluate(point)
     residual = np.asarray(observation.residual, dtype=float)
@@ -234,8 +250,17 @@ def _observe(
         bool(observation.finite) and np.all(np.isfinite(residual))
     ):
         raise _UnsupportedSideLane("opaque/nonfinite evaluator")
+    if not bool(observation.semantics_valid):
+        raise _UnsupportedSideLane("semantic-invalid particle observation")
+    if not _smooth_fd_capability(program):
+        raise _UnsupportedSideLane("opaque/nonsmooth source capability")
+    branch_token = _branch_token(observation)
+    if expected_branch_token is not _MISSING_BRANCH_TOKEN and not _same_branch_token(
+        expected_branch_token, branch_token
+    ):
+        raise _UnsupportedSideLane("particle selector token changed")
     if not need_jacobian:
-        return residual, None, bool(observation.semantics_valid), 0, 0
+        return residual, None, True, 0, 0, branch_token
 
     ad_values, jacobian, supported = _ad_relation(program, point)
     raw_supported = supported.copy()
@@ -246,11 +271,9 @@ def _observe(
     supported &= parity_ok
     analytic_count = int(np.count_nonzero(supported))
     full_fd = analytic_count == 0
-    if full_fd and (
-        not bool(observation.semantics_valid) or not _smooth_fd_capability(program)
-    ):
-        raise _UnsupportedSideLane("opaque/nonsmooth source capability")
     unsupported = np.flatnonzero(~supported)
+    if analytic_count and unsupported.size:
+        raise _UnsupportedSideLane("mixed AD/FD selector parity unknown")
     if unsupported.size:
         jacobian[unsupported, :] = _charged_one_sided_fd_rows(
             base_case,
@@ -258,11 +281,11 @@ def _observe(
             residual,
             chart,
             unsupported,
-            require_semantic=full_fd,
+            branch_token=branch_token,
         )
     if not np.all(np.isfinite(jacobian)):
         raise _UnsupportedSideLane("nonfinite hybrid Jacobian")
-    return residual, jacobian, bool(observation.semantics_valid), analytic_count, int(unsupported.size)
+    return residual, jacobian, True, analytic_count, int(unsupported.size), branch_token
 
 
 def _transport_group(
@@ -275,9 +298,14 @@ def _transport_group(
     if not 4 <= len(particles) <= 8 or particles.ndim != 2:
         raise _UnsupportedSideLane("few-particle group size")
     chart = np.median(np.maximum(1.0, np.abs(particles)), axis=0)
-    anchor_residual, anchor_jacobian, anchor_semantic, analytic_count, fd_rows = _observe(
-        base_case, program, particles[0], chart=chart
-    )
+    (
+        anchor_residual,
+        anchor_jacobian,
+        anchor_semantic,
+        analytic_count,
+        fd_rows,
+        branch_token,
+    ) = _observe(base_case, program, particles[0], chart=chart)
     row_scale = np.linalg.norm(anchor_jacobian * chart[np.newaxis, :], axis=1)
     positive = row_scale[np.isfinite(row_scale) & (row_scale > 0.0)]
     fallback = float(np.median(positive)) if positive.size else 1.0
@@ -292,8 +320,12 @@ def _transport_group(
         if index == 0:
             residual, semantic = anchor_residual, anchor_semantic
         else:
-            residual, _jacobian, semantic, _analytic, _fd_rows = _observe(
-                base_case, program, particle, need_jacobian=False
+            residual, _jacobian, semantic, _analytic, _fd_rows, _token = _observe(
+                base_case,
+                program,
+                particle,
+                need_jacobian=False,
+                expected_branch_token=branch_token,
             )
             calls += 1
         energy = 0.5 * float(np.dot(residual / row_scale, residual / row_scale))
@@ -317,8 +349,12 @@ def _transport_group(
         next_particles = particles.copy()
         next_energies = np.full(len(particles), np.inf)
         for index, particle in enumerate(particles):
-            residual, jacobian, _semantic, current_analytic, current_fd_rows = _observe(
-                base_case, program, particle, chart=chart
+            residual, jacobian, _semantic, current_analytic, current_fd_rows, _token = _observe(
+                base_case,
+                program,
+                particle,
+                chart=chart,
+                expected_branch_token=branch_token,
             )
             calls += 1
             analytic_count = min(analytic_count, current_analytic)
@@ -338,8 +374,19 @@ def _transport_group(
             trial = particle + chart * dz
             if np.any(trial < base_case.lower) or np.any(trial > base_case.upper):
                 trial = particle
-            trial_residual, _trial_jacobian, semantic, _trial_analytic, _trial_fd_rows = _observe(
-                base_case, program, trial, need_jacobian=False
+            (
+                trial_residual,
+                _trial_jacobian,
+                semantic,
+                _trial_analytic,
+                _trial_fd_rows,
+                _trial_token,
+            ) = _observe(
+                base_case,
+                program,
+                trial,
+                need_jacobian=False,
+                expected_branch_token=branch_token,
             )
             calls += 1
             energy = 0.5 * float(np.dot(trial_residual / row_scale, trial_residual / row_scale))
@@ -466,7 +513,9 @@ def configuration_manifest() -> Mapping[str, object]:
         "side_prefix_ordinals": "ordinal mod 4 == 0, grouped 4--8",
         "same_frozen_v15_local_kernel": True,
         "fresh_canonical_endpoint_replay_unchanged": True,
-        "opaque_or_ad_parity_failure": "exact original-prefix fallback",
+        "opaque_nonsmooth_mixed_selector_semantic_or_ad_parity_failure": (
+            "exact original-prefix fallback"
+        ),
         "source_problem_modified": False,
         "case_family_truth_target_or_outcome_routing": False,
         "module_sha256": {

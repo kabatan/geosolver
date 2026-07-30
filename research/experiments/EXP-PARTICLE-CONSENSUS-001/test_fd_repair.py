@@ -130,6 +130,110 @@ def test_mixed_pass_and_failed_ad_parity_is_not_partially_fd_repaired() -> None:
     assert all(np.array_equal(left, right) for left, right in zip(after.points, before.points, strict=True))
 
 
+def test_mixed_supported_and_truly_unsupported_rows_are_exact_prefix_fallback() -> None:
+    @dataclass(frozen=True)
+    class Dual:
+        value: float
+        derivative: np.ndarray
+
+    class MixedProgram(OpaqueProgram):
+        def relation_rows(self, point):
+            x = np.asarray(point, dtype=float)
+            return (Dual(x[0] - 1.0, np.array([1.0, 0.0])), None)
+
+    before = _prefix()
+    after = adapter._candidate_prefix(
+        SmoothCase(), MixedProgram(), before, time.monotonic() + 10.0
+    )
+    assert str(after.activation["particle_consensus_status"]).startswith("fallback:")
+    assert all(
+        np.array_equal(left, right)
+        for left, right in zip(after.points, before.points, strict=True)
+    )
+
+
+def test_full_ad_semantic_invalid_state_is_exact_prefix_fallback() -> None:
+    @dataclass(frozen=True)
+    class Dual:
+        value: float
+        derivative: np.ndarray
+
+    class FullProgram(OpaqueProgram):
+        def relation_rows(self, point):
+            x = np.asarray(point, dtype=float)
+            return (
+                Dual(x[0] - 1.0, np.array([1.0, 0.0])),
+                Dual(x[1] + 0.5, np.array([0.0, 1.0])),
+            )
+
+    class InvalidCase(SmoothCase):
+        def evaluate(self, point):
+            raw = super().evaluate(point)
+            return Observation(raw.residual, raw.finite, False)
+
+    before = _prefix()
+    after = adapter._candidate_prefix(
+        InvalidCase(), FullProgram(), before, time.monotonic() + 10.0
+    )
+    assert str(after.activation["particle_consensus_status"]).startswith("fallback:")
+    assert all(
+        np.array_equal(left, right)
+        for left, right in zip(after.points, before.points, strict=True)
+    )
+
+
+def test_valid_selector_token_change_is_exact_prefix_fallback() -> None:
+    @dataclass(frozen=True)
+    class TokenObservation:
+        residual: np.ndarray
+        finite: bool
+        semantics_valid: bool
+        branch_token: int
+
+    class SelectorCase(SmoothCase):
+        def evaluate(self, point):
+            raw = super().evaluate(point)
+            token = int(np.asarray(point, dtype=float)[0] >= 3.02)
+            return TokenObservation(raw.residual, raw.finite, True, token)
+
+    before = _prefix()
+    after = adapter._candidate_prefix(
+        SelectorCase(), OpaqueProgram(), before, time.monotonic() + 10.0
+    )
+    assert str(after.activation["particle_consensus_status"]).startswith("fallback:")
+    assert all(
+        np.array_equal(left, right)
+        for left, right in zip(after.points, before.points, strict=True)
+    )
+
+
+def test_nonsmooth_full_ad_is_exact_prefix_fallback() -> None:
+    @dataclass(frozen=True)
+    class Dual:
+        value: float
+        derivative: np.ndarray
+
+    class NonsmoothFullProgram(OpaqueProgram):
+        constraints = (("abs(x0) - 1", 0), ("x1 + 0.5", 0))
+
+        def relation_rows(self, point):
+            x = np.asarray(point, dtype=float)
+            return (
+                Dual(abs(x[0]) - 1.0, np.array([1.0, 0.0])),
+                Dual(x[1] + 0.5, np.array([0.0, 1.0])),
+            )
+
+    before = _prefix()
+    after = adapter._candidate_prefix(
+        SmoothCase(), NonsmoothFullProgram(), before, time.monotonic() + 10.0
+    )
+    assert str(after.activation["particle_consensus_status"]).startswith("fallback:")
+    assert all(
+        np.array_equal(left, right)
+        for left, right in zip(after.points, before.points, strict=True)
+    )
+
+
 def test_full_fd_without_a_bounded_side_sample_is_exact_prefix_fallback() -> None:
     class FixedCoordinateCase(SmoothCase):
         lower = np.array([3.0, -10.0])
