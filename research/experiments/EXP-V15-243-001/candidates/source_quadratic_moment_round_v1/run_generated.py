@@ -35,6 +35,9 @@ def main() -> int:
         "sqrt-aux-closure": source(
             ["x"], [{"def": "sqrt(x)", "value": "2"}]
         ),
+        "quadratic-slice-with-passthrough": source(
+            ["x", "y"], [{"def": "x*x", "value": "1"}]
+        ),
         "finite-phase-pair": source(
             ["t"],
             [{"def": "Distance(P,Point(1,0))", "value": "0"}],
@@ -50,8 +53,14 @@ def main() -> int:
     negative_fixtures = {
         "target-present": {**fixtures["direct-quadratic"], "answer": "x"},
         "degree-three-only": source(["x"], [{"def": "x**3", "value": "1"}]),
-        "unused-source-variable": source(
-            ["x", "y"], [{"def": "x*x", "value": "1"}]
+        "no-source-connected-quadratic": source(
+            ["x"],
+            [],
+            construction=[
+                {"name": "A", "expr": "Point(0,0)"},
+                {"name": "B", "expr": "Point(1,0)"},
+                {"name": "d", "expr": "Distance(A,B)"},
+            ],
         ),
         "non-QQ-only": source(
             ["x"], [{"def": "x", "value": "sqrt(2)"}]
@@ -74,6 +83,10 @@ def main() -> int:
             "all_selected_aux_definitions_closed"
         )
         is True,
+        "block_coordinate_passthrough_exercised": positive[
+            "quadratic-slice-with-passthrough"
+        ].get("baseline_passthrough_count")
+        == 1,
     }
     result = {
         "schema_version": "geotarget.source-quadratic-moment-generated/v1",

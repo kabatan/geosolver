@@ -266,21 +266,34 @@ def _source_slice_mapping(
             )
             continue
         phase = phases.get(name)
-        if phase is None or phase.get("finite_sheet_count") is None:
-            return mapping, False
-        cosine = str(phase["cosine_variable"])
-        sine = str(phase["sine_variable"])
-        if cosine not in selected_variables or sine not in selected_variables:
-            return mapping, False
+        if phase is not None and phase.get("finite_sheet_count") is not None:
+            cosine = str(phase["cosine_variable"])
+            sine = str(phase["sine_variable"])
+            if cosine in selected_variables and sine in selected_variables:
+                mapping.append(
+                    {
+                        "source_ordinal": source_ordinal,
+                        "kind": "finite_phase_pair",
+                        "lift_indices": [index[cosine], index[sine]],
+                        "finite_sheet_count": int(phase["finite_sheet_count"]),
+                    }
+                )
+                continue
+        # Repair A: the future rounder is a block-coordinate proposal.  A
+        # source coordinate outside the quadratic component is copied exactly
+        # from the already available search endpoint, never guessed from an
+        # unconstrained moment.  Local tail and canonical replay remain
+        # mandatory after splicing the rounded slice.
         mapping.append(
             {
                 "source_ordinal": source_ordinal,
-                "kind": "finite_phase_pair",
-                "lift_indices": [index[cosine], index[sine]],
-                "finite_sheet_count": int(phase["finite_sheet_count"]),
+                "kind": "baseline_passthrough",
+                "lift_indices": [],
+                "requires_search_endpoint": True,
             }
         )
-    return mapping, len(mapping) == len(source_names)
+    moment_mapped = sum(item["kind"] != "baseline_passthrough" for item in mapping)
+    return mapping, len(mapping) == len(source_names) and moment_mapped >= 1
 
 
 def scan_document(document: object) -> dict[str, object]:
@@ -458,7 +471,7 @@ def scan_document(document: object) -> dict[str, object]:
             tuple(source_names), artifact, selected_variables
         )
         if not mapping_complete:
-            return _base_record("SOURCE_QUADRATIC_MOMENT_NOT_READY", "source-slice-mapping-incomplete")
+            return _base_record("SOURCE_QUADRATIC_MOMENT_NOT_READY", "moment-source-slice-empty")
         selected_degrees = [int(valid_rows[index]["degree"]) for index in retained]
         if 2 not in selected_degrees:
             return _base_record("SOURCE_QUADRATIC_MOMENT_NOT_READY", "no-quadratic-equality-row")
@@ -487,14 +500,25 @@ def scan_document(document: object) -> dict[str, object]:
             "definedness_replay_only_count": len(artifact.definedness_ledger),
             "semantic_replay_obligation_count": len(artifact.replay_ledger) - 1,
             "phase_mapping_count": sum(item["kind"] == "finite_phase_pair" for item in mapping),
+            "baseline_passthrough_count": sum(
+                item["kind"] == "baseline_passthrough" for item in mapping
+            ),
+            "moment_replacement_source_coordinate_count": sum(
+                item["kind"] != "baseline_passthrough" for item in mapping
+            ),
             "closed_QQ_source_bound_count": direct_bounds,
             "source_slice_mapping_sha256": _canonical_sha(mapping),
             "source_slice_mapping_complete": True,
+            "search_endpoint_required_for_passthrough": any(
+                item["kind"] == "baseline_passthrough" for item in mapping
+            ),
             "target_auxiliary_removed": True,
             "target_link_removed": True,
             "strict_or_neq_promoted_to_moment_constraint": False,
             "all_selected_aux_definitions_closed": True,
-            "all_source_variables_incident": True,
+            "all_source_variables_incident": all(
+                item["kind"] != "baseline_passthrough" for item in mapping
+            ),
             "cover_proof_ready": bool(artifact.proof_ready),
         }
     except Exception as error:
