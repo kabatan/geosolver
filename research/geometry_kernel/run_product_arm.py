@@ -11,11 +11,13 @@ worker, its inputs, or any solver decision.
 from __future__ import annotations
 
 import argparse
+import fcntl
 import json
 import os
 import subprocess
 import sys
 from collections.abc import Sequence
+from contextlib import nullcontext
 from pathlib import Path
 
 THREAD_ENVIRONMENT = {
@@ -36,6 +38,8 @@ THREAD_ENVIRONMENT = {
     "MALLOC_ARENA_MAX": "2",
     "GEOTARGET_GLOBAL_RSS_RESERVATION_BYTES": str(8 * 1024**3),
 }
+BENCHMARK_LOCK = Path("/tmp/geotarget-exp-global-benchmark-v1.lock")
+PARENT_LOCK_RUNNER = Path(__file__).with_name("run_frozen_arm_under_parent_lock.py")
 
 
 def _arm_base_commit(path: Path) -> str:
@@ -77,6 +81,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--product-root", type=Path, required=True)
     parser.add_argument("--cpus", required=True)
     parser.add_argument("--run-arm", type=Path, required=True)
+    parser.add_argument("--wait-for-lock", action="store_true")
     parser.add_argument("run_arm_arguments", nargs=argparse.REMAINDER)
     arguments = parser.parse_args(argv)
     passthrough = list(arguments.run_arm_arguments)
@@ -111,21 +116,30 @@ def main(argv: Sequence[str] | None = None) -> int:
         / "champion_composition_worker_no_1280.py"
     )
     environment = {**os.environ, **THREAD_ENVIRONMENT}
-    with ProductRuntimeBroker(
-        cpus=cpus,
-        hp_worker=hp_worker,
-        hp_environment=THREAD_ENVIRONMENT,
-    ) as broker:
-        token = broker.begin_session(cpus)
-        try:
-            environment.update(broker.session_environment(token))
-            completed = subprocess.run(
-                [sys.executable, str(run_arm), *passthrough],
-                env=environment,
-                check=False,
-            )
-        finally:
-            broker.end_session(token)
+    lock_context = (
+        BENCHMARK_LOCK.open("a+", encoding="utf-8")
+        if arguments.wait_for_lock
+        else nullcontext(None)
+    )
+    with lock_context as lock:
+        if lock is not None:
+            fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
+        runner = PARENT_LOCK_RUNNER if lock is not None else run_arm
+        with ProductRuntimeBroker(
+            cpus=cpus,
+            hp_worker=hp_worker,
+            hp_environment=THREAD_ENVIRONMENT,
+        ) as broker:
+            token = broker.begin_session(cpus)
+            try:
+                environment.update(broker.session_environment(token))
+                completed = subprocess.run(
+                    [sys.executable, str(runner), *passthrough],
+                    env=environment,
+                    check=False,
+                )
+            finally:
+                broker.end_session(token)
     return completed.returncode
 
 

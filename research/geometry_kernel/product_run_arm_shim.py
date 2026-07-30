@@ -63,6 +63,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             cpus,
             "--run-arm",
             str(REAL_RUN_ARM),
+            "--wait-for-lock",
             "--",
             *arguments,
         ]
