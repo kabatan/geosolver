@@ -1,0 +1,83 @@
+{
+  "schema_version": "geotarget.exp-eval-002-result/v1",
+  "status": "BLOCKED_BEFORE_FORMAL_ARM",
+  "decision": "PARK_CACHED_SPARSITY_S0",
+  "base_commit": "0967ff1cde5c2435fe0207da65e8779ff24a6da6",
+  "formal_arm_created": false,
+  "full_worker_smoke_executed": false,
+  "missing_search_regression_smoke_executed": false,
+  "mechanism_sha256": "c10803a34931523c830855aa5315c70fa69a12908ceb7b50bf6a514316fef9b3",
+  "audit_sha256": "30dcc812d24d4b850733b2261af5d1eac2c8986c79d1a8cb599bdd6a4c1bfff7",
+  "seam": {
+    "path": "/home/kabatan/work/solver-experiment-runtime/solver/research/experiments/EXP-REAL61-006/analytic_jacobian/candidate.py",
+    "sha256": "9b1a8117c39d93e2c0b72b2fd1f18b49976730630ab664d0b45843d1ee90e35d",
+    "function": "_hybrid_jacobian",
+    "retained_and_strict_tracks_share_module": true,
+    "parent_patch_crosses_search_subprocess": false,
+    "actual_components": [
+      "relation residuals",
+      "compiled guard violations",
+      "opaque hard-feasibility component"
+    ],
+    "certified_plan_components": [
+      "relation constraints"
+    ]
+  },
+  "generated_differential": {
+    "seed": 772091,
+    "variants": [
+      "identity",
+      "variable-permutation",
+      "residual-permutation",
+      "joint-permutation"
+    ],
+    "probes_per_variant": 128,
+    "bit_identical_positive_step_full_jacobians": 512,
+    "mismatches": 0,
+    "colored_direction_evaluations": 1024,
+    "dense_direction_evaluations": 4096,
+    "direction_reduction_fraction": 0.75
+  },
+  "fallbacks": {
+    "nondifferentiable_pregate_bit_identical": true,
+    "branch_pregate_bit_identical": true,
+    "opaque_pregate_bit_identical": true,
+    "guard_pregate_bit_identical": true,
+    "runtime_branch_result_bit_identical": true,
+    "runtime_branch_callback_neutral": false,
+    "runtime_branch_candidate_directions": 5,
+    "runtime_branch_dense_directions": 4
+  },
+  "blocking_counterexample": {
+    "kind": "bound-directed signed zero",
+    "numeric_array_equal": true,
+    "bit_identical": false,
+    "differing_uint64_entries": 2,
+    "differences_are_signed_zero_only": true
+  },
+  "blocking_reasons": [
+    "guard and opaque hard-feasibility dependencies are not certified",
+    "runtime branch fallback consumes colored callbacks before dense replay",
+    "negative bound-directed steps violate full-Jacobian bit identity",
+    "single-core and pool search subprocesses require separate candidate-owned installation"
+  ],
+  "prior_negative_evidence": {
+    "colored_fd_result_sha256": "077eba2309554af416a9c153845e280706b6367d2a189502b053b589a86a97ed",
+    "colored_fd_decision": "FROZEN_CONFIGURATION_NEGATIVE",
+    "wave12_overlap_card_sha256": "9f29035d0e3f1e7095adc997510c9a04ce61d77d47cf4a27faac0efda9d27e59",
+    "wave12_verdict": "STOP_BEFORE_CODE_EXACT_MECHANISM_EXHAUSTED",
+    "claimed_reopen_gate_closed": false,
+    "reason": "cached source-AST compilation does not provide the required compiled typed/effect proof or change the augmented evaluator cost model"
+  },
+  "reopen_gate": "typed/effect-certified DAG dependencies for relation, guard, and hard-feasibility outputs plus pre-probe branch trace, candidate-owned single-core and pool hooks, and full uint64 Jacobian identity including signed zero and NaN payloads",
+  "authority": {
+    "canonical_replay_modified": false,
+    "hp_or_exactification_modified": false,
+    "result_schema_modified": false,
+    "truth_read": false,
+    "scorer_run": false,
+    "validation_or_sealed_read": false,
+    "formal_screen_run": false,
+    "heavy_hp_run": false
+  }
+}

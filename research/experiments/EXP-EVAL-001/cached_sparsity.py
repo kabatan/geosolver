@@ -25,9 +25,16 @@ MIN_DIRECTION_REDUCTION = 0.20
 _CONSTANT_NAMES = frozenset({"pi", "e", "True", "False", "None"})
 _NONDIFFERENTIABLE_CALLS = frozenset(
     {
+        "abs",
         "Abs",
+        "min",
         "Min",
+        "max",
         "Max",
+        "round",
+        "floor",
+        "ceil",
+        "sign",
         "Intersect",
         "ClosestPoint",
         "ContactPoint",
@@ -38,6 +45,32 @@ _NONDIFFERENTIABLE_CALLS = frozenset(
         "AssumeLt",
         "AssumeLe",
     }
+)
+_TRANSPARENT_SMOOTH_CALLS = frozenset(
+    {
+        "Point",
+        "sqrt",
+        "sin",
+        "cos",
+        "tan",
+        "asin",
+        "acos",
+        "atan",
+        "atan2",
+        "exp",
+        "log",
+    }
+)
+_BRANCH_OR_OPAQUE_NODES = (
+    ast.BoolOp,
+    ast.Compare,
+    ast.IfExp,
+    ast.Lambda,
+    ast.ListComp,
+    ast.SetComp,
+    ast.DictComp,
+    ast.GeneratorExp,
+    ast.Subscript,
 )
 
 
@@ -109,8 +142,20 @@ def _dependency(
     unresolved = False
     nonsmooth = False
     for node in ast.walk(parsed):
-        if isinstance(node, ast.Call) and _call_name(node.func) in _NONDIFFERENTIABLE_CALLS:
+        if isinstance(node, _BRANCH_OR_OPAQUE_NODES) or isinstance(
+            node, (ast.FloorDiv, ast.Mod)
+        ):
             nonsmooth = True
+        if isinstance(node, ast.Call):
+            name = _call_name(node.func)
+            if name in _NONDIFFERENTIABLE_CALLS:
+                nonsmooth = True
+            elif name not in _TRANSPARENT_SMOOTH_CALLS:
+                # A call outside the small reviewed pure subset may hide a
+                # selector, branch, mutable state, or dependency not visible
+                # in its arguments.  It must never receive structural zeros.
+                unresolved = True
+                axes.update(dense)
         if not isinstance(node, ast.Name):
             continue
         if id(node) in function_nodes or node.id in _CONSTANT_NAMES:
