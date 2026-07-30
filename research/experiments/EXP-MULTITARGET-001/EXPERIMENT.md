@@ -1,0 +1,114 @@
+# EXP-MULTITARGET-001 experiment card
+
+## V4 critical baseline correction (proposal only)
+
+V1-v3 incorrectly treated frozen numerical-v15 as the formal baseline. The
+actual common-control entrypoint is hash
+`e1405739201b0cb1d72e8f9ab6ca402b5e71918e569888993c4fdd13022c7301`
+and layers champion-v0/v1/v2 plus PointOnCircle periodic semantics and precision
+preload. This baseline mismatch explains why a v3 snapshot could still disagree
+with formal control.
+
+V4 invokes the exact top-level common control end-to-end before any candidate
+logic, snapshots its RESULT bytes, and uses only its remaining monotonic wall
+for optional side union. Direct-control and v4 dry PLAN bytes matched on three
+source-only smokes. The common-control snapshot and final RESULT SHA matched on
+all three, including source SHA `63fb3e…` under identical seed/budgets. No
+scorer/truth/formal result was read. `arm.json` is unchanged; v4 has a separate
+proposal manifest and evidence card.
+
+## V3 reopen decision (proposal only)
+
+The formal-owner-only v2 S1 aggregate was safety-clean but exact 15/24 versus
+control 16/24 (wins 1, losses 2). Paired wall geometric mean improved 6.3%,
+while p95 regressed 1.5%. No case identity or individual result was disclosed.
+This closes same-process scheduling overlays: preserving the nominal service
+trace is insufficient to guarantee monotone exact-set output across runs.
+
+The one remaining reopen mechanism is post-baseline result union. V3 patches no
+frozen function or plan. Frozen v15 materializes its complete RESULT first;
+side work starts only from measured leftover wall, after preserving those bytes,
+and can publish only an exact-key set union. No slack/no candidate/no novel
+authority all leave RESULT bytes unchanged. `arm.json` remains on v2 pending
+benchmark-owner acceptance; see `POST_BASELINE_UNION_V3.md` and the separate
+proposal manifest.
+
+## V2 reopen decision (current common arm)
+
+The benchmark-owner-only S1 seed-0 aggregate for v1 was safety-clean but exact
+14/24 versus control 16/24 (wins 0, losses 2). No case-level result or identity
+was disclosed. This opens only the preregistered tail-sizing/replay-admission
+gate: v1 reserved six HP seconds and changed reservoir replay from one to three
+seconds before authority, reducing the control's first-answer budget.
+
+V2 is a monotone post-authority extension of frozen v15. It changes no search,
+replay, tranche, frozen candidate order, timeout, child runtime, source replay,
+or authority behavior. Every frozen service event is retained as a prefix; only
+after all frozen waves complete, and only if canonical authority already
+passed, can truly unused wall slack admit a diverse deferred endpoint and its
+failure-triggered frozen restoration. With no authority the complete trace is
+control-identical. Full details and S0 evidence are in `POST_ANSWER_V2.md`.
+
+V1 below is retained as negative-result evidence and is no longer the selected
+common arm.
+
+## Hypothesis
+
+The frozen numerical-v15 tail can lose exact target recall when authority from
+one endpoint suppresses a same-provisional-cluster alternate or leaves too
+little explicit breadth for remaining target/configuration regions. Continuing
+after the first exact descriptor and prioritizing anonymous diversity should
+recover targets without changing canonical authority.
+
+## Mechanism and applicability
+
+- Require 28 seconds after discovery in formal 180/146 runs; common short
+  30/20 runs automatically retain their full 10-second tail.
+- Expand fresh source-replay reservoir selection from one to three seconds.
+- Reserve six seconds outside primary tranche sizing for alternate/restoration
+  work, with a three-second restoration sub-reserve after primary failure.
+- Do not suppress an alternate because authority succeeded in its provisional
+  cluster. Exact descriptor keys remain the only final deduplication authority.
+- After authority, order pending work by 50% provisional-target novelty, 25%
+  configuration novelty, and 25% residual quality.
+- Apply to every numerical-v15 run. No case, family, source hash, truth, known
+  target count, or prior benchmark outcome is used for routing.
+
+## Frozen boundaries
+
+- Parent numerical-v15 worker SHA-256:
+  `330e52c75b98d3c58a1422cec415b5a53673ebafb7e90789a271df34a308309d`.
+- Discovery worker, original-source replay, HP bridge, restoration worker,
+  descriptor authority, and canonical source replay are unmodified.
+- Final results retain schema `geotarget.exp008-finalist-numeric-worker-v15/v1`;
+  overlay provenance remains in `PLAN.json` and `hp_schedule`.
+- Deferred candidates remain unknown and no completeness claim is made.
+
+## S0 evidence
+
+- Unit/mechanism tests: 7 passed.
+- Generated deterministic panel: 100 cases / 3 families; every panel serviced
+  work after the first authority. The stop/suppress failure-model control kept
+  100 distinct exact descriptors and the candidate kept 180 (+80), with zero
+  descriptors beyond generated authority and exact duplicate dedup intact.
+- Unscored 30/20-second development smoke: frozen search completed successfully,
+  returned 9 endpoints and replay selected 3 candidates in 2 provisional
+  clusters. The tail attempted one primary, one alternate, and one restoration;
+  source bytes were unchanged and total elapsed time was 20.3814 seconds.
+- The raw result records its executed scheduler digest explicitly. A later
+  truth-free metamorphic counterexample changed only target-novelty ordering;
+  see `METAMORPHIC_S0.md` and its separate mechanism digest.
+- No truth, scorer, validation, sealed, screen24, or heavy formal run was used.
+- Common frozen `run_dataset.py` two-phase acceptance smoke: 1/1 accepted,
+  outer status `COMPLETE`, process `SUCCESS`, v15 result schema preserved,
+  source bytes unchanged, and 20.5022 seconds within the 30-second budget.
+  This acceptance artifact predates the target-affine ordering correction and
+  records that transitive digest; the entrypoint CLI/result schema did not
+  change. A formulation-only dry plan verifies the current transitive digest.
+
+## Reopen/stop gate
+
+Advance only through the benchmark owner. Stop if S1 shows an extra/invalid
+descriptor, recurring exact-set loss, no post-answer activation, or work/time
+regression beyond the preregistered gate. Reopen only with a causal failure in
+tail tranche sizing, novelty ordering, or replay admission.
