@@ -1,5 +1,26 @@
 # EXP-MULTITARGET-001: post-answer tail experiments
 
+## Proposed arm: exact common-control result union v4
+
+Integration audit found that v1-v3 used numerical-v15 directly, while the
+formal common control is the layered
+`repro_20260722/workers/champion_v2_poc_preloaded.py`. That control includes
+champion-v0 target-free reservoir batches, champion-v1 HP semantics,
+PointOnCircle periodic wrappers, zero-dimensional authority, and precision
+preload. V3's snapshot was internally monotone but was not a snapshot of the
+formal control.
+
+`worker_v4.py` hash-binds and invokes that exact top-level control without
+patching it. Its ordinary PLAN and RESULT are completed first; RESULT bytes are
+then retained as `COMMON_CONTROL_RESULT.json`. Only the control BASE's measured
+remaining wall can enter the existing result-union core. Three direct-control
+versus v4 source-only smokes—including source SHA prefix `63fb3e`—had identical
+dry PLAN bytes, and every no-union final RESULT was byte-identical to its
+in-process common-control snapshot.
+
+V4 is recorded in `arm-v4.proposal.json`; the selected `arm.json` remains
+unchanged for benchmark-owner integration. See `POST_COMMON_CONTROL_UNION_V4.md`.
+
 ## Proposed arm: full-worker result union v3
 
 Formal-owner aggregate evidence for v2 was safety-clean and faster on geometric

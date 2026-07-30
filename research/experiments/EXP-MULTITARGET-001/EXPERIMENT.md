@@ -1,5 +1,22 @@
 # EXP-MULTITARGET-001 experiment card
 
+## V4 critical baseline correction (proposal only)
+
+V1-v3 incorrectly treated frozen numerical-v15 as the formal baseline. The
+actual common-control entrypoint is hash
+`e1405739201b0cb1d72e8f9ab6ca402b5e71918e569888993c4fdd13022c7301`
+and layers champion-v0/v1/v2 plus PointOnCircle periodic semantics and precision
+preload. This baseline mismatch explains why a v3 snapshot could still disagree
+with formal control.
+
+V4 invokes the exact top-level common control end-to-end before any candidate
+logic, snapshots its RESULT bytes, and uses only its remaining monotonic wall
+for optional side union. Direct-control and v4 dry PLAN bytes matched on three
+source-only smokes. The common-control snapshot and final RESULT SHA matched on
+all three, including source SHA `63fb3e…` under identical seed/budgets. No
+scorer/truth/formal result was read. `arm.json` is unchanged; v4 has a separate
+proposal manifest and evidence card.
+
 ## V3 reopen decision (proposal only)
 
 The formal-owner-only v2 S1 aggregate was safety-clean but exact 15/24 versus
