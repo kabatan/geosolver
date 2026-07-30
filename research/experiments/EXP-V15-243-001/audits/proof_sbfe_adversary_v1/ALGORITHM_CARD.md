@@ -36,3 +36,13 @@ The graph lane may account for at most 25% of total budget; baseline reservation
 and spend must remain exactly 75%.  Equivalent graph representation and pure ID
 permutation must not change normalized selections, terminal states, witnesses,
 or budget accounting.
+
+## One-shot property run
+
+`fuzz_candidate.py` is a disposable fixed-seed extension, not reusable fuzzing
+infrastructure.  It generates 256 instances of one seven-leaf monotone schema.
+Each instance is executed in expanded, factored, renamed/reordered, and
+hidden-future-twin form: 1,024 candidate traces total.  The same independent
+oracle checks every trace, and relational comparisons check all three paired
+transformations.  Passing output contains aggregate counts only; the first
+failure includes the bounded seven-leaf input for immediate reduction.
