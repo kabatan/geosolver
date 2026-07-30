@@ -99,3 +99,19 @@ def test_dense_dependency_below_saving_gate_falls_back() -> None:
     assert plan.direction_reduction_fraction == 0.0
     assert "below 20 percent" in str(plan.fallback_reason)
 
+
+def test_branch_and_opaque_calls_fail_closed_before_any_coloring() -> None:
+    for expression in ("x if x > 0 else y", "OpaqueProjection(x)"):
+        document = {
+            **SMOOTH,
+            "constraints": [
+                {"def": expression, "value": 0},
+                {"def": "z + w", "value": 0},
+            ],
+        }
+        plan, _hit = compile_plan(document)
+        assert not plan.eligible
+        assert plan.fallback_reason in {
+            "branch or non-differentiable operation",
+            "unresolved source dependency",
+        }

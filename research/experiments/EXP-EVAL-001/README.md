@@ -50,10 +50,17 @@ at least 20%. Unknown dependencies become dense. Non-differentiable/selector
 operations, guard branches, shape/nonfinite errors and changed branch traces
 use the unchanged dense finite-difference path.
 
-This explicitly satisfies the reopen condition of the earlier colored-FD
-negative result: cached compilation plus applicability gating. It remains an
-S0 ablation until the benchmark owner decides whether its activation breadth
-justifies wiring it into a champion local-solver candidate.
+This tests the proposed cached-compilation plus applicability-gating reopen
+condition of the earlier colored-FD negative result. It remains an S0
+ablation; the full seam audit found that source-AST caching alone does not
+satisfy the stronger compiled typed/effect dependency gate.
+
+The subsequent full-v15 seam audit in `../EXP-EVAL-002` blocked that wiring:
+the current plan does not certify augmented guard/hard-feasibility rows,
+runtime branch fallback is not callback-neutral, and a negative-step signed
+zero counterexample violates the required bit identity. Lowercase
+nondifferentiable calls, AST branches, and opaque calls are now rejected before
+coloring, but no formal cached-sparsity arm exists.
 
 ## Reproduction
 
