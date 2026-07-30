@@ -185,6 +185,11 @@ def _load(name: str, path: Path):
 
 def _prepare(worker: Path, cpu: int):
     """Reproduce the frozen POC wrapper's setup before any candidate fork."""
+    # Keep the immutable reference closure untouched while correcting known
+    # semantic mismatches in the product-owned optimized HP process.
+    from geotarget.hp_semantics import install as install_hp_semantics
+
+    install_hp_semantics()
     wrapper = _load("geotarget_product_hp_poc_wrapper", worker)
     observed = hashlib.sha256(wrapper.BASE_WORKER.read_bytes()).hexdigest()
     if observed != wrapper.EXPECTED_BASE_SHA256:

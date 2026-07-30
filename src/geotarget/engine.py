@@ -83,6 +83,7 @@ def optimized_engine_hash() -> str:
         "parallel.py",
         "hp_slot_entrypoint.py",
         "hp_preloader.py",
+        "hp_semantics.py",
         "runtime_broker.py",
     ):
         path = Path(__file__).resolve().parent / name
@@ -91,17 +92,13 @@ def optimized_engine_hash() -> str:
     return digest.hexdigest()
 
 
-def evaluator_execution_metadata(
-    search: Mapping[str, Any], *, reference: bool
-) -> dict[str, Any]:
+def evaluator_execution_metadata(search: Mapping[str, Any], *, reference: bool) -> dict[str, Any]:
     """Describe the evaluator selected by the structural capability gate."""
 
     compiled = search.get("compiled_evaluator")
     compiled_record = dict(compiled) if isinstance(compiled, Mapping) else None
     enabled = bool(
-        not reference
-        and isinstance(compiled, Mapping)
-        and compiled.get("enabled") is True
+        not reference and isinstance(compiled, Mapping) and compiled.get("enabled") is True
     )
     fused = bool(
         not reference
@@ -281,30 +278,39 @@ def verify_engine() -> list[str]:
     return errors
 
 
-def _walk(value: Any):
-    yield value
-    if isinstance(value, Mapping):
-        for child in value.values():
-            yield from _walk(child)
-    elif isinstance(value, list):
-        for child in value:
-            yield from _walk(child)
+def _accepted_descriptor_nodes(raw: Mapping[str, Any]) -> list[Mapping[str, Any]]:
+    """Return only descriptors promoted by the frozen authority scheduler.
+
+    HP attempt artifacts intentionally retain rejected numerical proposals and
+    their provisional minpolys for auditability.  Those nested records are not
+    answers.  The frozen worker's top-level distinct descriptor list is the
+    authority boundary for positive-dimensional runs; the source-exact route
+    exposes one explicitly accepted descriptor instead.
+    """
+
+    for field in ("distinct_exact_target_descriptors", "distinct_exact_targets"):
+        if field not in raw:
+            continue
+        values = raw.get(field)
+        if not isinstance(values, list):
+            return []
+        return [value for value in values if isinstance(value, Mapping)]
+
+    descriptor = raw.get("exact_target_descriptor")
+    if (
+        raw.get("authority_pass") is True
+        and raw.get("status") == "EXACT_SYMBOLIC_TARGET_READY"
+        and isinstance(descriptor, Mapping)
+    ):
+        return [descriptor]
+    return []
 
 
 def extract_answers(raw: Mapping[str, Any]) -> list[ExactAnswer]:
     answers: list[ExactAnswer] = []
     seen: set[tuple[str, int]] = set()
-    witness = next(
-        (
-            dict(node)
-            for node in _walk(raw)
-            if isinstance(node, Mapping)
-            and any(key in node for key in ("selected_endpoint", "endpoint_coordinates", "witness"))
-        ),
-        None,
-    )
-    for node in _walk(raw):
-        if not isinstance(node, Mapping) or "minimal_polynomial_high_to_low" not in node:
+    for node in _accepted_descriptor_nodes(raw):
+        if "minimal_polynomial_high_to_low" not in node:
             continue
         polynomial = list(node.get("minimal_polynomial_high_to_low") or [])
         root_index = int(node.get("selected_real_root_index", 0))
@@ -345,7 +351,11 @@ def extract_answers(raw: Mapping[str, Any]) -> list[ExactAnswer]:
                 )
                 if node.get("exact_authority_kind") or node.get("authority_kind")
                 else None,
-                approximate_witness=witness,
+                # A descriptor is deliberately independent of rejected HP
+                # attempt records.  Until the frozen result promotes a witness
+                # alongside this exact descriptor, returning no witness is
+                # safer than attaching an unrelated exploratory endpoint.
+                approximate_witness=None,
             )
         )
     return answers
@@ -673,15 +683,24 @@ class ChampionSubprocessEngine:
 
             # Finish only work already belonging to the original 256-start graph.
             if not reference and not zero_dimensional_complete:
-                remaining = remaining_algorithm_budget()
-                _before_raw, _before_search, has_deferred, has_pending_starts = state(active_output)
-                should_continue_initial = _should_continue_initial_work(
-                    has_pending_starts=has_pending_starts,
-                    has_deferred_candidates=has_deferred,
-                    descriptor_count=initial_descriptor_count,
-                )
-                if remaining >= 12.0 and should_continue_initial:
-                    continuation_output = directory / "continuation-controller"
+                controller_round = 0
+                controller_stalled = False
+                while True:
+                    remaining = remaining_algorithm_budget()
+                    before_raw, _before_search, has_deferred, has_pending_starts = state(
+                        active_output
+                    )
+                    should_continue_initial = _should_continue_initial_work(
+                        has_pending_starts=has_pending_starts,
+                        has_deferred_candidates=has_deferred,
+                        descriptor_count=len(extract_answers(before_raw)),
+                    )
+                    if remaining < 12.0 or not should_continue_initial or controller_stalled:
+                        break
+                    controller_round += 1
+                    continuation_output = (
+                        directory / f"continuation-controller-{controller_round:03d}"
+                    )
                     invoke_phase(
                         "initial_continuation",
                         [
@@ -726,7 +745,8 @@ class ChampionSubprocessEngine:
                     if not (candidate_output / "RESULT.json").is_file():
                         raise EngineFailure("continuation controller checkpoint is incomplete")
                     active_output = candidate_output
-                    window = int(controller_state.get("windows_completed", 0))
+                    window += int(controller_state.get("windows_completed", 0))
+                    controller_stalled = bool(controller_state.get("stalled"))
                     controller_windows = controller_state.get("windows")
                     if isinstance(controller_windows, list):
                         stalled_pending = any(
@@ -767,6 +787,10 @@ class ChampionSubprocessEngine:
                         used_cores=len(cpus),
                     )
             raw, search, has_deferred, has_pending_starts = state(active_output)
+            # "Initial" means the complete frozen 0..255 work graph, including
+            # every checkpointed HP/alternate/restoration tranche—not merely
+            # the first 180-second child process.
+            initial_descriptor_count = len(extract_answers(raw))
             original_work = search.get("work") if isinstance(search, Mapping) else {}
             original_lanes_started = (
                 int(original_work.get("lanes_started", 0))

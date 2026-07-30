@@ -46,6 +46,49 @@ def _engine_identity(options: SolveOptions) -> tuple[str, str]:
     return ENGINE_ID, ENGINE_HASH
 
 
+def unexpected_engine_error_result(
+    problem: V15Problem | dict[str, Any],
+    options: SolveOptions,
+    *,
+    elapsed_seconds: float,
+) -> SolveResult:
+    """Return the stable public failure shape for an unexpected service fault.
+
+    The traceback belongs in the caller's log.  Keeping exception text out of
+    the result avoids exposing implementation details while still letting API
+    clients terminate their job polling through the normal ``engine_error``
+    contract.
+    """
+
+    native = problem.native_document() if isinstance(problem, V15Problem) else problem
+    engine_id, engine_hash = _engine_identity(options)
+    requested = ResourceUsage(
+        time_limit_seconds=options.max_time_seconds,
+        max_time_seconds=options.max_time_seconds,
+        cores=options.cores,
+        seed=options.seed,
+    )
+    return SolveResult(
+        status=ResultStatus.ENGINE_ERROR,
+        engine_id=engine_id,
+        engine_hash=engine_hash,
+        problem_sha256=_problem_hash(native),
+        requested_resources=requested,
+        used_resources=ResourceUsage(
+            time_limit_seconds=0,
+            max_time_seconds=0,
+            cores=0,
+            seed=options.seed,
+        ),
+        elapsed_seconds=max(0.0, elapsed_seconds),
+        work_checkpoint=WorkCheckpoint(),
+        detail="内部エラーが発生しました。再実行してください。",
+        engine_variant=options.engine,
+        termination_reason=TerminationReason.ENGINE_ERROR,
+        phase_metadata=PhaseMetadata(current="engine"),
+    )
+
+
 def solve(
     problem: V15Problem | dict[str, Any],
     options: SolveOptions | dict[str, Any] | None = None,

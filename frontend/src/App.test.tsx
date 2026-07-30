@@ -3,7 +3,8 @@ import userEvent from "@testing-library/user-event";
 import { IDBFactory } from "fake-indexeddb";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import productCatalog from "../../src/geotarget/dsl_catalog.json";
-import { App, catalogPaletteGroups, conditionFromFormula, expandDistanceShorthand, formulaToGuard, guardToFormula, migrateLegacyUiEquationGuards, withoutBlankExpressions, type DslCatalog } from "./App";
+import { App, catalogPaletteGroups, conditionDraftIssue, conditionFromFormula, expandDistanceShorthand, formulaToGuard, guardToFormula, migrateLegacyUiEquationGuards, validationIssueLocation, withoutBlankExpressions, type DslCatalog } from "./App";
+import { formatApproximateDecimal } from "./ExactResult";
 
 const catalog = {
   version: "V15",
@@ -34,6 +35,7 @@ const catalog = {
 };
 
 beforeEach(() => {
+  Object.defineProperty(window, "innerWidth", { configurable: true, value: 1440 });
   window.localStorage.clear();
   vi.stubGlobal("indexedDB", new IDBFactory());
   vi.stubGlobal("fetch", vi.fn(async (input: RequestInfo | URL) => {
@@ -50,6 +52,40 @@ beforeEach(() => {
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
 describe("condition formula presentation", () => {
+  it("shows solver approximations with twelve significant digits", () => {
+    expect(formatApproximateDecimal("0.46547751617515123063")).toBe(
+      "0.465477516175",
+    );
+    expect(formatApproximateDecimal("12345678901234567890")).toBe(
+      "1.23456789012e+19",
+    );
+  });
+
+  it("explains malformed formula delimiters before saving", () => {
+    expect(conditionDraftIssue("Angle(A, B, C) = pi")).toBeUndefined();
+    expect(
+      conditionDraftIssue("Assume(Angle((K,Y,X) + Angle(le(A,I,D) = pi)"),
+    ).toContain("閉じられていません");
+  });
+
+  it("maps internal guard paths to the visible condition number", () => {
+    const problem = {
+      task: "solve" as const,
+      id: "location",
+      variables: { names: [] },
+      construction: [],
+      constraints: [
+        { def: "x", value: 1 },
+        { def: "y", value: 2 },
+        { def: "z", value: 3 },
+      ],
+      guards: ["x < y", "y < z"],
+      answer: "x",
+      post_process: "",
+    };
+    expect(validationIssueLocation("guards[1]", problem)).toBe("条件 5");
+  });
+
   it("round-trips relational guards without exposing internal Assume calls", () => {
     expect(guardToFormula("AssumeLt(Angle(A, B, C), pi/2)")).toBe("Angle(A, B, C) < π/2");
     expect(formulaToGuard("Angle(A, B, C) < π/2")).toBe("AssumeLt(Angle(A, B, C), pi/2)");
@@ -271,6 +307,22 @@ describe("GeoTarget workbench", () => {
     expect(saved.guards).not.toContain(
       "AssumeEq(Distance(A, B), sqrt(17))",
     );
+  });
+
+  it("adds a new condition only once when Enter also blurs the editor", async () => {
+    render(<App />);
+    await userEvent.click(screen.getByRole("button", { name: "代数" }));
+    await userEvent.click(screen.getByRole("button", { name: "条件を追加" }));
+    const condition = screen.getByRole("combobox", { name: "条件 1" });
+    fireEvent.change(condition, { target: { value: "Distance(A, B) = 5" } });
+    fireEvent.keyDown(condition, { key: "Enter" });
+
+    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
+    const saved = JSON.parse(
+      (screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement)
+        .value,
+    );
+    expect(saved.constraints).toEqual([{ def: "Distance(A, B)", value: 5 }]);
   });
 
   it("migrates legacy equality guards when restoring an autosaved UI project", async () => {
@@ -1193,6 +1245,57 @@ describe("GeoTarget workbench", () => {
     expect(condition).toHaveValue("Distance(");
   });
 
+  it("replaces the whole identifier and reuses an existing opening parenthesis", async () => {
+    render(<App />);
+    await userEvent.click(screen.getByRole("button", { name: "代数" }));
+    await userEvent.click(screen.getByRole("button", { name: "条件を追加" }));
+    const condition = screen.getByRole("combobox", { name: "条件 1" }) as HTMLInputElement;
+
+    fireEvent.change(condition, { target: { value: "Angle(K,Y,X)" } });
+    condition.setSelectionRange(3, 3);
+    fireEvent.select(condition);
+    await waitFor(() => expect(screen.getByRole("option", { name: /^Angle/ })).toBeInTheDocument());
+    fireEvent.keyDown(condition, { key: "Tab" });
+    expect(condition).toHaveValue("Angle(K,Y,X)");
+
+    condition.setSelectionRange(5, 5);
+    fireEvent.select(condition);
+    await waitFor(() => expect(screen.getByRole("option", { name: /^Angle/ })).toBeInTheDocument());
+    fireEvent.keyDown(condition, { key: "Tab" });
+    expect(condition).toHaveValue("Angle(K,Y,X)");
+  });
+
+  it("does not save an unbalanced condition", async () => {
+    render(<App />);
+    await userEvent.click(screen.getByRole("button", { name: "代数" }));
+    await userEvent.click(screen.getByRole("button", { name: "条件を追加" }));
+    const condition = screen.getByRole("combobox", { name: "条件 1" });
+    fireEvent.change(condition, {
+      target: { value: "Assume(Angle((K,Y,X) + Angle(le(A,I,D) = pi)" },
+    });
+    condition.focus();
+    fireEvent.keyDown(condition, { key: "Enter" });
+
+    expect(screen.getByRole("alert")).toHaveTextContent("閉じられていません");
+    expect(condition).toHaveFocus();
+    expect(screen.queryByRole("combobox", { name: "条件 2" })).not.toBeInTheDocument();
+  });
+
+  it("ranks the pi constant ahead of unrelated partial function matches", async () => {
+    render(<App />);
+    await userEvent.click(screen.getByRole("button", { name: "代数" }));
+    await userEvent.click(screen.getByRole("button", { name: "条件を追加" }));
+    const condition = screen.getByRole("combobox", { name: "条件 1" });
+
+    await userEvent.type(condition, "pi");
+    expect(condition).toHaveAttribute(
+      "aria-activedescendant",
+      "condition-1-suggestions-constant-pi",
+    );
+    await userEvent.keyboard("{Enter}");
+    expect(condition).toHaveValue("pi");
+  });
+
   it("keeps keyboard focus on virtual keys and commits from the Enter key", async () => {
     render(<App />);
     await userEvent.click(screen.getByRole("button", { name: "代数" }));
@@ -1600,7 +1703,8 @@ describe("GeoTarget workbench", () => {
     });
     expect(submitted?.options).not.toHaveProperty("time_limit_seconds");
     expect(screen.getByText("champion-v2 · optimized")).toBeInTheDocument();
-    expect(screen.getAllByText("224.500秒 / 900秒").length).toBeGreaterThan(0);
+    expect(screen.getByText("solver計算時間")).toBeInTheDocument();
+    expect(screen.getByText("224.500秒")).toBeInTheDocument();
   });
 
   it("offers fixed-time and frozen reference execution as advanced choices", async () => {
@@ -1668,5 +1772,77 @@ describe("GeoTarget workbench", () => {
     releasePost();
     await waitFor(() => expect(calls).toContainEqual({ url: "/api/v1/solves/late-job", method: "DELETE" }));
     expect(screen.getAllByText("中止").length).toBeGreaterThan(0);
+  });
+
+  it("keeps polling and permits retry when a cancellation request fails", async () => {
+    let releaseTerminal!: () => void;
+    const terminalGate = new Promise<void>((resolve) => {
+      releaseTerminal = resolve;
+    });
+    let polls = 0;
+    vi.stubGlobal("fetch", vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      const method = init?.method || "GET";
+      if (url.endsWith("/api/v1/dsl/catalog")) return new Response(JSON.stringify(catalog));
+      if (url.endsWith("/api/v1/doctor")) return new Response(JSON.stringify({ ok: true }));
+      if (url.endsWith("/api/v1/session")) return new Response(JSON.stringify({ status: "ready" }));
+      if (url.endsWith("/api/v1/preview")) return new Response(JSON.stringify({ validation: { valid: true, issues: [] } }));
+      if (url.endsWith("/api/v1/solves") && method === "POST")
+        return new Response(JSON.stringify({ job_id: "cancel-retry" }), { status: 202 });
+      if (url.endsWith("/api/v1/solves/cancel-retry") && method === "DELETE")
+        return new Response("unavailable", { status: 503 });
+      if (url.endsWith("/api/v1/solves/cancel-retry")) {
+        polls += 1;
+        if (polls === 1)
+          return new Response(JSON.stringify({ state: "running", result: null }));
+        await terminalGate;
+        return new Response(JSON.stringify({ state: "cancelled", result: null }));
+      }
+      throw new Error(`unexpected fetch ${method} ${url}`);
+    }));
+
+    render(<App />);
+    await userEvent.click(screen.getByRole("button", { name: "解く" }));
+    await waitFor(() => expect(screen.getByText("初期探索")).toBeInTheDocument(), {
+      timeout: 2500,
+    });
+    await userEvent.click(screen.getByRole("button", { name: "中止" }));
+    await waitFor(() =>
+      expect(
+        screen
+          .getAllByRole("alert")
+          .some((element) => element.textContent?.includes("中止要求に失敗しました")),
+      ).toBe(true),
+    );
+    expect(screen.getByRole("button", { name: "中止" })).toBeEnabled();
+    releaseTerminal();
+    await waitFor(() => expect(screen.getAllByText("中止").length).toBeGreaterThan(1), {
+      timeout: 2500,
+    });
+  });
+
+  it("opens the medium-width inspector as an Escape-dismissible focus-trapped drawer", async () => {
+    const originalWidth = window.innerWidth;
+    Object.defineProperty(window, "innerWidth", { configurable: true, value: 1024 });
+    render(<App />);
+    fireEvent(window, new Event("resize"));
+    const trigger = screen.getByRole("button", { name: "Inspector / Solver" });
+    await userEvent.click(trigger);
+    expect(trigger).toHaveAttribute("aria-expanded", "true");
+    const inspector = screen.getByRole("complementary", {
+      name: "プロパティとsolver",
+    });
+    await waitFor(() =>
+      expect(
+        within(inspector).getByRole("button", { name: "Inspectorを閉じる" }),
+      ).toHaveFocus(),
+    );
+    await userEvent.keyboard("{Escape}");
+    expect(trigger).toHaveFocus();
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+    Object.defineProperty(window, "innerWidth", {
+      configurable: true,
+      value: originalWidth,
+    });
   });
 });

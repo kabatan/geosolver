@@ -1,0 +1,40 @@
+{
+  "task": "solve",
+  "id": "distance-3-4-5",
+  "variables": {
+    "names": ["xP", "Px", "Py", "tP2"]
+  },
+  "construction": [
+    {"name": "B", "expr": "Point(0, 0)"},
+    {"name": "C", "expr": "Point(xP, 0)"},
+    {"name": "A", "expr": "Point(Px, Py)"},
+    {"name": "I", "expr": "Incenter(A, B, C)"},
+    {"name": "l", "expr": "Line(B, C)"},
+    {"name": "l2", "expr": "Line(C, A)"},
+    {"name": "l3", "expr": "Line(A, B)"},
+    {"name": "D", "expr": "FootOfPerpendicular(I, l)"},
+    {"name": "c", "expr": "CircleThroughThreePoints(B, A, C)"},
+    {"name": "p", "expr": "ParallelLine(l, A)"},
+    {"name": "K", "expr": "Intersect(c, p, exclude=A)"},
+    {"name": "l4", "expr": "Line(A, D)"},
+    {"name": "P", "expr": "Intersect(c, l4, exclude=A)"},
+    {"name": "t", "expr": "Polar(K, c)"},
+    {"name": "Q", "expr": "Intersect(l, t)"},
+    {"name": "l5", "expr": "Line(P, Q)"},
+    {"name": "R", "expr": "Intersect(c, l5, exclude=P)"},
+    {"name": "l6", "expr": "Line(K, R)"},
+    {"name": "p2", "expr": "PerpendicularLine(l6, Q)"},
+    {"name": "t2", "expr": "Polar(R, c)"},
+    {"name": "X", "expr": "Intersect(p2, t2)"},
+    {"name": "Y", "expr": "PointOnLine(p2, tP2)"}
+  ],
+  "constraints": [
+    {"def": "Distance(B, C)", "value": 2},
+    {"def": "Distance(P, R)/Distance(R, Q)", "value": "16/9"},
+    {"def": "Distance(X, Q)/Distance(Q, Y)", "value": "2/5"},
+    {"def": "Angle(K,Y,X) + Angle(A,I,D)", "value": "pi"}
+  ],
+  "guards": ["AssumeLt(Distance(A, B), Distance(A,C))"],
+  "answer": "Distance(B, D)",
+  "post_process": ""
+}

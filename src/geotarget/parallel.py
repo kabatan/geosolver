@@ -7,6 +7,7 @@ import os
 import time
 from collections.abc import Callable, Mapping, Sequence
 from concurrent.futures import ThreadPoolExecutor
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -51,8 +52,31 @@ def _run_batch(
 ) -> list[tuple[int, Any, dict[str, Any]]]:
     completed: list[tuple[int, Any, dict[str, Any]]] = []
     cursor = 0
-    while cursor < len(items):
-        batch = items[cursor : cursor + len(cpus)]
+    # A frozen wave reserves MIN_HP_ATTEMPT_SECONDS for every item that belongs
+    # to that *budget window*.  A product continuation window is intentionally
+    # shorter than an arbitrarily large checkpointed wave, so admitting the
+    # entire pending suffix can make the frozen recurrence return zero for the
+    # first item (and therefore make permanent no-progress checkpoints).
+    #
+    # Find the largest ordinal prefix that this window can actually admit.  The
+    # suffix stays in the durable checkpoint and is offered, in the same order,
+    # to the next window.  This changes neither candidate order nor any HP or
+    # restoration calculation; it is the checkpoint analogue of the frozen
+    # primary-tranche rule and lets the existing CPU pool process each admitted
+    # prefix in parallel.
+    initial_remaining = max(
+        0.0,
+        hard_deadline - time.monotonic() - base.FINALIZE_RESERVE_SECONDS,
+    )
+    minimum_attempt = float(base.MIN_HP_ATTEMPT_SECONDS)
+    if not minimum_attempt > 0.0:
+        raise ValueError("minimum HP attempt must be positive")
+    # This is an upper bound only; the frozen recurrence below remains the
+    # authority and trims another item if clock movement reaches a boundary.
+    logical_capacity = int(initial_remaining / minimum_attempt)
+    admitted_end = min(len(items), logical_capacity)
+    while cursor < admitted_end:
+        batch = items[cursor : min(admitted_end, cursor + len(cpus))]
         remaining = hard_deadline - time.monotonic() - base.FINALIZE_RESERVE_SECONDS
         virtual_remaining = remaining
         attempt_seconds: list[float] = []
@@ -61,7 +85,7 @@ def _run_batch(
         for offset in range(len(batch)):
             seconds = base._wave_attempt_seconds(
                 virtual_remaining,
-                len(items) - cursor - offset,
+                admitted_end - cursor - offset,
                 cap_seconds,
             )
             attempt_seconds.append(seconds)
@@ -71,8 +95,13 @@ def _run_batch(
             for slot, (item, seconds) in enumerate(zip(batch, attempt_seconds, strict=True))
             if seconds > 0.0
         )
-        if not runnable:
-            break
+        if len(runnable) != len(batch):
+            # Shrink only the not-yet-started suffix.  Retrying with a smaller
+            # logical wave before launching anything is deterministic, keeps
+            # the admitted set an ordinal prefix, and guarantees that a later
+            # affordable item can never leapfrog an unaffordable earlier one.
+            admitted_end -= 1
+            continue
 
         with ThreadPoolExecutor(max_workers=len(runnable)) as executor:
             futures = [
@@ -84,8 +113,6 @@ def _run_batch(
             ):
                 completed.append((ordinal, candidate, dict(future.result())))
         cursor += len(runnable)
-        if len(runnable) != len(batch):
-            break
     return completed
 
 
@@ -602,24 +629,82 @@ def resume_candidates_parallel(
     )
 
 
+@dataclass(frozen=True)
+class AuthorityDeadlinePolicy:
+    """Select the effective authority deadline without changing its work."""
+
+    cap_seconds: float | None
+
+    @classmethod
+    def fixed(cls, seconds: float) -> AuthorityDeadlinePolicy:
+        if not seconds > 0.0:
+            raise ValueError("authority deadline cap must be positive")
+        return cls(float(seconds))
+
+    @classmethod
+    def outer_deadline(cls) -> AuthorityDeadlinePolicy:
+        return cls(None)
+
+    def apply(self, requested_deadline: float) -> float:
+        if self.cap_seconds is None:
+            return float(requested_deadline)
+        return min(float(requested_deadline), time.monotonic() + self.cap_seconds)
+
+
+@dataclass(frozen=True)
+class ParallelAuthorityAdapter:
+    """Explicit product-owned boundary around frozen candidate authority."""
+
+    base: Any
+    cpus: tuple[int, ...]
+    pool: Any
+    deadline_policy: AuthorityDeadlinePolicy
+
+    def service_candidates(self, **kwargs: Any):
+        arguments = dict(kwargs)
+        arguments.pop("cpu", None)
+        arguments["hard_deadline"] = self.deadline_policy.apply(
+            float(arguments["hard_deadline"])
+        )
+        return service_candidates_parallel(
+            base=self.base,
+            cpus=self.cpus,
+            pool=self.pool,
+            **arguments,
+        )
+
+    def resume_candidates(self, **kwargs: Any):
+        arguments = dict(kwargs)
+        arguments["hard_deadline"] = self.deadline_policy.apply(
+            float(arguments["hard_deadline"])
+        )
+        return resume_candidates_parallel(
+            base=self.base,
+            cpus=self.cpus,
+            pool=self.pool,
+            **arguments,
+        )
+
+    def compatibility_batch_service(self, **kwargs: Any):
+        return self.service_candidates(**kwargs)
+
+
 def install(
     base: Any,
     cpus: Sequence[int],
     *,
-    post_search_seconds: float = 34.0,
+    deadline_policy: AuthorityDeadlinePolicy | None = None,
+    install_compatibility_seam: bool = True,
     reservoir_checkpoint_path: Path | None = None,
     source_sha256: str | None = None,
-) -> None:
+) -> ParallelAuthorityAdapter:
     """Install scheduling only at champion-v0's frozen batch-service seam.
 
-    Each champion window retains the frozen 146:34 search/authority split.
-    Product continuation consumes only the resulting checkpoint and may open
-    another bounded window without changing per-candidate timeout semantics.
+    The default compatibility seam retains the frozen initial 146:34
+    search/authority split. Product continuation passes an explicit outer
+    deadline policy and invokes the returned adapter directly, so it can use
+    the remainder of its own bounded window without a second 34-second clamp.
     """
-
-    frozen_batch_service = base._service_candidates.__globals__.get("_ORIGINAL_SERVICE_CANDIDATES")
-    if frozen_batch_service is None:
-        raise RuntimeError("frozen batch-service seam is unavailable")
 
     cpu_tuple = tuple(int(cpu) for cpu in cpus)
     for name in (SOCKET_ENV, BROKER_SOCKET_ENV, BROKER_SESSION_ENV):
@@ -639,21 +724,33 @@ def install(
         pool.close_at_process_exit()
         base.THREAD_ENVIRONMENT[SOCKET_ENV] = str(pool.directory)
     base._geotarget_hp_pool = pool
-    base._geotarget_post_search_seconds = float(post_search_seconds)
+    policy = deadline_policy or AuthorityDeadlinePolicy.fixed(34.0)
+    base._geotarget_post_search_seconds = policy.cap_seconds
 
     if reservoir_checkpoint_path is not None:
         if source_sha256 is None:
             raise ValueError("source SHA-256 is required for a reservoir checkpoint")
         install_reservoir_checkpoint(base, reservoir_checkpoint_path, source_sha256)
 
-    def parallel_batch_service(**kwargs: Any):
-        kwargs.pop("cpu", None)
-        kwargs["hard_deadline"] = min(
-            float(kwargs["hard_deadline"]), time.monotonic() + post_search_seconds
+    adapter = ParallelAuthorityAdapter(
+        base=base,
+        cpus=cpu_tuple,
+        pool=pool,
+        deadline_policy=policy,
+    )
+    base._geotarget_parallel_authority_adapter = adapter
+    if install_compatibility_seam:
+        frozen_batch_service = base._service_candidates.__globals__.get(
+            "_ORIGINAL_SERVICE_CANDIDATES"
         )
-        return service_candidates_parallel(base=base, cpus=cpu_tuple, pool=pool, **kwargs)
-
-    base._service_candidates.__globals__["_ORIGINAL_SERVICE_CANDIDATES"] = parallel_batch_service
+        if frozen_batch_service is None:
+            raise RuntimeError("frozen batch-service seam is unavailable")
+        # Product continuation calls the adapter directly.  This mutation is
+        # kept solely at the frozen champion-v0 compatibility boundary.
+        base._service_candidates.__globals__["_ORIGINAL_SERVICE_CANDIDATES"] = (
+            adapter.compatibility_batch_service
+        )
+    return adapter
 
 
 def install_reservoir_checkpoint(base: Any, checkpoint_path: Path, source_sha256: str) -> None:

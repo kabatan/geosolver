@@ -1,11 +1,14 @@
 import {
+  CSSProperties,
   FocusEvent,
   KeyboardEvent,
   MouseEvent,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
+import { createPortal } from "react-dom";
 
 export type ExpressionSuggestion = {
   id: string;
@@ -20,7 +23,7 @@ type Editor = HTMLInputElement | HTMLTextAreaElement;
 type Props = {
   value: string;
   onChange: (value: string) => void;
-  onCommit?: (value: string) => void;
+  onCommit?: (value: string) => boolean | void;
   onEditorFocus?: (editor: Editor) => void;
   onEditorClick?: (editor: Editor) => void;
   onEscape?: () => void;
@@ -38,7 +41,9 @@ type Props = {
 function completionRange(value: string, caret: number) {
   const before = value.slice(0, caret);
   const match = /[A-Za-z_][A-Za-z0-9_]*$/.exec(before);
-  return { start: match?.index ?? caret, end: caret, query: match?.[0] ?? "" };
+  let end = caret;
+  while (end < value.length && /[A-Za-z0-9_]/.test(value[end])) end += 1;
+  return { start: match?.index ?? caret, end, query: match?.[0] ?? "" };
 }
 
 export function ExpressionAutocomplete({
@@ -59,9 +64,11 @@ export function ExpressionAutocomplete({
   autoFocus = false,
 }: Props) {
   const editorRef = useRef<Editor>(null);
+  const committedByEnterRef = useRef(false);
   const [focused, setFocused] = useState(false);
   const [caret, setCaret] = useState(value.length);
   const [active, setActive] = useState(0);
+  const [popupStyle, setPopupStyle] = useState<CSSProperties>();
   const range = completionRange(value, caret);
   const matches = useMemo(() => {
     if (!focused) return [];
@@ -70,21 +77,27 @@ export function ExpressionAutocomplete({
     return suggestions
       .map((item, order) => {
         const label = item.label.toLocaleLowerCase();
-        const detail = `${item.detail} ${item.keywords ?? ""}`.toLocaleLowerCase();
+        const keywords = (item.keywords ?? "").toLocaleLowerCase();
+        const detail = item.detail.toLocaleLowerCase();
+        const keywordTokens = keywords.split(/[^a-z0-9_]+/).filter(Boolean);
         const score = !query
-          ? 3
-          : label.startsWith(query)
+          ? 5
+          : label === query || keywordTokens.includes(query)
             ? 0
-            : label.includes(query)
+            : label.startsWith(query) || keywordTokens.some((word) => word.startsWith(query))
               ? 1
-              : detail.includes(query)
+              : label.includes(query)
                 ? 2
-                : 4;
+                : keywords.includes(query)
+                  ? 3
+                  : detail.includes(query)
+                    ? 4
+                    : 6;
         return { item, order, score };
       })
       .filter(({ score }) => {
         if (!query) return true;
-        return score < 4;
+        return score < 6;
       })
       .sort((left, right) => left.score - right.score || left.order - right.order)
       .slice(0, 8)
@@ -93,13 +106,65 @@ export function ExpressionAutocomplete({
   const open = matches.length > 0;
   const listId = `${dataMathField ?? ariaLabel.replace(/\s+/g, "-")}-suggestions`;
 
+  useLayoutEffect(() => {
+    if (!open) {
+      setPopupStyle(undefined);
+      return;
+    }
+    const positionPopup = () => {
+      const editor = editorRef.current;
+      if (!editor) return;
+      const rect = editor.getBoundingClientRect();
+      const margin = 8;
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const width = Math.min(
+        560,
+        Math.max(rect.width, Math.min(440, viewportWidth - margin * 2)),
+        viewportWidth - margin * 2,
+      );
+      const left = Math.max(
+        margin,
+        Math.min(rect.left, viewportWidth - width - margin),
+      );
+      const below = viewportHeight - rect.bottom - margin;
+      const above = rect.top - margin;
+      const placeAbove = below < 180 && above > below;
+      const maxHeight = Math.max(120, Math.min(320, placeAbove ? above : below));
+      setPopupStyle({
+        left,
+        width,
+        maxHeight,
+        ...(placeAbove
+          ? { bottom: viewportHeight - rect.top + 4 }
+          : { top: rect.bottom + 4 }),
+      });
+    };
+    positionPopup();
+    window.addEventListener("resize", positionPopup);
+    window.addEventListener("scroll", positionPopup, true);
+    return () => {
+      window.removeEventListener("resize", positionPopup);
+      window.removeEventListener("scroll", positionPopup, true);
+    };
+  }, [open]);
+
   const updateCaret = (editor: Editor) => {
     setCaret(editor.selectionStart ?? editor.value.length);
     setActive(0);
   };
   const apply = (item: ExpressionSuggestion) => {
     const editor = editorRef.current;
-    const next = `${value.slice(0, range.start)}${item.insert}${value.slice(range.end)}`;
+    // Complete the whole identifier, including the suffix to the right of a
+    // caret that was moved into the middle of a word.  Function suggestions
+    // already contain "(", so consume an existing opening parenthesis too.
+    // Without both rules, `Ang|le(` became `Angle(le(` and `Angle|(` became
+    // `Angle((`, silently corrupting otherwise valid geometry conditions.
+    const end =
+      item.insert.endsWith("(") && value[range.end] === "("
+        ? range.end + 1
+        : range.end;
+    const next = `${value.slice(0, range.start)}${item.insert}${value.slice(end)}`;
     const nextCaret = range.start + item.insert.length;
     onChange(next);
     setCaret(nextCaret);
@@ -140,7 +205,8 @@ export function ExpressionAutocomplete({
       (commitOnEnter || event.ctrlKey || event.metaKey)
     ) {
       event.preventDefault();
-      onCommit?.(value);
+      if (onCommit?.(value) === false) return;
+      committedByEnterRef.current = true;
       event.currentTarget.blur();
     }
   };
@@ -171,6 +237,7 @@ export function ExpressionAutocomplete({
       updateCaret(event.currentTarget),
     onKeyDown: keyDown,
     onFocus: (event: FocusEvent<Editor>) => {
+      committedByEnterRef.current = false;
       setFocused(true);
       updateCaret(event.currentTarget);
       onEditorFocus?.(event.currentTarget);
@@ -182,6 +249,10 @@ export function ExpressionAutocomplete({
     },
     onBlur: (event: FocusEvent<Editor>) => {
       setFocused(false);
+      if (committedByEnterRef.current) {
+        committedByEnterRef.current = false;
+        return;
+      }
       const next = event.relatedTarget;
       if (
         next instanceof Node &&
@@ -195,8 +266,13 @@ export function ExpressionAutocomplete({
   return (
     <div className="expression-autocomplete">
       {multiline ? <textarea {...common} /> : <input {...common} />}
-      {open && (
-        <div className="expression-suggestions" id={listId} role="listbox">
+      {open && popupStyle && createPortal(
+        <div
+          className="expression-suggestions"
+          id={listId}
+          role="listbox"
+          style={popupStyle}
+        >
           {matches.map((item, index) => (
             <button
               key={item.id}
@@ -213,7 +289,8 @@ export function ExpressionAutocomplete({
               <span>{item.detail}</span>
             </button>
           ))}
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   );

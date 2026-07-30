@@ -14,6 +14,7 @@ class FakeEngine:
         return (
             {
                 "status": "EXACT_SYMBOLIC_TARGET_READY",
+                "authority_pass": True,
                 "exact_target_descriptor": {
                     "minimal_polynomial_high_to_low": [1, -5],
                     "selected_real_root_index": 0,

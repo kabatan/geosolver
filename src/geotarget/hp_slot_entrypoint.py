@@ -34,18 +34,21 @@ def main() -> None:
 
     Path.open = slot_open
     try:
-        if os.environ.get(SOCKET_ENV):
-            solver_root = product_root / "_engine/runtime/solver"
-            if str(solver_root) not in sys.path:
-                sys.path.insert(0, str(solver_root))
-            from research.infrastructure.memory_safety import safe_subprocess
+        if not os.environ.get(SOCKET_ENV):
+            raise SystemExit(
+                "optimized HP authority requires the product preloader"
+            )
+        solver_root = product_root / "_engine/runtime/solver"
+        if str(solver_root) not in sys.path:
+            sys.path.insert(0, str(solver_root))
+        from research.infrastructure.memory_safety import safe_subprocess
 
-            original_reserved = safe_subprocess._run_guarded_reserved
+        original_reserved = safe_subprocess._run_guarded_reserved
 
-            def preloaded_reserved(command, **kwargs):
-                return delegated_run(command, original=original_reserved, **kwargs)
+        def preloaded_reserved(command, **kwargs):
+            return delegated_run(command, original=original_reserved, **kwargs)
 
-            safe_subprocess._run_guarded_reserved = preloaded_reserved
+        safe_subprocess._run_guarded_reserved = preloaded_reserved
         runpy.run_path(str(frozen_bridge), run_name="__main__")
     finally:
         if original_reserved is not None:

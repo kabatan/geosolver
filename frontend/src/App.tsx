@@ -55,7 +55,9 @@ import {
   MouseEvent as ReactMouseEvent,
   PointerEvent as ReactPointerEvent,
   ReactNode,
+  Suspense,
   WheelEvent as ReactWheelEvent,
+  lazy,
   useEffect,
   useMemo,
   useRef,
@@ -88,11 +90,23 @@ import {
   uniqueIdentifier,
 } from "./authoring";
 import { MathKeyboard } from "./MathKeyboard";
-import { expressionToTex, MathFormula, polynomialToTex } from "./MathFormula";
+import { expressionToTex, MathFormula } from "./MathFormula";
 import {
   ExpressionAutocomplete,
   ExpressionSuggestion,
 } from "./ExpressionAutocomplete";
+import {
+  ApiResult,
+  RunProgress,
+  SolverCores,
+  useSolverJob,
+} from "./useSolverJob";
+import {
+  DEFAULT_LAYOUT_SIZES,
+  useWorkbenchLayout,
+} from "./useWorkbenchLayout";
+
+const ExactResult = lazy(() => import("./ExactResult"));
 
 type Construction = { name: string; expr: string };
 type Constraint = { def: string; value: number | string };
@@ -136,15 +150,30 @@ function ConditionEditorRow({
   onDelete,
 }: ConditionEditorProps) {
   const [draft, setDraft] = useState(formula);
-  useEffect(() => setDraft(formula), [formula]);
+  const [draftIssue, setDraftIssue] = useState("");
+  useEffect(() => {
+    setDraft(formula);
+    setDraftIssue("");
+  }, [formula]);
   const field = `condition-${conditionIndex}`;
+  const commitDraft = (value: string) => {
+    const normalized = normalizeDraft(value);
+    const issue = conditionDraftIssue(normalized);
+    setDraftIssue(issue ?? "");
+    if (issue) return false;
+    onCommit(normalized);
+    return true;
+  };
   return (
     <div className="guard-row">
       <div className="formula-editor formula-editor-compact">
         <ExpressionAutocomplete
           value={draft}
-          onChange={(value) => setDraft(normalizeDraft(value))}
-          onCommit={onCommit}
+          onChange={(value) => {
+            setDraftIssue("");
+            setDraft(normalizeDraft(value));
+          }}
+          onCommit={commitDraft}
           suggestions={suggestions}
           ariaLabel={`条件 ${conditionIndex}`}
           ariaControls="math-keyboard"
@@ -171,6 +200,11 @@ function ConditionEditorRow({
           source={draft}
           label={`条件 ${conditionIndex}の数式表示`}
         />
+        {draftIssue && (
+          <p className="condition-draft-error" role="alert">
+            {draftIssue}
+          </p>
+        )}
       </div>
       <button aria-label={`条件 ${conditionIndex}を削除`} onClick={onDelete}>
         <X />
@@ -178,183 +212,7 @@ function ConditionEditorRow({
     </div>
   );
 }
-type ExactAnswer = {
-  minimal_polynomial_high_to_low: Array<number | string>;
-  selected_real_root_index: number;
-  isolating_interval: string[];
-  decimal: string;
-  exact_authority_kind?: string | null;
-  approximate_witness?: Record<string, unknown> | null;
-};
 type SolverMode = "adaptive" | "fixed" | "reference";
-type SolverCores = "auto" | number;
-type ResourceSummary = {
-  max_time_seconds?: number;
-  time_limit_seconds?: number;
-  cores?: SolverCores;
-  seed?: number;
-};
-type WorkCheckpointSummary = {
-  plan_sha256?: string;
-  completed_start_ordinals?: number[];
-  pending_start_ordinals?: number[];
-  extension_batch?: number;
-  extension_batch_ordinal?: number;
-  batch?: number;
-  batch_ordinal?: number;
-  window?: number;
-  stability_count?: number;
-  stable_batch_count?: number;
-  extension_stability_count?: number;
-};
-type ApiResult = {
-  status: string;
-  elapsed_seconds: number;
-  engine_id: string;
-  engine_hash: string;
-  engine_variant?: string;
-  problem_sha256: string;
-  requested_resources?: ResourceSummary;
-  used_resources?: ResourceSummary;
-  work_checkpoint?: WorkCheckpointSummary;
-  termination_reason?: string | null;
-  warnings: string[];
-  answers: ExactAnswer[];
-  detail?: string | null;
-};
-type RunProgress = {
-  phase: string;
-  completedStarts?: number;
-  totalStarts?: number;
-  batch?: number;
-  stabilityCount?: number;
-  usedCores?: number;
-  elapsedSeconds: number;
-  capSeconds: number;
-  terminationReason?: string;
-};
-
-function record(value: unknown): Record<string, unknown> {
-  return value && typeof value === "object"
-    ? (value as Record<string, unknown>)
-    : {};
-}
-
-function firstFinite(...values: unknown[]): number | undefined {
-  for (const value of values) {
-    const number = typeof value === "number" ? value : Number.NaN;
-    if (Number.isFinite(number)) return number;
-  }
-  return undefined;
-}
-
-function firstText(...values: unknown[]): string | undefined {
-  return values.find(
-    (value): value is string => typeof value === "string" && !!value.trim(),
-  );
-}
-
-function progressFromPayload(
-  payloadValue: unknown,
-  fallback: RunProgress,
-): RunProgress {
-  const payload = record(payloadValue);
-  const progress = record(payload.progress);
-  const result = record(payload.result);
-  const checkpoint = record(
-    progress.work_checkpoint ??
-      payload.work_checkpoint ??
-      result.work_checkpoint,
-  );
-  const usedResources = record(
-    progress.used_resources ?? payload.used_resources ?? result.used_resources,
-  );
-  const requestedResources = record(
-    progress.requested_resources ??
-      payload.requested_resources ??
-      result.requested_resources,
-  );
-  const completedOrdinals = checkpoint.completed_start_ordinals;
-  const pendingOrdinals = checkpoint.pending_start_ordinals;
-  const completedStarts = Array.isArray(completedOrdinals)
-    ? completedOrdinals.length
-    : firstFinite(
-        progress.completed_starts,
-        progress.completed_start_count,
-        payload.completed_starts,
-        checkpoint.completed_starts,
-      );
-  const pendingStarts = Array.isArray(pendingOrdinals)
-    ? pendingOrdinals.length
-    : undefined;
-  const totalStarts = firstFinite(
-    progress.total_starts,
-    payload.total_starts,
-    checkpoint.total_starts,
-    completedStarts !== undefined && pendingStarts !== undefined
-      ? completedStarts + pendingStarts
-      : undefined,
-  );
-  return {
-    phase:
-      firstText(
-        progress.phase,
-        payload.phase,
-        payload.state,
-        result.phase,
-      ) ?? fallback.phase,
-    completedStarts: completedStarts ?? fallback.completedStarts,
-    totalStarts: totalStarts ?? fallback.totalStarts,
-    batch:
-      firstFinite(
-        progress.extension_batch,
-        progress.extension_batch_ordinal,
-        progress.batch,
-        progress.batch_ordinal,
-        progress.extension_batches_completed,
-        checkpoint.extension_batch,
-        checkpoint.extension_batch_ordinal,
-        checkpoint.batch,
-        checkpoint.batch_ordinal,
-        checkpoint.extension_batches_completed,
-      ) ?? fallback.batch,
-    stabilityCount:
-      firstFinite(
-        progress.stability_count,
-        progress.stable_batch_count,
-        progress.extension_stability_count,
-        progress.consecutive_empty_extension_batches,
-        checkpoint.stability_count,
-        checkpoint.stable_batch_count,
-        checkpoint.extension_stability_count,
-        checkpoint.consecutive_empty_extension_batches,
-      ) ?? fallback.stabilityCount,
-    usedCores:
-      firstFinite(progress.used_cores, payload.used_cores, usedResources.cores) ??
-      fallback.usedCores,
-    elapsedSeconds:
-      firstFinite(
-        progress.elapsed_seconds,
-        payload.elapsed_seconds,
-        result.elapsed_seconds,
-      ) ?? fallback.elapsedSeconds,
-    capSeconds:
-      firstFinite(
-        progress.max_time_seconds,
-        progress.cap_seconds,
-        payload.max_time_seconds,
-        requestedResources.max_time_seconds,
-        requestedResources.time_limit_seconds,
-      ) ?? fallback.capSeconds,
-    terminationReason:
-      firstText(
-        progress.termination_reason,
-        payload.termination_reason,
-        result.termination_reason,
-      ) ?? fallback.terminationReason,
-  };
-}
-
 const TERMINATION_LABELS: Readonly<Record<string, string>> = {
   initial_work_answered: "初期探索で解を確定",
   extension_stable: "追加探索が安定したため終了",
@@ -372,17 +230,19 @@ function terminationLabel(reason?: string): string {
 function runPhaseLabel(phase: string): string {
   const labels: Readonly<Record<string, string>> = {
     idle: "待機中",
-    validating: "問題を検証中",
+    submitting: "問題を検証・送信中",
     queued: "実行待ち",
     running: "初期探索",
+    cancelling: "中止を要求中",
+    watchdog: "応答待ち（再接続中）",
     initial_search: "初期探索",
     extension: "追加探索",
     exact_authority: "厳密判定",
     finalizing: "結果を整理中",
     completed: "完了",
-    done: "完了",
+    succeeded: "完了",
     cancelled: "中止",
-    error: "エラー",
+    failed: "エラー",
   };
   return labels[phase] ?? phase;
 }
@@ -392,6 +252,42 @@ type ValidationReport = {
   issues: ValidationIssue[];
   warnings?: ValidationIssue[];
 };
+
+export function validationIssueLocation(
+  path: string,
+  problem: Problem,
+): string {
+  let match = /^constraints\[(\d+)](?:\.(def|value))?$/.exec(path);
+  if (match) return `条件 ${Number(match[1]) + 1}`;
+  match = /^guards\[(\d+)]$/.exec(path);
+  if (match)
+    return `条件 ${problem.constraints.length + Number(match[1]) + 1}`;
+  match = /^construction\[(\d+)]\.expr$/.exec(path);
+  if (match) {
+    const item = problem.construction[Number(match[1])];
+    return item ? `オブジェクト「${item.name}」の定義` : "作図の定義";
+  }
+  if (path === "answer") return "ターゲット";
+  if (path.startsWith("variables")) return "変数";
+  return path;
+}
+
+function validationIssueExpression(
+  path: string,
+  problem: Problem,
+): string | undefined {
+  let match = /^constraints\[(\d+)]\.(def|value)$/.exec(path);
+  if (match) {
+    const item = problem.constraints[Number(match[1])];
+    return item ? String(item[match[2] as "def" | "value"]) : undefined;
+  }
+  match = /^guards\[(\d+)]$/.exec(path);
+  if (match) return problem.guards[Number(match[1])];
+  match = /^construction\[(\d+)]\.expr$/.exec(path);
+  if (match) return problem.construction[Number(match[1])]?.expr;
+  if (path === "answer") return problem.answer;
+  return undefined;
+}
 type DslCategory = { id: string; label_ja: string; label_en: string };
 type DslTool = {
   id: string;
@@ -541,6 +437,7 @@ function canvasLabelLayout(
   viewport: Viewport,
   hidden: ReadonlySet<string>,
   styles: Readonly<Record<string, ObjectStyle>>,
+  selectedNames: ReadonlySet<string>,
 ): ReadonlyMap<string, CanvasLabelPlacement> {
   const placements = new Map<string, CanvasLabelPlacement>();
   const pointObstacles = items
@@ -561,7 +458,11 @@ function canvasLabelLayout(
         !hidden.has(item.name) &&
         displayedObjectLabel(item, styles[item.name]) !== "",
     )
-    .sort((a, b) => Number(b.kind === "point") - Number(a.kind === "point"));
+    .sort((a, b) => {
+      const priority = (item: SceneItem) =>
+        selectedNames.has(item.name) ? 2 : item.kind === "point" ? 1 : 0;
+      return priority(b) - priority(a);
+    });
   for (const item of ordered) {
     const label = displayedObjectLabel(item, styles[item.name]);
     const width = Math.min(150, Math.max(28, 16 + Array.from(label).length * 9));
@@ -574,6 +475,12 @@ function canvasLabelLayout(
       { x: anchor.x - width - 8, y: anchor.y + 5 },
       { x: anchor.x - width / 2, y: anchor.y - height - 11 },
       { x: anchor.x - width / 2, y: anchor.y + 11 },
+      { x: anchor.x + 18, y: anchor.y - height - 18 },
+      { x: anchor.x + 18, y: anchor.y + 18 },
+      { x: anchor.x - width - 18, y: anchor.y - height - 18 },
+      { x: anchor.x - width - 18, y: anchor.y + 18 },
+      { x: anchor.x + 30, y: anchor.y - height / 2 },
+      { x: anchor.x - width - 30, y: anchor.y - height / 2 },
     ];
     const fit = candidates
       .map((candidate) => ({ ...candidate, width, height }))
@@ -586,12 +493,13 @@ function canvasLabelLayout(
           !occupied.some((box) => intersects(candidate, box)) &&
           !pointObstacles.some((box) => intersects(candidate, box)),
       );
-    const fallback = fit ?? {
+    const fallback = fit ?? (selectedNames.has(item.name) || item.kind === "point" ? {
       x: Math.max(2, Math.min(viewport.width - width - 2, anchor.x + 8)),
       y: Math.max(2, Math.min(viewport.height - height - 2, anchor.y - height - 5)),
       width,
       height,
-    };
+    } : undefined);
+    if (!fallback) continue;
     placements.set(item.name, fallback);
     occupied.push(fallback);
   }
@@ -1021,6 +929,43 @@ export function conditionFromFormula(
     : { kind: "guard", value: formulaToGuard(source) };
 }
 
+export function conditionDraftIssue(source: string): string | undefined {
+  const expectedClose: Readonly<Record<string, string>> = {
+    "(": ")",
+    "[": "]",
+  };
+  const opening = new Set(Object.keys(expectedClose));
+  const closing = new Set(Object.values(expectedClose));
+  const stack: Array<{ character: string; index: number }> = [];
+  let quote = "";
+  for (let index = 0; index < source.length; index += 1) {
+    const character = source[index];
+    if (quote) {
+      if (character === quote && source[index - 1] !== "\\") quote = "";
+      continue;
+    }
+    if (character === '"' || character === "'") {
+      quote = character;
+      continue;
+    }
+    if (opening.has(character)) {
+      stack.push({ character, index });
+      continue;
+    }
+    if (!closing.has(character)) continue;
+    const latest = stack.pop();
+    if (!latest || expectedClose[latest.character] !== character)
+      return `${index + 1}文字目の「${character}」に対応する開き括弧がありません。式を入力し直してください。`;
+  }
+  if (quote)
+    return `文字列を閉じる「${quote}」がありません。式を入力し直してください。`;
+  if (stack.length) {
+    const latest = stack[stack.length - 1];
+    return `${latest.index + 1}文字目の「${latest.character}」が閉じられていません。「${expectedClose[latest.character]}」を補うか、式を入力し直してください。`;
+  }
+  return undefined;
+}
+
 /**
  * Upgrade projects written by the former visual condition editor.
  *
@@ -1246,26 +1191,6 @@ function isDslCatalog(value: unknown): value is DslCatalog {
     typeof item.version === "string" &&
     Array.isArray(item.categories) &&
     Array.isArray(item.tools)
-  );
-}
-function polynomialText(coefficients: Array<number | string>): string {
-  const degree = coefficients.length - 1;
-  if (degree < 0) return "—";
-  return (
-    coefficients
-      .map((raw, index) => {
-        const coefficient = String(raw);
-        const power = degree - index;
-        if (coefficient === "0" || coefficient === "0.0") return "";
-        const term = power === 0 ? "" : power === 1 ? "x" : `x^${power}`;
-        if (!term) return coefficient;
-        if (coefficient === "1") return term;
-        if (coefficient === "-1") return `-${term}`;
-        return `${coefficient}${term}`;
-      })
-      .filter(Boolean)
-      .join(" + ")
-      .replace(/\+ -/g, "− ") || "0"
   );
 }
 const FREEDOM_LABEL = { free: "自由", fixed: "固定", derived: "従属" } as const;
@@ -1662,32 +1587,8 @@ function PaletteGlyph({ id }: { id: string }) {
   );
 }
 
-type LayoutSizes = { left: number; right: number; bottom: number };
-const DEFAULT_LAYOUT_SIZES: LayoutSizes = { left: 350, right: 330, bottom: 196 };
-const LAYOUT_STORAGE_KEY = "geotarget.layout.v1";
-
 function clamp(value: number, minimum: number, maximum: number): number {
   return Math.min(maximum, Math.max(minimum, value));
-}
-
-function loadLayoutSizes(): LayoutSizes {
-  if (typeof window === "undefined") return DEFAULT_LAYOUT_SIZES;
-  try {
-    const stored = JSON.parse(
-      window.localStorage.getItem(LAYOUT_STORAGE_KEY) ?? "null",
-    ) as Partial<LayoutSizes> | null;
-    return {
-      left: clamp(Number(stored?.left) || DEFAULT_LAYOUT_SIZES.left, 250, 520),
-      right: clamp(Number(stored?.right) || DEFAULT_LAYOUT_SIZES.right, 270, 520),
-      bottom: clamp(
-        Number(stored?.bottom) || DEFAULT_LAYOUT_SIZES.bottom,
-        150,
-        420,
-      ),
-    };
-  } catch {
-    return DEFAULT_LAYOUT_SIZES;
-  }
 }
 
 type PaneResizeHandleProps = {
@@ -1778,10 +1679,11 @@ export function App() {
   const [pointNaming, setPointNaming] = useState<PointNaming>();
   const [pointNameDraft, setPointNameDraft] = useState("");
   const [leftMode, setLeftMode] = useState<"algebra" | "tools">("tools");
-  const [layoutSizes, setLayoutSizes] = useState<LayoutSizes>(loadLayoutSizes);
-  const [viewportWidth, setViewportWidth] = useState(() =>
-    typeof window === "undefined" ? 1440 : window.innerWidth,
-  );
+  const layout = useWorkbenchLayout();
+  const layoutSizes = layout.sizes;
+  const viewportWidth = layout.viewportWidth;
+  const inspectorDrawerOpen = layout.drawerOpen;
+  const setInspectorDrawerOpen = layout.setDrawerOpen;
   const [showAllTools, setShowAllTools] = useState(false);
   const [mathKeyboardOpen, setMathKeyboardOpen] = useState(false);
   const [activeMathField, setActiveMathField] = useState("");
@@ -1836,23 +1738,11 @@ export function App() {
   const [cores, setCores] = useState<SolverCores>(1);
   const [manualCores, setManualCores] = useState(1);
   const [seed, setSeed] = useState(0);
-  const [phase, setPhase] = useState<
-    | "idle"
-    | "validating"
-    | "queued"
-    | "running"
-    | "done"
-    | "cancelled"
-    | "error"
-  >("idle");
-  const [jobId, setJobId] = useState<string>();
-  const [elapsed, setElapsed] = useState(0);
-  const [runProgress, setRunProgress] = useState<RunProgress>({
-    phase: "idle",
-    elapsedSeconds: 0,
-    capSeconds: 180,
-  });
-  const [result, setResult] = useState<ApiResult>();
+  const solverJob = useSolverJob(setUiError);
+  const phase = solverJob.phase;
+  const runProgress: RunProgress = solverJob.progress;
+  const result: ApiResult | undefined = solverJob.result;
+  const elapsed = runProgress.wallElapsedSeconds;
   const [activeAnswer, setActiveAnswer] = useState(0);
   const importRef = useRef<HTMLInputElement>(null);
   const dialogInputRef = useRef<HTMLInputElement>(null);
@@ -1866,7 +1756,8 @@ export function App() {
   const problemRef = useRef(problem);
   const dialogRef = useRef<HTMLElement | null>(null);
   const dialogTriggerRef = useRef<HTMLElement | null>(null);
-  const runToken = useRef(0);
+  const inspectorDrawerRef = useRef<HTMLElement | null>(null);
+  const inspectorDrawerTriggerRef = useRef<HTMLButtonElement | null>(null);
   const dragRef = useRef<
     | (
         | {
@@ -1897,45 +1788,51 @@ export function App() {
   const dragFrameRef = useRef<number | undefined>(undefined);
   const pendingDragPointRef = useRef<Vec2 | undefined>(undefined);
 
-  useEffect(() => {
-    window.localStorage.setItem(
-      LAYOUT_STORAGE_KEY,
-      JSON.stringify(layoutSizes),
-    );
-  }, [layoutSizes]);
-
-  useEffect(() => {
-    const updateViewportWidth = () => setViewportWidth(window.innerWidth);
-    window.addEventListener("resize", updateViewportWidth);
-    return () => window.removeEventListener("resize", updateViewportWidth);
-  }, []);
-
-  useEffect(() => {
-    if (viewportWidth <= 980) return;
-    const panelBudget = Math.max(520, viewportWidth - 14 - 280);
-    setLayoutSizes((current) => {
-      let left = clamp(current.left, 250, 520);
-      let right = clamp(current.right, 270, 520);
-      const excess = left + right - panelBudget;
-      if (excess > 0) {
-        const reduceLeft = Math.min(excess, left - 250);
-        left -= reduceLeft;
-        right -= Math.min(excess - reduceLeft, right - 270);
-      }
-      return left === current.left && right === current.right
-        ? current
-        : { ...current, left, right };
-    });
-  }, [viewportWidth]);
-
   const leftPaneMaximum =
-    viewportWidth > 980
+    viewportWidth >= 1220
       ? clamp(viewportWidth - layoutSizes.right - 14 - 280, 250, 520)
       : 520;
   const rightPaneMaximum =
-    viewportWidth > 980
+    viewportWidth >= 1220
       ? clamp(viewportWidth - layoutSizes.left - 14 - 280, 270, 520)
       : 520;
+  const inspectorIsDrawer = viewportWidth >= 768 && viewportWidth < 1220;
+
+  useEffect(() => {
+    if (!inspectorIsDrawer || !inspectorDrawerOpen) return;
+    const drawer = inspectorDrawerRef.current;
+    const focusable = () =>
+      drawer
+        ? [
+            ...drawer.querySelectorAll<HTMLElement>(
+              'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex="0"]',
+            ),
+          ]
+        : [];
+    focusable()[0]?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setInspectorDrawerOpen(false);
+        inspectorDrawerTriggerRef.current?.focus();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const items = focusable();
+      if (!items.length) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [inspectorDrawerOpen, inspectorIsDrawer]);
 
   const scene = useMemo(
     () =>
@@ -1972,6 +1869,7 @@ export function App() {
         },
         hidden,
         objectStyles,
+        new Set([selected, ...toolPoints, ...(guided?.names ?? [])]),
       ),
     [
       scene.items,
@@ -1980,6 +1878,9 @@ export function App() {
       camera.pixelsPerUnit,
       hidden,
       objectStyles,
+      selected,
+      toolPoints,
+      guided?.names,
     ],
   );
   const selectedConstruction = problem.construction.find(
@@ -2186,7 +2087,7 @@ export function App() {
   useEffect(() => {
     if (!jsonDirty) setJsonDraft(JSON.stringify(problem, null, 2));
     setCommand(problem.answer);
-    setResult(undefined);
+    solverJob.clearResult();
     setValidation(undefined);
   }, [problem, jsonDirty]);
   useEffect(() => {
@@ -2230,20 +2131,6 @@ export function App() {
     variablePreview,
     measurements,
   ]);
-  useEffect(() => {
-    if (!["queued", "running"].includes(phase)) return;
-    const timer = window.setInterval(() => {
-      setElapsed((value) => value + 1);
-      setRunProgress((current) => ({
-        ...current,
-        elapsedSeconds: Math.min(
-          current.capSeconds,
-          current.elapsedSeconds + 1,
-        ),
-      }));
-    }, 1000);
-    return () => window.clearInterval(timer);
-  }, [phase]);
   useEffect(() => {
     if (!catalogOpen) return;
     dialogInputRef.current?.focus();
@@ -4099,7 +3986,6 @@ export function App() {
     }
   }
   async function startSolve() {
-    const token = ++runToken.current;
     const prepared = withoutBlankExpressions(problem);
     if (JSON.stringify(prepared) !== JSON.stringify(problem)) commit(prepared);
     const submittedProblem = JSON.stringify(prepared);
@@ -4120,146 +4006,21 @@ export function App() {
       cores: requestedCores,
       seed,
     } as const;
-    setPhase("validating");
-    setElapsed(0);
-    setRunProgress({
-      phase: "validating",
-      elapsedSeconds: 0,
+    setUiError("");
+    await solverJob.start({
+      problem: prepared,
+      options,
       capSeconds: requestedMaxTime,
       usedCores:
         typeof requestedCores === "number" ? requestedCores : undefined,
+      validate: async () => Boolean((await validateCurrent(prepared))?.valid),
+      isCurrentProblem: () =>
+        JSON.stringify(withoutBlankExpressions(problemRef.current)) ===
+        submittedProblem,
     });
-    setResult(undefined);
-    setUiError("");
-    const report = await validateCurrent(prepared);
-    if (token !== runToken.current) return;
-    if (!report?.valid) {
-      setPhase("error");
-      setRunProgress((currentProgress) => ({
-        ...currentProgress,
-        phase: "error",
-      }));
-      return;
-    }
-    try {
-      const response = await fetch("/api/v1/solves", {
-        method: "POST",
-        credentials: "same-origin",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          problem: prepared,
-          options,
-        }),
-      });
-      if (!response.ok)
-        throw new Error(`solve request failed (HTTP ${response.status})`);
-      const created = (await response.json()) as { job_id: string };
-      if (token !== runToken.current) {
-        await fetch(`/api/v1/solves/${created.job_id}`, {
-          method: "DELETE",
-          credentials: "same-origin",
-        }).catch(() => undefined);
-        return;
-      }
-      setJobId(created.job_id);
-      setPhase("queued");
-      setRunProgress((currentProgress) => ({
-        ...currentProgress,
-        phase: "queued",
-      }));
-      while (token === runToken.current) {
-        await new Promise((resolve) => window.setTimeout(resolve, 700));
-        const current = await fetch(`/api/v1/solves/${created.job_id}`, {
-          credentials: "same-origin",
-        });
-        if (!current.ok)
-          throw new Error(`job status failed (HTTP ${current.status})`);
-        const payload = (await current.json()) as {
-          state: string;
-          result: ApiResult | null;
-          progress?: unknown;
-          [key: string]: unknown;
-        };
-        if (token !== runToken.current) return;
-        setRunProgress((currentProgress) =>
-          progressFromPayload(payload, currentProgress),
-        );
-        if (payload.state === "running") setPhase("running");
-        if (payload.result) {
-          if (
-            JSON.stringify(withoutBlankExpressions(problemRef.current)) !==
-            submittedProblem
-          ) {
-            setUiError(
-              "計算中に問題が変更されたため、この結果は表示しません。もう一度実行してください",
-            );
-            setPhase("error");
-            setRunProgress((currentProgress) => ({
-              ...currentProgress,
-              phase: "error",
-            }));
-            return;
-          }
-          setResult(payload.result);
-          setRunProgress((currentProgress) => {
-            const completed = progressFromPayload(payload, currentProgress);
-            return {
-              ...completed,
-              phase:
-                payload.result?.status === "cancelled"
-                  ? "cancelled"
-                  : payload.result?.status.endsWith("error")
-                    ? "error"
-                    : "done",
-            };
-          });
-          setPhase(
-            payload.result.status.endsWith("error")
-              ? "error"
-              : payload.result.status === "cancelled"
-                ? "cancelled"
-                : "done",
-          );
-          return;
-        }
-        if (payload.state === "cancelled") {
-          setPhase("cancelled");
-          setRunProgress((currentProgress) => ({
-            ...currentProgress,
-            phase: "cancelled",
-            terminationReason: "cancelled",
-          }));
-          return;
-        }
-      }
-    } catch (error) {
-      if (token === runToken.current) {
-        setUiError(
-          error instanceof Error ? error.message : "solverに接続できません",
-        );
-        setPhase("error");
-        setRunProgress((currentProgress) => ({
-          ...currentProgress,
-          phase: "error",
-          terminationReason: "engine_error",
-        }));
-      }
-    }
   }
   async function cancelSolve() {
-    const id = jobId;
-    ++runToken.current;
-    setPhase("cancelled");
-    setRunProgress((current) => ({
-      ...current,
-      phase: "cancelled",
-      terminationReason: "cancelled",
-    }));
-    if (id)
-      await fetch(`/api/v1/solves/${id}`, {
-        method: "DELETE",
-        credentials: "same-origin",
-      }).catch(() => undefined);
+    await solverJob.cancel();
   }
   function applyJson() {
     try {
@@ -4614,7 +4375,13 @@ export function App() {
       ),
     });
   }
-  const running = ["validating", "queued", "running"].includes(phase);
+  const running = [
+    "submitting",
+    "queued",
+    "running",
+    "cancelling",
+    "watchdog",
+  ].includes(phase);
   const draftActive =
     !!guided?.names.length || !!toolPoints.length || !!pendingPoints.length;
   const keyboardIntersection =
@@ -4693,6 +4460,16 @@ export function App() {
           <button onClick={() => download(problem, ".json")}>
             <FloppyDisk />
             V15 JSON
+          </button>
+          <button
+            ref={inspectorDrawerTriggerRef}
+            className="inspector-drawer-trigger"
+            aria-controls="solver-inspector"
+            aria-expanded={inspectorDrawerOpen}
+            onClick={() => setInspectorDrawerOpen(true)}
+          >
+            <Wrench />
+            Inspector / Solver
           </button>
           <span
             className={`doctor-status ${doctor?.ok === false ? "bad" : ""}`}
@@ -5137,9 +4914,7 @@ export function App() {
           maximum={leftPaneMaximum}
           valuePerPixel={1}
           defaultValue={DEFAULT_LAYOUT_SIZES.left}
-          onChange={(left) =>
-            setLayoutSizes((current) => ({ ...current, left }))
-          }
+          onChange={(left) => layout.setSize("left", left)}
         />
         <section
           className="center-stage"
@@ -5554,9 +5329,7 @@ export function App() {
             maximum={420}
             valuePerPixel={-1}
             defaultValue={DEFAULT_LAYOUT_SIZES.bottom}
-            onChange={(bottom) =>
-              setLayoutSizes((current) => ({ ...current, bottom }))
-            }
+            onChange={(bottom) => layout.setSize("bottom", bottom)}
           />
           <div className="editor-panel">
             <div
@@ -5735,11 +5508,36 @@ export function App() {
           maximum={rightPaneMaximum}
           valuePerPixel={-1}
           defaultValue={DEFAULT_LAYOUT_SIZES.right}
-          onChange={(right) =>
-            setLayoutSizes((current) => ({ ...current, right }))
-          }
+          onChange={(right) => layout.setSize("right", right)}
         />
-        <aside className="solver-pane" aria-label="プロパティとsolver">
+        {inspectorIsDrawer && inspectorDrawerOpen && (
+          <button
+            className="inspector-drawer-backdrop"
+            aria-label="Inspector外側を閉じる"
+            onClick={() => {
+              setInspectorDrawerOpen(false);
+              inspectorDrawerTriggerRef.current?.focus();
+            }}
+          />
+        )}
+        <aside
+          id="solver-inspector"
+          ref={inspectorDrawerRef}
+          className={`solver-pane ${inspectorDrawerOpen ? "drawer-open" : ""}`}
+          aria-label="プロパティとsolver"
+          inert={inspectorIsDrawer && !inspectorDrawerOpen ? true : undefined}
+          aria-hidden={inspectorIsDrawer && !inspectorDrawerOpen ? true : undefined}
+        >
+          <button
+            className="inspector-drawer-close"
+            aria-label="Inspectorを閉じる"
+            onClick={() => {
+              setInspectorDrawerOpen(false);
+              inspectorDrawerTriggerRef.current?.focus();
+            }}
+          >
+            <X />
+          </button>
           <section className="inspector-section property-inspector">
             <h2>設定</h2>
             {selectedConstruction ? (
@@ -6339,7 +6137,11 @@ export function App() {
               <ul className="validation-errors">
                 {validation.issues.map((issue) => (
                   <li key={`${issue.path}-${issue.code}`}>
-                    <code>{issue.path}</code> {issue.message}
+                    <strong>{validationIssueLocation(issue.path, problem)}</strong>
+                    <span>{issue.message}</span>
+                    {validationIssueExpression(issue.path, problem) && (
+                      <code>{validationIssueExpression(issue.path, problem)}</code>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -6348,7 +6150,8 @@ export function App() {
               <ul className="validation-errors validation-warnings">
                 {validation.warnings.map((warning) => (
                   <li key={`${warning.path}-${warning.code}`}>
-                    <code>{warning.path}</code> {warning.message}
+                    <strong>{validationIssueLocation(warning.path, problem)}</strong>
+                    <span>{warning.message}</span>
                   </li>
                 ))}
               </ul>
@@ -6361,10 +6164,10 @@ export function App() {
                 {phase === "idle"
                   ? "待機中"
                   : `${runPhaseLabel(
-                      ["done", "cancelled", "error"].includes(phase)
+                      ["succeeded", "cancelled", "failed", "watchdog"].includes(phase)
                         ? phase
                         : runProgress.phase,
-                    )} · ${Math.round(Math.max(elapsed, runProgress.elapsedSeconds))}秒`}
+                    )} · 全体時間 ${Math.round(elapsed)}秒`}
               </span>
             </div>
             {phase !== "idle" && (
@@ -6372,9 +6175,7 @@ export function App() {
                 <div className="run-progress-line">
                   <strong>{runPhaseLabel(runProgress.phase)}</strong>
                   <span>
-                    {Math.round(
-                      Math.max(elapsed, runProgress.elapsedSeconds),
-                    )}
+                    全体時間 {Math.round(elapsed)}
                     /{Math.round(runProgress.capSeconds)}秒
                   </span>
                 </div>
@@ -6383,7 +6184,7 @@ export function App() {
                   max={Math.max(1, runProgress.capSeconds)}
                   value={Math.min(
                     runProgress.capSeconds,
-                    Math.max(elapsed, runProgress.elapsedSeconds),
+                    elapsed,
                   )}
                 />
                 <dl className="run-progress-grid">
@@ -6417,6 +6218,11 @@ export function App() {
                     終了理由: {terminationLabel(runProgress.terminationReason)}
                   </p>
                 )}
+                {solverJob.cancelError && (
+                  <p className="termination-line cancel-error" role="alert">
+                    {solverJob.cancelError}。中止を再試行できます。
+                  </p>
+                )}
               </div>
             )}
             <div className="solve-actions">
@@ -6438,165 +6244,27 @@ export function App() {
               </button>
             </div>
           </section>
-          <section className="inspector-section result-section">
-            <div className="result-heading">
-              <h2>厳密解</h2>
-              {result && <span>{result.answers.length} answers</span>}
-            </div>
-            {!result ? (
-              <div className="empty-result">まだ実行していません。</div>
-            ) : (
-              <>
-                <div className={`result-status status-${result.status}`}>
-                  {result.status}
-                </div>
-                {result.warnings.map((warning) => (
-                  <p className="warning-strip" key={warning}>
-                    {warning}
-                  </p>
-                ))}
-                {result.answers.map((answer, index) => (
-                  <article
-                    className={`answer-card ${activeAnswer === index ? "active-answer" : ""}`}
-                    key={`${answer.decimal}-${index}`}
-                  >
-                    <div className="answer-number">
-                      <span>#{index + 1}</span>
-                      <strong>
-                        <MathFormula source={answer.decimal} label={`近似値 ${answer.decimal}`} />
-                      </strong>
-                      {answer.approximate_witness && (
-                        <button
-                          onClick={() => {
-                            if (activeAnswer === index && showWitness)
-                              setShowWitness(false);
-                            else {
-                              setActiveAnswer(index);
-                              setShowWitness(true);
-                            }
-                          }}
-                        >
-                          {activeAnswer === index && showWitness
-                            ? "表示を隠す"
-                            : "作図に表示"}
-                        </button>
-                      )}
-                    </div>
-                    <dl>
-                      <div>
-                        <dt>最小多項式</dt>
-                        <dd className="exact-formula">
-                          <MathFormula
-                            source={polynomialText(
-                              answer.minimal_polynomial_high_to_low,
-                            )}
-                            tex={polynomialToTex(
-                              answer.minimal_polynomial_high_to_low,
-                            )}
-                            label={`最小多項式 ${polynomialText(answer.minimal_polynomial_high_to_low)}`}
-                          />
-                        </dd>
-                      </div>
-                      <div>
-                        <dt>実根 index</dt>
-                        <dd>{answer.selected_real_root_index}</dd>
-                      </div>
-                      <div>
-                        <dt>隔離区間</dt>
-                        <dd className="exact-formula">
-                          <MathFormula
-                            source={`[${answer.isolating_interval.join(", ")}]`}
-                            tex={`\\left[${answer.isolating_interval.join(",\\,")}\\right]`}
-                            label={`隔離区間 ${answer.isolating_interval.join(" から ")}`}
-                          />
-                        </dd>
-                      </div>
-                      {answer.exact_authority_kind && (
-                        <div>
-                          <dt>Authority</dt>
-                          <dd>{answer.exact_authority_kind}</dd>
-                        </div>
-                      )}
-                    </dl>
-                    {answer.approximate_witness && (
-                      <details open={activeAnswer === index && showWitness}>
-                        <summary>近似配置 (witness)</summary>
-                        <pre>
-                          {JSON.stringify(answer.approximate_witness, null, 2)}
-                        </pre>
-                      </details>
-                    )}
-                  </article>
-                ))}
-                <dl className="result-meta">
-                  <div>
-                    <dt>Engine</dt>
-                    <dd>
-                      {result.engine_id}
-                      {result.engine_variant && ` · ${result.engine_variant}`}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>Hash</dt>
-                    <dd>
-                      <code>{result.engine_hash}</code>
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>Problem SHA</dt>
-                    <dd>
-                      <code>{result.problem_sha256}</code>
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>Elapsed</dt>
-                    <dd>
-                      {result.elapsed_seconds.toFixed(3)}秒 / {Math.round(
-                        runProgress.capSeconds,
-                      )}
-                      秒
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>完了starts</dt>
-                    <dd>
-                      {runProgress.completedStarts ?? "—"}
-                      {runProgress.totalStarts !== undefined &&
-                        ` / ${runProgress.totalStarts}`}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>追加batch / 安定回数</dt>
-                    <dd>
-                      {runProgress.batch !== undefined
-                        ? `#${runProgress.batch}`
-                        : "—"}
-                      {" / "}
-                      {runProgress.stabilityCount ?? "—"}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>使用コア</dt>
-                    <dd>
-                      {runProgress.usedCores ??
-                        (typeof result.used_resources?.cores === "number"
-                          ? result.used_resources.cores
-                          : "—")}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>終了理由</dt>
-                    <dd>
-                      {terminationLabel(
-                        result.termination_reason ??
-                          runProgress.terminationReason,
-                      )}
-                    </dd>
-                  </div>
-                </dl>
-              </>
-            )}
-          </section>
+          <Suspense
+            fallback={
+              <section className="inspector-section result-section">
+                <div className="empty-result">結果表示を読み込み中…</div>
+              </section>
+            }
+          >
+            <ExactResult
+              result={result}
+              progress={runProgress}
+              activeAnswer={activeAnswer}
+              showWitness={showWitness}
+              onToggleWitness={(index) => {
+                if (activeAnswer === index && showWitness) setShowWitness(false);
+                else {
+                  setActiveAnswer(index);
+                  setShowWitness(true);
+                }
+              }}
+            />
+          </Suspense>
         </aside>
       </main>
       {mathKeyboardOpen && !catalogOpen && (

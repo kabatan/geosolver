@@ -82,10 +82,7 @@ def test_deployment_qualification_policy_is_not_part_of_engine_identity(
 
 
 def test_restoration_rescue_transitive_dependencies_are_hash_bound() -> None:
-    experiment = (
-        engine_root()
-        / "runtime/solver/research/experiments/EXP-REAL61-008"
-    )
+    experiment = engine_root() / "runtime/solver/research/experiments/EXP-REAL61-008"
     expected = {
         "dev41_row_restoration_v4/candidate.py": (
             "4a9eacaa3f592ea78992c174a4c37e7a0562273655ca9ba72c34575ee599485c"
@@ -161,6 +158,10 @@ def test_doctor_reports_locked_runtime() -> None:
     assert report["ok"]
     assert report["engine_hash"] == ENGINE_HASH
     assert report["nemo_locked"] is True
+    assert (
+        report["optimized_qualification"]["report_summary"]["qualified_engine_hash"]
+        == optimized_engine_hash()
+    )
 
 
 def test_frozen_subprocess_python_launcher_is_executable() -> None:
@@ -196,13 +197,13 @@ def test_reference_runtime_freezes_native_thread_environment() -> None:
 def test_exact_descriptor_mapping_is_exposed_without_losing_its_interval() -> None:
     answers = extract_answers(
         {
-            "descriptor": {
+            "distinct_exact_target_descriptors": [{
                 "minimal_polynomial_high_to_low": [1, -40],
                 "selected_real_root_index": 0,
                 "isolating_interval": {"left": "39.9", "right": "40.1"},
                 "target_1024": "40.000",
                 "authority_kind": "MINPOLY_REAL_ROOT_ISOLATOR",
-            }
+            }]
         }
     )
 
@@ -213,14 +214,62 @@ def test_exact_descriptor_mapping_is_exposed_without_losing_its_interval() -> No
 def test_exact_rational_root_is_a_display_decimal_fallback() -> None:
     answers = extract_answers(
         {
-            "minimal_polynomial_high_to_low": [1, -5],
-            "selected_real_root_index": 0,
-            "isolating_interval": {
-                "left": "4.9",
-                "right": "5.1",
-                "exact_rational_root": "5",
-            },
+            "distinct_exact_target_descriptors": [{
+                "minimal_polynomial_high_to_low": [1, -5],
+                "selected_real_root_index": 0,
+                "isolating_interval": {
+                    "left": "4.9",
+                    "right": "5.1",
+                    "exact_rational_root": "5",
+                },
+            }],
         }
     )
 
     assert answers[0].decimal == "5"
+
+
+def test_rejected_attempt_minpoly_is_never_exposed_as_an_answer() -> None:
+    raw = {
+        "distinct_exact_target_descriptors": [],
+        "hp_attempts": [
+            {
+                "authority_pass": False,
+                "final_result": {
+                    "target_authority": {
+                        "minimal_polynomial_high_to_low": [1, -999],
+                        "selected_real_root_index": 0,
+                        "target_1024": "999",
+                    }
+                },
+            }
+        ],
+    }
+
+    assert extract_answers(raw) == []
+
+
+def test_only_promoted_descriptor_is_exposed_when_rejected_attempts_remain() -> None:
+    accepted = {
+        "minimal_polynomial_high_to_low": [1, -5],
+        "selected_real_root_index": 0,
+        "target_1024": "5",
+    }
+    raw = {
+        "distinct_exact_target_descriptors": [accepted],
+        "hp_attempts": [
+            {
+                "authority_pass": False,
+                "descriptor": {
+                    "minimal_polynomial_high_to_low": [1, -999],
+                    "selected_real_root_index": 0,
+                    "target_1024": "999",
+                },
+            }
+        ],
+    }
+
+    answers = extract_answers(raw)
+
+    assert len(answers) == 1
+    assert answers[0].minimal_polynomial_high_to_low == [1, -5]

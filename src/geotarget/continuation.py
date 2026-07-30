@@ -17,6 +17,8 @@ from geotarget.hp_wave_checkpoint import pending as wave_pending
 from geotarget.hp_wave_checkpoint import validate as validate_wave_checkpoint
 from geotarget.optimized_search import run_parallel_search
 from geotarget.parallel import (
+    AuthorityDeadlinePolicy,
+    ParallelAuthorityAdapter,
     attempt_is_resource_busy,
     resume_candidates_parallel,
 )
@@ -40,6 +42,7 @@ class ContinuationContext:
 
     base: Any
     source_document: dict[str, Any]
+    authority: ParallelAuthorityAdapter | None = None
 
 
 def prepare_context(
@@ -51,13 +54,19 @@ def prepare_context(
 ) -> ContinuationContext:
     base = _load_frozen(runtime)
     base.HP_BRIDGE = Path(__file__).with_name("hp_slot_entrypoint.py")
-    # The same frozen 34-second authority window applies at every supported
-    # core count.  Installing this adapter only for multi-core solves made the
-    # one-core continuation consume the entire outer wall budget.
-    install_parallel(base, cpus, post_search_seconds=34.0)
+    authority = install_parallel(
+        base,
+        cpus,
+        deadline_policy=AuthorityDeadlinePolicy.outer_deadline(),
+        install_compatibility_seam=False,
+    )
     source_payload, source_document = base._source_contract(source, source_sha256)
     del source_payload
-    return ContinuationContext(base=base, source_document=source_document)
+    return ContinuationContext(
+        base=base,
+        source_document=source_document,
+        authority=authority,
+    )
 
 
 def _atomic_json(path: Path, value: Mapping[str, Any]) -> None:
@@ -314,18 +323,33 @@ def continue_result(
             checkpoint_input=checkpoint_input,
             checkpoint_output=checkpoint_output,
         )
-        authority_deadline = min(deadline, time.monotonic() + 34.0)
-        attempts, new_descriptors, resumed = resume_candidates_parallel(
-            base=base,
-            source=source,
-            source_sha256=source_sha256,
-            all_candidates=reservoir,
-            output=output / "resumed-wave",
-            hard_deadline=authority_deadline,
-            cpus=cpus,
-            checkpoint=durable,
-            pool=getattr(base, "_geotarget_hp_pool", None),
-        )
+        # The frozen split reserves 34 seconds when search consumes its full
+        # 146-second share.  If the fixed 0..255 search graph has already
+        # finished (or finishes early), its unused time flows forward into HP
+        # and restoration; it must not be thrown away by imposing a fresh
+        # 34-second wall cap here.
+        authority_started = time.monotonic()
+        authority_budget = max(0.0, deadline - authority_started)
+        authority_deadline = deadline
+        resume_arguments = {
+            "source": source,
+            "source_sha256": source_sha256,
+            "all_candidates": reservoir,
+            "output": output / "resumed-wave",
+            "hard_deadline": authority_deadline,
+            "checkpoint": durable,
+        }
+        if prepared.authority is not None:
+            attempts, new_descriptors, resumed = prepared.authority.resume_candidates(
+                **resume_arguments
+            )
+        else:
+            attempts, new_descriptors, resumed = resume_candidates_parallel(
+                base=base,
+                cpus=cpus,
+                pool=getattr(base, "_geotarget_hp_pool", None),
+                **resume_arguments,
+            )
         next_wave = resumed["durable_wave_checkpoint"]
         descriptors = _existing_descriptors(result)
         for descriptor in new_descriptors.values():
@@ -363,7 +387,8 @@ def continue_result(
             "new_starts": 0,
             "new_seeds": 0,
             "seconds": seconds,
-            "authority_cap_seconds": 34.0,
+            "authority_cap_seconds": authority_budget,
+            "nominal_authority_reserve_seconds": 34.0,
             "cpu": cpu,
             "no_progress": not terminal_attempt_count and not new_descriptors,
             "retryable_resource_contention": bool(
@@ -426,14 +451,24 @@ def continue_result(
         }
         return result
 
-    attempts, new_descriptors, schedule = base._service_candidates(
-        source=source,
-        source_sha256=source_sha256,
-        candidates=candidates,
-        cpu=cpu,
-        output=output,
-        hard_deadline=min(deadline, time.monotonic() + 34.0),
-    )
+    authority_started = time.monotonic()
+    authority_budget = max(0.0, deadline - authority_started)
+    service_arguments = {
+        "source": source,
+        "source_sha256": source_sha256,
+        "candidates": candidates,
+        "cpu": cpu,
+        "output": output,
+        "hard_deadline": deadline,
+    }
+    if prepared.authority is not None:
+        attempts, new_descriptors, schedule = prepared.authority.service_candidates(
+            **service_arguments
+        )
+    else:
+        attempts, new_descriptors, schedule = base._service_candidates(
+            **service_arguments
+        )
     descriptors = _existing_descriptors(result)
     for descriptor in new_descriptors.values():
         descriptors.setdefault(_descriptor_key(descriptor), dict(descriptor))
@@ -455,6 +490,8 @@ def continue_result(
         "new_starts": max(0, int(search.get("work", {}).get("lanes_started", 0)) - start_offset),
         "new_seeds": 0,
         "seconds": seconds,
+        "authority_cap_seconds": authority_budget,
+        "nominal_authority_reserve_seconds": 34.0,
         "cpu": cpu,
         "no_progress": (
             not terminal_attempt_count and not new_descriptors and not new_endpoint_points
@@ -580,11 +617,17 @@ def run_controller(
             retryable_contention
         )
         active_output = window_output
+        authority_budget = (
+            float(continuation.get("authority_cap_seconds", 34.0))
+            if isinstance(continuation, Mapping)
+            else 34.0
+        )
         windows.append(
             {
                 "ordinal": ordinal,
                 "requested_seconds": window_seconds,
-                "post_search_cap_seconds": 34.0,
+                "post_search_cap_seconds": authority_budget,
+                "nominal_post_search_reserve_seconds": 34.0,
                 "before_lanes": before_signature[0],
                 "after_lanes": after_signature[0],
                 "before_callbacks": before_signature[1],

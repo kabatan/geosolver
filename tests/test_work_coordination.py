@@ -10,6 +10,7 @@ import pytest
 
 from geotarget import continuation as continuation_module
 from geotarget import optimized_search as optimized_search_module
+from geotarget import parallel as parallel_module
 from geotarget.adaptive_continuation import (
     extension_batch_end,
     has_safe_extension_window,
@@ -25,6 +26,8 @@ from geotarget.optimized_search import (
     _run_full_prefix,
 )
 from geotarget.parallel import (
+    AuthorityDeadlinePolicy,
+    ParallelAuthorityAdapter,
     install_reservoir_checkpoint,
     resume_candidates_parallel,
     service_candidates_parallel,
@@ -945,8 +948,105 @@ def test_interrupted_primary_retains_restoration_and_resumes_exact_wave(
     assert resumed_statistics["durable_wave_checkpoint"]["stage"] == "complete"
 
 
+@pytest.mark.parametrize(
+    "cpus",
+    [
+        (0,),
+        (0, 1, 2, 3),
+        tuple(range(15)),
+    ],
+)
+def test_large_restoration_wave_is_drained_in_stable_window_tranches(
+    tmp_path: Path, cpus: tuple[int, ...]
+) -> None:
+    """A 34-second window must never deadlock on 11+ frozen candidates."""
+
+    class FrozenBudgetBase(ParallelBase):
+        FINALIZE_RESERVE_SECONDS = 3.0
+        MIN_HP_ATTEMPT_SECONDS = 3.0
+        MAX_RESTORATION_ATTEMPT_SECONDS = 12.0
+
+        def __init__(self) -> None:
+            super().__init__()
+            self.restored: list[str] = []
+
+        @staticmethod
+        def _wave_attempt_seconds(remaining, count, cap):
+            reserve = FrozenBudgetBase.MIN_HP_ATTEMPT_SECONDS * (count - 1)
+            admitted = min(cap, remaining - reserve)
+            return admitted if admitted >= FrozenBudgetBase.MIN_HP_ATTEMPT_SECONDS else 0.0
+
+        def _run_restoration_candidate(self, *, candidate, **kwargs):
+            del kwargs
+            self.restored.append(candidate.record_id)
+            return {
+                "record_id": candidate.record_id,
+                "authority_pass": False,
+                "descriptor": None,
+            }
+
+    class ReadyPool:
+        @staticmethod
+        def ensure() -> None:
+            return None
+
+    base = FrozenBudgetBase()
+    candidates = tuple(
+        Candidate(f"r{ordinal:02d}", f"{ordinal:064x}", ordinal) for ordinal in range(26)
+    )
+    checkpoint = create_wave_checkpoint(
+        stage="restoration",
+        batch_record_ids=[candidate.record_id for candidate in candidates],
+        pending_primary_record_ids=(),
+        pending_alternate_record_ids=(),
+        pending_restoration_record_ids=[candidate.record_id for candidate in candidates],
+        failed_primaries=[
+            {
+                "cluster_ordinal": candidate.cluster_ordinal,
+                "record_id": candidate.record_id,
+                "ordinal": candidate.cluster_ordinal,
+                "artifact_directory": str(tmp_path / "failed" / candidate.record_id),
+            }
+            for candidate in candidates
+        ],
+    )
+    window_attempt_counts: list[int] = []
+    for window in range(1, 5):
+        attempts, descriptors, statistics = resume_candidates_parallel(
+            base=base,
+            source=tmp_path / "problem.json",
+            source_sha256="a" * 64,
+            all_candidates=candidates,
+            output=tmp_path / f"window-{window}",
+            hard_deadline=time.monotonic() + 34.0,
+            cpus=cpus,
+            checkpoint=checkpoint,
+            pool=ReadyPool(),
+        )
+        assert descriptors == {}
+        window_attempt_counts.append(len(attempts))
+        checkpoint = statistics["durable_wave_checkpoint"]
+        if checkpoint["stage"] == "complete":
+            break
+
+    assert window_attempt_counts == [10, 10, 6]
+    assert base.restored == [candidate.record_id for candidate in candidates]
+    assert checkpoint["stage"] == "complete"
+    assert checkpoint["pending_restoration_record_ids"] == []
+
+
+def test_fixed_authority_policy_preserves_initial_34_second_reserve(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(parallel_module.time, "monotonic", lambda: 100.0)
+    policy = AuthorityDeadlinePolicy.fixed(34.0)
+    assert policy.apply(500.0) == 134.0
+    assert policy.apply(120.0) == 120.0
+    assert AuthorityDeadlinePolicy.outer_deadline().apply(500.0) == 500.0
+
+
 @pytest.mark.parametrize("cpus", [(0,), (0, 1), (0, 1, 2, 3)])
-def test_continuation_installs_same_34_second_authority_cap_for_all_core_counts(
+def test_continuation_installs_outer_deadline_adapter_for_all_core_counts(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, cpus: tuple[int, ...]
 ) -> None:
     class Base:
@@ -957,19 +1057,93 @@ def test_continuation_installs_same_34_second_authority_cap_for_all_core_counts(
             del source, source_sha256
             return b"{}", {}
 
-    observed: list[tuple[tuple[int, ...], float]] = []
+    authority = object()
+    observed: list[tuple[tuple[int, ...], float | None, bool]] = []
+
+    def fake_install(
+        _base,
+        values,
+        *,
+        deadline_policy: AuthorityDeadlinePolicy,
+        install_compatibility_seam: bool,
+    ):
+        observed.append(
+            (tuple(values), deadline_policy.cap_seconds, install_compatibility_seam)
+        )
+        return authority
+
     monkeypatch.setattr(continuation_module, "_load_frozen", lambda _runtime: Base())
-    monkeypatch.setattr(
-        continuation_module,
-        "install_parallel",
-        lambda _base, values, *, post_search_seconds: observed.append(
-            (tuple(values), post_search_seconds)
-        ),
-    )
-    continuation_module.prepare_context(
+    monkeypatch.setattr(continuation_module, "install_parallel", fake_install)
+    prepared = continuation_module.prepare_context(
         runtime=tmp_path,
         source=tmp_path / "problem.json",
         source_sha256="a" * 64,
         cpus=cpus,
     )
-    assert observed == [(cpus, 34.0)]
+    assert observed == [(cpus, None, False)]
+    assert prepared.authority is authority
+
+
+def test_authority_adapter_forwards_the_effective_deadline_and_candidate_order(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    observed: list[dict[str, object]] = []
+    expected = ([{"record_id": "first"}, {"record_id": "second"}], {}, {})
+
+    def fake_service_candidates_parallel(**kwargs):
+        observed.append(kwargs)
+        return expected
+
+    monkeypatch.setattr(
+        parallel_module,
+        "service_candidates_parallel",
+        fake_service_candidates_parallel,
+    )
+    adapter = ParallelAuthorityAdapter(
+        base=object(),
+        cpus=(0, 2),
+        pool=object(),
+        deadline_policy=AuthorityDeadlinePolicy.outer_deadline(),
+    )
+    candidates = ("first", "second")
+    result = adapter.service_candidates(
+        cpu=0,
+        candidates=candidates,
+        hard_deadline=432.5,
+    )
+    assert result is expected
+    assert observed[0]["hard_deadline"] == 432.5
+    assert observed[0]["candidates"] is candidates
+    assert observed[0]["cpus"] == (0, 2)
+    assert "cpu" not in observed[0]
+
+
+def test_authority_adapter_resume_uses_outer_deadline_without_reclamping(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    observed: list[dict[str, object]] = []
+    expected = ([], {}, {"stage": "complete"})
+
+    def fake_resume_candidates_parallel(**kwargs):
+        observed.append(kwargs)
+        return expected
+
+    monkeypatch.setattr(
+        parallel_module,
+        "resume_candidates_parallel",
+        fake_resume_candidates_parallel,
+    )
+    adapter = ParallelAuthorityAdapter(
+        base=object(),
+        cpus=(1,),
+        pool=object(),
+        deadline_policy=AuthorityDeadlinePolicy.outer_deadline(),
+    )
+    checkpoint = {"stage": "primary"}
+    result = adapter.resume_candidates(
+        checkpoint=checkpoint,
+        hard_deadline=987.25,
+    )
+    assert result is expected
+    assert observed[0]["hard_deadline"] == 987.25
+    assert observed[0]["checkpoint"] is checkpoint

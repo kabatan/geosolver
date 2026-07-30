@@ -5,12 +5,13 @@
   "default_engine": "optimized",
   "correctness_gate_passed": true,
   "performance_gate_passed": true,
-  "qualified_at": "2026-07-29T20:12:09+09:00",
-  "report_sha256": "ccf6939711fee77f175ef433ce09174e15248cbfe8a9bd0ba5c30b92e188f425",
+  "qualified_at": "2026-07-30T20:18:24+09:00",
+  "report_sha256": "56c4e630050a7d1772806f91785cd793d90af27f43e7eac3e1ca40687316e921",
   "report_summary": {
     "schema_version": "geotarget.optimized-qualification-summary/v1",
-    "qualified_engine_hash": "07de7a00b83ce7539d4b283bf9975bc998fc13c3ff6b064052e6581388e2c287",
-    "run_id": "fused-stable-engine-j7-20260729",
+    "qualified_engine_hash": "224025b3113b59814bd354e8db2e4181cc64faf010f9de0eaf19d4cbe28f1868",
+    "base_qualified_engine_hash": "07de7a00b83ce7539d4b283bf9975bc998fc13c3ff6b064052e6581388e2c287",
+    "run_id": "fused-stable-engine-j7-20260729+scheduler-corrective-20260730",
     "fingerprint_sha256": "d11ba561d104c4d0071343ffe73fe9aba6f0aff093d53599f0fb5333a68acf9d",
     "paired_report_file_sha256": "8eeb442e354fbc7d7a91e1068e9092b5e42710875b7be8490c207012a33bf1d2",
     "case_count": 145,
@@ -28,6 +29,45 @@
     "all_gates_passed": true,
     "fused_differential_probe_count": 725,
     "fused_differential_mismatch_count": 0,
-    "omc024_f_descriptor": [[[41, -841], 0]]
+    "omc024_f_descriptor": [[[41, -841], 0]],
+    "corrective_scheduler_patch": {
+      "scope": "checkpoint admission and unused-search-time carry-forward only",
+      "frozen_candidate_order_preserved": true,
+      "frozen_hp_restoration_exact_authority_preserved": true,
+      "large_restoration_probe_candidates": 26,
+      "large_restoration_probe_cores": [1, 4, 15],
+      "forced_34_second_tranches": [10, 10, 6],
+      "omc024_f_elapsed_seconds": 22.36584210197907,
+      "omc024_f_descriptor_preserved": true,
+      "false_exact_descriptors": 0
+    },
+    "deadline_adapter_patch": {
+      "scope": "product continuation scheduling boundary only",
+      "initial_nominal_authority_reserve_seconds": 34.0,
+      "initial_fixed_cap_preserved": true,
+      "normal_continuation_uses_outer_deadline": true,
+      "durable_resume_uses_outer_deadline": true,
+      "single_and_multi_core_candidate_order_preserved": true,
+      "frozen_runtime_compatibility_shim_isolated": true
+    },
+    "accepted_answer_extraction_patch": {
+      "scope": "product result normalization only",
+      "frozen_engine_bytes_changed": false,
+      "accepted_descriptor_authority": "top-level distinct_exact_target_descriptors",
+      "rejected_hp_attempt_descriptors_exposed": false,
+      "unassociated_witness_exposed": false
+    },
+    "high_precision_polar_semantics_correction": {
+      "scope": "optimized high-precision geometry registry only",
+      "frozen_reference_bytes_changed": false,
+      "ordinary_and_high_precision_equations_match": true,
+      "existing_145_polar_case_count": 0,
+      "ui_regression_fixture": "tests/fixtures/polar-ui-regression.json",
+      "old_false_descriptor_decimal": "0.34394961312231321496",
+      "corrected_descriptor": [[7, -14, 5], 0],
+      "corrected_decimal": "0.46547751617515123063",
+      "corrected_elapsed_seconds": 25.70558011700632,
+      "optimized_without_corrected_preloader_fails_closed": true
+    }
   }
 }
