@@ -44,3 +44,10 @@ The 100-panel deterministic S0 comparison is:
 the manifest and `mechanism_hash` is the SHA-256 of `worker.py` bytes. The
 frozen common runner accepts the final v15 result schema; overlay identity and
 mechanism digests are carried by the worker dry plan.
+
+Run the truth-free counterexample/metamorphic S0 with:
+
+```bash
+/home/kabatan/work/solver/.venv/bin/python \
+  research/experiments/EXP-MULTITARGET-001/run_metamorphic_s0.py
+```

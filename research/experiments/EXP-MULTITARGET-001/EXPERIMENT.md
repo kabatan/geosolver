@@ -43,12 +43,16 @@ recover targets without changing canonical authority.
   returned 9 endpoints and replay selected 3 candidates in 2 provisional
   clusters. The tail attempted one primary, one alternate, and one restoration;
   source bytes were unchanged and total elapsed time was 20.3814 seconds.
-- After the smoke, only dry-plan provenance fields were added; scheduling did
-  not change. The raw result records the executed scheduler digest explicitly.
+- The raw result records its executed scheduler digest explicitly. A later
+  truth-free metamorphic counterexample changed only target-novelty ordering;
+  see `METAMORPHIC_S0.md` and its separate mechanism digest.
 - No truth, scorer, validation, sealed, screen24, or heavy formal run was used.
 - Common frozen `run_dataset.py` two-phase acceptance smoke: 1/1 accepted,
   outer status `COMPLETE`, process `SUCCESS`, v15 result schema preserved,
   source bytes unchanged, and 20.5022 seconds within the 30-second budget.
+  This acceptance artifact predates the target-affine ordering correction and
+  records that transitive digest; the entrypoint CLI/result schema did not
+  change. A formulation-only dry plan verifies the current transitive digest.
 
 ## Reopen/stop gate
 
