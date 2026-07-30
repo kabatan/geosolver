@@ -1,0 +1,91 @@
+{
+  "schema_version": "geotarget.exp-struct-poly-001-v2-leftover-evidence/v1",
+  "base_commit": "0967ff1cde5c2435fe0207da65e8779ff24a6da6",
+  "formal_owner_s1_aggregate": {
+    "source": "benchmark owner aggregate only; no case-level data disclosed",
+    "seed": 0,
+    "safety_clean": true,
+    "activation_cases": 2,
+    "screen_cases": 24,
+    "proposals_per_activated_case": 2,
+    "candidate_score": 15,
+    "control_score": 16,
+    "wins": 0,
+    "losses": 1,
+    "ties": 23,
+    "wall_delta_percent": 0.39,
+    "case_ids_received": false
+  },
+  "reopen_gate": {
+    "side_proposals_in_any_baseline_reservoir_or_hp_queue": 0,
+    "baseline_fresh_replay_called_before_side_generation": true,
+    "all_discovered_baseline_primaries_required_served": true,
+    "baseline_primary_wave_required_complete": true,
+    "baseline_alternate_wave_required_complete": true,
+    "baseline_restoration_wave_required_complete": true,
+    "baseline_deferred_primary_count_required": 0,
+    "baseline_unexamined_backlog_required": 0,
+    "side_generation_uses_only_leftover_wall": true,
+    "side_hp_uses_only_leftover_slot_after_source_replay": true
+  },
+  "implementation": {
+    "leftover_overlay_sha256": "8c4a2ea497fc033614697e58eaa370153ab97191f09e2bcc6c713fa84322ca79",
+    "worker_sha256": "27a722a70302a9e86a7e8a1751dc4003ed2e5d1d837a2daf5922e697f3d4fc68",
+    "arm_sha256": "41825c3a4124824a9b0d553a02ea62df3b38f9ab08b545eea84e9d41a5443e75",
+    "closure_sha256": "2fb7ba92f4224d96eeb4a821613d6a2069259de9e060ea4442061c69da4a8291",
+    "maximum_generation_seconds": 2.0,
+    "maximum_symbolic_blocks": 4,
+    "maximum_cartesian_proposals": 32,
+    "side_source_replay_seconds": 0.5,
+    "original_finalize_reserve_retained": true,
+    "original_minimum_hp_slot_retained": true,
+    "local_candidate_authority": false
+  },
+  "trace_smoke": {
+    "runner_sha256": "212e75853ae529acbd4a33f84130a9671e1de0a8abdb657bec48ffc0756a9061",
+    "result_sha256": "9160240fdb6e0eb4c2ce4d70014a8aee76444088d9ff8071e103bf2ace9b2d2d",
+    "event_order": [
+      "baseline_fresh",
+      "baseline_service_complete",
+      "side_proposal_generation",
+      "side_fresh",
+      "side_service"
+    ],
+    "baseline_attempt_trace_is_prefix": true,
+    "baseline_statistics_fields_preserved": true,
+    "side_proposals_generated": 2,
+    "side_proposals_in_baseline_reservoir": 0,
+    "locally_verified": 0
+  },
+  "bitwise_fallbacks": {
+    "baseline_incomplete_returns_original_result_object": true,
+    "no_leftover_returns_original_result_object": true,
+    "side_factory_failure_returns_original_result_object": true,
+    "nonapplicable_dry_plan_bytes_equal_to_direct_frozen": true,
+    "nonapplicable_stdout_equal_to_direct_frozen": true,
+    "nonapplicable_stderr_equal_to_direct_frozen": true
+  },
+  "common_arm_contract": {
+    "screen24_dry_passed": true,
+    "execute": false,
+    "truth_passed_to_worker": false,
+    "entrypoint_hash_matched_arm": true
+  },
+  "tests": {
+    "passed": 7,
+    "failed": 0,
+    "test_sha256": "0dae852e7e77d42033ff0117375333d847faca8b5323576218f20ea3e1fd3fcf"
+  },
+  "custody": {
+    "formal_screen_run_by_this_lane": false,
+    "scorer_run": false,
+    "known_answers_read": false,
+    "case_level_formal_results_read": false,
+    "validation_or_sealed_read": false
+  },
+  "decision": {
+    "classification": "REOPEN_GATE_IMPLEMENTED_AS_LEFTOVER_ONLY_V2",
+    "formal_promotion_authorized": false,
+    "next_gate": "benchmark-owner S1 rerun; require baseline attempts/service trace equality before considering side outcomes"
+  }
+}

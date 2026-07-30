@@ -104,3 +104,38 @@ regression reproduced the missing search artifact (`TIMEOUT`) while completing
 normally, preserving source bytes and total-wall compliance, with zero HP
 attempts and no candidate telemetry. The common screen24 arm contract passed in
 dry mode with no truth passed to the worker. No formal screen or scorer ran.
+
+## Formal-owner aggregate and leftover-only v2
+
+The benchmark owner disclosed only an aggregate S1 seed-0 result for v1:
+safety clean, activation in 2/24 cases with two proposals each, score 15/24
+versus control 16/24, wins/losses/ties 0/1/23, and wall time +0.39%. No case ID,
+case-level result, expected value, scorer output, validation data, or sealed data
+was disclosed to this lane. The v1 proposal arm therefore fails recall
+promotion. Preserving endpoint order inside a shared capped replay/HP queue is
+not sufficient: a later side candidate can still consume service that a
+baseline wave would otherwise receive.
+
+The reopen condition is implemented by `worker_v2.py` and
+`leftover_overlay.py`. Before baseline service, the wrapper calls the original
+fresh replay first and retains only source/endpoint object references; it does
+not parse endpoints or generate proposals. It then calls the original service
+with the exact original candidate object and deadline. Side work is eligible
+only after the returned statistics assert all discovered primaries served,
+primary/alternate/restoration waves complete, zero deferred primaries, and zero
+unexamined backlog. It additionally reserves the champion's original finalize
+budget and minimum HP attempt, then uses only the remaining wall time for a
+bounded generator, a separate original source replay, and a second original HP
+service.
+
+If baseline waves are incomplete, no leftover slot exists, the proposal factory
+fails, or later side replay/service fails, the wrapper returns the exact
+original baseline result object. A generated trace records the strict order
+`baseline_fresh`, `baseline_service_complete`, `side_proposal_generation`,
+`side_fresh`, `side_service`; the original attempt trace is a prefix and the
+original baseline statistics are preserved with side statistics nested under a
+new key. Generated side proposals remain locally unauthorized. Non-applicable
+dry PLAN/stdout/stderr remain byte-identical to direct frozen execution, and the
+common screen24 dry contract passes. This lane ran no formal screen or scorer
+and read no truth; the next gate is a benchmark-owner S1 rerun that first checks
+baseline attempt/service-trace equality.
