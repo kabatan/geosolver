@@ -313,6 +313,19 @@ class S3ABBAOrchestratorTests(unittest.TestCase):
         )
         self.assertEqual(parsed.seeds, [0, 1, 2, 3, 4])
 
+    def test_solver_python_virtualenv_symlink_is_preserved(self) -> None:
+        linked_python = self.root / "venv-python"
+        linked_python.symlink_to(Path(sys.executable).resolve())
+        argv = self._argv(self.root / "raw-python-link")
+        argv[argv.index("--python") + 1] = str(linked_python)
+        arguments = ORCH.parser().parse_args(argv)
+
+        _, campaign = ORCH.prepare_campaign(arguments)
+
+        self.assertEqual(
+            campaign["config"]["solver_python"], str(linked_python.absolute())
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

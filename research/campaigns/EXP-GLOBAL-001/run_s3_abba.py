@@ -399,7 +399,10 @@ def prepare_campaign(arguments: argparse.Namespace) -> tuple[Path, dict[str, obj
     runner = arguments.runner.expanduser().resolve()
     frozen_root = arguments.frozen_root.expanduser().resolve()
     dataset = arguments.dataset.expanduser().resolve()
-    solver_python = arguments.python.expanduser().resolve()
+    # Keep a virtual-environment launcher path intact.  Resolving the symlink
+    # to its base interpreter drops the venv's site-packages and makes the
+    # frozen NumPy/SciPy version probe fail before any leg can start.
+    solver_python = arguments.python.expanduser().absolute()
     launcher_python = arguments.launcher_python.expanduser().resolve()
     for path, label in (
         (raw_root, "raw root"),
