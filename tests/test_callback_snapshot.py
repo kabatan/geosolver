@@ -12,7 +12,10 @@ import numpy as np
 from geotarget.callback_snapshot import compile_callback_snapshot
 from geotarget.compiled_evaluator import CompiledResidualEvaluator, compile_residual_plan
 from geotarget.continuation import _load_frozen
-from geotarget.fused_evaluation import install_fused_evaluation
+from geotarget.fused_evaluation import (
+    install_compiled_callback_snapshot,
+    install_fused_evaluation,
+)
 from geotarget.search_pool_worker_entrypoint import _activate_compiled_evaluator
 
 PROBLEM = {
@@ -81,6 +84,7 @@ def test_snapshot_preserves_complete_callback_and_numeric_lane_boundaries() -> N
 
     install_fused_evaluation(reference_budget)
     install_fused_evaluation(candidate_budget)
+    install_compiled_callback_snapshot(candidate_budget, snapshot)
     probes = [
         [0.0, 0.0, 3.0, 4.0, 1.0, 2.0],
         [1.0, -2.0, 1.0, -2.0, 0.5, 0.25],
@@ -149,3 +153,47 @@ def test_snapshot_dispatch_specializes_only_admitted_budget_instances() -> None:
     )
     assert type(fallback_budget) is base_class
     assert fallback_metadata["compiled_callback_snapshot"]["enabled"] is False
+
+
+def test_snapshot_metamorphic_layouts_remain_complete_and_bitwise() -> None:
+    runtime = _runtime("geotarget_callback_snapshot_metamorphic_runtime")
+    renamed = copy.deepcopy(PROBLEM)
+    replacements = {
+        "ax": "u0",
+        "ay": "u1",
+        "bx": "u2",
+        "by": "u3",
+        "px": "u4",
+        "py": "u5",
+    }
+    renamed["variables"]["names"] = list(replacements.values())
+    for construction in renamed["construction"]:
+        for source, target in replacements.items():
+            construction["expr"] = construction["expr"].replace(source, target)
+
+    reordered = copy.deepcopy(PROBLEM)
+    reordered["construction"] = [
+        reordered["construction"][2],
+        reordered["construction"][0],
+        reordered["construction"][1],
+        reordered["construction"][3],
+    ]
+    reordered["constraints"].reverse()
+
+    point = np.asarray([0.25, -1.5, 4.0, 3.5, -2.0, 7.0], dtype=float)
+    for ordinal, document in enumerate((PROBLEM, renamed, reordered)):
+        _case, reference_budget, reference = _build(runtime, copy.deepcopy(document))
+        compilation = compile_residual_plan(reference, source_sha256=f"{ordinal + 5:x}" * 64)
+        assert compilation.plan is not None
+        candidate = CompiledResidualEvaluator(reference, compilation.plan)
+        snapshot = compile_callback_snapshot(candidate)
+        assert snapshot is not None
+        candidate.compiled_callback_snapshot = snapshot
+        _case, candidate_budget, _reference = _build(runtime, copy.deepcopy(document))
+        candidate_budget.evaluator = candidate
+        install_fused_evaluation(reference_budget)
+        install_fused_evaluation(candidate_budget)
+        install_compiled_callback_snapshot(candidate_budget, snapshot)
+
+        _assert_opaque_equal(reference_budget(point), candidate_budget(point))
+        assert snapshot.metadata()["case_specific_routing"] is False
