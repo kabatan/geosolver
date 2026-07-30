@@ -1,5 +1,21 @@
 # EXP-MULTITARGET-001 experiment card
 
+## V3 reopen decision (proposal only)
+
+The formal-owner-only v2 S1 aggregate was safety-clean but exact 15/24 versus
+control 16/24 (wins 1, losses 2). Paired wall geometric mean improved 6.3%,
+while p95 regressed 1.5%. No case identity or individual result was disclosed.
+This closes same-process scheduling overlays: preserving the nominal service
+trace is insufficient to guarantee monotone exact-set output across runs.
+
+The one remaining reopen mechanism is post-baseline result union. V3 patches no
+frozen function or plan. Frozen v15 materializes its complete RESULT first;
+side work starts only from measured leftover wall, after preserving those bytes,
+and can publish only an exact-key set union. No slack/no candidate/no novel
+authority all leave RESULT bytes unchanged. `arm.json` remains on v2 pending
+benchmark-owner acceptance; see `POST_BASELINE_UNION_V3.md` and the separate
+proposal manifest.
+
 ## V2 reopen decision (current common arm)
 
 The benchmark-owner-only S1 seed-0 aggregate for v1 was safety-clean but exact

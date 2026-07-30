@@ -1,5 +1,22 @@
 # EXP-MULTITARGET-001: post-answer tail experiments
 
+## Proposed arm: full-worker result union v3
+
+Formal-owner aggregate evidence for v2 was safety-clean and faster on geometric
+mean, but still 15/24 versus control 16/24 (one win, two losses; no case identity
+or per-case result disclosed). `worker_v3.py` therefore abandons scheduler
+patching: it runs frozen v15 to a complete baseline `RESULT.json` first. Only
+when the same monotonic deadline has a separately observed admissible slack
+window may it retain a byte-exact `BASELINE_RESULT.json`, replay an unattempted
+endpoint, and exact-key-union a novel canonical descriptor.
+
+V3 is intentionally not selected by `arm.json`; `arm-v3.proposal.json` records
+the candidate binding for benchmark-owner review. Truth-free tests prove frozen
+dry-plan equality, no-slack RESULT byte equality, baseline trace-prefix
+preservation, descriptor-set monotonicity, and bounded deadline admission. A
+generated multi-target smoke expanded one frozen descriptor to two without
+altering the saved baseline. See `POST_BASELINE_UNION_V3.md`.
+
 ## Current arm: adaptive slack v2
 
 `arm.json` now selects `worker_v2.py`. Formal-owner aggregate evidence for v1
