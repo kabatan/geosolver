@@ -1,4 +1,42 @@
-# EXP-MULTITARGET-001: post-answer diverse tail
+# EXP-MULTITARGET-001: post-answer tail experiments
+
+## Current arm: adaptive slack v2
+
+`arm.json` now selects `worker_v2.py`. Formal-owner aggregate evidence for v1
+was safety-clean but 14/24 versus control 16/24 (0 wins, 2 losses). No case ID,
+truth, or per-case outcome was disclosed. The v1 mechanism reserved six HP
+seconds and expanded reservoir replay before any descriptor existed, so it
+could shorten baseline discovery/exactification.
+
+V2 removes every pre-answer reservation:
+
+1. Search seconds, starts, callbacks, seed, selection reserve, replay, primary
+   tranche, frozen wave order, timeout floats, child interpreter, and paths are
+   unchanged.
+2. Authority must pass through the frozen canonical verifier before adaptation
+   becomes eligible.
+3. All frozen primary, alternate, and restoration waves still execute in their
+   original order. Only after they complete may unused wall slack service
+   deferred reservoir endpoints, capped at six seconds per HP attempt, followed
+   by failure-triggered frozen restoration when fast failures leave more slack.
+4. If authority never passes, the full service trace is identical to v15 and
+   the adaptive lane remains unreachable.
+
+The frozen seam cannot confirm a provisional/exact descriptor during numerical
+discovery: confirmation first becomes available in HP service after search and
+fresh source replay. V2 therefore does not claim in-search continuation.
+
+Run the v2 trace-equivalence and truth-free metamorphic tests with:
+
+```bash
+/home/kabatan/work/solver/.venv/bin/python -m pytest -q \
+  research/experiments/EXP-MULTITARGET-001/test_post_answer_v2.py
+```
+
+See `POST_ANSWER_V2.md` and `results/post-answer-v2-s0.json` for the frozen
+boundary, trace contract, hashes, and generated execution smoke.
+
+## Superseded arm: diverse tail v1
 
 This is a scheduling-only overlay for the hash-bound numerical-v15 champion.
 It does not modify discovery, the original-source evaluator, canonical replay,
@@ -40,10 +78,8 @@ The 100-panel deterministic S0 comparison is:
   research/experiments/EXP-MULTITARGET-001/run_generated_s0.py
 ```
 
-`arm.json` follows the common campaign contract: its entrypoint is relative to
-the manifest and `mechanism_hash` is the SHA-256 of `worker.py` bytes. The
-frozen common runner accepts the final v15 result schema; overlay identity and
-mechanism digests are carried by the worker dry plan.
+The original v1 entrypoint remains as `worker.py` for negative-result evidence,
+but it is no longer selected by the common arm.
 
 Run the truth-free counterexample/metamorphic S0 with:
 

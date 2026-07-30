@@ -1,5 +1,24 @@
 # EXP-MULTITARGET-001 experiment card
 
+## V2 reopen decision (current common arm)
+
+The benchmark-owner-only S1 seed-0 aggregate for v1 was safety-clean but exact
+14/24 versus control 16/24 (wins 0, losses 2). No case-level result or identity
+was disclosed. This opens only the preregistered tail-sizing/replay-admission
+gate: v1 reserved six HP seconds and changed reservoir replay from one to three
+seconds before authority, reducing the control's first-answer budget.
+
+V2 is a monotone post-authority extension of frozen v15. It changes no search,
+replay, tranche, frozen candidate order, timeout, child runtime, source replay,
+or authority behavior. Every frozen service event is retained as a prefix; only
+after all frozen waves complete, and only if canonical authority already
+passed, can truly unused wall slack admit a diverse deferred endpoint and its
+failure-triggered frozen restoration. With no authority the complete trace is
+control-identical. Full details and S0 evidence are in `POST_ANSWER_V2.md`.
+
+V1 below is retained as negative-result evidence and is no longer the selected
+common arm.
+
 ## Hypothesis
 
 The frozen numerical-v15 tail can lose exact target recall when authority from
