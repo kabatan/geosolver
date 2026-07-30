@@ -1,0 +1,83 @@
+{
+  "aggregate": {
+    "activation_cases": 30,
+    "baseline_floor_mismatch": 0,
+    "cases": 30,
+    "descriptor_gains": 60,
+    "descriptor_losses": 0,
+    "eligible": 30,
+    "false_or_extra": 0,
+    "loops_completed": 200,
+    "payload_mismatch": 0,
+    "replay_rejections": 0
+  },
+  "by_family": {
+    "affine_cubic": {
+      "activation_cases": 10,
+      "baseline_floor_mismatch": 0,
+      "cases": 10,
+      "descriptor_gains": 20,
+      "descriptor_losses": 0,
+      "eligible": 10,
+      "false_or_extra": 0,
+      "loops_completed": 60,
+      "payload_mismatch": 0,
+      "replay_rejections": 0
+    },
+    "separated_quartic": {
+      "activation_cases": 10,
+      "baseline_floor_mismatch": 0,
+      "cases": 10,
+      "descriptor_gains": 30,
+      "descriptor_losses": 0,
+      "eligible": 10,
+      "false_or_extra": 0,
+      "loops_completed": 120,
+      "payload_mismatch": 0,
+      "replay_rejections": 0
+    },
+    "symmetric_quadratic": {
+      "activation_cases": 10,
+      "baseline_floor_mismatch": 0,
+      "cases": 10,
+      "descriptor_gains": 10,
+      "descriptor_losses": 0,
+      "eligible": 10,
+      "false_or_extra": 0,
+      "loops_completed": 20,
+      "payload_mismatch": 0,
+      "replay_rejections": 0
+    }
+  },
+  "entrypoint": "thin_real_connection.py:connect",
+  "formal_run": false,
+  "gate": {
+    "improved_families": 3,
+    "passed": true
+  },
+  "negative_gates": [
+    {
+      "label": "multivariate",
+      "reason": "SOURCE_COMPILE_REJECTED:Ineligible",
+      "rejected": true
+    },
+    {
+      "label": "nonsquarefree",
+      "reason": "NOT_EXACT_SQUARE_FREE",
+      "rejected": true
+    },
+    {
+      "label": "unsupported",
+      "reason": "NOT_REDUCED_UNIVARIATE",
+      "rejected": true
+    }
+  ],
+  "policy": {
+    "baseline_fraction": 0.75,
+    "proposal_authority": false,
+    "route": "pinned existing compiler -> direct QQ univariate square-free -> proposals -> caller canonical replay"
+  },
+  "schema": "geotarget.exp-coefficient-monodromy-thin-connection-smoke/v1",
+  "source_only_generated": true,
+  "truth_scorer_or_case_outcome_read": false
+}

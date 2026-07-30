@@ -2,5 +2,11 @@
 
 Candidate-private coefficient-parameter monodromy for small exact polynomial
 blocks. See `ALGORITHM_CARD.md` and `results/generated-d0.json`. It is a
-proposal route, not a completeness or output authority, and has no real
-adapter or common-arm binding.
+proposal route, not a completeness or output authority.
+
+`thin_real_connection.py:connect` is the bounded real-source adapter. It reuses
+the hash-pinned existing semantic compiler/reducer, accepts only a direct
+one-variable square-free QQ block, preserves the baseline payload and
+descriptor order byte-for-byte, reserves 75% of work for that baseline, and
+returns only side descriptors accepted by a caller-supplied canonical replay.
+The generated source-only result is in `results/thin-connection-smoke.json`.

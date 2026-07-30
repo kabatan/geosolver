@@ -1,6 +1,6 @@
 # Small exact-polynomial coefficient monodromy D0
 
-Status: `GENERATED_D0_PASS; PROPOSALS_ONLY; NO_REAL_ADAPTER`.
+Status: `GENERATED_D0_PASS; THIN_REAL_CONNECTION_PASS; PROPOSALS_ONLY`.
 
 - Candidate SHA-256: `60e1019ed384744fc8209169066b327d742ab84e5293c2de0729c03c7131631d`.
 - Runner SHA-256: `1242b8d7024644179ad36e7f61c11fe3dcdc943076a91ede3e7d697a63429ee0`.
@@ -54,3 +54,42 @@ start root, while retaining at least 75% common-control work. Every proposal
 must return through the existing canonical source replay. Stop if fewer than
 three anonymous source structures qualify, if compilation/path overhead
 exceeds the 25% route budget, or if any control descriptor is lost.
+
+## Thin real-source connection
+
+Decision: `GO_SOURCE_ONLY_D1_ELIGIBLE`.
+
+Entrypoint: `thin_real_connection.py:connect`.
+
+- Mechanism manifest SHA-256: `495d8586847bfb7ce3e501075007fabf73a5f79119962357280e407f85852cb4`.
+- Thin adapter SHA-256: `7717d71071e9d600a1ec2a1bad3fccd5d20f4b264d5bc7af4efa7cbfc8e7241f`.
+- Source-only runner SHA-256: `24f4ffc918afc2f1f8c6d46a7d61c6f4d12ae8748bc79207f0458f292c0862a4`.
+- Source-only aggregate SHA-256: `19e638669ae23e43365b8909ec774e2e50faaa5c9b9100b5abb2efb814c8d436`.
+
+The adapter imports the existing source-only semantic polynomial compiler,
+bounded linear auxiliary reducer, and source-coordinate reconstruction only
+after checking their frozen SHA-256 values. It admits exactly one raw variable
+which remains the same sole reduced variable, one QQ polynomial equation of
+degree 2--8, an exact square-free gcd certificate, and no periodic source
+reconstruction or selector replay obligation. It does not add a symbolic
+backend, eliminator, geometry compiler, or output authority.
+
+The common numerical baseline keeps `ceil(0.75 * total_work)` and its opaque
+payload/descriptor bytes are returned unchanged and in their original order.
+The monodromy side is additive. Every real reconstructed proposal is passed to
+the caller's existing canonical exact/source replay; only the descriptor
+returned by that authority can be appended. Compiler mismatch, ineligibility,
+bad start replay, complex proposal, reconstruction failure, or replay failure
+is fail-closed.
+
+The source-only generated smoke read no corpus truth, scorer, historical
+outcome, validation, or sealed data. Across 30 cases in three rational
+polynomial families it activated 30/30, added 60 descriptors, and had zero
+baseline losses, false/extra descriptors, replay rejections, payload rewrites,
+or 75% floor mismatches. Multivariate, repeated-root, and unsupported inputs
+were rejected. This is mechanism/connection evidence only; it does not claim
+real-corpus recall or completeness.
+
+Formal D1 must supply the already frozen canonical replay callback and the
+common baseline result. It may route only with the structural checks above and
+must retain the same dependency hashes and baseline floor.
