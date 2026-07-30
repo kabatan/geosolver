@@ -46,6 +46,23 @@ class BlockStructureTests(unittest.TestCase):
             )
         self.assertEqual(signatures, {(True, (1, 1, 1, 1), 0.0625)})
 
+    def test_variable_permutation_preserves_block_partition(self):
+        supports = ((0,), (0, 1), (1, 2), (0, 2, 3))
+        signatures = set()
+        for old_to_new in itertools.permutations(range(4)):
+            transformed = tuple(
+                tuple(old_to_new[index] for index in support) for support in supports
+            )
+            plan = analyze_relation_supports(transformed, 4)
+            signatures.add(
+                (
+                    plan.applicable,
+                    tuple(sorted(len(block.variable_indices) for block in plan.blocks)),
+                    plan.factor_work_ratio,
+                )
+            )
+        self.assertEqual(signatures, {(True, (1, 1, 1, 1), 0.0625)})
+
     def test_non_square_and_structurally_singular_fall_back(self):
         self.assertEqual(analyze_relation_supports(((0,),), 2).reason, "non_square")
         singular = analyze_relation_supports(((0,), (0,), (1, 2)), 3)
@@ -77,6 +94,53 @@ class BlockStructureTests(unittest.TestCase):
         self.assertEqual(structure.relation_supports, ((0,), (0, 1, 2), (1, 2)))
         self.assertEqual(structure.guard_supports, ((0,),))
         self.assertFalse(structure.polynomial_scalar_candidate)
+
+    def test_dag_reorder_and_cse_preserve_support_plan(self):
+        first = {
+            "variables": {"names": ["u", "v"]},
+            "construction": [
+                {"name": "A", "expr": "Point(u, 0)"},
+                {"name": "B", "expr": "Point(v, 0)"},
+                {"name": "A_alias", "expr": "A"},
+            ],
+            "constraints": [
+                {"def": "Coordinate(A_alias)", "value": 1},
+                {"def": "Distance(A_alias, B)", "value": 1},
+            ],
+            "guards": [],
+        }
+        reordered = {
+            **first,
+            "construction": [
+                {"name": "B", "expr": "Point(v, 0)"},
+                {"name": "A", "expr": "Point(u, 0)"},
+                {"name": "A_alias", "expr": "Point(u, 0)"},
+            ],
+        }
+        left = extract_v15_structure(first)
+        right = extract_v15_structure(reordered)
+        self.assertEqual(left.relation_supports, right.relation_supports)
+        self.assertEqual(left.plan.factor_work_ratio, right.plan.factor_work_ratio)
+        self.assertEqual(
+            tuple(len(block.variable_indices) for block in left.plan.blocks),
+            tuple(len(block.variable_indices) for block in right.plan.blocks),
+        )
+
+    def test_forward_reference_fails_closed_instead_of_underapproximating(self):
+        formulation = {
+            "variables": {"names": ["x", "y"]},
+            "construction": [
+                {"name": "B", "expr": "Point(A, y)"},
+                {"name": "A", "expr": "Point(x, 0)"},
+            ],
+            "constraints": [
+                {"def": "Coordinate(A)", "value": 1},
+                {"def": "Coordinate(B)", "value": 1},
+            ],
+            "guards": [],
+        }
+        with self.assertRaisesRegex(ValueError, "unknown value reference"):
+            extract_v15_structure(formulation)
 
     def test_every_numerical_candidate_reaches_canonical_verifier(self):
         supports = ((0,), (0, 1), (1, 2))

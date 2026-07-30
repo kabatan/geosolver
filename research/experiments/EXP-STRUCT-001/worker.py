@@ -55,6 +55,12 @@ def _atomic_write_json(path: Path, document: object) -> None:
 
 
 def _mechanism_hash() -> str:
+    """Common arm contract: raw SHA-256 of this entrypoint."""
+
+    return _sha256(Path(__file__).read_bytes())
+
+
+def _overlay_closure_hash() -> str:
     payload = (HERE / "block_structure.py").read_bytes() + (HERE / "champion_overlay.py").read_bytes()
     return _sha256(payload)
 
@@ -134,7 +140,12 @@ def main() -> None:
     arguments = _parser().parse_args()
     _verify_closure()
     _payload, document = _source(arguments.source, arguments.source_sha256)
-    structure = extract_v15_structure(document)
+    try:
+        structure = extract_v15_structure(document)
+    except (SyntaxError, TypeError, ValueError):
+        # Unsupported or ambiguous dependency syntax is baseline-only. The
+        # detector is never allowed to turn uncertainty into structure.
+        os.execv(str(FROZEN_PYTHON), frozen_command(original_arguments))
     if not structure.plan.applicable:
         os.execv(str(FROZEN_PYTHON), frozen_command(original_arguments))
 
@@ -173,6 +184,7 @@ def main() -> None:
         "arm_id": "EXP-STRUCT-001-BTF-CHAMPION-OVERLAY",
         "base_commit": "0967ff1cde5c2435fe0207da65e8779ff24a6da6",
         "mechanism_hash": _mechanism_hash(),
+        "overlay_closure_hash": _overlay_closure_hash(),
         "frozen_worker": str(FROZEN_WORKER),
         "frozen_worker_sha256": EXPECTED_FROZEN_WORKER_SHA256,
         "structure": {
