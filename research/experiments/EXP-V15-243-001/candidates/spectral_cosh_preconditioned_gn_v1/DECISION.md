@@ -21,3 +21,8 @@ That thin hook is now present.  A real frozen-champion smoke retained exactly
 returned 8/8 safe endpoints with the same 109 callbacks, and had zero invalid,
 guard-failed, or exception events.  It remains `D0`, pending benchmark-owner
 screen24/prospective breadth.
+
+The hook is now rebound to the current progressive-adaptive campaign worker.
+Decision: `GO_FORMAL_OWNER_SCREEN_CURRENT_CAMPAIGN`. This is a connection
+decision only; the prior frozen-champion smoke and generated D0 are not formal
+recall evidence. The candidate lane must not inspect per-case formal results.

@@ -24,3 +24,19 @@ source bytes stayed unchanged.  This is an activation/integration smoke only,
 not a recall or speed claim.  Raw artifacts are outside Git at
 `/home/kabatan/work/solver-experiment-results/spectral-cosh-real-smoke-v1/`.
 
+## Current progressive-adaptive worker
+
+The candidate-private entrypoint now loads the hash-pinned current adaptive
+full wrapper and redirects only its search executable back to the same thin
+entrypoint. The child retains the current scheduler and selects spectral-cosh
+only for original start ordinal `3 mod 4`; repeated rungs preserve that route.
+
+CPU-31 in-process source-seam tests passed `14/14`. They covered dependency and
+arm hashes, current full-worker authority custody, 6/8 baseline and 2/8 side
+routing on a synthetic eight-start prefix, unchanged source program, guarded
+case, literal prefix and absolute deadline objects, rank/eigenframe and
+nonsmooth fallback, source smoothness gating, and byte-identical canonical
+serialization when activation is zero. The 37-case generated D0 aggregate was
+also reproduced in substance (`17/0` wins/losses, zero false/extra, 75/25
+routing). No subprocess benchmark, truth, scorer, case outcome, validation,
+sealed or holdout input was used.
