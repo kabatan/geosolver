@@ -84,7 +84,7 @@ def _polynomial_expr(
         _fail(f"undeclared-symbol-in-{label}")
     try:
         poly = sp.Poly(sp.expand(expr), *symbols, domain=sp.QQ)
-    except (sp.PolynomialError, sp.CoercionFailed):
+    except (sp.PolynomialError, sp.CoercionFailed, AttributeError, TypeError, ValueError):
         _fail(f"non-qq-polynomial-{label}")
     if poly.total_degree() > MAX_INPUT_DEGREE:
         _fail(f"degree-cap-{label}")

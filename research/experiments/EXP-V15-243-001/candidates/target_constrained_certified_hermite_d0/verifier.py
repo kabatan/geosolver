@@ -35,7 +35,7 @@ def _parse_expr(value: Any, symbols: Sequence[sp.Symbol], locals_: Mapping[str, 
         _reject(f"nonexact-{label}")
     try:
         return sp.Poly(sp.expand(expr), *symbols, domain=sp.QQ).as_expr()
-    except (sp.PolynomialError, sp.CoercionFailed):
+    except (sp.PolynomialError, sp.CoercionFailed, AttributeError, TypeError, ValueError):
         _reject(f"non-qq-polynomial-{label}")
 
 

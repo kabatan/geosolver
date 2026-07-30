@@ -78,6 +78,13 @@ class CandidateTests(unittest.TestCase):
             certify(problem)
         self.assertEqual(caught.exception.reason, "inexact-equation-0")
 
+    def test_boolean_or_outside_polynomial_subset_fails_closed(self) -> None:
+        problem = copy.deepcopy(POSITIVE_CASES["regular-zero-dimensional-degree2"])
+        problem["guards"] = ["Or(x > 0, x < -1)"]
+        with self.assertRaises(CertificationFailure) as caught:
+            certify(problem)
+        self.assertEqual(caught.exception.reason, "non-qq-polynomial-guard-0")
+
 
 if __name__ == "__main__":
     unittest.main()
