@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geotarget.local/schemas/experiment-arm-v1.json",
+  "title": "GeoTarget disposable experiment arm",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "base_commit", "entrypoint", "mechanism_hash"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{2,79}$"
+    },
+    "base_commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "entrypoint": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mechanism_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}
