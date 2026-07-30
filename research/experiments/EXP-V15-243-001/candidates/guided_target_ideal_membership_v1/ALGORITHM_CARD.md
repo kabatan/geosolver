@@ -109,6 +109,14 @@ non-overclaim checks.  The four audited candidate files remain byte-identical
 to the hashes recorded by that audit; the later joint census runner is a
 separate aggregate-only measurement surface and cannot emit authority.
 
+The census reconstructs an internal synthetic proposal because the frozen
+proof API requires its input token to say `authority_pass=true`.  That token
+is bound only to the root-owned degree-one projection, is never returned, and
+does not represent the unavailable complete ordinary proposal.  Census and
+join outputs remain `authority_pass=false`, `target_release=false`, and
+`common_worker_integration=HOLD`.  The aggregate exposes only the number of
+distinct structural signatures, not the signatures or singleton histograms.
+
 The mechanism hash in `arm.json` is SHA-256 over, in listed order,
 `filename NUL decimal-byte-length NUL file-bytes` for `ideal_membership.py`,
 `typed_join.py`, `run_generated.py`, `run_source_only_readiness.py`, and

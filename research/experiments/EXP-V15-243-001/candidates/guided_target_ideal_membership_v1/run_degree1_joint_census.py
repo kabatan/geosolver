@@ -311,7 +311,6 @@ def main() -> int:
         "request_count": len(requests),
         **counts,
         "anonymous_prejoin_signature_count": len(signatures),
-        "anonymous_prejoin_signature_histogram": signatures,
         "workers_enabled": arguments.run_workers,
         "gate_minimum_ready": 10,
         "gate_minimum_signatures": 2,
