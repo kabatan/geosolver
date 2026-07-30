@@ -135,3 +135,22 @@ identity, and five opaque inputs did the same. All 15 baseline calls received
 100% of the original hard deadline. A separate injected post-replay side
 exception also returned the exact baseline object. This is connection and
 custody evidence only; a benchmark-owner formal rerun is still required.
+
+## Benchmark-owner Repair A disposition
+
+Status: `HOLD_ZERO_REAL_ACTIVATION`.
+
+On the frozen screen24 at 30/20 seconds and seed 0, Repair A scored `16/24`
+against the separately measured adaptive control's `15/24`, with zero
+false/extra/crash.  This apparent gain is not attributed to monodromy: all 24
+search artifacts had zero coefficient-monodromy counters, no canonical replay
+directory was created, and no side descriptor was appended.  The sole paired
+gain is therefore baseline wall-clock jitter, not a mechanism signal.  Further
+seeds are not spent on this unchanged route.
+
+Reopen only when a source-only audit demonstrates that the exact univariate
+polynomial projection and reconstruction contract actually qualifies on real
+solver inputs and reaches canonical replay before the deadline.  A sound
+operator-level algebraic lowering is a possible distinct reopen mechanism;
+loosening polynomial soundness, spending baseline time, or retuning the path
+tracker is not.
