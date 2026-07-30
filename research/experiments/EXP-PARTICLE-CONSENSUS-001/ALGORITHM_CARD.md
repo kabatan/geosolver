@@ -69,10 +69,11 @@ callback and wall budget may launch particle discovery into a separate output;
 only fresh canonical-replayed endpoints enter the same HP authority. Search
 endpoints are never unioned or reclustered. Novel authoritative descriptors are
 copy-on-write appended after the byte-equivalent baseline descriptor prefix.
-No surplus, no novelty, or any tail exception leaves the baseline result bytes
-untouched. A final-hash source-only smoke activated 1506 particle callbacks and
+No surplus, no novelty, or any pre-commit tail exception leaves the baseline
+result bytes untouched; replace-completed durability errors are recognized as
+committed unions. A final-hash source-only smoke activated 1497 particle callbacks and
 10 endpoints after baseline used zero callbacks, then added one novel descriptor
-accepted by the unchanged authority (`0 -> 1`) in 5.87 seconds. A callback-cap
+accepted by the unchanged authority (`0 -> 1`) in 15.74 seconds. A callback-cap
 no-surplus run created no tail directory; direct no-surplus and injected-error
 checks preserved exact baseline bytes. No truth/scorer was read and no target-set
 completeness is claimed. Formal truth-isolated D1 remains with the root owner.
