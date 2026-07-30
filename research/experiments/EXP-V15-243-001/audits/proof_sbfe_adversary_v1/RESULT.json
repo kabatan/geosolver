@@ -1,0 +1,46 @@
+{
+  "schema": "geotarget.proof-sbfe-adversary-summary/v1",
+  "scope": {
+    "cpu": 15,
+    "fixed_synthetic_trace_only": true,
+    "formal_dev_validation_sealed_truth_scorer_used": false,
+    "candidate_code_modified": false
+  },
+  "candidate": {
+    "commit": "ee29f3e69835516e5c1271ba1627099d23840254",
+    "sha256": "6a4c2146c66d3d7f06bb443cc3ce09e0122a9ce27222cc3b39d1a1542b080e1e"
+  },
+  "artifacts": {
+    "oracle_sha256": "50d715d552747c10db6004ea86226fc287f39c447a7b47930e8aac4f2896d400",
+    "replay_sha256": "9c26fcc3cd88f4cadc070c7b9f5b7a549c65cc014bcbf8d4c03b071474137e92",
+    "test_sha256": "ffd7f138ed338c36bfa6e1aa58dd972fb3be1a14320cf7e409dbc85b4cbbe021"
+  },
+  "oracle_self_test": {
+    "fixed_candidate_runs": 11,
+    "positive_self_checks": 2,
+    "negative_mutations_rejected": 3,
+    "decision": "ORACLE_SELF_TEST_PASS"
+  },
+  "candidate_replay": {
+    "fixed_run_count": 11,
+    "failure_count": 0,
+    "certificate_count": 13,
+    "failed_descriptor_count": 1,
+    "unresolved_descriptor_count": 2,
+    "selected_leaf_count": 28,
+    "deadline_late_count": 1,
+    "decision": "PASS"
+  },
+  "invariants": {
+    "hidden_future_prefix_independent": true,
+    "equivalent_dag_factoring_invariant": true,
+    "shared_node_evaluated_and_charged_once": true,
+    "terminal_routes_not_resurrected": true,
+    "baseline_reserved_and_spent_75_percent": true,
+    "graph_cap_at_most_25_percent": true,
+    "deadline_late_leaf_not_used_by_certificate": true,
+    "id_child_and_insertion_permutation_invariant": true
+  },
+  "counterexample": null,
+  "decision": "NO_COUNTEREXAMPLE_IN_FIXED_PROOF_SBFE_SUITE"
+}
