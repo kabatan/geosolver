@@ -26,6 +26,7 @@ PACKAGE_SOURCE = Path(__file__).resolve().parents[1]
 if str(PACKAGE_SOURCE) not in sys.path:
     sys.path.insert(0, str(PACKAGE_SOURCE))
 
+from geotarget.callback_snapshot import compile_callback_snapshot  # noqa: E402
 from geotarget.compiled_evaluator import (  # noqa: E402
     CompiledResidualEvaluator,
     compile_residual_plan,
@@ -33,9 +34,7 @@ from geotarget.compiled_evaluator import (  # noqa: E402
 )
 from geotarget.fused_evaluation import install_fused_evaluation  # noqa: E402
 
-SEARCH_ARM = (
-    "precision_isolated_retained_then_strict_nearroot_restart_direct_broyden_ruiz_tr_lm"
-)
+SEARCH_ARM = "precision_isolated_retained_then_strict_nearroot_restart_direct_broyden_ruiz_tr_lm"
 
 
 def _load(path: Path) -> Any:
@@ -94,6 +93,8 @@ def _activate_compiled_evaluator(
         }
     constant_result = precompute_constant_constructions(reference_evaluator)
     evaluator = CompiledResidualEvaluator(reference_evaluator, compilation.plan)
+    callback_snapshot = compile_callback_snapshot(evaluator)
+    evaluator.compiled_callback_snapshot = callback_snapshot
     budget.evaluator = evaluator
     return evaluator, {
         **compilation.plan.metadata(),
@@ -103,6 +104,15 @@ def _activate_compiled_evaluator(
         "fused_evaluation": fused_metadata,
         "constant_constructions": list(constant_result.precomputed_names),
         "constant_dependency_sha256": constant_result.dependency_sha256,
+        "compiled_callback_snapshot": (
+            callback_snapshot.metadata()
+            if callback_snapshot is not None
+            else {
+                "enabled": False,
+                "fallback_scope": "whole_callback",
+                "case_specific_routing": False,
+            }
+        ),
     }
 
 
@@ -153,9 +163,7 @@ def _release(queue_path: Path, worker_id: int, ordinal: int) -> None:
 
 def _atomic_json(path: Path, value: dict[str, Any]) -> None:
     temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(
-        json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-    )
+    temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     temporary.replace(path)
 
 
@@ -208,12 +216,8 @@ def main() -> None:
     search = _load(arguments.worker.resolve())
     base = search.BASE
     affinity = sorted(os.sched_getaffinity(0))
-    thread_environment = {
-        name: os.environ.get(name) for name in base.THREAD_VARIABLES
-    }
-    if len(affinity) != 1 or any(
-        value != "1" for value in thread_environment.values()
-    ):
+    thread_environment = {name: os.environ.get(name) for name in base.THREAD_VARIABLES}
+    if len(affinity) != 1 or any(value != "1" for value in thread_environment.values()):
         raise SystemExit("one pinned CPU and one-thread environment are required")
 
     source_payload = arguments.source.read_bytes()
@@ -313,8 +317,7 @@ def main() -> None:
             lane_callbacks = outcome.lane_callbacks
 
         raw_endpoint_points = [
-            base.np.asarray(endpoint, dtype=float).tolist()
-            for _lane, endpoint in endpoints
+            base.np.asarray(endpoint, dtype=float).tolist() for _lane, endpoint in endpoints
         ]
         work = {
             name: int(getattr(budget, attribute)) - before[attribute]
@@ -328,9 +331,7 @@ def main() -> None:
         work.update(
             {
                 "best_residual_inf": (
-                    float(budget.best_norm)
-                    if math.isfinite(budget.best_norm)
-                    else None
+                    float(budget.best_norm) if math.isfinite(budget.best_norm) else None
                 ),
                 "lanes_started": 1,
                 "lane_callbacks_min": min(lane_callbacks),
@@ -365,9 +366,7 @@ def main() -> None:
                 "full_prefix_sha256": prefix.sha256,
                 "sources": [prefix.sources[ordinal]],
                 "scale_exponents": [prefix.scale_exponents[ordinal]],
-                "selected_proposal_points_sha256": _point_digest(
-                    (prefix.points[ordinal],)
-                ),
+                "selected_proposal_points_sha256": _point_digest((prefix.points[ordinal],)),
             },
             "budget": {
                 "seconds": arguments.seconds,

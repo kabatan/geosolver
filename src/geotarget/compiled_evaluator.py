@@ -555,9 +555,7 @@ def compile_residual_plan(evaluator: Any, *, source_sha256: str) -> CompilationR
         except RecursionError:
             return CompilationResult(
                 plan=None,
-                fallback_reason=(
-                    "raw semantic gate resource fallback: recursion depth exceeded"
-                ),
+                fallback_reason=("raw semantic gate resource fallback: recursion depth exceeded"),
                 attempted_ast_opcode_set=typed_opcodes,
                 attempted_operand_result_type_set=typed_types,
                 attempted_selector_kind_set=typed_selectors,
@@ -596,9 +594,7 @@ def compile_residual_plan(evaluator: Any, *, source_sha256: str) -> CompilationR
         flat_program = None
         flat_fallback_reason = None
         try:
-            candidate = compile_flat_tape_program(
-                typed_program, raw_semantic_gate=raw_program
-            )
+            candidate = compile_flat_tape_program(typed_program, raw_semantic_gate=raw_program)
             if candidate.semantic_abi not in qualified_flat_abis:
                 raise UnsupportedFlatTapeBackend(
                     f"unqualified flat tape ABI: {candidate.semantic_abi}"
@@ -831,6 +827,7 @@ class CompiledResidualEvaluator:
         self.plan = plan
         self.bundle = reference.bundle
         self.compiled_guards = reference.compiled_guards
+        self.compiled_callback_snapshot = None
 
     def evaluate_float_residual(self, values: list[float]):
         from geosolver._internal.autosolve.execution.interpreter_helpers import (
