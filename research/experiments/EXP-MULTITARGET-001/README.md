@@ -21,9 +21,10 @@ remain explicitly unknown; the worker makes no completeness claim.
 
 The frozen worker is required at the digest recorded in `worker.py`. The
 runtime root and Python may be overridden with `GEOTARGET_FROZEN_SOLVER_ROOT`
-and `GEOTARGET_EXPERIMENT_PYTHON`, or the corresponding CLI flags. For a short
-S0-only 30/20 run, pass `--minimum-tail-seconds 8`; formal 180/146 runs retain
-the default 28-second minimum.
+and `GEOTARGET_EXPERIMENT_PYTHON`, or the corresponding CLI flags. A common
+short 30/20 run automatically uses its full 10-second post-search window;
+formal 180/146 runs retain the default 28-second minimum. An explicit
+`--minimum-tail-seconds` remains available for boundary tests.
 
 Run the generated policy tests with:
 
@@ -38,3 +39,8 @@ The 100-panel deterministic S0 comparison is:
 /home/kabatan/work/solver/.venv/bin/python \
   research/experiments/EXP-MULTITARGET-001/run_generated_s0.py
 ```
+
+`arm.json` follows the common campaign contract: its entrypoint is relative to
+the manifest and `mechanism_hash` is the SHA-256 of `worker.py` bytes. The
+frozen common runner accepts the final v15 result schema; overlay identity and
+mechanism digests are carried by the worker dry plan.

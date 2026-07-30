@@ -60,7 +60,7 @@ def _overlay_arguments(argv: list[str]) -> tuple[argparse.Namespace, list[str]]:
     parser.add_argument(
         "--minimum-tail-seconds",
         type=float,
-        default=candidate.MINIMUM_POST_SEARCH_RESERVE_SECONDS,
+        default=None,
     )
     return parser.parse_known_args(argv)
 
@@ -76,9 +76,22 @@ def _float_option(arguments: list[str], name: str, default: float) -> float:
         raise SystemExit(f"{name} requires a finite number") from error
 
 
+def _effective_minimum_tail(
+    total_seconds: float,
+    search_seconds: float,
+    requested: float | None,
+) -> float:
+    if requested is not None:
+        return requested
+    return min(
+        candidate.MINIMUM_POST_SEARCH_RESERVE_SECONDS,
+        max(0.0, total_seconds - search_seconds),
+    )
+
+
 def main() -> None:
     overlay, frozen_arguments = _overlay_arguments(sys.argv[1:])
-    if (
+    if overlay.minimum_tail_seconds is not None and (
         not math.isfinite(overlay.minimum_tail_seconds)
         or overlay.minimum_tail_seconds < 0.0
     ):
@@ -90,10 +103,15 @@ def main() -> None:
     search_seconds = _float_option(
         frozen_arguments, "--search-seconds", base.DEFAULT_SEARCH_SECONDS
     )
-    if total_seconds - search_seconds < overlay.minimum_tail_seconds:
+    minimum_tail_seconds = _effective_minimum_tail(
+        total_seconds,
+        search_seconds,
+        overlay.minimum_tail_seconds,
+    )
+    if total_seconds - search_seconds < minimum_tail_seconds:
         raise SystemExit(
             "post-search tail is smaller than --minimum-tail-seconds: "
-            f"{total_seconds - search_seconds:.6g} < {overlay.minimum_tail_seconds:.6g}"
+            f"{total_seconds - search_seconds:.6g} < {minimum_tail_seconds:.6g}"
         )
     if not overlay.python.is_file():
         raise SystemExit(f"experiment Python is unavailable: {overlay.python}")
@@ -104,7 +122,7 @@ def main() -> None:
     # Preserve the venv entrypoint path.  Resolving its symlink would make the
     # child interpreter lose pyvenv.cfg and the pinned numerical packages.
     base.PYTHON = overlay.python.absolute()
-    candidate.MINIMUM_POST_SEARCH_RESERVE_SECONDS = overlay.minimum_tail_seconds
+    candidate.MINIMUM_POST_SEARCH_RESERVE_SECONDS = minimum_tail_seconds
     base.SELECTION_RESERVE_SECONDS = candidate.RESERVOIR_REPLAY_SECONDS
     base._service_candidates = lambda **kwargs: candidate.service_candidates(
         base, **kwargs
@@ -112,11 +130,10 @@ def main() -> None:
     base._plan = candidate.patch_plan(
         base,
         base._plan,
-        minimum_tail_seconds=overlay.minimum_tail_seconds,
+        minimum_tail_seconds=minimum_tail_seconds,
         overlay_worker_sha256=_sha256(Path(__file__)),
         mechanism_sha256=_sha256(HERE / "candidate.py"),
     )
-    base.SCHEMA = "geotarget.exp-multitarget-001-result/v1"
     sys.argv = [sys.argv[0], *frozen_arguments]
     base.main()
 
