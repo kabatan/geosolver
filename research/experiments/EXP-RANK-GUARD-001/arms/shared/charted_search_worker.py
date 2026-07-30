@@ -28,7 +28,7 @@ BASE_WORKER_SHA256 = (
 )
 ADAPTER_PATH = HERE / "charted_search_adapter.py"
 ADAPTER_SHA256 = (
-    "3c4128a38525373ea227cec6352eed3edc408d71e56cf82bcfec0db9c0d2382c"
+    "657b139f00e59f4d02a98c895b37c08cb33c7ae0eb3c72b0ad0a9ad21630f1f3"
 )
 SCHEMA = "geotarget.exp-rank-guard-001.charted-search/v1"
 

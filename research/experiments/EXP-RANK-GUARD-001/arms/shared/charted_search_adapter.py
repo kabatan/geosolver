@@ -1,4 +1,4 @@
-"""Proposal-only finite-chart weak-direction overlay for frozen numerical-v15.
+"""Proposal-only strict-bound chart weak-direction overlay for numerical-v15.
 
 The frozen local kernel, evaluator, source replay and endpoint validation remain
 authoritative.  This adapter may replace at most the final 25% of non-insurance
@@ -96,15 +96,71 @@ def _sigmoid(values: np.ndarray) -> np.ndarray:
     return np.clip(output, MIN_INTERIOR_FRACTION, 1.0 - MIN_INTERIOR_FRACTION)
 
 
+def _softplus(values: np.ndarray) -> np.ndarray:
+    values = np.asarray(values, dtype=float)
+    return np.maximum(values, 0.0) + np.log1p(np.exp(-np.abs(values)))
+
+
+def _inverse_softplus(values: np.ndarray) -> np.ndarray:
+    values = np.asarray(values, dtype=float)
+    positive = np.maximum(values, np.nextafter(0.0, 1.0))
+    return positive + np.log(-np.expm1(-positive))
+
+
 def _to_chart(point: np.ndarray, lower: np.ndarray, upper: np.ndarray) -> np.ndarray:
-    fraction = (point - lower) / (upper - lower)
-    fraction = np.clip(fraction, MIN_INTERIOR_FRACTION, 1.0 - MIN_INTERIOR_FRACTION)
-    return np.log(fraction / (1.0 - fraction))
+    point = np.asarray(point, dtype=float)
+    chart = point.copy()
+    finite_lower = np.isfinite(lower)
+    finite_upper = np.isfinite(upper)
+    two_sided = finite_lower & finite_upper
+    lower_only = finite_lower & ~finite_upper
+    upper_only = ~finite_lower & finite_upper
+    if np.any(two_sided):
+        fraction = (point[two_sided] - lower[two_sided]) / (
+            upper[two_sided] - lower[two_sided]
+        )
+        fraction = np.clip(
+            fraction, MIN_INTERIOR_FRACTION, 1.0 - MIN_INTERIOR_FRACTION
+        )
+        chart[two_sided] = np.log(fraction / (1.0 - fraction))
+    if np.any(lower_only):
+        distance = point[lower_only] - lower[lower_only]
+        chart[lower_only] = _inverse_softplus(distance)
+    if np.any(upper_only):
+        distance = upper[upper_only] - point[upper_only]
+        chart[upper_only] = _inverse_softplus(distance)
+    return chart
 
 
 def _from_chart(chart: np.ndarray, lower: np.ndarray, upper: np.ndarray) -> np.ndarray:
-    fraction = _sigmoid(chart)
-    return lower + (upper - lower) * fraction
+    chart = np.asarray(chart, dtype=float)
+    point = chart.copy()
+    finite_lower = np.isfinite(lower)
+    finite_upper = np.isfinite(upper)
+    two_sided = finite_lower & finite_upper
+    lower_only = finite_lower & ~finite_upper
+    upper_only = ~finite_lower & finite_upper
+    if np.any(two_sided):
+        fraction = _sigmoid(chart[two_sided])
+        point[two_sided] = lower[two_sided] + (
+            upper[two_sided] - lower[two_sided]
+        ) * fraction
+    if np.any(lower_only):
+        point[lower_only] = lower[lower_only] + _softplus(chart[lower_only])
+    if np.any(upper_only):
+        point[upper_only] = upper[upper_only] - _softplus(chart[upper_only])
+    # Rounding at a very narrow or very distant boundary must not turn a chart
+    # proposal into an equality.  Unsupported intervals with no representable
+    # interior are rejected before reaching this function.
+    if np.any(finite_lower):
+        point[finite_lower] = np.maximum(
+            point[finite_lower], np.nextafter(lower[finite_lower], np.inf)
+        )
+    if np.any(finite_upper):
+        point[finite_upper] = np.minimum(
+            point[finite_upper], np.nextafter(upper[finite_upper], -np.inf)
+        )
+    return point
 
 
 def _observation(case: object, point: np.ndarray) -> tuple[np.ndarray, bool]:
@@ -262,9 +318,14 @@ def _overlay_prefix(
         or total == 0
         or lower.shape != (dimension,)
         or upper.shape != (dimension,)
-        or not np.all(np.isfinite(lower))
-        or not np.all(np.isfinite(upper))
+        or np.any(np.isnan(lower))
+        or np.any(np.isnan(upper))
         or not np.all(lower < upper)
+        or np.any(
+            np.isfinite(lower)
+            & np.isfinite(upper)
+            & (np.nextafter(lower, np.inf) >= upper)
+        )
     ):
         return literal_prefix, telemetry
     # One anchor costs 1 + 4*n observations for the two central-difference
@@ -361,6 +422,12 @@ def configuration_manifest() -> Mapping[str, object]:
         "insurance_period": INSURANCE_PERIOD,
         "proposal_radii": list(PROPOSAL_RADII),
         "fd_step": FD_STEP,
+        "coordinate_charts": {
+            "finite_lower_and_upper": "logit",
+            "finite_lower_only": "softplus",
+            "finite_upper_only": "reflected_softplus",
+            "unbounded": "identity",
+        },
         "overlay_callback_fraction_max": OVERLAY_CALLBACK_FRACTION_MAX,
         "overlay_callback_absolute_max": OVERLAY_CALLBACK_ABSOLUTE_MAX,
         "baseline_prefix_callback_reservation_required": True,
