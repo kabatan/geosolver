@@ -84,6 +84,26 @@ outward arithmetic sampling, malformed/overflow fallback, division-domain,
 dimension/width/volume/power gates, and a deterministic time cap. Raw aggregate
 evidence is in `results/generated-s0.json`.
 
+## Development formulation applicability audit
+
+A later aggregate-only audit applied the unchanged gate to the 145 canonical
+development worker formulation byte streams. It opened neither the outer
+dataset nor any truth, scorer, result, validation, or sealed artifact. Identity
+and answer-like values were skipped lexically rather than deserialized, and no
+case-level row was retained or emitted.
+
+Activation was **0/145**: 109 first failed the dimension cap, 35 low-dimensional
+square formulations lacked explicit finite source bounds, and one was
+nonsquare. Every formulation also exposed a geometry/opaque call, so a complete
+validated interval extension is absent even counterfactually. Estimated current
+route cost is therefore zero. See `FORMULATION_AUDIT.md` and
+`results/development145-formulation-aggregate.json`.
+
+Generated metamorphic S0 v2 added variable/residual permutation, affine
+coordinate and residual scaling, DAG reorder, and CSE. All five nonidentity
+variants matched the original proposal with zero authority-contract failures;
+see `METAMORPHIC_S0_V2.md`.
+
 ## Prior evidence and primary references
 
 The design retains the positive one-box boundary from the frozen
@@ -118,10 +138,11 @@ interval work.
 
 ## Advance, stop, and reopen gates
 
-Advance to an unscored champion-source adapter only if the benchmark owner can
-measure nonzero applicability on source-only metadata and preserve the same
-zero-authority contract. Formal S1/S2 measurement belongs exclusively to the
-benchmark owner.
+The formulation audit found zero safe applicability, so a champion-source
+adapter and formal S1/S2 run are currently stopped. Advance only after the
+benchmark owner can expose literal finite boxes plus a complete validated
+interval residual/Jacobian extension on source-only metadata while preserving
+the same zero-authority contract.
 
 Stop on any extra/invalid/crash, a canonical replay bypass, a recurring case
 loss, baseline quota violation, or no recall signal with more than 20% search
