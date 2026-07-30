@@ -204,9 +204,7 @@ def test_unknown_point_distance_problem_uses_bit_exact_refnum_program(monkeypatc
     compilation = compile_residual_plan(reference, source_sha256="d" * 64)
     assert compilation.plan is not None
     assert compilation.plan.flat_tape_program is not None
-    assert compilation.plan.semantic_abi_version == (
-        "geotarget.flat-ssa-tape/sympy-1.14-bf53-v1"
-    )
+    assert compilation.plan.semantic_abi_version == ("geotarget.flat-ssa-tape/sympy-1.14-bf53-v1")
     candidate = CompiledResidualEvaluator(reference, compilation.plan)
     random_source = random.Random(4)
 
@@ -256,9 +254,7 @@ def test_production_search_worker_selects_qualified_flat_tape() -> None:
         "raw_semantic_gate",
         "flat_tape",
     ]
-    assert metadata["flat_tape_metadata"]["qualification_status"] == (
-        "permanent_test_gate"
-    )
+    assert metadata["flat_tape_metadata"]["qualification_status"] == ("permanent_test_gate")
     assert metadata["raw_semantic_gate_metadata"]["problem_identity_read"] is False
 
 
@@ -446,18 +442,16 @@ def test_product_dispatcher_uses_actual_general_typed_signatures() -> None:
     reference = _build(problem)
     compilation = compile_residual_plan(reference, source_sha256="6" * 64)
     assert compilation.plan is not None
-    assert compilation.plan.raw_libmp_program is not None
-    assert compilation.plan.flat_tape_program is None
+    assert compilation.plan.raw_libmp_program is None
+    assert compilation.plan.flat_tape_program is not None
     assert compilation.fallback_reason is None
     metadata = compilation.plan.metadata()
     assert metadata["backend_selection_chain"] == [
         "typed",
         "raw_semantic_gate",
-        "raw_libmp",
+        "flat_tape",
     ]
-    assert "unsupported typed signature: Incenter" in str(
-        metadata["flat_tape_fallback_reason"]
-    )
+    assert metadata["flat_tape_fallback_reason"] is None
     assert {"MidpointPP", "Incenter"} <= set(compilation.attempted_ast_opcode_set)
     expected = reference.evaluate_float_residual([3.0, 0.25, 1.0, 4.0])
     observed = compilation.plan.evaluate([3.0, 0.25, 1.0, 4.0])

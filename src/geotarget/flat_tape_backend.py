@@ -29,8 +29,10 @@ from geotarget.raw_libmp_backend import (
     _as_float,
     _atan2_sympy,
     _circle,
+    _circumcenter,
     _div,
     _evalf_unary,
+    _incenter,
     _is_mpf,
     _is_zero,
     _mul,
@@ -55,6 +57,10 @@ FLAT_TAPE_QUALIFICATION_GATE = "permanent_generated_bitwise_deep_fanout_optimize
 
 class UnsupportedFlatTapeBackend(RuntimeError):
     """The complete typed program is outside the flat tape ABI."""
+
+
+class _FlatValueClassFallback(RuntimeError):
+    """A qualified tape reached a branch delegated to the raw authority."""
 
 
 class _Kind(IntEnum):
@@ -98,6 +104,13 @@ class _Op(IntEnum):
     DISTANCE_CP = 54
     AREA = 55
     ANGLE_PPP = 56
+    CIRCUMCENTER = 60
+    CIRCUMCIRCLE = 61
+    ORTHOCENTER = 62
+    CENTROID = 63
+    INCENTER = 64
+    INCIRCLE = 65
+    INTERSECT_LL = 70
 
 
 _OPCODES = {
@@ -137,6 +150,13 @@ _OPCODES = {
     "DistanceCP": _Op.DISTANCE_CP,
     "AreaPoints": _Op.AREA,
     "AnglePPP": _Op.ANGLE_PPP,
+    "Circumcenter": _Op.CIRCUMCENTER,
+    "Circumcircle": _Op.CIRCUMCIRCLE,
+    "Orthocenter": _Op.ORTHOCENTER,
+    "Centroid": _Op.CENTROID,
+    "Incenter": _Op.INCENTER,
+    "Incircle": _Op.INCIRCLE,
+    "Intersect": _Op.INTERSECT_LL,
 }
 
 _KINDS = {
@@ -178,6 +198,13 @@ _SIGNATURES: dict[str, tuple[tuple[str, ...], str]] = {
     "DistancePC": (("point2", "circle2"), "scalar"),
     "DistanceCP": (("circle2", "point2"), "scalar"),
     "AnglePPP": (("point2", "point2", "point2"), "scalar"),
+    "Circumcenter": (("point2", "point2", "point2"), "point2"),
+    "Circumcircle": (("point2", "point2", "point2"), "circle2"),
+    "Orthocenter": (("point2", "point2", "point2"), "point2"),
+    "Centroid": (("point2", "point2", "point2"), "point2"),
+    "Incenter": (("point2", "point2", "point2"), "point2"),
+    "Incircle": (("point2", "point2", "point2"), "circle2"),
+    "Intersect": (("line2", "line2"), "point2"),
 }
 
 
@@ -468,6 +495,125 @@ class FlatTapeProgram:
                 determinant = _abs(_sub(_mul(bax, bcy), _mul(bay, bcx)))
                 dot = _add(_mul(bax, bcx), _mul(bay, bcy))
                 s[out.index] = _atan2_sympy(determinant, dot)
+            elif op in {_Op.CIRCUMCENTER, _Op.CIRCUMCIRCLE}:
+                first, second, third = args
+                a = (px[first.index], py[first.index])
+                b = (px[second.index], py[second.index])
+                c = (px[third.index], py[third.index])
+                center = _circumcenter(a, b, c)
+                if center is None:
+                    raise _FlatValueClassFallback("Circumcenter denominator is zero")
+                if op is _Op.CIRCUMCENTER:
+                    px[out.index], py[out.index] = center
+                else:
+                    radius = _sqrt(
+                        _add(
+                            _mul(_sub(center[0], a[0]), _sub(center[0], a[0])),
+                            _mul(_sub(center[1], a[1]), _sub(center[1], a[1])),
+                        )
+                    )
+                    _circle(center, radius)
+                    cx[out.index], cy[out.index], cr[out.index] = (
+                        center[0],
+                        center[1],
+                        radius,
+                    )
+            elif op is _Op.ORTHOCENTER:
+                first, second, third = args
+                a = (px[first.index], py[first.index])
+                b = (px[second.index], py[second.index])
+                c = (px[third.index], py[third.index])
+                dx_bc, dy_bc = _sub(c[0], b[0]), _sub(c[1], b[1])
+                k1 = _add(_mul(dx_bc, a[0]), _mul(dy_bc, a[1]))
+                dx_ca, dy_ca = _sub(a[0], c[0]), _sub(a[1], c[1])
+                k2 = _add(_mul(dx_ca, b[0]), _mul(dy_ca, b[1]))
+                determinant = _sub(_mul(dx_bc, dy_ca), _mul(dx_ca, dy_bc))
+                if _is_zero(determinant):
+                    raise _FlatValueClassFallback("Orthocenter determinant is zero")
+                px[out.index] = _div(_sub(_mul(k1, dy_ca), _mul(k2, dy_bc)), determinant)
+                py[out.index] = _div(_sub(_mul(dx_bc, k2), _mul(dx_ca, k1)), determinant)
+            elif op is _Op.CENTROID:
+                first, second, third = args
+                px[out.index] = _div(
+                    _add(
+                        _add(px[first.index], px[second.index]),
+                        px[third.index],
+                    ),
+                    3,
+                )
+                py[out.index] = _div(
+                    _add(
+                        _add(py[first.index], py[second.index]),
+                        py[third.index],
+                    ),
+                    3,
+                )
+            elif op in {_Op.INCENTER, _Op.INCIRCLE}:
+                first, second, third = args
+                a = (px[first.index], py[first.index])
+                b = (px[second.index], py[second.index])
+                c = (px[third.index], py[third.index])
+                center = _incenter(a, b, c)
+                if op is _Op.INCENTER:
+                    px[out.index], py[out.index] = center
+                else:
+                    double_area = _abs(
+                        _add(
+                            _add(
+                                _mul(a[0], _sub(b[1], c[1])),
+                                _mul(b[0], _sub(c[1], a[1])),
+                            ),
+                            _mul(c[0], _sub(a[1], b[1])),
+                        )
+                    )
+                    side_a = _sqrt(
+                        _add(
+                            _mul(_sub(b[0], c[0]), _sub(b[0], c[0])),
+                            _mul(_sub(b[1], c[1]), _sub(b[1], c[1])),
+                        )
+                    )
+                    side_b = _sqrt(
+                        _add(
+                            _mul(_sub(c[0], a[0]), _sub(c[0], a[0])),
+                            _mul(_sub(c[1], a[1]), _sub(c[1], a[1])),
+                        )
+                    )
+                    side_c = _sqrt(
+                        _add(
+                            _mul(_sub(a[0], b[0]), _sub(a[0], b[0])),
+                            _mul(_sub(a[1], b[1]), _sub(a[1], b[1])),
+                        )
+                    )
+                    perimeter = _add(_add(side_a, side_b), side_c)
+                    radius = 0 if _is_zero(perimeter) else _div(double_area, perimeter)
+                    _circle(center, radius)
+                    cx[out.index], cy[out.index], cr[out.index] = (
+                        center[0],
+                        center[1],
+                        radius,
+                    )
+            elif op is _Op.INTERSECT_LL:
+                first, second = args
+                determinant = _sub(
+                    _mul(la[first.index], lb[second.index]),
+                    _mul(la[second.index], lb[first.index]),
+                )
+                if _is_zero(determinant):
+                    raise _FlatValueClassFallback("parallel line intersection")
+                px[out.index] = _div(
+                    _sub(
+                        _mul(lb[first.index], lc[second.index]),
+                        _mul(lb[second.index], lc[first.index]),
+                    ),
+                    determinant,
+                )
+                py[out.index] = _div(
+                    _sub(
+                        _mul(lc[first.index], la[second.index]),
+                        _mul(lc[second.index], la[first.index]),
+                    ),
+                    determinant,
+                )
             else:  # pragma: no cover - compile/runtime invariant
                 raise AssertionError(op)
 
@@ -489,6 +635,8 @@ class FlatTapeProgram:
         buffers = self._buffers()
         try:
             self._execute(self.construction_tape, raw_values, buffers)
+        except _FlatValueClassFallback:
+            return self.admission.raw_semantic_gate.evaluate(raw_values)
         except Exception:
             return [float("nan")] * len(self.constraint_tapes)
         residuals: list[float] = []
@@ -498,6 +646,8 @@ class FlatTapeProgram:
                 residuals.append(
                     _as_float(buffers.scalars[left.index]) - _as_float(buffers.scalars[right.index])
                 )
+            except _FlatValueClassFallback:
+                return self.admission.raw_semantic_gate.evaluate(raw_values)
             except Exception:
                 residuals.append(float("nan"))
         return residuals
@@ -675,15 +825,33 @@ def compile_flat_tape_program(
                 raise UnsupportedFlatTapeBackend("invalid BF53Literal payload")
             if node.opcode == "BF53Input" and str(node.payload) not in input_indexes:
                 raise UnsupportedFlatTapeBackend("unknown BF53Input payload")
+            intersect_payload_ok = False
+            if node.opcode == "Intersect" and node.payload is not None:
+                plan, selector_names = node.payload
+                intersect_payload_ok = (
+                    plan.support_key.operand_types == ("line2", "line2")
+                    and plan.result_type == "point2"
+                    and not selector_names
+                )
+                if not intersect_payload_ok:
+                    raise UnsupportedFlatTapeBackend(
+                        "only selector-free line-line Intersect is qualified"
+                    )
             if node.opcode not in {"ExactInt", "BF53Literal", "BF53Input"} and (
-                node.payload is not None
+                node.payload is not None and not intersect_payload_ok
             ):
                 raise UnsupportedFlatTapeBackend(
                     f"unexpected payload for {node.opcode}: {node.payload!r}"
                 )
             operands = tuple(compile_node(child) for child in node.operands)
             output = _Ref(kind, counters[int(kind)].take())
-            payload = input_indexes[str(node.payload)] if op is _Op.BF53_INPUT else node.payload
+            payload = (
+                input_indexes[str(node.payload)]
+                if op is _Op.BF53_INPUT
+                else None
+                if op is _Op.INTERSECT_LL
+                else node.payload
+            )
             if op is _Op.POW and (len(node.operands) != 2 or node.operands[1].opcode != "ExactInt"):
                 raise UnsupportedFlatTapeBackend("flat Pow exponent must be ExactInt")
             memo[identity] = output
