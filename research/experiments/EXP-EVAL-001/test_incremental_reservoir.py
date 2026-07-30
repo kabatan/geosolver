@@ -14,6 +14,7 @@ from incremental_reservoir import (
     Observation,
     ReservoirSnapshot,
     incremental_candidates,
+    install_initial_checkpoint,
 )
 
 
@@ -158,6 +159,25 @@ def _characterize(reservoir):
         )
         for candidate in candidates
     )
+
+
+def test_initial_writer_preserves_baseline_when_search_artifact_is_absent(
+    tmp_path: Path,
+) -> None:
+    sentinel = object()
+
+    class Base:
+        @staticmethod
+        def _fresh_replay_candidates(*args, **kwargs):
+            del args, kwargs
+            return sentinel
+
+    base = Base()
+    checkpoint = tmp_path / "candidate-reservoir.json"
+    install_initial_checkpoint(base, checkpoint, "f" * 64)
+
+    assert base._fresh_replay_candidates() is sentinel
+    assert not checkpoint.exists()
 
 
 def test_append_windows_are_bit_identical_to_full_replay(tmp_path: Path) -> None:

@@ -605,15 +605,19 @@ def install_initial_checkpoint(base: Any, checkpoint_path: Path, source_sha256: 
 
     original = base._fresh_replay_candidates
     base._geotarget_exp_eval_001_original_fresh_replay = original
-    adapter = FrozenChampionAdapter(base)
     resolved = checkpoint_path.resolve()
 
     def checkpointing_fresh(*args: Any, **kwargs: Any):
         reservoir = original(*args, **kwargs)
         search_path = resolved.parent / "search.json"
         if not search_path.is_file():
-            raise RuntimeError("search artifact is absent at reservoir commit")
+            # A failed/empty frozen search can legitimately reach the reservoir
+            # seam without an accepted artifact.  Preserve the original result;
+            # a later continuation will perform one full replay if search data
+            # becomes available, then commit v2.
+            return reservoir
         search = json.loads(search_path.read_text(encoding="utf-8"))
+        adapter = FrozenChampionAdapter(base)
         write_checkpoint(
             resolved,
             source_sha256=source_sha256,
