@@ -47,6 +47,46 @@ CPU_TELEMETRY_OUTER_PATHS = (
     ("outer_cpu_seconds",),
     ("outer_process_cpu_seconds",),
 )
+SIDE_METADATA_FIELDS = (
+    "seed",
+    "total_seconds",
+    "search_seconds",
+    "starts",
+    "callbacks_per_start",
+    "aggregate_callback_cap",
+    "jobs",
+    "cpus",
+    "development_dataset_sha256",
+    "archived_input_manifest_sha256",
+    "canonical_formulations_verified",
+    "runtime_versions",
+    "runner_sha256",
+    "scorer_sha256",
+    "execute",
+    "arm_id",
+    "arm_base_commit",
+    "arm_mechanism_hash",
+    "entrypoint_sha256",
+)
+PAIR_METADATA_FIELDS = (
+    "seed",
+    "total_seconds",
+    "search_seconds",
+    "starts",
+    "callbacks_per_start",
+    "aggregate_callback_cap",
+    "jobs",
+    "cpus",
+    "development_dataset_sha256",
+    "archived_input_manifest_sha256",
+    "canonical_formulations_verified",
+    "runtime_versions",
+    "runner_sha256",
+    "scorer_sha256",
+    "execute",
+    "partition",
+    "selected_dataset_sha256",
+)
 
 
 @dataclass(frozen=True)
@@ -129,6 +169,95 @@ def resolve_run_files(path: Path) -> tuple[Path, Path]:
     if not score.is_file() or not telemetry.is_file():
         raise ValueError(f"paired score/telemetry files are unavailable under {resolved}")
     return score, telemetry
+
+
+def load_run_metadata(path: Path) -> dict[str, object]:
+    """Load comparison-relevant run configuration when the runner emitted it."""
+
+    score, _telemetry = resolve_run_files(path)
+    root = score.parent
+    campaign_plan = root / "CAMPAIGN_PLAN.json"
+    run_plan = root / "RUN_PLAN.json"
+    plan_path = campaign_plan if campaign_plan.is_file() else run_plan
+    if not plan_path.is_file():
+        return {}
+    loaded = load_json(plan_path)
+    if not isinstance(loaded, Mapping):
+        raise ValueError(f"{plan_path}: run plan is not an object")
+    arm = loaded.get("arm")
+    arm = arm if isinstance(arm, Mapping) else {}
+    selected_sha = loaded.get("selected_dataset_sha256")
+    if selected_sha is None:
+        selected_sha = loaded.get("dataset_sha256")
+    entrypoint_sha = loaded.get("entrypoint_sha256")
+    if entrypoint_sha is None:
+        entrypoint_sha = loaded.get("worker_sha256")
+    cpus = loaded.get("cpus")
+    if isinstance(cpus, str):
+        cpus = [part.strip() for part in cpus.split(",") if part.strip()]
+    elif isinstance(cpus, (list, tuple)):
+        cpus = [str(part) for part in cpus]
+    return {
+        key: value
+        for key, value in {
+            "seed": loaded.get("seed"),
+            "total_seconds": loaded.get("total_seconds"),
+            "search_seconds": loaded.get("search_seconds"),
+            "starts": loaded.get("starts"),
+            "callbacks_per_start": loaded.get("callbacks_per_start"),
+            "aggregate_callback_cap": loaded.get("aggregate_callback_cap"),
+            "jobs": loaded.get("jobs"),
+            "cpus": cpus,
+            "development_dataset_sha256": loaded.get(
+                "development_dataset_sha256"
+            ),
+            "archived_input_manifest_sha256": loaded.get(
+                "archived_input_manifest_sha256"
+            ),
+            "canonical_formulations_verified": loaded.get(
+                "canonical_formulations_verified"
+            ),
+            "runtime_versions": loaded.get("runtime_versions"),
+            "runner_sha256": loaded.get("runner_sha256"),
+            "scorer_sha256": loaded.get("scorer_sha256"),
+            "execute": loaded.get("execute"),
+            "partition": loaded.get("partition"),
+            "selected_dataset_sha256": selected_sha,
+            "arm_id": arm.get("id"),
+            "arm_base_commit": arm.get("base_commit"),
+            "arm_mechanism_hash": arm.get("mechanism_hash"),
+            "entrypoint_sha256": entrypoint_sha,
+        }.items()
+        if value is not None
+    }
+
+
+def _canonical_metadata(value: object) -> str:
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def _validate_side_metadata(
+    rows: Sequence[Mapping[str, object]], *, side: str
+) -> None:
+    for field in SIDE_METADATA_FIELDS:
+        values = [row[field] for row in rows if field in row]
+        if values and any(value != values[0] for value in values[1:]):
+            raise ValueError(f"{side} metadata mismatch: {field}")
+
+
+def _validate_pair_metadata(
+    control: Mapping[str, object],
+    candidate: Mapping[str, object],
+    *,
+    pair_ordinal: int,
+) -> None:
+    for field in PAIR_METADATA_FIELDS:
+        if field not in control or field not in candidate:
+            continue
+        if control[field] != candidate[field]:
+            raise ValueError(
+                f"paired partition {pair_ordinal} metadata mismatch: {field}"
+            )
 
 
 def _load_telemetry(path: Path) -> dict[int, Mapping[str, object]]:
@@ -349,11 +478,75 @@ def _fold_summary(
     }
 
 
+def build_analysis_inputs(
+    control_paths: Sequence[Path], candidate_paths: Sequence[Path]
+) -> dict[str, object]:
+    if not control_paths or not candidate_paths:
+        raise ValueError("at least one control/candidate partition pair is required")
+    if len(control_paths) != len(candidate_paths):
+        raise ValueError("control and candidate input counts differ")
+    control: dict[str, CaseObservation] = {}
+    candidate: dict[str, CaseObservation] = {}
+    control_metadata: list[dict[str, object]] = []
+    candidate_metadata: list[dict[str, object]] = []
+    partition_case_counts: list[int] = []
+    for ordinal, (control_path, candidate_path) in enumerate(
+        zip(control_paths, candidate_paths, strict=True), 1
+    ):
+        left = load_run(control_path)
+        right = load_run(candidate_path)
+        if set(left) != set(right):
+            raise ValueError(
+                f"paired partition {ordinal} contains different case identities"
+            )
+        if set(control).intersection(left) or set(candidate).intersection(right):
+            raise ValueError("input partitions contain duplicate case identities")
+        left_metadata = load_run_metadata(control_path)
+        right_metadata = load_run_metadata(candidate_path)
+        _validate_pair_metadata(
+            left_metadata, right_metadata, pair_ordinal=ordinal
+        )
+        control.update(left)
+        candidate.update(right)
+        control_metadata.append(left_metadata)
+        candidate_metadata.append(right_metadata)
+        partition_case_counts.append(len(left))
+    _validate_side_metadata(control_metadata, side="control")
+    _validate_side_metadata(candidate_metadata, side="candidate")
+    metadata_fingerprint = hashlib.sha256(
+        _canonical_metadata(
+            {"control": control_metadata, "candidate": candidate_metadata}
+        ).encode("utf-8")
+    ).hexdigest()
+    merge_audit = {
+        "partition_pair_count": len(control_paths),
+        "partition_case_counts": partition_case_counts,
+        "pair_case_sets_match": True,
+        "duplicate_case_identities": False,
+        "control_side_metadata_compatible": True,
+        "candidate_side_metadata_compatible": True,
+        "paired_seed_limits_metadata_compatible": True,
+        "control_metadata_emitted_count": sum(bool(row) for row in control_metadata),
+        "candidate_metadata_emitted_count": sum(
+            bool(row) for row in candidate_metadata
+        ),
+        "metadata_fingerprint_sha256": metadata_fingerprint,
+    }
+    return _build_analysis_rows(control, candidate, merge_audit=merge_audit)
+
+
 def build_analysis(control_path: Path, candidate_path: Path) -> dict[str, object]:
-    control = load_run(control_path)
-    candidate = load_run(candidate_path)
-    if set(control) != set(candidate):
-        raise ValueError("paired runs contain different case identities")
+    """Backward-compatible single-partition API."""
+
+    return build_analysis_inputs([control_path], [candidate_path])
+
+
+def _build_analysis_rows(
+    control: Mapping[str, CaseObservation],
+    candidate: Mapping[str, CaseObservation],
+    *,
+    merge_audit: Mapping[str, object],
+) -> dict[str, object]:
     assignment = assign_folds(control)
     # Candidate identity must imply the same family partition independently.
     if any(control[key].cluster != candidate[key].cluster for key in control):
@@ -378,7 +571,7 @@ def build_analysis(control_path: Path, candidate_path: Path) -> dict[str, object
         ).encode("utf-8")
     ).hexdigest()
     return {
-        "schema_version": "geotarget.exp-global-001-family-disjoint-fold-analysis/v1",
+        "schema_version": "geotarget.exp-global-001-family-disjoint-fold-analysis/v2",
         "case_count": len(control),
         "family_cluster_count": len({row.cluster for row in control.values()}),
         "fold_count": FOLD_COUNT,
@@ -390,6 +583,7 @@ def build_analysis(control_path: Path, candidate_path: Path) -> dict[str, object
         "family_clusters_disjoint": True,
         "family_group_disjoint": True,
         "assignment_fingerprint_sha256": assignment_fingerprint,
+        "input_merge": dict(merge_audit),
         "timing_policy": {
             "wall": (
                 "worker_elapsed_wall_seconds when positive; otherwise "
@@ -428,11 +622,13 @@ def build_analysis(control_path: Path, candidate_path: Path) -> dict[str, object
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--control", required=True, type=Path)
-    parser.add_argument("--candidate", required=True, type=Path)
+    parser.add_argument("--control", action="append", required=True, type=Path)
+    parser.add_argument("--candidate", action="append", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     arguments = parser.parse_args()
-    document = build_analysis(arguments.control, arguments.candidate)
+    if len(arguments.control) != len(arguments.candidate):
+        raise SystemExit("--control and --candidate counts differ")
+    document = build_analysis_inputs(arguments.control, arguments.candidate)
     output = arguments.output.expanduser().resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(
@@ -447,6 +643,9 @@ def main() -> int:
         json.dumps(
             {
                 "output": str(output),
+                "partition_pair_count": document["input_merge"][
+                    "partition_pair_count"
+                ],
                 "fold_case_counts": [fold["case_count"] for fold in document["folds"]],
                 "fold_nets": [fold["net"] for fold in document["folds"]],
                 "wins_exceed_losses_in_at_least_2_folds": document["cross_fold_gate"][

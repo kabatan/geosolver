@@ -34,10 +34,19 @@ ROWS = (
 )
 
 
-def write_run(root: Path, *, candidate: bool, reverse: bool = False) -> None:
+def write_run(
+    root: Path,
+    *,
+    candidate: bool,
+    reverse: bool = False,
+    problem_ids=ROWS,
+    seed: int = 0,
+    mechanism: str | None = None,
+    partition: str = "all",
+) -> None:
     score_rows = []
     telemetry_rows = []
-    ordered = list(enumerate(ROWS, 1))
+    ordered = list(enumerate(problem_ids, 1))
     if reverse:
         ordered.reverse()
     for ordinal, problem_id in ordered:
@@ -85,9 +94,168 @@ def write_run(root: Path, *, candidate: bool, reverse: bool = False) -> None:
     (root / "TELEMETRY.json").write_text(
         json.dumps({"rows": telemetry_rows}), encoding="utf-8"
     )
+    dataset_sha = hashlib.sha256(
+        json.dumps(sorted(problem_ids)).encode("utf-8")
+    ).hexdigest()
+    (root / "CAMPAIGN_PLAN.json").write_text(
+        json.dumps(
+            {
+                "arm": {
+                    "id": "candidate" if candidate else "control",
+                    "base_commit": "base-candidate" if candidate else "base-control",
+                    "mechanism_hash": mechanism
+                    or ("candidate-mechanism" if candidate else "control-mechanism"),
+                },
+                "entrypoint_sha256": mechanism
+                or ("candidate-entrypoint" if candidate else "control-entrypoint"),
+                "seed": seed,
+                "total_seconds": 30.0,
+                "search_seconds": 20.0,
+                "starts": 256,
+                "callbacks_per_start": 600,
+                "aggregate_callback_cap": 153600,
+                "jobs": 1,
+                "cpus": "0",
+                "development_dataset_sha256": "development-dataset",
+                "canonical_formulations_verified": 145,
+                "runtime_versions": {"python": "3.12.11"},
+                "runner_sha256": "runner",
+                "scorer_sha256": "scorer",
+                "execute": True,
+                "partition": partition,
+                "selected_dataset_sha256": dataset_sha,
+            }
+        ),
+        encoding="utf-8",
+    )
 
 
 class FoldAnalysisTests(unittest.TestCase):
+    def test_three_way_disjoint_merge(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            partitions = (ROWS[:2], ROWS[2:5], ROWS[5:])
+            controls = []
+            candidates = []
+            for index, identities in enumerate(partitions):
+                control = root / f"control-{index}"
+                candidate = root / f"candidate-{index}"
+                write_run(
+                    control,
+                    candidate=False,
+                    problem_ids=identities,
+                    partition=f"partition-{index}",
+                )
+                write_run(
+                    candidate,
+                    candidate=True,
+                    problem_ids=identities,
+                    partition=f"partition-{index}",
+                )
+                controls.append(control)
+                candidates.append(candidate)
+            report = FOLDS.build_analysis_inputs(controls, candidates)
+            merge = report["input_merge"]
+            self.assertEqual(report["case_count"], len(ROWS))
+            self.assertEqual(merge["partition_pair_count"], 3)
+            self.assertEqual(merge["partition_case_counts"], [2, 3, 3])
+            self.assertTrue(merge["pair_case_sets_match"])
+            self.assertTrue(merge["control_side_metadata_compatible"])
+            self.assertTrue(merge["candidate_side_metadata_compatible"])
+            serialized = json.dumps(report, sort_keys=True)
+            for identity in ROWS:
+                self.assertNotIn(identity, serialized)
+            output = root / "merged-summary.json"
+            arguments = ["fold_analysis.py"]
+            for control in controls:
+                arguments.extend(("--control", str(control)))
+            for candidate in candidates:
+                arguments.extend(("--candidate", str(candidate)))
+            arguments.extend(("--output", str(output)))
+            with mock.patch.object(sys, "argv", arguments), mock.patch(
+                "sys.stdout", io.StringIO()
+            ):
+                self.assertEqual(FOLDS.main(), 0)
+            emitted = json.loads(output.read_text())
+            self.assertEqual(emitted["input_merge"]["partition_pair_count"], 3)
+
+    def test_merge_rejects_duplicate_case_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            controls = []
+            candidates = []
+            for index, identities in enumerate((ROWS[:3], ROWS[2:5])):
+                control = root / f"control-{index}"
+                candidate = root / f"candidate-{index}"
+                write_run(
+                    control,
+                    candidate=False,
+                    problem_ids=identities,
+                    partition=f"partition-{index}",
+                )
+                write_run(
+                    candidate,
+                    candidate=True,
+                    problem_ids=identities,
+                    partition=f"partition-{index}",
+                )
+                controls.append(control)
+                candidates.append(candidate)
+            with self.assertRaisesRegex(ValueError, "duplicate case identities"):
+                FOLDS.build_analysis_inputs(controls, candidates)
+
+    def test_merge_rejects_side_config_mismatch(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            controls = []
+            candidates = []
+            for index, identities in enumerate((ROWS[:4], ROWS[4:])):
+                control = root / f"control-{index}"
+                candidate = root / f"candidate-{index}"
+                write_run(
+                    control,
+                    candidate=False,
+                    problem_ids=identities,
+                    mechanism=f"control-mechanism-{index}",
+                    partition=f"partition-{index}",
+                )
+                write_run(
+                    candidate,
+                    candidate=True,
+                    problem_ids=identities,
+                    partition=f"partition-{index}",
+                )
+                controls.append(control)
+                candidates.append(candidate)
+            with self.assertRaisesRegex(ValueError, "control metadata mismatch"):
+                FOLDS.build_analysis_inputs(controls, candidates)
+
+    def test_merge_rejects_pair_case_set_mismatch(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            control = root / "control"
+            candidate = root / "candidate"
+            write_run(control, candidate=False, problem_ids=ROWS[:3])
+            write_run(candidate, candidate=True, problem_ids=ROWS[1:4])
+            with self.assertRaisesRegex(ValueError, "different case identities"):
+                FOLDS.build_analysis_inputs([control], [candidate])
+
+    def test_merge_rejects_paired_seed_mismatch(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            control = root / "control"
+            candidate = root / "candidate"
+            write_run(control, candidate=False, seed=0)
+            write_run(candidate, candidate=True, seed=1)
+            with self.assertRaisesRegex(ValueError, "metadata mismatch: seed"):
+                FOLDS.build_analysis_inputs([control], [candidate])
+
+    def test_merge_rejects_input_count_mismatch(self) -> None:
+        with self.assertRaisesRegex(ValueError, "input counts differ"):
+            FOLDS.build_analysis_inputs(
+                [Path("control")], [Path("candidate-1"), Path("candidate-2")]
+            )
+
     def test_family_disjoint_deterministic_balanced_assignment(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
