@@ -115,3 +115,46 @@ def test_snapshot_admission_is_invariant_under_problem_rename() -> None:
         assert snapshot is not None
         metadata.append(snapshot.metadata()["support_key_sha256"])
     assert metadata[0] == metadata[1]
+
+
+def test_snapshot_metamorphic_layouts_remain_complete_and_bitwise() -> None:
+    runtime = _runtime("geotarget_callback_snapshot_metamorphic_runtime")
+    renamed = copy.deepcopy(PROBLEM)
+    replacements = {
+        "ax": "u0",
+        "ay": "u1",
+        "bx": "u2",
+        "by": "u3",
+        "px": "u4",
+        "py": "u5",
+    }
+    renamed["variables"]["names"] = list(replacements.values())
+    for construction in renamed["construction"]:
+        for source, target in replacements.items():
+            construction["expr"] = construction["expr"].replace(source, target)
+
+    reordered = copy.deepcopy(PROBLEM)
+    reordered["construction"] = [
+        reordered["construction"][2],
+        reordered["construction"][0],
+        reordered["construction"][1],
+        reordered["construction"][3],
+    ]
+    reordered["constraints"].reverse()
+
+    point = np.asarray([0.25, -1.5, 4.0, 3.5, -2.0, 7.0], dtype=float)
+    for ordinal, document in enumerate((PROBLEM, renamed, reordered)):
+        _case, reference_budget, reference = _build(runtime, copy.deepcopy(document))
+        compilation = compile_residual_plan(reference, source_sha256=f"{ordinal + 5:x}" * 64)
+        assert compilation.plan is not None
+        candidate = CompiledResidualEvaluator(reference, compilation.plan)
+        snapshot = compile_callback_snapshot(candidate)
+        assert snapshot is not None
+        candidate.compiled_callback_snapshot = snapshot
+        _case, candidate_budget, _reference = _build(runtime, copy.deepcopy(document))
+        candidate_budget.evaluator = candidate
+        install_fused_evaluation(reference_budget)
+        install_fused_evaluation(candidate_budget)
+
+        _assert_opaque_equal(reference_budget(point), candidate_budget(point))
+        assert snapshot.metadata()["case_specific_routing"] is False
