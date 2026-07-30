@@ -10,6 +10,8 @@ Run with the pinned Python/SymPy environment:
   -m unittest -v test_btf_polynomial_pipeline.py
 /home/kabatan/work/solver-experiment-runtime/solver/python/.venv/bin/python run_s0.py
 /home/kabatan/work/solver-experiment-runtime/solver/python/.venv/bin/python \
+  run_full_v15_activation_smoke.py
+/home/kabatan/work/solver-experiment-runtime/solver/python/.venv/bin/python \
   audit_development_formulations.py /path/to/development145.jsonl \
   development-static-audit.json
 ```
@@ -25,3 +27,11 @@ Roots only replace their block coordinates in an existing numerical template.
 The resulting full-dimensional proposal has no authority until the unchanged
 canonical verifier accepts it. At least half of starts remain baseline (75% by
 default), and every route failure reclaims all starts for baseline.
+
+`worker.py` is the common-arm entrypoint for the frozen full-v15 champion. It
+does not subtract any baseline search starts or callbacks. For combined-
+applicable formulations it appends at most 32 proposals after every original
+endpoint and before the existing fresh source/guard replay. The side generator
+has one two-second envelope and at most four symbolic blocks. Non-applicable or
+parse-unsupported formulations are `exec`-delegated to the frozen worker with
+the original argument vector, producing bit-identical dry output.
