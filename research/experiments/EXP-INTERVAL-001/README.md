@@ -11,8 +11,14 @@ Run the generated checks with the campaign Python 3.12 environment:
   research/experiments/EXP-INTERVAL-001/test_interval_rescue.py
 /home/kabatan/work/solver/.venv/bin/python \
   research/experiments/EXP-INTERVAL-001/run_generated_s0.py
+/home/kabatan/work/solver/.venv/bin/python \
+  research/experiments/EXP-INTERVAL-001/run_interval_metamorphic_s0.py
+/home/kabatan/work/solver/.venv/bin/python \
+  research/experiments/EXP-INTERVAL-001/formulation_audit.py
 ```
 
-The second command prints the deterministic artifact stored at
-`results/generated-s0.json`. No formal dataset, scorer, Gold/validation/sealed
-answer data, or champion solve is opened by either command.
+The commands print deterministic aggregate artifacts stored in `results/`.
+The formulation audit reads only the already-isolated development formulation
+bytes, emits no case rows, and skips identity/answer-like values without JSON
+deserialization. No scorer, Gold/validation/sealed answer data, or formal solver
+execution is opened by these commands.
