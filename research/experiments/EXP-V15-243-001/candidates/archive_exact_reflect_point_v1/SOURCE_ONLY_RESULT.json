@@ -1,0 +1,62 @@
+{
+  "schema": "geotarget.archive-exact-reflect-point-source-only/v1",
+  "date": "2026-07-31",
+  "scope": {
+    "formal_execute": false,
+    "scorer_or_truth_read": false,
+    "real_case_outcome_read": false,
+    "cpu": 15,
+    "raw_artifact_root": "/tmp/geotarget-archive-exact-reflect-point-source-smoke-v1"
+  },
+  "mechanism": {
+    "opcode": "qreflect(::QPoint, ::QPoint)",
+    "semantics": "Reflect(reflected_point, center_point) = 2*center_point-reflected_point",
+    "branch_guard_or_definedness_added": false,
+    "maximum_recognition_degree": 8,
+    "all_other_extended_worker_bytes_identical_after_overload_removal": true,
+    "case_family_truth_target_count_or_outcome_routing": false
+  },
+  "activation_evidence": {
+    "source_only_reflect_point_construction_appearances": 7,
+    "aggregate_control_missing_dispatch_attempts": 16,
+    "individual_case_outcomes_used": false
+  },
+  "generated_d0": {
+    "pytest_command_cpu": 15,
+    "tests_passed": 16,
+    "tests_failed": 0,
+    "positive_families": [
+      "integer_and_rational_point_reflection",
+      "argument-order_pair",
+      "affine_rotation_reflection_metamorphic"
+    ],
+    "negative_and_near_miss": [
+      "wrong_target_rejected",
+      "wrong_argument_order_target_rejected",
+      "wrong_axis_type_rejected_by_typed_dispatch"
+    ],
+    "differential": [
+      "existing_line_reflection_result_exactly_equal",
+      "overload_removal_restores_original_extended_worker_bytes"
+    ],
+    "source_raw_answer_exact": true,
+    "target_link_exact": true,
+    "root_ordinal_attestation_complete": true
+  },
+  "source_only_dry_plans": {
+    "positive": {
+      "status": "DRY_RUN_NOT_STARTED",
+      "plan_sha256": "dcf40a0006585ee3b89bc514774ccf39ecbac54c7690caeec8a085389700156e",
+      "repeat_hash_equal": true,
+      "exact_outer_mode": "CONFIRM_ALL_AUTHORITIES",
+      "ordinary_authority_bypass": false
+    },
+    "zero_dimensional": {
+      "status": "DRY_RUN_NOT_STARTED",
+      "plan_sha256": "9da5b3bb133a4ce8d70cc2befd251fb5c7b6b5da6df9cbd8f016281695e8aceb",
+      "existing_source_exact_route_retained": true,
+      "reflect_opcode_invoked": false
+    }
+  },
+  "formal_disposition": "READY_FOR_BENCHMARK_OWNER_STATIC_REVIEW_AND_FORMAL_SCREEN"
+}
