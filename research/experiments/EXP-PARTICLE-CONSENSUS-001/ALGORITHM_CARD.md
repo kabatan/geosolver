@@ -1,7 +1,8 @@
 # EXP-PARTICLE-CONSENSUS-001 — equality-forced few-particle consensus
 
 Status: `D0_PASS_GENERATED`; start-replacement D1 rejected; surplus-only Repair A
-is source-smoke complete and awaits root-owned formal D1.
+was formally neutral with zero useful tail groups; Repair B is source-smoke
+complete and awaits root-owned formal D1.
 
 Hypothesis: an 8-particle, 25%-budget side lane can reach disconnected roots
 that ordinary consensus misses by combining Gibbs consensus with a stiff force
@@ -78,3 +79,24 @@ no-surplus run created no tail directory; direct no-surplus and injected-error
 checks preserved exact baseline bytes. No truth/scorer was read and no target-set
 completeness is claimed. Formal truth-isolated D1 remains with the root owner.
 Details: `TAIL_REPAIR_A_SOURCE_SMOKE.json` and `arm.json`.
+
+Repair A formal D1 disposition: on root-owned screen24, control and candidate
+both scored `15/24` (wins 1, losses 1; false/extra/crash 0). The tail launched
+on 6 cases but produced 0 groups and 0 safe proposals; every launch failed
+closed as `_UnsupportedSideLane`. The score movement is therefore unrelated
+jitter, not evidence of the particle mechanism.
+
+Repair B fixes only that representation seam. If every relation row is truly
+unsupported by source AD, a fail-closed AST capability check admits smooth,
+branch-free source operations and the particle force reuses the already charged
+one-sided FD stencil. A present analytic row that fails primal parity is never
+reinterpreted as opaque. Nonsmooth/selecting/unknown syntax, invalid anchors,
+semantic flips, nonfinite samples, and shape changes retain the exact baseline
+prefix. Partial-AD behavior, FD step, tail scheduler, baseline descriptor
+prefix, fresh replay, HP authority, and atomic custody are unchanged. On CPU 15,
+the source-only positive fixture activated 1 group and moved all 4 side points
+to safe generated solutions (`+4/-0`, unsafe 0), while 12 baseline ordinals
+were unchanged. Nonsmooth, semantic-flip, missing-metadata, and AD-parity
+near-miss and no-side-sample fixtures all took byte-identical fallback; 12
+tests passed. No
+truth/scorer was read. Details: `FD_REPAIR_B_SOURCE_SMOKE.json`.
