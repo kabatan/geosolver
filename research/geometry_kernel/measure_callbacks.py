@@ -30,12 +30,10 @@ if str(GEOSOLVER_SOURCE) not in sys.path:
 if str(REPOSITORY / "src") not in sys.path:
     sys.path.insert(0, str(REPOSITORY / "src"))
 
-from geotarget.compiled_evaluator import (  # noqa: E402
-    CompiledResidualEvaluator,
-    compile_residual_plan,
-)
 from geotarget.continuation import _load_frozen  # noqa: E402
-from geotarget.fused_evaluation import install_fused_evaluation  # noqa: E402
+from geotarget.search_pool_worker_entrypoint import (  # noqa: E402
+    _activate_compiled_evaluator,
+)
 
 SCHEMA = "geotarget.geometry-kernel-same-work/v1"
 
@@ -167,19 +165,11 @@ def measure(arguments: argparse.Namespace) -> dict[str, Any]:
             callback_cap=max(10_000_000, arguments.probes * arguments.repeats * 4),
             deadline=time.monotonic() + 86_400,
         )
-        compilation = compile_residual_plan(reference, source_sha256=source_sha256)
-        if compilation.plan is None:
-            evaluator = reference
-            metadata: dict[str, Any] = {
-                "mode": "reference",
-                "fallback_reason": compilation.fallback_reason,
-                "case_specific_routing": False,
-            }
-        else:
-            evaluator = CompiledResidualEvaluator(reference, compilation.plan)
-            metadata = compilation.plan.metadata()
-            budget.evaluator = evaluator
-        install_fused_evaluation(budget)
+        evaluator, metadata = _activate_compiled_evaluator(
+            reference,
+            budget,
+            source_sha256=source_sha256,
+        )
         points = _probes(
             source_sha256,
             len(reference.bundle.var_names),
