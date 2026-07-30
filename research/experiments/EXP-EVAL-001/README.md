@@ -1,6 +1,7 @@
 # EXP-EVAL-001: append-aware reservoir and cached sparsity
 
-Status: S0 implemented; formal S1 is owned by the root benchmark process.
+Status: S0 implemented and connected to the frozen full-v15 worker; formal S1
+remains owned by the root benchmark process.
 
 ## Incremental continuation mechanism
 
@@ -29,6 +30,16 @@ For a candidate built from pinned product code, add this directory to
 `install_initial_checkpoint` may additionally replace the initial reservoir
 writer so the first continuation window can consume v2 directly. A legacy v1
 checkpoint remains safe: it causes one full replay and is then upgraded.
+If the frozen search produced no accepted `search.json`, the initial writer
+preserves the original result without a checkpoint instead of turning a search
+miss into a worker crash.
+
+`worker.py` imports the clean `0967ff1c` product modules, binds their relative
+runtime paths to the separately restored frozen runtime, and invokes the pinned
+`optimized_entrypoint`. The dry/execute plan protocol, final v15 result schema,
+HP bridge, and canonical exact authority remain unchanged. Only continuation's
+reservoir reconstruction seam is overlaid; a truth-free sidecar records whether
+the incremental path actually activated.
 
 ## Independent cached-sparsity ablation
 
@@ -59,5 +70,8 @@ The recorded run produced 2,175 bit-identical frozen candidate comparisons,
 zero mismatches, a 66.7% semantic-replay reduction, 1.15x wall speedup and zero
 unexpected fallback. The cached-sparsity synthetic route reduced four dense
 directions to two and demonstrated all declared fail-closed fallbacks. No
-validation, sealed corpus, truth file, screen24 or heavy HP benchmark was read
-or run.
+validation, sealed corpus, truth file, formal screen24 or heavy HP benchmark was
+read or run. A one-case truth-free worker smoke preserved the v15 schema and
+activated prefix extension (6 verified records reused; 25 of 31 endpoints
+replayed). The known `63fb3e...` missing-search regression also completed and
+was accepted by the frozen runner predicate without a checkpoint crash.
