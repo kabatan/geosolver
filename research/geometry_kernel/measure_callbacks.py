@@ -152,6 +152,7 @@ def measure(arguments: argparse.Namespace) -> dict[str, Any]:
     base = _load_frozen(RUNTIME_ROOT)
     runtime = base._load_module("geotarget_geometry_kernel_measure_runtime", base.PRECISION_RUNTIME)
     rows: list[dict[str, Any]] = []
+    skipped_sources: list[str] = []
     input_stream = hashlib.sha256(b"geotarget.geometry-kernel-input-stream/v1\0")
     output_stream = hashlib.sha256(b"geotarget.geometry-kernel-output-stream/v1\0")
     paths = _problem_paths(arguments.cases_root)
@@ -170,6 +171,9 @@ def measure(arguments: argparse.Namespace) -> dict[str, Any]:
             budget,
             source_sha256=source_sha256,
         )
+        if arguments.compiled_only and not bool(metadata.get("enabled", False)):
+            skipped_sources.append(source_sha256)
+            continue
         points = _probes(
             source_sha256,
             len(reference.bundle.var_names),
@@ -228,10 +232,12 @@ def measure(arguments: argparse.Namespace) -> dict[str, Any]:
             "probes": arguments.probes,
             "repeats": arguments.repeats,
             "include_boundaries": arguments.include_boundaries,
+            "compiled_only": arguments.compiled_only,
         },
         "input_stream_digest": input_stream.hexdigest(),
         "output_stream_digest": output_stream.hexdigest(),
         "completed_cases": len(rows),
+        "skipped_source_sha256": skipped_sources,
         "peak_rss_kib": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
         "rows": rows,
     }
@@ -244,13 +250,14 @@ def parser() -> argparse.ArgumentParser:
     value.add_argument("--probes", type=int, default=64)
     value.add_argument("--repeats", type=int, default=5)
     value.add_argument("--include-boundaries", action="store_true")
+    value.add_argument("--compiled-only", action="store_true")
     return value
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     arguments = parser().parse_args(argv)
-    if arguments.probes < 4 or arguments.repeats < 1:
-        raise SystemExit("probes must be >= 4 and repeats must be >= 1")
+    if arguments.probes < 1 or arguments.repeats < 1:
+        raise SystemExit("probes and repeats must be >= 1")
     output = arguments.output.expanduser().resolve()
     if output == REPOSITORY or REPOSITORY in output.parents:
         raise SystemExit("measurement output must be outside the repository")

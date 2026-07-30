@@ -13,6 +13,9 @@ Boundary probes are enabled explicitly with `--include-boundaries`; they are
 included in differential digests but excluded from timing. This prevents a
 deliberately slow semantic fallback from redefining the structural-class
 performance measurement.
+`--compiled-only` omits whole-problem reference fallbacks from the kernel S0
+timing while recording and comparing the exact skipped source-SHA set. The
+full solver gates still include all 145 problems.
 
 `compare_same_work.py` rejects mismatched inputs or observations before
 reporting family-clustered ratios. It deliberately has no problem-ID allowlist

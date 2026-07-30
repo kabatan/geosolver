@@ -27,6 +27,8 @@ def compare(control: Mapping[str, Any], candidate: Mapping[str, Any]) -> dict[st
         raise ValueError("measurement configs differ")
     if control.get("input_stream_digest") != candidate.get("input_stream_digest"):
         raise ValueError("input streams differ")
+    if control.get("skipped_source_sha256") != candidate.get("skipped_source_sha256"):
+        raise ValueError("compiled-only fallback sets differ")
     control_rows = {row["source_sha256"]: row for row in control["rows"]}
     candidate_rows = {row["source_sha256"]: row for row in candidate["rows"]}
     if set(control_rows) != set(candidate_rows):
