@@ -230,10 +230,15 @@ def test_production_search_worker_selects_qualified_flat_tape() -> None:
     reference = _build(_raw_supported_problem("production-worker-flat-selection"))
     budget = SimpleNamespace(evaluator=reference)
     original_installer = search_worker_module.install_fused_evaluation
+    original_snapshot_installer = search_worker_module.install_compiled_callback_snapshot
     search_worker_module.install_fused_evaluation = lambda _budget: {
         "schema_version": "geotarget.fused-evaluation-budget/v1",
         "enabled": True,
         "case_specific_routing": False,
+    }
+    search_worker_module.install_compiled_callback_snapshot = lambda _budget, _snapshot: {
+        "enabled": True,
+        "dispatch": "test_budget",
     }
     try:
         evaluator, metadata = search_worker_module._activate_compiled_evaluator(
@@ -243,6 +248,7 @@ def test_production_search_worker_selects_qualified_flat_tape() -> None:
         )
     finally:
         search_worker_module.install_fused_evaluation = original_installer
+        search_worker_module.install_compiled_callback_snapshot = original_snapshot_installer
 
     assert isinstance(evaluator, CompiledResidualEvaluator)
     assert budget.evaluator is evaluator
