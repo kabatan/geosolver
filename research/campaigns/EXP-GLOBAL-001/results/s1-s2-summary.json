@@ -9,7 +9,7 @@
     "arm_id": "progressive-adaptive-hybrid-v1",
     "base_commit": "0967ff1cde5c2435fe0207da65e8779ff24a6da6",
     "mechanism_hash": "7d6f168d8679732c672842e6b7a44573d190449ad0fbe4cc09a7b9112ddc9500",
-    "disposition": "S2 survivor; freeze for S3 after CPU/RSS telemetry preflight"
+    "disposition": "S2 survivor; frozen and dry-planned for S3 ABBA"
   },
   "conditions": {
     "total_seconds": 30,
@@ -65,22 +65,39 @@
     },
     "disposition": "passed the preregistered S2 family-disjoint cross-check"
   },
+  "rank_trust_v2_s1_seed0": {
+    "mechanism_hash": "6095c66508400211ce4b9996cd9c4e054132ebdd1208682414bcede2c8460e69",
+    "control_exact": 16,
+    "candidate_exact": 16,
+    "wins": 0,
+    "losses": 0,
+    "activated_case_count": 5,
+    "candidate_over_control_wall_geometric_mean": 1.0011102353022536,
+    "candidate_safety_failures": 0,
+    "cpu_telemetry_available_cases": 24,
+    "rss_telemetry_available_cases": 24,
+    "disposition": "stopped at S1: formal activation but no recall or speed signal"
+  },
   "artifact_hashes": {
     "s1_paired_comparison": "66a482a38814df73c22960b4435ced0636326f04fca3c344c93023368e6b4829",
     "s2_screen60_extra_comparison": "136dbae7bf97b7a582a1e4b196c7336acac2ec310988b56205d256d25178b4d8",
     "s2_development_extra_comparison": "0c23986a67c1ac6409dc9c9ca9b2257af323998c1b5b403e16d1783bd160f68c",
     "s2_development145_partition_comparison": "c0f587cbc65a2f20c251b9341bd859c63d782c5da8c4630870eb6e0376c4b37c",
-    "s2_development145_fold_analysis": "77ab57fd9ff665b2859a274a4f43374c0fa8369aba1e489dbdbe7f84506dc513"
+    "s2_development145_fold_analysis": "77ab57fd9ff665b2859a274a4f43374c0fa8369aba1e489dbdbe7f84506dc513",
+    "rank_trust_v2_s1_comparison": "28080bddb335d6a0b0bae10c551dc65cbdaee9af93c547a2c62b403d47d0d667",
+    "s3_abba_dry_preflight": "42f6906affac5f0b799be82690c5fae1e5c1787d94574074b59f90a0ddf7efbe"
   },
   "external_artifact_roots": {
     "s1_comparison": "/home/kabatan/work/solver-experiment-results/s1-scheduler-hybrid-vs-control-seeds0-2.json",
     "s2_screen60_extra_comparison": "/home/kabatan/work/solver-experiment-results/s2-scheduler-hybrid-vs-control-screen60-extra-seed0.json",
     "s2_development_extra_control": "/home/kabatan/work/solver-experiment-results/s2-control-development-extra-30s-seed0-jobs1-v1",
     "s2_development_extra_candidate": "/home/kabatan/work/solver-experiment-results/s2-scheduler-hybrid-development-extra-30s-seed0-jobs1-v1",
-    "s2_development145_fold_analysis": "/home/kabatan/work/solver-experiment-results/s2-scheduler-hybrid-vs-control-development145-seed0-folds.json"
+    "s2_development145_fold_analysis": "/home/kabatan/work/solver-experiment-results/s2-scheduler-hybrid-vs-control-development145-seed0-folds.json",
+    "rank_trust_v2_s1_comparison": "/home/kabatan/work/solver-experiment-results/s1-rank-trust-v2-vs-control-seed0.json",
+    "s3_abba_dry_preflight": "/home/kabatan/work/solver-experiment-results/s3-abba-adaptive-v1-preflight-v2/S3_ABBA_ORCHESTRATION.json"
   },
   "known_measurement_limitations": [
-    "S1/S2 worker telemetry did not emit usable CPU seconds; wall comparisons are valid, CPU comparison is deferred to the S3 preflight fix.",
+    "The earlier adaptive S1/S2 runs predate telemetry v2 and therefore have wall but no usable CPU seconds; telemetry v2 was verified on 24/24 serial cases before S3.",
     "This is development evidence only and is not a final five-seed recall promotion result."
   ],
   "holdout_opened": false

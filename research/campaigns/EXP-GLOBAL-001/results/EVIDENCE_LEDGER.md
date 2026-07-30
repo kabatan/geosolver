@@ -11,7 +11,8 @@ outside Git, and validation/sealed inputs have not been opened.
 | Adaptive progressive hybrid | S1 nets are `[+2,+2,-1]`; S2 seed 0 development145 is 116/145 versus 113/145, wins/losses `5/2`, wall ratio `0.9627`, safety zero, family-fold nets `[+2,+1,0]`. | Sole S2 survivor; frozen for S3. | No tuning from S2 case identities.  Any mechanism change creates a new arm/hash and returns to S0. |
 | Multi-target v1-v3 | 14/24, 15/24, 15/24, but the wrappers used the wrong direct-v15 baseline. | Invalid mechanism comparison; retired. | Exact common-control result union and byte-identical no-op path. |
 | Multi-target v4 exact-control union | 16/24 tie, 24/24 accepted, negligible wall change, but no side-route activation on screen24. | Stopped at the S1 zero-activation gate. | A truth-blind applicability predicate with generated and screen activation, while retaining the byte-identical common path. |
-| Rank chart v1 | Seed 0 tied 16/24 and activated on 5/24; seed 1 fell to 14/24 versus 16/24. | Rejected for recurring recall risk. | The trust-radius v2 generated gate (`48/156` to `57/156`, no generated-family regression) is a distinct candidate and still requires formal S1. |
+| Rank chart v1 | Seed 0 tied 16/24 and activated on 5/24; seed 1 fell to 14/24 versus 16/24. | Rejected for recurring recall risk. | A distinct trust-radius policy with generated-family non-regression. |
+| Rank trust-radius v2 | Generated basin coverage improved `48/156` to `57/156`.  Formal S1 activated on 5/24 but tied control exactly (wins/losses `0/0`) with wall ratio `1.001`. | Stopped: no formal recall or speed signal; do not combine with the scheduler. | A new semantic applicability signal that changes formal exact-set outcomes without generated-family regression. |
 | Incremental evaluator | Microbenchmark speedup was 1.146x with identical ordering/bits.  The first full wrapper exceeded the 30 s budget; the isolated deadline arm later scored 14/24 versus 16/24 and was about 13.8% slower. | Rejected as an end-to-end arm. | A bit-identical hook below the existing deadline owner, plus end-to-end speed gain on screen24 without recall loss. |
 | Cached sparsity evaluator | Signed-zero mismatch and an unsafe child hook were found before formal screening. | Blocked at S0. | Bitwise equality including signed zero and a fail-closed hook owned by the canonical evaluator. |
 | Block-triangular structure | Static applicability was 27/145 and generated work dropped sharply, consistent with nonlinear block-triangular decomposition, but the first connected polynomial side route scored 15/24. | Useful structural primitive; not a survivor by itself. | A concrete small-block solver that preserves a fixed numerical-baseline quota and improves generated recall. |
@@ -35,10 +36,12 @@ Primary references:
 
 ## Current gate state
 
-- S0/metamorphic/differential tests: 99 passed after integration.
+- S0/metamorphic/differential/campaign tests: 117 passed across the latest
+  integrated per-suite checks.
 - S1: adaptive hybrid survived; other formally measured mechanisms stopped or
   remain explicitly unqualified.
 - S2: adaptive hybrid passed the family-disjoint development145 cross-check.
-- S3: pending a launcher CPU/RSS telemetry preflight; the candidate mechanism
-  hash is frozen.
+- S3: CPU/RSS telemetry is available on 24/24 serial smoke cases; the 20-leg
+  five-seed ABBA campaign is hash-frozen and dry-planned, but the multi-day
+  formal execution has not started.
 - Validation/sealed: unopened.

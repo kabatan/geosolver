@@ -10,6 +10,7 @@ silently treated as losses.
 | adaptive progressive hybrid | S1 seeds 0–2; S2 seed 0 | 18/24, 18/24, 16/24; 116/145 | 0.958, 0.940, 0.930; **0.963** | 1.000, 0.994, 1.003 | 0 | **S2 survivor** |
 | multi-target v4 union | S1 seed 0 | 16/24 | 1.007 | 0.995 | 0 | Dominated; zero side activation |
 | rank chart v1 | S1 seeds 0–1 | 16/24, 14/24 | 1.003, 1.001 | 1.008, 1.001 | 0 | Rejected; recurring recall loss |
+| rank trust-radius v2 | S1 seed 0 | 16/24 | 1.001 | 0.995 | 0 | Stopped; activation without recall/speed signal |
 | incremental evaluator deadline v2 | S1 seed 0 | 14/24 | 1.138 | 1.100 | 0 | Dominated |
 | BTF-polynomial v1 | S1 seed 0 | 15/24 | 1.004 | 1.011 | 0 | Dominated |
 | clean `0967ff1c` transplant | Wave 0 seed 0 | 15/24 | 1.049 | 1.044 | 1 | Rejected; unsafe |
@@ -23,8 +24,6 @@ five-seed ABBA wall/CPU, p95, completed-start, and exact-set evidence.
 
 Unqualified but still open mechanisms are not placed on the formal front:
 
-- rank trust-radius v2 passed generated S0 (`48/156` to `57/156`) but has not
-  yet received a clean formal S1 measurement;
 - structure-polynomial v2 has no valid formal measurement because its worker
   hash changed during the previous run;
 - fixed progressive profiles and multi-target v1-v3 used the wrong baseline
