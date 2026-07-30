@@ -1,6 +1,7 @@
 # EXP-RANK-GUARD-001 experiment card
 
-Status: **S0 complete; non-promotional**.
+Status: **S0 complete; charted proposal arm bound for S1, adapted CPQR
+fail-closed at the frozen Python seam**.
 
 ## Hypotheses
 
@@ -29,11 +30,54 @@ Status: **S0 complete; non-promotional**.
 
 ## Disposition
 
-- Advance adapted CPQR and the charted weak-pair start generator to a real
-  compiled development screen as separate ablations.
+- Advance the charted weak-pair start generator to benchmark-owner S1 as a
+  separately hash-bound arm.  This commit does not run or score screen24.
+- Do not advance adapted CPQR through the current Python proposal seam.  That
+  seam exposes only the charged Float64 source callback; it exposes no
+  hash-bound 128/256/512-bit callback with which to reproduce the S0 stability
+  certificate.  The arm therefore delegates the frozen champion unchanged and
+  writes an explicit blocker into its dry plan instead of substituting a
+  Float64 surrogate.
 - Do not advance weak-then-adaptive unchanged.  Reopen it only with a stable
   representation of the weak subspace or a representation-invariant subspace
   sampling rule.
 - Do not connect any S0 output directly to answer production.  Baseline search
   quota and canonical 512/768-bit replay remain mandatory.
 
+## S1 binding
+
+The charted arm replaces only tail proposal slots in the frozen literal prefix.
+Its diagnostic is charged to the existing source callback ledger and is capped
+at 5% of the aggregate callback cap and 64 callbacks, whichever is smaller.  It
+does not probe partially when a complete `h/h2` pair and both symmetric radii
+cannot fit.  The first 75% of prefix slots and every fourth counter-Cauchy slot
+are retained byte-for-byte.  Non-finite bounds, invalid semantics, unstable
+weak projectors, insufficient budget, and unavailable replacement slots all
+delegate the original prefix unchanged.
+
+Both arms use the common four-field `arm.json` contract.  The full worker keeps
+the frozen search candidate, final solve-result schema, source replay authority,
+reservoir/HP service, PSLQ/exactification path, and canonical descriptor key.
+The charted search worker and adapter are independently hash-bound; raw smoke
+artifacts live outside Git.
+
+One development source-only transport smoke completed the dry-plan/identical
+plan-SHA execute protocol.  The search artifact was accepted, the final schema
+remained `geotarget.exp008-finalist-numeric-worker-v15/v1`, source bytes were
+unchanged, and the total wall limit was respected.  The selected smoke source
+was ineligible for this overlay and exercised fail-closed baseline delegation;
+generated S0/unit tests separately exercise activation.  This is interface and
+fallback evidence only, not recall or speed evidence.
+
+An additional truth-free regression smoke used the development source SHA
+`63fb3e07117c...`, for which an optimized adapter had exited nonzero when the
+search artifact was absent.  Here the frozen champion search child timed out
+and produced no `search.json`, but the full worker fail-closed to an empty
+reservoir and emitted a completed, schema-valid `RESULT.json` with exit zero,
+unchanged source bytes, and wall-budget compliance.  Thus this arm does not
+inherit that optimized-adapter safety failure.
+
+Adapted CPQR may be reopened only after the proposal layer receives a
+hash-bound arbitrary-precision source residual API at 128/256/512 bits with
+ledger-visible callback accounting and without acquiring HP/canonical answer
+authority.
