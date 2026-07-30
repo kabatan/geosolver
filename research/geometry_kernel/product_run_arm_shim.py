@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import hashlib
+import os
 import sys
 from collections.abc import Sequence
 from pathlib import Path
@@ -20,6 +21,7 @@ REAL_RUN_ARM = Path(
     "experiment-harness/research/campaigns/EXP-GLOBAL-001/run_arm.py"
 )
 REAL_RUN_ARM_SHA256 = "e0b554fdd1c852656c942c5a25919cdd1c2b86b5c70a877ec83de4d3dcb7ae74"
+VENV_PYTHON = Path("/home/kabatan/work/solver/.venv/bin/python")
 PRODUCT_ROOTS = {
     "e5abe0c84b485273e06c38b1b69ce9efa3e02408": Path(
         "/home/kabatan/work/solver-wt/control-main-e5abe0"
@@ -28,6 +30,14 @@ PRODUCT_ROOTS = {
         "/home/kabatan/work/solver-wt/geometry-kernel-promote"
     ),
 }
+
+
+def _venv_reexec_command(arguments: Sequence[str]) -> list[str] | None:
+    """Restore the venv path that the frozen S3 driver resolves away."""
+    expected_prefix = VENV_PYTHON.parents[1].resolve()
+    if Path(sys.prefix).resolve() == expected_prefix:
+        return None
+    return [str(VENV_PYTHON), str(Path(__file__).resolve()), *arguments]
 
 
 def _argument(arguments: Sequence[str], name: str) -> str:
@@ -48,6 +58,9 @@ def _product_root(arguments: Sequence[str]) -> Path:
 
 def main(argv: Sequence[str] | None = None) -> int:
     arguments = list(sys.argv[1:] if argv is None else argv)
+    reexec = _venv_reexec_command(arguments)
+    if reexec is not None:
+        os.execv(reexec[0], reexec)
     try:
         if hashlib.sha256(REAL_RUN_ARM.read_bytes()).hexdigest() != REAL_RUN_ARM_SHA256:
             raise ValueError("frozen run_arm.py SHA-256 mismatch")
