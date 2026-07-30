@@ -27,6 +27,10 @@ def _load(name: str, path: Path):
 
 
 ADAPTER = _load("test_exp_rank_guard_001_charted_adapter", SHARED / "charted_search_adapter.py")
+TRUST = _load(
+    "test_exp_rank_guard_001_trusted_adapter",
+    SHARED / "trusted_search_adapter.py",
+)
 FULL = _load("test_exp_rank_guard_001_full_worker", SHARED / "full_worker.py")
 
 
@@ -66,8 +70,9 @@ class RankDeficientCase:
         )
 
 
-def _prefix(count: int = 16) -> Prefix:
-    points = tuple(np.zeros(2, dtype=float) for _ in range(count))
+def _prefix(count: int = 16, anchor=None) -> Prefix:
+    point = np.zeros(2, dtype=float) if anchor is None else np.asarray(anchor, dtype=float)
+    points = tuple(point.copy() for _ in range(count))
     return Prefix(
         points=points,
         sources=tuple(f"baseline-{index}" for index in range(count)),
@@ -159,6 +164,128 @@ class ProposalOverlayTests(unittest.TestCase):
         self.assertEqual(telemetry["rank_guard_overlay_callback_budget"], 6)
 
 
+class TrustRadiusV2Tests(unittest.TestCase):
+    def test_control_region_preserves_v1_radii(self):
+        self.assertEqual(
+            TRUST._trust_radii(1.0e-7, TRUST.HEADROOM_GATE),
+            ADAPTER.PROPOSAL_RADII,
+        )
+        self.assertEqual(TRUST._trust_radii(0.08, 0.5), ADAPTER.PROPOSAL_RADII)
+
+    def test_near_boundary_policy_is_deterministic_and_affine_scale_invariant(self):
+        rank_ratio = 1.0e-4
+        headroom = 0.04
+        expected_outer = max(
+            TRUST.MIN_OUTER_RADIUS,
+            ADAPTER.PROPOSAL_RADII[0]
+            * np.sqrt(headroom)
+            * TRUST._rank_confidence(rank_ratio),
+        )
+        outer, inner = TRUST._trust_radii(rank_ratio, headroom)
+        self.assertAlmostEqual(outer, expected_outer)
+        self.assertAlmostEqual(inner, TRUST.INNER_RATIO * expected_outer)
+        self.assertLess(outer, ADAPTER.PROPOSAL_RADII[0])
+
+        direction = np.array([0.0, 1.0])
+        observed = []
+        for width, offset in ((1.0e-9, -3.0e-9), (1.0, 5.0), (1.0e9, -7.0e9)):
+            lower = np.array([offset, offset])
+            upper = lower + width
+            anchor = lower + width * np.array([0.5, 0.02])
+            observed.append(TRUST._bound_headroom(anchor, lower, upper, direction))
+        for value in observed:
+            self.assertAlmostEqual(value, headroom, places=12)
+
+        for width in (1.0e-9, 1.0, 1.0e9):
+            one_sided = TRUST._bound_headroom(
+                np.array([0.5, 0.02 * width]),
+                np.array([0.0, 0.0]),
+                np.array([1.0, np.inf]),
+                direction,
+            )
+            self.assertEqual(one_sided, 1.0)
+            self.assertEqual(
+                TRUST._trust_radii(rank_ratio, one_sided),
+                ADAPTER.PROPOSAL_RADII,
+            )
+
+    def test_near_boundary_overlay_preserves_work_baseline_and_insurance(self):
+        class NearBoundaryCase:
+            dimension = 2
+            lower = np.array([0.0, 0.0])
+            upper = np.array([1.0, 1.0])
+
+            def __init__(self):
+                self.anchor = np.array([0.5, 0.02])
+                self.anchor_chart = ADAPTER._to_chart(
+                    self.anchor, self.lower, self.upper
+                )
+                self.callbacks = 0
+
+            def evaluate(self, point):
+                self.callbacks += 1
+                values = np.asarray(point, dtype=float)
+                delta = (
+                    ADAPTER._to_chart(values, self.lower, self.upper)
+                    - self.anchor_chart
+                )
+                return Observation(
+                    residual=np.array([delta[0], 1.0e-4 * delta[1]]),
+                    finite=bool(np.all(np.isfinite(delta))),
+                    semantics_valid=bool(
+                        np.all(values > self.lower) and np.all(values < self.upper)
+                    ),
+                )
+
+        case = NearBoundaryCase()
+        baseline = _prefix(anchor=case.anchor)
+        candidate, telemetry = TRUST._overlay_prefix(
+            case, baseline, callback_cap=512, callbacks_per_start=32
+        )
+        self.assertEqual(telemetry["rank_guard_overlay_activated"], 1)
+        self.assertEqual(telemetry["rank_guard_trust_v2_near_boundary"], 1)
+        self.assertEqual(case.callbacks, 13)
+        self.assertLessEqual(telemetry["rank_guard_overlay_replaced_slots"], 4)
+        self.assertLess(
+            telemetry["rank_guard_trust_v2_outer_radius_microunits"], 250_000
+        )
+        for ordinal in range(12):
+            self.assertEqual(
+                baseline.points[ordinal].tobytes(),
+                candidate.points[ordinal].tobytes(),
+            )
+        for ordinal in range(0, len(baseline.points), ADAPTER.INSURANCE_PERIOD):
+            self.assertEqual(
+                baseline.points[ordinal].tobytes(),
+                candidate.points[ordinal].tobytes(),
+            )
+        self.assertTrue(
+            all(
+                np.all(point > case.lower) and np.all(point < case.upper)
+                for point in candidate.points
+            )
+        )
+
+    def test_control_headroom_proposals_match_v1_bitwise(self):
+        baseline = _prefix()
+        v1_case = RankDeficientCase()
+        v2_case = RankDeficientCase()
+        v1, v1_telemetry = ADAPTER._overlay_prefix(
+            v1_case, baseline, callback_cap=512, callbacks_per_start=32
+        )
+        v2, v2_telemetry = TRUST._overlay_prefix(
+            v2_case, baseline, callback_cap=512, callbacks_per_start=32
+        )
+        self.assertEqual(v1_case.callbacks, v2_case.callbacks)
+        self.assertEqual(v2_telemetry["rank_guard_trust_v2_control_radii"], 1)
+        self.assertEqual(
+            v1_telemetry["rank_guard_overlay_replaced_slots"],
+            v2_telemetry["rank_guard_overlay_replaced_slots"],
+        )
+        for left, right in zip(v1.points, v2.points):
+            self.assertEqual(left.tobytes(), right.tobytes())
+
+
 class BindingTests(unittest.TestCase):
     def test_plan_modes_preserve_schema_and_fail_closed_cpqr(self):
         original = {"schema_version": "frozen-plan/v1", "status": "dry"}
@@ -182,6 +309,7 @@ class BindingTests(unittest.TestCase):
         for directory in (
             EXPERIMENT / "arms/charted-weak-proposal",
             EXPERIMENT / "arms/adapted-cpqr-proposal",
+            EXPERIMENT / "arms/charted-weak-trust-v2",
         ):
             manifest = json.loads((directory / "arm.json").read_text())
             self.assertEqual(set(manifest), {

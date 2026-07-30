@@ -39,6 +39,11 @@ this experiment against validation or sealed inputs.
 ## Full-v15 S1 arms
 
 - `arms/charted-weak-proposal/arm.json` is the active proposal-only arm.
+- `arms/charted-weak-trust-v2/arm.json` is a generated-qualified ablation.  It
+  preserves the v1 radii outside a weak-direction finite-two-sided headroom of
+  `0.1`; inside that gate its outer radius is
+  `clip(0.25 * sqrt(headroom) * rank_confidence, 0.03125, 0.25)` and its inner
+  radius is one quarter of the outer radius.
 - `arms/adapted-cpqr-proposal/arm.json` is deliberately fail-closed and runs the
   unchanged frozen champion while recording the missing arbitrary-precision
   proposal callback as a plan blocker.
@@ -93,11 +98,30 @@ GEOTARGET_FROZEN_SOLVER_ROOT=/home/kabatan/work/solver-experiment-runtime/solver
   research/experiments/EXP-RANK-GUARD-001/run_metamorphic_audit.py
 ```
 
+Run the generated-only trust-radius ablation without a formal corpus or scorer:
+
+```bash
+GEOTARGET_FROZEN_SOLVER_ROOT=/home/kabatan/work/solver-experiment-runtime/solver \
+  /home/kabatan/work/solver/.venv/bin/python \
+  research/experiments/EXP-RANK-GUARD-001/run_trust_radius_stress.py
+```
+
 The frozen result is in `results/metamorphic-activation-audit.json`.  It covers
 variable and residual permutation, affine bound scaling, logit/softplus
 near-boundary behavior, rank-deficient activation, nonsmooth fallback, exact
 callback accounting, baseline/insurance quota, the frozen adapter delegation
 seam, and an AST audit for case-specific routing.
+
+The compact trust-radius result is in
+`results/trust-radius-stress-summary.json`.  Across 156 generated cases at
+three affine widths and four rank ratios, v2 increased basin coverage from
+48 to 57 with no generated-family regression.  It retains two radii, 17
+callbacks for dimension three, at most four proposal replacements, the first
+75% baseline prefix, every-fourth insurance, and the 25% tail ceiling.
+One-sided bounds deliberately keep the v1 radius because no
+source-independent affine slack scale is available.  The runtime exposes only
+zero violation for a valid semantic guard, so v2 makes no claim to estimate a
+positive semantic-guard margin.
 
 For a formulation-bytes-only development145 applicability census, without
 starting the solver or evaluator:

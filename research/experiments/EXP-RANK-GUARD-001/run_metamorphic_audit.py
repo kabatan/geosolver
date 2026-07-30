@@ -21,13 +21,18 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 SHARED = HERE / "arms/shared"
 ADAPTER_PATH = SHARED / "charted_search_adapter.py"
+TRUST_ADAPTER_PATH = SHARED / "trusted_search_adapter.py"
 FULL_WORKER_PATH = SHARED / "full_worker.py"
 AUDITED_SOURCES = (
     ADAPTER_PATH,
     SHARED / "charted_search_worker.py",
     FULL_WORKER_PATH,
+    TRUST_ADAPTER_PATH,
+    SHARED / "trusted_search_worker.py",
+    SHARED / "trusted_full_worker.py",
     HERE / "arms/charted-weak-proposal/worker.py",
     HERE / "arms/adapted-cpqr-proposal/worker.py",
+    HERE / "arms/charted-weak-trust-v2/worker.py",
 )
 SENSITIVE_KEY = re.compile(
     r"^(?:case_id|problem_id|source_sha256|family|truth|gold|answer|expected_descriptor|"
@@ -48,6 +53,7 @@ def _load(name: str, path: Path):
 
 
 ADAPTER = _load("audit_exp_rank_guard_001_adapter", ADAPTER_PATH)
+TRUST = _load("audit_exp_rank_guard_001_trusted_adapter", TRUST_ADAPTER_PATH)
 FULL = _load("audit_exp_rank_guard_001_full", FULL_WORKER_PATH)
 
 
@@ -162,8 +168,8 @@ def _prefix(anchor: np.ndarray, count: int = 16) -> Prefix:
     )
 
 
-def _run_overlay(case: object) -> tuple[Prefix, dict[str, int]]:
-    candidate, telemetry = ADAPTER._overlay_prefix(
+def _run_overlay(case: object, adapter=ADAPTER) -> tuple[Prefix, dict[str, int]]:
+    candidate, telemetry = adapter._overlay_prefix(
         case,
         _prefix(np.asarray(case.anchor, dtype=float)),
         callback_cap=512,
@@ -172,11 +178,13 @@ def _run_overlay(case: object) -> tuple[Prefix, dict[str, int]]:
     return candidate, telemetry
 
 
-def _generated_points(prefix: Prefix) -> list[np.ndarray]:
+def _generated_points(
+    prefix: Prefix, expected_source: str = "rank_guard_charted_weak_pair"
+) -> list[np.ndarray]:
     return [
         np.asarray(point, dtype=float)
         for point, source in zip(prefix.points, prefix.sources)
-        if source == "rank_guard_charted_weak_pair"
+        if source == expected_source
     ]
 
 
@@ -283,6 +291,107 @@ def _metamorphic_audit() -> dict[str, object]:
                 "rank_guard_overlay_activated"
             ],
         },
+    }
+
+
+def _trust_v2_metamorphic_and_work_audit() -> dict[str, object]:
+    anchor_fraction = np.array([0.4, 0.55, 0.02])
+    cases = {
+        "baseline": FractionalLinearCase(
+            [-2.0, -3.0, -4.0], [2.0, 5.0, 6.0], anchor_fraction
+        ),
+        "variable_permutation": FractionalLinearCase(
+            [-8.0, 10.0, -1.0],
+            [12.0, 30.0, 9.0],
+            anchor_fraction,
+            variable_order=(2, 0, 1),
+        ),
+        "residual_permutation": FractionalLinearCase(
+            [-2.0, -3.0, -4.0],
+            [2.0, 5.0, 6.0],
+            anchor_fraction,
+            residual_order=(2, 0, 1),
+        ),
+        "affine_bound_scaling": FractionalLinearCase(
+            [101.0, -0.25, -900.0],
+            [117.0, 0.75, 1100.0],
+            anchor_fraction,
+        ),
+    }
+    points: dict[str, np.ndarray] = {}
+    telemetry: dict[str, dict[str, int]] = {}
+    expected_source = "rank_guard_trusted_weak_pair_v2"
+    for name, case in cases.items():
+        candidate, row = _run_overlay(case, TRUST)
+        telemetry[name] = row
+        points[name] = _sorted_rows(
+            [
+                case.canonical_fraction(point)
+                for point in _generated_points(candidate, expected_source)
+            ]
+        )
+
+    baseline = points["baseline"]
+    distances = {
+        f"{name}_max_normalized_distance": _max_row_distance(baseline, value)
+        for name, value in points.items()
+        if name != "baseline"
+    }
+    tolerance = 2.0e-8
+    expected_callbacks = 1 + 4 * cases["baseline"].dimension + 2 * len(
+        ADAPTER.PROPOSAL_RADII
+    )
+    all_activated = all(
+        row["rank_guard_overlay_activated"] == 1 for row in telemetry.values()
+    )
+    all_near_boundary = all(
+        row["rank_guard_trust_v2_near_boundary"] == 1
+        for row in telemetry.values()
+    )
+    exact_work = all(case.callbacks == expected_callbacks for case in cases.values())
+    same_outer_radius = len(
+        {
+            row["rank_guard_trust_v2_outer_radius_microunits"]
+            for row in telemetry.values()
+        }
+    ) == 1
+    baseline_preserved = all(
+        row["rank_guard_baseline_minimum_slots"] == 12
+        and row["rank_guard_baseline_reserved_callbacks"] == 384
+        and row["rank_guard_overlay_replaced_slots"] <= 4
+        for row in telemetry.values()
+    )
+    if (
+        any(distance > tolerance for distance in distances.values())
+        or not all_activated
+        or not all_near_boundary
+        or not exact_work
+        or not same_outer_radius
+        or not baseline_preserved
+    ):
+        raise RuntimeError("trust-v2 metamorphic or work contract failed")
+    return {
+        "tolerance": tolerance,
+        **distances,
+        "activation_by_transform": {
+            name: row["rank_guard_overlay_activated"]
+            for name, row in telemetry.items()
+        },
+        "near_boundary_gate_by_transform": {
+            name: row["rank_guard_trust_v2_near_boundary"]
+            for name, row in telemetry.items()
+        },
+        "outer_radius_microunits": telemetry["baseline"][
+            "rank_guard_trust_v2_outer_radius_microunits"
+        ],
+        "expected_callbacks_per_case": expected_callbacks,
+        "observed_callbacks_by_transform": {
+            name: case.callbacks for name, case in cases.items()
+        },
+        "generated_proposal_count": len(baseline),
+        "same_two_radii_and_callback_work_as_v1": exact_work,
+        "first_75_percent_and_insurance_contract_preserved": baseline_preserved,
+        "maximum_tail_replacements": 4,
     }
 
 
@@ -472,6 +581,7 @@ def _binding_audit() -> dict[str, object]:
     for relative in (
         Path("arms/charted-weak-proposal/arm.json"),
         Path("arms/adapted-cpqr-proposal/arm.json"),
+        Path("arms/charted-weak-trust-v2/arm.json"),
     ):
         manifest = json.loads((HERE / relative).read_text(encoding="utf-8"))
         entrypoint = (HERE / relative).parent / manifest["entrypoint"]
@@ -497,6 +607,18 @@ def _binding_audit() -> dict[str, object]:
         or plan["hp_pslq_or_canonical_authority_modified"] is not False
     ):
         raise RuntimeError("full-wrapper authority binding changed")
+    trust_binding = TRUST.configuration_manifest()
+    if (
+        trust_binding["same_callback_count_as_v1"] is not True
+        or trust_binding["same_first_75_percent_baseline"] is not True
+        or trust_binding["same_every_fourth_insurance"] is not True
+        or trust_binding["same_tail_replacement_fraction"] != 0.25
+        or trust_binding[
+            "source_replay_hp_pslq_or_canonical_authority_modified"
+        ]
+        is not False
+    ):
+        raise RuntimeError("trust-v2 quota or authority binding changed")
     return {
         "arms": arms,
         "frozen_plan_schema_preserved": True,
@@ -504,6 +626,12 @@ def _binding_audit() -> dict[str, object]:
         "source_replay_authority_modified": False,
         "hp_pslq_or_canonical_authority_modified": False,
         "final_result_schema_unchanged": True,
+        "trust_v2_configuration_sha256": trust_binding[
+            "configuration_sha256"
+        ],
+        "trust_v2_same_callback_count_as_v1": True,
+        "trust_v2_same_first_75_percent_and_insurance": True,
+        "trust_v2_tail_replacement_fraction": 0.25,
     }
 
 
@@ -515,6 +643,7 @@ def run_audit() -> dict[str, object]:
         "truth_expected_descriptor_or_scorer_used": False,
         "formal_screen_run": False,
         "metamorphic": _metamorphic_audit(),
+        "trust_v2_metamorphic_and_work": _trust_v2_metamorphic_and_work_audit(),
         "boundary_and_fallback": _boundary_and_fallback_audit(),
         "callback_quota_and_seam": _accounting_and_seam_audit(),
         "case_specific_routing_ast": _case_routing_ast_audit(),

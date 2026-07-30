@@ -1,7 +1,7 @@
 # EXP-RANK-GUARD-001 experiment card
 
-Status: **S0 complete; charted proposal arm bound for S1, adapted CPQR
-fail-closed at the frozen Python seam**.
+Status: **S0 complete; charted v1 bound for S1; generated-qualified trust-radius
+v2 bound as an ablation; adapted CPQR fail-closed at the frozen Python seam**.
 
 ## Hypotheses
 
@@ -126,3 +126,42 @@ Adapted CPQR may be reopened only after the proposal layer receives a
 hash-bound arbitrary-precision source residual API at 128/256/512 bits with
 ledger-visible callback accounting and without acquiring HP/canonical answer
 authority.
+
+## Generated trust-radius v2 ablation
+
+The benchmark owner returned aggregate-only context for charted v1: seed 0 tied
+the control at 16/24, safety was clean, activation was 5/24 with 20 proposals,
+and wall/p95 changed by `+0.27%/+0.76%`.  No case IDs or individual outcomes
+were disclosed to this lane.  Those aggregates motivated a generated-only
+radius audit; they were not used as routing inputs or tuning labels.
+
+The audit crossed three generated families, affine widths `1e-9`, `1`, and
+`1e9`, and rank ratios `1e-7`, `1e-4`, `1e-2`, and `0.08`, for 156 cases total.
+The fixed v1 radii covered 48 synthetic basin locations.  Multiplying bound
+headroom and rank confidence everywhere covered 66, but regressed the
+scale-independent basin family from 24 to 21 and was rejected.  Gating the
+product to weak-direction finite-two-sided bound headroom below `0.1` covered
+57: basin-scale-independent `24 -> 24`, guard/rank-coupled `12 -> 21`, and
+narrow-semantic-guard `12 -> 12`.  All 156 cases were strict-bound safe,
+callback-exact, and within the four-proposal tail quota.  The stress formula
+and bound implementation agreed on all 156 cases.
+
+The selected v2 outer radius is
+`clip(0.25 * sqrt(bound_headroom) * sqrt(max(0.05, 1-rank_ratio/0.1)),
+0.03125, 0.25)` inside the gate, with an inner radius of one quarter.  Outside
+the gate it returns the exact v1 radii `(0.25, 0.0625)`.  It uses only source
+bounds, the literal anchor, and the charged `h/h2` Jacobian singular ratio.
+One-sided bounds retain v1 radii because they do not provide an
+affine-invariant source scale.  Positive semantic-guard slack is unavailable:
+a valid frozen observation exposes zero violation, not distance to the nearest
+semantic boundary.  Complete symmetric-pair semantic validation therefore
+remains the only semantic guard and fails closed.
+
+Generated metamorphic checks activated v2 under variable permutation, residual
+permutation, and affine bound scaling.  Maximum normalized drift was
+`3.39e-16`; every transformed case used exactly 17 callbacks, two radii, no
+more than four replacements, the first 75% baseline prefix, and every-fourth
+insurance slot.  Control-headroom proposals match v1 bit-for-bit.  The v2 arm
+is hash-bound as `6095c66508400211ce4b9996cd9c4e054132ebdd1208682414bcede2c8460e69`.
+This is generated qualification only and makes no formal recall or speed claim;
+formal promotion remains exclusively with the benchmark owner.
