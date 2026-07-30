@@ -3,8 +3,8 @@
 The current adaptive solver finishes first.  Search endpoints are never mixed.
 Only independently fresh-replayed particle endpoints may enter the unchanged HP
 authority, after which newly authoritative descriptors are appended behind the
-immutable baseline descriptor prefix.  Any no-budget, error, or no-novelty
-path leaves the baseline RESULT.json bytes untouched.
+immutable baseline descriptor prefix.  Any no-budget, pre-commit error, or
+no-novelty path leaves the baseline RESULT.json bytes untouched.
 """
 
 from __future__ import annotations
@@ -95,7 +95,7 @@ def _install_plan_record(base) -> None:
             "particle_candidate_sha256": EXPECTED_PARTICLE_SHA256["candidate.py"],
             "particle_min_tail_callbacks": MIN_TAIL_CALLBACKS,
             "particle_min_tail_wall_seconds": MIN_TAIL_WALL_SECONDS,
-            "baseline_result_immutable_on_no_surplus_error_or_no_novelty": True,
+            "baseline_result_immutable_on_no_surplus_precommit_error_or_no_novelty": True,
             "search_endpoint_union_or_recluster": False,
         })
         return payload
@@ -128,6 +128,8 @@ def _run_tail(*, base, arguments, output: Path, hard_deadline: float) -> None:
         remaining_callbacks,
         tail_starts * int(arguments.callbacks_per_start),
     )
+    if tail_cap < MIN_TAIL_CALLBACKS:
+        return
 
     old_binding = (
         base.SEARCH_WORKER,
@@ -229,7 +231,21 @@ def _run_tail(*, base, arguments, output: Path, hard_deadline: float) -> None:
     }
     if _sha256(arguments.source) != arguments.source_sha256:
         raise RuntimeError("source changed during particle tail")
-    base.atomic_write_json(result_path, union)
+    intended_bytes = (
+        json.dumps(union, ensure_ascii=False, indent=2) + "\n"
+    ).encode("utf-8")
+    try:
+        base.atomic_write_json(result_path, union)
+    except Exception:
+        # atomic_write_json replaces RESULT before its directory fsync.  A
+        # post-replace durability error is therefore a committed union, not a
+        # tail failure.  A pre-replace error still has the exact baseline bytes.
+        current_bytes = result_path.read_bytes()
+        if current_bytes == intended_bytes:
+            return
+        if current_bytes == baseline_bytes:
+            raise
+        raise RuntimeError("particle tail atomic commit had ambiguous bytes")
 
 
 def main() -> None:
