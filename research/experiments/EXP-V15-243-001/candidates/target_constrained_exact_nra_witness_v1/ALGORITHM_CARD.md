@@ -54,3 +54,36 @@ mechanism SHA-256 is
 `7b98bdfb018d566994291ad75cb2e7f28f62adc960a784ca54d3b68b796586ff`.
 No formal scorer or truth-bearing dataset was executed. Next gate is a private
 adapter/D1 activation census, not backend parameter tuning.
+
+## Candidate-private applicability result
+
+The source-only development145 census is `HOLD_DESCRIPTOR_SEAM`, not a score.
+The frozen semantic lift's published 141/145 value is only a syntax/ledger
+upper bound conditional on a complete primitive backend; its actual
+`compile_document` accepts none of the current 145 formulations.  Rather than
+building a compiler, the adapter digest-pins and thinly reuses the existing
+`EXP-REAL61-002/algebraic_lane/compiler.py`, adding only the raw-target graph.
+This reopens earlier direct coverage of 0/243 only because the missing
+primitive cover and target-link seams are now measured together.
+
+With the real backend caps (8 source variables, 16 equations including target
+link and proposal, degree 12, 256 terms, 0.35 s static Gröbner, quotient
+enumeration 100,000), 7/145 sources are statically admissible if a compatible
+descriptor is proposed.  They span three anonymous structural strata:
+direct-polynomial 4, periodic-ledger 1, selector/branch-ledger 2.  Finite
+equational quotient dimension is median 16, p95/max 64; sparse cost proxy is
+median 656, p95/max 3992.  A source-replay obligation plus target-link seam is
+present for 52/145, but the legacy cover's canonical replay authority bridge
+is wired for 0/145.  Real solver-proposed polynomial/ordinal/isolator inputs
+are unavailable to a source-only census, so no candidate authority is emitted.
+
+A generated-only OR seam emits only after the frozen lift, descriptor-bound
+complete-subset check and independent untouched replay all pass.  Existing
+baseline authorities and the existing source-exact zero-dimensional route are
+returned byte-for-byte unchanged.  Applicability tests are 7/7; combined
+candidate tests are 17/17.  No formal execute, scorer, truth, outcome, expected
+target, family routing, validation/sealed formulation or CPU0--6 was used.
+Applicability SHA-256 is
+`48c6a5ab3ceef457b11c1db04c64e894aeb4fc32f7566af9dcc63a6199f78665`.
+The next reopen gate is a truth-blind stream of real proposals plus a
+candidate-private canonical replay bridge for these seven static sources.
