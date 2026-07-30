@@ -1,5 +1,14 @@
 # EXP-MULTITARGET-001: post-answer tail experiments
 
+## Proposed research arm: exact-descriptor species racing D0
+
+`species_racing.py` changes only the 25% side-budget allocation after a fixed
+75% ordinary prefix. It uses block-incidence Good--Turing/Chao2 estimates from
+canonical-authority descriptor history and never changes output authority or
+claims completeness. Generated D0 activated on 240/240 cases and improved all
+three mechanisms with false/extra zero. The common `arm.json` is unchanged;
+see `SPECIES_RACING_D0.md` and `results/species-racing-d0.json`.
+
 ## Proposed arm: exact common-control result union v4
 
 Integration audit found that v1-v3 used numerical-v15 directly, while the
