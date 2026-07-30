@@ -94,36 +94,44 @@ Formal D1 must supply the already frozen canonical replay callback and the
 common baseline result. It may route only with the structural checks above and
 must retain the same dependency hashes and baseline floor.
 
-## Runner-compatible full-worker binding
+## Runner-compatible full-worker binding and Repair A
 
-Status: `SOURCE_ONLY_FULL_BINDING_PASS; READY_FOR_FORMAL_OWNER_D1`.
+Status: `D1_75_25_STOP_NONPROMOTE; REPAIR_A_CORE15_PASS; FORMAL_RERUN_REQUIRED`.
 
 - Entrypoint: `full_worker.py`.
-- Worker SHA-256: `1bbb1dc6cfd9e8d86c77ad04ac0e40eebe15e5214d0b0af694ce29be3f1bfa71`.
-- Smoke runner SHA-256: `188b2683614968ec8f30c05b36e1c33e893f646157f12a28042d11e43646f6c7`.
-- Smoke aggregate SHA-256: `8e93bad65222d0d87af34ab1c5d5910b10d1462b33c9337a6c98a6af376e053e`.
+- Repair-A worker SHA-256: `727e4e2ec867fb040bc7b59568a676df061dc83a59a46d32a70fb9e2fbb4d4eb`.
+- Core-15 runner SHA-256: `becc86f25a9f2e1320f42dd4d8952e304eb00fe86e425470042493dd80af8b37`.
+- Core-15 aggregate SHA-256: `8863ae045b1211c1a6be1137eae01a22d755f2df0290a703c3ba805bf65e3953`.
 - Current adaptive entrypoint SHA-256: `7d6f168d8679732c672842e6b7a44573d190449ad0fbe4cc09a7b9112ddc9500`.
 - Current adaptive wrapper SHA-256: `4c4640a3bce5719d66f577c0093eabe93916476e319b8a595003a16f73dfb9b4`.
 
-The full worker imports the existing progressive-adaptive full wrapper after
-checking both current hashes. Search, endpoint replay, HP/restoration,
-descriptor key, PointOnCircle, zero-dimensional, precision preload, CLI, dry
-plan, execute handshake, and final result schema remain that worker's objects.
-Only `BASE._service_candidates` is decorated.
+The first formal-owner D1 aggregate for the 75/25 service-wall version was
+control `15/24`, candidate `13/24`, paired wins/losses `1/3`, with zero
+false/extra/crash. It is non-promotable. No individual case, truth, scorer, or
+outcome data was disclosed to this lane. The mechanism-level diagnosis is that
+the wrapper shortened the already adaptive baseline HP/canonical service to
+75% before attempting the additive route; that changed and sometimes starved
+the baseline authority path.
 
-The decorator passes 75% of the available post-search service wall to the
-unchanged adaptive HP/canonical service. Its descriptor mapping is frozen in
-insertion order and serialized to an opaque baseline payload. If that baseline
-contains an authority-approved endpoint, coefficient monodromy may use the
-remaining wall. Every new point is converted only by the existing
-`_fresh_replay_candidates` and then serviced by the captured unchanged
-HP/canonical function. Only the descriptor key returned by that path is
-appendable. Timeout, compiler ineligibility, callback failure, or any custody
-exception returns the baseline mapping unchanged.
+Repair A removes that split. The captured adaptive service executes first with
+the original hard deadline and produces the complete baseline attempt list,
+descriptor insertion order, opaque payload, and statistics object. Search
+results are neither unioned nor reclustered. Only wall time genuinely left
+after that call is available to a separate coefficient-monodromy tail. Every
+tail point still goes through the captured fresh source replay and the same
+captured HP/canonical authority. The baseline prefix is checked again before
+an accepted descriptor is appended.
 
-Three source-only smokes passed without truth, scorer, case outcome, or
-holdout access. The execute fixture retained `R:+2` first and added canonical
-`R:-2`; the expired-deadline fixture retained only `R:+2`; and an opaque
-`sin(x)` source failed closed with only `R:+2`. All three kept the full plan
-binding and canonical-authority identity. These are connection smokes, not
-real-corpus recall or timing evidence.
+If there is no authority-backed baseline start, no remaining wall, no new
+canonical descriptor, or any side exception, the exact baseline return object
+and all three contained objects are returned by identity. Side telemetry is
+added only when a genuinely new canonical descriptor is appended; it cannot
+rewrite the baseline result on a zero-gain path.
+
+The source-only core-15 smoke passed 15/15 without truth, scorer, corpus
+outcome, or holdout access: five eligible generated executions appended a
+canonical side descriptor, five zero-tail executions returned the baseline by
+identity, and five opaque inputs did the same. All 15 baseline calls received
+100% of the original hard deadline. A separate injected post-replay side
+exception also returned the exact baseline object. This is connection and
+custody evidence only; a benchmark-owner formal rerun is still required.

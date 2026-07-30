@@ -11,8 +11,9 @@ descriptor order byte-for-byte, reserves 75% of work for that baseline, and
 returns only side descriptors accepted by a caller-supplied canonical replay.
 The generated source-only result is in `results/thin-connection-smoke.json`.
 
-`full_worker.py` is the runner-compatible current-adaptive binding. It assigns
-75% of the post-search service wall to the unchanged adaptive HP/canonical
-service and uses only the remaining 25% for the thin route. Every side point
-returns through the same fresh source replay and canonical service before its
-descriptor is appended. See `results/full-worker-smoke.json`.
+`full_worker.py` is the runner-compatible Repair-A binding. It runs the
+unchanged adaptive HP/canonical service first with its complete original hard
+deadline, then uses only genuine leftover wall for the thin route. Every side
+point returns through the captured fresh source replay and canonical service.
+No remaining wall, no canonical addition, or any side exception returns the
+exact baseline result object. See `results/full-worker-smoke.json`.
