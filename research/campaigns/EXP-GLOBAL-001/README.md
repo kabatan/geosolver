@@ -47,3 +47,8 @@ Paired runs are compared with `compare_runs.py`.  Repeat `--control` and
 `--candidate` once per seed.  The report includes exact McNemar/binomial
 probabilities, 10,000-resample family-clustered recall intervals, and paired
 all-case wall-time ratios; deadline-censored cases are never removed.
+
+`arms/optimized-0967` is the only product transplant.  Its wrapper imports the
+algorithm core from the detached clean worktree at
+`/home/kabatan/work/solver-wt/control-0967`; it does not copy the product UI,
+HTTP service, or current `main` state into `experiment`.

@@ -44,6 +44,14 @@ class CampaignHarnessTests(unittest.TestCase):
         self.assertEqual(arm["mechanism_hash"], RUN.sha256_file(entrypoint))
         self.assertIn("champion_v2_poc_preloaded.py", str(entrypoint))
 
+    def test_optimized_core_arm_is_hash_bound(self) -> None:
+        path = CAMPAIGN / "arms/optimized-0967/arm.json"
+        arm, entrypoint = RUN.load_arm(path, self.frozen)
+        self.assertEqual(
+            arm["base_commit"], "0967ff1cde5c2435fe0207da65e8779ff24a6da6"
+        )
+        self.assertEqual(arm["mechanism_hash"], RUN.sha256_file(entrypoint))
+
     def test_development_formulations_match_archive(self) -> None:
         rows = RUN.load_rows(RUN.DEFAULT_DATASET)
         ordered, expected = RUN.validate_development_rows(rows, self.input_manifest)
