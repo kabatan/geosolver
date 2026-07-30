@@ -36,7 +36,14 @@ def main() -> int:
             ["x"], [{"def": "sqrt(x)", "value": "2"}]
         ),
         "quadratic-slice-with-passthrough": source(
-            ["x", "y"], [{"def": "x*x", "value": "1"}]
+            ["x", "y"],
+            [
+                {"def": "x*x", "value": "1"},
+                {"def": "OpaqueRelation(y)", "value": "0"},
+            ],
+        ),
+        "cross-term-all-incident": source(
+            ["x", "y"], [{"def": "x*y", "value": "1"}]
         ),
         "finite-phase-pair": source(
             ["t"],
@@ -61,6 +68,11 @@ def main() -> int:
                 {"name": "B", "expr": "Point(1,0)"},
                 {"name": "d", "expr": "Distance(A,B)"},
             ],
+        ),
+        "unsupported-aux-only": source(
+            ["x", "y"],
+            [{"def": "x*U", "value": "1"}],
+            construction=[{"name": "U", "expr": "OpaqueAux(y)"}],
         ),
         "non-QQ-only": source(
             ["x"], [{"def": "x", "value": "sqrt(2)"}]
@@ -87,7 +99,27 @@ def main() -> int:
             "quadratic-slice-with-passthrough"
         ].get("baseline_passthrough_count")
         == 1,
+        "cross_term_marks_all_coordinates_incident": positive[
+            "cross-term-all-incident"
+        ].get("baseline_passthrough_count")
+        == 0,
     }
+
+    permuted = source(
+        ["y", "x"],
+        [{"def": "y*y", "value": "4"}, {"def": "x*x", "value": "1"}],
+    )
+    permuted_result = scan_document(permuted)
+    base_result = positive["disconnected-direct-quadratics"]
+    checks["variable_and_row_permutation_covariant"] = bool(
+        permuted_result.get("ready") is True
+        and permuted_result.get("selected_component_count")
+        == base_result.get("selected_component_count")
+        and permuted_result.get("selected_equality_count")
+        == base_result.get("selected_equality_count")
+        and permuted_result.get("baseline_passthrough_count")
+        == base_result.get("baseline_passthrough_count")
+    )
     result = {
         "schema_version": "geotarget.source-quadratic-moment-generated/v1",
         "cpu_affinity": sorted(os.sched_getaffinity(0)),

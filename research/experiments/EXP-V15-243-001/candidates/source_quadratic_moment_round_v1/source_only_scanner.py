@@ -357,6 +357,7 @@ def scan_document(document: object) -> dict[str, object]:
                     "source": str(source),
                     "degree": degree,
                     "variables": frozenset(item.name for item in row_variables),
+                    "polynomial": str(polynomial.as_expr()),
                 }
             )
         if not valid_rows or len(valid_rows) > MAX_SELECTED_EQUALITIES:
@@ -418,40 +419,63 @@ def scan_document(document: object) -> dict[str, object]:
         if not retained:
             return _base_record("SOURCE_QUADRATIC_MOMENT_NOT_READY", "aux-definition-closure-empty")
 
-        # Discard valid but source-disconnected auxiliary rows.  This prevents
-        # an isolated constant construction from supplying the sole quadratic
-        # row for an otherwise linear source slice.
+        # Build correlative components of the row/variable bipartite graph.
+        # A Shor block is selected only when it contains a raw source equality,
+        # a quadratic row, a source-coordinate mapping, and all aux definitions.
         phase_by_source = {str(item["variable"]): item for item in artifact.phase_groups}
-        seed_variables: set[str] = set()
-        for name in source_names:
-            if any(name in set(valid_rows[index]["variables"]) for index in retained):
-                seed_variables.add(name)
-                continue
-            phase = phase_by_source.get(name)
-            if phase is not None and phase.get("finite_sheet_count") is not None:
-                seed_variables.add(str(phase["cosine_variable"]))
-                seed_variables.add(str(phase["sine_variable"]))
         variable_rows: dict[str, set[int]] = defaultdict(set)
         for index in retained:
             for variable in valid_rows[index]["variables"]:
                 variable_rows[str(variable)].add(index)
-        connected_rows: set[int] = set()
-        connected_variables = set(seed_variables)
-        queue = deque(seed_variables)
-        while queue:
-            variable = queue.popleft()
-            for index in variable_rows.get(variable, ()):
-                if index in connected_rows:
+        components: list[tuple[set[int], set[str]]] = []
+        unvisited = set(retained)
+        while unvisited:
+            first = min(unvisited)
+            component_rows: set[int] = set()
+            component_variables: set[str] = set()
+            queue = deque([first])
+            while queue:
+                index = queue.popleft()
+                if index in component_rows:
                     continue
-                connected_rows.add(index)
-                for neighbor in valid_rows[index]["variables"]:
-                    neighbor = str(neighbor)
-                    if neighbor not in connected_variables:
-                        connected_variables.add(neighbor)
-                        queue.append(neighbor)
-        retained &= connected_rows
+                component_rows.add(index)
+                unvisited.discard(index)
+                for variable in valid_rows[index]["variables"]:
+                    variable = str(variable)
+                    component_variables.add(variable)
+                    for neighbor in variable_rows.get(variable, ()):
+                        if neighbor not in component_rows:
+                            queue.append(neighbor)
+            components.append((component_rows, component_variables))
+
+        selected_components: list[tuple[set[int], set[str]]] = []
+        for component_rows, component_variables in components:
+            has_source_equality = any(
+                str(valid_rows[index]["source"]).startswith(("constraint:", "guard:"))
+                for index in component_rows
+            )
+            has_quadratic = any(int(valid_rows[index]["degree"]) == 2 for index in component_rows)
+            has_direct_source = bool(set(source_names) & component_variables)
+            has_phase_source = any(
+                str(phase["cosine_variable"]) in component_variables
+                and str(phase["sine_variable"]) in component_variables
+                and phase.get("finite_sheet_count") is not None
+                for phase in phase_by_source.values()
+            )
+            component_aux_closed = all(
+                variable not in definitions or definition_closed(variable, component_rows)
+                for variable in component_variables
+            )
+            if (
+                has_source_equality
+                and has_quadratic
+                and (has_direct_source or has_phase_source)
+                and component_aux_closed
+            ):
+                selected_components.append((component_rows, component_variables))
+        retained = set().union(*(item[0] for item in selected_components)) if selected_components else set()
         if not retained:
-            return _base_record("SOURCE_QUADRATIC_MOMENT_NOT_READY", "source-connected-cover-empty")
+            return _base_record("SOURCE_QUADRATIC_MOMENT_NOT_READY", "no-closed-quadratic-source-component")
 
         # Connectivity cannot remove a required definition row because it
         # shares the auxiliary, but replay the closure check defensively.
@@ -463,6 +487,32 @@ def scan_document(document: object) -> dict[str, object]:
             for variable in retained_variables
         ):
             return _base_record("SOURCE_QUADRATIC_MOMENT_NOT_READY", "aux-definition-closure-broken")
+
+        component_payload = []
+        for component_rows, component_variables in selected_components:
+            component_payload.append(
+                {
+                    "row_hashes": sorted(
+                        _canonical_sha(
+                            {
+                                "source_kind": str(valid_rows[index]["source"]).split(":", 1)[0],
+                                "degree": valid_rows[index]["degree"],
+                                "polynomial": valid_rows[index]["polynomial"],
+                            }
+                        )
+                        for index in component_rows
+                    ),
+                    "lift_indices": sorted(lift_names.index(name) for name in component_variables),
+                    "aux_definition_source_hashes": sorted(
+                        _canonical_sha(sorted(definitions[name].items()))
+                        for name in component_variables
+                        if name in definitions
+                    ),
+                }
+            )
+        component_partition_sha256 = _canonical_sha(
+            sorted(component_payload, key=_canonical_sha)
+        )
 
         selected_variables = frozenset(
             set().union(*(set(valid_rows[index]["variables"]) for index in retained))
@@ -492,6 +542,11 @@ def scan_document(document: object) -> dict[str, object]:
             "source_variable_count": len(source_names),
             "lift_variable_count": len(selected_variables),
             "selected_equality_count": len(retained),
+            "selected_component_count": len(selected_components),
+            "selected_source_equality_count": sum(
+                str(valid_rows[index]["source"]).startswith(("constraint:", "guard:"))
+                for index in retained
+            ),
             "selected_linear_equality_count": selected_degrees.count(1),
             "selected_quadratic_equality_count": selected_degrees.count(2),
             "ignored_equality_count": len(compiler.equations) - 1 - len(retained),
@@ -508,6 +563,15 @@ def scan_document(document: object) -> dict[str, object]:
             ),
             "closed_QQ_source_bound_count": direct_bounds,
             "source_slice_mapping_sha256": _canonical_sha(mapping),
+            "component_partition_sha256": component_partition_sha256,
+            "runtime_mapping_binding_required": [
+                "source_sha256",
+                "baseline_endpoint_sha256",
+                "baseline_endpoint_ordinal",
+                "sigma_ordinal",
+                "component_partition_sha256",
+                "source_slice_mapping_sha256",
+            ],
             "source_slice_mapping_complete": True,
             "search_endpoint_required_for_passthrough": any(
                 item["kind"] == "baseline_passthrough" for item in mapping
@@ -520,6 +584,11 @@ def scan_document(document: object) -> dict[str, object]:
                 item["kind"] != "baseline_passthrough" for item in mapping
             ),
             "cover_proof_ready": bool(artifact.proof_ready),
+            "baseline_minimum_fraction": "3/4",
+            "moment_side_maximum_fraction": "1/4",
+            "dykstra_iteration_count": 40,
+            "rounded_points_must_be_finite": True,
+            "passthrough_is_validity_evidence": False,
         }
     except Exception as error:
         reason = type(error).__name__

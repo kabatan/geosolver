@@ -17,8 +17,11 @@ inequality is introduced.
 
 For a readiness result, every selected semantic auxiliary must have all of its
 QQ degree-at-most-two definition rows in the same source-connected cover.
-Repair A adds a block-coordinate mapping rather than relaxing any polynomial
-threshold.  A source variable incident to the quadratic component maps to a
+Repair A adds correlative-component block mappings rather than relaxing any
+polynomial threshold.  Each selected row/variable component must contain a
+raw source equality, at least one quadratic equality, and the complete QQ
+degree-at-most-two definitions of every incident semantic auxiliary.  A
+source variable incident to a selected component maps to a
 direct stable lift index or finite-sheet phase pair.  A source variable outside
 that component maps to `baseline_passthrough`: the later rounder must copy that
 coordinate exactly from the existing search endpoint while replacing only the
@@ -36,11 +39,13 @@ The initial all-coordinate mapping found 42/135 ready sources but failed the
 root-owned fixed gate at `NO_SEARCH=0/3`, `WITHOUT_SAFE_HP=1/6`.  No individual
 fixed-panel record was returned.  After Repair A, the aggregate-only scanner
 found 82 structurally ready sources on the same 135-source anonymous panel
-(`a49f6e76...c5219`) and retained no individual record:
+(`a49f6e76...c5219`) and retained no individual record.  The conservative
+component closure review reduced the preliminary 82 count to the frozen 69:
 
 ```text
-ready                         82 / 135
+ready                         69 / 135
 quadratic-row-count absent    45
+no closed quadratic component 13
 non-QQ-only                    8
 ```
 
