@@ -1,0 +1,56 @@
+{
+  "schema_version": "geotarget.exp-global-001-wave0-control/v1",
+  "stage": "wave0-screen24-seed0",
+  "conditions": {
+    "partition": "screen24",
+    "total_seconds": 30,
+    "search_seconds": 20,
+    "starts": 256,
+    "callbacks_per_start": 600,
+    "seed": 0,
+    "jobs": 1,
+    "cpu": 0
+  },
+  "formal_control": {
+    "arm_id": "frozen-champion-v2-poc-preloaded",
+    "exact_set_equal": 16,
+    "case_count": 24,
+    "worker_accepted": 24,
+    "safety_failures": 0,
+    "outer_elapsed_seconds": {
+      "median": 25.54919121799867,
+      "p95_nearest_rank_floor": 26.694855240000834,
+      "total": 600.0093104300049
+    },
+    "external_artifact_root": "/home/kabatan/work/solver-experiment-results/wave0-control-screen24-30s-seed0-jobs1-v2",
+    "sha256": {
+      "RESULT.json": "a5717c2c1e11e939d0b84a6efccac60a55287c4793ae0a3a7a5179c287e4d307",
+      "OFFLINE_SCORE.json": "67df86a175a8b1c10e5a411fb27ae1fec1692334bec891f3277b29adbfaf205e",
+      "TELEMETRY.json": "58fb50823b353fe429e5b336c5bca6f472a57ee156d9a3a880ba6daa974f2db1"
+    }
+  },
+  "rejected_reference": {
+    "arm_id": "optimized-0967",
+    "exact_set_equal": 15,
+    "case_count": 24,
+    "worker_accepted": 23,
+    "safety_failures": 1,
+    "failure_taxonomy": {
+      "search_artifact_absent_at_reservoir_commit": 1
+    },
+    "wins": 1,
+    "losses": 2,
+    "ties": 21,
+    "candidate_over_control_worker_time_geometric_mean": 1.0492077644024396,
+    "candidate_over_control_worker_time_p95": 1.0440249773900867,
+    "disposition": "rejected; safety gate and recall/speed gates failed",
+    "external_artifact_root": "/home/kabatan/work/solver-experiment-results/wave0-optimized-screen24-30s-seed0-jobs1-v1",
+    "sha256": {
+      "RESULT.json": "4930f04542922039f3a91f3a7c26209cfc490a030a888c6f994b1c2b9019cbbe",
+      "OFFLINE_SCORE.json": "578104d6031e1e54c618062e497de910f43be14854fd7910077cb073abef824d",
+      "TELEMETRY.json": "bb6016e1a60b4867d51cc430e16794ba66187d2ab98acd768a139ab7639e1607",
+      "comparison": "9cafcbfd8434d3a047b06ec5b74fbe2e0bd17e115dda201149cc466f3b140dc3"
+    }
+  },
+  "holdout_opened": false
+}
