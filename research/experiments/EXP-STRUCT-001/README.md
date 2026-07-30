@@ -29,6 +29,15 @@ python3 run_s0.py
 python3 analyze_development.py /path/to/development145.jsonl
 ```
 
+`worker.py` is the minimal frozen-champion adapter. For a non-applicable source
+it uses `os.execv` with the exact frozen Python, worker, and original arguments.
+For an applicable source it validates the frozen champion dry plan and emits a
+sealed overlay plan. Execution is intentionally refused until a concrete block
+solver passes common-runner callback and wall-time gates. `champion_overlay.py`
+defines the eventual endpoint seam: baseline search stays intact, up to four
+block endpoints are appended, and the original champion source replay and
+exact authority receive every proposal.
+
 The structural work metric is a factorization proxy, `sum(block_size^3) /
 dimension^3`; it is not an oracle-work claim. Full compiled integration must
 measure residual evaluations, evaluator work, and wall time under the common
