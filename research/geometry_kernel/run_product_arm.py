@@ -94,6 +94,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     except (OSError, ValueError, subprocess.SubprocessError) as error:
         raise SystemExit(str(error)) from error
 
+    if "--execute" not in passthrough:
+        return subprocess.run(
+            [sys.executable, str(run_arm), *passthrough],
+            check=False,
+        ).returncode
+
     source = root / "src"
     sys.path.insert(0, str(source))
     from geotarget.runtime_broker import ProductRuntimeBroker
