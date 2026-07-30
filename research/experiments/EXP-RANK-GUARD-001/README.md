@@ -98,3 +98,18 @@ variable and residual permutation, affine bound scaling, logit/softplus
 near-boundary behavior, rank-deficient activation, nonsmooth fallback, exact
 callback accounting, baseline/insurance quota, the frozen adapter delegation
 seam, and an AST audit for case-specific routing.
+
+For a formulation-bytes-only development145 applicability census, without
+starting the solver or evaluator:
+
+```bash
+/home/kabatan/work/solver/.venv/bin/python \
+  research/experiments/EXP-RANK-GUARD-001/run_applicability_audit.py
+```
+
+This audit discards each problem ID before extracting any feature and emits no
+per-case row.  `results/development145-applicability-audit.json` contains only
+aggregate bound, structural eligibility, conservative nonsmooth/branch, and
+callback-envelope counts.  Static eligibility is deliberately not reported as
+actual activation: weak-projector stability and anchor semantics require the
+charged runtime callback.

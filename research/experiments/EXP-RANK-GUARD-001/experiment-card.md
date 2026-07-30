@@ -84,6 +84,36 @@ found zero source identifier literals, sensitive mapping reads, or sensitive
 routing conditions.  No truth, expected descriptor, scorer, or formal screen
 was used.
 
+## Development145 static applicability
+
+A separate source-bytes-only census discarded every problem ID before feature
+extraction and retained no per-case row.  It read no Gold, expected result,
+solver result, scorer, or truth data and invoked neither solver nor evaluator.
+All 145 formulations parsed with zero bound, residual-expression, or semantic
+guard parse failures.
+
+The corpus contains 12 two-sided strict-bound coordinates across seven cases,
+zero one-sided strict-bound coordinates, 68 finite coordinates with at least
+one inclusive endpoint, and 412 unbounded coordinates.  The one-sided count of
+zero is a corpus applicability result; softplus behavior remains covered by the
+generated metamorphic audit.
+
+Using only dimension, equation count, parsed bounds, and the frozen S1 budget,
+133/145 cases are structurally eligible to attempt the rank diagnostic.  The
+nonexclusive static exclusions are seven dimensions below two and six
+nonsquare residual-variable systems.  Of the eligible set, 127 contain a
+conservatively flagged potentially nonsmooth residual-DAG operation and three
+have semantic branch guards; these retain the existing `h/h2`/semantic-pair
+fail-close to the original prefix.
+
+Actual weak-rank activation is intentionally recorded as unknown: source bytes
+cannot establish the runtime projector stability or the literal anchor's
+semantic validity.  Under 256 starts, 600 callbacks/start, and cap 153,600, the
+maximum complete diagnostic is 33 callbacks (`0.0215%` of cap), below the
+effective 64-callback (`0.0417%`) overlay ceiling and therefore below the
+configured 5% limit.  All 133 structurally eligible cases preserve the 192-start
+/ 115,200-callback baseline reservation.
+
 An additional truth-free regression smoke used the development source SHA
 `63fb3e07117c...`, for which an optimized adapter had exited nonzero when the
 search artifact was absent.  Here the frozen champion search child timed out
