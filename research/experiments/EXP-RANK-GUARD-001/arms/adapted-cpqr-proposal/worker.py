@@ -10,7 +10,7 @@ import sys
 
 
 SHARED = Path(__file__).resolve().parents[1] / "shared/full_worker.py"
-SHARED_SHA256 = "7f30a88956726658fe54f5e995be9db5544b3667e406159d1e6eb7bbe7f5d3a6"
+SHARED_SHA256 = "9697639a32ea9a4d420ab1be3b49e5419058cf4ed45c3831dbb960ca1a2a3c36"
 
 if hashlib.sha256(SHARED.read_bytes()).hexdigest() != SHARED_SHA256:
     raise RuntimeError("hash-bound shared full worker changed")

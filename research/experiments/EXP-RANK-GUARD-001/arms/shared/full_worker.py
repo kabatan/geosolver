@@ -27,11 +27,11 @@ PRELOADED_WORKER_SHA256 = (
 )
 CHARTED_SEARCH_WORKER = HERE / "charted_search_worker.py"
 CHARTED_SEARCH_WORKER_SHA256 = (
-    "54b4f87ff589f40ff75a0f10ffff5228118d4b43795d35e697b7440eb63896bb"
+    "058b34d13036c9e348fa477afeaf95e27c12130da2c20e80a67082eb023f192d"
 )
 CHARTED_SEARCH_ADAPTER = HERE / "charted_search_adapter.py"
 CHARTED_SEARCH_ADAPTER_SHA256 = (
-    "3c4128a38525373ea227cec6352eed3edc408d71e56cf82bcfec0db9c0d2382c"
+    "657b139f00e59f4d02a98c895b37c08cb33c7ae0eb3c72b0ad0a9ad21630f1f3"
 )
 CHARTED = "charted-weak-pair"
 ADAPTED_CPQR_BLOCKED = "adapted-cpqr-blocked"
@@ -122,7 +122,9 @@ def _decorate_plan(
         common.update(
             {
                 "proposal_overlay_active": True,
-                "proposal_overlay": "strict-bound logit charted symmetric weak pair",
+                "proposal_overlay": (
+                    "strict-bound logit/softplus charted symmetric weak pair"
+                ),
                 "proposal_overlay_scope": "prefix proposals only",
                 "overlay_callback_fraction_max": 0.05,
                 "overlay_callback_absolute_max": 64,

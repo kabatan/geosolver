@@ -28,6 +28,10 @@ fraction of the public guard/domain margin.  The chart arm maps every finite
 strict interval through logit, so generated points remain strictly interior.
 The baseline lane remains present in every S0 comparison.
 
+The Python S1 overlay extends that finite chart conservatively: two-sided
+strict bounds use logit, lower-only bounds use softplus, upper-only bounds use
+reflected softplus, and unbounded coordinates remain in their original chart.
+
 No problem ID, family ID, target, primitive or Gold value enters a candidate
 interface.  Generated truth is joined only after candidate return.  Do not run
 this experiment against validation or sealed inputs.
@@ -80,3 +84,17 @@ GEOTARGET_FROZEN_SOLVER_ROOT=/home/kabatan/work/solver-experiment-runtime/solver
   -s research/experiments/EXP-RANK-GUARD-001/test \
   -p 'test_s1_overlay.py' -v
 ```
+
+Run the deterministic truth-free metamorphic/activation audit separately:
+
+```bash
+GEOTARGET_FROZEN_SOLVER_ROOT=/home/kabatan/work/solver-experiment-runtime/solver \
+  /home/kabatan/work/solver/.venv/bin/python \
+  research/experiments/EXP-RANK-GUARD-001/run_metamorphic_audit.py
+```
+
+The frozen result is in `results/metamorphic-activation-audit.json`.  It covers
+variable and residual permutation, affine bound scaling, logit/softplus
+near-boundary behavior, rank-deficient activation, nonsmooth fallback, exact
+callback accounting, baseline/insurance quota, the frozen adapter delegation
+seam, and an AST audit for case-specific routing.

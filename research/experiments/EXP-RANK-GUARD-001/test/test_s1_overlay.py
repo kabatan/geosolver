@@ -79,6 +79,22 @@ def _prefix(count: int = 16) -> Prefix:
 
 
 class ProposalOverlayTests(unittest.TestCase):
+    def test_logit_and_one_sided_softplus_roundtrip_stays_strict(self):
+        lower = np.array([-2.0, 1.0, -np.inf, -np.inf])
+        upper = np.array([3.0, np.inf, 7.0, np.inf])
+        point = np.array([
+            np.nextafter(-2.0, np.inf),
+            np.nextafter(1.0, np.inf),
+            np.nextafter(7.0, -np.inf),
+            -4.5,
+        ])
+        chart = ADAPTER._to_chart(point, lower, upper)
+        restored = ADAPTER._from_chart(chart, lower, upper)
+        self.assertTrue(np.all(restored > lower))
+        self.assertTrue(np.all(restored < upper))
+        self.assertTrue(np.all(np.isfinite(restored)))
+        self.assertEqual(restored[3], point[3])
+
     def test_overlay_preserves_prefix_and_insurance_slots(self):
         baseline = _prefix()
         case = RankDeficientCase()
@@ -121,10 +137,10 @@ class ProposalOverlayTests(unittest.TestCase):
         self.assertIs(candidate, baseline)
         self.assertEqual(telemetry["rank_guard_overlay_activated"], 0)
 
-    def test_nonfinite_bounds_are_ineligible(self):
+    def test_nan_bounds_are_ineligible(self):
         baseline = _prefix()
         case = RankDeficientCase()
-        case.upper = np.array([np.inf, 1.0])
+        case.upper = np.array([np.nan, 1.0])
         candidate, telemetry = ADAPTER._overlay_prefix(
             case, baseline, callback_cap=512, callbacks_per_start=32
         )

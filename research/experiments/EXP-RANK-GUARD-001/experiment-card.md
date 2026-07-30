@@ -47,13 +47,16 @@ fail-closed at the frozen Python seam**.
 ## S1 binding
 
 The charted arm replaces only tail proposal slots in the frozen literal prefix.
+It uses logit for two-sided strict bounds, softplus for lower-only bounds,
+reflected softplus for upper-only bounds, and identity for unbounded
+coordinates.
 Its diagnostic is charged to the existing source callback ledger and is capped
 at 5% of the aggregate callback cap and 64 callbacks, whichever is smaller.  It
 does not probe partially when a complete `h/h2` pair and both symmetric radii
 cannot fit.  The first 75% of prefix slots and every fourth counter-Cauchy slot
-are retained byte-for-byte.  Non-finite bounds, invalid semantics, unstable
-weak projectors, insufficient budget, and unavailable replacement slots all
-delegate the original prefix unchanged.
+are retained byte-for-byte.  NaN/empty bounds, invalid semantics, unstable weak
+projectors, insufficient budget, and unavailable replacement slots all delegate
+the original prefix unchanged.
 
 Both arms use the common four-field `arm.json` contract.  The full worker keeps
 the frozen search candidate, final solve-result schema, source replay authority,
@@ -68,6 +71,18 @@ unchanged, and the total wall limit was respected.  The selected smoke source
 was ineligible for this overlay and exercised fail-closed baseline delegation;
 generated S0/unit tests separately exercise activation.  This is interface and
 fallback evidence only, not recall or speed evidence.
+
+The current logit/softplus mechanism passed a deterministic generated audit:
+variable and residual permutation produced zero normalized proposal drift,
+affine bound scaling drift was `3.33e-16`, and every transformed rank-deficient
+case activated.  Mixed one-/two-sided proposals remained strictly interior;
+the nonsmooth case returned the original prefix.  Callback accounting was
+17 expected/17 observed, the first 12 of 16 slots and every fourth insurance
+slot were bitwise preserved, and the frozen adapter received the overlaid tail.
+AST inspection of the two entries, full/search wrappers and proposal adapter
+found zero source identifier literals, sensitive mapping reads, or sensitive
+routing conditions.  No truth, expected descriptor, scorer, or formal screen
+was used.
 
 An additional truth-free regression smoke used the development source SHA
 `63fb3e07117c...`, for which an optimized adapter had exited nonzero when the
