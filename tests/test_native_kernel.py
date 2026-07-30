@@ -103,3 +103,21 @@ def test_native_admission_rejects_periodic_tape_as_a_whole() -> None:
     compilation = compile_residual_plan(_build(problem), source_sha256="b" * 64)
     assert compilation.plan is not None
     assert compilation.plan.native_program is None
+
+
+def test_native_admission_rejects_source_exact_irrational_radical() -> None:
+    problem = {
+        **PROBLEM,
+        "variables": {"names": ["x", "y"]},
+        "construction": [
+            {"name": "O", "expr": "Point(0, 0)"},
+            {"name": "P", "expr": "Point(x, y)"},
+        ],
+        "constraints": [{"def": "Distance(O, P)", "value": "3*sqrt(2)/2"}],
+    }
+    reference = _build(problem)
+    compilation = compile_residual_plan(reference, source_sha256="c" * 64)
+
+    assert compilation.plan is not None
+    assert compilation.plan.flat_tape_program is not None
+    assert compilation.plan.native_program is None

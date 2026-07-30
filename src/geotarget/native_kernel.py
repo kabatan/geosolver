@@ -48,6 +48,20 @@ _SUPPORTED_OPS = frozenset(
     }
 )
 
+_EXACT_INT = 1
+_BF53_LITERAL = 2
+_BF53_INPUT = 3
+_SQRT = 12
+_IMPLICIT_SQRT_OPS = frozenset(
+    {
+        40,  # LinePP normalization
+        41,  # LineABC normalization
+        50,  # DistancePP
+        53,  # DistancePC
+        54,  # DistanceCP
+    }
+)
+
 
 def _sha256(path: Path) -> str:
     digest = hashlib.sha256()
@@ -127,6 +141,44 @@ def _serialized_instruction(item: Any) -> tuple[Any, ...]:
     )
 
 
+def _certify_numeric_effects(flat: FlatTapeProgram) -> None:
+    """Reject source-exact radicals before selecting the binary64 kernel.
+
+    The qualified Python tape intentionally retains an input-free irrational
+    radical as a deferred symbolic scalar until the residual boundary.  A
+    hardware ``sqrt`` rounds that value earlier and can move the final result
+    by one ULP.  Dependency flow through every scalar and geometry slot is a
+    source-independent numeric effect, so this conservative gate rejects the
+    complete native program whenever such a hidden or explicit radical has no
+    BF53 input/literal ancestor.
+    """
+
+    has_bf53_ancestor: dict[tuple[int, int], bool] = {}
+    tapes = [
+        flat.construction_tape,
+        *(tape for tape, _left, _right in flat.constraint_tapes),
+    ]
+    for tape in tapes:
+        for item in tape:
+            op = int(item.op)
+            output = (int(item.output.kind), item.output.index)
+            operand_effects = [
+                has_bf53_ancestor.get((int(reference.kind), reference.index), False)
+                for reference in item.operands
+            ]
+            if op in {_BF53_LITERAL, _BF53_INPUT}:
+                effect = True
+            elif op == _EXACT_INT:
+                effect = False
+            else:
+                effect = any(operand_effects)
+            if op == _SQRT and not effect:
+                raise ValueError("native source-exact sqrt requires symbolic boundary")
+            if op in _IMPLICIT_SQRT_OPS and not effect:
+                raise ValueError("native source-exact geometry requires symbolic boundary")
+            has_bf53_ancestor[output] = effect
+
+
 class NativeResidualProgram:
     """One-FFI residual evaluator with whole-callback Python fallback."""
 
@@ -166,6 +218,7 @@ def compile_native_program(flat: FlatTapeProgram) -> NativeResidualProgram | Non
     if not capability.get("available"):
         return None
     try:
+        _certify_numeric_effects(flat)
         construction = [_serialized_instruction(item) for item in flat.construction_tape]
         constraints = [
             (
