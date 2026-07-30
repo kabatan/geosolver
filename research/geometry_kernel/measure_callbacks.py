@@ -55,26 +55,37 @@ def _update_vector(digest: Any, values: Iterable[float]) -> None:
         digest.update(_float_bytes(value))
 
 
-def _probes(source_sha256: str, dimension: int, count: int) -> tuple[tuple[float, ...], ...]:
+def _probes(
+    source_sha256: str,
+    dimension: int,
+    count: int,
+    *,
+    include_boundaries: bool,
+) -> tuple[tuple[float, ...], ...]:
     if dimension == 0:
         return ((),)
-    probes: list[tuple[float, ...]] = [
-        tuple(0.0 for _ in range(dimension)),
-        tuple(-0.0 if index % 2 else 0.0 for index in range(dimension)),
-        tuple(
-            math.nextafter(0.0, 1.0) if index % 2 else -math.nextafter(0.0, 1.0)
-            for index in range(dimension)
-        ),
-        tuple(
-            math.nextafter(1.0, math.inf) if index % 2 else math.nextafter(-1.0, -math.inf)
-            for index in range(dimension)
-        ),
-    ]
+    probes: list[tuple[float, ...]] = []
+    if include_boundaries:
+        probes.extend(
+            [
+                tuple(0.0 for _ in range(dimension)),
+                tuple(-0.0 if index % 2 else 0.0 for index in range(dimension)),
+                tuple(
+                    math.nextafter(0.0, 1.0) if index % 2 else -math.nextafter(0.0, 1.0)
+                    for index in range(dimension)
+                ),
+                tuple(
+                    math.nextafter(1.0, math.inf) if index % 2 else math.nextafter(-1.0, -math.inf)
+                    for index in range(dimension)
+                ),
+            ]
+        )
     seed = int(source_sha256[:16], 16)
     generator = random.Random(seed)
-    while len(probes) < count:
+    target = count + (4 if include_boundaries else 0)
+    while len(probes) < target:
         probes.append(tuple(generator.uniform(-8.0, 8.0) for _ in range(dimension)))
-    return tuple(probes[:count])
+    return tuple(probes)
 
 
 def _problem_paths(cases_root: Path) -> list[Path]:
@@ -145,7 +156,9 @@ def measure(arguments: argparse.Namespace) -> dict[str, Any]:
     rows: list[dict[str, Any]] = []
     input_stream = hashlib.sha256(b"geotarget.geometry-kernel-input-stream/v1\0")
     output_stream = hashlib.sha256(b"geotarget.geometry-kernel-output-stream/v1\0")
-    for path in _problem_paths(arguments.cases_root):
+    paths = _problem_paths(arguments.cases_root)
+    for ordinal, path in enumerate(paths, start=1):
+        print(f"measure {ordinal}/{len(paths)} {path.parent.name}", file=sys.stderr, flush=True)
         payload = path.read_bytes()
         source_sha256 = _sha256(payload)
         document = json.loads(payload)
@@ -167,23 +180,30 @@ def measure(arguments: argparse.Namespace) -> dict[str, Any]:
             metadata = compilation.plan.metadata()
             budget.evaluator = evaluator
         install_fused_evaluation(budget)
-        points = _probes(source_sha256, len(reference.bundle.var_names), arguments.probes)
+        points = _probes(
+            source_sha256,
+            len(reference.bundle.var_names),
+            arguments.probes,
+            include_boundaries=arguments.include_boundaries,
+        )
+        timing_points = points[-arguments.probes :]
         for point in points:
             _update_vector(input_stream, point)
         residual_digest = _observation_digest(evaluator, points)
         callback_digest = _callback_digest(budget, points)
         output_stream.update(bytes.fromhex(residual_digest))
         output_stream.update(bytes.fromhex(callback_digest))
-        # Warm every value class before measuring an identical cyclic stream.
-        _observation_digest(evaluator, points)
+        # Boundary probes are differential-only. Timing uses normal finite
+        # probes so a semantic fallback cannot dominate an unrelated class.
+        _observation_digest(evaluator, timing_points)
         residual_timing = _time_calls(
             lambda point, evaluator=evaluator: evaluator.evaluate_float_residual(list(point)),
-            points,
+            timing_points,
             arguments.repeats,
         )
         callback_timing = _time_calls(
             lambda point, budget=budget: budget(np.asarray(point, dtype=float)),
-            points,
+            timing_points,
             arguments.repeats,
         )
         rows.append(
@@ -214,7 +234,11 @@ def measure(arguments: argparse.Namespace) -> dict[str, Any]:
             text=True,
             capture_output=True,
         ).stdout.strip(),
-        "config": {"probes": arguments.probes, "repeats": arguments.repeats},
+        "config": {
+            "probes": arguments.probes,
+            "repeats": arguments.repeats,
+            "include_boundaries": arguments.include_boundaries,
+        },
         "input_stream_digest": input_stream.hexdigest(),
         "output_stream_digest": output_stream.hexdigest(),
         "completed_cases": len(rows),
@@ -229,6 +253,7 @@ def parser() -> argparse.ArgumentParser:
     value.add_argument("--output", type=Path, required=True)
     value.add_argument("--probes", type=int, default=64)
     value.add_argument("--repeats", type=int, default=5)
+    value.add_argument("--include-boundaries", action="store_true")
     return value
 
 

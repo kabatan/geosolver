@@ -9,6 +9,10 @@ written into a worktree.
 records bitwise residual and complete-callback digests, and measures wall time,
 CPU time, callback throughput, peak RSS, and completed callbacks. Routing is
 reported only from backend mode, typed opcodes/effects, and selector metadata.
+Boundary probes are enabled explicitly with `--include-boundaries`; they are
+included in differential digests but excluded from timing. This prevents a
+deliberately slow semantic fallback from redefining the structural-class
+performance measurement.
 
 `compare_same_work.py` rejects mismatched inputs or observations before
 reporting family-clustered ratios. It deliberately has no problem-ID allowlist
