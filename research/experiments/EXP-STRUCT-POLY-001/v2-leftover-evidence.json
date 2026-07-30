@@ -30,8 +30,8 @@
   },
   "implementation": {
     "leftover_overlay_sha256": "8c4a2ea497fc033614697e58eaa370153ab97191f09e2bcc6c713fa84322ca79",
-    "worker_sha256": "27a722a70302a9e86a7e8a1751dc4003ed2e5d1d837a2daf5922e697f3d4fc68",
-    "arm_sha256": "41825c3a4124824a9b0d553a02ea62df3b38f9ab08b545eea84e9d41a5443e75",
+    "worker_sha256": "5c3c8b7f0420e6e7dc564721fd44964b1f238623a5d709e23033494741f76317",
+    "arm_sha256": "d4d0b12b8465514efaf1957af64cd0201039d7396f4a01693d36d5ba442758e5",
     "closure_sha256": "2fb7ba92f4224d96eeb4a821613d6a2069259de9e060ea4442061c69da4a8291",
     "maximum_generation_seconds": 2.0,
     "maximum_symbolic_blocks": 4,
@@ -71,10 +71,28 @@
     "truth_passed_to_worker": false,
     "entrypoint_hash_matched_arm": true
   },
+  "common_control_binding": {
+    "path": "/home/kabatan/work/solver-experiment-runtime/solver/research/experiments/EXP-V15-243-001/repro_20260722/workers/champion_v2_poc_preloaded.py",
+    "sha256": "e1405739201b0cb1d72e8f9ab6ca402b5e71918e569888993c4fdd13022c7301",
+    "direct_finalist_bound_as_entrypoint": false,
+    "champion_v2_point_on_circle_wrapper_preserved": true,
+    "champion_v1_point_on_circle_hp_wrapper_preserved": true,
+    "champion_v2_zero_dimensional_route_preserved": true,
+    "precision_runtime_preload_preserved": true,
+    "runner_sha256": "b3f269e30a518bf5b47c25f11ad6318fc3e14b815f1a13f08a2ba5031aeed444",
+    "audit_sha256": "9a5850e9c4a69e7a12b1e10accaa4ecdb301a0e2c03598384600c516c1f45364",
+    "source_sha256": "63fb3e07117c47ee18aa18cbb2e891578e84c1d8e3fb8dc1d3b26b777a70b1c0",
+    "combined_route_applicable": false,
+    "dry_plan_stdout_stderr_bytes_equal": true,
+    "execute_stdout_stderr_bytes_equal": true,
+    "result_semantics_equal_excluding_elapsed_wall_seconds": true,
+    "candidate_telemetry_created": false,
+    "truth_or_scorer_used": false
+  },
   "tests": {
-    "passed": 7,
+    "passed": 9,
     "failed": 0,
-    "test_sha256": "0dae852e7e77d42033ff0117375333d847faca8b5323576218f20ea3e1fd3fcf"
+    "test_sha256": "d12fb33953ba6da60785e6493ea39fad842d9ce3eaf68e98aeaaf89ab04f641c"
   },
   "custody": {
     "formal_screen_run_by_this_lane": false,
@@ -84,8 +102,8 @@
     "validation_or_sealed_read": false
   },
   "decision": {
-    "classification": "REOPEN_GATE_IMPLEMENTED_AS_LEFTOVER_ONLY_V2",
+    "classification": "REOPEN_GATE_IMPLEMENTED_AS_LEFTOVER_ONLY_V2; COMMON_CONTROL_BINDING_AUDITED",
     "formal_promotion_authorized": false,
-    "next_gate": "benchmark-owner S1 rerun; require baseline attempts/service trace equality before considering side outcomes"
+    "next_gate": "benchmark-owner S1 rerun; first seal candidate/control common-control path and hash, then require baseline attempts/service trace equality before considering side outcomes"
   }
 }

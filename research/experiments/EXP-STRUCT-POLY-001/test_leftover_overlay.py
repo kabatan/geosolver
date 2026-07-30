@@ -219,6 +219,78 @@ class LeftoverOverlayTests(unittest.TestCase):
             self.assertEqual(overlay["side_proposals_in_baseline_reservoir"], 0)
             self.assertTrue(overlay["baseline_completion_required"])
 
+    def test_v2_binds_loaded_periodic_common_control_graph(self):
+        worker_v2._verify_closure()
+        self.assertEqual(
+            worker_v2.V1.FROZEN_WORKER.resolve(),
+            worker_v2.COMMON_CONTROL.resolve(),
+        )
+        self.assertEqual(
+            hashlib.sha256(worker_v2.COMMON_CONTROL.read_bytes()).hexdigest(),
+            worker_v2.EXPECTED_COMMON_CONTROL_SHA256,
+        )
+        self.assertNotIn("finalist_numeric_worker_v15", str(worker_v2.COMMON_CONTROL))
+        frozen = worker_v2.V1._load_frozen()
+        expected = {
+            "preloaded": worker_v2.COMMON_CONTROL.resolve(),
+            "point_on_circle_v2": worker_v2.EXPECTED_COMMON_CONTROL_LAYERS[
+                "point_on_circle/champion_v2_wrapper.py"
+            ][0].resolve(),
+            "point_on_circle_v1": worker_v2.EXPECTED_COMMON_CONTROL_LAYERS[
+                "point_on_circle/champion_v1_wrapper.py"
+            ][0].resolve(),
+            "original_v2": worker_v2.EXPECTED_COMMON_CONTROL_LAYERS[
+                "champion_v2/worker.py"
+            ][0].resolve(),
+            "original_v1": worker_v2.EXPECTED_COMMON_CONTROL_LAYERS[
+                "champion_v1/worker.py"
+            ][0].resolve(),
+        }
+        actual = {
+            "preloaded": Path(frozen.__file__).resolve(),
+            "point_on_circle_v2": Path(frozen.CHAMPION.__file__).resolve(),
+            "point_on_circle_v1": Path(frozen.CHAMPION.V1.__file__).resolve(),
+            "original_v2": Path(frozen.CHAMPION.ORIGINAL_V2.__file__).resolve(),
+            "original_v1": Path(
+                frozen.CHAMPION.V1.ORIGINAL_V1.__file__
+            ).resolve(),
+        }
+        self.assertEqual(actual, expected)
+        self.assertIs(frozen.CHAMPION.BASE, frozen.CHAMPION.V1.V0.BASE)
+        self.assertEqual(
+            Path(frozen.CHAMPION.BASE._load_module.__code__.co_filename).resolve(),
+            worker_v2.EXPECTED_COMMON_CONTROL_LAYERS[
+                "precision_runtime_preload.py"
+            ][0].resolve(),
+        )
+
+    def test_registered_63fb3e_noop_result_differential(self):
+        audit = json.loads((HERE / "common-control-binding-audit.json").read_text())
+        self.assertEqual(
+            audit["source_sha256"],
+            "63fb3e07117c47ee18aa18cbb2e891578e84c1d8e3fb8dc1d3b26b777a70b1c0",
+        )
+        self.assertEqual(
+            audit["common_control_sha256"],
+            worker_v2.EXPECTED_COMMON_CONTROL_SHA256,
+        )
+        self.assertFalse(audit["truth_or_scorer_used"])
+        self.assertFalse(audit["combined_route_applicable"])
+        self.assertFalse(audit["candidate_telemetry_created"])
+        for field in (
+            "dry_plan_bytes_equal",
+            "dry_stdout_bytes_equal",
+            "dry_stderr_bytes_equal",
+            "execute_stdout_bytes_equal",
+            "execute_stderr_bytes_equal",
+            "result_semantics_equal",
+        ):
+            self.assertTrue(audit[field], field)
+        self.assertEqual(
+            audit["result_excluded_nondeterministic_fields"],
+            ["elapsed_wall_seconds"],
+        )
+
     def test_v2_nonapplicable_dry_is_bitwise_frozen_passthrough(self):
         document = {
             "task": "solve",

@@ -139,3 +139,32 @@ dry PLAN/stdout/stderr remain byte-identical to direct frozen execution, and the
 common screen24 dry contract passes. This lane ran no formal screen or scorer
 and read no truth; the next gate is a benchmark-owner S1 rerun that first checks
 baseline attempt/service-trace equality.
+
+## Common-control binding audit
+
+An integration audit confirms that both the formal-tested v1 entrypoint and v2
+bind the registered common control directly at
+`repro_20260722/workers/champion_v2_poc_preloaded.py`, SHA-256
+`e1405739201b0cb1d72e8f9ab6ca402b5e71918e569888993c4fdd13022c7301`.
+Neither entrypoint substitutes `finalist_numeric_worker_v15/worker.py` as its
+top-level baseline. V2 now fails closed unless this exact path/hash and its
+loaded layer graph match: precision preload, PointOnCircle champion-v2 wrapper,
+PointOnCircle champion-v1 wrapper and periodic HP closure, then the original
+champion-v2/v1 layers. This preserves champion-v2's zero-dimensional authority
+route and the periodic repair applied to positive-dimensional HP work.
+
+The truth-free source SHA `63fb3e...` remains BTF-irreducible and therefore
+takes the exact `os.execv` no-op route. A fresh paired direct-control/v2 run at
+15 seconds total, 5 seconds search, 16 starts, 32 callbacks/start, seed 0 and
+CPU 0 produced byte-equal dry PLAN/stdout/stderr and byte-equal execution
+stdout/stderr. RESULT semantics were equal after removing only the expected
+nondeterministic `elapsed_wall_seconds`: both completed with
+`SEARCH_DEADLINE_REACHED`, search classification `TIMEOUT`, zero HP attempts,
+and zero descriptors. The v2 telemetry file was absent. Raw artifacts are kept
+outside Git under `solver-artifacts/exp-struct-poly-001/common-control-binding-audit-v2`.
+
+Therefore a candidate-side baseline-entrypoint mismatch does not explain the
+v1 aggregate loss. The benchmark owner should still verify the independently
+launched control arm's path/hash in its private run manifest before interpreting
+the paired loss; this lane did not inspect that formal manifest. No scorer,
+truth, formal benchmark, validation, or sealed data was used in this audit.
