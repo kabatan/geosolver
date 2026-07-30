@@ -17,13 +17,16 @@ search, HP ordering/allocation, exact confirmation, descriptor construction,
 and final atomic write.  Those result bytes are copied to
 `FROZEN_BASELINE_RESULT.json` before any side action.
 
-Only unused baseline search callbacks and at least 12.5 seconds of true outer
+Only unused baseline search callbacks and at least 24 seconds of true outer
 wall surplus admit the separate DiGS service.  Only the DiGS suffix is replayed.
 Each side endpoint is passed back through the installed exact-outer HP callable;
 release additionally requires `ordinary_and_exact_descriptor_identity_match`.
-Accepted novel descriptors are appended after the immutable baseline prefix.
+The nested exact fallback must itself carry passing authority. Accepted novel
+descriptors and their proof-bearing HP attempts are appended after the
+immutable baseline descriptor and attempt prefixes; counts are updated.
 No side acceptance causes the baseline result object/file to remain unchanged.
-Every side exception fails closed to the frozen baseline bytes.
+The full baseline finalize reserve is never spent by the side lane. Every side
+exception fails closed because the candidate RESULT write is the last action.
 
 This is candidate-private one-file wiring.  It changes no public interface and
 does not read case IDs, families, truth, expected target count, scorer output,
@@ -37,7 +40,7 @@ separation.  It does not reuse Repair A's claim of formal exact-set monotonicity
 
 ## Evidence and limitations
 
-- Source-only seam tests: 6 passed on core 15.
+- Source-only seam tests: 7 passed on core 15.
 - Dry plan imports and verifies the frozen champion, resource scheduler, and
   exact-outer closure; the plan selects confirm-all exact authority.
 - Baseline descriptor payload SHA/order, zero-surplus identity, side prefix
@@ -52,8 +55,8 @@ separation.  It does not reuse Repair A's claim of formal exact-set monotonicity
 
 ## Frozen hashes
 
-- Worker: `1704670d5abf873d980b4abdd73efed0f19af6a784c5dc094fdb93a8cec0aa46`
-- Dry plan: `de5933a8849c0598e69ec2f4404c919e5a24dc369523eeb6806b13de810677b3`
+- Worker: `1dd115da19b201a494b2fc2d20b51f6fbd66ef6008d959f09539cd06065840d6`
+- Dry plan: `123218fb4613f7b7501b049b70473baa0e9d5db0b5475d7b38853a738af34831`
 - Raw champion-v2: `241128047481cc8a428ff99dcb9d840cbc2ade3e87ddb564bb1a920fe10346ca`
 - HP preserve-binding: `5453a30c46d3050c0520a6492f149595bf93d4f2794e3e1fa86d7d60c2365702`
 - Exact outer: `05650c1016f3974c0f74845037c76604eb38f2f4a337cc700721f0e148d9d3f7`

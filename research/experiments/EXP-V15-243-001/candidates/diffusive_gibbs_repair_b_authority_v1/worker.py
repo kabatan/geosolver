@@ -55,9 +55,8 @@ EXPECTED = {
 }
 
 MIN_SIDE_CALLBACKS = 16
-MIN_SIDE_WALL_SECONDS = 12.5
-FINAL_WRITE_RESERVE_SECONDS = 0.25
-MAX_SIDE_SEARCH_SECONDS = 8.0
+MIN_SIDE_WALL_SECONDS = 24.0
+MAX_SIDE_SEARCH_SECONDS = 6.0
 
 
 def sha256_bytes(payload: bytes) -> str:
@@ -80,8 +79,26 @@ def descriptor_key(descriptor: Mapping[str, object]) -> str:
     )
 
 
+def _confirmed_descriptor(attempt: Mapping[str, object]) -> Mapping[str, object] | None:
+    fallback = attempt.get("exact_coordinate_fallback")
+    descriptor = attempt.get("descriptor")
+    if (
+        attempt.get("status") != "TARGET_AUTHORITY_READY"
+        or attempt.get("authority_pass") is not True
+        or attempt.get("attempt_kind")
+        != "EXACT_CONFIRMATION_OF_ORDINARY_PROPOSAL"
+        or attempt.get("ordinary_and_exact_descriptor_identity_match") is not True
+        or not isinstance(fallback, Mapping)
+        or fallback.get("status") != "TARGET_AUTHORITY_READY"
+        or fallback.get("authority_pass") is not True
+        or not isinstance(descriptor, Mapping)
+    ):
+        return None
+    return descriptor
+
+
 def merge_frozen_baseline(
-    baseline: dict[str, object], side_descriptors: Sequence[Mapping[str, object]]
+    baseline: dict[str, object], side_attempts: Sequence[Mapping[str, object]]
 ) -> dict[str, object]:
     """Return baseline itself on an empty/duplicate side; otherwise prefix-union."""
 
@@ -93,16 +110,19 @@ def merge_frozen_baseline(
         for item in baseline_targets
         if isinstance(item, Mapping)
     }
-    accepted: list[dict[str, object]] = []
-    for raw in side_descriptors:
-        if not isinstance(raw, Mapping):
+    accepted: list[tuple[dict[str, object], dict[str, object]]] = []
+    for raw_attempt in side_attempts:
+        if not isinstance(raw_attempt, Mapping):
             continue
-        item = copy.deepcopy(dict(raw))
+        raw_descriptor = _confirmed_descriptor(raw_attempt)
+        if raw_descriptor is None:
+            continue
+        item = copy.deepcopy(dict(raw_descriptor))
         key = descriptor_key(item)
         if key in seen:
             continue
         seen.add(key)
-        accepted.append(item)
+        accepted.append((copy.deepcopy(dict(raw_attempt)), item))
     if not accepted:
         return baseline
 
@@ -110,12 +130,18 @@ def merge_frozen_baseline(
     descriptors = merged["distinct_exact_target_descriptors"]
     if not isinstance(descriptors, list):
         raise AssertionError("deep copy changed baseline descriptor type")
-    descriptors.extend(copy.deepcopy(accepted))
+    accepted_descriptors = [descriptor for _attempt, descriptor in accepted]
+    descriptors.extend(copy.deepcopy(accepted_descriptors))
     targets = merged.get("distinct_exact_targets")
     if not isinstance(targets, list):
         raise ValueError("baseline exact target list is unavailable")
     if targets is not descriptors:
-        targets.extend(copy.deepcopy(accepted))
+        targets.extend(copy.deepcopy(accepted_descriptors))
+    attempts = merged.get("hp_attempts")
+    if not isinstance(attempts, list):
+        raise ValueError("baseline HP attempt list is unavailable")
+    attempts.extend(copy.deepcopy([attempt for attempt, _descriptor in accepted]))
+    merged["hp_attempt_count"] = len(attempts)
     merged["distinct_exact_target_count"] = len(descriptors)
     merged["repair_b_side_exact_descriptor_count"] = len(accepted)
     merged["repair_b_baseline_descriptor_prefix_count"] = len(baseline_targets)
@@ -210,12 +236,27 @@ def _run_side(base, arguments, baseline: dict[str, object]) -> tuple[list[dict[s
     hard_deadline = base.PROCESS_STARTED + arguments.total_seconds
     search = arguments.output.resolve() / "search.json"
     baseline_search = json.loads(search.read_text(encoding="utf-8"))
-    work = baseline_search.get("work")
-    used = int(work.get("callbacks")) if isinstance(work, Mapping) else arguments.aggregate_callback_cap
     effective_cap = min(
         arguments.aggregate_callback_cap,
         arguments.starts * arguments.callbacks_per_start,
     )
+    work = baseline_search.get("work")
+    raw_used = work.get("callbacks") if isinstance(work, Mapping) else None
+    search_contract_ok = bool(
+        baseline_search.get("completed") is True
+        and baseline_search.get("source_sha256") == arguments.source_sha256
+        and baseline_search.get("source_bytes_unchanged") is True
+        and baseline_search.get("truth_used") is False
+        and type(raw_used) is int
+        and 0 <= raw_used <= effective_cap
+    )
+    if not search_contract_ok:
+        return [], {
+            "schema_version": "geotarget.exp-v15-243.digs-repair-b-side/v1",
+            "status": "BASELINE_SEARCH_LEDGER_REJECTED",
+            "truth_used": False,
+        }
+    used = raw_used
     callback_surplus = max(0, effective_cap - used)
     wall_surplus = hard_deadline - time.monotonic()
     telemetry: dict[str, object] = {
@@ -233,7 +274,7 @@ def _run_side(base, arguments, baseline: dict[str, object]) -> tuple[list[dict[s
 
     side_search_seconds = min(
         MAX_SIDE_SEARCH_SECONDS,
-        max(4.0, wall_surplus - 8.0),
+        max(4.0, wall_surplus - 18.0),
     )
     tail_root = arguments.output.resolve() / "repair-b-side"
     document = _side_search(
@@ -270,11 +311,14 @@ def _run_side(base, arguments, baseline: dict[str, object]) -> tuple[list[dict[s
         side_endpoints,
         hard_deadline=min(hard_deadline - 0.5, time.monotonic() + 0.75),
     )
-    descriptors: list[dict[str, object]] = []
     attempts: list[dict[str, object]] = []
     for ordinal, candidate in enumerate(candidates):
-        remaining = hard_deadline - time.monotonic() - FINAL_WRITE_RESERVE_SECONDS
-        if remaining < 7.5:
+        remaining = (
+            hard_deadline
+            - time.monotonic()
+            - base.FINALIZE_RESERVE_SECONDS
+        )
+        if remaining < 14.5:
             break
         attempt = base._run_hp_candidate(
             source=arguments.source,
@@ -286,21 +330,24 @@ def _run_side(base, arguments, baseline: dict[str, object]) -> tuple[list[dict[s
         )
         if isinstance(attempt, Mapping):
             attempts.append(dict(attempt))
-            descriptor = attempt.get("descriptor")
-            if (
-                attempt.get("authority_pass") is True
-                and attempt.get("ordinary_and_exact_descriptor_identity_match") is True
-                and isinstance(descriptor, Mapping)
-            ):
-                descriptors.append(dict(descriptor))
+    confirmed_attempts = [
+        attempt for attempt in attempts if _confirmed_descriptor(attempt) is not None
+    ]
+    if time.monotonic() >= hard_deadline - base.FINALIZE_RESERVE_SECONDS:
+        telemetry.update({
+            "status": "SIDE_AUTHORITY_LATE_BASELINE_ONLY",
+            "side_hp_attempt_count": len(attempts),
+            "side_exact_confirmed_count": len(confirmed_attempts),
+        })
+        return [], telemetry
     telemetry.update({
         "status": "SIDE_AUTHORITY_COMPLETE",
         "side_endpoint_count": len(side_endpoints),
         "side_replay_candidate_count": len(candidates),
         "side_hp_attempt_count": len(attempts),
-        "side_exact_confirmed_count": len(descriptors),
+        "side_exact_confirmed_count": len(confirmed_attempts),
     })
-    return descriptors, telemetry
+    return confirmed_attempts, telemetry
 
 
 def install_result_seam(base, arguments) -> Callable[..., object]:
@@ -325,12 +372,12 @@ def install_result_seam(base, arguments) -> Callable[..., object]:
         original_write(path, document)
         if path.name != "RESULT.json" or not isinstance(document, dict):
             return
-        frozen_bytes = path.read_bytes()
-        frozen_sha = sha256_bytes(frozen_bytes)
-        shutil.copyfile(path, path.with_name("FROZEN_BASELINE_RESULT.json"))
         try:
-            descriptors, telemetry = _run_side(base, arguments, document)
-            merged = merge_frozen_baseline(document, descriptors)
+            frozen_bytes = path.read_bytes()
+            frozen_sha = sha256_bytes(frozen_bytes)
+            shutil.copyfile(path, path.with_name("FROZEN_BASELINE_RESULT.json"))
+            attempts, telemetry = _run_side(base, arguments, document)
+            merged = merge_frozen_baseline(document, attempts)
             telemetry["baseline_bytes_sha256"] = frozen_sha
             telemetry["baseline_descriptor_payload_sha256"] = sha256_bytes(
                 json.dumps(
@@ -340,25 +387,30 @@ def install_result_seam(base, arguments) -> Callable[..., object]:
                 ).encode()
             )
             telemetry["baseline_descriptor_prefix_immutable"] = True
-            if merged is not document:
-                merged["elapsed_wall_seconds"] = time.monotonic() - base.PROCESS_STARTED
-                merged["within_total_wall_budget"] = (
-                    merged["elapsed_wall_seconds"] <= arguments.total_seconds
-                )
-                original_write(path, merged)
+            # Telemetry is committed first.  The candidate RESULT write, when
+            # admitted, is the final possibly-throwing action; atomic failure
+            # therefore leaves the already-written baseline in place.
             original_write(path.with_name("REPAIR_B_TELEMETRY.json"), telemetry)
+            if (
+                merged is not document
+                and time.monotonic()
+                < base.PROCESS_STARTED
+                + arguments.total_seconds
+                - base.FINALIZE_RESERVE_SECONDS
+            ):
+                merged["elapsed_wall_seconds"] = time.monotonic() - base.PROCESS_STARTED
+                merged["within_total_wall_budget"] = True
+                original_write(path, merged)
         except Exception as error:
-            # The already-written baseline is the fail-closed result.  Restore
-            # exact bytes in case a future writer implementation mutates early.
-            if path.read_bytes() != frozen_bytes:
-                path.write_bytes(frozen_bytes)
-            original_write(path.with_name("REPAIR_B_TELEMETRY.json"), {
-                "schema_version": "geotarget.exp-v15-243.digs-repair-b-side/v1",
-                "status": "SIDE_EXCEPTION_BASELINE_RESTORED",
-                "exception_type": type(error).__name__,
-                "baseline_bytes_sha256": frozen_sha,
-                "truth_used": False,
-            })
+            try:
+                original_write(path.with_name("REPAIR_B_TELEMETRY.json"), {
+                    "schema_version": "geotarget.exp-v15-243.digs-repair-b-side/v1",
+                    "status": "SIDE_EXCEPTION_BASELINE_RETAINED",
+                    "exception_type": type(error).__name__,
+                    "truth_used": False,
+                })
+            except Exception:
+                pass
 
     base._plan = plan
     base.atomic_write_json = write
