@@ -1,0 +1,53 @@
+# EXP-MULTITARGET-001 experiment card
+
+## Hypothesis
+
+The frozen numerical-v15 tail can lose exact target recall when authority from
+one endpoint suppresses a same-provisional-cluster alternate or leaves too
+little explicit breadth for remaining target/configuration regions. Continuing
+after the first exact descriptor and prioritizing anonymous diversity should
+recover targets without changing canonical authority.
+
+## Mechanism and applicability
+
+- Require 28 seconds after discovery in formal 180/146 runs; allow an explicit
+  smaller minimum only for short S0.
+- Expand fresh source-replay reservoir selection from one to three seconds.
+- Reserve six seconds outside primary tranche sizing for alternate/restoration
+  work, with a three-second restoration sub-reserve after primary failure.
+- Do not suppress an alternate because authority succeeded in its provisional
+  cluster. Exact descriptor keys remain the only final deduplication authority.
+- After authority, order pending work by 50% provisional-target novelty, 25%
+  configuration novelty, and 25% residual quality.
+- Apply to every numerical-v15 run. No case, family, source hash, truth, known
+  target count, or prior benchmark outcome is used for routing.
+
+## Frozen boundaries
+
+- Parent numerical-v15 worker SHA-256:
+  `330e52c75b98d3c58a1422cec415b5a53673ebafb7e90789a271df34a308309d`.
+- Discovery worker, original-source replay, HP bridge, restoration worker,
+  descriptor authority, and canonical source replay are unmodified.
+- Deferred candidates remain unknown and no completeness claim is made.
+
+## S0 evidence
+
+- Unit/mechanism tests: 7 passed.
+- Generated deterministic panel: 100 cases / 3 families; every panel serviced
+  work after the first authority. The stop/suppress failure-model control kept
+  100 distinct exact descriptors and the candidate kept 180 (+80), with zero
+  descriptors beyond generated authority and exact duplicate dedup intact.
+- Unscored 30/20-second development smoke: frozen search completed successfully,
+  returned 9 endpoints and replay selected 3 candidates in 2 provisional
+  clusters. The tail attempted one primary, one alternate, and one restoration;
+  source bytes were unchanged and total elapsed time was 20.3814 seconds.
+- After the smoke, only dry-plan provenance fields were added; scheduling did
+  not change. The raw result records the executed scheduler digest explicitly.
+- No truth, scorer, validation, sealed, screen24, or heavy formal run was used.
+
+## Reopen/stop gate
+
+Advance only through the benchmark owner. Stop if S1 shows an extra/invalid
+descriptor, recurring exact-set loss, no post-answer activation, or work/time
+regression beyond the preregistered gate. Reopen only with a causal failure in
+tail tranche sizing, novelty ordering, or replay admission.
