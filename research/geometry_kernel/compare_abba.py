@@ -15,6 +15,7 @@ from typing import Any
 _DIGEST_FIELDS = ("input_digest", "residual_digest", "callback_digest")
 _PHASES = ("residual", "callback")
 _METRICS = ("wall_ns", "cpu_ns")
+_MAX_RUN_ORDER_DRIFT = 0.10
 
 
 def _load(path: Path) -> Mapping[str, Any]:
@@ -144,6 +145,9 @@ def compare_abba(
     all_group_ratios = [
         ratio for values in structural_groups.values() for ratio in values.values()
     ]
+    drift_ratios = {
+        key: geometric_mean(values) for key, values in sorted(drift.items())
+    }
     return {
         "schema_version": 1,
         "same_work": not mismatches,
@@ -154,9 +158,12 @@ def compare_abba(
         "aggregates": aggregates,
         "structural_group_total_ratios": dict(sorted(structural_groups.items())),
         "no_structural_group_regression": all(value <= 1.0 for value in all_group_ratios),
-        "drift_geometric_mean_ratios": {
-            key: geometric_mean(values) for key, values in sorted(drift.items())
-        },
+        "drift_geometric_mean_ratios": drift_ratios,
+        "run_order_stable": all(
+            1.0 - _MAX_RUN_ORDER_DRIFT <= value <= 1.0 + _MAX_RUN_ORDER_DRIFT
+            for value in drift_ratios.values()
+        ),
+        "maximum_accepted_run_order_drift": _MAX_RUN_ORDER_DRIFT,
         "finite_positive_ratios": all(
             math.isfinite(value) and value > 0 for value in all_group_ratios
         ),

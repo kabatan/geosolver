@@ -50,6 +50,7 @@ def test_abba_uses_geometric_pair_and_checks_same_work() -> None:
         "case_geometric_mean_ratio"
     ] == 0.5
     assert report["no_structural_group_regression"] is True
+    assert report["run_order_stable"] is True
 
 
 def test_abba_reports_digest_mismatch() -> None:
@@ -66,3 +67,14 @@ def test_abba_reports_digest_mismatch() -> None:
         "residual_digest",
         "callback_digest",
     }
+
+
+def test_abba_flags_large_run_order_drift() -> None:
+    report = compare_abba(
+        _measurement(100),
+        _measurement(100),
+        _measurement(150),
+        _measurement(150),
+    )
+
+    assert report["run_order_stable"] is False
