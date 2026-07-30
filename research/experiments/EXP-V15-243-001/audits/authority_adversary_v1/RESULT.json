@@ -1,0 +1,66 @@
+{
+  "schema": "geotarget.authority-adversary-summary/v1",
+  "scope": {
+    "cpu": 15,
+    "fixed_generated_cases_only": true,
+    "formal_dev_scorer_truth_or_real_cases_used": false,
+    "candidate_code_modified": false
+  },
+  "snapshots": {
+    "r1-nra": {
+      "commit": "0bbc3f8d45ea1c3c22f8d35dd2aa2fa0f0922e97",
+      "candidate_sha256": "7b98bdfb018d566994291ad75cb2e7f28f62adc960a784ca54d3b68b796586ff"
+    },
+    "hermite-d0": {
+      "commit": "db590f312e744d2c1c08709aeb52e893ca493785",
+      "candidate_sha256": "c0506a294f5d09fa75a5abe37942fd59038b116d58facd45cf77e8a2ff9bdbe8",
+      "verifier_sha256": "5189a3ca7b2629fd9e537499689e9b3ce8ae3048121167c612bb0bf4ac6c2c6d"
+    },
+    "reflect-exact": {
+      "commit": "a0f2edec83873bc0a3037d09660bd9a11810d915",
+      "candidate_sha256": "8c9f5b656db49344b1514b4cfcc293479d016218c05d307a6b5c108adf706fc4",
+      "worker_sha256": "4dcd978baa2070a0fe97b74c5b2668f967ab10339425b72abc3a7c75bc6974ca"
+    }
+  },
+  "runner_sha256": "b4acdbe382427aed129b59f92fe635c48d909de9467bbf10f3375eee3295b4f8",
+  "test_sha256": "ba06930839639f6f2eb0283be78fa45cb626170b8aedffa8edcfb72706c3267b",
+  "aggregate": {
+    "case_count": 54,
+    "false_authority_count": 0,
+    "candidate_false_certificate_count": 0,
+    "missed_required_positive_count": 0,
+    "out_of_subset_uncaught_exception_count": 1,
+    "elapsed_seconds": 16.1760273300024,
+    "decision": "NO_FALSE_AUTHORITY_IN_FIXED_GENERATED_SUITE"
+  },
+  "lane_status_counts": {
+    "r1-nra": {
+      "NOT_PROVED": 12,
+      "REPLAY_REJECTED": 2,
+      "TARGET_CONSTRAINED_EXACT_WITNESS_READY": 3,
+      "TRUNCATED_READY_OBJECT": 1
+    },
+    "hermite-d0": {
+      "CERTIFICATE_VERIFIED": 2,
+      "CERTIFICATE_VERIFIED_BUT_SOURCE_REPLAY_ABSENT": 1,
+      "FAIL_CLOSED": 11,
+      "FORMAL_AUTHORITY_DENIED": 1,
+      "MUTATION_REJECTED": 4
+    },
+    "reflect-exact": {
+      "EXACT_REPLAY_ACCEPTED": 1,
+      "EXACT_REPLAY_REJECTED": 1,
+      "EXACT_TARGET_AUTHORITY_READY": 2,
+      "EXACT_TARGET_AUTHORITY_REJECTED": 11,
+      "HASH_REJECTED": 1,
+      "TRUNCATED_READY_OBJECT": 1
+    }
+  },
+  "findings": [
+    "R1 exact untouched replay accepted all three required positives and rejected all fixed corruption and timeout attacks.",
+    "Hermite polynomial certificates verified for admitted examples but remain HOLD for final authority because untouched source replay and a deadline/partial-artifact contract are absent.",
+    "Hermite Boolean Or outside the stated polynomial-guard subset raises an uncaught AttributeError; the adversary boundary catches it and grants no authority.",
+    "Reflect exact replay accepted the intended point and point-line semantics, rejected wrong overload, degeneracy, guard, target, ordinal, timeout, partial-artifact, and dependency-hash attacks.",
+    "Reflect Rotate full-turn syntax is unsupported and fails closed."
+  ]
+}
