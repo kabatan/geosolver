@@ -16,3 +16,8 @@ not add a compiler or shared runner.  Run prospective breadth before any
 development-score claim.  Reopen/repair only if real endpoints exhibit large
 Newton coordinates but the hook cannot obtain a non-collinear proposal.
 
+That thin hook is now present.  A real frozen-champion smoke retained exactly
+6/8 baseline lanes, activated 5 transformed linearizations in 2 side lanes,
+returned 8/8 safe endpoints with the same 109 callbacks, and had zero invalid,
+guard-failed, or exception events.  It remains `D0`, pending benchmark-owner
+screen24/prospective breadth.
