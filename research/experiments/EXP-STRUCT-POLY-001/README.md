@@ -14,6 +14,9 @@ Run with the pinned Python/SymPy environment:
 /home/kabatan/work/solver-experiment-runtime/solver/python/.venv/bin/python \
   run_leftover_trace_smoke.py
 /home/kabatan/work/solver-experiment-runtime/solver/python/.venv/bin/python \
+  run_common_control_binding_audit.py --source /path/to/source-63fb3e.json \
+  --output /outside/repo/common-control-binding-audit
+/home/kabatan/work/solver-experiment-runtime/solver/python/.venv/bin/python \
   audit_development_formulations.py /path/to/development145.jsonl \
   development-static-audit.json
 ```
@@ -48,3 +51,13 @@ generation, source replay, one original HP slot, and finalization. Incomplete
 baseline service, no leftover slot, or any side failure returns the exact
 original baseline result object. Side candidates use a separate invocation of
 the original source replay and HP service after the completion gate.
+
+The v2 entrypoint explicitly seals the registered common control
+`repro_20260722/workers/champion_v2_poc_preloaded.py` at SHA-256
+`e1405739...7301`; it does not bind the finalist numeric worker directly. Its
+loaded-module audit also seals the PointOnCircle champion-v2/v1 wrappers, their
+periodic HP bridge/manifest, the original champion-v2/v1 layers, and the
+precision-runtime preload. The registered non-applicable source `63fb3e...`
+matched direct control dry PLAN/stdout/stderr bytes and execution
+stdout/stderr. Its RESULT documents were equal after excluding only the
+nondeterministic `elapsed_wall_seconds`; no v2 telemetry was created.

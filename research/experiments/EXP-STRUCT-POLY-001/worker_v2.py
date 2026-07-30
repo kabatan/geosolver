@@ -46,6 +46,56 @@ def _load_v1_worker():
 
 
 V1 = _load_v1_worker()
+COMMON_CONTROL = (
+    V1.FROZEN_ROOT
+    / "research/experiments/EXP-V15-243-001/repro_20260722/workers/"
+    "champion_v2_poc_preloaded.py"
+)
+EXPECTED_COMMON_CONTROL_SHA256 = (
+    "e1405739201b0cb1d72e8f9ab6ca402b5e71918e569888993c4fdd13022c7301"
+)
+EXPECTED_COMMON_CONTROL_LAYERS = {
+    "precision_runtime_preload.py": (
+        V1.FROZEN_ROOT
+        / "research/experiments/EXP-V15-243-001/repro_20260722/workers/"
+        "precision_runtime_preload.py",
+        "1139fa3ae5f4805b4791bc3f99fb6dd89b38f0cdc778c29871eb7d3469e3c403",
+    ),
+    "point_on_circle/champion_v2_wrapper.py": (
+        V1.FROZEN_ROOT
+        / "research/experiments/EXP-V15-243-001/candidates/"
+        "point_on_circle_periodic_semantics/champion_v2_wrapper.py",
+        "0fc41efe21ab029e74ab8c3112d42271057d4dfeb808b52fea11500c2ae7003d",
+    ),
+    "point_on_circle/champion_v1_wrapper.py": (
+        V1.FROZEN_ROOT
+        / "research/experiments/EXP-V15-243-001/candidates/"
+        "point_on_circle_periodic_semantics/champion_v1_wrapper.py",
+        "022bd5363adc5df51ff0e9c44d82dbced9f830dd9ea3271f0e4af26cf05e3d9c",
+    ),
+    "point_on_circle/approved_hp_bridge_v5.py": (
+        V1.FROZEN_ROOT
+        / "research/experiments/EXP-V15-243-001/candidates/"
+        "point_on_circle_periodic_semantics/approved_hp_bridge_v5.py",
+        "812f7a2d761e7fe19c3991b9fcdffa5adb9d859aa36b034f7bfddaf201afb40f",
+    ),
+    "point_on_circle/champion_closure_manifest.py": (
+        V1.FROZEN_ROOT
+        / "research/experiments/EXP-V15-243-001/candidates/"
+        "point_on_circle_periodic_semantics/champion_closure_manifest.py",
+        "0e7910f33594ac600e85f964ca182e3bbc6835ca9a44a39db40d877e957542d5",
+    ),
+    "champion_v2/worker.py": (
+        V1.FROZEN_ROOT
+        / "research/experiments/EXP-V15-243-001/champion_v2/worker.py",
+        "241128047481cc8a428ff99dcb9d840cbc2ade3e87ddb564bb1a920fe10346ca",
+    ),
+    "champion_v1/worker.py": (
+        V1.FROZEN_ROOT
+        / "research/experiments/EXP-V15-243-001/champion_v1/worker.py",
+        "9189a7e2c64a51c70a1cc41cca44ed35c561058c2ffc82d962410d8b913d3e14",
+    ),
+}
 
 
 def _sha256(payload: bytes) -> str:
@@ -71,10 +121,17 @@ def _closure_hash() -> str:
 
 
 def _verify_closure() -> None:
-    if not V1.FROZEN_PYTHON.is_file() or not V1.FROZEN_WORKER.is_file():
+    if not V1.FROZEN_PYTHON.is_file() or not COMMON_CONTROL.is_file():
         raise RuntimeError("frozen full-v15 champion closure is unavailable")
-    if _sha256(V1.FROZEN_WORKER.read_bytes()) != V1.EXPECTED_FROZEN_WORKER_SHA256:
-        raise RuntimeError("frozen full-v15 champion digest changed")
+    if V1.FROZEN_WORKER.resolve() != COMMON_CONTROL.resolve():
+        raise RuntimeError("v2 is not bound to the registered common control")
+    if V1.EXPECTED_FROZEN_WORKER_SHA256 != EXPECTED_COMMON_CONTROL_SHA256:
+        raise RuntimeError("v1 and v2 disagree on the common-control digest")
+    if _sha256(COMMON_CONTROL.read_bytes()) != EXPECTED_COMMON_CONTROL_SHA256:
+        raise RuntimeError("registered common-control digest changed")
+    for name, (path, expected) in EXPECTED_COMMON_CONTROL_LAYERS.items():
+        if not path.is_file() or _sha256(path.read_bytes()) != expected:
+            raise RuntimeError(f"common-control periodic layer changed: {name}")
     dependencies = {
         "block_structure.py": HERE.parent / "EXP-STRUCT-001/block_structure.py",
         "polynomial_side_route.py": HERE.parent / "EXP-POLY-001/polynomial_side_route.py",
@@ -129,6 +186,30 @@ def _proposal_factory(document, starts, generation_budget):
 def install_full_v15_v2(document: Mapping[str, object]):
     _verify_closure()
     frozen = V1._load_frozen()
+    loaded_layers = {
+        "preloaded": Path(frozen.__file__).resolve(),
+        "point_on_circle_v2": Path(frozen.CHAMPION.__file__).resolve(),
+        "point_on_circle_v1": Path(frozen.CHAMPION.V1.__file__).resolve(),
+        "original_v2": Path(frozen.CHAMPION.ORIGINAL_V2.__file__).resolve(),
+        "original_v1": Path(frozen.CHAMPION.V1.ORIGINAL_V1.__file__).resolve(),
+    }
+    expected_layers = {
+        "preloaded": COMMON_CONTROL.resolve(),
+        "point_on_circle_v2": EXPECTED_COMMON_CONTROL_LAYERS[
+            "point_on_circle/champion_v2_wrapper.py"
+        ][0].resolve(),
+        "point_on_circle_v1": EXPECTED_COMMON_CONTROL_LAYERS[
+            "point_on_circle/champion_v1_wrapper.py"
+        ][0].resolve(),
+        "original_v2": EXPECTED_COMMON_CONTROL_LAYERS[
+            "champion_v2/worker.py"
+        ][0].resolve(),
+        "original_v1": EXPECTED_COMMON_CONTROL_LAYERS[
+            "champion_v1/worker.py"
+        ][0].resolve(),
+    }
+    if loaded_layers != expected_layers:
+        raise RuntimeError("loaded common-control layer graph changed")
     audit = install_leftover_only(
         frozen.CHAMPION,
         proposal_factory=_proposal_factory,
