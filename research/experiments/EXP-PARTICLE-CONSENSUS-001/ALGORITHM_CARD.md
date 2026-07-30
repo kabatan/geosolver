@@ -1,6 +1,7 @@
 # EXP-PARTICLE-CONSENSUS-001 — equality-forced few-particle consensus
 
-Status: `D0_PASS_GENERATED`; runner-compatible full worker is connected for D1.
+Status: `D0_PASS_GENERATED`; start-replacement D1 rejected; surplus-only Repair A
+is source-smoke complete and awaits root-owned formal D1.
 
 Hypothesis: an 8-particle, 25%-budget side lane can reach disconnected roots
 that ordinary consensus misses by combining Gibbs consensus with a stiff force
@@ -55,3 +56,24 @@ activation, deadline fallback, and fully opaque fallback. Every run completed,
 retained unchanged source bytes, used no truth/scorer, and made no completeness
 claim. This is connection evidence only; formal D1 remains owned by the root
 benchmark agent. Details: `SOURCE_ONLY_FULL_SMOKE.json` and `arm.json`.
+
+Start-replacement D1 disposition: the root-owned screen24 measured current
+adaptive `15/24` versus replacement particle `12/24` (wins 1, losses 4), with
+no false/extra/crash. Replacement is rejected; this is not evidence against a
+leftover-only independent tail because it had displaced the stronger discovery
+prefix.
+
+Repair A: `tail_full_wrapper.py` first runs the exact current-adaptive arm
+through search, reservoir, HP, and final descriptor mapping. Only real remaining
+callback and wall budget may launch particle discovery into a separate output;
+only fresh canonical-replayed endpoints enter the same HP authority. Search
+endpoints are never unioned or reclustered. Novel authoritative descriptors are
+copy-on-write appended after the byte-equivalent baseline descriptor prefix.
+No surplus, no novelty, or any tail exception leaves the baseline result bytes
+untouched. A final-hash source-only smoke activated 1506 particle callbacks and
+10 endpoints after baseline used zero callbacks, then added one novel descriptor
+accepted by the unchanged authority (`0 -> 1`) in 5.87 seconds. A callback-cap
+no-surplus run created no tail directory; direct no-surplus and injected-error
+checks preserved exact baseline bytes. No truth/scorer was read and no target-set
+completeness is claimed. Formal truth-isolated D1 remains with the root owner.
+Details: `TAIL_REPAIR_A_SOURCE_SMOKE.json` and `arm.json`.
