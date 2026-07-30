@@ -46,3 +46,19 @@ perfect and either wall/CPU improves materially or the staged route raises root
 capture. Kill unconditional staged evaluation if its observed callback overhead
 dominates factorization savings; retain the detector for sparse/AD or block
 Jacobian factorization experiments.
+
+## Frozen champion integration seam
+
+The second prototype commit adds `worker.py`, `champion_overlay.py`, and the
+common `arm.json`. An applicable dry run verifies the frozen champion closure,
+retains all baseline starts, and seals the intended injection point immediately
+before the original `_fresh_replay_candidates` source replay. Unit tests pass a
+generated block endpoint through a fake original replay and prove that the
+overlay itself cannot accept it. A non-applicable dry fixture produced exactly
+the same 155,729 PLAN bytes and stdout as direct frozen-champion execution.
+
+Applicable execution remains disabled: the pure-Python S0 block solver incurred
+11.1% more full residual evaluations, so binding it to the formal worker before
+callback/wall admission would turn a structural signal into an unqualified
+algorithm change. The adapter is integration-ready once a concrete proposal
+factory meets that gate; no heavy screen was run here.
