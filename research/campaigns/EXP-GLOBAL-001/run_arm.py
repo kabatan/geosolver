@@ -215,6 +215,15 @@ def select_partition(
         return list(ordered_rows)
     document = load_json(screen_manifest)
     screens = document.get("screens") if isinstance(document, Mapping) else None
+    if partition == "development-extra":
+        screen60 = screens.get("screen60") if isinstance(screens, Mapping) else None
+        screen60_ids = screen60.get("case_ids") if isinstance(screen60, Mapping) else None
+        if not isinstance(screen60_ids, list) or not all(
+            isinstance(value, str) for value in screen60_ids
+        ):
+            raise ValueError("frozen screen60 manifest is malformed")
+        excluded = set(screen60_ids)
+        return [row for row in ordered_rows if str(row["problem_id"]) not in excluded]
     manifest_partition = "screen60" if partition == "screen60-extra" else partition
     selected = screens.get(manifest_partition) if isinstance(screens, Mapping) else None
     case_ids = selected.get("case_ids") if isinstance(selected, Mapping) else None
@@ -358,7 +367,13 @@ def main() -> int:
     parser.add_argument("--arm", required=True, type=Path)
     parser.add_argument(
         "--partition",
-        choices=("screen24", "screen60", "screen60-extra", "development"),
+        choices=(
+            "screen24",
+            "screen60",
+            "screen60-extra",
+            "development-extra",
+            "development",
+        ),
         default="screen24",
     )
     parser.add_argument("--dataset", type=Path, default=DEFAULT_DATASET)

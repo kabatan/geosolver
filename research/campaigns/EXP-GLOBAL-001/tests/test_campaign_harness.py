@@ -74,15 +74,24 @@ class CampaignHarnessTests(unittest.TestCase):
         screen60_extra = RUN.select_partition(
             ordered, "screen60-extra", self.screen_manifest
         )
+        development_extra = RUN.select_partition(
+            ordered, "development-extra", self.screen_manifest
+        )
         self.assertEqual(len(screen24), 24)
         self.assertEqual(len(screen60), 60)
         self.assertEqual(len(screen60_extra), 36)
+        self.assertEqual(len(development_extra), 85)
         ids24 = {row["problem_id"] for row in screen24}
         ids60 = {row["problem_id"] for row in screen60}
         ids60_extra = {row["problem_id"] for row in screen60_extra}
+        ids_development_extra = {row["problem_id"] for row in development_extra}
         self.assertLessEqual(ids24, ids60)
         self.assertFalse(ids24 & ids60_extra)
         self.assertEqual(ids60, ids24 | ids60_extra)
+        self.assertFalse(ids60 & ids_development_extra)
+        self.assertEqual(
+            {row["problem_id"] for row in ordered}, ids60 | ids_development_extra
+        )
 
     def test_telemetry_drops_exact_values(self) -> None:
         extracted = RUN.scalar_telemetry(
