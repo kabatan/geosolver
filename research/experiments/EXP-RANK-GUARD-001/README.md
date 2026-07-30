@@ -32,6 +32,19 @@ No problem ID, family ID, target, primitive or Gold value enters a candidate
 interface.  Generated truth is joined only after candidate return.  Do not run
 this experiment against validation or sealed inputs.
 
+## Full-v15 S1 arms
+
+- `arms/charted-weak-proposal/arm.json` is the active proposal-only arm.
+- `arms/adapted-cpqr-proposal/arm.json` is deliberately fail-closed and runs the
+  unchanged frozen champion while recording the missing arbitrary-precision
+  proposal callback as a plan blocker.
+
+Each `entrypoint` is relative to its manifest, each manifest's
+`mechanism_hash` is the SHA-256 of the entrypoint bytes.  The overlay files and
+frozen champion entrypoint are hash-bound by their loaders; the frozen
+entrypoint retains its existing closure checks.  The root benchmark owner, not
+this experiment lane, owns formal S1 scoring.
+
 ## S0
 
 From the repository root:
@@ -58,3 +71,12 @@ python3 research/experiments/EXP-RANK-GUARD-001/conformance_adapter.py \
   --output /tmp/exp-rank-guard-conformance.json
 ```
 
+The Python S1 seam checks are development/source-only and can be run with the
+frozen Python environment:
+
+```bash
+GEOTARGET_FROZEN_SOLVER_ROOT=/home/kabatan/work/solver-experiment-runtime/solver \
+  /home/kabatan/work/solver/.venv/bin/python -m unittest discover \
+  -s research/experiments/EXP-RANK-GUARD-001/test \
+  -p 'test_s1_overlay.py' -v
+```
