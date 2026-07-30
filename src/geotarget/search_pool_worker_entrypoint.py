@@ -32,7 +32,10 @@ from geotarget.compiled_evaluator import (  # noqa: E402
     compile_residual_plan,
     precompute_constant_constructions,
 )
-from geotarget.fused_evaluation import install_fused_evaluation  # noqa: E402
+from geotarget.fused_evaluation import (  # noqa: E402
+    install_compiled_callback_snapshot,
+    install_fused_evaluation,
+)
 
 SEARCH_ARM = "precision_isolated_retained_then_strict_nearroot_restart_direct_broyden_ruiz_tr_lm"
 
@@ -96,6 +99,11 @@ def _activate_compiled_evaluator(
     callback_snapshot = compile_callback_snapshot(evaluator)
     evaluator.compiled_callback_snapshot = callback_snapshot
     budget.evaluator = evaluator
+    snapshot_dispatch = (
+        install_compiled_callback_snapshot(budget, callback_snapshot)
+        if callback_snapshot is not None
+        else None
+    )
     return evaluator, {
         **compilation.plan.metadata(),
         "enabled": True,
@@ -105,7 +113,7 @@ def _activate_compiled_evaluator(
         "constant_constructions": list(constant_result.precomputed_names),
         "constant_dependency_sha256": constant_result.dependency_sha256,
         "compiled_callback_snapshot": (
-            callback_snapshot.metadata()
+            {**callback_snapshot.metadata(), "dispatch": snapshot_dispatch}
             if callback_snapshot is not None
             else {
                 "enabled": False,

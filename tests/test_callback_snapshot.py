@@ -13,6 +13,7 @@ from geotarget.callback_snapshot import compile_callback_snapshot
 from geotarget.compiled_evaluator import CompiledResidualEvaluator, compile_residual_plan
 from geotarget.continuation import _load_frozen
 from geotarget.fused_evaluation import install_fused_evaluation
+from geotarget.search_pool_worker_entrypoint import _activate_compiled_evaluator
 
 PROBLEM = {
     "task": "solve",
@@ -115,3 +116,36 @@ def test_snapshot_admission_is_invariant_under_problem_rename() -> None:
         assert snapshot is not None
         metadata.append(snapshot.metadata()["support_key_sha256"])
     assert metadata[0] == metadata[1]
+
+
+def test_snapshot_dispatch_specializes_only_admitted_budget_instances() -> None:
+    runtime = _runtime("geotarget_callback_snapshot_dispatch_runtime")
+    _case, admitted_budget, admitted_reference = _build(runtime, copy.deepcopy(PROBLEM))
+    base_class = type(admitted_budget)
+    _evaluator, admitted_metadata = _activate_compiled_evaluator(
+        admitted_reference,
+        admitted_budget,
+        source_sha256="e" * 64,
+    )
+    assert type(admitted_budget) is not base_class
+    assert issubclass(type(admitted_budget), base_class)
+    assert admitted_metadata["compiled_callback_snapshot"]["dispatch"]["enabled"] is True
+
+    periodic = copy.deepcopy(PROBLEM)
+    periodic["variables"] = {"names": ["t"]}
+    periodic["construction"] = [
+        {"name": "O", "expr": "Point(0, 0)"},
+        {"name": "gamma", "expr": "Circle(O, 2)"},
+        {"name": "P", "expr": "PointOnCircle(gamma, t)"},
+    ]
+    periodic["constraints"] = [{"def": "Distance(O, P)", "value": 2}]
+    periodic["guards"] = []
+    periodic["answer"] = "Distance(O, P)"
+    _case, fallback_budget, fallback_reference = _build(runtime, periodic)
+    _evaluator, fallback_metadata = _activate_compiled_evaluator(
+        fallback_reference,
+        fallback_budget,
+        source_sha256="f" * 64,
+    )
+    assert type(fallback_budget) is base_class
+    assert fallback_metadata["compiled_callback_snapshot"]["enabled"] is False
