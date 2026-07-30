@@ -17,7 +17,7 @@ import json
 import math
 import sys
 import threading
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 from mpmath.libmp.libelefun import mpf_acos, mpf_atan, mpf_atan2, mpf_cos, mpf_pi, mpf_sin
@@ -1295,6 +1295,21 @@ class _RawNode:
     payload: Any
 
 
+class _RawBuffers:
+    """Per-thread value slots with generation stamps for callback isolation."""
+
+    __slots__ = ("generation", "stamps", "values")
+
+    def __init__(self, size: int) -> None:
+        self.generation = 0
+        self.stamps: list[int] = [0] * size
+        self.values: list[Any] = [None] * size
+
+    def begin_callback(self) -> int:
+        self.generation += 1
+        return self.generation
+
+
 @dataclass(frozen=True, slots=True)
 class RawLibmpProgram:
     """Identity-free executable raw-libmp residual program."""
@@ -1303,8 +1318,23 @@ class RawLibmpProgram:
     nodes: tuple[_RawNode, ...]
     construction_roots: tuple[int, ...]
     constraint_roots: tuple[tuple[int, int], ...]
+    construction_schedule: tuple[int, ...]
+    constraint_schedules: tuple[tuple[tuple[int, ...], tuple[int, ...]], ...]
     semantic_abi: str = RAW_LIBMP_ABI
     periodic_deep_constraint_sides: tuple[tuple[bool, bool], ...] = ()
+    _thread_local: threading.local = field(
+        default_factory=threading.local,
+        init=False,
+        repr=False,
+        compare=False,
+    )
+
+    def _buffers(self) -> _RawBuffers:
+        buffers = getattr(self._thread_local, "buffers", None)
+        if buffers is None:
+            buffers = _RawBuffers(len(self.nodes))
+            self._thread_local.buffers = buffers
+        return buffers
 
     def metadata(self) -> dict[str, Any]:
         opcodes = sorted({node.opcode for node in self.nodes})
@@ -1323,28 +1353,34 @@ class RawLibmpProgram:
             "corpus_metadata_read": False,
             "native_libm": False,
             "fastmath": False,
+            "recursive_callback_dispatch": False,
+            "scratch_isolation": "thread_local_generation_stamped",
             "numeric_backend": "mpmath.libmp binary53 round_nearest",
         }
 
     def evaluate(self, raw_values: list[float]) -> list[float]:
         if len(raw_values) != len(self.variable_names):
             raise ValueError("raw libmp evaluator dimension mismatch")
-        # One thread-local hash-cons table is reused as a preallocated logical
-        # slot map for this callback.  Replacing it here prevents provenance
-        # or values from leaking between optimizer starts/problems.
-        _DEFERRED_STATE.cache = {}
-        memo: list[Any] = [_MISSING] * len(self.nodes)
+        # Clear the per-thread hash-cons table without allocating another dict.
+        # Generation-stamped value slots make prior callback values invisible.
+        deferred_cache = getattr(_DEFERRED_STATE, "cache", None)
+        if deferred_cache is None:
+            deferred_cache = {}
+            _DEFERRED_STATE.cache = deferred_cache
+        else:
+            deferred_cache.clear()
+        buffers = self._buffers()
+        generation = buffers.begin_callback()
+        memo = buffers.values
+        stamps = buffers.stamps
 
-        def evaluate_node(index: int) -> Any:
-            cached = memo[index]
-            if cached is not _MISSING:
-                return cached
+        def execute_node(index: int) -> None:
             node = self.nodes[index]
             op = node.opcode
             # Leaves account for a substantial fraction of a typed DAG.  Do
             # not allocate their generator/argument tuple on every optimizer
             # callback.
-            args = tuple(evaluate_node(child) for child in node.operands) if node.operands else ()
+            args = tuple(memo[child] for child in node.operands) if node.operands else ()
             if op == "ExactInt":
                 result: Any = int(node.payload)
             elif op == "BF53Literal":
@@ -1667,17 +1703,25 @@ class RawLibmpProgram:
             else:  # pragma: no cover - compiler/runtime invariant
                 raise RawLibmpRuntimeFault(f"unknown raw opcode: {op}")
             memo[index] = result
-            return result
+            stamps[index] = generation
+
+        def execute_schedule(schedule: tuple[int, ...]) -> None:
+            for index in schedule:
+                if stamps[index] != generation:
+                    execute_node(index)
 
         try:
-            for root in self.construction_roots:
-                evaluate_node(root)
+            execute_schedule(self.construction_schedule)
         except Exception:
             return [float("nan")] * len(self.constraint_roots)
         residuals: list[float] = []
         for constraint_ordinal, (left, right) in enumerate(self.constraint_roots):
             try:
-                left_value, right_value = evaluate_node(left), evaluate_node(right)
+                left_schedule, right_schedule = self.constraint_schedules[constraint_ordinal]
+                execute_schedule(left_schedule)
+                left_value = memo[left]
+                execute_schedule(right_schedule)
+                right_value = memo[right]
                 deep_sides = (
                     self.periodic_deep_constraint_sides[constraint_ordinal]
                     if constraint_ordinal < len(self.periodic_deep_constraint_sides)
@@ -2204,6 +2248,28 @@ def compile_raw_libmp_program(program: TypedRefNumProgram) -> RawLibmpProgram:
     constraint_roots = tuple(
         (compile_node(left), compile_node(right)) for left, right in program.constraints
     )
+
+    def dependency_schedule(roots: tuple[int, ...]) -> tuple[int, ...]:
+        required: set[int] = set()
+
+        def require(index: int) -> None:
+            if index in required:
+                return
+            for child in nodes[index].operands:
+                require(child)
+            required.add(index)
+
+        for root in roots:
+            require(root)
+        # compile_node appends every child before its consumer, so the stable
+        # node index is already a topological instruction order.
+        return tuple(sorted(required))
+
+    construction_schedule = dependency_schedule(construction_roots)
+    constraint_schedules = tuple(
+        ((dependency_schedule((left,))), dependency_schedule((right,)))
+        for left, right in constraint_roots
+    )
     periodic_deep_constraint_sides = tuple(
         (contains_periodic_deep(left), contains_periodic_deep(right))
         for left, right in program.constraints
@@ -2213,6 +2279,8 @@ def compile_raw_libmp_program(program: TypedRefNumProgram) -> RawLibmpProgram:
         nodes=tuple(nodes),
         construction_roots=construction_roots,
         constraint_roots=constraint_roots,
+        construction_schedule=construction_schedule,
+        constraint_schedules=constraint_schedules,
         periodic_deep_constraint_sides=periodic_deep_constraint_sides,
     )
 
