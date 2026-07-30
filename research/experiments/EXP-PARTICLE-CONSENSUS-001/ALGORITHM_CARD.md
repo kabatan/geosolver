@@ -41,3 +41,9 @@ Initial fixed-consensus discretization tied 200→200. Repair A made the final
 seven steps an equality-only increasing-stiffness implicit rung, removing the
 off-manifold consensus bias; this changed the discretization, not a case
 threshold, radius, or seed. Aggregate: `D0_AGGREGATE.json`.
+
+Thin real seam: `real_search_worker.py` replaces only ordinal-mod-4 starts;
+the other 75% are asserted bit-identical. A source-only smoke activated one
+4-particle group (307 charged callbacks), served 16/16 starts, and fresh-replayed
+5 safe endpoints with no truth/scorer access. Fully opaque/parity-failed
+systems use the exact original prefix. Details: `REAL_CONNECTION.json`.
