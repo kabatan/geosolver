@@ -32,14 +32,34 @@ def test_adapter_exposes_only_common_control_and_hybrid() -> None:
     ] is False
 
 
-def test_full_wrapper_changes_only_declared_search_seam(monkeypatch) -> None:
+def test_full_wrapper_noop_is_exact_common_control() -> None:
     wrapper = _load("test_adaptive_hybrid_full_wrapper", HERE / "full_wrapper.py")
     frozen_root = Path("/home/kabatan/work/solver-experiment-runtime/solver")
-    original = wrapper._load_frozen(frozen_root)
+    control = wrapper.configure(frozen_root=frozen_root, enable_hybrid=False)
+    wrapper._verify_control_stack(control)
+    base = control.CHAMPION.BASE
+    assert hashlib.sha256(
+        (frozen_root / wrapper.CONTROL_ENTRYPOINT_RELATIVE).read_bytes()
+    ).hexdigest() == wrapper.EXPECTED_CONTROL_ENTRYPOINT_SHA256
+    assert base.SEARCH_ARM == (
+        "precision_isolated_retained_then_strict_nearroot_restart_direct_broyden_ruiz_tr_lm"
+    )
+    assert hashlib.sha256(Path(base.SEARCH_WORKER).read_bytes()).hexdigest() == (
+        wrapper.EXPECTED_CONTROL_CLOSURE_SHA256["baseline_search_worker"]
+    )
+
+
+def test_full_wrapper_changes_only_declared_search_seam(monkeypatch) -> None:
+    wrapper = _load("test_adaptive_hybrid_full_wrapper_rebind", HERE / "full_wrapper.py")
+    frozen_root = Path("/home/kabatan/work/solver-experiment-runtime/solver")
+    control = wrapper._load_control(frozen_root)
+    wrapper._verify_control_stack(control)
+    original = control.CHAMPION.BASE
     authority = {
         name: getattr(original, name)
         for name in (
             "SCHEMA",
+            "PYTHON",
             "HP_BRIDGE",
             "PRECISION_RUNTIME",
             "RESTORATION_WORKER",
@@ -50,19 +70,36 @@ def test_full_wrapper_changes_only_declared_search_seam(monkeypatch) -> None:
             "_fresh_replay_candidates",
             "_run_hp_candidate",
             "_run_restoration_candidate",
+            "_load_module",
+            "_plan",
+            "_service_candidates",
         )
     }
-    monkeypatch.setattr(wrapper, "_load_frozen", lambda _root: original)
+    champion_authority = {
+        "control_main": control.main,
+        "champion": control.CHAMPION,
+        "original_v2": control.CHAMPION.ORIGINAL_V2,
+        "periodic_v1": control.CHAMPION.V1,
+        "zero": control.CHAMPION.ZERO,
+    }
+    monkeypatch.setattr(wrapper, "_load_control", lambda _root: control)
     configured = wrapper.configure(
         frozen_root=frozen_root,
-        python=Path("/home/kabatan/work/solver/.venv/bin/python"),
+        enable_hybrid=True,
     )
-    assert configured.SEARCH_ARM == "progressive_adaptive_hybrid_64_600"
-    assert configured.SEARCH_WORKER == HERE / "search_worker.py"
-    assert configured.SEARCH_ADAPTER == HERE / "search_adapter.py"
-    assert configured.SEARCH_CANDIDATE == HERE / "candidate.py"
+    assert configured is control
+    base = configured.CHAMPION.BASE
+    assert base.SEARCH_ARM == "progressive_adaptive_hybrid_64_600"
+    assert base.SEARCH_WORKER == HERE / "search_worker.py"
+    assert base.SEARCH_ADAPTER == HERE / "search_adapter.py"
+    assert base.SEARCH_CANDIDATE == HERE / "candidate.py"
     for name, value in authority.items():
-        assert getattr(configured, name) is value
+        assert getattr(base, name) is value
+    assert configured.main is champion_authority["control_main"]
+    assert configured.CHAMPION is champion_authority["champion"]
+    assert configured.CHAMPION.ORIGINAL_V2 is champion_authority["original_v2"]
+    assert configured.CHAMPION.V1 is champion_authority["periodic_v1"]
+    assert configured.CHAMPION.ZERO is champion_authority["zero"]
 
 
 def test_arm_contract_and_transitive_hash_binding() -> None:
@@ -81,13 +118,16 @@ def test_arm_contract_and_transitive_hash_binding() -> None:
     assert wrapper_hash in resolved.read_text()
 
 
-def test_smoke_and_s0_evidence_bind_current_candidate_and_entrypoint() -> None:
+def test_current_control_audit_and_s0_bind_candidate_and_entrypoint() -> None:
     candidate_sha = hashlib.sha256((HERE / "candidate.py").read_bytes()).hexdigest()
     entrypoint_sha = hashlib.sha256((HERE / "full_worker.py").read_bytes()).hexdigest()
     s0 = json.loads((HERE / "S0_EVIDENCE.json").read_text())
-    smoke = json.loads((HERE / "FULL_BINDING_SMOKE.json").read_text())
+    audit = json.loads((HERE / "CONTROL_STACK_AUDIT.json").read_text())
     assert s0["candidate_sha256"] == candidate_sha
-    assert smoke["candidate_sha256"] == candidate_sha
-    assert smoke["entrypoint_sha256"] == entrypoint_sha
-    assert smoke["formal_screen_executed"] is False
-    assert smoke["scorer_used"] is False
+    assert audit["candidate_sha256"] == candidate_sha
+    assert audit["entrypoint_sha256"] == entrypoint_sha
+    assert audit["verdict"] == "PASS_EXACT_CONTROL_STACK_REBOUND"
+    assert all(row["semantic_result_equal"] for row in audit["noop_runs"])
+    assert audit["formal_screen_executed"] is False
+    assert audit["scorer_used"] is False
+    assert audit["benchmark_truth_used"] is False
