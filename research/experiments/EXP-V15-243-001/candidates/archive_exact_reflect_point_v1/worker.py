@@ -13,6 +13,8 @@ HERE = Path(__file__).resolve().parent
 ARCHIVE_WORKER = HERE.parent / "archive_champion_v2_poc_exact_outer_v1/worker.py"
 PRIVATE_CANDIDATE = HERE / "private_candidate.py"
 PRIVATE_FALLBACK = HERE / "private_fallback_worker.py"
+CONTAINED_LIFECYCLE = HERE / "contained_lifecycle.py"
+SITECUSTOMIZE = HERE / "sitecustomize.py"
 EXPECTED_ARCHIVE_WORKER_SHA256 = (
     "4c128a0e83e0cfbe959a97d4673f8e0f6a1e39ad4c336c2f31625fc6b0e4b715"
 )
@@ -21,6 +23,12 @@ EXPECTED_PRIVATE_CANDIDATE_SHA256 = (
 )
 EXPECTED_PRIVATE_FALLBACK_SHA256 = (
     "dfefce57bebe685728cb86770519730f187f378e460ccaff9469ba189b2998d2"
+)
+EXPECTED_CONTAINED_LIFECYCLE_SHA256 = (
+    "9fa8e50d6f030cf6c673eed4e065d24c8937cea655163789dee8fe9b48eae862"
+)
+EXPECTED_SITECUSTOMIZE_SHA256 = (
+    "de3cc49c1fbb525072992af657a3823c05da1774dfefb9e5b7cafdceb7d3aca7"
 )
 
 
@@ -47,11 +55,15 @@ def _verify_private_files() -> dict[str, str]:
         str(ARCHIVE_WORKER): _sha256(ARCHIVE_WORKER),
         str(PRIVATE_CANDIDATE): _sha256(PRIVATE_CANDIDATE),
         str(PRIVATE_FALLBACK): _sha256(PRIVATE_FALLBACK),
+        str(CONTAINED_LIFECYCLE): _sha256(CONTAINED_LIFECYCLE),
+        str(SITECUSTOMIZE): _sha256(SITECUSTOMIZE),
     }
     expected = {
         str(ARCHIVE_WORKER): EXPECTED_ARCHIVE_WORKER_SHA256,
         str(PRIVATE_CANDIDATE): EXPECTED_PRIVATE_CANDIDATE_SHA256,
         str(PRIVATE_FALLBACK): EXPECTED_PRIVATE_FALLBACK_SHA256,
+        str(CONTAINED_LIFECYCLE): EXPECTED_CONTAINED_LIFECYCLE_SHA256,
+        str(SITECUSTOMIZE): EXPECTED_SITECUSTOMIZE_SHA256,
     }
     if observed != expected:
         raise IntegrationError("archive/private reflect dependency changed")
@@ -60,11 +72,16 @@ def _verify_private_files() -> dict[str, str]:
 
 _verify_private_files()
 ARCHIVE = _load("geotarget_archive_exact_reflect_point_archive", ARCHIVE_WORKER)
+LIFECYCLE = _load(
+    "geotarget_archive_exact_reflect_point_contained_lifecycle",
+    CONTAINED_LIFECYCLE,
+)
 OUTER = ARCHIVE.OUTER
 BASE = ARCHIVE.BASE
 SCHEDULER = ARCHIVE.SCHEDULER
 ZERO = ARCHIVE.ZERO
 V1 = ARCHIVE.V1
+LIFECYCLE.install(BASE)
 
 # Candidate-private substitution only.  The original decorator consults these
 # globals dynamically for child launch, hash closure, and freeze verification.
@@ -96,6 +113,8 @@ def _assert_binding() -> None:
         raise IntegrationError("private exact candidate binding changed")
     if OUTER.EXACT_WORKER != PRIVATE_FALLBACK:
         raise IntegrationError("private fallback binding changed")
+    if BASE.run_guarded is not LIFECYCLE.contained_run_guarded:
+        raise IntegrationError("candidate-private child containment changed")
 
 
 def _reflect_ledger() -> dict[str, object]:
@@ -106,6 +125,8 @@ def _reflect_ledger() -> dict[str, object]:
         "exact_reflect_point_branch_or_guard_added": False,
         "exact_reflect_point_wrong_types_fail_closed": True,
         "exact_reflect_point_other_exact_authority_changed": False,
+        "historical_search_and_hp_children_same_group_contained": True,
+        "historical_child_lifecycle": LIFECYCLE.manifest(),
         "exact_reflect_point_private_file_sha256": _verify_private_files(),
         "case_family_truth_target_count_or_outcome_routing": False,
     }
@@ -132,6 +153,7 @@ SCHEDULER.HISTORICAL.CHAMPION.ORIGINAL_V2._plan = _zero_plan
 
 def main() -> None:
     _assert_binding()
+    LIFECYCLE.arm_formal_root()
     ARCHIVE.main()
 
 

@@ -9,6 +9,7 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import time
 import uuid
 
 import pytest
@@ -19,6 +20,7 @@ PRIVATE = HERE / "private_candidate.py"
 FALLBACK = HERE / "private_fallback_worker.py"
 WORKER = HERE / "worker.py"
 ARM = HERE / "arm.json"
+CONTAINED = HERE / "contained_lifecycle.py"
 JULIA = "/home/kabatan/.juliaup/bin/julia"
 JULIA_PROJECT = Path(
     "/home/kabatan/work/solver-experiment-runtime/solver/research/experiments/"
@@ -305,6 +307,83 @@ def test_private_fallback_binds_only_private_certifier() -> None:
     fallback = _load(f"reflect_fallback_test_{uuid.uuid4().hex}", FALLBACK)
     assert fallback.ORIGINAL.certify_exact_coordinate_witness is fallback.PRIVATE.certify_exact_coordinate_witness
     assert fallback.verify_dependencies()
+
+
+def test_candidate_private_formal_guard_is_quiet(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    sys.path.insert(0, "/home/kabatan/work/solver-experiment-runtime/solver")
+    lifecycle = _load(f"reflect_containment_test_{uuid.uuid4().hex}", CONTAINED)
+    safe = lifecycle.DEADLINE.same_group.SAFE
+    limits = safe.Limits(
+        timeout_seconds=4.0,
+        rss_bytes=128 * 1024 * 1024,
+        address_space_bytes=1024 * 1024 * 1024,
+        data_bytes=512 * 1024 * 1024,
+        output_bytes=128 * 1024,
+        tail_bytes=16 * 1024,
+        poll_seconds=0.01,
+        terminate_grace_seconds=0.2,
+    )
+    monkeypatch.setenv(
+        lifecycle.FORMAL_DEADLINE_ENV,
+        str(time.monotonic() + 6.0),
+    )
+    child = """
+import json
+import os
+import subprocess
+import sys
+import contained_lifecycle
+from research.infrastructure.memory_safety import safe_subprocess
+
+grandchild = subprocess.Popen(
+    [sys.executable, "-c", "import time; time.sleep(0.20)"]
+)
+print(json.dumps({
+    "root_pid": os.getpid(),
+    "grandchild_pid": grandchild.pid,
+    "sitecustomize_propagated": (
+        safe_subprocess.run_guarded is contained_lifecycle.contained_run_guarded
+    ),
+}), flush=True)
+grandchild.wait()
+"""
+    environment = os.environ.copy()
+    environment.update(
+        {
+            lifecycle.ACTIVATION_ENV: "1",
+            "PYTHONPATH": lifecycle._child_python_path(),
+        }
+    )
+    result = lifecycle.contained_run_guarded(
+        [sys.executable, "-c", child],
+        limits=limits,
+        environment=environment,
+        status_path=tmp_path / "containment-status.json",
+    )
+    assert result.classification == "SUCCESS", result
+    assert result.accepted_output is True
+    assert result.containment_breach is False
+    assert result.descendant_leak is False
+    assert result.descendants_observed >= 1
+    payload = json.loads(result.stdout_tail.strip().splitlines()[-1])
+    assert payload["sitecustomize_propagated"] is True
+    for _ in range(20):
+        if all(
+            not Path(f"/proc/{payload[name]}").exists()
+            for name in ("root_pid", "grandchild_pid")
+        ):
+            break
+        time.sleep(0.01)
+    assert all(
+        not Path(f"/proc/{payload[name]}").exists()
+        for name in ("root_pid", "grandchild_pid")
+    )
+    status = json.loads((tmp_path / "containment-status.json").read_text())
+    assert status["classification"] == "SUCCESS"
+    assert status["containment_breach"] is False
+    assert status["descendant_leak"] is False
 
 
 def test_archive_binding_and_truth_blind_plan(monkeypatch, tmp_path: Path) -> None:

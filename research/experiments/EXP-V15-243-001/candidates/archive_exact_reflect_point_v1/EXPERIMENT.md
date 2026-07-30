@@ -30,6 +30,15 @@ QQBar worker remain hash-pinned.  The archive outer's candidate and fallback
 paths alone are rebound to private wrappers.  There is no problem, family,
 truth, expected-count, target-value, or prior-outcome routing.
 
+For formal containment, this candidate directly copies the reviewed
+`ec10e4ed` same-group lifecycle and `sitecustomize` propagation bytes into its
+own directory.  Only `BASE.run_guarded` and the child bootstrap environment
+are replaced.  Commands, resource limits, time budgets, native-thread values,
+search/HP algorithms, descriptor acceptance, and authority policy remain with
+the historical caller.  The worker root never creates a new process group or
+session; the inherited formal deadline and exact-parent death signal apply to
+all candidate children.
+
 ## D0 and promotion gate
 
 Generated exact tests cover integer and rational positives, wrong target,
