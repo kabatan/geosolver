@@ -1283,3 +1283,35 @@ def test_stored_angle_line_expression_preserves_symbolic_constraint_boundary() -
         assert [_bits(value) for value in observed] == [
             _bits(value) for value in expected
         ]
+
+
+def test_callback_uses_topological_schedule_below_recursive_depth_limit() -> None:
+    expression = "x"
+    for _ in range(180):
+        expression = f"({expression}+1)"
+    problem = {
+        "task": "solve",
+        "id": "deep-raw-topological-executor",
+        "variables": {"names": ["x"]},
+        "construction": [],
+        "constraints": [{"def": expression, "value": 180}],
+        "guards": [],
+        "answer": "x",
+        "post_process": "",
+    }
+    reference = _build(problem)
+    expected = reference.evaluate_float_residual([3.5]).residual_vector
+    raw = compile_raw_libmp_program(compile_typed_refnum_program(reference.bundle))
+    buffers = raw._buffers()
+    slot_ids = (id(buffers.values), id(buffers.stamps))
+    previous_limit = sys.getrecursionlimit()
+    try:
+        sys.setrecursionlimit(80)
+        observed = raw.evaluate([3.5])
+        repeated = raw.evaluate([-2.0])
+    finally:
+        sys.setrecursionlimit(previous_limit)
+    assert [_bits(value) for value in observed] == [_bits(value) for value in expected]
+    assert repeated == [-2.0]
+    assert slot_ids == (id(raw._buffers().values), id(raw._buffers().stamps))
+    assert raw.metadata()["recursive_callback_dispatch"] is False
