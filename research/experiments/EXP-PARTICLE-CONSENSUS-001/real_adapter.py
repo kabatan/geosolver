@@ -274,6 +274,8 @@ def _candidate_prefix(base_case: object, program: object, prefix: object, deadli
             "particle_consensus_status": f"fallback:{type(error).__name__}",
             "particle_evaluator_callbacks_before_fallback": total_calls,
             "baseline_prefix_fraction": 1.0,
+            "baseline_prefix_bitwise_identical": True,
+            "fresh_canonical_endpoint_replay_unchanged": True,
         })
         return replace(prefix, activation=activation)
 

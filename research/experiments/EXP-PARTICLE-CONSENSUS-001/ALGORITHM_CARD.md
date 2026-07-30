@@ -1,6 +1,6 @@
 # EXP-PARTICLE-CONSENSUS-001 — equality-forced few-particle consensus
 
-Status: `D0_PASS_GENERATED`; real 145/243 authority is `HOLD`.
+Status: `D0_PASS_GENERATED`; runner-compatible full worker is connected for D1.
 
 Hypothesis: an 8-particle, 25%-budget side lane can reach disconnected roots
 that ordinary consensus misses by combining Gibbs consensus with a stiff force
@@ -47,3 +47,11 @@ the other 75% are asserted bit-identical. A source-only smoke activated one
 4-particle group (307 charged callbacks), served 16/16 starts, and fresh-replayed
 5 safe endpoints with no truth/scorer access. Fully opaque/parity-failed
 systems use the exact original prefix. Details: `REAL_CONNECTION.json`.
+
+Full-worker seam: `full_wrapper.py` directly copies the current adaptive/DiGS
+binding pattern and changes only the four discovery fields on the frozen common
+control. Three source-only executions under the final hash passed: partial-AD
+activation, deadline fallback, and fully opaque fallback. Every run completed,
+retained unchanged source bytes, used no truth/scorer, and made no completeness
+claim. This is connection evidence only; formal D1 remains owned by the root
+benchmark agent. Details: `SOURCE_ONLY_FULL_SMOKE.json` and `arm.json`.
