@@ -9,6 +9,13 @@ claims completeness. Generated D0 activated on 240/240 cases and improved all
 three mechanisms with false/extra zero. The common `arm.json` is unchanged;
 see `SPECIES_RACING_D0.md` and `results/species-racing-d0.json`.
 
+Repair A replaces generic side reallocation with a dominance-safe handoff:
+only typed redundant, unstarted deep work may be borrowed after independent
+descriptor confirmation and high unseen incidence. Its equal-work generated
+panel changes descriptor gain/loss from D0's `+170/-13` to `+294/-0` across
+five mechanisms. See `SPECIES_RACING_REPAIR_A.md` and
+`results/species-racing-repair-a.json`; the common arm remains unchanged.
+
 ## Proposed arm: exact common-control result union v4
 
 Integration audit found that v1-v3 used numerical-v15 directly, while the
