@@ -93,3 +93,37 @@ real-corpus recall or completeness.
 Formal D1 must supply the already frozen canonical replay callback and the
 common baseline result. It may route only with the structural checks above and
 must retain the same dependency hashes and baseline floor.
+
+## Runner-compatible full-worker binding
+
+Status: `SOURCE_ONLY_FULL_BINDING_PASS; READY_FOR_FORMAL_OWNER_D1`.
+
+- Entrypoint: `full_worker.py`.
+- Worker SHA-256: `1bbb1dc6cfd9e8d86c77ad04ac0e40eebe15e5214d0b0af694ce29be3f1bfa71`.
+- Smoke runner SHA-256: `188b2683614968ec8f30c05b36e1c33e893f646157f12a28042d11e43646f6c7`.
+- Smoke aggregate SHA-256: `8e93bad65222d0d87af34ab1c5d5910b10d1462b33c9337a6c98a6af376e053e`.
+- Current adaptive entrypoint SHA-256: `7d6f168d8679732c672842e6b7a44573d190449ad0fbe4cc09a7b9112ddc9500`.
+- Current adaptive wrapper SHA-256: `4c4640a3bce5719d66f577c0093eabe93916476e319b8a595003a16f73dfb9b4`.
+
+The full worker imports the existing progressive-adaptive full wrapper after
+checking both current hashes. Search, endpoint replay, HP/restoration,
+descriptor key, PointOnCircle, zero-dimensional, precision preload, CLI, dry
+plan, execute handshake, and final result schema remain that worker's objects.
+Only `BASE._service_candidates` is decorated.
+
+The decorator passes 75% of the available post-search service wall to the
+unchanged adaptive HP/canonical service. Its descriptor mapping is frozen in
+insertion order and serialized to an opaque baseline payload. If that baseline
+contains an authority-approved endpoint, coefficient monodromy may use the
+remaining wall. Every new point is converted only by the existing
+`_fresh_replay_candidates` and then serviced by the captured unchanged
+HP/canonical function. Only the descriptor key returned by that path is
+appendable. Timeout, compiler ineligibility, callback failure, or any custody
+exception returns the baseline mapping unchanged.
+
+Three source-only smokes passed without truth, scorer, case outcome, or
+holdout access. The execute fixture retained `R:+2` first and added canonical
+`R:-2`; the expired-deadline fixture retained only `R:+2`; and an opaque
+`sin(x)` source failed closed with only `R:+2`. All three kept the full plan
+binding and canonical-authority identity. These are connection smokes, not
+real-corpus recall or timing evidence.
