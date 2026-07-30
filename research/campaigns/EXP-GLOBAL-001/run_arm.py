@@ -215,10 +215,20 @@ def select_partition(
         return list(ordered_rows)
     document = load_json(screen_manifest)
     screens = document.get("screens") if isinstance(document, Mapping) else None
-    selected = screens.get(partition) if isinstance(screens, Mapping) else None
+    manifest_partition = "screen60" if partition == "screen60-extra" else partition
+    selected = screens.get(manifest_partition) if isinstance(screens, Mapping) else None
     case_ids = selected.get("case_ids") if isinstance(selected, Mapping) else None
     if not isinstance(case_ids, list) or not all(isinstance(value, str) for value in case_ids):
         raise ValueError("frozen screen manifest is malformed")
+    if partition == "screen60-extra":
+        screen24 = screens.get("screen24") if isinstance(screens, Mapping) else None
+        screen24_ids = screen24.get("case_ids") if isinstance(screen24, Mapping) else None
+        if not isinstance(screen24_ids, list) or not all(
+            isinstance(value, str) for value in screen24_ids
+        ):
+            raise ValueError("frozen screen24 manifest is malformed")
+        excluded = set(screen24_ids)
+        case_ids = [problem_id for problem_id in case_ids if problem_id not in excluded]
     by_id = {str(row["problem_id"]): row for row in ordered_rows}
     if any(problem_id not in by_id for problem_id in case_ids):
         raise ValueError("screen manifest refers to an unknown development case")
@@ -347,7 +357,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--arm", required=True, type=Path)
     parser.add_argument(
-        "--partition", choices=("screen24", "screen60", "development"), default="screen24"
+        "--partition",
+        choices=("screen24", "screen60", "screen60-extra", "development"),
+        default="screen24",
     )
     parser.add_argument("--dataset", type=Path, default=DEFAULT_DATASET)
     parser.add_argument("--frozen-root", type=Path, default=DEFAULT_FROZEN_ROOT)
