@@ -1,0 +1,10 @@
+# QVS Repair A — exact branch representation adversary
+
+- Counterexamples: `(x-1)^2=0` emitted the same descriptor twice (3 branch states, 2 configurations). Six independent repeated-root equations reached state 65 and fell back even though their exact solution space has one sheet. A minimized unresolved-leading-coefficient system also crashed when the impossible `a!=0` sheet became `zoo` inside a strict guard.
+- Repair mechanism: represent a provably zero discriminant with one branch; discard undefined generic-leading-coefficient sheets fail-closed while retaining the explicit `a=0` linear sheet; after exact replay, emit one proof witness per exact target descriptor. Branch cap, quotas, seed, radius, and scheduler thresholds are unchanged.
+- Independent oracle: SymPy QQ Groebner basis plus ideal remainders, exact algebraic substitution into every basis polynomial, exact denominator and inequality signs, and independently rebuilt square-free minpoly/root ordinal. Candidate replay/descriptor helpers are not used by the oracle.
+- Synthetic adversary: 1,072 instances / 2,144 traces, seed 20260748, CPU 14. Families cover n=2/3/4 chains, unresolved leading zero, nested radicals, repeated roots, discriminant zero, denominator sign, strict boundary, branch cap just before/over 64, elimination-order ties, and coefficient swell. Each seed has variable permutation, residual permutation/rational scaling, and factor/expand variants.
+- Result: primary gain families 3/3; false authority 0; fallback mismatch 0; baseline mismatch 0; metamorphic failure 0. True six-variable two-sheet expansion still falls back at state 65; five-variable expansion completes. Decision: **ADVANCE** to truth-blind corpus screening.
+- Scope: synthetic QQ polynomial/rational formulas only. No geometry/corpus/formal/runtime result was read, and this makes no 145/243 claim.
+
+Reopen only for an exact degree-2 source where case representation, undefined-sheet pruning, descriptor equivalence, or elimination—not numeric threshold tuning—loses or falsely certifies a witness.
