@@ -25,9 +25,9 @@ import time
 from typing import Any, Mapping, Sequence
 
 import current_exact_candidate as exact_candidate
-import typed_replay_connector
+import sector_angle_connector
 
-typed_replay_connector.install(exact_candidate)
+sector_angle_connector.install(exact_candidate)
 certify_exact_coordinate_witness = exact_candidate.certify_exact_coordinate_witness
 
 

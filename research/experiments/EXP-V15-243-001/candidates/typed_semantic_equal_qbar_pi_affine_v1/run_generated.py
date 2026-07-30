@@ -104,7 +104,7 @@ def main() -> int:
         positive_pass == len(positives)
         and negative_pass == len(negatives)
         and metamorphic_pass == len(metamorphic)
-        and os.sched_getaffinity(0) == {15}
+        and os.sched_getaffinity(0) == {14}
     )
     print(json.dumps(summary, indent=2, sort_keys=True))
     return 0 if summary["d0_pass"] else 1

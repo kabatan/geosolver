@@ -42,7 +42,7 @@ DAG_COMPILE_PATH = HERE / "current_dag_compile.py"
 QQBAR_WORKER = HERE / "current_qqbar_worker.jl"
 JULIA_PROJECT = WORKSPACE / "research/experiments/EXP-REAL61-002/target_elimination"
 
-from scanner import eligible_relation_indices
+from scanner import eligible_relation_indices, sector_relation_specs
 
 
 class ExactCoordinateFailure(RuntimeError):
@@ -1672,6 +1672,10 @@ def certify_exact_coordinate_witness(
                 "value is not exact rational",
                 "scalar is not an exact angle expression",
             )
+        }
+        job["sector_angle_relation_specs"] = {
+            str(index): list(spec)
+            for index, spec in sector_relation_specs(document).items()
         }
         _normalize_exact_guard_calls(job)
         replay = _run_qqbar(job, timeout_seconds=timeout_seconds)

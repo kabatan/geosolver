@@ -110,7 +110,7 @@ class ScannerTests(unittest.TestCase):
         self.assertEqual(
             result["ineligibility_reason_counts"],
             {
-                "MIXED_CLOSED_TYPES": 1,
+                "MIXED_CLOSED_TYPES": 2,
                 "NONLINEAR_OR_NESTED_PI": 2,
             },
         )
@@ -119,8 +119,8 @@ class ScannerTests(unittest.TestCase):
         self.assertNotIn("Angle(A", rendered)
         self.assertNotIn("pi*pi", rendered)
 
-    def test_cpu15_only(self):
-        self.assertEqual(os.sched_getaffinity(0), {15})
+    def test_single_campaign_cpu_only(self):
+        self.assertEqual(os.sched_getaffinity(0), {14})
 
 
 if __name__ == "__main__":

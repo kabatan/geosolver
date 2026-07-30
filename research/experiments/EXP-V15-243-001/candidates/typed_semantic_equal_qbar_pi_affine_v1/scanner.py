@@ -229,6 +229,69 @@ def _eligible_relation(left: str, right: str, failure: str) -> bool:
     return left == right and _eligible_for_failure(left, failure)
 
 
+def _positive_small_integer(node: ast.AST) -> int | None:
+    if (
+        isinstance(node, ast.Constant)
+        and isinstance(node.value, int)
+        and not isinstance(node.value, bool)
+        and 1 <= node.value <= 3
+    ):
+        return int(node.value)
+    return None
+
+
+def _direct_angle(
+    node: ast.AST,
+    environment: Mapping[str, StaticType],
+) -> StaticType | None:
+    if not (
+        isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Name)
+        and node.func.id == "Angle"
+        and not node.keywords
+    ):
+        return None
+    inferred = _infer(node, environment)
+    return inferred if inferred.tag in ("ANGLE_POINT", "ANGLE_LINE") else None
+
+
+def _scaled_direct_angle(
+    node: ast.AST,
+    environment: Mapping[str, StaticType],
+) -> tuple[int, StaticType] | None:
+    direct = _direct_angle(node, environment)
+    if direct is not None:
+        return 1, direct
+    if not isinstance(node, ast.BinOp) or not isinstance(node.op, ast.Mult):
+        return None
+    left_factor = _positive_small_integer(node.left)
+    right_factor = _positive_small_integer(node.right)
+    if (left_factor is None) == (right_factor is None):
+        return None
+    factor = left_factor if left_factor is not None else right_factor
+    angle_node = node.right if left_factor is not None else node.left
+    angle = _direct_angle(angle_node, environment)
+    if factor is None or angle is None:
+        return None
+    return factor, angle
+
+
+def _sector_relation_spec(
+    left: ast.AST,
+    right: ast.AST,
+    environment: Mapping[str, StaticType],
+) -> tuple[int, int, str] | None:
+    left_scaled = _scaled_direct_angle(left, environment)
+    right_scaled = _scaled_direct_angle(right, environment)
+    if left_scaled is None or right_scaled is None:
+        return None
+    left_factor, left_angle = left_scaled
+    right_factor, right_angle = right_scaled
+    if left_angle.tag != right_angle.tag:
+        return None
+    return left_factor, right_factor, left_angle.tag
+
+
 def _pi_degree(node: ast.AST) -> int:
     """Capped syntactic degree; 2 means nonlinear or nested transcendental."""
     if isinstance(node, ast.Name):
@@ -350,15 +413,28 @@ def scan(document: Mapping[str, Any], failure: str) -> dict[str, Any]:
         left_shape = _root_shape(left_ast, left)
         right_shape = _root_shape(right_ast, right)
         closed_shape = f"{left.tag}_EQ_{right.tag}__{left_shape}_TO_{right_shape}"
-        if not _eligible_relation(left.tag, right.tag, failure):
+        sector = (
+            _sector_relation_spec(left_ast, right_ast, environment)
+            if failure == "scalar is not an exact angle expression"
+            else None
+        )
+        eligible = (
+            sector is not None
+            if failure == "scalar is not an exact angle expression"
+            else _eligible_relation(left.tag, right.tag, failure)
+        )
+        if not eligible:
             reason_counts[
                 _ineligible_reason(left_ast, right_ast, left, right, failure)
             ] += 1
             shape_counts[closed_shape] += 1
             continue
-        signature = hashlib.sha256(
-            f"{failure}|{left.tag}|{left.shape}|{right.shape}".encode()
-        ).hexdigest()
+        signature_source = (
+            f"{failure}|SECTOR|{sector[0]}|{sector[1]}|{sector[2]}"
+            if sector is not None
+            else f"{failure}|{left.tag}|{left.shape}|{right.shape}"
+        )
+        signature = hashlib.sha256(signature_source.encode()).hexdigest()
         signatures.append(signature)
     combined = hashlib.sha256(
         json.dumps(sorted(signatures), separators=(",", ":")).encode()
@@ -406,9 +482,53 @@ def eligible_relation_indices(document: Mapping[str, Any], failure: str) -> list
         if left_ast is None or right_ast is None:
             continue
         left, right = _infer(left_ast, environment), _infer(right_ast, environment)
-        if _eligible_relation(left.tag, right.tag, failure):
+        if failure == "scalar is not an exact angle expression":
+            relation_eligible = (
+                _sector_relation_spec(left_ast, right_ast, environment) is not None
+            )
+        else:
+            relation_eligible = _eligible_relation(left.tag, right.tag, failure)
+        if relation_eligible:
             eligible.append(index)
     return eligible
+
+
+def sector_relation_specs(document: Mapping[str, Any]) -> dict[int, tuple[int, int]]:
+    """Internal source-to-DAG custody seam; never emitted by the scanner CLI."""
+    variables = document.get("variables")
+    names = variables.get("names") if isinstance(variables, Mapping) else None
+    construction = document.get("construction")
+    constraints = document.get("constraints")
+    if (
+        not isinstance(names, list)
+        or not all(isinstance(name, str) for name in names)
+        or not isinstance(construction, list)
+        or not isinstance(constraints, list)
+    ):
+        raise ValueError("malformed source-only document")
+    environment: dict[str, StaticType] = {
+        name: StaticType("QBAR", 1, "VARIABLE_QBAR") for name in names
+    }
+    for item in construction:
+        if not isinstance(item, Mapping) or not isinstance(item.get("name"), str):
+            raise ValueError("malformed construction")
+        expression = _parse_expression(item.get("expr"))
+        inferred = _infer(expression, environment) if expression is not None else UNKNOWN
+        if item["name"] in environment:
+            raise ValueError("source name redefinition")
+        environment[item["name"]] = inferred
+    result: dict[int, tuple[int, int]] = {}
+    for index, item in enumerate(constraints):
+        if not isinstance(item, Mapping):
+            continue
+        left = _parse_expression(item.get("def"))
+        right = _parse_expression(item.get("value"))
+        if left is None or right is None:
+            continue
+        spec = _sector_relation_spec(left, right, environment)
+        if spec is not None:
+            result[index] = (spec[0], spec[1])
+    return result
 
 
 def main() -> int:

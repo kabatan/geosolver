@@ -119,7 +119,7 @@ print(json.dumps({"affinity": sorted(os.sched_getaffinity(0)), "pgid": os.getpgi
             preexec_fn=connector._child_setup,
         )
         result = json.loads(completed.stdout)
-        self.assertEqual(result["affinity"], [15])
+        self.assertEqual(result["affinity"], [14])
         self.assertEqual(result["pgid"], parent_group)
         self.assertEqual(result["pdeathsig"], signal.SIGKILL)
 

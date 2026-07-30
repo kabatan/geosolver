@@ -166,8 +166,8 @@ class TypedSemanticEqualTests(unittest.TestCase):
             value, _ = compile_operand(node)
             self.assertTrue(typed_semantic_equal(value, value))
 
-    def test_cpu15_only(self):
-        self.assertEqual(os.sched_getaffinity(0), {15})
+    def test_single_campaign_cpu_only(self):
+        self.assertEqual(os.sched_getaffinity(0), {14})
 
 
 if __name__ == "__main__":
