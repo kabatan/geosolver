@@ -42,3 +42,19 @@ run and must not already contain `RESULT.json`.  Runtime dependencies are the
 frozen source/artifact roots, this candidate and prevalence scanner, Python
 3.12 with SymPy, and the standard library.  NumPy/SciPy/Jupyter/Julia and the
 formal scorer/authority are not imported.
+
+## One-shot result
+
+The assigned CPU14 run reproduced 7 activated sources, 73 activated endpoints,
+and all 4 signatures among 989 bounded saved endpoints.  The exact candidate
+was ready on 0 sources and emitted 0 proposals.  Consequently the
+candidate-first custody rule opened 0 baseline terminals.  Replay failures,
+authority/release violations, malformed sources, and malformed post-ready
+baseline envelopes were all 0.  Decision: `STOP_ENDPOINT_GATE`; no tuning or
+retry was performed.
+
+The repository-external aggregate result SHA-256 is
+`9af24c19b317fd267ee651afce99604c434570a0e3e840c290f294ef48c111df`.
+The only reopen condition is a new endpoint where an exact bounded-CF
+barycentric witness passes the untouched-source replay; numeric rational-Area
+activation alone is not a reopen signal.

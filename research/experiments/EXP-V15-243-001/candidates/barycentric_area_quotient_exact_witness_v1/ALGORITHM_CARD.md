@@ -49,5 +49,10 @@ translation/scale signatures, wrong-endpoint fallback, and zero authority or
 release.  This is only a generated mechanism result.  No endpoint census or
 formal/full replay run has been performed.
 
-The later fixed real gate remains full-replay pure gain on at least two
-independent signatures with zero false/extra/invalid results; otherwise STOP.
+The one-shot endpoint gate then reproduced the seven activated sources, but
+the exact candidate was ready on zero of them.  It therefore read zero stored
+baseline terminals and stopped before any formal authority or target release.
+This lineage is frozen `STOP_ENDPOINT_GATE`.  Its only reopen condition is a
+new saved endpoint on which the exact barycentric area continued-fraction
+witness itself survives untouched-source replay; a broader spelling-only or
+numeric-Area prevalence signal is insufficient.
