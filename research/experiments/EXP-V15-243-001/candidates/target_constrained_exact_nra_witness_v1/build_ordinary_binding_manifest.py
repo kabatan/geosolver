@@ -19,6 +19,7 @@ import tempfile
 from typing import Mapping
 
 import ordinary_proposal_binding as binding
+import run_degree1_proposal_census as degree1_replay
 
 
 APPROVED_ORIGINAL_ROOT = Path(
@@ -91,7 +92,12 @@ def _source_path(source_root: Path, value: object) -> Path:
 
 def _result_paths(root: Path) -> list[Path]:
     paths = []
-    for path in root.glob("**/RESULT.json"):
+    for artifact in sorted(root.iterdir()):
+        if artifact.is_symlink() or not artifact.is_dir():
+            continue
+        path = artifact / "RESULT.json"
+        if path.is_symlink() or not path.is_file():
+            continue
         resolved = path.resolve()
         try:
             resolved.relative_to(root)
@@ -109,18 +115,20 @@ def _matching_attempts(
     endpoint_sha256: str,
     identity: tuple[tuple[int, int], int],
 ) -> list[Mapping[str, object]]:
-    if result.get("source_sha256") != source_sha256:
-        return []
     attempts = result.get("hp_attempts")
     if not isinstance(attempts, list):
         return []
     matches = []
-    for attempt in attempts:
+    for outer_attempt in attempts:
+        if not isinstance(outer_attempt, Mapping):
+            continue
+        attempt = outer_attempt.get("ordinary_hp_proposal")
         if not isinstance(attempt, Mapping):
             continue
         if (
             attempt.get("status") != "TARGET_AUTHORITY_READY"
             or attempt.get("authority_pass") is not True
+            or outer_attempt.get("endpoint_float64_sha256") != endpoint_sha256
             or attempt.get("endpoint_float64_sha256") != endpoint_sha256
         ):
             continue
@@ -176,7 +184,7 @@ def main() -> int:
         except (UnicodeDecodeError, json.JSONDecodeError):
             continue
         if isinstance(document, Mapping):
-            ordinary_results.append((payload, document))
+            ordinary_results.append((path, payload, document))
 
     selected: list[tuple[dict[str, object], dict[str, object]]] = []
     used_attempt_hashes: set[str] = set()
@@ -206,14 +214,26 @@ def main() -> int:
             }
         )
         matches: list[tuple[bytes, Mapping[str, object]]] = []
-        for result_payload, result in ordinary_results:
-            for attempt in _matching_attempts(
+        for result_path, result_payload, result in ordinary_results:
+            attempts = _matching_attempts(
                 result,
                 source_sha256=source_sha256,
                 endpoint_sha256=endpoint_sha256,
                 identity=identity,
-            ):
-                matches.append((result_payload, attempt))
+            )
+            if not attempts:
+                continue
+            try:
+                binding.verify_original_projection_and_endpoint(
+                    result_path,
+                    result,
+                    anonymous_source_payload=source_payload,
+                    endpoint=endpoint,
+                    endpoint_sha256=endpoint_sha256,
+                )
+            except binding.BindingRejected:
+                continue
+            matches.extend((result_payload, attempt) for attempt in attempts)
         if not matches:
             continue
         if len(matches) != 1:
@@ -222,6 +242,13 @@ def main() -> int:
         attempt_sha256 = binding.canonical_sha256(attempt)
         if attempt_sha256 in used_attempt_hashes:
             raise SystemExit("ordinary proposal reused by multiple selected rows")
+        replay = degree1_replay._assess_request(
+            request,
+            timeout_seconds=3.0,
+            source_root=source_root,
+        )
+        if replay.get("thin_join_ready") is not True:
+            continue
         used_attempt_hashes.add(attempt_sha256)
         wrapper = {
             "schema_version": binding.PROPOSAL_SCHEMA,

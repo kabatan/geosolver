@@ -39,6 +39,7 @@ def _write_fixture(
     source_root: Path,
     proposal_root: Path,
     original_root: Path,
+    original_input_root: Path,
     *,
     ordinal: int,
     source_document: dict[str, object],
@@ -46,7 +47,15 @@ def _write_fixture(
 ) -> dict[str, object]:
     source = source_root / f"{ordinal:04d}.json"
     source.write_text(
-        json.dumps(source_document, ensure_ascii=False, separators=(",", ":")),
+        json.dumps(source_document, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    original_source = original_input_root / f"anonymous-{ordinal:04d}.json"
+    original_source.write_text(
+        json.dumps(
+            {"id": f"removed-{ordinal}", **source_document}, indent=2, sort_keys=True
+        )
+        + "\n",
         encoding="utf-8",
     )
     endpoint = [float(root)]
@@ -60,12 +69,32 @@ def _write_fixture(
     }
     original_case_root = original_root / f"anonymous-{ordinal:04d}"
     original_case_root.mkdir()
+    plan_root = original_case_root / "reservoir-batch-0000" / "hp" / "0000"
+    plan_root.mkdir(parents=True)
+    (plan_root / "PLAN.json").write_text(
+        json.dumps(
+            {
+                "endpoint_float64_sha256": endpoint_sha256,
+                "endpoint": endpoint,
+                "command": ["python", "worker.py", "--source", str(original_source)],
+            }
+        ),
+        encoding="utf-8",
+    )
     original_result = original_case_root / "RESULT.json"
     original_result.write_bytes(
         binding.canonical_bytes(
             {
-                "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
-                "hp_attempts": [attempt],
+                "source_sha256": hashlib.sha256(
+                    original_source.read_bytes()
+                ).hexdigest(),
+                "hp_attempts": [
+                    {
+                        "endpoint_float64_sha256": endpoint_sha256,
+                        "descriptor": _descriptor(root + 1),
+                        "ordinary_hp_proposal": attempt,
+                    }
+                ],
             }
         )
         + b"\n"
@@ -126,17 +155,21 @@ def main() -> int:
         source_root = root_path / "sources"
         proposal_root = root_path / "proposals"
         original_root = root_path / "original-results"
+        original_input_root = root_path / "original-inputs"
         source_root.mkdir()
         proposal_root.mkdir()
         original_root.mkdir()
+        original_input_root.mkdir()
         binding.APPROVED_SOURCE_ROOT = source_root.resolve()
         binding.APPROVED_PROPOSAL_ROOT = proposal_root.resolve()
         binding.APPROVED_ORIGINAL_RESULT_ROOT = original_root.resolve()
+        binding.APPROVED_ORIGINAL_INPUT_ROOT = original_input_root.resolve()
 
         direct = _write_fixture(
             source_root,
             proposal_root,
             original_root,
+            original_input_root,
             ordinal=0,
             source_document=_direct_document(3),
             root=3,
@@ -180,7 +213,20 @@ def main() -> int:
             builder._matching_attempts(
                 {
                     "source_sha256": direct["source_sha256"],
-                    "hp_attempts": [attempt, deepcopy(attempt)],
+                    "hp_attempts": [
+                        {
+                            "endpoint_float64_sha256": direct[
+                                "endpoint_float64_sha256"
+                            ],
+                            "ordinary_hp_proposal": attempt,
+                        },
+                        {
+                            "endpoint_float64_sha256": direct[
+                                "endpoint_float64_sha256"
+                            ],
+                            "ordinary_hp_proposal": deepcopy(attempt),
+                        },
+                    ],
                 },
                 source_sha256=str(direct["source_sha256"]),
                 endpoint_sha256=str(direct["endpoint_float64_sha256"]),
@@ -202,6 +248,7 @@ def main() -> int:
             source_root,
             proposal_root,
             original_root,
+            original_input_root,
             ordinal=1,
             source_document=multitarget_document,
             root=1,

@@ -5,10 +5,10 @@ they do not invoke the scorer or produce formal authority.
 
 Frozen executable hashes before the root panel:
 
-- connector: `39fa6e490b0e8d50a00dd304ef751aa386ab24df4d09bc5e4108aff8c2799cb8`
-- builder: `6a5b1e425a5ee68c58316db1eec83ef7e001f905a792ed474ae7fe34659489c4`
+- connector: `d55a4170739defdd09111593741cbc2b7558d76b70414f53c30975695f8bf9e9`
+- builder: `9b6ca3315316c59e573f77a96547e8b7ab41e7c18ed5ebfe94b1e95522a0eb82`
 - aggregate runner: `d487b51a84775eb46aef950d3f9fea7dd3961f75e16238886b6388b716c07d4c`
-- generated runner: `c36b1cae62fd285b35e0973da6c4fe7b32dee4199169553403dd059cafd223ad`
+- generated runner: `0092c07ec6aa6f88220ec216935d999277b48126ddb47972cb4ecf514cdc3399`
 - generated result: `14baa1cf0a99b8a463e4c517c231ecd2983ad26c0bbc0eedacdca78244515faf`
 - repaired projection census: `4028b556d53be1ce7adc3cc899347998d12ac490eea8dfc947187a9f8984f4aa`
 - degree-one request manifest:
@@ -39,7 +39,7 @@ taskset -c 14 \
 /home/kabatan/work/solver-experiment-runtime/solver/python/.venv/bin/python \
 /home/kabatan/work/solver-wt/target-constrained-nra-witness/research/experiments/EXP-V15-243-001/candidates/target_constrained_exact_nra_witness_v1/run_ordinary_proposal_binding.py \
   --requests /home/kabatan/work/solver-experiment-results/target-constrained-nra-ordinary-binding-v1/requests.json \
-  --requests-sha256 REPLACE_WITH_BUILDER_MANIFEST_SHA256 \
+  --requests-sha256 29f00d60bbdf4e4862eccdd3ac5c1274b48ba3ee5d4d0f5ee218cf42fea51233 \
   --source-root /home/kabatan/work/solver-experiment-results/partial-ideal-root-readiness-v1/degree1-inputs \
   --proposal-root /home/kabatan/work/solver-experiment-results/target-constrained-nra-ordinary-binding-v1/ordinary-proposals \
   --original-result-root /home/kabatan/work/solver-experiment-results/formal-control-development145-180-seed0/artifacts \

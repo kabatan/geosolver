@@ -43,17 +43,29 @@ def _fixture(tmp_path: Path, monkeypatch, *, document=None, root=3):
     source_root = tmp_path / "sources"
     proposal_root = tmp_path / "proposals"
     original_root = tmp_path / "original-results"
+    original_input_root = tmp_path / "original-inputs"
     source_root.mkdir()
     proposal_root.mkdir()
     original_root.mkdir()
+    original_input_root.mkdir()
     monkeypatch.setattr(binding, "APPROVED_SOURCE_ROOT", source_root.resolve())
     monkeypatch.setattr(binding, "APPROVED_PROPOSAL_ROOT", proposal_root.resolve())
     monkeypatch.setattr(
         binding, "APPROVED_ORIGINAL_RESULT_ROOT", original_root.resolve()
     )
+    monkeypatch.setattr(
+        binding, "APPROVED_ORIGINAL_INPUT_ROOT", original_input_root.resolve()
+    )
     source = source_root / "0000.json"
+    source_document = document or _document(root)
     source.write_text(
-        json.dumps(document or _document(root), separators=(",", ":")),
+        json.dumps(source_document, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    original_source = original_input_root / "anonymous.json"
+    original_source.write_text(
+        json.dumps({"id": "removed", **source_document}, indent=2, sort_keys=True)
+        + "\n",
         encoding="utf-8",
     )
     endpoint = [float(root)]
@@ -67,12 +79,32 @@ def _fixture(tmp_path: Path, monkeypatch, *, document=None, root=3):
     }
     original_case_root = original_root / "anonymous"
     original_case_root.mkdir()
+    plan_root = original_case_root / "reservoir-batch-0000" / "hp" / "0000"
+    plan_root.mkdir(parents=True)
+    (plan_root / "PLAN.json").write_text(
+        json.dumps(
+            {
+                "endpoint_float64_sha256": endpoint_sha,
+                "endpoint": endpoint,
+                "command": ["python", "worker.py", "--source", str(original_source)],
+            }
+        ),
+        encoding="utf-8",
+    )
     original_result = original_case_root / "RESULT.json"
     original_result.write_bytes(
         binding.canonical_bytes(
             {
-                "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
-                "hp_attempts": [attempt],
+                "source_sha256": hashlib.sha256(
+                    original_source.read_bytes()
+                ).hexdigest(),
+                "hp_attempts": [
+                    {
+                        "endpoint_float64_sha256": endpoint_sha,
+                        "descriptor": _descriptor(root + 1),
+                        "ordinary_hp_proposal": attempt,
+                    }
+                ],
             }
         )
         + b"\n"
@@ -166,7 +198,9 @@ def test_source_endpoint_descriptor_and_proposal_tamper_fail_closed(
 
     # Restore source, then alter the proposal while updating only its outer
     # file digest: the internally bound ordinary-attempt digest must reject.
-    source.write_text(json.dumps(_document(), separators=(",", ":")), encoding="utf-8")
+    source.write_text(
+        json.dumps(_document(), indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
     document = json.loads(proposal.read_bytes())
     document["ordinary_attempt"]["descriptor"]["target_1024"] = "4"
     proposal.write_bytes(binding.canonical_bytes(document) + b"\n")
@@ -218,7 +252,11 @@ def test_duplicate_ordinary_matches_are_rejected_by_builder_join():
         "endpoint_float64_sha256": endpoint_sha,
         "descriptor": descriptor,
     }
-    result = {"source_sha256": "b" * 64, "hp_attempts": [attempt, deepcopy(attempt)]}
+    outer = {
+        "endpoint_float64_sha256": endpoint_sha,
+        "ordinary_hp_proposal": attempt,
+    }
+    result = {"source_sha256": "b" * 64, "hp_attempts": [outer, deepcopy(outer)]}
     matches = builder._matching_attempts(
         result,
         source_sha256="b" * 64,

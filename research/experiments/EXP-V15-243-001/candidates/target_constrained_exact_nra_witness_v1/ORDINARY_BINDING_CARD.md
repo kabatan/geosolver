@@ -25,6 +25,15 @@ the existing full exact source runtime replays the untouched construction,
 constraints, bounds, guards, selector/branch ledger, and raw target link.  The
 connector returns the original ordinary descriptor without rewriting it.
 
+The frozen current `exact_outer` result stores this proposal under each outer
+attempt's `ordinary_hp_proposal`; the outer descriptor is deliberately not
+treated as the ordinary proposal.  The source used by the anonymous panel is
+the original solve JSON with only its top-level `id` removed and serialized by
+the frozen panel builder.  The connector reopens the matching frozen PLAN,
+checks the exact endpoint bits, checks the original raw source SHA against the
+outer RESULT, recomputes that id-stripped projection byte-for-byte, and binds
+it to the anonymous source SHA before exact replay.
+
 ## Custody and privacy boundary
 
 The root benchmark owner builds and runs the four-record panel.  Sources are
@@ -67,6 +76,33 @@ candidate suite passes 34/34.
 The earlier Repair A privacy review also closed its source-path oracle: the
 degree-one census now restricts sources to the anonymous panel root and
 rejects source identity/truth fields before compiler/replay.
+
+## Root-owned four-request result
+
+After the nested `ordinary_hp_proposal` and id-stripped source-projection
+provenance repair, the fixed truth-blind CPU14 builder selected exactly four
+records.  The connector census reached `ordinary_binding_pass=4/4`,
+`exact_replay_pass=4/4`, and `readiness=4/4`; all fixed failure counts were
+zero.  External authority, target release, target-set completeness, replay
+bypass, truth use, and case/family routing remained false.  Individual
+artifacts were not inspected and remain repository-external.
+
+The selected manifest SHA-256 is
+`29f00d60bbdf4e4862eccdd3ac5c1274b48ba3ee5d4d0f5ee218cf42fea51233`;
+the raw aggregate SHA-256 is
+`45f34e6994ab4cb65b461c049163540563e817ac07144a683dd07899eca5414b`;
+the ordered binding signature is
+`5550df994434c3ee5891abfa236a8ea43edebeddc4244853184fd0ab27f25fe9`.
+
+The benchmark owner's aggregate-only outcome intersection classified all
+four readiness records as already exact-solved by control seed 0:
+`control_exact_solved=4`, `control_missing=0`, and `unmatched=0`.  No case IDs,
+families, targets, or individual outcomes were disclosed.  Therefore this
+panel does not satisfy a seed-0 recall pure-gain gate.  It is frozen as a
+safety/provenance success only; it may be reopened for speed or recurring-seed
+evidence, or when a prospective ordinary proposal from a control-missing case
+or a new seed passes the identical join.  No formal `exact_outer` slot or
+large integration is authorized from this result.
 
 ## Original-result provenance and TCB
 
