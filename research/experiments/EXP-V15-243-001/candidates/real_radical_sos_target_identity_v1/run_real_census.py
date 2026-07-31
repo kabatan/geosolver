@@ -23,10 +23,18 @@ import candidate as local_candidate
 
 
 REQUESTS_SHA256 = "ee424315256582652ea0df72a05c21903a5fd4366867c6788129a79e4f80fd35"
+SOURCE_ROOT = Path(
+    "/home/kabatan/work/solver-experiment-results/partial-ideal-root-readiness-v1/"
+    "degree1-inputs"
+).resolve()
 REQUEST_KEYS = frozenset({"source_path", "endpoint", "candidate_relation_high_to_low"})
 FORBIDDEN_KEYS = frozenset({
     "id", "family", "truth", "answer", "target", "outcome", "result",
     "score", "known_count", "witness", "reason",
+})
+DOCUMENT_IDENTITY_KEYS = frozenset({
+    "id", "problem_id", "case_id", "family", "group", "truth", "expected",
+    "expected_target", "outcome", "result", "score", "known_count",
 })
 RECORD_SECONDS = 3.0
 SOS_DEGREE = 3
@@ -134,9 +142,20 @@ def _endpoint(values):
     return result
 
 
+def _source_path(value):
+    path = Path(str(value)).resolve(strict=True)
+    if path.parent != SOURCE_ROOT or not path.is_file():
+        raise CensusRejected("source custody root rejected")
+    if path.suffix != ".json" or len(path.stem) != 4 or not path.stem.isdigit():
+        raise CensusRejected("source custody name rejected")
+    return path
+
+
 def _primitive_compile(document):
     if not isinstance(document, Mapping) or document.get("post_process") not in (None, ""):
         raise CensusRejected("raw target source rejected")
+    if DOCUMENT_IDENTITY_KEYS & set(document):
+        raise CensusRejected("source identity boundary rejected")
     source, _metadata = APPLICABILITY._legacy_target_link_source(
         document, include_private_bridge_ledger=True
     )
@@ -360,7 +379,7 @@ def _summarize(requests):
             q = _proposal_root(request["candidate_relation_high_to_low"])
             endpoint = _endpoint(request["endpoint"])
             counts["degree_one_projection"] += 1
-            source_path = Path(str(request["source_path"]))
+            source_path = _source_path(request["source_path"])
             document = json.loads(source_path.read_bytes())
             with _record_deadline():
                 source = _primitive_compile(document)

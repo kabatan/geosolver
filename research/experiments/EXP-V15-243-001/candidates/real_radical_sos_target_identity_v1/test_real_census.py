@@ -1,4 +1,5 @@
 import sympy as sp
+import pytest
 
 import run_real_census as census
 
@@ -26,3 +27,10 @@ def test_aggregate_output_has_no_individual_evidence_fields():
     assert all(word not in payload for word in ("source_path", "witness", "reason", "target_q"))
     assert result["authority"] is False
     assert result["target_release"] is False
+
+
+def test_source_custody_and_document_identity_fail_closed(tmp_path):
+    with pytest.raises(census.CensusRejected):
+        census._source_path(tmp_path / "0000.json")
+    with pytest.raises(census.CensusRejected):
+        census._primitive_compile({"id": "forbidden", "post_process": None})
