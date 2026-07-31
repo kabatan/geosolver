@@ -1,0 +1,77 @@
+{
+  "schema_version": "geotarget.experimental-candidate-result/v1",
+  "candidate_id": "MSOLVE_EXACT_WITNESS_BIGINT_TRANSPORT_REOPEN_V1",
+  "status": "REOPEN_GATE_SATISFIED",
+  "decision": "PROMOTE_TO_BOUNDED_DEVELOPMENT_INTEGRATION",
+  "causal_hypothesis": "JSON3 converted an out-of-range JSON integer coefficient through Float64 scientific notation before the exact BigInt parser saw it.",
+  "mechanism": "Convert only schema-declared exact ZZ coefficient arrays to canonical decimal strings; preserve structural integers and fail closed on floats, malformed decimals, and unclassified out-of-range integers.",
+  "case_routing_used": false,
+  "serialization_d0": {
+    "status": "PASS",
+    "passed": 13,
+    "total": 13,
+    "property_integer_count": 256,
+    "property_max_bits": 4077,
+    "json3_bigint_round_trip": true,
+    "negative_inputs_fail_closed": true,
+    "artifact_sha256": "80aaf9cd371421dbe971a2121daf3df2fab698d46d4773390671af8a7bcdd565"
+  },
+  "frozen_old_job_replay": {
+    "case_id": "SURPRISE_P9",
+    "status": "PASS",
+    "old_failure_reproduced_before_repair": "ArgumentError: invalid BigInt from scientific Float conversion",
+    "post_repair_status": "EXACT_V2_WITNESS_REPLAY_VERIFIED",
+    "complete_qqbar_source_replay": true,
+    "selected_theta_degree": 4,
+    "transport_exact_integer_count": 29,
+    "transport_maximum_decimal_digits": 55,
+    "transport_round_trip_equal": true,
+    "transport_mathematical_job_sha256": "8fe7258587d2dc5df0a9e6e3252cf5c0f199c794554fbead653a891dd06a171a",
+    "transport_json_sha256": "59819bb38169199b06abbd9bda8b61047717b56580c1c0c5ed7cff6324196b68",
+    "augmented_relation_roots_exact": 26,
+    "augmented_guard_roots_exact": 21,
+    "augmented_bound_roots_exact": 0,
+    "original_source_relations_exact": 2,
+    "original_source_guards_exact": 2,
+    "original_source_bounds_exact": 0,
+    "dag_node_count": 225,
+    "source_raw_answer_exact": true,
+    "target_link_exact": true,
+    "maximum_intermediate_qqbar_degree": 4,
+    "nemo_replay_elapsed_seconds_observed": 1.938579,
+    "end_to_end_elapsed_seconds_observed": 3.481595,
+    "output_file_sha256": "f17cc8115026a03aeaa8c5d2b2c8de62a3994fb861c6917afbaef03a36cbb05d",
+    "raw_output_location": "/home/kabatan/work/solver-artifacts/EXP-V15-243-001/MSOLVE_EXACT_WITNESS_BIGINT_TRANSPORT_REOPEN_V1/FROZEN_SURPRISE_P9_REPLAY.json",
+    "output_internal_artifact_sha256": "8366411e0f552284e7758b414315104c8d480122fd2d49aae7747c3504a41b28",
+    "per_target_v2_evidence_artifact_sha256": "2294f4cbbed8e762a3dee7ad49d132b18ef06de880366e0fc89647a42657e876",
+    "transport_sidecar_sha256": "9d149edde1b943787b25027ca9c731b07c6808d1375ef3ae524b448f6c530519"
+  },
+  "authority": {
+    "exact_replay_authority": true,
+    "authority_condition": "complete QQBar source replay succeeded",
+    "collector_authority": false,
+    "development_proposal_only": true,
+    "target_image_completeness": "NOT_RUN",
+    "completeness_claim_permitted": false
+  },
+  "environment": {
+    "cpu_affinity": [14],
+    "native_threads": 1,
+    "python": "3.12.11",
+    "sympy": "1.14.0",
+    "julia": "1.12.6",
+    "frozen_inner_deadline_seconds": 8.25
+  },
+  "scope_guards": {
+    "truth_used": false,
+    "formal_scorer_used": false,
+    "validation_or_sealed_used": false,
+    "full98_used": false,
+    "case_specific_branching": false
+  },
+  "limitations": [
+    "One frozen development job establishes the causal repair, not recall or corpus coverage.",
+    "The exact witness remains a development proposal and does not establish target-image completeness.",
+    "A bounded integration/capability census is still required before portfolio allocation."
+  ]
+}
