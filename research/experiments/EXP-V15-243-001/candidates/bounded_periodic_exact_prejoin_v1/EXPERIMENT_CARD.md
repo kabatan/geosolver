@@ -23,3 +23,6 @@
   it is motivation only, not evidence for the repaired core used here.
 - Fallback: all unsupported sources are exact passthrough; 75% baseline quota
   is permanent.  No ID/family/truth/target-count/outcome routing is used.
+- D0: 4/4 generated families completed; bounded-only, periodic-only, and mixed
+  activated exactly 25%, while raw nonperiodic occurrence was exact
+  passthrough.  All 36 baseline ordinal checks were bitwise identical.
