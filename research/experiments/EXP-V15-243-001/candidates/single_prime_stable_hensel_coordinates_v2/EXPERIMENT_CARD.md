@@ -1,6 +1,6 @@
 # SINGLE_PRIME_STABLE_HENSEL_COORDINATES_V2
 
-- Status: `D0_PASS_REAL_GATE_PREPARED_NOT_EXECUTED`.
+- Status: `STOP_REAL_SOURCE_APPLICABILITY_ZERO`.
 - Hypothesis: rational source-coordinate tuples can be recovered from one
   deterministic nonsingular p-adic branch without the old second-prime CRT
   Cartesian product.  Stability of the complete tuple at `p^5` and `p^6`
@@ -51,6 +51,17 @@
   across 2 structural signatures and invalid authority 0.  Root may privately
   intersect accepted anonymous digests after freeze; no outcome-filtered panel
   is supplied here.  Julia/exact gate has not run.
+- Actual source-only applicability: STOP.  Static tests passed 4/4, but all
+  85 anonymous real sources failed closed at compilation; good-prime,
+  stable-tuple, exact-substitution and proposal counts were all zero.  No
+  endpoint, HP relation, target, truth or outcome reached the Hensel
+  candidate, and no Julia/exact replay ran. External aggregate SHA-256
+  `a1c48c7b6b93a577c7178b7b85e9f736a9236765484712ae6fa0ea9814ab7ef4`;
+  empty private aggregate SHA-256
+  `37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570`.
+  Reopen only after an independently reviewed source compiler semantic-cover
+  expansion makes actual anonymous rows compile.  Prime order, lift exponent,
+  reconstruction bound/radius and target proposal tuning do not reopen it.
 - Frozen hashes: candidate
   `a5a113faf7bfa070e52edd21293ccf53bc05832a2c85cc74e787d60b109c5314`;
   exact connector
