@@ -1,6 +1,6 @@
 # SAME_ROOT_PARTIAL_COORDINATE_CERTIFICATE_JOIN_V1
 
-- Status: `D0_PASS; ACTUAL_TRACE_GATE_NOT_RUN`.
+- Status: `D0_PASS; STOP_REAL_CONNECTOR_INTERVAL_BRIDGE_ZERO`.
 - Hypothesis: exactification currently loses configurations when no one
   endpoint/rung recognizes every coordinate.  Coordinate-local minpoly,
   real-root ordinal and isolator facts can be unioned across finalized attempts
@@ -24,11 +24,21 @@
   19-record successful panel contains only already-complete descriptors; failed
   real partial-coordinate facts and certified local boxes were not retained.
   Therefore it cannot establish incremental real activation for this mechanism.
-- Next gate: under the existing HP lock, make one candidate-private run that
+- Connector stop: `wave11_raw_interval_root_bridge_census` already measured
+  interval F/J occurrence mappings 0/145, arbitrary-box definedness tokens
+  0/145 and thin scalar-translator eligibility 0/145.  The independently
+  audited `certified_regular_root_wave2` Krawczyk kernel is fast and sound on
+  bounded QQ polynomial inputs (generated 100/100; root-certificate median
+  about 0.244 ms), but does not repair that raw-source semantic bridge.  A broad
+  interval compiler is specifically outside this experiment-first campaign.
+- Reopen gate: after an independently supplied source-bound interval F/J,
+  branch and definedness bridge has nonzero multi-cluster activation, make one
+  candidate-private run under the existing HP lock that
   retains finalized per-coordinate facts and local boxes only.  Continue only
   if at least two anonymous sources in two structural signatures become complete
   by a join while no constituent attempt is complete, all fresh Krawczyk gates
   pass, and unchanged exact replay has invalid/extra/authority failures zero.
-  Do not build a trace platform or tune PSLQ degree/radius/precision to reopen.
+  Do not build a trace/compiler platform or tune PSLQ degree/radius/precision
+  to reopen.
 - No truth, target value, outcome, case/family routing, formal benchmark, HP/CAS
   execution or shared infrastructure change occurred in this D0.
