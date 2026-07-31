@@ -114,7 +114,15 @@ failure; kNN and residual tie policy are unchanged.  The causal positive test
 does not activate after block one, activates after new evidence in block two,
 and retains all 16 generated original starts.  The frozen real-worker UNKNOWN
 test remains byte-equivalent after removing elapsed time.  The assigned Repair
-A D0 suite passed 11/11 on CPU14.  Root-only screen24 rerun remains pending.
+A D0 suite passed 11/11 on CPU14.  The fresh 72-pair screen24 rerun remained
+safe (candidate/control invalid 0/0) but activated 0 times: all 72 candidate
+runs were censored before a complete evidence block authorized the portal.
+Wins/losses/ties were 0/0/72, while candidate work fell to 138,514 callbacks
+and 1,989 lanes versus control 150,731 and 2,219; mean wall was 5.342 versus
+5.290 seconds.  Repair A is therefore stopped.  Reopen only with prospective
+evidence that a complete four-start block can finish within the same deadline
+and expose enough typed endpoint structure; do not tune thresholds, k, radius,
+or the deadline.
 
 ## Nearest mechanisms and reopen
 
