@@ -35,7 +35,12 @@ incomplete-ledger/tampered-certificate negatives, a strict-boundary empty
 near-miss, three metamorphics, and an upper polynomial with a spurious root
 that must be excluded by an empty exact fibre.
 
-Stop after D0 failure.  Do not tune order, degree, caps, or fixtures.  Reopen
-only for a complete algebraic ordered-field/sign implementation or a complete
-semantic compiler.  Any future runtime lane is capped at 25% exactification
-work while at least 75% remains the current proof-bearing control.
+The frozen blind degree-one static census found `0/85` eligible sources and
+zero signatures, because its descriptor proposals did not prove a global
+upper identity on the full source ideal.  Standalone status is `STOP`; do not
+tune order, degree, caps, thresholds, or fixtures.  Reopen only when an
+independent msolve/RUR producer supplies a verified global target eliminant,
+then use this mechanism strictly as the downstream all-real-root fibre
+exhaustion and predicate-count composition.  Any future runtime lane is capped
+at 25% exactification work while at least 75% remains the proof-bearing
+control.

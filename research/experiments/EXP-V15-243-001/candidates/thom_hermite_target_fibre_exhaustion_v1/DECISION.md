@@ -27,3 +27,18 @@ This is generated QQ/rational-target evidence only.  No corpus, truth,
 benchmark runner, common infrastructure, or production authority path was
 used.  Algebraic ordered fields and complete semantic compilation remain the
 source-only applicability gates before any real experiment.
+
+## Frozen real static disposition
+
+Root's blind degree-one census returned `eligible=0/85` and
+`signature_count=0`.  The standalone candidate is therefore `STOP`; no cap,
+threshold, order, or panel tuning is permitted.  A descriptor proposal is not
+a proof that a global target eliminant vanishes on the complete source ideal,
+so it cannot satisfy this candidate's first authority obligation.
+
+The mechanism may be reopened only as a composition after an independent
+msolve/RUR lane supplies a verified global target eliminant (including its
+ideal-membership/global-upper proof).  At that point this candidate is limited
+to exhausting every real eliminant-root fibre and applying the complete
+Hermite/Tarski predicate ledger.  Until such an artifact exists, do not rerun
+the standalone census.
