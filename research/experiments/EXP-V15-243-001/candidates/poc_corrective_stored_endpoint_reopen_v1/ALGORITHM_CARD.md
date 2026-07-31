@@ -69,3 +69,13 @@ descriptor. A zero complete-lane count returns
 `STOP_NO_COMPLETE_STORED_LANES`; the adapter must not be tuned from that stop.
 The census and its synthetic tests were prepared but not executed in this
 candidate lane, as execution remains benchmark-owner gated.
+
+Root later executed the frozen aggregate-only census under the CPU14 global
+lock. Aggregate SHA-256
+`62831951f4919fb8aa8ad43732d03893dd1ffd24befd774a2d8ac37ca644095e`
+reported 24,392 parsed JSON documents and 145 source documents, but zero
+stored bridge documents, proposals, complete independent coordinate lanes, or
+anonymous signatures. No corrective exactification ran and no truth, scorer,
+validation, or sealed data was opened. Final disposition:
+`STOP_NO_COMPLETE_STORED_LANES`; no adapter tuning or alternate stored-schema
+search is permitted in this campaign.
