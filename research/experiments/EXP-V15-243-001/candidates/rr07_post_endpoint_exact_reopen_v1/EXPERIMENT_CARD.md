@@ -32,6 +32,6 @@
   or contact operators without the independent tangent invariant does not
   reopen RR-07.
 - Mechanism SHA-256: `candidate.py`
-  `ad657621b9253e06b0e7f02d92e0a9fecaf555feef015ed0636fc38ff892d952`;
+  `b79e20cb2d2f5d74113052ccc88e221ab186cba5729fe61442aec5e6374d6533`;
   real gate
   `3fbcf5167c85a5ea36c1211a3ad4ff7c6e86493871d44c3ebbee0b14ba426adf`.
