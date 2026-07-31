@@ -213,6 +213,13 @@ def main() -> int:
         "schema_version": "geotarget.target-constrained-nra-ordinary-binding-generated/v1",
         "decision": decision,
         "positive_binding_ready_count": int(positive.get("binding_ready") is True),
+        "positive_ordinary_binding_pass_count": int(
+            positive.get("ordinary_binding_pass") is True
+        ),
+        "positive_exact_replay_pass_count": int(
+            positive.get("exact_replay_pass") is True
+        ),
+        "positive_readiness_count": int(positive.get("readiness") is True),
         "positive_external_authority_pass_count": int(
             positive.get("authority_pass") is True
         ),

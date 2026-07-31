@@ -103,6 +103,9 @@ def test_complete_binding_returns_existing_boundary_descriptor_but_holds_release
     expected = json.loads(proposal.read_bytes())["ordinary_attempt"]["descriptor"]
     result = _connect(row, source_root, proposal_root)
     assert result["binding_ready"] is True
+    assert result["ordinary_binding_pass"] is True
+    assert result["exact_replay_pass"] is True
+    assert result["readiness"] is True
     assert result["authority_boundary_descriptor_ready"] is True
     assert result["authority_boundary_exact_descriptor"] == expected
     assert result["ordinary_descriptor_returned_without_rewrite"] is True

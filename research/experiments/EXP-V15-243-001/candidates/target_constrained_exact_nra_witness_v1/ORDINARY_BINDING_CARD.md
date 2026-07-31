@@ -46,10 +46,15 @@ individual paths, descriptors, targets, witnesses, or failure strings.
 ## Safety state and generated evidence
 
 The connector proves one emission only and never claims runtime target-set
-completeness.  Until independent audit passes, every connector result has
+completeness.  At this experiment stage every connector result has
 `authority_pass=false` and `target_release=false`, even when the existing
 authority boundary accepts the exact descriptor and all exact replay steps
 pass.
+
+The four-request census remains non-authoritative even after the connector
+review: successful rows are counted only as `ordinary_binding_pass`,
+`exact_replay_pass`, and `readiness`.  Formal authority/release is reserved for
+the later current `exact_outer` integration plus canonical scoring gate.
 
 CPU14 generated S0 is `GO_AUDIT`: one complete positive binding passed while
 external authority/release remained zero; source, endpoint-bit, descriptor,

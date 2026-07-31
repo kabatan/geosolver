@@ -323,6 +323,9 @@ def connect(
         "truth_used": False,
         "case_family_target_count_routing": False,
         "binding_ready": False,
+        "ordinary_binding_pass": False,
+        "exact_replay_pass": False,
+        "readiness": False,
         "authority_boundary_descriptor_ready": False,
     }
     try:
@@ -422,6 +425,9 @@ def connect(
             {
                 "status": "AUTHORITY_BOUNDARY_DESCRIPTOR_READY_PENDING_AUDIT",
                 "binding_ready": True,
+                "ordinary_binding_pass": True,
+                "exact_replay_pass": True,
+                "readiness": True,
                 "authority_boundary_descriptor_ready": True,
                 "authority_boundary_sha256": AUTHORITY_BOUNDARY_SHA256,
                 "authority_boundary_exact_descriptor": ordinary_descriptor,

@@ -119,6 +119,9 @@ def main() -> int:
             if result.get("authority_boundary_descriptor_ready")
             else "authority_boundary_descriptor_not_ready"
         ] += 1
+        for signal in ("ordinary_binding_pass", "exact_replay_pass", "readiness"):
+            if result.get(signal) is True:
+                counts[signal] += 1
         failure = str(result.get("failure_class", "OTHER_FAIL_CLOSED"))
         if failure != "NONE":
             if failure not in FAILURE_CLASSES:
@@ -143,6 +146,9 @@ def main() -> int:
         "authority_boundary_descriptor_not_ready_count": counts[
             "authority_boundary_descriptor_not_ready"
         ],
+        "ordinary_binding_pass_count": counts["ordinary_binding_pass"],
+        "exact_replay_pass_count": counts["exact_replay_pass"],
+        "readiness_count": counts["readiness"],
         "fixed_failure_counts": {
             name: counts[f"failure:{name}"] for name in FAILURE_CLASSES
         },
