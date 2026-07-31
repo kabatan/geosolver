@@ -4,8 +4,10 @@
 from __future__ import annotations
 
 import argparse
+import atexit
 import ast
 from collections import Counter
+from decimal import Decimal, InvalidOperation
 from fractions import Fraction
 import hashlib
 import importlib.util
@@ -14,13 +16,18 @@ import math
 import os
 from pathlib import Path
 import struct
-import subprocess
 import sys
 import tempfile
 import time
 from typing import Mapping, Sequence
 
 from candidate import Inapplicable, reconstruct_anchored_edm
+from execution_guard import (
+    FormalRunLease,
+    atomic_write_0600,
+    canonical_json,
+    run_contained,
+)
 
 
 REQUESTS_SHA256 = "ee424315256582652ea0df72a05c21903a5fd4366867c6788129a79e4f80fd35"
@@ -32,6 +39,61 @@ PANEL_PROVENANCE = APPROVED_SOURCE_ROOT.parent / "DEGREE1_REQUEST_AGGREGATE.json
 PANEL_PROVENANCE_SHA256 = "c686498c6fec6b5a8f6d03eae68ef991ed1ea6998d3ea9479ba78d25f9ea74d3"
 APPROVED_PYTHON = Path("/home/kabatan/work/solver/.venv/bin/python").resolve()
 APPROVED_PYTHON_SHA256 = "ccc93c55c24bb92866cc2f9eff61b124abf5d1ee6c8da0ef9b5eed4d78a21f07"
+APPROVED_RUNTIME_ROOT = Path("/home/kabatan/work/solver-experiment-runtime/solver").resolve()
+APPROVED_RUNTIME_PYTHON = (APPROVED_RUNTIME_ROOT / "python/.venv/bin/python").resolve()
+APPROVED_JULIA = Path(
+    "/home/kabatan/.julia/juliaup/julia-1.12.6+0.x64.linux.gnu/bin/julia"
+).resolve()
+APPROVED_JULIA_SHA256 = "fd670aabc838e93f178cbcf7304c5e9c50aadcce3735e86d5e3218b1bb04e602"
+APPROVED_GEOSOLVER_SOURCE = Path("/home/kabatan/work/geosolver/src").resolve()
+APPROVED_GEOSOLVER_TREE_SHA256 = "03e38d35d33db708b64ca1202720154a76bc30052fc5ce737515eadaa5dcd732"
+RUNTIME_CLOSURE_FILES = {
+    "authority_runtime": (
+        "research/experiments/EXP-REAL61-007/provisional_numerical_architecture/source_only_runtime.py",
+        "a3596c7273122ee49f537a43c1c05b57318a86b56bfdf6f19eb0bd20c6f59796",
+    ),
+    "source_runtime": (
+        "research/experiments/EXP-REAL61-008/source_only/runtime.py",
+        "5594c7f673171999ac4455f00223861673ea42bc02be1bb3e115f28951dfdaf1",
+    ),
+    "exact_worker": (
+        "research/experiments/EXP-V15-243-001/candidates/exact_coordinate_replay/fallback_worker.py",
+        "44d6fa802dc51e7f58e5a72e48b434a62be84275c328bd605f0e9e2f6eb11900",
+    ),
+    "exact_candidate": (
+        "research/experiments/EXP-V15-243-001/candidates/exact_coordinate_replay/candidate.py",
+        "e0f24e605e7e7211d134ddea66e66adbb89307148a8f03c1afebd4a2c969c66f",
+    ),
+    "root_ordinal_audit": (
+        "research/experiments/EXP-V15-243-001/candidates/exact_coordinate_replay/FINAL_ROOT_ORDINAL_BOUNDARY_AUDIT.json",
+        "fa133c7243b9f455bbb4f80de1613efc53bc590ffc8556ec8ea4eee2377c3566",
+    ),
+    "numeric_refiner": (
+        "research/experiments/EXP-REAL61-001/refine_proposals_worker.py",
+        "14a107893f6db1b9ec113c28653a40b3817f274865b0fabc64e2a13702bdc7b3",
+    ),
+    "legacy_runtime": (
+        "research/experiments/EXP-REAL61-001/legacy61_runtime.py",
+        "3261a6289f4a43681e698937c158d4a4f1740e54b70b88559c399e3b6395ec2b",
+    ),
+    "qqbar_dag": (
+        "research/experiments/EXP-REAL61-004/qqbar_exact_replay/dag_compile.py",
+        "9b83181004a8ea2ea73f2974129e37ce252f7d352937b9f8b601b39eddf03d18",
+    ),
+    "qqbar_worker": (
+        "research/experiments/EXP-REAL61-004/qqbar_exact_replay/qqbar_worker.jl",
+        "3ac6415600da77f8748a11d15fa47eb3dcb9f8deada375388fc762a155df0b4a",
+    ),
+    "julia_project": (
+        "research/experiments/EXP-REAL61-002/target_elimination/Project.toml",
+        "9f39a2eb827fcc842513037ed5d9debbe1e1cf15a24e29111645917e9acaa6c7",
+    ),
+    "julia_manifest": (
+        "research/experiments/EXP-REAL61-002/target_elimination/Manifest.toml",
+        "0b93cd67d522d4cce3bea7b3a754109a972e1eb2ef7fabe7eecb6c7a3cb19b42",
+    ),
+}
+APPROVED_RUNTIME_CLOSURE_SHA256 = "ec2d5c933d947549194e9226170702360a8e3d350d69b7c07267afe2624a55a9"
 ROW_KEYS = frozenset(("candidate_relation_high_to_low", "endpoint", "source_path"))
 FORBIDDEN_SOURCE_KEYS = frozenset(
     ("id", "case_id", "problem_id", "family", "truth", "outcome", "result", "score", "known_count")
@@ -48,10 +110,59 @@ POINT_OPERATORS = frozenset(
 )
 MAX_DENOMINATOR = 1_000_000
 RECOGNITION_TOLERANCE = 2.0e-8
+EXACT_ADDRESS_SPACE_CAP_BYTES = 12 * 1024**3
+EXACT_RSS_CAP_BYTES = 10 * 1024**3
+EXACT_DATA_CAP_BYTES = 12 * 1024**3
+EXACT_FILE_CAP_BYTES = 16 * 1024**2
+EXACT_LOG_CAP_BYTES = 2 * 1024**2
 
 
 def _sha(payload: bytes) -> str:
     return hashlib.sha256(payload).hexdigest()
+
+
+def _tree_sha(root: Path) -> str:
+    digest = hashlib.sha256()
+    for path in sorted(root.rglob("*")):
+        if not path.is_file() or "__pycache__" in path.parts:
+            continue
+        relative = path.relative_to(root).as_posix().encode("utf-8")
+        payload = path.read_bytes()
+        digest.update(len(relative).to_bytes(4, "big"))
+        digest.update(relative)
+        digest.update(len(payload).to_bytes(8, "big"))
+        digest.update(payload)
+    return digest.hexdigest()
+
+
+def _runtime_closure(runtime_root: Path) -> tuple[str, Path, dict[str, object]]:
+    if runtime_root.resolve() != APPROVED_RUNTIME_ROOT:
+        raise SystemExit("unapproved exact runtime root")
+    records = {}
+    for name, (relative, expected) in sorted(RUNTIME_CLOSURE_FILES.items()):
+        path = runtime_root.resolve() / relative
+        observed = _sha(path.read_bytes()) if path.is_file() else None
+        if observed != expected:
+            raise SystemExit(f"exact runtime closure changed: {name}")
+        records[name] = {"path": str(path.resolve()), "sha256": expected}
+    for name, path, expected in (
+        ("formal_python", APPROVED_PYTHON, APPROVED_PYTHON_SHA256),
+        ("runtime_python", APPROVED_RUNTIME_PYTHON, APPROVED_PYTHON_SHA256),
+        ("julia", APPROVED_JULIA, APPROVED_JULIA_SHA256),
+    ):
+        if not path.is_file() or _sha(path.read_bytes()) != expected:
+            raise SystemExit(f"fixed executable changed: {name}")
+        records[name] = {"path": str(path), "sha256": expected}
+    if _tree_sha(APPROVED_GEOSOLVER_SOURCE) != APPROVED_GEOSOLVER_TREE_SHA256:
+        raise SystemExit("legacy geosolver transitive source tree changed")
+    records["geosolver_source_tree"] = {
+        "path": str(APPROVED_GEOSOLVER_SOURCE),
+        "sha256": APPROVED_GEOSOLVER_TREE_SHA256,
+    }
+    closure_sha = _sha(canonical_json(records))
+    if closure_sha != APPROVED_RUNTIME_CLOSURE_SHA256:
+        raise SystemExit("exact runtime transitive closure manifest changed")
+    return closure_sha, Path(records["exact_worker"]["path"]), records
 
 
 def _endpoint_sha(endpoint: Sequence[float]) -> str:
@@ -211,6 +322,124 @@ def _source_replay_ready(evaluator, endpoint) -> bool:
         return False
 
 
+def _strict_descriptor_ready(value: object, exact: object) -> bool:
+    """Recompute the minimal-polynomial, isolator, and ordinal obligations."""
+
+    if not isinstance(value, Mapping) or set(value) != {
+        "minimal_polynomial_high_to_low",
+        "selected_real_root_index",
+        "isolating_interval",
+        "proposal_relation_low_to_high",
+        "confirmation_relation_low_to_high",
+        "target_512",
+        "target_768",
+        "target_1024",
+    }:
+        return False
+    coefficients = value.get("minimal_polynomial_high_to_low")
+    ordinal = value.get("selected_real_root_index")
+    isolator = value.get("isolating_interval")
+    if (
+        not isinstance(coefficients, list)
+        or len(coefficients) < 2
+        or not all(isinstance(item, int) and not isinstance(item, bool) for item in coefficients)
+        or coefficients[0] <= 0
+        or math.gcd(*coefficients) != 1
+        or not isinstance(ordinal, int)
+        or isinstance(ordinal, bool)
+        or ordinal < 0
+        or not isinstance(isolator, Mapping)
+        or set(isolator) != {"left", "right", "multiplicity", "real_root_index"}
+        or isolator.get("multiplicity") != 1
+        or isinstance(isolator.get("multiplicity"), bool)
+        or isolator.get("real_root_index") != ordinal
+        or isinstance(isolator.get("real_root_index"), bool)
+        or value.get("proposal_relation_low_to_high") != list(reversed(coefficients))
+        or value.get("confirmation_relation_low_to_high") != list(reversed(coefficients))
+    ):
+        return False
+    try:
+        left = Fraction(isolator["left"])
+        right = Fraction(isolator["right"])
+        if left > right:
+            return False
+        for lane in ("target_512", "target_768", "target_1024"):
+            text = value[lane]
+            if not isinstance(text, str) or not Decimal(text).is_finite():
+                return False
+        import sympy as sp
+
+        variable = sp.Symbol("x")
+        polynomial = sp.Poly(coefficients, variable, domain=sp.ZZ)
+        if polynomial.degree() < 1 or polynomial.is_irreducible is not True:
+            return False
+        if sp.gcd(polynomial, polynomial.diff()).degree() != 0:
+            return False
+        left_q = sp.Rational(left.numerator, left.denominator)
+        right_q = sp.Rational(right.numerator, right.denominator)
+        if left == right:
+            if polynomial.degree() != 1 or polynomial.eval(left_q) != 0:
+                return False
+            roots_left = 0
+        else:
+            if polynomial.eval(left_q) == 0 or polynomial.eval(right_q) == 0:
+                return False
+            if polynomial.count_roots(left_q, right_q) != 1:
+                return False
+            roots_left = polynomial.count_roots(-sp.oo, left_q)
+        real_root_count = polynomial.count_roots(-sp.oo, sp.oo)
+        if int(roots_left) != ordinal or int(real_root_count) <= ordinal:
+            return False
+    except (InvalidOperation, TypeError, ValueError, ZeroDivisionError, KeyError):
+        return False
+    exact_target = exact.get("exact_target_descriptor") if isinstance(exact, Mapping) else None
+    attestation = exact.get("target_root_attestation") if isinstance(exact, Mapping) else None
+    return bool(
+        isinstance(exact_target, Mapping)
+        and set(exact_target) == {"coefficients_high_to_low", "isolating_interval"}
+        and exact_target.get("coefficients_high_to_low") == coefficients
+        and all(
+            isinstance(item, int) and not isinstance(item, bool)
+            for item in exact_target.get("coefficients_high_to_low", ())
+        )
+        and isinstance(exact_target.get("isolating_interval"), Mapping)
+        and set(exact_target.get("isolating_interval", {}))
+        == {"left", "right", "multiplicity", "real_root_index"}
+        and all(
+            isinstance(exact_target["isolating_interval"].get(key), int)
+            and not isinstance(exact_target["isolating_interval"].get(key), bool)
+            for key in ("multiplicity", "real_root_index")
+        )
+        and exact_target.get("isolating_interval") == dict(isolator)
+        and isinstance(attestation, Mapping)
+        and set(attestation)
+        == {
+            "claimed_real_root_index",
+            "attested_real_root_index",
+            "real_root_count",
+            "multiplicity",
+            "interval_unique",
+            "index_match",
+        }
+        and all(
+            isinstance(attestation.get(key), int)
+            and not isinstance(attestation.get(key), bool)
+            for key in (
+                "claimed_real_root_index",
+                "attested_real_root_index",
+                "real_root_count",
+                "multiplicity",
+            )
+        )
+        and attestation.get("claimed_real_root_index") == ordinal
+        and attestation.get("attested_real_root_index") == ordinal
+        and attestation.get("real_root_count") == int(real_root_count)
+        and attestation.get("multiplicity") == 1
+        and attestation.get("interval_unique") is True
+        and attestation.get("index_match") is True
+    )
+
+
 def _exact_ready(value: object, source_sha: str, endpoint_sha: str) -> bool:
     exact = value.get("exact_coordinate_authority") if isinstance(value, Mapping) else None
     numeric = value.get("numeric_source_replay") if isinstance(value, Mapping) else None
@@ -233,7 +462,7 @@ def _exact_ready(value: object, source_sha: str, endpoint_sha: str) -> bool:
         and value.get("numeric_guard_branch_replay_is_authority") is True
         and value.get("numeric_target_nearness_is_authority") is False
         and value.get("numeric_float_residual_is_authority") is False
-        and isinstance(value.get("descriptor"), Mapping)
+        and _strict_descriptor_ready(value.get("descriptor"), exact)
         and isinstance(exact, Mapping)
         and exact.get("schema_version") == "geotarget.v15-243-exact-coordinate-replay/v1"
         and exact.get("status") == "EXACT_TARGET_AUTHORITY_READY"
@@ -275,32 +504,113 @@ def _exact_ready(value: object, source_sha: str, endpoint_sha: str) -> bool:
     )
 
 
-def _run_exact(python: Path, worker: Path, source: Path, source_sha: str, endpoint, timeout: float):
+def _run_exact(
+    python: Path,
+    worker: Path,
+    source: Path,
+    source_sha: str,
+    ordinary_proposal_bytes: bytes,
+    endpoint,
+    timeout: float,
+    artifact_root: Path,
+    runtime_closure_sha256: str,
+    runtime_closure_records: Mapping[str, object],
+    lease: FormalRunLease,
+):
     endpoint_sha = _endpoint_sha(endpoint)
-    with tempfile.TemporaryDirectory(prefix="edm-gram-exact-") as temporary:
-        output = Path(temporary) / "RESULT.json"
-        command = [
-            str(python), str(worker), "--source", str(source),
+    source_bytes = source.read_bytes()
+    if _sha(source_bytes) != source_sha:
+        raise SystemExit("source bytes changed before exact replay")
+    artifact_root = artifact_root.resolve()
+    with tempfile.TemporaryDirectory(
+        prefix=".edm-gram-exact-", dir=artifact_root
+    ) as temporary:
+        attempt_root = Path(temporary).resolve()
+        attempt_root.chmod(0o700)
+        source_copy = attempt_root / "SOURCE.json"
+        proposal_copy = attempt_root / "ORDINARY-PROPOSAL.json"
+        output = attempt_root / "RESULT.json"
+        stdout_path = attempt_root / "STDOUT.bin"
+        stderr_path = attempt_root / "STDERR.bin"
+        manifest_path = attempt_root / "ATTEMPT.json"
+        atomic_write_0600(attempt_root, source_copy, source_bytes)
+        atomic_write_0600(attempt_root, proposal_copy, ordinary_proposal_bytes)
+        shim_root = attempt_root / "fixed-bin"
+        shim_root.mkdir(mode=0o700)
+        julia_shim = shim_root / "julia"
+        julia_shim.symlink_to(APPROVED_JULIA)
+        worker_arguments = [
+            "--source", str(source_copy),
             "--source-sha256", source_sha,
             "--endpoint", json.dumps(endpoint, separators=(",", ":")),
             "--endpoint-sha256", endpoint_sha,
             "--timeout-seconds", str(timeout), "--output", str(output),
         ]
+        manifest = {
+            "schema_version": "geotarget.edm-exact-attempt/v1",
+            "python_path": str(python.resolve()),
+            "worker_path": str(worker.resolve()),
+            "runtime_closure_sha256": runtime_closure_sha256,
+            "runtime_closure": dict(runtime_closure_records),
+            "source": {"path": str(source_copy), "sha256": source_sha},
+            "ordinary_proposal": {
+                "path": str(proposal_copy),
+                "sha256": _sha(ordinary_proposal_bytes),
+            },
+            "endpoint_float64_sha256": endpoint_sha,
+            "worker_arguments_sha256": _sha(
+                b"\0".join(item.encode("utf-8") for item in worker_arguments)
+            ),
+            "fixed_julia_shim": str(julia_shim),
+            "limits": {
+                "address_space_bytes": EXACT_ADDRESS_SPACE_CAP_BYTES,
+                "rss_bytes": EXACT_RSS_CAP_BYTES,
+                "data_bytes": EXACT_DATA_CAP_BYTES,
+                "file_bytes": EXACT_FILE_CAP_BYTES,
+                "log_bytes": EXACT_LOG_CAP_BYTES,
+            },
+            "truth_used": False,
+            "case_family_known_target_count_routing": False,
+        }
+        manifest_payload = canonical_json(manifest)
+        atomic_write_0600(attempt_root, manifest_path, manifest_payload)
+        environment, inherited_fds = lease.child_handoff(manifest_payload)
+        guard_path = Path(__file__).resolve().parent / "exact_worker_guard.py"
+        command = [
+            str(python.resolve()),
+            str(guard_path),
+            "--attempt-manifest", str(manifest_path),
+            "--worker", str(worker.resolve()),
+            "--python", str(python.resolve()),
+            "--",
+            *worker_arguments,
+        ]
         try:
-            completed = subprocess.run(
-                command, check=False, timeout=timeout + 1.0,
-                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            completed = run_contained(
+                command,
+                cwd=attempt_root,
+                environment=environment,
+                pass_fds=inherited_fds,
+                timeout_seconds=timeout + 1.0,
+                rss_cap_bytes=EXACT_RSS_CAP_BYTES,
+                stdout_path=stdout_path,
+                stderr_path=stderr_path,
+                output_cap_bytes=EXACT_LOG_CAP_BYTES,
             )
-        except subprocess.TimeoutExpired:
+        finally:
+            lease.close_child_token_fd(inherited_fds)
+        if completed.classification != "COMPLETED" or completed.returncode != 0:
             return False, endpoint_sha
-        if completed.returncode != 0:
+        if not output.is_file() or output.stat().st_size > EXACT_FILE_CAP_BYTES:
             return False, endpoint_sha
         try:
             result = json.loads(output.read_bytes())
         except (OSError, json.JSONDecodeError):
             return False, endpoint_sha
-        if _sha(source.read_bytes()) != source_sha:
+        if source.read_bytes() != source_bytes:
             raise SystemExit("source bytes changed across exact replay")
+        if proposal_copy.read_bytes() != ordinary_proposal_bytes:
+            raise SystemExit("ordinary proposal bytes changed across exact replay")
     return _exact_ready(result, source_sha, endpoint_sha), endpoint_sha
 
 
@@ -319,6 +629,17 @@ def main() -> int:
     arguments = parser.parse_args()
     if arguments.execute_exact and not arguments.execute_stored:
         raise SystemExit("exact gate requires stored gate")
+    supplied_artifact_root = arguments.output.absolute().parent
+    if supplied_artifact_root.is_symlink():
+        raise SystemExit("artifact root is a symlink")
+    supplied_artifact_root.mkdir(parents=True, exist_ok=True, mode=0o700)
+    artifact_root = supplied_artifact_root.resolve()
+    if (
+        arguments.private_signatures.absolute().parent.resolve() != artifact_root
+        or arguments.output.name in {"", ".", ".."}
+        or arguments.private_signatures.name in {"", ".", ".."}
+    ):
+        raise SystemExit("aggregate and sidecar must be direct children of one artifact root")
     if arguments.python.resolve() != APPROVED_PYTHON or _sha(APPROVED_PYTHON.read_bytes()) != APPROVED_PYTHON_SHA256:
         raise SystemExit("unapproved exact-gate Python")
     if os.sched_getaffinity(0) != {arguments.expected_cpu}:
@@ -373,11 +694,17 @@ def main() -> int:
             continue
         counters["static_activated"] += 1
         static_signatures.add(plan["signature"])
-        prepared.append((row, source, _sha(payload), dict(document), plan))
+        ordinary_proposal_bytes = canonical_json(dict(row))
+        prepared.append(
+            (row, source, _sha(payload), ordinary_proposal_bytes, dict(document), plan)
+        )
     static_pass = counters["static_activated"] >= 6 and len(static_signatures) >= 3
 
     runtime = None
     exact_worker = None
+    runtime_closure_sha256 = None
+    runtime_closure_records = None
+    formal_lease = None
     if arguments.execute_stored and static_pass:
         runtime_path = arguments.runtime_root.resolve() / "research/experiments/EXP-REAL61-008/source_only/runtime.py"
         authority_runtime = arguments.runtime_root.resolve() / "research/experiments/EXP-REAL61-007/provisional_numerical_architecture/source_only_runtime.py"
@@ -387,6 +714,14 @@ def main() -> int:
             raise SystemExit("source runtime authority closure changed")
         if _sha(exact_worker.read_bytes()) != EXACT_WORKER_SHA256:
             raise SystemExit("exact replay worker changed")
+        runtime_closure_sha256, exact_worker, runtime_closure_records = _runtime_closure(
+            arguments.runtime_root
+        )
+        if arguments.execute_exact:
+            formal_lease = FormalRunLease(
+                "POST_ENDPOINT_EDM_GRAM_EXACT_REOPEN_V1"
+            ).acquire()
+            atexit.register(formal_lease.release)
 
     stored_sources = set()
     stored_signatures = set()
@@ -394,7 +729,7 @@ def main() -> int:
     pure_signatures = set()
     private = []
     if runtime is not None:
-        for row, source, source_sha, document, plan in prepared:
+        for row, source, source_sha, ordinary_proposal_bytes, document, plan in prepared:
             if len(plan["anchors"]) < 2 or not plan["dynamic"]:
                 counters["stored_missing_fixed_anchor_or_dynamic_point"] += 1
                 continue
@@ -493,7 +828,9 @@ def main() -> int:
                 for route, exact_endpoint in schedule:
                     ready, exact_sha = _run_exact(
                         arguments.python.resolve(), exact_worker, source, source_sha,
-                        exact_endpoint, arguments.exact_timeout_seconds,
+                        ordinary_proposal_bytes, exact_endpoint,
+                        arguments.exact_timeout_seconds, artifact_root,
+                        runtime_closure_sha256, runtime_closure_records, formal_lease,
                     )
                     counters[f"{route}_exact_attempt"] += 1
                     if route == "candidate" and ready:
@@ -510,7 +847,11 @@ def main() -> int:
                     pure_signatures.add(signature)
                     counters["pure_gain"] += 1
                     private.extend(
-                        {"source_sha256": source_sha, "endpoint_float64_sha256": value}
+                        {
+                            "source_sha256": source_sha,
+                            "ordinary_proposal_bytes_sha256": _sha(ordinary_proposal_bytes),
+                            "endpoint_float64_sha256": value,
+                        }
                         for value in candidate_ready
                     )
 
@@ -518,8 +859,7 @@ def main() -> int:
     pure_pass = len(pure_sources) >= 2 and len(pure_signatures) >= 2
     private.sort(key=lambda item: (item["source_sha256"], item["endpoint_float64_sha256"]))
     private_payload = json.dumps(private, sort_keys=True, separators=(",", ":")).encode("ascii") + b"\n"
-    arguments.private_signatures.parent.mkdir(parents=True, exist_ok=True)
-    arguments.private_signatures.write_bytes(private_payload)
+    atomic_write_0600(artifact_root, arguments.private_signatures, private_payload)
     if not static_pass:
         disposition = "STOP_STATIC_PREVALENCE_GATE"
     elif not arguments.execute_stored:
@@ -538,7 +878,13 @@ def main() -> int:
         "requests_sha256": REQUESTS_SHA256,
         "request_panel_provenance_sha256": PANEL_PROVENANCE_SHA256,
         "python_sha256": APPROVED_PYTHON_SHA256,
+        "runtime_closure_sha256": runtime_closure_sha256,
         "exact_schedule": "ABBA_TWO_CANDIDATE_TWO_BASELINE_EQUAL_TIMEOUT",
+        "exact_process_containment": "NEW_SESSION_PGID_RSS_AS_DATA_FSIZE_OUTPUT_CAPS",
+        "formal_lease_child_handoff": "PARENT_TOKEN_HMAC_PLUS_INHERITED_LOCK_FD",
+        "source_and_ordinary_proposal_all_byte_binding": True,
+        "descriptor_minpoly_squarefree_isolator_ordinal_recomputed": True,
+        "aggregate_and_sidecar_atomic_mode_0600_root_confined": True,
         "static_activated_source_count": counters["static_activated"],
         "static_signature_count": len(static_signatures),
         "stored_activated_source_count": len(stored_sources),
@@ -558,8 +904,11 @@ def main() -> int:
         "target_release": False,
         "truth_case_family_target_count_outcome_routing": False,
     }
-    arguments.output.parent.mkdir(parents=True, exist_ok=True)
-    arguments.output.write_text(json.dumps(aggregate, sort_keys=True, separators=(",", ":")) + "\n")
+    aggregate_payload = canonical_json(aggregate)
+    atomic_write_0600(artifact_root, arguments.output, aggregate_payload)
+    if formal_lease is not None:
+        formal_lease.release()
+        atexit.unregister(formal_lease.release)
     print(json.dumps(aggregate, sort_keys=True, separators=(",", ":")))
     return 0
 

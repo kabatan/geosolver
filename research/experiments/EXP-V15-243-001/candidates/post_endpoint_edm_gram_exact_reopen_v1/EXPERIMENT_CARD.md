@@ -42,3 +42,38 @@
   frozen exact-coordinate fallback worker
   `44d6fa802dc51e7f58e5a72e48b434a62be84275c328bd605f0e9e2f6eb11900`
   in fresh subprocesses. It has not been executed after the P1 repair.
+
+## P2 formal-execution-boundary repair (2026-07-31)
+
+- Mathematical mechanism is unchanged (`candidate.py`
+  `1f30a8e5c334d6e1d1c1583afe9b06d2d1d7a5c4c326209d93fafc7c775c5270`).
+  The repair is candidate-private disposable code, not a common harness.
+- The real runner now internally owns the shared `FormalRunLease`; every exact
+  child needs the inherited lock FD plus a one-use parent-token HMAC. Direct
+  guarded-worker invocation fails closed. Each attempt is a new session/process
+  group with descendant termination and 10 GiB RSS, 12 GiB AS/data, 16 MiB
+  file, and 2 MiB log caps.
+- Python, Julia 1.12.6, the exact worker/candidate, numeric refiner, source
+  runtimes, QQBar compiler/worker, Julia Project/Manifest, root-ordinal audit,
+  and the complete 397-file legacy source tree are bound by runtime-closure
+  SHA-256 `ec2d5c933d947549194e9226170702360a8e3d350d69b7c07267afe2624a55a9`.
+- Every attempt copies and binds the untouched source bytes and canonical
+  ordinary-proposal bytes separately. Terminal descriptors are accepted only
+  after recomputing primitive irreducible square-free minimal polynomial,
+  unique rational isolator, real-root count/ordinal, and exact replay parity.
+  Aggregate and private sidecar publication is root-confined, atomic, and
+  mode `0600`.
+- Execution mutation D0: PASS 18/18, including 10 descriptor mutations,
+  forged/missing lease proof, runtime/source/proposal byte drift, deadline,
+  RSS/output caps, symlink and parent escape. No private/truth row and no
+  global formal lock was used. Artifact
+  `973ff03e7417e2e40e60dced2e4a79242967940b55dec673decdc118c5dc7bb5`.
+- Mathematical generated D0 remains byte-identical PASS
+  (`42057b0ef75da168e0da93241b1b20363e53e8f510b22dd5bca250e9b96c4285`);
+  repaired anonymous static D0 remains 68 sources / 3 signatures PASS
+  (`b843b60f0494bea0bf4fc8f01d0fb9e7b8f678eb03b79deeeb6ed0cf0758ab52`).
+- Mechanism closure (seven code/test files) is
+  `6723fc46a2212bc2fadfde8250ddcdc12eafad4a498c82fd72a06580c4bcc67a`.
+  Pure-gain exact replay was deliberately not run in this repair lane. Freeze
+  this closure and request independent adversarial re-audit before the owner
+  schedules any global-lock exact gate.

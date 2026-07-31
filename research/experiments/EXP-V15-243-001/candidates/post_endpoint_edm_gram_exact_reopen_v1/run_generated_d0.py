@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 
 from candidate import Inapplicable, reconstruct_anchored_edm, replay_branches, squared_distance
+from execution_guard import atomic_write_0600, canonical_json
 
 
 def _sha(tag: str) -> str:
@@ -143,8 +144,8 @@ def main() -> int:
         "target_release": False,
         "completed": True,
     }
-    arguments.output.parent.mkdir(parents=True, exist_ok=True)
-    arguments.output.write_text(json.dumps(result, sort_keys=True, separators=(",", ":")) + "\n")
+    output_root = arguments.output.absolute().parent
+    atomic_write_0600(output_root, arguments.output, canonical_json(result))
     print(json.dumps(result, sort_keys=True, separators=(",", ":")))
     return 0
 
