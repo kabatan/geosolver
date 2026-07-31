@@ -83,7 +83,7 @@ baseline authorities and the existing source-exact zero-dimensional route are
 returned byte-for-byte unchanged.  Applicability tests are 7/7; combined
 candidate tests are 17/17.  No formal execute, scorer, truth, outcome, expected
 target, family routing, validation/sealed formulation or CPU0--6 was used.
-Applicability SHA-256 is
-`48c6a5ab3ceef457b11c1db04c64e894aeb4fc32f7566af9dcc63a6199f78665`.
+Applicability SHA-256 after adding the optional private replay-ledger export is
+`8b3ae91409f56f9ba08597bd022fba0497c1e63341fcc5a04bd0e44c46c95b26`.
 The next reopen gate is a truth-blind stream of real proposals plus a
 candidate-private canonical replay bridge for these seven static sources.

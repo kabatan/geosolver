@@ -208,6 +208,8 @@ def _legacy_module():
 
 def _legacy_target_link_source(
     document: Mapping[str, object],
+    *,
+    include_private_bridge_ledger: bool = False,
 ) -> tuple[backend.PolynomialSource, dict[str, object]]:
     """Thinly add a target graph to the existing primitive cover compiler."""
 
@@ -293,6 +295,16 @@ def _legacy_target_link_source(
         "source_replay_authority_bridge_wired": False,
         "cover_is_source_authority": False,
     }
+    if include_private_bridge_ledger:
+        bridge = {
+            "source_document_sha256": backend._canonical_sha256(document),
+            "cover_variables": list(source.variables),
+            "cover_target_variable": target_variable.name,
+            "reconstruction": [dict(item) for item in compiler.reconstruction],
+            "replay_obligations": [dict(item) for item in compiler.replay],
+        }
+        bridge["bridge_ledger_sha256"] = backend._canonical_sha256(bridge)
+        metadata["private_bridge_ledger"] = bridge
     return source, metadata
 
 

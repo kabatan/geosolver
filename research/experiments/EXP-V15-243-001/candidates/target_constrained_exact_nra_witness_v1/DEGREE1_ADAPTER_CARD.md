@@ -12,8 +12,12 @@ For each projection it:
 2. derives its unique rational root and a fixed-width rational isolator;
 3. calls the existing digest-pinned primitive cover and target-link adapter;
 4. calls `candidate.prove` directly with the existing exact backend;
-5. reconstructs raw coordinates from the existing model descriptors;
-6. calls the existing frozen `ExactSourceRuntime` on the untouched source and
+5. binds and exactly recompiles the existing cover reconstruction and replay
+   ledgers, then embeds all algebraic model coordinates in one QQbar field;
+6. reuses the existing `rur_semantic_replay` reconstruction rules for direct
+   and bounded periodic source variables;
+7. calls the existing full geometry `exact_replay/exact_runtime.py` on the
+   untouched construction, constraints, bounds, guards and selectors, then
    exactly compares its raw target with the backend target.
 
 Post-processing remains outside this raw-target theorem.  The endpoint is
@@ -35,11 +39,16 @@ created.
 
 ## Generated evidence
 
-The existing candidate and applicability suite plus four adapter tests pass
-21/21.  The adapter positive reaches the existing backend, untouched source
-replay, and exact target-link comparison.  Wrong proposal, post-processing,
-and nonprimitive proposal negatives do not join.  The private per-request row
-contains no witness, target, descriptor, or path.
+The first root census reached 33 primitive covers and four exact backend
+witnesses, but the limited semantic runtime replayed none.  Repair A changes
+only the representation/replay seam described above; backend caps, timeout,
+and eligibility thresholds are unchanged.
+
+The full generated suite now passes 26/26.  Dedicated CPU14 reconstruction D0
+passes algebraic auxiliary, periodic, and selector paths (3/3), rejects a
+recompiled-ledger tamper, backend-target descriptor tamper, and wrong degree-
+one proposal, emits no private witness/target/path, and has zero external
+authority/release events.
 
 No real panel, corpus source, truth, scorer, case ID, family, outcome,
 validation, or sealed data was read while implementing or testing the

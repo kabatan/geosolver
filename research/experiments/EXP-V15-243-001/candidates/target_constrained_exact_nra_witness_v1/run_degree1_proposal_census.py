@@ -14,16 +14,66 @@ from __future__ import annotations
 import argparse
 from fractions import Fraction
 import hashlib
+import importlib.util
+import itertools
 import json
 import math
 import os
 from pathlib import Path
+import re
+import sys
 from typing import Mapping
 
 import sympy as sp
 
 import applicability
 import candidate as backend
+
+
+RUNTIME_ROOT = Path(
+    os.environ.get(
+        "GEOTARGET_EXPERIMENT_RUNTIME",
+        "/home/kabatan/work/solver-experiment-runtime/solver",
+    )
+).resolve()
+RUR_ADAPTER_PATH = (
+    RUNTIME_ROOT
+    / "research/experiments/EXP-REAL61-002/rur_semantic_replay/adapter.py"
+)
+RUR_ADAPTER_SHA256 = "7bd09aaab95f90802e83ae09704975e776c6774a2eb9ea785c0a65b474593bc2"
+EXACT_RUNTIME_PATH = (
+    RUNTIME_ROOT / "research/experiments/EXP-REAL61-002/exact_replay/exact_runtime.py"
+)
+EXACT_RUNTIME_SHA256 = "f57e6fdd730d75e2c6b73d497a5041afd6c714d6c644c8e558cf3ef281c52242"
+
+
+def _load(name: str, path: Path):
+    specification = importlib.util.spec_from_file_location(name, path)
+    if specification is None or specification.loader is None:
+        raise ImportError(path)
+    module = importlib.util.module_from_spec(specification)
+    sys.modules[name] = module
+    specification.loader.exec_module(module)
+    return module
+
+
+if (
+    hashlib.sha256(RUR_ADAPTER_PATH.read_bytes()).hexdigest() != RUR_ADAPTER_SHA256
+    or hashlib.sha256(EXACT_RUNTIME_PATH.read_bytes()).hexdigest()
+    != EXACT_RUNTIME_SHA256
+):
+    raise RuntimeError("frozen RUR semantic replay closure changed")
+RUR = _load("geotarget_nra_degree1_rur_semantic_replay", RUR_ADAPTER_PATH)
+
+
+_AFFINE_PERIODIC = re.compile(
+    r"\s*\(atan2\((?P<y>[^,]+),(?P<x>[^)]+)\) \+ 2\*pi\*k - "
+    r"\((?P<offset>.+)\)\)/\((?P<coefficient>.+)\); choose k by source bounds/guards\s*"
+)
+_RADIAN_MOD = re.compile(r"\s*atan2\((?P<y>[^,]+),(?P<x>[^)]+)\) mod 2\*pi\s*")
+_TURN_MOD = re.compile(
+    r"\s*atan2\((?P<y>[^,]+),(?P<x>[^)]+)\)/\(2\*pi\) mod 1\s*"
+)
 
 
 REQUEST_KEYS = frozenset(
@@ -125,6 +175,207 @@ def _failure_class(reason: object) -> str:
     return "OTHER_FAIL_CLOSED"
 
 
+def _validate_bridge_ledger(
+    document: Mapping[str, object],
+    source: backend.PolynomialSource,
+    bridge: object,
+) -> Mapping[str, object]:
+    if not isinstance(bridge, Mapping):
+        raise backend.NotProved("SOURCE_REPLAY_BRIDGE_LEDGER_MISSING")
+    expected = bridge.get("bridge_ledger_sha256")
+    unsigned = dict(bridge)
+    unsigned.pop("bridge_ledger_sha256", None)
+    if not isinstance(expected, str) or backend._canonical_sha256(unsigned) != expected:
+        raise backend.NotProved("SOURCE_REPLAY_BRIDGE_LEDGER_DIGEST_MISMATCH")
+    if bridge.get("source_document_sha256") != backend._canonical_sha256(document):
+        raise backend.NotProved("SOURCE_REPLAY_BRIDGE_SOURCE_DIGEST_MISMATCH")
+    if bridge.get("cover_variables") != list(source.variables):
+        raise backend.NotProved("SOURCE_REPLAY_BRIDGE_VARIABLE_LEDGER_MISMATCH")
+    if bridge.get("cover_target_variable") != str(source.raw_target):
+        raise backend.NotProved("SOURCE_REPLAY_BRIDGE_TARGET_LEDGER_MISMATCH")
+    if not isinstance(bridge.get("reconstruction"), list) or not isinstance(
+        bridge.get("replay_obligations"), list
+    ):
+        raise backend.NotProved("SOURCE_REPLAY_BRIDGE_RECONSTRUCTION_LEDGER_MALFORMED")
+    replayed_source, replayed_metadata = applicability._legacy_target_link_source(
+        document, include_private_bridge_ledger=True
+    )
+    replayed_bridge = replayed_metadata.get("private_bridge_ledger")
+    source_statement = {
+        "variables": list(source.variables),
+        "equations": [str(item) for item in source.equations],
+        "guard": str(source.guard),
+        "raw_target": str(source.raw_target),
+        "definedness": [str(item) for item in source.definedness],
+    }
+    replayed_source_statement = {
+        "variables": list(replayed_source.variables),
+        "equations": [str(item) for item in replayed_source.equations],
+        "guard": str(replayed_source.guard),
+        "raw_target": str(replayed_source.raw_target),
+        "definedness": [str(item) for item in replayed_source.definedness],
+    }
+    if source_statement != replayed_source_statement or bridge != replayed_bridge:
+        raise backend.NotProved("SOURCE_REPLAY_BRIDGE_EXACT_RECOMPILE_MISMATCH")
+    return bridge
+
+
+def _common_embedding(values: list[sp.Expr]):
+    nonrational = [sp.sympify(value) for value in values if value.is_Rational is not True]
+    symbol = sp.Symbol("__nra_bridge_theta")
+    if not nonrational:
+        return sp.Integer(0), sp.Poly(symbol, symbol, domain=sp.QQ), (sp.Integer(0), sp.Integer(0))
+    primitive = sp.to_number_field(nonrational)
+    theta = primitive.as_expr()
+    descriptor = backend._descriptor(theta)
+    if descriptor.get("kind") == "Rational":
+        return theta, sp.Poly(symbol, symbol, domain=sp.QQ), (theta, theta)
+    coefficients = descriptor["minimal_polynomial_high_to_low"]
+    polynomial = sp.Poly.from_list(coefficients, gens=symbol, domain=sp.ZZ)
+    interval = descriptor["isolating_interval"]
+    lower = sp.Rational(*interval["lower"])
+    upper = sp.Rational(*interval["upper"])
+    return theta, polynomial, (lower, upper)
+
+
+def _coordinate_options(
+    document: Mapping[str, object],
+    bridge: Mapping[str, object],
+    coordinate_map: Mapping[str, sp.Expr],
+):
+    raw_names = document.get("variables", {}).get("names")
+    if not isinstance(raw_names, list) or not all(
+        isinstance(name, str) and name for name in raw_names
+    ):
+        raise backend.NotProved("SOURCE_REPLAY_RAW_VARIABLE_LEDGER_MALFORMED")
+    by_variable: dict[str, list[Mapping[str, object]]] = {}
+    for item in bridge["reconstruction"]:
+        if not isinstance(item, Mapping) or not isinstance(item.get("variable"), str):
+            raise backend.NotProved("SOURCE_REPLAY_RECONSTRUCTION_ENTRY_MALFORMED")
+        by_variable.setdefault(str(item["variable"]), []).append(item)
+
+    option_sets = []
+    periodic_used = False
+    for name in raw_names:
+        if name in coordinate_map:
+            option_sets.append(
+                [RUR._CoordinateOption(coordinate_map[name], {"kind": "DIRECT"})]
+            )
+            continue
+        entries = by_variable.get(name, [])
+        if len(entries) != 1:
+            raise backend.NotProved("SOURCE_REPLAY_RECONSTRUCTION_ENTRY_COUNT")
+        formula = str(entries[0].get("formula"))
+        standard = RUR._ATAN2_RECONSTRUCTION.fullmatch(formula)
+        affine = _AFFINE_PERIODIC.fullmatch(formula)
+        radian = _RADIAN_MOD.fullmatch(formula)
+        turn = _TURN_MOD.fullmatch(formula)
+        match = standard or affine or radian or turn
+        if match is None:
+            raise backend.NotProved("SOURCE_REPLAY_RECONSTRUCTION_FORMULA_UNSUPPORTED")
+        y_name, x_name = match.group("y").strip(), match.group("x").strip()
+        if y_name not in coordinate_map or x_name not in coordinate_map:
+            raise backend.NotProved("SOURCE_REPLAY_RECONSTRUCTION_COORDINATE_MISSING")
+        angle = sp.atan2(coordinate_map[y_name], coordinate_map[x_name])
+        if standard is not None:
+            indices = RUR._period_indices_from_bounds(dict(document), name)
+            values = [angle + 2 * sp.pi * index for index in indices]
+        else:
+            indices = range(-RUR.MAX_PERIOD_INDEX, RUR.MAX_PERIOD_INDEX + 1)
+            if affine is not None:
+                offset = sp.sympify(affine.group("offset"))
+                coefficient = sp.sympify(affine.group("coefficient"))
+                if coefficient == 0 or coefficient.free_symbols:
+                    raise backend.NotProved("SOURCE_REPLAY_AFFINE_PHASE_MALFORMED")
+                values = [
+                    (angle + 2 * sp.pi * index - offset) / coefficient
+                    for index in indices
+                ]
+            elif turn is not None:
+                values = [angle / (2 * sp.pi) + index for index in indices]
+            else:
+                values = [angle + 2 * sp.pi * index for index in indices]
+        periodic_used = True
+        option_sets.append(
+            [
+                RUR._CoordinateOption(value, {"kind": "PERIODIC_RECONSTRUCTION"})
+                for value in values
+            ]
+        )
+    combination_count = math.prod(len(options) for options in option_sets)
+    if combination_count > RUR.MAX_RECONSTRUCTION_COMBINATIONS:
+        raise backend.NotProved("SOURCE_REPLAY_RECONSTRUCTION_COMBINATION_CAP")
+    return raw_names, option_sets, periodic_used
+
+
+def _replay_existing_witness(
+    document: Mapping[str, object],
+    source: backend.PolynomialSource,
+    witness: Mapping[str, object],
+    bridge: object,
+) -> dict[str, bool]:
+    bridge = _validate_bridge_ledger(document, source, bridge)
+    descriptors = witness.get("model_descriptors")
+    if not isinstance(descriptors, Mapping):
+        raise backend.NotProved("SOURCE_REPLAY_MODEL_LEDGER_MISSING")
+    if any(name not in descriptors for name in source.variables):
+        raise backend.NotProved("SOURCE_REPLAY_COVER_COORDINATE_MISSING")
+    coordinate_map = {
+        name: backend._from_descriptor(descriptors[name]) for name in source.variables
+    }
+    target_descriptor = descriptors.get("__nra_raw_target")
+    if not isinstance(target_descriptor, Mapping):
+        raise backend.NotProved("TARGET_LINK_MODEL_LEDGER_MISSING")
+    backend_target = backend._from_descriptor(target_descriptor)
+    cover_target = str(bridge["cover_target_variable"])
+    if sp.simplify(coordinate_map[cover_target] - backend_target) != 0:
+        raise backend.NotProved("TARGET_LINK_COVER_COORDINATE_MISMATCH")
+
+    theta, polynomial, interval = _common_embedding(
+        [*coordinate_map.values(), backend_target]
+    )
+    raw_names, option_sets, periodic_used = _coordinate_options(
+        document, bridge, coordinate_map
+    )
+    accepted = 0
+    with RUR._single_embedding_runtime(theta, polynomial, interval):
+        for combination in itertools.product(*option_sets):
+            coordinates = [option.value for option in combination]
+            try:
+                RUR.RUNTIME.replay_document(
+                    dict(document), coordinates, backend_target
+                )
+            except Exception:
+                continue
+            accepted += 1
+    if accepted != 1:
+        raise backend.NotProved(
+            "SOURCE_REPLAY_NO_UNIQUE_RECONSTRUCTION"
+            if accepted == 0
+            else "SOURCE_REPLAY_AMBIGUOUS_RECONSTRUCTION"
+        )
+    replay_kinds = {
+        str(item.get("kind"))
+        for item in bridge["replay_obligations"]
+        if isinstance(item, Mapping)
+    }
+    return {
+        "qqbar_embedding_ready": True,
+        "periodic_reconstruction_used": periodic_used,
+        "selector_or_branch_ledger_bound": bool(
+            replay_kinds
+            - {
+                "canonical-guard",
+                "raw-source-target-link",
+                "trig-parameter-reconstruction",
+                "periodic-parameter-bound",
+            }
+        ),
+        "untouched_source_replay_pass": True,
+        "untouched_target_link_pass": True,
+    }
+
+
 def _assess_request(
     request: Mapping[str, object], *, timeout_seconds: float
 ) -> dict[str, object]:
@@ -135,6 +386,9 @@ def _assess_request(
         "primitive_cover_ready": False,
         "backend_attempted": False,
         "backend_witness_ready": False,
+        "qqbar_embedding_ready": False,
+        "periodic_reconstruction_used": False,
+        "selector_or_branch_ledger_bound": False,
         "untouched_source_replay_pass": False,
         "untouched_target_link_pass": False,
         "thin_join_ready": False,
@@ -153,7 +407,9 @@ def _assess_request(
         if document.get("post_process") not in (None, ""):
             raise backend.NotProved("POST_PROCESS_OUTSIDE_RAW_TARGET_THEOREM")
 
-        source, metadata = applicability._legacy_target_link_source(document)
+        source, metadata = applicability._legacy_target_link_source(
+            document, include_private_bridge_ledger=True
+        )
         stratum = str(metadata.get("structural_stratum"))
         if stratum not in STRATA:
             raise backend.NotProved("LEGACY_PRIMITIVE_COVER_UNKNOWN_STRATUM")
@@ -170,29 +426,13 @@ def _assess_request(
         private["internal_candidate_authority_observed"] = True
         private["backend_witness_ready"] = True
 
-        descriptors = witness.get("model_descriptors")
-        raw_names = tuple(document.get("variables", {}).get("names", ()))
-        if not isinstance(descriptors, Mapping) or not raw_names:
-            raise backend.NotProved("UNTOUCHED_SOURCE_REPLAY_MODEL_LEDGER_MISSING")
-        if any(name not in descriptors for name in raw_names):
-            raise backend.NotProved("UNTOUCHED_SOURCE_REPLAY_RAW_COORDINATE_MISSING")
-        raw_values = {
-            name: backend._from_descriptor(descriptors[name]) for name in raw_names
-        }
-        _semantic, replay_module = backend._semantic_modules()
-        replay = replay_module.ExactSourceRuntime(document, raw_values).verify()
-        if replay.accepted is not True:
-            raise backend.NotProved("UNTOUCHED_SOURCE_REPLAY_REJECTED")
-        private["untouched_source_replay_pass"] = True
-
-        target_descriptor = descriptors.get("__nra_raw_target")
-        if not isinstance(target_descriptor, Mapping) or replay.target is None:
-            raise backend.NotProved("UNTOUCHED_TARGET_LINK_MODEL_LEDGER_MISSING")
-        backend_target = backend._from_descriptor(target_descriptor)
-        untouched_target = sp.sympify(replay.target)
-        if sp.simplify(backend_target - untouched_target) != 0:
-            raise backend.NotProved("UNTOUCHED_TARGET_LINK_REJECTED")
-        private["untouched_target_link_pass"] = True
+        replay = _replay_existing_witness(
+            document,
+            source,
+            witness,
+            metadata.get("private_bridge_ledger"),
+        )
+        private.update(replay)
         private["thin_join_ready"] = True
         private["failure_class"] = "NONE"
         return private
@@ -221,6 +461,9 @@ def main() -> int:
         "primitive_cover_ready": 0,
         "backend_attempted": 0,
         "backend_witness_ready": 0,
+        "qqbar_embedding_ready": 0,
+        "periodic_reconstruction_used": 0,
+        "selector_or_branch_ledger_bound": 0,
         "untouched_source_replay_pass": 0,
         "untouched_target_link_pass": 0,
         "thin_join_ready": 0,
@@ -247,6 +490,9 @@ def main() -> int:
             "primitive_cover_ready",
             "backend_attempted",
             "backend_witness_ready",
+            "qqbar_embedding_ready",
+            "periodic_reconstruction_used",
+            "selector_or_branch_ledger_bound",
             "untouched_source_replay_pass",
             "untouched_target_link_pass",
             "thin_join_ready",
