@@ -1,6 +1,15 @@
 # MSOLVE_EXACT_WITNESS_BIGINT_TRANSPORT_REOPEN_V1
 
-## Decision
+## Current production-connector decision
+
+`PRODUCTION_CONNECTOR_D0_PASS__HOLD_SELECTED9_PILOT`.
+
+The serialization reopen remains valid, and the selected runner now binds a
+complete ordinary HP proposal rather than a degree-one projection. Only
+saved/generated D0 was run. The selected-nine pilot and every heavy
+msolve/Julia execution remain benchmark-owner-only under the global lock.
+
+## Historical transport decision
 
 `REOPEN_GATE_SATISFIED`; promote the mechanism only to bounded development
 integration. The old msolve/QQBar family is no longer blocked by the recorded
@@ -80,16 +89,16 @@ env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
   NUMEXPR_NUM_THREADS=1 taskset -c 14 \
   /home/kabatan/work/solver-experiment-runtime/solver/python/.venv/bin/python \
   run_static_applicability.py \
-  --requests /home/kabatan/work/solver-experiment-results/partial-ideal-root-readiness-v1/degree1-requests.json \
-  --requests-sha256 ee424315256582652ea0df72a05c21903a5fd4366867c6788129a79e4f80fd35 \
+  --requests /approved/repository-external/full-ordinary-bindings.json \
+  --requests-sha256 FROZEN_BY_BENCHMARK_OWNER \
   --output STATIC_APPLICABILITY_RESULT.json --expected-cpu 14
 ```
 
 ## Frozen selected-execution runner (not executed here)
 
-The bounded next-step runner is now frozen, but only the benchmark owner may
-execute it. It rescans all 85 anonymous requests with the exact static predicate
-above and launches only eligible requests. Every selected request gets a fresh
+The original bounded runner was frozen against the activation-only degree-one
+panel. The production repair retains its containment but replaces that seam
+with full ordinary-proposal custody rows. Every selected request gets a fresh
 process pinned to CPU14, a 30-second outer wall cap, a 2-GiB aggregate RSS cap,
 4-GiB address-space cap, 3-GiB data cap, one native thread, and the shared global
 benchmark and sole-CAS locks.
@@ -98,10 +107,29 @@ The child runs the digest-pinned msolve wrapper, exact rational box selection,
 the existing FLINT irreducible-factor stage, the repaired lossless BigInt
 transport, and the existing Nemo QQBar source replay. Conversion is recorded
 only when the untouched construction/constraints, guards, bounds, branch
-selectors, and raw target link all pass exact replay. The degree-one projection
-is not the complete ordinary proposal: every artifact therefore retains
-`ordinary_full_proposal_binding=false`, `authority_pass=false`,
-`target_release=false`, and no completeness claim.
+selectors, and raw target link all pass exact replay.
+
+The worker verifies source bytes/SHA, exact Float64 endpoint bits/SHA, complete
+ordinary wrapper bytes/SHA, copied attempt canonical bytes/SHA, and original
+result bytes/SHA. It also verifies the frozen RESULT/PLAN schemas and their
+truth-blind, source-unchanged, endpoint-unchanged provenance. It revalidates a
+positive primitive square-free irreducible
+degree-1/2/4 minimal polynomial, exact isolator, and zero-based ordinal among
+the factor's real roots. The endpoint selects the RUR box and a unique exact
+irreducible theta factor; the ordinary target never selects a RUR root. QQBar
+then replays all source relations, guards, bounds, compiler definedness and
+predicates, branch obligations, and exact raw-target equality.
+
+The parent emits an exact request digest, run-binding digest, authorization
+digest, and one-time token digest for every fresh child. The child emits only a
+`PARENT_ACCEPTANCE_REQUIRED` conversion candidate, and the aggregate counts it
+only after independently matching all four digests. Direct child execution can
+never emit authority. Parent and child also fail closed on any change to their
+candidate-local runtime dependency hashes.
+
+Converted artifacts set `ordinary_full_proposal_binding=true` but retain
+`authority_pass=false`, `target_release=false`, and
+`completeness_claim=NOT_MADE`. Each conversion is one descriptor only.
 
 Individual request, source, target, failure, CAS, and replay artifacts remain in
 the root-owned directory outside Git. The public JSON contains only cumulative
@@ -116,8 +144,8 @@ env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 OMP_THREAD_LIMIT=1 \
   MKL_NUM_THREADS=1 BLIS_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 \
   JULIA_NUM_THREADS=1 taskset -c 14 \
   /home/kabatan/work/solver/.venv/bin/python run_selected_execution.py \
-  --requests /home/kabatan/work/solver-experiment-results/partial-ideal-root-readiness-v1/degree1-requests.json \
-  --requests-sha256 ee424315256582652ea0df72a05c21903a5fd4366867c6788129a79e4f80fd35 \
+  --requests /home/kabatan/work/solver-experiment-results/target-constrained-nra-ordinary-binding-v1/selected9-full-ordinary-bindings.json \
+  --requests-sha256 FROZEN_BY_BENCHMARK_OWNER \
   --raw-output-dir /home/kabatan/work/solver-artifacts/EXP-V15-243-001/MSOLVE_EXACT_WITNESS_BIGINT_TRANSPORT_REOPEN_V1/SELECTED_EXECUTION_RUN_001 \
   --output /home/kabatan/work/solver-artifacts/EXP-V15-243-001/MSOLVE_EXACT_WITNESS_BIGINT_TRANSPORT_REOPEN_V1/SELECTED_EXECUTION_RUN_001_PUBLIC.json \
   --expected-cpu 14
@@ -125,3 +153,29 @@ env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 OMP_THREAD_LIMIT=1 \
 
 No msolve, FLINT factorization, Julia/Nemo worker, formal scorer, truth, full98,
 validation, or sealed evaluation was run while preparing this freeze.
+
+## Production connector saved/generated D0
+
+CPU14 D0 on Python 3.12.11 passed 12/12 pytest checks. Four frozen ordinary
+artifacts passed full
+bytes/SHA binding and the production selected-admission seam. Generated
+degree-1, degree-2, and degree-4 descriptors passed the same primitive,
+square-free, irreducible, isolator, and ordinal contract. Degree 3 and a
+4,097-bit coefficient were rejected by the frozen cap. The already
+saved RUR factor and QQBar replay chain passed exact byte links and count
+ledgers.
+
+Wrong factor, factor-local ordinal, branch/guard count, and complete ordinary
+proposal bytes SHA mutations all failed closed. Additional mutations cover the
+parent request/token binding, compiler definedness/branch accounting, and stale
+candidate-local dependency hashes. The result records
+`msolve_runs=0`, `julia_runs=0`, `authority_pass=false`,
+`target_release=false`, and no completeness claim. Cap relaxation is not a
+reopen condition. The only next gate is the benchmark-owner selected-nine
+pilot using full ordinary artifacts; only after it may typed-guard Repair A be
+considered.
+
+Production mechanism hash:
+`675d30505376f810db5582794ba60ab1fcdfb910a77ab3f12cbb392f62748593`.
+The historical `FREEZE.json` remains unchanged; the full connector closure is
+recorded in `PRODUCTION_CONNECTOR_FREEZE.json`.

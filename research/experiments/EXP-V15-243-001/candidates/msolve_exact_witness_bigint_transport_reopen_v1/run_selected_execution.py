@@ -1,5 +1,5 @@
 #!/usr/bin/env python3.12
-"""Aggregate-only selected execution over the frozen anonymous degree-one panel."""
+"""Aggregate-only selected execution over a full ordinary-proposal binding panel."""
 
 from __future__ import annotations
 
@@ -8,6 +8,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import secrets
 import sys
 from typing import Any
 
@@ -36,6 +37,12 @@ THREAD_ENVIRONMENT = {
     "BLIS_NUM_THREADS": "1",
     "NUMEXPR_NUM_THREADS": "1",
     "JULIA_NUM_THREADS": "1",
+}
+LOCAL_RUNTIME_SHA256 = {
+    COMMON.HERE / "ordinary_proposal_binding.py": "aca55f2783476f7deff8c612a5f86f26681936e31a7b0ea5a19b1d2b06788bb6",
+    COMMON.HERE / "selected_execution_common.py": "3e2d977fd7aebbc4f2c79739a0a3bb9f824f25074b6ddd7a3af903bce4009b0e",
+    COMMON.HERE / "lossless_transport.py": "43fde3a479c2335f1e0311d990810bf4983d4c50f268a7968512cccb1daec521",
+    COMMON.HERE / "execute_selected_one.py": "73728f66fbe76fff6d7c235dfeadb26f8f7f91f630f76f5c56cc47d7753b84f8",
 }
 
 
@@ -80,13 +87,25 @@ def _read_child_result(path: Path) -> dict[str, Any] | None:
 def _conversion_is_false_authority(document: object) -> bool:
     return not (
         isinstance(document, dict)
-        and document.get("ordinary_full_proposal_binding") is False
+        and document.get("ordinary_full_proposal_binding") is True
         and document.get("authority_pass") is False
         and document.get("target_release") is False
         and document.get("completeness_claim") == "NOT_MADE"
         and document.get("truth_used") is False
         and document.get("formal_scorer_used") is False
         and document.get("full98_used") is False
+    )
+
+
+def _parent_binding_matches(document: object, expected: dict[str, str]) -> bool:
+    return bool(
+        isinstance(document, dict)
+        and all(document.get(key) == value for key, value in expected.items())
+        and document.get("parent_acceptance_required") is True
+        and document.get("standalone_conversion_authority") is False
+        and document.get("authority_pass") is False
+        and document.get("target_release") is False
+        and document.get("completeness_claim") == "NOT_MADE"
     )
 
 
@@ -102,6 +121,7 @@ def main() -> int:
         raise SystemExit("selected runner requires frozen Python 3.12.11")
     if os.sched_getaffinity(0) != {arguments.expected_cpu}:
         raise SystemExit("selected runner must be pinned to exactly the expected CPU")
+    COMMON.verify_local_runtime(LOCAL_RUNTIME_SHA256)
     os.environ.update(THREAD_ENVIRONMENT)
 
     request_bytes = arguments.requests.read_bytes()
@@ -110,7 +130,14 @@ def main() -> int:
         raise SystemExit("request panel SHA-256 mismatch")
     requests = json.loads(request_bytes)
     if not isinstance(requests, list):
-        raise SystemExit("request panel must be an array")
+        raise SystemExit("ordinary binding panel must be an array")
+    requests_path = arguments.requests.resolve()
+    if (
+        requests_path.parent != COMMON.ORDINARY.APPROVED_PANEL_ROOT
+        or requests_path.suffix != ".json"
+        or not requests_path.is_file()
+    ):
+        raise SystemExit("ordinary binding panel is outside approved custody")
 
     raw_root = _new_raw_root(arguments.raw_output_dir)
     dependencies = COMMON.load_admission_dependencies()
@@ -118,7 +145,9 @@ def main() -> int:
     admission_counts = {name: 0 for name in COMMON.ADMISSION_STAGES}
     admitted: list[tuple[int, object]] = []
     for ordinal, request in enumerate(requests):
-        result = COMMON.classify_request(request, dependencies=dependencies)
+        result = COMMON.classify_bound_ordinary_row(
+            request, dependencies=dependencies
+        )
         for stage in result["passed_stages"]:
             admission_counts[stage] += 1
         if result.get("eligible") is True:
@@ -135,10 +164,11 @@ def main() -> int:
         output_bytes=1 * 1024**2,
     )
     sole_cas_lock = Path("/tmp/GeoTarget/sole-cas-admission.lock")
+    run_binding_path = raw_root / "RUN_BINDING.json"
     safe.atomic_write_json(
-        raw_root / "RUN_BINDING.json",
+        run_binding_path,
         {
-            "schema_version": "geotarget.msolve-selected-exact-run-binding/v1",
+            "schema_version": "geotarget.msolve-selected-exact-run-binding/v2",
             "candidate_id": "MSOLVE_EXACT_WITNESS_BIGINT_TRANSPORT_REOPEN_V1",
             "request_panel_sha256": request_sha256,
             "request_count": len(requests),
@@ -148,7 +178,7 @@ def main() -> int:
             "fixed_child_data_bytes": 3 * 1024**3,
             "cpu_affinity": sorted(os.sched_getaffinity(0)),
             "one_request_per_fresh_process": True,
-            "ordinary_full_proposal_binding": False,
+            "ordinary_full_proposal_binding_required": True,
             "authority_pass": False,
             "target_release": False,
             "completeness_claim": "NOT_MADE",
@@ -157,19 +187,60 @@ def main() -> int:
             "full98_used": False,
         },
     )
+    run_binding_sha256 = hashlib.sha256(run_binding_path.read_bytes()).hexdigest()
     with FormalRunLease("msolve-selected-exact-execution", default_lock_path()):
         with FormalRunLease("msolve-selected-exact-execution-sole-cas", sole_cas_lock):
-            for execution_index, (_ordinal, request) in enumerate(admitted):
+            for execution_index, (request_ordinal, request) in enumerate(admitted):
                 child_dir = raw_root / f"request-{execution_index:03d}"
                 child_dir.mkdir(mode=0o700)
-                request_path = child_dir / "request.json"
+                request_path = child_dir / "ordinary-binding.json"
                 safe.atomic_write_json(request_path, request)
+                request_digest = hashlib.sha256(request_path.read_bytes()).hexdigest()
+                parent_token = secrets.token_hex(32)
+                token_digest = hashlib.sha256(parent_token.encode("ascii")).hexdigest()
+                authorization_path = child_dir / "PARENT_AUTHORIZATION.json"
+                safe.atomic_write_json(
+                    authorization_path,
+                    {
+                        "schema_version": "geotarget.msolve-selected-parent-authorization/v1",
+                        "candidate_id": "MSOLVE_EXACT_WITNESS_BIGINT_TRANSPORT_REOPEN_V1",
+                        "request_ordinal": request_ordinal,
+                        "ordinary_binding_request_sha256": request_digest,
+                        "parent_run_binding_sha256": run_binding_sha256,
+                        "parent_token_sha256": token_digest,
+                        "parent_acceptance_required": True,
+                        "authority_pass": False,
+                        "target_release": False,
+                        "completeness_claim": "NOT_MADE",
+                    },
+                )
+                authorization_digest = hashlib.sha256(
+                    authorization_path.read_bytes()
+                ).hexdigest()
+                expected_parent_binding = {
+                    "ordinary_binding_request_sha256": request_digest,
+                    "parent_run_binding_sha256": run_binding_sha256,
+                    "parent_authorization_sha256": authorization_digest,
+                    "parent_token_sha256": token_digest,
+                }
                 run_result = safe.run_guarded(
                     [
                         sys.executable,
                         str(COMMON.HERE / "execute_selected_one.py"),
-                        "--request",
+                        "--ordinary-binding",
                         str(request_path),
+                        "--ordinary-binding-sha256",
+                        request_digest,
+                        "--parent-run-binding",
+                        str(run_binding_path),
+                        "--parent-run-binding-sha256",
+                        run_binding_sha256,
+                        "--parent-authorization",
+                        str(authorization_path),
+                        "--parent-authorization-sha256",
+                        authorization_digest,
+                        "--parent-token",
+                        parent_token,
                         "--raw-dir",
                         str(child_dir / "raw"),
                         "--expected-cpu",
@@ -192,6 +263,7 @@ def main() -> int:
                     not run_result.accepted_output
                     or "converted" not in passed
                     or child.get("converted") is not True
+                    or not _parent_binding_matches(child, expected_parent_binding)
                 ):
                     continue
                 conversion = _read_child_result(child_dir / "raw/CONVERSION.json")
@@ -199,15 +271,20 @@ def main() -> int:
                 if not (
                     isinstance(conversion, dict)
                     and conversion.get("status")
-                    == "CONVERTED_BY_CANONICAL_EXACT_SOURCE_REPLAY"
+                    == "CONVERSION_CANDIDATE_PARENT_ACCEPTANCE_REQUIRED"
                     and isinstance(signature, str)
                     and len(signature) == 64
                     and conversion.get("conversion_signature") == signature
                     and conversion.get("canonical_source_replay") is True
                     and conversion.get("canonical_guard_replay") is True
                     and conversion.get("canonical_bound_replay") is True
+                    and conversion.get("canonical_definedness_replay") is True
                     and conversion.get("canonical_branch_replay") is True
                     and conversion.get("raw_target_exact_replay") is True
+                    and conversion.get("ordinary_full_proposal_binding") is True
+                    and _parent_binding_matches(
+                        conversion, expected_parent_binding
+                    )
                 ):
                     continue
                 child_counts["converted"] += 1
