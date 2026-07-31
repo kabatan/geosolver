@@ -56,9 +56,38 @@ No formal scorer, 98-case corpus, validation set, sealed set, or offline truth
 was read. The only corpus artifact replayed was the explicitly frozen old
 development job used to establish the causal reopen condition.
 
+## Anonymous static applicability gate
+
+The root-owned 85-request degree-one panel was scanned on CPU14 without
+executing msolve. Cumulative counts were 85 request-contract records, 20
+reversible QQ covers with equations at least variables, 18 endpoint/proposal
+compatible covers with a structural equation-variable perfect matching, and 9
+records inside every frozen degree/cost cap. These represent 9 anonymous source
+hashes and 9 anonymous structural signatures, passing the preregistered 4-hash /
+2-signature recurrence gate.
+
+The output contains only cumulative counts and signature cardinality. It emits
+no individual source path, source hash, target, signature, or record. The gate
+uses a fixed scale-aware endpoint target box, and fixed caps for variables,
+equations, predicates, polynomial degree, monomials, coefficient bits,
+expression operations, input bytes, and minimum structural matching degree
+product.
+
+Frozen invocation:
+
+```bash
+env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
+  NUMEXPR_NUM_THREADS=1 taskset -c 14 \
+  /home/kabatan/work/solver-experiment-runtime/solver/python/.venv/bin/python \
+  run_static_applicability.py \
+  --requests /home/kabatan/work/solver-experiment-results/partial-ideal-root-readiness-v1/degree1-requests.json \
+  --requests-sha256 ee424315256582652ea0df72a05c21903a5fd4366867c6788129a79e4f80fd35 \
+  --output STATIC_APPLICABILITY_RESULT.json --expected-cpu 14
+```
+
 ## Next bounded step
 
-Integrate this transport into the existing msolve exact-witness route and run a
-truth-blind capability census under per-route quota. Do not allocate portfolio
-authority merely from this one-job causal repair; each accepted descriptor must
-still pass the complete canonical QQBar source replay.
+Rerun the frozen static predicate inside a contained worker, execute msolve only
+for the eligible anonymous subset under a strict route quota, and return each
+candidate to complete canonical QQBar source replay. Do not allocate portfolio
+authority from static eligibility alone.

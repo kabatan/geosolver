@@ -46,6 +46,28 @@
     "per_target_v2_evidence_artifact_sha256": "2294f4cbbed8e762a3dee7ad49d132b18ef06de880366e0fc89647a42657e876",
     "transport_sidecar_sha256": "9d149edde1b943787b25027ca9c731b07c6808d1375ef3ae524b448f6c530519"
   },
+  "static_applicability": {
+    "status": "PASS",
+    "request_count": 85,
+    "stage_counts_cumulative": {
+      "request_contract_ready": 85,
+      "reversible_qq_exact_cover": 20,
+      "equations_ge_variables": 20,
+      "endpoint_target_proposal_compatible": 18,
+      "dimension0_selected_factor_possible": 18,
+      "fixed_degree_cost_caps": 9,
+      "eligible": 9
+    },
+    "eligible_anonymous_hash_count": 9,
+    "anonymous_signature_count": 9,
+    "minimum_eligible_hashes": 4,
+    "minimum_signatures": 2,
+    "gate_pass": true,
+    "msolve_runs": 0,
+    "individual_records_emitted": false,
+    "runner_sha256": "8a0152d6ccb47885a923c50d5fea1e464657e2bf9ce953e2282c39f49d3f97bd",
+    "aggregate_sha256": "b721d0d69590eb0769fe8498f77ce202128a02e99111326eef5ab3ee203a0489"
+  },
   "authority": {
     "exact_replay_authority": true,
     "authority_condition": "complete QQBar source replay succeeded",
@@ -72,6 +94,6 @@
   "limitations": [
     "One frozen development job establishes the causal repair, not recall or corpus coverage.",
     "The exact witness remains a development proposal and does not establish target-image completeness.",
-    "A bounded integration/capability census is still required before portfolio allocation."
+    "The static applicability gate does not replace contained msolve execution or complete QQBar replay."
   ]
 }
