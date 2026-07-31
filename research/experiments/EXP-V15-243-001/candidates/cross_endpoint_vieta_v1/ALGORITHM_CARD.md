@@ -6,8 +6,10 @@ For two to six source-safe HP endpoints of the same immutable source, the
 elementary symmetric sums of scalar answer approximations may be substantially
 easier to rationally reconstruct than any endpoint value in isolation.  Two
 independent HP rungs must reconstruct the same bounded rational coefficients.
-The resulting monic polynomial is only a proposal associated back to the
-original full tuples; every tuple must pass the untouched canonical replay.
+The resulting monic polynomial is structural evidence only. It is factored
+over `ZZ`; each endpoint independently selects the same irreducible factor and
+factor-local real-root ordinal from its 768/1024 rungs. Only that factor/root
+descriptor can enter the untouched canonical replay.
 
 This may exactify real conjugate target sets such as `±sqrt(2)` without a
 source eliminant, a known-root/exclude primitive, a case/family selector, or an
@@ -21,10 +23,16 @@ individual minimal-polynomial search.
 - each elementary symmetric sum is rationally reconstructed under fixed
   numerator/denominator/tolerance caps, with a uniqueness separation bound;
 - the two rungs must produce identical rational coefficient vectors;
-- the primitive integer polynomial and root ordinals are passed downstream;
-- all original full-tuple objects are replayed; one rejection or exception
-  discards the whole proposal and returns the untouched baseline object;
+- the whole primitive integer polynomial is never a minimal descriptor;
+- factor-local descriptors are replayed independently, so one endpoint
+  rejection does not discard a valid sibling;
+- accepted descriptor identities are deduplicated, unobserved roots are never
+  emitted, and the untouched baseline object remains in the union;
 - `completeness_claimed` is always false.
+
+Each rung is reauthenticated from original RESULT, PLAN, and HP lane authority
+bytes. Numeric hard/guard/intrinsic/original-DSL replay parity is a separate
+mandatory conjunct from QQBar exact replay.
 
 No source eliminant is built.  This is not line–circle other-root deflation and
 does not use `exclude`, a known root, target truth, historical outcome, case ID,
@@ -38,10 +46,11 @@ algebraic proposal.
   irrational pair; zero false proposals; endpoint permutation invariance;
   mixed-source, duplicate, non-independent rung, partial-set replay, malformed,
   and replay-exception controls fail closed.
-- Anonymous stored-endpoint gate: structural eligibility at least 4 sources,
-  activation at least 3 source/signature groups, and at least one proposal that
+- Anonymous stored-endpoint gate: the root structural scout's 595 proposals
+  are an upper bound; factor-parity and canonical activation must each reach
+  at least 3 sources and 2 structural signatures, and at least one proposal that
   the existing per-endpoint exactifier does not already produce.  Final
   canonical replay remains mandatory.  Individual outcomes/truth are hidden.
-- Stop immediately on any replay bypass, source-custody mismatch, false
+- Stop immediately on any whole-Vieta minimal-descriptor path, replay bypass,
+  source-custody mismatch, false
   proposal, or zero/narrow activation.  Do not tune from case identities.
-

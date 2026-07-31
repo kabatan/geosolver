@@ -49,6 +49,8 @@ class PolynomialProposal:
     source_sha256: str
     mechanism: str = MECHANISM
     completeness_claimed: bool = False
+    minimal_descriptor_claimed: bool = False
+    descriptor_emission_permitted: bool = False
 
 
 @dataclass(frozen=True)
@@ -61,6 +63,32 @@ class Outcome:
 
 
 Replay = Callable[[EndpointObservation, PolynomialProposal, int], bool]
+
+
+@dataclass(frozen=True)
+class EndpointReplayDecision:
+    accepted: bool
+    descriptor_identity_sha256: str
+
+
+@dataclass(frozen=True)
+class IndependentOutcome:
+    status: str
+    reason: str
+    structural_proposal: PolynomialProposal | None
+    fallback_result: Any
+    replay_calls: int
+    accepted_endpoint_indices: tuple[int, ...]
+    accepted_descriptor_identities: tuple[str, ...]
+    rejected_endpoint_count: int
+    exception_endpoint_count: int
+    duplicate_descriptor_count: int
+    completeness_claimed: bool = False
+
+
+IndependentReplay = Callable[
+    [EndpointObservation, PolynomialProposal, int], EndpointReplayDecision
+]
 
 
 def _valid_sha256(value: str) -> bool:
@@ -288,3 +316,126 @@ def propose_cross_endpoint_vieta(
     except Exception:
         return _closed("FULL_TUPLE_REPLAY_EXCEPTION", fallback_result, replay_calls=replay_calls)
     return Outcome("PROPOSAL", "ALL_ENDPOINT_FULL_TUPLE_REPLAYS_ACCEPTED", proposal, fallback_result, replay_calls)
+
+
+def propose_cross_endpoint_vieta_independent(
+    *,
+    source_bytes: bytes,
+    source_sha256: str,
+    endpoints: Sequence[EndpointObservation],
+    replay_endpoint: IndependentReplay,
+    fallback_result: Any,
+    **reconstruction_options: Any,
+) -> IndependentOutcome:
+    """Repair A: retain independently accepted factor descriptors only.
+
+    The whole Vieta polynomial is structural evidence and is explicitly not a
+    minimal-polynomial descriptor.  A caller must factor it first and return a
+    canonical factor/root descriptor identity per endpoint.  False/exception
+    results reject only that endpoint; accepted identities are deduplicated.
+    No unobserved root is materialized and the baseline fallback object is
+    carried through unchanged.
+    """
+
+    captured: list[tuple[EndpointObservation, PolynomialProposal, int]] = []
+
+    def capture(
+        endpoint: EndpointObservation,
+        proposal: PolynomialProposal,
+        root_ordinal: int,
+    ) -> bool:
+        captured.append((endpoint, proposal, root_ordinal))
+        return True
+
+    structural = propose_cross_endpoint_vieta(
+        source_bytes=source_bytes,
+        source_sha256=source_sha256,
+        endpoints=endpoints,
+        replay_full_tuple=capture,
+        fallback_result=fallback_result,
+        **reconstruction_options,
+    )
+    if structural.status != "PROPOSAL" or structural.proposal is None:
+        return IndependentOutcome(
+            "FALLBACK",
+            structural.reason,
+            None,
+            fallback_result,
+            0,
+            (),
+            (),
+            0,
+            0,
+            0,
+        )
+    proposal = structural.proposal
+    if (
+        proposal.minimal_descriptor_claimed is not False
+        or proposal.descriptor_emission_permitted is not False
+        or len(captured) != len(endpoints)
+        or any(item[1] != proposal for item in captured)
+    ):
+        return IndependentOutcome(
+            "FALLBACK",
+            "STRUCTURAL_PROPOSAL_CONTRACT_CHANGED",
+            None,
+            fallback_result,
+            0,
+            (),
+            (),
+            0,
+            len(endpoints),
+            0,
+        )
+
+    accepted_indices: list[int] = []
+    accepted_identities: list[str] = []
+    seen_identities: set[str] = set()
+    rejected = 0
+    exceptions = 0
+    duplicates = 0
+    replay_calls = 0
+    for index, (endpoint, _proposal, root_ordinal) in enumerate(captured):
+        replay_calls += 1
+        try:
+            decision = replay_endpoint(endpoint, proposal, root_ordinal)
+        except Exception:
+            exceptions += 1
+            continue
+        identity = (
+            decision.descriptor_identity_sha256
+            if isinstance(decision, EndpointReplayDecision)
+            else None
+        )
+        if (
+            not isinstance(decision, EndpointReplayDecision)
+            or decision.accepted is not True
+            or not isinstance(identity, str)
+            or len(identity) != 64
+            or any(character not in "0123456789abcdef" for character in identity)
+        ):
+            rejected += 1
+            continue
+        if identity in seen_identities:
+            duplicates += 1
+            continue
+        seen_identities.add(identity)
+        accepted_indices.append(index)
+        accepted_identities.append(identity)
+    accepted = len(accepted_indices)
+    return IndependentOutcome(
+        "PORTFOLIO" if accepted else "FALLBACK",
+        (
+            "INDEPENDENT_CANONICAL_ENDPOINTS_ACCEPTED"
+            if accepted
+            else "NO_CANONICAL_ENDPOINT_ACCEPTED"
+        ),
+        proposal,
+        fallback_result,
+        replay_calls,
+        tuple(accepted_indices),
+        tuple(accepted_identities),
+        rejected,
+        exceptions,
+        duplicates,
+    )

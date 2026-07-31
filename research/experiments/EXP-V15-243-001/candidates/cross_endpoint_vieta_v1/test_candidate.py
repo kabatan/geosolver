@@ -5,7 +5,11 @@ from decimal import Decimal, localcontext
 from fractions import Fraction
 from hashlib import sha256
 
-from candidate import propose_cross_endpoint_vieta
+from candidate import (
+    EndpointReplayDecision,
+    propose_cross_endpoint_vieta,
+    propose_cross_endpoint_vieta_independent,
+)
 from generated_cases import FAMILIES, GeneratedReplay, SOURCE_BYTES, SOURCE_SHA256, endpoint_set
 
 
@@ -223,3 +227,58 @@ def test_source_hash_and_degree_bounds_fail_closed_with_identity_fallback():
     )
     assert one.reason == "DEGREE_OUTSIDE_2_TO_6"
     assert one.fallback_result is FALLBACK
+
+
+def test_repair_a_endpoint_rejection_does_not_discard_valid_siblings():
+    family = FAMILIES[2]
+    endpoints = endpoint_set(family)
+
+    def independent(endpoint, proposal, root_ordinal):
+        if endpoint is endpoints[-1]:
+            return EndpointReplayDecision(False, "")
+        identity = sha256(f"{proposal.coefficients}:{root_ordinal}".encode()).hexdigest()
+        return EndpointReplayDecision(True, identity)
+
+    outcome = propose_cross_endpoint_vieta_independent(
+        source_bytes=SOURCE_BYTES,
+        source_sha256=SOURCE_SHA256,
+        endpoints=endpoints,
+        replay_endpoint=independent,
+        fallback_result=FALLBACK,
+    )
+    assert outcome.status == "PORTFOLIO"
+    assert outcome.accepted_endpoint_indices == (0, 1, 2)
+    assert len(outcome.accepted_descriptor_identities) == 3
+    assert outcome.rejected_endpoint_count == 1
+    assert outcome.exception_endpoint_count == 0
+    assert outcome.replay_calls == family.degree
+    assert outcome.completeness_claimed is False
+    assert outcome.structural_proposal is not None
+    assert outcome.structural_proposal.minimal_descriptor_claimed is False
+    assert outcome.structural_proposal.descriptor_emission_permitted is False
+    assert outcome.fallback_result is FALLBACK
+
+
+def test_repair_a_exception_and_descriptor_dedup_are_endpoint_local():
+    family = FAMILIES[1]
+    endpoints = endpoint_set(family)
+    shared = sha256(b"same-factor-root-descriptor").hexdigest()
+
+    def independent(endpoint, _proposal, _root_ordinal):
+        if endpoint is endpoints[1]:
+            raise RuntimeError("synthetic factor isolator failure")
+        return EndpointReplayDecision(True, shared)
+
+    outcome = propose_cross_endpoint_vieta_independent(
+        source_bytes=SOURCE_BYTES,
+        source_sha256=SOURCE_SHA256,
+        endpoints=endpoints,
+        replay_endpoint=independent,
+        fallback_result=FALLBACK,
+    )
+    assert outcome.status == "PORTFOLIO"
+    assert outcome.accepted_endpoint_indices == (0,)
+    assert outcome.accepted_descriptor_identities == (shared,)
+    assert outcome.exception_endpoint_count == 1
+    assert outcome.duplicate_descriptor_count == 1
+    assert outcome.replay_calls == family.degree

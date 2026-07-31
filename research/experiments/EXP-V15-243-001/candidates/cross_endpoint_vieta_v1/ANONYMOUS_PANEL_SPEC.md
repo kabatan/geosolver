@@ -63,3 +63,25 @@ Also assert that identity, path, truth, and individual records were not emitted.
 Do not emit polynomial coefficients, source/subset signatures, rows, targets,
 or per-request reasons. The owner may privately join proposal passes against
 the ordinary exactifier, but returns only aggregate gain and cluster counts.
+
+## Frozen v3 authority correction
+
+This section supersedes the earlier rung/replay details. The work-item schema
+is `geotarget.cross-endpoint-vieta-private-subset/v3`; each rung additionally
+binds the original RESULT, PLAN, and lane authority artifacts by path and SHA.
+The connector recomputes those byte digests, PLAN endpoint bits, source and
+endpoint bindings, 768/1024 tuple/raw-answer equality, and frozen numeric
+hard/guard/intrinsic/original-DSL replay parity. Numeric parity and QQBar exact
+replay are separate required conjuncts.
+
+The root scout's 595 structural proposals are an upper bound. The whole Vieta
+polynomial is structural only and is factored over `ZZ`. Each endpoint must
+independently choose one square-free irreducible factor and factor-local root
+ordinal at both rungs. Canonical replay receives only that factor descriptor.
+Endpoint rejection is local; accepted siblings remain, descriptor identities
+are deduplicated, unobserved roots are not emitted, the baseline union is
+unchanged, and completeness is always false.
+
+The root-only mode-0600 source-SHA sidecar contains only distinct structural
+proposal source hashes. It contains no control or canonical outcomes and is
+not part of the aggregate-only candidate result.
