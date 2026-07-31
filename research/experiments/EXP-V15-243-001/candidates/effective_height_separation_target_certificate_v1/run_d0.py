@@ -3,12 +3,13 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import struct
 from pathlib import Path
 from typing import Any
 
 import sympy as sp
 
-from candidate import canonical_sha256, prove
+from candidate import canonical_sha256, prove as prove_kernel
 
 
 HERE = Path(__file__).resolve().parent
@@ -81,19 +82,46 @@ def _case(
     facts: list[dict[str, Any]],
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     statement = {"variables": variables, "equations": equations, "raw_target": raw_target}
-    source_sha = canonical_sha256({"generated_source": statement})
+    source_text = json.dumps(
+        statement, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False
+    )
+    source_sha = hashlib.sha256(source_text.encode()).hexdigest()
+    endpoint_bits = [struct.pack(">d", float(index + 1)).hex() for index in range(len(variables))]
+    ledger = []
+    for index, equation in enumerate(equations):
+        ledger.append(
+            {
+                "ordinal": len(ledger),
+                "kind": "equation",
+                "node_sha256": canonical_sha256({"kind": "equation", "index": index, "text": equation}),
+            }
+        )
+    for kind in ("guard", "definedness", "branch"):
+        ledger.append(
+            {
+                "ordinal": len(ledger),
+                "kind": kind,
+                "node_sha256": canonical_sha256({"kind": kind, "tag": tag}),
+            }
+        )
     body: dict[str, Any] = {
         "source_sha256": source_sha,
-        "endpoint_float64_sha256": _digest("endpoint:" + tag),
+        "source_bytes_utf8": source_text,
+        "endpoint_float64_bits_hex": endpoint_bits,
+        "endpoint_float64_sha256": hashlib.sha256(bytes.fromhex("".join(endpoint_bits))).hexdigest(),
         "system_sha256": canonical_sha256(statement),
-        "obligation_ledger_sha256": _digest("ledger:" + tag),
+        "obligation_ledger": ledger,
+        "obligation_ledger_sha256": canonical_sha256(ledger),
         "lineage_sha256": _digest("lineage:" + tag),
+        "precision_rung": 768,
         "source_statement": statement,
         "coordinate_facts": facts,
+        "truth_used": False,
     }
     body["job_sha256"] = canonical_sha256(body)
     certificate: dict[str, Any] = {
-        "schema_version": "generated.same-root-exact-source-certificate/v1",
+        "schema_version": "geotarget.same-root-exact-source-certificate/v2",
+        "proof_mechanism": "EXACT_QQBAR_ORIGINAL_AST_REPLAY_ALL_OBLIGATIONS",
         "status": "VERIFIED",
         "job_sha256": body["job_sha256"],
         "source_sha256": source_sha,
@@ -101,7 +129,18 @@ def _case(
         "system_sha256": body["system_sha256"],
         "obligation_ledger_sha256": body["obligation_ledger_sha256"],
         "lineage_sha256": body["lineage_sha256"],
+        "precision_rung": body["precision_rung"],
         "coordinate_fact_sha256": [item["fact_sha256"] for item in facts],
+        "completed_original_ast_obligations": [
+            {
+                **item,
+                "exact_value_sha256": canonical_sha256(
+                    {"node_sha256": item["node_sha256"], "value": "generated-exact"}
+                ),
+                "verdict": "VERIFIED",
+            }
+            for item in ledger
+        ],
         "same_endpoint_source_root_unique": True,
         "all_source_equations_exact": True,
         "all_guards_exact": True,
@@ -112,6 +151,30 @@ def _case(
     }
     certificate["artifact_sha256"] = canonical_sha256(certificate)
     return body, certificate
+
+
+def _certificate_bytes(certificate: dict[str, Any]) -> bytes:
+    return json.dumps(
+        certificate, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False
+    ).encode()
+
+
+def _invoke(
+    *,
+    job: dict[str, Any],
+    source_root_certificate: dict[str, Any],
+    descriptor: dict[str, Any],
+    pinned_certificate_bytes: bytes | None = None,
+) -> dict[str, Any]:
+    actual = _certificate_bytes(source_root_certificate)
+    pinned = actual if pinned_certificate_bytes is None else pinned_certificate_bytes
+    return prove_kernel(
+        job=job,
+        source_root_certificate=source_root_certificate,
+        source_root_certificate_bytes=actual,
+        expected_source_root_certificate_bytes_sha256=hashlib.sha256(pinned).hexdigest(),
+        descriptor=descriptor,
+    )
 
 
 def _rebind(job: dict[str, Any], certificate: dict[str, Any]) -> None:
@@ -151,7 +214,7 @@ def run() -> dict[str, Any]:
     )
     check(
         "affine_rational",
-        prove(
+        _invoke(
             job=affine_job,
             source_root_certificate=affine_cert,
             descriptor=_descriptor([1, -10], "10"),
@@ -168,7 +231,7 @@ def run() -> dict[str, Any]:
     )
     check(
         "triangular_quadratic",
-        prove(
+        _invoke(
             job=triangular_job,
             source_root_certificate=triangular_cert,
             descriptor=_descriptor([1, -4, 2], "3.4142"),
@@ -186,7 +249,7 @@ def run() -> dict[str, Any]:
     )
     check(
         "coupled_low_degree",
-        prove(
+        _invoke(
             job=coupled_job,
             source_root_certificate=coupled_cert,
             descriptor=_descriptor([1, 0, -8], "2.8284"),
@@ -203,7 +266,7 @@ def run() -> dict[str, Any]:
     )
     check(
         "variable_equation_permutation",
-        prove(
+        _invoke(
             job=permuted_job,
             source_root_certificate=permuted_cert,
             descriptor=_descriptor([1, 0, -8], "2.8284"),
@@ -220,7 +283,7 @@ def run() -> dict[str, Any]:
     )
     check(
         "reversible_target_scale",
-        prove(
+        _invoke(
             job=scaled_job,
             source_root_certificate=scaled_cert,
             descriptor=_descriptor([1, 0, -8], "2.8284"),
@@ -237,7 +300,7 @@ def run() -> dict[str, Any]:
     )
     check(
         "near_but_nonzero",
-        prove(
+        _invoke(
             job=near_job,
             source_root_certificate=near_cert,
             descriptor=_descriptor([1, 0, -2], "1.4142", broad=["7/5", "3/2"]),
@@ -254,7 +317,7 @@ def run() -> dict[str, Any]:
     )
     check(
         "wrong_factor",
-        prove(
+        _invoke(
             job=wrong_job,
             source_root_certificate=wrong_cert,
             descriptor=_descriptor([1, 0, -3], "1.732", broad=["1", "2"]),
@@ -272,7 +335,7 @@ def run() -> dict[str, Any]:
     _rebind(bad_height_job, bad_height_cert)
     check(
         "underestimated_coordinate_height",
-        prove(
+        _invoke(
             job=bad_height_job,
             source_root_certificate=bad_height_cert,
             descriptor=_descriptor([1, 0, -8], "2.8284"),
@@ -291,7 +354,7 @@ def run() -> dict[str, Any]:
         )
         check(
             name,
-            prove(
+            _invoke(
                 job=coupled_job,
                 source_root_certificate=certificate,
                 descriptor=_descriptor([1, 0, -8], "2.8284"),
@@ -309,13 +372,86 @@ def run() -> dict[str, Any]:
     _rebind(ordinal_job, ordinal_cert)
     check(
         "wrong_coordinate_ordinal",
-        prove(
+        _invoke(
             job=ordinal_job,
             source_root_certificate=ordinal_cert,
             descriptor=_descriptor([1, 0, -8], "2.8284"),
         ),
         "NOT_PROVED",
     )
+
+    fake_schema = copy.deepcopy(coupled_cert)
+    fake_schema["schema_version"] = "attacker.self-signed-certificate/v1"
+    fake_schema["artifact_sha256"] = canonical_sha256(
+        {k: v for k, v in fake_schema.items() if k != "artifact_sha256"}
+    )
+    check(
+        "adversary_self_signed_schema",
+        _invoke(
+            job=coupled_job,
+            source_root_certificate=fake_schema,
+            descriptor=_descriptor([1, 0, -8], "2.8284"),
+        ),
+        "NOT_PROVED",
+    )
+
+    pinned_bytes = _certificate_bytes(coupled_cert)
+    altered_proof = copy.deepcopy(coupled_cert)
+    altered_proof["completed_original_ast_obligations"][0]["exact_value_sha256"] = "0" * 64
+    altered_proof["artifact_sha256"] = canonical_sha256(
+        {k: v for k, v in altered_proof.items() if k != "artifact_sha256"}
+    )
+    check(
+        "adversary_certificate_bytes_mutation",
+        _invoke(
+            job=coupled_job,
+            source_root_certificate=altered_proof,
+            descriptor=_descriptor([1, 0, -8], "2.8284"),
+            pinned_certificate_bytes=pinned_bytes,
+        ),
+        "NOT_PROVED",
+    )
+
+    qqbar_job = copy.deepcopy(coupled_job)
+    qqbar_cert = copy.deepcopy(coupled_cert)
+    qqbar_fact = qqbar_job["coordinate_facts"][0]
+    qqbar_fact["serialized_qqbar"]["real_root_ordinal"] = 0
+    qqbar_fact["serialized_qqbar_sha256"] = canonical_sha256(qqbar_fact["serialized_qqbar"])
+    qqbar_fact["fact_sha256"] = canonical_sha256(
+        {k: v for k, v in qqbar_fact.items() if k != "fact_sha256"}
+    )
+    _rebind(qqbar_job, qqbar_cert)
+    check(
+        "serialized_qqbar_outer_mismatch",
+        _invoke(
+            job=qqbar_job,
+            source_root_certificate=qqbar_cert,
+            descriptor=_descriptor([1, 0, -8], "2.8284"),
+        ),
+        "NOT_PROVED",
+    )
+
+    for name, field, mutation in (
+        ("source_bytes_mutation", "source_bytes_utf8", lambda value: value + " "),
+        (
+            "endpoint_bits_mutation",
+            "endpoint_float64_bits_hex",
+            lambda value: ["0000000000000000", *value[1:]],
+        ),
+    ):
+        mutated_job = copy.deepcopy(coupled_job)
+        mutated_cert = copy.deepcopy(coupled_cert)
+        mutated_job[field] = mutation(mutated_job[field])
+        _rebind(mutated_job, mutated_cert)
+        check(
+            name,
+            _invoke(
+                job=mutated_job,
+                source_root_certificate=mutated_cert,
+                descriptor=_descriptor([1, 0, -8], "2.8284"),
+            ),
+            "NOT_PROVED",
+        )
 
     result = {
         "schema_version": "geotarget.effective-height-separation-d0/v1",

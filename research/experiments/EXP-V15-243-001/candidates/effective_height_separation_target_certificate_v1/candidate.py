@@ -19,6 +19,8 @@ import sympy as sp
 
 
 SCHEMA = "geotarget.effective-height-target-zero-certificate/v1"
+PINNED_UPSTREAM_SCHEMA = "geotarget.same-root-exact-source-certificate/v2"
+PINNED_UPSTREAM_MECHANISM = "EXACT_QQBAR_ORIGINAL_AST_REPLAY_ALL_OBLIGATIONS"
 
 
 def canonical_sha256(value: object) -> str:
@@ -136,6 +138,12 @@ def _coordinate_fact(
     qqbar = fact.get("serialized_qqbar")
     if not isinstance(qqbar, dict) or canonical_sha256(qqbar) != fact.get("serialized_qqbar_sha256"):
         raise ValueError("serialized QQBar binding mismatch")
+    if qqbar != {
+        "coefficients_high_to_low": fact.get("coefficients_high_to_low"),
+        "isolating_interval": fact.get("isolating_interval"),
+        "real_root_ordinal": fact.get("real_root_ordinal"),
+    }:
+        raise ValueError("serialized QQBar and outer descriptor disagree")
     polynomial = _primitive_irreducible(fact.get("coefficients_high_to_low"), symbol)
     l1 = sum(abs(int(value)) for value in polynomial.all_coeffs())
     if fact.get("recomputed_l1_height") != l1:
@@ -163,17 +171,33 @@ def _not_proved(reason: str) -> dict[str, Any]:
 
 
 def prove(
-    *, job: dict[str, Any], source_root_certificate: dict[str, Any], descriptor: dict[str, Any]
+    *,
+    job: dict[str, Any],
+    source_root_certificate: dict[str, Any],
+    source_root_certificate_bytes: bytes,
+    expected_source_root_certificate_bytes_sha256: str,
+    descriptor: dict[str, Any],
 ) -> dict[str, Any]:
     try:
         if canonical_sha256({k: v for k, v in job.items() if k != "job_sha256"}) != job.get(
             "job_sha256"
         ):
             raise ValueError("job self-digest mismatch")
+        if not isinstance(source_root_certificate_bytes, bytes) or hashlib.sha256(
+            source_root_certificate_bytes
+        ).hexdigest() != expected_source_root_certificate_bytes_sha256:
+            raise ValueError("pinned upstream certificate bytes hash mismatch")
+        if json.loads(source_root_certificate_bytes) != source_root_certificate:
+            raise ValueError("upstream certificate bytes/document mismatch")
         if canonical_sha256(
             {k: v for k, v in source_root_certificate.items() if k != "artifact_sha256"}
         ) != source_root_certificate.get("artifact_sha256"):
             raise ValueError("source-root certificate self-digest mismatch")
+        if (
+            source_root_certificate.get("schema_version") != PINNED_UPSTREAM_SCHEMA
+            or source_root_certificate.get("proof_mechanism") != PINNED_UPSTREAM_MECHANISM
+        ):
+            raise ValueError("upstream certificate schema/mechanism is not pinned")
         if source_root_certificate.get("status") != "VERIFIED":
             raise ValueError("source-root certificate is not VERIFIED")
         for key in (
@@ -183,6 +207,7 @@ def prove(
             "system_sha256",
             "obligation_ledger_sha256",
             "lineage_sha256",
+            "precision_rung",
         ):
             if source_root_certificate.get(key) != job.get(key):
                 raise ValueError(f"source-root certificate {key} mismatch")
@@ -195,10 +220,59 @@ def prove(
         ):
             if source_root_certificate.get(flag) is not True:
                 raise ValueError(f"source-root certificate lacks {flag}")
+        if job.get("truth_used") is not False or source_root_certificate.get("truth_used") is not False:
+            raise ValueError("truth-free binding is absent")
+
+        source_text = job.get("source_bytes_utf8")
+        if not isinstance(source_text, str) or hashlib.sha256(source_text.encode()).hexdigest() != job.get(
+            "source_sha256"
+        ):
+            raise ValueError("source bytes/SHA binding mismatch")
+        endpoint_bits = job.get("endpoint_float64_bits_hex")
+        if not isinstance(endpoint_bits, list) or not endpoint_bits or any(
+            not isinstance(value, str) or len(value) != 16 for value in endpoint_bits
+        ):
+            raise ValueError("endpoint Float64 bits are absent")
+        try:
+            endpoint_bytes = bytes.fromhex("".join(endpoint_bits))
+        except ValueError as error:
+            raise ValueError("endpoint Float64 bits are malformed") from error
+        if hashlib.sha256(endpoint_bytes).hexdigest() != job.get("endpoint_float64_sha256"):
+            raise ValueError("endpoint Float64 bits/SHA binding mismatch")
+
+        ledger = job.get("obligation_ledger")
+        completed = source_root_certificate.get("completed_original_ast_obligations")
+        if not isinstance(ledger, list) or not isinstance(completed, list):
+            raise ValueError("complete original-AST obligation proof is absent")
+        if canonical_sha256(ledger) != job.get("obligation_ledger_sha256"):
+            raise ValueError("obligation ledger SHA mismatch")
+        expected_ledger = [
+            (item.get("ordinal"), item.get("node_sha256"), item.get("kind"))
+            for item in ledger
+            if isinstance(item, dict)
+        ]
+        completed_ledger = [
+            (item.get("ordinal"), item.get("node_sha256"), item.get("kind"))
+            for item in completed
+            if isinstance(item, dict)
+            and item.get("verdict") == "VERIFIED"
+            and isinstance(item.get("exact_value_sha256"), str)
+            and len(item["exact_value_sha256"]) == 64
+        ]
+        if expected_ledger != completed_ledger or len(expected_ledger) != len(ledger):
+            raise ValueError("original-AST obligation proof is incomplete or reordered")
+        kinds = [item[2] for item in expected_ledger]
+        required_kinds = {"equation", "guard", "definedness", "branch"}
+        if not required_kinds <= set(kinds):
+            raise ValueError("equation/guard/definedness/branch ledger is incomplete")
 
         statement = job.get("source_statement")
         if not isinstance(statement, dict) or canonical_sha256(statement) != job.get("system_sha256"):
             raise ValueError("source statement binding mismatch")
+        if source_text != json.dumps(
+            statement, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False
+        ):
+            raise ValueError("source bytes are not the exact bound statement")
         names = statement.get("variables")
         target_text = statement.get("raw_target")
         if not isinstance(names, list) or not isinstance(target_text, str) or len(set(names)) != len(names):
@@ -287,6 +361,7 @@ def prove(
             "rigorous_zero_upper_bound": str(zero_upper_bound),
             "strict_separation_verified": True,
             "source_root_certificate_sha256": source_root_certificate["artifact_sha256"],
+            "source_root_certificate_bytes_sha256": expected_source_root_certificate_bytes_sha256,
             "coordinate_fact_sha256": fact_hashes,
             "descriptor_sha256": canonical_sha256(descriptor),
             "numeric_proximity_used_as_equality": False,

@@ -102,14 +102,25 @@ minimum distance between unrelated algebraic numbers.
 - Output is always `authority=false`, `target_release=false`; final unchanged
   canonical source replay is mandatory.
 
+Repair A after independent audit pins the upstream certificate schema and
+proof mechanism and requires its exact raw-byte SHA from a trusted outer
+manifest.  It independently rehashes the source bytes and Float64 endpoint
+bits; binds lineage and precision rung; and matches a complete ordered ledger
+of equation, guard, definedness, and branch nodes to exact `VERIFIED`
+obligation records.  The serialized QQBar payload must exactly equal the outer
+minimal polynomial, isolator, and ordinal after all are recomputed.  A
+self-digested caller-created JSON object is no longer an admissible upstream
+certificate.
+
 ## D0 result
 
-Generated D0 passed **11/11**, with five positives across affine, triangular,
-coupled, permutation, and scale structures.  Six negatives cover a nonzero
-rational perturbation, wrong factor, underestimated height, singular source,
-failed branch replay, and wrong ordinal.  False accepts: **0**.
+Generated Repair-A D0 passed **16/16**, with five positives across affine,
+triangular, coupled, permutation, and scale structures.  Eleven negatives
+cover a nonzero rational perturbation, wrong factor, underestimated height,
+singular source, failed branch replay, wrong ordinal, self-signed schema,
+pinned-certificate byte mutation, QQBar inner/outer disagreement, source-byte
+mutation, and endpoint-bit mutation.  False accepts: **0**.
 
-Next gate is a truth-blind static census of already stored exact coordinate
-facts.  The mechanism is useful only when their isolators are narrow enough to
-beat the conservative `B^-D` threshold and the old exact target link is absent
-or fails.
+The relevant stored partial facts have the required full binding tuple in
+**0/19**, so no post-hoc retrofit or real run is permitted.  Reopen only with
+search-time full bindings on at least four sources across two signatures.
