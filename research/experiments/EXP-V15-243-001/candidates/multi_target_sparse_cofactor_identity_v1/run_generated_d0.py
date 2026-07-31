@@ -21,12 +21,19 @@ def _case(
     factors: list[list[int]],
     expected: bool,
 ) -> dict[str, object]:
+    source_sha256 = hashlib.sha256(f"synthetic-source:{name}".encode()).hexdigest()
+    artifact_sha256s = [
+        hashlib.sha256(f"synthetic-descriptor:{name}:{index}:{factor}".encode()).hexdigest()
+        for index, factor in enumerate(factors)
+    ]
     result = prove_multi_target_identity(
         variables=variables,
         active_equations=equations[: len(variables)],
         all_equations=equations,
         target_expression=target,
         factors_high_to_low=factors,
+        descriptor_artifact_sha256s=artifact_sha256s,
+        source_sha256=source_sha256,
     )
     actual = result["status"] == "IDENTITY_VERIFIED"
     if actual is not expected:
@@ -80,7 +87,7 @@ def main() -> int:
             ["x"],
             ["(x-1)*(x**2-2)"],
             "x",
-            [[1, 0, -2], [1, 0, -2]],
+            [[1, 0, -2], [1, -3]],
             False,
         ),
         _case(
