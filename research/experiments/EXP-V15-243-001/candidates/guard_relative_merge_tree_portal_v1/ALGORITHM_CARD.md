@@ -87,31 +87,34 @@ was returned to this lane.
 ## Repair A: real-gate portal splice
 
 `portal_search_worker.py` observes the same in-process pool and monkey-patches
-only the frozen worker's `run_local_arm` binding.  It executes the first three
-starts of the immutable literal prefix in original order, then marks only
-endpoints already returned by those baseline lanes and selects the first
-existing source-INTERIOR vertex where a strict invalid-endpoint-minimum lower-
-star component merges into an interior component.  This first complete 3:1
-block makes activation reachable under the 5-second screen instead of waiting
-for all 192 nominal baseline starts.
+only the frozen worker's `run_local_arm` binding.  The original three-start
+splice produced zero activations in Root's frozen 72-pair screen24 run
+(aggregate SHA `899671d...`; 60 UNKNOWN, 12 censored, 0 wins/losses).  Repair A
+therefore executes immutable starts in complete four-start insurance blocks,
+marks only endpoints already returned by those baseline lanes, and invokes the
+unchanged structural selector after every completed block.  It stops at the
+first existing source-INTERIOR portal, the fixed 75% baseline callback quota,
+or deadline.  This changes evidence availability, not a numeric threshold.
 
 One midpoint evaluation is charged inside the side quota, then that existing
 interior vertex is passed as a start to the unchanged canonical local kernel.
 The side callback cap is always at most exactly 25% of the original aggregate
-cap, including the midpoint, even if baseline lanes finish early.  If time and
-the baseline allowance remain, the original prefix resumes at ordinal four.
-The portal replaces only ordinal three, so all period-four product-Cauchy
-insurance ordinals remain baseline.  HP, reservoir, verifier, canonical source
-replay, candidate kernel, and search arm remain exact control.
+cap, including the midpoint, even if baseline lanes finish early.  No original
+start is replaced.  If time and the baseline allowance remain, every remaining
+period-four product-Cauchy insurance start is scheduled before the other
+remaining original starts.  HP, reservoir, verifier, canonical source replay,
+candidate kernel, and search arm remain exact control.
 
-Incomplete typing, fewer than eight interior vertices, missing endpoint
-minimum, kNN/residual ties, or no qualifying component merge make the local
-gate UNKNOWN.  In that case the trailing original prefix is run in order with
-the unchanged per-start kernel and callback cap; no candidate counter is added
-to the search result.  A generated real-worker negative test matches control
-after removing elapsed wall time.  A generated positive pool activates one
-existing-interior portal and one charged midpoint.  All 26 focused tests pass
-on CPU14.  Root-only screen24 5-second seeds 0--2 comparison remains pending.
+Incomplete typing, missing endpoint minimum, kNN/residual ties, or no qualifying
+component merge make the local gate UNKNOWN.  In that case the trailing
+original prefix is run in order with the unchanged per-start kernel and full
+original callback cap; no candidate counter is added.  Raw IEEE signed zero is
+normalized only for endpoint membership after a generated +0/-0 metamorphic
+failure; kNN and residual tie policy are unchanged.  The causal positive test
+does not activate after block one, activates after new evidence in block two,
+and retains all 16 generated original starts.  The frozen real-worker UNKNOWN
+test remains byte-equivalent after removing elapsed time.  The assigned Repair
+A D0 suite passed 11/11 on CPU14.  Root-only screen24 rerun remains pending.
 
 ## Nearest mechanisms and reopen
 

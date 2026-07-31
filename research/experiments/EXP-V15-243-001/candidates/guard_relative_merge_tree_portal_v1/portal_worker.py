@@ -12,7 +12,7 @@ import sys
 HERE = Path(__file__).resolve().parent
 WRAPPER = HERE / "portal_full_wrapper.py"
 EXPECTED_WRAPPER_SHA256 = (
-    "f5af4a9d8132b7b4e54733bcf8d2ad5705f9e8f0e4ac2aa09d036dd2ca5adcab"
+    "e0687264846cc7704eaaedd171e7e5f7c34e4c01c62d34b0333845ab163d7954"
 )
 
 

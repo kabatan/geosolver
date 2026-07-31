@@ -60,12 +60,21 @@ def build_runtime(*, activate: bool):
     budget = Budget()
     budget.callbacks = 0
     calls = []
-    positions = [-3.1, -2.0, -1.15, -0.2, 0.9, 2.05, 3.3, 4.7, 6.2, 7.8, 9.5, 11.4]
-    residuals = [0.01, 0.12, 0.25, 0.40, 0.58, 0.79, 1.03, 1.30, 1.60, 1.93, 2.29, 2.68]
-    pilot_extras = {
-        positions[0]: positions[3:5],
-        positions[1]: positions[5:7],
-        positions[2]: positions[7:9],
+    positions = [
+        -3.1, -2.0, -1.15, -0.2, 0.9, 2.05, 3.3, 4.7,
+        6.2, 7.8, 9.5, 11.4, 13.5, 15.8, 18.2, 20.9,
+    ]
+    residuals = [
+        0.12, 0.25, 0.40, 0.58, 0.01, 0.79, 1.03, 1.30,
+        1.60, 1.93, 2.29, 2.68, 3.10, 3.55, 4.03, 4.54,
+    ]
+    # The first complete insurance block cannot activate.  Evidence arrives
+    # only while evaluating the second block, so activation proves that the
+    # Repair A block loop is causal rather than a static three-start split.
+    second_block_extras = {
+        positions[4]: positions[8:10],
+        positions[5]: positions[10:12],
+        positions[6]: positions[12:14],
     }
 
     def evaluate(point):
@@ -73,7 +82,7 @@ def build_runtime(*, activate: bool):
         calls.append(value)
         budget.callbacks += 1
         nearest = min(range(len(positions)), key=lambda i: abs(positions[i] - value))
-        invalid = bool(activate and nearest == 0 and value == positions[0])
+        invalid = bool(activate and nearest == 4 and value == positions[4])
         return Observation(
             residual=np.asarray([residuals[nearest]], dtype=float),
             finite=True,
@@ -120,8 +129,8 @@ def build_runtime(*, activate: bool):
             before = budget.callbacks
             base_case.evaluate(point)
             value = float(np.asarray(point)[0])
-            if activate and len(literal_prefix.points) == 3 and value in pilot_extras:
-                for extra in pilot_extras[value]:
+            if activate and value in second_block_extras:
+                for extra in second_block_extras[value]:
                     if budget.callbacks < callback_cap:
                         base_case.evaluate(np.asarray([extra], dtype=float))
             endpoints.append((lane, np.asarray(point, dtype=float).copy()))
@@ -143,19 +152,23 @@ class PortalRuntimeTests(unittest.TestCase):
             budget=budget,
             program=None,
             literal_prefix=prefix,
-            callback_cap=12,
+            callback_cap=32,
             callbacks_per_start=1,
             deadline_monotonic=float("inf"),
         )
-        self.assertEqual(calls[0], float(prefix.points[0][0]))
-        self.assertEqual(calls[3], float(prefix.points[1][0]))
-        self.assertEqual(calls[6], float(prefix.points[2][0]))
+        self.assertEqual(calls[:4], [float(point[0]) for point in prefix.points[:4]])
         self.assertTrue(runtime.summary["portal_activated"])
+        self.assertEqual(runtime.summary["portal_detection_after_original_starts"], 8)
+        self.assertEqual(runtime.summary["baseline_blocks_completed"], 2)
         self.assertEqual(runtime.summary["midpoint_callbacks"], 1)
-        self.assertIn(calls[-1], calls[:9])
-        self.assertNotEqual(calls[-2], calls[-1])
+        self.assertLessEqual(
+            runtime.summary["portal_callbacks_used_including_midpoint"], 8
+        )
+        original_lanes = {lane for lane, _point in outcome.endpoints if lane < 16}
+        self.assertEqual(original_lanes, set(range(16)))
+        self.assertIn(16, {lane for lane, _point in outcome.endpoints})
         self.assertEqual(outcome.counters["guard_merge_portal_activations"], 1)
-        self.assertLessEqual(budget.callbacks, 12)
+        self.assertLessEqual(budget.callbacks, 32)
 
     def test_unknown_continues_exact_original_prefix_without_candidate_counters(self):
         runtime, run, case, budget, prefix, calls = build_runtime(activate=False)
@@ -165,25 +178,33 @@ class PortalRuntimeTests(unittest.TestCase):
             budget=budget,
             program=None,
             literal_prefix=prefix,
-            callback_cap=12,
+            callback_cap=32,
             callbacks_per_start=1,
             deadline_monotonic=float("inf"),
         )
         self.assertEqual(calls, [float(point[0]) for point in prefix.points])
         self.assertEqual(runtime.summary["mode"], "UNKNOWN_FULL_BASELINE_FALLBACK")
         self.assertFalse(runtime.summary["portal_activated"])
-        self.assertEqual(outcome.statuses, {"ok": 12})
+        self.assertEqual(outcome.statuses, {"ok": 16})
         self.assertEqual(outcome.counters, {})
-        self.assertEqual([lane for lane, _point in outcome.endpoints], list(range(12)))
-        self.assertEqual(outcome.lane_callbacks, (1,) * 12)
+        self.assertEqual([lane for lane, _point in outcome.endpoints], list(range(16)))
+        self.assertEqual(outcome.lane_callbacks, (1,) * 16)
 
     def test_period_four_iid_insurance_is_retained_in_baseline_prefix(self):
-        pilot, fallback, resume = portal_connector._phase_ordinals(256)
-        self.assertEqual(pilot, (0, 1, 2))
-        self.assertEqual(fallback, tuple(range(3, 256)))
-        self.assertEqual(resume, tuple(range(4, 256)))
-        retained = (*pilot, *resume)
-        self.assertEqual(sum(index % 4 == 0 for index in retained), 64)
+        blocks = portal_connector._complete_insurance_blocks(256)
+        self.assertEqual(blocks[0], (0, 1, 2, 3))
+        self.assertEqual(blocks[-1], (252, 253, 254, 255))
+        self.assertEqual(tuple(index for block in blocks for index in block), tuple(range(256)))
+        resume = portal_connector._resume_ordinals(8, 256)
+        self.assertEqual(resume[:62], tuple(range(8, 256, 4)))
+        self.assertEqual(set(resume), set(range(8, 256)))
+
+    def test_signed_zero_endpoint_membership_is_geometrically_invariant(self):
+        runtime, _run, _case, _budget, _prefix, _calls = build_runtime(activate=False)
+        runtime.collector._rows = [{"point": [-0.0], "endpoint": False}]
+        marked = runtime._mark_endpoints(((0, np.asarray([+0.0])),))
+        self.assertEqual(marked, 1)
+        self.assertTrue(runtime.collector._rows[0]["endpoint"])
 
     def test_cpu14_only(self):
         self.assertEqual(os.sched_getaffinity(0), {14})

@@ -15,20 +15,20 @@ from typing import Callable, Mapping, Sequence
 import numpy as np
 
 
-PORTAL_SCHEMA = "geotarget.guard-relative-merge-tree-portal-repair/v1"
+PORTAL_SCHEMA = "geotarget.guard-relative-merge-tree-portal-repair/v2"
 
 
-def _phase_ordinals(
-    count: int,
-) -> tuple[tuple[int, ...], tuple[int, ...], tuple[int, ...]]:
-    # Infer once after the first complete 3:1 block.  Ordinal three is a
-    # non-insurance start; every period-four Cauchy insurance ordinal remains
-    # in pilot or resume baseline.
-    pilot_count = min(3, count)
-    pilot = tuple(range(pilot_count))
-    fallback = tuple(range(pilot_count, count))
-    resume = tuple(range(4, count)) if count >= 4 else ()
-    return pilot, fallback, resume
+def _complete_insurance_blocks(count: int) -> tuple[tuple[int, ...], ...]:
+    """Return only complete original 4-start blocks, without replacing a start."""
+    return tuple(tuple(range(begin, begin + 4)) for begin in range(0, count - 3, 4))
+
+
+def _resume_ordinals(begin: int, count: int) -> tuple[int, ...]:
+    """Keep every remaining period-four insurance start ahead of side censoring."""
+    remaining = tuple(range(begin, count))
+    insurance = tuple(index for index in remaining if index % 4 == 0)
+    insurance_set = set(insurance)
+    return insurance + tuple(index for index in remaining if index not in insurance_set)
 
 
 def _prefix_slice(prefix: object, ordinals: Sequence[int]) -> object:
@@ -105,10 +105,18 @@ class PortalRuntime:
         }
 
     def _mark_endpoints(self, endpoints: Sequence[tuple[int, np.ndarray]]) -> int:
-        keys = {self.point_key(np.asarray(point, dtype=float)) for _lane, point in endpoints}
+        # +0.0 and -0.0 are the same geometric point.  The frozen byte key is
+        # intentionally untouched everywhere else; normalization is local to
+        # endpoint membership, where the raw IEEE sign caused false UNKNOWN.
+        def endpoint_key(point: np.ndarray) -> bytes:
+            normalized = np.asarray(point, dtype=float).copy()
+            normalized[normalized == 0.0] = 0.0
+            return self.point_key(normalized)
+
+        keys = {endpoint_key(point) for _lane, point in endpoints}
         marked = 0
         for row in self.collector._rows:
-            if self.point_key(np.asarray(row["point"], dtype=float)) in keys:
+            if endpoint_key(np.asarray(row["point"], dtype=float)) in keys:
                 row["endpoint"] = True
                 marked += 1
         return marked
@@ -170,9 +178,6 @@ class PortalRuntime:
             deadline_monotonic: float,
         ) -> object:
             points = tuple(literal_prefix.points)
-            pilot_ordinals, fallback_ordinals, resume_ordinals = _phase_ordinals(
-                len(points)
-            )
             if len(points) < 4:
                 self.summary = {
                     "mode": "FULL_BASELINE_NO_SIDE_QUOTA",
@@ -195,54 +200,101 @@ class PortalRuntime:
                 max(0, int(callback_cap) - begin), portal_available=True
             )
             baseline_limit = begin + int(allocation["baseline_callbacks"])
-            baseline = original(
-                arm,
-                base_case=base_case,
-                budget=budget,
-                program=program,
-                literal_prefix=_prefix_slice(literal_prefix, pilot_ordinals),
-                callback_cap=baseline_limit,
-                callbacks_per_start=callbacks_per_start,
-                deadline_monotonic=deadline_monotonic,
-            )
-            # A censored baseline never gives the side route authority.
-            if (
-                len(getattr(baseline, "lane_callbacks")) < len(pilot_ordinals)
-                or time.monotonic() >= deadline_monotonic
-                or int(budget.callbacks) >= int(callback_cap)
-            ):
-                self.summary = {
-                    "mode": "BASELINE_CENSORED_NO_PORTAL",
-                    "portal_activated": False,
-                    "baseline_callbacks": int(budget.callbacks) - begin,
-                    "individual_observations_emitted": False,
-                }
-                return baseline
-
-            proposal, marked, reason = self._proposal(getattr(baseline, "endpoints"))
-            if proposal is None:
-                fallback = original(
+            baseline = None
+            next_ordinal = 0
+            proposal = None
+            marked = 0
+            reasons: list[str] = []
+            completed_blocks = 0
+            for block in _complete_insurance_blocks(len(points)):
+                if int(budget.callbacks) >= baseline_limit or time.monotonic() >= deadline_monotonic:
+                    break
+                block_outcome = original(
                     arm,
                     base_case=base_case,
                     budget=budget,
                     program=program,
-                    literal_prefix=_prefix_slice(literal_prefix, fallback_ordinals),
-                    callback_cap=callback_cap,
+                    literal_prefix=_prefix_slice(literal_prefix, block),
+                    callback_cap=baseline_limit,
                     callbacks_per_start=callbacks_per_start,
                     deadline_monotonic=deadline_monotonic,
                 )
+                if baseline is None:
+                    baseline = block_outcome
+                else:
+                    baseline = _merge_outcomes(
+                        baseline, block_outcome, lane_offset=block[0]
+                    )
+                completed = len(getattr(block_outcome, "lane_callbacks"))
+                next_ordinal = block[0] + completed
+                if completed < len(block):
+                    break
+                completed_blocks += 1
+                next_ordinal = block[-1] + 1
+                proposal, marked, reason = self._proposal(
+                    getattr(baseline, "endpoints")
+                )
+                if reason is not None:
+                    reasons.append(reason)
+                if proposal is not None:
+                    break
+
+            if baseline is None:
+                # Obtain the native empty/censored outcome type without
+                # creating a candidate-specific result representation.
+                baseline = original(
+                    arm,
+                    base_case=base_case,
+                    budget=budget,
+                    program=program,
+                    literal_prefix=_prefix_slice(literal_prefix, (0, 1, 2, 3)),
+                    callback_cap=baseline_limit,
+                    callbacks_per_start=callbacks_per_start,
+                    deadline_monotonic=deadline_monotonic,
+                )
+                next_ordinal = len(getattr(baseline, "lane_callbacks"))
+
+            # A deadline cannot authorize the side route.  A quota-censored
+            # block also cannot activate, but UNKNOWN below still receives the
+            # remaining full baseline quota.
+            if time.monotonic() >= deadline_monotonic:
+                self.summary = {
+                    "mode": "BASELINE_CENSORED_NO_PORTAL",
+                    "portal_activated": False,
+                    "baseline_callbacks": int(budget.callbacks) - begin,
+                    "baseline_blocks_completed": completed_blocks,
+                    "individual_observations_emitted": False,
+                }
+                return baseline
+
+            if proposal is None:
+                fallback_ordinals = tuple(range(next_ordinal, len(points)))
+                if fallback_ordinals:
+                    fallback = original(
+                        arm,
+                        base_case=base_case,
+                        budget=budget,
+                        program=program,
+                        literal_prefix=_prefix_slice(literal_prefix, fallback_ordinals),
+                        callback_cap=callback_cap,
+                        callbacks_per_start=callbacks_per_start,
+                        deadline_monotonic=deadline_monotonic,
+                    )
+                    baseline = _merge_outcomes(
+                        baseline, fallback, lane_offset=next_ordinal
+                    )
                 self.summary = {
                     "mode": "UNKNOWN_FULL_BASELINE_FALLBACK",
                     "portal_activated": False,
-                    "unknown_reason": reason,
+                    "unknown_reason": reasons[-1] if reasons else "NO_COMPLETE_BLOCK",
+                    "proposal_attempts": completed_blocks,
+                    "baseline_blocks_completed": completed_blocks,
                     "baseline_endpoint_observations": marked,
                     "individual_observations_emitted": False,
                 }
                 # No candidate counters are added: the search result is the
                 # exact baseline prefix/kernel/callback continuation.
-                return _merge_outcomes(
-                    baseline, fallback, lane_offset=len(pilot_ordinals)
-                )
+                return baseline
 
             midpoint_before = int(budget.callbacks)
             midpoint_error = None
@@ -251,7 +303,10 @@ class PortalRuntime:
                 midpoint_before + int(allocation["side_callbacks"]),
             )
             try:
-                if int(budget.callbacks) < portal_limit:
+                if (
+                    int(allocation["midpoint_evaluation_callbacks"]) > 0
+                    and int(budget.callbacks) < portal_limit
+                ):
                     base_case.evaluate(np.asarray(proposal.midpoint_probe, dtype=float))
             except Exception as error:  # fail closed; the charged attempt remains charged
                 midpoint_error = type(error).__name__
@@ -279,6 +334,7 @@ class PortalRuntime:
             baseline_remaining = max(
                 0, int(allocation["baseline_callbacks"]) - baseline_used
             )
+            resume_ordinals = _resume_ordinals(next_ordinal, len(points))
             if (
                 resume_ordinals
                 and baseline_remaining > 0
@@ -306,6 +362,9 @@ class PortalRuntime:
                 "mode": "PORTAL_SIDE_ACTIVE",
                 "portal_activated": True,
                 "baseline_endpoint_observations": marked,
+                "baseline_blocks_completed": completed_blocks,
+                "portal_detection_after_original_starts": next_ordinal,
+                "proposal_attempts": completed_blocks,
                 "baseline_callbacks_cap": int(allocation["baseline_callbacks"]),
                 "side_callbacks_cap": int(allocation["side_callbacks"]),
                 "midpoint_callbacks": midpoint_callbacks,
@@ -320,7 +379,7 @@ class PortalRuntime:
             activated = _merge_outcomes(
                 baseline,
                 portal,
-                lane_offset=3,
+                lane_offset=len(points),
                 first_lane_extra=midpoint_callbacks,
                 status_extra={"guard_merge_portal_side_active": 1},
                 counter_extra={
@@ -328,7 +387,21 @@ class PortalRuntime:
                     "guard_merge_midpoint_callbacks": midpoint_callbacks,
                 },
             )
-            return _merge_outcomes(activated, resumed, lane_offset=4)
+            if resume_ordinals:
+                # Relabel endpoints by their original ordinals even though
+                # insurance starts are scheduled first after activation.
+                resumed_endpoints = tuple(
+                    (resume_ordinals[int(lane)], np.asarray(point, dtype=float).copy())
+                    for lane, point in getattr(resumed, "endpoints")
+                    if 0 <= int(lane) < len(resume_ordinals)
+                )
+                resumed = type(resumed)(
+                    endpoints=resumed_endpoints,
+                    statuses=getattr(resumed, "statuses"),
+                    counters=getattr(resumed, "counters"),
+                    lane_callbacks=getattr(resumed, "lane_callbacks"),
+                )
+            return _merge_outcomes(activated, resumed, lane_offset=0)
 
         return run_local_arm
 
@@ -362,6 +435,7 @@ def write_portal_sidecar(
 __all__ = [
     "PORTAL_SCHEMA",
     "PortalRuntime",
-    "_phase_ordinals",
+    "_complete_insurance_blocks",
+    "_resume_ordinals",
     "write_portal_sidecar",
 ]

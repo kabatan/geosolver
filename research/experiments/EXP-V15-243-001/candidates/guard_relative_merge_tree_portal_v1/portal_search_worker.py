@@ -29,7 +29,7 @@ LOCAL_BINDINGS = {
     ),
     "portal_connector.py": (
         HERE / "portal_connector.py",
-        "b7c9fce846badafd5af37ed681817b85f29d2264492476e9448778544d7e90c4",
+        "4eb4ef4a4a82ceb5c3605651fd0c239077aedbf6ce56496f70c5468f4af53484",
     ),
     "REAL_GATE_STATUS.json": (
         HERE / "REAL_GATE_STATUS.json",

@@ -2,7 +2,7 @@
 
 Use `arm.json` with the existing Root-custodied screen24 launcher.  The frozen
 full entrypoint is `portal_worker.py` (SHA-256
-`6210280ed43e0c66b6f079d7e98bb82b68d2d899eddd5600020b92a9e8c87bef`).
+`576e6cf7b819c13c3a84bf6d445ef23c928cc597384058f574850b34e29dbce2`).
 Run control and candidate at 5 seconds for seeds 0, 1, and 2 under the same
 source manifest and isolated process policy.  Do not return per-case results
 or source payloads to the candidate lane.
@@ -23,10 +23,18 @@ taskset -c 14 env OMP_NUM_THREADS=1 OMP_THREAD_LIMIT=1 \
 
 `$RESULT_JSON.guard-merge-portal.json` contains aggregate activation and the
 search-result hash only.  It emits no observation point, residual, endpoint,
-case outcome, target, or truth.  The portal is inferred after the first three
-baseline starts and replaces only ordinal three.  The portal route consumes at
-most 25% of the callback cap; baseline may resume at ordinal four with the
-remaining fixed 75% baseline callback allowance.  Thus all 64 period-four
-product-Cauchy insurance ordinals at 256 starts remain baseline.  If the local
-pool is UNKNOWN, ordinal three onward continues with the unchanged prefix,
-kernel, and original callback cap.
+case outcome, target, or truth.  Repair A evaluates complete four-start
+insurance blocks in original order and invokes the frozen structural selector
+after each block.  It stops at the first portal, the fixed 75% baseline quota,
+or deadline.  No original start is replaced.  The portal route consumes at
+most 25% of the callback cap; remaining period-four insurance starts run first
+inside the baseline continuation, followed by every other remaining prefix
+start while quota remains.  If the local pool is UNKNOWN, the unchanged
+prefix, kernel, and original full callback cap continue exactly.
+
+The direct AB runner is `run_screen24_direct.py` SHA-256
+`61bbe4ee8a254b311fa6dcddbe89d7e57d84c083512150383ed73f3621ae8867`.
+It requires a nonexistent output root and aggregate path, strict manifest
+leaves contained by the frozen input root, and a candidate sidecar whose digest
+matches the exact `search.json`.  It cannot resume or reuse a pair directory.
+Only aggregate safety and activation progress is printed every eight pairs.
