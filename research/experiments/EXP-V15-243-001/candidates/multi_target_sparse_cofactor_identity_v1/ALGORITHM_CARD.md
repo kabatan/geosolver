@@ -29,6 +29,14 @@
   both missing-factor/wrong-polynomial negatives rejected, false accepts zero.
   Frozen result SHA-256:
   `39da2295e93cd91bd883eb2762767a13ddbf8ad3014b00e201c3a68ec3535252`.
+- Real applicability: STOP.  An aggregate-only scan of 3,320 frozen authority
+  artifacts found four anonymous sources with at least two distinct primitive
+  factors, but all four failed the existing safe polynomial compiler cap;
+  verified product identities were 0 and no authority/release was attempted.
+  Reopen only after an independently reviewed semantic-cover compiler
+  expansion admits such sources.  Runner/result SHA-256 are
+  `a97a426e44cbb36218cad154a45ecccea11d989407a6f6b627e6a6f637a3c86e`
+  and `4752f1e8616fc38beaefd52c5f602bf9a2bcd15c169155bf544189de47d9759c`.
 - Nearest prior: `local_validated_witness/exact_link.py` and the planning-only
   `completeness_literature/candidates/10_candidate_identity_membership.md`.
   C3V computes an eliminant; this candidate verifies a known product and can
