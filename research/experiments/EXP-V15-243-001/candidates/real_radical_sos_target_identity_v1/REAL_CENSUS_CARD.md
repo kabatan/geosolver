@@ -8,6 +8,13 @@
 - Promotion gate: at least 4 identity-plus-typed-static intersections spanning at least 2 anonymous structural signatures. Authority and target release remain false regardless of counts.
 - Output: stage counts, one joined anonymous signature count, gate, and fixed safety booleans only. Formal scorer, truth, holdout partitions, and individual outcomes are not read.
 
+## Frozen result
+
+- CPU14, Python 3.12.11 / SymPy 1.14.0; 3 synthetic/custody tests passed.
+- Panel stages: input 85; primitive cover 33; safe QQ equality plus raw target 4; consistent non-unit ideal 4; direct `h` and `h²` miss 3; SOS search attempted 3; identity ready 0; typed-static intersection 0; joined signature count 0.
+- Decision: **REAL_GATE_STOP**. This exact bounded mechanism does not proceed to the contained Krawczyk/existence worker gate. No bound, degree, timeout, Gram family, or compiler threshold was adjusted after seeing the aggregate.
+- Safety: unexpected authority/release 0; authority and target release false; individual records absent. Repository-external aggregate SHA-256: `a591ad444f7b21e4c6f36450704d02b57dc2ac2a7b393a0b03ca81377b8497cf`.
+
 Command after CPU14 is released:
 
 `taskset -c 14 env PYTHONHASHSEED=0 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 /home/kabatan/work/solver/.venv/bin/python run_real_census.py --requests /home/kabatan/work/solver-experiment-results/partial-ideal-root-readiness-v1/degree1-requests.json --output /home/kabatan/work/solver-experiment-results/real-radical-sos-target-identity-v1/REAL_CENSUS.json`
