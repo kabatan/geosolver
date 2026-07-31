@@ -32,3 +32,9 @@
   `1f30a8e5c334d6e1d1c1583afe9b06d2d1d7a5c4c326209d93fafc7c775c5270`;
   real runner
   `0b125743dccd7f3246e2e6c3169a1007e619f6ff8158bc8f9da26e0842fd8d26`.
+- Queue state: `REAL_GATE_BLOCKED_BY_GLOBAL_LOCK`, not a candidate failure.
+  The frozen pure-gain command uses the same anonymous panel SHA above,
+  `--execute-stored --execute-exact --exact-timeout-seconds 20`, candidate
+  endpoint first, and the frozen exact-coordinate fallback worker
+  `44d6fa802dc51e7f58e5a72e48b434a62be84275c328bd605f0e9e2f6eb11900`
+  on the original endpoint only when the candidate reaches exact replay.
