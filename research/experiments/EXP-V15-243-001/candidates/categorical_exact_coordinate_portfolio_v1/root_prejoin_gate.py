@@ -299,7 +299,7 @@ def main() -> int:
     )
     _atomic_json(arguments.output.resolve(), aggregate)
     print(json.dumps(aggregate, sort_keys=True))
-    return 0
+    return 0 if go else 2
 
 
 if __name__ == "__main__":
