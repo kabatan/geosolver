@@ -75,6 +75,26 @@ Promotion requires at least three activated sources, at least two anonymous
 structural signatures, and zero false/source-invalid/fallback-byte mismatch.
 Activation alone makes no correctness, target-release, or completeness claim.
 
+## Disposition
+
+CPU14 generated D0 passed: 6/6 unit tests, 3/3 unrelated positive families,
+zero negative/near-miss/false emission, zero metamorphic mismatch, 9/9
+byte-identical fallbacks, and one intentional replay-disagreement orbit rejected
+as a whole.
+
+The frozen truth-blind 85-endpoint activation then produced zero structurally
+eligible sources, zero proposals, and zero anonymous signatures.  Safety
+counters remained clean: false emission, source-invalid, and fallback-byte
+mismatch were all zero.  The fixed decision is
+`STOP_ZERO_OR_NARROW_ACTIVATION`; no threshold, compiler gate, predicate, or
+source representation is loosened after observing that aggregate.
+
+Frozen evidence hashes:
+
+- candidate mechanism: `f9cc42d38921280a27d9605d0a08fe1e0527ea0fc7398783e31f0bd961a3258c`;
+- generated aggregate: `5d4648ca96fd1df3a5532df00e99c05dd9680772b024a3a222eca9fad390c33c`;
+- repository-external real aggregate: `8b0068e4cf165615a83a99ec27d11a5112796165d727988d6a9233848d2c5599`.
+
 ## Reopen/stop rule
 
 Stop on zero/narrow real activation.  Reopen only if a source-only audit shows

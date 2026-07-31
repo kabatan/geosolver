@@ -38,3 +38,7 @@ The real gate is `activation_source_count >= 3`,
 `anonymous_signature_count >= 2`, and zero false emission, source-invalid, or
 fallback-byte mismatch.  Its aggregate contains no source path, endpoint,
 coefficient, proposal, target, signature, or per-case failure.
+
+Final disposition: generated D0 passed, but the frozen anonymous panel had
+zero structural activation.  The candidate is stopped without retuning; see
+`REAL_ACTIVATION_AGGREGATE.json` and `ALGORITHM_CARD.md`.
