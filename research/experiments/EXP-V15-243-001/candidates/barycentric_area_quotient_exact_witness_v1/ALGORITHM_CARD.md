@@ -43,10 +43,11 @@ retained; unsupported DSL or symbolic uncertainty fails closed.
 
 The frozen prevalence gate passed: 43 sources across four signatures and 7
 endpoint activations across all four signatures, versus fixed gates 6/2/4.
-Generated/static tests must now show direct triangle, polygon, and composite
-Area activation; full replay of every emitted proposal; translation/scale
-invariance; wrong-endpoint rejection; baseline identity; and zero authority or
-release.  No CPU execution or formal run is authorized in this static commit.
+The CPU14 D0 gate passed on 2026-07-31: pytest was 7/7, and the generated
+panel had 3/3 activation plus 3/3 full exact-prototype replay, invariant
+translation/scale signatures, wrong-endpoint fallback, and zero authority or
+release.  This is only a generated mechanism result.  No endpoint census or
+formal/full replay run has been performed.
 
 The later fixed real gate remains full-replay pure gain on at least two
 independent signatures with zero false/extra/invalid results; otherwise STOP.
