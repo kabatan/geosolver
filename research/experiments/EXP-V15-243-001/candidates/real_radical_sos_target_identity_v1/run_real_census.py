@@ -143,7 +143,10 @@ def _endpoint(values):
 
 
 def _source_path(value):
-    path = Path(str(value)).resolve(strict=True)
+    try:
+        path = Path(str(value)).resolve(strict=True)
+    except OSError as error:
+        raise CensusRejected("source custody path rejected") from error
     if path.parent != SOURCE_ROOT or not path.is_file():
         raise CensusRejected("source custody root rejected")
     if path.suffix != ".json" or len(path.stem) != 4 or not path.stem.isdigit():
