@@ -1,5 +1,20 @@
 # CROSS_ENDPOINT_VIETA_V1
 
+## v4 repair disposition
+
+The v3 formal connector/gate is frozen `STOP`; its mathematical core remains
+`PASS`. Real source artifacts contain top-level `id` and their HP closure binds
+the id-bearing SHA, while v3 required id-free bytes and reused one digest for
+both roles. v4 separates authenticated raw artifact SHA from recomputed
+anonymous projection SHA as specified in `ANONYMOUS_PANEL_SPEC.md`.
+
+v4 also makes workers coordinator-only with inherited capability/lock FDs and
+temp-root output confinement. Canonical acceptance now materializes a factor
+descriptor plus proof record and builds a direct deduplicated union with the
+unchanged fallback object; counters are computed from that concrete union.
+Heavy replay remains `HOLD` until aggregate-only real-artifact v4 custody dry
+validation authenticates at least one subset under CPU14/global-lock custody.
+
 ## Hypothesis
 
 For two to six source-safe HP endpoints of the same immutable source, the

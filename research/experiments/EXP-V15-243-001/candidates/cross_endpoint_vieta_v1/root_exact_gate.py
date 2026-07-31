@@ -21,6 +21,7 @@ import json
 import math
 import os
 from pathlib import Path
+import stat
 import sys
 import tempfile
 from typing import Any, Mapping, Sequence
@@ -29,7 +30,7 @@ from typing import Any, Mapping, Sequence
 HERE = Path(__file__).resolve().parent
 RUNNER = Path(__file__).resolve()
 CONNECTOR = HERE / "canonical_connector.py"
-CONNECTOR_SHA256 = "317f732f5d62ef1f92496ad6bbe1119401402377cbe63ce9765e318dbfbc4f74"
+CONNECTOR_SHA256 = "b6e9dd7bb5c62a657451fd18294cbceef032d6b764cace0628d878684faa2b41"
 RUNTIME_ROOT = Path("/home/kabatan/work/solver-experiment-runtime/solver")
 RESULTS_ROOT = Path("/home/kabatan/work/solver-experiment-results")
 PYTHON = RUNTIME_ROOT / "python/.venv/bin/python"
@@ -39,11 +40,11 @@ SAFE_SUBPROCESS = (
 SAFE_LIMIT_EXEC = SAFE_SUBPROCESS.with_name("_limit_exec.py")
 OFFICIAL_GLOBAL_LOCK = Path("/tmp/geotarget-exp-global-benchmark-v1.lock")
 
-PANEL_SCHEMA = "geotarget.cross-endpoint-vieta-private-gate/v1"
-WORK_ITEM_SCHEMA = "geotarget.cross-endpoint-vieta-private-subset/v3"
-WORKER_SCHEMA = "geotarget.cross-endpoint-vieta-private-worker/v1"
-AGGREGATE_SCHEMA = "geotarget.cross-endpoint-vieta-canonical-gate/v1"
-PROPOSAL_SOURCE_SCHEMA = "geotarget.cross-endpoint-vieta-proposal-source-sha/v1"
+PANEL_SCHEMA = "geotarget.cross-endpoint-vieta-private-gate/v2"
+WORK_ITEM_SCHEMA = "geotarget.cross-endpoint-vieta-private-subset/v4"
+WORKER_SCHEMA = "geotarget.cross-endpoint-vieta-private-worker/v2"
+AGGREGATE_SCHEMA = "geotarget.cross-endpoint-vieta-canonical-gate/v2"
+PROPOSAL_SOURCE_SCHEMA = "geotarget.cross-endpoint-vieta-proposal-source-sha/v2"
 MAX_MANIFEST_BYTES = 64 * 1024 * 1024
 MAX_RESULT_BYTES = 64 * 1024
 MAX_SUBSETS = 595
@@ -79,7 +80,7 @@ WORKER_KEYS = frozenset(
     {
         "schema_version",
         "input_binding_sha256",
-        "source_sha256",
+        "source_projection_sha256",
         "structural_signature_sha256",
         "degree",
         "status",
@@ -96,6 +97,8 @@ WORKER_KEYS = frozenset(
         "canonical_replay_rejected_count",
         "canonical_replay_exception_count",
         "canonical_ready",
+        "materialized_union_built",
+        "canonical_factor_proof_record_count",
         "canonical_emitted_endpoint_count",
         "descriptor_identity_dedup_count",
         "fallback_identity_preserved",
@@ -178,7 +181,10 @@ def _source_rank(source_sha256: str) -> str:
 def _validate_raw_artifact_paths(raw: object) -> None:
     if not isinstance(raw, Mapping):
         raise GateFailure("private subset is not an object")
-    _within_results(Path(str(raw.get("source"))), must_exist=True)
+    source_binding = raw.get("source_artifact")
+    if not isinstance(source_binding, Mapping) or set(source_binding) != {"path", "sha256"}:
+        raise GateFailure("private raw source artifact binding schema changed")
+    _within_results(Path(str(source_binding.get("path"))), must_exist=True)
     endpoints = raw.get("endpoints")
     if not isinstance(endpoints, list):
         raise GateFailure("private subset endpoint list is absent")
@@ -230,9 +236,10 @@ def _manifest(path: Path, connector: Any) -> tuple[bytes, list[dict[str, Any]]]:
             row = connector.validate_private_subset(raw)
         except Exception as error:
             raise GateFailure("private subset failed truth-free custody validation") from error
-        source = _within_results(row["source"], must_exist=True)
-        row["source"] = source
-        source_sha = str(row["source_sha256"])
+        source_artifact = dict(row["source_artifact"])
+        source_artifact["path"] = _within_results(source_artifact["path"], must_exist=True)
+        row["source_artifact"] = source_artifact
+        source_sha = str(row["source_projection_sha256"])
         subset_sha = str(row["subset_sha256"])
         if subset_sha in subset_digests:
             raise GateFailure("private panel repeats a subset custody digest")
@@ -287,7 +294,7 @@ def _as_core_endpoints(core: Any, row: Mapping[str, Any]):
         low = endpoint["low"]
         high = endpoint["high"]
         observation = core.EndpointObservation(
-            source_sha256=row["source_sha256"],
+            source_sha256=row["source_projection_sha256"],
             low=core.HPRung(
                 precision_bits=low["precision_bits"],
                 provenance_sha256=low["provenance_sha256"],
@@ -349,8 +356,92 @@ def _stage_flags(reason: str, proposal_constructed: bool) -> tuple[bool, bool, b
     return reconstruction, agreement, numeric
 
 
-def _worker(work_item: Path, output: Path, per_endpoint_seconds: float) -> int:
+def _authorize_worker(
+    *,
+    authorization_fd: int,
+    lock_fd: int,
+    temporary_root: Path,
+    work_item: Path,
+    output: Path,
+    runner_sha256: str,
+) -> None:
+    if authorization_fd <= 2 or lock_fd <= 2 or authorization_fd == lock_fd:
+        raise GateFailure("worker lacks inherited coordinator descriptors")
+    try:
+        lock_target = Path(os.readlink(f"/proc/self/fd/{lock_fd}")).resolve()
+        if lock_target != OFFICIAL_GLOBAL_LOCK.resolve():
+            raise GateFailure("worker lock descriptor is not the official lock")
+        fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        payload = os.read(authorization_fd, 8193)
+        if len(payload) > 8192 or os.read(authorization_fd, 1):
+            raise GateFailure("coordinator capability is oversized or not one-shot")
+    except (OSError, ValueError) as error:
+        raise GateFailure("worker inherited capability validation failed") from error
+    finally:
+        try:
+            os.close(authorization_fd)
+        except OSError:
+            pass
+    try:
+        capability = json.loads(payload)
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise GateFailure("coordinator capability is malformed") from error
+    root = temporary_root.resolve(strict=True)
+    root_stat = root.stat()
+    item = work_item.resolve(strict=True)
+    destination = output.resolve(strict=False)
+    item_stat = item.stat()
+    expected_keys = {
+        "schema_version", "nonce", "coordinator_pid", "runner_sha256",
+        "temporary_root", "temporary_root_device", "temporary_root_inode",
+        "work_item", "work_item_sha256", "output",
+    }
+    if (
+        not isinstance(capability, Mapping)
+        or set(capability) != expected_keys
+        or capability.get("schema_version")
+        != "geotarget.cross-endpoint-vieta-worker-capability/v1"
+        or not _valid_sha(capability.get("nonce"))
+        or capability.get("coordinator_pid") != os.getppid()
+        or capability.get("runner_sha256") != runner_sha256
+        or Path(str(capability.get("temporary_root"))).resolve(strict=True) != root
+        or capability.get("temporary_root_device") != root_stat.st_dev
+        or capability.get("temporary_root_inode") != root_stat.st_ino
+        or Path(str(capability.get("work_item"))).resolve(strict=True) != item
+        or capability.get("work_item_sha256") != _sha256(item.read_bytes())
+        or Path(str(capability.get("output"))).resolve(strict=False) != destination
+        or item.parent != root
+        or destination.parent != root
+        or destination.exists()
+        or not stat.S_ISDIR(root_stat.st_mode)
+        or stat.S_IMODE(root_stat.st_mode) != 0o700
+        or root_stat.st_uid != os.getuid()
+        or not stat.S_ISREG(item_stat.st_mode)
+        or item_stat.st_uid != os.getuid()
+        or item_stat.st_nlink != 1
+    ):
+        raise GateFailure("worker capability/path confinement changed")
+
+
+def _worker(
+    work_item: Path,
+    output: Path,
+    per_endpoint_seconds: float,
+    *,
+    authorization_fd: int,
+    lock_fd: int,
+    temporary_root: Path,
+    runner_sha256: str,
+) -> int:
     _check_cpu14()
+    _authorize_worker(
+        authorization_fd=authorization_fd,
+        lock_fd=lock_fd,
+        temporary_root=temporary_root,
+        work_item=work_item,
+        output=output,
+        runner_sha256=runner_sha256,
+    )
     connector = _load_connector()
     payload = work_item.read_bytes()
     if not payload or len(payload) > MAX_MANIFEST_BYTES:
@@ -366,6 +457,7 @@ def _worker(work_item: Path, output: Path, per_endpoint_seconds: float) -> int:
     counters: Counter[str] = Counter()
     factor_targets: tuple[Mapping[str, Any], ...] | None = None
     factor_preparation_failed = False
+    accepted_factor_records: list[Mapping[str, Any]] = []
     index_by_object = {id(endpoint): index for index, endpoint in enumerate(endpoints)}
 
     def replay(observation: Any, proposal: Any, root_ordinal: int):
@@ -418,16 +510,27 @@ def _worker(work_item: Path, output: Path, per_endpoint_seconds: float) -> int:
         except Exception:
             counters["exceptions"] += 1
             return core.EndpointReplayDecision(False, "")
-        if accepted is True:
+        if (
+            isinstance(accepted, Mapping)
+            and accepted.get("status") == "CANONICAL_FACTOR_ACCEPTED"
+            and accepted.get("descriptor_identity_sha256") == identity
+        ):
             counters["accepted"] += 1
+            accepted_factor_records.append(accepted)
             return core.EndpointReplayDecision(True, identity)
         counters["rejected"] += 1
         return core.EndpointReplayDecision(False, "")
 
-    fallback = object()
+    fallback = {
+        "schema_version": "geotarget.unchanged-baseline-fallback/v1",
+        "status": "FALLBACK_UNCHANGED",
+        "records": (),
+        "target_set_completeness_claim": False,
+    }
+    fallback_snapshot = json.dumps(fallback, sort_keys=True, separators=(",", ":"))
     outcome = core.propose_cross_endpoint_vieta_independent(
         source_bytes=row["source_payload"],
-        source_sha256=row["source_sha256"],
+        source_sha256=row["source_projection_sha256"],
         endpoints=endpoints,
         replay_endpoint=replay,
         fallback_result=fallback,
@@ -437,6 +540,17 @@ def _worker(work_item: Path, output: Path, per_endpoint_seconds: float) -> int:
     reconstruction, agreement, numeric = _stage_flags(
         str(outcome.reason), proposal_constructed
     )
+    portfolio = connector.union_observed_factor_records(
+        fallback_result=fallback,
+        accepted_records=accepted_factor_records,
+        observed_endpoint_sha256=[
+            endpoint["endpoint_float64_sha256"] for endpoint in row["endpoints"]
+        ],
+    )
+    emitted_identities = tuple(
+        record["descriptor_identity_sha256"]
+        for record in portfolio["accepted_factor_records"]
+    )
     canonical_ready = bool(
         outcome.status == "PORTFOLIO"
         and outcome.structural_proposal is not None
@@ -445,28 +559,40 @@ def _worker(work_item: Path, output: Path, per_endpoint_seconds: float) -> int:
         and len(outcome.accepted_endpoint_indices) > 0
         and len(outcome.accepted_endpoint_indices)
         == len(outcome.accepted_descriptor_identities)
-        == counters["accepted"]
+        == portfolio["canonical_emitted_endpoint_count"]
+        and emitted_identities == outcome.accepted_descriptor_identities
+        and portfolio["descriptor_identity_dedup_count"]
+        == outcome.duplicate_descriptor_count
     )
     replay_bypass = int(
         outcome.status == "PORTFOLIO"
         and (
             outcome.replay_calls != degree
-            or counters["accepted"] != len(outcome.accepted_endpoint_indices)
+            or portfolio["canonical_emitted_endpoint_count"]
+            != len(outcome.accepted_endpoint_indices)
         )
     )
-    fallback_preserved = outcome.fallback_result is fallback
+    fallback_preserved = bool(
+        outcome.fallback_result is fallback
+        and portfolio["fallback_result"] is fallback
+        and portfolio["fallback_identity_preserved"] is True
+        and json.dumps(fallback, sort_keys=True, separators=(",", ":"))
+        == fallback_snapshot
+    )
     safety_invalid = int(
         not fallback_preserved
         or replay_bypass != 0
         or outcome.status not in {"FALLBACK", "PORTFOLIO"}
         or outcome.completeness_claimed is not False
         or counters["whole_minimal_descriptor"] != 0
+        or portfolio["unobserved_root_emit_count"] != 0
+        or portfolio["target_set_completeness_claim"] is not False
         or canonical_ready and not proposal_constructed
     )
     private = {
         "schema_version": WORKER_SCHEMA,
         "input_binding_sha256": row["subset_sha256"],
-        "source_sha256": row["source_sha256"],
+        "source_projection_sha256": row["source_projection_sha256"],
         "structural_signature_sha256": connector.structural_signature(
             row["source_document"]
         ),
@@ -491,15 +617,21 @@ def _worker(work_item: Path, output: Path, per_endpoint_seconds: float) -> int:
         "canonical_replay_rejected_count": counters["rejected"],
         "canonical_replay_exception_count": counters["exceptions"],
         "canonical_ready": canonical_ready,
-        "canonical_emitted_endpoint_count": len(outcome.accepted_endpoint_indices),
-        "descriptor_identity_dedup_count": outcome.duplicate_descriptor_count,
+        "materialized_union_built": True,
+        "canonical_factor_proof_record_count": len(accepted_factor_records),
+        "canonical_emitted_endpoint_count": portfolio[
+            "canonical_emitted_endpoint_count"
+        ],
+        "descriptor_identity_dedup_count": portfolio[
+            "descriptor_identity_dedup_count"
+        ],
         "fallback_identity_preserved": fallback_preserved,
         "replay_bypass_count": replay_bypass,
         "safety_invalid_count": safety_invalid,
         "whole_vieta_minimal_descriptor_count": counters[
             "whole_minimal_descriptor"
         ],
-        "unobserved_root_emit_count": 0,
+        "unobserved_root_emit_count": portfolio["unobserved_root_emit_count"],
         "truth_used": False,
         "target_set_completeness_claim": False,
     }
@@ -519,7 +651,7 @@ def _private_result(path: Path, *, expected_subset_sha: str) -> dict[str, Any] |
         or set(value) != WORKER_KEYS
         or value.get("schema_version") != WORKER_SCHEMA
         or value.get("input_binding_sha256") != expected_subset_sha
-        or not _valid_sha(value.get("source_sha256"))
+        or not _valid_sha(value.get("source_projection_sha256"))
         or not _valid_sha(value.get("structural_signature_sha256"))
         or not isinstance(value.get("degree"), int)
         or isinstance(value.get("degree"), bool)
@@ -536,6 +668,7 @@ def _private_result(path: Path, *, expected_subset_sha: str) -> dict[str, Any] |
         "proposal_constructed",
         "numeric_guard_branch_parity_passed",
         "canonical_ready",
+        "materialized_union_built",
         "fallback_identity_preserved",
         "truth_used",
         "target_set_completeness_claim",
@@ -545,6 +678,7 @@ def _private_result(path: Path, *, expected_subset_sha: str) -> dict[str, Any] |
         "canonical_replay_accepted_count",
         "canonical_replay_rejected_count",
         "canonical_replay_exception_count",
+        "canonical_factor_proof_record_count",
         "factor_level_independent_rung_parity_pass_count",
         "factor_level_rejected_endpoint_count",
         "canonical_emitted_endpoint_count",
@@ -563,6 +697,7 @@ def _private_result(path: Path, *, expected_subset_sha: str) -> dict[str, Any] |
             for key in count_keys
         )
         or value["truth_used"] is not False
+        or value["materialized_union_built"] is not True
         or value["target_set_completeness_claim"] is not False
         or value["proposal_constructed"] != value["numeric_gate_passed"]
         or value["numeric_guard_branch_parity_passed"] is not True
@@ -571,14 +706,22 @@ def _private_result(path: Path, *, expected_subset_sha: str) -> dict[str, Any] |
         or value["unobserved_root_emit_count"] != 0
         or value["factor_level_independent_rung_parity_pass_count"] > value["degree"]
         or value["factor_level_rejected_endpoint_count"] > value["degree"]
+        or value["replay_calls"] > value["degree"]
+        or value["canonical_replay_accepted_count"] > value["degree"]
+        or value["canonical_factor_proof_record_count"] > value["degree"]
         or value["canonical_emitted_endpoint_count"]
         > value["factor_level_independent_rung_parity_pass_count"]
+        or value["canonical_factor_proof_record_count"]
+        != value["canonical_replay_accepted_count"]
         or value["descriptor_identity_dedup_count"] > value["degree"]
+        or value["descriptor_identity_dedup_count"]
+        > value["canonical_factor_proof_record_count"]
         or value["canonical_ready"]
         and (
             value["replay_calls"] != value["degree"]
             or value["canonical_replay_accepted_count"]
             != value["canonical_emitted_endpoint_count"]
+            + value["descriptor_identity_dedup_count"]
             or value["canonical_emitted_endpoint_count"] <= 0
         )
     ):
@@ -594,6 +737,8 @@ def _guarded_worker(
     runner_sha256: str,
     degree: int,
     per_endpoint_seconds: float,
+    lock_fd: int,
+    temporary_root: Path,
 ):
     output.unlink(missing_ok=True)
     command = [
@@ -608,23 +753,56 @@ def _guarded_worker(
         runner_sha256,
         "--per-endpoint-seconds",
         str(per_endpoint_seconds),
+        "--authorization-fd",
+        "CAPABILITY_FD",
+        "--lock-fd",
+        str(lock_fd),
+        "--temporary-root",
+        str(temporary_root.resolve()),
     ]
     environment = os.environ.copy()
     environment.update(THREAD_ENVIRONMENT)
     timeout_seconds = degree * per_endpoint_seconds + 5.0
-    return guard.run_guarded(
-        command,
-        limits=guard.Limits(
-            timeout_seconds=timeout_seconds,
-            rss_bytes=1024 * 1024**2,
-            address_space_bytes=4096 * 1024**2,
-            data_bytes=3072 * 1024**2,
-            output_bytes=256 * 1024,
-            tail_bytes=16 * 1024,
-        ),
-        environment=environment,
-        cwd=HERE,
-    )
+    read_fd, write_fd = os.pipe()
+    try:
+        command[command.index("CAPABILITY_FD")] = str(read_fd)
+        root_stat = temporary_root.stat()
+        capability = {
+            "schema_version": "geotarget.cross-endpoint-vieta-worker-capability/v1",
+            "nonce": os.urandom(32).hex(),
+            "coordinator_pid": os.getpid(),
+            "runner_sha256": runner_sha256,
+            "temporary_root": str(temporary_root.resolve()),
+            "temporary_root_device": root_stat.st_dev,
+            "temporary_root_inode": root_stat.st_ino,
+            "work_item": str(work_item.resolve()),
+            "work_item_sha256": _sha256(work_item.read_bytes()),
+            "output": str(output.resolve()),
+        }
+        os.write(
+            write_fd,
+            json.dumps(capability, sort_keys=True, separators=(",", ":")).encode(),
+        )
+        os.close(write_fd)
+        write_fd = -1
+        return guard.run_guarded(
+            command,
+            limits=guard.Limits(
+                timeout_seconds=timeout_seconds,
+                rss_bytes=1024 * 1024**2,
+                address_space_bytes=4096 * 1024**2,
+                data_bytes=3072 * 1024**2,
+                output_bytes=256 * 1024,
+                tail_bytes=16 * 1024,
+            ),
+            environment=environment,
+            cwd=HERE,
+            pass_fds=(read_fd, lock_fd),
+        )
+    finally:
+        if write_fd >= 0:
+            os.close(write_fd)
+        os.close(read_fd)
 
 
 def _aggregate_private_rows(
@@ -656,6 +834,7 @@ def _aggregate_private_rows(
             "proposal_constructed",
             "numeric_guard_branch_parity_passed",
             "canonical_ready",
+            "materialized_union_built",
             "fallback_identity_preserved",
         ):
             totals[field] += int(row[field] is True)
@@ -664,6 +843,7 @@ def _aggregate_private_rows(
             "canonical_replay_accepted_count",
             "canonical_replay_rejected_count",
             "canonical_replay_exception_count",
+            "canonical_factor_proof_record_count",
             "factor_level_independent_rung_parity_pass_count",
             "factor_level_rejected_endpoint_count",
             "canonical_emitted_endpoint_count",
@@ -675,12 +855,12 @@ def _aggregate_private_rows(
         ):
             totals[field] += int(row[field])
         if row["proposal_constructed"] is True:
-            proposal_sources.add(str(row["source_sha256"]))
+            proposal_sources.add(str(row["source_projection_sha256"]))
         if row["factor_level_independent_rung_parity_pass_count"] > 0:
-            factor_parity_sources.add(str(row["source_sha256"]))
+            factor_parity_sources.add(str(row["source_projection_sha256"]))
             factor_parity_signatures.add(str(row["structural_signature_sha256"]))
         if row["canonical_ready"] is True:
-            ready_sources.add(str(row["source_sha256"]))
+            ready_sources.add(str(row["source_projection_sha256"]))
             ready_signatures.add(str(row["structural_signature_sha256"]))
 
     all_workers_accepted = len(rows) == request_count and process_failure_count == 0
@@ -694,6 +874,7 @@ def _aggregate_private_rows(
         all_workers_accepted
         and safety_invalid_count == 0
         and totals["numeric_guard_branch_parity_passed"] == len(rows)
+        and totals["materialized_union_built"] == len(rows)
         and len(factor_parity_sources) >= 3
         and len(factor_parity_signatures) >= 2
         and len(ready_sources) >= 3
@@ -743,6 +924,10 @@ def _aggregate_private_rows(
             "canonical_replay_exception_count"
         ],
         "canonical_ready_subset_count": totals["canonical_ready"],
+        "materialized_union_subset_count": totals["materialized_union_built"],
+        "canonical_factor_proof_record_count": totals[
+            "canonical_factor_proof_record_count"
+        ],
         "canonical_emitted_endpoint_count": totals[
             "canonical_emitted_endpoint_count"
         ],
@@ -771,7 +956,12 @@ def _aggregate_private_rows(
         "whole_vieta_polynomial_is_structural_only": True,
         "factor_local_real_root_ordinal_only": True,
         "independent_endpoint_repair_a": True,
-        "baseline_union_unchanged": True,
+        "baseline_union_unchanged": totals["fallback_identity_preserved"]
+        == len(rows),
+        "concrete_factor_descriptor_proof_union_built": totals[
+            "materialized_union_built"
+        ]
+        == len(rows),
         "source_eliminant_used": False,
         "known_root_or_exclude_primitive_used": False,
         "truth_used": False,
@@ -829,7 +1019,7 @@ def _coordinator(arguments: argparse.Namespace) -> int:
     connector = _load_connector()
     guard = _load_guard()
     manifest_payload, requests_rows = _manifest(requests, connector)
-    source_count = len({str(row["source_sha256"]) for row in requests_rows})
+    source_count = len({str(row["source_projection_sha256"]) for row in requests_rows})
     private_rows: list[dict[str, Any]] = []
     process_failure_count = 0
     with arguments.global_lock.open("a+b") as lock, tempfile.TemporaryDirectory(
@@ -842,8 +1032,11 @@ def _coordinator(arguments: argparse.Namespace) -> int:
             private_output = temporary_root / f"result-{ordinal}.json"
             private_request = {
                 "schema_version": WORK_ITEM_SCHEMA,
-                "source": str(row["source"]),
-                "source_sha256": row["source_sha256"],
+                "source_artifact": {
+                    "path": str(row["source_artifact"]["path"]),
+                    "sha256": row["source_artifact"]["sha256"],
+                },
+                "source_projection_sha256": row["source_projection_sha256"],
                 "subset_sha256": row["subset_sha256"],
                 "endpoints": [
                     {
@@ -867,6 +1060,8 @@ def _coordinator(arguments: argparse.Namespace) -> int:
                 runner_sha256=arguments.runner_sha256,
                 degree=len(row["endpoints"]),
                 per_endpoint_seconds=arguments.per_endpoint_seconds,
+                lock_fd=lock.fileno(),
+                temporary_root=temporary_root,
             )
             result = _private_result(
                 private_output, expected_subset_sha=row["subset_sha256"]
@@ -880,7 +1075,8 @@ def _coordinator(arguments: argparse.Namespace) -> int:
                 and guarded.output_cap_exceeded is False
                 and guarded.descendant_leak is False
                 and result is not None
-                and result["source_sha256"] == row["source_sha256"]
+                and result["source_projection_sha256"]
+                == row["source_projection_sha256"]
                 and result["degree"] == len(row["endpoints"])
             )
             if process_ok:
@@ -903,6 +1099,55 @@ def _coordinator(arguments: argparse.Namespace) -> int:
     return 0 if aggregate["status"] == "GO_CANONICAL_GATE" else 2
 
 
+def _custody_dry_validate(arguments: argparse.Namespace) -> int:
+    """Authenticate real v4 custody only; never launch replay or emit rows."""
+
+    _check_cpu14()
+    _check_self(arguments.runner_sha256)
+    if arguments.global_lock.resolve() != OFFICIAL_GLOBAL_LOCK:
+        raise GateFailure("the official machine-wide benchmark lock is required")
+    output = _within_results(arguments.output, must_exist=False)
+    requests = _within_results(arguments.requests, must_exist=True)
+    if output == requests:
+        raise GateFailure("dry-validation input and aggregate output must differ")
+    connector = _load_connector()
+    with arguments.global_lock.open("a+b") as lock:
+        fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
+        manifest_payload, rows = _manifest(requests, connector)
+        fcntl.flock(lock.fileno(), fcntl.LOCK_UN)
+    source_projections = {str(row["source_projection_sha256"]) for row in rows}
+    raw_sources = {str(row["source_artifact_sha256"]) for row in rows}
+    different = sum(
+        row["source_artifact_sha256"] != row["source_projection_sha256"] for row in rows
+    )
+    aggregate = {
+        "schema_version": "geotarget.cross-endpoint-vieta-v4-custody-dry-validation/v1",
+        "status": "GO_V4_CUSTODY" if rows and different == len(rows) else "STOP_V4_CUSTODY",
+        "authenticated_subset_count": len(rows),
+        "anonymous_source_projection_count": len(source_projections),
+        "raw_source_artifact_digest_count": len(raw_sources),
+        "raw_projection_distinct_subset_count": different,
+        "all_original_result_plan_lane_bytes_reauthenticated": bool(rows),
+        "canonical_replay_executed": False,
+        "julia_executed": False,
+        "individual_records_emitted": False,
+        "case_ids_retained": False,
+        "raw_source_sha256_retained": False,
+        "truth_used": False,
+        "manifest_sha256": _sha256(manifest_payload),
+        "runner_sha256": arguments.runner_sha256,
+        "connector_sha256": CONNECTOR_SHA256,
+        "cpu": 14,
+        "global_lock_held": True,
+    }
+    aggregate["aggregate_sha256"] = _sha256(
+        json.dumps(aggregate, sort_keys=True, separators=(",", ":")).encode()
+    )
+    _atomic_json(output, aggregate, mode=0o600)
+    print(json.dumps(aggregate, sort_keys=True))
+    return 0 if aggregate["status"] == "GO_V4_CUSTODY" else 2
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -911,6 +1156,9 @@ def main() -> int:
     worker.add_argument("--output", required=True, type=Path)
     worker.add_argument("--runner-sha256", required=True)
     worker.add_argument("--per-endpoint-seconds", required=True, type=float)
+    worker.add_argument("--authorization-fd", required=True, type=int)
+    worker.add_argument("--lock-fd", required=True, type=int)
+    worker.add_argument("--temporary-root", required=True, type=Path)
     coordinator = subparsers.add_parser("coordinator")
     coordinator.add_argument("--requests", required=True, type=Path)
     coordinator.add_argument("--output", required=True, type=Path)
@@ -918,6 +1166,11 @@ def main() -> int:
     coordinator.add_argument("--global-lock", required=True, type=Path)
     coordinator.add_argument("--runner-sha256", required=True)
     coordinator.add_argument("--per-endpoint-seconds", type=float, default=18.0)
+    custody = subparsers.add_parser("custody-dry-validate")
+    custody.add_argument("--requests", required=True, type=Path)
+    custody.add_argument("--output", required=True, type=Path)
+    custody.add_argument("--global-lock", required=True, type=Path)
+    custody.add_argument("--runner-sha256", required=True)
     arguments = parser.parse_args()
     _check_self(arguments.runner_sha256)
     if arguments.command == "worker":
@@ -929,8 +1182,16 @@ def main() -> int:
         ):
             raise GateFailure("per-endpoint timeout is outside the frozen range")
         return _worker(
-            arguments.work_item, arguments.output, arguments.per_endpoint_seconds
+            arguments.work_item,
+            arguments.output,
+            arguments.per_endpoint_seconds,
+            authorization_fd=arguments.authorization_fd,
+            lock_fd=arguments.lock_fd,
+            temporary_root=arguments.temporary_root,
+            runner_sha256=arguments.runner_sha256,
         )
+    if arguments.command == "custody-dry-validate":
+        return _custody_dry_validate(arguments)
     return _coordinator(arguments)
 
 

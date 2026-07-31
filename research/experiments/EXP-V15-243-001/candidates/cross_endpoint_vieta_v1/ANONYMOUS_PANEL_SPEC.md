@@ -3,6 +3,35 @@
 This panel is built and executed only by the benchmark owner. Candidate agents
 receive aggregate counters, never request rows or individual outcomes.
 
+## Frozen v4 custody and containment correction
+
+This section supersedes every v1/v3 source field below. The work item is
+`geotarget.cross-endpoint-vieta-private-subset/v4` and contains
+`source_artifact={path,sha256}` for the original id-bearing solve JSON plus
+`source_projection_sha256` for its canonical id-stripped projection. The
+connector authenticates raw bytes, rejects duplicate JSON keys, requires and
+removes exactly the top-level `id`, recomputes sorted/two-space/final-newline
+projection bytes, and checks the projection digest. The id value is never
+retained, ranked, grouped, emitted, or passed to candidate code.
+
+Original RESULT, PLAN, lane and HP provenance bind the raw artifact SHA.
+Candidate reconstruction, source/subset ranking, core input, and the root-only
+proposal sidecar use only the projection SHA. This two-level binding prevents
+both the v3 raw/projection mismatch and crossed artifact substitution.
+
+Workers require a one-shot random capability through an inherited FD, the
+coordinator's inherited official-lock FD, and work/output paths confined to
+the coordinator-created mode-0700 temp root. Direct worker invocation,
+arbitrary output paths, reused capabilities, and missing lock custody fail
+closed. Only aggregate output leaves the temp root.
+
+Canonical replay returns a concrete irreducible factor descriptor and proof
+record. The worker constructs a direct materialized union with the identical
+fallback object, deduplicates concrete records, and derives emitted,
+unobserved, and fallback-preservation counters from that union. The
+`custody-dry-validate` coordinator mode authenticates real v4 artifacts without
+executing canonical replay or Julia and emits aggregate counts only.
+
 ## Private request schema
 
 Each request contains:
@@ -64,7 +93,7 @@ Do not emit polynomial coefficients, source/subset signatures, rows, targets,
 or per-request reasons. The owner may privately join proposal passes against
 the ordinary exactifier, but returns only aggregate gain and cluster counts.
 
-## Frozen v3 authority correction
+## Historical v3 authority correction (superseded by v4 above)
 
 This section supersedes the earlier rung/replay details. The work-item schema
 is `geotarget.cross-endpoint-vieta-private-subset/v3`; each rung additionally

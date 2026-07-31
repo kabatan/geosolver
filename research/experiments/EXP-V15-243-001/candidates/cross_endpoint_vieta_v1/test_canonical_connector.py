@@ -133,6 +133,7 @@ def _artifact_binding(path: Path, digest: str):
 def _private_subset(tmp_path: Path, *, guard_ok: bool = True):
     source_path = tmp_path / "source.json"
     source = {
+        "id": "synthetic-custody-id",
         "task": "solve",
         "variables": {"names": ["x", "y"]},
         "construction": [],
@@ -140,7 +141,11 @@ def _private_subset(tmp_path: Path, *, guard_ok: bool = True):
         "guards": [],
         "answer": "x",
     }
-    source_sha = _write_json(source_path, source)
+    source_artifact_sha = _write_json(source_path, source)
+    projection = dict(source)
+    projection.pop("id")
+    projection_payload = json.dumps(projection, indent=2, sort_keys=True).encode() + b"\n"
+    projection_sha = hashlib.sha256(projection_payload).hexdigest()
     endpoint = [1.0, 2.0]
     bits = [struct.pack(">d", value).hex() for value in endpoint]
     endpoint_sha = connector._endpoint_sha256(bits)
@@ -149,7 +154,7 @@ def _private_subset(tmp_path: Path, *, guard_ok: bool = True):
         plan_path,
         {
             "schema_version": "geotarget.exp008-single-raw-endpoint-hp-plan/v1",
-            "source_sha256": source_sha,
+            "source_sha256": source_artifact_sha,
             "endpoint_float64_sha256": endpoint_sha,
             "endpoint": endpoint,
             "truth_read": False,
@@ -183,7 +188,7 @@ def _private_subset(tmp_path: Path, *, guard_ok: bool = True):
             "authority_pass": True,
             "final_result": {
                 "status": "TARGET_AUTHORITY_READY",
-                "source_raw_sha256": source_sha,
+                "source_raw_sha256": source_artifact_sha,
                 "endpoint_float64_sha256": endpoint_sha,
                 "authority_pass": True,
                 "input_contract": {
@@ -224,7 +229,7 @@ def _private_subset(tmp_path: Path, *, guard_ok: bool = True):
             "process_classification": "SUCCESS",
             "artifact_accepted": True,
             "authority_pass": True,
-            "source_sha256": source_sha,
+            "source_sha256": source_artifact_sha,
             "endpoint_float64_sha256": endpoint_sha,
             "artifact_sha256": lane_sha,
             "truth_read": False,
@@ -246,7 +251,7 @@ def _private_subset(tmp_path: Path, *, guard_ok: bool = True):
             result_sha256=result_sha,
             plan_sha256=plan_sha,
             lane_sha256=lane_sha,
-            source_sha256=source_sha,
+            source_sha256=source_artifact_sha,
             endpoint_bits=bits,
             endpoint_sha256=endpoint_sha,
             precision_bits=precision,
@@ -259,21 +264,22 @@ def _private_subset(tmp_path: Path, *, guard_ok: bool = True):
             **bindings,
         }
 
-    subset_sha = connector.subset_sha256(source_sha, [endpoint_sha, "f" * 64])
+    subset_sha = connector.subset_sha256(projection_sha, [endpoint_sha, "f" * 64])
     # A second, distinct endpoint is required by the private schema.  It can
     # reuse the original artifacts only after binding a matching PLAN, so the
     # unit directly exercises _rung for the custody contract instead.
-    return source_sha, endpoint_sha, bits, rung, subset_sha
+    return source_artifact_sha, projection_sha, endpoint_sha, bits, rung, subset_sha
 
 
 def test_original_result_plan_lane_provenance_and_numeric_parity(tmp_path):
-    source_sha, endpoint_sha, bits, rung, _ = _private_subset(tmp_path)
+    source_artifact_sha, projection_sha, endpoint_sha, bits, rung, _ = _private_subset(tmp_path)
     value = rung(768)
     validated = connector._rung(
         value,
         precision_bits=768,
         dimension=2,
-        source_sha256=source_sha,
+        artifact_source_sha256=source_artifact_sha,
+        source_projection_sha256=projection_sha,
         endpoint_bits=bits,
         endpoint_sha256=endpoint_sha,
     )
@@ -281,13 +287,152 @@ def test_original_result_plan_lane_provenance_and_numeric_parity(tmp_path):
 
 
 def test_numeric_guard_parity_failure_is_not_rescued_by_exact_route(tmp_path):
-    source_sha, endpoint_sha, bits, rung, _ = _private_subset(tmp_path, guard_ok=False)
+    source_artifact_sha, projection_sha, endpoint_sha, bits, rung, _ = _private_subset(tmp_path, guard_ok=False)
     with pytest.raises(connector.ConnectorFailure, match="numeric replay lane"):
         connector._rung(
             rung(1024),
             precision_bits=1024,
             dimension=2,
-            source_sha256=source_sha,
+            artifact_source_sha256=source_artifact_sha,
+            source_projection_sha256=projection_sha,
             endpoint_bits=bits,
             endpoint_sha256=endpoint_sha,
+        )
+
+
+def test_v4_dual_raw_and_projection_sha_binding(tmp_path):
+    raw_sha, projection_sha, _endpoint_sha, _bits, _rung_factory, _subset = _private_subset(
+        tmp_path
+    )
+    binding, observed_raw_sha, projection_payload, projection = connector._source(
+        {"path": str(tmp_path / "source.json"), "sha256": raw_sha}, projection_sha
+    )
+    assert binding["sha256"] == raw_sha
+    assert observed_raw_sha == raw_sha
+    assert hashlib.sha256(projection_payload).hexdigest() == projection_sha
+    assert "id" not in projection
+    assert raw_sha != projection_sha
+
+
+def test_v4_crossed_id_mutation_cannot_reuse_original_hp_artifacts(tmp_path):
+    raw_sha, projection_sha, endpoint_sha, bits, rung, _subset = _private_subset(tmp_path)
+    source_path = tmp_path / "source.json"
+    source = json.loads(source_path.read_text())
+    source["id"] = "different-custody-id"
+    mutated_raw_sha = _write_json(source_path, source)
+    assert mutated_raw_sha != raw_sha
+    _binding, observed, _payload, _projection = connector._source(
+        {"path": str(source_path), "sha256": mutated_raw_sha}, projection_sha
+    )
+    assert observed == mutated_raw_sha
+    with pytest.raises(connector.ConnectorFailure, match="authority binding"):
+        connector._rung(
+            rung(768),
+            precision_bits=768,
+            dimension=2,
+            artifact_source_sha256=mutated_raw_sha,
+            source_projection_sha256=projection_sha,
+            endpoint_bits=bits,
+            endpoint_sha256=endpoint_sha,
+        )
+
+
+def test_v4_duplicate_top_level_id_is_rejected(tmp_path):
+    source_path = tmp_path / "duplicate-id.json"
+    payload = (
+        b'{"id":"first","id":"second","task":"solve",'
+        b'"variables":{"names":["x"]},"construction":[],"constraints":[],'
+        b'"guards":[],"answer":"x"}'
+    )
+    source_path.write_bytes(payload)
+    with pytest.raises(connector.ConnectorFailure, match="duplicate JSON key"):
+        connector._source(
+            {"path": str(source_path), "sha256": hashlib.sha256(payload).hexdigest()},
+            "0" * 64,
+        )
+
+
+def _accepted_record(endpoint_sha: str, coefficients: list[int], root_index: int):
+    descriptor = {
+        "coefficients_high_to_low": coefficients,
+        "isolating_interval": {
+            "left": str(root_index),
+            "right": str(root_index),
+            "multiplicity": 1,
+            "real_root_index": root_index,
+        },
+    }
+    identity = hashlib.sha256(
+        json.dumps(descriptor, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+    proof = {
+        "schema_version": "geotarget.cross-endpoint-vieta-canonical-factor-proof/v1",
+        "status": "CANONICAL_FACTOR_ACCEPTED",
+        "observed_endpoint_float64_sha256": endpoint_sha,
+        "descriptor_identity_sha256": identity,
+        "factor_local_real_root_ordinal": root_index,
+        "source_raw_answer_exact": True,
+        "target_link_exact": True,
+        "root_ordinal_attestation_complete": True,
+        "attested_real_root_index": root_index,
+        "multiplicity": 1,
+        "truth_used": False,
+        "post_process_used": False,
+        "target_set_completeness_claim": False,
+    }
+    return {
+        "status": "CANONICAL_FACTOR_ACCEPTED",
+        "descriptor": descriptor,
+        "descriptor_identity_sha256": identity,
+        "proof_record": proof,
+        "proof_record_sha256": hashlib.sha256(
+            json.dumps(proof, sort_keys=True, separators=(",", ":")).encode()
+        ).hexdigest(),
+        "observed_endpoint_float64_sha256": endpoint_sha,
+        "unobserved_root_emitted": False,
+        "target_set_completeness_claim": False,
+    }
+
+
+def test_materialized_union_keeps_fallback_and_partial_siblings():
+    endpoint_shas = ["a" * 64, "b" * 64, "c" * 64]
+    first = _accepted_record(endpoint_shas[0], [1, -2], 0)
+    sibling = _accepted_record(endpoint_shas[2], [1, 0, -2], 1)
+    duplicate = dict(first)
+    duplicate["observed_endpoint_float64_sha256"] = endpoint_shas[1]
+    duplicate_proof = dict(duplicate["proof_record"])
+    duplicate_proof["observed_endpoint_float64_sha256"] = endpoint_shas[1]
+    duplicate["proof_record"] = duplicate_proof
+    duplicate["proof_record_sha256"] = hashlib.sha256(
+        json.dumps(duplicate_proof, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+    fallback = {"status": "UNCHANGED", "records": ()}
+    union = connector.union_observed_factor_records(
+        fallback_result=fallback,
+        accepted_records=[first, duplicate, sibling],
+        observed_endpoint_sha256=endpoint_shas,
+    )
+    assert union["fallback_result"] is fallback
+    assert union["canonical_emitted_endpoint_count"] == 2
+    assert union["descriptor_identity_dedup_count"] == 1
+    assert union["unobserved_root_emit_count"] == 0
+    assert [item["descriptor"] for item in union["accepted_factor_records"]] == [
+        first["descriptor"],
+        sibling["descriptor"],
+    ]
+
+
+def test_materialized_union_rejects_mutated_proof():
+    endpoint_sha = "d" * 64
+    record = _accepted_record(endpoint_sha, [1, -3], 0)
+    record["proof_record"] = dict(record["proof_record"])
+    record["proof_record"]["target_link_exact"] = False
+    record["proof_record_sha256"] = hashlib.sha256(
+        json.dumps(record["proof_record"], sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+    with pytest.raises(connector.ConnectorFailure, match="record binding"):
+        connector.union_observed_factor_records(
+            fallback_result=object(),
+            accepted_records=[record],
+            observed_endpoint_sha256=[endpoint_sha],
         )

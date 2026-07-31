@@ -39,7 +39,7 @@ EXACT_DAG = (
 EXACT_QQBAR = EXACT_DAG.with_name("qqbar_worker.jl")
 PYTHON = RUNTIME_ROOT / "python/.venv/bin/python"
 SCHEMA = "geotarget.cross-endpoint-vieta-canonical-replay/v1"
-PRIVATE_SCHEMA = "geotarget.cross-endpoint-vieta-private-subset/v3"
+PRIVATE_SCHEMA = "geotarget.cross-endpoint-vieta-private-subset/v4"
 LOW_BITS = 768
 HIGH_BITS = 1024
 MAX_SOURCE_BYTES = 4 * 1024 * 1024
@@ -74,6 +74,7 @@ FORBIDDEN_REQUEST_KEYS = frozenset(
 )
 FORBIDDEN_SOURCE_KEYS = frozenset(
     {
+        "id",
         "case_id",
         "problem_id",
         "family",
@@ -130,25 +131,44 @@ def _contains_forbidden_key(value: Any, forbidden: frozenset[str]) -> bool:
     return False
 
 
-def _source(path: Path, expected_sha256: str) -> tuple[bytes, dict[str, Any]]:
+def _strict_object(pairs: Sequence[tuple[str, Any]]) -> dict[str, Any]:
+    result: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in result:
+            raise ConnectorFailure(f"duplicate JSON key {key!r}")
+        result[key] = value
+    return result
+
+
+def _source(
+    binding: object, expected_projection_sha256: str
+) -> tuple[dict[str, Any], str, bytes, dict[str, Any]]:
+    if not isinstance(binding, Mapping) or set(binding) != {"path", "sha256"}:
+        raise ConnectorFailure("source artifact binding schema changed")
+    path = Path(str(binding.get("path")))
+    expected_artifact_sha256 = binding.get("sha256")
     payload = path.read_bytes()
     if (
         not payload
         or len(payload) > MAX_SOURCE_BYTES
-        or not _valid_sha(expected_sha256)
-        or _sha256(payload) != expected_sha256
+        or not _valid_sha(expected_artifact_sha256)
+        or _sha256(payload) != expected_artifact_sha256
+        or not _valid_sha(expected_projection_sha256)
     ):
-        raise ConnectorFailure("source bytes or SHA-256 changed")
+        raise ConnectorFailure("raw source artifact bytes or SHA-256 changed")
     try:
-        document = json.loads(payload)
+        raw_document = json.loads(payload, object_pairs_hook=_strict_object)
     except (UnicodeDecodeError, json.JSONDecodeError) as error:
         raise ConnectorFailure("source is not JSON") from error
+    if not isinstance(raw_document, dict) or "id" not in raw_document:
+        raise ConnectorFailure("raw source artifact lacks its top-level custody id")
+    document = dict(raw_document)
+    document.pop("id")
     variables = document.get("variables") if isinstance(document, Mapping) else None
     names = variables.get("names") if isinstance(variables, Mapping) else None
     if (
         not isinstance(document, dict)
         or document.get("task") != "solve"
-        or "id" in document
         or not isinstance(names, list)
         or not names
         or len(names) > MAX_TUPLE_DIMENSION
@@ -157,7 +177,24 @@ def _source(path: Path, expected_sha256: str) -> tuple[bytes, dict[str, Any]]:
         or _contains_forbidden_key(document, FORBIDDEN_SOURCE_KEYS)
     ):
         raise ConnectorFailure("source projection is outside exact solve authority")
-    return payload, document
+    projection = (
+        json.dumps(
+            document,
+            ensure_ascii=False,
+            indent=2,
+            sort_keys=True,
+            allow_nan=False,
+        )
+        + "\n"
+    ).encode("utf-8")
+    if _sha256(projection) != expected_projection_sha256:
+        raise ConnectorFailure("id-stripped canonical source projection SHA-256 changed")
+    return (
+        {"path": path, "sha256": str(expected_artifact_sha256)},
+        str(expected_artifact_sha256),
+        projection,
+        document,
+    )
 
 
 def _endpoint_sha256(bits: Sequence[str]) -> str:
@@ -253,7 +290,8 @@ def _rung(
     *,
     precision_bits: int,
     dimension: int,
-    source_sha256: str,
+    artifact_source_sha256: str,
+    source_projection_sha256: str,
     endpoint_bits: Sequence[str],
     endpoint_sha256: str,
 ) -> dict[str, Any]:
@@ -302,7 +340,7 @@ def _rung(
         or result.get("process_classification") != "SUCCESS"
         or result.get("artifact_accepted") is not True
         or result.get("authority_pass") is not True
-        or result.get("source_sha256") != source_sha256
+        or result.get("source_sha256") != artifact_source_sha256
         or result.get("endpoint_float64_sha256") != endpoint_sha256
         or result.get("artifact_sha256") != lane_binding["sha256"]
         or result.get("truth_read") is not False
@@ -316,7 +354,7 @@ def _rung(
     if (
         plan.get("schema_version")
         != "geotarget.exp008-single-raw-endpoint-hp-plan/v1"
-        or plan.get("source_sha256") != source_sha256
+        or plan.get("source_sha256") != artifact_source_sha256
         or plan.get("endpoint_float64_sha256") != endpoint_sha256
         or _plan_endpoint_bits(plan) != tuple(endpoint_bits)
         or plan.get("truth_read") is not False
@@ -345,7 +383,7 @@ def _rung(
         or lane.get("authority_pass") is not True
         or not isinstance(final, Mapping)
         or final.get("status") != "TARGET_AUTHORITY_READY"
-        or final.get("source_raw_sha256") != source_sha256
+        or final.get("source_raw_sha256") != artifact_source_sha256
         or final.get("endpoint_float64_sha256") != endpoint_sha256
         or final.get("authority_pass") is not True
         or not isinstance(input_contract, Mapping)
@@ -386,7 +424,7 @@ def _rung(
         result_sha256=result_binding["sha256"],
         plan_sha256=plan_binding["sha256"],
         lane_sha256=lane_binding["sha256"],
-        source_sha256=source_sha256,
+        source_sha256=artifact_source_sha256,
         endpoint_bits=endpoint_bits,
         endpoint_sha256=endpoint_sha256,
         precision_bits=precision_bits,
@@ -402,6 +440,8 @@ def _rung(
         "plan_artifact": plan_binding,
         "lane_artifact": lane_binding,
         "numeric_guard_branch_parity": True,
+        "raw_source_artifact_sha256": artifact_source_sha256,
+        "source_projection_sha256": source_projection_sha256,
     }
 
 
@@ -409,14 +449,21 @@ def validate_private_subset(value: object) -> dict[str, Any]:
     if (
         not isinstance(value, Mapping)
         or set(value)
-        != {"schema_version", "source", "source_sha256", "subset_sha256", "endpoints"}
+        != {
+            "schema_version",
+            "source_artifact",
+            "source_projection_sha256",
+            "subset_sha256",
+            "endpoints",
+        }
         or value.get("schema_version") != PRIVATE_SCHEMA
         or _contains_forbidden_key(value, FORBIDDEN_REQUEST_KEYS)
     ):
         raise ConnectorFailure("private subset schema or truth boundary changed")
-    source_path = Path(str(value.get("source")))
-    source_sha = value.get("source_sha256")
-    source_payload, document = _source(source_path, str(source_sha))
+    projection_sha = value.get("source_projection_sha256")
+    source_artifact, artifact_source_sha, source_payload, document = _source(
+        value.get("source_artifact"), str(projection_sha)
+    )
     dimension = len(document["variables"]["names"])
     raw_endpoints = value.get("endpoints")
     if not isinstance(raw_endpoints, list) or not 2 <= len(raw_endpoints) <= 6:
@@ -441,7 +488,8 @@ def validate_private_subset(value: object) -> dict[str, Any]:
             raw.get("low"),
             precision_bits=LOW_BITS,
             dimension=dimension,
-            source_sha256=str(source_sha),
+            artifact_source_sha256=artifact_source_sha,
+            source_projection_sha256=str(projection_sha),
             endpoint_bits=bits,
             endpoint_sha256=str(endpoint_sha),
         )
@@ -449,7 +497,8 @@ def validate_private_subset(value: object) -> dict[str, Any]:
             raw.get("high"),
             precision_bits=HIGH_BITS,
             dimension=dimension,
-            source_sha256=str(source_sha),
+            artifact_source_sha256=artifact_source_sha,
+            source_projection_sha256=str(projection_sha),
             endpoint_bits=bits,
             endpoint_sha256=str(endpoint_sha),
         )
@@ -464,11 +513,12 @@ def validate_private_subset(value: object) -> dict[str, Any]:
                 "high": high,
             }
         )
-    if subset_sha256(str(source_sha), endpoint_shas) != value.get("subset_sha256"):
+    if subset_sha256(str(projection_sha), endpoint_shas) != value.get("subset_sha256"):
         raise ConnectorFailure("subset custody digest changed")
     return {
-        "source": source_path,
-        "source_sha256": source_sha,
+        "source_artifact": source_artifact,
+        "source_artifact_sha256": artifact_source_sha,
+        "source_projection_sha256": projection_sha,
         "source_payload": source_payload,
         "source_document": document,
         "subset_sha256": value["subset_sha256"],
@@ -688,8 +738,8 @@ def canonical_replay_endpoint(
     endpoint: Mapping[str, Any],
     target_proposal: Mapping[str, Any],
     timeout_seconds: float,
-) -> bool:
-    """Run the unchanged exact DAG/QQBar source replay for one full tuple."""
+) -> dict[str, Any]:
+    """Return one concrete factor descriptor plus its canonical proof record."""
 
     if not math.isfinite(timeout_seconds) or timeout_seconds <= 0.25:
         raise ConnectorFailure("canonical replay timeout is invalid")
@@ -720,7 +770,7 @@ def canonical_replay_endpoint(
     exact._normalize_exact_guard_calls(job)
     replay = exact._run_qqbar(job, timeout_seconds=timeout_seconds)
     if not isinstance(replay, Mapping) or replay.get("status") != "EXACT_REPLAY_ACCEPTED":
-        return False
+        return {"status": "CANONICAL_FACTOR_REJECTED"}
     coordinate_ordinals = [
         int(exact._qqbar_descriptor(item)["isolating_interval"]["real_root_index"])
         for item in coordinate_proposals
@@ -732,7 +782,7 @@ def canonical_replay_endpoint(
         target_root_index=target_root_ordinal,
     )
     attestation = replay.get("target_root_attestation")
-    return bool(
+    accepted = bool(
         replay.get("truth_used") is False
         and replay.get("post_process_used") is False
         and replay.get("completeness_claim_permitted") is False
@@ -746,6 +796,104 @@ def canonical_replay_endpoint(
         and attestation.get("index_match") is True
         and attestation.get("multiplicity") == 1
     )
+    if not accepted:
+        return {"status": "CANONICAL_FACTOR_REJECTED"}
+    descriptor = exact._qqbar_descriptor(target_proposal)
+    descriptor_identity = _sha256(
+        json.dumps(descriptor, sort_keys=True, separators=(",", ":")).encode()
+    )
+    proof = {
+        "schema_version": "geotarget.cross-endpoint-vieta-canonical-factor-proof/v1",
+        "status": "CANONICAL_FACTOR_ACCEPTED",
+        "observed_endpoint_float64_sha256": endpoint["endpoint_float64_sha256"],
+        "descriptor_identity_sha256": descriptor_identity,
+        "factor_local_real_root_ordinal": target_root_ordinal,
+        "source_raw_answer_exact": True,
+        "target_link_exact": True,
+        "root_ordinal_attestation_complete": True,
+        "attested_real_root_index": int(attestation["attested_real_root_index"]),
+        "multiplicity": int(attestation["multiplicity"]),
+        "truth_used": False,
+        "post_process_used": False,
+        "target_set_completeness_claim": False,
+    }
+    return {
+        "status": "CANONICAL_FACTOR_ACCEPTED",
+        "descriptor": descriptor,
+        "descriptor_identity_sha256": descriptor_identity,
+        "proof_record": proof,
+        "proof_record_sha256": _sha256(
+            json.dumps(proof, sort_keys=True, separators=(",", ":")).encode()
+        ),
+        "observed_endpoint_float64_sha256": endpoint["endpoint_float64_sha256"],
+        "unobserved_root_emitted": False,
+        "target_set_completeness_claim": False,
+    }
+
+
+def union_observed_factor_records(
+    *,
+    fallback_result: Any,
+    accepted_records: Sequence[Mapping[str, Any]],
+    observed_endpoint_sha256: Sequence[str],
+) -> dict[str, Any]:
+    """Build the concrete baseline+candidate union and derive its accounting."""
+
+    observed = set(observed_endpoint_sha256)
+    if len(observed) != len(observed_endpoint_sha256):
+        raise ConnectorFailure("observed endpoint ledger contains duplicates")
+    emitted: list[Mapping[str, Any]] = []
+    seen_descriptors: set[str] = set()
+    duplicate_count = 0
+    for record in accepted_records:
+        if not isinstance(record, Mapping) or record.get("status") != "CANONICAL_FACTOR_ACCEPTED":
+            raise ConnectorFailure("union received a non-accepted factor record")
+        descriptor = record.get("descriptor")
+        proof = record.get("proof_record")
+        identity = record.get("descriptor_identity_sha256")
+        endpoint_sha = record.get("observed_endpoint_float64_sha256")
+        if (
+            not isinstance(descriptor, Mapping)
+            or not isinstance(proof, Mapping)
+            or not _valid_sha(identity)
+            or endpoint_sha not in observed
+            or _sha256(json.dumps(descriptor, sort_keys=True, separators=(",", ":")).encode())
+            != identity
+            or proof.get("descriptor_identity_sha256") != identity
+            or proof.get("observed_endpoint_float64_sha256") != endpoint_sha
+            or proof.get("schema_version")
+            != "geotarget.cross-endpoint-vieta-canonical-factor-proof/v1"
+            or proof.get("status") != "CANONICAL_FACTOR_ACCEPTED"
+            or proof.get("source_raw_answer_exact") is not True
+            or proof.get("target_link_exact") is not True
+            or proof.get("root_ordinal_attestation_complete") is not True
+            or proof.get("truth_used") is not False
+            or proof.get("post_process_used") is not False
+            or proof.get("target_set_completeness_claim") is not False
+            or _sha256(json.dumps(proof, sort_keys=True, separators=(",", ":")).encode())
+            != record.get("proof_record_sha256")
+            or record.get("unobserved_root_emitted") is not False
+            or record.get("target_set_completeness_claim") is not False
+        ):
+            raise ConnectorFailure("factor descriptor/proof record binding changed")
+        if identity in seen_descriptors:
+            duplicate_count += 1
+            continue
+        seen_descriptors.add(str(identity))
+        emitted.append(record)
+    unobserved_count = sum(
+        record["observed_endpoint_float64_sha256"] not in observed for record in emitted
+    )
+    return {
+        "schema_version": "geotarget.cross-endpoint-vieta-materialized-union/v1",
+        "fallback_result": fallback_result,
+        "accepted_factor_records": tuple(emitted),
+        "canonical_emitted_endpoint_count": len(emitted),
+        "descriptor_identity_dedup_count": duplicate_count,
+        "unobserved_root_emit_count": unobserved_count,
+        "fallback_identity_preserved": True,
+        "target_set_completeness_claim": False,
+    }
 
 
 def structural_signature(document: Mapping[str, Any]) -> str:
