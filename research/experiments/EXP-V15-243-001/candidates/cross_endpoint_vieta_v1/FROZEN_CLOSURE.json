@@ -1,19 +1,23 @@
 {
-  "schema_version": "geotarget.cross-endpoint-vieta-frozen-closure/v1",
-  "candidate": "CROSS_ENDPOINT_VIETA_V1_REPAIR_A",
+  "schema_version": "geotarget.cross-endpoint-vieta-frozen-closure/v2",
+  "candidate": "CROSS_ENDPOINT_VIETA_V1_REPAIR_A_V4",
   "files_sha256": {
-    "ALGORITHM_CARD.md": "1335e57257ea1cdcbe08b8bfa76f8ab66aea750ac8078beb13b8e2fb9a0d3029",
-    "ANONYMOUS_PANEL_SPEC.md": "e80390b437dc3a2f2dbf6ff01965adb54f069ddb1f534b086fdf484afa7633a7",
+    "ALGORITHM_CARD.md": "979e1ef18de52f953a34e1640e2be7f9f4255e21f61883ab1391cf434c9167b7",
+    "ANONYMOUS_PANEL_SPEC.md": "e378f0adda68a1fa2ed598542910023c5438273924f6d675b5fcbfc42caab34a",
     "GENERATED_EVIDENCE.json": "f3da1a80fdc0ab981f5df2a4a532cbc03702d1c8f111b8d331414756701d49e8",
     "ROOT_EXACT_GATE_SPEC.md": "d2140d030316375fbe121a21fb240819389753269055717fcb0444c68c66d55d",
+    "V4_REPAIR_RESULT.md": "b741d761d21b3bcce162a3d824f611c3b77342376d4d9c1694b3b165f1519c20",
     "arm.json": "772924de47bda7383df34d519354049853221c662a92ba4306934b71dfbab2f9",
+    "build_v4_manifest.py": "20d61ac855f8862c99457dfe3894bd1353a73e4d64516a716501db1b64ff8b37",
     "candidate.py": "2c26493575c09ba788efdc0bff2d4e0db2a80f946ee7c0b0f41b5114da107f6d",
-    "canonical_connector.py": "317f732f5d62ef1f92496ad6bbe1119401402377cbe63ce9765e318dbfbc4f74",
+    "canonical_connector.py": "b6e9dd7bb5c62a657451fd18294cbceef032d6b764cace0628d878684faa2b41",
     "generated_cases.py": "a09b5d442c3260e9c75f6349f0d85dd81b7dc1d0bfef9adb71a563d35043ad7c",
-    "root_exact_gate.py": "ff40fa9f39f308b91591e870a21a3ad7bb705d65d97ec5326e617e11c55331ab",
+    "root_exact_gate.py": "01873e2f97bec47cdf3f9d5d62309f496d9f4968187e2b0e7bab4a77ed356075",
     "run_d0.py": "18705fee57f131823e3489b9248026160f44906184ab2a92c83e251e068081d1",
+    "test_build_v4_manifest.py": "7aa0b2af1c264f90bca5194094953b05289f0093a90600978418bbff367c26e1",
     "test_candidate.py": "9ffcd36cf4e4e950dc75d1fbb0906aadfd42d3bed60ccf2cac9a025c6f89c588",
-    "test_canonical_connector.py": "4b3898826317a53cd68492902309cbf12167c5a129dbced18aa7bc41ad86e8db"
+    "test_canonical_connector.py": "6a0b506c626541e1b6e140a83153e65b8afd3d8b98a0138c2bf7400b0d468004",
+    "test_root_gate_v4.py": "1529e0d8557c7d3a4b4a24300bd74cb1faa22c8645588ffa591937464a07b857"
   },
   "external_frozen_sha256": {
     "exact_coordinate_replay/candidate.py": "e0f24e605e7e7211d134ddea66e66adbb89307148a8f03c1afebd4a2c969c66f",
@@ -24,11 +28,21 @@
     "qqbar_exact_replay/qqbar_worker.jl": "3ac6415600da77f8748a11d15fa47eb3dcb9f8deada375388fc762a155df0b4a"
   },
   "d0_unit_gate": {
-    "command": "taskset -c 14 /home/kabatan/work/solver-experiment-runtime/solver/python/.venv/bin/python -m pytest -q test_candidate.py test_canonical_connector.py",
-    "passed": 15,
+    "command": "taskset -c 14 /home/kabatan/work/solver-experiment-runtime/solver/python/.venv/bin/python -m pytest -q test_candidate.py test_canonical_connector.py test_root_gate_v4.py test_build_v4_manifest.py",
+    "passed": 26,
     "failed": 0,
     "julia_executed": false,
-    "real_corpus_executed": false
+    "real_corpus_executed": false,
+    "scorer_or_truth_read": false
+  },
+  "manifest_builder": {
+    "panel_schema": "geotarget.cross-endpoint-vieta-private-gate/v2",
+    "private_mode": "0600",
+    "max_sources": 128,
+    "max_subsets_per_source": 16,
+    "max_subsets": 595,
+    "every_private_row_revalidated": true,
+    "real_artifacts_executed": false
   },
   "structural_proposal_upper_bound": 595,
   "whole_vieta_minimal_descriptor_count": 0,

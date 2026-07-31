@@ -32,6 +32,15 @@ unobserved, and fallback-preservation counters from that union. The
 `custody-dry-validate` coordinator mode authenticates real v4 artifacts without
 executing canonical replay or Julia and emits aggregate counts only.
 
+The candidate-specific `build_v4_manifest.py` is the sole manifest builder. It
+accepts a formal-control HP artifact root and raw input directory, starts from
+ordinary HP `PLAN.json` schema matches only, authenticates adjacent
+RESULT/PLAN/authority bytes plus both frozen numeric lanes, and never opens a
+scorer/truth/outcome tree. It applies caps of 128 anonymous source projections,
+16 subsets per source, and 595 subsets total. Private rows and all artifact
+paths stay below `/home/kabatan/work/solver-experiment-results` in mode 0600;
+only an aggregate count/hash document is printed.
+
 ## Private request schema
 
 Each request contains:
