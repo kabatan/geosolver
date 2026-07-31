@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
-from dataclasses import dataclass
 import hashlib
 import importlib.util
 import json
+import os
 from pathlib import Path
+import subprocess
 from types import SimpleNamespace
 import sys
 import time
@@ -95,6 +96,10 @@ def test_one_base_and_exact_authority_boundary(module) -> None:
     assert module.OUTER._ORDINARY_HP is scheduler.UPSTREAM._HISTORICAL_HP
     assert module.BASE._run_hp_candidate is module.OUTER._run_exact_outer
     assert module.ZERO is scheduler.CONTROL.CHAMPION.ZERO
+    assert module.OUTER._FROZEN_SCHEDULER_SHA256 == module.EXPECTED_SCHEDULER_SHIM_SHA256
+    closure = module.OUTER._compact_closure()
+    assert closure["closure_sha256"]
+    assert module.OUTER.verify_exact_freeze()
 
 
 def test_plan_freezes_quota_failure_and_authority_contract(module, tmp_path: Path) -> None:
@@ -227,3 +232,42 @@ def test_arm_mechanism_hash_is_entrypoint_hash() -> None:
     assert arm["entrypoint"] == "worker.py"
     assert arm["mechanism_hash"] == hashlib.sha256(WORKER.read_bytes()).hexdigest()
 
+
+def test_scheduler_shim_stale_mutation_fails_closed(
+    module, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    stale = tmp_path / "scheduler_shim.py"
+    stale.write_bytes(module.SCHEDULER_SHIM.read_bytes() + b"\n# stale mutation\n")
+    monkeypatch.setattr(module, "SCHEDULER_SHIM", stale)
+    with pytest.raises(module.IntegrationError, match="scheduler changed"):
+        module._assert_runtime_binding()
+
+
+def test_shared_source_worker_stale_mutation_fails_before_import(
+    module, tmp_path: Path
+) -> None:
+    real_worker = module.SCHEDULER.PARTICLE_ROOT / "real_search_worker.py"
+    expected = module.SCHEDULER.EXPECTED_SHA256[real_worker]
+    assert hashlib.sha256(real_worker.read_bytes()).hexdigest() == expected
+    stale = tmp_path / "shared-worker.py"
+    stale.write_text("raise AssertionError('stale worker executed')\n", encoding="utf-8")
+    environment = dict(os.environ)
+    environment["GEOTARGET_PARTICLE_SHARED_SOURCE_WORKER"] = str(stale)
+    code = (
+        "import importlib.util,sys;"
+        f"p={str(real_worker)!r};"
+        "s=importlib.util.spec_from_file_location('stale_shared_worker_probe',p);"
+        "m=importlib.util.module_from_spec(s);sys.modules[s.name]=m;"
+        "s.loader.exec_module(m)"
+    )
+    completed = subprocess.run(
+        [sys.executable, "-c", code],
+        check=False,
+        capture_output=True,
+        text=True,
+        env=environment,
+        timeout=10.0,
+    )
+    assert completed.returncode != 0
+    assert "particle shared source-worker SHA-256 mismatch" in completed.stderr
+    assert "stale worker executed" not in completed.stderr

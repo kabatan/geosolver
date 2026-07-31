@@ -19,7 +19,7 @@ SEARCH_WORKER = HERE / "real_search_worker.py"
 SEARCH_ADAPTER = HERE / "real_adapter.py"
 SEARCH_CANDIDATE = HERE / "candidate.py"
 EXPECTED_LOCAL_SHA256 = {
-    "real_search_worker.py": "91d7469ba3792e11d2c6b023178d50fc89859616f01293fe4fa72e423f778d00",
+    "real_search_worker.py": "0f0f1983f2684caf043d51be8df3b70e0f502ea9ee6531b8c4d0e5ed8084ff61",
     "real_adapter.py": "3242434e21971a65753161adf8fb2119aa3001a628abdbe654cc08f2353e790a",
     "candidate.py": "1d24ab131de635ef47c5f9f2230822f3d62a6d7b5787be95e26089d59c924a4e",
 }

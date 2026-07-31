@@ -80,6 +80,13 @@ checks preserved exact baseline bytes. No truth/scorer was read and no target-se
 completeness is claimed. Formal truth-isolated D1 remains with the root owner.
 Details: `TAIL_REPAIR_A_SOURCE_SMOKE.json` and `arm.json`.
 
+The later progressive exact-tail composition required a causal runtime-closure
+repair: `real_search_worker.py` now verifies the archived shared source-worker
+bytes before import and before `main`. Its changed hash was cascaded through
+both wrappers and `arm.json`; numerical policy is unchanged. The composition's
+full closure and mutation evidence are recorded in
+`archive_progressive_hybrid_exact_outer_particle_tail_repair_b_v1/CAUSAL_REPAIR_A_FREEZE.json`.
+
 Repair A formal D1 disposition: on root-owned screen24, control and candidate
 both scored `15/24` (wins 1, losses 1; false/extra/crash 0). The tail launched
 on 6 cases but produced 0 groups and 0 safe proposals; every launch failed

@@ -28,6 +28,7 @@ EXACT_OUTER = (
 AUTHORITY_BOUNDARY = EXACT_OUTER.parent / "authority_boundary.py"
 EXPECTED_EXACT_OUTER_SHA256 = "05650c1016f3974c0f74845037c76604eb38f2f4a337cc700721f0e148d9d3f7"
 EXPECTED_AUTHORITY_BOUNDARY_SHA256 = "a36520a416d0b8c900bca6b79192c7014812c9b1270be09248347f0f19e167e9"
+EXPECTED_SCHEDULER_SHIM_SHA256 = "f80cc788a66df5759b2d9289273f5311089007efaf52da117e9f7c32f8228a4d"
 
 
 class IntegrationError(RuntimeError):
@@ -64,6 +65,8 @@ if _sha256(EXACT_OUTER) != EXPECTED_EXACT_OUTER_SHA256:
     raise IntegrationError("exact_outer worker digest changed")
 if _sha256(AUTHORITY_BOUNDARY) != EXPECTED_AUTHORITY_BOUNDARY_SHA256:
     raise IntegrationError("exact_outer authority boundary digest changed")
+if _sha256(SCHEDULER_SHIM) != EXPECTED_SCHEDULER_SHIM_SHA256:
+    raise IntegrationError("particle scheduler shim digest changed")
 _require_global_setting(OUTER_SCHEDULER_ENV, str(SCHEDULER_SHIM.resolve()), path=True)
 _require_global_setting(OUTER_MODE_ENV, CONFIRM_ALL_AUTHORITIES)
 
@@ -94,6 +97,8 @@ def _assert_runtime_binding() -> None:
         raise IntegrationError("exact_outer worker changed after import")
     if _sha256(AUTHORITY_BOUNDARY) != EXPECTED_AUTHORITY_BOUNDARY_SHA256:
         raise IntegrationError("authority boundary changed after import")
+    if _sha256(SCHEDULER_SHIM) != EXPECTED_SCHEDULER_SHIM_SHA256:
+        raise IntegrationError("particle scheduler changed after import")
 
 
 def _ledger() -> dict[str, object]:

@@ -29,3 +29,22 @@ group with four safe side points and left the baseline input unchanged. The
 zero-dimensional fixture bypassed the tail. Candidate-local unit/D0 checks are
 22/22 passing; no formal corpus, scorer, truth, or `--execute` run was used.
 Formal D1 remains pending with the benchmark owner.
+
+## Causal Repair A: transitive runtime pin
+
+The independent audit stopped the arm because `worker.py` did not pin its
+selected scheduler and the particle `real_search_worker.py` did not pin the
+shared source worker it imported. Repair A adds only those two fail-closed
+checks and cascades the resulting hashes through the particle wrappers,
+scheduler, entrypoints, and arms. The shared source worker is verified before
+import and again before `main`; the selected scheduler is verified before the
+exact-outer import and in every runtime binding assertion. The existing exact
+outer internal freeze remains unchanged and was reverified.
+
+CPU14 generated tests pass 8/8 for the composed candidate and 16/16 for the
+shared particle mechanism. Mutated scheduler bytes and mutated shared-worker
+bytes both fail closed, the latter before the stale module executes. No search
+math, callback/wall quota, timeout, exact authority, corpus, formal scorer,
+Julia/CAS, or `--execute` path was changed or run. Exact hashes are in
+`CAUSAL_REPAIR_A_FREEZE.json`; formal execution remains blocked pending a fresh
+adversary audit and benchmark-owner custody.
