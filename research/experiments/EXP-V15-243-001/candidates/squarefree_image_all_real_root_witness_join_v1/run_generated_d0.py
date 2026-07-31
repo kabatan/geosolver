@@ -87,7 +87,7 @@ def _run(
         descriptor_artifact_sha256s=descriptor_shas, source_sha256=source_sha,
         witness_provider=bound_provider,
     )
-    actual = result["status"] == "COMPLETE_TARGET_IMAGE_CERTIFICATE_READY"
+    actual = result["status"] == "ALL_REAL_ROOT_WITNESS_JOIN_PROPOSAL_READY"
     if actual is not expected:
         raise AssertionError(f"{name}: expected={expected}, result={result}")
     return {"name": name, "expected": expected, "certified": actual, "reason": result.get("reason")}
@@ -108,6 +108,7 @@ def main() -> int:
         "positive_pass_count": sum(row["expected"] and row["certified"] for row in rows),
         "negative_reject_count": sum((not row["expected"]) and (not row["certified"]) for row in rows),
         "false_complete_count": 0,
+        "target_set_completeness_claim": False,
         "canonical_outer_release_required": True,
         "rows": rows,
     }

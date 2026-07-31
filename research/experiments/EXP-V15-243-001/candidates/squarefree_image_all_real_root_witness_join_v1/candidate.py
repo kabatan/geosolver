@@ -162,17 +162,19 @@ def certify_complete_target_image(
     }
     return {
         "schema_version": SCHEMA,
-        "status": "COMPLETE_TARGET_IMAGE_CERTIFICATE_READY",
+        "status": "ALL_REAL_ROOT_WITNESS_JOIN_PROPOSAL_READY",
         "upper_bound_verified": True,
         "all_real_roots_witnessed": True,
         "real_root_count": len(specifications),
         "witness_count": len(witness_artifacts),
         "certificate_sha256": canonical_sha256(certificate_body),
-        "completeness_certificate_ready": True,
-        "target_set_completeness_claim": True,
+        "caller_witness_artifacts_cover_all_real_roots": True,
+        "completeness_certificate_ready": False,
+        "target_set_completeness_claim": False,
         "truth_used": False,
         "target_release": False,
         "canonical_outer_release_required": True,
+        "canonical_outer_must_reverify_witness_artifact_bytes": True,
     }
 
 

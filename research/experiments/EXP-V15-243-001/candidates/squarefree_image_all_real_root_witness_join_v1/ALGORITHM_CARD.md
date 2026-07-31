@@ -9,8 +9,11 @@
   ordinals alone are never treated as the target set.
 - Inputs: the bound multi-target identity candidate plus unique exact replay
   witness artifacts for each root.  IDs/families/truth/counts are forbidden.
-- Output: certificate readiness only.  Canonical outer verification/release is
-  still mandatory; the join itself never writes final solver descriptors.
+- Output: join proposal readiness only.  Caller-authored witness self-hashes
+  are not authority: `target_set_completeness_claim` remains false.  Canonical
+  outer must read and independently reverify immutable exact-replay artifact
+  bytes, bind source/system/endpoint/worker/factor ordinals, and then decide
+  completeness/release.  The join itself never writes final descriptors.
 - Reopen: the archived Thom/Hermite lane stopped because no global upper
   polynomial existed.  Sparse-cofactor identity supplies that explicit gate.
 - Generated D0: GO_REAL_JOIN, positives 3/3, missing-conjugate/extra-factor/
