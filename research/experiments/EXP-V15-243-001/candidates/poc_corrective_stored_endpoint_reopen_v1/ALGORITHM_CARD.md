@@ -57,3 +57,15 @@ pinned exclusively to CPU14. They cover a clean endpoint/bridge join, a
 verified private hold, baseline object-identity fallback, and truth, endpoint,
 resource-deferral, and not-run rejection. No corpus, scorer, manifest, real
 endpoint, truth, validation, or sealed data was opened.
+
+## Stored-lane census handoff
+
+`stored_lane_census.py` is a root-custody, aggregate-only pre-gate. It scans
+only an explicitly supplied development artifact root, excludes scorer/truth
+and validation/sealed paths, validates frozen refinement bridges, and counts
+complete independent 768/1024 coordinate lanes and non-turn recognition
+readiness. It emits no per-row path, hash, endpoint, coordinate, target, or
+descriptor. A zero complete-lane count returns
+`STOP_NO_COMPLETE_STORED_LANES`; the adapter must not be tuned from that stop.
+The census and its synthetic tests were prepared but not executed in this
+candidate lane, as execution remains benchmark-owner gated.
