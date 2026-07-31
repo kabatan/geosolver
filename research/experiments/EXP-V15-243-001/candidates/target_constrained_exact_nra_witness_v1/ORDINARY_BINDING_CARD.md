@@ -62,8 +62,26 @@ and proposal-artifact tampering were rejected 4/4; duplicate matching
 ordinary attempts were detected by the builder's exactly-one rule; and a
 two-target source admitted one exact emission proof while retaining
 `target_set_completeness_claim=false` and `target_release=false`.  The complete
-candidate suite passes 33/33.
+candidate suite passes 34/34.
 
 The earlier Repair A privacy review also closed its source-path oracle: the
 degree-one census now restricts sources to the anonymous panel root and
 rejects source identity/truth fields before compiler/replay.
+
+## Original-result provenance and TCB
+
+The copied proposal artifact binds the SHA-256 of its frozen formal-control
+`RESULT.json`.  To avoid materializing case-bearing paths, the connector scans
+only regular `RESULT.json` files under the approved control root and requires
+that the digest identify exactly one original.  It then requires exactly one
+matching source/endpoint/descriptor authority-ready attempt and canonical
+equality with the copied attempt.  The exact-coordinate
+`nested_exact_authority_matches_source` helper is intentionally not invoked:
+it accepts a different exact-coordinate fallback schema, while source
+authority here is supplied by the fresh NRA witness plus full exact DSL replay.
+
+The one-shot builder and write-protected custody directories are part of the
+trusted benchmark-owner TCB.  Hashes cannot authenticate an adversary able to
+rewrite both an artifact and every attestation supplied to the same process.
+The connector instead prevents caller-selected file escape and revalidates all
+copied ordinary evidence against the frozen original root.

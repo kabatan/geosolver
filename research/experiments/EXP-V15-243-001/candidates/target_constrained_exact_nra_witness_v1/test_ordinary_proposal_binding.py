@@ -42,10 +42,15 @@ def _document(root: int = 3):
 def _fixture(tmp_path: Path, monkeypatch, *, document=None, root=3):
     source_root = tmp_path / "sources"
     proposal_root = tmp_path / "proposals"
+    original_root = tmp_path / "original-results"
     source_root.mkdir()
     proposal_root.mkdir()
+    original_root.mkdir()
     monkeypatch.setattr(binding, "APPROVED_SOURCE_ROOT", source_root.resolve())
     monkeypatch.setattr(binding, "APPROVED_PROPOSAL_ROOT", proposal_root.resolve())
+    monkeypatch.setattr(
+        binding, "APPROVED_ORIGINAL_RESULT_ROOT", original_root.resolve()
+    )
     source = source_root / "0000.json"
     source.write_text(
         json.dumps(document or _document(root), separators=(",", ":")),
@@ -60,11 +65,25 @@ def _fixture(tmp_path: Path, monkeypatch, *, document=None, root=3):
         "descriptor": _descriptor(root),
         "case_family_truth_target_count_routing": False,
     }
+    original_case_root = original_root / "anonymous"
+    original_case_root.mkdir()
+    original_result = original_case_root / "RESULT.json"
+    original_result.write_bytes(
+        binding.canonical_bytes(
+            {
+                "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+                "hp_attempts": [attempt],
+            }
+        )
+        + b"\n"
+    )
     wrapper = {
         "schema_version": binding.PROPOSAL_SCHEMA,
         "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
         "endpoint_float64_sha256": endpoint_sha,
-        "original_result_sha256": "a" * 64,
+        "original_result_sha256": hashlib.sha256(
+            original_result.read_bytes()
+        ).hexdigest(),
         "ordinary_attempt_sha256": binding.canonical_sha256(attempt),
         "ordinary_attempt": attempt,
         "truth_used": False,
@@ -92,6 +111,7 @@ def _connect(row, source_root, proposal_root):
         row,
         source_root=source_root,
         proposal_root=proposal_root,
+        original_result_root=binding.APPROVED_ORIGINAL_RESULT_ROOT,
         timeout_seconds=3.0,
     )
 
@@ -154,6 +174,15 @@ def test_source_endpoint_descriptor_and_proposal_tamper_fail_closed(
     changed["proposal_sha256"] = hashlib.sha256(proposal.read_bytes()).hexdigest()
     assert _connect(changed, source_root, proposal_root)["binding_ready"] is False
 
+    # Even a self-consistent copied wrapper is rejected when it differs from
+    # the bounded, digest-checked original RESULT attempt.
+    document["ordinary_attempt_sha256"] = binding.canonical_sha256(
+        document["ordinary_attempt"]
+    )
+    proposal.write_bytes(binding.canonical_bytes(document) + b"\n")
+    changed["proposal_sha256"] = hashlib.sha256(proposal.read_bytes()).hexdigest()
+    assert _connect(changed, source_root, proposal_root)["binding_ready"] is False
+
 
 def test_symlink_escape_is_rejected(tmp_path, monkeypatch):
     row, source_root, proposal_root, _source, proposal = _fixture(tmp_path, monkeypatch)
@@ -164,6 +193,20 @@ def test_symlink_escape_is_rejected(tmp_path, monkeypatch):
     row["proposal_result_rel"] = escaped.name
     row["proposal_sha256"] = hashlib.sha256(outside.read_bytes()).hexdigest()
     assert _connect(row, source_root, proposal_root)["binding_ready"] is False
+
+
+def test_original_result_digest_must_be_unique_in_frozen_root(tmp_path, monkeypatch):
+    row, source_root, proposal_root, _source, _proposal = _fixture(
+        tmp_path, monkeypatch
+    )
+    original_root = binding.APPROVED_ORIGINAL_RESULT_ROOT
+    original = original_root / "anonymous" / "RESULT.json"
+    duplicate_root = original_root / "duplicate"
+    duplicate_root.mkdir()
+    (duplicate_root / "RESULT.json").write_bytes(original.read_bytes())
+    result = _connect(row, source_root, proposal_root)
+    assert result["binding_ready"] is False
+    assert result["target_release"] is False
 
 
 def test_duplicate_ordinary_matches_are_rejected_by_builder_join():

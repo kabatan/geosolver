@@ -17,7 +17,9 @@ import hashlib
 import importlib.util
 import json
 import math
+import os
 from pathlib import Path
+import stat
 import struct
 import sys
 from typing import Mapping, Sequence
@@ -40,6 +42,10 @@ APPROVED_PANEL_ROOT = Path(
     "/home/kabatan/work/solver-experiment-results/target-constrained-nra-ordinary-binding-v1"
 ).resolve()
 APPROVED_PROPOSAL_ROOT = (APPROVED_PANEL_ROOT / "ordinary-proposals").resolve()
+APPROVED_ORIGINAL_RESULT_ROOT = Path(
+    "/home/kabatan/work/solver-experiment-results/"
+    "formal-control-development145-180-seed0/artifacts"
+).resolve()
 AUTHORITY_BOUNDARY_PATH = Path(
     "/home/kabatan/work/solver-experiment-runtime/solver/research/experiments/"
     "EXP-V15-243-001/candidates/exact_outer_decorator/authority_boundary.py"
@@ -144,14 +150,21 @@ def _load_boundary():
 BOUNDARY = _load_boundary()
 
 
-def require_approved_roots(source_root: Path, proposal_root: Path) -> tuple[Path, Path]:
+def require_approved_roots(
+    source_root: Path, proposal_root: Path, original_result_root: Path
+) -> tuple[Path, Path, Path]:
     source = source_root.resolve()
     proposal = proposal_root.resolve()
-    if source != APPROVED_SOURCE_ROOT or proposal != APPROVED_PROPOSAL_ROOT:
+    original = original_result_root.resolve()
+    if (
+        source != APPROVED_SOURCE_ROOT
+        or proposal != APPROVED_PROPOSAL_ROOT
+        or original != APPROVED_ORIGINAL_RESULT_ROOT
+    ):
         raise BindingRejected("UNAPPROVED_INPUT_CUSTODY_ROOT")
-    if not source.is_dir() or not proposal.is_dir():
+    if not source.is_dir() or not proposal.is_dir() or not original.is_dir():
         raise BindingRejected("APPROVED_INPUT_CUSTODY_ROOT_MISSING")
-    return source, proposal
+    return source, proposal, original
 
 
 def bounded_relative_file(root: Path, value: object) -> Path:
@@ -165,6 +178,45 @@ def bounded_relative_file(root: Path, value: object) -> Path:
     if path.suffix != ".json" or not path.is_file():
         raise BindingRejected("ARTIFACT_PATH_NOT_JSON_FILE")
     return path
+
+
+def original_result_by_sha256(
+    root: Path, expected_sha256: object
+) -> Mapping[str, object]:
+    if not is_sha256(expected_sha256):
+        raise BindingRejected("ORIGINAL_RESULT_SHA256_MALFORMED")
+    matches: list[bytes] = []
+    for directory, directory_names, file_names in os.walk(root, followlinks=False):
+        directory_path = Path(directory)
+        directory_names[:] = [
+            name for name in directory_names if not (directory_path / name).is_symlink()
+        ]
+        if "RESULT.json" not in file_names:
+            continue
+        candidate = directory_path / "RESULT.json"
+        if candidate.is_symlink() or not stat.S_ISREG(candidate.lstat().st_mode):
+            raise BindingRejected("ORIGINAL_RESULT_PATH_NOT_REGULAR_FILE")
+        path = candidate.resolve()
+        try:
+            path.relative_to(root)
+        except ValueError as error:
+            raise BindingRejected(
+                "ORIGINAL_RESULT_PATH_ESCAPED_APPROVED_ROOT"
+            ) from error
+        if path.name != "RESULT.json" or not path.is_file():
+            raise BindingRejected("ORIGINAL_RESULT_PATH_MALFORMED")
+        payload = path.read_bytes()
+        if _sha256(payload) == expected_sha256:
+            matches.append(payload)
+    if len(matches) != 1:
+        raise BindingRejected("ORIGINAL_RESULT_SHA256_NOT_UNIQUE_IN_APPROVED_ROOT")
+    try:
+        result = json.loads(matches[0])
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise BindingRejected("ORIGINAL_RESULT_NOT_JSON") from error
+    if not isinstance(result, Mapping):
+        raise BindingRejected("ORIGINAL_RESULT_NOT_MAPPING")
+    return result
 
 
 def endpoint_from_bits(value: object) -> tuple[float, ...]:
@@ -229,6 +281,7 @@ def descriptor_identity(value: object) -> tuple[tuple[int, int], int]:
 
 def _ordinary_descriptor(
     proposal_artifact: Mapping[str, object],
+    original_result: Mapping[str, object],
     *,
     source_sha256: str,
     endpoint_sha256: str,
@@ -260,6 +313,31 @@ def _ordinary_descriptor(
     identity = BOUNDARY.descriptor_identity(attempt.get("descriptor"))
     if descriptor is None or identity != expected_identity:
         raise BindingRejected("ORDINARY_DESCRIPTOR_EXACT_IDENTITY_MISMATCH")
+    if original_result.get("source_sha256") != source_sha256:
+        raise BindingRejected("ORIGINAL_RESULT_SOURCE_BINDING_MISMATCH")
+    original_attempts = original_result.get("hp_attempts")
+    if not isinstance(original_attempts, list):
+        raise BindingRejected("ORIGINAL_RESULT_ATTEMPT_LEDGER_MALFORMED")
+    matches = []
+    for original_attempt in original_attempts:
+        if not isinstance(original_attempt, Mapping):
+            continue
+        if (
+            original_attempt.get("status") != "TARGET_AUTHORITY_READY"
+            or original_attempt.get("authority_pass") is not True
+            or original_attempt.get("endpoint_float64_sha256") != endpoint_sha256
+            or BOUNDARY.descriptor_identity(original_attempt.get("descriptor"))
+            != expected_identity
+            or BOUNDARY.exact_descriptor(original_attempt.get("descriptor")) is None
+        ):
+            continue
+        matches.append(original_attempt)
+    if len(matches) != 1:
+        raise BindingRejected("ORIGINAL_RESULT_ORDINARY_ATTEMPT_NOT_UNIQUE")
+    if canonical_sha256(matches[0]) != proposal_artifact[
+        "ordinary_attempt_sha256"
+    ] or canonical_bytes(matches[0]) != canonical_bytes(attempt):
+        raise BindingRejected("COPIED_ORDINARY_ATTEMPT_NOT_ORIGINAL")
     # The value handed back to the authority boundary is byte-for-byte the
     # ordinary descriptor mapping after canonical serialization; it is never
     # synthesized from the NRA witness.
@@ -309,6 +387,7 @@ def connect(
     *,
     source_root: Path,
     proposal_root: Path,
+    original_result_root: Path,
     timeout_seconds: float,
 ) -> dict[str, object]:
     """Build one private audit artifact.  No terminal releases a target."""
@@ -335,7 +414,9 @@ def connect(
             raise BindingRejected("REQUEST_CROSSED_IDENTITY_TRUTH_BOUNDARY")
         if not math.isfinite(timeout_seconds) or timeout_seconds <= 0:
             raise BindingRejected("BACKEND_TIMEOUT_MALFORMED")
-        source_root, proposal_root = require_approved_roots(source_root, proposal_root)
+        source_root, proposal_root, original_result_root = require_approved_roots(
+            source_root, proposal_root, original_result_root
+        )
         source_path = bounded_relative_file(source_root, row["source_rel"])
         proposal_path = bounded_relative_file(proposal_root, row["proposal_result_rel"])
         source_payload = source_path.read_bytes()
@@ -355,6 +436,9 @@ def connect(
             proposal_artifact, Mapping
         ):
             raise BindingRejected("SOURCE_OR_PROPOSAL_NOT_MAPPING")
+        original_result = original_result_by_sha256(
+            original_result_root, proposal_artifact.get("original_result_sha256")
+        )
         if FORBIDDEN_SOURCE_KEYS & set(document):
             raise BindingRejected("SOURCE_DOCUMENT_CROSSED_IDENTITY_TRUTH_BOUNDARY")
         if document.get("post_process") not in (None, ""):
@@ -377,6 +461,7 @@ def connect(
         identity = descriptor_identity(row["degree1_descriptor"])
         _ordinary_attempt, ordinary_descriptor = _ordinary_descriptor(
             proposal_artifact,
+            original_result,
             source_sha256=source_sha256,
             endpoint_sha256=endpoint_sha256,
             expected_identity=identity,
@@ -450,6 +535,7 @@ def connect(
 
 __all__ = [
     "APPROVED_PANEL_ROOT",
+    "APPROVED_ORIGINAL_RESULT_ROOT",
     "APPROVED_PROPOSAL_ROOT",
     "APPROVED_SOURCE_ROOT",
     "BindingRejected",

@@ -45,7 +45,7 @@ witnesses, but the limited semantic runtime replayed none.  Repair A changes
 only the representation/replay seam described above; backend caps, timeout,
 and eligibility thresholds are unchanged.
 
-The full candidate suite now passes 33/33.  Dedicated CPU14 reconstruction D0
+The full candidate suite now passes 34/34.  Dedicated CPU14 reconstruction D0
 passes algebraic auxiliary, periodic, and selector paths (3/3), rejects a
 recompiled-ledger tamper, backend-target descriptor tamper, and wrong degree-
 one proposal, emits no private witness/target/path, and has zero external

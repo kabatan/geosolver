@@ -41,6 +41,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--requests-sha256", required=True)
     parser.add_argument("--source-root", type=Path, required=True)
     parser.add_argument("--proposal-root", type=Path, required=True)
+    parser.add_argument("--original-result-root", type=Path, required=True)
     parser.add_argument("--artifact-dir", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--expected-cpu", type=int, default=14)
@@ -73,8 +74,10 @@ def main() -> int:
         or arguments.backend_timeout_seconds <= 0
     ):
         raise SystemExit("backend timeout must be finite and positive")
-    source_root, proposal_root = binding.require_approved_roots(
-        arguments.source_root, arguments.proposal_root
+    source_root, proposal_root, original_result_root = binding.require_approved_roots(
+        arguments.source_root,
+        arguments.proposal_root,
+        arguments.original_result_root,
     )
     requests_path = arguments.requests.resolve()
     if (
@@ -108,6 +111,7 @@ def main() -> int:
             row,
             source_root=source_root,
             proposal_root=proposal_root,
+            original_result_root=original_result_root,
             timeout_seconds=arguments.backend_timeout_seconds,
         )
         _atomic_write(artifact_dir / f"{ordinal:04d}.json", result)

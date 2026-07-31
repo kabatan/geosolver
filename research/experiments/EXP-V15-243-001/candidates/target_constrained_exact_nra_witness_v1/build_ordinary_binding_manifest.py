@@ -25,6 +25,8 @@ APPROVED_ORIGINAL_ROOT = Path(
     "/home/kabatan/work/solver-experiment-results/"
     "formal-control-development145-180-seed0/artifacts"
 ).resolve()
+if APPROVED_ORIGINAL_ROOT != binding.APPROVED_ORIGINAL_RESULT_ROOT:
+    raise RuntimeError("ordinary original-result custody roots disagree")
 APPROVED_DEGREE1_REQUESTS = Path(
     "/home/kabatan/work/solver-experiment-results/partial-ideal-root-readiness-v1/degree1-requests.json"
 ).resolve()

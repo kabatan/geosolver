@@ -38,6 +38,7 @@ def _descriptor(root: int) -> dict[str, object]:
 def _write_fixture(
     source_root: Path,
     proposal_root: Path,
+    original_root: Path,
     *,
     ordinal: int,
     source_document: dict[str, object],
@@ -57,11 +58,25 @@ def _write_fixture(
         "descriptor": _descriptor(root),
         "case_family_truth_target_count_routing": False,
     }
+    original_case_root = original_root / f"anonymous-{ordinal:04d}"
+    original_case_root.mkdir()
+    original_result = original_case_root / "RESULT.json"
+    original_result.write_bytes(
+        binding.canonical_bytes(
+            {
+                "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+                "hp_attempts": [attempt],
+            }
+        )
+        + b"\n"
+    )
     artifact = {
         "schema_version": binding.PROPOSAL_SCHEMA,
         "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
         "endpoint_float64_sha256": endpoint_sha256,
-        "original_result_sha256": "a" * 64,
+        "original_result_sha256": hashlib.sha256(
+            original_result.read_bytes()
+        ).hexdigest(),
         "ordinary_attempt_sha256": binding.canonical_sha256(attempt),
         "ordinary_attempt": attempt,
         "truth_used": False,
@@ -110,14 +125,18 @@ def main() -> int:
         root_path = Path(temporary)
         source_root = root_path / "sources"
         proposal_root = root_path / "proposals"
+        original_root = root_path / "original-results"
         source_root.mkdir()
         proposal_root.mkdir()
+        original_root.mkdir()
         binding.APPROVED_SOURCE_ROOT = source_root.resolve()
         binding.APPROVED_PROPOSAL_ROOT = proposal_root.resolve()
+        binding.APPROVED_ORIGINAL_RESULT_ROOT = original_root.resolve()
 
         direct = _write_fixture(
             source_root,
             proposal_root,
+            original_root,
             ordinal=0,
             source_document=_direct_document(3),
             root=3,
@@ -126,6 +145,7 @@ def main() -> int:
             direct,
             source_root=source_root,
             proposal_root=proposal_root,
+            original_result_root=original_root,
             timeout_seconds=3.0,
         )
 
@@ -145,6 +165,7 @@ def main() -> int:
                     row,
                     source_root=source_root,
                     proposal_root=proposal_root,
+                    original_result_root=original_root,
                     timeout_seconds=3.0,
                 )
             )
@@ -180,6 +201,7 @@ def main() -> int:
         multitarget_row = _write_fixture(
             source_root,
             proposal_root,
+            original_root,
             ordinal=1,
             source_document=multitarget_document,
             root=1,
@@ -188,6 +210,7 @@ def main() -> int:
             multitarget_row,
             source_root=source_root,
             proposal_root=proposal_root,
+            original_result_root=original_root,
             timeout_seconds=3.0,
         )
 
