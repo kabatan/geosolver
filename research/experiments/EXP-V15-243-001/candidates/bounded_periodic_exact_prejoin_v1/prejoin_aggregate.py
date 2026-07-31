@@ -72,6 +72,13 @@ def _require_sha(path: Path, expected: str) -> None:
         raise SystemExit(f"pinned helper changed: {path.name}")
 
 
+def _require_loaded(module: object, path: Path, expected: str) -> None:
+    observed = Path(str(getattr(module, "__file__", ""))).resolve()
+    if observed != path.resolve():
+        raise SystemExit(f"loaded helper identity changed: {path.name}")
+    _require_sha(observed, expected)
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, required=True)
@@ -200,6 +207,27 @@ def main() -> int:
     if str(nra_root) not in sys.path:
         sys.path.insert(0, str(nra_root))
     binding = _load("geotarget_prejoin_existing_nra_binding", nra_root / "ordinary_proposal_binding.py")
+    replay_module = sys.modules.get(binding._replay_existing_witness.__module__)
+    _require_loaded(
+        binding,
+        nra_root / "ordinary_proposal_binding.py",
+        EXPECTED_HELPER_SHA256["ordinary_proposal_binding.py"],
+    )
+    _require_loaded(
+        binding.applicability,
+        nra_root / "applicability.py",
+        EXPECTED_HELPER_SHA256["applicability.py"],
+    )
+    _require_loaded(
+        binding.backend,
+        nra_root / "candidate.py",
+        EXPECTED_HELPER_SHA256["candidate.py"],
+    )
+    _require_loaded(
+        replay_module,
+        nra_root / "run_degree1_proposal_census.py",
+        EXPECTED_HELPER_SHA256["run_degree1_proposal_census.py"],
+    )
     if any(
         Path(getattr(binding, name)).resolve() != expected
         for name, expected in EXPECTED_NRA_APPROVED_ROOTS.items()
@@ -207,6 +235,8 @@ def main() -> int:
         raise SystemExit("pinned NRA custody roots changed")
     msolve = _load("geotarget_prejoin_existing_msolve_source_compile", msolve_path)
     boundary = _load("geotarget_prejoin_authority_boundary", boundary_path)
+    _require_loaded(msolve, msolve_path, EXPECTED_MSOLVE_SHA256)
+    _require_loaded(boundary, boundary_path, EXPECTED_BOUNDARY_SHA256)
 
     per_pair: dict[tuple[object, str], dict[str, object]] = {}
     totals = {arm: Counter() for arm in ARMS}
