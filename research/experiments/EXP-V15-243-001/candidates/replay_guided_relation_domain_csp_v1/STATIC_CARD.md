@@ -82,3 +82,25 @@ descriptor must still pass the existing canonical exact authority boundary.
   rewriting, and fallback returns the untouched baseline object by identity;
 - untouched full replay passes generated positives, while authority and target
   release remain zero.
+
+## Frozen generated result
+
+On exclusively assigned CPU14, the candidate-local suite passed `7/7` in
+0.53 seconds.  Generated S0 reached `GO_STATIC_AUDIT`: all four positive
+families produced proposal holds and every proposal passed the later untouched
+full source/raw-target replay; target/ID changes and constraint permutation
+preserved the assignment signature; root-before-guard pruning was observed;
+and all underconstrained, cap, truth-input, non-solve, and post-process
+negatives fell back.  Authority and target release remained zero.
+
+Frozen SHA-256 values:
+
+- candidate mechanism:
+  `da92a984d6d3e4452649a87207835dca0bdbce28306108fd787aa6a35a60776e`;
+- generated runner:
+  `ed296d19080db4fe86e0cce365bf16c0adc482b6c894edaf0328104ae1a7004d`;
+- generated result:
+  `1bf6e273e4f148da3ad0a1e5ac7a57fdb2d4a2df09e91a493cf5e224689c1738`.
+
+This is only a generated/static gate.  No anonymous source census, scorer,
+formal arm, HP process, or canonical authority integration was run.
