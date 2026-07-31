@@ -1,6 +1,6 @@
 # ADAPTIVE_DEFLATION_ONE real applicability gate
 
-Status: scanner frozen for Root-owned degree1 panel85; real run pending.
+Status: scanner frozen for Root-owned degree1 panel85; fresh-refiner connector added, real run pending.
 
 The gate does not run the proposal and does not inspect a scored outcome.  Its
 strict input record contains only an untouched source path+digest, a bare
@@ -51,3 +51,11 @@ exactly `source_path`, `source_sha256`, `endpoint`, and
 `status`, `numeric_v3_ready`, and `target_stability_ready`; all four are
 required and no other field is accepted.  Root must not include scored
 outcomes or identity metadata.
+
+`run_root_panel.py` is the disposable Root-only connector for the existing
+degree-one endpoint panel.  It prefilters to square 2x2 sources, runs the
+frozen REAL61 refiner in a fresh process, and supplies only its mechanical
+ready/miss status to this scanner.  Refiner failures and timeouts fail closed
+as misses and still must pass the untouched semantic endpoint and normalized
+corank-one tests.  The connector publishes aggregate counts only and never
+enables a proposal or authority.
