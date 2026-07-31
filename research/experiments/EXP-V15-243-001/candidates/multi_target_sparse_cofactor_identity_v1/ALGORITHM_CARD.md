@@ -12,9 +12,10 @@
   Per-root exact existence, guards/branches, untouched raw-target replay, and
   canonical descriptor release remain mandatory.
 - Custody: factors are canonical primitive positive-leading polynomials and
-  must be distinct after unit/scalar normalization.  Every factor has a bound
-  descriptor-artifact SHA; source, exact system, descriptor set, and job SHAs
-  are passed into the frozen exact-link artifact and returned by the candidate.
+  must be irreducible and distinct after unit/scalar normalization.  Every
+  factor has a unique bound descriptor-artifact SHA; source, exact system,
+  descriptor set, and job SHAs are passed into the frozen exact-link artifact
+  and must be returned unchanged by the candidate.
 - Routing: source equations and already exact-replayed reservoir descriptors
   only.  No ID, family, truth, expected count/value, or prior outcome.
 - D0 gate: mixed rational/quadratic components, target-collapsed components,

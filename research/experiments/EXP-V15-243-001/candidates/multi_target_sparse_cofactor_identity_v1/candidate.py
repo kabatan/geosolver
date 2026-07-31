@@ -58,6 +58,8 @@ def _canonical_factor(coefficients: Sequence[int]) -> tuple[int, ...]:
         primitive = -primitive
     if primitive.sqf_part() != primitive:
         raise ValueError("target factor must be square-free")
+    if primitive.is_irreducible is not True:
+        raise ValueError("target factor must be irreducible over Q")
     return tuple(int(item) for item in primitive.all_coeffs())
 
 
@@ -109,6 +111,8 @@ def prove_multi_target_identity(
     source_sha256 = _require_sha256(source_sha256, "source_sha256")
     if len(descriptor_artifact_sha256s) != len(factors_high_to_low):
         raise ValueError("every target factor requires one descriptor artifact binding")
+    if len(set(descriptor_artifact_sha256s)) != len(descriptor_artifact_sha256s):
+        raise ValueError("descriptor artifact bindings must be unique")
     canonical_factors = tuple(_canonical_factor(item) for item in factors_high_to_low)
     bound_factors = sorted(
         (
@@ -149,7 +153,11 @@ def prove_multi_target_identity(
         target_descriptor_sha256=descriptor_set_sha256,
     )
     proof_valid = bool(
-        proof.get("status") == "VERIFIED" and exact_link.verify_artifact(proof)
+        proof.get("status") == "VERIFIED"
+        and proof.get("job_sha256") == job_sha256
+        and proof.get("system_sha256") == system_sha256
+        and proof.get("target_descriptor_sha256") == descriptor_set_sha256
+        and exact_link.verify_artifact(proof)
     )
     factor_digests = [
         hashlib.sha256(
@@ -165,7 +173,7 @@ def prove_multi_target_identity(
         "target_set_completeness_claim": False,
         "truth_used": False,
         "case_family_target_count_routing": False,
-        "factor_count": len(factors_high_to_low),
+        "factor_count": len(bound_factors),
         "factor_digests": factor_digests,
         "product_degree": len(product) - 1,
         "product_coefficients_high_to_low": list(product),

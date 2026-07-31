@@ -18,6 +18,11 @@ def test_duplicate_or_scaled_equivalent_factors_reject() -> None:
         squarefree_product([[1, -1], [2, -2]])
 
 
+def test_reducible_factor_rejects() -> None:
+    with pytest.raises(ValueError, match="irreducible"):
+        squarefree_product([[1, 0, -1], [1, -2]])
+
+
 def test_product_proves_all_components_where_one_factor_does_not() -> None:
     result = prove_multi_target_identity(
         variables=["x"],
