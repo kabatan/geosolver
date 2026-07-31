@@ -25,6 +25,12 @@ APPROVED_ORIGINAL_ROOT = Path(
     "/home/kabatan/work/solver-experiment-results/"
     "formal-control-development145-180-seed0/artifacts"
 ).resolve()
+APPROVED_DEGREE1_REQUESTS = Path(
+    "/home/kabatan/work/solver-experiment-results/partial-ideal-root-readiness-v1/degree1-requests.json"
+).resolve()
+APPROVED_DEGREE1_REQUESTS_SHA256 = (
+    "ee424315256582652ea0df72a05c21903a5fd4366867c6788129a79e4f80fd35"
+)
 DEGREE1_REQUEST_KEYS = frozenset(
     {"source_path", "endpoint", "candidate_relation_high_to_low"}
 )
@@ -128,6 +134,8 @@ def main() -> int:
     arguments = _parser().parse_args()
     if os.sched_getaffinity(0) != {arguments.expected_cpu}:
         raise SystemExit("manifest builder must be pinned to expected CPU")
+    if arguments.expected_count != 4:
+        raise SystemExit("selected panel cardinality is frozen at four")
     source_root = arguments.source_root.resolve()
     proposal_root = arguments.proposal_root.resolve()
     original_root = arguments.original_artifact_root.resolve()
@@ -145,8 +153,14 @@ def main() -> int:
     if manifest.exists():
         raise SystemExit("selected manifest already exists")
 
+    if arguments.degree1_requests.resolve() != APPROVED_DEGREE1_REQUESTS:
+        raise SystemExit("degree-one requests are outside approved custody")
+
     request_payload = arguments.degree1_requests.read_bytes()
-    if _sha256(request_payload) != arguments.degree1_requests_sha256.lower():
+    if (
+        arguments.degree1_requests_sha256.lower() != APPROVED_DEGREE1_REQUESTS_SHA256
+        or _sha256(request_payload) != APPROVED_DEGREE1_REQUESTS_SHA256
+    ):
         raise SystemExit("degree-one request SHA-256 mismatch")
     degree1_requests = json.loads(request_payload)
     if not isinstance(degree1_requests, list):

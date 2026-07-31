@@ -96,6 +96,16 @@ def _sha256(payload: bytes) -> str:
     return hashlib.sha256(payload).hexdigest()
 
 
+def is_sha256(value: object) -> bool:
+    if not isinstance(value, str) or len(value) != 64 or value.lower() != value:
+        return False
+    try:
+        bytes.fromhex(value)
+    except ValueError:
+        return False
+    return True
+
+
 def canonical_bytes(value: object) -> bytes:
     return json.dumps(
         value,
@@ -230,6 +240,7 @@ def _ordinary_descriptor(
         proposal_artifact.get("schema_version") != PROPOSAL_SCHEMA
         or proposal_artifact.get("source_sha256") != source_sha256
         or proposal_artifact.get("endpoint_float64_sha256") != endpoint_sha256
+        or not is_sha256(proposal_artifact.get("original_result_sha256"))
         or proposal_artifact.get("truth_used") is not False
         or proposal_artifact.get("case_family_target_count_routing") is not False
     ):
@@ -400,6 +411,7 @@ def connect(
             },
             "ordinary_descriptor_sha256": descriptor_sha256,
             "proposal_artifact_sha256": proposal_sha256,
+            "original_result_sha256": proposal_artifact["original_result_sha256"],
             "ordinary_attempt_sha256": proposal_artifact["ordinary_attempt_sha256"],
             "nra_witness_sha256": witness.get("witness_sha256"),
             "source_replay_bridge_sha256": metadata["private_bridge_ledger"].get(
@@ -445,4 +457,5 @@ __all__ = [
     "descriptor_identity",
     "endpoint_bits_hex",
     "endpoint_float64_sha256",
+    "is_sha256",
 ]
