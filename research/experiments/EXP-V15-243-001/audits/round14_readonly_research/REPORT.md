@@ -116,3 +116,121 @@ descriptor-existence witnesses join independently.
 Both remain source-only census proposals.  Neither may proceed without four
 eligible sources in two anonymous operator signatures and strict nonoverlap
 with existing EDM/Gram, typed Angle, and sector mechanisms.
+
+## 5. Round 15 strict representation censuses
+
+The projective-bracket route was recounted with the raw target admitted as
+solver input but with every source equation, guard, definedness condition, and
+branch required to close in an affine/projective bracket frame.  A conservative
+Point/Line/Intersect/Midpoint/Centroid/Parallel cover produced `0/145` strict
+sources and zero signatures.  The earlier loose `10/145` count silently left
+metric obligations outside the proof and is superseded.  Adding an absolute
+conic would reproduce the existing Gram/CGA algebra, so the route is
+`STOP_STRICT_SOURCE_CLOSURE`.
+
+A conformal geometric algebra upper census admitted 64 sources in ten shapes
+through Line/Circle blades and typed intersections/tangency, including 38
+circle-bearing sources.  Its exact operator coverage was nevertheless already
+owned by the QQBar/Gram compiler, ruler-and-compass line/circle intersections,
+and typed Angle/sector lifts.  It is `STOP_DUPLICATE_REPRESENTATION`, not a new
+solver mechanism.
+
+## 6. Round 16 source-height target-zero separation
+
+Arithmetic Nullstellensatz bounds by Krick--Pardo--Sombra are global
+certificate/height tools.  Reconstructing a resultant or Groebner basis from
+them would duplicate an existing exact backend.  A narrower theorem-level
+route remains distinct: the DMM isolated-root separation bound of
+Emiris--Mourrain--Tsigaridas applies to an augmented integer system
+`f_1=...=f_n=0, y-q(x)=0` and supplies a nonzero lower bound for `|y|` from
+source degree, coefficient bits, and mixed-volume or dense bounds, without
+constructing a resultant at runtime.
+
+For a Krawczyk-isolated regular root, shift every coordinate exactly away from
+zero, prove the raw-target denominator nonzero, and interval-refine `q(X)`.
+If `|q(X)|` is strictly below the DMM lower bound, then `q(alpha)=0`.  All
+source/guard/branch replay and descriptor irreducibility/ordinal checks remain
+mandatory.  The bound is exponentially pessimistic, so status is
+`HOLD_SOURCE_PRECISION_CENSUS`: reopen only if at least four sources in two
+signatures close within a fixed precision cap.
+
+Primary sources:
+
+- https://arxiv.org/abs/1005.5610
+- https://arxiv.org/abs/math/9911094
+- https://arxiv.org/abs/alg-geom/9608010
+
+## 7. Round 17 factorized Hermite fibre
+
+The anonymous degree-one panel gave ten exact-QQ complete typed covers; exactly
+one met the old global syntactic Hermite caps.  A relaxed exact-algebraic
+coefficient census gave a safe 13-source upper set containing the known eleven
+ordinary exact-semialgebraic opportunities.  Every one of the 13
+equation-variable incidence graphs was connected.  Hence disconnected product
+blocks, strict factorable sources, and per-block cap rescues were all zero.
+
+All 13 systems did have multiple matching-derived block-triangular SCCs, but
+these are dependent blocks: downstream equations contain upstream variables.
+Independent Hermite nonemptiness counts cannot be multiplied or AND-composed.
+Doing so soundly requires ordered algebraic specialization along a triangular
+tower, which is LUR/RUR/triangular-decomposition work.  The proposed simple
+composition is `STOP_NO_INDEPENDENT_PRODUCT`.  Reopen only with at least four
+sources/two signatures having disconnected equation-variable components, a
+target local to one component, and every semantic obligation local to exactly
+one component.
+
+## 8. Round 18 partial radical border-basis Hermite witness
+
+Akoglu--Szanto reconstructs exact rational Hermite matrices from approximate
+roots and verifies multiplication matrices.  Its published complete-ideal
+theorem assumes the reconstructed size is at least the quotient dimension;
+the paper's root-near-a-point corollary also uses the Hermite matrices of the
+whole zero-dimensional ideal.  A proposal cluster must therefore never be
+called complete merely because its moments reconstruct.
+
+There is, however, a narrower theorem obligation visible before the equality
+step in the proof of their Theorem 4.2.  Let `I=<f>` be the exact source/fibre
+ideal.  From a proposal-bound cluster reconstruct a rational extended moment
+matrix on a monomial set `B` connected to one.  Exact verification must prove:
+
+1. `H_B` and the extended matrix have the same full rank `k`;
+2. the induced rational multiplication matrices `M_i` satisfy the border
+   identities and commute;
+3. a rational separating combination of the `M_i` has square-free
+   characteristic polynomial;
+4. every exact source/fibre generator satisfies `f_j(M)=0`;
+5. recomputed trace moments agree with the proposed moment matrix.
+
+These checks construct a radical zero-dimensional border-basis ideal `J` with
+`I subset J`, hence `V(J) subset V(I)`, without needing `J=I` and without an
+all-complex-roots assumption.  Hermite/Tarski sign determination over `J` can
+then prove that at least one of those exact source roots lies in a rational
+box, satisfies every guard/definedness/branch predicate, and lies in the
+proposed target fibre `p(raw_target)=0` and its rational isolator.  Coordinate
+minimal polynomials are never constructed; the exact object is the local
+quotient representation.  The output is an existence witness only and makes
+no target-set completeness claim.
+
+The source-only structural upper gate found 16 complete QQ covers in the
+development control proposals; 15 had at least four distinct endpoint hashes
+for one exact ordinary descriptor, across 15 anonymous structural signatures.
+This is cluster availability, not proof: a real-only subset need not be
+Galois-stable, so its moments may not reconstruct over QQ.  Advance only if an
+exact reconstruction D0 proves the five obligations and a positive Tarski
+count on at least four sources/two signatures under frozen dimension,
+denominator, and precision caps.  Any missing conjugates cause fail-closed
+rational reconstruction, never cluster padding or an inferred completeness
+claim.
+
+This `PARTIAL_RADICAL_BORDER_BASIS_HERMITE` route is mathematically distinct
+only in its strict local-subideal authority.  If it computes the complete
+source quotient, an eliminant, coordinate RURs, or LUR projection polynomials,
+it becomes a stopped global quotient-backend duplicate.  Cheng--Gao--Guo LUR
+itself is not a local escape: its algorithm starts with a Groebner basis and a
+monomial basis of the full quotient and computes elimination polynomials whose
+isolating boxes cover every root.  LUR is therefore `STOP_GLOBAL_GROEBNER_AND_ALL_ROOTS`.
+
+Primary sources:
+
+- https://arxiv.org/abs/2110.10313
+- https://arxiv.org/abs/1102.4681
