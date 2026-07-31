@@ -76,8 +76,42 @@ common-control objects.
 Generated connector parity used the real frozen worker on a one-variable
 strict-guard source.  With a completed fixed callback budget, collect and
 baseline search results were equal after removing only elapsed wall time.
-All 18 focused tests pass on CPU14.  The real screen gate remains Root-only;
-the 25% portal quota may be implemented only after aggregate recurrence passes.
+All 18 collect-focused tests passed on CPU14.  Root's collect-only screen24
+seed 0 aggregate then supplied 11 complete typed pools with at least eight
+interior observations, seven low-residual invalid endpoints across four
+anonymous sources, 46,450 charged callbacks, 22,968 unique finite typed
+observations, 399 endpoint observations, and zero accounting mismatches.  This
+satisfies the frozen global dynamic gate.  No individual row or case outcome
+was returned to this lane.
+
+## Repair A: real-gate portal splice
+
+`portal_search_worker.py` observes the same in-process pool and monkey-patches
+only the frozen worker's `run_local_arm` binding.  It executes the first three
+starts of the immutable literal prefix in original order, then marks only
+endpoints already returned by those baseline lanes and selects the first
+existing source-INTERIOR vertex where a strict invalid-endpoint-minimum lower-
+star component merges into an interior component.  This first complete 3:1
+block makes activation reachable under the 5-second screen instead of waiting
+for all 192 nominal baseline starts.
+
+One midpoint evaluation is charged inside the side quota, then that existing
+interior vertex is passed as a start to the unchanged canonical local kernel.
+The side callback cap is always at most exactly 25% of the original aggregate
+cap, including the midpoint, even if baseline lanes finish early.  If time and
+the baseline allowance remain, the original prefix resumes at ordinal four.
+The portal replaces only ordinal three, so all period-four product-Cauchy
+insurance ordinals remain baseline.  HP, reservoir, verifier, canonical source
+replay, candidate kernel, and search arm remain exact control.
+
+Incomplete typing, fewer than eight interior vertices, missing endpoint
+minimum, kNN/residual ties, or no qualifying component merge make the local
+gate UNKNOWN.  In that case the trailing original prefix is run in order with
+the unchanged per-start kernel and callback cap; no candidate counter is added
+to the search result.  A generated real-worker negative test matches control
+after removing elapsed wall time.  A generated positive pool activates one
+existing-interior portal and one charged midpoint.  All 26 focused tests pass
+on CPU14.  Root-only screen24 5-second seeds 0--2 comparison remains pending.
 
 ## Nearest mechanisms and reopen
 
