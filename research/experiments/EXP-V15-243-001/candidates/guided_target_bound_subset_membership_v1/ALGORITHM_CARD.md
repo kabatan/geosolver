@@ -2,7 +2,7 @@
 
 ## Disposition
 
-`REPAIR_B SYNTHETIC_GO / AGGREGATE CENSUS READY / AUTHORITY HOLD`
+`REPAIR_B SYNTHETIC_GO / ROOT CENSUS STOP / AUTHORITY HOLD`
 
 Repair A's root-owned census found no powered-remainder failures.  Instead,
 76/85 requests stopped at the source-equality gate and 9/85 at target
@@ -65,3 +65,13 @@ signatures.  It emits no paths, endpoints, relations, q values, raw reasons,
 signature values, histograms, or individual records.  Its proposal is a
 projection only; all outputs fix complete ordinary binding false,
 `authority_pass=false`, `target_release=false`, and common integration HOLD.
+
+Root census outcome: 85/85 degree-one projections were accepted and 19/85 had
+a typed root job, but Repair B produced 0 identities and 0 typed-prejoin
+intersections.  Fixed failure taxonomy was 76
+`NO_SAFE_SOURCE_EQUALITY_GENERATOR` and 9
+`TARGET_OUTSIDE_SAFE_POLYNOMIAL_SUBSET`; remainder, cap, cofactor, deadline,
+authority, and release counts were all zero.  The accounting repair worked,
+but the frozen narrow compiler cannot produce a generator on these sources.
+After direct membership, radical-square, and bound-subset mechanisms all
+returned zero, this route is stopped rather than tuning caps or thresholds.
