@@ -85,9 +85,43 @@ env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
   --output STATIC_APPLICABILITY_RESULT.json --expected-cpu 14
 ```
 
-## Next bounded step
+## Frozen selected-execution runner (not executed here)
 
-Rerun the frozen static predicate inside a contained worker, execute msolve only
-for the eligible anonymous subset under a strict route quota, and return each
-candidate to complete canonical QQBar source replay. Do not allocate portfolio
-authority from static eligibility alone.
+The bounded next-step runner is now frozen, but only the benchmark owner may
+execute it. It rescans all 85 anonymous requests with the exact static predicate
+above and launches only eligible requests. Every selected request gets a fresh
+process pinned to CPU14, a 30-second outer wall cap, a 2-GiB aggregate RSS cap,
+4-GiB address-space cap, 3-GiB data cap, one native thread, and the shared global
+benchmark and sole-CAS locks.
+
+The child runs the digest-pinned msolve wrapper, exact rational box selection,
+the existing FLINT irreducible-factor stage, the repaired lossless BigInt
+transport, and the existing Nemo QQBar source replay. Conversion is recorded
+only when the untouched construction/constraints, guards, bounds, branch
+selectors, and raw target link all pass exact replay. The degree-one projection
+is not the complete ordinary proposal: every artifact therefore retains
+`ordinary_full_proposal_binding=false`, `authority_pass=false`,
+`target_release=false`, and no completeness claim.
+
+Individual request, source, target, failure, CAS, and replay artifacts remain in
+the root-owned directory outside Git. The public JSON contains only cumulative
+stage counts, converted count, anonymous converted-signature cardinality, and
+false-authority count. The preregistered advance threshold is at least 3
+conversions, at least 2 signatures, and false-authority count 0.
+
+Benchmark-owner invocation (the raw directory must not already exist):
+
+```bash
+env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 OMP_THREAD_LIMIT=1 \
+  MKL_NUM_THREADS=1 BLIS_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 \
+  JULIA_NUM_THREADS=1 taskset -c 14 \
+  /home/kabatan/work/solver/.venv/bin/python run_selected_execution.py \
+  --requests /home/kabatan/work/solver-experiment-results/partial-ideal-root-readiness-v1/degree1-requests.json \
+  --requests-sha256 ee424315256582652ea0df72a05c21903a5fd4366867c6788129a79e4f80fd35 \
+  --raw-output-dir /home/kabatan/work/solver-artifacts/EXP-V15-243-001/MSOLVE_EXACT_WITNESS_BIGINT_TRANSPORT_REOPEN_V1/SELECTED_EXECUTION_RUN_001 \
+  --output /home/kabatan/work/solver-artifacts/EXP-V15-243-001/MSOLVE_EXACT_WITNESS_BIGINT_TRANSPORT_REOPEN_V1/SELECTED_EXECUTION_RUN_001_PUBLIC.json \
+  --expected-cpu 14
+```
+
+No msolve, FLINT factorization, Julia/Nemo worker, formal scorer, truth, full98,
+validation, or sealed evaluation was run while preparing this freeze.
