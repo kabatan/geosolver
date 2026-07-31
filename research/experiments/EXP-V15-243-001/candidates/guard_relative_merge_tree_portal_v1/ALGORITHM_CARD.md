@@ -55,6 +55,30 @@ in this lane; Root owns aggregate observation custody.  No corpus, formal
 runner, scorer, truth, 98-case, validation, sealed input, or individual result
 was accessed.
 
+## Collect-only real gate connector
+
+`collect_search_worker.py` loads the exact frozen champion-v0 search worker
+(`ce2dd5...`) and replaces only the already charged `SourceOnlyCase.evaluate`
+callable.  The original callback is called exactly once and its identical
+return object is forwarded to the solver.  At most 1,200 unique finite typed
+observations are retained in process.  Progressive residual calls are neither
+replayed nor inspected, hard-feasibility-only failures are excluded, and no
+individual observation is written to disk.
+
+After the unchanged `search.json` exists, its existing endpoints are matched
+against the in-memory pool.  Only aggregate `dynamic_gate` counts are written
+to `search.json.guard-merge-gate.json`; the baseline result is SHA-bound and
+left byte-for-byte unchanged.  The portal proposal and side quota are both
+OFF.  The full wrapper rebinds only `BASE.SEARCH_WORKER`; search adapter,
+candidate, arm, HP, reservoir, verifier, and canonical replay remain the exact
+common-control objects.
+
+Generated connector parity used the real frozen worker on a one-variable
+strict-guard source.  With a completed fixed callback budget, collect and
+baseline search results were equal after removing only elapsed wall time.
+All 18 focused tests pass on CPU14.  The real screen gate remains Root-only;
+the 25% portal quota may be implemented only after aggregate recurrence passes.
+
 ## Nearest mechanisms and reopen
 
 Barrier/guard penalties are not reused: invalid endpoints never become
