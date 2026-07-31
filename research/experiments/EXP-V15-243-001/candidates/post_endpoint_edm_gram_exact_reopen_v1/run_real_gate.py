@@ -27,6 +27,11 @@ REQUESTS_SHA256 = "ee424315256582652ea0df72a05c21903a5fd4366867c6788129a79e4f80f
 APPROVED_SOURCE_ROOT = Path(
     "/home/kabatan/work/solver-experiment-results/partial-ideal-root-readiness-v1/degree1-inputs"
 ).resolve()
+APPROVED_REQUESTS = APPROVED_SOURCE_ROOT.parent / "degree1-requests.json"
+PANEL_PROVENANCE = APPROVED_SOURCE_ROOT.parent / "DEGREE1_REQUEST_AGGREGATE.json"
+PANEL_PROVENANCE_SHA256 = "c686498c6fec6b5a8f6d03eae68ef991ed1ea6998d3ea9479ba78d25f9ea74d3"
+APPROVED_PYTHON = Path("/home/kabatan/work/solver/.venv/bin/python").resolve()
+APPROVED_PYTHON_SHA256 = "ccc93c55c24bb92866cc2f9eff61b124abf5d1ee6c8da0ef9b5eed4d78a21f07"
 ROW_KEYS = frozenset(("candidate_relation_high_to_low", "endpoint", "source_path"))
 FORBIDDEN_SOURCE_KEYS = frozenset(
     ("id", "case_id", "problem_id", "family", "truth", "outcome", "result", "score", "known_count")
@@ -207,13 +212,66 @@ def _source_replay_ready(evaluator, endpoint) -> bool:
 
 
 def _exact_ready(value: object, source_sha: str, endpoint_sha: str) -> bool:
+    exact = value.get("exact_coordinate_authority") if isinstance(value, Mapping) else None
+    numeric = value.get("numeric_source_replay") if isinstance(value, Mapping) else None
+    lanes = numeric.get("lane_source_replay") if isinstance(numeric, Mapping) else None
     return bool(
         isinstance(value, Mapping)
+        and value.get("schema_version") == "geotarget.v15-243-exact-coordinate-fallback/v1"
+        and value.get("completed") is True
         and value.get("status") == "EXACT_COORDINATE_TARGET_AUTHORITY_READY"
         and value.get("authority_pass") is True
         and value.get("source_sha256") == source_sha
         and value.get("endpoint_float64_sha256") == endpoint_sha
         and value.get("truth_used") is False
+        and value.get("case_family_known_target_count_routing") is False
+        and value.get("source_or_problem_modified") is False
+        and value.get("bounds_added_or_inferred") is False
+        and value.get("coordinate_reparameterization") is False
+        and value.get("target_set_completeness_claim") is False
+        and value.get("within_fallback_wall_budget") is True
+        and value.get("numeric_guard_branch_replay_is_authority") is True
+        and value.get("numeric_target_nearness_is_authority") is False
+        and value.get("numeric_float_residual_is_authority") is False
+        and isinstance(value.get("descriptor"), Mapping)
+        and isinstance(exact, Mapping)
+        and exact.get("schema_version") == "geotarget.v15-243-exact-coordinate-replay/v1"
+        and exact.get("status") == "EXACT_TARGET_AUTHORITY_READY"
+        and exact.get("authority_pass") is True
+        and exact.get("truth_used") is False
+        and exact.get("source_replay_required") is True
+        and exact.get("source_semantic_lowering_endpoint_independent") is True
+        and isinstance(exact.get("source_constraints_exact"), int)
+        and not isinstance(exact.get("source_constraints_exact"), bool)
+        and exact.get("source_constraints_exact") >= 0
+        and isinstance(exact.get("source_guards_exact"), int)
+        and not isinstance(exact.get("source_guards_exact"), bool)
+        and exact.get("source_guards_exact") >= 0
+        and isinstance(exact.get("source_bounds_exact"), int)
+        and not isinstance(exact.get("source_bounds_exact"), bool)
+        and exact.get("source_bounds_exact") >= 0
+        and exact.get("source_raw_answer_exact") is True
+        and exact.get("target_link_exact") is True
+        and exact.get("post_process_used") is False
+        and exact.get("target_set_completeness_claim") is False
+        and isinstance(numeric, Mapping)
+        and numeric.get("schema_version") == "geotarget.v15-243-frozen-numeric-source-replay/v1"
+        and numeric.get("source_sha256") == source_sha
+        and numeric.get("float_endpoint_source_replay_required") is True
+        and numeric.get("all_precision_lanes_guard_and_hard_feasible") is True
+        and numeric.get("all_precision_lanes_source_residual_reached") is True
+        and numeric.get("coordinates_linked_to_exact_roots_by_independent_lanes") is True
+        and numeric.get("branch_and_guard_parity_is_not_inferred_from_qqbar") is True
+        and isinstance(lanes, Mapping)
+        and set(lanes) == {"155", "232", "320"}
+        and all(
+            isinstance(lanes[key], Mapping)
+            and lanes[key].get("guard_ok") is True
+            and lanes[key].get("hard_feasible") is True
+            and lanes[key].get("residual_reached") is True
+            and lanes[key].get("answer_defined") is True
+            for key in ("155", "232", "320")
+        )
     )
 
 
@@ -241,6 +299,8 @@ def _run_exact(python: Path, worker: Path, source: Path, source_sha: str, endpoi
             result = json.loads(output.read_bytes())
         except (OSError, json.JSONDecodeError):
             return False, endpoint_sha
+        if _sha(source.read_bytes()) != source_sha:
+            raise SystemExit("source bytes changed across exact replay")
     return _exact_ready(result, source_sha, endpoint_sha), endpoint_sha
 
 
@@ -259,10 +319,29 @@ def main() -> int:
     arguments = parser.parse_args()
     if arguments.execute_exact and not arguments.execute_stored:
         raise SystemExit("exact gate requires stored gate")
+    if arguments.python.resolve() != APPROVED_PYTHON or _sha(APPROVED_PYTHON.read_bytes()) != APPROVED_PYTHON_SHA256:
+        raise SystemExit("unapproved exact-gate Python")
     if os.sched_getaffinity(0) != {arguments.expected_cpu}:
         raise SystemExit("real gate must be pinned to expected CPU")
     if arguments.source_root.resolve() != APPROVED_SOURCE_ROOT:
         raise SystemExit("unapproved anonymous source root")
+    if arguments.requests.resolve() != APPROVED_REQUESTS:
+        raise SystemExit("unapproved anonymous request panel")
+    provenance_payload = PANEL_PROVENANCE.read_bytes()
+    if _sha(provenance_payload) != PANEL_PROVENANCE_SHA256:
+        raise SystemExit("request-panel provenance SHA mismatch")
+    provenance = json.loads(provenance_payload)
+    if provenance != {
+        "anonymous_projection_count": 85,
+        "answer_field_semantics": "untouched source raw-target expression only",
+        "offline_truth_or_expected_value_retained": False,
+        "problem_ids_retained": False,
+        "request_count": 85,
+        "requests_sha256": REQUESTS_SHA256,
+        "schema_version": "partial-ideal-degree1-request-panel-v1",
+        "selection": "first degree-one ordinary HP proposal per source; no exact outcome filter",
+    }:
+        raise SystemExit("request-panel outcome-blind provenance mismatch")
     request_payload = arguments.requests.read_bytes()
     if _sha(request_payload) != REQUESTS_SHA256:
         raise SystemExit("requests SHA mismatch")
@@ -274,7 +353,12 @@ def main() -> int:
     static_signatures = set()
     counters = Counter()
     for row in rows:
-        source = Path(str(row["source_path"])).resolve()
+        source_argument = Path(str(row["source_path"])).absolute()
+        if source_argument.is_symlink():
+            raise SystemExit("anonymous source projection is a symlink")
+        source = source_argument.resolve()
+        if source.parent != APPROVED_SOURCE_ROOT or len(source.stem) != 4 or not source.stem.isdigit() or source.suffix != ".json":
+            raise SystemExit("anonymous source path is not a direct four-digit projection")
         try:
             source.relative_to(APPROVED_SOURCE_ROOT)
         except ValueError:
@@ -377,22 +461,50 @@ def main() -> int:
             counters["stored_activated"] += 1
 
             if arguments.execute_exact:
-                candidate_ready = []
+                baseline_sha = _endpoint_sha(endpoint)
+                distinct = []
+                seen = set()
                 for proposal in proposals:
-                    ready, proposal_sha = _run_exact(
+                    proposal_sha = _endpoint_sha(proposal)
+                    if proposal_sha == baseline_sha:
+                        counters["candidate_endpoint_digest_equals_baseline"] += 1
+                    elif proposal_sha in seen:
+                        counters["candidate_endpoint_digest_duplicate"] += 1
+                    else:
+                        distinct.append(proposal)
+                        seen.add(proposal_sha)
+                if not distinct:
+                    counters["candidate_no_distinct_endpoint_for_exact_gate"] += 1
+                    continue
+
+                # Fixed ABBA: exactly two candidate and two baseline calls at
+                # the same per-call deadline.  One candidate is duplicated if
+                # only one reflection survives; neither readiness outcome can
+                # suppress a later call.
+                candidate_attempts = (distinct + distinct)[:2]
+                schedule = (
+                    ("candidate", candidate_attempts[0]),
+                    ("baseline", endpoint),
+                    ("baseline", endpoint),
+                    ("candidate", candidate_attempts[1]),
+                )
+                candidate_ready = []
+                baseline_ready = False
+                for route, exact_endpoint in schedule:
+                    ready, exact_sha = _run_exact(
                         arguments.python.resolve(), exact_worker, source, source_sha,
-                        proposal, arguments.exact_timeout_seconds,
+                        exact_endpoint, arguments.exact_timeout_seconds,
                     )
-                    if ready:
-                        candidate_ready.append(proposal_sha)
+                    counters[f"{route}_exact_attempt"] += 1
+                    if route == "candidate" and ready:
+                        candidate_ready.append(exact_sha)
+                    elif route == "baseline" and ready:
+                        baseline_ready = True
+                candidate_ready = sorted(set(candidate_ready))
                 if candidate_ready:
                     counters["candidate_exact_replay_ready"] += 1
-                    baseline_ready, _baseline_sha = _run_exact(
-                        arguments.python.resolve(), exact_worker, source, source_sha,
-                        endpoint, arguments.exact_timeout_seconds,
-                    )
-                else:
-                    baseline_ready = False
+                if baseline_ready:
+                    counters["baseline_exact_replay_ready"] += 1
                 if candidate_ready and not baseline_ready:
                     pure_sources.add(source_sha)
                     pure_signatures.add(signature)
@@ -424,6 +536,9 @@ def main() -> int:
         "schema_version": "geotarget.post-endpoint-edm-gram-exact-reopen-real-gate/v1",
         "request_count": len(rows),
         "requests_sha256": REQUESTS_SHA256,
+        "request_panel_provenance_sha256": PANEL_PROVENANCE_SHA256,
+        "python_sha256": APPROVED_PYTHON_SHA256,
+        "exact_schedule": "ABBA_TWO_CANDIDATE_TWO_BASELINE_EQUAL_TIMEOUT",
         "static_activated_source_count": counters["static_activated"],
         "static_signature_count": len(static_signatures),
         "stored_activated_source_count": len(stored_sources),

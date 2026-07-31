@@ -31,10 +31,14 @@
 - Pure-gain exact replay remains pending. Mechanism SHA-256 `candidate.py`
   `1f30a8e5c334d6e1d1c1583afe9b06d2d1d7a5c4c326209d93fafc7c775c5270`;
   real runner
-  `0b125743dccd7f3246e2e6c3169a1007e619f6ff8158bc8f9da26e0842fd8d26`.
+  `2d46ac14710b934b6792ae2f4d2476b81def64e625602c9f0f55bf8963e1bf92`.
 - Queue state: `REAL_GATE_BLOCKED_BY_GLOBAL_LOCK`, not a candidate failure.
+  P1 audit repair pins the Python binary and outcome-blind panel provenance,
+  rejects candidate endpoints whose Float64 digest equals the baseline,
+  executes fixed ABBA with exactly two equal-timeout calls per route, and
+  requires the full schema/source/parser/guard/raw-target terminal contract.
   The frozen pure-gain command uses the same anonymous panel SHA above,
-  `--execute-stored --execute-exact --exact-timeout-seconds 20`, candidate
-  endpoint first, and the frozen exact-coordinate fallback worker
+  `--execute-stored --execute-exact --exact-timeout-seconds 20`, and the
+  frozen exact-coordinate fallback worker
   `44d6fa802dc51e7f58e5a72e48b434a62be84275c328bd605f0e9e2f6eb11900`
-  on the original endpoint only when the candidate reaches exact replay.
+  in fresh subprocesses. It has not been executed after the P1 repair.
