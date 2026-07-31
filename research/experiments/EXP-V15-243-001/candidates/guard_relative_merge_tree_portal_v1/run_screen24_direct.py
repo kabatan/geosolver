@@ -47,11 +47,12 @@ def _run_one(
     seed: int,
 ) -> dict[str, object]:
     output.parent.mkdir(parents=True, exist_ok=True)
+    if output.is_file():
+        return _read_result(output, source_sha)
     environment = os.environ.copy()
     environment.update(THREAD_ENV)
     started = time.monotonic()
-    completed = subprocess.run(
-        [
+    command = [
             str(PYTHON),
             str(worker),
             "--case",
@@ -72,14 +73,19 @@ def _run_one(
             str(seed),
             "--output",
             str(output),
-        ],
-        cwd=worker.parent,
-        env=environment,
-        check=False,
-        capture_output=True,
-        text=True,
-        timeout=9.0,
-    )
+        ]
+    try:
+        completed = subprocess.run(
+            command,
+            cwd=worker.parent,
+            env=environment,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=20.0,
+        )
+    except subprocess.TimeoutExpired:
+        return {"ok": False, "returncode": "TIMEOUT", "wall": 20.0}
     wall = time.monotonic() - started
     if completed.returncode != 0 or not output.is_file():
         return {
@@ -88,6 +94,10 @@ def _run_one(
             "wall": wall,
             "stderr_tail": completed.stderr[-300:],
         }
+    return _read_result(output, source_sha)
+
+
+def _read_result(output: Path, source_sha: str) -> dict[str, object]:
     document = json.loads(output.read_text(encoding="utf-8"))
     work = document.get("work") if isinstance(document, Mapping) else None
     safety = bool(
@@ -105,7 +115,7 @@ def _run_one(
     )
     return {
         "ok": safety,
-        "wall": wall,
+        "wall": float(document.get("elapsed_wall_seconds", math.nan)),
         "safe_endpoint_count": int(document.get("safe_endpoint_count", 0)),
         "diagnostic_distinct_target_count": int(
             document.get("diagnostic_distinct_target_count", 0)
