@@ -36,3 +36,21 @@ Expected elapsed time is 30–90 seconds; the preregistered worst-case row-wall
 sum is 255 seconds and the outer hard wall is 300 seconds.  This command does
 not import or invoke Julia, Nemo, HP, a global machine lock, a scorer, or a
 formal authority.
+
+## Frozen result
+
+The root-owned one-shot run completed all 85 rows with process classification
+`SUCCESS`.  Proposal-ready sources, proposals, and full-replay-ready sources
+were all zero.  The aggregate failure taxonomy was
+`SEMANTIC_LIFT_REJECTED=84` and
+`PERIODIC_SOURCE_RECONSTRUCTION_NOT_IMPLEMENTED=1`.  Malformed/resource rows,
+selection/truth violations, and authority/release violations were all zero.
+Maximum observed row wall was 0.311 seconds and maximum process-group RSS was
+58,535,936 bytes, below the fixed caps.
+
+Decision: `STOP_ANONYMOUS_CENSUS`; no tuning or retry was performed.  The
+repository-external aggregate SHA-256 is
+`577608149bcd69375dd585f58ce0410194ea532bf1545d4c971437759bef4133`.
+Reopen only with a new anonymous row that passes the existing target-blind
+semantic lift, or a separately generated/reviewed exact semantic-lift
+expansion; periodic support also requires a complete finite phase-sheet rule.

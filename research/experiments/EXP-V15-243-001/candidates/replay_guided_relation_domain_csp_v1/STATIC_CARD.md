@@ -102,5 +102,17 @@ Frozen SHA-256 values:
 - generated result:
   `1bf6e273e4f148da3ad0a1e5ac7a57fdb2d4a2df09e91a493cf5e224689c1738`.
 
-This is only a generated/static gate.  No anonymous source census, scorer,
-formal arm, HP process, or canonical authority integration was run.
+The root-owned anonymous degree-1 census subsequently stopped the lineage.
+All 85 isolated row processes completed within their fixed caps, but the
+candidate produced zero proposal-ready sources: 84 were rejected by the
+target-blind semantic lift and one required unimplemented periodic source
+reconstruction.  No proposal, replay authority, release, malformed/resource
+row, or safety-boundary violation occurred.  No scorer, formal arm, HP
+process, or canonical authority integration was run.
+
+Decision: `STOP_ANONYMOUS_CENSUS`.  Reopen only with a new anonymous source
+projection that passes the current target-blind semantic lift, or with a
+separately generated and reviewed semantic-lift expansion that demonstrates
+exact finite-domain replay before another census.  The same degree-1 panel
+and current lift are not a reopen signal; periodic support additionally needs
+a complete finite original-phase-sheet theorem.
