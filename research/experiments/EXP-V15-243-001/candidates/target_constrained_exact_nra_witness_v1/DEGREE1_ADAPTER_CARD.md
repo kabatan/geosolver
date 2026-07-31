@@ -13,7 +13,8 @@ For each projection it:
 3. calls the existing digest-pinned primitive cover and target-link adapter;
 4. calls `candidate.prove` directly with the existing exact backend;
 5. binds and exactly recompiles the existing cover reconstruction and replay
-   ledgers, then embeds all algebraic model coordinates in one QQbar field;
+   ledgers, then embeds all algebraic model coordinates in one exact SymPy
+   algebraic field;
 6. reuses the existing `rur_semantic_replay` reconstruction rules for direct
    and bounded periodic source variables;
 7. calls the existing full geometry `exact_replay/exact_runtime.py` on the
@@ -44,7 +45,7 @@ witnesses, but the limited semantic runtime replayed none.  Repair A changes
 only the representation/replay seam described above; backend caps, timeout,
 and eligibility thresholds are unchanged.
 
-The full generated suite now passes 26/26.  Dedicated CPU14 reconstruction D0
+The full candidate suite now passes 33/33.  Dedicated CPU14 reconstruction D0
 passes algebraic auxiliary, periodic, and selector paths (3/3), rejects a
 recompiled-ledger tamper, backend-target descriptor tamper, and wrong degree-
 one proposal, emits no private witness/target/path, and has zero external
@@ -53,3 +54,10 @@ authority/release events.
 No real panel, corpus source, truth, scorer, case ID, family, outcome,
 validation, or sealed data was read while implementing or testing the
 adapter.  The root benchmark owner exclusively runs the aggregate panel.
+
+An independent review subsequently found that the first census runner did not
+bound caller-supplied source paths.  This is now closed: only regular JSON
+files directly under the frozen anonymous `degree1-inputs` root are admitted,
+and source documents containing identity/family/truth/outcome fields are
+rejected before compilation.  The complete ordinary-proposal connector is
+described in `ORDINARY_BINDING_CARD.md`.

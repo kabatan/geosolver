@@ -37,6 +37,7 @@ def _assess(tmp_path, document, coefficients):
             "candidate_relation_high_to_low": coefficients,
         },
         timeout_seconds=3.0,
+        source_root=tmp_path,
     )
 
 
@@ -66,6 +67,30 @@ def test_post_process_remains_outside_raw_target_theorem(tmp_path):
 def test_nonprimitive_projection_fails_before_backend(tmp_path):
     result = _assess(tmp_path, _document(), [2, -6])
     assert result["descriptor_accepted"] is False
+    assert result["backend_attempted"] is False
+
+
+def test_source_identity_field_is_rejected_before_compilation(tmp_path):
+    document = _document()
+    document["id"] = "forbidden"
+    result = _assess(tmp_path, document, [1, -3])
+    assert result["thin_join_ready"] is False
+    assert result["backend_attempted"] is False
+
+
+def test_source_path_must_stay_in_supplied_anonymous_root(tmp_path):
+    outside = tmp_path.parent / "outside-degree1-source.json"
+    outside.write_text(json.dumps(_document()), encoding="utf-8")
+    result = _assess_request(
+        {
+            "source_path": str(outside),
+            "endpoint": [3.0],
+            "candidate_relation_high_to_low": [1, -3],
+        },
+        timeout_seconds=3.0,
+        source_root=tmp_path,
+    )
+    assert result["thin_join_ready"] is False
     assert result["backend_attempted"] is False
 
 

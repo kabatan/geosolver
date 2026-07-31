@@ -36,15 +36,19 @@ RUNTIME_ROOT = Path(
         "/home/kabatan/work/solver-experiment-runtime/solver",
     )
 ).resolve()
+PANEL_SOURCE_ROOT = Path(
+    "/home/kabatan/work/solver-experiment-results/partial-ideal-root-readiness-v1/degree1-inputs"
+).resolve()
 RUR_ADAPTER_PATH = (
-    RUNTIME_ROOT
-    / "research/experiments/EXP-REAL61-002/rur_semantic_replay/adapter.py"
+    RUNTIME_ROOT / "research/experiments/EXP-REAL61-002/rur_semantic_replay/adapter.py"
 )
 RUR_ADAPTER_SHA256 = "7bd09aaab95f90802e83ae09704975e776c6774a2eb9ea785c0a65b474593bc2"
 EXACT_RUNTIME_PATH = (
     RUNTIME_ROOT / "research/experiments/EXP-REAL61-002/exact_replay/exact_runtime.py"
 )
-EXACT_RUNTIME_SHA256 = "f57e6fdd730d75e2c6b73d497a5041afd6c714d6c644c8e558cf3ef281c52242"
+EXACT_RUNTIME_SHA256 = (
+    "f57e6fdd730d75e2c6b73d497a5041afd6c714d6c644c8e558cf3ef281c52242"
+)
 
 
 def _load(name: str, path: Path):
@@ -71,14 +75,10 @@ _AFFINE_PERIODIC = re.compile(
     r"\((?P<offset>.+)\)\)/\((?P<coefficient>.+)\); choose k by source bounds/guards\s*"
 )
 _RADIAN_MOD = re.compile(r"\s*atan2\((?P<y>[^,]+),(?P<x>[^)]+)\) mod 2\*pi\s*")
-_TURN_MOD = re.compile(
-    r"\s*atan2\((?P<y>[^,]+),(?P<x>[^)]+)\)/\(2\*pi\) mod 1\s*"
-)
+_TURN_MOD = re.compile(r"\s*atan2\((?P<y>[^,]+),(?P<x>[^)]+)\)/\(2\*pi\) mod 1\s*")
 
 
-REQUEST_KEYS = frozenset(
-    {"source_path", "endpoint", "candidate_relation_high_to_low"}
-)
+REQUEST_KEYS = frozenset({"source_path", "endpoint", "candidate_relation_high_to_low"})
 FORBIDDEN_KEYS = frozenset(
     {
         "id",
@@ -86,6 +86,19 @@ FORBIDDEN_KEYS = frozenset(
         "truth",
         "answer",
         "target",
+        "outcome",
+        "result",
+        "score",
+        "known_count",
+    }
+)
+FORBIDDEN_SOURCE_KEYS = frozenset(
+    {
+        "id",
+        "case_id",
+        "problem_id",
+        "family",
+        "truth",
         "outcome",
         "result",
         "score",
@@ -126,7 +139,9 @@ def _proposal(coefficients: object) -> backend.TargetProposal:
     if (
         not isinstance(coefficients, list)
         or len(coefficients) != 2
-        or any(not isinstance(item, int) or isinstance(item, bool) for item in coefficients)
+        or any(
+            not isinstance(item, int) or isinstance(item, bool) for item in coefficients
+        )
     ):
         raise backend.NotProved("DEGREE_ONE_PROJECTION_REJECTED")
     leading, constant = coefficients
@@ -150,6 +165,16 @@ def _validate_endpoint(value: object) -> None:
     converted = [float(item) for item in value]
     if any(not math.isfinite(item) for item in converted):
         raise backend.NotProved("MALFORMED_ENDPOINT_LEDGER")
+
+
+def _bounded_source_path(value: object, source_root: Path) -> Path:
+    if not isinstance(value, str):
+        raise backend.NotProved("SOURCE_PATH_OUTSIDE_FROZEN_ANONYMOUS_PANEL")
+    root = source_root.resolve()
+    path = Path(value).resolve()
+    if path.parent != root or path.suffix != ".json" or not path.is_file():
+        raise backend.NotProved("SOURCE_PATH_OUTSIDE_FROZEN_ANONYMOUS_PANEL")
+    return path
 
 
 def _failure_class(reason: object) -> str:
@@ -221,10 +246,16 @@ def _validate_bridge_ledger(
 
 
 def _common_embedding(values: list[sp.Expr]):
-    nonrational = [sp.sympify(value) for value in values if value.is_Rational is not True]
+    nonrational = [
+        sp.sympify(value) for value in values if value.is_Rational is not True
+    ]
     symbol = sp.Symbol("__nra_bridge_theta")
     if not nonrational:
-        return sp.Integer(0), sp.Poly(symbol, symbol, domain=sp.QQ), (sp.Integer(0), sp.Integer(0))
+        return (
+            sp.Integer(0),
+            sp.Poly(symbol, symbol, domain=sp.QQ),
+            (sp.Integer(0), sp.Integer(0)),
+        )
     primitive = sp.to_number_field(nonrational)
     theta = primitive.as_expr()
     descriptor = backend._descriptor(theta)
@@ -342,9 +373,7 @@ def _replay_existing_witness(
         for combination in itertools.product(*option_sets):
             coordinates = [option.value for option in combination]
             try:
-                RUR.RUNTIME.replay_document(
-                    dict(document), coordinates, backend_target
-                )
+                RUR.RUNTIME.replay_document(dict(document), coordinates, backend_target)
             except Exception:
                 continue
             accepted += 1
@@ -377,7 +406,7 @@ def _replay_existing_witness(
 
 
 def _assess_request(
-    request: Mapping[str, object], *, timeout_seconds: float
+    request: Mapping[str, object], *, timeout_seconds: float, source_root: Path
 ) -> dict[str, object]:
     """Return a private fixed-category row; never a witness or target value."""
 
@@ -400,10 +429,12 @@ def _assess_request(
         _validate_endpoint(request["endpoint"])
         proposal = _proposal(request["candidate_relation_high_to_low"])
         private["descriptor_accepted"] = True
-        source_path = Path(str(request["source_path"]))
+        source_path = _bounded_source_path(request["source_path"], source_root)
         document = json.loads(source_path.read_bytes())
         if not isinstance(document, Mapping):
             raise backend.NotProved("LEGACY_PRIMITIVE_COVER_SOURCE_NOT_MAPPING")
+        if FORBIDDEN_SOURCE_KEYS & set(document):
+            raise backend.NotProved("SOURCE_DOCUMENT_CROSSED_IDENTITY_TRUTH_BOUNDARY")
         if document.get("post_process") not in (None, ""):
             raise backend.NotProved("POST_PROCESS_OUTSIDE_RAW_TARGET_THEOREM")
 
@@ -445,7 +476,10 @@ def main() -> int:
     arguments = _parser().parse_args()
     if os.sched_getaffinity(0) != {arguments.expected_cpu}:
         raise SystemExit("degree-one NRA census must be pinned to the expected CPU")
-    if not math.isfinite(arguments.backend_timeout_seconds) or arguments.backend_timeout_seconds <= 0:
+    if (
+        not math.isfinite(arguments.backend_timeout_seconds)
+        or arguments.backend_timeout_seconds <= 0
+    ):
         raise SystemExit("backend timeout must be finite and positive")
     payload = arguments.requests.read_bytes()
     observed_sha256 = hashlib.sha256(payload).hexdigest()
@@ -481,6 +515,7 @@ def main() -> int:
         row = _assess_request(
             request,
             timeout_seconds=arguments.backend_timeout_seconds,
+            source_root=PANEL_SOURCE_ROOT,
         )
         if row["descriptor_accepted"]:
             counts["descriptor_accepted"] += 1
