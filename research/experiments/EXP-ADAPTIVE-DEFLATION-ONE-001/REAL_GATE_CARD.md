@@ -1,6 +1,6 @@
 # ADAPTIVE_DEFLATION_ONE real applicability gate
 
-Status: scanner frozen for Root-owned degree1 panel85; fresh-refiner connector added, real run pending.
+Status: `REAL_GATE_STOP` after the fresh-refiner degree1 panel85 run.
 
 The gate does not run the proposal and does not inspect a scored outcome.  Its
 strict input record contains only an untouched source path+digest, a bare
@@ -59,3 +59,13 @@ ready/miss status to this scanner.  Refiner failures and timeouts fail closed
 as misses and still must pass the untouched semantic endpoint and normalized
 corank-one tests.  The connector publishes aggregate counts only and never
 enables a proposal or authority.
+
+The frozen real run admitted 16 square 2x2 endpoints.  The ordinary frozen
+refiner was already ready on all 16, so none satisfied the preregistered
+baseline-miss condition.  Five reached the exact C2 compiler before that
+condition rejected them; eleven were outside exact C2 coverage.  Eligible
+count and structural-signature count were both zero.  Therefore the proposal
+connector and D1 were not run.  Reopen only with a prospective source-only
+endpoint corpus where the frozen refiner mechanically misses and the same
+corank-one predicate activates; changing rank thresholds or precision rungs
+does not reopen this result.
