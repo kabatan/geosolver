@@ -129,6 +129,13 @@ def test_service_surfaces_legacy_time_limit_warning(problem: dict) -> None:
     assert any("time_limit_seconds is deprecated" in warning for warning in result.warnings)
 
 
+def test_service_rejects_falsey_invalid_options(problem: dict) -> None:
+    result = solve(problem, 0, engine=FakeEngine())  # type: ignore[arg-type]
+
+    assert result.status == "resource_error"
+    assert "validation error" in result.detail.lower()
+
+
 def test_optimized_service_discloses_whole_problem_reference_evaluator_fallback(
     problem: dict,
 ) -> None:

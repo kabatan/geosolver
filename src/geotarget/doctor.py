@@ -24,12 +24,27 @@ def diagnose() -> dict[str, Any]:
     julia = shutil.which("julia")
     julia_version = None
     if julia:
-        completed = subprocess.run(
-            [julia, "--version"], text=True, capture_output=True, timeout=10, check=False
-        )
-        julia_version = completed.stdout.strip()
-        if "1.12.6" not in julia_version:
-            errors.append(f"Julia 1.12.6 required; found {julia_version or 'unknown'}")
+        try:
+            completed = subprocess.run(
+                [julia, "--version"],
+                text=True,
+                capture_output=True,
+                timeout=10,
+                check=False,
+            )
+        except (OSError, subprocess.TimeoutExpired) as error:
+            errors.append(f"Julia version check failed: {error}")
+        else:
+            julia_version = "\n".join(
+                part.strip() for part in (completed.stdout, completed.stderr) if part.strip()
+            ) or None
+            if completed.returncode != 0:
+                errors.append(
+                    f"Julia version check exited with code {completed.returncode}: "
+                    f"{julia_version or 'unknown'}"
+                )
+            elif "1.12.6" not in (julia_version or ""):
+                errors.append(f"Julia 1.12.6 required; found {julia_version or 'unknown'}")
     else:
         errors.append("Julia executable not found")
     manifest = julia_project_root() / "Manifest.toml"

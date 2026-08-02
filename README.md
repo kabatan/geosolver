@@ -16,6 +16,16 @@ uv run geotarget solve examples/problem.json --output result.json
 uv run geotarget ui
 ```
 
+For a local verification pass:
+
+```bash
+uv run ruff check .
+PYTHONDONTWRITEBYTECODE=1 uv run pytest -q
+pnpm --dir frontend test
+pnpm --dir frontend test:sites
+pnpm --dir frontend build
+```
+
 The qualified default is the `optimized` engine in adaptive mode, with a
 900-second safety cap and automatic physical-core selection. Its stable engine
 hash is `224025b3113b59814bd354e8db2e4181cc64faf010f9de0eaf19d4cbe28f1868`.

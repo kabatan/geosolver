@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from copy import deepcopy
 from datetime import datetime
 from functools import lru_cache
 from importlib.resources import files
@@ -25,11 +26,22 @@ def report_summary_sha256(summary: dict[str, Any]) -> str:
 
 
 @lru_cache(maxsize=1)
-def policy() -> dict[str, Any]:
+def _validated_policy() -> dict[str, Any]:
     value = json.loads(
         files("geotarget").joinpath("qualification.json").read_text(encoding="utf-8")
     )
     return validate_policy(value)
+
+
+def policy() -> dict[str, Any]:
+    """Return an independent qualification snapshot.
+
+    The embedded policy is process-wide authority. Returning a copy prevents
+    an API consumer or diagnostic caller from accidentally mutating the
+    cached authority for later requests.
+    """
+
+    return deepcopy(_validated_policy())
 
 
 def validate_policy(value: dict[str, Any]) -> dict[str, Any]:
@@ -52,9 +64,10 @@ def validate_policy(value: dict[str, Any]) -> dict[str, Any]:
             raise RuntimeError("optimized qualification timestamp is invalid") from error
         if timestamp.tzinfo is None:
             raise RuntimeError("optimized qualification timestamp must include a timezone")
-        if not isinstance(report_sha256, str) or re.fullmatch(
-            r"[0-9a-f]{64}", report_sha256
-        ) is None:
+        if (
+            not isinstance(report_sha256, str)
+            or re.fullmatch(r"[0-9a-f]{64}", report_sha256) is None
+        ):
             raise RuntimeError("optimized qualification report checksum is invalid")
         if not isinstance(report_summary, dict):
             raise RuntimeError("optimized qualification report summary is missing")

@@ -15,7 +15,7 @@ from typing import Any
 from fastapi import Cookie, FastAPI, Header, HTTPException, Request, Response
 from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from geotarget.doctor import diagnose
 from geotarget.dsl_contract import catalog_payload
@@ -36,7 +36,7 @@ class SolveRequest(BaseModel):
     # Pydantic model here would coerce e.g. constraint value ``0`` to ``0.0``
     # before the source-preserving validator and exact replay authority see it.
     problem: dict[str, Any]
-    options: SolveOptions = SolveOptions()
+    options: SolveOptions = Field(default_factory=SolveOptions)
 
 
 @dataclass
@@ -45,9 +45,7 @@ class Job:
     request: SolveRequest
     state: str = "queued"
     result: SolveResult | None = None
-    events: deque[dict[str, Any]] = field(
-        default_factory=lambda: deque(maxlen=MAX_EVENTS_PER_JOB)
-    )
+    events: deque[dict[str, Any]] = field(default_factory=lambda: deque(maxlen=MAX_EVENTS_PER_JOB))
     engine: ChampionSubprocessEngine | None = None
     cancelled: bool = False
     progress: dict[str, Any] = field(default_factory=dict)
@@ -97,8 +95,7 @@ class JobManager:
         terminal = [
             job
             for job in self.jobs.values()
-            if job.state in {"completed", "cancelled"}
-            and job.completed_monotonic is not None
+            if job.state in {"completed", "cancelled"} and job.completed_monotonic is not None
         ]
         expired = {
             job.id
@@ -183,9 +180,7 @@ class JobManager:
                         "phase": "cancelled" if result.status == "cancelled" else "completed",
                         "elapsed_seconds": result.elapsed_seconds,
                         "termination_reason": result.termination_reason,
-                        "completed_starts": len(
-                            result.work_checkpoint.completed_start_ordinals
-                        ),
+                        "completed_starts": len(result.work_checkpoint.completed_start_ordinals),
                         "extension_batches_completed": (
                             result.work_checkpoint.extension_batches_completed
                         ),

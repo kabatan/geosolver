@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import threading
 from collections import OrderedDict
@@ -15,10 +16,15 @@ _LOCK = threading.Lock()
 _CACHE: OrderedDict[str, ValidationReport] = OrderedDict()
 
 
-def validate_cached(problem: dict[str, Any]) -> tuple[ValidationReport, bool]:
-    key = json.dumps(
+def _cache_key(problem: dict[str, Any]) -> str:
+    payload = json.dumps(
         problem, ensure_ascii=False, sort_keys=True, separators=(",", ":")
-    )
+    ).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
+def validate_cached(problem: dict[str, Any]) -> tuple[ValidationReport, bool]:
+    key = _cache_key(problem)
     with _LOCK:
         cached = _CACHE.get(key)
         if cached is not None:

@@ -95,7 +95,7 @@ def solve(
     *,
     engine: SolverEngine | None = None,
 ) -> SolveResult:
-    requested_payload = options or SolveOptions()
+    requested_payload = SolveOptions() if options is None else options
     try:
         parsed_options = (
             requested_payload

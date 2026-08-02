@@ -35,6 +35,13 @@ def test_qualified_optimized_engine_is_the_atomic_default() -> None:
     assert qualification["report_summary"]["all_gates_passed"] is True
 
 
+def test_qualification_policy_returns_an_independent_snapshot() -> None:
+    first = policy()
+    first["promotion_status"] = "reference"
+
+    assert policy()["promotion_status"] == "qualified"
+
+
 def test_promoted_policy_requires_timestamped_checksum_evidence() -> None:
     summary = {
         "schema_version": "geotarget.optimized-qualification-summary/v1",

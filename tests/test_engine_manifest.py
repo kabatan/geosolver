@@ -1,4 +1,5 @@
 import os
+import subprocess
 from pathlib import Path
 
 from geotarget.doctor import diagnose
@@ -75,6 +76,20 @@ def test_doctor_reports_locked_runtime() -> None:
         report["optimized_qualification"]["report_summary"]["qualified_engine_hash"]
         == optimized_engine_hash()
     )
+
+
+def test_doctor_reports_julia_probe_failure(monkeypatch) -> None:
+    monkeypatch.setattr("geotarget.doctor.shutil.which", lambda _name: "/missing/julia")
+
+    def fail_probe(*_args, **_kwargs):
+        raise subprocess.TimeoutExpired(cmd="julia --version", timeout=10)
+
+    monkeypatch.setattr("geotarget.doctor.subprocess.run", fail_probe)
+    report = diagnose()
+
+    assert report["julia"] is None
+    assert report["ok"] is False
+    assert any("Julia version check failed" in error for error in report["errors"])
 
 
 def test_frozen_subprocess_python_launcher_is_executable() -> None:
