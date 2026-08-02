@@ -1,0 +1,48 @@
+{
+  "schema_version": "geotarget.exp-real61-008.source-only-freeze/v1",
+  "status": "FROZEN_FOR_BASELINE_FIT8",
+  "policy_digest": "fbf70a530960ffdbcc59f87ede65644ff5eb968dc9e67eb75b47f67384dcd609",
+  "file_sha256": {
+    "runtime.py": "5594c7f673171999ac4455f00223861673ea42bc02be1bb3e115f28951dfdaf1",
+    "prefix.py": "4beaabd9ad5f9a8c83b7284ebfe260dd9f385b65342a7d43e7600240face4050",
+    "scaling.py": "ddb2c6c4f91ca3da8b012f6876d52d79abc05df59eb39b46da32fe0c8c201ebc",
+    "policy.py": "50221a454c86397c76bcaa6577f963da9cfd26084231172b20173c48410c0b67",
+    "replay.py": "18ec12d900aacb7756e27fbee85fb3edf48dd348e68407b163b424fc18df2e13",
+    "worker.py": "c19e47c159a18d71601cfca5fa8225e2baada939c377163715dcb5fda75a0739",
+    "run_fit8.py": "6b6fb864514ac5aceb5aef8d8db1b8b69b65d02147a479182176ec1d74c7b9a9",
+    "test_source_only.py": "af726d287bba5ccba1c64e178454f4aec994b0fd440c28eb967e731e5fbf33af",
+    "../../EXP-REAL61-007/provisional_numerical_architecture/source_only_runtime.py": "a3596c7273122ee49f537a43c1c05b57318a86b56bfdf6f19eb0bd20c6f59796",
+    "../../EXP-REAL61-006/analytic_jacobian/candidate.py": "9b1a8117c39d93e2c0b72b2fd1f18b49976730630ab664d0b45843d1ee90e35d"
+  },
+  "configuration": {
+    "prefix": "at least 25% counter-keyed independent product Cauchy; remaining scrambled Sobol rational charts",
+    "dyadic_exponents": [0, 1, -1, 2, -2, 3, -3, 4, -4, 6, -6, 8, -8, 10, -10],
+    "unbounded_origin": 0.0,
+    "explicit_source_bounds_only": true,
+    "unbounded_coordinate_clipping": false,
+    "finite_search_envelope": false,
+    "local_origin": "start",
+    "local_scale": "max(1,abs(start_j))",
+    "jacobian_column_equilibration": "optional but disabled in this baseline packet; available factor bounds [0.25,4.0]",
+    "gauge_or_symmetry_reduction": false,
+    "case_family_truth_target_count_routing": false,
+    "fit8": {
+      "arms": ["analytic_forward_ad_cpqr", "analytic_forward_ad_lsmr"],
+      "seconds": 10.0,
+      "starts": 16,
+      "callbacks_per_start": 600,
+      "seed": 0,
+      "candidate_cap": "same case's control actual callbacks"
+    }
+  },
+  "tests": {
+    "unit_static_synthetic": "7 passed",
+    "guarded_smoke_case": "P15-a16eb27b4f",
+    "guarded_smoke_classification": "SUCCESS",
+    "guarded_smoke_peak_rss_bytes": 147447808,
+    "guarded_smoke_endpoints_validated": 16,
+    "guarded_smoke_safe_endpoints": 5,
+    "guarded_smoke_callbacks": 534
+  },
+  "exact_command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 OMP_THREAD_LIMIT=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 GEOTARGET_GLOBAL_RSS_RESERVATION_BYTES=8589934592 python/.venv/bin/python research/experiments/EXP-REAL61-008/source_only/run_fit8.py --jobs 2 --cpus 4,5"
+}
