@@ -160,6 +160,16 @@
       "observed_break_condition": "At the clean 4,800-callback T0 threshold, the candidate recovered 3/10 qualified targets versus 4/10 for the primary control, left safe-full unchanged at 2/5, regressed NearRank from 1/1 to 0/1 and used 1.001 times the callback work. It correctly rejected every accepted-endpoint safety hazard but hit 18 local caps.",
       "current_decision": "Reject this frozen configuration before T1, remove its code and Python/Julia dependencies, and retain the provenance-bound decision and artifact hashes. This is not a rejection of reflective trust regions or trust-region methods as classes.",
       "reopen_gate": "A new trust-region experiment must change a general mechanism such as branch-stable model agreement, derivative information, or invariant singular correction; it must not merely wrap another dense TR implementation, and must pass the common safety, stratum, work and unrelated-family gates."
+    },
+    {
+      "id": "NEG-019",
+      "title": "Compiled geometry callback snapshot did not establish a whole-solver speedup",
+      "evidence_state": "reproduced",
+      "source_evidence_ids": ["EVID-27"],
+      "claim_not_supported": "A semantically equivalent compiled geometry callback snapshot is a production-wide solver speedup.",
+      "observed_break_condition": "The 131-case callback same-work measurement improved callback wall by 7.25% with zero mismatches, but the completed whole-solver seed-0 A1/B1 pair was correctness-neutral and 0.82% slower by the registered geometric-mean wall metric; the five-seed serial ABBA gate was interrupted after candidate B2 case 6/145.",
+      "current_decision": "Do not promote the snapshot, update qualification, build a production wheel, or merge to main. Preserve the callback implementation and bounded evidence as a non-promoted local optimization result; do not claim a whole-solver speedup.",
+      "reopen_gate": "Only a new, separately preregistered experiment may reopen this mechanism, with a complete five-seed serial ABBA, safety and recall non-regression, family-clustered end-to-end speed confidence, jobs=7 RSS and throughput, and full wheel, doctor and fallback verification."
     }
   ]
 }

@@ -1,0 +1,125 @@
+{
+  "schema_version": "geotarget.geometry-kernel-experiment-result/v1",
+  "experiment_id": "EXP-GEOMETRY-KERNEL-001",
+  "recorded_at": "2026-08-02",
+  "title": "Geometry callback kernel optimization: whole-solver promotion decision",
+  "objective": "Evaluate semantically equivalent callback implementations without changing optimizer policy, proposal order, callback budgets, thresholds, precision authority, PointOnCircle semantics, public API, or result schema.",
+  "isolation": {
+    "main_commit": "e5abe0c84b485273e06c38b1b69ce9efa3e02408",
+    "experiment_commit_before_recording": "5f9dee88ad33422ae9a96fb5e3917b3ab53a2dfa",
+    "experiment_branch_edited_only_for_this_record": true,
+    "main_modified": false,
+    "experiment_solver_code_modified": false,
+    "artifact_root": "/home/kabatan/work/solver-artifacts/geometry-kernel/20260731-e5abe0-baseline",
+    "frozen_dataset": "/home/kabatan/work/solver-artifacts/experiment-freeze-20260727/product-145-20260727-v4/development145.jsonl",
+    "frozen_dataset_sha256": "c150bb352fc905dc4eead8a56ec50125d6dd2409d2de14ccd91a502836ea8511"
+  },
+  "arms": {
+    "iterative": {
+      "branch": "codex/geometry-kernel-iterative",
+      "commit": "51c7f8d79815e0c29f07b51a26a7b553adcac24a",
+      "decision": "rejected",
+      "evidence": "Stable interleaved callback ratio 0.999054; flat-tape path regressed 0.337 percent."
+    },
+    "snapshot": {
+      "branch": "codex/geometry-kernel-promote",
+      "commit": "720ae718d73c83cc542b7c946da2d644ee91a4aa",
+      "decision": "not_promoted",
+      "evidence": "Callback kernel improved, but completed whole-solver ABBA did not show an end-to-end speedup."
+    },
+    "native": {
+      "branch": "codex/geometry-kernel-native",
+      "commit": "830427fd641fd7c0c39541e2d9bc548ad91c393c",
+      "decision": "rejected",
+      "evidence": "Exact-gated native callback path regressed callback wall by approximately 1.64 percent; Rust/build changes were excluded from promotion."
+    }
+  },
+  "callback_evidence": {
+    "report": "interleaved-snapshot-v2/report.json",
+    "report_sha256": "1591914c6f0d475afe4e7a34b239046c9d1736fe3273a55768acdd6fcd45625e",
+    "case_count": 131,
+    "same_work": true,
+    "routing_contract_satisfied": true,
+    "mismatch_count": 0,
+    "callback_wall_geometric_mean_ratio": 0.9274973518687736,
+    "callback_speedup_percent": 7.25026481312264,
+    "residual_wall_geometric_mean_ratio": 0.9138901621847735,
+    "residual_speedup_percent": 8.61098378152265,
+    "core_matrix_reports": {
+      "1": "9f3fc7cc7ed9ab3550afcbd51e54e8af13d21d3f92e6152e3b78a5fb22a79f6b",
+      "2": "8a1aae6f70ed6b2698d0341a9f365557b772afa6eec09e0fe687d7528d296a63",
+      "4": "fd5a12524b90b27327a4a396b19b4f99e22225ee9237b7e6e79adcce79fd8444",
+      "8": "fe3805367801d047bcd36453f18c498db095178a56dc9b4646a65e144c89c94b",
+      "15": "0980d012241af8b27a9e97081011baf04f5f99770885c3d6798175e41f63286e"
+    },
+    "boundary_differential_report_sha256": "dc72c9d34b2da47ded8f3754a8c3b9a7598ca73b1dd48b537420689631106a23"
+  },
+  "screen_evidence": {
+    "comparison": "screen24-prod-seeds0-2-comparison.json",
+    "comparison_sha256": "137eb1aafe874c453356cc0213569d467777a41e11c104c16fdebb588f690b5d",
+    "seeds": [0, 1, 2],
+    "net_exact_deltas": [2, 0, 0],
+    "all_safety_zero": true,
+    "per_seed_candidate_over_control_wall_geometric_mean": [0.6866582874374443, 0.9920794302408134, 1.0021473373878504],
+    "pooled_family_bootstrap_wall_ratio_95_percent": [0.8508314805863767, 0.9271820074248105],
+    "interpretation": "Screen safety and recall were non-regressive, but end-to-end timing was seed-sensitive and was not treated as final proof."
+  },
+  "whole_solver_abba": {
+    "campaign_root": "s3-abba-product-seeds0-4-v5",
+    "fixed_contract": {
+      "seeds": [0, 1, 2, 3, 4],
+      "order": "A1-control/B1-candidate/B2-candidate/A2-control",
+      "jobs": 1,
+      "cpu": 15,
+      "total_seconds": 180.0,
+      "search_seconds": 146.0,
+      "starts": 256,
+      "callbacks_per_start": 600,
+      "aggregate_callback_cap": 153600
+    },
+    "completed_legs": ["seed-00-a1-control", "seed-00-b1-candidate"],
+    "completed_comparison": "s3-abba-product-seeds0-4-v5/seed00-a1-b1-comparison.json",
+    "completed_comparison_sha256": "177413c84b989a3b0fdc3ba5cd9131b8688c2dc5d43bb0403573ef68266c5a",
+    "control_exact": 137,
+    "candidate_exact": 137,
+    "lost_or_extra_safety": 0,
+    "candidate_over_control_wall_geometric_mean_ratio": 1.0082430171620753,
+    "candidate_over_control_p95_ratio": 0.9958371936664508,
+    "decision_boundary": "The only completed whole-solver pair was correctness-neutral but approximately 0.82 percent slower by the registered geometric-mean metric. The five-seed promotion gate was not completed."
+  },
+  "interrupted_campaign": {
+    "v4_partial_cases": 18,
+    "v5_completed_legs": 2,
+    "v5_partial_leg": "seed-00-b2-candidate",
+    "v5_partial_cases": 6,
+    "remaining_v5_legs": 18,
+    "campaign_status_in_manifest": "running",
+    "parent_process_at_recording": "not running",
+    "partial_artifacts_retained": true,
+    "no_resume_or_new_optimization_attempt_authorized": true
+  },
+  "final_decision": {
+    "status": "not_promoted",
+    "summary": "The snapshot is a valid local callback optimization, but it was not demonstrated to improve the complete solver under the registered whole-solver gate.",
+    "qualification_updated": false,
+    "wheel_built": false,
+    "main_merge": false,
+    "additional_optimization": false,
+    "external_final_decision_sha256": "073b92828f89aba3c9241f113340095055bf1b85e3901588bf605407e1da7ec8"
+  },
+  "cleanup": {
+    "temporary_worktrees_to_remove": [
+      "/home/kabatan/work/solver-wt/control-main-e5abe0",
+      "/home/kabatan/work/solver-wt/geometry-kernel-lab",
+      "/home/kabatan/work/solver-wt/geometry-kernel-promote",
+      "/home/kabatan/work/solver-wt/geometry-kernel-iterative",
+      "/home/kabatan/work/solver-wt/geometry-kernel-snapshot",
+      "/home/kabatan/work/solver-wt/geometry-kernel-native"
+    ],
+    "preserved_worktrees": [
+      "/home/kabatan/work/solver",
+      "/home/kabatan/work/solver-wt/experiment"
+    ],
+    "external_artifacts_preserved": true
+  }
+}
