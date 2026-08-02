@@ -12,3 +12,9 @@
 `src/geotarget/_engine/product-manifest.json` maps every frozen source path and
 hash to its product path. `geotarget doctor` is the executable enforcement
 point.
+
+The source paths under `research/` are provenance references to the
+`experiment` branch. Trace-only candidates, source-only runners, restoration
+experiments, and experiment-local Julia metadata are retained there and are not
+included in the product manifest; the selected runtime and its five dynamic
+runtime dependencies remain packaged on `main`.

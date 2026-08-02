@@ -18,7 +18,7 @@ uv run geotarget ui
 
 The qualified default is the `optimized` engine in adaptive mode, with a
 900-second safety cap and automatic physical-core selection. Its stable engine
-hash is `07de7a00b83ce7539d4b283bf9975bc998fc13c3ff6b064052e6581388e2c287`.
+hash is `224025b3113b59814bd354e8db2e4181cc64faf010f9de0eaf19d4cbe28f1868`.
 The byte-identical `reference` engine remains available for the frozen
 one-core, 180-second reproduction mode.
 `no_answer_found` is not a proof that the source geometry has no solution. See
@@ -30,7 +30,9 @@ replay authority binds to those native source bytes.
 
 The experiment evidence is preserved on branch `experiment` and tag
 `champion-v2-poc-preloaded-20260722`. Raw artifacts are outside Git in the
-checksummed freeze archive described on that branch.
+checksummed freeze archive described on that branch. The research source
+snapshots corresponding to the packaged frozen runtime are also kept on that
+branch; `main` contains only the product runtime copies required for execution.
 
 ## Two-engine resource boundary
 
