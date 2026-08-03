@@ -1,0 +1,24 @@
+{
+  "schema_version": "geotarget.homotopy-experiment-manifest/v1",
+  "base_revision": "0858883a80583db3670be991f51fb45f7c10b3ca",
+  "branch": "codex/exp-homotopy-baseline",
+  "dataset": "development145",
+  "dataset_sha256": "c150bb352fc905dc4eead8a56ec50125d6dd2409d2de14ccd91a502836ea8511",
+  "comparison": {
+    "engine": "optimized",
+    "run_mode": "fixed_time",
+    "cores": 1,
+    "max_time_seconds": 180,
+    "seed": 0,
+    "current_first_alternation": true,
+    "truth_blind_workers": true,
+    "timeout_grace_is_timeout": true
+  },
+  "homotopy": {
+    "start_system": "polyhedral",
+    "only_non_zero": false,
+    "certification_precisions_bits": [256, 512, 1024],
+    "exact_backend": "Nemo+Singular pinned; exact target mirror in SymPy QQ"
+  },
+  "artifact_policy": "raw worker artifacts outside repository; only hash manifests and aggregate reports are checked in"
+}
