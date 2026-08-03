@@ -54,7 +54,7 @@ function _certificate_summary(system, solutions_to_certify)
     last_error = nothing
     for precision in PRECISIONS
         try
-            result = certify(
+            result = HomotopyContinuation.certify(
                 system,
                 solutions_to_certify;
                 max_precision = precision,
@@ -80,7 +80,7 @@ function main(input_path, output_path)
     system = System(equations; variables = variables)
     seed = UInt32(mod(Int(get(payload, "seed", 0)), 2^32))
     homotopy_started = time()
-    result = solve(
+    result = HomotopyContinuation.solve(
         system;
         start_system = :polyhedral,
         only_non_zero = false,

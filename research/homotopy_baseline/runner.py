@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import os
 import resource
 import shutil
+import signal
 import subprocess
 import tempfile
 import time
@@ -26,6 +28,14 @@ PACKAGE_ROOT = Path(__file__).resolve().parent
 JULIA_PROJECT = PACKAGE_ROOT / "julia"
 JULIA_WORKER = JULIA_PROJECT / "worker.jl"
 DATASET_SHA256 = "c150bb352fc905dc4eead8a56ec50125d6dd2409d2de14ccd91a502836ea8511"
+
+
+class _CompileDeadlineExceeded(TimeoutError):
+    """Raised when exact polynomialization consumes the complete wall budget."""
+
+
+def _raise_compile_deadline(_signum: int, _frame: Any) -> None:
+    raise _CompileDeadlineExceeded("compile deadline exceeded")
 
 
 def _sha256(path: Path) -> str:
@@ -246,8 +256,34 @@ def solve_problem(
         "metrics": {},
         "warnings": [],
     }
+    compile_budget = float(seconds)
+    previous_timer = signal.getitimer(signal.ITIMER_REAL)
+    timer_enabled = math.isfinite(compile_budget) and compile_budget > 0.0
+    if timer_enabled:
+        signal.signal(signal.SIGALRM, _raise_compile_deadline)
+        signal.setitimer(signal.ITIMER_REAL, compile_budget)
     try:
         compilation = compile_problem(problem, mode=mode)
+    except _CompileDeadlineExceeded as error:
+        base.update(
+            {
+                "status": "timeout",
+                "admission": {
+                    "mode": mode,
+                    "supported": False,
+                    "stage": "compile_timeout",
+                    "reasons": ["compile_deadline_exceeded"],
+                    "calls": [],
+                    "variable_count": 0,
+                    "equation_count": 0,
+                    "branch_count": 1,
+                },
+                "detail": str(error),
+                "timeout_phase": "compile",
+                "timings": {"compile_seconds": time.monotonic() - started},
+            }
+        )
+        return base
     except UnsupportedFormulation as error:
         base.update(
             {
@@ -258,6 +294,11 @@ def solve_problem(
             }
         )
         return base
+    finally:
+        if timer_enabled:
+            signal.setitimer(signal.ITIMER_REAL, 0.0)
+            if previous_timer != (0.0, 0.0):
+                signal.setitimer(signal.ITIMER_REAL, *previous_timer)
     base["source_sha256"] = compilation.source_sha256
     base["admission"] = compilation.admission.json()
     base["system"] = compilation.json()
@@ -279,6 +320,24 @@ def solve_problem(
             "certificate_max_precision_bits": worker.get("certificate_max_precision_bits"),
         }
     )
+    if time.monotonic() - started >= float(seconds):
+        base.update(
+            {
+                "status": "timeout",
+                "timeout_phase": "homotopy_or_certification",
+                "timings": {
+                    "compile_seconds": compile_elapsed,
+                    "homotopy_seconds": float(
+                        worker.get("timings", {}).get("homotopy_seconds", worker_elapsed)
+                    ),
+                    "certification_seconds": float(
+                        worker.get("timings", {}).get("certification_seconds", 0.0)
+                    ),
+                    "total_seconds": time.monotonic() - started,
+                },
+            }
+        )
+        return base
     candidates = [
         item
         for item in worker.get("candidates", [])
@@ -286,14 +345,47 @@ def solve_problem(
         and item.get("real")
         and _candidate_satisfies_guards(compilation, item)
     ]
+    elimination_budget = float(seconds) - (time.monotonic() - started)
+    previous_timer = signal.getitimer(signal.ITIMER_REAL)
+    timer_enabled = math.isfinite(elimination_budget) and elimination_budget > 0.0
+    if timer_enabled:
+        signal.signal(signal.SIGALRM, _raise_compile_deadline)
+        signal.setitimer(signal.ITIMER_REAL, elimination_budget)
     try:
         descriptors, elimination = descriptors_from_candidates(compilation, candidates)
         base["metrics"]["elimination_degree"] = int(elimination.degree())
         base["metrics"]["ideal_degree"] = exact_degree(compilation)
         base["answers"] = descriptors
         base["distinct_exact_targets"] = descriptors
+    except _CompileDeadlineExceeded as error:
+        base.update(
+            {
+                "status": "timeout",
+                "timeout_phase": "elimination",
+                "detail": str(error),
+                "timings": {
+                    "compile_seconds": compile_elapsed,
+                    "homotopy_seconds": float(
+                        worker.get("timings", {}).get("homotopy_seconds", worker_elapsed)
+                    ),
+                    "certification_seconds": float(
+                        worker.get("timings", {}).get("certification_seconds", 0.0)
+                    ),
+                    "elimination_seconds": time.monotonic() - started
+                    - compile_elapsed
+                    - worker_elapsed,
+                    "total_seconds": time.monotonic() - started,
+                },
+            }
+        )
+        return base
     except ExactEliminationError as error:
         base["warnings"].append(str(error))
+    finally:
+        if timer_enabled:
+            signal.setitimer(signal.ITIMER_REAL, 0.0)
+            if previous_timer != (0.0, 0.0):
+                signal.setitimer(signal.ITIMER_REAL, *previous_timer)
     status = str(worker.get("status", "engine_error"))
     degree = base["metrics"].get("ideal_degree")
     complete = (
@@ -329,6 +421,9 @@ def solve_problem(
         ),
         "total_seconds": time.monotonic() - started,
     }
+    if base["timings"]["total_seconds"] > float(seconds):
+        base["status"] = "timeout"
+        base["timeout_phase"] = "elimination"
     base["peak_rss_kib"] = int(resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss)
     return base
 
