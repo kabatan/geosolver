@@ -30,12 +30,12 @@ JULIA_WORKER = JULIA_PROJECT / "worker.jl"
 DATASET_SHA256 = "c150bb352fc905dc4eead8a56ec50125d6dd2409d2de14ccd91a502836ea8511"
 
 
-class _CompileDeadlineExceeded(TimeoutError):
-    """Raised when exact polynomialization consumes the complete wall budget."""
+class _DeadlineExceeded(TimeoutError):
+    """Raised when a solve phase consumes the complete wall budget."""
 
 
-def _raise_compile_deadline(_signum: int, _frame: Any) -> None:
-    raise _CompileDeadlineExceeded("compile deadline exceeded")
+def _raise_deadline(_signum: int, _frame: Any) -> None:
+    raise _DeadlineExceeded("solve deadline exceeded")
 
 
 def _sha256(path: Path) -> str:
@@ -260,11 +260,11 @@ def solve_problem(
     previous_timer = signal.getitimer(signal.ITIMER_REAL)
     timer_enabled = math.isfinite(compile_budget) and compile_budget > 0.0
     if timer_enabled:
-        signal.signal(signal.SIGALRM, _raise_compile_deadline)
+        signal.signal(signal.SIGALRM, _raise_deadline)
         signal.setitimer(signal.ITIMER_REAL, compile_budget)
     try:
         compilation = compile_problem(problem, mode=mode)
-    except _CompileDeadlineExceeded as error:
+    except _DeadlineExceeded as error:
         base.update(
             {
                 "status": "timeout",
@@ -349,7 +349,7 @@ def solve_problem(
     previous_timer = signal.getitimer(signal.ITIMER_REAL)
     timer_enabled = math.isfinite(elimination_budget) and elimination_budget > 0.0
     if timer_enabled:
-        signal.signal(signal.SIGALRM, _raise_compile_deadline)
+        signal.signal(signal.SIGALRM, _raise_deadline)
         signal.setitimer(signal.ITIMER_REAL, elimination_budget)
     try:
         descriptors, elimination = descriptors_from_candidates(compilation, candidates)
@@ -357,7 +357,7 @@ def solve_problem(
         base["metrics"]["ideal_degree"] = exact_degree(compilation)
         base["answers"] = descriptors
         base["distinct_exact_targets"] = descriptors
-    except _CompileDeadlineExceeded as error:
+    except _DeadlineExceeded as error:
         base.update(
             {
                 "status": "timeout",
