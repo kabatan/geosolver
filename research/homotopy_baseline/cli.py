@@ -75,18 +75,18 @@ def _load_dataset(path: str) -> list[dict[str, Any]]:
     return rows
 
 
-def _current_control(problem: dict[str, Any], seconds: float, seed: int) -> dict[str, Any]:
-    """Run the product control in an isolated, hard-deadline subprocess.
-
-    Calling the service in-process is convenient for a smoke test but allows a
-    broker/preloader fault to outlive the solver's nominal fixed-time window.
-    The official comparison measures the complete CLI lifecycle, so startup,
-    shutdown, and descendants are all inside the same wall-clock cap.
-    """
+def _isolated_json_worker(
+    problem: dict[str, Any],
+    *,
+    command_builder: Any,
+    seconds: float,
+    timeout_detail: str,
+) -> dict[str, Any]:
+    """Run one comparison arm with a hard wall and process-group cleanup."""
 
     started = time.monotonic()
     root = Path(__file__).resolve().parents[2]
-    with tempfile.TemporaryDirectory(prefix="geotarget-current-") as directory:
+    with tempfile.TemporaryDirectory(prefix="geotarget-comparison-") as directory:
         workspace = Path(directory)
         source = workspace / "problem.json"
         output = workspace / "result.json"
@@ -94,7 +94,73 @@ def _current_control(problem: dict[str, Any], seconds: float, seed: int) -> dict
             json.dumps(problem, ensure_ascii=False, sort_keys=True, separators=(",", ":")),
             encoding="utf-8",
         )
-        command = [
+        command = command_builder(source, output)
+        try:
+            completed = subprocess.Popen(
+                command,
+                cwd=root,
+                env=os.environ.copy(),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                start_new_session=True,
+            )
+            try:
+                stdout, stderr = completed.communicate(timeout=max(0.1, float(seconds)))
+            except subprocess.TimeoutExpired:
+                with suppress(ProcessLookupError):
+                    os.killpg(completed.pid, signal.SIGTERM)
+                try:
+                    completed.wait(timeout=5.0)
+                except subprocess.TimeoutExpired:
+                    with suppress(ProcessLookupError):
+                        os.killpg(completed.pid, signal.SIGKILL)
+                    completed.wait(timeout=5.0)
+                elapsed = time.monotonic() - started
+                return {
+                    "status": "timeout",
+                    "detail": timeout_detail,
+                    "elapsed_seconds": elapsed,
+                    "harness_elapsed_seconds": elapsed,
+                    "timings": {"total_seconds": elapsed},
+                    "answers": [],
+                }
+        except OSError as error:
+            elapsed = time.monotonic() - started
+            return {
+                "status": "engine_error",
+                "detail": str(error),
+                "elapsed_seconds": elapsed,
+                "harness_elapsed_seconds": elapsed,
+                "timings": {"total_seconds": elapsed},
+                "answers": [],
+            }
+        if output.is_file():
+            try:
+                result = json.loads(output.read_text(encoding="utf-8"))
+                if isinstance(result, dict):
+                    result["harness_elapsed_seconds"] = time.monotonic() - started
+                    if stderr:
+                        result["harness_stderr_tail"] = stderr[-4000:]
+                    return result
+            except json.JSONDecodeError:
+                pass
+        elapsed = time.monotonic() - started
+        return {
+            "status": "engine_error",
+            "detail": (stderr or stdout)[-4000:],
+            "elapsed_seconds": elapsed,
+            "harness_elapsed_seconds": elapsed,
+            "timings": {"total_seconds": elapsed},
+            "answers": [],
+        }
+
+
+def _current_control(problem: dict[str, Any], seconds: float, seed: int) -> dict[str, Any]:
+    """Run the product control in an isolated, hard-deadline subprocess."""
+
+    def command(source: Path, output: Path) -> list[str]:
+        return [
             sys.executable,
             "-m",
             "geotarget.cli",
@@ -113,57 +179,45 @@ def _current_control(problem: dict[str, Any], seconds: float, seed: int) -> dict
             "--output",
             str(output),
         ]
-        environment = os.environ.copy()
-        try:
-            completed = subprocess.Popen(
-                command,
-                cwd=root,
-                env=environment,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                start_new_session=True,
-            )
-            try:
-                stdout, stderr = completed.communicate(timeout=max(0.1, float(seconds)))
-            except subprocess.TimeoutExpired:
-                with suppress(ProcessLookupError):
-                    os.killpg(completed.pid, signal.SIGTERM)
-                try:
-                    completed.wait(timeout=5.0)
-                except subprocess.TimeoutExpired:
-                    with suppress(ProcessLookupError):
-                        os.killpg(completed.pid, signal.SIGKILL)
-                    completed.wait(timeout=5.0)
-                return {
-                    "status": "timeout",
-                    "detail": "current control exceeded the hard wall deadline",
-                    "elapsed_seconds": time.monotonic() - started,
-                    "answers": [],
-                }
-        except OSError as error:
-            return {
-                "status": "engine_error",
-                "detail": str(error),
-                "elapsed_seconds": time.monotonic() - started,
-                "answers": [],
-            }
-        if output.is_file():
-            try:
-                result = json.loads(output.read_text(encoding="utf-8"))
-                if isinstance(result, dict):
-                    result["harness_elapsed_seconds"] = time.monotonic() - started
-                    if stderr:
-                        result["harness_stderr_tail"] = stderr[-4000:]
-                    return result
-            except json.JSONDecodeError:
-                pass
-        return {
-            "status": "engine_error",
-            "detail": (stderr or stdout)[-4000:],
-            "elapsed_seconds": time.monotonic() - started,
-            "answers": [],
-        }
+
+    return _isolated_json_worker(
+        problem,
+        command_builder=command,
+        seconds=seconds,
+        timeout_detail="current control exceeded the hard wall deadline",
+    )
+
+
+def _homotopy_control(
+    problem: dict[str, Any], *, mode: str, completeness: str, seconds: float, seed: int
+) -> dict[str, Any]:
+    """Run the HC arm out-of-process so SymPy/Julia cannot overrun the cap."""
+
+    def command(source: Path, output: Path) -> list[str]:
+        return [
+            sys.executable,
+            "-m",
+            "research.homotopy_baseline",
+            "solve",
+            str(source),
+            "--mode",
+            mode,
+            "--completeness",
+            completeness,
+            "--seconds",
+            str(float(seconds)),
+            "--seed",
+            str(int(seed)),
+            "--output",
+            str(output),
+        ]
+
+    return _isolated_json_worker(
+        problem,
+        command_builder=command,
+        seconds=seconds,
+        timeout_detail="homotopy arm exceeded the hard wall deadline",
+    )
 
 
 def _product_hash_check() -> dict[str, Any]:
@@ -419,12 +473,12 @@ def _compare(args: argparse.Namespace) -> int:
             if arm == "current":
                 arms[arm] = _current_control(problem, args.seconds, args.seed)
             else:
-                arms[arm] = solve_problem(
+                arms[arm] = _homotopy_control(
                     problem,
                     mode=args.mode,
+                    completeness=args.completeness,
                     seconds=args.seconds,
                     seed=args.seed,
-                    completeness=args.completeness,
                 )
         cases.append(
             {
