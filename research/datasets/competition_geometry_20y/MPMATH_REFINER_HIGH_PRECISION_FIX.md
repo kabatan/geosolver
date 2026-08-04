@@ -62,9 +62,11 @@ post-process.
 
 Validation results:
 
-- frozen runtime regression suite: **127 passed, 1 skipped**;
-- new closure/refinement regression file: **5 passed**;
+- frozen runtime regression suite: **128 passed, 1 skipped**;
+- new closure/refinement regression file: **6 passed**;
 - Ruff on both modified runtime/test files: **clean**.
 
 The final modified runtime SHA-256 is
-`89c33a8a30d5ecaf14cab159cabc17d45429ec3b529b75af584bd4d0087ceb1c`.
+`0d29248086229239c1bc160b56fc38b7c21aa0c11e943416add63ee9e3411dd0`.
+The optional closure failure guard also treats mpmath `TypeError`/`IndexError`
+as an unproven closure instead of aborting the solver.
