@@ -4,7 +4,7 @@
   "source_statement": "Circles $\\mathcal{C}_1, \\mathcal{C}_2,$ and $\\mathcal{C}_3$ have their centers at (0,0), (12,0), and (24,0), and have radii 1, 2, and 4, respectively. Line $t_1$ is a common internal tangent to $\\mathcal{C}_1$ and $\\mathcal{C}_2$ and has a positive slope, and line $t_2$ is a common internal tangent to $\\mathcal{C}_2$ and $\\mathcal{C}_3$ and has a negative slope. Given that lines $t_1$ and $t_2$ intersect at $(x,y),$ and that $x=p-q\\sqrt{r},$ where $p, q,$ and $r$ are positive integers and $r$ is not divisible by the square of any prime, find $p+q+r.$",
   "clause_ledger": [
     {"source": "three fixed circles", "dsl": "direct Circle constructions", "kind": "construction"},
-    {"source": "common internal tangents with specified slope signs", "dsl": "variable lines represented by two points (y=m*x+b) and IsTangent constraints with slope-sign guards", "kind": "constraint/guard"},
+    {"source": "common internal tangents with specified slope signs", "dsl": "variable lines represented by y=m*x+b, IsTangent constraints, slope-sign guards, and opposite-side signed-line guards for each circle pair", "kind": "constraint/guard"},
     {"source": "intersection and x radical form", "dsl": "T=Intersect(t1,t2), answer T.x with exact p+q+r radical contest presentation", "kind": "construction/answer"}
   ],
   "variables": {"names": ["m1", "b1", "m2", "b2"]},
@@ -25,6 +25,11 @@
     {"def": "IsTangent(t2,C2)", "value": 0},
     {"def": "IsTangent(t2,C3)", "value": 0}
   ],
-  "guards": ["AssumeGt(m1,0)", "AssumeLt(m2,0)"],
+  "guards": [
+    "AssumeGt(m1,0)",
+    "AssumeLt(m2,0)",
+    "AssumeLt(b1*(12*m1+b1),0)",
+    "AssumeLt((12*m2+b2)*(24*m2+b2),0)"
+  ],
   "answer": "T.x"
 }

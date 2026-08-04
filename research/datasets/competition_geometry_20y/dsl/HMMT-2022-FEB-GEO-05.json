@@ -4,7 +4,7 @@
   "source_statement": "Let triangle ABC be such that AB = AC = 22 and BC = 11. Point D is chosen in the interior of the triangle such that AD = 19 and ∠ABD + ∠ACD = 90◦ . The value of BD2 + CD2 can be expressed as ab , where a and b are relatively prime positive integers. Compute 100a + b.",
   "clause_ledger": [
     {"source": "isosceles triangle side lengths", "dsl": "symmetric coordinate gauge with exact height from the side-length relation", "kind": "construction/constraint"},
-    {"source": "D interior, AD=19, angle sum 90 degrees", "dsl": "D variable, direct Distance and Angle constraints plus positive-area guards", "kind": "constraint/guard"},
+    {"source": "D interior, AD=19, angle sum 90 degrees", "dsl": "D variable, direct Distance and Angle constraints plus signed same-side guards for the three oriented sides of ABC", "kind": "constraint/guard"},
     {"source": "100a+b", "dsl": "direct squared-distance sum and exact fraction contest presentation", "kind": "answer"}
   ],
   "variables": {"names": ["dx", "dy"]},
@@ -21,6 +21,11 @@
     {"def": "Distance(A,D)", "value": 19},
     {"def": "Angle(A,B,D)+Angle(A,C,D)", "value": "pi/2"}
   ],
-  "guards": ["AssumeGt(dy,0)", "AssumeGt(Area(A,B,D),0)", "AssumeGt(Area(B,C,D),0)", "AssumeGt(Area(C,A,D),0)"],
+  "guards": [
+    "AssumeGt(dy,0)",
+    "AssumeGt(Vector(A,B).cross(Vector(A,D)),0)",
+    "AssumeGt(Vector(B,C).cross(Vector(B,D)),0)",
+    "AssumeGt(Vector(C,A).cross(Vector(C,D)),0)"
+  ],
   "answer": "Distance(B,D)^2+Distance(C,D)^2"
 }

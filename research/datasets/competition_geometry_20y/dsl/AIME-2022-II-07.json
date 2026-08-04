@@ -4,7 +4,7 @@
   "source_statement": "A circle with radius $6$ is externally tangent to a circle with radius $24$ . Find the area of the triangular region bounded by the three common tangent lines of these two circles.",
   "clause_ledger": [
     {"source": "two externally tangent circles", "dsl": "fixed centers O1=(0,0), O2=(30,0), tangent point T=(6,0)", "kind": "construction"},
-    {"source": "three common tangent lines", "dsl": "the contact tangent x=6 plus the two symmetric variable external common tangents", "kind": "construction/constraint"},
+    {"source": "three common tangent lines", "dsl": "the contact tangent x=6 plus a reflected pair of variable external common tangents (l2 is the reflection of l1 across the x-axis)", "kind": "construction/constraint"},
     {"source": "triangle area", "dsl": "area of the three line intersections", "kind": "answer"}
   ],
   "variables": {"names": ["m", "b"]},
@@ -16,7 +16,7 @@
     {"name": "T", "expr": "Point(6,0)"},
     {"name": "l0", "expr": "Line(Point(6,0),Point(6,1))"},
     {"name": "l1", "expr": "Line(m,-1,b)"},
-    {"name": "l2", "expr": "Line(-m,-1,b)"},
+    {"name": "l2", "expr": "Line(-m,-1,-b)"},
     {"name": "V", "expr": "Intersect(l1,l2)"},
     {"name": "W1", "expr": "Intersect(l0,l1)"},
     {"name": "W2", "expr": "Intersect(l0,l2)"}

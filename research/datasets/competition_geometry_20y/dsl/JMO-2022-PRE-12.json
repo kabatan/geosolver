@@ -10,7 +10,7 @@
     },
     {
       "source": "P on circumcircle BHC and inside",
-      "dsl": "direct Circumcircle/OnCircle and interior guards",
+      "dsl": "direct Circumcircle/OnCircle, AssumeAcute, and signed same-side interior guards",
       "kind": "construction/constraint/guard"
     },
     {
@@ -83,8 +83,10 @@
   "guards": [
     "AssumeGt(cx,0)",
     "AssumeGt(cy,0)",
-    "AssumeGt(px,0)",
-    "AssumeGt(py,0)"
+    "AssumeAcute(A,B,C)",
+    "AssumeGt(Vector(A,B).cross(Vector(A,P)),0)",
+    "AssumeGt(Vector(B,C).cross(Vector(B,P)),0)",
+    "AssumeGt(Vector(C,A).cross(Vector(C,P)),0)"
   ],
   "answer": "Distance(B,C)"
 }

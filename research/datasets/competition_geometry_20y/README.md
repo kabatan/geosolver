@@ -27,6 +27,8 @@
 - `BENCHMARK_REPORT_180S_1CORE.md`: 180秒/1 core測定の条件・集計・検証結果。
 - `BENCHMARK_REPORT_180S_1CORE_FINAL.md`: 最終DSLの180秒/1 core集計と、不一致をDSL/solver数値/採点器に分離した報告。
 - `BENCHMARK_REPORT_180S_1CORE_AFTER_GENERAL_FIX.md`: 個別DSL回避策を戻し、共通API境界を修正した後の集計・回帰検証。
+- `DSL_REPAIR_BENCHMARK_REPORT_180S_1CORE.md` / `benchmark_results_180s_1core_dsl_repairs.json`: DSL不備を修正した10ケースだけの180秒・1 core再実行結果。strict exactは6/10で、残る不一致は境界・近退化のsolver数値偽陽性として独立監査しています。
+- `validate_dsl_repairs.py`: 上記10ケースだけを実行したこと、`budget=180`、affinity `[0]`、strict集合フラグを機械検証します。
 - `runtime_api_compat_regression.py`: 公開DSLの`Line`/`Rotate`/`Tangent`/`IncircleContactPoint`/`Perimeter`と数式caretを一括検査する回帰テスト。
 - `runtime_general_fix_manifest.json`: 外部runtimeの修正対象ファイルとSHA256、再現用回帰テストの固定マニフェスト。
 - `DSL_INTEGRITY_AUDIT.md` / `verify_dsl_integrity.py`: 302 JSONの重複キー、IR parser、source provenance、変数上限、benchmark coverageを検査する最終監査。
@@ -54,6 +56,8 @@ DSL化では、定理による短縮（角の二等分線定理、方べき、Pt
 solverの正答は、contestの最終入力形式ではなく、DSLの`answer`式が取り得る数学的な厳密解集合とPhase Cの`answer_values`集合が一致することです。例えば本文が「量が`a/b`と表されるので`a+b`を答えよ」と言う場合、truthには`a/b`を登録し、`a+b`は`presentation_answer`にだけ残します。DSL JSONからは`post_process`メンバーを全て削除しました。
 
 比較はSymPyの記号式を簡約したうえで双方向に行い、数値許容幅で別解を同一視しません。Phase Cが同一根について出す小数fallbackは、同じ記号式が併記されている場合に限りシリアライズ重複として捨てます。記号式のない小数だけの出力は、厳密解集合一致とは判定しません。truthが独立に確定していない行は`truth_status=unresolved`として、正答率の分母から隠さず別集計します。
+
+`decimal-only` は、Phase Cの`answer_values`に記号的な厳密式がなく、候補の高精度数値文字列だけが出力される状態です。`run_phasec_assembly.py`は`identify_answer`が厳密式を返せないときに`str(candidate.answer_hp)`へfallbackします。この値は近いことの診断には使えますが、例えば正答`408`に対する`407.999999…`のような出力も、厳密解集合としては`408`と同一視しません。記号式と同じ根の小数が併記された場合だけ、シリアライズ重複として除去します。
 
 ## 再生成
 

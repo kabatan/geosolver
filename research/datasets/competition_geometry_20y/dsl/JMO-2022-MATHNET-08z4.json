@@ -4,7 +4,7 @@
   "source_statement": "Let $ABC$ be an acute triangle with $AB = 11$, $AC = 10$, and denote the orthocenter by $H$ and the midpoint of $BC$ by $M$. Point $P$ in triangle $ABC$ lies on the circumcircle of triangle $BHC$ and satisfies $\\angle ABP = \\angle CPM$, $PM = 3$. Find the length of $BC$.",
   "clause_ledger": [
     {"source": "acute triangle side lengths, H and M", "dsl": "direct Orthocenter and Midpoint constructions", "kind": "construction/constraint"},
-    {"source": "P on circumcircle BHC and inside", "dsl": "direct Circumcircle/OnCircle and interior guards", "kind": "construction/constraint/guard"},
+    {"source": "P on circumcircle BHC and inside", "dsl": "direct Circumcircle/OnCircle and signed same-side interior guards", "kind": "construction/constraint/guard"},
     {"source": "angle equality and PM=3", "dsl": "direct Angle and Distance constraints", "kind": "constraint"},
     {"source": "BC", "dsl": "Distance(B,C)", "kind": "answer"}
   ],
@@ -27,7 +27,9 @@
   "guards": [
     "AssumeGt(cx,0)", "AssumeGt(cy,0)",
     "AssumeAcute(A,B,C)",
-    "AssumeGt(Area(A,B,P),0)", "AssumeGt(Area(B,C,P),0)", "AssumeGt(Area(C,A,P),0)"
+    "AssumeGt(Vector(A,B).cross(Vector(A,P)),0)",
+    "AssumeGt(Vector(B,C).cross(Vector(B,P)),0)",
+    "AssumeGt(Vector(C,A).cross(Vector(C,P)),0)"
   ],
   "answer": "Distance(B,C)"
 }

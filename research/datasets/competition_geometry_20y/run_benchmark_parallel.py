@@ -39,6 +39,12 @@ def main() -> None:
         help="fail unless the benchmark process is restricted to exactly one CPU",
     )
     ap.add_argument("--output", type=Path, required=True)
+    ap.add_argument(
+        "--case-id",
+        dest="case_ids",
+        action="append",
+        help="run only this DSL stem; repeat the option for multiple cases",
+    )
     args = ap.parse_args()
 
     cpu_affinity = sorted(os.sched_getaffinity(0)) if hasattr(os, "sched_getaffinity") else []
@@ -48,7 +54,16 @@ def main() -> None:
         )
 
     here = Path(__file__).resolve().parent
-    cases = sorted((here / "dsl").glob("*.json"))
+    all_cases = sorted((here / "dsl").glob("*.json"))
+    if args.case_ids:
+        selected = set(args.case_ids)
+        known = {case.stem for case in all_cases}
+        unknown = selected - known
+        if unknown:
+            raise SystemExit(f"unknown --case-id value(s): {sorted(unknown)}")
+        cases = [case for case in all_cases if case.stem in selected]
+    else:
+        cases = all_cases
     audits = {}
     audit_path = here / "manual_audit.jsonl"
     if audit_path.exists():
@@ -73,8 +88,9 @@ def main() -> None:
         if line.strip():
             row = json.loads(line)
             truth[row["case_id"]] = row
-    if set(truth) != {case.stem for case in cases}:
-        raise SystemExit("exact_truth.jsonl does not cover every DSL case")
+    missing_truth = {case.stem for case in cases} - set(truth)
+    if missing_truth:
+        raise SystemExit(f"exact_truth.jsonl does not cover selected DSL case(s): {sorted(missing_truth)}")
     py = args.runtime_root / "solver/python/.venv/bin/python"
     geo = args.runtime_root / "geosolver/src"
     child = here / "benchmark_child.py"
@@ -137,6 +153,7 @@ def main() -> None:
         "runtime_root": str(args.runtime_root),
         "seeds": args.seeds,
         "budget_sec": args.budget,
+        "case_id_filter": sorted(args.case_ids) if args.case_ids else None,
         "jobs": args.jobs,
         "hard_timeout": args.hard_timeout,
         "subprocess_timeout_sec": subprocess_timeout,
