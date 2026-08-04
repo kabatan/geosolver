@@ -19,6 +19,9 @@
 - `exact_truth.jsonl`: 各DSLの`answer`式に対する、問題文を手作業で確認したraw厳密解集合。`published_answer`（AIMEの`a+b`等）はpresentation referenceとして別保持します。
 - `benchmark_results_180s_1core_strict_raw.json`: 上記180秒測定をraw厳密解集合で再採点した結果。`post_process`や代表解の最終形式変換は採点に使いません。
 - `BENCHMARK_REPORT_180S_1CORE_STRICT_RAW.md`: raw厳密解集合一致を正答とした採点定義、分母、内訳、再現検査の報告。
+- `FAILURE_CASE_AUDIT_STRICT_RAW.md` / `FAILURE_CASE_AUDIT_STRICT_RAW.jsonl`: strict failure 66件をcase単位で、raw Phase C値、DSL constraints/guards、source hash、runtime証拠と突合した原因監査。
+- `build_failure_case_audit.py`: 上記failure auditをbenchmark/truth/manual DSLから再生成し、66件のcoverageを検査するスクリプト。
+- `FAILURE_CASE_INDEPENDENT_CHECKS.json` / `verify_failure_case_independent.py`: solver本体を呼ばずに、no_solutionの独立 witness、DSL代数矛盾、`Area`のunsigned semanticsを再現する検算。
 - `exact_scoring.py` / `rescore_strict_benchmark.py`: 記号式の双方向集合比較と既存測定結果の再採点ツール。小数単独は厳密解と認めず、同じ記号解に付随する小数シリアライズだけを重複として除外します。再採点は固定runtimeのSymPyで実行します。
 - `build_exact_truth.py`: source statementとraw解答台帳を生成する監査スクリプト。
 - `BENCHMARK_REPORT_180S_1CORE.md`: 180秒/1 core測定の条件・集計・検証結果。

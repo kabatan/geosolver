@@ -31,10 +31,24 @@ def expected_parts(expected: str | list[str] | tuple[str, ...] | None) -> list[s
 
 def _normalise_text(value: str) -> str:
     text = str(value).strip()
-    text = text.replace("π", "pi").replace("√", "sqrt")
-    text = text.replace("^", "**")
+    # Source ledgers use Unicode/LaTeX radical notation while the solver's
+    # exact printer uses function notation.  Normalize the *radical token*
+    # rather than merely replacing ``√`` with ``sqrt``: ``2√3`` must become
+    # ``2*sqrt(3)``, not the unrelated identifier ``2sqrt3``.
+    text = text.replace("\\pi", "pi").replace("π", "pi")
     text = re.sub(r"\\sqrt\s*\{([^{}]+)\}", r"sqrt(\1)", text)
     text = re.sub(r"sqrt\s*\{([^{}]+)\}", r"sqrt(\1)", text)
+    text = re.sub(r"√\s*\(([^()]+)\)", r"sqrt(\1)", text)
+    text = re.sub(r"√\s*(\d+(?:\.\d+)?)", r"sqrt(\1)", text)
+    text = re.sub(r"∛\s*\(([^()]+)\)", r"cbrt(\1)", text)
+    text = re.sub(r"∛\s*(\d+(?:\.\d+)?)", r"cbrt(\1)", text)
+    text = text.replace("^", "**")
+    # Make the common coefficient/radical and coefficient/pi products
+    # explicit before symbolic parsing.  Other implicit products are handled
+    # by SymPy's implicit-multiplication transformation below.
+    text = re.sub(r"(?<=\d)(?=(?:sqrt|cbrt)\()", "*", text)
+    text = re.sub(r"(?<=\))(?:)(?=(?:sqrt|cbrt)\()", "*", text)
+    text = re.sub(r"(?<=\d)(?=pi\b)", "*", text)
     # The solver's exact printer and the source ledger may differ only in
     # harmless whitespace around multiplication and division.
     text = re.sub(r"\s+", "", text)
@@ -53,17 +67,27 @@ def _sympy_exact(value: str) -> Any | None:
         return None
     try:
         import sympy as sp
+        from sympy.parsing.sympy_parser import (
+            convert_xor,
+            implicit_multiplication_application,
+            parse_expr,
+            standard_transformations,
+        )
 
         x = sp.Symbol("x")
-        expr = sp.sympify(
+        expr = parse_expr(
             text,
-            locals={
+            local_dict={
                 "sqrt": sp.sqrt,
                 "pi": sp.pi,
+                "cbrt": lambda value: sp.root(value, 3),
                 "CRootOf": sp.CRootOf,
                 "RootOf": sp.RootOf,
                 "x": x,
             },
+            transformations=standard_transformations
+            + (implicit_multiplication_application, convert_xor),
+            evaluate=True,
         )
         # A decimal hidden inside a larger expression is still approximate.
         if expr.atoms(sp.Float):
