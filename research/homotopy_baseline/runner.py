@@ -235,14 +235,31 @@ def _run_julia(compilation_payload: dict[str, Any], *, seconds: float, seed: int
 
 
 def solve_problem(
-    problem: Mapping[str, Any], *, mode: str = "core", seconds: float = 180.0, seed: int = 0
+    problem: Mapping[str, Any],
+    *,
+    mode: str = "core",
+    seconds: float = 180.0,
+    seed: int = 0,
+    completeness: str = "complete",
 ) -> dict[str, Any]:
-    """Compile, track all isolated paths, certify, and emit v1 result JSON."""
+    """Compile, certify target witnesses, and emit v1 result JSON.
+
+    ``complete`` is the proof-oriented arm: it additionally checks that every
+    path was certified and that the certified path count agrees with the exact
+    quotient-space degree.  ``target`` deliberately omits that global claim;
+    it still requires a Krawczyk-certified witness and exact elimination/root
+    isolation, but reports the result as ``answers_found_completeness_unknown``.
+    """
+
+    if completeness not in {"complete", "target"}:
+        raise ValueError("completeness must be 'complete' or 'target'")
 
     started = time.monotonic()
     base: dict[str, Any] = {
         "schema_version": "geotarget.homotopy-result/v1",
         "mode": mode,
+        "completeness_policy": completeness,
+        "completeness_claim": completeness == "complete",
         "source_sha256": "",
         "translator_hash": translator_hash(),
         "environment_hash": environment_hash(),
@@ -345,6 +362,8 @@ def solve_problem(
         and item.get("real")
         and _candidate_satisfies_guards(compilation, item)
     ]
+    descriptors: list[dict[str, Any]] = []
+    elimination = None
     elimination_budget = float(seconds) - (time.monotonic() - started)
     previous_timer = signal.getitimer(signal.ITIMER_REAL)
     timer_enabled = math.isfinite(elimination_budget) and elimination_budget > 0.0
@@ -354,7 +373,11 @@ def solve_problem(
     try:
         descriptors, elimination = descriptors_from_candidates(compilation, candidates)
         base["metrics"]["elimination_degree"] = int(elimination.degree())
-        base["metrics"]["ideal_degree"] = exact_degree(compilation)
+        # The target arm still constructs an exact target certificate, but it
+        # does not pay for (or claim) the independent quotient-degree proof.
+        base["metrics"]["ideal_degree"] = (
+            exact_degree(compilation) if completeness == "complete" else None
+        )
         base["answers"] = descriptors
         base["distinct_exact_targets"] = descriptors
     except _DeadlineExceeded as error:
@@ -389,18 +412,19 @@ def solve_problem(
     status = str(worker.get("status", "engine_error"))
     degree = base["metrics"].get("ideal_degree")
     complete = (
-        status == "certified"
+        completeness == "complete"
+        and status == "certified"
         and not worker.get("failed_paths", 0)
         and not worker.get("singular_paths", 0)
         and not base["metrics"].get("duplicate_paths", 0)
         and int(worker.get("certified_count", 0)) == int(worker.get("paths", 0))
         and degree is not None
         and int(degree) == int(worker.get("paths", 0))
-        and len(descriptors if "descriptors" in locals() else []) >= 0
+        and len(descriptors) >= 0
     )
     if complete:
         base["status"] = "exact_complete"
-    elif descriptors if "descriptors" in locals() else False:
+    elif descriptors:
         base["status"] = "answers_found_completeness_unknown"
     elif status == "timeout":
         base["status"] = "timeout"

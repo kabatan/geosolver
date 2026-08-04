@@ -48,7 +48,13 @@ def _analyze(args: argparse.Namespace) -> int:
 
 def _solve(args: argparse.Namespace) -> int:
     problem = _read_problem(args.input)
-    result = solve_problem(problem, mode=args.mode, seconds=args.seconds, seed=args.seed)
+    result = solve_problem(
+        problem,
+        mode=args.mode,
+        seconds=args.seconds,
+        seed=args.seed,
+        completeness=args.completeness,
+    )
     _write_json(args.output, result)
     return 0 if result.get("status") not in {"engine_error", "timeout"} else 2
 
@@ -127,16 +133,30 @@ def _truth_values(row: dict[str, Any]) -> list[float] | None:
 def _arm_score(row: dict[str, Any], result: dict[str, Any]) -> dict[str, Any]:
     expected = _truth_values(row)
     actual: list[float] = []
-    for descriptor in result.get("answers", []):
+    descriptors = result.get("answers")
+    if not isinstance(descriptors, list):
+        descriptors = result.get("distinct_exact_target_descriptors") or result.get(
+            "distinct_exact_targets", []
+        )
+    for descriptor in descriptors:
         try:
             actual.append(float(descriptor["decimal"]))
         except (KeyError, TypeError, ValueError):
             continue
     if expected is None:
-        return {"truth_available": False, "exact_set_match": None, "extra": None, "duplicate": None}
+        return {
+            "truth_available": False,
+            "exact_set_match": None,
+            "exact_set_recall": None,
+            "extra": None,
+            "duplicate": None,
+            "actual_count": len(actual),
+            "expected_count": None,
+        }
     tolerance = 1e-8
     matched = [False] * len(expected)
     extras = 0
+    duplicates = 0
     for value in actual:
         candidates = [
             index
@@ -145,95 +165,160 @@ def _arm_score(row: dict[str, Any], result: dict[str, Any]) -> dict[str, Any]:
         ]
         if candidates:
             matched[candidates[0]] = True
+        elif any(abs(value - target) <= tolerance for target in expected):
+            duplicates += 1
         else:
             extras += 1
-    duplicate = max(0, len(actual) - len(expected) - extras)
     return {
         "truth_available": True,
         "exact_set_match": bool(all(matched) and extras == 0),
         "exact_set_recall": sum(matched) / len(expected) if expected else 1.0,
         "extra": extras,
-        "duplicate": duplicate,
+        "duplicate": duplicates,
+        "actual_count": len(actual),
+        "expected_count": len(expected),
+    }
+
+
+def _result_time(result: dict[str, Any], cap: float) -> float:
+    timings = result.get("timings")
+    if isinstance(timings, dict) and "total_seconds" in timings:
+        try:
+            return float(timings["total_seconds"])
+        except (TypeError, ValueError):
+            pass
+    try:
+        return float(result.get("elapsed_seconds", cap))
+    except (TypeError, ValueError):
+        return cap
+
+
+def _arm_metrics(cases: list[dict[str, Any]], arm: str, cap: float) -> dict[str, Any]:
+    results = [case.get(arm, {}) for case in cases]
+    scores = [case.get("offline_score", {}).get(arm, {}) for case in cases]
+    available = [score for score in scores if score.get("truth_available")]
+    statuses = [str(result.get("status", "unknown")) for result in results]
+    admitted = [
+        index
+        for index, result in enumerate(results)
+        if str(result.get("status")) not in {"unsupported", "invalid_problem"}
+    ]
+    times = [_result_time(result, cap) for result in results]
+    ordered_times = sorted(times)
+    p95_index = (
+        max(0, min(len(ordered_times) - 1, math.ceil(0.95 * len(ordered_times)) - 1))
+        if ordered_times
+        else 0
+    )
+    exact_matches = [score.get("exact_set_match") is True for score in available]
+    recalls = [float(score.get("exact_set_recall", 0.0)) for score in available]
+    return {
+        "case_count": len(cases),
+        "truth_available_count": len(available),
+        "admission_coverage": (
+            len(admitted) / len(cases) if cases else 0.0
+        ),
+        "exact_complete_rate": (
+            sum(status == "exact_complete" for status in statuses) / len(cases)
+            if cases
+            else 0.0
+        ),
+        "exact_set_match_count": sum(exact_matches),
+        "exact_set_match_rate": sum(exact_matches) / len(available) if available else None,
+        "exact_set_recall": sum(recalls) / len(recalls) if recalls else None,
+        "extra_count": sum(int(score.get("extra", 0) or 0) for score in available),
+        "duplicate_count": sum(int(score.get("duplicate", 0) or 0) for score in available),
+        "answer_count": sum(
+            len(result.get("answers", []))
+            if isinstance(result.get("answers", []), list)
+            else 0
+            for result in results
+        ),
+        "conditional_answer_rate": (
+            sum(bool(result.get("answers")) for result in (results[index] for index in admitted))
+            / len(admitted)
+            if admitted
+            else None
+        ),
+        "conditional_exact_set_match_rate": (
+            sum(scores[index].get("exact_set_match") is True for index in admitted)
+            / sum(scores[index].get("truth_available") is True for index in admitted)
+            if sum(scores[index].get("truth_available") is True for index in admitted)
+            else None
+        ),
+        "status_counts": {
+            status: statuses.count(status) for status in sorted(set(statuses))
+        },
+        "timeout_count": statuses.count("timeout"),
+        "unsupported_count": statuses.count("unsupported"),
+        "certification_failure_count": statuses.count("certification_failed"),
+        "median_wall_seconds": median(times) if times else None,
+        "p95_wall_seconds": ordered_times[p95_index] if ordered_times else None,
+        "restricted_mean_wall_seconds": (
+            sum(min(value, cap) for value in times) / len(times) if times else None
+        ),
+        "peak_rss_kib_max": max(
+            (int(result.get("peak_rss_kib", 0)) for result in results), default=0
+        ),
     }
 
 
 def _comparison_metrics(cases: list[dict[str, Any]], cap: float) -> dict[str, Any]:
-    homotopy = [case["homotopy"] for case in cases]
-    statuses = [str(result.get("status")) for result in homotopy]
-    successes = [
-        bool(case.get("offline_score", {}).get("homotopy", {}).get("exact_set_match"))
-        for case in cases
-    ]
-    current_successes = [
-        bool(case.get("offline_score", {}).get("current", {}).get("exact_set_match"))
-        for case in cases
-    ]
-    b = sum(not a and h for a, h in zip(current_successes, successes, strict=True))
-    c = sum(a and not h for a, h in zip(current_successes, successes, strict=True))
+    current_success: dict[int, bool] = {}
+    homotopy_success: dict[int, bool] = {}
+    for index, case in enumerate(cases):
+        current_score = case.get("offline_score", {}).get("current", {})
+        homotopy_score = case.get("offline_score", {}).get("homotopy", {})
+        if current_score.get("truth_available") and homotopy_score.get("truth_available"):
+            current_success[index] = current_score.get("exact_set_match") is True
+            homotopy_success[index] = homotopy_score.get("exact_set_match") is True
+    b = sum(not current_success[index] and homotopy_success[index] for index in current_success)
+    c = sum(current_success[index] and not homotopy_success[index] for index in current_success)
     statistic = ((abs(b - c) - 1) ** 2 / (b + c)) if b + c else 0.0
     p_value = math.erfc(math.sqrt(statistic / 2.0)) if b + c else 1.0
-    homotopy_scores = [case.get("offline_score", {}).get("homotopy", {}) for case in cases]
-    available_scores = [score for score in homotopy_scores if score.get("truth_available")]
-    admitted = [case for case in cases if case["homotopy"].get("status") != "unsupported"]
-
-    def times(results: list[dict[str, Any]]) -> list[float]:
-        return [float(result.get("timings", {}).get("total_seconds", cap)) for result in results]
-
-    all_times = times(homotopy)
-    sorted_times = sorted(all_times)
-    p95_index = (
-        max(0, min(len(sorted_times) - 1, math.ceil(0.95 * len(sorted_times)) - 1))
-        if sorted_times
-        else 0
-    )
+    homotopy = _arm_metrics(cases, "homotopy", cap)
+    current = _arm_metrics(cases, "current", cap)
     return {
         "case_count": len(cases),
-        "admission_coverage": sum(status != "unsupported" for status in statuses) / len(cases)
-        if cases
-        else 0.0,
-        "exact_complete_rate": sum(status == "exact_complete" for status in statuses) / len(cases)
-        if cases
-        else 0.0,
-        "exact_set_recall": (
-            sum(float(score.get("exact_set_recall", 0.0)) for score in available_scores)
-            / len(available_scores)
-            if available_scores
-            else None
-        ),
-        "extra_count": sum(int(score.get("extra", 0) or 0) for score in available_scores),
-        "duplicate_count": sum(int(score.get("duplicate", 0) or 0) for score in available_scores),
-        "conditional_success": (
-            sum(bool(case["homotopy"].get("answers")) for case in admitted) / len(admitted)
-            if admitted
-            else None
-        ),
-        "timeout_count": statuses.count("timeout"),
-        "unsupported_count": statuses.count("unsupported"),
-        "certification_failure_count": statuses.count("certification_failed"),
+        "arms": {"current": current, "homotopy": homotopy},
+        # Keep the homotopy fields at the top level for compatibility with the
+        # exploratory reports produced before the target/completeness split.
+        **homotopy,
         "paired_wins": b,
         "paired_losses": c,
-        "mcnemar": {"b": b, "c": c, "chi_square_cc": statistic, "p_value_asymptotic": p_value},
-        "median_wall_seconds": median(all_times) if all_times else None,
-        "p95_wall_seconds": sorted_times[p95_index] if sorted_times else None,
-        "restricted_mean_wall_seconds": sum(min(value, cap) for value in all_times) / len(all_times)
-        if all_times
-        else None,
+        "mcnemar": {
+            "truth_available_pairs": len(current_success),
+            "b": b,
+            "c": c,
+            "chi_square_cc": statistic,
+            "p_value_asymptotic": p_value,
+        },
         "phase_seconds": {
             "compile": sum(
-                float(item.get("timings", {}).get("compile_seconds", 0.0)) for item in homotopy
+                float(case.get("homotopy", {}).get("timings", {}).get("compile_seconds", 0.0))
+                for case in cases
             ),
             "homotopy": sum(
-                float(item.get("timings", {}).get("homotopy_seconds", 0.0)) for item in homotopy
+                float(case.get("homotopy", {}).get("timings", {}).get("homotopy_seconds", 0.0))
+                for case in cases
             ),
             "certification": sum(
-                float(item.get("timings", {}).get("certification_seconds", 0.0))
-                for item in homotopy
+                float(
+                    case.get("homotopy", {})
+                    .get("timings", {})
+                    .get("certification_seconds", 0.0)
+                )
+                for case in cases
             ),
             "elimination": sum(
-                float(item.get("timings", {}).get("elimination_seconds", 0.0)) for item in homotopy
+                float(
+                    case.get("homotopy", {})
+                    .get("timings", {})
+                    .get("elimination_seconds", 0.0)
+                )
+                for case in cases
             ),
         },
-        "peak_rss_kib_max": max((int(item.get("peak_rss_kib", 0)) for item in homotopy), default=0),
     }
 
 
@@ -252,7 +337,11 @@ def _compare(args: argparse.Namespace) -> int:
                 arms[arm] = _current_control(problem, args.seconds, args.seed)
             else:
                 arms[arm] = solve_problem(
-                    problem, mode=args.mode, seconds=args.seconds, seed=args.seed
+                    problem,
+                    mode=args.mode,
+                    seconds=args.seconds,
+                    seed=args.seed,
+                    completeness=args.completeness,
                 )
         cases.append(
             {
@@ -261,18 +350,31 @@ def _compare(args: argparse.Namespace) -> int:
                 "order": "current_first" if current_first else "homotopy_first",
                 "current": arms["current"],
                 "homotopy": arms["homotopy"],
-                "offline_score": {
-                    "current": _arm_score(row, arms["current"]),
-                    "homotopy": _arm_score(row, arms["homotopy"]),
-                },
+                "_source_row": row,
             }
         )
+        print(
+            f"case {ordinal + 1}/{len(rows)} {cases[-1]['problem_id']} "
+            f"current={arms['current'].get('status')} homotopy={arms['homotopy'].get('status')}",
+            file=sys.stderr,
+            flush=True,
+        )
+    # The truth-bearing answer is read only after every worker has terminated.
+    # It is not passed into either solver arm, and it is not consulted for
+    # admission, stopping, or candidate generation.
+    for case, row in zip(cases, rows, strict=True):
+        case["offline_score"] = {
+            "current": _arm_score(row, case["current"]),
+            "homotopy": _arm_score(row, case["homotopy"]),
+        }
+        case.pop("_source_row", None)
     summary = {
         "schema_version": "geotarget.homotopy-comparison/v1",
         "dataset": str(args.dataset),
         "dataset_sha256": hashlib.sha256(Path(args.dataset).read_bytes()).hexdigest(),
         "expected_development145_sha256": DATASET_SHA256,
         "mode": args.mode,
+        "completeness_policy": args.completeness,
         "seconds": args.seconds,
         "seed": args.seed,
         "truth_blind": True,
@@ -299,6 +401,12 @@ def build_parser() -> argparse.ArgumentParser:
     solve = subparsers.add_parser("solve", help="run one HC + exact-certification solve")
     solve.add_argument("input")
     solve.add_argument("--mode", choices=("core", "extended"), default="core")
+    solve.add_argument(
+        "--completeness",
+        choices=("complete", "target"),
+        default="complete",
+        help="global all-roots proof or target-only certified witness policy",
+    )
     solve.add_argument("--seconds", type=float, default=180.0)
     solve.add_argument("--seed", type=int, default=0)
     solve.add_argument("--output")
@@ -307,6 +415,12 @@ def build_parser() -> argparse.ArgumentParser:
     compare = subparsers.add_parser("compare", help="run paired current/homotopy workers")
     compare.add_argument("dataset")
     compare.add_argument("--mode", choices=("core", "extended"), default="core")
+    compare.add_argument(
+        "--completeness",
+        choices=("complete", "target"),
+        default="complete",
+        help="global all-roots proof or target-only certified witness policy",
+    )
     compare.add_argument("--seconds", type=float, default=180.0)
     compare.add_argument("--seed", type=int, default=0)
     compare.add_argument("--limit", type=int)
