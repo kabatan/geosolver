@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 
-from research.homotopy_baseline.cli import main
+from research.homotopy_baseline.cli import _arm_score, main
 from research.homotopy_baseline.compiler import compile_problem
 from research.homotopy_baseline.runner import DATASET_SHA256
 
@@ -82,3 +82,12 @@ def test_target_policy_never_claims_global_completeness(monkeypatch):
     assert result["completeness_policy"] == "target"
     assert result["completeness_claim"] is False
     assert result["answers"]
+
+
+def test_offline_score_accepts_exact_rational_descriptors():
+    result = _arm_score(
+        {"answer": "81/29"},
+        {"answers": [{"decimal": "81/29"}]},
+    )
+    assert result["exact_set_match"] is True
+    assert result["exact_set_recall"] == 1.0
