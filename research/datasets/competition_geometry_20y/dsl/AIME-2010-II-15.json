@@ -6,7 +6,7 @@
     {"source": "triangle ABC sides 13,14,15; M midpoint AC; D angle bisector from B", "dsl": "coordinate triangle, midpoint and AngleBisector constructions", "kind": "construction/constraint"},
     {"source": "N midpoint AB; E angle bisector from C", "dsl": "direct Midpoint/AngleBisector constructions", "kind": "construction"},
     {"source": "P is other intersection of circumcircles AMN and ADE; Q=AP intersect BC", "dsl": "two Circumcircle constructions and intersections", "kind": "construction"},
-    {"source": "BQ/CQ=m/n and m-n", "dsl": "Distance(B,Q)/Distance(Q,C) with fraction-difference post-process", "kind": "answer/postprocess"}
+    {"source": "BQ/CQ=m/n and m-n", "dsl": "Distance(B,Q)/Distance(Q,C) with fraction-difference contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["cx", "cy"]},
   "construction": [
@@ -36,6 +36,5 @@
   ],
   "guards": ["AssumeGt(cy,0)", "AssumeGt(Dot(Vector(A,P),Vector(A,Q)),0)", "AssumeGt(Distance(B,Q),0)", "AssumeGt(Distance(Q,C),0)"],
   "answer": "Distance(B,Q)/Distance(Q,C)",
-  "solver_coverage": "executable_source_faithful",
-  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator - f.denominator"
+  "solver_coverage": "executable_source_faithful"
 }

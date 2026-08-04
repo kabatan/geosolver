@@ -6,7 +6,7 @@
     {"source": "isosceles AEF", "dsl": "fixed symmetric base coordinate gauge with direct side distances", "kind": "construction/constraint"},
     {"source": "B,D on sides and BD parallel EF", "dsl": "B=tE,D=tF", "kind": "construction"},
     {"source": "C interior and ABCD cyclic; BC=3,CD=4", "dsl": "C variable with Circumcircle(A,B,D), OnCircle(C,...) and distance constraints", "kind": "constraint/guard"},
-    {"source": "100a+b area ratio", "dsl": "direct area ratio and exact fraction post-process", "kind": "answer"}
+    {"source": "100a+b area ratio", "dsl": "direct area ratio and exact fraction contest presentation", "kind": "answer"}
   ],
   "variables": {"names": ["t", "cx", "cy"]},
   "construction": [
@@ -30,6 +30,5 @@
     "AssumeGt(t,0)", "AssumeLt(t,1)", "AssumeGt(cy,0)", "AssumeLt(cy,sqrt(341))",
     "AssumeGt(Area(A,E,C),0)", "AssumeGt(Area(E,F,C),0)", "AssumeGt(Area(F,A,C),0)"
   ],
-  "answer": "Area(A,B,C,D)/Area(A,E,F)",
-  "post_process": "f = formatter.to_fraction(answer_values[0]); result = 100*f.numerator + f.denominator"
+  "answer": "Area(A,B,C,D)/Area(A,E,F)"
 }

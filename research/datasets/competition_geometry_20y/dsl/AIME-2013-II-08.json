@@ -4,7 +4,7 @@
   "source_statement": "A hexagon that is inscribed in a circle has side lengths $22$ , $22$ , $20$ , $22$ , $22$ , and $20$ in that order. The radius of the circle can be written as $p+\\sqrt{q}$ , where $p$ and $q$ are positive integers. Find $p+q$ .",
   "clause_ledger": [
     {"source": "six cyclic vertices and ordered chord lengths", "dsl": "fix O=(0,0), A=(r,0), and construct each successive positive central-angle rotation from its stated chord length; the six direct chord constraints and closure remain", "kind": "construction/constraint"},
-    {"source": "p+sqrt(q) radius presentation", "dsl": "answer Radius circle with explicit radical presentation marker", "kind": "answer/postprocess"}
+    {"source": "p+sqrt(q) radius presentation", "dsl": "answer Radius circle with explicit radical presentation marker", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["r"]},
   "construction": [
@@ -36,6 +36,5 @@
     {"def": "Distance(F,A)", "value": 20}
   ],
   "guards": ["AssumeGt(r,11)", "AssumeGt(Area(A,B,C),0)", "AssumeGt(Area(A,C,D),0)", "AssumeGt(Area(A,D,E),0)", "AssumeConvex([A,B,C,D,E,F])"],
-  "answer": "r",
-  "post_process": "# radical_mode=rational_plus_sqrt_sum"
+  "answer": "r"
 }

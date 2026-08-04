@@ -6,7 +6,7 @@
     {"source": "points P,Q on AB with the three lengths", "dsl": "A=(0,0), B=(13,0), P=(4,0), Q=(7,0)", "kind": "construction"},
     {"source": "triangle circumcircle and second intersections S,T", "dsl": "direct Circumcircle and Intersect excluding C", "kind": "construction"},
     {"source": "BT=5, AS=7", "dsl": "direct distance constraints", "kind": "constraint"},
-    {"source": "m+n", "dsl": "geometric answer ST with explicit fraction post_process", "kind": "answer/postprocess"}
+    {"source": "m+n", "dsl": "geometric answer ST with explicit fraction contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["cx", "cy"]},
   "construction": [
@@ -24,6 +24,5 @@
     {"def": "Distance(A,S)", "value": 7}
   ],
   "guards": ["AssumeGt(cy,0)"],
-  "answer": "Distance(S,T)",
-  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+  "answer": "Distance(S,T)"
 }

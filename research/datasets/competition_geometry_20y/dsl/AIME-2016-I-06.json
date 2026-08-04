@@ -6,7 +6,7 @@
     {"source": "triangle, incenter, and C-angle bisector foot L", "dsl": "direct Incenter and intersection constructions", "kind": "construction"},
     {"source": "CL meets circumcircle again at D", "dsl": "direct Circumcircle/Intersect excluding C", "kind": "construction"},
     {"source": "LI=2 and LD=3", "dsl": "direct distance constraints", "kind": "constraint"},
-    {"source": "p+q", "dsl": "geometric answer IC with explicit fraction post_process", "kind": "answer/postprocess"}
+    {"source": "p+q", "dsl": "geometric answer IC with explicit fraction contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["b", "cx", "cy"]},
   "construction": [
@@ -23,6 +23,5 @@
     {"def": "Distance(L,D)", "value": 3}
   ],
   "guards": ["AssumeGt(b,0)", "AssumeGt(cy,0)", "AssumeGt(Area(A,B,C),0)"],
-  "answer": "Distance(I,C)",
-  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+  "answer": "Distance(I,C)"
 }

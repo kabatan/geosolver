@@ -6,7 +6,7 @@
     {"source": "right triangle and altitude", "dsl": "fixed coordinate right-triangle gauge and FootOfPerpendicular", "kind": "construction"},
     {"source": "circle with diameter CD", "dsl": "Circle(Midpoint(C,D),Distance(C,D)/2)", "kind": "construction"},
     {"source": "IA and IB tangent to omega", "dsl": "power-of-point equalities for A and B tangent lines", "kind": "constraint"},
-    {"source": "perimeter ratio m/n and m+n", "dsl": "direct ratio plus fraction post-process", "kind": "answer"}
+    {"source": "perimeter ratio m/n and m+n", "dsl": "direct ratio plus fraction contest presentation", "kind": "answer"}
   ],
   "variables": {"names": ["ix", "iy"]},
   "construction": [
@@ -23,6 +23,5 @@
     {"def": "Distance(O,Line(B,I))", "value": "Distance(C,D)/2"}
   ],
   "guards": ["AssumeLt(ix,0)", "AssumeLt(iy,0)"],
-  "answer": "(Distance(A,I)+Distance(B,I))/Distance(A,B)+1",
-  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+  "answer": "(Distance(A,I)+Distance(B,I))/Distance(A,B)+1"
 }

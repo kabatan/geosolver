@@ -6,7 +6,7 @@
     {"source": "acute triangle ABC with circumcenter O and centroid G", "dsl": "variable triangle, O=Circumcenter, G=Centroid", "kind": "construction/constraint"},
     {"source": "X=tangent at A intersect line through G perpendicular GO; Y=XG intersect BC", "dsl": "direct tangent/perpendicular/intersection constructions", "kind": "construction"},
     {"source": "angles B,C,XOY are in ratio 13:2:17", "dsl": "two exact ratio equations between Angle expressions", "kind": "constraint"},
-    {"source": "degree A and m+n", "dsl": "180*Angle(B,A,C)/pi with fraction post-process", "kind": "answer/postprocess"}
+    {"source": "degree A and m+n", "dsl": "180*Angle(B,A,C)/pi with fraction contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["bx", "cx", "cy"]},
   "construction": [
@@ -26,6 +26,5 @@
   ],
   "guards": ["AssumeGt(bx,0)", "AssumeGt(cy,0)", "AssumeGt(Angle(B,A,C),0)", "AssumeAcute(A,B,C)"],
   "answer": "180*Angle(B,A,C)/pi",
-  "solver_coverage": "executable_source_faithful",
-  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+  "solver_coverage": "executable_source_faithful"
 }

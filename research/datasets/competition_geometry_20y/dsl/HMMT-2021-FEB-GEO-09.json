@@ -5,7 +5,7 @@
   "clause_ledger": [
     {"source": "trapezoid and side conditions", "dsl": "horizontal parallel-base coordinate gauge with direct distances", "kind": "construction/constraint"},
     {"source": "M midpoint; P second circle intersection on AC", "dsl": "Midpoint, Circumcircle, Intersect(...,exclude=C)", "kind": "construction"},
-    {"source": "AP=10 and target 100a+b", "dsl": "direct distance and fraction post-process", "kind": "constraint/answer"}
+    {"source": "AP=10 and target 100a+b", "dsl": "direct distance and fraction contest presentation", "kind": "constraint/answer"}
   ],
   "variables": {"names": ["u", "h"]},
   "construction": [
@@ -23,6 +23,5 @@
     {"def": "Distance(A,P)", "value": 10}
   ],
   "guards": ["AssumeGt(h,0)", "AssumeGt(u,0)"],
-  "answer": "Distance(M,P)",
-  "post_process": "f = formatter.to_fraction(answer_values[0]); result = 100*f.numerator + f.denominator"
+  "answer": "Distance(M,P)"
 }

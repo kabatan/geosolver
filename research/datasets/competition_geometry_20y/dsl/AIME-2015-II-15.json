@@ -6,7 +6,7 @@
     {"source": "circles P,Q radii 1,4 externally tangent at A", "dsl": "O1=(0,0),O2=(5,0), A=(1,0), circles with fixed radii", "kind": "construction/constraint"},
     {"source": "B,C on circles and BC common external tangent", "dsl": "use the fixed external-tangent branch with normal (3/5,-4/5), B=(-3/5,4/5), C=(13/5,16/5); the original circle/tangency constraints are retained", "kind": "construction/constraint"},
     {"source": "line l through A meets circles again D,E; B,C same side", "dsl": "one angle theta defines l through A; D,E are the second intersections with the two circles, and the same-side condition is retained as a signed-cross-product guard", "kind": "construction/constraint/guard"},
-    {"source": "areas DBA and ACE equal; common area m/n and m+n", "dsl": "equal Area constraints and Area(D,B,A) with fraction post-process", "kind": "constraint/answer/postprocess"}
+    {"source": "areas DBA and ACE equal; common area m/n and m+n", "dsl": "equal Area constraints and Area(D,B,A) with fraction contest presentation", "kind": "constraint/answer/contest presentation"}
   ],
   "variables": {"names": ["theta"]},
   "construction": [
@@ -33,6 +33,5 @@
   ],
   "guards": ["AssumeGt(Vector(A,B).cross(Vector(A,D))*Vector(A,C).cross(Vector(A,D)),0)", "AssumeGt(Distance(A,D),0)", "AssumeGt(Distance(A,E),0)"],
   "answer": "Area(D,B,A)",
-  "solver_coverage": "executable_source_faithful",
-  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+  "solver_coverage": "executable_source_faithful"
 }

@@ -5,7 +5,7 @@
   "clause_ledger": [
     {"source": "rectangle side lengths", "dsl": "fixed rectangle coordinates", "kind": "construction"},
     {"source": "E,F interior and four incidence/parallel/distance conditions", "dsl": "variable E,F with direct constraints", "kind": "construction/constraint/guard"},
-    {"source": "radical presentation", "dsl": "geometric answer EF with explicit marker", "kind": "answer/postprocess"}
+    {"source": "radical presentation", "dsl": "geometric answer EF with explicit marker", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["ex", "ey", "fx", "fy"]},
   "construction": [
@@ -25,6 +25,5 @@
     {"def": "OnSegment(K,A,D)", "value": 0}
   ],
   "guards": ["AssumeGt(ex,0)", "AssumeLt(ex,12)", "AssumeGt(ey,0)", "AssumeLt(ey,10)", "AssumeGt(fx,0)", "AssumeLt(fx,12)", "AssumeGt(fy,0)", "AssumeLt(fy,10)"],
-  "answer": "Distance(E,F)",
-  "post_process": "# radical_mode=linear_sqrt_sum"
+  "answer": "Distance(E,F)"
 }

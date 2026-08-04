@@ -6,7 +6,7 @@
     {"source": "acute triangle ABC with orthocenter H and circumcircle omega", "dsl": "variable triangle, H=Orthocenter(A,B,C), omega=Circumcircle(A,B,C)", "kind": "construction/constraint"},
     {"source": "tangent at H to circumcircle HBC meets omega at X,Y", "dsl": "gamma=Circumcircle(H,B,C), tangent line and two intersections with omega", "kind": "construction"},
     {"source": "HA=3,HX=2,HY=6", "dsl": "direct distance constraints", "kind": "constraint"},
-    {"source": "area ABC=m sqrt(n) and m+n", "dsl": "Area(A,B,C) with radical post-process", "kind": "answer/postprocess"}
+    {"source": "area ABC=m sqrt(n) and m+n", "dsl": "Area(A,B,C) with radical contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["bx", "cx", "cy", "xx", "xy", "yx", "yy"]},
   "construction": [
@@ -31,6 +31,5 @@
   ],
   "guards": ["AssumeGt(bx,0)", "AssumeGt(cy,0)", "AssumeGt(Area(A,B,C),0)", "AssumeAcute(A,B,C)"],
   "answer": "Area(A,B,C)",
-  "solver_coverage": "executable_source_faithful",
-  "post_process": "# radical_mode=single_sqrt_sum"
+  "solver_coverage": "executable_source_faithful"
 }

@@ -7,7 +7,7 @@
     {"source": "both diagonals have length 10sqrt(21)", "dsl": "direct Distance(A,C) and Distance(B,D) constraints", "kind": "constraint"},
     {"source": "EA=10sqrt(7), ED=30sqrt(7)", "dsl": "direct E-distance constraints", "kind": "constraint"},
     {"source": "F is foot from C to AD", "dsl": "F=(v,0) in the horizontal gauge", "kind": "construction"},
-    {"source": "m+n presentation", "dsl": "geometric answer Distance(E,F), with explicit radical transform in post_process", "kind": "answer/postprocess"}
+    {"source": "m+n presentation", "dsl": "geometric answer Distance(E,F), with explicit radical transform in contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["d", "u", "v", "ex", "ey"]},
   "construction": [
@@ -26,6 +26,5 @@
     {"def": "Distance(E,D)", "value": "30*sqrt(7)"}
   ],
   "guards": ["AssumeGt(d,0)", "AssumeGt(u,0)", "AssumeGt(v,u)", "AssumeLt(v,d)", "AssumeGt(d,Distance(B,C))"],
-  "answer": "Distance(E,F)",
-  "post_process": "# radical_mode=single_sqrt_sum"
+  "answer": "Distance(E,F)"
 }

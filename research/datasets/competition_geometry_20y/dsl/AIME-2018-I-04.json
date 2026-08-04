@@ -5,7 +5,7 @@
   "clause_ledger": [
     {"source": "isosceles triangle side lengths", "dsl": "coordinate gauge with direct side distances", "kind": "construction/constraint"},
     {"source": "D,E positions and AD=DE=EC", "dsl": "D,E variables with segment guards and direct Distance equalities", "kind": "constraint/guard"},
-    {"source": "p+q", "dsl": "AD followed by exact fraction numerator-plus-denominator post-process", "kind": "answer"}
+    {"source": "p+q", "dsl": "AD followed by exact fraction numerator-plus-denominator contest presentation", "kind": "answer"}
   ],
   "variables": {"names": ["dx", "dy", "ex", "ey"]},
   "construction": [
@@ -27,6 +27,5 @@
     {"def": "OnSegment(E,A,C)", "value": 0}
   ],
   "guards": ["AssumeGt(dx,0)", "AssumeLt(dx,10)", "AssumeGt(ey,0)", "AssumeLt(ey,48/5)"],
-  "answer": "Distance(A,D)",
-  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+  "answer": "Distance(A,D)"
 }

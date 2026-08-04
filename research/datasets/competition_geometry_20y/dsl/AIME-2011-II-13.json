@@ -6,7 +6,7 @@
     {"source": "square side 12 and P on AC with AP>CP", "dsl": "fixed square coordinates and P=(p,p), p>6", "kind": "construction/guard"},
     {"source": "O1,O2 circumcenters", "dsl": "direct Circumcenter constructions", "kind": "construction"},
     {"source": "angle O1PO2=120", "dsl": "direct Angle constraint", "kind": "constraint"},
-    {"source": "sqrt(a)+sqrt(b)", "dsl": "geometric answer AP with explicit radical presentation in post_process", "kind": "answer/postprocess"}
+    {"source": "sqrt(a)+sqrt(b)", "dsl": "geometric answer AP with explicit radical presentation in contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["p"]},
   "construction": [
@@ -23,6 +23,5 @@
     {"def": "OnSegment(P,A,C)", "value": 0}
   ],
   "guards": ["AssumeGt(p,6)", "AssumeLt(p,12)"],
-  "answer": "Distance(A,P)",
-  "post_process": "# radical_mode=radical_sum basis=2,3,6"
+  "answer": "Distance(A,P)"
 }

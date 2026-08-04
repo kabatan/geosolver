@@ -6,7 +6,7 @@
     {"source": "triangle ABC has sides 3,4,5", "dsl": "A=(0,0),B=(3,0),C=(0,4)", "kind": "construction/constraint"},
     {"source": "omega meets AB at E,B; BC at B,D; AC at F,G", "dsl": "variable side points and one circle with all six OnCircle/OnSegment clauses", "kind": "construction/constraint"},
     {"source": "EF=DF and DG/EG=3/4", "dsl": "direct distance constraints", "kind": "constraint"},
-    {"source": "DE=m sqrt(b)/c and m+b+c", "dsl": "Distance(D,E) with radical post-process", "kind": "answer/postprocess"}
+    {"source": "DE=m sqrt(b)/c and m+b+c", "dsl": "Distance(D,E) with radical contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["ex", "dx", "fy", "gy", "ox", "oy", "r"]},
   "construction": [
@@ -38,6 +38,5 @@
   ],
   "guards": ["AssumeGt(r,0)", "AssumeGt(ex,0)", "AssumeLt(ex,3)", "AssumeGt(fy,0)", "AssumeLt(gy,4)"],
   "answer": "Distance(D,E)",
-  "solver_coverage": "executable_source_faithful",
-  "post_process": "# radical_mode=pqr_sum"
+  "solver_coverage": "executable_source_faithful"
 }

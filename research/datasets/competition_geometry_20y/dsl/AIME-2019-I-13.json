@@ -6,7 +6,7 @@
     {"source": "triangle ABC sides 4,5,6 and D,E on ray AB with AB<AD<AE", "dsl": "A=(0,0),B=(4,0), C variable with side constraints; D=(d,0), E=(e,0) and order guards", "kind": "construction/constraint/guard"},
     {"source": "F is the non-C intersection of circumcircles ACD and EBC", "dsl": "Gamma1=Circumcircle(A,C,D), Gamma2=Circumcircle(E,B,C), F on both", "kind": "construction/constraint"},
     {"source": "DF=2, EF=7", "dsl": "direct distance constraints", "kind": "constraint"},
-    {"source": "BE=(a+b sqrt(c))/d and a+b+c+d", "dsl": "Distance(B,E) with radical post-process", "kind": "answer/postprocess"}
+    {"source": "BE=(a+b sqrt(c))/d and a+b+c+d", "dsl": "Distance(B,E) with radical contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["cx", "cy", "d", "e", "fx", "fy"]},
   "construction": [
@@ -30,6 +30,5 @@
   ],
   "guards": ["AssumeGt(cy,0)", "AssumeGt(d,4)", "AssumeGt(e,d)", "AssumeGt(fy,0)", "AssumeGt(Distance(F,C),0)"],
   "answer": "Distance(B,E)",
-  "solver_coverage": "executable_source_faithful",
-  "post_process": "# radical_mode=pqr_sum"
+  "solver_coverage": "executable_source_faithful"
 }

@@ -12,6 +12,12 @@ from fractions import Fraction
 import math
 import re
 
+from exact_scoring import (
+    expected_parts as _strict_expected_parts,
+    strict_answer_set_complete,
+    strict_answer_set_exact,
+)
+
 
 def _expected_parts(expected: str | list[str] | None) -> list[str]:
     if expected in (None, ""):
@@ -130,6 +136,16 @@ def main() -> None:
                 for key in keys:
                     if key:
                         audits[key] = row
+    truth = {}
+    truth_path = here / "exact_truth.jsonl"
+    if not truth_path.is_file():
+        raise SystemExit(f"strict scoring requires {truth_path}")
+    for line in truth_path.read_text(encoding="utf-8").splitlines():
+        if line.strip():
+            row = json.loads(line)
+            truth[row["case_id"]] = row
+    if set(truth) != {case.stem for case in cases}:
+        raise SystemExit("exact_truth.jsonl does not cover every DSL case")
     py = args.runtime_root / "solver/python/.venv/bin/python"
     geo = args.runtime_root / "geosolver/src"
     child = here / "benchmark_child.py"
@@ -157,16 +173,21 @@ def main() -> None:
                     continue
             if payload is None:
                 payload = {"status": "runner_error", "stdout_tail": proc.stdout[-2000:], "stderr_tail": proc.stderr[-2000:]}
-            expected = audits.get(case.stem, {}).get("published_answer")
-            compared_answer = payload.get("reported_answer") or payload.get("selected_answer")
+            audited_truth = truth.get(case.stem, {})
+            expected = audited_truth.get("exact_answer_set")
+            phasec_values = (payload.get("phasec") or {}).get("answer_values", [])
             payload.update({
                 "case_id": case.stem,
                 "seed": seed,
                 "wall_sec": elapsed,
                 "expected_answer": expected,
+                "presentation_answer": audits.get(case.stem, {}).get("published_answer"),
+                "truth_status": audited_truth.get("truth_status"),
                 "raw_selected_answer": payload.get("selected_answer"),
-                "answer_match": close_to_expected(compared_answer, expected),
-                "answer_set_complete": answer_set_complete(payload.get("accepted_answers", []), expected),
+                "answer_match": strict_answer_set_exact(phasec_values, expected),
+                "answer_set_complete": strict_answer_set_complete(phasec_values, expected),
+                "answer_set_exact": strict_answer_set_exact(phasec_values, expected),
+                "solution_values": [str(x) for x in phasec_values],
             })
             rows.append(payload)
             print(json.dumps(payload, ensure_ascii=False))
@@ -182,8 +203,15 @@ def main() -> None:
         "no_solution_runs": sum(x.get("status") == "no_solution" for x in rows),
         "reference_only_runs": sum(x.get("status") == "reference_only" for x in rows),
         "exception_runs": sum(x.get("status") == "exception" for x in rows),
-        "correct_runs": sum(x.get("answer_match") is True for x in rows),
+        "correct_runs": sum(x.get("answer_set_exact") is True for x in rows),
         "complete_answer_set_runs": sum(x.get("answer_set_complete") is True for x in rows),
+        "answer_set_exact_runs": sum(x.get("answer_set_exact") is True for x in rows),
+        "truth_available_runs": sum(bool(_strict_expected_parts(x.get("expected_answer"))) for x in rows),
+        "truth_verified_runs": sum(x.get("truth_status") == "verified" for x in rows),
+        "truth_verified_runnable_runs": sum(
+            x.get("truth_status") == "verified" and x.get("status") != "reference_only"
+            for x in rows
+        ),
         "results": rows,
     }
     args.output.write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

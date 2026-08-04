@@ -6,7 +6,7 @@
     {"source": "isosceles triangle side lengths", "dsl": "fixed symmetric coordinate triangle A=(28,96), B=(0,0), C=(56,0)", "kind": "construction"},
     {"source": "circle P radius16 tangent AC,BC", "dsl": "variable center O1 and distance-to-line constraints", "kind": "construction/constraint"},
     {"source": "circle Q tangent AB,BC and externally tangent P inside triangle", "dsl": "variable center O2/r and direct line/two-center distance constraints with interior guards", "kind": "construction/constraint/guard"},
-    {"source": "m+n*k", "dsl": "geometric answer radius r with explicit radical marker", "kind": "answer/postprocess"}
+    {"source": "m+n*k", "dsl": "geometric answer radius r with explicit radical marker", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["o1x", "o1y", "o2x", "o2y", "r"]},
   "construction": [
@@ -32,6 +32,5 @@
     "AssumeGt(Vector(C,A).cross(Vector(C,O2)),0)",
     "AssumeGe(Distance(O2,Line(A,C)),r)"
   ],
-  "answer": "r",
-  "post_process": "# radical_mode=m_minus_n_sqrt_k"
+  "answer": "r"
 }

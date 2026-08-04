@@ -6,7 +6,7 @@
     {"source": "AB=5, BC=12, AC=13", "dsl": "A=(0,0), B=(5,0), C=(5,12)", "kind": "construction/constraint"},
     {"source": "angle BAD equals angle CAD", "dsl": "Angle(B,A,D)=Angle(C,A,D)", "kind": "constraint"},
     {"source": "angle ACB equals angle DCB", "dsl": "Angle(A,C,B)=Angle(D,C,B)", "kind": "constraint"},
-    {"source": "AD", "dsl": "Distance(A,D)", "kind": "answer/postprocess"}
+    {"source": "AD", "dsl": "Distance(A,D)", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["dx", "dy"]},
   "construction": [
@@ -21,6 +21,5 @@
   ],
   "guards": ["AssumeGt(dy,0)", "AssumeGt(Distance(A,D),0)"],
   "answer": "Distance(A,D)",
-  "solver_coverage": "executable_source_faithful",
-  "post_process": "# radical_mode=pqr_sum basis=13"
+  "solver_coverage": "executable_source_faithful"
 }

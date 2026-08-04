@@ -6,7 +6,7 @@
     {"source": "A=(0,0), B=(20,0), AC=BC, angle BAC=75 degrees", "dsl": "A,B,C are fixed exactly by the stated gauge and the isosceles/angle conditions", "kind": "construction/constraint"},
     {"source": "rotate ABC counterclockwise until C' is on positive y-axis", "dsl": "B'=Rotate(B,pi/12), C'=Rotate(C,pi/12); pi/12 is the direct 15-degree rotation implied by the source rays", "kind": "construction"},
     {"source": "common region of the two triangles", "dsl": "D=AC intersect B'C', E=BC intersect B'C', F=BC intersect AB'; common polygon is A-D-E-F", "kind": "construction/answer"},
-    {"source": "find (p-q+r-s)/2 for the radical area form", "dsl": "post_process extracts the four source coefficients from Area(A,D,E,F)", "kind": "answer/postprocess"}
+    {"source": "find (p-q+r-s)/2 for the radical area form", "dsl": "contest presentation extracts the four source coefficients from Area(A,D,E,F)", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": []},
   "construction": [
@@ -29,6 +29,5 @@
   ],
   "guards": [],
   "answer": "Area(A,D,E,F)",
-  "solver_coverage": "executable_source_faithful",
-  "post_process": "# radical_mode=p_minus_q_plus_r_minus_s_over2 basis=2,3,6"
+  "solver_coverage": "executable_source_faithful"
 }

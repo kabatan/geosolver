@@ -7,7 +7,7 @@
     {"source": "Area(Ai,A1,Ai+1)=1 for i=2..10", "dsl": "the alternating lengths satisfy t*u=26/5, so the constructed consecutive rays have the source area; all nine direct Area constraints are retained", "kind": "constraint"},
     {"source": "cos(angle Ai A1 Ai+1)=12/13 for i=2..10", "dsl": "the constructed successive ray angle is theta=atan(5/12), whose cosine is 12/13; all nine direct cosine constraints are retained", "kind": "constraint"},
     {"source": "perimeter equals 20", "dsl": "the perimeter is written as the explicit sum of the eleven edge distances (equivalent to Perimeter(A1,...,A11)=20)", "kind": "constraint"},
-    {"source": "A1A2+A1A11 and m+n+p+q presentation", "dsl": "sum of source distances with radical presentation post-process", "kind": "answer/postprocess"}
+    {"source": "A1A2+A1A11 and m+n+p+q presentation", "dsl": "sum of source distances with radical presentation contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["t"]},
   "construction": [
@@ -48,6 +48,5 @@
   ],
   "guards": ["AssumeGt(t,0)", "AssumeNoSelfIntersecting([A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11])"],
   "answer": "Distance(A1,A2)+Distance(A1,A11)",
-  "solver_coverage": "executable_source_faithful",
-  "post_process": "# radical_mode=m_sqrt_n_minus_p_over_q"
+  "solver_coverage": "executable_source_faithful"
 }

@@ -6,7 +6,7 @@
     {"source": "equilateral ABC inscribed in omega of radius 18", "dsl": "exact circumcircle/vertex gauge", "kind": "construction/constraint"},
     {"source": "omegaA/B/C tangent to the corresponding two sides and internally tangent to omega", "dsl": "one scalar r determines the three symmetric centers OA,OB,OC on the symmetric vertex-radius branch selected by the six stated pairwise intersections; the original tangent/internal-tangent constraints are retained", "kind": "construction/constraint"},
     {"source": "six pairwise intersections form large and small equilateral triangles", "dsl": "S1,S2,S3 are the intersections of the respective circle pairs nearest O, which is the smaller equilateral branch; the original incidences/equal-side constraints are retained", "kind": "construction/constraint"},
-    {"source": "small side sqrt(a)-sqrt(b), find a+b", "dsl": "Distance(S1,S2) with radical presentation marker", "kind": "answer/postprocess"}
+    {"source": "small side sqrt(a)-sqrt(b), find a+b", "dsl": "Distance(S1,S2) with radical presentation marker", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["r"]},
   "construction": [
@@ -49,6 +49,5 @@
   ],
   "guards": ["AssumeGt(r,0)", "AssumeLt(r,18)", "AssumeGt(Area(S1,S2,S3),0)"],
   "answer": "Distance(S1,S2)",
-  "solver_coverage": "executable_source_faithful",
-  "post_process": "# radical_mode=sqrt_difference_sum basis=3,39"
+  "solver_coverage": "executable_source_faithful"
 }

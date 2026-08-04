@@ -5,7 +5,7 @@
   "clause_ledger": [
     {"source": "triangle ABC has sides 4,5,6 and AD angle-bisects A", "dsl": "A,B,C with exact side constraints; D=intersection of angle bisector A with BC", "kind": "construction/constraint"},
     {"source": "perpendicular bisector of AD meets angle bisectors at B,C in E,F", "dsl": "L=PerpendicularBisector(A,D), E/F intersections with the two internal bisectors", "kind": "construction"},
-    {"source": "area AEF=m sqrt(n)/p and m+n+p", "dsl": "Area(A,E,F) with radical presentation post-process", "kind": "answer/postprocess"}
+    {"source": "area AEF=m sqrt(n)/p and m+n+p", "dsl": "Area(A,E,F) with radical presentation contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["cx", "cy"]},
   "construction": [
@@ -24,6 +24,5 @@
   ],
   "guards": ["AssumeGt(cy,0)", "AssumeGt(Area(A,E,F),0)"],
   "answer": "Area(A,E,F)",
-  "solver_coverage": "executable_source_faithful",
-  "post_process": "# radical_mode=pqr_sum"
+  "solver_coverage": "executable_source_faithful"
 }

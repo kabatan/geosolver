@@ -6,7 +6,7 @@
     {"source": "triangle side lengths and circumcircle", "dsl": "coordinate triangle and direct Circumcircle", "kind": "construction/constraint"},
     {"source": "D angle-bisector foot and E second circle intersection", "dsl": "Incenter line and Intersect excluding A", "kind": "construction"},
     {"source": "gamma diameter DE and F second intersection", "dsl": "Circle(Midpoint(D,E),Distance(D,E)/2) and Intersect excluding E", "kind": "construction"},
-    {"source": "m+n", "dsl": "AF^2 with fraction postprocess", "kind": "answer/postprocess"}
+    {"source": "m+n", "dsl": "AF^2 with fraction contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["cx", "cy"]},
   "construction": [
@@ -26,6 +26,5 @@
     {"def": "OnSegment(D,B,C)", "value": 0}
   ],
   "guards": ["AssumeGt(cy,0)"],
-  "answer": "Distance(A,F)**2",
-  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+  "answer": "Distance(A,F)**2"
 }

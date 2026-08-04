@@ -5,7 +5,7 @@
   "clause_ledger": [
     {"source": "two unit squares sharing A", "dsl": "A fixed at the common vertex, with E,F,G variable and direct unit-side/perpendicular constraints", "kind": "construction/constraint"},
     {"source": "intersection area is 1/2 and angle BAE<45 degrees", "dsl": "source overlap polygon A,E,H,D where H=EF∩CD, with branch guard", "kind": "constraint/guard"},
-    {"source": "100a+b", "dsl": "answer is tan(angle BAE)=AE_y/AE_x; explicit fraction transform is in post_process", "kind": "answer/postprocess"}
+    {"source": "100a+b", "dsl": "answer is tan(angle BAE)=AE_y/AE_x; explicit fraction transform is in contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["ex", "ey", "gx", "gy"]},
   "construction": [
@@ -27,6 +27,5 @@
     {"def": "Area(A,E,H,D)", "value": "1/2"}
   ],
   "guards": ["AssumeGt(ex,0)", "AssumeGt(ey,0)", "AssumeLt(ey,ex)", "AssumeLt(gx,0)", "AssumeGt(gy,0)"],
-  "answer": "ey/ex",
-  "post_process": "f = formatter.to_fraction(answer_values[0]); result = 100*f.numerator + f.denominator"
+  "answer": "ey/ex"
 }

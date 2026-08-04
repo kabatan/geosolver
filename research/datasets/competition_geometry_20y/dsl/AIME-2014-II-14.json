@@ -6,7 +6,7 @@
     {"source": "triangle side/angles", "dsl": "A=(0,0), B=(10,0), variable C with direct angle and side constraints", "kind": "construction/constraint"},
     {"source": "H altitude foot, D angle-bisector foot, M midpoint BC", "dsl": "FootOfPerpendicular, Incenter angle-bisector line intersection, and Midpoint", "kind": "construction"},
     {"source": "N midpoint HM and P on ray AD with PN perpendicular BC", "dsl": "direct Midpoint, PerpendicularLine, and intersection", "kind": "construction/constraint"},
-    {"source": "m+n", "dsl": "geometric answer AP^2 with explicit fraction post_process", "kind": "answer/postprocess"}
+    {"source": "m+n", "dsl": "geometric answer AP^2 with explicit fraction contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["cx", "cy"]},
   "construction": [
@@ -25,6 +25,5 @@
     {"def": "Angle(A,C,B)", "value": "45*pi/180"}
   ],
   "guards": ["AssumeGt(cx,0)", "AssumeGt(cy,0)", "AssumeGt(Area(A,B,C),0)", "AssumeGt(Dot(Vector(A,D),Vector(A,P)),0)"],
-  "answer": "Distance(A,P)**2",
-  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+  "answer": "Distance(A,P)**2"
 }

@@ -7,7 +7,7 @@
     {"source": "P on AB, Q on AC, R,S on BC", "dsl": "use t for P=(12t,0); Q is the intersection of AC with the line through P parallel to BC, and R,S are the intersections of BC with the perpendiculars through Q,P; the original carrier constraints are retained", "kind": "constraint/guard"},
     {"source": "PQRS is a rectangle", "dsl": "opposite sides parallel, adjacent sides perpendicular, and opposite side lengths equal", "kind": "constraint"},
     {"source": "beta is the coefficient of w^2 in Area=alpha*w-beta*w^2", "dsl": "Distance(A,Line(B,C))/Distance(B,C), the altitude/side coefficient of the parallel slice family", "kind": "answer"},
-    {"source": "m+n", "dsl": "fraction post-process", "kind": "answer/postprocess"}
+    {"source": "m+n", "dsl": "fraction contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["t"]},
   "construction": [
@@ -37,6 +37,5 @@
   ],
   "guards": ["AssumeGt(t,0)", "AssumeLt(t,1)"],
   "answer": "Distance(A,Line(B,C))/Distance(B,C)",
-  "solver_coverage": "executable_source_faithful",
-  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+  "solver_coverage": "executable_source_faithful"
 }

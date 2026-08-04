@@ -7,7 +7,7 @@
     {"source": "chord AB length 30", "dsl": "horizontal gauge A=(-15,h), B=(15,h) with circle constraints", "kind": "construction/constraint"},
     {"source": "chord CD length 14 and intersection P", "dsl": "variable C,D with circle and chord constraints, P=AB∩CD", "kind": "construction/constraint"},
     {"source": "midpoint distance 12", "dsl": "direct Midpoint constructions and Distance constraint", "kind": "constraint"},
-    {"source": "remainder presentation", "dsl": "geometric answer OP^2 with explicit fraction presentation in post_process", "kind": "answer/postprocess"}
+    {"source": "remainder presentation", "dsl": "geometric answer OP^2 with explicit fraction presentation in contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["h", "cx", "cy", "dx", "dy"]},
   "construction": [
@@ -31,6 +31,5 @@
     {"def": "OnSegment(P,C,D)", "value": 0}
   ],
   "guards": ["AssumeGt(h,0)", "AssumeGt(Area(A,C,D),0)"],
-  "answer": "Distance(O,P)**2",
-  "post_process": "f = formatter.to_fraction(answer_values[0]); result = (f.numerator + f.denominator) % 1000"
+  "answer": "Distance(O,P)**2"
 }

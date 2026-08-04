@@ -5,7 +5,7 @@
   "clause_ledger": [
     {"source": "right triangle, AB=4, and angle A<45", "dsl": "A=(0,0), B=(4,0), variable C with Angle(A,C,B)=90 and branch guards", "kind": "construction/constraint/guard"},
     {"source": "P on AB, CP=1, angle APC=2 angle ACP", "dsl": "P=(p,0) and direct distance/angle constraints", "kind": "construction/constraint"},
-    {"source": "p+qsqrt(r) presentation", "dsl": "geometric answer AP/BP with explicit radical transform", "kind": "answer/postprocess"}
+    {"source": "p+qsqrt(r) presentation", "dsl": "geometric answer AP/BP with explicit radical transform", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["p", "cx", "cy"]},
   "construction": [
@@ -21,6 +21,5 @@
     {"def": "Angle(A,P,C)", "value": "2*Angle(A,C,P)"}
   ],
   "guards": ["AssumeGt(cx,0)", "AssumeGt(cy,0)", "AssumeGt(p,0)", "AssumeLt(p,4)", "AssumeLt(Angle(B,A,C),pi/4)"],
-  "answer": "Distance(A,P)/Distance(P,B)",
-  "post_process": "# radical_mode=linear_sqrt_sum"
+  "answer": "Distance(A,P)/Distance(P,B)"
 }

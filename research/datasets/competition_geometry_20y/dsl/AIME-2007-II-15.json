@@ -6,7 +6,7 @@
     {"source": "triangle ABC sides 13,14,15", "dsl": "fix the unique convex 13-14-15 triangle by a rigid-motion gauge", "kind": "construction/constraint"},
     {"source": "omegaA/B/C equal circles tangent to the indicated two sides", "dsl": "the three centers are constructed on the corresponding vertex-incenter rays at scale r/4; all original tangency constraints remain", "kind": "construction/constraint"},
     {"source": "central omega externally tangent to omegaA/B/C and all four circles are interior", "dsl": "center O, three center-distance equations equal to 2r, and signed-side/distance guards for the radius-r disk inside ABC", "kind": "construction/constraint/guard"},
-    {"source": "m/n and m+n", "dsl": "r with fraction post-process", "kind": "answer/postprocess"}
+    {"source": "m/n and m+n", "dsl": "r with fraction contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["ox", "oy", "r"]},
   "construction": [
@@ -52,6 +52,5 @@
     "AssumeGe(Distance(O,Line(C,A)),r)"
   ],
   "answer": "r",
-  "solver_coverage": "executable_source_faithful",
-  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+  "solver_coverage": "executable_source_faithful"
 }

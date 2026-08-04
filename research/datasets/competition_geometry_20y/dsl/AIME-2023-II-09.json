@@ -6,7 +6,7 @@
     {"source": "two intersecting circles P,Q and common tangent AB", "dsl": "fix the tangent gauge A=(-5,0), B=(7,0), P=(0,k); the circle centers and radii are constructed from tangency and P-incidence, and Q is the other circle intersection", "kind": "construction/constraint"},
     {"source": "line through P parallel AB meets circles again at X,Y", "dsl": "L is the horizontal through P; X=(2*A.x-P.x,P.y) and Y=(2*B.x-P.x,P.y) are the second chord intersections", "kind": "construction"},
     {"source": "PX=10, PY=14, PQ=5", "dsl": "three direct distance constraints", "kind": "constraint"},
-    {"source": "area trapezoid XABY and m+n presentation", "dsl": "Area(X,A,B,Y) with radical post-process", "kind": "answer/postprocess"}
+    {"source": "area trapezoid XABY and m+n presentation", "dsl": "Area(X,A,B,Y) with radical contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["k"]},
   "construction": [
@@ -37,6 +37,5 @@
   ],
   "guards": ["AssumeGt(k,0)", "AssumeGt(Distance(A,B),0)", "AssumeLt(Distance(P,Line(A,B)),Distance(Q,Line(A,B)))"],
   "answer": "Area(X,A,B,Y)",
-  "solver_coverage": "executable_source_faithful",
-  "post_process": "# radical_mode=single_sqrt_sum"
+  "solver_coverage": "executable_source_faithful"
 }

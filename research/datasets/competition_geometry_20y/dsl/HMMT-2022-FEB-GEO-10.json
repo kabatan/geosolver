@@ -6,7 +6,7 @@
     {"source": "circle omega center O radius 8; AC and BD perpendicular chords", "dsl": "fix the chord gauge A=(-sqrt61,sqrt3), C=(sqrt61,sqrt3), B=(1,-3sqrt7), D=(1,3sqrt7), which exactly realizes the two chord lengths and perpendicularity; the original incidence constraints are retained", "kind": "construction/constraint"},
     {"source": "P inside ABCD and four circumcircles tangent in pairs", "dsl": "P variable plus Circumcircle(A,B,P), Circumcircle(C,D,P), Circumcircle(A,D,P), Circumcircle(B,C,P) and IsTangent pairs", "kind": "construction/constraint"},
     {"source": "AC=2sqrt61, BD=6sqrt7", "dsl": "direct chord lengths", "kind": "constraint"},
-    {"source": "OP=a-sqrt(b), compute 100a+b", "dsl": "Distance(O,P) with explicit radical presentation marker", "kind": "answer/postprocess"}
+    {"source": "OP=a-sqrt(b), compute 100a+b", "dsl": "Distance(O,P) with explicit radical presentation marker", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["px", "py"]},
   "construction": [
@@ -39,6 +39,5 @@
     "AssumeGt(Area(C,D,P),0)", "AssumeGt(Area(D,A,P),0)"
   ],
   "answer": "Distance(O,P)",
-  "solver_coverage": "executable_source_faithful",
-  "post_process": "# radical_mode=hundred_a_plus_b"
+  "solver_coverage": "executable_source_faithful"
 }

@@ -16,6 +16,11 @@
 - `benchmark_results_180s_1core_evaluated.json`: 上記にcoverage判定と、余分な候補を拒否する厳密解答集合判定を付加した結果。
 - `benchmark_results_180s_1core_final.json`: 最終DSL（AIME-2016-I-15の作図修正を含む）と修正済みanswer projectionで再評価した最終結果。
 - `benchmark_results_180s_1core_after_general_fix_final.json`: 公開geometry APIと高精度backendの共通互換修正後に、180秒・1 coreで全302件を再測定した結果。
+- `exact_truth.jsonl`: 各DSLの`answer`式に対する、問題文を手作業で確認したraw厳密解集合。`published_answer`（AIMEの`a+b`等）はpresentation referenceとして別保持します。
+- `benchmark_results_180s_1core_strict_raw.json`: 上記180秒測定をraw厳密解集合で再採点した結果。`post_process`や代表解の最終形式変換は採点に使いません。
+- `BENCHMARK_REPORT_180S_1CORE_STRICT_RAW.md`: raw厳密解集合一致を正答とした採点定義、分母、内訳、再現検査の報告。
+- `exact_scoring.py` / `rescore_strict_benchmark.py`: 記号式の双方向集合比較と既存測定結果の再採点ツール。小数単独は厳密解と認めず、同じ記号解に付随する小数シリアライズだけを重複として除外します。再採点は固定runtimeのSymPyで実行します。
+- `build_exact_truth.py`: source statementとraw解答台帳を生成する監査スクリプト。
 - `BENCHMARK_REPORT_180S_1CORE.md`: 180秒/1 core測定の条件・集計・検証結果。
 - `BENCHMARK_REPORT_180S_1CORE_FINAL.md`: 最終DSLの180秒/1 core集計と、不一致をDSL/solver数値/採点器に分離した報告。
 - `BENCHMARK_REPORT_180S_1CORE_AFTER_GENERAL_FIX.md`: 個別DSL回避策を戻し、共通API境界を修正した後の集計・回帰検証。
@@ -41,6 +46,12 @@ DSL化では、定理による短縮（角の二等分線定理、方べき、Pt
 
 座標圧縮後の変数数については、`DOF_COMPRESSION_AUDIT.md` を正とします。`benchmark_results_180s_1core*.json` と `BENCHMARK_REPORT_180S_1CORE.md` は圧縮前の302件baselineを保存したartifactであり、圧縮後の比較対象は `dof_measurement_180s_1core.jsonl` です。
 
+## 正誤判定の定義
+
+solverの正答は、contestの最終入力形式ではなく、DSLの`answer`式が取り得る数学的な厳密解集合とPhase Cの`answer_values`集合が一致することです。例えば本文が「量が`a/b`と表されるので`a+b`を答えよ」と言う場合、truthには`a/b`を登録し、`a+b`は`presentation_answer`にだけ残します。DSL JSONからは`post_process`メンバーを全て削除しました。
+
+比較はSymPyの記号式を簡約したうえで双方向に行い、数値許容幅で別解を同一視しません。Phase Cが同一根について出す小数fallbackは、同じ記号式が併記されている場合に限りシリアライズ重複として捨てます。記号式のない小数だけの出力は、厳密解集合一致とは判定しません。truthが独立に確定していない行は`truth_status=unresolved`として、正答率の分母から隠さず別集計します。
+
 ## 再生成
 
 依存を増やさないため、抽出器は標準Pythonだけで動きます。入力キャッシュを用意した上で、例えば次を実行します。
@@ -57,7 +68,7 @@ python3 extract_dataset.py \
 solver評価は、固定runtimeを汚さないよう外部worktreeから実行します。
 
 ```bash
-python3 run_benchmark_parallel.py \
+/home/kabatan/work/solver-experiment-runtime/solver/python/.venv/bin/python run_benchmark_parallel.py \
   --runtime-root /home/kabatan/work/solver-experiment-runtime \
   --seeds 7 --budget 3 --jobs 8 \
   --output benchmark_results.json

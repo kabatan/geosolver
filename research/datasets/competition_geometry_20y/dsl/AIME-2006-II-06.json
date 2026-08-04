@@ -6,7 +6,7 @@
     {"source": "unit square and E,F on the named sides", "dsl": "fixed square coordinates and variable side points", "kind": "construction/guard"},
     {"source": "AEF equilateral", "dsl": "three equal side distances", "kind": "constraint"},
     {"source": "smaller square at B with parallel sides and a vertex on AE", "dsl": "V=(1-s,s) with the other square vertices determined by side s, and Collinear(A,E,V)", "kind": "construction/constraint"},
-    {"source": "radical presentation", "dsl": "geometric answer s with explicit marker", "kind": "answer/postprocess"}
+    {"source": "radical presentation", "dsl": "geometric answer s with explicit marker", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["e", "f", "s"]},
   "construction": [
@@ -26,6 +26,5 @@
     {"def": "OnSegment(F,C,D)", "value": 0}
   ],
   "guards": ["AssumeGt(e,0)", "AssumeLt(e,1)", "AssumeGt(f,0)", "AssumeLt(f,1)", "AssumeGt(s,0)", "AssumeLt(s,1)"],
-  "answer": "s",
-  "post_process": "# radical_mode=rational_minus_sqrt_sum"
+  "answer": "s"
 }

@@ -5,7 +5,7 @@
   "clause_ledger": [
     {"source": "three fixed circles", "dsl": "direct Circle constructions", "kind": "construction"},
     {"source": "common internal tangents with specified slope signs", "dsl": "variable lines represented by two points (y=m*x+b) and IsTangent constraints with slope-sign guards", "kind": "constraint/guard"},
-    {"source": "intersection and x radical form", "dsl": "T=Intersect(t1,t2), answer T.x with exact p+q+r radical post-process", "kind": "construction/answer"}
+    {"source": "intersection and x radical form", "dsl": "T=Intersect(t1,t2), answer T.x with exact p+q+r radical contest presentation", "kind": "construction/answer"}
   ],
   "variables": {"names": ["m1", "b1", "m2", "b2"]},
   "construction": [
@@ -26,6 +26,5 @@
     {"def": "IsTangent(t2,C3)", "value": 0}
   ],
   "guards": ["AssumeGt(m1,0)", "AssumeLt(m2,0)"],
-  "answer": "T.x",
-  "post_process": "# radical_mode=p_plus_q_plus_r"
+  "answer": "T.x"
 }

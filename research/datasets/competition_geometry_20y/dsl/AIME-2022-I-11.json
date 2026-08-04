@@ -6,7 +6,7 @@
     {"source": "parallelogram ABCD with angle BAD<90", "dsl": "fix the diagonal gauge A=(0,0), C=(28,0) from AP+PQ+QC, use B=(bx,by), D=C-B, and retain the acute-angle branch guard", "kind": "construction/constraint"},
     {"source": "circle tangent to DA,AB,BC intersects AC at P,Q", "dsl": "P=(3,0), Q=(12,0) are the source diagonal positions; O=(15/2,oy) and r=OP, with the original circle and three tangency constraints retained", "kind": "construction/constraint"},
     {"source": "AP=3,PQ=9,QC=16", "dsl": "direct distances on the diagonal", "kind": "constraint"},
-    {"source": "area ABCD=m sqrt(n) and m+n", "dsl": "Area(A,B,C,D) with radical post-process", "kind": "answer/postprocess"}
+    {"source": "area ABCD=m sqrt(n) and m+n", "dsl": "Area(A,B,C,D) with radical contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["bx", "by", "oy"]},
   "construction": [
@@ -34,6 +34,5 @@
   ],
   "guards": ["AssumeGt(by,0)", "AssumeGt(r,0)", "AssumeGt(Dot(Vector(A,B),Vector(A,D)),0)"],
   "answer": "Area(A,B,C,D)",
-  "solver_coverage": "executable_source_faithful",
-  "post_process": "# radical_mode=single_sqrt_sum"
+  "solver_coverage": "executable_source_faithful"
 }

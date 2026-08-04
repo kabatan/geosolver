@@ -6,7 +6,7 @@
     {"source": "AB=9 and the two congruent triangles share AB", "dsl": "fixed A=(0,0), B=(9,0) and direct distance constraints", "kind": "construction/constraint"},
     {"source": "C,D are distinct on the same side and the listed side lengths hold", "dsl": "variable C,D with four source distance constraints and positive-y branch", "kind": "constraint/guard"},
     {"source": "intersection of the two triangular regions", "dsl": "X is the crossing of AC and BD; the common region is the source-order triangle ABX", "kind": "construction/constraint"},
-    {"source": "m/n then m+n", "dsl": "geometric answer is Area(A,B,X); explicit fraction sum is retained in post_process", "kind": "answer/postprocess"}
+    {"source": "m/n then m+n", "dsl": "geometric answer is Area(A,B,X); explicit fraction sum is retained in contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["cx", "cy", "dx", "dy"]},
   "construction": [
@@ -23,6 +23,5 @@
     {"def": "Distance(B,D)", "value": 17}
   ],
   "guards": ["AssumeGt(cy,0)", "AssumeGt(dy,0)", "AssumeGt(cx,9)", "AssumeLt(dx,0)"],
-  "answer": "Area(A,B,X)",
-  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+  "answer": "Area(A,B,X)"
 }

@@ -6,7 +6,7 @@
     {"source": "triangle angle and RD=1", "dsl": "D=(0,0), R=(1,0), variable E with direct angle constraints", "kind": "construction/constraint"},
     {"source": "M midpoint RD and C on ED with RC perpendicular EM", "dsl": "direct Midpoint, collinearity, and Perpendicular constraints", "kind": "construction/constraint"},
     {"source": "A is beyond E on DE and CA=AR", "dsl": "D,E,A collinear with order guard and direct Distance equality", "kind": "construction/constraint"},
-    {"source": "a+b+c presentation", "dsl": "geometric answer AE with explicit radical transform in post_process", "kind": "answer/postprocess"}
+    {"source": "a+b+c presentation", "dsl": "geometric answer AE with explicit radical transform in contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["ex", "ey", "cx", "cy", "ax", "ay"]},
   "construction": [
@@ -28,6 +28,5 @@
     {"def": "Distance(C,A)", "value": "Distance(A,R)"}
   ],
   "guards": ["AssumeGt(ey,0)", "AssumeGt(cx,0)", "AssumeGt(cy,0)", "AssumeGt(ax,ex)"],
-  "answer": "Distance(A,E)",
-  "post_process": "# radical_mode=rational_minus_sqrt_sum basis=3"
+  "answer": "Distance(A,E)"
 }

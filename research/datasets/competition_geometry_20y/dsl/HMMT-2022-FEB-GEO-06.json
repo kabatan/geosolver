@@ -5,7 +5,7 @@
   "clause_ledger": [
     {"source": "rectangle inscribed in circle", "dsl": "coordinate rectangle centered at O with Circle(O,r)", "kind": "construction"},
     {"source": "P on minor arc AB and three products", "dsl": "variable P on Gamma with direct distance-product constraints and arc branch guard", "kind": "construction/constraint/guard"},
-    {"source": "100a+10b+c", "dsl": "geometric answer Area(A,B,C,D) with explicit radical marker", "kind": "answer/postprocess"}
+    {"source": "100a+10b+c", "dsl": "geometric answer Area(A,B,C,D) with explicit radical marker", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["a", "b", "px", "py"]},
   "construction": [
@@ -24,6 +24,5 @@
     {"def": "Distance(P,B)*Distance(P,C)", "value": 9}
   ],
   "guards": ["AssumeGt(a,0)", "AssumeGt(b,0)", "AssumeLt(py,-b)", "AssumeLt(py,0)", "AssumeGt(px,-a)", "AssumeLt(px,a)"],
-  "answer": "Area(A,B,C,D)",
-  "post_process": "# radical_mode=pqr_sum"
+  "answer": "Area(A,B,C,D)"
 }

@@ -6,7 +6,7 @@
     {"source": "convex quadrilateral with four ordered side lengths", "dsl": "coordinate points with direct distances and convexity guards", "kind": "construction/constraint"},
     {"source": "area 30", "dsl": "direct Area constraint", "kind": "constraint"},
     {"source": "acute angle between diagonals", "dsl": "X=AC∩BD and Angle(A,X,B) with acute branch", "kind": "construction/constraint"},
-    {"source": "m+n", "dsl": "tan(theta) with explicit fraction post_process", "kind": "answer/postprocess"}
+    {"source": "m+n", "dsl": "tan(theta) with explicit fraction contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["cx", "cy", "dx", "dy"]},
   "construction": [
@@ -23,6 +23,5 @@
     {"def": "Area(A,B,C,D)", "value": 30}
   ],
   "guards": ["AssumeGt(cy,0)", "AssumeGt(dy,0)", "AssumeConvex([A,B,C,D])", "AssumeGt(Angle(A,X,B),0)", "AssumeLt(Angle(A,X,B),pi/2)"],
-  "answer": "tan(Angle(A,X,B))",
-  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+  "answer": "tan(Angle(A,X,B))"
 }

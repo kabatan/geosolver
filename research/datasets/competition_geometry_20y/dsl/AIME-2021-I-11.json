@@ -6,8 +6,8 @@
     {"source": "cyclic quadrilateral ABCD with AB=4,BC=5,CD=6,DA=7", "dsl": "A,B,C,D with four side constraints, AreConcyclic, and the named cyclic order enforced by AssumeConvex", "kind": "construction/constraint"},
     {"source": "A1,C1 are feet from A,C to BD", "dsl": "FootOfPerpendicular constructions to Line(B,D)", "kind": "construction"},
     {"source": "B1,D1 are feet from B,D to AC", "dsl": "FootOfPerpendicular constructions to Line(A,C)", "kind": "construction"},
-    {"source": "perimeter A1B1C1D1", "dsl": "Perimeter(A1,B1,C1,D1)", "kind": "answer/postprocess"},
-    {"source": "m+n presentation", "dsl": "fraction post-process", "kind": "answer/postprocess"}
+    {"source": "perimeter A1B1C1D1", "dsl": "Perimeter(A1,B1,C1,D1)", "kind": "answer/contest presentation"},
+    {"source": "m+n presentation", "dsl": "fraction contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["cx", "cy", "dx", "dy"]},
   "construction": [
@@ -29,6 +29,5 @@
   ],
   "guards": ["AssumeGt(cy,0)", "AssumeGt(dy,0)", "AssumeConvex([A,B,C,D])", "AssumeGt(Distance(A1,B1),0)"],
   "answer": "Perimeter(A1,B1,C1,D1)",
-  "solver_coverage": "executable_source_faithful",
-  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+  "solver_coverage": "executable_source_faithful"
 }

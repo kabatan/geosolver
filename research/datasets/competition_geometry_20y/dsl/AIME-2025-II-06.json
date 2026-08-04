@@ -6,7 +6,7 @@
     {"source": "omega1 radius6 centered A internally tangent at B to omega2 radius15", "dsl": "A=(0,0), B=(6,0), omega1=Circle(A,6), omega2=Circle((-9,0),15)", "kind": "construction/constraint"},
     {"source": "BC diameter omega2 and BC perpendicular AD", "dsl": "C=(-24,0), D=(0,12), direct diameter/perpendicular constraints", "kind": "construction/constraint"},
     {"source": "rectangle EFGH inscribed omega1, EF perpendicular BC and figure-side order", "dsl": "E=(e,-h),F=(e,h),G=(-e,h),H=(-e,-h) with circle and order guards", "kind": "construction/constraint/guard"},
-    {"source": "areas DGF and CHG equal; rectangle area m/n and m+n", "dsl": "direct equal-area constraint and Area(E,F,G,H) fraction post-process", "kind": "constraint/answer/postprocess"}
+    {"source": "areas DGF and CHG equal; rectangle area m/n and m+n", "dsl": "direct equal-area constraint and Area(E,F,G,H) fraction contest presentation", "kind": "constraint/answer/contest presentation"}
   ],
   "variables": {"names": ["e", "h"]},
   "construction": [
@@ -35,6 +35,5 @@
   ],
   "guards": ["AssumeGt(e,0)", "AssumeGt(h,0)", "AssumeLt(e,6)", "AssumeLt(h,6)", "AssumeGt(Area(E,F,G,H),0)"],
   "answer": "Area(E,F,G,H)",
-  "solver_coverage": "executable_source_faithful",
-  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+  "solver_coverage": "executable_source_faithful"
 }

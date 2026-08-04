@@ -6,7 +6,7 @@
     {"source": "AB chord of omega with P on AB, AP=5,PB=3", "dsl": "rigid-motion gauge with the chord midpoint on the y-axis: A=(-4,h), P=(1,h), B=(4,h), which is exactly the source collinearity and distance data", "kind": "construction/constraint"},
     {"source": "omega1 through A,P internally tangent omega; omega2 through B,P internally tangent omega", "dsl": "the tangency points are the source points A and B; each inner center is constructed on the corresponding O-A/O-B radius with a scalar factor in (0,1), and P-incidence is retained", "kind": "construction/constraint"},
     {"source": "Q is other intersection; PQ meets omega at X,Y with XY=11", "dsl": "Q is the direct other circle intersection; X and Y are the near/far line-circle intersections, so no free intersection coordinates are introduced", "kind": "construction/constraint"},
-    {"source": "PQ^2=m/n and m+n", "dsl": "Distance(P,Q)^2 with fraction post-process", "kind": "answer/postprocess"}
+    {"source": "PQ^2=m/n and m+n", "dsl": "Distance(P,Q)^2 with fraction contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["h", "k1", "k2"]},
   "construction": [
@@ -43,6 +43,5 @@
   ],
   "guards": ["AssumeGt(Distance(O,A),0)", "AssumeGt(k1,0)", "AssumeLt(k1,1)", "AssumeGt(k2,0)", "AssumeLt(k2,1)", "AssumeGt(Distance(P,Q),0)", "AssumeGt(Distance(X,Y),0)"],
   "answer": "Distance(P,Q)*Distance(P,Q)",
-  "solver_coverage": "executable_source_faithful",
-  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+  "solver_coverage": "executable_source_faithful"
 }

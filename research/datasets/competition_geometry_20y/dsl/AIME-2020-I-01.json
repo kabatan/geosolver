@@ -5,7 +5,7 @@
   "clause_ledger": [
     {"source": "isosceles triangle and ordered side points", "dsl": "coordinate A,B,C,D,E with direct collinearity/order and AB=AC", "kind": "construction/constraint/guard"},
     {"source": "AE=ED=DB=BC", "dsl": "four direct distance equalities", "kind": "constraint"},
-    {"source": "degree fraction m/n", "dsl": "answer 180*Angle(A,B,C)/pi with fraction postprocess", "kind": "answer/postprocess"}
+    {"source": "degree fraction m/n", "dsl": "answer 180*Angle(A,B,C)/pi with fraction contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["bx", "cx", "cy", "dx", "dy", "e"]},
   "construction": [
@@ -25,6 +25,5 @@
     {"def": "OnSegment(E,A,B)", "value": 0}
   ],
   "guards": ["AssumeGt(bx,0)", "AssumeGt(cx,0)", "AssumeGt(cy,0)", "AssumeGt(e,0)", "AssumeLt(e,bx)", "AssumeGt(dy,0)", "AssumeLt(dx,cx)"],
-  "answer": "180*Angle(A,B,C)/pi",
-  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+  "answer": "180*Angle(A,B,C)/pi"
 }

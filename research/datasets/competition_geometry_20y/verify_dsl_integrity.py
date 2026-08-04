@@ -8,12 +8,15 @@ benchmark cannot hide a malformed or silently changed problem definition.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
 from collections import Counter
 from pathlib import Path
 from typing import Any
+
+from exact_scoring import exact_target_is_valid
 
 
 ROOT = Path(__file__).resolve().parent
@@ -131,8 +134,8 @@ def main() -> int:
             for i, item in enumerate(ledger):
                 if not isinstance(item, dict) or not all(isinstance(item.get(k), str) and item[k].strip() for k in ("source", "dsl", "kind")):
                     fail(errors, f"{path.name}: clause_ledger[{i}] is incomplete")
-        if "published_answer" in case or "expected_answer" in case:
-            fail(errors, f"{path.name}: answer metadata leaked into DSL")
+        if "published_answer" in case or "expected_answer" in case or "post_process" in case:
+            fail(errors, f"{path.name}: contest answer/presentation metadata leaked into DSL")
 
         # Let the production parser validate expression safety and the full IR
         # schema.  Import lazily so the script remains useful from this repo.
@@ -145,9 +148,14 @@ def main() -> int:
     try:
         audit_rows = read_jsonl(ROOT / "manual_audit.jsonl")
         inventory_rows = read_jsonl(ROOT / "scope_inventory.jsonl")
+        truth_rows = read_jsonl(ROOT / "exact_truth.jsonl")
     except Exception as exc:
         fail(errors, f"metadata JSONL: {exc}")
-        audit_rows, inventory_rows = [], []
+        audit_rows, inventory_rows, truth_rows = [], [], []
+
+    truth_by_case = {row.get("case_id"): row for row in truth_rows}
+    if len(truth_by_case) != len(truth_rows):
+        fail(errors, "exact_truth.jsonl contains duplicate case_id rows")
 
     audit_by_path: dict[str, list[dict[str, Any]]] = {}
     for row in audit_rows:
@@ -187,6 +195,27 @@ def main() -> int:
             dsl_source = row.get("dsl_source_statement")
             if dsl_source and dsl_source != source:
                 fail(errors, f"{path}: stale dsl_source_statement in audit row {row.get('problem_id')}")
+        truth = truth_by_case.get(Path(path).stem)
+        if truth is None:
+            fail(errors, f"{path}: missing exact_truth provenance row")
+        else:
+            if truth.get("dsl_path") != path:
+                fail(errors, f"{path}: exact_truth.dsl_path mismatch")
+            expected_hash = hashlib.sha256(source.encode("utf-8")).hexdigest()
+            if truth.get("source_statement_sha256") != expected_hash:
+                fail(errors, f"{path}: exact_truth source hash mismatch")
+            if truth.get("truth_status") not in {"verified", "unresolved", "not_executable"}:
+                fail(errors, f"{path}: invalid exact_truth truth_status")
+            exact = truth.get("exact_answer_set")
+            if not isinstance(exact, list) or not all(isinstance(value, str) and value.strip() for value in exact):
+                fail(errors, f"{path}: exact_truth.exact_answer_set must be a list of strings")
+            if truth.get("truth_status") == "verified" and not exact:
+                fail(errors, f"{path}: verified exact_truth row has an empty answer set")
+            if truth.get("truth_status") == "verified" and not exact_target_is_valid(exact):
+                fail(errors, f"{path}: verified exact_truth row contains an approximate or duplicate value")
+
+    if {row.get("case_id") for row in truth_rows} != set(cases):
+        fail(errors, "exact_truth/case mismatch")
 
     reference = {stem for stem, case in cases.items() if str(case.get("solver_coverage", "")).startswith("reference_only")}
     if len(paths) != 302:
@@ -215,6 +244,9 @@ def main() -> int:
         "audit_rows": len(audit_rows),
         "inventory_rows": len(inventory_rows),
         "inventory_ready_paths": len(ready_paths),
+        "truth_rows": len(truth_rows),
+        "truth_verified": sum(row.get("truth_status") == "verified" for row in truth_rows),
+        "truth_unresolved": sum(row.get("truth_status") == "unresolved" for row in truth_rows),
         "variable_histogram": dict(sorted(Counter(len(c.get("variables", {}).get("names", [])) for c in cases.values()).items())),
         "errors": len(errors),
     }

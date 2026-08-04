@@ -6,7 +6,7 @@
     {"source": "equilateral ABC of side 12", "dsl": "B=(0,0), C=(12,0), A=(6,6*sqrt(3))", "kind": "construction/constraint"},
     {"source": "A touches point T on BC with BT=9 after folding", "dsl": "T=(9,0); the fold is the perpendicular bisector of AT", "kind": "construction/constraint"},
     {"source": "fold line segment", "dsl": "L=PerpendicularBisector(A,T), M=L intersect AB, N=L intersect AC; answer MN", "kind": "construction/answer"},
-    {"source": "m sqrt(p)/n presentation", "dsl": "explicit radical post-process on Distance(M,N)", "kind": "answer/postprocess"}
+    {"source": "m sqrt(p)/n presentation", "dsl": "explicit radical contest presentation on Distance(M,N)", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": []},
   "construction": [
@@ -30,6 +30,5 @@
   ],
   "guards": [],
   "answer": "Distance(M,N)",
-  "solver_coverage": "executable_source_faithful",
-  "post_process": "# radical_mode=pqr_sum"
+  "solver_coverage": "executable_source_faithful"
 }

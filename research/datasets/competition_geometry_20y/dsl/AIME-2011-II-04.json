@@ -5,7 +5,7 @@
   "clause_ledger": [
     {"source": "triangle and angle-bisector point D", "dsl": "coordinate triangle with D on BC and Angle(A,B,D)=Angle(D,B? no); use the angle-bisector equality at A", "kind": "construction/constraint"},
     {"source": "M midpoint and P=AC intersect BM", "dsl": "direct Midpoint and Intersect constructions", "kind": "construction"},
-    {"source": "CP/PA and m+n", "dsl": "distance ratio plus fraction post-process", "kind": "answer"}
+    {"source": "CP/PA and m+n", "dsl": "distance ratio plus fraction contest presentation", "kind": "answer"}
   ],
   "variables": {"names": ["bx", "by", "t"]},
   "construction": [
@@ -23,6 +23,5 @@
     {"def": "Collinear(B,D,C)", "value": 0}
   ],
   "guards": ["AssumeGt(by,0)", "AssumeGt(bx,0)", "AssumeLt(bx,11)"],
-  "answer": "Distance(C,P)/Distance(P,A)",
-  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+  "answer": "Distance(C,P)/Distance(P,A)"
 }

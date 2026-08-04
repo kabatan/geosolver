@@ -5,7 +5,7 @@
   "clause_ledger": [
     {"source": "triangle side lengths", "dsl": "coordinate gauge with direct Distance constraints", "kind": "construction/constraint"},
     {"source": "M on AC and equal incircle radii", "dsl": "M=(m,0), Incircle radius equality", "kind": "construction/constraint"},
-    {"source": "p+q for AM/CM", "dsl": "Distance ratio followed by exact fraction numerator-plus-denominator post-process", "kind": "answer"}
+    {"source": "p+q for AM/CM", "dsl": "Distance ratio followed by exact fraction numerator-plus-denominator contest presentation", "kind": "answer"}
   ],
   "variables": {"names": ["bx", "by", "m"]},
   "construction": [
@@ -24,6 +24,5 @@
     {"def": "OnSegment(M,A,C)", "value": 0}
   ],
   "guards": ["AssumeGt(by,0)", "AssumeGt(m,0)", "AssumeLt(m,15)"],
-  "answer": "Distance(A,M)/Distance(M,C)",
-  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+  "answer": "Distance(A,M)/Distance(M,C)"
 }

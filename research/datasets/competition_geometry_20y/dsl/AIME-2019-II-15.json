@@ -5,7 +5,7 @@
   "clause_ledger": [
     {"source": "acute triangle ABC; P and Q are perpendicular feet", "dsl": "A=(0,0), B=(b,0), C variable; P=foot(C,AB), Q=foot(B,AC)", "kind": "construction/constraint"},
     {"source": "PQ meets circumcircle at X,Y with XP=10,PQ=25,QY=15", "dsl": "X,Y on Line(P,Q) and Gamma with direct distances", "kind": "construction/constraint"},
-    {"source": "AB*AC=m sqrt(n) and m+n", "dsl": "product of source side distances with radical post-process", "kind": "answer/postprocess"}
+    {"source": "AB*AC=m sqrt(n) and m+n", "dsl": "product of source side distances with radical contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["b", "cx", "cy", "xx", "xy", "yx", "yy"]},
   "construction": [
@@ -31,6 +31,5 @@
   ],
   "guards": ["AssumeGt(b,0)", "AssumeGt(cy,0)", "AssumeGt(Area(A,B,C),0)", "AssumeAcute(A,B,C)"],
   "answer": "Distance(A,B)*Distance(A,C)",
-  "solver_coverage": "executable_source_faithful",
-  "post_process": "# radical_mode=single_sqrt_sum"
+  "solver_coverage": "executable_source_faithful"
 }

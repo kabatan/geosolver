@@ -6,7 +6,7 @@
     {"source": "incircle and contact X", "dsl": "direct Incenter/IncircleContactPoint constructions", "kind": "construction"},
     {"source": "Y is second AX-incircle intersection", "dsl": "direct Intersect excluding X", "kind": "construction"},
     {"source": "P on AB with AP=3,PB=4 and Q on AC with PQ tangent at Y", "dsl": "coordinate P and variable Q, with Y on PQ and IsTangent(Line(P,Q),omega)", "kind": "construction/constraint"},
-    {"source": "m+n", "dsl": "AQ with fraction postprocess", "kind": "answer/postprocess"}
+    {"source": "m+n", "dsl": "AQ with fraction contest presentation", "kind": "answer/contest presentation"}
   ],
   "variables": {"names": ["cx", "cy", "qx", "qy"]},
   "construction": [
@@ -28,6 +28,5 @@
     {"def": "IsTangent(Line(P,Q),omega)", "value": 0}
   ],
   "guards": ["AssumeGt(cy,0)", "AssumeGt(qx,0)", "AssumeGt(qy,0)"],
-  "answer": "Distance(A,Q)",
-  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+  "answer": "Distance(A,Q)"
 }

@@ -15,12 +15,12 @@
     },
     {
       "source": "four given angles",
-      "dsl": "direct Angle constraints in radians",
+      "dsl": "direct Angle constraints in radians; the requested angle is projected to degrees in the answer expression",
       "kind": "constraint"
     },
     {
       "source": "T=BE∩CF and asks angle BTC",
-      "dsl": "direct intersection and Angle answer",
+      "dsl": "direct intersection and degree measure 180*Angle(B,T,C)/pi",
       "kind": "construction/answer"
     }
   ],
@@ -125,6 +125,5 @@
     "AssumeLt(g1+g2+g3+g4+g5,2*pi)",
     "AssumeConvex([A,B,C,D,E,F])"
   ],
-  "answer": "Angle(B,T,C)",
-  "post_process": "180*answer_values[0]/pi"
+  "answer": "180*Angle(B,T,C)/pi"
 }
