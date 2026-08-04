@@ -426,7 +426,7 @@ def _arm_metrics(cases: list[dict[str, Any]], arm: str, cap: float) -> dict[str,
             status: statuses.count(status) for status in sorted(set(statuses))
         },
         "timeout_count": statuses.count("timeout"),
-        "admission_timeout_count": sum(
+        "timeout_without_admission_metadata_count": sum(
             status == "timeout" and not (results[index].get("admission") or {})
             for index, status in enumerate(statuses)
         )

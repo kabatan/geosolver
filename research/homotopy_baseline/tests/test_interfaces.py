@@ -116,5 +116,5 @@ def test_admission_timeout_is_not_a_conditional_success_case():
     ]
     metrics = _arm_metrics(cases, "homotopy", 180.0)
     assert metrics["admission_coverage"] == 0.5
-    assert metrics["admission_timeout_count"] == 1
+    assert metrics["timeout_without_admission_metadata_count"] == 1
     assert metrics["conditional_answer_rate"] == 1.0
