@@ -17,6 +17,8 @@ from pathlib import Path
 from statistics import median
 from typing import Any
 
+import psutil
+
 from .compiler import admission_report
 from .runner import DATASET_SHA256, admission_manifest, solve_problem
 
@@ -86,6 +88,24 @@ def _isolated_json_worker(
 
     started = time.monotonic()
     root = Path(__file__).resolve().parents[2]
+    def terminate_tree(pid: int) -> None:
+        try:
+            root_process = psutil.Process(pid)
+            descendants = root_process.children(recursive=True)
+        except psutil.Error:
+            descendants = []
+        with suppress(ProcessLookupError):
+            os.killpg(pid, signal.SIGTERM)
+        for child in descendants:
+            with suppress(psutil.Error):
+                child.terminate()
+        _gone, alive = psutil.wait_procs(descendants, timeout=3.0)
+        with suppress(ProcessLookupError):
+            os.killpg(pid, signal.SIGKILL)
+        for child in alive:
+            with suppress(psutil.Error):
+                child.kill()
+
     with tempfile.TemporaryDirectory(prefix="geotarget-comparison-") as directory:
         workspace = Path(directory)
         source = workspace / "problem.json"
@@ -108,13 +128,8 @@ def _isolated_json_worker(
             try:
                 stdout, stderr = completed.communicate(timeout=max(0.1, float(seconds)))
             except subprocess.TimeoutExpired:
-                with suppress(ProcessLookupError):
-                    os.killpg(completed.pid, signal.SIGTERM)
-                try:
-                    completed.wait(timeout=5.0)
-                except subprocess.TimeoutExpired:
-                    with suppress(ProcessLookupError):
-                        os.killpg(completed.pid, signal.SIGKILL)
+                terminate_tree(completed.pid)
+                with suppress(subprocess.TimeoutExpired):
                     completed.wait(timeout=5.0)
                 elapsed = time.monotonic() - started
                 return {
