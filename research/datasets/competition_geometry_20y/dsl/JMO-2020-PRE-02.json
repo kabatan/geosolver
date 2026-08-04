@@ -15,7 +15,7 @@
     },
     {
       "source": "CGH equilateral and H inside",
-      "dsl": "three equal side distances and interior branch guards",
+      "dsl": "three equal side distances and signed same-side guards for the hexagon interior",
       "kind": "constraint/guard"
     },
     {
@@ -75,12 +75,12 @@
     }
   ],
   "guards": [
-    "AssumeGt(Area(A,B,H),0)",
-    "AssumeGt(Area(B,C,H),0)",
-    "AssumeGt(Area(C,D,H),0)",
-    "AssumeGt(Area(D,E,H),0)",
-    "AssumeGt(Area(E,F,H),0)",
-    "AssumeGt(Area(F,A,H),0)"
+    "AssumeGt(Vector(A,B).cross(Vector(A,H)),0)",
+    "AssumeGt(Vector(B,C).cross(Vector(B,H)),0)",
+    "AssumeGt(Vector(C,D).cross(Vector(C,H)),0)",
+    "AssumeGt(Vector(D,E).cross(Vector(D,H)),0)",
+    "AssumeGt(Vector(E,F).cross(Vector(E,H)),0)",
+    "AssumeGt(Vector(F,A).cross(Vector(F,H)),0)"
   ],
   "answer": "Area(E,F,H)"
 }

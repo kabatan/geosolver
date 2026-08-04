@@ -9,8 +9,8 @@
       "kind": "construction"
     },
     {
-      "source": "point order/collinearities",
-      "dsl": "X on AC, Z on CX extension, and B,Z,Y collinear with direct order guards",
+      "source": "A,Y,X; B,Z,Y; and C,X,Z are collinear in the stated orders",
+      "dsl": "three direct Collinear constraints together with OnSegment(Y,A,X), OnSegment(Z,B,Y), and OnSegment(X,C,Z)",
       "kind": "construction/guard"
     },
     {
@@ -25,13 +25,7 @@
     }
   ],
   "variables": {
-    "names": [
-      "x",
-      "zx",
-      "zy",
-      "yx",
-      "yy"
-    ]
+    "names": ["xx", "xy", "yx", "yy", "zx", "zy"]
   },
   "construction": [
     {
@@ -46,10 +40,7 @@
       "name": "C",
       "expr": "Point(0,1)"
     },
-    {
-      "name": "X",
-      "expr": "Point(0,x)"
-    },
+    {"name": "X", "expr": "Point(xx,xy)"},
     {
       "name": "Z",
       "expr": "Point(zx,zy)"
@@ -61,15 +52,27 @@
   ],
   "constraints": [
     {
-      "def": "Distance(A,X)",
-      "value": "x"
+      "def": "Collinear(A,Y,X)",
+      "value": 0
+    },
+    {
+      "def": "Collinear(B,Z,Y)",
+      "value": 0
     },
     {
       "def": "Collinear(C,X,Z)",
       "value": 0
     },
     {
-      "def": "Collinear(B,Z,Y)",
+      "def": "OnSegment(Y,A,X)",
+      "value": 0
+    },
+    {
+      "def": "OnSegment(Z,B,Y)",
+      "value": 0
+    },
+    {
+      "def": "OnSegment(X,C,Z)",
       "value": 0
     },
     {
@@ -86,11 +89,15 @@
     }
   ],
   "guards": [
-    "AssumeGt(x,0)",
-    "AssumeLt(x,1)",
-    "AssumeGt(zy,1)",
+    "AssumeGt(xx,0)",
+    "AssumeGt(xy,0)",
+    "AssumeLt(xx+xy,1)",
     "AssumeGt(yx,0)",
-    "AssumeGt(yy,0)"
+    "AssumeGt(yy,0)",
+    "AssumeLt(yx+yy,1)",
+    "AssumeGt(zx,0)",
+    "AssumeGt(zy,0)",
+    "AssumeLt(zx+zy,1)"
   ],
   "answer": "Distance(A,X)"
 }

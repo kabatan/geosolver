@@ -5,7 +5,7 @@
   "clause_ledger": [
     {"source": "equilateral triangles ABC and DEF", "dsl": "equal-side Distance constraints for each triangle", "kind": "constraint"},
     {"source": "B,E,F,C lie on a line in this order", "dsl": "all four points are on y=0 with 0<14<Fx<Cx", "kind": "construction/guard"},
-    {"source": "D lies inside ABC", "dsl": "positive subtriangle areas and area partition guard", "kind": "guard"},
+    {"source": "D lies inside ABC", "dsl": "signed same-side guards and area partition guard", "kind": "guard"},
     {"source": "BE=14, EF=15, FC=16", "dsl": "direct Distance constraints", "kind": "constraint"},
     {"source": "compute AD", "dsl": "Distance(A,D)", "kind": "answer"}
   ],
@@ -32,9 +32,9 @@
     "AssumeGt(Fx, 14)",
     "AssumeGt(Cx, Fx)",
     "AssumeGt(Ay, 0)",
-    "AssumeGt(Area(A, B, D), 0)",
-    "AssumeGt(Area(B, C, D), 0)",
-    "AssumeGt(Area(C, A, D), 0)"
+    "AssumeGt(Vector(A,B).cross(Vector(A,D)),0)",
+    "AssumeGt(Vector(B,C).cross(Vector(B,D)),0)",
+    "AssumeGt(Vector(C,A).cross(Vector(C,D)),0)"
   ],
   "answer": "Distance(A, D)"
 }

@@ -35,8 +35,9 @@
   ],
   "guards": [
     "AssumeGt(px*px+py*py,0)", "AssumeConvex([A,B,C,D])",
-    "AssumeGt(Area(A,B,P),0)", "AssumeGt(Area(B,C,P),0)",
-    "AssumeGt(Area(C,D,P),0)", "AssumeGt(Area(D,A,P),0)"
+    "AssumeGt(Vector(A,B).cross(Vector(A,P))*Vector(B,C).cross(Vector(B,P)),0)",
+    "AssumeGt(Vector(A,B).cross(Vector(A,P))*Vector(C,D).cross(Vector(C,P)),0)",
+    "AssumeGt(Vector(A,B).cross(Vector(A,P))*Vector(D,A).cross(Vector(D,P)),0)"
   ],
   "answer": "Distance(O,P)",
   "solver_coverage": "executable_source_faithful"

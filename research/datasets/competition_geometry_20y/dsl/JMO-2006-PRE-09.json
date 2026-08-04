@@ -4,7 +4,7 @@
   "source_statement": "BC=5，CA=7，AB=8である三角形ABCの内部に点Oをとる。三角形OBCの外接円，三角形OCAの外接円，三角形OABの外接円の半径がすべて等しいとき，その等しい半径を求めよ。",
   "clause_ledger": [
     {"source": "triangle side lengths", "dsl": "direct Distance constraints in a coordinate gauge", "kind": "constraint"},
-    {"source": "O inside ABC", "dsl": "positive subtriangle area guards", "kind": "guard"},
+    {"source": "O inside ABC", "dsl": "signed same-side guards for the three sides of ABC", "kind": "guard"},
     {"source": "three circumradii equal", "dsl": "Radius(Circumcircle(O,B,C))=Radius(Circumcircle(O,C,A))=Radius(Circumcircle(O,A,B))", "kind": "constraint"},
     {"source": "common circumradius", "dsl": "Radius(Circumcircle(O,B,C))", "kind": "answer"}
   ],
@@ -22,6 +22,6 @@
     {"def": "Radius(Circumcircle(O,B,C))", "value": "Radius(Circumcircle(O,C,A))"},
     {"def": "Radius(Circumcircle(O,B,C))", "value": "Radius(Circumcircle(O,A,B))"}
   ],
-  "guards": ["AssumeGt(ay,0)", "AssumeGt(oy,0)", "AssumeGt(Area(O,B,C),0)", "AssumeGt(Area(O,C,A),0)", "AssumeGt(Area(O,A,B),0)", "AssumeGt(Area(A,B,C),0)"],
+  "guards": ["AssumeGt(ay,0)", "AssumeGt(oy,0)", "AssumeGt(Vector(B,C).cross(Vector(B,O)),0)", "AssumeGt(Vector(C,A).cross(Vector(C,O)),0)", "AssumeGt(Vector(A,B).cross(Vector(A,O)),0)", "AssumeGt(Area(A,B,C),0)"],
   "answer": "Radius(Circumcircle(O,B,C))"
 }

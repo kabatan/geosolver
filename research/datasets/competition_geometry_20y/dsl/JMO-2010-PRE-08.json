@@ -10,7 +10,7 @@
     },
     {
       "source": "P inside with three distances",
-      "dsl": "P variable, direct Distance constraints and interior guards",
+      "dsl": "P variable, direct Distance constraints and signed same-side interior guards",
       "kind": "constraint/guard"
     },
     {
@@ -61,9 +61,9 @@
   "guards": [
     "AssumeGt(t,0)",
     "AssumeGt(py,0)",
-    "AssumeGt(Area(A,B,P),0)",
-    "AssumeGt(Area(B,C,P),0)",
-    "AssumeGt(Area(C,A,P),0)"
+    "AssumeGt(Vector(A,B).cross(Vector(A,P)),0)",
+    "AssumeGt(Vector(B,C).cross(Vector(B,P)),0)",
+    "AssumeGt(Vector(C,A).cross(Vector(C,P)),0)"
   ],
   "answer": "Area(A,B,C)"
 }

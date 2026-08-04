@@ -9,6 +9,11 @@
       "kind": "construction/constraint"
     },
     {
+      "source": "P inside ABC",
+      "dsl": "signed same-side guards for the three sides of ABC",
+      "kind": "guard"
+    },
+    {
       "source": "E,F are perpendicular feet on CA,AB",
       "dsl": "direct FootOfPerpendicular constructions",
       "kind": "construction"
@@ -83,7 +88,10 @@
     "AssumeGt(h,0)",
     "AssumeGt(py,0)",
     "AssumeGt(px,0)",
-    "AssumeLt(px,14)"
+    "AssumeLt(px,14)",
+    "AssumeGt(Vector(A,B).cross(Vector(A,P)),0)",
+    "AssumeGt(Vector(B,C).cross(Vector(B,P)),0)",
+    "AssumeGt(Vector(C,A).cross(Vector(C,P)),0)"
   ],
   "answer": "Distance(A,B)"
 }

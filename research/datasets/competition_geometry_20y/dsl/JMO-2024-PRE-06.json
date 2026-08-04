@@ -10,7 +10,7 @@
     },
     {
       "source": "E on BC",
-      "dsl": "E is a variable point on the source side BC; no extra position is imposed",
+      "dsl": "E is on the source segment BC, with strict endpoint-exclusion guards",
       "kind": "construction"
     },
     {
@@ -96,6 +96,10 @@
       "value": 0
     },
     {
+      "def": "OnSegment(E,B,C)",
+      "value": 0
+    },
+    {
       "def": "Distance(O,B)",
       "value": "r"
     },
@@ -118,7 +122,9 @@
   ],
   "guards": [
     "AssumeGt(cy,0)",
-    "AssumeGt(r,0)"
+    "AssumeGt(r,0)",
+    "AssumeGt(Distance(E,B),0)",
+    "AssumeGt(Distance(E,C),0)"
   ],
   "answer": "Distance(B,C)"
 }

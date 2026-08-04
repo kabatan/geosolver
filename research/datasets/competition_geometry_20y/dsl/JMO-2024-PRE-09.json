@@ -5,7 +5,7 @@
   "clause_ledger": [
     {
       "source": "cyclic quadrilateral and AB,BC lengths",
-      "dsl": "coordinate points with Circumcircle and direct side constraints",
+      "dsl": "coordinate points with Circumcircle, AssumeConvex([A,B,C,D]), and direct side constraints",
       "kind": "construction/constraint"
     },
     {
@@ -15,7 +15,7 @@
     },
     {
       "source": "F on DE, angle equality, BE=5,EF=3",
-      "dsl": "direct collinearity/angle/distance constraints",
+      "dsl": "E on segment BC, F on segment DE, and direct angle/distance constraints",
       "kind": "construction/constraint"
     },
     {
@@ -26,7 +26,6 @@
   ],
   "variables": {
     "names": [
-      "b",
       "cx",
       "cy",
       "dx",
@@ -87,6 +86,10 @@
       "value": 0
     },
     {
+      "def": "OnSegment(E,B,C)",
+      "value": 0
+    },
+    {
       "def": "OnCircle(D,Gamma)",
       "value": 0
     },
@@ -102,7 +105,8 @@
   "guards": [
     "AssumeGt(cy,0)",
     "AssumeGt(dy,0)",
-    "AssumeGt(fy,0)"
+    "AssumeGt(fy,0)",
+    "AssumeConvex([A,B,C,D])"
   ],
   "answer": "Distance(D,F)"
 }

@@ -4,7 +4,7 @@
   "source_statement": "[7] Let ABC be a triangle with BC = 2007, CA = 2008, AB = 2009. Let ω be an excircle of ABC that touches the line segment BC at D, and touches extensions of lines AC and AB at E and F , respectively (so that C lies on segment AE and B lies on segment AF ). Let O be the center of ω. Let ` be the line through O perpendicular to AD. Let ` meet line EF at G. Compute the length DG.",
   "clause_ledger": [
     {"source": "triangle side lengths", "dsl": "B=(0,0), C=(2007,0), A variable with direct side constraints", "kind": "construction/constraint"},
-    {"source": "A-excircle tangent at D,E,F", "dsl": "omega=Excircle(A,B,C,vertex='A'), D is the source BC contact coordinate, E/F are line contact points", "kind": "construction/constraint"},
+    {"source": "A-excircle tangent at D,E,F", "dsl": "omega=Excircle(A,B,C,vertex='A'), with D on BC and C on AE, B on AF; E/F are the line contact points", "kind": "construction/constraint"},
     {"source": "O center and line through O perpendicular to AD", "dsl": "O=Center(omega), ell=PerpendicularLine(Line(A,D),O)", "kind": "construction"},
     {"source": "G=ell∩EF", "dsl": "G=Intersect(ell,Line(E,F))", "kind": "construction"},
     {"source": "DG", "dsl": "Distance(D,G)", "kind": "answer"}
@@ -27,6 +27,9 @@
     {"def": "Distance(A,C)", "value": 2008},
     {"def": "Distance(B,C)", "value": 2007},
     {"def": "OnCircle(D,omega)", "value": 0},
+    {"def": "OnSegment(D,B,C)", "value": 0},
+    {"def": "OnSegment(C,A,E)", "value": 0},
+    {"def": "OnSegment(B,A,F)", "value": 0},
     {"def": "Perpendicular(Line(B,C),Line(O,D))", "value": 0}
   ],
   "guards": ["AssumeGt(ay,0)", "AssumeGt(Distance(D,G),0)"],

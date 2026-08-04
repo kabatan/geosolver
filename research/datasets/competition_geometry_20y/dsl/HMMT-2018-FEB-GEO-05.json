@@ -3,7 +3,7 @@
   "task": "solve",
   "source_statement": "In the quadrilateral M ARE inscribed in a unit circle ω, AM is a diameter of ω, and E lies on the angle bisector of ∠RAM . Given that triangles RAM and REM have the same area, find the area of quadrilateral M ARE.",
   "clause_ledger": [
-    {"source": "M,A,R,E on unit circle and AM diameter", "dsl": "unit circle centered at origin with A=(1,0), M=(-1,0), R variable and E constructed on the circle", "kind": "construction"},
+    {"source": "M,A,R,E on unit circle and AM diameter", "dsl": "unit circle centered at origin with A=(1,0), M=(-1,0), R variable, E constructed on the circle, and AssumeConvex([M,A,R,E])", "kind": "construction/guard"},
     {"source": "E on angle bisector of RAM", "dsl": "E=Intersect(AngleBisector(R,A,M),omega,exclude=A)", "kind": "construction"},
     {"source": "area RAM equals area REM", "dsl": "Area(R,A,M)=Area(R,E,M)", "kind": "constraint"},
     {"source": "area MARE", "dsl": "Area(M,A,R,E)", "kind": "answer"}
@@ -21,6 +21,6 @@
   "constraints": [
     {"def": "Area(R,A,M)", "value": "Area(R,E,M)"}
   ],
-  "guards": ["AssumeGt(theta,0)", "AssumeLt(theta,pi)", "AssumeGt(Area(M,A,R,E),0)"],
+  "guards": ["AssumeGt(theta,0)", "AssumeLt(theta,pi)", "AssumeConvex([M,A,R,E])", "AssumeGt(Area(M,A,R,E),0)"],
   "answer": "Area(M,A,R,E)"
 }

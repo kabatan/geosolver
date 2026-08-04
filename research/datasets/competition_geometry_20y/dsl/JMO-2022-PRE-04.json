@@ -3,7 +3,7 @@
   "task": "solve",
   "source_statement": "凸四角形ABCDとその内部の点Pがあり，直線APと直線AD，直線BPと直線CDはそれぞれ直交する。AB=7，AP=3，BP=6，AD=5，CD=10のとき，三角形ABCの面積を求めよ。ただし，XYで線分XYの長さを表すものとする。",
   "clause_ledger": [
-    {"source": "convex quadrilateral ABCD and P inside", "dsl": "labeled points with four positive subtriangle-area guards", "kind": "construction/guard"},
+    {"source": "convex quadrilateral ABCD and P inside", "dsl": "AssumeConvex plus orientation-independent signed same-side guards for all four sides", "kind": "construction/guard"},
     {"source": "AP orthogonal AD", "dsl": "Perpendicular(Line(A,P),Line(A,D))", "kind": "constraint"},
     {"source": "BP orthogonal CD", "dsl": "Perpendicular(Line(B,P),Line(C,D))", "kind": "constraint"},
     {"source": "AB=7, AP=3, BP=6, AD=5, CD=10", "dsl": "direct Distance constraints", "kind": "constraint"},
@@ -30,10 +30,10 @@
   "guards": [
     "AssumeLt(By, 0)",
     "AssumeGt(Cx, 0)",
-    "AssumeGt(Area(A, B, P), 0)",
-    "AssumeGt(Area(B, C, P), 0)",
-    "AssumeGt(Area(C, D, P), 0)",
-    "AssumeGt(Area(D, A, P), 0)"
+    "AssumeConvex([A,B,C,D])",
+    "AssumeGt(Vector(A,B).cross(Vector(A,P))*Vector(B,C).cross(Vector(B,P)),0)",
+    "AssumeGt(Vector(A,B).cross(Vector(A,P))*Vector(C,D).cross(Vector(C,P)),0)",
+    "AssumeGt(Vector(A,B).cross(Vector(A,P))*Vector(D,A).cross(Vector(D,P)),0)"
   ],
   "answer": "Area(A, B, C)"
 }

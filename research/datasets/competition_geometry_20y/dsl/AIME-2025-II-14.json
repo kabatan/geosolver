@@ -5,7 +5,7 @@
   "clause_ledger": [
     {"source": "right triangle and hypotenuse", "dsl": "A=(0,0), B=(u,0), C=(0,v), Distance(B,C)=38", "kind": "construction/constraint"},
     {"source": "five equal lengths 14", "dsl": "direct Distance constraints for K,L", "kind": "constraint"},
-    {"source": "K,L inside", "dsl": "positive subarea guards", "kind": "guard"},
+    {"source": "K,L inside", "dsl": "signed same-side guards for all three sides of ABC, for both K and L", "kind": "guard"},
     {"source": "area BKLC=n sqrt(3)", "dsl": "Area(B,K,L,C) with exact radical answer retained", "kind": "answer"}
   ],
   "variables": {"names": ["u", "v", "kx", "ky", "lx", "ly"]},
@@ -24,6 +24,6 @@
     {"def": "Distance(C,L)", "value": 14},
     {"def": "Distance(K,L)", "value": 14}
   ],
-  "guards": ["AssumeGt(u,0)", "AssumeGt(v,0)", "AssumeGt(kx,0)", "AssumeGt(ky,0)", "AssumeGt(lx,0)", "AssumeGt(ly,0)", "AssumeGt(Area(A,B,K),0)", "AssumeGt(Area(A,C,L),0)"],
+  "guards": ["AssumeGt(u,0)", "AssumeGt(v,0)", "AssumeGt(kx,0)", "AssumeGt(ky,0)", "AssumeGt(lx,0)", "AssumeGt(ly,0)", "AssumeGt(Vector(A,B).cross(Vector(A,K)),0)", "AssumeGt(Vector(B,C).cross(Vector(B,K)),0)", "AssumeGt(Vector(C,A).cross(Vector(C,K)),0)", "AssumeGt(Vector(A,B).cross(Vector(A,L)),0)", "AssumeGt(Vector(B,C).cross(Vector(B,L)),0)", "AssumeGt(Vector(C,A).cross(Vector(C,L)),0)"],
   "answer": "Area(B,K,L,C)"
 }

@@ -4,7 +4,7 @@
   "source_statement": "Let $\\triangle ABC$ be an equilateral triangle with side length $55.$ Points $D,$ $E,$ and $F$ lie on $\\overline{BC},$ $\\overline{CA},$ and $\\overline{AB},$ respectively, with $BD = 7,$ $CE=30,$ and $AF=40.$ Point $P$ inside $\\triangle ABC$ has the property that \\[\\angle AEP = \\angle BFP = \\angle CDP.\\] Find $\\tan^2(\\angle AEP).$",
   "clause_ledger": [
     {"source": "equilateral ABC side 55; BD=7, CE=30, AF=40", "dsl": "exact coordinate gauge and side-point constructions", "kind": "construction/constraint"},
-    {"source": "P inside ABC and angles AEP=BFP=CDP", "dsl": "P variable with two exact Angle equalities and inside guard", "kind": "construction/constraint/guard"},
+    {"source": "P inside ABC and angles AEP=BFP=CDP", "dsl": "P variable with two exact Angle equalities and signed same-side inside guards", "kind": "construction/constraint/guard"},
     {"source": "tan^2(angle AEP)", "dsl": "(2*Area(A,E,P)/Dot(Vector(E,A),Vector(E,P)))^2, the definition of tangent squared", "kind": "answer"}
   ],
   "variables": {"names": ["px", "py"]},
@@ -27,7 +27,7 @@
     {"def": "Angle(A,E,P)", "value": "Angle(B,F,P)"},
     {"def": "Angle(B,F,P)", "value": "Angle(C,D,P)"}
   ],
-  "guards": ["AssumeGt(px,0)", "AssumeLt(px,55)", "AssumeGt(py,0)", "AssumeLt(py,55*sqrt(3)/2)", "AssumeGt(Area(A,B,P),0)", "AssumeGt(Area(B,C,P),0)", "AssumeGt(Area(C,A,P),0)"],
+  "guards": ["AssumeGt(px,0)", "AssumeLt(px,55)", "AssumeGt(py,0)", "AssumeLt(py,55*sqrt(3)/2)", "AssumeGt(Vector(A,B).cross(Vector(A,P)),0)", "AssumeGt(Vector(B,C).cross(Vector(B,P)),0)", "AssumeGt(Vector(C,A).cross(Vector(C,P)),0)"],
   "answer": "4*Area(A,E,P)*Area(A,E,P)/(Dot(Vector(E,A),Vector(E,P))*Dot(Vector(E,A),Vector(E,P)))",
   "solver_coverage": "executable_source_faithful"
 }

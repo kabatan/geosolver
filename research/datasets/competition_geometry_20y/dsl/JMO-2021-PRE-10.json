@@ -5,12 +5,12 @@
   "clause_ledger": [
     {
       "source": "D,E on AB,AC and D,B,C,E cyclic",
-      "dsl": "coordinate side points with Gamma=Circumcircle(D,B,C) and OnCircle(E,Gamma)",
+      "dsl": "coordinate side points with OnSegment(E,A,C), Gamma=Circumcircle(D,B,C), and OnCircle(E,Gamma)",
       "kind": "construction/constraint"
     },
     {
       "source": "P inside DBCE and three equal angles",
-      "dsl": "variable P with direct Angle equalities and interior guards",
+      "dsl": "AssumeConvex([D,B,C,E]) plus signed same-side guards and direct Angle equalities",
       "kind": "construction/constraint/guard"
     },
     {
@@ -79,6 +79,10 @@
       "value": 0
     },
     {
+      "def": "OnSegment(E,A,C)",
+      "value": 0
+    },
+    {
       "def": "OnCircle(E,Gamma)",
       "value": 0
     },
@@ -105,7 +109,12 @@
     "AssumeLt(d,9)",
     "AssumeGt(ex,0)",
     "AssumeGt(ey,0)",
-    "AssumeGt(py,0)"
+    "AssumeGt(py,0)",
+    "AssumeConvex([D,B,C,E])",
+    "AssumeGt(Vector(D,B).cross(Vector(D,P)),0)",
+    "AssumeGt(Vector(B,C).cross(Vector(B,P)),0)",
+    "AssumeGt(Vector(C,E).cross(Vector(C,P)),0)",
+    "AssumeGt(Vector(E,D).cross(Vector(E,P)),0)"
   ],
   "answer": "Distance(B,P)/Distance(C,P)"
 }
