@@ -28,6 +28,7 @@
 - `BENCHMARK_REPORT_180S_1CORE_FINAL.md`: 最終DSLの180秒/1 core集計と、不一致をDSL/solver数値/採点器に分離した報告。
 - `BENCHMARK_REPORT_180S_1CORE_AFTER_GENERAL_FIX.md`: 個別DSL回避策を戻し、共通API境界を修正した後の集計・回帰検証。
 - `DSL_REPAIR_BENCHMARK_REPORT_180S_1CORE.md` / `benchmark_results_180s_1core_dsl_repairs.json`: DSL不備を修正した10ケースだけの180秒・1 core再実行結果。strict exactは6/10で、残る不一致は境界・近退化のsolver数値偽陽性として独立監査しています。
+- `DSL_DEFICIENCY_REPAIR_REPORT.md` / `benchmark_results_180s_1core_remaining_dsl_fixes.json`: 残り35件の監査で確認した3件（HMMT-2007/2013/2021）のDSL定義修正、意味保存の証拠、180秒・1 core再実行結果。
 - `validate_dsl_repairs.py`: 上記10ケースだけを実行したこと、`budget=180`、affinity `[0]`、strict集合フラグを機械検証します。
 - `runtime_api_compat_regression.py`: 公開DSLの`Line`/`Rotate`/`Tangent`/`IncircleContactPoint`/`Perimeter`と数式caretを一括検査する回帰テスト。
 - `runtime_general_fix_manifest.json`: 外部runtimeの修正対象ファイルとSHA256、再現用回帰テストの固定マニフェスト。

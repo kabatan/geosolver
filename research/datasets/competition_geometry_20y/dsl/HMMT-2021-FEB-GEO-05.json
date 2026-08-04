@@ -5,7 +5,7 @@
   "clause_ledger": [
     {"source": "isosceles AEF", "dsl": "fixed symmetric base coordinate gauge with direct side distances", "kind": "construction/constraint"},
     {"source": "B,D on sides and BD parallel EF", "dsl": "B=tE,D=tF", "kind": "construction"},
-    {"source": "C interior and ABCD cyclic; BC=3,CD=4", "dsl": "C variable with Circumcircle(A,B,D), OnCircle(C,...) and distance constraints", "kind": "constraint/guard"},
+    {"source": "C interior and ABCD cyclic; BC=3,CD=4", "dsl": "C variable with Circumcircle(A,B,D), OnCircle(C,...) and signed same-side conditions for the three sides of AEF", "kind": "constraint/guard"},
     {"source": "100a+b area ratio", "dsl": "direct area ratio and exact fraction contest presentation", "kind": "answer"}
   ],
   "variables": {"names": ["t", "cx", "cy"]},
@@ -28,7 +28,9 @@
   ],
   "guards": [
     "AssumeGt(t,0)", "AssumeLt(t,1)", "AssumeGt(cy,0)", "AssumeLt(cy,sqrt(341))",
-    "AssumeGt(Area(A,E,C),0)", "AssumeGt(Area(E,F,C),0)", "AssumeGt(Area(F,A,C),0)"
+    "AssumeGt(Vector(A,E).cross(Vector(A,C)),0)",
+    "AssumeGt(Vector(E,F).cross(Vector(E,C)),0)",
+    "AssumeGt(Vector(F,A).cross(Vector(F,C)),0)"
   ],
   "answer": "Area(A,B,C,D)/Area(A,E,F)"
 }

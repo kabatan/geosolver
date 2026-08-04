@@ -5,7 +5,7 @@
   "clause_ledger": [
     {"source": "O2 on omega1", "dsl": "Distance(O1,O2)=r1", "kind": "constraint"},
     {"source": "A intersection of circles", "dsl": "Distance(O1,A)=r1 and Distance(O2,A)=r2", "kind": "constraint"},
-    {"source": "B intersection of O1O2 with omega2", "dsl": "B=(b,0), O1O2 is the x-axis, Distance(O2,B)=r2", "kind": "construction/constraint"},
+    {"source": "B intersection of O1O2 with omega2 (distinct from O1)", "dsl": "B=(b,0), O1O2 is the x-axis, Distance(O2,B)=r2, and B != O1 as the non-degenerate named intersection", "kind": "construction/constraint/guard"},
     {"source": "AB=O1A", "dsl": "direct Distance(A,B)=r1", "kind": "constraint"},
     {"source": "r1/r2", "dsl": "r1/r2", "kind": "answer"}
   ],
@@ -25,6 +25,6 @@
     {"def": "Distance(O2,B)", "value": "r2"},
     {"def": "Distance(A,B)", "value": "r1"}
   ],
-  "guards": ["AssumeGt(r1,0)", "AssumeGt(r2,0)", "AssumeGt(Ay,0)", "AssumeNe(Distance(A,B),0)"],
+  "guards": ["AssumeGt(r1,0)", "AssumeGt(r2,0)", "AssumeGt(Ay,0)", "AssumeNe(Distance(A,B),0)", "AssumeNe(Distance(B,O1),0)"],
   "answer": "r1/r2"
 }
