@@ -6,9 +6,13 @@ import argparse
 import hashlib
 import json
 import math
+import os
+import signal
 import subprocess
 import sys
+import tempfile
 import time
+from contextlib import suppress
 from pathlib import Path
 from statistics import median
 from typing import Any
@@ -72,20 +76,94 @@ def _load_dataset(path: str) -> list[dict[str, Any]]:
 
 
 def _current_control(problem: dict[str, Any], seconds: float, seed: int) -> dict[str, Any]:
-    try:
-        from geotarget.models import SolveOptions
-        from geotarget.service import solve
+    """Run the product control in an isolated, hard-deadline subprocess.
 
-        options = SolveOptions(
-            engine="optimized",
-            run_mode="fixed_time",
-            max_time_seconds=max(180.0, float(seconds)),
-            cores=1,
-            seed=int(seed),
+    Calling the service in-process is convenient for a smoke test but allows a
+    broker/preloader fault to outlive the solver's nominal fixed-time window.
+    The official comparison measures the complete CLI lifecycle, so startup,
+    shutdown, and descendants are all inside the same wall-clock cap.
+    """
+
+    started = time.monotonic()
+    root = Path(__file__).resolve().parents[2]
+    with tempfile.TemporaryDirectory(prefix="geotarget-current-") as directory:
+        workspace = Path(directory)
+        source = workspace / "problem.json"
+        output = workspace / "result.json"
+        source.write_text(
+            json.dumps(problem, ensure_ascii=False, sort_keys=True, separators=(",", ":")),
+            encoding="utf-8",
         )
-        return solve(problem, options).model_dump(mode="json")
-    except Exception as error:
-        return {"status": "engine_error", "detail": str(error)}
+        command = [
+            sys.executable,
+            "-m",
+            "geotarget.cli",
+            "solve",
+            str(source),
+            "--engine",
+            "optimized",
+            "--run-mode",
+            "fixed_time",
+            "--max-time",
+            str(max(180.0, float(seconds))),
+            "--cores",
+            "1",
+            "--seed",
+            str(int(seed)),
+            "--output",
+            str(output),
+        ]
+        environment = os.environ.copy()
+        try:
+            completed = subprocess.Popen(
+                command,
+                cwd=root,
+                env=environment,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                start_new_session=True,
+            )
+            try:
+                stdout, stderr = completed.communicate(timeout=max(0.1, float(seconds)))
+            except subprocess.TimeoutExpired:
+                with suppress(ProcessLookupError):
+                    os.killpg(completed.pid, signal.SIGTERM)
+                try:
+                    completed.wait(timeout=5.0)
+                except subprocess.TimeoutExpired:
+                    with suppress(ProcessLookupError):
+                        os.killpg(completed.pid, signal.SIGKILL)
+                    completed.wait(timeout=5.0)
+                return {
+                    "status": "timeout",
+                    "detail": "current control exceeded the hard wall deadline",
+                    "elapsed_seconds": time.monotonic() - started,
+                    "answers": [],
+                }
+        except OSError as error:
+            return {
+                "status": "engine_error",
+                "detail": str(error),
+                "elapsed_seconds": time.monotonic() - started,
+                "answers": [],
+            }
+        if output.is_file():
+            try:
+                result = json.loads(output.read_text(encoding="utf-8"))
+                if isinstance(result, dict):
+                    result["harness_elapsed_seconds"] = time.monotonic() - started
+                    if stderr:
+                        result["harness_stderr_tail"] = stderr[-4000:]
+                    return result
+            except json.JSONDecodeError:
+                pass
+        return {
+            "status": "engine_error",
+            "detail": (stderr or stdout)[-4000:],
+            "elapsed_seconds": time.monotonic() - started,
+            "answers": [],
+        }
 
 
 def _product_hash_check() -> dict[str, Any]:
@@ -181,6 +259,11 @@ def _arm_score(row: dict[str, Any], result: dict[str, Any]) -> dict[str, Any]:
 
 
 def _result_time(result: dict[str, Any], cap: float) -> float:
+    if "harness_elapsed_seconds" in result:
+        try:
+            return float(result["harness_elapsed_seconds"])
+        except (TypeError, ValueError):
+            pass
     timings = result.get("timings")
     if isinstance(timings, dict) and "total_seconds" in timings:
         try:
