@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 
-from research.homotopy_baseline.cli import _arm_score, main
+from research.homotopy_baseline.cli import _arm_metrics, _arm_score, main
 from research.homotopy_baseline.compiler import compile_problem
 from research.homotopy_baseline.runner import DATASET_SHA256
 
@@ -91,3 +91,30 @@ def test_offline_score_accepts_exact_rational_descriptors():
     )
     assert result["exact_set_match"] is True
     assert result["exact_set_recall"] == 1.0
+
+
+def test_admission_timeout_is_not_a_conditional_success_case():
+    cases = [
+        {
+            "homotopy": {"status": "timeout", "answers": []},
+            "offline_score": {"homotopy": {"truth_available": True}},
+        },
+        {
+            "homotopy": {
+                "status": "answers_found_completeness_unknown",
+                "answers": [{"decimal": "1"}],
+                "admission": {"supported": True},
+            },
+            "offline_score": {
+                "homotopy": {
+                    "truth_available": True,
+                    "exact_set_match": True,
+                    "exact_set_recall": 1.0,
+                }
+            },
+        },
+    ]
+    metrics = _arm_metrics(cases, "homotopy", 180.0)
+    assert metrics["admission_coverage"] == 0.5
+    assert metrics["admission_timeout_count"] == 1
+    assert metrics["conditional_answer_rate"] == 1.0

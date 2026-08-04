@@ -364,11 +364,21 @@ def _arm_metrics(cases: list[dict[str, Any]], arm: str, cap: float) -> dict[str,
     scores = [case.get("offline_score", {}).get(arm, {}) for case in cases]
     available = [score for score in scores if score.get("truth_available")]
     statuses = [str(result.get("status", "unknown")) for result in results]
-    admitted = [
-        index
-        for index, result in enumerate(results)
-        if str(result.get("status")) not in {"unsupported", "invalid_problem"}
-    ]
+    if arm == "homotopy":
+        # A subprocess timeout before admission has no ``admission`` payload;
+        # it must not inflate the conditional success denominator.  Only a
+        # completed polynomialized report with ``supported=true`` is admitted.
+        admitted = [
+            index
+            for index, result in enumerate(results)
+            if (result.get("admission") or {}).get("supported") is True
+        ]
+    else:
+        admitted = [
+            index
+            for index, result in enumerate(results)
+            if str(result.get("status")) not in {"unsupported", "invalid_problem"}
+        ]
     times = [_result_time(result, cap) for result in results]
     ordered_times = sorted(times)
     p95_index = (
@@ -416,6 +426,12 @@ def _arm_metrics(cases: list[dict[str, Any]], arm: str, cap: float) -> dict[str,
             status: statuses.count(status) for status in sorted(set(statuses))
         },
         "timeout_count": statuses.count("timeout"),
+        "admission_timeout_count": sum(
+            status == "timeout" and not (results[index].get("admission") or {})
+            for index, status in enumerate(statuses)
+        )
+        if arm == "homotopy"
+        else 0,
         "unsupported_count": statuses.count("unsupported"),
         "certification_failure_count": statuses.count("certification_failed"),
         "median_wall_seconds": median(times) if times else None,
