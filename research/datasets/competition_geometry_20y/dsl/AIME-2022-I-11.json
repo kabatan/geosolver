@@ -1,0 +1,39 @@
+{
+  "id": "AIME-2022-I-11",
+  "task": "solve",
+  "source_statement": "Let $ABCD$ be a parallelogram with $\\angle BAD < 90^\\circ.$ A circle tangent to sides $\\overline{DA},$ $\\overline{AB},$ and $\\overline{BC}$ intersects diagonal $\\overline{AC}$ at points $P$ and $Q$ with $AP < AQ,$ as shown. Suppose that $AP=3,$ $PQ=9,$ and $QC=16.$ Then the area of $ABCD$ can be expressed in the form $m\\sqrt{n},$ where $m$ and $n$ are positive integers, and $n$ is not divisible by the square of any prime. Find $m+n.$ [asy] defaultpen(linewidth(0.6)+fontsize(11)); size(8cm); pair A,B,C,D,P,Q; A=(0,0); label(\"$A$\", A, SW); B=(6,15); label(\"$B$\", B, NW); C=(30,15); label(\"$C$\", C, NE); D=(24,0); label(\"$D$\", D, SE); P=(5.2,2.6); label(\"$P$\", (5.8,2.6), N); Q=(18.3,9.1); label(\"$Q$\", (18.1,9.7), W); draw(A--B--C--D--cycle); draw(C--A); draw(Circle((10.95,7.45), 7.45)); dot(A^^B^^C^^D^^P^^Q); [/asy]",
+  "clause_ledger": [
+    {"source": "parallelogram ABCD with angle BAD<90", "dsl": "fix the diagonal gauge A=(0,0), C=(28,0) from AP+PQ+QC, use B=(bx,by), D=C-B, and retain the acute-angle branch guard", "kind": "construction/constraint"},
+    {"source": "circle tangent to DA,AB,BC intersects AC at P,Q", "dsl": "P=(3,0), Q=(12,0) are the source diagonal positions; O=(15/2,oy) and r=OP, with the original circle and three tangency constraints retained", "kind": "construction/constraint"},
+    {"source": "AP=3,PQ=9,QC=16", "dsl": "direct distances on the diagonal", "kind": "constraint"},
+    {"source": "area ABCD=m sqrt(n) and m+n", "dsl": "Area(A,B,C,D) with radical post-process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["bx", "by", "oy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(bx,by)"},
+    {"name": "C", "expr": "Point(28,0)"},
+    {"name": "D", "expr": "Point(28-bx,-by)"},
+    {"name": "P", "expr": "Point(3,0)"},
+    {"name": "Q", "expr": "Point(12,0)"},
+    {"name": "O", "expr": "Point(15/2,oy)"},
+    {"name": "r", "expr": "Distance(O,P)"},
+    {"name": "omega", "expr": "Circle(O,r)"}
+  ],
+  "constraints": [
+    {"def": "OnCircle(P,omega)", "value": 0},
+    {"def": "OnCircle(Q,omega)", "value": 0},
+    {"def": "OnLine(P,A,C)", "value": 0},
+    {"def": "OnLine(Q,A,C)", "value": 0},
+    {"def": "IsTangent(Line(D,A),omega)", "value": 0},
+    {"def": "IsTangent(Line(A,B),omega)", "value": 0},
+    {"def": "IsTangent(Line(B,C),omega)", "value": 0},
+    {"def": "Distance(A,P)", "value": 3},
+    {"def": "Distance(P,Q)", "value": 9},
+    {"def": "Distance(Q,C)", "value": 16}
+  ],
+  "guards": ["AssumeGt(by,0)", "AssumeGt(r,0)", "AssumeGt(Dot(Vector(A,B),Vector(A,D)),0)"],
+  "answer": "Area(A,B,C,D)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": "# radical_mode=single_sqrt_sum"
+}

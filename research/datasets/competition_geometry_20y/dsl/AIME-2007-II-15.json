@@ -1,0 +1,57 @@
+{
+  "id": "AIME-2007-II-15",
+  "task": "solve",
+  "source_statement": "Four circles $\\omega,$ $\\omega_{A},$ $\\omega_{B},$ and $\\omega_{C}$ with the same radius are drawn in the interior of triangle $ABC$ such that $\\omega_{A}$ is tangent to sides $AB$ and $AC$ , $\\omega_{B}$ to $BC$ and $BA$ , $\\omega_{C}$ to $CA$ and $CB$ , and $\\omega$ is externally tangent to $\\omega_{A},$ $\\omega_{B},$ and $\\omega_{C}$ . If the sides of triangle $ABC$ are $13,$ $14,$ and $15,$ the radius of $\\omega$ can be represented in the form $\\frac{m}{n}$ , where $m$ and $n$ are relatively prime positive integers. Find $m+n.$",
+  "clause_ledger": [
+    {"source": "triangle ABC sides 13,14,15", "dsl": "fix the unique convex 13-14-15 triangle by a rigid-motion gauge", "kind": "construction/constraint"},
+    {"source": "omegaA/B/C equal circles tangent to the indicated two sides", "dsl": "the three centers are constructed on the corresponding vertex-incenter rays at scale r/4; all original tangency constraints remain", "kind": "construction/constraint"},
+    {"source": "central omega externally tangent to omegaA/B/C and all four circles are interior", "dsl": "center O, three center-distance equations equal to 2r, and signed-side/distance guards for the radius-r disk inside ABC", "kind": "construction/constraint/guard"},
+    {"source": "m/n and m+n", "dsl": "r with fraction post-process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["ox", "oy", "r"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(13,0)"},
+    {"name": "C", "expr": "Point(99/13,168/13)"},
+    {"name": "Itri", "expr": "Point(7,4)"},
+    {"name": "IA", "expr": "PointOnSegment(A,Itri,r/4)"},
+    {"name": "IB", "expr": "PointOnSegment(B,Itri,r/4)"},
+    {"name": "IC", "expr": "PointOnSegment(C,Itri,r/4)"},
+    {"name": "O", "expr": "Point(ox,oy)"},
+    {"name": "omegaA", "expr": "Circle(IA,r)"},
+    {"name": "omegaB", "expr": "Circle(IB,r)"},
+    {"name": "omegaC", "expr": "Circle(IC,r)"},
+    {"name": "omega", "expr": "Circle(O,r)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 13},
+    {"def": "Distance(B,C)", "value": 14},
+    {"def": "Distance(C,A)", "value": 15},
+    {"def": "Distance(IA,Line(A,B))", "value": "r"},
+    {"def": "Distance(IA,Line(A,C))", "value": "r"},
+    {"def": "Distance(IB,Line(B,C))", "value": "r"},
+    {"def": "Distance(IB,Line(B,A))", "value": "r"},
+    {"def": "Distance(IC,Line(C,A))", "value": "r"},
+    {"def": "Distance(IC,Line(C,B))", "value": "r"},
+    {"def": "OnLine(IA,A,Itri)", "value": 0},
+    {"def": "OnLine(IB,B,Itri)", "value": 0},
+    {"def": "OnLine(IC,C,Itri)", "value": 0},
+    {"def": "Distance(O,IA)", "value": "2*r"},
+    {"def": "Distance(O,IB)", "value": "2*r"},
+    {"def": "Distance(O,IC)", "value": "2*r"}
+  ],
+  "guards": [
+    "AssumeGt(r,0)",
+    "AssumeLt(r,4)",
+    "AssumeConvex([A,B,C])",
+    "AssumeGt(Area(A,B,O),0)",
+    "AssumeGt(Area(B,C,O),0)",
+    "AssumeGt(Area(C,A,O),0)",
+    "AssumeGe(Distance(O,Line(A,B)),r)",
+    "AssumeGe(Distance(O,Line(B,C)),r)",
+    "AssumeGe(Distance(O,Line(C,A)),r)"
+  ],
+  "answer": "r",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+}

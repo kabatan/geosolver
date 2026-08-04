@@ -1,0 +1,82 @@
+{
+  "id": "JMO-2016-PRE-08",
+  "task": "solve",
+  "source_statement": "三角形ABCの内接円をωとする。辺BCとωの接点をDとし，直線ADとωの交点のうちDでない方をXとする。AX:XD=BC:10，ωの半径が1のとき，線分XDの長さを求めよ。ただし，YZで線分YZの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "incircle of triangle ABC",
+      "dsl": "direct Incircle construction",
+      "kind": "construction"
+    },
+    {
+      "source": "D is incircle contact on BC",
+      "dsl": "IncircleContactPoint(A,B,C,side='BC')",
+      "kind": "construction"
+    },
+    {
+      "source": "X is the other intersection of AD with omega",
+      "dsl": "Intersect(Line(A,D),omega,exclude=D)",
+      "kind": "construction"
+    },
+    {
+      "source": "AX:XD=1:3 and semiperimeter 10",
+      "dsl": "direct ratio and side-sum constraints",
+      "kind": "constraint"
+    },
+    {
+      "source": "XD",
+      "dsl": "direct Distance(X,D)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "b",
+      "cx",
+      "cy"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(b,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(cx,cy)"
+    },
+    {
+      "name": "omega",
+      "expr": "Incircle(A,B,C)"
+    },
+    {
+      "name": "D",
+      "expr": "IncircleContactPoint(A,B,C,side='BC')"
+    },
+    {
+      "name": "X",
+      "expr": "Intersect(Line(A,D),omega,exclude=D)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(A,B)+Distance(B,C)+Distance(C,A)",
+      "value": 20
+    },
+    {
+      "def": "3*Distance(A,X)",
+      "value": "Distance(X,D)"
+    }
+  ],
+  "guards": [
+    "AssumeGt(b,0)",
+    "AssumeGt(cy,0)",
+    "AssumeGt(Area(A,B,C),0)"
+  ],
+  "answer": "Distance(X,D)",
+  "post_process": ""
+}

@@ -1,0 +1,37 @@
+{
+  "id": "AIME-2012-II-13",
+  "task": "solve",
+  "source_statement": "Equilateral $\\triangle ABC$ has side length $\\sqrt{111}$ . There are four distinct triangles $AD_1E_1$ , $AD_1E_2$ , $AD_2E_3$ , and $AD_2E_4$ , each congruent to $\\triangle ABC$ ,\nwith $BD_1 = BD_2 = \\sqrt{11}$ . Find $\\sum_{k=1}^4(CE_k)^2$ .",
+  "clause_ledger": [
+    {"source": "equilateral ABC side sqrt111 and BD1=BD2=sqrt11", "dsl": "A,B,C fixed equilateral gauge; D1,D2 are the two intersections of Circle(B,sqrt11) and Circle(A,sqrt111)", "kind": "construction/constraint"},
+    {"source": "four distinct triangles AD1E1,AD1E2,AD2E3,AD2E4 each congruent to ABC", "dsl": "E1,E2 (respectively E3,E4) are the two 60-degree rotations of D1 (respectively D2) about A; all original congruence distance constraints are retained", "kind": "construction/constraint"},
+    {"source": "sum (CEk)^2", "dsl": "sum of four squared source distances", "kind": "answer"}
+  ],
+  "variables": {"names": []},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(sqrt(111),0)"},
+    {"name": "C", "expr": "Point(sqrt(111)/2,sqrt(333)/2)"},
+    {"name": "D1", "expr": "Intersect(Circle(B,sqrt(11)),Circle(A,sqrt(111)),near=C)"},
+    {"name": "D2", "expr": "Intersect(Circle(B,sqrt(11)),Circle(A,sqrt(111)),exclude=D1)"},
+    {"name": "E1", "expr": "Point(D1.x*cos(pi/3)-D1.y*sin(pi/3),D1.x*sin(pi/3)+D1.y*cos(pi/3))"},
+    {"name": "E2", "expr": "Point(D1.x*cos(pi/3)+D1.y*sin(pi/3),-D1.x*sin(pi/3)+D1.y*cos(pi/3))"},
+    {"name": "E3", "expr": "Point(D2.x*cos(pi/3)-D2.y*sin(pi/3),D2.x*sin(pi/3)+D2.y*cos(pi/3))"},
+    {"name": "E4", "expr": "Point(D2.x*cos(pi/3)+D2.y*sin(pi/3),-D2.x*sin(pi/3)+D2.y*cos(pi/3))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": "sqrt(111)"},
+    {"def": "Distance(B,C)", "value": "sqrt(111)"},
+    {"def": "Distance(C,A)", "value": "sqrt(111)"},
+    {"def": "Distance(B,D1)", "value": "sqrt(11)"},
+    {"def": "Distance(B,D2)", "value": "sqrt(11)"},
+    {"def": "Distance(A,D1)", "value": "sqrt(111)"}, {"def": "Distance(D1,E1)", "value": "sqrt(111)"}, {"def": "Distance(E1,A)", "value": "sqrt(111)"},
+    {"def": "Distance(A,D1)", "value": "Distance(D1,E2)"}, {"def": "Distance(E2,A)", "value": "sqrt(111)"},
+    {"def": "Distance(A,D2)", "value": "sqrt(111)"}, {"def": "Distance(D2,E3)", "value": "sqrt(111)"}, {"def": "Distance(E3,A)", "value": "sqrt(111)"},
+    {"def": "Distance(A,D2)", "value": "Distance(D2,E4)"}, {"def": "Distance(E4,A)", "value": "sqrt(111)"}
+  ],
+  "guards": [],
+  "answer": "Distance(C,E1)*Distance(C,E1)+Distance(C,E2)*Distance(C,E2)+Distance(C,E3)*Distance(C,E3)+Distance(C,E4)*Distance(C,E4)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

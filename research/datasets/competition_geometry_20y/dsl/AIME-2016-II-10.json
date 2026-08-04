@@ -1,0 +1,29 @@
+{
+  "id": "AIME-2016-II-10",
+  "task": "solve",
+  "source_statement": "Triangle $ABC$ is inscribed in circle $\\omega$ . Points $P$ and $Q$ are on side $\\overline{AB}$ with $AP<AQ$ . Rays $CP$ and $CQ$ meet $\\omega$ again at $S$ and $T$ (other than $C$ ), respectively. If $AP=4,PQ=3,QB=6,BT=5,$ and $AS=7$ , then $ST=\\frac{m}{n}$ , where $m$ and $n$ are relatively prime positive integers. Find $m+n$ .",
+  "clause_ledger": [
+    {"source": "points P,Q on AB with the three lengths", "dsl": "A=(0,0), B=(13,0), P=(4,0), Q=(7,0)", "kind": "construction"},
+    {"source": "triangle circumcircle and second intersections S,T", "dsl": "direct Circumcircle and Intersect excluding C", "kind": "construction"},
+    {"source": "BT=5, AS=7", "dsl": "direct distance constraints", "kind": "constraint"},
+    {"source": "m+n", "dsl": "geometric answer ST with explicit fraction post_process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["cx", "cy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(13,0)"},
+    {"name": "P", "expr": "Point(4,0)"},
+    {"name": "Q", "expr": "Point(7,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "Gamma", "expr": "Circumcircle(A,B,C)"},
+    {"name": "S", "expr": "Intersect(Line(C,P),Gamma,exclude=C)"},
+    {"name": "T", "expr": "Intersect(Line(C,Q),Gamma,exclude=C)"}
+  ],
+  "constraints": [
+    {"def": "Distance(B,T)", "value": 5},
+    {"def": "Distance(A,S)", "value": 7}
+  ],
+  "guards": ["AssumeGt(cy,0)"],
+  "answer": "Distance(S,T)",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+}

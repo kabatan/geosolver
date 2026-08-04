@@ -1,0 +1,31 @@
+{
+  "id": "AIME-2012-II-15",
+  "task": "solve",
+  "source_statement": "Triangle $ABC$ is inscribed in circle $\\omega$ with $AB=5$ , $BC=7$ , and $AC=3$ . The bisector of angle $A$ meets side $\\overline{BC}$ at $D$ and circle $\\omega$ at a second point $E$ . Let $\\gamma$ be the circle with diameter $\\overline{DE}$ . Circles $\\omega$ and $\\gamma$ meet at $E$ and a second point $F$ . Then $AF^2 = \\frac mn$ , where $m$ and $n$ are relatively prime positive integers. Find $m+n$ .",
+  "clause_ledger": [
+    {"source": "triangle side lengths and circumcircle", "dsl": "coordinate triangle and direct Circumcircle", "kind": "construction/constraint"},
+    {"source": "D angle-bisector foot and E second circle intersection", "dsl": "Incenter line and Intersect excluding A", "kind": "construction"},
+    {"source": "gamma diameter DE and F second intersection", "dsl": "Circle(Midpoint(D,E),Distance(D,E)/2) and Intersect excluding E", "kind": "construction"},
+    {"source": "m+n", "dsl": "AF^2 with fraction postprocess", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["cx", "cy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(5,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "I", "expr": "Incenter(A,B,C)"},
+    {"name": "D", "expr": "Intersect(Line(A,I),Line(B,C))"},
+    {"name": "omega", "expr": "Circumcircle(A,B,C)"},
+    {"name": "E", "expr": "Intersect(Line(A,D),omega,exclude=A)"},
+    {"name": "gamma", "expr": "Circle(Midpoint(D,E),Distance(D,E)/2)"},
+    {"name": "F", "expr": "Intersect(omega,gamma,exclude=E)"}
+  ],
+  "constraints": [
+    {"def": "Distance(B,C)", "value": 7},
+    {"def": "Distance(A,C)", "value": 3},
+    {"def": "OnSegment(D,B,C)", "value": 0}
+  ],
+  "guards": ["AssumeGt(cy,0)"],
+  "answer": "Distance(A,F)**2",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+}

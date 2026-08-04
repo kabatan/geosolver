@@ -1,0 +1,26 @@
+{
+  "id": "HMMT-2013-FEB-GEO-07",
+  "task": "solve",
+  "source_statement": "Let ABC be an obtuse triangle with circumcenter O such that ∠ABC = 15◦ and ∠BAC > 90◦ . Suppose that AO meets BC at D, and that OD2 + OC · DC = OC 2 . Find ∠C.",
+  "clause_ledger": [
+    {"source": "obtuse triangle, angle B=15 degrees, angle A>90 degrees", "dsl": "direct angle constraint plus obtuse guard", "kind": "constraint/guard"},
+    {"source": "O circumcenter and D=AO intersection BC", "dsl": "O=Circumcenter(A,B,C), D=Intersect(Line(A,O),Line(B,C))", "kind": "construction"},
+    {"source": "OD^2+OC*DC=OC^2", "dsl": "direct scalar equality", "kind": "constraint"},
+    {"source": "angle C", "dsl": "Angle(A,C,B)", "kind": "answer"}
+  ],
+  "variables": {"names": ["Ax", "Ay"]},
+  "construction": [
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(1,0)"},
+    {"name": "A", "expr": "Point(Ax,Ay)"},
+    {"name": "O", "expr": "Circumcenter(A,B,C)"},
+    {"name": "D", "expr": "Intersect(Line(A,O),Line(B,C))"}
+  ],
+  "constraints": [
+    {"def": "Angle(A,B,C)", "value": "pi/12"},
+    {"def": "Distance(O,D)*Distance(O,D) + Distance(O,C)*Distance(D,C)", "value": "Distance(O,C)*Distance(O,C)"}
+  ],
+  "guards": ["AssumeGt(Ay,0)", "AssumeGt(Angle(B,A,C),pi/2)"],
+  "answer": "180*Angle(A,C,B)/pi",
+  "post_process": ""
+}

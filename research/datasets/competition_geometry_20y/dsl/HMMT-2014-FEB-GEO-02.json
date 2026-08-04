@@ -1,0 +1,26 @@
+{
+  "id": "HMMT-2014-FEB-GEO-02",
+  "task": "solve",
+  "source_statement": "Point P and line ` are such that the distance from P to ` is 12. Given that T is a point on ` such that P T = 13, find the radius of the circle passing through P and tangent to ` at T .",
+  "clause_ledger": [
+    {"source": "distance from P to line l is 12", "dsl": "l is the y=0 carrier and P=(px,12)", "kind": "construction/constraint"},
+    {"source": "T on l and PT=13", "dsl": "T=(0,0), U=(1,0) define l; direct Distance(P,T)=13", "kind": "construction/constraint"},
+    {"source": "circle through P tangent to l at T", "dsl": "center K=(0,r) is on the perpendicular at T; Distance(K,T)=Distance(K,P)=r", "kind": "construction/constraint"},
+    {"source": "radius", "dsl": "r", "kind": "answer"}
+  ],
+  "variables": {"names": ["px", "r"]},
+  "construction": [
+    {"name": "T", "expr": "Point(0,0)"},
+    {"name": "U", "expr": "Point(1,0)"},
+    {"name": "P", "expr": "Point(px,12)"},
+    {"name": "K", "expr": "Point(0,r)"}
+  ],
+  "constraints": [
+    {"def": "Distance(P,T)", "value": 13},
+    {"def": "Distance(K,T)", "value": "r"},
+    {"def": "Distance(K,P)", "value": "r"}
+  ],
+  "guards": ["AssumeGt(r,0)", "AssumeGt(px,0)"],
+  "answer": "r",
+  "post_process": ""
+}

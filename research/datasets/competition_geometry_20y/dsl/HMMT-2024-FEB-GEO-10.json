@@ -1,0 +1,38 @@
+{
+  "id": "HMMT-2024-FEB-GEO-10",
+  "task": "solve",
+  "source_statement": "Suppose point P is inside quadrilateral ABCD such that ∠P AB = ∠P DA, ∠P AD = ∠P DC, ∠P BA = ∠P CB, and ∠P BC = ∠P CD. If P A = 4, P B = 5, and P C = 10, compute the perimeter of ABCD.",
+  "clause_ledger": [
+    {"source": "P inside quadrilateral ABCD", "dsl": "direct P=(0,0), labeled vertices, positive source triangle-area guards, and no-self-intersection guard", "kind": "construction/guard"},
+    {"source": "four stated angle equalities", "dsl": "four direct Angle constraints in the source order", "kind": "constraint"},
+    {"source": "PA=4, PB=5, PC=10", "dsl": "direct Distance constraints", "kind": "constraint"},
+    {"source": "perimeter ABCD", "dsl": "sum of the four source side distances", "kind": "answer"}
+  ],
+  "variables": {"names": ["bx", "by", "cx", "cy", "dx", "dy"]},
+  "construction": [
+    {"name": "P", "expr": "Point(0,0)"},
+    {"name": "A", "expr": "Point(4,0)"},
+    {"name": "B", "expr": "Point(bx,by)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "D", "expr": "Point(dx,dy)"}
+  ],
+  "constraints": [
+    {"def": "Distance(P,A)", "value": 4},
+    {"def": "Distance(P,B)", "value": 5},
+    {"def": "Distance(P,C)", "value": 10},
+    {"def": "Angle(P,A,B)", "value": "Angle(P,D,A)"},
+    {"def": "Angle(P,A,D)", "value": "Angle(P,D,C)"},
+    {"def": "Angle(P,B,A)", "value": "Angle(P,C,B)"},
+    {"def": "Angle(P,B,C)", "value": "Angle(P,C,D)"}
+  ],
+  "guards": [
+    "AssumeGt(Area(A,B,P),0)",
+    "AssumeGt(Area(B,C,P),0)",
+    "AssumeGt(Area(C,D,P),0)",
+    "AssumeGt(Area(D,A,P),0)",
+    "AssumeGt(Area(A,B,C,D),0)",
+    "AssumeNoSelfIntersecting([A,B,C,D])"
+  ],
+  "answer": "Distance(A,B)+Distance(B,C)+Distance(C,D)+Distance(D,A)",
+  "post_process": ""
+}

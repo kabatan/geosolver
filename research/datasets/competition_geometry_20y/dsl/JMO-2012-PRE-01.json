@@ -1,0 +1,89 @@
+{
+  "id": "JMO-2012-PRE-01",
+  "task": "solve",
+  "source_statement": "正方形ABCDがある。点P，Q，R，Sがそれぞれ辺AB，BC，CD，DA上にあり，直線PR，BCは平行で，直線SQ，ABは平行である。PRとSQの交点をZとする。BP=7，BQ=6，DZ=5のとき，正方形ABCDの一辺の長さを求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "square and side points",
+      "dsl": "fixed axis-aligned square with the stated side positions",
+      "kind": "construction"
+    },
+    {
+      "source": "parallel lines and Z intersection",
+      "dsl": "PR and SQ are the horizontal/vertical carriers and Z=(6,7)",
+      "kind": "construction"
+    },
+    {
+      "source": "BP=7,BQ=6,DZ=5",
+      "dsl": "direct coordinate/distance constraints",
+      "kind": "constraint"
+    },
+    {
+      "source": "side length",
+      "dsl": "s",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "s"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(0,s)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(s,0)"
+    },
+    {
+      "name": "D",
+      "expr": "Point(s,s)"
+    },
+    {
+      "name": "P",
+      "expr": "Point(0,7)"
+    },
+    {
+      "name": "Q",
+      "expr": "Point(6,0)"
+    },
+    {
+      "name": "R",
+      "expr": "Point(s,7)"
+    },
+    {
+      "name": "S",
+      "expr": "Point(6,s)"
+    },
+    {
+      "name": "Z",
+      "expr": "Point(6,7)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(B,P)",
+      "value": 7
+    },
+    {
+      "def": "Distance(B,Q)",
+      "value": 6
+    },
+    {
+      "def": "Distance(D,Z)",
+      "value": 5
+    }
+  ],
+  "guards": [
+    "AssumeGt(s,7)"
+  ],
+  "answer": "s",
+  "post_process": ""
+}

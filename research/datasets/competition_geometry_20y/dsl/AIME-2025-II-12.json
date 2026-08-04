@@ -1,0 +1,53 @@
+{
+  "id": "AIME-2025-II-12",
+  "task": "solve",
+  "source_statement": "Let $A_1 A_2 A_3 \\ldots A_{11}$ be an $11$-sided non-convex simple polygon with the following properties:\n\n\\begin{itemize}\n\\item For every integer $2 \\le i \\le 10$,  the area of $\\triangle A_i A_{1} A_{i+1}$  is equal to $1$.\n\\item For every integer $2 \\le i \\le 10$, $\\cos(\\angle A_i A_{1} A_{i+1}) = \\frac{12}{13}$.\n\\item The perimeter of the $11$-gon $A_1 A_2 A_3 \\dots A_{11}$  is equal to $20$.\n\\end{itemize}\n\nThen $A_1 A_2 + A_1 A_{11} = \\frac{m \\sqrt{n} - p}{q}$ where $m, n, p$, and $q$ are positive integers, $n$ is not divisible by the square of any prime, and no prime divides all of $m, p$, and $q$. Find $m + n + p + q$.",
+  "clause_ledger": [
+    {"source": "11-sided non-convex simple polygon A1...A11", "dsl": "fix A1=(0,0) and use the non-convex simple all-positive-turning-angle branch: the rays A1Ai have successive angle theta=atan(5/12), with alternating lengths t and u=26/(5t); the original simple/non-convex guard is retained", "kind": "construction/guard"},
+    {"source": "Area(Ai,A1,Ai+1)=1 for i=2..10", "dsl": "the alternating lengths satisfy t*u=26/5, so the constructed consecutive rays have the source area; all nine direct Area constraints are retained", "kind": "constraint"},
+    {"source": "cos(angle Ai A1 Ai+1)=12/13 for i=2..10", "dsl": "the constructed successive ray angle is theta=atan(5/12), whose cosine is 12/13; all nine direct cosine constraints are retained", "kind": "constraint"},
+    {"source": "perimeter equals 20", "dsl": "the perimeter is written as the explicit sum of the eleven edge distances (equivalent to Perimeter(A1,...,A11)=20)", "kind": "constraint"},
+    {"source": "A1A2+A1A11 and m+n+p+q presentation", "dsl": "sum of source distances with radical presentation post-process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["t"]},
+  "construction": [
+    {"name": "A1", "expr": "Point(0,0)"},
+    {"name": "u", "expr": "26/(5*t)"},
+    {"name": "theta", "expr": "atan(5/12)"},
+    {"name": "A2", "expr": "Point(t,0)"},
+    {"name": "A3", "expr": "Point(u*cos(theta),u*sin(theta))"},
+    {"name": "A4", "expr": "Point(t*cos(2*theta),t*sin(2*theta))"},
+    {"name": "A5", "expr": "Point(u*cos(3*theta),u*sin(3*theta))"},
+    {"name": "A6", "expr": "Point(t*cos(4*theta),t*sin(4*theta))"},
+    {"name": "A7", "expr": "Point(u*cos(5*theta),u*sin(5*theta))"},
+    {"name": "A8", "expr": "Point(t*cos(6*theta),t*sin(6*theta))"},
+    {"name": "A9", "expr": "Point(u*cos(7*theta),u*sin(7*theta))"},
+    {"name": "A10", "expr": "Point(t*cos(8*theta),t*sin(8*theta))"},
+    {"name": "A11", "expr": "Point(u*cos(9*theta),u*sin(9*theta))"}
+  ],
+  "constraints": [
+    {"def": "Area(A2,A1,A3)", "value": 1},
+    {"def": "Area(A3,A1,A4)", "value": 1},
+    {"def": "Area(A4,A1,A5)", "value": 1},
+    {"def": "Area(A5,A1,A6)", "value": 1},
+    {"def": "Area(A6,A1,A7)", "value": 1},
+    {"def": "Area(A7,A1,A8)", "value": 1},
+    {"def": "Area(A8,A1,A9)", "value": 1},
+    {"def": "Area(A9,A1,A10)", "value": 1},
+    {"def": "Area(A10,A1,A11)", "value": 1},
+    {"def": "cos(Angle(A2,A1,A3))", "value": "12/13"},
+    {"def": "cos(Angle(A3,A1,A4))", "value": "12/13"},
+    {"def": "cos(Angle(A4,A1,A5))", "value": "12/13"},
+    {"def": "cos(Angle(A5,A1,A6))", "value": "12/13"},
+    {"def": "cos(Angle(A6,A1,A7))", "value": "12/13"},
+    {"def": "cos(Angle(A7,A1,A8))", "value": "12/13"},
+    {"def": "cos(Angle(A8,A1,A9))", "value": "12/13"},
+    {"def": "cos(Angle(A9,A1,A10))", "value": "12/13"},
+    {"def": "cos(Angle(A10,A1,A11))", "value": "12/13"},
+    {"def": "Distance(A1,A2)+Distance(A2,A3)+Distance(A3,A4)+Distance(A4,A5)+Distance(A5,A6)+Distance(A6,A7)+Distance(A7,A8)+Distance(A8,A9)+Distance(A9,A10)+Distance(A10,A11)+Distance(A11,A1)", "value": 20}
+  ],
+  "guards": ["AssumeGt(t,0)", "AssumeNoSelfIntersecting([A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11])"],
+  "answer": "Distance(A1,A2)+Distance(A1,A11)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": "# radical_mode=m_sqrt_n_minus_p_over_q"
+}

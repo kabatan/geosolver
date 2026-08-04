@@ -1,0 +1,28 @@
+{
+  "id": "HMMT-2020-FEB-GEO-04",
+  "task": "solve",
+  "source_statement": "Let ABCD be a rectangle and E be a point on segment AD. We are given that quadrilateral BCDE has an inscribed circle ω1 that is tangent to BE at T . If the incircle ω2 of ABE is also tangent to BE at T , then find the ratio of the radius of ω1 to the radius of ω2 .",
+  "clause_ledger": [
+    {"source": "rectangle and E on AD", "dsl": "coordinate rectangle with E on the left side", "kind": "construction/guard"},
+    {"source": "two incircles tangent to BE at the same T", "dsl": "direct Incircle constructions and ContactPoint constraints/equality", "kind": "construction/constraint"},
+    {"source": "radius ratio", "dsl": "Radius(omega1)/Radius(omega2)", "kind": "answer"}
+  ],
+  "variables": {"names": ["w", "h", "e"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(w,0)"},
+    {"name": "C", "expr": "Point(w,h)"},
+    {"name": "D", "expr": "Point(0,h)"},
+    {"name": "E", "expr": "Point(0,e)"},
+    {"name": "omega1", "expr": "Incircle(B,C,D,E)"},
+    {"name": "omega2", "expr": "Incircle(A,B,E)"},
+    {"name": "T1", "expr": "ContactPoint(omega1,Line(B,E))"},
+    {"name": "T2", "expr": "ContactPoint(omega2,Line(B,E))"}
+  ],
+  "constraints": [
+    {"def": "Distance(T1,T2)", "value": 0}
+  ],
+  "guards": ["AssumeGt(w,0)", "AssumeGt(h,0)", "AssumeGt(e,0)", "AssumeLt(e,h)"],
+  "answer": "Radius(omega1)/Radius(omega2)",
+  "post_process": ""
+}

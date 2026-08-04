@@ -1,0 +1,102 @@
+{
+  "id": "JMO-2014-PRE-09",
+  "task": "solve",
+  "source_statement": "正方形ABCDがあり，その対角線の交点をOとする。線分OA，OB，OC，OD上にそれぞれ点P，Q，R，Sがあり，OP=3，OQ=5，OR=4をみたしている。直線ABと直線PQの交点，直線BCと直線QRの交点，直線CDと直線RSの交点が同一直線上にあるとき，線分OSの長さを求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "square center and radial points",
+      "dsl": "symmetric square coordinate gauge and direct radial distances",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "three line-side intersections collinear",
+      "dsl": "direct Intersect and Collinear constructions",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "OS",
+      "dsl": "Distance(O,S)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "s",
+      "t"
+    ]
+  },
+  "construction": [
+    {
+      "name": "O",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "A",
+      "expr": "Point(-s/2,s/2)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(s/2,s/2)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(s/2,-s/2)"
+    },
+    {
+      "name": "D",
+      "expr": "Point(-s/2,-s/2)"
+    },
+    {
+      "name": "P",
+      "expr": "Point(-3/sqrt(2),3/sqrt(2))"
+    },
+    {
+      "name": "Q",
+      "expr": "Point(5/sqrt(2),5/sqrt(2))"
+    },
+    {
+      "name": "R",
+      "expr": "Point(4/sqrt(2),-4/sqrt(2))"
+    },
+    {
+      "name": "S",
+      "expr": "Point(-t/sqrt(2),-t/sqrt(2))"
+    },
+    {
+      "name": "X",
+      "expr": "Intersect(Line(A,B),Line(P,Q))"
+    },
+    {
+      "name": "Y",
+      "expr": "Intersect(Line(B,C),Line(Q,R))"
+    },
+    {
+      "name": "Z",
+      "expr": "Intersect(Line(C,D),Line(R,S))"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(O,P)",
+      "value": 3
+    },
+    {
+      "def": "Distance(O,Q)",
+      "value": 5
+    },
+    {
+      "def": "Distance(O,R)",
+      "value": 4
+    },
+    {
+      "def": "Collinear(X,Y,Z)",
+      "value": 0
+    }
+  ],
+  "guards": [
+    "AssumeGt(s,8)",
+    "AssumeGt(t,0)"
+  ],
+  "answer": "Distance(O,S)",
+  "post_process": ""
+}

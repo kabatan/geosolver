@@ -1,0 +1,159 @@
+{
+  "id": "JMO-2020-PRE-11",
+  "task": "solve",
+  "source_statement": "円Ωの周上に5点A，B，C，D，Pがこの順にある。点Pを通り直線ABに点Aで接する円と点Pを通り直線CDに点Dで接する円がΩの内部の点Kで交わっている。また線分AB，CDの中点をそれぞれM，Nとすると，3点A，K，NおよびD，K，Mはそれぞれ同一直線上にあった。AK=5，DK=3，KM=7が成り立つとし，直線PKとΩの交点のうちPでない方をQとするとき，線分CQの長さを求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "A,B,C,D,P occur in this order on Omega",
+      "dsl": "fix O=(0,0), A=(r,0), parameterize the ordered cyclic gaps for B,C,D,P, and retain the source cyclic-order branch; K is constructed from the two source tangent circles (and the collinearity clauses remain explicit)",
+      "kind": "construction/guard"
+    },
+    {
+      "source": "circles through P tangent to AB at A and CD at D meet at K",
+      "dsl": "construct the center of the P,A circle as the intersection of the perpendicular to AB at A and the perpendicular bisector of AP; construct the analogous P,D circle for CD, then K=Intersect(GammaA,GammaD,exclude=P). This is the stated tangent-circle branch, not a new geometric condition",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "M,N are midpoints of AB,CD; A,K,N and D,K,M are collinear",
+      "dsl": "M=Midpoint(A,B), N=Midpoint(C,D), Collinear(A,K,N), Collinear(D,K,M)",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "AK=5, DK=3, KM=7",
+      "dsl": "direct distance constraints",
+      "kind": "constraint"
+    },
+    {
+      "source": "Q is the second intersection of PK and Omega; find CQ",
+      "dsl": "Q=Intersect(Line(P,K),Omega,exclude=P), Distance(C,Q)",
+      "kind": "construction/answer"
+    }
+  ],
+  "variables": {
+      "names": [
+        "r",
+        "g1",
+        "g2",
+        "g3",
+      "g4"
+    ]
+  },
+  "construction": [
+    {"name": "O", "expr": "Point(0,0)"},
+    {"name": "A", "expr": "Point(r,0)"},
+    {"name": "B", "expr": "Point(r*cos(g1),r*sin(g1))"},
+    {"name": "C", "expr": "Point(r*cos(g1+g2),r*sin(g1+g2))"},
+    {"name": "D", "expr": "Point(r*cos(g1+g2+g3),r*sin(g1+g2+g3))"},
+    {"name": "P", "expr": "Point(r*cos(g1+g2+g3+g4),r*sin(g1+g2+g3+g4))"},
+    {
+      "name": "M",
+      "expr": "Midpoint(A,B)"
+    },
+    {
+      "name": "N",
+      "expr": "Midpoint(C,D)"
+    },
+    {
+      "name": "perpA",
+      "expr": "PerpendicularLine(Line(A,B),A)"
+    },
+    {
+      "name": "bisAP",
+      "expr": "PerpendicularBisector(A,P)"
+    },
+    {
+      "name": "OA",
+      "expr": "Intersect(perpA,bisAP)"
+    },
+    {
+      "name": "GammaA",
+      "expr": "CircleThroughPoint(OA,A)"
+    },
+    {
+      "name": "perpD",
+      "expr": "PerpendicularLine(Line(C,D),D)"
+    },
+    {
+      "name": "bisDP",
+      "expr": "PerpendicularBisector(D,P)"
+    },
+    {
+      "name": "OD",
+      "expr": "Intersect(perpD,bisDP)"
+    },
+    {
+      "name": "GammaD",
+      "expr": "CircleThroughPoint(OD,D)"
+    },
+    {
+      "name": "K",
+      "expr": "Intersect(GammaA,GammaD,exclude=P)"
+    },
+    {
+      "name": "Omega",
+      "expr": "Circle(O,r)"
+    },
+    {
+      "name": "Q",
+      "expr": "Intersect(Line(P,K),Omega,exclude=P)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Collinear(A,K,N)",
+      "value": 0
+    },
+    {
+      "def": "Collinear(D,K,M)",
+      "value": 0
+    },
+    {
+      "def": "Distance(A,K)",
+      "value": 5
+    },
+    {
+      "def": "Distance(D,K)",
+      "value": 3
+    },
+    {
+      "def": "Distance(K,M)",
+      "value": 7
+    },
+    {
+      "def": "OnCircle(P,Omega)",
+      "value": 0
+    },
+    {
+      "def": "OnCircle(D,Omega)",
+      "value": 0
+    },
+    {
+      "def": "OnCircle(A,GammaA)",
+      "value": 0
+    },
+    {
+      "def": "OnCircle(P,GammaA)",
+      "value": 0
+    },
+    {
+      "def": "OnCircle(D,GammaD)",
+      "value": 0
+    },
+    {
+      "def": "OnCircle(P,GammaD)",
+      "value": 0
+    }
+  ],
+  "guards": [
+    "AssumeGt(r,0)",
+    "AssumeGt(g1,0)",
+    "AssumeGt(g2,0)",
+    "AssumeGt(g3,0)",
+    "AssumeGt(g4,0)",
+    "AssumeLt(g1+g2+g3+g4,2*pi)",
+    "AssumeLt(Distance(O,K),r)",
+    "AssumeConvex([A,B,C,D,P])"
+  ],
+  "answer": "Distance(C,Q)",
+  "post_process": ""
+}

@@ -1,0 +1,72 @@
+{
+  "id": "JMO-2018-PRE-03",
+  "task": "solve",
+  "source_statement": "四角形ABCDが，∠A=∠B=90°，∠C=45°，AC=19，BD=15をみたすとき，その面積を求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "three angles and two diagonals",
+      "dsl": "coordinate quadrilateral gauge with direct Angle/Distance constraints",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "area ABCD",
+      "dsl": "Area(A,B,C,D)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "b",
+      "x",
+      "d"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(0,b)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(x,0)"
+    },
+    {
+      "name": "D",
+      "expr": "Point(d,b)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Perpendicular(Line(A,B),Line(A,D))",
+      "value": 0
+    },
+    {
+      "def": "Perpendicular(Line(B,A),Line(B,C))",
+      "value": 0
+    },
+    {
+      "def": "Angle(B,C,D)",
+      "value": "pi/4"
+    },
+    {
+      "def": "Distance(A,C)",
+      "value": 19
+    },
+    {
+      "def": "Distance(B,D)",
+      "value": 15
+    }
+  ],
+  "guards": [
+    "AssumeGt(b,0)",
+    "AssumeGt(x,0)",
+    "AssumeGt(d,0)",
+    "AssumeGt(x,d)"
+  ],
+  "answer": "Area(A,B,C,D)",
+  "post_process": ""
+}

@@ -1,0 +1,26 @@
+{
+  "id": "AIME-2009-II-10",
+  "task": "solve",
+  "source_statement": "Four lighthouses are located at points $A$ , $B$ , $C$ , and $D$ . The lighthouse at $A$ is $5$ kilometers from the lighthouse at $B$ , the lighthouse at $B$ is $12$ kilometers from the lighthouse at $C$ , and the lighthouse at $A$ is $13$ kilometers from the lighthouse at $C$ . To an observer at $A$ , the angle determined by the lights at $B$ and $D$ and the angle determined by the lights at $C$ and $D$ are equal. To an observer at $C$ , the angle determined by the lights at $A$ and $B$ and the angle determined by the lights at $D$ and $B$ are equal. The number of kilometers from $A$ to $D$ is given by $\\frac{p\\sqrt{r}}{q}$ , where $p$ , $q$ , and $r$ are relatively prime positive integers, and $r$ is not divisible by the square of any prime. Find $p+q+r$ .",
+  "clause_ledger": [
+    {"source": "AB=5, BC=12, AC=13", "dsl": "A=(0,0), B=(5,0), C=(5,12)", "kind": "construction/constraint"},
+    {"source": "angle BAD equals angle CAD", "dsl": "Angle(B,A,D)=Angle(C,A,D)", "kind": "constraint"},
+    {"source": "angle ACB equals angle DCB", "dsl": "Angle(A,C,B)=Angle(D,C,B)", "kind": "constraint"},
+    {"source": "AD", "dsl": "Distance(A,D)", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["dx", "dy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(5,0)"},
+    {"name": "C", "expr": "Point(5,12)"},
+    {"name": "D", "expr": "Point(dx,dy)"}
+  ],
+  "constraints": [
+    {"def": "Angle(B,A,D)", "value": "Angle(C,A,D)"},
+    {"def": "Angle(A,C,B)", "value": "Angle(D,C,B)"}
+  ],
+  "guards": ["AssumeGt(dy,0)", "AssumeGt(Distance(A,D),0)"],
+  "answer": "Distance(A,D)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": "# radical_mode=pqr_sum basis=13"
+}

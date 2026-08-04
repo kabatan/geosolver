@@ -1,0 +1,25 @@
+{
+  "id": "HMMT-2018-FEB-GEO-01",
+  "task": "solve",
+  "source_statement": "Triangle GRT has GR = 5, RT = 12, and GT = 13. The perpendicular bisector of GT intersects the extension of GR at O. Find T O.",
+  "clause_ledger": [
+    {"source": "triangle side lengths", "dsl": "G=(0,0), R=(5,0), T=(5,12)", "kind": "construction"},
+    {"source": "O on perpendicular bisector of GT and extension GR", "dsl": "O=Intersect(PerpendicularBisector(G,T),Line(G,R))", "kind": "construction"},
+    {"source": "TO", "dsl": "Distance(T,O)", "kind": "answer"}
+  ],
+  "variables": {"names": []},
+  "construction": [
+    {"name": "G", "expr": "Point(0,0)"},
+    {"name": "R", "expr": "Point(5,0)"},
+    {"name": "T", "expr": "Point(5,12)"},
+    {"name": "O", "expr": "Intersect(PerpendicularBisector(G,T),Line(G,R))"}
+  ],
+  "constraints": [
+    {"def": "Distance(G,R)", "value": 5},
+    {"def": "Distance(R,T)", "value": 12},
+    {"def": "Distance(G,T)", "value": 13}
+  ],
+  "guards": ["AssumeGt(Distance(T,O),0)"],
+  "answer": "Distance(T,O)",
+  "post_process": ""
+}

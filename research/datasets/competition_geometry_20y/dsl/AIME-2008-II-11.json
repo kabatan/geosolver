@@ -1,0 +1,37 @@
+{
+  "id": "AIME-2008-II-11",
+  "task": "solve",
+  "source_statement": "In triangle $ABC$ , $AB = AC = 100$ , and $BC = 56$ . Circle $P$ has radius $16$ and is tangent to $\\overline{AC}$ and $\\overline{BC}$ . Circle $Q$ is externally tangent to circle $P$ and is tangent to $\\overline{AB}$ and $\\overline{BC}$ . No point of circle $Q$ lies outside of $\\bigtriangleup\\overline{ABC}$ . The radius of circle $Q$ can be expressed in the form $m - n\\sqrt{k}$ ,where $m$ , $n$ , and $k$ are positive integers and $k$ is the product of distinct primes. Find $m +nk$ .",
+  "clause_ledger": [
+    {"source": "isosceles triangle side lengths", "dsl": "fixed symmetric coordinate triangle A=(28,96), B=(0,0), C=(56,0)", "kind": "construction"},
+    {"source": "circle P radius16 tangent AC,BC", "dsl": "variable center O1 and distance-to-line constraints", "kind": "construction/constraint"},
+    {"source": "circle Q tangent AB,BC and externally tangent P inside triangle", "dsl": "variable center O2/r and direct line/two-center distance constraints with interior guards", "kind": "construction/constraint/guard"},
+    {"source": "m+n*k", "dsl": "geometric answer radius r with explicit radical marker", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["o1x", "o1y", "o2x", "o2y", "r"]},
+  "construction": [
+    {"name": "A", "expr": "Point(28,96)"},
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(56,0)"},
+    {"name": "O1", "expr": "Point(o1x,o1y)"},
+    {"name": "O2", "expr": "Point(o2x,o2y)"},
+    {"name": "P", "expr": "Circle(O1,16)"},
+    {"name": "Q", "expr": "Circle(O2,r)"}
+  ],
+  "constraints": [
+    {"def": "Distance(O1,Line(A,C))", "value": 16},
+    {"def": "Distance(O1,Line(B,C))", "value": 16},
+    {"def": "Distance(O2,Line(A,B))", "value": "r"},
+    {"def": "Distance(O2,Line(B,C))", "value": "r"},
+    {"def": "Distance(O1,O2)", "value": "16+r"}
+  ],
+  "guards": [
+    "AssumeGt(r,0)", "AssumeGt(o1y,0)", "AssumeGt(o2y,0)", "AssumeLt(o2x,56)",
+    "AssumeGt(Vector(A,B).cross(Vector(A,O2)),0)",
+    "AssumeGt(Vector(B,C).cross(Vector(B,O2)),0)",
+    "AssumeGt(Vector(C,A).cross(Vector(C,O2)),0)",
+    "AssumeGe(Distance(O2,Line(A,C)),r)"
+  ],
+  "answer": "r",
+  "post_process": "# radical_mode=m_minus_n_sqrt_k"
+}

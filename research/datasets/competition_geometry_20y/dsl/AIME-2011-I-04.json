@@ -1,0 +1,30 @@
+{
+  "id": "AIME-2011-I-04",
+  "task": "solve",
+  "source_statement": "In triangle $ABC$ , $AB = 125$ , $AC = 117$ , and $BC = 120$ .  The angle bisector of angle $A$ intersects $\\overline{BC}$ at point $L$ , and the angle bisector of angle $B$ intersects $\\overline{AC}$ at point $K$ .  Let $M$ and $N$ be the feet of the perpendiculars from $C$ to $\\overline{BK}$ and $\\overline{AL}$ , respectively.  Find $MN$ .",
+  "clause_ledger": [
+    {"source": "triangle side lengths", "dsl": "coordinate triangle with direct distances", "kind": "construction/constraint"},
+    {"source": "angle-bisector feet L,K", "dsl": "incenter I and intersections AI∩BC, BI∩AC", "kind": "construction"},
+    {"source": "M,N are perpendicular feet from C", "dsl": "direct FootOfPerpendicular constructions", "kind": "construction"},
+    {"source": "MN", "dsl": "Distance(M,N)", "kind": "answer"}
+  ],
+  "variables": {"names": ["ax", "ay"]},
+  "construction": [
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(120,0)"},
+    {"name": "A", "expr": "Point(ax,ay)"},
+    {"name": "I", "expr": "Incenter(A,B,C)"},
+    {"name": "L", "expr": "Intersect(Line(A,I),Line(B,C))"},
+    {"name": "K", "expr": "Intersect(Line(B,I),Line(A,C))"},
+    {"name": "M", "expr": "FootOfPerpendicular(Line(B,K),C)"},
+    {"name": "N", "expr": "FootOfPerpendicular(Line(A,L),C)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 125},
+    {"def": "Distance(A,C)", "value": 117},
+    {"def": "Distance(B,C)", "value": 120}
+  ],
+  "guards": ["AssumeGt(ay,0)"],
+  "answer": "Distance(M,N)",
+  "post_process": ""
+}

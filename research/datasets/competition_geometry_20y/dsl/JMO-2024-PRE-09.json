@@ -1,0 +1,109 @@
+{
+  "id": "JMO-2024-PRE-09",
+  "task": "solve",
+  "source_statement": "円に内接する四角形ABCDがあり，AB=7，BC=18をみたしている。∠CDAの二等分線と辺BCが点Eで交わっており，また線分DE上の点Fが∠AED=∠FCDをみたしている。BE=5，EF=3のとき，線分DFの長さを求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "cyclic quadrilateral and AB,BC lengths",
+      "dsl": "coordinate points with Circumcircle and direct side constraints",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "angle bisector of CDA meets BC at E",
+      "dsl": "I=Incenter(C,D,A), E=DI∩BC",
+      "kind": "construction"
+    },
+    {
+      "source": "F on DE, angle equality, BE=5,EF=3",
+      "dsl": "direct collinearity/angle/distance constraints",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "DF",
+      "dsl": "Distance(D,F)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "b",
+      "cx",
+      "cy",
+      "dx",
+      "dy",
+      "fx",
+      "fy"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(7,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(cx,cy)"
+    },
+    {
+      "name": "D",
+      "expr": "Point(dx,dy)"
+    },
+    {
+      "name": "Gamma",
+      "expr": "Circumcircle(A,B,C)"
+    },
+    {
+      "name": "I",
+      "expr": "Incenter(C,D,A)"
+    },
+    {
+      "name": "E",
+      "expr": "Intersect(Line(D,I),Line(B,C))"
+    },
+    {
+      "name": "F",
+      "expr": "Point(fx,fy)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(B,C)",
+      "value": 18
+    },
+    {
+      "def": "Distance(B,E)",
+      "value": 5
+    },
+    {
+      "def": "Distance(D,F)+Distance(F,E)",
+      "value": "Distance(D,E)"
+    },
+    {
+      "def": "Collinear(D,E,F)",
+      "value": 0
+    },
+    {
+      "def": "OnCircle(D,Gamma)",
+      "value": 0
+    },
+    {
+      "def": "Angle(A,E,D)",
+      "value": "Angle(F,C,D)"
+    },
+    {
+      "def": "Distance(E,F)",
+      "value": 3
+    }
+  ],
+  "guards": [
+    "AssumeGt(cy,0)",
+    "AssumeGt(dy,0)",
+    "AssumeGt(fy,0)"
+  ],
+  "answer": "Distance(D,F)",
+  "post_process": ""
+}

@@ -1,0 +1,111 @@
+{
+  "id": "JMO-2011-PRE-11",
+  "task": "solve",
+  "source_statement": "四角形ABCDが，点Oを中心とする円に外接しており，OA=5，OB=6，OC=7，OD=8が成立している。線分ACの中点をM，線分BDの中点をNとするとき，OM:ONを求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "ABCD circumscribes a circle centered at O",
+      "dsl": "fix O=(0,0), parameterize the four tangent contact radii, and construct A,B,C,D as intersections of consecutive tangent lines; this is an exact convex tangential-quadrilateral representation",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "OA,OB,OC,OD are 5,6,7,8",
+      "dsl": "direct radial distance constraints",
+      "kind": "constraint"
+    },
+    {
+      "source": "M,N are diagonal midpoints",
+      "dsl": "direct Midpoint constructions",
+      "kind": "construction"
+    },
+    {
+      "source": "OM:ON",
+      "dsl": "Distance(O,M)/Distance(O,N)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "r",
+      "beta",
+      "gamma",
+      "delta"
+    ]
+  },
+  "construction": [
+    {
+      "name": "O",
+      "expr": "Point(0,0)"
+    },
+    {"name": "T1", "expr": "Point(r,0)"},
+    {"name": "T2", "expr": "Point(r*cos(beta),r*sin(beta))"},
+    {"name": "T3", "expr": "Point(r*cos(gamma),r*sin(gamma))"},
+    {"name": "T4", "expr": "Point(r*cos(delta),r*sin(delta))"},
+    {"name": "l1", "expr": "PerpendicularLine(Line(O,T1),T1)"},
+    {"name": "l2", "expr": "PerpendicularLine(Line(O,T2),T2)"},
+    {"name": "l3", "expr": "PerpendicularLine(Line(O,T3),T3)"},
+    {"name": "l4", "expr": "PerpendicularLine(Line(O,T4),T4)"},
+    {"name": "A", "expr": "Intersect(l4,l1)"},
+    {"name": "B", "expr": "Intersect(l1,l2)"},
+    {"name": "C", "expr": "Intersect(l2,l3)"},
+    {"name": "D", "expr": "Intersect(l3,l4)"},
+    {
+      "name": "omega",
+      "expr": "Circle(O,r)"
+    },
+    {
+      "name": "M",
+      "expr": "Midpoint(A,C)"
+    },
+    {
+      "name": "N",
+      "expr": "Midpoint(B,D)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(O,A)",
+      "value": 5
+    },
+    {
+      "def": "Distance(O,B)",
+      "value": 6
+    },
+    {
+      "def": "Distance(O,C)",
+      "value": 7
+    },
+    {
+      "def": "Distance(O,D)",
+      "value": 8
+    },
+    {
+      "def": "Distance(O,Line(A,B))",
+      "value": "r"
+    },
+    {
+      "def": "Distance(O,Line(B,C))",
+      "value": "r"
+    },
+    {
+      "def": "Distance(O,Line(C,D))",
+      "value": "r"
+    },
+    {
+      "def": "Distance(O,Line(D,A))",
+      "value": "r"
+    }
+  ],
+  "guards": [
+    "AssumeGt(r,0)",
+    "AssumeGt(Area(A,B,C),0)",
+    "AssumeGt(Area(A,C,D),0)",
+    "AssumeGt(beta,0)",
+    "AssumeGt(gamma-beta,0)",
+    "AssumeGt(delta-gamma,0)",
+    "AssumeGt(2*pi-delta,0)",
+    "AssumeConvex([A,B,C,D])"
+  ],
+  "answer": "Distance(O,M)/Distance(O,N)",
+  "post_process": ""
+}

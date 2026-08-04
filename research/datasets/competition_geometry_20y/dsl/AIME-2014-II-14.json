@@ -1,0 +1,30 @@
+{
+  "id": "AIME-2014-II-14",
+  "task": "solve",
+  "source_statement": "In $\\triangle ABC$ , $AB=10$ , $\\measuredangle A=30^{\\circ}$ , and $\\measuredangle C=45^{\\circ}$ . Let $H$ , $D$ , and $M$ be points on line $\\overline{BC}$ such that $AH\\perp BC$ , $\\measuredangle BAD=\\measuredangle CAD$ , and $BM=CM$ . Point $N$ is the midpoint of segment $HM$ , and point $P$ is on ray $AD$ such that $PN\\perp BC$ . Then $AP^2=\\frac{m}{n}$ , where $m$ and $n$ are relatively prime positive integers. Find $m+n$ .",
+  "clause_ledger": [
+    {"source": "triangle side/angles", "dsl": "A=(0,0), B=(10,0), variable C with direct angle and side constraints", "kind": "construction/constraint"},
+    {"source": "H altitude foot, D angle-bisector foot, M midpoint BC", "dsl": "FootOfPerpendicular, Incenter angle-bisector line intersection, and Midpoint", "kind": "construction"},
+    {"source": "N midpoint HM and P on ray AD with PN perpendicular BC", "dsl": "direct Midpoint, PerpendicularLine, and intersection", "kind": "construction/constraint"},
+    {"source": "m+n", "dsl": "geometric answer AP^2 with explicit fraction post_process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["cx", "cy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(10,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "H", "expr": "FootOfPerpendicular(Line(B,C),A)"},
+    {"name": "I", "expr": "Incenter(A,B,C)"},
+    {"name": "D", "expr": "Intersect(Line(A,I),Line(B,C))"},
+    {"name": "M", "expr": "Midpoint(B,C)"},
+    {"name": "N", "expr": "Midpoint(H,M)"},
+    {"name": "P", "expr": "Intersect(Line(A,D),PerpendicularLine(Line(B,C),N))"}
+  ],
+  "constraints": [
+    {"def": "Angle(B,A,C)", "value": "30*pi/180"},
+    {"def": "Angle(A,C,B)", "value": "45*pi/180"}
+  ],
+  "guards": ["AssumeGt(cx,0)", "AssumeGt(cy,0)", "AssumeGt(Area(A,B,C),0)", "AssumeGt(Dot(Vector(A,D),Vector(A,P)),0)"],
+  "answer": "Distance(A,P)**2",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+}

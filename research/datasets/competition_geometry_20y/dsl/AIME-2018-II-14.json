@@ -1,0 +1,33 @@
+{
+  "id": "AIME-2018-II-14",
+  "task": "solve",
+  "source_statement": "The incircle $\\omega$ of triangle $ABC$ is tangent to $\\overline{BC}$ at $X$ . Let $Y \\neq X$ be the other intersection of $\\overline{AX}$ with $\\omega$ . Points $P$ and $Q$ lie on $\\overline{AB}$ and $\\overline{AC}$ , respectively, so that $\\overline{PQ}$ is tangent to $\\omega$ at $Y$ . Assume that $AP = 3$ , $PB = 4$ , $AC = 8$ , and $AQ = \\dfrac{m}{n}$ , where $m$ and $n$ are relatively prime positive integers. Find $m+n$ .",
+  "clause_ledger": [
+    {"source": "incircle and contact X", "dsl": "direct Incenter/IncircleContactPoint constructions", "kind": "construction"},
+    {"source": "Y is second AX-incircle intersection", "dsl": "direct Intersect excluding X", "kind": "construction"},
+    {"source": "P on AB with AP=3,PB=4 and Q on AC with PQ tangent at Y", "dsl": "coordinate P and variable Q, with Y on PQ and IsTangent(Line(P,Q),omega)", "kind": "construction/constraint"},
+    {"source": "m+n", "dsl": "AQ with fraction postprocess", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["cx", "cy", "qx", "qy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(7,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "I", "expr": "Incenter(A,B,C)"},
+    {"name": "omega", "expr": "Incircle(A,B,C)"},
+    {"name": "X", "expr": "IncircleContactPoint(A,B,C,side='BC')"},
+    {"name": "Y", "expr": "Intersect(Line(A,X),omega,exclude=X)"},
+    {"name": "P", "expr": "Point(3,0)"},
+    {"name": "Q", "expr": "Point(qx,qy)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,C)", "value": 8},
+    {"def": "Collinear(A,Q,C)", "value": 0},
+    {"def": "OnSegment(Q,A,C)", "value": 0},
+    {"def": "OnLine(Y,P,Q)", "value": 0},
+    {"def": "IsTangent(Line(P,Q),omega)", "value": 0}
+  ],
+  "guards": ["AssumeGt(cy,0)", "AssumeGt(qx,0)", "AssumeGt(qy,0)"],
+  "answer": "Distance(A,Q)",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+}

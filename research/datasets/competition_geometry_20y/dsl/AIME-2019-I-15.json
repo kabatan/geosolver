@@ -1,0 +1,48 @@
+{
+  "id": "AIME-2019-I-15",
+  "task": "solve",
+  "source_statement": "Let $\\overline{AB}$ be a chord of a circle $\\omega$ , and let $P$ be a point on the chord $\\overline{AB}$ . Circle $\\omega_1$ passes through $A$ and $P$ and is internally tangent to $\\omega$ . Circle $\\omega_2$ passes through $B$ and $P$ and is internally tangent to $\\omega$ . Circles $\\omega_1$ and $\\omega_2$ intersect at points $P$ and $Q$ . Line $PQ$ intersects $\\omega$ at $X$ and $Y$ . Assume that $AP=5$ , $PB=3$ , $XY=11$ , and $PQ^2 = \\tfrac{m}{n}$ , where $m$ and $n$ are relatively prime positive integers. Find $m+n$ .",
+  "clause_ledger": [
+    {"source": "AB chord of omega with P on AB, AP=5,PB=3", "dsl": "rigid-motion gauge with the chord midpoint on the y-axis: A=(-4,h), P=(1,h), B=(4,h), which is exactly the source collinearity and distance data", "kind": "construction/constraint"},
+    {"source": "omega1 through A,P internally tangent omega; omega2 through B,P internally tangent omega", "dsl": "the tangency points are the source points A and B; each inner center is constructed on the corresponding O-A/O-B radius with a scalar factor in (0,1), and P-incidence is retained", "kind": "construction/constraint"},
+    {"source": "Q is other intersection; PQ meets omega at X,Y with XY=11", "dsl": "Q is the direct other circle intersection; X and Y are the near/far line-circle intersections, so no free intersection coordinates are introduced", "kind": "construction/constraint"},
+    {"source": "PQ^2=m/n and m+n", "dsl": "Distance(P,Q)^2 with fraction post-process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["h", "k1", "k2"]},
+  "construction": [
+    {"name": "O", "expr": "Point(0,0)"},
+    {"name": "P", "expr": "Point(1,h)"},
+    {"name": "A", "expr": "Point(-4,h)"},
+    {"name": "B", "expr": "Point(4,h)"},
+    {"name": "omega", "expr": "Circle(O,Distance(O,A))"},
+    {"name": "O1", "expr": "Point(k1*A.x,k1*A.y)"},
+    {"name": "O2", "expr": "Point(k2*B.x,k2*B.y)"},
+    {"name": "omega1", "expr": "Circle(O1,Distance(O1,A))"},
+    {"name": "omega2", "expr": "Circle(O2,Distance(O2,B))"},
+    {"name": "Q", "expr": "Intersect(omega1,omega2,exclude=P)"},
+    {"name": "PQ", "expr": "Line(P,Q)"},
+    {"name": "X", "expr": "Intersect(PQ,omega,near=P)"},
+    {"name": "Y", "expr": "Intersect(PQ,omega,far=P)"}
+  ],
+  "constraints": [
+    {"def": "OnCircle(A,omega)", "value": 0},
+    {"def": "OnCircle(B,omega)", "value": 0},
+    {"def": "OnCircle(A,omega1)", "value": 0},
+    {"def": "OnCircle(P,omega1)", "value": 0},
+    {"def": "OnCircle(B,omega2)", "value": 0},
+    {"def": "OnCircle(P,omega2)", "value": 0},
+    {"def": "Distance(O,O1)", "value": "Distance(O,A)-Distance(O1,A)"},
+    {"def": "Distance(O,O2)", "value": "Distance(O,A)-Distance(O2,B)"},
+    {"def": "OnCircle(Q,omega1)", "value": 0},
+    {"def": "OnCircle(Q,omega2)", "value": 0},
+    {"def": "OnLine(X,P,Q)", "value": 0},
+    {"def": "OnLine(Y,P,Q)", "value": 0},
+    {"def": "OnCircle(X,omega)", "value": 0},
+    {"def": "OnCircle(Y,omega)", "value": 0},
+    {"def": "Distance(X,Y)", "value": 11}
+  ],
+  "guards": ["AssumeGt(Distance(O,A),0)", "AssumeGt(k1,0)", "AssumeLt(k1,1)", "AssumeGt(k2,0)", "AssumeLt(k2,1)", "AssumeGt(Distance(P,Q),0)", "AssumeGt(Distance(X,Y),0)"],
+  "answer": "Distance(P,Q)*Distance(P,Q)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+}

@@ -1,0 +1,32 @@
+{
+  "id": "HMMT-2022-FEB-GEO-03",
+  "task": "solve",
+  "source_statement": "Let ABCD and AEF G be unit squares such that the area of their intersection is 21 . Given that ∠BAE < 45◦ , tan ∠BAE can be expressed as b for relatively prime positive integers a and b. Compute a 100a + b.",
+  "clause_ledger": [
+    {"source": "two unit squares sharing A", "dsl": "A fixed at the common vertex, with E,F,G variable and direct unit-side/perpendicular constraints", "kind": "construction/constraint"},
+    {"source": "intersection area is 1/2 and angle BAE<45 degrees", "dsl": "source overlap polygon A,E,H,D where H=EF∩CD, with branch guard", "kind": "constraint/guard"},
+    {"source": "100a+b", "dsl": "answer is tan(angle BAE)=AE_y/AE_x; explicit fraction transform is in post_process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["ex", "ey", "gx", "gy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(1,0)"},
+    {"name": "C", "expr": "Point(1,1)"},
+    {"name": "D", "expr": "Point(0,1)"},
+    {"name": "E", "expr": "Point(ex,ey)"},
+    {"name": "G", "expr": "Point(gx,gy)"},
+    {"name": "F", "expr": "Point(ex+gx,ey+gy)"},
+    {"name": "H", "expr": "Intersect(Line(E,F),Line(C,D))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,E)", "value": 1},
+    {"def": "Distance(A,G)", "value": 1},
+    {"def": "Perpendicular(Line(A,E),Line(A,G))", "value": 0},
+    {"def": "Distance(E,F)", "value": 1},
+    {"def": "Distance(G,F)", "value": 1},
+    {"def": "Area(A,E,H,D)", "value": "1/2"}
+  ],
+  "guards": ["AssumeGt(ex,0)", "AssumeGt(ey,0)", "AssumeLt(ey,ex)", "AssumeLt(gx,0)", "AssumeGt(gy,0)"],
+  "answer": "ey/ex",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = 100*f.numerator + f.denominator"
+}

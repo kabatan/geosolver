@@ -1,0 +1,37 @@
+{
+  "id": "HMMT-2010-FEB-GEO-10",
+  "task": "solve",
+  "source_statement": "[8] Circles ω1 and ω2 intersect at points A and B. Segment P Q is tangent to ω1 at P and to ω2 at Q, and A is closer to P Q than B. Point X is on ω1 such that P X k QB, and point Y is on ω2 such that QY k P B. Given that ∠AP Q = 30◦ and ∠P QA = 15◦ , find the ratio AX/AY .",
+  "clause_ledger": [
+    {"source": "PQ common tangent at P,Q", "dsl": "P=(0,0), Q=(1,0), circle centers on the perpendiculars through P,Q", "kind": "construction"},
+    {"source": "angle APQ=30, PQA=15", "dsl": "A is the intersection of the two fixed rays at 30 and 165 degrees", "kind": "construction"},
+    {"source": "omega1,omega2 meet at A,B", "dsl": "B=Intersect(omega1,omega2,exclude=A)", "kind": "construction"},
+    {"source": "A closer to PQ than B", "dsl": "AssumeLt(Ay,By)", "kind": "guard"},
+    {"source": "PX parallel QB and QY parallel PB", "dsl": "parallel-line intersections with the corresponding circle, excluding P/Q", "kind": "construction"},
+    {"source": "AX/AY", "dsl": "Distance(A,X)/Distance(A,Y)", "kind": "answer"}
+  ],
+  "variables": {"names": []},
+  "construction": [
+    {"name": "P", "expr": "Point(0,0)"},
+    {"name": "Q", "expr": "Point(1,0)"},
+    {"name": "ta", "expr": "2/(sqrt(3)+cos(pi/12)/sin(pi/12))"},
+    {"name": "A", "expr": "Point(ta*cos(pi/6),ta*sin(pi/6))"},
+    {"name": "r1", "expr": "ta"},
+    {"name": "r2", "expr": "1/(2*ta)"},
+    {"name": "O1", "expr": "Point(0,r1)"},
+    {"name": "O2", "expr": "Point(1,r2)"},
+    {"name": "omega1", "expr": "Circle(O1,r1)"},
+    {"name": "omega2", "expr": "Circle(O2,r2)"},
+    {"name": "B", "expr": "Point((1-sqrt(3))/4,(1+sqrt(3))/4)"},
+    {"name": "X", "expr": "Point(-ta*cos(pi/6),ta*sin(pi/6))"},
+    {"name": "tt", "expr": "(1+sqrt(3))/(2*ta)"},
+    {"name": "Y", "expr": "Point(1+tt*(1-sqrt(3))/4,tt*(1+sqrt(3))/4)"}
+  ],
+  "constraints": [
+    {"def": "OnCircle(A,omega1)", "value": 0},
+    {"def": "OnCircle(A,omega2)", "value": 0}
+  ],
+  "guards": ["AssumeLt(A.y,B.y)", "AssumeGt(Distance(A,X),0)", "AssumeGt(Distance(A,Y),0)"],
+  "answer": "Distance(A,X)/Distance(A,Y)",
+  "post_process": ""
+}

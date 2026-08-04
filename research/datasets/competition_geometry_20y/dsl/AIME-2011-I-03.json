@@ -1,0 +1,68 @@
+{
+  "id": "AIME-2011-I-03",
+  "task": "solve",
+  "source_statement": "Let $L$ be the line with slope $\\frac{5}{12}$ that contains the point $A = (24,-1)$ , and let $M$ be the line perpendicular to line $L$ that contains the point $B = (5,6)$ .  The original coordinate axes are erased, and line $L$ is made the $x$ -axis and line $M$ the $y$ -axis.  In the new coordinate system, point $A$ is on the positive $x$ -axis, and point $B$ is on the positive $y$ -axis.  The point $P$ with coordinates $(-14,27)$ in the original system has coordinates $(\\alpha,\\beta)$ in the new coordinate system.  Find $\\alpha + \\beta$ .",
+  "clause_ledger": [
+    {
+      "source": "L slope 5/12 through A=(24,-1)",
+      "dsl": "L=Line(A,Point(36,4))",
+      "kind": "construction"
+    },
+    {
+      "source": "M perpendicular to L through B=(5,6)",
+      "dsl": "M=Line(B,Point(0,18))",
+      "kind": "construction"
+    },
+    {
+      "source": "A and B are positive new axes; P=(-14,27) in original coordinates",
+      "dsl": "O=Intersect(L,M), P=Point(-14,27), with the two normalized source-axis directions",
+      "kind": "construction"
+    },
+    {
+      "source": "alpha+beta",
+      "dsl": "sum of the two orthonormal coordinates of P in the source axes",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": []
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(24,-1)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(5,6)"
+    },
+    {
+      "name": "L",
+      "expr": "Line(A,Point(36,4))"
+    },
+    {
+      "name": "M",
+      "expr": "Line(B,Point(0,18))"
+    },
+    {
+      "name": "O",
+      "expr": "Intersect(L,M)"
+    },
+    {
+      "name": "P",
+      "expr": "Point(-14,27)"
+    },
+    {
+      "name": "u",
+      "expr": "Point(12/13,5/13)"
+    },
+    {
+      "name": "v",
+      "expr": "Point(-5/13,12/13)"
+    }
+  ],
+  "constraints": [],
+  "guards": [],
+  "answer": "Dot(Vector(O,P),u)+Dot(Vector(O,P),v)",
+  "post_process": ""
+}

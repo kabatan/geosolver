@@ -1,0 +1,93 @@
+{
+  "id": "JMO-2012-PRE-02",
+  "task": "solve",
+  "source_statement": "下図のように円周上にA，B，C，Dがこの順にあり，Bでの接線と直線ABのなす角は30°，Cでの接線と直線CDのなす角は10°である。直線AB，DCは平行で，円の中心について反対側にある。このとき∠BDCの大きさを求めよ。",
+  "clause_ledger": [
+    {
+      "source": "A,B,C,D on a circle in this order",
+      "dsl": "the tangent-angle and parallel/opposite-center clauses fix the cyclic configuration up to similarity; use the corresponding exact angular gauge on a unit circle and retain the original constraints",
+      "kind": "construction/constraint/guard"
+    },
+    {
+      "source": "tangent-angle conditions at B and C",
+      "dsl": "tangent carrier lines BU,CV perpendicular to OB,OC and direct Angle constraints",
+      "kind": "constraint"
+    },
+    {
+      "source": "AB parallel DC and opposite-center placement",
+      "dsl": "Parallel(Line(A,B),Line(D,C)) plus side-of-center branch guards",
+      "kind": "constraint/guard"
+    },
+    {
+      "source": "angle BDC",
+      "dsl": "Angle(B,D,C)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": []
+  },
+  "construction": [
+    {
+      "name": "O",
+      "expr": "Point(0,0)"
+    },
+    {"name": "r", "expr": "1"},
+    {"name": "A", "expr": "Point(cos(2*pi/3),sin(2*pi/3))"},
+    {"name": "B", "expr": "Point(cos(pi/3),sin(pi/3))"},
+    {"name": "C", "expr": "Point(cos(-4*pi/9),sin(-4*pi/9))"},
+    {"name": "D", "expr": "Point(cos(-5*pi/9),sin(-5*pi/9))"},
+    {"name": "U", "expr": "Point(B.x+cos(5*pi/6),B.y+sin(5*pi/6))"},
+    {"name": "V", "expr": "Point(C.x+cos(19*pi/18),C.y+sin(19*pi/18))"},
+    {
+      "name": "omega",
+      "expr": "Circle(O,r)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(O,A)",
+      "value": "r"
+    },
+    {
+      "def": "Distance(O,B)",
+      "value": "r"
+    },
+    {
+      "def": "Distance(O,C)",
+      "value": "r"
+    },
+    {
+      "def": "Distance(O,D)",
+      "value": "r"
+    },
+    {
+      "def": "Perpendicular(Line(O,B),Line(B,U))",
+      "value": 0
+    },
+    {
+      "def": "Perpendicular(Line(O,C),Line(C,V))",
+      "value": 0
+    },
+    {
+      "def": "Angle(A,B,U)",
+      "value": "pi/6"
+    },
+    {
+      "def": "Angle(D,C,V)",
+      "value": "pi/18"
+    },
+    {
+      "def": "Parallel(Line(A,B),Line(D,C))",
+      "value": 0
+    }
+  ],
+  "guards": [
+    "AssumeGt(r,0)",
+    "AssumeGt(Area(A,B,C),0)",
+    "AssumeGt(Area(A,C,D),0)",
+    "AssumeConvex([A,B,C,D])"
+  ],
+  "answer": "Angle(B,D,C)",
+  "post_process": ""
+}

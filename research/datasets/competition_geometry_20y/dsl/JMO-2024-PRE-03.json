@@ -1,0 +1,95 @@
+{
+  "id": "JMO-2024-PRE-03",
+  "task": "solve",
+  "source_statement": "一辺の長さが10の正三角形ABCがある。Aを通る円が辺BC（端点を除く）と点Xで接し，辺AB，ACとそれぞれAでない点D，Eで交わっている。BX>CX，AD+AE=13がともに成立つとき，線分BXの長さを求めよ。ただし，PQで線分PQの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "equilateral ABC side 10",
+      "dsl": "fixed coordinates",
+      "kind": "construction"
+    },
+    {
+      "source": "circle through A tangent to BC at X",
+      "dsl": "Circle(O,r) with O vertically above X and direct tangency/radius constraints",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "D,E second intersections on AB,AC",
+      "dsl": "direct Intersect(...,exclude=A)",
+      "kind": "construction"
+    },
+    {
+      "source": "BX>CX and AD+AE=13",
+      "dsl": "branch guard and direct sum constraint",
+      "kind": "constraint/guard"
+    },
+    {
+      "source": "BX",
+      "dsl": "Distance(B,X)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "x",
+      "oy",
+      "r"
+    ]
+  },
+  "construction": [
+    {
+      "name": "B",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(10,0)"
+    },
+    {
+      "name": "A",
+      "expr": "Point(5,5*sqrt(3))"
+    },
+    {
+      "name": "X",
+      "expr": "Point(x,0)"
+    },
+    {
+      "name": "O",
+      "expr": "Point(x,oy)"
+    },
+    {
+      "name": "Gamma",
+      "expr": "Circle(O,r)"
+    },
+    {
+      "name": "D",
+      "expr": "Intersect(Line(A,B),Gamma,exclude=A)"
+    },
+    {
+      "name": "E",
+      "expr": "Intersect(Line(A,C),Gamma,exclude=A)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(O,A)",
+      "value": "r"
+    },
+    {
+      "def": "Distance(O,X)",
+      "value": "r"
+    },
+    {
+      "def": "Distance(A,D)+Distance(A,E)",
+      "value": 13
+    }
+  ],
+  "guards": [
+    "AssumeGt(x,5)",
+    "AssumeLt(x,10)",
+    "AssumeGt(oy,0)",
+    "AssumeGt(r,0)"
+  ],
+  "answer": "Distance(B,X)",
+  "post_process": ""
+}

@@ -1,0 +1,91 @@
+{
+  "id": "JMO-2019-PRE-08",
+  "task": "solve",
+  "source_statement": "AB>ACをみたす三角形ABCの内心をIとし，辺AB，ACを1:8に内分する点をそれぞれD，Eとする。三角形DIEが一辺の長さが1の正三角形であるとき，線分ABの長さを求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "incenter and 1:8 side divisions",
+      "dsl": "direct Incenter and D/E coordinates at one-ninth of the two sides",
+      "kind": "construction"
+    },
+    {
+      "source": "DIE equilateral side 1",
+      "dsl": "three direct side distances",
+      "kind": "constraint"
+    },
+    {
+      "source": "AB",
+      "dsl": "Distance(A,B)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "b",
+      "cx",
+      "cy",
+      "ex",
+      "ey"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(b,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(cx,cy)"
+    },
+    {
+      "name": "I",
+      "expr": "Incenter(A,B,C)"
+    },
+    {
+      "name": "D",
+      "expr": "Point(b/9,0)"
+    },
+    {
+      "name": "E",
+      "expr": "Point(ex,ey)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Collinear(A,E,C)",
+      "value": 0
+    },
+    {
+      "def": "Distance(A,E)",
+      "value": "Distance(A,C)/9"
+    },
+    {
+      "def": "OnSegment(E,A,C)",
+      "value": 0
+    },
+    {
+      "def": "Distance(D,E)",
+      "value": 1
+    },
+    {
+      "def": "Distance(D,I)",
+      "value": 1
+    },
+    {
+      "def": "Distance(E,I)",
+      "value": 1
+    }
+  ],
+  "guards": [
+    "AssumeGt(b,0)",
+    "AssumeGt(cx,0)",
+    "AssumeGt(cy,0)",
+    "AssumeGt(b,Distance(A,C))"
+  ],
+  "answer": "Distance(A,B)",
+  "post_process": ""
+}

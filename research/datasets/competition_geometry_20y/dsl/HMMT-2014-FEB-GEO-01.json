@@ -1,0 +1,29 @@
+{
+  "id": "HMMT-2014-FEB-GEO-01",
+  "task": "solve",
+  "source_statement": "Let O1 and O2 be concentric circles with radii 4 and 6, respectively. A chord AB is drawn in O1 with length 2. Extend AB to intersect O2 in points C and D. Find CD.",
+  "clause_ledger": [
+    {"source": "concentric circles radii 4 and 6", "dsl": "O is the common center; direct Distance constraints", "kind": "construction/constraint"},
+    {"source": "AB is a chord of O1 and AB=2", "dsl": "A,B share the chord carrier and lie on radius-4 circle; Distance(A,B)=2", "kind": "constraint"},
+    {"source": "extend AB to C,D on O2", "dsl": "C,D share the same carrier y=h and lie on the radius-6 circle; order guards", "kind": "construction/constraint/guard"},
+    {"source": "CD", "dsl": "Distance(C,D)", "kind": "answer"}
+  ],
+  "variables": {"names": ["h", "cx"]},
+  "construction": [
+    {"name": "O", "expr": "Point(0,0)"},
+    {"name": "A", "expr": "Point(-1,h)"},
+    {"name": "B", "expr": "Point(1,h)"},
+    {"name": "C", "expr": "Point(-cx,h)"},
+    {"name": "D", "expr": "Point(cx,h)"}
+  ],
+  "constraints": [
+    {"def": "Distance(O,A)", "value": 4},
+    {"def": "Distance(O,B)", "value": 4},
+    {"def": "Distance(A,B)", "value": 2},
+    {"def": "Distance(O,C)", "value": 6},
+    {"def": "Distance(O,D)", "value": 6}
+  ],
+  "guards": ["AssumeGt(h,0)", "AssumeGt(cx,1)"],
+  "answer": "Distance(C,D)",
+  "post_process": ""
+}

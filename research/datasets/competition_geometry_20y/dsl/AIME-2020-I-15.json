@@ -1,0 +1,36 @@
+{
+  "id": "AIME-2020-I-15",
+  "task": "solve",
+  "source_statement": "Let $\\triangle ABC$ be an acute triangle with circumcircle $\\omega,$ and let $H$ be the intersection of the altitudes of $\\triangle ABC.$ Suppose the tangent to the circumcircle of $\\triangle HBC$ at $H$ intersects $\\omega$ at points $X$ and $Y$ with $HA=3,HX=2,$ and $HY=6.$ The area of $\\triangle ABC$ can be written in the form $m\\sqrt{n},$ where $m$ and $n$ are positive integers, and $n$ is not divisible by the square of any prime. Find $m+n.$",
+  "clause_ledger": [
+    {"source": "acute triangle ABC with orthocenter H and circumcircle omega", "dsl": "variable triangle, H=Orthocenter(A,B,C), omega=Circumcircle(A,B,C)", "kind": "construction/constraint"},
+    {"source": "tangent at H to circumcircle HBC meets omega at X,Y", "dsl": "gamma=Circumcircle(H,B,C), tangent line and two intersections with omega", "kind": "construction"},
+    {"source": "HA=3,HX=2,HY=6", "dsl": "direct distance constraints", "kind": "constraint"},
+    {"source": "area ABC=m sqrt(n) and m+n", "dsl": "Area(A,B,C) with radical post-process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["bx", "cx", "cy", "xx", "xy", "yx", "yy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(bx,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "H", "expr": "Orthocenter(A,B,C)"},
+    {"name": "omega", "expr": "Circumcircle(A,B,C)"},
+    {"name": "gamma", "expr": "Circumcircle(H,B,C)"},
+    {"name": "L", "expr": "Tangent(H,gamma)"},
+    {"name": "X", "expr": "Point(xx,xy)"},
+    {"name": "Y", "expr": "Point(yx,yy)"}
+  ],
+  "constraints": [
+    {"def": "OnCircle(X,omega)", "value": 0},
+    {"def": "OnCircle(Y,omega)", "value": 0},
+    {"def": "OnLine(X,L)", "value": 0},
+    {"def": "OnLine(Y,L)", "value": 0},
+    {"def": "Distance(A,H)", "value": 3},
+    {"def": "Distance(H,X)", "value": 2},
+    {"def": "Distance(H,Y)", "value": 6}
+  ],
+  "guards": ["AssumeGt(bx,0)", "AssumeGt(cy,0)", "AssumeGt(Area(A,B,C),0)", "AssumeAcute(A,B,C)"],
+  "answer": "Area(A,B,C)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": "# radical_mode=single_sqrt_sum"
+}

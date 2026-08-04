@@ -1,0 +1,130 @@
+{
+  "id": "JMO-2016-PRE-03",
+  "task": "solve",
+  "source_statement": "円に内接する六角形ABCDEFについて，半直線ABと半直線DCの交点をP，半直線BCと半直線EDの交点をQ，半直線CDと半直線FEの交点をR，半直線DEと半直線AFの交点をSとすると，∠BPC=50°，∠CQD=45°，∠DRE=40°，∠ESF=35°であった。直線BEと直線CFの交点をTとするとき，∠BTCの大きさを求めよ。",
+  "clause_ledger": [
+    {
+      "source": "six cyclic points in order",
+      "dsl": "fix A=(r,0) and parameterize the positive cyclic gaps g1,...,g5; construct B,...,F on Circle(O,r) and retain the source order/convex branch",
+      "kind": "construction/constraint/guard"
+    },
+    {
+      "source": "P,Q,R,S are the four stated half-line intersections",
+      "dsl": "direct line intersections; line carrier preserves the source incidence",
+      "kind": "construction"
+    },
+    {
+      "source": "four given angles",
+      "dsl": "direct Angle constraints in radians",
+      "kind": "constraint"
+    },
+    {
+      "source": "T=BE∩CF and asks angle BTC",
+      "dsl": "direct intersection and Angle answer",
+      "kind": "construction/answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "r",
+      "g1",
+      "g2",
+      "g3",
+      "g4",
+      "g5"
+    ]
+  },
+  "construction": [
+    {
+      "name": "O",
+      "expr": "Point(0,0)"
+    },
+    {"name": "A", "expr": "Point(r,0)"},
+    {"name": "B", "expr": "Point(r*cos(g1),r*sin(g1))"},
+    {"name": "C", "expr": "Point(r*cos(g1+g2),r*sin(g1+g2))"},
+    {"name": "D", "expr": "Point(r*cos(g1+g2+g3),r*sin(g1+g2+g3))"},
+    {"name": "E", "expr": "Point(r*cos(g1+g2+g3+g4),r*sin(g1+g2+g3+g4))"},
+    {"name": "F", "expr": "Point(r*cos(g1+g2+g3+g4+g5),r*sin(g1+g2+g3+g4+g5))"},
+    {
+      "name": "omega",
+      "expr": "Circle(O,r)"
+    },
+    {
+      "name": "P",
+      "expr": "Intersect(Line(A,B),Line(D,C))"
+    },
+    {
+      "name": "Q",
+      "expr": "Intersect(Line(B,C),Line(E,D))"
+    },
+    {
+      "name": "R",
+      "expr": "Intersect(Line(C,D),Line(F,E))"
+    },
+    {
+      "name": "S",
+      "expr": "Intersect(Line(D,E),Line(A,F))"
+    },
+    {
+      "name": "T",
+      "expr": "Intersect(Line(B,E),Line(C,F))"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(O,A)",
+      "value": "r"
+    },
+    {
+      "def": "Distance(O,B)",
+      "value": "r"
+    },
+    {
+      "def": "Distance(O,C)",
+      "value": "r"
+    },
+    {
+      "def": "Distance(O,D)",
+      "value": "r"
+    },
+    {
+      "def": "Distance(O,E)",
+      "value": "r"
+    },
+    {
+      "def": "Distance(O,F)",
+      "value": "r"
+    },
+    {
+      "def": "Angle(B,P,C)",
+      "value": "50*pi/180"
+    },
+    {
+      "def": "Angle(C,Q,D)",
+      "value": "45*pi/180"
+    },
+    {
+      "def": "Angle(D,R,E)",
+      "value": "40*pi/180"
+    },
+    {
+      "def": "Angle(E,S,F)",
+      "value": "35*pi/180"
+    }
+  ],
+  "guards": [
+    "AssumeGt(r,0)",
+    "AssumeGt(Area(A,B,C),0)",
+    "AssumeGt(Area(A,C,D),0)",
+    "AssumeGt(Area(A,D,E),0)",
+    "AssumeGt(g1,0)",
+    "AssumeGt(g2,0)",
+    "AssumeGt(g3,0)",
+    "AssumeGt(g4,0)",
+    "AssumeGt(g5,0)",
+    "AssumeLt(g1+g2+g3+g4+g5,2*pi)",
+    "AssumeConvex([A,B,C,D,E,F])"
+  ],
+  "answer": "Angle(B,T,C)",
+  "post_process": "180*answer_values[0]/pi"
+}

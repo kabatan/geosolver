@@ -1,0 +1,27 @@
+{
+  "id": "HMMT-2014-FEB-GEO-04",
+  "task": "solve",
+  "source_statement": "In quadrilateral ABCD, \\DAC = 98 , \\DBC = 82 , \\BCD = 70 , and BC = AD. Find \\ACD. B A C D",
+  "clause_ledger": [
+    {"source": "quadrilateral ABCD", "dsl": "C=(0,0), D=(1,0), B on the 70-degree ray, A variable with convex branch guard", "kind": "construction/guard"},
+    {"source": "angle DAC=98, angle DBC=82, angle BCD=70", "dsl": "direct Angle residuals in radians", "kind": "constraint"},
+    {"source": "BC=AD", "dsl": "Distance(B,C)=Distance(A,D)", "kind": "constraint"},
+    {"source": "angle ACD", "dsl": "180*Angle(A,C,D)/pi", "kind": "answer"}
+  ],
+  "variables": {"names": ["b", "ax", "ay"]},
+  "construction": [
+    {"name": "C", "expr": "Point(0,0)"},
+    {"name": "D", "expr": "Point(1,0)"},
+    {"name": "B", "expr": "Point(b*cos(7*pi/18),b*sin(7*pi/18))"},
+    {"name": "A", "expr": "Point(ax,ay)"}
+  ],
+  "constraints": [
+    {"def": "Angle(D,A,C)", "value": "98*pi/180"},
+    {"def": "Angle(D,B,C)", "value": "82*pi/180"},
+    {"def": "Angle(B,C,D)", "value": "70*pi/180"},
+    {"def": "Distance(B,C)", "value": "Distance(A,D)"}
+  ],
+  "guards": ["AssumeGt(b,0)", "AssumeGt(ay,0)", "AssumeGt(Area(A,B,C),0)"],
+  "answer": "180*Angle(A,C,D)/pi",
+  "post_process": ""
+}

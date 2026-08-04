@@ -1,0 +1,30 @@
+{
+  "id": "HMMT-2019-FEB-GEO-05",
+  "task": "solve",
+  "source_statement": "Isosceles triangle ABC with AB = AC is inscribed √ in a unit circle Ω with center O. Point D is the reflection of C across AB. Given that DO = 3, find the area of triangle ABC.",
+  "clause_ledger": [
+    {"source": "isosceles triangle on unit circle", "dsl": "variable A,B,C with OnCircle constraints and AB=AC", "kind": "construction/constraint"},
+    {"source": "D reflection of C across AB", "dsl": "direct Reflect(C,Line(A,B))", "kind": "construction"},
+    {"source": "DO=3", "dsl": "direct Distance constraint", "kind": "constraint"},
+    {"source": "area ABC", "dsl": "Area(A,B,C)", "kind": "answer"}
+  ],
+  "variables": {"names": ["ax", "ay", "bx", "by", "cx", "cy"]},
+  "construction": [
+    {"name": "O", "expr": "Point(0,0)"},
+    {"name": "A", "expr": "Point(ax,ay)"},
+    {"name": "B", "expr": "Point(bx,by)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "Omega", "expr": "Circle(O,1)"},
+    {"name": "D", "expr": "Reflect(C,Line(A,B))"}
+  ],
+  "constraints": [
+    {"def": "OnCircle(A,Omega)", "value": 0},
+    {"def": "OnCircle(B,Omega)", "value": 0},
+    {"def": "OnCircle(C,Omega)", "value": 0},
+    {"def": "Distance(A,B)", "value": "Distance(A,C)"},
+    {"def": "Distance(D,O)", "value": 3}
+  ],
+  "guards": ["AssumeGt(Area(A,B,C),0)"],
+  "answer": "Area(A,B,C)",
+  "post_process": ""
+}

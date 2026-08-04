@@ -1,0 +1,43 @@
+{
+  "id": "AIME-2006-I-07",
+  "task": "solve",
+  "source_statement": "An angle is drawn on a set of equally spaced parallel lines as shown. The ratio of the area of shaded region $C$ to the area of shaded region $B$ is $\\frac{11}{5}$ . Find the ratio of shaded region $D$ to the area of shaded region $A$ . [asy] size(6cm); defaultpen(linewidth(0.7)+fontsize(10)); for(int i=0; i<4; i=i+1) { fill((2*i,0)--(2*i+1,0)--(2*i+1,6)--(2*i,6)--cycle, mediumgray); } pair A=(1/3,4), B=A+7.5*dir(-17), C=A+7*dir(10); draw(B--A--C); fill((7.3,0)--(7.8,0)--(7.8,6)--(7.3,6)--cycle, white); clip(B--A--C--cycle); for(int i=0; i<9; i=i+1) { draw((i,1)--(i,6)); } label(\"$\\mathcal{A}$\", A+0.2*dir(-17), S); label(\"$\\mathcal{B}$\", A+2.3*dir(-17), S); label(\"$\\mathcal{C}$\", A+4.4*dir(-17), S); label(\"$\\mathcal{D}$\", A+6.5*dir(-17), S); [/asy]",
+  "clause_ledger": [
+    {"source": "angle on equally spaced parallel lines and shaded strips A-D", "dsl": "the unknown vertex offset vx in the first unit strip is retained; fixed nonparallel ray directions are only a coordinate gauge, and strip boundaries are x=0,1,...,7", "kind": "construction"},
+    {"source": "area C / area B = 11/5", "dsl": "Area(Creg)=11*Area(Breg)/5", "kind": "constraint"},
+    {"source": "area D / area A", "dsl": "Area(Dreg)/Area(Areg)", "kind": "answer"}
+  ],
+  "variables": {"names": ["vx"]},
+  "construction": [
+    {"name": "A0", "expr": "Point(vx,4)"},
+    {"name": "B0", "expr": "Point(vx+15*cos(-17*pi/180)/2,4+15*sin(-17*pi/180)/2)"},
+    {"name": "C0", "expr": "Point(vx+7*cos(10*pi/180),4+7*sin(10*pi/180))"},
+    {"name": "L", "expr": "Line(A0,B0)"},
+    {"name": "U", "expr": "Line(A0,C0)"},
+    {"name": "L1", "expr": "Intersect(L,Line(Point(1,0),Point(1,1)))"},
+    {"name": "U1", "expr": "Intersect(U,Line(Point(1,0),Point(1,1)))"},
+    {"name": "L2", "expr": "Intersect(L,Line(Point(2,0),Point(2,1)))"},
+    {"name": "U2", "expr": "Intersect(U,Line(Point(2,0),Point(2,1)))"},
+    {"name": "L3", "expr": "Intersect(L,Line(Point(3,0),Point(3,1)))"},
+    {"name": "U3", "expr": "Intersect(U,Line(Point(3,0),Point(3,1)))"},
+    {"name": "L4", "expr": "Intersect(L,Line(Point(4,0),Point(4,1)))"},
+    {"name": "U4", "expr": "Intersect(U,Line(Point(4,0),Point(4,1)))"},
+    {"name": "L5", "expr": "Intersect(L,Line(Point(5,0),Point(5,1)))"},
+    {"name": "U5", "expr": "Intersect(U,Line(Point(5,0),Point(5,1)))"},
+    {"name": "L6", "expr": "Intersect(L,Line(Point(6,0),Point(6,1)))"},
+    {"name": "U6", "expr": "Intersect(U,Line(Point(6,0),Point(6,1)))"},
+    {"name": "L7", "expr": "Intersect(L,Line(Point(7,0),Point(7,1)))"},
+    {"name": "U7", "expr": "Intersect(U,Line(Point(7,0),Point(7,1)))"},
+    {"name": "Areg", "expr": "Area(A0,L1,U1)"},
+    {"name": "Breg", "expr": "Area(L2,L3,U3,U2)"},
+    {"name": "Creg", "expr": "Area(L4,L5,U5,U4)"},
+    {"name": "Dreg", "expr": "Area(L6,L7,U7,U6)"}
+  ],
+  "constraints": [
+    {"def": "Creg", "value": "11*Breg/5"}
+  ],
+  "guards": ["AssumeGt(vx,0)", "AssumeLt(vx,1)"],
+  "answer": "Dreg/Areg",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

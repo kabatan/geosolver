@@ -1,0 +1,28 @@
+{
+  "id": "HMMT-2014-FEB-GEO-06",
+  "task": "solve",
+  "source_statement": "In quadrilateral ABCD, we have AB = 5, BC = 6, CD = 5, DA = 4, and \\ABC = 90 . Let AC and BE BD meet at E. Compute ED .",
+  "clause_ledger": [
+    {"source": "quadrilateral ABCD and angle ABC=90 degrees", "dsl": "right-angle carrier gauge A=(0,0), B=(5,0), C=(5,6), convex branch guard", "kind": "construction/constraint/guard"},
+    {"source": "AB=5, BC=6, CD=5, DA=4", "dsl": "direct Distance constraints", "kind": "constraint"},
+    {"source": "AC and BD meet at E", "dsl": "E=Intersect(Line(A,C),Line(B,D))", "kind": "construction"},
+    {"source": "BE/ED", "dsl": "Distance(B,E)/Distance(E,D)", "kind": "answer"}
+  ],
+  "variables": {"names": ["Dx", "Dy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(5,0)"},
+    {"name": "C", "expr": "Point(5,6)"},
+    {"name": "D", "expr": "Point(Dx,Dy)"},
+    {"name": "E", "expr": "Intersect(Line(A,C),Line(B,D))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 5},
+    {"def": "Distance(B,C)", "value": 6},
+    {"def": "Distance(C,D)", "value": 5},
+    {"def": "Distance(D,A)", "value": 4}
+  ],
+  "guards": ["AssumeGt(Dx,0)", "AssumeLt(Dx,5)", "AssumeGt(Dy,0)", "AssumeLt(Dy,6)"],
+  "answer": "Distance(B,E)/Distance(E,D)",
+  "post_process": ""
+}

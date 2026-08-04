@@ -1,0 +1,28 @@
+{
+  "id": "AIME-2007-II-09",
+  "task": "solve",
+  "source_statement": "Rectangle $ABCD$ is given with $AB=63$ and $BC=448.$ Points $E$ and $F$ lie on $AD$ and $BC$ respectively, such that $AE=CF=84.$ The inscribed circle of triangle $BEF$ is tangent to $EF$ at point $P,$ and the inscribed circle of triangle $DEF$ is tangent to $EF$ at point $Q.$ Find $PQ.$",
+  "clause_ledger": [
+    {"source": "rectangle ABCD, AB=63, BC=448", "dsl": "A=(0,0), B=(63,0), C=(63,448), D=(0,448)", "kind": "construction/constraint"},
+    {"source": "E on AD and F on BC with AE=CF=84", "dsl": "E=(0,84), F=(63,364)", "kind": "construction/constraint"},
+    {"source": "incircle of triangle BEF tangent to EF at P", "dsl": "P=IncircleContactPoint(B,E,F,side='BC'), where the B,C-labeled side is E-F", "kind": "construction"},
+    {"source": "incircle of triangle DEF tangent to EF at Q", "dsl": "Q=IncircleContactPoint(D,E,F,side='BC'), where the B,C-labeled side is E-F", "kind": "construction"},
+    {"source": "PQ", "dsl": "Distance(P,Q)", "kind": "answer"}
+  ],
+  "variables": {"names": []},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(63,0)"},
+    {"name": "C", "expr": "Point(63,448)"},
+    {"name": "D", "expr": "Point(0,448)"},
+    {"name": "E", "expr": "Point(0,84)"},
+    {"name": "F", "expr": "Point(63,364)"},
+    {"name": "P", "expr": "IncircleContactPoint(B,E,F,side='BC')"},
+    {"name": "Q", "expr": "IncircleContactPoint(D,E,F,side='BC')"}
+  ],
+  "constraints": [],
+  "guards": ["AssumeGt(Distance(B,E),0)", "AssumeGt(Distance(D,E),0)"],
+  "answer": "Distance(P,Q)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

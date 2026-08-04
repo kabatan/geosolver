@@ -1,0 +1,90 @@
+{
+  "id": "JMO-2021-PRE-03",
+  "task": "solve",
+  "source_statement": "AB=ACとなる二等辺三角形ABCの内部に点Pをとり，Pから辺BC，CA，ABにおろした垂線をそれぞれD，E，Fとする。BD=9，CD=5，PE=2，PF=5のとき，辺ABの長さを求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "AB=AC and D is the foot on BC with BD=9,CD=5",
+      "dsl": "B=(0,0), C=(14,0), A=(7,h), D=Foot(P,BC) with direct segment distances",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "E,F are perpendicular feet on CA,AB",
+      "dsl": "direct FootOfPerpendicular constructions",
+      "kind": "construction"
+    },
+    {
+      "source": "PE=2, PF=5",
+      "dsl": "direct distance constraints",
+      "kind": "constraint"
+    },
+    {
+      "source": "AB",
+      "dsl": "Distance(A,B)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "h",
+      "px",
+      "py"
+    ]
+  },
+  "construction": [
+    {
+      "name": "B",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(14,0)"
+    },
+    {
+      "name": "A",
+      "expr": "Point(7,h)"
+    },
+    {
+      "name": "P",
+      "expr": "Point(px,py)"
+    },
+    {
+      "name": "D",
+      "expr": "FootOfPerpendicular(Line(B,C),P)"
+    },
+    {
+      "name": "E",
+      "expr": "FootOfPerpendicular(Line(C,A),P)"
+    },
+    {
+      "name": "F",
+      "expr": "FootOfPerpendicular(Line(A,B),P)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(B,D)",
+      "value": 9
+    },
+    {
+      "def": "Distance(D,C)",
+      "value": 5
+    },
+    {
+      "def": "Distance(P,E)",
+      "value": 2
+    },
+    {
+      "def": "Distance(P,F)",
+      "value": 5
+    }
+  ],
+  "guards": [
+    "AssumeGt(h,0)",
+    "AssumeGt(py,0)",
+    "AssumeGt(px,0)",
+    "AssumeLt(px,14)"
+  ],
+  "answer": "Distance(A,B)",
+  "post_process": ""
+}

@@ -1,0 +1,31 @@
+{
+  "id": "HMMT-2014-FEB-GEO-08",
+  "task": "solve",
+  "source_statement": "Let ABC be a triangle with sides AB = 6, BC = 10, and CA = 8. Let M and N be the midpoints of BA and BC, respectively. Choose the point Y on ray CM so that the circumcircle of triangle AM Y is tangent to AN . Find the area of triangle N AY .",
+  "clause_ledger": [
+    {"source": "triangle side lengths", "dsl": "right-triangle gauge A=(0,0), B=(6,0), C=(0,8)", "kind": "construction"},
+    {"source": "M,N midpoints", "dsl": "M=Midpoint(B,A), N=Midpoint(B,C)", "kind": "construction"},
+    {"source": "Y on ray CM", "dsl": "Y=C+t(M-C), t>0", "kind": "construction/guard"},
+    {"source": "circumcircle AMY tangent to AN", "dsl": "Gamma=Circumcircle(A,M,Y), IsTangent(Line(A,N),Gamma)=0", "kind": "constraint"},
+    {"source": "area NAY", "dsl": "Area(N,A,Y)", "kind": "answer"}
+  ],
+  "variables": {"names": ["t"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(6,0)"},
+    {"name": "C", "expr": "Point(0,8)"},
+    {"name": "M", "expr": "Midpoint(B,A)"},
+    {"name": "N", "expr": "Midpoint(B,C)"},
+    {"name": "Y", "expr": "Point(6*t/2,8*(1-t))"},
+    {"name": "Gamma", "expr": "Circumcircle(A,M,Y)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 6},
+    {"def": "Distance(B,C)", "value": 10},
+    {"def": "Distance(C,A)", "value": 8},
+    {"def": "IsTangent(Line(A,N),Gamma)", "value": 0}
+  ],
+  "guards": ["AssumeGt(t,0)", "AssumeGt(Area(N,A,Y),0)"],
+  "answer": "Area(N,A,Y)",
+  "post_process": ""
+}

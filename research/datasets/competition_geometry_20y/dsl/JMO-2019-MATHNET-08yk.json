@@ -1,0 +1,30 @@
+{
+  "id": "JMO-2019-MATHNET-08yk",
+  "task": "solve",
+  "source_statement": "Let $I$ be the in-center of a triangle $ABC$ satisfying $AB > AC$, and let $D, E$ be points on the sides $AB, AC$, respectively, dividing the sides into two segments with $1:8$ ratio. If the triangle $DIE$ becomes the regular triangle with side length $1$, what is the length of $AB$? Here by $XY$ we denote the length of the line segment $XY$ as well.",
+  "clause_ledger": [
+    {"source": "incenter and 1:8 side divisions", "dsl": "direct Incenter and D/E coordinates at one-ninth of the two sides", "kind": "construction"},
+    {"source": "DIE equilateral side 1", "dsl": "three direct side distances", "kind": "constraint"},
+    {"source": "AB", "dsl": "Distance(A,B)", "kind": "answer"}
+  ],
+  "variables": {"names": ["b", "cx", "cy", "ex", "ey"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(b,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "I", "expr": "Incenter(A,B,C)"},
+    {"name": "D", "expr": "Point(b/9,0)"},
+    {"name": "E", "expr": "Point(ex,ey)"}
+  ],
+  "constraints": [
+    {"def": "Collinear(A,E,C)", "value": 0},
+    {"def": "OnSegment(E,A,C)", "value": 0},
+    {"def": "Distance(A,E)", "value": "Distance(A,C)/9"},
+    {"def": "Distance(D,E)", "value": 1},
+    {"def": "Distance(D,I)", "value": 1},
+    {"def": "Distance(E,I)", "value": 1}
+  ],
+  "guards": ["AssumeGt(b,0)", "AssumeGt(cx,0)", "AssumeGt(cy,0)", "AssumeGt(b,Distance(A,C))"],
+  "answer": "Distance(A,B)",
+  "post_process": ""
+}

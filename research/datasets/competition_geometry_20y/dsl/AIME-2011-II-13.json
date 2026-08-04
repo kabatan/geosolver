@@ -1,0 +1,28 @@
+{
+  "id": "AIME-2011-II-13",
+  "task": "solve",
+  "source_statement": "Point $P$ lies on the diagonal $AC$ of square $ABCD$ with $AP > CP$ . Let $O_1$ and $O_2$ be the circumcenters of triangles $ABP$ and $CDP$ , respectively. Given that $AB = 12$ and $\\angle O_1PO_2 = 120 ^{\\circ}$ , then $AP = \\sqrt{a} + \\sqrt{b}$ , where $a$ and $b$ are positive integers. Find $a + b$ .",
+  "clause_ledger": [
+    {"source": "square side 12 and P on AC with AP>CP", "dsl": "fixed square coordinates and P=(p,p), p>6", "kind": "construction/guard"},
+    {"source": "O1,O2 circumcenters", "dsl": "direct Circumcenter constructions", "kind": "construction"},
+    {"source": "angle O1PO2=120", "dsl": "direct Angle constraint", "kind": "constraint"},
+    {"source": "sqrt(a)+sqrt(b)", "dsl": "geometric answer AP with explicit radical presentation in post_process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["p"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(12,0)"},
+    {"name": "C", "expr": "Point(12,12)"},
+    {"name": "D", "expr": "Point(0,12)"},
+    {"name": "P", "expr": "Point(p,p)"},
+    {"name": "O1", "expr": "Circumcenter(A,B,P)"},
+    {"name": "O2", "expr": "Circumcenter(C,D,P)"}
+  ],
+  "constraints": [
+    {"def": "Angle(O1,P,O2)", "value": "2*pi/3"},
+    {"def": "OnSegment(P,A,C)", "value": 0}
+  ],
+  "guards": ["AssumeGt(p,6)", "AssumeLt(p,12)"],
+  "answer": "Distance(A,P)",
+  "post_process": "# radical_mode=radical_sum basis=2,3,6"
+}

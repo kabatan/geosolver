@@ -1,0 +1,118 @@
+{
+  "id": "JMO-2018-PRE-09",
+  "task": "solve",
+  "source_statement": "三角形ABCの内接円が辺BC，CA，ABとそれぞれ点P，Q，Rで，∠A内の傍接円が辺BC，直線CA，ABとそれぞれ点S，T，Uで接している。三角形ABCの外接円と，直線PQと直線STの交点をD，直線PRと直線SUの交点をEとすると，AI=3，IP=1，PS=2のとき，線分DEの長さを求めよ。ただし，XYで線分XYの長さを表すものとする。また，三角形ABCの∠A内の傍接円とは，辺BC，直線ABのB側への延長線，および辺ACのC側への延長線に接する円のことをさす。",
+  "clause_ledger": [
+    {
+      "source": "incircle contacts P,Q,R",
+      "dsl": "Incircle and IncircleContactPoint constructions",
+      "kind": "construction"
+    },
+    {
+      "source": "A-excircle contacts S,T,U on the named lines",
+      "dsl": "Excircle(A,B,C,vertex='A') and ContactPoint on BC,CA,AB",
+      "kind": "construction"
+    },
+    {
+      "source": "D=PQ∩ST and E=PR∩SU",
+      "dsl": "direct line intersections",
+      "kind": "construction"
+    },
+    {
+      "source": "AI=3, IP=1, PS=2",
+      "dsl": "direct distance constraints",
+      "kind": "constraint"
+    },
+    {
+      "source": "DE",
+      "dsl": "Distance(D,E)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "b",
+      "cx",
+      "cy"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(b,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(cx,cy)"
+    },
+    {
+      "name": "inc",
+      "expr": "Incircle(A,B,C)"
+    },
+    {
+      "name": "I",
+      "expr": "Incenter(A,B,C)"
+    },
+    {
+      "name": "P",
+      "expr": "IncircleContactPoint(A,B,C,side='BC')"
+    },
+    {
+      "name": "Q",
+      "expr": "IncircleContactPoint(A,B,C,side='CA')"
+    },
+    {
+      "name": "R",
+      "expr": "IncircleContactPoint(A,B,C,side='AB')"
+    },
+    {
+      "name": "exc",
+      "expr": "Excircle(A,B,C,vertex='A')"
+    },
+    {
+      "name": "S",
+      "expr": "ContactPoint(exc,Line(B,C))"
+    },
+    {
+      "name": "T",
+      "expr": "ContactPoint(exc,Line(C,A))"
+    },
+    {
+      "name": "U",
+      "expr": "ContactPoint(exc,Line(A,B))"
+    },
+    {
+      "name": "D",
+      "expr": "Intersect(Line(P,Q),Line(S,T))"
+    },
+    {
+      "name": "E",
+      "expr": "Intersect(Line(P,R),Line(S,U))"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(A,I)",
+      "value": 3
+    },
+    {
+      "def": "Distance(I,P)",
+      "value": 1
+    },
+    {
+      "def": "Distance(P,S)",
+      "value": 2
+    }
+  ],
+  "guards": [
+    "AssumeGt(b,0)",
+    "AssumeGt(cy,0)",
+    "AssumeGt(Area(A,B,C),0)"
+  ],
+  "answer": "Distance(D,E)",
+  "post_process": ""
+}

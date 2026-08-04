@@ -1,0 +1,28 @@
+{
+  "id": "HMMT-2024-FEB-GEO-04",
+  "task": "solve",
+  "source_statement": "Let ABCD be a square, and let ℓ be a line passing through the midpoint of segment AB that intersects segment BC. Given that the distances from A and C to ℓ are 4 and 7, respectively, compute the area of ABCD.",
+  "clause_ledger": [
+    {"source": "square ABCD", "dsl": "direct square coordinate construction with side parameter s", "kind": "construction"},
+    {"source": "l through midpoint AB and intersects BC", "dsl": "M=Midpoint(A,B), P on BC, l=Line(M,P)", "kind": "construction/guard"},
+    {"source": "distances A-to-l=4 and C-to-l=7", "dsl": "direct Distance(point,Line) constraints", "kind": "constraint"},
+    {"source": "area ABCD", "dsl": "Area(A,B,C,D)", "kind": "answer"}
+  ],
+  "variables": {"names": ["s", "p"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(s,0)"},
+    {"name": "C", "expr": "Point(s,s)"},
+    {"name": "D", "expr": "Point(0,s)"},
+    {"name": "M", "expr": "Midpoint(A,B)"},
+    {"name": "P", "expr": "Point(s,p)"},
+    {"name": "l", "expr": "Line(M,P)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,l)", "value": 4},
+    {"def": "Distance(C,l)", "value": 7}
+  ],
+  "guards": ["AssumeGt(s,0)", "AssumeGt(p,0)", "AssumeLt(p,s)"],
+  "answer": "Area(A,B,C,D)",
+  "post_process": ""
+}

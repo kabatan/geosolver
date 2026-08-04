@@ -1,0 +1,29 @@
+{
+  "id": "HMMT-2013-FEB-GEO-02",
+  "task": "solve",
+  "source_statement": "Let ABCD be an isosceles trapezoid such that AD = BC, AB = 3, and CD = 8. Let E be a point in the plane such that BC = EC and AE ⊥ EC. Compute AE.",
+  "clause_ledger": [
+    {"source": "isosceles trapezoid, AB=3, CD=8, AD=BC", "dsl": "symmetric direct coordinate gauge with base lengths and leg equality", "kind": "construction/constraint"},
+    {"source": "EC=BC", "dsl": "direct Distance(E,C)=Distance(B,C)", "kind": "constraint"},
+    {"source": "AE perpendicular EC", "dsl": "Perpendicular(Line(A,E),Line(E,C))", "kind": "constraint"},
+    {"source": "AE", "dsl": "Distance(A,E)", "kind": "answer"}
+  ],
+  "variables": {"names": ["h", "Ex", "Ey"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(3,0)"},
+    {"name": "D", "expr": "Point(-2.5,h)"},
+    {"name": "C", "expr": "Point(5.5,h)"},
+    {"name": "E", "expr": "Point(Ex,Ey)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 3},
+    {"def": "Distance(D,C)", "value": 8},
+    {"def": "Distance(A,D)", "value": "Distance(B,C)"},
+    {"def": "Distance(E,C)", "value": "Distance(B,C)"},
+    {"def": "Perpendicular(Line(A,E),Line(E,C))", "value": 0}
+  ],
+  "guards": ["AssumeGt(h,0)", "AssumeGt(Distance(A,E),0)"],
+  "answer": "Distance(A,E)",
+  "post_process": ""
+}

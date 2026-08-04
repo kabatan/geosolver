@@ -1,0 +1,31 @@
+{
+  "id": "AIME-2021-II-14",
+  "task": "solve",
+  "source_statement": "Let $\\Delta ABC$ be an acute triangle with circumcenter $O$ and centroid $G$ . Let $X$ be the intersection of the line tangent to the circumcircle of $\\Delta ABC$ at $A$ and the line perpendicular to $GO$ at $G$ . Let $Y$ be the intersection of lines $XG$ and $BC$ . Given that the measures of $\\angle ABC, \\angle BCA,$ and $\\angle XOY$ are in the ratio $13 : 2 : 17,$ the degree measure of $\\angle BAC$ can be written as $\\frac{m}{n},$ where $m$ and $n$ are relatively prime positive integers. Find $m+n$ .",
+  "clause_ledger": [
+    {"source": "acute triangle ABC with circumcenter O and centroid G", "dsl": "variable triangle, O=Circumcenter, G=Centroid", "kind": "construction/constraint"},
+    {"source": "X=tangent at A intersect line through G perpendicular GO; Y=XG intersect BC", "dsl": "direct tangent/perpendicular/intersection constructions", "kind": "construction"},
+    {"source": "angles B,C,XOY are in ratio 13:2:17", "dsl": "two exact ratio equations between Angle expressions", "kind": "constraint"},
+    {"source": "degree A and m+n", "dsl": "180*Angle(B,A,C)/pi with fraction post-process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["bx", "cx", "cy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(bx,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "Gamma", "expr": "Circumcircle(A,B,C)"},
+    {"name": "O", "expr": "Circumcenter(A,B,C)"},
+    {"name": "G", "expr": "Centroid(A,B,C)"},
+    {"name": "tA", "expr": "Tangent(A,Gamma)"},
+    {"name": "X", "expr": "Intersect(tA,PerpendicularLine(G,Line(G,O)))"},
+    {"name": "Y", "expr": "Intersect(Line(X,G),Line(B,C))"}
+  ],
+  "constraints": [
+    {"def": "2*Angle(A,B,C)", "value": "13*Angle(B,C,A)"},
+    {"def": "17*Angle(B,C,A)", "value": "2*Angle(X,O,Y)"}
+  ],
+  "guards": ["AssumeGt(bx,0)", "AssumeGt(cy,0)", "AssumeGt(Angle(B,A,C),0)", "AssumeAcute(A,B,C)"],
+  "answer": "180*Angle(B,A,C)/pi",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+}

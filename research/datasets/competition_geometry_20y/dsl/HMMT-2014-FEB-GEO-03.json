@@ -1,0 +1,28 @@
+{
+  "id": "HMMT-2014-FEB-GEO-03",
+  "task": "solve",
+  "source_statement": "ABC is a triangle such that BC = 10, CA = 12. Let M be the midpoint of side AC. Given that BM is parallel to the external bisector of \\A, find area of triangle ABC. (Lines AB and AC form two angles, one of which is \\BAC. The external bisector of \\A is the line that bisects the other angle.)",
+  "clause_ledger": [
+    {"source": "BC=10, CA=12", "dsl": "B=(0,0), C=(10,0), A variable with direct distances", "kind": "construction/constraint"},
+    {"source": "M midpoint of AC", "dsl": "M=Midpoint(A,C)", "kind": "construction"},
+    {"source": "BM parallel to external angle bisector at A", "dsl": "external=PerpendicularLine(AngleBisector(B,A,C),A), Parallel(Line(B,M),external)", "kind": "constraint"},
+    {"source": "area ABC", "dsl": "Area(A,B,C)", "kind": "answer"}
+  ],
+  "variables": {"names": ["ax", "ay"]},
+  "construction": [
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(10,0)"},
+    {"name": "A", "expr": "Point(ax,ay)"},
+    {"name": "M", "expr": "Midpoint(A,C)"},
+    {"name": "internal", "expr": "AngleBisector(B,A,C)"},
+    {"name": "external", "expr": "PerpendicularLine(internal,A)"}
+  ],
+  "constraints": [
+    {"def": "Distance(B,C)", "value": 10},
+    {"def": "Distance(C,A)", "value": 12},
+    {"def": "Parallel(Line(B,M),external)", "value": 0}
+  ],
+  "guards": ["AssumeGt(ay,0)", "AssumeGt(Area(A,B,C),0)"],
+  "answer": "Area(A,B,C)",
+  "post_process": ""
+}

@@ -1,0 +1,26 @@
+{
+  "id": "AIME-2010-II-14",
+  "task": "solve",
+  "source_statement": "Triangle $ABC$ with right angle at $C$ , $\\angle BAC < 45^\\circ$ and $AB = 4$ . Point $P$ on $\\overline{AB}$ is chosen such that $\\angle APC = 2\\angle ACP$ and $CP = 1$ . The ratio $\\frac{AP}{BP}$ can be represented in the form $p + q\\sqrt{r}$ , where $p$ , $q$ , $r$ are positive integers and $r$ is not divisible by the square of any prime. Find $p+q+r$ .",
+  "clause_ledger": [
+    {"source": "right triangle, AB=4, and angle A<45", "dsl": "A=(0,0), B=(4,0), variable C with Angle(A,C,B)=90 and branch guards", "kind": "construction/constraint/guard"},
+    {"source": "P on AB, CP=1, angle APC=2 angle ACP", "dsl": "P=(p,0) and direct distance/angle constraints", "kind": "construction/constraint"},
+    {"source": "p+qsqrt(r) presentation", "dsl": "geometric answer AP/BP with explicit radical transform", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["p", "cx", "cy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(4,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "P", "expr": "Point(p,0)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 4},
+    {"def": "Angle(A,C,B)", "value": "pi/2"},
+    {"def": "Distance(C,P)", "value": 1},
+    {"def": "Angle(A,P,C)", "value": "2*Angle(A,C,P)"}
+  ],
+  "guards": ["AssumeGt(cx,0)", "AssumeGt(cy,0)", "AssumeGt(p,0)", "AssumeLt(p,4)", "AssumeLt(Angle(B,A,C),pi/4)"],
+  "answer": "Distance(A,P)/Distance(P,B)",
+  "post_process": "# radical_mode=linear_sqrt_sum"
+}

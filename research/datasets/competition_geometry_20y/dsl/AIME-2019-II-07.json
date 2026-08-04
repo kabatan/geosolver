@@ -1,0 +1,52 @@
+{
+  "id": "AIME-2019-II-07",
+  "task": "solve",
+  "source_statement": "Triangle $ABC$ has side lengths $AB=120,BC=220$ , and $AC=180$ . Lines $\\ell_A,\\ell_B$ , and $\\ell_C$ are drawn parallel to $\\overline{BC},\\overline{AC}$ , and $\\overline{AB}$ , respectively, such that the intersections of $\\ell_A,\\ell_B$ , and $\\ell_C$ with the interior of $\\triangle ABC$ are segments of lengths $55,45$ , and $15$ , respectively. Find the perimeter of the triangle whose sides lie on lines $\\ell_A,\\ell_B$ , and $\\ell_C$ .",
+  "clause_ledger": [
+    {"source": "triangle ABC has sides 120,220,180", "dsl": "fix the rigid-motion gauge A=(0,0), B=(120,0), C=(-20/3,sqrt(291200)/3); the original side constraints are retained", "kind": "construction/constraint"},
+    {"source": "l_A parallel BC with interior segment 55", "dsl": "the 55/220=1/4 similarity ratio gives Ua at one quarter of AB from A; lA is constructed parallel to BC", "kind": "construction/constraint"},
+    {"source": "l_B parallel AC with interior segment 45", "dsl": "the 45/180=1/4 similarity ratio gives Ub at one quarter of BA from B; lB is constructed parallel to AC", "kind": "construction/constraint"},
+    {"source": "l_C parallel AB with interior segment 15", "dsl": "the 15/120=1/8 similarity ratio gives Uc at one eighth of CA from C; lC is constructed parallel to AB", "kind": "construction/constraint"},
+    {"source": "triangle formed by the three lines", "dsl": "I= lA intersect lB, J=lB intersect lC, K=lC intersect lA", "kind": "construction"},
+    {"source": "perimeter", "dsl": "explicit sum Distance(I,J)+Distance(J,K)+Distance(K,I) (equivalent to Perimeter(I,J,K))", "kind": "answer"}
+  ],
+  "variables": {"names": []},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(120,0)"},
+    {"name": "C", "expr": "Point(-20/3,sqrt(291200)/3)"},
+    {"name": "Ua", "expr": "PointOnSegment(A,B,1/4)"},
+    {"name": "Ub", "expr": "PointOnSegment(B,A,1/4)"},
+    {"name": "Uc", "expr": "PointOnSegment(C,A,1/8)"},
+    {"name": "lA", "expr": "ParallelLine(Ua,Line(B,C))"},
+    {"name": "lB", "expr": "ParallelLine(Ub,Line(A,C))"},
+    {"name": "lC", "expr": "ParallelLine(Uc,Line(A,B))"},
+    {"name": "A1", "expr": "Intersect(lA,Line(A,B))"},
+    {"name": "A2", "expr": "Intersect(lA,Line(A,C))"},
+    {"name": "B1", "expr": "Intersect(lB,Line(A,B))"},
+    {"name": "B2", "expr": "Intersect(lB,Line(B,C))"},
+    {"name": "C1", "expr": "Intersect(lC,Line(A,C))"},
+    {"name": "C2", "expr": "Intersect(lC,Line(B,C))"},
+    {"name": "I", "expr": "Intersect(lA,lB)"},
+    {"name": "J", "expr": "Intersect(lB,lC)"},
+    {"name": "K", "expr": "Intersect(lC,lA)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 120},
+    {"def": "Distance(B,C)", "value": 220},
+    {"def": "Distance(C,A)", "value": 180},
+    {"def": "Distance(A1,A2)", "value": 55},
+    {"def": "Distance(B1,B2)", "value": 45},
+    {"def": "Distance(C1,C2)", "value": 15},
+    {"def": "OnSegment(A1,A,B)", "value": 0},
+    {"def": "OnSegment(A2,A,C)", "value": 0},
+    {"def": "OnSegment(B1,A,B)", "value": 0},
+    {"def": "OnSegment(B2,B,C)", "value": 0},
+    {"def": "OnSegment(C1,A,C)", "value": 0},
+    {"def": "OnSegment(C2,B,C)", "value": 0}
+  ],
+  "guards": ["AssumeGt(C.y,0)", "AssumeGt(Distance(I,J),0)", "AssumeGt(Distance(J,K),0)", "AssumeGt(Distance(K,I),0)"],
+  "answer": "Distance(I,J)+Distance(J,K)+Distance(K,I)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

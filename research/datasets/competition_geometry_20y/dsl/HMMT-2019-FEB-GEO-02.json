@@ -1,0 +1,32 @@
+{
+  "id": "HMMT-2019-FEB-GEO-02",
+  "task": "solve",
+  "source_statement": "In rectangle ABCD, points E and F lie on sides AB and CD respectively such that both AF and CE are perpendicular to diagonal BD. Given that BF and DE separate ABCD into three polygons with equal area, and that EF = 1, find the length of BD.",
+  "clause_ledger": [
+    {"source": "rectangle ABCD", "dsl": "A=(0,0), B=(w,0), C=(w,h), D=(0,h)", "kind": "construction"},
+    {"source": "E on AB, F on CD", "dsl": "E=(e,0), F=(f,h) with segment guards", "kind": "construction/guard"},
+    {"source": "AF and CE perpendicular BD", "dsl": "Perpendicular(Line(A,F),Line(B,D)) and Perpendicular(Line(C,E),Line(B,D))", "kind": "constraint"},
+    {"source": "BF and DE give three equal-area polygons", "dsl": "the exact equal-area relations BE=DF=AB/3 in this rectangle gauge", "kind": "constraint"},
+    {"source": "EF=1", "dsl": "Distance(E,F)=1", "kind": "constraint"},
+    {"source": "BD", "dsl": "Distance(B,D)", "kind": "answer"}
+  ],
+  "variables": {"names": ["w", "h", "e", "f"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(w,0)"},
+    {"name": "C", "expr": "Point(w,h)"},
+    {"name": "D", "expr": "Point(0,h)"},
+    {"name": "E", "expr": "Point(e,0)"},
+    {"name": "F", "expr": "Point(f,h)"}
+  ],
+  "constraints": [
+    {"def": "Perpendicular(Line(A,F),Line(B,D))", "value": 0},
+    {"def": "Perpendicular(Line(C,E),Line(B,D))", "value": 0},
+    {"def": "Distance(B,E)", "value": "Distance(D,F)"},
+    {"def": "Distance(B,E)", "value": "Distance(A,B)/3"},
+    {"def": "Distance(E,F)", "value": 1}
+  ],
+  "guards": ["AssumeGt(w,0)", "AssumeGt(h,0)", "AssumeGt(e,0)", "AssumeLt(e,w)", "AssumeGt(f,0)", "AssumeLt(f,w)"],
+  "answer": "Distance(B,D)",
+  "post_process": ""
+}

@@ -1,0 +1,38 @@
+{
+  "id": "AIME-2021-I-13",
+  "task": "solve",
+  "source_statement": "Circles $\\omega_1$ and $\\omega_2$ with radii $961$ and $625$ , respectively, intersect at distinct points $A$ and $B$ . A third circle $\\omega$ is externally tangent to both $\\omega_1$ and $\\omega_2$ . Suppose line $AB$ intersects $\\omega$ at two points $P$ and $Q$ such that the measure of minor arc $\\widehat{PQ}$ is $120^{\\circ}$ . Find the distance between the centers of $\\omega_1$ and $\\omega_2$ .",
+  "clause_ledger": [
+    {"source": "omega1,omega2 radii 961,625 intersect at A,B", "dsl": "fixed-radius circles with A on both and B=second intersection", "kind": "construction/constraint"},
+    {"source": "omega externally tangent to both", "dsl": "third circle and two external tangency distance equations", "kind": "construction/constraint"},
+    {"source": "line AB cuts omega at P,Q with minor arc PQ=120 degrees", "dsl": "P,Q are line intersections and Angle(P,O,Q)=2*pi/3", "kind": "construction/constraint"},
+    {"source": "distance between centers", "dsl": "Distance(O1,O2)", "kind": "answer"}
+  ],
+  "variables": {"names": ["ax", "ay", "d", "ox", "oy", "r"]},
+  "construction": [
+    {"name": "O1", "expr": "Point(0,0)"},
+    {"name": "O2", "expr": "Point(d,0)"},
+    {"name": "omega1", "expr": "Circle(O1,961)"},
+    {"name": "omega2", "expr": "Circle(O2,625)"},
+    {"name": "A", "expr": "Point(ax,ay)"},
+    {"name": "B", "expr": "Intersect(omega1,omega2,exclude=A)"},
+    {"name": "O", "expr": "Point(ox,oy)"},
+    {"name": "omega", "expr": "Circle(O,r)"},
+    {"name": "L", "expr": "Line(A,B)"},
+    {"name": "P", "expr": "Intersect(L,omega)"},
+    {"name": "Q", "expr": "Intersect(L,omega,exclude=P)"}
+  ],
+  "constraints": [
+    {"def": "OnCircle(A,omega1)", "value": 0},
+    {"def": "OnCircle(A,omega2)", "value": 0},
+    {"def": "Distance(O,O1)", "value": "r+961"},
+    {"def": "Distance(O,O2)", "value": "r+625"},
+    {"def": "OnCircle(P,omega)", "value": 0},
+    {"def": "OnCircle(Q,omega)", "value": 0},
+    {"def": "Angle(P,O,Q)", "value": "2*pi/3"}
+  ],
+  "guards": ["AssumeGt(d,0)", "AssumeGt(ay,0)", "AssumeGt(r,0)"],
+  "answer": "Distance(O1,O2)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

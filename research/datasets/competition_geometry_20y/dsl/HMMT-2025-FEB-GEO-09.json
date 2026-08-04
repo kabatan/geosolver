@@ -1,0 +1,42 @@
+{
+  "id": "HMMT-2025-FEB-GEO-09",
+  "task": "solve",
+  "source_statement": "Let ABCD be a rectangle with BC = 24. Point X lies inside the rectangle such that ∠AXB = 90◦ . Given that triangles △AXD and △BXC are both acute and have circumradii 13 and 15, respectively, compute AB.",
+  "clause_ledger": [
+    {"source": "rectangle ABCD with BC=24", "dsl": "direct rectangle gauge with BC=24", "kind": "construction/constraint"},
+    {"source": "X inside and angle AXB=90 degrees", "dsl": "X is free with rectangle-interior guards and direct Angle(A,X,B)", "kind": "construction/constraint/guard"},
+    {"source": "circumradii of AXD and BXC are 13 and 15", "dsl": "direct Circumcircle constructions and radius attributes", "kind": "construction/constraint"},
+    {"source": "AB", "dsl": "Distance(A,B)", "kind": "answer"}
+  ],
+  "variables": {"names": ["w", "xx", "xy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(w,0)"},
+    {"name": "C", "expr": "Point(w,24)"},
+    {"name": "D", "expr": "Point(0,24)"},
+    {"name": "X", "expr": "Point(xx,xy)"},
+    {"name": "Gamma_AXD", "expr": "Circumcircle(A,X,D)"},
+    {"name": "Gamma_BXC", "expr": "Circumcircle(B,X,C)"}
+  ],
+  "constraints": [
+    {"def": "Distance(B,C)", "value": 24},
+    {"def": "Angle(A,X,B)", "value": "pi/2"},
+    {"def": "Gamma_AXD.radius", "value": 13},
+    {"def": "Gamma_BXC.radius", "value": 15}
+  ],
+  "guards": [
+    "AssumeGt(w,24)",
+    "AssumeGt(xx,0)",
+    "AssumeLt(xx,w)",
+    "AssumeGt(xy,0)",
+    "AssumeLt(xy,24)",
+    "AssumeLt(Angle(A,X,D),pi/2)",
+    "AssumeLt(Angle(X,D,A),pi/2)",
+    "AssumeLt(Angle(D,A,X),pi/2)",
+    "AssumeLt(Angle(B,X,C),pi/2)",
+    "AssumeLt(Angle(X,C,B),pi/2)",
+    "AssumeLt(Angle(C,B,X),pi/2)"
+  ],
+  "answer": "Distance(A,B)",
+  "post_process": ""
+}

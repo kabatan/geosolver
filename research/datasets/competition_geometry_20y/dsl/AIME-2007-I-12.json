@@ -1,0 +1,34 @@
+{
+  "id": "AIME-2007-I-12",
+  "task": "solve",
+  "source_statement": "In isosceles triangle $ABC$ , $A$ is located at the origin and $B$ is located at (20,0).  Point $C$ is in the first quadrant with $AC = BC$ and angle $BAC = 75^{\\circ}$ .  If triangle $ABC$ is rotated counterclockwise about point $A$ until the image of $C$ lies on the positive $y$ -axis, the area of the region common to the original and the rotated triangle is in the form $p\\sqrt{2} + q\\sqrt{3} + r\\sqrt{6} + s$ , where $p,q,r,s$ are integers.  Find $(p-q+r-s)/2$ .",
+  "clause_ledger": [
+    {"source": "A=(0,0), B=(20,0), AC=BC, angle BAC=75 degrees", "dsl": "A,B,C are fixed exactly by the stated gauge and the isosceles/angle conditions", "kind": "construction/constraint"},
+    {"source": "rotate ABC counterclockwise until C' is on positive y-axis", "dsl": "B'=Rotate(B,pi/12), C'=Rotate(C,pi/12); pi/12 is the direct 15-degree rotation implied by the source rays", "kind": "construction"},
+    {"source": "common region of the two triangles", "dsl": "D=AC intersect B'C', E=BC intersect B'C', F=BC intersect AB'; common polygon is A-D-E-F", "kind": "construction/answer"},
+    {"source": "find (p-q+r-s)/2 for the radical area form", "dsl": "post_process extracts the four source coefficients from Area(A,D,E,F)", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": []},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(20,0)"},
+    {"name": "C", "expr": "Point(10,10*tan(75*pi/180))"},
+    {"name": "Bp", "expr": "Rotate(B,pi/12,A)"},
+    {"name": "Cp", "expr": "Rotate(C,pi/12,A)"},
+    {"name": "D", "expr": "Intersect(Line(A,C),Line(Bp,Cp))"},
+    {"name": "E", "expr": "Intersect(Line(B,C),Line(Bp,Cp))"},
+    {"name": "F", "expr": "Intersect(Line(B,C),Line(A,Bp))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 20},
+    {"def": "Distance(A,C)", "value": "Distance(B,C)"},
+    {"def": "Angle(B,A,C)", "value": "75*pi/180"},
+    {"def": "OnLine(D,A,C)", "value": 0},
+    {"def": "OnLine(E,B,C)", "value": 0},
+    {"def": "OnLine(F,B,C)", "value": 0}
+  ],
+  "guards": [],
+  "answer": "Area(A,D,E,F)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": "# radical_mode=p_minus_q_plus_r_minus_s_over2 basis=2,3,6"
+}

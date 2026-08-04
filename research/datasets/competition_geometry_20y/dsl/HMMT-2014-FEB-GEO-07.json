@@ -1,0 +1,30 @@
+{
+  "id": "HMMT-2014-FEB-GEO-07",
+  "task": "solve",
+  "source_statement": "Triangle ABC has sides AB = 14, BC = 13, and CA = 15. It is inscribed in circle , which has center O. Let M be the midpoint of AB, let B 0 be the point on diametrically opposite B, and let X be the intersection of AO and M B 0 . Find the length of AX.",
+  "clause_ledger": [
+    {"source": "triangle side lengths", "dsl": "A=(14,0), B=(0,0), C=(5,12)", "kind": "construction"},
+    {"source": "O circumcenter and M midpoint AB", "dsl": "O=Circumcenter(A,B,C), M=Midpoint(A,B)", "kind": "construction"},
+    {"source": "B' diametrically opposite B", "dsl": "B'=Point(2*Ox-Bx,2*Oy-By) in the fixed coordinate gauge", "kind": "construction"},
+    {"source": "X=AO∩MB'", "dsl": "X=Intersect(Line(A,O),Line(M,B'))", "kind": "construction"},
+    {"source": "AX", "dsl": "Distance(A,X)", "kind": "answer"}
+  ],
+  "variables": {"names": []},
+  "construction": [
+    {"name": "A", "expr": "Point(14,0)"},
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(5,12)"},
+    {"name": "O", "expr": "Circumcenter(A,B,C)"},
+    {"name": "M", "expr": "Midpoint(A,B)"},
+    {"name": "Bp", "expr": "Point(2*7,2*(33/8))"},
+    {"name": "X", "expr": "Intersect(Line(A,O),Line(M,Bp))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 14},
+    {"def": "Distance(B,C)", "value": 13},
+    {"def": "Distance(C,A)", "value": 15}
+  ],
+  "guards": ["AssumeGt(Distance(A,X),0)"],
+  "answer": "Distance(A,X)",
+  "post_process": ""
+}

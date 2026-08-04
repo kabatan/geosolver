@@ -1,0 +1,32 @@
+{
+  "id": "HMMT-2020-FEB-GEO-08",
+  "task": "solve",
+  "source_statement": "Let ABC be an acute triangle with circumcircle Γ. Let the internal angle bisector of ∠BAC intersect BC and Γ at E and N , respectively. Let A0 be the antipode of A on Γ and let V be the point where AA0 intersects BC. Given that EV = 6, V A0 = 7, and A0 N = 9, compute the radius of Γ.",
+  "clause_ledger": [
+    {"source": "acute triangle and circumcircle", "dsl": "direct Circumcenter/Circumcircle constructions", "kind": "construction/guard"},
+    {"source": "A-angle bisector E,N and antipode A0", "dsl": "direct AngleBisector, Intersect, and point reflection about O", "kind": "construction"},
+    {"source": "V=AA0∩BC and three lengths", "dsl": "direct intersection and Distance constraints", "kind": "construction/constraint"},
+    {"source": "radius", "dsl": "Radius(Gamma)", "kind": "answer"}
+  ],
+  "variables": {"names": ["b", "cx", "cy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(b,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "O", "expr": "Circumcenter(A,B,C)"},
+    {"name": "Gamma", "expr": "Circumcircle(A,B,C)"},
+    {"name": "A0", "expr": "Reflect(A,O)"},
+    {"name": "bis", "expr": "AngleBisector(B,A,C)"},
+    {"name": "E", "expr": "Intersect(bis,Line(B,C))"},
+    {"name": "N", "expr": "Intersect(bis,Gamma,exclude=A)"},
+    {"name": "V", "expr": "Intersect(Line(A,A0),Line(B,C))"}
+  ],
+  "constraints": [
+    {"def": "Distance(E,V)", "value": 6},
+    {"def": "Distance(V,A0)", "value": 7},
+    {"def": "Distance(A0,N)", "value": 9}
+  ],
+  "guards": ["AssumeGt(b,0)", "AssumeGt(cy,0)", "AssumeGt(Area(A,B,C),0)", "AssumeAcute(A,B,C)"],
+  "answer": "Radius(Gamma)",
+  "post_process": ""
+}

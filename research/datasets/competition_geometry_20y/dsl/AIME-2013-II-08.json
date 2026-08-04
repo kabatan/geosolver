@@ -1,0 +1,41 @@
+{
+  "id": "AIME-2013-II-08",
+  "task": "solve",
+  "source_statement": "A hexagon that is inscribed in a circle has side lengths $22$ , $22$ , $20$ , $22$ , $22$ , and $20$ in that order. The radius of the circle can be written as $p+\\sqrt{q}$ , where $p$ and $q$ are positive integers. Find $p+q$ .",
+  "clause_ledger": [
+    {"source": "six cyclic vertices and ordered chord lengths", "dsl": "fix O=(0,0), A=(r,0), and construct each successive positive central-angle rotation from its stated chord length; the six direct chord constraints and closure remain", "kind": "construction/constraint"},
+    {"source": "p+sqrt(q) radius presentation", "dsl": "answer Radius circle with explicit radical presentation marker", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["r"]},
+  "construction": [
+    {"name": "O", "expr": "Point(0,0)"},
+    {"name": "c22", "expr": "1-22*22/(2*r*r)"},
+    {"name": "s22", "expr": "22*sqrt(4*r*r-22*22)/(2*r*r)"},
+    {"name": "c20", "expr": "1-20*20/(2*r*r)"},
+    {"name": "s20", "expr": "20*sqrt(4*r*r-20*20)/(2*r*r)"},
+    {"name": "A", "expr": "Point(r,0)"},
+    {"name": "B", "expr": "Point(r*c22,r*s22)"},
+    {"name": "C", "expr": "Point(B.x*c22-B.y*s22,B.x*s22+B.y*c22)"},
+    {"name": "D", "expr": "Point(C.x*c20-C.y*s20,C.x*s20+C.y*c20)"},
+    {"name": "E", "expr": "Point(D.x*c22-D.y*s22,D.x*s22+D.y*c22)"},
+    {"name": "F", "expr": "Point(E.x*c22-E.y*s22,E.x*s22+E.y*c22)"},
+    {"name": "Gamma", "expr": "Circle(O,r)"}
+  ],
+  "constraints": [
+    {"def": "Distance(O,A)", "value": "r"},
+    {"def": "Distance(O,B)", "value": "r"},
+    {"def": "Distance(O,C)", "value": "r"},
+    {"def": "Distance(O,D)", "value": "r"},
+    {"def": "Distance(O,E)", "value": "r"},
+    {"def": "Distance(O,F)", "value": "r"},
+    {"def": "Distance(A,B)", "value": 22},
+    {"def": "Distance(B,C)", "value": 22},
+    {"def": "Distance(C,D)", "value": 20},
+    {"def": "Distance(D,E)", "value": 22},
+    {"def": "Distance(E,F)", "value": 22},
+    {"def": "Distance(F,A)", "value": 20}
+  ],
+  "guards": ["AssumeGt(r,11)", "AssumeGt(Area(A,B,C),0)", "AssumeGt(Area(A,C,D),0)", "AssumeGt(Area(A,D,E),0)", "AssumeConvex([A,B,C,D,E,F])"],
+  "answer": "r",
+  "post_process": "# radical_mode=rational_plus_sqrt_sum"
+}

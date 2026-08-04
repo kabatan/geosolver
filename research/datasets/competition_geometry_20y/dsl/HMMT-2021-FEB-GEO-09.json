@@ -1,0 +1,28 @@
+{
+  "id": "HMMT-2021-FEB-GEO-09",
+  "task": "solve",
+  "source_statement": "Let ABCD be a trapezoid with AB k CD and AD = BD. Let M be the midpoint of AB, and let P 6= C be the second intersection of the circumcircle of 4BCD and the diagonal AC. Suppose that BC = 27, CD = 25, and AP = 10. If M P = ab for relatively prime positive integers a and b, compute 100a + b.",
+  "clause_ledger": [
+    {"source": "trapezoid and side conditions", "dsl": "horizontal parallel-base coordinate gauge with direct distances", "kind": "construction/constraint"},
+    {"source": "M midpoint; P second circle intersection on AC", "dsl": "Midpoint, Circumcircle, Intersect(...,exclude=C)", "kind": "construction"},
+    {"source": "AP=10 and target 100a+b", "dsl": "direct distance and fraction post-process", "kind": "constraint/answer"}
+  ],
+  "variables": {"names": ["u", "h"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(5,0)"},
+    {"name": "D", "expr": "Point(u,h)"},
+    {"name": "C", "expr": "Point(u+25,h)"},
+    {"name": "M", "expr": "Midpoint(A,B)"},
+    {"name": "P", "expr": "Intersect(Circumcircle(B,C,D),Line(A,C),exclude=C)"}
+  ],
+  "constraints": [
+    {"def": "Distance(B,C)", "value": 27},
+    {"def": "Distance(C,D)", "value": 25},
+    {"def": "Distance(A,D)", "value": "Distance(B,D)"},
+    {"def": "Distance(A,P)", "value": 10}
+  ],
+  "guards": ["AssumeGt(h,0)", "AssumeGt(u,0)"],
+  "answer": "Distance(M,P)",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = 100*f.numerator + f.denominator"
+}

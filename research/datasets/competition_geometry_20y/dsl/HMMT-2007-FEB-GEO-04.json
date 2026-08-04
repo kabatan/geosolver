@@ -1,0 +1,35 @@
+{
+  "id": "HMMT-2007-FEB-GEO-04",
+  "task": "solve",
+  "source_statement": "[4] Circle ω has radius 5 and is centered at O. Point A lies outside ω such that OA = 13. The two tangents to ω passing through A are drawn, and points B and C are chosen on them (one on each tangent), such that line BC is tangent to ω and ω lies outside triangle ABC. Compute AB + AC given that BC = 7.",
+  "clause_ledger": [
+    {"source": "circle radius 5 centered at O", "dsl": "omega=Circle(O,5)", "kind": "construction"},
+    {"source": "OA=13 and B,C on the two tangents through A", "dsl": "fixed O,A plus IsTangent(Line(A,B),omega), IsTangent(Line(A,C),omega)", "kind": "constraint"},
+    {"source": "BC is tangent to omega and omega outside ABC", "dsl": "IsTangent(Line(B,C),omega) plus opposite-side branch guards", "kind": "constraint/guard"},
+    {"source": "BC=7", "dsl": "Distance(B,C)=7", "kind": "constraint"},
+    {"source": "AB+AC", "dsl": "Distance(A,B)+Distance(A,C)", "kind": "answer"}
+  ],
+  "variables": {"names": ["Bx", "By", "Cx", "Cy"]},
+  "construction": [
+    {"name": "O", "expr": "Point(0, 0)"},
+    {"name": "A", "expr": "Point(13, 0)"},
+    {"name": "B", "expr": "Point(Bx, By)"},
+    {"name": "C", "expr": "Point(Cx, Cy)"},
+    {"name": "omega", "expr": "Circle(O, 5)"}
+  ],
+  "constraints": [
+    {"def": "Distance(O,A)", "value": 13},
+    {"def": "IsTangent(Line(A,B),omega)", "value": 0},
+    {"def": "IsTangent(Line(A,C),omega)", "value": 0},
+    {"def": "IsTangent(Line(B,C),omega)", "value": 0},
+    {"def": "Distance(B,C)", "value": 7}
+  ],
+  "guards": [
+    "AssumeGt(By, 0)",
+    "AssumeLt(Cy, 0)",
+    "AssumeGt(Area(A,B,C), 0)",
+    "AssumeNe(Area(A,B,C), 0)"
+  ],
+  "answer": "Distance(A,B) + Distance(A,C)",
+  "post_process": ""
+}

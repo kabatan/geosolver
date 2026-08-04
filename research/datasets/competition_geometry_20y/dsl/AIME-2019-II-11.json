@@ -1,0 +1,36 @@
+{
+  "id": "AIME-2019-II-11",
+  "task": "solve",
+  "source_statement": "Triangle $ABC$ has side lengths $AB=7,BC=8,$ and $CA=9.$ Circle $\\omega_1$ passes through $B$ and is tangent to line $AC$ at $A.$ Circle $\\omega_2$ passes through $C$ and is tangent to line $AB$ at $A.$ Let $K$ be the intersection of circles $\\omega_1$ and $\\omega_2$ not equal to $A.$ Then $AK=\\tfrac{m}{n},$ where $m$ and $n$ are relatively prime positive integers. Find $m+n.$",
+  "clause_ledger": [
+    {"source": "triangle side lengths", "dsl": "A=(0,0), B=(7,0), variable C with direct distances", "kind": "construction/constraint"},
+    {"source": "omega1 tangent AC at A through B; omega2 tangent AB at A through C", "dsl": "variable centers/radii with perpendicular radius at A and circle-through-point constraints", "kind": "construction/constraint"},
+    {"source": "K is the other circle intersection", "dsl": "direct Intersect(...,exclude=A)", "kind": "construction"},
+    {"source": "m+n", "dsl": "AK with explicit fraction post_process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["cx", "cy", "o1x", "o1y", "r1", "o2y", "r2"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(7,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "O1", "expr": "Point(o1x,o1y)"},
+    {"name": "O2", "expr": "Point(0,o2y)"},
+    {"name": "omega1", "expr": "Circle(O1,r1)"},
+    {"name": "omega2", "expr": "Circle(O2,r2)"},
+    {"name": "K", "expr": "Intersect(omega1,omega2,exclude=A)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 7},
+    {"def": "Distance(B,C)", "value": 8},
+    {"def": "Distance(A,C)", "value": 9},
+    {"def": "Distance(O1,A)", "value": "r1"},
+    {"def": "Distance(O1,B)", "value": "r1"},
+    {"def": "Perpendicular(Line(O1,A),Line(A,C))", "value": 0},
+    {"def": "Distance(O2,A)", "value": "r2"},
+    {"def": "Distance(O2,C)", "value": "r2"},
+    {"def": "Perpendicular(Line(O2,A),Line(A,B))", "value": 0}
+  ],
+  "guards": ["AssumeGt(cy,0)", "AssumeGt(r1,0)", "AssumeGt(r2,0)"],
+  "answer": "Distance(A,K)",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+}

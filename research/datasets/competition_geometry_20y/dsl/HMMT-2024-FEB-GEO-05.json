@@ -1,0 +1,32 @@
+{
+  "id": "HMMT-2024-FEB-GEO-05",
+  "task": "solve",
+  "source_statement": "Let ABCD be a convex trapezoid such that ∠DAB = ∠ABC = 90◦ , DA = 2, AB = 3, and BC = 8. Let ω be a circle passing through A and tangent to segment CD at point T . Suppose that the center of ω lies on line BC. Compute CT .",
+  "clause_ledger": [
+    {"source": "convex trapezoid and right angles at A,B", "dsl": "A,B are a horizontal base and D,C are the source perpendicular-leg points, with convexity guard", "kind": "construction/constraint/guard"},
+    {"source": "DA=2, AB=3, BC=8", "dsl": "direct Distance constraints", "kind": "constraint"},
+    {"source": "circle through A, tangent to segment CD at T, center on BC", "dsl": "O is on the BC carrier, omega=Circle(O,Distance(O,A)), and T is the perpendicular foot from O to CD with direct segment/tangency constraints", "kind": "construction/constraint"},
+    {"source": "CT", "dsl": "Distance(C,T)", "kind": "answer"}
+  ],
+  "variables": {"names": ["oy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(3,0)"},
+    {"name": "D", "expr": "Point(0,2)"},
+    {"name": "C", "expr": "Point(3,8)"},
+    {"name": "O", "expr": "Point(3,oy)"},
+    {"name": "omega", "expr": "Circle(O,Distance(O,A))"},
+    {"name": "T", "expr": "FootOfPerpendicular(O,Line(C,D))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,D)", "value": 2},
+    {"def": "Distance(A,B)", "value": 3},
+    {"def": "Distance(B,C)", "value": 8},
+    {"def": "Perpendicular(Line(O,T),Line(C,D))", "value": 0},
+    {"def": "Distance(O,T)", "value": "omega.radius"},
+    {"def": "OnCircle(T,omega)", "value": 0}
+  ],
+  "guards": ["AssumeGt(oy,0)", "AssumeLt(oy,8)", "AssumeEq(OnSegment(T,C,D),0)", "AssumeNoSelfIntersecting([A,B,C,D])"],
+  "answer": "Distance(C,T)",
+  "post_process": ""
+}

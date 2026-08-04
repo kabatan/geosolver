@@ -1,0 +1,31 @@
+{
+  "id": "HMMT-2023-FEB-GEO-05",
+  "task": "solve",
+  "source_statement": "Let ABC be a triangle with AB = 13, BC = 14, and CA = 15. Suppose P QRS is a square such that P and R lie on line BC, Q lies on line CA, and S lies on line AB. Compute the side length of this square.",
+  "clause_ledger": [
+    {"source": "triangle ABC with sides 13,14,15", "dsl": "direct coordinate gauge A=(5,12), B=(0,0), C=(14,0), preserving the three source distances", "kind": "construction/constraint"},
+    {"source": "PQRS is a square and P,R lie on line BC", "dsl": "P,Q,R,S are constructed as the four vertices of the source square with P,R on y=0", "kind": "construction"},
+    {"source": "Q lies on line CA and S lies on line AB", "dsl": "direct collinearity constraints Area(C,A,Q)=0 and Area(A,B,S)=0", "kind": "constraint"},
+    {"source": "side length of square", "dsl": "Distance(P,Q)", "kind": "answer"}
+  ],
+  "variables": {"names": ["m", "d"]},
+  "construction": [
+    {"name": "A", "expr": "Point(5,12)"},
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(14,0)"},
+    {"name": "P", "expr": "Point(m-d,0)"},
+    {"name": "Q", "expr": "Point(m,d)"},
+    {"name": "R", "expr": "Point(m+d,0)"},
+    {"name": "S", "expr": "Point(m,-d)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 13},
+    {"def": "Distance(B,C)", "value": 14},
+    {"def": "Distance(C,A)", "value": 15},
+    {"def": "Area(C,A,Q)", "value": 0},
+    {"def": "Area(A,B,S)", "value": 0}
+  ],
+  "guards": ["AssumeGt(d,0)"],
+  "answer": "Distance(P,Q)",
+  "post_process": ""
+}

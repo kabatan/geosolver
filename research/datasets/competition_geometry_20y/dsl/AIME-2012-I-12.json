@@ -1,0 +1,104 @@
+{
+  "id": "AIME-2012-I-12",
+  "task": "solve",
+  "source_statement": "Let $\\triangle ABC$ be a right triangle with right angle at $C.$ Let $D$ and $E$ be points on $\\overline{AB}$ with $D$ between $A$ and $E$ such that $\\overline{CD}$ and $\\overline{CE}$ trisect $\\angle C.$ If $\\frac{DE}{BE} = \\frac{8}{15},$ then $\\tan B$ can be written as $\\frac{m \\sqrt{p}}{n},$ where $m$ and $n$ are relatively prime positive integers, and $p$ is a positive integer not divisible by the square of any prime. Find $m+n+p.$",
+  "clause_ledger": [
+    {
+      "source": "right triangle ABC, right angle C",
+      "dsl": "A=(a,0), B=(0,b), C=(0,0)",
+      "kind": "construction"
+    },
+    {
+      "source": "D,E on AB with D between A,E",
+      "dsl": "D,E are variable points on carrier AB with order guards",
+      "kind": "construction/guard"
+    },
+    {
+      "source": "CD and CE trisect angle C",
+      "dsl": "three consecutive source angles are equal",
+      "kind": "constraint"
+    },
+    {
+      "source": "DE/BE=8/15",
+      "dsl": "direct ratio constraint",
+      "kind": "constraint"
+    },
+    {
+      "source": "tan B",
+      "dsl": "a/b in this right-triangle gauge",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "a",
+      "b",
+      "dx",
+      "dy",
+      "ex",
+      "ey"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(a,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(0,b)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "D",
+      "expr": "Point(dx,dy)"
+    },
+    {
+      "name": "E",
+      "expr": "Point(ex,ey)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Angle(A,C,D)",
+      "value": "Angle(D,C,E)"
+    },
+    {
+      "def": "Angle(D,C,E)",
+      "value": "Angle(E,C,B)"
+    },
+    {
+      "def": "Collinear(A,D,B)",
+      "value": 0
+    },
+    {
+      "def": "Collinear(A,E,B)",
+      "value": 0
+    },
+    {
+      "def": "OnSegment(D,A,E)",
+      "value": 0
+    },
+    {
+      "def": "OnSegment(E,A,B)",
+      "value": 0
+    },
+    {
+      "def": "Distance(D,E)/Distance(B,E)",
+      "value": "8/15"
+    }
+  ],
+  "guards": [
+    "AssumeGt(a,0)",
+    "AssumeGt(b,0)",
+    "AssumeGt(dx,0)",
+    "AssumeGt(ex,0)",
+    "AssumeGt(dy,0)",
+    "AssumeGt(ey,0)"
+  ],
+  "answer": "a/b",
+  "post_process": "# radical_mode=pqr_sum basis=3"
+}

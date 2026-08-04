@@ -1,0 +1,24 @@
+{
+  "id": "AIME-2015-I-04",
+  "task": "solve",
+  "source_statement": "Point $B$ lies on line segment $\\overline{AC}$ with $AB=16$ and $BC=4$ . Points $D$ and $E$ lie on the same side of line $AC$ forming equilateral triangles $\\triangle ABD$ and $\\triangle BCE$ . Let $M$ be the midpoint of $\\overline{AE}$ , and $N$ be the midpoint of $\\overline{CD}$ . The area of $\\triangle BMN$ is $x$ . Find $x^2$ .",
+  "clause_ledger": [
+    {"source": "collinear A,B,C with lengths", "dsl": "A=(0,0),B=(16,0),C=(20,0)", "kind": "construction"},
+    {"source": "equilateral triangles on same side", "dsl": "direct exact equilateral coordinates for D,E", "kind": "construction"},
+    {"source": "M,N midpoints and x^2", "dsl": "direct Midpoint/Area expression", "kind": "answer"}
+  ],
+  "variables": {"names": []},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(16,0)"},
+    {"name": "C", "expr": "Point(20,0)"},
+    {"name": "D", "expr": "Point(8,8*sqrt(3))"},
+    {"name": "E", "expr": "Point(18,2*sqrt(3))"},
+    {"name": "M", "expr": "Midpoint(A,E)"},
+    {"name": "N", "expr": "Midpoint(C,D)"}
+  ],
+  "constraints": [],
+  "guards": [],
+  "answer": "Area(B,M,N)**2",
+  "post_process": ""
+}

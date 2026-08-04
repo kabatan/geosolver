@@ -1,0 +1,28 @@
+{
+  "id": "AIME-2018-II-12",
+  "task": "solve",
+  "source_statement": "Let $ABCD$ be a convex quadrilateral with $AB = CD = 10$ , $BC = 14$ , and $AD = 2\\sqrt{65}$ . Assume that the diagonals of $ABCD$ intersect at point $P$ , and that the sum of the areas of triangles $APB$ and $CPD$ equals the sum of the areas of triangles $BPC$ and $APD$ . Find the area of quadrilateral $ABCD$ .",
+  "clause_ledger": [
+    {"source": "convex quadrilateral and side lengths", "dsl": "coordinate points with direct side distances and convexity guards", "kind": "construction/constraint"},
+    {"source": "diagonal intersection P and equal area sums", "dsl": "P=Intersect(AC,BD), direct area equality", "kind": "construction/constraint"},
+    {"source": "area ABCD", "dsl": "Area(A,B,C,D)", "kind": "answer"}
+  ],
+  "variables": {"names": ["cx", "cy", "dx", "dy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(10,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "D", "expr": "Point(dx,dy)"},
+    {"name": "P", "expr": "Intersect(Line(A,C),Line(B,D))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 10},
+    {"def": "Distance(B,C)", "value": 14},
+    {"def": "Distance(C,D)", "value": 10},
+    {"def": "Distance(D,A)", "value": "2*sqrt(65)"},
+    {"def": "Area(A,P,B)+Area(C,P,D)", "value": "Area(B,P,C)+Area(A,P,D)"}
+  ],
+  "guards": ["AssumeGt(cy,0)", "AssumeLt(dy,0)", "AssumeConvex([A,B,C,D])"],
+  "answer": "Area(A,B,C,D)",
+  "post_process": ""
+}

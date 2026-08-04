@@ -1,0 +1,30 @@
+{
+  "id": "HMMT-2006-FEB-GEO-10",
+  "task": "solve",
+  "source_statement": "Triangle ABC has side lengths AB = 65, BC = 33, and AC = 56. Find the radius of the circle tangent to sides AC and BC and to the circumcircle of triangle ABC.",
+  "clause_ledger": [
+    {"source": "triangle side lengths", "dsl": "right-triangle coordinate realization C=(0,0), A=(56,0), B=(0,33)", "kind": "construction"},
+    {"source": "circle tangent to AC and BC", "dsl": "T=(r,r), so the circle of radius r is tangent to the two coordinate legs", "kind": "construction"},
+    {"source": "circle tangent to circumcircle", "dsl": "Distance(O,T)=Radius(Gamma)-r for internal tangency", "kind": "constraint"},
+    {"source": "radius", "dsl": "r", "kind": "answer"}
+  ],
+  "variables": {"names": ["r"]},
+  "construction": [
+    {"name": "C", "expr": "Point(0,0)"},
+    {"name": "A", "expr": "Point(56,0)"},
+    {"name": "B", "expr": "Point(0,33)"},
+    {"name": "Gamma", "expr": "Circumcircle(A,B,C)"},
+    {"name": "O", "expr": "Center(Gamma)"},
+    {"name": "T", "expr": "Point(r,r)"},
+    {"name": "omega", "expr": "Circle(T,r)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 65},
+    {"def": "Distance(B,C)", "value": 33},
+    {"def": "Distance(A,C)", "value": 56},
+    {"def": "Distance(O,T)", "value": "Radius(Gamma)-r"}
+  ],
+  "guards": ["AssumeGt(r,0)", "AssumeLt(r,33)"],
+  "answer": "r",
+  "post_process": ""
+}

@@ -1,0 +1,96 @@
+{
+  "id": "JMO-2017-PRE-10",
+  "task": "solve",
+  "source_statement": "三角形ABCは∠B=90°，AB=8，BC=3をみたす。辺BC上に点P，辺CA上に点Q，辺AB上に点Rがあり，∠CRP=∠CRQ，∠BPR=∠CPQをみたす。また，三角形PQRの周の長さは12である。このとき，Qから辺BCにおろした垂線の長さを求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "right triangle ABC with AB=8, BC=3",
+      "dsl": "fixed coordinate right-triangle gauge",
+      "kind": "construction"
+    },
+    {
+      "source": "P,Q,R lie on BC,CA,AB",
+      "dsl": "direct point constructions with line/order guards",
+      "kind": "construction/guard"
+    },
+    {
+      "source": "two angle equalities",
+      "dsl": "direct Angle constraints",
+      "kind": "constraint"
+    },
+    {
+      "source": "perimeter PQR=12",
+      "dsl": "direct sum of three side distances",
+      "kind": "constraint"
+    },
+    {
+      "source": "perpendicular from Q to BC",
+      "dsl": "Distance(Q,Line(B,C))",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "p",
+      "q",
+      "qx",
+      "qy",
+      "r"
+    ]
+  },
+  "construction": [
+    {
+      "name": "B",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "A",
+      "expr": "Point(8,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(0,3)"
+    },
+    {
+      "name": "P",
+      "expr": "Point(0,p)"
+    },
+    {
+      "name": "Q",
+      "expr": "Point(qx,qy)"
+    },
+    {
+      "name": "R",
+      "expr": "Point(r,0)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(P,Q)+Distance(Q,R)+Distance(R,P)",
+      "value": 12
+    },
+    {
+      "def": "Collinear(C,Q,A)",
+      "value": 0
+    },
+    {
+      "def": "Angle(C,R,P)",
+      "value": "Angle(C,R,Q)"
+    },
+    {
+      "def": "Angle(B,P,R)",
+      "value": "Angle(C,P,Q)"
+    }
+  ],
+  "guards": [
+    "AssumeGt(p,0)",
+    "AssumeLt(p,3)",
+    "AssumeGt(qx,0)",
+    "AssumeGt(qy,0)",
+    "AssumeLt(qx,8)",
+    "AssumeLt(r,8)",
+    "AssumeGt(r,0)"
+  ],
+  "answer": "Distance(Q,Line(B,C))",
+  "post_process": ""
+}

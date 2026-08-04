@@ -1,0 +1,35 @@
+{
+  "id": "HMMT-2024-FEB-GEO-03",
+  "task": "solve",
+  "source_statement": "Let Ω and ω be circles with radii 123 and 61, respectively, such that the center of Ω lies on ω. A chord of Ω is cut by ω into three segments, whose lengths are in the ratio 1 : 2 : 3 in that order. Given that this chord is not a diameter of Ω, compute the length of this chord.",
+  "clause_ledger": [
+    {"source": "radii 123 and 61; center of Omega lies on omega", "dsl": "rotate the chord to y=h and use the segment-ratio midpoint identities to construct S=(-L/3,sy); the original center/radius constraints remain", "kind": "construction/constraint"},
+    {"source": "chord of Omega cut by omega", "dsl": "L=sqrt(123^2-h^2), W=(-L,h), X=(-2L/3,h), Y=(0,h), Z=(L,h); this is a rigid-rotation gauge plus the stated ordered ratios", "kind": "construction/constraint"},
+    {"source": "segments ratio 1:2:3 in order", "dsl": "introduce t and impose WX=t, XY=2t, YZ=3t with x-order guards", "kind": "constraint/guard"},
+    {"source": "chord length WZ", "dsl": "Distance(W,Z)", "kind": "answer"}
+  ],
+  "variables": {"names": ["h", "sy"]},
+  "construction": [
+    {"name": "O", "expr": "Point(0,0)"},
+    {"name": "L", "expr": "sqrt(123*123-h*h)"},
+    {"name": "t", "expr": "L/3"},
+    {"name": "S", "expr": "Point(-L/3,sy)"},
+    {"name": "W", "expr": "Point(-L,h)"},
+    {"name": "X", "expr": "Point(-2*L/3,h)"},
+    {"name": "Y", "expr": "Point(0,h)"},
+    {"name": "Z", "expr": "Point(L,h)"}
+  ],
+  "constraints": [
+    {"def": "Distance(O,S)", "value": 61},
+    {"def": "Distance(O,W)", "value": 123},
+    {"def": "Distance(O,Z)", "value": 123},
+    {"def": "Distance(S,X)", "value": 61},
+    {"def": "Distance(S,Y)", "value": 61},
+    {"def": "Distance(W,X)", "value": "t"},
+    {"def": "Distance(X,Y)", "value": "2*t"},
+    {"def": "Distance(Y,Z)", "value": "3*t"}
+  ],
+  "guards": ["AssumeGt(t,0)", "AssumeLt(W.x,X.x)", "AssumeLt(X.x,Y.x)", "AssumeLt(Y.x,Z.x)", "AssumeNe(h,0)"],
+  "answer": "Distance(W,Z)",
+  "post_process": ""
+}

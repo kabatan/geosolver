@@ -1,0 +1,30 @@
+{
+  "id": "HMMT-2006-FEB-GEO-04",
+  "task": "solve",
+  "source_statement": "Let ABC be a triangle such that AB = 2, CA = 3, and BC = 4. A semicircle with its diameter on BC is tangent to AB and AC. Compute the area of the semicircle. √",
+  "clause_ledger": [
+    {"source": "triangle ABC with AB=2, CA=3, BC=4", "dsl": "fixed coordinate realization of the three source side lengths", "kind": "construction"},
+    {"source": "semicircle with diameter on BC tangent to AB and AC", "dsl": "O is the angle-bisector point on BC; r is the distance from O to AB and the equal distance to AC", "kind": "construction/constraint"},
+    {"source": "area of the semicircle", "dsl": "pi*r*r/2", "kind": "answer"}
+  ],
+  "variables": {"names": []},
+  "construction": [
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(4,0)"},
+    {"name": "A", "expr": "Point(11/8,3*sqrt(15)/8)"},
+    {"name": "O", "expr": "Point(8/5,0)"},
+    {"name": "E", "expr": "FootOfPerpendicular(O,Line(A,B))"},
+    {"name": "F", "expr": "FootOfPerpendicular(O,Line(A,C))"},
+    {"name": "r", "expr": "Distance(O,E)"},
+    {"name": "omega", "expr": "Circle(O,r)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 2},
+    {"def": "Distance(A,C)", "value": 3},
+    {"def": "Distance(B,C)", "value": 4},
+    {"def": "Distance(O,E)", "value": "Distance(O,F)"}
+  ],
+  "guards": ["AssumeGt(r,0)"],
+  "answer": "pi*r*r/2",
+  "post_process": ""
+}

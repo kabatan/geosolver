@@ -1,0 +1,25 @@
+{
+  "id": "AIME-2023-II-03",
+  "task": "solve",
+  "source_statement": "Let $\\triangle ABC$ be an isosceles triangle with $\\angle A = 90^\\circ.$ There exists a point $P$ inside $\\triangle ABC$ such that $\\angle PAB = \\angle PBC = \\angle PCA$ and $AP = 10.$ Find the area of $\\triangle ABC.$",
+  "clause_ledger": [
+    {"source": "isosceles right triangle at A", "dsl": "A=(0,0), B=(s,0), C=(0,s)", "kind": "construction"},
+    {"source": "interior P and three equal angles", "dsl": "variable P with direct Angle equalities and interior guards", "kind": "constraint/guard"},
+    {"source": "AP=10 and area", "dsl": "direct distance constraint and Area answer", "kind": "constraint/answer"}
+  ],
+  "variables": {"names": ["s", "px", "py"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(s,0)"},
+    {"name": "C", "expr": "Point(0,s)"},
+    {"name": "P", "expr": "Point(px,py)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,P)", "value": 10},
+    {"def": "Angle(P,A,B)", "value": "Angle(P,B,C)"},
+    {"def": "Angle(P,B,C)", "value": "Angle(P,C,A)"}
+  ],
+  "guards": ["AssumeGt(s,0)", "AssumeGt(px,0)", "AssumeGt(py,0)", "AssumeLt(px,s)", "AssumeLt(py,s)", "AssumeLt(px+py,s)"],
+  "answer": "Area(A,B,C)",
+  "post_process": ""
+}

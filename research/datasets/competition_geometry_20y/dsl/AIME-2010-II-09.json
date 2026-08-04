@@ -1,0 +1,35 @@
+{
+  "id": "AIME-2010-II-09",
+  "task": "solve",
+  "source_statement": "Let $ABCDEF$ be a regular hexagon. Let $G$ , $H$ , $I$ , $J$ , $K$ , and $L$ be the midpoints of sides $AB$ , $BC$ , $CD$ , $DE$ , $EF$ , and $AF$ , respectively. The segments $\\overline{AH}$ , $\\overline{BI}$ , $\\overline{CJ}$ , $\\overline{DK}$ , $\\overline{EL}$ , and $\\overline{FG}$ bound a smaller regular hexagon. Let the ratio of the area of the smaller hexagon to the area of $ABCDEF$ be expressed as a fraction $\\frac {m}{n}$ where $m$ and $n$ are relatively prime positive integers. Find $m + n$ .",
+  "clause_ledger": [
+    {"source": "regular hexagon and side midpoints", "dsl": "six direct regular-hexagon coordinates and Midpoint constructions", "kind": "construction"},
+    {"source": "six segments bound inner hexagon", "dsl": "six adjacent Intersect constructions", "kind": "construction"},
+    {"source": "area ratio m/n and m+n", "dsl": "direct area ratio and exact fraction post-process", "kind": "answer"}
+  ],
+  "variables": {"names": ["s"]},
+  "construction": [
+    {"name": "A", "expr": "Point(s,0)"},
+    {"name": "B", "expr": "Point(s/2,sqrt(3)*s/2)"},
+    {"name": "C", "expr": "Point(-s/2,sqrt(3)*s/2)"},
+    {"name": "D", "expr": "Point(-s,0)"},
+    {"name": "E", "expr": "Point(-s/2,-sqrt(3)*s/2)"},
+    {"name": "F", "expr": "Point(s/2,-sqrt(3)*s/2)"},
+    {"name": "G", "expr": "Midpoint(A,B)"},
+    {"name": "H", "expr": "Midpoint(B,C)"},
+    {"name": "I", "expr": "Midpoint(C,D)"},
+    {"name": "J", "expr": "Midpoint(D,E)"},
+    {"name": "K", "expr": "Midpoint(E,F)"},
+    {"name": "L", "expr": "Midpoint(F,A)"},
+    {"name": "U", "expr": "Intersect(Line(A,H),Line(B,I))"},
+    {"name": "V", "expr": "Intersect(Line(B,I),Line(C,J))"},
+    {"name": "W", "expr": "Intersect(Line(C,J),Line(D,K))"},
+    {"name": "X", "expr": "Intersect(Line(D,K),Line(E,L))"},
+    {"name": "Y", "expr": "Intersect(Line(E,L),Line(F,G))"},
+    {"name": "Z", "expr": "Intersect(Line(F,G),Line(A,H))"}
+  ],
+  "constraints": [],
+  "guards": ["AssumeGt(s,0)"],
+  "answer": "Area(U,V,W,X,Y,Z)/Area(A,B,C,D,E,F)",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+}

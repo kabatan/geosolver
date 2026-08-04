@@ -1,0 +1,37 @@
+{
+  "id": "HMMT-2007-FEB-GEO-03",
+  "task": "solve",
+  "source_statement": "[4] Circles ω1 , ω2 , and ω3 are centered at M, N, and O, respectively. The points of tangency between ω2 and ω3 , ω3 and ω1 , and ω1 and ω2 are tangent at A, B, and C, respectively. Line M O intersects ω3 and ω1 again at P and Q respectively, and line AP intersects ω2 again at R. Given that ABC is an equilateral triangle of side length 1, compute the area of P QR.",
+  "clause_ledger": [
+    {"source": "three pairwise tangent circles and equilateral ABC of side 1", "dsl": "the forced unit-circle/equilateral-center realization M=(0,sqrt(3)), N=(-1,0), O=(1,0), with A,B,C the pairwise contact midpoints", "kind": "construction"},
+    {"source": "MO meets omega3 and omega1 again at P,Q", "dsl": "P and Q are the intersections opposite the contact point B on the center line", "kind": "construction"},
+    {"source": "AP meets omega2 again at R", "dsl": "R=Intersect(Line(A,P),omega2,exclude=A)", "kind": "construction"},
+    {"source": "area PQR", "dsl": "Area(P,Q,R)", "kind": "answer"}
+  ],
+  "variables": {"names": []},
+  "construction": [
+    {"name": "M", "expr": "Point(0,sqrt(3))"},
+    {"name": "N", "expr": "Point(-1,0)"},
+    {"name": "O", "expr": "Point(1,0)"},
+    {"name": "omega1", "expr": "Circle(M,1)"},
+    {"name": "omega2", "expr": "Circle(N,1)"},
+    {"name": "omega3", "expr": "Circle(O,1)"},
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(1/2,sqrt(3)/2)"},
+    {"name": "C", "expr": "Point(-1/2,sqrt(3)/2)"},
+    {"name": "P", "expr": "Point(3/2,-sqrt(3)/2)"},
+    {"name": "Q", "expr": "Point(-1/2,3*sqrt(3)/2)"},
+    {"name": "R", "expr": "Intersect(Line(A,P),omega2,exclude=A)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 1},
+    {"def": "Distance(B,C)", "value": 1},
+    {"def": "Distance(C,A)", "value": 1},
+    {"def": "Distance(M,N)", "value": 2},
+    {"def": "Distance(N,O)", "value": 2},
+    {"def": "Distance(O,M)", "value": 2}
+  ],
+  "guards": [],
+  "answer": "Area(P,Q,R)",
+  "post_process": ""
+}

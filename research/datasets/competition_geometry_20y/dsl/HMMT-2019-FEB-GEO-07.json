@@ -1,0 +1,36 @@
+{
+  "id": "HMMT-2019-FEB-GEO-07",
+  "task": "solve",
+  "source_statement": "Let ABC be a triangle with AB = 13, BC = 14, CA = 15. Let H be the orthocenter of ABC. Find the radius of the circle with nonzero radius tangent to the circumcircles of AHB, BHC, CHA.",
+  "clause_ledger": [
+    {"source": "triangle and orthocenter", "dsl": "A=(5,12), B=(0,0), C=(14,0), H=(5,15/4)", "kind": "construction"},
+    {"source": "three circumcircles", "dsl": "GammaA=Circumcircle(A,H,B), GammaB=Circumcircle(B,H,C), GammaC=Circumcircle(C,H,A)", "kind": "construction"},
+    {"source": "circle tangent to all three", "dsl": "Omega is Circumcircle of the anticomplementary vertices A0=B+C-A, B0=C+A-B, C0=A+B-C, with explicit tangency residuals", "kind": "construction/constraint"},
+    {"source": "radius", "dsl": "Radius(Omega)", "kind": "answer"}
+  ],
+  "variables": {"names": []},
+  "construction": [
+    {"name": "A", "expr": "Point(5,12)"},
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(14,0)"},
+    {"name": "H", "expr": "Point(5,15/4)"},
+    {"name": "GammaA", "expr": "Circumcircle(A,H,B)"},
+    {"name": "GammaB", "expr": "Circumcircle(B,H,C)"},
+    {"name": "GammaC", "expr": "Circumcircle(C,H,A)"},
+    {"name": "A0", "expr": "Point(9,-12)"},
+    {"name": "B0", "expr": "Point(19,12)"},
+    {"name": "C0", "expr": "Point(-9,12)"},
+    {"name": "Omega", "expr": "Circumcircle(A0,B0,C0)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 13},
+    {"def": "Distance(B,C)", "value": 14},
+    {"def": "Distance(C,A)", "value": 15},
+    {"def": "IsTangent(Omega,GammaA)", "value": 0},
+    {"def": "IsTangent(Omega,GammaB)", "value": 0},
+    {"def": "IsTangent(Omega,GammaC)", "value": 0}
+  ],
+  "guards": ["AssumeGt(Radius(Omega),0)"],
+  "answer": "Radius(Omega)",
+  "post_process": ""
+}

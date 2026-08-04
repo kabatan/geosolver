@@ -1,0 +1,32 @@
+{
+  "id": "HMMT-2025-FEB-GEO-03",
+  "task": "solve",
+  "source_statement": "Point P lies inside square ABCD such that the areas of △P AB, △P BC, △P CD, and △P DA are 1, 2, 3, and 4, in some order. Compute P A · P B · P C · P D.",
+  "clause_ledger": [
+    {"source": "P inside square ABCD", "dsl": "A=(0,0),B=(s,0),C=(s,s),D=(0,s),P=(px,py) with interior guards", "kind": "construction/guard"},
+    {"source": "areas of PAB,PBC,PCD,PDA are 1,2,3,4 in some order", "dsl": "area variables aa..dd plus elementary symmetric equations for the unordered multiset {1,2,3,4}; no order is selected", "kind": "constraint"},
+    {"source": "PA*PB*PC*PD", "dsl": "product of four source distances", "kind": "answer"}
+  ],
+  "variables": {"names": ["s", "px", "py", "aa", "bb", "cc", "dd"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(s,0)"},
+    {"name": "C", "expr": "Point(s,s)"},
+    {"name": "D", "expr": "Point(0,s)"},
+    {"name": "P", "expr": "Point(px,py)"}
+  ],
+  "constraints": [
+    {"def": "aa", "value": "Area(P,A,B)"},
+    {"def": "bb", "value": "Area(P,B,C)"},
+    {"def": "cc", "value": "Area(P,C,D)"},
+    {"def": "dd", "value": "Area(P,D,A)"},
+    {"def": "aa+bb+cc+dd", "value": 10},
+    {"def": "aa*bb+aa*cc+aa*dd+bb*cc+bb*dd+cc*dd", "value": 35},
+    {"def": "aa*bb*cc+aa*bb*dd+aa*cc*dd+bb*cc*dd", "value": 50},
+    {"def": "aa*bb*cc*dd", "value": 24}
+  ],
+  "guards": ["AssumeGt(s,0)", "AssumeGt(px,0)", "AssumeLt(px,s)", "AssumeGt(py,0)", "AssumeLt(py,s)"],
+  "answer": "Distance(P,A)*Distance(P,B)*Distance(P,C)*Distance(P,D)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

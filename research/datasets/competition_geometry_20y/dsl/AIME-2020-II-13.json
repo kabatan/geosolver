@@ -1,0 +1,45 @@
+{
+  "id": "AIME-2020-II-13",
+  "task": "solve",
+  "source_statement": "Convex pentagon $ABCDE$ has side lengths $AB=5$ , $BC=CD=DE=6$ , and $EA=7$ . Moreover, the pentagon has an inscribed circle (a circle tangent to each side of the pentagon). Find the area of $ABCDE$ .",
+  "clause_ledger": [
+    {"source": "convex pentagon side lengths", "dsl": "construct the five vertices as intersections of consecutive tangent lines and retain the direct ordered side distances", "kind": "construction/constraint"},
+    {"source": "one circle tangent to every side", "dsl": "fix I=(0,0), parameterize the five contact radii, and construct the five side lines as tangents to Circle(I,r)", "kind": "construction/constraint"},
+    {"source": "area ABCDE", "dsl": "Area(A,B,C,D,E)", "kind": "answer"}
+  ],
+  "variables": {"names": ["r", "beta", "gamma", "delta", "epsilon"]},
+  "construction": [
+    {"name": "I", "expr": "Point(0,0)"},
+    {"name": "T1", "expr": "Point(r,0)"},
+    {"name": "T2", "expr": "Point(r*cos(beta),r*sin(beta))"},
+    {"name": "T3", "expr": "Point(r*cos(gamma),r*sin(gamma))"},
+    {"name": "T4", "expr": "Point(r*cos(delta),r*sin(delta))"},
+    {"name": "T5", "expr": "Point(r*cos(epsilon),r*sin(epsilon))"},
+    {"name": "l1", "expr": "PerpendicularLine(Line(I,T1),T1)"},
+    {"name": "l2", "expr": "PerpendicularLine(Line(I,T2),T2)"},
+    {"name": "l3", "expr": "PerpendicularLine(Line(I,T3),T3)"},
+    {"name": "l4", "expr": "PerpendicularLine(Line(I,T4),T4)"},
+    {"name": "l5", "expr": "PerpendicularLine(Line(I,T5),T5)"},
+    {"name": "A", "expr": "Intersect(l5,l1)"},
+    {"name": "B", "expr": "Intersect(l1,l2)"},
+    {"name": "C", "expr": "Intersect(l2,l3)"},
+    {"name": "D", "expr": "Intersect(l3,l4)"},
+    {"name": "E", "expr": "Intersect(l4,l5)"},
+    {"name": "omega", "expr": "Circle(I,r)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 5},
+    {"def": "Distance(B,C)", "value": 6},
+    {"def": "Distance(C,D)", "value": 6},
+    {"def": "Distance(D,E)", "value": 6},
+    {"def": "Distance(E,A)", "value": 7},
+    {"def": "Distance(I,Line(A,B))", "value": "r"},
+    {"def": "Distance(I,Line(B,C))", "value": "r"},
+    {"def": "Distance(I,Line(C,D))", "value": "r"},
+    {"def": "Distance(I,Line(D,E))", "value": "r"},
+    {"def": "Distance(I,Line(E,A))", "value": "r"}
+  ],
+  "guards": ["AssumeGt(r,0)", "AssumeGt(beta,0)", "AssumeGt(gamma-beta,0)", "AssumeGt(delta-gamma,0)", "AssumeGt(epsilon-delta,0)", "AssumeGt(2*pi-epsilon,0)", "AssumeConvex([A,B,C,D,E])"],
+  "answer": "Area(A,B,C,D,E)",
+  "post_process": ""
+}

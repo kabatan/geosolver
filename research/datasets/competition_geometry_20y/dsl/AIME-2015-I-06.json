@@ -1,0 +1,53 @@
+{
+  "id": "AIME-2015-I-06",
+  "task": "solve",
+  "source_statement": "Point $A,B,C,D,$ and $E$ are equally spaced on a minor arc of a circle. Points $E,F,G,H,I$ and $A$ are equally spaced on a minor arc of a second circle with center $C$ as shown in the figure below. The angle $\\angle ABD$ exceeds $\\angle AHG$ by $12^\\circ$ . Find the degree measure of $\\angle BAG$ . [asy] pair A,B,C,D,E,F,G,H,I,O; O=(0,0); C=dir(90); B=dir(70); A=dir(50); D=dir(110); E=dir(130); draw(arc(O,1,50,130)); real x=2*sin(20*pi/180); F=x*dir(228)+C; G=x*dir(256)+C; H=x*dir(284)+C; I=x*dir(312)+C; draw(arc(C,x,200,340)); label(\"$A$\",A,dir(0)); label(\"$B$\",B,dir(75)); label(\"$C$\",C,dir(90)); label(\"$D$\",D,dir(105)); label(\"$E$\",E,dir(180)); label(\"$F$\",F,dir(225)); label(\"$G$\",G,dir(260)); label(\"$H$\",H,dir(280)); label(\"$I$\",I,dir(315));[/asy]",
+  "clause_ledger": [
+    {"source": "A,B,C,D,E equally spaced on a minor arc of a circle", "dsl": "use the rigid-motion/scale gauge O=(0,0), C=(0,1), and parameterize the ordered minor arc by d: A,B,C,D,E have central angles pi/2-2*d, pi/2-d, pi/2, pi/2+d, pi/2+2*d; the original circle incidences and equal-chord constraints are retained", "kind": "construction/constraint"},
+    {"source": "E,F,G,H,I,A equally spaced on minor arc of circle centered C", "dsl": "parameterize the ordered minor arc by e: F,G,H,I are successive counterclockwise rotations by e of E about C; r2 is the circle radius determined by the constructed E,A chord, and the original circle incidences/equal-chord constraints are retained", "kind": "construction/constraint"},
+    {"source": "angle ABD exceeds angle AHG by 12 degrees", "dsl": "Angle(A,B,D)-Angle(A,H,G)=12*pi/180", "kind": "constraint"},
+    {"source": "angle BAG", "dsl": "Angle(B,A,G) in degrees", "kind": "answer"}
+  ],
+  "variables": {"names": ["d", "e"]},
+  "construction": [
+    {"name": "O", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(0,1)"},
+    {"name": "A", "expr": "Point(cos(pi/2-2*d),sin(pi/2-2*d))"},
+    {"name": "B", "expr": "Point(cos(pi/2-d),sin(pi/2-d))"},
+    {"name": "D", "expr": "Point(cos(pi/2+d),sin(pi/2+d))"},
+    {"name": "E", "expr": "Point(cos(pi/2+2*d),sin(pi/2+2*d))"},
+    {"name": "evecx", "expr": "E.x-C.x"}, {"name": "evecy", "expr": "E.y-C.y"},
+    {"name": "r2", "expr": "Distance(E,A)/(2*sin(5*e/2))"},
+    {"name": "omega1", "expr": "Circle(O,1)"},
+    {"name": "omega2", "expr": "Circle(C,r2)"}
+    ,{"name": "F", "expr": "Point(C.x+r2*((evecx/r2)*cos(e)-(evecy/r2)*sin(e)),C.y+r2*((evecx/r2)*sin(e)+(evecy/r2)*cos(e)))"}
+    ,{"name": "G", "expr": "Point(C.x+(F.x-C.x)*cos(e)-(F.y-C.y)*sin(e),C.y+(F.x-C.x)*sin(e)+(F.y-C.y)*cos(e))"}
+    ,{"name": "H", "expr": "Point(C.x+(G.x-C.x)*cos(e)-(G.y-C.y)*sin(e),C.y+(G.x-C.x)*sin(e)+(G.y-C.y)*cos(e))"}
+    ,{"name": "I", "expr": "Point(C.x+(H.x-C.x)*cos(e)-(H.y-C.y)*sin(e),C.y+(H.x-C.x)*sin(e)+(H.y-C.y)*cos(e))"}
+  ],
+  "constraints": [
+    {"def": "OnCircle(A,omega1)", "value": 0},
+    {"def": "OnCircle(B,omega1)", "value": 0},
+    {"def": "OnCircle(C,omega1)", "value": 0},
+    {"def": "OnCircle(D,omega1)", "value": 0},
+    {"def": "OnCircle(E,omega1)", "value": 0},
+    {"def": "OnCircle(E,omega2)", "value": 0},
+    {"def": "OnCircle(F,omega2)", "value": 0},
+    {"def": "OnCircle(G,omega2)", "value": 0},
+    {"def": "OnCircle(H,omega2)", "value": 0},
+    {"def": "OnCircle(I,omega2)", "value": 0},
+    {"def": "OnCircle(A,omega2)", "value": 0},
+    {"def": "Distance(A,B)", "value": "Distance(B,C)"},
+    {"def": "Distance(B,C)", "value": "Distance(C,D)"},
+    {"def": "Distance(C,D)", "value": "Distance(D,E)"},
+    {"def": "Distance(E,F)", "value": "Distance(F,G)"},
+    {"def": "Distance(F,G)", "value": "Distance(G,H)"},
+    {"def": "Distance(G,H)", "value": "Distance(H,I)"},
+    {"def": "Distance(H,I)", "value": "Distance(I,A)"},
+    {"def": "Angle(A,B,D)-Angle(A,H,G)", "value": "12*pi/180"}
+  ],
+  "guards": ["AssumeGt(d,0)", "AssumeLt(d,pi/4)", "AssumeGt(e,0)", "AssumeLt(e,pi/5)", "AssumeGt(r2,0)"],
+  "answer": "180*Angle(B,A,G)/pi",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

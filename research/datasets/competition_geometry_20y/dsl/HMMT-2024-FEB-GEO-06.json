@@ -1,0 +1,51 @@
+{
+  "id": "HMMT-2024-FEB-GEO-06",
+  "task": "solve",
+  "source_statement": "In triangle ABC, a circle ω with center O passes through B and C and intersects segments AB and AC again at B ′ and C ′ , respectively. Suppose that the circles with diameters BB ′ and CC ′ are externally tangent to each other at T . If AB = 18, AC = 36, and AT = 12, compute AO.",
+  "clause_ledger": [
+    {"source": "triangle ABC and circle omega centered at O through B,C", "dsl": "fix AB=18, parameterize C on the AC=36 ray, and construct omega as Circumcircle(B,B',C); O and r are derived, while the original circle constraints remain", "kind": "construction/constraint"},
+    {"source": "omega intersects segments AB and AC again at B',C'", "dsl": "B'=Point(bp,0), C'=q*C are the stated segment points and remain constrained on omega", "kind": "construction/constraint/guard"},
+    {"source": "diameter circles BB' and CC' externally tangent at T", "dsl": "construct the two diameter-circle centers/radii and construct their external tangency point T on the center segment; the original tangency constraints remain", "kind": "construction/constraint"},
+    {"source": "AB=18, AC=36, AT=12 and AO", "dsl": "direct distance constraints and Distance(A,O) answer", "kind": "constraint/answer"}
+  ],
+  "variables": {"names": ["theta", "bp", "q"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(18,0)"},
+    {"name": "C", "expr": "Point(36*cos(theta),36*sin(theta))"},
+    {"name": "Bp", "expr": "Point(bp,0)"},
+    {"name": "Cp", "expr": "Point(q*C.x,q*C.y)"},
+    {"name": "omega", "expr": "Circumcircle(B,Bp,C)"},
+    {"name": "O", "expr": "Center(omega)"},
+    {"name": "r", "expr": "Radius(omega)"},
+    {"name": "MB", "expr": "Midpoint(B,Bp)"},
+    {"name": "MC", "expr": "Midpoint(C,Cp)"},
+    {"name": "rB", "expr": "Distance(B,Bp)/2"},
+    {"name": "rC", "expr": "Distance(C,Cp)/2"},
+    {"name": "omega_B", "expr": "Circle(MB,rB)"},
+    {"name": "omega_C", "expr": "Circle(MC,rC)"},
+    {"name": "T", "expr": "PointOnSegment(MB,MC,rB/(rB+rC))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 18},
+    {"def": "Distance(A,C)", "value": 36},
+    {"def": "Distance(O,B)", "value": "r"},
+    {"def": "Distance(O,C)", "value": "r"},
+    {"def": "Distance(O,Bp)", "value": "r"},
+    {"def": "Distance(O,Cp)", "value": "r"},
+    {"def": "Distance(A,T)", "value": 12},
+    {"def": "OnCircle(T,omega_B)", "value": 0},
+    {"def": "OnCircle(T,omega_C)", "value": 0},
+    {"def": "Distance(omega_B.center,omega_C.center)", "value": "omega_B.radius+omega_C.radius"}
+  ],
+  "guards": [
+    "AssumeGt(C.y,0)",
+    "AssumeGt(r,0)",
+    "AssumeGt(bp,0)",
+    "AssumeLt(bp,18)",
+    "AssumeGt(q,0)",
+    "AssumeLt(q,1)"
+  ],
+  "answer": "Distance(A,O)",
+  "post_process": ""
+}

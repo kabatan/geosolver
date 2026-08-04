@@ -1,0 +1,31 @@
+{
+  "id": "AIME-2008-I-10",
+  "task": "solve",
+  "source_statement": "Let $ABCD$ be an isosceles trapezoid with $\\overline{AD}||\\overline{BC}$ whose angle at the longer base $\\overline{AD}$ is $\\dfrac{\\pi}{3}$ . The diagonals have length $10\\sqrt {21}$ , and point $E$ is at distances $10\\sqrt {7}$ and $30\\sqrt {7}$ from vertices $A$ and $D$ , respectively. Let $F$ be the foot of the altitude from $C$ to $\\overline{AD}$ . The distance $EF$ can be expressed in the form $m\\sqrt {n}$ , where $m$ and $n$ are positive integers and $n$ is not divisible by the square of any prime. Find $m + n$ .",
+  "clause_ledger": [
+    {"source": "isosceles trapezoid AD parallel BC and angle at longer base pi/3", "dsl": "AD is the horizontal gauge, B=(u,sqrt(3)u), C=(v,sqrt(3)u), and equal legs/long-base guards", "kind": "construction/constraint/guard"},
+    {"source": "both diagonals have length 10sqrt(21)", "dsl": "direct Distance(A,C) and Distance(B,D) constraints", "kind": "constraint"},
+    {"source": "EA=10sqrt(7), ED=30sqrt(7)", "dsl": "direct E-distance constraints", "kind": "constraint"},
+    {"source": "F is foot from C to AD", "dsl": "F=(v,0) in the horizontal gauge", "kind": "construction"},
+    {"source": "m+n presentation", "dsl": "geometric answer Distance(E,F), with explicit radical transform in post_process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["d", "u", "v", "ex", "ey"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "D", "expr": "Point(d,0)"},
+    {"name": "B", "expr": "Point(u,sqrt(3)*u)"},
+    {"name": "C", "expr": "Point(v,sqrt(3)*u)"},
+    {"name": "E", "expr": "Point(ex,ey)"},
+    {"name": "F", "expr": "Point(v,0)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": "Distance(C,D)"},
+    {"def": "Distance(A,C)", "value": "10*sqrt(21)"},
+    {"def": "Distance(B,D)", "value": "10*sqrt(21)"},
+    {"def": "Distance(E,A)", "value": "10*sqrt(7)"},
+    {"def": "Distance(E,D)", "value": "30*sqrt(7)"}
+  ],
+  "guards": ["AssumeGt(d,0)", "AssumeGt(u,0)", "AssumeGt(v,u)", "AssumeLt(v,d)", "AssumeGt(d,Distance(B,C))"],
+  "answer": "Distance(E,F)",
+  "post_process": "# radical_mode=single_sqrt_sum"
+}

@@ -1,0 +1,34 @@
+{
+  "id": "HMMT-2020-FEB-GEO-09",
+  "task": "solve",
+  "source_statement": "Circles ωa , ωb , ωc have centers A, B, C, respectively and are pairwise externally tangent at points D, E, F (with D ∈ BC, E ∈ CA, F ∈ AB). Lines BE and CF meet at T . Given that ωa has ra- dius 341, there exists a line ` tangent to all three circles, and there exists a circle of radius 49 tangent to all three circles, compute the distance from T to `.",
+  "clause_ledger": [
+    {"source": "three pairwise externally tangent circles with centers A,B,C and omega_a radius341", "dsl": "use the existing common tangent as the x-axis and the source positive-side ordering: rb=49*p^2, q=sqrt(341)*p/(sqrt(341)-7*p), rc=49*q^2, B=(2sqrt(341*49)*p,rb), C=(2sqrt(341*49)*q,rc); the original external center-distance equations are retained", "kind": "construction/constraint"},
+    {"source": "D,E,F pairwise tangency points and T=BE intersect CF", "dsl": "D,E,F are the exact radius-ratio tangency-point constructions on BC, CA, AB using the constructed source radii; the original incidence equations and T intersection are retained", "kind": "construction/constraint"},
+    {"source": "a common tangent line l and a radius49 circle tangent to all three", "dsl": "L is the x-axis in the source tangent-line gauge, so each original circle has the source radius as its y-coordinate; W is the near-C intersection of the radius-390 and radius-(rb+49) circles, with the original C-tangency equation retained", "kind": "construction/constraint"},
+    {"source": "distance from T to l", "dsl": "Distance(T,l)", "kind": "answer"}
+  ],
+  "variables": {"names": ["p"]},
+  "construction": [
+    {"name": "q", "expr": "sqrt(341)*p/(sqrt(341)-7*p)"},
+    {"name": "rb", "expr": "49*p*p"}, {"name": "rc", "expr": "49*q*q"},
+    {"name": "A", "expr": "Point(0,341)"}, {"name": "B", "expr": "Point(2*sqrt(341*49)*p,rb)"}, {"name": "C", "expr": "Point(2*sqrt(341*49)*q,rc)"},
+    {"name": "omegaA", "expr": "Circle(A,341)"}, {"name": "omegaB", "expr": "Circle(B,rb)"}, {"name": "omegaC", "expr": "Circle(C,rc)"},
+    {"name": "D", "expr": "PointOnSegment(B,C,rb/(rb+rc))"},
+    {"name": "E", "expr": "PointOnSegment(C,A,rc/(rc+341))"},
+    {"name": "F", "expr": "PointOnSegment(A,B,341/(341+rb))"},
+    {"name": "L", "expr": "Line(Point(0,0),Point(1,0))"}, {"name": "W", "expr": "Intersect(Circle(A,341+49),Circle(B,rb+49),near=C)"}, {"name": "T", "expr": "Intersect(Line(B,E),Line(C,F))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": "341+rb"}, {"def": "Distance(B,C)", "value": "rb+rc"}, {"def": "Distance(C,A)", "value": "rc+341"},
+    {"def": "OnCircle(D,omegaB)", "value": 0}, {"def": "OnCircle(D,omegaC)", "value": 0}, {"def": "OnLine(D,B,C)", "value": 0},
+    {"def": "OnCircle(E,omegaC)", "value": 0}, {"def": "OnCircle(E,omegaA)", "value": 0}, {"def": "OnLine(E,C,A)", "value": 0},
+    {"def": "OnCircle(F,omegaA)", "value": 0}, {"def": "OnCircle(F,omegaB)", "value": 0}, {"def": "OnLine(F,A,B)", "value": 0},
+    {"def": "IsTangent(L,omegaA)", "value": 0}, {"def": "IsTangent(L,omegaB)", "value": 0}, {"def": "IsTangent(L,omegaC)", "value": 0},
+    {"def": "Distance(W,A)", "value": "341+49"}, {"def": "Distance(W,B)", "value": "rb+49"}, {"def": "Distance(W,C)", "value": "rc+49"}
+  ],
+  "guards": ["AssumeGt(p,1)", "AssumeLt(p,sqrt(341)/7)", "AssumeGt(Distance(T,L),0)"],
+  "answer": "Distance(T,L)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

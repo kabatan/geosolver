@@ -1,0 +1,58 @@
+{
+  "id": "AIME-2011-I-14",
+  "task": "solve",
+  "source_statement": "Let $A_1 A_2 A_3 A_4 A_5 A_6 A_7 A_8$ be a regular octagon.  Let $M_1$ , $M_3$ , $M_5$ , and $M_7$ be the midpoints of sides $\\overline{A_1 A_2}$ , $\\overline{A_3 A_4}$ , $\\overline{A_5 A_6}$ , and $\\overline{A_7 A_8}$ , respectively.  For $i = 1, 3, 5, 7$ , ray $R_i$ is constructed from $M_i$ towards the interior of the octagon such that $R_1 \\perp R_3$ , $R_3 \\perp R_5$ , $R_5 \\perp R_7$ , and $R_7 \\perp R_1$ .  Pairs of rays $R_1$ and $R_3$ , $R_3$ and $R_5$ , $R_5$ and $R_7$ , and $R_7$ and $R_1$ meet at $B_1$ , $B_3$ , $B_5$ , $B_7$ respectively.  If $B_1 B_3 = A_1 A_2$ , then $\\cos 2 \\angle A_3 M_3 B_1$ can be written in the form $m - \\sqrt{n}$ , where $m$ and $n$ are positive integers.  Find $m + n$ .",
+  "clause_ledger": [
+    {"source": "regular octagon A1...A8 and midpoints M1,M3,M5,M7", "dsl": "exact unit circumferential octagon gauge and Midpoint constructions (scale is irrelevant to the angle/length ratio)", "kind": "construction"},
+    {"source": "rays R1,R3,R5,R7 pairwise consecutive perpendicular and intersections Bi", "dsl": "one angle theta determines inward ray directions u, R90(u), -u, -R90(u) through the four source midpoints; the original perpendicular constraints and intersections are retained", "kind": "construction/constraint"},
+    {"source": "B1B3=A1A2 and cos(2 angle A3M3B1)", "dsl": "direct length constraint and trigonometric answer", "kind": "constraint/answer"},
+    {"source": "m+n for m-sqrt(n)", "dsl": "m_minus_sqrt_n post-process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["theta"]},
+  "construction": [
+    {"name": "A1", "expr": "Point(1,0)"},
+    {"name": "A2", "expr": "Point(1/sqrt(2),1/sqrt(2))"},
+    {"name": "A3", "expr": "Point(0,1)"},
+    {"name": "A4", "expr": "Point(-1/sqrt(2),1/sqrt(2))"},
+    {"name": "A5", "expr": "Point(-1,0)"},
+    {"name": "A6", "expr": "Point(-1/sqrt(2),-1/sqrt(2))"},
+    {"name": "A7", "expr": "Point(0,-1)"},
+    {"name": "A8", "expr": "Point(1/sqrt(2),-1/sqrt(2))"},
+    {"name": "M1", "expr": "Midpoint(A1,A2)"},
+    {"name": "M3", "expr": "Midpoint(A3,A4)"},
+    {"name": "M5", "expr": "Midpoint(A5,A6)"},
+    {"name": "M7", "expr": "Midpoint(A7,A8)"},
+    {"name": "R1", "expr": "Line(M1,Point(M1.x+cos(theta),M1.y+sin(theta)))"},
+    {"name": "R3", "expr": "Line(M3,Point(M3.x-sin(theta),M3.y+cos(theta)))"},
+    {"name": "R5", "expr": "Line(M5,Point(M5.x-cos(theta),M5.y-sin(theta)))"},
+    {"name": "R7", "expr": "Line(M7,Point(M7.x+sin(theta),M7.y-cos(theta)))"},
+    {"name": "B1", "expr": "Intersect(R1,R3)"},
+    {"name": "B3", "expr": "Intersect(R3,R5)"},
+    {"name": "B5", "expr": "Intersect(R5,R7)"},
+    {"name": "B7", "expr": "Intersect(R7,R1)"}
+  ],
+  "constraints": [
+    {"def": "Perpendicular(R1,R3)", "value": 0},
+    {"def": "Perpendicular(R3,R5)", "value": 0},
+    {"def": "Perpendicular(R5,R7)", "value": 0},
+    {"def": "Perpendicular(R7,R1)", "value": 0},
+    {"def": "Distance(B1,B3)", "value": "Distance(A1,A2)"}
+  ],
+  "guards": [
+    "AssumeGt(Dot(Vector(M1,Point(0,0)),Vector(M1,Point(M1.x+cos(theta),M1.y+sin(theta)))),0)",
+    "AssumeGt(Dot(Vector(M3,Point(0,0)),Vector(M3,Point(M3.x-sin(theta),M3.y+cos(theta)))),0)",
+    "AssumeGt(Dot(Vector(M5,Point(0,0)),Vector(M5,Point(M5.x-cos(theta),M5.y-sin(theta)))),0)",
+    "AssumeGt(Dot(Vector(M7,Point(0,0)),Vector(M7,Point(M7.x+sin(theta),M7.y-cos(theta)))),0)",
+    "AssumeGt(Dot(Vector(M1,B1),Vector(M1,Point(M1.x+cos(theta),M1.y+sin(theta)))),0)",
+    "AssumeGt(Dot(Vector(M3,B1),Vector(M3,Point(M3.x-sin(theta),M3.y+cos(theta)))),0)",
+    "AssumeGt(Dot(Vector(M3,B3),Vector(M3,Point(M3.x-sin(theta),M3.y+cos(theta)))),0)",
+    "AssumeGt(Dot(Vector(M5,B3),Vector(M5,Point(M5.x-cos(theta),M5.y-sin(theta)))),0)",
+    "AssumeGt(Dot(Vector(M5,B5),Vector(M5,Point(M5.x-cos(theta),M5.y-sin(theta)))),0)",
+    "AssumeGt(Dot(Vector(M7,B5),Vector(M7,Point(M7.x+sin(theta),M7.y-cos(theta)))),0)",
+    "AssumeGt(Dot(Vector(M7,B7),Vector(M7,Point(M7.x+sin(theta),M7.y-cos(theta)))),0)",
+    "AssumeGt(Dot(Vector(M1,B7),Vector(M1,Point(M1.x+cos(theta),M1.y+sin(theta)))),0)"
+  ],
+  "answer": "cos(2*Angle(A3,M3,B1))",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": "# radical_mode=m_minus_sqrt_n"
+}

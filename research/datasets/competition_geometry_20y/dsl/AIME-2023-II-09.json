@@ -1,0 +1,42 @@
+{
+  "id": "AIME-2023-II-09",
+  "task": "solve",
+  "source_statement": "Circles $\\omega_1$ and $\\omega_2$ intersect at two points $P$ and $Q,$ and their common tangent line closer to $P$ intersects $\\omega_1$ and $\\omega_2$ at points $A$ and $B,$ respectively. The line parallel to $AB$ that passes through $P$ intersects $\\omega_1$ and $\\omega_2$ for the second time at points $X$ and $Y,$ respectively. Suppose $PX=10,$ $PY=14,$ and $PQ=5.$ Then the area of trapezoid $XABY$ is $m\\sqrt{n},$ where $m$ and $n$ are positive integers and $n$ is not divisible by the square of any prime. Find $m+n.$",
+  "clause_ledger": [
+    {"source": "two intersecting circles P,Q and common tangent AB", "dsl": "fix the tangent gauge A=(-5,0), B=(7,0), P=(0,k); the circle centers and radii are constructed from tangency and P-incidence, and Q is the other circle intersection", "kind": "construction/constraint"},
+    {"source": "line through P parallel AB meets circles again at X,Y", "dsl": "L is the horizontal through P; X=(2*A.x-P.x,P.y) and Y=(2*B.x-P.x,P.y) are the second chord intersections", "kind": "construction"},
+    {"source": "PX=10, PY=14, PQ=5", "dsl": "three direct distance constraints", "kind": "constraint"},
+    {"source": "area trapezoid XABY and m+n presentation", "dsl": "Area(X,A,B,Y) with radical post-process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["k"]},
+  "construction": [
+    {"name": "P", "expr": "Point(0,k)"},
+    {"name": "A", "expr": "Point(-5,0)"},
+    {"name": "B", "expr": "Point(7,0)"},
+    {"name": "r1", "expr": "(25+k*k)/(2*k)"},
+    {"name": "r2", "expr": "(49+k*k)/(2*k)"},
+    {"name": "O1", "expr": "Point(-5,r1)"},
+    {"name": "O2", "expr": "Point(7,r2)"},
+    {"name": "omega1", "expr": "Circle(O1,r1)"},
+    {"name": "omega2", "expr": "Circle(O2,r2)"},
+    {"name": "L", "expr": "ParallelLine(P,Line(A,B))"},
+    {"name": "X", "expr": "Point(2*A.x-P.x,P.y)"},
+    {"name": "Y", "expr": "Point(2*B.x-P.x,P.y)"},
+    {"name": "Q", "expr": "Intersect(omega1,omega2,exclude=P)"}
+  ],
+  "constraints": [
+    {"def": "OnCircle(P,omega1)", "value": 0},
+    {"def": "OnCircle(P,omega2)", "value": 0},
+    {"def": "OnCircle(Q,omega1)", "value": 0},
+    {"def": "OnCircle(Q,omega2)", "value": 0},
+    {"def": "Distance(P,X)", "value": 10},
+    {"def": "Distance(P,Y)", "value": 14},
+    {"def": "Distance(P,Q)", "value": 5},
+    {"def": "Distance(O1,A)", "value": "r1"},
+    {"def": "Distance(O2,B)", "value": "r2"}
+  ],
+  "guards": ["AssumeGt(k,0)", "AssumeGt(Distance(A,B),0)", "AssumeLt(Distance(P,Line(A,B)),Distance(Q,Line(A,B)))"],
+  "answer": "Area(X,A,B,Y)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": "# radical_mode=single_sqrt_sum"
+}

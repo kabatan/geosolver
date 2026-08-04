@@ -1,0 +1,30 @@
+{
+  "id": "HMMT-2009-FEB-GEO-08",
+  "task": "solve",
+  "source_statement": "[7] Triangle ABC has side lengths AB = 231, BC = 160, and AC = 281. Point D is constructed on the opposite side of line AC as point B such that AD = 178 and CD = 153. Compute the distance from B to the midpoint of segment AD.",
+  "clause_ledger": [
+    {"source": "triangle side lengths", "dsl": "direct distances for A,B,C", "kind": "constraint"},
+    {"source": "D opposite side of AC from B", "dsl": "D_y<0 while B_y>0 in the coordinate gauge", "kind": "guard"},
+    {"source": "AD=178, CD=153", "dsl": "direct distances", "kind": "constraint"},
+    {"source": "midpoint of AD", "dsl": "M=Midpoint(A,D)", "kind": "construction"},
+    {"source": "distance B to midpoint", "dsl": "Distance(B,M)", "kind": "answer"}
+  ],
+  "variables": {"names": ["Bx", "By", "Dx", "Dy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(281,0)"},
+    {"name": "B", "expr": "Point(Bx,By)"},
+    {"name": "D", "expr": "Point(Dx,Dy)"},
+    {"name": "M", "expr": "Midpoint(A,D)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 231},
+    {"def": "Distance(B,C)", "value": 160},
+    {"def": "Distance(A,C)", "value": 281},
+    {"def": "Distance(A,D)", "value": 178},
+    {"def": "Distance(C,D)", "value": 153}
+  ],
+  "guards": ["AssumeGt(By,0)", "AssumeLt(Dy,0)"],
+  "answer": "Distance(B,M)",
+  "post_process": ""
+}

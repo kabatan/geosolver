@@ -1,0 +1,27 @@
+{
+  "id": "HMMT-2015-FEB-GEO-06",
+  "task": "solve",
+  "source_statement": "In triangle ABC, AB = 2, AC √ = 1 + 5, and ∠CAB = 54 . Suppose D lies on the extension of AC through C such that CD = 5 − 1. If M is the midpoint of BD, determine the measure of ∠ACM , in degrees.",
+  "clause_ledger": [
+    {"source": "AB=2, AC=1+sqrt(5), angle A=54 degrees", "dsl": "A=(0,0), C=(1+sqrt(5),0), B=2(cos54,sin54)", "kind": "construction"},
+    {"source": "D on AC extension with CD=sqrt(5)-1", "dsl": "D=(2sqrt(5),0)", "kind": "construction"},
+    {"source": "M midpoint of BD", "dsl": "M=Midpoint(B,D)", "kind": "construction"},
+    {"source": "angle ACM", "dsl": "180*Angle(A,C,M)/pi", "kind": "answer"}
+  ],
+  "variables": {"names": []},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(1+sqrt(5),0)"},
+    {"name": "B", "expr": "Point(2*cos(3*pi/10),2*sin(3*pi/10))"},
+    {"name": "D", "expr": "Point(2*sqrt(5),0)"},
+    {"name": "M", "expr": "Midpoint(B,D)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 2},
+    {"def": "Distance(A,C)", "value": "1+sqrt(5)"},
+    {"def": "Distance(C,D)", "value": "sqrt(5)-1"}
+  ],
+  "guards": [],
+  "answer": "180*Angle(A,C,M)/pi",
+  "post_process": ""
+}

@@ -1,0 +1,70 @@
+{
+  "id": "JMO-2017-PRE-01",
+  "task": "solve",
+  "source_statement": "四角形ABCDは∠A=∠B=∠C=30°，AB=4，BC=2√3をみたす。このとき四角形ABCDの面積を求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "quadrilateral angle data and two side lengths",
+      "dsl": "coordinate A,B,C gauge with direct Angle/Distance constraints",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "area ABCD",
+      "dsl": "Area(A,B,C,D)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "dx",
+      "dy"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(4,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(1,sqrt(3))"
+    },
+    {
+      "name": "D",
+      "expr": "Point(dx,dy)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(A,B)",
+      "value": 4
+    },
+    {
+      "def": "Distance(B,C)",
+      "value": "2*sqrt(3)"
+    },
+    {
+      "def": "Angle(D,A,B)",
+      "value": "pi/6"
+    },
+    {
+      "def": "Angle(A,B,C)",
+      "value": "pi/6"
+    },
+    {
+      "def": "Angle(B,C,D)",
+      "value": "pi/6"
+    }
+  ],
+  "guards": [
+    "AssumeGt(dy,0)",
+    "AssumeGt(Area(A,B,C),0)",
+    "AssumeGt(Area(A,C,D),0)"
+  ],
+  "answer": "Area(A,B,C,D)",
+  "post_process": ""
+}

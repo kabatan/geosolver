@@ -1,0 +1,30 @@
+{
+  "id": "AIME-2022-I-03",
+  "task": "solve",
+  "source_statement": "In isosceles trapezoid $ABCD,$ parallel bases $\\overline{AB}$ and $\\overline{CD}$ have lengths $500$ and $650,$ respectively, and $AD=BC=333.$ The angle bisectors of $\\angle A$ and $\\angle D$ meet at $P,$ and the angle bisectors of $\\angle B$ and $\\angle C$ meet at $Q.$ Find $PQ.$",
+  "clause_ledger": [
+    {"source": "isosceles trapezoid, AB=500, CD=650, AD=BC=333", "dsl": "symmetric coordinates A=(-250,0),B=(250,0),C=(325,h),D=(-325,h), with leg constraints", "kind": "construction/constraint"},
+    {"source": "P is intersection of internal bisectors at A,D", "dsl": "P=Intersect(AngleBisector(D,A,B),AngleBisector(C,D,A))", "kind": "construction"},
+    {"source": "Q is intersection of internal bisectors at B,C", "dsl": "Q=Intersect(AngleBisector(A,B,C),AngleBisector(B,C,D))", "kind": "construction"},
+    {"source": "PQ", "dsl": "Distance(P,Q)", "kind": "answer"}
+  ],
+  "variables": {"names": ["h"]},
+  "construction": [
+    {"name": "A", "expr": "Point(-250,0)"},
+    {"name": "B", "expr": "Point(250,0)"},
+    {"name": "C", "expr": "Point(325,h)"},
+    {"name": "D", "expr": "Point(-325,h)"},
+    {"name": "P", "expr": "Intersect(AngleBisector(D,A,B),AngleBisector(C,D,A))"},
+    {"name": "Q", "expr": "Intersect(AngleBisector(A,B,C),AngleBisector(B,C,D))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 500},
+    {"def": "Distance(C,D)", "value": 650},
+    {"def": "Distance(A,D)", "value": 333},
+    {"def": "Distance(B,C)", "value": 333}
+  ],
+  "guards": ["AssumeGt(h,0)", "AssumeGt(Distance(P,Q),0)"],
+  "answer": "Distance(P,Q)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

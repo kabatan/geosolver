@@ -1,0 +1,35 @@
+{
+  "id": "AIME-2007-I-15",
+  "task": "solve",
+  "source_statement": "Let $ABC$ be an equilateral triangle, and let $D$ and $F$ be points on sides $BC$ and $AB$ , respectively, with $FA = 5$ and $CD = 2$ .  Point $E$ lies on side $CA$ such that angle $DEF = 60^{\\circ}$ .  The area of triangle $DEF$ is $14\\sqrt{3}$ .  The two possible values of the length of side $AB$ are $p \\pm q \\sqrt{r}$ , where $p$ and $q$ are rational, and $r$ is an integer not divisible by the square of a prime.  Find $r$ .",
+  "clause_ledger": [
+    {"source": "equilateral triangle ABC", "dsl": "A,B,C are fixed in a direct equilateral gauge with side variable s", "kind": "construction/constraint"},
+    {"source": "D on BC with CD=2 and F on AB with FA=5", "dsl": "D and F are the exact source side-point constructions; segment guards retain the stated sides", "kind": "construction/constraint/guard"},
+    {"source": "E on CA and angle DEF=60 degrees", "dsl": "E is a variable point on CA with OnSegment and Angle(D,E,F)=pi/3", "kind": "construction/constraint"},
+    {"source": "area of DEF is 14sqrt(3)", "dsl": "Area(D,E,F)=14*sqrt(3)", "kind": "constraint"},
+    {"source": "find r in the two radical values of AB", "dsl": "geometric answer is s; no root selection is inserted into the definition", "kind": "answer"}
+  ],
+  "variables": {"names": ["s", "ex", "ey"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(s,0)"},
+    {"name": "C", "expr": "Point(s/2,sqrt(3)*s/2)"},
+    {"name": "F", "expr": "Point(5,0)"},
+    {"name": "D", "expr": "Point(s/2+2*(s-s/2)/s,sqrt(3)*s/2-2*(sqrt(3)*s/2)/s)"},
+    {"name": "E", "expr": "Point(ex,ey)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": "s"},
+    {"def": "Distance(B,C)", "value": "s"},
+    {"def": "Distance(C,A)", "value": "s"},
+    {"def": "Distance(C,D)", "value": 2},
+    {"def": "Distance(F,A)", "value": 5},
+    {"def": "OnSegment(E,C,A)", "value": 0},
+    {"def": "Angle(D,E,F)", "value": "pi/3"},
+    {"def": "Area(D,E,F)", "value": "14*sqrt(3)"}
+  ],
+  "guards": ["AssumeGt(s,5)", "AssumeGt(ex,0)", "AssumeLt(ex,s/2)", "AssumeGt(ey,0)", "AssumeLt(ey,sqrt(3)*s/2)", "AssumeGt(Distance(B,D),0)", "AssumeLt(Distance(B,D),s)"],
+  "answer": "Distance(A,B)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": "# radical_mode=quadratic_radical_radicand basis=989"
+}

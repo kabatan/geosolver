@@ -1,0 +1,32 @@
+{
+  "id": "AIME-2018-I-04",
+  "task": "solve",
+  "source_statement": "In $\\triangle ABC, AB = AC = 10$ and $BC = 12$ . Point $D$ lies strictly between $A$ and $B$ on $\\overline{AB}$ and point $E$ lies strictly between $A$ and $C$ on $\\overline{AC}$ so that $AD = DE = EC$ . Then $AD$ can be expressed in the form $\\dfrac{p}{q}$ , where $p$ and $q$ are relatively prime positive integers. Find $p+q$ .",
+  "clause_ledger": [
+    {"source": "isosceles triangle side lengths", "dsl": "coordinate gauge with direct side distances", "kind": "construction/constraint"},
+    {"source": "D,E positions and AD=DE=EC", "dsl": "D,E variables with segment guards and direct Distance equalities", "kind": "constraint/guard"},
+    {"source": "p+q", "dsl": "AD followed by exact fraction numerator-plus-denominator post-process", "kind": "answer"}
+  ],
+  "variables": {"names": ["dx", "dy", "ex", "ey"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(10,0)"},
+    {"name": "C", "expr": "Point(14/5,48/5)"},
+    {"name": "D", "expr": "Point(dx,dy)"},
+    {"name": "E", "expr": "Point(ex,ey)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 10},
+    {"def": "Distance(A,C)", "value": 10},
+    {"def": "Distance(B,C)", "value": 12},
+    {"def": "Distance(A,D)", "value": "Distance(D,E)"},
+    {"def": "Distance(D,E)", "value": "Distance(E,C)"},
+    {"def": "Collinear(A,D,B)", "value": 0},
+    {"def": "Collinear(A,E,C)", "value": 0},
+    {"def": "OnSegment(D,A,B)", "value": 0},
+    {"def": "OnSegment(E,A,C)", "value": 0}
+  ],
+  "guards": ["AssumeGt(dx,0)", "AssumeLt(dx,10)", "AssumeGt(ey,0)", "AssumeLt(ey,48/5)"],
+  "answer": "Distance(A,D)",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+}

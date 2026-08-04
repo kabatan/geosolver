@@ -1,0 +1,91 @@
+{
+  "id": "JMO-2011-PRE-06",
+  "task": "solve",
+  "source_statement": "∠ABC=90°である三角形ABCの辺BC，CA，AB上に点P，Q，Rがあり，AQ:QC=2:1，AR=AQ，QP=QR，∠PQR=90°が成立している。CP=1のときARを求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "right triangle ABC",
+      "dsl": "C=(0,0), A=(a,0), B=(0,b)",
+      "kind": "construction"
+    },
+    {
+      "source": "P,Q,R side positions and AQ:QC=2:1, CP=1",
+      "dsl": "P=(0,1), Q=(a/3,0), R variable on AB",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "AR=AQ, QP=QR, angle PQR=90",
+      "dsl": "direct Distance and Perpendicular constraints",
+      "kind": "constraint"
+    },
+    {
+      "source": "AR",
+      "dsl": "Distance(A,R)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "a",
+      "b",
+      "rx",
+      "ry"
+    ]
+  },
+  "construction": [
+    {
+      "name": "C",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "A",
+      "expr": "Point(a,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(0,b)"
+    },
+    {
+      "name": "P",
+      "expr": "Point(0,1)"
+    },
+    {
+      "name": "Q",
+      "expr": "Point(a/3,0)"
+    },
+    {
+      "name": "R",
+      "expr": "Point(rx,ry)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(C,P)",
+      "value": 1
+    },
+    {
+      "def": "Distance(A,R)",
+      "value": "Distance(A,Q)"
+    },
+    {
+      "def": "Distance(Q,P)",
+      "value": "Distance(Q,R)"
+    },
+    {
+      "def": "Perpendicular(Line(Q,P),Line(Q,R))",
+      "value": 0
+    },
+    {
+      "def": "Collinear(A,R,B)",
+      "value": 0
+    }
+  ],
+  "guards": [
+    "AssumeGt(a,0)",
+    "AssumeGt(b,1)",
+    "AssumeGt(ry,0)",
+    "AssumeLt(rx,a)"
+  ],
+  "answer": "Distance(A,R)",
+  "post_process": ""
+}

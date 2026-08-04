@@ -1,0 +1,25 @@
+{
+  "id": "AIME-2013-II-15",
+  "task": "solve",
+  "source_statement": "Let $A,B,C$ be angles of an acute triangle with \\begin{align*} \\cos^2 A + \\cos^2 B + 2 \\sin A \\sin B \\cos C &= \\frac{15}{8} \\text{ and} \\\\ \\cos^2 B + \\cos^2 C + 2 \\sin B \\sin C \\cos A &= \\frac{14}{9} \\end{align*} There are positive integers $p$ , $q$ , $r$ , and $s$ for which \\[\\cos^2 C + \\cos^2 A + 2 \\sin C \\sin A \\cos B = \\frac{p-q\\sqrt{r}}{s},\\] where $p+q$ and $s$ are relatively prime and $r$ is not divisible by the square of any prime.  Find $p+q+r+s$ .",
+  "clause_ledger": [
+    {"source": "acute triangle angles A,B,C", "dsl": "alpha,beta directly parameterize the triangle angles and C is constructed by the sine-law gauge; the published acute wording is inconsistent with the solvable intended branch, so the executable branch is documented explicitly in source_note", "kind": "construction/constraint/guard"},
+    {"source": "two given cosine identities", "dsl": "identities copied verbatim as constraints", "kind": "constraint"},
+    {"source": "third identity and p+q+r+s", "dsl": "third expression as answer with radical presentation post-process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["alpha", "beta"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(1,0)"},
+    {"name": "C", "expr": "Point(sin(beta)*cos(alpha)/sin(alpha+beta),sin(beta)*sin(alpha)/sin(alpha+beta))"}
+  ],
+  "constraints": [
+    {"def": "cos(alpha)**2+cos(beta)**2+2*sin(alpha)*sin(beta)*cos(pi-alpha-beta)", "value": "15/8"},
+    {"def": "cos(beta)**2+cos(pi-alpha-beta)**2+2*sin(beta)*sin(pi-alpha-beta)*cos(alpha)", "value": "14/9"}
+  ],
+  "guards": ["AssumeGt(alpha,0)", "AssumeLt(alpha,pi/2)", "AssumeGt(beta,pi/2)", "AssumeLt(beta,pi)", "AssumeGt(pi-alpha-beta,0)", "AssumeLt(pi-alpha-beta,pi/2)"],
+  "answer": "cos(pi-alpha-beta)**2+cos(alpha)**2+2*sin(pi-alpha-beta)*sin(alpha)*cos(beta)",
+  "solver_coverage": "executable_source_faithful",
+  "source_note": "The published statement says acute triangle, but the two given identities have no acute solution; the official intended branch has A and C acute and B obtuse. The original source_statement is preserved verbatim and this correction is explicit rather than silent.",
+  "post_process": "# radical_mode=p_plus_q_plus_r_plus_s"
+}

@@ -1,0 +1,33 @@
+{
+  "id": "HMMT-2006-FEB-GEO-08",
+  "task": "solve",
+  "source_statement": "Triangle ABC has a right angle at B. Point D lies on side BC such that 3∠BAD = ∠BAC. Given AC = 2 and CD = 1, compute BD.",
+  "clause_ledger": [
+    {"source": "triangle ABC has a right angle at B", "dsl": "Angle(A,B,C)=pi/2", "kind": "constraint"},
+    {"source": "D lies on side BC", "dsl": "B,D,C are collinear with 0<D<C guards", "kind": "construction/guard"},
+    {"source": "3 angle BAD = angle BAC", "dsl": "direct angle equality constraint", "kind": "constraint"},
+    {"source": "AC=2 and CD=1", "dsl": "direct Distance constraints", "kind": "constraint"},
+    {"source": "compute BD", "dsl": "Distance(B,D)", "kind": "answer"}
+  ],
+  "variables": {"names": ["Ay", "Cx", "Dx"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0, Ay)"},
+    {"name": "B", "expr": "Point(0, 0)"},
+    {"name": "C", "expr": "Point(Cx, 0)"},
+    {"name": "D", "expr": "Point(Dx, 0)"}
+  ],
+  "constraints": [
+    {"def": "Angle(A, B, C)", "value": "pi/2"},
+    {"def": "Distance(A, C)", "value": 2},
+    {"def": "Distance(C, D)", "value": 1},
+    {"def": "3 * Angle(B, A, D)", "value": "Angle(B, A, C)"}
+  ],
+  "guards": [
+    "AssumeGt(Ay, 0)",
+    "AssumeGt(Dx, 0)",
+    "AssumeLt(Dx, Cx)",
+    "AssumeGt(Cx, 1)"
+  ],
+  "answer": "Distance(B, D)",
+  "post_process": ""
+}

@@ -1,0 +1,28 @@
+{
+  "id": "HMMT-2023-FEB-GEO-04",
+  "task": "solve",
+  "source_statement": "Let ABCD be a square, and let M be the midpoint of side BC. Points P and Q lie on segment AM such that ∠BP D = ∠BQD = 135◦ . Given that AP < AQ, compute AQ AP .",
+  "clause_ledger": [
+    {"source": "square ABCD and M midpoint BC", "dsl": "direct square gauge and M=Midpoint(B,C)", "kind": "construction"},
+    {"source": "P,Q on AM", "dsl": "P and Q are direct affine points on A-M with parameters p,q", "kind": "construction/guard"},
+    {"source": "angles BPD=BQD=135 degrees", "dsl": "direct Angle constraints", "kind": "constraint"},
+    {"source": "AP<AQ and AQ/AP", "dsl": "p<q guard; Distance(A,Q)/Distance(A,P)", "kind": "guard/answer"}
+  ],
+  "variables": {"names": ["s", "p", "q"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(s,0)"},
+    {"name": "C", "expr": "Point(s,s)"},
+    {"name": "D", "expr": "Point(0,s)"},
+    {"name": "M", "expr": "Midpoint(B,C)"},
+    {"name": "P", "expr": "Point(p*s,p*s/2)"},
+    {"name": "Q", "expr": "Point(q*s,q*s/2)"}
+  ],
+  "constraints": [
+    {"def": "Angle(B,P,D)", "value": "3*pi/4"},
+    {"def": "Angle(B,Q,D)", "value": "3*pi/4"}
+  ],
+  "guards": ["AssumeGt(s,0)", "AssumeGt(p,0)", "AssumeLt(p,1)", "AssumeGt(q,p)", "AssumeLt(q,1)"],
+  "answer": "Distance(A,Q)/Distance(A,P)",
+  "post_process": ""
+}

@@ -1,0 +1,39 @@
+{
+  "id": "HMMT-2020-FEB-GEO-02",
+  "task": "solve",
+  "source_statement": "Let ABC be a triangle with AB = 5, AC = 8, and ∠BAC = 60◦ . Let U V W XY Z be a regular hexagon that is inscribed inside ABC such that U and V lie on side BA, W and X lie on side AC, and Z lies on side CB. What is the side length of hexagon U V W XY Z?",
+  "clause_ledger": [
+    {"source": "triangle AB=5, AC=8, angle A=60", "dsl": "A=(0,0), B=(5,0), C=(4,4sqrt(3))", "kind": "construction"},
+    {"source": "regular hexagon UVWXYZ", "dsl": "the six source vertices are the direct regular-hexagon coordinate construction with side s", "kind": "construction"},
+    {"source": "U,V on BA; W,X on AC; Z on CB", "dsl": "direct collinearity residuals and side-segment guards", "kind": "constraint/guard"},
+    {"source": "side length", "dsl": "s", "kind": "answer"}
+  ],
+  "variables": {"names": ["s"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(5,0)"},
+    {"name": "C", "expr": "Point(4,4*sqrt(3))"},
+    {"name": "U", "expr": "Point(2*s,0)"},
+    {"name": "V", "expr": "Point(s,0)"},
+    {"name": "W", "expr": "Point(s/2,sqrt(3)*s/2)"},
+    {"name": "X", "expr": "Point(s,sqrt(3)*s)"},
+    {"name": "Y", "expr": "Point(2*s,sqrt(3)*s)"},
+    {"name": "Z", "expr": "Point(5*s/2,sqrt(3)*s/2)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 5},
+    {"def": "Distance(A,C)", "value": 8},
+    {"def": "Angle(B,A,C)", "value": "pi/3"},
+    {"def": "Area(A,C,W)", "value": 0},
+    {"def": "Area(A,C,X)", "value": 0},
+    {"def": "Area(B,C,Z)", "value": 0},
+    {"def": "OnSegment(U,B,A)", "value": 0},
+    {"def": "OnSegment(V,B,A)", "value": 0},
+    {"def": "OnSegment(W,A,C)", "value": 0},
+    {"def": "OnSegment(X,A,C)", "value": 0},
+    {"def": "OnSegment(Z,B,C)", "value": 0}
+  ],
+  "guards": ["AssumeGt(s,0)", "AssumeLt(2*s,5)", "AssumeLt(s,8)"],
+  "answer": "s",
+  "post_process": ""
+}

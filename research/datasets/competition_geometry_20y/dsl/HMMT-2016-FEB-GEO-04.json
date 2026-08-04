@@ -1,0 +1,33 @@
+{
+  "id": "HMMT-2016-FEB-GEO-04",
+  "task": "solve",
+  "source_statement": "Let ABC be a triangle with AB = 3, AC = 8, BC = 7 and let M and N be the midpoints of AB and AC, respectively. Point T is selected on side BC so that AT = T C. The circumcircles of triangles BAT , M AN intersect at D. Compute DC.",
+  "clause_ledger": [
+    {"source": "triangle side lengths", "dsl": "A=(0,0), B=(3,0), C=(4,4sqrt(3))", "kind": "construction"},
+    {"source": "M,N midpoints", "dsl": "M=Midpoint(A,B), N=Midpoint(A,C)", "kind": "construction"},
+    {"source": "T on BC with AT=TC", "dsl": "T is an affine point on BC with direct equality", "kind": "construction/constraint"},
+    {"source": "circumcircles BAT and MAN meet at D", "dsl": "D=Intersect(Circumcircle(B,A,T),Circumcircle(M,A,N),exclude=A)", "kind": "construction"},
+    {"source": "DC", "dsl": "Distance(D,C)", "kind": "answer"}
+  ],
+  "variables": {"names": ["t"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(3,0)"},
+    {"name": "C", "expr": "Point(4,4*sqrt(3))"},
+    {"name": "M", "expr": "Midpoint(A,B)"},
+    {"name": "N", "expr": "Midpoint(A,C)"},
+    {"name": "T", "expr": "Point(3+t,4*sqrt(3)*t)"},
+    {"name": "Gamma1", "expr": "Circumcircle(B,A,T)"},
+    {"name": "Gamma2", "expr": "Circumcircle(M,A,N)"},
+    {"name": "D", "expr": "Intersect(Gamma1,Gamma2,exclude=A)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 3},
+    {"def": "Distance(A,C)", "value": 8},
+    {"def": "Distance(B,C)", "value": 7},
+    {"def": "Distance(A,T)", "value": "Distance(T,C)"}
+  ],
+  "guards": ["AssumeGt(t,0)", "AssumeLt(t,1)", "AssumeGt(Distance(D,C),0)"],
+  "answer": "Distance(D,C)",
+  "post_process": ""
+}

@@ -1,0 +1,39 @@
+{
+  "id": "HMMT-2019-FEB-GEO-10",
+  "task": "solve",
+  "source_statement": "In triangle ABC, AB = 13, BC = 14, CA = 15. Squares ABB1 A2 , BCC1 B2 , CAA1 C2 are constructed outside the triangle. Squares A1 A2 A3 A4 , B1 B2 B3 B4 , C1 C2 C3 C4 are constructed outside the hexagon A1 A2 B1 B2 C1 C2 . Squares A3 B4 B5 A6 , B3 C4 C5 B6 , C3 A4 A5 C6 are constructed outside the hexagon A4 A3 B4 B3 C4 C3 . Find the area of the hexagon A5 A6 B5 B6 C5 C6 .",
+  "clause_ledger": [
+    {"source": "triangle ABC sides 13,14,15", "dsl": "fix the rigid-motion gauge A=(0,0), B=(13,0), C=(99/13,168/13); these coordinates are exactly the unique positive-orientation 13-14-15 triangle", "kind": "construction/constraint"},
+    {"source": "nine named squares constructed outside the stated polygons", "dsl": "each square is constructed from the preceding edge by the clockwise 90-degree rotation, which is the outside branch for the explicitly listed counterclockwise polygons; all original equal-side/perpendicular constraints are retained", "kind": "construction/constraint/guard"},
+    {"source": "area hexagon A5A6B5B6C5C6", "dsl": "Area(A5,A6,B5,B6,C5,C6)", "kind": "answer"}
+  ],
+  "variables": {"names": []},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"}, {"name": "B", "expr": "Point(13,0)"}, {"name": "C", "expr": "Point(99/13,168/13)"},
+    {"name": "B1", "expr": "Point(B.x+(B.y-A.y),B.y-(B.x-A.x))"}, {"name": "A2", "expr": "Point(A.x+(B.y-A.y),A.y-(B.x-A.x))"},
+    {"name": "C1", "expr": "Point(C.x+(C.y-B.y),C.y-(C.x-B.x))"}, {"name": "B2", "expr": "Point(B.x+(C.y-B.y),B.y-(C.x-B.x))"},
+    {"name": "A1", "expr": "Point(A.x+(A.y-C.y),A.y-(A.x-C.x))"}, {"name": "C2", "expr": "Point(C.x+(A.y-C.y),C.y-(A.x-C.x))"},
+    {"name": "A3", "expr": "Point(A2.x+(A2.y-A1.y),A2.y-(A2.x-A1.x))"}, {"name": "A4", "expr": "Point(A1.x+(A2.y-A1.y),A1.y-(A2.x-A1.x))"},
+    {"name": "B3", "expr": "Point(B2.x+(B2.y-B1.y),B2.y-(B2.x-B1.x))"}, {"name": "B4", "expr": "Point(B1.x+(B2.y-B1.y),B1.y-(B2.x-B1.x))"},
+    {"name": "C3", "expr": "Point(C2.x+(C2.y-C1.y),C2.y-(C2.x-C1.x))"}, {"name": "C4", "expr": "Point(C1.x+(C2.y-C1.y),C1.y-(C2.x-C1.x))"},
+    {"name": "B5", "expr": "Point(B4.x+(B4.y-A3.y),B4.y-(B4.x-A3.x))"}, {"name": "A6", "expr": "Point(A3.x+(B4.y-A3.y),A3.y-(B4.x-A3.x))"},
+    {"name": "C5", "expr": "Point(C4.x+(C4.y-B3.y),C4.y-(C4.x-B3.x))"}, {"name": "B6", "expr": "Point(B3.x+(C4.y-B3.y),B3.y-(C4.x-B3.x))"},
+    {"name": "A5", "expr": "Point(A4.x+(A4.y-C3.y),A4.y-(A4.x-C3.x))"}, {"name": "C6", "expr": "Point(C3.x+(A4.y-C3.y),C3.y-(A4.x-C3.x))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 13}, {"def": "Distance(B,C)", "value": 14}, {"def": "Distance(C,A)", "value": 15},
+    {"def": "Distance(A,B)", "value": "Distance(B,B1)"}, {"def": "Distance(B,B1)", "value": "Distance(B1,A2)"}, {"def": "Distance(B1,A2)", "value": "Distance(A2,A)"}, {"def": "Perpendicular(Line(A,B),Line(B,B1))", "value": 0},
+    {"def": "Distance(B,C)", "value": "Distance(C,C1)"}, {"def": "Distance(C,C1)", "value": "Distance(C1,B2)"}, {"def": "Distance(C1,B2)", "value": "Distance(B2,B)"}, {"def": "Perpendicular(Line(B,C),Line(C,C1))", "value": 0},
+    {"def": "Distance(C,A)", "value": "Distance(A,A1)"}, {"def": "Distance(A,A1)", "value": "Distance(A1,C2)"}, {"def": "Distance(A1,C2)", "value": "Distance(C2,C)"}, {"def": "Perpendicular(Line(C,A),Line(A,A1))", "value": 0},
+    {"def": "Distance(A1,A2)", "value": "Distance(A2,A3)"}, {"def": "Distance(A2,A3)", "value": "Distance(A3,A4)"}, {"def": "Distance(A3,A4)", "value": "Distance(A4,A1)"}, {"def": "Perpendicular(Line(A1,A2),Line(A2,A3))", "value": 0},
+    {"def": "Distance(B1,B2)", "value": "Distance(B2,B3)"}, {"def": "Distance(B2,B3)", "value": "Distance(B3,B4)"}, {"def": "Distance(B3,B4)", "value": "Distance(B4,B1)"}, {"def": "Perpendicular(Line(B1,B2),Line(B2,B3))", "value": 0},
+    {"def": "Distance(C1,C2)", "value": "Distance(C2,C3)"}, {"def": "Distance(C2,C3)", "value": "Distance(C3,C4)"}, {"def": "Distance(C3,C4)", "value": "Distance(C4,C1)"}, {"def": "Perpendicular(Line(C1,C2),Line(C2,C3))", "value": 0},
+    {"def": "Distance(A3,B4)", "value": "Distance(B4,B5)"}, {"def": "Distance(B4,B5)", "value": "Distance(B5,A6)"}, {"def": "Distance(B5,A6)", "value": "Distance(A6,A3)"}, {"def": "Perpendicular(Line(A3,B4),Line(B4,B5))", "value": 0},
+    {"def": "Distance(B3,C4)", "value": "Distance(C4,C5)"}, {"def": "Distance(C4,C5)", "value": "Distance(C5,B6)"}, {"def": "Distance(C5,B6)", "value": "Distance(B6,B3)"}, {"def": "Perpendicular(Line(B3,C4),Line(C4,C5))", "value": 0},
+    {"def": "Distance(C3,A4)", "value": "Distance(A4,A5)"}, {"def": "Distance(A4,A5)", "value": "Distance(A5,C6)"}, {"def": "Distance(A5,C6)", "value": "Distance(C6,C3)"}, {"def": "Perpendicular(Line(C3,A4),Line(A4,A5))", "value": 0}
+  ],
+  "guards": ["AssumeGt(C.y,0)", "AssumeConvex([A,B,C])", "AssumeConvex([A,B,B1,A2])", "AssumeConvex([B,C,C1,B2])", "AssumeConvex([C,A,A1,C2])", "AssumeConvex([A1,A2,A3,A4])", "AssumeConvex([B1,B2,B3,B4])", "AssumeConvex([C1,C2,C3,C4])", "AssumeConvex([A3,B4,B5,A6])", "AssumeConvex([B3,C4,C5,B6])", "AssumeConvex([C3,A4,A5,C6])"],
+  "answer": "Area(A5,A6,B5,B6,C5,C6)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

@@ -1,0 +1,45 @@
+{
+  "id": "AIME-2016-I-15",
+  "task": "solve",
+  "source_statement": "Circles $\\omega_1$ and $\\omega_2$ intersect at points $X$ and $Y$ . Line $\\ell$ is tangent to $\\omega_1$ and $\\omega_2$ at $A$ and $B$ , respectively, with line $AB$ closer to point $X$ than to $Y$ . Circle $\\omega$ passes through $A$ and $B$ intersecting $\\omega_1$ again at $D \\neq A$ and intersecting $\\omega_2$ again at $C \\neq B$ . The three points $C$ , $Y$ , $D$ are collinear, $XC = 67$ , $XY = 47$ , and $XD = 37$ . Find $AB^2$ .",
+  "clause_ledger": [
+    {"source": "omega1,omega2 intersect X,Y; common tangent l at A,B", "dsl": "tangent-line gauge y=0 with circles centered above A/B and X,Y on both circles", "kind": "construction/constraint"},
+    {"source": "omega through A,B and D; C is second intersection with omega2; C,Y,D collinear", "dsl": "X is the intersection of omega1,omega2 nearest the chord midpoint M (the source branch closer to AB), Y is the other intersection; C is the second intersection of omega and omega2 excluding B, with C,Y,D collinear; D remains the source point constrained by XD=37 and the circle incidences; the source non-equalities D!=A and C!=B are explicit guards", "kind": "construction/constraint/guard"},
+    {"source": "XC=67, XY=47, XD=37", "dsl": "direct distance constraints", "kind": "constraint"},
+    {"source": "AB^2", "dsl": "Distance(A,B)^2", "kind": "answer"}
+  ],
+  "variables": {"names": ["b", "r1", "r2", "dx", "dy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(b,0)"},
+    {"name": "O1", "expr": "Point(0,r1)"},
+    {"name": "O2", "expr": "Point(b,r2)"},
+    {"name": "omega1", "expr": "Circle(O1,r1)"},
+    {"name": "omega2", "expr": "Circle(O2,r2)"},
+    {"name": "M", "expr": "Midpoint(A,B)"},
+    {"name": "X", "expr": "Intersect(omega1,omega2,near=M)"},
+    {"name": "Y", "expr": "Intersect(omega1,omega2,exclude=X)"},
+    {"name": "D", "expr": "Point(dx,dy)"},
+    {"name": "omega", "expr": "Circumcircle(A,B,D)"},
+    {"name": "C", "expr": "Intersect(omega,omega2,exclude=B)"}
+  ],
+  "constraints": [
+    {"def": "OnCircle(X,omega1)", "value": 0},
+    {"def": "OnCircle(X,omega2)", "value": 0},
+    {"def": "OnCircle(Y,omega1)", "value": 0},
+    {"def": "OnCircle(Y,omega2)", "value": 0},
+    {"def": "IsTangent(Line(A,B),omega1)", "value": 0},
+    {"def": "IsTangent(Line(A,B),omega2)", "value": 0},
+    {"def": "OnCircle(D,omega1)", "value": 0},
+    {"def": "OnCircle(C,omega2)", "value": 0},
+    {"def": "OnCircle(C,omega)", "value": 0},
+    {"def": "OnLine(C,Y,D)", "value": 0},
+    {"def": "Distance(X,C)", "value": 67},
+    {"def": "Distance(X,Y)", "value": 47},
+    {"def": "Distance(X,D)", "value": 37}
+  ],
+  "guards": ["AssumeGt(b,0)", "AssumeGt(r1,0)", "AssumeGt(r2,0)", "AssumeLt(Distance(X,Line(A,B)),Distance(Y,Line(A,B)))", "AssumeNe(Distance(D,A),0)", "AssumeNe(Distance(C,B),0)"],
+  "answer": "Distance(A,B)*Distance(A,B)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

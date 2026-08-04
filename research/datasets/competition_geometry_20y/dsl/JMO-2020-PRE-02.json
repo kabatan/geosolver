@@ -1,0 +1,87 @@
+{
+  "id": "JMO-2020-PRE-02",
+  "task": "solve",
+  "source_statement": "一辺の長さが1の正六角形ABCDEFがあり，線分ABの中点をGとする。正六角形の内部に点Hをとったところ，三角形CGHは正三角形となった。このとき三角形EFHの面積を求めよ。",
+  "clause_ledger": [
+    {
+      "source": "regular hexagon side 1",
+      "dsl": "fixed six-vertex coordinates in source order",
+      "kind": "construction"
+    },
+    {
+      "source": "G midpoint of AB",
+      "dsl": "direct Midpoint construction",
+      "kind": "construction"
+    },
+    {
+      "source": "CGH equilateral and H inside",
+      "dsl": "three equal side distances and interior branch guards",
+      "kind": "constraint/guard"
+    },
+    {
+      "source": "area EFH",
+      "dsl": "Area(E,F,H)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "hx",
+      "hy"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(1,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(1/2,sqrt(3)/2)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(-1/2,sqrt(3)/2)"
+    },
+    {
+      "name": "D",
+      "expr": "Point(-1,0)"
+    },
+    {
+      "name": "E",
+      "expr": "Point(-1/2,-sqrt(3)/2)"
+    },
+    {
+      "name": "F",
+      "expr": "Point(1/2,-sqrt(3)/2)"
+    },
+    {
+      "name": "G",
+      "expr": "Midpoint(A,B)"
+    },
+    {
+      "name": "H",
+      "expr": "Point(hx,hy)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(C,G)",
+      "value": "Distance(G,H)"
+    },
+    {
+      "def": "Distance(G,H)",
+      "value": "Distance(H,C)"
+    }
+  ],
+  "guards": [
+    "AssumeGt(Area(A,B,H),0)",
+    "AssumeGt(Area(B,C,H),0)",
+    "AssumeGt(Area(C,D,H),0)",
+    "AssumeGt(Area(D,E,H),0)",
+    "AssumeGt(Area(E,F,H),0)",
+    "AssumeGt(Area(F,A,H),0)"
+  ],
+  "answer": "Area(E,F,H)",
+  "post_process": ""
+}

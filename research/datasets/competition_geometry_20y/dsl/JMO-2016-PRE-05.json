@@ -1,0 +1,96 @@
+{
+  "id": "JMO-2016-PRE-05",
+  "task": "solve",
+  "source_statement": "四角形ABCDはAC=20，AD=16をみたす。線分CD上に点Pをとると，三角形ABPと三角形ACDが合同となった。三角形APDの面積が28のとき，三角形BCPの面積を求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "quadrilateral and AC,AD",
+      "dsl": "variable coordinate points with direct distances",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "triangles ABP and ACD congruent",
+      "dsl": "the three corresponding side equalities AB=AC, AP=AD, BP=CD",
+      "kind": "constraint"
+    },
+    {
+      "source": "P on CD and area APD=28",
+      "dsl": "Collinear(C,P,D) and direct Area constraint",
+      "kind": "constraint"
+    },
+    {
+      "source": "area BCP",
+      "dsl": "Area(B,C,P)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "bx",
+      "by",
+      "cx",
+      "cy",
+      "px",
+      "py"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "D",
+      "expr": "Point(16,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(bx,by)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(cx,cy)"
+    },
+    {
+      "name": "P",
+      "expr": "Point(px,py)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(A,C)",
+      "value": 20
+    },
+    {
+      "def": "Distance(A,D)",
+      "value": 16
+    },
+    {
+      "def": "Distance(A,B)",
+      "value": "Distance(A,C)"
+    },
+    {
+      "def": "Distance(A,P)",
+      "value": "Distance(A,D)"
+    },
+    {
+      "def": "Distance(B,P)",
+      "value": "Distance(C,D)"
+    },
+    {
+      "def": "Collinear(C,P,D)",
+      "value": 0
+    },
+    {
+      "def": "Area(A,P,D)",
+      "value": 28
+    }
+  ],
+  "guards": [
+    "AssumeGt(by,0)",
+    "AssumeGt(cy,0)",
+    "AssumeGt(py,0)"
+  ],
+  "answer": "Area(B,C,P)",
+  "post_process": ""
+}

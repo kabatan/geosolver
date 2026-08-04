@@ -1,0 +1,29 @@
+{
+  "id": "HMMT-2007-FEB-GEO-09",
+  "task": "solve",
+  "source_statement": "[7] 4ABC is right angled at A. D is a point on AB such that CD = 1. AE is the altitude from A to BC. If BD = BE = 1, what is the length of AD?",
+  "clause_ledger": [
+    {"source": "ABC right angled at A", "dsl": "Angle(B,A,C)=pi/2", "kind": "constraint"},
+    {"source": "D on AB and CD=1, BD=1", "dsl": "D=Point(d,0), B=Point(d+1,0), direct CD/BD constraints", "kind": "construction/constraint"},
+    {"source": "AE is altitude to BC", "dsl": "E=FootOfPerpendicular(A,Line(B,C))", "kind": "construction"},
+    {"source": "BE=1", "dsl": "Distance(B,E)=1", "kind": "constraint"},
+    {"source": "AD", "dsl": "Distance(A,D)", "kind": "answer"}
+  ],
+  "variables": {"names": ["d", "c"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0, 0)"},
+    {"name": "D", "expr": "Point(d, 0)"},
+    {"name": "B", "expr": "Point(d + 1, 0)"},
+    {"name": "C", "expr": "Point(0, c)"},
+    {"name": "E", "expr": "FootOfPerpendicular(A, Line(B,C))"}
+  ],
+  "constraints": [
+    {"def": "Angle(B,A,C)", "value": "pi/2"},
+    {"def": "Distance(B,D)", "value": 1},
+    {"def": "Distance(C,D)", "value": 1},
+    {"def": "Distance(B,E)", "value": 1}
+  ],
+  "guards": ["AssumeGt(d,0)", "AssumeGt(c,0)", "AssumeGt(Distance(C,E),0)"],
+  "answer": "Distance(A,D)",
+  "post_process": ""
+}

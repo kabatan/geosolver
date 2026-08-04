@@ -1,0 +1,40 @@
+{
+  "id": "JMO-2022-PRE-04",
+  "task": "solve",
+  "source_statement": "凸四角形ABCDとその内部の点Pがあり，直線APと直線AD，直線BPと直線CDはそれぞれ直交する。AB=7，AP=3，BP=6，AD=5，CD=10のとき，三角形ABCの面積を求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {"source": "convex quadrilateral ABCD and P inside", "dsl": "labeled points with four positive subtriangle-area guards", "kind": "construction/guard"},
+    {"source": "AP orthogonal AD", "dsl": "Perpendicular(Line(A,P),Line(A,D))", "kind": "constraint"},
+    {"source": "BP orthogonal CD", "dsl": "Perpendicular(Line(B,P),Line(C,D))", "kind": "constraint"},
+    {"source": "AB=7, AP=3, BP=6, AD=5, CD=10", "dsl": "direct Distance constraints", "kind": "constraint"},
+    {"source": "area of triangle ABC", "dsl": "Area(A,B,C)", "kind": "answer"}
+  ],
+  "variables": {"names": ["Bx", "By", "Cx", "Cy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0, 0)"},
+    {"name": "P", "expr": "Point(3, 0)"},
+    {"name": "D", "expr": "Point(0, 5)"},
+    {"name": "B", "expr": "Point(Bx, By)"},
+    {"name": "C", "expr": "Point(Cx, Cy)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A, B)", "value": 7},
+    {"def": "Distance(A, P)", "value": 3},
+    {"def": "Distance(B, P)", "value": 6},
+    {"def": "Distance(A, D)", "value": 5},
+    {"def": "Distance(C, D)", "value": 10},
+    {"def": "Perpendicular(Line(A, P), Line(A, D))", "value": 0},
+    {"def": "Perpendicular(Line(B, P), Line(C, D))", "value": 0},
+    {"def": "Area(A, B, P) + Area(B, C, P) + Area(C, D, P) + Area(D, A, P)", "value": "Area(A, B, C, D)"}
+  ],
+  "guards": [
+    "AssumeLt(By, 0)",
+    "AssumeGt(Cx, 0)",
+    "AssumeGt(Area(A, B, P), 0)",
+    "AssumeGt(Area(B, C, P), 0)",
+    "AssumeGt(Area(C, D, P), 0)",
+    "AssumeGt(Area(D, A, P), 0)"
+  ],
+  "answer": "Area(A, B, C)",
+  "post_process": ""
+}

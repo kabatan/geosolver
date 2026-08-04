@@ -1,0 +1,89 @@
+{
+  "id": "JMO-2022-PRE-02",
+  "task": "solve",
+  "source_statement": "辺ADと辺BCが平行で，角Bと角Cが鋭角であるような台形ABCDに半径3の円が内接している。AB=7，CD=8のとき台形ABCDの面積を求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "AD parallel BC, AB=7, CD=8",
+      "dsl": "horizontal parallel-base gauge with direct leg distances",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "circle radius 3 tangent to all four sides",
+      "dsl": "center O=(ox,3), Circle(O,3), and distance-to-each-side constraints",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "area ABCD",
+      "dsl": "Area(A,D,C,B)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "a",
+      "d",
+      "b",
+      "ox"
+    ]
+  },
+  "construction": [
+    {
+      "name": "B",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(b,0)"
+    },
+    {
+      "name": "A",
+      "expr": "Point(a,6)"
+    },
+    {
+      "name": "D",
+      "expr": "Point(d,6)"
+    },
+    {
+      "name": "O",
+      "expr": "Point(ox,3)"
+    },
+    {
+      "name": "omega",
+      "expr": "Circle(O,3)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(A,B)",
+      "value": 7
+    },
+    {
+      "def": "Distance(D,C)",
+      "value": 8
+    },
+    {
+      "def": "Distance(O,Line(A,D))",
+      "value": 3
+    },
+    {
+      "def": "Distance(O,Line(A,B))",
+      "value": 3
+    },
+    {
+      "def": "Distance(O,Line(D,C))",
+      "value": 3
+    },
+    {
+      "def": "Distance(O,Line(B,C))",
+      "value": 3
+    }
+  ],
+  "guards": [
+    "AssumeGt(b,0)",
+    "AssumeGt(d-a,0)",
+    "AssumeGt(Area(A,D,C),0)"
+  ],
+  "answer": "Area(A,D,C,B)",
+  "post_process": ""
+}

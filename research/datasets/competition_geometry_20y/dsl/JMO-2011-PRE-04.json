@@ -1,0 +1,80 @@
+{
+  "id": "JMO-2011-PRE-04",
+  "task": "solve",
+  "source_statement": "下の図において，点Oは扇形OABの中心である。AQ=5，BQ=6，OQ=PQであるとき，この扇形の半径の長さを求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "sector center and chord AB with Q on AB",
+      "dsl": "AB is gauged as a horizontal chord with Q at the stated 5:6 division and O on its perpendicular bisector",
+      "kind": "construction"
+    },
+    {
+      "source": "OQ=PQ and P on the circular arc",
+      "dsl": "P is the reflection of O across Q; OnCircle(P,Circle(O,R))",
+      "kind": "constraint/construction"
+    },
+    {
+      "source": "sector radius",
+      "dsl": "Distance(O,A)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "h"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "Q",
+      "expr": "Point(5,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(11,0)"
+    },
+    {
+      "name": "O",
+      "expr": "Point(5,h)"
+    },
+    {
+      "name": "P",
+      "expr": "Point(5,-h)"
+    },
+    {
+      "name": "Gamma",
+      "expr": "Circle(O,Distance(O,A))"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(A,Q)",
+      "value": 5
+    },
+    {
+      "def": "Distance(Q,B)",
+      "value": 6
+    },
+    {
+      "def": "Distance(O,Q)",
+      "value": "Distance(P,Q)"
+    },
+    {
+      "def": "OnCircle(P,Gamma)",
+      "value": 0
+    },
+    {
+      "def": "Collinear(O,Q,P)",
+      "value": 0
+    }
+  ],
+  "guards": [
+    "AssumeGt(h,0)"
+  ],
+  "answer": "Distance(O,A)",
+  "post_process": ""
+}

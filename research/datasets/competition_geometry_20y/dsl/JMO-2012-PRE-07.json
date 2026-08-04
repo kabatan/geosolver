@@ -1,0 +1,96 @@
+{
+  "id": "JMO-2012-PRE-07",
+  "task": "solve",
+  "source_statement": "三角形ABCの外心をOとする。線分AB上に点D，線分AC上に点Eをとると，線分DEの中点がOと一致した。AD=8，BD=3，AO=7のとき，CEを求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "D on AB with AD=8,BD=3",
+      "dsl": "A=(0,0), D=(8,0), B=(11,0)",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "E on AC and midpoint DE is O",
+      "dsl": "E,C variables with O=Midpoint(D,E), Collinear(A,E,C)",
+      "kind": "construction"
+    },
+    {
+      "source": "O circumcenter and AO=7",
+      "dsl": "OA=OB=OC=7",
+      "kind": "constraint"
+    },
+    {
+      "source": "CE",
+      "dsl": "Distance(C,E)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "ex",
+      "ey",
+      "cx",
+      "cy"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "D",
+      "expr": "Point(8,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(11,0)"
+    },
+    {
+      "name": "E",
+      "expr": "Point(ex,ey)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(cx,cy)"
+    },
+    {
+      "name": "O",
+      "expr": "Midpoint(D,E)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(A,D)",
+      "value": 8
+    },
+    {
+      "def": "Distance(D,B)",
+      "value": 3
+    },
+    {
+      "def": "Distance(A,O)",
+      "value": 7
+    },
+    {
+      "def": "Distance(B,O)",
+      "value": 7
+    },
+    {
+      "def": "Distance(C,O)",
+      "value": 7
+    },
+    {
+      "def": "Collinear(A,E,C)",
+      "value": 0
+    }
+  ],
+  "guards": [
+    "AssumeGt(ey,0)",
+    "AssumeGt(cy,0)",
+    "AssumeGt(ex,0)",
+    "AssumeLt(ex,cx)",
+    "AssumeLt(ey,cy)"
+  ],
+  "answer": "Distance(C,E)",
+  "post_process": ""
+}

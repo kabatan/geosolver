@@ -1,0 +1,18 @@
+{
+  "id": "HMMT-2008-FEB-GEO-05",
+  "task": "solve",
+  "source_statement": "[5] A piece of paper is folded in half. A second fold is made at an angle φ (0◦ < φ < 90◦ ) to the first, and a cut is made as shown below. Á When the piece of paper is unfolded, the resulting hole is a polygon. Let O be one of its vertices. Suppose that all the other vertices of the hole lie on a circle centered at O, and also that ∠XOY = 144◦ , where X and Y are the the vertices of the hole adjacent to O. Find the value(s) of φ (in degrees).",
+  "clause_ledger": [
+    {"source": "paper folds and cut as shown", "dsl": "the source diagram is retained as an explicit figure-dependent clause; no fold line or cut endpoint is invented", "kind": "source_only"},
+    {"source": "all other hole vertices lie on circle centered at O", "dsl": "figure-dependent polygon/circle incidence, retained verbatim", "kind": "source_only"},
+    {"source": "angle XOY=144 degrees", "dsl": "angle constraint after the figure-dependent vertices are named", "kind": "constraint"},
+    {"source": "find phi", "dsl": "phi", "kind": "answer"}
+  ],
+  "variables": {"names": ["phi"]},
+  "construction": [],
+  "constraints": [],
+  "guards": ["AssumeGt(phi,0)", "AssumeLt(phi,pi/2)"],
+  "answer": "phi",
+  "solver_coverage": "reference_only_figure_clause",
+  "post_process": ""
+}

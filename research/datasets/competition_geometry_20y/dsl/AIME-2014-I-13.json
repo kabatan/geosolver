@@ -1,0 +1,40 @@
+{
+  "id": "AIME-2014-I-13",
+  "task": "solve",
+  "source_statement": "On square $ABCD$ , points $E,F,G$ , and $H$ lie on sides $\\overline{AB},\\overline{BC},\\overline{CD},$ and $\\overline{DA},$ respectively, so that $\\overline{EG} \\perp \\overline{FH}$ and $EG=FH = 34$ . Segments $\\overline{EG}$ and $\\overline{FH}$ intersect at a point $P$ , and the areas of the quadrilaterals $AEPH, BFPE, CGPF,$ and $DHPG$ are in the ratio $269:275:405:411.$ Find the area of square $ABCD$ . [asy] pair A = (0,sqrt(850)); pair B = (0,0); pair C = (sqrt(850),0); pair D = (sqrt(850),sqrt(850)); draw(A--B--C--D--cycle); dotfactor = 3; dot(\"$A$\",A,dir(135)); dot(\"$B$\",B,dir(215)); dot(\"$C$\",C,dir(305)); dot(\"$D$\",D,dir(45)); pair H = ((2sqrt(850)-sqrt(306))/6,sqrt(850)); pair F = ((2sqrt(850)+sqrt(306)+7)/6,0); dot(\"$H$\",H,dir(90)); dot(\"$F$\",F,dir(270)); draw(H--F); pair E = (0,(sqrt(850)-6)/2); pair G = (sqrt(850),(sqrt(850)+sqrt(100))/2); dot(\"$E$\",E,dir(180)); dot(\"$G$\",G,dir(0)); draw(E--G); pair P = extension(H,F,E,G); dot(\"$P$\",P,dir(60)); label(\"$w$\", intersectionpoint( A--P, E--H )); label(\"$x$\", intersectionpoint( B--P, E--F )); label(\"$y$\", intersectionpoint( C--P, G--F )); label(\"$z$\", intersectionpoint( D--P, G--H ));[/asy]",
+  "clause_ledger": [
+    {"source": "square ABCD with E,F,G,H on successive sides", "dsl": "coordinate square and four side points", "kind": "construction/constraint"},
+    {"source": "EG perpendicular FH and EG=FH=34", "dsl": "direct perpendicular and distance constraints", "kind": "constraint"},
+    {"source": "P=EG intersect FH", "dsl": "P=Intersect(Line(E,G),Line(F,H))", "kind": "construction"},
+    {"source": "four quadrilateral areas ratio 269:275:405:411", "dsl": "four area constraints with common scale t", "kind": "constraint"},
+    {"source": "area square", "dsl": "s*s", "kind": "answer"}
+  ],
+  "variables": {"names": ["s", "e", "f", "g", "h", "t"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(s,0)"},
+    {"name": "C", "expr": "Point(s,s)"},
+    {"name": "D", "expr": "Point(0,s)"},
+    {"name": "E", "expr": "Point(e,0)"},
+    {"name": "F", "expr": "Point(s,f)"},
+    {"name": "G", "expr": "Point(g,s)"},
+    {"name": "H", "expr": "Point(0,h)"},
+    {"name": "P", "expr": "Intersect(Line(E,G),Line(F,H))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": "Distance(B,C)"},
+    {"def": "Perpendicular(Line(E,G),Line(F,H))", "value": 0},
+    {"def": "Distance(E,G)", "value": 34},
+    {"def": "Distance(F,H)", "value": 34},
+    {"def": "Area(A,E,P,H)", "value": "269*t"},
+    {"def": "Area(B,F,P,E)", "value": "275*t"},
+    {"def": "Area(C,G,P,F)", "value": "405*t"},
+    {"def": "Area(D,H,P,G)", "value": "411*t"},
+    {"def": "OnSegment(P,E,G)", "value": 0},
+    {"def": "OnSegment(P,F,H)", "value": 0}
+  ],
+  "guards": ["AssumeGt(s,0)", "AssumeGt(t,0)", "AssumeGt(e,0)", "AssumeLt(e,s)", "AssumeGt(f,0)", "AssumeLt(f,s)", "AssumeGt(g,0)", "AssumeLt(g,s)", "AssumeGt(h,0)", "AssumeLt(h,s)"],
+  "answer": "s*s",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

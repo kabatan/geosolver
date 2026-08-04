@@ -1,0 +1,27 @@
+{
+  "id": "JMO-2007-PRE-01",
+  "task": "solve",
+  "source_statement": "凸四角形ABCDは，AB=3，BC=4，CD=5，DA=6，∠ABC=90°をみたす。ABCDの面積を求めよ。",
+  "clause_ledger": [
+    {"source": "convex quadrilateral and side lengths", "dsl": "A,B,C,D coordinate construction with direct side distances and convexity guards", "kind": "construction/constraint"},
+    {"source": "angle ABC=90 degrees", "dsl": "Perpendicular(Line(A,B),Line(B,C))", "kind": "constraint"},
+    {"source": "area ABCD", "dsl": "Area(A,B,C,D)", "kind": "answer"}
+  ],
+  "variables": {"names": ["dx", "dy"]},
+  "construction": [
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "A", "expr": "Point(3,0)"},
+    {"name": "C", "expr": "Point(0,4)"},
+    {"name": "D", "expr": "Point(dx,dy)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 3},
+    {"def": "Distance(B,C)", "value": 4},
+    {"def": "Distance(C,D)", "value": 5},
+    {"def": "Distance(D,A)", "value": 6},
+    {"def": "Perpendicular(Line(A,B),Line(B,C))", "value": 0}
+  ],
+  "guards": ["AssumeGt(dy,0)", "AssumeGt(dx,0)", "AssumeConvex([A,B,C,D])"],
+  "answer": "Area(A,B,C,D)",
+  "post_process": ""
+}

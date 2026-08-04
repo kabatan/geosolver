@@ -1,0 +1,41 @@
+{
+  "id": "AIME-2010-II-15",
+  "task": "solve",
+  "source_statement": "In triangle $ABC$ , $AC=13$ , $BC=14$ , and $AB=15$ . Points $M$ and $D$ lie on $AC$ with $AM=MC$ and $\\angle ABD = \\angle DBC$ . Points $N$ and $E$ lie on $AB$ with $AN=NB$ and $\\angle ACE = \\angle ECB$ . Let $P$ be the point, other than $A$ , of intersection of the circumcircles of $\\triangle AMN$ and $\\triangle ADE$ . Ray $AP$ meets $BC$ at $Q$ . The ratio $\\frac{BQ}{CQ}$ can be written in the form $\\frac{m}{n}$ , where $m$ and $n$ are relatively prime positive integers. Find $m-n$ .",
+  "clause_ledger": [
+    {"source": "triangle ABC sides 13,14,15; M midpoint AC; D angle bisector from B", "dsl": "coordinate triangle, midpoint and AngleBisector constructions", "kind": "construction/constraint"},
+    {"source": "N midpoint AB; E angle bisector from C", "dsl": "direct Midpoint/AngleBisector constructions", "kind": "construction"},
+    {"source": "P is other intersection of circumcircles AMN and ADE; Q=AP intersect BC", "dsl": "two Circumcircle constructions and intersections", "kind": "construction"},
+    {"source": "BQ/CQ=m/n and m-n", "dsl": "Distance(B,Q)/Distance(Q,C) with fraction-difference post-process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["cx", "cy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(15,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "M", "expr": "Midpoint(A,C)"},
+    {"name": "N", "expr": "Midpoint(A,B)"},
+    {"name": "D", "expr": "Intersect(AngleBisector(A,B,C),Line(A,C))"},
+    {"name": "E", "expr": "Intersect(AngleBisector(A,C,B),Line(A,B))"},
+    {"name": "g1", "expr": "Circumcircle(A,M,N)"},
+    {"name": "g2", "expr": "Circumcircle(A,D,E)"},
+    {"name": "P", "expr": "Intersect(g1,g2,exclude=A)"},
+    {"name": "Q", "expr": "Intersect(Line(A,P),Line(B,C))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,C)", "value": 13},
+    {"def": "Distance(B,C)", "value": 14},
+    {"def": "OnLine(D,A,C)", "value": 0},
+    {"def": "OnSegment(D,A,C)", "value": 0},
+    {"def": "OnLine(E,A,B)", "value": 0},
+    {"def": "OnSegment(E,A,B)", "value": 0},
+    {"def": "OnCircle(P,g1)", "value": 0},
+    {"def": "OnCircle(P,g2)", "value": 0},
+    {"def": "OnLine(Q,B,C)", "value": 0},
+    {"def": "OnSegment(Q,B,C)", "value": 0}
+  ],
+  "guards": ["AssumeGt(cy,0)", "AssumeGt(Dot(Vector(A,P),Vector(A,Q)),0)", "AssumeGt(Distance(B,Q),0)", "AssumeGt(Distance(Q,C),0)"],
+  "answer": "Distance(B,Q)/Distance(Q,C)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator - f.denominator"
+}

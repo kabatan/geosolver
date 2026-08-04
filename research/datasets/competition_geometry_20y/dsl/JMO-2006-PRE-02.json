@@ -1,0 +1,25 @@
+{
+  "id": "JMO-2006-PRE-02",
+  "task": "solve",
+  "source_statement": "正三角形の内部に点Pがあり，Pから各辺に下ろした垂線の長さはそれぞれ1, 2, 3であるとする。この正三角形の一辺の長さを求めよ。",
+  "clause_ledger": [
+    {"source": "P is inside an equilateral triangle", "dsl": "equilateral coordinate gauge with positive interior guards", "kind": "construction/guard"},
+    {"source": "perpendicular lengths are 1, 2, 3", "dsl": "direct point-to-line Distance constraints for the three named sides", "kind": "constraint"},
+    {"source": "length of one edge", "dsl": "Distance(A,B)", "kind": "answer"}
+  ],
+  "variables": {"names": ["s", "px", "py"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(s,0)"},
+    {"name": "C", "expr": "Point(s/2,sqrt(3)*s/2)"},
+    {"name": "P", "expr": "Point(px,py)"}
+  ],
+  "constraints": [
+    {"def": "Distance(P,Line(A,B))", "value": 1},
+    {"def": "Distance(P,Line(A,C))", "value": 2},
+    {"def": "Distance(P,Line(B,C))", "value": 3}
+  ],
+  "guards": ["AssumeGt(s,0)", "AssumeGt(py,0)", "AssumeGt(px,py/sqrt(3))", "AssumeLt(px,s-py/sqrt(3))"],
+  "answer": "Distance(A,B)",
+  "post_process": ""
+}

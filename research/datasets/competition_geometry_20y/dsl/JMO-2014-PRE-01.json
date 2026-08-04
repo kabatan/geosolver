@@ -1,0 +1,101 @@
+{
+  "id": "JMO-2014-PRE-01",
+  "task": "solve",
+  "source_statement": "円C1が円C2に点Aで内接している。円C2の中心を点Oとする。円C1上に点Pがあり，Pでの円C1の接線はOを通っている。半直線OPと円C2の交点をQとし，点Aを通る円C1の接線と直線OPの交点をRとする。円C2の半径が9，PQ=QRのとき，線分OPの長さを求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "two tangent circles and radius 9",
+      "dsl": "O=(0,0), A=(0,9), C1 center on OA with variable radius r",
+      "kind": "construction"
+    },
+    {
+      "source": "P tangent condition and Q,R constructions",
+      "dsl": "P,Q,R variables with OnCircle/line/tangent constraints",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "PQ=QR and OP",
+      "dsl": "direct Distance equality and answer",
+      "kind": "constraint/answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "r",
+      "px",
+      "py",
+      "qx",
+      "qy",
+      "rx"
+    ]
+  },
+  "construction": [
+    {
+      "name": "O",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "A",
+      "expr": "Point(0,9)"
+    },
+    {
+      "name": "O1",
+      "expr": "Point(0,9-r)"
+    },
+    {
+      "name": "C1",
+      "expr": "Circle(O1,r)"
+    },
+    {
+      "name": "C2",
+      "expr": "Circle(O,9)"
+    },
+    {
+      "name": "P",
+      "expr": "Point(px,py)"
+    },
+    {
+      "name": "Q",
+      "expr": "Point(qx,qy)"
+    },
+    {
+      "name": "R",
+      "expr": "Point(rx,9)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "OnCircle(P,C1)",
+      "value": 0
+    },
+    {
+      "def": "Distance(O1,Line(O,P))",
+      "value": "r"
+    },
+    {
+      "def": "OnCircle(Q,C2)",
+      "value": 0
+    },
+    {
+      "def": "Collinear(O,P,Q)",
+      "value": 0
+    },
+    {
+      "def": "Collinear(O,P,R)",
+      "value": 0
+    },
+    {
+      "def": "Distance(P,Q)",
+      "value": "Distance(Q,R)"
+    }
+  ],
+  "guards": [
+    "AssumeGt(r,0)",
+    "AssumeLt(r,9)",
+    "AssumeGt(py,0)",
+    "AssumeGt(qy,0)",
+    "AssumeGt(rx,0)"
+  ],
+  "answer": "Distance(O,P)",
+  "post_process": ""
+}

@@ -1,0 +1,45 @@
+{
+  "id": "HMMT-2017-FEB-GEO-05",
+  "task": "solve",
+  "source_statement": "Let ABCD be a quadrilateral with an inscribed circle ω and let P be the intersection of its diagonals AC and BD. Let R1 , R2 , R3 , R4 be the circumradii of triangles AP B, BP C, CP D, DP A respectively. If R1 = 31 and R2 = 24 and R3 = 12, find R4 .",
+  "clause_ledger": [
+    {"source": "quadrilateral with incircle", "dsl": "fix I=(0,0), parameterize the four tangent contact radii, and construct A,B,C,D as intersections of consecutive tangent lines; this is an exact convex tangential-quadrilateral representation", "kind": "construction/constraint"},
+    {"source": "P diagonal intersection", "dsl": "direct Intersect", "kind": "construction"},
+    {"source": "four circumradii and three given values", "dsl": "direct Circumcircle/Radius constraints", "kind": "construction/constraint"},
+    {"source": "R4", "dsl": "Radius(Circumcircle(D,P,A))", "kind": "answer"}
+  ],
+  "variables": {"names": ["r", "t2", "t3", "t4"]},
+  "construction": [
+    {"name": "I", "expr": "Point(0,0)"},
+    {"name": "T1", "expr": "Point(r,0)"},
+    {"name": "T2", "expr": "Point(r*(1-t2*t2)/(1+t2*t2),r*2*t2/(1+t2*t2))"},
+    {"name": "T3", "expr": "Point(r*(1-t3*t3)/(1+t3*t3),r*2*t3/(1+t3*t3))"},
+    {"name": "T4", "expr": "Point(r*(1-t4*t4)/(1+t4*t4),r*2*t4/(1+t4*t4))"},
+    {"name": "l1", "expr": "PerpendicularLine(Line(I,T1),T1)"},
+    {"name": "l2", "expr": "PerpendicularLine(Line(I,T2),T2)"},
+    {"name": "l3", "expr": "PerpendicularLine(Line(I,T3),T3)"},
+    {"name": "l4", "expr": "PerpendicularLine(Line(I,T4),T4)"},
+    {"name": "A", "expr": "Intersect(l4,l1)"},
+    {"name": "B", "expr": "Intersect(l1,l2)"},
+    {"name": "C", "expr": "Intersect(l2,l3)"},
+    {"name": "D", "expr": "Intersect(l3,l4)"},
+    {"name": "omega", "expr": "Circle(I,r)"},
+    {"name": "P", "expr": "Intersect(Line(A,C),Line(B,D))"},
+    {"name": "G1", "expr": "Circumcircle(A,P,B)"},
+    {"name": "G2", "expr": "Circumcircle(B,P,C)"},
+    {"name": "G3", "expr": "Circumcircle(C,P,D)"},
+    {"name": "G4", "expr": "Circumcircle(D,P,A)"}
+  ],
+  "constraints": [
+    {"def": "Distance(I,Line(A,B))", "value": "r"},
+    {"def": "Distance(I,Line(B,C))", "value": "r"},
+    {"def": "Distance(I,Line(C,D))", "value": "r"},
+    {"def": "Distance(I,Line(D,A))", "value": "r"},
+    {"def": "Radius(G1)", "value": 31},
+    {"def": "Radius(G2)", "value": 24},
+    {"def": "Radius(G3)", "value": 12}
+  ],
+  "guards": ["AssumeGt(r,0)", "AssumeConvex([A,B,C,D])"],
+  "answer": "Radius(G4)",
+  "post_process": ""
+}

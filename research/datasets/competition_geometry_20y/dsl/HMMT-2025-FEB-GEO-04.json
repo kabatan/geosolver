@@ -1,0 +1,50 @@
+{
+  "id": "HMMT-2025-FEB-GEO-04",
+  "task": "solve",
+  "source_statement": "A semicircle is inscribed in another semicircle if the smaller semicircle’s diameter is a chord of the larger semicircle, and the smaller semicircle’s arc is tangent to the diameter of the larger semicircle. Semicircle S1 is inscribed in a semicircle S2 , which is inscribed in another semicircle S3 . The radii of S1 and S3 are 1 and 10, respectively, and the diameters of S1 and S3 are parallel. The endpoints of the diameter of S3 are A and B, and S2 ’s arc is tangent to AB at C. Compute AC · CB. S3 S2 S1 A C B",
+  "clause_ledger": [
+    {"source": "S3 radius 10 and diameter endpoints A,B", "dsl": "fixed horizontal diameter A=(0,0), B=(20,0), Gamma3 centered at (10,0)", "kind": "construction"},
+    {"source": "S2 inscribed in S3 and tangent to AB at C", "dsl": "tangency to AB gives O2=(cx,r2); U,V are constructed as the two endpoints of the radius-r2 chord of S3 centered at O2 (the chord direction is perpendicular to O3O2), and the original outer-incidence constraints remain", "kind": "construction/constraint"},
+    {"source": "S1 radius1 inscribed in S2 with diameter parallel to S3", "dsl": "construct U1,V1 as the horizontal diameter endpoints of the radius-1 S1; O1 remains free subject to the original S2-incidence and diameter-tangency constraints", "kind": "construction/constraint"},
+    {"source": "AC*CB", "dsl": "direct product of distances", "kind": "answer"}
+  ],
+  "variables": {"names": ["cx", "r2", "o1x", "o1y"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(20,0)"},
+    {"name": "O3", "expr": "Point(10,0)"},
+    {"name": "S3", "expr": "Circle(O3,10)"},
+    {"name": "C", "expr": "Point(cx,0)"},
+    {"name": "O2", "expr": "Point(cx,r2)"},
+    {"name": "S2", "expr": "Circle(O2,r2)"},
+    {"name": "dx", "expr": "cx-10"},
+    {"name": "dy", "expr": "r2"},
+    {"name": "dn", "expr": "sqrt(dx*dx+dy*dy)"},
+    {"name": "vx", "expr": "-r2*dy/dn"},
+    {"name": "vy", "expr": "r2*dx/dn"},
+    {"name": "U", "expr": "Point(O2.x+vx,O2.y+vy)"},
+    {"name": "V", "expr": "Point(O2.x-vx,O2.y-vy)"},
+    {"name": "O1", "expr": "Point(o1x,o1y)"},
+    {"name": "S1", "expr": "Circle(O1,1)"},
+    {"name": "U1", "expr": "Point(o1x-1,o1y)"},
+    {"name": "V1", "expr": "Point(o1x+1,o1y)"}
+  ],
+  "constraints": [
+    {"def": "Distance(O2,C)", "value": "r2"},
+    {"def": "Distance(O3,U)", "value": 10},
+    {"def": "Distance(O3,V)", "value": 10},
+    {"def": "Distance(U,V)", "value": "2*r2"},
+    {"def": "Collinear(U,O2,V)", "value": 0},
+    {"def": "Distance(O1,U1)", "value": 1},
+    {"def": "Distance(O1,V1)", "value": 1},
+    {"def": "Distance(U1,V1)", "value": 2},
+    {"def": "Parallel(Line(U1,V1),Line(A,B))", "value": 0},
+    {"def": "OnCircle(U1,S2)", "value": 0},
+    {"def": "OnCircle(V1,S2)", "value": 0},
+    {"def": "Distance(O1,Line(U,V))", "value": 1},
+    {"def": "Collinear(U1,O1,V1)", "value": 0}
+  ],
+  "guards": ["AssumeGt(r2,1)", "AssumeGt(cx,0)", "AssumeLt(cx,20)"],
+  "answer": "Distance(A,C)*Distance(C,B)",
+  "post_process": ""
+}

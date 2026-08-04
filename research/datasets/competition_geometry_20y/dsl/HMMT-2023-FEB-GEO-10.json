@@ -1,0 +1,31 @@
+{
+  "id": "HMMT-2023-FEB-GEO-10",
+  "task": "solve",
+  "source_statement": "Triangle ABC has incenter I. Let D be the foot of the perpendicular from A to side BC. Let X be a point such that segment AX is a diameter of the circumcircle of triangle ABC. Given that ID = 2, IA = 3, and IX = 4, compute the inradius of triangle ABC.",
+  "clause_ledger": [
+    {"source": "triangle ABC and incenter I", "dsl": "direct triangle coordinates and I=Incenter(A,B,C)", "kind": "construction"},
+    {"source": "D foot from A to BC", "dsl": "D=FootOfPerpendicular(A,Line(B,C))", "kind": "construction"},
+    {"source": "AX is a diameter of circumcircle ABC", "dsl": "O=Circumcenter(A,B,C) and X=Reflect(A,O), the source antipode construction", "kind": "construction"},
+    {"source": "ID=2, IA=3, IX=4", "dsl": "direct Distance constraints", "kind": "constraint"},
+    {"source": "inradius", "dsl": "Incircle(A,B,C).radius", "kind": "answer"}
+  ],
+  "variables": {"names": ["cx", "ax", "ay"]},
+  "construction": [
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(cx,0)"},
+    {"name": "A", "expr": "Point(ax,ay)"},
+    {"name": "I", "expr": "Incenter(A,B,C)"},
+    {"name": "D", "expr": "FootOfPerpendicular(A,Line(B,C))"},
+    {"name": "O", "expr": "Circumcenter(A,B,C)"},
+    {"name": "X", "expr": "Reflect(A,O)"},
+    {"name": "incircle", "expr": "Incircle(A,B,C)"}
+  ],
+  "constraints": [
+    {"def": "Distance(I,D)", "value": 2},
+    {"def": "Distance(I,A)", "value": 3},
+    {"def": "Distance(I,X)", "value": 4}
+  ],
+  "guards": ["AssumeGt(cx,0)", "AssumeGt(ay,0)", "AssumeNe(Area(A,B,C),0)"],
+  "answer": "incircle.radius",
+  "post_process": ""
+}

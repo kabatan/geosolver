@@ -1,0 +1,30 @@
+{
+  "id": "AIME-2015-II-11",
+  "task": "solve",
+  "source_statement": "The circumcircle of acute $\\triangle ABC$ has center $O$ . The line passing through point $O$ perpendicular to $\\overline{OB}$ intersects lines $AB$ and $BC$ at $P$ and $Q$ , respectively. Also $AB=5$ , $BC=4$ , $BQ=4.5$ , and $BP=\\frac{m}{n}$ , where $m$ and $n$ are relatively prime positive integers. Find $m+n$ .",
+  "clause_ledger": [
+    {"source": "acute triangle ABC with AB=5 and BC=4", "dsl": "A=(0,0), B=(5,0), variable C and direct side constraints", "kind": "construction/constraint"},
+    {"source": "O is circumcenter", "dsl": "direct Circumcenter construction", "kind": "construction"},
+    {"source": "line through O perpendicular to OB meets AB,BC at P,Q", "dsl": "variable point V defines that line; Perpendicular(Line(O,V),Line(O,B)) and direct intersections", "kind": "construction/constraint"},
+    {"source": "BQ=4.5 and asks m+n for BP=m/n", "dsl": "direct Distance(B,Q) and BP answer with fraction postprocess", "kind": "constraint/answer"}
+  ],
+  "variables": {"names": ["cx", "cy", "vx", "vy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(5,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "O", "expr": "Circumcenter(A,B,C)"},
+    {"name": "V", "expr": "Point(vx,vy)"},
+    {"name": "P", "expr": "Intersect(Line(O,V),Line(A,B))"},
+    {"name": "Q", "expr": "Intersect(Line(O,V),Line(B,C))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 5},
+    {"def": "Distance(B,C)", "value": 4},
+    {"def": "Perpendicular(Line(O,V),Line(O,B))", "value": 0},
+    {"def": "Distance(B,Q)", "value": "9/2"}
+  ],
+  "guards": ["AssumeGt(cy,0)", "AssumeGt(Area(A,B,C),0)", "AssumeAcute(A,B,C)"],
+  "answer": "Distance(B,P)",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+}

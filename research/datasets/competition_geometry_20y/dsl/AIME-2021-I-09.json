@@ -1,0 +1,27 @@
+{
+  "id": "AIME-2021-I-09",
+  "task": "solve",
+  "source_statement": "Let $ABCD$ be an isosceles trapezoid with $AD=BC$ and $AB<CD.$ Suppose that the distances from $A$ to the lines $BC,CD,$ and $BD$ are $15,18,$ and $10,$ respectively. Let $K$ be the area of $ABCD.$ Find $\\sqrt2 \\cdot K.$",
+  "clause_ledger": [
+    {"source": "isosceles trapezoid AD=BC and AB<CD", "dsl": "A=(-u,0), B=(u,0), C=(v,h), D=(-v,h), with u<v", "kind": "construction/constraint"},
+    {"source": "distance from A to BC, CD, BD are 15,18,10", "dsl": "three direct Distance(point,line) constraints", "kind": "constraint"},
+    {"source": "K=area of trapezoid", "dsl": "Area(A,B,C,D)", "kind": "answer"},
+    {"source": "sqrt(2)*K", "dsl": "sqrt(2)*Area(A,B,C,D)", "kind": "answer"}
+  ],
+  "variables": {"names": ["u", "v", "h"]},
+  "construction": [
+    {"name": "A", "expr": "Point(-u,0)"},
+    {"name": "B", "expr": "Point(u,0)"},
+    {"name": "C", "expr": "Point(v,h)"},
+    {"name": "D", "expr": "Point(-v,h)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,Line(B,C))", "value": 15},
+    {"def": "Distance(A,Line(C,D))", "value": 18},
+    {"def": "Distance(A,Line(B,D))", "value": 10}
+  ],
+  "guards": ["AssumeGt(u,0)", "AssumeGt(v,0)", "AssumeGt(h,0)", "AssumeGt(v-u,0)"],
+  "answer": "sqrt(2)*Area(A,B,C,D)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

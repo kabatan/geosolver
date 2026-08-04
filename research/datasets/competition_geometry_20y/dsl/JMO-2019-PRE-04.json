@@ -1,0 +1,105 @@
+{
+  "id": "JMO-2019-PRE-04",
+  "task": "solve",
+  "source_statement": "正五角形ABCDEがあり，線分BEと線分ACの交点をFとする。また点Fを通る直線が辺AB，CDとそれぞれG，Hで交わり，BG=4，CH=5が成立つ。このとき線分AGの長さを求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "regular pentagon ABCDE",
+      "dsl": "five vertices on a common circle with successive 2*pi/5 angular positions",
+      "kind": "construction"
+    },
+    {
+      "source": "F=BE∩AC",
+      "dsl": "direct line intersection",
+      "kind": "construction"
+    },
+    {
+      "source": "line through F meets AB,CD at G,H; BG=4,CH=5",
+      "dsl": "variable G,H with line-incidence and distance constraints",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "AG",
+      "dsl": "Distance(A,G)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "r",
+      "gx",
+      "gy",
+      "hx",
+      "hy"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(r*cos(pi/2),r*sin(pi/2))"
+    },
+    {
+      "name": "B",
+      "expr": "Point(r*cos(pi/2+2*pi/5),r*sin(pi/2+2*pi/5))"
+    },
+    {
+      "name": "C",
+      "expr": "Point(r*cos(pi/2+4*pi/5),r*sin(pi/2+4*pi/5))"
+    },
+    {
+      "name": "D",
+      "expr": "Point(r*cos(pi/2+6*pi/5),r*sin(pi/2+6*pi/5))"
+    },
+    {
+      "name": "E",
+      "expr": "Point(r*cos(pi/2+8*pi/5),r*sin(pi/2+8*pi/5))"
+    },
+    {
+      "name": "F",
+      "expr": "Intersect(Line(B,E),Line(A,C))"
+    },
+    {
+      "name": "G",
+      "expr": "Point(gx,gy)"
+    },
+    {
+      "name": "H",
+      "expr": "Point(hx,hy)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Collinear(A,G,B)",
+      "value": 0
+    },
+    {
+      "def": "Collinear(C,H,D)",
+      "value": 0
+    },
+    {
+      "def": "Collinear(F,G,H)",
+      "value": 0
+    },
+    {
+      "def": "Distance(B,G)",
+      "value": 4
+    },
+    {
+      "def": "Distance(C,H)",
+      "value": 5
+    },
+    {
+      "def": "Distance(A,G)+Distance(G,B)",
+      "value": "Distance(A,B)"
+    },
+    {
+      "def": "Distance(C,H)+Distance(H,D)",
+      "value": "Distance(C,D)"
+    }
+  ],
+  "guards": [
+    "AssumeGt(r,0)"
+  ],
+  "answer": "Distance(A,G)",
+  "post_process": ""
+}

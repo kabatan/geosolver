@@ -1,0 +1,38 @@
+{
+  "id": "HMMT-2016-FEB-GEO-06",
+  "task": "solve",
+  "source_statement": "Let ABC be a triangle with incenter I, incircle γ and circumcircle Γ. Let M , N , P be the midpoints of sides BC, CA, AB and let E, F be the tangency points of γ with CA and AB, respectively. Let U , V be the intersections of line EF with line M N and line M P , respectively, and let X be the midpoint \\ of Γ. Given that AB = 5, AC = 8, and ∠A = 60◦ , compute the area of triangle XU V . of arc BAC",
+  "clause_ledger": [
+    {"source": "triangle AB=5, AC=8, angle A=60", "dsl": "A=(0,0), B=(5,0), C=(4,4sqrt(3))", "kind": "construction"},
+    {"source": "I, incircle gamma, circumcircle Gamma", "dsl": "standard Incenter/Incircle/Circumcircle constructors", "kind": "construction"},
+    {"source": "M,N,P midpoints and E,F tangency points", "dsl": "Midpoint and ContactPoint constructors", "kind": "construction"},
+    {"source": "U=EF∩MN, V=EF∩MP", "dsl": "line intersections", "kind": "construction"},
+    {"source": "X midpoint of arc BAC", "dsl": "X=(-3/2,3sqrt(3)/2), the arc-BAC midpoint in this exact coordinate gauge", "kind": "construction"},
+    {"source": "area XUV", "dsl": "Area(X,U,V)", "kind": "answer"}
+  ],
+  "variables": {"names": []},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(5,0)"},
+    {"name": "C", "expr": "Point(4,4*sqrt(3))"},
+    {"name": "I", "expr": "Incenter(A,B,C)"},
+    {"name": "gamma", "expr": "Incircle(A,B,C)"},
+    {"name": "Gamma", "expr": "Circumcircle(A,B,C)"},
+    {"name": "M", "expr": "Midpoint(B,C)"},
+    {"name": "N", "expr": "Midpoint(C,A)"},
+    {"name": "P", "expr": "Midpoint(A,B)"},
+    {"name": "E", "expr": "ContactPoint(gamma,Line(C,A))"},
+    {"name": "F", "expr": "ContactPoint(gamma,Line(A,B))"},
+    {"name": "U", "expr": "Intersect(Line(E,F),Line(M,N))"},
+    {"name": "V", "expr": "Intersect(Line(E,F),Line(M,P))"},
+    {"name": "X", "expr": "Point(-3/2,3*sqrt(3)/2)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 5},
+    {"def": "Distance(A,C)", "value": 8},
+    {"def": "Angle(B,A,C)", "value": "pi/3"}
+  ],
+  "guards": ["AssumeGt(Area(X,U,V),0)"],
+  "answer": "Area(X,U,V)",
+  "post_process": ""
+}

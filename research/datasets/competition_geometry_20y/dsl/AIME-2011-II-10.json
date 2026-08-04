@@ -1,0 +1,36 @@
+{
+  "id": "AIME-2011-II-10",
+  "task": "solve",
+  "source_statement": "A circle with center $O$ has radius 25. Chord $\\overline{AB}$ of length 30 and chord $\\overline{CD}$ of length 14 intersect at point $P$ . The distance between the midpoints of the two chords is 12. The quantity $OP^2$ can be represented as $\\frac{m}{n}$ , where $m$ and $n$ are relatively prime positive integers. Find the remainder when $m + n$ is divided by 1000.",
+  "clause_ledger": [
+    {"source": "circle center O radius 25", "dsl": "O=(0,0) and Circle(O,25)", "kind": "construction"},
+    {"source": "chord AB length 30", "dsl": "horizontal gauge A=(-15,h), B=(15,h) with circle constraints", "kind": "construction/constraint"},
+    {"source": "chord CD length 14 and intersection P", "dsl": "variable C,D with circle and chord constraints, P=AB∩CD", "kind": "construction/constraint"},
+    {"source": "midpoint distance 12", "dsl": "direct Midpoint constructions and Distance constraint", "kind": "constraint"},
+    {"source": "remainder presentation", "dsl": "geometric answer OP^2 with explicit fraction presentation in post_process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["h", "cx", "cy", "dx", "dy"]},
+  "construction": [
+    {"name": "O", "expr": "Point(0,0)"},
+    {"name": "A", "expr": "Point(-15,h)"},
+    {"name": "B", "expr": "Point(15,h)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "D", "expr": "Point(dx,dy)"},
+    {"name": "P", "expr": "Intersect(Line(A,B),Line(C,D))"},
+    {"name": "M1", "expr": "Midpoint(A,B)"},
+    {"name": "M2", "expr": "Midpoint(C,D)"}
+  ],
+  "constraints": [
+    {"def": "Distance(O,A)", "value": 25},
+    {"def": "Distance(O,B)", "value": 25},
+    {"def": "Distance(O,C)", "value": 25},
+    {"def": "Distance(O,D)", "value": 25},
+    {"def": "Distance(C,D)", "value": 14},
+    {"def": "Distance(M1,M2)", "value": 12},
+    {"def": "OnSegment(P,A,B)", "value": 0},
+    {"def": "OnSegment(P,C,D)", "value": 0}
+  ],
+  "guards": ["AssumeGt(h,0)", "AssumeGt(Area(A,C,D),0)"],
+  "answer": "Distance(O,P)**2",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = (f.numerator + f.denominator) % 1000"
+}

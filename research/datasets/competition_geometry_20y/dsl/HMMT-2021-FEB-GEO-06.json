@@ -1,0 +1,28 @@
+{
+  "id": "HMMT-2021-FEB-GEO-06",
+  "task": "solve",
+  "source_statement": "In triangle ABC, let M be the midpoint of BC, H be the orthocenter, and O be the circumcenter. Let N be the reflection of M over H. Suppose that OA = ON = 11 and OH = 7. Compute BC 2 .",
+  "clause_ledger": [
+    {"source": "triangle centers and midpoint/reflection", "dsl": "direct Orthocenter, Circumcenter, Midpoint constructions and point reflection formula", "kind": "construction"},
+    {"source": "OA=ON=11, OH=7", "dsl": "direct Distance constraints", "kind": "constraint"},
+    {"source": "BC^2", "dsl": "squared side distance", "kind": "answer"}
+  ],
+  "variables": {"names": ["ax", "ay", "cx", "cy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(ax,ay)"},
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "M", "expr": "Midpoint(B,C)"},
+    {"name": "H", "expr": "Orthocenter(A,B,C)"},
+    {"name": "O", "expr": "Circumcenter(A,B,C)"},
+    {"name": "N", "expr": "Reflect(M,H)"}
+  ],
+  "constraints": [
+    {"def": "Distance(O,A)", "value": 11},
+    {"def": "Distance(O,N)", "value": 11},
+    {"def": "Distance(O,H)", "value": 7}
+  ],
+  "guards": ["AssumeGt(ay,0)", "AssumeGt(cy,0)", "AssumeGt(Area(A,B,C),0)"],
+  "answer": "Distance(B,C)^2",
+  "post_process": ""
+}

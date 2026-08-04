@@ -1,0 +1,29 @@
+{
+  "id": "AIME-2014-II-08",
+  "task": "solve",
+  "source_statement": "Circle $C$ with radius 2 has diameter $\\overline{AB}$ . Circle $D$ is internally tangent to circle $C$ at $A$ . Circle $E$ is internally tangent to circle $C$ , externally tangent to circle $D$ , and tangent to $\\overline{AB}$ . The radius of circle $D$ is three times the radius of circle $E$ , and can be written in the form $\\sqrt{m}-n$ , where $m$ and $n$ are positive integers. Find $m+n$ .",
+  "clause_ledger": [
+    {"source": "large circle and diameter AB", "dsl": "O=(0,0), A=(-2,0), B=(2,0), Circle(O,2)", "kind": "construction"},
+    {"source": "D internally tangent at A and radius relation", "dsl": "center on OA with radius d=3e", "kind": "construction/constraint"},
+    {"source": "E internally tangent to C, externally tangent D, tangent AB", "dsl": "E=(ex,e), direct center-distance constraints", "kind": "constraint"},
+    {"source": "m+n", "dsl": "radius D with the source radical form left to post-processing", "kind": "answer"}
+  ],
+  "variables": {"names": ["e", "ex"]},
+  "construction": [
+    {"name": "O", "expr": "Point(0,0)"},
+    {"name": "A", "expr": "Point(-2,0)"},
+    {"name": "B", "expr": "Point(2,0)"},
+    {"name": "C", "expr": "Circle(O,2)"},
+    {"name": "OD", "expr": "Point(-2+3*e,0)"},
+    {"name": "E", "expr": "Point(ex,e)"}
+  ],
+  "constraints": [
+    {"def": "Distance(O,OD)", "value": "2-3*e"},
+    {"def": "Distance(O,E)", "value": "2-e"},
+    {"def": "Distance(OD,E)", "value": "4*e"},
+    {"def": "Distance(E,Line(A,B))", "value": "e"}
+  ],
+  "guards": ["AssumeGt(e,0)", "AssumeLt(3*e,2)"],
+  "answer": "3*e",
+  "post_process": "# radical_mode=sqrt_m_minus_n basis=15"
+}

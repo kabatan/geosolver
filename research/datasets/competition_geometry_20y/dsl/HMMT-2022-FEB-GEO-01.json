@@ -1,0 +1,32 @@
+{
+  "id": "HMMT-2022-FEB-GEO-01",
+  "task": "solve",
+  "source_statement": "Let ABC be a triangle with ∠A = 60◦ . Line ℓ intersects segments AB and AC and splits triangle ABC into an equilateral triangle and a quadrilateral. Let X and Y be on ℓ such that lines BX and CY are perpendicular to ℓ. Given that AB = 20 and AC = 22, compute XY .",
+  "clause_ledger": [
+    {"source": "triangle A=60, AB=20, AC=22", "dsl": "A=(0,0), B=(20,0), C=(11,11*sqrt(3))", "kind": "construction/constraint"},
+    {"source": "line l cuts AB,AC and leaves an equilateral triangle plus quadrilateral", "dsl": "U on AB and V on AC with AUV equilateral; l=Line(U,V)", "kind": "construction/constraint"},
+    {"source": "BX and CY perpendicular to l; X,Y on l", "dsl": "X=FootOfPerpendicular(B,l), Y=FootOfPerpendicular(C,l)", "kind": "construction"},
+    {"source": "XY", "dsl": "Distance(X,Y)", "kind": "answer"}
+  ],
+  "variables": {"names": ["u"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(20,0)"},
+    {"name": "C", "expr": "Point(11,11*sqrt(3))"},
+    {"name": "U", "expr": "Point(u,0)"},
+    {"name": "V", "expr": "Point(u/2,u*sqrt(3)/2)"},
+    {"name": "l", "expr": "Line(U,V)"},
+    {"name": "X", "expr": "FootOfPerpendicular(B,l)"},
+    {"name": "Y", "expr": "FootOfPerpendicular(C,l)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 20},
+    {"def": "Distance(A,C)", "value": 22},
+    {"def": "Distance(A,U)", "value": "Distance(A,V)"},
+    {"def": "Distance(A,U)", "value": "Distance(U,V)"}
+  ],
+  "guards": ["AssumeGt(u,0)", "AssumeLt(u,20)"],
+  "answer": "Distance(X,Y)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

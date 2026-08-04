@@ -1,0 +1,96 @@
+{
+  "id": "JMO-2010-PRE-11",
+  "task": "solve",
+  "source_statement": "四角形ABCDは∠DAB=110°，∠ABC=50°，∠BCD=70°をみたす。AB，CDの中点をそれぞれM，Nとし，線分MN上に点PをとるとAD=CPとなった。このとき∠APCの大きさを求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "quadrilateral angle data",
+      "dsl": "direct Angle constraints in a coordinate gauge",
+      "kind": "constraint"
+    },
+    {
+      "source": "midpoints and P ratio",
+      "dsl": "direct Midpoint constructions and P affine on MN with MP/NP=AM/CN",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "AP=CP and angle APC",
+      "dsl": "direct distance constraint and degree-valued angle answer",
+      "kind": "constraint/answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "bx",
+      "cx",
+      "cy",
+      "dx",
+      "dy",
+      "px",
+      "py"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(bx,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(cx,cy)"
+    },
+    {
+      "name": "D",
+      "expr": "Point(dx,dy)"
+    },
+    {
+      "name": "M",
+      "expr": "Midpoint(A,B)"
+    },
+    {
+      "name": "N",
+      "expr": "Midpoint(C,D)"
+    },
+    {
+      "name": "P",
+      "expr": "Point(px,py)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Angle(D,A,B)",
+      "value": "110*pi/180"
+    },
+    {
+      "def": "Angle(A,B,C)",
+      "value": "50*pi/180"
+    },
+    {
+      "def": "Angle(B,C,D)",
+      "value": "70*pi/180"
+    },
+    {
+      "def": "Distance(A,P)",
+      "value": "Distance(C,P)"
+    },
+    {
+      "def": "Distance(M,P)/Distance(P,N)",
+      "value": "Distance(A,M)/Distance(C,N)"
+    },
+    {
+      "def": "Collinear(M,P,N)",
+      "value": 0
+    }
+  ],
+  "guards": [
+    "AssumeGt(bx,0)",
+    "AssumeGt(cy,0)",
+    "AssumeGt(dy,0)"
+  ],
+  "answer": "180*Angle(A,P,C)/pi",
+  "post_process": ""
+}

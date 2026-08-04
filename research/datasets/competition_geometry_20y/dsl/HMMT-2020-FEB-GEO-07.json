@@ -1,0 +1,34 @@
+{
+  "id": "HMMT-2020-FEB-GEO-07",
+  "task": "solve",
+  "source_statement": "Let Γ be a circle, and ω1 and ω2 be two non-intersecting circles inside Γ that are internally tangent to Γ at X1 and X2 , respectively. Let one of the common internal tangents of ω1 and ω2 touch ω1 and ω2 at T1 and T2 , respectively, while intersecting Γ at two points A and B. Given that 2X1 T1 = X2 T2 and that ω1 , ω2 , and Γ have radii 2, 3, and 12, respectively, compute the length of AB.",
+  "clause_ledger": [
+    {"source": "Gamma radius12; omega1/omega2 radii2,3 internally tangent at X1,X2", "dsl": "use the common internal tangent as y=0, O=(0,h), O1=(sqrt(100-(h-2)^2),2), O2=(sqrt(81-(h+3)^2),-3), and construct X1,X2 on Gamma along the center radii; the original internal-tangency constraints are retained", "kind": "construction/constraint"},
+    {"source": "common internal tangent touches at T1,T2 and meets Gamma at A,B", "dsl": "L is the x-axis, T1,T2 are the tangent feet, and A,B are its Gamma intersections", "kind": "construction/constraint"},
+    {"source": "2 X1T1 = X2T2", "dsl": "direct distance ratio", "kind": "constraint"},
+    {"source": "AB", "dsl": "Distance(A,B)", "kind": "answer"}
+  ],
+  "variables": {"names": ["h"]},
+  "construction": [
+    {"name": "O", "expr": "Point(0,h)"}, {"name": "Gamma", "expr": "Circle(O,12)"},
+    {"name": "u", "expr": "sqrt(100-(h-2)*(h-2))"}, {"name": "v", "expr": "sqrt(81-(h+3)*(h+3))"},
+    {"name": "O1", "expr": "Point(u,2)"}, {"name": "O2", "expr": "Point(v,-3)"},
+    {"name": "omega1", "expr": "Circle(O1,2)"}, {"name": "omega2", "expr": "Circle(O2,3)"},
+    {"name": "X1", "expr": "Point(O.x+(12/10)*(O1.x-O.x),O.y+(12/10)*(O1.y-O.y))"}, {"name": "X2", "expr": "Point(O.x+(12/9)*(O2.x-O.x),O.y+(12/9)*(O2.y-O.y))"},
+    {"name": "T1", "expr": "Point(u,0)"}, {"name": "T2", "expr": "Point(v,0)"},
+    {"name": "l", "expr": "Line(Point(0,0),Point(1,0))"},
+    {"name": "A", "expr": "Intersect(l,Gamma,near=Point(0,0))"}, {"name": "B", "expr": "Intersect(l,Gamma,exclude=A)"}
+  ],
+  "constraints": [
+    {"def": "OnCircle(X1,Gamma)", "value": 0}, {"def": "OnCircle(X1,omega1)", "value": 0},
+    {"def": "OnCircle(X2,Gamma)", "value": 0}, {"def": "OnCircle(X2,omega2)", "value": 0},
+    {"def": "Distance(O,O1)", "value": 10}, {"def": "Distance(O,O2)", "value": 9},
+    {"def": "OnCircle(T1,omega1)", "value": 0}, {"def": "OnCircle(T2,omega2)", "value": 0},
+    {"def": "IsTangent(l,omega1)", "value": 0}, {"def": "IsTangent(l,omega2)", "value": 0},
+    {"def": "Distance(X1,T1)", "value": "Distance(X2,T2)/2"}
+  ],
+  "guards": ["AssumeGt(h,0)", "AssumeLt(h,6)", "AssumeGt(Distance(T1,T2),0)", "AssumeGt(Distance(A,B),0)"],
+  "answer": "Distance(A,B)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

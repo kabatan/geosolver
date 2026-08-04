@@ -1,0 +1,30 @@
+{
+  "id": "HMMT-2015-FEB-GEO-03",
+  "task": "solve",
+  "source_statement": "Let ABCD be a quadrilateral with ∠BAD = ∠ABC = 90◦ , and suppose AB = BC = 1, AD = 2. The circumcircle of ABC meets AD and BD at points E and F , respectively. If lines AF and CD meet at K, compute EK.",
+  "clause_ledger": [
+    {"source": "right-angle quadrilateral and side lengths", "dsl": "A=(0,1), B=(0,0), C=(1,0), D=(2,1)", "kind": "construction"},
+    {"source": "circumcircle meets AD,BD at E,F", "dsl": "E/F are the non-vertex intersections with Circumcircle(A,B,C)", "kind": "construction"},
+    {"source": "K=AF∩CD", "dsl": "K=Intersect(Line(A,F),Line(C,D))", "kind": "construction"},
+    {"source": "EK", "dsl": "Distance(E,K)", "kind": "answer"}
+  ],
+  "variables": {"names": []},
+  "construction": [
+    {"name": "A", "expr": "Point(0,1)"},
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(1,0)"},
+    {"name": "D", "expr": "Point(2,1)"},
+    {"name": "Gamma", "expr": "Circumcircle(A,B,C)"},
+    {"name": "E", "expr": "Intersect(Line(A,D),Gamma,exclude=A)"},
+    {"name": "F", "expr": "Intersect(Line(B,D),Gamma,exclude=B)"},
+    {"name": "K", "expr": "Intersect(Line(A,F),Line(C,D))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 1},
+    {"def": "Distance(B,C)", "value": 1},
+    {"def": "Distance(A,D)", "value": 2}
+  ],
+  "guards": ["AssumeGt(Distance(E,K),0)"],
+  "answer": "Distance(E,K)",
+  "post_process": ""
+}

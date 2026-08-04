@@ -1,0 +1,30 @@
+{
+  "id": "AIME-2021-II-02",
+  "task": "solve",
+  "source_statement": "Equilateral triangle $ABC$ has side length $840$ . Point $D$ lies on the same side of line $BC$ as $A$ such that $\\overline{BD} \\perp \\overline{BC}$ . The line $\\ell$ through $D$ parallel to line $BC$ intersects sides $\\overline{AB}$ and $\\overline{AC}$ at points $E$ and $F$ , respectively. Point $G$ lies on $\\ell$ such that $F$ is between $E$ and $G$ , $\\triangle AFG$ is isosceles, and the ratio of the area of $\\triangle AFG$ to the area of $\\triangle BED$ is $8:9$ . Find $AF$ . [asy] pair A,B,C,D,E,F,G; B=origin; A=5*dir(60); C=(5,0); E=0.6*A+0.4*B; F=0.6*A+0.4*C; G=rotate(240,F)*A; D=extension(E,F,B,dir(90)); draw(D--G--A,grey); draw(B--0.5*A+rotate(60,B)*A*0.5,grey); draw(A--B--C--cycle,linewidth(1.5)); dot(A^^B^^C^^D^^E^^F^^G); label(\"$A$\",A,dir(90)); label(\"$B$\",B,dir(225)); label(\"$C$\",C,dir(-45)); label(\"$D$\",D,dir(180)); label(\"$E$\",E,dir(-45)); label(\"$F$\",F,dir(225)); label(\"$G$\",G,dir(0)); label(\"$\\ell$\",midpoint(E--F),dir(90)); [/asy]",
+  "clause_ledger": [
+    {"source": "equilateral triangle side 840", "dsl": "fixed coordinates", "kind": "construction"},
+    {"source": "D, line ell, E,F,G incidences", "dsl": "D=(0,d), ell horizontal and direct intersections/coordinates", "kind": "construction/constraint"},
+    {"source": "AFG isosceles and area ratio 8:9", "dsl": "the source figure/order selects the realizable AF=FG isosceles branch, with direct area ratio", "kind": "constraint/guard"},
+    {"source": "AF", "dsl": "Distance(A,F)", "kind": "answer"}
+  ],
+  "variables": {"names": ["d", "gx"]},
+  "construction": [
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(840,0)"},
+    {"name": "A", "expr": "Point(420,420*sqrt(3))"},
+    {"name": "D", "expr": "Point(0,d)"},
+    {"name": "ell", "expr": "Line(Point(0,d),Point(1,d))"},
+    {"name": "E", "expr": "Intersect(ell,Line(A,B))"},
+    {"name": "F", "expr": "Intersect(ell,Line(A,C))"},
+    {"name": "G", "expr": "Point(gx,d)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,F)", "value": "Distance(F,G)"},
+    {"def": "9*Area(A,F,G)", "value": "8*Area(B,E,D)"},
+    {"def": "Distance(E,F)+Distance(F,G)", "value": "Distance(E,G)"}
+  ],
+  "guards": ["AssumeGt(d,0)", "AssumeLt(d,420*sqrt(3))", "AssumeGt(gx,420)", "AssumeGt(Area(A,F,G),0)"],
+  "answer": "Distance(A,F)",
+  "post_process": ""
+}

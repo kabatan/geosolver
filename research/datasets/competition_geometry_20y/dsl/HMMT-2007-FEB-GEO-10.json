@@ -1,0 +1,35 @@
+{
+  "id": "HMMT-2007-FEB-GEO-10",
+  "task": "solve",
+  "source_statement": "[8] ABCD is a convex quadrilateral such that AB = 2, BC = 3, CD = 7, and AD = 6. It also has an incircle. Given that ∠ABC is right, determine the radius of this incircle.",
+  "clause_ledger": [
+    {"source": "AB=2, BC=3 and angle ABC=90 degrees", "dsl": "direct fixed A,B,C gauge and constraints", "kind": "construction/constraint"},
+    {"source": "CD=7 and AD=6", "dsl": "direct distances for free D", "kind": "constraint"},
+    {"source": "convex quadrilateral", "dsl": "AssumeConvex([A,B,C,D])", "kind": "guard"},
+    {"source": "has an incircle", "dsl": "free center I and r with distance-to-each-side equal to r", "kind": "constraint"},
+    {"source": "radius", "dsl": "r", "kind": "answer"}
+  ],
+  "variables": {"names": ["Dx", "Dy", "Ix", "Iy", "r"]},
+  "construction": [
+    {"name": "B", "expr": "Point(0, 0)"},
+    {"name": "A", "expr": "Point(2, 0)"},
+    {"name": "C", "expr": "Point(0, 3)"},
+    {"name": "D", "expr": "Point(Dx, Dy)"},
+    {"name": "I", "expr": "Point(Ix, Iy)"},
+    {"name": "omega", "expr": "Circle(I, r)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 2},
+    {"def": "Distance(B,C)", "value": 3},
+    {"def": "Angle(A,B,C)", "value": "pi/2"},
+    {"def": "Distance(C,D)", "value": 7},
+    {"def": "Distance(A,D)", "value": 6},
+    {"def": "Distance(I,Line(A,B))", "value": "r"},
+    {"def": "Distance(I,Line(B,C))", "value": "r"},
+    {"def": "Distance(I,Line(C,D))", "value": "r"},
+    {"def": "Distance(I,Line(D,A))", "value": "r"}
+  ],
+  "guards": ["AssumeGt(r,0)", "AssumeConvex([A,B,C,D])"],
+  "answer": "r",
+  "post_process": ""
+}

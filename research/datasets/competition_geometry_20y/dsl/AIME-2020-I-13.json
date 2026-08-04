@@ -1,0 +1,29 @@
+{
+  "id": "AIME-2020-I-13",
+  "task": "solve",
+  "source_statement": "Point $D$ lies on side $\\overline{BC}$ of $\\triangle ABC$ so that $\\overline{AD}$ bisects $\\angle BAC.$ The perpendicular bisector of $\\overline{AD}$ intersects the bisectors of $\\angle ABC$ and $\\angle ACB$ in points $E$ and $F,$ respectively. Given that $AB=4,BC=5,$ and $CA=6,$ the area of $\\triangle AEF$ can be written as $\\tfrac{m\\sqrt{n}}p,$ where $m$ and $p$ are relatively prime positive integers, and $n$ is a positive integer not divisible by the square of any prime. Find $m+n+p$ .",
+  "clause_ledger": [
+    {"source": "triangle ABC has sides 4,5,6 and AD angle-bisects A", "dsl": "A,B,C with exact side constraints; D=intersection of angle bisector A with BC", "kind": "construction/constraint"},
+    {"source": "perpendicular bisector of AD meets angle bisectors at B,C in E,F", "dsl": "L=PerpendicularBisector(A,D), E/F intersections with the two internal bisectors", "kind": "construction"},
+    {"source": "area AEF=m sqrt(n)/p and m+n+p", "dsl": "Area(A,E,F) with radical presentation post-process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["cx", "cy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(4,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "D", "expr": "Intersect(AngleBisector(B,A,C),Line(B,C))"},
+    {"name": "L", "expr": "PerpendicularBisector(A,D)"},
+    {"name": "E", "expr": "Intersect(L,AngleBisector(A,B,C))"},
+    {"name": "F", "expr": "Intersect(L,AngleBisector(A,C,B))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 4},
+    {"def": "Distance(B,C)", "value": 5},
+    {"def": "Distance(C,A)", "value": 6}
+  ],
+  "guards": ["AssumeGt(cy,0)", "AssumeGt(Area(A,E,F),0)"],
+  "answer": "Area(A,E,F)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": "# radical_mode=pqr_sum"
+}

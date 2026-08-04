@@ -1,0 +1,36 @@
+{
+  "id": "AIME-2011-II-02",
+  "task": "solve",
+  "source_statement": "On square $ABCD$ , point $E$ lies on side $AD$ and point $F$ lies on side $BC$ , so that $BE=EF=FD=30$ . Find the area of the square $ABCD$ .",
+  "clause_ledger": [
+    {"source": "square ABCD", "dsl": "direct axis-aligned square construction with side s", "kind": "construction"},
+    {"source": "E lies on AD and F lies on BC", "dsl": "E=Point(0,t), F=Point(s,u) with side-order guards", "kind": "construction/guard"},
+    {"source": "BE=EF=FD=30", "dsl": "three direct Distance constraints", "kind": "constraint"},
+    {"source": "area of square ABCD", "dsl": "Area(A,B,C,D)", "kind": "answer"}
+  ],
+  "variables": {"names": ["s", "t", "u"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0, 0)"},
+    {"name": "B", "expr": "Point(s, 0)"},
+    {"name": "C", "expr": "Point(s, s)"},
+    {"name": "D", "expr": "Point(0, s)"},
+    {"name": "E", "expr": "Point(0, t)"},
+    {"name": "F", "expr": "Point(s, u)"}
+  ],
+  "constraints": [
+    {"def": "Distance(B, E)", "value": 30},
+    {"def": "Distance(E, F)", "value": 30},
+    {"def": "Distance(F, D)", "value": 30},
+    {"def": "OnSegment(E,A,D)", "value": 0},
+    {"def": "OnSegment(F,B,C)", "value": 0}
+  ],
+  "guards": [
+    "AssumeGt(s, 0)",
+    "AssumeGt(t, 0)",
+    "AssumeLt(t, s)",
+    "AssumeGt(u, 0)",
+    "AssumeLt(u, s)"
+  ],
+  "answer": "Area(A, B, C, D)",
+  "post_process": ""
+}

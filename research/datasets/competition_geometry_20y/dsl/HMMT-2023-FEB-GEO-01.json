@@ -1,0 +1,28 @@
+{
+  "id": "HMMT-2023-FEB-GEO-01",
+  "task": "solve",
+  "source_statement": "Let ABCDEF be a regular hexagon, and let P be a point inside quadrilateral ABCD. If the area of triangle P BC is 20, and the area of triangle P AD is 23, compute the area of hexagon ABCDEF .",
+  "clause_ledger": [
+    {"source": "regular hexagon ABCDEF", "dsl": "six vertices are constructed on a common radius with successive pi/3 rotations", "kind": "construction"},
+    {"source": "P inside quadrilateral ABCD", "dsl": "P is variable and four positive subarea guards retain the stated interior branch", "kind": "construction/guard"},
+    {"source": "area PBC=20 and area PAD=23", "dsl": "direct Area constraints", "kind": "constraint"},
+    {"source": "area ABCDEF", "dsl": "Area(A,B,C,D,E,F)", "kind": "answer"}
+  ],
+  "variables": {"names": ["s", "px", "py"]},
+  "construction": [
+    {"name": "A", "expr": "Point(s,0)"},
+    {"name": "B", "expr": "Point(s/2,sqrt(3)*s/2)"},
+    {"name": "C", "expr": "Point(-s/2,sqrt(3)*s/2)"},
+    {"name": "D", "expr": "Point(-s,0)"},
+    {"name": "E", "expr": "Point(-s/2,-sqrt(3)*s/2)"},
+    {"name": "F", "expr": "Point(s/2,-sqrt(3)*s/2)"},
+    {"name": "P", "expr": "Point(px,py)"}
+  ],
+  "constraints": [
+    {"def": "Area(P,B,C)", "value": 20},
+    {"def": "Area(P,A,D)", "value": 23}
+  ],
+  "guards": ["AssumeGt(s,0)", "AssumeGt(py,0)", "AssumeLt(py,sqrt(3)*s/2)", "AssumeGt(px,-s+py/sqrt(3))", "AssumeLt(px,s-py/sqrt(3))"],
+  "answer": "Area(A,B,C,D,E,F)",
+  "post_process": ""
+}

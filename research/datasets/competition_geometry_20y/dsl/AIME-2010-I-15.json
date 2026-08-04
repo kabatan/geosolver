@@ -1,0 +1,29 @@
+{
+  "id": "AIME-2010-I-15",
+  "task": "solve",
+  "source_statement": "In $\\triangle{ABC}$ with $AB = 12$ , $BC = 13$ , and $AC = 15$ , let $M$ be a point on $\\overline{AC}$ such that the incircles of $\\triangle{ABM}$ and $\\triangle{BCM}$ have equal radii. Then $\\frac{AM}{CM} = \\frac{p}{q}$ , where $p$ and $q$ are relatively prime positive integers. Find $p + q$ .",
+  "clause_ledger": [
+    {"source": "triangle side lengths", "dsl": "coordinate gauge with direct Distance constraints", "kind": "construction/constraint"},
+    {"source": "M on AC and equal incircle radii", "dsl": "M=(m,0), Incircle radius equality", "kind": "construction/constraint"},
+    {"source": "p+q for AM/CM", "dsl": "Distance ratio followed by exact fraction numerator-plus-denominator post-process", "kind": "answer"}
+  ],
+  "variables": {"names": ["bx", "by", "m"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(15,0)"},
+    {"name": "B", "expr": "Point(bx,by)"},
+    {"name": "M", "expr": "Point(m,0)"},
+    {"name": "I1", "expr": "Incircle(A,B,M)"},
+    {"name": "I2", "expr": "Incircle(B,C,M)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 12},
+    {"def": "Distance(B,C)", "value": 13},
+    {"def": "Distance(A,C)", "value": 15},
+    {"def": "Radius(I1)", "value": "Radius(I2)"},
+    {"def": "OnSegment(M,A,C)", "value": 0}
+  ],
+  "guards": ["AssumeGt(by,0)", "AssumeGt(m,0)", "AssumeLt(m,15)"],
+  "answer": "Distance(A,M)/Distance(M,C)",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+}

@@ -1,0 +1,112 @@
+{
+  "id": "JMO-2021-PRE-10",
+  "task": "solve",
+  "source_statement": "三角形ABCの辺AB，AC上にそれぞれ点D，Eがあり，4点D，B，C，Eは同一円周上にある。また，四角形DBCEの内部に点Pがあり，∠BDP=∠BPC=∠PECをみたしている。AB=9，AC=11，DP=1，EP=3のとき，BP/CPの値を求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "D,E on AB,AC and D,B,C,E cyclic",
+      "dsl": "coordinate side points with Gamma=Circumcircle(D,B,C) and OnCircle(E,Gamma)",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "P inside DBCE and three equal angles",
+      "dsl": "variable P with direct Angle equalities and interior guards",
+      "kind": "construction/constraint/guard"
+    },
+    {
+      "source": "AB=9, AC=11, DP=1, EP=3",
+      "dsl": "direct distances",
+      "kind": "constraint"
+    },
+    {
+      "source": "BP/CP",
+      "dsl": "direct distance ratio",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "cx",
+      "cy",
+      "d",
+      "ex",
+      "ey",
+      "px",
+      "py"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(9,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(cx,cy)"
+    },
+    {
+      "name": "D",
+      "expr": "Point(d,0)"
+    },
+    {
+      "name": "E",
+      "expr": "Point(ex,ey)"
+    },
+    {
+      "name": "P",
+      "expr": "Point(px,py)"
+    },
+    {
+      "name": "Gamma",
+      "expr": "Circumcircle(D,B,C)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(A,B)",
+      "value": 9
+    },
+    {
+      "def": "Distance(A,C)",
+      "value": 11
+    },
+    {
+      "def": "Collinear(A,E,C)",
+      "value": 0
+    },
+    {
+      "def": "OnCircle(E,Gamma)",
+      "value": 0
+    },
+    {
+      "def": "Angle(B,D,P)",
+      "value": "Angle(B,P,C)"
+    },
+    {
+      "def": "Angle(B,P,C)",
+      "value": "Angle(P,E,C)"
+    },
+    {
+      "def": "Distance(D,P)",
+      "value": 1
+    },
+    {
+      "def": "Distance(E,P)",
+      "value": 3
+    }
+  ],
+  "guards": [
+    "AssumeGt(cy,0)",
+    "AssumeGt(d,0)",
+    "AssumeLt(d,9)",
+    "AssumeGt(ex,0)",
+    "AssumeGt(ey,0)",
+    "AssumeGt(py,0)"
+  ],
+  "answer": "Distance(B,P)/Distance(C,P)",
+  "post_process": ""
+}

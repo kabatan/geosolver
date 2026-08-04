@@ -1,0 +1,28 @@
+{
+  "id": "AIME-2016-I-06",
+  "task": "solve",
+  "source_statement": "In $\\triangle ABC$ let $I$ be the center of the inscribed circle, and let the bisector of $\\angle ACB$ intersect $\\overline{AB}$ at $L$ . The line through $C$ and $L$ intersects the circumscribed circle of $\\triangle ABC$ at the two points $C$ and $D$ . If $LI=2$ and $LD=3$ , then $IC= \\frac{p}{q}$ , where $p$ and $q$ are relatively prime positive integers. Find $p+q$ .",
+  "clause_ledger": [
+    {"source": "triangle, incenter, and C-angle bisector foot L", "dsl": "direct Incenter and intersection constructions", "kind": "construction"},
+    {"source": "CL meets circumcircle again at D", "dsl": "direct Circumcircle/Intersect excluding C", "kind": "construction"},
+    {"source": "LI=2 and LD=3", "dsl": "direct distance constraints", "kind": "constraint"},
+    {"source": "p+q", "dsl": "geometric answer IC with explicit fraction post_process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["b", "cx", "cy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(b,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "I", "expr": "Incenter(A,B,C)"},
+    {"name": "L", "expr": "Intersect(Line(C,I),Line(A,B))"},
+    {"name": "Gamma", "expr": "Circumcircle(A,B,C)"},
+    {"name": "D", "expr": "Intersect(Line(C,L),Gamma,exclude=C)"}
+  ],
+  "constraints": [
+    {"def": "Distance(L,I)", "value": 2},
+    {"def": "Distance(L,D)", "value": 3}
+  ],
+  "guards": ["AssumeGt(b,0)", "AssumeGt(cy,0)", "AssumeGt(Area(A,B,C),0)"],
+  "answer": "Distance(I,C)",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+}

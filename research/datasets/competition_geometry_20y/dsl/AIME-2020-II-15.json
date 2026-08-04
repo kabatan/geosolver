@@ -1,0 +1,38 @@
+{
+  "id": "AIME-2020-II-15",
+  "task": "solve",
+  "source_statement": "Let $\\triangle ABC$ be an acute scalene triangle with circumcircle $\\omega$ . The tangents to $\\omega$ at $B$ and $C$ intersect at $T$ . Let $X$ and $Y$ be the projections of $T$ onto lines $AB$ and $AC$ , respectively. Suppose $BT = CT = 16$ , $BC = 22$ , and $TX^2 + TY^2 + XY^2 = 1143$ . Find $XY^2$ .",
+  "clause_ledger": [
+    {"source": "acute scalene triangle and tangents at B,C meet T", "dsl": "A variable, B=(-11,0), C=(11,0), Gamma=Circumcircle(A,B,C), T=tangent intersection", "kind": "construction/constraint"},
+    {"source": "X,Y projections of T onto AB,AC", "dsl": "FootOfPerpendicular constructions", "kind": "construction"},
+    {"source": "BT=CT=16, BC=22, TX^2+TY^2+XY^2=1143", "dsl": "direct distance/equation constraints", "kind": "constraint"},
+    {"source": "XY^2", "dsl": "Distance(X,Y)^2", "kind": "answer"}
+  ],
+  "variables": {"names": ["ax", "ay"]},
+  "construction": [
+    {"name": "A", "expr": "Point(ax,ay)"},
+    {"name": "B", "expr": "Point(-11,0)"},
+    {"name": "C", "expr": "Point(11,0)"},
+    {"name": "Gamma", "expr": "Circumcircle(A,B,C)"},
+    {"name": "tB", "expr": "Tangent(B,Gamma)"},
+    {"name": "tC", "expr": "Tangent(C,Gamma)"},
+    {"name": "T", "expr": "Intersect(tB,tC)"},
+    {"name": "X", "expr": "FootOfPerpendicular(T,Line(A,B))"},
+    {"name": "Y", "expr": "FootOfPerpendicular(T,Line(A,C))"}
+  ],
+  "constraints": [
+    {"def": "Distance(B,C)", "value": 22},
+    {"def": "Distance(B,T)", "value": 16},
+    {"def": "Distance(C,T)", "value": 16},
+    {"def": "Distance(T,X)*Distance(T,X)+Distance(T,Y)*Distance(T,Y)+Distance(X,Y)*Distance(X,Y)", "value": 1143}
+  ],
+  "guards": [
+    "AssumeGt(ay,0)", "AssumeAcute(A,B,C)",
+    "AssumeNe(Distance(A,B),Distance(A,C))",
+    "AssumeNe(Distance(A,B),Distance(B,C))",
+    "AssumeNe(Distance(A,C),Distance(B,C))"
+  ],
+  "answer": "Distance(X,Y)*Distance(X,Y)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

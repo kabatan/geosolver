@@ -1,0 +1,32 @@
+{
+  "id": "HMMT-2025-FEB-GEO-06",
+  "task": "solve",
+  "source_statement": "Trapezoid ABCD, with AB ∥ CD, has side lengths AB = 11, BC = 8, CD = 19, and DA = 4. Compute the area of the convex quadrilateral whose vertices are the circumcenters of △ABC, △BCD, △CDA, and △DAB.",
+  "clause_ledger": [
+    {"source": "trapezoid ABCD with AB parallel CD", "dsl": "A,B are on y=0 and C,D on y=dy, with direct Parallel constraint", "kind": "construction/constraint"},
+    {"source": "AB=11, BC=8, CD=19, DA=4", "dsl": "direct Distance constraints", "kind": "constraint"},
+    {"source": "circumcenters of ABC, BCD, CDA, DAB", "dsl": "direct Circumcenter constructions in the source triangle order", "kind": "construction"},
+    {"source": "area of their convex quadrilateral", "dsl": "Area(O_BCD,O_CDA,O_DAB,O_ABC) with convex branch guard", "kind": "answer/guard"}
+  ],
+  "variables": {"names": ["dx", "dy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(11,0)"},
+    {"name": "D", "expr": "Point(dx,dy)"},
+    {"name": "C", "expr": "Point(dx+19,dy)"},
+    {"name": "O_BCD", "expr": "Circumcenter(B,C,D)"},
+    {"name": "O_CDA", "expr": "Circumcenter(C,D,A)"},
+    {"name": "O_DAB", "expr": "Circumcenter(D,A,B)"},
+    {"name": "O_ABC", "expr": "Circumcenter(A,B,C)"}
+  ],
+  "constraints": [
+    {"def": "Parallel(Line(A,B),Line(C,D))", "value": 0},
+    {"def": "Distance(A,B)", "value": 11},
+    {"def": "Distance(B,C)", "value": 8},
+    {"def": "Distance(C,D)", "value": 19},
+    {"def": "Distance(D,A)", "value": 4}
+  ],
+  "guards": ["AssumeGt(dy,0)", "AssumeNoSelfIntersecting([A,B,C,D])"],
+  "answer": "Area(O_BCD,O_CDA,O_DAB,O_ABC)",
+  "post_process": ""
+}

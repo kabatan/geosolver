@@ -1,0 +1,91 @@
+{
+  "id": "AIME-2025-I-02",
+  "task": "solve",
+  "source_statement": "On $\\triangle ABC$ points $A,D,E$, and $B$ lie that order on side $\\overline{AB}$ with $AD=4, DE=16$, and $EB=8$. Points $A,F,G$, and $C$ lie in that order on side $\\overline{AC}$ with $AF=13, FG=52$, and $GC=26$. Let $M$ be the reflection of $D$ through $F$, and let $N$ be the reflection of $G$ through $E$. Quadrilateral $DEGF$ has area 288. Find the area of heptagon $AFNBCEM$.",
+  "clause_ledger": [
+    {
+      "source": "A,D,E,B on AB with AD=4,DE=16,EB=8",
+      "dsl": "A=(0,0), B=(28,0), D=(4,0), E=(20,0)",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "A,F,G,C on AC with AF=13,FG=52,GC=26",
+      "dsl": "C is variable with AC=91; F=(13/91)C and G=(65/91)C",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "M reflection of D through F; N reflection of G through E",
+      "dsl": "M=Reflect(D,F), N=Reflect(G,E)",
+      "kind": "construction"
+    },
+    {
+      "source": "area DEGF=288",
+      "dsl": "direct Area(D,E,G,F)=288",
+      "kind": "constraint"
+    },
+    {
+      "source": "area AFNBCEM",
+      "dsl": "Area(A,F,N,B,C,E,M)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "cx",
+      "cy"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(28,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(cx,cy)"
+    },
+    {
+      "name": "D",
+      "expr": "Point(4,0)"
+    },
+    {
+      "name": "E",
+      "expr": "Point(20,0)"
+    },
+    {
+      "name": "F",
+      "expr": "Point(13*cx/91,13*cy/91)"
+    },
+    {
+      "name": "G",
+      "expr": "Point(65*cx/91,65*cy/91)"
+    },
+    {
+      "name": "M",
+      "expr": "Reflect(D,F)"
+    },
+    {
+      "name": "N",
+      "expr": "Reflect(G,E)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(A,C)",
+      "value": 91
+    },
+    {
+      "def": "Area(D,E,G,F)",
+      "value": 288
+    }
+  ],
+  "guards": [
+    "AssumeGt(cy,0)"
+  ],
+  "answer": "Area(A,F,N,B,C,E,M)",
+  "post_process": ""
+}

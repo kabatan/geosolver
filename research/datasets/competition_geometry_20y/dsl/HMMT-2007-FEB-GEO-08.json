@@ -1,0 +1,28 @@
+{
+  "id": "HMMT-2007-FEB-GEO-08",
+  "task": "solve",
+  "source_statement": "[6] ABCD is a convex quadrilateral such that AB < AD. The diagonal AC bisects ∠BAD, and m∠ABD = 130◦ . Let E be a point on the interior of AD, and m∠BAD = 40◦ . Given that BC = CD = DE, determine m∠ACE in degrees.",
+  "clause_ledger": [
+    {"source": "AB<AD, angle ABD=130 degrees, angle BAD=40 degrees", "dsl": "scale gauge AB=1; B and D are on rays symmetric about AC at 20 degrees, with AD/AB=sin(130)/sin(10)", "kind": "construction/constraint"},
+    {"source": "convex ABCD and AC angle bisector", "dsl": "A=(0,0), AC is the x-axis, B and D lie on opposite symmetric rays, C=(c,0)", "kind": "construction/guard"},
+    {"source": "BC=CD", "dsl": "Distance(B,C)=Distance(C,D)", "kind": "constraint"},
+    {"source": "E interior to AD and DE=BC", "dsl": "E is the source AD interpolation at distance BC from D", "kind": "construction/constraint"},
+    {"source": "angle ACE in degrees", "dsl": "180*Angle(A,C,E)/pi", "kind": "answer"}
+  ],
+  "variables": {"names": ["c"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "v", "expr": "sin(13*pi/18)/sin(pi/18)"},
+    {"name": "B", "expr": "Point(cos(pi/9),sin(pi/9))"},
+    {"name": "D", "expr": "Point(v*cos(pi/9),-v*sin(pi/9))"},
+    {"name": "C", "expr": "Point(c,0)"},
+    {"name": "bc", "expr": "Distance(B,C)"},
+    {"name": "E", "expr": "Point((1-bc/v)*v*cos(pi/9),-(1-bc/v)*v*sin(pi/9))"}
+  ],
+  "constraints": [
+    {"def": "Distance(B,C)", "value": "Distance(C,D)"}
+  ],
+  "guards": ["AssumeGt(c,0)", "AssumeGt(bc,0)", "AssumeLt(bc,v)", "AssumeConvex([A,B,C,D])"],
+  "answer": "180*Angle(A,C,E)/pi",
+  "post_process": ""
+}

@@ -1,0 +1,28 @@
+{
+  "id": "JMO-2006-PRE-09",
+  "task": "solve",
+  "source_statement": "BC=5，CA=7，AB=8である三角形ABCの内部に点Oをとる。三角形OBCの外接円，三角形OCAの外接円，三角形OABの外接円の半径がすべて等しいとき，その等しい半径を求めよ。",
+  "clause_ledger": [
+    {"source": "triangle side lengths", "dsl": "direct Distance constraints in a coordinate gauge", "kind": "constraint"},
+    {"source": "O inside ABC", "dsl": "positive subtriangle area guards", "kind": "guard"},
+    {"source": "three circumradii equal", "dsl": "Radius(Circumcircle(O,B,C))=Radius(Circumcircle(O,C,A))=Radius(Circumcircle(O,A,B))", "kind": "constraint"},
+    {"source": "common circumradius", "dsl": "Radius(Circumcircle(O,B,C))", "kind": "answer"}
+  ],
+  "variables": {"names": ["ax", "ay", "ox", "oy"]},
+  "construction": [
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(5,0)"},
+    {"name": "A", "expr": "Point(ax,ay)"},
+    {"name": "O", "expr": "Point(ox,oy)"}
+  ],
+  "constraints": [
+    {"def": "Distance(B,C)", "value": 5},
+    {"def": "Distance(C,A)", "value": 7},
+    {"def": "Distance(A,B)", "value": 8},
+    {"def": "Radius(Circumcircle(O,B,C))", "value": "Radius(Circumcircle(O,C,A))"},
+    {"def": "Radius(Circumcircle(O,B,C))", "value": "Radius(Circumcircle(O,A,B))"}
+  ],
+  "guards": ["AssumeGt(ay,0)", "AssumeGt(oy,0)", "AssumeGt(Area(O,B,C),0)", "AssumeGt(Area(O,C,A),0)", "AssumeGt(Area(O,A,B),0)", "AssumeGt(Area(A,B,C),0)"],
+  "answer": "Radius(Circumcircle(O,B,C))",
+  "post_process": ""
+}

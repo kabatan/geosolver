@@ -1,0 +1,31 @@
+{
+  "id": "HMMT-2012-FEB-GEO-02",
+  "task": "solve",
+  "source_statement": "Let ABC be a triangle with ∠A = 90◦ , AB = 1, and AC = 2. Let ℓ be a line through A perpendicular to BC, and let the perpendicular bisectors of AB and AC meet ℓ at E and F , respectively. Find the length of segment EF .",
+  "clause_ledger": [
+    {"source": "right triangle AB=1, AC=2", "dsl": "direct coordinate gauge and constraints", "kind": "construction/constraint"},
+    {"source": "ell through A perpendicular BC", "dsl": "AE and AF are each constrained perpendicular to BC and pass through A", "kind": "constraint"},
+    {"source": "E,F on perpendicular bisectors of AB,AC", "dsl": "equal-distance definitions to endpoint pairs", "kind": "constraint"},
+    {"source": "EF", "dsl": "Distance(E,F)", "kind": "answer"}
+  ],
+  "variables": {"names": ["Ex", "Ey", "Fx", "Fy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(1,0)"},
+    {"name": "C", "expr": "Point(0,2)"},
+    {"name": "E", "expr": "Point(Ex,Ey)"},
+    {"name": "F", "expr": "Point(Fx,Fy)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 1},
+    {"def": "Distance(A,C)", "value": 2},
+    {"def": "Angle(B,A,C)", "value": "pi/2"},
+    {"def": "Perpendicular(Line(A,E),Line(B,C))", "value": 0},
+    {"def": "Perpendicular(Line(A,F),Line(B,C))", "value": 0},
+    {"def": "Distance(E,A)", "value": "Distance(E,B)"},
+    {"def": "Distance(F,A)", "value": "Distance(F,C)"}
+  ],
+  "guards": ["AssumeGt(Distance(E,A),0)", "AssumeGt(Distance(F,A),0)"],
+  "answer": "Distance(E,F)",
+  "post_process": ""
+}

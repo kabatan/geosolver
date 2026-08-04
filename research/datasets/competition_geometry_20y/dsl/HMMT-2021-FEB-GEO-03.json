@@ -1,0 +1,31 @@
+{
+  "id": "HMMT-2021-FEB-GEO-03",
+  "task": "solve",
+  "source_statement": "Triangle ABC has a right angle at C, and D is the foot of the altitude from C to AB. Points L, M , and N are the midpoints of segments AD, DC, and CA, respectively. If CL = 7 and BM = 12, compute BN 2 .",
+  "clause_ledger": [
+    {"source": "triangle ABC has a right angle at C", "dsl": "C=(0,0), A=(a,0), B=(0,b), with a,b>0", "kind": "construction/gauge"},
+    {"source": "D is the foot of the altitude from C to AB", "dsl": "D is the orthogonal projection of C onto line AB, written in the chosen coordinate gauge as the equivalent projection formula", "kind": "construction"},
+    {"source": "L, M, N are midpoints of AD, DC, CA", "dsl": "direct Midpoint constructions", "kind": "construction"},
+    {"source": "CL=7 and BM=12", "dsl": "direct Distance constraints", "kind": "constraint"},
+    {"source": "compute BN^2", "dsl": "square of the direct distance expression", "kind": "answer"}
+  ],
+  "variables": {"names": ["a", "b", "dx", "dy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(a,0)"},
+    {"name": "B", "expr": "Point(0,b)"},
+    {"name": "C", "expr": "Point(0,0)"},
+    {"name": "D", "expr": "Point(dx,dy)"},
+    {"name": "L", "expr": "Midpoint(A,D)"},
+    {"name": "M", "expr": "Midpoint(D,C)"},
+    {"name": "N", "expr": "Midpoint(C,A)"}
+  ],
+  "constraints": [
+    {"def": "Collinear(A,D,B)", "value": 0},
+    {"def": "Perpendicular(Line(C,D),Line(A,B))", "value": 0},
+    {"def": "Distance(C,L)", "value": 7},
+    {"def": "Distance(B,M)", "value": 12}
+  ],
+  "guards": ["AssumeGt(a,0)", "AssumeGt(b,0)"],
+  "answer": "Distance(B,N)^2",
+  "post_process": ""
+}

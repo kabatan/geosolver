@@ -1,0 +1,29 @@
+{
+  "id": "HMMT-2017-FEB-GEO-01",
+  "task": "solve",
+  "source_statement": "Let A, B, C, D be four points on a circle in that order. Also, AB = 3, BC = 5, CD = 6, and DA = 4. AP Let diagonals AC and BD intersect at P . Compute CP .",
+  "clause_ledger": [
+    {"source": "cyclic quadrilateral and diagonal intersection P", "dsl": "P=(0,0), A=(-a,0), C=(c,0), B=(0,b), D=(0,-d), Gamma=Circumcircle(A,B,C), OnCircle(D,Gamma)", "kind": "construction/constraint"},
+    {"source": "AB=3,BC=5,CD=6,DA=4", "dsl": "direct Distance constraints", "kind": "constraint"},
+    {"source": "AP/CP", "dsl": "a/c", "kind": "answer"}
+  ],
+  "variables": {"names": ["a", "c", "b", "d", "theta"]},
+  "construction": [
+    {"name": "P", "expr": "Point(0,0)"},
+    {"name": "A", "expr": "Point(-a,0)"},
+    {"name": "C", "expr": "Point(c,0)"},
+    {"name": "B", "expr": "Point(b*cos(theta),b*sin(theta))"},
+    {"name": "D", "expr": "Point(-d*cos(theta),-d*sin(theta))"},
+    {"name": "Gamma", "expr": "Circumcircle(A,B,C)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 3},
+    {"def": "Distance(B,C)", "value": 5},
+    {"def": "Distance(C,D)", "value": 6},
+    {"def": "Distance(D,A)", "value": 4},
+    {"def": "OnCircle(D,Gamma)", "value": 0}
+  ],
+  "guards": ["AssumeGt(a,0)", "AssumeGt(c,0)", "AssumeGt(b,0)", "AssumeGt(d,0)", "AssumeGt(theta,0)", "AssumeLt(theta,pi)"],
+  "answer": "a/c",
+  "post_process": ""
+}

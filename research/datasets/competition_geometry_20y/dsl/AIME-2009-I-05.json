@@ -1,0 +1,30 @@
+{
+  "id": "AIME-2009-I-05",
+  "task": "solve",
+  "source_statement": "Triangle $ABC$ has $AC = 450$ and $BC = 300$ . Points $K$ and $L$ are located on $\\overline{AC}$ and $\\overline{AB}$ respectively so that $AK = CK$ , and $\\overline{CL}$ is the angle bisector of angle $C$ . Let $P$ be the point of intersection of $\\overline{BK}$ and $\\overline{CL}$ , and let $M$ be the point on line $BK$ for which $K$ is the midpoint of $\\overline{PM}$ . If $AM = 180$ , find $LP$ .",
+  "clause_ledger": [
+    {"source": "triangle side lengths and K midpoint", "dsl": "coordinate triangle with direct side constraints and Midpoint", "kind": "construction/constraint"},
+    {"source": "CL angle bisector, P intersection, M reflection through K", "dsl": "direct incenter line intersection and Reflect(K,P) construction", "kind": "construction"},
+    {"source": "AM=180", "dsl": "direct distance constraint", "kind": "constraint"},
+    {"source": "LP", "dsl": "Distance(L,P)", "kind": "answer"}
+  ],
+  "variables": {"names": ["ax", "ay", "bx", "by"]},
+  "construction": [
+    {"name": "C", "expr": "Point(0,0)"},
+    {"name": "A", "expr": "Point(ax,ay)"},
+    {"name": "B", "expr": "Point(bx,by)"},
+    {"name": "K", "expr": "Midpoint(A,C)"},
+    {"name": "I", "expr": "Incenter(A,B,C)"},
+    {"name": "L", "expr": "Intersect(Line(C,I),Line(A,B))"},
+    {"name": "P", "expr": "Intersect(Line(B,K),Line(C,L))"},
+    {"name": "M", "expr": "Reflect(P,K)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,C)", "value": 450},
+    {"def": "Distance(B,C)", "value": 300},
+    {"def": "Distance(A,M)", "value": 180}
+  ],
+  "guards": ["AssumeGt(ay,0)", "AssumeGt(by,0)", "AssumeGt(Area(A,B,C),0)"],
+  "answer": "Distance(L,P)",
+  "post_process": ""
+}

@@ -1,0 +1,43 @@
+{
+  "id": "HMMT-2008-FEB-GEO-07",
+  "task": "solve",
+  "source_statement": "[6] Let C1 and C2 be externally tangent circles with radius 2 and 3, respectively. Let C3 be a circle internally tangent to both C1 and C2 at points A and B, respectively. The tangents to C3 at A and B meet at T , and T A = 4. Determine the radius of C3 .",
+  "clause_ledger": [
+    {"source": "C1,C2 externally tangent, radii 2,3", "dsl": "fixed centers O1,O2 with Distance(O1,O2)=5 and circles", "kind": "construction/constraint"},
+    {"source": "C3 internally tangent to C1,C2 at A,B", "dsl": "K is constructed on the positive side from the two center-distance equations, and A,B are the corresponding center-line tangency points; the original distance/collinearity constraints remain", "kind": "construction/constraint"},
+    {"source": "tangents to C3 at A,B meet at T", "dsl": "AT and BT perpendicular to KA and KB", "kind": "constraint"},
+    {"source": "TA=4", "dsl": "Distance(T,A)=4", "kind": "constraint"},
+    {"source": "radius of C3", "dsl": "r", "kind": "answer"}
+  ],
+  "variables": {"names": ["r"]},
+  "construction": [
+    {"name": "O1", "expr": "Point(0,0)"},
+    {"name": "O2", "expr": "Point(5,0)"},
+    {"name": "Kx", "expr": "2+r/5"},
+    {"name": "Ky", "expr": "sqrt((r-2)*(r-2)-Kx*Kx)"},
+    {"name": "K", "expr": "Point(Kx,Ky)"},
+    {"name": "C1", "expr": "Circle(O1,2)"},
+    {"name": "C2", "expr": "Circle(O2,3)"},
+    {"name": "C3", "expr": "Circle(K,r)"},
+    {"name": "A", "expr": "PointOnSegment(O1,K,-2/(r-2))"},
+    {"name": "B", "expr": "PointOnSegment(O2,K,-3/(r-3))"},
+    {"name": "T", "expr": "Intersect(PerpendicularLine(Line(K,A),A),PerpendicularLine(Line(K,B),B))"}
+  ],
+  "constraints": [
+    {"def": "Distance(O1,O2)", "value": 5},
+    {"def": "Distance(O1,K)", "value": "r-2"},
+    {"def": "Distance(O2,K)", "value": "r-3"},
+    {"def": "Distance(O1,A)", "value": 2},
+    {"def": "Distance(K,A)", "value": "r"},
+    {"def": "Area(O1,K,A)", "value": 0},
+    {"def": "Distance(O2,B)", "value": 3},
+    {"def": "Distance(K,B)", "value": "r"},
+    {"def": "Area(O2,K,B)", "value": 0},
+    {"def": "Perpendicular(Line(A,T),Line(A,K))", "value": 0},
+    {"def": "Perpendicular(Line(B,T),Line(B,K))", "value": 0},
+    {"def": "Distance(T,A)", "value": 4}
+  ],
+  "guards": ["AssumeGt(r,5)", "AssumeGt(Ky,0)", "AssumeGt(Area(O1,O2,K),0)"],
+  "answer": "r",
+  "post_process": ""
+}

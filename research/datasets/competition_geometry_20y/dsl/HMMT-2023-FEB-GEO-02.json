@@ -1,0 +1,35 @@
+{
+  "id": "HMMT-2023-FEB-GEO-02",
+  "task": "solve",
+  "source_statement": "Points X, Y , and Z lie on a circle with center O such that XY = 12. Points A and B lie on segment XY such that OA = AZ = ZB = BO = 5. Compute AB.",
+  "clause_ledger": [
+    {"source": "X,Y,Z lie on circle center O", "dsl": "direct equal-distance constraints from O to X,Y,Z", "kind": "constraint"},
+    {"source": "XY=12", "dsl": "direct Distance(X,Y)=12 with perpendicular-bisector gauge", "kind": "construction/constraint"},
+    {"source": "A,B on segment XY", "dsl": "the perpendicular-bisector gauge uses A=(-u,0), B=(u,0), with explicit OnSegment constraints and the nondegenerate u>0 branch", "kind": "construction/guard"},
+    {"source": "OA=AZ=ZB=BO=5", "dsl": "four direct Distance constraints", "kind": "constraint"},
+    {"source": "AB", "dsl": "Distance(A,B)", "kind": "answer"}
+  ],
+  "variables": {"names": ["h", "u", "zx", "zy"]},
+  "construction": [
+    {"name": "X", "expr": "Point(-6,0)"},
+    {"name": "Y", "expr": "Point(6,0)"},
+    {"name": "O", "expr": "Point(0,h)"},
+    {"name": "A", "expr": "Point(-u,0)"},
+    {"name": "B", "expr": "Point(u,0)"},
+    {"name": "Z", "expr": "Point(zx,zy)"}
+  ],
+  "constraints": [
+    {"def": "Distance(X,Y)", "value": 12},
+    {"def": "Distance(O,X)", "value": "Distance(O,Y)"},
+    {"def": "Distance(O,Z)", "value": "Distance(O,X)"},
+    {"def": "Distance(O,A)", "value": 5},
+    {"def": "Distance(A,Z)", "value": 5},
+    {"def": "Distance(Z,B)", "value": 5},
+    {"def": "Distance(B,O)", "value": 5},
+    {"def": "OnSegment(A,X,Y)", "value": 0},
+    {"def": "OnSegment(B,X,Y)", "value": 0}
+  ],
+  "guards": ["AssumeGt(u,0)", "AssumeGt(zy,0)"],
+  "answer": "Distance(A,B)",
+  "post_process": ""
+}

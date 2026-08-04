@@ -1,0 +1,30 @@
+{
+  "id": "AIME-2008-II-05",
+  "task": "solve",
+  "source_statement": "In trapezoid $ABCD$ with $\\overline{BC}\\parallel\\overline{AD}$ , let $BC = 1000$ and $AD = 2008$ . Let $\\angle A = 37^\\circ$ , $\\angle D = 53^\\circ$ , and $M$ and $N$ be the midpoints of $\\overline{BC}$ and $\\overline{AD}$ , respectively. Find the length $MN$ .",
+  "clause_ledger": [
+    {"source": "trapezoid ABCD with BC parallel AD", "dsl": "A,D on y=0 and B,C on y=h with BC horizontal", "kind": "construction"},
+    {"source": "BC=1000 and AD=2008", "dsl": "direct Distance constraints", "kind": "constraint"},
+    {"source": "angle A=37 degrees and angle D=53 degrees", "dsl": "direct Angle(D,A,B) and Angle(C,D,A) constraints", "kind": "constraint"},
+    {"source": "M,N are midpoints", "dsl": "Midpoint(B,C), Midpoint(A,D)", "kind": "construction"},
+    {"source": "find MN", "dsl": "Distance(M,N)", "kind": "answer"}
+  ],
+  "variables": {"names": ["Bx", "h"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0, 0)"},
+    {"name": "D", "expr": "Point(2008, 0)"},
+    {"name": "B", "expr": "Point(Bx, h)"},
+    {"name": "C", "expr": "Point(Bx + 1000, h)"},
+    {"name": "M", "expr": "Midpoint(B, C)"},
+    {"name": "N", "expr": "Midpoint(A, D)"}
+  ],
+  "constraints": [
+    {"def": "Distance(B, C)", "value": 1000},
+    {"def": "Distance(A, D)", "value": 2008},
+    {"def": "Angle(D, A, B)", "value": "37*pi/180"},
+    {"def": "Angle(C, D, A)", "value": "53*pi/180"}
+  ],
+  "guards": ["AssumeGt(h, 0)", "AssumeGt(Bx, 0)", "AssumeLt(Bx, 1008)"],
+  "answer": "Distance(M, N)",
+  "post_process": ""
+}

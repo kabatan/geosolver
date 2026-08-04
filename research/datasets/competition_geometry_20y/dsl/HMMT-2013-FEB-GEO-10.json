@@ -1,0 +1,38 @@
+{
+  "id": "HMMT-2013-FEB-GEO-10",
+  "task": "solve",
+  "source_statement": "Triangle ABC is inscribed in a circle ω. Let the bisector of angle A meet ω at D and BC at E. Let the reflections of A across D and C be D′ and C ′ , respectively. Suppose that ∠A = 60◦ , AB = 3, and AE = 4. If the tangent to ω at A meets line BC at P , and the circumcircle of AP D′ meets line BC at F (other than P ), compute F C ′ . HMMT 2013 Saturday 16 February 2013 Geometry Test PUT LABEL HERE Name Team ID# Organization Team",
+  "clause_ledger": [
+    {"source": "triangle ABC inscribed in omega, angle A=60, AB=3", "dsl": "A,B,C with Circumcircle and angle/side constraints", "kind": "construction/constraint"},
+    {"source": "A-angle bisector meets omega again D and BC at E", "dsl": "E=angle-bisector/BC intersection; D=second intersection with Gamma", "kind": "construction"},
+    {"source": "D' and C' are reflections of A across D and C", "dsl": "D'=Reflect(A,D), C'=Reflect(A,C)", "kind": "construction"},
+    {"source": "tangent at A meets BC at P; circumcircle APD' meets BC again F", "dsl": "direct tangent/intersection constructions", "kind": "construction"},
+    {"source": "FC'", "dsl": "Distance(F,C')", "kind": "answer"}
+  ],
+  "variables": {"names": ["bx", "cx", "cy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(bx,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "Gamma", "expr": "Circumcircle(A,B,C)"},
+    {"name": "Lbis", "expr": "AngleBisector(B,A,C)"},
+    {"name": "E", "expr": "Intersect(Lbis,Line(B,C))"},
+    {"name": "D", "expr": "Intersect(Line(A,E),Gamma,exclude=A)"},
+    {"name": "Dp", "expr": "Reflect(A,D)"},
+    {"name": "Cp", "expr": "Reflect(A,C)"},
+    {"name": "P", "expr": "Intersect(Tangent(A,Gamma),Line(B,C))"},
+    {"name": "Gamma2", "expr": "Circumcircle(A,P,Dp)"},
+    {"name": "F", "expr": "Intersect(Line(B,C),Gamma2,exclude=P)"}
+  ],
+  "constraints": [
+    {"def": "Angle(B,A,C)", "value": "pi/3"},
+    {"def": "Distance(A,B)", "value": 3},
+    {"def": "OnCircle(D,Gamma)", "value": 0},
+    {"def": "OnLine(E,B,C)", "value": 0},
+    {"def": "Distance(A,E)", "value": 4}
+  ],
+  "guards": ["AssumeGt(bx,0)", "AssumeGt(cy,0)", "AssumeGt(Distance(F,Cp),0)"],
+  "answer": "Distance(F,Cp)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

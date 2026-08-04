@@ -1,0 +1,103 @@
+{
+  "id": "AIME-2023-I-08",
+  "task": "solve",
+  "source_statement": "Rhombus $ABCD$ has $\\angle BAD < 90^\\circ.$ There is a point $P$ on the incircle of the rhombus such that the distances from $P$ to the lines $DA,AB,$ and $BC$ are $9,5,$ and $16,$ respectively. Find the perimeter of $ABCD.$",
+  "clause_ledger": [
+    {
+      "source": "rhombus ABCD and incircle",
+      "dsl": "AB=AD=s, C=B+D, I=midpoint(BD), circle tangent to all four source sides",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "P on incircle",
+      "dsl": "P is a variable point on the source incircle",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "distances from P to DA,AB,BC are 9,5,16",
+      "dsl": "three direct Distance(point,line) constraints",
+      "kind": "constraint"
+    },
+    {
+      "source": "perimeter",
+      "dsl": "4*s",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "s",
+      "u",
+      "v",
+      "px",
+      "py"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(s,0)"
+    },
+    {
+      "name": "D",
+      "expr": "Point(u,v)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(s+u,v)"
+    },
+    {
+      "name": "I",
+      "expr": "Midpoint(B,D)"
+    },
+    {
+      "name": "omega",
+      "expr": "Circle(I,Distance(I,Line(A,B)))"
+    },
+    {
+      "name": "P",
+      "expr": "Point(px,py)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(A,B)",
+      "value": "Distance(A,D)"
+    },
+    {
+      "def": "Distance(I,Line(A,B))",
+      "value": "Distance(I,Line(A,D))"
+    },
+    {
+      "def": "Distance(I,Line(A,B))",
+      "value": "Distance(I,Line(B,C))"
+    },
+    {
+      "def": "OnCircle(P,omega)",
+      "value": 0
+    },
+    {
+      "def": "Distance(P,Line(A,D))",
+      "value": 9
+    },
+    {
+      "def": "Distance(P,Line(A,B))",
+      "value": 5
+    },
+    {
+      "def": "Distance(P,Line(B,C))",
+      "value": 16
+    }
+  ],
+  "guards": [
+    "AssumeGt(s,0)",
+    "AssumeGt(v,0)",
+    "AssumeGt(u,0)"
+  ],
+  "answer": "4*s",
+  "post_process": ""
+}

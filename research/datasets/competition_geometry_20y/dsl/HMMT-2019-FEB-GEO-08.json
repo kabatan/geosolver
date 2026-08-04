@@ -1,0 +1,28 @@
+{
+  "id": "HMMT-2019-FEB-GEO-08",
+  "task": "solve",
+  "source_statement": "In triangle ABC with AB < AC, let H be the orthocenter and O be the circumcenter. Given that the midpoint of OH lies on BC, BC = 1, and the perimeter of ABC is 6, find the area of ABC.",
+  "clause_ledger": [
+    {"source": "triangle BC=1 and perimeter 6", "dsl": "B=(0,0), C=(1,0), A variable with direct perimeter constraint", "kind": "construction/constraint"},
+    {"source": "H orthocenter, O circumcenter", "dsl": "standard Orthocenter/Circumcenter constructors", "kind": "construction"},
+    {"source": "midpoint OH lies on BC", "dsl": "N=Midpoint(O,H), Area(B,C,N)=0", "kind": "constraint"},
+    {"source": "area ABC", "dsl": "Area(A,B,C)", "kind": "answer"}
+  ],
+  "variables": {"names": ["ax", "ay"]},
+  "construction": [
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(1,0)"},
+    {"name": "A", "expr": "Point(ax,ay)"},
+    {"name": "H", "expr": "Orthocenter(A,B,C)"},
+    {"name": "O", "expr": "Circumcenter(A,B,C)"},
+    {"name": "N", "expr": "Midpoint(O,H)"}
+  ],
+  "constraints": [
+    {"def": "Distance(B,C)", "value": 1},
+    {"def": "Distance(A,B)+Distance(B,C)+Distance(C,A)", "value": 6},
+    {"def": "Area(B,C,N)", "value": 0}
+  ],
+  "guards": ["AssumeGt(ay,0)", "AssumeLt(Distance(A,B),Distance(A,C))", "AssumeGt(Area(A,B,C),0)"],
+  "answer": "Area(A,B,C)",
+  "post_process": ""
+}

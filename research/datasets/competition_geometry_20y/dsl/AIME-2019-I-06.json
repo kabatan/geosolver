@@ -1,0 +1,28 @@
+{
+  "id": "AIME-2019-I-06",
+  "task": "solve",
+  "source_statement": "In convex quadrilateral $KLMN$ , side $\\overline{MN}$ is perpendicular to diagonal $\\overline{KM}$ , side $\\overline{KL}$ is perpendicular to diagonal $\\overline{LN}$ , $MN = 65$ , and $KL = 28$ . The line through $L$ perpendicular to side $\\overline{KN}$ intersects diagonal $\\overline{KM}$ at $O$ with $KO = 8$ . Find $MO$ .",
+  "clause_ledger": [
+    {"source": "convex quadrilateral and two perpendicularities", "dsl": "coordinate K,M,N,L with direct constraints", "kind": "construction/constraint"},
+    {"source": "MN=65, KL=28, O construction and KO=8", "dsl": "direct distance, PerpendicularLine, intersection constraints", "kind": "construction/constraint"},
+    {"source": "MO", "dsl": "Distance(M,O)", "kind": "answer"}
+  ],
+  "variables": {"names": ["m", "nx", "ny", "lx", "ly"]},
+  "construction": [
+    {"name": "K", "expr": "Point(0,0)"},
+    {"name": "M", "expr": "Point(m,0)"},
+    {"name": "N", "expr": "Point(nx,ny)"},
+    {"name": "L", "expr": "Point(lx,ly)"},
+    {"name": "O", "expr": "Intersect(Line(K,M),PerpendicularLine(Line(K,N),L))"}
+  ],
+  "constraints": [
+    {"def": "Perpendicular(Line(M,N),Line(K,M))", "value": 0},
+    {"def": "Perpendicular(Line(K,L),Line(L,N))", "value": 0},
+    {"def": "Distance(M,N)", "value": 65},
+    {"def": "Distance(K,L)", "value": 28},
+    {"def": "Distance(K,O)", "value": 8}
+  ],
+  "guards": ["AssumeGt(m,8)", "AssumeGt(ny,0)", "AssumeGt(ly,0)", "AssumeConvex([K,L,M,N])"],
+  "answer": "Distance(M,O)",
+  "post_process": ""
+}

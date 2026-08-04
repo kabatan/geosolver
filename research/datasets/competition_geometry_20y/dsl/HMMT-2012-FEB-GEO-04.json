@@ -1,0 +1,39 @@
+{
+  "id": "HMMT-2012-FEB-GEO-04",
+  "task": "solve",
+  "source_statement": "There are circles ω1 and ω2 . They intersect in two points, one of which is the point A. B lies on ω1 such that AB is tangent to ω2 . The tangent to ω1 at B intersects ω2 at C and D, where D is the closer to B. AD intersects ω1 again at E. If BD = 3 and CD = 13, find EB/ED.",
+  "clause_ledger": [
+    {"source": "tangent to omega1 at B meets omega2 at C,D with BD=3, CD=13", "dsl": "B=(0,0), D=(3,0), C=(16,0), omega1 center on the vertical through B, and omega2 through C,D", "kind": "construction"},
+    {"source": "AB tangent to omega2 at A and A on both circles", "dsl": "OnCircle(A,omega1), OnCircle(A,omega2), IsTangent(Line(A,B),omega2)=0", "kind": "constraint"},
+    {"source": "AD meets omega1 again at E", "dsl": "E=Intersect(Line(A,D),omega1,exclude=A)", "kind": "construction"},
+    {"source": "EB/ED", "dsl": "Distance(E,B)/Distance(E,D)", "kind": "answer"}
+  ],
+  "variables": {"names": []},
+  "construction": [
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "D", "expr": "Point(3,0)"},
+    {"name": "C", "expr": "Point(16,0)"},
+    {"name": "m", "expr": "13/(8*sqrt(3))"},
+    {"name": "xA", "expr": "(19/2)/(1+m*m)"},
+    {"name": "A", "expr": "Point(xA,m*xA)"},
+    {"name": "r1", "expr": "xA*(1+m*m)/(2*m)"},
+    {"name": "O1", "expr": "Point(0,r1)"},
+    {"name": "omega1", "expr": "Circle(O1,r1)"},
+    {"name": "O2", "expr": "Point(19/2,0)"},
+    {"name": "r2", "expr": "13/2"},
+    {"name": "omega2", "expr": "Circle(O2,r2)"},
+    {"name": "T", "expr": "FootOfPerpendicular(O2,Line(A,B))"},
+    {"name": "E", "expr": "Intersect(Line(A,D),omega1,exclude=A)"}
+  ],
+  "constraints": [
+    {"def": "Distance(B,D)", "value": 3},
+    {"def": "Distance(C,D)", "value": 13},
+    {"def": "OnCircle(A,omega1)", "value": 0},
+    {"def": "OnCircle(A,omega2)", "value": 0},
+    {"def": "Distance(O2,T)", "value": "r2"},
+    {"def": "OnCircle(E,omega1)", "value": 0}
+  ],
+  "guards": ["AssumeGt(r1,0)", "AssumeGt(Distance(E,B),0)", "AssumeGt(Distance(E,D),0)"],
+  "answer": "Distance(E,B)/Distance(E,D)",
+  "post_process": ""
+}

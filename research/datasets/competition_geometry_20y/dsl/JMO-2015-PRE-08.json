@@ -1,0 +1,29 @@
+{
+  "id": "JMO-2015-PRE-08",
+  "task": "solve",
+  "source_statement": "平面上に5点A，B，C，D，Pがあり，このうちA，B，C，Dはこの順に同一直線上に並んでいる。また，AB=BC=CD=6，PB=5，PC=7をみたしている。三角形PACの外接円と三角形PBDの外接円の交点のうちPでない方をQとおくとき，線分PQの長さを求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {"source": "A,B,C,D collinear in this order and AB=BC=CD=6", "dsl": "A=(-6,0), B=(0,0), C=(6,0), D=(12,0), with order guard", "kind": "construction/constraint"},
+    {"source": "PB=5 and PC=7", "dsl": "Distance(P,B)=5 and Distance(P,C)=7", "kind": "constraint"},
+    {"source": "Q is the second intersection of circumcircles PAC and PBD", "dsl": "Q=Intersect(Circumcircle(P,A,C),Circumcircle(P,B,D),exclude=P)", "kind": "construction"},
+    {"source": "PQ", "dsl": "Distance(P,Q)", "kind": "answer"}
+  ],
+  "variables": {"names": ["px", "py"]},
+  "construction": [
+    {"name": "A", "expr": "Point(-6,0)"},
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(6,0)"},
+    {"name": "D", "expr": "Point(12,0)"},
+    {"name": "P", "expr": "Point(px,py)"},
+    {"name": "Gamma1", "expr": "Circumcircle(P,A,C)"},
+    {"name": "Gamma2", "expr": "Circumcircle(P,B,D)"},
+    {"name": "Q", "expr": "Intersect(Gamma1,Gamma2,exclude=P)"}
+  ],
+  "constraints": [
+    {"def": "Distance(P,B)", "value": 5},
+    {"def": "Distance(P,C)", "value": 7}
+  ],
+  "guards": ["AssumeGt(py,0)"],
+  "answer": "Distance(P,Q)",
+  "post_process": ""
+}

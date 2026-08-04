@@ -1,0 +1,35 @@
+{
+  "id": "HMMT-2018-FEB-GEO-10",
+  "task": "solve",
+  "source_statement": "Let ABC be a triangle such that AB = 6, BC = 5, AC = 7. Let the tangents to the circumcircle of ABC at B and C meet at X. Let Z be a point on the circumcircle of ABC. Let Y be the foot of the perpendicular from X to CZ. Let K be the intersection of the circumcircle of BCY with line AB. Given that Y is on the interior of segment CZ and Y Z = 3CY , compute AK.",
+  "clause_ledger": [
+    {"source": "AB=6, BC=5, AC=7", "dsl": "A,B,C with exact triangle side constraints", "kind": "construction/constraint"},
+    {"source": "X is intersection of tangents at B,C", "dsl": "X=Intersect(Tangent(B,Gamma),Tangent(C,Gamma))", "kind": "construction"},
+    {"source": "Z on circumcircle; Y is foot from X to CZ; YZ=3CY", "dsl": "Z variable on Gamma, Y=FootOfPerpendicular(X,Line(C,Z)), direct distance ratio", "kind": "construction/constraint"},
+    {"source": "K is intersection of circumcircle BCY with AB", "dsl": "K=Intersect(Circumcircle(B,C,Y),Line(A,B))", "kind": "construction"},
+    {"source": "AK", "dsl": "Distance(A,K)", "kind": "answer"}
+  ],
+  "variables": {"names": ["cx", "cy", "zx", "zy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(6,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "Gamma", "expr": "Circumcircle(A,B,C)"},
+    {"name": "X", "expr": "Intersect(Tangent(B,Gamma),Tangent(C,Gamma))"},
+    {"name": "Z", "expr": "Point(zx,zy)"},
+    {"name": "Y", "expr": "FootOfPerpendicular(X,Line(C,Z))"},
+    {"name": "K", "expr": "Intersect(Circumcircle(B,C,Y),Line(A,B))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 6},
+    {"def": "Distance(B,C)", "value": 5},
+    {"def": "Distance(C,A)", "value": 7},
+    {"def": "OnCircle(Z,Gamma)", "value": 0},
+    {"def": "Distance(Y,Z)", "value": "3*Distance(C,Y)"},
+    {"def": "OnSegment(Y,C,Z)", "value": 0}
+  ],
+  "guards": ["AssumeGt(cy,0)", "AssumeGt(Distance(C,Y),0)", "AssumeGt(Distance(A,K),0)"],
+  "answer": "Distance(A,K)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

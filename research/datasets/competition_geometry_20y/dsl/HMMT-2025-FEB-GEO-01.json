@@ -1,0 +1,41 @@
+{
+  "id": "HMMT-2025-FEB-GEO-01",
+  "task": "solve",
+  "source_statement": "Equilateral triangles △ABC and △DEF are drawn such that points B, E, F , and C lie on a line in this order, and point D lies inside triangle △ABC. If BE = 14, EF = 15, and F C = 16, compute AD.",
+  "clause_ledger": [
+    {"source": "equilateral triangles ABC and DEF", "dsl": "equal-side Distance constraints for each triangle", "kind": "constraint"},
+    {"source": "B,E,F,C lie on a line in this order", "dsl": "all four points are on y=0 with 0<14<Fx<Cx", "kind": "construction/guard"},
+    {"source": "D lies inside ABC", "dsl": "positive subtriangle areas and area partition guard", "kind": "guard"},
+    {"source": "BE=14, EF=15, FC=16", "dsl": "direct Distance constraints", "kind": "constraint"},
+    {"source": "compute AD", "dsl": "Distance(A,D)", "kind": "answer"}
+  ],
+  "variables": {"names": ["Fx", "Cx", "Ax", "Ay", "Dx", "Dy"]},
+  "construction": [
+    {"name": "B", "expr": "Point(0, 0)"},
+    {"name": "E", "expr": "Point(14, 0)"},
+    {"name": "F", "expr": "Point(Fx, 0)"},
+    {"name": "C", "expr": "Point(Cx, 0)"},
+    {"name": "A", "expr": "Point(Ax, Ay)"},
+    {"name": "D", "expr": "Point(Dx, Dy)"}
+  ],
+  "constraints": [
+    {"def": "Distance(B, E)", "value": 14},
+    {"def": "Distance(E, F)", "value": 15},
+    {"def": "Distance(F, C)", "value": 16},
+    {"def": "Distance(A, B)", "value": "Distance(B, C)"},
+    {"def": "Distance(A, C)", "value": "Distance(A, B)"},
+    {"def": "Distance(D, E)", "value": "Distance(E, F)"},
+    {"def": "Distance(D, F)", "value": "Distance(E, F)"},
+    {"def": "Area(A, B, D) + Area(B, C, D) + Area(C, A, D)", "value": "Area(A, B, C)"}
+  ],
+  "guards": [
+    "AssumeGt(Fx, 14)",
+    "AssumeGt(Cx, Fx)",
+    "AssumeGt(Ay, 0)",
+    "AssumeGt(Area(A, B, D), 0)",
+    "AssumeGt(Area(B, C, D), 0)",
+    "AssumeGt(Area(C, A, D), 0)"
+  ],
+  "answer": "Distance(A, D)",
+  "post_process": ""
+}

@@ -1,0 +1,28 @@
+{
+  "id": "AIME-2009-I-12",
+  "task": "solve",
+  "source_statement": "In right $\\triangle ABC$ with hypotenuse $\\overline{AB}$ , $AC = 12$ , $BC = 35$ , and $\\overline{CD}$ is the altitude to $\\overline{AB}$ . Let $\\omega$ be the circle having $\\overline{CD}$ as a diameter. Let $I$ be a point outside $\\triangle ABC$ such that $\\overline{AI}$ and $\\overline{BI}$ are both tangent to circle $\\omega$ . The ratio of the perimeter of $\\triangle ABI$ to the length $AB$ can be expressed in the form $\\frac {m}{n}$ , where $m$ and $n$ are relatively prime positive integers. Find $m + n$ .",
+  "clause_ledger": [
+    {"source": "right triangle and altitude", "dsl": "fixed coordinate right-triangle gauge and FootOfPerpendicular", "kind": "construction"},
+    {"source": "circle with diameter CD", "dsl": "Circle(Midpoint(C,D),Distance(C,D)/2)", "kind": "construction"},
+    {"source": "IA and IB tangent to omega", "dsl": "power-of-point equalities for A and B tangent lines", "kind": "constraint"},
+    {"source": "perimeter ratio m/n and m+n", "dsl": "direct ratio plus fraction post-process", "kind": "answer"}
+  ],
+  "variables": {"names": ["ix", "iy"]},
+  "construction": [
+    {"name": "C", "expr": "Point(0,0)"},
+    {"name": "A", "expr": "Point(12,0)"},
+    {"name": "B", "expr": "Point(0,35)"},
+    {"name": "D", "expr": "FootOfPerpendicular(C,Line(A,B))"},
+    {"name": "O", "expr": "Midpoint(C,D)"},
+    {"name": "omega", "expr": "Circle(O,Distance(C,D)/2)"},
+    {"name": "I", "expr": "Point(ix,iy)"}
+  ],
+  "constraints": [
+    {"def": "Distance(O,Line(A,I))", "value": "Distance(C,D)/2"},
+    {"def": "Distance(O,Line(B,I))", "value": "Distance(C,D)/2"}
+  ],
+  "guards": ["AssumeLt(ix,0)", "AssumeLt(iy,0)"],
+  "answer": "(Distance(A,I)+Distance(B,I))/Distance(A,B)+1",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+}

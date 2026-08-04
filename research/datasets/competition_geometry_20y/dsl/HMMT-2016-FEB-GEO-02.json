@@ -1,0 +1,27 @@
+{
+  "id": "HMMT-2016-FEB-GEO-02",
+  "task": "solve",
+  "source_statement": "Let ABC be a triangle with AB = 13, BC = 14, CA = 15. Let H be the orthocenter of ABC. Find the distance between the circumcenters of triangles AHB and AHC.",
+  "clause_ledger": [
+    {"source": "triangle and orthocenter", "dsl": "A=(5,12), B=(0,0), C=(14,0), H=(5,15/4)", "kind": "construction"},
+    {"source": "circumcenters of AHB and AHC", "dsl": "U=Circumcenter(A,H,B), V=Circumcenter(A,H,C)", "kind": "construction"},
+    {"source": "distance UV", "dsl": "Distance(U,V)", "kind": "answer"}
+  ],
+  "variables": {"names": []},
+  "construction": [
+    {"name": "A", "expr": "Point(5,12)"},
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(14,0)"},
+    {"name": "H", "expr": "Point(5,15/4)"},
+    {"name": "U", "expr": "Circumcenter(A,H,B)"},
+    {"name": "V", "expr": "Circumcenter(A,H,C)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 13},
+    {"def": "Distance(B,C)", "value": 14},
+    {"def": "Distance(C,A)", "value": 15}
+  ],
+  "guards": [],
+  "answer": "Distance(U,V)",
+  "post_process": ""
+}

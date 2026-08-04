@@ -1,0 +1,30 @@
+{
+  "id": "HMMT-2007-FEB-GEO-06",
+  "task": "solve",
+  "source_statement": "[5] Triangle ABC has ∠A = 90◦ , side BC = 25, AB > AC, and area 150. Circle ω is inscribed in ABC, with M its point of tangency on AC. Line BM meets ω a second time at point L. Find the length of segment BL.",
+  "clause_ledger": [
+    {"source": "right triangle and BC=25, area=150, AB>AC", "dsl": "direct coordinate triangle with angle, side, area, and inequality constraints", "kind": "construction/constraint/guard"},
+    {"source": "omega is the incircle", "dsl": "omega=Incircle(A,B,C)", "kind": "construction"},
+    {"source": "M is tangency point on AC", "dsl": "M=IncircleContactPoint(A,B,C,side='CA')", "kind": "construction"},
+    {"source": "BM meets omega again at L", "dsl": "L=Intersect(Line(B,M),omega,exclude=M)", "kind": "construction"},
+    {"source": "BL", "dsl": "Distance(B,L)", "kind": "answer"}
+  ],
+  "variables": {"names": ["b", "c"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0, 0)"},
+    {"name": "B", "expr": "Point(b, 0)"},
+    {"name": "C", "expr": "Point(0, c)"},
+    {"name": "omega", "expr": "Incircle(A, B, C)"},
+    {"name": "I", "expr": "Center(omega)"},
+    {"name": "M", "expr": "FootOfPerpendicular(I, Line(A,C))"},
+    {"name": "L", "expr": "Intersect(Line(B, M), omega, exclude=M)"}
+  ],
+  "constraints": [
+    {"def": "Angle(B,A,C)", "value": "pi/2"},
+    {"def": "Distance(B,C)", "value": 25},
+    {"def": "Area(A,B,C)", "value": 150}
+  ],
+  "guards": ["AssumeGt(b,0)", "AssumeGt(c,0)", "AssumeGt(Distance(A,B),Distance(A,C))"],
+  "answer": "Distance(B,L)",
+  "post_process": ""
+}

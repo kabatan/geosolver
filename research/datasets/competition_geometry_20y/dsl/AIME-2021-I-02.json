@@ -1,0 +1,23 @@
+{
+  "id": "AIME-2021-I-02",
+  "task": "solve",
+  "source_statement": "In the diagram below, $ABCD$ is a rectangle with side lengths $AB=3$ and $BC=11$ , and $AECF$ is a rectangle with side lengths $AF=7$ and $FC=9,$ as shown. The area of the shaded region common to the interiors of both rectangles is $\\frac mn$ , where $m$ and $n$ are relatively prime positive integers. Find $m+n$ . [asy] pair A, B, C, D, E, F; A = (0,3); B=(0,0); C=(11,0); D=(11,3); E=foot(C, A, (9/4,0)); F=foot(A, C, (35/4,3)); draw(A--B--C--D--cycle); draw(A--E--C--F--cycle); filldraw(A--(9/4,0)--C--(35/4,3)--cycle,gray*0.5+0.5*lightgray); dot(A^^B^^C^^D^^E^^F); label(\"$A$\", A, W); label(\"$B$\", B, W); label(\"$C$\", C, (1,0)); label(\"$D$\", D, (1,0)); label(\"$F$\", F, N); label(\"$E$\", E, S); [/asy]",
+  "clause_ledger": [
+    {"source": "the two rectangles and their labeled vertices", "dsl": "the exact coordinates printed in the source Asym figure", "kind": "construction"},
+    {"source": "shaded common interior", "dsl": "the source-order quadrilateral A-E-C-F", "kind": "answer"},
+    {"source": "m/n then m+n", "dsl": "direct area followed by explicit fraction presentation", "kind": "postprocess"}
+  ],
+  "variables": {"names": []},
+  "construction": [
+    {"name": "A", "expr": "Point(0,3)"},
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(11,0)"},
+    {"name": "D", "expr": "Point(11,3)"},
+    {"name": "E", "expr": "Point(9/4,0)"},
+    {"name": "F", "expr": "Point(35/4,3)"}
+  ],
+  "constraints": [],
+  "guards": [],
+  "answer": "Area(A,E,C,F)",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+}

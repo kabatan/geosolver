@@ -1,0 +1,106 @@
+{
+  "id": "JMO-2017-PRE-04",
+  "task": "solve",
+  "source_statement": "相異なる3点D，B，Cは同一直線上にあり，DB=BC=2である。点AはAB=ACをみたし，直線ABと直線DCのそれぞれにおいて，AとDで接する円Γが存在するとする。Γと直線ABの交点のうちAでない方をEとし，直線CEとΓの交点のうちEでない方をFとするとき，線分EFの長さを求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "D,B,C collinear in that order with DB=BC=2",
+      "dsl": "D=(-2,0), B=(0,0), C=(2,0) coordinate gauge",
+      "kind": "construction"
+    },
+    {
+      "source": "AB=AC",
+      "dsl": "A=(0,h) gives the stated isosceles branch",
+      "kind": "construction"
+    },
+    {
+      "source": "Gamma tangent to AC at A and DC at D",
+      "dsl": "Circle(O,r), radius-line distance constraints and perpendicular radii at the two specified contact points",
+      "kind": "constraint"
+    },
+    {
+      "source": "E,F are the specified second intersections",
+      "dsl": "direct Intersect(...,exclude=...) constructions",
+      "kind": "construction"
+    },
+    {
+      "source": "EF",
+      "dsl": "Distance(E,F)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "h",
+      "ox",
+      "oy",
+      "r"
+    ]
+  },
+  "construction": [
+    {
+      "name": "D",
+      "expr": "Point(-2,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(2,0)"
+    },
+    {
+      "name": "A",
+      "expr": "Point(0,h)"
+    },
+    {
+      "name": "O",
+      "expr": "Point(ox,oy)"
+    },
+    {
+      "name": "Gamma",
+      "expr": "Circle(O,r)"
+    },
+    {
+      "name": "E",
+      "expr": "Intersect(Line(A,B),Gamma,exclude=A)"
+    },
+    {
+      "name": "F",
+      "expr": "Intersect(Line(C,E),Gamma,exclude=E)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(O,A)",
+      "value": "r"
+    },
+    {
+      "def": "Distance(O,D)",
+      "value": "r"
+    },
+    {
+      "def": "Distance(O,Line(A,C))",
+      "value": "r"
+    },
+    {
+      "def": "Distance(O,Line(D,C))",
+      "value": "r"
+    },
+    {
+      "def": "Perpendicular(Line(O,A),Line(A,C))",
+      "value": 0
+    },
+    {
+      "def": "Perpendicular(Line(O,D),Line(D,C))",
+      "value": 0
+    }
+  ],
+  "guards": [
+    "AssumeGt(h,0)",
+    "AssumeGt(r,0)"
+  ],
+  "answer": "Distance(E,F)",
+  "post_process": ""
+}

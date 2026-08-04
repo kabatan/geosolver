@@ -1,0 +1,25 @@
+{
+  "id": "HMMT-2025-FEB-GEO-02",
+  "task": "solve",
+  "source_statement": "In a two-dimensional cave with a parallel floor and ceiling, two stalactites of lengths 16 and 36 hang perpendicularly from the ceiling, while two stalagmites of heights 25 and 49 grow perpendicularly from the ground. If the tips of these four structures form the vertices of a square in some order, compute the height of the cave.",
+  "clause_ledger": [
+    {"source": "parallel floor/ceiling and four vertical structures", "dsl": "floor y=0 and ceiling y=H, with four tip points at the four stated heights", "kind": "construction"},
+    {"source": "tips form a square in some order", "dsl": "the two stalactite tips and the two stalagmite tips are the opposite pairs forced by their unequal vertical differences; equal, perpendicular diagonals with a common midpoint are equivalent to the square condition", "kind": "constraint/branch"},
+    {"source": "cave height", "dsl": "direct variable H", "kind": "answer"}
+  ],
+  "variables": {"names": ["H", "x1", "x2", "x3", "x4"]},
+  "construction": [
+    {"name": "T1", "expr": "Point(x1,H-16)"},
+    {"name": "T2", "expr": "Point(x2,H-36)"},
+    {"name": "T3", "expr": "Point(x3,25)"},
+    {"name": "T4", "expr": "Point(x4,49)"}
+  ],
+  "constraints": [
+    {"def": "Distance(Midpoint(T1,T2),Midpoint(T3,T4))", "value": 0},
+    {"def": "Distance(T1,T2)", "value": "Distance(T3,T4)"},
+    {"def": "Perpendicular(Line(T1,T2),Line(T3,T4))", "value": 0}
+  ],
+  "guards": ["AssumeGt(H,49)", "AssumeGt(Distance(T1,T2),0)"] ,
+  "answer": "H",
+  "post_process": ""
+}

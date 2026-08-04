@@ -1,0 +1,32 @@
+{
+  "id": "HMMT-2006-FEB-GEO-03",
+  "task": "solve",
+  "source_statement": "Let A, B, C, and D be points on a circle such that AB = 11 and CD = 19. Point P is on segment AB with AP = 6, and Q is on segment CD with CQ = 7. The line through P and Q intersects the circle at X and Y . If P Q = 27, find XY .",
+  "clause_ledger": [
+    {"source": "A,B,C,D lie on one circle", "dsl": "Gamma=Circumcircle(A,B,C) and OnCircle(D,Gamma)", "kind": "constraint"},
+    {"source": "AB=11, AP=6 with P on AB", "dsl": "A=(-6,0), P=(0,0), B=(5,0)", "kind": "construction"},
+    {"source": "CD=19, CQ=7 with Q on CD", "dsl": "C=Q+7u and D=Q-12u for a unit direction u", "kind": "construction"},
+    {"source": "PQ=27", "dsl": "P=(0,0), Q=(27,0)", "kind": "construction"},
+    {"source": "line PQ intersects the circle at X,Y", "dsl": "X and Y are the two line-circle intersections", "kind": "construction"},
+    {"source": "XY", "dsl": "Distance(X,Y)", "kind": "answer"}
+  ],
+  "variables": {"names": ["a", "c", "s"]},
+  "construction": [
+    {"name": "A", "expr": "Point(-6*cos(a),-6*sin(a))"},
+    {"name": "P", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(5*cos(a),5*sin(a))"},
+    {"name": "Q", "expr": "Point(27,0)"},
+    {"name": "C", "expr": "Point(27+7*c,7*s)"},
+    {"name": "D", "expr": "Point(27-12*c,-12*s)"},
+    {"name": "Gamma", "expr": "Circumcircle(A,B,C)"},
+    {"name": "O", "expr": "Center(Gamma)"},
+    {"name": "H", "expr": "FootOfPerpendicular(O,Line(P,Q))"}
+  ],
+  "constraints": [
+    {"def": "c*c+s*s", "value": 1},
+    {"def": "OnCircle(D,Gamma)", "value": 0}
+  ],
+  "guards": ["AssumeGt(s,0)", "AssumeGt(a,0)", "AssumeLt(a,pi)"],
+  "answer": "2*sqrt(Radius(Gamma)*Radius(Gamma)-Distance(O,H)*Distance(O,H))",
+  "post_process": ""
+}

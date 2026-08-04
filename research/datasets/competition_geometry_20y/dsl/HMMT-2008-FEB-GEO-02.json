@@ -1,0 +1,31 @@
+{
+  "id": "HMMT-2008-FEB-GEO-02",
+  "task": "solve",
+  "source_statement": "[3] Let ABC be an equilateral triangle. Let Ω be its incircle (circle inscribed in the triangle) and let ω be a circle tangent externally to Ω as well as to sides AB and AC. Determine the ratio of the radius of Ω to the radius of ω.",
+  "clause_ledger": [
+    {"source": "equilateral ABC", "dsl": "fixed equilateral coordinate realization with vertex A at the origin", "kind": "construction"},
+    {"source": "Omega is the incircle", "dsl": "Omega=Incircle(A,B,C), R=Radius(Omega)", "kind": "construction"},
+    {"source": "omega tangent to AB and AC", "dsl": "J=(2s,0), the angle-bisector center at distance s from each 60-degree side", "kind": "construction"},
+    {"source": "external tangency of Omega and omega", "dsl": "Distance(I,J)=R+s", "kind": "constraint"},
+    {"source": "R/radius(omega)", "dsl": "R/s", "kind": "answer"}
+  ],
+  "variables": {"names": ["s"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(9,3*sqrt(3))"},
+    {"name": "C", "expr": "Point(9,-3*sqrt(3))"},
+    {"name": "Omega", "expr": "Incircle(A,B,C)"},
+    {"name": "I", "expr": "Center(Omega)"},
+    {"name": "R", "expr": "Radius(Omega)"},
+    {"name": "J", "expr": "Point(2*s,0)"},
+    {"name": "omega", "expr": "Circle(J,s)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": "Distance(B,C)"},
+    {"def": "Distance(B,C)", "value": "Distance(C,A)"},
+    {"def": "Distance(I,J)", "value": "R+s"}
+  ],
+  "guards": ["AssumeGt(s,0)", "AssumeLt(s,R)"],
+  "answer": "R/s",
+  "post_process": ""
+}

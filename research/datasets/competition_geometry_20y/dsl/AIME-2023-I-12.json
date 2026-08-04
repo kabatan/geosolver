@@ -1,0 +1,34 @@
+{
+  "id": "AIME-2023-I-12",
+  "task": "solve",
+  "source_statement": "Let $\\triangle ABC$ be an equilateral triangle with side length $55.$ Points $D,$ $E,$ and $F$ lie on $\\overline{BC},$ $\\overline{CA},$ and $\\overline{AB},$ respectively, with $BD = 7,$ $CE=30,$ and $AF=40.$ Point $P$ inside $\\triangle ABC$ has the property that \\[\\angle AEP = \\angle BFP = \\angle CDP.\\] Find $\\tan^2(\\angle AEP).$",
+  "clause_ledger": [
+    {"source": "equilateral ABC side 55; BD=7, CE=30, AF=40", "dsl": "exact coordinate gauge and side-point constructions", "kind": "construction/constraint"},
+    {"source": "P inside ABC and angles AEP=BFP=CDP", "dsl": "P variable with two exact Angle equalities and inside guard", "kind": "construction/constraint/guard"},
+    {"source": "tan^2(angle AEP)", "dsl": "(2*Area(A,E,P)/Dot(Vector(E,A),Vector(E,P)))^2, the definition of tangent squared", "kind": "answer"}
+  ],
+  "variables": {"names": ["px", "py"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(55,0)"},
+    {"name": "C", "expr": "Point(55/2,55*sqrt(3)/2)"},
+    {"name": "D", "expr": "Point(55-7*(55-55/2)/55,7*(55*sqrt(3)/2)/55)"},
+    {"name": "E", "expr": "Point(55/2*(1-30/55),55*sqrt(3)/2*(1-30/55))"},
+    {"name": "F", "expr": "Point(40,0)"},
+    {"name": "P", "expr": "Point(px,py)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 55},
+    {"def": "Distance(B,C)", "value": 55},
+    {"def": "Distance(C,A)", "value": 55},
+    {"def": "Distance(B,D)", "value": 7},
+    {"def": "Distance(C,E)", "value": 30},
+    {"def": "Distance(A,F)", "value": 40},
+    {"def": "Angle(A,E,P)", "value": "Angle(B,F,P)"},
+    {"def": "Angle(B,F,P)", "value": "Angle(C,D,P)"}
+  ],
+  "guards": ["AssumeGt(px,0)", "AssumeLt(px,55)", "AssumeGt(py,0)", "AssumeLt(py,55*sqrt(3)/2)", "AssumeGt(Area(A,B,P),0)", "AssumeGt(Area(B,C,P),0)", "AssumeGt(Area(C,A,P),0)"],
+  "answer": "4*Area(A,E,P)*Area(A,E,P)/(Dot(Vector(E,A),Vector(E,P))*Dot(Vector(E,A),Vector(E,P)))",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

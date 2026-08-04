@@ -1,0 +1,27 @@
+{
+  "id": "HMMT-2006-FEB-GEO-06",
+  "task": "solve",
+  "source_statement": "A circle of radius t is tangent to the hypotenuse, the incircle, and one leg of an isosceles right triangle with inradius r = 1 + sin π8 . Find rt.",
+  "clause_ledger": [
+    {"source": "isosceles right triangle", "dsl": "right-isosceles gauge with legs on x=0 and y=0 and hypotenuse x+y=L", "kind": "construction"},
+    {"source": "incircle radius r=1+sin(pi/8)", "dsl": "I=(r,r) and the source radius is fixed directly", "kind": "construction"},
+    {"source": "small circle radius t tangent to one leg and the hypotenuse", "dsl": "T=(L-t(1+sqrt(2)),t), so y=t and distance to x+y=L is t", "kind": "construction"},
+    {"source": "small circle tangent to the incircle", "dsl": "Distance(I,T)=r+t", "kind": "constraint"},
+    {"source": "r*t", "dsl": "r*t", "kind": "answer"}
+  ],
+  "variables": {"names": ["t"]},
+  "construction": [
+    {"name": "r", "expr": "1+sin(pi/8)"},
+    {"name": "L", "expr": "r/(1-1/sqrt(2))"},
+    {"name": "I", "expr": "Point(r,r)"},
+    {"name": "T", "expr": "Point(L-t*(1+sqrt(2)),t)"},
+    {"name": "omega", "expr": "Circle(I,r)"},
+    {"name": "tau", "expr": "Circle(T,t)"}
+  ],
+  "constraints": [
+    {"def": "Distance(I,T)", "value": "r+t"}
+  ],
+  "guards": ["AssumeGt(t,0)", "AssumeLt(t,r)", "AssumeGt(L-t*(1+sqrt(2)),0)"],
+  "answer": "r*t",
+  "post_process": ""
+}

@@ -1,0 +1,84 @@
+{
+  "id": "JMO-2015-PRE-02",
+  "task": "solve",
+  "source_statement": "円周上に3点A，B，Cがあり，点PをBとCにおける円の接線の交点とする。直線ABと直線CPが平行であり，AB=3，BP=4のとき，線分BCの長さを求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "circle and tangent intersection P",
+      "dsl": "Gamma=Circumcircle(A,B,C), P fixed, and tangent-line constraints at B,C",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "AB parallel CP, AB=3, BP=4",
+      "dsl": "direct Parallel and Distance constraints",
+      "kind": "constraint"
+    },
+    {
+      "source": "BC",
+      "dsl": "Distance(B,C)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "cx",
+      "cy",
+      "ax",
+      "ay"
+    ]
+  },
+  "construction": [
+    {
+      "name": "P",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(4,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(cx,cy)"
+    },
+    {
+      "name": "A",
+      "expr": "Point(ax,ay)"
+    },
+    {
+      "name": "Gamma",
+      "expr": "Circumcircle(A,B,C)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(P,B)",
+      "value": 4
+    },
+    {
+      "def": "Distance(P,C)",
+      "value": 4
+    },
+    {
+      "def": "Distance(A,B)",
+      "value": 3
+    },
+    {
+      "def": "IsTangent(Line(P,B),Gamma)",
+      "value": 0
+    },
+    {
+      "def": "IsTangent(Line(P,C),Gamma)",
+      "value": 0
+    },
+    {
+      "def": "Parallel(Line(A,B),Line(P,C))",
+      "value": 0
+    }
+  ],
+  "guards": [
+    "AssumeGt(cy,0)",
+    "AssumeGt(ay,0)"
+  ],
+  "answer": "Distance(B,C)",
+  "post_process": ""
+}

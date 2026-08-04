@@ -1,0 +1,45 @@
+{
+  "id": "JMO-2025-PRE-05",
+  "task": "solve",
+  "source_statement": "円に内接する四角形 ABCD が半径 6 の円に外接している。また、半直線 AB と半直線 DC が点 P で交わり、半直線 AD と半直線 BC が点 Q で交わっている。三角形 PBC, QCD の内接円の半径がそれぞれ 5, 3 であるとき、BC/CD の値を求めよ。ただし、XY で線分 XY の長さを表す。",
+  "clause_ledger": [
+    {"source": "cyclic quadrilateral circumscribed about radius-6 circle", "dsl": "fix O=(0,0), construct the four side lines as tangents to Circle(O,6), and construct A,B,C,D as consecutive tangent-line intersections; the original cyclic constraint remains", "kind": "construction/constraint"},
+    {"source": "P,Q are the two stated ray intersections", "dsl": "direct line intersections", "kind": "construction"},
+    {"source": "incircle radii of PBC,QCD are 5,3", "dsl": "direct Incircle constructions and Radius constraints", "kind": "constraint"},
+    {"source": "BC/CD", "dsl": "direct distance ratio", "kind": "answer"}
+  ],
+  "variables": {"names": ["beta", "gamma", "delta"]},
+  "construction": [
+    {"name": "O", "expr": "Point(0,0)"},
+    {"name": "omega", "expr": "Circle(O,6)"},
+    {"name": "T1", "expr": "Point(6,0)"},
+    {"name": "T2", "expr": "Point(6*cos(beta),6*sin(beta))"},
+    {"name": "T3", "expr": "Point(6*cos(gamma),6*sin(gamma))"},
+    {"name": "T4", "expr": "Point(6*cos(delta),6*sin(delta))"},
+    {"name": "l1", "expr": "PerpendicularLine(Line(O,T1),T1)"},
+    {"name": "l2", "expr": "PerpendicularLine(Line(O,T2),T2)"},
+    {"name": "l3", "expr": "PerpendicularLine(Line(O,T3),T3)"},
+    {"name": "l4", "expr": "PerpendicularLine(Line(O,T4),T4)"},
+    {"name": "A", "expr": "Intersect(l4,l1)"},
+    {"name": "B", "expr": "Intersect(l1,l2)"},
+    {"name": "C", "expr": "Intersect(l2,l3)"},
+    {"name": "D", "expr": "Intersect(l3,l4)"},
+    {"name": "Gamma", "expr": "Circumcircle(A,B,C)"},
+    {"name": "P", "expr": "Intersect(Line(A,B),Line(D,C))"},
+    {"name": "Q", "expr": "Intersect(Line(A,D),Line(B,C))"},
+    {"name": "i1", "expr": "Incircle(P,B,C)"},
+    {"name": "i2", "expr": "Incircle(Q,C,D)"}
+  ],
+  "constraints": [
+    {"def": "OnCircle(D,Gamma)", "value": 0},
+    {"def": "Distance(O,Line(A,B))", "value": 6},
+    {"def": "Distance(O,Line(B,C))", "value": 6},
+    {"def": "Distance(O,Line(C,D))", "value": 6},
+    {"def": "Distance(O,Line(D,A))", "value": 6},
+    {"def": "Radius(i1)", "value": 5},
+    {"def": "Radius(i2)", "value": 3}
+  ],
+  "guards": ["AssumeGt(beta,0)", "AssumeGt(gamma-beta,0)", "AssumeGt(delta-gamma,0)", "AssumeGt(2*pi-delta,0)", "AssumeConvex([A,B,C,D])"],
+  "answer": "Distance(B,C)/Distance(C,D)",
+  "post_process": ""
+}

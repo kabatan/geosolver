@@ -1,0 +1,28 @@
+{
+  "id": "HMMT-2020-FEB-GEO-06",
+  "task": "solve",
+  "source_statement": "Let ABC be a triangle with AB = 5, BC = 6, CA = 7. Let D be a point on ray AB beyond B such that BD = 7, E be a point on ray BC beyond C such that CE = 5, and F be a point on ray CA beyond A such that AF = 6. Compute the area of the circumcircle of DEF .",
+  "clause_ledger": [
+    {"source": "triangle side lengths", "dsl": "coordinate gauge with direct Distance constraints", "kind": "construction/constraint"},
+    {"source": "D,E,F on the specified rays with given lengths", "dsl": "direct affine ray constructions from the labeled source points", "kind": "construction"},
+    {"source": "area of circumcircle DEF", "dsl": "pi*Radius(Circumcircle(D,E,F))^2", "kind": "answer"}
+  ],
+  "variables": {"names": ["ax", "ay"]},
+  "construction": [
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(6,0)"},
+    {"name": "A", "expr": "Point(ax,ay)"},
+    {"name": "D", "expr": "Point(7/5*(-ax),7/5*(-ay))"},
+    {"name": "E", "expr": "Point(11,0)"},
+    {"name": "F", "expr": "Point(ax+6/7*(ax-6),ay)"},
+    {"name": "Gamma", "expr": "Circumcircle(D,E,F)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 5},
+    {"def": "Distance(B,C)", "value": 6},
+    {"def": "Distance(C,A)", "value": 7}
+  ],
+  "guards": ["AssumeGt(ay,0)"],
+  "answer": "pi*Radius(Gamma)^2",
+  "post_process": ""
+}

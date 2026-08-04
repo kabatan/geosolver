@@ -1,0 +1,27 @@
+{
+  "id": "AIME-2007-I-09",
+  "task": "solve",
+  "source_statement": "In right triangle $ABC$ with right angle $C$ , $CA = 30$ and $CB = 16$ .  Its legs $CA$ and $CB$ are extended beyond $A$ and $B$ .  Points $O_1$ and $O_2$ lie in the exterior of the triangle and are the centers of two circles with equal radii.  The circle with center $O_1$ is tangent to the hypotenuse and to the extension of leg $CA$ , the circle with center $O_2$ is tangent to the hypotenuse and to the extension of leg $CB$ , and the circles are externally tangent to each other.  The length of the radius of either circle can be expressed as $p/q$ , where $p$ and $q$ are relatively prime positive integers.  Find $p+q$ .",
+  "clause_ledger": [
+    {"source": "right triangle with CA=30, CB=16", "dsl": "fixed coordinate gauge C=(0,0), A=(30,0), B=(0,16)", "kind": "construction"},
+    {"source": "each circle tangent to hypotenuse and one leg extension", "dsl": "centers O1=(x1,r), O2=(r,y2), direct point-to-line distance constraints plus extension guards", "kind": "constraint/guard"},
+    {"source": "equal radii and external tangency", "dsl": "same variable r and Distance(O1,O2)=2r", "kind": "constraint"},
+    {"source": "p+q", "dsl": "radius followed by the exact rational numerator-plus-denominator post-process", "kind": "answer"}
+  ],
+  "variables": {"names": ["x1", "y2", "r"]},
+  "construction": [
+    {"name": "C", "expr": "Point(0,0)"},
+    {"name": "A", "expr": "Point(30,0)"},
+    {"name": "B", "expr": "Point(0,16)"},
+    {"name": "O1", "expr": "Point(x1,r)"},
+    {"name": "O2", "expr": "Point(r,y2)"}
+  ],
+  "constraints": [
+    {"def": "Distance(O1,Line(A,B))", "value": "r"},
+    {"def": "Distance(O2,Line(A,B))", "value": "r"},
+    {"def": "Distance(O1,O2)", "value": "2*r"}
+  ],
+  "guards": ["AssumeGt(r,0)", "AssumeGt(x1,30)", "AssumeGt(y2,16)"],
+  "answer": "r",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+}

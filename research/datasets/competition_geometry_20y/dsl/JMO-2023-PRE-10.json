@@ -1,0 +1,87 @@
+{
+  "id": "JMO-2023-PRE-10",
+  "task": "solve",
+  "source_statement": "鋭角三角形ABCがあり，Aから辺BCにおろした垂線の足をD，辺ACの中点をMとする。線分BM上に点Pを，∠PAM=∠MBAをみたすようにとる。∠BAP=41°，∠PDB=115°のとき，∠BACの大きさを求めよ。",
+  "clause_ledger": [
+    {
+      "source": "acute triangle and altitude foot D",
+      "dsl": "coordinate triangle with D=FootOfPerpendicular(Line(B,C),A)",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "M midpoint AC and P on BM",
+      "dsl": "direct Midpoint and Collinear(B,P,M)",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "angle PAM=angle MBA, BAP=41, PDB=115",
+      "dsl": "direct Angle constraints",
+      "kind": "constraint"
+    },
+    {
+      "source": "angle BAC",
+      "dsl": "Angle(B,A,C) in degrees",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "cx",
+      "cy",
+      "px",
+      "py"
+    ]
+  },
+  "construction": [
+    {
+      "name": "B",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(cx,0)"
+    },
+    {
+      "name": "A",
+      "expr": "Point(5,cy)"
+    },
+    {
+      "name": "D",
+      "expr": "FootOfPerpendicular(Line(B,C),A)"
+    },
+    {
+      "name": "M",
+      "expr": "Midpoint(A,C)"
+    },
+    {
+      "name": "P",
+      "expr": "Point(px,py)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Collinear(B,P,M)",
+      "value": 0
+    },
+    {
+      "def": "Angle(P,A,M)",
+      "value": "Angle(M,B,A)"
+    },
+    {
+      "def": "Angle(B,A,P)",
+      "value": "41*pi/180"
+    },
+    {
+      "def": "Angle(P,D,B)",
+      "value": "115*pi/180"
+    }
+  ],
+  "guards": [
+    "AssumeGt(cx,5)",
+    "AssumeGt(cy,0)",
+    "AssumeGt(px,0)",
+    "AssumeGt(py,0)"
+  ],
+  "answer": "180*Angle(B,A,C)/pi",
+  "post_process": ""
+}

@@ -1,0 +1,36 @@
+{
+  "id": "AIME-2006-II-01",
+  "task": "solve",
+  "source_statement": "In convex hexagon $ABCDEF$ , all six sides are congruent, $\\angle A$ and $\\angle D$ are right angles, and $\\angle B, \\angle C, \\angle E,$ and $\\angle F$ are congruent. The area of the hexagonal region is $2116(\\sqrt{2}+1).$ Find $AB$ .",
+  "clause_ledger": [
+    {"source": "convex hexagon and equal sides", "dsl": "fix AB=s and construct the unique convex equiangular branch from the stated right/equal-angle conditions; all six direct side equalities remain", "kind": "construction/constraint/guard"},
+    {"source": "angles A,D right; B,C,E,F congruent", "dsl": "the 90-degree turns at A,D and 45-degree exterior turns forced by the four equal remaining interior angles are used only as a coordinate construction; the original Angle constraints remain", "kind": "construction/constraint"},
+    {"source": "given area", "dsl": "direct Area constraint", "kind": "constraint"},
+    {"source": "AB", "dsl": "Distance(A,B)", "kind": "answer"}
+  ],
+  "variables": {"names": ["s"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(s,0)"},
+    {"name": "C", "expr": "Point(s+s/sqrt(2),s/sqrt(2))"},
+    {"name": "D", "expr": "Point(s+s/sqrt(2),s+s/sqrt(2))"},
+    {"name": "E", "expr": "Point(s/sqrt(2),s+s/sqrt(2))"},
+    {"name": "F", "expr": "Point(0,s)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": "Distance(B,C)"},
+    {"def": "Distance(B,C)", "value": "Distance(C,D)"},
+    {"def": "Distance(C,D)", "value": "Distance(D,E)"},
+    {"def": "Distance(D,E)", "value": "Distance(E,F)"},
+    {"def": "Distance(E,F)", "value": "Distance(F,A)"},
+    {"def": "Angle(F,A,B)", "value": "pi/2"},
+    {"def": "Angle(C,D,E)", "value": "pi/2"},
+    {"def": "Angle(A,B,C)", "value": "Angle(B,C,D)"},
+    {"def": "Angle(B,C,D)", "value": "Angle(D,E,F)"},
+    {"def": "Angle(D,E,F)", "value": "Angle(E,F,A)"},
+    {"def": "Area(A,B,C,D,E,F)", "value": "2116*(sqrt(2)+1)"}
+  ],
+  "guards": ["AssumeGt(s,0)", "AssumeGt(Area(A,B,C),0)", "AssumeGt(Area(A,C,D),0)", "AssumeConvex([A,B,C,D,E,F])"],
+  "answer": "Distance(A,B)",
+  "post_process": ""
+}

@@ -1,0 +1,34 @@
+{
+  "id": "AIME-2014-II-03",
+  "task": "solve",
+  "source_statement": "A rectangle has sides of length $a$ and 36. A hinge is installed at each vertex of the rectangle, and at the midpoint of each side of length 36. The sides of length $a$ can be pressed toward each other keeping those two sides parallel so the rectangle becomes a convex hexagon as shown. When the figure is a hexagon with the sides of length $a$ parallel and separated by a distance of 24, the hexagon has the same area as the original rectangle. Find $a^2$ . [asy] pair A,B,C,D,E,F,R,S,T,X,Y,Z; dotfactor = 2; unitsize(.1cm); A = (0,0); B = (0,18); C = (0,36); // don't look here D = (12*2.236, 36); E = (12*2.236, 18); F = (12*2.236, 0); draw(A--B--C--D--E--F--cycle); dot(\" \",A,NW); dot(\" \",B,NW); dot(\" \",C,NW); dot(\" \",D,NW); dot(\" \",E,NW); dot(\" \",F,NW); //don't look here R = (12*2.236 +22,0); S = (12*2.236 + 22 - 13.4164,12); T = (12*2.236 + 22,24); X = (12*4.472+ 22,24); Y = (12*4.472+ 22 + 13.4164,12); Z = (12*4.472+ 22,0); draw(R--S--T--X--Y--Z--cycle); dot(\" \",R,NW); dot(\" \",S,NW); dot(\" \",T,NW); dot(\" \",X,NW); dot(\" \",Y,NW); dot(\" \",Z,NW); // sqrt180 = 13.4164 // sqrt5 = 2.236[/asy]",
+  "clause_ledger": [
+    {"source": "rectangle with side lengths a and 36; hinges at vertices and midpoints of 36-sides", "dsl": "pressed hexagon RSTXYZ has four hinge segments of length 18 and two parallel sides of length a", "kind": "construction/constraint"},
+    {"source": "the two sides of length a remain parallel and are separated by 24", "dsl": "the hinge-symmetric gauge in the figure puts R,T and Z,X on perpendicular connectors, with ZR and TX parallel and 24 apart", "kind": "constraint"},
+    {"source": "pressed figure is convex hexagon with same area as rectangle", "dsl": "Area(R,S,T,X,Y,Z)=36*a and non-self-intersection guard", "kind": "constraint/guard"},
+    {"source": "a^2", "dsl": "a*a", "kind": "answer"}
+  ],
+  "variables": {"names": ["a", "sx", "sy", "ux", "uy"]},
+  "construction": [
+    {"name": "R", "expr": "Point(0,0)"},
+    {"name": "Z", "expr": "Point(a,0)"},
+    {"name": "T", "expr": "Point(0,24)"},
+    {"name": "X", "expr": "Point(a,24)"},
+    {"name": "S", "expr": "Point(sx,sy)"},
+    {"name": "Y", "expr": "Point(ux,uy)"}
+  ],
+  "constraints": [
+    {"def": "Distance(R,S)", "value": 18},
+    {"def": "Distance(S,T)", "value": 18},
+    {"def": "Distance(X,Y)", "value": 18},
+    {"def": "Distance(Y,Z)", "value": 18},
+    {"def": "Distance(Z,R)", "value": "Distance(T,X)"},
+    {"def": "Parallel(Line(Z,R),Line(T,X))", "value": 0},
+    {"def": "Distance(R,Line(T,X))", "value": 24},
+    {"def": "Area(R,S,T,X,Y,Z)", "value": "36*a"}
+  ],
+  "guards": ["AssumeGt(a,0)", "AssumeGt(sy,0)", "AssumeLt(sy,24)", "AssumeConvex([R,S,T,X,Y,Z])", "AssumeNoSelfIntersecting([R,S,T,X,Y,Z])"],
+  "answer": "a*a",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

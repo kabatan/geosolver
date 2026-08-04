@@ -1,0 +1,59 @@
+{
+  "id": "HMMT-2011-two-circles-tangent-line",
+  "task": "solve",
+  "source_statement": "Let ω1 and ω2 be two circles that intersect at points A and B. Let line l be tangent to ω1 at P and to ω2 at Q so that A is closer to P Q than B. Let points R and S lie along rays P A and QA, respectively, so that P Q = AR = AS and R and S are on opposite sides of A as P and Q. Let O be the circumcenter of triangle ASR, and let C and D be the midpoints of major arcs AP and AQ, respectively. If ∠AP Q is 45 degrees and ∠AQP is 30 degrees, determine ∠COD in degrees.",
+  "clause_ledger": [
+    {
+      "source": "two circles and tangent line",
+      "dsl": "fix the scale gauge PQ=1, take l as y=0, and use the two given angles to construct A and the two tangent-circle centers exactly",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "R,S,O,C,D and angle data",
+      "dsl": "R,S are constructed on the two rays with AR=AS=PQ; O is the circumcenter; C,D are constructed as the major-arc midpoints by the opposite normalized chord-radius direction; the original incidence/order constraints are retained",
+      "kind": "construction/constraint"
+    }
+  ],
+  "variables": {"names": []},
+  "construction": [
+    {"name": "P", "expr": "Point(0,0)"},
+    {"name": "Q", "expr": "Point(1,0)"},
+    {"name": "lam", "expr": "(sqrt(3)-1)/2"},
+    {"name": "O1", "expr": "Point(0,lam)"},
+    {"name": "O2", "expr": "Point(1,2*lam)"},
+    {"name": "omega1", "expr": "Circle(O1,lam)"},
+    {"name": "omega2", "expr": "Circle(O2,2*lam)"},
+    {"name": "l", "expr": "Line(P,Q)"},
+    {"name": "A", "expr": "Point(lam,lam)"},
+    {"name": "B", "expr": "Intersect(omega1,omega2,exclude=A)"},
+    {"name": "R", "expr": "Point(A.x+(A.x-P.x)/Distance(A,P),A.y+(A.y-P.y)/Distance(A,P))"},
+    {"name": "S", "expr": "Point(A.x+(A.x-Q.x)/Distance(A,Q),A.y+(A.y-Q.y)/Distance(A,Q))"},
+    {"name": "O", "expr": "Circumcenter(A,S,R)"},
+    {"name": "MAP", "expr": "Midpoint(A,P)"},
+    {"name": "MAQ", "expr": "Midpoint(A,Q)"},
+    {"name": "C", "expr": "Point(O1.x-lam*(MAP.x-O1.x)/Distance(MAP,O1),O1.y-lam*(MAP.y-O1.y)/Distance(MAP,O1))"},
+    {"name": "D", "expr": "Point(O2.x-2*lam*(MAQ.x-O2.x)/Distance(MAQ,O2),O2.y-2*lam*(MAQ.y-O2.y)/Distance(MAQ,O2))"}
+  ],
+  "constraints": [
+    {"def": "IsTangent(l,omega1)", "value": 0},
+    {"def": "IsTangent(l,omega2)", "value": 0},
+    {"def": "OnCircle(A,omega1)", "value": 0},
+    {"def": "OnCircle(A,omega2)", "value": 0},
+    {"def": "Angle(A,P,Q)", "value": "pi/4"},
+    {"def": "Angle(A,Q,P)", "value": "pi/6"},
+    {"def": "OnLine(R,P,A)", "value": 0},
+    {"def": "OnLine(S,Q,A)", "value": 0},
+    {"def": "Distance(P,Q)", "value": "Distance(A,R)"},
+    {"def": "Distance(P,Q)", "value": "Distance(A,S)"},
+    {"def": "Distance(P,R)", "value": "Distance(P,A)+Distance(A,R)"},
+    {"def": "Distance(Q,S)", "value": "Distance(Q,A)+Distance(A,S)"},
+    {"def": "OnCircle(C,omega1)", "value": 0},
+    {"def": "Distance(C,A)", "value": "Distance(C,P)"},
+    {"def": "OnCircle(D,omega2)", "value": 0},
+    {"def": "Distance(D,A)", "value": "Distance(D,Q)"}
+  ],
+  "guards": ["AssumeLt(Distance(A,l),Distance(B,l))"],
+  "answer": "180*Angle(C,O,D)/pi",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

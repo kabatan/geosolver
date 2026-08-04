@@ -1,0 +1,112 @@
+{
+  "id": "JMO-2013-PRE-03",
+  "task": "solve",
+  "source_statement": "半径1の円周上にA1，A2，A3，A4，A5がこの順にあり，∠A5A2A4=∠A1A3A5=∠A2A4A1=∠A3A5A2=30°をみたしている。A2A4とA3A5，A3A5とA4A1，A4A1とA5A2，A5A2とA1A3，A1A3とA2A4の交点をそれぞれB1，B2，B3，B4，B5とするとき，五角形B1B2B3B4B5の面積を求めよ。",
+  "clause_ledger": [
+    {
+      "source": "five cyclic points and four stated 30-degree angles",
+      "dsl": "fix A1=(0,1) and parameterize the ordered cyclic gaps u2,u3,u4,u5 on the unit circle; the original OnCircle and Angle constraints remain",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "five chord intersections",
+      "dsl": "direct Intersect(Line(...),Line(...)) constructions",
+      "kind": "construction"
+    },
+    {
+      "source": "area B1...B5",
+      "dsl": "Area(B1,B2,B3,B4,B5)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "u2",
+      "u3",
+      "u4",
+      "u5"
+    ]
+  },
+  "construction": [
+    {
+      "name": "O",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "A1",
+      "expr": "Point(0,1)"
+    },
+    {"name": "A2", "expr": "Point(cos(pi/2+u2),sin(pi/2+u2))"},
+    {"name": "A3", "expr": "Point(cos(pi/2+u2+u3),sin(pi/2+u2+u3))"},
+    {"name": "A4", "expr": "Point(cos(pi/2+u2+u3+u4),sin(pi/2+u2+u3+u4))"},
+    {"name": "A5", "expr": "Point(cos(pi/2+u2+u3+u4+u5),sin(pi/2+u2+u3+u4+u5))"},
+    {
+      "name": "Gamma",
+      "expr": "Circle(O,1)"
+    },
+    {
+      "name": "B1",
+      "expr": "Intersect(Line(A2,A4),Line(A3,A5))"
+    },
+    {
+      "name": "B2",
+      "expr": "Intersect(Line(A3,A5),Line(A4,A1))"
+    },
+    {
+      "name": "B3",
+      "expr": "Intersect(Line(A4,A1),Line(A5,A2))"
+    },
+    {
+      "name": "B4",
+      "expr": "Intersect(Line(A5,A2),Line(A1,A3))"
+    },
+    {
+      "name": "B5",
+      "expr": "Intersect(Line(A1,A3),Line(A2,A4))"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "OnCircle(A2,Gamma)",
+      "value": 0
+    },
+    {
+      "def": "OnCircle(A3,Gamma)",
+      "value": 0
+    },
+    {
+      "def": "OnCircle(A4,Gamma)",
+      "value": 0
+    },
+    {
+      "def": "OnCircle(A5,Gamma)",
+      "value": 0
+    },
+    {
+      "def": "Angle(A5,A2,A4)",
+      "value": "pi/6"
+    },
+    {
+      "def": "Angle(A1,A3,A5)",
+      "value": "pi/6"
+    },
+    {
+      "def": "Angle(A2,A4,A1)",
+      "value": "pi/6"
+    },
+    {
+      "def": "Angle(A3,A5,A2)",
+      "value": "pi/6"
+    }
+  ],
+  "guards": [
+    "AssumeGt(u2,0)",
+    "AssumeGt(u3,0)",
+    "AssumeGt(u4,0)",
+    "AssumeGt(u5,0)",
+    "AssumeLt(u2+u3+u4+u5,2*pi)",
+    "AssumeConvex([A1,A2,A3,A4,A5])"
+  ],
+  "answer": "Area(B1,B2,B3,B4,B5)",
+  "post_process": ""
+}

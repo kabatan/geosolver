@@ -1,0 +1,41 @@
+{
+  "id": "HMMT-2016-FEB-GEO-10",
+  "task": "solve",
+  "source_statement": "The incircle of a triangle ABC is tangent to BC at D. Let H and Γ denote the orthocenter and circumcircle of 4ABC. The B-mixtilinear incircle, centered at OB , is tangent to lines BA and BC and internally tangent to Γ. √ The C-mixtilinear incircle, centered at OC , is defined similarly. Suppose that DH ⊥ OB OC , AB = 3 and AC = 2. Find BC.",
+  "clause_ledger": [
+    {"source": "incircle tangent BC at D; H orthocenter and Gamma circumcircle", "dsl": "IncircleContactPoint, Orthocenter, Circumcircle constructions", "kind": "construction"},
+    {"source": "B/C-mixtilinear incircles centered OB/OC tangent to the two adjacent lines and internally to Gamma", "dsl": "construct OB and OC on the internal angle-bisector rays at B,C at the exact distance implied by radii rb,rc; the original line/circle tangency constraints remain", "kind": "construction/constraint"},
+    {"source": "DH perpendicular OB OC; AB=3, AC=2", "dsl": "direct perpendicular and side constraints", "kind": "constraint"},
+    {"source": "BC", "dsl": "Distance(B,C)", "kind": "answer"}
+  ],
+  "variables": {"names": ["theta", "rb", "rc"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"}, {"name": "B", "expr": "Point(3,0)"}, {"name": "C", "expr": "Point(2*cos(theta),2*sin(theta))"},
+    {"name": "D", "expr": "IncircleContactPoint(A,B,C,0)"}, {"name": "H", "expr": "Orthocenter(A,B,C)"}, {"name": "Gamma", "expr": "Circumcircle(A,B,C)"},
+    {"name": "BAx", "expr": "A.x-B.x"}, {"name": "BAy", "expr": "A.y-B.y"},
+    {"name": "BCx", "expr": "C.x-B.x"}, {"name": "BCy", "expr": "C.y-B.y"},
+    {"name": "uBx", "expr": "BAx/Distance(B,A)+BCx/Distance(B,C)"},
+    {"name": "uBy", "expr": "BAy/Distance(B,A)+BCy/Distance(B,C)"},
+    {"name": "uBn", "expr": "sqrt(uBx*uBx+uBy*uBy)"},
+    {"name": "sB2", "expr": "sqrt((1-Dot(Vector(B,A),Vector(B,C))/(Distance(B,A)*Distance(B,C)))/2)"},
+    {"name": "CAx", "expr": "A.x-C.x"}, {"name": "CAy", "expr": "A.y-C.y"},
+    {"name": "CBx", "expr": "B.x-C.x"}, {"name": "CBy", "expr": "B.y-C.y"},
+    {"name": "uCx", "expr": "CAx/Distance(C,A)+CBx/Distance(C,B)"},
+    {"name": "uCy", "expr": "CAy/Distance(C,A)+CBy/Distance(C,B)"},
+    {"name": "uCn", "expr": "sqrt(uCx*uCx+uCy*uCy)"},
+    {"name": "sC2", "expr": "sqrt((1-Dot(Vector(C,A),Vector(C,B))/(Distance(C,A)*Distance(C,B)))/2)"},
+    {"name": "OB", "expr": "Point(B.x+rb*uBx/(uBn*sB2),B.y+rb*uBy/(uBn*sB2))"},
+    {"name": "OC", "expr": "Point(C.x+rc*uCx/(uCn*sC2),C.y+rc*uCy/(uCn*sC2))"},
+    {"name": "omegaB", "expr": "Circle(OB,rb)"}, {"name": "omegaC", "expr": "Circle(OC,rc)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 3}, {"def": "Distance(A,C)", "value": 2},
+    {"def": "IsTangent(Line(B,A),omegaB)", "value": 0}, {"def": "IsTangent(Line(B,C),omegaB)", "value": 0}, {"def": "IsTangent(omegaB,Gamma)", "value": 0},
+    {"def": "IsTangent(Line(C,A),omegaC)", "value": 0}, {"def": "IsTangent(Line(C,B),omegaC)", "value": 0}, {"def": "IsTangent(omegaC,Gamma)", "value": 0},
+    {"def": "Perpendicular(Line(D,H),Line(OB,OC))", "value": 0}
+  ],
+  "guards": ["AssumeGt(sin(theta),0)", "AssumeLt(theta,pi)", "AssumeGt(rb,0)", "AssumeGt(rc,0)"],
+  "answer": "Distance(B,C)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

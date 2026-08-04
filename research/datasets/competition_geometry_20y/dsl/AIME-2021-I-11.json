@@ -1,0 +1,34 @@
+{
+  "id": "AIME-2021-I-11",
+  "task": "solve",
+  "source_statement": "Let $ABCD$ be a cyclic quadrilateral with $AB=4,BC=5,CD=6,$ and $DA=7.$ Let $A_1$ and $C_1$ be the feet of the perpendiculars from $A$ and $C,$ respectively, to line $BD,$ and let $B_1$ and $D_1$ be the feet of the perpendiculars from $B$ and $D,$ respectively, to line $AC.$ The perimeter of $A_1B_1C_1D_1$ is $\\frac mn,$ where $m$ and $n$ are relatively prime positive integers. Find $m+n.$",
+  "clause_ledger": [
+    {"source": "cyclic quadrilateral ABCD with AB=4,BC=5,CD=6,DA=7", "dsl": "A,B,C,D with four side constraints, AreConcyclic, and the named cyclic order enforced by AssumeConvex", "kind": "construction/constraint"},
+    {"source": "A1,C1 are feet from A,C to BD", "dsl": "FootOfPerpendicular constructions to Line(B,D)", "kind": "construction"},
+    {"source": "B1,D1 are feet from B,D to AC", "dsl": "FootOfPerpendicular constructions to Line(A,C)", "kind": "construction"},
+    {"source": "perimeter A1B1C1D1", "dsl": "Perimeter(A1,B1,C1,D1)", "kind": "answer/postprocess"},
+    {"source": "m+n presentation", "dsl": "fraction post-process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["cx", "cy", "dx", "dy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(4,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "D", "expr": "Point(dx,dy)"},
+    {"name": "A1", "expr": "FootOfPerpendicular(A,Line(B,D))"},
+    {"name": "C1", "expr": "FootOfPerpendicular(C,Line(B,D))"},
+    {"name": "B1", "expr": "FootOfPerpendicular(B,Line(A,C))"},
+    {"name": "D1", "expr": "FootOfPerpendicular(D,Line(A,C))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 4},
+    {"def": "Distance(B,C)", "value": 5},
+    {"def": "Distance(C,D)", "value": 6},
+    {"def": "Distance(D,A)", "value": 7},
+    {"def": "AreConcyclic(A,B,C,D)", "value": 0}
+  ],
+  "guards": ["AssumeGt(cy,0)", "AssumeGt(dy,0)", "AssumeConvex([A,B,C,D])", "AssumeGt(Distance(A1,B1),0)"],
+  "answer": "Perimeter(A1,B1,C1,D1)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+}

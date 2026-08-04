@@ -1,0 +1,33 @@
+{
+  "id": "HMMT-2006-FEB-GEO-07",
+  "task": "solve",
+  "source_statement": "Suppose ABCD is an isosceles trapezoid in which AB k CD. Two mutually externally tangent circles ω1 and ω2 are inscribed in ABCD such that ω1 is tangent to AB, BC, and CD while ω2 is tangent to AB, DA, and CD. Given that AB = 1, CD = 6, compute the radius of either circle.",
+  "clause_ledger": [
+    {"source": "isosceles trapezoid AB parallel CD with AB=1, CD=6", "dsl": "symmetric horizontal bases A=(-1/2,0), B=(1/2,0), D=(-3,2r), C=(3,2r)", "kind": "construction"},
+    {"source": "two equal circles tangent to both bases", "dsl": "O1=(r,r), O2=(-r,r), Circle(O1,r), Circle(O2,r)", "kind": "construction"},
+    {"source": "omega1 tangent to BC and omega2 tangent to DA", "dsl": "distance from each center to its leg equals r", "kind": "constraint"},
+    {"source": "mutually externally tangent", "dsl": "Distance(O1,O2)=2r", "kind": "constraint"},
+    {"source": "radius", "dsl": "r", "kind": "answer"}
+  ],
+  "variables": {"names": ["r"]},
+  "construction": [
+    {"name": "A", "expr": "Point(-1/2,0)"},
+    {"name": "B", "expr": "Point(1/2,0)"},
+    {"name": "D", "expr": "Point(-3,2*r)"},
+    {"name": "C", "expr": "Point(3,2*r)"},
+    {"name": "O1", "expr": "Point(r,r)"},
+    {"name": "O2", "expr": "Point(-r,r)"},
+    {"name": "omega1", "expr": "Circle(O1,r)"},
+    {"name": "omega2", "expr": "Circle(O2,r)"},
+    {"name": "T1", "expr": "FootOfPerpendicular(O1,Line(B,C))"},
+    {"name": "T2", "expr": "FootOfPerpendicular(O2,Line(A,D))"}
+  ],
+  "constraints": [
+    {"def": "Distance(O1,O2)", "value": "2*r"},
+    {"def": "Distance(O1,T1)", "value": "r"},
+    {"def": "Distance(O2,T2)", "value": "r"}
+  ],
+  "guards": ["AssumeGt(r,0)"],
+  "answer": "r",
+  "post_process": ""
+}

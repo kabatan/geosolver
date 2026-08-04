@@ -1,0 +1,29 @@
+{
+  "id": "HMMT-2022-FEB-GEO-06",
+  "task": "solve",
+  "source_statement": "Let ABCD be a rectangle inscribed in circle Γ, and let P be a point on minor arc AB of Γ. Suppose that √P A · P B = 2, P C · P D = 18, and P B · P C = 9. The area of rectangle ABCD can be expressed as a c b , where a and c are relatively prime positive integers and b is a squarefree positive integer. Compute 100a + 10b + c.",
+  "clause_ledger": [
+    {"source": "rectangle inscribed in circle", "dsl": "coordinate rectangle centered at O with Circle(O,r)", "kind": "construction"},
+    {"source": "P on minor arc AB and three products", "dsl": "variable P on Gamma with direct distance-product constraints and arc branch guard", "kind": "construction/constraint/guard"},
+    {"source": "100a+10b+c", "dsl": "geometric answer Area(A,B,C,D) with explicit radical marker", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["a", "b", "px", "py"]},
+  "construction": [
+    {"name": "O", "expr": "Point(0,0)"},
+    {"name": "A", "expr": "Point(-a,-b)"},
+    {"name": "B", "expr": "Point(a,-b)"},
+    {"name": "C", "expr": "Point(a,b)"},
+    {"name": "D", "expr": "Point(-a,b)"},
+    {"name": "Gamma", "expr": "Circle(O,Distance(O,A))"},
+    {"name": "P", "expr": "Point(px,py)"}
+  ],
+  "constraints": [
+    {"def": "Distance(O,P)", "value": "Distance(O,A)"},
+    {"def": "Distance(P,A)*Distance(P,B)", "value": 2},
+    {"def": "Distance(P,C)*Distance(P,D)", "value": 18},
+    {"def": "Distance(P,B)*Distance(P,C)", "value": 9}
+  ],
+  "guards": ["AssumeGt(a,0)", "AssumeGt(b,0)", "AssumeLt(py,-b)", "AssumeLt(py,0)", "AssumeGt(px,-a)", "AssumeLt(px,a)"],
+  "answer": "Area(A,B,C,D)",
+  "post_process": "# radical_mode=pqr_sum"
+}

@@ -1,0 +1,30 @@
+{
+  "id": "HMMT-2012-FEB-GEO-03",
+  "task": "solve",
+  "source_statement": "Let ABC be a triangle with incenter I. Let the circle centered at B and passing through I intersect side AB at D and let the circle centered at C passing through I intersect side AC at E. Suppose DE is the perpendicular bisector of AI. What are all possible measures of angle BAC in degrees?",
+  "clause_ledger": [
+    {"source": "triangle ABC with incenter I", "dsl": "isosceles coordinate gauge A=(0,0), B/C symmetric about AI, I=Incenter(A,B,C)", "kind": "construction"},
+    {"source": "B-centered circle through I meets AB at D; C-centered circle through I meets AC at E", "dsl": "direct side points D,E and Distance(B,D)=Distance(B,I), Distance(C,E)=Distance(C,I)", "kind": "construction/constraint"},
+    {"source": "DE is perpendicular bisector of AI", "dsl": "DE perpendicular AI and its midpoint M is equidistant from A and I", "kind": "constraint"},
+    {"source": "all measures angle BAC", "dsl": "180*Angle(B,A,C)/pi", "kind": "answer"}
+  ],
+  "variables": {"names": ["alpha", "d"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(cos(alpha/2),sin(alpha/2))"},
+    {"name": "C", "expr": "Point(cos(alpha/2),-sin(alpha/2))"},
+    {"name": "I", "expr": "Incenter(A,B,C)"},
+    {"name": "D", "expr": "Point(d*cos(alpha/2),d*sin(alpha/2))"},
+    {"name": "E", "expr": "Point(d*cos(alpha/2),-d*sin(alpha/2))"},
+    {"name": "M", "expr": "Midpoint(D,E)"}
+  ],
+  "constraints": [
+    {"def": "Distance(B,D)", "value": "Distance(B,I)"},
+    {"def": "Distance(C,E)", "value": "Distance(C,I)"},
+    {"def": "Perpendicular(Line(D,E),Line(A,I))", "value": 0},
+    {"def": "Distance(M,A)", "value": "Distance(M,I)"}
+  ],
+  "guards": ["AssumeGt(alpha,0)", "AssumeLt(alpha,pi)", "AssumeGt(d,0)", "AssumeLt(d,1)"],
+  "answer": "180*Angle(B,A,C)/pi",
+  "post_process": ""
+}

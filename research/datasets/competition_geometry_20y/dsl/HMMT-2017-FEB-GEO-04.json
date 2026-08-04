@@ -1,0 +1,30 @@
+{
+  "id": "HMMT-2017-FEB-GEO-04",
+  "task": "solve",
+  "source_statement": "Let ABCD be a convex quadrilateral with AB = 5, BC = 6, CD = 7, and DA = 8. Let M, P, N, Q be the midpoints of sides AB, BC, CD, DA respectively. Compute M N 2 − P Q2 .",
+  "clause_ledger": [
+    {"source": "convex quadrilateral side lengths", "dsl": "A=(0,0), B=(5,0), C=(5,6), D variable with direct distances and convex guard", "kind": "construction/constraint"},
+    {"source": "midpoints M,P,N,Q", "dsl": "Midpoint of the four source sides", "kind": "construction"},
+    {"source": "MN^2-PQ^2", "dsl": "Distance(M,N)^2-Distance(P,Q)^2", "kind": "answer"}
+  ],
+  "variables": {"names": ["dx", "dy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(5,0)"},
+    {"name": "C", "expr": "Point(5,6)"},
+    {"name": "D", "expr": "Point(dx,dy)"},
+    {"name": "M", "expr": "Midpoint(A,B)"},
+    {"name": "P", "expr": "Midpoint(B,C)"},
+    {"name": "N", "expr": "Midpoint(C,D)"},
+    {"name": "Q", "expr": "Midpoint(D,A)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 5},
+    {"def": "Distance(B,C)", "value": 6},
+    {"def": "Distance(C,D)", "value": 7},
+    {"def": "Distance(D,A)", "value": 8}
+  ],
+  "guards": ["AssumeGt(dy,0)", "AssumeConvex([A,B,C,D])"],
+  "answer": "Distance(M,N)*Distance(M,N)-Distance(P,Q)*Distance(P,Q)",
+  "post_process": ""
+}

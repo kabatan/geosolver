@@ -1,0 +1,29 @@
+{
+  "id": "HMMT-2006-FEB-GEO-01",
+  "task": "solve",
+  "source_statement": "Octagon ABCDEF GH is equiangular. Given that AB = 1, BC = 2, CD = 3, DE = 4, EF = F G = 2, compute the perimeter of the octagon.",
+  "clause_ledger": [
+    {"source": "equiangular convex octagon", "dsl": "successive side directions turn by pi/4 in a direct coordinate gauge", "kind": "construction"},
+    {"source": "AB=1, BC=2, CD=3, DE=4, EF=FG=2", "dsl": "fixed successive side vectors", "kind": "construction"},
+    {"source": "closed octagon", "dsl": "Distance(A,Aclose)=0 for the final GH/HA closure", "kind": "constraint"},
+    {"source": "perimeter", "dsl": "sum of the eight direct side lengths", "kind": "answer"}
+  ],
+  "variables": {"names": ["g", "h"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0, 0)"},
+    {"name": "B", "expr": "Point(1, 0)"},
+    {"name": "C", "expr": "Point(1 + sqrt(2), sqrt(2))"},
+    {"name": "D", "expr": "Point(1 + sqrt(2), 3 + sqrt(2))"},
+    {"name": "E", "expr": "Point(1 - sqrt(2), 3 + 3*sqrt(2))"},
+    {"name": "F", "expr": "Point(-1 - sqrt(2), 3 + 3*sqrt(2))"},
+    {"name": "G", "expr": "Point(-1 - 2*sqrt(2), 3 + 2*sqrt(2))"},
+    {"name": "H", "expr": "Point(-1 - 2*sqrt(2), 3 + 2*sqrt(2) - g)"},
+    {"name": "Aclose", "expr": "Point(-1 - 2*sqrt(2) + h/sqrt(2), 3 + 2*sqrt(2) - g - h/sqrt(2))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A, Aclose)", "value": 0}
+  ],
+  "guards": ["AssumeGt(g, 0)", "AssumeGt(h, 0)"],
+  "answer": "1 + 2 + 3 + 4 + 2 + 2 + g + h",
+  "post_process": ""
+}

@@ -1,0 +1,122 @@
+{
+  "id": "JMO-2014-PRE-04",
+  "task": "solve",
+  "source_statement": "円周上に6点A，B，C，D，E，Fがこの順にあり，線分AD，BE，CFは一点で交わっている。AB=1，BC=2，CD=3，DE=4，EF=5のとき，線分FAの長さを求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "six cyclic points in order",
+      "dsl": "fix A=(r,0) and parameterize the positive cyclic gaps g1,...,g5; construct B,...,F on Circle(O,r) and retain the source order/convex branch",
+      "kind": "construction/constraint/guard"
+    },
+    {
+      "source": "AD, BE, CF concurrent",
+      "dsl": "T=Intersect(Line(A,D),Line(B,E)) and T lies on Line(C,F)",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "five consecutive chord lengths",
+      "dsl": "direct Distance constraints",
+      "kind": "constraint"
+    },
+    {
+      "source": "FA",
+      "dsl": "direct Distance(F,A)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "r",
+      "g1",
+      "g2",
+      "g3",
+      "g4",
+      "g5"
+    ]
+  },
+  "construction": [
+    {
+      "name": "O",
+      "expr": "Point(0,0)"
+    },
+    {"name": "A", "expr": "Point(r,0)"},
+    {"name": "B", "expr": "Point(r*cos(g1),r*sin(g1))"},
+    {"name": "C", "expr": "Point(r*cos(g1+g2),r*sin(g1+g2))"},
+    {"name": "D", "expr": "Point(r*cos(g1+g2+g3),r*sin(g1+g2+g3))"},
+    {"name": "E", "expr": "Point(r*cos(g1+g2+g3+g4),r*sin(g1+g2+g3+g4))"},
+    {"name": "F", "expr": "Point(r*cos(g1+g2+g3+g4+g5),r*sin(g1+g2+g3+g4+g5))"},
+    {
+      "name": "omega",
+      "expr": "Circle(O,r)"
+    },
+    {
+      "name": "T",
+      "expr": "Intersect(Line(A,D),Line(B,E))"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(O,A)",
+      "value": "r"
+    },
+    {
+      "def": "Distance(O,B)",
+      "value": "r"
+    },
+    {
+      "def": "Distance(O,C)",
+      "value": "r"
+    },
+    {
+      "def": "Distance(O,D)",
+      "value": "r"
+    },
+    {
+      "def": "Distance(O,E)",
+      "value": "r"
+    },
+    {
+      "def": "Distance(O,F)",
+      "value": "r"
+    },
+    {
+      "def": "Distance(A,B)",
+      "value": 1
+    },
+    {
+      "def": "Distance(B,C)",
+      "value": 2
+    },
+    {
+      "def": "Distance(C,D)",
+      "value": 3
+    },
+    {
+      "def": "Distance(D,E)",
+      "value": 4
+    },
+    {
+      "def": "Distance(E,F)",
+      "value": 5
+    },
+    {
+      "def": "Distance(T,Line(C,F))",
+      "value": 0
+    }
+  ],
+  "guards": [
+    "AssumeGt(r,0)",
+    "AssumeGt(Area(A,B,C),0)",
+    "AssumeGt(Area(A,C,D),0)",
+    "AssumeGt(Area(A,D,E),0)",
+    "AssumeGt(g1,0)",
+    "AssumeGt(g2,0)",
+    "AssumeGt(g3,0)",
+    "AssumeGt(g4,0)",
+    "AssumeGt(g5,0)",
+    "AssumeLt(g1+g2+g3+g4+g5,2*pi)",
+    "AssumeConvex([A,B,C,D,E,F])"
+  ],
+  "answer": "Distance(F,A)",
+  "post_process": ""
+}

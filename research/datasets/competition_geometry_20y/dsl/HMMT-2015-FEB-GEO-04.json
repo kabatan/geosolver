@@ -1,0 +1,31 @@
+{
+  "id": "HMMT-2015-FEB-GEO-04",
+  "task": "solve",
+  "source_statement": "Let ABCD be a cyclic quadrilateral with AB = 3, BC = 2, CD = 2, DA = 4. Let lines perpendicular to BC from B and C meet AD at B ′ and C ′ , respectively. Let lines perpendicular to AD from A and [BCC ′ B ′ ] D meet BC at A′ and D′ , respectively. Compute the ratio [DAA ′ D ′ ] , where [̟] denotes the area of figure ̟.",
+  "clause_ledger": [
+    {"source": "cyclic quadrilateral side lengths", "dsl": "B=(0,0), C=(2,0), and A,D remain variables subject to the four stated side lengths and AreConcyclic", "kind": "construction/constraint"},
+    {"source": "B',C' feet from B,C to AD; A',D' feet from A,D to BC", "dsl": "FootOfPerpendicular constructions", "kind": "construction"},
+    {"source": "ratio of quadrilateral areas", "dsl": "Area(B,C,Cp,Bp)/Area(D,A,Ap,Dp)", "kind": "answer"}
+  ],
+  "variables": {"names": ["ax", "ay", "dx", "dy"]},
+  "construction": [
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(2,0)"},
+    {"name": "A", "expr": "Point(ax,ay)"},
+    {"name": "D", "expr": "Point(dx,dy)"},
+    {"name": "Bp", "expr": "FootOfPerpendicular(B,Line(A,D))"},
+    {"name": "Cp", "expr": "FootOfPerpendicular(C,Line(A,D))"},
+    {"name": "Ap", "expr": "FootOfPerpendicular(A,Line(B,C))"},
+    {"name": "Dp", "expr": "FootOfPerpendicular(D,Line(B,C))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 3},
+    {"def": "Distance(B,C)", "value": 2},
+    {"def": "Distance(C,D)", "value": 2},
+    {"def": "Distance(D,A)", "value": 4},
+    {"def": "AreConcyclic(A,B,C,D)", "value": 0}
+  ],
+  "guards": ["AssumeGt(ay,0)", "AssumeGt(dy,0)", "AssumeConvex([A,B,C,D])", "AssumeGt(Area(B,C,Cp,Bp),0)", "AssumeGt(Area(D,A,Ap,Dp),0)"],
+  "answer": "Area(B,C,Cp,Bp)/Area(D,A,Ap,Dp)",
+  "post_process": ""
+}

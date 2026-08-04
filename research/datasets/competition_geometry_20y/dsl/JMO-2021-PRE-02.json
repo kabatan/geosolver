@@ -1,0 +1,28 @@
+{
+  "id": "JMO-2021-PRE-02",
+  "task": "solve",
+  "source_statement": "下図のような正十角形がある。全体の面積が1のとき、斜線部の面積を求めよ。",
+  "clause_ledger": [
+    {"source": "正十角形", "dsl": "V0,...,V9 are the regular decagon in the figure's top-horizontal orientation", "kind": "construction"},
+    {"source": "全体の面積が1", "dsl": "Area(V0,...,V9)=1", "kind": "constraint"},
+    {"source": "斜線部", "dsl": "the two figure-defined components are the quadrilateral V7,V0,V1,V2 and triangle V2,V3,V4", "kind": "construction/answer"}
+  ],
+  "variables": {"names": ["r"]},
+  "construction": [
+    {"name": "V0", "expr": "Point(r*cos(3*pi/5),r*sin(3*pi/5))"},
+    {"name": "V1", "expr": "Point(r*cos(2*pi/5),r*sin(2*pi/5))"},
+    {"name": "V2", "expr": "Point(r*cos(pi/5),r*sin(pi/5))"},
+    {"name": "V3", "expr": "Point(r,0)"},
+    {"name": "V4", "expr": "Point(r*cos(-pi/5),r*sin(-pi/5))"},
+    {"name": "V5", "expr": "Point(r*cos(-2*pi/5),r*sin(-2*pi/5))"},
+    {"name": "V6", "expr": "Point(r*cos(-3*pi/5),r*sin(-3*pi/5))"},
+    {"name": "V7", "expr": "Point(r*cos(-4*pi/5),r*sin(-4*pi/5))"},
+    {"name": "V8", "expr": "Point(-r,0)"},
+    {"name": "V9", "expr": "Point(r*cos(4*pi/5),r*sin(4*pi/5))"}
+  ],
+  "constraints": [{"def": "Area(V0,V1,V2,V3,V4,V5,V6,V7,V8,V9)", "value": 1}],
+  "guards": ["AssumeGt(r,0)"],
+  "answer": "Area(V7,V0,V1,V2)+Area(V2,V3,V4)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

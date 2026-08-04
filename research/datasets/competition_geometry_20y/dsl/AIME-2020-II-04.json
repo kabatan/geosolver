@@ -1,0 +1,31 @@
+{
+  "id": "AIME-2020-II-04",
+  "task": "solve",
+  "source_statement": "Triangles $\\triangle ABC$ and $\\triangle A'B'C'$ lie in the coordinate plane with vertices $A(0,0)$ , $B(0,12)$ , $C(16,0)$ , $A'(24,18)$ , $B'(36,18)$ , $C'(24,2)$ . A rotation of $m$ degrees clockwise around the point $(x,y)$ where $0<m<180$ , will transform $\\triangle ABC$ to $\\triangle A'B'C'$ . Find $m+x+y$ .",
+  "clause_ledger": [
+    {"source": "the two labeled coordinate triangles", "dsl": "all six source coordinates are fixed exactly", "kind": "construction"},
+    {"source": "clockwise rotation about (x,y) by m degrees maps corresponding vertices", "dsl": "K=(x,y), R=Rotate(point,-m*pi/180,K), and zero-distance correspondence constraints", "kind": "construction/constraint"},
+    {"source": "m+x+y", "dsl": "direct scalar expression", "kind": "answer"}
+  ],
+  "variables": {"names": ["m", "x", "y"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(0,12)"},
+    {"name": "C", "expr": "Point(16,0)"},
+    {"name": "Ap", "expr": "Point(24,18)"},
+    {"name": "Bp", "expr": "Point(36,18)"},
+    {"name": "Cp", "expr": "Point(24,2)"},
+    {"name": "K", "expr": "Point(x,y)"},
+    {"name": "RA", "expr": "Rotate(A,-m*pi/180,K)"},
+    {"name": "RB", "expr": "Rotate(B,-m*pi/180,K)"},
+    {"name": "RC", "expr": "Rotate(C,-m*pi/180,K)"}
+  ],
+  "constraints": [
+    {"def": "Distance(RA,Ap)", "value": 0},
+    {"def": "Distance(RB,Bp)", "value": 0},
+    {"def": "Distance(RC,Cp)", "value": 0}
+  ],
+  "guards": ["AssumeGt(m,0)", "AssumeLt(m,180)"],
+  "answer": "m+x+y",
+  "post_process": ""
+}

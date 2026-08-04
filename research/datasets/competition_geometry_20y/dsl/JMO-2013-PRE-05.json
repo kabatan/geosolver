@@ -1,0 +1,93 @@
+{
+  "id": "JMO-2013-PRE-05",
+  "task": "solve",
+  "source_statement": "相異なる2点P，Qで交わる2円O1，O2がある。点Pにおける円O1の接線が，Pとは異なる点Rで円O2と交わっている。また，点Qにおける円O2の接線が，Qとは異なる点Sで円O1と交わっている。さらに，直線PRと直線QSが点Xで交わっている。XR=9，XS=2のとき，円O1の半径は円O2の半径の何倍であるか。ただし，YZで線分YZの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "two intersecting circles and tangent constructions",
+      "dsl": "O1=Circumcircle(P,Q,S), O2=Circumcircle(P,Q,R), with tangent-line constraints",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "X=PR intersection QS and XR,XS",
+      "dsl": "X fixed at origin, R and S at the stated distances on the two carrier rays",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "radius ratio",
+      "dsl": "Radius(O1)/Radius(O2)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "theta",
+      "p",
+      "q"
+    ]
+  },
+  "construction": [
+    {
+      "name": "X",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "R",
+      "expr": "Point(9,0)"
+    },
+    {
+      "name": "S",
+      "expr": "Point(2*cos(theta),2*sin(theta))"
+    },
+    {
+      "name": "P",
+      "expr": "Point(p,0)"
+    },
+    {
+      "name": "Q",
+      "expr": "Point(q*cos(theta),q*sin(theta))"
+    },
+    {
+      "name": "O1",
+      "expr": "Circumcircle(P,Q,S)"
+    },
+    {
+      "name": "O2",
+      "expr": "Circumcircle(P,Q,R)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(X,R)",
+      "value": 9
+    },
+    {
+      "def": "Distance(X,S)",
+      "value": 2
+    },
+    {
+      "def": "Collinear(P,R,X)",
+      "value": 0
+    },
+    {
+      "def": "Collinear(Q,S,X)",
+      "value": 0
+    },
+    {
+      "def": "IsTangent(Line(P,R),O1)",
+      "value": 0
+    },
+    {
+      "def": "IsTangent(Line(Q,S),O2)",
+      "value": 0
+    }
+  ],
+  "guards": [
+    "AssumeGt(theta,0)",
+    "AssumeLt(theta,pi)",
+    "AssumeLt(p,0)",
+    "AssumeGt(q,0)"
+  ],
+  "answer": "Radius(O1)/Radius(O2)",
+  "post_process": ""
+}

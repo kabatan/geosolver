@@ -1,0 +1,29 @@
+{
+  "id": "HMMT-2012-FEB-GEO-01",
+  "task": "solve",
+  "source_statement": "ABC is an isosceles triangle with AB = 2 and ∡ABC = 90◦ . D is the midpoint of BC and E is on AC such that the area of AEDB is twice the area of ECD. Find the length of DE.",
+  "clause_ledger": [
+    {"source": "isosceles right triangle, AB=2", "dsl": "A=(2,0), B=(0,0), C=(0,2) with direct right/side constraints", "kind": "construction/constraint"},
+    {"source": "D midpoint of BC", "dsl": "D=Midpoint(B,C)", "kind": "construction"},
+    {"source": "E on AC", "dsl": "E is direct segment parameterization with 0<t<1", "kind": "construction/guard"},
+    {"source": "area AEDB twice area ECD", "dsl": "direct polygon/triangle area equality", "kind": "constraint"},
+    {"source": "DE", "dsl": "Distance(D,E)", "kind": "answer"}
+  ],
+  "variables": {"names": ["t"]},
+  "construction": [
+    {"name": "A", "expr": "Point(2,0)"},
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(0,2)"},
+    {"name": "D", "expr": "Midpoint(B,C)"},
+    {"name": "E", "expr": "Point(2*(1-t),2*t)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 2},
+    {"def": "Distance(B,C)", "value": 2},
+    {"def": "Angle(A,B,C)", "value": "pi/2"},
+    {"def": "Area(A,E,D,B)", "value": "2*Area(E,C,D)"}
+  ],
+  "guards": ["AssumeGt(t,0)", "AssumeLt(t,1)"],
+  "answer": "Distance(D,E)",
+  "post_process": ""
+}

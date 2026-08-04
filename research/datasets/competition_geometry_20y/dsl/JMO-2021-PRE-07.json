@@ -1,0 +1,85 @@
+{
+  "id": "JMO-2021-PRE-07",
+  "task": "solve",
+  "source_statement": "三角形ABCの辺BC上に点P，Qがあり，三角形ACPの垂心と三角形ABQの垂心は一致している。AB=10，AC=11，BP=5，CQ=6のとき，辺BCの長さを求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "P,Q on BC and the two fixed distances",
+      "dsl": "B=(0,0), C=(c,0), P=(5,0), Q=(c-6,0)",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "orthocenters of ACP and ABQ coincide",
+      "dsl": "direct Orthocenter constructions and zero-distance equality",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "AB=10, AC=11",
+      "dsl": "direct side-distance constraints",
+      "kind": "constraint"
+    },
+    {
+      "source": "BC",
+      "dsl": "direct variable c",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "c",
+      "ax",
+      "ay"
+    ]
+  },
+  "construction": [
+    {
+      "name": "B",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(c,0)"
+    },
+    {
+      "name": "A",
+      "expr": "Point(ax,ay)"
+    },
+    {
+      "name": "P",
+      "expr": "Point(5,0)"
+    },
+    {
+      "name": "Q",
+      "expr": "Point(c-6,0)"
+    },
+    {
+      "name": "H1",
+      "expr": "Orthocenter(A,C,P)"
+    },
+    {
+      "name": "H2",
+      "expr": "Orthocenter(A,B,Q)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(A,B)",
+      "value": 10
+    },
+    {
+      "def": "Distance(A,C)",
+      "value": 11
+    },
+    {
+      "def": "Distance(H1,H2)",
+      "value": 0
+    }
+  ],
+  "guards": [
+    "AssumeGt(c,11)",
+    "AssumeGt(ay,0)",
+    "AssumeGt(c-6,5)"
+  ],
+  "answer": "c",
+  "post_process": ""
+}

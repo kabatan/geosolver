@@ -1,0 +1,29 @@
+{
+  "id": "HMMT-2024-FEB-GEO-02",
+  "task": "solve",
+  "source_statement": "Let ABC be a triangle with ∠BAC = 90◦ . Let D, E, and F be the feet of altitude, angle bisector, and median from A to BC, respectively. If DE = 3 and EF = 5, compute the length of BC.",
+  "clause_ledger": [
+    {"source": "right triangle at A", "dsl": "Perpendicular(Line(A,B),Line(A,C))=0", "kind": "constraint"},
+    {"source": "D,E,F are feet from A to BC", "dsl": "all three points have y=0; D uses the perpendicular projection gauge, E uses the direct angle-bisector equality, F=Midpoint(B,C)", "kind": "construction/constraint"},
+    {"source": "DE=3 and EF=5", "dsl": "direct Distance constraints", "kind": "constraint"},
+    {"source": "BC", "dsl": "Distance(B,C)", "kind": "answer"}
+  ],
+  "variables": {"names": ["s", "u", "v", "e"]},
+  "construction": [
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(s,0)"},
+    {"name": "A", "expr": "Point(u,v)"},
+    {"name": "D", "expr": "Point(u,0)"},
+    {"name": "E", "expr": "Point(e,0)"},
+    {"name": "F", "expr": "Midpoint(B,C)"}
+  ],
+  "constraints": [
+    {"def": "Perpendicular(Line(A,B),Line(A,C))", "value": 0},
+    {"def": "Angle(B,A,E)", "value": "Angle(E,A,C)"},
+    {"def": "Distance(D,E)", "value": 3},
+    {"def": "Distance(E,F)", "value": 5}
+  ],
+  "guards": ["AssumeGt(s,0)", "AssumeGt(v,0)", "AssumeGt(u,0)", "AssumeLt(u,s)", "AssumeGt(e,0)", "AssumeLt(e,s)"],
+  "answer": "Distance(B,C)",
+  "post_process": ""
+}

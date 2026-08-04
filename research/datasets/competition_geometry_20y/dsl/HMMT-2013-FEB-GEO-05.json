@@ -1,0 +1,29 @@
+{
+  "id": "HMMT-2013-FEB-GEO-05",
+  "task": "solve",
+  "source_statement": "In triangle ABC, ∠A = 45◦ and M is the midpoint of BC. AM intersects the circumcircle of ABC for the second time at D, and AM = 2M D. Find cos ∠AOD, where O is the circumcenter of ABC.",
+  "clause_ledger": [
+    {"source": "angle A=45 degrees", "dsl": "Angle(B,A,C)=pi/4", "kind": "constraint"},
+    {"source": "M midpoint of BC", "dsl": "M=Midpoint(B,C)", "kind": "construction"},
+    {"source": "D second intersection of AM and circumcircle", "dsl": "D=Intersect(Line(A,M),Gamma,exclude=A)", "kind": "construction"},
+    {"source": "AM=2MD", "dsl": "direct distance equality", "kind": "constraint"},
+    {"source": "cos angle AOD", "dsl": "cos(Angle(A,O,D))", "kind": "answer"}
+  ],
+  "variables": {"names": ["s", "Ax", "Ay"]},
+  "construction": [
+    {"name": "M", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(-s,0)"},
+    {"name": "C", "expr": "Point(s,0)"},
+    {"name": "A", "expr": "Point(Ax,Ay)"},
+    {"name": "Gamma", "expr": "Circumcircle(A,B,C)"},
+    {"name": "D", "expr": "Intersect(Line(A,M),Gamma,exclude=A)"},
+    {"name": "O", "expr": "Circumcenter(A,B,C)"}
+  ],
+  "constraints": [
+    {"def": "Angle(B,A,C)", "value": "pi/4"},
+    {"def": "Distance(A,M)", "value": "2*Distance(M,D)"}
+  ],
+  "guards": ["AssumeGt(s,0)", "AssumeGt(Ay,0)", "AssumeGt(Distance(A,M),0)"],
+  "answer": "cos(Angle(A,O,D))",
+  "post_process": ""
+}

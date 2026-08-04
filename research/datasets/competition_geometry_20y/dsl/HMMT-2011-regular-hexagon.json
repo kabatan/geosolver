@@ -1,0 +1,85 @@
+{
+  "id": "HMMT-2011-regular-hexagon",
+  "task": "solve",
+  "source_statement": "Let ABCDEF be a regular hexagon of area 1. Let M be the midpoint of DE. Let X be the intersection of AC and BM , let Y be the intersection of BF and AM , and let Z be the intersection of AC and BF . If [P ] denotes the area of polygon P for any polygon P in the plane, evaluate [BXC] + [AY F ] + [ABZ] − [M XZY ].",
+  "clause_ledger": [
+    {
+      "source": "regular hexagon ABCDEF of area 1",
+      "dsl": "six fixed circumferential coordinates with side parameter s and direct area constraint",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "M midpoint of DE",
+      "dsl": "direct Midpoint construction",
+      "kind": "construction"
+    },
+    {
+      "source": "X,Y,Z are stated line intersections",
+      "dsl": "direct Intersect constructions",
+      "kind": "construction"
+    },
+    {
+      "source": "signed combination of polygon areas",
+      "dsl": "same four Area expressions and signs",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "s"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(s,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(s/2,sqrt(3)*s/2)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(-s/2,sqrt(3)*s/2)"
+    },
+    {
+      "name": "D",
+      "expr": "Point(-s,0)"
+    },
+    {
+      "name": "E",
+      "expr": "Point(-s/2,-sqrt(3)*s/2)"
+    },
+    {
+      "name": "F",
+      "expr": "Point(s/2,-sqrt(3)*s/2)"
+    },
+    {
+      "name": "M",
+      "expr": "Midpoint(D,E)"
+    },
+    {
+      "name": "X",
+      "expr": "Intersect(Line(A,C),Line(B,M))"
+    },
+    {
+      "name": "Y",
+      "expr": "Intersect(Line(B,F),Line(A,M))"
+    },
+    {
+      "name": "Z",
+      "expr": "Intersect(Line(A,C),Line(B,F))"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Area(A,B,C,D,E,F)",
+      "value": 1
+    }
+  ],
+  "guards": [
+    "AssumeGt(s,0)"
+  ],
+  "answer": "Area(B,X,C)+Area(A,Y,F)+Area(A,B,Z)-Area(M,X,Z,Y)",
+  "post_process": ""
+}

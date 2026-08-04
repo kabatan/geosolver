@@ -1,0 +1,97 @@
+{
+  "id": "JMO-2018-PRE-06",
+  "task": "solve",
+  "source_statement": "三角形ABCは直角二等辺三角形で，∠A=90°である。その内部に3点X，Y，Zをとったところ，三角形XYZは∠X=90°であるような直角二等辺三角形であり，点A，XおよびB，Z，YおよびC，X，Zはそれぞれこの順に同一直線上に並んでいた。AB=1，XY=1/4のとき，線分AXの長さを求めよ。ただし，STで線分STの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "right isosceles ABC",
+      "dsl": "A=(0,0),B=(1,0),C=(0,1)",
+      "kind": "construction"
+    },
+    {
+      "source": "point order/collinearities",
+      "dsl": "X on AC, Z on CX extension, and B,Z,Y collinear with direct order guards",
+      "kind": "construction/guard"
+    },
+    {
+      "source": "right isosceles XYZ and XY=1/4",
+      "dsl": "Perpendicular at X, equal legs, direct distance",
+      "kind": "constraint"
+    },
+    {
+      "source": "AX",
+      "dsl": "Distance(A,X)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "x",
+      "zx",
+      "zy",
+      "yx",
+      "yy"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(1,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(0,1)"
+    },
+    {
+      "name": "X",
+      "expr": "Point(0,x)"
+    },
+    {
+      "name": "Z",
+      "expr": "Point(zx,zy)"
+    },
+    {
+      "name": "Y",
+      "expr": "Point(yx,yy)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(A,X)",
+      "value": "x"
+    },
+    {
+      "def": "Collinear(C,X,Z)",
+      "value": 0
+    },
+    {
+      "def": "Collinear(B,Z,Y)",
+      "value": 0
+    },
+    {
+      "def": "Distance(X,Y)",
+      "value": "1/4"
+    },
+    {
+      "def": "Distance(X,Y)",
+      "value": "Distance(X,Z)"
+    },
+    {
+      "def": "Perpendicular(Line(X,Y),Line(X,Z))",
+      "value": 0
+    }
+  ],
+  "guards": [
+    "AssumeGt(x,0)",
+    "AssumeLt(x,1)",
+    "AssumeGt(zy,1)",
+    "AssumeGt(yx,0)",
+    "AssumeGt(yy,0)"
+  ],
+  "answer": "Distance(A,X)",
+  "post_process": ""
+}

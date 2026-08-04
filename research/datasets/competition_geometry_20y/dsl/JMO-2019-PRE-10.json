@@ -1,0 +1,104 @@
+{
+  "id": "JMO-2019-PRE-10",
+  "task": "solve",
+  "source_statement": "三角形ABCおよび辺AB，AC上の点D，Eについて，AB=6，AC=9，AD=4，AE=6が成り立っている。また，三角形ADEの外接円と辺BCの交点をそれぞれF，Gとし，三角形BFGCの外接円を考える。ただし，4点B，F，G，Cはこの順に並んでいる。直線DFとEGが三角形ABCの外接円上で交わるとき，FG/BCの値を求めよ。なお，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "triangle and side-point distances",
+      "dsl": "fix AB=6 on the x-axis and parameterize C on the AC=9 ray; construct E at AE=6 and retain the direct side constraints",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "F,G are the two ordered intersections of circumcircle ADE with BC",
+      "dsl": "F and G are the ordered circle-line intersections, selected as near B and the other point, respectively",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "DF∩EG on circumcircle ABC",
+      "dsl": "direct intersection and OnCircle constraint",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "FG/BC",
+      "dsl": "direct ratio",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "theta"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(6,0)"
+    },
+    {"name": "C", "expr": "Point(9*cos(theta),9*sin(theta))"},
+    {
+      "name": "D",
+      "expr": "Point(4,0)"
+    },
+    {"name": "E", "expr": "Point(6*cos(theta),6*sin(theta))"},
+    {
+      "name": "Gamma1",
+      "expr": "Circumcircle(A,D,E)"
+    },
+    {
+      "name": "Gamma2",
+      "expr": "Circumcircle(A,B,C)"
+    },
+    {"name": "F", "expr": "Intersect(Line(B,C),Gamma1,near=B)"},
+    {"name": "G", "expr": "Intersect(Line(B,C),Gamma1,exclude=F)"},
+    {
+      "name": "T",
+      "expr": "Intersect(Line(D,F),Line(E,G))"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(A,C)",
+      "value": 9
+    },
+    {
+      "def": "Distance(A,E)",
+      "value": 6
+    },
+    {
+      "def": "Collinear(A,E,C)",
+      "value": 0
+    },
+    {
+      "def": "Collinear(B,F,C)",
+      "value": 0
+    },
+    {
+      "def": "Collinear(B,G,C)",
+      "value": 0
+    },
+    {
+      "def": "OnCircle(F,Gamma1)",
+      "value": 0
+    },
+    {
+      "def": "OnCircle(G,Gamma1)",
+      "value": 0
+    },
+    {
+      "def": "OnCircle(T,Gamma2)",
+      "value": 0
+    }
+  ],
+  "guards": [
+    "AssumeGt(sin(theta),0)",
+    "AssumeLt(theta,pi)",
+    "AssumeGt(F.x,G.x)",
+    "AssumeConvex([A,B,C])"
+  ],
+  "answer": "Distance(F,G)/Distance(B,C)",
+  "post_process": ""
+}

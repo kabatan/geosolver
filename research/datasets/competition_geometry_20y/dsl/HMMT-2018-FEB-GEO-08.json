@@ -1,0 +1,40 @@
+{
+  "id": "HMMT-2018-FEB-GEO-08",
+  "task": "solve",
+  "source_statement": "Let ABC be an equilateral triangle with side length 8. Let X be on side AB so that AX = 5 and Y be on side AC so that AY = 3. Let Z be on side BC so that AZ, BY, CX are concurrent. Let ZX, ZY intersect the circumcircle of AXY again at P, Q respectively. Let XQ and Y P intersect at K. Compute KX · KQ.",
+  "clause_ledger": [
+    {"source": "equilateral triangle and side points", "dsl": "exact coordinate gauge with X,Y on the two sides", "kind": "construction/constraint"},
+    {"source": "AZ,BY,CX concurrent", "dsl": "variable concurrency point T and three Collinear constraints", "kind": "constraint"},
+    {"source": "circle intersections P,Q and K", "dsl": "direct Circumcircle/Intersect constructions", "kind": "construction"},
+    {"source": "KX*KQ", "dsl": "product of direct distances", "kind": "answer"}
+  ],
+  "variables": {"names": ["zx", "zy", "tx", "ty"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(8,0)"},
+    {"name": "C", "expr": "Point(4,4*sqrt(3))"},
+    {"name": "X", "expr": "Point(5,0)"},
+    {"name": "Y", "expr": "Point(3/2,3*sqrt(3)/2)"},
+    {"name": "Z", "expr": "Point(zx,zy)"},
+    {"name": "T", "expr": "Point(tx,ty)"},
+    {"name": "Gamma", "expr": "Circumcircle(A,X,Y)"},
+    {"name": "P", "expr": "Intersect(Line(Z,X),Gamma,exclude=X)"},
+    {"name": "Q", "expr": "Intersect(Line(Z,Y),Gamma,exclude=Y)"},
+    {"name": "K", "expr": "Intersect(Line(X,Q),Line(Y,P))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 8},
+    {"def": "Distance(B,C)", "value": 8},
+    {"def": "Distance(C,A)", "value": 8},
+    {"def": "Distance(A,X)", "value": 5},
+    {"def": "Distance(A,Y)", "value": 3},
+    {"def": "Collinear(A,Z,T)", "value": 0},
+    {"def": "Collinear(B,Y,T)", "value": 0},
+    {"def": "Collinear(C,X,T)", "value": 0},
+    {"def": "Collinear(B,C,Z)", "value": 0},
+    {"def": "OnSegment(Z,B,C)", "value": 0}
+  ],
+  "guards": ["AssumeGt(zy,0)", "AssumeLt(zy,4*sqrt(3))"],
+  "answer": "Distance(K,X)*Distance(K,Q)",
+  "post_process": ""
+}

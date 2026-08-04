@@ -1,0 +1,23 @@
+{
+  "id": "HMMT-2010-FEB-GEO-01",
+  "task": "solve",
+  "source_statement": "[3] Below is pictured a regular seven-pointed star. Find the measure of angle a in radians. a",
+  "clause_ledger": [
+    {"source": "regular seven-pointed star", "dsl": "regular heptagram {7/2}: vertices are equally spaced on a unit circle and each star edge advances two vertices", "kind": "construction"},
+    {"source": "angle a at a star tip", "dsl": "Angle(V2,V0,V5), the two incident {7/2} star edges at V0", "kind": "answer"}
+  ],
+  "variables": {"names": []},
+  "construction": [
+    {"name": "V0", "expr": "Point(1,0)"},
+    {"name": "V1", "expr": "Point(cos(2*pi/7),sin(2*pi/7))"},
+    {"name": "V2", "expr": "Point(cos(4*pi/7),sin(4*pi/7))"},
+    {"name": "V3", "expr": "Point(cos(6*pi/7),sin(6*pi/7))"},
+    {"name": "V4", "expr": "Point(cos(8*pi/7),sin(8*pi/7))"},
+    {"name": "V5", "expr": "Point(cos(10*pi/7),sin(10*pi/7))"},
+    {"name": "V6", "expr": "Point(cos(12*pi/7),sin(12*pi/7))"}
+  ],
+  "constraints": [],
+  "guards": [],
+  "answer": "Angle(V2,V0,V5)",
+  "post_process": ""
+}

@@ -1,0 +1,33 @@
+{
+  "id": "HMMT-2006-FEB-GEO-02",
+  "task": "solve",
+  "source_statement": "Suppose ABC is a scalene right triangle, and P is the point on hypotenuse AC such that ∠ABP = 45◦ . Given that AP = 1 and CP = 2, compute the area of ABC.",
+  "clause_ledger": [
+    {"source": "ABC is a scalene right triangle", "dsl": "Angle(A,B,C)=pi/2 plus three pairwise non-equality guards", "kind": "constraint/guard"},
+    {"source": "P is on hypotenuse AC", "dsl": "A,P,C are collinear in the stated order by fixed coordinates", "kind": "construction"},
+    {"source": "angle ABP=45 degrees", "dsl": "Angle(A,B,P)=pi/4", "kind": "constraint"},
+    {"source": "AP=1 and CP=2", "dsl": "direct Distance constraints", "kind": "constraint"},
+    {"source": "area of ABC", "dsl": "Area(A,B,C)", "kind": "answer"}
+  ],
+  "variables": {"names": ["Bx", "By"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0, 0)"},
+    {"name": "P", "expr": "Point(1, 0)"},
+    {"name": "C", "expr": "Point(3, 0)"},
+    {"name": "B", "expr": "Point(Bx, By)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A, P)", "value": 1},
+    {"def": "Distance(P, C)", "value": 2},
+    {"def": "Angle(A, B, C)", "value": "pi/2"},
+    {"def": "Angle(A, B, P)", "value": "pi/4"}
+  ],
+  "guards": [
+    "AssumeGt(By, 0)",
+    "AssumeNe(Distance(A, B), Distance(B, C))",
+    "AssumeNe(Distance(A, B), Distance(A, C))",
+    "AssumeNe(Distance(B, C), Distance(A, C))"
+  ],
+  "answer": "Area(A, B, C)",
+  "post_process": ""
+}

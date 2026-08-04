@@ -1,0 +1,34 @@
+{
+  "id": "JMO-2022-MATHNET-08z4",
+  "task": "solve",
+  "source_statement": "Let $ABC$ be an acute triangle with $AB = 11$, $AC = 10$, and denote the orthocenter by $H$ and the midpoint of $BC$ by $M$. Point $P$ in triangle $ABC$ lies on the circumcircle of triangle $BHC$ and satisfies $\\angle ABP = \\angle CPM$, $PM = 3$. Find the length of $BC$.",
+  "clause_ledger": [
+    {"source": "acute triangle side lengths, H and M", "dsl": "direct Orthocenter and Midpoint constructions", "kind": "construction/constraint"},
+    {"source": "P on circumcircle BHC and inside", "dsl": "direct Circumcircle/OnCircle and interior guards", "kind": "construction/constraint/guard"},
+    {"source": "angle equality and PM=3", "dsl": "direct Angle and Distance constraints", "kind": "constraint"},
+    {"source": "BC", "dsl": "Distance(B,C)", "kind": "answer"}
+  ],
+  "variables": {"names": ["cx", "cy", "px", "py"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(11,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "H", "expr": "Orthocenter(A,B,C)"},
+    {"name": "M", "expr": "Midpoint(B,C)"},
+    {"name": "P", "expr": "Point(px,py)"},
+    {"name": "Gamma", "expr": "Circumcircle(B,H,C)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,C)", "value": 10},
+    {"def": "OnCircle(P,Gamma)", "value": 0},
+    {"def": "Angle(A,B,P)", "value": "Angle(C,P,M)"},
+    {"def": "Distance(P,M)", "value": 3}
+  ],
+  "guards": [
+    "AssumeGt(cx,0)", "AssumeGt(cy,0)",
+    "AssumeAcute(A,B,C)",
+    "AssumeGt(Area(A,B,P),0)", "AssumeGt(Area(B,C,P),0)", "AssumeGt(Area(C,A,P),0)"
+  ],
+  "answer": "Distance(B,C)",
+  "post_process": ""
+}

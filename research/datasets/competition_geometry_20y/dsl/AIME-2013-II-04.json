@@ -1,0 +1,26 @@
+{
+  "id": "AIME-2013-II-04",
+  "task": "solve",
+  "source_statement": "In the Cartesian plane let $A = (1,0)$ and $B = \\left( 2, 2\\sqrt{3} \\right)$ .  Equilateral triangle $ABC$ is constructed so that $C$ lies in the first quadrant.  Let $P=(x,y)$ be the center of $\\triangle ABC$ .  Then $x \\cdot y$ can be written as $\\tfrac{p\\sqrt{q}}{r}$ , where $p$ and $r$ are relatively prime positive integers and $q$ is an integer that is not divisible by the square of any prime.  Find $p+q+r$ .",
+  "clause_ledger": [
+    {"source": "A=(1,0), B=(2,2sqrt(3))", "dsl": "fixed source coordinates", "kind": "construction"},
+    {"source": "ABC is equilateral and C is in the first quadrant", "dsl": "equal side distances plus positive-coordinate branch guards", "kind": "constraint/guard"},
+    {"source": "P is the center of ABC", "dsl": "P is constrained to the centroid of A,B,C", "kind": "construction/constraint"},
+    {"source": "p+q+r presentation", "dsl": "the geometric answer is x*y; the explicit radical presentation is retained in post_process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["cx", "cy", "px", "py"]},
+  "construction": [
+    {"name": "A", "expr": "Point(1,0)"},
+    {"name": "B", "expr": "Point(2,2*sqrt(3))"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "P", "expr": "Point(px,py)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,C)", "value": "Distance(A,B)"},
+    {"def": "Distance(B,C)", "value": "Distance(A,B)"},
+    {"def": "Distance(P,Centroid(A,B,C))", "value": 0}
+  ],
+  "guards": ["AssumeGt(cx,0)", "AssumeGt(cy,0)", "AssumeGt(px,0)", "AssumeGt(py,0)"],
+  "answer": "px*py",
+  "post_process": "# radical_mode=pqr_sum"
+}

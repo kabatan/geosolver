@@ -1,0 +1,70 @@
+{
+  "id": "JMO-2010-PRE-08",
+  "task": "solve",
+  "source_statement": "三角形ABCの内部に点Pがある。AP=√3，BP=5，CP=2，AB:AC=2:1，∠BAC=60°であるとき，三角形ABCの面積を求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "AB:AC=2:1 and angle BAC=60",
+      "dsl": "ray coordinate gauge B=(2t,0), C=(t/2,sqrt(3)t/2)",
+      "kind": "construction"
+    },
+    {
+      "source": "P inside with three distances",
+      "dsl": "P variable, direct Distance constraints and interior guards",
+      "kind": "constraint/guard"
+    },
+    {
+      "source": "area ABC",
+      "dsl": "Area(A,B,C)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "t",
+      "px",
+      "py"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(2*t,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(t/2,sqrt(3)*t/2)"
+    },
+    {
+      "name": "P",
+      "expr": "Point(px,py)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(P,A)",
+      "value": "sqrt(3)"
+    },
+    {
+      "def": "Distance(P,B)",
+      "value": 5
+    },
+    {
+      "def": "Distance(P,C)",
+      "value": 2
+    }
+  ],
+  "guards": [
+    "AssumeGt(t,0)",
+    "AssumeGt(py,0)",
+    "AssumeGt(Area(A,B,P),0)",
+    "AssumeGt(Area(B,C,P),0)",
+    "AssumeGt(Area(C,A,P),0)"
+  ],
+  "answer": "Area(A,B,C)",
+  "post_process": ""
+}

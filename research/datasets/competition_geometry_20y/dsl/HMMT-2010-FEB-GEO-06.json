@@ -1,0 +1,32 @@
+{
+  "id": "HMMT-2010-FEB-GEO-06",
+  "task": "solve",
+  "source_statement": "[5] Three unit circles ω1 , ω2 , and ω3 in the plane have the property that each circle passes through the centers of the other two. A square S surrounds the three circles in such a way that each of its four sides is tangent to at least one of ω1 , ω2 and ω3 . Find the side length of the square S.",
+  "clause_ledger": [
+    {"source": "three unit circles, each through the other centers", "dsl": "P,Q,R are pairwise distance 1 and all three circles have radius 1", "kind": "construction/constraint"},
+    {"source": "square surrounds circles", "dsl": "square [0,L]^2; P=(1,1) is tangent to left/bottom, Q=(qx,L-1) to top, R=(L-1,ry) to right", "kind": "construction/guard"},
+    {"source": "each square side tangent to at least one circle", "dsl": "the four coordinate-side placements encode the four tangencies", "kind": "constraint"},
+    {"source": "side length", "dsl": "L", "kind": "answer"}
+  ],
+  "variables": {"names": ["L", "qx", "ry"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(0,L)"},
+    {"name": "C", "expr": "Point(L,L)"},
+    {"name": "D", "expr": "Point(L,0)"},
+    {"name": "P", "expr": "Point(1,1)"},
+    {"name": "Q", "expr": "Point(qx,L-1)"},
+    {"name": "R", "expr": "Point(L-1,ry)"},
+    {"name": "omega1", "expr": "Circle(P,1)"},
+    {"name": "omega2", "expr": "Circle(Q,1)"},
+    {"name": "omega3", "expr": "Circle(R,1)"}
+  ],
+  "constraints": [
+    {"def": "Distance(P,Q)", "value": 1},
+    {"def": "Distance(P,R)", "value": 1},
+    {"def": "Distance(Q,R)", "value": 1}
+  ],
+  "guards": ["AssumeGt(L,2)", "AssumeGt(qx,1)", "AssumeLt(qx,L-1)", "AssumeGt(ry,1)", "AssumeLt(ry,L-1)"],
+  "answer": "L",
+  "post_process": ""
+}

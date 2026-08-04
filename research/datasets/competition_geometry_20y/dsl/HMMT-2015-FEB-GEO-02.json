@@ -1,0 +1,28 @@
+{
+  "id": "HMMT-2015-FEB-GEO-02",
+  "task": "solve",
+  "source_statement": "Let ABC be a triangle with orthocenter H; suppose that AB = 13, BC = 14, CA = 15. Let GA be the centroid of triangle HBC, and define GB , GC similarly. Determine the area of triangle GA GB GC .",
+  "clause_ledger": [
+    {"source": "triangle side lengths and orthocenter H", "dsl": "fixed coordinate triangle A=(5,12), B=(0,0), C=(14,0), H=(5,15/4)", "kind": "construction"},
+    {"source": "GA,GB,GC centroids", "dsl": "Centroid(H,B,C), Centroid(H,C,A), Centroid(H,A,B)", "kind": "construction"},
+    {"source": "area GAGBGC", "dsl": "Area(GA,GB,GC)", "kind": "answer"}
+  ],
+  "variables": {"names": []},
+  "construction": [
+    {"name": "A", "expr": "Point(5,12)"},
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(14,0)"},
+    {"name": "H", "expr": "Point(5,15/4)"},
+    {"name": "GA", "expr": "Centroid(H,B,C)"},
+    {"name": "GB", "expr": "Centroid(H,C,A)"},
+    {"name": "GC", "expr": "Centroid(H,A,B)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 13},
+    {"def": "Distance(B,C)", "value": 14},
+    {"def": "Distance(C,A)", "value": 15}
+  ],
+  "guards": [],
+  "answer": "Area(GA,GB,GC)",
+  "post_process": ""
+}

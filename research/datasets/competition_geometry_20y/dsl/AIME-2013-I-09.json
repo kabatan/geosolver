@@ -1,0 +1,35 @@
+{
+  "id": "AIME-2013-I-09",
+  "task": "solve",
+  "source_statement": "A paper equilateral triangle $ABC$ has side length $12$ . The paper triangle is folded so that vertex $A$ touches a point on side $\\overline{BC}$ a distance $9$ from point $B$ . The length of the line segment along which the triangle is folded can be written as $\\frac{m\\sqrt{p}}{n}$ , where $m$ , $n$ , and $p$ are positive integers, $m$ and $n$ are relatively prime, and $p$ is not divisible by the square of any prime. Find $m+n+p$ . [asy] import cse5; size(12cm); pen tpen = defaultpen + 1.337; real a = 39/5.0; real b = 39/7.0; pair B = MP(\"B\", (0,0), dir(200)); pair A = MP(\"A\", (9,0), dir(-80)); pair C = MP(\"C\", (12,0), dir(-20)); pair K = (6,10.392); pair M = (a*B+(12-a)*K) / 12; pair N = (b*C+(12-b)*K) / 12; draw(B--M--N--C--cycle, tpen); draw(M--A--N--cycle); fill(M--A--N--cycle, mediumgrey); pair shift = (-20.13, 0); pair B1 = MP(\"B\", B+shift, dir(200)); pair A1 = MP(\"A\", K+shift, dir(90)); pair C1 = MP(\"C\", C+shift, dir(-20)); draw(A1--B1--C1--cycle, tpen);[/asy]",
+  "clause_ledger": [
+    {"source": "equilateral ABC of side 12", "dsl": "B=(0,0), C=(12,0), A=(6,6*sqrt(3))", "kind": "construction/constraint"},
+    {"source": "A touches point T on BC with BT=9 after folding", "dsl": "T=(9,0); the fold is the perpendicular bisector of AT", "kind": "construction/constraint"},
+    {"source": "fold line segment", "dsl": "L=PerpendicularBisector(A,T), M=L intersect AB, N=L intersect AC; answer MN", "kind": "construction/answer"},
+    {"source": "m sqrt(p)/n presentation", "dsl": "explicit radical post-process on Distance(M,N)", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": []},
+  "construction": [
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(12,0)"},
+    {"name": "A", "expr": "Point(6,6*sqrt(3))"},
+    {"name": "T", "expr": "Point(9,0)"},
+    {"name": "L", "expr": "PerpendicularBisector(A,T)"},
+    {"name": "M", "expr": "Intersect(L,Line(A,B))"},
+    {"name": "N", "expr": "Intersect(L,Line(A,C))"}
+  ],
+  "constraints": [
+    {"def": "Distance(B,C)", "value": 12},
+    {"def": "Distance(B,T)", "value": 9},
+    {"def": "Distance(A,B)", "value": "Distance(B,C)"},
+    {"def": "Distance(A,C)", "value": "Distance(B,C)"},
+    {"def": "Distance(A,M)", "value": "Distance(T,M)"},
+    {"def": "Distance(A,N)", "value": "Distance(T,N)"},
+    {"def": "OnSegment(M,A,B)", "value": 0},
+    {"def": "OnSegment(N,A,C)", "value": 0}
+  ],
+  "guards": [],
+  "answer": "Distance(M,N)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": "# radical_mode=pqr_sum"
+}

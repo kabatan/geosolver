@@ -1,0 +1,31 @@
+{
+  "id": "HMMT-2013-FEB-GEO-04",
+  "task": "solve",
+  "source_statement": "Let ω1 and ω2 be circles with centers O1 and O2 , respectively, and radii r1 and r2 , respectively. Suppose that O2 is on ω1 . Let A be one of the intersections of ω1 and ω2 , and B be one of the two intersections of line O1 O2 with ω2 . If AB = O1 A, find all possible values of rr12 .",
+  "clause_ledger": [
+    {"source": "O2 on omega1", "dsl": "Distance(O1,O2)=r1", "kind": "constraint"},
+    {"source": "A intersection of circles", "dsl": "Distance(O1,A)=r1 and Distance(O2,A)=r2", "kind": "constraint"},
+    {"source": "B intersection of O1O2 with omega2", "dsl": "B=(b,0), O1O2 is the x-axis, Distance(O2,B)=r2", "kind": "construction/constraint"},
+    {"source": "AB=O1A", "dsl": "direct Distance(A,B)=r1", "kind": "constraint"},
+    {"source": "r1/r2", "dsl": "r1/r2", "kind": "answer"}
+  ],
+  "variables": {"names": ["r1", "r2", "Ax", "Ay", "b"]},
+  "construction": [
+    {"name": "O1", "expr": "Point(0,0)"},
+    {"name": "O2", "expr": "Point(r1,0)"},
+    {"name": "omega1", "expr": "Circle(O1,r1)"},
+    {"name": "omega2", "expr": "Circle(O2,r2)"},
+    {"name": "A", "expr": "Point(Ax,Ay)"},
+    {"name": "B", "expr": "Point(b,0)"}
+  ],
+  "constraints": [
+    {"def": "Distance(O1,O2)", "value": "r1"},
+    {"def": "Distance(O1,A)", "value": "r1"},
+    {"def": "Distance(O2,A)", "value": "r2"},
+    {"def": "Distance(O2,B)", "value": "r2"},
+    {"def": "Distance(A,B)", "value": "r1"}
+  ],
+  "guards": ["AssumeGt(r1,0)", "AssumeGt(r2,0)", "AssumeGt(Ay,0)", "AssumeNe(Distance(A,B),0)"],
+  "answer": "r1/r2",
+  "post_process": ""
+}

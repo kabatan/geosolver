@@ -1,0 +1,31 @@
+{
+  "id": "AIME-2023-II-12",
+  "task": "solve",
+  "source_statement": "In $\\triangle ABC$ with side lengths $AB = 13,$ $BC = 14,$ and $CA = 15,$ let $M$ be the midpoint of $\\overline{BC}.$ Let $P$ be the point on the circumcircle of $\\triangle ABC$ such that $M$ is on $\\overline{AP}.$ There exists a unique point $Q$ on segment $\\overline{AM}$ such that $\\angle PBQ = \\angle PCQ.$ Then $AQ$ can be written as $\\frac{m}{\\sqrt{n}},$ where $m$ and $n$ are relatively prime positive integers. Find $m+n.$",
+  "clause_ledger": [
+    {"source": "triangle side lengths and M midpoint", "dsl": "coordinate triangle with direct distances and Midpoint", "kind": "construction/constraint"},
+    {"source": "P on circumcircle with M on AP", "dsl": "P=second intersection of AM with Circumcircle", "kind": "construction"},
+    {"source": "Q on AM and angle equality", "dsl": "variable Q with collinearity/order and direct Angle constraint", "kind": "construction/constraint"},
+    {"source": "AQ", "dsl": "Distance(A,Q)", "kind": "answer"}
+  ],
+  "variables": {"names": ["cx", "cy", "qx", "qy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(13,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "M", "expr": "Midpoint(B,C)"},
+    {"name": "Gamma", "expr": "Circumcircle(A,B,C)"},
+    {"name": "P", "expr": "Intersect(Line(A,M),Gamma,exclude=A)"},
+    {"name": "Q", "expr": "Point(qx,qy)"}
+  ],
+  "constraints": [
+    {"def": "Distance(B,C)", "value": 14},
+    {"def": "Distance(A,C)", "value": 15},
+    {"def": "Collinear(A,Q,M)", "value": 0},
+    {"def": "OnSegment(Q,A,M)", "value": 0},
+    {"def": "Angle(P,B,Q)", "value": "Angle(P,C,Q)"}
+  ],
+  "guards": ["AssumeGt(cy,0)", "AssumeGt(qx,0)", "AssumeGt(qy,0)"],
+  "answer": "Distance(A,Q)",
+  "post_process": "# radical_mode=m_over_sqrt_n_sum basis=37"
+}

@@ -1,0 +1,88 @@
+{
+  "id": "JMO-2008-PRE-11",
+  "task": "solve",
+  "source_statement": "凸四角形ABCDはAB=BC=2，CD=2√3，DA=2√5をみたす。また，AC，BDの中点をそれぞれM，Nとすると，MN=√2となる。このとき，四角形ABCDの面積を求めよ。ただし，XYで線分XYの長さをあらわすものとする。",
+  "clause_ledger": [
+    {
+      "source": "convex quadrilateral and four side lengths",
+      "dsl": "coordinate points with direct side distances and convexity guards",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "M,N are diagonal midpoints and MN=sqrt(2)",
+      "dsl": "direct Midpoint constructions and Distance constraint",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "area ABCD",
+      "dsl": "Area(A,B,C,D)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "c",
+      "bx",
+      "by",
+      "dx",
+      "dy"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(c,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(bx,by)"
+    },
+    {
+      "name": "D",
+      "expr": "Point(dx,dy)"
+    },
+    {
+      "name": "M",
+      "expr": "Midpoint(A,C)"
+    },
+    {
+      "name": "N",
+      "expr": "Midpoint(B,D)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(A,B)",
+      "value": 2
+    },
+    {
+      "def": "Distance(B,C)",
+      "value": 2
+    },
+    {
+      "def": "Distance(C,D)",
+      "value": "2*sqrt(3)"
+    },
+    {
+      "def": "Distance(D,A)",
+      "value": "2*sqrt(5)"
+    },
+    {
+      "def": "Distance(M,N)",
+      "value": "sqrt(2)"
+    }
+  ],
+  "guards": [
+    "AssumeGt(c,0)",
+    "AssumeGt(by,0)",
+    "AssumeLt(dy,0)",
+    "AssumeGt(Area(A,B,C),0)",
+    "AssumeGt(Area(A,C,D),0)"
+  ],
+  "answer": "Area(A,B,C,D)",
+  "post_process": ""
+}

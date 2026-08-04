@@ -1,0 +1,42 @@
+{
+  "id": "AIME-2022-II-15",
+  "task": "solve",
+  "source_statement": "Two externally tangent circles $\\omega_1$ and $\\omega_2$ have centers $O_1$ and $O_2$ , respectively. A third circle $\\Omega$ passing through $O_1$ and $O_2$ intersects $\\omega_1$ at $B$ and $C$ and $\\omega_2$ at $A$ and $D$ , as shown. Suppose that $AB = 2$ , $O_1O_2 = 15$ , $CD = 16$ , and $ABO_1CDO_2$ is a convex hexagon. Find the area of this hexagon. [asy] import geometry; size(10cm); point O1=(0,0),O2=(15,0),B=9*dir(30); circle w1=circle(O1,9),w2=circle(O2,6),o=circle(O1,O2,B); point A=intersectionpoints(o,w2)[1],D=intersectionpoints(o,w2)[0],C=intersectionpoints(o,w1)[0]; filldraw(A--B--O1--C--D--O2--cycle,0.2*red+white,black); draw(w1); draw(w2); draw(O1--O2,dashed); draw(o); dot(O1); dot(O2); dot(A); dot(D); dot(C); dot(B); label(\"$\\omega_1$\",8*dir(110),SW); label(\"$\\omega_2$\",5*dir(70)+(15,0),SE); label(\"$O_1$\",O1,W); label(\"$O_2$\",O2,E); label(\"$B$\",B,N+1/2*E); label(\"$A$\",A,N+1/2*W); label(\"$C$\",C,S+1/4*W); label(\"$D$\",D,S+1/4*E); label(\"$15$\",midpoint(O1--O2),N); label(\"$16$\",midpoint(C--D),N); label(\"$2$\",midpoint(A--B),S); label(\"$\\Omega$\",o.C+(o.r-1)*dir(270)); [/asy]",
+  "clause_ledger": [
+    {"source": "omega1,omega2 externally tangent; centers O1,O2 and O1O2=15", "dsl": "O1=(0,0),O2=(15,0), use r1 and r2=15-r1 as the source radii", "kind": "construction/constraint"},
+    {"source": "Omega through O1,O2; intersections B,C with omega1 and A,D with omega2", "dsl": "use B=(r1*cos(theta),r1*sin(theta)); Omega is its circumcircle with O1,O2; C is the other omega1 intersection, A is the omega2 intersection nearest B, and D is the other omega2 intersection", "kind": "construction/constraint/guard"},
+    {"source": "AB=2, CD=16, convex hexagon ABO1CDO2", "dsl": "direct distance constraints and AssumeConvex", "kind": "constraint/guard"},
+    {"source": "area ABO1CDO2", "dsl": "Area(A,B,O1,C,D,O2)", "kind": "answer"}
+  ],
+  "variables": {"names": ["r1", "theta"]},
+  "construction": [
+    {"name": "O1", "expr": "Point(0,0)"},
+    {"name": "O2", "expr": "Point(15,0)"},
+    {"name": "r2", "expr": "15-r1"},
+    {"name": "omega1", "expr": "Circle(O1,r1)"},
+    {"name": "omega2", "expr": "Circle(O2,r2)"},
+    {"name": "B", "expr": "Point(r1*cos(theta),r1*sin(theta))"},
+    {"name": "Omega", "expr": "Circumcircle(O1,O2,B)"},
+    {"name": "C", "expr": "Intersect(omega1,Omega,exclude=B)"},
+    {"name": "A", "expr": "Intersect(omega2,Omega,near=B)"},
+    {"name": "D", "expr": "Intersect(omega2,Omega,exclude=A)"}
+  ],
+  "constraints": [
+    {"def": "Distance(O1,O2)", "value": 15},
+    {"def": "Distance(O1,O2)", "value": "r1+r2"},
+    {"def": "OnCircle(B,omega1)", "value": 0},
+    {"def": "OnCircle(B,Omega)", "value": 0},
+    {"def": "OnCircle(C,omega1)", "value": 0},
+    {"def": "OnCircle(C,Omega)", "value": 0},
+    {"def": "OnCircle(A,omega2)", "value": 0},
+    {"def": "OnCircle(A,Omega)", "value": 0},
+    {"def": "OnCircle(D,omega2)", "value": 0},
+    {"def": "OnCircle(D,Omega)", "value": 0},
+    {"def": "Distance(A,B)", "value": 2},
+    {"def": "Distance(C,D)", "value": 16}
+  ],
+  "guards": ["AssumeGt(r1,0)", "AssumeLt(r1,15)", "AssumeGt(sin(theta),0)", "AssumeConvex([A,B,O1,C,D,O2])"],
+  "answer": "Area(A,B,O1,C,D,O2)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

@@ -1,0 +1,34 @@
+{
+  "id": "HMMT-2009-FEB-GEO-10",
+  "task": "solve",
+  "source_statement": "[8] Points A and B lie on circle ω. Point P lies on the extension of segment AB past B. Line ` passes through P and is tangent to ω. The tangents to ω at points A and B intersect ` at points D and C respectively. Given that AB = 7, BC = 2, and AD = 3, compute BP.",
+  "clause_ledger": [
+    {"source": "A,B on omega and P beyond B on AB", "dsl": "A=(0,0), B=(7,0), P=(p,0), omega through A,B, p>7", "kind": "construction/guard"},
+    {"source": "line through P tangent to omega", "dsl": "C,D,P collinear and IsTangent(Line(C,D),omega)", "kind": "constraint"},
+    {"source": "D,C intersections with tangents at A,B", "dsl": "AD perpendicular OA and BC perpendicular OB", "kind": "constraint"},
+    {"source": "AB=7, BC=2, AD=3", "dsl": "direct distances", "kind": "constraint"},
+    {"source": "BP", "dsl": "Distance(B,P)", "kind": "answer"}
+  ],
+  "variables": {"names": ["p", "k", "u", "v"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(7,0)"},
+    {"name": "P", "expr": "Point(p,0)"},
+    {"name": "O", "expr": "Point(3.5,k)"},
+    {"name": "omega", "expr": "Circle(O,sqrt(k*k+12.25))"},
+    {"name": "C", "expr": "Point(7+v*k, v*3.5)"},
+    {"name": "D", "expr": "Point(u*k, -u*3.5)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 7},
+    {"def": "Area(P,C,D)", "value": 0},
+    {"def": "IsTangent(Line(C,D),omega)", "value": 0},
+    {"def": "Perpendicular(Line(A,D),Line(A,O))", "value": 0},
+    {"def": "Perpendicular(Line(B,C),Line(B,O))", "value": 0},
+    {"def": "Distance(B,C)", "value": 2},
+    {"def": "Distance(A,D)", "value": 3}
+  ],
+  "guards": ["AssumeGt(p,7)", "AssumeGt(k,0)", "AssumeNe(u,0)", "AssumeNe(v,0)"],
+  "answer": "Distance(B,P)",
+  "post_process": ""
+}

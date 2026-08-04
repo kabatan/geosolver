@@ -1,0 +1,28 @@
+{
+  "id": "AIME-2017-II-10",
+  "task": "solve",
+  "source_statement": "Rectangle $ABCD$ has side lengths $AB=84$ and $AD=42$ . Point $M$ is the midpoint of $\\overline{AD}$ , point $N$ is the trisection point of $\\overline{AB}$ closer to $A$ , and point $O$ is the intersection of $\\overline{CM}$ and $\\overline{DN}$ . Point $P$ lies on the quadrilateral $BCON$ , and $\\overline{BP}$ bisects the area of $BCON$ . Find the area of $\\triangle CDP$ .",
+  "clause_ledger": [
+    {"source": "rectangle and M,N,O constructions", "dsl": "direct coordinate rectangle, Midpoint and Intersect constructions", "kind": "construction"},
+    {"source": "P in BCON and BP area bisector", "dsl": "P variable with the two subareas from B equal to half Area(BCON)", "kind": "constraint/guard"},
+    {"source": "area CDP", "dsl": "Area(C,D,P)", "kind": "answer"}
+  ],
+  "variables": {"names": ["px", "py"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(84,0)"},
+    {"name": "C", "expr": "Point(84,42)"},
+    {"name": "D", "expr": "Point(0,42)"},
+    {"name": "M", "expr": "Midpoint(A,D)"},
+    {"name": "N", "expr": "Point(28,0)"},
+    {"name": "O", "expr": "Intersect(Line(C,M),Line(D,N))"},
+    {"name": "P", "expr": "Point(px,py)"}
+  ],
+  "constraints": [
+    {"def": "Area(B,C,P)", "value": "Area(B,C,O,N)/2"},
+    {"def": "OnSegment(P,C,O)", "value": 0}
+  ],
+  "guards": ["AssumeGt(px,28)", "AssumeLt(px,84)", "AssumeGt(py,0)", "AssumeLt(py,42)"],
+  "answer": "Area(C,D,P)",
+  "post_process": ""
+}

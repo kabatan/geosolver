@@ -1,0 +1,43 @@
+{
+  "id": "AIME-2014-I-15",
+  "task": "solve",
+  "source_statement": "In $\\triangle ABC, AB = 3, BC = 4,$ and $CA = 5$ . Circle $\\omega$ intersects $\\overline{AB}$ at $E$ and $B, \\overline{BC}$ at $B$ and $D,$ and $\\overline{AC}$ at $F$ and $G$ . Given that $EF=DF$ and $\\frac{DG}{EG} = \\frac{3}{4},$ length $DE=\\frac{a\\sqrt{b}}{c},$ where $a$ and $c$ are relatively prime positive integers, and $b$ is a positive integer not divisible by the square of any prime. Find $a+b+c$ .",
+  "clause_ledger": [
+    {"source": "triangle ABC has sides 3,4,5", "dsl": "A=(0,0),B=(3,0),C=(0,4)", "kind": "construction/constraint"},
+    {"source": "omega meets AB at E,B; BC at B,D; AC at F,G", "dsl": "variable side points and one circle with all six OnCircle/OnSegment clauses", "kind": "construction/constraint"},
+    {"source": "EF=DF and DG/EG=3/4", "dsl": "direct distance constraints", "kind": "constraint"},
+    {"source": "DE=m sqrt(b)/c and m+b+c", "dsl": "Distance(D,E) with radical post-process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["ex", "dx", "fy", "gy", "ox", "oy", "r"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(3,0)"},
+    {"name": "C", "expr": "Point(0,4)"},
+    {"name": "E", "expr": "Point(ex,0)"},
+    {"name": "D", "expr": "Point(3-dx/3,dx*4/3)"},
+    {"name": "F", "expr": "Point(0,fy)"},
+    {"name": "G", "expr": "Point(0,gy)"},
+    {"name": "O", "expr": "Point(ox,oy)"},
+    {"name": "omega", "expr": "Circle(O,r)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 3},
+    {"def": "Distance(B,C)", "value": 4},
+    {"def": "Distance(C,A)", "value": 5},
+    {"def": "OnCircle(E,omega)", "value": 0},
+    {"def": "OnCircle(B,omega)", "value": 0},
+    {"def": "OnCircle(D,omega)", "value": 0},
+    {"def": "OnCircle(F,omega)", "value": 0},
+    {"def": "OnCircle(G,omega)", "value": 0},
+    {"def": "OnSegment(E,A,B)", "value": 0},
+    {"def": "OnSegment(D,B,C)", "value": 0},
+    {"def": "OnSegment(F,A,C)", "value": 0},
+    {"def": "OnSegment(G,A,C)", "value": 0},
+    {"def": "Distance(E,F)", "value": "Distance(D,F)"},
+    {"def": "Distance(D,G)", "value": "3*Distance(E,G)/4"}
+  ],
+  "guards": ["AssumeGt(r,0)", "AssumeGt(ex,0)", "AssumeLt(ex,3)", "AssumeGt(fy,0)", "AssumeLt(gy,4)"],
+  "answer": "Distance(D,E)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": "# radical_mode=pqr_sum"
+}

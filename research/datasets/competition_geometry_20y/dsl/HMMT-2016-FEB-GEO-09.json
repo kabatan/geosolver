@@ -1,0 +1,32 @@
+{
+  "id": "HMMT-2016-FEB-GEO-09",
+  "task": "solve",
+  "source_statement": "In cyclic quadrilateral ABCD with AB = AD = 49 and AC = 73, let I and J denote the incenters of triangles ABD and CBD. If diagonal BD bisects IJ, find the length of IJ.",
+  "clause_ledger": [
+    {"source": "cyclic quadrilateral AB=AD=49, AC=73", "dsl": "A,B,C,D with side constraints and AreConcyclic", "kind": "construction/constraint"},
+    {"source": "I,J incenters of ABD,CBD", "dsl": "I=Incenter(A,B,D), J=Incenter(C,B,D)", "kind": "construction"},
+    {"source": "BD bisects IJ", "dsl": "Midpoint(I,J) lies on Line(B,D)", "kind": "constraint"},
+    {"source": "IJ", "dsl": "Distance(I,J)", "kind": "answer"}
+  ],
+  "variables": {"names": ["cx", "cy", "dx", "dy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(49,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "D", "expr": "Point(dx,dy)"},
+    {"name": "I", "expr": "Incenter(A,B,D)"},
+    {"name": "J", "expr": "Incenter(C,B,D)"},
+    {"name": "M", "expr": "Midpoint(I,J)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 49},
+    {"def": "Distance(A,D)", "value": 49},
+    {"def": "Distance(A,C)", "value": 73},
+    {"def": "AreConcyclic(A,B,C,D)", "value": 0},
+    {"def": "OnLine(M,B,D)", "value": 0}
+  ],
+  "guards": ["AssumeGt(cy,0)", "AssumeGt(dy,0)", "AssumeGt(Distance(I,J),0)", "AssumeConvex([A,B,C,D])"],
+  "answer": "Distance(I,J)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

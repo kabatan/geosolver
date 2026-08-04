@@ -1,0 +1,32 @@
+{
+  "id": "AIME-2025-II-01",
+  "task": "solve",
+  "source_statement": "Six points $A, B, C, D, E$ and $F$ lie in a straight line in that order. Suppose that $G$ is a point not on the line and that $AC = 26$, $BD = 22$, $CE = 31$, $DF = 33$, $AF = 73$, $CG = 40$, and $DG = 30$. Find the area of $\\triangle BGE$.",
+  "clause_ledger": [
+    {"source": "six collinear points in order and segment lengths", "dsl": "line gauge A=0 with direct consecutive-distance constraints and order guards", "kind": "construction/constraint"},
+    {"source": "G off line and CG,DG", "dsl": "G=(gx,gy), Distance constraints, gy != 0", "kind": "constraint/guard"},
+    {"source": "area BGE", "dsl": "Area(B,G,E)", "kind": "answer"}
+  ],
+  "variables": {"names": ["b", "c", "d", "e", "f", "gx", "gy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(b,0)"},
+    {"name": "C", "expr": "Point(c,0)"},
+    {"name": "D", "expr": "Point(d,0)"},
+    {"name": "E", "expr": "Point(e,0)"},
+    {"name": "F", "expr": "Point(f,0)"},
+    {"name": "G", "expr": "Point(gx,gy)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,C)", "value": 26},
+    {"def": "Distance(B,D)", "value": 22},
+    {"def": "Distance(C,E)", "value": 31},
+    {"def": "Distance(D,F)", "value": 33},
+    {"def": "Distance(A,F)", "value": 73},
+    {"def": "Distance(C,G)", "value": 40},
+    {"def": "Distance(D,G)", "value": 30}
+  ],
+  "guards": ["AssumeGt(b,0)", "AssumeGt(c,b)", "AssumeGt(d,c)", "AssumeGt(e,d)", "AssumeGt(f,e)", "AssumeGt(gy*gy,0)"],
+  "answer": "Area(B,G,E)",
+  "post_process": ""
+}

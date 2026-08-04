@@ -1,0 +1,29 @@
+{
+  "id": "AIME-2023-I-05",
+  "task": "solve",
+  "source_statement": "Let $P$ be a point on the circle circumscribing square $ABCD$ that satisfies $PA \\cdot PC = 56$ and $PB \\cdot PD = 90.$ Find the area of $ABCD.$",
+  "clause_ledger": [
+    {"source": "square ABCD", "dsl": "coordinate square with side variable s", "kind": "construction"},
+    {"source": "P on circumcircle", "dsl": "direct Circumcircle/OnCircle relation", "kind": "constraint"},
+    {"source": "PA*PC=56 and PB*PD=90", "dsl": "direct product-of-distance constraints", "kind": "constraint"},
+    {"source": "area square", "dsl": "squared side length", "kind": "answer"}
+  ],
+  "variables": {"names": ["s", "px", "py"]},
+  "construction": [
+    {"name": "A", "expr": "Point(-s/2,-s/2)"},
+    {"name": "B", "expr": "Point(s/2,-s/2)"},
+    {"name": "C", "expr": "Point(s/2,s/2)"},
+    {"name": "D", "expr": "Point(-s/2,s/2)"},
+    {"name": "O", "expr": "Point(0,0)"},
+    {"name": "P", "expr": "Point(px,py)"},
+    {"name": "Gamma", "expr": "Circle(O,s/sqrt(2))"}
+  ],
+  "constraints": [
+    {"def": "OnCircle(P,Gamma)", "value": 0},
+    {"def": "Distance(P,A)*Distance(P,C)", "value": 56},
+    {"def": "Distance(P,B)*Distance(P,D)", "value": 90}
+  ],
+  "guards": ["AssumeGt(s,0)"],
+  "answer": "s*s",
+  "post_process": ""
+}

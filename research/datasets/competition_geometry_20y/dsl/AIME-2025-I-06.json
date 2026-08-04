@@ -1,0 +1,30 @@
+{
+  "id": "AIME-2025-I-06",
+  "task": "solve",
+  "source_statement": "An isosceles trapezoid has an inscribed circle tangent to each of its four sides. The radius of the circle is 3, and the area of the trapezoid is 72. Let the parallel sides of the trapezoid have lengths $r$ and $s$, with $r \\neq s$. Find $r^{2}+s^{2}$.",
+  "clause_ledger": [
+    {"source": "isosceles trapezoid with parallel bases r,s", "dsl": "symmetric horizontal coordinate gauge", "kind": "construction"},
+    {"source": "incircle radius 3 tangent to all four sides", "dsl": "omega=Circle(O,3), O=(0,3), direct center-to-side distance constraints", "kind": "constraint"},
+    {"source": "area 72 and r!=s", "dsl": "direct Area constraint and non-equality guard", "kind": "constraint/guard"},
+    {"source": "r^2+s^2", "dsl": "direct scalar expression", "kind": "answer"}
+  ],
+  "variables": {"names": ["r", "s"]},
+  "construction": [
+    {"name": "A", "expr": "Point(-r/2,0)"},
+    {"name": "B", "expr": "Point(r/2,0)"},
+    {"name": "C", "expr": "Point(s/2,6)"},
+    {"name": "D", "expr": "Point(-s/2,6)"},
+    {"name": "O", "expr": "Point(0,3)"},
+    {"name": "omega", "expr": "Circle(O,3)"}
+  ],
+  "constraints": [
+    {"def": "Area(A,B,C,D)", "value": 72},
+    {"def": "Distance(O,Line(A,B))", "value": 3},
+    {"def": "Distance(O,Line(B,C))", "value": 3},
+    {"def": "Distance(O,Line(C,D))", "value": 3},
+    {"def": "Distance(O,Line(D,A))", "value": 3}
+  ],
+  "guards": ["AssumeGt(r,0)", "AssumeGt(s,0)", "AssumeNe(r,s)"],
+  "answer": "r*r+s*s",
+  "post_process": ""
+}

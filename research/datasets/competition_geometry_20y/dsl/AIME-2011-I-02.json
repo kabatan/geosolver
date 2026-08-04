@@ -1,0 +1,30 @@
+{
+  "id": "AIME-2011-I-02",
+  "task": "solve",
+  "source_statement": "In rectangle $ABCD$ , $AB = 12$ and $BC = 10$ .  Points $E$ and $F$ lie inside rectangle $ABCD$ so that $BE = 9$ , $DF = 8$ , $\\overline{BE} \\parallel \\overline{DF}$ , $\\overline{EF} \\parallel \\overline{AB}$ , and line $BE$ intersects segment $\\overline{AD}$ .  The length $EF$ can be expressed in the form $m \\sqrt{n} - p$ , where $m$ , $n$ , and $p$ are positive integers and $n$ is not divisible by the square of any prime.  Find $m + n + p$ .",
+  "clause_ledger": [
+    {"source": "rectangle side lengths", "dsl": "fixed rectangle coordinates", "kind": "construction"},
+    {"source": "E,F interior and four incidence/parallel/distance conditions", "dsl": "variable E,F with direct constraints", "kind": "construction/constraint/guard"},
+    {"source": "radical presentation", "dsl": "geometric answer EF with explicit marker", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["ex", "ey", "fx", "fy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(12,0)"},
+    {"name": "C", "expr": "Point(12,10)"},
+    {"name": "D", "expr": "Point(0,10)"},
+    {"name": "E", "expr": "Point(ex,ey)"},
+    {"name": "F", "expr": "Point(fx,fy)"},
+    {"name": "K", "expr": "Intersect(Line(B,E),Line(A,D))"}
+  ],
+  "constraints": [
+    {"def": "Distance(B,E)", "value": 9},
+    {"def": "Distance(D,F)", "value": 8},
+    {"def": "Parallel(Line(B,E),Line(D,F))", "value": 0},
+    {"def": "Parallel(Line(E,F),Line(A,B))", "value": 0},
+    {"def": "OnSegment(K,A,D)", "value": 0}
+  ],
+  "guards": ["AssumeGt(ex,0)", "AssumeLt(ex,12)", "AssumeGt(ey,0)", "AssumeLt(ey,10)", "AssumeGt(fx,0)", "AssumeLt(fx,12)", "AssumeGt(fy,0)", "AssumeLt(fy,10)"],
+  "answer": "Distance(E,F)",
+  "post_process": "# radical_mode=linear_sqrt_sum"
+}

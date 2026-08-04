@@ -1,0 +1,28 @@
+{
+  "id": "JMO-2015-PRE-11",
+  "task": "solve",
+  "source_statement": "三角形ABCの外接円をΓとおく。Γの点Aを含まない方の弧BCの中点をA′，点Bを含まない方の弧CAの中点をB′，点Cを含まない方の弧ABの中点をC′とおく。三角形AB′C′，三角形A′BC′，三角形A′B′Cの面積がそれぞれ2，3，4のとき，三角形ABCの面積を求めよ。",
+  "clause_ledger": [
+    {"source": "circumcircle of ABC and opposite arc midpoints", "dsl": "Gamma=Circumcircle(A,B,C), then Midpoint(Arc(...,excluding=opposite vertex))", "kind": "construction"},
+    {"source": "three given areas", "dsl": "direct Area constraints", "kind": "constraint"},
+    {"source": "area ABC", "dsl": "Area(A,B,C)", "kind": "answer"}
+  ],
+  "variables": {"names": ["b", "cx", "cy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(b,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "Gamma", "expr": "Circumcircle(A,B,C)"},
+    {"name": "Ap", "expr": "Midpoint(Arc(Gamma,B,C,excluding=A))"},
+    {"name": "Bp", "expr": "Midpoint(Arc(Gamma,C,A,excluding=B))"},
+    {"name": "Cp", "expr": "Midpoint(Arc(Gamma,A,B,excluding=C))"}
+  ],
+  "constraints": [
+    {"def": "Area(A,Bp,Cp)", "value": 2},
+    {"def": "Area(Ap,B,Cp)", "value": 3},
+    {"def": "Area(Ap,Bp,Cp)", "value": 4}
+  ],
+  "guards": ["AssumeGt(b,0)", "AssumeGt(cy,0)", "AssumeGt(Area(A,B,C),0)"],
+  "answer": "Area(A,B,C)",
+  "post_process": ""
+}

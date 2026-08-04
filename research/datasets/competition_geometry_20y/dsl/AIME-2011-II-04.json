@@ -1,0 +1,28 @@
+{
+  "id": "AIME-2011-II-04",
+  "task": "solve",
+  "source_statement": "In triangle $ABC$ , $AB=20$ and $AC=11$ . The angle bisector of angle $A$ intersects $BC$ at point $D$ , and point $M$ is the midpoint of $AD$ . Let $P$ be the point of intersection of $AC$ and the line $BM$ . The ratio of $CP$ to $PA$ can be expressed in the form $\\frac{m}{n}$ , where $m$ and $n$ are relatively prime positive integers. Find $m+n$ .",
+  "clause_ledger": [
+    {"source": "triangle and angle-bisector point D", "dsl": "coordinate triangle with D on BC and Angle(A,B,D)=Angle(D,B? no); use the angle-bisector equality at A", "kind": "construction/constraint"},
+    {"source": "M midpoint and P=AC intersect BM", "dsl": "direct Midpoint and Intersect constructions", "kind": "construction"},
+    {"source": "CP/PA and m+n", "dsl": "distance ratio plus fraction post-process", "kind": "answer"}
+  ],
+  "variables": {"names": ["bx", "by", "t"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(11,0)"},
+    {"name": "B", "expr": "Point(bx,by)"},
+    {"name": "D", "expr": "Point(bx*(1-t)+11*t,by*(1-t))"},
+    {"name": "M", "expr": "Midpoint(A,D)"},
+    {"name": "P", "expr": "Intersect(Line(A,C),Line(B,M))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 20},
+    {"def": "Distance(A,C)", "value": 11},
+    {"def": "Angle(B,A,D)", "value": "Angle(D,A,C)"},
+    {"def": "Collinear(B,D,C)", "value": 0}
+  ],
+  "guards": ["AssumeGt(by,0)", "AssumeGt(bx,0)", "AssumeLt(bx,11)"],
+  "answer": "Distance(C,P)/Distance(P,A)",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+}

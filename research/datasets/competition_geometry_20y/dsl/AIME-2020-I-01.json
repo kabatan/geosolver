@@ -1,0 +1,30 @@
+{
+  "id": "AIME-2020-I-01",
+  "task": "solve",
+  "source_statement": "In $\\triangle ABC$ with $AB=AC,$ point $D$ lies strictly between $A$ and $C$ on side $\\overline{AC},$ and point $E$ lies strictly between $A$ and $B$ on side $\\overline{AB}$ such that $AE=ED=DB=BC.$ The degree measure of $\\angle ABC$ is $\\tfrac{m}{n},$ where $m$ and $n$ are relatively prime positive integers. Find $m+n.$",
+  "clause_ledger": [
+    {"source": "isosceles triangle and ordered side points", "dsl": "coordinate A,B,C,D,E with direct collinearity/order and AB=AC", "kind": "construction/constraint/guard"},
+    {"source": "AE=ED=DB=BC", "dsl": "four direct distance equalities", "kind": "constraint"},
+    {"source": "degree fraction m/n", "dsl": "answer 180*Angle(A,B,C)/pi with fraction postprocess", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["bx", "cx", "cy", "dx", "dy", "e"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(bx,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "D", "expr": "Point(dx,dy)"},
+    {"name": "E", "expr": "Point(e,0)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": "Distance(A,C)"},
+    {"def": "Distance(A,E)", "value": "Distance(E,D)"},
+    {"def": "Distance(E,D)", "value": "Distance(D,B)"},
+    {"def": "Distance(D,B)", "value": "Distance(B,C)"},
+    {"def": "Collinear(A,D,C)", "value": 0},
+    {"def": "OnSegment(D,A,C)", "value": 0},
+    {"def": "OnSegment(E,A,B)", "value": 0}
+  ],
+  "guards": ["AssumeGt(bx,0)", "AssumeGt(cx,0)", "AssumeGt(cy,0)", "AssumeGt(e,0)", "AssumeLt(e,bx)", "AssumeGt(dy,0)", "AssumeLt(dx,cx)"],
+  "answer": "180*Angle(A,B,C)/pi",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+}

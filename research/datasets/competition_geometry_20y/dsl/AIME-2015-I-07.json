@@ -1,0 +1,34 @@
+{
+  "id": "AIME-2015-I-07",
+  "task": "solve",
+  "source_statement": "In the diagram below, $ABCD$ is a square. Point $E$ is the midpoint of $\\overline{AD}$ . Points $F$ and $G$ lie on $\\overline{CE}$ , and $H$ and $J$ lie on $\\overline{AB}$ and $\\overline{BC}$ , respectively, so that $FGHJ$ is a square. Points $K$ and $L$ lie on $\\overline{GH}$ , and $M$ and $N$ lie on $\\overline{AD}$ and $\\overline{AB}$ , respectively, so that $KLMN$ is a square. The area of $KLMN$ is 99. Find the area of $FGHJ$ . [asy] pair A,B,C,D,E,F,G,H,J,K,L,M,N; B=(0,0); real m=7*sqrt(55)/5; J=(m,0); C=(7*m/2,0); A=(0,7*m/2); D=(7*m/2,7*m/2); E=(A+D)/2; H=(0,2m); N=(0,2m+3*sqrt(55)/2); G=foot(H,E,C); F=foot(J,E,C); draw(A--B--C--D--cycle); draw(C--E); draw(G--H--J--F); pair X=foot(N,E,C); M=extension(N,X,A,D); K=foot(N,H,G); L=foot(M,H,G); draw(K--N--M--L); label(\"$A$\",A,NW); label(\"$B$\",B,SW); label(\"$C$\",C,SE); label(\"$D$\",D,NE); label(\"$E$\",E,dir(90)); label(\"$F$\",F,NE); label(\"$G$\",G,NE); label(\"$H$\",H,W); label(\"$J$\",J,S); label(\"$K$\",K,SE); label(\"$L$\",L,SE); label(\"$M$\",M,dir(90)); label(\"$N$\",N,dir(180)); [/asy]",
+  "clause_ledger": [
+    {"source": "square ABCD and E midpoint AD", "dsl": "coordinate square with E=Midpoint(A,D)", "kind": "construction/constraint"},
+    {"source": "F,G on CE and H,J on AB,BC form square FGHJ", "dsl": "H and J use their scalar positions on AB and BC; F and G are the source square completion from the directed side HJ, with the original OnSegment and square constraints retained", "kind": "construction/constraint"},
+    {"source": "K,L on GH and M,N on AD,AB form square KLMN of area 99", "dsl": "M and N use their scalar positions on AD and AB; K and L are the source square completion from the directed side MN, with the original OnSegment, square, and area constraints retained", "kind": "construction/constraint"},
+    {"source": "area FGHJ", "dsl": "Area(F,G,H,J)", "kind": "answer"}
+  ],
+  "variables": {"names": ["s", "h", "j", "mx", "ny"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,s)"}, {"name": "B", "expr": "Point(0,0)"}, {"name": "C", "expr": "Point(s,0)"}, {"name": "D", "expr": "Point(s,s)"},
+    {"name": "E", "expr": "Midpoint(A,D)"},
+    {"name": "H", "expr": "Point(0,h)"}, {"name": "J", "expr": "Point(j,0)"},
+    {"name": "F", "expr": "Point(J.x-(J.y-H.y),J.y+(J.x-H.x))"},
+    {"name": "G", "expr": "Point(H.x-(J.y-H.y),H.y+(J.x-H.x))"},
+    {"name": "M", "expr": "Point(mx,s)"}, {"name": "N", "expr": "Point(0,ny)"},
+    {"name": "K", "expr": "Point(N.x-(N.y-M.y),N.y+(N.x-M.x))"},
+    {"name": "L", "expr": "Point(M.x-(N.y-M.y),M.y+(N.x-M.x))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": "Distance(B,C)"},
+    {"def": "Distance(F,G)", "value": "Distance(G,H)"}, {"def": "Distance(G,H)", "value": "Distance(H,J)"}, {"def": "Distance(H,J)", "value": "Distance(J,F)"}, {"def": "Perpendicular(Line(F,G),Line(G,H))", "value": 0},
+    {"def": "OnSegment(F,C,E)", "value": 0}, {"def": "OnSegment(G,C,E)", "value": 0}, {"def": "OnSegment(H,A,B)", "value": 0}, {"def": "OnSegment(J,B,C)", "value": 0},
+    {"def": "Distance(K,L)", "value": "Distance(L,M)"}, {"def": "Distance(L,M)", "value": "Distance(M,N)"}, {"def": "Distance(M,N)", "value": "Distance(N,K)"}, {"def": "Perpendicular(Line(K,L),Line(L,M))", "value": 0},
+    {"def": "OnSegment(K,G,H)", "value": 0}, {"def": "OnSegment(L,G,H)", "value": 0}, {"def": "OnSegment(M,A,D)", "value": 0}, {"def": "OnSegment(N,A,B)", "value": 0},
+    {"def": "Area(K,L,M,N)", "value": 99}
+  ],
+  "guards": ["AssumeGt(s,0)", "AssumeConvex([A,B,C,D])", "AssumeGt(Area(F,G,H,J),0)", "AssumeGt(Area(K,L,M,N),0)"],
+  "answer": "Area(F,G,H,J)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

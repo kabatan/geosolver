@@ -1,0 +1,89 @@
+{
+  "id": "JMO-2023-PRE-03",
+  "task": "solve",
+  "source_statement": "一辺の長さが3である正三角形ABCの辺BC，CA，AB上にそれぞれ点D，E，Fがあり，BD=1，∠ADE=∠DEF=60°をみたしている。このとき，線分AFの長さを求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "equilateral ABC side 3",
+      "dsl": "fixed equilateral coordinates",
+      "kind": "construction"
+    },
+    {
+      "source": "D,E,F on the named sides and BD=1",
+      "dsl": "D fixed on BC and E,F variable on CA,AB with segment guards",
+      "kind": "construction/constraint/guard"
+    },
+    {
+      "source": "angle ADE=angle DEF=60 degrees",
+      "dsl": "direct Angle constraints",
+      "kind": "constraint"
+    },
+    {
+      "source": "AF",
+      "dsl": "Distance(A,F)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "ex",
+      "ey",
+      "fx",
+      "fy"
+    ]
+  },
+  "construction": [
+    {
+      "name": "B",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(3,0)"
+    },
+    {
+      "name": "A",
+      "expr": "Point(3/2,3*sqrt(3)/2)"
+    },
+    {
+      "name": "D",
+      "expr": "Point(1,0)"
+    },
+    {
+      "name": "E",
+      "expr": "Point(ex,ey)"
+    },
+    {
+      "name": "F",
+      "expr": "Point(fx,fy)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Collinear(C,E,A)",
+      "value": 0
+    },
+    {
+      "def": "Collinear(A,F,B)",
+      "value": 0
+    },
+    {
+      "def": "Angle(A,D,E)",
+      "value": "pi/3"
+    },
+    {
+      "def": "Angle(D,E,F)",
+      "value": "pi/3"
+    }
+  ],
+  "guards": [
+    "AssumeGt(ey,0)",
+    "AssumeGt(fy,0)",
+    "AssumeGt(ex,1.5)",
+    "AssumeLt(ex,3)",
+    "AssumeGt(fx,0)",
+    "AssumeLt(fx,1.5)"
+  ],
+  "answer": "Distance(A,F)",
+  "post_process": ""
+}

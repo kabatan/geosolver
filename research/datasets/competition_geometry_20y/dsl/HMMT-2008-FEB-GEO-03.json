@@ -1,0 +1,42 @@
+{
+  "id": "HMMT-2008-FEB-GEO-03",
+  "task": "solve",
+  "source_statement": "[4] Let ABC be a triangle with ∠BAC = 90◦ . A circle is tangent to the sides AB and AC at X and Y respectively, such that the points on the circle diametrically opposite X and Y both lie on the side BC. Given that AB = 6, find the area of the portion of the circle that lies outside the triangle. C Y A X B",
+  "clause_ledger": [
+    {"source": "right triangle at A, AB=6", "dsl": "A=(0,0), B=(6,0), C=(0,c)", "kind": "construction/constraint"},
+    {"source": "circle tangent to AB and AC at X,Y", "dsl": "O=(r,r), omega=Circle(O,r), X=(r,0), Y=(0,r)", "kind": "construction"},
+    {"source": "diametrically opposite X,Y lie on BC", "dsl": "Xp=(2r,r), Yp=(r,2r) and both have zero oriented area with B,C", "kind": "constraint"},
+    {"source": "portion of circle outside triangle", "dsl": "the circular cap cut off by BC: sector(UOV) minus triangle UOV, where U,V are the two BC/omega intersections", "kind": "answer-definition"},
+    {"source": "area outside", "dsl": "r*r*Angle(U,O,V)/2 - Area(U,O,V)", "kind": "answer"}
+  ],
+  "variables": {"names": ["c", "r"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(6,0)"},
+    {"name": "C", "expr": "Point(0,c)"},
+    {"name": "O", "expr": "Point(r,r)"},
+    {"name": "omega", "expr": "Circle(O,r)"},
+    {"name": "X", "expr": "Point(r,0)"},
+    {"name": "Y", "expr": "Point(0,r)"},
+    {"name": "Xp", "expr": "Point(2*r,r)"},
+    {"name": "Yp", "expr": "Point(r,2*r)"},
+    {"name": "L2", "expr": "c*c+36"},
+    {"name": "f", "expr": "r*(c+6)-6*c"},
+    {"name": "hx", "expr": "r-f*c/L2"},
+    {"name": "hy", "expr": "r-f*6/L2"},
+    {"name": "h", "expr": "sqrt(r*r-f*f/L2)"},
+    {"name": "U", "expr": "Point(hx-6*h/sqrt(L2),hy+c*h/sqrt(L2))"},
+    {"name": "V", "expr": "Point(hx+6*h/sqrt(L2),hy-c*h/sqrt(L2))"}
+  ],
+  "constraints": [
+    {"def": "Angle(B,A,C)", "value": "pi/2"},
+    {"def": "Distance(A,B)", "value": 6},
+    {"def": "Area(B,C,Xp)", "value": 0},
+    {"def": "Area(B,C,Yp)", "value": 0},
+    {"def": "OnSegment(Xp,B,C)", "value": 0},
+    {"def": "OnSegment(Yp,B,C)", "value": 0}
+  ],
+  "guards": ["AssumeGt(c,0)", "AssumeGt(r,0)", "AssumeLt(r,6)", "AssumeGt(h,0)"],
+  "answer": "r*r*Angle(U,O,V)/2-Area(U,O,V)",
+  "post_process": ""
+}

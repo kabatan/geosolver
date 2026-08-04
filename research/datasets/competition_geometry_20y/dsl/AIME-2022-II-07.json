@@ -1,0 +1,33 @@
+{
+  "id": "AIME-2022-II-07",
+  "task": "solve",
+  "source_statement": "A circle with radius $6$ is externally tangent to a circle with radius $24$ . Find the area of the triangular region bounded by the three common tangent lines of these two circles.",
+  "clause_ledger": [
+    {"source": "two externally tangent circles", "dsl": "fixed centers O1=(0,0), O2=(30,0), tangent point T=(6,0)", "kind": "construction"},
+    {"source": "three common tangent lines", "dsl": "the contact tangent x=6 plus the two symmetric variable external common tangents", "kind": "construction/constraint"},
+    {"source": "triangle area", "dsl": "area of the three line intersections", "kind": "answer"}
+  ],
+  "variables": {"names": ["m", "b"]},
+  "construction": [
+    {"name": "O1", "expr": "Point(0,0)"},
+    {"name": "O2", "expr": "Point(30,0)"},
+    {"name": "C1", "expr": "Circle(O1,6)"},
+    {"name": "C2", "expr": "Circle(O2,24)"},
+    {"name": "T", "expr": "Point(6,0)"},
+    {"name": "l0", "expr": "Line(Point(6,0),Point(6,1))"},
+    {"name": "l1", "expr": "Line(m,-1,b)"},
+    {"name": "l2", "expr": "Line(-m,-1,b)"},
+    {"name": "V", "expr": "Intersect(l1,l2)"},
+    {"name": "W1", "expr": "Intersect(l0,l1)"},
+    {"name": "W2", "expr": "Intersect(l0,l2)"}
+  ],
+  "constraints": [
+    {"def": "IsTangent(l1,C1)", "value": 0},
+    {"def": "IsTangent(l1,C2)", "value": 0},
+    {"def": "IsTangent(l2,C1)", "value": 0},
+    {"def": "IsTangent(l2,C2)", "value": 0}
+  ],
+  "guards": ["AssumeGt(m,0)"],
+  "answer": "Area(V,W1,W2)",
+  "post_process": ""
+}

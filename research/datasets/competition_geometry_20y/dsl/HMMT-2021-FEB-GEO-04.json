@@ -1,0 +1,30 @@
+{
+  "id": "HMMT-2021-FEB-GEO-04",
+  "task": "solve",
+  "source_statement": "Let ABCD be a trapezoid with AB k CD, AB = 5, BC = 9, CD = 10, and DA = 7. Lines BC and DA intersect at point E. Let M be the midpoint of CD, and let N be the intersection of the circumcircles of 4BM C and 4DM A (other than M ). If EN 2 = ab for relatively prime positive integers a and b, compute 100a + b.",
+  "clause_ledger": [
+    {"source": "trapezoid and side lengths", "dsl": "horizontal parallel-base coordinate gauge with direct distances", "kind": "construction/constraint"},
+    {"source": "E intersection and M midpoint", "dsl": "direct Intersect and Midpoint constructions", "kind": "construction"},
+    {"source": "N second circle intersection", "dsl": "Circumcircle constructions and Intersect(...,exclude=M)", "kind": "construction"},
+    {"source": "100a+b from EN^2", "dsl": "squared distance and exact fraction post-process", "kind": "answer"}
+  ],
+  "variables": {"names": ["u", "h"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(5,0)"},
+    {"name": "D", "expr": "Point(u,h)"},
+    {"name": "C", "expr": "Point(u+10,h)"},
+    {"name": "E", "expr": "Intersect(Line(B,C),Line(D,A))"},
+    {"name": "M", "expr": "Midpoint(C,D)"},
+    {"name": "N", "expr": "Intersect(Circumcircle(B,M,C),Circumcircle(D,M,A),exclude=M)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,D)", "value": 7},
+    {"def": "Distance(B,C)", "value": 9},
+    {"def": "Distance(C,D)", "value": 10},
+    {"def": "Distance(A,B)", "value": 5}
+  ],
+  "guards": ["AssumeGt(h,0)", "AssumeGt(u,0)"],
+  "answer": "Distance(E,N)^2",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = 100*f.numerator + f.denominator"
+}

@@ -1,0 +1,31 @@
+{
+  "id": "JMO-2025-PRE-09",
+  "task": "solve",
+  "source_statement": "鋭角三角形 ABC があり、その外心を O とする。A から辺 BC におろした垂線の足を D とすると、∠AOD = 90°、OD = 4√7 が成立した。D から辺 AB, AC におろした垂線の足をそれぞれ E, F とおくと、線分 AO と線分 EF が点 P で交わった。AP = 11 のとき、線分 EF の長さを求めよ。ただし、XY で線分 XY の長さを表す。",
+  "clause_ledger": [
+    {"source": "acute triangle, circumcenter, and altitude foot D", "dsl": "direct Circumcenter and FootOfPerpendicular constructions", "kind": "construction/constraint"},
+    {"source": "angle AOD=90 and OD=4sqrt(7)", "dsl": "direct Angle and Distance constraints", "kind": "constraint"},
+    {"source": "E,F are feet from D to AB,AC", "dsl": "direct FootOfPerpendicular constructions", "kind": "construction"},
+    {"source": "P=AO∩EF and AP=11", "dsl": "direct intersection and distance constraint", "kind": "construction/constraint"},
+    {"source": "EF", "dsl": "Distance(E,F)", "kind": "answer"}
+  ],
+  "variables": {"names": ["b", "cx", "cy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(b,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "O", "expr": "Circumcenter(A,B,C)"},
+    {"name": "D", "expr": "FootOfPerpendicular(Line(B,C),A)"},
+    {"name": "E", "expr": "FootOfPerpendicular(Line(A,B),D)"},
+    {"name": "F", "expr": "FootOfPerpendicular(Line(A,C),D)"},
+    {"name": "P", "expr": "Intersect(Line(A,O),Line(E,F))"}
+  ],
+  "constraints": [
+    {"def": "Angle(A,O,D)", "value": "pi/2"},
+    {"def": "Distance(O,D)", "value": "4*sqrt(7)"},
+    {"def": "Distance(A,P)", "value": 11}
+  ],
+  "guards": ["AssumeGt(b,0)", "AssumeGt(cy,0)", "AssumeGt(Area(A,B,C),0)"],
+  "answer": "Distance(E,F)",
+  "post_process": ""
+}

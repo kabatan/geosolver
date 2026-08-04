@@ -1,0 +1,25 @@
+{
+  "id": "HMMT-2009-FEB-GEO-09",
+  "task": "solve",
+  "source_statement": "[7] Let ABC be a triangle with AB = 16 and AC = 5. Suppose the bisectors of angles ∠ABC and ∠BCA meet at point P in the triangle’s interior. Given that AP = 4, compute BC.",
+  "clause_ledger": [
+    {"source": "P is intersection of angle bisectors at B,C", "dsl": "P=Incenter(A,B,C)", "kind": "construction"},
+    {"source": "AB=16, AC=5, AP=4", "dsl": "direct distance constraints", "kind": "constraint"},
+    {"source": "BC", "dsl": "Distance(B,C)", "kind": "answer"}
+  ],
+  "variables": {"names": ["Cx", "Cy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(16,0)"},
+    {"name": "C", "expr": "Point(Cx,Cy)"},
+    {"name": "P", "expr": "Incenter(A,B,C)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 16},
+    {"def": "Distance(A,C)", "value": 5},
+    {"def": "Distance(A,P)", "value": 4}
+  ],
+  "guards": ["AssumeGt(Cy,0)"],
+  "answer": "Distance(B,C)",
+  "post_process": ""
+}

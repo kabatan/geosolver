@@ -1,0 +1,21 @@
+{
+  "id": "AIME-2013-II-05",
+  "task": "solve",
+  "source_statement": "In equilateral $\\triangle ABC$ let points $D$ and $E$ trisect $\\overline{BC}$ . Then $\\sin(\\angle DAE)$ can be expressed in the form $\\frac{a\\sqrt{b}}{c}$ , where $a$ and $c$ are relatively prime positive integers, and $b$ is an integer that is not divisible by the square of any prime. Find $a+b+c$ .",
+  "clause_ledger": [
+    {"source": "equilateral triangle and two trisection points", "dsl": "fixed unit equilateral coordinates with D,E at one-third/two-thirds of BC", "kind": "construction"},
+    {"source": "sin(angle DAE) and radical presentation", "dsl": "direct trigonometric answer and explicit presentation marker", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": []},
+  "construction": [
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(1,0)"},
+    {"name": "A", "expr": "Point(1/2,sqrt(3)/2)"},
+    {"name": "D", "expr": "Point(1/3,0)"},
+    {"name": "E", "expr": "Point(2/3,0)"}
+  ],
+  "constraints": [],
+  "guards": [],
+  "answer": "sin(Angle(D,A,E))",
+  "post_process": "# radical_mode=pqr_sum"
+}

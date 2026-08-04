@@ -1,0 +1,27 @@
+{
+  "id": "HMMT-2022-FEB-GEO-05",
+  "task": "solve",
+  "source_statement": "Let triangle ABC be such that AB = AC = 22 and BC = 11. Point D is chosen in the interior of the triangle such that AD = 19 and ∠ABD + ∠ACD = 90◦ . The value of BD2 + CD2 can be expressed as ab , where a and b are relatively prime positive integers. Compute 100a + b.",
+  "clause_ledger": [
+    {"source": "isosceles triangle side lengths", "dsl": "symmetric coordinate gauge with exact height from the side-length relation", "kind": "construction/constraint"},
+    {"source": "D interior, AD=19, angle sum 90 degrees", "dsl": "D variable, direct Distance and Angle constraints plus positive-area guards", "kind": "constraint/guard"},
+    {"source": "100a+b", "dsl": "direct squared-distance sum and exact fraction post-process", "kind": "answer"}
+  ],
+  "variables": {"names": ["dx", "dy"]},
+  "construction": [
+    {"name": "B", "expr": "Point(-11/2,0)"},
+    {"name": "C", "expr": "Point(11/2,0)"},
+    {"name": "A", "expr": "Point(0,sqrt(22*22-(11/2)*(11/2)))"},
+    {"name": "D", "expr": "Point(dx,dy)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 22},
+    {"def": "Distance(A,C)", "value": 22},
+    {"def": "Distance(B,C)", "value": 11},
+    {"def": "Distance(A,D)", "value": 19},
+    {"def": "Angle(A,B,D)+Angle(A,C,D)", "value": "pi/2"}
+  ],
+  "guards": ["AssumeGt(dy,0)", "AssumeGt(Area(A,B,D),0)", "AssumeGt(Area(B,C,D),0)", "AssumeGt(Area(C,A,D),0)"],
+  "answer": "Distance(B,D)^2+Distance(C,D)^2",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = 100*f.numerator + f.denominator"
+}

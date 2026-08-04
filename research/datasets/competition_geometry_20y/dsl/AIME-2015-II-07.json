@@ -1,0 +1,42 @@
+{
+  "id": "AIME-2015-II-07",
+  "task": "solve",
+  "source_statement": "Triangle $ABC$ has side lengths $AB = 12$ , $BC = 25$ , and $CA = 17$ . Rectangle $PQRS$ has vertex $P$ on $\\overline{AB}$ , vertex $Q$ on $\\overline{AC}$ , and vertices $R$ and $S$ on $\\overline{BC}$ . In terms of the side length $PQ = w$ , the area of $PQRS$ can be expressed as the quadratic polynomial \\[\\text{Area}(PQRS) = \\alpha w - \\beta \\cdot w^2.\\] Then the coefficient $\\beta = \\frac{m}{n}$ , where $m$ and $n$ are relatively prime positive integers. Find $m+n$ .",
+  "clause_ledger": [
+    {"source": "triangle ABC has AB=12, BC=25, CA=17", "dsl": "fix the rigid-motion gauge A=(0,0), B=(12,0), C=(-8,15), which is exactly the positive 12-25-17 triangle", "kind": "construction/constraint"},
+    {"source": "P on AB, Q on AC, R,S on BC", "dsl": "use t for P=(12t,0); Q is the intersection of AC with the line through P parallel to BC, and R,S are the intersections of BC with the perpendiculars through Q,P; the original carrier constraints are retained", "kind": "constraint/guard"},
+    {"source": "PQRS is a rectangle", "dsl": "opposite sides parallel, adjacent sides perpendicular, and opposite side lengths equal", "kind": "constraint"},
+    {"source": "beta is the coefficient of w^2 in Area=alpha*w-beta*w^2", "dsl": "Distance(A,Line(B,C))/Distance(B,C), the altitude/side coefficient of the parallel slice family", "kind": "answer"},
+    {"source": "m+n", "dsl": "fraction post-process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["t"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(12,0)"},
+    {"name": "C", "expr": "Point(-8,15)"},
+    {"name": "lineBC", "expr": "Line(B,C)"},
+    {"name": "lineAC", "expr": "Line(A,C)"},
+    {"name": "P", "expr": "Point(12*t,0)"},
+    {"name": "Q", "expr": "Intersect(ParallelLine(P,lineBC),lineAC)"},
+    {"name": "R", "expr": "Intersect(PerpendicularLine(lineBC,Q),lineBC)"},
+    {"name": "S", "expr": "Intersect(PerpendicularLine(lineBC,P),lineBC)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 12},
+    {"def": "Distance(B,C)", "value": 25},
+    {"def": "Distance(C,A)", "value": 17},
+    {"def": "OnSegment(P,A,B)", "value": 0},
+    {"def": "OnSegment(Q,A,C)", "value": 0},
+    {"def": "OnSegment(R,B,C)", "value": 0},
+    {"def": "OnSegment(S,B,C)", "value": 0},
+    {"def": "Parallel(Line(P,Q),Line(R,S))", "value": 0},
+    {"def": "Parallel(Line(Q,R),Line(S,P))", "value": 0},
+    {"def": "Perpendicular(Line(P,Q),Line(Q,R))", "value": 0},
+    {"def": "Distance(P,Q)", "value": "Distance(R,S)"},
+    {"def": "Distance(Q,R)", "value": "Distance(S,P)"}
+  ],
+  "guards": ["AssumeGt(t,0)", "AssumeLt(t,1)"],
+  "answer": "Distance(A,Line(B,C))/Distance(B,C)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+}

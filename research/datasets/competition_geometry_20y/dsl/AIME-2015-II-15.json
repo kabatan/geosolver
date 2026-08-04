@@ -1,0 +1,38 @@
+{
+  "id": "AIME-2015-II-15",
+  "task": "solve",
+  "source_statement": "Circles $\\mathcal{P}$ and $\\mathcal{Q}$ have radii $1$ and $4$ , respectively, and are externally tangent at point $A$ . Point $B$ is on $\\mathcal{P}$ and point $C$ is on $\\mathcal{Q}$ such that $BC$ is a common external tangent of the two circles. A line $\\ell$ through $A$ intersects $\\mathcal{P}$ again at $D$ and intersects $\\mathcal{Q}$ again at $E$ . Points $B$ and $C$ lie on the same side of $\\ell$ , and the areas of $\\triangle DBA$ and $\\triangle ACE$ are equal. This common area is $\\frac{m}{n}$ , where $m$ and $n$ are relatively prime positive integers. Find $m+n$ . [asy] import cse5; pathpen=black; pointpen=black; size(6cm);  pair E = IP(L((-.2476,1.9689),(0.8,1.6),-3,5.5),CR((4,4),4)), D = (-.2476,1.9689);  filldraw(D--(0.8,1.6)--(0,0)--cycle,gray(0.7)); filldraw(E--(0.8,1.6)--(4,0)--cycle,gray(0.7)); D(CR((0,1),1)); D(CR((4,4),4,150,390)); D(L(MP(\"D\",D(D),N),MP(\"A\",D((0.8,1.6)),NE),1,5.5)); D((-1.2,0)--MP(\"B\",D((0,0)),S)--MP(\"C\",D((4,0)),S)--(8,0)); D(MP(\"E\",E,N)); [/asy]",
+  "clause_ledger": [
+    {"source": "circles P,Q radii 1,4 externally tangent at A", "dsl": "O1=(0,0),O2=(5,0), A=(1,0), circles with fixed radii", "kind": "construction/constraint"},
+    {"source": "B,C on circles and BC common external tangent", "dsl": "use the fixed external-tangent branch with normal (3/5,-4/5), B=(-3/5,4/5), C=(13/5,16/5); the original circle/tangency constraints are retained", "kind": "construction/constraint"},
+    {"source": "line l through A meets circles again D,E; B,C same side", "dsl": "one angle theta defines l through A; D,E are the second intersections with the two circles, and the same-side condition is retained as a signed-cross-product guard", "kind": "construction/constraint/guard"},
+    {"source": "areas DBA and ACE equal; common area m/n and m+n", "dsl": "equal Area constraints and Area(D,B,A) with fraction post-process", "kind": "constraint/answer/postprocess"}
+  ],
+  "variables": {"names": ["theta"]},
+  "construction": [
+    {"name": "O1", "expr": "Point(0,0)"},
+    {"name": "O2", "expr": "Point(5,0)"},
+    {"name": "A", "expr": "Point(1,0)"},
+    {"name": "omega1", "expr": "Circle(O1,1)"},
+    {"name": "omega2", "expr": "Circle(O2,4)"},
+    {"name": "B", "expr": "Point(-3/5,4/5)"},
+    {"name": "C", "expr": "Point(13/5,16/5)"},
+    {"name": "L", "expr": "Line(A,Point(A.x+cos(theta),A.y+sin(theta)))"},
+    {"name": "D", "expr": "Intersect(L,omega1,exclude=A)"},
+    {"name": "E", "expr": "Intersect(L,omega2,exclude=A)"}
+  ],
+  "constraints": [
+    {"def": "OnCircle(B,omega1)", "value": 0},
+    {"def": "OnCircle(C,omega2)", "value": 0},
+    {"def": "IsTangent(Line(B,C),omega1)", "value": 0},
+    {"def": "IsTangent(Line(B,C),omega2)", "value": 0},
+    {"def": "OnCircle(D,omega1)", "value": 0},
+    {"def": "OnCircle(E,omega2)", "value": 0},
+    {"def": "OnLine(E,A,D)", "value": 0},
+    {"def": "Area(D,B,A)", "value": "Area(A,C,E)"}
+  ],
+  "guards": ["AssumeGt(Vector(A,B).cross(Vector(A,D))*Vector(A,C).cross(Vector(A,D)),0)", "AssumeGt(Distance(A,D),0)", "AssumeGt(Distance(A,E),0)"],
+  "answer": "Area(D,B,A)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+}

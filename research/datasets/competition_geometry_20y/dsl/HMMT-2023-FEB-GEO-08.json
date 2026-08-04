@@ -1,0 +1,29 @@
+{
+  "id": "HMMT-2023-FEB-GEO-08",
+  "task": "solve",
+  "source_statement": "Triangle ABC with ∠BAC > 90◦ has AB = 5 and AC = 7. Points D and E lie on segment BC such that BD = DE = EC. If ∠BAC + ∠DAE = 180◦ , compute BC.",
+  "clause_ledger": [
+    {"source": "AB=5, AC=7 and angle BAC>90 degrees", "dsl": "direct distances and obtuse-branch guard", "kind": "constraint/guard"},
+    {"source": "BD=DE=EC with D,E on BC", "dsl": "D,E are direct one-third/two-thirds affine points on B-C with order guards", "kind": "construction/constraint"},
+    {"source": "angle BAC+angle DAE=180 degrees", "dsl": "direct angle-sum constraint", "kind": "constraint"},
+    {"source": "BC", "dsl": "Distance(B,C)", "kind": "answer"}
+  ],
+  "variables": {"names": ["cx", "cy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(5,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "D", "expr": "Point((2*5+cx)/3,cy/3)"},
+    {"name": "E", "expr": "Point((5+2*cx)/3,2*cy/3)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 5},
+    {"def": "Distance(A,C)", "value": 7},
+    {"def": "Angle(B,A,C)", "value": "pi-Angle(D,A,E)"},
+    {"def": "OnSegment(D,B,C)", "value": 0},
+    {"def": "OnSegment(E,B,C)", "value": 0}
+  ],
+  "guards": ["AssumeGt(cy,0)", "AssumeGt(Angle(B,A,C),pi/2)"],
+  "answer": "Distance(B,C)",
+  "post_process": ""
+}

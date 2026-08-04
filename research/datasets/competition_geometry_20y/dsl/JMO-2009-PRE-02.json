@@ -1,0 +1,84 @@
+{
+  "id": "JMO-2009-PRE-02",
+  "task": "solve",
+  "source_statement": "半径2の円O1と半径4の円O2が点Pで外接している。O1，O2の周上にPと異なる点A，Bをそれぞれとるとき，A，P，Bが一直線上に並んでいた。線分ABの長さが4であるとき，線分PBの長さを求めよ。",
+  "clause_ledger": [
+    {
+      "source": "two externally tangent circles",
+      "dsl": "fixed centers O1=(0,0), O2=(6,0), contact P=(2,0)",
+      "kind": "construction"
+    },
+    {
+      "source": "A,B on circles and collinear with P; AB=4",
+      "dsl": "OnCircle/Collinear and direct Distance constraints",
+      "kind": "constraint"
+    },
+    {
+      "source": "PB",
+      "dsl": "Distance(P,B)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "ax",
+      "ay",
+      "bx",
+      "by"
+    ]
+  },
+  "construction": [
+    {
+      "name": "O1",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "O2",
+      "expr": "Point(6,0)"
+    },
+    {
+      "name": "P",
+      "expr": "Point(2,0)"
+    },
+    {
+      "name": "C1",
+      "expr": "Circle(O1,2)"
+    },
+    {
+      "name": "C2",
+      "expr": "Circle(O2,4)"
+    },
+    {
+      "name": "A",
+      "expr": "Point(ax,ay)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(bx,by)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "OnCircle(A,C1)",
+      "value": 0
+    },
+    {
+      "def": "OnCircle(B,C2)",
+      "value": 0
+    },
+    {
+      "def": "Collinear(A,P,B)",
+      "value": 0
+    },
+    {
+      "def": "Distance(A,B)",
+      "value": 4
+    }
+  ],
+  "guards": [
+    "AssumeGt(ay,0)",
+    "AssumeGt(by,0)"
+  ],
+  "answer": "Distance(P,B)",
+  "post_process": ""
+}

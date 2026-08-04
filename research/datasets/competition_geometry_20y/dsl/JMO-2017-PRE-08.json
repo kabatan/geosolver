@@ -1,0 +1,108 @@
+{
+  "id": "JMO-2017-PRE-08",
+  "task": "solve",
+  "source_statement": "三角形ABCの辺BC上に2点D，Eがある。4点B，D，E，Cはこの順に並んでおり，∠BAD=∠ACE，∠ABD=∠CAEであるとする。三角形ABEの外接円と三角形ADCの外接円のAと異なる交点をXとおき，AXとBCの交点をPとする。BF=5，CF=6，XD=3のとき，線分XEの長さを求めよ。ただし，PQで線分PQの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "D,E on BC in order B,D,E,C",
+      "dsl": "B=(0,0), C=(11,0), D=(d,0), E=(e,0) with 0<d<e<11",
+      "kind": "construction/guard"
+    },
+    {
+      "source": "two angle equalities",
+      "dsl": "direct Angle constraints",
+      "kind": "constraint"
+    },
+    {
+      "source": "X is second intersection of circumcircles ABE and ADC",
+      "dsl": "direct Circumcircle/Intersect construction",
+      "kind": "construction"
+    },
+    {
+      "source": "F=AX∩BC, BF=5, CF=6, XD=3",
+      "dsl": "direct intersection and distance constraints",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "XE",
+      "dsl": "Distance(X,E)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "ax",
+      "ay",
+      "d",
+      "e"
+    ]
+  },
+  "construction": [
+    {
+      "name": "B",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(11,0)"
+    },
+    {
+      "name": "A",
+      "expr": "Point(ax,ay)"
+    },
+    {
+      "name": "D",
+      "expr": "Point(d,0)"
+    },
+    {
+      "name": "E",
+      "expr": "Point(e,0)"
+    },
+    {
+      "name": "Gamma1",
+      "expr": "Circumcircle(A,B,E)"
+    },
+    {
+      "name": "Gamma2",
+      "expr": "Circumcircle(A,D,C)"
+    },
+    {
+      "name": "X",
+      "expr": "Intersect(Gamma1,Gamma2,exclude=A)"
+    },
+    {
+      "name": "F",
+      "expr": "Intersect(Line(A,X),Line(B,C))"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Angle(B,A,D)",
+      "value": "Angle(A,C,E)"
+    },
+    {
+      "def": "Angle(A,B,D)",
+      "value": "Angle(C,A,E)"
+    },
+    {
+      "def": "Distance(B,F)",
+      "value": 5
+    },
+    {
+      "def": "Distance(C,F)",
+      "value": 6
+    },
+    {
+      "def": "Distance(X,D)",
+      "value": 3
+    }
+  ],
+  "guards": [
+    "AssumeGt(ay,0)",
+    "AssumeGt(d,0)",
+    "AssumeLt(d,e)",
+    "AssumeLt(e,11)"
+  ],
+  "answer": "Distance(X,E)",
+  "post_process": ""
+}

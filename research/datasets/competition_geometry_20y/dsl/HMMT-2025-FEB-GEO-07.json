@@ -1,0 +1,28 @@
+{
+  "id": "HMMT-2025-FEB-GEO-07",
+  "task": "solve",
+  "source_statement": "Point P is inside triangle △ABC such that ∠ABP = ∠ACP . Given that AB = 6, AC = 8, BC = 7, 1 [BP C] and BP P C = 2 , compute [ABC] . (Here, [XY Z] denotes the area of △XY Z).",
+  "clause_ledger": [
+    {"source": "P inside triangle ABC", "dsl": "P is a free point with three positive subtriangle-area guards", "kind": "construction/guard"},
+    {"source": "angle ABP=angle ACP", "dsl": "direct Angle(A,B,P)=Angle(A,C,P)", "kind": "constraint"},
+    {"source": "AB=6, AC=8, BC=7 and BP/PC=1/2", "dsl": "direct side and distance-ratio constraints", "kind": "constraint"},
+    {"source": "[BPC]/[ABC]", "dsl": "Area(B,P,C)/Area(A,B,C)", "kind": "answer"}
+  ],
+  "variables": {"names": ["cx", "cy", "u", "v"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(6,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "P", "expr": "Point(6*u+cx*v,cy*v)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 6},
+    {"def": "Distance(A,C)", "value": 8},
+    {"def": "Distance(B,C)", "value": 7},
+    {"def": "Angle(A,B,P)", "value": "Angle(A,C,P)"},
+    {"def": "Distance(B,P)", "value": "Distance(P,C)/2"}
+  ],
+  "guards": ["AssumeGt(cy,0)", "AssumeGt(u,0)", "AssumeGt(v,0)", "AssumeLt(u+v,1)"],
+  "answer": "Area(B,P,C)/Area(A,B,C)",
+  "post_process": ""
+}

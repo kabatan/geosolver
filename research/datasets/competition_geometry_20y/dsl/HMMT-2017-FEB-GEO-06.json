@@ -1,0 +1,34 @@
+{
+  "id": "HMMT-2017-FEB-GEO-06",
+  "task": "solve",
+  "source_statement": "In convex quadrilateral ABCD we have AB = 15, BC = 16, CD = 12, DA = 25, and BD = 20. Let M and γ denote the circumcenter and circumcircle of 4ABD. Line CB meets γ again at F , line AF meets M C at G, and line GD meets γ again at E. Determine the area of pentagon ABCDE.",
+  "clause_ledger": [
+    {"source": "convex ABCD with AB=15, BC=16, CD=12, DA=25, BD=20", "dsl": "A,B,C,D with the five stated distance constraints and an explicit convexity guard", "kind": "construction/constraint/guard"},
+    {"source": "F is second intersection of CB with circumcircle ABD", "dsl": "Gamma=Circumcircle(A,B,D); F=Intersect(Line(C,B),Gamma,exclude=B)", "kind": "construction"},
+    {"source": "G=AF intersect MC and E is second intersection of GD with Gamma", "dsl": "M=Circumcenter(A,B,D), G=Intersect(Line(A,F),Line(M,C)), E=Intersect(Line(G,D),Gamma,exclude=D)", "kind": "construction"},
+    {"source": "area ABCDE", "dsl": "Area(A,B,C,D,E)", "kind": "answer"}
+  ],
+  "variables": {"names": ["cx", "cy", "dx", "dy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(15,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "D", "expr": "Point(dx,dy)"},
+    {"name": "Gamma", "expr": "Circumcircle(A,B,D)"},
+    {"name": "M", "expr": "Circumcenter(A,B,D)"},
+    {"name": "F", "expr": "Intersect(Line(C,B),Gamma,exclude=B)"},
+    {"name": "G", "expr": "Intersect(Line(A,F),Line(M,C))"},
+    {"name": "E", "expr": "Intersect(Line(G,D),Gamma,exclude=D)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 15},
+    {"def": "Distance(B,C)", "value": 16},
+    {"def": "Distance(C,D)", "value": 12},
+    {"def": "Distance(D,A)", "value": 25},
+    {"def": "Distance(B,D)", "value": 20}
+  ],
+  "guards": ["AssumeGt(cy,0)", "AssumeConvex([A,B,C,D])", "AssumeGt(Area(A,B,C,D,E),0)"],
+  "answer": "Area(A,B,C,D,E)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

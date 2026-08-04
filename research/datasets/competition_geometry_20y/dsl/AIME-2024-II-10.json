@@ -1,0 +1,29 @@
+{
+  "id": "AIME-2024-II-10",
+  "task": "solve",
+  "source_statement": "Let $\\triangle$ $ABC$ have incenter $I$ and circumcenter $O$ with $\\overline{IA} \\perp \\overline{OI}$ , circumradius $13$ , and inradius $6$ . Find $AB \\cdot AC$ .",
+  "clause_ledger": [
+    {"source": "triangle with incenter/circumcenter", "dsl": "direct Incenter and Circumcenter constructions", "kind": "construction"},
+    {"source": "IA perpendicular OI", "dsl": "Perpendicular(Line(I,A),Line(I,O))", "kind": "constraint"},
+    {"source": "radii 13 and 6", "dsl": "direct Radius constraints", "kind": "constraint"},
+    {"source": "AB*AC", "dsl": "product of direct side distances", "kind": "answer"}
+  ],
+  "variables": {"names": ["b", "cx", "cy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(b,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "I", "expr": "Incenter(A,B,C)"},
+    {"name": "O", "expr": "Circumcenter(A,B,C)"},
+    {"name": "Gamma", "expr": "Circumcircle(A,B,C)"},
+    {"name": "omega", "expr": "Incircle(A,B,C)"}
+  ],
+  "constraints": [
+    {"def": "Perpendicular(Line(I,A),Line(I,O))", "value": 0},
+    {"def": "Radius(Gamma)", "value": 13},
+    {"def": "Radius(omega)", "value": 6}
+  ],
+  "guards": ["AssumeGt(b,0)", "AssumeGt(cy,0)", "AssumeGt(Area(A,B,C),0)"],
+  "answer": "Distance(A,B)*Distance(A,C)",
+  "post_process": ""
+}

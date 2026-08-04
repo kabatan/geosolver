@@ -1,0 +1,32 @@
+{
+  "id": "HMMT-2006-FEB-GEO-05",
+  "task": "solve",
+  "source_statement": "Triangle ABC has side lengths AB = 2 5, BC = 1, and CA = 5. Point D is on side AC such that CD = 1, and F is a point such that BF = 2 and CF = 3. Let E be the intersection of lines AB and DF . Find the area of CDEB.",
+  "clause_ledger": [
+    {"source": "AB=2√5, BC=1, CA=5", "dsl": "A=(5,0), B=(3/5,4/5), C=(0,0) realizes the stated triangle", "kind": "construction"},
+    {"source": "D on AC with CD=1", "dsl": "D=Point(1,0) on the source segment AC", "kind": "construction"},
+    {"source": "BF=2 and CF=3", "dsl": "direct Distance constraints for F", "kind": "constraint"},
+    {"source": "E=AB∩DF", "dsl": "E=Intersect(Line(A,B),Line(D,F))", "kind": "construction"},
+    {"source": "area CDEB", "dsl": "Area(C,D,E,B)", "kind": "answer"}
+  ],
+  "variables": {"names": ["fx", "fy"]},
+  "construction": [
+    {"name": "C", "expr": "Point(0,0)"},
+    {"name": "A", "expr": "Point(5,0)"},
+    {"name": "B", "expr": "Point(3/5,4/5)"},
+    {"name": "D", "expr": "Point(1,0)"},
+    {"name": "F", "expr": "Point(fx,fy)"},
+    {"name": "E", "expr": "Intersect(Line(A,B),Line(D,F))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": "2*sqrt(5)"},
+    {"def": "Distance(B,C)", "value": 1},
+    {"def": "Distance(A,C)", "value": 5},
+    {"def": "Distance(C,D)", "value": 1},
+    {"def": "Distance(B,F)", "value": 2},
+    {"def": "Distance(C,F)", "value": 3}
+  ],
+  "guards": ["AssumeGt(fy,0)"],
+  "answer": "Area(C,D,E,B)",
+  "post_process": ""
+}

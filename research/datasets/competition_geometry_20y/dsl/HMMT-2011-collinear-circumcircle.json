@@ -1,0 +1,90 @@
+{
+  "id": "HMMT-2011-collinear-circumcircle",
+  "task": "solve",
+  "source_statement": "Collinear points A, B, and C are given in the Cartesian plane such that A = (a, 0) lies along the x-axis, B lies along the line y = x, C lies along the line y = 2x, and AB/BC = 2. If D = (a, a), the circumcircle of triangle ADC intersects y = x again at E, and ray AE intersects y = 2x at F , evaluate AE/EF .",
+  "clause_ledger": [
+    {
+      "source": "coordinate lines and collinearity/ratio",
+      "dsl": "direct line gauges, Collinear(A,B,C), and Distance(A,B)=2*Distance(B,C)",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "D=(a,a) and E second circle/line intersection",
+      "dsl": "D=Point(a,a), Gamma=Circumcircle(A,D,C), E=Intersect(Gamma,y=x,exclude=D)",
+      "kind": "construction"
+    },
+    {
+      "source": "F is ray AE intersection with y=2x",
+      "dsl": "direct line intersection",
+      "kind": "construction"
+    },
+    {
+      "source": "AE/EF",
+      "dsl": "direct distance ratio",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "a",
+      "bx",
+      "cx"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(a,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(bx,bx)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(cx,2*cx)"
+    },
+    {
+      "name": "D",
+      "expr": "Point(a,a)"
+    },
+    {
+      "name": "L1",
+      "expr": "Line(Point(0,0),Point(1,1))"
+    },
+    {
+      "name": "L2",
+      "expr": "Line(Point(0,0),Point(1,2))"
+    },
+    {
+      "name": "Gamma",
+      "expr": "Circumcircle(A,D,C)"
+    },
+    {
+      "name": "E",
+      "expr": "Intersect(Gamma,L1,exclude=D)"
+    },
+    {
+      "name": "F",
+      "expr": "Intersect(Line(A,E),L2)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Collinear(A,B,C)",
+      "value": 0
+    },
+    {
+      "def": "Distance(A,B)",
+      "value": "2*Distance(B,C)"
+    }
+  ],
+  "guards": [
+    "AssumeGt(a,0)",
+    "AssumeGt(bx,0)",
+    "AssumeGt(cx,0)",
+    "AssumeGt(Dot(Vector(A,E),Vector(A,F)),0)"
+  ],
+  "answer": "Distance(A,E)/Distance(E,F)",
+  "post_process": ""
+}

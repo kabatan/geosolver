@@ -1,0 +1,125 @@
+{
+  "id": "JMO-2024-PRE-06",
+  "task": "solve",
+  "source_statement": "AB=AC=5である二等辺三角形ABCの辺AB上にAD=3をみたす点Dが，辺BC上（端点を除く）に点Eがある。点Eを通り直線ABに点Bで接する円をωとすると，ωは三角形ADEの外接円に接した。ωと直線AEの交点のうちEでない方をFとすると，CF=10が成り立った。このとき，辺BCの長さを求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {
+      "source": "AB=AC=5 and D on AB with AD=3",
+      "dsl": "A=(0,0), B=(5,0), C=(5*cos(theta),5*sin(theta)), D=(3,0), with AB=AC gauge",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "E on BC",
+      "dsl": "E is a variable point on the source side BC; no extra position is imposed",
+      "kind": "construction"
+    },
+    {
+      "source": "omega through E tangent to AB at B and tangent to circumcircle ADE",
+      "dsl": "omega is represented by a center/radius with B,E incidence and tangent-circle relation",
+      "kind": "constraint"
+    },
+    {
+      "source": "F is the other intersection of omega and AE; CF=10",
+      "dsl": "F=Intersect(omega,Line(A,E),exclude=E), Distance(C,F)=10",
+      "kind": "construction/constraint"
+    },
+    {
+      "source": "BC",
+      "dsl": "Distance(B,C)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "cx",
+      "cy",
+      "ex",
+      "ey",
+      "ox",
+      "oy",
+      "r"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(5,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(cx,cy)"
+    },
+    {
+      "name": "D",
+      "expr": "Point(3,0)"
+    },
+    {
+      "name": "E",
+      "expr": "Point(ex,ey)"
+    },
+    {
+      "name": "O",
+      "expr": "Point(ox,oy)"
+    },
+    {
+      "name": "omega",
+      "expr": "Circle(O,r)"
+    },
+    {
+      "name": "Gamma",
+      "expr": "Circumcircle(A,D,E)"
+    },
+    {
+      "name": "F",
+      "expr": "Intersect(omega,Line(A,E),exclude=E)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(A,B)",
+      "value": 5
+    },
+    {
+      "def": "Distance(A,C)",
+      "value": 5
+    },
+    {
+      "def": "Distance(A,D)",
+      "value": 3
+    },
+    {
+      "def": "Collinear(B,E,C)",
+      "value": 0
+    },
+    {
+      "def": "Distance(O,B)",
+      "value": "r"
+    },
+    {
+      "def": "OnCircle(E,omega)",
+      "value": 0
+    },
+    {
+      "def": "IsTangent(omega,Line(A,B),B)",
+      "value": 0
+    },
+    {
+      "def": "IsTangent(omega,Gamma)",
+      "value": 0
+    },
+    {
+      "def": "Distance(C,F)",
+      "value": 10
+    }
+  ],
+  "guards": [
+    "AssumeGt(cy,0)",
+    "AssumeGt(r,0)"
+  ],
+  "answer": "Distance(B,C)",
+  "post_process": ""
+}

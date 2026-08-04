@@ -1,0 +1,79 @@
+{
+  "id": "JMO-2008-PRE-02",
+  "task": "solve",
+  "source_statement": "一辺1の正方形ABCDがある。ADを直径とする円Oを描き，辺AB上の点Eを，直線CEがOの接線となるようにとる。このとき，三角形CBEの面積を求めよ。",
+  "clause_ledger": [
+    {
+      "source": "ABCD is a unit square",
+      "dsl": "fixed unit-square coordinates A=(0,0), B=(1,0), C=(1,1), D=(0,1), with the stated order",
+      "kind": "construction"
+    },
+    {
+      "source": "AD is a diameter and O is the circle center",
+      "dsl": "O=Midpoint(A,D) and Circle(O,Distance(O,A))",
+      "kind": "construction"
+    },
+    {
+      "source": "E is on side AB",
+      "dsl": "E=Point(e,0) with 0<e<1",
+      "kind": "construction/guard"
+    },
+    {
+      "source": "CE is tangent to the circle",
+      "dsl": "the distance from O to line CE equals the circle radius",
+      "kind": "constraint"
+    },
+    {
+      "source": "area of triangle CBE",
+      "dsl": "Area(C,B,E)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": [
+      "e"
+    ]
+  },
+  "construction": [
+    {
+      "name": "A",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(1,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(1,1)"
+    },
+    {
+      "name": "D",
+      "expr": "Point(0,1)"
+    },
+    {
+      "name": "O",
+      "expr": "Midpoint(A,D)"
+    },
+    {
+      "name": "omega",
+      "expr": "Circle(O,Distance(O,A))"
+    },
+    {
+      "name": "E",
+      "expr": "Point(e,0)"
+    }
+  ],
+  "constraints": [
+    {
+      "def": "Distance(O,Line(C,E))",
+      "value": "Distance(O,A)"
+    }
+  ],
+  "guards": [
+    "AssumeGt(e,0)",
+    "AssumeLt(e,1)"
+  ],
+  "answer": "Area(C,B,E)",
+  "post_process": ""
+}

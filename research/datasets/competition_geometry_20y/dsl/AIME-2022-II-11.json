@@ -1,0 +1,35 @@
+{
+  "id": "AIME-2022-II-11",
+  "task": "solve",
+  "source_statement": "Let $ABCD$ be a convex quadrilateral with $AB=2, AD=7,$ and $CD=3$ such that the bisectors of acute angles $\\angle{DAB}$ and $\\angle{ADC}$ intersect at the midpoint of $\\overline{BC}.$ Find the square of the area of $ABCD.$",
+  "clause_ledger": [
+    {"source": "convex quadrilateral and side lengths AB=2, AD=7, CD=3", "dsl": "coordinate quadrilateral with direct side distances and convexity guards", "kind": "construction/constraint"},
+    {"source": "bisectors of acute angles DAB and ADC intersect", "dsl": "internal angle bisectors represented by lines through the corresponding triangle incenters", "kind": "construction"},
+    {"source": "intersection is midpoint of BC", "dsl": "M=Midpoint(B,C) and both bisector lines pass through M", "kind": "constraint"},
+    {"source": "square of area", "dsl": "Area(A,B,C,D)^2", "kind": "answer"}
+  ],
+  "variables": {"names": ["bx", "by", "dx", "dy", "cx", "cy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(bx,by)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "D", "expr": "Point(dx,dy)"},
+    {"name": "M", "expr": "Midpoint(B,C)"},
+    {"name": "I1", "expr": "Incenter(A,B,D)"},
+    {"name": "I2", "expr": "Incenter(A,C,D)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 2},
+    {"def": "Distance(A,D)", "value": 7},
+    {"def": "Distance(C,D)", "value": 3},
+    {"def": "Distance(M,Line(A,I1))", "value": 0},
+    {"def": "Distance(M,Line(D,I2))", "value": 0}
+  ],
+  "guards": [
+    "AssumeGt(by,0)", "AssumeGt(dy,0)", "AssumeGt(cy,0)",
+    "AssumeConvex([A,B,C,D])",
+    "AssumeLt(Angle(D,A,B),pi/2)", "AssumeLt(Angle(A,D,C),pi/2)"
+  ],
+  "answer": "Area(A,B,C,D)**2",
+  "post_process": ""
+}

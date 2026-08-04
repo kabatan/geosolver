@@ -1,0 +1,36 @@
+{
+  "id": "AIME-2025-II-05",
+  "task": "solve",
+  "source_statement": "Suppose $\\triangle ABC$ has angles $\\angle BAC = 84^\\circ$, $\\angle ABC = 60^\\circ$, and $\\angle ACB = 36^\\circ$. Let $D$, $E$, and $F$ be the midpoints of sides $\\overline{BC}$, $\\overline{AC}$, and $\\overline{AB}$, respectively. The circumcircle of $\\triangle DEF$ intersects $\\overline{BD}$, $\\overline{AE}$, and $\\overline{AF}$ at points $G$, $H$, and $J$, respectively. The points $G$, $D$, $E$, $H$, $J$, and $F$ divide the circumcircle of $\\triangle DEF$ into six minor arcs, as shown. Find $\\wideparen{DE} + 2 \\cdot \\wideparen{HJ} + 3 \\cdot \\wideparen{FG}$, where the arcs are measured in degrees.\n\n\\begin{tikzpicture}[scale=1.2]\n    \\coordinate (B) at (0,0);\n    \\coordinate (C) at (6,0);\n    \\coordinate (A) at (1.78,3.07);\n    \n    \\coordinate (D) at ($(B)!0.5!(C)$);\n    \\coordinate (E) at ($(A)!0.5!(C)$);\n    \\coordinate (F) at ($(A)!0.5!(B)$);\n    \n    \\draw (A) -- (B) -- (C) -- cycle;\n\n    \\fill (A) circle (2pt) node[above] {$A$};\n    \\fill (B) circle (2pt) node[below] {$B$};\n    \\fill (C) circle (2pt) node[below] {$C$};\n\n    \\fill (D) circle (2pt) node[below] {$D$};\n    \\fill (E) circle (2pt) node[right] {$E$};\n    \\fill (F) circle (2pt) node[left] {$F$};\n\n    \\draw (D) -- (E) -- (F) -- cycle;\n\n    \\coordinate (O) at (2.39,1.38);\n    \n    \\draw (O) circle (1.51);\n\n    \\coordinate (G) at (1.72, 0.03);\n    \\coordinate (J) at (1.5, 2.6);\n    \\coordinate (H) at (2.08, 2.85);\n\n    \\fill (G) circle (2pt) node[below] {$G$};\n    \\fill (H) circle (2pt) node[above] {$H$};\n    \\fill (J) circle (2pt) node[above left] {$J$};\n\\end{tikzpicture}",
+  "clause_ledger": [
+    {"source": "triangle angles 84,60,36 and D,E,F midpoints", "dsl": "B=(0,0),C=(6,0), variable A with exact angle constraints and Midpoint constructions", "kind": "construction/constraint"},
+    {"source": "circumcircle DEF meets BD,AE,AF again at G,H,J", "dsl": "Gamma=Circumcircle(D,E,F) and three second intersections", "kind": "construction"},
+    {"source": "weighted minor arcs DE,HJ,FG in degrees", "dsl": "central Angle expressions at Gamma center multiplied by 180/pi", "kind": "answer"}
+  ],
+  "variables": {"names": ["ax", "ay"]},
+  "construction": [
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(6,0)"},
+    {"name": "A", "expr": "Point(ax,ay)"},
+    {"name": "D", "expr": "Midpoint(B,C)"},
+    {"name": "E", "expr": "Midpoint(A,C)"},
+    {"name": "F", "expr": "Midpoint(A,B)"},
+    {"name": "Gamma", "expr": "Circumcircle(D,E,F)"},
+    {"name": "O", "expr": "Circumcenter(D,E,F)"},
+    {"name": "G", "expr": "Intersect(Line(B,D),Gamma,exclude=D)"},
+    {"name": "H", "expr": "Intersect(Line(A,E),Gamma,exclude=E)"},
+    {"name": "J", "expr": "Intersect(Line(A,F),Gamma,exclude=F)"}
+  ],
+  "constraints": [
+    {"def": "Angle(B,A,C)", "value": "84*pi/180"},
+    {"def": "Angle(A,B,C)", "value": "60*pi/180"},
+    {"def": "Angle(A,C,B)", "value": "36*pi/180"},
+    {"def": "OnSegment(G,B,D)", "value": 0},
+    {"def": "OnSegment(H,A,E)", "value": 0},
+    {"def": "OnSegment(J,A,F)", "value": 0}
+  ],
+  "guards": ["AssumeGt(ay,0)"],
+  "answer": "180*(Angle(D,O,E)+2*Angle(H,O,J)+3*Angle(F,O,G))/pi",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

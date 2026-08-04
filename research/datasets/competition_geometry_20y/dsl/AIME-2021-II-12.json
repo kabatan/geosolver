@@ -1,0 +1,28 @@
+{
+  "id": "AIME-2021-II-12",
+  "task": "solve",
+  "source_statement": "A convex quadrilateral has area $30$ and side lengths $5, 6, 9,$ and $7,$ in that order. Denote by $\\theta$ the measure of the acute angle formed by the diagonals of the quadrilateral. Then $\\tan \\theta$ can be written in the form $\\tfrac{m}{n}$ , where $m$ and $n$ are relatively prime positive integers. Find $m + n$ .",
+  "clause_ledger": [
+    {"source": "convex quadrilateral with four ordered side lengths", "dsl": "coordinate points with direct distances and convexity guards", "kind": "construction/constraint"},
+    {"source": "area 30", "dsl": "direct Area constraint", "kind": "constraint"},
+    {"source": "acute angle between diagonals", "dsl": "X=AC∩BD and Angle(A,X,B) with acute branch", "kind": "construction/constraint"},
+    {"source": "m+n", "dsl": "tan(theta) with explicit fraction post_process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["cx", "cy", "dx", "dy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(5,0)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "D", "expr": "Point(dx,dy)"},
+    {"name": "X", "expr": "Intersect(Line(A,C),Line(B,D))"}
+  ],
+  "constraints": [
+    {"def": "Distance(B,C)", "value": 6},
+    {"def": "Distance(C,D)", "value": 9},
+    {"def": "Distance(D,A)", "value": 7},
+    {"def": "Area(A,B,C,D)", "value": 30}
+  ],
+  "guards": ["AssumeGt(cy,0)", "AssumeGt(dy,0)", "AssumeConvex([A,B,C,D])", "AssumeGt(Angle(A,X,B),0)", "AssumeLt(Angle(A,X,B),pi/2)"],
+  "answer": "tan(Angle(A,X,B))",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = f.numerator + f.denominator"
+}

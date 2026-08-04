@@ -1,0 +1,29 @@
+{
+  "id": "HMMT-2009-FEB-GEO-07",
+  "task": "solve",
+  "source_statement": "[5] In triangle ABC, D is the midpoint of BC, E is the foot of the perpendicular from A to BC, and F is the foot of the perpendicular from D to AC. Given that BE = 5, EC = 9, and the area of triangle ABC is 84, compute |EF |.",
+  "clause_ledger": [
+    {"source": "D midpoint of BC", "dsl": "D=Midpoint(B,C)", "kind": "construction"},
+    {"source": "E foot from A to BC", "dsl": "A=(e,h), BC is the x-axis, so E=(e,0) and AE is perpendicular to BC", "kind": "construction"},
+    {"source": "F foot from D to AC", "dsl": "F=FootOfPerpendicular(D,Line(A,C))", "kind": "construction"},
+    {"source": "BE=5, EC=9, area ABC=84", "dsl": "direct distance and area constraints", "kind": "constraint"},
+    {"source": "EF", "dsl": "Distance(E,F)", "kind": "answer"}
+  ],
+  "variables": {"names": ["c", "e", "h"]},
+  "construction": [
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(c,0)"},
+    {"name": "D", "expr": "Midpoint(B,C)"},
+    {"name": "E", "expr": "Point(e,0)"},
+    {"name": "A", "expr": "Point(e,h)"},
+    {"name": "F", "expr": "FootOfPerpendicular(D,Line(A,C))"}
+  ],
+  "constraints": [
+    {"def": "Distance(B,E)", "value": 5},
+    {"def": "Distance(E,C)", "value": 9},
+    {"def": "Area(A,B,C)", "value": 84}
+  ],
+  "guards": ["AssumeGt(c,0)", "AssumeGt(h,0)"],
+  "answer": "Distance(E,F)",
+  "post_process": ""
+}

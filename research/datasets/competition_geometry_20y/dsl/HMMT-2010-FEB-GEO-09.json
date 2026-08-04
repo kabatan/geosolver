@@ -1,0 +1,43 @@
+{
+  "id": "HMMT-2010-FEB-GEO-09",
+  "task": "solve",
+  "source_statement": "[7] Let ABCD be a quadrilateral with an inscribed circle centered at I. Let CI intersect AB at E. If ∠IDE = 35◦ , ∠ABC = 70◦ , and ∠BCD = 60◦ , then what are all possible measures of ∠CDA?",
+  "clause_ledger": [
+    {"source": "quadrilateral ABCD with an inscribed circle centered at I", "dsl": "convex labeled quadrilateral and explicit circle centered at I tangent to all four side lines; the fixed B,C gauge removes only similarity scale", "kind": "construction/constraint/guard"},
+    {"source": "∠ABC = 70°", "dsl": "AB is the ray at 70° from BC; I is on the corresponding B angle-bisector ray", "kind": "construction"},
+    {"source": "∠BCD = 60°", "dsl": "CD is the ray at 120° from the positive BC axis; I is on the corresponding C angle-bisector ray", "kind": "construction"},
+    {"source": "CI intersects AB at E", "dsl": "E=Intersect(Line(C,I),Line(A,B))", "kind": "construction"},
+    {"source": "∠IDE = 35°", "dsl": "Angle(I,D,E)=35*pi/180", "kind": "constraint"},
+    {"source": "all possible measures of ∠CDA", "dsl": "Angle(C,D,A)*180/pi; finite accepted branches are retained", "kind": "answer"}
+  ],
+  "variables": {"names": ["a", "d"]},
+  "construction": [
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(1,0)"},
+    {"name": "ABray", "expr": "Point(cos(70*pi/180),sin(70*pi/180))"},
+    {"name": "CDray", "expr": "Point(1+cos(120*pi/180),sin(120*pi/180))"},
+    {"name": "BIray", "expr": "Point(cos(35*pi/180),sin(35*pi/180))"},
+    {"name": "CIray", "expr": "Point(1+cos(150*pi/180),sin(150*pi/180))"},
+    {"name": "A", "expr": "Point(a*cos(70*pi/180),a*sin(70*pi/180))"},
+    {"name": "D", "expr": "Point(1-d/2,d*sqrt(3)/2)"},
+    {"name": "I", "expr": "Intersect(Line(B,BIray),Line(C,CIray))"},
+    {"name": "omega", "expr": "Circle(I,Distance(I,Line(B,C)))"},
+    {"name": "E", "expr": "Intersect(Line(C,I),Line(A,B))"}
+  ],
+  "constraints": [
+    {"def": "IsTangent(Line(A,B),omega)", "value": 0},
+    {"def": "IsTangent(Line(B,C),omega)", "value": 0},
+    {"def": "IsTangent(Line(C,D),omega)", "value": 0},
+    {"def": "IsTangent(Line(D,A),omega)", "value": 0},
+    {"def": "Angle(I,D,E)", "value": "35*pi/180"}
+  ],
+  "guards": [
+    "AssumeGt(a,0)",
+    "AssumeGt(d,0)",
+    "AssumeConvex([A,B,C,D])",
+    "AssumeGt(Area(A,C,D),0)",
+    "AssumeNe(Distance(D,E),0)"
+  ],
+  "answer": "Angle(C,D,A)*180/pi",
+  "post_process": ""
+}

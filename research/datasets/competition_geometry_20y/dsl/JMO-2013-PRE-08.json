@@ -1,0 +1,35 @@
+{
+  "id": "JMO-2013-PRE-08",
+  "task": "solve",
+  "source_statement": "凸四角形ABCDがあり，ACとBDが点Xで直交していて，AX=5，BX=6，CX=20が成り立っている。Aを中心としAXを半径とする円，Bを中心としBXを半径とする円，Cを中心としCXを半径とする円，Dを中心としDXを半径とする円をそれぞれC1，C2，C3，C4とする。4つの円C1，C2，C3，C4すべてに接する円が存在するとき，DXを求めよ。ただし，YZで線分YZの長さを表すものとする。",
+  "clause_ledger": [
+    {"source": "convex quadrilateral and perpendicular diagonals", "dsl": "A,C lie on one axis through X and B,D on the perpendicular axis", "kind": "construction"},
+    {"source": "AX=5, BX=6, CX=20", "dsl": "direct fixed coordinates relative to X", "kind": "constraint"},
+    {"source": "four circles have centers A,B,C,D and radii AX,BX,CX,DX", "dsl": "Circle(center,radius) constructions", "kind": "construction"},
+    {"source": "one circle tangent to all four", "dsl": "variable center/radius and four IsTangent constraints", "kind": "constraint"},
+    {"source": "DX", "dsl": "Distance(D,X)", "kind": "answer"}
+  ],
+  "variables": {"names": ["d", "ox", "oy", "r"]},
+  "construction": [
+    {"name": "X", "expr": "Point(0,0)"},
+    {"name": "A", "expr": "Point(-5,0)"},
+    {"name": "B", "expr": "Point(0,6)"},
+    {"name": "C", "expr": "Point(20,0)"},
+    {"name": "D", "expr": "Point(0,-d)"},
+    {"name": "O1", "expr": "Circle(A,5)"},
+    {"name": "O2", "expr": "Circle(B,6)"},
+    {"name": "O3", "expr": "Circle(C,20)"},
+    {"name": "O4", "expr": "Circle(D,d)"},
+    {"name": "T", "expr": "Point(ox,oy)"},
+    {"name": "Omega", "expr": "Circle(T,r)"}
+  ],
+  "constraints": [
+    {"def": "Distance(T,A)", "value": "r+5"},
+    {"def": "Distance(T,B)", "value": "r+6"},
+    {"def": "Distance(T,C)", "value": "r+20"},
+    {"def": "Distance(T,D)", "value": "r+d"}
+  ],
+  "guards": ["AssumeGt(d,0)", "AssumeGt(r,0)"],
+  "answer": "Distance(D,X)",
+  "post_process": ""
+}

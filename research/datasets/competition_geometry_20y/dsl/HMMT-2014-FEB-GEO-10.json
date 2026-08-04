@@ -1,0 +1,39 @@
+{
+  "id": "HMMT-2014-FEB-GEO-10",
+  "task": "solve",
+  "source_statement": "Let ABC be a triangle with AB = 13, BC = 14, and CA = 15. Let be the circumcircle of ABC, let O be its circumcenter, and let M be the midpoint of minor arc BC. d Circle !1 is internally tangent to at A, and circle !2 , centered at M , is externally tangent to !1 at a point T . Ray AT meets segment BC at point S, such that BS CS = 4/15. Find the radius of !2 . HMMT 2014 Saturday 22 February 2014 Geometry PUT LABEL HERE Name Team ID# Organization Team",
+  "clause_ledger": [
+    {"source": "triangle and circumcircle", "dsl": "A=(5,12), B=(0,0), C=(14,0), Gamma=Circumcircle(A,B,C)", "kind": "construction"},
+    {"source": "M midpoint of minor arc BC", "dsl": "M=(7,-4), the minor-arc midpoint on the perpendicular bisector of BC", "kind": "construction"},
+    {"source": "omega1 internally tangent to Gamma at A", "dsl": "O1 is on OA with O1A=r1 and OO1=R-r1", "kind": "construction"},
+    {"source": "omega2 centered at M externally tangent at T", "dsl": "T on ray AS; T lies on both circles and Distance(O1,M)=r1+r2", "kind": "constraint"},
+    {"source": "BS-CS=4/15", "dsl": "S=(107/15,0)", "kind": "construction"},
+    {"source": "radius omega2", "dsl": "r2", "kind": "answer"}
+  ],
+  "variables": {"names": ["r1", "r2", "t"]},
+  "construction": [
+    {"name": "A", "expr": "Point(5,12)"},
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(14,0)"},
+    {"name": "Gamma", "expr": "Circumcircle(A,B,C)"},
+    {"name": "O", "expr": "Center(Gamma)"},
+    {"name": "R", "expr": "Radius(Gamma)"},
+    {"name": "M", "expr": "Point(7,-4)"},
+    {"name": "S", "expr": "Point(107/15,0)"},
+    {"name": "T", "expr": "Point(5+t*(107/15-5),12*(1-t))"},
+    {"name": "O1", "expr": "Point(7-2*(R-r1)/R,33/8+(63/8)*(R-r1)/R)"},
+    {"name": "omega1", "expr": "Circle(O1,r1)"},
+    {"name": "omega2", "expr": "Circle(M,r2)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 13},
+    {"def": "Distance(B,C)", "value": 14},
+    {"def": "Distance(C,A)", "value": 15},
+    {"def": "Distance(O1,T)", "value": "r1"},
+    {"def": "Distance(M,T)", "value": "r2"},
+    {"def": "Distance(O1,M)", "value": "r1+r2"}
+  ],
+  "guards": ["AssumeGt(r1,0)", "AssumeGt(r2,0)", "AssumeGt(t,0)"],
+  "answer": "r2",
+  "post_process": ""
+}

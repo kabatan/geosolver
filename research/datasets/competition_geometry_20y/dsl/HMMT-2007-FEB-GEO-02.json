@@ -1,0 +1,30 @@
+{
+  "id": "HMMT-2007-FEB-GEO-02",
+  "task": "solve",
+  "source_statement": "[3] A, B, C, and D are points on a circle, and segments AC and BD intersect at P , such that AP = 8, P C = 1, and BD = 6. Find BP , given that BP < DP.",
+  "clause_ledger": [
+    {"source": "AC and BD intersect at P", "dsl": "P is the fixed intersection gauge and A,P,C / B,P,D are collinear", "kind": "construction"},
+    {"source": "A,B,C,D are on one circle", "dsl": "Gamma=Circumcircle(A,B,C) and OnCircle(D,Gamma)=0", "kind": "constraint"},
+    {"source": "AP=8, PC=1, BD=6", "dsl": "direct distances", "kind": "constraint"},
+    {"source": "BP<DP", "dsl": "AssumeLt(BP,DP)", "kind": "guard"},
+    {"source": "BP", "dsl": "Distance(B,P)", "kind": "answer"}
+  ],
+  "variables": {"names": ["b"]},
+  "construction": [
+    {"name": "P", "expr": "Point(0, 0)"},
+    {"name": "A", "expr": "Point(-8, 0)"},
+    {"name": "C", "expr": "Point(1, 0)"},
+    {"name": "B", "expr": "Point(0, b)"},
+    {"name": "D", "expr": "Point(0, -(6 - b))"},
+    {"name": "Gamma", "expr": "Circumcircle(A, B, C)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A, P)", "value": 8},
+    {"def": "Distance(P, C)", "value": 1},
+    {"def": "Distance(B, D)", "value": 6},
+    {"def": "OnCircle(D, Gamma)", "value": 0}
+  ],
+  "guards": ["AssumeGt(b, 0)", "AssumeLt(b, 3)"],
+  "answer": "Distance(B, P)",
+  "post_process": ""
+}

@@ -1,0 +1,33 @@
+{
+  "id": "HMMT-2024-FEB-GEO-08",
+  "task": "solve",
+  "source_statement": "Let ABT CD be a convex pentagon with area 22 such that AB = CD and the circumcircles of triangles T AB and T CD are internally tangent. Given that ∠AT D = 90◦ , ∠BT C = 120◦ , BT = 4, and CT = 5, compute the area of triangle T AD.",
+  "clause_ledger": [
+    {"source": "convex pentagon ABTCD of area 22", "dsl": "direct labeled point construction, Area(A,B,T,C,D)=22, and non-self-intersection/positive-area guards", "kind": "construction/constraint/guard"},
+    {"source": "AB=CD, angle ATD=90, angle BTC=120, BT=4, CT=5", "dsl": "direct distance and Angle constraints", "kind": "constraint"},
+    {"source": "circumcircles TAB and TCD internally tangent", "dsl": "direct Circumcircle constructions and center-distance=absolute-radius-difference constraint", "kind": "construction/constraint"},
+    {"source": "area TAD", "dsl": "Area(T,A,D)", "kind": "answer"}
+  ],
+  "variables": {"names": ["ax", "ay", "dx", "dy"]},
+  "construction": [
+    {"name": "T", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(4,0)"},
+    {"name": "C", "expr": "Point(-5/2,-5*sqrt(3)/2)"},
+    {"name": "A", "expr": "Point(ax,ay)"},
+    {"name": "D", "expr": "Point(dx,dy)"},
+    {"name": "Gamma_TAB", "expr": "Circumcircle(T,A,B)"},
+    {"name": "Gamma_TCD", "expr": "Circumcircle(T,C,D)"}
+  ],
+  "constraints": [
+    {"def": "Area(A,B,T,C,D)", "value": 22},
+    {"def": "Distance(A,B)", "value": "Distance(C,D)"},
+    {"def": "Angle(A,T,D)", "value": "pi/2"},
+    {"def": "Angle(B,T,C)", "value": "2*pi/3"},
+    {"def": "Distance(T,B)", "value": 4},
+    {"def": "Distance(T,C)", "value": 5},
+    {"def": "Distance(Gamma_TAB.center,Gamma_TCD.center)", "value": "abs(Gamma_TAB.radius-Gamma_TCD.radius)"}
+  ],
+  "guards": ["AssumeGt(Area(A,B,T,C,D),0)", "AssumeNoSelfIntersecting([A,B,T,C,D])"],
+  "answer": "Area(T,A,D)",
+  "post_process": ""
+}

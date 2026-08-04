@@ -1,0 +1,30 @@
+{
+  "id": "AIME-2013-I-03",
+  "task": "solve",
+  "source_statement": "Let $ABCD$ be a square, and let $E$ and $F$ be points on $\\overline{AB}$ and $\\overline{BC},$ respectively. The line through $E$ parallel to $\\overline{BC}$ and the line through $F$ parallel to $\\overline{AB}$ divide $ABCD$ into two squares and two nonsquare rectangles. The sum of the areas of the two squares is $\\frac{9}{10}$ of the area of square $ABCD.$ Find $\\frac{AE}{EB} + \\frac{EB}{AE}.$",
+  "clause_ledger": [
+    {"source": "square and parallel cuts", "dsl": "coordinate square and E,F on adjacent sides; e=f is the direct condition for the two cut-off squares", "kind": "construction/constraint"},
+    {"source": "sum of two square areas is 9/10", "dsl": "direct area equality", "kind": "constraint"},
+    {"source": "symmetric ratio sum", "dsl": "direct ratio expression", "kind": "answer"}
+  ],
+  "variables": {"names": ["s", "e", "f"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(s,0)"},
+    {"name": "C", "expr": "Point(s,s)"},
+    {"name": "D", "expr": "Point(0,s)"},
+    {"name": "E", "expr": "Point(e,0)"},
+    {"name": "F", "expr": "Point(s,f)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": "Distance(B,C)"},
+    {"def": "Distance(A,E)", "value": "Distance(B,F)"},
+    {"def": "e", "value": "f"},
+    {"def": "e*e+(s-e)*(s-e)", "value": "9*s*s/10"},
+    {"def": "OnSegment(E,A,B)", "value": 0},
+    {"def": "OnSegment(F,B,C)", "value": 0}
+  ],
+  "guards": ["AssumeGt(s,0)", "AssumeGt(e,0)", "AssumeLt(e,s)"],
+  "answer": "e/(s-e)+(s-e)/e",
+  "post_process": ""
+}

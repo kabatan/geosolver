@@ -1,0 +1,43 @@
+{
+  "id": "JMO-2025-PRE-12",
+  "task": "solve",
+  "source_statement": "円 Ω に内接する五角形 ABCDE があり、AC = AD および BC ∥ DE をみたしている。また、Ω の A を含まない方の弧 CD 上に点 P をとり、直線 AB, BC, CD, DE, EA に関して P と対称な点をそれぞれ P1, P2, P3, P4, P5 とすると、PC : PD = P1P2 : P4P5 = 2 : 3、CD : P2P4 = 4√2 : 11 が成立した。このとき、P1P3/P1P5 の値を求めよ。",
+  "clause_ledger": [
+    {"source": "cyclic pentagon, AC=AD, BC parallel DE", "dsl": "fix A=(r,0), parameterize the cyclic gaps, construct B,C,D,E on Circle(O,r), and retain the direct distance/parallel constraints", "kind": "construction/constraint"},
+    {"source": "P on arc CD not containing A", "dsl": "construct P between C and D using the positive gap g3; the cyclic-order guards retain the stated arc branch", "kind": "construction/guard"},
+    {"source": "P1,...,P5 are reflections in the five named lines", "dsl": "direct Reflect constructions", "kind": "construction"},
+    {"source": "three length ratios and target ratio", "dsl": "direct Distance ratio constraints and answer", "kind": "constraint/answer"}
+  ],
+  "variables": {"names": ["r", "g1", "g2", "g3", "g4", "g5"]},
+  "construction": [
+    {"name": "O", "expr": "Point(0,0)"},
+    {"name": "A", "expr": "Point(r,0)"},
+    {"name": "B", "expr": "Point(r*cos(g1),r*sin(g1))"},
+    {"name": "C", "expr": "Point(r*cos(g1+g2),r*sin(g1+g2))"},
+    {"name": "P", "expr": "Point(r*cos(g1+g2+g3),r*sin(g1+g2+g3))"},
+    {"name": "D", "expr": "Point(r*cos(g1+g2+g3+g4),r*sin(g1+g2+g3+g4))"},
+    {"name": "E", "expr": "Point(r*cos(g1+g2+g3+g4+g5),r*sin(g1+g2+g3+g4+g5))"},
+    {"name": "Omega", "expr": "Circle(O,r)"},
+    {"name": "P1", "expr": "Reflect(P,Line(A,B))"},
+    {"name": "P2", "expr": "Reflect(P,Line(B,C))"},
+    {"name": "P3", "expr": "Reflect(P,Line(C,D))"},
+    {"name": "P4", "expr": "Reflect(P,Line(D,E))"},
+    {"name": "P5", "expr": "Reflect(P,Line(E,A))"}
+  ],
+  "constraints": [
+    {"def": "Distance(O,A)", "value": "r"},
+    {"def": "Distance(O,B)", "value": "r"},
+    {"def": "Distance(O,C)", "value": "r"},
+    {"def": "Distance(O,D)", "value": "r"},
+    {"def": "Distance(O,E)", "value": "r"},
+    {"def": "Distance(O,P)", "value": "r"},
+    {"def": "Distance(A,C)", "value": "Distance(A,D)"},
+    {"def": "Parallel(Line(B,C),Line(D,E))", "value": 0},
+    {"def": "3*Distance(P,C)", "value": "2*Distance(P,D)"},
+    {"def": "3*Distance(P1,P2)", "value": "2*Distance(P4,P5)"},
+    {"def": "11*Distance(C,D)", "value": "4*sqrt(2)*Distance(P2,P4)"}
+  ],
+  "guards": ["AssumeGt(r,0)", "AssumeGt(g1,0)", "AssumeGt(g2,0)", "AssumeGt(g3,0)", "AssumeGt(g4,0)", "AssumeGt(g5,0)", "AssumeLt(g1+g2+g3+g4+g5,2*pi)", "AssumeConvex([A,B,C,D,E])"],
+  "answer": "Distance(P1,P3)/Distance(P1,P5)",
+  "post_process": ""
+}

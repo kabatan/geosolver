@@ -1,0 +1,41 @@
+{
+  "id": "HMMT-2025-FEB-GEO-08",
+  "task": "solve",
+  "source_statement": "Let ABCD be an isosceles trapezoid such that CD > AB = 4. Let E be a point on line CD such that DE = 2 and D lies between E and C. Let M be the midpoint of AE. Given that points A, B, C, D, and M lie on a circle with radius 5, compute M D.",
+  "clause_ledger": [
+    {"source": "isosceles trapezoid ABCD, CD>AB=4", "dsl": "AB and CD are horizontal, direct AB length and AD=BC isosceles constraint, with CD>AB guard", "kind": "construction/constraint/guard"},
+    {"source": "E on line CD, DE=2, D between E and C", "dsl": "E is the source-directed point two units left of D on the CD carrier and C is on the other side", "kind": "construction/guard"},
+    {"source": "M midpoint of AE", "dsl": "M=Midpoint(A,E)", "kind": "construction"},
+    {"source": "A,B,C,D,M on a radius-5 circle", "dsl": "free center O with direct Distance-to-O=5 constraints for all five source points", "kind": "constraint"},
+    {"source": "MD", "dsl": "Distance(M,D)", "kind": "answer"}
+  ],
+  "variables": {"names": ["dx", "dy", "cd", "ox", "oy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(4,0)"},
+    {"name": "D", "expr": "Point(dx,dy)"},
+    {"name": "C", "expr": "Point(dx+cd,dy)"},
+    {"name": "E", "expr": "Point(dx-2,dy)"},
+    {"name": "M", "expr": "Midpoint(A,E)"},
+    {"name": "O", "expr": "Point(ox,oy)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 4},
+    {"def": "Parallel(Line(A,B),Line(C,D))", "value": 0},
+    {"def": "Distance(A,D)", "value": "Distance(B,C)"},
+    {"def": "Distance(D,E)", "value": 2},
+    {"def": "Distance(O,A)", "value": 5},
+    {"def": "Distance(O,B)", "value": 5},
+    {"def": "Distance(O,C)", "value": 5},
+    {"def": "Distance(O,D)", "value": 5},
+    {"def": "Distance(O,M)", "value": 5}
+  ],
+  "guards": [
+    "AssumeGt(dy,0)",
+    "AssumeGt(cd,4)",
+    "AssumeNoSelfIntersecting([A,B,C,D])",
+    "AssumeEq(OnSegment(D,E,C),0)"
+  ],
+  "answer": "Distance(M,D)",
+  "post_process": ""
+}

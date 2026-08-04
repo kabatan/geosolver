@@ -1,0 +1,39 @@
+{
+  "id": "AIME-2024-II-05",
+  "task": "solve",
+  "source_statement": "Let $ABCDEF$ be a convex equilateral hexagon in which all pairs of opposite sides are parallel. The triangle whose sides are extensions of segments $\\overline{AB}$ , $\\overline{CD}$ , and $\\overline{EF}$ has side lengths $200, 240,$ and $300$ . Find the side length of the hexagon.",
+  "clause_ledger": [
+    {"source": "convex equilateral hexagon with opposite sides parallel", "dsl": "fix A=(0,0), AB along the x-axis, and construct the six vertices from side length s and the two remaining side directions alpha,beta; the original equal-side/parallel constraints are retained", "kind": "construction/constraint"},
+    {"source": "triangle formed by extensions of AB, CD, EF has sides 200,240,300", "dsl": "U=AB intersect CD, V=CD intersect EF, W=EF intersect AB with three distance constraints", "kind": "construction/constraint"},
+    {"source": "side length of hexagon", "dsl": "Distance(A,B)", "kind": "answer"}
+  ],
+  "variables": {"names": ["s", "alpha", "beta"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(s,0)"},
+    {"name": "C", "expr": "Point(s+s*cos(alpha),s*sin(alpha))"},
+    {"name": "D", "expr": "Point(s+s*cos(alpha)+s*cos(beta),s*sin(alpha)+s*sin(beta))"},
+    {"name": "E", "expr": "Point(s*cos(alpha)+s*cos(beta),s*sin(alpha)+s*sin(beta))"},
+    {"name": "F", "expr": "Point(s*cos(beta),s*sin(beta))"},
+    {"name": "U", "expr": "Intersect(Line(A,B),Line(C,D))"},
+    {"name": "V", "expr": "Intersect(Line(C,D),Line(E,F))"},
+    {"name": "W", "expr": "Intersect(Line(E,F),Line(A,B))"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": "Distance(B,C)"},
+    {"def": "Distance(B,C)", "value": "Distance(C,D)"},
+    {"def": "Distance(C,D)", "value": "Distance(D,E)"},
+    {"def": "Distance(D,E)", "value": "Distance(E,F)"},
+    {"def": "Distance(E,F)", "value": "Distance(F,A)"},
+    {"def": "Parallel(Line(A,B),Line(D,E))", "value": 0},
+    {"def": "Parallel(Line(B,C),Line(E,F))", "value": 0},
+    {"def": "Parallel(Line(C,D),Line(F,A))", "value": 0},
+    {"def": "Distance(U,V)*Distance(U,V)+Distance(V,W)*Distance(V,W)+Distance(W,U)*Distance(W,U)", "value": 187600},
+    {"def": "Distance(U,V)*Distance(U,V)*Distance(V,W)*Distance(V,W)+Distance(U,V)*Distance(U,V)*Distance(W,U)*Distance(W,U)+Distance(V,W)*Distance(V,W)*Distance(W,U)*Distance(W,U)", "value": 11088000000},
+    {"def": "Distance(U,V)*Distance(U,V)*Distance(V,W)*Distance(V,W)*Distance(W,U)*Distance(W,U)", "value": 207360000000000}
+  ],
+  "guards": ["AssumeGt(s,0)", "AssumeConvex([A,B,C,D,E,F])"],
+  "answer": "Distance(A,B)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

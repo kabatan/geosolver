@@ -1,0 +1,29 @@
+{
+  "id": "HMMT-2008-FEB-GEO-04",
+  "task": "solve",
+  "source_statement": "[4] In a triangle ABC, take point D on BC such that DB = 14, DA = 13, DC = 4, and the circumcircle of ADB is congruent to the circumcircle of ADC. What is the area of triangle ABC?",
+  "clause_ledger": [
+    {"source": "D on BC with DB=14 and DC=4", "dsl": "B=(0,0), D=(14,0), C=(18,0)", "kind": "construction/constraint"},
+    {"source": "DA=13", "dsl": "direct Distance(A,D)=13", "kind": "constraint"},
+    {"source": "circumcircles ADB and ADC are congruent", "dsl": "direct equality of Radius(Circumcircle(A,B,D)) and Radius(Circumcircle(A,D,C))", "kind": "constraint"},
+    {"source": "area ABC", "dsl": "Area(A,B,C)", "kind": "answer"}
+  ],
+  "variables": {"names": ["Ax", "Ay"]},
+  "construction": [
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "D", "expr": "Point(14,0)"},
+    {"name": "C", "expr": "Point(18,0)"},
+    {"name": "A", "expr": "Point(Ax,Ay)"},
+    {"name": "Gamma1", "expr": "Circumcircle(A,B,D)"},
+    {"name": "Gamma2", "expr": "Circumcircle(A,D,C)"}
+  ],
+  "constraints": [
+    {"def": "Distance(B,D)", "value": 14},
+    {"def": "Distance(D,C)", "value": 4},
+    {"def": "Distance(A,D)", "value": 13},
+    {"def": "Radius(Gamma1)", "value": "Radius(Gamma2)"}
+  ],
+  "guards": ["AssumeGt(Ay,0)", "AssumeGt(Area(A,B,C),0)"],
+  "answer": "Area(A,B,C)",
+  "post_process": ""
+}

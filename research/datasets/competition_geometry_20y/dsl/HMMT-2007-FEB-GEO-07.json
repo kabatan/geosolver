@@ -1,0 +1,28 @@
+{
+  "id": "HMMT-2007-FEB-GEO-07",
+  "task": "solve",
+  "source_statement": "[5] Convex quadrilateral ABCD has sides AB = BC = 7, CD = 5, and AD = 3. Given additionally that m∠ABC = 60◦ , find BD.",
+  "clause_ledger": [
+    {"source": "AB=BC=7 and angle ABC=60 degrees", "dsl": "direct fixed A,B,C gauge and distance/angle constraints", "kind": "construction/constraint"},
+    {"source": "CD=5 and AD=3", "dsl": "direct distances for free D", "kind": "constraint"},
+    {"source": "convex quadrilateral", "dsl": "AssumeConvex([A,B,C,D])", "kind": "guard"},
+    {"source": "BD", "dsl": "Distance(B,D)", "kind": "answer"}
+  ],
+  "variables": {"names": ["Dx", "Dy"]},
+  "construction": [
+    {"name": "B", "expr": "Point(0, 0)"},
+    {"name": "C", "expr": "Point(7, 0)"},
+    {"name": "A", "expr": "Point(3.5, 3.5*sqrt(3))"},
+    {"name": "D", "expr": "Point(Dx, Dy)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 7},
+    {"def": "Distance(B,C)", "value": 7},
+    {"def": "Angle(A,B,C)", "value": "pi/3"},
+    {"def": "Distance(C,D)", "value": 5},
+    {"def": "Distance(A,D)", "value": 3}
+  ],
+  "guards": ["AssumeConvex([A,B,C,D])"],
+  "answer": "Distance(B,D)",
+  "post_process": ""
+}

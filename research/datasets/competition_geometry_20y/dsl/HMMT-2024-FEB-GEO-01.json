@@ -1,0 +1,43 @@
+{
+  "id": "HMMT-2024-FEB-GEO-01",
+  "task": "solve",
+  "source_statement": "Inside an equilateral triangle of side length 6, three congruent equilateral triangles of side length x with sides parallel to the original equilateral triangle are arranged so that each has a vertex on a side of the larger triangle, and a vertex on another one of the three equilateral triangles, as shown below. A smaller equilateral triangle formed between the three congruent equilateral triangles has side length 1. Compute x.",
+  "clause_ledger": [
+    {"source": "outer equilateral triangle of side 6", "dsl": "A=(3,3sqrt(3)), B=(0,0), C=(6,0)", "kind": "construction"},
+    {"source": "three congruent equilateral triangles of side x, parallel to the outer triangle", "dsl": "T1,T2,T3 use the same downward equilateral coordinate template with side variable x", "kind": "construction/constraint"},
+    {"source": "one vertex of each small triangle lies on the large triangle", "dsl": "U1 on AB, V2 on AC, W3 on BC with segment membership residuals", "kind": "constraint/guard"},
+    {"source": "one vertex lies on another small triangle, as shown", "dsl": "U2 on V1W1, V3 on U2W2, and W1 on U3V3; these are the three cyclic contacts visible in the official figure", "kind": "constraint"},
+    {"source": "central equilateral triangle has side length 1", "dsl": "the three contact vertices W1,U2,V3 have all pairwise distances 1", "kind": "constraint"},
+    {"source": "compute x", "dsl": "answer x", "kind": "answer"}
+  ],
+  "variables": {"names": ["x", "u1x", "u1y", "u2x", "u2y", "u3x", "u3y"]},
+  "construction": [
+    {"name": "A", "expr": "Point(3,3*sqrt(3))"},
+    {"name": "B", "expr": "Point(0,0)"},
+    {"name": "C", "expr": "Point(6,0)"},
+    {"name": "U1", "expr": "Point(u1x,u1y)"},
+    {"name": "V1", "expr": "Point(u1x+x,u1y)"},
+    {"name": "W1", "expr": "Point(u1x+x/2,u1y-sqrt(3)*x/2)"},
+    {"name": "U2", "expr": "Point(u2x,u2y)"},
+    {"name": "V2", "expr": "Point(u2x+x,u2y)"},
+    {"name": "W2", "expr": "Point(u2x+x/2,u2y-sqrt(3)*x/2)"},
+    {"name": "U3", "expr": "Point(u3x,u3y)"},
+    {"name": "V3", "expr": "Point(u3x+x,u3y)"},
+    {"name": "W3", "expr": "Point(u3x+x/2,u3y-sqrt(3)*x/2)"}
+  ],
+  "constraints": [
+    {"def": "OnSegment(U1,A,B)", "value": 0},
+    {"def": "OnSegment(V2,A,C)", "value": 0},
+    {"def": "OnSegment(W3,B,C)", "value": 0},
+    {"def": "OnSegment(U2,V1,W1)", "value": 0},
+    {"def": "OnSegment(V3,U2,W2)", "value": 0},
+    {"def": "OnSegment(W1,U3,V3)", "value": 0},
+    {"def": "Distance(W1,U2)", "value": 1},
+    {"def": "Distance(U2,V3)", "value": 1},
+    {"def": "Distance(V3,W1)", "value": 1}
+  ],
+  "guards": ["AssumeGt(x,0)", "AssumeLt(x,6)", "AssumeGt(u1y,0)", "AssumeLt(u1y,3*sqrt(3))", "AssumeGt(u2y,0)", "AssumeLt(u2y,3*sqrt(3))", "AssumeGt(u3x,0)", "AssumeLt(u3x+x,6)"],
+  "answer": "x",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

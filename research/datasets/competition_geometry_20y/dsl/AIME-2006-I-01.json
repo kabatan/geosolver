@@ -1,0 +1,29 @@
+{
+  "id": "AIME-2006-I-01",
+  "task": "solve",
+  "source_statement": "In quadrilateral $ABCD , \\angle B$ is a right angle, diagonal $\\overline{AC}$ is perpendicular to $\\overline{CD},  AB=18, BC=21,$ and $CD=14.$ Find the perimeter of $ABCD.$",
+  "clause_ledger": [
+    {"source": "quadrilateral ABCD", "dsl": "labeled points A,B,C,D and perimeter answer", "kind": "construction/answer"},
+    {"source": "angle B is a right angle", "dsl": "Angle(A,B,C)=pi/2", "kind": "constraint"},
+    {"source": "AC is perpendicular to CD", "dsl": "Angle(A,C,D)=pi/2", "kind": "constraint"},
+    {"source": "AB=18, BC=21, CD=14", "dsl": "direct Distance constraints", "kind": "constraint"},
+    {"source": "perimeter of ABCD", "dsl": "Distance(A,B)+Distance(B,C)+Distance(C,D)+Distance(D,A)", "kind": "answer"}
+  ],
+  "variables": {"names": ["Dx", "Dy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0, 0)"},
+    {"name": "B", "expr": "Point(18, 0)"},
+    {"name": "C", "expr": "Point(18, 21)"},
+    {"name": "D", "expr": "Point(Dx, Dy)"}
+  ],
+  "constraints": [
+    {"def": "Angle(A, B, C)", "value": "pi/2"},
+    {"def": "Distance(A, B)", "value": 18},
+    {"def": "Distance(B, C)", "value": 21},
+    {"def": "Distance(C, D)", "value": 14},
+    {"def": "Angle(A, C, D)", "value": "pi/2"}
+  ],
+  "guards": ["AssumeGt(Dy, 21)", "AssumeLt(Dx, 18)"],
+  "answer": "Distance(A, B) + Distance(B, C) + Distance(C, D) + Distance(D, A)",
+  "post_process": ""
+}

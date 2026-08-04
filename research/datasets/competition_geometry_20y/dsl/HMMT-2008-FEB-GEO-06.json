@@ -1,0 +1,27 @@
+{
+  "id": "HMMT-2008-FEB-GEO-06",
+  "task": "solve",
+  "source_statement": "[5] Let ABC be a triangle with ∠A = 45◦ . Let P be a point on side BC with P B = 3 and P C = 5. Let O be the circumcenter of ABC. Determine the length OP .",
+  "clause_ledger": [
+    {"source": "P on BC with PB=3 and PC=5", "dsl": "P=(0,0), B=(-3,0), C=(5,0)", "kind": "construction/constraint"},
+    {"source": "angle A=45 degrees", "dsl": "Angle(B,A,C)=pi/4", "kind": "constraint"},
+    {"source": "O circumcenter of ABC", "dsl": "O=Circumcenter(A,B,C)", "kind": "construction"},
+    {"source": "OP", "dsl": "Distance(O,P)", "kind": "answer"}
+  ],
+  "variables": {"names": ["Ax", "Ay"]},
+  "construction": [
+    {"name": "P", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(-3,0)"},
+    {"name": "C", "expr": "Point(5,0)"},
+    {"name": "A", "expr": "Point(Ax,Ay)"},
+    {"name": "O", "expr": "Circumcenter(A,B,C)"}
+  ],
+  "constraints": [
+    {"def": "Distance(P,B)", "value": 3},
+    {"def": "Distance(P,C)", "value": 5},
+    {"def": "Angle(B,A,C)", "value": "pi/4"}
+  ],
+  "guards": ["AssumeGt(Ay,0)"],
+  "answer": "Distance(O,P)",
+  "post_process": ""
+}

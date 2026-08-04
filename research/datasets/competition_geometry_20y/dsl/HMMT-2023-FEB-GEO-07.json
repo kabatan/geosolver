@@ -1,0 +1,40 @@
+{
+  "id": "HMMT-2023-FEB-GEO-07",
+  "task": "solve",
+  "source_statement": "Quadrilateral ABCD is inscribed in circle Γ. Segments AC and BD intersect at E. Circle γ passes through E and is tangent to Γ at A. Suppose that the circumcircle of triangle BCE is tangent to γ at E and is tangent to line CD at C. Suppose that Γ has radius 3 and γ has radius 2. Compute BD.",
+  "clause_ledger": [
+    {"source": "cyclic ABCD with AC and BD meeting E", "dsl": "fix O=(0,0), A=(3,0), parameterize the ordered cyclic gaps for B,C,D on Gamma, and retain E=Intersect(AC,BD)", "kind": "construction/constraint"},
+    {"source": "gamma through E tangent to Gamma at A, radii 2 and 3", "dsl": "two explicit circles, OnCircle(A,gamma/Gamma), IsTangent(gamma,Gamma)", "kind": "construction/constraint"},
+    {"source": "circumcircle BCE tangent to gamma at E and line CD at C", "dsl": "delta=Circumcircle(B,C,E), tangency and incidence constraints", "kind": "construction/constraint"},
+    {"source": "BD", "dsl": "Distance(B,D)", "kind": "answer"}
+  ],
+  "variables": {"names": ["gx", "gy", "g1", "g2", "g3"]},
+  "construction": [
+    {"name": "O", "expr": "Point(0,0)"},
+    {"name": "Gamma", "expr": "Circle(O,3)"},
+    {"name": "G", "expr": "Point(gx,gy)"},
+    {"name": "gamma", "expr": "Circle(G,2)"},
+    {"name": "A", "expr": "Point(3,0)"},
+    {"name": "B", "expr": "Point(3*cos(g1),3*sin(g1))"},
+    {"name": "C", "expr": "Point(3*cos(g1+g2),3*sin(g1+g2))"},
+    {"name": "D", "expr": "Point(3*cos(g1+g2+g3),3*sin(g1+g2+g3))"},
+    {"name": "E", "expr": "Intersect(Line(A,C),Line(B,D))"},
+    {"name": "delta", "expr": "Circumcircle(B,C,E)"}
+  ],
+  "constraints": [
+    {"def": "OnCircle(A,Gamma)", "value": 0},
+    {"def": "OnCircle(B,Gamma)", "value": 0},
+    {"def": "OnCircle(C,Gamma)", "value": 0},
+    {"def": "OnCircle(D,Gamma)", "value": 0},
+    {"def": "OnCircle(A,gamma)", "value": 0},
+    {"def": "OnCircle(E,gamma)", "value": 0},
+    {"def": "IsTangent(gamma,Gamma)", "value": 0},
+    {"def": "OnCircle(E,delta)", "value": 0},
+    {"def": "IsTangent(delta,gamma)", "value": 0},
+    {"def": "IsTangent(Line(C,D),delta)", "value": 0}
+  ],
+  "guards": ["AssumeGt(g1,0)", "AssumeGt(g2,0)", "AssumeGt(g3,0)", "AssumeLt(g1+g2+g3,2*pi)", "AssumeConvex([A,B,C,D])", "AssumeGt(Distance(B,D),0)"],
+  "answer": "Distance(B,D)",
+  "solver_coverage": "executable_source_faithful",
+  "post_process": ""
+}

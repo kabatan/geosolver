@@ -1,0 +1,35 @@
+{
+  "id": "HMMT-2021-FEB-GEO-05",
+  "task": "solve",
+  "source_statement": "Let AEF be a triangle with EF = 20 and AE = AF = 21. Let B and D be points chosen on segments AE and AF , respectively, such that BD is parallel to EF . Point C is chosen in the interior of triangle AEF such that ABCD is cyclic. If BC = 3 and CD = 4, then the ratio of areas [ABCD] [AEF ] can be written as ab for relatively prime positive integers a, b. Compute 100a + b.",
+  "clause_ledger": [
+    {"source": "isosceles AEF", "dsl": "fixed symmetric base coordinate gauge with direct side distances", "kind": "construction/constraint"},
+    {"source": "B,D on sides and BD parallel EF", "dsl": "B=tE,D=tF", "kind": "construction"},
+    {"source": "C interior and ABCD cyclic; BC=3,CD=4", "dsl": "C variable with Circumcircle(A,B,D), OnCircle(C,...) and distance constraints", "kind": "constraint/guard"},
+    {"source": "100a+b area ratio", "dsl": "direct area ratio and exact fraction post-process", "kind": "answer"}
+  ],
+  "variables": {"names": ["t", "cx", "cy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "E", "expr": "Point(10,sqrt(341))"},
+    {"name": "F", "expr": "Point(-10,sqrt(341))"},
+    {"name": "B", "expr": "Point(10*t,sqrt(341)*t)"},
+    {"name": "D", "expr": "Point(-10*t,sqrt(341)*t)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "Gamma", "expr": "Circumcircle(A,B,D)"}
+  ],
+  "constraints": [
+    {"def": "Distance(E,F)", "value": 20},
+    {"def": "Distance(A,E)", "value": 21},
+    {"def": "Distance(A,F)", "value": 21},
+    {"def": "Distance(B,C)", "value": 3},
+    {"def": "Distance(C,D)", "value": 4},
+    {"def": "OnCircle(C,Gamma)", "value": 0}
+  ],
+  "guards": [
+    "AssumeGt(t,0)", "AssumeLt(t,1)", "AssumeGt(cy,0)", "AssumeLt(cy,sqrt(341))",
+    "AssumeGt(Area(A,E,C),0)", "AssumeGt(Area(E,F,C),0)", "AssumeGt(Area(F,A,C),0)"
+  ],
+  "answer": "Area(A,B,C,D)/Area(A,E,F)",
+  "post_process": "f = formatter.to_fraction(answer_values[0]); result = 100*f.numerator + f.denominator"
+}

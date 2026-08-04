@@ -1,0 +1,34 @@
+{
+  "id": "HMMT-2014-FEB-GEO-09",
+  "task": "solve",
+  "source_statement": "Two circles are said to be orthogonal if they intersect in two points, and their tangents at either point of intersection are perpendicular. Two circles !1 and !p 2 with radii 10 and 13, respectively, are externally tangent at point P . Another circle !3 with radius 2 2 passes through P and is orthogonal to both !1 and !2 . A fourth circle !4 , orthogonal to !3 , is externally tangent to !1 and !2 . Compute the radius of !4 .",
+  "clause_ledger": [
+    {"source": "omega1,omega2 radii 10,13 externally tangent", "dsl": "O1=(0,0), O2=(23,0), radius circles 10 and13, P=(10,0)", "kind": "construction"},
+    {"source": "omega3 radius 2sqrt(2), through P, orthogonal to first two", "dsl": "O3=(10,2sqrt(2)), omega3=Circle(O3,2sqrt(2)); direct orthogonality constraints", "kind": "construction/constraint"},
+    {"source": "omega4 orthogonal to omega3 and externally tangent to omega1,omega2", "dsl": "distance equalities for external tangency and orthogonality", "kind": "constraint"},
+    {"source": "radius omega4", "dsl": "r4", "kind": "answer"}
+  ],
+  "variables": {"names": ["x4", "y4", "r4"]},
+  "construction": [
+    {"name": "O1", "expr": "Point(0,0)"},
+    {"name": "O2", "expr": "Point(23,0)"},
+    {"name": "P", "expr": "Point(10,0)"},
+    {"name": "omega1", "expr": "Circle(O1,10)"},
+    {"name": "omega2", "expr": "Circle(O2,13)"},
+    {"name": "O3", "expr": "Point(10,2*sqrt(2))"},
+    {"name": "omega3", "expr": "Circle(O3,2*sqrt(2))"},
+    {"name": "O4", "expr": "Point(x4,y4)"},
+    {"name": "omega4", "expr": "Circle(O4,r4)"}
+  ],
+  "constraints": [
+    {"def": "Distance(O1,O2)", "value": 23},
+    {"def": "Distance(O1,P)", "value": 10},
+    {"def": "Distance(O2,P)", "value": 13},
+    {"def": "Distance(O1,O4)", "value": "10+r4"},
+    {"def": "Distance(O2,O4)", "value": "13+r4"},
+    {"def": "Distance(O3,O4)", "value": "sqrt(8+r4*r4)"}
+  ],
+  "guards": ["AssumeGt(r4,0)", "AssumeGt(y4,0)"],
+  "answer": "r4",
+  "post_process": ""
+}

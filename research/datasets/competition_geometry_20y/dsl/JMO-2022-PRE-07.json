@@ -1,0 +1,29 @@
+{
+  "id": "JMO-2022-PRE-07",
+  "task": "solve",
+  "source_statement": "∠BAC=90°，AB=AC=7である直角二等辺三角形ABCがある。辺BC，CA，AB上にそれぞれ点D，E，Fがあり，∠EDF=90°，DE=5，DF=3をみたしているとき，線分BDの長さを求めよ。ただし，XYで線分XYの長さを表すものとする。",
+  "clause_ledger": [
+    {"source": "isosceles right triangle", "dsl": "A=(0,0), B=(7,0), C=(0,7)", "kind": "construction"},
+    {"source": "D,E,F lie on BC,CA,AB", "dsl": "point coordinates with carrier-line and segment guards", "kind": "construction/guard"},
+    {"source": "angle EDF=90, DE=5, DF=3", "dsl": "Perpendicular and direct Distance constraints", "kind": "constraint"},
+    {"source": "BD", "dsl": "Distance(B,D)", "kind": "answer"}
+  ],
+  "variables": {"names": ["dx", "dy", "ex", "fy"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(7,0)"},
+    {"name": "C", "expr": "Point(0,7)"},
+    {"name": "D", "expr": "Point(dx,dy)"},
+    {"name": "E", "expr": "Point(0,ex)"},
+    {"name": "F", "expr": "Point(fy,0)"}
+  ],
+  "constraints": [
+    {"def": "Distance(D,E)", "value": 5},
+    {"def": "Distance(D,F)", "value": 3},
+    {"def": "Perpendicular(Line(D,E),Line(D,F))", "value": 0},
+    {"def": "Collinear(B,D,C)", "value": 0}
+  ],
+  "guards": ["AssumeGt(dx,0)", "AssumeGt(dy,0)", "AssumeLt(dx,7)", "AssumeLt(dy,7)", "AssumeGt(ex,0)", "AssumeLt(ex,7)", "AssumeGt(fy,0)", "AssumeLt(fy,7)"],
+  "answer": "Distance(B,D)",
+  "post_process": ""
+}

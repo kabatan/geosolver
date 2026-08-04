@@ -1,0 +1,27 @@
+{
+  "id": "HMMT-2018-FEB-GEO-05",
+  "task": "solve",
+  "source_statement": "In the quadrilateral M ARE inscribed in a unit circle ω, AM is a diameter of ω, and E lies on the angle bisector of ∠RAM . Given that triangles RAM and REM have the same area, find the area of quadrilateral M ARE.",
+  "clause_ledger": [
+    {"source": "M,A,R,E on unit circle and AM diameter", "dsl": "unit circle centered at origin with A=(1,0), M=(-1,0), R variable and E constructed on the circle", "kind": "construction"},
+    {"source": "E on angle bisector of RAM", "dsl": "E=Intersect(AngleBisector(R,A,M),omega,exclude=A)", "kind": "construction"},
+    {"source": "area RAM equals area REM", "dsl": "Area(R,A,M)=Area(R,E,M)", "kind": "constraint"},
+    {"source": "area MARE", "dsl": "Area(M,A,R,E)", "kind": "answer"}
+  ],
+  "variables": {"names": ["theta"]},
+  "construction": [
+    {"name": "O", "expr": "Point(0,0)"},
+    {"name": "omega", "expr": "Circle(O,1)"},
+    {"name": "A", "expr": "Point(1,0)"},
+    {"name": "M", "expr": "Point(-1,0)"},
+    {"name": "R", "expr": "Point(cos(theta),sin(theta))"},
+    {"name": "bis", "expr": "AngleBisector(R,A,M)"},
+    {"name": "E", "expr": "Intersect(bis,omega,exclude=A)"}
+  ],
+  "constraints": [
+    {"def": "Area(R,A,M)", "value": "Area(R,E,M)"}
+  ],
+  "guards": ["AssumeGt(theta,0)", "AssumeLt(theta,pi)", "AssumeGt(Area(M,A,R,E),0)"],
+  "answer": "Area(M,A,R,E)",
+  "post_process": ""
+}

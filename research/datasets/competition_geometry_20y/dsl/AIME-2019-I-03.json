@@ -1,0 +1,67 @@
+{
+  "id": "AIME-2019-I-03",
+  "task": "solve",
+  "source_statement": "In $\\triangle PQR$ , $PR=15$ , $QR=20$ , and $PQ=25$ . Points $A$ and $B$ lie on $\\overline{PQ}$ , points $C$ and $D$ lie on $\\overline{QR}$ , and points $E$ and $F$ lie on $\\overline{PR}$ , with $PA=QB=QC=RD=RE=PF=5$ . Find the area of hexagon $ABCDEF$ .",
+  "clause_ledger": [
+    {
+      "source": "15-20-25 triangle PQR",
+      "dsl": "P=(0,0), Q=(25,0), R=(9,12)",
+      "kind": "construction"
+    },
+    {
+      "source": "six points at the stated 5-unit offsets",
+      "dsl": "A=(5,0), B=(20,0), C=(21,3), D=(13,9), E=(6,8), F=(3,4)",
+      "kind": "construction"
+    },
+    {
+      "source": "area ABCDEF",
+      "dsl": "Area(A,B,C,D,E,F)",
+      "kind": "answer"
+    }
+  ],
+  "variables": {
+    "names": []
+  },
+  "construction": [
+    {
+      "name": "P",
+      "expr": "Point(0,0)"
+    },
+    {
+      "name": "Q",
+      "expr": "Point(25,0)"
+    },
+    {
+      "name": "R",
+      "expr": "Point(9,12)"
+    },
+    {
+      "name": "A",
+      "expr": "Point(5,0)"
+    },
+    {
+      "name": "B",
+      "expr": "Point(20,0)"
+    },
+    {
+      "name": "C",
+      "expr": "Point(21,3)"
+    },
+    {
+      "name": "D",
+      "expr": "Point(13,9)"
+    },
+    {
+      "name": "E",
+      "expr": "Point(6,8)"
+    },
+    {
+      "name": "F",
+      "expr": "Point(3,4)"
+    }
+  ],
+  "constraints": [],
+  "guards": [],
+  "answer": "Area(A,B,C,D,E,F)",
+  "post_process": ""
+}

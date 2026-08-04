@@ -1,0 +1,27 @@
+{
+  "id": "HMMT-2013-FEB-GEO-08",
+  "task": "solve",
+  "source_statement": "Let ABCD be a convex quadrilateral. Extend line CD past D to meet line AB at P and extend line CB past B to meet line AD at Q. Suppose that line AC bisects ∠BAD. If AD = 47 , AP = 212 , and AB = 14 11 , compute AQ.",
+  "clause_ledger": [
+    {"source": "convex quadrilateral ABCD", "dsl": "A,B,C,D are constructed on the stated two intersecting line pairs with a positive-angle branch guard", "kind": "construction/guard"},
+    {"source": "CD extended past D meets AB at P", "dsl": "P is placed on the AB ray with AP=21/2 and C is the intersection of PD with AC", "kind": "construction"},
+    {"source": "CB extended past B meets AD at Q", "dsl": "Q=Intersect(Line(C,B),Line(A,D))", "kind": "construction"},
+    {"source": "AC bisects angle BAD", "dsl": "AB and AD are symmetric about the carrier line AC", "kind": "construction"},
+    {"source": "AD=7/4, AP=21/2, AB=14/11", "dsl": "direct coordinate lengths", "kind": "constraint"},
+    {"source": "AQ", "dsl": "Distance(A,Q)", "kind": "answer"}
+  ],
+  "variables": {"names": ["g"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "X", "expr": "Point(1,0)"},
+    {"name": "B", "expr": "Point((14/11)*cos(g),(14/11)*sin(g))"},
+    {"name": "D", "expr": "Point((7/4)*cos(g),-(7/4)*sin(g))"},
+    {"name": "P", "expr": "Point(-(21/2)*cos(g),-(21/2)*sin(g))"},
+    {"name": "C", "expr": "Intersect(Line(P,D),Line(A,X))"},
+    {"name": "Q", "expr": "Intersect(Line(C,B),Line(A,D))"}
+  ],
+  "constraints": [],
+  "guards": ["AssumeGt(g,0)", "AssumeLt(g,pi/2)", "AssumeConvex([A,B,C,D])", "AssumeGt(Distance(A,Q),0)"],
+  "answer": "Distance(A,Q)",
+  "post_process": ""
+}

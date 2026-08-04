@@ -1,0 +1,31 @@
+{
+  "id": "AIME-2006-II-09",
+  "task": "solve",
+  "source_statement": "Circles $\\mathcal{C}_1, \\mathcal{C}_2,$ and $\\mathcal{C}_3$ have their centers at (0,0), (12,0), and (24,0), and have radii 1, 2, and 4, respectively. Line $t_1$ is a common internal tangent to $\\mathcal{C}_1$ and $\\mathcal{C}_2$ and has a positive slope, and line $t_2$ is a common internal tangent to $\\mathcal{C}_2$ and $\\mathcal{C}_3$ and has a negative slope. Given that lines $t_1$ and $t_2$ intersect at $(x,y),$ and that $x=p-q\\sqrt{r},$ where $p, q,$ and $r$ are positive integers and $r$ is not divisible by the square of any prime, find $p+q+r.$",
+  "clause_ledger": [
+    {"source": "three fixed circles", "dsl": "direct Circle constructions", "kind": "construction"},
+    {"source": "common internal tangents with specified slope signs", "dsl": "variable lines represented by two points (y=m*x+b) and IsTangent constraints with slope-sign guards", "kind": "constraint/guard"},
+    {"source": "intersection and x radical form", "dsl": "T=Intersect(t1,t2), answer T.x with exact p+q+r radical post-process", "kind": "construction/answer"}
+  ],
+  "variables": {"names": ["m1", "b1", "m2", "b2"]},
+  "construction": [
+    {"name": "O1", "expr": "Point(0,0)"},
+    {"name": "O2", "expr": "Point(12,0)"},
+    {"name": "O3", "expr": "Point(24,0)"},
+    {"name": "C1", "expr": "Circle(O1,1)"},
+    {"name": "C2", "expr": "Circle(O2,2)"},
+    {"name": "C3", "expr": "Circle(O3,4)"},
+    {"name": "t1", "expr": "Line(m1,-1,b1)"},
+    {"name": "t2", "expr": "Line(m2,-1,b2)"},
+    {"name": "T", "expr": "Intersect(t1,t2)"}
+  ],
+  "constraints": [
+    {"def": "IsTangent(t1,C1)", "value": 0},
+    {"def": "IsTangent(t1,C2)", "value": 0},
+    {"def": "IsTangent(t2,C2)", "value": 0},
+    {"def": "IsTangent(t2,C3)", "value": 0}
+  ],
+  "guards": ["AssumeGt(m1,0)", "AssumeLt(m2,0)"],
+  "answer": "T.x",
+  "post_process": "# radical_mode=p_plus_q_plus_r"
+}

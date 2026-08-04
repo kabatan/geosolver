@@ -1,0 +1,35 @@
+{
+  "id": "HMMT-2008-FEB-GEO-09",
+  "task": "solve",
+  "source_statement": "[7] Let ABC be a triangle, and I its incenter. Let the incircle of ABC touch side BC at D, and let lines BI and CI meet the circle with diameter AI at points P and Q, respectively. Given BI = 6, CI = 5, DI = 3, determine the value of (DP/DQ) .",
+  "clause_ledger": [
+    {"source": "incircle touches BC at D with DI=3", "dsl": "D=(0,0), I=(0,3), and incircle=Circle(I,3)", "kind": "construction"},
+    {"source": "BI=6, CI=5", "dsl": "B=(-3sqrt(3),0), C=(4,0)", "kind": "construction/constraint"},
+    {"source": "I is the incenter", "dsl": "the variable A makes AB and AC tangent to the incircle, with A above BC", "kind": "constraint/guard"},
+    {"source": "circle with diameter AI", "dsl": "Delta=Circle(Midpoint(A,I),Distance(A,I)/2)", "kind": "construction"},
+    {"source": "P=BI∩Delta and Q=CI∩Delta", "dsl": "second intersections excluding endpoint I", "kind": "construction"},
+    {"source": "(DP/DQ)^2", "dsl": "(Distance(D,P)/Distance(D,Q))^2", "kind": "answer"}
+  ],
+  "variables": {"names": ["ax", "ay"]},
+  "construction": [
+    {"name": "D", "expr": "Point(0,0)"},
+    {"name": "I", "expr": "Point(0,3)"},
+    {"name": "incircle", "expr": "Circle(I,3)"},
+    {"name": "B", "expr": "Point(-3*sqrt(3),0)"},
+    {"name": "C", "expr": "Point(4,0)"},
+    {"name": "A", "expr": "Point(ax,ay)"},
+    {"name": "Delta", "expr": "Circle(Midpoint(A,I),Distance(A,I)/2)"},
+    {"name": "P", "expr": "Intersect(Line(B,I),Delta,exclude=I)"},
+    {"name": "Q", "expr": "Intersect(Line(C,I),Delta,exclude=I)"}
+  ],
+  "constraints": [
+    {"def": "Distance(B,I)", "value": 6},
+    {"def": "Distance(C,I)", "value": 5},
+    {"def": "Distance(D,I)", "value": 3},
+    {"def": "IsTangent(Line(A,B),incircle)", "value": 0},
+    {"def": "IsTangent(Line(A,C),incircle)", "value": 0}
+  ],
+  "guards": ["AssumeGt(ay,0)", "AssumeGt(Distance(D,P),0)", "AssumeGt(Distance(D,Q),0)"],
+  "answer": "(Distance(D,P)/Distance(D,Q))*(Distance(D,P)/Distance(D,Q))",
+  "post_process": ""
+}

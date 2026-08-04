@@ -1,0 +1,35 @@
+{
+  "id": "HMMT-2025-FEB-GEO-05",
+  "task": "solve",
+  "source_statement": "Let △ABC be an equilateral triangle with side length 6. Let P be a point inside triangle △ABC such that ∠BP C = 120◦ . The circle with diameter AP meets the circumcircle of △ABC again at X ̸= A. Given that AX = 5, compute XP .",
+  "clause_ledger": [
+    {"source": "equilateral triangle ABC of side 6", "dsl": "direct equilateral coordinate gauge", "kind": "construction"},
+    {"source": "P inside ABC and angle BPC=120 degrees", "dsl": "P is free with three positive subtriangle-area guards and direct Angle(B,P,C) constraint", "kind": "construction/constraint/guard"},
+    {"source": "circle with diameter AP and circumcircle ABC meet again at X != A", "dsl": "direct Circle(Midpoint(A,P),Distance(A,P)/2), Circumcircle(A,B,C), and OnCircle constraints; AX=5 excludes A", "kind": "construction/constraint"},
+    {"source": "XP", "dsl": "Distance(X,P)", "kind": "answer"}
+  ],
+  "variables": {"names": ["u", "v"]},
+  "construction": [
+    {"name": "A", "expr": "Point(0,0)"},
+    {"name": "B", "expr": "Point(6,0)"},
+    {"name": "C", "expr": "Point(3,3*sqrt(3))"},
+    {"name": "P", "expr": "Point(6*u+3*v,3*sqrt(3)*v)"},
+    {"name": "Gamma", "expr": "Circumcircle(A,B,C)"},
+    {"name": "diam_AP", "expr": "Circle(Midpoint(A,P),Distance(A,P)/2)"},
+    {"name": "X", "expr": "Intersect(Gamma,diam_AP,exclude=A)"}
+  ],
+  "constraints": [
+    {"def": "Distance(A,B)", "value": 6},
+    {"def": "Distance(B,C)", "value": 6},
+    {"def": "Distance(C,A)", "value": 6},
+    {"def": "Angle(B,P,C)", "value": "2*pi/3"},
+    {"def": "Distance(A,X)", "value": 5}
+  ],
+  "guards": [
+    "AssumeGt(u,0)",
+    "AssumeGt(v,0)",
+    "AssumeLt(u+v,1)"
+  ],
+  "answer": "Distance(X,P)",
+  "post_process": ""
+}

@@ -1,0 +1,33 @@
+{
+  "id": "AIME-2014-II-11",
+  "task": "solve",
+  "source_statement": "In $\\triangle RED$ , $\\measuredangle DRE=75^{\\circ}$ and $\\measuredangle RED=45^{\\circ}$ . $RD=1$ . Let $M$ be the midpoint of segment $\\overline{RD}$ . Point $C$ lies on side $\\overline{ED}$ such that $\\overline{RC}\\perp\\overline{EM}$ . Extend segment $\\overline{DE}$ through $E$ to point $A$ such that $CA=AR$ . Then $AE=\\frac{a-\\sqrt{b}}{c}$ , where $a$ and $c$ are relatively prime positive integers, and $b$ is a positive integer. Find $a+b+c$ .",
+  "clause_ledger": [
+    {"source": "triangle angle and RD=1", "dsl": "D=(0,0), R=(1,0), variable E with direct angle constraints", "kind": "construction/constraint"},
+    {"source": "M midpoint RD and C on ED with RC perpendicular EM", "dsl": "direct Midpoint, collinearity, and Perpendicular constraints", "kind": "construction/constraint"},
+    {"source": "A is beyond E on DE and CA=AR", "dsl": "D,E,A collinear with order guard and direct Distance equality", "kind": "construction/constraint"},
+    {"source": "a+b+c presentation", "dsl": "geometric answer AE with explicit radical transform in post_process", "kind": "answer/postprocess"}
+  ],
+  "variables": {"names": ["ex", "ey", "cx", "cy", "ax", "ay"]},
+  "construction": [
+    {"name": "D", "expr": "Point(0,0)"},
+    {"name": "R", "expr": "Point(1,0)"},
+    {"name": "E", "expr": "Point(ex,ey)"},
+    {"name": "M", "expr": "Midpoint(R,D)"},
+    {"name": "C", "expr": "Point(cx,cy)"},
+    {"name": "A", "expr": "Point(ax,ay)"}
+  ],
+  "constraints": [
+    {"def": "Angle(D,R,E)", "value": "75*pi/180"},
+    {"def": "Angle(R,E,D)", "value": "45*pi/180"},
+    {"def": "Collinear(D,C,E)", "value": 0},
+    {"def": "OnSegment(C,D,E)", "value": 0},
+    {"def": "Perpendicular(Line(R,C),Line(E,M))", "value": 0},
+    {"def": "Collinear(D,E,A)", "value": 0},
+    {"def": "OnSegment(E,D,A)", "value": 0},
+    {"def": "Distance(C,A)", "value": "Distance(A,R)"}
+  ],
+  "guards": ["AssumeGt(ey,0)", "AssumeGt(cx,0)", "AssumeGt(cy,0)", "AssumeGt(ax,ex)"],
+  "answer": "Distance(A,E)",
+  "post_process": "# radical_mode=rational_minus_sqrt_sum basis=3"
+}
