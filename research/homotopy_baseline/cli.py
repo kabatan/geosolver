@@ -289,8 +289,18 @@ def _arm_score(row: dict[str, Any], result: dict[str, Any]) -> dict[str, Any]:
         try:
             import sympy as sp
 
-            actual.append(sp.Float(str(descriptor["decimal"]), 80))
-        except (KeyError, TypeError, ValueError):
+            # Product results may use exact rationals (for example ``81/29``)
+            # while the HC arm normally emits a decimal expansion.  Parse the
+            # descriptor as an expression first so both representations retain
+            # exact meaning before the high-precision comparison.
+            value = sp.sympify(
+                str(descriptor["decimal"]),
+                locals={"sqrt": sp.sqrt, "pi": sp.pi},
+            )
+            if value.is_real is False:
+                continue
+            actual.append(sp.N(value, 80))
+        except (KeyError, TypeError, ValueError, SyntaxError):
             continue
     if expected is None:
         return {
