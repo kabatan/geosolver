@@ -70,9 +70,12 @@ def _git_revision() -> str | None:
 
 def _engine_identity() -> dict[str, str | None]:
     try:
-        from geotarget.engine import ENGINE_HASH, OPTIMIZED_ENGINE_ID
+        from geotarget.engine import OPTIMIZED_ENGINE_ID, optimized_engine_hash
 
-        return {"engine_id": str(OPTIMIZED_ENGINE_ID), "engine_hash": str(ENGINE_HASH)}
+        return {
+            "engine_id": str(OPTIMIZED_ENGINE_ID),
+            "engine_hash": str(optimized_engine_hash()),
+        }
     except Exception:
         return {"engine_id": None, "engine_hash": None}
 
