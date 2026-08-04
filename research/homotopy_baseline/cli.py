@@ -258,7 +258,7 @@ def _product_hash_check() -> dict[str, Any]:
         return {"product_unchanged": False, "error": str(error)}
 
 
-def _truth_values(row: dict[str, Any]) -> list[float] | None:
+def _truth_values(row: dict[str, Any]) -> list[Any] | None:
     """Parse the frozen textual answer only in the post-worker scorer."""
 
     try:
@@ -266,12 +266,12 @@ def _truth_values(row: dict[str, Any]) -> list[float] | None:
 
         raw = row.get("answer", "")
         values = raw if isinstance(raw, list) else [raw]
-        result: list[float] = []
+        result: list[Any] = []
         for item in values:
             value = sp.sympify(str(item), locals={"sqrt": sp.sqrt, "pi": sp.pi})
             if value.is_real is False:
                 return None
-            result.append(float(value.evalf(50)))
+            result.append(sp.N(value, 80))
         return result
     except Exception:
         return None
@@ -279,7 +279,7 @@ def _truth_values(row: dict[str, Any]) -> list[float] | None:
 
 def _arm_score(row: dict[str, Any], result: dict[str, Any]) -> dict[str, Any]:
     expected = _truth_values(row)
-    actual: list[float] = []
+    actual: list[Any] = []
     descriptors = result.get("answers")
     if not isinstance(descriptors, list):
         descriptors = result.get("distinct_exact_target_descriptors") or result.get(
@@ -287,7 +287,9 @@ def _arm_score(row: dict[str, Any], result: dict[str, Any]) -> dict[str, Any]:
         )
     for descriptor in descriptors:
         try:
-            actual.append(float(descriptor["decimal"]))
+            import sympy as sp
+
+            actual.append(sp.Float(str(descriptor["decimal"]), 80))
         except (KeyError, TypeError, ValueError):
             continue
     if expected is None:
@@ -300,7 +302,9 @@ def _arm_score(row: dict[str, Any], result: dict[str, Any]) -> dict[str, Any]:
             "actual_count": len(actual),
             "expected_count": None,
         }
-    tolerance = 1e-8
+    import sympy as sp
+
+    tolerance = sp.Float("1e-40", 80)
     matched = [False] * len(expected)
     extras = 0
     duplicates = 0
@@ -308,11 +312,11 @@ def _arm_score(row: dict[str, Any], result: dict[str, Any]) -> dict[str, Any]:
         candidates = [
             index
             for index, target in enumerate(expected)
-            if not matched[index] and abs(value - target) <= tolerance
+            if not matched[index] and bool(abs(value - target) <= tolerance)
         ]
         if candidates:
             matched[candidates[0]] = True
-        elif any(abs(value - target) <= tolerance for target in expected):
+        elif any(bool(abs(value - target) <= tolerance) for target in expected):
             duplicates += 1
         else:
             extras += 1
