@@ -55,7 +55,7 @@ The focused benchmark used seed `7`, `--budget 180`, `--jobs 1`,
 | HMMT-2014-FEB-GEO-08 | no | yes | `600/73` |
 
 The before run was `0/3` exact; the final run was `3/3` exact.  The final
-wall times were 1.25 s, 47.30 s, and 3.46 s respectively, all within the
+wall times were 1.26 s, 46.46 s, and 3.48 s respectively, all within the
 180-second budget on one core.  Strict comparison was against the independent
 `exact_truth.jsonl` ledger, not a decimal tolerance or a presentation
 post-process.
