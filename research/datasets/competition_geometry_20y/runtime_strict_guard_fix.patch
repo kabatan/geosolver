@@ -1,0 +1,724 @@
+--- a/geosolver/src/geosolver/_internal/autosolve/guards/compile.py
++++ b/geosolver/src/geosolver/_internal/autosolve/guards/compile.py
+@@ -492,6 +492,118 @@
+     return mp.mpf("1")
+ 
+ 
++def _normalized_positive_margin(gap: Any, *scale_values: Any) -> Any:
++    """Return a dimensionless distance from a strict guard boundary."""
++    gap_mpf = _as_mpf(gap)
++    if not mp.isfinite(gap_mpf):
++        return mp.mpf("0")
++    scale = mp.mpf("1")
++    for value in scale_values:
++        try:
++            scale = max(scale, abs(_as_mpf(value)))
++        except Exception:
++            continue
++    return max(mp.mpf("0"), gap_mpf) / scale
++
++
++def _convexity_margin(guard: GuardIR, context: dict[str, Any]) -> Any:
++    """Return the smallest strict turn margin for ``AssumeConvex``."""
++    call = _extract_call_signature(str(guard.condition_expr or guard.source))
++    if call is None or call[0] not in {"AssumeConvex", "AssumeStrictConvex"}:
++        return mp.inf
++    parts = _split_top_level_args(call[1])
++    if not parts:
++        return mp.inf
++    try:
++        raw_points = (
++            _safe_eval_numeric(parts[0], context)
++            if len(parts) == 1
++            else [_safe_eval_numeric(part, context) for part in parts]
++        )
++        points = tuple(_point_xy(point) for point in raw_points)
++    except Exception:
++        return mp.inf
++    if len(points) < 3:
++        return mp.mpf("0")
++    minimum = mp.inf
++    for index in range(len(points)):
++        previous = points[index - 1]
++        current = points[index]
++        following = points[(index + 1) % len(points)]
++        first_x = current[0] - previous[0]
++        first_y = current[1] - previous[1]
++        second_x = following[0] - current[0]
++        second_y = following[1] - current[1]
++        denominator = mp.sqrt(first_x * first_x + first_y * first_y) * mp.sqrt(
++            second_x * second_x + second_y * second_y
++        )
++        if denominator <= 0:
++            return mp.mpf("0")
++        minimum = min(
++            minimum,
++            abs(first_x * second_y - first_y * second_x) / denominator,
++        )
++    return minimum
++
++
++def guard_margin_value(guard: GuardIR, context: dict[str, Any]) -> Any:
++    """Return the geometric margin for a guard that has passed.
++
++    Strict comparisons and open bounds receive a finite, dimensionless
++    margin. Closed/equality predicates have an allowed boundary and therefore
++    return ``+inf``. Unknown predicates retain the legacy ``+inf`` value;
++    their truth is still checked by ``guard_hard_satisfied``.
++    """
++    if guard.kind == "compare":
++        lhs = _as_mpf(_safe_eval_numeric(str(guard.lhs_expr), context))
++        rhs = _as_mpf(_safe_eval_numeric(str(guard.rhs_expr), context))
++        operator = str(guard.operator)
++        if operator == ">":
++            return _normalized_positive_margin(lhs - rhs, lhs, rhs)
++        if operator == "<":
++            return _normalized_positive_margin(rhs - lhs, lhs, rhs)
++        if operator == "!=":
++            return _normalized_positive_margin(abs(lhs - rhs), lhs, rhs)
++        return mp.inf
++    if guard.kind == "bound_open":
++        value = _as_mpf(_safe_eval_numeric(str(guard.lhs_expr), context))
++        margins: list[Any] = []
++        if guard.lower_expr is not None:
++            lower = _as_mpf(_safe_eval_numeric(guard.lower_expr, context))
++            margins.append(_normalized_positive_margin(value - lower, value, lower))
++        if guard.upper_expr is not None:
++            upper = _as_mpf(_safe_eval_numeric(guard.upper_expr, context))
++            margins.append(_normalized_positive_margin(upper - value, value, upper))
++        return min(margins) if margins else mp.inf
++    if guard.kind == "triangle_class":
++        side_ratio, sine_measure, minimum_cosine = _triangle_class_measures(
++            guard,
++            context,
++        )
++        if guard.operator == "acute":
++            return min(side_ratio, sine_measure, minimum_cosine)
++        if guard.operator == "obtuse":
++            return min(side_ratio, sine_measure, -minimum_cosine)
++        if guard.operator == "right":
++            return min(side_ratio, sine_measure)
++        return mp.inf
++    if guard.kind == "logical_and":
++        return min(
++            (guard_margin_value(child, context) for child in guard.children),
++            default=mp.inf,
++        )
++    if guard.kind == "logical_or":
++        passing = [
++            guard_margin_value(child, context)
++            for child in guard.children
++            if guard_hard_satisfied(child, context)
++        ]
++        return max(passing) if passing else mp.mpf("0")
++    if guard.kind == "raw_condition":
++        return _convexity_margin(guard, context)
++    return mp.inf
++
++
+ def guard_hard_satisfied(guard: GuardIR, context: dict[str, Any]) -> bool:
+     if guard.kind == "triangle_class":
+         return _triangle_class_hard_satisfied(guard, context)
+--- a/geosolver/src/geosolver/_internal/autosolve/execution/interpreter_helpers.py
++++ b/geosolver/src/geosolver/_internal/autosolve/execution/interpreter_helpers.py
+@@ -33,11 +33,12 @@
+     residual_norm,
+ )
+ from geosolver._internal.autosolve.answer.precision_schedule import MIN_PRECISION
+-from geosolver._internal.autosolve.guards.compile import (
+-    compile_guards,
+-    guard_hard_satisfied,
+-    guard_violation_value,
+-)
++from geosolver._internal.autosolve.guards.compile import (
++    compile_guards,
++    guard_margin_value,
++    guard_hard_satisfied,
++    guard_violation_value,
++)
+ from geosolver._internal.autosolve.guards.evaluate import _is_guard_satisfied
+ from geosolver.core.result import SolveResult, SolveStatus
+ from geosolver.ir.compiler import safe_eval_expr, safe_eval_expr_hp
+@@ -423,32 +424,61 @@
+         return safe_eval_expr(spec.objective_expr, context)
+     return None
+ 
+-def _collect_guard_violations(
+-    values: list[Any],
++def _collect_guard_evidence(
++    values: list[Any],
+     *,
+     spec: IRSpec,
+     var_names: list[str],
+-    base_context: dict[str, Any],
+-    compiled_guards: tuple[Any, ...] | None = None,
+-) -> list[str]:
+-    if not spec.guards:
+-        return []
+-    target_dps = max(int(mp.dps), MIN_PRECISION, 80)
+-    with mp.workdps(target_dps):
+-        try:
+-            context = _build_guard_context(spec, var_names, values, base_context)
+-        except Exception as exc:
+-            return [f"context_error: {exc}"]
+-
+-        guard_irs = compiled_guards if compiled_guards is not None else compile_guards(spec.guards)
+-        violations: list[str] = []
+-        for index, guard_ir in enumerate(guard_irs):
+-            try:
+-                if not guard_hard_satisfied(guard_ir, context):
+-                    violations.append(f"guard[{index}] returned False")
+-            except Exception as exc:
+-                violations.append(f"guard[{index}] raised: {exc}")
+-        return violations
++    base_context: dict[str, Any],
++    compiled_guards: tuple[Any, ...] | None = None,
++    include_margins: bool = True,
++) -> tuple[list[str], tuple[Any | None, ...]]:
++    if not spec.guards:
++        return [], ()
++    target_dps = max(int(mp.dps), MIN_PRECISION, 80)
++    with mp.workdps(target_dps):
++        try:
++            context = _build_guard_context(spec, var_names, values, base_context)
++        except Exception as exc:
++            return [f"context_error: {exc}"], tuple(None for _ in spec.guards)
++
++        guard_irs = compiled_guards if compiled_guards is not None else compile_guards(spec.guards)
++        violations: list[str] = []
++        margins: list[Any | None] = []
++        for index, guard_ir in enumerate(guard_irs):
++            try:
++                guard_ok = guard_hard_satisfied(guard_ir, context)
++                if not guard_ok:
++                    violations.append(f"guard[{index}] returned False")
++                    margins.append(None)
++                else:
++                    margins.append(
++                        guard_margin_value(guard_ir, context)
++                        if include_margins
++                        else mp.inf
++                    )
++            except Exception as exc:
++                violations.append(f"guard[{index}] raised: {exc}")
++                margins.append(None)
++        return violations, tuple(margins)
++
++
++def _collect_guard_violations(
++    values: list[Any],
++    *,
++    spec: IRSpec,
++    var_names: list[str],
++    base_context: dict[str, Any],
++    compiled_guards: tuple[Any, ...] | None = None,
++) -> list[str]:
++    violations, _margins = _collect_guard_evidence(
++        values,
++        spec=spec,
++        var_names=var_names,
++        base_context=base_context,
++        compiled_guards=compiled_guards,
++    )
++    return violations
+ 
+ 
+ def _guard_violation_penalty(
+--- a/geosolver/src/geosolver/_internal/pipeline/evaluator/evaluate_hp_hard_feasibility.py
++++ b/geosolver/src/geosolver/_internal/pipeline/evaluator/evaluate_hp_hard_feasibility.py
+@@ -6,7 +6,9 @@
+ from dataclasses import replace
+ 
+ from geosolver._internal.autosolve.context import _get_high_precision_context
+-from geosolver._internal.autosolve.execution.interpreter_helpers import _collect_guard_violations
++from geosolver._internal.autosolve.execution.interpreter_helpers import (
++    _collect_guard_evidence,
++)
+ from geosolver.ir.compiler import safe_eval_expr_hp
+ from geosolver._internal.solver.precision.type_guards.mp_types import MPFloat
+ from geosolver._internal.solver.precision.type_guards.strict_to_mpf import strict_to_mpf
+@@ -24,19 +26,21 @@
+     return strict_to_mpf(value, context="evaluate_hp_hard_feasibility.cast")
+ 
+ 
+-def evaluate_hp_hard_feasibility(
++def evaluate_hp_hard_feasibility(
+     *,
+     bundle: ProblemBundle,
+-    values: Sequence[MPFloat],
+-    precision: int,
+-) -> HardFeasibilitySnapshot:
++    values: Sequence[MPFloat],
++    precision: int,
++    include_margins: bool = True,
++) -> HardFeasibilitySnapshot:
+     """Evaluate hard-feasibility checks in high-precision execution mode."""
+-    guard_violations = _collect_guard_violations(
++    guard_violations, guard_margins = _collect_guard_evidence(
+         list(values),
+         spec=bundle.spec,
+-        var_names=list(bundle.var_names),
+-        base_context=dict(bundle.base_context),
+-    )
++        var_names=list(bundle.var_names),
++        base_context=dict(bundle.base_context),
++        include_margins=bool(include_margins),
++    )
+     hp_base_context = dict(bundle.base_context)
+     hp_base_context.update(_get_high_precision_context(int(precision)))
+     hp_bundle = replace(bundle, base_context=hp_base_context)
+@@ -46,7 +50,8 @@
+         values=values,
+         eval_expr=safe_eval_expr_hp,
+         cast_value=_cast_hp_value,
+-        allow_float=False,
+-        guard_ok=(len(guard_violations) == 0),
+-        guard_violations=tuple(guard_violations),
+-    )
++        allow_float=False,
++        guard_ok=(len(guard_violations) == 0),
++        guard_violations=tuple(guard_violations),
++        guard_margins=guard_margins,
++    )
+--- a/geosolver/src/geosolver/_internal/pipeline/evaluator/evaluate_float_hard_feasibility.py
++++ b/geosolver/src/geosolver/_internal/pipeline/evaluator/evaluate_float_hard_feasibility.py
+@@ -4,7 +4,9 @@
+ 
+ from collections.abc import Sequence
+ 
+-from geosolver._internal.autosolve.execution.interpreter_helpers import _collect_guard_violations
++from geosolver._internal.autosolve.execution.interpreter_helpers import (
++    _collect_guard_evidence,
++)
+ from geosolver.ir.compiler import safe_eval_expr
+ 
+ from geosolver._internal.pipeline.contracts.hard_feasibility_snapshot import (
+@@ -20,25 +22,28 @@
+     return float(value)
+ 
+ 
+-def evaluate_float_hard_feasibility(
++def evaluate_float_hard_feasibility(
+     *,
+-    bundle: ProblemBundle,
+-    values: Sequence[float],
+-) -> HardFeasibilitySnapshot:
++    bundle: ProblemBundle,
++    values: Sequence[float],
++    include_margins: bool = True,
++) -> HardFeasibilitySnapshot:
+     """Evaluate hard-feasibility checks in float execution mode."""
+-    guard_violations = _collect_guard_violations(
++    guard_violations, guard_margins = _collect_guard_evidence(
+         list(values),
+         spec=bundle.spec,
+-        var_names=list(bundle.var_names),
+-        base_context=dict(bundle.base_context),
+-    )
++        var_names=list(bundle.var_names),
++        base_context=dict(bundle.base_context),
++        include_margins=bool(include_margins),
++    )
+     return evaluate_hard_feasibility(
+         bundle=bundle,
+         checks=bundle.hard_feasibility_checks,
+         values=values,
+         eval_expr=safe_eval_expr,
+         cast_value=_cast_float_value,
+-        allow_float=True,
+-        guard_ok=(len(guard_violations) == 0),
+-        guard_violations=tuple(guard_violations),
+-    )
++        allow_float=True,
++        guard_ok=(len(guard_violations) == 0),
++        guard_violations=tuple(guard_violations),
++        guard_margins=guard_margins,
++    )
+--- a/geosolver/src/geosolver/_internal/pipeline/contracts/evaluator_port.py
++++ b/geosolver/src/geosolver/_internal/pipeline/contracts/evaluator_port.py
+@@ -39,17 +39,20 @@
+     def evaluate_guard(self, values: Sequence[object]) -> tuple[bool, tuple[str, ...]]:
+         """Evaluate hard guards for a candidate."""
+ 
+-    def evaluate_float_hard_feasibility(
+-        self,
+-        values: Sequence[float],
+-    ) -> HardFeasibilitySnapshot:
++    def evaluate_float_hard_feasibility(
++        self,
++        values: Sequence[float],
++        *,
++        include_margins: bool = True,
++    ) -> HardFeasibilitySnapshot:
+         """Evaluate hard-feasibility checks in float mode."""
+ 
+-    def evaluate_hp_hard_feasibility(
++    def evaluate_hp_hard_feasibility(
+         self,
+         values: Sequence[MPFloat],
+-        *,
+-        precision: int,
+-    ) -> HardFeasibilitySnapshot:
++        *,
++        precision: int,
++        include_margins: bool = True,
++    ) -> HardFeasibilitySnapshot:
+         """Evaluate hard-feasibility checks in high-precision mode."""
+ 
+--- a/geosolver/src/geosolver/_internal/pipeline/evaluator/ir_evaluator.py
++++ b/geosolver/src/geosolver/_internal/pipeline/evaluator/ir_evaluator.py
+@@ -63,23 +63,31 @@
+         )
+         return (len(violations) == 0), tuple(violations)
+ 
+-    def evaluate_float_hard_feasibility(self, values: Sequence[float]):
+-        return evaluate_float_hard_feasibility(
+-            bundle=self.bundle,
+-            values=list(values),
+-        )
++    def evaluate_float_hard_feasibility(
++        self,
++        values: Sequence[float],
++        *,
++        include_margins: bool = True,
++    ):
++        return evaluate_float_hard_feasibility(
++            bundle=self.bundle,
++            values=list(values),
++            include_margins=bool(include_margins),
++        )
+ 
+     def evaluate_hp_hard_feasibility(
+         self,
+-        values: Sequence[MPFloat],
+-        *,
+-        precision: int,
+-    ):
++        values: Sequence[MPFloat],
++        *,
++        precision: int,
++        include_margins: bool = True,
++    ):
+         return evaluate_hp_hard_feasibility(
+             bundle=self.bundle,
+-            values=list(values),
+-            precision=int(precision),
+-        )
++            values=list(values),
++            precision=int(precision),
++            include_margins=bool(include_margins),
++        )
+ 
+ 
+ def build_ir_evaluator(bundle: ProblemBundle) -> IREvaluator:
+--- a/geosolver/src/geosolver/_internal/pipeline/evaluator/_hard_feasibility_core.py
++++ b/geosolver/src/geosolver/_internal/pipeline/evaluator/_hard_feasibility_core.py
+@@ -128,14 +128,19 @@
+     return None
+ 
+ 
+-def _evaluate_guard_check(
+-    *,
+-    check: HardFeasibilityCheck,
+-    guard_ok: bool,
+-    guard_violations: tuple[str, ...],
+-) -> tuple[bool, str | None, MPFloat | None]:
+-    if guard_ok:
+-        return True, None, mp.mpf("1")
++def _evaluate_guard_check(
++    *,
++    check: HardFeasibilityCheck,
++    guard_ok: bool,
++    guard_violations: tuple[str, ...],
++    guard_margin: MPFloat | None,
++) -> tuple[bool, str | None, MPFloat | None]:
++    if guard_ok:
++        if guard_margin is None:
++            return False, f"{check.check_id}:margin_unavailable", None
++        if mp.isfinite(guard_margin) and guard_margin <= 0:
++            return False, f"{check.check_id}:boundary", guard_margin
++        return True, None, guard_margin
+     if guard_violations:
+         return False, guard_violations[0], None
+     return False, check.check_id, None
+@@ -264,20 +269,29 @@
+     )
+ 
+ 
+-def _evaluate_single_check(
++def _evaluate_single_check(
+     *,
+     check: HardFeasibilityCheck,
+     state: HardFeasibilityRuntimeState,
+-    allow_float: bool,
+-    guard_ok: bool,
+-    guard_violations: tuple[str, ...],
+-) -> tuple[bool, str | None, MPFloat | None]:
+-    if check.kind == KIND_GUARD:
+-        return _evaluate_guard_check(
+-            check=check,
+-            guard_ok=guard_ok,
+-            guard_violations=guard_violations,
+-        )
++    allow_float: bool,
++    guard_ok: bool,
++    guard_violations: tuple[str, ...],
++    guard_margins: tuple[MPFloat | None, ...],
++) -> tuple[bool, str | None, MPFloat | None]:
++    if check.kind == KIND_GUARD:
++        guard_margin: MPFloat | None = None
++        try:
++            guard_index = int(check.check_id.rsplit(":", 1)[1])
++            if 0 <= guard_index < len(guard_margins):
++                guard_margin = guard_margins[guard_index]
++        except (IndexError, TypeError, ValueError):
++            guard_margin = None
++        return _evaluate_guard_check(
++            check=check,
++            guard_ok=guard_ok,
++            guard_violations=guard_violations,
++            guard_margin=guard_margin,
++        )
+     if check.kind == KIND_LINE_DISTINCT:
+         return _evaluate_line_distinct_check(
+             check=check,
+@@ -316,17 +330,18 @@
+     return True
+ 
+ 
+-def evaluate_hard_feasibility(
++def evaluate_hard_feasibility(
+     *,
+     bundle: ProblemBundle,
+     checks: tuple[HardFeasibilityCheck, ...],
+     values: Sequence[object],
+     eval_expr: Callable[[str, dict[str, object]], object],
+     cast_value: Callable[[object], object],
+-    allow_float: bool,
+-    guard_ok: bool,
+-    guard_violations: tuple[str, ...],
+-) -> HardFeasibilitySnapshot:
++    allow_float: bool,
++    guard_ok: bool,
++    guard_violations: tuple[str, ...],
++    guard_margins: tuple[MPFloat | None, ...] = (),
++) -> HardFeasibilitySnapshot:
+     """Evaluate hard-feasibility checks and return aggregated snapshot."""
+     if not checks:
+         return HardFeasibilitySnapshot(
+@@ -359,10 +374,11 @@
+         ok, failure_tag, margin = _evaluate_single_check(
+             check=check,
+             state=state,
+-            allow_float=allow_float,
+-            guard_ok=guard_ok,
+-            guard_violations=guard_violations,
+-        )
++            allow_float=allow_float,
++            guard_ok=guard_ok,
++            guard_violations=guard_violations,
++            guard_margins=guard_margins,
++        )
+         if ok:
+             if margin is not None and mp.isfinite(margin):
+                 passed_margins.append(margin)
+--- a/geosolver/src/geosolver/_internal/pipeline/refine/mpmath_refiner.py
++++ b/geosolver/src/geosolver/_internal/pipeline/refine/mpmath_refiner.py
+@@ -89,11 +89,14 @@
+     evaluator: EvaluatorPort,
+     point: list[MPFloat],
+     precision: int,
++    *,
++    include_margins: bool = True,
+ ) -> object:
+     with high_precision_mode():
+         return evaluator.evaluate_hp_hard_feasibility(
+             point,
+             precision=int(precision),
++            include_margins=bool(include_margins),
+         )
+ 
+ 
+@@ -826,6 +829,7 @@
+                     evaluator,
+                     trial,
+                     trial_dps,
++                    include_margins=False,
+                 ).hard_feasible
+         for _ in range(int(self.config.max_stage_iters)):
+             if best_norm <= target_residual:
+--- a/geosolver/src/geosolver/_internal/pipeline/search/scipy_multistart_backend.py
++++ b/geosolver/src/geosolver/_internal/pipeline/search/scipy_multistart_backend.py
+@@ -37,7 +37,12 @@
+ _BOUNDED_TRF_TIME_BUDGET_SECONDS = 45.0
+ _N_HALTON_STARTS = 320
+ _LM_MAX_NFEV = 80
+-_RESIDUAL_ACCEPT_FLOAT = 1e-8
++# Keep a small search-side closure window so that the high-precision refiner
++# can polish roots returned by bounded 1-D scans.  Phase C still applies the
++# strict residual gate (1e-15) to the polished candidate, so this does not
++# weaken final answer acceptance.  In particular, a root found within the
++# scan's float resolution must not be discarded before refinement.
++_RESIDUAL_ACCEPT_FLOAT = 1e-6
+ _FLOAT_HARD_FEASIBILITY_MARGIN_MIN = mp.mpf("1e-6")
+ _HALTON_START_BURN_IN = 3
+ _HALTON_PREFIX_STARTS_PER_DIMENSION = 1
+@@ -504,7 +509,10 @@
+     values: np.ndarray,
+ ) -> float:
+     try:
+-        snapshot = evaluator.evaluate_float_hard_feasibility(list(values))
++        snapshot = evaluator.evaluate_float_hard_feasibility(
++            list(values),
++            include_margins=False,
++        )
+     except Exception:
+         return float(1e3)
+     if not snapshot.hard_feasible:
+@@ -705,7 +713,10 @@
+             hard_violation_tags=(f"eval_status:{float_eval.evaluation_status.value}",),
+             validity_margin_float=None,
+         )
+-    hard_snapshot = evaluator.evaluate_float_hard_feasibility(point)
++    hard_snapshot = evaluator.evaluate_float_hard_feasibility(
++        point,
++        include_margins=False,
++    )
+     guard_ok, _violations = evaluator.evaluate_guard(point)
+     penalty = 0.0 if hard_snapshot.hard_feasible else float(config.guard_penalty)
+     validity_margin_float = None
+@@ -757,7 +768,10 @@
+             guard_ok = False
+         try:
+             hard_feasible = bool(
+-                evaluator.evaluate_float_hard_feasibility(list(start)).hard_feasible
++                evaluator.evaluate_float_hard_feasibility(
++                    list(start),
++                    include_margins=False,
++                ).hard_feasible
+             )
+         except Exception:
+             hard_feasible = False
+--- a/geosolver/src/geosolver/_internal/pipeline/search/nomad_blackbox_adapter.py
++++ b/geosolver/src/geosolver/_internal/pipeline/search/nomad_blackbox_adapter.py
+@@ -86,7 +86,10 @@
+                 )
+             )
+             return 0
+-        hard_snapshot = self.evaluator.evaluate_float_hard_feasibility(coords)
++        hard_snapshot = self.evaluator.evaluate_float_hard_feasibility(
++            coords,
++            include_margins=False,
++        )
+         guard_ok, _violations = self.evaluator.evaluate_guard(coords)
+         penalty = 0.0 if hard_snapshot.hard_feasible else self.config.guard_penalty
+         if self.constraint_scales is not None:
+--- a/geosolver/src/geosolver/_internal/pipeline/exact/identify_answer.py
++++ b/geosolver/src/geosolver/_internal/pipeline/exact/identify_answer.py
+@@ -81,7 +81,7 @@
+     return str(simplified)
+ 
+ 
+-def _sympy_fallback(value: MPFloat, precision_dps: int) -> tuple[str | None, MPFloat | None]:
++def _sympy_fallback(value: MPFloat, precision_dps: int) -> tuple[str | None, MPFloat | None]:
+     try:
+         import sympy as sp
+     except Exception:
+@@ -98,7 +98,26 @@
+     tolerance = mp.power(mp.mpf("10"), -(max(int(precision_dps) - 20, 1)))
+     if residual <= tolerance:
+         return str(expr), residual
+-    return None, residual
++    return None, residual
++
++
++def _is_symbolic_zero(value: str | None) -> bool:
++    if value is None:
++        return False
++    try:
++        import sympy as sp
++
++        return bool(sp.sympify(value) == 0)
++    except Exception:
++        return str(value).strip() in {"0", "0.0"}
++
++
++def _numeric_value_is_exact_zero(value: MPFloat, precision_dps: int) -> bool:
++    try:
++        with mp.workdps(max(int(precision_dps) + 20, int(mp.dps))):
++            return bool(mp.mpf(value) == 0)
++    except Exception:
++        return False
+ 
+ 
+ def identify_answer(
+@@ -129,15 +148,34 @@
+             if linear_exact is not None:
+                 selected_exact = linear_exact
+                 method = "pslq-linear"
+-            else:
+-                poly_exact = _polynomial_exact_value(list(coefficients), answer_hp)
+-                if poly_exact is not None:
+-                    selected_exact = poly_exact
+-                    method = "pslq-symbolic"
++            else:
++                poly_exact = _polynomial_exact_value(list(coefficients), answer_hp)
++                if poly_exact is not None:
++                    selected_exact = poly_exact
++                    method = "pslq-symbolic"
+                 else:
+-                    selected_exact = f"poly({coefficients})"
+-                    method = "pslq"
+-            return ExactIdentificationResult(
++                    selected_exact = f"poly({coefficients})"
++                    method = "pslq"
++            # A zero-root polynomial can have a tiny nonzero numerical value
++            # as its approximate root (for example x**7 at 1e-122).  The
++            # polynomial residual alone is therefore not proof that the exact
++            # answer is zero.  Keep the numeric value unresolved unless the
++            # evaluator itself returned exact zero.
++            if _is_symbolic_zero(selected_exact) and not _numeric_value_is_exact_zero(
++                answer_hp,
++                int(input_precision_dps),
++            ):
++                return ExactIdentificationResult(
++                    exact_status="verification_failed",
++                    identification_method=f"{method}-zero_rejected",
++                    input_precision_dps=int(input_precision_dps),
++                    minimal_polynomial=tuple(int(c) for c in coefficients),
++                    polynomial_degree=degree,
++                    selected_exact_value=None,
++                    verification_residual=residual,
++                    numeric_fallback_value=answer_hp,
++                )
++            return ExactIdentificationResult(
+                 exact_status="identified",
+                 identification_method=method,
+                 input_precision_dps=int(input_precision_dps),
+@@ -157,9 +195,23 @@
+             verification_residual=residual,
+             numeric_fallback_value=answer_hp,
+         )
+-    sympy_exact, sympy_residual = _sympy_fallback(answer_hp, int(input_precision_dps))
+-    if sympy_exact is not None:
+-        return ExactIdentificationResult(
++    sympy_exact, sympy_residual = _sympy_fallback(answer_hp, int(input_precision_dps))
++    if sympy_exact is not None:
++        if _is_symbolic_zero(sympy_exact) and not _numeric_value_is_exact_zero(
++            answer_hp,
++            int(input_precision_dps),
++        ):
++            return ExactIdentificationResult(
++                exact_status="not_identified",
++                identification_method="sympy-zero-rejected",
++                input_precision_dps=int(input_precision_dps),
++                minimal_polynomial=None,
++                polynomial_degree=None,
++                selected_exact_value=None,
++                verification_residual=sympy_residual,
++                numeric_fallback_value=answer_hp,
++            )
++        return ExactIdentificationResult(
+             exact_status="identified",
+             identification_method="sympy",
+             input_precision_dps=int(input_precision_dps),

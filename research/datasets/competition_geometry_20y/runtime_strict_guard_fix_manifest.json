@@ -1,0 +1,60 @@
+{
+  "runtime_root": "/home/kabatan/work/solver-experiment-runtime-strictfix",
+  "base_runtime_root": "/home/kabatan/work/solver-experiment-runtime",
+  "purpose": "Reject numerically unresolved strict-inequality and degenerate-boundary candidates without changing the DSL.",
+  "files": [
+    {
+      "path": "geosolver/src/geosolver/_internal/autosolve/guards/compile.py",
+      "sha256": "3a1ecc228a9e59fbde7d37c12e8b219aee4f1f9468c3e10a01abad6748d75ed1"
+    },
+    {
+      "path": "geosolver/src/geosolver/_internal/autosolve/execution/interpreter_helpers.py",
+      "sha256": "7340ea687b567e09a3e7897560d0a2984d30e76e0f12c7cf84d431f0f695bf26"
+    },
+    {
+      "path": "geosolver/src/geosolver/_internal/pipeline/evaluator/evaluate_hp_hard_feasibility.py",
+      "sha256": "91b722a100f889792e92f061d0568ea786e05482e7bfc71094a6dea8ba60a47d"
+    },
+    {
+      "path": "geosolver/src/geosolver/_internal/pipeline/evaluator/evaluate_float_hard_feasibility.py",
+      "sha256": "09d5e9eb094e2c94f0030b964e358fca2e0d61d1ab2dd5588ecb6f03adcbbb2b"
+    },
+    {
+      "path": "geosolver/src/geosolver/_internal/pipeline/contracts/evaluator_port.py",
+      "sha256": "3e98322aaac8c2f6b47f3cda25a53c412f810d933d96aedf12d04fcd99889870"
+    },
+    {
+      "path": "geosolver/src/geosolver/_internal/pipeline/evaluator/ir_evaluator.py",
+      "sha256": "09b3e7b66dad47e5fe8abbd7419719e87c49fe683f84796a179e9bbc164597e0"
+    },
+    {
+      "path": "geosolver/src/geosolver/_internal/pipeline/evaluator/_hard_feasibility_core.py",
+      "sha256": "e2be463b7e85fcd2aa5a907c26b4a257215f5664be79e31f74a080f0522c31bd"
+    },
+    {
+      "path": "geosolver/src/geosolver/_internal/pipeline/refine/mpmath_refiner.py",
+      "sha256": "b34e9565114bbf83e095e46be1475240a873220615a13ef3d52f343949d9602f"
+    },
+    {
+      "path": "geosolver/src/geosolver/_internal/pipeline/search/scipy_multistart_backend.py",
+      "sha256": "dfd4c7e350aa78d91aa351012a1d6aaa0284a82aee94dd7ce9a1109f3e6a45b8"
+    },
+    {
+      "path": "geosolver/src/geosolver/_internal/pipeline/search/nomad_blackbox_adapter.py",
+      "sha256": "8b9b0b41f2b5e5be4fec2cc8a6014778a97eda6ecdfc1aa660e8f947f129e1a2"
+    },
+    {
+      "path": "geosolver/src/geosolver/_internal/pipeline/exact/identify_answer.py",
+      "sha256": "b536f6330267230c366176d98af8ba4c0c585486855a9b1717790f755d1eb3ab"
+    }
+  ],
+  "regression": "verify_strict_guard_fix.py; 36 geometry/contract tests plus strict-boundary smoke checks",
+  "patch": {
+    "path": "runtime_strict_guard_fix.patch",
+    "sha256": "5d9bf00525bc6562063c89f75990e1303adac4138f42c9206f5fc022db54fda2"
+  },
+  "benchmark": {
+    "path": "benchmark_results_180s_1core_strict_guard_fix_v2_2026-08-05.json",
+    "sha256": "e1b096142390b988dbe0cf64fa5d961f6264df21b084614bc013cb573d51b3a1"
+  }
+}

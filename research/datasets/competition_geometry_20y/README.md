@@ -34,6 +34,9 @@
 - `validate_dsl_repairs.py`: 上記10ケースだけを実行したこと、`budget=180`、affinity `[0]`、strict集合フラグを機械検証します。
 - `runtime_api_compat_regression.py`: 公開DSLの`Line`/`Rotate`/`Tangent`/`IncircleContactPoint`/`Perimeter`と数式caretを一括検査する回帰テスト。
 - `runtime_general_fix_manifest.json`: 外部runtimeの修正対象ファイルとSHA256、再現用回帰テストの固定マニフェスト。
+- `STRICT_GUARD_FIX_REPORT_2026-08-05.md` / `benchmark_results_180s_1core_strict_guard_fix_v2_2026-08-05.json`: strict inequality・非退化境界の偽陽性をsolver側で修正し、対象12件を180秒・1 coreで再測定した報告とraw結果。
+- `runtime_strict_guard_fix_manifest.json`: strict guard修正版の外部runtimeファイルSHA256と再現条件。元のfrozen runtimeは変更していない。
+- `verify_strict_guard_fix.py` / `runtime_strict_guard_fix.patch`: strict margin受理の最小回帰検証と、修正版runtimeの再適用用diff。
 - `DSL_INTEGRITY_AUDIT.md` / `verify_dsl_integrity.py`: 302 JSONの重複キー、IR parser、source provenance、変数上限、benchmark coverageを検査する最終監査。
 - `validate_benchmark_180_final.py`: 最終benchmarkのstatus・answer-set・CPU affinity検証。
 - `PERFORMANCE_DIAGNOSIS.md`: 旧134/145との比較差、answer projection/DSL分岐、solver exception/timeoutを切り分けた検証報告。
