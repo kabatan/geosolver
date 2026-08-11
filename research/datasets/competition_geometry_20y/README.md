@@ -37,6 +37,8 @@
 - `STRICT_GUARD_FIX_REPORT_2026-08-05.md` / `benchmark_results_180s_1core_strict_guard_fix_v2_2026-08-05.json`: strict inequality・非退化境界の偽陽性をsolver側で修正し、対象12件を180秒・1 coreで再測定した報告とraw結果。
 - `runtime_strict_guard_fix_manifest.json`: strict guard修正版の外部runtimeファイルSHA256と再現条件。元のfrozen runtimeは変更していない。
 - `verify_strict_guard_fix.py` / `runtime_strict_guard_fix.patch`: strict margin受理の最小回帰検証と、修正版runtimeの再適用用diff。
+- `EXACTIFICATION_FACTOR_FIX_REPORT_2026-08-12.md`: PSLQの重複・可約関係が残差を人工的に縮小して通過するexactification検証器バグの一般修正報告。
+- `runtime_exactification_factor_fix_manifest.json` / `runtime_exactification_factor_fix.patch` / `verify_exactification_factor_fix.py`: 因数分解・根距離検証の固定SHA256、再適用diff、72近傍の誤受理回帰検証。修正版runtimeはstrict guard測定runtimeと分離している。
 - `DSL_INTEGRITY_AUDIT.md` / `verify_dsl_integrity.py`: 302 JSONの重複キー、IR parser、source provenance、変数上限、benchmark coverageを検査する最終監査。
 - `validate_benchmark_180_final.py`: 最終benchmarkのstatus・answer-set・CPU affinity検証。
 - `PERFORMANCE_DIAGNOSIS.md`: 旧134/145との比較差、answer projection/DSL分岐、solver exception/timeoutを切り分けた検証報告。

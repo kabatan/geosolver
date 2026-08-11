@@ -82,6 +82,10 @@ SHA256で固定した。再適用用のunified diffは
 frozen runtimeのルートで適用する場合は `patch -p1 < runtime_strict_guard_fix.patch` を
 使い、適用前後にmanifestのSHA256を検証する。
 
+後続のexactification修正を別runtimeへ分離する際、strict guard測定用runtimeは
+frozen runtimeへこのpatchを再適用して再構成した。`identify_answer.py` のmanifest hashは
+その再構成コピーの値へ更新しており、strict guardの実装・測定結果は変更していない。
+
 ## 残る不一致の扱い
 
 この修正で消えるのは「strict/open/nondegenerate条件の境界候補を受理する」系統だけ

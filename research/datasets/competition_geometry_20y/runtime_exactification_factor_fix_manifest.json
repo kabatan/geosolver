@@ -1,0 +1,33 @@
+{
+  "runtime_root": "/home/kabatan/work/solver-experiment-runtime-exactfix",
+  "base_runtime_root": "/home/kabatan/work/solver-experiment-runtime",
+  "prerequisite": "runtime_strict_guard_fix.patch",
+  "purpose": "Prevent repeated/reducible PSLQ relations from passing exactification through a squared (or higher-power) residual.",
+  "files": [
+    {
+      "path": "geosolver/src/geosolver/_internal/solver/exact/polynomial_search.py",
+      "sha256": "bc8ded3ecb833ec9b52a5220410fdb91057ef6ed6e91b5851b9f5036ccb5be0e"
+    },
+    {
+      "path": "geosolver/src/geosolver/_internal/pipeline/exact/verify_identified_answer.py",
+      "sha256": "f236ff6b52546da65f7a7647f60178ac6ed11658c70bfda1725460dafbcf816a"
+    },
+    {
+      "path": "geosolver/src/geosolver/_internal/pipeline/exact/identify_answer.py",
+      "sha256": "8fd88cad33b211ce0e93d3f6e63635c697f748682a408ccdaf1aa2e53fc68742"
+    },
+    {
+      "path": "geosolver/tests/regression/contracts/test_exactification_factor_guard.py",
+      "sha256": "ba6ea560cf45a5139047070c8b1e7661c758f39d6b4bfbd7042aec3268a673b2"
+    }
+  ],
+  "regression": {
+    "command": "PYTHONPATH=geosolver/src solver/python/.venv/bin/python -m pytest -q geosolver/tests/regression/contracts/test_exactification_factor_guard.py",
+    "result": "4 passed",
+    "reproduction_script": "research/datasets/competition_geometry_20y/verify_exactification_factor_fix.py"
+  },
+  "patch": {
+    "path": "runtime_exactification_factor_fix.patch",
+    "sha256": "55fb3d7b8a6edf46b66b7e82776e8a0df7ea5a60da8806f76698b6adf4a42cb8"
+  }
+}
