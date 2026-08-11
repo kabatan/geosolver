@@ -30,7 +30,7 @@ from typing import Any, Mapping, Sequence
 HERE = Path(__file__).resolve().parent
 RUNNER = Path(__file__).resolve()
 CONNECTOR = HERE / "canonical_connector.py"
-CONNECTOR_SHA256 = "b6e9dd7bb5c62a657451fd18294cbceef032d6b764cace0628d878684faa2b41"
+CONNECTOR_SHA256 = "1cc6f4b199f588f708c329daa452a5712c5e9b8fcea5b7938f3e4393cead5411"
 RUNTIME_ROOT = Path("/home/kabatan/work/solver-experiment-runtime/solver")
 RESULTS_ROOT = Path("/home/kabatan/work/solver-experiment-results")
 PYTHON = RUNTIME_ROOT / "python/.venv/bin/python"
@@ -39,6 +39,7 @@ SAFE_SUBPROCESS = (
 )
 SAFE_LIMIT_EXEC = SAFE_SUBPROCESS.with_name("_limit_exec.py")
 OFFICIAL_GLOBAL_LOCK = Path("/tmp/geotarget-exp-global-benchmark-v1.lock")
+ROOT_AUTHORITY_UID = 0
 
 PANEL_SCHEMA = "geotarget.cross-endpoint-vieta-private-gate/v2"
 WORK_ITEM_SCHEMA = "geotarget.cross-endpoint-vieta-private-subset/v4"
@@ -356,6 +357,43 @@ def _stage_flags(reason: str, proposal_constructed: bool) -> tuple[bool, bool, b
     return reconstruction, agreement, numeric
 
 
+def _read_root_issued_capability(authorization_fd: int) -> Mapping[str, Any]:
+    """Consume one capability from an anonymous FIFO created by OS root.
+
+    Public capability fields alone cannot authenticate a same-UID parent.
+    The FIFO inode owner is therefore the authority boundary: an unprivileged
+    wrapper cannot mint a descriptor with uid 0, and a regular/reusable file
+    is rejected before any capability fields are considered.
+    """
+
+    if authorization_fd <= 2:
+        raise GateFailure("worker lacks inherited coordinator descriptors")
+    try:
+        descriptor_stat = os.fstat(authorization_fd)
+        if (
+            not stat.S_ISFIFO(descriptor_stat.st_mode)
+            or descriptor_stat.st_uid != ROOT_AUTHORITY_UID
+        ):
+            raise GateFailure("worker capability is not a root-owned one-shot FIFO")
+        payload = os.read(authorization_fd, 8193)
+        if len(payload) > 8192 or os.read(authorization_fd, 1):
+            raise GateFailure("coordinator capability is oversized or not one-shot")
+    except OSError as error:
+        raise GateFailure("worker inherited capability validation failed") from error
+    finally:
+        try:
+            os.close(authorization_fd)
+        except OSError:
+            pass
+    try:
+        capability = json.loads(payload)
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise GateFailure("coordinator capability is malformed") from error
+    if not isinstance(capability, Mapping):
+        raise GateFailure("coordinator capability is malformed")
+    return capability
+
+
 def _authorize_worker(
     *,
     authorization_fd: int,
@@ -367,32 +405,21 @@ def _authorize_worker(
 ) -> None:
     if authorization_fd <= 2 or lock_fd <= 2 or authorization_fd == lock_fd:
         raise GateFailure("worker lacks inherited coordinator descriptors")
+    capability = _read_root_issued_capability(authorization_fd)
     try:
         lock_target = Path(os.readlink(f"/proc/self/fd/{lock_fd}")).resolve()
         if lock_target != OFFICIAL_GLOBAL_LOCK.resolve():
             raise GateFailure("worker lock descriptor is not the official lock")
         fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        payload = os.read(authorization_fd, 8193)
-        if len(payload) > 8192 or os.read(authorization_fd, 1):
-            raise GateFailure("coordinator capability is oversized or not one-shot")
     except (OSError, ValueError) as error:
         raise GateFailure("worker inherited capability validation failed") from error
-    finally:
-        try:
-            os.close(authorization_fd)
-        except OSError:
-            pass
-    try:
-        capability = json.loads(payload)
-    except (UnicodeDecodeError, json.JSONDecodeError) as error:
-        raise GateFailure("coordinator capability is malformed") from error
     root = temporary_root.resolve(strict=True)
     root_stat = root.stat()
     item = work_item.resolve(strict=True)
     destination = output.resolve(strict=False)
     item_stat = item.stat()
     expected_keys = {
-        "schema_version", "nonce", "coordinator_pid", "runner_sha256",
+        "schema_version", "nonce", "issuer_effective_uid", "coordinator_pid", "runner_sha256",
         "temporary_root", "temporary_root_device", "temporary_root_inode",
         "work_item", "work_item_sha256", "output",
     }
@@ -400,8 +427,9 @@ def _authorize_worker(
         not isinstance(capability, Mapping)
         or set(capability) != expected_keys
         or capability.get("schema_version")
-        != "geotarget.cross-endpoint-vieta-worker-capability/v1"
+        != "geotarget.cross-endpoint-vieta-worker-capability/v2"
         or not _valid_sha(capability.get("nonce"))
+        or capability.get("issuer_effective_uid") != ROOT_AUTHORITY_UID
         or capability.get("coordinator_pid") != os.getppid()
         or capability.get("runner_sha256") != runner_sha256
         or Path(str(capability.get("temporary_root"))).resolve(strict=True) != root
@@ -740,6 +768,8 @@ def _guarded_worker(
     lock_fd: int,
     temporary_root: Path,
 ):
+    if os.geteuid() != ROOT_AUTHORITY_UID:
+        raise GateFailure("only the OS-root benchmark owner may issue worker capabilities")
     output.unlink(missing_ok=True)
     command = [
         str(PYTHON),
@@ -768,8 +798,9 @@ def _guarded_worker(
         command[command.index("CAPABILITY_FD")] = str(read_fd)
         root_stat = temporary_root.stat()
         capability = {
-            "schema_version": "geotarget.cross-endpoint-vieta-worker-capability/v1",
+            "schema_version": "geotarget.cross-endpoint-vieta-worker-capability/v2",
             "nonce": os.urandom(32).hex(),
+            "issuer_effective_uid": ROOT_AUTHORITY_UID,
             "coordinator_pid": os.getpid(),
             "runner_sha256": runner_sha256,
             "temporary_root": str(temporary_root.resolve()),
@@ -999,6 +1030,10 @@ def _aggregate_private_rows(
 def _coordinator(arguments: argparse.Namespace) -> int:
     _check_cpu14()
     _check_self(arguments.runner_sha256)
+    if os.geteuid() != ROOT_AUTHORITY_UID:
+        raise GateFailure(
+            "heavy coordinator requires the OS-root capability-issuer boundary"
+        )
     if arguments.global_lock.resolve() != OFFICIAL_GLOBAL_LOCK:
         raise GateFailure("the official machine-wide benchmark lock is required")
     if (

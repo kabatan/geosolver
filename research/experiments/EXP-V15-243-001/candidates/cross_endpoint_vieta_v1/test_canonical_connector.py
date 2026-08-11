@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import copy
 from decimal import Decimal, localcontext
 import hashlib
 import json
 from pathlib import Path
 import struct
+from types import SimpleNamespace
 
 import mpmath
 import pytest
@@ -436,3 +438,120 @@ def test_materialized_union_rejects_mutated_proof():
             accepted_records=[record],
             observed_endpoint_sha256=[endpoint_sha],
         )
+
+
+def _rehash_record(record, *, descriptor_changed: bool):
+    if descriptor_changed:
+        identity = hashlib.sha256(
+            json.dumps(
+                record["descriptor"], sort_keys=True, separators=(",", ":")
+            ).encode()
+        ).hexdigest()
+        record["descriptor_identity_sha256"] = identity
+        record["proof_record"]["descriptor_identity_sha256"] = identity
+    record["proof_record_sha256"] = hashlib.sha256(
+        json.dumps(
+            record["proof_record"], sort_keys=True, separators=(",", ":")
+        ).encode()
+    ).hexdigest()
+
+
+@pytest.mark.parametrize(
+    "mutation,descriptor_changed",
+    [
+        ("descriptor_ordinal", True),
+        ("proof_factor_ordinal", False),
+        ("proof_attested_ordinal", False),
+        ("descriptor_multiplicity", True),
+        ("proof_multiplicity", False),
+    ],
+)
+def test_materialized_union_rejects_each_recomputed_semantic_mutation(
+    mutation, descriptor_changed
+):
+    endpoint_sha = "e" * 64
+    record = copy.deepcopy(_accepted_record(endpoint_sha, [1, -5], 0))
+    if mutation == "descriptor_ordinal":
+        record["descriptor"]["isolating_interval"]["real_root_index"] = 7
+    elif mutation == "proof_factor_ordinal":
+        record["proof_record"]["factor_local_real_root_ordinal"] = 7
+    elif mutation == "proof_attested_ordinal":
+        record["proof_record"]["attested_real_root_index"] = 7
+    elif mutation == "descriptor_multiplicity":
+        record["descriptor"]["isolating_interval"]["multiplicity"] = 9
+    else:
+        record["proof_record"]["multiplicity"] = 9
+    _rehash_record(record, descriptor_changed=descriptor_changed)
+    with pytest.raises(connector.ConnectorFailure, match="record binding"):
+        connector.union_observed_factor_records(
+            fallback_result=object(),
+            accepted_records=[record],
+            observed_endpoint_sha256=[endpoint_sha],
+        )
+
+
+@pytest.mark.parametrize("layer", ["record", "descriptor", "interval", "proof"])
+def test_materialized_union_requires_exact_key_sets(layer):
+    endpoint_sha = "f" * 64
+    record = copy.deepcopy(_accepted_record(endpoint_sha, [1, -7], 0))
+    target = {
+        "record": record,
+        "descriptor": record["descriptor"],
+        "interval": record["descriptor"]["isolating_interval"],
+        "proof": record["proof_record"],
+    }[layer]
+    target["attacker_extension"] = True
+    _rehash_record(record, descriptor_changed=layer in {"descriptor", "interval"})
+    with pytest.raises(connector.ConnectorFailure):
+        connector.union_observed_factor_records(
+            fallback_result=object(),
+            accepted_records=[record],
+            observed_endpoint_sha256=[endpoint_sha],
+        )
+
+
+def test_frozen_file_and_tree_closure_reject_stale_mutations(tmp_path, monkeypatch):
+    frozen_file = tmp_path / "Project.toml"
+    frozen_file.write_text("[deps]\n")
+    frozen_tree = tmp_path / "Nemo"
+    frozen_tree.mkdir()
+    (frozen_tree / "source.jl").write_text("module Nemo end\n")
+    monkeypatch.setattr(
+        connector,
+        "FROZEN_DEPENDENCIES",
+        {frozen_file: hashlib.sha256(frozen_file.read_bytes()).hexdigest()},
+    )
+    monkeypatch.setattr(
+        connector,
+        "FROZEN_DIRECTORY_TREES",
+        {frozen_tree: connector._directory_tree_sha256(frozen_tree)},
+    )
+    connector.verify_frozen_dependencies()
+    frozen_file.write_text("[deps]\nNemo = \"changed\"\n")
+    with pytest.raises(connector.ConnectorFailure, match="closure changed"):
+        connector.verify_frozen_dependencies()
+    frozen_file.write_text("[deps]\n")
+    (frozen_tree / "source.jl").write_text("module DriftedNemo end\n")
+    with pytest.raises(connector.ConnectorFailure, match="closure changed"):
+        connector.verify_frozen_dependencies()
+
+
+def test_qqbar_uses_absolute_frozen_julia_project_and_depot(monkeypatch):
+    observed = {}
+
+    def fake_run(command, **kwargs):
+        observed["command"] = command
+        observed["environment"] = kwargs["env"]
+        return SimpleNamespace(returncode=0, stdout='{"status":"FAKE"}\n', stderr="")
+
+    monkeypatch.setattr(connector, "verify_frozen_dependencies", lambda: {})
+    monkeypatch.setattr(connector.subprocess, "run", fake_run)
+    exact = SimpleNamespace(_extended_worker_source=lambda: "# generated-only fake\n")
+    assert connector._run_frozen_qqbar(exact, {}, timeout_seconds=1.0) == {
+        "status": "FAKE"
+    }
+    assert observed["command"][0] == str(connector.JULIA)
+    assert Path(observed["command"][0]).is_absolute()
+    assert observed["command"][2] == f"--project={connector.JULIA_PROJECT}"
+    assert observed["environment"]["JULIA_DEPOT_PATH"] == str(connector.JULIA_DEPOT)
+    assert observed["environment"]["JULIA_PROJECT"] == str(connector.JULIA_PROJECT)

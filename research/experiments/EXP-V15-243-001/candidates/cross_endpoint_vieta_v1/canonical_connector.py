@@ -14,13 +14,16 @@ import hashlib
 import importlib.util
 import json
 import math
+import os
 from pathlib import Path
 from decimal import Decimal, InvalidOperation
 from fractions import Fraction
 from functools import reduce
 from math import gcd
 import struct
+import subprocess
 import sys
+import tempfile
 from typing import Any, Mapping, Sequence
 
 
@@ -38,6 +41,13 @@ EXACT_DAG = (
 )
 EXACT_QQBAR = EXACT_DAG.with_name("qqbar_worker.jl")
 PYTHON = RUNTIME_ROOT / "python/.venv/bin/python"
+JULIA = Path("/home/kabatan/.local/share/geosolver/julia-1.12.6/bin/julia")
+JULIA_ROOT = JULIA.parent.parent
+JULIA_PROJECT = (
+    RUNTIME_ROOT
+    / "research/experiments/EXP-REAL61-002/target_elimination"
+)
+JULIA_DEPOT = Path("/home/kabatan/.julia")
 SCHEMA = "geotarget.cross-endpoint-vieta-canonical-replay/v1"
 PRIVATE_SCHEMA = "geotarget.cross-endpoint-vieta-private-subset/v4"
 LOW_BITS = 768
@@ -52,7 +62,54 @@ FROZEN_DEPENDENCIES = {
     EXACT_DAG: "9b83181004a8ea2ea73f2974129e37ce252f7d352937b9f8b601b39eddf03d18",
     EXACT_QQBAR: "3ac6415600da77f8748a11d15fa47eb3dcb9f8deada375388fc762a155df0b4a",
     PYTHON: "ccc93c55c24bb92866cc2f9eff61b124abf5d1ee6c8da0ef9b5eed4d78a21f07",
+    JULIA: "fd670aabc838e93f178cbcf7304c5e9c50aadcce3735e86d5e3218b1bb04e602",
+    JULIA_ROOT / "lib/libjulia.so.1.12.6":
+        "4824d37c1ede40eb8532109c13913006e405bd3d1c67030a3aa3188c40437a49",
+    JULIA_ROOT / "lib/julia/libjulia-internal.so.1.12.6":
+        "6b36919ffd284b533d1aea07ec2d96678c6596586805187e2bd980690aac558f",
+    JULIA_ROOT / "lib/julia/sys.so":
+        "a3404a5b0e87e7f0a9063fec4864a04b4e69d59d4d69dfc6b5faf368c9c7f1c2",
+    JULIA_PROJECT / "Project.toml":
+        "9f39a2eb827fcc842513037ed5d9debbe1e1cf15a24e29111645917e9acaa6c7",
+    JULIA_PROJECT / "Manifest.toml":
+        "0b93cd67d522d4cce3bea7b3a754109a972e1eb2ef7fabe7eecb6c7a3cb19b42",
 }
+
+# Only the package/artifact trees reachable from `using JSON3, Nemo` are
+# admitted.  The fixed Manifest chooses these exact package slugs and the
+# x86_64-linux FLINT/OpenBLAS32 artifacts.  Compiled caches are deliberately
+# excluded because exact replay runs with --compile=no.
+FROZEN_DIRECTORY_TREES = {
+    JULIA_DEPOT / "packages/AbstractAlgebra/Y7um3":
+        "d39a72cacb6fe2dc5e36e0f79ee6e39ce7a7f21a13f9816902cae0f9eaa6d4ad",
+    JULIA_DEPOT / "packages/FLINT_jll/BE8UX":
+        "9634ea9b0a4c8eac5582d2cb44f5f9a8558ca7ec1fefcdd983f6c28ffd912c62",
+    JULIA_DEPOT / "packages/JLLWrappers/Kp7TC":
+        "3ca355b9d491c59e3ead241bcd719047a4552ff4cc0ab12ac8624a0be08568d9",
+    JULIA_DEPOT / "packages/JSON3/rT1w2":
+        "e8f0058660c9b05da79a741632234524204b977f639c1719538b58837ae86678",
+    JULIA_DEPOT / "packages/MacroTools/Ar0jT":
+        "ad7c116efcfb501a311437112ea8c6a10f750b2f5dfd2f860f77c42130ecf85d",
+    JULIA_DEPOT / "packages/Nemo/1ce8i":
+        "d7a452310b282e270e9ab2f2abb680b8b67b17961d6dac2dd6c0688949a2ca45",
+    JULIA_DEPOT / "packages/OpenBLAS32_jll/KLZ3O":
+        "ce6903f40a89d8244d8526b4f5b23c37d651c1cbd630547f5115592904729bda",
+    JULIA_DEPOT / "packages/Parsers/05lwR":
+        "0d1557fadb08fe6fbf25388dd738af9fe97f17ad050557c28a3b86ce5708c697",
+    JULIA_DEPOT / "packages/PrecompileTools/QUxvR":
+        "9ba0088ac23b116e2d39b00ff2441b25489e1b91485e10f615fc93becd27382b",
+    JULIA_DEPOT / "packages/Preferences/kUJxq":
+        "8c6503c204eea2d01a35ee3078f64a1648f8010ec261632b7af83621d4c42a20",
+    JULIA_DEPOT / "packages/RandomExtensions/4ml47":
+        "868babac19a5cf67234970c1801b3d38fdee3a4aff0f41c4af30ebbf4afeb4a3",
+    JULIA_DEPOT / "packages/StructTypes/PaLwj":
+        "b117eb60820db09ef85664e3aa46b44b20c120273541e7903fe5fa929e4020f9",
+    JULIA_DEPOT / "artifacts/d6b8593013c45bb7462990264c22bc68169e8108":
+        "4369ec665d62a851ca9a3b38e75c1d2f3140d833d0e4c1239d4cecc33ee2438d",
+    JULIA_DEPOT / "artifacts/296d14cc59b11df01fd4134f4c368d9b47fb8f42":
+        "21218787f415bc6810c5481b3611e2612963ae59e784fae25de8bfd240b3ebcd",
+}
+_FROZEN_CLOSURE_VERIFIED = False
 
 FORBIDDEN_REQUEST_KEYS = frozenset(
     {
@@ -109,15 +166,46 @@ def _valid_sha(value: object) -> bool:
     )
 
 
+def _directory_tree_sha256(root: Path) -> str:
+    """Hash relative names plus every file/symlink payload in one tree."""
+
+    if not root.is_dir() or root.is_symlink():
+        return "MISSING"
+    digest = hashlib.sha256()
+    entries = sorted(
+        (item for item in root.rglob("*") if item.is_file() or item.is_symlink()),
+        key=lambda item: item.relative_to(root).as_posix(),
+    )
+    for item in entries:
+        relative = item.relative_to(root).as_posix().encode("utf-8")
+        if item.is_symlink():
+            digest.update(b"L\0" + relative + b"\0")
+            digest.update(os.readlink(item).encode("utf-8") + b"\0")
+        else:
+            digest.update(b"F\0" + relative + b"\0")
+            digest.update(_sha256(item.read_bytes()).encode("ascii") + b"\0")
+    return digest.hexdigest()
+
+
 def verify_frozen_dependencies() -> dict[str, str]:
-    observed = {
+    global _FROZEN_CLOSURE_VERIFIED
+    observed_files = {
         str(path): _sha256(path.read_bytes()) if path.is_file() else "MISSING"
         for path in FROZEN_DEPENDENCIES
     }
-    expected = {str(path): digest for path, digest in FROZEN_DEPENDENCIES.items()}
-    if observed != expected:
+    expected_files = {
+        str(path): digest for path, digest in FROZEN_DEPENDENCIES.items()
+    }
+    observed_trees = {
+        str(path): _directory_tree_sha256(path) for path in FROZEN_DIRECTORY_TREES
+    }
+    expected_trees = {
+        str(path): digest for path, digest in FROZEN_DIRECTORY_TREES.items()
+    }
+    if observed_files != expected_files or observed_trees != expected_trees:
         raise ConnectorFailure("frozen Vieta/canonical replay closure changed")
-    return observed
+    _FROZEN_CLOSURE_VERIFIED = True
+    return {**observed_files, **observed_trees}
 
 
 def _contains_forbidden_key(value: Any, forbidden: frozenset[str]) -> bool:
@@ -731,6 +819,83 @@ def prepare_factorized_targets(
     return tuple(result)
 
 
+def _run_frozen_qqbar(
+    exact: Any, job: Mapping[str, Any], *, timeout_seconds: float
+) -> dict[str, Any]:
+    """Run the established worker inside the frozen Julia/Nemo closure."""
+
+    if not _FROZEN_CLOSURE_VERIFIED:
+        verify_frozen_dependencies()
+    environment = os.environ.copy()
+    environment.update(
+        {
+            "JULIA_DEPOT_PATH": str(JULIA_DEPOT),
+            "JULIA_LOAD_PATH": f"{JULIA_PROJECT}:@stdlib",
+            "JULIA_PROJECT": str(JULIA_PROJECT),
+            "JULIA_PKG_OFFLINE": "true",
+            "JULIA_NUM_THREADS": "1",
+            "JULIA_NUM_GC_THREADS": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+        }
+    )
+    temporary: Path | None = None
+    temporary_worker: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w", encoding="utf-8", suffix=".json", delete=False
+        ) as stream:
+            temporary = Path(stream.name)
+            json.dump(
+                job, stream, ensure_ascii=False, separators=(",", ":"), allow_nan=False
+            )
+        with tempfile.NamedTemporaryFile(
+            mode="w", encoding="utf-8", suffix=".jl", delete=False
+        ) as stream:
+            temporary_worker = Path(stream.name)
+            stream.write(exact._extended_worker_source())
+        completed = subprocess.run(
+            [
+                str(JULIA),
+                "--compile=no",
+                f"--project={JULIA_PROJECT}",
+                "--startup-file=no",
+                "--history-file=no",
+                str(temporary_worker),
+                str(temporary),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=float(timeout_seconds),
+            env=environment,
+        )
+    except subprocess.TimeoutExpired as error:
+        raise ConnectorFailure("frozen QQBar exact replay timed out") from error
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
+        if temporary_worker is not None:
+            temporary_worker.unlink(missing_ok=True)
+    if completed.returncode != 0:
+        raise ConnectorFailure(
+            f"frozen QQBar worker exited {completed.returncode}: "
+            f"{completed.stderr[-400:]}"
+        )
+    records = [line for line in completed.stdout.splitlines() if line.strip()]
+    if len(records) != 1:
+        raise ConnectorFailure("frozen QQBar worker emitted a noncanonical record count")
+    try:
+        result = json.loads(records[0], object_pairs_hook=_strict_object)
+    except json.JSONDecodeError as error:
+        raise ConnectorFailure("frozen QQBar worker emitted invalid JSON") from error
+    if not isinstance(result, dict):
+        raise ConnectorFailure("frozen QQBar worker record is not an object")
+    return result
+
+
 def canonical_replay_endpoint(
     *,
     exact: Any,
@@ -768,7 +933,7 @@ def canonical_replay_endpoint(
         target_descriptor=exact._job_descriptor(target_proposal),
     )
     exact._normalize_exact_guard_calls(job)
-    replay = exact._run_qqbar(job, timeout_seconds=timeout_seconds)
+    replay = _run_frozen_qqbar(exact, job, timeout_seconds=timeout_seconds)
     if not isinstance(replay, Mapping) or replay.get("status") != "EXACT_REPLAY_ACCEPTED":
         return {"status": "CANONICAL_FACTOR_REJECTED"}
     coordinate_ordinals = [
@@ -845,17 +1010,77 @@ def union_observed_factor_records(
     emitted: list[Mapping[str, Any]] = []
     seen_descriptors: set[str] = set()
     duplicate_count = 0
+    record_keys = {
+        "status",
+        "descriptor",
+        "descriptor_identity_sha256",
+        "proof_record",
+        "proof_record_sha256",
+        "observed_endpoint_float64_sha256",
+        "unobserved_root_emitted",
+        "target_set_completeness_claim",
+    }
+    descriptor_keys = {"coefficients_high_to_low", "isolating_interval"}
+    interval_keys = {"left", "right", "multiplicity", "real_root_index"}
+    proof_keys = {
+        "schema_version",
+        "status",
+        "observed_endpoint_float64_sha256",
+        "descriptor_identity_sha256",
+        "factor_local_real_root_ordinal",
+        "source_raw_answer_exact",
+        "target_link_exact",
+        "root_ordinal_attestation_complete",
+        "attested_real_root_index",
+        "multiplicity",
+        "truth_used",
+        "post_process_used",
+        "target_set_completeness_claim",
+    }
     for record in accepted_records:
-        if not isinstance(record, Mapping) or record.get("status") != "CANONICAL_FACTOR_ACCEPTED":
+        if (
+            not isinstance(record, Mapping)
+            or set(record) != record_keys
+            or record.get("status") != "CANONICAL_FACTOR_ACCEPTED"
+        ):
             raise ConnectorFailure("union received a non-accepted factor record")
         descriptor = record.get("descriptor")
         proof = record.get("proof_record")
         identity = record.get("descriptor_identity_sha256")
         endpoint_sha = record.get("observed_endpoint_float64_sha256")
+        interval = descriptor.get("isolating_interval") if isinstance(descriptor, Mapping) else None
+        coefficients = descriptor.get("coefficients_high_to_low") if isinstance(descriptor, Mapping) else None
+        descriptor_ordinal = interval.get("real_root_index") if isinstance(interval, Mapping) else None
+        try:
+            interval_is_rational = bool(
+                isinstance(interval, Mapping)
+                and isinstance(interval.get("left"), str)
+                and isinstance(interval.get("right"), str)
+                and Fraction(interval["left"]) <= Fraction(interval["right"])
+            )
+        except (ValueError, ZeroDivisionError):
+            interval_is_rational = False
         if (
             not isinstance(descriptor, Mapping)
+            or set(descriptor) != descriptor_keys
+            or not isinstance(coefficients, list)
+            or len(coefficients) < 2
+            or not all(
+                isinstance(value, int) and not isinstance(value, bool)
+                for value in coefficients
+            )
+            or not isinstance(interval, Mapping)
+            or set(interval) != interval_keys
+            or interval_is_rational is not True
+            or not isinstance(descriptor_ordinal, int)
+            or isinstance(descriptor_ordinal, bool)
+            or descriptor_ordinal < 0
+            or interval.get("multiplicity") != 1
+            or isinstance(interval.get("multiplicity"), bool)
             or not isinstance(proof, Mapping)
+            or set(proof) != proof_keys
             or not _valid_sha(identity)
+            or not _valid_sha(endpoint_sha)
             or endpoint_sha not in observed
             or _sha256(json.dumps(descriptor, sort_keys=True, separators=(",", ":")).encode())
             != identity
@@ -867,6 +1092,12 @@ def union_observed_factor_records(
             or proof.get("source_raw_answer_exact") is not True
             or proof.get("target_link_exact") is not True
             or proof.get("root_ordinal_attestation_complete") is not True
+            or proof.get("factor_local_real_root_ordinal") != descriptor_ordinal
+            or isinstance(proof.get("factor_local_real_root_ordinal"), bool)
+            or proof.get("attested_real_root_index") != descriptor_ordinal
+            or isinstance(proof.get("attested_real_root_index"), bool)
+            or proof.get("multiplicity") != 1
+            or isinstance(proof.get("multiplicity"), bool)
             or proof.get("truth_used") is not False
             or proof.get("post_process_used") is not False
             or proof.get("target_set_completeness_claim") is not False

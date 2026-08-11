@@ -25,7 +25,7 @@ from typing import Any, Mapping, Sequence
 
 HERE = Path(__file__).resolve().parent
 CONNECTOR_PATH = HERE / "canonical_connector.py"
-CONNECTOR_SHA256 = "b6e9dd7bb5c62a657451fd18294cbceef032d6b764cace0628d878684faa2b41"
+CONNECTOR_SHA256 = "1cc6f4b199f588f708c329daa452a5712c5e9b8fcea5b7938f3e4393cead5411"
 RESULTS_ROOT = Path("/home/kabatan/work/solver-experiment-results")
 PANEL_SCHEMA = "geotarget.cross-endpoint-vieta-private-gate/v2"
 WORK_ITEM_SCHEMA = "geotarget.cross-endpoint-vieta-private-subset/v4"
