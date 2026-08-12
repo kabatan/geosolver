@@ -1,0 +1,77 @@
+{
+  "runtime_root": "/home/kabatan/work/solver-experiment-runtime-rankfix",
+  "base_runtime_root": "/home/kabatan/work/solver-experiment-runtime-exactfix",
+  "prerequisite": "runtime_exactification_factor_fix.patch",
+  "purpose": "Refine underdetermined and structurally rank-deficient residual systems on a local full-rank coordinate chart without weakening source-problem certification.",
+  "algorithm": {
+    "rank_detection": "complete-pivot Gaussian elimination on the high-precision finite-difference Jacobian",
+    "local_gauge": "hold non-pivot variables at the closure start point and solve the selected independent source residuals for the pivot variables",
+    "certification": "re-evaluate every original evaluator residual, bounds, and hard-feasibility guards before accepting closure",
+    "budget_guard": "propagate the pipeline monotonic deadline into residual evaluations and cap rank-aware findroot at 64 iterations"
+  },
+  "files": [
+    {
+      "path": "geosolver/src/geosolver/_internal/pipeline/refine/mpmath_refiner.py",
+      "sha256": "602665e038e98188999689676475fe162c6249c75d513c99de3cac4c1bcc577c"
+    },
+    {
+      "path": "geosolver/tests/regression/precision/test_mpmath_refiner_closure_gate.py",
+      "sha256": "4a6a341d61cdd0de4b3d30d399781d3af812810bea4eb33c4897b46d28abf2bb"
+    }
+  ],
+  "dsl_inputs": [
+    {
+      "path": "dsl/AIME-2009-I-05.json",
+      "sha256": "e2872f7dc49e939bdb39b6f07e8340ae4820746e6ef25d56a5ef2db95f7e009e"
+    },
+    {
+      "path": "dsl/AIME-2015-II-11.json",
+      "sha256": "42195f46f0f2f4e93f94c6a22d7b8de3ab06cab651ebaa8bcec146b91511b253"
+    },
+    {
+      "path": "dsl/AIME-2016-I-06.json",
+      "sha256": "d927b084959bcb54e9bb34b5bf055742de17c7ceac05c03ea3c13acaeb7449a3"
+    },
+    {
+      "path": "dsl/AIME-2022-II-11.json",
+      "sha256": "0ad447b0727624d58c8b85f447a42f0aea13e34959cc7163bdd413110e8bcf95"
+    },
+    {
+      "path": "dsl/HMMT-2006-FEB-GEO-03.json",
+      "sha256": "865a025bbbf29ddd344a72cdc702cbf20e15348fe55d8cfcdbd09c5f625a039b"
+    },
+    {
+      "path": "dsl/HMMT-2013-FEB-GEO-05.json",
+      "sha256": "8f9024bd09ef602733c48d7588c014b7820358a4c21ad4831ba7415a9080360a"
+    },
+    {
+      "path": "dsl/HMMT-2023-FEB-GEO-01.json",
+      "sha256": "8ff234c1c23e5d40739eba7801a5ad06a4ffe24a6ce37528b914bcc8e46139f8"
+    }
+  ],
+  "regression": {
+    "focused_command": "PYTHONPATH=geosolver/src solver/python/.venv/bin/python -m pytest -q geosolver/tests/regression/precision/test_mpmath_refiner_closure_gate.py geosolver/tests/regression/contracts/test_exactification_factor_guard.py",
+    "focused_result": "14 passed",
+    "full_command": "PYTHONPATH=geosolver/src solver/python/.venv/bin/python -m pytest -q geosolver/tests",
+    "full_result": "136 passed, 1 skipped",
+    "ruff_result": "pass",
+    "compileall_result": "pass"
+  },
+  "benchmarks": [
+    {
+      "path": "benchmark_results_180s_1core_rank_aware_closure_six_2026-08-12.json",
+      "sha256": "0404108fbc4f5d86d7bfd1fe14163c15e151afaf5c847d78531eea7bebf6a5cc",
+      "result": "6/6 strict exact answer-set matches"
+    },
+    {
+      "path": "benchmark_results_180s_1core_rank_aware_closure_square_control_2026-08-12.json",
+      "sha256": "dee55ff45cc5a817b74cf5684479d39b02f9f89593a04c7969166b180193eb83",
+      "result": "1/1 strict exact answer-set match"
+    }
+  ],
+  "patch": {
+    "path": "runtime_rank_aware_closure_fix.patch",
+    "sha256": "c9790fac1f3db29730958ea5c31b92246a3c78edfb5fbbfa9d80c569b8dbb65f",
+    "dry_run_result": "applies cleanly to base_runtime_root with patch --dry-run --binary -p1"
+  }
+}
