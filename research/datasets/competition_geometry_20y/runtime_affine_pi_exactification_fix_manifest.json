@@ -1,0 +1,66 @@
+{
+  "runtime_root": "/home/kabatan/work/solver-experiment-runtime-piaffinefix",
+  "base_runtime_root": "/home/kabatan/work/solver-experiment-runtime-rankfix",
+  "prerequisite": "runtime_rank_aware_closure_fix.patch",
+  "purpose": "Identify bounded-complexity exact values A*pi+B with real algebraic A and B, while verifying direct expression distance rather than only an integer-relation residual.",
+  "search_bounds": {
+    "strict_max_total_degree": 4,
+    "standard_max_total_degree": 3,
+    "relaxed_max_total_degree": 1,
+    "coefficient_and_step_bounds": "reuse the existing exactification tier max_coeff and max_steps"
+  },
+  "algorithm": {
+    "rational_coefficients": "PSLQ on [value, pi, 1]",
+    "algebraic_coefficients": "PSLQ on bivariate value/pi monomials, exact factorization, then exact polynomial-system solution after substituting value=A*t+B",
+    "coefficient_certificate": "SymPy minimal_polynomial succeeds and is_algebraic/is_real are true for both A and B",
+    "acceptance": "the reconstructed A*pi+B expression itself must be within 10^-(input_precision_dps-20) of the numeric input",
+    "ambiguity": "multiple distinct verified affine expressions fail closed"
+  },
+  "files": [
+    {
+      "path": "geosolver/src/geosolver/_internal/pipeline/exact/identify_answer.py",
+      "sha256": "e8bbce89bf1be11c99fbb41df3f2d97093e574360aa24894351faedb7a1fe89c"
+    },
+    {
+      "path": "geosolver/src/geosolver/_internal/solver/exact/affine_pi_search.py",
+      "sha256": "90d90cec32d4dbfe6aa156e1d9c0f99da344e3742f3523f25585dfcc0baef0c7"
+    },
+    {
+      "path": "geosolver/tests/regression/contracts/test_affine_pi_exactification.py",
+      "sha256": "2a67ecd05653c2fa069d1e3dc9b6953d8f20ea6df374146a9b57049103d903f4"
+    }
+  ],
+  "dsl_inputs": [
+    {
+      "path": "dsl/HMMT-2006-FEB-GEO-04.json",
+      "sha256": "44c0187b2d1c7953292d0b596ba0ee7014ca78e5db55d4514e2871183150833b"
+    },
+    {
+      "path": "dsl/HMMT-2008-FEB-GEO-03.json",
+      "sha256": "cc021ff53d5742780fe2c8c4954853b9a04401cf7c5c93ad25f18aa21e70883a"
+    },
+    {
+      "path": "dsl/HMMT-2010-FEB-GEO-01.json",
+      "sha256": "366eb45734c2dc79b069cdae24296ce7f14903b12e89bb02cc475215166eff38"
+    }
+  ],
+  "regression": {
+    "focused_command": "PYTHONPATH=geosolver/src solver/python/.venv/bin/python -m pytest -q geosolver/tests/regression/contracts/test_affine_pi_exactification.py geosolver/tests/regression/contracts/test_exactification_factor_guard.py geosolver/tests/regression/contracts/test_no_case_specific_branching.py",
+    "focused_result": "11 passed",
+    "full_command": "PYTHONPATH=geosolver/src solver/python/.venv/bin/python -m pytest -q geosolver/tests",
+    "full_result": "142 passed, 1 skipped",
+    "ruff_result": "new module/test pass; identify_answer import ordering pass",
+    "compileall_result": "pass"
+  },
+  "benchmark": {
+    "path": "benchmark_results_180s_1core_affine_pi_fix_three_2026-08-12.json",
+    "sha256": "d898752298cc773550fbfbd68b0f17a90af354b79e4b4e2ccf251ee3900c092b",
+    "result": "3/3 strict exact answer-set matches"
+  },
+  "patch": {
+    "path": "runtime_affine_pi_exactification_fix.patch",
+    "sha256": "acda221c4586e16824c4257f85f3334d476d8cc5e98747ed707c32ac17636178",
+    "apply_command": "git apply --ignore-space-change --ignore-whitespace runtime_affine_pi_exactification_fix.patch",
+    "verification": "applied to a temporary base-runtime tree and all three resulting files matched the target semantically"
+  }
+}

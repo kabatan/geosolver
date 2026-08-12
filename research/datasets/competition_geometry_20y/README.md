@@ -40,6 +40,7 @@
 - `EXACTIFICATION_FACTOR_FIX_REPORT_2026-08-12.md`: PSLQの重複・可約関係が残差を人工的に縮小して通過するexactification検証器バグの一般修正報告。
 - `runtime_exactification_factor_fix_manifest.json` / `runtime_exactification_factor_fix.patch` / `verify_exactification_factor_fix.py`: 因数分解・根距離検証の固定SHA256、再適用diff、72近傍の誤受理回帰検証。修正版runtimeはstrict guard測定runtimeと分離している。
 - `RANK_AWARE_CLOSURE_FIX_REPORT_2026-08-12.md` / `runtime_rank_aware_closure_fix_manifest.json` / `runtime_rank_aware_closure_fix.patch`: underdetermined・構造的rank欠損系を局所full-rank chartで高精度化する一般修正、全source残差による再認証、対象6件+対照1件の180秒/1 core厳密集合一致を固定する。
+- `AFFINE_PI_EXACTIFICATION_FIX_REPORT_2026-08-12.md` / `runtime_affine_pi_exactification_fix_manifest.json` / `runtime_affine_pi_exactification_fix.patch`: 実代数的数`A,B`を持つ`A*pi+B`の有界PSLQ復元、式全体の直接距離検証、π対象3件の180秒/1 core厳密集合一致を固定する。
 - `DSL_INTEGRITY_AUDIT.md` / `verify_dsl_integrity.py`: 302 JSONの重複キー、IR parser、source provenance、変数上限、benchmark coverageを検査する最終監査。
 - `validate_benchmark_180_final.py`: 最終benchmarkのstatus・answer-set・CPU affinity検証。
 - `PERFORMANCE_DIAGNOSIS.md`: 旧134/145との比較差、answer projection/DSL分岐、solver exception/timeoutを切り分けた検証報告。
