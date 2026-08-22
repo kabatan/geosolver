@@ -7,7 +7,11 @@ from dataclasses import dataclass
 from mpmath import mp
 
 from geosolver._internal.pipeline.contracts.pipeline_result import ExactIdentificationResult
-from geosolver._internal.solver.exact.polynomial_search import find_minimal_polynomial
+from geosolver._internal.solver.exact.affine_pi_search import identify_affine_pi
+from geosolver._internal.solver.exact.polynomial_search import (
+    canonicalize_polynomial,
+    find_minimal_polynomial,
+)
 from geosolver._internal.solver.precision.type_guards.mp_types import MPFloat
 
 from .classify_exact_requirement import RELAXED_TIER, STANDARD_TIER, STRICT_TIER
@@ -21,12 +25,28 @@ class ExactTierConfig:
     max_degree: int
     max_coeff: int
     max_steps: int
+    max_affine_pi_total_degree: int
 
 
 TIER_CONFIGS = {
-    STRICT_TIER: ExactTierConfig(max_degree=8, max_coeff=10**8, max_steps=20000),
-    STANDARD_TIER: ExactTierConfig(max_degree=6, max_coeff=10**7, max_steps=15000),
-    RELAXED_TIER: ExactTierConfig(max_degree=4, max_coeff=10**6, max_steps=10000),
+    STRICT_TIER: ExactTierConfig(
+        max_degree=8,
+        max_coeff=10**8,
+        max_steps=20000,
+        max_affine_pi_total_degree=4,
+    ),
+    STANDARD_TIER: ExactTierConfig(
+        max_degree=6,
+        max_coeff=10**7,
+        max_steps=15000,
+        max_affine_pi_total_degree=3,
+    ),
+    RELAXED_TIER: ExactTierConfig(
+        max_degree=4,
+        max_coeff=10**6,
+        max_steps=10000,
+        max_affine_pi_total_degree=1,
+    ),
 }
 
 
@@ -101,6 +121,55 @@ def _sympy_fallback(value: MPFloat, precision_dps: int) -> tuple[str | None, MPF
     return None, residual
 
 
+def _is_symbolic_zero(value: str | None) -> bool:
+    if value is None:
+        return False
+    try:
+        import sympy as sp
+
+        return bool(sp.sympify(value) == 0)
+    except Exception:
+        return str(value).strip() in {"0", "0.0"}
+
+
+def _numeric_value_is_exact_zero(value: MPFloat, precision_dps: int) -> bool:
+    try:
+        with mp.workdps(max(int(precision_dps) + 20, int(mp.dps))):
+            return bool(mp.mpf(value) == 0)
+    except Exception:
+        return False
+
+
+def _identify_affine_pi_result(
+    *,
+    answer_hp: MPFloat,
+    config: ExactTierConfig,
+    input_precision_dps: int,
+) -> ExactIdentificationResult | None:
+    candidate = identify_affine_pi(
+        numeric_value=answer_hp,
+        precision_dps=int(input_precision_dps),
+        max_total_degree=int(config.max_affine_pi_total_degree),
+        max_coeff=int(config.max_coeff),
+        max_steps=int(config.max_steps),
+    )
+    if candidate is None:
+        return None
+    return ExactIdentificationResult(
+        exact_status="identified",
+        identification_method=candidate.method,
+        input_precision_dps=int(input_precision_dps),
+        # A nonconstant A*pi+B is transcendental, so it has no minimal
+        # polynomial over the rationals.  The bivariate search relation is an
+        # internal reconstruction certificate, not this contract field.
+        minimal_polynomial=None,
+        polynomial_degree=None,
+        selected_exact_value=candidate.exact_value,
+        verification_residual=candidate.verification_residual,
+        numeric_fallback_value=None,
+    )
+
+
 def identify_answer(
     *,
     answer_hp: MPFloat,
@@ -118,6 +187,30 @@ def identify_answer(
         verbose=False,
     )
     if coefficients is not None:
+        # Keep the contract defensive even when a third-party/legacy search
+        # backend supplies a reducible or repeated relation.  Exact results
+        # must carry a primitive square-free minimal factor, never a relation
+        # whose multiplicity artificially reduces the residual.
+        canonical = canonicalize_polynomial(coefficients, answer_hp)
+        if canonical is None:
+            affine_pi_result = _identify_affine_pi_result(
+                answer_hp=answer_hp,
+                config=config,
+                input_precision_dps=int(input_precision_dps),
+            )
+            if affine_pi_result is not None:
+                return affine_pi_result
+            return ExactIdentificationResult(
+                exact_status="verification_failed",
+                identification_method="pslq-noncanonical",
+                input_precision_dps=int(input_precision_dps),
+                minimal_polynomial=tuple(int(c) for c in coefficients),
+                polynomial_degree=len(coefficients) - 1,
+                selected_exact_value=None,
+                verification_residual=mp.inf,
+                numeric_fallback_value=answer_hp,
+            )
+        coefficients = canonical
         verified, residual = verify_identified_answer(
             coefficients=coefficients,
             numeric_value=answer_hp,
@@ -137,6 +230,25 @@ def identify_answer(
                 else:
                     selected_exact = f"poly({coefficients})"
                     method = "pslq"
+            # A zero-root polynomial can have a tiny nonzero numerical value
+            # as its approximate root (for example x**7 at 1e-122).  The
+            # polynomial residual alone is therefore not proof that the exact
+            # answer is zero.  Keep the numeric value unresolved unless the
+            # evaluator itself returned exact zero.
+            if _is_symbolic_zero(selected_exact) and not _numeric_value_is_exact_zero(
+                answer_hp,
+                int(input_precision_dps),
+            ):
+                return ExactIdentificationResult(
+                    exact_status="verification_failed",
+                    identification_method=f"{method}-zero_rejected",
+                    input_precision_dps=int(input_precision_dps),
+                    minimal_polynomial=tuple(int(c) for c in coefficients),
+                    polynomial_degree=degree,
+                    selected_exact_value=None,
+                    verification_residual=residual,
+                    numeric_fallback_value=answer_hp,
+                )
             return ExactIdentificationResult(
                 exact_status="identified",
                 identification_method=method,
@@ -147,6 +259,13 @@ def identify_answer(
                 verification_residual=residual,
                 numeric_fallback_value=None,
             )
+        affine_pi_result = _identify_affine_pi_result(
+            answer_hp=answer_hp,
+            config=config,
+            input_precision_dps=int(input_precision_dps),
+        )
+        if affine_pi_result is not None:
+            return affine_pi_result
         return ExactIdentificationResult(
             exact_status="verification_failed",
             identification_method="pslq",
@@ -157,8 +276,29 @@ def identify_answer(
             verification_residual=residual,
             numeric_fallback_value=answer_hp,
         )
+    affine_pi_result = _identify_affine_pi_result(
+        answer_hp=answer_hp,
+        config=config,
+        input_precision_dps=int(input_precision_dps),
+    )
+    if affine_pi_result is not None:
+        return affine_pi_result
     sympy_exact, sympy_residual = _sympy_fallback(answer_hp, int(input_precision_dps))
     if sympy_exact is not None:
+        if _is_symbolic_zero(sympy_exact) and not _numeric_value_is_exact_zero(
+            answer_hp,
+            int(input_precision_dps),
+        ):
+            return ExactIdentificationResult(
+                exact_status="not_identified",
+                identification_method="sympy-zero-rejected",
+                input_precision_dps=int(input_precision_dps),
+                minimal_polynomial=None,
+                polynomial_degree=None,
+                selected_exact_value=None,
+                verification_residual=sympy_residual,
+                numeric_fallback_value=answer_hp,
+            )
         return ExactIdentificationResult(
             exact_status="identified",
             identification_method="sympy",

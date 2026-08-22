@@ -233,9 +233,21 @@ def MP_Line(*args):
         if line is None:
             raise ValueError("Cannot create line from identical points")
         return line
+    # The public geometry API also permits a line in coefficient form
+    # ``Line(a, b, c)`` for ``a*x + b*y + c = 0``.  Keep this conversion at
+    # the high-precision boundary so DSL expressions do not need a separate
+    # coordinate-only workaround.
+    if len(args) == 3:
+        a, b, c = (_to_mpf(value) for value in args)
+        if a == 0 and b == 0:
+            raise ValueError("Cannot create a line with zero coefficients")
+        return MPLine(a, b, c)
     if len(args) == 1 and isinstance(args[0], MPLine):
         return args[0]
-    raise TypeError(f"Line expects two MPPoint objects. Got: {[type(a) for a in args]}")
+    raise TypeError(
+        "Line expects two MPPoint objects, one MPLine, or three numeric coefficients. "
+        f"Got: {[type(a) for a in args]}"
+    )
 
 
 def MP_OnLine(

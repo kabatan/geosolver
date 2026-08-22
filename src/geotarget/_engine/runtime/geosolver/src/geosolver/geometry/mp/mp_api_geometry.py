@@ -120,7 +120,20 @@ def MP_ClosestPoint(point, line):
     return mp_closest_point(point, line)
 
 
-def MP_Rotate(point, center, angle):
+def MP_Rotate(point, angle, center=None):
+    """Rotate using the public ``Rotate(point, angle, center)`` signature.
+
+    Older internal callers used ``(point, center, angle)``.  Accept that
+    ordering as well while making the public ordering the canonical one.
+    """
+    if isinstance(angle, MPPoint):
+        # Backward compatibility for the former internal ordering.
+        legacy_center = angle
+        angle, center = center, legacy_center
+    if center is None:
+        center = MPPoint(0, 0)
+    if not isinstance(center, MPPoint):
+        raise TypeError("Rotate center must be an MPPoint")
     return mp_rotate(point, center, angle)
 
 
@@ -172,8 +185,32 @@ def MP_AngleBisector(A, B, C):
     return mp_angle_bisector(A, B, C)
 
 
-def MP_TangentLine(circle, point):
-    return mp_tangent_line(circle, point)
+def _select_tangent_line(lines, use_first=True):
+    """Match the high-level Tangent API, which returns one line."""
+    if lines is None:
+        return None
+    if isinstance(lines, (list, tuple)):
+        if not lines:
+            return None
+        return lines[0] if use_first else lines[-1]
+    return lines
+
+
+def _normalize_point_circle_args(arg1, arg2, operation):
+    """Normalize public ``(point, circle)`` and legacy ``(circle, point)``."""
+    if isinstance(arg1, MPCircle) and isinstance(arg2, MPPoint):
+        return arg2, arg1
+    if isinstance(arg1, MPPoint) and isinstance(arg2, MPCircle):
+        return arg1, arg2
+    raise TypeError(f"{operation} expects a point and a circle")
+
+
+def MP_TangentLine(arg1, arg2, use_first=True):
+    # ``TangentLine`` is a public alias of ``Tangent(point, circle)`` while
+    # the historical low-level helper used ``(circle, point)``.  Accept both
+    # orders at the boundary.
+    point, circle = _normalize_point_circle_args(arg1, arg2, "TangentLine")
+    return _select_tangent_line(mp_tangent_line(circle, point), use_first)
 
 
 def MP_RadicalAxis(c1, c2):
@@ -250,8 +287,10 @@ def MP_Center(obj):
     raise TypeError("Expected MPCircle or MPArc")
 
 
-def MP_Tangent(point, circle):
-    return mp_tangent_line(circle, point)
+def MP_Tangent(arg1, arg2, use_first=True):
+    """Return one tangent line for either public or legacy argument order."""
+    point, circle = _normalize_point_circle_args(arg1, arg2, "Tangent")
+    return _select_tangent_line(mp_tangent_line(circle, point), use_first)
 
 
 def MP_Perpendicular(line1, line2):

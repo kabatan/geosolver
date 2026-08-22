@@ -722,6 +722,17 @@ def _run_external_pipeline_without_variables(
     accepted_answers: tuple[MPFloat, ...] = ()
     phasec_answer_values: tuple[str, ...] = ()
     phasec_accepted_count = 0
+    # Keep the result object available for the no-solution branch below.  In
+    # the old code it was only assigned after a successful direct evaluation,
+    # so a valid zero-variable problem whose guards failed raised
+    # ``UnboundLocalError`` while assembling the summary.
+    phasec_result = PhaseCAssemblyResult(
+        accepted_candidates=(),
+        exact_results=(),
+        answer_values=(),
+        rejected_false_positive_count=0,
+        rejection_tags=(),
+    )
     if (
         guard_ok
         and hp_eval.evaluation_status is EvaluationStatus.OK

@@ -28,9 +28,9 @@ pnpm --dir frontend build
 
 The qualified default is the `optimized` engine in adaptive mode, with a
 900-second safety cap and automatic physical-core selection. Its stable engine
-hash is `224025b3113b59814bd354e8db2e4181cc64faf010f9de0eaf19d4cbe28f1868`.
-The byte-identical `reference` engine remains available for the frozen
-one-core, 180-second reproduction mode.
+hash is `e1309839656f19d8486dbd10bebc4f0730132f8f88ab097ab3fa57e7abb8255f`.
+The experiment-aligned `reference` engine remains available for the one-core,
+180-second reproduction mode.
 `no_answer_found` is not a proof that the source geometry has no solution. See
 `CHARTER.md` and `docs/V15_GEOMETRY_DSL_AUTHORING_MANUAL_ja.md`.
 

@@ -86,7 +86,10 @@ class NomadBlackboxAdapter:
                 )
             )
             return 0
-        hard_snapshot = self.evaluator.evaluate_float_hard_feasibility(coords)
+        hard_snapshot = self.evaluator.evaluate_float_hard_feasibility(
+            coords,
+            include_margins=False,
+        )
         guard_ok, _violations = self.evaluator.evaluate_guard(coords)
         penalty = 0.0 if hard_snapshot.hard_feasible else self.config.guard_penalty
         if self.constraint_scales is not None:

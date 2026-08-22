@@ -42,6 +42,8 @@ class EvaluatorPort(Protocol):
     def evaluate_float_hard_feasibility(
         self,
         values: Sequence[float],
+        *,
+        include_margins: bool = True,
     ) -> HardFeasibilitySnapshot:
         """Evaluate hard-feasibility checks in float mode."""
 
@@ -50,6 +52,7 @@ class EvaluatorPort(Protocol):
         values: Sequence[MPFloat],
         *,
         precision: int,
+        include_margins: bool = True,
     ) -> HardFeasibilitySnapshot:
         """Evaluate hard-feasibility checks in high-precision mode."""
 

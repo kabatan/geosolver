@@ -37,7 +37,12 @@ _PARAMETRIC_LOCAL_FLOAT_TIME_BUDGET_SECONDS = 60.0
 _BOUNDED_TRF_TIME_BUDGET_SECONDS = 45.0
 _N_HALTON_STARTS = 320
 _LM_MAX_NFEV = 80
-_RESIDUAL_ACCEPT_FLOAT = 1e-8
+# Keep a small search-side closure window so that the high-precision refiner
+# can polish roots returned by bounded 1-D scans.  Phase C still applies the
+# strict residual gate (1e-15) to the polished candidate, so this does not
+# weaken final answer acceptance.  In particular, a root found within the
+# scan's float resolution must not be discarded before refinement.
+_RESIDUAL_ACCEPT_FLOAT = 1e-6
 _FLOAT_HARD_FEASIBILITY_MARGIN_MIN = mp.mpf("1e-6")
 _HALTON_START_BURN_IN = 3
 _HALTON_PREFIX_STARTS_PER_DIMENSION = 1
@@ -504,7 +509,10 @@ def _evaluate_hard_feasibility_penalty(
     values: np.ndarray,
 ) -> float:
     try:
-        snapshot = evaluator.evaluate_float_hard_feasibility(list(values))
+        snapshot = evaluator.evaluate_float_hard_feasibility(
+            list(values),
+            include_margins=False,
+        )
     except Exception:
         return float(1e3)
     if not snapshot.hard_feasible:
@@ -705,7 +713,10 @@ def _build_candidate(
             hard_violation_tags=(f"eval_status:{float_eval.evaluation_status.value}",),
             validity_margin_float=None,
         )
-    hard_snapshot = evaluator.evaluate_float_hard_feasibility(point)
+    hard_snapshot = evaluator.evaluate_float_hard_feasibility(
+        point,
+        include_margins=False,
+    )
     guard_ok, _violations = evaluator.evaluate_guard(point)
     penalty = 0.0 if hard_snapshot.hard_feasible else float(config.guard_penalty)
     validity_margin_float = None
@@ -757,7 +768,10 @@ def _rank_bounded_trf_starts(
             guard_ok = False
         try:
             hard_feasible = bool(
-                evaluator.evaluate_float_hard_feasibility(list(start)).hard_feasible
+                evaluator.evaluate_float_hard_feasibility(
+                    list(start),
+                    include_margins=False,
+                ).hard_feasible
             )
         except Exception:
             hard_feasible = False

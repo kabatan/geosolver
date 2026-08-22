@@ -133,9 +133,14 @@ def _evaluate_guard_check(
     check: HardFeasibilityCheck,
     guard_ok: bool,
     guard_violations: tuple[str, ...],
+    guard_margin: MPFloat | None,
 ) -> tuple[bool, str | None, MPFloat | None]:
     if guard_ok:
-        return True, None, mp.mpf("1")
+        if guard_margin is None:
+            return False, f"{check.check_id}:margin_unavailable", None
+        if mp.isfinite(guard_margin) and guard_margin <= 0:
+            return False, f"{check.check_id}:boundary", guard_margin
+        return True, None, guard_margin
     if guard_violations:
         return False, guard_violations[0], None
     return False, check.check_id, None
@@ -271,12 +276,21 @@ def _evaluate_single_check(
     allow_float: bool,
     guard_ok: bool,
     guard_violations: tuple[str, ...],
+    guard_margins: tuple[MPFloat | None, ...],
 ) -> tuple[bool, str | None, MPFloat | None]:
     if check.kind == KIND_GUARD:
+        guard_margin: MPFloat | None = None
+        try:
+            guard_index = int(check.check_id.rsplit(":", 1)[1])
+            if 0 <= guard_index < len(guard_margins):
+                guard_margin = guard_margins[guard_index]
+        except (IndexError, TypeError, ValueError):
+            guard_margin = None
         return _evaluate_guard_check(
             check=check,
             guard_ok=guard_ok,
             guard_violations=guard_violations,
+            guard_margin=guard_margin,
         )
     if check.kind == KIND_LINE_DISTINCT:
         return _evaluate_line_distinct_check(
@@ -326,6 +340,7 @@ def evaluate_hard_feasibility(
     allow_float: bool,
     guard_ok: bool,
     guard_violations: tuple[str, ...],
+    guard_margins: tuple[MPFloat | None, ...] = (),
 ) -> HardFeasibilitySnapshot:
     """Evaluate hard-feasibility checks and return aggregated snapshot."""
     if not checks:
@@ -362,6 +377,7 @@ def evaluate_hard_feasibility(
             allow_float=allow_float,
             guard_ok=guard_ok,
             guard_violations=guard_violations,
+            guard_margins=guard_margins,
         )
         if ok:
             if margin is not None and mp.isfinite(margin):

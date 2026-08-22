@@ -35,6 +35,7 @@ from geosolver._internal.autosolve.execution.interpreter_result_helpers import (
 from geosolver._internal.autosolve.answer.precision_schedule import MIN_PRECISION
 from geosolver._internal.autosolve.guards.compile import (
     compile_guards,
+    guard_margin_value,
     guard_hard_satisfied,
     guard_violation_value,
 )
@@ -423,6 +424,45 @@ def _evaluate_answer_value(
         return safe_eval_expr(spec.objective_expr, context)
     return None
 
+def _collect_guard_evidence(
+    values: list[Any],
+    *,
+    spec: IRSpec,
+    var_names: list[str],
+    base_context: dict[str, Any],
+    compiled_guards: tuple[Any, ...] | None = None,
+    include_margins: bool = True,
+) -> tuple[list[str], tuple[Any | None, ...]]:
+    if not spec.guards:
+        return [], ()
+    target_dps = max(int(mp.dps), MIN_PRECISION, 80)
+    with mp.workdps(target_dps):
+        try:
+            context = _build_guard_context(spec, var_names, values, base_context)
+        except Exception as exc:
+            return [f"context_error: {exc}"], tuple(None for _ in spec.guards)
+
+        guard_irs = compiled_guards if compiled_guards is not None else compile_guards(spec.guards)
+        violations: list[str] = []
+        margins: list[Any | None] = []
+        for index, guard_ir in enumerate(guard_irs):
+            try:
+                guard_ok = guard_hard_satisfied(guard_ir, context)
+                if not guard_ok:
+                    violations.append(f"guard[{index}] returned False")
+                    margins.append(None)
+                else:
+                    margins.append(
+                        guard_margin_value(guard_ir, context)
+                        if include_margins
+                        else mp.inf
+                    )
+            except Exception as exc:
+                violations.append(f"guard[{index}] raised: {exc}")
+                margins.append(None)
+        return violations, tuple(margins)
+
+
 def _collect_guard_violations(
     values: list[Any],
     *,
@@ -431,24 +471,14 @@ def _collect_guard_violations(
     base_context: dict[str, Any],
     compiled_guards: tuple[Any, ...] | None = None,
 ) -> list[str]:
-    if not spec.guards:
-        return []
-    target_dps = max(int(mp.dps), MIN_PRECISION, 80)
-    with mp.workdps(target_dps):
-        try:
-            context = _build_guard_context(spec, var_names, values, base_context)
-        except Exception as exc:
-            return [f"context_error: {exc}"]
-
-        guard_irs = compiled_guards if compiled_guards is not None else compile_guards(spec.guards)
-        violations: list[str] = []
-        for index, guard_ir in enumerate(guard_irs):
-            try:
-                if not guard_hard_satisfied(guard_ir, context):
-                    violations.append(f"guard[{index}] returned False")
-            except Exception as exc:
-                violations.append(f"guard[{index}] raised: {exc}")
-        return violations
+    violations, _margins = _collect_guard_evidence(
+        values,
+        spec=spec,
+        var_names=var_names,
+        base_context=base_context,
+        compiled_guards=compiled_guards,
+    )
+    return violations
 
 
 def _guard_violation_penalty(

@@ -6,7 +6,9 @@ from collections.abc import Sequence
 from dataclasses import replace
 
 from geosolver._internal.autosolve.context import _get_high_precision_context
-from geosolver._internal.autosolve.execution.interpreter_helpers import _collect_guard_violations
+from geosolver._internal.autosolve.execution.interpreter_helpers import (
+    _collect_guard_evidence,
+)
 from geosolver.ir.compiler import safe_eval_expr_hp
 from geosolver._internal.solver.precision.type_guards.mp_types import MPFloat
 from geosolver._internal.solver.precision.type_guards.strict_to_mpf import strict_to_mpf
@@ -29,13 +31,15 @@ def evaluate_hp_hard_feasibility(
     bundle: ProblemBundle,
     values: Sequence[MPFloat],
     precision: int,
+    include_margins: bool = True,
 ) -> HardFeasibilitySnapshot:
     """Evaluate hard-feasibility checks in high-precision execution mode."""
-    guard_violations = _collect_guard_violations(
+    guard_violations, guard_margins = _collect_guard_evidence(
         list(values),
         spec=bundle.spec,
         var_names=list(bundle.var_names),
         base_context=dict(bundle.base_context),
+        include_margins=bool(include_margins),
     )
     hp_base_context = dict(bundle.base_context)
     hp_base_context.update(_get_high_precision_context(int(precision)))
@@ -49,4 +53,5 @@ def evaluate_hp_hard_feasibility(
         allow_float=False,
         guard_ok=(len(guard_violations) == 0),
         guard_violations=tuple(guard_violations),
+        guard_margins=guard_margins,
     )

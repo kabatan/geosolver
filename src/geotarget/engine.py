@@ -28,7 +28,7 @@ from geotarget.resources import ResourceReservation
 from geotarget.runtime_broker import ProductRuntimeBroker
 
 ENGINE_ID = "champion-v2-poc-preloaded-20260722"
-ENGINE_HASH = "9fa23aecdb9372dfd961b46224b88937c3317eaeb56796a05142563f26078f15"
+ENGINE_HASH = "b3846de5a725abd32241616c637ba435b292f0a4cdd22a6bf105a2e995edf408"
 OPTIMIZED_ENGINE_ID = "champion-v2-poc-preloaded-optimized-v1"
 INITIAL_ALGORITHM_SECONDS = 180.0
 # The frozen process establishes PROCESS_STARTED only after the interpreter and

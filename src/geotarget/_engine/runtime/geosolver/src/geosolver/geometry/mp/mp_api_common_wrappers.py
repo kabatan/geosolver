@@ -37,11 +37,47 @@ def MP_Circumcircle(A: Any, B: Any, C: Any) -> Any:
     return mp_circumcircle(A, B, C)
 
 
+def _same_point(left: Any, right: Any) -> bool:
+    return left is right or (isinstance(left, MPPoint) and isinstance(right, MPPoint) and left == right)
+
+
+def _normalize_contact_side(A: Any, B: Any, C: Any, side: Any) -> Any:
+    """Normalize the public side aliases to the pair expected by mp_impl."""
+    if side is None:
+        return None
+    if isinstance(side, str):
+        return {
+            "BC": (B, C),
+            "CA": (C, A),
+            "AB": (A, B),
+        }.get(side)
+    # bool is an int subclass, but is not a meaningful side index.
+    if isinstance(side, int) and not isinstance(side, bool):
+        return {0: (B, C), 1: (C, A), 2: (A, B)}.get(side)
+    if isinstance(side, (tuple, list)):
+        return tuple(side) if len(side) == 2 else None
+    if _same_point(side, A):
+        return (B, C)
+    if _same_point(side, B):
+        return (C, A)
+    if _same_point(side, C):
+        return (A, B)
+    return None
+
+
 def MP_IncircleContactPoint(A: Any, B: Any, C: Any, side: Any = None) -> Any:
-    return mp_incircle_contact_point(A, B, C, side)
+    normalized_side = _normalize_contact_side(A, B, C, side)
+    return mp_incircle_contact_point(A, B, C, normalized_side)
 
 
 def MP_Intersect(obj1: Any, obj2: Any, exclude: Any = None, **kwargs: Any) -> Any:
+    # Construction helpers conventionally return a single object.  Unwrap a
+    # singleton result defensively so a backend that represents a unique
+    # tangent/intersection as ``[line]`` remains composable in the DSL.
+    if isinstance(obj1, (list, tuple)) and len(obj1) == 1:
+        obj1 = obj1[0]
+    if isinstance(obj2, (list, tuple)) and len(obj2) == 1:
+        obj2 = obj2[0]
     return mp_intersect(obj1, obj2, exclude=exclude, **kwargs)
 
 

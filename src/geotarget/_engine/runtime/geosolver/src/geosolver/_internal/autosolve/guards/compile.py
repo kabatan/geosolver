@@ -492,6 +492,118 @@ def _compare_violation(lhs_value: Any, rhs_value: Any, operator: str) -> Any:
     return mp.mpf("1")
 
 
+def _normalized_positive_margin(gap: Any, *scale_values: Any) -> Any:
+    """Return a dimensionless distance from a strict guard boundary."""
+    gap_mpf = _as_mpf(gap)
+    if not mp.isfinite(gap_mpf):
+        return mp.mpf("0")
+    scale = mp.mpf("1")
+    for value in scale_values:
+        try:
+            scale = max(scale, abs(_as_mpf(value)))
+        except Exception:
+            continue
+    return max(mp.mpf("0"), gap_mpf) / scale
+
+
+def _convexity_margin(guard: GuardIR, context: dict[str, Any]) -> Any:
+    """Return the smallest strict turn margin for ``AssumeConvex``."""
+    call = _extract_call_signature(str(guard.condition_expr or guard.source))
+    if call is None or call[0] not in {"AssumeConvex", "AssumeStrictConvex"}:
+        return mp.inf
+    parts = _split_top_level_args(call[1])
+    if not parts:
+        return mp.inf
+    try:
+        raw_points = (
+            _safe_eval_numeric(parts[0], context)
+            if len(parts) == 1
+            else [_safe_eval_numeric(part, context) for part in parts]
+        )
+        points = tuple(_point_xy(point) for point in raw_points)
+    except Exception:
+        return mp.inf
+    if len(points) < 3:
+        return mp.mpf("0")
+    minimum = mp.inf
+    for index in range(len(points)):
+        previous = points[index - 1]
+        current = points[index]
+        following = points[(index + 1) % len(points)]
+        first_x = current[0] - previous[0]
+        first_y = current[1] - previous[1]
+        second_x = following[0] - current[0]
+        second_y = following[1] - current[1]
+        denominator = mp.sqrt(first_x * first_x + first_y * first_y) * mp.sqrt(
+            second_x * second_x + second_y * second_y
+        )
+        if denominator <= 0:
+            return mp.mpf("0")
+        minimum = min(
+            minimum,
+            abs(first_x * second_y - first_y * second_x) / denominator,
+        )
+    return minimum
+
+
+def guard_margin_value(guard: GuardIR, context: dict[str, Any]) -> Any:
+    """Return the geometric margin for a guard that has passed.
+
+    Strict comparisons and open bounds receive a finite, dimensionless
+    margin. Closed/equality predicates have an allowed boundary and therefore
+    return ``+inf``. Unknown predicates retain the legacy ``+inf`` value;
+    their truth is still checked by ``guard_hard_satisfied``.
+    """
+    if guard.kind == "compare":
+        lhs = _as_mpf(_safe_eval_numeric(str(guard.lhs_expr), context))
+        rhs = _as_mpf(_safe_eval_numeric(str(guard.rhs_expr), context))
+        operator = str(guard.operator)
+        if operator == ">":
+            return _normalized_positive_margin(lhs - rhs, lhs, rhs)
+        if operator == "<":
+            return _normalized_positive_margin(rhs - lhs, lhs, rhs)
+        if operator == "!=":
+            return _normalized_positive_margin(abs(lhs - rhs), lhs, rhs)
+        return mp.inf
+    if guard.kind == "bound_open":
+        value = _as_mpf(_safe_eval_numeric(str(guard.lhs_expr), context))
+        margins: list[Any] = []
+        if guard.lower_expr is not None:
+            lower = _as_mpf(_safe_eval_numeric(guard.lower_expr, context))
+            margins.append(_normalized_positive_margin(value - lower, value, lower))
+        if guard.upper_expr is not None:
+            upper = _as_mpf(_safe_eval_numeric(guard.upper_expr, context))
+            margins.append(_normalized_positive_margin(upper - value, value, upper))
+        return min(margins) if margins else mp.inf
+    if guard.kind == "triangle_class":
+        side_ratio, sine_measure, minimum_cosine = _triangle_class_measures(
+            guard,
+            context,
+        )
+        if guard.operator == "acute":
+            return min(side_ratio, sine_measure, minimum_cosine)
+        if guard.operator == "obtuse":
+            return min(side_ratio, sine_measure, -minimum_cosine)
+        if guard.operator == "right":
+            return min(side_ratio, sine_measure)
+        return mp.inf
+    if guard.kind == "logical_and":
+        return min(
+            (guard_margin_value(child, context) for child in guard.children),
+            default=mp.inf,
+        )
+    if guard.kind == "logical_or":
+        passing = [
+            guard_margin_value(child, context)
+            for child in guard.children
+            if guard_hard_satisfied(child, context)
+        ]
+        return max(passing) if passing else mp.mpf("0")
+    if guard.kind == "raw_condition":
+        return _convexity_margin(guard, context)
+    return mp.inf
+
+
 def guard_hard_satisfied(guard: GuardIR, context: dict[str, Any]) -> bool:
     if guard.kind == "triangle_class":
         return _triangle_class_hard_satisfied(guard, context)

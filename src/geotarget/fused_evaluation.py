@@ -74,6 +74,7 @@ def _fused_call_factory(opaque_evaluation: Any):
     )
     from geosolver._internal.autosolve.guards.compile import (
         guard_hard_satisfied,
+        guard_margin_value,
         guard_violation_value,
     )
     from geosolver._internal.pipeline.evaluator._hard_feasibility_core import (
@@ -104,15 +105,21 @@ def _fused_call_factory(opaque_evaluation: Any):
                     dict(evaluator.bundle.base_context),
                 )
                 violations: list[str] = []
+                guard_margins: list[Any | None] = []
                 guard_penalty_mpf = mp.mpf("0")
                 guard_vector_values: list[float] = []
                 guard_vector_failed = False
                 for index, guard in enumerate(evaluator.compiled_guards):
                     try:
-                        if not guard_hard_satisfied(guard, context):
+                        guard_satisfied = guard_hard_satisfied(guard, context)
+                        if not guard_satisfied:
                             violations.append(f"guard[{index}] returned False")
+                            guard_margins.append(None)
+                        else:
+                            guard_margins.append(guard_margin_value(guard, context))
                     except Exception as error:
                         violations.append(f"guard[{index}] raised: {error}")
+                        guard_margins.append(None)
                     try:
                         value = guard_violation_value(guard, context)
                         if mp.isfinite(value):
@@ -142,6 +149,7 @@ def _fused_call_factory(opaque_evaluation: Any):
                 allow_float=True,
                 guard_ok=guard_ok,
                 guard_violations=tuple(violations),
+                guard_margins=tuple(guard_margins),
             )
             semantics = bool(guard_ok and hard.hard_feasible)
             hard_penalty = 0.0

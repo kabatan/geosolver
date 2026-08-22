@@ -29,8 +29,22 @@ def MP_ParallelLine(point, line):
     return mp_parallel_line(point, line)
 
 
-def MP_Perimeter(A, B, C):
-    return mp_perimeter(A, B, C)
+def MP_Perimeter(*args):
+    """Return the cyclic perimeter for any polygon with at least 3 points."""
+    if len(args) == 1:
+        obj = args[0]
+        points = getattr(obj, "points", None)
+        if points is None:
+            points = getattr(obj, "vertices", None)
+        if points is None and isinstance(obj, (list, tuple)):
+            points = obj
+        if points is not None:
+            args = tuple(points)
+    if len(args) < 3:
+        raise TypeError("Perimeter expects at least three points")
+    return sum(
+        args[i].distance_to(args[(i + 1) % len(args)]) for i in range(len(args))
+    )
 
 
 def MP_IsAcuteTriangle(A, B, C):
