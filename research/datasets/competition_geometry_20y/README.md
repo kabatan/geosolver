@@ -16,6 +16,8 @@
 - `benchmark_results_180s_1core_evaluated.json`: 上記にcoverage判定と、余分な候補を拒否する厳密解答集合判定を付加した結果。
 - `benchmark_results_180s_1core_final.json`: 最終DSL（AIME-2016-I-15の作図修正を含む）と修正済みanswer projectionで再評価した最終結果。
 - `benchmark_results_180s_1core_after_general_fix_final.json`: 公開geometry APIと高精度backendの共通互換修正後に、180秒・1 coreで全302件を再測定した結果。
+- `benchmark_results_180s_1core_latest_full_2026-08-22.json`: strict guard、exactification factor、rank-aware closure、affine π exactificationを結合した最新runtimeで、全302件をseed 7・180秒・1 coreにより連続再測定したraw結果。
+- `benchmark_results_180s_1core_latest_full_strict_2026-08-22.json` / `BENCHMARK_REPORT_180S_1CORE_LATEST_FULL_2026-08-22.md`: 上記full runをraw厳密解集合で再採点した成果物と報告。verified 205件中190件が厳密集合一致（92.68%）。
 - `exact_truth.jsonl`: 各DSLの`answer`式に対する、問題文を手作業で確認したraw厳密解集合。`published_answer`（AIMEの`a+b`等）はpresentation referenceとして別保持します。
 - `benchmark_results_180s_1core_strict_raw.json`: 上記180秒測定をraw厳密解集合で再採点した結果。`post_process`や代表解の最終形式変換は採点に使いません。
 - `BENCHMARK_REPORT_180S_1CORE_STRICT_RAW.md`: raw厳密解集合一致を正答とした採点定義、分母、内訳、再現検査の報告。

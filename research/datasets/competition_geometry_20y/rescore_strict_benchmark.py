@@ -37,7 +37,11 @@ def main() -> None:
         target = truth.get(row.get("case_id"), {})
         expected = target.get("exact_answer_set")
         values = (row.get("phasec") or {}).get("answer_values", [])
-        row["presentation_answer"] = row.get("expected_answer")
+        # Always restore the source-audited presentation answer from the truth
+        # table.  Historical inputs stored it in ``expected_answer``, while
+        # current runners already store the exact set there; copying the input
+        # field would therefore corrupt current-format artifacts.
+        row["presentation_answer"] = target.get("presentation_answer")
         row["expected_answer"] = expected
         row["truth_status"] = target.get("truth_status")
         row["raw_selected_answer"] = row.get("selected_answer")
