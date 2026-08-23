@@ -36,7 +36,9 @@ def source_tree_hash() -> str:
     for relative, resource in sorted(_product_files(files("geosolver"))):
         digest.update(relative.encode("utf-8"))
         digest.update(b"\0")
-        digest.update(resource.read_bytes())
+        # Git may materialize text as LF or CRLF depending on platform policy.
+        # Both represent the same product source and must produce the same lock.
+        digest.update(resource.read_bytes().replace(b"\r\n", b"\n"))
         digest.update(b"\0")
     return f"sha256:{digest.hexdigest()}"
 
