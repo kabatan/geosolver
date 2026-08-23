@@ -1,0 +1,304 @@
+/* ============================================================
+   Floating layers: tool catalog dialog, toast, point name card
+   ============================================================ */
+.dialog-backdrop {
+  position: fixed;
+  z-index: 40;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  background: rgb(0 0 0 / 76%);
+  animation: overlay-in var(--t-med) var(--ease);
+}
+.tool-dialog {
+  width: min(900px, calc(100vw - 40px));
+  height: min(680px, calc(100vh - 40px));
+  display: grid;
+  grid-template-rows: 60px 54px 1fr;
+  overflow: hidden;
+  border: 1px solid #4a555c;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-3);
+  animation: dialog-in var(--t-med) var(--ease);
+}
+@keyframes overlay-in {
+  from { opacity: 0; }
+}
+@keyframes dialog-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.985); }
+}
+.tool-dialog > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--cyan-600);
+  background: var(--chrome);
+}
+.tool-dialog > header span {
+  color: #71e4f6;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.tool-dialog > header h2 { margin-top: 2px; color: #fff; font-size: var(--fs-xl); font-weight: 800; letter-spacing: -0.02em; }
+.tool-dialog > header button {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: #fff;
+}
+.tool-dialog > header button:hover { background: #292929; color: #fff; }
+.catalog-search {
+  height: 54px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 18px;
+  border: 0;
+  border-bottom: 1px solid #344047;
+  border-radius: 0;
+  background: #0d171b;
+  color: var(--text-2);
+  transition: border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+}
+.catalog-search:focus-within {
+  border-bottom-color: var(--cyan-600);
+  box-shadow: inset 0 -2px var(--cyan-600);
+}
+.catalog-search svg { width: 15px; height: 15px; }
+.catalog-search input { width: 100%; border: 0; outline: 0; background: transparent; }
+.catalog-body {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  border-top: 1px solid var(--line);
+}
+.catalog-body nav {
+  min-height: 0;
+  overflow: auto;
+  padding: 10px;
+  border-right: 1px solid var(--line);
+  background: var(--surface);
+  scrollbar-width: thin;
+}
+.catalog-body nav section + section { margin-top: 12px; }
+.catalog-body nav h3 {
+  margin: 0 6px 4px;
+  color: var(--text-1);
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.catalog-body nav button {
+  width: 100%;
+  min-height: 34px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  padding: 0 9px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  text-align: left;
+}
+.catalog-body nav button:hover:not(:disabled),
+.catalog-body nav button.selected {
+  background: #173847;
+  color: #fff;
+  box-shadow: inset 3px 0 var(--cyan-600);
+}
+.catalog-body nav button span { font-size: var(--fs-xs); }
+.catalog-body nav button code { color: var(--text-3); font-size: 10px; }
+.catalog-body nav button.selected code,
+.catalog-body nav button:hover:not(:disabled) code { color: rgb(255 255 255 / 76%); }
+.tool-form { overflow: auto; padding: 22px; scrollbar-width: thin; }
+.status-pill {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--green-bg);
+  color: var(--green-600);
+  font-size: 11px;
+  font-weight: 650;
+}
+.status-advanced { background: var(--amber-bg); color: var(--amber-700); }
+.status-legacy_read_only { background: var(--surface-3); color: var(--text-2); }
+.tool-form h3 { margin: 9px 0; font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+.tool-form > p { margin-bottom: 18px; color: var(--text-2); font-size: var(--fs-sm); line-height: 1.55; }
+.tool-form > label {
+  display: block;
+  margin-top: 13px;
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+  font-weight: 650;
+}
+.tool-form input,
+.tool-form textarea {
+  width: 100%;
+  margin-top: 5px;
+  padding: 8px 10px;
+  border: 1px solid #3c474e;
+  border-radius: var(--radius-md);
+}
+.tool-form input:focus,
+.tool-form textarea:focus {
+  outline: none;
+  border-color: var(--accent-600);
+  box-shadow: 0 0 0 2px rgb(54 198 223 / 18%);
+}
+.tool-form input { height: 38px; }
+.tool-form textarea {
+  height: 100px;
+  resize: vertical;
+  font: var(--fs-sm)/1.5 ui-monospace, monospace;
+}
+.tool-form textarea.formula-input { min-height: 54px; font: 500 15px/1.5 Inter, system-ui, sans-serif; }
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
+}
+.dialog-actions button {
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--text-1);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  font-weight: 550;
+}
+.dialog-actions button:hover { background: var(--surface-2); }
+.dialog-actions button.primary-action {
+  border-color: var(--accent-600);
+  background: var(--accent-600);
+  color: #fff;
+}
+.dialog-actions button.primary-action:hover:not(:disabled) { background: var(--accent-700); }
+.dialog-actions button.guided-action {
+  border-color: var(--accent-200);
+  background: var(--accent-50);
+  color: var(--accent-600);
+}
+.dialog-actions button.guided-action:hover { background: var(--accent-100); }
+
+/* --- Toast -------------------------------------------------------- */
+.toast {
+  position: fixed;
+  z-index: 50;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  min-width: 300px;
+  max-width: min(620px, 90vw);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 12px 11px 14px;
+  border: 1px solid var(--red-line);
+  border-left: 3px solid var(--red-600);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--red-650);
+  box-shadow: var(--shadow-3);
+  font-size: var(--fs-sm);
+  animation: toast-in var(--t-med) var(--ease);
+}
+@keyframes toast-in {
+  from { opacity: 0; transform: translate(-50%, 12px); }
+}
+.toast button {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: inherit;
+}
+.toast button:hover { background: var(--red-bg); }
+.toast svg { width: 15px; height: 15px; }
+.toast.success {
+  border-color: color-mix(in srgb, var(--green-600) 36%, var(--line));
+  border-left-color: var(--green-600);
+  color: var(--green-600);
+}
+.toast.success button:hover { background: var(--green-bg); }
+
+/* --- Point naming card --------------------------------------------- */
+.point-name-card {
+  position: fixed;
+  z-index: 45;
+  left: 50%;
+  bottom: 24px;
+  width: min(360px, calc(100vw - 32px));
+  transform: translateX(-50%);
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-3);
+  animation: toast-in var(--t-med) var(--ease);
+}
+.point-name-card > div:first-child,
+.point-name-card > div:last-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.point-name-card strong { color: var(--text-1); font-size: var(--fs-md); }
+.point-name-card > div:first-child span {
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-3);
+  color: var(--text-3);
+  font-size: 10px;
+  font-weight: 600;
+}
+.point-name-card p {
+  margin: 5px 0 10px;
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+.point-name-card input {
+  width: 100%;
+  height: 38px;
+  margin-bottom: 10px;
+  padding: 0 11px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  font-size: var(--fs-md);
+}
+.point-name-card input:focus {
+  outline: none;
+  border-color: var(--accent-400);
+  box-shadow: 0 0 0 3px var(--accent-100);
+}
+.point-name-card button {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  font-weight: 550;
+}
+.point-name-card button:hover { background: var(--surface-2); }
+.point-name-card button.primary-action {
+  border-color: var(--accent-600);
+  background: var(--accent-600);
+  color: #fff;
+}

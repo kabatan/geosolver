@@ -1,50 +1,21 @@
 import {
-  Angle,
-  ArrowArcRight,
   ArrowClockwise,
   ArrowCounterClockwise,
-  ArrowLineRight,
-  ArrowRight,
-  ArrowsClockwise,
-  ArrowsHorizontal,
-  ArrowsLeftRight,
   ArrowsOut,
-  Check,
-  Circle,
-  CircleDashed,
-  CircleHalf,
-  CircleNotch,
-  CirclesThree,
-  CloudArrowDown,
-  CloudArrowUp,
-  CompassTool,
-  CrosshairSimple,
-  Cursor,
+  CaretLeft,
+  CaretRight,
+  DotsNine,
   DotsThreeVertical,
   Eye,
   EyeSlash,
-  FloppyDisk,
   GridFour,
   Hand,
-  Intersect,
-  IntersectSquare,
-  IntersectThree,
-  LineSegment,
-  LineSegments,
   MagnifyingGlass,
   Minus,
-  Pentagon,
-  Play,
   Plus,
-  Polygon,
-  Ruler,
-  Selection,
   Shapes,
-  Stop,
   Target,
   Trash,
-  Triangle,
-  VectorTwo,
   Wrench,
   X,
 } from "@phosphor-icons/react";
@@ -52,9 +23,7 @@ import {
   CSSProperties,
   ChangeEvent,
   KeyboardEvent as ReactKeyboardEvent,
-  MouseEvent as ReactMouseEvent,
   PointerEvent as ReactPointerEvent,
-  ReactNode,
   Suspense,
   WheelEvent as ReactWheelEvent,
   lazy,
@@ -89,12 +58,12 @@ import {
   parameterizedPoint,
   uniqueIdentifier,
 } from "./authoring";
-import { MathKeyboard } from "./MathKeyboard";
-import { expressionToTex, MathFormula } from "./MathFormula";
+import { MathFormula, expressionToTex } from "./MathFormula";
 import {
   ExpressionAutocomplete,
   ExpressionSuggestion,
 } from "./ExpressionAutocomplete";
+import { MathKeyboard } from "./MathKeyboard";
 import {
   ApiResult,
   RunProgress,
@@ -103,1565 +72,149 @@ import {
 } from "./useSolverJob";
 import {
   DEFAULT_LAYOUT_SIZES,
+  DESKTOP_MODEL_PANE_MIN_WIDTH,
+  WIDE_WORKBENCH_MIN_WIDTH,
   useWorkbenchLayout,
 } from "./useWorkbenchLayout";
+import {
+  CANVAS,
+  EMPTY_CATALOG,
+  FREEDOM_LABEL,
+  GuidedSelection,
+  HistoryState,
+  INITIAL_PROBLEM,
+  Measurement,
+  ObjectStyle,
+  PendingPoint,
+  PointNaming,
+  PaletteTool,
+  Problem,
+  ProjectEnvelope,
+  SolverMode,
+  ToolMode,
+  ValidationReport,
+  Construction,
+  DslCatalog,
+  DslTool,
+} from "./types";
+import {
+  appendUiCondition,
+  conditionFromFormula,
+  constraintToFormula,
+  displayMathConstants,
+  expandDistanceShorthand,
+  formatConditionDraft,
+  guardToFormula,
+  internalMathConstants,
+  GUARD_TOOL_NOTATION,
+  migrateLegacyUiEquationGuards,
+  replaceCondition,
+  withoutBlankExpressions,
+} from "./mathFormat";
+import {
+  allNames,
+  cloneProblem,
+  completeVariablePreview,
+  deletionClosure,
+  isDslCatalog,
+  isProblem,
+  referencesIdentifier,
+  replaceIdentifier,
+  validIdentifier,
+} from "./problemModel";
+import {
+  extractWitnessPoints,
+  loadLastProject,
+  PROJECT_FORMAT_VERSION,
+  saveLastProject,
+  validationIssueExpression,
+  validationIssueLocation,
+} from "./projectStore";
+import {
+  BASIC_PALETTE_GROUP,
+  catalogPaletteGroups,
+  guardFormulaForTool,
+  PaletteGlyph,
+  toolOutput,
+} from "./palette";
+import {
+  canvasLabelLayout,
+  CanvasMathLabel,
+  DEFAULT_POINT_SIZE,
+  MAX_POINT_SIZE,
+  renderedPointSize,
+  SceneShape,
+} from "./canvasParts";
+import { clamp, PaneResizeHandle } from "./chrome";
+import { ConditionEditorRow } from "./components/ConditionEditorRow";
+import { CanvasToolbar } from "./components/CanvasToolbar";
+import { ToolInstruction } from "./components/ToolInstruction";
+import { ZoomControls } from "./components/ZoomControls";
+import { EditorTabs } from "./components/EditorTabs";
+import { AppBar } from "./components/AppBar";
+import { SolverExecutionDock } from "./components/SolverExecutionDock";
+import {
+  WorkflowStageNav,
+  type WorkflowStage,
+} from "./components/WorkflowStageNav";
+import { SolverInstrumentRail } from "./components/SolverInstrumentRail";
 
 const ExactResult = lazy(() => import("./ExactResult"));
 
-type Construction = { name: string; expr: string };
-type Constraint = { def: string; value: number | string };
-type Problem = {
-  task: "solve";
-  id: string;
-  variables: { names: string[] };
-  construction: Construction[];
-  constraints: Constraint[];
-  guards: string[];
-  answer: string;
-  post_process: string;
+export { catalogPaletteGroups };
+export {
+  conditionDraftIssue,
+  conditionFromFormula,
+  expandDistanceShorthand,
+  formulaToGuard,
+  guardToFormula,
+  migrateLegacyUiEquationGuards,
+  withoutBlankExpressions,
+} from "./mathFormat";
+export { validationIssueLocation } from "./projectStore";
+export type { DslCatalog } from "./types";
+
+const SKETCH_TOOL_IDS = [
+  "Move",
+  "Point",
+  "Segment",
+  "Line",
+  "CircleThroughPoint",
+  "Polygon",
+] as const;
+
+const SKETCH_TOOL_SHORTCUTS: Readonly<Record<string, string>> = {
+  Move: "M",
+  Point: "P",
+  Segment: "S",
+  Line: "L",
+  Arc: "A",
+  CircleThroughPoint: "C",
+  CircleThroughThreePoints: "3",
+  Polygon: "G",
+  ParallelLine: "R",
+  PerpendicularLine: "N",
+  Reflect: "F",
+  Angle: "Q",
+  Distance: "D",
+  Delete: "Del",
 };
 
-type ConditionEditorProps = {
-  formula: string;
-  conditionIndex: number;
-  suggestions: readonly ExpressionSuggestion[];
-  normalizeDraft: (value: string) => string;
-  mathKeyboardOpen: boolean;
-  activeMathField: string;
-  autoFocus?: boolean;
-  registerMathTarget: (
-    editor: HTMLInputElement | HTMLTextAreaElement,
-    setter: (value: string) => void,
-  ) => void;
-  onCommit: (formula: string) => void;
-  onDelete: () => void;
-};
+const CONSTRAINT_SHORTCUTS = [
+  { id: "Parallel", label: "平行", key: "A" },
+  { id: "Perpendicular", label: "垂直", key: "P" },
+  { id: "IsTangent", label: "接する", key: "T" },
+  { id: "Collinear", label: "共線", key: "C" },
+  { id: "OnCircle", label: "円周上", key: "O" },
+  { id: "Midpoint", label: "中点", key: "M" },
+  { id: "AssumeEq", label: "等しい", key: "E" },
+  { id: "AssumeNe", label: "異なる", key: "N" },
+  { id: "AssumeLt", label: "未満", key: "<" },
+  { id: "AssumeLe", label: "以下", key: "≤" },
+  { id: "AssumeGt", label: "より大", key: ">" },
+  { id: "AssumeGe", label: "以上", key: "≥" },
+] as const;
 
-function ConditionEditorRow({
-  formula,
-  conditionIndex,
-  suggestions,
-  normalizeDraft,
-  mathKeyboardOpen,
-  activeMathField,
-  autoFocus,
-  registerMathTarget,
-  onCommit,
-  onDelete,
-}: ConditionEditorProps) {
-  const [draft, setDraft] = useState(formula);
-  const [draftIssue, setDraftIssue] = useState("");
-  useEffect(() => {
-    setDraft(formula);
-    setDraftIssue("");
-  }, [formula]);
-  const field = `condition-${conditionIndex}`;
-  const commitDraft = (value: string) => {
-    const normalized = normalizeDraft(value);
-    const issue = conditionDraftIssue(normalized);
-    setDraftIssue(issue ?? "");
-    if (issue) return false;
-    onCommit(normalized);
-    return true;
-  };
-  return (
-    <div className="guard-row">
-      <div className="formula-editor formula-editor-compact">
-        <ExpressionAutocomplete
-          value={draft}
-          onChange={(value) => {
-            setDraftIssue("");
-            setDraft(normalizeDraft(value));
-          }}
-          onCommit={commitDraft}
-          suggestions={suggestions}
-          ariaLabel={`条件 ${conditionIndex}`}
-          ariaControls="math-keyboard"
-          ariaDescribedBy={
-            mathKeyboardOpen && activeMathField === field
-              ? "math-keyboard-status"
-              : undefined
-          }
-          dataMathField={field}
-          autoFocus={autoFocus}
-          onEditorFocus={(editor) =>
-            registerMathTarget(editor, (value) =>
-              setDraft(normalizeDraft(value)),
-            )
-          }
-          onEditorClick={(editor) =>
-            registerMathTarget(editor, (value) =>
-              setDraft(normalizeDraft(value)),
-            )
-          }
-        />
-        <MathFormula
-          className="formula-preview"
-          source={draft}
-          label={`条件 ${conditionIndex}の数式表示`}
-        />
-        {draftIssue && (
-          <p className="condition-draft-error" role="alert">
-            {draftIssue}
-          </p>
-        )}
-      </div>
-      <button aria-label={`条件 ${conditionIndex}を削除`} onClick={onDelete}>
-        <X />
-      </button>
-    </div>
-  );
-}
-type SolverMode = "adaptive" | "fixed" | "reference";
-const TERMINATION_LABELS: Readonly<Record<string, string>> = {
-  initial_work_answered: "初期探索で解を確定",
-  extension_stable: "追加探索が安定したため終了",
-  safety_cap: "安全上限に到達",
-  exact_complete: "厳密完全性を確認",
-  cancelled: "ユーザーが中止",
-  engine_error: "engine error",
-};
-
-function terminationLabel(reason?: string): string {
-  if (!reason) return "—";
-  return TERMINATION_LABELS[reason] ?? reason;
-}
-
-function runPhaseLabel(phase: string): string {
-  const labels: Readonly<Record<string, string>> = {
-    idle: "待機中",
-    submitting: "問題を検証・送信中",
-    queued: "実行待ち",
-    running: "初期探索",
-    cancelling: "中止を要求中",
-    watchdog: "応答待ち（再接続中）",
-    initial_search: "初期探索",
-    extension: "追加探索",
-    exact_authority: "厳密判定",
-    finalizing: "結果を整理中",
-    completed: "完了",
-    succeeded: "完了",
-    cancelled: "中止",
-    failed: "エラー",
-  };
-  return labels[phase] ?? phase;
-}
-type ValidationIssue = { path: string; code: string; message: string };
-type ValidationReport = {
-  valid: boolean;
-  issues: ValidationIssue[];
-  warnings?: ValidationIssue[];
-};
-
-export function validationIssueLocation(
-  path: string,
-  problem: Problem,
-): string {
-  let match = /^constraints\[(\d+)](?:\.(def|value))?$/.exec(path);
-  if (match) return `条件 ${Number(match[1]) + 1}`;
-  match = /^guards\[(\d+)]$/.exec(path);
-  if (match)
-    return `条件 ${problem.constraints.length + Number(match[1]) + 1}`;
-  match = /^construction\[(\d+)]\.expr$/.exec(path);
-  if (match) {
-    const item = problem.construction[Number(match[1])];
-    return item ? `オブジェクト「${item.name}」の定義` : "作図の定義";
-  }
-  if (path === "answer") return "ターゲット";
-  if (path.startsWith("variables")) return "変数";
-  return path;
-}
-
-function validationIssueExpression(
-  path: string,
-  problem: Problem,
-): string | undefined {
-  let match = /^constraints\[(\d+)]\.(def|value)$/.exec(path);
-  if (match) {
-    const item = problem.constraints[Number(match[1])];
-    return item ? String(item[match[2] as "def" | "value"]) : undefined;
-  }
-  match = /^guards\[(\d+)]$/.exec(path);
-  if (match) return problem.guards[Number(match[1])];
-  match = /^construction\[(\d+)]\.expr$/.exec(path);
-  if (match) return problem.construction[Number(match[1])]?.expr;
-  if (path === "answer") return problem.answer;
-  return undefined;
-}
-type DslCategory = { id: string; label_ja: string; label_en: string };
-type DslTool = {
-  id: string;
-  category: string;
-  label_ja: string;
-  signature: string;
-  authoring_status?: "supported" | "advanced" | "legacy_read_only";
-  notes_ja?: string;
-};
-export type DslCatalog = {
-  version: string;
-  categories: DslCategory[];
-  tools: DslTool[];
-};
-type ToolMode =
-  | "select"
-  | "pan"
-  | "free-point"
-  | "fixed-point"
-  | "point-on-object"
-  | "segment"
-  | "line"
-  | "circle"
-  | "polygon";
-type ObjectStyle = {
-  color?: string;
-  lineWidth?: number;
-  pointSize?: number;
-  lineDash?: "solid" | "dashed" | "dotted";
-  label?: "name" | "caption" | "hidden";
-  caption?: string;
-};
-type ProjectEnvelope = {
-  formatVersion?: number;
-  problem: Problem;
-  viewport?: { center?: Vec2; pixelsPerUnit?: number };
-  style?: {
-    grid?: boolean;
-    snap?: boolean;
-    witness?: boolean;
-    hidden?: string[];
-    objects?: Record<string, ObjectStyle>;
-  };
-  ui?: {
-    selected?: string;
-    variablePreview?: Record<string, number>;
-    measurements?: Measurement[];
-  };
-};
-type Measurement = { name: string; expr: string };
-type HistoryState = {
-  problem: Problem;
-  variablePreview: Record<string, number>;
-  objectStyles: Record<string, ObjectStyle>;
-  hidden: string[];
-  measurements: Measurement[];
-};
-type GuidedSelection = {
-  tool: DslTool;
-  spec: GuidedSpec;
-  names: string[];
-  outputName: string;
-  choices?: Record<string, string>;
-  repeatable?: boolean;
-};
-type PendingPoint = {
-  name: string;
-  variables: readonly [string, string];
-  expression: string;
-  position: Vec2;
-};
-type PointNaming = {
-  generatedName: string;
-};
-type PaletteTool = {
-  id: string;
-  label: string;
-  action: "mode" | "guided" | "catalog" | "hint";
-  value: string;
-  note?: string;
-};
-type PaletteGroup = { id: string; label: string; tools: PaletteTool[] };
-
-const DEFAULT_POINT_SIZE = 3.5;
-const MAX_POINT_SIZE = 8;
-function renderedPointSize(style?: ObjectStyle): number {
-  return Math.max(
-    1.5,
-    Math.min(MAX_POINT_SIZE, style?.pointSize ?? DEFAULT_POINT_SIZE),
-  );
-}
-
-function displayedObjectLabel(
-  item: SceneItem,
-  style?: ObjectStyle,
-): string {
-  if (style?.label === "hidden") return "";
-  if (style?.label === "caption") return style.caption || item.name;
-  if (style?.label === "name") return item.name;
-  return item.kind === "point" ? item.name : "";
-}
-
-type CanvasLabelPlacement = Readonly<{
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}>;
-
-function canvasLabelAnchor(item: SceneItem, viewport: Viewport): Vec2 {
-  if (item.kind === "point") return worldToScreen(item.position, viewport);
-  if (item.kind === "circle") {
-    const center = worldToScreen(item.center, viewport);
-    return { x: center.x + item.radius * viewport.pixelsPerUnit, y: center.y };
-  }
-  if (item.kind === "arc")
-    return worldToScreen(
-      {
-        x: item.center.x + item.radius * Math.cos(item.endAngle),
-        y: item.center.y + item.radius * Math.sin(item.endAngle),
-      },
-      viewport,
-    );
-  if (item.kind === "polygon")
-    return worldToScreen(item.vertices[0] ?? { x: 0, y: 0 }, viewport);
-  if (item.kind === "segment" || item.kind === "vector")
-    return worldToScreen(
-      {
-        x: (item.start.x + item.end.x) / 2,
-        y: (item.start.y + item.end.y) / 2,
-      },
-      viewport,
-    );
-  if (item.kind === "ray")
-    return worldToScreen(
-      {
-        x: item.start.x + item.direction.x,
-        y: item.start.y + item.direction.y,
-      },
-      viewport,
-    );
-  return worldToScreen(item.anchor, viewport);
-}
-
-function canvasLabelLayout(
-  items: readonly SceneItem[],
-  viewport: Viewport,
-  hidden: ReadonlySet<string>,
-  styles: Readonly<Record<string, ObjectStyle>>,
-  selectedNames: ReadonlySet<string>,
-): ReadonlyMap<string, CanvasLabelPlacement> {
-  const placements = new Map<string, CanvasLabelPlacement>();
-  const pointObstacles = items
-    .filter((item) => item.kind === "point" && !hidden.has(item.name))
-    .map((item) => {
-      const point = canvasLabelAnchor(item, viewport);
-      return { x: point.x - 7, y: point.y - 7, width: 14, height: 14 };
-    });
-  const occupied: CanvasLabelPlacement[] = [];
-  const intersects = (a: CanvasLabelPlacement, b: CanvasLabelPlacement) =>
-    a.x < b.x + b.width &&
-    a.x + a.width > b.x &&
-    a.y < b.y + b.height &&
-    a.y + a.height > b.y;
-  const ordered = [...items]
-    .filter(
-      (item) =>
-        !hidden.has(item.name) &&
-        displayedObjectLabel(item, styles[item.name]) !== "",
-    )
-    .sort((a, b) => {
-      const priority = (item: SceneItem) =>
-        selectedNames.has(item.name) ? 2 : item.kind === "point" ? 1 : 0;
-      return priority(b) - priority(a);
-    });
-  for (const item of ordered) {
-    const label = displayedObjectLabel(item, styles[item.name]);
-    const width = Math.min(150, Math.max(28, 16 + Array.from(label).length * 9));
-    const height = 26;
-    const anchor = canvasLabelAnchor(item, viewport);
-    const candidates = [
-      { x: anchor.x + 8, y: anchor.y - height - 5 },
-      { x: anchor.x + 8, y: anchor.y + 5 },
-      { x: anchor.x - width - 8, y: anchor.y - height - 5 },
-      { x: anchor.x - width - 8, y: anchor.y + 5 },
-      { x: anchor.x - width / 2, y: anchor.y - height - 11 },
-      { x: anchor.x - width / 2, y: anchor.y + 11 },
-      { x: anchor.x + 18, y: anchor.y - height - 18 },
-      { x: anchor.x + 18, y: anchor.y + 18 },
-      { x: anchor.x - width - 18, y: anchor.y - height - 18 },
-      { x: anchor.x - width - 18, y: anchor.y + 18 },
-      { x: anchor.x + 30, y: anchor.y - height / 2 },
-      { x: anchor.x - width - 30, y: anchor.y - height / 2 },
-    ];
-    const fit = candidates
-      .map((candidate) => ({ ...candidate, width, height }))
-      .find(
-        (candidate) =>
-          candidate.x >= 2 &&
-          candidate.y >= 2 &&
-          candidate.x + candidate.width <= viewport.width - 2 &&
-          candidate.y + candidate.height <= viewport.height - 2 &&
-          !occupied.some((box) => intersects(candidate, box)) &&
-          !pointObstacles.some((box) => intersects(candidate, box)),
-      );
-    const fallback = fit ?? (selectedNames.has(item.name) || item.kind === "point" ? {
-      x: Math.max(2, Math.min(viewport.width - width - 2, anchor.x + 8)),
-      y: Math.max(2, Math.min(viewport.height - height - 2, anchor.y - height - 5)),
-      width,
-      height,
-    } : undefined);
-    if (!fallback) continue;
-    placements.set(item.name, fallback);
-    occupied.push(fallback);
-  }
-  return placements;
-}
-
-function CanvasMathLabel({
-  source,
-  placement,
-  tex,
-}: {
-  source: string;
-  placement: CanvasLabelPlacement;
-  tex?: string;
-}) {
-  const isIdentifier = /^[A-Za-z_][A-Za-z0-9_]*$/.test(source);
-  return (
-    <foreignObject
-      className="canvas-math-label"
-      x={placement.x}
-      y={placement.y}
-      width={placement.width}
-      height={placement.height}
-      aria-hidden="true"
-    >
-      <div>
-        {tex || isIdentifier ? (
-          <MathFormula source={source} tex={tex} />
-        ) : (
-          <span className="canvas-plain-label">{source}</span>
-        )}
-      </div>
-    </foreignObject>
-  );
-}
-
-const INITIAL_PROBLEM: Problem = {
-  task: "solve",
-  id: "distance-3-4-5",
-  variables: { names: [] },
-  construction: [
-    { name: "A", expr: "Point(0, 0)" },
-    { name: "B", expr: "Point(3, 4)" },
-  ],
-  constraints: [],
-  guards: [],
-  answer: "Distance(A, B)",
-  post_process: "",
-};
-const EMPTY_CATALOG: DslCatalog = { version: "V15", categories: [], tools: [] };
-const CANVAS = { width: 1000, height: 700 };
-const BASIC_PALETTE_GROUP: PaletteGroup = {
-  id: "basic",
-  label: "基本ツール",
-  tools: [
-    { id: "Move", label: "移動", action: "mode", value: "select" },
-    {
-      id: "Point",
-      label: "点",
-      action: "mode",
-      value: "free-point",
-      note: "空白・直線・円を自動判定",
-    },
-    { id: "Segment", label: "線分", action: "mode", value: "segment" },
-    { id: "Line", label: "直線", action: "mode", value: "line" },
-    { id: "Polygon", label: "多角形", action: "mode", value: "polygon" },
-    {
-      id: "CircleThroughPoint",
-      label: "中心と1点で円",
-      action: "mode",
-      value: "circle",
-    },
-  ],
-};
-const EDIT_PALETTE_GROUP: PaletteGroup = {
-  id: "edit",
-  label: "編集",
-  tools: [
-    {
-      id: "SelectObjects",
-      label: "オブジェクトを選択",
-      action: "mode",
-      value: "select",
-    },
-    {
-      id: "ShowHideObject",
-      label: "表示／非表示",
-      action: "hint",
-      value: "オブジェクト一覧の色付き丸を押すと表示を切り替えられます",
-    },
-    {
-      id: "Delete",
-      label: "削除",
-      action: "hint",
-      value: "オブジェクトを選択し、設定パネルの削除を押してください",
-    },
-  ],
-};
-const DIRECT_TOOL_MODES: Readonly<Record<string, ToolMode>> = {
-  Point: "free-point",
-  Segment: "segment",
-  Line: "line",
-  Polygon: "polygon",
-  CircleThroughPoint: "circle",
-};
-
-/** The full palette is derived from the canonical DSL catalog so functions cannot silently disappear from the UI. */
-export function catalogPaletteGroups(catalog: DslCatalog): PaletteGroup[] {
-  const groups = catalog.categories
-    .map((category) => ({
-      id: category.id,
-      label: category.label_ja,
-      tools: catalog.tools
-        .filter(
-          (tool) =>
-            tool.category === category.id &&
-            tool.authoring_status !== "legacy_read_only",
-        )
-        .map(
-          (tool): PaletteTool => ({
-            id: tool.id,
-            label: tool.label_ja,
-            action: DIRECT_TOOL_MODES[tool.id]
-              ? "mode"
-              : guidedSpecFor(tool.id)?.choices?.length
-                ? "catalog"
-                : guidedSpecFor(tool.id)
-                  ? "guided"
-                  : "catalog",
-            value: DIRECT_TOOL_MODES[tool.id] ?? tool.id,
-            note: tool.notes_ja,
-          }),
-        ),
-    }))
-    .filter((group) => group.tools.length > 0);
-  return [EDIT_PALETTE_GROUP, ...groups];
-}
-
-function cloneProblem(problem: Problem): Problem {
-  return structuredClone(problem);
-}
-function allNames(problem: Problem): string[] {
-  return [
-    ...problem.variables.names,
-    ...problem.construction.map((item) => item.name),
-  ];
-}
-function toolOutput(
-  tool: DslTool,
-): "construction" | "measurement" | "constraint" | "guard" {
-  const contractOutput = guidedSpecFor(tool.id)?.output;
-  if (contractOutput) return contractOutput;
-  if (tool.category === "measurements") return "measurement";
-  if (tool.category === "constraints") return "constraint";
-  if (tool.category === "guards") return "guard";
-  return "construction";
-}
-
-const RELATION_TO_ASSUME: Readonly<Record<string, string>> = {
-  "<": "AssumeLt",
-  "≤": "AssumeLe",
-  "<=": "AssumeLe",
-  ">": "AssumeGt",
-  "≥": "AssumeGe",
-  ">=": "AssumeGe",
-  "=": "AssumeEq",
-  "==": "AssumeEq",
-  "≠": "AssumeNe",
-  "!=": "AssumeNe",
-};
-const ASSUME_TO_RELATION: Readonly<Record<string, string>> = {
-  AssumeLt: "<",
-  AssumeLe: "≤",
-  AssumeGt: ">",
-  AssumeGe: "≥",
-  AssumeEq: "=",
-  AssumeNe: "≠",
-};
-const GUARD_TOOL_NOTATION: Readonly<Record<string, string>> = {
-  Assume: "条件",
-  AssumeLt: "<",
-  AssumeLe: "≤",
-  AssumeGt: ">",
-  AssumeGe: "≥",
-  AssumeEq: "=",
-  AssumeNe: "≠",
-  Bound: "a ≤ t ≤ b",
-  AssumeAcute: "鋭角",
-  AssumeRight: "直角",
-  AssumeObtuse: "鈍角",
-  AssumeConvex: "凸",
-  AssumeNoSelfIntersecting: "非自己交差",
-  AssumeOrder: "順序",
-};
-
-function splitTopLevelArguments(source: string): string[] | undefined {
-  const parts: string[] = [];
-  let depth = 0;
-  let start = 0;
-  for (let index = 0; index < source.length; index += 1) {
-    const character = source[index];
-    if ("([{".includes(character)) depth += 1;
-    else if (")]}".includes(character)) depth -= 1;
-    else if (character === "," && depth === 0) {
-      parts.push(source.slice(start, index).trim());
-      start = index + 1;
-    }
-    if (depth < 0) return undefined;
-  }
-  if (depth !== 0) return undefined;
-  parts.push(source.slice(start).trim());
-  return parts;
-}
-function parseCall(
-  source: string,
-): { name: string; args: string[] } | undefined {
-  const match = /^([A-Za-z_][A-Za-z0-9_]*)\s*\(([\s\S]*)\)$/.exec(
-    source.trim(),
-  );
-  if (!match) return undefined;
-  const args = splitTopLevelArguments(match[2]);
-  return args ? { name: match[1], args } : undefined;
-}
-function displayMathConstants(source: string): string {
-  return source.replace(/\bpi\b/g, "π");
-}
-function internalMathConstants(source: string): string {
-  return source.replace(/π/g, "pi");
-}
-
-const SCALAR_LANGUAGE_NAMES = new Set([
-  "and",
-  "or",
-  "not",
-  "if",
-  "else",
-  "True",
-  "False",
-  "None",
-  "pi",
-]);
-
-/** Expand an unambiguous concatenation of two point IDs in scalar expressions. */
-export function expandDistanceShorthand(
-  source: string,
-  pointNames: Iterable<string>,
-  reservedNames?: Iterable<string>,
-  expandTrailingToken = true,
-): string {
-  const pointList = [...pointNames];
-  const points = new Set(pointList);
-  const reserved = new Set(reservedNames ?? pointList);
-  let result = "";
-  let cursor = 0;
-  while (cursor < source.length) {
-    const character = source[cursor];
-    if (character === "'" || character === '"') {
-      const quote = character;
-      const start = cursor;
-      cursor += 1;
-      while (cursor < source.length) {
-        if (source[cursor] === "\\") cursor += 2;
-        else if (source[cursor] === quote) {
-          cursor += 1;
-          break;
-        } else cursor += 1;
-      }
-      result += source.slice(start, cursor);
-      continue;
-    }
-    const previous = cursor > 0 ? source[cursor - 1] : "";
-    if (
-      /[A-Za-z_]/.test(character) &&
-      (cursor === 0 || !/[A-Za-z0-9_]/.test(previous))
-    ) {
-      const start = cursor;
-      cursor += 1;
-      while (cursor < source.length && /[A-Za-z0-9_]/.test(source[cursor]))
-        cursor += 1;
-      const token = source.slice(start, cursor);
-      let before = start - 1;
-      while (before >= 0 && /\s/.test(source[before])) before -= 1;
-      let after = cursor;
-      while (after < source.length && /\s/.test(source[after])) after += 1;
-      const isFunction = source[after] === "(";
-      const isAttribute = before >= 0 && source[before] === ".";
-      const isKeyword =
-        (source[before] === "(" || source[before] === ",") &&
-        source[after] === "=" &&
-        source[after + 1] !== "=";
-      const candidates: Array<readonly [string, string]> = [];
-      if (
-        (expandTrailingToken || cursor < source.length) &&
-        !SCALAR_LANGUAGE_NAMES.has(token) &&
-        !reserved.has(token) &&
-        !isFunction &&
-        !isAttribute &&
-        !isKeyword
-      ) {
-        for (let index = 1; index < token.length; index += 1) {
-          const left = token.slice(0, index);
-          const right = token.slice(index);
-          if (points.has(left) && points.has(right))
-            candidates.push([left, right]);
-        }
-      }
-      result +=
-        candidates.length === 1
-          ? `Distance(${candidates[0][0]}, ${candidates[0][1]})`
-          : token;
-      continue;
-    }
-    result += character;
-    cursor += 1;
-  }
-  return result;
-}
-
-/** Present V15 guards as equations while keeping the champion-native JSON unchanged. */
-export function guardToFormula(guard: string): string {
-  const call = parseCall(guard);
-  if (!call) return displayMathConstants(guard);
-  const operator = ASSUME_TO_RELATION[call.name];
-  if (operator && call.args.length === 2)
-    return `${displayMathConstants(call.args[0])} ${operator} ${displayMathConstants(call.args[1])}`;
-  if (call.name === "Assume" && call.args.length === 1)
-    return displayMathConstants(call.args[0]);
-  if (call.name === "Bound" && call.args.length === 2) {
-    const interval = /^\(\s*([^,]+)\s*,\s*([^,]+)\s*\)$/.exec(call.args[1]);
-    if (interval)
-      return `${displayMathConstants(interval[1])} ≤ ${call.args[0]} ≤ ${displayMathConstants(interval[2])}`;
-  }
-  if (call.name.startsWith("Assume"))
-    return displayMathConstants(
-      `${call.name.slice("Assume".length)}(${call.args.join(", ")})`,
-    );
-  return displayMathConstants(guard);
-}
-
-function topLevelRelation(
-  source: string,
-): { lhs: string; operator: string; rhs: string } | undefined {
-  let depth = 0;
-  for (let index = 0; index < source.length; index += 1) {
-    const character = source[index];
-    if ("([{".includes(character)) {
-      depth += 1;
-      continue;
-    }
-    if (")]}".includes(character)) {
-      depth -= 1;
-      continue;
-    }
-    if (depth !== 0) continue;
-    const operator = [
-      "<=",
-      ">=",
-      "!=",
-      "==",
-      "≤",
-      "≥",
-      "≠",
-      "<",
-      ">",
-      "=",
-    ].find((candidate) => source.startsWith(candidate, index));
-    if (!operator) continue;
-    const lhs = source.slice(0, index).trim();
-    const rhs = source.slice(index + operator.length).trim();
-    if (lhs && rhs) return { lhs, operator, rhs };
-  }
-  return undefined;
-}
-
-export function formulaToGuard(formula: string): string {
-  const source = internalMathConstants(formula.trim());
-  if (!source) return source;
-  if (/^(?:Assume[A-Za-z]*|Bound)\s*\(/.test(source)) return source;
-  const bounded =
-    /^(.+?)\s*(?:<=|≤)\s*([A-Za-z_][A-Za-z0-9_]*)\s*(?:<=|≤)\s*(.+)$/.exec(
-      source,
-    );
-  if (bounded)
-    return `Bound(${bounded[2]}, (${bounded[1].trim()}, ${bounded[3].trim()}))`;
-  const relation = topLevelRelation(source);
-  if (relation)
-    return `${RELATION_TO_ASSUME[relation.operator]}(${relation.lhs}, ${relation.rhs})`;
-  const call = parseCall(source);
-  const namedAssumption =
-    call &&
-    [
-      "Acute",
-      "Right",
-      "Obtuse",
-      "Convex",
-      "NoSelfIntersecting",
-      "Order",
-    ].includes(call.name);
-  if (call && namedAssumption)
-    return `Assume${call.name}(${call.args.join(", ")})`;
-  if (call) return source;
-  return `Assume(${source})`;
-}
-
-function constraintToFormula(constraint: Constraint): string {
-  return `${displayMathConstants(constraint.def)} = ${displayMathConstants(String(constraint.value))}`;
-}
-function formulaToConstraint(formula: string): Constraint {
-  const source = internalMathConstants(formula.trim());
-  const relation = topLevelRelation(source);
-  if (!relation || !["=", "=="].includes(relation.operator))
-    return { def: source, value: 0 };
-  const value = /^-?(?:\d+(?:\.\d*)?|\.\d+)$/.test(relation.rhs)
-    ? Number(relation.rhs)
-    : relation.rhs;
-  return { def: relation.lhs, value };
-}
-
-export function conditionFromFormula(
-  formula: string,
-): { kind: "constraint"; value: Constraint } | { kind: "guard"; value: string } | undefined {
-  const source = formula.trim();
-  if (!source) return undefined;
-  const relation = topLevelRelation(internalMathConstants(source));
-  return relation && ["=", "=="].includes(relation.operator)
-    ? { kind: "constraint", value: formulaToConstraint(source) }
-    : { kind: "guard", value: formulaToGuard(source) };
-}
-
-export function conditionDraftIssue(source: string): string | undefined {
-  const expectedClose: Readonly<Record<string, string>> = {
-    "(": ")",
-    "[": "]",
-  };
-  const opening = new Set(Object.keys(expectedClose));
-  const closing = new Set(Object.values(expectedClose));
-  const stack: Array<{ character: string; index: number }> = [];
-  let quote = "";
-  for (let index = 0; index < source.length; index += 1) {
-    const character = source[index];
-    if (quote) {
-      if (character === quote && source[index - 1] !== "\\") quote = "";
-      continue;
-    }
-    if (character === '"' || character === "'") {
-      quote = character;
-      continue;
-    }
-    if (opening.has(character)) {
-      stack.push({ character, index });
-      continue;
-    }
-    if (!closing.has(character)) continue;
-    const latest = stack.pop();
-    if (!latest || expectedClose[latest.character] !== character)
-      return `${index + 1}文字目の「${character}」に対応する開き括弧がありません。式を入力し直してください。`;
-  }
-  if (quote)
-    return `文字列を閉じる「${quote}」がありません。式を入力し直してください。`;
-  if (stack.length) {
-    const latest = stack[stack.length - 1];
-    return `${latest.index + 1}文字目の「${latest.character}」が閉じられていません。「${expectedClose[latest.character]}」を補うか、式を入力し直してください。`;
-  }
-  return undefined;
-}
-
-/**
- * Upgrade projects written by the former visual condition editor.
- *
- * That editor serialized every `=` as AssumeEq, which is a hard admissibility
- * guard in V15 rather than a numerical equation.  The migration is deliberately
- * syntax-generic: every two-argument AssumeEq produced by the UI becomes the
- * equivalent constraint, regardless of the functions used on either side.
- * Raw V15 documents are not passed through this project migration.
- */
-export function migrateLegacyUiEquationGuards(problem: Problem): {
-  problem: Problem;
-  migratedCount: number;
-} {
-  const constraints = [...problem.constraints];
-  const guards: string[] = [];
-  let migratedCount = 0;
-  for (const guard of problem.guards) {
-    const call = parseCall(guard);
-    if (call?.name !== "AssumeEq" || call.args.length !== 2) {
-      guards.push(guard);
-      continue;
-    }
-    const constraint = formulaToConstraint(`${call.args[0]} = ${call.args[1]}`);
-    const duplicate = constraints.some(
-      (item) =>
-        item.def === constraint.def && String(item.value) === String(constraint.value),
-    );
-    if (!duplicate) constraints.push(constraint);
-    migratedCount += 1;
-  }
-  return {
-    problem:
-      migratedCount === 0
-        ? problem
-        : { ...problem, constraints, guards },
-    migratedCount,
-  };
-}
-
-function appendUiCondition(problem: Problem, expression: string): Problem {
-  const parsed = conditionFromFormula(guardToFormula(expression));
-  if (!parsed) return problem;
-  return parsed.kind === "constraint"
-    ? { ...problem, constraints: [...problem.constraints, parsed.value] }
-    : { ...problem, guards: [...problem.guards, parsed.value] };
-}
-
-function formatConditionDraft(formula: string): string {
-  let depth = 0;
-  let quote = "";
-  let result = "";
-  for (let index = 0; index < formula.length; index += 1) {
-    const character = formula[index];
-    if (quote) {
-      result += character;
-      if (character === quote && formula[index - 1] !== "\\") quote = "";
-      continue;
-    }
-    if (character === '"' || character === "'") {
-      quote = character;
-      result += character;
-      continue;
-    }
-    if (["(", "[", "{"].includes(character)) depth += 1;
-    if (")]}".includes(character)) depth -= 1;
-    const operator =
-      depth === 0
-        ? ["<=", ">=", "!=", "==", "≤", "≥", "≠", "<", ">", "="].find(
-            (candidate) => formula.startsWith(candidate, index),
-          )
-        : undefined;
-    if (!operator) {
-      result += character;
-      continue;
-    }
-    if (!formula.slice(index + operator.length).trim()) {
-      result += operator;
-      index += operator.length - 1;
-      continue;
-    }
-    result = result.trimEnd();
-    result += ` ${displayMathConstants(operator)} `;
-    index += operator.length - 1;
-    while (/\s/.test(formula[index + 1] ?? "")) index += 1;
-  }
-  return result;
-}
-
-export function withoutBlankExpressions(problem: Problem): Problem {
-  return {
-    ...problem,
-    constraints: problem.constraints.filter(
-      (item) => item.def.trim() && String(item.value).trim(),
-    ),
-    guards: problem.guards.filter((item) => item.trim()),
-  };
-}
-
-function replaceCondition(
-  problem: Problem,
-  sourceKind: "constraint" | "guard",
-  sourceIndex: number,
-  formula: string,
-): Problem {
-  const next: Problem = {
-    ...problem,
-    constraints:
-      sourceKind === "constraint"
-        ? problem.constraints.filter((_, index) => index !== sourceIndex)
-        : [...problem.constraints],
-    guards:
-      sourceKind === "guard"
-        ? problem.guards.filter((_, index) => index !== sourceIndex)
-        : [...problem.guards],
-  };
-  const parsed = conditionFromFormula(formula);
-  if (!parsed) return next;
-  if (parsed.kind === "constraint") next.constraints.push(parsed.value);
-  else next.guards.push(parsed.value);
-  return next;
-}
-
-function guardFormulaForTool(tool: DslTool): string {
-  return toolOutput(tool) === "guard"
-    ? guardToFormula(tool.signature)
-    : tool.signature;
-}
-function validIdentifier(value: string): boolean {
-  return /^[A-Za-z_][A-Za-z0-9_]*$/.test(value);
-}
-function referencesIdentifier(source: string, name: string): boolean {
-  return new RegExp(
-    `\\b${name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`,
-  ).test(source);
-}
-function replaceIdentifier(source: string, from: string, to: string): string {
-  return source.replace(
-    new RegExp(`\\b${from.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "g"),
-    to,
-  );
-}
-function ownedVariablesFor(
-  construction: Construction,
-  variables: readonly string[],
-): readonly string[] {
-  const direct = directPointVariables(construction, variables);
-  if (direct) return direct;
-  const parameter = parameterizedPoint(construction, variables);
-  return parameter ? [parameter.variable] : [];
-}
-function deletionClosure(
-  problem: Problem,
-  root: string,
-): { names: Set<string>; variables: Set<string> } {
-  const names = new Set([root]);
-  const variables = new Set<string>();
-  const absorbVariables = (construction: Construction) =>
-    ownedVariablesFor(construction, problem.variables.names).forEach((name) =>
-      variables.add(name),
-    );
-  const rootConstruction = problem.construction.find(
-    (item) => item.name === root,
-  );
-  if (rootConstruction) absorbVariables(rootConstruction);
-  let changed = true;
-  while (changed) {
-    changed = false;
-    for (const construction of problem.construction) {
-      if (names.has(construction.name)) continue;
-      if (
-        ![...names, ...variables].some((name) =>
-          referencesIdentifier(construction.expr, name),
-        )
-      )
-        continue;
-      names.add(construction.name);
-      absorbVariables(construction);
-      changed = true;
-    }
-  }
-  return { names, variables };
-}
-function completeVariablePreview(
-  problem: Problem,
-  saved: Record<string, number> = {},
-): Record<string, number> {
-  const preview: Record<string, number> = {};
-  problem.variables.names.forEach((name) => {
-    if (Number.isFinite(saved[name])) preview[name] = saved[name];
-  });
-  problem.construction.forEach((construction, index) => {
-    const pair = directPointVariables(construction, problem.variables.names);
-    if (!pair) return;
-    if (!Number.isFinite(preview[pair[0]]))
-      preview[pair[0]] = (index % 4) * 2 - 3;
-    if (!Number.isFinite(preview[pair[1]]))
-      preview[pair[1]] = 2 - Math.floor(index / 4) * 2;
-  });
-  problem.variables.names.forEach((name) => {
-    if (!Number.isFinite(preview[name])) preview[name] = 1;
-  });
-  return preview;
-}
-function isProblem(value: unknown): value is Problem {
-  if (!value || typeof value !== "object") return false;
-  const item = value as Partial<Problem>;
-  return (
-    item.task === "solve" &&
-    typeof item.id === "string" &&
-    Array.isArray(item.construction) &&
-    Array.isArray(item.constraints) &&
-    Array.isArray(item.guards) &&
-    typeof item.answer === "string" &&
-    typeof item.post_process === "string" &&
-    !!item.variables &&
-    Array.isArray(item.variables.names)
-  );
-}
-function isDslCatalog(value: unknown): value is DslCatalog {
-  if (!value || typeof value !== "object") return false;
-  const item = value as Partial<DslCatalog>;
-  return (
-    typeof item.version === "string" &&
-    Array.isArray(item.categories) &&
-    Array.isArray(item.tools)
-  );
-}
-const FREEDOM_LABEL = { free: "自由", fixed: "固定", derived: "従属" } as const;
-const PROJECT_FORMAT_VERSION = 2;
-function saveLastProject(envelope: ProjectEnvelope) {
-  const request = indexedDB.open("geotarget", 2);
-  request.onupgradeneeded = () => {
-    if (!request.result.objectStoreNames.contains("projects"))
-      request.result.createObjectStore("projects");
-  };
-  request.onsuccess = () =>
-    request.result
-      .transaction("projects", "readwrite")
-      .objectStore("projects")
-      .put(envelope, "__last__");
-}
-function loadLastProject(onLoad: (value: ProjectEnvelope) => void) {
-  const request = indexedDB.open("geotarget", 2);
-  request.onupgradeneeded = () => {
-    if (!request.result.objectStoreNames.contains("projects"))
-      request.result.createObjectStore("projects");
-  };
-  request.onsuccess = () => {
-    const read = request.result
-      .transaction("projects")
-      .objectStore("projects")
-      .get("__last__");
-    read.onsuccess = () => {
-      if (read.result?.problem && isProblem(read.result.problem)) {
-        const envelope = read.result as ProjectEnvelope;
-        const migrated = migrateLegacyUiEquationGuards(envelope.problem);
-        onLoad({
-          ...envelope,
-          formatVersion: PROJECT_FORMAT_VERSION,
-          problem: migrated.problem,
-        });
-      }
-    };
-  };
-}
-function extractWitnessPoints(
-  value: unknown,
-): Array<{ name: string; position: Vec2 }> {
-  const found = new Map<string, Vec2>();
-  function visit(node: unknown) {
-    if (!node || typeof node !== "object") return;
-    if (Array.isArray(node)) {
-      node.forEach(visit);
-      return;
-    }
-    for (const [key, child] of Object.entries(
-      node as Record<string, unknown>,
-    )) {
-      if (
-        Array.isArray(child) &&
-        child.length >= 2 &&
-        typeof child[0] === "number" &&
-        typeof child[1] === "number"
-      )
-        found.set(key, { x: child[0], y: child[1] });
-      else if (
-        child &&
-        typeof child === "object" &&
-        typeof (child as { x?: unknown }).x === "number" &&
-        typeof (child as { y?: unknown }).y === "number"
-      )
-        found.set(key, {
-          x: (child as { x: number }).x,
-          y: (child as { y: number }).y,
-        });
-      else visit(child);
-    }
-  }
-  visit(value);
-  return [...found].map(([name, position]) => ({ name, position }));
-}
-
-function SceneShape({
-  item,
-  viewport,
-  hidden,
-  selected,
-  freedom,
-  objectStyle,
-  labelPlacement,
-  guidedCandidate,
-  onPointDown,
-  onPointMove,
-  onPointUp,
-  onPointClick,
-}: {
-  item: SceneItem;
-  viewport: Viewport;
-  hidden: boolean;
-  selected: boolean;
-  freedom: "free" | "fixed" | "derived";
-  objectStyle?: ObjectStyle;
-  labelPlacement?: CanvasLabelPlacement;
-  guidedCandidate?: boolean;
-  onPointDown: (event: ReactPointerEvent<SVGGElement>, name: string) => void;
-  onPointMove: (event: ReactPointerEvent<SVGGElement>) => void;
-  onPointUp: (event: ReactPointerEvent<SVGGElement>) => void;
-  onPointClick: (event: ReactMouseEvent<SVGElement>, name: string) => void;
-}) {
-  if (hidden) return null;
-  const cls = `geometry-object freedom-${freedom} ${selected ? "selected-object" : ""} ${guidedCandidate === true ? "guided-candidate" : guidedCandidate === false ? "guided-unavailable" : ""}`;
-  const candidateLabel =
-    guidedCandidate === true
-      ? "、次の引数として選択可能"
-      : guidedCandidate === false
-        ? "、現在の引数には選択不可"
-        : "";
-  const dash =
-    objectStyle?.lineDash === "dashed"
-      ? "10 6"
-      : objectStyle?.lineDash === "dotted"
-        ? "2 5"
-        : undefined;
-  const label = displayedObjectLabel(item, objectStyle);
-  if (item.kind === "point") {
-    const point = worldToScreen(item.position, viewport);
-    const pointSize = renderedPointSize(objectStyle);
-    return (
-      <g
-        className={`${cls} geometry-point ${freedom === "free" ? "draggable" : ""}`}
-        data-object={item.name}
-        data-freedom={freedom}
-        role="button"
-        tabIndex={0}
-        aria-label={`${FREEDOM_LABEL[freedom]}点 ${item.name} (${item.position.x.toFixed(3)}, ${item.position.y.toFixed(3)})${candidateLabel}`}
-        aria-disabled={guidedCandidate === false || undefined}
-        onPointerDown={(event) => onPointDown(event, item.name)}
-        onPointerMove={onPointMove}
-        onPointerUp={onPointUp}
-        onPointerCancel={onPointUp}
-        onLostPointerCapture={onPointUp}
-        onClick={(event) => onPointClick(event, item.name)}
-        onKeyDown={(event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            (event.currentTarget as SVGGElement).dispatchEvent(
-              new MouseEvent("click", { bubbles: true }),
-            );
-          }
-        }}
-      >
-        <circle
-          className="point-hit"
-          cx={point.x}
-          cy={point.y}
-          r="12"
-          style={{ fill: "transparent", stroke: "transparent" }}
-        />
-        {selected && (
-          <circle
-            className="point-selection-ring"
-            cx={point.x}
-            cy={point.y}
-            r={pointSize + 1.8}
-          />
-        )}
-        <circle
-          cx={point.x}
-          cy={point.y}
-          r={pointSize}
-          style={{ fill: objectStyle?.color }}
-        />
-        {label && labelPlacement && (
-          <CanvasMathLabel source={label} placement={labelPlacement} />
-        )}
-      </g>
-    );
-  }
-  if (item.kind === "circle") {
-    const center = worldToScreen(item.center, viewport);
-    return (
-      <g
-        data-object={item.name}
-        role="button"
-        tabIndex={0}
-        aria-label={`${FREEDOM_LABEL[freedom]}円 ${item.name}${candidateLabel}`}
-        aria-disabled={guidedCandidate === false || undefined}
-        onClick={(event) => onPointClick(event, item.name)}
-        onKeyDown={(event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            (event.currentTarget as SVGGElement).dispatchEvent(
-              new MouseEvent("click", { bubbles: true }),
-            );
-          }
-        }}
-      >
-        <circle
-          className="geometry-object-hit"
-          cx={center.x}
-          cy={center.y}
-          r={item.radius * viewport.pixelsPerUnit}
-        />
-        <circle
-          className={cls}
-          cx={center.x}
-          cy={center.y}
-          r={item.radius * viewport.pixelsPerUnit}
-          style={{
-            stroke: objectStyle?.color,
-            strokeWidth: objectStyle?.lineWidth,
-            strokeDasharray: dash,
-          }}
-        />
-        {label && labelPlacement && (
-          <CanvasMathLabel source={label} placement={labelPlacement} />
-        )}
-      </g>
-    );
-  }
-  if (item.kind === "arc") {
-    const start = worldToScreen(
-      {
-        x: item.center.x + item.radius * Math.cos(item.startAngle),
-        y: item.center.y + item.radius * Math.sin(item.startAngle),
-      },
-      viewport,
-    );
-    const end = worldToScreen(
-      {
-        x: item.center.x + item.radius * Math.cos(item.endAngle),
-        y: item.center.y + item.radius * Math.sin(item.endAngle),
-      },
-      viewport,
-    );
-    const turn = (value: number) =>
-      ((value % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
-    const span = item.counterclockwise
-      ? turn(item.endAngle - item.startAngle)
-      : turn(item.startAngle - item.endAngle);
-    const path = `M ${start.x} ${start.y} A ${item.radius * viewport.pixelsPerUnit} ${item.radius * viewport.pixelsPerUnit} 0 ${span > Math.PI ? 1 : 0} ${item.counterclockwise ? 0 : 1} ${end.x} ${end.y}`;
-    return (
-      <g
-        data-object={item.name}
-        role="button"
-        tabIndex={0}
-        aria-label={`${FREEDOM_LABEL[freedom]}円弧 ${item.name}${candidateLabel}`}
-        aria-disabled={guidedCandidate === false || undefined}
-        onClick={(event) => onPointClick(event, item.name)}
-        onKeyDown={(event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            (event.currentTarget as SVGGElement).dispatchEvent(
-              new MouseEvent("click", { bubbles: true }),
-            );
-          }
-        }}
-      >
-        <path className="geometry-object-hit" d={path} fill="none" />
-        <path
-          className={cls}
-          d={path}
-          fill="none"
-          style={{
-            stroke: objectStyle?.color,
-            strokeWidth: objectStyle?.lineWidth,
-            strokeDasharray: dash,
-          }}
-        />
-        {label && labelPlacement && (
-          <CanvasMathLabel source={label} placement={labelPlacement} />
-        )}
-      </g>
-    );
-  }
-  if (item.kind === "polygon") {
-    const points = item.vertices
-      .map((point) => {
-        const p = worldToScreen(point, viewport);
-        return `${p.x},${p.y}`;
-      })
-      .join(" ");
-    return (
-      <g>
-        <polygon
-          className={cls}
-          data-object={item.name}
-          role="button"
-          tabIndex={0}
-          aria-label={`${FREEDOM_LABEL[freedom]}多角形 ${item.name}${candidateLabel}`}
-          aria-disabled={guidedCandidate === false || undefined}
-          onClick={(event) => onPointClick(event, item.name)}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" || event.key === " ") {
-              event.preventDefault();
-              (event.currentTarget as SVGPolygonElement).dispatchEvent(
-                new MouseEvent("click", { bubbles: true }),
-              );
-            }
-          }}
-          style={{
-            stroke: objectStyle?.color,
-            strokeWidth: objectStyle?.lineWidth,
-            strokeDasharray: dash,
-          }}
-          points={points}
-        />
-        {label && labelPlacement && (
-          <CanvasMathLabel source={label} placement={labelPlacement} />
-        )}
-      </g>
-    );
-  }
-  const start =
-    item.kind === "segment" || item.kind === "vector"
-      ? item.start
-      : item.kind === "ray"
-        ? item.start
-        : item.anchor;
-  const direction =
-    item.kind === "segment" || item.kind === "vector"
-      ? { x: item.end.x - item.start.x, y: item.end.y - item.start.y }
-      : item.direction;
-  const length = Math.hypot(direction.x, direction.y) || 1;
-  const unit = { x: direction.x / length, y: direction.y / length };
-  const from =
-    item.kind === "segment" || item.kind === "vector"
-      ? start
-      : item.kind === "ray"
-        ? start
-        : { x: start.x - unit.x * 100, y: start.y - unit.y * 100 };
-  const to =
-    item.kind === "segment" || item.kind === "vector"
-      ? item.end
-      : { x: start.x + unit.x * 100, y: start.y + unit.y * 100 };
-  const a = worldToScreen(from, viewport);
-  const b = worldToScreen(to, viewport);
-  return (
-    <g
-      data-object={item.name}
-      role="button"
-      tabIndex={0}
-      aria-label={`${FREEDOM_LABEL[freedom]}${item.kind} ${item.name}${candidateLabel}`}
-      aria-disabled={guidedCandidate === false || undefined}
-      onClick={(event) => onPointClick(event, item.name)}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          (event.currentTarget as SVGGElement).dispatchEvent(
-            new MouseEvent("click", { bubbles: true }),
-          );
-        }
-      }}
-    >
-      <line
-        className="geometry-object-hit"
-        x1={a.x}
-        y1={a.y}
-        x2={b.x}
-        y2={b.y}
-      />
-      <line
-        className={cls}
-        x1={a.x}
-        y1={a.y}
-        x2={b.x}
-        y2={b.y}
-        style={{
-          stroke: objectStyle?.color,
-          strokeWidth: objectStyle?.lineWidth,
-          strokeDasharray: dash,
-        }}
-      />
-      {label && labelPlacement && (
-        <CanvasMathLabel source={label} placement={labelPlacement} />
-      )}
-    </g>
-  );
-}
-
-function PaletteGlyph({ id }: { id: string }) {
-  const editGlyphs: Record<string, ReactNode> = {
-    Move: <Cursor />,
-    SelectObjects: <Selection />,
-    ShowHideObject: <Eye />,
-    Delete: <Trash />,
-  };
-  return (
-    editGlyphs[id] ?? (
-      <svg
-        className="palette-icon"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <use href={`/tool-icons.svg#tool-${id}`} />
-      </svg>
-    )
-  );
-}
-
-function clamp(value: number, minimum: number, maximum: number): number {
-  return Math.min(maximum, Math.max(minimum, value));
-}
-
-type PaneResizeHandleProps = {
-  orientation: "vertical" | "horizontal";
-  label: string;
-  value: number;
-  minimum: number;
-  maximum: number;
-  valuePerPixel: 1 | -1;
-  defaultValue: number;
-  onChange: (value: number) => void;
-};
-
-function PaneResizeHandle({
-  orientation,
-  label,
-  value,
-  minimum,
-  maximum,
-  valuePerPixel,
-  defaultValue,
-  onChange,
-}: PaneResizeHandleProps) {
-  const changeBy = (delta: number) =>
-    onChange(clamp(value + delta * valuePerPixel, minimum, maximum));
-  const beginResize = (event: ReactPointerEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    const start = orientation === "vertical" ? event.clientX : event.clientY;
-    const initial = value;
-    const move = (moveEvent: PointerEvent) => {
-      const current =
-        orientation === "vertical" ? moveEvent.clientX : moveEvent.clientY;
-      onChange(
-        clamp(initial + (current - start) * valuePerPixel, minimum, maximum),
-      );
-    };
-    const finish = () => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", finish);
-      document.body.classList.remove("pane-resizing");
-    };
-    document.body.classList.add("pane-resizing");
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", finish, { once: true });
-  };
-  return (
-    <div
-      className={`pane-resizer pane-resizer-${orientation}`}
-      role="separator"
-      aria-label={label}
-      aria-orientation={orientation}
-      aria-valuemin={minimum}
-      aria-valuemax={maximum}
-      aria-valuenow={Math.round(value)}
-      aria-valuetext={`${Math.round(value)}ピクセル`}
-      tabIndex={0}
-      title="ドラッグでサイズ変更・ダブルクリックで初期化"
-      onPointerDown={beginResize}
-      onDoubleClick={() => onChange(defaultValue)}
-      onKeyDown={(event) => {
-        const decreaseKey = orientation === "vertical" ? "ArrowLeft" : "ArrowUp";
-        const increaseKey = orientation === "vertical" ? "ArrowRight" : "ArrowDown";
-        if (event.key === decreaseKey || event.key === increaseKey) {
-          event.preventDefault();
-          changeBy(event.key === increaseKey ? 16 : -16);
-        } else if (event.key === "Home" || event.key === "End") {
-          event.preventDefault();
-          onChange(event.key === "Home" ? minimum : maximum);
-        }
-      }}
-    />
-  );
-}
 
 export function App() {
   const [problem, setProblem] = useState<Problem>(INITIAL_PROBLEM);
@@ -1678,13 +231,18 @@ export function App() {
   const [pendingPoints, setPendingPoints] = useState<PendingPoint[]>([]);
   const [pointNaming, setPointNaming] = useState<PointNaming>();
   const [pointNameDraft, setPointNameDraft] = useState("");
-  const [leftMode, setLeftMode] = useState<"algebra" | "tools">("tools");
+  const [leftMode, setLeftMode] = useState<"algebra" | "tools">("algebra");
+  const [workflowMode, setWorkflowMode] = useState<WorkflowStage>("draw");
+  const [leftDeckOpen, setLeftDeckOpen] = useState(true);
+  const [editorDockOpen, setEditorDockOpen] = useState(true);
+  const [sourceDrawerOpen, setSourceDrawerOpen] = useState(false);
   const layout = useWorkbenchLayout();
   const layoutSizes = layout.sizes;
   const viewportWidth = layout.viewportWidth;
   const inspectorDrawerOpen = layout.drawerOpen;
   const setInspectorDrawerOpen = layout.setDrawerOpen;
   const [showAllTools, setShowAllTools] = useState(false);
+  const [viewToolsOpen, setViewToolsOpen] = useState(false);
   const [mathKeyboardOpen, setMathKeyboardOpen] = useState(false);
   const [activeMathField, setActiveMathField] = useState("");
   const [grid, setGrid] = useState(true);
@@ -1696,10 +254,20 @@ export function App() {
   const [propertyTab, setPropertyTab] = useState<
     "basic" | "style" | "advanced"
   >("basic");
-  const [camera, setCamera] = useState({
-    center: { x: 0, y: 0 } as Vec2,
-    pixelsPerUnit: 65,
-  });
+  const [camera, setCamera] = useState(() =>
+    typeof window !== "undefined" && window.innerWidth < 768
+      ? {
+          center: { x: 2, y: 1.5 } as Vec2,
+          pixelsPerUnit: 80,
+        }
+      : {
+          center: { x: 0, y: 0 } as Vec2,
+          pixelsPerUnit: 65,
+        },
+  );
+  const [mobileFitRequested, setMobileFitRequested] = useState(
+    () => typeof window !== "undefined" && window.innerWidth < 768,
+  );
   const [keyboardPoint, setKeyboardPoint] = useState<Vec2>({ x: 1, y: 1 });
   const [intersectionHint, setIntersectionHint] =
     useState<IntersectionCandidate>();
@@ -1729,8 +297,13 @@ export function App() {
   );
   const [jsonDirty, setJsonDirty] = useState(false);
   const [uiError, setUiError] = useState("");
+  const [uiNotice, setUiNotice] = useState("");
   const [validation, setValidation] = useState<ValidationReport>();
-  const [doctor, setDoctor] = useState<{ ok: boolean; checks?: unknown }>();
+  const [doctor, setDoctor] = useState<{
+    ok: boolean;
+    checks?: unknown;
+    errors?: unknown[];
+  }>();
   // Start fail-closed, then apply the backend qualification policy atomically.
   const [solverMode, setSolverMode] = useState<SolverMode>("reference");
   const [optimizedQualified, setOptimizedQualified] = useState(false);
@@ -1742,7 +315,6 @@ export function App() {
   const phase = solverJob.phase;
   const runProgress: RunProgress = solverJob.progress;
   const result: ApiResult | undefined = solverJob.result;
-  const elapsed = runProgress.wallElapsedSeconds;
   const [activeAnswer, setActiveAnswer] = useState(0);
   const importRef = useRef<HTMLInputElement>(null);
   const dialogInputRef = useRef<HTMLInputElement>(null);
@@ -1756,8 +328,15 @@ export function App() {
   const problemRef = useRef(problem);
   const dialogRef = useRef<HTMLElement | null>(null);
   const dialogTriggerRef = useRef<HTMLElement | null>(null);
+  const sourceDrawerRef = useRef<HTMLDivElement | null>(null);
+  const sourceDrawerTriggerRef = useRef<HTMLButtonElement | null>(null);
   const inspectorDrawerRef = useRef<HTMLElement | null>(null);
   const inspectorDrawerTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const inspectorScrollBodyRef = useRef<HTMLDivElement | null>(null);
+  const modelPaneRef = useRef<HTMLElement | null>(null);
+  const mobileModelTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const viewToolsRef = useRef<HTMLDivElement | null>(null);
+  const viewToolsTriggerRef = useRef<HTMLButtonElement | null>(null);
   const dragRef = useRef<
     | (
         | {
@@ -1789,14 +368,23 @@ export function App() {
   const pendingDragPointRef = useRef<Vec2 | undefined>(undefined);
 
   const leftPaneMaximum =
-    viewportWidth >= 1220
+    viewportWidth >= WIDE_WORKBENCH_MIN_WIDTH
       ? clamp(viewportWidth - layoutSizes.right - 14 - 280, 250, 520)
       : 520;
   const rightPaneMaximum =
-    viewportWidth >= 1220
+    viewportWidth >= WIDE_WORKBENCH_MIN_WIDTH
       ? clamp(viewportWidth - layoutSizes.left - 14 - 280, 270, 520)
       : 520;
-  const inspectorIsDrawer = viewportWidth >= 768 && viewportWidth < 1220;
+  const inspectorIsDrawer = true;
+
+  useEffect(() => {
+    if (viewportWidth < WIDE_WORKBENCH_MIN_WIDTH) {
+      setEditorDockOpen(false);
+    }
+    if (viewportWidth < DESKTOP_MODEL_PANE_MIN_WIDTH) {
+      setLeftDeckOpen(false);
+    }
+  }, [viewportWidth]);
 
   useEffect(() => {
     if (!inspectorIsDrawer || !inspectorDrawerOpen) return;
@@ -1811,10 +399,14 @@ export function App() {
         : [];
     focusable()[0]?.focus();
     const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented) return;
       if (event.key === "Escape") {
         event.preventDefault();
         setInspectorDrawerOpen(false);
-        inspectorDrawerTriggerRef.current?.focus();
+        window.setTimeout(
+          () => inspectorDrawerTriggerRef.current?.focus(),
+          0,
+        );
         return;
       }
       if (event.key !== "Tab") return;
@@ -1834,6 +426,125 @@ export function App() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [inspectorDrawerOpen, inspectorIsDrawer]);
 
+  useEffect(() => {
+    if (!sourceDrawerOpen) return;
+    const drawer = sourceDrawerRef.current;
+    const inertTargets = [
+      document.querySelector<HTMLElement>(".app-bar"),
+      document.querySelector<HTMLElement>(".model-pane"),
+      ...(drawer?.parentElement
+        ? [...drawer.parentElement.children]
+            .filter((element) => element !== drawer)
+            .filter((element): element is HTMLElement => element instanceof HTMLElement)
+        : []),
+    ].filter((element): element is HTMLElement => !!element);
+    const priorInert = inertTargets.map(
+      (element) => [element, element.hasAttribute("inert")] as const,
+    );
+    inertTargets.forEach((element) => {
+      element.inert = true;
+      element.setAttribute("inert", "");
+    });
+    const focusable = () =>
+      drawer
+        ? [
+            ...drawer.querySelectorAll<HTMLElement>(
+              'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex="0"]',
+            ),
+          ]
+        : [];
+    focusable()[0]?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented) return;
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setSourceDrawerOpen(false);
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const items = focusable();
+      if (!items.length) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      priorInert.forEach(([element, wasInert]) => {
+        element.inert = wasInert;
+        if (!wasInert) element.removeAttribute("inert");
+      });
+      if (drawer?.contains(document.activeElement)) {
+        sourceDrawerTriggerRef.current?.focus();
+      }
+    };
+  }, [sourceDrawerOpen]);
+
+  useEffect(() => {
+    if (!viewToolsOpen) return;
+    const onPointerDown = (event: PointerEvent) => {
+      if (!viewToolsRef.current?.contains(event.target as Node)) {
+        setViewToolsOpen(false);
+      }
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      setViewToolsOpen(false);
+      viewToolsTriggerRef.current?.focus();
+    };
+    window.addEventListener("pointerdown", onPointerDown);
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [viewToolsOpen]);
+
+  useEffect(() => {
+    if (viewportWidth >= 768 || !leftDeckOpen) return;
+    const pane = modelPaneRef.current;
+    const focusable = () =>
+      pane
+        ? [
+            ...pane.querySelectorAll<HTMLElement>(
+              'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex="0"]',
+            ),
+          ]
+        : [];
+    focusable()[0]?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        setLeftDeckOpen(false);
+        mobileModelTriggerRef.current?.focus();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const items = focusable();
+      if (!items.length) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [leftDeckOpen, viewportWidth]);
+
   const scene = useMemo(
     () =>
       evaluateConstrainedScene(
@@ -1844,6 +555,15 @@ export function App() {
       ),
     [problem.construction, problem.constraints, problem.variables.names, variablePreview],
   );
+  useEffect(() => {
+    if (viewportWidth < 768) setMobileFitRequested(true);
+  }, [viewportWidth]);
+  useEffect(() => {
+    if (!mobileFitRequested || viewportWidth >= 768 || !scene.items.length)
+      return;
+    fitAllObjects();
+    setMobileFitRequested(false);
+  }, [hidden, mobileFitRequested, scene.items, viewportWidth]);
   useEffect(() => {
     if (!guidedPointReady || !scene.byName.has(guidedPointReady)) return;
     setGuidedPointReady(undefined);
@@ -1935,6 +655,65 @@ export function App() {
       showAllTools ? catalogPaletteGroups(catalog) : [BASIC_PALETTE_GROUP],
     [catalog, showAllTools],
   );
+  const allPaletteTools = useMemo(() => {
+    const tools = [
+      ...BASIC_PALETTE_GROUP.tools,
+      ...catalogPaletteGroups(catalog).flatMap((group) => group.tools),
+    ];
+    return new Map(tools.map((item) => [item.id, item]));
+  }, [catalog]);
+  const sketchTools = useMemo(
+    () =>
+      showAllTools
+        ? paletteGroups.flatMap((group) => group.tools)
+        : SKETCH_TOOL_IDS.map((id) => allPaletteTools.get(id)).filter(
+            (item): item is PaletteTool => !!item,
+          ),
+    [allPaletteTools, paletteGroups, showAllTools],
+  );
+  const constraintTools = useMemo(
+    () =>
+      CONSTRAINT_SHORTCUTS.map((shortcut) => ({
+        ...shortcut,
+        tool: allPaletteTools.get(shortcut.id),
+      })),
+    [allPaletteTools],
+  );
+  useEffect(() => {
+    const activateShortcut = (event: KeyboardEvent) => {
+      if (
+        event.defaultPrevented ||
+        event.altKey ||
+        event.ctrlKey ||
+        event.metaKey ||
+        catalogOpen ||
+        sourceDrawerOpen ||
+        inspectorDrawerOpen
+      )
+        return;
+      const target = event.target;
+      if (
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target instanceof HTMLSelectElement ||
+        (target instanceof HTMLElement && target.isContentEditable)
+      )
+        return;
+      const key = event.key.toUpperCase();
+      const toolId = Object.entries(SKETCH_TOOL_SHORTCUTS).find(
+        ([, shortcut]) => shortcut === key,
+      )?.[0];
+      if (!toolId) return;
+      const shortcutTool = allPaletteTools.get(toolId);
+      if (!shortcutTool) return;
+      event.preventDefault();
+      setWorkflowMode("draw");
+      activatePaletteTool(shortcutTool);
+      window.setTimeout(() => canvasRef.current?.focus(), 0);
+    };
+    window.addEventListener("keydown", activateShortcut);
+    return () => window.removeEventListener("keydown", activateShortcut);
+  }, [allPaletteTools, catalogOpen, inspectorDrawerOpen, sourceDrawerOpen]);
   const mathFunctionNames = useMemo(
     () =>
       catalog.tools
@@ -2026,6 +805,7 @@ export function App() {
         setObjectStyles(envelope.style.objects ?? {});
       }
       if (envelope.ui?.selected) setSelected(envelope.ui.selected);
+      if (window.innerWidth < 768) setMobileFitRequested(true);
     });
     fetch("/api/v1/dsl/catalog")
       .then(async (response) => {
@@ -2385,11 +1165,11 @@ export function App() {
       const local = point.matrixTransform(matrix.inverse());
       return { x: local.x, y: local.y };
     }
-    // Browser fallback for the default xMidYMid meet viewBox transform.
-    const scale = Math.min(
-      box.width / CANVAS.width,
-      box.height / CANVAS.height,
-    );
+    // Browser fallback for the responsive SVG viewBox transform.
+    const scale =
+      viewportWidth < 768
+        ? Math.max(box.width / CANVAS.width, box.height / CANVAS.height)
+        : Math.min(box.width / CANVAS.width, box.height / CANVAS.height);
     const left = box.left + (box.width - CANVAS.width * scale) / 2;
     const top = box.top + (box.height - CANVAS.height * scale) / 2;
     return { x: (clientX - left) / scale, y: (clientY - top) / scale };
@@ -3082,6 +1862,7 @@ export function App() {
     ]);
     setUiError("");
     setLeftMode("algebra");
+    setWorkflowMode("constrain");
     return true;
   }
   function addInscribedPolygon(
@@ -3159,6 +1940,7 @@ export function App() {
   }
   function revealConditions() {
     setLeftMode("algebra");
+    setWorkflowMode("constrain");
   }
   function normalizeScalarInput(
     source: string,
@@ -3668,6 +2450,7 @@ export function App() {
     panRef.current = undefined;
   }
   function setMode(mode: ToolMode) {
+    setWorkflowMode("draw");
     setTool(mode);
     setToolPoints([]);
     setPendingPoints([]);
@@ -4084,15 +2867,21 @@ export function App() {
       event.target.value = "";
     });
   }
-  function download(value: unknown, suffix: string) {
+  function download(value: unknown, suffix: string, label: string) {
     const url = URL.createObjectURL(
       new Blob([JSON.stringify(value, null, 2)], { type: "application/json" }),
     );
     const anchor = document.createElement("a");
     anchor.href = url;
     anchor.download = `${problem.id}${suffix}`;
+    anchor.hidden = true;
+    document.body.append(anchor);
     anchor.click();
-    URL.revokeObjectURL(url);
+    window.setTimeout(() => {
+      anchor.remove();
+      URL.revokeObjectURL(url);
+    }, 1_000);
+    setUiNotice(`${label}を書き出しました · ${anchor.download}`);
   }
   function toggleSelectedPointFreedom() {
     if (!selectedConstruction) return;
@@ -4363,13 +3152,17 @@ export function App() {
     const maxY = Math.max(...points.map((point) => point.y));
     const width = Math.max(maxX - minX, 1);
     const height = Math.max(maxY - minY, 1);
+    const horizontalBudget =
+      viewportWidth < 768
+        ? Math.max(240, viewportWidth - 72)
+        : CANVAS.width - 120;
     setCamera({
       center: { x: (minX + maxX) / 2, y: (minY + maxY) / 2 },
       pixelsPerUnit: Math.max(
         20,
         Math.min(
           180,
-          (CANVAS.width - 120) / width,
+          horizontalBudget / width,
           (CANVAS.height - 120) / height,
         ),
       ),
@@ -4411,163 +3204,200 @@ export function App() {
               : tool === "pan"
                 ? "ドラッグして表示範囲を移動"
                 : "青い点をドラッグして移動。空白ドラッグでパン";
+  const activeToolLabel =
+    guided?.tool.label_ja ??
+    paletteGroups
+      .flatMap((group) => group.tools)
+      .find((item) => item.action === "mode" && item.value === tool)?.label ??
+    "移動";
 
   return (
-    <div className="app-shell">
-      <header
-        className="app-bar"
-        inert={catalogOpen ? true : undefined}
-        aria-hidden={catalogOpen || undefined}
-      >
-        <div className="brand">GeoTarget</div>
-        <span className="project-name">{problem.id}.geotarget.json</span>
-        <div className="app-actions">
-          <input
-            ref={importRef}
-            className="visually-hidden"
-            tabIndex={-1}
-            type="file"
-            accept=".json,.geotarget.json"
-            onChange={importProject}
-          />
-          <button onClick={() => importRef.current?.click()}>
-            <CloudArrowDown />
-            読み込む
-          </button>
-          <button
-            onClick={() =>
-              download(
-                {
-                  formatVersion: PROJECT_FORMAT_VERSION,
-                  problem,
-                  viewport: camera,
-                  style: {
-                    grid,
-                    snap,
-                    witness: showWitness,
-                    hidden: [...hidden],
-                    objects: objectStyles,
-                  },
-                  ui: { selected, variablePreview, measurements },
-                },
-                ".geotarget.json",
-              )
-            }
-          >
-            <CloudArrowUp />
-            プロジェクト
-          </button>
-          <button onClick={() => download(problem, ".json")}>
-            <FloppyDisk />
-            V15 JSON
-          </button>
-          <button
-            ref={inspectorDrawerTriggerRef}
-            className="inspector-drawer-trigger"
-            aria-controls="solver-inspector"
-            aria-expanded={inspectorDrawerOpen}
-            onClick={() => setInspectorDrawerOpen(true)}
-          >
-            <Wrench />
-            Inspector / Solver
-          </button>
-          <span
-            className={`doctor-status ${doctor?.ok === false ? "bad" : ""}`}
-          >
-            {doctor?.ok ? (
-              <Check weight="bold" />
-            ) : doctor ? (
-              <X weight="bold" />
-            ) : null}
-            {doctor
-              ? `Doctor: ${doctor.ok ? "正常" : "要確認"}`
-              : "Doctor: 確認中"}
-          </span>
-        </div>
-      </header>
+    <div
+      className="app-shell"
+      style={
+        {
+          "--left-pane-width": `${layoutSizes.left}px`,
+          "--right-pane-width": `${layoutSizes.right}px`,
+          "--bottom-pane-height": `${layoutSizes.bottom}px`,
+        } as CSSProperties
+      }
+    >
+      <AppBar
+        projectName={`${problem.id}.geotarget.json`}
+        modalOpen={catalogOpen}
+        importRef={importRef}
+        onImport={importProject}
+        onExportProject={() =>
+          download(
+            {
+              formatVersion: PROJECT_FORMAT_VERSION,
+              problem,
+              viewport: camera,
+              style: {
+                grid,
+                snap,
+                witness: showWitness,
+                hidden: [...hidden],
+                objects: objectStyles,
+              },
+              ui: { selected, variablePreview, measurements },
+            },
+            ".geotarget.json",
+            "プロジェクト",
+          )
+        }
+        onExportJson={() => download(problem, ".json", "V15 JSON")}
+        sourceTriggerRef={sourceDrawerTriggerRef}
+        sourceOpen={sourceDrawerOpen}
+        onToggleSource={() => {
+          if (sourceDrawerOpen) {
+            setSourceDrawerOpen(false);
+            sourceDrawerTriggerRef.current?.focus();
+            return;
+          }
+          setEditorTab("json");
+          setEditorDockOpen(true);
+          setSourceDrawerOpen(true);
+        }}
+        inspectorTriggerRef={inspectorDrawerTriggerRef}
+        inspectorOpen={inspectorDrawerOpen}
+        onToggleInspector={() => {
+          if (inspectorDrawerOpen) {
+            setInspectorDrawerOpen(false);
+            window.setTimeout(
+              () => inspectorDrawerTriggerRef.current?.focus(),
+              0,
+            );
+          } else {
+            setInspectorDrawerOpen(true);
+          }
+        }}
+        doctor={doctor}
+        mobileStage={workflowMode}
+        mobileStageCount={
+          workflowMode === "draw"
+            ? problem.construction.length
+            : workflowMode === "constrain"
+              ? problem.constraints.length + problem.guards.length
+              : problem.answer.trim()
+                ? 1
+                : 0
+        }
+        mobileModelOpen={leftDeckOpen}
+        mobileModelTriggerRef={mobileModelTriggerRef}
+        onToggleMobileModel={() => setLeftDeckOpen((open) => !open)}
+      />
       <main
-        className="workspace"
+        className={`workspace ${leftDeckOpen ? "left-deck-open" : "left-deck-collapsed"} ${editorDockOpen ? "editor-dock-open" : "editor-dock-collapsed"} ${sourceDrawerOpen ? "source-drawer-open" : "source-drawer-closed"} workflow-${workflowMode}`}
         style={
           {
             "--left-pane-width": `${layoutSizes.left}px`,
             "--right-pane-width": `${layoutSizes.right}px`,
+            "--bottom-pane-height": `${layoutSizes.bottom}px`,
           } as CSSProperties
         }
         inert={catalogOpen ? true : undefined}
         aria-hidden={catalogOpen || undefined}
       >
-        <aside className="model-pane geogebra-pane" aria-label="作図サイドバー">
-          <nav className="view-rail" aria-label="サイドバー表示">
-            <button
-              className={leftMode === "algebra" ? "active" : ""}
-              aria-pressed={leftMode === "algebra"}
-              onClick={() => setLeftMode("algebra")}
-            >
-              <Shapes />
-              <span>代数</span>
-            </button>
-            <button
-              className={leftMode === "tools" ? "active" : ""}
-              aria-pressed={leftMode === "tools"}
-              onClick={() => setLeftMode("tools")}
-            >
-              <Wrench />
-              <span>ツール</span>
-            </button>
-          </nav>
+        {viewportWidth < 768 && leftDeckOpen ? (
+          <button
+            className="mobile-model-backdrop"
+            aria-label="作図ナビゲーションの外側を閉じる"
+            onPointerDown={(event) => {
+              event.preventDefault();
+              setLeftDeckOpen(false);
+              mobileModelTriggerRef.current?.focus();
+            }}
+            onClick={() => {
+              setLeftDeckOpen(false);
+              mobileModelTriggerRef.current?.focus();
+            }}
+          />
+        ) : null}
+        <aside
+          id="model-navigator"
+          ref={modelPaneRef}
+          className={`model-pane geogebra-pane mode-${leftMode} ${leftDeckOpen ? "deck-open" : "deck-collapsed"}`}
+          aria-label="作図サイドバー"
+          role={viewportWidth < 768 && leftDeckOpen ? "dialog" : undefined}
+          aria-modal={viewportWidth < 768 && leftDeckOpen ? true : undefined}
+          inert={viewportWidth < 768 && !leftDeckOpen ? true : undefined}
+          aria-hidden={viewportWidth < 768 && !leftDeckOpen ? true : undefined}
+        >
+          <WorkflowStageNav
+            mode={workflowMode}
+            objectCount={problem.construction.length}
+            conditionCount={problem.constraints.length + problem.guards.length}
+            solverReady={!!problem.answer.trim()}
+            onDraw={() => {
+              setWorkflowMode("draw");
+              // The drawing tools already live on the canvas bench. Keep the
+              // object navigator visible so switching workflow stages never
+              // replaces useful project context with an empty instruction view.
+              setLeftMode("algebra");
+            }}
+            onConstrain={() => {
+              setWorkflowMode("constrain");
+              setLeftMode("algebra");
+            }}
+            onSolve={() => {
+              setWorkflowMode("solve");
+              setLeftMode("algebra");
+              setInspectorDrawerOpen(true);
+              window.setTimeout(() => {
+                const scrollBody = inspectorScrollBodyRef.current;
+                const solverSection =
+                  scrollBody?.querySelector<HTMLElement>(
+                    ".solver-settings-section",
+                  );
+                if (scrollBody && solverSection)
+                  scrollBody.scrollTop = Math.max(
+                    0,
+                    solverSection.offsetTop - scrollBody.offsetTop,
+                  );
+              }, 0);
+            }}
+          />
+          <button
+            className="left-deck-toggle"
+            aria-label={leftDeckOpen ? "作図デッキを折りたたむ" : "作図デッキを開く"}
+            aria-expanded={leftDeckOpen}
+            onClick={() => {
+              setLeftDeckOpen((open) => !open);
+              if (leftDeckOpen && viewportWidth < 768)
+                window.setTimeout(
+                  () => mobileModelTriggerRef.current?.focus(),
+                  0,
+                );
+            }}
+          >
+            {leftDeckOpen ? <CaretLeft /> : <CaretRight />}
+            <span>{leftDeckOpen ? "COLLAPSE" : "OPEN"}</span>
+          </button>
           <div className="left-view">
             {leftMode === "tools" ? (
               <>
-                <div className="geogebra-view-heading">
-                  <h1>ツール</h1>
+                <div className="sketch-tool-actions">
                   <button
-                    aria-label="すべてのV15ツールを開く"
-                    onClick={() => openCatalog()}
+                    aria-label="選択モードに戻る"
+                    onClick={() => setMode("select")}
                   >
-                    <Plus />
+                    <X />
+                    <span>選択に戻る</span>
                   </button>
                 </div>
-                <div className="tool-gallery" aria-label="GeoGebra型作図ツール">
-                  {paletteGroups.map((group) => (
-                    <section
-                      key={group.id}
-                      aria-labelledby={`tool-group-${group.id}`}
-                    >
-                      <h2 id={`tool-group-${group.id}`}>{group.label}</h2>
-                      <div className="tool-grid">
-                        {group.tools.map((item) => {
-                          const active =
-                            (item.action === "mode" && tool === item.value) ||
-                            guided?.tool.id === item.value;
-                          return (
-                            <button
-                              key={`${group.id}-${item.id}`}
-                              className={active ? "active" : ""}
-                              aria-pressed={active}
-                              aria-label={`作図ツール ${item.label}`}
-                              title={item.note ?? item.label}
-                              onClick={() => activatePaletteTool(item)}
-                            >
-                              <PaletteGlyph id={item.id} />
-                              <span>{item.label}</span>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </section>
-                  ))}
-                  <button
-                    className="more-tools"
-                    onClick={() => setShowAllTools((value) => !value)}
-                  >
-                    {showAllTools ? "基本ツールだけ表示" : "その他のツール"}
-                  </button>
+                <div className="draw-mode-note">
+                  <strong>DRAW MODE</strong>
+                  <span>上のツールベンチから作図を開始します。</span>
                 </div>
               </>
             ) : (
               <>
                 <div className="geogebra-view-heading">
-                  <h1>代数</h1>
+                  <div>
+                    <h1>オブジェクト</h1>
+                    <small>MODEL GRAPH</small>
+                  </div>
                   <span>{problem.construction.length}</span>
                 </div>
                 <label className="search-field">
@@ -4651,15 +3481,17 @@ export function App() {
                         >
                           {isHidden ? <EyeSlash /> : <i aria-hidden="true" />}
                         </button>
-                        <div className="object-id">
-                          <strong>{item.name}</strong>
-                          <span>{FREEDOM_LABEL[freedom]}</span>
+                        <div className="object-summary">
+                          <div className="object-id">
+                            <strong>{item.name}</strong>
+                            <span>{FREEDOM_LABEL[freedom]}</span>
+                          </div>
+                          <MathFormula
+                            className="object-formula"
+                            source={item.expr}
+                            label={`${item.name}の定義: ${item.expr}`}
+                          />
                         </div>
-                        <MathFormula
-                          className="object-formula"
-                          source={item.expr}
-                          label={`${item.name}の定義: ${item.expr}`}
-                        />
                         <button
                           className="object-more"
                           aria-label={`${item.name}の設定`}
@@ -4740,7 +3572,10 @@ export function App() {
                 )}
                 <section className="advanced-model" aria-label="条件と変数">
                   <div className="conditions-heading">
-                    <span>条件と変数</span>
+                    <div>
+                      <span>条件と変数</span>
+                      <small>CONSTRAINT SYSTEM</small>
+                    </div>
                     <strong>
                       {problem.constraints.length + problem.guards.length}
                     </strong>
@@ -4922,93 +3757,103 @@ export function App() {
             { "--bottom-pane-height": `${layoutSizes.bottom}px` } as CSSProperties
           }
         >
-          <div
-            className="canvas-toolbar geogebra-canvas-bar"
-            aria-label="作図操作"
-          >
-            <div className="tool-group compact">
-              <button
-                aria-label="元に戻す"
-                disabled={!history.length && !draftActive}
-                onClick={undo}
-              >
-                <ArrowCounterClockwise />
-              </button>
-              <button
-                aria-label="やり直す"
-                disabled={!future.length && !draftActive}
-                onClick={redo}
-              >
-                <ArrowClockwise />
-              </button>
+          <div className={`instrument-tool-bench ${showAllTools ? "expanded" : ""}`}>
+            <div className="instrument-tool-grid" aria-label="作図ツール">
+              {sketchTools.map((item) => {
+                const active =
+                  (item.action === "mode" && tool === item.value) ||
+                  guided?.tool.id === item.value;
+                return (
+                  <button
+                    key={item.id}
+                    className={active ? "active" : ""}
+                    aria-pressed={active}
+                    aria-label={`作図ツール ${item.label}`}
+                    title={item.note ?? item.label}
+                    onClick={() => activatePaletteTool(item)}
+                  >
+                    <PaletteGlyph id={item.id} />
+                    <span>{item.label}</span>
+                    <kbd>{SKETCH_TOOL_SHORTCUTS[item.id] ?? ""}</kbd>
+                  </button>
+                );
+              })}
             </div>
-            <strong>
-              {guided?.tool.label_ja ??
-                paletteGroups
-                  .flatMap((group) => group.tools)
-                  .find((item) => item.action === "mode" && item.value === tool)
-                  ?.label ??
-                "移動"}
-            </strong>
-            <div className="tool-group compact">
+            <button
+              className="more-tools"
+              aria-expanded={showAllTools}
+              onClick={() => {
+                setViewToolsOpen(false);
+                setShowAllTools((value) => !value);
+              }}
+            >
+              <DotsNine />
+              <span>
+                {showAllTools ? "基本ツールだけ表示" : "その他のツール"}
+              </span>
+            </button>
+            <button
+              className="catalog-tool-trigger"
+              aria-label="すべてのV15ツールを開く"
+              onClick={() => openCatalog()}
+            >
+              <MagnifyingGlass />
+              <span>CATALOG</span>
+            </button>
+            <div className="view-tools" ref={viewToolsRef}>
               <button
-                className={grid ? "active" : ""}
-                aria-label="グリッド"
-                aria-pressed={grid}
-                onClick={() => setGrid(!grid)}
+                ref={viewToolsTriggerRef}
+                className="view-tools-trigger"
+                aria-label="表示・履歴ツール"
+                aria-expanded={viewToolsOpen}
+                aria-controls="view-tools-popover"
+                onClick={() => setViewToolsOpen((value) => !value)}
               >
                 <GridFour />
               </button>
-              <button
-                className={snap ? "active" : ""}
-                aria-label="スナップ"
-                aria-pressed={snap}
-                onClick={() => setSnap(!snap)}
-              >
-                <Target />
-              </button>
-              <button aria-label="表示を移動" onClick={() => setMode("pan")}>
-                <Hand />
-              </button>
-              <button
-                aria-label="すべてのオブジェクトを表示"
-                title="すべて表示"
-                disabled={!hidden.size}
-                onClick={() => setHidden(new Set())}
-              >
-                <Eye />
-              </button>
-              <button
-                aria-label="図全体に表示を合わせる"
-                title="全体表示"
-                disabled={!scene.items.length}
-                onClick={fitAllObjects}
-              >
-                <ArrowsOut />
-              </button>
-              <button
-                className="clear-all-button"
-                aria-label="すべて消去"
-                title="すべて消去"
-                disabled={
-                  !problem.construction.length &&
-                  !problem.variables.names.length &&
-                  !problem.constraints.length &&
-                  !problem.guards.length &&
-                  !problem.answer &&
-                  !problem.post_process &&
-                  !measurements.length
-                }
-                onClick={clearAll}
-              >
-                <Trash />
-              </button>
+              {viewToolsOpen ? (
+                <div
+                  id="view-tools-popover"
+                  className="view-tools-popover"
+                  role="group"
+                  aria-label="表示と履歴"
+                >
+                  <span className="view-tools-eyebrow">VIEW / HISTORY</span>
+                  <CanvasToolbar
+                    canUndo={!!history.length || draftActive}
+                    canRedo={!!future.length || draftActive}
+                    onUndo={undo}
+                    onRedo={redo}
+                    grid={grid}
+                    snap={snap}
+                    onToggleGrid={() => setGrid(!grid)}
+                    onToggleSnap={() => setSnap(!snap)}
+                    onPan={() => setMode("pan")}
+                    canShowAll={!!hidden.size}
+                    onShowAll={() => setHidden(new Set())}
+                    canFitAll={!!scene.items.length}
+                    onFitAll={fitAllObjects}
+                    canClearAll={
+                      !!(
+                        problem.construction.length ||
+                        problem.variables.names.length ||
+                        problem.constraints.length ||
+                        problem.guards.length ||
+                        problem.answer ||
+                        problem.post_process ||
+                        measurements.length
+                      )
+                    }
+                    onClearAll={clearAll}
+                  />
+                </div>
+              ) : null}
             </div>
           </div>
-          <div className="tool-instruction">
-            <span className="instruction-copy" role="status">
-              {instruction}
-              {!guided &&
+          <ToolInstruction
+            toolLabel={activeToolLabel}
+            message={`${instruction}${
+              !guided &&
               [
                 "free-point",
                 "fixed-point",
@@ -5018,34 +3863,30 @@ export function App() {
                 "polygon",
               ].includes(tool)
                 ? ` · キーボード位置 x ${keyboardPoint.x.toFixed(1)}, y ${keyboardPoint.y.toFixed(1)}。矢印キーで移動、Enterで確定`
-                : ""}
-            </span>
-            <div>
-              {scene.warnings.length ? (
-                <span>{scene.warnings.length}件は描画プレビュー対象外</span>
-              ) : null}
-              {(guided ||
-                toolPoints.length > 0 ||
-                !["select", "pan"].includes(tool)) && (
-                <button
-                  onClick={() => {
-                    setGuided(undefined);
-                    setToolPoints([]);
-                    setPendingPoints([]);
-                    setTool("select");
-                    window.setTimeout(() => canvasRef.current?.focus(), 0);
-                  }}
-                >
-                  作図を中止
-                </button>
-              )}
-            </div>
-          </div>
+                : ""
+            }`}
+            warningCount={scene.warnings.length}
+            showCancel={
+              !!guided ||
+              toolPoints.length > 0 ||
+              !["select", "pan"].includes(tool)
+            }
+            onCancel={() => {
+              setGuided(undefined);
+              setToolPoints([]);
+              setPendingPoints([]);
+              setTool("select");
+              window.setTimeout(() => canvasRef.current?.focus(), 0);
+            }}
+          />
           <div className={`canvas-wrap mode-${tool}`}>
             <svg
               ref={canvasRef}
               className="geometry-canvas"
               viewBox={`0 0 ${CANVAS.width} ${CANVAS.height}`}
+              preserveAspectRatio={
+                viewportWidth < 768 ? "xMidYMid slice" : "xMidYMid meet"
+              }
               role="application"
               tabIndex={0}
               aria-label="幾何作図キャンバス。作図中は矢印キーで配置位置を動かしEnterで確定。通常は矢印キーで表示移動、プラスとマイナスで拡大縮小"
@@ -5073,6 +3914,17 @@ export function App() {
             >
               <defs>
                 <pattern
+                  id="micro-grid"
+                  className="minor-grid-pattern"
+                  width={camera.pixelsPerUnit / 5}
+                  height={camera.pixelsPerUnit / 5}
+                  patternUnits="userSpaceOnUse"
+                >
+                  <path
+                    d={`M ${camera.pixelsPerUnit / 5} 0 L 0 0 0 ${camera.pixelsPerUnit / 5}`}
+                  />
+                </pattern>
+                <pattern
                   id="minor-grid"
                   width={camera.pixelsPerUnit / 2}
                   height={camera.pixelsPerUnit / 2}
@@ -5082,12 +3934,28 @@ export function App() {
                     d={`M ${camera.pixelsPerUnit / 2} 0 L 0 0 0 ${camera.pixelsPerUnit / 2}`}
                   />
                 </pattern>
+                <pattern
+                  id="major-grid"
+                  className="major-grid-pattern"
+                  width={camera.pixelsPerUnit}
+                  height={camera.pixelsPerUnit}
+                  patternUnits="userSpaceOnUse"
+                >
+                  <rect
+                    width={camera.pixelsPerUnit}
+                    height={camera.pixelsPerUnit}
+                    fill="url(#micro-grid)"
+                  />
+                  <path
+                    d={`M ${camera.pixelsPerUnit} 0 L 0 0 0 ${camera.pixelsPerUnit}`}
+                  />
+                </pattern>
               </defs>
               <rect
                 className="canvas-hit"
                 width={CANVAS.width}
                 height={CANVAS.height}
-                fill={grid ? "url(#minor-grid)" : "#fff"}
+                fill={grid ? "url(#major-grid)" : "var(--drafting-paper)"}
               />
               {(() => {
                 const origin = worldToScreen({ x: 0, y: 0 }, viewport);
@@ -5288,39 +4156,48 @@ export function App() {
                   );
                 })}
             </svg>
-            <div className="zoom-controls">
-              <button
-                aria-label="拡大"
-                onClick={() =>
-                  setCamera((value) => ({
-                    ...value,
-                    pixelsPerUnit: Math.min(180, value.pixelsPerUnit * 1.2),
-                  }))
-                }
-              >
-                <Plus />
-              </button>
-              <button
-                aria-label="縮小"
-                onClick={() =>
-                  setCamera((value) => ({
-                    ...value,
-                    pixelsPerUnit: Math.max(20, value.pixelsPerUnit / 1.2),
-                  }))
-                }
-              >
-                <Minus />
-              </button>
-              <button
-                aria-label="表示を中央に戻す"
-                onClick={() =>
-                  setCamera({ center: { x: 0, y: 0 }, pixelsPerUnit: 65 })
-                }
-              >
-                <Target />
-              </button>
-            </div>
+            <ZoomControls
+              onZoomIn={() =>
+                setCamera((value) => ({
+                  ...value,
+                  pixelsPerUnit: Math.min(180, value.pixelsPerUnit * 1.2),
+                }))
+              }
+              onZoomOut={() =>
+                setCamera((value) => ({
+                  ...value,
+                  pixelsPerUnit: Math.max(20, value.pixelsPerUnit / 1.2),
+                }))
+              }
+              onRecenter={() =>
+                setCamera({ center: { x: 0, y: 0 }, pixelsPerUnit: 65 })
+              }
+            />
           </div>
+          <SolverInstrumentRail
+            target={problem.answer}
+            phase={phase}
+            progress={runProgress}
+            running={running}
+            profile={
+              solverMode === "reference"
+                ? "180s  /  1 core"
+                : `${maxTime}s  /  ${cores === "auto" ? "auto cores" : `${cores} cores`}`
+            }
+            onOpenTarget={() => {
+              setWorkflowMode("solve");
+              setInspectorDrawerOpen(true);
+            }}
+            onOpenDetails={() => {
+              setWorkflowMode("solve");
+              setInspectorDrawerOpen(true);
+            }}
+            onStart={() => {
+              setWorkflowMode("solve");
+              void startSolve();
+            }}
+            onCancel={() => void cancelSolve()}
+          />
           <PaneResizeHandle
             orientation="horizontal"
             label="下部エディターの高さを変更"
@@ -5331,76 +4208,24 @@ export function App() {
             defaultValue={DEFAULT_LAYOUT_SIZES.bottom}
             onChange={(bottom) => layout.setSize("bottom", bottom)}
           />
-          <div className="editor-panel">
-            <div
-              className="editor-tabs"
-              role="tablist"
-              aria-label="問題エディター"
-              onKeyDown={(event) => {
-                if (
-                  !["ArrowLeft", "ArrowRight", "Home", "End"].includes(
-                    event.key,
-                  )
-                )
-                  return;
-                event.preventDefault();
-                const tabs: Array<typeof editorTab> = [
-                  "command",
-                  "json",
-                  "details",
-                ];
-                const index = tabs.indexOf(editorTab);
-                const next =
-                  event.key === "Home"
-                    ? tabs[0]
-                    : event.key === "End"
-                      ? tabs[2]
-                      : tabs[
-                          (index + (event.key === "ArrowRight" ? 1 : 2)) % 3
-                        ];
-                setEditorTab(next);
-                window.setTimeout(
-                  () =>
-                    document
-                      .querySelector<HTMLElement>(
-                        `[role="tab"][aria-selected="true"]`,
-                      )
-                      ?.focus(),
-                  0,
-                );
+          <div
+            id="advanced-source-drawer"
+            ref={sourceDrawerRef}
+            className={`editor-panel ${editorDockOpen ? "dock-open" : "dock-collapsed"} ${sourceDrawerOpen ? "source-visible" : "source-hidden"}`}
+            role={sourceDrawerOpen ? "dialog" : undefined}
+            aria-label={sourceDrawerOpen ? "Advanced Source" : undefined}
+            aria-modal={sourceDrawerOpen || undefined}
+          >
+            <EditorTabs
+              tab={editorTab}
+              onChange={setEditorTab}
+              expanded={editorDockOpen}
+              onToggleExpanded={() => {
+                const next = !editorDockOpen;
+                setEditorDockOpen(next);
+                setSourceDrawerOpen(next);
               }}
-            >
-              <button
-                id="tab-command"
-                role="tab"
-                aria-controls="panel-command"
-                aria-selected={editorTab === "command"}
-                tabIndex={editorTab === "command" ? 0 : -1}
-                onClick={() => setEditorTab("command")}
-              >
-                ターゲット
-              </button>
-              <button
-                id="tab-json"
-                role="tab"
-                aria-controls="panel-json"
-                aria-selected={editorTab === "json"}
-                tabIndex={editorTab === "json" ? 0 : -1}
-                onClick={() => setEditorTab("json")}
-              >
-                V15 JSON
-              </button>
-              <button
-                id="tab-details"
-                role="tab"
-                aria-controls="panel-details"
-                aria-selected={editorTab === "details"}
-                tabIndex={editorTab === "details" ? 0 : -1}
-                onClick={() => setEditorTab("details")}
-              >
-                描画ログ
-              </button>
-            </div>
+            />
             {editorTab === "command" && (
               <div
                 id="panel-command"
@@ -5499,6 +4324,44 @@ export function App() {
               </div>
             )}
           </div>
+          <nav className="constraint-rail" aria-label="制約ショートカット">
+            <button
+              className="constraint-settings"
+              aria-label={`選択: ${selected || "—"}`}
+              aria-controls="solver-inspector"
+              aria-expanded={inspectorDrawerOpen}
+              onClick={() => setInspectorDrawerOpen(true)}
+            >
+              <span className="constraint-context-label">SELECTED</span>
+              <strong>{selected || "—"}</strong>
+              <Wrench />
+            </button>
+            <div className="constraint-shortcuts">
+              {constraintTools
+                .filter(({ id }) =>
+                  ["Parallel", "Perpendicular", "AssumeEq", "Midpoint"].includes(
+                    id,
+                  ),
+                )
+                .map(({ id, label, key, tool: shortcutTool }) =>
+                  shortcutTool ? (
+                    <button
+                      key={id}
+                      aria-label={`制約 ${label}`}
+                      title={shortcutTool.note ?? label}
+                      onClick={() => activatePaletteTool(shortcutTool)}
+                    >
+                      <span className="constraint-key">
+                        <kbd>Shift</kbd>
+                        <kbd>{key}</kbd>
+                      </span>
+                      <strong>{label}</strong>
+                      <PaletteGlyph id={id} />
+                    </button>
+                  ) : null,
+                )}
+            </div>
+          </nav>
         </section>
         <PaneResizeHandle
           orientation="vertical"
@@ -5516,7 +4379,10 @@ export function App() {
             aria-label="Inspector外側を閉じる"
             onClick={() => {
               setInspectorDrawerOpen(false);
-              inspectorDrawerTriggerRef.current?.focus();
+              window.setTimeout(
+                () => inspectorDrawerTriggerRef.current?.focus(),
+                0,
+              );
             }}
           />
         )}
@@ -5533,13 +4399,34 @@ export function App() {
             aria-label="Inspectorを閉じる"
             onClick={() => {
               setInspectorDrawerOpen(false);
-              inspectorDrawerTriggerRef.current?.focus();
+              window.setTimeout(
+                () => inspectorDrawerTriggerRef.current?.focus(),
+                0,
+              );
             }}
           >
             <X />
           </button>
-          <section className="inspector-section property-inspector">
-            <h2>設定</h2>
+          <div className="inspector-deck-title">
+            <div>
+              <span className="inspector-eyebrow">INSPECTOR</span>
+              <strong>{selectedConstruction?.name || "No selection"}</strong>
+              <span className="inspector-selection-meta">
+                {selectedConstruction
+                  ? FREEDOM_LABEL[
+                      freedomOf(
+                        selectedConstruction,
+                        problem.variables.names,
+                      )
+                    ]
+                  : "オブジェクトを選択してください"}
+              </span>
+            </div>
+            <i aria-hidden="true" />
+          </div>
+          <div ref={inspectorScrollBodyRef} className="inspector-scroll-body">
+            <section className="inspector-section property-inspector">
+            <h2>オブジェクト</h2>
             {selectedConstruction ? (
               <div className="property-form">
                 <div
@@ -5774,22 +4661,24 @@ export function App() {
                     <p className="property-kind">
                       位置はprojectに保存され、solverへ渡すV15定義は変えません。
                     </p>
-                    {selectedSceneItem?.kind === "point" &&
-                      (selectedDirectVariables ||
-                        isFixedPointDefinition(selectedConstruction)) && (
-                        <button
-                          className="secondary-action"
-                          onClick={toggleSelectedPointFreedom}
-                        >
-                          {selectedDirectVariables
-                            ? "点を固定"
-                            : "点を自由にする"}
-                        </button>
-                      )}
-                    <button className="danger-action" onClick={removeSelected}>
-                      <Trash />
-                      削除
-                    </button>
+                    <div className="property-actions">
+                      {selectedSceneItem?.kind === "point" &&
+                        (selectedDirectVariables ||
+                          isFixedPointDefinition(selectedConstruction)) && (
+                          <button
+                            className="secondary-action"
+                            onClick={toggleSelectedPointFreedom}
+                          >
+                            {selectedDirectVariables
+                              ? "点を固定"
+                              : "点を自由にする"}
+                          </button>
+                        )}
+                      <button className="danger-action" onClick={removeSelected}>
+                        <Trash />
+                        削除
+                      </button>
+                    </div>
                   </div>
                 )}
                 {propertyTab === "style" && (
@@ -5928,9 +4817,9 @@ export function App() {
             ) : (
               <p className="muted">オブジェクトを選択すると設定できます。</p>
             )}
-          </section>
-          <section className="inspector-section">
-            <h2>Solver</h2>
+            </section>
+            <section className="inspector-section solver-settings-section">
+            <h2>Solver設定</h2>
             <label className="solver-target-field">
               ターゲット
               <input
@@ -6156,115 +5045,38 @@ export function App() {
                 ))}
               </ul>
             )}
-          </section>
-          <section className="inspector-section execution-section">
-            <div className="execution-heading">
-              <h2>実行</h2>
-              <span aria-live="polite">
-                {phase === "idle"
-                  ? "待機中"
-                  : `${runPhaseLabel(
-                      ["succeeded", "cancelled", "failed", "watchdog"].includes(phase)
-                        ? phase
-                        : runProgress.phase,
-                    )} · 全体時間 ${Math.round(elapsed)}秒`}
-              </span>
-            </div>
-            {phase !== "idle" && (
-              <div className="run-progress" aria-label="solver進捗">
-                <div className="run-progress-line">
-                  <strong>{runPhaseLabel(runProgress.phase)}</strong>
-                  <span>
-                    全体時間 {Math.round(elapsed)}
-                    /{Math.round(runProgress.capSeconds)}秒
-                  </span>
-                </div>
-                <progress
-                  aria-label="経過時間"
-                  max={Math.max(1, runProgress.capSeconds)}
-                  value={Math.min(
-                    runProgress.capSeconds,
-                    elapsed,
-                  )}
-                />
-                <dl className="run-progress-grid">
-                  <div>
-                    <dt>完了starts</dt>
-                    <dd>
-                      {runProgress.completedStarts ?? "—"}
-                      {runProgress.totalStarts !== undefined &&
-                        ` / ${runProgress.totalStarts}`}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>追加batch</dt>
-                    <dd>
-                      {runProgress.batch !== undefined
-                        ? `#${runProgress.batch}`
-                        : "—"}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>安定回数</dt>
-                    <dd>{runProgress.stabilityCount ?? "—"}</dd>
-                  </div>
-                  <div>
-                    <dt>使用コア</dt>
-                    <dd>{runProgress.usedCores ?? "自動調整中"}</dd>
-                  </div>
-                </dl>
-                {runProgress.terminationReason && (
-                  <p className="termination-line">
-                    終了理由: {terminationLabel(runProgress.terminationReason)}
-                  </p>
-                )}
-                {solverJob.cancelError && (
-                  <p className="termination-line cancel-error" role="alert">
-                    {solverJob.cancelError}。中止を再試行できます。
-                  </p>
-                )}
-              </div>
-            )}
-            <div className="solve-actions">
-              <button
-                className="primary-action"
-                disabled={running}
-                onClick={() => void startSolve()}
-              >
-                <Play weight="fill" />
-                解く
-              </button>
-              <button
-                className="cancel-action"
-                disabled={!running}
-                onClick={() => void cancelSolve()}
-              >
-                <Stop />
-                中止
-              </button>
-            </div>
-          </section>
-          <Suspense
-            fallback={
-              <section className="inspector-section result-section">
-                <div className="empty-result">結果表示を読み込み中…</div>
-              </section>
-            }
-          >
-            <ExactResult
-              result={result}
-              progress={runProgress}
-              activeAnswer={activeAnswer}
-              showWitness={showWitness}
-              onToggleWitness={(index) => {
-                if (activeAnswer === index && showWitness) setShowWitness(false);
-                else {
-                  setActiveAnswer(index);
-                  setShowWitness(true);
-                }
-              }}
-            />
-          </Suspense>
+            </section>
+            <Suspense
+              fallback={
+                <section className="inspector-section result-section">
+                  <div className="empty-result">結果表示を読み込み中…</div>
+                </section>
+              }
+            >
+              <ExactResult
+                result={result}
+                progress={runProgress}
+                activeAnswer={activeAnswer}
+                showWitness={showWitness}
+                onToggleWitness={(index) => {
+                  if (activeAnswer === index && showWitness)
+                    setShowWitness(false);
+                  else {
+                    setActiveAnswer(index);
+                    setShowWitness(true);
+                  }
+                }}
+              />
+            </Suspense>
+          </div>
+          <SolverExecutionDock
+            phase={phase}
+            progress={runProgress}
+            running={running}
+            cancelError={solverJob.cancelError}
+            onStart={() => void startSolve()}
+            onCancel={() => void cancelSolve()}
+          />
         </aside>
       </main>
       {mathKeyboardOpen && !catalogOpen && (
@@ -6352,6 +5164,14 @@ export function App() {
           </button>
         </div>
       )}
+      {uiNotice && (
+        <div className="toast success" role="status">
+          <span>{uiNotice}</span>
+          <button aria-label="通知を閉じる" onClick={() => setUiNotice("")}>
+            <X />
+          </button>
+        </div>
+      )}
       {catalogOpen && catalogTool && (
         <div
           className="dialog-backdrop"
@@ -6368,7 +5188,7 @@ export function App() {
           >
             <header>
               <div>
-                <span>V15 {catalog.version}</span>
+                <span>{catalog.version}</span>
                 <h2 id="tool-title">作図・条件カタログ</h2>
               </div>
               <button aria-label="閉じる" onClick={closeCatalog}>

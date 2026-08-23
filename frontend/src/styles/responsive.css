@@ -1,0 +1,144 @@
+/* ============================================================
+   Responsive behavior for the image-matched sketch workspace
+   ============================================================ */
+@media (max-width: 1439px) {
+  .solver-pane {
+    position: fixed;
+    z-index: 72;
+    top: 68px;
+    right: 27px;
+    bottom: 38px;
+    width: min(360px, calc(100vw - 54px));
+    border: 1px solid #343a3d;
+    box-shadow: 0 24px 70px rgb(0 0 0 / 70%);
+    transform: translateX(calc(100% + 32px));
+    transition: transform var(--t-med) var(--ease);
+  }
+  .solver-pane.drawer-open { transform: translateX(0); }
+  .inspector-drawer-trigger { display: inline-flex !important; }
+  .inspector-drawer-close { display: grid !important; }
+  .inspector-drawer-backdrop {
+    position: fixed;
+    z-index: 70;
+    inset: 0;
+    border: 0;
+    background: rgb(0 0 0 / 58%);
+    backdrop-filter: blur(2px);
+  }
+  .app-actions .doctor-status { display: none; }
+  .status-actions { border: 0; padding: 0; background: transparent; }
+  .app-actions .inspector-drawer-trigger {
+    width: 30px;
+    min-width: 30px;
+    min-height: 30px;
+    padding: 0;
+    background: rgb(24 28 30 / 78%);
+    color: #e5ecee;
+    font-size: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .app-bar {
+    right: 27px;
+    left: 27px;
+    height: 62px;
+    padding: 6px 3px 0;
+  }
+  .brand-lockup {
+    max-width: calc(100vw - 190px);
+    padding-inline: 5px;
+  }
+  .brand { font-size: 14px; }
+  .brand-lockup > span { font-size: 8px; }
+  .file-actions button:nth-of-type(2) { display: none; }
+  .model-pane {
+    top: 0;
+    bottom: 38px;
+    left: 0;
+    width: min(112px, calc(100vw - 54px));
+  }
+  .model-pane.mode-algebra { width: min(300px, calc(100vw - 54px)); }
+  .model-pane.deck-collapsed { width: 27px; }
+  .canvas-toolbar { top: 64px; }
+  .constraint-rail {
+    top: 88px;
+    right: 27px;
+    width: 94px;
+  }
+  .constraint-shortcuts button { grid-template-columns: auto minmax(0, 1fr) 13px; }
+  .tool-instruction,
+  .workspace.left-deck-collapsed .tool-instruction {
+    right: 27px;
+    bottom: 38px;
+    left: 27px;
+    width: auto;
+  }
+  .instruction-copy { max-width: 44vw; }
+  .instruction-actions > span { display: none; }
+  .zoom-controls { right: 28px; bottom: 43px; }
+  .editor-panel,
+  .workspace.left-deck-collapsed .editor-panel {
+    right: 27px;
+    bottom: 0;
+    left: 27px;
+    max-height: 220px;
+  }
+  .solver-pane {
+    top: 62px;
+    right: 27px;
+    bottom: 38px;
+    width: min(360px, calc(100vw - 54px));
+  }
+  .command-area { grid-template-columns: 1fr; }
+  .command-area > span { grid-column: auto; }
+  .adaptive-resource-grid { grid-template-columns: 1fr 1fr; }
+  .dialog-backdrop { padding: 8px; }
+  .tool-dialog {
+    width: calc(100vw - 16px);
+    height: calc(100vh - 16px);
+    grid-template-rows: 50px 42px 1fr;
+  }
+  .catalog-body { display: flex; flex-direction: column; overflow: auto; }
+  .catalog-body nav {
+    flex: 0 0 min(42vh, 280px);
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .tool-form { flex: 1 0 auto; padding: 14px; overflow: visible; }
+}
+
+@media (max-width: 500px) {
+  .app-action-group { border: 0; padding: 0; background: transparent; }
+  .file-actions button:nth-of-type(3) { display: none; }
+  .constraint-key kbd:first-child { display: none; }
+  .constraint-rail { width: 80px; }
+  .constraint-shortcuts button { grid-template-columns: auto minmax(0, 1fr) 12px; gap: 2px; }
+  .constraint-shortcuts button > strong { font-size: 7px; }
+  .editor-tabs button { min-width: 0; flex: 1; padding-inline: 6px; }
+  .instruction-copy { display: none; }
+  .math-keyboard {
+    bottom: 40px;
+    width: calc(100vw - 54px);
+    padding-inline: 7px;
+  }
+  .math-key-grid {
+    gap: 3px;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) 5px repeat(5, minmax(0, 1fr));
+  }
+  .math-key-grid > button { height: 37px; font-size: var(--fs-md); }
+  .math-keyboard-tabs [role="tab"] { min-width: 49px; font-size: var(--fs-xs); }
+  .math-key-grid-functions { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .math-key-grid-functions > button { line-height: 37px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

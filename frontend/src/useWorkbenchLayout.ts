@@ -2,11 +2,14 @@ import { useEffect, useReducer } from "react";
 
 export type LayoutSizes = { left: number; right: number; bottom: number };
 export const DEFAULT_LAYOUT_SIZES: LayoutSizes = {
-  left: 350,
-  right: 330,
-  bottom: 196,
+  left: 288,
+  right: 360,
+  bottom: 280,
 };
 export const LAYOUT_STORAGE_KEY = "geotarget.layout.v1";
+export const INSPECTOR_DRAWER_MIN_WIDTH = 768;
+export const DESKTOP_MODEL_PANE_MIN_WIDTH = 1100;
+export const WIDE_WORKBENCH_MIN_WIDTH = 1440;
 
 function clamp(value: number, minimum: number, maximum: number) {
   return Math.min(maximum, Math.max(minimum, value));
@@ -43,7 +46,7 @@ function reducer(state: State, action: Action): State {
   if (action.type === "size")
     return { ...state, sizes: { ...state.sizes, [action.pane]: action.value } };
   let sizes = state.sizes;
-  if (action.viewportWidth >= 1220) {
+  if (action.viewportWidth >= WIDE_WORKBENCH_MIN_WIDTH) {
     const panelBudget = Math.max(520, action.viewportWidth - 14 - 280);
     let left = clamp(sizes.left, 250, 520);
     let right = clamp(sizes.right, 270, 520);
@@ -59,7 +62,8 @@ function reducer(state: State, action: Action): State {
     sizes,
     viewportWidth: action.viewportWidth,
     drawerOpen:
-      action.viewportWidth >= 768 && action.viewportWidth < 1220
+      action.viewportWidth >= INSPECTOR_DRAWER_MIN_WIDTH &&
+      action.viewportWidth < WIDE_WORKBENCH_MIN_WIDTH
         ? state.drawerOpen
         : false,
   };

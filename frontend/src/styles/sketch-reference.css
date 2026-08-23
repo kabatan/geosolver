@@ -1,0 +1,494 @@
+/* ============================================================
+   Image-matched sketch workstation
+   Reference geometry: 26px global rail, 86px tool list,
+   full-bleed grid, 100px constraint strip, 38px timeline dock.
+   ============================================================ */
+
+/* --- Borderless top chrome ---------------------------------- */
+.app-bar {
+  position: fixed;
+  z-index: 60;
+  top: 0;
+  right: 28px;
+  left: 27px;
+  height: 68px;
+  padding: 8px 8px 0 7px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  pointer-events: none;
+  align-items: flex-start;
+}
+.app-bar::before { display: none; }
+.product-context,
+.app-actions { pointer-events: auto; }
+.product-context {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+}
+.product-mark {
+  width: 35px;
+  height: 35px;
+  display: grid;
+  flex: 0 0 35px;
+  place-items: center;
+  border-radius: 50%;
+  background: #1d4eff;
+  color: #fff;
+  box-shadow: 0 1px 8px rgb(0 0 0 / 42%);
+}
+.product-mark svg { width: 23px; height: 23px; }
+.brand-lockup {
+  min-width: 0;
+  max-width: min(610px, calc(100vw - 360px));
+  display: grid;
+  gap: 1px;
+  padding: 2px 5px 2px 0;
+  background: rgb(5 6 7 / 58%);
+  text-shadow: 0 2px 4px #000;
+}
+.brand {
+  overflow: hidden;
+  color: #f7f8f9;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.12;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.brand-lockup > span {
+  color: #e2e5e7;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.app-actions {
+  align-self: flex-start;
+  gap: 3px;
+}
+.app-action-group {
+  min-height: 30px;
+  gap: 2px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.app-actions button {
+  width: 30px;
+  min-width: 30px;
+  min-height: 30px;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid rgb(122 132 137 / 18%);
+  border-radius: 1px;
+  background: rgb(20 22 23 / 70%);
+  color: #f2f4f5;
+  font-size: 0;
+}
+.app-actions button:hover { background: rgb(42 46 48 / 92%); }
+.app-actions svg { width: 16px; height: 16px; }
+.doctor-status {
+  width: 30px;
+  min-width: 30px;
+  min-height: 30px;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid rgb(122 132 137 / 18%);
+  background: rgb(20 22 23 / 70%);
+  color: transparent;
+  font-size: 0;
+}
+.doctor-status::before { width: 6px; height: 6px; }
+.doctor-status > svg { display: none; }
+
+/* --- Full-bleed canvas -------------------------------------- */
+.app-shell,
+.workspace,
+.center-stage,
+.canvas-wrap { background: #08090a; }
+.canvas-wrap {
+  background-image:
+    linear-gradient(rgb(30 34 35 / 52%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(30 34 35 / 52%) 1px, transparent 1px),
+    linear-gradient(rgb(45 50 52 / 58%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(45 50 52 / 58%) 1px, transparent 1px);
+  background-size: 13px 13px, 13px 13px, 65px 65px, 65px 65px;
+}
+.workspace { height: 100vh; }
+.center-stage { inset: 0; }
+.workspace > .pane-resizer,
+.center-stage > .pane-resizer { display: none; }
+
+/* --- Left global rail + slim tool list ---------------------- */
+.model-pane {
+  position: absolute;
+  z-index: 42;
+  top: 0;
+  bottom: 38px;
+  left: 0;
+  width: 112px;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  transition: width var(--t-med) var(--ease);
+}
+.model-pane.mode-algebra { width: min(300px, calc(100vw - 126px)); }
+.model-pane.deck-collapsed { width: 27px; }
+.geogebra-pane { grid-template-columns: 27px minmax(0, 1fr); }
+.view-rail {
+  border-right: 1px solid #25292b;
+  background: rgb(10 11 12 / 92%);
+}
+.view-rail button,
+.model-pane.deck-collapsed .view-rail button {
+  width: 26px;
+  min-width: 26px;
+  min-height: 31px;
+  gap: 0;
+  padding: 0;
+  border-bottom: 1px solid rgb(77 84 88 / 18%);
+  color: #737c81;
+}
+.view-rail button span { display: none; }
+.view-rail button:hover { background: #1a1d1f; color: #fff; }
+.view-rail button.active {
+  background: #1b2022;
+  color: #d6e4e8;
+  box-shadow: inset 2px 0 #1ca9bd;
+}
+.view-rail svg { width: 14px; height: 14px; }
+.view-rail .left-deck-toggle {
+  min-height: 31px;
+  margin-top: auto;
+  border-top: 1px solid #2a2e30;
+}
+.left-view {
+  padding-top: 87px;
+  background: rgb(8 9 10 / 84%);
+  backdrop-filter: blur(2px);
+}
+.model-pane.mode-algebra .left-view { padding-top: 68px; background: rgb(10 12 13 / 96%); }
+.model-pane.deck-collapsed .left-view { display: none; }
+.sketch-tool-actions {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+.sketch-tool-actions button {
+  height: 23px;
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  align-items: center;
+  gap: 3px;
+  padding: 0 4px 0 1px;
+  border: 0;
+  border-bottom: 1px solid rgb(93 100 104 / 16%);
+  background: rgb(35 37 39 / 78%);
+  color: #bdc3c6;
+  font-size: 9px;
+  text-align: left;
+}
+.sketch-tool-actions button:hover { background: #34383a; color: #fff; }
+.sketch-tool-actions svg { width: 13px; height: 13px; justify-self: center; }
+.tool-gallery {
+  min-height: 0;
+  overflow: auto;
+  padding: 0 0 8px;
+  scrollbar-width: none;
+}
+.tool-gallery::-webkit-scrollbar { display: none; }
+.tool-gallery section,
+.tool-gallery section + section { padding: 0; border: 0; }
+.tool-gallery h2 { display: none; }
+.tool-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.tool-grid button {
+  width: 100%;
+  min-height: 23px;
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 3px;
+  padding: 0 4px 0 1px;
+  border: 0;
+  border-bottom: 1px solid rgb(93 100 104 / 14%);
+  border-radius: 0;
+  background: rgb(33 35 37 / 74%);
+  color: #d3d7d9;
+  font-size: 9px;
+  line-height: 1;
+  text-align: left;
+}
+.tool-grid button:hover { background: #373b3d; color: #fff; }
+.tool-grid button.active {
+  border: 0;
+  background: #303638;
+  color: #fff;
+  box-shadow: inset 2px 0 #21aec3;
+}
+.tool-grid button svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  justify-self: center;
+  color: #c7ccce;
+}
+.tool-grid button .palette-icon {
+  width: 14px;
+  height: 14px;
+  filter: invert(.85) saturate(.2) brightness(1.3);
+}
+.tool-grid button span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tool-grid kbd,
+.constraint-key kbd {
+  min-width: 10px;
+  padding: 1px 2px;
+  border: 0;
+  border-radius: 1px;
+  background: rgb(76 80 82 / 70%);
+  color: #aeb4b7;
+  font: 7px/1.1 Inter, sans-serif;
+  text-align: center;
+}
+.more-tools {
+  width: 100%;
+  min-height: 23px;
+  margin: 0;
+  padding: 0 4px 0 25px;
+  border: 0;
+  border-bottom: 1px solid rgb(93 100 104 / 14%);
+  border-radius: 0;
+  background: rgb(27 29 30 / 82%);
+  color: #aab2b5;
+  font-size: 8px;
+}
+.more-tools:hover { background: #34383a; color: #fff; }
+
+/* Algebra expands as an overlay only when requested. */
+.model-pane.mode-algebra .geogebra-view-heading { min-height: 36px; }
+.model-pane.mode-algebra .geogebra-view-heading h1 { font-size: 11px; }
+.model-pane.mode-algebra .search-field { margin: 8px; }
+
+/* --- Right constraints and utility icon rail ---------------- */
+.constraint-rail {
+  position: fixed;
+  z-index: 43;
+  top: 116px;
+  right: 27px;
+  width: 101px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1px;
+  pointer-events: auto;
+}
+.constraint-rail button {
+  border: 0;
+  border-radius: 0;
+  background: rgb(31 33 34 / 78%);
+  color: #cfd4d6;
+}
+.constraint-rail button:hover:not(:disabled) { background: #3a3e40; color: #fff; }
+.constraint-settings {
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  padding: 0 4px;
+  font-size: 8px;
+  font-weight: 700;
+}
+.constraint-settings svg { width: 13px; height: 13px; }
+.constraint-shortcuts { display: grid; gap: 1px; }
+.constraint-shortcuts button {
+  min-height: 21px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) 14px;
+  align-items: center;
+  gap: 4px;
+  padding: 0 3px;
+}
+.constraint-shortcuts button > strong {
+  overflow: hidden;
+  font-size: 8px;
+  font-weight: 650;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.constraint-shortcuts button > svg { width: 13px; height: 13px; color: #90999d; }
+.constraint-shortcuts .palette-icon { filter: invert(.7) saturate(.2); }
+.constraint-key { display: flex; gap: 1px; }
+.constraint-solver {
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  margin-top: 5px;
+  padding: 0 4px;
+  font-size: 8px;
+  font-weight: 750;
+}
+.constraint-solver svg { width: 13px; height: 13px; }
+
+.canvas-toolbar {
+  position: fixed;
+  z-index: 44;
+  top: 72px;
+  right: 0;
+  left: auto;
+  width: 27px;
+  min-width: 27px;
+  height: auto;
+  max-height: calc(100vh - 118px);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  overflow: auto;
+  border: 0;
+  border-left: 1px solid #25292b;
+  border-bottom: 1px solid #25292b;
+  background: rgb(11 12 13 / 88%);
+  box-shadow: none;
+  backdrop-filter: blur(2px);
+  transform: none;
+  scrollbar-width: none;
+}
+.canvas-toolbar .tool-group {
+  width: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.canvas-toolbar .tool-group.compact button {
+  width: 26px;
+  min-width: 26px;
+  min-height: 27px;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid rgb(77 84 88 / 20%);
+  border-radius: 0;
+  background: transparent;
+  color: #7f888c;
+}
+.canvas-toolbar .tool-group.compact button:hover { background: #24282a; color: #fff; }
+.canvas-toolbar .tool-group.compact button.active {
+  background: #252b2d;
+  color: #d9e6e9;
+  box-shadow: inset -2px 0 #21aec3;
+}
+.canvas-toolbar .tool-group.compact svg { width: 14px; height: 14px; }
+
+/* --- Dense source-like grid and lightweight HUD ------------- */
+.geometry-canvas .minor-grid-pattern path { stroke: #181b1c; stroke-width: .55; }
+.geometry-canvas .major-grid-pattern > path { stroke: #242829; stroke-width: .75; }
+.axes line { stroke-width: .8; }
+.axes line:first-child { stroke: #284049; }
+.axes line:last-child { stroke: #3c3147; }
+.geometry-object { stroke: #3193a4; stroke-width: 1.15; }
+.geometry-object.freedom-free { stroke: #38a6b9; }
+.geometry-object.selected-object { stroke-width: 1.65; }
+.geometry-point circle { fill: #9caeb4; stroke-width: 1; }
+.geometry-point.freedom-free circle { fill: #36b8cc; }
+.tool-instruction {
+  position: fixed;
+  z-index: 42;
+  top: auto;
+  right: auto;
+  bottom: 38px;
+  left: 112px;
+  width: min(520px, calc(100vw - 240px));
+  min-height: 27px;
+  padding: 0;
+  border: 0;
+  background: rgb(17 19 20 / 82%);
+  box-shadow: none;
+  backdrop-filter: blur(2px);
+}
+.workspace.left-deck-collapsed .tool-instruction { left: 27px; }
+.instruction-tool {
+  min-width: 76px;
+  padding: 0 8px;
+  border-right: 1px solid #3b4143;
+  background: rgb(39 42 44 / 84%);
+  color: #fff;
+  font-size: 9px;
+}
+.tool-instruction .instruction-copy { font-size: 9px; font-weight: 500; }
+.instruction-actions > span { font-size: 8px; }
+.tool-instruction button { min-height: 21px; margin-right: 3px; font-size: 8px; }
+
+.zoom-controls {
+  z-index: 43;
+  right: 28px;
+  bottom: 43px;
+  border: 1px solid #34393b;
+  border-radius: 1px;
+  background: rgb(15 17 18 / 84%);
+  box-shadow: none;
+}
+.zoom-controls button { width: 26px; height: 27px; background: transparent; }
+.zoom-controls svg { width: 13px; height: 13px; }
+
+/* --- Bottom timeline / expandable editor -------------------- */
+.editor-panel,
+.workspace.left-deck-collapsed .editor-panel {
+  position: fixed;
+  z-index: 45;
+  right: 27px;
+  bottom: 0;
+  left: 27px;
+  height: var(--bottom-pane-height, 160px);
+  border: 0;
+  border-top: 2px solid var(--signal);
+  background: rgb(9 10 11 / 95%);
+  box-shadow: none;
+  backdrop-filter: blur(4px);
+}
+.editor-panel.dock-collapsed,
+.workspace.left-deck-collapsed .editor-panel.dock-collapsed { height: 38px; }
+.editor-tabbar,
+.editor-tabs { height: 36px; }
+.editor-tabbar { border-bottom: 0; background: transparent; }
+.editor-tabs button {
+  min-width: 86px;
+  padding: 0 12px;
+  border-bottom-width: 1px;
+  color: #9aa1a4;
+  font-size: 10px;
+}
+.editor-tabs button[aria-selected="true"] {
+  background: rgb(40 43 44 / 78%);
+  border-bottom-color: #32b5ca;
+}
+.editor-dock-toggle {
+  width: 42px;
+  flex-basis: 42px;
+  border-left: 1px solid #303537;
+  background: transparent;
+}
+
+/* --- Inspector remains a real drawer behind the slim rail --- */
+.solver-pane {
+  z-index: 72;
+  border-radius: 0;
+  background: rgb(10 12 13 / 98%);
+  backdrop-filter: blur(8px);
+}
+.inspector-deck-title { min-height: 40px; }

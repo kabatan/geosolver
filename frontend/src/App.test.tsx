@@ -51,6 +51,20 @@ beforeEach(() => {
 
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
+async function openInspector() {
+  const trigger = screen.getByRole("button", { name: "Inspector / Solver" });
+  if (trigger.getAttribute("aria-expanded") !== "true") {
+    await userEvent.click(trigger);
+  }
+}
+
+async function openViewTools() {
+  const trigger = screen.getByRole("button", { name: "表示・履歴ツール" });
+  if (trigger.getAttribute("aria-expanded") !== "true") {
+    await userEvent.click(trigger);
+  }
+}
+
 describe("condition formula presentation", () => {
   it("shows solver approximations with twelve significant digits", () => {
     expect(formatApproximateDecimal("0.46547751617515123063")).toBe(
@@ -236,26 +250,269 @@ describe("GeoTarget workbench", () => {
     const bottom = screen.getByRole("separator", {
       name: "下部エディターの高さを変更",
     });
-    expect(left).toHaveAttribute("aria-valuenow", "350");
-    expect(right).toHaveAttribute("aria-valuenow", "330");
-    expect(bottom).toHaveAttribute("aria-valuenow", "196");
+    expect(left).toHaveAttribute("aria-valuenow", "288");
+    expect(right).toHaveAttribute("aria-valuenow", "360");
+    expect(bottom).toHaveAttribute("aria-valuenow", "280");
 
     fireEvent.keyDown(left, { key: "ArrowRight" });
     fireEvent.keyDown(right, { key: "ArrowLeft" });
     fireEvent.keyDown(bottom, { key: "ArrowUp" });
-    expect(left).toHaveAttribute("aria-valuenow", "366");
-    expect(right).toHaveAttribute("aria-valuenow", "346");
-    expect(bottom).toHaveAttribute("aria-valuenow", "212");
+    expect(left).toHaveAttribute("aria-valuenow", "304");
+    expect(right).toHaveAttribute("aria-valuenow", "376");
+    expect(bottom).toHaveAttribute("aria-valuenow", "296");
 
     await waitFor(() =>
       expect(JSON.parse(localStorage.getItem("geotarget.layout.v1") ?? "{}")).toEqual({
-        left: 366,
-        right: 346,
-        bottom: 212,
+        left: 304,
+        right: 376,
+        bottom: 296,
       }),
     );
     fireEvent.doubleClick(left);
-    expect(left).toHaveAttribute("aria-valuenow", "350");
+    expect(left).toHaveAttribute("aria-valuenow", "288");
+  });
+
+  it("keeps previously saved pane sizes instead of replacing them with new defaults", () => {
+    localStorage.setItem(
+      "geotarget.layout.v1",
+      JSON.stringify({ left: 402, right: 388, bottom: 228 }),
+    );
+    render(<App />);
+    expect(
+      screen.getByRole("separator", { name: "左パネルの幅を変更" }),
+    ).toHaveAttribute("aria-valuenow", "402");
+    expect(
+      screen.getByRole("separator", { name: "右パネルの幅を変更" }),
+    ).toHaveAttribute("aria-valuenow", "388");
+    expect(
+      screen.getByRole("separator", { name: "下部エディターの高さを変更" }),
+    ).toHaveAttribute("aria-valuenow", "228");
+  });
+
+  it("keeps solver execution controls in the inspector action dock", async () => {
+    render(<App />);
+    await openInspector();
+    const inspector = screen.getByRole("complementary", {
+      name: "プロパティとsolver",
+    });
+    const dock = inspector.querySelector(".solver-execution-dock");
+    expect(dock).toBe(inspector.lastElementChild);
+    expect(within(dock as HTMLElement).getByRole("button", { name: "解く" })).toBeEnabled();
+    expect(within(dock as HTMLElement).getByRole("button", { name: "中止" })).toBeDisabled();
+  });
+
+  it("collapses the floating construction deck and problem editor without removing them", async () => {
+    render(<App />);
+
+    const constructionDeck = screen.getByRole("complementary", {
+      name: "作図サイドバー",
+    });
+    const editor = document.querySelector(".editor-panel");
+    await userEvent.click(
+      screen.getByRole("button", { name: "作図デッキを折りたたむ" }),
+    );
+    await userEvent.click(
+      screen.getByRole("button", { name: "問題エディターを折りたたむ" }),
+    );
+
+    expect(constructionDeck).toHaveClass("deck-collapsed");
+    expect(editor).toHaveClass("dock-collapsed");
+    expect(
+      screen.getByRole("button", { name: "作図デッキを開く" }),
+    ).toHaveAttribute("aria-expanded", "false");
+    expect(
+      screen.getByRole("button", { name: "問題エディターを開く" }),
+    ).toHaveAttribute("aria-expanded", "false");
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "作図デッキを開く" }),
+    );
+    await userEvent.click(
+      screen.getByRole("button", { name: "問題エディターを開く" }),
+    );
+    expect(constructionDeck).toHaveClass("deck-open");
+    expect(editor).toHaveClass("dock-open");
+  });
+
+  it("exposes the tool bench and only applicable constraint shortcuts", () => {
+    render(<App />);
+
+    expect(
+      screen.getByRole("button", { name: "作図ツール 線分" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("navigation", { name: "制約ショートカット" }),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "制約 平行" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "選択: A" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Solverを実行" })).toBeEnabled();
+  });
+
+  it("starts mobile workspaces in a canvas-first collapsed state", async () => {
+    Object.defineProperty(window, "innerWidth", {
+      configurable: true,
+      value: 390,
+    });
+    render(<App />);
+    fireEvent(window, new Event("resize"));
+
+    const navigatorTrigger = await screen.findByRole("button", {
+      name: "作図ナビゲーションを開く。現在 DRAW",
+    });
+    expect(navigatorTrigger).toHaveAttribute("aria-expanded", "false");
+    expect(
+      screen.getByRole("button", { name: "問題エディターを開く" }),
+    ).toBeInTheDocument();
+    expect(document.getElementById("solver-inspector")).toHaveAttribute("inert");
+  });
+
+  it("opens the mobile workflow navigator and restores its trigger on Escape", async () => {
+    Object.defineProperty(window, "innerWidth", {
+      configurable: true,
+      value: 390,
+    });
+    render(<App />);
+    fireEvent(window, new Event("resize"));
+    const trigger = await screen.findByRole("button", {
+      name: "作図ナビゲーションを開く。現在 DRAW",
+    });
+    await userEvent.click(trigger);
+    expect(
+      screen.getByRole("dialog", { name: "作図サイドバー" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "代数" }),
+    ).toBeVisible();
+    await userEvent.keyboard("{Escape}");
+    expect(trigger).toHaveFocus();
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("closes the mobile workflow navigator from the header and backdrop", async () => {
+    Object.defineProperty(window, "innerWidth", {
+      configurable: true,
+      value: 390,
+    });
+    render(<App />);
+    fireEvent(window, new Event("resize"));
+    const trigger = await screen.findByRole("button", {
+      name: "作図ナビゲーションを開く。現在 DRAW",
+    });
+    await userEvent.click(trigger);
+    await userEvent.click(trigger);
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+
+    await userEvent.click(trigger);
+    fireEvent.pointerDown(
+      screen.getByRole("button", { name: "作図ナビゲーションの外側を閉じる" }),
+    );
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+    expect(trigger).toHaveFocus();
+  });
+
+  it("keeps project actions and engine integrity reachable in compact layouts", async () => {
+    Object.defineProperty(window, "innerWidth", {
+      configurable: true,
+      value: 1024,
+    });
+    render(<App />);
+    fireEvent(window, new Event("resize"));
+    const trigger = screen.getByRole("button", {
+      name: "Projectと実行環境メニュー",
+    });
+    await userEvent.click(trigger);
+    const menu = screen.getByRole("menu", { name: "Projectと実行環境" });
+    expect(
+      within(menu).getByRole("menuitem", { name: "読み込む" }),
+    ).toBeEnabled();
+    expect(
+      within(menu).getByRole("menuitem", { name: "プロジェクトを書き出す" }),
+    ).toBeEnabled();
+    expect(
+      within(menu).getByRole("menuitem", { name: "V15 JSONを書き出す" }),
+    ).toBeEnabled();
+    expect(within(menu).getByRole("status")).toHaveTextContent(
+      "Target validationとは別の実行環境チェック",
+    );
+    await userEvent.keyboard("{Escape}");
+    expect(trigger).toHaveFocus();
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("closes the mobile Inspector from its trigger, backdrop, and Escape", async () => {
+    Object.defineProperty(window, "innerWidth", {
+      configurable: true,
+      value: 390,
+    });
+    render(<App />);
+    fireEvent(window, new Event("resize"));
+    const trigger = screen.getByRole("button", { name: "Inspector / Solver" });
+
+    await userEvent.click(trigger);
+    await userEvent.click(trigger);
+    await waitFor(() => expect(trigger).toHaveFocus());
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+
+    await userEvent.click(trigger);
+    await userEvent.click(
+      screen.getByRole("button", { name: "Inspector外側を閉じる" }),
+    );
+    await waitFor(() => expect(trigger).toHaveFocus());
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+
+    await userEvent.click(trigger);
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(trigger).toHaveFocus());
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("downloads project and V15 JSON with visible completion feedback", async () => {
+    const createObjectURL = vi.fn(() => "blob:geotarget-test");
+    const revokeObjectURL = vi.fn();
+    vi.stubGlobal("URL", {
+      ...URL,
+      createObjectURL,
+      revokeObjectURL,
+    });
+    const clicked: HTMLAnchorElement[] = [];
+    vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(function (
+      this: HTMLAnchorElement,
+    ) {
+      clicked.push(this);
+    });
+    render(<App />);
+
+    await userEvent.click(screen.getByTitle("プロジェクトを書き出す"));
+    expect(clicked.at(-1)?.download).toBe(
+      "distance-3-4-5.geotarget.json",
+    );
+    expect(document.querySelector(".toast.success")).toHaveTextContent(
+      "プロジェクトを書き出しました",
+    );
+
+    await userEvent.click(screen.getByRole("button", { name: "通知を閉じる" }));
+    await userEvent.click(screen.getByTitle("V15 JSONを書き出す"));
+    expect(clicked.at(-1)?.download).toBe("distance-3-4-5.json");
+    expect(document.querySelector(".toast.success")).toHaveTextContent(
+      "V15 JSONを書き出しました",
+    );
+    expect(createObjectURL).toHaveBeenCalledTimes(2);
+  });
+
+  it("activates visible drawing shortcuts outside text fields", async () => {
+    render(<App />);
+    fireEvent.keyDown(window, { key: "p" });
+    expect(screen.getByRole("button", { name: "作図ツール 点" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    const search = screen.getByRole("textbox", { name: "オブジェクトを検索" });
+    search.focus();
+    fireEvent.keyDown(search, { key: "m" });
+    expect(screen.getByRole("button", { name: "作図ツール 点" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
   });
 
   it("accepts AB as a target shorthand and stores canonical V15 JSON", async () => {
@@ -403,6 +660,7 @@ describe("GeoTarget workbench", () => {
 
   it("provides show-all, fit-all, and undoable clear-all convenience actions", async () => {
     render(<App />);
+    await openViewTools();
     const fit = screen.getByRole("button", { name: "図全体に表示を合わせる" });
     const gridPattern = document.querySelector<SVGPatternElement>("#minor-grid")!;
     expect(gridPattern.getAttribute("width")).toBe("32.5");
@@ -412,6 +670,7 @@ describe("GeoTarget workbench", () => {
     await userEvent.click(screen.getByRole("button", { name: "代数" }));
     await userEvent.click(screen.getByRole("button", { name: "Aを非表示" }));
     expect(document.querySelector('[data-object="A"]')).not.toBeInTheDocument();
+    await openViewTools();
     await userEvent.click(screen.getByRole("button", { name: "すべてのオブジェクトを表示" }));
     expect(document.querySelector('[data-object="A"]')).toBeInTheDocument();
 
@@ -622,6 +881,7 @@ describe("GeoTarget workbench", () => {
     await userEvent.click(screen.getByRole("button", { name: /^固定点 A/ }));
     await userEvent.click(screen.getByRole("button", { name: /^固定点 B/ }));
     expect(document.querySelector('[data-object="s"]')).toBeInTheDocument();
+    await openViewTools();
     await userEvent.click(screen.getByRole("button", { name: "元に戻す" }));
     expect(document.querySelector('[data-object="s"]')).not.toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "やり直す" }));
@@ -650,6 +910,7 @@ describe("GeoTarget workbench", () => {
     expect(document.querySelector('[data-object="P"]')).toBeInTheDocument();
     expect(document.querySelector('[data-object="P"] .canvas-math-label')).not.toBeInTheDocument();
 
+    await openViewTools();
     await userEvent.click(screen.getByRole("button", { name: "元に戻す" }));
     expect(document.querySelector('[data-object="P"]')).not.toBeInTheDocument();
     expect(document.querySelector('[data-object="Q"]')).toBeInTheDocument();
@@ -657,6 +918,7 @@ describe("GeoTarget workbench", () => {
 
   it("hides line and circle labels until the user explicitly enables them", async () => {
     render(<App />);
+    await openInspector();
     await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
     const labeledObjects = {
       task: "solve", id: "default-object-labels", variables: { names: [] },
@@ -694,6 +956,7 @@ describe("GeoTarget workbench", () => {
     expect(document.querySelector('[data-object="P"]')).toBeInTheDocument();
     expect(document.querySelector('[data-object="P2"]')).toBeInTheDocument();
     expect(document.querySelector('[data-object="s"]')).toBeInTheDocument();
+    await openViewTools();
     await userEvent.click(screen.getByRole("button", { name: "元に戻す" }));
     expect(document.querySelector('[data-object="P"]')).not.toBeInTheDocument();
     expect(document.querySelector('[data-object="s"]')).not.toBeInTheDocument();
@@ -717,6 +980,7 @@ describe("GeoTarget workbench", () => {
     await userEvent.click(screen.getByRole("button", { name: "作図ツール 直線" }));
     canvas.focus(); fireEvent.keyDown(canvas, { key: "Enter" });
     expect(document.querySelector("[data-pending-point]")).toBeInTheDocument();
+    await openViewTools();
     const undo = screen.getByRole("button", { name: "元に戻す" });
     expect(undo).toBeEnabled(); await userEvent.click(undo);
     expect(document.querySelector("[data-pending-point]")).not.toBeInTheDocument();
@@ -732,6 +996,7 @@ describe("GeoTarget workbench", () => {
     await userEvent.click(screen.getByRole("button", { name: "作図ツール 直線" }));
     canvas.focus(); fireEvent.keyDown(canvas, { key: "ArrowRight" }); fireEvent.keyDown(canvas, { key: "Enter" });
     expect(document.querySelector("[data-pending-point]")).toBeInTheDocument();
+    await openViewTools();
     await userEvent.click(screen.getByRole("button", { name: "元に戻す" }));
     expect(document.querySelector("[data-pending-point]")).not.toBeInTheDocument();
     expect(document.querySelector('[data-object="P"]')).toBeInTheDocument();
@@ -761,6 +1026,7 @@ describe("GeoTarget workbench", () => {
 
   it("maps pointer coordinates through SVG letterboxing", async () => {
     render(<App />);
+    await openInspector();
     const canvas = screen.getByRole("application", { name: /幾何作図キャンバス/ });
     Object.defineProperty(canvas, "getBoundingClientRect", { value: () => ({ left: 0, top: 0, width: 1000, height: 1000, right: 1000, bottom: 1000, x: 0, y: 0, toJSON() {} }) });
     await userEvent.click(screen.getByRole("button", { name: "作図ツール 点" }));
@@ -771,6 +1037,7 @@ describe("GeoTarget workbench", () => {
 
   it("snaps the Point tool to the coordinate axes and origin", async () => {
     render(<App />);
+    await openInspector();
     await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
     const empty = { task: "solve", id: "axes", variables: { names: [] }, construction: [], constraints: [], guards: [], answer: "", post_process: "" };
     fireEvent.change(screen.getByRole("textbox", { name: "V15 JSON" }), { target: { value: JSON.stringify(empty) } });
@@ -802,6 +1069,7 @@ describe("GeoTarget workbench", () => {
 
   it("keeps free-point drag as preview metadata without rewriting the V15 expression", async () => {
     render(<App />);
+    await openInspector();
     const canvas = screen.getByRole("application", { name: /幾何作図キャンバス/ });
     Object.defineProperty(canvas, "getBoundingClientRect", { value: () => ({ left: 0, top: 0, width: 1000, height: 700, right: 1000, bottom: 700, x: 0, y: 0, toJSON() {} }) });
     await userEvent.click(screen.getByRole("button", { name: "作図ツール 点" }));
@@ -835,6 +1103,7 @@ describe("GeoTarget workbench", () => {
 
   it("drags points constrained to a line, segment, and circle", async () => {
     render(<App />);
+    await openInspector();
     await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
     const constrained = {
       task: "solve", id: "constrained-drag", variables: { names: ["tl", "ts", "tc"] },
@@ -855,12 +1124,13 @@ describe("GeoTarget workbench", () => {
       fireEvent.pointerMove(point, { clientX: 650, clientY: 250, pointerId });
       fireEvent.pointerUp(point, { clientX: 650, clientY: 250, pointerId });
       expect(screen.getByRole("spinbutton", { name: `${name}のparameter表示値` })).not.toHaveValue(0);
-      expect(screen.getByText(variable)).toBeInTheDocument();
+      expect(screen.getAllByText(variable).length).toBeGreaterThan(0);
     }
   });
 
   it("creates a one-degree-of-freedom point by clicking directly on a line", async () => {
     render(<App />);
+    await openInspector();
     const canvas = screen.getByRole("application", { name: /幾何作図キャンバス/ });
     Object.defineProperty(canvas, "getBoundingClientRect", { value: () => ({ left: 0, top: 0, width: 1000, height: 700, right: 1000, bottom: 700, x: 0, y: 0, toJSON() {} }) });
     await userEvent.click(screen.getByRole("button", { name: "作図ツール 直線" }));
@@ -1004,6 +1274,7 @@ describe("GeoTarget workbench", () => {
 
   it("creates and cleanly removes a bounded one-parameter point", async () => {
     render(<App />);
+    await openInspector();
     await userEvent.click(screen.getByRole("button", { name: "すべてのV15ツールを開く" }));
     await userEvent.click(screen.getByRole("button", { name: /線分上の点/ }));
     await userEvent.click(screen.getByRole("button", { name: "図から引数を選ぶ" }));
@@ -1023,6 +1294,7 @@ describe("GeoTarget workbench", () => {
 
   it("deletes the full dependent closure even when definitions form a cycle", async () => {
     render(<App />);
+    await openInspector();
     await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
     const cyclic = {
       task: "solve", id: "cyclic-delete", variables: { names: [] },
@@ -1089,6 +1361,31 @@ describe("GeoTarget workbench", () => {
     await userEvent.keyboard("{Escape}");
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(trigger).toHaveFocus();
+  });
+
+  it("keeps display utilities compact and restores their trigger on Escape", async () => {
+    render(<App />);
+    const trigger = screen.getByRole("button", { name: "表示・履歴ツール" });
+    await userEvent.click(trigger);
+    expect(screen.getByRole("group", { name: "表示と履歴" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "グリッド" })).toBeVisible();
+    await userEvent.keyboard("{Escape}");
+    expect(screen.queryByRole("group", { name: "表示と履歴" })).not.toBeInTheDocument();
+    expect(trigger).toHaveFocus();
+  });
+
+  it("opens Advanced Source as an inert-backed drawer and restores focus", async () => {
+    render(<App />);
+    const trigger = screen.getByRole("button", { name: "Source" });
+    await userEvent.click(trigger);
+    const drawer = screen.getByRole("dialog", { name: "Advanced Source" });
+    expect(drawer).toBeInTheDocument();
+    expect(screen.getByRole("complementary", { name: "作図サイドバー" })).toHaveAttribute("inert");
+    expect(screen.getByRole("banner")).toHaveAttribute("inert");
+    await userEvent.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog", { name: "Advanced Source" })).not.toBeInTheDocument();
+    expect(trigger).toHaveFocus();
+    expect(screen.getByRole("banner")).not.toHaveAttribute("inert");
   });
 
   it("keeps the workbench interactive while the DSL catalog is unavailable", async () => {
@@ -1331,6 +1628,7 @@ describe("GeoTarget workbench", () => {
 
   it("dismisses definition suggestions without discarding the draft", async () => {
     render(<App />);
+    await openInspector();
     await userEvent.click(screen.getByRole("button", { name: /^固定点 A/ }));
     const definition = screen.getByRole("combobox", { name: "定義" });
     await userEvent.clear(definition);
@@ -1353,6 +1651,7 @@ describe("GeoTarget workbench", () => {
 
   it("closes the contextual keyboard when its expression field unmounts", async () => {
     render(<App />);
+    await openInspector();
     const target = screen.getByRole("textbox", { name: "ターゲット式" });
     await userEvent.click(target);
     expect(target).toHaveAttribute(
@@ -1383,6 +1682,7 @@ describe("GeoTarget workbench", () => {
 
   it("clears the active expression when moving to ordinary controls or opening the catalog", async () => {
     render(<App />);
+    await openInspector();
     await userEvent.click(screen.getByRole("button", { name: "代数" }));
     await userEvent.click(screen.getByRole("button", { name: "条件を追加" }));
     const condition = screen.getByRole("combobox", { name: "条件 1" });
@@ -1524,6 +1824,7 @@ describe("GeoTarget workbench", () => {
 
   it("keeps the solver target caret aligned while canonicalizing pi", async () => {
     render(<App />);
+    await openInspector();
     const solver = screen.getByRole("complementary", { name: "プロパティとsolver" });
     const target = within(solver).getByRole("textbox", { name: "ターゲット" });
     await userEvent.click(target);
@@ -1558,6 +1859,7 @@ describe("GeoTarget workbench", () => {
 
   it("edits an object's name and definition from the property inspector", async () => {
     render(<App />);
+    await openInspector();
     await userEvent.click(screen.getByRole("button", { name: /^固定点 A/ }));
     const name = screen.getByRole("textbox", { name: "名前" });
     await userEvent.clear(name); await userEvent.type(name, "P{Enter}");
@@ -1569,6 +1871,7 @@ describe("GeoTarget workbench", () => {
     await userEvent.keyboard("{Control>}{Enter}{/Control}");
     expect(screen.getByRole("combobox", { name: "定義" })).toHaveValue("Point(1, 2)");
 
+    await openViewTools();
     await userEvent.click(screen.getByRole("button", { name: "元に戻す" }));
     expect(screen.getByRole("combobox", { name: "定義" })).toHaveValue("Point(0, 0)");
   });
@@ -1602,6 +1905,7 @@ describe("GeoTarget workbench", () => {
       throw new Error(`unexpected fetch ${method} ${url}`);
     }));
     render(<App />);
+    await openInspector();
     await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
     const editor = screen.getByRole("textbox", { name: "V15 JSON" });
     const imported = JSON.parse((editor as HTMLTextAreaElement).value);
@@ -1610,7 +1914,7 @@ describe("GeoTarget workbench", () => {
     await userEvent.click(screen.getByRole("button", { name: "JSONを適用" }));
     await userEvent.click(screen.getByRole("button", { name: "解く" }));
 
-    await waitFor(() => expect(screen.getByText("完了")).toBeInTheDocument(), {
+    await waitFor(() => expect(screen.getAllByText("完了").length).toBeGreaterThan(0), {
       timeout: 2500,
     });
     expect((submitted?.problem as { guards: string[] }).guards).toEqual([]);
@@ -1677,19 +1981,24 @@ describe("GeoTarget workbench", () => {
     }));
 
     render(<App />);
+    await openInspector();
     await userEvent.click(screen.getByText("詳細設定"));
     await userEvent.click(screen.getByRole("radio", { name: /適応/ }));
     expect(screen.getByRole("spinbutton", { name: "上限時間 (秒)" })).toHaveValue(900);
     expect(screen.getByRole("combobox", { name: "使用コア" })).toHaveValue("auto");
     await userEvent.click(screen.getByRole("button", { name: "解く" }));
 
-    await waitFor(() => expect(screen.getByText("追加探索")).toBeInTheDocument(), {
-      timeout: 2500,
-    });
+    await waitFor(
+      () =>
+        expect(document.querySelector(".solver-execution-dock")).toHaveTextContent(
+          "追加探索",
+        ),
+      { timeout: 2500 },
+    );
     expect(screen.getByText("128 / 256")).toBeInTheDocument();
     expect(screen.getByText("#3")).toBeInTheDocument();
-    expect(screen.getByText("2")).toBeInTheDocument();
-    expect(screen.getByText("4")).toBeInTheDocument();
+    expect(screen.getAllByText("2").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("4").length).toBeGreaterThan(0);
     await waitFor(
       () => expect(screen.getAllByText("追加探索が安定したため終了").length).toBeGreaterThan(0),
       { timeout: 2500 },
@@ -1709,6 +2018,7 @@ describe("GeoTarget workbench", () => {
 
   it("offers fixed-time and frozen reference execution as advanced choices", async () => {
     render(<App />);
+    await openInspector();
     await userEvent.click(screen.getByText("詳細設定"));
     const adaptive = screen.getByRole("radio", { name: /適応/ });
     const fixed = screen.getByRole("radio", { name: /固定時間/ });
@@ -1740,6 +2050,7 @@ describe("GeoTarget workbench", () => {
     }));
 
     render(<App />);
+    await openInspector();
     await waitFor(() =>
       expect(
         screen.getByText("適応実行", { selector: ".solver-profile-summary strong" }),
@@ -1766,6 +2077,7 @@ describe("GeoTarget workbench", () => {
       throw new Error(`unexpected fetch ${method} ${url}`);
     }));
     render(<App />);
+    await openInspector();
     await userEvent.click(screen.getByRole("button", { name: "解く" }));
     await waitFor(() => expect(screen.getByRole("button", { name: "中止" })).toBeEnabled());
     await userEvent.click(screen.getByRole("button", { name: "中止" }));
@@ -1802,8 +2114,9 @@ describe("GeoTarget workbench", () => {
     }));
 
     render(<App />);
+    await openInspector();
     await userEvent.click(screen.getByRole("button", { name: "解く" }));
-    await waitFor(() => expect(screen.getByText("初期探索")).toBeInTheDocument(), {
+    await waitFor(() => expect(screen.getAllByText("初期探索").length).toBeGreaterThan(0), {
       timeout: 2500,
     });
     await userEvent.click(screen.getByRole("button", { name: "中止" }));
@@ -1827,22 +2140,57 @@ describe("GeoTarget workbench", () => {
     render(<App />);
     fireEvent(window, new Event("resize"));
     const trigger = screen.getByRole("button", { name: "Inspector / Solver" });
+    const inspector = document.getElementById("solver-inspector");
+    expect(inspector).not.toBeNull();
+    expect(inspector).toHaveAttribute("inert");
     await userEvent.click(trigger);
     expect(trigger).toHaveAttribute("aria-expanded", "true");
-    const inspector = screen.getByRole("complementary", {
-      name: "プロパティとsolver",
-    });
+    expect(inspector).not.toHaveAttribute("inert");
     await waitFor(() =>
       expect(
-        within(inspector).getByRole("button", { name: "Inspectorを閉じる" }),
+        within(inspector as HTMLElement).getByRole("button", {
+          name: "Inspectorを閉じる",
+        }),
       ).toHaveFocus(),
     );
     await userEvent.keyboard("{Escape}");
     expect(trigger).toHaveFocus();
     expect(trigger).toHaveAttribute("aria-expanded", "false");
+    expect(inspector).toHaveAttribute("inert");
     Object.defineProperty(window, "innerWidth", {
       configurable: true,
       value: originalWidth,
     });
+  });
+
+  it("keeps the object navigator visible when returning to the drawing stage", async () => {
+    render(<App />);
+    await userEvent.click(screen.getByRole("button", { name: "代数" }));
+    await userEvent.click(screen.getByRole("button", { name: "ツール" }));
+    expect(
+      screen.getByRole("tree", { name: "作図オブジェクト" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "ツール" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+  });
+
+  it("anchors contextual constraints to the canvas and opens Solver from its workflow stage", async () => {
+    render(<App />);
+    const constraintRail = screen.getByRole("navigation", {
+      name: "制約ショートカット",
+    });
+    expect(constraintRail.parentElement).toHaveClass("center-stage");
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "Solveワークスペース" }),
+    );
+    expect(
+      screen.getByRole("button", { name: "Solveワークスペース" }),
+    ).toHaveAttribute("aria-pressed", "true");
+    expect(
+      screen.getByRole("button", { name: "Inspector / Solver" }),
+    ).toHaveAttribute("aria-expanded", "true");
   });
 });

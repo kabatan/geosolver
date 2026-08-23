@@ -1,0 +1,70 @@
+/* ============================================================
+   Shared control primitives: primary/secondary/danger actions
+   ============================================================ */
+.primary-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid var(--accent-600);
+  border-radius: var(--radius-md);
+  background: var(--accent-600);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: none;
+  transition:
+    background-color var(--t-fast) var(--ease),
+    box-shadow var(--t-fast) var(--ease);
+}
+.primary-action:hover:not(:disabled) {
+  background: #4878ff;
+  box-shadow: 0 0 0 1px rgb(88 128 255 / 32%);
+}
+.primary-action svg { width: 15px; height: 15px; }
+
+.secondary-action {
+  min-height: 34px;
+  margin-top: 10px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  color: var(--text-1);
+  font-size: var(--fs-sm);
+  font-weight: 550;
+}
+.secondary-action:hover { border-color: var(--cyan-600); background: var(--cyan-50); }
+
+.danger-action {
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 12px;
+  padding: 0 12px;
+  border: 1px solid var(--red-line);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  color: var(--red-600);
+  font-size: var(--fs-sm);
+  font-weight: 550;
+}
+.danger-action:hover { background: var(--red-bg); }
+.danger-action svg { width: 14px; height: 14px; }
+
+.cancel-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid var(--red-line);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  color: var(--red-600);
+  font-weight: 600;
+}
+.cancel-action:hover:not(:disabled) { background: var(--red-bg); }
+.cancel-action svg { width: 15px; height: 15px; }
+
+.ok { color: var(--green-600); }
+.bad { color: var(--red-600); }

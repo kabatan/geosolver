@@ -85,3 +85,49 @@ orange measurements, green conditions); editing actions may retain the
 existing product icons. The left algebra/tools pane, right inspector/solver
 pane, and bottom problem editor must remain user-resizable, keyboard operable,
 and persist their sizes locally.
+
+## Design system (2026-08-22)
+
+On 2026-08-22 the owner selected a refined-blue accent system (single blue
+ramp, violet reserved for intersection snap / derived indicators), no dark
+mode, and a token-first stylesheet. All styling lives in `src/styles/`
+(`tokens.css` is the source of truth for color/type/shape/elevation/motion;
+surfaces are split by area). Keep new styles on tokens; do not reintroduce
+magic values or sub-11px type. `App.tsx` re-exports the pure problem/format
+API (`catalogPaletteGroups`, `guardToFormula`, etc.) that tests import;
+shared types live in `types.ts`, canvas rendering in `canvasParts.tsx`,
+small UI parts under `components/`.
+
+## Shapr3D Help Center visual direction (2026-08-23)
+
+The owner selected the Shapr3D Help Center as the visual reference while
+keeping GeoTarget's existing functionality and GeoGebra-derived interaction
+model. Use a light-only, flat editorial system: near-black chrome (`#0d0d0d`),
+electric blue (`#1d4eff`), pale cyan information surfaces (`#e8f9ff` and
+`#c6effe`), heavy headings, square controls, restrained overlays, and no
+decorative gradients or card stacks. Preserve the four workbench regions, but
+the right inspector becomes a drawer below 1440px and solver execution remains
+persistently reachable. Existing saved pane sizes must not be overwritten.
+
+## Dark geometric workstation direction (2026-08-23, supersedes visual theme)
+
+The owner later selected a dark Shapr3D sketching/video reference and explicitly
+authorized a large visual departure. The default UI is now a near-black
+geometric workstation: the canvas and precision grid dominate, peripheral panes
+read as compact command decks, construction geometry uses luminous cyan, blue
+marks selection, and magenta is reserved for live progress/timeline emphasis.
+This supersedes the earlier light Help Center theme while retaining all API,
+V15, geometry, keyboard, accessibility, and persistence contracts.
+
+## Spatial Command direction (2026-08-23, current visual authority)
+
+The owner rejected the video-workstation and generic white three-pane variants
+as AI-looking, then selected the `Spatial Command` mock. It supersedes every
+earlier visual-theme paragraph above. Use a matte graphite model index fused to
+the left edge, a warm mineral drafting canvas, a hard-edged floating tool bench,
+a selection-attached constraint plate, and a single bottom solver instrument
+rail with safety-orange execution signal. The geometry owns the viewport; do
+not restore a full-width app header, permanent right inspector, media-player
+composition, magenta timeline, rounded SaaS cards, blue CTA, gradients, glass,
+glow, or invented logo. Keep the real interaction, V15, accessibility,
+persistence, icon, math keyboard, and solver contracts described above.

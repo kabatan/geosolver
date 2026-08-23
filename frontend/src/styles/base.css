@@ -1,0 +1,74 @@
+/* ============================================================
+   Base reset, focus, scrollbars, shared control primitives
+   ============================================================ */
+* { box-sizing: border-box; }
+html, body, #root { margin: 0; min-height: 100%; }
+body {
+  min-width: 0;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text-1);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+button, input, textarea, select { font: inherit; color: inherit; }
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+textarea,
+select {
+  background-color: #090d10;
+  border-color: var(--line-strong);
+}
+input::placeholder,
+textarea::placeholder { color: #637078; }
+button { color: inherit; cursor: pointer; }
+button:disabled { cursor: default; opacity: 0.45; }
+
+:focus-visible {
+  outline: 2px solid var(--accent-500);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+::selection { background: var(--accent-600); color: #fff; }
+
+code, textarea {
+  font-family: "SFMono-Regular", Consolas, "Hiragino Kaku Gothic ProN",
+    "Yu Gothic UI", monospace;
+}
+
+/* Thin, quiet scrollbars everywhere */
+* { scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
+*::-webkit-scrollbar { width: 9px; height: 9px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 0;
+  border: 2px solid var(--bg);
+}
+*::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+/* Shared interactive rhythm */
+.app-actions button,
+.tool-group button,
+.view-rail button,
+.zoom-controls button,
+.editor-tabs button,
+.property-tabs button,
+.object-more,
+.visibility,
+.measurement-row button {
+  transition:
+    background-color var(--t-fast) var(--ease),
+    color var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease),
+    box-shadow var(--t-fast) var(--ease);
+}
+
+h1, h2, h3, p { margin: 0; }
