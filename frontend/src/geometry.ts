@@ -1,6 +1,6 @@
 /**
  * A deliberately small, non-executable interpreter for the drawable subset of
- * the V15 construction language.  This module never evaluates JavaScript and
+ * the GeoSolver construction language.  This module never evaluates JavaScript and
  * treats unsupported expressions as data, reported through Scene.warnings.
  */
 
@@ -27,7 +27,7 @@ export type SceneLine = SceneItemBase & Readonly<{
   kind: "line";
   anchor: Vec2;
   direction: Vec2;
-  /** Normal coefficient orientation used by V15 Line(a,b,c). */
+  /** Normal coefficient orientation used by GeoSolver Line(a,b,c). */
   normal: Vec2;
 }>;
 
@@ -275,7 +275,7 @@ class Parser {
   }
 }
 
-/** Parse a V15-style expression without executing it. */
+/** Parse a GeoSolver-style expression without executing it. */
 export function parseExpression(source: string): ExpressionNode {
   if (!source.trim()) throw new ParseFailure("式が空です");
   return new Parser(source).parse();
@@ -937,7 +937,7 @@ function parameterForPoint(
 
 /**
  * Evaluate the visual construction while honoring incidence constraints that
- * the V15 solver treats as equations.  This keeps authored one-degree-of-
+ * the GeoSolver solver treats as equations.  This keeps authored one-degree-of-
  * freedom points and relational intersections attached when their upstream
  * geometry moves; it never changes the canonical problem sent to the solver.
  */
@@ -1284,7 +1284,7 @@ function cleanCoordinate(value: number, fractionDigits: number): string {
   return rounded.toFixed(fractionDigits).replace(/(?:\.0+|(\.\d*?)0+)$/, "$1");
 }
 
-/** Format a dragged/free point back into the canonical drawable V15 spelling. */
+/** Format a dragged/free point back into the canonical drawable GeoSolver spelling. */
 export function formatPointExpression(point: Vec2, fractionDigits = 6): string {
   if (!Number.isInteger(fractionDigits) || fractionDigits < 0 || fractionDigits > 12) {
     throw new RangeError("fractionDigits must be an integer between 0 and 12");

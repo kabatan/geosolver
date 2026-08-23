@@ -6,7 +6,7 @@ const TABS: readonly EditorTab[] = ["command", "json", "details"];
 
 const TAB_LABELS: Readonly<Record<EditorTab, string>> = {
   command: "ターゲット",
-  json: "V15 JSON",
+  json: "GeoSolver JSON",
   details: "描画ログ",
 };
 

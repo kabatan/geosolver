@@ -3,6 +3,20 @@ import type { GuidedSpec } from "./authoring";
 
 export type Construction = { name: string; expr: string };
 export type Constraint = { def: string; value: number | string };
+export type GeometryCondition =
+  | {
+      left: string;
+      operator: "=" | "!=" | "<" | "<=" | ">" | ">=";
+      right: number | string;
+    }
+  | { predicate: string };
+export type GeometryProblem = {
+  id: string;
+  variables: string[];
+  constructions: Array<{ name: string; expression: string }>;
+  conditions: GeometryCondition[];
+  target: string;
+};
 export type Problem = {
   task: "solve";
   id: string;
@@ -33,7 +47,7 @@ export type DslTool = {
   notes_ja?: string;
 };
 export type DslCatalog = {
-  version: string;
+  schema_version: number;
   categories: DslCategory[];
   tools: DslTool[];
 };
@@ -145,7 +159,7 @@ export const INITIAL_PROBLEM: Problem = {
 };
 
 export const EMPTY_CATALOG: DslCatalog = {
-  version: "V15",
+  schema_version: 1,
   categories: [],
   tools: [],
 };

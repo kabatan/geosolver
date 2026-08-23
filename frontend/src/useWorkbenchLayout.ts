@@ -6,7 +6,7 @@ export const DEFAULT_LAYOUT_SIZES: LayoutSizes = {
   right: 360,
   bottom: 280,
 };
-export const LAYOUT_STORAGE_KEY = "geotarget.layout.v1";
+export const LAYOUT_STORAGE_KEY = "geosolver.layout.v1";
 export const INSPECTOR_DRAWER_MIN_WIDTH = 768;
 export const DESKTOP_MODEL_PANE_MIN_WIDTH = 1100;
 export const WIDE_WORKBENCH_MIN_WIDTH = 1440;

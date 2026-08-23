@@ -122,7 +122,7 @@ export function AppBar({
     >
       <div className="product-context">
         <div className="brand-lockup">
-          <div className="brand">GEOTARGET</div>
+          <div className="brand">GEOSOLVER</div>
           <span aria-hidden="true">/</span>
           <strong className="project-name">{projectName}</strong>
         </div>
@@ -145,7 +145,7 @@ export function AppBar({
           className="visually-hidden"
           tabIndex={-1}
           type="file"
-          accept=".json,.geotarget.json"
+          accept=".json,.geosolver.json"
           onChange={onImport}
         />
         <div className="app-action-group file-actions">
@@ -157,9 +157,9 @@ export function AppBar({
             <DownloadSimple />
             <span>プロジェクト</span>
           </button>
-          <button title="V15 JSONを書き出す" onClick={onExportJson}>
+          <button title="GeoSolver JSONを書き出す" onClick={onExportJson}>
             <FloppyDisk />
-            <span>V15 JSON</span>
+            <span>GeoSolver JSON</span>
           </button>
           <button
             ref={sourceTriggerRef}
@@ -248,7 +248,7 @@ export function AppBar({
                 onClick={() => runCompactAction(onExportJson)}
               >
                 <FloppyDisk />
-                V15 JSONを書き出す
+                GeoSolver JSONを書き出す
               </button>
               <button
                 role="menuitem"

@@ -162,7 +162,7 @@ export function expandDistanceShorthand(
   return result;
 }
 
-/** Present V15 guards as equations while keeping the champion-native JSON unchanged. */
+/** Present GeoSolver guards as equations while keeping the champion-native JSON unchanged. */
 export function guardToFormula(guard: string): string {
   const call = parseCall(guard);
   if (!call) return displayMathConstants(guard);
@@ -315,10 +315,10 @@ export function conditionDraftIssue(source: string): string | undefined {
  * Upgrade projects written by the former visual condition editor.
  *
  * That editor serialized every `=` as AssumeEq, which is a hard admissibility
- * guard in V15 rather than a numerical equation.  The migration is deliberately
+ * guard in GeoSolver rather than a numerical equation.  The migration is deliberately
  * syntax-generic: every two-argument AssumeEq produced by the UI becomes the
  * equivalent constraint, regardless of the functions used on either side.
- * Raw V15 documents are not passed through this project migration.
+ * Raw GeoSolver documents are not passed through this project migration.
  */
 export function migrateLegacyUiEquationGuards(problem: Problem): {
   problem: Problem;

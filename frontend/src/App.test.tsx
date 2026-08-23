@@ -2,12 +2,22 @@ import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-li
 import userEvent from "@testing-library/user-event";
 import { IDBFactory } from "fake-indexeddb";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import productCatalog from "../../src/geotarget/dsl_catalog.json";
+import productCatalog from "../../src/geosolver/problem/catalog.json";
 import { App, catalogPaletteGroups, conditionDraftIssue, conditionFromFormula, expandDistanceShorthand, formulaToGuard, guardToFormula, migrateLegacyUiEquationGuards, validationIssueLocation, withoutBlankExpressions, type DslCatalog } from "./App";
 import { formatApproximateDecimal } from "./ExactResult";
+import { fromGeometryProblem, toGeometryProblem } from "./problemModel";
+import type { Problem } from "./types";
+
+function parseEditor(source: string) {
+  return fromGeometryProblem(JSON.parse(source));
+}
+
+function testGeometryProblem(problem: unknown) {
+  return toGeometryProblem(problem as Problem);
+}
 
 const catalog = {
-  version: "V15",
+  schema_version: 1,
   categories: [
     { id: "points", label_ja: "点", label_en: "Points" },
     { id: "lines", label_ja: "線", label_en: "Lines" },
@@ -42,7 +52,13 @@ beforeEach(() => {
     const url = String(input);
     if (url.endsWith("/api/v1/dsl/catalog")) return new Response(JSON.stringify(catalog));
     if (url.endsWith("/api/v1/doctor")) return new Response(JSON.stringify({ ok: true }));
-    if (url.endsWith("/api/v1/qualification")) return new Response(JSON.stringify({ default_engine: "reference" }));
+    if (url.endsWith("/api/v1/capabilities"))
+      return new Response(
+        JSON.stringify({
+          default_engine: "standard",
+          engines: { standard: { supported: true }, reference: { supported: true } },
+        }),
+      );
     if (url.endsWith("/api/v1/session")) return new Response(JSON.stringify({ status: "ready" }));
     if (url.endsWith("/api/v1/preview")) return new Response(JSON.stringify({ validation: { valid: true, issues: [] } }));
     throw new Error(`unexpected fetch ${url}`);
@@ -235,7 +251,7 @@ describe("distance shorthand", () => {
   });
 });
 
-describe("GeoTarget workbench", () => {
+describe("GeoSolver workbench", () => {
   it("uses the supplied geometry icon sprite and exposes persistent pane separators", async () => {
     render(<App />);
 
@@ -262,7 +278,7 @@ describe("GeoTarget workbench", () => {
     expect(bottom).toHaveAttribute("aria-valuenow", "296");
 
     await waitFor(() =>
-      expect(JSON.parse(localStorage.getItem("geotarget.layout.v1") ?? "{}")).toEqual({
+      expect(JSON.parse(localStorage.getItem("geosolver.layout.v1") ?? "{}")).toEqual({
         left: 304,
         right: 376,
         bottom: 296,
@@ -274,7 +290,7 @@ describe("GeoTarget workbench", () => {
 
   it("keeps previously saved pane sizes instead of replacing them with new defaults", () => {
     localStorage.setItem(
-      "geotarget.layout.v1",
+      "geosolver.layout.v1",
       JSON.stringify({ left: 402, right: 388, bottom: 228 }),
     );
     render(<App />);
@@ -429,7 +445,7 @@ describe("GeoTarget workbench", () => {
       within(menu).getByRole("menuitem", { name: "プロジェクトを書き出す" }),
     ).toBeEnabled();
     expect(
-      within(menu).getByRole("menuitem", { name: "V15 JSONを書き出す" }),
+      within(menu).getByRole("menuitem", { name: "GeoSolver JSONを書き出す" }),
     ).toBeEnabled();
     expect(within(menu).getByRole("status")).toHaveTextContent(
       "Target validationとは別の実行環境チェック",
@@ -466,8 +482,8 @@ describe("GeoTarget workbench", () => {
     expect(trigger).toHaveAttribute("aria-expanded", "false");
   });
 
-  it("downloads project and V15 JSON with visible completion feedback", async () => {
-    const createObjectURL = vi.fn(() => "blob:geotarget-test");
+  it("downloads project and GeoSolver JSON with visible completion feedback", async () => {
+    const createObjectURL = vi.fn(() => "blob:geosolver-test");
     const revokeObjectURL = vi.fn();
     vi.stubGlobal("URL", {
       ...URL,
@@ -484,17 +500,17 @@ describe("GeoTarget workbench", () => {
 
     await userEvent.click(screen.getByTitle("プロジェクトを書き出す"));
     expect(clicked.at(-1)?.download).toBe(
-      "distance-3-4-5.geotarget.json",
+      "distance-3-4-5.geosolver-project.json",
     );
     expect(document.querySelector(".toast.success")).toHaveTextContent(
       "プロジェクトを書き出しました",
     );
 
     await userEvent.click(screen.getByRole("button", { name: "通知を閉じる" }));
-    await userEvent.click(screen.getByTitle("V15 JSONを書き出す"));
+    await userEvent.click(screen.getByTitle("GeoSolver JSONを書き出す"));
     expect(clicked.at(-1)?.download).toBe("distance-3-4-5.json");
     expect(document.querySelector(".toast.success")).toHaveTextContent(
-      "V15 JSONを書き出しました",
+      "GeoSolver JSONを書き出しました",
     );
     expect(createObjectURL).toHaveBeenCalledTimes(2);
   });
@@ -515,15 +531,15 @@ describe("GeoTarget workbench", () => {
     );
   });
 
-  it("accepts AB as a target shorthand and stores canonical V15 JSON", async () => {
+  it("accepts AB as a target shorthand and stores canonical GeoSolver JSON", async () => {
     render(<App />);
     const target = screen.getByRole("textbox", { name: "ターゲット式" });
     await userEvent.clear(target);
     await userEvent.type(target, "AB");
     await userEvent.click(screen.getByRole("button", { name: "ターゲットに設定" }));
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
-    const saved = JSON.parse(
-      (screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement)
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
+    const saved = parseEditor(
+      (screen.getByRole("textbox", { name: "GeoSolver JSON" }) as HTMLTextAreaElement)
         .value,
     );
     expect(saved.answer).toBe("Distance(A, B)");
@@ -537,9 +553,9 @@ describe("GeoTarget workbench", () => {
     await userEvent.clear(condition);
     await userEvent.type(condition, "AB<6");
     expect(condition).toHaveValue("Distance(A, B) < 6");
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
-    const saved = JSON.parse(
-      (screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement)
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
+    const saved = parseEditor(
+      (screen.getByRole("textbox", { name: "GeoSolver JSON" }) as HTMLTextAreaElement)
         .value,
     );
     expect(saved.guards).toContain("AssumeLt(Distance(A, B), 6)");
@@ -552,9 +568,9 @@ describe("GeoTarget workbench", () => {
     const condition = screen.getByRole("combobox", { name: "条件 1" });
     await userEvent.type(condition, "Distance(A, B)=sqrt(17)");
     fireEvent.keyDown(condition, { key: "Enter" });
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
-    const saved = JSON.parse(
-      (screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement)
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
+    const saved = parseEditor(
+      (screen.getByRole("textbox", { name: "GeoSolver JSON" }) as HTMLTextAreaElement)
         .value,
     );
     expect(saved.constraints).toContainEqual({
@@ -574,9 +590,9 @@ describe("GeoTarget workbench", () => {
     fireEvent.change(condition, { target: { value: "Distance(A, B) = 5" } });
     fireEvent.keyDown(condition, { key: "Enter" });
 
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
-    const saved = JSON.parse(
-      (screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement)
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
+    const saved = parseEditor(
+      (screen.getByRole("textbox", { name: "GeoSolver JSON" }) as HTMLTextAreaElement)
         .value,
     );
     expect(saved.constraints).toEqual([{ def: "Distance(A, B)", value: 5 }]);
@@ -602,7 +618,7 @@ describe("GeoTarget workbench", () => {
       },
     };
     await new Promise<void>((resolve, reject) => {
-      const open = indexedDB.open("geotarget", 2);
+      const open = indexedDB.open("geosolver", 2);
       open.onupgradeneeded = () => open.result.createObjectStore("projects");
       open.onerror = () => reject(open.error);
       open.onsuccess = () => {
@@ -617,11 +633,11 @@ describe("GeoTarget workbench", () => {
 
     render(<App />);
     await waitFor(() =>
-      expect(screen.getByText("legacy-autosave.geotarget.json")).toBeInTheDocument(),
+      expect(screen.getByText("legacy-autosave.geosolver-project.json")).toBeInTheDocument(),
     );
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
-    const saved = JSON.parse(
-      (screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement)
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
+    const saved = parseEditor(
+      (screen.getByRole("textbox", { name: "GeoSolver JSON" }) as HTMLTextAreaElement)
         .value,
     );
     expect(saved.constraints).toEqual([{ def: "Distance(A, B)", value: 1 }]);
@@ -631,10 +647,10 @@ describe("GeoTarget workbench", () => {
   it("canonicalizes AB when a catalog measurement is saved", async () => {
     render(<App />);
     await userEvent.click(
-      screen.getByRole("button", { name: "すべてのV15ツールを開く" }),
+      screen.getByRole("button", { name: "すべてのGeoSolverツールを開く" }),
     );
     await userEvent.click(screen.getByRole("button", { name: /比Ratio/ }));
-    const definition = screen.getByRole("combobox", { name: "V15定義式" });
+    const definition = screen.getByRole("combobox", { name: "GeoSolver定義式" });
     await userEvent.clear(definition);
     await userEvent.type(definition, "AB");
     await userEvent.click(screen.getByRole("button", { name: "測定値に追加" }));
@@ -643,8 +659,12 @@ describe("GeoTarget workbench", () => {
     );
   });
 
-  it("exposes every authorable V15 catalog function in the full palette", () => {
-    const visible = new Set(catalogPaletteGroups(productCatalog as DslCatalog).flatMap((group) => group.tools.map((tool) => tool.id)));
+  it("exposes every authorable GeoSolver catalog function in the full palette", () => {
+    const visible = new Set(
+      catalogPaletteGroups({ ...productCatalog, schema_version: 1 } as DslCatalog).flatMap(
+        (group) => group.tools.map((tool) => tool.id),
+      ),
+    );
     const expected = productCatalog.tools.filter((tool) => tool.authoring_status !== "legacy_read_only").map((tool) => tool.id);
     expect(expected.filter((id) => !visible.has(id))).toEqual([]);
   });
@@ -697,13 +717,13 @@ describe("GeoTarget workbench", () => {
 
   it("keeps JSON as an explicit draft and applies it to the canvas", async () => {
     render(<App />);
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
     const replacement = {
       task: "solve", id: "one-point", variables: { names: [] },
       construction: [{ name: "X", expr: "Point(2, 1)" }], constraints: [], guards: [],
       answer: "Distance(X, X)", post_process: "",
     };
-    fireEvent.change(screen.getByRole("textbox", { name: "V15 JSON" }), { target: { value: JSON.stringify(replacement) } });
+    fireEvent.change(screen.getByRole("textbox", { name: "GeoSolver JSON" }), { target: { value: JSON.stringify(testGeometryProblem(replacement)) } });
     expect(document.querySelector('[data-object="X"]')).not.toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "JSONを適用" }));
     await waitFor(() => expect(document.querySelector('[data-object="X"]')).toBeInTheDocument());
@@ -712,7 +732,7 @@ describe("GeoTarget workbench", () => {
 
   it("offers and creates an exact intersection when the Point tool is used near a crossing", async () => {
     render(<App />);
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
     const crossing = {
       task: "solve", id: "crossing", variables: { names: [] },
       construction: [
@@ -721,7 +741,7 @@ describe("GeoTarget workbench", () => {
         { name: "horizontal", expr: "Line(A, B)" }, { name: "vertical", expr: "Line(C, D)" },
       ], constraints: [], guards: [], answer: "Distance(A, B)", post_process: "",
     };
-    fireEvent.change(screen.getByRole("textbox", { name: "V15 JSON" }), { target: { value: JSON.stringify(crossing) } });
+    fireEvent.change(screen.getByRole("textbox", { name: "GeoSolver JSON" }), { target: { value: JSON.stringify(testGeometryProblem(crossing)) } });
     await userEvent.click(screen.getByRole("button", { name: "JSONを適用" }));
     const canvas = screen.getByRole("application", { name: /幾何作図キャンバス/ });
     Object.defineProperty(canvas, "getBoundingClientRect", { value: () => ({ left: 0, top: 0, width: 1000, height: 700, right: 1000, bottom: 700, x: 0, y: 0, toJSON() {} }) });
@@ -735,7 +755,7 @@ describe("GeoTarget workbench", () => {
 
   it("keeps both line-circle branches as one parameter plus an incidence constraint", async () => {
     render(<App />);
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
     const crossing = {
       task: "solve", id: "line-circle-branch", variables: { names: [] },
       construction: [
@@ -745,14 +765,14 @@ describe("GeoTarget workbench", () => {
         { name: "A", expr: "Point(0, -2)" },
       ], constraints: [], guards: [], answer: "Distance(O, R)", post_process: "",
     };
-    fireEvent.change(screen.getByRole("textbox", { name: "V15 JSON" }), { target: { value: JSON.stringify(crossing) } });
+    fireEvent.change(screen.getByRole("textbox", { name: "GeoSolver JSON" }), { target: { value: JSON.stringify(testGeometryProblem(crossing)) } });
     await userEvent.click(screen.getByRole("button", { name: "JSONを適用" }));
     const canvas = screen.getByRole("application", { name: /幾何作図キャンバス/ });
     Object.defineProperty(canvas, "getBoundingClientRect", { value: () => ({ left: 0, top: 0, width: 1000, height: 700, right: 1000, bottom: 700, x: 0, y: 0, toJSON() {} }) });
     await userEvent.click(screen.getByRole("button", { name: "作図ツール 点" }));
     fireEvent.click(document.querySelector('[data-object="vertical"]')!, { clientX: 500, clientY: 220, detail: 1 });
     expect(screen.getByDisplayValue("PointOnCircle(omega, tP)")).toBeInTheDocument();
-    const saved = JSON.parse((screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement).value);
+    const saved = parseEditor((screen.getByRole("textbox", { name: "GeoSolver JSON" }) as HTMLTextAreaElement).value);
     expect(saved.variables.names).toContain("tP");
     expect(saved.constraints).toContainEqual({ def: "OnLine(P, vertical)", value: 0 });
     expect(saved.construction).not.toContainEqual(expect.objectContaining({ expr: expect.stringContaining("exclude=") }));
@@ -761,7 +781,7 @@ describe("GeoTarget workbench", () => {
 
   it("keeps both circle-circle branches without relying on internal list order", async () => {
     render(<App />);
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
     const crossing = {
       task: "solve", id: "circle-circle-branches", variables: { names: [] },
       construction: [
@@ -769,21 +789,21 @@ describe("GeoTarget workbench", () => {
         { name: "c1", expr: "Circle(O1, 2)" }, { name: "c2", expr: "Circle(O2, 2)" },
       ], constraints: [], guards: [], answer: "Distance(O1, O2)", post_process: "",
     };
-    fireEvent.change(screen.getByRole("textbox", { name: "V15 JSON" }), { target: { value: JSON.stringify(crossing) } });
+    fireEvent.change(screen.getByRole("textbox", { name: "GeoSolver JSON" }), { target: { value: JSON.stringify(testGeometryProblem(crossing)) } });
     await userEvent.click(screen.getByRole("button", { name: "JSONを適用" }));
     const canvas = screen.getByRole("application", { name: /幾何作図キャンバス/ });
     Object.defineProperty(canvas, "getBoundingClientRect", { value: () => ({ left: 0, top: 0, width: 1000, height: 700, right: 1000, bottom: 700, x: 0, y: 0, toJSON() {} }) });
     await userEvent.click(screen.getByRole("button", { name: "作図ツール 点" }));
     fireEvent.click(document.querySelector('[data-object="c1"]')!, { clientX: 500, clientY: 237, detail: 1 });
     expect(screen.getByDisplayValue("PointOnCircle(c1, tP)")).toBeInTheDocument();
-    const saved = JSON.parse((screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement).value);
+    const saved = parseEditor((screen.getByRole("textbox", { name: "GeoSolver JSON" }) as HTMLTextAreaElement).value);
     expect(saved.constraints).toContainEqual({ def: "OnCircle(P, c2)", value: 0 });
     expect(saved.guards).not.toContain(expect.stringContaining("n="));
   });
 
   it("uses exclude when both objects are proven to share the other intersection", async () => {
     render(<App />);
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
     const crossing = {
       task: "solve", id: "shared-circle-intersection", variables: { names: [] },
       construction: [
@@ -791,21 +811,21 @@ describe("GeoTarget workbench", () => {
         { name: "c1", expr: "CircleThroughPoint(O1, P)" }, { name: "c2", expr: "CircleThroughPoint(O2, P)" },
       ], constraints: [], guards: [], answer: "Distance(O1, O2)", post_process: "",
     };
-    fireEvent.change(screen.getByRole("textbox", { name: "V15 JSON" }), { target: { value: JSON.stringify(crossing) } });
+    fireEvent.change(screen.getByRole("textbox", { name: "GeoSolver JSON" }), { target: { value: JSON.stringify(testGeometryProblem(crossing)) } });
     await userEvent.click(screen.getByRole("button", { name: "JSONを適用" }));
     const canvas = screen.getByRole("application", { name: /幾何作図キャンバス/ });
     Object.defineProperty(canvas, "getBoundingClientRect", { value: () => ({ left: 0, top: 0, width: 1000, height: 700, right: 1000, bottom: 700, x: 0, y: 0, toJSON() {} }) });
     await userEvent.click(screen.getByRole("button", { name: "作図ツール 点" }));
     fireEvent.click(document.querySelector('[data-object="c1"]')!, { clientX: 500, clientY: 610, detail: 1 });
     expect(screen.getByDisplayValue("Intersect(c1, c2, exclude=P)")).toBeInTheDocument();
-    const saved = JSON.parse((screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement).value);
+    const saved = parseEditor((screen.getByRole("textbox", { name: "GeoSolver JSON" }) as HTMLTextAreaElement).value);
     expect(saved.variables.names).toEqual([]);
     expect(saved.constraints).toEqual([]);
   });
 
   it("combines the shared-point heuristic with finite segment semantics", async () => {
     render(<App />);
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
     const crossing = {
       task: "solve", id: "shared-segment-intersection", variables: { names: [] },
       construction: [
@@ -813,20 +833,20 @@ describe("GeoTarget workbench", () => {
         { name: "omega", expr: "CircleThroughPoint(O, P)" }, { name: "s", expr: "Segment(P, Q)" },
       ], constraints: [], guards: [], answer: "Distance(P, Q)", post_process: "",
     };
-    fireEvent.change(screen.getByRole("textbox", { name: "V15 JSON" }), { target: { value: JSON.stringify(crossing) } });
+    fireEvent.change(screen.getByRole("textbox", { name: "GeoSolver JSON" }), { target: { value: JSON.stringify(testGeometryProblem(crossing)) } });
     await userEvent.click(screen.getByRole("button", { name: "JSONを適用" }));
     const canvas = screen.getByRole("application", { name: /幾何作図キャンバス/ });
     Object.defineProperty(canvas, "getBoundingClientRect", { value: () => ({ left: 0, top: 0, width: 1000, height: 700, right: 1000, bottom: 700, x: 0, y: 0, toJSON() {} }) });
     await userEvent.click(screen.getByRole("button", { name: "作図ツール 点" }));
     fireEvent.click(document.querySelector('[data-object="s"]')!, { clientX: 630, clientY: 350, detail: 1 });
-    const saved = JSON.parse((screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement).value);
+    const saved = parseEditor((screen.getByRole("textbox", { name: "GeoSolver JSON" }) as HTMLTextAreaElement).value);
     expect(saved.constraints).toContainEqual({ def: "OnSegment(P2, P, Q)", value: 0 });
     expect(saved.guards).toContain("AssumeNe(Distance(P2, P), 0)");
   });
 
   it("creates the same branch-neutral intersection from the keyboard crosshair", async () => {
     render(<App />);
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
     const crossing = {
       task: "solve", id: "keyboard-intersection", variables: { names: [] },
       construction: [
@@ -835,7 +855,7 @@ describe("GeoTarget workbench", () => {
         { name: "omega", expr: "CircleThroughPoint(O, R)" }, { name: "vertical", expr: "Line(C, D)" },
       ], constraints: [], guards: [], answer: "Distance(O, R)", post_process: "",
     };
-    fireEvent.change(screen.getByRole("textbox", { name: "V15 JSON" }), { target: { value: JSON.stringify(crossing) } });
+    fireEvent.change(screen.getByRole("textbox", { name: "GeoSolver JSON" }), { target: { value: JSON.stringify(testGeometryProblem(crossing)) } });
     await userEvent.click(screen.getByRole("button", { name: "JSONを適用" }));
     await userEvent.click(screen.getByRole("button", { name: "作図ツール 点" }));
     const canvas = screen.getByRole("application", { name: /幾何作図キャンバス/ }); canvas.focus();
@@ -843,13 +863,13 @@ describe("GeoTarget workbench", () => {
     expect(screen.getByRole("status")).toHaveTextContent("交点候補");
     fireEvent.keyDown(canvas, { key: "Enter" });
     expect(screen.getByDisplayValue("PointOnCircle(omega, tP)")).toBeInTheDocument();
-    const saved = JSON.parse((screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement).value);
+    const saved = parseEditor((screen.getByRole("textbox", { name: "GeoSolver JSON" }) as HTMLTextAreaElement).value);
     expect(saved.constraints).toContainEqual({ def: "OnLine(P, vertical)", value: 0 });
   });
 
   it("preserves segment and ray domains instead of widening them to lines", async () => {
     render(<App />);
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
     const crossing = {
       task: "solve", id: "finite-carrier-intersection", variables: { names: [] },
       construction: [
@@ -858,13 +878,13 @@ describe("GeoTarget workbench", () => {
         { name: "r", expr: "Ray(A, B)" }, { name: "vertical", expr: "Line(C, D)" },
       ], constraints: [], guards: [], answer: "Distance(A, B)", post_process: "",
     };
-    fireEvent.change(screen.getByRole("textbox", { name: "V15 JSON" }), { target: { value: JSON.stringify(crossing) } });
+    fireEvent.change(screen.getByRole("textbox", { name: "GeoSolver JSON" }), { target: { value: JSON.stringify(testGeometryProblem(crossing)) } });
     await userEvent.click(screen.getByRole("button", { name: "JSONを適用" }));
     const canvas = screen.getByRole("application", { name: /幾何作図キャンバス/ });
     Object.defineProperty(canvas, "getBoundingClientRect", { value: () => ({ left: 0, top: 0, width: 1000, height: 700, right: 1000, bottom: 700, x: 0, y: 0, toJSON() {} }) });
     await userEvent.click(screen.getByRole("button", { name: "作図ツール 点" }));
     fireEvent.click(document.querySelector('[data-object="r"]')!, { clientX: 630, clientY: 350, detail: 1 });
-    const saved = JSON.parse((screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement).value);
+    const saved = parseEditor((screen.getByRole("textbox", { name: "GeoSolver JSON" }) as HTMLTextAreaElement).value);
     expect(saved.construction).toContainEqual({ name: "P", expr: "PointOnLine(vertical, tP)" });
     expect(saved.constraints).toContainEqual({ def: "OnLine(P, Line(A, B))", value: 0 });
     expect(saved.guards).toContain("AssumeGe(Dot(Vector(A, P), Vector(A, B)), 0)");
@@ -919,7 +939,7 @@ describe("GeoTarget workbench", () => {
   it("hides line and circle labels until the user explicitly enables them", async () => {
     render(<App />);
     await openInspector();
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
     const labeledObjects = {
       task: "solve", id: "default-object-labels", variables: { names: [] },
       construction: [
@@ -930,7 +950,7 @@ describe("GeoTarget workbench", () => {
       ],
       constraints: [], guards: [], answer: "Distance(A, B)", post_process: "",
     };
-    fireEvent.change(screen.getByRole("textbox", { name: "V15 JSON" }), { target: { value: JSON.stringify(labeledObjects) } });
+    fireEvent.change(screen.getByRole("textbox", { name: "GeoSolver JSON" }), { target: { value: JSON.stringify(testGeometryProblem(labeledObjects)) } });
     await userEvent.click(screen.getByRole("button", { name: "JSONを適用" }));
 
     expect(document.querySelector('[data-object="A"] .canvas-math-label')).toBeInTheDocument();
@@ -1038,9 +1058,9 @@ describe("GeoTarget workbench", () => {
   it("snaps the Point tool to the coordinate axes and origin", async () => {
     render(<App />);
     await openInspector();
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
     const empty = { task: "solve", id: "axes", variables: { names: [] }, construction: [], constraints: [], guards: [], answer: "", post_process: "" };
-    fireEvent.change(screen.getByRole("textbox", { name: "V15 JSON" }), { target: { value: JSON.stringify(empty) } });
+    fireEvent.change(screen.getByRole("textbox", { name: "GeoSolver JSON" }), { target: { value: JSON.stringify(testGeometryProblem(empty)) } });
     await userEvent.click(screen.getByRole("button", { name: "JSONを適用" }));
     const canvas = screen.getByRole("application", { name: /幾何作図キャンバス/ });
     Object.defineProperty(canvas, "getBoundingClientRect", { value: () => ({ left: 0, top: 0, width: 1000, height: 700, right: 1000, bottom: 700, x: 0, y: 0, toJSON() {} }) });
@@ -1067,7 +1087,7 @@ describe("GeoTarget workbench", () => {
     expect(document.querySelector('[data-object="P"] circle:not(.point-hit)')).toHaveAttribute("cy", "350");
   });
 
-  it("keeps free-point drag as preview metadata without rewriting the V15 expression", async () => {
+  it("keeps free-point drag as preview metadata without rewriting the GeoSolver expression", async () => {
     render(<App />);
     await openInspector();
     const canvas = screen.getByRole("application", { name: /幾何作図キャンバス/ });
@@ -1104,7 +1124,7 @@ describe("GeoTarget workbench", () => {
   it("drags points constrained to a line, segment, and circle", async () => {
     render(<App />);
     await openInspector();
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
     const constrained = {
       task: "solve", id: "constrained-drag", variables: { names: ["tl", "ts", "tc"] },
       construction: [
@@ -1113,7 +1133,7 @@ describe("GeoTarget workbench", () => {
         { name: "L", expr: "PointOnLine(line, tl)" }, { name: "S", expr: "PointOnSegment(A, B, ts)" }, { name: "C", expr: "PointOnCircle(circle, tc)" },
       ], constraints: [], guards: ["Bound(ts, (0, 1))"], answer: "Distance(A, B)", post_process: "",
     };
-    fireEvent.change(screen.getByRole("textbox", { name: "V15 JSON" }), { target: { value: JSON.stringify(constrained) } });
+    fireEvent.change(screen.getByRole("textbox", { name: "GeoSolver JSON" }), { target: { value: JSON.stringify(testGeometryProblem(constrained)) } });
     await userEvent.click(screen.getByRole("button", { name: "JSONを適用" }));
     const canvas = screen.getByRole("application", { name: /幾何作図キャンバス/ });
     Object.defineProperty(canvas, "getBoundingClientRect", { value: () => ({ left: 0, top: 0, width: 1000, height: 700, right: 1000, bottom: 700, x: 0, y: 0, toJSON() {} }) });
@@ -1186,7 +1206,7 @@ describe("GeoTarget workbench", () => {
     await userEvent.click(screen.getByRole("button", { name: "作図ツール 中心と1点で円" }));
     await userEvent.click(screen.getByRole("button", { name: /^固定点 A/ }));
     await userEvent.click(screen.getByRole("button", { name: /^固定点 B/ }));
-    await userEvent.click(screen.getByRole("button", { name: "すべてのV15ツールを開く" }));
+    await userEvent.click(screen.getByRole("button", { name: "すべてのGeoSolverツールを開く" }));
     await userEvent.click(screen.getByRole("button", { name: /中点/ }));
     await userEvent.click(screen.getByRole("button", { name: "図から引数を選ぶ" }));
     fireEvent.click(document.querySelector('[data-object="c"]')!, { clientX: 760, clientY: 350 });
@@ -1195,8 +1215,8 @@ describe("GeoTarget workbench", () => {
     expect(screen.getByDisplayValue("Midpoint(P, A)")).toBeInTheDocument();
     await userEvent.type(screen.getByRole("textbox", { name: "新しい点の名前" }), "Q");
     await userEvent.click(screen.getByRole("button", { name: "確定" }));
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
-    expect((screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement).value).toContain('"expr": "Midpoint(Q, A)"');
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
+    expect((screen.getByRole("textbox", { name: "GeoSolver JSON" }) as HTMLTextAreaElement).value).toContain('"expression": "Midpoint(Q, A)"');
   });
 
   it("builds an inscribed polygon from only a circle and vertex count", async () => {
@@ -1204,7 +1224,7 @@ describe("GeoTarget workbench", () => {
     await userEvent.click(screen.getByRole("button", { name: "作図ツール 中心と1点で円" }));
     await userEvent.click(screen.getByRole("button", { name: /^固定点 A/ }));
     await userEvent.click(screen.getByRole("button", { name: /^固定点 B/ }));
-    await userEvent.click(screen.getByRole("button", { name: "すべてのV15ツールを開く" }));
+    await userEvent.click(screen.getByRole("button", { name: "すべてのGeoSolverツールを開く" }));
     await userEvent.click(screen.getByRole("button", { name: /円に内接する多角形/ }));
     await userEvent.selectOptions(screen.getByRole("combobox", { name: "頂点数" }), "5");
     await userEvent.click(screen.getByRole("button", { name: "図から引数を選ぶ" }));
@@ -1212,16 +1232,16 @@ describe("GeoTarget workbench", () => {
 
     expect(screen.getByDisplayValue("Polygon([P, P2, P3, P4, P5])")).toBeInTheDocument();
     expect(document.querySelector('[data-object="i"]')).toBeInTheDocument();
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
-    const source = (screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement).value;
-    expect(source).toContain('"expr": "PointOnCircle(c, 0.25)"');
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
+    const source = (screen.getByRole("textbox", { name: "GeoSolver JSON" }) as HTMLTextAreaElement).value;
+    expect(source).toContain('"expression": "PointOnCircle(c, 0.25)"');
     expect(source.match(/PointOnCircle\(c, tP/g)).toHaveLength(4);
-    expect(source).toContain('"expr": "Polygon([P, P2, P3, P4, P5])"');
+    expect(source).toContain('"expression": "Polygon([P, P2, P3, P4, P5])"');
   });
 
   it("creates a construction by selecting its arguments on the diagram", async () => {
     render(<App />);
-    await userEvent.click(screen.getByRole("button", { name: "すべてのV15ツールを開く" }));
+    await userEvent.click(screen.getByRole("button", { name: "すべてのGeoSolverツールを開く" }));
     await userEvent.click(screen.getByRole("button", { name: /中点/ }));
     await userEvent.click(screen.getByRole("button", { name: "図から引数を選ぶ" }));
     expect(screen.getByRole("status")).toHaveTextContent("1点目を図から選択");
@@ -1234,13 +1254,13 @@ describe("GeoTarget workbench", () => {
 
   it("creates only a genuine circle tangent through the Polar construction", async () => {
     render(<App />);
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
     const setup = {
       task: "solve", id: "tangent", variables: { names: [] },
       construction: [{ name: "O", expr: "Point(0, 0)" }, { name: "P", expr: "Point(2, 0)" }, { name: "Q", expr: "Point(1, 0)" }, { name: "c", expr: "CircleThroughPoint(O, P)" }],
       constraints: [], guards: [], answer: "Distance(O, P)", post_process: "",
     };
-    fireEvent.change(screen.getByRole("textbox", { name: "V15 JSON" }), { target: { value: JSON.stringify(setup) } });
+    fireEvent.change(screen.getByRole("textbox", { name: "GeoSolver JSON" }), { target: { value: JSON.stringify(testGeometryProblem(setup)) } });
     await userEvent.click(screen.getByRole("button", { name: "JSONを適用" }));
     await userEvent.click(screen.getByRole("button", { name: "ツール" }));
     await userEvent.click(screen.getByRole("button", { name: "その他のツール" }));
@@ -1256,7 +1276,7 @@ describe("GeoTarget workbench", () => {
   it("supports keyboard guided selection through the object tree and Escape cancellation", async () => {
     render(<App />);
     const canvas = screen.getByRole("application", { name: /幾何作図キャンバス/ });
-    await userEvent.click(screen.getByRole("button", { name: "すべてのV15ツールを開く" }));
+    await userEvent.click(screen.getByRole("button", { name: "すべてのGeoSolverツールを開く" }));
     await userEvent.click(screen.getByRole("button", { name: /中点/ }));
     await userEvent.click(screen.getByRole("button", { name: "図から引数を選ぶ" }));
     await userEvent.click(screen.getByRole("button", { name: "代数" }));
@@ -1275,7 +1295,7 @@ describe("GeoTarget workbench", () => {
   it("creates and cleanly removes a bounded one-parameter point", async () => {
     render(<App />);
     await openInspector();
-    await userEvent.click(screen.getByRole("button", { name: "すべてのV15ツールを開く" }));
+    await userEvent.click(screen.getByRole("button", { name: "すべてのGeoSolverツールを開く" }));
     await userEvent.click(screen.getByRole("button", { name: /線分上の点/ }));
     await userEvent.click(screen.getByRole("button", { name: "図から引数を選ぶ" }));
     await userEvent.click(screen.getByRole("button", { name: /^固定点 A/ }));
@@ -1295,7 +1315,7 @@ describe("GeoTarget workbench", () => {
   it("deletes the full dependent closure even when definitions form a cycle", async () => {
     render(<App />);
     await openInspector();
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
     const cyclic = {
       task: "solve", id: "cyclic-delete", variables: { names: [] },
       construction: [
@@ -1306,7 +1326,7 @@ describe("GeoTarget workbench", () => {
       constraints: [{ def: "Distance(A, C)", value: 1 }], guards: ["NonZero(Distance(B, C))"],
       answer: "Distance(B, C)", post_process: "A",
     };
-    fireEvent.change(screen.getByRole("textbox", { name: "V15 JSON" }), { target: { value: JSON.stringify(cyclic) } });
+    fireEvent.change(screen.getByRole("textbox", { name: "GeoSolver JSON" }), { target: { value: JSON.stringify(testGeometryProblem(cyclic)) } });
     await userEvent.click(screen.getByRole("button", { name: "JSONを適用" }));
     await userEvent.click(screen.getByRole("button", { name: "削除" }));
     expect(document.querySelector('[data-object="A"]')).not.toBeInTheDocument();
@@ -1314,9 +1334,9 @@ describe("GeoTarget workbench", () => {
     expect(document.querySelector('[data-object="C"]')).toBeInTheDocument();
     await userEvent.click(screen.getByRole("tab", { name: "ターゲット" }));
     expect(screen.getByRole("textbox", { name: "ターゲット式" })).toHaveValue("");
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
     await waitFor(() => {
-      const saved = JSON.parse((screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement).value);
+      const saved = parseEditor((screen.getByRole("textbox", { name: "GeoSolver JSON" }) as HTMLTextAreaElement).value);
       expect(saved.construction).toEqual([{ name: "C", expr: "Point(0, 0)" }]);
       expect(saved.constraints).toEqual([]); expect(saved.guards).toEqual([]); expect(saved.post_process).toBe("");
     });
@@ -1345,15 +1365,15 @@ describe("GeoTarget workbench", () => {
     const targetTab = screen.getByRole("tab", { name: "ターゲット" });
     targetTab.focus();
     await userEvent.keyboard("{ArrowRight}");
-    const jsonTab = screen.getByRole("tab", { name: "V15 JSON" });
+    const jsonTab = screen.getByRole("tab", { name: "GeoSolver JSON" });
     expect(jsonTab).toHaveAttribute("aria-controls", "panel-json");
     expect(jsonTab).toHaveAttribute("aria-selected", "true");
-    expect(screen.getByRole("tabpanel", { name: "V15 JSON" })).toHaveAttribute("aria-labelledby", "tab-json");
+    expect(screen.getByRole("tabpanel", { name: "GeoSolver JSON" })).toHaveAttribute("aria-labelledby", "tab-json");
   });
 
   it("opens a modal catalog, traps the workflow, and restores trigger focus", async () => {
     render(<App />);
-    const trigger = screen.getByRole("button", { name: "すべてのV15ツールを開く" });
+    const trigger = screen.getByRole("button", { name: "すべてのGeoSolverツールを開く" });
     trigger.focus();
     await userEvent.click(trigger);
     expect(await screen.findByRole("dialog", { name: "作図・条件カタログ" })).toBeInTheDocument();
@@ -1395,7 +1415,7 @@ describe("GeoTarget workbench", () => {
       throw new Error(`unexpected fetch ${input}`);
     }));
     render(<App />);
-    await userEvent.click(screen.getByRole("button", { name: "すべてのV15ツールを開く" }));
+    await userEvent.click(screen.getByRole("button", { name: "すべてのGeoSolverツールを開く" }));
     expect(screen.getByRole("alert")).toHaveTextContent("作図カタログを読み込み中");
     expect(screen.getByRole("main")).not.toHaveAttribute("inert");
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
@@ -1409,7 +1429,7 @@ describe("GeoTarget workbench", () => {
     }));
     render(<App />);
     expect(await screen.findByRole("alert")).toHaveTextContent("DSLカタログを読み込めませんでした");
-    await userEvent.click(screen.getByRole("button", { name: "すべてのV15ツールを開く" }));
+    await userEvent.click(screen.getByRole("button", { name: "すべてのGeoSolverツールを開く" }));
     expect(screen.getByRole("alert")).toHaveTextContent("作図カタログを利用できません");
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
@@ -1428,7 +1448,7 @@ describe("GeoTarget workbench", () => {
 
   it("creates a perpendicular foot that remains geometrically derived", async () => {
     render(<App />);
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
     const setup = {
       task: "solve", id: "perpendicular-foot", variables: { names: [] },
       construction: [
@@ -1436,7 +1456,7 @@ describe("GeoTarget workbench", () => {
         { name: "i", expr: "Point(1, 3)" }, { name: "base", expr: "Segment(P2, P3)" },
       ], constraints: [], guards: [], answer: "Distance(P2, P3)", post_process: "",
     };
-    fireEvent.change(screen.getByRole("textbox", { name: "V15 JSON" }), { target: { value: JSON.stringify(setup) } });
+    fireEvent.change(screen.getByRole("textbox", { name: "GeoSolver JSON" }), { target: { value: JSON.stringify(testGeometryProblem(setup)) } });
     await userEvent.click(screen.getByRole("button", { name: "JSONを適用" }));
     await userEvent.click(screen.getByRole("button", { name: "ツール" }));
     await userEvent.click(screen.getByRole("button", { name: "その他のツール" }));
@@ -1453,7 +1473,7 @@ describe("GeoTarget workbench", () => {
 
   it("adds computed angle and ratio values without changing the solver target", async () => {
     render(<App />);
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
     const setup = {
       task: "solve", id: "measurements", variables: { names: [] },
       construction: [
@@ -1461,7 +1481,7 @@ describe("GeoTarget workbench", () => {
         { name: "C", expr: "Point(0, 1)" }, { name: "D", expr: "Point(0, 2)" },
       ], constraints: [], guards: [], answer: "Distance(A, B)", post_process: "",
     };
-    fireEvent.change(screen.getByRole("textbox", { name: "V15 JSON" }), { target: { value: JSON.stringify(setup) } });
+    fireEvent.change(screen.getByRole("textbox", { name: "GeoSolver JSON" }), { target: { value: JSON.stringify(testGeometryProblem(setup)) } });
     await userEvent.click(screen.getByRole("button", { name: "JSONを適用" }));
     await userEvent.click(screen.getByRole("button", { name: "ツール" }));
     await userEvent.click(screen.getByRole("button", { name: "その他のツール" }));
@@ -1470,16 +1490,16 @@ describe("GeoTarget workbench", () => {
     for (const name of ["A", "B", "C"]) await userEvent.click(screen.getByRole("button", { name: new RegExp(`^固定点 ${name}`) }));
     expect(screen.getByRole("region", { name: "測定値" })).toBeInTheDocument();
     expect(screen.getByRole("status", { name: "aの値" })).toHaveTextContent("90.00°");
-    expect(JSON.parse((screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement).value).answer).toBe("Distance(A, B)");
+    expect(JSON.parse((screen.getByRole("textbox", { name: "GeoSolver JSON" }) as HTMLTextAreaElement).value).target).toBe("Distance(A, B)");
 
     await userEvent.click(screen.getByRole("button", { name: "ツール" }));
     await userEvent.click(screen.getByRole("button", { name: "作図ツール 比" }));
     for (const name of ["A", "B", "B", "D"]) await userEvent.click(screen.getByRole("button", { name: new RegExp(`^固定点 ${name}`) }));
     expect(screen.getByRole("status", { name: "rの値" })).toHaveTextContent("0.5");
-    expect(JSON.parse((screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement).value).answer).toBe("Distance(A, B)");
+    expect(JSON.parse((screen.getByRole("textbox", { name: "GeoSolver JSON" }) as HTMLTextAreaElement).value).target).toBe("Distance(A, B)");
 
     await userEvent.click(screen.getByRole("button", { name: "aをターゲットに設定" }));
-    expect(JSON.parse((screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement).value).answer).toBe("Angle(A, B, C)");
+    expect(JSON.parse((screen.getByRole("textbox", { name: "GeoSolver JSON" }) as HTMLTextAreaElement).value).target).toBe("Angle(A, B, C)");
   });
 
   it("shows the math keyboard only from contextual expression fields", async () => {
@@ -1619,11 +1639,12 @@ describe("GeoTarget workbench", () => {
     enterKey.focus();
     await userEvent.keyboard("{Enter}");
     expect(screen.getByRole("combobox", { name: "条件 1" })).toHaveValue("x < 6");
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
-    expect(
-      (screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement)
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
+    const saved = parseEditor(
+      (screen.getByRole("textbox", { name: "GeoSolver JSON" }) as HTMLTextAreaElement)
         .value,
-    ).toContain("AssumeLt(x, 6)");
+    );
+    expect(saved.guards).toContain("AssumeLt(x, 6)");
   });
 
   it("dismisses definition suggestions without discarding the draft", async () => {
@@ -1658,7 +1679,7 @@ describe("GeoTarget workbench", () => {
       "aria-describedby",
       "math-keyboard-status",
     );
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
     await waitFor(() =>
       expect(
         screen.queryByRole("region", { name: "数式キーボード" }),
@@ -1701,13 +1722,13 @@ describe("GeoTarget workbench", () => {
     await userEvent.click(condition);
     await userEvent.click(screen.getByRole("button", { name: "ツール" }));
     await userEvent.click(
-      screen.getByRole("button", { name: "すべてのV15ツールを開く" }),
+      screen.getByRole("button", { name: "すべてのGeoSolverツールを開く" }),
     );
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     expect(
       screen.queryByRole("region", { name: "数式キーボード" }),
     ).not.toBeInTheDocument();
-    const definition = screen.getByRole("combobox", { name: "V15定義式" });
+    const definition = screen.getByRole("combobox", { name: "GeoSolver定義式" });
     await userEvent.click(definition);
     expect(
       screen.getByRole("region", { name: "数式キーボード" }),
@@ -1716,15 +1737,15 @@ describe("GeoTarget workbench", () => {
 
   it("routes point-valued catalog tools by their contract instead of their visual category", async () => {
     render(<App />);
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
     const setup = {
       task: "solve", id: "center-routing", variables: { names: [] },
       construction: [{ name: "O", expr: "Point(0, 0)" }, { name: "R", expr: "Point(2, 0)" }, { name: "c", expr: "CircleThroughPoint(O, R)" }],
       constraints: [], guards: [], answer: "Radius(c)", post_process: "",
     };
-    fireEvent.change(screen.getByRole("textbox", { name: "V15 JSON" }), { target: { value: JSON.stringify(setup) } });
+    fireEvent.change(screen.getByRole("textbox", { name: "GeoSolver JSON" }), { target: { value: JSON.stringify(testGeometryProblem(setup)) } });
     await userEvent.click(screen.getByRole("button", { name: "JSONを適用" }));
-    await userEvent.click(screen.getByRole("button", { name: "すべてのV15ツールを開く" }));
+    await userEvent.click(screen.getByRole("button", { name: "すべてのGeoSolverツールを開く" }));
     await userEvent.click(screen.getByRole("button", { name: /円の中心/ }));
     await userEvent.click(screen.getByRole("button", { name: "図から引数を選ぶ" }));
     await userEvent.click(document.querySelector('[data-object="c"]')!);
@@ -1736,7 +1757,7 @@ describe("GeoTarget workbench", () => {
 
   it("adds a condition even after a construction ID was cleared", async () => {
     render(<App />);
-    await userEvent.click(screen.getByRole("button", { name: "すべてのV15ツールを開く" }));
+    await userEvent.click(screen.getByRole("button", { name: "すべてのGeoSolverツールを開く" }));
     await userEvent.clear(screen.getByLabelText("オブジェクトID"));
     await userEvent.click(screen.getByRole("button", { name: /円上/ }));
     expect(screen.queryByLabelText("オブジェクトID")).not.toBeInTheDocument();
@@ -1788,9 +1809,9 @@ describe("GeoTarget workbench", () => {
 
   it("keeps the catalog keyboard inside its modal and canonicalizes pi", async () => {
     render(<App />);
-    await userEvent.click(screen.getByRole("button", { name: "すべてのV15ツールを開く" }));
+    await userEvent.click(screen.getByRole("button", { name: "すべてのGeoSolverツールを開く" }));
     const dialog = screen.getByRole("dialog");
-    const definition = screen.getByRole("combobox", { name: "V15定義式" });
+    const definition = screen.getByRole("combobox", { name: "GeoSolver定義式" });
     await userEvent.clear(definition);
     await userEvent.type(definition, "Point(");
     const keyboard = screen.getByRole("region", { name: "数式キーボード" });
@@ -1805,8 +1826,8 @@ describe("GeoTarget workbench", () => {
     await userEvent.click(screen.getByRole("button", { name: "構成に追加" }));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(screen.queryByRole("region", { name: "数式キーボード" })).not.toBeInTheDocument();
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
-    expect((screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement).value).toContain('"expr": "Point(pi, 0)"');
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
+    expect((screen.getByRole("textbox", { name: "GeoSolver JSON" }) as HTMLTextAreaElement).value).toContain('"expression": "Point(pi, 0)"');
   });
 
   it("opens the math keyboard from the target formula and canonicalizes pi", async () => {
@@ -1818,8 +1839,8 @@ describe("GeoTarget workbench", () => {
     await userEvent.click(within(keyboard).getByRole("button", { name: "π" }));
     expect(target).toHaveValue("π");
     await userEvent.click(screen.getByRole("button", { name: "ターゲットに設定" }));
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
-    expect((screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement).value).toContain('"answer": "pi"');
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
+    expect((screen.getByRole("textbox", { name: "GeoSolver JSON" }) as HTMLTextAreaElement).value).toContain('"target": "pi"');
   });
 
   it("keeps the solver target caret aligned while canonicalizing pi", async () => {
@@ -1835,13 +1856,13 @@ describe("GeoTarget workbench", () => {
     expect(target).toHaveValue("π/");
     fireEvent.change(target, { target: { value: "π/2" } });
     expect(target).toHaveValue("π/2");
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
-    expect((screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement).value).toContain('"answer": "pi/2"');
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
+    expect((screen.getByRole("textbox", { name: "GeoSolver JSON" }) as HTMLTextAreaElement).value).toContain('"target": "pi/2"');
   });
 
   it("reveals a newly added inequality in the visible conditions list", async () => {
     render(<App />);
-    await userEvent.click(screen.getByRole("button", { name: "すべてのV15ツールを開く" }));
+    await userEvent.click(screen.getByRole("button", { name: "すべてのGeoSolverツールを開く" }));
     await userEvent.click(screen.getByRole("button", { name: /未満/ }));
     const expression = screen.getByRole("combobox", { name: "条件式" });
     expect(expression).toHaveValue("lhs < rhs");
@@ -1851,8 +1872,12 @@ describe("GeoTarget workbench", () => {
     expect(screen.getByRole("button", { name: "代数" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByText("等式・不等式をまとめて表示します。内部形式の違いを意識せず、数式のまま編集できます。")).toBeVisible();
     expect(screen.getByRole("combobox", { name: "条件 1" })).toHaveValue("Distance(A, B) < 6");
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
-    expect((screen.getByRole("textbox", { name: "V15 JSON" }) as HTMLTextAreaElement).value).toContain("AssumeLt(Distance(A, B), 6)");
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
+    const saved = parseEditor(
+      (screen.getByRole("textbox", { name: "GeoSolver JSON" }) as HTMLTextAreaElement)
+        .value,
+    );
+    expect(saved.guards).toContain("AssumeLt(Distance(A, B), 6)");
     await userEvent.click(screen.getByRole("button", { name: "条件 1を削除" }));
     expect(screen.queryByRole("combobox", { name: "条件 1" })).not.toBeInTheDocument();
   });
@@ -1893,11 +1918,12 @@ describe("GeoTarget workbench", () => {
         return new Response(JSON.stringify({
           state: "completed",
           result: {
-            status: "answers_found_completeness_unknown",
-            engine_id: "test-engine",
-            engine_hash: "test-hash",
-            problem_sha256: "problem-hash",
+            status: "solved",
+            completeness: "unknown",
+            engine: { name: "standard", hash: "test-hash" },
+            problem_hash: "problem-hash",
             elapsed_seconds: 0.01,
+            termination_reason: "answer_found",
             warnings: [],
             answers: [],
           },
@@ -1906,10 +1932,10 @@ describe("GeoTarget workbench", () => {
     }));
     render(<App />);
     await openInspector();
-    await userEvent.click(screen.getByRole("tab", { name: "V15 JSON" }));
-    const editor = screen.getByRole("textbox", { name: "V15 JSON" });
+    await userEvent.click(screen.getByRole("tab", { name: "GeoSolver JSON" }));
+    const editor = screen.getByRole("textbox", { name: "GeoSolver JSON" });
     const imported = JSON.parse((editor as HTMLTextAreaElement).value);
-    imported.guards = [""];
+    imported.conditions = [{ predicate: "" }];
     fireEvent.change(editor, { target: { value: JSON.stringify(imported) } });
     await userEvent.click(screen.getByRole("button", { name: "JSONを適用" }));
     await userEvent.click(screen.getByRole("button", { name: "解く" }));
@@ -1917,7 +1943,7 @@ describe("GeoTarget workbench", () => {
     await waitFor(() => expect(screen.getAllByText("完了").length).toBeGreaterThan(0), {
       timeout: 2500,
     });
-    expect((submitted?.problem as { guards: string[] }).guards).toEqual([]);
+    expect((submitted?.problem as { conditions: unknown[] }).conditions).toEqual([]);
     expect(
       screen.queryByText(/計算中に問題が変更されたため/),
     ).not.toBeInTheDocument();
@@ -1957,13 +1983,12 @@ describe("GeoTarget workbench", () => {
         return new Response(JSON.stringify({
           state: "completed",
           result: {
-            status: "answers_found_completeness_unknown",
-            engine_id: "champion-v2",
-            engine_hash: "test-hash",
-            engine_variant: "optimized",
-            problem_sha256: "problem-hash",
-            requested_resources: { max_time_seconds: 900, cores: "auto", seed: 0 },
-            used_resources: { max_time_seconds: 900, cores: 4, seed: 0 },
+            status: "solved",
+            completeness: "unknown",
+            engine: { name: "standard", hash: "test-hash" },
+            problem_hash: "problem-hash",
+            requested_resources: { time_limit_seconds: 900, cores: "auto", seed: 0 },
+            used_resources: { time_limit_seconds: 900, cores: 4, seed: 0 },
             elapsed_seconds: 224.5,
             work_checkpoint: {
               completed_start_ordinals: [0, 1, 2, 3],
@@ -2004,14 +2029,12 @@ describe("GeoTarget workbench", () => {
       { timeout: 2500 },
     );
     expect(submitted?.options).toEqual({
-      engine: "optimized",
-      run_mode: "adaptive",
-      max_time_seconds: 900,
+      engine: "standard",
+      time_limit_seconds: 900,
       cores: "auto",
       seed: 0,
     });
-    expect(submitted?.options).not.toHaveProperty("time_limit_seconds");
-    expect(screen.getByText("champion-v2 · optimized")).toBeInTheDocument();
+    expect(screen.getByText("standard")).toBeInTheDocument();
     expect(screen.getByText("solver計算時間")).toBeInTheDocument();
     expect(screen.getByText("224.500秒")).toBeInTheDocument();
   });
@@ -2023,13 +2046,13 @@ describe("GeoTarget workbench", () => {
     const adaptive = screen.getByRole("radio", { name: /適応/ });
     const fixed = screen.getByRole("radio", { name: /固定時間/ });
     const reference = screen.getByRole("radio", { name: /参照版/ });
-    expect(reference).toBeChecked();
+    expect(adaptive).toBeChecked();
 
     await userEvent.click(adaptive);
-    expect(screen.getAllByText(/未認定候補・実験用/).length).toBeGreaterThan(0);
+    expect(screen.getByText("適応実行", { selector: ".solver-profile-summary strong" })).toBeInTheDocument();
     await userEvent.click(fixed);
     expect(
-      screen.getByText("固定時間（未認定候補）", {
+      screen.getByText("固定時間", {
         selector: ".solver-profile-summary strong",
       }),
     ).toBeInTheDocument();
@@ -2039,12 +2062,12 @@ describe("GeoTarget workbench", () => {
     expect(screen.getByRole("combobox", { name: "使用コア" })).toBeDisabled();
   });
 
-  it("applies the promoted backend qualification tuple atomically", async () => {
+  it("applies backend capabilities atomically", async () => {
     vi.stubGlobal("fetch", vi.fn(async (input: RequestInfo | URL) => {
       const url = String(input);
       if (url.endsWith("/api/v1/dsl/catalog")) return new Response(JSON.stringify(catalog));
       if (url.endsWith("/api/v1/doctor")) return new Response(JSON.stringify({ ok: true }));
-      if (url.endsWith("/api/v1/qualification")) return new Response(JSON.stringify({ default_engine: "optimized", promotion_status: "qualified" }));
+      if (url.endsWith("/api/v1/capabilities")) return new Response(JSON.stringify({ default_engine: "standard", engines: { standard: { supported: true }, reference: { supported: true } } }));
       if (url.endsWith("/api/v1/session")) return new Response(JSON.stringify({ status: "ready" }));
       throw new Error(`unexpected fetch ${url}`);
     }));

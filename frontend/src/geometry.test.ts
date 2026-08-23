@@ -3,7 +3,7 @@ import { evaluateConstrainedScene, evaluateScalarExpression, evaluateScene, form
 import { guidedExpression, guidedSpecs } from "./authoring";
 
 describe("geometry preview", () => {
-  it("derives every visible primitive from V15 construction order", () => {
+  it("derives every visible primitive from GeoSolver construction order", () => {
     const scene = evaluateScene([
       { name: "A", expr: "Point(0, 0)" },
       { name: "B", expr: "Point(3, 4)" },
@@ -56,12 +56,12 @@ describe("geometry preview", () => {
     ], { ts: 0.25, tl: 3, tc: 0.25 });
     expect(scene.warnings).toEqual([]);
     expect(scene.byName.get("S")).toMatchObject({ position: { x: 1, y: 0 } });
-    // V15 Line(A,B) coefficients orient PointOnLine toward A-B.
+    // GeoSolver Line(A,B) coefficients orient PointOnLine toward A-B.
     expect(scene.byName.get("L")).toMatchObject({ position: { x: -3, y: 0 } });
     expect(scene.byName.get("C")).toMatchObject({ position: { x: expect.closeTo(0), y: 2 } });
   });
 
-  it("projects coordinate-free points onto their V15 incidence carrier", () => {
+  it("projects coordinate-free points onto their GeoSolver incidence carrier", () => {
     const scene = evaluateConstrainedScene(
       [
         { name: "I_A", expr: "Point(0, 0)" },

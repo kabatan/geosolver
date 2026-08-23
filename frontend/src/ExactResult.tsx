@@ -2,9 +2,10 @@ import { MathFormula, polynomialToTex } from "./MathFormula";
 import { ApiResult, RunProgress } from "./useSolverJob";
 
 const STATUS_LABELS: Readonly<Record<string, string>> = {
-  answers_found_completeness_unknown: "解を検出（完全性未確定）",
+  solved: "厳密解を検出",
   no_answer_found: "解を検出できませんでした",
-  exact_complete: "厳密解を確定",
+  invalid_problem: "入力エラー",
+  unsupported_platform: "このOSでは利用できません",
   cancelled: "中止",
   validation_error: "入力エラー",
   resource_error: "リソースエラー",
@@ -78,7 +79,7 @@ export default function ExactResult({
           <div className={`result-status status-${result.status}`}>
             {STATUS_LABELS[result.status] ?? result.status}
           </div>
-          {result.detail && <p className="result-detail">{result.detail}</p>}
+          {result.error && <p className="result-detail">{result.error.message}</p>}
           {result.warnings.map((warning) => (
             <p className="warning-strip" key={warning}>
               {warning}
@@ -107,22 +108,35 @@ export default function ExactResult({
                     </button>
                   )}
                 </div>
-                <dl>
-                  <div>
-                    <dt>最小多項式</dt>
-                    <dd className="exact-formula">
-                      <MathFormula
-                        source={polynomialText(answer.minimal_polynomial_high_to_low)}
-                        tex={polynomialToTex(answer.minimal_polynomial_high_to_low)}
-                        label={`最小多項式 ${polynomialText(answer.minimal_polynomial_high_to_low)}`}
-                      />
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>実根 index</dt>
-                    <dd>{answer.selected_real_root_index}</dd>
-                  </div>
-                </dl>
+                {answer.kind === "algebraic" ? (
+                  <dl>
+                    <div>
+                      <dt>最小多項式</dt>
+                      <dd className="exact-formula">
+                        <MathFormula
+                          source={polynomialText(answer.minimal_polynomial)}
+                          tex={polynomialToTex(answer.minimal_polynomial)}
+                          label={`最小多項式 ${polynomialText(answer.minimal_polynomial)}`}
+                        />
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>実根 index</dt>
+                      <dd>{answer.real_root_index}</dd>
+                    </div>
+                  </dl>
+                ) : (
+                  <dl>
+                    <div>
+                      <dt>π係数</dt>
+                      <dd>{answer.pi_coefficient}</dd>
+                    </div>
+                    <div>
+                      <dt>定数項</dt>
+                      <dd>{answer.constant}</dd>
+                    </div>
+                  </dl>
+                )}
                 <details>
                   <summary>完全精度・隔離区間</summary>
                   <dl>
@@ -138,20 +152,21 @@ export default function ExactResult({
                         </button>
                       </dd>
                     </div>
-                    <div>
-                      <dt>隔離区間</dt>
-                      <dd className="exact-formula">
-                        <MathFormula
-                          source={`[${answer.isolating_interval.join(", ")}]`}
-                          tex={`\\left[${answer.isolating_interval.join(",\\,")}\\right]`}
-                          label={`隔離区間 ${answer.isolating_interval.join(" から ")}`}
-                        />
-                      </dd>
-                    </div>
-                    {answer.exact_authority_kind && (
+                    {answer.kind === "algebraic" ? (
                       <div>
-                        <dt>厳密判定方式</dt>
-                        <dd>{answer.exact_authority_kind}</dd>
+                        <dt>隔離区間</dt>
+                        <dd className="exact-formula">
+                          <MathFormula
+                            source={`[${answer.isolating_interval.join(", ")}]`}
+                            tex={`\\left[${answer.isolating_interval.join(",\\,")}\\right]`}
+                            label={`隔離区間 ${answer.isolating_interval.join(" から ")}`}
+                          />
+                        </dd>
+                      </div>
+                    ) : (
+                      <div>
+                        <dt>厳密式</dt>
+                        <dd>{`${answer.pi_coefficient}π + ${answer.constant}`}</dd>
                       </div>
                     )}
                   </dl>
@@ -173,17 +188,16 @@ export default function ExactResult({
             <div>
               <dt>Engine</dt>
               <dd>
-                {result.engine_id}
-                {result.engine_variant && ` · ${result.engine_variant}`}
+                {result.engine.name}
               </dd>
             </div>
             <div>
               <dt>Hash</dt>
-              <dd><code>{result.engine_hash}</code></dd>
+              <dd><code>{result.engine.hash}</code></dd>
             </div>
             <div>
               <dt>Problem SHA</dt>
-              <dd><code>{result.problem_sha256}</code></dd>
+              <dd><code>{result.problem_hash}</code></dd>
             </div>
             <div>
               <dt>完了starts</dt>

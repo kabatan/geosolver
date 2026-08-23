@@ -3,7 +3,7 @@ import { acceptsSceneItem, directPointVariables, freePointDefinition, freedomOf,
 import type { SceneItem } from "./geometry";
 
 describe("visual authoring semantics", () => {
-  it("creates a V15 free point from two scalar variables", () => {
+  it("creates a GeoSolver free point from two scalar variables", () => {
     const definition = freePointDefinition("P", { x: 1.5, y: -2 }, []);
     expect(definition).toEqual({ variables: ["Px", "Py"], expression: "Point(Px, Py)", preview: { Px: 1.5, Py: -2 } });
     expect(directPointVariables({ name: "P", expr: definition.expression }, definition.variables)).toEqual(["Px", "Py"]);

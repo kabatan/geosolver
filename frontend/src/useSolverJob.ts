@@ -1,13 +1,21 @@
 import { useEffect, useReducer, useRef } from "react";
 
-export type ExactAnswer = {
-  minimal_polynomial_high_to_low: Array<number | string>;
-  selected_real_root_index: number;
-  isolating_interval: string[];
-  decimal: string;
-  exact_authority_kind?: string | null;
-  approximate_witness?: Record<string, unknown> | null;
-};
+export type ExactAnswer =
+  | {
+      kind: "algebraic";
+      minimal_polynomial: string[];
+      real_root_index: number;
+      isolating_interval: [string, string];
+      decimal: string;
+      approximate_witness?: Record<string, unknown> | null;
+    }
+  | {
+      kind: "affine_pi";
+      pi_coefficient: string;
+      constant: string;
+      decimal: string;
+      approximate_witness?: Record<string, unknown> | null;
+    };
 
 export type SolverCores = "auto" | number;
 export type ResourceSummary = {
@@ -31,18 +39,17 @@ export type WorkCheckpointSummary = {
 };
 export type ApiResult = {
   status: string;
+  completeness: "proven" | "unknown";
   elapsed_seconds: number;
-  engine_id: string;
-  engine_hash: string;
-  engine_variant?: string;
-  problem_sha256: string;
+  engine: { name: "standard" | "reference"; hash: string };
+  problem_hash: string;
   requested_resources?: ResourceSummary;
   used_resources?: ResourceSummary;
   work_checkpoint?: WorkCheckpointSummary;
   termination_reason?: string | null;
   warnings: string[];
   answers: ExactAnswer[];
-  detail?: string | null;
+  error?: { code: string; message: string } | null;
 };
 export type RunProgress = {
   phase: string;

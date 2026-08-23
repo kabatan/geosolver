@@ -43,7 +43,7 @@ export type { ValidationIssue };
 export const PROJECT_FORMAT_VERSION = 2;
 
 export function saveLastProject(envelope: ProjectEnvelope) {
-  const request = indexedDB.open("geotarget", 2);
+  const request = indexedDB.open("geosolver", 2);
   request.onupgradeneeded = () => {
     if (!request.result.objectStoreNames.contains("projects"))
       request.result.createObjectStore("projects");
@@ -56,7 +56,7 @@ export function saveLastProject(envelope: ProjectEnvelope) {
 }
 
 export function loadLastProject(onLoad: (value: ProjectEnvelope) => void) {
-  const request = indexedDB.open("geotarget", 2);
+  const request = indexedDB.open("geosolver", 2);
   request.onupgradeneeded = () => {
     if (!request.result.objectStoreNames.contains("projects"))
       request.result.createObjectStore("projects");

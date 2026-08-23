@@ -116,10 +116,13 @@ import {
   cloneProblem,
   completeVariablePreview,
   deletionClosure,
+  fromGeometryProblem,
   isDslCatalog,
+  isGeometryProblem,
   isProblem,
   referencesIdentifier,
   replaceIdentifier,
+  toGeometryProblem,
   validIdentifier,
 } from "./problemModel";
 import {
@@ -293,7 +296,7 @@ export function App() {
   );
   const [command, setCommand] = useState(INITIAL_PROBLEM.answer);
   const [jsonDraft, setJsonDraft] = useState(
-    JSON.stringify(INITIAL_PROBLEM, null, 2),
+    JSON.stringify(toGeometryProblem(INITIAL_PROBLEM), null, 2),
   );
   const [jsonDirty, setJsonDirty] = useState(false);
   const [uiError, setUiError] = useState("");
@@ -304,11 +307,10 @@ export function App() {
     checks?: unknown;
     errors?: unknown[];
   }>();
-  // Start fail-closed, then apply the backend qualification policy atomically.
-  const [solverMode, setSolverMode] = useState<SolverMode>("reference");
-  const [optimizedQualified, setOptimizedQualified] = useState(false);
-  const [maxTime, setMaxTime] = useState(180);
-  const [cores, setCores] = useState<SolverCores>(1);
+  const [solverMode, setSolverMode] = useState<SolverMode>("adaptive");
+  const [standardAvailable, setStandardAvailable] = useState(true);
+  const [maxTime, setMaxTime] = useState(900);
+  const [cores, setCores] = useState<SolverCores>("auto");
   const [manualCores, setManualCores] = useState(1);
   const [seed, setSeed] = useState(0);
   const solverJob = useSolverJob(setUiError);
@@ -787,7 +789,7 @@ export function App() {
     loadLastProject((envelope) => {
       setProblem(envelope.problem);
       setCommand(envelope.problem.answer);
-      setJsonDraft(JSON.stringify(envelope.problem, null, 2));
+      setJsonDraft(JSON.stringify(toGeometryProblem(envelope.problem), null, 2));
       setVariablePreview(
         completeVariablePreview(envelope.problem, envelope.ui?.variablePreview),
       );
@@ -826,7 +828,7 @@ export function App() {
       .then((response) => response.json())
       .then(setDoctor)
       .catch(() => setDoctor({ ok: false }));
-    fetch("/api/v1/qualification")
+    fetch("/api/v1/capabilities")
       .then(async (response) => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const payload: unknown = await response.json();
@@ -835,20 +837,18 @@ export function App() {
           typeof payload !== "object" ||
           !("default_engine" in payload) ||
           (payload.default_engine !== "reference" &&
-            payload.default_engine !== "optimized")
+            payload.default_engine !== "standard")
         ) {
-          throw new Error("invalid qualification payload");
+          throw new Error("invalid capability payload");
         }
         return {
           defaultEngine: payload.default_engine,
-          optimizedQualified:
-            "promotion_status" in payload &&
-            payload.promotion_status === "qualified",
+          standardAvailable: payload.default_engine === "standard",
         };
       })
-      .then(({ defaultEngine, optimizedQualified: qualified }) => {
-        setOptimizedQualified(qualified);
-        if (defaultEngine === "optimized") {
+      .then(({ defaultEngine, standardAvailable: qualified }) => {
+        setStandardAvailable(qualified);
+        if (defaultEngine === "standard") {
           setSolverMode("adaptive");
           setMaxTime(900);
           setCores("auto");
@@ -865,7 +865,8 @@ export function App() {
       });
   }, []);
   useEffect(() => {
-    if (!jsonDirty) setJsonDraft(JSON.stringify(problem, null, 2));
+    if (!jsonDirty)
+      setJsonDraft(JSON.stringify(toGeometryProblem(problem), null, 2));
     setCommand(problem.answer);
     solverJob.clearResult();
     setValidation(undefined);
@@ -944,7 +945,7 @@ export function App() {
       const target = event.target;
       if (
         target instanceof HTMLTextAreaElement &&
-        ["条件式", "V15定義式"].includes(
+        ["条件式", "GeoSolver定義式"].includes(
           target.getAttribute("aria-label") ?? "",
         )
       )
@@ -1732,7 +1733,7 @@ export function App() {
       }
     }
     if (!expression || !membership) {
-      setUiError("この図形の交点所属をV15で表現できません");
+      setUiError("この図形の交点所属をGeoSolverで表現できません");
       return undefined;
     }
     if (excludePoint)
@@ -2571,7 +2572,7 @@ export function App() {
       if (!catalogItem) {
         setUiError(
           catalogStatus === "ready"
-            ? `${item.label}は現在のV15カタログにありません`
+            ? `${item.label}は現在のGeoSolverカタログにありません`
             : "作図カタログを読み込み中です",
         );
         return;
@@ -2753,7 +2754,7 @@ export function App() {
         method: "POST",
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(prepared),
+        body: JSON.stringify(toGeometryProblem(prepared)),
       });
       if (!response.ok) throw new Error(`検証API: HTTP ${response.status}`);
       const payload = (await response.json()) as {
@@ -2783,15 +2784,14 @@ export function App() {
           ? "auto"
           : Math.max(1, Math.round(cores));
     const options = {
-      engine: solverMode === "reference" ? "reference" : "optimized",
-      run_mode: solverMode === "adaptive" ? "adaptive" : "fixed_time",
-      max_time_seconds: requestedMaxTime,
+      engine: solverMode === "reference" ? "reference" : "standard",
+      time_limit_seconds: requestedMaxTime,
       cores: requestedCores,
       seed,
     } as const;
     setUiError("");
     await solverJob.start({
-      problem: prepared,
+      problem: toGeometryProblem(prepared),
       options,
       capSeconds: requestedMaxTime,
       usedCores:
@@ -2808,9 +2808,9 @@ export function App() {
   function applyJson() {
     try {
       const parsed = JSON.parse(jsonDraft) as unknown;
-      if (!isProblem(parsed))
-        throw new Error("V15 problemの必須fieldが不足しています");
-      commit(parsed);
+      if (!isGeometryProblem(parsed))
+        throw new Error("GeoSolver problemの必須fieldが不足しています");
+      commit(fromGeometryProblem(parsed));
       setJsonDirty(false);
     } catch (error) {
       setUiError(
@@ -2823,41 +2823,50 @@ export function App() {
     if (!file) return;
     file.text().then((text) => {
       try {
-        const parsed = JSON.parse(text) as Problem | ProjectEnvelope;
-        const imported = "problem" in parsed ? parsed.problem : parsed;
-        if (!isProblem(imported)) throw new Error("V15 problemではありません");
+        const parsed = JSON.parse(text) as unknown;
+        if (!parsed || typeof parsed !== "object")
+          throw new Error("GeoSolver JSONではありません");
+        const envelope = parsed as ProjectEnvelope;
+        const imported =
+          "problem" in envelope
+            ? envelope.problem
+            : isGeometryProblem(parsed)
+              ? fromGeometryProblem(parsed)
+              : undefined;
+        if (!imported || !isProblem(imported))
+          throw new Error("GeoSolver problemではありません");
         const prepared =
-          "problem" in parsed
+          "problem" in envelope
             ? migrateLegacyUiEquationGuards(imported).problem
             : imported;
         const importedPreview = completeVariablePreview(
           prepared,
-          "problem" in parsed ? parsed.ui?.variablePreview : undefined,
+          "problem" in envelope ? envelope.ui?.variablePreview : undefined,
         );
         commit(prepared, importedPreview);
         setSelected(
-          "problem" in parsed
-            ? parsed.ui?.selected || prepared.construction[0]?.name || ""
+          "problem" in envelope
+            ? envelope.ui?.selected || prepared.construction[0]?.name || ""
             : prepared.construction[0]?.name || "",
         );
         setMeasurements(
-          "problem" in parsed ? (parsed.ui?.measurements ?? []) : [],
+          "problem" in envelope ? (envelope.ui?.measurements ?? []) : [],
         );
         if (
-          "problem" in parsed &&
-          parsed.viewport?.center &&
-          parsed.viewport.pixelsPerUnit
+          "problem" in envelope &&
+          envelope.viewport?.center &&
+          envelope.viewport.pixelsPerUnit
         )
           setCamera({
-            center: parsed.viewport.center,
-            pixelsPerUnit: parsed.viewport.pixelsPerUnit,
+            center: envelope.viewport.center,
+            pixelsPerUnit: envelope.viewport.pixelsPerUnit,
           });
-        if ("problem" in parsed && parsed.style) {
-          setGrid(parsed.style.grid ?? true);
-          setSnap(parsed.style.snap ?? true);
-          setShowWitness(parsed.style.witness ?? true);
-          setHidden(new Set(parsed.style.hidden ?? []));
-          setObjectStyles(parsed.style.objects ?? {});
+        if ("problem" in envelope && envelope.style) {
+          setGrid(envelope.style.grid ?? true);
+          setSnap(envelope.style.snap ?? true);
+          setShowWitness(envelope.style.witness ?? true);
+          setHidden(new Set(envelope.style.hidden ?? []));
+          setObjectStyles(envelope.style.objects ?? {});
         }
       } catch (error) {
         setUiError(
@@ -3223,7 +3232,7 @@ export function App() {
       }
     >
       <AppBar
-        projectName={`${problem.id}.geotarget.json`}
+        projectName={`${problem.id}.geosolver-project.json`}
         modalOpen={catalogOpen}
         importRef={importRef}
         onImport={importProject}
@@ -3242,11 +3251,13 @@ export function App() {
               },
               ui: { selected, variablePreview, measurements },
             },
-            ".geotarget.json",
+            ".geosolver-project.json",
             "プロジェクト",
           )
         }
-        onExportJson={() => download(problem, ".json", "V15 JSON")}
+        onExportJson={() =>
+          download(toGeometryProblem(problem), ".json", "GeoSolver JSON")
+        }
         sourceTriggerRef={sourceDrawerTriggerRef}
         sourceOpen={sourceDrawerOpen}
         onToggleSource={() => {
@@ -3794,7 +3805,7 @@ export function App() {
             </button>
             <button
               className="catalog-tool-trigger"
-              aria-label="すべてのV15ツールを開く"
+              aria-label="すべてのGeoSolverツールを開く"
               onClick={() => openCatalog()}
             >
               <MagnifyingGlass />
@@ -4288,7 +4299,7 @@ export function App() {
                 className="json-editor"
               >
                 <textarea
-                  aria-label="V15 JSON"
+                  aria-label="GeoSolver JSON"
                   value={jsonDraft}
                   onChange={(event) => {
                     setJsonDraft(event.target.value);
@@ -4659,7 +4670,7 @@ export function App() {
                       </fieldset>
                     )}
                     <p className="property-kind">
-                      位置はprojectに保存され、solverへ渡すV15定義は変えません。
+                      位置はprojectに保存され、solverへ渡すGeoSolver定義は変えません。
                     </p>
                     <div className="property-actions">
                       {selectedSceneItem?.kind === "point" &&
@@ -4802,14 +4813,14 @@ export function App() {
                     aria-labelledby="property-tab-advanced"
                   >
                     <p className="property-kind">
-                      V15定義は厳密なsource of truthです。高度な式編集はV15
+                      GeoSolver定義は厳密なsource of truthです。高度な式編集はGeoSolver
                       JSONタブで行えます。
                     </p>
                     <MathFormula
                       className="advanced-definition"
                       source={selectedConstruction.expr}
                       display
-                      label={`${selectedConstruction.name}のV15定義`}
+                      label={`${selectedConstruction.name}のGeoSolver定義`}
                     />
                   </div>
                 )}
@@ -4871,11 +4882,11 @@ export function App() {
             <div className="solver-profile-summary" aria-live="polite">
               <strong>
                 {solverMode === "adaptive"
-                  ? optimizedQualified
+                  ? standardAvailable
                     ? "適応実行"
                     : "適応実行（未認定候補）"
                   : solverMode === "fixed"
-                    ? optimizedQualified
+                    ? standardAvailable
                       ? "固定時間"
                       : "固定時間（未認定候補）"
                     : "参照版"}
@@ -4965,7 +4976,7 @@ export function App() {
                   />
                   <span>
                     <strong>適応</strong>
-                    {!optimizedQualified && "未認定候補・実験用。"}
+                    {!standardAvailable && "未認定候補・実験用。"}
                     解が安定した時点で早く終了します
                   </span>
                 </label>
@@ -4983,7 +4994,7 @@ export function App() {
                   />
                   <span>
                     <strong>固定時間</strong>
-                    {!optimizedQualified && "未認定候補・実験用。"}
+                    {!standardAvailable && "未認定候補・実験用。"}
                     指定した上限まで固定workを続けます
                   </span>
                 </label>
@@ -5188,7 +5199,7 @@ export function App() {
           >
             <header>
               <div>
-                <span>{catalog.version}</span>
+                <span>schema {catalog.schema_version}</span>
                 <h2 id="tool-title">作図・条件カタログ</h2>
               </div>
               <button aria-label="閉じる" onClick={closeCatalog}>
@@ -5306,7 +5317,7 @@ export function App() {
                 <label>
                   {["guard", "constraint"].includes(toolOutput(catalogTool))
                     ? "条件式"
-                    : "V15定義式"}
+                    : "GeoSolver定義式"}
                   <ExpressionAutocomplete
                     multiline
                     className={
@@ -5317,7 +5328,7 @@ export function App() {
                     ariaLabel={
                       ["guard", "constraint"].includes(toolOutput(catalogTool))
                         ? "条件式"
-                        : "V15定義式"
+                        : "GeoSolver定義式"
                     }
                     ariaControls="math-keyboard"
                     ariaDescribedBy={
