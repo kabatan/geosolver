@@ -3,9 +3,9 @@ requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
 [project]
-name = "geotarget"
+name = "geosolver"
 version = "1.0.0"
-description = "Frozen-champion numerical geometry solver"
+description = "Cross-platform numerical geometry solver with exact answer assembly"
 requires-python = ">=3.12,<3.13"
 dependencies = [
   "fastapi==0.116.1",
@@ -29,15 +29,24 @@ dev = [
 ]
 
 [project.scripts]
-geotarget = "geotarget.cli:app"
+geosolver = "geosolver.application.cli:app"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/geotarget"]
+packages = ["src/geosolver"]
 
 [tool.hatch.build.targets.wheel.force-include]
-"src/geotarget/_engine/runtime/solver/python/.venv/bin/python" = "geotarget/_engine/runtime/solver/python/.venv/bin/python"
-"julia/Project.toml" = "geotarget/_julia/Project.toml"
-"julia/Manifest.toml" = "geotarget/_julia/Manifest.toml"
+"frontend/dist/client" = "geosolver/frontend"
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "src/geosolver",
+  "frontend/dist/client",
+  "README.md",
+  "pyproject.toml",
+]
+
+[tool.hatch.build.targets.sdist.force-include]
+"frontend/dist/client" = "frontend/dist/client"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -46,7 +55,7 @@ addopts = "-q"
 [tool.ruff]
 target-version = "py312"
 line-length = 100
-exclude = ["src/geotarget/_engine/runtime"]
+exclude = ["src/geosolver/_internal"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
