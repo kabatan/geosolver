@@ -1,0 +1,57 @@
+name: GeoSolver CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    name: ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Linux
+            os: ubuntu-latest
+          - name: Windows
+            os: windows-latest
+          - name: macOS Intel
+            os: macos-13
+          - name: macOS Apple Silicon
+            os: macos-14
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: "1.12.6"
+      - uses: pnpm/action-setup@v4
+        with:
+          version: "10"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - name: Install Python dependencies
+        run: uv sync --all-extras --frozen
+      - name: Instantiate packaged Julia environment
+        run: julia --project=src/geosolver/julia --startup-file=no -e "using Pkg; Pkg.instantiate(); using Nemo"
+      - name: Verify Python and worker behavior
+        run: uv run pytest
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: pnpm install --frozen-lockfile
+      - name: Verify frontend
+        working-directory: frontend
+        run: pnpm test && pnpm build && pnpm test:sites
+      - name: Build clean wheel
+        run: uv build
+      - name: Verify installed wheel without repository imports
+        run: uv run python scripts/verify_wheel.py

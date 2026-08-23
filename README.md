@@ -1,81 +1,84 @@
-# GeoTarget
+# GeoSolver
 
-GeoTarget turns a V15 geometry problem into exact target descriptors with the
-2026-07-22 champion algorithm. The product keeps a byte-identical frozen
-reference engine and permits a separately qualified optimized engine. It
-includes a Python API, CLI, loopback FastAPI service, and a React/SVG
-construction workbench.
+GeoSolverは、有限個の値を答えとして持つ2次元幾何問題を数値探索し、可能な場合は厳密な答えdescriptorを返すsolverです。数値探索は一般には完全性を証明しないため、結果の`completeness`は`proven`または`unknown`として`status`とは独立に返します。
 
-```bash
-uv sync --frozen
-pnpm --dir frontend install --frozen-lockfile
-pnpm --dir frontend build
-uv run geotarget doctor
-uv run geotarget validate examples/problem.json
-uv run geotarget solve examples/problem.json --output result.json
-uv run geotarget ui
-```
+## 対応環境
 
-For a local verification pass:
+- `standard`: Linux、Windows、macOS。既定900秒、180〜900秒、自動コア。
+- `reference`: Linuxのみ。比較用の決定論的な180秒・1コア実行。
+
+WindowsまたはmacOSで`reference`を指定すると、別engineへ切り替えず`unsupported_platform`を返します。
+
+## インストールとCLI
+
+Python 3.12とJuliaを用意し、Julia projectの依存関係をinstantiateしてください。
 
 ```bash
-uv run ruff check .
-PYTHONDONTWRITEBYTECODE=1 uv run pytest -q
-pnpm --dir frontend test
-pnpm --dir frontend test:sites
-pnpm --dir frontend build
+uv sync --extra dev
+julia --project=src/geosolver/julia -e 'import Pkg; Pkg.instantiate()'
+uv run geosolver doctor
+uv run geosolver validate examples/problem.json
+uv run geosolver solve examples/problem.json --output result.json
+uv run geosolver ui
 ```
 
-The qualified default is the `optimized` engine in adaptive mode, with a
-900-second safety cap and automatic physical-core selection. Its stable engine
-hash is `e1309839656f19d8486dbd10bebc4f0730132f8f88ab097ab3fa57e7abb8255f`.
-The experiment-aligned `reference` engine remains available for the one-core,
-180-second reproduction mode.
-`no_answer_found` is not a proof that the source geometry has no solution. See
-`CHARTER.md` and `docs/V15_GEOMETRY_DSL_AUTHORING_MANUAL_ja.md`.
+CLIは`validate`、`solve`、`doctor`、`ui`を提供します。HTTP APIはloopback限定の`/api/v1`です。
 
-Validation is non-coercing: the original JSON scalar types are preserved when
-the document is materialized for the engine because the champion's exact
-replay authority binds to those native source bytes.
+## Python API
 
-The experiment evidence is preserved on branch `experiment` and tag
-`champion-v2-poc-preloaded-20260722`. Raw artifacts are outside Git in the
-checksummed freeze archive described on that branch. The research source
-snapshots corresponding to the packaged frozen runtime are also kept on that
-branch; `main` contains only the product runtime copies required for execution.
+```python
+from geosolver import GeometryProblem, SolveOptions, solve, validate
 
-## Two-engine resource boundary
+problem = GeometryProblem(
+    id="example",
+    variables=["x"],
+    constructions=[],
+    conditions=[{"left": "x", "operator": "=", "right": 1}],
+    target="x",
+)
 
-The frozen reference engine remains byte-identical, including its execution
-order. A qualified optimized engine may change only an equivalent
-implementation or scheduling. In both engines the champion thresholds,
-optimizer, 600 callbacks per start, proposals, high-precision policy,
-restoration, exact authority, and PointOnCircle semantics remain fixed.
+assert validate(problem).valid
+result = solve(problem, SolveOptions(engine="standard", cores="auto"))
+```
 
-The optimized engine has one search-budget exception: only when the first 256
-starts produce zero accepted answers may it add deterministic batches of 64
-starts, with `stability=2` and a `max_time_seconds` safety cap no greater than
-900. Extension start ordinals have no numeric upper bound; only starts that fit
-before the time cap may run. Finding an answer within the first 256 starts
-disables this extension. No other proposal or seed lane may be introduced.
+互換layerはありません。正式なpackage/import/CLI名はすべて`geosolver`です。
 
-Resource coordination may shard only qualified equivalent work and must merge
-attempts and exact descriptors deterministically. Requests that cannot reserve
-the declared physical cores and memory fail instead of downgrading.
-`no_answer_found`, including after the extension, means only that the bounded
-run found no accepted answer. The existing `exact_complete` route remains
-available only when the unchanged exact authority establishes completeness in
-its supported scope; optimization and extension provide no new completeness
-proof.
+## 問題JSON
 
-The optimized callback path compiles supported V15 DAGs as a whole problem.
-For every other V15 program it still fuses the reference-semantics guard and
-hard-feasibility snapshot, so unknown problems do not lose the general
-speedup. The fusion is independent of problem identity and was bit-identical
-on 725 differential probes over the frozen 145-case set.
+```json
+{
+  "id": "example",
+  "variables": ["x"],
+  "constructions": [
+    {"name": "A", "expression": "Point(0, 0)"}
+  ],
+  "conditions": [
+    {"left": "x", "operator": "=", "right": 1},
+    {"left": "x", "operator": ">=", "right": 0},
+    {"predicate": "AcuteTriangle(A, B, C)"}
+  ],
+  "target": "Distance(A, B)"
+}
+```
 
-The final qualification completed all 145 cases with zero lost reference
-descriptors, zero truth-external exact descriptors and zero failures. Median
-reported time was 55.66 seconds versus 136.28 seconds for the frozen reference;
-p95 was 177.38 seconds versus 178.17 seconds. The full report remains outside
-main and is checksum-bound by `src/geotarget/qualification.json`.
+relation operatorは`=`、`!=`、`<`、`<=`、`>`、`>=`です。`right`はbooleanを認めず、整数、浮動小数、厳密式文字列を型を保ったまま扱います。詳しいDSLは[GEOSOLVER_GEOMETRY_DSL_AUTHORING_MANUAL_ja.md](docs/GEOSOLVER_GEOMETRY_DSL_AUTHORING_MANUAL_ja.md)を参照してください。
+
+## 厳密結果
+
+- `algebraic`: 整数係数多項式、実根番号、隔離区間、十進近似。
+- `affine_pi`: 既約有理数のπ係数と定数項、十進近似。
+
+ラジアンの`π/2`は`affine_pi`、`Degrees(...)`で変換した`90`は`algebraic`です。workerのcrash、artifact欠落、artifact破損は`engine_error`であり、正常探索後の`no_answer_found`とは区別されます。
+
+## 開発
+
+```bash
+uv run pytest
+uv run ruff check src tests
+cd frontend
+pnpm test
+pnpm build
+pnpm test:sites
+```
+
+mainには製品runtimeとreleaseに必要なassetだけを置きます。研究実験、全145問の手動release比較、過去の実行物は`experiment` branchで管理します。
