@@ -164,7 +164,7 @@ def select_rescue_boxes(
                 upper_bounds=upper_bounds,
                 source_candidate_ids=(int(candidate.candidate_id),),
                 priority=float(candidate.score),
-                stage="phasea_rescue",
+                stage="search_rescue",
             )
         )
         if len(boxes) >= max_boxes:

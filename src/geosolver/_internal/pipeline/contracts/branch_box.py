@@ -4,14 +4,14 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-STAGE_PHASEA_COMPACT = "phasea_compact"
-STAGE_PHASEA_RESCUE = "phasea_rescue"
+STAGE_SEARCH_COMPACT = "search_compact"
+STAGE_SEARCH_RESCUE = "search_rescue"
 STAGE_OPTIMIZE_FEASIBILITY_LOCK = "optimize_feasibility_lock"
 STAGE_OPTIMIZE_BOUNDARY = "optimize_boundary"
 
 _ALLOWED_STAGES = (
-    STAGE_PHASEA_COMPACT,
-    STAGE_PHASEA_RESCUE,
+    STAGE_SEARCH_COMPACT,
+    STAGE_SEARCH_RESCUE,
     STAGE_OPTIMIZE_FEASIBILITY_LOCK,
     STAGE_OPTIMIZE_BOUNDARY,
 )

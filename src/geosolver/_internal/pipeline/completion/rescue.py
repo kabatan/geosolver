@@ -17,7 +17,7 @@ from geosolver._internal.pipeline.contracts.runtime_budget import RuntimeBudget
 _STABLE_ACCEPTED_STATUSES = ("target_reached", "box_solved", "box_enumerated")
 
 
-def phasec_needs_completion(accepted_candidates: tuple[RefinedCandidate, ...]) -> bool:
+def exact_assembly_needs_completion(accepted_candidates: tuple[RefinedCandidate, ...]) -> bool:
     """Return whether Phase C evidence is too weak to stop the pipeline."""
 
     if not accepted_candidates:

@@ -33,7 +33,6 @@ from geosolver._internal.solver.precision.type_guards.high_precision_mode import
 from geosolver._internal.solver.precision.type_guards.mp_types import MPFloat
 from geosolver.ir.compiler import safe_eval_expr_hp
 
-from .deduplicate_refined_candidates import deduplicate_refined_candidates
 from .finite_difference_jacobian import compute_finite_difference_jacobian
 from .levenberg_marquardt_step import compute_levenberg_marquardt_step
 from .line_search import _point_within_bounds, run_line_search
@@ -806,19 +805,16 @@ class MpmathRefiner(LocalRefinerPort):
                 )
             )
         refined = tuple(refined_list)
-        deduped = deduplicate_refined_candidates(
-            candidates=refined,
-            tolerance=mp.mpf(self.config.dedup_answer_tolerance),
-        )
+        ordered = tuple(sorted(refined, key=lambda candidate: candidate.residual_norm_hp))
         converged_count = sum(
-            1 for candidate in deduped if candidate.refinement_status == TARGET_REACHED
+            1 for candidate in ordered if candidate.refinement_status == TARGET_REACHED
         )
         return RefinementBatchResult(
-            candidates=deduped,
+            candidates=ordered,
             converged_count=converged_count,
             attempted_count=attempted_count,
             solver_name="mpmath_refiner",
-            hard_feasible_count=sum(1 for candidate in deduped if candidate.hard_feasible),
+            hard_feasible_count=sum(1 for candidate in ordered if candidate.hard_feasible),
             attempted_box_count=0,
         )
 

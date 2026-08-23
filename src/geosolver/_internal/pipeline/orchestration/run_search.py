@@ -33,7 +33,7 @@ from geosolver._internal.pipeline.search.scipy_multistart_backend import (
 )
 from geosolver._internal.pipeline.search.select_search_start_points import select_search_start_points
 
-from .run_phase0_probe import Phase0ProbeResult
+from .run_initial_probe import InitialProbeResult
 
 
 def _merge_search_diagnostics(
@@ -79,7 +79,7 @@ def _merge_search_diagnostics(
         merged["local_start_status_counts_by_seed"] = per_seed_counts
     return merged
 
-def _build_phasea_backend(
+def _build_search_backend(
     *,
     config: NomadConfig,
     start_points: list[list[float]],
@@ -118,7 +118,7 @@ def _attach_search_diagnostic(
     )
 
 
-def _run_scipy_phasea_pass(
+def _run_scipy_search_pass(
     *,
     bundle: ProblemBundle,
     evaluator: EvaluatorPort,
@@ -184,7 +184,7 @@ def _build_supplemental_start_points(
     return tuple(supplemental_start_points)
 
 
-def _merge_phasea_results(
+def _merge_search_results(
     *,
     primary: SearchBatchResult,
     supplemental: SearchBatchResult,
@@ -263,7 +263,7 @@ def _merge_search_batch_results(
     )
 
 
-def _phasea_deadline_monotonic(config: NomadConfig) -> float | None:
+def _search_deadline_monotonic(config: NomadConfig) -> float | None:
     if config.max_time_sec is None:
         return None
     max_time_sec = float(config.max_time_sec)
@@ -272,13 +272,13 @@ def _phasea_deadline_monotonic(config: NomadConfig) -> float | None:
     return time.monotonic() + max_time_sec
 
 
-def _remaining_phasea_budget_sec(deadline_monotonic: float | None) -> float | None:
+def _remaining_search_budget_sec(deadline_monotonic: float | None) -> float | None:
     if deadline_monotonic is None:
         return None
     return max(0.0, float(deadline_monotonic - time.monotonic()))
 
 
-def _run_supplemental_phasea_pass(
+def _run_supplemental_search_pass(
     *,
     bundle: ProblemBundle,
     evaluator: EvaluatorPort,
@@ -308,12 +308,12 @@ def _run_supplemental_phasea_pass(
     )
 
 
-def run_phasea_search(
+def run_search(
     *,
     bundle: ProblemBundle,
     evaluator: EvaluatorPort,
     bounds: list[tuple[float, float]],
-    phase0_result: Phase0ProbeResult,
+    initial_probe_result: InitialProbeResult,
     config: NomadConfig,
     search_mode: str = "disco_mads",
     guard_feasible_prefix_min: int = 64,
@@ -322,7 +322,7 @@ def run_phasea_search(
 ) -> SearchBatchResult:
     """Run phase A search with phase-0-derived start points."""
     start_points = select_search_start_points(
-        probe_candidates=phase0_result.candidates,
+        probe_candidates=initial_probe_result.candidates,
         bounds=bounds,
         required_count=len(config.seed_values),
         dedup_distance_threshold=config.start_dedup_distance,
@@ -332,7 +332,7 @@ def run_phasea_search(
         int(guard_feasible_prefix_min),
     )
     if search_mode == SEARCH_MODE_HYBRID_LEGACY_NOMAD:
-        phasea_deadline = _phasea_deadline_monotonic(config)
+        search_deadline = _search_deadline_monotonic(config)
         try:
             nomad_result = NomadBackend(
                 config=config,
@@ -346,7 +346,7 @@ def run_phasea_search(
                 guard_feasible_prefix_count=prefix_count,
             )
         except ImportError as exc:
-            return _run_scipy_phasea_pass(
+            return _run_scipy_search_pass(
                 bundle=bundle,
                 evaluator=evaluator,
                 bounds=bounds,
@@ -356,7 +356,7 @@ def run_phasea_search(
                 constraint_scales=constraint_scales,
                 fallback_reason=exc,
             )
-        remaining_budget_sec = _remaining_phasea_budget_sec(phasea_deadline)
+        remaining_budget_sec = _remaining_search_budget_sec(search_deadline)
         supplemental_start_points = _build_supplemental_start_points(
             start_points=start_points,
             nomad_result=nomad_result,
@@ -374,7 +374,7 @@ def run_phasea_search(
             if remaining_budget_sec is None
             else max(0.0, float(remaining_budget_sec) / 2.0)
         )
-        primary_supplemental_result = _run_supplemental_phasea_pass(
+        primary_supplemental_result = _run_supplemental_search_pass(
             bundle=bundle,
             evaluator=evaluator,
             bounds=bounds,
@@ -385,14 +385,14 @@ def run_phasea_search(
             guard_feasible_prefix_count=prefix_count,
             constraint_scales=constraint_scales,
         )
-        offset_supplemental_result = _run_supplemental_phasea_pass(
+        offset_supplemental_result = _run_supplemental_search_pass(
             bundle=bundle,
             evaluator=evaluator,
             bounds=bounds,
             start_points=offset_supplemental_start_points,
             config=config,
             seed_values=_offset_supplemental_seed_values(seed_values=config.seed_values),
-            budget_sec=_remaining_phasea_budget_sec(phasea_deadline),
+            budget_sec=_remaining_search_budget_sec(search_deadline),
             guard_feasible_prefix_count=prefix_count,
             constraint_scales=constraint_scales,
         )
@@ -400,14 +400,14 @@ def run_phasea_search(
             first=primary_supplemental_result,
             second=offset_supplemental_result,
         )
-        return _merge_phasea_results(
+        return _merge_search_results(
             primary=nomad_result,
             supplemental=supplemental_result,
             bounds=bounds,
             config=config,
             guard_feasible_prefix_count=prefix_count,
         )
-    backend = _build_phasea_backend(
+    backend = _build_search_backend(
         config=config,
         start_points=start_points,
         search_mode=search_mode,
@@ -424,7 +424,7 @@ def run_phasea_search(
     except ImportError as exc:
         if search_mode == SEARCH_MODE_SCIPY_MULTISTART:
             raise
-        return _run_scipy_phasea_pass(
+        return _run_scipy_search_pass(
             bundle=bundle,
             evaluator=evaluator,
             bounds=bounds,

@@ -428,28 +428,28 @@ def run_discrete_target_completion(
     evaluator: object,
     search_result: SearchBatchResult,
     refinement_result: RefinementBatchResult,
-    phasec_result: object,
+    exact_assembly_result: object,
     refiner: MpmathRefiner | None,
     runtime_budget: RuntimeBudget,
     pipeline_config: ExternalPipelineConfig,
 ) -> tuple[RefinementBatchResult, object, dict[str, object]]:
     # Lazily import to avoid making the orchestration package depend on itself
     # while still sharing Phase C acceptance policy.
-    from geosolver._internal.pipeline.orchestration.run_phasec_assembly import run_phasec_assembly
+    from geosolver._internal.pipeline.orchestration.assemble_exact_results import assemble_exact_results
 
-    if phasec_result.accepted_candidates:
+    if exact_assembly_result.accepted_candidates:
         return (
             refinement_result,
-            phasec_result,
+            exact_assembly_result,
             default_discrete_completion_summary(
                 runtime_budget=runtime_budget,
-                skip_reason="phasec_already_accepted",
+                skip_reason="exact_assembly_already_accepted",
             ),
         )
     if refiner is None:
         return (
             refinement_result,
-            phasec_result,
+            exact_assembly_result,
             default_discrete_completion_summary(
                 runtime_budget=runtime_budget,
                 skip_reason="box_solver_path",
@@ -458,7 +458,7 @@ def run_discrete_target_completion(
     if runtime_budget.remaining_sec() <= 0.0:
         return (
             refinement_result,
-            phasec_result,
+            exact_assembly_result,
             default_discrete_completion_summary(
                 runtime_budget=runtime_budget,
                 skip_reason="runtime_exhausted",
@@ -475,7 +475,7 @@ def run_discrete_target_completion(
     if not specs:
         return (
             refinement_result,
-            phasec_result,
+            exact_assembly_result,
             default_discrete_completion_summary(
                 runtime_budget=runtime_budget,
                 skip_reason="integer_constraint_count_lt_1",
@@ -485,7 +485,7 @@ def run_discrete_target_completion(
     if not observations:
         return (
             refinement_result,
-            phasec_result,
+            exact_assembly_result,
             default_discrete_completion_summary(
                 runtime_budget=runtime_budget,
                 skip_reason="no_guard_feasible_integer_observations",
@@ -514,7 +514,7 @@ def run_discrete_target_completion(
         summary["constraint_count"] = len(specs)
         summary["target_intervals"] = [list(interval) for interval in intervals]
         summary["tuple_count"] = tuple_count
-        return refinement_result, phasec_result, summary
+        return refinement_result, exact_assembly_result, summary
     refined_starts_by_source_id = _best_refined_starts_by_source_id(refinement_result.candidates)
     fallback_candidates: list[RefinedCandidate] = []
     fallback_candidate_targets: dict[int, tuple[int, ...]] = {}
@@ -555,13 +555,13 @@ def run_discrete_target_completion(
             best_residual = refined_candidate.residual_norm_hp
     elapsed_sec = time.monotonic() - fallback_started_at
     merged_refinement = refinement_result
-    merged_phasec = phasec_result
+    merged_exact_assembly = exact_assembly_result
     if fallback_candidates:
         merged_refinement = _merge_refinement_results(
             refinement_result=refinement_result,
             fallback_candidates=tuple(fallback_candidates),
         )
-        merged_phasec = run_phasec_assembly(
+        merged_exact_assembly = assemble_exact_results(
             refined_candidates=merged_refinement.candidates,
             input_precision_dps=120,
             residual_threshold=mp.mpf(pipeline_config.acceptance_residual_threshold),
@@ -569,12 +569,12 @@ def run_discrete_target_completion(
         )
     solved_tuples = [
         list(fallback_candidate_targets[int(candidate.candidate_id)])
-        for candidate in merged_phasec.accepted_candidates
+        for candidate in merged_exact_assembly.accepted_candidates
         if int(candidate.candidate_id) in fallback_candidate_targets
     ]
     return (
         merged_refinement,
-        merged_phasec,
+        merged_exact_assembly,
         {
             "strategy_id": DISCRETE_TARGET_STRATEGY_ID,
             "completion_type": "discrete_target_enumeration",
@@ -587,7 +587,7 @@ def run_discrete_target_completion(
             "attempted_tuple_count": attempted_tuple_count,
             "completed_enumeration": completed_enumeration,
             "best_residual": "inf" if not mp.isfinite(best_residual) else str(best_residual),
-            "accepted_count": len(merged_phasec.accepted_candidates),
+            "accepted_count": len(merged_exact_assembly.accepted_candidates),
             "solved_tuples": solved_tuples,
             "elapsed_sec": elapsed_sec,
             "remaining_budget_sec": runtime_budget.remaining_sec(),

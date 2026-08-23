@@ -48,10 +48,10 @@ def _extract_fallback_answers_from_refined(external_result: Any) -> list[Any]:
 
 
 def _extract_external_residual(summary: dict[str, Any]) -> Any:
-    phaseb = summary.get("phaseb")
-    if not isinstance(phaseb, dict):
+    refinement = summary.get("refinement")
+    if not isinstance(refinement, dict):
         return float("inf")
-    best_residual = phaseb.get("best_residual")
+    best_residual = refinement.get("best_residual")
     if best_residual is None:
         return float("inf")
     try:

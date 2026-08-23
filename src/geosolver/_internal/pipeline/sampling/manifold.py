@@ -1,7 +1,7 @@
 """Structure-aware deterministic samplers for Phase 0.
 
 The previous implementation embedded a distance-specific rescue directly in
-``run_phase0_probe``.  This module turns the same idea into an explicit
+``run_initial_probe``.  This module turns the same idea into an explicit
 strategy portfolio: each sampler declares the mathematical structure it uses,
 produces points satisfying that structure, and reports diagnostics under a
 strategy id.  That makes adding future samplers (line, circle, angle, branch

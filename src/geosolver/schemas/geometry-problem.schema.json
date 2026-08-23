@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geosolver.local/schemas/geometry-problem.schema.json",
+  "title": "GeoSolver GeometryProblem",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "variables", "constructions", "conditions", "target"],
+  "properties": {
+    "id": {"type": "string"},
+    "variables": {"type": "array", "items": {"type": "string"}},
+    "constructions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "expression"],
+        "properties": {
+          "name": {"type": "string"},
+          "expression": {"type": "string"}
+        }
+      }
+    },
+    "conditions": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["left", "operator", "right"],
+            "properties": {
+              "left": {"type": "string"},
+              "operator": {"enum": ["=", "!=", "<", "<=", ">", ">="]},
+              "right": {"type": ["integer", "number", "string"]}
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["predicate"],
+            "properties": {"predicate": {"type": "string"}}
+          }
+        ]
+      }
+    },
+    "target": {"type": "string"}
+  }
+}

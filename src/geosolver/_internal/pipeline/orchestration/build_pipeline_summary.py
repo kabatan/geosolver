@@ -12,8 +12,8 @@ from geosolver._internal.pipeline.contracts.candidate_record import (
 )
 from geosolver._internal.pipeline.evaluator.classify_evaluation_failure import EvaluationStatus
 
-from .run_phase0_probe import Phase0ProbeResult
-from .run_phasec_assembly import PhaseCAssemblyResult
+from .run_initial_probe import InitialProbeResult
+from .assemble_exact_results import ExactAssemblyResult
 
 
 def _best_residual_text(result: RefinementBatchResult) -> str:
@@ -43,7 +43,7 @@ def _best_refined_candidate(
 def _selected_refined_candidate(
     *,
     refinement_result: RefinementBatchResult,
-    assembly_result: PhaseCAssemblyResult,
+    assembly_result: ExactAssemblyResult,
 ) -> RefinedCandidate | None:
     if assembly_result.accepted_candidates:
         return assembly_result.accepted_candidates[0]
@@ -85,18 +85,18 @@ def _candidate_ids(candidates: tuple[RefinedCandidate, ...]) -> list[int]:
 
 def build_pipeline_summary(
     *,
-    phase0_result: Phase0ProbeResult,
+    initial_probe_result: InitialProbeResult,
     search_result: SearchBatchResult,
     refinement_result: RefinementBatchResult,
-    assembly_result: PhaseCAssemblyResult,
-    phase_rescue_summary: dict[str, object] | None = None,
-    phase_integer_fallback_summary: dict[str, object] | None = None,
+    assembly_result: ExactAssemblyResult,
+    rescue_search_summary: dict[str, object] | None = None,
+    integer_fallback_summary: dict[str, object] | None = None,
     debug_candidates: tuple[dict[str, object], ...] = (),
 ) -> dict[str, object]:
     """Build phase-level summary object."""
     rescue_summary = (
-        dict(phase_rescue_summary)
-        if isinstance(phase_rescue_summary, dict)
+        dict(rescue_search_summary)
+        if isinstance(rescue_search_summary, dict)
         else {
             "triggered": False,
             "box_count": 0,
@@ -107,8 +107,8 @@ def build_pipeline_summary(
         }
     )
     integer_summary = (
-        dict(phase_integer_fallback_summary)
-        if isinstance(phase_integer_fallback_summary, dict)
+        dict(integer_fallback_summary)
+        if isinstance(integer_fallback_summary, dict)
         else {
             "triggered": False,
             "skip_reason": "not_attempted",
@@ -123,7 +123,7 @@ def build_pipeline_summary(
             "remaining_budget_sec": None,
         }
     )
-    phasea_summary: dict[str, object] = {
+    search_summary: dict[str, object] = {
         "evaluation_count": search_result.evaluation_count,
         "failure_ratio": search_result.failure_ratio,
         "selected_candidates": len(search_result.candidates),
@@ -141,10 +141,10 @@ def build_pipeline_summary(
         "compact_candidate_count": len(search_result.candidates),
     }
     if search_result.search_diagnostics:
-        phasea_summary.update(dict(search_result.search_diagnostics))
-    local_start_events = phasea_summary.get("local_start_events")
+        search_summary.update(dict(search_result.search_diagnostics))
+    local_start_events = search_summary.get("local_start_events")
     if isinstance(local_start_events, (tuple, list)):
-        phasea_summary["local_start_events"] = list(local_start_events)
+        search_summary["local_start_events"] = list(local_start_events)
     selected_candidate = _selected_refined_candidate(
         refinement_result=refinement_result,
         assembly_result=assembly_result,
@@ -152,9 +152,9 @@ def build_pipeline_summary(
     best_candidate_id = _candidate_id(selected_candidate)
     accepted_candidate_ids = _candidate_ids(assembly_result.accepted_candidates)
     summary = {
-        "phase0": dict(phase0_result.metrics),
-        "phasea": phasea_summary,
-        "phaseb": {
+        "initial_probe": dict(initial_probe_result.metrics),
+        "search": search_summary,
+        "refinement": {
             "attempted_count": refinement_result.attempted_count,
             "converged_count": refinement_result.converged_count,
             "best_residual": _best_residual_text(refinement_result),
@@ -162,7 +162,7 @@ def build_pipeline_summary(
             "hard_feasible_count": refinement_result.hard_feasible_count,
             "attempted_box_count": refinement_result.attempted_box_count,
         },
-        "phasec": {
+        "exact_assembly": {
             "accepted_count": len(assembly_result.accepted_candidates),
             "answer_values": list(assembly_result.answer_values),
             "rejected_false_positive_count": assembly_result.rejected_false_positive_count,

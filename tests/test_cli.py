@@ -1,79 +1,29 @@
+from __future__ import annotations
+
+import json
+
 from typer.testing import CliRunner
 
-from geotarget.cli import app
+from geosolver.application.cli import app
 
 
-def test_cli_validate_uses_public_validation_contract() -> None:
-    result = CliRunner().invoke(app, ["validate", "examples/problem.json"])
-    assert result.exit_code == 0
-    assert '"valid": true' in result.stdout
-
-
-def test_cli_serializes_optimized_options(monkeypatch) -> None:
-    captured = {}
-
-    def fake_solve(problem, options):
-        del problem
-        captured.update(options.model_dump())
-        return type(
-            "Result",
-            (),
+def test_validate_cli_uses_new_problem_schema(tmp_path) -> None:
+    path = tmp_path / "問題.json"
+    path.write_text(
+        json.dumps(
             {
-                "status": "exact_complete",
-                "model_dump": lambda self, **kwargs: {"status": self.status},
+                "id": "cli",
+                "variables": ["x"],
+                "constructions": [],
+                "conditions": [{"left": "x", "operator": "=", "right": 1}],
+                "target": "x",
             },
-        )()
-
-    monkeypatch.setattr("geotarget.cli.solve_problem", fake_solve)
-    result = CliRunner().invoke(
-        app,
-        [
-            "solve",
-            "examples/problem.json",
-            "--engine",
-            "optimized",
-            "--run-mode",
-            "adaptive",
-            "--max-time",
-            "600",
-            "--cores",
-            "auto",
-        ],
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
     )
 
-    assert result.exit_code == 0
-    assert captured == {
-        "engine": "optimized",
-        "run_mode": "adaptive",
-        "max_time_seconds": 600.0,
-        "cores": "auto",
-        "seed": 0,
-    }
-
-
-def test_cli_uses_qualified_optimized_default(monkeypatch) -> None:
-    captured = {}
-
-    def fake_solve(problem, options):
-        del problem
-        captured.update(options.model_dump())
-        return type(
-            "Result",
-            (),
-            {
-                "status": "exact_complete",
-                "model_dump": lambda self, **kwargs: {"status": self.status},
-            },
-        )()
-
-    monkeypatch.setattr("geotarget.cli.solve_problem", fake_solve)
-    result = CliRunner().invoke(app, ["solve", "examples/problem.json"])
+    result = CliRunner().invoke(app, ["validate", str(path)])
 
     assert result.exit_code == 0
-    assert captured == {
-        "engine": "optimized",
-        "run_mode": "adaptive",
-        "max_time_seconds": 900.0,
-        "cores": "auto",
-        "seed": 0,
-    }
+    assert json.loads(result.stdout)["valid"] is True

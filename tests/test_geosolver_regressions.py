@@ -81,8 +81,12 @@ def test_cancelling_one_session_does_not_cancel_another() -> None:
             )
 
     with ThreadPoolExecutor(max_workers=2) as executor:
-        cancelled = executor.submit(solve, problem_with_value(), options(), runner=SessionRunner(True))
-        completed = executor.submit(solve, problem_with_value(), options(), runner=SessionRunner(False))
+        cancelled = executor.submit(
+            solve, problem_with_value(), options(), runner=SessionRunner(True)
+        )
+        completed = executor.submit(
+            solve, problem_with_value(), options(), runner=SessionRunner(False)
+        )
 
     assert cancelled.result().status == "cancelled"
     assert completed.result().status == "solved"
@@ -137,3 +141,28 @@ def test_reference_engine_is_not_silently_replaced_off_linux(
 
     assert result.status == "unsupported_platform"
     assert result.engine.name == "reference"
+
+
+@pytest.mark.skipif(platform.system() != "Linux", reason="reference is Linux-only")
+def test_frozen_smoke_descriptors_match_standard_and_reference() -> None:
+    corpus = [
+        problem_with_value(),
+        GeometryProblem(
+            id="right-angle",
+            variables=[],
+            constructions=[
+                {"name": "A", "expression": "Point(0, 0)"},
+                {"name": "B", "expression": "Point(1, 0)"},
+                {"name": "C", "expression": "Point(0, 1)"},
+            ],
+            conditions=[],
+            target="Angle(B, A, C)",
+        ),
+    ]
+    for problem in corpus:
+        standard = solve(problem, options())
+        reference = solve(problem, SolveOptions(engine="reference"))
+        assert standard.status == reference.status == "solved"
+        assert [answer.canonical_key() for answer in standard.answers] == [
+            answer.canonical_key() for answer in reference.answers
+        ]

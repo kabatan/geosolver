@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import json
 import subprocess
+from dataclasses import dataclass
+from pathlib import Path
 
 from mpmath import mp
 
@@ -91,8 +92,8 @@ class JuliaBoxSolver(BoxSolverPort):
         if self.command is not None:
             return list(self.command)
         command: list[str] = ["julia"]
-        if self.project_dir is not None and self.project_dir.strip():
-            command.append(f"--project={self.project_dir}")
+        project = self.project_dir or str(Path(__file__).resolve().parents[3] / "julia")
+        command.append(f"--project={project}")
         if self.entry_script is not None and self.entry_script.strip():
             command.append(self.entry_script)
         return command
@@ -107,8 +108,9 @@ class JuliaBoxSolver(BoxSolverPort):
             check=False,
         )
         if process.returncode != 0:
+            stderr = process.stderr.strip()
             raise RuntimeError(
-                f"Julia sidecar failed: returncode={process.returncode}, stderr={process.stderr.strip()}"
+                f"Julia sidecar failed: returncode={process.returncode}, stderr={stderr}"
             )
         if process.stdout.strip() == "":
             raise RuntimeError("Julia sidecar returned empty stdout")

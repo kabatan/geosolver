@@ -5,9 +5,9 @@ from __future__ import annotations
 import os
 import shutil
 import time
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable
 
 from .protocol import KernelError, KernelResponse, dumps_request
 
@@ -22,11 +22,7 @@ DEFAULT_JULIA_BINDIR = str(
 
 
 def _default_project() -> str:
-    path = Path(__file__).resolve()
-    try:
-        return str(path.parents[5] / "julia" / "GeoSolverKernel")
-    except IndexError:
-        return "julia/GeoSolverKernel"
+    return str(Path(__file__).resolve().parents[3] / "julia")
 
 
 DEFAULT_JULIA_PROJECT = _default_project()

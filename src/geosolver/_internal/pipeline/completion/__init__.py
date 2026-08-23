@@ -3,11 +3,11 @@
 from .rescue import (
     default_rescue_completion_summary,
     merge_search_candidates_with_rescue,
-    phasec_needs_completion,
+    exact_assembly_needs_completion,
 )
 
 __all__ = [
     "default_rescue_completion_summary",
     "merge_search_candidates_with_rescue",
-    "phasec_needs_completion",
+    "exact_assembly_needs_completion",
 ]

@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geosolver.local/schemas/solve-result.schema.json",
+  "title": "GeoSolver SolveResult",
+  "type": "object",
+  "required": ["status", "completeness", "engine", "problem_hash", "answers", "termination_reason"],
+  "properties": {
+    "status": {"enum": ["solved", "no_answer_found", "cancelled", "invalid_problem", "resource_error", "unsupported_platform", "engine_error"]},
+    "completeness": {"enum": ["proven", "unknown"]},
+    "engine": {
+      "type": "object",
+      "required": ["name", "hash"],
+      "properties": {
+        "name": {"enum": ["standard", "reference"]},
+        "hash": {"type": "string"}
+      }
+    },
+    "problem_hash": {"type": "string"},
+    "answers": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["kind", "minimal_polynomial", "real_root_index", "isolating_interval", "decimal"],
+            "properties": {
+              "kind": {"const": "algebraic"},
+              "minimal_polynomial": {"type": "array", "items": {"type": "string"}},
+              "real_root_index": {"type": "integer"},
+              "isolating_interval": {"type": "array", "prefixItems": [{"type": "string"}, {"type": "string"}], "minItems": 2, "maxItems": 2},
+              "decimal": {"type": "string"}
+            }
+          },
+          {
+            "type": "object",
+            "required": ["kind", "pi_coefficient", "constant", "decimal"],
+            "properties": {
+              "kind": {"const": "affine_pi"},
+              "pi_coefficient": {"type": "string"},
+              "constant": {"type": "string"},
+              "decimal": {"type": "string"}
+            }
+          }
+        ]
+      }
+    },
+    "termination_reason": {"type": "string"},
+    "error": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "object", "required": ["code", "message"], "properties": {"code": {"type": "string"}, "message": {"type": "string"}}}
+      ]
+    }
+  }
+}

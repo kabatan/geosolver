@@ -8,7 +8,7 @@ failure signatures.
 from geosolver._internal.pipeline.completion import (
     default_rescue_completion_summary,
     merge_search_candidates_with_rescue,
-    phasec_needs_completion,
+    exact_assembly_needs_completion,
 )
 from geosolver._internal.pipeline.discrete import (
     IntegerTargetObservation,
@@ -31,6 +31,6 @@ __all__ = [
     "default_discrete_completion_summary",
     "default_rescue_completion_summary",
     "merge_search_candidates_with_rescue",
-    "phasec_needs_completion",
+    "exact_assembly_needs_completion",
     "run_discrete_target_completion",
 ]

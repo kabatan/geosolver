@@ -11,7 +11,7 @@ from geosolver._internal.pipeline.contracts.problem_bundle import ProblemBundle
 from geosolver._internal.pipeline.refine.mpmath_refiner import MpmathRefiner
 
 
-def run_phaseb_refinement(
+def run_refinement(
     *,
     bundle: ProblemBundle,
     evaluator: EvaluatorPort,

@@ -21,7 +21,7 @@ PHASE0_POINTS_PER_SEED_DEFAULT = 50
 EXACT_DISTANCE_SAMPLE_COUNT = 12
 
 
-def derive_phase0_seeds(
+def derive_initial_probe_seeds(
     external_seed: int,
     *,
     count: int = len(PHASE0_SEEDS),
@@ -31,7 +31,7 @@ def derive_phase0_seeds(
 
 
 @dataclass(frozen=True)
-class Phase0ProbeResult:
+class InitialProbeResult:
     """Phase 0 probe output."""
 
     candidates: tuple[FloatCandidate, ...]
@@ -40,13 +40,13 @@ class Phase0ProbeResult:
 
 
 
-def augment_phase0_with_exact_distance_samples(
+def augment_initial_probe_with_exact_distance_samples(
     *,
     bundle: ProblemBundle,
     evaluator: EvaluatorPort,
     bounds: list[tuple[float, float]],
-    phase0_result: Phase0ProbeResult,
-) -> Phase0ProbeResult:
+    initial_probe_result: InitialProbeResult,
+) -> InitialProbeResult:
     """Backwards-compatible wrapper for structure-aware Phase 0 samplers.
 
     The implementation now lives in ``pipeline.sampling`` so deterministic
@@ -58,13 +58,13 @@ def augment_phase0_with_exact_distance_samples(
         bundle=bundle,
         evaluator=evaluator,
         bounds=bounds,
-        candidates=phase0_result.candidates,
-        metrics=dict(phase0_result.metrics),
+        candidates=initial_probe_result.candidates,
+        metrics=dict(initial_probe_result.metrics),
     )
-    return Phase0ProbeResult(
+    return InitialProbeResult(
         candidates=candidates,
         metrics=metrics,
-        constraint_scales=phase0_result.constraint_scales,
+        constraint_scales=initial_probe_result.constraint_scales,
     )
 
 
@@ -101,13 +101,13 @@ def _compute_constraint_scales(
     return scales
 
 
-def run_phase0_probe(
+def run_initial_probe(
     *,
     evaluator: EvaluatorPort,
     bounds: list[tuple[float, float]],
     points_per_seed: int = PHASE0_POINTS_PER_SEED_DEFAULT,
     seeds: tuple[int, ...] = PHASE0_SEEDS,
-) -> Phase0ProbeResult:
+) -> InitialProbeResult:
     """Generate random probe points and keep finite candidates."""
     total_points = 0
     finite_points = 0
@@ -163,7 +163,7 @@ def run_phase0_probe(
         "best_random_point": best_point,
         "constraint_scales": constraint_scales,
     }
-    return Phase0ProbeResult(
+    return InitialProbeResult(
         candidates=tuple(records),
         metrics=metrics,
         constraint_scales=constraint_scales,

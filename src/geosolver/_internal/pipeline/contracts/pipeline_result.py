@@ -27,7 +27,7 @@ class ExternalPipelineResult:
     """Top-level contract returned by external pipeline orchestration.
 
     The ``summary`` payload is expected to include stable top-level keys:
-    ``phase0``, ``phasea``, ``phaseb``, ``phasec``, ``phase_rescue``,
+    ``initial_probe``, ``search``, ``refinement``, ``exact_assembly``, ``phase_rescue``,
     ``phase_integer_fallback``, and ``debug_candidates``.
     """
 
