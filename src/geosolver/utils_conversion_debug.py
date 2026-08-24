@@ -6,10 +6,10 @@ from typing import Any, Dict, Optional
 import re
 import traceback
 
-from geosolver._internal.config.environment.exception_debug_flag import (
+from geosolver.engine.standard.config.environment.exception_debug_flag import (
     debug_exceptions_enabled as _debug_exceptions_enabled_from_env,
 )
-from geosolver._internal.observability.logging.compat import emit_legacy_log
+from geosolver.runtime.logging.compat import emit_legacy_log
 
 
 def to_mpf_sanitized(val: Any, *, dps: Optional[int] = None) -> Any:

@@ -6,10 +6,10 @@ from typing import List, Sequence
 
 from mpmath import mp, mpf
 
-from geosolver._internal.solver.precision.type_guards.high_precision_contamination_error import (
+from geosolver.engine.standard.precision.type_guards.high_precision_contamination_error import (
     HighPrecisionContaminationError,
 )
-from geosolver._internal.solver.precision.type_guards.strict_to_mpf import strict_to_mpf
+from geosolver.engine.standard.precision.type_guards.strict_to_mpf import strict_to_mpf
 
 
 def to_mpf(value: object) -> mpf:

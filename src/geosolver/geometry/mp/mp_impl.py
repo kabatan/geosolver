@@ -19,7 +19,7 @@ from functools import partial
 from typing import Optional, Tuple, List, Callable, Union, Dict
 
 from geosolver.utils import to_mpf_sanitized
-from geosolver._internal.config.environment.mp_degenerate_floors import (
+from geosolver.engine.standard.config.environment.mp_degenerate_floors import (
     get_mp_degenerate_abs_floor,
     get_mp_degenerate_rel_floor,
 )

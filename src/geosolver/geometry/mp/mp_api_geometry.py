@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from mpmath import mpf
 
-from geosolver._internal.solver.precision.type_guards.high_precision_contamination_error import (
+from geosolver.engine.standard.precision.type_guards.high_precision_contamination_error import (
     HighPrecisionContaminationError,
 )
-from geosolver._internal.solver.precision.type_guards.strict_to_mpf import strict_to_mpf
+from geosolver.engine.standard.precision.type_guards.strict_to_mpf import strict_to_mpf
 from .mp_api_geometry_centers import (
     MP_FeuerbachPoint,
     MP_FermatPoint,

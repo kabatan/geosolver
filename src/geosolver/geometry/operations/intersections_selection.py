@@ -15,7 +15,7 @@ def _emit_selection_trace(
     selected_index: int,
 ) -> None:
     try:
-        from geosolver._internal.pipeline.evaluator.selection_trace import (
+        from geosolver.engine.standard.evaluation.selection_trace import (
             record_selection_trace,
         )
     except Exception:

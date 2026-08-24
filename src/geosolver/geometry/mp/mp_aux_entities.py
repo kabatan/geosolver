@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from mpmath import mp, mpf, sqrt as mp_sqrt
 
-from geosolver._internal.solver.precision.type_guards.strict_to_mpf import strict_to_mpf
+from geosolver.engine.standard.precision.type_guards.strict_to_mpf import strict_to_mpf
 
 if TYPE_CHECKING:
     from geosolver.geometry.mp.mp_impl import MPPoint

@@ -156,7 +156,7 @@ def high_precision_geometry_mode(precision: int = 100):
 
     Note:
         INV-12 対応: WP6_5モンキーパッチが含まれる HP モードコンテキストマネージャ
-        (``geosolver._internal.solver.precision.type_guards.high_precision_mode``)
+        (``geosolver.engine.standard.precision.type_guards.high_precision_mode``)
         とは別物。このコンテキストマネージャは geometry バックエンドの切り替え専用。
     """
     with use_runtime(backend=BackendType.MPMATH, precision=precision) as runtime:
@@ -171,7 +171,7 @@ def high_precision_mode(precision: int = 100):
         ``high_precision_geometry_mode(precision)`` を使用してください。
         このエイリアスは将来のバージョンで削除されます。
         WP6_5 動的ガード付きの HP mode コンテキストマネージャ
-        (``geosolver._internal.solver.precision.type_guards.high_precision_mode``)
+        (``geosolver.engine.standard.precision.type_guards.high_precision_mode``)
         とは別物です（INV-12）。
     """
     import warnings

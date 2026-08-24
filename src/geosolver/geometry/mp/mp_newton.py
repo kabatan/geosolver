@@ -6,11 +6,11 @@ from typing import Callable, List, Optional, Tuple
 
 from mpmath import mp, mpf, sqrt as mp_sqrt
 
-from geosolver._internal.observability.logging.compat import emit_legacy_log
-from geosolver._internal.solver.precision.type_guards.high_precision_contamination_error import (
+from geosolver.runtime.logging.compat import emit_legacy_log
+from geosolver.engine.standard.precision.type_guards.high_precision_contamination_error import (
     HighPrecisionContaminationError,
 )
-from geosolver._internal.solver.precision.type_guards.strict_to_mpf import strict_to_mpf
+from geosolver.engine.standard.precision.type_guards.strict_to_mpf import strict_to_mpf
 
 
 DAMPING_GROWTH_FACTOR = mpf(6) / 5
