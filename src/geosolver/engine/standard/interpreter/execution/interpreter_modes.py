@@ -41,8 +41,8 @@ from geosolver.engine.standard.precision.type_guards.should_use_mpmath import (
     precision_backend_name,
     should_use_mpmath,
 )
-from geosolver.engine.standard.solve.legacy_solve_tolerances import solve_residual_tolerance
-from geosolver.engine.standard.solve import solve
+from geosolver.engine.standard.solver.tolerances import solve_residual_tolerance
+from geosolver.engine.standard.solver import solve
 
 from .interpreter_hp_helpers import (
     collect_hp_float_return_symbols as _collect_hp_float_return_symbols,

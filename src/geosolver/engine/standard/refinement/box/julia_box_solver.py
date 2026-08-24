@@ -18,7 +18,7 @@ from geosolver.engine.standard.contracts.evaluator_port import EvaluatorPort
 from geosolver.engine.standard.contracts.problem_bundle import ProblemBundle
 from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
 
-from ..contracts.box_solver_port import BoxSolverPort, TaskKind
+from ...contracts.box_solver_port import BoxSolverPort, TaskKind
 
 _BOX_SOLVER_NAME = "julia_box_solver"
 _PROTOCOL_VERSION = 1

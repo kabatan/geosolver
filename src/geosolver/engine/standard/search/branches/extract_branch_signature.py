@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from collections.abc import Callable, Sequence
 
-from geosolver.engine.standard.branches.branch_decision import BranchDecision
-from geosolver.engine.standard.branches.branch_signature import BranchSignature
-from geosolver.engine.standard.optimization.mp.mp_residual_vector import mp_residual_vector
+from geosolver.engine.standard.search.branches.branch_decision import BranchDecision
+from geosolver.engine.standard.search.branches.branch_signature import BranchSignature
+from geosolver.engine.standard.refinement.optimization.mp.mp_residual_vector import mp_residual_vector
 from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
 
 

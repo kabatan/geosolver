@@ -1,6 +1,6 @@
 """Identify exact form for a single numeric value."""
 
-from .algebraic_compat import identify
+from .algebraic import identify
 from .pslq import find_polynomial_pslq
 from .strict_verify import is_exact_match
 from .minimal_polynomial import compute_minimal_polynomial

@@ -7,7 +7,7 @@ from collections.abc import Callable, Sequence
 from mpmath import mp
 
 from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
-from geosolver.engine.standard.families.solution_family import SolutionFamily
+from geosolver.engine.standard.refinement.families.solution_family import SolutionFamily
 
 
 def cluster_solutions_into_families(

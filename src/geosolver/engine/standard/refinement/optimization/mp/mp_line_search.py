@@ -7,9 +7,9 @@ from collections.abc import Callable, Sequence
 from mpmath import mp
 
 from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
-from geosolver.engine.standard.optimization.mp.mp_residual_vector import mp_residual_vector
-from geosolver.engine.standard.optimization.mp.mp_residual_norm import mp_residual_norm
-from geosolver.engine.standard.optimization.mp.mp_clamp_to_bounds import mp_clamp_to_bounds
+from geosolver.engine.standard.refinement.optimization.mp.mp_residual_vector import mp_residual_vector
+from geosolver.engine.standard.refinement.optimization.mp.mp_residual_norm import mp_residual_norm
+from geosolver.engine.standard.refinement.optimization.mp.mp_clamp_to_bounds import mp_clamp_to_bounds
 
 
 def mp_backtracking_line_search(

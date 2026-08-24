@@ -11,12 +11,12 @@ from mpmath import mp
 
 from geosolver.engine.standard.precision.type_guards.high_precision_mode import high_precision_mode
 from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
-from geosolver.engine.standard.optimization.mp.mp_residual_vector import mp_residual_vector
-from geosolver.engine.standard.optimization.mp.mp_residual_norm import mp_residual_norm
-from geosolver.engine.standard.optimization.mp.mp_jacobian import compute_mp_jacobian
-from geosolver.engine.standard.optimization.mp.mp_gauss_newton_step import compute_gauss_newton_step
-from geosolver.engine.standard.optimization.mp.mp_line_search import mp_backtracking_line_search
-from geosolver.engine.standard.optimization.mp.mp_clamp_to_bounds import mp_clamp_to_bounds
+from geosolver.engine.standard.refinement.optimization.mp.mp_residual_vector import mp_residual_vector
+from geosolver.engine.standard.refinement.optimization.mp.mp_residual_norm import mp_residual_norm
+from geosolver.engine.standard.refinement.optimization.mp.mp_jacobian import compute_mp_jacobian
+from geosolver.engine.standard.refinement.optimization.mp.mp_gauss_newton_step import compute_gauss_newton_step
+from geosolver.engine.standard.refinement.optimization.mp.mp_line_search import mp_backtracking_line_search
+from geosolver.engine.standard.refinement.optimization.mp.mp_clamp_to_bounds import mp_clamp_to_bounds
 
 
 _DEFAULT_MAX_ITERATIONS = 50

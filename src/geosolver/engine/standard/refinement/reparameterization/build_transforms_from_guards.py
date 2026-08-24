@@ -8,7 +8,7 @@ import mpmath as mp
 
 from geosolver.engine.standard.interpreter.guards.compile import GuardBoundHint, GuardIR
 from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
-from geosolver.engine.standard.reparameterization.variable_transform import (
+from geosolver.engine.standard.refinement.reparameterization.variable_transform import (
     VariableTransform,
 )
 

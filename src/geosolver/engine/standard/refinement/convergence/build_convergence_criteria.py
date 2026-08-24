@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from mpmath import mp
 
-from geosolver.engine.standard.convergence.convergence_criteria import ConvergenceCriteria
+from geosolver.engine.standard.refinement.convergence.convergence_criteria import ConvergenceCriteria
 from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
 
 

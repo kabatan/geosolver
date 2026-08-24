@@ -5,7 +5,7 @@ from collections.abc import Sequence
 import numpy as np
 from scipy.stats import qmc
 
-from geosolver.engine.standard.quasirandom.generate_points import _generate_halton_points
+from geosolver.engine.standard.search.quasirandom.generate_points import _generate_halton_points
 
 
 def generate_halton_random_points(

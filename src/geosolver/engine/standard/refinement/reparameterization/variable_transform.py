@@ -7,11 +7,11 @@ from dataclasses import dataclass
 import mpmath as mp
 
 from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
-from geosolver.engine.standard.reparameterization.mp_sigmoid import (
+from geosolver.engine.standard.refinement.reparameterization.mp_sigmoid import (
     mp_sigmoid,
     mp_sigmoid_inverse,
 )
-from geosolver.engine.standard.reparameterization.mp_softplus import (
+from geosolver.engine.standard.refinement.reparameterization.mp_softplus import (
     mp_softplus,
     mp_softplus_inverse,
 )

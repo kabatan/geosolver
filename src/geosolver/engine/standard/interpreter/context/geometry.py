@@ -4,7 +4,7 @@ import math
 from typing import Any
 
 import geosolver.geometry as geom
-from geosolver.engine.standard.interpreter.context.legacy_aliases import apply_legacy_aliases
+from geosolver.engine.standard.interpreter.context.aliases import apply_geometry_aliases
 
 
 def _get_geometry_context(prefer_fast: bool = False) -> dict[str, Any]:
@@ -22,4 +22,4 @@ def _get_geometry_context(prefer_fast: bool = False) -> dict[str, Any]:
             "pi": math.pi,
         }
     )
-    return apply_legacy_aliases(context)
+    return apply_geometry_aliases(context)

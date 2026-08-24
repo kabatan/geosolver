@@ -1,4 +1,4 @@
-"""Public solve() orchestrator delegated to legacy parity pipeline."""
+"""Numerical solve orchestrator for the standard engine."""
 
 from collections.abc import Callable
 from typing import Any
@@ -6,7 +6,7 @@ from typing import Any
 from geosolver.engine.standard.interpreter.guards.compile import GuardIR
 from geosolver.engine.standard.interpreter.execution.interpreter_helpers import CandidateEval
 
-from .legacy_solve_engine import run_legacy_solve_pipeline
+from .engine import run_solve_pipeline
 
 
 def solve(
@@ -29,8 +29,8 @@ def solve(
     variable_names: list[str] | None = None,
     guard_irs: list[GuardIR] | None = None,
 ) -> tuple[list[float], dict[str, Any]]:
-    """Run legacy parity solve pipeline and return best solution + diagnostics."""
-    return run_legacy_solve_pipeline(
+    """Run the standard solve pipeline and return its solution and diagnostics."""
+    return run_solve_pipeline(
         n=n,
         f=f,
         v=v,

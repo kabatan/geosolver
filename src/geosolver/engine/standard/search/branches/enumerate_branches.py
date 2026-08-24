@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import itertools
 
-from geosolver.engine.standard.branches.branch_decision import BranchDecision
-from geosolver.engine.standard.branches.branch_signature import BranchSignature
+from geosolver.engine.standard.search.branches.branch_decision import BranchDecision
+from geosolver.engine.standard.search.branches.branch_signature import BranchSignature
 
 
 def enumerate_branch_signatures(

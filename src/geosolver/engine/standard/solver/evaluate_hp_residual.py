@@ -18,7 +18,7 @@ from geosolver.engine.standard.precision.type_guards.ensure_no_float import (
     ensure_no_float,
 )
 from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
-from geosolver.engine.standard.solve.hp_residual_result import HPResidualResult
+from geosolver.engine.standard.solver.hp_residual_result import HPResidualResult
 
 
 def evaluate_hp_residual(

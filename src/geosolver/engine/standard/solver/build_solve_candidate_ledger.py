@@ -13,8 +13,8 @@ from geosolver.engine.standard.precision.type_guards.high_precision_contaminatio
 )
 from geosolver.engine.standard.precision.type_guards.high_precision_mode import high_precision_mode
 from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
-from geosolver.engine.standard.solve.evaluate_hp_residual import evaluate_hp_residual
-from geosolver.engine.standard.solve.tracked_candidate import TrackedCandidate
+from geosolver.engine.standard.solver.evaluate_hp_residual import evaluate_hp_residual
+from geosolver.engine.standard.solver.tracked_candidate import TrackedCandidate
 
 
 def build_solve_candidate_ledger(

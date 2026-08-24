@@ -369,7 +369,7 @@ def create_mp_f_from_sympy(
     return partial(_evaluate_sympy_vector_function, f_sympy)
 
 
-from .mp_impl_compat_wrappers import (
+from .mp_impl_common_wrappers import (
     mp_arc,
     mp_area,
     mp_angle,

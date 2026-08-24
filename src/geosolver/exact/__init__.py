@@ -1,6 +1,6 @@
 """Exact-value identification and public answer descriptors."""
 
-from .algebraic_compat import (
+from .algebraic import (
     _format_sqrt_like,
     _snap_sqrt_of_near_square,
     exact_algebraic,

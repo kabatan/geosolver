@@ -4,7 +4,7 @@ from collections.abc import Callable, Sequence
 import inspect
 
 from geosolver.engine.standard.config.search_budget import SearchBudget
-from geosolver.engine.standard.solve.legacy_candidate_ops import (
+from geosolver.engine.standard.solver.candidate_operations import (
     select_best_candidates,
 )
 

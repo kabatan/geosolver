@@ -5,7 +5,7 @@ a single candidate scalar from Zone A (float / numpy.floating) or Zone C
 (mpf / int / Fraction) into an mpf value.
 
 This replaces the former ``_strict_boundary_mpf`` private helper that was
-defined inside ``legacy_solve_engine.py``, resolving the duplicate-
+defined inside ``engine.py``, resolving the duplicate-
 implementation debt identified in REFACTORING_PLAN.md and WP4.
 """
 # zone: b

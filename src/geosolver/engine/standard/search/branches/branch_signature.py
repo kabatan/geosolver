@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from geosolver.engine.standard.branches.branch_decision import BranchDecision
+from geosolver.engine.standard.search.branches.branch_decision import BranchDecision
 
 
 @dataclass(frozen=True)

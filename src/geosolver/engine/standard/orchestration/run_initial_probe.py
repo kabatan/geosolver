@@ -14,7 +14,7 @@ from geosolver.engine.standard.search.nomad_config import (
     GUARD_PENALTY_DEFAULT,
     derive_seed_values,
 )
-from geosolver.engine.standard.sampling import augment_with_manifold_samples
+from geosolver.engine.standard.search.sampling import augment_with_manifold_samples
 
 PHASE0_SEEDS = (0, 1, 2, 3, 4)
 PHASE0_POINTS_PER_SEED_DEFAULT = 50

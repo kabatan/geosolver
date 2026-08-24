@@ -19,13 +19,13 @@ from geosolver.engine.standard.interpreter.execution.interpreter_helpers import 
     CandidateEval,
 )
 from geosolver.engine.standard.config.search_budget import SearchBudget
-from geosolver.engine.standard.deduplication.remove_solutions import remove_duplicate_solutions
-from geosolver.engine.standard.bounds.normalize import normalize_bounds
+from geosolver.engine.standard.search.deduplication.remove_solutions import remove_duplicate_solutions
+from geosolver.engine.standard.search.bounds.normalize import normalize_bounds
 from geosolver.exact.identify_batch import identify_exact_answers
-from geosolver.engine.standard.optimization.single_point.lbfgsb import run_lbfgsb
-from geosolver.engine.standard.optimization.single_point.least_squares import run_least_squares
+from geosolver.engine.standard.refinement.optimization.single_point.lbfgsb import run_lbfgsb
+from geosolver.engine.standard.refinement.optimization.single_point.least_squares import run_least_squares
 
-from geosolver.engine.standard.refinement.high_precision_compat_helpers import (
+from geosolver.engine.standard.refinement.high_precision_helpers import (
     _auto_high_precision_wrapper,
 )
 from geosolver.engine.standard.refinement.high_precision_projection import project_high_precision
@@ -54,34 +54,34 @@ from geosolver.engine.standard.precision.type_guards.boundary_float_to_mpf impor
     boundary_float_to_mpf,
     BoundaryOrigin,
 )
-from geosolver.engine.standard.solve.legacy_solve_tolerances import (
+from geosolver.engine.standard.solver.tolerances import (
     solve_residual_tolerance,
 )
-from geosolver.engine.standard.solve.apply_solve_candidate_evaluator import (
+from geosolver.engine.standard.solver.apply_solve_candidate_evaluator import (
     apply_solve_candidate_evaluator,
 )
-from geosolver.engine.standard.solve.build_solve_candidate_ledger import (
+from geosolver.engine.standard.solver.build_solve_candidate_ledger import (
     build_solve_candidate_ledger,
 )
-from geosolver.engine.standard.solve.evaluate_hp_residual import (
+from geosolver.engine.standard.solver.evaluate_hp_residual import (
     evaluate_hp_residual,
 )
-from geosolver.engine.standard.convergence.build_convergence_criteria import (
+from geosolver.engine.standard.refinement.convergence.build_convergence_criteria import (
     build_convergence_criteria,
 )
-from geosolver.engine.standard.convergence.check_solve_convergence import (
+from geosolver.engine.standard.refinement.convergence.check_solve_convergence import (
     check_solve_convergence,
 )
-from geosolver.engine.standard.solve.normalize_solutions_to_mpf import (
+from geosolver.engine.standard.solver.normalize_solutions_to_mpf import (
     normalize_solutions_to_mpf,
 )
-from geosolver.engine.standard.solve.boundary_normalize_solutions import (
+from geosolver.engine.standard.solver.boundary_normalize_solutions import (
     boundary_normalize_solutions,
 )
-from geosolver.engine.standard.solve.solve_boundary_convert import (
+from geosolver.engine.standard.solver.boundary_conversion import (
     solve_boundary_mpf,
 )
-from geosolver.engine.standard.solve.legacy_candidate_ops import (
+from geosolver.engine.standard.solver.candidate_operations import (
     dedupe_refined_solutions,
     pick_best_solution,
     safe_objective_value,
@@ -89,28 +89,28 @@ from geosolver.engine.standard.solve.legacy_candidate_ops import (
     safe_refine_candidate,
     select_best_candidates,
 )
-from geosolver.engine.standard.optimization.mp.mp_local_solve import mp_local_solve
-from geosolver.engine.standard.families.cluster_solutions import (
+from geosolver.engine.standard.refinement.optimization.mp.mp_local_solve import mp_local_solve
+from geosolver.engine.standard.refinement.families.cluster_solutions import (
     cluster_solutions_into_families,
 )
-from geosolver.engine.standard.families.check_family_set_stability import (
+from geosolver.engine.standard.refinement.families.check_family_set_stability import (
     check_family_set_stability,
 )
-from geosolver.engine.standard.families.select_family_representatives import (
+from geosolver.engine.standard.refinement.families.select_family_representatives import (
     select_family_representatives,
 )
-from geosolver.engine.standard.families.solution_family import SolutionFamily
-from geosolver.engine.standard.branches.extract_branch_signature import (
+from geosolver.engine.standard.refinement.families.solution_family import SolutionFamily
+from geosolver.engine.standard.search.branches.extract_branch_signature import (
     extract_branch_signature,
 )
-from geosolver.engine.standard.reparameterization.build_transforms_from_guards import (
+from geosolver.engine.standard.refinement.reparameterization.build_transforms_from_guards import (
     build_transforms_from_guards,
     _count_deferred_open_bounds,
 )
-from geosolver.engine.standard.reparameterization.variable_transform import (
+from geosolver.engine.standard.refinement.reparameterization.variable_transform import (
     VariableTransform,
 )
-from geosolver.engine.standard.solve.tracked_candidate import (
+from geosolver.engine.standard.solver.tracked_candidate import (
     TrackedCandidate,
     make_tracked,
     tracked_from_pool,
@@ -382,7 +382,7 @@ def _residual_objective(
         return float("inf")
     return float(sum(value * value for value in residuals))
 
-# _strict_boundary_mpf was extracted to solve_boundary_convert.solve_boundary_mpf (WP4)
+# _strict_boundary_mpf was extracted to boundary_conversion.solve_boundary_mpf (WP4)
 _strict_boundary_mpf = solve_boundary_mpf
 
 def _solve_search_budget(
@@ -703,8 +703,8 @@ def _deduplicate_points(
             comparable = True
             for left, right in zip(candidate, accepted):
                 try:
-                    left_mpf = _strict_boundary_mpf(left, context="legacy_solve.dedupe_left")
-                    right_mpf = _strict_boundary_mpf(right, context="legacy_solve.dedupe_right")
+                    left_mpf = _strict_boundary_mpf(left, context="standard_solve.dedupe_left")
+                    right_mpf = _strict_boundary_mpf(right, context="standard_solve.dedupe_right")
                     delta = left_mpf - right_mpf
                     distance_sq += delta * delta
                 except Exception:
@@ -728,11 +728,11 @@ def _refine_high_precision_candidates(
     precision: int = 100,
 ) -> list[list[Any]]:
     refined: list[list[Any]] = []
-    target = [_strict_boundary_mpf(value, context="legacy_solve.refine_target") for value in v]
-    ensure_no_float(target, context="legacy_solve.refine_target")
+    target = [_strict_boundary_mpf(value, context="standard_solve.refine_target") for value in v]
+    ensure_no_float(target, context="standard_solve.refine_target")
     for candidate in candidates:
-        seed = [_strict_boundary_mpf(value, context="legacy_solve.refine_seed") for value in candidate]
-        ensure_no_float(seed, context="legacy_solve.refine_seed")
+        seed = [_strict_boundary_mpf(value, context="standard_solve.refine_seed") for value in candidate]
+        ensure_no_float(seed, context="standard_solve.refine_seed")
         try:
             hp_solution = project_high_precision(
                 f_hp,
@@ -743,7 +743,7 @@ def _refine_high_precision_candidates(
                 int(precision),
             )
             refined.append([
-                strict_to_mpf(value, context="legacy_solve.refine_solution") for value in hp_solution
+                strict_to_mpf(value, context="standard_solve.refine_solution") for value in hp_solution
             ])
         except HighPrecisionContaminationError:
             raise
@@ -760,11 +760,11 @@ def _refine_one_high_precision_solution(
     deadline: float | None = None,
     refine_state: dict[str, bool] | None = None,
 ) -> list[object]:
-    ensure_high_precision_mode(context="legacy_solve.refine_one_high_precision_solution")
-    seed = [_strict_boundary_mpf(value, context="legacy_solve.refine_one_seed") for value in solution]
-    target = [_strict_boundary_mpf(value, context="legacy_solve.refine_one_target") for value in v]
-    ensure_no_float(seed, context="legacy_solve.refine_one_seed")
-    ensure_no_float(target, context="legacy_solve.refine_one_target")
+    ensure_high_precision_mode(context="standard_solve.refine_one_high_precision_solution")
+    seed = [_strict_boundary_mpf(value, context="standard_solve.refine_one_seed") for value in solution]
+    target = [_strict_boundary_mpf(value, context="standard_solve.refine_one_target") for value in v]
+    ensure_no_float(seed, context="standard_solve.refine_one_seed")
+    ensure_no_float(target, context="standard_solve.refine_one_target")
     try:
         refined = list(seed)
         for extra_digits in _HP_REFINE_STAGE_EXTRA_DIGITS:
@@ -781,9 +781,9 @@ def _refine_one_high_precision_solution(
                 deadline=deadline,
             )
             refined = [
-                strict_to_mpf(value, context="legacy_solve.refine_one_solution") for value in hp_solution
+                strict_to_mpf(value, context="standard_solve.refine_one_solution") for value in hp_solution
             ]
-            ensure_no_float(refined, context="legacy_solve.refine_one_solution")
+            ensure_no_float(refined, context="standard_solve.refine_one_solution")
         return list(refined)
     except HighPrecisionContaminationError:
         raise
@@ -799,9 +799,9 @@ def _high_precision_residual_vector(
     v: Sequence[Any],
 ) -> list[Any]:
     hp_values = f_hp([_strict_boundary_mpf(value, context="hp_point") for value in solution])
-    ensure_no_float(hp_values, context="legacy_solve.hp_values")
+    ensure_no_float(hp_values, context="standard_solve.hp_values")
     hp_targets = [_strict_boundary_mpf(value, context="hp_target") for value in v]
-    ensure_no_float(hp_targets, context="legacy_solve.hp_targets")
+    ensure_no_float(hp_targets, context="standard_solve.hp_targets")
     return [
         ensure_mpf(value, context="hp_residual_value") - target
         for value, target in zip(hp_values, hp_targets)
@@ -1024,7 +1024,7 @@ def _build_solution_families(
         branch_signatures=branch_signatures,
     )
 
-def run_legacy_solve_pipeline(
+def run_solve_pipeline(
     *,
     n: int,
     f: Callable[[list[float]], list[float]],
@@ -1081,7 +1081,7 @@ def run_legacy_solve_pipeline(
     residual_fn = partial(_residual_vector, f, target_float)
     hp_target_early: list[Any] = []
     if hp_path_enabled:
-        hp_target_early = [_strict_boundary_mpf(value, context="legacy_solve.hp_target") for value in target_raw]
+        hp_target_early = [_strict_boundary_mpf(value, context="standard_solve.hp_target") for value in target_raw]
     # FIX-7: Activate precision audit/policy for high-precision pipelines
     _fix7_audit = PrecisionAudit() if int(precision) >= 60 else None
     _fix7_policy = default_precision_policy() if int(precision) >= 60 else None
@@ -1303,24 +1303,24 @@ def run_legacy_solve_pipeline(
     contamination_error_examples: list[str] = []
     contamination_detected = False
     if hp_path_enabled and not hp_target:
-        hp_target = [_strict_boundary_mpf(value, context="legacy_solve.hp_target") for value in target_raw]
+        hp_target = [_strict_boundary_mpf(value, context="standard_solve.hp_target") for value in target_raw]
     if find_all and ordered and hp_path_enabled and not _time_exceeded(started_at, time_limit):
         from geosolver.engine.standard.refinement.multi.refine_solutions import (
             iterative_refine_multiple_solutions,
         )
         ordered = boundary_normalize_solutions(
             ordered,
-            context="legacy_solve.hp_ordered_pre_refine_boundary",
+            context="standard_solve.hp_ordered_pre_refine_boundary",
             converter=lambda value, value_context: _strict_boundary_mpf(value, context=value_context),
         )
         try:
             with high_precision_mode():
                 ordered, float_origin_pre = normalize_solutions_to_mpf(
                     ordered,
-                    context="legacy_solve.hp_ordered_pre_refine",
+                    context="standard_solve.hp_ordered_pre_refine",
                 )
                 float_origin_count += int(float_origin_pre)
-                ensure_no_float(ordered, context="legacy_solve.hp_ordered_pre_refine")
+                ensure_no_float(ordered, context="standard_solve.hp_ordered_pre_refine")
         except HighPrecisionContaminationError as exc:
             contamination_detected = True
             float_origin_count += 1
@@ -1354,17 +1354,17 @@ def run_legacy_solve_pipeline(
     if hp_path_enabled:
         ordered = boundary_normalize_solutions(
             ordered,
-            context="legacy_solve.hp_ordered_post_refine_boundary",
+            context="standard_solve.hp_ordered_post_refine_boundary",
             converter=lambda value, value_context: _strict_boundary_mpf(value, context=value_context),
         )
         try:
             with high_precision_mode():
                 ordered, float_origin_post = normalize_solutions_to_mpf(
                     ordered,
-                    context="legacy_solve.hp_ordered",
+                    context="standard_solve.hp_ordered",
                 )
                 float_origin_count += int(float_origin_post)
-                ensure_no_float(ordered, context="legacy_solve.hp_ordered")
+                ensure_no_float(ordered, context="standard_solve.hp_ordered")
         except HighPrecisionContaminationError as exc:
             contamination_detected = True
             float_origin_count += 1
@@ -1390,7 +1390,7 @@ def run_legacy_solve_pipeline(
     ):
         try:
             selected_seed = [
-                _strict_boundary_mpf(value, context="legacy_solve.selected_seed")
+                _strict_boundary_mpf(value, context="standard_solve.selected_seed")
                 for value in best_solution
             ]
             selected_deadline = (
@@ -1789,7 +1789,7 @@ def run_legacy_solve_pipeline(
     diagnostics["family_representative_candidate_ids"] = family_rep_ids
 
     diagnostics["diagnostics"] = {
-        "pipeline": "legacy_solve",
+        "pipeline": "standard_solve",
         "residual_norm": diagnostics["residual_norm"],
         "residual_tolerance": diagnostics["residual_tolerance"],
         "n_solutions": diagnostics["n_solutions"],

@@ -5,7 +5,7 @@ from __future__ import annotations
 from mpmath import mp
 
 from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
-from geosolver.engine.standard.families.solution_family import SolutionFamily
+from geosolver.engine.standard.refinement.families.solution_family import SolutionFamily
 
 
 def check_family_set_stability(

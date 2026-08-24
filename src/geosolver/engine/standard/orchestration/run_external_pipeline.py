@@ -7,7 +7,7 @@ import time
 
 from mpmath import mp
 
-from geosolver.engine.standard.box.julia_box_solver import JuliaBoxSolver
+from geosolver.engine.standard.refinement.box.julia_box_solver import JuliaBoxSolver
 from geosolver.engine.standard.contracts.box_solver_port import BoxSolverPort
 from geosolver.engine.standard.contracts.baseline_search_policy import (
     SEARCH_ATTEMPT_HYBRID_FALLBACK,
@@ -25,12 +25,12 @@ from geosolver.engine.standard.contracts.external_pipeline_config import (
 )
 from geosolver.engine.standard.contracts.pipeline_result import ExternalPipelineResult
 from geosolver.engine.standard.contracts.runtime_budget import RuntimeBudget
-from geosolver.engine.standard.completion import (
+from geosolver.engine.standard.search.completion import (
     default_rescue_completion_summary,
     merge_search_candidates_with_rescue,
     exact_assembly_needs_completion,
 )
-from geosolver.engine.standard.discrete.integer_targets import (
+from geosolver.engine.standard.search.discrete.integer_targets import (
     default_discrete_completion_summary,
     run_discrete_target_completion,
 )

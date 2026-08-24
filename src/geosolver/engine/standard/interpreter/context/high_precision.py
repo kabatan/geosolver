@@ -6,7 +6,7 @@ from typing import Any
 import geosolver.geometry.mp.mp_api as mp_api
 from mpmath import mp
 from geosolver.engine.standard.interpreter.context.geometry import _get_geometry_context
-from geosolver.engine.standard.interpreter.context.legacy_aliases import apply_legacy_aliases
+from geosolver.engine.standard.interpreter.context.aliases import apply_geometry_aliases
 from geosolver.engine.standard.precision.type_guards.ensure_mpf import ensure_mpf
 from geosolver.engine.standard.precision.type_guards.strict_to_mpf import strict_to_mpf
 from geosolver.geometry.registry import MultiFunctionWrapper
@@ -168,7 +168,7 @@ def _build_hp_context_dict() -> dict[str, Any]:
         if alias:
             context[alias] = value
 
-    context = apply_legacy_aliases(context)
+    context = apply_geometry_aliases(context)
     context = _attach_float_return_tracer(context)
     if "Midpoint" in context:
         context["MidPoint"] = context["Midpoint"]

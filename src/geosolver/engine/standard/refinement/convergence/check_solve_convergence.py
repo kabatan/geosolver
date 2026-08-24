@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from geosolver.engine.standard.convergence.convergence_criteria import ConvergenceCriteria
-from geosolver.engine.standard.convergence.convergence_status import ConvergenceStatus
-from geosolver.engine.standard.solve.hp_residual_result import HPResidualResult
+from geosolver.engine.standard.refinement.convergence.convergence_criteria import ConvergenceCriteria
+from geosolver.engine.standard.refinement.convergence.convergence_status import ConvergenceStatus
+from geosolver.engine.standard.solver.hp_residual_result import HPResidualResult
 
 
 def check_solve_convergence(

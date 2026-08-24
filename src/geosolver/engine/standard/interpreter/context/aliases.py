@@ -104,7 +104,7 @@ def _contact_point_compat(
     raise TypeError("ContactPoint の互換呼び出しに失敗しました")
 
 
-def apply_legacy_aliases(context: dict[str, Any]) -> dict[str, Any]:
+def apply_geometry_aliases(context: dict[str, Any]) -> dict[str, Any]:
     if "Midpoint" in context and "MidPoint" not in context:
         context["MidPoint"] = context["Midpoint"]
 

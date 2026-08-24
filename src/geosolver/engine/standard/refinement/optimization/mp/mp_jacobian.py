@@ -7,7 +7,7 @@ from collections.abc import Callable, Sequence
 from mpmath import mp
 
 from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
-from geosolver.engine.standard.optimization.mp.mp_residual_vector import mp_residual_vector
+from geosolver.engine.standard.refinement.optimization.mp.mp_residual_vector import mp_residual_vector
 
 _MIN_DELTA_DIGITS = 8
 _DEFAULT_DELTA_HEADROOM_DIGITS = 12
