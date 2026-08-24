@@ -6,8 +6,8 @@ from typing import Any, Callable, Dict, List, Tuple
 
 from mpmath import mp
 
-from geosolver.core.result import SolveResult, SolveStatus
-from geosolver.ir.compiler import safe_eval_expr_hp
+from geosolver.engine.standard.result import SolveResult, SolveStatus
+from geosolver.problem.ir.compiler import safe_eval_expr_hp
 
 
 def _converged_solution_indices(metadata: Dict[str, Any], total_solutions: int) -> List[int]:

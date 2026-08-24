@@ -10,7 +10,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, Optional, Generator
 import inspect
-from geosolver.utils_conversion_debug import (
+from geosolver.engine.standard.precision.conversion import (
     debug_exceptions_enabled,
     debug_print_exception,
     to_mpf_sanitized,

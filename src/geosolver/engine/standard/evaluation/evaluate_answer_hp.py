@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from mpmath import mp
 
 from geosolver.engine.standard.interpreter.answer.evaluate_hp import _evaluate_answer_high_precision
-from geosolver.ir.errors import IRCompileError
+from geosolver.problem.ir.errors import IRCompileError
 from geosolver.engine.standard.precision.type_guards.ensure_no_float import (
     ensure_high_precision_mode,
 )

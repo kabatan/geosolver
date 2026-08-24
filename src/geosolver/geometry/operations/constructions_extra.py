@@ -6,7 +6,7 @@ from typing import Any, List, Optional
 
 from sympy import cos, pi, sin, sqrt
 
-from geosolver.core.errors import CoincidentPointsError
+from geosolver.errors import CoincidentPointsError
 from geosolver.geometry.entities.base import Circle, Line, Point
 from geosolver.geometry.entities.polygon import Polygon
 from geosolver.geometry.registry import geometry_symbol

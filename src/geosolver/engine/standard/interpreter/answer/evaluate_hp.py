@@ -9,8 +9,8 @@ from geosolver.engine.standard.interpreter.context import _get_high_precision_co
 from geosolver.engine.standard.precision.type_guards.high_precision_mode import (
     high_precision_mode,
 )
-from geosolver.ir.compiler import safe_eval_expr_hp
-from geosolver.ir.schema import IRSpec
+from geosolver.problem.ir.compiler import safe_eval_expr_hp
+from geosolver.problem.ir.schema import IRSpec
 
 from .eval_to_mpf import _eval_exact_to_mpf
 

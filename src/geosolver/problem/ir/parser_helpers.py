@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from typing import Any, List, Sequence, Tuple
 
-from geosolver.ir.compiler import validate_expr_safety
-from geosolver.ir.errors import IRValidationError
-from geosolver.ir.schema import IRConstruction
+from geosolver.problem.ir.compiler import validate_expr_safety
+from geosolver.problem.ir.errors import IRValidationError
+from geosolver.problem.ir.schema import IRConstruction
 
 
 def parse_construction(construction_raw: Sequence[Any]) -> List[IRConstruction]:

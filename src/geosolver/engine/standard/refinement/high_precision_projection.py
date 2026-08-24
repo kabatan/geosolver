@@ -17,7 +17,7 @@ import traceback
 import numpy as np
 from mpmath import mp, mpf
 
-from geosolver.utils import (
+from geosolver.engine.standard.precision.utilities import (
     call_with_precision,
     PrecisionKwargCache,
     ensure_mp_dps,

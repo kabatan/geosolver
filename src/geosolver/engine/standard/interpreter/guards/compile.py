@@ -8,7 +8,7 @@ from typing import Any
 
 from mpmath import mp
 
-from geosolver.ir.compiler import safe_eval_expr, safe_eval_expr_hp
+from geosolver.problem.ir.compiler import safe_eval_expr, safe_eval_expr_hp
 
 from .evaluate import _is_guard_satisfied
 from .registry import (

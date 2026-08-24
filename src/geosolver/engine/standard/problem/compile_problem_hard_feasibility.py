@@ -12,7 +12,7 @@ from geosolver.engine.standard.contracts.hard_feasibility_check import (
     KIND_LINE_DISTINCT,
     KIND_TRIANGLE_NONDEGENERATE,
 )
-from geosolver.ir.schema import IRSpec
+from geosolver.problem.ir.schema import IRSpec
 
 _LINE_FUNCTION_NAMES = ("Line", "LineThrough")
 _TRIANGLE_FUNCTION_NAMES = ("Circumcircle", "TriangleCenter", "Incircle", "Incenter")

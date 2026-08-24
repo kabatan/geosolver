@@ -40,10 +40,10 @@ from geosolver.engine.standard.interpreter.guards.compile import (
     guard_violation_value,
 )
 from geosolver.engine.standard.interpreter.guards.evaluate import _is_guard_satisfied
-from geosolver.core.result import SolveResult, SolveStatus
-from geosolver.ir.compiler import safe_eval_expr, safe_eval_expr_hp
-from geosolver.ir.parser import load_ir
-from geosolver.ir.schema import IRSpec
+from geosolver.engine.standard.result import SolveResult, SolveStatus
+from geosolver.problem.ir.compiler import safe_eval_expr, safe_eval_expr_hp
+from geosolver.problem.ir.parser import load_ir
+from geosolver.problem.ir.schema import IRSpec
 from geosolver.engine.standard.precision.type_guards.boundary_float_to_mpf import (
     boundary_float_to_mpf,
     BoundaryOrigin,

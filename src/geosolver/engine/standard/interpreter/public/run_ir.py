@@ -6,7 +6,7 @@ from mpmath import mp
 
 from geosolver.engine.standard.interpreter.answer.eval_to_mpf import _eval_exact_to_mpf
 from geosolver.engine.standard.interpreter.answer.wrap_value import _wrap_exact_value
-from geosolver.core.result import SolveResult, SolveStatus
+from geosolver.engine.standard.result import SolveResult, SolveStatus
 from geosolver.engine.standard.orchestration.run_external_pipeline import (
     run_external_pipeline,
 )

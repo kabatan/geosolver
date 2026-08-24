@@ -31,7 +31,7 @@ from geosolver.engine.standard.precision.type_guards.boundary_float_to_mpf impor
 )
 from geosolver.engine.standard.precision.type_guards.high_precision_mode import high_precision_mode
 from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
-from geosolver.ir.compiler import safe_eval_expr_hp
+from geosolver.problem.ir.compiler import safe_eval_expr_hp
 
 from .finite_difference_jacobian import compute_finite_difference_jacobian
 from .levenberg_marquardt_step import compute_levenberg_marquardt_step

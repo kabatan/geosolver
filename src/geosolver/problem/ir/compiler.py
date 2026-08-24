@@ -9,9 +9,9 @@ import functools
 from types import CodeType
 from typing import Any, Dict, List, Set, Type
 
-from geosolver.ir.errors import IRCompileError, IRSecurityError
-from geosolver.ir.safe_evaluator import SafeEvaluator
-from geosolver.ir.compiler_validation import (
+from geosolver.problem.ir.errors import IRCompileError, IRSecurityError
+from geosolver.problem.ir.safe_evaluator import SafeEvaluator
+from geosolver.problem.ir.compiler_validation import (
     collect_name_nodes,
     ensure_allowed_ast_nodes,
     parse_eval_tree,

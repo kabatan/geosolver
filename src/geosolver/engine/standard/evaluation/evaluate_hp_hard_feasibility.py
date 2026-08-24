@@ -9,7 +9,7 @@ from geosolver.engine.standard.interpreter.context import _get_high_precision_co
 from geosolver.engine.standard.interpreter.execution.interpreter_helpers import (
     _collect_guard_evidence,
 )
-from geosolver.ir.compiler import safe_eval_expr_hp
+from geosolver.problem.ir.compiler import safe_eval_expr_hp
 from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
 from geosolver.engine.standard.precision.type_guards.strict_to_mpf import strict_to_mpf
 

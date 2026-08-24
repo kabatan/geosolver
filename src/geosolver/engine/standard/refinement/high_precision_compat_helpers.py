@@ -7,7 +7,7 @@ from typing import Any, Callable, List
 from mpmath import mp
 
 from geosolver.geometry.mp.mp_api import use_mpmath_api
-from geosolver.utils import PrecisionKwargCache, call_with_precision
+from geosolver.engine.standard.precision.utilities import PrecisionKwargCache, call_with_precision
 from geosolver.engine.standard.precision.type_guards.boundary_float_to_mpf import (
     BoundaryOrigin,
     boundary_float_to_mpf,

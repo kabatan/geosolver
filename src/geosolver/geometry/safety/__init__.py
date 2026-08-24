@@ -4,7 +4,7 @@
 solver/optimizer での入力除外、Assume条件による制約を提供。
 
 使用例:
-    from geosolver.core.safety import Assume, AssumeGt, AssumeNe
+    from geosolver.geometry.safety import Assume, AssumeGt, AssumeNe
 
     AssumeGt(Distance(A, B), Distance(A, C))  # AB > AC を要求
     AssumeNe(x, 0)  # x != 0 を要求
@@ -13,7 +13,7 @@ solver/optimizer での入力除外、Assume条件による制約を提供。
 from typing import Optional, Any, Tuple
 from contextlib import contextmanager
 import contextvars
-from geosolver.core.safety_numeric import (
+from geosolver.geometry.safety.numeric import (
     is_acute_triangle as _is_acute_triangle_impl,
     normalize_interval as _normalize_interval_impl,
     to_float as _to_float,
@@ -401,7 +401,7 @@ def Assume(
         _handle_failure(message or "Assume(condition) undecidable")
 
 
-from geosolver.core.safety_assumptions_geometry import (
+from geosolver.geometry.safety.assumptions import (
     AssumeAcute,
     AssumeConvex,
     AssumeNoSelfIntersecting,

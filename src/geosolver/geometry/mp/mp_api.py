@@ -8,7 +8,7 @@ from geosolver.engine.standard.precision.type_guards.high_precision_contaminatio
     HighPrecisionContaminationError,
 )
 from geosolver.engine.standard.precision.type_guards.strict_to_mpf import strict_to_mpf
-from geosolver.core.safety import (
+from geosolver.geometry.safety import (
     Assume,
     AssumeEq,
     AssumeGe,

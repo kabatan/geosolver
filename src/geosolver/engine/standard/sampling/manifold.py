@@ -19,7 +19,7 @@ from geosolver.engine.standard.contracts.candidate_record import FloatCandidate
 from geosolver.engine.standard.contracts.evaluator_port import EvaluatorPort
 from geosolver.engine.standard.evaluation.classify_evaluation_failure import EvaluationStatus
 from geosolver.engine.standard.problem.load_problem_bundle import ProblemBundle
-from geosolver.ir.compiler import safe_eval_expr
+from geosolver.problem.ir.compiler import safe_eval_expr
 
 EXACT_DISTANCE_SAMPLE_COUNT = 12
 

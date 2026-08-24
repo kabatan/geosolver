@@ -9,10 +9,10 @@ import json
 import re
 from typing import Any, Dict, List, Optional, Tuple, Union, Sequence
 
-from geosolver.ir.schema import IRSpec, IRVariableSpec, IRConstruction
-from geosolver.ir.errors import IRValidationError
-from geosolver.ir.compiler import validate_expr_safety, extract_names
-from geosolver.ir.parser_helpers import (
+from geosolver.problem.ir.schema import IRSpec, IRVariableSpec, IRConstruction
+from geosolver.problem.ir.errors import IRValidationError
+from geosolver.problem.ir.compiler import validate_expr_safety, extract_names
+from geosolver.problem.ir.parser_helpers import (
     parse_construction,
     parse_constraints_and_values,
     parse_guards,

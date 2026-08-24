@@ -7,7 +7,7 @@ from collections.abc import Sequence
 from geosolver.engine.standard.interpreter.execution.interpreter_helpers import (
     _collect_guard_evidence,
 )
-from geosolver.ir.compiler import safe_eval_expr
+from geosolver.problem.ir.compiler import safe_eval_expr
 
 from geosolver.engine.standard.contracts.hard_feasibility_snapshot import (
     HardFeasibilitySnapshot,

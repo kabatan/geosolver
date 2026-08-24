@@ -7,7 +7,7 @@ Implements Polar, Pole, Power, RadicalAxis, etc.
 from typing import Optional, Union, Any, List
 from geosolver.geometry.registry import geometry_symbol
 from geosolver.geometry.entities.base import Point, Line, Circle
-from geosolver.core.errors import CoincidentPointsError
+from geosolver.errors import CoincidentPointsError
 from geosolver.geometry.operations.advanced_helpers import (
     compute_polar_coeffs,
     compute_pole_point,

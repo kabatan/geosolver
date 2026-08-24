@@ -113,7 +113,7 @@ from geosolver.geometry.runtime import (
 )
 
 # Assume関数（制約条件用）
-from geosolver.core.safety import (
+from geosolver.geometry.safety import (
     Assume,
     Bound,
     AssumeEq,

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
-from geosolver.core.safety_geometry_guards import (
+from geosolver.geometry.safety.guards import (
     assume_acute,
     assume_convex,
     assume_no_self_intersecting,
@@ -23,7 +23,7 @@ def AssumeAcute(
     rel_floor: Optional[float] = None,
     abs_floor: Optional[float] = None,
 ) -> None:
-    from geosolver.core import safety as _s
+    from geosolver.geometry import safety as _s
 
     assume_acute(
         A=A,
@@ -45,7 +45,7 @@ def AssumeRight(
     *,
     tol: Optional[float] = None,
 ) -> None:
-    from geosolver.core import safety as _s
+    from geosolver.geometry import safety as _s
 
     effective_tol = (
         _s._get_tolerance(1.0, None, None) if tol is None else tol
@@ -71,7 +71,7 @@ def AssumeObtuse(
     *,
     tol: Optional[float] = None,
 ) -> None:
-    from geosolver.core import safety as _s
+    from geosolver.geometry import safety as _s
 
     effective_tol = (
         _s._get_tolerance(1.0, None, None) if tol is None else tol
@@ -95,7 +95,7 @@ def AssumeConvex(
     *,
     tol: float = 1e-6,
 ) -> None:
-    from geosolver.core import safety as _s
+    from geosolver.geometry import safety as _s
 
     assume_convex(
         polygon=polygon,
@@ -112,7 +112,7 @@ def AssumeNoSelfIntersecting(
     *,
     tol: float = 1e-6,
 ) -> None:
-    from geosolver.core import safety as _s
+    from geosolver.geometry import safety as _s
 
     assume_no_self_intersecting(
         polygon=polygon,
@@ -131,7 +131,7 @@ def AssumeOrder(
     *,
     tol: float = 1e-6,
 ) -> None:
-    from geosolver.core import safety as _s
+    from geosolver.geometry import safety as _s
 
     assume_order(
         P1=P1,

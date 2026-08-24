@@ -9,7 +9,7 @@ import math
 from sympy import sqrt, asin, cos, sin, simplify, expand, N as _N, Abs, sympify, pi, atan2
 from geosolver.geometry.registry import geometry_symbol
 from geosolver.geometry.entities.base import Point, Line, Circle
-from geosolver.core.errors import CoincidentPointsError, CollinearPointsError, ExcludedPointError
+from geosolver.errors import CoincidentPointsError, CollinearPointsError, ExcludedPointError
 
 from geosolver.geometry.operations.constructions_extra import (
     PointOnLine,

@@ -9,7 +9,7 @@ import numpy as np
 from sympy import sqrt, simplify, solve, N as _N, Abs, Max
 from geosolver.geometry.registry import geometry_symbol
 from geosolver.geometry.entities.base import Point, Line, Circle
-from geosolver.core.errors import NoIntersectionError, ParallelLinesError
+from geosolver.errors import NoIntersectionError, ParallelLinesError
 from geosolver.geometry.operations.intersections_closest import ClosestPoint
 from geosolver.geometry.operations.intersections_circle_ops import (
     IntersectLineCircle,

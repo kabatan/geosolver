@@ -1,25 +1,25 @@
 """GeoSolver IR (Intermediate Representation) Module"""
 
-from geosolver.ir.errors import (
+from geosolver.problem.ir.errors import (
     IRError,
     IRValidationError,
     IRCompileError,
     IRSecurityError,
 )
-from geosolver.ir.schema import (
+from geosolver.problem.ir.schema import (
     IRSpec,
     IRVariableSpec,
     IRConstruction,
     TaskKind,
 )
-from geosolver.ir.compiler import (
+from geosolver.problem.ir.compiler import (
     safe_eval_expr,
     extract_names,
     validate_expr_safety,
     ALLOWED_AST_NODES,
     BANNED_SUBSTRINGS,
 )
-from geosolver.ir.parser import load_ir
+from geosolver.problem.ir.parser import load_ir
 
 __all__ = [
     # Errors

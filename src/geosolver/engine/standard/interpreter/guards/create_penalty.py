@@ -4,7 +4,7 @@ from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from typing import Any
 
-from geosolver.ir.compiler import safe_eval_expr
+from geosolver.problem.ir.compiler import safe_eval_expr
 
 from .evaluate import _evaluate_guards
 

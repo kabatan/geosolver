@@ -20,9 +20,9 @@ from geosolver.engine.standard.interpreter.public.solve_finalize import (
     build_solve_failure_result,
     build_solve_success_result,
 )
-from geosolver.core.result import SolveResult, SolveStatus
-from geosolver.ir.compiler import safe_eval_expr, safe_eval_expr_hp
-from geosolver.ir.schema import IRSpec
+from geosolver.engine.standard.result import SolveResult, SolveStatus
+from geosolver.problem.ir.compiler import safe_eval_expr, safe_eval_expr_hp
+from geosolver.problem.ir.schema import IRSpec
 from geosolver.engine.standard.precision.type_guards.ensure_no_float import (
     ensure_high_precision_mode,
     ensure_no_float,

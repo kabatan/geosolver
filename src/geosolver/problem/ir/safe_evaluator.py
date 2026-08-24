@@ -4,7 +4,7 @@ import ast
 import operator
 from typing import Dict, Any, Callable
 
-from geosolver.ir.errors import IRCompileError, IRSecurityError
+from geosolver.problem.ir.errors import IRCompileError, IRSecurityError
 
 
 class SafeEvaluator(ast.NodeVisitor):

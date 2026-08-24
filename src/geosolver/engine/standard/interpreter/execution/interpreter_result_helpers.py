@@ -6,7 +6,7 @@ import math
 from typing import Any
 
 from geosolver.engine.standard.interpreter.answer import _wrap_exact_value
-from geosolver.core.result import SolveResult, SolveStatus
+from geosolver.engine.standard.result import SolveResult, SolveStatus
 
 
 def residual_norm(residuals: list[float]) -> float:

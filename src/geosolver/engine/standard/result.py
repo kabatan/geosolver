@@ -7,7 +7,7 @@ Solver/Optimizerの統一結果型。
 
 from dataclasses import dataclass, field
 from typing import Generic, List, Optional, TypeVar, Dict, Any
-from geosolver.core.exact_value import ExactValue
+from geosolver.exact.value import ExactValue
 
 
 from enum import Enum, auto

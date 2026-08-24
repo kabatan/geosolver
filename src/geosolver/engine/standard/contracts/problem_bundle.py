@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from geosolver.engine.standard.contracts.hard_feasibility_check import HardFeasibilityCheck
-from geosolver.ir.schema import IRSpec
+from geosolver.problem.ir.schema import IRSpec
 
 
 @dataclass(frozen=True)

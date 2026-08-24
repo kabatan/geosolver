@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from geosolver.core.result import ExactValue
+from geosolver.engine.standard.result import ExactValue
 from geosolver.exact import identify
 from geosolver.exact.approximate_marker import is_approximate_marker
 

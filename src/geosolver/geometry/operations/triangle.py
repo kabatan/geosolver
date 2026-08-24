@@ -9,7 +9,7 @@ from typing import Optional, Union, List, Any
 from sympy import sqrt, sin, cos, tan, acos, pi
 from geosolver.geometry.registry import geometry_symbol
 from geosolver.geometry.entities.base import Point, Line, Circle
-from geosolver.core.errors import CoincidentPointsError, CollinearPointsError
+from geosolver.errors import CoincidentPointsError, CollinearPointsError
 from geosolver.geometry.operations.triangle_circle_backends import (
     incenter_mpmath_impl,
     incenter_numpy_impl,

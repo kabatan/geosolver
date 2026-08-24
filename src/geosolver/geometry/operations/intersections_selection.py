@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from geosolver.core.errors import NoIntersectionError
+from geosolver.errors import NoIntersectionError
 from geosolver.geometry.mp.mp_primitives_intersections import _next_frozen_selector_entry
 
 

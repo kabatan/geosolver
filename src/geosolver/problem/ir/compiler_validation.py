@@ -5,7 +5,7 @@ from __future__ import annotations
 import ast
 from typing import List, Set, Type
 
-from geosolver.ir.errors import IRCompileError
+from geosolver.problem.ir.errors import IRCompileError
 
 
 def _normalize_math_caret(expr: str) -> str:

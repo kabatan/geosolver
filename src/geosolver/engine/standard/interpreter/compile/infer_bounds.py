@@ -6,8 +6,8 @@ import ast
 from typing import Any
 
 from geosolver.engine.standard.interpreter.guards.compile import compile_guards, evaluate_bound_hint
-from geosolver.ir.compiler import safe_eval_expr
-from geosolver.ir.schema import IRSpec
+from geosolver.problem.ir.compiler import safe_eval_expr
+from geosolver.problem.ir.schema import IRSpec
 
 
 DEFAULT_SCALE = 10.0
