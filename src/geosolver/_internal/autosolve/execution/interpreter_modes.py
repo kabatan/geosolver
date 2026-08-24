@@ -42,7 +42,7 @@ from geosolver._internal.solver.precision.type_guards.should_use_mpmath import (
     should_use_mpmath,
 )
 from geosolver._internal.solver.public.legacy_solve_tolerances import solve_residual_tolerance
-from geosolver.solver import solve
+from geosolver._internal.solver.public import solve
 
 from .interpreter_hp_helpers import (
     collect_hp_float_return_symbols as _collect_hp_float_return_symbols,

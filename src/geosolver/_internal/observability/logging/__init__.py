@@ -1,6 +1,5 @@
-"""Structured logging utilities for solver observability."""
+"""Logging compatibility used by the numerical solver."""
 
 from .compat import emit_legacy_log
-from .logger import StructuredLogger
 
-__all__ = ["StructuredLogger", "emit_legacy_log"]
+__all__ = ["emit_legacy_log"]

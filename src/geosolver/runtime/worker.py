@@ -13,7 +13,7 @@ from typing import Any
 
 from mpmath import mp
 
-from geosolver.autosolve.interpreter import run_ir
+from geosolver._internal.autosolve.public import run_ir
 from geosolver.runtime.protocol import WorkerArtifact, WorkerError, WorkerRequest
 
 LOGGER = logging.getLogger(__name__)

@@ -12,7 +12,7 @@ from geosolver._internal.autosolve.execution.interpreter_helpers import (
     select_feasible_candidate,
 )
 from geosolver._internal.observability.logging.compat import emit_legacy_log
-from geosolver.solver import solve
+from geosolver._internal.solver.public import solve
 
 
 FAST_MODE_TIME_LIMIT_MAX = 200.0
