@@ -17,8 +17,8 @@ Python 3.12とJuliaを用意し、Julia projectの依存関係をinstantiateし�
 uv sync --extra dev
 julia --project=src/geosolver/julia -e 'import Pkg; Pkg.instantiate()'
 uv run geosolver doctor
-uv run geosolver validate examples/problem.json
-uv run geosolver solve examples/problem.json --output result.json
+uv run geosolver validate path/to/problem.json
+uv run geosolver solve path/to/problem.json --output result.json
 uv run geosolver ui
 ```
 
@@ -61,7 +61,7 @@ result = solve(problem, SolveOptions(engine="standard", cores="auto"))
 }
 ```
 
-relation operatorは`=`、`!=`、`<`、`<=`、`>`、`>=`です。`right`はbooleanを認めず、整数、浮動小数、厳密式文字列を型を保ったまま扱います。詳しいDSLは[GEOSOLVER_GEOMETRY_DSL_AUTHORING_MANUAL_ja.md](docs/GEOSOLVER_GEOMETRY_DSL_AUTHORING_MANUAL_ja.md)を参照してください。
+relation operatorは`=`、`!=`、`<`、`<=`、`>`、`>=`です。`right`はbooleanを認めず、整数、浮動小数、厳密式文字列を型を保ったまま扱います。幾何関数とpredicateの一覧は`geosolver ui`のcatalog、または`/api/v1/dsl/catalog`で確認できます。
 
 ## 厳密結果
 
