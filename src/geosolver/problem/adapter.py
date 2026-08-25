@@ -40,6 +40,11 @@ def _source(value: object) -> str:
 
 def _predicate_to_engine(expression: str) -> str:
     stripped = expression.strip()
+    # ``Bound`` is already a solver-native guard.  Keeping it at the top
+    # level lets the guard compiler represent it as a bound constraint rather
+    # than evaluating it as a nested Python call in the HP context.
+    if re.match(r"^Bound\s*\(", stripped):
+        return stripped
     for public_name, engine_name in PREDICATE_ALIASES.items():
         if re.match(rf"^{re.escape(public_name)}\s*\(", stripped):
             return re.sub(

@@ -1,0 +1,73 @@
+{
+  "id": "aime-2000-1-2",
+  "variables": [
+    "u",
+    "v"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(u, v)"
+    },
+    {
+      "name": "diagonal",
+      "expression": "Line(Point(0, 0), Point(1, 1))"
+    },
+    {
+      "name": "y_axis",
+      "expression": "Line(Point(0, 0), Point(0, 1))"
+    },
+    {
+      "name": "x_axis",
+      "expression": "Line(Point(0, 0), Point(1, 0))"
+    },
+    {
+      "name": "B",
+      "expression": "Reflect(A, diagonal)"
+    },
+    {
+      "name": "C",
+      "expression": "Reflect(B, y_axis)"
+    },
+    {
+      "name": "D",
+      "expression": "Reflect(C, x_axis)"
+    },
+    {
+      "name": "E",
+      "expression": "Reflect(D, y_axis)"
+    },
+    {
+      "name": "pentagon",
+      "expression": "Polygon([A, B, C, D, E])"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "IsInteger(u)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsInteger(v)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "v",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "u",
+      "operator": ">",
+      "right": "v"
+    },
+    {
+      "left": "Area(A, B, C, D, E)",
+      "operator": "=",
+      "right": 451
+    }
+  ],
+  "target": "u + v"
+}

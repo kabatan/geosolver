@@ -144,7 +144,10 @@ def _compile_bound_guard(
     inclusive: bool = True,
 ) -> GuardIR:
     interval_text = interval_expr.strip()
-    if interval_text.startswith("(") and interval_text.endswith(")"):
+    if (
+        (interval_text.startswith("(") and interval_text.endswith(")"))
+        or (interval_text.startswith("[") and interval_text.endswith("]"))
+    ):
         parts = _split_top_level_args(interval_text[1:-1], expected_parts=2)
     else:
         parts = None
@@ -169,6 +172,52 @@ def _compile_bound_guard(
         lower_expr=lower_expr,
         upper_expr=upper_expr,
         bounds_hints=bounds_hints,
+    )
+
+
+def _compile_bound_call(source: str, body: str) -> GuardIR | None:
+    """Compile a ``Bound`` call, including calls nested in ``Assume``.
+
+    ``Bound`` exposes ``message`` as its only optional positional argument;
+    ``inclusive`` and the tolerance knobs are keyword-only.  The guard IR
+    only needs the interval and inclusivity, so message/tolerance arguments
+    are accepted and ignored here while malformed calls remain raw guards.
+    """
+    parts = _split_top_level_args(body)
+    if parts is None or len(parts) < 2:
+        return None
+    value_expr, interval_expr = parts[0].strip(), parts[1].strip()
+    if not value_expr or not interval_expr:
+        return None
+
+    inclusive = True
+    positional_message_seen = False
+    for argument in parts[2:]:
+        text = argument.strip()
+        if not text:
+            return None
+        if "=" not in text:
+            if positional_message_seen:
+                return None
+            positional_message_seen = True
+            continue
+        name, value = (item.strip() for item in text.split("=", 1))
+        if name == "inclusive":
+            if value == "False":
+                inclusive = False
+            elif value == "True":
+                inclusive = True
+            else:
+                return None
+        elif name in {"message", "rel_floor", "abs_floor"}:
+            continue
+        else:
+            return None
+    return _compile_bound_guard(
+        source,
+        value_expr,
+        interval_expr,
+        inclusive=inclusive,
     )
 
 
@@ -201,6 +250,19 @@ def _compile_raw_condition(source: str, condition_expr: str) -> GuardIR:
     )
 
 
+def _compile_residual_template(
+    source: str,
+    template: str,
+    body: str,
+) -> GuardIR | None:
+    """Compile a residual guard template after checking its arity."""
+    expected_parts = template.count("{")
+    parts = _split_top_level_args(body, expected_parts=expected_parts)
+    if parts is None:
+        return None
+    return _compile_residual_guard(source, template.format(*parts))
+
+
 def _split_top_level_compare(expr: str) -> tuple[str, str, str] | None:
     text = expr.strip()
     depth = 0
@@ -226,6 +288,10 @@ def _compile_condition_expr(source: str, expr: str) -> GuardIR:
     call = _extract_call_signature(expr)
     if call is not None:
         func_name, body = call
+        if func_name == "Bound":
+            bound_guard = _compile_bound_call(source, body)
+            if bound_guard is not None:
+                return bound_guard
         if func_name == "And":
             parts = _split_top_level_args(body)
             if parts:
@@ -250,6 +316,15 @@ def _compile_condition_expr(source: str, expr: str) -> GuardIR:
                     kind="logical_not",
                     children=( _compile_condition_expr(parts[0], parts[0]), ),
                 )
+        residual_template = get_residual_guard_template(func_name)
+        if residual_template is not None:
+            residual_guard = _compile_residual_template(
+                source,
+                residual_template,
+                body,
+            )
+            if residual_guard is not None:
+                return residual_guard
         if func_name in _COMPARE_GUARD_OPERATOR_MAP:
             parts = _split_top_level_args(body, expected_parts=2)
             if parts:
@@ -282,13 +357,9 @@ def compile_guard_expr(guard_expr: str) -> GuardIR:
 
     func_name, body = call
     if func_name == "Bound":
-        parts_2 = _split_top_level_args(body, expected_parts=2)
-        if parts_2:
-            return _compile_bound_guard(text, parts_2[0], parts_2[1])
-        parts_3 = _split_top_level_args(body, expected_parts=3)
-        if parts_3:
-            inclusive = _parse_inclusive_kwarg(parts_3[2])
-            return _compile_bound_guard(text, parts_3[0], parts_3[1], inclusive=inclusive)
+        bound_guard = _compile_bound_call(text, body)
+        if bound_guard is not None:
+            return bound_guard
         return _compile_raw_condition(text, text)
 
     if is_compare_guard(func_name):
@@ -317,9 +388,9 @@ def compile_guard_expr(guard_expr: str) -> GuardIR:
 
     residual_template = get_residual_guard_template(func_name)
     if residual_template is not None:
-        parts = _split_top_level_args(body)
-        if parts:
-            return _compile_residual_guard(text, residual_template.format(*parts))
+        residual_guard = _compile_residual_template(text, residual_template, body)
+        if residual_guard is not None:
+            return residual_guard
         return _compile_raw_condition(text, text)
 
     return _compile_raw_condition(text, text)

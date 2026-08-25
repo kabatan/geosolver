@@ -12,6 +12,10 @@ COMPARE_GUARD_NAMES: tuple[str, ...] = (
 )
 
 RESIDUAL_GUARD_TEMPLATES: dict[str, str] = {
+    # ``IsInteger`` is a residual-valued predicate rather than a boolean
+    # predicate.  Register it here so it is compiled through the residual
+    # guard path even when the DSL wraps it in ``Assume(...)``.
+    "IsInteger": "IsInteger({0})",
     "AssumeCollinear": "Collinear({0}, {1}, {2})",
     "AssumeParallel": "Parallel({0}, {1})",
     "AssumePerpendicular": "Perpendicular({0}, {1})",

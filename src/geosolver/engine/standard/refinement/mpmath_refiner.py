@@ -6,6 +6,7 @@ import ast
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
+from fractions import Fraction
 from functools import partial
 
 from mpmath import mp
@@ -268,6 +269,74 @@ def _build_integer_constraint_closures(
         specs=specs,
         target_integers=values,
     )
+
+
+def _exact_answer_from_integer_closures(
+    *,
+    bundle: ProblemBundle,
+    closures: tuple[IntegerConstraintClosure, ...],
+    precision: int = 120,
+) -> MPFloat | None:
+    """Evaluate a small arithmetic answer exactly from integer variables.
+
+    This deliberately handles only the closed form ``IsInteger(variable)``
+    case and arithmetic over those variables.  Geometry calls, arbitrary
+    expressions, and non-variable integer closures are left to the numerical
+    answer evaluator; they do not provide enough evidence for an exact hint.
+    """
+    if not closures or bundle.spec.answer_expr is None:
+        return None
+    integer_bindings: dict[str, int] = {}
+    variable_names = set(bundle.var_names)
+    for closure in closures:
+        try:
+            node = ast.parse(closure.inner_expression, mode="eval").body
+        except (SyntaxError, TypeError, ValueError):
+            return None
+        if not isinstance(node, ast.Name) or node.id not in variable_names:
+            return None
+        target = mp.mpf(closure.target_integer)
+        if not mp.isfinite(target) or target != mp.nint(target):
+            return None
+        integer_bindings[node.id] = int(mp.nint(target))
+    if not integer_bindings:
+        return None
+
+    try:
+        answer_node = ast.parse(bundle.spec.answer_expr, mode="eval").body
+
+        def evaluate(node: ast.AST) -> Fraction:
+            if (
+                isinstance(node, ast.Constant)
+                and isinstance(node.value, int)
+                and not isinstance(node.value, bool)
+            ):
+                return Fraction(int(node.value))
+            if isinstance(node, ast.Name) and node.id in integer_bindings:
+                return Fraction(integer_bindings[node.id])
+            if isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.UAdd | ast.USub):
+                value = evaluate(node.operand)
+                return value if isinstance(node.op, ast.UAdd) else -value
+            if isinstance(node, ast.BinOp):
+                left = evaluate(node.left)
+                right = evaluate(node.right)
+                if isinstance(node.op, ast.Add):
+                    return left + right
+                if isinstance(node.op, ast.Sub):
+                    return left - right
+                if isinstance(node.op, ast.Mult):
+                    return left * right
+                if isinstance(node.op, ast.Div):
+                    return left / right
+                if isinstance(node.op, ast.Pow) and right.denominator == 1:
+                    return left ** int(right)
+            raise ValueError("answer is not arithmetic over integer variables")
+
+        exact = evaluate(answer_node)
+    except (ArithmeticError, SyntaxError, TypeError, ValueError, ZeroDivisionError):
+        return None
+    with mp.workdps(max(50, int(precision))):
+        return mp.mpf(exact.numerator) / mp.mpf(exact.denominator)
 
 
 def _evaluate_integer_closure_residuals(
@@ -860,6 +929,7 @@ class MpmathRefiner(LocalRefinerPort):
             phase_history=closure_history,
             stage_status=closure_status,
             answer_dps=closure_answer_dps,
+            integer_closures=closures,
         )
         return self._build_refined_candidate(
             bundle=bundle,
@@ -873,6 +943,7 @@ class MpmathRefiner(LocalRefinerPort):
                 tuple(mp.mpf(target) for target in target_integers),
             ),
             answer_dps=closure_answer_dps,
+            integer_closures=closures,
         )
 
     def project_point_to_noninteger_constraint_manifold(
@@ -1111,6 +1182,7 @@ class MpmathRefiner(LocalRefinerPort):
         stage_status: str,
         candidate_id: int,
         answer_dps: int,
+        integer_closures: tuple[IntegerConstraintClosure, ...] = (),
     ) -> RefinedCandidate:
         final_vector = self._residual_vector_for_stage(
             bundle=bundle,
@@ -1127,11 +1199,17 @@ class MpmathRefiner(LocalRefinerPort):
             point,
             int(answer_dps),
         )
-        answer = self._evaluate_answer(
-            evaluator=evaluator,
-            point=point,
-            dps=int(answer_dps),
+        answer = _exact_answer_from_integer_closures(
+            bundle=bundle,
+            closures=integer_closures,
+            precision=max(120, int(answer_dps)),
         )
+        if answer is None:
+            answer = self._evaluate_answer(
+                evaluator=evaluator,
+                point=point,
+                dps=int(answer_dps),
+            )
         return RefinedCandidate(
             x_hp=tuple(point),
             residual_norm_hp=final_norm,
@@ -1214,6 +1292,7 @@ class MpmathRefiner(LocalRefinerPort):
         phase_history: tuple[str, ...],
         stage_status: str,
         answer_dps: int,
+        integer_closures: tuple[IntegerConstraintClosure, ...] = (),
         deadline_monotonic: float | None = None,
     ) -> tuple[list[MPFloat], tuple[str, ...], str, int]:
         current = [mp.mpf(value) for value in point]
@@ -1224,6 +1303,8 @@ class MpmathRefiner(LocalRefinerPort):
             evaluator=evaluator,
             point=current,
             dps=final_dps,
+            integer_closures=integer_closures,
+            smooth_zero_constraints=not bool(integer_closures),
         )
         if final_vector is None:
             return current, tuple(history), stage_status, answer_dps
@@ -1248,7 +1329,8 @@ class MpmathRefiner(LocalRefinerPort):
             self._residual_vector_for_stage,
             bundle,
             evaluator,
-            smooth_zero_constraints=True,
+            integer_closures=integer_closures,
+            smooth_zero_constraints=not bool(integer_closures),
         )
         for closure_dps in closure_stages:
             if deadline_monotonic is not None and time.monotonic() >= float(deadline_monotonic):
@@ -1369,6 +1451,60 @@ class MpmathRefiner(LocalRefinerPort):
             point=current,
         )
         if direct_candidate is not None:
+            # A direct numerical acceptance is not an exactness certificate
+            # when the problem contains explicit integer-valued constraints.
+            # Close those constraints first so the answer is evaluated on the
+            # certified integer branch (rather than, e.g., at 21 + 1e-85).
+            integer_closures = _build_integer_constraint_closures(
+                bundle=bundle,
+                point=current,
+                dps=max(
+                    int(self.config.direct_accept_dps),
+                    int(max(self.config.schedule_dps)),
+                ),
+            )
+            if integer_closures:
+                closure_status, closure_point, closure_answer_dps, closure_history = (
+                    self._run_integer_closure_path(
+                        bundle=bundle,
+                        evaluator=evaluator,
+                        start_point=current,
+                        bounds=bounds,
+                        preserve_hard_feasibility=bool(candidate.hard_feasible),
+                        integer_closures=integer_closures,
+                    )
+                )
+                (
+                    polished_point,
+                    polished_history,
+                    polished_status,
+                    polished_answer_dps,
+                ) = self._apply_post_lm_closure_polish(
+                    bundle=bundle,
+                    evaluator=evaluator,
+                    bounds=bounds,
+                    point=closure_point,
+                    phase_history=closure_history,
+                    stage_status=closure_status,
+                    answer_dps=closure_answer_dps,
+                    integer_closures=integer_closures,
+                    deadline_monotonic=deadline_monotonic,
+                )
+                if polished_status == TARGET_REACHED:
+                    return (
+                        self._build_refined_candidate(
+                            bundle=bundle,
+                            candidate=candidate,
+                            evaluator=evaluator,
+                            point=polished_point,
+                            phase_history=polished_history,
+                            stage_status=polished_status,
+                            candidate_id=int(candidate.candidate_id),
+                            answer_dps=polished_answer_dps,
+                            integer_closures=integer_closures,
+                        ),
+                    )
+
             # A low residual at the final evaluation precision is only a
             # numerical acceptance test.  It is not evidence that the
             # double-precision search point is the exact root.  In
@@ -1396,7 +1532,7 @@ class MpmathRefiner(LocalRefinerPort):
                     deadline_monotonic=deadline_monotonic,
                 )
             )
-            if polished_status == TARGET_REACHED:
+            if polished_status == TARGET_REACHED and not integer_closures:
                 return (
                     self._build_refined_candidate(
                         bundle=bundle,
@@ -1454,8 +1590,6 @@ class MpmathRefiner(LocalRefinerPort):
             answer_dps=answer_dps,
         )
         results: list[RefinedCandidate] = [primary_candidate]
-        if stage_status == TARGET_REACHED:
-            return tuple(results)
         closures = _build_integer_constraint_closures(
             bundle=bundle,
             point=current,
@@ -1471,16 +1605,36 @@ class MpmathRefiner(LocalRefinerPort):
             preserve_hard_feasibility=primary_candidate.hard_feasible,
             integer_closures=closures,
         )
+        closure_point, polished_closure_history, closure_status, closure_answer_dps = (
+            self._apply_post_lm_closure_polish(
+                bundle=bundle,
+                evaluator=evaluator,
+                bounds=bounds,
+                point=closure_point,
+                phase_history=phase_history + closure_history,
+                stage_status=closure_status,
+                answer_dps=closure_answer_dps,
+                integer_closures=closures,
+                deadline_monotonic=deadline_monotonic,
+            )
+        )
         closure_candidate = self._build_refined_candidate(
             bundle=bundle,
             candidate=candidate,
             evaluator=evaluator,
             point=closure_point,
-            phase_history=tuple(history) + closure_history,
+            phase_history=polished_closure_history,
             stage_status=closure_status,
             candidate_id=_integer_closure_candidate_id(int(candidate.candidate_id)),
             answer_dps=closure_answer_dps,
+            integer_closures=closures,
         )
-        if closure_candidate.residual_norm_hp < primary_candidate.residual_norm_hp:
+        # Keep the closure-derived candidate even when both residuals round to
+        # zero at the evaluator precision: it carries the exact arithmetic
+        # answer obtained from the certified integer targets.
+        if (
+            closure_candidate.residual_norm_hp <= primary_candidate.residual_norm_hp
+            or closure_candidate.answer_hp != primary_candidate.answer_hp
+        ):
             results.append(closure_candidate)
         return tuple(results)
