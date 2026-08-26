@@ -23,7 +23,7 @@ def _import_pynomad() -> object:
         import PyNomad  # type: ignore[import-not-found]
     except Exception as exc:
         raise ImportError(
-            "PyNomad is required for rescue search (no silent fallback)."
+            "PyNomad (provided by PyNomadBBO) is required for rescue search (no silent fallback)."
         ) from exc
     return PyNomad
 

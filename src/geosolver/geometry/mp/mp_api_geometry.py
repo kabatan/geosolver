@@ -8,9 +8,11 @@ from geosolver.engine.standard.precision.type_guards.high_precision_contaminatio
     HighPrecisionContaminationError,
 )
 from geosolver.engine.standard.precision.type_guards.strict_to_mpf import strict_to_mpf
+from geosolver.geometry.operations.advanced_helpers import compute_polar_coeffs
+
 from .mp_api_geometry_centers import (
-    MP_FeuerbachPoint,
     MP_FermatPoint,
+    MP_FeuerbachPoint,
     MP_FirstFermatPoint,
     MP_FirstIsodynamicPoint,
     MP_GergonnePoint,
@@ -22,7 +24,6 @@ from .mp_api_geometry_centers import (
     MP_SpiekerCenter,
     MP_SymmedianPoint,
 )
-
 from .mp_impl import (
     MPArc,
     MPCircle,
@@ -307,16 +308,18 @@ def MP_Parallel(line1, line2):
 
 def MP_Polar(point, circle):
     center = circle.center
-    r = circle.radius
     dx = point.x - center.x
     dy = point.y - center.y
-    d2 = dx * dx + dy * dy
-    if d2 == 0:
+    if dx == 0 and dy == 0:
         raise ValueError("Point cannot be at center of circle")
-    k = r * r / d2
-    inv_x = center.x + k * dx
-    inv_y = center.y + k * dy
-    return MPLine(-dy, dx, dy * inv_x - dx * inv_y)
+    a, b, c = compute_polar_coeffs(
+        center.x,
+        center.y,
+        circle.radius,
+        point.x,
+        point.y,
+    )
+    return MPLine(a, b, c)
 
 
 def MP_Pole(line, circle):

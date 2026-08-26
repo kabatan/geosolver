@@ -22,6 +22,8 @@ uv run geosolver solve path/to/problem.json --output result.json
 uv run geosolver ui
 ```
 
+`standard`のNOMAD検索にはNOMAD 4の`PyNomadBBO`を使用します。対応wheelがない環境ではSciPyフォールバックになります。
+
 CLIは`validate`、`solve`、`doctor`、`ui`を提供します。HTTP APIはloopback限定の`/api/v1`です。
 
 ## Python API
