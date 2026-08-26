@@ -83,9 +83,12 @@ def mp_angle(A: "MPPoint", B: "MPPoint", C: "MPPoint") -> mpf:
 
     norm_BA = BA.norm()
     norm_BC = BC.norm()
-    tol = mpf(10) ** (-(mp.dps - 10))
-    if norm_BA < tol or norm_BC < tol:
-        return mpf("0")
+    # A zero-length ray has no direction, hence no angle.  Do not coerce this
+    # undefined case to zero: doing so makes coincident-point diagrams satisfy
+    # angle constraints.  Non-zero rays, however small, remain valid because
+    # the angle itself is scale invariant.
+    if norm_BA == 0 or norm_BC == 0:
+        raise ValueError("Angle undefined for zero-length ray")
 
     dot = BA.dot(BC)
     cross = BA.cross(BC)

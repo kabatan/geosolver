@@ -86,6 +86,7 @@ GEOMETRY_PUBLIC_API = [
     "IncircleContactPoint",
     "Arc",
     "PointOnArc",
+    "Degrees",
     "IsInteger",
     "IsPrime",
     "geometry_symbol",

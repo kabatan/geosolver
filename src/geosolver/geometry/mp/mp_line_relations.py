@@ -75,9 +75,8 @@ def mp_angle_between_vectors(v1: "MPPoint", v2: "MPPoint") -> mpf:
         norm1 = v1.norm()
         norm2 = v2.norm()
 
-        tol = _line_tolerance()
-        if norm1 < tol or norm2 < tol:
-            return mpf("0")
+        if norm1 == 0 or norm2 == 0:
+            raise ValueError("Angle undefined for zero-length vector")
 
         point_cls = _mp_point_class()
         n1 = point_cls(v1.x / norm1, v1.y / norm1)
@@ -142,9 +141,8 @@ def mp_angle_between_lines(l1: "MPLine", l2: "MPLine") -> mpf:
         norm1 = v1.norm()
         norm2 = v2.norm()
 
-        tol = _line_tolerance()
-        if norm1 < tol or norm2 < tol:
-            return mpf("0")
+        if norm1 == 0 or norm2 == 0:
+            raise ValueError("Angle undefined for zero-length line direction")
 
         cross = v1.x * v2.y - v1.y * v2.x
         sin_angle = cross / (norm1 * norm2)

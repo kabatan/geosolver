@@ -12,9 +12,33 @@ from sympy import Eq, Or, Piecewise, exp, pi, sin
 from geosolver.geometry.registry import geometry_symbol
 
 __all__ = [
+    "Degrees",
     "IsInteger",
     "IsPrime",
 ]
+
+
+# =============================================================================
+# Degrees - radian-to-degree conversion
+# =============================================================================
+
+@geometry_symbol("Degrees", category="numeric")
+def Degrees(angle: Any) -> Any:
+    """Convert an angle in radians to degrees.
+
+    The solver's geometric angle primitives use radians.  Keeping this as a
+    registered scalar function (rather than only rewriting a top-level target)
+    makes the conversion usable in constraints and nested expressions too.
+    """
+    return angle * 180 / pi
+
+
+@Degrees.set_mpmath
+def _Degrees_mpmath(angle):
+    """mpmath high-precision radian-to-degree conversion."""
+    from mpmath import mp
+
+    return angle * 180 / mp.pi
 
 # 1000未満の素数リスト（事前計算）
 _PRIMES_UNDER_1000 = [

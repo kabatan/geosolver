@@ -54,6 +54,47 @@ class _ClosureDeadlineExceeded(RuntimeError):
     """Internal control signal for an optional closure that used its budget."""
 
 
+def _problem_contains_call(spec: object, function_name: str) -> bool:
+    """Return whether any user expression in ``spec`` calls ``function_name``.
+
+    Angle residuals contain an absolute-value cusp at collinear configurations.
+    The refiner uses this narrow syntactic signal to opt into the one-sided
+    finite-difference fallback; all other problems retain centered differences.
+    """
+    texts: list[str] = []
+    for construction in getattr(spec, "construction", ()) or ():
+        expression = getattr(construction, "expr", None)
+        if isinstance(expression, str):
+            texts.append(expression)
+    # Only expressions that contribute to the residual/objective are relevant
+    # to this Jacobian.  Hard guards are checked separately and should not
+    # alter the numerical derivative policy of an otherwise smooth system.
+    for attribute in ("constraints",):
+        for expression in getattr(spec, attribute, ()) or ():
+            if isinstance(expression, str):
+                texts.append(expression)
+    # ``answer_expr`` is evaluated after refinement and is not part of the
+    # residual Jacobian.  Including it here would change the finite-difference
+    # policy for an otherwise smooth problem merely because its requested
+    # output happens to be an angle.
+    for attribute in ("objective_expr",):
+        expression = getattr(spec, attribute, None)
+        if isinstance(expression, str):
+            texts.append(expression)
+
+    for expression in texts:
+        try:
+            tree = ast.parse(expression, mode="eval")
+        except SyntaxError:
+            continue
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Call):
+                continue
+            if isinstance(node.func, ast.Name) and node.func.id == function_name:
+                return True
+    return False
+
+
 def _vector_norm(values: list[MPFloat]) -> MPFloat:
     return mp.sqrt(mp.fsum(value * value for value in values))
 
@@ -607,6 +648,7 @@ def _run_rank_aware_findroot(
     dps: int,
     target_residual: MPFloat,
     max_steps: int,
+    one_sided_at_cusp: bool = False,
 ) -> list[MPFloat] | None:
     """Refine on a local full-rank chart of a residual manifold.
 
@@ -627,6 +669,7 @@ def _run_rank_aware_findroot(
         point=start_point,
         dps=int(dps),
         residual_fn=jacobian_residual_fn,
+        one_sided_at_cusp=bool(one_sided_at_cusp),
     )
     if jacobian is None:
         return None
@@ -712,6 +755,7 @@ def _run_findroot_closure(
     max_steps: int,
     residual_fn: Callable[[list[MPFloat], int], list[MPFloat] | None] | None = None,
     deadline_monotonic: float | None = None,
+    one_sided_at_cusp: bool = False,
 ) -> tuple[list[MPFloat], MPFloat] | None:
     if len(start_point) == 0:
         return None
@@ -837,6 +881,7 @@ def _run_findroot_closure(
             dps=int(dps),
             target_residual=mp.mpf(target_residual),
             max_steps=int(max_steps),
+            one_sided_at_cusp=bool(one_sided_at_cusp),
         )
     except _ClosureDeadlineExceeded:
         return None
@@ -1106,6 +1151,7 @@ class MpmathRefiner(LocalRefinerPort):
                 point=current,
                 dps=int(dps),
                 residual_fn=residual_fn,
+                one_sided_at_cusp=_problem_contains_call(bundle.spec, "Angle"),
             )
             if jacobian is None:
                 status = BRANCH_INSTABILITY
@@ -1356,6 +1402,7 @@ class MpmathRefiner(LocalRefinerPort):
                 max_steps=closure_max_steps,
                 residual_fn=closure_residual_fn,
                 deadline_monotonic=deadline_monotonic,
+                one_sided_at_cusp=_problem_contains_call(bundle.spec, "Angle"),
             )
             if closed is None:
                 continue

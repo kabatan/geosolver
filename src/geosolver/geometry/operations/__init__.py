@@ -85,7 +85,7 @@ from geosolver.geometry.operations.constructions import (
     InscribedPolygon,
 )
 
-from geosolver.geometry.operations.numeric import IsInteger, IsPrime
+from geosolver.geometry.operations.numeric import Degrees, IsInteger, IsPrime
 from geosolver.geometry.operations.aliases import Center, Collinear, ContactPoint
 
 __all__ = [
@@ -164,6 +164,7 @@ __all__ = [
     "Pole",
     "RadicalAxis",
     # numeric
+    "Degrees",
     "IsInteger",
     "IsPrime",
     "Center",

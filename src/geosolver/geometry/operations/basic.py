@@ -159,6 +159,13 @@ def Angle(obj1, obj2=None, obj3=None):
 
         BA = A - B
         BC = C - B
+        # An angle is undefined when either ray has zero length.  Returning
+        # ``atan2(0, 0) == 0`` silently turns a coincident-point construction
+        # into a valid zero-angle constraint and can make the solver certify a
+        # degenerate diagram.  Keep symbolic expressions untouched, but reject
+        # cases that are provably coincident at construction time.
+        if BA.dot(BA) == 0 or BC.dot(BC) == 0:
+            raise ValueError("Angle undefined for coincident points")
         dot = BA.dot(BC)
         cross = BA.cross(BC)
 

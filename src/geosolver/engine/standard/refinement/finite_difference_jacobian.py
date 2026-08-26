@@ -17,8 +17,17 @@ def compute_finite_difference_jacobian(
     point: Sequence[MPFloat],
     dps: int,
     residual_fn: Callable[[list[MPFloat], int], list[MPFloat] | None],
+    one_sided_at_cusp: bool = False,
 ) -> list[list[MPFloat]] | None:
-    """Compute Jacobian matrix by centered finite differences."""
+    """Compute a Jacobian matrix by finite differences.
+
+    Centered differences are the least biased choice for smooth residuals,
+    but they cancel at an absolute-value/``atan2(abs(...), ...)`` cusp.  For
+    explicitly marked nonsmooth systems, use a non-zero one-sided directional
+    slope only when the two one-sided slopes have opposite signs and the
+    centered slope is numerical zero.  The default remains the historical
+    centered scheme so unrelated smooth problems retain their behavior.
+    """
     base = residual_fn(list(point), int(dps))
     if base is None:
         return None
@@ -45,7 +54,27 @@ def compute_finite_difference_jacobian(
                     continue
                 denominator = mp.mpf("2") * step
                 for row in range(rows):
-                    jacobian[row][column] = (plus_vec[row] - minus_vec[row]) / denominator
+                    centered = (plus_vec[row] - minus_vec[row]) / denominator
+                    if one_sided_at_cusp:
+                        forward = (plus_vec[row] - base[row]) / step
+                        backward = (base[row] - minus_vec[row]) / step
+                        scale = max(mp.mpf("1"), abs(forward), abs(backward), abs(centered))
+                        tolerance = 100 * mp.eps * scale
+                        if (
+                            abs(centered) <= tolerance
+                            and abs(forward) > tolerance
+                            and abs(backward) > tolerance
+                            and forward * backward < 0
+                        ):
+                            # A derivative does not exist at a true cusp.  A
+                            # directional slope is still useful to Newton/LM;
+                            # choose the stronger side deterministically.
+                            centered = (
+                                forward
+                                if abs(forward) >= abs(backward)
+                                else backward
+                            )
+                    jacobian[row][column] = centered
                 success = True
                 break
             if not success:

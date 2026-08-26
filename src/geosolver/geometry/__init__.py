@@ -40,6 +40,7 @@ from geosolver.geometry.operations import (
     OnCircle,
     ParallelismMeasure,
     # Numeric constraints
+    Degrees,
     IsInteger,
     IsPrime,
     # Constructions
