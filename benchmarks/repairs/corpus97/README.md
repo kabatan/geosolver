@@ -77,7 +77,8 @@
 ## researchブランチでの検査
 
 このブランチでは入力を再生成せず、確定した`benchmarks/cases.jsonl`と`benchmarks/dsl/`を直接使う。
-一度きりの旧修復・再取得・診断スクリプトは元の`codex/solver-hardening`作業ツリーへ残した。
+一度きりの旧修復・再取得・診断スクリプトはrepo外の保全ディレクトリへ移した。
+現在の所在地は[作業場所と旧資料](../../../README.md#作業場所と旧資料)を参照。
 以下の初回修復・試運転の記録は当時の報告であり、現在のsolver成績を示すものではない。
 
 ```bash
@@ -93,7 +94,7 @@
 - `witnesses.py`: 手計算から得た正しい配置のfixture。残差・定義域・求値を検査するが、campaignの初期値へ渡さない。
 - 旧`dsl_repairs.py`・`repair_data.py`・`apply_repairs.py`は初回修復時の実装。現在の参照値は`cases.jsonl`へ確定済み。
 
-原資料のバイナリはrepo外の `/home/kabatan/work/solver-research-assets/corpus97-sources/` に保存。旧`fetch_sources.py`も元の作業ツリーに残す。変更され得るWebページでは再取得hashが一致するとは限らないため、手元の原資料を優先する。
+原資料のバイナリはrepo外の `/home/kabatan/work/solver-research-assets/corpus97-sources/` に保存。旧`fetch_sources.py`は上記の保全ディレクトリに残す。変更され得るWebページでは再取得hashが一致するとは限らないため、手元の原資料を優先する。
 
 旧importerの再実行は修復を上書きしてしまうため、修復記録が存在すれば書込み前に停止するよう保護した。実験結果によるケース除外、失敗した問題の参照集合を空にする操作、過去artifactの書換えはしない。
 

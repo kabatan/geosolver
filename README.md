@@ -116,4 +116,14 @@ worker protocolはv3です。過去の評価artifactは書き換えず、runner�
 323問は既にsolver開発に使用した集合であり、未使用の評価集合ではありません。
 問題・出典・修正台帳は[benchmark説明](benchmarks/README.md)、今後の研究方針は
 [研究レポート・実験計画](JSSA_2026_REPORT_AND_EXPERIMENT_PLAN.md)を参照してください。
-以前の修正報告・実行結果は元の`codex/solver-hardening`作業ツリーに残しています。
+
+## 作業場所と旧資料
+
+通常の作業場所は`/home/kabatan/work/solver`直下、ブランチは`research`です。
+作業用worktreeは追加しません。移植時に作った`solver-wt/research`は解消済みです。
+
+以前の修正報告・実行結果・未追跡ファイルは、repo外の
+`/home/kabatan/work/solver-research-assets/workspace-before-research-root-20260830/snapshot/`
+へ元の相対パスを保って退避し、全ファイルのSHA-256を照合しました。
+旧trackedファイルの未commit変更はstash `d1fccaea8583bdc645f9d88716aa47540ba4f055`にも保存しています。
+同保全ディレクトリの`RECOVERY.md`に復旧方法を記録しています。旧branch・履歴・研究資産は削除していません。

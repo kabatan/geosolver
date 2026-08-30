@@ -25,7 +25,7 @@ runは180秒・1 coreで固定し、Linuxでは異なる物理coreのCPUへjob�
 参照値はraw runに入れません。manifestの参照hashと一致する参照を使い、別工程のassessでcanonical exact key集合を比較します。未確認の参照値は正誤判定から除外します。
 
 `local-evaluation/`はGit追跡対象外です。実行後はそのディレクトリと`SHA256SUMS`を別途保全してください。
-以前の実行結果は元の作業ツリーに残っています。移植前の`solver-a0-canary-20260830`は全jobが同じCPUへ固定されていたため、時間を正式な性能評価へ使いません。
+以前の実行結果はrepo外の保全ディレクトリへ移しました。[作業場所と旧資料](../README.md#作業場所と旧資料)を参照してください。移植前の`solver-a0-canary-20260830`は全jobが同じCPUへ固定されていたため、時間を正式な性能評価へ使いません。
 
 `stress_runner.py`はLinuxの負荷診断専用です。例えば8物理core・16並列の過剰割当を再現できますが、専有1 coreの正式な性能値とは比較しません。通常の研究実行には`research_runner.py`を使います。
 

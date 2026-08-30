@@ -7,6 +7,10 @@
 その後の未使用補助関数の削除・MP backend接続修正は[追加整理記録](RESEARCH_CLEANUP.md)を参照。
 移植時のhashを現在の値で上書きせず、現在の製品hashは`src/geosolver/engine-lock.json`で管理する。
 
+作業場所はその後`/home/kabatan/work/solver`直下へ統合し、以下で述べる一時的なresearch worktreeは解消した。
+元の未commit変更と資料の保全先は[現在の作業場所・旧資料](README.md#作業場所と旧資料)を参照。
+以下の移植元・移植先パスは、移植当時の履歴として記載している。
+
 ## 移植元と保全
 
 - 移植元：`/home/kabatan/work/solver`、`codex/solver-hardening`。
@@ -80,10 +84,10 @@ Git履歴は共有しているので、これは作業ツリー・以降のcommi
 ## 以降の作業
 
 ```bash
-cd /home/kabatan/work/solver-wt/research
+cd /home/kabatan/work/solver
 uv sync --all-extras --frozen
 uv run geosolver doctor
 uv run python benchmarks/research_runner.py validate
 ```
 
-正式実験はこのブランチのclean treeで実行する。元のdirty worktreeをcheckoutし直す必要はない。
+正式実験はrepo直下の`research`ブランチのclean treeで実行する。別worktreeは不要。
