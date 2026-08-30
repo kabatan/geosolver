@@ -44,32 +44,3 @@ def normalize_interval(
     lo_v = to_float_fn(lo) if lo is not None else None
     hi_v = to_float_fn(hi) if hi is not None else None
     return lo_v, hi_v
-
-
-def is_acute_triangle(
-    A: Any,
-    B: Any,
-    C: Any,
-    rel_floor: float | None,
-    abs_floor: float | None,
-    *,
-    to_point_xy_fn: Callable[[Any], tuple[float, float]],
-    get_tolerance_fn: Callable[[float, float | None, float | None], float],
-) -> bool:
-    """Check whether three points form an acute triangle."""
-    ax, ay = to_point_xy_fn(A)
-    bx, by = to_point_xy_fn(B)
-    cx, cy = to_point_xy_fn(C)
-
-    a2 = (bx - cx) ** 2 + (by - cy) ** 2
-    b2 = (cx - ax) ** 2 + (cy - ay) ** 2
-    c2 = (ax - bx) ** 2 + (ay - by) ** 2
-
-    scale = max(1.0, a2, b2, c2)
-    tol = get_tolerance_fn(scale, rel_floor, abs_floor)
-
-    area = abs((bx - ax) * (cy - ay) - (by - ay) * (cx - ax)) * 0.5
-    if area <= tol:
-        return False
-
-    return (b2 + c2) > (a2 + tol) and (c2 + a2) > (b2 + tol) and (a2 + b2) > (c2 + tol)

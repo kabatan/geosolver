@@ -196,19 +196,3 @@ def select_intersection(result: Any, n: Any, exclude: Any, near: Any, far: Any) 
     if exclude is not None:
         raise AmbiguousResultError("exclude selector leaves multiple intersections")
     raise AmbiguousResultError("multiple intersections require one selector")
-
-
-def _to_float_safe(expr: Any) -> float:
-    return to_float_safe(expr)
-
-
-def _dist_sq(p1: Any, p2: Any) -> Any:
-    return dist_sq(p1, p2)
-
-
-def _get_dynamic_tolerance() -> float:
-    return get_dynamic_tolerance()
-
-
-def _select_intersection(result: Any, n: Any, exclude: Any, near: Any, far: Any) -> Any:
-    return select_intersection(result, n, exclude, near, far)

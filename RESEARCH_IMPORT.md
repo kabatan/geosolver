@@ -3,6 +3,10 @@
 2026-08-30。`research`の旧solverを整理済み最新版へ置き換えた。
 アルゴリズム・探索設定・DSL・参照値の変更は行っていない。
 
+この文書と`RESEARCH_IMPORT_MANIFEST.json`は移植commit `faf43a85`時点の記録。
+その後の未使用補助関数の削除・MP backend接続修正は[追加整理記録](RESEARCH_CLEANUP.md)を参照。
+移植時のhashを現在の値で上書きせず、現在の製品hashは`src/geosolver/engine-lock.json`で管理する。
+
 ## 移植元と保全
 
 - 移植元：`/home/kabatan/work/solver`、`codex/solver-hardening`。

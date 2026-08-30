@@ -125,21 +125,6 @@ from .mp_impl import (
     mp_line_through_two_points,
 )
 
-# Fallback for polygon area if optional module is missing
-try:
-    from .mpmath_geometry import mp_polygon_area  # type: ignore
-except ImportError:  # pragma: no cover
-
-    def mp_polygon_area(*points):
-        """Shoelace formula for polygon area (absolute value)."""
-        if len(points) < 3:
-            return mp.mpf("0")
-        pts = [(_to_mpf(p.x), _to_mpf(p.y)) for p in points]
-        area = mp.mpf("0")
-        for (x1, y1), (x2, y2) in zip(pts, pts[1:] + pts[:1], strict=False):
-            area += x1 * y2 - x2 * y1
-        return mp.fabs(area) / 2
-
 
 def _to_mpf(value):
     if isinstance(value, mpf):
@@ -152,18 +137,6 @@ def _to_mpf(value):
         raise TypeError(
             f"Unsupported high precision numeric value in geometry.mp_api: {value!r}"
         ) from exc
-
-
-def _ensure_point(obj):
-    if isinstance(obj, MPPoint):
-        return obj
-    raise TypeError("Expected MPPoint")
-
-
-def _ensure_line(obj):
-    if isinstance(obj, MPLine):
-        return obj
-    raise TypeError("Expected MPLine")
 
 
 def MP_Point(x, y):

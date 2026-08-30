@@ -15,9 +15,6 @@ from contextlib import contextmanager
 from typing import Any
 
 from geosolver.geometry.safety.numeric import (
-    is_acute_triangle as _is_acute_triangle_impl,
-)
-from geosolver.geometry.safety.numeric import (
     normalize_interval as _normalize_interval_impl,
 )
 from geosolver.geometry.safety.numeric import (
@@ -143,25 +140,6 @@ def _get_tolerance(scale: float, rel_floor: float | None, abs_floor: float | Non
 def _to_point_xy(point: Any) -> tuple[float, float]:
     """点オブジェクトを (x, y) のfloat座標に変換する。"""
     return _to_point_xy_impl(point, to_float_fn=_to_float)
-
-
-def _is_acute_triangle(
-    A: Any,
-    B: Any,
-    C: Any,
-    rel_floor: float | None,
-    abs_floor: float | None,
-) -> bool:
-    """3点が鋭角三角形を成すか判定する。"""
-    return _is_acute_triangle_impl(
-        A,
-        B,
-        C,
-        rel_floor,
-        abs_floor,
-        to_point_xy_fn=_to_point_xy,
-        get_tolerance_fn=_get_tolerance,
-    )
 
 
 def _handle_failure(message: str) -> None:

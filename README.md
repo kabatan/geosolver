@@ -5,6 +5,7 @@ GeoSolverは、有限個の値を答えとして持つ2次元幾何問題を数�
 この`research`ブランチにはsolver本体、323問の開発用DSL、回帰テスト、研究用runnerだけを中心に収録しています。
 HTTP/UI、Julia、旧solver、過去の大容量実行結果は含めません。
 出典・DSL修正の台帳と研究計画は保全しています。[移植記録](RESEARCH_IMPORT.md)を参照してください。
+移植後に残っていた補助関数とMP backendの接続は[追加整理記録](RESEARCH_CLEANUP.md)のとおり整理しました。
 
 ## 対応環境
 

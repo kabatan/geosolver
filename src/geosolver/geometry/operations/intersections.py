@@ -17,34 +17,13 @@ from geosolver.geometry.operations.intersections_circle_ops import (
 )
 from geosolver.geometry.operations.intersections_closest import ClosestPoint
 from geosolver.geometry.operations.intersections_selection import (
-    dist_sq as _dist_sq_helper,
-)
-from geosolver.geometry.operations.intersections_selection import (
-    get_dynamic_tolerance as _get_dynamic_tolerance_helper,
-)
-from geosolver.geometry.operations.intersections_selection import (
     select_intersection as _select_intersection,
-)
-from geosolver.geometry.operations.intersections_selection import (
-    to_float_safe as _to_float_safe_helper,
 )
 from geosolver.geometry.registry import geometry_symbol
 
 # =============================================================================
 # Intersect (Generic)
 # =============================================================================
-
-
-def _to_float_safe(expr: Any) -> float:
-    return _to_float_safe_helper(expr)
-
-
-def _dist_sq(p1: Any, p2: Any) -> Any:
-    return _dist_sq_helper(p1, p2)
-
-
-def _get_dynamic_tolerance() -> float:
-    return _get_dynamic_tolerance_helper()
 
 
 @geometry_symbol("Intersect", category="intersections")

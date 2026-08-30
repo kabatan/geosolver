@@ -213,7 +213,6 @@ _PRIMES_UNDER_1000 = [
     991,
     997,
 ]
-_PRIMES_UNDER_1000_SET = set(_PRIMES_UNDER_1000)
 _IS_PRIME_CONDITION = None
 
 
@@ -252,7 +251,7 @@ def IsInteger(x: Any) -> Any:
 @IsInteger.set_mpmath
 def _IsInteger_mpmath(x):
     """mpmath高精度版"""
-    from .mp_impl import mp_is_integer
+    from geosolver.geometry.mp.mp_number_constraints import mp_is_integer
 
     return mp_is_integer(x)
 
@@ -320,6 +319,6 @@ def IsPrime(x: Any) -> Any:
 @IsPrime.set_mpmath
 def _IsPrime_mpmath(x):
     """mpmath高精度版"""
-    from .mp_impl import mp_is_prime
+    from geosolver.geometry.mp.mp_number_constraints import mp_is_prime
 
     return mp_is_prime(x)
