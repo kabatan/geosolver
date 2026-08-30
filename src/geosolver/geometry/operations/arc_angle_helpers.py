@@ -6,7 +6,7 @@ import math
 from typing import Any
 
 from sympy import N as _N
-from sympy import atan2, cos, pi, sin
+from sympy import atan2, pi
 
 try:
     import mpmath
@@ -20,14 +20,6 @@ def get_atan2(y: Any, x: Any) -> Any:
     if isinstance(y, int | float) and isinstance(x, int | float):
         return math.atan2(y, x)
     return atan2(y, x)
-
-
-def get_pi(val_type: Any) -> Any:
-    if mpmath and isinstance(val_type, mpmath.mpf):
-        return mpmath.pi
-    if isinstance(val_type, int | float):
-        return math.pi
-    return pi
 
 
 def point_angle(center: Any, point: Any) -> Any:
@@ -47,15 +39,6 @@ def in_arc_ccw(x: Any, start: Any, end: Any) -> bool:
     if start <= end:
         return start <= x <= end
     return x >= start or x <= end
-
-
-def angle_to_value(val: Any) -> Any:
-    if mpmath and isinstance(val, mpmath.mpf):
-        return val
-    try:
-        return float(_N(val))
-    except Exception:
-        return 0.0
 
 
 def normalize_angle(angle: Any) -> Any:
@@ -130,22 +113,6 @@ def angle_in_arc(
         use_arc1 = diff <= pi_val
 
     return (in_arc1 and use_arc1) or (in_arc2 and not use_arc1)
-
-
-def get_cos(angle: Any) -> Any:
-    if mpmath and isinstance(angle, mpmath.mpf):
-        return mpmath.cos(angle)
-    if isinstance(angle, int | float):
-        return math.cos(angle)
-    return cos(angle)
-
-
-def get_sin(angle: Any) -> Any:
-    if mpmath and isinstance(angle, mpmath.mpf):
-        return mpmath.sin(angle)
-    if isinstance(angle, int | float):
-        return math.sin(angle)
-    return sin(angle)
 
 
 def get_dynamic_tolerance_arc() -> Any:

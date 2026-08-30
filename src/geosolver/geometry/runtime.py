@@ -47,12 +47,10 @@ class GeometryRuntime:
     Attributes:
         backend: 使用するバックエンド
         precision: 精度（桁数）
-        raise_on_degenerate: 退化図形で例外を投げるか
     """
 
     backend: BackendType = BackendType.SYMPY
     precision: int = 15
-    raise_on_degenerate: bool = False
 
     def dispatch(self, wrapper: "MultiFunctionWrapper", args: tuple, kwargs: dict[str, Any]) -> Any:
         """
@@ -104,7 +102,6 @@ def get_backend() -> BackendType:
 def use_runtime(
     backend: BackendType = None,
     precision: int = None,
-    raise_on_degenerate: bool = None,
 ):
     """
     ランタイム設定をスコープ内で変更
@@ -112,7 +109,6 @@ def use_runtime(
     Args:
         backend: バックエンド（省略時は現在の値を維持）
         precision: 精度（省略時は現在の値を維持）
-        raise_on_degenerate: 退化図形で例外を投げるか
 
     Yields:
         新しいGeometryRuntime
@@ -127,9 +123,6 @@ def use_runtime(
     new = GeometryRuntime(
         backend=backend if backend is not None else current.backend,
         precision=precision if precision is not None else current.precision,
-        raise_on_degenerate=(
-            raise_on_degenerate if raise_on_degenerate is not None else current.raise_on_degenerate
-        ),
     )
     token = _runtime_var.set(new)
     try:

@@ -16,7 +16,7 @@ from geosolver.problem.models import GeometryProblem
 from geosolver.runtime.deadline import runtime_session
 
 ROOT = Path(__file__).resolve().parents[1]
-AUDIT = ROOT / "benchmarks/repairs/corpus97"
+BOUNDARY_DSL = ROOT / "tests/fixtures/jmo-2009-boundary.json"
 
 
 def make_evaluator(dsl):
@@ -26,20 +26,16 @@ def make_evaluator(dsl):
 
 
 def test_saved_jmo_2009_forbidden_boundary_is_not_accepted():
-    dsl = json.loads((AUDIT / "known-boundary-regression.json").read_text())
+    dsl = json.loads(BOUNDARY_DSL.read_text())
     fixtures = json.loads((ROOT / "tests/fixtures/forbidden-boundary-candidates.json").read_text())
-    candidate = next(
-        c
-        for c in fixtures
-        if c["candidate_id"] == 9000000000014
-    )
+    candidate = next(c for c in fixtures if c["candidate_id"] == 9000000000014)
     with mp.workdps(1200), runtime_session(time.monotonic() + 15):
         point = tuple(mp.mpf(v) for v in candidate["x_hp"])
         assert not verify_final_candidate(evaluator=make_evaluator(dsl), values=point).verified
 
 
 def test_jmo_2009_true_noncoincident_configuration_survives():
-    dsl = json.loads((AUDIT / "known-boundary-regression.json").read_text())
+    dsl = json.loads(BOUNDARY_DSL.read_text())
     with mp.workdps(220), runtime_session(time.monotonic() + 15):
         point = (mp.mpf(14) / 9, 8 * mp.sqrt(2) / 9, mp.mpf(26) / 9, -16 * mp.sqrt(2) / 9)
         result = verify_final_candidate(evaluator=make_evaluator(dsl), values=point)

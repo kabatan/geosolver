@@ -14,11 +14,10 @@ Geometry Function Registry
 
 import functools
 from collections.abc import Callable
-from typing import Any
 
 # グローバルレジストリ
 _REGISTRY: dict[str, "MultiFunctionWrapper"] = {}
-_METADATA: dict[str, dict[str, Any]] = {}
+_CATEGORIES: dict[str, str] = {}
 
 
 class MultiFunctionWrapper:
@@ -82,14 +81,13 @@ class MultiFunctionWrapper:
         return f"<MultiFunctionWrapper '{self._name}' backends={backends}>"
 
 
-def geometry_symbol(name: str = None, category: str = "general", auto_derive: bool = True):
+def geometry_symbol(name: str = None, category: str = "general"):
     """
     幾何シンボル登録デコレータ
 
     Args:
         name: 関数名（省略時は関数名を使用）
         category: カテゴリ（basic, triangles, circles, etc.）
-        auto_derive: lambdifyで自動派生するか（将来用）
 
     Returns:
         MultiFunctionWrapper
@@ -103,7 +101,6 @@ def geometry_symbol(name: str = None, category: str = "general", auto_derive: bo
         _geometry_symbol_decorator,
         name=name,
         category=category,
-        auto_derive=auto_derive,
     )
 
 
@@ -112,7 +109,6 @@ def _geometry_symbol_decorator(
     *,
     name: str | None,
     category: str,
-    auto_derive: bool,
 ) -> MultiFunctionWrapper:
     symbol_name = func.__name__ if name is None else name
 
@@ -124,11 +120,7 @@ def _geometry_symbol_decorator(
 
     # レジストリに登録
     _REGISTRY[symbol_name] = wrapper
-    _METADATA[symbol_name] = {
-        "category": category,
-        "doc": func.__doc__,
-        "auto_derive": auto_derive,
-    }
+    _CATEGORIES[symbol_name] = category
 
     return wrapper
 
@@ -150,15 +142,4 @@ def list_functions(category: str = None) -> dict[str, MultiFunctionWrapper]:
     """
     if category is None:
         return dict(_REGISTRY)
-    return {k: v for k, v in _REGISTRY.items() if _METADATA.get(k, {}).get("category") == category}
-
-
-def get_metadata(name: str) -> dict[str, Any] | None:
-    """関数のメタデータを取得"""
-    return _METADATA.get(name)
-
-
-def clear_registry():
-    """レジストリをクリア（テスト用）"""
-    _REGISTRY.clear()
-    _METADATA.clear()
+    return {k: v for k, v in _REGISTRY.items() if _CATEGORIES.get(k) == category}

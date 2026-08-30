@@ -4,8 +4,8 @@ GeoSolverは、有限個の値を答えとして持つ2次元幾何問題を数�
 
 この`research`ブランチにはsolver本体、323問の開発用DSL、回帰テスト、研究用runnerだけを中心に収録しています。
 HTTP/UI、Julia、旧solver、過去の大容量実行結果は含めません。
-出典・DSL修正の台帳と研究計画は保全しています。[移植記録](RESEARCH_IMPORT.md)を参照してください。
-移植後に残っていた補助関数とMP backendの接続は[追加整理記録](RESEARCH_CLEANUP.md)のとおり整理しました。
+出典と参照値は現行の`benchmarks/cases.jsonl`、研究方針は研究計画書で管理します。
+完了済みの移植・修復資料はGit履歴に残し、通常の実行・テストからは切り離しています。
 
 ## 対応環境
 
@@ -114,7 +114,7 @@ uv run python benchmarks/research_runner.py summarize benchmarks/local-evaluatio
 worker protocolはv3です。過去の評価artifactは書き換えず、runnerの読取adapterで比較します。
 
 323問は既にsolver開発に使用した集合であり、未使用の評価集合ではありません。
-問題・出典・修正台帳は[benchmark説明](benchmarks/README.md)、今後の研究方針は
+問題・出典・履歴の参照方法は[benchmark説明](benchmarks/README.md)、今後の研究方針は
 [研究レポート・実験計画](JSSA_2026_REPORT_AND_EXPERIMENT_PLAN.md)を参照してください。
 
 ## 作業場所と旧資料
@@ -126,4 +126,4 @@ worker protocolはv3です。過去の評価artifactは書き換えず、runner�
 `/home/kabatan/work/solver-research-assets/workspace-before-research-root-20260830/snapshot/`
 へ元の相対パスを保って退避し、全ファイルのSHA-256を照合しました。
 旧trackedファイルの未commit変更はstash `d1fccaea8583bdc645f9d88716aa47540ba4f055`にも保存しています。
-同保全ディレクトリの`RECOVERY.md`に復旧方法を記録しています。旧branch・履歴・研究資産は削除していません。
+同保全ディレクトリの`RECOVERY.md`に復旧方法を記録しています。旧作業branchは削除済みですが、保全済みの履歴・研究資産・stashは維持しています。

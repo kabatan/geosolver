@@ -2,15 +2,11 @@
 
 from __future__ import annotations
 
-import contextvars
-from contextlib import contextmanager
-from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from mpmath import mp, mpf
 from mpmath import sqrt as mp_sqrt
 
-from geosolver.engine.standard.contracts.selection_trace_entry import SelectionTraceEntry
 from geosolver.engine.standard.evaluation.selection_trace import record_selection_trace
 from geosolver.errors import AmbiguousResultError, InfiniteSolutionsError, NoIntersectionError
 
@@ -19,37 +15,6 @@ if TYPE_CHECKING:
 
 
 INTERSECTION_TOLERANCE_DPS_RATIO = mpf("0.8")
-
-
-SelectorBranchEntry = SelectionTraceEntry
-
-
-@dataclass
-class SelectorTrace:
-    entries: list[SelectorBranchEntry] = field(default_factory=list)
-    min_margin: mpf = mp.inf
-
-    @property
-    def has_entries(self) -> bool:
-        return bool(self.entries)
-
-    def record(self, entry: SelectionTraceEntry) -> None:
-        self.entries.append(entry)
-        if mp.isfinite(entry.margin):
-            self.min_margin = min(self.min_margin, entry.margin)
-
-
-_SELECTOR_TRACE: contextvars.ContextVar[SelectorTrace | None] = contextvars.ContextVar(
-    "_SELECTOR_TRACE",
-    default=None,
-)
-_FROZEN_SELECTOR_ENTRIES: contextvars.ContextVar[tuple[SelectorBranchEntry, ...] | None] = (
-    contextvars.ContextVar("_FROZEN_SELECTOR_ENTRIES", default=None)
-)
-_SELECTOR_CALL_INDEX: contextvars.ContextVar[int] = contextvars.ContextVar(
-    "_SELECTOR_CALL_INDEX",
-    default=0,
-)
 
 
 def _intersection_tolerance(scale: mpf | None = None) -> mpf:
@@ -73,58 +38,13 @@ def _selector_margin(value: mpf) -> mpf:
 
 
 def _record_selector_branch(branch_index: int, margin: mpf, kind: str, candidates) -> None:
-    entry = record_selection_trace(
+    record_selection_trace(
         selector_kind=kind,
         candidate_count=len(candidates),
         selected_index=branch_index,
         candidates=tuple((p.x, p.y) for p in candidates),
         margin=_selector_margin(margin),
     )
-    trace = _SELECTOR_TRACE.get()
-    if trace is None:
-        return
-    trace.record(entry)
-
-
-def _next_frozen_selector_entry() -> SelectorBranchEntry | None:
-    frozen_entries = _FROZEN_SELECTOR_ENTRIES.get()
-    if not frozen_entries:
-        return None
-    index = _SELECTOR_CALL_INDEX.get()
-    _SELECTOR_CALL_INDEX.set(index + 1)
-    if index >= len(frozen_entries):
-        return None
-    return frozen_entries[index]
-
-
-@contextmanager
-def capture_selector_trace() -> SelectorTrace:
-    trace = SelectorTrace()
-    token_trace = _SELECTOR_TRACE.set(trace)
-    token_frozen = _FROZEN_SELECTOR_ENTRIES.set(None)
-    token_index = _SELECTOR_CALL_INDEX.set(0)
-    try:
-        yield trace
-    finally:
-        _SELECTOR_CALL_INDEX.reset(token_index)
-        _FROZEN_SELECTOR_ENTRIES.reset(token_frozen)
-        _SELECTOR_TRACE.reset(token_trace)
-
-
-@contextmanager
-def freeze_selector_trace(
-    entries: list[SelectorBranchEntry] | tuple[SelectorBranchEntry, ...],
-) -> None:
-    frozen = tuple(entries)
-    token_trace = _SELECTOR_TRACE.set(None)
-    token_frozen = _FROZEN_SELECTOR_ENTRIES.set(frozen)
-    token_index = _SELECTOR_CALL_INDEX.set(0)
-    try:
-        yield
-    finally:
-        _SELECTOR_CALL_INDEX.reset(token_index)
-        _FROZEN_SELECTOR_ENTRIES.reset(token_frozen)
-        _SELECTOR_TRACE.reset(token_trace)
 
 
 def _select_original_candidate(
@@ -151,10 +71,6 @@ def _select_original_candidate(
             _record_selector_branch(0, mp.inf, "unique", candidates)
             return candidates[0]
         raise AmbiguousResultError("multiple intersections require one selector")
-
-    frozen_entry = _next_frozen_selector_entry()
-    if frozen_entry is not None and 0 <= int(frozen_entry.branch_index) < len(candidates):
-        return candidates[int(frozen_entry.branch_index)]
 
     active: list[tuple[int, MPPoint]] = list(enumerate(candidates))
     margin = mp.inf

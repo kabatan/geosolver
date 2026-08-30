@@ -1,7 +1,6 @@
-"""Regression coverage for the last geometry helpers retained during import."""
+"""Geometry backend dispatch and internal import integrity."""
 
 import ast
-import importlib
 from pathlib import Path
 
 import pytest
@@ -46,29 +45,6 @@ def test_public_polygon_area_and_acute_guards_keep_the_active_implementations():
         AssumeAcute(a, b, c)
         with pytest.raises(AssumptionError):
             AssumeAcute(a, b, MP_Point(2, 0))
-
-
-@pytest.mark.parametrize(
-    "module,retired",
-    [
-        ("geosolver.geometry.mp.mp_api", ("_ensure_point", "_ensure_line", "mp_polygon_area")),
-        (
-            "geosolver.geometry.operations.intersections",
-            ("_to_float_safe", "_dist_sq", "_get_dynamic_tolerance"),
-        ),
-        (
-            "geosolver.geometry.operations.intersections_selection",
-            ("_to_float_safe", "_dist_sq", "_get_dynamic_tolerance", "_select_intersection"),
-        ),
-        ("geosolver.geometry.safety", ("_is_acute_triangle",)),
-        ("geosolver.geometry.safety.numeric", ("is_acute_triangle",)),
-        ("geosolver.geometry.operations.numeric", ("_PRIMES_UNDER_1000_SET",)),
-        ("geosolver.geometry.mp.mp_number_constraints", ("_MP_PRIMES_UNDER_1000",)),
-    ],
-)
-def test_retired_geometry_helpers_are_not_reintroduced(module, retired):
-    loaded = importlib.import_module(module)
-    assert not any(hasattr(loaded, name) for name in retired)
 
 
 def test_all_explicit_internal_import_targets_exist():

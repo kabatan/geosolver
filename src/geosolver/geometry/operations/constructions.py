@@ -8,7 +8,6 @@ from typing import Any
 
 from sympy import simplify, sqrt
 
-from geosolver.errors import CoincidentPointsError
 from geosolver.geometry.entities.base import Line, Point
 from geosolver.geometry.operations.constructions_extra import (
     CircleThroughPoint,
@@ -46,22 +45,6 @@ from geosolver.geometry.operations.constructions_linear_backends import (
     perpendicular_line_numpy_impl,
 )
 from geosolver.geometry.registry import geometry_symbol
-
-# =============================================================================
-# Helper: 退化チェックの挙動制御用
-# =============================================================================
-# runtimeでの制御が理想だが、個別のフラグもサポート
-_RAISE_ON_DEGENERATE = False
-
-
-def set_raise_on_degenerate(val: bool):
-    global _RAISE_ON_DEGENERATE
-    _RAISE_ON_DEGENERATE = val
-
-
-def get_raise_on_degenerate() -> bool:
-    return _RAISE_ON_DEGENERATE
-
 
 # =============================================================================
 # PerpendicularLine
@@ -159,9 +142,7 @@ def PerpendicularBisector(p1: Point, p2: Point) -> Line | None:
         b = -l_a
         c = -(a * mid_x + b * mid_y)
         return Line(a, b, c)
-    except Exception as exc:
-        if get_raise_on_degenerate():
-            raise CoincidentPointsError(f"Points coincide: {p1}, {p2}") from exc
+    except Exception:
         return None
 
 
@@ -223,8 +204,6 @@ def AngleBisector(A: Point, B: Point, C: Point) -> Line | None:
 
         # ゼロ除算チェック
         if norm_BA == 0 or norm_BC == 0:
-            if get_raise_on_degenerate():
-                raise CoincidentPointsError("Points coincide")
             return None
 
         u = Point(BA.x / norm_BA, BA.y / norm_BA)
@@ -246,8 +225,6 @@ def AngleBisector(A: Point, B: Point, C: Point) -> Line | None:
         return Line(a, b, c)
 
     except Exception:
-        if get_raise_on_degenerate():
-            raise
         return None
 
 

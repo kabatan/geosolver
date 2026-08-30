@@ -6,7 +6,6 @@ from math import sqrt
 from typing import Any
 
 from geosolver.errors import AmbiguousResultError, NoIntersectionError
-from geosolver.geometry.mp.mp_primitives_intersections import _next_frozen_selector_entry
 
 
 def _emit_selection_trace(
@@ -129,11 +128,6 @@ def select_intersection(result: Any, n: Any, exclude: Any, near: Any, far: Any) 
             margin=margin,
         )
         return point
-
-    if n is not None or exclude is not None or near is not None or far is not None:
-        frozen = _next_frozen_selector_entry()
-        if frozen is not None and 0 <= int(frozen.branch_index) < len(candidates):
-            return finish(candidates[int(frozen.branch_index)])
 
     if exclude is not None:
         filtered = []

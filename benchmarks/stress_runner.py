@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import sys
 import threading
@@ -16,54 +15,13 @@ from queue import Queue
 import psutil
 import research_runner as runner
 
-ANCHORS = {
-    "aime-2000-1-2",
-    "AIME-2006-I-01",
-    "HMMT-2014-FEB-GEO-10",
-    "HMMT-2015-FEB-GEO-04",
-    "HMMT-2008-FEB-GEO-07",
-    "aime-2001-2-7",
-    "aime-2001-1-9",
-    "AIME-2007-II-15",
-}
-QUOTAS = {"AIME": 25, "HMMT": 24, "JMO": 11}
 
-
-def natural_key(record):
-    parts = record.identifier.upper().split("-")
-    if parts[0] == "AIME":
-        parts = [{"I": "1", "II": "2"}.get(part, part) for part in parts]
-    return tuple(str(int(part)) if part.isdigit() else part for part in parts)
-
-
-def select_cases(records):
-    eligible = [r for r in records if r.runnable and r.truth_status == "verified"]
-    chosen = [r for r in eligible if r.identifier in ANCHORS]
-    if len(chosen) != len(ANCHORS):
-        raise runner.CampaignError("an anchor is missing or not verified")
-    seen = {natural_key(r) for r in chosen}
-    ranked = sorted(
-        eligible,
-        key=lambda r: hashlib.sha256(("solver-stress60-v1/" + r.identifier).encode()).hexdigest(),
-    )
-    for family, quota in QUOTAS.items():
-        count = sum(r.identifier.upper().split("-")[0] == family for r in chosen)
-        for record in ranked:
-            if count == quota:
-                break
-            if record.identifier.upper().split("-")[0] != family or natural_key(record) in seen:
-                continue
-            chosen.append(record)
-            seen.add(natural_key(record))
-            count += 1
-        if count != quota:
-            raise runner.CampaignError(f"insufficient eligible cases for {family}")
-    return sorted(
-        chosen,
-        key=lambda r: hashlib.sha256(
-            ("solver-stress60-v1/order/" + r.identifier).encode()
-        ).hexdigest(),
-    )
+def select_cases(records, identifiers):
+    requested = set(identifiers)
+    chosen = [r for r in records if r.identifier in requested and r.runnable]
+    if not requested or {r.identifier for r in chosen} != requested:
+        raise runner.CampaignError("a nonempty set of runnable case IDs is required")
+    return sorted(chosen, key=lambda r: r.identifier)
 
 
 def cpu_slots(cpus, jobs):
@@ -77,7 +35,9 @@ def main():
     parser.add_argument("destination", type=Path)
     parser.add_argument("--jobs", type=int, default=16)
     parser.add_argument("--physical-cores", type=int, default=8)
-    parser.add_argument("--case-id", action="append")
+    selection_group = parser.add_mutually_exclusive_group(required=True)
+    selection_group.add_argument("--case-id", action="append")
+    selection_group.add_argument("--all", action="store_true", help="all verified runnable cases")
     arguments = parser.parse_args()
     destination = arguments.destination.resolve()
     if destination.exists() and any(destination.iterdir()):
@@ -99,19 +59,13 @@ def main():
     if not validation["valid"]:
         raise runner.CampaignError(str(validation))
     records = runner._load_cases()
-    if arguments.case_id:
-        requested = set(arguments.case_id)
-        records = [r for r in records if r.identifier in requested and r.runnable]
-        if {r.identifier for r in records} != requested:
-            raise runner.CampaignError("unknown or non-runnable case requested")
-        selection = "explicit follow-up IDs; see manifest"
+    if arguments.all:
+        identifiers = [r.identifier for r in records if r.runnable and r.truth_status == "verified"]
+        selection = "all verified runnable cases, ordered by case ID"
     else:
-        records = select_cases(records)
-        selection = (
-            "verified runnable cases only; eight pre-existing anchors; family quotas "
-            "25 AIME / 24 HMMT / 11 JMO; SHA256(solver-stress60-v1/+ID) ranking; "
-            "natural AIME duplicates excluded; no solver outcomes used"
-        )
+        identifiers = arguments.case_id
+        selection = "explicit case IDs, ordered by case ID; see manifest"
+    records = select_cases(records, identifiers)
     psutil.Process().cpu_affinity(cpus)
     manifest = runner._manifest(records, [0])
     manifest["diagnostic_execution"] = {

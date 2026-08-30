@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from functools import lru_cache
 from typing import Any
 
@@ -17,12 +17,6 @@ class RuntimeContract:
     allowed_keywords: frozenset[str]
     variadic: bool
     result_kind: str
-
-    def public_payload(self) -> dict[str, Any]:
-        payload = asdict(self)
-        payload["parameters"] = list(self.parameters)
-        payload["allowed_keywords"] = sorted(self.allowed_keywords)
-        return payload
 
 
 @lru_cache(maxsize=1)
@@ -43,11 +37,6 @@ def runtime_contracts() -> dict[str, RuntimeContract]:
 @lru_cache(maxsize=1)
 def selector_values() -> dict[str, tuple[Any, ...]]:
     return dict(dsl_spec().selector_values)
-
-
-def catalog_document() -> dict[str, Any]:
-    """Return the public catalog; retained as the compatibility entrypoint."""
-    return catalog_payload()
 
 
 def catalog_payload() -> dict[str, Any]:

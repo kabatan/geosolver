@@ -2,8 +2,6 @@
 Numeric conversion and rounding helpers for mpmath geometry code.
 """
 
-from collections.abc import Sequence
-
 from mpmath import mp, mpf
 
 from geosolver.engine.standard.precision.type_guards.high_precision_contamination_error import (
@@ -28,20 +26,6 @@ def mp_evalf(value: object, precision: int = 15) -> mpf:
     """Evaluate a numeric value as mpf."""
     del precision
     return to_mpf(value)
-
-
-def _is_mpf_instance(value: object) -> bool:
-    return type(value).__name__ == "mpf" or (
-        hasattr(value, "__class__") and value.__class__.__name__ == "mpf"
-    )
-
-
-def convert_sympy_input(vec: Sequence[object]) -> list[object]:
-    """Normalize sequence values for high-precision math without float demotion."""
-    has_mpf = any(_is_mpf_instance(v) for v in vec)
-    if has_mpf:
-        return [v for v in vec]
-    return [to_mpf(v) for v in vec]
 
 
 def round_to_nearest_int(value: object) -> int:

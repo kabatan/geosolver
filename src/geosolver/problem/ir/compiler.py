@@ -28,20 +28,6 @@ __all__ = [
 ]
 
 
-PYTHON37_LITERAL_NODES: tuple[type, ...] = tuple(
-    node
-    for node in (
-        ast.__dict__.get("Num"),
-        ast.__dict__.get("Str"),
-    )
-    if isinstance(node, type)
-)
-
-PYTHON38_SUBSCRIPT_NODES: tuple[type, ...] = tuple(
-    node for node in (ast.__dict__.get("Index"),) if isinstance(node, type)
-)
-
-
 # 許可するASTノードタイプ
 ALLOWED_AST_NODES: set[type] = {
     ast.Expression,
@@ -87,8 +73,6 @@ ALLOWED_AST_NODES: set[type] = {
     ast.Attribute,
     ast.Subscript,
     ast.Slice,
-    *PYTHON37_LITERAL_NODES,
-    *PYTHON38_SUBSCRIPT_NODES,
 }
 
 # 禁止するサブストリング（コードインジェクション対策）

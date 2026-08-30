@@ -135,12 +135,6 @@ def _CircleThroughPoint_mpmath(center, point):
     return circle_through_point_mpmath_impl(center, point)
 
 
-def _get_raise_on_degenerate_flag() -> bool:
-    from geosolver.geometry.operations.constructions import get_raise_on_degenerate
-
-    return get_raise_on_degenerate()
-
-
 @geometry_symbol("CircleThroughThreePoints", category="constructions")
 def CircleThroughThreePoints(p1: Point, p2: Point, p3: Point) -> Circle | None:
     x1, y1 = p1.x, p1.y
@@ -148,8 +142,6 @@ def CircleThroughThreePoints(p1: Point, p2: Point, p3: Point) -> Circle | None:
     x3, y3 = p3.x, p3.y
     D = 2 * (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2))
     if D == 0:
-        if _get_raise_on_degenerate_flag():
-            raise CoincidentPointsError("Points are collinear")
         return None
     Ux = (
         (x1**2 + y1**2) * (y2 - y3) + (x2**2 + y2**2) * (y3 - y1) + (x3**2 + y3**2) * (y1 - y2)

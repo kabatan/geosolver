@@ -30,20 +30,8 @@ class DegenerateGeometryError(GeometryDomainError):
     pass
 
 
-class CollinearPointsError(DegenerateGeometryError):
-    """3点以上が一直線上にある場合"""
-
-    pass
-
-
 class CoincidentPointsError(DegenerateGeometryError):
     """2点以上が一致する場合"""
-
-    pass
-
-
-class ParallelLinesError(DegenerateGeometryError):
-    """2直線が平行で交点がない場合"""
 
     pass
 
@@ -54,49 +42,7 @@ class NoIntersectionError(GeometryError):
     pass
 
 
-class ZeroAreaError(DegenerateGeometryError):
-    """面積がゼロの場合"""
-
-    pass
-
-
 class InvalidCircleError(DegenerateGeometryError):
     """無効な円（半径がゼロまたは負）"""
-
-    pass
-
-
-class ExcludedPointError(GeometryError):
-    """除外指定された点が選択された場合"""
-
-    pass
-
-
-class SolverError(Exception):
-    """ソルバー関連の基底例外"""
-
-    pass
-
-
-class NoSolutionError(SolverError):
-    """解が見つからない場合"""
-
-    pass
-
-
-class ConvergenceError(SolverError):
-    """収束しない場合"""
-
-    pass
-
-
-class SolverTimeoutError(SolverError):
-    """時間制限超過"""
-
-    pass
-
-
-class PrecisionError(SolverError):
-    """目標精度に到達できない場合"""
 
     pass
