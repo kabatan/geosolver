@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
 
 
 def compute_polar_coeffs(cx: Any, cy: Any, radius: Any, px: Any, py: Any) -> tuple[Any, Any, Any]:
@@ -20,7 +20,7 @@ def compute_pole_point(
     cy: Any,
     radius: Any,
     tolerance: Any,
-) -> Optional[tuple[Any, Any]]:
+) -> tuple[Any, Any] | None:
     denom = line_a * cx + line_b * cy + line_c
     if abs(denom) < tolerance:
         return None

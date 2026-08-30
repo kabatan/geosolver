@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import math
 import random
+from dataclasses import dataclass
 
 from geosolver.engine.standard.contracts.candidate_record import FloatCandidate
 from geosolver.engine.standard.contracts.evaluator_port import EvaluatorPort
@@ -15,10 +15,10 @@ from geosolver.engine.standard.search.nomad_config import (
     derive_seed_values,
 )
 from geosolver.engine.standard.search.sampling import augment_with_manifold_samples
+from geosolver.runtime.deadline import timed_phase, uses_deadline
 
 PHASE0_SEEDS = (0, 1, 2, 3, 4)
 PHASE0_POINTS_PER_SEED_DEFAULT = 50
-EXACT_DISTANCE_SAMPLE_COUNT = 12
 
 
 def derive_initial_probe_seeds(
@@ -39,7 +39,6 @@ class InitialProbeResult:
     constraint_scales: tuple[float, ...] | None = None
 
 
-
 def augment_initial_probe_with_exact_distance_samples(
     *,
     bundle: ProblemBundle,
@@ -47,12 +46,7 @@ def augment_initial_probe_with_exact_distance_samples(
     bounds: list[tuple[float, float]],
     initial_probe_result: InitialProbeResult,
 ) -> InitialProbeResult:
-    """Backwards-compatible wrapper for structure-aware Phase 0 samplers.
-
-    The implementation now lives in ``pipeline.sampling`` so deterministic
-    geometry-derived samples are managed as a strategy portfolio rather than as
-    orchestration-specific rescue logic.
-    """
+    """Add structure-aware samples while preserving Phase 0 constraint scales."""
 
     candidates, metrics = augment_with_manifold_samples(
         bundle=bundle,
@@ -101,6 +95,8 @@ def _compute_constraint_scales(
     return scales
 
 
+@timed_phase("initial_probe")
+@uses_deadline
 def run_initial_probe(
     *,
     evaluator: EvaluatorPort,
@@ -116,9 +112,14 @@ def run_initial_probe(
     best_point: tuple[float, ...] | None = None
     best_residual = float("inf")
     per_constraint_abs: list[list[float]] = []
+    residual_vectors = []
     for seed in seeds:
         rng = random.Random(int(seed))
         for point_index in range(int(points_per_seed)):
+            from geosolver.runtime.deadline import expired
+
+            if expired():
+                break
             point = [rng.uniform(low, high) for low, high in bounds]
             total_points += 1
             float_eval = evaluator.evaluate_float_residual(point)
@@ -154,7 +155,20 @@ def run_initial_probe(
                     validity_margin_float=None,
                 )
             )
+            residual_vectors.append(tuple(float_eval.residual_vector))
     constraint_scales = _compute_constraint_scales(per_constraint_abs)
+    from dataclasses import replace
+
+    from geosolver.engine.standard.evaluation.scaled_score import scaled_score
+
+    records = [
+        replace(
+            record,
+            score=scaled_score(residuals, constraint_scales)
+            + (0.0 if record.guard_ok else GUARD_PENALTY_DEFAULT),
+        )
+        for record, residuals in zip(records, residual_vectors, strict=True)
+    ]
     metrics = {
         "total_random_points": total_points,
         "finite_residual_ratio": 0.0 if total_points == 0 else (finite_points / total_points),
@@ -168,4 +182,3 @@ def run_initial_probe(
         metrics=metrics,
         constraint_scales=constraint_scales,
     )
-

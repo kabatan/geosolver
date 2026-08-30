@@ -1,0 +1,109 @@
+{
+  "id": "HMMT-2024-FEB-GEO-03",
+  "variables": [
+    "h",
+    "sy"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "L",
+      "expression": "sqrt(123 * 123 - h * h)"
+    },
+    {
+      "name": "t",
+      "expression": "L / 3"
+    },
+    {
+      "name": "S",
+      "expression": "Point(-L / 3, sy)"
+    },
+    {
+      "name": "W",
+      "expression": "Point(-L, h)"
+    },
+    {
+      "name": "X",
+      "expression": "Point(-2 * L / 3, h)"
+    },
+    {
+      "name": "Y",
+      "expression": "Point(0, h)"
+    },
+    {
+      "name": "Z",
+      "expression": "Point(L, h)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(O, S)",
+      "operator": "=",
+      "right": 61
+    },
+    {
+      "left": "Distance(O, W)",
+      "operator": "=",
+      "right": 123
+    },
+    {
+      "left": "Distance(O, Z)",
+      "operator": "=",
+      "right": 123
+    },
+    {
+      "left": "Distance(S, X)",
+      "operator": "=",
+      "right": 61
+    },
+    {
+      "left": "Distance(S, Y)",
+      "operator": "=",
+      "right": 61
+    },
+    {
+      "left": "Distance(W, X)",
+      "operator": "=",
+      "right": "t"
+    },
+    {
+      "left": "Distance(X, Y)",
+      "operator": "=",
+      "right": "2 * t"
+    },
+    {
+      "left": "Distance(Y, Z)",
+      "operator": "=",
+      "right": "3 * t"
+    },
+    {
+      "left": "t",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "W.x",
+      "operator": "<",
+      "right": "X.x"
+    },
+    {
+      "left": "X.x",
+      "operator": "<",
+      "right": "Y.x"
+    },
+    {
+      "left": "Y.x",
+      "operator": "<",
+      "right": "Z.x"
+    },
+    {
+      "left": "h",
+      "operator": "!=",
+      "right": "0"
+    }
+  ],
+  "target": "Distance(W, Z)"
+}

@@ -8,6 +8,7 @@ Numeric Constraint Functions
 from typing import Any
 
 from sympy import Eq, Or, Piecewise, exp, pi, sin
+from sympy.ntheory.primetest import isprime
 
 from geosolver.geometry.registry import geometry_symbol
 
@@ -21,6 +22,7 @@ __all__ = [
 # =============================================================================
 # Degrees - radian-to-degree conversion
 # =============================================================================
+
 
 @geometry_symbol("Degrees", category="numeric")
 def Degrees(angle: Any) -> Any:
@@ -40,19 +42,176 @@ def _Degrees_mpmath(angle):
 
     return angle * 180 / mp.pi
 
+
 # 1000未満の素数リスト（事前計算）
 _PRIMES_UNDER_1000 = [
-    2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71,
-    73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151,
-    157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233,
-    239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317,
-    331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397, 401, 409, 419,
-    421, 433, 439, 443, 449, 457, 461, 463, 467, 479, 487, 491, 499, 503, 509,
-    521, 523, 541, 547, 557, 563, 569, 571, 577, 587, 593, 599, 601, 607, 613,
-    617, 619, 631, 641, 643, 647, 653, 659, 661, 673, 677, 683, 691, 701, 709,
-    719, 727, 733, 739, 743, 751, 757, 761, 769, 773, 787, 797, 809, 811, 821,
-    823, 827, 829, 839, 853, 857, 859, 863, 877, 881, 883, 887, 907, 911, 919,
-    929, 937, 941, 947, 953, 967, 971, 977, 983, 991, 997,
+    2,
+    3,
+    5,
+    7,
+    11,
+    13,
+    17,
+    19,
+    23,
+    29,
+    31,
+    37,
+    41,
+    43,
+    47,
+    53,
+    59,
+    61,
+    67,
+    71,
+    73,
+    79,
+    83,
+    89,
+    97,
+    101,
+    103,
+    107,
+    109,
+    113,
+    127,
+    131,
+    137,
+    139,
+    149,
+    151,
+    157,
+    163,
+    167,
+    173,
+    179,
+    181,
+    191,
+    193,
+    197,
+    199,
+    211,
+    223,
+    227,
+    229,
+    233,
+    239,
+    241,
+    251,
+    257,
+    263,
+    269,
+    271,
+    277,
+    281,
+    283,
+    293,
+    307,
+    311,
+    313,
+    317,
+    331,
+    337,
+    347,
+    349,
+    353,
+    359,
+    367,
+    373,
+    379,
+    383,
+    389,
+    397,
+    401,
+    409,
+    419,
+    421,
+    433,
+    439,
+    443,
+    449,
+    457,
+    461,
+    463,
+    467,
+    479,
+    487,
+    491,
+    499,
+    503,
+    509,
+    521,
+    523,
+    541,
+    547,
+    557,
+    563,
+    569,
+    571,
+    577,
+    587,
+    593,
+    599,
+    601,
+    607,
+    613,
+    617,
+    619,
+    631,
+    641,
+    643,
+    647,
+    653,
+    659,
+    661,
+    673,
+    677,
+    683,
+    691,
+    701,
+    709,
+    719,
+    727,
+    733,
+    739,
+    743,
+    751,
+    757,
+    761,
+    769,
+    773,
+    787,
+    797,
+    809,
+    811,
+    821,
+    823,
+    827,
+    829,
+    839,
+    853,
+    857,
+    859,
+    863,
+    877,
+    881,
+    883,
+    887,
+    907,
+    911,
+    919,
+    929,
+    937,
+    941,
+    947,
+    953,
+    967,
+    971,
+    977,
+    983,
+    991,
+    997,
 ]
 _PRIMES_UNDER_1000_SET = set(_PRIMES_UNDER_1000)
 _IS_PRIME_CONDITION = None
@@ -61,6 +220,7 @@ _IS_PRIME_CONDITION = None
 # =============================================================================
 # IsInteger - 微分可能な整数性制約関数
 # =============================================================================
+
 
 @geometry_symbol("IsInteger", category="numeric")
 def IsInteger(x: Any) -> Any:
@@ -93,12 +253,14 @@ def IsInteger(x: Any) -> Any:
 def _IsInteger_mpmath(x):
     """mpmath高精度版"""
     from .mp_impl import mp_is_integer
+
     return mp_is_integer(x)
 
 
 # =============================================================================
 # IsPrime - 微分可能な素数性制約関数
 # =============================================================================
+
 
 @geometry_symbol("IsPrime", category="numeric")
 def IsPrime(x: Any) -> Any:
@@ -129,10 +291,10 @@ def IsPrime(x: Any) -> Any:
         - 素数の場合は厳密に0を返す
     """
     # 数値入力の高速パス（SymPy Piecewise 構築を避ける）
-    if isinstance(x, (int, float)):
+    if isinstance(x, int | float):
         if x < 2 or int(x) != x:
             return 1.0
-        return 0.0 if int(x) in _PRIMES_UNDER_1000_SET else 1.0
+        return 0.0 if isprime(int(x)) else 1.0
 
     # 整数性チェック
     integer_residual = sin(pi * x) ** 2
@@ -151,14 +313,13 @@ def IsPrime(x: Any) -> Any:
     non_prime_residual = integer_residual + positivity_residual + 1
 
     # Piecewise: 素数なら0、それ以外は残差
-    return Piecewise(
-        (0, _IS_PRIME_CONDITION),
-        (non_prime_residual, True)
-    )
+    return Piecewise((0, _IS_PRIME_CONDITION), (non_prime_residual, True))
+
+
 # mpmath backend for IsPrime
 @IsPrime.set_mpmath
 def _IsPrime_mpmath(x):
     """mpmath高精度版"""
     from .mp_impl import mp_is_prime
-    return mp_is_prime(x)
 
+    return mp_is_prime(x)

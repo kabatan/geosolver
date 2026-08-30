@@ -1,13 +1,13 @@
 """Geometry Entities - Point, Line, Circle"""
 
 from geosolver.geometry.entities.base import (
-    Point,
-    Line,
     Circle,
-    Segment,
+    Line,
+    Point,
     Ray,
-    midpoint,
+    Segment,
     _sympify_preserve_precision,
+    midpoint,
 )
 from geosolver.geometry.entities.polygon import Polygon
 
@@ -21,4 +21,3 @@ __all__ = [
     "midpoint",
     "_sympify_preserve_precision",
 ]
-

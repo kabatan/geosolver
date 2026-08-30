@@ -4,9 +4,12 @@ Polygon helper functions extracted from mp_impl.
 
 from __future__ import annotations
 
-from typing import List, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
-from mpmath import cos as mp_cos, mp, mpf, pi as mp_pi, sin as mp_sin
+from mpmath import cos as mp_cos
+from mpmath import mp, mpf
+from mpmath import pi as mp_pi
+from mpmath import sin as mp_sin
 
 from geosolver.geometry.mp.mp_conversion import to_mpf
 
@@ -14,14 +17,14 @@ if TYPE_CHECKING:
     from geosolver.geometry.mp.mp_impl import MPCircle, MPPoint
 
 
-def _squared_distance(p: "MPPoint", q: "MPPoint") -> mpf:
+def _squared_distance(p: MPPoint, q: MPPoint) -> mpf:
     dx = q.x - p.x
     dy = q.y - p.y
     return dx * dx + dy * dy
 
 
 def _polygon_relative_tolerance(
-    points: tuple["MPPoint", ...],
+    points: tuple[MPPoint, ...],
 ) -> tuple[mpf, mpf]:
     """Return a dimensionless tolerance with a cancellation safety floor."""
 
@@ -35,20 +38,12 @@ def _polygon_relative_tolerance(
         return mp.inf, diameter_squared
 
     diameter = mp.sqrt(diameter_squared)
-    coordinate_scale = max(
-        max(abs(point.x), abs(point.y)) for point in points
-    )
-    cancellation_floor = (
-        mpf(16)
-        * len(points)
-        * mp.eps
-        * coordinate_scale
-        / diameter
-    )
+    coordinate_scale = max(max(abs(point.x), abs(point.y)) for point in points)
+    cancellation_floor = mpf(16) * len(points) * mp.eps * coordinate_scale / diameter
     return max(base, cancellation_floor), diameter_squared
 
 
-def _orientation(p: "MPPoint", q: "MPPoint", r: "MPPoint", rel_tol: mpf) -> int:
+def _orientation(p: MPPoint, q: MPPoint, r: MPPoint, rel_tol: mpf) -> int:
     pqx = q.x - p.x
     pqy = q.y - p.y
     prx = r.x - p.x
@@ -60,22 +55,16 @@ def _orientation(p: "MPPoint", q: "MPPoint", r: "MPPoint", rel_tol: mpf) -> int:
     return 1 if val > 0 else 2
 
 
-def _on_segment(p: "MPPoint", q: "MPPoint", r: "MPPoint", rel_tol: mpf) -> bool:
+def _on_segment(p: MPPoint, q: MPPoint, r: MPPoint, rel_tol: mpf) -> bool:
     segment_length = mp.sqrt(_squared_distance(p, r))
     coordinate_tol = rel_tol * segment_length
     return (
-        min(p.x, r.x) - coordinate_tol
-        <= q.x
-        <= max(p.x, r.x) + coordinate_tol
-        and min(p.y, r.y) - coordinate_tol
-        <= q.y
-        <= max(p.y, r.y) + coordinate_tol
+        min(p.x, r.x) - coordinate_tol <= q.x <= max(p.x, r.x) + coordinate_tol
+        and min(p.y, r.y) - coordinate_tol <= q.y <= max(p.y, r.y) + coordinate_tol
     )
 
 
-def _segments_intersect(
-    p1: "MPPoint", p2: "MPPoint", p3: "MPPoint", p4: "MPPoint", rel_tol: mpf
-) -> bool:
+def _segments_intersect(p1: MPPoint, p2: MPPoint, p3: MPPoint, p4: MPPoint, rel_tol: mpf) -> bool:
     o1 = _orientation(p1, p2, p3, rel_tol)
     o2 = _orientation(p1, p2, p4, rel_tol)
     o3 = _orientation(p3, p4, p1, rel_tol)
@@ -96,19 +85,15 @@ def _segments_intersect(
         return True
     if o3 == 0 and _on_segment(p3, p1, p4, rel_tol):
         return True
-    if o4 == 0 and _on_segment(p3, p2, p4, rel_tol):
-        return True
-    return False
+    return bool(o4 == 0 and _on_segment(p3, p2, p4, rel_tol))
 
 
-def mp_is_convex(*points: "MPPoint") -> Optional[bool]:
+def mp_is_convex(*points: MPPoint) -> bool | None:
     if len(points) < 3:
         return None
 
     n = len(points)
-    rel_tol, polygon_scale_squared = _polygon_relative_tolerance(
-        tuple(points)
-    )
+    rel_tol, polygon_scale_squared = _polygon_relative_tolerance(tuple(points))
     if polygon_scale_squared == 0:
         return False
 
@@ -117,10 +102,7 @@ def mp_is_convex(*points: "MPPoint") -> Optional[bool]:
     # as a mere endpoint touch in the edge-intersection test.
     for i in range(n):
         for j in range(i + 1, n):
-            if (
-                _squared_distance(points[i], points[j])
-                <= rel_tol * rel_tol * polygon_scale_squared
-            ):
+            if _squared_distance(points[i], points[j]) <= rel_tol * rel_tol * polygon_scale_squared:
                 return False
 
     # Equal turn signs alone are insufficient: a star polygon can have the
@@ -139,17 +121,12 @@ def mp_is_convex(*points: "MPPoint") -> Optional[bool]:
         v2x = p3.x - p2.x
         v2y = p3.y - p2.y
         cross = v1x * v2y - v1y * v2x
-        turn_scale_squared = (
-            (v1x * v1x + v1y * v1y) * (v2x * v2x + v2y * v2y)
-        )
+        turn_scale_squared = (v1x * v1x + v1y * v1y) * (v2x * v2x + v2y * v2y)
 
         # ``AssumeConvex`` denotes strict convexity.  A zero turn leaves three
         # consecutive vertices collinear, so accepting it would admit a
         # degenerate boundary polygon.
-        if (
-            turn_scale_squared == 0
-            or cross * cross <= rel_tol * rel_tol * turn_scale_squared
-        ):
+        if turn_scale_squared == 0 or cross * cross <= rel_tol * rel_tol * turn_scale_squared:
             return False
         if sign is None:
             sign = cross > 0
@@ -161,14 +138,12 @@ def mp_is_convex(*points: "MPPoint") -> Optional[bool]:
     return True
 
 
-def mp_has_self_intersection(*points: "MPPoint") -> Optional[bool]:
+def mp_has_self_intersection(*points: MPPoint) -> bool | None:
     if len(points) < 3:
         return None
 
     n = len(points)
-    rel_tol, _polygon_scale_squared = _polygon_relative_tolerance(
-        tuple(points)
-    )
+    rel_tol, _polygon_scale_squared = _polygon_relative_tolerance(tuple(points))
     edges = [(points[i], points[(i + 1) % n]) for i in range(n)]
 
     for i in range(n):
@@ -185,7 +160,7 @@ def mp_has_self_intersection(*points: "MPPoint") -> Optional[bool]:
     return False
 
 
-def mp_polygon_area(*points: "MPPoint") -> mpf:
+def mp_polygon_area(*points: MPPoint) -> mpf:
     if len(points) < 3:
         return mpf(0)
 
@@ -198,7 +173,7 @@ def mp_polygon_area(*points: "MPPoint") -> mpf:
     return abs(area) / 2
 
 
-def mp_inscribed_polygon_vertices(circle: "MPCircle", *t_params: object) -> List["MPPoint"]:
+def mp_inscribed_polygon_vertices(circle: MPCircle, *t_params: object) -> list[MPPoint]:
     if len(t_params) == 0:
         raise ValueError("At least one parameter is required for inscribed polygon")
 

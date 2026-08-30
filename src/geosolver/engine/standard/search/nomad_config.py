@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import ceil
 
-DISCO_MADS_OPTIMIZATION = True
 DISCO_MADS_HID_CONST = True
 DISCO_MADS_HID_CONST_OUTPUT_VALUE = 1e20
 DISPLAY_DEGREE = 0
@@ -49,17 +49,13 @@ class NomadConfig:
     start_dedup_distance: float = START_DEDUP_DISTANCE_DEFAULT
     dedup_distance: float = DEDUP_DISTANCE_DEFAULT
     bound_expansion_ratio: float = BOUND_EXPANSION_RATIO_DEFAULT
-    # Compatibility flag for callers that distinguish exhaustive portfolio runs
-    # from early-stopping search. The current implementation keeps the complete
-    # schedule by default and does not short-circuit after the first admissible point.
-    complete_search: bool = True
 
     @classmethod
-    def sanity_tier(cls) -> "NomadConfig":
+    def sanity_tier(cls) -> NomadConfig:
         return cls(max_bb_eval=SANITY_TIER_BUDGET_DEFAULT)
 
     @classmethod
-    def standard_tier(cls) -> "NomadConfig":
+    def standard_tier(cls) -> NomadConfig:
         return cls(max_bb_eval=STANDARD_TIER_BUDGET_DEFAULT)
 
     def build_params(
@@ -75,9 +71,8 @@ class NomadConfig:
         elif search_mode == SEARCH_MODE_MADS:
             disco_mads_optimization = "false"
         else:
-            raise ValueError(
-                f"search_mode must be '{SEARCH_MODE_DISCO_MADS}' or '{SEARCH_MODE_MADS}', got {search_mode!r}"
-            )
+            expected = f"'{SEARCH_MODE_DISCO_MADS}' or '{SEARCH_MODE_MADS}'"
+            raise ValueError(f"search_mode must be {expected}, got {search_mode!r}")
         return [
             f"DIMENSION {dimension}",
             "BB_OUTPUT_TYPE OBJ",
@@ -86,12 +81,11 @@ class NomadConfig:
             f"DISCO_MADS_HID_CONST_OUTPUT_VALUE {DISCO_MADS_HID_CONST_OUTPUT_VALUE}",
             f"MAX_BB_EVAL {self.max_bb_eval}",
             *(
-                [f"MAX_TIME {int(self.max_time_sec)}"]
-                if self.max_time_sec is not None and int(self.max_time_sec) > 0
+                [f"MAX_TIME {max(1, ceil(self.max_time_sec))}"]
+                if self.max_time_sec is not None
                 else []
             ),
             f"DISPLAY_DEGREE {DISPLAY_DEGREE}",
             f"SEED {seed}",
             f"ADD_SEED_TO_FILE_NAMES {ADD_SEED_TO_FILE_NAMES}",
         ]
-

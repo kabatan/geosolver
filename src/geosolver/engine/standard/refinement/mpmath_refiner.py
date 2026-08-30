@@ -1,4 +1,4 @@
-"""mpmath-based staged local refiner (compatibility/debugging only)."""
+"""Active mpmath-based staged local refiner for the research pipeline."""
 
 from __future__ import annotations
 
@@ -11,11 +11,6 @@ from functools import partial
 
 from mpmath import mp
 
-from geosolver.engine.standard.interpreter.compile.infer_bounds import infer_bound_expansion_locks
-from geosolver.engine.standard.interpreter.execution.interpreter_hp_helpers import to_mpf_value
-from geosolver.engine.standard.interpreter.execution.interpreter_modes import (
-    _build_solution_context_high_precision,
-)
 from geosolver.engine.standard.contracts.candidate_record import (
     FloatCandidate,
     RefinedCandidate,
@@ -25,7 +20,10 @@ from geosolver.engine.standard.contracts.evaluator_port import EvaluatorPort
 from geosolver.engine.standard.contracts.local_refiner_port import LocalRefinerPort
 from geosolver.engine.standard.contracts.problem_bundle import ProblemBundle
 from geosolver.engine.standard.evaluation.classify_evaluation_failure import EvaluationStatus
-from geosolver.engine.standard.problem.infer_problem_bounds import infer_problem_bounds
+from geosolver.engine.standard.evaluation.high_precision_expressions import (
+    build_solution_context_high_precision,
+    to_mpf_value,
+)
 from geosolver.engine.standard.precision.type_guards.boundary_float_to_mpf import (
     BoundaryOrigin,
     boundary_float_to_mpf,
@@ -33,6 +31,7 @@ from geosolver.engine.standard.precision.type_guards.boundary_float_to_mpf impor
 from geosolver.engine.standard.precision.type_guards.high_precision_mode import high_precision_mode
 from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
 from geosolver.problem.ir.compiler import safe_eval_expr_hp
+from geosolver.runtime.deadline import timed_phase, uses_deadline
 
 from .finite_difference_jacobian import compute_finite_difference_jacobian
 from .levenberg_marquardt_step import compute_levenberg_marquardt_step
@@ -158,7 +157,12 @@ def _is_zero_target(target: object) -> bool:
 
 
 def _extract_isinteger_inner_expression(constraint_expression: str) -> str | None:
-    """Extract the inner expression from an ``IsInteger(inner)`` constraint."""
+    """Extract an integer-valued expression from a discrete numeric constraint.
+
+    A prime constraint necessarily implies integrality, so it uses the same
+    projection and closure machinery.  Primality itself is re-evaluated by the
+    original ``IsPrime`` residual after projection.
+    """
 
     try:
         parsed = ast.parse(constraint_expression, mode="eval")
@@ -169,9 +173,9 @@ def _extract_isinteger_inner_expression(constraint_expression: str) -> str | Non
         return None
     if call.keywords or len(call.args) != 1:
         return None
-    if not isinstance(call.func, ast.Name) or call.func.id != "IsInteger":
+    if not isinstance(call.func, ast.Name) or call.func.id not in {"IsInteger", "IsPrime"}:
         return None
-    return ast.unparse(call.args[0])
+    return ast.get_source_segment(constraint_expression, call.args[0])
 
 
 def _integer_closure_candidate_id(base_candidate_id: int) -> int:
@@ -203,7 +207,7 @@ def _build_hp_context(
 ) -> dict[str, object]:
     """Build the high-precision evaluation context for one point."""
 
-    return _build_solution_context_high_precision(
+    return build_solution_context_high_precision(
         bundle.spec,
         list(bundle.var_names),
         list(point),
@@ -216,7 +220,7 @@ def build_integer_constraint_specs(
     *,
     bundle: ProblemBundle,
 ) -> tuple[IntegerConstraintSpec, ...]:
-    """Return all top-level zero-target ``IsInteger`` constraints."""
+    """Return all top-level zero-target integer or prime constraints."""
 
     specs: list[IntegerConstraintSpec] = []
     for index, constraint_expression in enumerate(bundle.spec.constraints):
@@ -248,21 +252,20 @@ def evaluate_integer_constraint_values(
     if len(point) != len(bundle.var_names):
         return None
     try:
-        with mp.workdps(int(dps)):
-            with high_precision_mode():
-                context = _build_hp_context(bundle=bundle, point=point, dps=int(dps))
-                values: list[MPFloat] = []
-                for spec in specs:
-                    raw_value = safe_eval_expr_hp(spec.inner_expression, context)
-                    values.append(
-                        mp.mpf(
-                            to_mpf_value(
-                                raw_value,
-                                precision=int(dps),
-                                context=f"integer_constraint_value:{spec.constraint_index}",
-                            )
+        with mp.workdps(int(dps)), high_precision_mode():
+            context = _build_hp_context(bundle=bundle, point=point, dps=int(dps))
+            values: list[MPFloat] = []
+            for spec in specs:
+                raw_value = safe_eval_expr_hp(spec.inner_expression, context)
+                values.append(
+                    mp.mpf(
+                        to_mpf_value(
+                            raw_value,
+                            precision=int(dps),
+                            context=f"integer_constraint_value:{spec.constraint_index}",
                         )
                     )
+                )
         return tuple(values)
     except Exception:
         return None
@@ -392,20 +395,19 @@ def _evaluate_integer_closure_residuals(
     if not closures:
         return {}
     try:
-        with mp.workdps(int(dps)):
-            with high_precision_mode():
-                context = _build_hp_context(bundle=bundle, point=point, dps=int(dps))
-                overrides: dict[int, MPFloat] = {}
-                for closure in closures:
-                    raw_value = safe_eval_expr_hp(closure.inner_expression, context)
-                    inner_value = mp.mpf(
-                        to_mpf_value(
-                            raw_value,
-                            precision=int(dps),
-                            context=f"integer_closure_residual:{closure.constraint_index}",
-                        )
+        with mp.workdps(int(dps)), high_precision_mode():
+            context = _build_hp_context(bundle=bundle, point=point, dps=int(dps))
+            overrides: dict[int, MPFloat] = {}
+            for closure in closures:
+                raw_value = safe_eval_expr_hp(closure.inner_expression, context)
+                inner_value = mp.mpf(
+                    to_mpf_value(
+                        raw_value,
+                        precision=int(dps),
+                        context=f"integer_closure_residual:{closure.constraint_index}",
                     )
-                    overrides[closure.constraint_index] = inner_value - closure.target_integer
+                )
+                overrides[closure.constraint_index] = inner_value - closure.target_integer
         return overrides
     except Exception:
         return None
@@ -421,16 +423,13 @@ def _residual_vector_without_integer_constraints(
 ) -> list[MPFloat] | None:
     """Evaluate residuals with top-level integer constraints removed."""
 
-    with mp.workdps(int(dps)):
-        with high_precision_mode():
-            hp_eval = evaluator.evaluate_hp_residual(point, precision=int(dps))
+    with mp.workdps(int(dps)), high_precision_mode():
+        hp_eval = evaluator.evaluate_hp_residual(point, precision=int(dps))
     if hp_eval.evaluation_status is not EvaluationStatus.OK:
         return None
     skipped = set(int(index) for index in integer_constraint_indices)
     residuals = [
-        mp.mpf(value)
-        for index, value in enumerate(hp_eval.residual_vector)
-        if index not in skipped
+        mp.mpf(value) for index, value in enumerate(hp_eval.residual_vector) if index not in skipped
     ]
     if not residuals:
         return None
@@ -477,63 +476,65 @@ def _smooth_zero_constraint_residuals(
         kind = node.func.id.lower()
         if kind not in {"distance", "istangent"}:
             continue
-        plans[index] = (kind, (ast.unparse(node.args[0]), ast.unparse(node.args[1])))
+        plans[index] = (
+            kind,
+            tuple(ast.get_source_segment(constraint_expression, arg) for arg in node.args),
+        )
     if not plans:
         return residuals
 
     try:
-        with mp.workdps(int(dps)):
-            with high_precision_mode():
-                context = _build_hp_context(bundle=bundle, point=point, dps=int(dps))
-                rewritten: list[MPFloat] = []
-                for index, residual in enumerate(residuals):
-                    plan = plans.get(index)
-                    if plan is None:
-                        rewritten.append(mp.mpf(residual))
-                        continue
-                    kind, (left_expr, right_expr) = plan
-                    left = safe_eval_expr_hp(left_expr, context)
-                    right = safe_eval_expr_hp(right_expr, context)
-                    if kind == "distance":
-                        if all(hasattr(value, "x") and hasattr(value, "y") for value in (left, right)):
-                            rewritten.extend(
-                                [
-                                    mp.mpf(left.x) - mp.mpf(right.x),
-                                    mp.mpf(left.y) - mp.mpf(right.y),
-                                ]
-                            )
-                            continue
-                    else:
-                        line = circle = None
-                        if (
-                            hasattr(left, "a")
-                            and hasattr(left, "b")
-                            and hasattr(left, "c")
-                            and hasattr(right, "center")
-                            and hasattr(right, "radius")
-                        ):
-                            line, circle = left, right
-                        elif (
-                            hasattr(right, "a")
-                            and hasattr(right, "b")
-                            and hasattr(right, "c")
-                            and hasattr(left, "center")
-                            and hasattr(left, "radius")
-                        ):
-                            line, circle = right, left
-                        if line is not None and circle is not None:
-                            signed_distance = (
-                                mp.mpf(line.a) * mp.mpf(circle.center.x)
-                                + mp.mpf(line.b) * mp.mpf(circle.center.y)
-                                + mp.mpf(line.c)
-                            )
-                            rewritten.append(
-                                signed_distance * signed_distance
-                                - mp.mpf(circle.radius) * mp.mpf(circle.radius)
-                            )
-                            continue
+        with mp.workdps(int(dps)), high_precision_mode():
+            context = _build_hp_context(bundle=bundle, point=point, dps=int(dps))
+            rewritten: list[MPFloat] = []
+            for index, residual in enumerate(residuals):
+                plan = plans.get(index)
+                if plan is None:
                     rewritten.append(mp.mpf(residual))
-                return rewritten
+                    continue
+                kind, (left_expr, right_expr) = plan
+                left = safe_eval_expr_hp(left_expr, context)
+                right = safe_eval_expr_hp(right_expr, context)
+                if kind == "distance":
+                    if all(hasattr(value, "x") and hasattr(value, "y") for value in (left, right)):
+                        rewritten.extend(
+                            [
+                                mp.mpf(left.x) - mp.mpf(right.x),
+                                mp.mpf(left.y) - mp.mpf(right.y),
+                            ]
+                        )
+                        continue
+                else:
+                    line = circle = None
+                    if (
+                        hasattr(left, "a")
+                        and hasattr(left, "b")
+                        and hasattr(left, "c")
+                        and hasattr(right, "center")
+                        and hasattr(right, "radius")
+                    ):
+                        line, circle = left, right
+                    elif (
+                        hasattr(right, "a")
+                        and hasattr(right, "b")
+                        and hasattr(right, "c")
+                        and hasattr(left, "center")
+                        and hasattr(left, "radius")
+                    ):
+                        line, circle = right, left
+                    if line is not None and circle is not None:
+                        signed_distance = (
+                            mp.mpf(line.a) * mp.mpf(circle.center.x)
+                            + mp.mpf(line.b) * mp.mpf(circle.center.y)
+                            + mp.mpf(line.c)
+                        )
+                        rewritten.append(
+                            signed_distance * signed_distance
+                            - mp.mpf(circle.radius) * mp.mpf(circle.radius)
+                        )
+                        continue
+                rewritten.append(mp.mpf(residual))
+            return rewritten
     except Exception:
         # This is an optimization aid, never a second failure path for the
         # evaluator.  Keep the source residuals if a construction is not a
@@ -545,7 +546,7 @@ def _normalize_findroot_point(root: object) -> list[MPFloat] | None:
     if isinstance(root, mp.matrix):
         values = [mp.mpf(root[index]) for index in range(len(root))]
         return values
-    if isinstance(root, (list, tuple)):
+    if isinstance(root, list | tuple):
         return [mp.mpf(value) for value in root]
     try:
         return [mp.mpf(root)]
@@ -557,6 +558,7 @@ def _select_rank_revealing_subsystem(
     jacobian: list[list[MPFloat]],
     *,
     dps: int,
+    relative_tolerance: MPFloat | None = None,
 ) -> tuple[tuple[int, ...], tuple[int, ...]] | None:
     """Select a numerically independent square Jacobian submatrix.
 
@@ -594,7 +596,8 @@ def _select_rank_revealing_subsystem(
         # this refiner.  Keeping 25 relative digits separates the real small
         # pivots seen in geometry problems from differencing noise without
         # pretending that the numerical Jacobian is exact.
-        relative_tolerance = mp.power(10, -min(25, max(12, int(dps) // 3)))
+        if relative_tolerance is None:
+            relative_tolerance = mp.power(10, -min(25, max(12, int(dps) // 3)))
         pivot_tolerance = scale * relative_tolerance
         row_order = list(range(row_count))
         column_order = list(range(column_count))
@@ -693,6 +696,7 @@ def _run_rank_aware_findroot(
     try:
         with mp.workdps(int(dps)):
             if len(active_start) == 1:
+
                 def scalar_residual(value: MPFloat) -> MPFloat:
                     return selected_residuals(mp.mpf(value))[0]
 
@@ -722,27 +726,23 @@ def _run_rank_aware_findroot(
 def _convert_problem_bounds(
     bundle: ProblemBundle,
 ) -> tuple[tuple[MPFloat | None, MPFloat | None], ...]:
-    bounds = infer_problem_bounds(bundle)
-    locks = infer_bound_expansion_locks(
-        bundle.spec,
-        bundle.var_names,
-        bundle.base_context,
+    from geosolver.engine.standard.interpreter.context.high_precision import (
+        _get_high_precision_context,
     )
-    return tuple(
-        (
-            (
-                boundary_float_to_mpf(lower, origin=BoundaryOrigin.LEGACY_BOUND)
-                if lower_locked
-                else None
-            ),
-            (
-                boundary_float_to_mpf(upper, origin=BoundaryOrigin.LEGACY_BOUND)
-                if upper_locked
-                else None
-            ),
+    from geosolver.problem.domain_bounds import mathematical_bounds
+
+    domains = mathematical_bounds(bundle.spec)
+    # Bounds are shared by all refinement stages, including the 500-digit
+    # closure. Do not evaluate irrational limits through float or ambient dps.
+    with mp.workdps(max(mp.dps, 530)), high_precision_mode():
+        context = _get_high_precision_context(mp.dps)
+        return tuple(
+            tuple(
+                None if value is None else safe_eval_expr_hp(str(value), context)
+                for value in (domains[name].lower, domains[name].upper)
+            )
+            for name in bundle.var_names
         )
-        for (lower, upper), (lower_locked, upper_locked) in zip(bounds, locks, strict=True)
-    )
 
 
 def _run_findroot_closure(
@@ -764,15 +764,13 @@ def _run_findroot_closure(
         if deadline_monotonic is not None and time.monotonic() >= float(deadline_monotonic):
             raise _ClosureDeadlineExceeded
         if residual_fn is not None:
-            with mp.workdps(int(dps)):
-                with high_precision_mode():
-                    values = residual_fn(point, int(dps))
+            with mp.workdps(int(dps)), high_precision_mode():
+                values = residual_fn(point, int(dps))
             if values is None:
                 raise ValueError("closure residual evaluation failed")
             return tuple(mp.mpf(value) for value in values)
-        with mp.workdps(int(dps)):
-            with high_precision_mode():
-                hp_eval = evaluator.evaluate_hp_residual(point, precision=int(dps))
+        with mp.workdps(int(dps)), high_precision_mode():
+            hp_eval = evaluator.evaluate_hp_residual(point, precision=int(dps))
         if hp_eval.evaluation_status is not EvaluationStatus.OK:
             raise ValueError(f"findroot residual status={hp_eval.evaluation_status.value}")
         return tuple(mp.mpf(value) for value in hp_eval.residual_vector)
@@ -784,9 +782,8 @@ def _run_findroot_closure(
             return None
         if not _point_within_bounds(point, bounds):
             return None
-        with mp.workdps(int(dps)):
-            with high_precision_mode():
-                hp_eval = evaluator.evaluate_hp_residual(point, precision=int(dps))
+        with mp.workdps(int(dps)), high_precision_mode():
+            hp_eval = evaluator.evaluate_hp_residual(point, precision=int(dps))
         if hp_eval.evaluation_status is not EvaluationStatus.OK:
             return None
         residual_norm = _vector_norm([mp.mpf(value) for value in hp_eval.residual_vector])
@@ -805,6 +802,7 @@ def _run_findroot_closure(
     standard_point: list[MPFloat] | None = None
 
     if len(start_point) == 1:
+
         def evaluate_scalar_residuals(arg: MPFloat) -> tuple[MPFloat, ...]:
             return evaluate_residuals([mp.mpf(arg)])
 
@@ -848,6 +846,7 @@ def _run_findroot_closure(
             with mp.workdps(int(dps)):
                 standard_point = _normalize_findroot_point(root)
     elif len(initial_residuals) >= len(start_point):
+
         def residuals(*args: MPFloat) -> tuple[MPFloat, ...]:
             point = [mp.mpf(value) for value in args]
             return evaluate_residuals(point)
@@ -890,10 +889,12 @@ def _run_findroot_closure(
 
 @dataclass(frozen=True)
 class MpmathRefiner(LocalRefinerPort):
-    """Compatibility/debug-only local refiner using staged LM at high precision."""
+    """Production local refiner using staged LM and high-precision closure."""
 
     config: RefinerConfig = RefinerConfig()
 
+    @timed_phase("refinement")
+    @uses_deadline
     def refine_candidates(
         self,
         *,
@@ -929,7 +930,6 @@ class MpmathRefiner(LocalRefinerPort):
             attempted_count=attempted_count,
             solver_name="mpmath_refiner",
             hard_feasible_count=sum(1 for candidate in ordered if candidate.hard_feasible),
-            attempted_box_count=0,
         )
 
     def refine_candidate_with_integer_targets(
@@ -958,23 +958,27 @@ class MpmathRefiner(LocalRefinerPort):
             specs=specs,
             target_integers=target_integers,
         )
-        closure_status, closure_point, closure_answer_dps, closure_history = self._run_integer_closure_path(
-            bundle=bundle,
-            evaluator=evaluator,
-            start_point=current,
-            bounds=bounds,
-            preserve_hard_feasibility=bool(candidate.hard_feasible),
-            integer_closures=closures,
+        closure_status, closure_point, closure_answer_dps, closure_history = (
+            self._run_integer_closure_path(
+                bundle=bundle,
+                evaluator=evaluator,
+                start_point=current,
+                bounds=bounds,
+                preserve_hard_feasibility=bool(candidate.hard_feasible),
+                integer_closures=closures,
+            )
         )
-        closure_point, closure_history, closure_status, closure_answer_dps = self._apply_post_lm_closure_polish(
-            bundle=bundle,
-            evaluator=evaluator,
-            bounds=bounds,
-            point=closure_point,
-            phase_history=closure_history,
-            stage_status=closure_status,
-            answer_dps=closure_answer_dps,
-            integer_closures=closures,
+        closure_point, closure_history, closure_status, closure_answer_dps = (
+            self._apply_post_lm_closure_polish(
+                bundle=bundle,
+                evaluator=evaluator,
+                bounds=bounds,
+                point=closure_point,
+                phase_history=closure_history,
+                stage_status=closure_status,
+                answer_dps=closure_answer_dps,
+                integer_closures=closures,
+            )
         )
         return self._build_refined_candidate(
             bundle=bundle,
@@ -1004,10 +1008,7 @@ class MpmathRefiner(LocalRefinerPort):
         specs = build_integer_constraint_specs(bundle=bundle)
         if not specs:
             return None
-        integer_constraint_indices = tuple(
-            int(spec.constraint_index)
-            for spec in specs
-        )
+        integer_constraint_indices = tuple(int(spec.constraint_index) for spec in specs)
         residual_fn = partial(
             _residual_vector_without_integer_constraints,
             bundle,
@@ -1059,9 +1060,12 @@ class MpmathRefiner(LocalRefinerPort):
         integer_closures: tuple[IntegerConstraintClosure, ...] = (),
         smooth_zero_constraints: bool = False,
     ) -> list[MPFloat] | None:
-        with mp.workdps(int(dps)):
-            with high_precision_mode():
-                hp_eval = evaluator.evaluate_hp_residual(point, precision=int(dps))
+        from geosolver.runtime.deadline import expired
+
+        if expired():
+            return None
+        with mp.workdps(int(dps)), high_precision_mode():
+            hp_eval = evaluator.evaluate_hp_residual(point, precision=int(dps))
         if hp_eval.evaluation_status is not EvaluationStatus.OK:
             return None
         residuals = [mp.mpf(value) for value in hp_eval.residual_vector]
@@ -1092,9 +1096,8 @@ class MpmathRefiner(LocalRefinerPort):
         point: list[MPFloat],
         dps: int,
     ) -> MPFloat | None:
-        with mp.workdps(int(dps)):
-            with high_precision_mode():
-                answer_eval = evaluator.evaluate_answer_hp(point, precision=int(dps))
+        with mp.workdps(int(dps)), high_precision_mode():
+            answer_eval = evaluator.evaluate_answer_hp(point, precision=int(dps))
         if answer_eval.evaluation_status is not EvaluationStatus.OK:
             return None
         return answer_eval.answer_hp
@@ -1136,6 +1139,7 @@ class MpmathRefiner(LocalRefinerPort):
         status = MAX_ITERS
         trial_filter = None
         if preserve_hard_feasibility:
+
             def trial_filter(trial: list[MPFloat], trial_dps: int) -> bool:
                 return _evaluate_hard_feasibility(
                     evaluator,
@@ -1143,7 +1147,12 @@ class MpmathRefiner(LocalRefinerPort):
                     trial_dps,
                     include_margins=False,
                 ).hard_feasible
+
         for _ in range(int(self.config.max_stage_iters)):
+            from geosolver.runtime.deadline import expired
+
+            if expired():
+                return "deadline_reached", best, best_norm
             if best_norm <= target_residual:
                 status = TARGET_REACHED
                 break
@@ -1152,6 +1161,7 @@ class MpmathRefiner(LocalRefinerPort):
                 dps=int(dps),
                 residual_fn=residual_fn,
                 one_sided_at_cusp=_problem_contains_call(bundle.spec, "Angle"),
+                base_residual=current_vec,
             )
             if jacobian is None:
                 status = BRANCH_INSTABILITY
@@ -1171,11 +1181,7 @@ class MpmathRefiner(LocalRefinerPort):
                 bounds=bounds,
                 trial_filter=trial_filter,
             )
-            if (
-                not improved
-                and preserve_hard_feasibility
-                and integer_closures
-            ):
+            if not improved and preserve_hard_feasibility and integer_closures:
                 trial, trial_vec, improved = run_line_search(
                     point=current,
                     current_norm=current_norm,
@@ -1230,16 +1236,29 @@ class MpmathRefiner(LocalRefinerPort):
         answer_dps: int,
         integer_closures: tuple[IntegerConstraintClosure, ...] = (),
     ) -> RefinedCandidate:
+        from geosolver.runtime.deadline import expired
+
+        if expired():
+            # Preserve the last iterate, without doing more work after Phase B's
+            # cutoff. Phase C evaluates this draft under the remaining solve
+            # budget; an absent answer/infinite placeholder is not a solution.
+            return RefinedCandidate(
+                x_hp=tuple(point),
+                residual_norm_hp=mp.inf,
+                answer_hp=None,
+                refinement_status="deadline_reached",
+                phase_history=(*phase_history, "final_evaluation_deferred"),
+                source=candidate,
+                candidate_id=int(candidate_id),
+                coordinate_precision_dps=int(answer_dps),
+            )
         final_vector = self._residual_vector_for_stage(
             bundle=bundle,
             evaluator=evaluator,
             point=point,
             dps=int(answer_dps),
         )
-        if final_vector is None:
-            final_norm = mp.inf
-        else:
-            final_norm = _vector_norm(final_vector)
+        final_norm = mp.inf if final_vector is None else _vector_norm(final_vector)
         hard_snapshot = _evaluate_hard_feasibility(
             evaluator,
             point,
@@ -1268,7 +1287,6 @@ class MpmathRefiner(LocalRefinerPort):
             hard_violation_tags=tuple(hard_snapshot.failure_tags),
             validity_margin_hp=hard_snapshot.min_margin,
         )
-
 
     def _direct_accept_candidate(
         self,
@@ -1361,15 +1379,10 @@ class MpmathRefiner(LocalRefinerPort):
             final_dps,
         )
         closure_threshold = _closure_start_threshold(self.config, final_dps)
-        if (
-            not hard_snapshot.hard_feasible
-            or final_norm > closure_threshold
-        ):
+        if not hard_snapshot.hard_feasible or final_norm > closure_threshold:
             return current, tuple(history), stage_status, answer_dps
         closure_stages = tuple(
-            int(stage)
-            for stage in self.config.closure_schedule_dps
-            if int(stage) >= final_dps
+            int(stage) for stage in self.config.closure_schedule_dps if int(stage) >= final_dps
         )
         closure_residual_fn = partial(
             self._residual_vector_for_stage,
@@ -1448,8 +1461,7 @@ class MpmathRefiner(LocalRefinerPort):
         current = [mp.mpf(value) for value in start_point]
         history: list[str] = []
         target_summary = ",".join(
-            f"{closure.constraint_index}:{closure.target_integer}"
-            for closure in integer_closures
+            f"{closure.constraint_index}:{closure.target_integer}" for closure in integer_closures
         )
         history.append(f"{INTEGER_CLOSURE_PHASE}:targets:{target_summary}")
         stage_status = MAX_ITERS
@@ -1637,6 +1649,8 @@ class MpmathRefiner(LocalRefinerPort):
             answer_dps=answer_dps,
         )
         results: list[RefinedCandidate] = [primary_candidate]
+        if primary_candidate.refinement_status == "deadline_reached":
+            return tuple(results)
         closures = _build_integer_constraint_closures(
             bundle=bundle,
             point=current,
@@ -1644,13 +1658,15 @@ class MpmathRefiner(LocalRefinerPort):
         )
         if not closures:
             return tuple(results)
-        closure_status, closure_point, closure_answer_dps, closure_history = self._run_integer_closure_path(
-            bundle=bundle,
-            evaluator=evaluator,
-            start_point=current,
-            bounds=bounds,
-            preserve_hard_feasibility=primary_candidate.hard_feasible,
-            integer_closures=closures,
+        closure_status, closure_point, closure_answer_dps, closure_history = (
+            self._run_integer_closure_path(
+                bundle=bundle,
+                evaluator=evaluator,
+                start_point=current,
+                bounds=bounds,
+                preserve_hard_feasibility=primary_candidate.hard_feasible,
+                integer_closures=closures,
+            )
         )
         closure_point, polished_closure_history, closure_status, closure_answer_dps = (
             self._apply_post_lm_closure_polish(

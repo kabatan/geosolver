@@ -10,13 +10,20 @@ solver/optimizer での入力除外、Assume条件による制約を提供。
     AssumeNe(x, 0)  # x != 0 を要求
 """
 
-from typing import Optional, Any, Tuple
-from contextlib import contextmanager
 import contextvars
+from contextlib import contextmanager
+from typing import Any
+
 from geosolver.geometry.safety.numeric import (
     is_acute_triangle as _is_acute_triangle_impl,
+)
+from geosolver.geometry.safety.numeric import (
     normalize_interval as _normalize_interval_impl,
+)
+from geosolver.geometry.safety.numeric import (
     to_float as _to_float,
+)
+from geosolver.geometry.safety.numeric import (
     to_point_xy as _to_point_xy_impl,
 )
 
@@ -37,7 +44,7 @@ _ASSUME_ENABLED: contextvars.ContextVar[bool] = contextvars.ContextVar(
 # - 'flag' : 例外は投げず、違反を violations に記録
 # - 'ignore': 例外もフラグも無し
 _ASSUME_MODE: contextvars.ContextVar[str] = contextvars.ContextVar("_ASSUME_MODE", default="raise")
-_ASSUME_VIOLATIONS: contextvars.ContextVar[Optional[list]] = contextvars.ContextVar(
+_ASSUME_VIOLATIONS: contextvars.ContextVar[list | None] = contextvars.ContextVar(
     "_ASSUME_VIOLATIONS", default=None
 )
 
@@ -50,7 +57,7 @@ def _get_assume_tolerance():
         # Use 10^(-dps + 5) as tolerance (5 digits of margin)
         dps = mpmath.mp.dps
         return 10 ** (-dps + 5)
-    except:
+    except Exception:
         pass
     return 1e-9  # Fallback for backward compatibility
 
@@ -62,7 +69,7 @@ def _get_assume_abs_tolerance():
 
         dps = mpmath.mp.dps
         return 10 ** (-dps + 2)
-    except:
+    except Exception:
         pass
     return 1e-12  # Fallback
 
@@ -73,7 +80,7 @@ def _get_assume_abs_tolerance():
 
 
 @contextmanager
-def assume_mode(mode: str = "raise", *, violations: Optional[list] = None):
+def assume_mode(mode: str = "raise", *, violations: list | None = None):
     """Assume 系の失敗時の挙動を切り替える。
 
     - mode='raise': 従来通り例外
@@ -100,13 +107,11 @@ def assume_enabled(enabled: bool):
 
 
 # Module-level storage for custom tolerance overrides (if set manually)
-_CUSTOM_REL_FLOOR: Optional[float] = None
-_CUSTOM_ABS_FLOOR: Optional[float] = None
+_CUSTOM_REL_FLOOR: float | None = None
+_CUSTOM_ABS_FLOOR: float | None = None
 
 
-def set_assume_tolerance(
-    rel_floor: Optional[float] = None, abs_floor: Optional[float] = None
-) -> None:
+def set_assume_tolerance(rel_floor: float | None = None, abs_floor: float | None = None) -> None:
     """Assume(...) の既定トレランスを更新する。"""
     global _CUSTOM_REL_FLOOR, _CUSTOM_ABS_FLOOR
     if rel_floor is not None:
@@ -115,7 +120,7 @@ def set_assume_tolerance(
         _CUSTOM_ABS_FLOOR = float(abs_floor)
 
 
-def _get_tolerance(scale: float, rel_floor: Optional[float], abs_floor: Optional[float]) -> float:
+def _get_tolerance(scale: float, rel_floor: float | None, abs_floor: float | None) -> float:
     """スケールに応じた許容誤差を計算（動的許容値対応）"""
     # Use provided values, or custom overrides, or dynamic defaults
     if rel_floor is not None:
@@ -135,7 +140,7 @@ def _get_tolerance(scale: float, rel_floor: Optional[float], abs_floor: Optional
     return max(af, rf * max(1.0, abs(scale)))
 
 
-def _to_point_xy(point: Any) -> Tuple[float, float]:
+def _to_point_xy(point: Any) -> tuple[float, float]:
     """点オブジェクトを (x, y) のfloat座標に変換する。"""
     return _to_point_xy_impl(point, to_float_fn=_to_float)
 
@@ -144,8 +149,8 @@ def _is_acute_triangle(
     A: Any,
     B: Any,
     C: Any,
-    rel_floor: Optional[float],
-    abs_floor: Optional[float],
+    rel_floor: float | None,
+    abs_floor: float | None,
 ) -> bool:
     """3点が鋭角三角形を成すか判定する。"""
     return _is_acute_triangle_impl(
@@ -180,9 +185,9 @@ def _assume_compare(
     lhs: Any,
     rhs: Any,
     op: str,
-    message: Optional[str] = None,
-    rel_floor: Optional[float] = None,
-    abs_floor: Optional[float] = None,
+    message: str | None = None,
+    rel_floor: float | None = None,
+    abs_floor: float | None = None,
 ) -> None:
     """lhs (op) rhs を許容誤差付きで判定"""
     if not _ASSUME_ENABLED.get():
@@ -218,7 +223,7 @@ def _assume_compare(
         _handle_failure(message or f"Assume({lhs} {op} {rhs}) failed")
 
 
-def _normalize_interval(bounds: Any) -> Tuple[Optional[float], Optional[float]]:
+def _normalize_interval(bounds: Any) -> tuple[float | None, float | None]:
     """Bound/Assume 用の範囲指定を標準化する。"""
     return _normalize_interval_impl(bounds, to_float_fn=_to_float)
 
@@ -226,11 +231,11 @@ def _normalize_interval(bounds: Any) -> Tuple[Optional[float], Optional[float]]:
 def Bound(
     value: Any,
     bounds: Any,
-    message: Optional[str] = None,
+    message: str | None = None,
     *,
     inclusive: bool = True,
-    rel_floor: Optional[float] = None,
-    abs_floor: Optional[float] = None,
+    rel_floor: float | None = None,
+    abs_floor: float | None = None,
 ) -> Any:
     """
     Bound(x, (lo, hi)) - x を指定範囲内にあると仮定するガード。
@@ -266,10 +271,10 @@ def Bound(
 def AssumeNe(
     lhs: Any,
     rhs: Any,
-    message: Optional[str] = None,
+    message: str | None = None,
     *,
-    rel_floor: Optional[float] = None,
-    abs_floor: Optional[float] = None,
+    rel_floor: float | None = None,
+    abs_floor: float | None = None,
 ) -> None:
     """Assume(lhs != rhs) - 不等を要求（ほぼ等しいも除外）"""
     _assume_compare(lhs, rhs, "!=", message, rel_floor, abs_floor)
@@ -278,10 +283,10 @@ def AssumeNe(
 def AssumeEq(
     lhs: Any,
     rhs: Any,
-    message: Optional[str] = None,
+    message: str | None = None,
     *,
-    rel_floor: Optional[float] = None,
-    abs_floor: Optional[float] = None,
+    rel_floor: float | None = None,
+    abs_floor: float | None = None,
 ) -> None:
     """Assume(lhs == rhs) - 等を要求（ほぼ等しいを許容）"""
     _assume_compare(lhs, rhs, "==", message, rel_floor, abs_floor)
@@ -290,10 +295,10 @@ def AssumeEq(
 def AssumeLt(
     lhs: Any,
     rhs: Any,
-    message: Optional[str] = None,
+    message: str | None = None,
     *,
-    rel_floor: Optional[float] = None,
-    abs_floor: Optional[float] = None,
+    rel_floor: float | None = None,
+    abs_floor: float | None = None,
 ) -> None:
     """Assume(lhs < rhs) - より小を要求"""
     _assume_compare(lhs, rhs, "<", message, rel_floor, abs_floor)
@@ -302,10 +307,10 @@ def AssumeLt(
 def AssumeLe(
     lhs: Any,
     rhs: Any,
-    message: Optional[str] = None,
+    message: str | None = None,
     *,
-    rel_floor: Optional[float] = None,
-    abs_floor: Optional[float] = None,
+    rel_floor: float | None = None,
+    abs_floor: float | None = None,
 ) -> None:
     """Assume(lhs <= rhs) - 以下を要求"""
     _assume_compare(lhs, rhs, "<=", message, rel_floor, abs_floor)
@@ -314,10 +319,10 @@ def AssumeLe(
 def AssumeGt(
     lhs: Any,
     rhs: Any,
-    message: Optional[str] = None,
+    message: str | None = None,
     *,
-    rel_floor: Optional[float] = None,
-    abs_floor: Optional[float] = None,
+    rel_floor: float | None = None,
+    abs_floor: float | None = None,
 ) -> None:
     """Assume(lhs > rhs) - より大を要求"""
     _assume_compare(lhs, rhs, ">", message, rel_floor, abs_floor)
@@ -326,10 +331,10 @@ def AssumeGt(
 def AssumeGe(
     lhs: Any,
     rhs: Any,
-    message: Optional[str] = None,
+    message: str | None = None,
     *,
-    rel_floor: Optional[float] = None,
-    abs_floor: Optional[float] = None,
+    rel_floor: float | None = None,
+    abs_floor: float | None = None,
 ) -> None:
     """Assume(lhs >= rhs) - 以上を要求"""
     _assume_compare(lhs, rhs, ">=", message, rel_floor, abs_floor)
@@ -337,10 +342,10 @@ def AssumeGe(
 
 def Assume(
     condition: Any,
-    message: Optional[str] = None,
+    message: str | None = None,
     *,
-    rel_floor: Optional[float] = None,
-    abs_floor: Optional[float] = None,
+    rel_floor: float | None = None,
+    abs_floor: float | None = None,
 ) -> None:
     """条件が満たされない場合に AssumptionError を投げて入力を除外する。
 
@@ -380,7 +385,7 @@ def Assume(
 
     # sympy の BooleanTrue/False
     try:
-        from sympy.logic.boolalg import BooleanTrue, BooleanFalse
+        from sympy.logic.boolalg import BooleanFalse, BooleanTrue
 
         if isinstance(condition, BooleanTrue):
             return
@@ -409,7 +414,6 @@ from geosolver.geometry.safety.assumptions import (
     AssumeOrder,
     AssumeRight,
 )
-
 
 # エクスポート
 __all__ = [

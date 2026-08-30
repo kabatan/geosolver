@@ -6,22 +6,21 @@ from typing import Any
 
 from mpmath import mp
 from sympy import sympify
+
 from geosolver.engine.standard.precision.type_guards.boundary_float_to_mpf import (
     BoundaryOrigin,
     boundary_float_to_mpf,
 )
 
 
-def _eval_exact_to_mpf(expr: Any, precision: int = 80) -> Any:
+def _eval_exact_to_mpf_current_precision(expr: Any, precision: int = 80) -> Any:
     """Evaluate symbolic expression to mpmath value with fallback behavior."""
     if expr is None:
         return None
 
     target_precision = max(15, int(precision))
-    mp.dps = max(mp.dps, target_precision)
-
     try:
-        if isinstance(expr, (mp.mpf, mp.mpc)):
+        if isinstance(expr, mp.mpf | mp.mpc):
             return expr
     except Exception:
         pass
@@ -46,3 +45,10 @@ def _eval_exact_to_mpf(expr: Any, precision: int = 80) -> Any:
         return mp.mpf(expr)
     except Exception:
         return None
+
+
+def _eval_exact_to_mpf(expr: Any, precision: int = 80) -> Any:
+    """Evaluate an exact expression without mutating process-wide precision."""
+    target_precision = max(15, int(precision))
+    with mp.workdps(max(mp.dps, target_precision)):
+        return _eval_exact_to_mpf_current_precision(expr, precision=target_precision)

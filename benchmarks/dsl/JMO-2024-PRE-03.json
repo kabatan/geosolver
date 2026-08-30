@@ -1,0 +1,90 @@
+{
+  "id": "JMO-2024-PRE-03",
+  "variables": [
+    "x",
+    "oy",
+    "r"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(10, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(5, 5 * sqrt(3))"
+    },
+    {
+      "name": "X",
+      "expression": "Point(x, 0)"
+    },
+    {
+      "name": "O",
+      "expression": "Point(x, oy)"
+    },
+    {
+      "name": "Gamma",
+      "expression": "Circle(O, r)"
+    },
+    {
+      "name": "D",
+      "expression": "Intersect(Line(A, B), Gamma, exclude=A)"
+    },
+    {
+      "name": "E",
+      "expression": "Intersect(Line(A, C), Gamma, exclude=A)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(O, A)",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(O, X)",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "OnSegment(D, A, B)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(E, A, C)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(A, D) + Distance(A, E)",
+      "operator": "=",
+      "right": 13
+    },
+    {
+      "left": "x",
+      "operator": ">",
+      "right": "5"
+    },
+    {
+      "left": "x",
+      "operator": "<",
+      "right": "10"
+    },
+    {
+      "left": "oy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "r",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "Distance(B, X)"
+}

@@ -1,0 +1,78 @@
+{
+  "id": "AIME-2020-II-04",
+  "variables": [
+    "m",
+    "x",
+    "y"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(0, 12)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(16, 0)"
+    },
+    {
+      "name": "Ap",
+      "expression": "Point(24, 18)"
+    },
+    {
+      "name": "Bp",
+      "expression": "Point(36, 18)"
+    },
+    {
+      "name": "Cp",
+      "expression": "Point(24, 2)"
+    },
+    {
+      "name": "K",
+      "expression": "Point(x, y)"
+    },
+    {
+      "name": "RA",
+      "expression": "Rotate(A, -m * pi / 180, K)"
+    },
+    {
+      "name": "RB",
+      "expression": "Rotate(B, -m * pi / 180, K)"
+    },
+    {
+      "name": "RC",
+      "expression": "Rotate(C, -m * pi / 180, K)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(RA, Ap)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(RB, Bp)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(RC, Cp)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "m",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "m",
+      "operator": "<",
+      "right": "180"
+    }
+  ],
+  "target": "m + x + y"
+}

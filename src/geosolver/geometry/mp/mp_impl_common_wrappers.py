@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from functools import lru_cache
-from typing import List, Optional
 
 from mpmath import mpf
 
@@ -48,8 +47,8 @@ def mp_arc(
     circle: MPCircle,
     start: MPPoint,
     end: MPPoint,
-    including: Optional[MPPoint] = None,
-    excluding: Optional[MPPoint] = None,
+    including: MPPoint | None = None,
+    excluding: MPPoint | None = None,
 ) -> MPArc:
     return _impl_module()._mp_arc_impl(circle, start, end, including=including, excluding=excluding)
 
@@ -84,16 +83,16 @@ def mp_centroid(A: MPPoint, B: MPPoint, C: MPPoint) -> MPPoint:
     return _impl_module()._mp_centroid_impl(A, B, C)
 
 
-def mp_circumcenter(A: MPPoint, B: MPPoint, C: MPPoint) -> Optional[MPPoint]:
+def mp_circumcenter(A: MPPoint, B: MPPoint, C: MPPoint) -> MPPoint | None:
     circ = _impl_module().mp_circumcircle(A, B, C)
     return circ.center if circ else None
 
 
-def mp_incenter(A: MPPoint, B: MPPoint, C: MPPoint) -> Optional[MPPoint]:
+def mp_incenter(A: MPPoint, B: MPPoint, C: MPPoint) -> MPPoint | None:
     return _impl_module().mp_triangle_center(A, B, C, 1)
 
 
-def mp_orthocenter(A: MPPoint, B: MPPoint, C: MPPoint) -> Optional[MPPoint]:
+def mp_orthocenter(A: MPPoint, B: MPPoint, C: MPPoint) -> MPPoint | None:
     return _impl_module().mp_triangle_center(A, B, C, 4)
 
 
@@ -121,11 +120,11 @@ def mp_are_perpendicular(l1: MPLine, l2: MPLine) -> bool:
     return _impl_module()._mp_are_perpendicular_impl(l1, l2)
 
 
-def mp_are_concyclic(A: MPPoint, B: MPPoint, C: MPPoint, D: MPPoint) -> bool:
+def mp_are_concyclic(A: MPPoint, B: MPPoint, C: MPPoint, D: MPPoint) -> mpf:
     return _impl_module()._mp_are_concyclic_impl(A, B, C, D)
 
 
-def mp_slope(line: MPLine) -> Optional[mpf]:
+def mp_slope(line: MPLine) -> mpf | None:
     return _impl_module()._mp_slope_impl(line)
 
 
@@ -141,19 +140,19 @@ def mp_circumference(circle: MPCircle) -> mpf:
     return 2 * _impl_module().mp_pi * circle.radius
 
 
-def mp_nine_point_center(A: MPPoint, B: MPPoint, C: MPPoint) -> Optional[MPPoint]:
+def mp_nine_point_center(A: MPPoint, B: MPPoint, C: MPPoint) -> MPPoint | None:
     return _impl_module()._mp_nine_point_center_impl(A, B, C)
 
 
-def mp_nine_point_circle(A: MPPoint, B: MPPoint, C: MPPoint) -> Optional[MPCircle]:
+def mp_nine_point_circle(A: MPPoint, B: MPPoint, C: MPPoint) -> MPCircle | None:
     return _impl_module()._mp_nine_point_circle_impl(A, B, C)
 
 
-def mp_excircle(A: MPPoint, B: MPPoint, C: MPPoint, vertex: str = "A") -> Optional[MPCircle]:
+def mp_excircle(A: MPPoint, B: MPPoint, C: MPPoint, vertex: str = "A") -> MPCircle | None:
     return _impl_module()._mp_excircle_impl(A, B, C, vertex=vertex)
 
 
-def mp_excenter(A: MPPoint, B: MPPoint, C: MPPoint, vertex: str = "A") -> Optional[MPPoint]:
+def mp_excenter(A: MPPoint, B: MPPoint, C: MPPoint, vertex: str = "A") -> MPPoint | None:
     return _impl_module()._mp_excenter_impl(A, B, C, vertex=vertex)
 
 
@@ -165,11 +164,11 @@ def mp_angle_bisector(A: MPPoint, B: MPPoint, C: MPPoint) -> MPLine:
     return _impl_module()._mp_angle_bisector_impl(A, B, C)
 
 
-def mp_tangent_line(circle: MPCircle, point: MPPoint) -> Optional[List[MPLine]]:
+def mp_tangent_line(circle: MPCircle, point: MPPoint) -> list[MPLine] | None:
     return _impl_module()._mp_tangent_line_impl(circle, point)
 
 
-def mp_radical_axis(c1: MPCircle, c2: MPCircle) -> Optional[MPLine]:
+def mp_radical_axis(c1: MPCircle, c2: MPCircle) -> MPLine | None:
     return _impl_module()._mp_radical_axis_impl(c1, c2)
 
 
@@ -177,11 +176,11 @@ def mp_power_of_point(point: MPPoint, circle: MPCircle) -> mpf:
     return _impl_module()._mp_power_of_point_impl(point, circle)
 
 
-def mp_is_convex(*points) -> Optional[bool]:
+def mp_is_convex(*points) -> bool | None:
     return _impl_module()._mp_is_convex_impl(*points)
 
 
-def mp_has_self_intersection(*points) -> Optional[bool]:
+def mp_has_self_intersection(*points) -> bool | None:
     return _impl_module()._mp_has_self_intersection_impl(*points)
 
 

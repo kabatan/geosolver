@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Optional
-
 from geosolver.geometry.entities.base import Circle, Point
 from geosolver.geometry.registry import geometry_symbol
 
@@ -12,7 +10,7 @@ _MP_SOFTCAP_MAX_RADIUS = "1e6"
 
 
 @geometry_symbol("Circumcircle", category="triangle")
-def Circumcircle(A: Point, B: Point, C: Point) -> Optional[Circle]:
+def Circumcircle(A: Point, B: Point, C: Point) -> Circle | None:
     """Triangle circumcircle."""
     from geosolver.geometry.operations.triangle import Circumcenter
 
@@ -27,6 +25,7 @@ def Circumcircle(A: Point, B: Point, C: Point) -> Optional[Circle]:
 def _Circumcircle_numpy(A, B, C):
     """NumPy implementation with smooth radius soft-cap."""
     import numpy as np
+
     from geosolver.geometry.operations.triangle import _circumcenter_numpy_impl
 
     center = _circumcenter_numpy_impl(A, B, C)
@@ -43,6 +42,7 @@ def _Circumcircle_numpy(A, B, C):
 def _Circumcircle_mpmath(A, B, C):
     """mpmath implementation with smooth radius soft-cap."""
     from mpmath import mpf, sqrt, tanh
+
     from geosolver.geometry.operations.triangle import _Circumcenter_mpmath
 
     center = _Circumcenter_mpmath(A, B, C)

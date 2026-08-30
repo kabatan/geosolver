@@ -8,6 +8,12 @@ from geosolver.geometry.entities.base import Circle, Line, Point
 
 
 def point_on_segment_numpy_impl(p1: Any, p2: Any, t: Any) -> list[Any]:
+    from geosolver.errors import CoincidentPointsError, GeometryDomainError
+
+    if p1[0] == p2[0] and p1[1] == p2[1]:
+        raise CoincidentPointsError("segment endpoints must be distinct")
+    if not 0 <= t <= 1:
+        raise GeometryDomainError("segment parameter must be in [0, 1]")
     return [p1[0] + t * (p2[0] - p1[0]), p1[1] + t * (p2[1] - p1[1])]
 
 
@@ -44,7 +50,10 @@ def point_on_circle_numpy_impl(circle: Any, t: Any) -> list[Any]:
 
 
 def point_on_circle_mpmath_impl(circle: Circle, t: Any) -> Point:
-    from mpmath import cos as mp_cos, pi as mp_pi, sin as mp_sin
+    from mpmath import cos as mp_cos
+    from mpmath import pi as mp_pi
+    from mpmath import sin as mp_sin
+
     from geosolver.geometry.mp.mp_core_types import MPPoint
 
     angle = 2 * mp_pi * t
@@ -87,6 +96,7 @@ def tangent_numpy_impl(point: Any, circle: Any, use_first: bool = True) -> list[
 
 def tangent_mpmath_impl(point: Point, circle: Circle, use_first: bool = True) -> Line:
     from mpmath import sqrt
+
     from geosolver.geometry.mp.mp_core_types import MPLine
 
     cx, cy = circle.center.x, circle.center.y
@@ -126,6 +136,7 @@ def circle_through_point_numpy_impl(center: Any, point: Any) -> list[Any]:
 
 def circle_through_point_mpmath_impl(center: Point, point: Point) -> Circle:
     from mpmath import sqrt
+
     from geosolver.geometry.mp.mp_core_types import MPCircle
 
     dx = center.x - point.x
@@ -157,10 +168,9 @@ def circle_through_three_points_numpy_impl(p1: Any, p2: Any, p3: Any) -> list[An
     return [Ux, Uy, np.sqrt(dx * dx + dy * dy)]
 
 
-def circle_through_three_points_mpmath_impl(
-    p1: Point, p2: Point, p3: Point
-) -> Circle | None:
+def circle_through_three_points_mpmath_impl(p1: Point, p2: Point, p3: Point) -> Circle | None:
     from mpmath import sqrt
+
     from geosolver.geometry.mp.mp_core_types import MPCircle, MPPoint
 
     x1, y1 = p1.x, p1.y
@@ -170,14 +180,10 @@ def circle_through_three_points_mpmath_impl(
     if abs(D) < 1e-20:
         return None
     Ux = (
-        (x1**2 + y1**2) * (y2 - y3)
-        + (x2**2 + y2**2) * (y3 - y1)
-        + (x3**2 + y3**2) * (y1 - y2)
+        (x1**2 + y1**2) * (y2 - y3) + (x2**2 + y2**2) * (y3 - y1) + (x3**2 + y3**2) * (y1 - y2)
     ) / D
     Uy = (
-        (x1**2 + y1**2) * (x3 - x2)
-        + (x2**2 + y2**2) * (x1 - x3)
-        + (x3**2 + y3**2) * (x2 - x1)
+        (x1**2 + y1**2) * (x3 - x2) + (x2**2 + y2**2) * (x1 - x3) + (x3**2 + y3**2) * (x2 - x1)
     ) / D
     dx = x1 - Ux
     dy = y1 - Uy

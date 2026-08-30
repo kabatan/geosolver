@@ -2,67 +2,64 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, replace
 import time
+from dataclasses import dataclass, replace
 
 from mpmath import mp
 
-from geosolver.engine.standard.refinement.box.julia_box_solver import JuliaBoxSolver
-from geosolver.engine.standard.contracts.box_solver_port import BoxSolverPort
 from geosolver.engine.standard.contracts.baseline_search_policy import (
     SEARCH_ATTEMPT_HYBRID_FALLBACK,
     SEARCH_ATTEMPT_PRIMARY,
     SearchAttemptConfig,
 )
 from geosolver.engine.standard.contracts.candidate_record import (
-    RefinementBatchResult,
     RefinedCandidate,
+    RefinementBatchResult,
     SearchBatchResult,
 )
 from geosolver.engine.standard.contracts.external_pipeline_config import (
-    ExternalPipelineConfig,
     SEARCH_MODE_HYBRID_LEGACY_NOMAD,
+    ExternalPipelineConfig,
 )
 from geosolver.engine.standard.contracts.pipeline_result import ExternalPipelineResult
 from geosolver.engine.standard.contracts.runtime_budget import RuntimeBudget
+from geosolver.engine.standard.evaluation.classify_evaluation_failure import EvaluationStatus
+from geosolver.engine.standard.evaluation.ir_evaluator import build_ir_evaluator
+from geosolver.engine.standard.precision.type_guards.high_precision_mode import high_precision_mode
+from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
+from geosolver.engine.standard.problem.infer_problem_bounds import infer_problem_bounds
+from geosolver.engine.standard.problem.load_problem_bundle import load_problem_bundle
+from geosolver.engine.standard.refinement.mpmath_refiner import MpmathRefiner
 from geosolver.engine.standard.search.completion import (
     default_rescue_completion_summary,
-    merge_search_candidates_with_rescue,
     exact_assembly_needs_completion,
+    merge_search_candidates_with_rescue,
 )
 from geosolver.engine.standard.search.discrete.integer_targets import (
     default_discrete_completion_summary,
     run_discrete_target_completion,
 )
-from geosolver.engine.standard.evaluation.classify_evaluation_failure import EvaluationStatus
-from geosolver.engine.standard.evaluation.ir_evaluator import build_ir_evaluator
-from geosolver.engine.standard.problem.infer_problem_bounds import infer_problem_bounds
-from geosolver.engine.standard.problem.load_problem_bundle import load_problem_bundle
-from geosolver.engine.standard.refinement.mpmath_refiner import MpmathRefiner
-from geosolver.engine.standard.search.nomad_config import NomadConfig
 from geosolver.engine.standard.search.nomad_config import (
     DEFAULT_SEED_VALUES,
+    NomadConfig,
     derive_seed_values,
 )
-from geosolver.engine.standard.precision.type_guards.high_precision_mode import high_precision_mode
-from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
 
+from .assemble_exact_results import ExactAssemblyResult, assemble_exact_results
 from .build_pipeline_summary import build_pipeline_summary
 from .run_initial_probe import (
+    InitialProbeResult,
     augment_initial_probe_with_exact_distance_samples,
     derive_initial_probe_seeds,
     run_initial_probe,
-    InitialProbeResult,
 )
-from .run_search import run_search
-from .run_box_refinement import run_box_refinement
-from .run_refinement import run_refinement
+from .run_refinement import (
+    merge_refinement_results,
+    refine_added_candidates,
+    run_refinement,
+)
 from .run_rescue_search import run_rescue_search
-from .assemble_exact_results import ExactAssemblyResult, assemble_exact_results
-
-# Backwards-compatible private aliases for older regression tests/importers.
-_default_integer_fallback_summary = default_discrete_completion_summary
-_run_integer_target_fallback = run_discrete_target_completion
+from .run_search import run_search
 
 
 def _resolve_search_seed_count(config: NomadConfig) -> int:
@@ -70,7 +67,6 @@ def _resolve_search_seed_count(config: NomadConfig) -> int:
     if configured_count > 0:
         return configured_count
     return len(DEFAULT_SEED_VALUES)
-
 
 
 @dataclass(frozen=True)
@@ -91,45 +87,12 @@ class _CompletedPipelineStageState:
     integer_fallback_summary: dict[str, object]
 
 
-_ORDERED_ATTEMPT_COMPLETION_BUDGET_SHARED_RUNTIME = "shared_runtime_budget"
-_ORDERED_ATTEMPT_COMPLETION_BUDGET_FRESH_AFTER_SEARCH = (
-    "fresh_completion_budget_after_search"
-)
-
-
-@dataclass(frozen=True)
-class _OrderedAttemptBudgetRelationship:
-    completion_budget_mode: str
-
-    def build_completion_runtime_budget(
-        self,
-        *,
-        pipeline_config: ExternalPipelineConfig,
-        runtime_budget: RuntimeBudget,
-    ) -> RuntimeBudget:
-        if self.completion_budget_mode == _ORDERED_ATTEMPT_COMPLETION_BUDGET_SHARED_RUNTIME:
-            return runtime_budget
-        if (
-            self.completion_budget_mode
-            != _ORDERED_ATTEMPT_COMPLETION_BUDGET_FRESH_AFTER_SEARCH
-        ):
-            raise ValueError(
-                "unknown ordered-attempt completion budget mode: "
-                f"{self.completion_budget_mode}"
-            )
-        return RuntimeBudget(
-            total_budget_sec=pipeline_config.total_time_budget_sec,
-            started_at_monotonic=time.monotonic(),
-        )
-
-
 @dataclass(frozen=True)
 class _OrderedSearchAttemptDescriptor:
     attempt_id: str
     stage_label: str
     pipeline_config: ExternalPipelineConfig
     initial_probe_seed_base: int | None
-    budget_relationship: _OrderedAttemptBudgetRelationship
 
 
 @dataclass(frozen=True)
@@ -240,9 +203,6 @@ def _resolve_ordered_search_attempts(
             stage_label="primary",
             pipeline_config=primary_pipeline_config,
             initial_probe_seed_base=_resolve_primary_initial_probe_seed_base(seed=seed),
-            budget_relationship=_OrderedAttemptBudgetRelationship(
-                completion_budget_mode=_ORDERED_ATTEMPT_COMPLETION_BUDGET_SHARED_RUNTIME
-            ),
         )
     ]
     fallback_seed_base = _resolve_fallback_seed_base(
@@ -261,11 +221,6 @@ def _resolve_ordered_search_attempts(
             stage_label="fallback",
             pipeline_config=fallback_pipeline_config,
             initial_probe_seed_base=fallback_seed_base,
-            budget_relationship=_OrderedAttemptBudgetRelationship(
-                completion_budget_mode=(
-                    _ORDERED_ATTEMPT_COMPLETION_BUDGET_FRESH_AFTER_SEARCH
-                )
-            ),
         )
     )
     return tuple(resolved_attempts)
@@ -282,8 +237,12 @@ def _build_staged_fallback_summary(
         "selected_stage": selection.selected_outcome.attempt.stage_label,
         "primary_search_mode": primary_config.global_search_mode,
         "primary_seed_values": list(primary_config.search.seed_values),
-        "primary_exact_assembly_accepted_count": len(primary_result.exact_assembly_result.accepted_candidates),
-        "primary_refinement_best_residual": str(_best_refinement_residual(primary_result.refinement_result)),
+        "primary_exact_assembly_accepted_count": len(
+            primary_result.exact_assembly_result.accepted_candidates
+        ),
+        "primary_refinement_best_residual": str(
+            _best_refinement_residual(primary_result.refinement_result)
+        ),
     }
     if selection.fallback_outcome is not None:
         fallback_config = selection.fallback_outcome.attempt.pipeline_config
@@ -320,7 +279,10 @@ def _should_select_fallback_attempt(
         return True
     if fallback_best > primary_best:
         return False
-    return fallback_result.search_result.evaluation_count > primary_result.search_result.evaluation_count
+    return (
+        fallback_result.search_result.evaluation_count
+        > primary_result.search_result.evaluation_count
+    )
 
 
 def _build_hybrid_stage_fallback_config(
@@ -347,10 +309,9 @@ def _build_hybrid_stage_fallback_config(
         _resolve_search_seed_count(pipeline_config.search),
     )
     fallback_seed_values = derive_seed_values(seed_base, count=fallback_seed_count)
-    if (
-        pipeline_config.global_search_mode == SEARCH_MODE_HYBRID_LEGACY_NOMAD
-        and tuple(pipeline_config.search.seed_values) == tuple(fallback_seed_values)
-    ):
+    if pipeline_config.global_search_mode == SEARCH_MODE_HYBRID_LEGACY_NOMAD and tuple(
+        pipeline_config.search.seed_values
+    ) == tuple(fallback_seed_values):
         return None
     return replace(
         pipeline_config,
@@ -362,23 +323,8 @@ def _build_hybrid_stage_fallback_config(
     )
 
 
-def _resolve_attempt_completion_runtime_budget(
-    *,
-    attempt: _OrderedSearchAttemptDescriptor,
-    runtime_budget: RuntimeBudget,
-) -> RuntimeBudget:
-    return attempt.budget_relationship.build_completion_runtime_budget(
-        pipeline_config=attempt.pipeline_config,
-        runtime_budget=runtime_budget,
-    )
-
-
 def _build_refinement_refiner(pipeline_config: ExternalPipelineConfig) -> MpmathRefiner:
-    try:
-        return MpmathRefiner(config=pipeline_config.refiner_config)
-    except TypeError:
-        # Some tests monkeypatch MpmathRefiner with a zero-arg stub.
-        return MpmathRefiner()
+    return MpmathRefiner(config=pipeline_config.refiner_config)
 
 
 def _run_pipeline_stage(
@@ -388,9 +334,8 @@ def _run_pipeline_stage(
     bounds: list[tuple[float, float]],
     pipeline_config: ExternalPipelineConfig,
     seed_base: int | None,
-    box_solver: BoxSolverPort | None,
-    refiner: MpmathRefiner | None,
-    runtime_budget: RuntimeBudget | None = None,
+    refiner: MpmathRefiner,
+    runtime_budget: RuntimeBudget,
 ) -> _PipelineStageState:
     initial_probe_seed_count = _resolve_search_seed_count(pipeline_config.search)
     initial_probe_seeds = (
@@ -411,6 +356,7 @@ def _run_pipeline_stage(
     )
     constraint_scales = getattr(initial_probe_result, "constraint_scales", None)
     search_search_config = pipeline_config.search
+    remaining_before_search = runtime_budget.remaining_sec()
     if search_search_config.max_time_sec is None:
         # The baseline contract keeps the search config timeless so NOMAD can own
         # its own budget.  The SciPy fallback, however, is an in-process portfolio
@@ -418,7 +364,15 @@ def _run_pipeline_stage(
         # external pipeline's per-case budget.
         search_search_config = replace(
             search_search_config,
-            max_time_sec=max(1.0, float(pipeline_config.total_time_budget_sec) * 0.55),
+            max_time_sec=max(0.0, remaining_before_search * 0.55),
+        )
+    else:
+        search_search_config = replace(
+            search_search_config,
+            max_time_sec=min(
+                float(search_search_config.max_time_sec),
+                remaining_before_search,
+            ),
         )
     search_result = run_search(
         bundle=bundle,
@@ -431,31 +385,18 @@ def _run_pipeline_stage(
         guard_feasible_prefix_multiplier=pipeline_config.guard_feasible_prefix_multiplier,
         constraint_scales=constraint_scales,
     )
-    if pipeline_config.enable_box_solver:
-        if box_solver is None:
-            raise RuntimeError("box solver is required but unavailable")
-        refinement_result = run_box_refinement(
-            bundle=bundle,
-            evaluator=evaluator,
-            bounds=bounds,
-            search_result=search_result,
-            pipeline_config=pipeline_config,
-            box_solver=box_solver,
-        )
-    else:
-        if refiner is None:
-            raise RuntimeError("refiner is required for non-box-solver path")
-        refinement_result = run_refinement(
-            bundle=bundle,
-            evaluator=evaluator,
-            search_result=search_result,
-            refiner=refiner,
-        )
+    refinement_result = run_refinement(
+        bundle=bundle,
+        evaluator=evaluator,
+        search_result=search_result,
+        refiner=refiner,
+        deadline_monotonic=pipeline_config.refinement_deadline(runtime_budget),
+    )
     exact_assembly_result = assemble_exact_results(
         refined_candidates=refinement_result.candidates,
+        evaluator=evaluator,
         input_precision_dps=120,
-        residual_threshold=mp.mpf(pipeline_config.acceptance_residual_threshold),
-        acceptance_margin_ratio=mp.mpf(pipeline_config.acceptance_margin_ratio),
+        deadline_monotonic=float(runtime_budget.deadline_monotonic),
     )
     return _PipelineStageState(
         initial_probe_result=initial_probe_result,
@@ -472,8 +413,7 @@ def _complete_pipeline_stage(
     bounds: list[tuple[float, float]],
     stage_state: _PipelineStageState,
     pipeline_config: ExternalPipelineConfig,
-    box_solver: BoxSolverPort | None,
-    refiner: MpmathRefiner | None,
+    refiner: MpmathRefiner,
     runtime_budget: RuntimeBudget,
 ) -> _CompletedPipelineStageState:
     search_result = stage_state.search_result
@@ -486,80 +426,75 @@ def _complete_pipeline_stage(
         runtime_budget=runtime_budget,
         skip_reason="not_attempted",
     )
-    if exact_assembly_needs_completion(exact_assembly_result.accepted_candidates):
-        if runtime_budget.remaining_sec() >= pipeline_config.rescue_time_budget_sec:
-            try:
-                rescue_result = run_rescue_search(
-                    bundle=bundle,
-                    evaluator=evaluator,
-                    bounds=bounds,
-                    search_result=search_result,
-                    pipeline_config=pipeline_config,
-                    runtime_budget=runtime_budget,
-                    constraint_scales=stage_state.initial_probe_result.constraint_scales,
-                )
-            except ImportError as exc:
-                rescue_result = None
-                rescue_search_summary = default_rescue_completion_summary(
-                    runtime_budget=runtime_budget,
-                    triggered=False,
-                    skip_reason=f"backend_unavailable: {exc}",
-                )
-            if rescue_result is not None:
-                rescue_search_summary = default_rescue_completion_summary(
-                    runtime_budget=runtime_budget,
-                    triggered=True,
-                    box_count=len(rescue_result.boxes),
-                    rescued_candidate_count=len(rescue_result.candidates),
-                    best_residual=(
-                        "inf"
-                        if not rescue_result.candidates
-                        else min(candidate.residual_norm_float for candidate in rescue_result.candidates)
-                    ),
-                    elapsed_sec=rescue_result.elapsed_sec,
-                )
-            if rescue_result is not None and rescue_result.candidates:
-                search_result = merge_search_candidates_with_rescue(
-                    search_result=search_result,
-                    rescued_candidates=rescue_result.candidates,
-                )
-                if pipeline_config.enable_box_solver:
-                    if box_solver is None:
-                        raise RuntimeError("box solver is required but unavailable")
-                    refinement_result = run_box_refinement(
-                        bundle=bundle,
-                        evaluator=evaluator,
-                        bounds=bounds,
-                        search_result=search_result,
-                        pipeline_config=pipeline_config,
-                        box_solver=box_solver,
-                        rescue_boxes=rescue_result.boxes,
+    if (
+        exact_assembly_needs_completion(exact_assembly_result.accepted_candidates)
+        and runtime_budget.remaining_sec() >= pipeline_config.rescue_time_budget_sec
+    ):
+        try:
+            rescue_result = run_rescue_search(
+                bundle=bundle,
+                evaluator=evaluator,
+                bounds=bounds,
+                search_result=search_result,
+                pipeline_config=pipeline_config,
+                runtime_budget=runtime_budget,
+                constraint_scales=stage_state.initial_probe_result.constraint_scales,
+            )
+        except ImportError as exc:
+            rescue_result = None
+            rescue_search_summary = default_rescue_completion_summary(
+                runtime_budget=runtime_budget,
+                triggered=False,
+                skip_reason=f"backend_unavailable: {exc}",
+            )
+        if rescue_result is not None:
+            rescue_search_summary = default_rescue_completion_summary(
+                runtime_budget=runtime_budget,
+                triggered=True,
+                box_count=len(rescue_result.boxes),
+                rescued_candidate_count=len(rescue_result.candidates),
+                best_residual=(
+                    "inf"
+                    if not rescue_result.candidates
+                    else min(
+                        candidate.residual_norm_float for candidate in rescue_result.candidates
                     )
-                else:
-                    if refiner is None:
-                        raise RuntimeError("refiner is required for non-box-solver path")
-                    refinement_result = run_refinement(
-                        bundle=bundle,
-                        evaluator=evaluator,
-                        search_result=search_result,
-                        refiner=refiner,
-                        deadline_monotonic=time.monotonic() + runtime_budget.remaining_sec(),
-                    )
-                exact_assembly_result = assemble_exact_results(
-                    refined_candidates=refinement_result.candidates,
-                    input_precision_dps=120,
-                    residual_threshold=mp.mpf(pipeline_config.acceptance_residual_threshold),
-                    acceptance_margin_ratio=mp.mpf(pipeline_config.acceptance_margin_ratio),
-                )
-    refinement_result, exact_assembly_result, integer_fallback_summary = run_discrete_target_completion(
-        bundle=bundle,
-        evaluator=evaluator,
-        search_result=search_result,
-        refinement_result=refinement_result,
-        exact_assembly_result=exact_assembly_result,
-        refiner=refiner,
-        runtime_budget=runtime_budget,
-        pipeline_config=pipeline_config,
+                ),
+                elapsed_sec=rescue_result.elapsed_sec,
+            )
+        if rescue_result is not None and rescue_result.candidates:
+            rescued_refinement = refine_added_candidates(
+                bundle=bundle,
+                evaluator=evaluator,
+                candidates=rescue_result.candidates,
+                refiner=refiner,
+                deadline_monotonic=pipeline_config.refinement_deadline(runtime_budget),
+            )
+            search_result = merge_search_candidates_with_rescue(
+                search_result=search_result,
+                rescued_candidates=rescue_result.candidates,
+            )
+            refinement_result = merge_refinement_results(
+                refinement_result,
+                rescued_refinement,
+            )
+            exact_assembly_result = assemble_exact_results(
+                refined_candidates=refinement_result.candidates,
+                evaluator=evaluator,
+                input_precision_dps=120,
+                deadline_monotonic=float(runtime_budget.deadline_monotonic),
+            )
+    refinement_result, exact_assembly_result, integer_fallback_summary = (
+        run_discrete_target_completion(
+            bundle=bundle,
+            evaluator=evaluator,
+            search_result=search_result,
+            refinement_result=refinement_result,
+            exact_assembly_result=exact_assembly_result,
+            refiner=refiner,
+            runtime_budget=runtime_budget,
+            pipeline_config=pipeline_config,
+        )
     )
     return _CompletedPipelineStageState(
         initial_probe_result=stage_state.initial_probe_result,
@@ -577,8 +512,7 @@ def _execute_ordered_search_attempt(
     bundle: object,
     evaluator: object,
     bounds: list[tuple[float, float]],
-    box_solver: BoxSolverPort | None,
-    refiner: MpmathRefiner | None,
+    refiner: MpmathRefiner,
     runtime_budget: RuntimeBudget,
 ) -> _OrderedSearchAttemptOutcome:
     stage_state = _run_pipeline_stage(
@@ -587,7 +521,6 @@ def _execute_ordered_search_attempt(
         bounds=bounds,
         pipeline_config=attempt.pipeline_config,
         seed_base=attempt.initial_probe_seed_base,
-        box_solver=box_solver,
         refiner=refiner,
         runtime_budget=runtime_budget,
     )
@@ -599,12 +532,8 @@ def _execute_ordered_search_attempt(
             bounds=bounds,
             stage_state=stage_state,
             pipeline_config=attempt.pipeline_config,
-            box_solver=box_solver,
             refiner=refiner,
-            runtime_budget=_resolve_attempt_completion_runtime_budget(
-                attempt=attempt,
-                runtime_budget=runtime_budget,
-            ),
+            runtime_budget=runtime_budget,
         ),
     )
 
@@ -640,8 +569,7 @@ def _run_ordered_search_attempts(
     bundle: object,
     evaluator: object,
     bounds: list[tuple[float, float]],
-    box_solver: BoxSolverPort | None,
-    refiner: MpmathRefiner | None,
+    refiner: MpmathRefiner,
     runtime_budget: RuntimeBudget,
 ) -> _OrderedSearchAttemptSelection:
     primary_attempt = ordered_attempts[0]
@@ -650,13 +578,13 @@ def _run_ordered_search_attempts(
         bundle=bundle,
         evaluator=evaluator,
         bounds=bounds,
-        box_solver=box_solver,
         refiner=refiner,
         runtime_budget=runtime_budget,
     )
     if (
         len(primary_outcome.completed_stage_state.exact_assembly_result.accepted_candidates) > 0
         or len(ordered_attempts) == 1
+        or runtime_budget.remaining_sec() <= 0
     ):
         return _select_ordered_search_attempt_outcome(primary_outcome=primary_outcome)
     fallback_attempt = ordered_attempts[1]
@@ -665,7 +593,6 @@ def _run_ordered_search_attempts(
         bundle=bundle,
         evaluator=evaluator,
         bounds=bounds,
-        box_solver=box_solver,
         refiner=refiner,
         runtime_budget=runtime_budget,
     )
@@ -688,6 +615,7 @@ def _build_debug_candidates(
         debug_entries.append(
             {
                 "candidate_id": int(candidate.candidate_id),
+                "candidate_uid": candidate.candidate_uid,
                 "stage": "refinement",
                 "hard_feasible": bool(candidate.hard_feasible),
                 "validity_margin": (
@@ -727,8 +655,10 @@ def _run_external_pipeline_without_variables(
     # so a valid zero-variable problem whose guards failed raised
     # ``UnboundLocalError`` while assembling the summary.
     exact_assembly_result = ExactAssemblyResult(
+        numeric_feasible_candidates=(),
         accepted_candidates=(),
         exact_results=(),
+        candidate_records=(),
         answer_values=(),
         rejected_false_positive_count=0,
         rejection_tags=(),
@@ -754,9 +684,9 @@ def _run_external_pipeline_without_variables(
         refined_candidates = (refined,)
         exact_assembly_result = assemble_exact_results(
             refined_candidates=refined_candidates,
+            evaluator=evaluator,
             input_precision_dps=120,
-            residual_threshold=mp.mpf(pipeline_config.acceptance_residual_threshold),
-            acceptance_margin_ratio=mp.mpf(pipeline_config.acceptance_margin_ratio),
+            deadline_monotonic=float(runtime_budget.deadline_monotonic),
         )
         exact_results = exact_assembly_result.exact_results
         exact_assembly_answer_values = exact_assembly_result.answer_values
@@ -774,7 +704,9 @@ def _run_external_pipeline_without_variables(
             "total_random_points": 1,
             "finite_residual_ratio": 1.0 if float_eval.is_finite else 0.0,
             "guard_pass_ratio": 1.0 if guard_ok else 0.0,
-            "best_random_residual": float_eval.residual_norm_float if float_eval.is_finite else None,
+            "best_random_residual": float_eval.residual_norm_float
+            if float_eval.is_finite
+            else None,
             "best_random_point": [],
             "guard_violations": list(guard_violations),
         },
@@ -793,9 +725,9 @@ def _run_external_pipeline_without_variables(
             "best_residual": str(hp_eval.residual_norm_hp),
             "solver_name": "direct_evaluation",
             "hard_feasible_count": 1 if selected_answer is not None else 0,
-            "attempted_box_count": 0,
         },
         "exact_assembly": {
+            "numeric_feasible_count": len(exact_assembly_result.numeric_feasible_candidates),
             "accepted_count": exact_assembly_accepted_count,
             "answer_values": list(exact_assembly_answer_values),
             "rejected_false_positive_count": 0,
@@ -810,8 +742,17 @@ def _run_external_pipeline_without_variables(
         ),
         "debug_candidates": [],
     }
-    # Backward-compatible summary key retained for older benchmark readers.
-    summary["phase_integer_fallback"] = summary["phase_discrete_completion"]
+    from dataclasses import asdict
+
+    summary["pipeline_backend"] = "direct_evaluation"
+    summary["verification_records"] = list(exact_assembly_result.verification_records)
+    summary["exact_candidate_records"] = [
+        asdict(record) for record in exact_assembly_result.candidate_records
+    ]
+    summary["exact_assembly"]["rejection_tags"] = list(exact_assembly_result.rejection_tags)
+    summary["exact_assembly"]["rejected_false_positive_count"] = (
+        exact_assembly_result.rejected_false_positive_count
+    )
     accepted_candidate_ids = [
         int(candidate.candidate_id)
         for candidate in exact_assembly_result.accepted_candidates
@@ -830,37 +771,56 @@ def _run_external_pipeline_without_variables(
         selected_answer=selected_answer,
         accepted_answers=accepted_answers,
         float_candidates=(),
-        refined_candidates=refined_candidates,
+        refined_candidates=exact_assembly_result.updated_candidates(refined_candidates),
         exact_results=exact_results,
         summary=summary,
+        accepted_candidate_ids=tuple(accepted_candidate_ids),
     )
 
 
 def run_external_pipeline(
     problem_ir: object,
     *,
-    prefer_fast: bool = False,
     seed: int | None = None,
     nomad_config: NomadConfig | None = None,
     refiner: MpmathRefiner | None = None,
     pipeline_config: ExternalPipelineConfig | None = None,
-    box_solver: BoxSolverPort | None = None,
+    deadline_monotonic: float | None = None,
+) -> ExternalPipelineResult:
+    """Run every phase under the same deadline, including direct internal calls."""
+    from geosolver.runtime.deadline import uses_deadline
+
+    if deadline_monotonic is None:
+        config = pipeline_config or ExternalPipelineConfig.standard_tier()
+        deadline_monotonic = time.monotonic() + config.total_time_budget_sec
+    return uses_deadline(_run_external_pipeline)(
+        problem_ir,
+        seed=seed,
+        nomad_config=nomad_config,
+        refiner=refiner,
+        pipeline_config=pipeline_config,
+        deadline_monotonic=deadline_monotonic,
+    )
+
+
+def _run_external_pipeline(
+    problem_ir: object,
+    *,
+    seed: int | None = None,
+    nomad_config: NomadConfig | None = None,
+    refiner: MpmathRefiner | None = None,
+    pipeline_config: ExternalPipelineConfig | None = None,
+    deadline_monotonic: float | None = None,
 ) -> ExternalPipelineResult:
     """Execute external pipeline and return structured contract result.
 
     Args:
-        refiner: Compatibility/debug-only refiner used when box-solver path is disabled.
+        refiner: Active local refiner, injectable for regression tests.
     """
     if pipeline_config is not None and nomad_config is not None:
         raise ValueError("pipeline_config and nomad_config cannot be provided together")
     active_pipeline_config = (
-        pipeline_config
-        if pipeline_config is not None
-        else (
-            ExternalPipelineConfig.sanity_tier()
-            if prefer_fast
-            else ExternalPipelineConfig.standard_tier()
-        )
+        pipeline_config if pipeline_config is not None else ExternalPipelineConfig.standard_tier()
     )
     if nomad_config is not None:
         active_pipeline_config = replace(active_pipeline_config, search=nomad_config)
@@ -876,17 +836,12 @@ def run_external_pipeline(
     runtime_budget = RuntimeBudget(
         total_budget_sec=active_pipeline_config.total_time_budget_sec,
         started_at_monotonic=time.monotonic(),
+        deadline_monotonic=deadline_monotonic,
     )
-    active_box_solver = box_solver
-    if active_pipeline_config.enable_box_solver and active_box_solver is None:
-        active_box_solver = JuliaBoxSolver(
-            precision_dps=int(active_pipeline_config.box_precision_dps),
-            time_budget_sec=float(active_pipeline_config.box_time_budget_sec),
-        )
     refinement_refiner = refiner
-    if not active_pipeline_config.enable_box_solver and refinement_refiner is None:
+    if refinement_refiner is None:
         refinement_refiner = _build_refinement_refiner(active_pipeline_config)
-    bundle = load_problem_bundle(problem_ir, prefer_fast=prefer_fast)
+    bundle = load_problem_bundle(problem_ir)
     evaluator = build_ir_evaluator(bundle)
     if len(bundle.var_names) == 0:
         return _run_external_pipeline_without_variables(
@@ -904,7 +859,6 @@ def run_external_pipeline(
         bundle=bundle,
         evaluator=evaluator,
         bounds=bounds,
-        box_solver=active_box_solver,
         refiner=refinement_refiner,
         runtime_budget=runtime_budget,
     )
@@ -932,6 +886,7 @@ def run_external_pipeline(
     summary["search_staged_fallback"] = _build_staged_fallback_summary(
         selection=attempt_selection,
     )
+    summary["pipeline_backend"] = selected_attempt.pipeline_config.global_search_mode
     selected_answer = None
     accepted_answers = tuple(
         candidate.answer_hp
@@ -949,7 +904,7 @@ def run_external_pipeline(
         selected_answer=selected_answer,
         accepted_answers=accepted_answers,
         float_candidates=search_result.candidates,
-        refined_candidates=refinement_result.candidates,
+        refined_candidates=exact_assembly_result.updated_candidates(refinement_result.candidates),
         exact_results=exact_assembly_result.exact_results,
         summary=summary,
         accepted_candidate_ids=accepted_candidate_ids,

@@ -16,6 +16,7 @@ except Exception:  # pragma: no cover
 
 try:
     from sympy import Float as _SympyFloat
+
     _SYMPY_FLOAT_TYPES: tuple[type, ...] = (_SympyFloat,)
 except Exception:  # pragma: no cover
     _SYMPY_FLOAT_TYPES = ()
@@ -23,10 +24,10 @@ except Exception:  # pragma: no cover
 
 def ensure_no_float(value: object, *, context: str) -> None:
     """Raise HighPrecisionContaminationError if value contains float/numpy.floating/sympy.Float."""
-    if isinstance(value, float) or (
-        _NUMPY_FLOATING_TYPES and isinstance(value, _NUMPY_FLOATING_TYPES)
-    ) or (
-        _SYMPY_FLOAT_TYPES and isinstance(value, _SYMPY_FLOAT_TYPES)
+    if (
+        isinstance(value, float)
+        or (_NUMPY_FLOATING_TYPES and isinstance(value, _NUMPY_FLOATING_TYPES))
+        or (_SYMPY_FLOAT_TYPES and isinstance(value, _SYMPY_FLOAT_TYPES))
     ):
         raise HighPrecisionContaminationError(
             f"float contamination detected at {context}: {type(value).__name__}"
@@ -37,7 +38,7 @@ def ensure_no_float(value: object, *, context: str) -> None:
             ensure_no_float(item, context=f"{context}.{key}")
         return
 
-    if isinstance(value, (str, bytes, bytearray)):
+    if isinstance(value, str | bytes | bytearray):
         return
 
     if isinstance(value, Sequence):

@@ -12,13 +12,13 @@ if TYPE_CHECKING:
     from geosolver.geometry.mp.mp_impl import MPLine, MPPoint
 
 
-def _mp_point_class() -> type["MPPoint"]:
+def _mp_point_class() -> type[MPPoint]:
     from geosolver.geometry.mp.mp_impl import MPPoint
 
     return MPPoint
 
 
-def _mp_line_class() -> type["MPLine"]:
+def _mp_line_class() -> type[MPLine]:
     from geosolver.geometry.mp.mp_impl import MPLine
 
     return MPLine
@@ -30,11 +30,11 @@ def _mp_vector_class():
     return MPVector
 
 
-def mp_triangle_area(A: "MPPoint", B: "MPPoint", C: "MPPoint") -> mpf:
+def mp_triangle_area(A: MPPoint, B: MPPoint, C: MPPoint) -> mpf:
     return abs((B - A).cross(C - A)) / 2
 
 
-def mp_triangle_perimeter(A: "MPPoint", B: "MPPoint", C: "MPPoint") -> mpf:
+def mp_triangle_perimeter(A: MPPoint, B: MPPoint, C: MPPoint) -> mpf:
     a = B.distance_to(C)
     b = C.distance_to(A)
     c = A.distance_to(B)
@@ -53,16 +53,16 @@ def mp_distance(obj1, obj2) -> mpf:
     raise TypeError(f"Unsupported types for distance: {type(obj1)}, {type(obj2)}")
 
 
-def mp_midpoint(A: "MPPoint", B: "MPPoint") -> "MPPoint":
+def mp_midpoint(A: MPPoint, B: MPPoint) -> MPPoint:
     point_cls = _mp_point_class()
     return point_cls((A.x + B.x) / 2, (A.y + B.y) / 2)
 
 
-def mp_perimeter(A: "MPPoint", B: "MPPoint", C: "MPPoint") -> mpf:
+def mp_perimeter(A: MPPoint, B: MPPoint, C: MPPoint) -> mpf:
     return mp_triangle_perimeter(A, B, C)
 
 
-def mp_is_acute_triangle(A: "MPPoint", B: "MPPoint", C: "MPPoint") -> bool:
+def mp_is_acute_triangle(A: MPPoint, B: MPPoint, C: MPPoint) -> bool:
     tol = mpf(10) ** (-(mp.dps - 10))
 
     a2 = (B.x - C.x) ** 2 + (B.y - C.y) ** 2
@@ -76,7 +76,7 @@ def mp_is_acute_triangle(A: "MPPoint", B: "MPPoint", C: "MPPoint") -> bool:
     return a2 + b2 > c2 + tol and b2 + c2 > a2 + tol and c2 + a2 > b2 + tol
 
 
-def mp_angle(A: "MPPoint", B: "MPPoint", C: "MPPoint") -> mpf:
+def mp_angle(A: MPPoint, B: MPPoint, C: MPPoint) -> mpf:
     vector_cls = _mp_vector_class()
     BA = vector_cls(A.x - B.x, A.y - B.y)
     BC = vector_cls(C.x - B.x, C.y - B.y)
@@ -95,10 +95,10 @@ def mp_angle(A: "MPPoint", B: "MPPoint", C: "MPPoint") -> mpf:
     return mp.atan2(abs(cross), dot)
 
 
-def mp_area(A: "MPPoint", B: "MPPoint", C: "MPPoint") -> mpf:
+def mp_area(A: MPPoint, B: MPPoint, C: MPPoint) -> mpf:
     return mp_triangle_area(A, B, C)
 
 
-def mp_centroid(A: "MPPoint", B: "MPPoint", C: "MPPoint") -> "MPPoint":
+def mp_centroid(A: MPPoint, B: MPPoint, C: MPPoint) -> MPPoint:
     point_cls = _mp_point_class()
     return point_cls((A.x + B.x + C.x) / 3, (A.y + B.y + C.y) / 3)

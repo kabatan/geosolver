@@ -6,14 +6,17 @@ sympy を使用した高精度シンボリック計算に対応。
 """
 
 from sympy import (
-    sympify,
-    sqrt,
     Abs,
     expand,
-    N as _N,
     pi,
+    sqrt,
+    sympify,
 )
-from typing import Union, Optional
+from sympy import (
+    N as _N,
+)
+
+from geosolver.errors import GeometryDomainError, InvalidCircleError
 
 from .linear_primitives import Ray, Segment, midpoint
 
@@ -37,9 +40,7 @@ class Point:
         >>> d = A.distance_to(B) # sqrt(8)
     """
 
-    def __init__(
-        self, x: Union[int, float, str] = 0, y: Union[int, float, str] = 0
-    ):
+    def __init__(self, x: int | float | str = 0, y: int | float | str = 0):
         """
         点の初期化
 
@@ -90,21 +91,21 @@ class Point:
 
     def __mul__(self, scalar):
         """スカラー倍"""
-        if isinstance(scalar, (int, float)):
+        if isinstance(scalar, int | float):
             return Point(self.x * scalar, self.y * scalar)
         s = _sympify_preserve_precision(scalar)
         return Point(self.x * s, self.y * s)
 
     def __rmul__(self, scalar):
         """スカラー倍（逆順）"""
-        if isinstance(scalar, (int, float)):
+        if isinstance(scalar, int | float):
             return Point(self.x * scalar, self.y * scalar)
         s = _sympify_preserve_precision(scalar)
         return Point(self.x * s, self.y * s)
 
     def __truediv__(self, scalar):
         """スカラー除算"""
-        if isinstance(scalar, (int, float)):
+        if isinstance(scalar, int | float):
             return Point(self.x / scalar, self.y / scalar)
         s = _sympify_preserve_precision(scalar)
         return Point(self.x / s, self.y / s)
@@ -162,9 +163,9 @@ class Line:
 
     def __init__(
         self,
-        arg1: Union[int, float, str, Point],
-        arg2: Union[int, float, str, Point],
-        arg3: Union[int, float, str, None] = None,
+        arg1: int | float | str | Point,
+        arg2: int | float | str | Point,
+        arg3: int | float | str | None = None,
     ):
         """
         直線の作成
@@ -192,7 +193,7 @@ class Line:
 
         norm = sqrt(a**2 + b**2)
         if norm == 0:
-            raise ValueError("Dimensions of line must be non-zero (points must be distinct)")
+            raise GeometryDomainError("line requires two distinct points or a nonzero normal")
 
         self.a = a / norm
         self.b = b / norm
@@ -266,9 +267,7 @@ class Line:
 
     def evalf(self, precision: int = 15):
         """数値評価"""
-        return Line(
-            _N(self.a, precision), _N(self.b, precision), _N(self.c, precision)
-        )
+        return Line(_N(self.a, precision), _N(self.b, precision), _N(self.c, precision))
 
 
 class Circle:
@@ -282,10 +281,17 @@ class Circle:
         >>> C.contains_point(Point(3, 4))  # True
     """
 
-    def __init__(self, center: Point, radius: Union[int, float, str]):
+    def __init__(self, center: Point, radius: int | float | str):
         radius = sympify(radius)
-        if radius < 0:
-            raise ValueError("Radius must be non-negative")
+        positive = getattr(radius, "is_positive", None)
+        if positive is False or radius == 0:
+            raise InvalidCircleError("circle radius must be positive")
+        if positive is None and getattr(radius, "is_number", False):
+            try:
+                if float(_N(radius, 30)) <= 0:
+                    raise InvalidCircleError("circle radius must be positive")
+            except TypeError:
+                pass
         self.center = center
         self.radius = radius
 
@@ -354,5 +360,3 @@ def _sympify_preserve_precision(value):
     except Exception:
         pass
     return sympify(value)
-
-

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 import logging
-import platform
 import time
 from typing import Any
 
@@ -13,8 +12,6 @@ from geosolver.engine import (
     EngineRunner,
     EngineTimedOut,
 )
-from geosolver.exact import assemble_exact_answers
-from geosolver.platform import available_physical_cores
 from geosolver.problem.models import (
     Completeness,
     EngineIdentity,
@@ -27,7 +24,7 @@ from geosolver.problem.models import (
     TerminationReason,
 )
 from geosolver.problem.validation import validate
-from geosolver.runtime.integrity import locked_engine_hash
+from geosolver.runtime.integrity import engine_identity_hashes
 
 LOGGER = logging.getLogger(__name__)
 
@@ -48,11 +45,7 @@ def problem_hash(problem: GeometryProblem) -> str:
     return hashlib.sha256(canonical_problem_json(problem).encode("utf-8")).hexdigest()
 
 
-def engine_hash(name: str) -> str:
-    return locked_engine_hash(name)
-
-
-def _resources(options: SolveOptions, cores: int | str) -> ResourceUsage:
+def _resources(options: SolveOptions, cores: int) -> ResourceUsage:
     return ResourceUsage(
         time_limit_seconds=options.resolved_time_limit,
         cores=cores,
@@ -74,7 +67,7 @@ def _base_result(
     return SolveResult(
         status=status,
         completeness=Completeness.UNKNOWN,
-        engine=EngineIdentity(name=options.engine, hash=engine_hash(options.engine)),
+        engine=EngineIdentity(**engine_identity_hashes()),
         problem_hash=problem_hash(problem),
         requested_resources=_resources(options, options.resolved_cores),
         used_resources=_resources(options, cores),
@@ -91,6 +84,7 @@ def solve(
     *,
     runner: EngineRunner | None = None,
 ) -> SolveResult:
+    started = time.monotonic()
     parsed_options = (
         options if isinstance(options, SolveOptions) else SolveOptions.model_validate(options or {})
     )
@@ -126,34 +120,15 @@ def solve(
                 message="; ".join(f"{issue.path}: {issue.message}" for issue in report.issues),
             ),
         )
-    if parsed_options.engine == "reference" and platform.system() != "Linux":
-        return _base_result(
-            status=ResultStatus.UNSUPPORTED_PLATFORM,
-            problem=parsed_problem,
-            options=parsed_options,
-            cores=1,
-            elapsed=0.0,
-            termination=TerminationReason.ENGINE_FAILED,
-            error=SolveError(
-                code="unsupported_platform",
-                message="reference engine is supported on Linux only",
-            ),
-        )
-    requested_cores = parsed_options.resolved_cores
-    cores = (
-        available_physical_cores()
-        if requested_cores == "auto"
-        else min(int(requested_cores), available_physical_cores())
-    )
+    cores = 1  # The current solver executes one numerical stream per worker.
     active_runner = runner or EngineRunner()
-    started = time.monotonic()
     try:
         execution = active_runner.run(
             parsed_problem.engine_document(),
             seed=parsed_options.seed,
             cores=cores,
             time_limit_seconds=parsed_options.resolved_time_limit,
-            prefer_fast=parsed_options.engine == "standard",
+            deadline_monotonic=started + parsed_options.resolved_time_limit,
         )
     except EngineCancelled as error:
         return _base_result(
@@ -214,7 +189,7 @@ def solve(
             ),
         )
     try:
-        answers, warnings = assemble_exact_answers(execution.artifact.exact_candidates)
+        answers, warnings = execution.artifact.answers, execution.artifact.warnings
     except Exception:
         LOGGER.exception("exact answer assembly failed")
         return _base_result(
@@ -230,6 +205,16 @@ def solve(
             ),
         )
     elapsed = time.monotonic() - started
+    if elapsed >= parsed_options.resolved_time_limit:
+        return _base_result(
+            status=ResultStatus.RESOURCE_ERROR,
+            problem=parsed_problem,
+            options=parsed_options,
+            cores=cores,
+            elapsed=elapsed,
+            termination=TerminationReason.TIME_LIMIT,
+            error=SolveError(code="time_limit_reached", message="solve exceeded its deadline"),
+        )
     base = _base_result(
         status=ResultStatus.SOLVED if answers else ResultStatus.NO_ANSWER,
         problem=parsed_problem,
@@ -237,13 +222,26 @@ def solve(
         cores=cores,
         elapsed=elapsed,
         termination=(
-            TerminationReason.ANSWER_FOUND if answers else TerminationReason.NO_ANSWER_FOUND
+            TerminationReason.TIME_LIMIT
+            if execution.artifact.termination_reason == "time_limit_reached"
+            else (TerminationReason.ANSWER_FOUND if answers else TerminationReason.NO_ANSWER_FOUND)
         ),
-        diagnostics=execution.artifact.diagnostics,
+        diagnostics={
+            **execution.artifact.diagnostics,
+            "phase_timings": execution.artifact.phase_timings,
+            "counters": execution.artifact.counters,
+            "candidate_records": execution.artifact.candidate_records,
+            "rejection_tags": execution.artifact.rejection_tags,
+            "process_info": execution.artifact.process_info,
+            "config_snapshot": execution.artifact.config_snapshot,
+            "stdout": execution.artifact.stdout,
+            "stderr": execution.artifact.stderr,
+            "numeric_feasible": execution.artifact.numeric_feasible,
+            "exact_identified": execution.artifact.exact_identified,
+            "public_solved": bool(answers),
+        },
     )
     base.answers = answers
     base.warnings = warnings
-    base.completeness = (
-        Completeness.PROVEN if answers and not parsed_problem.variables else Completeness.UNKNOWN
-    )
+    base.completeness = Completeness.UNKNOWN
     return base

@@ -5,12 +5,13 @@ import os
 import signal
 import subprocess
 import sys
-import time
 from collections.abc import Sequence
 from pathlib import Path
 from typing import IO, Any
 
 import psutil
+
+_POPEN_TYPE = subprocess.Popen
 
 
 def available_physical_cores() -> int:
@@ -44,12 +45,14 @@ def spawn_process(
     env: dict[str, str],
     stdout: IO[Any] | int | None = subprocess.PIPE,
     stderr: IO[Any] | int | None = subprocess.PIPE,
+    stdin: IO[Any] | int | None = None,
 ) -> subprocess.Popen[str]:
     options: dict[str, Any] = {
         "cwd": str(cwd),
         "env": env,
         "stdout": stdout,
         "stderr": stderr,
+        "stdin": stdin,
         "text": True,
         "encoding": "utf-8",
     }
@@ -57,7 +60,29 @@ def spawn_process(
         options["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
     else:
         options["start_new_session"] = True
-    return subprocess.Popen(list(command), **options)
+    job = None
+    if os.name == "nt":
+        from geosolver.platform.windows_job import WindowsJob
+
+        job = WindowsJob()
+        command = [sys.executable, "-m", "geosolver.runtime.process_gate", job.event_name, *command]
+    try:
+        process = subprocess.Popen(list(command), **options)
+        if job is not None:
+            try:
+                job.assign_and_release(process.pid)
+                process._geosolver_job = job
+            except BaseException:
+                process.kill()
+                process.wait()
+                raise
+    except BaseException:
+        if job is not None:
+            job.close()
+        raise
+    if isinstance(process, _POPEN_TYPE):
+        process._geosolver_owned_group = True
+    return process
 
 
 def set_affinity(process_id: int, cores: int) -> None:
@@ -73,7 +98,12 @@ def set_affinity(process_id: int, cores: int) -> None:
 
 
 def terminate_process_tree(process: subprocess.Popen[str], grace_seconds: float = 2.0) -> None:
-    if process.poll() is not None:
+    job = getattr(process, "_geosolver_job", None)
+    if job is not None:
+        job.close()
+        process.wait(timeout=max(0.1, grace_seconds))
+        return
+    if process.poll() is not None and not getattr(process, "_geosolver_owned_group", False):
         return
     try:
         root = psutil.Process(process.pid)
@@ -91,23 +121,17 @@ def terminate_process_tree(process: subprocess.Popen[str], grace_seconds: float 
         if root is not None:
             with contextlib.suppress(psutil.Error):
                 root.terminate()
-    try:
+    with contextlib.suppress(subprocess.TimeoutExpired):
         process.wait(timeout=grace_seconds)
-        return
-    except subprocess.TimeoutExpired:
-        pass
     targets = descendants + ([] if root is None else [root])
     for target in targets:
         with contextlib.suppress(psutil.Error):
             target.kill()
+    if sys.platform != "win32":
+        with contextlib.suppress(ProcessLookupError, PermissionError):
+            os.killpg(process.pid, signal.SIGKILL)
     try:
         process.wait(timeout=max(0.1, grace_seconds))
     except subprocess.TimeoutExpired:
         process.kill()
         process.wait(timeout=max(0.1, grace_seconds))
-
-
-def wait_interval(deadline: float, maximum: float = 0.05) -> None:
-    remaining = deadline - time.monotonic()
-    if remaining > 0:
-        time.sleep(min(maximum, remaining))

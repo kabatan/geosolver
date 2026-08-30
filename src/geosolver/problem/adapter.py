@@ -3,7 +3,13 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from geosolver.problem.models import GeometryProblem, PredicateCondition, RelationCondition
+from geosolver.problem.compiler import (
+    CompiledPredicate,
+    CompiledRelation,
+    compile_problem,
+    predicate_guard_source,
+)
+from geosolver.problem.models import GeometryProblem
 
 RELATION_GUARDS = {
     "!=": "AssumeNe",
@@ -19,6 +25,7 @@ PREDICATE_ALIASES = {
     "ObtuseTriangle": "AssumeObtuse",
     "ConvexPolygon": "AssumeConvex",
     "SimplePolygon": "AssumeNoSelfIntersecting",
+    "Order": "AssumeOrder",
 }
 
 
@@ -57,26 +64,32 @@ def _predicate_to_engine(expression: str) -> str:
 
 
 def to_engine_document(problem: GeometryProblem) -> dict[str, Any]:
+    compiled = compile_problem(problem)
     constraints: list[dict[str, object]] = []
     guards: list[str] = []
-    for condition in problem.conditions:
-        if isinstance(condition, RelationCondition):
+    for condition in compiled.conditions:
+        if isinstance(condition, CompiledRelation):
+            right_value: object = (
+                condition.right.source
+                if condition.right_literal is None
+                else condition.right_literal
+            )
             if condition.operator == "=":
-                constraints.append({"def": condition.left, "value": condition.right})
+                constraints.append({"def": condition.left.source, "value": right_value})
             else:
                 guard = RELATION_GUARDS[condition.operator]
-                guards.append(f"{guard}({condition.left}, {_source(condition.right)})")
-        elif isinstance(condition, PredicateCondition):
-            guards.append(_predicate_to_engine(condition.predicate))
+                guards.append(f"{guard}({condition.left.source}, {_source(right_value)})")
+        elif isinstance(condition, CompiledPredicate):
+            guards.append(_predicate_to_engine(predicate_guard_source(condition.expression)))
     return {
         "task": "solve",
-        "id": problem.id,
-        "variables": {"names": list(problem.variables)},
+        "id": compiled.identifier,
+        "variables": {"names": list(compiled.variables)},
         "construction": [
-            {"name": item.name, "expr": item.expression} for item in problem.constructions
+            {"name": item.name, "expr": item.expression.source} for item in compiled.constructions
         ],
         "constraints": constraints,
         "guards": guards,
-        "answer": _target_to_engine(problem.target),
+        "answer": _target_to_engine(compiled.target.source),
         "post_process": "",
     }

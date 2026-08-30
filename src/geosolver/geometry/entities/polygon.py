@@ -1,16 +1,19 @@
 """
 2D Polygon Entity
 """
-from typing import List, Tuple, Optional
-from sympy import N as _N, Abs
 
-from geosolver.geometry.entities.base import Point, Line, _sympify_preserve_precision
+from sympy import Abs
+from sympy import N as _N
+
+from geosolver.geometry.entities.base import Point
+
 
 class Polygon:
     """
     2D Polygon class defined by a list of vertices.
     """
-    def __init__(self, vertices: List[Point]):
+
+    def __init__(self, vertices: list[Point]):
         if len(vertices) < 3:
             raise ValueError("Polygon must have at least 3 vertices.")
         self._vertices = vertices
@@ -20,11 +23,11 @@ class Polygon:
         self._is_self_intersecting_cache = None
 
     @property
-    def vertices(self) -> List[Point]:
+    def vertices(self) -> list[Point]:
         return self._vertices
 
     @property
-    def edges(self) -> List[Tuple[Point, Point]]:
+    def edges(self) -> list[tuple[Point, Point]]:
         """Returns a list of edges as tuples of Points (start, end)."""
         edges = []
         n = len(self._vertices)
@@ -44,7 +47,7 @@ class Polygon:
                 area -= self._vertices[j].x * self._vertices[i].y
             self._area_cache = Abs(area) / 2
         return self._area_cache
-    
+
     @property
     def perimeter(self):
         """Calculates the perimeter of the polygon."""
@@ -65,22 +68,23 @@ class Polygon:
 
     def _check_convexity(self) -> bool:
         n = len(self._vertices)
-        if n < 3: return False
-        
+        if n < 3:
+            return False
+
         sign = None
         for i in range(n):
             p1 = self._vertices[i]
             p2 = self._vertices[(i + 1) % n]
             p3 = self._vertices[(i + 2) % n]
-            
+
             # Cross product of edge vectors
             cross = (p2.x - p1.x) * (p3.y - p2.y) - (p2.y - p1.y) * (p3.x - p2.x)
-            
+
             try:
                 cross_val = float(_N(cross, 15))
                 if abs(cross_val) < 1e-12:
-                    continue # Collinear is okay
-                
+                    continue  # Collinear is okay
+
                 current_sign = cross_val > 0
                 if sign is None:
                     sign = current_sign
@@ -104,11 +108,11 @@ class Polygon:
         for i in range(n):
             for j in range(i + 2, n):
                 if i == 0 and j == n - 1:
-                    continue # Adjacent edges (first and last)
-                
+                    continue  # Adjacent edges (first and last)
+
                 p1, p2 = edges[i]
                 p3, p4 = edges[j]
-                
+
                 if self._segments_intersect(p1, p2, p3, p4):
                     return True
         return False
@@ -120,21 +124,18 @@ class Polygon:
         o3 = _segment_orientation(p3, p4, p1)
         o4 = _segment_orientation(p3, p4, p2)
 
-        if o1 != o2 and o3 != o4:
-            return True # General intersection
-
-        # Collinear cases (on segment) - omitted for simplicity as 'self-intersecting' usually implies crossing
-        return False
+        # Collinear cases are intentionally omitted here; this legacy symbolic
+        # helper only treats a proper crossing as self-intersection.
+        return o1 != o2 and o3 != o4
 
     def __repr__(self):
         return f"Polygon(vertices={self._vertices})"
 
 
 def _segment_orientation(p: Point, q: Point, r: Point) -> int:
-    val = (
-        float(_N(q.y - p.y, 15)) * float(_N(r.x - q.x, 15))
-        - float(_N(q.x - p.x, 15)) * float(_N(r.y - q.y, 15))
-    )
+    first = float(_N(q.y - p.y, 15)) * float(_N(r.x - q.x, 15))
+    second = float(_N(q.x - p.x, 15)) * float(_N(r.y - q.y, 15))
+    val = first - second
     if abs(val) < 1e-12:
         return 0
     return 1 if val > 0 else 2

@@ -1,0 +1,182 @@
+{
+  "id": "AIME-2022-I-08",
+  "variables": [
+    "r"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "omega",
+      "expression": "Circle(O, 18)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(0, 18)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(-9 * sqrt(3), -9)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(9 * sqrt(3), -9)"
+    },
+    {
+      "name": "OA",
+      "expression": "Point(0, r - 18)"
+    },
+    {
+      "name": "OB",
+      "expression": "Point(-(r - 18) * sqrt(3) / 2, -(r - 18) / 2)"
+    },
+    {
+      "name": "OC",
+      "expression": "Point((r - 18) * sqrt(3) / 2, -(r - 18) / 2)"
+    },
+    {
+      "name": "omegaA",
+      "expression": "Circle(OA, r)"
+    },
+    {
+      "name": "omegaB",
+      "expression": "Circle(OB, r)"
+    },
+    {
+      "name": "omegaC",
+      "expression": "Circle(OC, r)"
+    },
+    {
+      "name": "S1",
+      "expression": "Intersect(omegaA, omegaB, near=O)"
+    },
+    {
+      "name": "S2",
+      "expression": "Intersect(omegaB, omegaC, near=O)"
+    },
+    {
+      "name": "S3",
+      "expression": "Intersect(omegaC, omegaA, near=O)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(O, A)",
+      "operator": "=",
+      "right": 18
+    },
+    {
+      "left": "Distance(O, B)",
+      "operator": "=",
+      "right": 18
+    },
+    {
+      "left": "Distance(O, C)",
+      "operator": "=",
+      "right": 18
+    },
+    {
+      "left": "Distance(OA, Line(A, B))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(OA, Line(A, C))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(OB, Line(B, A))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(OB, Line(B, C))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(OC, Line(C, A))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(OC, Line(C, B))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(O, OA)",
+      "operator": "=",
+      "right": "18 - r"
+    },
+    {
+      "left": "Distance(O, OB)",
+      "operator": "=",
+      "right": "18 - r"
+    },
+    {
+      "left": "Distance(O, OC)",
+      "operator": "=",
+      "right": "18 - r"
+    },
+    {
+      "left": "OnCircle(S1, omegaA)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(S1, omegaB)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(S2, omegaB)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(S2, omegaC)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(S3, omegaC)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(S3, omegaA)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(S1, S2)",
+      "operator": "=",
+      "right": "Distance(S2, S3)"
+    },
+    {
+      "left": "Distance(S2, S3)",
+      "operator": "=",
+      "right": "Distance(S3, S1)"
+    },
+    {
+      "left": "r",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "r",
+      "operator": "<",
+      "right": "18"
+    },
+    {
+      "left": "Area(S1, S2, S3)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "Distance(S1, S2)"
+}

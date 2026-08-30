@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 
 def _triangle_cosines(
@@ -161,7 +162,7 @@ def assume_convex(
         from geosolver.geometry.mp.mp_impl import MPPoint
 
         points_raw = getattr(polygon, "points", polygon)
-        if not isinstance(points_raw, (list, tuple)):
+        if not isinstance(points_raw, list | tuple):
             points_raw = list(points_raw)
 
         mp_points = []
@@ -195,7 +196,7 @@ def assume_no_self_intersecting(
         from geosolver.geometry.mp.mp_impl import MPPoint
 
         points_raw = getattr(polygon, "points", polygon)
-        if not isinstance(points_raw, (list, tuple)):
+        if not isinstance(points_raw, list | tuple):
             points_raw = list(points_raw)
 
         mp_points = []

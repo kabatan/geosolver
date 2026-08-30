@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
-import math
+import ast
 from dataclasses import dataclass
 from typing import Any
 
 from mpmath import mp
 
-from geosolver.problem.ir.compiler import safe_eval_expr, safe_eval_expr_hp
+from geosolver.problem.expression_source import source_expression
+from geosolver.problem.ir.compiler import safe_eval_expr_hp
 
 from .evaluate import _is_guard_satisfied
 from .registry import (
@@ -17,7 +18,6 @@ from .registry import (
     is_compare_guard,
 )
 
-_VARIABLE_NAME_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
 _COMPARISON_OPERATORS: tuple[str, ...] = (">=", "<=", "!=", "==", ">", "<")
 _POINT_COORDINATE_COUNT = 2
 _TRIANGLE_VERTEX_COUNT = 3
@@ -32,13 +32,6 @@ _COMPARE_GUARD_OPERATOR_MAP: dict[str, str] = {
 
 
 @dataclass(frozen=True)
-class GuardBoundHint:
-    variable: str
-    lower_expr: str | None = None
-    upper_expr: str | None = None
-
-
-@dataclass(frozen=True)
 class GuardIR:
     source: str
     kind: str
@@ -50,8 +43,7 @@ class GuardIR:
     residual_expr: str | None = None
     condition_expr: str | None = None
     argument_exprs: tuple[str, ...] = ()
-    children: tuple["GuardIR", ...] = ()
-    bounds_hints: tuple[GuardBoundHint, ...] = ()
+    children: tuple[GuardIR, ...] = ()
 
 
 def _split_top_level_args(arg_text: str, expected_parts: int | None = None) -> list[str] | None:
@@ -76,6 +68,12 @@ def _split_top_level_args(arg_text: str, expected_parts: int | None = None) -> l
 
 def _extract_call_signature(expr: str) -> tuple[str, str] | None:
     text = expr.strip()
+    try:
+        parsed = ast.parse(text, mode="eval").body
+    except SyntaxError:
+        return None
+    if not isinstance(parsed, ast.Call) or not isinstance(parsed.func, ast.Name):
+        return None
     if not text.endswith(")"):
         return None
     depth = 0
@@ -98,33 +96,6 @@ def _extract_call_signature(expr: str) -> tuple[str, str] | None:
     return name, body
 
 
-def _is_simple_variable(expr: str) -> bool:
-    text = expr.strip()
-    if not text:
-        return False
-    if text[0].isdigit():
-        return False
-    return all(char in _VARIABLE_NAME_CHARS for char in text)
-
-
-def _make_bounds_hints_for_compare(lhs_expr: str, rhs_expr: str, operator: str) -> tuple[GuardBoundHint, ...]:
-    lhs_is_var = _is_simple_variable(lhs_expr)
-    rhs_is_var = _is_simple_variable(rhs_expr)
-    if lhs_is_var == rhs_is_var:
-        return ()
-    if lhs_is_var:
-        if operator in (">", ">="):
-            return (GuardBoundHint(variable=lhs_expr, lower_expr=rhs_expr),)
-        if operator in ("<", "<="):
-            return (GuardBoundHint(variable=lhs_expr, upper_expr=rhs_expr),)
-        return ()
-    if operator in (">", ">="):
-        return (GuardBoundHint(variable=rhs_expr, upper_expr=lhs_expr),)
-    if operator in ("<", "<="):
-        return (GuardBoundHint(variable=rhs_expr, lower_expr=lhs_expr),)
-    return ()
-
-
 def _compile_compare_guard(source: str, lhs_expr: str, rhs_expr: str, operator: str) -> GuardIR:
     return GuardIR(
         source=source,
@@ -132,46 +103,6 @@ def _compile_compare_guard(source: str, lhs_expr: str, rhs_expr: str, operator: 
         operator=operator,
         lhs_expr=lhs_expr.strip(),
         rhs_expr=rhs_expr.strip(),
-        bounds_hints=_make_bounds_hints_for_compare(lhs_expr.strip(), rhs_expr.strip(), operator),
-    )
-
-
-def _compile_bound_guard(
-    source: str,
-    value_expr: str,
-    interval_expr: str,
-    *,
-    inclusive: bool = True,
-) -> GuardIR:
-    interval_text = interval_expr.strip()
-    if (
-        (interval_text.startswith("(") and interval_text.endswith(")"))
-        or (interval_text.startswith("[") and interval_text.endswith("]"))
-    ):
-        parts = _split_top_level_args(interval_text[1:-1], expected_parts=2)
-    else:
-        parts = None
-    lower_expr = parts[0].strip() if parts else None
-    upper_expr = parts[1].strip() if parts else None
-    bounds_hints: tuple[GuardBoundHint, ...] = ()
-    if _is_simple_variable(value_expr.strip()):
-        bounds_hints = (
-            GuardBoundHint(
-                variable=value_expr.strip(),
-                lower_expr=lower_expr,
-                upper_expr=upper_expr,
-            ),
-        )
-    kind = "bound" if inclusive else "bound_open"
-    operator = "closed" if inclusive else "open"
-    return GuardIR(
-        source=source,
-        kind=kind,
-        operator=operator,
-        lhs_expr=value_expr.strip(),
-        lower_expr=lower_expr,
-        upper_expr=upper_expr,
-        bounds_hints=bounds_hints,
     )
 
 
@@ -183,41 +114,48 @@ def _compile_bound_call(source: str, body: str) -> GuardIR | None:
     only needs the interval and inclusivity, so message/tolerance arguments
     are accepted and ignored here while malformed calls remain raw guards.
     """
-    parts = _split_top_level_args(body)
-    if parts is None or len(parts) < 2:
+    try:
+        parsed = ast.parse(f"Bound({body})", mode="eval").body
+    except SyntaxError:
         return None
-    value_expr, interval_expr = parts[0].strip(), parts[1].strip()
-    if not value_expr or not interval_expr:
+    if not isinstance(parsed, ast.Call):
         return None
-
+    keywords = {keyword.arg: keyword.value for keyword in parsed.keywords if keyword.arg}
+    value_node = parsed.args[0] if parsed.args else keywords.get("value")
+    interval_node = parsed.args[1] if len(parsed.args) > 1 else keywords.get("bounds")
+    if value_node is None or interval_node is None:
+        return None
+    if not isinstance(interval_node, ast.Tuple | ast.List) or len(interval_node.elts) != 2:
+        return None
+    value_expr = source_expression(value_node, f"Bound({body})")
+    lower_node, upper_node = interval_node.elts
+    lower_expr = (
+        None
+        if isinstance(lower_node, ast.Constant) and lower_node.value is None
+        else source_expression(lower_node, f"Bound({body})")
+    )
+    upper_expr = (
+        None
+        if isinstance(upper_node, ast.Constant) and upper_node.value is None
+        else source_expression(upper_node, f"Bound({body})")
+    )
+    if lower_expr is None and upper_expr is None:
+        return None
     inclusive = True
-    positional_message_seen = False
-    for argument in parts[2:]:
-        text = argument.strip()
-        if not text:
+    inclusive_node = keywords.get("inclusive")
+    if inclusive_node is not None:
+        if not isinstance(inclusive_node, ast.Constant) or not isinstance(
+            inclusive_node.value, bool
+        ):
             return None
-        if "=" not in text:
-            if positional_message_seen:
-                return None
-            positional_message_seen = True
-            continue
-        name, value = (item.strip() for item in text.split("=", 1))
-        if name == "inclusive":
-            if value == "False":
-                inclusive = False
-            elif value == "True":
-                inclusive = True
-            else:
-                return None
-        elif name in {"message", "rel_floor", "abs_floor"}:
-            continue
-        else:
-            return None
-    return _compile_bound_guard(
-        source,
-        value_expr,
-        interval_expr,
-        inclusive=inclusive,
+        inclusive = inclusive_node.value
+    return GuardIR(
+        source=source,
+        kind="bound" if inclusive else "bound_open",
+        operator="closed" if inclusive else "open",
+        lhs_expr=value_expr,
+        lower_expr=lower_expr,
+        upper_expr=upper_expr,
     )
 
 
@@ -285,6 +223,59 @@ def _split_top_level_compare(expr: str) -> tuple[str, str, str] | None:
 
 
 def _compile_condition_expr(source: str, expr: str) -> GuardIR:
+    try:
+        parsed = ast.parse(expr, mode="eval").body
+    except SyntaxError:
+        parsed = None
+    if isinstance(parsed, ast.BoolOp):
+        children = tuple(
+            _compile_condition_expr(source_expression(n, expr), source_expression(n, expr))
+            for n in parsed.values
+        )
+        is_and = isinstance(parsed.op, ast.And)
+        return GuardIR(
+            source=source,
+            kind="logical_and" if is_and else "logical_or",
+            children=children,
+        )
+    if isinstance(parsed, ast.UnaryOp) and isinstance(parsed.op, ast.Not):
+        child = source_expression(parsed.operand, expr)
+        return GuardIR(
+            source=source, kind="logical_not", children=(_compile_condition_expr(child, child),)
+        )
+    if isinstance(parsed, ast.Compare):
+        children: list[GuardIR] = []
+        left = parsed.left
+        operator_names = {
+            ast.Gt: ">",
+            ast.GtE: ">=",
+            ast.Lt: "<",
+            ast.LtE: "<=",
+            ast.Eq: "==",
+            ast.NotEq: "!=",
+        }
+        for operator_node, right in zip(parsed.ops, parsed.comparators, strict=True):
+            operator = operator_names.get(type(operator_node))
+            if operator is None:
+                return _compile_raw_condition(source, expr)
+            children.append(
+                _compile_compare_guard(
+                    source_expression(
+                        ast.Compare(left=left, ops=[operator_node], comparators=[right]), expr
+                    ),
+                    source_expression(left, expr),
+                    source_expression(right, expr),
+                    operator,
+                )
+            )
+            left = right
+        if len(children) == 1:
+            return children[0]
+        return GuardIR(
+            source=source,
+            kind="logical_and",
+            children=tuple(children),
+        )
     call = _extract_call_signature(expr)
     if call is not None:
         func_name, body = call
@@ -295,10 +286,11 @@ def _compile_condition_expr(source: str, expr: str) -> GuardIR:
         if func_name == "And":
             parts = _split_top_level_args(body)
             if parts:
+                children = tuple(_compile_condition_expr(part, part) for part in parts)
                 return GuardIR(
                     source=source,
                     kind="logical_and",
-                    children=tuple(_compile_condition_expr(part, part) for part in parts),
+                    children=children,
                 )
         if func_name == "Or":
             parts = _split_top_level_args(body)
@@ -314,7 +306,7 @@ def _compile_condition_expr(source: str, expr: str) -> GuardIR:
                 return GuardIR(
                     source=source,
                     kind="logical_not",
-                    children=( _compile_condition_expr(parts[0], parts[0]), ),
+                    children=(_compile_condition_expr(parts[0], parts[0]),),
                 )
         residual_template = get_residual_guard_template(func_name)
         if residual_template is not None:
@@ -339,14 +331,6 @@ def _compile_condition_expr(source: str, expr: str) -> GuardIR:
         lhs_expr, operator, rhs_expr = compare
         return _compile_compare_guard(source, lhs_expr, rhs_expr, operator)
     return _compile_raw_condition(source, expr)
-
-
-def _parse_inclusive_kwarg(expr: str) -> bool:
-    """Parse inclusive=True/False from a Bound third argument."""
-    text = expr.strip()
-    if "=" in text:
-        text = text.split("=", 1)[1].strip()
-    return text != "False"
 
 
 def compile_guard_expr(guard_expr: str) -> GuardIR:
@@ -378,6 +362,9 @@ def compile_guard_expr(guard_expr: str) -> GuardIR:
         if parts:
             return _compile_condition_expr(text, parts[0])
         return _compile_raw_condition(text, text)
+
+    if func_name in {"And", "Or", "Not"}:
+        return _compile_condition_expr(text, text)
 
     triangle_class = get_triangle_class(func_name)
     if triangle_class is not None:
@@ -419,10 +406,7 @@ def _as_mpf(value: Any) -> Any:
 def _point_xy(value: Any) -> tuple[Any, Any]:
     if hasattr(value, "x") and hasattr(value, "y"):
         return _as_mpf(value.x), _as_mpf(value.y)
-    if (
-        isinstance(value, (tuple, list))
-        and len(value) == _POINT_COORDINATE_COUNT
-    ):
+    if isinstance(value, tuple | list) and len(value) == _POINT_COORDINATE_COUNT:
         return _as_mpf(value[0]), _as_mpf(value[1])
     raise TypeError("triangle-class guard requires point-like arguments")
 
@@ -434,10 +418,7 @@ def _triangle_class_measures(
     if len(guard.argument_exprs) != _TRIANGLE_VERTEX_COUNT:
         raise ValueError("triangle-class guard requires exactly three arguments")
 
-    points = tuple(
-        _point_xy(_safe_eval_numeric(expr, context))
-        for expr in guard.argument_exprs
-    )
+    points = tuple(_point_xy(_safe_eval_numeric(expr, context)) for expr in guard.argument_exprs)
     (ax, ay), (bx, by), (cx, cy) = points
 
     abx, aby = bx - ax, by - ay
@@ -457,11 +438,7 @@ def _triangle_class_measures(
     side_ratio = min(ab2, ac2, bc2) / maximum_side2
     cross = abs(abx * acy - aby * acx)
     cross_denominator = mp.sqrt(ab2 * ac2)
-    sine_measure = (
-        cross / cross_denominator
-        if cross_denominator > 0
-        else mp.mpf("0")
-    )
+    sine_measure = cross / cross_denominator if cross_denominator > 0 else mp.mpf("0")
 
     cosine_denominators = (
         mp.sqrt(ab2 * ac2),
@@ -475,7 +452,7 @@ def _triangle_class_measures(
     )
     cosines = tuple(
         dot / denominator if denominator > 0 else mp.mpf("0")
-        for dot, denominator in zip(dot_products, cosine_denominators)
+        for dot, denominator in zip(dot_products, cosine_denominators, strict=False)
     )
     return side_ratio, sine_measure, min(cosines)
 
@@ -530,17 +507,17 @@ def _compare_hard_satisfied(lhs_value: Any, rhs_value: Any, operator: str) -> bo
     rhs = _as_mpf(rhs_value)
     tol = _guard_numeric_tolerance()
     if operator == ">":
-        return lhs > rhs + tol
+        return lhs > rhs
     if operator == ">=":
         return lhs >= rhs - tol
     if operator == "<":
-        return lhs < rhs - tol
+        return lhs < rhs
     if operator == "<=":
         return lhs <= rhs + tol
     if operator == "==":
         return abs(lhs - rhs) <= tol
     if operator == "!=":
-        return abs(lhs - rhs) > tol
+        return lhs != rhs
     return False
 
 
@@ -689,7 +666,7 @@ def guard_hard_satisfied(guard: GuardIR, context: dict[str, Any]) -> bool:
         if guard.lower_expr is not None:
             lower = _as_mpf(_safe_eval_numeric(guard.lower_expr, context))
             if is_open:
-                if value <= lower + tol:
+                if value <= lower:
                     return False
             else:
                 if value < lower - tol:
@@ -697,7 +674,7 @@ def guard_hard_satisfied(guard: GuardIR, context: dict[str, Any]) -> bool:
         if guard.upper_expr is not None:
             upper = _as_mpf(_safe_eval_numeric(guard.upper_expr, context))
             if is_open:
-                if value >= upper - tol:
+                if value >= upper:
                     return False
             else:
                 if value > upper + tol:
@@ -755,28 +732,3 @@ def guard_violation_value(guard: GuardIR, context: dict[str, Any]) -> Any:
         child_value = guard_violation_value(guard.children[0], context)
         return mp.mpf("0") if child_value > 0 else mp.mpf("1")
     return mp.mpf("0") if guard_hard_satisfied(guard, context) else mp.mpf("1")
-
-
-def evaluate_bound_hint(
-    hint: GuardBoundHint,
-    *,
-    context: dict[str, Any],
-) -> tuple[str, float | None, float | None] | None:
-    lower_value: float | None = None
-    upper_value: float | None = None
-    try:
-        if hint.lower_expr is not None:
-            lower_raw = safe_eval_expr(hint.lower_expr, context)
-            lower_value = float(lower_raw.evalf()) if hasattr(lower_raw, "evalf") else float(lower_raw)
-        if hint.upper_expr is not None:
-            upper_raw = safe_eval_expr(hint.upper_expr, context)
-            upper_value = float(upper_raw.evalf()) if hasattr(upper_raw, "evalf") else float(upper_raw)
-    except Exception:
-        return None
-    if lower_value is not None and not math.isfinite(lower_value):
-        return None
-    if upper_value is not None and not math.isfinite(upper_value):
-        return None
-    if lower_value is not None and upper_value is not None and lower_value >= upper_value:
-        return None
-    return hint.variable, lower_value, upper_value

@@ -4,27 +4,31 @@
 蜷・未謨ｰ縺ｯSymPy(繝・ヵ繧ｩ繝ｫ繝・, NumPy(鬮倬・, mpmath(鬮倡ｲｾ蠎ｦ)縺ｮ3縺､縺ｮ螳溯｣・ｒ謖√▽縲・
 """
 
-from typing import Optional, Union, List, Any
+from typing import Any
+
 import numpy as np
-from sympy import sqrt, simplify, solve, N as _N, Abs, Max
-from geosolver.geometry.registry import geometry_symbol
-from geosolver.geometry.entities.base import Point, Line, Circle
-from geosolver.errors import NoIntersectionError, ParallelLinesError
-from geosolver.geometry.operations.intersections_closest import ClosestPoint
+from sympy import simplify
+
+from geosolver.errors import InfiniteSolutionsError, NoIntersectionError
+from geosolver.geometry.entities.base import Circle, Line, Point
 from geosolver.geometry.operations.intersections_circle_ops import (
-    IntersectLineCircle,
-    _IntersectLineCircle_numpy,
-    _IntersectLineCircle_mpmath,
     IntersectCircles,
-    _IntersectCircles_numpy,
-    _IntersectCircles_mpmath,
+    IntersectLineCircle,
 )
+from geosolver.geometry.operations.intersections_closest import ClosestPoint
 from geosolver.geometry.operations.intersections_selection import (
     dist_sq as _dist_sq_helper,
+)
+from geosolver.geometry.operations.intersections_selection import (
     get_dynamic_tolerance as _get_dynamic_tolerance_helper,
+)
+from geosolver.geometry.operations.intersections_selection import (
     select_intersection as _select_intersection,
+)
+from geosolver.geometry.operations.intersections_selection import (
     to_float_safe as _to_float_safe_helper,
 )
+from geosolver.geometry.registry import geometry_symbol
 
 # =============================================================================
 # Intersect (Generic)
@@ -47,10 +51,10 @@ def _get_dynamic_tolerance() -> float:
 def Intersect(
     obj1: Any,
     obj2: Any,
-    n: Optional[int] = None,
-    exclude: Optional[Point] = None,
-    near: Optional[Point] = None,
-    far: Optional[Point] = None,
+    n: int | None = None,
+    exclude: Point | None = None,
+    near: Point | None = None,
+    far: Point | None = None,
 ) -> Any:
     """
     豎守畑莠､轤ｹ險育ｮ・
@@ -127,7 +131,7 @@ def _Intersect_numpy(obj1, obj2):
 
 
 @geometry_symbol("IntersectLines", category="intersections")
-def IntersectLines(l1: Line, l2: Line) -> Optional[Point]:
+def IntersectLines(l1: Line, l2: Line) -> Point | None:
     """2逶ｴ邱壹・莠､轤ｹ"""
     # SymPy
     # l1: a1 x + b1 y + c1 = 0
@@ -135,9 +139,12 @@ def IntersectLines(l1: Line, l2: Line) -> Optional[Point]:
     # det = a1 b2 - a2 b1
     det = l1.a * l2.b - l2.a * l1.b
 
-    if det == 0:
-        # Parallel lines - no intersection
-        return None
+    if simplify(det) == 0:
+        same_a_c = simplify(l1.a * l2.c - l2.a * l1.c) == 0
+        same_b_c = simplify(l1.b * l2.c - l2.b * l1.c) == 0
+        if same_a_c and same_b_c:
+            raise InfiniteSolutionsError("coincident lines have infinitely many intersections")
+        raise NoIntersectionError("parallel lines do not intersect")
 
     x = (l1.b * l2.c - l2.b * l1.c) / det
     y = (l2.a * l1.c - l1.a * l2.c) / det
@@ -149,9 +156,13 @@ def _IntersectLines_numpy(l1, l2):
     """NumPy"""
     # l1, l2: [a, b, c]
     det = l1[0] * l2[1] - l2[0] * l1[1]
-    if abs(det) < 1e-12:
-        # Parallel lines
-        return None
+    scale = max(abs(l1[0] * l2[1]), abs(l2[0] * l1[1]), 1.0)
+    if abs(det) <= np.finfo(float).eps * 32 * scale:
+        same_a_c = abs(l1[0] * l2[2] - l2[0] * l1[2]) <= np.finfo(float).eps * 32 * scale
+        same_b_c = abs(l1[1] * l2[2] - l2[1] * l1[2]) <= np.finfo(float).eps * 32 * scale
+        if same_a_c and same_b_c:
+            raise InfiniteSolutionsError("coincident lines have infinitely many intersections")
+        raise NoIntersectionError("parallel lines do not intersect")
     x = (l1[1] * l2[2] - l2[1] * l1[2]) / det
     y = (l2[0] * l1[2] - l1[0] * l2[2]) / det
     return [x, y]
@@ -160,17 +171,18 @@ def _IntersectLines_numpy(l1, l2):
 @IntersectLines.set_mpmath
 def _IntersectLines_mpmath(l1, l2):
     """mpmath"""
+    from geosolver.geometry.mp.mp_core_types import MPPoint
+
     det = l1.a * l2.b - l2.a * l1.b
-    if abs(det) < 1e-25:
-        # Parallel lines - no intersection
-        return None
+    if det == 0:
+        if l1.a * l2.c == l2.a * l1.c and l1.b * l2.c == l2.b * l1.c:
+            raise InfiniteSolutionsError("coincident lines have infinitely many intersections")
+        raise NoIntersectionError("parallel lines do not intersect")
     x = (l1.b * l2.c - l2.b * l1.c) / det
     y = (l2.a * l1.c - l1.a * l2.c) / det
-    return Point(x, y)
+    return MPPoint(x, y)
 
 
 # =============================================================================
 # IntersectLineCircle
 # =============================================================================
-
-

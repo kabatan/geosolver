@@ -1,0 +1,59 @@
+{
+  "id": "JMO-2015-PRE-08",
+  "variables": [
+    "px",
+    "py"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(-6, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(6, 0)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(12, 0)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(px, py)"
+    },
+    {
+      "name": "Gamma1",
+      "expression": "Circumcircle(P, A, C)"
+    },
+    {
+      "name": "Gamma2",
+      "expression": "Circumcircle(P, B, D)"
+    },
+    {
+      "name": "Q",
+      "expression": "Intersect(Gamma1, Gamma2, exclude=P)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(P, B)",
+      "operator": "=",
+      "right": 5
+    },
+    {
+      "left": "Distance(P, C)",
+      "operator": "=",
+      "right": 7
+    },
+    {
+      "left": "py",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "Distance(P, Q)"
+}

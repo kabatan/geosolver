@@ -44,7 +44,7 @@ def run_line_search(
     _ = dps
     alpha = mp.mpf("1")
     for _ in range(max_steps):
-        trial = [value + (alpha * delta) for value, delta in zip(point, step)]
+        trial = [value + (alpha * delta) for value, delta in zip(point, step, strict=False)]
         if not _point_within_bounds(trial, bounds):
             alpha /= mp.mpf("2")
             continue
@@ -58,4 +58,3 @@ def run_line_search(
                 return trial, trial_vec, True
         alpha /= mp.mpf("2")
     return [mp.mpf(value) for value in point], None, False
-

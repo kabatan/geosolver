@@ -1,0 +1,51 @@
+{
+  "id": "AIME-2007-II-09",
+  "variables": [],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(63, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(63, 448)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(0, 448)"
+    },
+    {
+      "name": "E",
+      "expression": "Point(0, 84)"
+    },
+    {
+      "name": "F",
+      "expression": "Point(63, 364)"
+    },
+    {
+      "name": "P",
+      "expression": "IncircleContactPoint(B, E, F, side='BC')"
+    },
+    {
+      "name": "Q",
+      "expression": "IncircleContactPoint(D, E, F, side='BC')"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(B, E)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(D, E)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "Distance(P, Q)"
+}

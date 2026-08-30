@@ -6,9 +6,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from mpmath import mp, mpf, sqrt as mp_sqrt
+from mpmath import mp, mpf
+from mpmath import sqrt as mp_sqrt
 
 from geosolver.engine.standard.precision.type_guards.strict_to_mpf import strict_to_mpf
+from geosolver.errors import GeometryDomainError
 
 if TYPE_CHECKING:
     from geosolver.geometry.mp.mp_impl import MPPoint
@@ -17,7 +19,9 @@ if TYPE_CHECKING:
 class MPSegment:
     __slots__ = ["p1", "p2"]
 
-    def __init__(self, p1: "MPPoint", p2: "MPPoint"):
+    def __init__(self, p1: MPPoint, p2: MPPoint):
+        if p1.x == p2.x and p1.y == p2.y:
+            raise GeometryDomainError("Segment requires two distinct points")
         self.p1 = p1
         self.p2 = p2
 
@@ -27,14 +31,16 @@ class MPSegment:
     def length(self) -> mpf:
         return self.p1.distance_to(self.p2)
 
-    def midpoint(self) -> "MPPoint":
+    def midpoint(self) -> MPPoint:
         return _mp_midpoint(self.p1, self.p2)
 
 
 class MPRay:
     __slots__ = ["start", "through"]
 
-    def __init__(self, start: "MPPoint", through: "MPPoint"):
+    def __init__(self, start: MPPoint, through: MPPoint):
+        if start.x == through.x and start.y == through.y:
+            raise GeometryDomainError("Ray requires two distinct points")
         self.start = start
         self.through = through
 
@@ -46,8 +52,16 @@ class MPVector:
     __slots__ = ["x", "y"]
 
     def __init__(self, x, y):
-        self.x = x if isinstance(x, mpf) else strict_to_mpf(x, context="geometry.mp_aux_entities.MPVector.x")
-        self.y = y if isinstance(y, mpf) else strict_to_mpf(y, context="geometry.mp_aux_entities.MPVector.y")
+        self.x = (
+            x
+            if isinstance(x, mpf)
+            else strict_to_mpf(x, context="geometry.mp_aux_entities.MPVector.x")
+        )
+        self.y = (
+            y
+            if isinstance(y, mpf)
+            else strict_to_mpf(y, context="geometry.mp_aux_entities.MPVector.y")
+        )
 
     def __repr__(self):
         return f"MPVector({mp.nstr(self.x, 15)}, {mp.nstr(self.y, 15)})"
@@ -62,19 +76,19 @@ class MPVector:
         return self.x * other.y - self.y * other.x
 
 
-def mp_segment(p1: "MPPoint", p2: "MPPoint") -> MPSegment:
+def mp_segment(p1: MPPoint, p2: MPPoint) -> MPSegment:
     return MPSegment(p1, p2)
 
 
-def mp_ray(start: "MPPoint", through: "MPPoint") -> MPRay:
+def mp_ray(start: MPPoint, through: MPPoint) -> MPRay:
     return MPRay(start, through)
 
 
-def mp_vector(A: "MPPoint", B: "MPPoint") -> MPVector:
+def mp_vector(A: MPPoint, B: MPPoint) -> MPVector:
     return MPVector(B.x - A.x, B.y - A.y)
 
 
-def _mp_midpoint(p1: "MPPoint", p2: "MPPoint") -> "MPPoint":
+def _mp_midpoint(p1: MPPoint, p2: MPPoint) -> MPPoint:
     from geosolver.geometry.mp.mp_impl import mp_midpoint
 
     return mp_midpoint(p1, p2)

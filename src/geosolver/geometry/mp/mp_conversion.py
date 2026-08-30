@@ -2,7 +2,7 @@
 Numeric conversion and rounding helpers for mpmath geometry code.
 """
 
-from typing import List, Sequence
+from collections.abc import Sequence
 
 from mpmath import mp, mpf
 
@@ -36,7 +36,7 @@ def _is_mpf_instance(value: object) -> bool:
     )
 
 
-def convert_sympy_input(vec: Sequence[object]) -> List[object]:
+def convert_sympy_input(vec: Sequence[object]) -> list[object]:
     """Normalize sequence values for high-precision math without float demotion."""
     has_mpf = any(_is_mpf_instance(v) for v in vec)
     if has_mpf:

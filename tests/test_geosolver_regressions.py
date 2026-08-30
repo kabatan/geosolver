@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import platform
+import time
 from concurrent.futures import ThreadPoolExecutor
 from types import SimpleNamespace
 
@@ -11,7 +11,7 @@ from geosolver import GeometryProblem, SolveOptions, solve
 from geosolver.application.service import problem_hash
 from geosolver.engine import EngineCancelled, EngineFailure
 from geosolver.exact import assemble_exact_answers
-from geosolver.runtime.protocol import WorkerArtifact
+from geosolver.runtime.protocol import WorkerArtifact, WorkerRequest
 from geosolver.runtime.worker import execute
 
 
@@ -76,7 +76,10 @@ def test_cancelling_one_session_does_not_cancel_another() -> None:
                 raise EngineCancelled
             return SimpleNamespace(
                 artifact=WorkerArtifact(
-                    status="completed", solver_status="success", exact_candidates=["1"]
+                    status="completed",
+                    solver_status="success",
+                    exact_candidates=["1"],
+                    answers=assemble_exact_answers(["1"])[0],
                 )
             )
 
@@ -119,50 +122,22 @@ def test_worker_restores_global_mpmath_precision(monkeypatch: pytest.MonkeyPatch
     def precision_leaking_solver(*args: object, **kwargs: object) -> SimpleNamespace:
         mp.dps = 333
         return SimpleNamespace(
-            status=SimpleNamespace(name="SUCCESS"),
-            metadata={"exact_answer_candidates": ["1"]},
-            exact_answer=None,
-            answer_values=[1],
+            status="success",
+            summary={},
+            exact_results=[SimpleNamespace(selected_exact_value="1", descriptor=None)],
+            accepted_answers=[1],
+            refined_candidates=[],
+            accepted_candidate_ids=[],
         )
 
-    monkeypatch.setattr("geosolver.runtime.worker.run_ir", precision_leaking_solver)
-    request = SimpleNamespace(engine_document={}, prefer_fast=True, seed=0)
-    artifact = execute(request)  # type: ignore[arg-type]
+    monkeypatch.setattr("geosolver.runtime.worker.run_external_pipeline", precision_leaking_solver)
+    request = WorkerRequest(
+        engine_document={},
+        seed=0,
+        deadline_monotonic=time.monotonic() + 180,
+        effective_cores=1,
+    )
+    artifact = execute(request)
 
     assert artifact.status == "completed"
     assert mp.dps == original
-
-
-def test_reference_engine_is_not_silently_replaced_off_linux(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    monkeypatch.setattr(platform, "system", lambda: "Darwin")
-    result = solve(problem_with_value(), SolveOptions(engine="reference"))
-
-    assert result.status == "unsupported_platform"
-    assert result.engine.name == "reference"
-
-
-@pytest.mark.skipif(platform.system() != "Linux", reason="reference is Linux-only")
-def test_frozen_smoke_descriptors_match_standard_and_reference() -> None:
-    corpus = [
-        problem_with_value(),
-        GeometryProblem(
-            id="right-angle",
-            variables=[],
-            constructions=[
-                {"name": "A", "expression": "Point(0, 0)"},
-                {"name": "B", "expression": "Point(1, 0)"},
-                {"name": "C", "expression": "Point(0, 1)"},
-            ],
-            conditions=[],
-            target="Angle(B, A, C)",
-        ),
-    ]
-    for problem in corpus:
-        standard = solve(problem, options())
-        reference = solve(problem, SolveOptions(engine="reference"))
-        assert standard.status == reference.status == "solved"
-        assert [answer.canonical_key() for answer in standard.answers] == [
-            answer.canonical_key() for answer in reference.answers
-        ]

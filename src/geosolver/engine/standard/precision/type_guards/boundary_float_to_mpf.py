@@ -7,7 +7,7 @@ Design notes:
 - Uses ``mp.mpf(float_value)`` directly (IEEE 754 exact read, no str bridge).
 - Must be called **outside** ``high_precision_mode()`` to avoid WP6_5
   constructor guard collision.
-- Records ``origin`` for audit traceability.
+- Includes ``origin`` in conversion errors for traceability.
 """
 
 from __future__ import annotations
@@ -22,35 +22,30 @@ from .high_precision_mode import _boundary_conversion_context
 
 try:
     import numpy as np
+
     _NUMPY_FLOATING_TYPES: tuple[type, ...] = (np.floating,)
 except Exception:  # pragma: no cover
     _NUMPY_FLOATING_TYPES = ()
 
 
 # ---------------------------------------------------------------------------
-# BoundaryOrigin enum (WP4 — origin tracking)
+# Boundary conversion error origins
 # ---------------------------------------------------------------------------
+
 
 class BoundaryOrigin(str, enum.Enum):
     """Identifies the Zone A component that produced the float value."""
 
     SCIPY_OPTIMIZE = "scipy.optimize"
-    DIFFERENTIAL_EVOLUTION = "differential_evolution"
     INITIAL_POINT = "initial_point"
-    LEGACY_TOLERANCE = "legacy_tolerance"
     LEGACY_BOUND = "legacy_bound"
-    RESIDUAL_NORM = "residual_norm"
     OBJECTIVE_VALUE = "objective_value"
-    CONSTRAINT_TOL = "constraint_tol"
-    PENALTY_WEIGHT = "penalty_weight"
-    OBJECTIVE_SIGN = "objective_sign"
-    REFINE_TOLERANCE = "refine_tolerance"
-    DEDUPE_TOLERANCE = "dedupe_tolerance"
 
 
 # ---------------------------------------------------------------------------
 # Conversion function
 # ---------------------------------------------------------------------------
+
 
 def boundary_float_to_mpf(
     value: Any,
@@ -75,6 +70,7 @@ def boundary_float_to_mpf(
     """
     # --- INV-14: must NOT be called inside high_precision_mode ---
     from .high_precision_mode import is_high_precision_mode
+
     if is_high_precision_mode():
         raise HighPrecisionContaminationError(
             f"boundary_float_to_mpf called inside high_precision_mode (precision laundering "
@@ -95,6 +91,7 @@ def boundary_float_to_mpf(
 
     # --- Non-finite rejection ---
     import math
+
     if not allow_nonfinite and not math.isfinite(float_value):
         raise HighPrecisionContaminationError(
             f"Non-finite float value is rejected at boundary "
@@ -103,5 +100,5 @@ def boundary_float_to_mpf(
 
     # --- Direct IEEE 754 conversion (no str bridge) ---
     # Bypass WP6_5 constructor guard via boundary context manager.
-    with _boundary_conversion_context(origin=origin.value):
+    with _boundary_conversion_context():
         return mp.mpf(float_value)

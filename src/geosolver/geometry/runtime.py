@@ -18,9 +18,9 @@ Geometry Runtime
 
 from contextlib import contextmanager
 from contextvars import ContextVar
-from enum import Enum, auto
 from dataclasses import dataclass
-from typing import Any, Tuple, Dict, TYPE_CHECKING
+from enum import Enum, auto
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from .registry import MultiFunctionWrapper
@@ -54,9 +54,7 @@ class GeometryRuntime:
     precision: int = 15
     raise_on_degenerate: bool = False
 
-    def dispatch(
-        self, wrapper: "MultiFunctionWrapper", args: Tuple, kwargs: Dict[str, Any]
-    ) -> Any:
+    def dispatch(self, wrapper: "MultiFunctionWrapper", args: tuple, kwargs: dict[str, Any]) -> Any:
         """
         バックエンドに応じて関数をディスパッチ
 
@@ -83,14 +81,13 @@ class GeometryRuntime:
 
 
 # コンテキスト変数（スレッドセーフ、asyncセーフ）
-_runtime_var: ContextVar[GeometryRuntime] = ContextVar(
-    "geometry_runtime", default=GeometryRuntime()
-)
+_runtime_var: ContextVar[GeometryRuntime | None] = ContextVar("geometry_runtime", default=None)
 
 
 def get_current_runtime() -> GeometryRuntime:
     """現在のランタイム設定を取得"""
-    return _runtime_var.get()
+    runtime = _runtime_var.get()
+    return GeometryRuntime() if runtime is None else runtime
 
 
 def get_precision() -> int:
@@ -131,9 +128,7 @@ def use_runtime(
         backend=backend if backend is not None else current.backend,
         precision=precision if precision is not None else current.precision,
         raise_on_degenerate=(
-            raise_on_degenerate
-            if raise_on_degenerate is not None
-            else current.raise_on_degenerate
+            raise_on_degenerate if raise_on_degenerate is not None else current.raise_on_degenerate
         ),
     )
     token = _runtime_var.set(new)
@@ -175,6 +170,7 @@ def high_precision_mode(precision: int = 100):
         とは別物です（INV-12）。
     """
     import warnings
+
     warnings.warn(
         "geosolver.geometry.runtime.high_precision_mode は非推奨です。"
         " high_precision_geometry_mode を使用してください。"

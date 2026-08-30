@@ -1,0 +1,88 @@
+{
+  "id": "HMMT-2008-FEB-GEO-09",
+  "variables": [
+    "ax",
+    "ay"
+  ],
+  "constructions": [
+    {
+      "name": "D",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "I",
+      "expression": "Point(0, 3)"
+    },
+    {
+      "name": "incircle",
+      "expression": "Circle(I, 3)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(-3 * sqrt(3), 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(4, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "Delta",
+      "expression": "Circle(Midpoint(A, I), Distance(A, I) / 2)"
+    },
+    {
+      "name": "P",
+      "expression": "Intersect(Line(B, I), Delta, exclude=I)"
+    },
+    {
+      "name": "Q",
+      "expression": "Intersect(Line(C, I), Delta, exclude=I)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(B, I)",
+      "operator": "=",
+      "right": 6
+    },
+    {
+      "left": "Distance(C, I)",
+      "operator": "=",
+      "right": 5
+    },
+    {
+      "left": "Distance(D, I)",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "IsTangent(Line(A, B), incircle)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(Line(A, C), incircle)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(D, P)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(D, Q)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "Distance(D, P) / Distance(D, Q) * (Distance(D, P) / Distance(D, Q))"
+}

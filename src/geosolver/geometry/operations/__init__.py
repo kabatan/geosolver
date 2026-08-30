@@ -1,92 +1,92 @@
 """Geometry Operations"""
 
 from geosolver.geometry.operations.basic import (
-    Distance,
-    Midpoint,
     Angle,
-    Radius,
     Area,
-    Vector,
-    Dot,
-    OnSegment,
-    OnLine,
-    OnCircle,
-    IsTangent,
-    Perpendicular,
-    Parallel,
-    Slope,
-    Length,
-    Perimeter,
-    Circumference,
     AreConcyclic,
+    Circumference,
+    Distance,
+    Dot,
+    IsTangent,
+    Length,
+    Midpoint,
+    OnCircle,
+    OnLine,
+    OnSegment,
+    Parallel,
     ParallelismMeasure,
+    Perimeter,
+    Perpendicular,
+    Radius,
+    Slope,
+    Vector,
 )
 from geosolver.geometry.operations.constructions import (
     AngleBisector,
-    PerpendicularLine,
-    ParallelLine,
-    PerpendicularBisector,
-    FootOfPerpendicular,
-    PointOnLine,
-    PointOnSegment,
-    PointOnCircle,
-    Tangent,
     CircleThroughPoint,
     CircleThroughThreePoints,
+    FootOfPerpendicular,
     InscribedPolygonVertices,
+    ParallelLine,
+    PerpendicularBisector,
+    PerpendicularLine,
+    PointOnCircle,
+    PointOnLine,
+    PointOnSegment,
+    Tangent,
 )
+
 # Aliases
 TangentLine = Tangent
-from geosolver.geometry.operations.intersections import (
-    Intersect,
-    IntersectLines,
-    IntersectLineCircle,
-    IntersectCircles,
-    ClosestPoint,
-)
-from geosolver.geometry.operations.triangle import (
-    Centroid,
-    Incenter,
-    Circumcenter,
-    Orthocenter,
-    Incircle,
-    Circumcircle,
-    Excenter,
-    Excircle,
-    NinePointCircle,
-    TriangleCenter,
-    NinePointCenter,
-    SymmedianPoint,
-    GergonnePoint,
-    NagelPoint,
-    Mittenpunkt,
-    SpiekerCenter,
-    FeuerbachPoint,
-    FermatPoint,
-    IsodynamicPoint,
-    IncircleContactPoint,
-)
-from geosolver.geometry.operations.transforms import (
-    Rotate,
-    Reflect,
-)
 from geosolver.geometry.operations.advanced import (
-    PowerOfPoint,
     Polar,
     Pole,
+    PowerOfPoint,
     RadicalAxis,
 )
+from geosolver.geometry.operations.aliases import Center, Collinear, ContactPoint
 from geosolver.geometry.operations.arc import (
     Arc,
     PointOnArc,
 )
 from geosolver.geometry.operations.constructions import (
-    RegularPolygon,
     InscribedPolygon,
+    RegularPolygon,
 )
-
+from geosolver.geometry.operations.intersections import (
+    ClosestPoint,
+    Intersect,
+    IntersectCircles,
+    IntersectLineCircle,
+    IntersectLines,
+)
 from geosolver.geometry.operations.numeric import Degrees, IsInteger, IsPrime
-from geosolver.geometry.operations.aliases import Center, Collinear, ContactPoint
+from geosolver.geometry.operations.transforms import (
+    Reflect,
+    Rotate,
+)
+from geosolver.geometry.operations.triangle import (
+    Centroid,
+    Circumcenter,
+    Circumcircle,
+    Excenter,
+    Excircle,
+    FermatPoint,
+    FeuerbachPoint,
+    GergonnePoint,
+    Incenter,
+    Incircle,
+    IncircleContactPoint,
+    IsodynamicPoint,
+    Mittenpunkt,
+    NagelPoint,
+    NinePointCenter,
+    NinePointCircle,
+    Orthocenter,
+    SpiekerCenter,
+    SymmedianPoint,
+    TriangleCenter,
+)
 
 __all__ = [
     # basic
@@ -107,6 +107,7 @@ __all__ = [
     "Perimeter",
     "Circumference",
     "ParallelismMeasure",
+    "AreConcyclic",
     "OnCircle",
     # constructions
     "AngleBisector",
@@ -123,6 +124,7 @@ __all__ = [
     "InscribedPolygon",
     "InscribedPolygonVertices",
     "TangentLine",
+    "Tangent",
     # intersections
     "Intersect",
     "IntersectLines",
@@ -157,7 +159,6 @@ __all__ = [
     "Arc",
     "PointOnArc",
     # polygon
-
     # advanced
     "PowerOfPoint",
     "Polar",

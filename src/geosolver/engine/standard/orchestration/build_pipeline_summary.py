@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from dataclasses import asdict
+
 from mpmath import mp
 
 from geosolver.engine.standard.contracts.candidate_record import (
@@ -12,8 +14,8 @@ from geosolver.engine.standard.contracts.candidate_record import (
 )
 from geosolver.engine.standard.evaluation.classify_evaluation_failure import EvaluationStatus
 
-from .run_initial_probe import InitialProbeResult
 from .assemble_exact_results import ExactAssemblyResult
+from .run_initial_probe import InitialProbeResult
 
 
 def _best_residual_text(result: RefinementBatchResult) -> str:
@@ -27,7 +29,7 @@ def _best_residual_text(result: RefinementBatchResult) -> str:
 
 
 def _candidate_id(candidate: FloatCandidate | RefinedCandidate | None) -> int | None:
-    if candidate is None or int(candidate.candidate_id) < 0:
+    if candidate is None or int(candidate.candidate_id) == -1:
         return None
     return int(candidate.candidate_id)
 
@@ -63,11 +65,16 @@ def _build_candidate_ledger(search_result: SearchBatchResult) -> list[dict[str, 
             "hard_feasible": bool(candidate.hard_feasible),
             "origin_seed": int(candidate.origin_seed),
             "origin_start_point_index": int(candidate.origin_start_point_index),
+            "candidate_uid": candidate.candidate_uid,
+            "origin_phase": candidate.origin_phase,
+            "origin_backend": candidate.origin_backend,
             "hard_violation_tags": list(candidate.hard_violation_tags),
         }
         candidate_id = _candidate_id(candidate)
         if candidate_id is not None:
             entry["candidate_id"] = candidate_id
+        if candidate.origin_box_index is not None:
+            entry["origin_box_index"] = int(candidate.origin_box_index)
         if candidate.validity_margin_float is not None:
             entry["validity_margin"] = float(candidate.validity_margin_float)
         ledger.append(entry)
@@ -143,7 +150,7 @@ def build_pipeline_summary(
     if search_result.search_diagnostics:
         search_summary.update(dict(search_result.search_diagnostics))
     local_start_events = search_summary.get("local_start_events")
-    if isinstance(local_start_events, (tuple, list)):
+    if isinstance(local_start_events, tuple | list):
         search_summary["local_start_events"] = list(local_start_events)
     selected_candidate = _selected_refined_candidate(
         refinement_result=refinement_result,
@@ -152,6 +159,8 @@ def build_pipeline_summary(
     best_candidate_id = _candidate_id(selected_candidate)
     accepted_candidate_ids = _candidate_ids(assembly_result.accepted_candidates)
     summary = {
+        "exact_candidate_records": [asdict(record) for record in assembly_result.candidate_records],
+        "verification_records": list(assembly_result.verification_records),
         "initial_probe": dict(initial_probe_result.metrics),
         "search": search_summary,
         "refinement": {
@@ -160,19 +169,16 @@ def build_pipeline_summary(
             "best_residual": _best_residual_text(refinement_result),
             "solver_name": refinement_result.solver_name,
             "hard_feasible_count": refinement_result.hard_feasible_count,
-            "attempted_box_count": refinement_result.attempted_box_count,
         },
         "exact_assembly": {
+            "numeric_feasible_count": len(assembly_result.numeric_feasible_candidates),
             "accepted_count": len(assembly_result.accepted_candidates),
             "answer_values": list(assembly_result.answer_values),
             "rejected_false_positive_count": assembly_result.rejected_false_positive_count,
             "rejection_tags": list(assembly_result.rejection_tags),
         },
         "phase_rescue": rescue_summary,
-        # New strategy-neutral key.  The legacy key is retained below so older
-        # benchmark contracts continue to read the same summaries.
         "phase_discrete_completion": integer_summary,
-        "phase_integer_fallback": integer_summary,
         "debug_candidates": list(debug_candidates),
         "candidate_ledger": _build_candidate_ledger(search_result),
         "best_candidate_id": best_candidate_id,

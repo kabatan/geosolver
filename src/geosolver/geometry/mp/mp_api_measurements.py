@@ -14,7 +14,6 @@ from .mp_impl import (
     mp_inscribed_polygon_vertices,
     mp_parallel_line,
     mp_parallelism_measure,
-    mp_perimeter,
     mp_point_factory,
     mp_point_on_segment,
     mp_polygon_area,
@@ -36,15 +35,13 @@ def MP_Perimeter(*args):
         points = getattr(obj, "points", None)
         if points is None:
             points = getattr(obj, "vertices", None)
-        if points is None and isinstance(obj, (list, tuple)):
+        if points is None and isinstance(obj, list | tuple):
             points = obj
         if points is not None:
             args = tuple(points)
     if len(args) < 3:
         raise TypeError("Perimeter expects at least three points")
-    return sum(
-        args[i].distance_to(args[(i + 1) % len(args)]) for i in range(len(args))
-    )
+    return sum(args[i].distance_to(args[(i + 1) % len(args)]) for i in range(len(args)))
 
 
 def MP_IsAcuteTriangle(A, B, C):
@@ -77,8 +74,13 @@ def MP_evalf(value, precision=15):
     return mp_evalf(value, precision)
 
 
-def MP_Arc(circle, start, end, including=None, excluding=None):
-    return mp_arc(circle, start, end, including, excluding)
+def MP_Arc(
+    circle=None, start_point=None, end_point=None, including=None, excluding=None, **aliases
+):
+    from geosolver.geometry.arc_parameters import resolve_arc_arguments
+
+    circle, start_point, end_point = resolve_arc_arguments(circle, start_point, end_point, aliases)
+    return mp_arc(circle, start_point, end_point, including, excluding)
 
 
 def MP_PointFactory(obj, t, including=None, excluding=None, exclude=None):
@@ -114,6 +116,8 @@ def MP_Area(*args):
         return mp_polygon_area(*args)
     if len(args) == 1:
         circle = args[0]
+        if hasattr(circle, "area"):
+            return circle.area
         if hasattr(circle, "radius"):
             return mp.pi * circle.radius**2
     raise ValueError("Area requires 1 circle or 3+ points")

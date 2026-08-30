@@ -5,12 +5,12 @@ from __future__ import annotations
 import ast
 
 from geosolver.engine.standard.contracts.hard_feasibility_check import (
-    HardFeasibilityCheck,
     KIND_GUARD,
     KIND_INTERSECTION_EXCLUDE_DISTINCT,
     KIND_INTERSECTION_SELECTION_TRACE,
     KIND_LINE_DISTINCT,
     KIND_TRIANGLE_NONDEGENERATE,
+    HardFeasibilityCheck,
 )
 from geosolver.problem.ir.schema import IRSpec
 

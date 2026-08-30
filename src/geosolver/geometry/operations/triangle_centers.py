@@ -1,18 +1,18 @@
 """Generic and named triangle center operations."""
 
-from typing import Any, Optional
+from typing import Any
 
 from geosolver.geometry.entities.base import Point
-from geosolver.geometry.registry import geometry_symbol
 from geosolver.geometry.operations.triangle_centers_core import (
     TriangleCenter,
     _TriangleCenter_mpmath,
     _TriangleCenter_numpy,
 )
+from geosolver.geometry.registry import geometry_symbol
 
 
 @geometry_symbol("NinePointCenter", category="triangle")
-def NinePointCenter(A: Point, B: Point, C: Point) -> Optional[Point]:
+def NinePointCenter(A: Point, B: Point, C: Point) -> Point | None:
     """9-Point Center (X5)."""
     return TriangleCenter(A, B, C, 5)
 
@@ -28,7 +28,7 @@ def _NinePointCenter_mpmath(A: Any, B: Any, C: Any):
 
 
 @geometry_symbol("SymmedianPoint", category="triangle")
-def SymmedianPoint(A: Point, B: Point, C: Point) -> Optional[Point]:
+def SymmedianPoint(A: Point, B: Point, C: Point) -> Point | None:
     """Symmedian Point (Lemoine Point, X6)."""
     return TriangleCenter(A, B, C, 6)
 
@@ -44,7 +44,7 @@ def _SymmedianPoint_mpmath(A: Any, B: Any, C: Any):
 
 
 @geometry_symbol("GergonnePoint", category="triangle")
-def GergonnePoint(A: Point, B: Point, C: Point) -> Optional[Point]:
+def GergonnePoint(A: Point, B: Point, C: Point) -> Point | None:
     """Gergonne Point (X7)."""
     return TriangleCenter(A, B, C, 7)
 
@@ -60,7 +60,7 @@ def _GergonnePoint_mpmath(A: Any, B: Any, C: Any):
 
 
 @geometry_symbol("NagelPoint", category="triangle")
-def NagelPoint(A: Point, B: Point, C: Point) -> Optional[Point]:
+def NagelPoint(A: Point, B: Point, C: Point) -> Point | None:
     """Nagel Point (X8)."""
     return TriangleCenter(A, B, C, 8)
 
@@ -76,7 +76,7 @@ def _NagelPoint_mpmath(A: Any, B: Any, C: Any):
 
 
 @geometry_symbol("Mittenpunkt", category="triangle")
-def Mittenpunkt(A: Point, B: Point, C: Point) -> Optional[Point]:
+def Mittenpunkt(A: Point, B: Point, C: Point) -> Point | None:
     """Mittenpunkt (X9)."""
     return TriangleCenter(A, B, C, 9)
 
@@ -92,7 +92,7 @@ def _Mittenpunkt_mpmath(A: Any, B: Any, C: Any):
 
 
 @geometry_symbol("SpiekerCenter", category="triangle")
-def SpiekerCenter(A: Point, B: Point, C: Point) -> Optional[Point]:
+def SpiekerCenter(A: Point, B: Point, C: Point) -> Point | None:
     """Spieker Center (X10)."""
     return TriangleCenter(A, B, C, 10)
 
@@ -108,7 +108,7 @@ def _SpiekerCenter_mpmath(A: Any, B: Any, C: Any):
 
 
 @geometry_symbol("FeuerbachPoint", category="triangle")
-def FeuerbachPoint(A: Point, B: Point, C: Point) -> Optional[Point]:
+def FeuerbachPoint(A: Point, B: Point, C: Point) -> Point | None:
     """Feuerbach Point (X11)."""
     return TriangleCenter(A, B, C, 11)
 
@@ -124,7 +124,7 @@ def _FeuerbachPoint_mpmath(A: Any, B: Any, C: Any):
 
 
 @geometry_symbol("FermatPoint", category="triangle")
-def FermatPoint(A: Point, B: Point, C: Point, first: bool = True) -> Optional[Point]:
+def FermatPoint(A: Point, B: Point, C: Point, first: bool = True) -> Point | None:
     """Fermat Point (X13/X14)."""
     return TriangleCenter(A, B, C, 13 if first else 14)
 
@@ -140,7 +140,7 @@ def _FermatPoint_mpmath(A: Any, B: Any, C: Any, first: bool = True):
 
 
 @geometry_symbol("IsodynamicPoint", category="triangle")
-def IsodynamicPoint(A: Point, B: Point, C: Point, first: bool = True) -> Optional[Point]:
+def IsodynamicPoint(A: Point, B: Point, C: Point, first: bool = True) -> Point | None:
     """Isodynamic Point (X15/X16)."""
     return TriangleCenter(A, B, C, 15 if first else 16)
 

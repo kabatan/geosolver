@@ -28,9 +28,7 @@ def _build_fallback_start_points(
     denominator = float(required_count + 1)
     for index in range(required_count):
         ratio = float(index + 1) / denominator
-        points.append(
-            [low + ((high - low) * ratio) for low, high in bounds]
-        )
+        points.append([low + ((high - low) * ratio) for low, high in bounds])
     return points
 
 
@@ -48,7 +46,7 @@ def select_search_start_points(
         probe_candidates,
         key=lambda candidate: (
             not candidate.guard_ok,
-            candidate.residual_norm_float,
+            candidate.score,
         ),
     )
     selected: list[FloatCandidate] = []
@@ -65,4 +63,3 @@ def select_search_start_points(
     if not selected:
         return _build_fallback_start_points(bounds, required_count)
     return [list(candidate.x_float) for candidate in selected]
-

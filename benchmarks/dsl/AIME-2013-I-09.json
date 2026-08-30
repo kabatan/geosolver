@@ -1,0 +1,77 @@
+{
+  "id": "AIME-2013-I-09",
+  "variables": [],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(12, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(6, 6 * sqrt(3))"
+    },
+    {
+      "name": "T",
+      "expression": "Point(9, 0)"
+    },
+    {
+      "name": "L",
+      "expression": "PerpendicularBisector(A, T)"
+    },
+    {
+      "name": "M",
+      "expression": "Intersect(L, Line(A, B))"
+    },
+    {
+      "name": "N",
+      "expression": "Intersect(L, Line(A, C))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": 12
+    },
+    {
+      "left": "Distance(B, T)",
+      "operator": "=",
+      "right": 9
+    },
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": "Distance(B, C)"
+    },
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": "Distance(B, C)"
+    },
+    {
+      "left": "Distance(A, M)",
+      "operator": "=",
+      "right": "Distance(T, M)"
+    },
+    {
+      "left": "Distance(A, N)",
+      "operator": "=",
+      "right": "Distance(T, N)"
+    },
+    {
+      "left": "OnSegment(M, A, B)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(N, A, C)",
+      "operator": "=",
+      "right": 0
+    }
+  ],
+  "target": "Distance(M, N)"
+}

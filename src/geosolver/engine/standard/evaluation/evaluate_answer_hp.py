@@ -7,15 +7,14 @@ from dataclasses import dataclass
 
 from mpmath import mp
 
+from geosolver.engine.standard.contracts.problem_bundle import ProblemBundle
 from geosolver.engine.standard.interpreter.answer.evaluate_hp import _evaluate_answer_high_precision
-from geosolver.problem.ir.errors import IRCompileError
 from geosolver.engine.standard.precision.type_guards.ensure_no_float import (
     ensure_high_precision_mode,
 )
 from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
 from geosolver.engine.standard.precision.type_guards.strict_to_mpf import strict_to_mpf
-
-from geosolver.engine.standard.contracts.problem_bundle import ProblemBundle
+from geosolver.problem.ir.errors import IRCompileError
 
 from .classify_evaluation_failure import EvaluationStatus
 
@@ -40,7 +39,7 @@ def evaluate_answer_hp(
     """
     ensure_high_precision_mode(context="pipeline.evaluate_answer_hp")
     try:
-        raw_value, _value_text, _ctx = _evaluate_answer_high_precision(
+        raw_value = _evaluate_answer_high_precision(
             bundle.spec,
             bundle.var_names,
             list(values),
@@ -66,4 +65,3 @@ def evaluate_answer_hp(
         answer_hp=answer,
         evaluation_status=EvaluationStatus.OK,
     )
-

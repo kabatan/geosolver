@@ -84,11 +84,10 @@ def test_degenerate_angle_is_not_certified_by_the_solver() -> None:
 
 
 def test_angle_cusp_can_use_a_directional_finite_difference() -> None:
-    residual = lambda point, _dps: [abs(point[0])]
+    def residual(point, _dps):
+        return [abs(point[0])]
 
-    centered = compute_finite_difference_jacobian(
-        point=[mp.mpf("0")], dps=30, residual_fn=residual
-    )
+    centered = compute_finite_difference_jacobian(point=[mp.mpf("0")], dps=30, residual_fn=residual)
     cusp_aware = compute_finite_difference_jacobian(
         point=[mp.mpf("0")],
         dps=30,

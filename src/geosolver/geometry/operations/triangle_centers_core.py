@@ -1,14 +1,14 @@
 """Core TriangleCenter implementation and backend bindings."""
 
-from typing import Any, Optional
+from typing import Any
 
 from sympy import sqrt
 
 from geosolver.geometry.entities.base import Point
-from geosolver.geometry.registry import geometry_symbol
 from geosolver.geometry.operations.triangle_centers_numpy_backend import (
     triangle_center_numpy_impl,
 )
+from geosolver.geometry.registry import geometry_symbol
 
 
 def _triangle_ops():
@@ -24,7 +24,7 @@ def _sin_shifted_symbolic(sin_value: Any, cos_value: Any, sign: int) -> Any:
 
 
 @geometry_symbol("TriangleCenter", category="triangle")
-def TriangleCenter(A: Point, B: Point, C: Point, n: int) -> Optional[Point]:
+def TriangleCenter(A: Point, B: Point, C: Point, n: int) -> Point | None:
     """Generic Triangle Center function (Kimberling center X(n))."""
     triangle_ops = _triangle_ops()
     if n == 1:

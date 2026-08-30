@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, replace
 import time
+from dataclasses import dataclass, replace
 
 from geosolver.engine.standard.contracts.branch_box import BranchBox
 from geosolver.engine.standard.contracts.candidate_record import FloatCandidate, SearchBatchResult
@@ -16,6 +16,10 @@ from geosolver.engine.standard.search.deduplicate_search_candidates import (
 )
 from geosolver.engine.standard.search.nomad_blackbox_adapter import NomadBlackboxAdapter
 from geosolver.engine.standard.search.select_rescue_boxes import select_rescue_boxes
+from geosolver.runtime.deadline import timed_phase, uses_deadline
+
+_RESCUE_CANDIDATE_NAMESPACE = 10_000_000_000_000
+_RESCUE_BOX_NAMESPACE_STRIDE = 1_000_000_000
 
 
 def _import_pynomad() -> object:
@@ -37,6 +41,8 @@ class RescueSearchResult:
     elapsed_sec: float
 
 
+@timed_phase("rescue")
+@uses_deadline
 def run_rescue_search(
     *,
     bundle: ProblemBundle,
@@ -64,18 +70,34 @@ def run_rescue_search(
         keep_per_run=int(pipeline_config.keep_per_rescue_box),
         keep_after_dedup=int(pipeline_config.keep_per_rescue_box),
         min_per_seed_after_dedup=0,
+        max_time_sec=min(runtime_budget.remaining_sec(), pipeline_config.rescue_time_budget_sec),
     )
     rescued_candidates: list[FloatCandidate] = []
     seed = int(rescue_config.seed_values[0]) if rescue_config.seed_values else 0
-    for box in boxes:
-        if runtime_budget.remaining_sec() <= 0.0:
+    for box_index, box in enumerate(boxes):
+        remaining = min(
+            runtime_budget.remaining_sec(),
+            started_at + pipeline_config.rescue_time_budget_sec - time.monotonic(),
+        )
+        if remaining <= 0.0:
             break
+        rescue_config = replace(rescue_config, max_time_sec=remaining)
         adapter = NomadBlackboxAdapter(
             evaluator=evaluator,
             config=rescue_config,
             origin_seed=seed,
             origin_start_point_index=0,
             constraint_scales=constraint_scales,
+            candidate_namespace=(
+                _RESCUE_CANDIDATE_NAMESPACE + int(box_index) * _RESCUE_BOX_NAMESPACE_STRIDE
+            ),
+            origin_phase="rescue",
+            origin_backend="nomad",
+            origin_box_index=int(box_index),
+            deadline_monotonic=min(
+                float(runtime_budget.deadline_monotonic),
+                started_at + pipeline_config.rescue_time_budget_sec,
+            ),
         )
         py_nomad.setSeed(seed)
         params = rescue_config.build_params(

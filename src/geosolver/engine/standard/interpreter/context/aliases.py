@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from functools import partial
-from typing import Any, Callable
+from typing import Any
 
 
 def _center_alias(obj: Any) -> Any:
@@ -31,19 +32,24 @@ def _contact_point_alias(
     closest_fn: Callable[..., Any] | None = None,
 ) -> Any:
     center = getattr(obj, "center", None)
-    if center is not None and hasattr(ref, "a") and hasattr(ref, "b") and hasattr(ref, "c"):
-        if callable(closest_fn):
-            try:
-                return closest_fn(center, ref)
-            except Exception:
-                pass
+    if (
+        center is not None
+        and hasattr(ref, "a")
+        and hasattr(ref, "b")
+        and hasattr(ref, "c")
+        and callable(closest_fn)
+    ):
+        try:
+            return closest_fn(center, ref)
+        except Exception:
+            pass
 
     try:
         result = intersect_fn(obj, ref)
     except Exception:
         result = intersect_fn(ref, obj)
 
-    if isinstance(result, (list, tuple)):
+    if isinstance(result, list | tuple):
         if not result:
             return []
         return result[0]
@@ -84,7 +90,7 @@ def _contact_point_compat(
                     result = intersect_fn(circle_obj, line_obj)
                 except Exception:
                     result = intersect_fn(line_obj, circle_obj)
-                if isinstance(result, (list, tuple)):
+                if isinstance(result, list | tuple):
                     if not result:
                         return []
                     return result[0]

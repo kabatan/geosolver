@@ -1,0 +1,52 @@
+{
+  "id": "HMMT-2008-FEB-GEO-06",
+  "variables": [
+    "Ax",
+    "Ay"
+  ],
+  "constructions": [
+    {
+      "name": "P",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(-3, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(5, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(Ax, Ay)"
+    },
+    {
+      "name": "O",
+      "expression": "Circumcenter(A, B, C)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(P, B)",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "Distance(P, C)",
+      "operator": "=",
+      "right": 5
+    },
+    {
+      "left": "Angle(B, A, C)",
+      "operator": "=",
+      "right": "pi / 4"
+    },
+    {
+      "left": "Ay",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "Distance(O, P)"
+}

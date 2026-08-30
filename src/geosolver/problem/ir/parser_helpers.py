@@ -2,15 +2,16 @@
 
 from __future__ import annotations
 
-from typing import Any, List, Sequence, Tuple
+from collections.abc import Sequence
+from typing import Any
 
 from geosolver.problem.ir.compiler import validate_expr_safety
 from geosolver.problem.ir.errors import IRValidationError
 from geosolver.problem.ir.schema import IRConstruction
 
 
-def parse_construction(construction_raw: Sequence[Any]) -> List[IRConstruction]:
-    construction: List[IRConstruction] = []
+def parse_construction(construction_raw: Sequence[Any]) -> list[IRConstruction]:
+    construction: list[IRConstruction] = []
     for i, item in enumerate(construction_raw):
         if not isinstance(item, dict):
             raise IRValidationError(f"construction[{i}] must be object")
@@ -23,9 +24,9 @@ def parse_construction(construction_raw: Sequence[Any]) -> List[IRConstruction]:
     return construction
 
 
-def parse_constraints_and_values(constraints_raw: Sequence[Any]) -> Tuple[List[str], List[Any]]:
-    constraints: List[str] = []
-    inferred_v: List[Any] = []
+def parse_constraints_and_values(constraints_raw: Sequence[Any]) -> tuple[list[str], list[Any]]:
+    constraints: list[str] = []
+    inferred_v: list[Any] = []
 
     for i, item in enumerate(constraints_raw):
         if isinstance(item, str):
@@ -49,8 +50,8 @@ def parse_constraints_and_values(constraints_raw: Sequence[Any]) -> Tuple[List[s
     return constraints, inferred_v
 
 
-def parse_guards(guards_raw: Sequence[Any]) -> List[str]:
-    guards: List[str] = []
+def parse_guards(guards_raw: Sequence[Any]) -> list[str]:
+    guards: list[str] = []
     for i, expr in enumerate(guards_raw):
         if not isinstance(expr, str):
             raise IRValidationError(f"guards[{i}] must be string")

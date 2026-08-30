@@ -98,6 +98,26 @@ def _call_issues(path: str, call: ast.Call) -> list[ValidationIssue]:
         issues.append(
             _issue(path, "unknown_keyword", f"存在しないkeywordです: {', '.join(unknown)}")
         )
+    if call.func.id == "Intersect":
+        selectors = {"n", "exclude", "near", "far"} & set(keyword_names)
+        if len(selectors) > 1:
+            issues.append(
+                _issue(
+                    path,
+                    "conflicting_selectors",
+                    "Intersectではn、exclude、near、farを同時に指定できません",
+                )
+            )
+        for keyword in call.keywords:
+            if keyword.arg != "n":
+                continue
+            if (
+                not isinstance(keyword.value, ast.Constant)
+                or isinstance(keyword.value.value, bool)
+                or not isinstance(keyword.value.value, int)
+                or keyword.value.value < 1
+            ):
+                issues.append(_issue(path, "invalid_selector", "nは1以上の整数です"))
     supplied = positional + len(set(keyword_names))
     if supplied < contract.min_args:
         issues.append(_issue(path, "too_few_arguments", "引数が不足しています"))
@@ -241,6 +261,13 @@ def validate(problem: GeometryProblem | dict[str, Any]) -> ValidationReport:
         json.dumps(normalized, allow_nan=False)
     except ValueError as error:
         issues.append(_issue("$", "non_finite", str(error)))
+    if not issues:
+        from geosolver.problem.compiler import ProblemCompileError, compile_problem
+
+        try:
+            compile_problem(parsed)
+        except ProblemCompileError as error:
+            issues.append(_issue(error.path, error.code, str(error)))
     return ValidationReport(
         valid=not issues,
         issues=issues,

@@ -17,7 +17,7 @@ except ImportError:  # pragma: no cover
 def get_atan2(y: Any, x: Any) -> Any:
     if mpmath and (isinstance(y, mpmath.mpf) or isinstance(x, mpmath.mpf)):
         return mpmath.atan2(y, x)
-    if isinstance(y, (int, float)) and isinstance(x, (int, float)):
+    if isinstance(y, int | float) and isinstance(x, int | float):
         return math.atan2(y, x)
     return atan2(y, x)
 
@@ -25,7 +25,7 @@ def get_atan2(y: Any, x: Any) -> Any:
 def get_pi(val_type: Any) -> Any:
     if mpmath and isinstance(val_type, mpmath.mpf):
         return mpmath.pi
-    if isinstance(val_type, (int, float)):
+    if isinstance(val_type, int | float):
         return math.pi
     return pi
 
@@ -66,7 +66,7 @@ def normalize_angle(angle: Any) -> Any:
             result += two_pi
         return result
 
-    if isinstance(angle, (int, float)):
+    if isinstance(angle, int | float):
         two_pi = 2 * math.pi
         result = angle % two_pi
         if result < 0:
@@ -102,10 +102,7 @@ def angle_in_arc(
     if a_v is None or s_v is None or e_v is None:
         return True
 
-    if mpmath and isinstance(a_v, mpmath.mpf):
-        pi_val = mpmath.pi
-    else:
-        pi_val = math.pi
+    pi_val = mpmath.pi if mpmath and isinstance(a_v, mpmath.mpf) else math.pi
 
     two_pi = 2 * pi_val
 
@@ -138,7 +135,7 @@ def angle_in_arc(
 def get_cos(angle: Any) -> Any:
     if mpmath and isinstance(angle, mpmath.mpf):
         return mpmath.cos(angle)
-    if isinstance(angle, (int, float)):
+    if isinstance(angle, int | float):
         return math.cos(angle)
     return cos(angle)
 
@@ -146,7 +143,7 @@ def get_cos(angle: Any) -> Any:
 def get_sin(angle: Any) -> Any:
     if mpmath and isinstance(angle, mpmath.mpf):
         return mpmath.sin(angle)
-    if isinstance(angle, (int, float)):
+    if isinstance(angle, int | float):
         return math.sin(angle)
     return sin(angle)
 

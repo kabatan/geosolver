@@ -21,10 +21,12 @@ def Center(obj: Any) -> Any:
 
 
 def Collinear(point1: Any, point2: Any, point3: Any, ordered: bool = False) -> Any:
-    from geosolver.geometry.runtime import get_backend, BackendType
+    from geosolver.geometry.runtime import BackendType, get_backend
+
     try:
         if get_backend() == BackendType.MPMATH:
             from geosolver.geometry.mp.mp_api import MP_Collinear
+
             return MP_Collinear(point1, point2, point3, ordered=ordered)
     except Exception:
         pass
@@ -50,7 +52,7 @@ def _contact_point_circle_line(circle_obj: Circle, line_obj: Line) -> Any:
     except Exception:
         result = Intersect(line_obj, circle_obj)
 
-    if isinstance(result, (list, tuple)):
+    if isinstance(result, list | tuple):
         if not result:
             return []
         return result[0]

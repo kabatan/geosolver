@@ -4,7 +4,7 @@ Incircle-related helpers extracted from mp_impl.
 
 from __future__ import annotations
 
-from typing import List, Optional, Tuple, TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from mpmath import mp, mpf
 
@@ -12,19 +12,19 @@ if TYPE_CHECKING:
     from geosolver.geometry.mp.mp_impl import MPCircle, MPPoint
 
 
-def _mp_point_class() -> type["MPPoint"]:
+def _mp_point_class() -> type[MPPoint]:
     from geosolver.geometry.mp.mp_impl import MPPoint
 
     return MPPoint
 
 
-def _mp_circle_class() -> type["MPCircle"]:
+def _mp_circle_class() -> type[MPCircle]:
     from geosolver.geometry.mp.mp_impl import MPCircle
 
     return MPCircle
 
 
-def _mp_triangle_area(A: "MPPoint", B: "MPPoint", C: "MPPoint") -> mpf:
+def _mp_triangle_area(A: MPPoint, B: MPPoint, C: MPPoint) -> mpf:
     from geosolver.geometry.mp.mp_impl import mp_triangle_area
 
     return mp_triangle_area(A, B, C)
@@ -36,7 +36,7 @@ def _mp_area_tolerance(scale_len: mpf) -> mpf:
     return _mp_area_tolerance(scale_len)
 
 
-def _contact_on_segment(P1: "MPPoint", P2: "MPPoint", dist_from_P1: mpf, tol: mpf) -> "MPPoint":
+def _contact_on_segment(P1: MPPoint, P2: MPPoint, dist_from_P1: mpf, tol: mpf) -> MPPoint:
     point_cls = _mp_point_class()
     seg_len = P1.distance_to(P2)
     if seg_len < tol:
@@ -46,8 +46,8 @@ def _contact_on_segment(P1: "MPPoint", P2: "MPPoint", dist_from_P1: mpf, tol: mp
 
 
 def mp_incircle_contact_point(
-    A: "MPPoint", B: "MPPoint", C: "MPPoint", side: Optional[Tuple["MPPoint", "MPPoint"]] = None
-) -> Union[List["MPPoint"], "MPPoint", None]:
+    A: MPPoint, B: MPPoint, C: MPPoint, side: tuple[MPPoint, MPPoint] | None = None
+) -> list[MPPoint] | MPPoint | None:
     a = B.distance_to(C)
     b = C.distance_to(A)
     c = A.distance_to(B)
@@ -80,7 +80,7 @@ def mp_incircle_contact_point(
     raise ValueError("Invalid side specification")
 
 
-def mp_incircle(A: "MPPoint", B: "MPPoint", C: "MPPoint") -> Optional["MPCircle"]:
+def mp_incircle(A: MPPoint, B: MPPoint, C: MPPoint) -> MPCircle | None:
     a = B.distance_to(C)
     b = C.distance_to(A)
     c = A.distance_to(B)

@@ -179,8 +179,7 @@ def _find_bivariate_relation(
         with mp.workdps(work_dps):
             value = mp.mpf(numeric_value)
             monomials = [
-                value**value_degree * mp.pi**pi_degree
-                for value_degree, pi_degree in exponents
+                value**value_degree * mp.pi**pi_degree for value_degree, pi_degree in exponents
             ]
             relation = pslq(
                 mp.matrix(monomials),
@@ -206,9 +205,7 @@ def _relation_factors(
         value_symbol, pi_symbol = sp.symbols("affine_value affine_pi")
         expression = sum(
             coefficient * value_symbol**value_degree * pi_symbol**pi_degree
-            for (value_degree, pi_degree), coefficient in zip(
-                exponents, relation, strict=True
-            )
+            for (value_degree, pi_degree), coefficient in zip(exponents, relation, strict=True)
         )
         polynomial = sp.Poly(expression, value_symbol, pi_symbol, domain=sp.ZZ)
         _content, raw_factors = sp.factor_list(polynomial.as_expr())
@@ -233,9 +230,7 @@ def _factor_affine_candidates(
 
     try:
         value_symbol, pi_symbol = sp.symbols("affine_value affine_pi")
-        coefficient_symbol, constant_symbol = sp.symbols(
-            "affine_coefficient affine_constant"
-        )
+        coefficient_symbol, constant_symbol = sp.symbols("affine_coefficient affine_constant")
         substituted = sp.Poly(
             sp.expand(
                 factor.subs(

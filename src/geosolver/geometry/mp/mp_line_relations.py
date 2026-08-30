@@ -4,28 +4,38 @@ Line/angle relation helpers extracted from mp_impl.
 
 from __future__ import annotations
 
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from mpmath import (
     acos as mp_acos,
+)
+from mpmath import (
     asin as mp_asin,
+)
+from mpmath import (
     mp,
     mpf,
+)
+from mpmath import (
     pi as mp_pi,
+)
+from mpmath import (
     sqrt as mp_sqrt,
 )
+
+from geosolver.errors import InfiniteSolutionsError, NoIntersectionError
 
 if TYPE_CHECKING:
     from geosolver.geometry.mp.mp_impl import MPLine, MPPoint
 
 
-def _mp_line_class() -> type["MPLine"]:
+def _mp_line_class() -> type[MPLine]:
     from geosolver.geometry.mp.mp_impl import MPLine
 
     return MPLine
 
 
-def _mp_point_class() -> type["MPPoint"]:
+def _mp_point_class() -> type[MPPoint]:
     from geosolver.geometry.mp.mp_impl import MPPoint
 
     return MPPoint
@@ -35,10 +45,10 @@ def _line_tolerance() -> mpf:
     return mpf(10) ** (-max(50, int(mp.dps) - 10))
 
 
-def mp_line_through_two_points(p1: "MPPoint", p2: "MPPoint") -> Optional["MPLine"]:
+def mp_line_through_two_points(p1: MPPoint, p2: MPPoint) -> MPLine | None:
     dx = p2.x - p1.x
     dy = p2.y - p1.y
-    if abs(dx) < _line_tolerance() and abs(dy) < _line_tolerance():
+    if dx == 0 and dy == 0:
         return None
 
     a = -dy
@@ -48,7 +58,7 @@ def mp_line_through_two_points(p1: "MPPoint", p2: "MPPoint") -> Optional["MPLine
     return line_cls(a, b, c)
 
 
-def mp_perpendicular_line(line: "MPLine", point: "MPPoint") -> "MPLine":
+def mp_perpendicular_line(line: MPLine, point: MPPoint) -> MPLine:
     a = line.b
     b = -line.a
     c = -(a * point.x + b * point.y)
@@ -56,10 +66,12 @@ def mp_perpendicular_line(line: "MPLine", point: "MPPoint") -> "MPLine":
     return line_cls(a, b, c)
 
 
-def mp_line_line_intersection(l1: "MPLine", l2: "MPLine") -> Optional["MPPoint"]:
+def mp_line_line_intersection(l1: MPLine, l2: MPLine) -> MPPoint | None:
     det = l1.a * l2.b - l2.a * l1.b
-    if abs(det) < _line_tolerance():
-        return None
+    if det == 0:
+        if l1.a * l2.c == l2.a * l1.c and l1.b * l2.c == l2.b * l1.c:
+            raise InfiniteSolutionsError("coincident lines have infinitely many intersections")
+        raise NoIntersectionError("parallel lines do not intersect")
 
     x = (l1.b * l2.c - l2.b * l1.c) / det
     y = (l2.a * l1.c - l1.a * l2.c) / det
@@ -67,9 +79,10 @@ def mp_line_line_intersection(l1: "MPLine", l2: "MPLine") -> Optional["MPPoint"]
     return point_cls(x, y)
 
 
-def mp_angle_between_vectors(v1: "MPPoint", v2: "MPPoint") -> mpf:
+def mp_angle_between_vectors(v1: MPPoint, v2: MPPoint) -> mpf:
     original_dps = mp.dps
-    mp.dps = original_dps * 2 + 50
+    precision_scope = mp.workdps(original_dps * 2 + 50)
+    precision_scope.__enter__()
 
     try:
         norm1 = v1.norm()
@@ -103,10 +116,10 @@ def mp_angle_between_vectors(v1: "MPPoint", v2: "MPPoint") -> mpf:
 
         return +angle
     finally:
-        mp.dps = original_dps
+        precision_scope.__exit__(None, None, None)
 
 
-def mp_parallelism_measure(l1: "MPLine", l2: "MPLine", method: str = "cross") -> mpf:
+def mp_parallelism_measure(l1: MPLine, l2: MPLine, method: str = "cross") -> mpf:
     v1 = l1.direction_vector()
     v2 = l2.direction_vector()
 
@@ -130,9 +143,10 @@ def mp_parallelism_measure(l1: "MPLine", l2: "MPLine", method: str = "cross") ->
     raise ValueError(f"Unknown method: {method}")
 
 
-def mp_angle_between_lines(l1: "MPLine", l2: "MPLine") -> mpf:
+def mp_angle_between_lines(l1: MPLine, l2: MPLine) -> mpf:
     original_dps = mp.dps
-    mp.dps = original_dps * 2 + 50
+    precision_scope = mp.workdps(original_dps * 2 + 50)
+    precision_scope.__enter__()
 
     try:
         v1 = l1.direction_vector()
@@ -161,4 +175,4 @@ def mp_angle_between_lines(l1: "MPLine", l2: "MPLine") -> mpf:
             angle = mp_acos(abs(cos_angle))
         return +angle
     finally:
-        mp.dps = original_dps
+        precision_scope.__exit__(None, None, None)

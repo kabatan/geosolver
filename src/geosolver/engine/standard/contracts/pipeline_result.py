@@ -20,6 +20,9 @@ class ExactIdentificationResult:
     selected_exact_value: str | None
     verification_residual: MPFloat | None
     numeric_fallback_value: MPFloat | None
+    descriptor: object | None = None
+    evidence_origin: str = "numerical_reconstruction"
+    discovery_precision_dps: int | None = None
 
 
 @dataclass(frozen=True)
@@ -28,7 +31,7 @@ class ExternalPipelineResult:
 
     The ``summary`` payload is expected to include stable top-level keys:
     ``initial_probe``, ``search``, ``refinement``, ``exact_assembly``, ``phase_rescue``,
-    ``phase_integer_fallback``, and ``debug_candidates``.
+    ``phase_discrete_completion``, and complete verification/exact candidate records.
     """
 
     status: str
@@ -39,4 +42,3 @@ class ExternalPipelineResult:
     exact_results: tuple[ExactIdentificationResult, ...]
     summary: dict[str, object]
     accepted_candidate_ids: tuple[int, ...] = ()
-

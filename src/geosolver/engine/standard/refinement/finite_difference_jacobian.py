@@ -18,6 +18,7 @@ def compute_finite_difference_jacobian(
     dps: int,
     residual_fn: Callable[[list[MPFloat], int], list[MPFloat] | None],
     one_sided_at_cusp: bool = False,
+    base_residual: Sequence[MPFloat] | None = None,
 ) -> list[list[MPFloat]] | None:
     """Compute a Jacobian matrix by finite differences.
 
@@ -28,15 +29,16 @@ def compute_finite_difference_jacobian(
     centered slope is numerical zero.  The default remains the historical
     centered scheme so unrelated smooth problems retain their behavior.
     """
-    base = residual_fn(list(point), int(dps))
+    base = (
+        residual_fn(list(point), int(dps))
+        if base_residual is None
+        else [mp.mpf(value) for value in base_residual]
+    )
     if base is None:
         return None
     rows = len(base)
     cols = len(point)
-    jacobian: list[list[MPFloat]] = [
-        [mp.mpf("0") for _ in range(cols)]
-        for _ in range(rows)
-    ]
+    jacobian: list[list[MPFloat]] = [[mp.mpf("0") for _ in range(cols)] for _ in range(rows)]
     with mp.workdps(int(dps)):
         for column in range(cols):
             exponent = min(max(int(dps) // 2, 1), MAX_STEP_EXPONENT)
@@ -69,15 +71,10 @@ def compute_finite_difference_jacobian(
                             # A derivative does not exist at a true cusp.  A
                             # directional slope is still useful to Newton/LM;
                             # choose the stronger side deterministically.
-                            centered = (
-                                forward
-                                if abs(forward) >= abs(backward)
-                                else backward
-                            )
+                            centered = forward if abs(forward) >= abs(backward) else backward
                     jacobian[row][column] = centered
                 success = True
                 break
             if not success:
                 return None
     return jacobian
-

@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
-from typing import Any, Callable, Optional, Tuple
+from collections.abc import Callable
+from typing import Any
 
 
 def to_float(value: Any) -> float:
     """Convert value to float with support for sympy/mpmath objects."""
     try:
-        if isinstance(value, (int, float)):
+        if isinstance(value, int | float):
             return float(value)
         if hasattr(value, "_mpf_"):
             return float(value)
@@ -19,23 +20,23 @@ def to_float(value: Any) -> float:
         raise ValueError(f"Cannot convert to float: {value}") from exc
 
 
-def to_point_xy(point: Any, *, to_float_fn: Callable[[Any], float]) -> Tuple[float, float]:
+def to_point_xy(point: Any, *, to_float_fn: Callable[[Any], float]) -> tuple[float, float]:
     """Convert point-like object to ``(x, y)`` float coordinates."""
     if hasattr(point, "x") and hasattr(point, "y"):
         return to_float_fn(point.x), to_float_fn(point.y)
-    if isinstance(point, (list, tuple)) and len(point) >= 2:
+    if isinstance(point, list | tuple) and len(point) >= 2:
         return to_float_fn(point[0]), to_float_fn(point[1])
     raise ValueError(f"Cannot interpret point: {point}")
 
 
 def normalize_interval(
     bounds: Any, *, to_float_fn: Callable[[Any], float]
-) -> Tuple[Optional[float], Optional[float]]:
+) -> tuple[float | None, float | None]:
     """Normalize bound spec into ``(lo, hi)`` float pair."""
     if isinstance(bounds, dict):
         lo = bounds.get("lo", bounds.get("min"))
         hi = bounds.get("hi", bounds.get("max"))
-    elif isinstance(bounds, (list, tuple)) and len(bounds) == 2:
+    elif isinstance(bounds, list | tuple) and len(bounds) == 2:
         lo, hi = bounds
     else:
         raise ValueError("bounds must be (lo, hi) or dict with lo/hi")
@@ -49,11 +50,11 @@ def is_acute_triangle(
     A: Any,
     B: Any,
     C: Any,
-    rel_floor: Optional[float],
-    abs_floor: Optional[float],
+    rel_floor: float | None,
+    abs_floor: float | None,
     *,
-    to_point_xy_fn: Callable[[Any], Tuple[float, float]],
-    get_tolerance_fn: Callable[[float, Optional[float], Optional[float]], float],
+    to_point_xy_fn: Callable[[Any], tuple[float, float]],
+    get_tolerance_fn: Callable[[float, float | None, float | None], float],
 ) -> bool:
     """Check whether three points form an acute triangle."""
     ax, ay = to_point_xy_fn(A)

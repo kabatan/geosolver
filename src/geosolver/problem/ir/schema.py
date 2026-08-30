@@ -6,7 +6,7 @@ Pydanticではなくdataclassを使用して依存を最小化。
 """
 
 from dataclasses import dataclass, field
-from typing import List, Dict, Any, Optional, Tuple, Literal
+from typing import Literal
 
 TaskKind = Literal["solve", "optimize"]
 
@@ -22,10 +22,10 @@ class IRVariableSpec:
     両方指定された場合はnamesが優先。
     """
 
-    names: Optional[List[str]] = None
-    n: Optional[int] = None
+    names: list[str] | None = None
+    n: int | None = None
 
-    def resolved_names(self) -> List[str]:
+    def resolved_names(self) -> list[str]:
         """解決された変数名リストを返す"""
         if self.names is not None:
             return list(self.names)
@@ -70,19 +70,19 @@ class IRSpec:
 
     task: TaskKind
     variables: IRVariableSpec
-    
-    m: Optional[int] = None
 
-    bounds: Optional[List[Optional[Tuple[float, float]]]] = None
-    v: Optional[List[float]] = None
+    m: int | None = None
 
-    construction: List[IRConstruction] = field(default_factory=list)
-    constraints: List[str] = field(default_factory=list)
-    guards: List[str] = field(default_factory=list)
-    
-    answer_expr: Optional[str] = None
+    bounds: list[tuple[float, float] | None] | None = None
+    v: list[float] | None = None
+
+    construction: list[IRConstruction] = field(default_factory=list)
+    constraints: list[str] = field(default_factory=list)
+    guards: list[str] = field(default_factory=list)
+
+    answer_expr: str | None = None
     # answer_format: Optional[Dict[str, Any]] = None # Deprecated
-    post_process: Optional[str] = None # Pythonコードによる後処理
-    
-    objective_expr: Optional[str] = None
+    post_process: str | None = None  # Pythonコードによる後処理
+
+    objective_expr: str | None = None
     maximize: bool = False

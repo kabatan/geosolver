@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
 
 from geosolver.geometry.safety.guards import (
     assume_acute,
@@ -18,10 +18,10 @@ def AssumeAcute(
     A: Any,
     B: Any,
     C: Any,
-    message: Optional[str] = None,
+    message: str | None = None,
     *,
-    rel_floor: Optional[float] = None,
-    abs_floor: Optional[float] = None,
+    rel_floor: float | None = None,
+    abs_floor: float | None = None,
 ) -> None:
     from geosolver.geometry import safety as _s
 
@@ -41,15 +41,13 @@ def AssumeRight(
     A: Any,
     B: Any,
     C: Any,
-    message: Optional[str] = None,
+    message: str | None = None,
     *,
-    tol: Optional[float] = None,
+    tol: float | None = None,
 ) -> None:
     from geosolver.geometry import safety as _s
 
-    effective_tol = (
-        _s._get_tolerance(1.0, None, None) if tol is None else tol
-    )
+    effective_tol = _s._get_tolerance(1.0, None, None) if tol is None else tol
     assume_right(
         A=A,
         B=B,
@@ -67,15 +65,13 @@ def AssumeObtuse(
     A: Any,
     B: Any,
     C: Any,
-    message: Optional[str] = None,
+    message: str | None = None,
     *,
-    tol: Optional[float] = None,
+    tol: float | None = None,
 ) -> None:
     from geosolver.geometry import safety as _s
 
-    effective_tol = (
-        _s._get_tolerance(1.0, None, None) if tol is None else tol
-    )
+    effective_tol = _s._get_tolerance(1.0, None, None) if tol is None else tol
     assume_obtuse(
         A=A,
         B=B,
@@ -91,7 +87,7 @@ def AssumeObtuse(
 
 def AssumeConvex(
     polygon: Any,
-    message: Optional[str] = None,
+    message: str | None = None,
     *,
     tol: float = 1e-6,
 ) -> None:
@@ -108,7 +104,7 @@ def AssumeConvex(
 
 def AssumeNoSelfIntersecting(
     polygon: Any,
-    message: Optional[str] = None,
+    message: str | None = None,
     *,
     tol: float = 1e-6,
 ) -> None:
@@ -127,7 +123,7 @@ def AssumeOrder(
     P1: Any,
     P2: Any,
     P3: Any,
-    message: Optional[str] = None,
+    message: str | None = None,
     *,
     tol: float = 1e-6,
 ) -> None:

@@ -8,6 +8,7 @@ import typer
 
 from geosolver.application.service import solve as solve_problem
 from geosolver.doctor import diagnose
+from geosolver.problem.catalog import catalog_payload
 from geosolver.problem.models import SolveOptions
 from geosolver.problem.validation import validate as validate_problem
 
@@ -21,15 +22,13 @@ def _read(path: Path) -> dict[str, Any]:
     return value
 
 
-def _cores(value: str) -> str | int:
-    if value == "auto":
-        return value
+def _cores(value: str) -> int:
     try:
         parsed = int(value)
     except ValueError as error:
-        raise typer.BadParameter("must be 'auto' or a positive integer") from error
+        raise typer.BadParameter("must be a positive integer") from error
     if parsed < 1:
-        raise typer.BadParameter("must be 'auto' or a positive integer")
+        raise typer.BadParameter("must be a positive integer")
     return parsed
 
 
@@ -44,14 +43,12 @@ def validate(problem: Path) -> None:
 @app.command()
 def solve(
     problem: Path,
-    engine: Annotated[str, typer.Option("--engine")] = "standard",
-    time_limit_seconds: Annotated[float | None, typer.Option("--time-limit-seconds")] = None,
-    cores: Annotated[str, typer.Option("--cores")] = "auto",
+    time_limit_seconds: Annotated[float, typer.Option("--time-limit-seconds")] = 180,
+    cores: Annotated[str, typer.Option("--cores")] = "1",
     seed: Annotated[int, typer.Option("--seed")] = 0,
     output: Annotated[Path | None, typer.Option("--output")] = None,
 ) -> None:
     options = SolveOptions(
-        engine=engine,
         time_limit_seconds=time_limit_seconds,
         cores=_cores(cores),
         seed=seed,
@@ -75,13 +72,17 @@ def doctor() -> None:
 
 
 @app.command()
-def ui(
-    host: Annotated[str, typer.Option(hidden=True)] = "127.0.0.1",
-    port: Annotated[int, typer.Option()] = 8765,
+def catalog(
+    as_json: Annotated[bool, typer.Option("--json")] = False,
 ) -> None:
-    import uvicorn
-
-    uvicorn.run("geosolver.application.http:app", host=host, port=port, log_level="info")
+    """Print the versioned public Geometry DSL catalog."""
+    payload = catalog_payload()
+    if not as_json:
+        typer.echo(f"Geometry DSL {payload['dsl_version']}")
+        for tool in payload["tools"]:
+            typer.echo(f"{tool['id']}: {tool['signature']}")
+        return
+    typer.echo(json.dumps(payload, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":

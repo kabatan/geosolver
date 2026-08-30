@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from geosolver.errors import GeometryDomainError
+
 if TYPE_CHECKING:
     from .base import Point
 
@@ -11,11 +13,13 @@ if TYPE_CHECKING:
 class Segment:
     """線分"""
 
-    def __init__(self, p1: "Point", p2: "Point") -> None:
+    def __init__(self, p1: Point, p2: Point) -> None:
         from geosolver.geometry.entities.base import Point
 
         if not (isinstance(p1, Point) and isinstance(p2, Point)):
             raise TypeError("Segment requires two Points")
+        if p1.x == p2.x and p1.y == p2.y:
+            raise GeometryDomainError("Segment requires two distinct points")
         self.p1 = p1
         self.p2 = p2
 
@@ -32,13 +36,13 @@ class Segment:
 class Ray:
     """半直線"""
 
-    def __init__(self, start: "Point", through: "Point") -> None:
+    def __init__(self, start: Point, through: Point) -> None:
         from geosolver.geometry.entities.base import Point
 
         if not (isinstance(start, Point) and isinstance(through, Point)):
             raise TypeError("Ray requires two Points")
-        if start == through:
-            raise ValueError("Ray requires two distinct points")
+        if start.x == through.x and start.y == through.y:
+            raise GeometryDomainError("Ray requires two distinct points")
         self.start = start
         self.through = through
 
@@ -49,7 +53,7 @@ class Ray:
         return Ray(self.start.evalf(digits), self.through.evalf(digits))
 
 
-def midpoint(A: "Point", B: "Point") -> "Point":
+def midpoint(A: Point, B: Point) -> Point:
     from geosolver.geometry.entities.base import Point
 
     return Point((A.x + B.x) / 2, (A.y + B.y) / 2)

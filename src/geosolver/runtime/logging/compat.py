@@ -21,7 +21,9 @@ def emit_legacy_log(
     stream = sys.stdout if file is None else file
     message = sep.join(str(value) for value in values)
     mode = get_log_mode("human")
-    output = LogFormatters.as_json("solver_message", {"message": message}) if mode == "json" else message
+    output = (
+        LogFormatters.as_json("solver_message", {"message": message}) if mode == "json" else message
+    )
     stream.write(f"{output}{end}")
     if flush and hasattr(stream, "flush"):
         stream.flush()

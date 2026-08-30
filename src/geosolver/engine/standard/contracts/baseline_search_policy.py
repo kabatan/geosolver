@@ -55,7 +55,7 @@ class BaselineSearchPolicy:
         primary_search_mode: str,
         hybrid_fallback_search_mode: str,
         fallback_seed_count: int = len(DEFAULT_SEED_VALUES),
-    ) -> "BaselineSearchPolicy":
+    ) -> BaselineSearchPolicy:
         """Build the current ordered attempt policy for production-baseline runs."""
         primary_seed = int(authoritative_seed)
         normalized_fallback_seed_count = max(1, int(fallback_seed_count))

@@ -1,0 +1,198 @@
+{
+  "window": {
+    "from": 2006,
+    "to": 2025,
+    "inclusive": true
+  },
+  "retrieved_at": "2026-08-03",
+  "sources": [
+    {
+      "name": "AIME 1983-2024 CSV",
+      "url": "https://huggingface.co/datasets/gneubig/aime-1983-2024/resolve/main/AIME_Dataset_1983_2024.csv",
+      "role": "AIME I/II statements and short answers",
+      "coverage": "2006-2024"
+    },
+    {
+      "name": "AIME 2025 rows",
+      "url": "https://datasets-server.huggingface.co/rows?dataset=yentinglin%2Faime_2025&config=default&split=train&offset=0&length=100",
+      "role": "AIME 2025 statements and short answers",
+      "coverage": "2025"
+    },
+    {
+      "name": "HMMT official archive",
+      "url": "https://beta.hmmt.org/www/archive/problems",
+      "role": "official archive index; February Geometry PDFs are linked from the archive",
+      "coverage": "2006-2025"
+    },
+    {
+      "name": "HMMT February Geometry PDF pattern",
+      "url": "https://hmmt-archive.s3.amazonaws.com/tournaments/{year}/feb/geo/problems.pdf",
+      "role": "official problem statements; 2011 uses alggeo/calcgeo/combgeo",
+      "coverage": "2006-2025"
+    },
+    {
+      "name": "HMMT 2014 Geometry solutions",
+      "url": "https://hmmt-archive.s3.amazonaws.com/tournaments/2014/feb/geo/solutions.pdf",
+      "role": "published answers for the three added HMMT 2014 DSL cases",
+      "coverage": "2014 cases 1, 2, 6"
+    },
+    {
+      "name": "HMMT 2010 Geometry solutions",
+      "url": "https://hmmt-archive.s3.amazonaws.com/tournaments/2010/feb/geo/solutions.pdf",
+      "role": "published answer set for HMMT-2010-FEB-GEO-09 (70 and 160 degrees)",
+      "coverage": "2010 case 9"
+    },
+    {
+      "name": "HMMT 2024 Geometry solutions",
+      "url": "https://hmmt-archive.s3.amazonaws.com/tournaments/2024/feb/geo/solutions.pdf",
+      "role": "published answers for added HMMT 2024 DSL cases",
+      "coverage": "2024 cases 2, 3, 4, 9"
+    },
+    {
+      "name": "HMMT 2023 Geometry solutions",
+      "url": "https://hmmt-archive.s3.amazonaws.com/tournaments/2023/feb/geo/solutions.pdf",
+      "role": "published answers for added HMMT 2023 DSL cases",
+      "coverage": "2023 cases 1, 2"
+    },
+    {
+      "name": "JMO official overview",
+      "url": "https://www.imojp.org/domestic/jmo_overview.html",
+      "role": "official year list and annual problem links",
+      "coverage": "2006-2025"
+    },
+    {
+      "name": "MathNet-filtered",
+      "url": "https://huggingface.co/datasets/LLParallax/MathNet-filtered",
+      "role": "problem-text supplement when an official JMO page is image-only; never used to rewrite a statement",
+      "coverage": "partial; rows are marked with source_kind=MathNet-supplement"
+    }
+  ],
+  "local_inputs": [
+    {
+      "path": "/tmp/aime.csv",
+      "sha256": "959358884aa93b30b8d85ecb80fd8b577014498c08f7569faf88f675cc3fb9f4",
+      "bytes": 342215
+    },
+    {
+      "path": "/tmp/aime_2025.json",
+      "sha256": "324bd92096d6f512aad6cf6792082138f44b89f5b3292c6eb7d5a6b7bd157cd9",
+      "bytes": 21178
+    },
+    {
+      "path": "/tmp/jmo_mathnet_geometry.jsonl",
+      "sha256": "4cc0881f3017e2d13d2c62bd9ffde71230d26679a07999be4d078b3703b894c9",
+      "bytes": 16060
+    },
+    {
+      "path": "/tmp/hmmt_pdf/2006_feb_geo.txt",
+      "sha256": "4a880385fa1af04157ca69c929189856908b0a20f04b973d1318cbbf461d1bea",
+      "bytes": 2116
+    },
+    {
+      "path": "/tmp/hmmt_pdf/2007_feb_geo.txt",
+      "sha256": "a6adebf371b0c98955269fd72705c83eafaee679a25ac6ec5db37c1859686458",
+      "bytes": 2549
+    },
+    {
+      "path": "/tmp/hmmt_pdf/2008_feb_geo.txt",
+      "sha256": "88f6c8fa9bb644107c5658bf239f364f706a9d73cf3a486e6ef6280c59020a9b",
+      "bytes": 3459
+    },
+    {
+      "path": "/tmp/hmmt_pdf/2009_feb_geo.txt",
+      "sha256": "58f85e335f2462308eb2faacd2be5e9c92552de3e24674b2bf63171e6f107b74",
+      "bytes": 3100
+    },
+    {
+      "path": "/tmp/hmmt_pdf/2010_feb_geo.txt",
+      "sha256": "4ccbd03b2d0bbb0481ab8d04dbc55708b2cd498b0064eca54bc450c8d479a281",
+      "bytes": 2809
+    },
+    {
+      "path": "/tmp/hmmt_pdf/2011_feb_alggeo.txt",
+      "sha256": "338f142cfbd8fb9a4639d441de9a77328ed7905c9746ce4cef0170fb89570265",
+      "bytes": 6061
+    },
+    {
+      "path": "/tmp/hmmt_pdf/2011_feb_calcgeo.txt",
+      "sha256": "cd5bc827d91178029d7f05d1e4d6753eb802ddd8d28955c007b1f65705c86e36",
+      "bytes": 7895
+    },
+    {
+      "path": "/tmp/hmmt_pdf/2011_feb_combgeo.txt",
+      "sha256": "cea6f94802835ffe602937558cf6fb3edee7c6b16784997c7bb91aae8437d29b",
+      "bytes": 8300
+    },
+    {
+      "path": "/tmp/hmmt_pdf/2012_feb_geo.txt",
+      "sha256": "5a4ec5f8ae49c8549a030b052d457cf2717ef26f3dac72685bb0945f731b7804",
+      "bytes": 5541
+    },
+    {
+      "path": "/tmp/hmmt_pdf/2013_feb_geo.txt",
+      "sha256": "3619b93d831e08ebd63c8e6d1f8797d76b99cea5f7b29de1733ce71b06f24ab1",
+      "bytes": 4806
+    },
+    {
+      "path": "/tmp/hmmt_pdf/2014_feb_geo.txt",
+      "sha256": "481a83d5778760ca04b3189fb4bb7ebb2de827677bf54de77945f4c0d2a5be8a",
+      "bytes": 4235
+    },
+    {
+      "path": "/tmp/hmmt_pdf/2015_feb_geo.txt",
+      "sha256": "0bf4d05027268274815b89c0e5696a6be2e7aed11f1891ff3e347cb2206c9afb",
+      "bytes": 3562
+    },
+    {
+      "path": "/tmp/hmmt_pdf/2016_feb_geo.txt",
+      "sha256": "58b39680d6a4064d47f028af9725bf1feca2243713e55d2ed3c4c3234842870d",
+      "bytes": 3550
+    },
+    {
+      "path": "/tmp/hmmt_pdf/2017_feb_geo.txt",
+      "sha256": "88d1b200236237a5e67d258b2a8486597398da8f945c3f114fc5b83b712859cb",
+      "bytes": 2725
+    },
+    {
+      "path": "/tmp/hmmt_pdf/2018_feb_geo.txt",
+      "sha256": "e9e8ca4fd39fd8fee40063df7db5ccaaf41c04b4703604d186360b98e603eec4",
+      "bytes": 3423
+    },
+    {
+      "path": "/tmp/hmmt_pdf/2019_feb_geo.txt",
+      "sha256": "6959e800818b6a07628c61acd77d70432252d59934305bebf33770ce9bcbe0d9",
+      "bytes": 2641
+    },
+    {
+      "path": "/tmp/hmmt_pdf/2020_feb_geo.txt",
+      "sha256": "995715fed24687baec99dbfa46a7dda730d3c8c982f586d711daa2757e18c282",
+      "bytes": 3111
+    },
+    {
+      "path": "/tmp/hmmt_pdf/2021_feb_geo.txt",
+      "sha256": "0beefdded0e6d064de0a6e155dbcceccddb4cdde01cca06b12036376c2c6d63f",
+      "bytes": 2981
+    },
+    {
+      "path": "/tmp/hmmt_pdf/2022_feb_geo.txt",
+      "sha256": "bc97e230aefeeb7855487b0c521503bd7282a906e304c07910ce9e4e0663492f",
+      "bytes": 4408
+    },
+    {
+      "path": "/tmp/hmmt_pdf/2023_feb_geo.txt",
+      "sha256": "e4afb8c2c911995f07d65d645feb5c79067e187697c0c5abeb47e74f069a7e01",
+      "bytes": 2258
+    },
+    {
+      "path": "/tmp/hmmt_pdf/2024_feb_geo.txt",
+      "sha256": "0e04dc8477d3167853df28dacaed03fabad1b9e0a6eade67f2083dd4503be5c8",
+      "bytes": 2994
+    },
+    {
+      "path": "/tmp/hmmt_pdf/2025_feb_geo.txt",
+      "sha256": "f2e8585da848ad08af09727c464202b7c5ba6ef0f270782afb5950414ff495a3",
+      "bytes": 3053
+    }
+  ],
+  "generated_at": "2026-08-03"
+}

@@ -7,24 +7,12 @@ from typing import TYPE_CHECKING
 from geosolver.engine.standard.contracts.branch_box import BranchBox
 from geosolver.engine.standard.contracts.candidate_record import FloatCandidate
 
+from .coordinate_distance import normalized_distance
+
 if TYPE_CHECKING:
     from geosolver.engine.standard.contracts.external_pipeline_config import (
         ExternalPipelineConfig,
     )
-
-
-def _normalized_distance(
-    *,
-    first: tuple[float, ...],
-    second: tuple[float, ...],
-    bounds: list[tuple[float, float]],
-) -> float:
-    total = 0.0
-    for index, (low, high) in enumerate(bounds):
-        width = max(high - low, 1e-12)
-        diff = (first[index] - second[index]) / width
-        total += diff * diff
-    return total ** 0.5
 
 
 def _nearest_representative_distance(
@@ -34,7 +22,7 @@ def _nearest_representative_distance(
     bounds: list[tuple[float, float]],
 ) -> float:
     distances = [
-        _normalized_distance(
+        normalized_distance(
             first=candidate.x_float,
             second=other.x_float,
             bounds=bounds,
@@ -53,8 +41,10 @@ def _axis_radius_from_neighbor_distance(
     neighbor_distance: float,
     pipeline_config: ExternalPipelineConfig,
 ) -> float:
-    base_radius = float(global_width) * float(neighbor_distance) * float(
-        pipeline_config.rescue_radius_fraction
+    base_radius = (
+        float(global_width)
+        * float(neighbor_distance)
+        * float(pipeline_config.rescue_radius_fraction)
     )
     min_radius = float(global_width) * float(pipeline_config.rescue_radius_min_ratio)
     max_radius = float(global_width) * float(pipeline_config.rescue_radius_max_ratio)
@@ -79,35 +69,6 @@ def _clamp_box_to_global_bounds(
     return tuple(clamped_center), tuple(lower_bounds), tuple(upper_bounds)
 
 
-def _select_farthest_representatives(
-    *,
-    candidates: tuple[FloatCandidate, ...],
-    bounds: list[tuple[float, float]],
-    max_count: int,
-) -> tuple[FloatCandidate, ...]:
-    if not candidates:
-        return ()
-    selected: list[FloatCandidate] = [candidates[0]]
-    remaining = list(candidates[1:])
-    while remaining and len(selected) < int(max_count):
-        best_index = 0
-        best_distance = -1.0
-        for index, candidate in enumerate(remaining):
-            min_distance = min(
-                _normalized_distance(
-                    first=candidate.x_float,
-                    second=selected_candidate.x_float,
-                    bounds=bounds,
-                )
-                for selected_candidate in selected
-            )
-            if min_distance > best_distance:
-                best_distance = min_distance
-                best_index = index
-        selected.append(remaining.pop(best_index))
-    return tuple(selected)
-
-
 def select_rescue_boxes(
     guard_feasible_ledger: tuple[FloatCandidate, ...],
     bounds: list[tuple[float, float]],
@@ -124,7 +85,7 @@ def select_rescue_boxes(
         best_distance = -1.0
         for index, candidate in enumerate(remaining):
             min_distance = min(
-                _normalized_distance(
+                normalized_distance(
                     first=candidate.x_float,
                     second=selected_candidate.x_float,
                     bounds=bounds,

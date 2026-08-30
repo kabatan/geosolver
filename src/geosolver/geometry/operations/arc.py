@@ -4,27 +4,16 @@
 円弧上の点を扱うための機能を提供。
 """
 
-from typing import Optional, Any
-import math
-from sympy import sqrt
+from typing import Any
+
 try:
     import mpmath
 except ImportError:
     mpmath = None
 
-from geosolver.geometry.registry import geometry_symbol
-from geosolver.geometry.entities import Point, Line, Circle
-
+from geosolver.geometry.entities import Circle, Line, Point
 from geosolver.geometry.operations.arc_membership import point_on_arc as _point_on_arc_impl
-from geosolver.geometry.operations.arc_angle_helpers import (
-    angle_in_arc as _angle_in_arc,
-    angle_to_value as _angle_to_value,
-    get_cos as _get_cos,
-    get_dynamic_tolerance_arc as _get_dynamic_tolerance_arc,
-    get_sin as _get_sin,
-    normalize_angle as _normalize_angle,
-    point_angle as _point_angle,
-)
+from geosolver.geometry.registry import geometry_symbol
 
 
 class Arc:
@@ -39,12 +28,18 @@ class Arc:
 
     def __init__(
         self,
-        circle: Circle,
-        start_point: Point,
-        end_point: Point,
-        including: Optional[Point] = None,
-        excluding: Optional[Point] = None,
+        circle: Circle = None,
+        start_point: Point = None,
+        end_point: Point = None,
+        including: Point | None = None,
+        excluding: Point | None = None,
+        **aliases,
     ):
+        from geosolver.geometry.arc_parameters import resolve_arc_arguments
+
+        circle, start_point, end_point = resolve_arc_arguments(
+            circle, start_point, end_point, aliases
+        )
         if not isinstance(circle, Circle):
             raise TypeError("Arc requires a Circle as first argument")
         if not isinstance(start_point, Point) or not isinstance(end_point, Point):
@@ -57,6 +52,9 @@ class Arc:
         self.end = end_point
         self.including = including
         self.excluding = excluding
+        from geosolver.geometry.arc_parameters import arc_parameters
+
+        arc_parameters(circle, start_point, end_point, including, excluding, tolerance="1e-12")
 
     @property
     def center(self) -> Point:
@@ -82,57 +80,8 @@ def _point_on_arc(arc: Arc, point: Point) -> bool:
 
 
 def arc_midpoint(arc: Arc) -> Point:
-    """弧の中点を計算"""
-    start_angle = _point_angle(arc.center, arc.start)
-    end_angle = _point_angle(arc.center, arc.end)
-
-    s = _normalize_angle(start_angle)
-    e = _normalize_angle(end_angle)
-
-    # 角度を数値化して平均をとる
-    s_f = _angle_to_value(s)
-    e_f = _angle_to_value(e)
-    pi_val = mpmath.pi if mpmath and isinstance(s_f, mpmath.mpf) else math.pi
-    two_pi = 2 * pi_val
-
-    # Counter-clockwise arc length from s to e.
-    diff = e_f - s_f
-    if diff < 0:
-        diff += two_pi
-
-    # Candidate midpoints for the two arcs.
-    mid_angle1 = (s_f + diff / 2) % two_pi
-    mid_angle2 = (mid_angle1 + pi_val) % two_pi
-
-    inc_angle = _point_angle(arc.center, arc.including) if arc.including else None
-    exc_angle = _point_angle(arc.center, arc.excluding) if arc.excluding else None
-
-    if inc_angle is not None or exc_angle is not None:
-        inc_val = _angle_to_value(_normalize_angle(inc_angle)) if inc_angle is not None else None
-        exc_val = _angle_to_value(_normalize_angle(exc_angle)) if exc_angle is not None else None
-
-        m1_ok = _angle_in_arc(mid_angle1, s_f, e_f, inc_val, exc_val)
-        m2_ok = _angle_in_arc(mid_angle2, s_f, e_f, inc_val, exc_val)
-
-        if m1_ok and not m2_ok:
-            mid_angle = mid_angle1
-        elif m2_ok and not m1_ok:
-            mid_angle = mid_angle2
-        else:
-            # Ambiguous: default to shorter arc
-            mid_angle = mid_angle1 if diff <= pi_val else mid_angle2
-    else:
-        # Default: shorter arc
-        mid_angle = mid_angle1 if diff <= pi_val else mid_angle2
-
-    # 中点の座標
-    # cos, sin を適切に選択
-    cos_val = _get_cos(mid_angle)
-    sin_val = _get_sin(mid_angle)
-
-    x = arc.center.x + arc.radius * cos_val
-    y = arc.center.y + arc.radius * sin_val
-    return Point(x, y)
+    """Midpoint on the same selected arc as PointOnArc."""
+    return PointOnArc(arc, 0.5)
 
 
 # PointOnArc: 弧上のパラメトリック点
@@ -148,23 +97,21 @@ def PointOnArc(arc: Arc, t: Any) -> Point:
     Returns:
         Point
     """
-    start_angle = _point_angle(arc.center, arc.start)
-    end_angle = _point_angle(arc.center, arc.end)
+    from mpmath import mp
 
-    # 弧の向きを考慮
-    # 将来的に including/excluding に基づく弧選択を拡張
-    # 現在は単純に角度補間（反時計回りとは限らない？）
-    # 本来は Arc クラス自体が向きや選択範囲を正規化して持つべきだが
-    # ここでは単純な線形補間
+    from geosolver.geometry.arc_parameters import arc_parameters
 
-    angle = start_angle + t * (end_angle - start_angle)
-
-    cos_val = _get_cos(angle)
-    sin_val = _get_sin(angle)
-
-    x = arc.center.x + arc.radius * cos_val
-    y = arc.center.y + arc.radius * sin_val
-    return Point(x, y)
+    with mp.workdps(40):
+        parameter = mp.mpf(str(t))
+        if not 0 <= parameter <= 1:
+            raise ValueError("PointOnArc parameter must be in [0, 1]")
+        first, sweep = arc_parameters(
+            arc.circle, arc.start, arc.end, arc.including, arc.excluding, tolerance="1e-12"
+        )
+        angle = first + parameter * sweep
+        return Point(
+            arc.center.x + arc.radius * mp.cos(angle), arc.center.y + arc.radius * mp.sin(angle)
+        )
 
 
 # Intersect のArc対応（別モジュールで統合する必要あり）

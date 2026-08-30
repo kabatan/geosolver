@@ -4,16 +4,18 @@ Triangle center computation extracted from mp_impl.
 
 from __future__ import annotations
 
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
-from mpmath import mp, mpf, sin as mp_sin, sqrt as mp_sqrt
+from mpmath import mp, mpf
+from mpmath import sqrt as mp_sqrt
+
 from geosolver.geometry.mp.mp_triangle_centers_special import compute_special_triangle_center
 
 if TYPE_CHECKING:
     from geosolver.geometry.mp.mp_impl import MPPoint
 
 
-def _mp_point_class() -> type["MPPoint"]:
+def _mp_point_class() -> type[MPPoint]:
     from geosolver.geometry.mp.mp_impl import MPPoint
 
     return MPPoint
@@ -25,25 +27,25 @@ def _mp_area_tolerance(scale_len: mpf) -> mpf:
     return _mp_area_tolerance(scale_len)
 
 
-def _mp_triangle_area(A: "MPPoint", B: "MPPoint", C: "MPPoint") -> mpf:
+def _mp_triangle_area(A: MPPoint, B: MPPoint, C: MPPoint) -> mpf:
     from geosolver.geometry.mp.mp_impl import mp_triangle_area
 
     return mp_triangle_area(A, B, C)
 
 
-def _mp_circumcircle(A: "MPPoint", B: "MPPoint", C: "MPPoint"):
+def _mp_circumcircle(A: MPPoint, B: MPPoint, C: MPPoint):
     from geosolver.geometry.mp.mp_impl import mp_circumcircle
 
     return mp_circumcircle(A, B, C)
 
 
-def _mp_midpoint(A: "MPPoint", B: "MPPoint") -> "MPPoint":
+def _mp_midpoint(A: MPPoint, B: MPPoint) -> MPPoint:
     from geosolver.geometry.mp.mp_impl import mp_midpoint
 
     return mp_midpoint(A, B)
 
 
-def _mp_line_through_two_points(A: "MPPoint", B: "MPPoint"):
+def _mp_line_through_two_points(A: MPPoint, B: MPPoint):
     from geosolver.geometry.mp.mp_impl import mp_line_through_two_points
 
     return mp_line_through_two_points(A, B)
@@ -55,25 +57,25 @@ def _mp_line_line_intersection(l1, l2):
     return mp_line_line_intersection(l1, l2)
 
 
-def _mp_incircle(A: "MPPoint", B: "MPPoint", C: "MPPoint"):
+def _mp_incircle(A: MPPoint, B: MPPoint, C: MPPoint):
     from geosolver.geometry.mp.mp_impl import mp_incircle
 
     return mp_incircle(A, B, C)
 
 
-def _mp_nine_point_circle(A: "MPPoint", B: "MPPoint", C: "MPPoint"):
+def _mp_nine_point_circle(A: MPPoint, B: MPPoint, C: MPPoint):
     from geosolver.geometry.mp.mp_impl import mp_nine_point_circle
 
     return mp_nine_point_circle(A, B, C)
 
 
-def _mp_centroid(A: "MPPoint", B: "MPPoint", C: "MPPoint") -> "MPPoint":
+def _mp_centroid(A: MPPoint, B: MPPoint, C: MPPoint) -> MPPoint:
     from geosolver.geometry.mp.mp_impl import mp_centroid
 
     return mp_centroid(A, B, C)
 
 
-def _contact_point_on_segment(p1: "MPPoint", p2: "MPPoint", dist_from_p1: mpf, tol: mpf) -> "MPPoint":
+def _contact_point_on_segment(p1: MPPoint, p2: MPPoint, dist_from_p1: mpf, tol: mpf) -> MPPoint:
     point_cls = _mp_point_class()
     seg_len = p1.distance_to(p2)
     if seg_len < tol:
@@ -82,7 +84,7 @@ def _contact_point_on_segment(p1: "MPPoint", p2: "MPPoint", dist_from_p1: mpf, t
     return point_cls(p1.x + t * (p2.x - p1.x), p1.y + t * (p2.y - p1.y))
 
 
-def mp_triangle_center(A: "MPPoint", B: "MPPoint", C: "MPPoint", n: int) -> Optional["MPPoint"]:
+def mp_triangle_center(A: MPPoint, B: MPPoint, C: MPPoint, n: int) -> MPPoint | None:
     point_cls = _mp_point_class()
     tol = mpf(10) ** (-(mp.dps - 10))
 
@@ -99,7 +101,9 @@ def mp_triangle_center(A: "MPPoint", B: "MPPoint", C: "MPPoint", n: int) -> Opti
         total = a + b + c
         if total < tol:
             return None
-        return point_cls((a * A.x + b * B.x + c * C.x) / total, (a * A.y + b * B.y + c * C.y) / total)
+        return point_cls(
+            (a * A.x + b * B.x + c * C.x) / total, (a * A.y + b * B.y + c * C.y) / total
+        )
     if n == 2:
         return point_cls((A.x + B.x + C.x) / 3, (A.y + B.y + C.y) / 3)
     if n == 3:
@@ -122,7 +126,9 @@ def mp_triangle_center(A: "MPPoint", B: "MPPoint", C: "MPPoint", n: int) -> Opti
         total = a2 + b2 + c2
         if total < tol:
             return None
-        return point_cls((a2 * A.x + b2 * B.x + c2 * C.x) / total, (a2 * A.y + b2 * B.y + c2 * C.y) / total)
+        return point_cls(
+            (a2 * A.x + b2 * B.x + c2 * C.x) / total, (a2 * A.y + b2 * B.y + c2 * C.y) / total
+        )
     if n == 7:
         s = (a + b + c) / 2
         D = _contact_point_on_segment(B, C, s - b, tol)
@@ -147,7 +153,9 @@ def mp_triangle_center(A: "MPPoint", B: "MPPoint", C: "MPPoint", n: int) -> Opti
         wb = b * (s - b)
         wc = c * (s - c)
         total = wa + wb + wc
-        return point_cls((wa * A.x + wb * B.x + wc * C.x) / total, (wa * A.y + wb * B.y + wc * C.y) / total)
+        return point_cls(
+            (wa * A.x + wb * B.x + wc * C.x) / total, (wa * A.y + wb * B.y + wc * C.y) / total
+        )
     if n == 10:
         Ma = _mp_midpoint(B, C)
         Mb = _mp_midpoint(C, A)

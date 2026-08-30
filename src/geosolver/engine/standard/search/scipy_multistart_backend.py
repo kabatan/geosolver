@@ -2,18 +2,15 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
 import math
 import time
+from dataclasses import dataclass, field
 
 import numpy as np
+from mpmath import mp
 from scipy.optimize import brentq, least_squares, minimize, minimize_scalar
 from scipy.stats import qmc
-from mpmath import mp
 
-from geosolver.engine.standard.interpreter.execution.interpreter_helpers import (
-    _guard_violation_penalty,
-)
 from geosolver.engine.standard.contracts.candidate_record import (
     FloatCandidate,
     SearchBatchResult,
@@ -23,6 +20,9 @@ from geosolver.engine.standard.contracts.global_search_port import GlobalSearchP
 from geosolver.engine.standard.contracts.problem_bundle import ProblemBundle
 from geosolver.engine.standard.evaluation.classify_evaluation_failure import (
     EvaluationStatus,
+)
+from geosolver.engine.standard.evaluation.guard_penalty import (
+    guard_violation_penalty,
 )
 from geosolver.engine.standard.problem.infer_problem_bounds import (
     _infer_parametric_variable_names,
@@ -144,9 +144,9 @@ class _ResidualObjectiveFn:
 
 
 def _raise_if_deadline_exceeded(deadline_monotonic: float | None) -> None:
-    if deadline_monotonic is None:
-        return
-    if time.monotonic() > float(deadline_monotonic):
+    from geosolver.runtime.deadline import expired
+
+    if expired(deadline_monotonic):
         raise _SearchDeadlineExceeded()
 
 
@@ -162,7 +162,7 @@ def _family_budget(
     )
     total_budget = float(
         config.max_time_sec
-        if config.max_time_sec is not None and float(config.max_time_sec) > 0.0
+        if config.max_time_sec is not None
         else (base_local_budget + _BOUNDED_TRF_TIME_BUDGET_SECONDS)
     )
     total_share = base_local_budget + _BOUNDED_TRF_TIME_BUDGET_SECONDS
@@ -285,26 +285,6 @@ def _build_halton_starts(
     return [lower + sample * (upper - lower) for sample in samples]
 
 
-def _build_local_start_sequence(
-    *,
-    lower: np.ndarray,
-    upper: np.ndarray,
-    n_starts_halton: int,
-    burn_in: int,
-    seed: int,
-    extra_prefix_points: tuple[list[float], ...],
-) -> list[np.ndarray]:
-    starts, _ = _build_local_start_sequence_with_prefix_count(
-        lower=lower,
-        upper=upper,
-        n_starts_halton=n_starts_halton,
-        burn_in=burn_in,
-        seed=seed,
-        extra_prefix_points=extra_prefix_points,
-    )
-    return list(starts)
-
-
 def _build_local_start_sequence_with_kinds(
     *,
     lower: np.ndarray,
@@ -387,7 +367,7 @@ def _build_local_start_sequence_with_kinds(
         starts=starts,
         labels=labels,
         seen=seen,
-        extra_starts=front_tail[len(early_tail):],
+        extra_starts=front_tail[len(early_tail) :],
         label="front_tail",
     )
     shallow_prefix_count = len(starts)
@@ -421,26 +401,6 @@ def _split_local_anchor_block(
         anchors[front_anchor_count:],
         halton_tail[front_tail_count:],
     )
-
-
-def _build_local_start_sequence_with_prefix_count(
-    *,
-    lower: np.ndarray,
-    upper: np.ndarray,
-    n_starts_halton: int,
-    burn_in: int,
-    seed: int,
-    extra_prefix_points: tuple[list[float], ...],
-) -> tuple[tuple[np.ndarray, ...], int]:
-    starts, _labels, seed_prefix_count = _build_local_start_sequence_with_kinds(
-        lower=lower,
-        upper=upper,
-        n_starts_halton=n_starts_halton,
-        burn_in=burn_in,
-        seed=seed,
-        extra_prefix_points=extra_prefix_points,
-    )
-    return starts, seed_prefix_count
 
 
 def _build_local_start_diagnostics(
@@ -488,7 +448,7 @@ def _evaluate_guard_penalty(
     values: np.ndarray,
 ) -> float:
     try:
-        penalty = _guard_violation_penalty(
+        penalty = guard_violation_penalty(
             list(values),
             spec=bundle.spec,
             var_names=list(bundle.var_names),
@@ -496,10 +456,10 @@ def _evaluate_guard_penalty(
             compiled_guards=getattr(evaluator, "compiled_guards", None),
         )
     except Exception:
-        return float(1e6)
+        return 1e6
     penalty_float = float(penalty)
     if not math.isfinite(penalty_float):
-        return float(1e6)
+        return 1e6
     return penalty_float
 
 
@@ -514,9 +474,9 @@ def _evaluate_hard_feasibility_penalty(
             include_margins=False,
         )
     except Exception:
-        return float(1e3)
+        return 1e3
     if not snapshot.hard_feasible:
-        return float(1e3)
+        return 1e3
     if snapshot.min_margin is None:
         return 0.0
     safe_margin = max(snapshot.min_margin, mp.mpf("1e-30"))
@@ -602,7 +562,7 @@ def _collect_local_start_record(
         bundle=bundle,
         evaluator=evaluator,
         n_constraints=n_constraints,
-        deadline_monotonic=deadline_monotonic if n_vars > n_constraints else None,
+        deadline_monotonic=deadline_monotonic,
         telemetry=telemetry,
         constraint_scales=constraint_scales,
     )
@@ -638,6 +598,7 @@ def _collect_local_start_record(
         family_code=_LM_FAMILY_CODE,
         origin_start_point_index=start_index,
         telemetry=telemetry,
+        constraint_scales=constraint_scales,
     )
 
 
@@ -651,11 +612,12 @@ def _build_candidate(
     family_code: int,
     origin_start_point_index: int,
     telemetry: _SearchTelemetry,
+    constraint_scales: tuple[float, ...] | None = None,
 ) -> FloatCandidate:
     point = tuple(float(value) for value in values)
     in_bounds = all(
         float(low) <= value <= float(high)
-        for value, (low, high) in zip(point, bounds)
+        for value, (low, high) in zip(point, bounds, strict=False)
     )
     if not in_bounds:
         candidate_id = _candidate_id(
@@ -722,9 +684,11 @@ def _build_candidate(
     validity_margin_float = None
     if hard_snapshot.min_margin is not None and math.isfinite(float(hard_snapshot.min_margin)):
         validity_margin_float = float(hard_snapshot.min_margin)
+    from geosolver.engine.standard.evaluation.scaled_score import scaled_score
+
     return FloatCandidate(
         x_float=point,
-        score=(float(float_eval.residual_norm_float) * float(float_eval.residual_norm_float)) + penalty,
+        score=scaled_score(float_eval.residual_vector, constraint_scales) + penalty,
         residual_norm_float=float(float_eval.residual_norm_float),
         guard_ok=bool(guard_ok),
         evaluation_status=float_eval.evaluation_status,
@@ -785,55 +749,6 @@ def _rank_bounded_trf_starts(
         ranked.append((priority, start))
     ranked.sort(key=lambda item: item[0])
     return [values for _, values in ranked]
-
-
-def _collect_local_family_records(
-    *,
-    bundle: ProblemBundle,
-    evaluator: EvaluatorPort,
-    bounds: list[tuple[float, float]],
-    config: NomadConfig,
-    seed: int,
-    deadline_monotonic: float | None,
-    extra_prefix_points: tuple[list[float], ...],
-    has_parametric_variables: bool,
-    telemetry: _SearchTelemetry,
-    constraint_scales: tuple[float, ...] | None = None,
-) -> tuple[FloatCandidate, ...]:
-    if deadline_monotonic is not None and time.monotonic() > deadline_monotonic:
-        return ()
-    lower = np.array([low for low, _high in bounds], dtype=float)
-    upper = np.array([high for _low, high in bounds], dtype=float)
-    burn_in = _HALTON_START_BURN_IN if has_parametric_variables else 0
-    starts, _ = _build_local_start_sequence_with_prefix_count(
-        lower=lower,
-        upper=upper,
-        n_starts_halton=_N_HALTON_STARTS,
-        burn_in=burn_in,
-        seed=seed,
-        extra_prefix_points=extra_prefix_points,
-    )
-    records: list[FloatCandidate] = []
-    for start_index, start in enumerate(starts):
-        try:
-            record = _collect_local_start_record(
-                bundle=bundle,
-                evaluator=evaluator,
-                bounds=bounds,
-                config=config,
-                seed=seed,
-                start_index=start_index,
-                start=start,
-                deadline_monotonic=deadline_monotonic,
-                telemetry=telemetry,
-                constraint_scales=constraint_scales,
-            )
-        except _SearchDeadlineExceeded:
-            break
-        if record is None:
-            continue
-        records.append(record)
-    return tuple(records)
 
 
 def _collect_bounded_trf_records(
@@ -905,6 +820,7 @@ def _collect_bounded_trf_records(
                 family_code=_TRF_FAMILY_CODE,
                 origin_start_point_index=start_index,
                 telemetry=telemetry,
+                constraint_scales=constraint_scales,
             )
         )
     return tuple(records)
@@ -970,7 +886,9 @@ def _safe_brentq_root(
         return float(residual)
 
     try:
-        return float(brentq(scalar_fn, float(left), float(right), xtol=1e-12, rtol=1e-12, maxiter=80))
+        return float(
+            brentq(scalar_fn, float(left), float(right), xtol=1e-12, rtol=1e-12, maxiter=80)
+        )
     except Exception:
         return None
 
@@ -1073,7 +991,9 @@ def _run_one_dimensional_search(
             root_values.append(float(x_value))
         if residual is not None and math.isfinite(residual) and abs(residual) <= 1e-8:
             root_values.append(float(x_value))
-    for (left, f_left, _n_left), (right, f_right, _n_right) in zip(observations, observations[1:]):
+    for (left, f_left, _n_left), (right, f_right, _n_right) in zip(
+        observations, observations[1:], strict=False
+    ):
         if f_left is None or f_right is None:
             continue
         if not (math.isfinite(f_left) and math.isfinite(f_right)):
@@ -1159,6 +1079,15 @@ class ScipyMultistartBackend(GlobalSearchPort):
         guard_feasible_prefix_count: int | None = None,
     ) -> SearchBatchResult:
         _ = search_mode
+        from geosolver.runtime.deadline import expired
+
+        if expired() or (self.config.max_time_sec is not None and self.config.max_time_sec <= 0):
+            return SearchBatchResult(
+                candidates=(),
+                evaluation_count=0,
+                failure_ratio=0,
+                search_diagnostics={"termination_reason": "time_limit_reached"},
+            )
         has_parametric_variables = bool(_infer_parametric_variable_names(bundle))
         family_budget = _family_budget(
             config=self.config,
@@ -1169,7 +1098,7 @@ class ScipyMultistartBackend(GlobalSearchPort):
         local_deadline = (
             time.monotonic() + family_budget.lm_budget_sec
             if family_budget.lm_budget_sec > 0.0
-            else None
+            else time.monotonic()
         )
         all_records: list[FloatCandidate] = []
         lower = np.array([low for low, _high in bounds], dtype=float)
@@ -1177,7 +1106,7 @@ class ScipyMultistartBackend(GlobalSearchPort):
         one_d_deadline = (
             time.monotonic() + family_budget.lm_budget_sec
             if family_budget.lm_budget_sec > 0.0
-            else None
+            else time.monotonic()
         )
         if len(bounds) == 1:
             one_d_points, one_d_diagnostics = _run_one_dimensional_search(
@@ -1198,13 +1127,22 @@ class ScipyMultistartBackend(GlobalSearchPort):
                     family_code=_ONE_D_FAMILY_CODE,
                     origin_start_point_index=index,
                     telemetry=telemetry,
+                    constraint_scales=self.constraint_scales,
                 )
                 for index, point in enumerate(one_d_points)
             )
             admissible_one_d_records = tuple(
                 sorted(
-                    (candidate for candidate in one_d_records if _is_admissible_candidate(candidate)),
-                    key=lambda candidate: (candidate.residual_norm_float, candidate.score, candidate.candidate_id),
+                    (
+                        candidate
+                        for candidate in one_d_records
+                        if _is_admissible_candidate(candidate)
+                    ),
+                    key=lambda candidate: (
+                        candidate.residual_norm_float,
+                        candidate.score,
+                        candidate.candidate_id,
+                    ),
                 )
             )
             if one_d_records and admissible_one_d_records:
@@ -1224,12 +1162,19 @@ class ScipyMultistartBackend(GlobalSearchPort):
                 # point into mpmath is pure overhead.  Keep all admissible roots/families,
                 # but do not let close non-root probes inflate Phase B.
                 selected = admissible_one_d_records[: int(self.config.keep_after_dedup)]
-                failure_ratio = 1.0 if telemetry.evaluation_count == 0 else (telemetry.failure_count / telemetry.evaluation_count)
+                failure_ratio = (
+                    1.0
+                    if telemetry.evaluation_count == 0
+                    else (telemetry.failure_count / telemetry.evaluation_count)
+                )
                 diagnostics = _build_local_start_diagnostics(telemetry=telemetry)
                 diagnostics["one_dimensional_search"] = one_d_diagnostics
+                admissible_count = sum(
+                    1 for candidate in records if _is_admissible_candidate(candidate)
+                )
                 print(
                     "    One-dimensional root family:"
-                    f" {sum(1 for candidate in records if _is_admissible_candidate(candidate))} admissible"
+                    f" {admissible_count} admissible"
                     f" ({len(records)} final states, {telemetry.evaluation_count} residual evals)"
                 )
                 return SearchBatchResult(
@@ -1332,7 +1277,7 @@ class ScipyMultistartBackend(GlobalSearchPort):
         trf_deadline = (
             time.monotonic() + family_budget.trf_budget_sec
             if family_budget.trf_budget_sec > 0.0
-            else None
+            else time.monotonic()
         )
         for seed in seed_values:
             all_records.extend(
@@ -1375,7 +1320,8 @@ class ScipyMultistartBackend(GlobalSearchPort):
         print(
             "    Supplemental legacy float family:"
             f" {admissible_count} admissible"
-            f" ({len(records)} final states, {evaluation_count} residual evals, mode=scipy_multistart)"
+            f" ({len(records)} final states, {evaluation_count} residual evals,"
+            " mode=scipy_multistart)"
         )
         return SearchBatchResult(
             candidates=selected,

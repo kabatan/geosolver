@@ -1,0 +1,67 @@
+{
+  "id": "AIME-2019-II-13",
+  "variables": [
+    "px",
+    "py"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(px,py)"
+    },
+    {
+      "name": "A1",
+      "expression": "Point(cos(0*pi/4)/sqrt(pi),sin(0*pi/4)/sqrt(pi))"
+    },
+    {
+      "name": "A2",
+      "expression": "Point(cos(1*pi/4)/sqrt(pi),sin(1*pi/4)/sqrt(pi))"
+    },
+    {
+      "name": "A3",
+      "expression": "Point(cos(2*pi/4)/sqrt(pi),sin(2*pi/4)/sqrt(pi))"
+    },
+    {
+      "name": "A4",
+      "expression": "Point(cos(3*pi/4)/sqrt(pi),sin(3*pi/4)/sqrt(pi))"
+    },
+    {
+      "name": "A5",
+      "expression": "Point(cos(4*pi/4)/sqrt(pi),sin(4*pi/4)/sqrt(pi))"
+    },
+    {
+      "name": "A6",
+      "expression": "Point(cos(5*pi/4)/sqrt(pi),sin(5*pi/4)/sqrt(pi))"
+    },
+    {
+      "name": "A7",
+      "expression": "Point(cos(6*pi/4)/sqrt(pi),sin(6*pi/4)/sqrt(pi))"
+    },
+    {
+      "name": "A8",
+      "expression": "Point(cos(7*pi/4)/sqrt(pi),sin(7*pi/4)/sqrt(pi))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "px**2+py**2",
+      "operator": "<",
+      "right": "1/pi"
+    },
+    {
+      "left": "1/8-sqrt(2)/(4*pi)+(Vector(A1,A2).x*Vector(A1,P).y-Vector(A1,A2).y*Vector(A1,P).x)/2",
+      "operator": "=",
+      "right": "1/7"
+    },
+    {
+      "left": "1/8-sqrt(2)/(4*pi)+(Vector(A3,A4).x*Vector(A3,P).y-Vector(A3,A4).y*Vector(A3,P).x)/2",
+      "operator": "=",
+      "right": "1/9"
+    }
+  ],
+  "target": "1/8-sqrt(2)/(4*pi)+(Vector(A6,A7).x*Vector(A6,P).y-Vector(A6,A7).y*Vector(A6,P).x)/2"
+}

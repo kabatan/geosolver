@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any, Sequence
+from collections.abc import Sequence
+from typing import Any
 
 from sympy import pi, sqrt
 
@@ -23,8 +24,12 @@ def parallel_impl(obj1: Any, obj2: Any) -> Any:
 
 def slope_impl(obj1: Any, obj2: Any | None = None) -> Any:
     if obj2 is not None:
+        if obj2.x == obj1.x:
+            raise ValueError("vertical or degenerate line has no finite slope")
         return (obj2.y - obj1.y) / (obj2.x - obj1.x)
     if isinstance(obj1, Line):
+        if obj1.b == 0:
+            raise ValueError("vertical line has no finite slope")
         return -obj1.a / obj1.b
     raise TypeError("Slope requires a Line or two Points")
 
@@ -41,7 +46,8 @@ def perimeter_impl(args: Sequence[Any]) -> Any:
     if len(args) == 1:
         obj = args[0]
         if hasattr(obj, "perimeter"):
-            return obj.perimeter()
+            perimeter = obj.perimeter
+            return perimeter() if callable(perimeter) else perimeter
         if hasattr(obj, "points"):
             points = obj.points
         else:

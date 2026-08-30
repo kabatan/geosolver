@@ -4,19 +4,20 @@ Core high-precision geometry types extracted from mp_impl.
 
 from __future__ import annotations
 
-from typing import Tuple
+from mpmath import mp, mpf
+from mpmath import sqrt as mp_sqrt
 
-from mpmath import mp, mpf, sqrt as mp_sqrt
-
+from geosolver.errors import InvalidCircleError
 from geosolver.geometry.mp.mp_conversion import to_mpf
 
 
 class MPPoint:
-    __slots__ = ["x", "y"]
+    __slots__ = ["x", "y", "_circle_incidence"]
 
     def __init__(self, x, y):
         self.x = to_mpf(x)
         self.y = to_mpf(y)
+        self._circle_incidence = None
 
     def __repr__(self):
         return f"MPPoint({mp.nstr(self.x, 15)}, {mp.nstr(self.y, 15)})"
@@ -56,7 +57,7 @@ class MPPoint:
     def distance_to(self, other) -> mpf:
         return mp_sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2)
 
-    def to_float_tuple(self) -> Tuple[float, float]:
+    def to_float_tuple(self) -> tuple[float, float]:
         return (float(self.x), float(self.y))
 
 
@@ -89,11 +90,35 @@ class MPLine:
 
 
 class MPCircle:
-    __slots__ = ["center", "radius"]
+    __slots__ = ["center", "radius", "_defining_incidence"]
 
     def __init__(self, center: MPPoint, radius):
         self.center = center
         self.radius = to_mpf(radius)
+        if self.radius <= 0:
+            raise InvalidCircleError("circle radius must be positive")
+        self._defining_incidence = None
+
+    def _state(self):
+        return self.center.x, self.center.y, self.radius
+
+    def _remember_defining_points(self, points):
+        self._defining_incidence = (self._state(), tuple((p.x, p.y) for p in points))
+
+    def _remember_parametric_point(self, point):
+        point._circle_incidence = (self._state(), (point.x, point.y))
+
+    def _has_proven_incidence(self, point):
+        # These witnesses come only from constructions, never a proximity
+        # tolerance. Coordinate snapshots invalidate them after any mutation.
+        state, coordinates = self._state(), (point.x, point.y)
+        if point._circle_incidence == (state, coordinates):
+            return True
+        return (
+            self._defining_incidence is not None
+            and self._defining_incidence[0] == state
+            and coordinates in self._defining_incidence[1]
+        )
 
     def __repr__(self):
         return f"MPCircle(center={self.center}, r={mp.nstr(self.radius, 15)})"

@@ -1,0 +1,85 @@
+{
+  "id": "HMMT-2016-FEB-GEO-09",
+  "variables": [
+    "cx",
+    "cy",
+    "dx",
+    "dy"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(49, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(dx, dy)"
+    },
+    {
+      "name": "I",
+      "expression": "Incenter(A, B, D)"
+    },
+    {
+      "name": "J",
+      "expression": "Incenter(C, B, D)"
+    },
+    {
+      "name": "M",
+      "expression": "Midpoint(I, J)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 49
+    },
+    {
+      "left": "Distance(A, D)",
+      "operator": "=",
+      "right": 49
+    },
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": 73
+    },
+    {
+      "left": "AreConcyclic(A, B, C, D)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnLine(M, B, D)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "dy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(I, J)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "predicate": "ConvexPolygon([A, B, C, D])"
+    }
+  ],
+  "target": "Distance(I, J)"
+}

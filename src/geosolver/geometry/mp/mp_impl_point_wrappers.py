@@ -2,34 +2,44 @@
 
 from __future__ import annotations
 
-from typing import Optional, Tuple
-
-from geosolver.geometry.mp.mp_arc_entities import mp_check_excluded_points as _mp_check_excluded_points_impl
+from geosolver.geometry.mp.mp_arc_entities import (
+    mp_check_excluded_points as _mp_check_excluded_points_impl,
+)
 from geosolver.geometry.mp.mp_core_types import MPCircle, MPLine, MPPoint
 from geosolver.geometry.mp.mp_parametric_points import (
     mp_point_on_arc as _mp_point_on_arc_impl,
+)
+from geosolver.geometry.mp.mp_parametric_points import (
     mp_point_on_circle as _mp_point_on_circle_impl,
+)
+from geosolver.geometry.mp.mp_parametric_points import (
     mp_point_on_line as _mp_point_on_line_impl,
+)
+from geosolver.geometry.mp.mp_parametric_points import (
     mp_point_on_segment as _mp_point_on_segment_impl,
 )
 from geosolver.geometry.mp.mp_triangle_checks import (
     mp_middle_point_on_line as _mp_middle_point_on_line_impl,
+)
+from geosolver.geometry.mp.mp_triangle_checks import (
     mp_orthic_triangle as _mp_orthic_triangle_impl,
+)
+from geosolver.geometry.mp.mp_triangle_checks import (
     mp_triangle_type as _mp_triangle_type_impl,
 )
 
 
-def mp_triangle_type(A: MPPoint, B: MPPoint, C: MPPoint) -> Optional[str]:
+def mp_triangle_type(A: MPPoint, B: MPPoint, C: MPPoint) -> str | None:
     return _mp_triangle_type_impl(A=A, B=B, C=C)
 
 
-def mp_middle_point_on_line(A: MPPoint, B: MPPoint, C: MPPoint) -> Optional[MPPoint]:
+def mp_middle_point_on_line(A: MPPoint, B: MPPoint, C: MPPoint) -> MPPoint | None:
     return _mp_middle_point_on_line_impl(A=A, B=B, C=C)
 
 
 def mp_orthic_triangle(
     A: MPPoint, B: MPPoint, C: MPPoint
-) -> Optional[Tuple[MPPoint, MPPoint, MPPoint]]:
+) -> tuple[MPPoint, MPPoint, MPPoint] | None:
     return _mp_orthic_triangle_impl(A=A, B=B, C=C)
 
 
@@ -54,10 +64,10 @@ def mp_point_on_arc(
     point1: MPPoint,
     point2: MPPoint,
     t,
-    including: Optional[MPPoint] = None,
-    excluding: Optional[MPPoint] = None,
+    including: MPPoint | None = None,
+    excluding: MPPoint | None = None,
     exclude=None,
-) -> Optional[MPPoint]:
+) -> MPPoint | None:
     return _mp_point_on_arc_impl(
         circle=circle,
         point1=point1,

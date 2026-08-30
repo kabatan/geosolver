@@ -1,0 +1,61 @@
+{
+  "id": "HMMT-2015-FEB-GEO-03",
+  "variables": [],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 1)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(2, 1)"
+    },
+    {
+      "name": "Gamma",
+      "expression": "Circumcircle(A, B, C)"
+    },
+    {
+      "name": "E",
+      "expression": "Intersect(Line(A, D), Gamma, exclude=A)"
+    },
+    {
+      "name": "F",
+      "expression": "Intersect(Line(B, D), Gamma, exclude=B)"
+    },
+    {
+      "name": "K",
+      "expression": "Intersect(Line(A, F), Line(C, D))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 1
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": 1
+    },
+    {
+      "left": "Distance(A, D)",
+      "operator": "=",
+      "right": 2
+    },
+    {
+      "left": "Distance(E, K)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "Distance(E, K)"
+}

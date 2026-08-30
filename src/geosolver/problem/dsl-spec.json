@@ -1,0 +1,4701 @@
+{
+  "schema_version": 1,
+  "dsl_version": "1.1.0",
+  "semantics": "nondegenerate_euclidean_2d",
+  "selector_values": {
+    "vertex": [
+      "A",
+      "B",
+      "C",
+      0,
+      1,
+      2
+    ],
+    "side": [
+      "BC",
+      "CA",
+      "AB",
+      0,
+      1,
+      2
+    ],
+    "first": [
+      true,
+      false
+    ],
+    "ccw": [
+      true,
+      false
+    ],
+    "ordered": [
+      true,
+      false
+    ],
+    "inclusive": [
+      true,
+      false
+    ],
+    "use_first": [
+      true,
+      false
+    ]
+  },
+  "categories": [
+    {
+      "id": "points",
+      "label_ja": "点・交点",
+      "label_en": "Points"
+    },
+    {
+      "id": "lines",
+      "label_ja": "直線・線分",
+      "label_en": "Lines"
+    },
+    {
+      "id": "circles",
+      "label_ja": "円・円弧",
+      "label_en": "Circles"
+    },
+    {
+      "id": "polygons",
+      "label_ja": "多角形",
+      "label_en": "Polygons"
+    },
+    {
+      "id": "relations",
+      "label_ja": "平行・垂直・接線",
+      "label_en": "Relations"
+    },
+    {
+      "id": "transforms",
+      "label_ja": "変換",
+      "label_en": "Transforms"
+    },
+    {
+      "id": "centers",
+      "label_ja": "三角形の中心・円",
+      "label_en": "Triangle centers"
+    },
+    {
+      "id": "measurements",
+      "label_ja": "測定",
+      "label_en": "Measurements"
+    },
+    {
+      "id": "constraints",
+      "label_ja": "幾何条件",
+      "label_en": "Constraints"
+    },
+    {
+      "id": "guards",
+      "label_ja": "条件・範囲",
+      "label_en": "Conditions and bounds"
+    },
+    {
+      "id": "advanced",
+      "label_ja": "高度な構成",
+      "label_en": "Advanced"
+    }
+  ],
+  "symbols": [
+    {
+      "name": "AcuteTriangle",
+      "aliases": [
+        "AssumeAcute"
+      ],
+      "symbol_kind": "function",
+      "signature": "AcuteTriangle(A, B, C)",
+      "min_args": 3,
+      "max_positional": 4,
+      "parameters": [
+        "A",
+        "B",
+        "C",
+        "message",
+        "abs_floor",
+        "rel_floor"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C",
+        "abs_floor",
+        "message",
+        "rel_floor"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any",
+        "message": "any",
+        "abs_floor": "any",
+        "rel_floor": "any"
+      },
+      "output_type": "boolean",
+      "positions": [
+        "guard"
+      ],
+      "semantic_kind": "boolean",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "AssumeAcute",
+      "high_precision_implementation": "AssumeAcute",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "guards",
+      "label_ja": "鋭角三角形",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "And",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "And(value)",
+      "min_args": 1,
+      "max_positional": null,
+      "parameters": [],
+      "allowed_keywords": [],
+      "variadic": true,
+      "input_types": {},
+      "output_type": "boolean",
+      "positions": [
+        "guard"
+      ],
+      "semantic_kind": "boolean",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "And",
+      "high_precision_implementation": "And",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "runtime",
+      "label_ja": "And",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Angle",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Angle(A, B, C)",
+      "min_args": 1,
+      "max_positional": 3,
+      "parameters": [
+        "obj1",
+        "obj2",
+        "obj3",
+        "A",
+        "B",
+        "C"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C"
+      ],
+      "variadic": false,
+      "input_types": {
+        "obj1": "any",
+        "obj2": "any",
+        "obj3": "any",
+        "A": "any",
+        "B": "any",
+        "C": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "construction",
+        "constraint",
+        "target"
+      ],
+      "semantic_kind": "measurement",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Angle",
+      "high_precision_implementation": "Angle",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "measurements",
+      "label_ja": "角度",
+      "notes_ja": "頂点は中央のB、単位はradianです。",
+      "expands_to": null
+    },
+    {
+      "name": "AngleBisector",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "AngleBisector(A, B, C)",
+      "min_args": 3,
+      "max_positional": 3,
+      "parameters": [
+        "A",
+        "B",
+        "C"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "AngleBisector",
+      "high_precision_implementation": "AngleBisector",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "lines",
+      "label_ja": "角の二等分線",
+      "notes_ja": "頂点は中央のBで、内角二等分線を返します。",
+      "expands_to": null
+    },
+    {
+      "name": "Arc",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Arc(omega, A, B, including=P)",
+      "min_args": 3,
+      "max_positional": 5,
+      "parameters": [
+        "circle",
+        "start_point",
+        "end_point",
+        "including",
+        "excluding",
+        "omega",
+        "A",
+        "B"
+      ],
+      "allowed_keywords": [
+        "circle",
+        "start_point",
+        "end_point",
+        "including",
+        "excluding",
+        "omega",
+        "A",
+        "B"
+      ],
+      "variadic": false,
+      "input_types": {
+        "circle": "any",
+        "start_point": "any",
+        "end_point": "any",
+        "including": "any",
+        "excluding": "any",
+        "omega": "any",
+        "A": "any",
+        "B": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [
+        "endpoints are distinct points on the circle; antipodal endpoints require an explicit branch"
+      ],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Arc",
+      "high_precision_implementation": "Arc",
+      "branches": [
+        "minor",
+        "including",
+        "excluding"
+      ],
+      "authoring_status": "advanced",
+      "category": "circles",
+      "label_ja": "円弧",
+      "notes_ja": "sourceがmajor/minor arcを区別する場合はincludingまたはexcludingを必ず明示します。",
+      "expands_to": null
+    },
+    {
+      "name": "AreConcyclic",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "AreConcyclic(A, B, C, D)",
+      "min_args": 4,
+      "max_positional": 4,
+      "parameters": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any",
+        "D": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "constraint"
+      ],
+      "semantic_kind": "residual",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "AreConcyclic",
+      "high_precision_implementation": "AreConcyclic",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "constraints",
+      "label_ja": "AreConcyclic",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Area",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Area(A, B, C)",
+      "min_args": 1,
+      "max_positional": null,
+      "parameters": [
+        "A",
+        "B",
+        "C"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C"
+      ],
+      "variadic": true,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "construction",
+        "constraint",
+        "target"
+      ],
+      "semantic_kind": "measurement",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Area",
+      "high_precision_implementation": "Area",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "measurements",
+      "label_ja": "面積",
+      "notes_ja": "Polygon objectではなくcircleまたは点列を渡します。",
+      "expands_to": null
+    },
+    {
+      "name": "Order",
+      "aliases": [
+        "AssumeOrder"
+      ],
+      "symbol_kind": "function",
+      "signature": "Order(A, P, B)",
+      "min_args": 3,
+      "max_positional": 4,
+      "parameters": [
+        "P1",
+        "P2",
+        "P3",
+        "message",
+        "tol"
+      ],
+      "allowed_keywords": [
+        "P1",
+        "P2",
+        "P3",
+        "message",
+        "tol"
+      ],
+      "variadic": false,
+      "input_types": {
+        "P1": "any",
+        "P2": "any",
+        "P3": "any",
+        "message": "any",
+        "tol": "any"
+      },
+      "output_type": "boolean",
+      "positions": [
+        "guard"
+      ],
+      "semantic_kind": "boolean",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "AssumeOrder",
+      "high_precision_implementation": "AssumeOrder",
+      "branches": [],
+      "authoring_status": "legacy_read_only",
+      "category": "guards",
+      "label_ja": "点の順序（旧形式）",
+      "notes_ja": "高精度guardとの型互換問題があるため、PointOnSegmentとBoundまたはOnSegmentを使います。",
+      "expands_to": null
+    },
+    {
+      "name": "Bound",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Bound(t, (0, 1))",
+      "min_args": 2,
+      "max_positional": 3,
+      "parameters": [
+        "value",
+        "bounds",
+        "message",
+        "abs_floor",
+        "inclusive",
+        "rel_floor"
+      ],
+      "allowed_keywords": [
+        "abs_floor",
+        "bounds",
+        "inclusive",
+        "message",
+        "rel_floor",
+        "value"
+      ],
+      "variadic": false,
+      "input_types": {
+        "value": "any",
+        "bounds": "any",
+        "message": "any",
+        "abs_floor": "any",
+        "inclusive": "any",
+        "rel_floor": "any"
+      },
+      "output_type": "boolean",
+      "positions": [
+        "guard"
+      ],
+      "semantic_kind": "boolean",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Bound",
+      "high_precision_implementation": "Bound",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "guards",
+      "label_ja": "変数の範囲",
+      "notes_ja": "幾何parameterの自然domainだけに使用します。",
+      "expands_to": null
+    },
+    {
+      "name": "Center",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Center(omega)",
+      "min_args": 1,
+      "max_positional": 1,
+      "parameters": [
+        "omega"
+      ],
+      "allowed_keywords": [
+        "omega"
+      ],
+      "variadic": false,
+      "input_types": {
+        "omega": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Center",
+      "high_precision_implementation": "Center",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "points",
+      "label_ja": "円・円弧の中心",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Centroid",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Centroid(A, B, C)",
+      "min_args": 3,
+      "max_positional": 3,
+      "parameters": [
+        "A",
+        "B",
+        "C"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Centroid",
+      "high_precision_implementation": "Centroid",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "centers",
+      "label_ja": "重心",
+      "notes_ja": "sourceがこの中心を直接定義する場合だけ使用します。",
+      "expands_to": null
+    },
+    {
+      "name": "Circle",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Circle(O, 1)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "O",
+        "arg2"
+      ],
+      "allowed_keywords": [
+        "O",
+        "arg2"
+      ],
+      "variadic": false,
+      "input_types": {
+        "O": "any",
+        "arg2": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [
+        "radius > 0"
+      ],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Circle",
+      "high_precision_implementation": "Circle",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "circles",
+      "label_ja": "中心と半径の円",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "CircleThroughPoint",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "CircleThroughPoint(O, P)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "O",
+        "P"
+      ],
+      "allowed_keywords": [
+        "O",
+        "P"
+      ],
+      "variadic": false,
+      "input_types": {
+        "O": "any",
+        "P": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "CircleThroughPoint",
+      "high_precision_implementation": "CircleThroughPoint",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "circles",
+      "label_ja": "中心と通過点の円",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "CircleThroughThreePoints",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "CircleThroughThreePoints(A, B, C)",
+      "min_args": 3,
+      "max_positional": 3,
+      "parameters": [
+        "A",
+        "B",
+        "C"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [
+        "three points are non-collinear"
+      ],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "CircleThroughThreePoints",
+      "high_precision_implementation": "CircleThroughThreePoints",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "circles",
+      "label_ja": "3点を通る円",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Circumcenter",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Circumcenter(A, B, C)",
+      "min_args": 3,
+      "max_positional": 3,
+      "parameters": [
+        "A",
+        "B",
+        "C"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [
+        "three points are non-collinear"
+      ],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Circumcenter",
+      "high_precision_implementation": "Circumcenter",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "centers",
+      "label_ja": "外心",
+      "notes_ja": "非共線な三点が必要です。",
+      "expands_to": null
+    },
+    {
+      "name": "Circumcircle",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Circumcircle(A, B, C)",
+      "min_args": 3,
+      "max_positional": 3,
+      "parameters": [
+        "A",
+        "B",
+        "C"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Circumcircle",
+      "high_precision_implementation": "Circumcircle",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "centers",
+      "label_ja": "外接円",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Circumference",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Circumference(omega)",
+      "min_args": 1,
+      "max_positional": 1,
+      "parameters": [
+        "omega"
+      ],
+      "allowed_keywords": [
+        "omega"
+      ],
+      "variadic": false,
+      "input_types": {
+        "omega": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "construction",
+        "constraint",
+        "target"
+      ],
+      "semantic_kind": "measurement",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Circumference",
+      "high_precision_implementation": "Circumference",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "measurements",
+      "label_ja": "円周",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "ClosestPoint",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "ClosestPoint(P, line)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "P",
+        "line"
+      ],
+      "allowed_keywords": [
+        "P",
+        "line"
+      ],
+      "variadic": false,
+      "input_types": {
+        "P": "any",
+        "line": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "ClosestPoint",
+      "high_precision_implementation": "ClosestPoint",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "points",
+      "label_ja": "最近点",
+      "notes_ja": "新規問題では高精度互換なPoint-Line形を使用します。",
+      "expands_to": null
+    },
+    {
+      "name": "Collinear",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Collinear(A, B, C)",
+      "min_args": 3,
+      "max_positional": 4,
+      "parameters": [
+        "point1",
+        "point2",
+        "point3",
+        "ordered",
+        "A",
+        "B",
+        "C"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C"
+      ],
+      "variadic": false,
+      "input_types": {
+        "point1": "any",
+        "point2": "any",
+        "point3": "any",
+        "ordered": "any",
+        "A": "any",
+        "B": "any",
+        "C": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "constraint"
+      ],
+      "semantic_kind": "residual",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Collinear",
+      "high_precision_implementation": "Collinear",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "constraints",
+      "label_ja": "共線",
+      "notes_ja": "順序はこの式から推測せず別途明示します。",
+      "expands_to": null
+    },
+    {
+      "name": "ContactPoint",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "ContactPoint(omega, line)",
+      "min_args": 2,
+      "max_positional": 4,
+      "parameters": [
+        "A",
+        "B",
+        "C",
+        "side"
+      ],
+      "allowed_keywords": [
+        "side"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any",
+        "side": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "ContactPoint",
+      "high_precision_implementation": "ContactPoint",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "relations",
+      "label_ja": "接点",
+      "notes_ja": "垂足を返すだけで接すること自体は検証しないため、IsTangentを別に残します。",
+      "expands_to": null
+    },
+    {
+      "name": "ConvexPolygon",
+      "aliases": [
+        "AssumeConvex"
+      ],
+      "symbol_kind": "function",
+      "signature": "ConvexPolygon([A, B, C, D])",
+      "min_args": 1,
+      "max_positional": 2,
+      "parameters": [
+        "polygon",
+        "message",
+        "tol"
+      ],
+      "allowed_keywords": [
+        "message",
+        "polygon",
+        "tol"
+      ],
+      "variadic": false,
+      "input_types": {
+        "polygon": "any",
+        "message": "any",
+        "tol": "any"
+      },
+      "output_type": "boolean",
+      "positions": [
+        "guard"
+      ],
+      "semantic_kind": "boolean",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "AssumeConvex",
+      "high_precision_implementation": "AssumeConvex",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "guards",
+      "label_ja": "凸多角形",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Degrees",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Degrees(angle)",
+      "min_args": 1,
+      "max_positional": 1,
+      "parameters": [
+        "angle"
+      ],
+      "allowed_keywords": [
+        "angle"
+      ],
+      "variadic": false,
+      "input_types": {
+        "angle": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "construction",
+        "constraint",
+        "target"
+      ],
+      "semantic_kind": "measurement",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Degrees",
+      "high_precision_implementation": "Degrees",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "measurements",
+      "label_ja": "Degrees",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Distance",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Distance(A, B)",
+      "min_args": 1,
+      "max_positional": 2,
+      "parameters": [
+        "obj1",
+        "obj2",
+        "A",
+        "B"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B"
+      ],
+      "variadic": false,
+      "input_types": {
+        "obj1": "any",
+        "obj2": "any",
+        "A": "any",
+        "B": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "construction",
+        "constraint",
+        "target"
+      ],
+      "semantic_kind": "measurement",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Distance",
+      "high_precision_implementation": "Distance",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "measurements",
+      "label_ja": "距離",
+      "notes_ja": "新規問題ではPoint-PointまたはPoint-Lineの2引数形を使用します。",
+      "expands_to": null
+    },
+    {
+      "name": "Dot",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Dot(Vector(A, B), Vector(C, D))",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "arg1",
+        "arg2"
+      ],
+      "allowed_keywords": [
+        "arg1",
+        "arg2"
+      ],
+      "variadic": false,
+      "input_types": {
+        "arg1": "any",
+        "arg2": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "construction",
+        "constraint",
+        "target"
+      ],
+      "semantic_kind": "measurement",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Dot",
+      "high_precision_implementation": "Dot",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "measurements",
+      "label_ja": "内積",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Excenter",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Excenter(A, B, C, vertex='A')",
+      "min_args": 3,
+      "max_positional": 4,
+      "parameters": [
+        "A",
+        "B",
+        "C",
+        "vertex"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C",
+        "vertex"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any",
+        "vertex": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Excenter",
+      "high_precision_implementation": "Excenter",
+      "branches": [
+        "A",
+        "B",
+        "C"
+      ],
+      "authoring_status": "advanced",
+      "category": "centers",
+      "label_ja": "傍心",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Excircle",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Excircle(A, B, C, vertex='A')",
+      "min_args": 3,
+      "max_positional": 4,
+      "parameters": [
+        "A",
+        "B",
+        "C",
+        "vertex"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C",
+        "vertex"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any",
+        "vertex": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Excircle",
+      "high_precision_implementation": "Excircle",
+      "branches": [
+        "A",
+        "B",
+        "C"
+      ],
+      "authoring_status": "advanced",
+      "category": "centers",
+      "label_ja": "傍接円",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "FermatPoint",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "FermatPoint(A, B, C, first=True)",
+      "min_args": 3,
+      "max_positional": 4,
+      "parameters": [
+        "A",
+        "B",
+        "C",
+        "first"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C",
+        "first"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any",
+        "first": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "FermatPoint",
+      "high_precision_implementation": "FermatPoint",
+      "branches": [
+        "first",
+        "second"
+      ],
+      "authoring_status": "advanced",
+      "category": "centers",
+      "label_ja": "フェルマー点",
+      "notes_ja": "firstはbranchです。sourceとの対応を明示します。",
+      "expands_to": null
+    },
+    {
+      "name": "FeuerbachPoint",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "FeuerbachPoint(A, B, C)",
+      "min_args": 3,
+      "max_positional": 3,
+      "parameters": [
+        "A",
+        "B",
+        "C"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "FeuerbachPoint",
+      "high_precision_implementation": "FeuerbachPoint",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "advanced",
+      "label_ja": "フォイエルバッハ点",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "FootOfPerpendicular",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "FootOfPerpendicular(P, line)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "P",
+        "line"
+      ],
+      "allowed_keywords": [
+        "P",
+        "line"
+      ],
+      "variadic": false,
+      "input_types": {
+        "P": "any",
+        "line": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "FootOfPerpendicular",
+      "high_precision_implementation": "FootOfPerpendicular",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "lines",
+      "label_ja": "垂線の足",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "GergonnePoint",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "GergonnePoint(A, B, C)",
+      "min_args": 3,
+      "max_positional": 3,
+      "parameters": [
+        "A",
+        "B",
+        "C"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "GergonnePoint",
+      "high_precision_implementation": "GergonnePoint",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "centers",
+      "label_ja": "ジェルゴンヌ点",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Incenter",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Incenter(A, B, C)",
+      "min_args": 3,
+      "max_positional": 3,
+      "parameters": [
+        "A",
+        "B",
+        "C"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [
+        "three points are non-collinear"
+      ],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Incenter",
+      "high_precision_implementation": "Incenter",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "centers",
+      "label_ja": "内心",
+      "notes_ja": "sourceがこの中心を直接定義する場合だけ使用します。",
+      "expands_to": null
+    },
+    {
+      "name": "Incircle",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Incircle(A, B, C)",
+      "min_args": 3,
+      "max_positional": 3,
+      "parameters": [
+        "A",
+        "B",
+        "C"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [
+        "three points are non-collinear"
+      ],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Incircle",
+      "high_precision_implementation": "Incircle",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "centers",
+      "label_ja": "内接円",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "IncircleContactPoint",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "IncircleContactPoint(A, B, C, side='BC')",
+      "min_args": 3,
+      "max_positional": 4,
+      "parameters": [
+        "A",
+        "B",
+        "C",
+        "side"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C",
+        "side"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any",
+        "side": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "IncircleContactPoint",
+      "high_precision_implementation": "IncircleContactPoint",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "centers",
+      "label_ja": "内接円の接点",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "InscribedPolygon",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "InscribedPolygon(omega, t2, t3)",
+      "min_args": 2,
+      "max_positional": null,
+      "parameters": [
+        "circle",
+        "omega",
+        "t2",
+        "t3"
+      ],
+      "allowed_keywords": [
+        "omega",
+        "t2",
+        "t3"
+      ],
+      "variadic": true,
+      "input_types": {
+        "circle": "any",
+        "omega": "any",
+        "t2": "any",
+        "t3": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [
+        "at least one parameter",
+        "0 < every parameter < 1"
+      ],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "InscribedPolygon",
+      "high_precision_implementation": "InscribedPolygon",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "polygons",
+      "label_ja": "円に内接する多角形（旧形式）",
+      "notes_ja": "最初の頂点は中心の真上。残りの円弧のt倍ずつ反時計回りに順次配置します。",
+      "expands_to": null
+    },
+    {
+      "name": "InscribedPolygonVertices",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "円を選択し、頂点数を指定",
+      "min_args": 2,
+      "max_positional": null,
+      "parameters": [
+        "circle"
+      ],
+      "allowed_keywords": [
+        "circle"
+      ],
+      "variadic": true,
+      "input_types": {
+        "circle": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [
+        "at least one parameter",
+        "0 < every parameter < 1"
+      ],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "InscribedPolygonVertices",
+      "high_precision_implementation": "InscribedPolygonVertices",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "polygons",
+      "label_ja": "円に内接する多角形",
+      "notes_ja": "最初の頂点は中心の真上。残りの円弧のt倍ずつ反時計回りに順次配置します。",
+      "expands_to": null
+    },
+    {
+      "name": "Intersect",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Intersect(obj1, obj2, n=None, exclude=None, near=None, far=None)",
+      "min_args": 2,
+      "max_positional": 6,
+      "parameters": [
+        "obj1",
+        "obj2",
+        "n",
+        "exclude",
+        "near",
+        "far"
+      ],
+      "allowed_keywords": [
+        "obj1",
+        "obj2",
+        "n",
+        "exclude",
+        "near",
+        "far"
+      ],
+      "variadic": false,
+      "input_types": {
+        "obj1": "any",
+        "obj2": "any",
+        "n": "any",
+        "exclude": "any",
+        "near": "any",
+        "far": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [
+        "the selected intersection is finite and unique"
+      ],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Intersect",
+      "high_precision_implementation": "Intersect",
+      "branches": [
+        "unique",
+        "n",
+        "exclude",
+        "near",
+        "far"
+      ],
+      "authoring_status": "advanced",
+      "category": "points",
+      "label_ja": "交点",
+      "notes_ja": "複数交点ではexclude、near、farなどsourceに根拠のあるselectorを明示します。",
+      "expands_to": null
+    },
+    {
+      "name": "IntersectCircles",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "IntersectCircles(circle1, circle2)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "circle1",
+        "circle2"
+      ],
+      "allowed_keywords": [
+        "circle1",
+        "circle2"
+      ],
+      "variadic": false,
+      "input_types": {
+        "circle1": "any",
+        "circle2": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "IntersectCircles",
+      "high_precision_implementation": "IntersectCircles",
+      "branches": [
+        "zero",
+        "tangent",
+        "two"
+      ],
+      "authoring_status": "legacy_read_only",
+      "category": "points",
+      "label_ja": "2円の交点リスト",
+      "notes_ja": "listを返し、その順序にbranch semanticsはありません。",
+      "expands_to": null
+    },
+    {
+      "name": "IntersectLineCircle",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "IntersectLineCircle(line, omega)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "line",
+        "omega"
+      ],
+      "allowed_keywords": [
+        "line",
+        "omega"
+      ],
+      "variadic": false,
+      "input_types": {
+        "line": "any",
+        "omega": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "IntersectLineCircle",
+      "high_precision_implementation": "IntersectLineCircle",
+      "branches": [
+        "zero",
+        "tangent",
+        "two"
+      ],
+      "authoring_status": "legacy_read_only",
+      "category": "points",
+      "label_ja": "直線と円の交点リスト",
+      "notes_ja": "listを返し、その順序にbranch semanticsはありません。",
+      "expands_to": null
+    },
+    {
+      "name": "IntersectLines",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "IntersectLines(line1, line2)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "line1",
+        "line2"
+      ],
+      "allowed_keywords": [
+        "line1",
+        "line2"
+      ],
+      "variadic": false,
+      "input_types": {
+        "line1": "any",
+        "line2": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [
+        "lines have one finite intersection"
+      ],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "IntersectLines",
+      "high_precision_implementation": "IntersectLines",
+      "branches": [
+        "unique"
+      ],
+      "authoring_status": "legacy_read_only",
+      "category": "points",
+      "label_ja": "2直線の交点（低水準）",
+      "notes_ja": "新規問題ではIntersectへ統一します。",
+      "expands_to": null
+    },
+    {
+      "name": "IsInteger",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "IsInteger(value)",
+      "min_args": 1,
+      "max_positional": 1,
+      "parameters": [
+        "value"
+      ],
+      "allowed_keywords": [
+        "value"
+      ],
+      "variadic": false,
+      "input_types": {
+        "value": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "constraint"
+      ],
+      "semantic_kind": "residual",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "IsInteger",
+      "high_precision_implementation": "IsInteger",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "runtime",
+      "label_ja": "IsInteger",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "IsPrime",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "IsPrime(value)",
+      "min_args": 1,
+      "max_positional": 1,
+      "parameters": [
+        "value"
+      ],
+      "allowed_keywords": [
+        "value"
+      ],
+      "variadic": false,
+      "input_types": {
+        "value": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "constraint"
+      ],
+      "semantic_kind": "residual",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "IsPrime",
+      "high_precision_implementation": "IsPrime",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "runtime",
+      "label_ja": "IsPrime",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "IsTangent",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "IsTangent(line, omega)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "line",
+        "omega"
+      ],
+      "allowed_keywords": [
+        "line",
+        "omega"
+      ],
+      "variadic": false,
+      "input_types": {
+        "line": "any",
+        "omega": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "constraint"
+      ],
+      "semantic_kind": "residual",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "IsTangent",
+      "high_precision_implementation": "IsTangent",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "constraints",
+      "label_ja": "接する",
+      "notes_ja": "円同士では内接・外接branchを区別しないため、必要なら距離式で明示します。",
+      "expands_to": null
+    },
+    {
+      "name": "IsodynamicPoint",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "IsodynamicPoint(A, B, C, first=True)",
+      "min_args": 3,
+      "max_positional": 4,
+      "parameters": [
+        "A",
+        "B",
+        "C",
+        "first"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C",
+        "first"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any",
+        "first": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "IsodynamicPoint",
+      "high_precision_implementation": "IsodynamicPoint",
+      "branches": [
+        "first",
+        "second"
+      ],
+      "authoring_status": "advanced",
+      "category": "advanced",
+      "label_ja": "等力点",
+      "notes_ja": "firstはbranchです。sourceとの対応を明示します。",
+      "expands_to": null
+    },
+    {
+      "name": "Length",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Length(segment)",
+      "min_args": 1,
+      "max_positional": 1,
+      "parameters": [
+        "segment"
+      ],
+      "allowed_keywords": [
+        "segment"
+      ],
+      "variadic": false,
+      "input_types": {
+        "segment": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "construction",
+        "constraint",
+        "target"
+      ],
+      "semantic_kind": "measurement",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Length",
+      "high_precision_implementation": "Length",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "measurements",
+      "label_ja": "長さ",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Line",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Line(A, B)",
+      "min_args": 2,
+      "max_positional": 3,
+      "parameters": [
+        "arg1",
+        "arg2",
+        "arg3",
+        "A",
+        "B"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B"
+      ],
+      "variadic": false,
+      "input_types": {
+        "arg1": "any",
+        "arg2": "any",
+        "arg3": "any",
+        "A": "any",
+        "B": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [
+        "endpoints are distinct"
+      ],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Line",
+      "high_precision_implementation": "Line",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "lines",
+      "label_ja": "2点を通る直線",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Midpoint",
+      "aliases": [
+        "MidPoint",
+        "midpoint"
+      ],
+      "symbol_kind": "function",
+      "signature": "Midpoint(A, B)",
+      "min_args": 1,
+      "max_positional": 2,
+      "parameters": [
+        "obj1",
+        "obj2",
+        "A",
+        "B"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B"
+      ],
+      "variadic": false,
+      "input_types": {
+        "obj1": "any",
+        "obj2": "any",
+        "A": "any",
+        "B": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Midpoint",
+      "high_precision_implementation": "Midpoint",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "points",
+      "label_ja": "中点",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Mittenpunkt",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Mittenpunkt(A, B, C)",
+      "min_args": 3,
+      "max_positional": 3,
+      "parameters": [
+        "A",
+        "B",
+        "C"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Mittenpunkt",
+      "high_precision_implementation": "Mittenpunkt",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "advanced",
+      "label_ja": "ミッテン点",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "NagelPoint",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "NagelPoint(A, B, C)",
+      "min_args": 3,
+      "max_positional": 3,
+      "parameters": [
+        "A",
+        "B",
+        "C"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "NagelPoint",
+      "high_precision_implementation": "NagelPoint",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "centers",
+      "label_ja": "ナーゲル点",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "NinePointCenter",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "NinePointCenter(A, B, C)",
+      "min_args": 3,
+      "max_positional": 3,
+      "parameters": [
+        "A",
+        "B",
+        "C"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "NinePointCenter",
+      "high_precision_implementation": "NinePointCenter",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "centers",
+      "label_ja": "九点円の中心",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "NinePointCircle",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "NinePointCircle(A, B, C)",
+      "min_args": 3,
+      "max_positional": 3,
+      "parameters": [
+        "A",
+        "B",
+        "C"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "NinePointCircle",
+      "high_precision_implementation": "NinePointCircle",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "centers",
+      "label_ja": "九点円",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Not",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Not(value)",
+      "min_args": 1,
+      "max_positional": 1,
+      "parameters": [
+        "value"
+      ],
+      "allowed_keywords": [
+        "value"
+      ],
+      "variadic": false,
+      "input_types": {
+        "value": "any"
+      },
+      "output_type": "boolean",
+      "positions": [
+        "guard"
+      ],
+      "semantic_kind": "boolean",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Not",
+      "high_precision_implementation": "Not",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "runtime",
+      "label_ja": "Not",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "ObtuseTriangle",
+      "aliases": [
+        "AssumeObtuse"
+      ],
+      "symbol_kind": "function",
+      "signature": "ObtuseTriangle(A, B, C)",
+      "min_args": 3,
+      "max_positional": 4,
+      "parameters": [
+        "A",
+        "B",
+        "C",
+        "message",
+        "tol"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C",
+        "message",
+        "tol"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any",
+        "message": "any",
+        "tol": "any"
+      },
+      "output_type": "boolean",
+      "positions": [
+        "guard"
+      ],
+      "semantic_kind": "boolean",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "AssumeObtuse",
+      "high_precision_implementation": "AssumeObtuse",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "guards",
+      "label_ja": "鈍角三角形",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "OnCircle",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "OnCircle(P, omega)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "P",
+        "omega"
+      ],
+      "allowed_keywords": [
+        "P",
+        "omega"
+      ],
+      "variadic": false,
+      "input_types": {
+        "P": "any",
+        "omega": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "constraint"
+      ],
+      "semantic_kind": "residual",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "OnCircle",
+      "high_precision_implementation": "OnCircle",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "constraints",
+      "label_ja": "円周上",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "OnLine",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "OnLine(P, line)",
+      "min_args": 2,
+      "max_positional": 4,
+      "parameters": [
+        "point",
+        "obj1",
+        "obj2",
+        "ordered",
+        "P",
+        "line"
+      ],
+      "allowed_keywords": [
+        "P",
+        "line"
+      ],
+      "variadic": false,
+      "input_types": {
+        "point": "any",
+        "obj1": "any",
+        "obj2": "any",
+        "ordered": "any",
+        "P": "any",
+        "line": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "constraint"
+      ],
+      "semantic_kind": "residual",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "OnLine",
+      "high_precision_implementation": "OnLine",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "constraints",
+      "label_ja": "直線上",
+      "notes_ja": "constraintの左辺として使い、valueを0にします。",
+      "expands_to": null
+    },
+    {
+      "name": "OnSegment",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "OnSegment(P, A, B)",
+      "min_args": 3,
+      "max_positional": 3,
+      "parameters": [
+        "P",
+        "A",
+        "B"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "P"
+      ],
+      "variadic": false,
+      "input_types": {
+        "P": "any",
+        "A": "any",
+        "B": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "constraint"
+      ],
+      "semantic_kind": "residual",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "OnSegment",
+      "high_precision_implementation": "OnSegment",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "constraints",
+      "label_ja": "線分上",
+      "notes_ja": "closed segmentへの所属residualです。",
+      "expands_to": null
+    },
+    {
+      "name": "Or",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Or(value)",
+      "min_args": 1,
+      "max_positional": null,
+      "parameters": [],
+      "allowed_keywords": [],
+      "variadic": true,
+      "input_types": {},
+      "output_type": "boolean",
+      "positions": [
+        "guard"
+      ],
+      "semantic_kind": "boolean",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Or",
+      "high_precision_implementation": "Or",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "runtime",
+      "label_ja": "Or",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Orthocenter",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Orthocenter(A, B, C)",
+      "min_args": 3,
+      "max_positional": 3,
+      "parameters": [
+        "A",
+        "B",
+        "C"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [
+        "three points are non-collinear"
+      ],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Orthocenter",
+      "high_precision_implementation": "Orthocenter",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "centers",
+      "label_ja": "垂心",
+      "notes_ja": "非共線な三点が必要です。",
+      "expands_to": null
+    },
+    {
+      "name": "Parallel",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Parallel(line1, line2)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "line1",
+        "line2"
+      ],
+      "allowed_keywords": [
+        "line1",
+        "line2"
+      ],
+      "variadic": false,
+      "input_types": {
+        "line1": "any",
+        "line2": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "constraint"
+      ],
+      "semantic_kind": "residual",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Parallel",
+      "high_precision_implementation": "Parallel",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "constraints",
+      "label_ja": "平行",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "ParallelLine",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "ParallelLine(line, P)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "line",
+        "P"
+      ],
+      "allowed_keywords": [
+        "P",
+        "line"
+      ],
+      "variadic": false,
+      "input_types": {
+        "line": "any",
+        "P": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "ParallelLine",
+      "high_precision_implementation": "ParallelLine",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "relations",
+      "label_ja": "平行線",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "ParallelismMeasure",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "ParallelismMeasure(line1, line2, method='cross')",
+      "min_args": 2,
+      "max_positional": 3,
+      "parameters": [
+        "line1",
+        "line2",
+        "method"
+      ],
+      "allowed_keywords": [
+        "line1",
+        "line2",
+        "method"
+      ],
+      "variadic": false,
+      "input_types": {
+        "line1": "any",
+        "line2": "any",
+        "method": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "constraint"
+      ],
+      "semantic_kind": "residual",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "ParallelismMeasure",
+      "high_precision_implementation": "ParallelismMeasure",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "runtime",
+      "label_ja": "ParallelismMeasure",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Perimeter",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Perimeter(A, B, C)",
+      "min_args": 1,
+      "max_positional": null,
+      "parameters": [
+        "A",
+        "B",
+        "C"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C"
+      ],
+      "variadic": true,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "construction",
+        "constraint",
+        "target"
+      ],
+      "semantic_kind": "measurement",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Perimeter",
+      "high_precision_implementation": "Perimeter",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "measurements",
+      "label_ja": "周長",
+      "notes_ja": "高精度互換なのは三角形の3点形です。一般の多角形はDistanceの和を使います。",
+      "expands_to": null
+    },
+    {
+      "name": "Perpendicular",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Perpendicular(line1, line2)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "line1",
+        "line2"
+      ],
+      "allowed_keywords": [
+        "line1",
+        "line2"
+      ],
+      "variadic": false,
+      "input_types": {
+        "line1": "any",
+        "line2": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "constraint"
+      ],
+      "semantic_kind": "residual",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Perpendicular",
+      "high_precision_implementation": "Perpendicular",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "constraints",
+      "label_ja": "垂直",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "PerpendicularBisector",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "PerpendicularBisector(A, B)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "A",
+        "B"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "PerpendicularBisector",
+      "high_precision_implementation": "PerpendicularBisector",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "lines",
+      "label_ja": "垂直二等分線",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "PerpendicularLine",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "PerpendicularLine(line, P)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "line",
+        "P"
+      ],
+      "allowed_keywords": [
+        "P",
+        "line"
+      ],
+      "variadic": false,
+      "input_types": {
+        "line": "any",
+        "P": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "PerpendicularLine",
+      "high_precision_implementation": "PerpendicularLine",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "relations",
+      "label_ja": "垂線",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Point",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Point(0, 0)",
+      "min_args": 0,
+      "max_positional": 2,
+      "parameters": [
+        "x",
+        "y",
+        "arg1",
+        "arg2"
+      ],
+      "allowed_keywords": [
+        "arg1",
+        "arg2"
+      ],
+      "variadic": false,
+      "input_types": {
+        "x": "any",
+        "y": "any",
+        "arg1": "any",
+        "arg2": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Point",
+      "high_precision_implementation": "Point",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "points",
+      "label_ja": "座標で点を作る",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "PointOnArc",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "PointOnArc(arc, t)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "arc",
+        "t"
+      ],
+      "allowed_keywords": [
+        "arc",
+        "t"
+      ],
+      "variadic": false,
+      "input_types": {
+        "arc": "any",
+        "t": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [
+        "0 <= t <= 1"
+      ],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "PointOnArc",
+      "high_precision_implementation": "PointOnArc",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "points",
+      "label_ja": "円弧上の点",
+      "notes_ja": "Arcで選んだ弧を始点から終点へ補間します。",
+      "expands_to": null
+    },
+    {
+      "name": "PointOnCircle",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "PointOnCircle(omega, t)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "omega",
+        "t"
+      ],
+      "allowed_keywords": [
+        "omega",
+        "t"
+      ],
+      "variadic": false,
+      "input_types": {
+        "omega": "any",
+        "t": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [
+        "t is real"
+      ],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "PointOnCircle",
+      "high_precision_implementation": "PointOnCircle",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "points",
+      "label_ja": "円上の点",
+      "notes_ja": "tは任意の実数。配置は周期1ですが、t自体への条件や求値は周期で同一視しません。",
+      "expands_to": null
+    },
+    {
+      "name": "PointOnLine",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "PointOnLine(line, t)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "line",
+        "t"
+      ],
+      "allowed_keywords": [
+        "line",
+        "t"
+      ],
+      "variadic": false,
+      "input_types": {
+        "line": "any",
+        "t": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "PointOnLine",
+      "high_precision_implementation": "PointOnLine",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "points",
+      "label_ja": "直線上の点",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "PointOnSegment",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "PointOnSegment(A, B, t)",
+      "min_args": 3,
+      "max_positional": 3,
+      "parameters": [
+        "A",
+        "B",
+        "t"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "t"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "t": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [
+        "A != B",
+        "0 <= t <= 1"
+      ],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "PointOnSegment",
+      "high_precision_implementation": "PointOnSegment",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "points",
+      "label_ja": "線分上の点",
+      "notes_ja": "相異なる端点A,Bの線分内を補間します。端点を含み、延長にはPointOnLineを使います。",
+      "expands_to": null
+    },
+    {
+      "name": "Polar",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Polar(P, omega)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "P",
+        "omega"
+      ],
+      "allowed_keywords": [
+        "P",
+        "omega"
+      ],
+      "variadic": false,
+      "input_types": {
+        "P": "any",
+        "omega": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Polar",
+      "high_precision_implementation": "Polar",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "advanced",
+      "label_ja": "極線",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Pole",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Pole(line, omega)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "line",
+        "omega"
+      ],
+      "allowed_keywords": [
+        "line",
+        "omega"
+      ],
+      "variadic": false,
+      "input_types": {
+        "line": "any",
+        "omega": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Pole",
+      "high_precision_implementation": "Pole",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "advanced",
+      "label_ja": "極",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Polygon",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Polygon([A, B, C])",
+      "min_args": 1,
+      "max_positional": 1,
+      "parameters": [
+        "arg1"
+      ],
+      "allowed_keywords": [
+        "arg1"
+      ],
+      "variadic": false,
+      "input_types": {
+        "arg1": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Polygon",
+      "high_precision_implementation": "Polygon",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "polygons",
+      "label_ja": "多角形",
+      "notes_ja": "頂点は複数引数ではなく1個のlistとして渡します。",
+      "expands_to": null
+    },
+    {
+      "name": "PowerOfPoint",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "PowerOfPoint(P, omega)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "P",
+        "omega"
+      ],
+      "allowed_keywords": [
+        "P",
+        "omega"
+      ],
+      "variadic": false,
+      "input_types": {
+        "P": "any",
+        "omega": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "constraint"
+      ],
+      "semantic_kind": "residual",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "PowerOfPoint",
+      "high_precision_implementation": "PowerOfPoint",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "advanced",
+      "label_ja": "点の冪",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "RadicalAxis",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "RadicalAxis(circle1, circle2)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "circle1",
+        "circle2"
+      ],
+      "allowed_keywords": [
+        "circle1",
+        "circle2"
+      ],
+      "variadic": false,
+      "input_types": {
+        "circle1": "any",
+        "circle2": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "RadicalAxis",
+      "high_precision_implementation": "RadicalAxis",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "advanced",
+      "label_ja": "根軸",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Radius",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Radius(omega)",
+      "min_args": 1,
+      "max_positional": 1,
+      "parameters": [
+        "omega"
+      ],
+      "allowed_keywords": [
+        "omega"
+      ],
+      "variadic": false,
+      "input_types": {
+        "omega": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "construction",
+        "constraint",
+        "target"
+      ],
+      "semantic_kind": "measurement",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Radius",
+      "high_precision_implementation": "Radius",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "measurements",
+      "label_ja": "半径",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Ratio",
+      "aliases": [],
+      "symbol_kind": "macro",
+      "signature": "Distance(A, B) / Distance(C, D)",
+      "min_args": 4,
+      "max_positional": 4,
+      "parameters": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any",
+        "D": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": null,
+      "high_precision_implementation": null,
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "measurements",
+      "label_ja": "2つの長さの比",
+      "notes_ja": "4点を順に選び、AB/CDを測定値として作成します。",
+      "expands_to": "Distance(A, B) / Distance(C, D)"
+    },
+    {
+      "name": "Ray",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Ray(A, B)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "A",
+        "B"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [
+        "endpoints are distinct"
+      ],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Ray",
+      "high_precision_implementation": "Ray",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "lines",
+      "label_ja": "半直線",
+      "notes_ja": "AとBは異なる点である必要があります。",
+      "expands_to": null
+    },
+    {
+      "name": "Reflect",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Reflect(P, line)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "P",
+        "line"
+      ],
+      "allowed_keywords": [
+        "P",
+        "line"
+      ],
+      "variadic": false,
+      "input_types": {
+        "P": "any",
+        "line": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Reflect",
+      "high_precision_implementation": "Reflect",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "transforms",
+      "label_ja": "鏡映",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "RegularPolygon",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "RegularPolygon(A, B, 3, ccw=True)",
+      "min_args": 3,
+      "max_positional": 4,
+      "parameters": [
+        "p1",
+        "p2",
+        "n",
+        "ccw",
+        "A",
+        "B",
+        "arg3"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "arg3",
+        "ccw"
+      ],
+      "variadic": false,
+      "input_types": {
+        "p1": "any",
+        "p2": "any",
+        "n": "any",
+        "ccw": "any",
+        "A": "any",
+        "B": "any",
+        "arg3": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "RegularPolygon",
+      "high_precision_implementation": "RegularPolygon",
+      "branches": [
+        "ccw",
+        "clockwise"
+      ],
+      "authoring_status": "advanced",
+      "category": "polygons",
+      "label_ja": "正多角形",
+      "notes_ja": "ccwは鏡映branchです。sourceが向きを指定しない場合に一方へ固定してはいけません。",
+      "expands_to": null
+    },
+    {
+      "name": "RightTriangle",
+      "aliases": [
+        "AssumeRight"
+      ],
+      "symbol_kind": "function",
+      "signature": "RightTriangle(A, B, C)",
+      "min_args": 3,
+      "max_positional": 4,
+      "parameters": [
+        "A",
+        "B",
+        "C",
+        "message",
+        "tol"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C",
+        "message",
+        "tol"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any",
+        "message": "any",
+        "tol": "any"
+      },
+      "output_type": "boolean",
+      "positions": [
+        "guard"
+      ],
+      "semantic_kind": "boolean",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "AssumeRight",
+      "high_precision_implementation": "AssumeRight",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "guards",
+      "label_ja": "直角三角形",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Rotate",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Rotate(P, angle, center=O)",
+      "min_args": 2,
+      "max_positional": 3,
+      "parameters": [
+        "point",
+        "angle",
+        "center",
+        "P"
+      ],
+      "allowed_keywords": [
+        "P",
+        "angle",
+        "center"
+      ],
+      "variadic": false,
+      "input_types": {
+        "point": "any",
+        "angle": "any",
+        "center": "any",
+        "P": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Rotate",
+      "high_precision_implementation": "Rotate",
+      "branches": [],
+      "authoring_status": "legacy_read_only",
+      "category": "transforms",
+      "label_ja": "回転（旧形式）",
+      "notes_ja": "通常精度と高精度で引数互換問題があるため、新規問題では明示座標式を使います。",
+      "expands_to": null
+    },
+    {
+      "name": "Segment",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Segment(A, B)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "A",
+        "B"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [
+        "endpoints are distinct"
+      ],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Segment",
+      "high_precision_implementation": "Segment",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "lines",
+      "label_ja": "線分",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "SimplePolygon",
+      "aliases": [
+        "AssumeNoSelfIntersecting"
+      ],
+      "symbol_kind": "function",
+      "signature": "SimplePolygon([A, B, C, D])",
+      "min_args": 1,
+      "max_positional": 2,
+      "parameters": [
+        "polygon",
+        "message",
+        "tol"
+      ],
+      "allowed_keywords": [
+        "message",
+        "polygon",
+        "tol"
+      ],
+      "variadic": false,
+      "input_types": {
+        "polygon": "any",
+        "message": "any",
+        "tol": "any"
+      },
+      "output_type": "boolean",
+      "positions": [
+        "guard"
+      ],
+      "semantic_kind": "boolean",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "AssumeNoSelfIntersecting",
+      "high_precision_implementation": "AssumeNoSelfIntersecting",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "guards",
+      "label_ja": "自己交差しない",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Slope",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Slope(first, second)",
+      "min_args": 1,
+      "max_positional": 2,
+      "parameters": [
+        "obj1",
+        "obj2",
+        "first",
+        "second"
+      ],
+      "allowed_keywords": [
+        "first",
+        "second"
+      ],
+      "variadic": false,
+      "input_types": {
+        "obj1": "any",
+        "obj2": "any",
+        "first": "any",
+        "second": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "construction",
+        "constraint",
+        "target"
+      ],
+      "semantic_kind": "measurement",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Slope",
+      "high_precision_implementation": "Slope",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "runtime",
+      "label_ja": "Slope",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "SpiekerCenter",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "SpiekerCenter(A, B, C)",
+      "min_args": 3,
+      "max_positional": 3,
+      "parameters": [
+        "A",
+        "B",
+        "C"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "SpiekerCenter",
+      "high_precision_implementation": "SpiekerCenter",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "advanced",
+      "label_ja": "シュピーカー中心",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "SymmedianPoint",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "SymmedianPoint(A, B, C)",
+      "min_args": 3,
+      "max_positional": 3,
+      "parameters": [
+        "A",
+        "B",
+        "C"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "SymmedianPoint",
+      "high_precision_implementation": "SymmedianPoint",
+      "branches": [],
+      "authoring_status": "advanced",
+      "category": "centers",
+      "label_ja": "類似重心",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Tangent",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Tangent(P, omega, use_first=True)",
+      "min_args": 2,
+      "max_positional": 3,
+      "parameters": [
+        "point",
+        "circle",
+        "use_first",
+        "P",
+        "omega"
+      ],
+      "allowed_keywords": [
+        "P",
+        "omega",
+        "use_first"
+      ],
+      "variadic": false,
+      "input_types": {
+        "point": "any",
+        "circle": "any",
+        "use_first": "any",
+        "P": "any",
+        "omega": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [
+        "point is on or outside a positive-radius circle"
+      ],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Tangent",
+      "high_precision_implementation": "Tangent",
+      "branches": [
+        "first",
+        "second",
+        "on_circle_unique"
+      ],
+      "authoring_status": "supported",
+      "category": "constructions",
+      "label_ja": "Tangent",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "TangentAtPoint",
+      "aliases": [],
+      "symbol_kind": "macro",
+      "signature": "Polar(P, omega)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "P",
+        "omega"
+      ],
+      "allowed_keywords": [
+        "P",
+        "omega"
+      ],
+      "variadic": false,
+      "input_types": {
+        "P": "any",
+        "omega": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": null,
+      "high_precision_implementation": null,
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "relations",
+      "label_ja": "接点における接線",
+      "notes_ja": "円周上の点Pにおける接線をPolar(P, omega)として作図します。Pが円周上にない場合は作図しません。",
+      "expands_to": "Polar"
+    },
+    {
+      "name": "TangentLine",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "TangentLine(P, omega, use_first=True)",
+      "min_args": 2,
+      "max_positional": 3,
+      "parameters": [
+        "point",
+        "circle",
+        "use_first",
+        "P",
+        "omega"
+      ],
+      "allowed_keywords": [
+        "P",
+        "omega",
+        "use_first"
+      ],
+      "variadic": false,
+      "input_types": {
+        "point": "any",
+        "circle": "any",
+        "use_first": "any",
+        "P": "any",
+        "omega": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [
+        "point is on or outside a positive-radius circle"
+      ],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "TangentLine",
+      "high_precision_implementation": "TangentLine",
+      "branches": [
+        "first",
+        "second",
+        "on_circle_unique"
+      ],
+      "authoring_status": "legacy_read_only",
+      "category": "relations",
+      "label_ja": "接線（旧形式）",
+      "notes_ja": "通常精度と高精度で互換問題があるため、接線はlineのparameterizationとIsTangentで表します。",
+      "expands_to": null
+    },
+    {
+      "name": "Triangle",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Triangle(points)",
+      "min_args": 1,
+      "max_positional": null,
+      "parameters": [
+        "points"
+      ],
+      "allowed_keywords": [
+        "points"
+      ],
+      "variadic": true,
+      "input_types": {
+        "points": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [
+        "three points are non-collinear"
+      ],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Triangle",
+      "high_precision_implementation": "Triangle",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "runtime",
+      "label_ja": "Triangle",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "TriangleCenter",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "TriangleCenter(A, B, C, n)",
+      "min_args": 4,
+      "max_positional": 4,
+      "parameters": [
+        "A",
+        "B",
+        "C",
+        "n"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B",
+        "C",
+        "n"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any",
+        "C": "any",
+        "n": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "TriangleCenter",
+      "high_precision_implementation": "TriangleCenter",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "runtime",
+      "label_ja": "TriangleCenter",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "Vector",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "Vector(A, B)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "A",
+        "B"
+      ],
+      "allowed_keywords": [
+        "A",
+        "B"
+      ],
+      "variadic": false,
+      "input_types": {
+        "A": "any",
+        "B": "any"
+      },
+      "output_type": "object",
+      "positions": [
+        "construction"
+      ],
+      "semantic_kind": "object",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "Vector",
+      "high_precision_implementation": "Vector",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "lines",
+      "label_ja": "ベクトル",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "abs",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "abs(value)",
+      "min_args": 1,
+      "max_positional": 1,
+      "parameters": [
+        "value"
+      ],
+      "allowed_keywords": [
+        "value"
+      ],
+      "variadic": false,
+      "input_types": {
+        "value": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "construction",
+        "constraint",
+        "target"
+      ],
+      "semantic_kind": "measurement",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "abs",
+      "high_precision_implementation": "abs",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "runtime",
+      "label_ja": "abs",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "acos",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "acos(value)",
+      "min_args": 1,
+      "max_positional": 1,
+      "parameters": [
+        "value"
+      ],
+      "allowed_keywords": [
+        "value"
+      ],
+      "variadic": false,
+      "input_types": {
+        "value": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "construction",
+        "constraint",
+        "target"
+      ],
+      "semantic_kind": "measurement",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "acos",
+      "high_precision_implementation": "acos",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "runtime",
+      "label_ja": "acos",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "asin",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "asin(value)",
+      "min_args": 1,
+      "max_positional": 1,
+      "parameters": [
+        "value"
+      ],
+      "allowed_keywords": [
+        "value"
+      ],
+      "variadic": false,
+      "input_types": {
+        "value": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "construction",
+        "constraint",
+        "target"
+      ],
+      "semantic_kind": "measurement",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "asin",
+      "high_precision_implementation": "asin",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "runtime",
+      "label_ja": "asin",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "atan",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "atan(value)",
+      "min_args": 1,
+      "max_positional": 1,
+      "parameters": [
+        "value"
+      ],
+      "allowed_keywords": [
+        "value"
+      ],
+      "variadic": false,
+      "input_types": {
+        "value": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "construction",
+        "constraint",
+        "target"
+      ],
+      "semantic_kind": "measurement",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "atan",
+      "high_precision_implementation": "atan",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "runtime",
+      "label_ja": "atan",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "atan2",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "atan2(y, x)",
+      "min_args": 2,
+      "max_positional": 2,
+      "parameters": [
+        "y",
+        "x"
+      ],
+      "allowed_keywords": [
+        "x",
+        "y"
+      ],
+      "variadic": false,
+      "input_types": {
+        "y": "any",
+        "x": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "construction",
+        "constraint",
+        "target"
+      ],
+      "semantic_kind": "measurement",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "atan2",
+      "high_precision_implementation": "atan2",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "runtime",
+      "label_ja": "atan2",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "cos",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "cos(value)",
+      "min_args": 1,
+      "max_positional": 1,
+      "parameters": [
+        "value"
+      ],
+      "allowed_keywords": [
+        "value"
+      ],
+      "variadic": false,
+      "input_types": {
+        "value": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "construction",
+        "constraint",
+        "target"
+      ],
+      "semantic_kind": "measurement",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "cos",
+      "high_precision_implementation": "cos",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "runtime",
+      "label_ja": "cos",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "max",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "max(value)",
+      "min_args": 1,
+      "max_positional": null,
+      "parameters": [],
+      "allowed_keywords": [],
+      "variadic": true,
+      "input_types": {},
+      "output_type": "scalar",
+      "positions": [
+        "construction",
+        "constraint",
+        "target"
+      ],
+      "semantic_kind": "measurement",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "max",
+      "high_precision_implementation": "max",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "runtime",
+      "label_ja": "max",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "min",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "min(value)",
+      "min_args": 1,
+      "max_positional": null,
+      "parameters": [],
+      "allowed_keywords": [],
+      "variadic": true,
+      "input_types": {},
+      "output_type": "scalar",
+      "positions": [
+        "construction",
+        "constraint",
+        "target"
+      ],
+      "semantic_kind": "measurement",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "min",
+      "high_precision_implementation": "min",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "runtime",
+      "label_ja": "min",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "sin",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "sin(value)",
+      "min_args": 1,
+      "max_positional": 1,
+      "parameters": [
+        "value"
+      ],
+      "allowed_keywords": [
+        "value"
+      ],
+      "variadic": false,
+      "input_types": {
+        "value": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "construction",
+        "constraint",
+        "target"
+      ],
+      "semantic_kind": "measurement",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "sin",
+      "high_precision_implementation": "sin",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "runtime",
+      "label_ja": "sin",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "sqrt",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "sqrt(value, evaluate=True)",
+      "min_args": 1,
+      "max_positional": 2,
+      "parameters": [
+        "value",
+        "evaluate"
+      ],
+      "allowed_keywords": [
+        "evaluate",
+        "value"
+      ],
+      "variadic": false,
+      "input_types": {
+        "value": "any",
+        "evaluate": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "construction",
+        "constraint",
+        "target"
+      ],
+      "semantic_kind": "measurement",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "sqrt",
+      "high_precision_implementation": "sqrt",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "runtime",
+      "label_ja": "sqrt",
+      "notes_ja": "",
+      "expands_to": null
+    },
+    {
+      "name": "tan",
+      "aliases": [],
+      "symbol_kind": "function",
+      "signature": "tan(value)",
+      "min_args": 1,
+      "max_positional": 1,
+      "parameters": [
+        "value"
+      ],
+      "allowed_keywords": [
+        "value"
+      ],
+      "variadic": false,
+      "input_types": {
+        "value": "any"
+      },
+      "output_type": "scalar",
+      "positions": [
+        "construction",
+        "constraint",
+        "target"
+      ],
+      "semantic_kind": "measurement",
+      "domain": [],
+      "error_codes": [
+        "geometry_domain_error",
+        "no_solution",
+        "ambiguous_result",
+        "infinite_solutions"
+      ],
+      "standard_implementation": "tan",
+      "high_precision_implementation": "tan",
+      "branches": [],
+      "authoring_status": "supported",
+      "category": "runtime",
+      "label_ja": "tan",
+      "notes_ja": "",
+      "expands_to": null
+    }
+  ],
+  "internal_symbols": [
+    "Assume",
+    "AssumeAcute",
+    "AssumeCollinear",
+    "AssumeConvex",
+    "AssumeCyclic",
+    "AssumeEq",
+    "AssumeGe",
+    "AssumeGt",
+    "AssumeLe",
+    "AssumeLt",
+    "AssumeNe",
+    "AssumeNoSelfIntersecting",
+    "AssumeObtuse",
+    "AssumeParallel",
+    "AssumePerpendicular",
+    "AssumeRight",
+    "AssumptionError",
+    "BackendType",
+    "GeometryRuntime",
+    "MP_*",
+    "MultiFunctionWrapper",
+    "evalf",
+    "fast_mode",
+    "float",
+    "geometry_symbol",
+    "get_backend",
+    "get_function",
+    "get_precision",
+    "high_precision_mode",
+    "int",
+    "list_functions",
+    "use_runtime"
+  ]
+}

@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+import time
+from dataclasses import dataclass, replace
 
-from geosolver.engine.standard.interpreter.compile.infer_bounds import infer_bound_expansion_locks
 from geosolver.engine.standard.contracts.candidate_record import FloatCandidate, SearchBatchResult
 from geosolver.engine.standard.contracts.evaluator_port import EvaluatorPort
 from geosolver.engine.standard.contracts.global_search_port import GlobalSearchPort
 from geosolver.engine.standard.contracts.problem_bundle import ProblemBundle
+from geosolver.engine.standard.interpreter.compile.infer_bounds import infer_bound_expansion_locks
 
 from .build_guard_feasible_ledger import build_guard_feasible_ledger
 from .deduplicate_search_candidates import deduplicate_search_candidates
@@ -71,7 +72,6 @@ class NomadBackend(GlobalSearchPort):
             infer_bound_expansion_locks(
                 bundle.spec,
                 bundle.var_names,
-                context=dict(bundle.base_context),
             )
         )
         expanded_bounds = _expand_bounds(
@@ -85,17 +85,38 @@ class NomadBackend(GlobalSearchPort):
         all_records: list[FloatCandidate] = []
         total_evals = 0
         total_failures = 0
-        for index, seed in enumerate(self.config.seed_values):
+        search_deadline = (
+            None
+            if self.config.max_time_sec is None
+            else time.monotonic() + max(0.0, float(self.config.max_time_sec))
+        )
+        seed_values = tuple(self.config.seed_values)
+        for index, seed in enumerate(seed_values):
+            remaining_seed_count = len(seed_values) - index
+            seed_config = self.config
+            if search_deadline is not None:
+                remaining = max(0.0, search_deadline - time.monotonic())
+                if remaining <= 0.0:
+                    break
+                seed_config = replace(
+                    self.config,
+                    max_time_sec=remaining / max(1, remaining_seed_count),
+                )
             adapter = NomadBlackboxAdapter(
                 evaluator=evaluator,
-                config=self.config,
+                config=seed_config,
                 origin_seed=int(seed),
                 origin_start_point_index=index % len(self.start_points),
                 constraint_scales=self.constraint_scales,
+                deadline_monotonic=(
+                    None
+                    if seed_config.max_time_sec is None
+                    else time.monotonic() + seed_config.max_time_sec
+                ),
             )
             py_nomad.setSeed(int(seed))
             start = self.start_points[index % len(self.start_points)]
-            params = self.config.build_params(
+            params = seed_config.build_params(
                 dimension=len(bounds),
                 seed=int(seed),
                 search_mode=search_mode,
@@ -109,7 +130,9 @@ class NomadBackend(GlobalSearchPort):
             )
             total_evals += adapter.evaluation_count
             total_failures += adapter.failure_count
-            run_top = sorted(adapter.records, key=lambda item: item.score)[: self.config.keep_per_run]
+            run_top = sorted(adapter.records, key=lambda item: item.score)[
+                : self.config.keep_per_run
+            ]
             all_candidates.extend(run_top)
             all_records.extend(adapter.records)
         prefix_count = (
@@ -140,4 +163,3 @@ class NomadBackend(GlobalSearchPort):
             all_records=tuple(all_records),
             guard_feasible_ledger=guard_feasible_ledger,
         )
-

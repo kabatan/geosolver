@@ -55,4 +55,3 @@ class EvaluatorPort(Protocol):
         include_margins: bool = True,
     ) -> HardFeasibilitySnapshot:
         """Evaluate hard-feasibility checks in high-precision mode."""
-

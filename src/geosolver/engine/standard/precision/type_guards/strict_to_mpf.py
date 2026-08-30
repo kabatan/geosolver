@@ -15,8 +15,8 @@ except Exception:  # pragma: no cover
 
 try:
     from sympy import Float as _SympyFloat
-    from sympy import Rational as _SympyRational
     from sympy import Integer as _SympyInteger
+    from sympy import Rational as _SympyRational
 except Exception:  # pragma: no cover
     _SympyFloat = ()
     _SympyRational = ()
@@ -50,9 +50,11 @@ def strict_to_mpf(value: object, *, context: str) -> mpf:
         rational_value = value
         return mp.mpf(rational_value)
 
-    if isinstance(value, float) or (
-        _NUMPY_FLOATING_TYPES and isinstance(value, _NUMPY_FLOATING_TYPES)
-    ) or is_sympy_float:
+    if (
+        isinstance(value, float)
+        or (_NUMPY_FLOATING_TYPES and isinstance(value, _NUMPY_FLOATING_TYPES))
+        or is_sympy_float
+    ):
         raise HighPrecisionContaminationError(
             f"float-like value is forbidden in high precision path ({context}): {value}"
         )

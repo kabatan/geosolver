@@ -6,7 +6,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from mpmath import cos as mp_cos, sin as mp_sin
+from mpmath import cos as mp_cos
+from mpmath import sin as mp_sin
 
 from geosolver.geometry.mp.mp_conversion import to_mpf
 
@@ -14,25 +15,25 @@ if TYPE_CHECKING:
     from geosolver.geometry.mp.mp_impl import MPLine, MPPoint
 
 
-def _mp_point_class() -> type["MPPoint"]:
+def _mp_point_class() -> type[MPPoint]:
     from geosolver.geometry.mp.mp_impl import MPPoint
 
     return MPPoint
 
 
-def _mp_line_class() -> type["MPLine"]:
+def _mp_line_class() -> type[MPLine]:
     from geosolver.geometry.mp.mp_impl import MPLine
 
     return MPLine
 
 
-def mp_closest_point(point: "MPPoint", line: "MPLine") -> "MPPoint":
+def mp_closest_point(point: MPPoint, line: MPLine) -> MPPoint:
     t = -(line.a * point.x + line.b * point.y + line.c)
     point_cls = _mp_point_class()
     return point_cls(point.x + t * line.a, point.y + t * line.b)
 
 
-def mp_rotate(point: "MPPoint", center: "MPPoint", angle) -> "MPPoint":
+def mp_rotate(point: MPPoint, center: MPPoint, angle) -> MPPoint:
     angle_mpf = to_mpf(angle)
     dx = point.x - center.x
     dy = point.y - center.y
@@ -46,7 +47,7 @@ def mp_rotate(point: "MPPoint", center: "MPPoint", angle) -> "MPPoint":
     return point_cls(new_x, new_y)
 
 
-def mp_reflect(point: "MPPoint", mirror) -> "MPPoint":
+def mp_reflect(point: MPPoint, mirror) -> MPPoint:
     line_cls = _mp_line_class()
     point_cls = _mp_point_class()
 

@@ -2,14 +2,13 @@
 
 from __future__ import annotations
 
-from typing import Any, List, Optional
+from typing import Any
 
 from sympy import cos, pi, sin, sqrt
 
-from geosolver.errors import CoincidentPointsError
+from geosolver.errors import CoincidentPointsError, GeometryDomainError, NoIntersectionError
 from geosolver.geometry.entities.base import Circle, Line, Point
 from geosolver.geometry.entities.polygon import Polygon
-from geosolver.geometry.registry import geometry_symbol
 from geosolver.geometry.operations.constructions_extra_backends import (
     circle_through_point_mpmath_impl,
     circle_through_point_numpy_impl,
@@ -24,6 +23,7 @@ from geosolver.geometry.operations.constructions_extra_backends import (
     tangent_mpmath_impl,
     tangent_numpy_impl,
 )
+from geosolver.geometry.registry import geometry_symbol
 
 
 @geometry_symbol("PointOnLine", category="parametric")
@@ -37,6 +37,10 @@ def PointOnLine(line: Line, t: Any) -> Point:
 
 @geometry_symbol("PointOnSegment", category="parametric")
 def PointOnSegment(p1: Point, p2: Point, t: Any) -> Point:
+    if p1.x == p2.x and p1.y == p2.y:
+        raise CoincidentPointsError("segment endpoints must be distinct")
+    if not 0 <= t <= 1:
+        raise GeometryDomainError("segment parameter must be in [0, 1]")
     return Point(p1.x + t * (p2.x - p1.x), p1.y + t * (p2.y - p1.y))
 
 
@@ -80,27 +84,30 @@ def _PointOnCircle_mpmath(circle, t):
 
 
 @geometry_symbol("Tangent", category="constructions")
-def Tangent(point: Point, circle: Circle, use_first: bool = True) -> Optional[Line]:
-    d2 = (point.x - circle.center.x) ** 2 + (point.y - circle.center.y) ** 2
+def Tangent(point: Point, circle: Circle, use_first: bool = True) -> Line | None:
+    vx = point.x - circle.center.x
+    vy = point.y - circle.center.y
+    d2 = vx**2 + vy**2
     r2 = circle.radius**2
-    d = sqrt(d2)
-    L = sqrt(d2 - r2)
-    sin_a = circle.radius / d
-    cos_a = L / d
-    ux = (circle.center.x - point.x) / d
-    uy = (circle.center.y - point.y) / d
-    if use_first:
-        rx = ux * cos_a - uy * sin_a
-        ry = ux * sin_a + uy * cos_a
-    else:
-        rx = ux * cos_a + uy * sin_a
-        ry = -ux * sin_a + uy * cos_a
-    tx = point.x + L * rx
-    ty = point.y + L * ry
-    a = point.y - ty
-    b = tx - point.x
-    c = -a * point.x - b * point.y
-    return Line(a, b, c)
+    difference = d2 - r2
+    sign = getattr(difference, "is_positive", None)
+    if difference == 0 or getattr(difference, "is_zero", None) is True:
+        return Line(vx, vy, -(vx * point.x + vy * point.y))
+    if getattr(difference, "is_negative", None) is True:
+        raise NoIntersectionError("an interior point has no real tangent line")
+    if sign is None and getattr(difference, "is_number", False) and float(difference.evalf(50)) < 0:
+        raise NoIntersectionError("an interior point has no real tangent line")
+    if d2 == 0:
+        raise GeometryDomainError("tangent is undefined at the circle center")
+    offset = circle.radius * sqrt(difference) / d2
+    base_x = circle.center.x + r2 * vx / d2
+    base_y = circle.center.y + r2 * vy / d2
+    direction = 1 if use_first else -1
+    tangent_point = Point(
+        base_x + direction * offset * (-vy),
+        base_y + direction * offset * vx,
+    )
+    return Line(point, tangent_point)
 
 
 @Tangent.set_numpy
@@ -135,7 +142,7 @@ def _get_raise_on_degenerate_flag() -> bool:
 
 
 @geometry_symbol("CircleThroughThreePoints", category="constructions")
-def CircleThroughThreePoints(p1: Point, p2: Point, p3: Point) -> Optional[Circle]:
+def CircleThroughThreePoints(p1: Point, p2: Point, p3: Point) -> Circle | None:
     x1, y1 = p1.x, p1.y
     x2, y2 = p2.x, p2.y
     x3, y3 = p3.x, p3.y
@@ -145,14 +152,10 @@ def CircleThroughThreePoints(p1: Point, p2: Point, p3: Point) -> Optional[Circle
             raise CoincidentPointsError("Points are collinear")
         return None
     Ux = (
-        (x1**2 + y1**2) * (y2 - y3)
-        + (x2**2 + y2**2) * (y3 - y1)
-        + (x3**2 + y3**2) * (y1 - y2)
+        (x1**2 + y1**2) * (y2 - y3) + (x2**2 + y2**2) * (y3 - y1) + (x3**2 + y3**2) * (y1 - y2)
     ) / D
     Uy = (
-        (x1**2 + y1**2) * (x3 - x2)
-        + (x2**2 + y2**2) * (x1 - x3)
-        + (x3**2 + y3**2) * (x2 - x1)
+        (x1**2 + y1**2) * (x3 - x2) + (x2**2 + y2**2) * (x1 - x3) + (x3**2 + y3**2) * (x2 - x1)
     ) / D
     center = Point(Ux, Uy)
     return Circle(center, center.distance_to(p1))
@@ -218,6 +221,11 @@ def _RegularPolygon_mpmath(p1, p2, n, ccw=True):
     from mpmath import cos, pi, sin
 
     from geosolver.geometry.mp.mp_impl import MPPoint
+    from geosolver.geometry.mp.mp_polygon import MPPolygon
+
+    if int(n) != n or n < 3 or p1 == p2:
+        raise ValueError("RegularPolygon requires distinct vertices and integer n >= 3")
+    n = int(n)
 
     vertices = [p1, p2]
     angle_step = 2 * pi / n
@@ -236,11 +244,13 @@ def _RegularPolygon_mpmath(p1, p2, n, ccw=True):
         vertices.append(next_p)
         prev_p = current_p
         current_p = next_p
-    return vertices
+    return MPPolygon(vertices)
 
 
 @geometry_symbol("InscribedPolygon", category="constructions")
 def InscribedPolygon(circle: Circle, *t_params) -> Polygon:
+    if not t_params or any(not 0 < t < 1 for t in t_params):
+        raise GeometryDomainError("inscribed polygon parameters must be in (0, 1)")
     O = circle.center
     r = circle.radius
     P1 = Point(O.x, O.y + r)
@@ -259,6 +269,9 @@ def InscribedPolygon(circle: Circle, *t_params) -> Polygon:
 def _InscribedPolygon_numpy(circle, *t_params):
     import numpy as np
 
+    if not t_params or any(not 0 < t < 1 for t in t_params):
+        raise GeometryDomainError("inscribed polygon parameters must be in (0, 1)")
+
     cx, cy, r = circle
     vertices = [[cx, cy + r]]
     theta_start = np.pi / 2
@@ -274,12 +287,13 @@ def _InscribedPolygon_numpy(circle, *t_params):
 @InscribedPolygon.set_mpmath
 def _InscribedPolygon_mpmath(circle, *t_params):
     from geosolver.geometry.mp.mp_impl import mp_inscribed_polygon_vertices
+    from geosolver.geometry.mp.mp_polygon import MPPolygon
 
-    return mp_inscribed_polygon_vertices(circle, *t_params)
+    return MPPolygon(mp_inscribed_polygon_vertices(circle, *t_params))
 
 
 @geometry_symbol("InscribedPolygonVertices", category="constructions")
-def InscribedPolygonVertices(circle: Circle, *t_params) -> List[Point]:
+def InscribedPolygonVertices(circle: Circle, *t_params) -> list[Point]:
     return InscribedPolygon(circle, *t_params).vertices
 
 
@@ -290,4 +304,4 @@ def _InscribedPolygonVertices_numpy(circle, *t_params):
 
 @InscribedPolygonVertices.set_mpmath
 def _InscribedPolygonVertices_mpmath(circle, *t_params):
-    return _InscribedPolygon_mpmath(circle, *t_params)
+    return _InscribedPolygon_mpmath(circle, *t_params).vertices

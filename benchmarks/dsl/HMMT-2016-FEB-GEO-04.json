@@ -1,0 +1,82 @@
+{
+  "id": "HMMT-2016-FEB-GEO-04",
+  "variables": [
+    "t"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(3, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(4, 4 * sqrt(3))"
+    },
+    {
+      "name": "M",
+      "expression": "Midpoint(A, B)"
+    },
+    {
+      "name": "N",
+      "expression": "Midpoint(A, C)"
+    },
+    {
+      "name": "T",
+      "expression": "Point(3 + t, 4 * sqrt(3) * t)"
+    },
+    {
+      "name": "Gamma1",
+      "expression": "Circumcircle(B, A, T)"
+    },
+    {
+      "name": "Gamma2",
+      "expression": "Circumcircle(M, A, N)"
+    },
+    {
+      "name": "D",
+      "expression": "Intersect(Gamma1, Gamma2, exclude=A)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": 8
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": 7
+    },
+    {
+      "left": "Distance(A, T)",
+      "operator": "=",
+      "right": "Distance(T, C)"
+    },
+    {
+      "left": "t",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "t",
+      "operator": "<",
+      "right": "1"
+    },
+    {
+      "left": "Distance(D, C)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "Distance(D, C)"
+}

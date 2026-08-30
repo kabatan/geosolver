@@ -20,4 +20,3 @@ class LocalRefinerPort(Protocol):
         candidates: tuple[FloatCandidate, ...],
     ) -> RefinementBatchResult:
         """Refine float candidates into high-precision candidates."""
-

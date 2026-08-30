@@ -4,18 +4,7 @@ from __future__ import annotations
 
 from geosolver.engine.standard.contracts.candidate_record import FloatCandidate
 
-
-def _normalized_distance(
-    x: tuple[float, ...],
-    y: tuple[float, ...],
-    bounds: list[tuple[float, float]],
-) -> float:
-    total = 0.0
-    for index, (low, high) in enumerate(bounds):
-        width = max(high - low, 1e-12)
-        diff = (x[index] - y[index]) / width
-        total += diff * diff
-    return total ** 0.5
+from .coordinate_distance import normalized_distance
 
 
 def _is_duplicate_candidate(
@@ -26,7 +15,8 @@ def _is_duplicate_candidate(
     dedup_distance_threshold: float,
 ) -> bool:
     return any(
-        _normalized_distance(candidate.x_float, existing.x_float, bounds) < dedup_distance_threshold
+        normalized_distance(first=candidate.x_float, second=existing.x_float, bounds=bounds)
+        < dedup_distance_threshold
         for existing in selected
     )
 
@@ -103,4 +93,3 @@ def deduplicate_search_candidates(
         if len(selected) >= keep_count:
             break
     return tuple(selected)
-

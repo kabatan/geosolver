@@ -22,4 +22,3 @@ class GlobalSearchPort(Protocol):
         guard_feasible_prefix_count: int | None = None,
     ) -> SearchBatchResult:
         """Run global search and return float candidates."""
-

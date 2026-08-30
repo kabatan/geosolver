@@ -3,13 +3,15 @@
 import functools
 from typing import Any
 
-import geosolver.geometry.mp.mp_api as mp_api
 from mpmath import mp
-from geosolver.engine.standard.interpreter.context.geometry import _get_geometry_context
+
+import geosolver.geometry.mp.mp_api as mp_api
 from geosolver.engine.standard.interpreter.context.aliases import apply_geometry_aliases
+from geosolver.engine.standard.interpreter.context.geometry import _get_geometry_context
 from geosolver.engine.standard.precision.type_guards.ensure_mpf import ensure_mpf
 from geosolver.engine.standard.precision.type_guards.strict_to_mpf import strict_to_mpf
 from geosolver.geometry.registry import MultiFunctionWrapper
+from geosolver.problem.dsl_spec import public_symbol_names
 
 try:
     import numpy as np
@@ -27,7 +29,9 @@ class _HPFloatReturnTracer:
         self._symbols: set[str] = set()
 
     def record(self, *, symbol: str, value: object) -> None:
-        if isinstance(value, float) or (_NUMPY_FLOATING_TYPES and isinstance(value, _NUMPY_FLOATING_TYPES)):
+        if isinstance(value, float) or (
+            _NUMPY_FLOATING_TYPES and isinstance(value, _NUMPY_FLOATING_TYPES)
+        ):
             self._symbols.add(symbol)
 
     def snapshot(self) -> list[str]:
@@ -85,8 +89,12 @@ def _validate_line_backend_consistency(context: dict[str, Any]) -> None:
     parallel_fn = context.get("Parallel")
     perpendicular_fn = context.get("Perpendicular")
 
-    if not all(callable(entry) for entry in (point_ctor, line_ctor, parallel_fn, perpendicular_fn)):
-        raise RuntimeError("HP context backend mismatch: Point/Line/Parallel/Perpendicular callable set is incomplete")
+    required = (point_ctor, line_ctor, parallel_fn, perpendicular_fn)
+    if not all(callable(entry) for entry in required):
+        raise RuntimeError(
+            "HP context backend mismatch: "
+            "Point/Line/Parallel/Perpendicular callable set is incomplete"
+        )
 
     try:
         p1 = point_ctor(0, 0)
@@ -97,7 +105,9 @@ def _validate_line_backend_consistency(context: dict[str, Any]) -> None:
         parallel_fn(l1, l2)
         perpendicular_fn(l1, l2)
     except Exception as exc:
-        raise RuntimeError(f"HP context backend mismatch for Line/Parallel/Perpendicular: {exc}") from exc
+        raise RuntimeError(
+            f"HP context backend mismatch for Line/Parallel/Perpendicular: {exc}"
+        ) from exc
 
 
 def _validate_symbol_parity(std_context: dict[str, Any], hp_context: dict[str, Any]) -> None:
@@ -118,8 +128,7 @@ def _validate_symbol_parity(std_context: dict[str, Any], hp_context: dict[str, A
     if missing_symbols:
         missing_symbols.sort()
         raise RuntimeError(
-            "HP context symbol parity violation: missing symbols "
-            + ", ".join(missing_symbols)
+            "HP context symbol parity violation: missing symbols " + ", ".join(missing_symbols)
         )
     if non_callable_symbols:
         non_callable_symbols.sort()
@@ -138,34 +147,35 @@ def _build_hp_context_dict() -> dict[str, Any]:
             context[name] = value.mp
         else:
             context[name] = value
-    context.update({
-        "sqrt": mp.sqrt,
-        "sin": mp.sin,
-        "cos": mp.cos,
-        "tan": mp.tan,
-        "asin": mp.asin,
-        "acos": mp.acos,
-        "atan": mp.atan,
-        "atan2": mp.atan2,
-        "pi": mp.pi,
-        "abs": abs,
-        "min": min,
-        "max": max,
-        "int": int,
-        "float": _forbidden_float,
-        "_RawFloat": _raw_float_bridge,
-        "mpf": ensure_mpf,
-        "ensure_mpf": ensure_mpf,
-    })
+    context.update(
+        {
+            "sqrt": mp.sqrt,
+            "sin": mp.sin,
+            "cos": mp.cos,
+            "tan": mp.tan,
+            "asin": mp.asin,
+            "acos": mp.acos,
+            "atan": mp.atan,
+            "atan2": mp.atan2,
+            "pi": mp.pi,
+            "abs": abs,
+            "min": min,
+            "max": max,
+            "int": int,
+            "float": _forbidden_float,
+            "_RawFloat": _raw_float_bridge,
+            "mpf": ensure_mpf,
+            "ensure_mpf": ensure_mpf,
+        }
+    )
     for name in dir(mp_api):
         if not name.startswith("MP_"):
             continue
         value = getattr(mp_api, name)
         if not callable(value):
             continue
-        context[name] = value
         alias = name[3:]
-        if alias:
+        if alias in public_symbol_names():
             context[alias] = value
 
     context = apply_geometry_aliases(context)
@@ -179,5 +189,5 @@ def _build_hp_context_dict() -> dict[str, Any]:
 
 def _get_high_precision_context(precision: int = 80) -> dict[str, Any]:
     """Build high-precision context with mpmath-first functions."""
-    mp.dps = max(mp.dps, int(precision))
+    _ = precision
     return _build_hp_context_dict().copy()

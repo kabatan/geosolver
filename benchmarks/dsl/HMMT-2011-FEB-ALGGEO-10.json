@@ -1,0 +1,65 @@
+{
+  "id": "HMMT-2011-FEB-ALGGEO-10",
+  "variables": [
+    "e",
+    "f"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(13, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(13, 13)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(0, 13)"
+    },
+    {
+      "name": "E",
+      "expression": "Point(e, 0)"
+    },
+    {
+      "name": "F",
+      "expression": "Point(0, f)"
+    },
+    {
+      "name": "X",
+      "expression": "Point(13, 6)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Area(A, B, C, D)",
+      "operator": "=",
+      "right": "Area(A, E, F)"
+    },
+    {
+      "left": "Collinear(E, F, X)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "e",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "f",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(D, F)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "Distance(D, F)"
+}

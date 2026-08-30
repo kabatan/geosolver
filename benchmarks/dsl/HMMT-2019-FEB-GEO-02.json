@@ -1,0 +1,93 @@
+{
+  "id": "HMMT-2019-FEB-GEO-02",
+  "variables": [
+    "w",
+    "h",
+    "e",
+    "f"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(w, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(w, h)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(0, h)"
+    },
+    {
+      "name": "E",
+      "expression": "Point(e, 0)"
+    },
+    {
+      "name": "F",
+      "expression": "Point(f, h)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Perpendicular(Line(A, F), Line(B, D))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Perpendicular(Line(C, E), Line(B, D))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(B, E)",
+      "operator": "=",
+      "right": "Distance(D, F)"
+    },
+    {
+      "left": "Distance(B, E)",
+      "operator": "=",
+      "right": "Distance(A, B) / 3"
+    },
+    {
+      "left": "Distance(E, F)",
+      "operator": "=",
+      "right": 1
+    },
+    {
+      "left": "w",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "h",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "e",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "e",
+      "operator": "<",
+      "right": "w"
+    },
+    {
+      "left": "f",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "f",
+      "operator": "<",
+      "right": "w"
+    }
+  ],
+  "target": "Distance(B, D)"
+}

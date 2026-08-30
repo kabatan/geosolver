@@ -5,19 +5,7 @@ from __future__ import annotations
 from geosolver.engine.standard.contracts.candidate_record import FloatCandidate
 from geosolver.engine.standard.evaluation.classify_evaluation_failure import EvaluationStatus
 
-
-def _normalized_distance(
-    *,
-    first: tuple[float, ...],
-    second: tuple[float, ...],
-    bounds: list[tuple[float, float]],
-) -> float:
-    total = 0.0
-    for index, (low, high) in enumerate(bounds):
-        width = max(high - low, 1e-12)
-        diff = (first[index] - second[index]) / width
-        total += diff * diff
-    return total ** 0.5
+from .coordinate_distance import normalized_distance
 
 
 def _guard_feasible_prefix_count(*, total_count: int, prefix_count: int) -> int:
@@ -58,23 +46,33 @@ def _select_guard_feasible_prefix(
         return ()
     selected: list[FloatCandidate] = [ordered[0]]
     remaining = list(ordered[1:])
+    nearest_distances = [
+        normalized_distance(
+            first=candidate.x_float,
+            second=selected[0].x_float,
+            bounds=bounds,
+        )
+        for candidate in remaining
+    ]
     while remaining and len(selected) < keep_count:
         best_index = 0
         best_key: tuple[float, float, int] | None = None
         for index, candidate in enumerate(remaining):
-            min_distance = min(
-                _normalized_distance(
-                    first=candidate.x_float,
-                    second=chosen.x_float,
-                    bounds=bounds,
-                )
-                for chosen in selected
-            )
+            min_distance = nearest_distances[index]
             key = (min_distance, -float(candidate.score), -int(candidate.candidate_id))
             if best_key is None or key > best_key:
                 best_key = key
                 best_index = index
-        selected.append(remaining.pop(best_index))
+        chosen = remaining.pop(best_index)
+        nearest_distances.pop(best_index)
+        selected.append(chosen)
+        for index, candidate in enumerate(remaining):
+            distance = normalized_distance(
+                first=candidate.x_float,
+                second=chosen.x_float,
+                bounds=bounds,
+            )
+            nearest_distances[index] = min(nearest_distances[index], distance)
     return tuple(selected)
 
 
@@ -88,22 +86,31 @@ def _select_farthest_point_representatives(
         return ()
     representatives: list[FloatCandidate] = [prefix[0]]
     remaining = list(prefix[1:])
+    nearest_distances = [
+        normalized_distance(
+            first=candidate.x_float,
+            second=representatives[0].x_float,
+            bounds=bounds,
+        )
+        for candidate in remaining
+    ]
     while remaining and len(representatives) < int(compact_keep_count):
         best_index = 0
         best_distance = -1.0
-        for index, candidate in enumerate(remaining):
-            min_distance = min(
-                _normalized_distance(
-                    first=candidate.x_float,
-                    second=selected.x_float,
-                    bounds=bounds,
-                )
-                for selected in representatives
-            )
+        for index, min_distance in enumerate(nearest_distances):
             if min_distance > best_distance:
                 best_distance = min_distance
                 best_index = index
-        representatives.append(remaining.pop(best_index))
+        chosen = remaining.pop(best_index)
+        nearest_distances.pop(best_index)
+        representatives.append(chosen)
+        for index, candidate in enumerate(remaining):
+            distance = normalized_distance(
+                first=candidate.x_float,
+                second=chosen.x_float,
+                bounds=bounds,
+            )
+            nearest_distances[index] = min(nearest_distances[index], distance)
     representatives.sort(key=lambda item: item.score)
     return tuple(representatives[: max(0, int(compact_keep_count))])
 

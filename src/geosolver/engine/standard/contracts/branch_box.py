@@ -1,20 +1,12 @@
-"""Branch-local box contract shared by solve/optimize box solvers."""
+"""Branch-local bounds used by finite NOMAD rescue searches."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 
-STAGE_SEARCH_COMPACT = "search_compact"
 STAGE_SEARCH_RESCUE = "search_rescue"
-STAGE_OPTIMIZE_FEASIBILITY_LOCK = "optimize_feasibility_lock"
-STAGE_OPTIMIZE_BOUNDARY = "optimize_boundary"
 
-_ALLOWED_STAGES = (
-    STAGE_SEARCH_COMPACT,
-    STAGE_SEARCH_RESCUE,
-    STAGE_OPTIMIZE_FEASIBILITY_LOCK,
-    STAGE_OPTIMIZE_BOUNDARY,
-)
+_ALLOWED_STAGES = (STAGE_SEARCH_RESCUE,)
 
 
 @dataclass(frozen=True)
@@ -34,6 +26,6 @@ class BranchBox:
             raise ValueError(f"stage must be one of {_ALLOWED_STAGES}, got {self.stage!r}")
         if len(self.lower_bounds) != len(self.upper_bounds):
             raise ValueError("lower_bounds and upper_bounds must have matching dimensions")
-        for low, high in zip(self.lower_bounds, self.upper_bounds):
+        for low, high in zip(self.lower_bounds, self.upper_bounds, strict=False):
             if float(low) > float(high):
                 raise ValueError("lower_bounds must be <= upper_bounds for every axis")

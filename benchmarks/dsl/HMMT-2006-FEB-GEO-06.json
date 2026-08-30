@@ -1,0 +1,55 @@
+{
+  "id": "HMMT-2006-FEB-GEO-06",
+  "variables": [
+    "t"
+  ],
+  "constructions": [
+    {
+      "name": "r",
+      "expression": "1 + sin(pi / 8)"
+    },
+    {
+      "name": "L",
+      "expression": "r / (1 - 1 / sqrt(2))"
+    },
+    {
+      "name": "I",
+      "expression": "Point(r, r)"
+    },
+    {
+      "name": "T",
+      "expression": "Point(L - t * (1 + sqrt(2)), t)"
+    },
+    {
+      "name": "omega",
+      "expression": "Circle(I, r)"
+    },
+    {
+      "name": "tau",
+      "expression": "Circle(T, t)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(I, T)",
+      "operator": "=",
+      "right": "r + t"
+    },
+    {
+      "left": "t",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "t",
+      "operator": "<",
+      "right": "r"
+    },
+    {
+      "left": "L - t * (1 + sqrt(2))",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "r * t"
+}

@@ -12,7 +12,6 @@ from pydantic import (
     StrictInt,
     StrictStr,
     field_validator,
-    model_validator,
 )
 
 
@@ -55,28 +54,13 @@ class GeometryProblem(StrictModel):
 
 
 class SolveOptions(StrictModel):
-    engine: Literal["standard", "reference"] = "standard"
-    time_limit_seconds: StrictInt | StrictFloat | None = None
-    cores: Literal["auto"] | StrictInt | None = None
+    time_limit_seconds: StrictInt | StrictFloat = 180
+    cores: StrictInt = 1
     seed: StrictInt = 0
-
-    @model_validator(mode="after")
-    def resolve_defaults(self) -> SolveOptions:
-        if self.time_limit_seconds is None:
-            self.time_limit_seconds = 180 if self.engine == "reference" else 900
-        if self.cores is None:
-            self.cores = 1 if self.engine == "reference" else "auto"
-        if self.engine == "reference" and (
-            float(self.time_limit_seconds) != 180.0 or self.cores != 1
-        ):
-            raise ValueError("reference engine requires 180 seconds and one core")
-        return self
 
     @field_validator("time_limit_seconds")
     @classmethod
-    def valid_time_limit(cls, value: int | float | None) -> int | float | None:
-        if value is None:
-            return value
+    def valid_time_limit(cls, value: int | float) -> int | float:
         if isinstance(value, bool) or not math.isfinite(float(value)):
             raise ValueError("time_limit_seconds must be finite")
         if not 180 <= float(value) <= 900:
@@ -85,22 +69,18 @@ class SolveOptions(StrictModel):
 
     @field_validator("cores")
     @classmethod
-    def valid_cores(cls, value: str | int | None) -> str | int | None:
-        if value in {None, "auto"}:
-            return value
+    def valid_cores(cls, value: int) -> int:
         if isinstance(value, bool) or int(value) < 1:
-            raise ValueError("cores must be 'auto' or a positive integer")
+            raise ValueError("cores must be a positive integer")
         return value
 
     @property
     def resolved_time_limit(self) -> float:
-        assert self.time_limit_seconds is not None
         return float(self.time_limit_seconds)
 
     @property
-    def resolved_cores(self) -> Literal["auto"] | int:
-        assert self.cores is not None
-        return self.cores
+    def resolved_cores(self) -> int:
+        return int(self.cores)
 
 
 class ValidationIssue(StrictModel):
@@ -142,35 +122,71 @@ class TerminationReason(StrEnum):
 
 
 class EngineIdentity(StrictModel):
-    name: Literal["standard", "reference"]
-    hash: str
+    name: Literal["standard"] = "standard"
+    source_hash: str
+    resolved_config_hash: str
+    dependency_lock_hash: str
+
+    @property
+    def hash(self) -> str:
+        """Compatibility accessor for the former single hash field."""
+        return self.source_hash
 
 
 class ResourceUsage(StrictModel):
     time_limit_seconds: float
-    cores: Literal["auto"] | int
+    cores: int
     seed: int
 
 
-class AlgebraicAnswer(StrictModel):
-    kind: Literal["algebraic"] = "algebraic"
+class AlgebraicNumberDescriptor(StrictModel):
+    """Canonical identity and isolation data for one real algebraic number."""
+
     minimal_polynomial: list[str]
     real_root_index: int
     isolating_interval: tuple[str, str]
     decimal: str
 
     def canonical_key(self) -> tuple[object, ...]:
-        return (self.kind, tuple(self.minimal_polynomial), self.real_root_index)
+        return (tuple(self.minimal_polynomial), self.real_root_index)
+
+
+class AlgebraicAnswer(StrictModel):
+    kind: Literal["algebraic"] = "algebraic"
+    value: AlgebraicNumberDescriptor
+
+    @property
+    def minimal_polynomial(self) -> list[str]:
+        return self.value.minimal_polynomial
+
+    @property
+    def real_root_index(self) -> int:
+        return self.value.real_root_index
+
+    @property
+    def isolating_interval(self) -> tuple[str, str]:
+        return self.value.isolating_interval
+
+    @property
+    def decimal(self) -> str:
+        return self.value.decimal
+
+    def canonical_key(self) -> tuple[object, ...]:
+        return (self.kind, *self.value.canonical_key())
 
 
 class AffinePiAnswer(StrictModel):
     kind: Literal["affine_pi"] = "affine_pi"
-    pi_coefficient: str
-    constant: str
+    pi_coefficient: AlgebraicNumberDescriptor
+    constant: AlgebraicNumberDescriptor
     decimal: str
 
     def canonical_key(self) -> tuple[object, ...]:
-        return (self.kind, self.pi_coefficient, self.constant)
+        return (
+            self.kind,
+            self.pi_coefficient.canonical_key(),
+            self.constant.canonical_key(),
+        )
 
 
 ExactAnswer = Annotated[AlgebraicAnswer | AffinePiAnswer, Field(discriminator="kind")]

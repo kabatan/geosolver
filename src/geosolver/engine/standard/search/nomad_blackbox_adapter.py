@@ -10,6 +10,7 @@ from mpmath import mp
 from geosolver.engine.standard.contracts.candidate_record import FloatCandidate
 from geosolver.engine.standard.contracts.evaluator_port import EvaluatorPort
 from geosolver.engine.standard.evaluation.classify_evaluation_failure import EvaluationStatus
+from geosolver.runtime.deadline import expired
 
 from .nomad_config import NomadConfig
 
@@ -24,9 +25,10 @@ def _candidate_id(
     origin_seed: int,
     origin_start_point_index: int,
     evaluation_count: int,
+    namespace: int = _NOMAD_CANDIDATE_NAMESPACE,
 ) -> int:
     return (
-        _NOMAD_CANDIDATE_NAMESPACE
+        int(namespace)
         + int(origin_seed) * _SEED_CANDIDATE_MULTIPLIER
         + int(origin_start_point_index) * _START_POINT_CANDIDATE_MULTIPLIER
         + int(evaluation_count)
@@ -55,17 +57,26 @@ class NomadBlackboxAdapter:
     origin_seed: int
     origin_start_point_index: int
     constraint_scales: tuple[float, ...] | None = None
+    candidate_namespace: int = _NOMAD_CANDIDATE_NAMESPACE
+    origin_phase: str = "search"
+    origin_backend: str = "nomad"
+    origin_attempt: int = 0
+    origin_box_index: int | None = None
     records: list[FloatCandidate] = field(default_factory=list)
     evaluation_count: int = 0
     failure_count: int = 0
+    deadline_monotonic: float | None = None
 
     def __call__(self, point: NomadPointLike) -> int:
+        if expired(self.deadline_monotonic):
+            return 0
         coords = [float(point.get_coord(index)) for index in range(point.size())]
         self.evaluation_count += 1
         candidate_id = _candidate_id(
             origin_seed=self.origin_seed,
             origin_start_point_index=self.origin_start_point_index,
             evaluation_count=self.evaluation_count,
+            namespace=self.candidate_namespace,
         )
         float_eval = self.evaluator.evaluate_float_residual(coords)
         if float_eval.evaluation_status is not EvaluationStatus.OK:
@@ -83,6 +94,11 @@ class NomadBlackboxAdapter:
                     hard_feasible=False,
                     hard_violation_tags=(f"eval_status:{float_eval.evaluation_status.value}",),
                     validity_margin_float=None,
+                    origin_phase=self.origin_phase,
+                    origin_backend=self.origin_backend,
+                    origin_attempt=self.origin_attempt,
+                    origin_box_index=self.origin_box_index,
+                    origin_evaluation_index=self.evaluation_count,
                 )
             )
             return 0
@@ -94,8 +110,12 @@ class NomadBlackboxAdapter:
         penalty = 0.0 if hard_snapshot.hard_feasible else self.config.guard_penalty
         if self.constraint_scales is not None:
             scaled = [
-                r / s
-                for r, s in zip(float_eval.residual_vector, self.constraint_scales)
+                residual / scale
+                for residual, scale in zip(
+                    float_eval.residual_vector,
+                    self.constraint_scales,
+                    strict=False,
+                )
             ]
             scaled_norm_sq = sum(r * r for r in scaled)
         else:
@@ -118,7 +138,11 @@ class NomadBlackboxAdapter:
                 hard_feasible=hard_snapshot.hard_feasible,
                 hard_violation_tags=tuple(hard_snapshot.failure_tags),
                 validity_margin_float=validity_margin_float,
+                origin_phase=self.origin_phase,
+                origin_backend=self.origin_backend,
+                origin_attempt=self.origin_attempt,
+                origin_box_index=self.origin_box_index,
+                origin_evaluation_index=self.evaluation_count,
             )
         )
         return 1
-

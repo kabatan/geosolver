@@ -1,33 +1,21 @@
-"""Polynomial search helpers used by algebraic compatibility layer."""
+"""Bounded polynomial reconstruction and real-root verification helpers."""
 
 from __future__ import annotations
 
-from typing import Any, List, Optional, Sequence, Union
+from collections.abc import Sequence
+from typing import Any
 
 from mpmath import mp, mpf
 
-from geosolver.runtime.logging import emit_legacy_log as _emit_log
 from geosolver.exact.polynomial_search_helpers import (
     scale_candidates_for_value,
-    simple_lll,
     to_mpf_sanitized,
     verify_polynomial,
 )
+from geosolver.runtime.logging import emit_legacy_log as _emit_log
 
 
-def _to_mpf_sanitized(val: Any) -> Any:
-    return to_mpf_sanitized(val)
-
-
-def _scale_candidates_for_value(val: Any) -> List[Any]:
-    return scale_candidates_for_value(val)
-
-
-def _simple_lll(basis: Any, delta: float = 0.75) -> Any:
-    return simple_lll(basis, delta)
-
-
-def _normalize_integer_polynomial(coefficients: Sequence[int]) -> Optional[List[int]]:
+def _normalize_integer_polynomial(coefficients: Sequence[int]) -> list[int] | None:
     """Return a primitive, positive-leading polynomial in descending order.
 
     PSLQ can return a relation multiplied by an arbitrary integer, with
@@ -60,7 +48,7 @@ def _normalize_integer_polynomial(coefficients: Sequence[int]) -> Optional[List[
     return values
 
 
-def _irreducible_factors(coefficients: Sequence[int]) -> list[List[int]] | None:
+def _irreducible_factors(coefficients: Sequence[int]) -> list[list[int]] | None:
     """Factor an integer relation and return its distinct primitive factors.
 
     A relation found from an approximate value is not necessarily a minimal
@@ -84,7 +72,7 @@ def _irreducible_factors(coefficients: Sequence[int]) -> list[List[int]] | None:
         # the residual check when SymPy is unavailable or cannot factor it.
         return None
 
-    result: list[List[int]] = []
+    result: list[list[int]] = []
     for factor, _multiplicity in factors:
         try:
             factor_poly = sp.Poly(factor, symbol, domain=sp.ZZ)
@@ -100,9 +88,7 @@ def _irreducible_factors(coefficients: Sequence[int]) -> list[List[int]] | None:
     return result or None
 
 
-def nearest_real_root_distance(
-    coefficients: Sequence[int], value: Any
-) -> Any:
+def nearest_real_root_distance(coefficients: Sequence[int], value: Any) -> Any:
     """Return the distance from ``value`` to the nearest real root.
 
     This is deliberately a root-distance check rather than a polynomial
@@ -129,16 +115,18 @@ def nearest_real_root_distance(
         root_precision = max(80, int(mp.dps) + 20)
         with mp.workdps(root_precision):
             return min(
-                abs(mp.mpf(str(sp.N(root, root_precision))) - numeric_value)
-                for root in roots
+                abs(mp.mpf(str(sp.N(root, root_precision))) - numeric_value) for root in roots
             )
     except Exception:
         return mp.inf
 
 
 def canonicalize_polynomial(
-    coefficients: Sequence[int], numeric_value: Any | None = None
-) -> Optional[List[int]]:
+    coefficients: Sequence[int],
+    numeric_value: Any | None = None,
+    *,
+    precision_dps: int | None = None,
+) -> list[int] | None:
     """Return the distinct minimal-polynomial factor compatible with a value.
 
     The result is always primitive, positive-leading, and square-free.  When
@@ -155,10 +143,9 @@ def canonicalize_polynomial(
     if len(factors) == 1:
         return factors[0]
 
-    scored = [
-        (nearest_real_root_distance(factor, numeric_value), factor)
-        for factor in factors
-    ]
+    precision = int(precision_dps) if precision_dps is not None else int(mp.dps)
+    with mp.workdps(precision + 40):
+        scored = [(nearest_real_root_distance(factor, numeric_value), factor) for factor in factors]
     scored = [entry for entry in scored if mp.isfinite(entry[0])]
     if not scored:
         return None
@@ -166,32 +153,29 @@ def canonicalize_polynomial(
     best_distance, best_factor = scored[0]
     if len(scored) > 1:
         second_distance = scored[1][0]
-        tie_tolerance = mp.power(
-            mp.mpf("10"), -max(20, int(mp.dps) // 2)
-        )
+        tie_tolerance = mp.power(mp.mpf("10"), -max(20, precision - 20))
         if abs(second_distance - best_distance) <= tie_tolerance:
             return None
     return best_factor
 
 
-def _verify_polynomial(coeffs: List[int], r: Any, precision: float) -> bool:
+def _verify_polynomial(coeffs: list[int], r: Any, precision: float) -> bool:
     canonical = canonicalize_polynomial(coeffs, r)
     if canonical is None:
         return False
     return verify_polynomial(canonical, r, precision)
 
 
-def find_minimal_polynomial(
-    r: Union[float, Any],
+def _find_minimal_polynomial_current_precision(
+    r: float | Any,
     precision: int = 15,
     max_degree: int = 8,
     verbose: bool = False,
     *,
     max_coeff: int = 10**15,
     max_steps: int = 10000,
-) -> Optional[List[int]]:
+) -> list[int] | None:
     """Predict minimal polynomial coefficients from a numerical approximation."""
-    mp.dps = max(precision + 40, 80)
     r = to_mpf_sanitized(r)
 
     for degree in range(1, max_degree + 1):
@@ -209,7 +193,7 @@ def find_minimal_polynomial(
                 _emit_log(f"  次数{degree}の最小因子を発見: {canonical}")
             return canonical
 
-        for s in _scale_candidates_for_value(r):
+        for s in scale_candidates_for_value(r):
             try:
                 y = r / s
             except Exception:
@@ -225,15 +209,15 @@ def find_minimal_polynomial(
             if coeffs_y is None:
                 continue
 
-            coeffs_x: List[int] = []
-            for idx, a in enumerate(coeffs_y):
-                p = degree - idx
-                try:
-                    scale_pow = int(mp.nint(s ** (degree - p)))
-                except Exception:
-                    coeffs_x = []
-                    break
-                coeffs_x.append(int(a) * int(scale_pow))
+            import sympy as sp
+
+            # Scales are powers of ten; reconstruct them exactly, including
+            # negative exponents, before clearing coefficient denominators.
+            exponent = int(mp.nint(mp.log10(s)))
+            scale_exact = sp.Rational(10) ** exponent
+            scaled = [sp.Integer(a) * scale_exact**idx for idx, a in enumerate(coeffs_y)]
+            denominator = sp.ilcm(*[int(a.q) for a in scaled])
+            coeffs_x = [int(a * denominator) for a in scaled]
 
             if not coeffs_x:
                 continue
@@ -256,7 +240,28 @@ def find_minimal_polynomial(
     return None
 
 
-def _find_polynomial_pslq(
+def find_minimal_polynomial(
+    r: float | Any,
+    precision: int = 15,
+    max_degree: int = 8,
+    verbose: bool = False,
+    *,
+    max_coeff: int = 10**15,
+    max_steps: int = 10000,
+) -> list[int] | None:
+    """Predict a minimal polynomial without leaking mpmath precision."""
+    with mp.workdps(max(mp.dps, int(precision) + 40, 80)):
+        return _find_minimal_polynomial_current_precision(
+            r,
+            precision,
+            max_degree,
+            verbose,
+            max_coeff=max_coeff,
+            max_steps=max_steps,
+        )
+
+
+def _find_polynomial_pslq_current_precision(
     r: Any,
     degree: int,
     precision: int,
@@ -264,14 +269,10 @@ def _find_polynomial_pslq(
     max_coeff: int = 10**15,
     max_steps: int = 10000,
     verbose: bool = False,
-) -> Optional[List[int]]:
+) -> list[int] | None:
     """Find polynomial coefficients with PSLQ."""
-    try:
-        from mpmath import pslq
-    except ImportError:
-        return _find_polynomial_lll(r, degree, precision, verbose)
+    from mpmath import pslq
 
-    mp.dps = max(precision + 30, 60)
     powers = [r**i for i in range(degree + 1)]
 
     try:
@@ -309,42 +310,21 @@ def _find_polynomial_pslq(
         return None
 
 
-def _find_polynomial_lll(
+def _find_polynomial_pslq(
     r: Any,
     degree: int,
     precision: int,
+    *,
+    max_coeff: int = 10**15,
+    max_steps: int = 10000,
     verbose: bool = False,
-) -> Optional[List[int]]:
-    """Find polynomial coefficients with LLL fallback."""
-    try:
-        import numpy as np
-    except ImportError:
-        return None
-
-    scale = 10 ** (precision // 2)
-    n = degree + 1
-    basis = np.zeros((n + 1, n + 1), dtype=np.float64)
-
-    for i in range(n):
-        basis[i, i] = 1
-
-    r_float = float(r)
-    for i in range(n):
-        basis[n, i] = int(scale * (r_float**i))
-    basis[n, n] = scale
-
-    try:
-        reduced = _simple_lll(basis)
-        for row in reduced:
-            coeffs = [int(round(row[i])) for i in range(n)]
-            if any(c != 0 for c in coeffs):
-                coeffs = list(reversed(coeffs))
-                if coeffs[0] < 0:
-                    coeffs = [-c for c in coeffs]
-                if _verify_polynomial(coeffs, r, precision * 0.5):
-                    return coeffs
-    except Exception as e:
-        if verbose:
-            _emit_log(f"  LLL failed: {e}")
-
-    return None
+) -> list[int] | None:
+    with mp.workdps(max(mp.dps, int(precision) + 30, 60)):
+        return _find_polynomial_pslq_current_precision(
+            r,
+            degree,
+            precision,
+            max_coeff=max_coeff,
+            max_steps=max_steps,
+            verbose=verbose,
+        )

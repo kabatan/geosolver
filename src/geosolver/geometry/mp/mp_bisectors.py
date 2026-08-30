@@ -12,13 +12,13 @@ if TYPE_CHECKING:
     from geosolver.geometry.mp.mp_impl import MPLine, MPPoint
 
 
-def _mp_line_class() -> type["MPLine"]:
+def _mp_line_class() -> type[MPLine]:
     from geosolver.geometry.mp.mp_impl import MPLine
 
     return MPLine
 
 
-def _mp_point_class() -> type["MPPoint"]:
+def _mp_point_class() -> type[MPPoint]:
     from geosolver.geometry.mp.mp_impl import MPPoint
 
     return MPPoint
@@ -30,13 +30,13 @@ def _mp_vector_class():
     return MPVector
 
 
-def _mp_midpoint(a: "MPPoint", b: "MPPoint") -> "MPPoint":
+def _mp_midpoint(a: MPPoint, b: MPPoint) -> MPPoint:
     from geosolver.geometry.mp.mp_impl import mp_midpoint
 
     return mp_midpoint(a, b)
 
 
-def _mp_line_through_two_points(a: "MPPoint", b: "MPPoint"):
+def _mp_line_through_two_points(a: MPPoint, b: MPPoint):
     from geosolver.geometry.mp.mp_impl import mp_line_through_two_points
 
     return mp_line_through_two_points(a, b)
@@ -46,7 +46,7 @@ def _tol() -> mpf:
     return mpf(10) ** (-(mp.dps - 10))
 
 
-def mp_perpendicular_bisector(A: "MPPoint", B: "MPPoint") -> "MPLine":
+def mp_perpendicular_bisector(A: MPPoint, B: MPPoint) -> MPLine:
     mid = _mp_midpoint(A, B)
     dx = B.x - A.x
     dy = B.y - A.y
@@ -57,7 +57,7 @@ def mp_perpendicular_bisector(A: "MPPoint", B: "MPPoint") -> "MPLine":
     return line_cls(a, b, c)
 
 
-def mp_angle_bisector(A: "MPPoint", B: "MPPoint", C: "MPPoint") -> "MPLine":
+def mp_angle_bisector(A: MPPoint, B: MPPoint, C: MPPoint) -> MPLine:
     vector_cls = _mp_vector_class()
     line_cls = _mp_line_class()
     point_cls = _mp_point_class()

@@ -12,13 +12,13 @@ Geometry Function Registry
     incenter.set_numpy(fast_incenter)
 """
 
-from typing import Callable, Dict, Any, Optional
 import functools
-
+from collections.abc import Callable
+from typing import Any
 
 # グローバルレジストリ
-_REGISTRY: Dict[str, "MultiFunctionWrapper"] = {}
-_METADATA: Dict[str, Dict[str, Any]] = {}
+_REGISTRY: dict[str, "MultiFunctionWrapper"] = {}
+_METADATA: dict[str, dict[str, Any]] = {}
 
 
 class MultiFunctionWrapper:
@@ -34,8 +34,8 @@ class MultiFunctionWrapper:
     def __init__(self, name: str, sympy_func: Callable):
         self._name = name
         self._sympy = sympy_func
-        self._numpy: Optional[Callable] = None
-        self._mpmath: Optional[Callable] = None
+        self._numpy: Callable | None = None
+        self._mpmath: Callable | None = None
         # functools.wraps相当
         self.__name__ = name
         self.__doc__ = sympy_func.__doc__
@@ -82,9 +82,7 @@ class MultiFunctionWrapper:
         return f"<MultiFunctionWrapper '{self._name}' backends={backends}>"
 
 
-def geometry_symbol(
-    name: str = None, category: str = "general", auto_derive: bool = True
-):
+def geometry_symbol(name: str = None, category: str = "general", auto_derive: bool = True):
     """
     幾何シンボル登録デコレータ
 
@@ -112,7 +110,7 @@ def geometry_symbol(
 def _geometry_symbol_decorator(
     func: Callable,
     *,
-    name: Optional[str],
+    name: str | None,
     category: str,
     auto_derive: bool,
 ) -> MultiFunctionWrapper:
@@ -135,12 +133,12 @@ def _geometry_symbol_decorator(
     return wrapper
 
 
-def get_function(name: str) -> Optional[MultiFunctionWrapper]:
+def get_function(name: str) -> MultiFunctionWrapper | None:
     """レジストリから関数を取得"""
     return _REGISTRY.get(name)
 
 
-def list_functions(category: str = None) -> Dict[str, MultiFunctionWrapper]:
+def list_functions(category: str = None) -> dict[str, MultiFunctionWrapper]:
     """
     登録された関数を一覧
 
@@ -152,14 +150,10 @@ def list_functions(category: str = None) -> Dict[str, MultiFunctionWrapper]:
     """
     if category is None:
         return dict(_REGISTRY)
-    return {
-        k: v
-        for k, v in _REGISTRY.items()
-        if _METADATA.get(k, {}).get("category") == category
-    }
+    return {k: v for k, v in _REGISTRY.items() if _METADATA.get(k, {}).get("category") == category}
 
 
-def get_metadata(name: str) -> Optional[Dict[str, Any]]:
+def get_metadata(name: str) -> dict[str, Any] | None:
     """関数のメタデータを取得"""
     return _METADATA.get(name)
 

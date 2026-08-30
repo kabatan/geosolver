@@ -62,7 +62,7 @@ def test_runner_rejects_abnormal_worker_artifacts(
     monkeypatch.setattr("geosolver.engine.runner.set_affinity", lambda *args: None)
 
     with pytest.raises(EngineFailure) as caught:
-        EngineRunner().run({}, seed=0, cores=1, time_limit_seconds=180, prefer_fast=True)
+        EngineRunner().run({}, seed=0, cores=1, time_limit_seconds=180)
 
     assert caught.value.code == expected_code
 
@@ -75,6 +75,25 @@ def test_atomic_artifact_update_supports_unicode_and_spaces(tmp_path: Path) -> N
 
     assert json.loads(output.read_text(encoding="utf-8"))["status"] == "completed"
     assert not list(output.parent.glob("*.tmp"))
+
+
+def test_runner_closes_log_streams_when_worker_spawn_fails(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    captured: dict[str, Any] = {}
+
+    def failing_spawn(command: list[str], **kwargs: Any) -> FinishedProcess:
+        captured["stdout"] = kwargs["stdout"]
+        captured["stderr"] = kwargs["stderr"]
+        raise OSError("spawn failed")
+
+    monkeypatch.setattr("geosolver.engine.runner.spawn_process", failing_spawn)
+
+    with pytest.raises(OSError, match="spawn failed"):
+        EngineRunner().run({}, seed=0, cores=1, time_limit_seconds=180)
+
+    assert captured["stdout"].closed
+    assert captured["stderr"].closed
 
 
 def test_runner_stops_a_worker_tree_at_the_memory_limit(
@@ -90,9 +109,7 @@ def test_runner_stops_a_worker_tree_at_the_memory_limit(
     )
 
     with pytest.raises(EngineResourceExhausted) as caught:
-        EngineRunner(memory_limit_bytes=100).run(
-            {}, seed=0, cores=1, time_limit_seconds=180, prefer_fast=True
-        )
+        EngineRunner(memory_limit_bytes=100).run({}, seed=0, cores=1, time_limit_seconds=180)
 
     assert caught.value.code == "memory_limit_exceeded"
     assert terminated == [process]

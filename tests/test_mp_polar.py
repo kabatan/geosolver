@@ -17,9 +17,7 @@ def test_mp_polar_at_circle_point_is_the_tangent_line() -> None:
         # The polar of a point on the circle is its tangent: it contains the
         # point, stays one radius from the center, and has the radial normal.
         assert abs(line.a * point.x + line.b * point.y + line.c) < mp.mpf("1e-70")
-        assert abs(
-            abs(line.c + line.a * center.x + line.b * center.y) - circle.radius
-        ) < mp.mpf("1e-70")
-        assert abs(
-            line.a * (point.y - center.y) - line.b * (point.x - center.x)
-        ) < mp.mpf("1e-70")
+        assert abs(abs(line.c + line.a * center.x + line.b * center.y) - circle.radius) < mp.mpf(
+            "1e-70"
+        )
+        assert abs(line.a * (point.y - center.y) - line.b * (point.x - center.x)) < mp.mpf("1e-70")

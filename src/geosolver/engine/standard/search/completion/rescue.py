@@ -11,10 +11,11 @@ from geosolver.engine.standard.contracts.candidate_record import (
     FloatCandidate,
     RefinedCandidate,
     SearchBatchResult,
+    assert_candidate_id_consistency,
 )
 from geosolver.engine.standard.contracts.runtime_budget import RuntimeBudget
 
-_STABLE_ACCEPTED_STATUSES = ("target_reached", "box_solved", "box_enumerated")
+_STABLE_ACCEPTED_STATUSES = ("target_reached",)
 
 
 def exact_assembly_needs_completion(accepted_candidates: tuple[RefinedCandidate, ...]) -> bool:
@@ -58,15 +59,17 @@ def merge_search_candidates_with_rescue(
     search_result: SearchBatchResult,
     rescued_candidates: tuple[FloatCandidate, ...],
 ) -> SearchBatchResult:
-    """Append rescue candidates without duplicating candidate IDs."""
+    """Append rescue candidates while rejecting provenance collisions."""
 
     merged_candidates = list(search_result.candidates)
-    seen = {candidate.candidate_id for candidate in merged_candidates}
+    all_candidates = tuple(merged_candidates) + tuple(rescued_candidates)
+    assert_candidate_id_consistency(all_candidates)
+    seen = {candidate.candidate_uid for candidate in merged_candidates}
     for rescued in rescued_candidates:
-        if rescued.candidate_id in seen:
+        if rescued.candidate_uid in seen:
             continue
         merged_candidates.append(rescued)
-        seen.add(rescued.candidate_id)
+        seen.add(rescued.candidate_uid)
     merged_all_records = tuple(search_result.all_records) + tuple(rescued_candidates)
     return SearchBatchResult(
         candidates=tuple(merged_candidates),

@@ -11,8 +11,8 @@ manifold, etc.) a general extension point instead of an orchestration patch.
 from __future__ import annotations
 
 import ast
-from dataclasses import dataclass
 import math
+from dataclasses import dataclass
 from typing import Protocol
 
 from geosolver.engine.standard.contracts.candidate_record import FloatCandidate
@@ -170,10 +170,7 @@ def _midpoint_bounds(bounds: list[tuple[float, float]]) -> list[float]:
 
 
 def _is_within_bounds(point: list[float], bounds: list[tuple[float, float]]) -> bool:
-    return all(
-        low <= value <= high
-        for value, (low, high) in zip(point, bounds, strict=True)
-    )
+    return all(low <= value <= high for value, (low, high) in zip(point, bounds, strict=True))
 
 
 @dataclass(frozen=True)
@@ -260,12 +257,6 @@ class DistanceCircleSampler:
             "best_residual": None if best_point is None else best_residual,
             "best_point": best_point,
         }
-        # Backwards-compatible Phase 0 metric aliases used by older diagnostics.
-        metrics["total_exact_distance_manifold_points"] = total_samples
-        metrics["finite_exact_distance_manifold_ratio"] = metrics["finite_ratio"]
-        metrics["guard_pass_exact_distance_manifold_ratio"] = metrics["guard_pass_ratio"]
-        metrics["best_exact_distance_manifold_residual"] = metrics["best_residual"]
-        metrics["best_exact_distance_manifold_point"] = metrics["best_point"]
         return ManifoldSampleResult(
             strategy_id=self.strategy_id,
             candidates=tuple(records),
@@ -273,9 +264,7 @@ class DistanceCircleSampler:
         )
 
 
-DEFAULT_MANIFOLD_SAMPLE_STRATEGIES: tuple[ManifoldSampleStrategy, ...] = (
-    DistanceCircleSampler(),
-)
+DEFAULT_MANIFOLD_SAMPLE_STRATEGIES: tuple[ManifoldSampleStrategy, ...] = (DistanceCircleSampler(),)
 
 
 def augment_with_manifold_samples(
@@ -303,10 +292,6 @@ def augment_with_manifold_samples(
             continue
         merged_candidates.extend(result.candidates)
         strategy_metrics[result.strategy_id] = result.metrics
-        # Keep legacy flat metric names for existing summaries/tests.
-        for key, value in result.metrics.items():
-            if key.startswith("total_exact_") or key.startswith("finite_exact_") or key.startswith("guard_pass_exact_") or key.startswith("best_exact_"):
-                merged_metrics[key] = value
     if strategy_metrics:
         existing_sampling = merged_metrics.get("manifold_sampling")
         if isinstance(existing_sampling, dict):

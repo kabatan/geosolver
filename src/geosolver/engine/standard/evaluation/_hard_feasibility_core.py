@@ -8,12 +8,12 @@ from dataclasses import dataclass
 from mpmath import mp
 
 from geosolver.engine.standard.contracts.hard_feasibility_check import (
-    HardFeasibilityCheck,
     KIND_GUARD,
     KIND_INTERSECTION_EXCLUDE_DISTINCT,
     KIND_INTERSECTION_SELECTION_TRACE,
     KIND_LINE_DISTINCT,
     KIND_TRIANGLE_NONDEGENERATE,
+    HardFeasibilityCheck,
 )
 from geosolver.engine.standard.contracts.hard_feasibility_snapshot import (
     HardFeasibilitySnapshot,
@@ -35,7 +35,6 @@ from geosolver.engine.standard.precision.type_guards.strict_to_mpf import strict
 LINE_MARGIN_MIN = mp.mpf("1e-12")
 TRIANGLE_MARGIN_MIN = mp.mpf("1e-14")
 INTERSECTION_MARGIN_MIN = mp.mpf("1e-12")
-SELECTION_MIN_CANDIDATE_COUNT = 2
 
 
 @dataclass(frozen=True)
@@ -70,8 +69,8 @@ def _point_coordinates(
 ) -> tuple[MPFloat, MPFloat] | None:
     if not (hasattr(value, "x") and hasattr(value, "y")):
         return None
-    x_value = _to_mpf_value(getattr(value, "x"), allow_float=allow_float, context=f"{context}.x")
-    y_value = _to_mpf_value(getattr(value, "y"), allow_float=allow_float, context=f"{context}.y")
+    x_value = _to_mpf_value(value.x, allow_float=allow_float, context=f"{context}.x")
+    y_value = _to_mpf_value(value.y, allow_float=allow_float, context=f"{context}.y")
     if x_value is None or y_value is None:
         return None
     return x_value, y_value
@@ -166,7 +165,8 @@ def _evaluate_line_distinct_check(
     )
     if margin is None:
         return False, f"{check.check_id}:margin_unavailable", None
-    if margin <= LINE_MARGIN_MIN:
+    threshold = LINE_MARGIN_MIN if allow_float else mp.mpf("0")
+    if margin <= threshold:
         return False, f"{check.check_id}:line_not_distinct", margin
     return True, None, margin
 
@@ -193,7 +193,8 @@ def _evaluate_triangle_check(
     )
     if margin is None:
         return False, f"{check.check_id}:margin_unavailable", None
-    if margin <= TRIANGLE_MARGIN_MIN:
+    threshold = TRIANGLE_MARGIN_MIN if allow_float else mp.mpf("0")
+    if margin <= threshold:
         return False, f"{check.check_id}:triangle_degenerate", margin
     return True, None, margin
 
@@ -218,7 +219,8 @@ def _evaluate_intersection_exclude_check(
     )
     if margin is None:
         return False, f"{check.check_id}:margin_unavailable", None
-    if margin <= INTERSECTION_MARGIN_MIN:
+    threshold = INTERSECTION_MARGIN_MIN if allow_float else mp.mpf("0")
+    if margin <= threshold:
         return False, f"{check.check_id}:exclude_not_distinct", margin
     return True, None, margin
 
@@ -236,14 +238,13 @@ def _evaluate_selection_trace_check(
     trace = state.trace_entries.get(symbol_name)
     expected_kind = _expected_selector_kind(check.check_id)
     if trace is None:
-        if expected_kind in {"near", "far"} and symbol_name in state.context:
-            return True, None, mp.mpf("1")
         return False, f"{check.check_id}:trace_not_found", None
     if expected_kind is not None and trace.selector_kind != expected_kind:
         return False, f"{check.check_id}:selector_mismatch", None
-    if trace.candidate_count < SELECTION_MIN_CANDIDATE_COUNT:
+    if trace.candidate_count < 1:
         return False, f"{check.check_id}:insufficient_candidates", None
-    return True, None, mp.mpf(trace.candidate_count - 1)
+    margin = mp.inf if trace.margin is None else trace.margin
+    return bool(margin > 0), None if margin > 0 else f"{check.check_id}:selector_tie", margin
 
 
 def _build_runtime_state(
@@ -254,7 +255,7 @@ def _build_runtime_state(
     cast_value: Callable[[object], object],
 ) -> HardFeasibilityRuntimeState:
     context: dict[str, object] = dict(bundle.base_context)
-    for symbol_name, value in zip(bundle.var_names, values):
+    for symbol_name, value in zip(bundle.var_names, values, strict=False):
         context[symbol_name] = cast_value(value)
     with capture_selection_trace() as trace_entries:
         for item in bundle.spec.construction:

@@ -7,7 +7,7 @@ from dataclasses import dataclass
 SELECTOR_EXCLUDE = "exclude"
 SELECTOR_NEAR = "near"
 SELECTOR_FAR = "far"
-_ALLOWED_SELECTORS = (SELECTOR_EXCLUDE, SELECTOR_NEAR, SELECTOR_FAR)
+_ALLOWED_SELECTORS = (SELECTOR_EXCLUDE, SELECTOR_NEAR, SELECTOR_FAR, "n", "unique")
 
 
 @dataclass(frozen=True)
@@ -18,6 +18,17 @@ class SelectionTraceEntry:
     selector_kind: str
     candidate_count: int
     selected_index: int
+    call_site_id: str = ""
+    candidates: tuple[tuple[object, object], ...] = ()
+    margin: object = None
+
+    @property
+    def branch_index(self):
+        return self.selected_index
+
+    @property
+    def kind(self):
+        return self.selector_kind
 
     def __post_init__(self) -> None:
         if self.selector_kind not in _ALLOWED_SELECTORS:

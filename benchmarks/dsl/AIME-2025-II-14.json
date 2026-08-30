@@ -1,0 +1,126 @@
+{
+  "id": "AIME-2025-II-14",
+  "variables": [
+    "u",
+    "v",
+    "kx",
+    "ky",
+    "lx",
+    "ly"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(u, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(0, v)"
+    },
+    {
+      "name": "K",
+      "expression": "Point(kx, ky)"
+    },
+    {
+      "name": "L",
+      "expression": "Point(lx, ly)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": 38
+    },
+    {
+      "left": "Distance(A, K)",
+      "operator": "=",
+      "right": 14
+    },
+    {
+      "left": "Distance(A, L)",
+      "operator": "=",
+      "right": 14
+    },
+    {
+      "left": "Distance(B, K)",
+      "operator": "=",
+      "right": 14
+    },
+    {
+      "left": "Distance(C, L)",
+      "operator": "=",
+      "right": 14
+    },
+    {
+      "left": "Distance(K, L)",
+      "operator": "=",
+      "right": 14
+    },
+    {
+      "left": "u",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "v",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "kx",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "ky",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "lx",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "ly",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Vector(A, B).x * Vector(A, K).y - Vector(A, B).y * Vector(A, K).x",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Vector(B, C).x * Vector(B, K).y - Vector(B, C).y * Vector(B, K).x",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Vector(C, A).x * Vector(C, K).y - Vector(C, A).y * Vector(C, K).x",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Vector(A, B).x * Vector(A, L).y - Vector(A, B).y * Vector(A, L).x",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Vector(B, C).x * Vector(B, L).y - Vector(B, C).y * Vector(B, L).x",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Vector(C, A).x * Vector(C, L).y - Vector(C, A).y * Vector(C, L).x",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "Area(B, K, L, C)"
+}

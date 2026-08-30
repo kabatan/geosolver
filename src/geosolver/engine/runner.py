@@ -10,6 +10,7 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 
+import psutil
 from pydantic import ValidationError
 
 from geosolver.platform.processes import (
@@ -78,26 +79,46 @@ class EngineRunner:
         seed: int,
         cores: int,
         time_limit_seconds: float,
-        prefer_fast: bool,
+        deadline_monotonic: float | None = None,
     ) -> EngineExecution:
         self._cancel_event.clear()
+        deadline = (
+            time.monotonic() + float(time_limit_seconds)
+            if deadline_monotonic is None
+            else deadline_monotonic
+        )
         request = WorkerRequest(
             engine_document=engine_document,
             seed=seed,
-            prefer_fast=prefer_fast,
+            deadline_monotonic=deadline,
+            effective_cores=cores,
+            config_snapshot={
+                "time_limit_seconds": float(time_limit_seconds),
+                "cores": int(cores),
+                "seed": int(seed),
+            },
         )
         with tempfile.TemporaryDirectory(prefix="geosolver-") as temporary_directory:
             working_directory = Path(temporary_directory)
             input_path = working_directory / "request.json"
             output_path = working_directory / "artifact.json"
+            stdout_path = working_directory / "stdout.log"
+            stderr_path = working_directory / "stderr.log"
             input_path.write_text(
                 request.model_dump_json(indent=2) + "\n",
                 encoding="utf-8",
                 newline="\n",
             )
             environment = os.environ.copy()
-            environment["GEOSOLVER_NUM_WORKERS"] = str(cores)
             environment["GEOSOLVER_MEMORY_LIMIT_BYTES"] = str(self._memory_limit_bytes)
+            thread_variables = (
+                "OMP_NUM_THREADS",
+                "OPENBLAS_NUM_THREADS",
+                "MKL_NUM_THREADS",
+                "NUMEXPR_NUM_THREADS",
+            )
+            for variable in thread_variables:
+                environment[variable] = "1"
             command = [
                 sys.executable,
                 "-m",
@@ -107,11 +128,25 @@ class EngineRunner:
                 "--output",
                 str(output_path),
             ]
-            process = spawn_process(command, cwd=working_directory, env=environment)
+            stdout_stream = stdout_path.open("w", encoding="utf-8", newline="\n")
+            stderr_stream = stderr_path.open("w", encoding="utf-8", newline="\n")
+            try:
+                process = spawn_process(
+                    command,
+                    cwd=working_directory,
+                    env=environment,
+                    stdout=stdout_stream,
+                    stderr=stderr_stream,
+                )
+            except BaseException:
+                stdout_stream.close()
+                stderr_stream.close()
+                raise
             set_affinity(process.pid, cores)
             with self._lock:
                 self._process = process
-            deadline = time.monotonic() + time_limit_seconds
+            peak_rss = 0
+            cpu_by_process = {}
             try:
                 while process.poll() is None:
                     if self._cancel_event.is_set():
@@ -120,17 +155,38 @@ class EngineRunner:
                     if time.monotonic() >= deadline:
                         terminate_process_tree(process)
                         raise EngineTimedOut
-                    if process_tree_memory_bytes(process.pid) > self._memory_limit_bytes:
+                    memory = process_tree_memory_bytes(process.pid)
+                    peak_rss = max(peak_rss, memory)
+                    try:
+                        root = psutil.Process(process.pid)
+                        for child in [root, *root.children(recursive=True)]:
+                            with child.oneshot():
+                                usage = child.cpu_times()
+                                cpu_by_process[(child.pid, child.create_time())] = (
+                                    usage.user + usage.system
+                                )
+                    except psutil.Error:
+                        pass
+                    if memory > self._memory_limit_bytes:
                         terminate_process_tree(process)
                         raise EngineResourceExhausted(
                             "memory_limit_exceeded",
                             "solve exceeded the worker memory limit",
                         )
                     self._cancel_event.wait(0.05)
-                stdout, stderr = process.communicate()
+                communicated_stdout, communicated_stderr = process.communicate()
             finally:
+                if getattr(process, "_geosolver_owned_group", False):
+                    terminate_process_tree(process, grace_seconds=0.1)
+                stdout_stream.close()
+                stderr_stream.close()
                 with self._lock:
                     self._process = None
+
+            stdout = stdout_path.read_text(encoding="utf-8") if stdout_path.exists() else ""
+            stderr = stderr_path.read_text(encoding="utf-8") if stderr_path.exists() else ""
+            stdout = stdout or communicated_stdout or ""
+            stderr = stderr or communicated_stderr or ""
 
             if self._cancel_event.is_set():
                 raise EngineCancelled
@@ -151,5 +207,25 @@ class EngineRunner:
                 error = artifact.error
                 code = error.code if error is not None else "worker_failed"
                 message = error.message if error is not None else "worker did not complete"
+                if code == "time_limit_reached":
+                    raise EngineTimedOut
                 raise EngineFailure(code, message)
+            artifact = artifact.model_copy(
+                update={
+                    "stdout": stdout,
+                    "stderr": stderr,
+                    "process_info": {
+                        **artifact.process_info,
+                        "pid": int(process.pid),
+                        "returncode": int(process.returncode),
+                        "effective_cores": int(cores),
+                        "peak_rss_bytes": peak_rss,
+                        "cpu_seconds": max(
+                            sum(cpu_by_process.values()),
+                            artifact.process_info.get("cpu_seconds", 0),
+                        ),
+                        "resource_sampling_interval_seconds": 0.05,
+                    },
+                }
+            )
             return EngineExecution(artifact=artifact, stdout=stdout, stderr=stderr)

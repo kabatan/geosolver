@@ -2,15 +2,25 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING
 
+from mpmath import (
+    atan2 as mp_atan2,
+)
+from mpmath import (
+    cos as mp_cos,
+)
 from mpmath import (
     mp,
     mpf,
-    atan2 as mp_atan2,
-    cos as mp_cos,
+)
+from mpmath import (
     pi as mp_pi,
+)
+from mpmath import (
     sin as mp_sin,
+)
+from mpmath import (
     sqrt as mp_sqrt,
 )
 
@@ -22,7 +32,6 @@ from geosolver.geometry.mp.mp_primitives_intersections import (
     mp_intersect,
     mp_line_circle_intersection,
 )
-
 
 ARC_MIDPOINT_TOLERANCE_DPS_RATIO = mpf("0.8")
 
@@ -45,8 +54,8 @@ def _angle_in_arc(
     angle: mpf,
     start_angle: mpf,
     end_angle: mpf,
-    including_angle: Optional[mpf] = None,
-    excluding_angle: Optional[mpf] = None,
+    including_angle: mpf | None = None,
+    excluding_angle: mpf | None = None,
 ) -> bool:
     a = _normalize_angle(angle)
     s = _normalize_angle(start_angle)
@@ -68,7 +77,7 @@ def _angle_in_arc(
     return (in_arc1 and use_arc1) or (in_arc2 and not use_arc1)
 
 
-def _is_point_on_arc(point: "MPPoint", arc: "MPArc") -> bool:
+def _is_point_on_arc(point: MPPoint, arc: MPArc) -> bool:
     center = arc.circle.center
     theta_start = mp_atan2(arc.start.y - center.y, arc.start.x - center.x)
     theta_end = mp_atan2(arc.end.y - center.y, arc.end.x - center.x)
@@ -84,12 +93,12 @@ def _is_point_on_arc(point: "MPPoint", arc: "MPArc") -> bool:
 
 
 def mp_arc_midpoint(
-    circle: "MPCircle",
-    p1: "MPPoint",
-    p2: "MPPoint",
-    including: Optional["MPPoint"] = None,
-    excluding: Optional["MPPoint"] = None,
-) -> Union[list["MPPoint"], "MPPoint"]:
+    circle: MPCircle,
+    p1: MPPoint,
+    p2: MPPoint,
+    including: MPPoint | None = None,
+    excluding: MPPoint | None = None,
+) -> list[MPPoint] | MPPoint:
     """Return midpoint candidates (or selected midpoint) on an arc."""
     if including is not None and excluding is not None:
         raise ValueError("Cannot specify both including and excluding")

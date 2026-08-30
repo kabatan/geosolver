@@ -31,4 +31,3 @@ def compute_levenberg_marquardt_step(
     except Exception:
         return [mp.mpf("0") for _ in range(cols)]
     return [mp.mpf(solution[index]) for index in range(cols)]
-

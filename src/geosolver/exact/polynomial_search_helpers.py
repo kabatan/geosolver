@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import re
-from typing import Any, List
+from contextlib import suppress
+from typing import Any
 
 from mpmath import almosteq, fabs, mp, mpf
 
@@ -12,7 +13,7 @@ def strip_whitespace(value: str) -> str:
     return re.sub(r"\s+", "", value)
 
 
-def scale_candidates_for_value(val: Any) -> List[Any]:
+def scale_candidates_for_value(val: Any) -> list[Any]:
     vabs = fabs(val)
     if vabs == 0:
         return [mpf("1")]
@@ -21,15 +22,13 @@ def scale_candidates_for_value(val: Any) -> List[Any]:
     except Exception:
         return [mpf("1")]
 
-    scales: List[Any] = []
+    scales: list[Any] = []
     for kk in (k, k - 1, k + 1):
-        try:
+        with suppress(Exception):
             scales.append(mpf(10) ** kk)
-        except Exception:
-            pass
     scales.append(mpf("1"))
 
-    uniq: List[Any] = []
+    uniq: list[Any] = []
     for s in scales:
         if s == 0:
             continue
@@ -37,23 +36,6 @@ def scale_candidates_for_value(val: Any) -> List[Any]:
             continue
         uniq.append(s)
     return uniq
-
-
-def gram_schmidt_lll(B: Any) -> tuple[Any, Any]:
-    import numpy as np
-
-    n = len(B)
-    Q = np.zeros_like(B, dtype=np.float64)
-    mu = np.zeros((n, n), dtype=np.float64)
-
-    for i in range(n):
-        Q[i] = B[i].copy()
-        for j in range(i):
-            if np.dot(Q[j], Q[j]) > 1e-10:
-                mu[i, j] = np.dot(B[i], Q[j]) / np.dot(Q[j], Q[j])
-                Q[i] = Q[i] - mu[i, j] * Q[j]
-
-    return Q, mu
 
 
 def to_mpf_sanitized(val: Any) -> Any:
@@ -83,44 +65,19 @@ def to_mpf_sanitized(val: Any) -> Any:
         return mpf("nan")
 
 
-def simple_lll(basis: Any, delta: float = 3 / 4) -> Any:
-    """Simple LLL implementation based on Gram-Schmidt orthogonalization."""
-    import numpy as np
-
-    n = len(basis)
-    B = basis.astype(np.float64).copy()
-
-    k = 1
-    while k < n:
-        Q, mu = gram_schmidt_lll(B)
-
-        for j in range(k - 1, -1, -1):
-            if abs(mu[k, j]) > 0.5:
-                B[k] = B[k] - round(mu[k, j]) * B[j]
-                Q, mu = gram_schmidt_lll(B)
-
-        if np.dot(Q[k], Q[k]) >= (delta - mu[k, k - 1] ** 2) * np.dot(Q[k - 1], Q[k - 1]):
-            k += 1
-        else:
-            B[[k, k - 1]] = B[[k - 1, k]]
-            k = max(k - 1, 1)
-
-    norms = [np.linalg.norm(row) for row in B]
-    indices = np.argsort(norms)
-    return B[indices]
-
-
-def verify_polynomial(coeffs: List[int], r: Any, precision: float) -> bool:
+def verify_polynomial(coeffs: list[int], r: Any, precision: float) -> bool:
     """Verify whether the polynomial has ``r`` as a root."""
-    mp.dps = max(int(precision) + 20, 50)
+    with mp.workdps(max(mp.dps, int(precision) + 20, 50)):
+        val = mpf(0)
+        magnitude = mpf(0)
+        degree = len(coeffs) - 1
+        for i, c in enumerate(coeffs):
+            term = mpf(c) * (r ** (degree - i))
+            val += term
+            magnitude += abs(term)
 
-    val = mpf(0)
-    degree = len(coeffs) - 1
-    for i, c in enumerate(coeffs):
-        val += mpf(c) * (r ** (degree - i))
-
-    if precision > 100:
-        tol = mpf(10) ** (-(precision * 3 / 5))
-    else:
-        tol = mpf(10) ** (-(precision * 2 / 5))
-    return fabs(val) < tol
+        if precision > 100:
+            tol = mpf(10) ** (-(precision * 3 / 5))
+        else:
+            tol = mpf(10) ** (-(precision * 2 / 5))
+        return val == 0 or (magnitude > 0 and fabs(val) / magnitude < tol)

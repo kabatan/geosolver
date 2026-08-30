@@ -2,8 +2,8 @@
 
 from typing import Any
 
-from geosolver.geometry.registry import geometry_symbol
 from geosolver.geometry.entities.base import Circle, Point
+from geosolver.geometry.registry import geometry_symbol
 
 
 def _mp_point_distance(p1: Point, p2: Point):

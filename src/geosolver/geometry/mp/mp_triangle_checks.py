@@ -4,7 +4,7 @@ Triangle classification/check helpers extracted from mp_impl.
 
 from __future__ import annotations
 
-from typing import Optional, Tuple, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from mpmath import mp, mpf
 
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from geosolver.geometry.mp.mp_impl import MPPoint
 
 
-def mp_triangle_type(A: "MPPoint", B: "MPPoint", C: "MPPoint") -> Optional[str]:
+def mp_triangle_type(A: MPPoint, B: MPPoint, C: MPPoint) -> str | None:
     cross = (B.x - A.x) * (C.y - A.y) - (B.y - A.y) * (C.x - A.x)
     tol = mpf(10) ** (-(mp.dps - 5))
 
@@ -35,7 +35,7 @@ def mp_triangle_type(A: "MPPoint", B: "MPPoint", C: "MPPoint") -> Optional[str]:
     return "acute"
 
 
-def mp_middle_point_on_line(A: "MPPoint", B: "MPPoint", C: "MPPoint") -> Optional["MPPoint"]:
+def mp_middle_point_on_line(A: MPPoint, B: MPPoint, C: MPPoint) -> MPPoint | None:
     cross = (B.x - A.x) * (C.y - A.y) - (B.y - A.y) * (C.x - A.x)
     tol = mpf(10) ** (-(mp.dps - 5))
     if abs(cross) >= tol:
@@ -53,8 +53,8 @@ def mp_middle_point_on_line(A: "MPPoint", B: "MPPoint", C: "MPPoint") -> Optiona
 
 
 def mp_orthic_triangle(
-    A: "MPPoint", B: "MPPoint", C: "MPPoint"
-) -> Optional[Tuple["MPPoint", "MPPoint", "MPPoint"]]:
+    A: MPPoint, B: MPPoint, C: MPPoint
+) -> tuple[MPPoint, MPPoint, MPPoint] | None:
     cross = (B.x - A.x) * (C.y - A.y) - (B.y - A.y) * (C.x - A.x)
     tol = mpf(10) ** (-(mp.dps - 5))
     if abs(cross) < tol:

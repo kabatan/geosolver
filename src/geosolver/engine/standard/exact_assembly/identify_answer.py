@@ -7,12 +7,12 @@ from dataclasses import dataclass
 from mpmath import mp
 
 from geosolver.engine.standard.contracts.pipeline_result import ExactIdentificationResult
+from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
 from geosolver.exact.affine_pi_search import identify_affine_pi
 from geosolver.exact.polynomial_search import (
     canonicalize_polynomial,
     find_minimal_polynomial,
 )
-from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
 
 from .classify_exact_requirement import RELAXED_TIER, STANDARD_TIER, STRICT_TIER
 from .verify_identified_answer import verify_identified_answer
@@ -65,7 +65,7 @@ def _linear_exact_value(coefficients: list[int]) -> str | None:
 
 
 def _polynomial_exact_value(
-    coefficients: list[int], numeric_value: MPFloat
+    coefficients: list[int], numeric_value: MPFloat, precision_dps: int = 120
 ) -> str | None:
     """Resolve a minimal polynomial to a symbolic expression via sympy.
 
@@ -88,8 +88,9 @@ def _polynomial_exact_value(
     best_dist = None
     for root in roots:
         try:
-            approx = mp.mpf(str(sp.N(root, 40)))
-            dist = abs(approx - numeric_value)
+            with mp.workdps(int(precision_dps) + 40):
+                approx = mp.mpf(str(sp.N(root, int(precision_dps) + 40)))
+                dist = abs(approx - numeric_value)
             if best_dist is None or dist < best_dist:
                 best_dist = dist
                 best_root = root
@@ -97,8 +98,19 @@ def _polynomial_exact_value(
             continue
     if best_root is None:
         return None
-    simplified = sp.nsimplify(best_root)
-    return str(simplified)
+    # CRootOf is already exact. nsimplify can replace it by a nearby rational.
+    with mp.workdps(int(precision_dps) + 40):
+        tolerance = max(1, abs(numeric_value)) * mp.power(10, -max(1, int(precision_dps) - 20))
+        if best_dist > tolerance:
+            return None
+        compatible = [
+            root
+            for root in roots
+            if abs(mp.mpf(str(sp.N(root, int(precision_dps) + 40))) - numeric_value) <= tolerance
+        ]
+        if len(compatible) != 1:
+            return None
+    return str(best_root)
 
 
 def _sympy_fallback(value: MPFloat, precision_dps: int) -> tuple[str | None, MPFloat | None]:
@@ -110,6 +122,7 @@ def _sympy_fallback(value: MPFloat, precision_dps: int) -> tuple[str | None, MPF
     # Reject trivial decimal-to-fraction conversions (denominator is a power of 10).
     if expr.is_Rational and expr.q > 10**6:
         from sympy import factorint
+
         factors = factorint(int(expr.q))
         if set(factors.keys()) <= {2, 5}:
             return None, None
@@ -170,7 +183,7 @@ def _identify_affine_pi_result(
     )
 
 
-def identify_answer(
+def _identify_answer_proposal(
     *,
     answer_hp: MPFloat,
     tier: str,
@@ -191,7 +204,9 @@ def identify_answer(
         # backend supplies a reducible or repeated relation.  Exact results
         # must carry a primitive square-free minimal factor, never a relation
         # whose multiplicity artificially reduces the residual.
-        canonical = canonicalize_polynomial(coefficients, answer_hp)
+        canonical = canonicalize_polynomial(
+            coefficients, answer_hp, precision_dps=int(input_precision_dps)
+        )
         if canonical is None:
             affine_pi_result = _identify_affine_pi_result(
                 answer_hp=answer_hp,
@@ -223,13 +238,23 @@ def identify_answer(
                 selected_exact = linear_exact
                 method = "pslq-linear"
             else:
-                poly_exact = _polynomial_exact_value(list(coefficients), answer_hp)
+                poly_exact = _polynomial_exact_value(
+                    list(coefficients), answer_hp, int(input_precision_dps)
+                )
                 if poly_exact is not None:
                     selected_exact = poly_exact
                     method = "pslq-symbolic"
                 else:
-                    selected_exact = f"poly({coefficients})"
-                    method = "pslq"
+                    return ExactIdentificationResult(
+                        exact_status="verification_failed",
+                        identification_method="pslq-ambiguous-root",
+                        input_precision_dps=int(input_precision_dps),
+                        minimal_polynomial=tuple(coefficients),
+                        polynomial_degree=degree,
+                        selected_exact_value=None,
+                        verification_residual=residual,
+                        numeric_fallback_value=answer_hp,
+                    )
             # A zero-root polynomial can have a tiny nonzero numerical value
             # as its approximate root (for example x**7 at 1e-122).  The
             # polynomial residual alone is therefore not proof that the exact
@@ -320,3 +345,19 @@ def identify_answer(
         numeric_fallback_value=answer_hp,
     )
 
+
+def identify_answer(
+    *, answer_hp, tier, input_precision_dps, answer_uncertainty=None, closed_source=None
+):
+    """Bounded discovery followed by root-distance validation and a descriptor."""
+    from geosolver.runtime.symbolic import request
+    from geosolver.runtime.symbolic_operations import decode_identification
+
+    payload = {
+        "value": answer_hp._mpf_,
+        "tier": tier,
+        "precision": input_precision_dps,
+        "uncertainty": None if answer_uncertainty is None else answer_uncertainty._mpf_,
+        "closed_source": closed_source,
+    }
+    return decode_identification(request("identify", payload))

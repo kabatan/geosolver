@@ -42,11 +42,8 @@ def main() -> int:
         raise RuntimeError(f"wheel contains retired product artifacts: {found}")
     required = {
         "geosolver/engine-lock.json",
-        "geosolver/julia/Project.toml",
-        "geosolver/julia/Manifest.toml",
         "geosolver/schemas/geometry-problem.schema.json",
         "geosolver/schemas/solve-result.schema.json",
-        "geosolver/frontend/index.html",
     }
     missing = sorted(required.difference(names))
     if missing:
@@ -94,7 +91,8 @@ angle = solved('Angle(B, A, C)', [
     {'name': 'B', 'expression': 'Point(1, 0)'},
     {'name': 'C', 'expression': 'Point(0, 1)'},
 ])
-assert angle.kind == 'affine_pi' and angle.pi_coefficient == '1/2', angle
+assert angle.kind == 'affine_pi', angle
+assert angle.pi_coefficient.minimal_polynomial == ['2', '-1'], angle
 degrees = solved('Degrees(Angle(B, A, C))', [
     {'name': 'A', 'expression': 'Point(0, 0)'},
     {'name': 'B', 'expression': 'Point(1, 0)'},

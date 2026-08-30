@@ -24,7 +24,6 @@ MAX_STAGE_ITERS = 80
 STALL_LIMIT = 5
 LINE_SEARCH_FAILURE_LIMIT = 12
 LINE_SEARCH_MAX_STEPS = 20
-DEDUP_ANSWER_TOLERANCE = mp.mpf("1e-20")
 STAGE_PROMOTION_RELAX_POWER = mp.mpf("0.5")
 DIRECT_ACCEPT_RESIDUAL = mp.mpf("1e-15")
 DIRECT_ACCEPT_DPS = 120
@@ -44,7 +43,6 @@ class RefinerConfig:
     stall_limit: int = STALL_LIMIT
     line_search_failure_limit: int = LINE_SEARCH_FAILURE_LIMIT
     line_search_max_steps: int = LINE_SEARCH_MAX_STEPS
-    dedup_answer_tolerance: object = DEDUP_ANSWER_TOLERANCE
     stage_promotion_relax_power: object = STAGE_PROMOTION_RELAX_POWER
     direct_accept_residual: object | None = DIRECT_ACCEPT_RESIDUAL
     direct_accept_dps: int = DIRECT_ACCEPT_DPS
@@ -62,4 +60,3 @@ class RefinerConfig:
         if relax_power <= mp.mpf("0") or relax_power > mp.mpf("1"):
             raise ValueError("stage_promotion_relax_power must be in (0, 1]")
         return mp.power(target, relax_power)
-

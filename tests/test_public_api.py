@@ -24,7 +24,8 @@ def test_documented_public_imports_and_schema() -> None:
 
     jsonschema.validate(problem.model_dump(mode="json"), schema)
     assert validate(problem).valid
-    assert SolveOptions().engine == "standard"
+    assert SolveOptions().time_limit_seconds == 180
+    assert SolveOptions().cores == 1
     assert callable(solve)
 
 

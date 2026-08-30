@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
-from dataclasses import replace
 import time
+from dataclasses import replace
 
 from geosolver.engine.standard.contracts.candidate_record import (
-    FloatCandidate,
     SearchBatchResult,
 )
 from geosolver.engine.standard.contracts.evaluator_port import EvaluatorPort
@@ -32,6 +31,7 @@ from geosolver.engine.standard.search.scipy_multistart_backend import (
     ScipyMultistartBackend,
 )
 from geosolver.engine.standard.search.select_search_start_points import select_search_start_points
+from geosolver.runtime.deadline import timed_phase, uses_deadline
 
 from .run_initial_probe import InitialProbeResult
 
@@ -48,8 +48,8 @@ def _merge_search_diagnostics(
     merged = dict(first)
     first_events = first.get("local_start_events", ())
     second_events = second.get("local_start_events", ())
-    local_start_events = list(first_events) if isinstance(first_events, (tuple, list)) else []
-    if isinstance(second_events, (tuple, list)):
+    local_start_events = list(first_events) if isinstance(first_events, tuple | list) else []
+    if isinstance(second_events, tuple | list):
         local_start_events.extend(second_events)
     if local_start_events:
         merged["local_start_events"] = tuple(local_start_events)
@@ -78,6 +78,7 @@ def _merge_search_diagnostics(
     if per_seed_counts:
         merged["local_start_status_counts_by_seed"] = per_seed_counts
     return merged
+
 
 def _build_search_backend(
     *,
@@ -242,9 +243,7 @@ def _merge_search_batch_results(
 ) -> SearchBatchResult:
     candidates = tuple(first.candidates) + tuple(second.candidates)
     all_records = tuple(first.all_records) + tuple(second.all_records)
-    guard_feasible_ledger = tuple(first.guard_feasible_ledger) + tuple(
-        second.guard_feasible_ledger
-    )
+    guard_feasible_ledger = tuple(first.guard_feasible_ledger) + tuple(second.guard_feasible_ledger)
     evaluation_count = int(first.evaluation_count) + int(second.evaluation_count)
     failure_count = sum(
         1 for candidate in all_records if candidate.evaluation_status is not EvaluationStatus.OK
@@ -267,9 +266,7 @@ def _search_deadline_monotonic(config: NomadConfig) -> float | None:
     if config.max_time_sec is None:
         return None
     max_time_sec = float(config.max_time_sec)
-    if max_time_sec <= 0.0:
-        return None
-    return time.monotonic() + max_time_sec
+    return time.monotonic() + max(0.0, max_time_sec)
 
 
 def _remaining_search_budget_sec(deadline_monotonic: float | None) -> float | None:
@@ -308,6 +305,8 @@ def _run_supplemental_search_pass(
     )
 
 
+@timed_phase("search")
+@uses_deadline
 def run_search(
     *,
     bundle: ProblemBundle,
@@ -370,9 +369,7 @@ def run_search(
             include_nomad_prefix=False,
         )
         first_pass_budget_sec = (
-            None
-            if remaining_budget_sec is None
-            else max(0.0, float(remaining_budget_sec) / 2.0)
+            None if remaining_budget_sec is None else max(0.0, float(remaining_budget_sec) / 2.0)
         )
         primary_supplemental_result = _run_supplemental_search_pass(
             bundle=bundle,
@@ -434,4 +431,3 @@ def run_search(
             constraint_scales=constraint_scales,
             fallback_reason=exc,
         )
-

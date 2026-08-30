@@ -29,8 +29,6 @@ from .mp_impl import (
     MPCircle,
     MPLine,
     MPPoint,
-    MPSegment,
-    mp_angle_between_lines,
     mp_angle_bisector,
     mp_are_concyclic,
     mp_centroid,
@@ -65,7 +63,6 @@ from .mp_impl import (
     mp_slope,
     mp_tangent_line,
     mp_triangle_area,
-    mp_triangle_center,
     mp_triangle_type,
     mp_vector,
 )
@@ -146,8 +143,13 @@ def MP_AreConcyclic(A, B, C, D):
     return mp_are_concyclic(A, B, C, D)
 
 
-def MP_Slope(line):
-    return mp_slope(line)
+def MP_Slope(first, second=None):
+    if second is not None:
+        dx = second.x - first.x
+        if dx == 0:
+            raise ValueError("vertical or degenerate line has no finite slope")
+        return (second.y - first.y) / dx
+    return mp_slope(first)
 
 
 def MP_Length(segment):
@@ -190,7 +192,7 @@ def _select_tangent_line(lines, use_first=True):
     """Match the high-level Tangent API, which returns one line."""
     if lines is None:
         return None
-    if isinstance(lines, (list, tuple)):
+    if isinstance(lines, list | tuple):
         if not lines:
             return None
         return lines[0] if use_first else lines[-1]
@@ -250,15 +252,10 @@ def MP_PointOnCircle(circle, t):
     return mp_point_on_circle(circle, t)
 
 
-def MP_PointOnArc(arc_or_circle, start=None, end=None, t=None, including=None, excluding=None):
-    if isinstance(arc_or_circle, MPArc):
-        arc = arc_or_circle
-        if start is not None and not isinstance(start, MPPoint):
-            t = start
-        return mp_point_on_arc(arc.circle, arc.start, arc.end, t)
-    if isinstance(arc_or_circle, MPCircle):
-        return mp_point_on_arc(arc_or_circle, start, end, t, including, excluding)
-    raise TypeError("Expected MPArc or MPCircle")
+def MP_PointOnArc(arc, t):
+    if not isinstance(arc, MPArc):
+        raise TypeError("PointOnArc requires an Arc")
+    return mp_point_on_arc(arc.circle, arc.start, arc.end, t, arc.including, arc.excluding)
 
 
 def MP_MiddlePointOnLine(line, P, d):
@@ -386,9 +383,11 @@ def MP_Polygon(*points):
     # vertices, while retaining the historical variadic MP spelling.  Without
     # this normalization ``Polygon([A, B, C])`` becomes ``([A, B, C],)`` and
     # geometry guards see the whole vertex list as one point.
-    if len(points) == 1 and isinstance(points[0], (list, tuple)):
+    if len(points) == 1 and isinstance(points[0], list | tuple):
         points = tuple(points[0])
-    return tuple(points)
+    from geosolver.geometry.mp.mp_polygon import MPPolygon
+
+    return MPPolygon(points)
 
 
 def MP_Quadrilateral(A, B, C, D):

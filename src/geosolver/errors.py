@@ -12,7 +12,19 @@ class GeometryError(Exception):
     pass
 
 
-class DegenerateGeometryError(GeometryError):
+class GeometryDomainError(GeometryError):
+    """The requested object is outside the nondegenerate Euclidean domain."""
+
+
+class AmbiguousResultError(GeometryError):
+    """A construction has several branches and no unique selector."""
+
+
+class InfiniteSolutionsError(GeometryError):
+    """A construction has infinitely many valid results."""
+
+
+class DegenerateGeometryError(GeometryDomainError):
     """退化した図形（無効な図形）の例外"""
 
     pass

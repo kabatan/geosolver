@@ -8,8 +8,6 @@ version = "1.0.0"
 description = "Cross-platform numerical geometry solver with exact answer assembly"
 requires-python = ">=3.12,<3.13"
 dependencies = [
-  "fastapi==0.116.1",
-  "jsonschema==4.25.1",
   "mpmath==1.3.0",
   "numpy==2.5.1",
   "PyNomadBBO==4.5.1; platform_machine == 'x86_64' or platform_machine == 'AMD64' or platform_system == 'Darwin'",
@@ -18,12 +16,11 @@ dependencies = [
   "scipy==1.18.0",
   "sympy==1.14.0",
   "typer==0.16.1",
-  "uvicorn==0.35.0",
 ]
 
 [project.optional-dependencies]
 dev = [
-  "httpx==0.28.1",
+  "jsonschema==4.25.1",
   "pytest==8.4.1",
   "pytest-cov==6.2.1",
   "ruff==0.12.8",
@@ -35,19 +32,12 @@ geosolver = "geosolver.application.cli:app"
 [tool.hatch.build.targets.wheel]
 packages = ["src/geosolver"]
 
-[tool.hatch.build.targets.wheel.force-include]
-"frontend/dist/client" = "geosolver/frontend"
-
 [tool.hatch.build.targets.sdist]
 include = [
   "src/geosolver",
-  "frontend/dist/client",
   "README.md",
   "pyproject.toml",
 ]
-
-[tool.hatch.build.targets.sdist.force-include]
-"frontend/dist/client" = "frontend/dist/client"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -59,3 +49,20 @@ line-length = 100
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+# These modules intentionally provide compatibility/public re-exports.  Their
+# imports are part of the DSL/API surface even when unused in the defining file.
+"src/geosolver/geometry/__init__.py" = ["F401"]
+"src/geosolver/geometry/mp/mp_api.py" = ["F401"]
+"src/geosolver/geometry/mp/mp_impl.py" = ["F401"]
+"src/geosolver/geometry/mp/mp_primitives.py" = ["F401"]
+"src/geosolver/geometry/operations/constructions.py" = ["F401"]
+"src/geosolver/geometry/operations/intersections.py" = ["F401"]
+"src/geosolver/geometry/operations/__init__.py" = ["E402"]
+"src/geosolver/geometry/operations/triangle.py" = ["E741", "F401"]
+"src/geosolver/geometry/safety/__init__.py" = ["E402", "F401"]
+"src/geosolver/geometry/mp/mp_circle_relations.py" = ["E741"]
+"src/geosolver/geometry/mp/mp_parametric_points.py" = ["E741"]
+"src/geosolver/geometry/mp/mp_triangle_centers.py" = ["E741"]
+"src/geosolver/geometry/operations/constructions_extra.py" = ["E741"]

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from contextlib import suppress
 from typing import Any
 
 from sympy import N as _N
@@ -23,7 +24,9 @@ def point_on_arc(arc: Any, point: Any) -> bool:
     dist = point.distance_to(arc.center)
 
     if mpmath and isinstance(dist, mpmath.mpf):
-        radius_value = mpmath.mpf(arc.radius) if not isinstance(arc.radius, mpmath.mpf) else arc.radius
+        radius_value = (
+            mpmath.mpf(arc.radius) if not isinstance(arc.radius, mpmath.mpf) else arc.radius
+        )
         tolerance = get_dynamic_tolerance_arc()
         if abs(dist - radius_value) > tolerance:
             return False
@@ -31,10 +34,8 @@ def point_on_arc(arc: Any, point: Any) -> bool:
         try:
             dps = 50
             if mpmath:
-                try:
+                with suppress(Exception):
                     dps = max(50, int(mpmath.mp.dps * 4 / 5))
-                except Exception:
-                    pass
             val = float(_N(dist, dps))
             radius_value = float(_N(arc.radius, dps))
             tolerance = get_dynamic_tolerance_arc()

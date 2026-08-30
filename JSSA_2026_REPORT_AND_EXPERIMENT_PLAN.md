@@ -608,8 +608,8 @@ d(p,x)^kQ\bigl(p,\tau(p,x)\bigr)^m=\sum_i h_i(p,x)F_i(p,x),
 - dependency lock、OS、CPU、Python/Julia/NOMAD/SciPy/mpmath等のversionを固定する。
 - 最終tagで同じfull runをfresh processから再実行する。
 - unique problem単位のdedupe表を確定する。
-- `research`側AIMEについて、現状の27 manifest rows／28 DSL filesの不一致を解消し、28問を全て`development_touched=true`、`outcome_seen=true`として登録する。
-- `experiment`側296 uniqueと`research`側28問を同じ現行schema・runnerで扱うため、旧DSL、変換script、変換後DSLのhashと意味対応を保存する。
+- `research`側AIMEの旧27 manifest rows／28 DSL filesの不一致は解消済みであり、28問を全て`development_touched=true`、`outcome_seen=true`として登録する。
+- `experiment`側の原資料296 uniqueから条件矛盾1件を除いた295 uniqueと、`research`側28問を同じ現行schema・runnerで扱うため、旧DSL、変換script、変換後DSLのhashと意味対応を保存する。
 - raw artifactとSHA-256 manifestを保存する。
 - 外部パラメータをsolver内部の記号変数として実装する前に、数値をDSLへ代入して既存solverを反復実行できる薄い実験器を作る。
 - 問題族ID、パラメータの意味・許容範囲、代入値、solver出力、生成用／最終確認用標本、候補式・候補性質、厳密証明の状態を一つのmanifestで追跡する。
@@ -625,7 +625,7 @@ d(p,x)^kQ\bigl(p,\tau(p,x)\bigr)^m=\sum_i h_i(p,x)F_i(p,x),
 
 > 凍結したGeoSolverは、有限個の目的値を持つ自然な競技幾何問題に対し、固定計算予算でどの程度参照集合と一致する候補を返すか。また、GMB（GMBL入力）と共通に表現できる課題では、一つの有効配置を見つける能力がどう異なるか。
 
-- 開発に用いた名目324問では、現象発見、基本性能、失敗段階を記述する。
+- 現行の開発集合323問題（323 inventory、重複なし）では、現象発見、基本性能、失敗段階を記述する。原資料から除いた条件矛盾1件と重複6登録の監査履歴は別途保存する。
 - 最終版では、開発に使っていない`E1-core20`を必須の新規評価とする。9月24日時点で主定理と入力監査に余裕がある場合だけ`E1-extension10`を追加するが、中核20問の結果は常に独立して示す。
 - GMB比較では、原論文の39問題を表現範囲の全対象枠とする公式側集合と`E1-core20`を別々の問題集合として使い、同一hardware、core数、wall-time、20 run、共通validatorでK1「一つの有効配置」を比較する。E1はGMBL表現可能性で選別・補充しない。
 - 参照目的値集合が既知の共通subsetだけで、K3相当の有限目的値回収を副比較する。これはGMB本来の主評価ではないと明記する。
@@ -1034,7 +1034,7 @@ candidate_frozen_at / first_proof_started_at / AI-or-human provenance by item
 
 | role | 選定・固定の時点 | 主な役割 | 主張してよいこと |
 |---|---|---|---|
-| `solver_development` | 既に結果を見た296＋28問 | solver開発、広い現象の把握 | この開発問題集での結果 |
+| `solver_development` | 既に結果を見た323 inventory／323 unique問題 | solver開発、広い現象の把握 | この開発問題集での結果 |
 | `miner_development` | 結論を隠した開発用6定理。語彙・規則・順位の変更を許す | 予想生成器の実装・調整 | この6定理での開発結果だけ。確認的性能ではない |
 | `miner_frozen_evaluation` | 方法固定前に別の12定理、結論manifest、許容同値表現、入力をhash固定 | 凍結した生成器の確認 | この12定理・複雑度層でのTop-k回収。新規定理発見率ではない |
 | `theorem_discovery` | 応募者が一領域と3～6構成族を指定。raw候補閲覧後の追加は`post_hoc_exploration`と区別 | 新しい一般則の探索 | 何を試し、何が見つかったか。一般的な発見率ではない |
@@ -1070,7 +1070,7 @@ candidate_frozen_at / first_proof_started_at / AI-or-human provenance by item
 
 Git履歴は、結果の数学的正しさや研究者からの完全な独立性を証明するものではない。一方で、data leakage、結果閲覧後のcase除外、設定の後付け変更を可視化し、同じ入力で再実行できるようにするためには必要である。本研究では次の軽量な運用だけを必須とする。
 
-1. **baselineを正直に固定する。** 現在ある296＋28問は全て`development_touched`かつ`outcome_seen`としてmanifestへ記録し、過去に未観測だったようには扱わない。現在の未commit DSLを整理し、27 manifest rows／28 DSL filesの不一致を解消したcommitをE0準備の起点とする。過去履歴は書き換えない。`history_partition=development`と`experiment_use=[E0,E2-R,...]`は別fieldにし、一つのcaseをE0とE2-Rの両方で使っても履歴区分が変わらないようにする。
+1. **baselineを正直に固定する。** 現在ある323 inventory／323 unique問題は全て`development_touched`かつ`outcome_seen`としてmanifestへ記録し、過去に未観測だったようには扱わない。28問側の旧manifest不一致を解消し、原資料302 files側の重複除去・参照専用・移植保留・条件矛盾による削除の履歴も残す。過去履歴は書き換えない。`history_partition=development`と`experiment_use=[E0,E2-R,...]`は別fieldにし、一つのcaseをE0とE2-Rの両方で使っても履歴区分が変わらないようにする。
 2. **入力固定と実行結果を別commitにする。** 各主要実験について、実行前にprotocol、case manifest、DSL hash、truth version、solver commit、seed、budget、停止規則をcommitする。その後のrun artifactは別commitまたは外部artifact manifestに保存する。
 3. **freeze tagを少数だけ付ける。** 最低限、`e0-input-v1`、`gmb-common-input-v1`、`miner-benchmark-input-v1`、`geometry-conjecture-miner-v1`、`theorem-candidate-YYYYMMDD`、`e1-final-freeze-YYYYMMDD`を用いる。予想生成器を主成果にしない場合はminerのmethod tagを作らず、補助toolのcommitだけ記録する。tag直前にはtest・validator・hash検査が通ることを確認する。
 4. **raw結果を上書きしない。** `experiment_id`ごとに新しいdirectoryを作り、`RUN.json`、case別出力、集計、`SHA256SUMS`、再現commandを保存する。大容量logを無理にGitへ入れる必要はなく、immutableな保存先とそのhashだけをGit追跡してよい。
@@ -1101,7 +1101,9 @@ research/
 
 既存の自然問題を一つの固定表現で広く実行し、一般則の発見に使うsolverが一問題専用でないこと、どの処理段階に限界があるかを確認する。同時に、提出候補runtimeについて環境・source・結果を閉じる。
 
-E0には、`experiment` branchのAIME/HMMT/JMO 2006--2025の296 unique問題と、`research` branchのAIME 2000--2005の28 DSL候補を使う。名目上は324問であるが、後者は現時点で27 manifest rows／28 DSL filesなので、28件目のsource identityを確定し、両群を横断してdedupeしてから最終unique数を固定する。両群とも既にsolver outcomeを閲覧しており、全件を`development_touched`かつ`outcome_seen`とする。
+E0には、`experiment` branchのAIME/HMMT/JMO 2006--2025の原資料302 source files（296 unique問題）から条件矛盾1件と重複6登録を除いた295 records（295 unique問題）と、`research` branchのAIME 2000--2005の28問を使う。現行manifestの値は、**inventory 323 records、unique natural problems 323、現行public DSLで実行可能323、truth verified 323、truth quarantined 0、reference-only 0、移植保留0**である。2026-08-30に旧未完成・参照未確認97件を修復後、再監査で `HMMT-2013-FEB-GEO-09` の通常角による条件の矛盾を確認し、公式資料の再確認後にユーザーの指示で現行登録・DSLから削除した。続いて重複6組についてDSLと参照集合の一致を確認し、公式問題番号・一次出典を優先して各1登録に整理した。solver成績は代表選択に使わない。削除前の登録と埋込DSLは `benchmarks/repairs/corpus97/removed-cases.jsonl` と `benchmarks/repairs/dedup-20260830/removed-cases.jsonl` に保全し、後者の対応表・hashは同ディレクトリの `ledger.json` に記録する。過去artifactは変更しない。両群とも既にsolver outcomeを閲覧しており、全件を`development_touched`かつ`outcome_seen`とする。
+
+この件数は`benchmarks/cases.jsonl`と`benchmarks/research_runner.py validate`の機械集計を唯一の根拠とする。現行は1自然問題1登録だが、過去の重複込みの登録数を独立問題数として表示せず、成功率の分母はtruth status、実行可能性、dedupe単位を明記する。旧IRからの変換記録は`benchmarks/provenance/competition_geometry_20y/migration-manifest.json`へ保存済みであり、今回の追補は`benchmarks/repairs/corpus97/repair-ledger.jsonl`と削除・重複除去記録に旧新hashと根拠を残す。古い移行記録の件数を現在の件数として用いない。
 
 このcorpusは未知性能の評価には使えない。一方、solverの広さを示し、定理発見を壊し得る枝欠落・精密化失敗・値同定失敗を見つけるには十分大きい。truth未確定や実行不能も含むsource inventory全体を残し、参照集合一致率と全実行可能caseの挙動を分ける。
 
@@ -1111,25 +1113,25 @@ E0は次の二層を、混ぜて一つの代表成功率にせず併記する。
 
 | stratum | 内容 | candidate unique | 既知の状態 | E0での役割 |
 |---|---|---:|---|---|
-| `competition20y_main` | AIME/HMMT/JMO、2006--2025 | 296 | 279 executable、202 reference verified、全てdevelopment利用済み | 定義した収録規則下の20年主failure census |
-| `aime_early_challenge` | AIME、2000--2005 | 28候補 | 応募者確認で全件実行済み。repoは27 manifest／28 DSLを要修正 | 高難度寄りの早期年代extension |
-| **合計** |  | **名目324** | 最終値はmanifest・dedupe後に固定 | 仮説発見用development corpus |
+| `competition20y_main` | AIME/HMMT/JMO、2006--2025 | 295 unique／295 inventory | public DSL実行可能295、truth verified 295、truth quarantined 0 | 定義した収録規則下の20年主failure census |
+| `aime_early_challenge` | AIME、2000--2005 | 28 | 28 manifest／28 public DSL、全件development利用済み | 高難度寄りの早期年代extension |
+| **合計** |  | **323 unique／323 inventory** | public DSL実行可能323、truth verified 323、truth quarantined 0 | 仮説発見用development corpus |
 
-- `competition20y_main`では既存302 filesを全てinventoryへ入れ、aliasを畳んで296 unique問題として扱う。参照集合がある202問だけに母集団を縮めず、現行schemaへ未移植のcaseも移植可否と理由をfunnelに残す。
+- `competition20y_main`では原資料302 filesの履歴を残し、条件矛盾1件の削除とalias6件の除去後の295登録・295 unique問題を現行セットとする。solverが解けないことを理由に問題を捨てず、移植・再監査・矛盾削除・重複除去の理由を区別して記録する。
 - `aime_early_challenge`はAIME単一sourceかつ難問寄りで、定義した収録規則下の2006--2025主frameと性質が違う。したがって主corpusへ数だけ加えず、stratum別結果を必ず示す。
 - alias、数値だけを変えた同一family、翻訳重複を分離し、統計単位はunique source problemとする。
 - 各問題はcanonical authoring manualに従った一つの**frozen baseline表現**を用いる。ここで`canonical`は「事前に固定した代表表現」を意味し、「solver outcomeを見ずに作られた」という意味ではない。
 - 過去のDSLを削除せず、`development_touched`、`outcome_seen`、`first_known_run`、`dsl_version`を記録する。履歴不明なら安全側に倒して`outcome_seen=true`とする。
-- 既存DSLを単に`canonical_clean`と改名しない。E0の名目324候補は全てdevelopmentであり、表現規則に関する外的な数量的結論は新規集合で確認する。
+- 既存DSLを単に`canonical_clean`と改名しない。E0の323 unique問題は全てdevelopmentであり、表現規則に関する外的な数量的結論は新規集合で確認する。
 - `verified`、`reference_unresolved`、`not_executable`を別層として残す。参照集合一致率はverified unique問題で、candidate発見やfailure checkpointはtruth未確定を含む全実行可能unique問題で集計し、二つの分母を混ぜない。
-- OMC corpusはE0の324問には混ぜない。必要ならsource provenanceと重複単位を別途監査し、過去のengineering stress corpusとして補助資料にだけ示す。
+- OMC corpusはE0の323問には混ぜない。必要ならsource provenanceと重複単位を別途監査し、過去のengineering stress corpusとして補助資料にだけ示す。
 
 ### case作成と実行前freeze
 
-1. 296問側は既存source inventoryと`dedupe_key`を再検証し、28問側はsource identity、収録理由、target adaptation、重複関係を追加する。
-2. 27 manifest rows／28 DSL filesの不一致を解消する。28件目が有効ならmanifestへ追加し、重複または無効なら理由を残して名目324を修正する。
+1. 主層295問側は既存source inventory、削除記録と`dedupe_key`を再検証し、28問側はsource identity、収録理由、target adaptation、重複関係を追加する。
+2. 27 manifest rows／28 DSL filesの不一致を解消する。これは`aime-2003-2-11`の出典・参照値を独立確認してmanifestへ追加することで解消済みである。
 3. 旧IRから現行schemaへの変換scriptを作り、元DSL hash、変換後hash、未変換理由を保存する。変換時に意味を変える手修正は別versionとして記録する。
-4. 全件にはsource、変換、hashの機械的検査を行う。手作業のclause ledgerは、target adaptationが多い28問、E0の全failureと主要matched success、E2・E1対象へ集中する。296問側は既存監査記録を再利用し、全件を人手で一から書き直さない。
+4. 全件にはsource、変換、hashの機械的検査を行う。手作業のclause ledgerは、target adaptationが多い28問、E0の全failureと主要matched success、E2・E1対象へ集中する。主層295問側は既存監査記録を再利用し、全件を人手で一から書き直さない。
 5. parser、type、scope、未使用変数、次元、重複keyをstatic checkし、reference setはsolver出力とは別の資料・数学的検算から整える。既にsolver結果を知っている事実は隠さず、truthの根拠levelを記録する。
 6. source、DSL、reference、manual version、development flagsを一括manifestへcommitし、`e0-input-v1` tagを付けてからE0 primary runを開始する。
 7. 実行後にsemantic bugを発見した場合、元caseを消さず`semantic_error`として残し、修正版は新versionで再実行する。修正版だけを最初からのbaseline結果として扱わない。
@@ -1161,7 +1163,7 @@ E0は仮説を発見する開発調査なので、実行後にcaseを修正・�
 
 ### 主張境界
 
-E0から言えるのは、**この開発問題集内で観測された性能と失敗分布**である。296問の主層と28問の追加層を分け、名目324問の合算値を競技幾何一般の頻度とは呼ばない。ここから直接、未知問題性能、失敗原因の因果、一般のDSL表現依存性を主張しない。第一案の本文では、solverの基礎能力を示す一表と代表的限界に圧縮する。
+E0から言えるのは、**この開発問題集内で観測された性能と失敗分布**である。295 unique問題の主層と28問の追加層を分け、323 unique問題の合算値を競技幾何一般の頻度とは呼ばない。ここから直接、未知問題性能、失敗原因の因果、一般のDSL表現依存性を主張しない。第一案の本文では、solverの基礎能力を示す一表と代表的限界に圧縮する。
 
 ---
 
@@ -1734,7 +1736,7 @@ E2-Mの高いsplit率を一般的頻度として報告しない。第一案で�
 
 #### A2. 表現依存性の参考調査
 
-- 目標16～20 unique problems。`competition20y_main`のreference verified 202 uniqueだけをframeとし、AIME早期28問challengeは代表率の分母へ混ぜない。source、年代、target型、条件種別を全交差させず、事前に定めた4～6 strataへまとめ、各層内をcase IDのstable hash順に採用する。層、抽出数、hash saltはvariant結果を見る前にcommitする。
+- 目標16～20 unique problems。`competition20y_main`のreference verified層（2026-08-30再監査・矛盾削除・重複除去後295 unique）をframeとし、AIME早期28問challengeは代表率の分母へ混ぜない。抽出時のmanifestから適格件数を再確認する。source、年代、target型、条件種別を全交差させず、事前に定めた4～6 strataへまとめ、各層内をcase IDのstable hash順に採用する。層、抽出数、hash saltはvariant結果を見る前にcommitする。
 - 既知のtruth-verified development frameからの抽出なので、selectionがoutcome非依存でも、結論は「このtruth-verified development frame内の粗い表現感度」に限定する。一般の自然問題における頻度とは呼ばない。外的妥当性はE2-MとE1が担う。
 - canonicalに加え、広く安全に適用できる事前固定の3変換程度を用いる。全問題へ9種類を機械的に掛ける設計にはしない。
 - 3 fixed seeds、最大180秒。variant数やseed数を独立問題数へ数えない。
@@ -2443,7 +2445,7 @@ failure atlas、全表現差、全要素除去実験は第二案へ切り替え�
 
 ### 必須A：solverを独立した成果として成立させる
 
-1. E0の296＋28問を統合し、重複・schema・参照答え・開発接触歴を整理する。
+1. E0の323 inventory（323 unique）について、schema・参照答え・開発接触歴を整理する。2026-08-30に旧未完成・参照未確認97件を修復した後、再監査による条件矛盾1件を削除し、ユーザーの指示で重複6登録も除去した。残る323件がpublic DSLで実行可能かつ参照確認済み。修復台帳・削除前の登録・対応表・過去artifactを保持する。修復台帳にはAI支援による照合であること、幾何領域の分解など入力作成上の前処理も明記する。これは全問のsolver成功や第三者査読済みを意味しない。
 2. 最終版solverを固定後、E0を再実行し、問題単位成功率、時間、失敗分類を出す。
 3. `E1-core20`を9月中に入力・参照答えまで固定し、最終版の最初の一回をprimary評価とする。
 4. 14.Dの手順でGMBを再現し、`E1-core20`の追加19 runをsecondaryとして再利用しながら、二つの共通課題集合でK1を比較する。
@@ -2505,7 +2507,7 @@ coding agentで実装量を増やせても、数学的に自然な探索領域�
 | T1 | T0合格時のみ、結論伏せ固定評価12定理（4層×3） | 累積Recall@1/10/100、順位、負の対照、要素除去 |
 | T2 | 一領域内の3～6構成族 | 結論非入力のraw候補が命題形成へ実質的に寄与したか |
 | T3 | 最良1候補 | 完全なstatement、証明、例外、文献比較 |
-| E0 | 名目324問、重複除去後はunique problem単位 | 最終版solverの開発集合上の能力と失敗 |
+| E0 | 323 inventory／323 unique問題、実行可能性とtruthを別集計 | 最終版solverの開発集合上の能力と失敗 |
 | E1 | `E1-core20`＋任意の`E1-extension10` | core20をprimaryとする凍結後の一回評価。extensionは別集計 |
 | GMB比較 | 原論文39問題frameの非予備共通subset＋`E1-core20`共通subset、各20 run | E1側をprimaryとする同一予算K1と副次的な有限目的値回収 |
 
@@ -2522,8 +2524,8 @@ CPU時間は並列化できる。応募者の時間はT2/T3へ最優先で配分
 - T0の最初の4件を選び、正解と認める同値表現を実行前に固定する。
 - GMB公式実装のcommit・環境を固定し、性能集計から除く予備5問と共通validatorを準備する。
 - 二つのGMB共通課題集合の静的admission ruleを作る。GeoSolver側source poolは`E1-core20`全件とし、GMBL表現可能性で選別・補充しない。意味指定として許すGMBL metadataと、結果後の収束調整として禁止する変更を分ける。
-- E0の296＋28問について、所在、重複、schema、参照答え、開発接触歴を棚卸しする。
-- research側の27 manifest rows／28 DSL filesの不一致を解消し、28問を全て`development_touched=true`、`outcome_seen=true`として扱う。
+- E0の323 inventory／323 unique問題について、所在、schema、参照答え、開発接触歴を棚卸しする（統合manifestとvalidatorは2026-08-30に作成済み、条件矛盾1件の削除と重複6登録の除去記録を保全）。
+- research側の27 manifest rows／28 DSL filesの不一致は解消済みであり、28問を全て`development_touched=true`、`outcome_seen=true`として扱う。
 - E1は問題源、採否規則、`E1-core20`の予定問題だけを決め、solverを実行しない。`E1-extension10`は任意枠として別管理する。
 - `research/manifests`、`research/theorem_families`、`research/runs`の非上書き規則と最小schemaを記録する。
 - 本文の問題設定、先行研究、保証範囲を書き始める。
@@ -2676,7 +2678,7 @@ CPU時間は並列化できる。応募者の時間はT2/T3へ最優先で配分
 14. GeoGebra、GMB/GMBL、既存の自動定理発見法ではなく、このsolverと生成器を使う必要はどこにあるか。
 15. GMBも複数modelを返せるのではないか。差を配置数ではなく何で測ったか。
 16. GMB/GMBL比較で、問題選択、parameterization、root selector、計算予算、validatorをどう公平にしたか。
-17. 開発324問の高成功率は過適合ではないか。新規E1ではどうだったか。
+17. 開発323問の高成功率は過適合ではないか。新規E1ではどうだったか。
 18. DSLやseedを変えると、配置生成と上位候補はどの程度変わるか。
 19. solverのどの工夫が応募者独自で、どこが既存の数値最適化か。
 20. IMO金メダル級の幾何経験は、領域選定・候補解釈・証明にどう寄与し、機械の寄与とどう分けたか。
@@ -2698,7 +2700,7 @@ CPU時間は並列化できる。応募者の時間はT2/T3へ最優先で配分
 
 ### 判定B：solverの計算的成果
 
-- E0の296＋28問について重複、開発接触歴、truth status、unsupportedを明示したか。
+- E0の323 inventory／323 unique問題について開発接触歴、truth status、unsupportedと、原資料から削除した矛盾1件・重複6登録の根拠を明示したか。
 - `E1-core20`を入力・参照答えまで実行前に固定し、最終版で一度だけprimary評価したか。`E1-extension10`を採用した場合は別集計にしたか。
 - E1閲覧後のsolver変更にE1と独立した`change_origin`があり、E1由来の変更をprospective結果へ混ぜていないか。
 - `E1-core20`の最初のrunをprimaryとして先に保存し、GMB比較用の追加19 runをsecondaryとして分離したか。

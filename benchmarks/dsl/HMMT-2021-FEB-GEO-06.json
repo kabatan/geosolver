@@ -1,0 +1,72 @@
+{
+  "id": "HMMT-2021-FEB-GEO-06",
+  "variables": [
+    "ax",
+    "ay",
+    "cx",
+    "cy"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "M",
+      "expression": "Midpoint(B, C)"
+    },
+    {
+      "name": "H",
+      "expression": "Orthocenter(A, B, C)"
+    },
+    {
+      "name": "O",
+      "expression": "Circumcenter(A, B, C)"
+    },
+    {
+      "name": "N",
+      "expression": "Reflect(M, H)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(O, A)",
+      "operator": "=",
+      "right": 11
+    },
+    {
+      "left": "Distance(O, N)",
+      "operator": "=",
+      "right": 11
+    },
+    {
+      "left": "Distance(O, H)",
+      "operator": "=",
+      "right": 7
+    },
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Area(A, B, C)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "Distance(B, C) ** 2"
+}

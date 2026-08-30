@@ -4,18 +4,19 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 from dataclasses import dataclass
+from functools import cached_property
 
-from geosolver.engine.standard.interpreter.execution.interpreter_helpers import _collect_guard_violations
+from geosolver.engine.standard.contracts.problem_bundle import ProblemBundle
+from geosolver.engine.standard.evaluation.guard_penalty import collect_guard_violations
 from geosolver.engine.standard.interpreter.guards.compile import GuardIR
 from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
-
 from geosolver.engine.standard.problem.compile_problem_guards import compile_problem_guards
-from geosolver.engine.standard.contracts.problem_bundle import ProblemBundle
+from geosolver.runtime.deadline import counted
 
-from .evaluate_float_hard_feasibility import evaluate_float_hard_feasibility
-from .evaluate_hp_hard_feasibility import evaluate_hp_hard_feasibility
 from .evaluate_answer_hp import HPAnswerEvaluation, evaluate_answer_hp
+from .evaluate_float_hard_feasibility import evaluate_float_hard_feasibility
 from .evaluate_float_residual import FloatResidualEvaluation, evaluate_float_residual
+from .evaluate_hp_hard_feasibility import evaluate_hp_hard_feasibility
 from .evaluate_hp_residual import HPResidualEvaluation, evaluate_hp_residual
 
 
@@ -26,9 +27,21 @@ class IREvaluator:
     bundle: ProblemBundle
     compiled_guards: tuple[GuardIR, ...]
 
+    @cached_property
+    def verification_equations(self):
+        from geosolver.engine.standard.evaluation.verification_numerics import prepare_equations
+
+        return prepare_equations(self)
+
+    @cached_property
+    def exact_candidate_cache(self):
+        return {}
+
+    @counted
     def evaluate_float_residual(self, values: Sequence[float]) -> FloatResidualEvaluation:
         return evaluate_float_residual(bundle=self.bundle, values=list(values))
 
+    @counted
     def evaluate_hp_residual(
         self,
         values: Sequence[MPFloat],
@@ -41,6 +54,7 @@ class IREvaluator:
             precision=int(precision),
         )
 
+    @counted
     def evaluate_answer_hp(
         self,
         values: Sequence[MPFloat],
@@ -53,8 +67,9 @@ class IREvaluator:
             precision=int(precision),
         )
 
+    @counted
     def evaluate_guard(self, values: Sequence[object]) -> tuple[bool, tuple[str, ...]]:
-        violations = _collect_guard_violations(
+        violations = collect_guard_violations(
             list(values),
             spec=self.bundle.spec,
             var_names=list(self.bundle.var_names),
@@ -63,6 +78,7 @@ class IREvaluator:
         )
         return (len(violations) == 0), tuple(violations)
 
+    @counted
     def evaluate_float_hard_feasibility(
         self,
         values: Sequence[float],
@@ -75,6 +91,7 @@ class IREvaluator:
             include_margins=bool(include_margins),
         )
 
+    @counted
     def evaluate_hp_hard_feasibility(
         self,
         values: Sequence[MPFloat],
@@ -96,4 +113,3 @@ def build_ir_evaluator(bundle: ProblemBundle) -> IREvaluator:
         bundle=bundle,
         compiled_guards=compile_problem_guards(bundle),
     )
-

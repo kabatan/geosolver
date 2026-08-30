@@ -22,4 +22,3 @@ def classify_exact_requirement(candidate: RefinedCandidate) -> str:
     if residual <= STANDARD_THRESHOLD:
         return STANDARD_TIER
     return RELAXED_TIER
-

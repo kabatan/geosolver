@@ -2,16 +2,20 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
-from mpmath import acos as mp_acos, mpf, pi as mp_pi, sin as mp_sin, sqrt as mp_sqrt
+from mpmath import acos as mp_acos
+from mpmath import mpf
+from mpmath import pi as mp_pi
+from mpmath import sin as mp_sin
+from mpmath import sqrt as mp_sqrt
 
 if TYPE_CHECKING:
     from geosolver.geometry.mp.mp_impl import MPPoint
 
 
 def _angles_and_side_lengths(
-    A: "MPPoint", B: "MPPoint", C: "MPPoint"
+    A: MPPoint, B: MPPoint, C: MPPoint
 ) -> tuple[Any, Any, Any, Any, Any, Any]:
     a2 = (B.x - C.x) ** 2 + (B.y - C.y) ** 2
     b2 = (C.x - A.x) ** 2 + (C.y - A.y) ** 2
@@ -31,14 +35,14 @@ def _angles_and_side_lengths(
 
 
 def compute_special_triangle_center(
-    A: "MPPoint",
-    B: "MPPoint",
-    C: "MPPoint",
+    A: MPPoint,
+    B: MPPoint,
+    C: MPPoint,
     n: int,
     tol: Any,
-    point_cls: type["MPPoint"],
+    point_cls: type[MPPoint],
     centroid_fn,
-) -> Optional["MPPoint"]:
+) -> MPPoint | None:
     if n not in {13, 14, 15, 16}:
         return None
 
@@ -62,7 +66,9 @@ def compute_special_triangle_center(
         wb = 1 / sin_B_offset
         wc = 1 / sin_C_offset
         total = wa + wb + wc
-        return point_cls((wa * A.x + wb * B.x + wc * C.x) / total, (wa * A.y + wb * B.y + wc * C.y) / total)
+        return point_cls(
+            (wa * A.x + wb * B.x + wc * C.x) / total, (wa * A.y + wb * B.y + wc * C.y) / total
+        )
 
     if n == 14:
         sin_A_offset = mp_sin(angle_A - offset)
@@ -74,7 +80,9 @@ def compute_special_triangle_center(
         wb = 1 / sin_B_offset
         wc = 1 / sin_C_offset
         total = wa + wb + wc
-        return point_cls((wa * A.x + wb * B.x + wc * C.x) / total, (wa * A.y + wb * B.y + wc * C.y) / total)
+        return point_cls(
+            (wa * A.x + wb * B.x + wc * C.x) / total, (wa * A.y + wb * B.y + wc * C.y) / total
+        )
 
     if n == 15:
         wa = mp_sin(angle_A + offset)
@@ -83,7 +91,9 @@ def compute_special_triangle_center(
         total = wa + wb + wc
         if abs(total) < tol:
             return centroid_fn(A, B, C)
-        return point_cls((wa * A.x + wb * B.x + wc * C.x) / total, (wa * A.y + wb * B.y + wc * C.y) / total)
+        return point_cls(
+            (wa * A.x + wb * B.x + wc * C.x) / total, (wa * A.y + wb * B.y + wc * C.y) / total
+        )
 
     wa = mp_sin(angle_A - offset)
     wb = mp_sin(angle_B - offset)
@@ -91,4 +101,6 @@ def compute_special_triangle_center(
     total = wa + wb + wc
     if abs(total) < tol:
         return centroid_fn(A, B, C)
-    return point_cls((wa * A.x + wb * B.x + wc * C.x) / total, (wa * A.y + wb * B.y + wc * C.y) / total)
+    return point_cls(
+        (wa * A.x + wb * B.x + wc * C.x) / total, (wa * A.y + wb * B.y + wc * C.y) / total
+    )

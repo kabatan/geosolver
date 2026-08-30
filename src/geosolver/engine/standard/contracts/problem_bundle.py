@@ -18,4 +18,3 @@ class ProblemBundle:
     base_context: dict[str, object]
     problem_id: str | None
     hard_feasibility_checks: tuple[HardFeasibilityCheck, ...] = ()
-

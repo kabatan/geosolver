@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+import math
 from collections.abc import Sequence
 from enum import Enum
-import math
 
 from mpmath import mp
 
@@ -38,4 +38,3 @@ def classify_evaluation_failure(values: Sequence[object]) -> EvaluationStatus:
         if not _is_finite(value):
             return EvaluationStatus.NON_FINITE
     return EvaluationStatus.OK
-

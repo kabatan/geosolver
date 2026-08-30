@@ -1,0 +1,58 @@
+{
+  "id": "AIME-2013-II-13",
+  "variables": [
+    "t",
+    "ax",
+    "ay"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(t, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(4 * t, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "E",
+      "expression": "Midpoint(A, D)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": "Distance(B, C)"
+    },
+    {
+      "left": "Distance(C, E)",
+      "operator": "=",
+      "right": "sqrt(7)"
+    },
+    {
+      "left": "Distance(B, E)",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "t",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "Area(A, B, C)"
+}

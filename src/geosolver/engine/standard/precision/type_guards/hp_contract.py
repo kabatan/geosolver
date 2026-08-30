@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from inspect import signature
-from typing import Any, Callable
+from typing import Any
 
 from .ensure_no_float import ensure_high_precision_mode, ensure_no_float
 
@@ -23,7 +24,9 @@ class _HPContractWrapped:
         bound.apply_defaults()
         for name in self._input_names:
             if name in bound.arguments:
-                ensure_no_float(bound.arguments[name], context=f"hp_contract:{self.__name__}.input:{name}")
+                ensure_no_float(
+                    bound.arguments[name], context=f"hp_contract:{self.__name__}.input:{name}"
+                )
         result = self._func(*args, **kwargs)
         ensure_no_float(result, context=f"hp_contract:{self.__name__}.output")
         return result

@@ -4,9 +4,12 @@ Parametric point construction helpers extracted from mp_impl.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
-from mpmath import atan2 as mp_atan2, cos as mp_cos, pi as mp_pi, sin as mp_sin
+from mpmath import atan2 as mp_atan2
+from mpmath import cos as mp_cos
+from mpmath import pi as mp_pi
+from mpmath import sin as mp_sin
 
 from geosolver.geometry.mp.mp_conversion import to_mpf
 
@@ -14,37 +17,37 @@ if TYPE_CHECKING:
     from geosolver.geometry.mp.mp_impl import MPArc, MPCircle, MPLine, MPPoint
 
 
-def _mp_point_class() -> type["MPPoint"]:
+def _mp_point_class() -> type[MPPoint]:
     from geosolver.geometry.mp.mp_impl import MPPoint
 
     return MPPoint
 
 
-def _mp_arc_class() -> type["MPArc"]:
+def _mp_arc_class() -> type[MPArc]:
     from geosolver.geometry.mp.mp_impl import MPArc
 
     return MPArc
 
 
-def _mp_circle_class() -> type["MPCircle"]:
+def _mp_circle_class() -> type[MPCircle]:
     from geosolver.geometry.mp.mp_impl import MPCircle
 
     return MPCircle
 
 
-def _mp_line_class() -> type["MPLine"]:
+def _mp_line_class() -> type[MPLine]:
     from geosolver.geometry.mp.mp_impl import MPLine
 
     return MPLine
 
 
-def _check_excluded_points(point: "MPPoint", exclude: Any) -> None:
+def _check_excluded_points(point: MPPoint, exclude: Any) -> None:
     from geosolver.geometry.mp.mp_impl import _mp_check_excluded_points
 
     _mp_check_excluded_points(point, exclude)
 
 
-def mp_point_on_line(line: "MPLine", t: Any, exclude: Any = None) -> "MPPoint":
+def mp_point_on_line(line: MPLine, t: Any, exclude: Any = None) -> MPPoint:
     t_mpf = to_mpf(t)
     point_cls = _mp_point_class()
 
@@ -58,8 +61,14 @@ def mp_point_on_line(line: "MPLine", t: Any, exclude: Any = None) -> "MPPoint":
     return result
 
 
-def mp_point_on_segment(p1: "MPPoint", p2: "MPPoint", t: Any, exclude: Any = None) -> "MPPoint":
+def mp_point_on_segment(p1: MPPoint, p2: MPPoint, t: Any, exclude: Any = None) -> MPPoint:
+    from geosolver.errors import CoincidentPointsError, GeometryDomainError
+
     t_mpf = to_mpf(t)
+    if p1.x == p2.x and p1.y == p2.y:
+        raise CoincidentPointsError("segment endpoints must be distinct")
+    if not 0 <= t_mpf <= 1:
+        raise GeometryDomainError("segment parameter must be in [0, 1]")
     point_cls = _mp_point_class()
 
     result = point_cls(p1.x + t_mpf * (p2.x - p1.x), p1.y + t_mpf * (p2.y - p1.y))
@@ -67,7 +76,7 @@ def mp_point_on_segment(p1: "MPPoint", p2: "MPPoint", t: Any, exclude: Any = Non
     return result
 
 
-def mp_point_on_circle(circle: "MPCircle", t: Any, exclude: Any = None) -> "MPPoint":
+def mp_point_on_circle(circle: MPCircle, t: Any, exclude: Any = None) -> MPPoint:
     t_mpf = to_mpf(t)
     point_cls = _mp_point_class()
 
@@ -76,25 +85,26 @@ def mp_point_on_circle(circle: "MPCircle", t: Any, exclude: Any = None) -> "MPPo
         circle.center.x + circle.radius * mp_cos(theta),
         circle.center.y + circle.radius * mp_sin(theta),
     )
+    circle._remember_parametric_point(result)
     _check_excluded_points(result, exclude)
     return result
 
 
 def mp_point_on_arc(
-    circle: "MPCircle",
-    point1: "MPPoint",
-    point2: "MPPoint",
+    circle: MPCircle,
+    point1: MPPoint,
+    point2: MPPoint,
     t: Any,
-    including: Optional["MPPoint"] = None,
-    excluding: Optional["MPPoint"] = None,
+    including: MPPoint | None = None,
+    excluding: MPPoint | None = None,
     exclude: Any = None,
-) -> Optional["MPPoint"]:
+) -> MPPoint | None:
     if including is not None and excluding is not None:
         raise ValueError("Cannot specify both including and excluding")
 
     t_mpf = to_mpf(t)
     if t_mpf < 0 or t_mpf > 1:
-        return None
+        raise ValueError("arc parameter must be in [0, 1]")
 
     O = circle.center
     r = circle.radius
@@ -109,7 +119,7 @@ def mp_point_on_arc(
         ccw_angle -= 2 * mp_pi
 
     cw_angle = 2 * mp_pi - ccw_angle
-    use_ccw = True
+    use_ccw = ccw_angle < mp_pi
 
     if including is not None or excluding is not None:
         ref_point = including if including is not None else excluding
@@ -135,8 +145,8 @@ def mp_point_on_arc(
 def mp_point_factory(
     obj: Any,
     t: Any,
-    including: Optional["MPPoint"] = None,
-    excluding: Optional["MPPoint"] = None,
+    including: MPPoint | None = None,
+    excluding: MPPoint | None = None,
     exclude: Any = None,
 ) -> Any:
     t_mpf = to_mpf(t)

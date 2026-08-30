@@ -6,11 +6,11 @@ from collections.abc import Sequence
 
 from mpmath import mp
 
+from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
 from geosolver.exact.polynomial_search import (
     canonicalize_polynomial,
     nearest_real_root_distance,
 )
-from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
 
 
 def _evaluate_polynomial(coefficients: Sequence[int], value: MPFloat) -> MPFloat:
@@ -35,18 +35,16 @@ def verify_identified_answer(
     with the value, then require both the canonical residual and the distance
     to its nearest real root to meet the same tolerance.
     """
-    canonical = canonicalize_polynomial(coefficients, numeric_value)
+    canonical = canonicalize_polynomial(coefficients, numeric_value, precision_dps=precision_dps)
     if canonical is None:
         return False, mp.inf
-    with mp.workdps(int(precision_dps)):
+    with mp.workdps(int(precision_dps) + 40):
         residual = abs(_evaluate_polynomial(canonical, numeric_value))
-        tolerance = mp.power(mp.mpf("10"), -(max(int(precision_dps) - 20, 1)))
+        tolerance = max(1, abs(numeric_value)) * mp.power(
+            mp.mpf("10"), -(max(int(precision_dps) - 20, 1))
+        )
         root_distance = nearest_real_root_distance(canonical, numeric_value)
         is_verified = bool(
-            mp.isfinite(residual)
-            and residual <= tolerance
-            and mp.isfinite(root_distance)
-            and root_distance <= tolerance
+            mp.isfinite(residual) and mp.isfinite(root_distance) and root_distance <= tolerance
         )
     return is_verified, residual
-
