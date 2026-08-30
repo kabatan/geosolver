@@ -3,7 +3,7 @@
 **対象**：第70回日本学生科学賞・高校の部「応用数学」  
 **目標**：最高賞（内閣総理大臣賞）を狙える、鋭く、再現可能で、過大主張のない研究作品  
 **作成日**：2026-08-28  
-**最終更新**：2026-08-30<br>
+**最終更新**：2026-08-31<br>
 **文書の役割**：応募レポートそのものではなく、本文・実験・補助資料・口頭審査を一つの論理へ統合する実行設計書
 
 ---
@@ -555,7 +555,21 @@ d(p,x)^kQ\bigl(p,\tau(p,x)\bigr)^m=\sum_i h_i(p,x)F_i(p,x),
 
 ## 5. 現在ある証拠の正しい扱い
 
-### 5.1 最新の固定済み開発問題集における結果
+### 5.0 研究開始時のsolver固定（2026-08-31）
+
+整理済みのsolver本体と現行323問をannotated tag **`solver-a0`** で固定する。
+製品コードは`de0e90fe`と同一で、実装・設定・依存のhashは同tagの`src/geosolver/engine-lock.json`、
+入力・参照値は同tagの`benchmarks/cases.jsonl`と`benchmarks/dsl/`を根拠とする。
+再現手順と固定後の改訂規則はREADMEの「研究開始時の固定版」を参照する。
+
+本固定は**研究開始時の基準版**であり、E1/GMB本比較用の最終版固定とは区別する。
+正式実行はLinux・180秒／問題・1物理コア／job・seed 0を基準とし、反復実験のseed列は事前指定する。
+323問は全件が開発で観測済みであり、未使用評価集合ではない。
+回帰試験・入力整合性・配布物検査の合格と、全323問の性能評価を混同しない。
+以下の過去成績を`solver-a0`の成績に読み替えず、固定版の性能値は同版を用いた新しいcampaignで測る。
+solverの変更が必要になれば別tagを付け、過去artifactと`solver-a0`は変更しない。
+
+### 5.1 過去の固定済み開発問題集における結果
 
 `experiment` branchの2026-08-22 full runは次の条件である。
 
@@ -603,9 +617,9 @@ d(p,x)^kQ\bigl(p,\tau(p,x)\bigr)^m=\sum_i h_i(p,x)F_i(p,x),
 
 - 提出対象runtimeを一つに決め、`submission-candidate` tagを付ける。
 - 現行HEADと過去benchmark runtimeの差を解消する。
-- engine integrity hash不一致を解消する。
+- `solver-a0`で確認したengine integrity hashの整合性を、その後の版でも検査する。
 - 180秒という外側hard timeoutと内部探索budgetの関係を明文化する。
-- dependency lock、OS、CPU、Python/Julia/NOMAD/SciPy/mpmath等のversionを固定する。
+- dependency lock、OS、CPU、Python/NOMAD/SciPy/mpmath等のversionを記録する。現行solverはJuliaを使用しない。
 - 最終tagで同じfull runをfresh processから再実行する。
 - unique problem単位のdedupe表を確定する。
 - `research`側AIMEの旧27 manifest rows／28 DSL filesの不一致は解消済みであり、28問を全て`development_touched=true`、`outcome_seen=true`として登録する。

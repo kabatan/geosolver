@@ -7,6 +7,25 @@ HTTP/UI、Julia、旧solver、過去の大容量実行結果は含めません�
 出典と参照値は現行の`benchmarks/cases.jsonl`、研究方針は研究計画書で管理します。
 完了済みの移植・修復資料はGit履歴に残し、通常の実行・テストからは切り離しています。
 
+## 研究開始時の固定版
+
+2026-08-31時点の基準版を、annotated tag **`solver-a0`** として固定します。
+solver本体は`de0e90fe`の整理完了版と同一で、固定に伴うアルゴリズム・DSL・参照値の変更はありません。
+`research`は今後も研究を進めるブランチであり、固定版の再現にはブランチの最新HEADではなく、このtagを指定してください。
+
+- 実装・既定設定・依存の識別：`src/geosolver/engine-lock.json`。
+- 依存の再現：Python 3.12、`uv.lock`、`uv sync --all-extras --frozen`。
+- 固定入力：`benchmarks/cases.jsonl`と対応する323問の`benchmarks/dsl/`。
+  `cases.jsonl`のSHA-256は`c5f92269783add80779a38b4159f298b7f49300386bca0008bb02d3c82d3fccb`。
+- 正式な研究実行：Linux、180秒／問題、1物理コア／job、seed 0を基準とする。反復実験のseed列は実行前に別途固定する。
+- 解の網羅性は`unknown`。固定は、バグ不存在・一般的な存在証明・未知問題への成功率を保証するものではない。
+
+固定時のLinux検査は全回帰テスト、323問の静的整合性、Ruff、schema、engine lock、fresh-process import、API/worker smokeを対象とします。
+同一製品hashのclean wheelも確認済みです。固定後の全323問の性能再測定と、他OSでの実行確認は別に記録します。
+
+`solver-a0`は移動・上書きしません。solverや既定設定・依存を変える場合は`solver-a1`以降の別tagにし、
+入力・参照値の改訂もcommitで区別します。過去artifactは上書きせず、実行ごとのcommit、hash、設定、環境をrunnerで保存します。
+
 ## 対応環境
 
 単一の`standard` engineをLinux、Windows、macOSで提供します。既定は180秒・1コアで、一般APIでは180〜900秒と正の整数コア数を指定できます。研究用の正式実行は180秒・1コアに固定します。
