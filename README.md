@@ -82,3 +82,8 @@ quickstart. `worker_count > 1` is not available in the production runner yet.
 
 No public license has been granted. The repository is private/all rights
 reserved until the owner explicitly chooses a license.
+
+
+## GeoSolver experiment archive
+
+The [2026-09-08 archive](research-archives/2026-09-08/README.md) preserves the solver-improvement and GMB measurement records moved from `research`. Its manifest identifies the GeoSolver source commit; the GeoTarget implementation in this branch is not the measured source.

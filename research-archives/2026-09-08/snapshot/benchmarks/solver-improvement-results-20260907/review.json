@@ -1,0 +1,200 @@
+{
+  "status": "final measured selection",
+  "items": {
+    "F01": {
+      "change": "Recover local Brent deadlines; preserve global TimeoutError",
+      "stage": "stage1",
+      "final_decision": "adopted"
+    },
+    "F02": {
+      "change": "Memoize shared construction dependencies and maximum literal scale",
+      "stage": "stage1",
+      "final_decision": "adopted"
+    },
+    "F03": {
+      "change": "Keep rank-chart assembly and typed coordinates at requested precision",
+      "stage": "stage1, stage4-preserve",
+      "final_decision": "adopted"
+    },
+    "F04": {
+      "change": "Use exact float tuple seed identity",
+      "stage": "stage2",
+      "final_decision": "adopted"
+    },
+    "F05": {
+      "change": "Remove fixed-width scalar root merging",
+      "stage": "stage2",
+      "final_decision": "adopted"
+    },
+    "F06": {
+      "change": "Evaluate closed endpoints and adjacent representable interior points",
+      "stage": "stage2",
+      "final_decision": "adopted"
+    },
+    "F07": {
+      "change": "Bracket every scalar residual and select distinct local norm minima",
+      "stage": "stage2",
+      "final_decision": "adopted"
+    },
+    "F08": {
+      "change": "Stable hypot norm and direct sign comparison",
+      "stage": "stage1",
+      "final_decision": "adopted",
+      "final_reason": "極端な値だけhypotへ切り替え、通常域の残差ノルムと二乗スコアは従来の計算順・丸めを維持。初期版の一律hypot化でNOMADの探索列が変化したため、有限値の安全性と通常域の再現性を分離。"
+    },
+    "F09": {
+      "change": "Second-order one-sided finite differences on domain boundaries",
+      "stage": "stage2",
+      "final_decision": "adopted"
+    },
+    "F10": {
+      "change": "Equilibrate refinement rank tests; explicit verifier error threshold unchanged",
+      "stage": "stage2",
+      "final_decision": "adopted"
+    },
+    "F11": {
+      "change": "Merge evaluation failure counts using the evaluation population",
+      "stage": "stage1",
+      "final_decision": "adopted"
+    },
+    "F12": {
+      "change": "Bounded scalar branch scan before primary NOMAD can terminate with one root",
+      "stage": "stage6-scalar",
+      "reason": "Fixed tuning families expose systematic partial answer sets even when development-corpus partial sets are few. Compare general scalar branch discovery without changing final verification.",
+      "final_decision": "adopted",
+      "final_reason": "全残差を使う最大2秒のscalar探索を主探索へ接続。候補は通常の精密化と最終検証へ渡す。冗長式でscalar反復数が64へ減らないよう修正。"
+    },
+    "F13": {
+      "change": "Expand inferred fallback sides by factor eight while preserving mathematical sides",
+      "stage": "stage3-expansion",
+      "final_decision": "not adopted",
+      "final_reason": "推定範囲の拡張はscreenで1件改善したが、同じ取りこぼしをscalar探索で解消。最終版は範囲を変更しない。"
+    },
+    "F14": {
+      "change": "Finite extreme scaled-score handling",
+      "stage": "stage4-quality",
+      "final_decision": "not adopted",
+      "final_reason": "候補の品質重み付けとraw/scaled切替の実験は正答数を増やさず、1078.14秒へ悪化。安定なノルム計算のみF08として残す。"
+    },
+    "F15": {
+      "change": "Bounded TRF primary local solver experiment",
+      "stage": "stage4-trf",
+      "final_decision": "not adopted",
+      "final_reason": "bounded TRFは同じ正答数で1077.08→1148.67秒。元の多変数探索を維持。"
+    },
+    "F16": {
+      "decision": "No generalized invalid-domain penalty prototype",
+      "reason": "A failed evaluator supplies no valid directional residual; replacing it without a domain-specific valid extension would add an unsupported objective. One-sided differences and bounded TRF are tested separately.",
+      "final_decision": "not adopted",
+      "final_reason": "A failed evaluator supplies no valid directional residual; replacing it without a domain-specific valid extension would add an unsupported objective. One-sided differences and bounded TRF are tested separately."
+    },
+    "F17": {
+      "change": "Residual-quality weighted farthest candidate selection",
+      "stage": "stage4-quality",
+      "final_decision": "not adopted",
+      "final_reason": "品質重み付き選択は同じ正答数で1068.92→1078.14秒。元の選択順を維持。"
+    },
+    "F18": {
+      "change": "Round-robin candidate quanta with high-precision resume",
+      "stage": "stage3-progressive",
+      "final_decision": "not adopted",
+      "final_reason": "候補間の段階的再開は正答数を増やさず、1063.69→1067.51秒。複雑さに見合う効果なし。"
+    },
+    "F19": {
+      "change": "Record source identity, revisions and phase history across resumed refinement",
+      "stage": "stage3-progressive",
+      "final_decision": "not adopted",
+      "final_reason": "再開スケジューラと一緒に撤回。既存revision・phase history・artifact読取互換性は維持。"
+    },
+    "F20": {
+      "change": "Successive answer stability stops extra closure after 250 digits; unchanged final uncertainty verifier",
+      "stage": "stage4-adaptive",
+      "limitation": "Work allocation heuristic, not a certified uncertainty bound",
+      "final_decision": "not adopted",
+      "final_reason": "Full 969-run evaluation exposed false early stability: 250-digit candidates pass initial verification but fail later 500-digit domain boundary/uncertainty verification. Removing the stop restores five distance-zero failures and a deadline case in the predeclared regression investigation."
+    },
+    "F21": {
+      "change": "Keep best completed local probe on local cutoff",
+      "stage": "stage4-intermediate",
+      "final_decision": "not adopted",
+      "final_reason": "局所中断時の追加保持は正答数を増やさず、1078.14→1077.08秒の微差のみ。"
+    },
+    "F22": {
+      "change": "Bounded near-observation integer tuple heap enumeration",
+      "stage": "stage2-integer",
+      "final_decision": "not adopted",
+      "final_reason": "整数部分列挙は正答数を増やさず。最終scalar修正の効果から切り離して撤回。"
+    },
+    "F23": {
+      "change": "Compare candidate round-robin schedule under existing finalization reserve",
+      "stage": "stage3-progressive",
+      "final_decision": "not adopted",
+      "final_reason": "最終化予約の3秒下限は第3候補の全969実行で929→928件・総時間+0.51%となり撤回。既存の20%・最大30秒を維持。"
+    },
+    "F24": {
+      "change": "30-digit strict guard screening with high-precision fallback near the boundary",
+      "stage": "stage4-guards",
+      "final_decision": "not adopted",
+      "final_reason": "低精度guardの実験は直前のTRF版より速いが、余分な戦略を外した組合せを優先。最終版は元のguard評価を使用。"
+    },
+    "F25": {
+      "change": "Reuse Jacobian only while point is unchanged; rank chart before deficient full Newton",
+      "stage": "stage4-reuse, stage4-rank-first",
+      "final_decision": "partially adopted",
+      "final_reason": "同じ点のJacobianのみ再利用し、点が変われば破棄。rank-firstは2試行0成功で撤回し、元のNewton→rank-chart順序を維持。"
+    },
+    "F26": {
+      "change": "Static residual dependencies and disjoint-row finite difference coloring",
+      "stage": "stage4-sparse",
+      "final_decision": "adopted",
+      "final_reason": "残差の静的依存が互いに交わらない列だけ差分を共有。不明な依存は全変数へ保守的に戻す。"
+    },
+    "F27": {
+      "decision": "Keep final verifier linear algebra unchanged",
+      "reason": "Exact-assembly profile: matrix correction 0.218s and inverse 0.048s; domain-margin numerical derivatives account for most verifier time. Insufficient benefit for verification-sensitive refactoring.",
+      "final_decision": "partially adopted",
+      "final_reason": "最終検証の線形代数と閾値は維持。幾何述語だけ、完全な座標表現と計算精度が一致する場合の結果を最大512件再利用。可変Pointのidentityや丸めた値をkeyにしない。"
+    },
+    "F28": {
+      "change": "Skip repeated unscaled PSLQ and duplicate canonicalization",
+      "stage": "stage4-reuse",
+      "final_decision": "adopted",
+      "final_reason": "factor=1の重複PSLQと同一多項式の重複正規化を除去。探索上限と検証は変更しない。"
+    },
+    "F29": {
+      "decision": "Keep compatibility checking unchanged",
+      "reason": "Three profiles show 0.5-3 percent inclusive time; immutable evaluator snapshots already reuse work. Further shortcut is not justified.",
+      "final_decision": "partially adopted",
+      "final_reason": "snapshot互換性検査は維持。正確なmpf・int型の演算引数だけはfloat混入でないため、高精度モードのcontext参照を省略。floatとsubclassには既存検査を適用。"
+    },
+    "F30": {
+      "decision": "Keep exact degree, coefficient and verification limits unchanged",
+      "reason": "No profile-backed safe expansion identified; no benchmark-specific limit or expected-answer branching introduced.",
+      "final_decision": "not adopted",
+      "final_reason": "No profile-backed safe expansion identified; no benchmark-specific limit or expected-answer branching introduced."
+    },
+    "F31": {
+      "decision": "Keep worker serialization and save path unchanged",
+      "reason": "Profiled serialization under 0.4 percent; preserving partial publication and timeout behavior is more valuable than an unmeasured rewrite.",
+      "final_decision": "not adopted",
+      "final_reason": "Profiled serialization under 0.4 percent; preserving partial publication and timeout behavior is more valuable than an unmeasured rewrite."
+    },
+    "F32": {
+      "decision": "Reject naive native-float replacement",
+      "reason": "Angle cross product at 1e-200 scale underflows to zero in binary64 although 53-bit mpmath gives pi/2. Numeric probe records counterexample.",
+      "final_decision": "not adopted",
+      "final_reason": "Angle cross product at 1e-200 scale underflows to zero in binary64 although 53-bit mpmath gives pi/2. Numeric probe records counterexample."
+    },
+    "F33": {
+      "decision": "Reject gmpy2 dependency adoption",
+      "reason": "Isolated 2.2.1 backend speeds numerical microbenchmarks but fails 10 of 165 compatibility regressions, including mpz serialization. Main dependency lock and runtime remain Python backend.",
+      "final_decision": "not adopted",
+      "final_reason": "Isolated 2.2.1 backend speeds numerical microbenchmarks but fails 10 of 165 compatibility regressions, including mpz serialization. Main dependency lock and runtime remain Python backend."
+    },
+    "F34": {
+      "change": "Retain batch diagnostics and process-wall/p95/execution-layout measurements",
+      "stage": "stage1, research tooling",
+      "final_decision": "adopted"
+    }
+  }
+}
