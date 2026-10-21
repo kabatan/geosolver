@@ -1,0 +1,49 @@
+{
+  "id": "AIME-2013-II-15",
+  "variables": [
+    "alpha",
+    "beta"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(sin(beta) * cos(alpha) / sin(alpha + beta), sin(beta) * sin(alpha) / sin(alpha + beta))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "cos(alpha) ** 2 + cos(beta) ** 2 + 2 * sin(alpha) * sin(beta) * cos(pi - alpha - beta)",
+      "operator": "=",
+      "right": "15 / 8"
+    },
+    {
+      "left": "cos(beta) ** 2 + cos(pi - alpha - beta) ** 2 + 2 * sin(beta) * sin(pi - alpha - beta) * cos(alpha)",
+      "operator": "=",
+      "right": "14 / 9"
+    },
+    {
+      "left": "alpha",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "beta",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "pi - alpha - beta",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "cos(pi - alpha - beta) ** 2 + cos(alpha) ** 2 + 2 * sin(pi - alpha - beta) * sin(alpha) * cos(beta)"
+}

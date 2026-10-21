@@ -1,0 +1,89 @@
+{
+  "id": "AIME-2015-II-07",
+  "variables": [
+    "alpha",
+    "beta"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(12, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(-8, 15)"
+    },
+    {
+      "name": "lineBC",
+      "expression": "Line(B, C)"
+    },
+    {
+      "name": "lineAC",
+      "expression": "Line(A, C)"
+    },
+    {
+      "name": "P1",
+      "expression": "Point(12 * 1/3, 0)"
+    },
+    {
+      "name": "Q1",
+      "expression": "Intersect(ParallelLine(lineBC, P1), lineAC)"
+    },
+    {
+      "name": "R1",
+      "expression": "FootOfPerpendicular(Q1, lineBC)"
+    },
+    {
+      "name": "S1",
+      "expression": "FootOfPerpendicular(P1, lineBC)"
+    },
+    {
+      "name": "P2",
+      "expression": "Point(12 * 2/3, 0)"
+    },
+    {
+      "name": "Q2",
+      "expression": "Intersect(ParallelLine(lineBC, P2), lineAC)"
+    },
+    {
+      "name": "R2",
+      "expression": "FootOfPerpendicular(Q2, lineBC)"
+    },
+    {
+      "name": "S2",
+      "expression": "FootOfPerpendicular(P2, lineBC)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 12
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": 25
+    },
+    {
+      "left": "Distance(C, A)",
+      "operator": "=",
+      "right": 17
+    },
+    {
+      "left": "Distance(P1, Q1) * Distance(Q1, R1)",
+      "operator": "=",
+      "right": "alpha * Distance(P1, Q1) - beta * Distance(P1, Q1) ** 2"
+    },
+    {
+      "left": "Distance(P2, Q2) * Distance(Q2, R2)",
+      "operator": "=",
+      "right": "alpha * Distance(P2, Q2) - beta * Distance(P2, Q2) ** 2"
+    }
+  ],
+  "target": "beta"
+}
