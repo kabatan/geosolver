@@ -1,0 +1,15 @@
+{
+  "case_id": "IMO_2007_P4",
+  "source": {"official_url": "https://www.imo-official.org/assets/documents/problems/2007/2007_eng.pdf", "official_pdf_sha256": "29246b496d6fbca636e4482ec18c3f86b71754e02cfc80ba9066d08443a79a46", "official_pdf_page": 2, "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2007_P4.smt2", "gmbl_sha256": "8a05850e3c754e27208f18035b0545a70a0279d5c1a386f9b135da4333e9647f"},
+  "normalization": {"anchors": ["A", "B"], "fixed_coordinates": {"A": ["0", "0"], "B": ["1", "0"]}, "removed_continuous_dof": 4, "justification": "三角形の辺ABは正長。相似変換でABを単位水平線分にし、C=(cx,cy)の形・上下は自由に残す。", "scale_invariant": true, "reflection_fixed": false},
+  "clauses": [
+    {"id": "triangle", "statement_ja": "ABCは非退化な三角形。", "gmbl": ["(param (A B C) triangle)"], "geosolver": ["A, B, C", "Area(A, B, C) > 0"], "status": "matched"},
+    {"id": "bisector_intersections", "statement_ja": "角BCAの内角二等分線と外接円のC以外の交点がR。BCとACの垂直二等分線との交点がそれぞれP,Q。", "gmbl": ["(i-bisector B C A)", "(rs-neq C)", "(perp-bis B C)", "(perp-bis A C)"], "geosolver": ["bisector = AngleBisector(B, C, A)", "R = Intersect(bisector, Gamma, exclude=C)", "P = Intersect(bisector, PerpendicularBisector(B, C))", "Q = Intersect(bisector, PerpendicularBisector(A, C))"], "status": "matched"},
+    {"id": "midpoints", "statement_ja": "K,LはBC,ACの中点。", "gmbl": ["(define K point (midp B C))", "(define L point (midp A C))"], "geosolver": ["K = Midpoint(B, C)", "L = Midpoint(A, C)"], "status": "matched"}
+  ],
+  "goal": {"statement_ja": "三角形RPKとRQLの面積が等しい。", "gmbl": ["(eval (= (area R P K) (area R Q L)))"], "included_in_search": false, "target": "0"},
+  "source_differences": [{"kind": "implementation_acceptance_policy", "detail": "GMBの全保存点間min_distは原文にない。P,Q等が一致する特殊配置を一律には除外しない。"}],
+  "open_issues": [],
+  "author_review": {"reviewer": "dsl_2007_2013", "primary_sources_read": ["公式2007英語PDF第2頁（画像・抽出本文）", "公開IMO_2007_P4.smt2", "GeoSolver DSL specのAngleBisector・Intersect"], "static_validation": "GeometryProblem、validate、compile_problemに合格。36問の探索・精密化は未実施。"},
+  "comparison_status": "draft"
+}

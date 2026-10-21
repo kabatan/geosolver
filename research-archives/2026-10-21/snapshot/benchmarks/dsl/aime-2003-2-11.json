@@ -1,0 +1,47 @@
+{
+  "id": "aime-2003-2-11",
+  "variables": [
+    "x",
+    "y"
+  ],
+  "constructions": [
+    {
+      "name": "C",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(24, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(0, 7)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(x, y)"
+    },
+    {
+      "name": "M",
+      "expression": "Midpoint(A, B)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, D)",
+      "operator": "=",
+      "right": 15
+    },
+    {
+      "left": "Distance(B, D)",
+      "operator": "=",
+      "right": 15
+    },
+    {
+      "left": "7*x + 24*y - 168",
+      "operator": "<",
+      "right": 0
+    }
+  ],
+  "target": "Area(C, D, M)"
+}

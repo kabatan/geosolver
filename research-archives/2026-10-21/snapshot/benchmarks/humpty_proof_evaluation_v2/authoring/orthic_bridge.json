@@ -1,0 +1,93 @@
+[
+  {
+    "id": "OB01",
+    "title_ja": "垂足の三角形に作る二接円と元の中線",
+    "problem_ja": "鋭角三角形ABCでAB≠ACとする。BからACへの垂足をE、CからABへの垂足をF、BCの中点をNとする。A,Eを通り直線AFにAで接する円と、A,Fを通り直線AEにAで接する円の、Aでない交点をXとする。A,N,Xが一直線上にあることを証明せよ。",
+    "short_route_ja": [
+      "垂心HからANへの垂足Pを補い、APの中点をMとする。核心の橋渡しは、Mが△AEFの二接円のAでない共通点になること。",
+      "従ってX=M。A,M,P,Nは同一直線上なので結論が出る。"
+    ],
+    "after_discovery_ja": "核心の橋渡しを認識した後は、二円の共通点の一意性でX=Mと同定し、中線上と結論する二手。新たな計算・別の難しい補題は不要。橋渡し自体の説明は完全証明に必要。",
+    "key_lemma_ja": "HをABCの垂心、PをHからANへの垂足、MをAPの中点とする。A,E,F,H,Pは直径AHの円上にあり、中線の等面積とAE=AB cos A、AF=AC cos AからPE/PF=AE/AF。この比はAPを△AEFのA対称中線の弦と同定する。さらに△AEPの中線EMに関する正弦比を円周角の正弦比と比較すると∠AEM=∠PEF=∠PAF。同様に∠AFM=∠PFE=∠PAE。接弦定理の逆からMは問題の二円の共通点になる。これが『APの中点は△AEFのA-Dumpty点』の具体的な証明である。",
+    "solution_ja": [
+      "HをABCの垂心として補い、PをHからANへの垂足、MをAPの中点とする。AE⊥EH、AF⊥FH、AP⊥PHなのでA,E,F,H,Pは直径AHの円Γ上にある。鋭角条件によりHと半直線ANは角EAFの内部にあり、P≠Aは半直線ANとΓのAでない交点である。従ってPはΓのAを含まない弧EF上にある。",
+      "θ=∠BACとおく。射影の長さからAE=AB cosθ、AF=AC cosθであり、AE/AF=AB/AC。NがBCの中点だから△ABNと△ACNの面積は等しく、AB sin∠BAN=AC sin∠NAC。従ってsin∠EAP/sin∠PAF=sin∠NAC/sin∠BAN=AB/AC=AE/AF。Γの弦の比へ書き換えるとPE/PF=AE/AFを得る。",
+      "ここから二接円との一致を名前の引用なしで示す。α=∠AEM、β=∠MEP、γ=∠PEF、δ=∠FEAとする。MはAPの中点なので△AEMと△MEPの面積が等しく、AE sinα=EP sinβ。よってsinα/sinβ=EP/AE。Γの弦の比よりsinγ/sinδ=PF/FA。前段のPE/PF=AE/AFからEP/AE=PF/FAなので、この二つの正弦比は等しい。",
+      "Mは線分APの内部にあり、またPがAを含まない弧EF上にあるため半直線EFは角AEPの内部にある。従ってα+β=γ+δ=∠AEPで、全ての角は正である。同じ和τ∈(0,π)を持つ角の組ではsin t/sin(τ−t)は一意にtを定めるので、α=γ。これはsinα sin(τ−γ)−sinγ sin(τ−α)=sinτ sin(α−γ)からも直ちに従う。Γの円周角よりγ=∠PAFなので、∠AEM=∠PAF=∠MAF。接弦定理の逆によって、円AEMはAで直線AFに接する。従ってMは第一の円上にある。",
+      "E,Fを交換した同じ議論から∠AFM=∠PFE=∠PAE=∠MAEとなる。従って円AFMはAで直線AEに接し、Mは第二の円上にもある。",
+      "AEとAFは異なる直線なので二円は相異なる。M≠Aだから、二円のAでない共通点はMでありX=M。M∈AP⊂ANよりA,N,Xは一直線上にある。"
+    ],
+    "key_auxiliary_ja": "問題文にない垂心H、P=HからANへの垂足、M=APの中点を導入する。Pは元の△ABCのA-Humpty点、Mは垂足三角形△AEFのA-Dumpty点に当たるが、参照証明はこの名前を前提にしない。",
+    "auxiliary_hint_ja": "三角形ABCの垂心をHとし、HからANへの垂足Pと、APの中点Mを補助点として導入して考えてください。",
+    "transfer_target_ja": "元三角形の中線への垂足と、垂足三角形の二接円との間で表現を移し替える。学習時に個別に現れたHumptyとDumptyを、学習にない派生三角形の組合せで同定・利用できるかを見る。",
+    "training_overlap_ids": ["H01", "H03", "H04", "H14", "DA01", "DA07", "DA11", "DB15"],
+    "overlap_audit_ja": [
+      "v2のtraining_problems.jsonl全37件を照合した。元三角形の二つの垂足E,Fにこの二接円を作り、元のBCの中点Nとの共線性を問う問題はない。主学習の数値を文字へ置き換えた同一問題ではない。",
+      "DA01は二接円の基本作図を△ABCそのものに使う。OB01は同じ局所作図を新しい△AEFへ適用し、元の△ABCの中線へ結び付ける。基本作図との重なりは意図的であり、全部が未知の構成だとは主張しない。",
+      "H01,H04はHから元三角形の中線への垂足を与える。H03,H14,DA07もその点の別表示に関係する。OB01ではH,P,Mを問題文に与えず、Xの別表現として導入する。",
+      "DB15は『元三角形のDumpty点が別の三角形のHumpty点になる』関係を含むが、そちらのE,Fは辺の中点であり、Aから底辺への垂足Dと合わせる。OB01のE,FはB,Cからの垂足であり、『元三角形のHumpty点までの線分の中点』という橋渡しは異なる。関連した派生三角形への転移として扱い、無関係な能力とは数えない。",
+      "X自体は問題文に現れ、参照証明のMと同じ物理的な点である。測るのは新しい表示の認識とP,Mの補助的な再構成であり、目的点そのものが図から完全に欠けた問題ではない。",
+      "A対称中線の方向を直接同定する証明や座標証明でも解ける。正答のみをHumpty点の自発導入成功と判定しない。ヒント版は同一問題の診断であり独立問題数に含めない。"
+    ],
+    "novelty_status": "ユーザー提供の橋渡し補題を独立に証明し、留保する証明評価へ構成したもの。世界での新規性・原著性・事前学習で未見であることは主張しない。",
+    "source": [
+      {
+        "title": "ユーザー提供のHumpty・Dumpty間の補題",
+        "locator": "ABCのB,Cからの垂足をE,Fとすると、A-Humpty点Pに対するAP中点は△AEFのA-Dumpty点。今回の完全証明と一般座標検算はこの補題を独立に検証したもの。"
+      },
+      {
+        "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+        "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+        "locator": "Definition / Characterization 1, PDF p.3; Characterization 5, PDF p.4。対称中線の弦の中点と二接円という一般的背景の出典。このPDFに今回の垂足三角形の橋渡しがそのまま載るとは主張しない。"
+      },
+      {
+        "title": "Evan Chen, Lemmas in AoPS Geometry",
+        "url": "https://web.evanchen.cc/handouts/GeoSlang/GeoSlang.pdf",
+        "locator": "§3.1。Humpty点の中線への射影という一般的背景。今回の橋渡し自体は上記の独立証明による。"
+      }
+    ],
+    "domain_ja": [
+      "ABCは非退化な鋭角三角形でAB≠AC。E,Fは各辺の内部にあり、A,E,Fは非共線である。",
+      "AEとAFが異なる直線なので、それぞれの指定接円が一意に存在し、二円は相異なる。参照証明でM≠Aを両円に構成することにより、Aでない実共通点Xの存在と一意性も示す。",
+      "HはABCの内部にあるため、AHとANのなす角は90°未満でP≠A。AB≠ACによりH≠Pであり、射影と直径AHの円の記述は退化しない。",
+      "証明中PはΓのAを含まない弧EF上、Mは線分APの内部にある。この位置関係により使用した通常の正の角の和と正弦比が成り立つ。"
+    ],
+    "scoring_ja": [
+      "参照経路は7点: 0〜2点でH,P,Mを正しく構成し、共円性とPE/PF=AE/AFを示す。0〜3点で中点Mが二つの指定接円に属する核心の橋渡しを説明する。0〜2点でX=Mの同定、共線性、必要な非退化条件を完結する。",
+      "『MはDumpty点だから二接円上』『PはHumpty点だからこの関係が成り立つ』という名前のみの核心引用は完答にしない。具体的な円周角・正弦比・接弦条件、または同等の完全な根拠を求める。通常の円周角、接弦定理、正弦定理は使用できる。",
+      "座標や、対称中線の方向を直接同定する方法も、完全なら7点。採点は参照証明と同じ補助点の使用を要求しない。",
+      "証明得点と別にHUMPTY_ORTHIC_MIDPOINT / DIRECT_SYMMEDIAN / ALGEBRA / OTHER_VALIDを記録する。HUMPTY_ORTHIC_MIDPOINTはP,Mを自発導入し、M=Xの橋渡しを実際に利用した場合に限る。不要な点の追加や名前だけでは利用成功に数えない。",
+      "ヒントなしを主評価とし、auxiliary_hint_jaを追加した同一問題は補助診断にする。ヒントありでP,Mを用いても自発導入成功とは数えず、二題の独立評価とも数えない。"
+    ],
+    "verification_ja": [
+      "上記の純幾何証明は、ユーザー提供の橋渡しを円周角、面積比と接弦定理から導く。特殊点の名称や未証明の核心定理を前提にしない。",
+      "verify_orthic_bridge.pyはB=(-1,0),C=(1,0),A=(u,v)でE,Fを射影から求め、指定の点と接線の三条件から二つの円を別々に構成する。根軸と円の方程式から第二交点Xを求め、独立に作ったP=foot(H,AN)とM=(A+P)/2に対しX=Mを恒等確認した。",
+      "同じ一般座標でA,E,F,H,Pの共円性、PE² AF²=PF² AE²、接条件、A,N,Xの共線性も恒等確認した。全体の相似を除く任意の鋭角三角形を含むパラメータ範囲である。",
+      "代表例は下記の有理座標から全作図を再現し、鋭角、AB≠AC、相異なる二円、正の半径、X≠Aまで厳密に確認した。"
+    ],
+    "family_id": "humpty_to_orthic_dumpty_midpoint",
+    "evaluation_role": "primary_transfer",
+    "role": "transfer_main",
+    "method_codes": ["HUMPTY_ORTHIC_MIDPOINT", "DIRECT_SYMMEDIAN", "ALGEBRA", "OTHER_VALID"],
+    "verification_script": "verify_orthic_bridge.py",
+    "selection_reason_ja": "ユーザーが指定した橋渡しを、その発見後に追加の難しい処理が残らない問いへする。核が同じ別の問いを水増しせず一問とする。",
+    "overlap_level_ja": "二接円と中線への射影は既習配置。両者を垂足三角形で接続する組合せと共線性の問いは37 mainにない。",
+    "witness": {
+      "points": {
+        "A": ["1/2", "3/2"],
+        "B": ["-1", "0"],
+        "C": ["1", "0"],
+        "N": ["0", "0"],
+        "E": ["4/5", "3/5"],
+        "F": ["0", "1"],
+        "H": ["1/2", "1/2"],
+        "P": ["1/5", "3/5"],
+        "M": ["7/20", "21/20"],
+        "X": ["7/20", "21/20"]
+      },
+      "circle_coefficients": [["-7/4", "-9/4", "7/4"], ["-1/4", "-11/4", "7/4"]],
+      "circle_convention": "x²+y²+alpha*x+beta*y+gamma=0",
+      "checks": ["鋭角でAB≠AC", "二垂足と指定接円を元の定義から構成", "Xを二円から独立に求めた", "X=M=(A+P)/2", "A,N,X共線"]
+    }
+  }
+]

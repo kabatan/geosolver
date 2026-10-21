@@ -1,0 +1,145 @@
+{
+  "case_id": "IMO_2004_P1",
+  "source": {
+    "official_url": "https://www.imo-official.org/assets/documents/problems/2004/2004_eng.pdf",
+    "official_legacy_url": "https://www.imo-official.org/problems/2004/eng.pdf",
+    "official_pdf_sha256": "b94ed994dca8ad6c22827535132d67eae37935cbf6d3bdeb196c5fa362282062",
+    "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2004_P1.smt2",
+    "gmbl_sha256": "c063c59ea57ea2e1eaff43606fada513fa291e5216e5c3c0490ca591412c8561",
+    "gmbl_commit": "f070afe18ed874b3a31db519ea6f593f40a1be00"
+  },
+  "normalization": {
+    "anchors": [
+      "B",
+      "C"
+    ],
+    "fixed_coordinates": {
+      "B": [
+        "0",
+        "0"
+      ],
+      "C": [
+        "1",
+        "0"
+      ]
+    },
+    "removed_continuous_dof": 4,
+    "justification": "鋭角三角形の辺BCは非零で、円の直径・内角二等分線・円の共通点の条件は相似不変。 平行移動2・回転1・正の一様拡大縮小1のみを除く。",
+    "scale_invariant": true,
+    "reflection_fixed": false
+  },
+  "clauses": [
+    {
+      "id": "acute-scalene-at-A",
+      "statement_ja": "ABCは鋭角でAB≠AC。",
+      "gmbl": [
+        "(param (A B C) acute-tri)",
+        "(assert (not (cong A B A C)))"
+      ],
+      "geosolver": [
+        "AcuteTriangle(A, B, C)",
+        "Distance(A, B) != Distance(A, C)"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "diameter-circle",
+      "statement_ja": "OはBCの中点、円omegaの直径はBC。",
+      "gmbl": [
+        "(define O point (midp B C))",
+        "(diam B C)"
+      ],
+      "geosolver": [
+        "O = Midpoint(B, C)",
+        "omega = CircleThroughPoint(O, B)"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "second-intersections",
+      "statement_ja": "M,Nは円とAB,ACとの、それぞれB,Cとは異なる交点。",
+      "gmbl": [
+        "(define M point (inter-lc (line A B) (diam B C) (rs-neq B)))",
+        "(define N point (inter-lc (line A C) (diam B C) (rs-neq C)))"
+      ],
+      "geosolver": [
+        "M = Intersect(Line(A, B), omega, exclude=B)",
+        "N = Intersect(Line(A, C), omega, exclude=C)"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "bisector-meeting",
+      "statement_ja": "角BACと角MONの内角二等分線の交点がR。",
+      "gmbl": [
+        "(define R point (inter-ll (i-bisector B A C) (i-bisector M O N)))"
+      ],
+      "geosolver": [
+        "R = Intersect(AngleBisector(B, A, C), AngleBisector(M, O, N))"
+      ],
+      "status": "matched"
+    }
+  ],
+  "goal": {
+    "statement_ja": "BMRとCNRの外接円はBC上に共通点を持つ。",
+    "gmbl": [
+      "(eval (on-seg (inter-cc (circumcircle B M R) (circumcircle C N R) (rs-neq R)) B C))"
+    ],
+    "geosolver_expressions": [
+      "OnSegment(Intersect(Circumcircle(B,M,R), Circumcircle(C,N,R), exclude=R), B, C) = 0"
+    ],
+    "coverage": "BC上にあるもう一つの共通点を調べる。円と第二交点の存在は結論評価側で検査。",
+    "included_in_search": false,
+    "target": "0"
+  },
+  "source_differences": [
+    {
+      "id": "gmb-global-admission",
+      "kind": "implementation_limit",
+      "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+      "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+    },
+    {
+      "id": "gmb-acute-sampler",
+      "kind": "implementation_limit",
+      "detail_ja": "benchmarks/gmb/.runtime/source/src/optimizer.py:448-488のacute-triはB=(-2,0),C=(2,0),Axを初期値固定、Ayを(1.1,4.1)へ制限する。このパラメータ範囲は全鋭角三角形を尽くさず、Aが鈍角になる配置も含む。公開DSL名の数学的な鋭角条件をGeoSolverでは保持する。",
+      "comparison_effect": "探索上の制限は移植しない。GMB出力にも鋭角条件を共通検査器で課す。"
+    },
+    {
+      "id": "second-point-side-membership",
+      "kind": "equivalent_construction",
+      "detail_ja": "原文のM,Nは辺上だが、鋭角三角形ではBC直径円との第二交点がそれぞれAB,ACの内部にある。GMBLと同じ第二交点構成を使い、辺の延長枝は選ばない。",
+      "comparison_effect": "共通検査器では辺上も確認する。"
+    },
+    {
+      "id": "goal-segment-margin",
+      "kind": "implementation_limit",
+      "detail_ja": "benchmarks/gmb/.runtime/source/src/optimizer.py:1110-1115のon-seg predicateは辺の両端20%を除いた内側に対する余裕を用いる。原文にはこの数値的な追加条件はない。",
+      "comparison_effect": "原文の線分所属とGMB自身のevalは分けて報告する。"
+    }
+  ],
+  "open_issues": [],
+  "author_review": {
+    "author": "dsl_2000_2006",
+    "primary_sources_read": [
+      "official IMO 2004 English PDF (relevant problem text and rendered page)",
+      "pinned GMBL IMO_2004_P1.smt2",
+      "benchmarks/gmb/.runtime/source/src/optimizer.py",
+      "src/geosolver/problem/dsl-spec.json",
+      "src/geosolver/engine/standard/interpreter/context/geometry.py",
+      "src/geosolver/engine/standard/interpreter/context/high_precision.py"
+    ],
+    "static_validation": {
+      "public_model": true,
+      "validator": true,
+      "compiler": true,
+      "warnings": [],
+      "variables": 2,
+      "constructions": 8,
+      "conditions": 2
+    },
+    "solve_or_refinement_executed": false,
+    "independent_review_required": true
+  },
+  "comparison_status": "draft"
+}

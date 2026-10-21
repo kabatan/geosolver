@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2014_P3",
+  "reviewer": "independent_review",
+  "case_sha256": "64e2557160612d812d88f7808094a1791daeb2f880a28435bb4a0e77392dac56",
+  "audit_sha256": "100f6108c44bd3791e507efa70240991af5fe5ccea4ac20f8e7739442bd75af4",
+  "gmbl_sha256": "9bb28cab1c38c8ad0a3ba7a9ec06505b22795672b96a0a971dc49e6e40bcc4b6",
+  "reviewed_original_pdf_sha256": "8642358ce5518c8bd93a92d6b02ddb39f59d30dcfc63e581fdca9d11f01b138a",
+  "verdict": "pass",
+  "normalization_checked": true,
+  "conclusion_not_assumed": true,
+  "original_conditions_covered_by_gmbl": true,
+  "scope_of_coverage_ja": "原文の仮定を当該比較範囲で満たすかの監査である。原文の全境界配置を含む解集合の完全同値、GMB実装の全数値分岐の正当性、実験の実行許可を意味しない。",
+  "comparison_scope": "nondegenerate_configuration_domain",
+  "sources_read": [
+    "cases/IMO_2014_P3.json",
+    "audit/IMO_2014_P3.json",
+    "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2014_P3.smt2",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2014-eng.pdf",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2014-eng.txt",
+    "AUTHORING.md",
+    "reviews/UPSTREAM_SEMANTICS.md"
+  ],
+  "official_url": "https://www.imo-official.org/assets/documents/problems/2014/2014_eng.pdf",
+  "normalization_review": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "removed_continuous_dof": 4,
+    "scale_invariant": true,
+    "reflection_fixed": false,
+    "remaining_solver_variables": [
+      "cx",
+      "cy",
+      "dx",
+      "dy",
+      "s",
+      "t"
+    ],
+    "shape_fixed_beyond_original_hypotheses": false,
+    "checked_ja": "原文で相異なる二点の単位基線化だけで平行移動2・回転1・正の尺度1を除く。元の形の変数と鏡映配置を保持している。"
+  },
+  "original_goal_not_used": "BDは三角形TSHの外接円に接する。",
+  "checked_input_counts": {
+    "constructions": 7,
+    "conditions": 15
+  },
+  "method": {
+    "read_all_constructions_and_conditions": true,
+    "read_original_problem_assumptions": true,
+    "checked_domains_branches_and_non_degeneracy": true,
+    "checked_goal_separation": true,
+    "exact_algebraic_checks_only_where_documented": true,
+    "solver_executed": false,
+    "optimizer_executed": false,
+    "refinement_executed": false,
+    "prior_case_performance_used_to_adjust_input": false
+  },
+  "gmb_runtime_equivalence_claimed": false,
+  "findings": [
+    {
+      "id": "IMO_2014_P3-review-1",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "ABを単位基線にしC,D,S,Tの形・位置を残す。四つの同符号外積で頂点順ABCDの狭義凸性を両向きとも表す。"
+    },
+    {
+      "id": "IMO_2014_P3-review-2",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "B,Dの直角、Hの垂足、HがSCTの内部にある三つの符号、二つの角の差がπ/2である条件を照合した。"
+    },
+    {
+      "id": "IMO_2014_P3-review-3",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "半直線のゼロ長を許さずS,Tを対応辺内部に取る。S=A又はT=Aも角差条件とH内部条件に反するため、原文の非退化配置を取り落とさない。BDとTSH外接円の接線性は結論のみ。"
+    }
+  ],
+  "remaining_uncertainties": []
+}

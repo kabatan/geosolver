@@ -1,0 +1,2663 @@
+{
+  "scope": "Descriptive reaggregation of existing frozen grades; no new model inference and no regrading.",
+  "limitations": [
+    "Output counts are not independent construction or training-seed counts.",
+    "Pooled conditions diagnose metric disagreement and failure location; they do not estimate a common intervention effect.",
+    "H03/H04/H14 are three construction IDs within one projection lemma cluster.",
+    "Thinking uses a different prompt template and inference budget from non-Thinking.",
+    "Base Thinking H04 has a documented strict sensitivity grade: total proof count would be 0 instead of 1.",
+    "Fresh3 partial outputs are not graded or inspected here; absence of a score is not an experimental failure."
+  ],
+  "sources": {
+    "fresh1_first_pass": {
+      "path": "qwen/.runtime/qwen35_external_teacher_20260925/scored-near-transfer-first-pass/joined-grades.json",
+      "sha256": "5c895d124a2fa26054e598f8a94190827a39aaf2852080cd35be2884fca2cdbf"
+    },
+    "fresh1_second_decoding_seed": {
+      "path": "qwen/.runtime/qwen35_external_teacher_20260925/scored-near-transfer-repeat1/joined-grades.json",
+      "sha256": "cc4280b6fa8253f47cf5ef19355ad545ac822243eec6ce9ec9e1017b22f715fa"
+    },
+    "fresh2_data_form": {
+      "path": "qwen/.runtime/qwen35_external_teacher_20260925/scored-fresh2/joined-grades.json",
+      "sha256": "d6cf0509f85b23f53a9c1e7b69bab5703f5a09320f428004eaa2ce457e461463"
+    },
+    "thinking": {
+      "path": "docs/research/qwen35-external-teacher-2026-09-25/thinking-comparison-blind/THINKING_JOINED_SCORES.json",
+      "sha256": "a961f147d5f3c6f3990e65b23f2058a99a769f53ae5f152b10df46412315cb6c"
+    },
+    "teacher_forcing_policy_probe": {
+      "path": "qwen/.runtime/qwen35_external_teacher_20260924/policy-diagnostic-high-low.json",
+      "sha256": "2b077a6541cd8cc61ff209582587fa201b29259869077a62410cba909c91b1c3"
+    },
+    "eval-fresh3-base-en-32k": {
+      "path": "qwen/.runtime/qwen35_external_teacher_20260925/eval-fresh3-base-en-32k/receipt.json",
+      "sha256": "68c55a1f566908b9953bb118de231efe413bca41ed6756bfe940115b66bf3c0e"
+    },
+    "eval-fresh3-six-source-variants-en-32k": {
+      "path": "qwen/.runtime/qwen35_external_teacher_20260925/eval-fresh3-six-source-variants-en-32k/receipt.json",
+      "sha256": "8c107a8e188c80db81782566655bc93720aff9d6296390e3577fa73b35260ecc"
+    }
+  },
+  "by_experiment_and_arm": {
+    "fresh1_first_pass": {
+      "32-original": {
+        "heldout": {
+          "n_outputs": 5,
+          "source_ids": [
+            "H03",
+            "H04",
+            "H08",
+            "H14",
+            "H15"
+          ],
+          "exact": 1,
+          "relation": 1,
+          "proof": 0,
+          "use": 0,
+          "complete": 0,
+          "exact_but_incomplete": 1,
+          "finish_reasons": {
+            "stop": 5
+          }
+        },
+        "retention": {
+          "n_outputs": 4,
+          "source_ids": [
+            "H01",
+            "H02",
+            "H07",
+            "H13"
+          ],
+          "exact": 1,
+          "relation": 3,
+          "proof": 1,
+          "use": 1,
+          "complete": 1,
+          "exact_but_incomplete": 0,
+          "finish_reasons": {
+            "stop": 4
+          }
+        },
+        "by_source_id": {
+          "H01": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H01"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 1,
+            "use": 1,
+            "complete": 1,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H02": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H02"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H03": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H03"
+            ],
+            "exact": 0,
+            "relation": 1,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H04": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H04"
+            ],
+            "exact": 1,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 1,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H07": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H07"
+            ],
+            "exact": 0,
+            "relation": 1,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H08": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H08"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H13": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H13"
+            ],
+            "exact": 0,
+            "relation": 1,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H14": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H14"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H15": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H15"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          }
+        }
+      },
+      "36-multi": {
+        "heldout": {
+          "n_outputs": 5,
+          "source_ids": [
+            "H03",
+            "H04",
+            "H08",
+            "H14",
+            "H15"
+          ],
+          "exact": 1,
+          "relation": 1,
+          "proof": 1,
+          "use": 1,
+          "complete": 1,
+          "exact_but_incomplete": 0,
+          "finish_reasons": {
+            "stop": 5
+          }
+        },
+        "retention": {
+          "n_outputs": 4,
+          "source_ids": [
+            "H01",
+            "H02",
+            "H07",
+            "H13"
+          ],
+          "exact": 1,
+          "relation": 3,
+          "proof": 1,
+          "use": 1,
+          "complete": 1,
+          "exact_but_incomplete": 0,
+          "finish_reasons": {
+            "stop": 4
+          }
+        },
+        "by_source_id": {
+          "H01": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H01"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 1,
+            "use": 1,
+            "complete": 1,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H02": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H02"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H03": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H03"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H04": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H04"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 1,
+            "use": 1,
+            "complete": 1,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H07": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H07"
+            ],
+            "exact": 0,
+            "relation": 1,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H08": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H08"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H13": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H13"
+            ],
+            "exact": 0,
+            "relation": 1,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H14": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H14"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H15": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H15"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          }
+        }
+      },
+      "36-repeat": {
+        "heldout": {
+          "n_outputs": 5,
+          "source_ids": [
+            "H03",
+            "H04",
+            "H08",
+            "H14",
+            "H15"
+          ],
+          "exact": 1,
+          "relation": 1,
+          "proof": 0,
+          "use": 1,
+          "complete": 0,
+          "exact_but_incomplete": 1,
+          "finish_reasons": {
+            "stop": 5
+          }
+        },
+        "retention": {
+          "n_outputs": 4,
+          "source_ids": [
+            "H01",
+            "H02",
+            "H07",
+            "H13"
+          ],
+          "exact": 1,
+          "relation": 3,
+          "proof": 1,
+          "use": 1,
+          "complete": 1,
+          "exact_but_incomplete": 0,
+          "finish_reasons": {
+            "stop": 4
+          }
+        },
+        "by_source_id": {
+          "H01": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H01"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 1,
+            "use": 1,
+            "complete": 1,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H02": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H02"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H03": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H03"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H04": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H04"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H07": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H07"
+            ],
+            "exact": 0,
+            "relation": 1,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H08": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H08"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H13": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H13"
+            ],
+            "exact": 0,
+            "relation": 1,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H14": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H14"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 0,
+            "use": 1,
+            "complete": 0,
+            "exact_but_incomplete": 1,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H15": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H15"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          }
+        }
+      },
+      "base": {
+        "heldout": {
+          "n_outputs": 5,
+          "source_ids": [
+            "H03",
+            "H04",
+            "H08",
+            "H14",
+            "H15"
+          ],
+          "exact": 0,
+          "relation": 0,
+          "proof": 0,
+          "use": 0,
+          "complete": 0,
+          "exact_but_incomplete": 0,
+          "finish_reasons": {
+            "stop": 5
+          }
+        },
+        "retention": {
+          "n_outputs": 4,
+          "source_ids": [
+            "H01",
+            "H02",
+            "H07",
+            "H13"
+          ],
+          "exact": 1,
+          "relation": 3,
+          "proof": 1,
+          "use": 1,
+          "complete": 1,
+          "exact_but_incomplete": 0,
+          "finish_reasons": {
+            "stop": 4
+          }
+        },
+        "by_source_id": {
+          "H01": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H01"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 1,
+            "use": 1,
+            "complete": 1,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H02": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H02"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H03": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H03"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H04": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H04"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H07": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H07"
+            ],
+            "exact": 0,
+            "relation": 1,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H08": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H08"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H13": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H13"
+            ],
+            "exact": 0,
+            "relation": 1,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H14": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H14"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H15": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H15"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          }
+        }
+      }
+    },
+    "fresh1_second_decoding_seed": {
+      "32-original": {
+        "heldout": {
+          "n_outputs": 5,
+          "source_ids": [
+            "H03",
+            "H04",
+            "H08",
+            "H14",
+            "H15"
+          ],
+          "exact": 2,
+          "relation": 2,
+          "proof": 0,
+          "use": 2,
+          "complete": 0,
+          "exact_but_incomplete": 2,
+          "finish_reasons": {
+            "stop": 5
+          }
+        },
+        "retention": {
+          "n_outputs": 4,
+          "source_ids": [
+            "H01",
+            "H02",
+            "H07",
+            "H13"
+          ],
+          "exact": 0,
+          "relation": 3,
+          "proof": 2,
+          "use": 0,
+          "complete": 0,
+          "exact_but_incomplete": 0,
+          "finish_reasons": {
+            "stop": 4
+          }
+        },
+        "by_source_id": {
+          "H01": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H01"
+            ],
+            "exact": 0,
+            "relation": 1,
+            "proof": 1,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H02": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H02"
+            ],
+            "exact": 0,
+            "relation": 1,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H03": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H03"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H04": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H04"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 0,
+            "use": 1,
+            "complete": 0,
+            "exact_but_incomplete": 1,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H07": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H07"
+            ],
+            "exact": 0,
+            "relation": 1,
+            "proof": 1,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H08": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H08"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H13": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H13"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H14": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H14"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 0,
+            "use": 1,
+            "complete": 0,
+            "exact_but_incomplete": 1,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H15": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H15"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          }
+        }
+      },
+      "36-multi": {
+        "heldout": {
+          "n_outputs": 5,
+          "source_ids": [
+            "H03",
+            "H04",
+            "H08",
+            "H14",
+            "H15"
+          ],
+          "exact": 1,
+          "relation": 1,
+          "proof": 0,
+          "use": 1,
+          "complete": 0,
+          "exact_but_incomplete": 1,
+          "finish_reasons": {
+            "stop": 5
+          }
+        },
+        "retention": {
+          "n_outputs": 4,
+          "source_ids": [
+            "H01",
+            "H02",
+            "H07",
+            "H13"
+          ],
+          "exact": 1,
+          "relation": 4,
+          "proof": 3,
+          "use": 2,
+          "complete": 1,
+          "exact_but_incomplete": 0,
+          "finish_reasons": {
+            "stop": 4
+          }
+        },
+        "by_source_id": {
+          "H01": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H01"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 1,
+            "use": 1,
+            "complete": 1,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H02": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H02"
+            ],
+            "exact": 0,
+            "relation": 1,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H03": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H03"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H04": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H04"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 0,
+            "use": 1,
+            "complete": 0,
+            "exact_but_incomplete": 1,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H07": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H07"
+            ],
+            "exact": 0,
+            "relation": 1,
+            "proof": 1,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H08": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H08"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H13": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H13"
+            ],
+            "exact": 0,
+            "relation": 1,
+            "proof": 1,
+            "use": 1,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H14": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H14"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H15": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H15"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          }
+        }
+      },
+      "36-repeat": {
+        "heldout": {
+          "n_outputs": 5,
+          "source_ids": [
+            "H03",
+            "H04",
+            "H08",
+            "H14",
+            "H15"
+          ],
+          "exact": 2,
+          "relation": 2,
+          "proof": 1,
+          "use": 2,
+          "complete": 1,
+          "exact_but_incomplete": 1,
+          "finish_reasons": {
+            "stop": 5
+          }
+        },
+        "retention": {
+          "n_outputs": 4,
+          "source_ids": [
+            "H01",
+            "H02",
+            "H07",
+            "H13"
+          ],
+          "exact": 2,
+          "relation": 3,
+          "proof": 3,
+          "use": 3,
+          "complete": 2,
+          "exact_but_incomplete": 0,
+          "finish_reasons": {
+            "stop": 4
+          }
+        },
+        "by_source_id": {
+          "H01": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H01"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 1,
+            "use": 1,
+            "complete": 1,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H02": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H02"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H03": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H03"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H04": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H04"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 1,
+            "use": 1,
+            "complete": 1,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H07": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H07"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 1,
+            "use": 1,
+            "complete": 1,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H08": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H08"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H13": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H13"
+            ],
+            "exact": 0,
+            "relation": 1,
+            "proof": 1,
+            "use": 1,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H14": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H14"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 0,
+            "use": 1,
+            "complete": 0,
+            "exact_but_incomplete": 1,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H15": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H15"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          }
+        }
+      },
+      "base": {
+        "heldout": {
+          "n_outputs": 5,
+          "source_ids": [
+            "H03",
+            "H04",
+            "H08",
+            "H14",
+            "H15"
+          ],
+          "exact": 1,
+          "relation": 1,
+          "proof": 0,
+          "use": 1,
+          "complete": 0,
+          "exact_but_incomplete": 1,
+          "finish_reasons": {
+            "stop": 5
+          }
+        },
+        "retention": {
+          "n_outputs": 4,
+          "source_ids": [
+            "H01",
+            "H02",
+            "H07",
+            "H13"
+          ],
+          "exact": 1,
+          "relation": 3,
+          "proof": 2,
+          "use": 1,
+          "complete": 1,
+          "exact_but_incomplete": 0,
+          "finish_reasons": {
+            "stop": 4
+          }
+        },
+        "by_source_id": {
+          "H01": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H01"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 1,
+            "use": 1,
+            "complete": 1,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H02": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H02"
+            ],
+            "exact": 0,
+            "relation": 1,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H03": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H03"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H04": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H04"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 0,
+            "use": 1,
+            "complete": 0,
+            "exact_but_incomplete": 1,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H07": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H07"
+            ],
+            "exact": 0,
+            "relation": 1,
+            "proof": 1,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H08": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H08"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H13": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H13"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H14": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H14"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H15": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H15"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          }
+        }
+      }
+    },
+    "fresh2_data_form": {
+      "balanced-qa": {
+        "heldout": {
+          "n_outputs": 5,
+          "source_ids": [
+            "H03",
+            "H04",
+            "H08",
+            "H14",
+            "H15"
+          ],
+          "exact": 2,
+          "relation": 2,
+          "proof": 0,
+          "use": 2,
+          "complete": 0,
+          "exact_but_incomplete": 2,
+          "finish_reasons": {
+            "stop": 5
+          }
+        },
+        "retention": {
+          "n_outputs": 4,
+          "source_ids": [
+            "H01",
+            "H02",
+            "H07",
+            "H13"
+          ],
+          "exact": 1,
+          "relation": 2,
+          "proof": 1,
+          "use": 1,
+          "complete": 1,
+          "exact_but_incomplete": 0,
+          "finish_reasons": {
+            "stop": 4
+          }
+        },
+        "by_source_id": {
+          "H01": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H01"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 1,
+            "use": 1,
+            "complete": 1,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H02": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H02"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H03": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H03"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H04": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H04"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 0,
+            "use": 1,
+            "complete": 0,
+            "exact_but_incomplete": 1,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H07": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H07"
+            ],
+            "exact": 0,
+            "relation": 1,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H08": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H08"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 0,
+            "use": 1,
+            "complete": 0,
+            "exact_but_incomplete": 1,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H13": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H13"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H14": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H14"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H15": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H15"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          }
+        }
+      },
+      "base": {
+        "heldout": {
+          "n_outputs": 5,
+          "source_ids": [
+            "H03",
+            "H04",
+            "H08",
+            "H14",
+            "H15"
+          ],
+          "exact": 1,
+          "relation": 2,
+          "proof": 1,
+          "use": 1,
+          "complete": 1,
+          "exact_but_incomplete": 0,
+          "finish_reasons": {
+            "stop": 5
+          }
+        },
+        "retention": {
+          "n_outputs": 4,
+          "source_ids": [
+            "H01",
+            "H02",
+            "H07",
+            "H13"
+          ],
+          "exact": 2,
+          "relation": 3,
+          "proof": 1,
+          "use": 2,
+          "complete": 1,
+          "exact_but_incomplete": 1,
+          "finish_reasons": {
+            "stop": 4
+          }
+        },
+        "by_source_id": {
+          "H01": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H01"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 1,
+            "use": 1,
+            "complete": 1,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H02": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H02"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 0,
+            "use": 1,
+            "complete": 0,
+            "exact_but_incomplete": 1,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H03": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H03"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H04": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H04"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 1,
+            "use": 1,
+            "complete": 1,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H07": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H07"
+            ],
+            "exact": 0,
+            "relation": 1,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H08": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H08"
+            ],
+            "exact": 0,
+            "relation": 1,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H13": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H13"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H14": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H14"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H15": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H15"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          }
+        }
+      },
+      "direct-multi": {
+        "heldout": {
+          "n_outputs": 5,
+          "source_ids": [
+            "H03",
+            "H04",
+            "H08",
+            "H14",
+            "H15"
+          ],
+          "exact": 1,
+          "relation": 1,
+          "proof": 0,
+          "use": 0,
+          "complete": 0,
+          "exact_but_incomplete": 1,
+          "finish_reasons": {
+            "stop": 5
+          }
+        },
+        "retention": {
+          "n_outputs": 4,
+          "source_ids": [
+            "H01",
+            "H02",
+            "H07",
+            "H13"
+          ],
+          "exact": 1,
+          "relation": 2,
+          "proof": 0,
+          "use": 1,
+          "complete": 0,
+          "exact_but_incomplete": 1,
+          "finish_reasons": {
+            "stop": 4
+          }
+        },
+        "by_source_id": {
+          "H01": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H01"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 0,
+            "use": 1,
+            "complete": 0,
+            "exact_but_incomplete": 1,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H02": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H02"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H03": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H03"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H04": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H04"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H07": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H07"
+            ],
+            "exact": 0,
+            "relation": 1,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H08": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H08"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 1,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H13": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H13"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H14": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H14"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H15": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H15"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          }
+        }
+      },
+      "repeat": {
+        "heldout": {
+          "n_outputs": 5,
+          "source_ids": [
+            "H03",
+            "H04",
+            "H08",
+            "H14",
+            "H15"
+          ],
+          "exact": 2,
+          "relation": 3,
+          "proof": 1,
+          "use": 2,
+          "complete": 0,
+          "exact_but_incomplete": 2,
+          "finish_reasons": {
+            "stop": 5
+          }
+        },
+        "retention": {
+          "n_outputs": 4,
+          "source_ids": [
+            "H01",
+            "H02",
+            "H07",
+            "H13"
+          ],
+          "exact": 1,
+          "relation": 2,
+          "proof": 1,
+          "use": 1,
+          "complete": 1,
+          "exact_but_incomplete": 0,
+          "finish_reasons": {
+            "stop": 4
+          }
+        },
+        "by_source_id": {
+          "H01": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H01"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 1,
+            "use": 1,
+            "complete": 1,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H02": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H02"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H03": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H03"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H04": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H04"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 0,
+            "use": 1,
+            "complete": 0,
+            "exact_but_incomplete": 1,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H07": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H07"
+            ],
+            "exact": 0,
+            "relation": 1,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H08": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H08"
+            ],
+            "exact": 0,
+            "relation": 1,
+            "proof": 1,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H13": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H13"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H14": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H14"
+            ],
+            "exact": 1,
+            "relation": 1,
+            "proof": 0,
+            "use": 1,
+            "complete": 0,
+            "exact_but_incomplete": 1,
+            "finish_reasons": {
+              "stop": 1
+            }
+          },
+          "H15": {
+            "n_outputs": 1,
+            "source_ids": [
+              "H15"
+            ],
+            "exact": 0,
+            "relation": 0,
+            "proof": 0,
+            "use": 0,
+            "complete": 0,
+            "exact_but_incomplete": 0,
+            "finish_reasons": {
+              "stop": 1
+            }
+          }
+        }
+      }
+    }
+  },
+  "pooled_diagnostic_counts": {
+    "all_targets": {
+      "n_outputs": 60,
+      "source_ids": [
+        "H03",
+        "H04",
+        "H08",
+        "H14",
+        "H15"
+      ],
+      "exact": 15,
+      "relation": 17,
+      "proof": 4,
+      "use": 13,
+      "complete": 3,
+      "exact_but_incomplete": 12,
+      "finish_reasons": {
+        "stop": 60
+      }
+    },
+    "projection_cluster": {
+      "n_outputs": 36,
+      "source_ids": [
+        "H03",
+        "H04",
+        "H14"
+      ],
+      "exact": 13,
+      "relation": 13,
+      "proof": 3,
+      "use": 12,
+      "complete": 3,
+      "exact_but_incomplete": 10,
+      "finish_reasons": {
+        "stop": 36
+      }
+    },
+    "hidden_projection_targets": {
+      "n_outputs": 24,
+      "source_ids": [
+        "H03",
+        "H14"
+      ],
+      "exact": 4,
+      "relation": 5,
+      "proof": 0,
+      "use": 4,
+      "complete": 0,
+      "exact_but_incomplete": 4,
+      "finish_reasons": {
+        "stop": 24
+      }
+    },
+    "retention": {
+      "n_outputs": 48,
+      "source_ids": [
+        "H01",
+        "H02",
+        "H07",
+        "H13"
+      ],
+      "exact": 13,
+      "relation": 34,
+      "proof": 17,
+      "use": 15,
+      "complete": 11,
+      "exact_but_incomplete": 2,
+      "finish_reasons": {
+        "stop": 48
+      }
+    }
+  },
+  "thinking": {
+    "adapter_nonthinking": {
+      "n_attempts": 6,
+      "final_answers": 6,
+      "exact": 2,
+      "complete_proof": 1,
+      "generated_tokens": 50822,
+      "finish_reasons": {
+        "stop": 6
+      },
+      "by_source_id": {
+        "H03": {
+          "attempts": 2,
+          "exact": 0,
+          "complete_proof": 0
+        },
+        "H04": {
+          "attempts": 2,
+          "exact": 1,
+          "complete_proof": 1
+        },
+        "H14": {
+          "attempts": 2,
+          "exact": 1,
+          "complete_proof": 0
+        }
+      }
+    },
+    "adapter_thinking": {
+      "n_attempts": 6,
+      "final_answers": 5,
+      "exact": 2,
+      "complete_proof": 1,
+      "generated_tokens": 282761,
+      "finish_reasons": {
+        "length": 1,
+        "stop": 5
+      },
+      "by_source_id": {
+        "H03": {
+          "attempts": 2,
+          "exact": 0,
+          "complete_proof": 0
+        },
+        "H04": {
+          "attempts": 2,
+          "exact": 2,
+          "complete_proof": 1
+        },
+        "H14": {
+          "attempts": 2,
+          "exact": 0,
+          "complete_proof": 0
+        }
+      }
+    },
+    "base_nonthinking": {
+      "n_attempts": 6,
+      "final_answers": 6,
+      "exact": 2,
+      "complete_proof": 1,
+      "generated_tokens": 51891,
+      "finish_reasons": {
+        "stop": 6
+      },
+      "by_source_id": {
+        "H03": {
+          "attempts": 2,
+          "exact": 0,
+          "complete_proof": 0
+        },
+        "H04": {
+          "attempts": 2,
+          "exact": 2,
+          "complete_proof": 1
+        },
+        "H14": {
+          "attempts": 2,
+          "exact": 0,
+          "complete_proof": 0
+        }
+      }
+    },
+    "base_thinking": {
+      "n_attempts": 6,
+      "final_answers": 6,
+      "exact": 4,
+      "complete_proof": 1,
+      "generated_tokens": 246479,
+      "finish_reasons": {
+        "stop": 6
+      },
+      "by_source_id": {
+        "H03": {
+          "attempts": 2,
+          "exact": 1,
+          "complete_proof": 0
+        },
+        "H04": {
+          "attempts": 2,
+          "exact": 1,
+          "complete_proof": 1
+        },
+        "H14": {
+          "attempts": 2,
+          "exact": 2,
+          "complete_proof": 0
+        }
+      }
+    }
+  },
+  "teacher_forcing_policy_probe": {
+    "teacher_answer_nll": [
+      {
+        "kind": "teacher_answer_nll",
+        "config": "H01",
+        "arm": "base",
+        "tokens": 296,
+        "mean_nll": 1.4243446588516235
+      },
+      {
+        "kind": "teacher_answer_nll",
+        "config": "H01",
+        "arm": "high",
+        "tokens": 296,
+        "mean_nll": 0.5421759486198425
+      },
+      {
+        "kind": "teacher_answer_nll",
+        "config": "H01",
+        "arm": "low",
+        "tokens": 296,
+        "mean_nll": 1.293393611907959
+      },
+      {
+        "kind": "teacher_answer_nll",
+        "config": "H02",
+        "arm": "base",
+        "tokens": 635,
+        "mean_nll": 1.6724482774734497
+      },
+      {
+        "kind": "teacher_answer_nll",
+        "config": "H02",
+        "arm": "high",
+        "tokens": 635,
+        "mean_nll": 0.930192232131958
+      },
+      {
+        "kind": "teacher_answer_nll",
+        "config": "H02",
+        "arm": "low",
+        "tokens": 635,
+        "mean_nll": 1.5152829885482788
+      },
+      {
+        "kind": "teacher_answer_nll",
+        "config": "H13",
+        "arm": "base",
+        "tokens": 697,
+        "mean_nll": 1.6442303657531738
+      },
+      {
+        "kind": "teacher_answer_nll",
+        "config": "H13",
+        "arm": "high",
+        "tokens": 697,
+        "mean_nll": 0.8952414393424988
+      },
+      {
+        "kind": "teacher_answer_nll",
+        "config": "H13",
+        "arm": "low",
+        "tokens": 697,
+        "mean_nll": 1.5241813659667969
+      }
+    ],
+    "first_token_kl": [
+      {
+        "kind": "base_to_adapter_kl",
+        "prompt": "numeric-H01",
+        "arm": "high",
+        "prefix_tokens": 0,
+        "kl_nats": 8.639654159545898
+      },
+      {
+        "kind": "base_to_adapter_kl",
+        "prompt": "numeric-H01",
+        "arm": "low",
+        "prefix_tokens": 0,
+        "kl_nats": 0.07156935334205627
+      },
+      {
+        "kind": "base_to_adapter_kl",
+        "prompt": "proof-EV02",
+        "arm": "high",
+        "prefix_tokens": 0,
+        "kl_nats": 4.620286464691162
+      },
+      {
+        "kind": "base_to_adapter_kl",
+        "prompt": "proof-EV02",
+        "arm": "low",
+        "prefix_tokens": 0,
+        "kl_nats": 0.055958766490221024
+      }
+    ]
+  },
+  "fresh3_status": {
+    "eval-fresh3-base-en-32k": {
+      "exists": true,
+      "n_saved_outputs": 9,
+      "receipt": {
+        "status": "complete",
+        "jobs_sha256": "63829db6e55462bf964a9d0de69486167cf5b8d6e3fdafd45305c90c8da0a09d",
+        "driver_sha256": "16d8d2747fb37741e8a8b0b685a358f548411c341cf34e08ba5a5cf9839a79c9",
+        "model_metadata_sha256": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd",
+        "samples": 1,
+        "cap": 32768,
+        "context": 45056,
+        "temperature": 1.0,
+        "top_p": 0.95,
+        "top_k": 20,
+        "presence_penalty": 1.5,
+        "thinking": false,
+        "adapter": null,
+        "start_unix": 1790305157.5456605,
+        "end_unix": 1790306326.1400454,
+        "elapsed_seconds": 1168.5942579330876
+      }
+    },
+    "eval-fresh3-six-source-variants-en-32k": {
+      "exists": true,
+      "n_saved_outputs": 3,
+      "receipt": {
+        "status": "failed",
+        "jobs_sha256": "63829db6e55462bf964a9d0de69486167cf5b8d6e3fdafd45305c90c8da0a09d",
+        "driver_sha256": "16d8d2747fb37741e8a8b0b685a358f548411c341cf34e08ba5a5cf9839a79c9",
+        "model_metadata_sha256": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd",
+        "samples": 1,
+        "cap": 32768,
+        "context": 45056,
+        "temperature": 1.0,
+        "top_p": 0.95,
+        "top_k": 20,
+        "presence_penalty": 1.5,
+        "thinking": false,
+        "adapter": "qwen/.runtime/qwen35_external_teacher_20260925/train-fresh3-six-source-variants/adapter-vllm",
+        "start_unix": 1790306339.4874375,
+        "error": "KeyboardInterrupt()",
+        "end_unix": 1790307006.4075763,
+        "elapsed_seconds": 666.9199981191196
+      }
+    },
+    "eval-fresh3-six-source-repeat-en-32k": {
+      "exists": false,
+      "n_saved_outputs": 0,
+      "receipt": null
+    }
+  },
+  "exact_but_incomplete_target_rows": [
+    {
+      "blind_id": "B016",
+      "source_id": "H04",
+      "condition": "32-original",
+      "job_id": "diverse-en-near-transfer-H04-fresh1-0",
+      "finish_reason": "stop",
+      "exact": true,
+      "relation": false,
+      "proof": false,
+      "use": false,
+      "note": "The final value √69/2 matches the key, but is selected as a boundary/“limit” guess after deriving a relation that still depends on free u. The orthocenter y-coordinate has the wrong sign for B=(−c,0), C=(c,0), yielding an incorrect projection factor and 2tu=3u²+v²−c² instead of 2tu=AM²+c².",
+      "complete": false,
+      "experiment": "fresh1_first_pass"
+    },
+    {
+      "blind_id": "B025",
+      "source_id": "H14",
+      "condition": "36-repeat",
+      "job_id": "diverse-en-near-transfer-H14-fresh1-0",
+      "finish_reason": "stop",
+      "exact": true,
+      "relation": true,
+      "proof": false,
+      "use": true,
+      "note": "Correctly states AR⊥RH (equivalently R lies on the circle with diameter AH) and applies the right-triangle relation and exact arithmetic to obtain 1805/2928. But the decisive link from D,E,P,Q and the two circles to this property is only called a known property/asserted; no inversion or equivalent derivation is supplied.",
+      "complete": false,
+      "experiment": "fresh1_first_pass"
+    },
+    {
+      "blind_id": "B012",
+      "source_id": "H04",
+      "condition": "32-original",
+      "job_id": "diverse-en-near-transfer-H04-fresh1-1",
+      "finish_reason": "stop",
+      "exact": true,
+      "relation": true,
+      "proof": false,
+      "use": true,
+      "note": "Corrects its initial AT² = BT·BC claim and derives AT² = BT·CT with the right order and arithmetic. Its cancellation of c² - (u²+v²) relies on the false coordinate assertion u=0, v=c when the factor vanishes; acuteness would instead rule out the right-angle case. Independent second blind review agrees proof=false: the cancelled factor is nonzero for an acute triangle, but this response does not establish that; its offered reason is invalid or insufficient.",
+      "complete": false,
+      "experiment": "fresh1_second_decoding_seed"
+    },
+    {
+      "blind_id": "B011",
+      "source_id": "H04",
+      "condition": "36-multi",
+      "job_id": "diverse-en-near-transfer-H04-fresh1-1",
+      "finish_reason": "stop",
+      "exact": true,
+      "relation": true,
+      "proof": false,
+      "use": true,
+      "note": "After rejecting AT² = BT·BC, it derives AT² = BT·CT on the T-B-C branch and applies the data correctly. The cancellation of c² - (u²+v²) is justified by the false claim that equality forces u=0, v=c; acuteness would exclude the right-angle case. Independent second blind review agrees proof=false: the cancelled factor is nonzero for an acute triangle, but this response does not establish that; its offered reason is invalid or insufficient.",
+      "complete": false,
+      "experiment": "fresh1_second_decoding_seed"
+    },
+    {
+      "blind_id": "B004",
+      "source_id": "H04",
+      "condition": "base",
+      "job_id": "diverse-en-near-transfer-H04-fresh1-1",
+      "finish_reason": "stop",
+      "exact": true,
+      "relation": true,
+      "proof": false,
+      "use": true,
+      "note": "Derives P and t, then on t < -c obtains AT² = TB·TC and uses TC = TB + BC. It divides by R² - c² while attributing nonzero to scalene/nondegenerate; acuteness would exclude the right-angle case, but that decisive exclusion is not established. Independent second blind review agrees proof=false: the cancelled factor is nonzero for an acute triangle, but this response does not establish that; its offered reason is invalid or insufficient.",
+      "complete": false,
+      "experiment": "fresh1_second_decoding_seed"
+    },
+    {
+      "blind_id": "B029",
+      "source_id": "H14",
+      "condition": "32-original",
+      "job_id": "diverse-en-near-transfer-H14-fresh1-1",
+      "finish_reason": "stop",
+      "exact": true,
+      "relation": true,
+      "proof": false,
+      "use": true,
+      "note": "Eventually states the true circle-with-diameter-AH/right-angle-at-R relation and correctly applies Pythagoras to obtain 1805/2928. The claimed coordinate/dot-product derivation is expressly omitted, with no proof that the constructed R is the orthocenter projection.",
+      "complete": false,
+      "experiment": "fresh1_second_decoding_seed"
+    },
+    {
+      "blind_id": "B024",
+      "source_id": "H14",
+      "condition": "36-repeat",
+      "job_id": "diverse-en-near-transfer-H14-fresh1-1",
+      "finish_reason": "stop",
+      "exact": true,
+      "relation": true,
+      "proof": false,
+      "use": true,
+      "note": "After discarding false collinearity guesses, it states the true right angle AR⊥HR and computes area 1805/2928 correctly. It never derives R as the orthocenter projection from D,E,P,Q; the right angle is guessed from the given lengths.",
+      "complete": false,
+      "experiment": "fresh1_second_decoding_seed"
+    },
+    {
+      "blind_id": "B028",
+      "source_id": "H04",
+      "condition": "balanced-qa",
+      "job_id": "diverse-en-near-transfer-fresh2-H04-fresh2-0",
+      "finish_reason": "stop",
+      "exact": true,
+      "relation": true,
+      "proof": false,
+      "use": true,
+      "note": "The corrected symmetric-coordinate calculation derives the T coordinate from the orthocenter projection and TA=TP; with T left of B it gives AT²=t²−(BC/2)²=TB·TC. The exact substitution is correct. Independent blind reviews found inconsistent midpoint coordinates and skipped decisive algebra.",
+      "complete": false,
+      "experiment": "fresh2_data_form"
+    },
+    {
+      "blind_id": "B012",
+      "source_id": "H04",
+      "condition": "repeat",
+      "job_id": "diverse-en-near-transfer-fresh2-H04-fresh2-0",
+      "finish_reason": "stop",
+      "exact": true,
+      "relation": true,
+      "proof": false,
+      "use": true,
+      "note": "Derives P=(m²/AM²)A, then TA=TP gives 2tu=AM²+m² and AT²=t²−m²; with T<B<C, TB·TC=t²−m². Uses the positive length and exact givens correctly. Independent blind reviews found the AM^2-m^2 cancellation unjustified by acuteness.",
+      "complete": false,
+      "experiment": "fresh2_data_form"
+    },
+    {
+      "blind_id": "B021",
+      "source_id": "H08",
+      "condition": "balanced-qa",
+      "job_id": "diverse-en-near-transfer-fresh2-H08-fresh2-0",
+      "finish_reason": "stop",
+      "exact": true,
+      "relation": true,
+      "proof": false,
+      "use": true,
+      "note": "States the correct angle relation and uses it with the acute branch to obtain 195/29, but the vector-rotation assertion does not prove the relation.",
+      "complete": false,
+      "experiment": "fresh2_data_form"
+    },
+    {
+      "blind_id": "B004",
+      "source_id": "H08",
+      "condition": "direct-multi",
+      "job_id": "diverse-en-near-transfer-fresh2-H08-fresh2-0",
+      "finish_reason": "stop",
+      "exact": true,
+      "relation": true,
+      "proof": false,
+      "use": false,
+      "note": "Final value matches 195/29, but the angle lemma is unsupported; the cyclicity claim is false and later area arithmetic contradicts the final value, which is guessed.",
+      "complete": false,
+      "experiment": "fresh2_data_form"
+    },
+    {
+      "blind_id": "B025",
+      "source_id": "H14",
+      "condition": "repeat",
+      "job_id": "diverse-en-near-transfer-fresh2-H14-fresh2-0",
+      "finish_reason": "stop",
+      "exact": true,
+      "relation": true,
+      "proof": false,
+      "use": true,
+      "note": "Final value 343/2960 follows from the stated right angle AR⊥RH and the length ratios, but the answer also asserts the incompatible R=reflection-of-H claim and never derives the right-angle relation from D,E,P,Q or the common circles; needs adjudication. Adjudicated incomplete: the unsupported construction-to-right-angle step makes proof false despite exact arithmetic.",
+      "complete": false,
+      "experiment": "fresh2_data_form"
+    }
+  ]
+}

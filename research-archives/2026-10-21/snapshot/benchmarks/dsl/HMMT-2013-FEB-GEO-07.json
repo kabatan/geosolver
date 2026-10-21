@@ -1,0 +1,52 @@
+{
+  "id": "HMMT-2013-FEB-GEO-07",
+  "variables": [
+    "Ax",
+    "Ay"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(Ax, Ay)"
+    },
+    {
+      "name": "O",
+      "expression": "Circumcenter(A, B, C)"
+    },
+    {
+      "name": "D",
+      "expression": "Intersect(Line(A, O), Line(B, C))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Angle(A, B, C)",
+      "operator": "=",
+      "right": "pi / 12"
+    },
+    {
+      "left": "Distance(O, D) * Distance(O, D) + Distance(O, C) * Distance(D, C)",
+      "operator": "=",
+      "right": "Distance(O, C) * Distance(O, C)"
+    },
+    {
+      "left": "Ay",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Angle(B, A, C)",
+      "operator": ">",
+      "right": "pi / 2"
+    }
+  ],
+  "target": "180 * Angle(A, C, B) / pi"
+}

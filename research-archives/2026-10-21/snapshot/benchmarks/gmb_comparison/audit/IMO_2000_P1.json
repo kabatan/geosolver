@@ -1,0 +1,211 @@
+{
+  "case_id": "IMO_2000_P1",
+  "source": {
+    "official_url": "https://www.imo-official.org/assets/documents/problems/2000/2000_eng.pdf",
+    "official_legacy_url": "https://www.imo-official.org/problems/2000/eng.pdf",
+    "official_pdf_sha256": "04d49b95b4351ba08d5f41279f4589a27b7aa32572f0f073d47eacc55896180b",
+    "supplementary_primary_source": {
+      "url": "https://www.imo-register.org.uk/2000-report.pdf",
+      "title": "41st International Mathematical Olympiad: Report by Imre Leader (UK Team Leader)",
+      "printed_page": 4,
+      "pdf_sha256": "ac90daf78bc52b8ebdc870aab0ab17b7accadaed8b058cef61a7b0a30284b503",
+      "asset_relative_path": "imo/2000-uk-report.pdf",
+      "role_ja": "大会当年の英国団長報告の問題文で支持直線の交点とMに近い共通接線という枝指定を確認する。現行公式サイトの短縮問題文にない枝指定を補う一次資料。"
+    },
+    "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2000_P1.smt2",
+    "gmbl_sha256": "c7546705b4a2984f1fd8828b56f5f0b2ba47ba67f66ed418ef22276828d13b4a",
+    "gmbl_commit": "f070afe18ed874b3a31db519ea6f593f40a1be00"
+  },
+  "normalization": {
+    "anchors": [
+      "C",
+      "D"
+    ],
+    "fixed_coordinates": {
+      "C": [
+        "0",
+        "0"
+      ],
+      "D": [
+        "1",
+        "0"
+      ]
+    },
+    "removed_continuous_dof": 4,
+    "justification": "MがCとDの間にあるためC≠D。接線・共円・平行・共線・半直線と等距離の条件は全て相似不変。 平行移動2・回転1・正の一様拡大縮小1のみを除く。",
+    "scale_invariant": true,
+    "reflection_fixed": false
+  },
+  "clauses": [
+    {
+      "id": "between",
+      "statement_ja": "MはC,Dの間にある。",
+      "gmbl": [
+        "(param M point (on-seg C D))"
+      ],
+      "geosolver": [
+        "M = PointOnSegment(C, D, m)",
+        "0 < m < 1"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "first-circle",
+      "statement_ja": "C,A,M,Nは同一の非退化な円に属する。",
+      "gmbl": [
+        "(param N point (on-circ (circ C A M)))"
+      ],
+      "geosolver": [
+        "omega1 = Circumcircle(C, A, M)",
+        "N = PointOnCircle(omega1, tn)"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "second-circle-and-parallel",
+      "statement_ja": "N,M,B,Dは同一円、かつABはCDと平行。Bの任意交点を番号で固定しない。",
+      "gmbl": [
+        "(define B point (inter-lc (para-at A (line C D)) (circ N M D) rs-arbitrary))"
+      ],
+      "geosolver": [
+        "B = Point(bx, ay)",
+        "omega2 = Circumcircle(N, M, D)",
+        "OnCircle(B, omega2) = 0",
+        "AB = Line(A, B)"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "tangencies",
+      "statement_ja": "ABは第一円にAで、第二円にBで接する。",
+      "gmbl": [
+        "(assert (tangent-lc (line A B) (circ C A M)))",
+        "(assert (tangent-lc (line A B) (circ N M B)))"
+      ],
+      "geosolver": [
+        "IsTangent(AB, omega1) = 0",
+        "IsTangent(AB, omega2) = 0"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "nearer-M-tangent",
+      "statement_ja": "共通接線ABはNよりMに近い方を選ぶ。ABは水平なので各点からの距離はy座標差の絶対値に等しい。",
+      "gmbl": [],
+      "geosolver": [
+        "abs(N.y - A.y) > abs(M.y - A.y)"
+      ],
+      "status": "original_condition_missing_from_gmbl"
+    },
+    {
+      "id": "intersections",
+      "statement_ja": "PはNAとCMを含む直線の交点、QはNBとMDを含む直線の交点。",
+      "gmbl": [
+        "(define P point (inter-ll (line N A) (line C M)))",
+        "(define Q point (inter-ll (line N B) (line M D)))"
+      ],
+      "geosolver": [
+        "P = Intersect(Line(N, A), Line(C, M))",
+        "Q = Intersect(Line(N, B), Line(M, D))"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "rays",
+      "statement_ja": "Eは半直線CAとDBの共通点。",
+      "gmbl": [
+        "(define E point (inter-ll (line C A) (line D B)))",
+        "(assert (on-ray E D B))",
+        "(assert (on-ray E C A))"
+      ],
+      "geosolver": [
+        "E = Intersect(Line(C, A), Line(D, B))",
+        "Dot(Vector(C, E), Vector(C, A)) > 0",
+        "Dot(Vector(D, E), Vector(D, B)) > 0"
+      ],
+      "status": "matched"
+    }
+  ],
+  "goal": {
+    "statement_ja": "PE=QEを証明する。",
+    "gmbl": [
+      "(eval (cong P E Q E))"
+    ],
+    "geosolver_expressions": [
+      "Distance(P, E) = Distance(Q, E)"
+    ],
+    "coverage": "原文の結論全体",
+    "included_in_search": false,
+    "target": "0"
+  },
+  "source_differences": [
+    {
+      "id": "gmb-global-admission",
+      "kind": "implementation_limit",
+      "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+      "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+    },
+    {
+      "id": "arbitrary-B",
+      "kind": "representation_choice",
+      "detail_ja": "GMBのrs-arbitraryをn=1へ変えず、Bの水平線上の座標bxを残し円所属を課す。接線条件が成立する配置ではBは第二円の接点であり一意。",
+      "comparison_effect": "原文が指示する配置の枝を人為的に除かない。"
+    },
+    {
+      "id": "second-circle-definition",
+      "kind": "equivalent_construction",
+      "detail_ja": "GMBの第二の接線assertはcirc(N,M,B)を使用する。新入力ではcirc(N,M,D)を再利用するが、N,M,D非共線・Bの円所属・ABの非退化から同一円となる。",
+      "comparison_effect": "既知の幾何演算の再表現。結論PE=QEは使用していない。"
+    },
+    {
+      "id": "rays-margin",
+      "kind": "implementation_limit",
+      "detail_ja": "benchmarks/gmb/.runtime/source/src/optimizer.py:1117-1122のonray_gapは始点を方向ベクトルの0.2倍だけずらす。原文にないその余裕は仮定に追加しない。",
+      "comparison_effect": "半直線上の存在と正の方向を共通検査する。"
+    },
+    {
+      "id": "chord-wording",
+      "kind": "source_wording",
+      "detail_ja": "現行公式PDFのchords NA and CM meetという短縮表現に対し、2000年英国団長報告p4はANとCD、BNとCDをそれぞれ支持直線として交わらせると明記する。GMBLおよび本DSLの直線交点による表現はこの一次資料と一致する。",
+      "comparison_effect": "弦分内への条件を追加しない。支持直線か弦分かという解釈上の保留は追加一次資料により解消した。"
+    },
+    {
+      "id": "nearer-M-branch-missing",
+      "kind": "missing_original_assumption",
+      "blocking": true,
+      "detail_ja": "2000年英国団長報告p4は接線ABがNよりMに近いことを指定する。現行公式PDFの短縮表現と公開GMBLはこの条件を持たず、接線の平行・円所属・接する条件・MがCDの内部にある条件・Eが半直線上にある条件からも導かれない。新DSLには原文どおりの距離比較を追加した。",
+      "evidence": [
+        "benchmarks/gmb_comparison/reviews/counterexample_2000_p1_tangent_branch.json",
+        "benchmarks/gmb_comparison/reviews/EQUIVALENCE_ARGUMENTS.md"
+      ],
+      "comparison_effect": "修正後DSLと未変更の公開GMBLは同じ仮定集合ではないため比較をblockedとする。GMB原本や既存artifactを黙って変更せず、共通の原文条件による検査・計測契約を決定するまで公平な直接比較へ含めない。"
+    }
+  ],
+  "open_issues": [
+    "GMBLにはnearer-M-tangent条件がない。原文準拠DSLとの比較をどう行うかを決定するまで、このケースの性能比較は保留する。"
+  ],
+  "author_review": {
+    "author": "dsl_2000_2006",
+    "primary_sources_read": [
+      "official IMO 2000 English PDF (relevant problem text and rendered page)",
+      "Imre Leader's 2000 UK Team Leader report, printed page 4 (supplementary original problem statement, PDF rendered and visually inspected)",
+      "pinned GMBL IMO_2000_P1.smt2",
+      "benchmarks/gmb/.runtime/source/src/optimizer.py",
+      "src/geosolver/problem/dsl-spec.json",
+      "src/geosolver/engine/standard/interpreter/context/geometry.py",
+      "src/geosolver/engine/standard/interpreter/context/high_precision.py"
+    ],
+    "static_validation": {
+      "public_model": true,
+      "validator": true,
+      "compiler": true,
+      "warnings": [],
+      "variables": 5,
+      "constructions": 12,
+      "conditions": 7
+    },
+    "solve_or_refinement_executed": false,
+    "independent_review_required": true
+  },
+  "comparison_status": "blocked"
+}

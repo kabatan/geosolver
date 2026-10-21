@@ -1,0 +1,77 @@
+{
+  "id": "AIME-2010-I-15",
+  "variables": [
+    "bx",
+    "by",
+    "m"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(15, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(bx, by)"
+    },
+    {
+      "name": "M",
+      "expression": "Point(m, 0)"
+    },
+    {
+      "name": "I1",
+      "expression": "Incircle(A, B, M)"
+    },
+    {
+      "name": "I2",
+      "expression": "Incircle(B, C, M)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 12
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": 13
+    },
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": 15
+    },
+    {
+      "left": "Radius(I1)",
+      "operator": "=",
+      "right": "Radius(I2)"
+    },
+    {
+      "left": "OnSegment(M, A, C)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "by",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "m",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "m",
+      "operator": "<",
+      "right": "15"
+    }
+  ],
+  "target": "Distance(A, M) / Distance(M, C)"
+}

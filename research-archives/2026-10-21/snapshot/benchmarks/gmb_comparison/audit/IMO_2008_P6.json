@@ -1,0 +1,31 @@
+{
+  "case_id": "IMO_2008_P6",
+  "source": {"official_url": "https://www.imo-official.org/assets/documents/problems/2008/2008_eng.pdf", "official_pdf_sha256": "d6975d8903404668d5cd534990af75347593ac501d61624ba387aa6b12f13318", "official_pdf_page": 2, "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2008_P6.smt2", "gmbl_sha256": "003abc3eeb2037e128212c6e59881f34663ffb1ee437f24cf1e2a37385d86da0"},
+  "normalization": {"anchors": ["B", "A"], "fixed_coordinates": {"B": ["0", "0"], "A": ["1", "0"]}, "removed_continuous_dof": 4, "justification": "凸四辺形の辺BAは正長。BAを単位水平線分にする。C,D,円中心の自由度と鏡映を残す。", "scale_invariant": true, "reflection_fixed": false},
+  "clauses": [
+    {"id": "quadrilateral", "statement_ja": "ABCDは凸四辺形でBA≠BC。", "gmbl": ["(param (A B C D) polygon)", "(assert (not (cong B A B C)))"], "geosolver": ["ConvexPolygon([A, B, C, D])", "Distance(B, A) != Distance(B, C)"], "status": "matched_source_semantics"},
+    {"id": "incircles", "statement_ja": "omega_1,omega_2はABC,ADCの内接円。", "gmbl": ["(define omega_1 circle (incircle A B C))", "(define omega_2 circle (incircle A D C))"], "geosolver": ["omega_1 = Incircle(A, B, C)", "omega_2 = Incircle(A, D, C)"], "status": "matched"},
+    {"id": "tangent_ba", "statement_ja": "正半径円omegaは半直線BAのAより先で接する。", "gmbl": ["(param omega circle (tangent-cl (line B A)))", "(assert (on-ray (inter-lc (line B A) omega rs-arbitrary) B A))", "(assert (not (on-seg (inter-lc (line B A) omega rs-arbitrary) B A)))"], "geosolver": ["O = Point(ox, oy)", "TBA = Point(ox, 0)", "omega = CircleThroughPoint(O, TBA)", "oy != 0", "ox > 1"], "status": "matched_mathematical_intent"},
+    {"id": "tangent_bc", "statement_ja": "同じ円は半直線BCのCより先で接する。", "gmbl": ["(assert (tangent-lc (line B C) omega))", "(assert (on-ray (inter-lc (line B C) omega rs-arbitrary) B C))", "凸ABCD・BAのAより先の接点・AD接線という残りの仮定"], "geosolver": ["IsTangent(Line(B, C), omega) = 0", "TBC = FootOfPerpendicular(O, Line(B, C))", "Dot(Vector(C, TBC), Vector(B, C)) > 0"], "status": "matched_by_verified_implication"},
+    {"id": "tangent_other_lines", "statement_ja": "omegaは直線AD,CDにも接する。辺内部の接点とは限定しない。", "gmbl": ["(assert (tangent-lc (line A D) omega))", "(assert (tangent-lc (line C D) omega))"], "geosolver": ["IsTangent(Line(A, D), omega) = 0", "IsTangent(Line(C, D), omega) = 0"], "status": "matched"}
+  ],
+  "goal": {"statement_ja": "omega_1,omega_2の共通外接線の交点がomega上にある。", "gmbl": [], "gmbl_goal_supported": false, "included_in_search": false, "target": "0"},
+  "source_differences": [
+    {"kind": "mathematically_redundant_condition", "detail": "BC接点のbeyond CはGMBLに明示されないが、凸性とBA,BC,ADへの接線条件から従う。下記の含意を別担当が独立確認済みで、原文にある点順条件は解集合を狭めない。"},
+    {"kind": "implementation_sampling_and_guards", "detail": "GMB polygonの角度/辺比範囲、on-ray・not on-segの固定幅による処理は、数学的な凸四辺形・厳密な点順と同一ではない。GeoSolverへ追加仮定として移さない。"},
+    {"kind": "unsupported_posthoc_goal", "detail": "公開GMBLにはevalがない。配置生成と、外接線交点に関する追加の独立検査は別指標とする。"}
+  ],
+  "verified_implication": {
+    "claim": "凸性と他の接線条件はBC接点がCより先にあることを含意する。",
+    "derivation": [
+      "B=(0,0),A=(1,0),C=c(cosθ,sinθ),0<θ<piとする（鏡映してよい）。両正半直線の接点T,UはBT=BU=sで、BAの接点条件からs>1。円の中心はO=(s,s*tan(θ/2))、半径はs*tan(θ/2)。",
+      "凸ABCDではD=αA+βCと書け、α>0,β>0,α+β>1。k=(1+cosθ)/2∈(0,1)とする。",
+      "ADへの接線距離式を展開するとs(s−1)(1−α)=β*c*(s−k)。q=tan(θ/2)として、元の二乗距離式の差は4βc q²/(1+q²)とこの等式の左右差の積になる。係数は非零。",
+      "右辺が正なのでα<1。凸性からβ/(1−α)>1であり、c<s(s−1)/(s−k)<s。従ってBU=s>BC=cとなり、接点はCより先。CDへの接線条件はこの含意には不要。"
+    ],
+    "independent_check": "independent_review担当が凸性の係数条件、接点長、接線式の因子、最後の不等式を独立確認。authorも一般記号の恒等式のみSymPyで展開照合（配置探索・数値最適化なし）。"
+  },
+  "open_issues": [],
+  "author_review": {"reviewer": "dsl_2007_2013", "primary_sources_read": ["公式2008英語PDF第2頁（画像・抽出本文）", "公開IMO_2008_P6.smt2", "GMB optimizer.pyの接円parameterization・polygon", "GeoSolver DSL specのIsTangent・CircleThroughPoint"], "static_validation": "GeometryProblem、validate、compile_problemに合格。探索・精密化未実施。"},
+  "comparison_status": "draft"
+}

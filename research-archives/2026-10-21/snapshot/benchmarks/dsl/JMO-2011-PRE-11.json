@@ -1,0 +1,159 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(O, A)",
+      "operator": "=",
+      "right": 5
+    },
+    {
+      "left": "Distance(O, B)",
+      "operator": "=",
+      "right": 6
+    },
+    {
+      "left": "Distance(O, C)",
+      "operator": "=",
+      "right": 7
+    },
+    {
+      "left": "Distance(O, D)",
+      "operator": "=",
+      "right": 8
+    },
+    {
+      "left": "Distance(O, Line(A, B))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(O, Line(B, C))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(O, Line(C, D))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(O, Line(D, A))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "r",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Area(A, B, C)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Area(A, C, D)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "beta",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "gamma - beta",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "delta - gamma",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "2 * pi - delta",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "predicate": "ConvexPolygon([A, B, C, D])"
+    },
+    {
+      "predicate": "Or(And((Vector(A,B).x*Vector(A,O).y-Vector(A,B).y*Vector(A,O).x)>0,(Vector(B,C).x*Vector(B,O).y-Vector(B,C).y*Vector(B,O).x)>0,(Vector(C,D).x*Vector(C,O).y-Vector(C,D).y*Vector(C,O).x)>0,(Vector(D,A).x*Vector(D,O).y-Vector(D,A).y*Vector(D,O).x)>0),And((Vector(A,B).x*Vector(A,O).y-Vector(A,B).y*Vector(A,O).x)<0,(Vector(B,C).x*Vector(B,O).y-Vector(B,C).y*Vector(B,O).x)<0,(Vector(C,D).x*Vector(C,O).y-Vector(C,D).y*Vector(C,O).x)<0,(Vector(D,A).x*Vector(D,O).y-Vector(D,A).y*Vector(D,O).x)<0))"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "O"
+    },
+    {
+      "expression": "Point(r, 0)",
+      "name": "T1"
+    },
+    {
+      "expression": "Point(r * cos(beta), r * sin(beta))",
+      "name": "T2"
+    },
+    {
+      "expression": "Point(r * cos(gamma), r * sin(gamma))",
+      "name": "T3"
+    },
+    {
+      "expression": "Point(r * cos(delta), r * sin(delta))",
+      "name": "T4"
+    },
+    {
+      "expression": "PerpendicularLine(Line(O, T1), T1)",
+      "name": "l1"
+    },
+    {
+      "expression": "PerpendicularLine(Line(O, T2), T2)",
+      "name": "l2"
+    },
+    {
+      "expression": "PerpendicularLine(Line(O, T3), T3)",
+      "name": "l3"
+    },
+    {
+      "expression": "PerpendicularLine(Line(O, T4), T4)",
+      "name": "l4"
+    },
+    {
+      "expression": "Intersect(l4, l1)",
+      "name": "A"
+    },
+    {
+      "expression": "Intersect(l1, l2)",
+      "name": "B"
+    },
+    {
+      "expression": "Intersect(l2, l3)",
+      "name": "C"
+    },
+    {
+      "expression": "Intersect(l3, l4)",
+      "name": "D"
+    },
+    {
+      "expression": "Circle(O, r)",
+      "name": "omega"
+    },
+    {
+      "expression": "Midpoint(A, C)",
+      "name": "M"
+    },
+    {
+      "expression": "Midpoint(B, D)",
+      "name": "N"
+    }
+  ],
+  "id": "JMO-2011-PRE-11",
+  "target": "Distance(O, M) / Distance(O, N)",
+  "variables": [
+    "r",
+    "beta",
+    "gamma",
+    "delta"
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "id": "JMO-2009-PRE-02",
+  "variables": [
+    "t"
+  ],
+  "constructions": [
+    {
+      "name": "O1",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "O2",
+      "expression": "Point(6,0)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(2,0)"
+    },
+    {
+      "name": "C1",
+      "expression": "Circle(O1,2)"
+    },
+    {
+      "name": "C2",
+      "expression": "Circle(O2,4)"
+    },
+    {
+      "name": "Q",
+      "expression": "Point(2+cos(t),-sin(t))"
+    },
+    {
+      "name": "L",
+      "expression": "Line(P,Q)"
+    },
+    {
+      "name": "A",
+      "expression": "Intersect(L,C1,exclude=P)"
+    },
+    {
+      "name": "B",
+      "expression": "Intersect(L,C2,exclude=P)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "t",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "t",
+      "operator": "<",
+      "right": "pi/2"
+    },
+    {
+      "left": "Distance(A,B)",
+      "operator": "=",
+      "right": "4"
+    }
+  ],
+  "target": "Distance(P,B)"
+}

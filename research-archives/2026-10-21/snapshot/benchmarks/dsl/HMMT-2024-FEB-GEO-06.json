@@ -1,0 +1,153 @@
+{
+  "id": "HMMT-2024-FEB-GEO-06",
+  "variables": [
+    "theta",
+    "bp",
+    "q"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(18, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(36 * cos(theta), 36 * sin(theta))"
+    },
+    {
+      "name": "Bp",
+      "expression": "Point(bp, 0)"
+    },
+    {
+      "name": "Cp",
+      "expression": "Point(q * C.x, q * C.y)"
+    },
+    {
+      "name": "omega",
+      "expression": "Circumcircle(B, Bp, C)"
+    },
+    {
+      "name": "O",
+      "expression": "Center(omega)"
+    },
+    {
+      "name": "r",
+      "expression": "Radius(omega)"
+    },
+    {
+      "name": "MB",
+      "expression": "Midpoint(B, Bp)"
+    },
+    {
+      "name": "MC",
+      "expression": "Midpoint(C, Cp)"
+    },
+    {
+      "name": "rB",
+      "expression": "Distance(B, Bp) / 2"
+    },
+    {
+      "name": "rC",
+      "expression": "Distance(C, Cp) / 2"
+    },
+    {
+      "name": "omega_B",
+      "expression": "Circle(MB, rB)"
+    },
+    {
+      "name": "omega_C",
+      "expression": "Circle(MC, rC)"
+    },
+    {
+      "name": "T",
+      "expression": "PointOnSegment(MB, MC, rB / (rB + rC))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 18
+    },
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": 36
+    },
+    {
+      "left": "Distance(O, B)",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(O, C)",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(O, Bp)",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(O, Cp)",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(A, T)",
+      "operator": "=",
+      "right": 12
+    },
+    {
+      "left": "OnCircle(T, omega_B)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(T, omega_C)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(omega_B.center, omega_C.center)",
+      "operator": "=",
+      "right": "omega_B.radius + omega_C.radius"
+    },
+    {
+      "left": "C.y",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "r",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "bp",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "bp",
+      "operator": "<",
+      "right": "18"
+    },
+    {
+      "left": "q",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "q",
+      "operator": "<",
+      "right": "1"
+    }
+  ],
+  "target": "Distance(A, O)"
+}

@@ -1,0 +1,141 @@
+{
+  "status": "untrained candidate data; not evidence of transfer",
+  "source_scope": {
+    "base_path": "/home/kabatan/work/solver/docs/research/qwen35-external-teacher-2026-09-25/heldout-near-transfer/train.json",
+    "base_rows": 32,
+    "base_sha256": "114f75e357d03e37fb42062c7aa26c50883fedf122d7f1d7866276c1f32b0c60",
+    "teacher_inputs": [
+      "external-H01-v0",
+      "candidate-H01-v1",
+      "candidate-H01-v2",
+      "external-H07-v0",
+      "candidate-H07-v1",
+      "candidate-H07-v2"
+    ],
+    "excluded_sources": [
+      "H03",
+      "H04",
+      "H08",
+      "H14",
+      "H15"
+    ],
+    "excluded_problem_answer_or_output_referenced": false,
+    "primary_comparison_or_frozen_eval_inputs_modified": false
+  },
+  "design": "Six English relation-check teacher QAs, three each for H01 and H07, asking for the true general relation, branch, proof, exact application, and a counterexample to a plausible false claim.",
+  "candidate_ids": [
+    "candidate-H01-v0-relation-check",
+    "candidate-H01-v1-relation-check",
+    "candidate-H01-v2-relation-check",
+    "candidate-H07-v0-relation-check",
+    "candidate-H07-v1-relation-check",
+    "candidate-H07-v2-relation-check"
+  ],
+  "combined_dataset": {
+    "rows": 38,
+    "unique_ids": 38,
+    "unique_sources": 32,
+    "H01_presentations": 4,
+    "H07_presentations": 4,
+    "all_other_sources_once": true,
+    "excluded_source_occurrences": 0
+  },
+  "proof_provenance": {
+    "H01_formula_and_branch_statements_verified_in_audited_v0": true,
+    "H07_radial_area_and_reflection_statements_verified_in_audited_v0": true
+  },
+  "sympy_version": "1.14.0",
+  "sympy_exact_checks": [
+    {
+      "case": "H01-v0",
+      "BC": 12,
+      "AM": 10,
+      "acute_test_t2_minus_m2": "64",
+      "projection_factor": "9/25",
+      "true_MP": "18/5",
+      "true_AP": "32/5",
+      "false_claim_left": "32/5",
+      "false_claim_right": "18/5",
+      "exact_counterexample": true
+    },
+    {
+      "case": "H01-v1",
+      "BC": 22,
+      "AM": 13,
+      "acute_test_t2_minus_m2": "48",
+      "projection_factor": "121/169",
+      "true_MP": "121/13",
+      "true_AP": "48/13",
+      "false_claim_left": "48/13",
+      "false_claim_right": "2",
+      "exact_counterexample": true
+    },
+    {
+      "case": "H01-v2",
+      "BC": 18,
+      "AM": 11,
+      "acute_test_t2_minus_m2": "40",
+      "projection_factor": "81/121",
+      "true_MP": "81/11",
+      "true_AP": "40/11",
+      "false_claim_left": "81/11",
+      "false_claim_right": "9",
+      "exact_counterexample": true
+    },
+    {
+      "case": "H07-v0",
+      "AB": 8,
+      "ON_exact": "8*sqrt(10)/5",
+      "ON_squared": "128/5",
+      "MF": 3,
+      "lambda": "5/8",
+      "ordered_branch_0_lt_lambda_lt_1": true,
+      "OM_exact": "sqrt(10)",
+      "OM_times_ON": "16",
+      "OA_squared": "16",
+      "true_area": "9",
+      "false_claim_left": "16",
+      "false_claim_right": "64",
+      "exact_counterexample": true
+    },
+    {
+      "case": "H07-v1",
+      "AB": 7,
+      "ON_exact": "49*sqrt(37)/74",
+      "ON_squared": "2401/148",
+      "MF": 3,
+      "lambda": "37/49",
+      "ordered_branch_0_lt_lambda_lt_1": true,
+      "OM_exact": "sqrt(37)/2",
+      "OM_times_ON": "49/4",
+      "OA_squared": "49/4",
+      "true_area": "36/7",
+      "false_claim_left": "37/49",
+      "false_claim_right": "148/49",
+      "exact_counterexample": true
+    },
+    {
+      "case": "H07-v2",
+      "AB": 8,
+      "ON_exact": "16*sqrt(13)/13",
+      "ON_squared": "256/13",
+      "MF": 3,
+      "lambda": "13/16",
+      "ordered_branch_0_lt_lambda_lt_1": true,
+      "OM_exact": "sqrt(13)",
+      "OM_times_ON": "16",
+      "OA_squared": "16",
+      "true_area": "9/2",
+      "false_claim_left": "9/2",
+      "false_claim_right": "39/2",
+      "exact_counterexample": true
+    }
+  ],
+  "hashes": {
+    "candidate-qa.json": "515bae21e4d61d32293b40d15fac02f916e2ca88ba11565cb08d1898e345bab7",
+    "train-32-plus-6-candidate.json": "448f7bd2834496aa51bd63e9d6800c4c96dd4a10f63270233590a06e190e0e34",
+    "token-audit.json": "7a5d853dcd149d720313780912d87194dc218f2dd83442a969d5dffdb234136f"
+  },
+  "token_audit": "token-audit.json",
+  "prompt_clarity_update": "In all three H07 candidate prompts, the first circle is now explicitly tangent at A and the second circle at B; no answers or proof text changed."
+}

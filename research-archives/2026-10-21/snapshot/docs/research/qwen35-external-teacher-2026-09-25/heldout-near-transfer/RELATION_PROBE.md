@@ -1,0 +1,5 @@
+# Short relation-only diagnostic
+
+The English job file `relation-only-jobs.json` was frozen while the unchanged-base integrated answers were still being generated, before opening or grading any fresh integrated answer. Its SHA-256 is `fa0165be008b8d5fbe37c3510c7e7e552ff8534e20928f945d238077e2857867`. It contains the same nine constructions and fresh numerical givens as `eval_jobs.json`, but asks for one useful general relation, its conditions, and a decisive justification; it explicitly forbids the final numerical value.
+
+If the integrated comparison leaves the mechanism unclear, run this diagnostic for base, 32-original, 36-multi, and 36-repeat with one sample per job, 512 new-token cap, context 45056, temperature 1.0, top-p 0.95, top-k 20, and presence penalty 1.5. All four conditions receive the same nine prompts and seeds. Score true/useful relation, correct branch, and decisive justification separately. This is exploratory mechanism evidence, not a substitute for complete proof or a checkpoint-selection gate. Do not train on these jobs.

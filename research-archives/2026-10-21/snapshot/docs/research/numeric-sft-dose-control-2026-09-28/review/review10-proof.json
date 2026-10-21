@@ -1,0 +1,41 @@
+{
+  "packet": "qwen/.runtime/numeric_sft_dose_control_20260928/review-transfer-review10/index.json",
+  "rubric": "docs/research/related-numeric-sft-2026-09-28/REVIEW_RUBRIC.md",
+  "review_type": "blind_AP01_self_contained_proof",
+  "cases": [
+    {
+      "case_id": "proof-00",
+      "score": 2,
+      "complete_proof": false,
+      "essential_progress": "DA=DB、EA=ECから∠ABF=∠BAM=x、∠ACF=∠CAM=yを導き、F内部を使って∠BFC=2∠BACを正しく示す。またA,P,Nの円がABCの外接円の中心A・比1/2の相似像であることを正しく指摘する。",
+      "flaw_or_gap": "相似像上にFがあること、すなわち2F−AがABCの外接円上にあることを元の作図から導かない。最終line 429–430はそれを「構図から確かに成立」と断言するだけで、目標の共円性を言い換えている。line 437の∠PFN=∠PAN=Aという枝も一般に逆で、FとAはPNの反対側、正しくは∠PFN=180°−A。したがって単純な計算省略ではなく核心が欠ける。",
+      "evidence_quotes": [
+        {
+          "line": 94,
+          "quote": "$\\angle BFC = 180^\\circ - (180^\\circ - x - y - x - y) = 2x + 2y = 2\\angle A$."
+        },
+        {
+          "line": 322,
+          "quote": "$\\omega$ is the image of the circumcircle of $ABC$ under a homothety centered at $A$ with ratio $1/2$."
+        },
+        {
+          "line": 429,
+          "quote": "the point $F$ is indeed the inverse of the circumcircle under this homothety."
+        },
+        {
+          "line": 430,
+          "quote": "Therefore, $F$ lies on the homothetic image of $\\Gamma$"
+        },
+        {
+          "line": 437,
+          "quote": "The angle $\\angle PFN$ equals $\\angle PAN = A$"
+        }
+      ],
+      "incidental_error": "探索中のBF∥AM説はline 264で明示撤回されるため最終解法の決定的欠陥とはしない。最終line 437の円周角の枝違いは核心に関わる誤りとしてflaw_or_gapに記録した。",
+      "uncertainty": "低い。相似像の円の構成自体は正しいが、Fがその上にある根拠は答案内にない。枝の誤りも有効な急角不等辺の構図で検証可能。",
+      "read_coverage": "proof-00.md全442行。探索、Lemma/Proof、Final Argument Construction、Conclusionを確認。"
+    }
+  ],
+  "independent_check": "A=(0,0), B=(3,2), C=(4,−2), M=(7/2,0), D=(13/6,0), E=(5/2,0)は急角不等辺で、D,Eは半直線AM上。F=BD∩CE=(16/7,2/7)は三角形内部。P=(3/2,1), N=(2,−1)。A,P,Nからの円とP,N,Fからの円の中心はともに(33/28,−1/7)で、真の共円性は成立する。一方cross(P,N,F)=17/14、cross(P,N,A)=−7/2でF,AはPNの反対側、(P−F)·(N−F)=−34/49<0に対し(P−A)·(N−A)=2>0。よってline 437の両角が等しいという枝は偽。これは一般証明の代用ではなく答案中の枝主張の反例。",
+  "boundary_case": "正しい∠BFC=2Aと相似円の同定はscore2の進展。Fが相似円上という目標同値の命題を未証明で引用し、枝も誤るためscore3/4には達しない。"
+}

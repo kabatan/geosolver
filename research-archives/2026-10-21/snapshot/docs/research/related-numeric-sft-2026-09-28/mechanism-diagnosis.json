@@ -1,0 +1,181 @@
+{
+  "scope": "Posthoc interpretation of existing teacher-forced digit-loss probes and existing greedy-fit summary. No training or GPU work was run for this diagnosis.",
+  "teacher_forced_probe": {
+    "definition": "Each next-token prediction is evaluated with the full correct target prefix present. This measures conditional likelihood of target tokens, not autonomous numeric generation.",
+    "decomposition_method": "For each category, contribution = category token count / all-target token count × (base category mean CE − SFT-A category mean CE). Contribution shares divide this value by the observed all-target CE decrease. Token counts are identical between base and SFT-A in each split.",
+    "train": {
+      "examples": 80,
+      "target_tokens": 1517,
+      "all_target_ce_base": 2.5232129829058434,
+      "all_target_ce_sft_a": 2.029144373754107,
+      "all_target_ce_decrease": 0.49406860915173656,
+      "all_target_top1_base": 0.15820698747528017,
+      "all_target_top1_sft_a": 0.23335530652603823,
+      "all_target_top1_change_percentage_points": 7.514831905075806,
+      "category_contributions": {
+        "leading_6_digits": {
+          "tokens": 480,
+          "ce_base": 2.4253262445718673,
+          "ce_sft_a": 2.175456618323612,
+          "ce_decrease": 0.24986962624825537,
+          "weighted_all_target_ce_decrease": 0.07906224166062135,
+          "share_of_all_target_decrease_percent": 16.002279885047308,
+          "top1_change_percentage_points": 8.75
+        },
+        "remaining_digits": {
+          "tokens": 873,
+          "ce_base": 2.989705661045044,
+          "ce_sft_a": 2.3007700377723195,
+          "ce_decrease": 0.6889356232727244,
+          "weighted_all_target_ce_decrease": 0.39646723738766537,
+          "share_of_all_target_decrease_percent": 80.24538091346415,
+          "top1_change_percentage_points": 7.445589919816722
+        },
+        "format_only": {
+          "tokens": 84,
+          "ce_base": 0.48159957422952476,
+          "ce_sft_a": 0.06557817482652831,
+          "ce_decrease": 0.41602139940299643,
+          "weighted_all_target_ce_decrease": 0.023036122313679432,
+          "share_of_all_target_decrease_percent": 4.66253509876493,
+          "top1_change_percentage_points": 14.28571428571429
+        },
+        "eos": {
+          "tokens": 80,
+          "ce_base": 0.1636261418258073,
+          "ce_sft_a": 0.24890035661228466,
+          "ce_decrease": -0.08527421478647737,
+          "weighted_all_target_ce_decrease": -0.004496992210229525,
+          "share_of_all_target_decrease_percent": -0.9101958972763688,
+          "top1_change_percentage_points": -6.25
+        }
+      }
+    },
+    "new_shape": {
+      "examples": 10,
+      "target_tokens": 188,
+      "all_target_ce_base": 2.511183216242724,
+      "all_target_ce_sft_a": 2.0640780314006792,
+      "all_target_ce_decrease": 0.44710518484204487,
+      "all_target_top1_base": 0.1702127659574468,
+      "all_target_top1_sft_a": 0.22872340425531915,
+      "all_target_top1_change_percentage_points": 5.851063829787234,
+      "category_contributions": {
+        "leading_6_digits": {
+          "tokens": 60,
+          "ce_base": 2.4607792854309083,
+          "ce_sft_a": 2.2025048340360325,
+          "ce_decrease": 0.2582744513948758,
+          "weighted_all_target_ce_decrease": 0.08242801640261994,
+          "share_of_all_target_decrease_percent": 18.435933913792667,
+          "top1_change_percentage_points": 15.0
+        },
+        "remaining_digits": {
+          "tokens": 108,
+          "ce_base": 2.947446581390169,
+          "ce_sft_a": 2.3267658993049904,
+          "ce_decrease": 0.6206806820851787,
+          "weighted_all_target_ce_decrease": 0.3565612428999963,
+          "share_of_all_target_decrease_percent": 79.74884993247477,
+          "top1_change_percentage_points": 1.8518518518518517
+        },
+        "format_only": {
+          "tokens": 10,
+          "ce_base": 0.5157906343694776,
+          "ce_sft_a": 0.04770975593710318,
+          "ce_decrease": 0.4680808784323744,
+          "weighted_all_target_ce_decrease": 0.02489791906555183,
+          "share_of_all_target_decrease_percent": 5.568693880020171,
+          "top1_change_percentage_points": 9.999999999999998
+        },
+        "eos": {
+          "tokens": 10,
+          "ce_base": 0.09735503939446062,
+          "ce_sft_a": 0.4128565176855773,
+          "ce_decrease": -0.3155014782911167,
+          "weighted_all_target_ce_decrease": -0.016781993526123227,
+          "share_of_all_target_decrease_percent": -3.7534777262876156,
+          "top1_change_percentage_points": -9.999999999999998
+        }
+      }
+    }
+  },
+  "greedy_fit_summary": {
+    "status": "complete",
+    "scope": "posthoc exploratory greedy direct-number fit; not primary transfer endpoint",
+    "base": {
+      "trained_all": {
+        "n": 80,
+        "correct": 0,
+        "median_relative_error": 0.864340077639941,
+        "mean_relative_error": 2.6267358039306656,
+        "within_1pct": 0,
+        "within_5pct": 4,
+        "within_10pct": 7
+      },
+      "new_shape": {
+        "n": 10,
+        "correct": 0,
+        "median_relative_error": 0.921694921591302,
+        "mean_relative_error": 0.9122294933180067,
+        "within_1pct": 0,
+        "within_5pct": 0,
+        "within_10pct": 0
+      }
+    },
+    "sft_a": {
+      "trained_all": {
+        "n": 80,
+        "correct": 0,
+        "median_relative_error": 0.16987018672112894,
+        "mean_relative_error": 0.3869037480382721,
+        "within_1pct": 5,
+        "within_5pct": 19,
+        "within_10pct": 29
+      },
+      "new_shape": {
+        "n": 10,
+        "correct": 0,
+        "median_relative_error": 0.24954162791636175,
+        "mean_relative_error": 0.6357073447193233,
+        "within_1pct": 2,
+        "within_5pct": 3,
+        "within_10pct": 3
+      }
+    }
+  },
+  "interpretation": {
+    "supported": [
+      "After SFT-A, correct target tokens became substantially more predictable under gold-prefix teacher forcing. On both splits, remaining-digit tokens account for about 80% of the all-target CE decrease because they are numerous and their category CE fell by about 0.62–0.69 nats/token.",
+      "The six leading significant digits also improved in CE and top-1 accuracy. Format tokens improved strongly but contribute only about 4.7–5.6% of the aggregate CE decrease because they are few.",
+      "EOS worsened in CE and top-1 accuracy, slightly offsetting the aggregate gain.",
+      "The separate greedy-fit summary shows SFT-A outputs were closer to targets on these samples, including the 10 new-shape cases, though still not exact under the summary's correct count."
+    ],
+    "not_established": [
+      "Teacher-forced CE is not a measure of free-running answer generation: the model receives the correct preceding answer tokens at every position.",
+      "The observations do not establish exact numerical mastery, a reusable arithmetic algorithm, or broad generalization. Greedy correct counts are 0/80 trained and 0/10 new-shape for both base and SFT-A, despite lower relative errors for SFT-A.",
+      "The small new-shape sample and posthoc exploratory greedy metric do not isolate whether the improvement comes from input-conditioned computation, familiar answer distributions, prompt/format adaptation, or a mixture.",
+      "This is evidence about this numeric-only dataset, SFT-A checkpoint, training recipe, and 128-update budget; it is not evidence against SFT in general or other data, objectives, models, and training budgets."
+    ]
+  },
+  "recommended_next_experiment": {
+    "name": "Matched input-perturbation numeric response test",
+    "status": "Unexecuted auxiliary suggestion; separate from the root agent's next-training proposal.",
+    "design": "Use 10 construction families, with two unseen parameterizations per family (10 matched pairs, 20 prompts). Within each pair, keep wording and construction fixed, vary one free parameter of the original construction, then regenerate all dependent givens and recompute the exact target from that construction. Do not independently perturb a dependent condition, which could invalidate existence or branch assumptions. Select parameter pairs whose correct targets differ by at least 10%. Use full-precision numeric-only targets and evaluate the existing base and SFT-A checkpoints with identical greedy decoding settings. Do not shuffle or pseudo-label targets.",
+    "measurements": [
+      "Greedy exact-correct rate and median relative error for each checkpoint.",
+      "Pairwise input sensitivity: whether each prediction changes in the target's direction and whether predicted target deltas track gold target deltas.",
+      "Optionally record teacher-forced digit CE on the same correct targets as a separate conditional-likelihood diagnostic."
+    ],
+    "why_this_is_diagnostic": "Matched pairs hold shape, wording, and output convention nearly constant while requiring different correct answers. Varying a free construction parameter and regenerating dependent values preserves valid configurations. If SFT-A follows the changed inputs better than base, that is stronger evidence of input-conditioned numeric mapping than a reduction in average error toward typical values. This test does not itself establish broad construction transfer.",
+    "supervision_integrity": "Every target remains the independently verified correct value for its own prompt. The proposed follow-up is evaluation-only and requires no new training; if followed by training later, train only on the exact prompt-to-correct-target pairs."
+  },
+  "provenance": {
+    "read": [
+      "qwen/.runtime/related_numeric_sft_20260928/base-digit-probe/summary.json",
+      "qwen/.runtime/related_numeric_sft_20260928/sft-a-digit-probe/summary.json",
+      "qwen/.runtime/related_numeric_sft_20260928/greedy-fit-scores.json summary/status/scope"
+    ],
+    "limitations": "An initial unfiltered display of greedy-fit-scores.json was clipped and incidentally showed some row excerpts; those rows were not analyzed or used. Interpretation used only the summary/status/scope. No training prompts or inputs were inspected. No waiting, GPU execution, or training was performed."
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "phase": "foundation_screen",
+  "models": [
+    "qwen3_4b",
+    "qwen3_2507",
+    "qwen35_9b",
+    "r1_8b"
+  ],
+  "samples_per_problem": 2,
+  "max_output_tokens": 8192,
+  "max_context": 12288,
+  "dtype": "bfloat16",
+  "kv_cache_dtype": "auto",
+  "tool_access": false,
+  "language": "en",
+  "seed": 2026092319,
+  "model_watchdog_seconds": 2700,
+  "total_screen_answers": 96,
+  "updates": 0,
+  "sampling": {
+    "qwen3_4b": {
+      "temperature": 0.6,
+      "top_p": 0.95,
+      "top_k": 20
+    },
+    "qwen3_2507": {
+      "temperature": 0.6,
+      "top_p": 0.95,
+      "top_k": 20
+    },
+    "qwen35_9b": {
+      "temperature": 1.0,
+      "top_p": 0.95,
+      "top_k": 20,
+      "presence_penalty": 1.5
+    },
+    "r1_8b": {
+      "temperature": 0.6,
+      "top_p": 0.95,
+      "top_k": -1
+    }
+  },
+  "decisions": [
+    "Use completed valid reasoning, spontaneous geometric use, truncation and cost separately.",
+    "This is a model-plus-recommended-setting comparison, not an architecture causal test.",
+    "Screen is development data; do not train on these questions or choose checkpoint on the target proof evaluation.",
+    "If one candidate already solves simple unseen compositions reliably, foundation FT is not a prerequisite.",
+    "Before SFT, freeze independent confirmation questions and target-development checks.",
+    "At most one small foundation SFT recipe initially; online target RL is outside this pilot."
+  ],
+  "jobs_sha256": "21d4a5bc41d8068b71a2147265acf7c59adf2f5159e72b31ee800e333a8fa5fe"
+}

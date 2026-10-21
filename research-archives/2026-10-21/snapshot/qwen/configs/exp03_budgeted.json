@@ -1,0 +1,37 @@
+{
+  "budget_ledger": "qwen/.runtime/exp03_budgeted/budget.json",
+  "data": "benchmarks/humpty_configurations_v2/training_variants.jsonl",
+  "evaluation_files": [
+    "benchmarks/humpty_configurations_v2/eval_variants.jsonl",
+    "benchmarks/humpty_proof_evaluation_v2/evaluation_prompts.jsonl",
+    "benchmarks/humpty_proof_evaluation_v2/auxiliary_hint_prompts.jsonl",
+    "benchmarks/humpty_proof_evaluation_v2/researcher_problems.json"
+  ],
+  "evaluation_reserve_hours": 8.0,
+  "evaluation_samples": {
+    "numeric": 2,
+    "proof": 4
+  },
+  "evaluation_seed": 20261001,
+  "kv_cache_dtype": "auto",
+  "lr": 5e-06,
+  "max_completion": 32512,
+  "max_seqs": 4,
+  "measure_after": false,
+  "minimum_mixed_groups_after_five": 4,
+  "planning": {
+    "process_overhead_seconds_per_round": 60,
+    "safety_factor": 1.15,
+    "training_tokens_per_second": 188.8502234869498,
+    "update_seconds_per_round": 240
+  },
+  "prompts_per_round": 4,
+  "readiness_gate": "qwen/.runtime/exp03_budgeted/readiness.json",
+  "research_scope": "Exploratory numeric-only supervision to proof transfer on 37 approved configurations. Data are independently checked construction calculations, not a repository-solver-generated corpus. Same-configuration and other-configuration proofs are reported separately. No claim of proof transfer from technical calibration.",
+  "rounds": 37,
+  "route": "fp16_native",
+  "samples": 4,
+  "seed": 20260923,
+  "technical_calibration": false,
+  "wall_hours": 40
+}

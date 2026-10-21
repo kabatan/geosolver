@@ -1,0 +1,64 @@
+{
+  "id": "AIME-2011-I-04",
+  "variables": [
+    "ax",
+    "ay"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(120, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "I",
+      "expression": "Incenter(A, B, C)"
+    },
+    {
+      "name": "L",
+      "expression": "Intersect(Line(A, I), Line(B, C))"
+    },
+    {
+      "name": "K",
+      "expression": "Intersect(Line(B, I), Line(A, C))"
+    },
+    {
+      "name": "M",
+      "expression": "FootOfPerpendicular(Line(B, K), C)"
+    },
+    {
+      "name": "N",
+      "expression": "FootOfPerpendicular(Line(A, L), C)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 125
+    },
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": 117
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": 120
+    },
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "Distance(M, N)"
+}

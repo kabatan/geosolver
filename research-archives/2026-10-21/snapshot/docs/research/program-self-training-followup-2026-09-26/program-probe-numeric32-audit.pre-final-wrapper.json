@@ -1,0 +1,3658 @@
+{
+  "status": "complete",
+  "raw_dir": "/home/kabatan/work/solver/qwen/.runtime/program_self_training_20260926/program-probe-numeric",
+  "generation": {
+    "receipt_sha256": "9dea6d9fe5cf956abe608ccc9d87734a5590e45def91c1d768f6edb56039b6f1",
+    "jobs_file_used_for_receipt": "/home/kabatan/work/solver/docs/research/program-self-training-2026-09-26/program-probe-jobs.json",
+    "jobs_sha256": "23cb72e16bfdf7135be9c40685691c2875fa1f134d2064adfcaecc42f46e2057",
+    "settings": {
+      "samples": 1,
+      "cap": 32768,
+      "context": 73728,
+      "temperature": 0.7,
+      "top_p": 0.95,
+      "top_k": 20,
+      "presence_penalty": 0.2,
+      "thinking": false
+    },
+    "generation_audit": {
+      "status": "complete",
+      "outputs": 8,
+      "finish_reasons": {
+        "stop": 8
+      },
+      "completion_tokens": 49470,
+      "per_source_finish": {
+        "DA01": {
+          "stop": 1
+        },
+        "DA05": {
+          "stop": 1
+        },
+        "H01": {
+          "stop": 1
+        },
+        "H04": {
+          "stop": 1
+        },
+        "H07": {
+          "stop": 1
+        },
+        "H13": {
+          "stop": 1
+        },
+        "H14": {
+          "stop": 1
+        },
+        "H15": {
+          "stop": 1
+        }
+      },
+      "receipt_sha256": "9dea6d9fe5cf956abe608ccc9d87734a5590e45def91c1d768f6edb56039b6f1",
+      "raw_sha256": {
+        "program-probe-da01-0.json": "d7bf1dbc4eeeff0d7642884cba98dbf0c69b355b85a1e2ebaff18b40dd3f80a5",
+        "program-probe-da05-0.json": "16dbe5c6a8a212cc09ab3cf88f2df0bbe0441a0290c4551e007e6b500741f5d8",
+        "program-probe-h01-0.json": "1ac0c37b0976e26638a5bcb7b7140f5f767be2a46aedfcddc0238262a8486024",
+        "program-probe-h04-0.json": "091cc7f77c84e0bcc8320ac47254e2f8ac166d65d7cb283820c9dd82181a17b8",
+        "program-probe-h07-0.json": "3b7c5370a78e3ff36372156fa2236ddedc7738d7fb254ae4c353a92e9df83985",
+        "program-probe-h13-0.json": "a43a6c610c60a41d58581b5552f06c2e2759b327c76c8f280bf752be79c8ca61",
+        "program-probe-h14-0.json": "8a08c93d683b3d0f263e249d40db5cbeaae77ffc5270d88c51a76d707ec4ed5f",
+        "program-probe-h15-0.json": "ffe2dcba98fd6a6e27bc00948a4452ffb6f0016d13ef144e55948d18ef7530f4"
+      },
+      "generation_driver_sha256": "16d8d2747fb37741e8a8b0b685a358f548411c341cf34e08ba5a5cf9839a79c9",
+      "model_metadata_sha256": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd"
+    },
+    "adapter": "/home/kabatan/work/solver/qwen/.runtime/program_self_training_20260926/train-numeric/final/adapter-vllm",
+    "adapter_sha256": "7148214176fa4dae54c7b2dea5508228bc67a9629b6bab295080682feb05d5cd",
+    "training_global_updates": 32,
+    "training_target_kind": "numeric",
+    "training_receipt": "/home/kabatan/work/solver/qwen/.runtime/program_self_training_20260926/train-numeric/receipt.json"
+  },
+  "audit_wrapper": {
+    "path": "/home/kabatan/work/solver/docs/research/program-self-training-followup-2026-09-26/audit_probe.py",
+    "sha256": "ce268f0d3380b54232de453a0bd7e650b41ad8bfa6490eb4c4fbfe9c48a28c34"
+  },
+  "grading": {
+    "implementation": "/home/kabatan/work/solver/docs/research/program-self-training-2026-09-26/execution_harness.py",
+    "case_file": "/home/kabatan/work/solver/docs/research/program-self-training-2026-09-26/numeric_cases_private.jsonl",
+    "case_file_sha256": "f3e6bf82f8b2c342f95ed50f74bd9a5fc2c8a94fc8f1e11772f2ee53a6745445",
+    "split": "final",
+    "cases_per_configuration": 24,
+    "numeric_tolerance": {
+      "absolute": 1e-07,
+      "relative": 1e-06
+    },
+    "execution": "same normalized-code extraction and bubblewrap-isolated evaluate_candidate used by pipeline.py final"
+  },
+  "summary": {
+    "target_configurations": 7,
+    "passed_configurations": 4,
+    "failed_or_format_failure_configurations": 3,
+    "censored_configurations": 0,
+    "mathematical_or_format_failures": 3,
+    "passed_sources": [
+      "H01",
+      "H04",
+      "H13",
+      "DA01"
+    ],
+    "failed_sources": [
+      "H07",
+      "H15",
+      "DA05"
+    ],
+    "ignored_out_of_scope_sources": [
+      "H14"
+    ]
+  },
+  "records": [
+    {
+      "id": "program-probe-h01",
+      "source_id": "H01",
+      "sample": 0,
+      "raw_file": "/home/kabatan/work/solver/qwen/.runtime/program_self_training_20260926/program-probe-numeric/program-probe-h01-0.json",
+      "raw_sha256": "1ac0c37b0976e26638a5bcb7b7140f5f767be2a46aedfcddc0238262a8486024",
+      "finish_reason": "stop",
+      "completion_tokens": 2032,
+      "all_passed": true,
+      "status": "pass",
+      "extracted_program": {
+        "code_sha256": "a85d87bfd8958b5a41d8f7f4435f04e6151ae43369b27bb40f164377e4d107ee",
+        "normalized_sha256": "4a7fef80f25dd7ff7744011618051f9bf559c848a64070ebbd3d3551aeaa4bb4",
+        "selected_fence_index": 0,
+        "closed_program_fences": 1,
+        "solve_definitions": 1,
+        "stripped_one_trailing_assistant_eos": true,
+        "finish_reason": "stop",
+        "extraction_rule": "last parse-valid closed python/py/unlabelled fence with top-level synchronous solve(givens); preserve whole fence; last solve definition wins"
+      },
+      "check": {
+        "status": "complete",
+        "code_sha256": "4a7fef80f25dd7ff7744011618051f9bf559c848a64070ebbd3d3551aeaa4bb4",
+        "cases_sha256": "691ede18f5dc076b3eeef2ee7a3add49a5e75d57ba9bcd2a5761be846e7c185c",
+        "limits": {
+          "wall_seconds": 2.0,
+          "cpu_seconds": 1,
+          "memory_bytes": 268435456,
+          "output_bytes": 16384,
+          "tmp_bytes": 16777216,
+          "input_bytes": 196608
+        },
+        "abs_tol": 1e-07,
+        "rel_tol": 1e-06,
+        "isolation": "bwrap user/PID/network/mount namespaces; minimal readonly system Python; no host data; seccomp forbids fork/clone and namespace changes",
+        "seccomp_sha256": "e0c9b8a9c07ac931bb76f64c7e516503f80c1d3744932102d63592d256e2e3c3",
+        "bootstrap_sha256": "23c251e468233ca1355a9a1e03651f5fcd21eda1dc6b026b10a119785c974302",
+        "n_cases": 24,
+        "n_passed": 24,
+        "all_passed": true,
+        "events": [
+          {
+            "case_id": "H01-final-001",
+            "source_id": "H01",
+            "split": "final",
+            "givens_sha256": "7bcc2dc07c2d05432df18b245fc7fc40b264048f9601fe6aeb8627304a41450b",
+            "answer": 3.3822177054871676,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 3.382217705487169}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.023441092809662223,
+              "value": 3.382217705487169
+            },
+            "absolute_error": 1.3322676295501878e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 3.4822177054871672e-06,
+            "passed": true
+          },
+          {
+            "case_id": "H01-final-002",
+            "source_id": "H01",
+            "split": "final",
+            "givens_sha256": "a5db9fa95ed087b67e87f3c089a89a90bcb48d849dac2d1f0edb47c7f33b6b33",
+            "answer": 10.097357237752737,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 10.097357237752735}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.019646275090053678,
+              "value": 10.097357237752735
+            },
+            "absolute_error": 1.7763568394002505e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.0197357237752737e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H01-final-003",
+            "source_id": "H01",
+            "split": "final",
+            "givens_sha256": "76cb8e4a5c56d5e18ee925f3a3c132d214b11ca4cb98647ff44e974c0707ce6e",
+            "answer": 8.603669508065805,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 8.603669508065805}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01563508901745081,
+              "value": 8.603669508065805
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 8.703669508065804e-06,
+            "passed": true
+          },
+          {
+            "case_id": "H01-final-004",
+            "source_id": "H01",
+            "split": "final",
+            "givens_sha256": "4971f87639c22928d3277d45cf77dfbcc6e880c29d0ce389bf9a8db20fad9d7b",
+            "answer": 2.0081307629798153,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 2.008130762979819}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016473115887492895,
+              "value": 2.008130762979819
+            },
+            "absolute_error": 3.552713678800501e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.1081307629798153e-06,
+            "passed": true
+          },
+          {
+            "case_id": "H01-final-005",
+            "source_id": "H01",
+            "split": "final",
+            "givens_sha256": "5f93bf763a5e577d0eb6bc3558470fd5a29cf98fbc19223f84459a695e03f3bd",
+            "answer": 17.4546223976691,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 17.4546223976691}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.015352939954027534,
+              "value": 17.4546223976691
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.75546223976691e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H01-final-006",
+            "source_id": "H01",
+            "split": "final",
+            "givens_sha256": "021da0e005ced06a00f7c4e58b87247594339d7c1faff8483d6eb5fb5595f4fb",
+            "answer": 7.8153865441658406,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 7.8153865441658406}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.018705419031903148,
+              "value": 7.8153865441658406
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 7.915386544165841e-06,
+            "passed": true
+          },
+          {
+            "case_id": "H01-final-007",
+            "source_id": "H01",
+            "split": "final",
+            "givens_sha256": "4781529a8a7d67f73d621685fea6d3dcd473bbbbf95a1c2c28922ae3f1e753ae",
+            "answer": 5.150998339522561,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 5.150998339522564}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.018539590062573552,
+              "value": 5.150998339522564
+            },
+            "absolute_error": 3.552713678800501e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 5.25099833952256e-06,
+            "passed": true
+          },
+          {
+            "case_id": "H01-final-008",
+            "source_id": "H01",
+            "split": "final",
+            "givens_sha256": "f267bf981ff0baaaecfd5af42d1c98e7e4c7bddd8c59e43d29f5f4b366fdc89c",
+            "answer": 5.182742417936838,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 5.182742417936838}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.02333857398480177,
+              "value": 5.182742417936838
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 5.282742417936838e-06,
+            "passed": true
+          },
+          {
+            "case_id": "H01-final-009",
+            "source_id": "H01",
+            "split": "final",
+            "givens_sha256": "5f4c738f6a340f2fdd1f486368f1dbfe41d9a05bae535524b1db16263acb05e4",
+            "answer": 11.878437104564782,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 11.878437104564787}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.018226110143586993,
+              "value": 11.878437104564787
+            },
+            "absolute_error": 5.329070518200751e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.1978437104564782e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H01-final-010",
+            "source_id": "H01",
+            "split": "final",
+            "givens_sha256": "82b63285a039ade43f915c87403b138a553290d52fdf950706261e951c81cd28",
+            "answer": 13.809289926283192,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 13.809289926283192}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01703042513690889,
+              "value": 13.809289926283192
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.3909289926283192e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H01-final-011",
+            "source_id": "H01",
+            "split": "final",
+            "givens_sha256": "80bab3830129ff3319d7d1efabf3e6fef359bcfe7d559dff8d9583cf7cec5355",
+            "answer": 8.097491634258542,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 8.097491634258544}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01769060199148953,
+              "value": 8.097491634258544
+            },
+            "absolute_error": 1.7763568394002505e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 8.197491634258543e-06,
+            "passed": true
+          },
+          {
+            "case_id": "H01-final-012",
+            "source_id": "H01",
+            "split": "final",
+            "givens_sha256": "11fa0d18997e4c1952c3b8ab0d0907397d2c901535e0716ff900745d75af2514",
+            "answer": 1.3598289406326227,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 1.359828940632623}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.021415610099211335,
+              "value": 1.359828940632623
+            },
+            "absolute_error": 2.220446049250313e-16,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.4598289406326226e-06,
+            "passed": true
+          },
+          {
+            "case_id": "H01-final-013",
+            "source_id": "H01",
+            "split": "final",
+            "givens_sha256": "059e90bfc4a3a9c180c546d6b03c3c850ce4d6fe776fd699f198fe885a527c6a",
+            "answer": 1.2754720926430965,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 1.2754720926430936}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.019845684990286827,
+              "value": 1.2754720926430936
+            },
+            "absolute_error": 2.886579864025407e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.3754720926430964e-06,
+            "passed": true
+          },
+          {
+            "case_id": "H01-final-014",
+            "source_id": "H01",
+            "split": "final",
+            "givens_sha256": "177d35db65a75c66f0ca0b415fc8d2657c90f661ea87a6dfb201cc909bdc0e08",
+            "answer": 0.716810772767573,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 0.7168107727675727}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01874384912662208,
+              "value": 0.7168107727675727
+            },
+            "absolute_error": 3.3306690738754696e-16,
+            "absolute_error_overflowed": false,
+            "tolerance": 8.16810772767573e-07,
+            "passed": true
+          },
+          {
+            "case_id": "H01-final-015",
+            "source_id": "H01",
+            "split": "final",
+            "givens_sha256": "97c2e05bf65e567d4fab8e56e96b7e63a228f2352f2da042b36b8582cd50a806",
+            "answer": 6.464815880748684,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 6.4648158807486835}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01799465110525489,
+              "value": 6.4648158807486835
+            },
+            "absolute_error": 8.881784197001252e-16,
+            "absolute_error_overflowed": false,
+            "tolerance": 6.564815880748684e-06,
+            "passed": true
+          },
+          {
+            "case_id": "H01-final-016",
+            "source_id": "H01",
+            "split": "final",
+            "givens_sha256": "ff13fb8abc5a985441da2303a431333f1ae3294698ec6ec38670af5a2c7c3a37",
+            "answer": 4.514278879400247,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 4.514278879400244}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.015647259075194597,
+              "value": 4.514278879400244
+            },
+            "absolute_error": 2.6645352591003757e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 4.614278879400247e-06,
+            "passed": true
+          },
+          {
+            "case_id": "H01-final-017",
+            "source_id": "H01",
+            "split": "final",
+            "givens_sha256": "4ed7a794462ed1e1b614be7303f460517a9bee065b358cd92a7bcf228ae48c5f",
+            "answer": 9.035048938713123,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 9.035048938713123}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.014959820779040456,
+              "value": 9.035048938713123
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 9.135048938713123e-06,
+            "passed": true
+          },
+          {
+            "case_id": "H01-final-018",
+            "source_id": "H01",
+            "split": "final",
+            "givens_sha256": "8972e890ef629af8634e109bb1dc598690c22721988126fe227d7e08b86df664",
+            "answer": 0.2178414704126926,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 0.21784147041269256}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.014904622221365571,
+              "value": 0.21784147041269256
+            },
+            "absolute_error": 5.551115123125783e-17,
+            "absolute_error_overflowed": false,
+            "tolerance": 3.178414704126926e-07,
+            "passed": true
+          },
+          {
+            "case_id": "H01-final-019",
+            "source_id": "H01",
+            "split": "final",
+            "givens_sha256": "ec5ef80aa44122a8288e4739573b5722c235630c3477d67888a52d4a431a5e67",
+            "answer": 0.6678455904329776,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 0.6678455904329812}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016612925799563527,
+              "value": 0.6678455904329812
+            },
+            "absolute_error": 3.552713678800501e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 7.678455904329776e-07,
+            "passed": true
+          },
+          {
+            "case_id": "H01-final-020",
+            "source_id": "H01",
+            "split": "final",
+            "givens_sha256": "17c1be477b91b680fc498ed6f992d0414d8b1f58e7c352620066ef314a3edabe",
+            "answer": 4.044052621667052,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 4.044052621667052}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01518701994791627,
+              "value": 4.044052621667052
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 4.144052621667052e-06,
+            "passed": true
+          },
+          {
+            "case_id": "H01-final-021",
+            "source_id": "H01",
+            "split": "final",
+            "givens_sha256": "7037ccad7c749f0ac959951602db92ed999af143c583d28207212e7ef51f0c5b",
+            "answer": 4.738992227503552,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 4.73899222750355}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.018265699967741966,
+              "value": 4.73899222750355
+            },
+            "absolute_error": 1.7763568394002505e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 4.838992227503551e-06,
+            "passed": true
+          },
+          {
+            "case_id": "H01-final-022",
+            "source_id": "H01",
+            "split": "final",
+            "givens_sha256": "ac1e8bfc8ea1ea3230446a77245b699774249bd7723ce4d4c5fd4d26511c9fb6",
+            "answer": 7.080115123803037,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 7.080115123803036}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016402846900746226,
+              "value": 7.080115123803036
+            },
+            "absolute_error": 8.881784197001252e-16,
+            "absolute_error_overflowed": false,
+            "tolerance": 7.180115123803037e-06,
+            "passed": true
+          },
+          {
+            "case_id": "H01-final-023",
+            "source_id": "H01",
+            "split": "final",
+            "givens_sha256": "be30508522d17c11ba4200b417b50d7f2cc99ed54f516027ec2259b91b9a0298",
+            "answer": 5.331218669114645,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 5.331218669114644}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.015390268992632627,
+              "value": 5.331218669114644
+            },
+            "absolute_error": 8.881784197001252e-16,
+            "absolute_error_overflowed": false,
+            "tolerance": 5.431218669114645e-06,
+            "passed": true
+          },
+          {
+            "case_id": "H01-final-024",
+            "source_id": "H01",
+            "split": "final",
+            "givens_sha256": "0c154ed242329bc546cd5379f9a2fcfa46b949c0018144a99f78b9f000bcbc30",
+            "answer": 2.5079112426007013,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 2.5079112426007013}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.014777342090383172,
+              "value": 2.5079112426007013
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.607911242600701e-06,
+            "passed": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "program-probe-h04",
+      "source_id": "H04",
+      "sample": 0,
+      "raw_file": "/home/kabatan/work/solver/qwen/.runtime/program_self_training_20260926/program-probe-numeric/program-probe-h04-0.json",
+      "raw_sha256": "091cc7f77c84e0bcc8320ac47254e2f8ac166d65d7cb283820c9dd82181a17b8",
+      "finish_reason": "stop",
+      "completion_tokens": 6200,
+      "all_passed": true,
+      "status": "pass",
+      "extracted_program": {
+        "code_sha256": "a64586ce88898d8f79a3a86d33ffb2b730c2bb791ea08a4e3a7a0fce10aab8d4",
+        "normalized_sha256": "76e385e4dd36723cbb4d76d0789c970520039fba3962d0ef40d7c83aa0e5b1e4",
+        "selected_fence_index": 0,
+        "closed_program_fences": 1,
+        "solve_definitions": 1,
+        "stripped_one_trailing_assistant_eos": true,
+        "finish_reason": "stop",
+        "extraction_rule": "last parse-valid closed python/py/unlabelled fence with top-level synchronous solve(givens); preserve whole fence; last solve definition wins"
+      },
+      "check": {
+        "status": "complete",
+        "code_sha256": "76e385e4dd36723cbb4d76d0789c970520039fba3962d0ef40d7c83aa0e5b1e4",
+        "cases_sha256": "100bcd01ebd1e76e8a999188e164721ef1f6200f6d3a3ecbd2714e24d6da04b5",
+        "limits": {
+          "wall_seconds": 2.0,
+          "cpu_seconds": 1,
+          "memory_bytes": 268435456,
+          "output_bytes": 16384,
+          "tmp_bytes": 16777216,
+          "input_bytes": 196608
+        },
+        "abs_tol": 1e-07,
+        "rel_tol": 1e-06,
+        "isolation": "bwrap user/PID/network/mount namespaces; minimal readonly system Python; no host data; seccomp forbids fork/clone and namespace changes",
+        "seccomp_sha256": "e0c9b8a9c07ac931bb76f64c7e516503f80c1d3744932102d63592d256e2e3c3",
+        "bootstrap_sha256": "23c251e468233ca1355a9a1e03651f5fcd21eda1dc6b026b10a119785c974302",
+        "n_cases": 24,
+        "n_passed": 24,
+        "all_passed": true,
+        "events": [
+          {
+            "case_id": "H04-final-001",
+            "source_id": "H04",
+            "split": "final",
+            "givens_sha256": "d5374933def39e5a16c6b1c07e1b3a9cf08cd5d5cc01001c6784919ce40046b5",
+            "answer": 4090.0383421183983,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 4090.0383421183983}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01474226196296513,
+              "value": 4090.0383421183983
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 0.004090138342118399,
+            "passed": true
+          },
+          {
+            "case_id": "H04-final-002",
+            "source_id": "H04",
+            "split": "final",
+            "givens_sha256": "c07083f823617cb78b349343fc025dd3520521c0702c05c12282adaf092eb3c9",
+            "answer": 84.66288909802458,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 84.66288909802456}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.014496083138510585,
+              "value": 84.66288909802456
+            },
+            "absolute_error": 1.4210854715202004e-14,
+            "absolute_error_overflowed": false,
+            "tolerance": 8.476288909802457e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H04-final-003",
+            "source_id": "H04",
+            "split": "final",
+            "givens_sha256": "8226daf45016d7ed090d1af8a6fb3820bc7ca3d292b47bf58ad15cc584c06537",
+            "answer": 14.446463542665382,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 14.44646354266538}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.0185806299559772,
+              "value": 14.44646354266538
+            },
+            "absolute_error": 1.7763568394002505e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.4546463542665382e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H04-final-004",
+            "source_id": "H04",
+            "split": "final",
+            "givens_sha256": "f83aaf4438424c7b7c07a67c3c6b2d4aebc69f5216d9ce9b1d87c3505de1f066",
+            "answer": 23.977024330680095,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 23.97702433068008}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017479612957686186,
+              "value": 23.97702433068008
+            },
+            "absolute_error": 1.4210854715202004e-14,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.4077024330680093e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H04-final-005",
+            "source_id": "H04",
+            "split": "final",
+            "givens_sha256": "7482ef1d707ebe4e92f5df54aa0bc9f96672e74090d9bebbef81e36f7331744b",
+            "answer": 17.566246027203565,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 17.566246027203565}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01847607991658151,
+              "value": 17.566246027203565
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.7666246027203564e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H04-final-006",
+            "source_id": "H04",
+            "split": "final",
+            "givens_sha256": "75f7c3568fd80214cf982f765e1ef5bd803b7b4cb72846536512238566c8f307",
+            "answer": 20.212128711014774,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 20.212128711014774}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017141384072601795,
+              "value": 20.212128711014774
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.0312128711014772e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H04-final-007",
+            "source_id": "H04",
+            "split": "final",
+            "givens_sha256": "d983c1bf38e73fd0722bed81809493758f13905c2109cb789a8ba0e1e06d454e",
+            "answer": 397.2656007567243,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 397.2656007567244}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016399156069383025,
+              "value": 397.2656007567244
+            },
+            "absolute_error": 5.684341886080802e-14,
+            "absolute_error_overflowed": false,
+            "tolerance": 0.0003973656007567243,
+            "passed": true
+          },
+          {
+            "case_id": "H04-final-008",
+            "source_id": "H04",
+            "split": "final",
+            "givens_sha256": "4f472146f009f672076074e6f0e60ee245f19e4b7a6b715b3ffbed71b95613bd",
+            "answer": 14.491620721459663,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 14.491620721459663}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017430583015084267,
+              "value": 14.491620721459663
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.4591620721459663e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H04-final-009",
+            "source_id": "H04",
+            "split": "final",
+            "givens_sha256": "658ab5adea19504d1e891b2364c8427e8cd542cf68661bb13c0977e26e460533",
+            "answer": 5.570227016037747,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 5.570227016037745}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01688078511506319,
+              "value": 5.570227016037745
+            },
+            "absolute_error": 1.7763568394002505e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 5.6702270160377464e-06,
+            "passed": true
+          },
+          {
+            "case_id": "H04-final-010",
+            "source_id": "H04",
+            "split": "final",
+            "givens_sha256": "a6131ebe384f1a892ab168de5aab1fb93cb38cb1ed36c93b54e70029b5f84e2a",
+            "answer": 10.403442247923975,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 10.403442247923977}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01744348299689591,
+              "value": 10.403442247923977
+            },
+            "absolute_error": 1.7763568394002505e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.0503442247923975e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H04-final-011",
+            "source_id": "H04",
+            "split": "final",
+            "givens_sha256": "b59421629b31fb7d3a82088b09af65464290a512c6e0676ab80d0eb2ade6ec3a",
+            "answer": 25.303174252433838,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 25.303174252433838}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016038587084040046,
+              "value": 25.303174252433838
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.5403174252433836e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H04-final-012",
+            "source_id": "H04",
+            "split": "final",
+            "givens_sha256": "72e4b04b42de63527051106e3832bed00e836d1a7288fb13ca8fc3a45bd9d631",
+            "answer": 9.741318700020416,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 9.741318700020415}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.0156718990765512,
+              "value": 9.741318700020415
+            },
+            "absolute_error": 1.7763568394002505e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 9.841318700020417e-06,
+            "passed": true
+          },
+          {
+            "case_id": "H04-final-013",
+            "source_id": "H04",
+            "split": "final",
+            "givens_sha256": "cbb4dd93d483ab377d5b3fd05ee1e7a0980196584139b5351ccaec584aae89a7",
+            "answer": 25.12776911945784,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 25.12776911945784}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016299056820571423,
+              "value": 25.12776911945784
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.522776911945784e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H04-final-014",
+            "source_id": "H04",
+            "split": "final",
+            "givens_sha256": "de4b8bfad0c80c55d6d2b2ad8e14cf4ce02d5a46365be1422b6c194cd4f2e0ff",
+            "answer": 15.95554473848533,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 15.955544738485331}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016347886994481087,
+              "value": 15.955544738485331
+            },
+            "absolute_error": 1.7763568394002505e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.605554473848533e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H04-final-015",
+            "source_id": "H04",
+            "split": "final",
+            "givens_sha256": "fdfd160d99786f33d215488e50c413b6c4cc06a8231744177755676d9f263314",
+            "answer": 6.871866891857637,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 6.8718668918576356}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016980133950710297,
+              "value": 6.8718668918576356
+            },
+            "absolute_error": 1.7763568394002505e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 6.9718668918576365e-06,
+            "passed": true
+          },
+          {
+            "case_id": "H04-final-016",
+            "source_id": "H04",
+            "split": "final",
+            "givens_sha256": "6d41eae76bb5fb0f83fb917eb0abc88b6c6526cb5d88a70dee260ac02460d0e1",
+            "answer": 43.6475009359762,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 43.647500935976204}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01597569789737463,
+              "value": 43.647500935976204
+            },
+            "absolute_error": 7.105427357601002e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 4.37475009359762e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H04-final-017",
+            "source_id": "H04",
+            "split": "final",
+            "givens_sha256": "9d79bd4ec6e13d2debf75446fc3498ead560a59ebd140212e3d1fc6b1662209e",
+            "answer": 5.3027029566745325,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 5.302702956674529}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016171467024832964,
+              "value": 5.302702956674529
+            },
+            "absolute_error": 3.552713678800501e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 5.402702956674532e-06,
+            "passed": true
+          },
+          {
+            "case_id": "H04-final-018",
+            "source_id": "H04",
+            "split": "final",
+            "givens_sha256": "988d8b0ad526fed9168bd3091fd5baed85b5b2aaaab5ff47706acae9f026ad43",
+            "answer": 33.19257913259246,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 33.19257913259246}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017007724149152637,
+              "value": 33.19257913259246
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 3.329257913259247e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H04-final-019",
+            "source_id": "H04",
+            "split": "final",
+            "givens_sha256": "c20a52dcacb68f0759f2b4a4a731faf022bcee821b027aebd3342741ff54edda",
+            "answer": 25.272189199580094,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 25.272189199580094}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.015430550090968609,
+              "value": 25.272189199580094
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.5372189199580092e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H04-final-020",
+            "source_id": "H04",
+            "split": "final",
+            "givens_sha256": "fb5e8ca9183e90eb2b548d632138e55d8a0272dee3b7a70b64cfbf5e96866e1c",
+            "answer": 73.62090752672644,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 73.62090752672644}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017240833025425673,
+              "value": 73.62090752672644
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 7.372090752672644e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H04-final-021",
+            "source_id": "H04",
+            "split": "final",
+            "givens_sha256": "ebdb4c2df440a2a3f2824b49946110d1569bd616351fd64f67e8267c3dc61d15",
+            "answer": 13.146464623741881,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 13.146464623741883}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017710471991449594,
+              "value": 13.146464623741883
+            },
+            "absolute_error": 1.7763568394002505e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.3246464623741882e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H04-final-022",
+            "source_id": "H04",
+            "split": "final",
+            "givens_sha256": "83052325d6d6c596a4376148dd0a677a4d420333b6b0772fd7c6b7e28be8fb3d",
+            "answer": 20.73345947447621,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 20.73345947447621}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01520378002896905,
+              "value": 20.73345947447621
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.0833459474476206e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H04-final-023",
+            "source_id": "H04",
+            "split": "final",
+            "givens_sha256": "7eeca8b87dff64aa0904a58ffe007f093c63edd6ca82fc8aa769508c04b1b1f7",
+            "answer": 22.81400061732487,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 22.81400061732487}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.015268800081685185,
+              "value": 22.81400061732487
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.2914000617324867e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H04-final-024",
+            "source_id": "H04",
+            "split": "final",
+            "givens_sha256": "7f4a898f2823d465502fa7723dd050d395650f0db3869b0e79bbcbbe1e3f11c8",
+            "answer": 308.3531548827617,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 308.3531548827617}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01672213594429195,
+              "value": 308.3531548827617
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 0.0003084531548827617,
+            "passed": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "program-probe-h07",
+      "source_id": "H07",
+      "sample": 0,
+      "raw_file": "/home/kabatan/work/solver/qwen/.runtime/program_self_training_20260926/program-probe-numeric/program-probe-h07-0.json",
+      "raw_sha256": "3b7c5370a78e3ff36372156fa2236ddedc7738d7fb254ae4c353a92e9df83985",
+      "finish_reason": "stop",
+      "completion_tokens": 5529,
+      "all_passed": false,
+      "status": "fail",
+      "extracted_program": {
+        "code_sha256": "528dfe02e25ae29dbb921a0e1c11d3b8936abb94e4fa0c03ed696dcad872197f",
+        "normalized_sha256": "97248da94d1981fdef24d58fbe4e87747c2843e3d49835d1e0c6609a10cd76bb",
+        "selected_fence_index": 0,
+        "closed_program_fences": 1,
+        "solve_definitions": 1,
+        "stripped_one_trailing_assistant_eos": true,
+        "finish_reason": "stop",
+        "extraction_rule": "last parse-valid closed python/py/unlabelled fence with top-level synchronous solve(givens); preserve whole fence; last solve definition wins"
+      },
+      "check": {
+        "status": "complete",
+        "code_sha256": "97248da94d1981fdef24d58fbe4e87747c2843e3d49835d1e0c6609a10cd76bb",
+        "cases_sha256": "850d3909e6301f013519c522ff2c43aae89866b0a9755d6eea324ba02160f5f8",
+        "limits": {
+          "wall_seconds": 2.0,
+          "cpu_seconds": 1,
+          "memory_bytes": 268435456,
+          "output_bytes": 16384,
+          "tmp_bytes": 16777216,
+          "input_bytes": 196608
+        },
+        "abs_tol": 1e-07,
+        "rel_tol": 1e-06,
+        "isolation": "bwrap user/PID/network/mount namespaces; minimal readonly system Python; no host data; seccomp forbids fork/clone and namespace changes",
+        "seccomp_sha256": "e0c9b8a9c07ac931bb76f64c7e516503f80c1d3744932102d63592d256e2e3c3",
+        "bootstrap_sha256": "23c251e468233ca1355a9a1e03651f5fcd21eda1dc6b026b10a119785c974302",
+        "n_cases": 24,
+        "n_passed": 0,
+        "all_passed": false,
+        "events": [
+          {
+            "case_id": "H07-final-001",
+            "source_id": "H07",
+            "split": "final",
+            "givens_sha256": "28809371e98756058552021337fbc98aa69ba438959a88068c655a8325aefc9a",
+            "answer": 17.723813436269822,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'x_c' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017105723964050412,
+              "error_type": "NameError",
+              "error": "name 'x_c' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.782381343626982e-05,
+            "passed": false
+          },
+          {
+            "case_id": "H07-final-002",
+            "source_id": "H07",
+            "split": "final",
+            "givens_sha256": "cce0dc9123f0ec50c31dc33d95dd15a4a717b740b555fd2b6a475ee2a28748b3",
+            "answer": 18.066585276129363,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'x_c' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.018688839161768556,
+              "error_type": "NameError",
+              "error": "name 'x_c' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.816658527612936e-05,
+            "passed": false
+          },
+          {
+            "case_id": "H07-final-003",
+            "source_id": "H07",
+            "split": "final",
+            "givens_sha256": "5a6fc3f24ea2f8797391b33842c4decd3c7b6a8a8e1b9e907066a3b5f7c591fd",
+            "answer": 44.05526518320099,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'x_c' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017020585015416145,
+              "error_type": "NameError",
+              "error": "name 'x_c' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 4.415526518320099e-05,
+            "passed": false
+          },
+          {
+            "case_id": "H07-final-004",
+            "source_id": "H07",
+            "split": "final",
+            "givens_sha256": "fb9b4563fe4f4183bbacda434aba68b310f6e9423c7e9b073be9c6af37d055c8",
+            "answer": 5.409671900801518,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'x_c' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.018923687981441617,
+              "error_type": "NameError",
+              "error": "name 'x_c' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 5.509671900801518e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H07-final-005",
+            "source_id": "H07",
+            "split": "final",
+            "givens_sha256": "4c5e86c440827f903a5b2635e587462cc7a5523a35cf9040ff3b519d03ae4710",
+            "answer": 14.554636197849355,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'x_c' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.018088490003719926,
+              "error_type": "NameError",
+              "error": "name 'x_c' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.4654636197849355e-05,
+            "passed": false
+          },
+          {
+            "case_id": "H07-final-006",
+            "source_id": "H07",
+            "split": "final",
+            "givens_sha256": "8b78ada9fe8a7f2155bdc91e53d021c8e53fbc91d33721b132fd93e2a55ac5b8",
+            "answer": 4.228239352427391,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'x_c' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.019146096892654896,
+              "error_type": "NameError",
+              "error": "name 'x_c' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 4.328239352427391e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H07-final-007",
+            "source_id": "H07",
+            "split": "final",
+            "givens_sha256": "1dc4312c2fd7ae9b887d901c784a905735d504475af35d07d4fa6f5d7e48cbef",
+            "answer": 26.516788947577798,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'x_c' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017581602791324258,
+              "error_type": "NameError",
+              "error": "name 'x_c' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.6616788947577794e-05,
+            "passed": false
+          },
+          {
+            "case_id": "H07-final-008",
+            "source_id": "H07",
+            "split": "final",
+            "givens_sha256": "fe5089bf5a8b3e6bb439616da338f8d871a36b3430246e1fed09482ca2dc56b0",
+            "answer": 10.356470097627977,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'x_c' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.018401530105620623,
+              "error_type": "NameError",
+              "error": "name 'x_c' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.0456470097627978e-05,
+            "passed": false
+          },
+          {
+            "case_id": "H07-final-009",
+            "source_id": "H07",
+            "split": "final",
+            "givens_sha256": "1e3746c2f659471f784af6a64145ee6722e62f3b08c4d010f03499ac18d71548",
+            "answer": 53.06503440170735,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'x_c' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01583078783005476,
+              "error_type": "NameError",
+              "error": "name 'x_c' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 5.316503440170735e-05,
+            "passed": false
+          },
+          {
+            "case_id": "H07-final-010",
+            "source_id": "H07",
+            "split": "final",
+            "givens_sha256": "00b11b831d36dd8e3950b973b8ea4aff2556a2f66d637e1f4e4ef9ac085c0518",
+            "answer": 6.097628257099537,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'x_c' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.018460699822753668,
+              "error_type": "NameError",
+              "error": "name 'x_c' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 6.197628257099537e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H07-final-011",
+            "source_id": "H07",
+            "split": "final",
+            "givens_sha256": "3ba7ccf4260a00b412a590e64b1c584aa81fb36e9cdbf934598f77b54796e04c",
+            "answer": 5.192986369128962,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'x_c' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016317197121679783,
+              "error_type": "NameError",
+              "error": "name 'x_c' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 5.2929863691289624e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H07-final-012",
+            "source_id": "H07",
+            "split": "final",
+            "givens_sha256": "bcc97d6a29ff6306e081a7300cafc8942d3aee3ac89b59ff092e73a9da42b5c3",
+            "answer": 26.847999306228743,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'x_c' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.015621998813003302,
+              "error_type": "NameError",
+              "error": "name 'x_c' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.694799930622874e-05,
+            "passed": false
+          },
+          {
+            "case_id": "H07-final-013",
+            "source_id": "H07",
+            "split": "final",
+            "givens_sha256": "afc62191d3f3300c75a7c00d6bf9fbe80cc50eececd1abe6433811c1fec0788a",
+            "answer": 7.44349103011546,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'x_c' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.018569339998066425,
+              "error_type": "NameError",
+              "error": "name 'x_c' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 7.54349103011546e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H07-final-014",
+            "source_id": "H07",
+            "split": "final",
+            "givens_sha256": "b0d4ec51ae2a31344c8b63e87df7872d3680dd39c2a4328b3ccd6f39477c266b",
+            "answer": 3.1441846577695847,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'x_c' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01561386906541884,
+              "error_type": "NameError",
+              "error": "name 'x_c' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 3.2441846577695844e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H07-final-015",
+            "source_id": "H07",
+            "split": "final",
+            "givens_sha256": "45647550183c3a38554e1e51597eefaeb41243e1dbb371360c3b08b7effc09fe",
+            "answer": 13.109537749159678,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'x_c' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016700386069715023,
+              "error_type": "NameError",
+              "error": "name 'x_c' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.3209537749159678e-05,
+            "passed": false
+          },
+          {
+            "case_id": "H07-final-016",
+            "source_id": "H07",
+            "split": "final",
+            "givens_sha256": "a6932c356f8ca14d552c1fe5fe3a49e261b67126bd8b87662e1706da093ce51b",
+            "answer": 5.5056430665498794,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'x_c' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.019196807174012065,
+              "error_type": "NameError",
+              "error": "name 'x_c' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 5.605643066549879e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H07-final-017",
+            "source_id": "H07",
+            "split": "final",
+            "givens_sha256": "c93ed34eae2667bd8686d7ae3f9f2834a9f11b426cccd63dc6c0b778a80b5179",
+            "answer": 4.8296479298707915,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'x_c' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.015978238079696894,
+              "error_type": "NameError",
+              "error": "name 'x_c' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 4.929647929870791e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H07-final-018",
+            "source_id": "H07",
+            "split": "final",
+            "givens_sha256": "b0ac266b4cfb2ebbdb8416a225e4f9c7e843d6667a328e5db6d7682d60e59193",
+            "answer": 6.698001274404754,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'x_c' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017944401130080223,
+              "error_type": "NameError",
+              "error": "name 'x_c' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 6.798001274404753e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H07-final-019",
+            "source_id": "H07",
+            "split": "final",
+            "givens_sha256": "6309f10e3dbb030f0aa06df11979a4426ae7f271ef45b109e2680466cd560e86",
+            "answer": 1.4190606166650084,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'x_c' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.0156477689743042,
+              "error_type": "NameError",
+              "error": "name 'x_c' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.5190606166650084e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H07-final-020",
+            "source_id": "H07",
+            "split": "final",
+            "givens_sha256": "6fedb30257eb280ed26ed37fd03e5d0757285b8541a73a279ef206c32abe3205",
+            "answer": 1.5251898855224515,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'x_c' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017534662038087845,
+              "error_type": "NameError",
+              "error": "name 'x_c' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.6251898855224514e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H07-final-021",
+            "source_id": "H07",
+            "split": "final",
+            "givens_sha256": "f3d247012278744651e31ba6405e9faa31615f516e2dd9f1d6f5cce00c6a42e5",
+            "answer": 2.8991375046441434,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'x_c' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01824033004231751,
+              "error_type": "NameError",
+              "error": "name 'x_c' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.999137504644143e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H07-final-022",
+            "source_id": "H07",
+            "split": "final",
+            "givens_sha256": "80d5854588903638d9dffbd7f1f89ccd780b5209436fe881e5bb580c0f2f8a56",
+            "answer": 1.252805315843379,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'x_c' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.0182120599783957,
+              "error_type": "NameError",
+              "error": "name 'x_c' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.3528053158433787e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H07-final-023",
+            "source_id": "H07",
+            "split": "final",
+            "givens_sha256": "51aac30aebdd598155918a248611b4c933aa0a7046a0d13a2483a437ba706dd3",
+            "answer": 45.090205157590646,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'x_c' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01868415903300047,
+              "error_type": "NameError",
+              "error": "name 'x_c' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 4.519020515759064e-05,
+            "passed": false
+          },
+          {
+            "case_id": "H07-final-024",
+            "source_id": "H07",
+            "split": "final",
+            "givens_sha256": "55d990f69f290cb5d9c29245683b8af174e7cb70cfe402fc80ccb45276d17ac2",
+            "answer": 9.783652313563241,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'x_c' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.02002586401067674,
+              "error_type": "NameError",
+              "error": "name 'x_c' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 9.883652313563242e-06,
+            "passed": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "program-probe-h13",
+      "source_id": "H13",
+      "sample": 0,
+      "raw_file": "/home/kabatan/work/solver/qwen/.runtime/program_self_training_20260926/program-probe-numeric/program-probe-h13-0.json",
+      "raw_sha256": "a43a6c610c60a41d58581b5552f06c2e2759b327c76c8f280bf752be79c8ca61",
+      "finish_reason": "stop",
+      "completion_tokens": 4244,
+      "all_passed": true,
+      "status": "pass",
+      "extracted_program": {
+        "code_sha256": "d25ae19e8c2a0e2921b8425375c2556a278a0c6c0ec29e808892d2fde0c61377",
+        "normalized_sha256": "ecada3537d823ab50a059452494f34b1963fbbfd413c8450d57f9066da9d5bea",
+        "selected_fence_index": 0,
+        "closed_program_fences": 1,
+        "solve_definitions": 1,
+        "stripped_one_trailing_assistant_eos": true,
+        "finish_reason": "stop",
+        "extraction_rule": "last parse-valid closed python/py/unlabelled fence with top-level synchronous solve(givens); preserve whole fence; last solve definition wins"
+      },
+      "check": {
+        "status": "complete",
+        "code_sha256": "ecada3537d823ab50a059452494f34b1963fbbfd413c8450d57f9066da9d5bea",
+        "cases_sha256": "76a09b02168356d01511958c249e9f048909908d3e9443c1afbfbaf98f893a3d",
+        "limits": {
+          "wall_seconds": 2.0,
+          "cpu_seconds": 1,
+          "memory_bytes": 268435456,
+          "output_bytes": 16384,
+          "tmp_bytes": 16777216,
+          "input_bytes": 196608
+        },
+        "abs_tol": 1e-07,
+        "rel_tol": 1e-06,
+        "isolation": "bwrap user/PID/network/mount namespaces; minimal readonly system Python; no host data; seccomp forbids fork/clone and namespace changes",
+        "seccomp_sha256": "e0c9b8a9c07ac931bb76f64c7e516503f80c1d3744932102d63592d256e2e3c3",
+        "bootstrap_sha256": "23c251e468233ca1355a9a1e03651f5fcd21eda1dc6b026b10a119785c974302",
+        "n_cases": 24,
+        "n_passed": 24,
+        "all_passed": true,
+        "events": [
+          {
+            "case_id": "H13-final-001",
+            "source_id": "H13",
+            "split": "final",
+            "givens_sha256": "e43bcb368b66e4232ad6e61abb919b98df7c35fb5ae13597a777ef330eab85a9",
+            "answer": 15.010654479850931,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 15.010654479850936}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017609423026442528,
+              "value": 15.010654479850936
+            },
+            "absolute_error": 5.329070518200751e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.511065447985093e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H13-final-002",
+            "source_id": "H13",
+            "split": "final",
+            "givens_sha256": "0c43d0b4ac7675a493516e39779799afceb865623881a62065ab6738c5135ec9",
+            "answer": 114.0459642143297,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 114.04596421432973}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.018247880041599274,
+              "value": 114.04596421432973
+            },
+            "absolute_error": 2.842170943040401e-14,
+            "absolute_error_overflowed": false,
+            "tolerance": 0.0001141459642143297,
+            "passed": true
+          },
+          {
+            "case_id": "H13-final-003",
+            "source_id": "H13",
+            "split": "final",
+            "givens_sha256": "ce7068c28a3d8da2a3a2212b401fcdd92d0483f4accdc5a0098277fd166e4406",
+            "answer": 67.3764279647399,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 67.37642796473989}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01710139401257038,
+              "value": 67.37642796473989
+            },
+            "absolute_error": 1.4210854715202004e-14,
+            "absolute_error_overflowed": false,
+            "tolerance": 6.74764279647399e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H13-final-004",
+            "source_id": "H13",
+            "split": "final",
+            "givens_sha256": "78584df12f8d5de406f1894d02e073e794cc99b0415a86bd51a2ca286d462cf4",
+            "answer": 26.477617400598646,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 26.477617400598636}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017267953138798475,
+              "value": 26.477617400598636
+            },
+            "absolute_error": 1.0658141036401503e-14,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.6577617400598643e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H13-final-005",
+            "source_id": "H13",
+            "split": "final",
+            "givens_sha256": "245bb7bda6fd62e25a3c5269534ddc36a554d8c20b707273f4fbce678e474326",
+            "answer": 17.29341130878915,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 17.293411308789153}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016014786902815104,
+              "value": 17.293411308789153
+            },
+            "absolute_error": 3.552713678800501e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.739341130878915e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H13-final-006",
+            "source_id": "H13",
+            "split": "final",
+            "givens_sha256": "38693a8a453a248e5292ed5a85a7219ff02c6460544c403ccb7241f55e0d09cc",
+            "answer": 122.18336563009481,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 122.18336563009477}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016512275906279683,
+              "value": 122.18336563009477
+            },
+            "absolute_error": 4.263256414560601e-14,
+            "absolute_error_overflowed": false,
+            "tolerance": 0.0001222833656300948,
+            "passed": true
+          },
+          {
+            "case_id": "H13-final-007",
+            "source_id": "H13",
+            "split": "final",
+            "givens_sha256": "755599e448d9dd35cb2b9dd0509b6bf2b7f8debc35724fb0c2f3006ba1ea16eb",
+            "answer": 18.544050784012743,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 18.544050784012736}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01679312507621944,
+              "value": 18.544050784012736
+            },
+            "absolute_error": 7.105427357601002e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.864405078401274e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H13-final-008",
+            "source_id": "H13",
+            "split": "final",
+            "givens_sha256": "d510f1fdbbd5dac69ccbfe442c8c95bbf98cf0c49e512d81c8b2208ead33f35c",
+            "answer": 88.75429431994253,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 88.7542943199425}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01579773798584938,
+              "value": 88.7542943199425
+            },
+            "absolute_error": 2.842170943040401e-14,
+            "absolute_error_overflowed": false,
+            "tolerance": 8.885429431994254e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H13-final-009",
+            "source_id": "H13",
+            "split": "final",
+            "givens_sha256": "f0b2ca7a9417c1684cfb0a0a04fb61b0eace662d18cf3af95b4e9c3e7a64d7ab",
+            "answer": 21.283218298881636,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 21.283218298881636}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.015164100099354982,
+              "value": 21.283218298881636
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.1383218298881635e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H13-final-010",
+            "source_id": "H13",
+            "split": "final",
+            "givens_sha256": "e0daac98e754fe0b66397c1253f921562e6dfd56ccc27ccf0fc11566ae013b82",
+            "answer": 20.3681685535794,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 20.368168553579398}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016825664788484573,
+              "value": 20.368168553579398
+            },
+            "absolute_error": 3.552713678800501e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.04681685535794e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H13-final-011",
+            "source_id": "H13",
+            "split": "final",
+            "givens_sha256": "16eaa17290b3a6d13e0f5ec5437a0811c66803251c70df091af51e074df1cdc3",
+            "answer": 47.80544256723569,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 47.80544256723569}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.0167431749869138,
+              "value": 47.80544256723569
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 4.790544256723569e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H13-final-012",
+            "source_id": "H13",
+            "split": "final",
+            "givens_sha256": "c2e1a827ba9871c74160f6ddf99fc503c2298e2e6e318fa5d626b7142a0bbbc2",
+            "answer": 52.16614386903232,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 52.16614386903232}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.015881008002907038,
+              "value": 52.16614386903232
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 5.226614386903232e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H13-final-013",
+            "source_id": "H13",
+            "split": "final",
+            "givens_sha256": "735d646e9d2fbf6adf6739d24297891fd52cf6ad411f14fff38c3a1565306968",
+            "answer": 35.59312001680822,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 35.59312001680822}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.015417430084198713,
+              "value": 35.59312001680822
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 3.5693120016808224e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H13-final-014",
+            "source_id": "H13",
+            "split": "final",
+            "givens_sha256": "a291e0734d9b3fd8bb4b4bf4a385d30883e6dc1f1dc3b434e252d6a106148d37",
+            "answer": 35.78093243080628,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 35.78093243080628}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.0184557291213423,
+              "value": 35.78093243080628
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 3.588093243080628e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H13-final-015",
+            "source_id": "H13",
+            "split": "final",
+            "givens_sha256": "1c4846d63dc65c14f074f609f30412a9fead4a4ab1ed0d026986474443099f33",
+            "answer": 49.22896945426659,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 49.2289694542666}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.0166657951194793,
+              "value": 49.2289694542666
+            },
+            "absolute_error": 7.105427357601002e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 4.932896945426659e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H13-final-016",
+            "source_id": "H13",
+            "split": "final",
+            "givens_sha256": "9147853c31ddb95d13c140b01e9d69c448b8c85e2a28d639290dc20e338baeb4",
+            "answer": 218.39224351118798,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 218.39224351118807}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.015430699102580547,
+              "value": 218.39224351118807
+            },
+            "absolute_error": 8.526512829121202e-14,
+            "absolute_error_overflowed": false,
+            "tolerance": 0.00021849224351118797,
+            "passed": true
+          },
+          {
+            "case_id": "H13-final-017",
+            "source_id": "H13",
+            "split": "final",
+            "givens_sha256": "40df81167a97bb30d52a00c507727a603958d825a7ea8cda0b221abed31034b7",
+            "answer": 197.25595312657148,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 197.25595312657146}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.015124341007322073,
+              "value": 197.25595312657146
+            },
+            "absolute_error": 2.842170943040401e-14,
+            "absolute_error_overflowed": false,
+            "tolerance": 0.00019735595312657148,
+            "passed": true
+          },
+          {
+            "case_id": "H13-final-018",
+            "source_id": "H13",
+            "split": "final",
+            "givens_sha256": "ee0d6cba06b4443313be4a394ab4879a249527a9ab786062d1441060cadcdb36",
+            "answer": 321.31322328061793,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 321.31322328061793}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016534605994820595,
+              "value": 321.31322328061793
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 0.00032141322328061795,
+            "passed": true
+          },
+          {
+            "case_id": "H13-final-019",
+            "source_id": "H13",
+            "split": "final",
+            "givens_sha256": "f9df991fd4dd2fec3cd870a5f3af5f4aba0c6439402378e41a99164b10832e12",
+            "answer": 46.67186156064293,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 46.67186156064293}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.018360799876973033,
+              "value": 46.67186156064293
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 4.6771861560642934e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H13-final-020",
+            "source_id": "H13",
+            "split": "final",
+            "givens_sha256": "c490f44943f0dd49308edfa5204bb6baa52345d25972f8e31a0f5bd166e7627b",
+            "answer": 22.054092439899613,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 22.054092439899616}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01731545408256352,
+              "value": 22.054092439899616
+            },
+            "absolute_error": 3.552713678800501e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.2154092439899612e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H13-final-021",
+            "source_id": "H13",
+            "split": "final",
+            "givens_sha256": "e7f0e3d9583521da6ab54408d1922cf01a1b3bf201d31cdf2c68057294225036",
+            "answer": 37.54292677748267,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 37.54292677748266}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.014936311170458794,
+              "value": 37.54292677748266
+            },
+            "absolute_error": 7.105427357601002e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 3.764292677748267e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H13-final-022",
+            "source_id": "H13",
+            "split": "final",
+            "givens_sha256": "9dff0cf0f7722f197d4a44ae0512d0f13c7be453dd908ca0807ff4a878700394",
+            "answer": 14.128004393760543,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 14.128004393760541}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016664325958117843,
+              "value": 14.128004393760541
+            },
+            "absolute_error": 1.7763568394002505e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.4228004393760543e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H13-final-023",
+            "source_id": "H13",
+            "split": "final",
+            "givens_sha256": "3d673c4c3875053fbc48a4127173fc3ca938e140eb69c98d0132ee9c172000b9",
+            "answer": 10.971385490872787,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 10.971385490872787}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017044873908162117,
+              "value": 10.971385490872787
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.1071385490872787e-05,
+            "passed": true
+          },
+          {
+            "case_id": "H13-final-024",
+            "source_id": "H13",
+            "split": "final",
+            "givens_sha256": "e9a57a312c3675f595f99e98578051fc8b3768472f3f1949ecf7499101be7f77",
+            "answer": 122.53634479194709,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 122.53634479194707}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01594573794864118,
+              "value": 122.53634479194707
+            },
+            "absolute_error": 1.4210854715202004e-14,
+            "absolute_error_overflowed": false,
+            "tolerance": 0.00012263634479194708,
+            "passed": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "program-probe-h15",
+      "source_id": "H15",
+      "sample": 0,
+      "raw_file": "/home/kabatan/work/solver/qwen/.runtime/program_self_training_20260926/program-probe-numeric/program-probe-h15-0.json",
+      "raw_sha256": "ffe2dcba98fd6a6e27bc00948a4452ffb6f0016d13ef144e55948d18ef7530f4",
+      "finish_reason": "stop",
+      "completion_tokens": 6599,
+      "all_passed": false,
+      "status": "fail",
+      "extracted_program": {
+        "code_sha256": "b624c4a7173b03339874a800b1ed0f9fe69674df95720144428c89b6e941343f",
+        "normalized_sha256": "f1d9508289858cf7925a167392c0a6188e4ccb2c8d215065b19685646e9c801d",
+        "selected_fence_index": 0,
+        "closed_program_fences": 1,
+        "solve_definitions": 1,
+        "stripped_one_trailing_assistant_eos": true,
+        "finish_reason": "stop",
+        "extraction_rule": "last parse-valid closed python/py/unlabelled fence with top-level synchronous solve(givens); preserve whole fence; last solve definition wins"
+      },
+      "check": {
+        "status": "complete",
+        "code_sha256": "f1d9508289858cf7925a167392c0a6188e4ccb2c8d215065b19685646e9c801d",
+        "cases_sha256": "048dbc695669b600a3ef5d53348e29f0509df40e55e7fbd861cb33e1760fd8b5",
+        "limits": {
+          "wall_seconds": 2.0,
+          "cpu_seconds": 1,
+          "memory_bytes": 268435456,
+          "output_bytes": 16384,
+          "tmp_bytes": 16777216,
+          "input_bytes": 196608
+        },
+        "abs_tol": 1e-07,
+        "rel_tol": 1e-06,
+        "isolation": "bwrap user/PID/network/mount namespaces; minimal readonly system Python; no host data; seccomp forbids fork/clone and namespace changes",
+        "seccomp_sha256": "e0c9b8a9c07ac931bb76f64c7e516503f80c1d3744932102d63592d256e2e3c3",
+        "bootstrap_sha256": "23c251e468233ca1355a9a1e03651f5fcd21eda1dc6b026b10a119785c974302",
+        "n_cases": 24,
+        "n_passed": 0,
+        "all_passed": false,
+        "events": [
+          {
+            "case_id": "H15-final-001",
+            "source_id": "H15",
+            "split": "final",
+            "givens_sha256": "f157cf7f4dedcc50cd516e1df9788b16be4748e290f374fc653460574c714010",
+            "answer": 6.185705636812407,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'conj' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.015673339134082198,
+              "error_type": "NameError",
+              "error": "name 'conj' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 6.285705636812407e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H15-final-002",
+            "source_id": "H15",
+            "split": "final",
+            "givens_sha256": "09d77a61120e4016c1915162f7187c3f21deb14c0ad062435daf423b516245ba",
+            "answer": 4.766546414096256,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'conj' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017326922854408622,
+              "error_type": "NameError",
+              "error": "name 'conj' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 4.866546414096256e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H15-final-003",
+            "source_id": "H15",
+            "split": "final",
+            "givens_sha256": "5e3e0ea899c9c25d33afe2dbc73b512bd41ab60b70c305257b76d88ac485e4eb",
+            "answer": 3.354997139984345,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'conj' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017487673088908195,
+              "error_type": "NameError",
+              "error": "name 'conj' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 3.454997139984345e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H15-final-004",
+            "source_id": "H15",
+            "split": "final",
+            "givens_sha256": "37ef0dfbacd69678ddd84d6807e5ab1115e7c7dab224ae1f26727aae54733bbf",
+            "answer": 9.019270735505572,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'conj' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017175114015117288,
+              "error_type": "NameError",
+              "error": "name 'conj' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 9.119270735505571e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H15-final-005",
+            "source_id": "H15",
+            "split": "final",
+            "givens_sha256": "05964f691440b7d0a6fdf02a1b15e9e837ed8d384f337df3135fcfec194c70c1",
+            "answer": 1.8203938234566037,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'conj' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01689020497724414,
+              "error_type": "NameError",
+              "error": "name 'conj' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.9203938234566037e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H15-final-006",
+            "source_id": "H15",
+            "split": "final",
+            "givens_sha256": "6bda8dd19b8803a096c6941ce006a21dbca88b2a9ea723c476c8ba40458a45e2",
+            "answer": 5.127736465608449,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'conj' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017511712852865458,
+              "error_type": "NameError",
+              "error": "name 'conj' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 5.227736465608449e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H15-final-007",
+            "source_id": "H15",
+            "split": "final",
+            "givens_sha256": "4851e64a7fe78fe1794f1a5d1226b12c444e8215fa8fd3da9a6c5b7328307777",
+            "answer": 3.58586260746628,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'conj' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.015478249173611403,
+              "error_type": "NameError",
+              "error": "name 'conj' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 3.68586260746628e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H15-final-008",
+            "source_id": "H15",
+            "split": "final",
+            "givens_sha256": "33de9cfe7a9c1d4be47f6a2691040e6a9e400018fbf36cff192ddbc397b3d628",
+            "answer": 8.905405024284589,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'conj' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01740647293627262,
+              "error_type": "NameError",
+              "error": "name 'conj' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 9.00540502428459e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H15-final-009",
+            "source_id": "H15",
+            "split": "final",
+            "givens_sha256": "c8380de6d0a60f51596b49a070841a2e4b443f9ec7c9e3bc6631209c5c230a07",
+            "answer": 0.38155950961988516,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'conj' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.015652799047529697,
+              "error_type": "NameError",
+              "error": "name 'conj' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 4.815595096198851e-07,
+            "passed": false
+          },
+          {
+            "case_id": "H15-final-010",
+            "source_id": "H15",
+            "split": "final",
+            "givens_sha256": "09652058173abab46b30590acc66478fd84137f249ec981037fea6292f9564f0",
+            "answer": 9.663276162187282,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'conj' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016932993894442916,
+              "error_type": "NameError",
+              "error": "name 'conj' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 9.763276162187283e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H15-final-011",
+            "source_id": "H15",
+            "split": "final",
+            "givens_sha256": "02145e2158b1376e03f2f91a5498d8d538ed6f3ad7ec9d4cafe3f7a15a31e270",
+            "answer": 0.35579320846542717,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'conj' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016912463819608092,
+              "error_type": "NameError",
+              "error": "name 'conj' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 4.5579320846542716e-07,
+            "passed": false
+          },
+          {
+            "case_id": "H15-final-012",
+            "source_id": "H15",
+            "split": "final",
+            "givens_sha256": "92b55a582f9fce5040a36f4c859ba1c947b2876c47de7cd5242bdf6c683fc3f0",
+            "answer": 6.361725279912196,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'conj' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01504656090401113,
+              "error_type": "NameError",
+              "error": "name 'conj' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 6.461725279912196e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H15-final-013",
+            "source_id": "H15",
+            "split": "final",
+            "givens_sha256": "f415de385f5d8ba6a7b3e71818d4020bc52a194f275dfa01f6219f41cd3b3257",
+            "answer": 1.1291261315016443,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'conj' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017629292095080018,
+              "error_type": "NameError",
+              "error": "name 'conj' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.229126131501644e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H15-final-014",
+            "source_id": "H15",
+            "split": "final",
+            "givens_sha256": "1f6125f5acc80cb14a4f1da1a5e135235bbe486fe1e0932eb2899a7d7f2b0c43",
+            "answer": 3.5688675036001842,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'conj' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01802508090622723,
+              "error_type": "NameError",
+              "error": "name 'conj' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 3.668867503600184e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H15-final-015",
+            "source_id": "H15",
+            "split": "final",
+            "givens_sha256": "989a8ee2943dea9d3c99a802ca6cfefabee43f3334b7cc43684c092ec7238b62",
+            "answer": 3.0316401348124105,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'conj' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.018778469180688262,
+              "error_type": "NameError",
+              "error": "name 'conj' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 3.1316401348124104e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H15-final-016",
+            "source_id": "H15",
+            "split": "final",
+            "givens_sha256": "6ad966e27efbfe94914a83cedd655c641e6e795dd4f2374c02ac25acf37b9344",
+            "answer": 3.6832138827510255,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'conj' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017826330848038197,
+              "error_type": "NameError",
+              "error": "name 'conj' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 3.7832138827510254e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H15-final-017",
+            "source_id": "H15",
+            "split": "final",
+            "givens_sha256": "ab95d4da426956409a45480855ca3bd6ac40e852faaaed14346193fc0b83abe5",
+            "answer": 0.8598557186649456,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'conj' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016753755044192076,
+              "error_type": "NameError",
+              "error": "name 'conj' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 9.598557186649454e-07,
+            "passed": false
+          },
+          {
+            "case_id": "H15-final-018",
+            "source_id": "H15",
+            "split": "final",
+            "givens_sha256": "d64147c514feda226bb925e64ed2b8b1761168936a6a3af3bb66c91706a157d7",
+            "answer": 4.710687042655233,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'conj' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.018222290091216564,
+              "error_type": "NameError",
+              "error": "name 'conj' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 4.810687042655233e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H15-final-019",
+            "source_id": "H15",
+            "split": "final",
+            "givens_sha256": "73609f9c086251f833b2103db7853df5c9a409baa9e4e0df78e8f7435ebdb820",
+            "answer": 0.9227579998269005,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'conj' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01685910508967936,
+              "error_type": "NameError",
+              "error": "name 'conj' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.0227579998269006e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H15-final-020",
+            "source_id": "H15",
+            "split": "final",
+            "givens_sha256": "a649a4b09e90290502a8cf94ce7e3cfcc5bde768fdd450a524f98a4fc561e63f",
+            "answer": 8.254065636271399,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'conj' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016123957000672817,
+              "error_type": "NameError",
+              "error": "name 'conj' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 8.3540656362714e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H15-final-021",
+            "source_id": "H15",
+            "split": "final",
+            "givens_sha256": "a9eacf3f7f806d7abdda8336c9a373caf70395eae0dd3217973887ffdd9c159f",
+            "answer": 10.961971894171542,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'conj' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01718806312419474,
+              "error_type": "NameError",
+              "error": "name 'conj' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.1061971894171543e-05,
+            "passed": false
+          },
+          {
+            "case_id": "H15-final-022",
+            "source_id": "H15",
+            "split": "final",
+            "givens_sha256": "d483fed858976e879664759eee57aeb0a7eebf1b50996a502be3450966e948a9",
+            "answer": 2.036768912801556,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'conj' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01690971478819847,
+              "error_type": "NameError",
+              "error": "name 'conj' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.1367689128015557e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H15-final-023",
+            "source_id": "H15",
+            "split": "final",
+            "givens_sha256": "2927660c9be7a6fc2b0ba3793667536adf4c6c613729e59ba821e0db64826b9c",
+            "answer": 5.641816324418679,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'conj' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016670485958456993,
+              "error_type": "NameError",
+              "error": "name 'conj' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 5.741816324418678e-06,
+            "passed": false
+          },
+          {
+            "case_id": "H15-final-024",
+            "source_id": "H15",
+            "split": "final",
+            "givens_sha256": "b7a61d28832cbbd10c3acb8c1e1adf4cbce373861633511d05a6742e22215421",
+            "answer": 4.414358234960671,
+            "execution": {
+              "status": "runtime_error",
+              "returncode": 0,
+              "stdout": "{\"status\": \"runtime_error\", \"error_type\": \"NameError\", \"error\": \"name 'conj' is not defined\"}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.018861538032069802,
+              "error_type": "NameError",
+              "error": "name 'conj' is not defined"
+            },
+            "absolute_error": null,
+            "absolute_error_overflowed": false,
+            "tolerance": 4.514358234960671e-06,
+            "passed": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "program-probe-da01",
+      "source_id": "DA01",
+      "sample": 0,
+      "raw_file": "/home/kabatan/work/solver/qwen/.runtime/program_self_training_20260926/program-probe-numeric/program-probe-da01-0.json",
+      "raw_sha256": "d7bf1dbc4eeeff0d7642884cba98dbf0c69b355b85a1e2ebaff18b40dd3f80a5",
+      "finish_reason": "stop",
+      "completion_tokens": 1618,
+      "all_passed": true,
+      "status": "pass",
+      "extracted_program": {
+        "code_sha256": "7abfc09692c9eccbfee86f101397490532c6b53b15142c9500cb96a9869fdd35",
+        "normalized_sha256": "f4d152459d4407d99ebebceba7c2fbed3b885f8e1b997a2e2304c84571a42cd8",
+        "selected_fence_index": 0,
+        "closed_program_fences": 1,
+        "solve_definitions": 1,
+        "stripped_one_trailing_assistant_eos": true,
+        "finish_reason": "stop",
+        "extraction_rule": "last parse-valid closed python/py/unlabelled fence with top-level synchronous solve(givens); preserve whole fence; last solve definition wins"
+      },
+      "check": {
+        "status": "complete",
+        "code_sha256": "f4d152459d4407d99ebebceba7c2fbed3b885f8e1b997a2e2304c84571a42cd8",
+        "cases_sha256": "39c2fdf39a2eefa519cabd42d4cf01880e7ce0b795a618b0826024ad0df009ce",
+        "limits": {
+          "wall_seconds": 2.0,
+          "cpu_seconds": 1,
+          "memory_bytes": 268435456,
+          "output_bytes": 16384,
+          "tmp_bytes": 16777216,
+          "input_bytes": 196608
+        },
+        "abs_tol": 1e-07,
+        "rel_tol": 1e-06,
+        "isolation": "bwrap user/PID/network/mount namespaces; minimal readonly system Python; no host data; seccomp forbids fork/clone and namespace changes",
+        "seccomp_sha256": "e0c9b8a9c07ac931bb76f64c7e516503f80c1d3744932102d63592d256e2e3c3",
+        "bootstrap_sha256": "23c251e468233ca1355a9a1e03651f5fcd21eda1dc6b026b10a119785c974302",
+        "n_cases": 24,
+        "n_passed": 24,
+        "all_passed": true,
+        "events": [
+          {
+            "case_id": "DA01-final-001",
+            "source_id": "DA01",
+            "split": "final",
+            "givens_sha256": "bdc1d537bfb7609527bd91fae4b91edf032c00050f53d61db53c600db1d717ef",
+            "answer": 4.941031128387449,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 4.941031128387447}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016998284962028265,
+              "value": 4.941031128387447
+            },
+            "absolute_error": 1.7763568394002505e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 5.041031128387449e-06,
+            "passed": true
+          },
+          {
+            "case_id": "DA01-final-002",
+            "source_id": "DA01",
+            "split": "final",
+            "givens_sha256": "4d3370febf5a218b8bc86900b135df61369bba01731fcda8c9ab9a8485aca892",
+            "answer": 4.95704438864271,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 4.95704438864271}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017149564111605287,
+              "value": 4.95704438864271
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 5.05704438864271e-06,
+            "passed": true
+          },
+          {
+            "case_id": "DA01-final-003",
+            "source_id": "DA01",
+            "split": "final",
+            "givens_sha256": "33a04a788668a7c185dc929f6774161b13f2800626b8966cb7c170406afabbf0",
+            "answer": 7.638154966337257,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 7.638154966337266}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01693020504899323,
+              "value": 7.638154966337266
+            },
+            "absolute_error": 8.881784197001252e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 7.738154966337257e-06,
+            "passed": true
+          },
+          {
+            "case_id": "DA01-final-004",
+            "source_id": "DA01",
+            "split": "final",
+            "givens_sha256": "8004091787d79afbba3e3d0ef91c795ade2b950188ca837b2ac19b158213b184",
+            "answer": 1.4276347733124215,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 1.4276347733124217}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.015034560114145279,
+              "value": 1.4276347733124217
+            },
+            "absolute_error": 2.220446049250313e-16,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.5276347733124216e-06,
+            "passed": true
+          },
+          {
+            "case_id": "DA01-final-005",
+            "source_id": "DA01",
+            "split": "final",
+            "givens_sha256": "0d47a7410185028fe40ee578d56aed7ea65f830a81931b678336fd375aa1b26b",
+            "answer": 9.606398218713013,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 9.60639821871301}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.018715668935328722,
+              "value": 9.60639821871301
+            },
+            "absolute_error": 1.7763568394002505e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 9.706398218713013e-06,
+            "passed": true
+          },
+          {
+            "case_id": "DA01-final-006",
+            "source_id": "DA01",
+            "split": "final",
+            "givens_sha256": "2d87cfa204bbaafff03289d4a15b00751474266cbf08464c7faac829dd033c16",
+            "answer": 2.7477627881744375,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 2.7477627881744375}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01681059505790472,
+              "value": 2.7477627881744375
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.8477627881744373e-06,
+            "passed": true
+          },
+          {
+            "case_id": "DA01-final-007",
+            "source_id": "DA01",
+            "split": "final",
+            "givens_sha256": "79b9c6c9558428b3d82ffa0d8f8255b022a70eba94c260e9bfbbe48a18c0b2b1",
+            "answer": 5.344262538834317,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 5.344262538834317}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.018133171135559678,
+              "value": 5.344262538834317
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 5.444262538834317e-06,
+            "passed": true
+          },
+          {
+            "case_id": "DA01-final-008",
+            "source_id": "DA01",
+            "split": "final",
+            "givens_sha256": "d9a362059b155e44457c3e4ccebeb1f001bb6cf49a4fc99c1e2f9d16cf88009c",
+            "answer": 4.318631093659374,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 4.3186310936593735}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.018371619982644916,
+              "value": 4.3186310936593735
+            },
+            "absolute_error": 8.881784197001252e-16,
+            "absolute_error_overflowed": false,
+            "tolerance": 4.418631093659374e-06,
+            "passed": true
+          },
+          {
+            "case_id": "DA01-final-009",
+            "source_id": "DA01",
+            "split": "final",
+            "givens_sha256": "605710b928199d75ad4ccdd25d56f69e7924acff9c6862a3b6a63d0201c1b3dd",
+            "answer": 5.34851230482236,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 5.348512304822359}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01858395989984274,
+              "value": 5.348512304822359
+            },
+            "absolute_error": 8.881784197001252e-16,
+            "absolute_error_overflowed": false,
+            "tolerance": 5.448512304822359e-06,
+            "passed": true
+          },
+          {
+            "case_id": "DA01-final-010",
+            "source_id": "DA01",
+            "split": "final",
+            "givens_sha256": "b7b918c20a3485d95ca0a44e1950b873149d27f2bfe8ff23efc3ff5395cc41c1",
+            "answer": 3.292403893891304,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 3.292403893891307}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.019120316952466965,
+              "value": 3.292403893891307
+            },
+            "absolute_error": 3.1086244689504383e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 3.3924038938913035e-06,
+            "passed": true
+          },
+          {
+            "case_id": "DA01-final-011",
+            "source_id": "DA01",
+            "split": "final",
+            "givens_sha256": "ac61df89c3f013e04ac6d31fef299129e5ec51cab7522b8f957a8d45e8349855",
+            "answer": 1.5139886423580358,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 1.5139886423580375}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01780692208558321,
+              "value": 1.5139886423580375
+            },
+            "absolute_error": 1.7763568394002505e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.6139886423580355e-06,
+            "passed": true
+          },
+          {
+            "case_id": "DA01-final-012",
+            "source_id": "DA01",
+            "split": "final",
+            "givens_sha256": "a67f9cfa63a27b532240072cf82a8ded589cb7243fa50f276837345859b12601",
+            "answer": 3.312613142647969,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 3.3126131426479697}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01899562799371779,
+              "value": 3.3126131426479697
+            },
+            "absolute_error": 8.881784197001252e-16,
+            "absolute_error_overflowed": false,
+            "tolerance": 3.4126131426479685e-06,
+            "passed": true
+          },
+          {
+            "case_id": "DA01-final-013",
+            "source_id": "DA01",
+            "split": "final",
+            "givens_sha256": "374bcb42b19c45b8350e2bad78467bb1b4d1c0f7f372cc754c43abb6b6163e44",
+            "answer": 9.140545371948912,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 9.14054537194891}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.018690789118409157,
+              "value": 9.14054537194891
+            },
+            "absolute_error": 1.7763568394002505e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 9.240545371948912e-06,
+            "passed": true
+          },
+          {
+            "case_id": "DA01-final-014",
+            "source_id": "DA01",
+            "split": "final",
+            "givens_sha256": "59cb8e3387005ef28e5190ce4c9ceb37b57d157a23554183701fc6efe9545461",
+            "answer": 4.990874201375682,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 4.990874201375686}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.0235165529884398,
+              "value": 4.990874201375686
+            },
+            "absolute_error": 3.552713678800501e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 5.090874201375682e-06,
+            "passed": true
+          },
+          {
+            "case_id": "DA01-final-015",
+            "source_id": "DA01",
+            "split": "final",
+            "givens_sha256": "ed4fdcef9950acb45fcde1398311845e276b1af2c0f7196b24e9b91d4d961d13",
+            "answer": 1.958053880729037,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 1.958053880729039}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01976401498541236,
+              "value": 1.958053880729039
+            },
+            "absolute_error": 1.9984014443252818e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.058053880729037e-06,
+            "passed": true
+          },
+          {
+            "case_id": "DA01-final-016",
+            "source_id": "DA01",
+            "split": "final",
+            "givens_sha256": "361ee933dbb6226ea8fad594d083e6955555c278a75c40b0ba577b98d5819675",
+            "answer": 4.965280287878176,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 4.965280287878179}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016354846069589257,
+              "value": 4.965280287878179
+            },
+            "absolute_error": 2.6645352591003757e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 5.0652802878781756e-06,
+            "passed": true
+          },
+          {
+            "case_id": "DA01-final-017",
+            "source_id": "DA01",
+            "split": "final",
+            "givens_sha256": "6065d53887921cf1e28dc8517e5731dcdc8f474d70fd72f9aa6ae8f78d8c45e0",
+            "answer": 4.084391688809335,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 4.084391688809333}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01574442908167839,
+              "value": 4.084391688809333
+            },
+            "absolute_error": 1.7763568394002505e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 4.1843916888093345e-06,
+            "passed": true
+          },
+          {
+            "case_id": "DA01-final-018",
+            "source_id": "DA01",
+            "split": "final",
+            "givens_sha256": "ec405327df3e6dfe7be36f325c356d5e76d97e037fd3601b43679c0b9ac40fcb",
+            "answer": 2.7726108047369276,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 2.7726108047369276}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.015108020976185799,
+              "value": 2.7726108047369276
+            },
+            "absolute_error": 0.0,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.872610804736927e-06,
+            "passed": true
+          },
+          {
+            "case_id": "DA01-final-019",
+            "source_id": "DA01",
+            "split": "final",
+            "givens_sha256": "4b7c5742b10712ae7f230be78a000ef0f954f61d52f3bb9bac486e0df6949fb3",
+            "answer": 7.09536872956772,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 7.095368729567725}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.014911490958184004,
+              "value": 7.095368729567725
+            },
+            "absolute_error": 5.329070518200751e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 7.195368729567719e-06,
+            "passed": true
+          },
+          {
+            "case_id": "DA01-final-020",
+            "source_id": "DA01",
+            "split": "final",
+            "givens_sha256": "b8b66165940b0dc764c66731a9c538c20db754c7f9adc45e785f5ef09dd795a7",
+            "answer": 3.405899666057509,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 3.4058996660575094}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.015327939996495843,
+              "value": 3.4058996660575094
+            },
+            "absolute_error": 4.440892098500626e-16,
+            "absolute_error_overflowed": false,
+            "tolerance": 3.5058996660575085e-06,
+            "passed": true
+          },
+          {
+            "case_id": "DA01-final-021",
+            "source_id": "DA01",
+            "split": "final",
+            "givens_sha256": "ced6d3c7f6a0f9d9f543ce804cabba7be450aa9b06d79e47a32b8e38b0498e0a",
+            "answer": 3.832365043148437,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 3.8323650431484384}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01844690996222198,
+              "value": 3.8323650431484384
+            },
+            "absolute_error": 1.3322676295501878e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 3.932365043148437e-06,
+            "passed": true
+          },
+          {
+            "case_id": "DA01-final-022",
+            "source_id": "DA01",
+            "split": "final",
+            "givens_sha256": "3b21a59356600b380c0483c467cef499ba9cace7e7813755b9a91525a783223c",
+            "answer": 9.894359057461788,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 9.89435905746178}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01664233487099409,
+              "value": 9.89435905746178
+            },
+            "absolute_error": 7.105427357601002e-15,
+            "absolute_error_overflowed": false,
+            "tolerance": 9.994359057461788e-06,
+            "passed": true
+          },
+          {
+            "case_id": "DA01-final-023",
+            "source_id": "DA01",
+            "split": "final",
+            "givens_sha256": "72bee628d66801ef1ae51d2a34052d9f81feb158e20adf22356cec7b3d36d002",
+            "answer": 7.996029363678432,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 7.996029363678431}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01857622992247343,
+              "value": 7.996029363678431
+            },
+            "absolute_error": 8.881784197001252e-16,
+            "absolute_error_overflowed": false,
+            "tolerance": 8.096029363678432e-06,
+            "passed": true
+          },
+          {
+            "case_id": "DA01-final-024",
+            "source_id": "DA01",
+            "split": "final",
+            "givens_sha256": "c7b402e791f5afe1cd2fcdc92b802bbcbb86ca3f36bf52a27132602b5f3f0b71",
+            "answer": 6.968432834253274,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 6.968432834253275}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.0174658028408885,
+              "value": 6.968432834253275
+            },
+            "absolute_error": 8.881784197001252e-16,
+            "absolute_error_overflowed": false,
+            "tolerance": 7.068432834253274e-06,
+            "passed": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "program-probe-da05",
+      "source_id": "DA05",
+      "sample": 0,
+      "raw_file": "/home/kabatan/work/solver/qwen/.runtime/program_self_training_20260926/program-probe-numeric/program-probe-da05-0.json",
+      "raw_sha256": "16dbe5c6a8a212cc09ab3cf88f2df0bbe0441a0290c4551e007e6b500741f5d8",
+      "finish_reason": "stop",
+      "completion_tokens": 13354,
+      "all_passed": false,
+      "status": "fail",
+      "extracted_program": {
+        "code_sha256": "709bc13bb8831eb581aad5d482104109fd2587bc329ee11be6129d1112e62a11",
+        "normalized_sha256": "a7744bf9678d577e387d58b97fa21ebcda6a0a583c23582d90a6a60a78ee4b91",
+        "selected_fence_index": 0,
+        "closed_program_fences": 1,
+        "solve_definitions": 1,
+        "stripped_one_trailing_assistant_eos": true,
+        "finish_reason": "stop",
+        "extraction_rule": "last parse-valid closed python/py/unlabelled fence with top-level synchronous solve(givens); preserve whole fence; last solve definition wins"
+      },
+      "check": {
+        "status": "complete",
+        "code_sha256": "a7744bf9678d577e387d58b97fa21ebcda6a0a583c23582d90a6a60a78ee4b91",
+        "cases_sha256": "c61568e1da27607b6c4593a149d992444c8a09478c9abea081b61caaada8aa33",
+        "limits": {
+          "wall_seconds": 2.0,
+          "cpu_seconds": 1,
+          "memory_bytes": 268435456,
+          "output_bytes": 16384,
+          "tmp_bytes": 16777216,
+          "input_bytes": 196608
+        },
+        "abs_tol": 1e-07,
+        "rel_tol": 1e-06,
+        "isolation": "bwrap user/PID/network/mount namespaces; minimal readonly system Python; no host data; seccomp forbids fork/clone and namespace changes",
+        "seccomp_sha256": "e0c9b8a9c07ac931bb76f64c7e516503f80c1d3744932102d63592d256e2e3c3",
+        "bootstrap_sha256": "23c251e468233ca1355a9a1e03651f5fcd21eda1dc6b026b10a119785c974302",
+        "n_cases": 24,
+        "n_passed": 0,
+        "all_passed": false,
+        "events": [
+          {
+            "case_id": "DA05-final-001",
+            "source_id": "DA05",
+            "split": "final",
+            "givens_sha256": "f3e77a141aa833d238fa6f81d37705c3a6a02855910aaffcee30d7cc43ee22cb",
+            "answer": 4.286780856297337,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 12.55477334753894}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016566494945436716,
+              "value": 12.55477334753894
+            },
+            "absolute_error": 8.267992491241603,
+            "absolute_error_overflowed": false,
+            "tolerance": 4.386780856297337e-06,
+            "passed": false
+          },
+          {
+            "case_id": "DA05-final-002",
+            "source_id": "DA05",
+            "split": "final",
+            "givens_sha256": "1aabeece5c5978ee11343568897b03d73fe8e6ac181cbe432bbc2d58ac048fad",
+            "answer": 10.293167436098054,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 6.370762338793704}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01724608289077878,
+              "value": 6.370762338793704
+            },
+            "absolute_error": 3.92240509730435,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.0393167436098054e-05,
+            "passed": false
+          },
+          {
+            "case_id": "DA05-final-003",
+            "source_id": "DA05",
+            "split": "final",
+            "givens_sha256": "229f96114625addc26c4a9b8caf24268c95f3e3a6bffe327ab23b095e4624c7c",
+            "answer": 5.345458124319193,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 7.78763926672084}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017525773029774427,
+              "value": 7.78763926672084
+            },
+            "absolute_error": 2.4421811424016466,
+            "absolute_error_overflowed": false,
+            "tolerance": 5.4454581243191924e-06,
+            "passed": false
+          },
+          {
+            "case_id": "DA05-final-004",
+            "source_id": "DA05",
+            "split": "final",
+            "givens_sha256": "e7236d817240e27b145108cbe5a7f647980e0e087136e50f871a8235db5a11f6",
+            "answer": 5.957399875256899,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 7.0994401101677616}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.015336970100179315,
+              "value": 7.0994401101677616
+            },
+            "absolute_error": 1.142040234910863,
+            "absolute_error_overflowed": false,
+            "tolerance": 6.057399875256899e-06,
+            "passed": false
+          },
+          {
+            "case_id": "DA05-final-005",
+            "source_id": "DA05",
+            "split": "final",
+            "givens_sha256": "433d71342d4fba1ea8dc56f007d4699821fad99d21c6646b8d38906bf758894a",
+            "answer": 4.581819869480062,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 4.72314234038994}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01604133821092546,
+              "value": 4.72314234038994
+            },
+            "absolute_error": 0.14132247090987882,
+            "absolute_error_overflowed": false,
+            "tolerance": 4.681819869480062e-06,
+            "passed": false
+          },
+          {
+            "case_id": "DA05-final-006",
+            "source_id": "DA05",
+            "split": "final",
+            "givens_sha256": "d7939ec5cb4107d543f0ca014b6aa3b76084bfce6108f6f01996c28d41e170e8",
+            "answer": 1.8177304738847737,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 7.970287493393644}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016639736015349627,
+              "value": 7.970287493393644
+            },
+            "absolute_error": 6.152557019508871,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.9177304738847735e-06,
+            "passed": false
+          },
+          {
+            "case_id": "DA05-final-007",
+            "source_id": "DA05",
+            "split": "final",
+            "givens_sha256": "fe80b937022ba94589b7cb256719cc7162d5d8ef135eb3b081f569b43d168d01",
+            "answer": 9.882482044460414,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 5.235828256277352}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017458113143220544,
+              "value": 5.235828256277352
+            },
+            "absolute_error": 4.646653788183062,
+            "absolute_error_overflowed": false,
+            "tolerance": 9.982482044460414e-06,
+            "passed": false
+          },
+          {
+            "case_id": "DA05-final-008",
+            "source_id": "DA05",
+            "split": "final",
+            "givens_sha256": "98314a08df7a5b6cee984608ce5c68978dea27890ea24e5c31754acbba8c3e30",
+            "answer": 12.81990326319226,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 1.86827886879885}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.018189910100772977,
+              "value": 1.86827886879885
+            },
+            "absolute_error": 10.95162439439341,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.2919903263192259e-05,
+            "passed": false
+          },
+          {
+            "case_id": "DA05-final-009",
+            "source_id": "DA05",
+            "split": "final",
+            "givens_sha256": "8c37ce782992b9aaecbdce434cbbdec1a5be559a25ddc9df589935810ac2c345",
+            "answer": 20.234169524366795,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 5.824211659332506}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016239786986261606,
+              "value": 5.824211659332506
+            },
+            "absolute_error": 14.40995786503429,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.0334169524366792e-05,
+            "passed": false
+          },
+          {
+            "case_id": "DA05-final-010",
+            "source_id": "DA05",
+            "split": "final",
+            "givens_sha256": "28cb84449942cba7587d3d799e2ae8219c272cac80903269f7ad2127aaa094bd",
+            "answer": 13.81880927882858,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 7.041659602758405}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01730785402469337,
+              "value": 7.041659602758405
+            },
+            "absolute_error": 6.777149676070175,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.391880927882858e-05,
+            "passed": false
+          },
+          {
+            "case_id": "DA05-final-011",
+            "source_id": "DA05",
+            "split": "final",
+            "givens_sha256": "b19276fe44ce86f368182f9f8dfaddf023fabaa20281ce7c0fa17e0cfdc20ecf",
+            "answer": 2.1232372821129966,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 6.925321821585598}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017276793951168656,
+              "value": 6.925321821585598
+            },
+            "absolute_error": 4.8020845394726015,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.2232372821129964e-06,
+            "passed": false
+          },
+          {
+            "case_id": "DA05-final-012",
+            "source_id": "DA05",
+            "split": "final",
+            "givens_sha256": "2bc0229c14a405dff2c976a63c918e5b6777092c26d8673a42021f36cd3b809e",
+            "answer": 8.093343077694046,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 1.4983995028585428}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01729036308825016,
+              "value": 1.4983995028585428
+            },
+            "absolute_error": 6.5949435748355025,
+            "absolute_error_overflowed": false,
+            "tolerance": 8.193343077694046e-06,
+            "passed": false
+          },
+          {
+            "case_id": "DA05-final-013",
+            "source_id": "DA05",
+            "split": "final",
+            "givens_sha256": "51d138a508b2bd814c56d5ecbb2b9b95c55020434d0547192bd37f209c228225",
+            "answer": 23.991054259677483,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 2.9099099407178026}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01609727810136974,
+              "value": 2.9099099407178026
+            },
+            "absolute_error": 21.08114431895968,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.409105425967748e-05,
+            "passed": false
+          },
+          {
+            "case_id": "DA05-final-014",
+            "source_id": "DA05",
+            "split": "final",
+            "givens_sha256": "e98dfed736c4182be5945b4a16d755d23b80c7568089e7bf7d67cf17aaf7fd6a",
+            "answer": 0.7518991635869504,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 5.42982438230138}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.015169210033491254,
+              "value": 5.42982438230138
+            },
+            "absolute_error": 4.67792521871443,
+            "absolute_error_overflowed": false,
+            "tolerance": 8.518991635869504e-07,
+            "passed": false
+          },
+          {
+            "case_id": "DA05-final-015",
+            "source_id": "DA05",
+            "split": "final",
+            "givens_sha256": "ed3603235f2ba6a984a29dbe15dc1ddacf64557a5a7f827e373786007ace7f7c",
+            "answer": 23.60230366713934,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 3.4174031981107422}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.018072739941999316,
+              "value": 3.4174031981107422
+            },
+            "absolute_error": 20.184900469028598,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.3702303667139338e-05,
+            "passed": false
+          },
+          {
+            "case_id": "DA05-final-016",
+            "source_id": "DA05",
+            "split": "final",
+            "givens_sha256": "dfaa493d5b8758601c8dcaf808e286e4df390289d6a056df267b39dd87252ed0",
+            "answer": 15.912137221465699,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 2.709999149721649}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.015709098894149065,
+              "value": 2.709999149721649
+            },
+            "absolute_error": 13.202138071744049,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.60121372214657e-05,
+            "passed": false
+          },
+          {
+            "case_id": "DA05-final-017",
+            "source_id": "DA05",
+            "split": "final",
+            "givens_sha256": "80f82c96a2e23e4fb357e07125a4b61e78a784197324a7277ad20e6007c28d78",
+            "answer": 16.68340554313517,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 5.3740670834697735}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016165588051080704,
+              "value": 5.3740670834697735
+            },
+            "absolute_error": 11.309338459665396,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.6783405543135167e-05,
+            "passed": false
+          },
+          {
+            "case_id": "DA05-final-018",
+            "source_id": "DA05",
+            "split": "final",
+            "givens_sha256": "88fe0df528d6e2e367880584ff825161a3851582f83d27d8ae7b7c23867ae233",
+            "answer": 8.588023685639184,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 2.7198429312047434}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017097054049372673,
+              "value": 2.7198429312047434
+            },
+            "absolute_error": 5.868180754434441,
+            "absolute_error_overflowed": false,
+            "tolerance": 8.688023685639185e-06,
+            "passed": false
+          },
+          {
+            "case_id": "DA05-final-019",
+            "source_id": "DA05",
+            "split": "final",
+            "givens_sha256": "ffbcef642438fd348deb5dc5dba66202ed2bfbbeec1c575c24f6c886a14f38e4",
+            "answer": 14.444402320052198,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 7.943120495849213}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.015737328911200166,
+              "value": 7.943120495849213
+            },
+            "absolute_error": 6.5012818242029855,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.4544402320052198e-05,
+            "passed": false
+          },
+          {
+            "case_id": "DA05-final-020",
+            "source_id": "DA05",
+            "split": "final",
+            "givens_sha256": "1f3094e117f1c445696bbfb62d4e25a23ed4de8e121e96d946faeb3c56606be6",
+            "answer": 31.06552646457273,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 3.973741565960099}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.01750730280764401,
+              "value": 3.973741565960099
+            },
+            "absolute_error": 27.09178489861263,
+            "absolute_error_overflowed": false,
+            "tolerance": 3.116552646457273e-05,
+            "passed": false
+          },
+          {
+            "case_id": "DA05-final-021",
+            "source_id": "DA05",
+            "split": "final",
+            "givens_sha256": "d3a7271762ef39c89c4a42e25d17276f18c89b09bc4b57ac477ee05454c174dd",
+            "answer": 17.594282310592167,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 7.239712638263674}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.015465629054233432,
+              "value": 7.239712638263674
+            },
+            "absolute_error": 10.354569672328493,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.7694282310592164e-05,
+            "passed": false
+          },
+          {
+            "case_id": "DA05-final-022",
+            "source_id": "DA05",
+            "split": "final",
+            "givens_sha256": "1eab4b46abec4d97f979195a09539682707daf91aa7fb03580a52792cff5fe59",
+            "answer": 1.9542725305567672,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 6.846897222067898}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.016774544958025217,
+              "value": 6.846897222067898
+            },
+            "absolute_error": 4.892624691511131,
+            "absolute_error_overflowed": false,
+            "tolerance": 2.054272530556767e-06,
+            "passed": false
+          },
+          {
+            "case_id": "DA05-final-023",
+            "source_id": "DA05",
+            "split": "final",
+            "givens_sha256": "40ab6c4cdb9873d136644c805b48255c681b12fba9a139185b17660d217edf84",
+            "answer": 6.623687266345703,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 10.303164767917721}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.018022591015323997,
+              "value": 10.303164767917721
+            },
+            "absolute_error": 3.679477501572018,
+            "absolute_error_overflowed": false,
+            "tolerance": 6.723687266345703e-06,
+            "passed": false
+          },
+          {
+            "case_id": "DA05-final-024",
+            "source_id": "DA05",
+            "split": "final",
+            "givens_sha256": "dd2f443e5ed09b2327e498e8ecff42591a57bcc29ae116e0df5491566605c5ca",
+            "answer": 1.8106582140687404,
+            "execution": {
+              "status": "ok",
+              "returncode": 0,
+              "stdout": "{\"status\": \"ok\", \"value\": 6.30934882851288}\n",
+              "stderr": "",
+              "elapsed_seconds": 0.017429902916774154,
+              "value": 6.30934882851288
+            },
+            "absolute_error": 4.498690614444139,
+            "absolute_error_overflowed": false,
+            "tolerance": 1.91065821406874e-06,
+            "passed": false
+          }
+        ]
+      }
+    }
+  ]
+}

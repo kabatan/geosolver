@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2007_P4",
+  "reviewer": "independent_review",
+  "case_sha256": "0eba66d8d8a8128a33ad83782f6ad57baee741bbe3b174a139f45c072ee29d5a",
+  "audit_sha256": "ea9155a72646023a88525c2541b761605185fdc28265f75b19652ad46cbe4b35",
+  "gmbl_sha256": "8a05850e3c754e27208f18035b0545a70a0279d5c1a386f9b135da4333e9647f",
+  "reviewed_original_pdf_sha256": "29246b496d6fbca636e4482ec18c3f86b71754e02cfc80ba9066d08443a79a46",
+  "verdict": "pass",
+  "normalization_checked": true,
+  "conclusion_not_assumed": true,
+  "original_conditions_covered_by_gmbl": true,
+  "scope_of_coverage_ja": "原文の仮定を当該比較範囲で満たすかの監査である。原文の全境界配置を含む解集合の完全同値、GMB実装の全数値分岐の正当性、実験の実行許可を意味しない。",
+  "comparison_scope": "nondegenerate_configuration_domain",
+  "sources_read": [
+    "cases/IMO_2007_P4.json",
+    "audit/IMO_2007_P4.json",
+    "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2007_P4.smt2",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2007-eng.pdf",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2007-eng.txt",
+    "AUTHORING.md",
+    "reviews/UPSTREAM_SEMANTICS.md"
+  ],
+  "official_url": "https://www.imo-official.org/assets/documents/problems/2007/2007_eng.pdf",
+  "normalization_review": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "removed_continuous_dof": 4,
+    "scale_invariant": true,
+    "reflection_fixed": false,
+    "remaining_solver_variables": [
+      "cx",
+      "cy"
+    ],
+    "shape_fixed_beyond_original_hypotheses": false,
+    "checked_ja": "原文で相異なる二点の単位基線化だけで平行移動2・回転1・正の尺度1を除く。元の形の変数と鏡映配置を保持している。"
+  },
+  "original_goal_not_used": "三角形RPKとRQLの面積が等しい。",
+  "checked_input_counts": {
+    "constructions": 10,
+    "conditions": 1
+  },
+  "method": {
+    "read_all_constructions_and_conditions": true,
+    "read_original_problem_assumptions": true,
+    "checked_domains_branches_and_non_degeneracy": true,
+    "checked_goal_separation": true,
+    "exact_algebraic_checks_only_where_documented": true,
+    "solver_executed": false,
+    "optimizer_executed": false,
+    "refinement_executed": false,
+    "prior_case_performance_used_to_adjust_input": false
+  },
+  "gmb_runtime_equivalence_claimed": false,
+  "findings": [
+    {
+      "id": "IMO_2007_P4-review-1",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "ABのみ単位基線、Cの二座標を残す。Cの内角二等分線と外接円の二つ目の交点Rを確認した。"
+    },
+    {
+      "id": "IMO_2007_P4-review-2",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "P,Qの二つの垂直二等分線、K,Lの各中点との対応が一致する。全点間距離や任意の図形固定は追加されていない。"
+    },
+    {
+      "id": "IMO_2007_P4-review-3",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "二三角形の面積の比較は結論として分離している。結論中の三角形の退化は、入力への秘密の追加仮定ではなく後段の結論検査で区別する。"
+    }
+  ],
+  "remaining_uncertainties": []
+}

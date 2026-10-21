@@ -1,0 +1,24 @@
+{
+  "recorded_utc": "2026-09-25T17:46:28Z",
+  "phase": "After execution freeze, before any training rollout or weight update; baseline evaluation generation still running",
+  "reason": "Increase throughput for the eight-prompt training rollout batch by allowing eight concurrent vLLM sequences. This changes scheduling capacity only; prompts, seeds, sampling parameters, model, adapter, objective, and evaluation generator stay fixed.",
+  "changes": [
+    {
+      "file": "config.json",
+      "field": "rollout.max_num_seqs",
+      "old_value": "implicit hardcoded 2",
+      "new_value": 8,
+      "old_sha256": "900875229922a6c5e665b54595aee749c2d24e3f93f0715fa7ddb0d3170c72f9",
+      "new_sha256": "4c309f9a4cef30f3eb0ca160ec5d265ad200fe00f647d92df07623a7b3ee9b7f"
+    },
+    {
+      "file": "rollout_worker.py",
+      "fields": ["rollout.max_num_seqs", "generation_seconds", "generated_tokens_per_second"],
+      "old_sha256": "261aca44a04b61c56bdc2684f5b73a5345482ed0a8bad10b0c87662072d175f4",
+      "new_sha256": "59fa04b120123fd8809f01b6c712bd7c7391887ec0448ec9caa8f9eda94ed6bd",
+      "details": "Configurable sequence concurrency accepts 2, 4, or 8 and defaults to 8; receipt adds timed generated-token throughput. A genuine memory failure may trigger a separately recorded fallback to 4 then 2."
+    }
+  ],
+  "unchanged_evaluation_generator": "docs/research/qwen35-diverse-sft-2026-09-24/generate.py",
+  "cpu_preflight": "pass"
+}

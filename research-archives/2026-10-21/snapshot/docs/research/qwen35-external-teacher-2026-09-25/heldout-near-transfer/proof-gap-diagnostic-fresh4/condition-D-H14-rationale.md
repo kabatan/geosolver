@@ -1,0 +1,5 @@
+# Condition D: H14 grading
+
+The construction-to-foot proof and the ray/non-M-intersection branches are supplied by the prompt, so I record them as supplied and give no independent proof or transfer credit. The answer correctly uses that bridge: with `R=(m²/S)A` and `H·A=m²`, it derives `(H−R)·A=0`. Since `A, R, M` are collinear, this establishes `HR ⟂ AR`. It selects the positive length `HR=√(AH²−AR²)=13/5` and computes the exact area `507/200`. The conditional downstream execution, positive root, exact value, and application pass.
+
+There is one uncorrected contradictory auxiliary equation: the opening says `MR·MA=m⁴/S`, while its own supplied formula `R=(m²/S)A` gives `MR·MA=m²`. The later right-angle proof correctly computes the latter value and does not rely on the erroneous one. I therefore record downstream execution as successful, but withhold strict whole-answer proof/completeness credit under the rubric's unresolved-contradiction rule. The naturally stopped response used 3,037 completion tokens.

@@ -1,0 +1,97 @@
+{
+  "id": "AIME-2011-II-10",
+  "variables": [
+    "h",
+    "cx",
+    "cy",
+    "dx",
+    "dy"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(-15, h)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(15, h)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(dx, dy)"
+    },
+    {
+      "name": "P",
+      "expression": "Intersect(Line(A, B), Line(C, D))"
+    },
+    {
+      "name": "M1",
+      "expression": "Midpoint(A, B)"
+    },
+    {
+      "name": "M2",
+      "expression": "Midpoint(C, D)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(O, A)",
+      "operator": "=",
+      "right": 25
+    },
+    {
+      "left": "Distance(O, B)",
+      "operator": "=",
+      "right": 25
+    },
+    {
+      "left": "Distance(O, C)",
+      "operator": "=",
+      "right": 25
+    },
+    {
+      "left": "Distance(O, D)",
+      "operator": "=",
+      "right": 25
+    },
+    {
+      "left": "Distance(C, D)",
+      "operator": "=",
+      "right": 14
+    },
+    {
+      "left": "Distance(M1, M2)",
+      "operator": "=",
+      "right": 12
+    },
+    {
+      "left": "OnSegment(P, A, B)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(P, C, D)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "h",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Area(A, C, D)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "Distance(O, P) ** 2"
+}

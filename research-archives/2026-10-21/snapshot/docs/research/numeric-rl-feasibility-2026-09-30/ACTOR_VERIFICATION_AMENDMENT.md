@@ -1,0 +1,3 @@
+# Actor再読み込み検査の追加
+
+初回screenと群選択規則、報酬、学習実装を変更しない。保存adapterのactor再読み込み時に、同一vLLM engineでbaseと更新後の固定1024token系列のlog probabilityを比較する。HF learnerとの絶対差だけではbackendの数値差と更新効果を混同するため、actor内の差分も保存する。これは接続検査であり、学習系列の切詰めや性能評価には使わない。4回答の再生成は学習済み同一問題の技術検査に限定する。追加コードの事前hashと時刻は runtime/actor-verification-freeze.json に保存。

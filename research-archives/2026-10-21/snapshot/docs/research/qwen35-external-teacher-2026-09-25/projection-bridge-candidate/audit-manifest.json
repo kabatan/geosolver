@@ -1,0 +1,223 @@
+{
+  "status": "candidate_untrained",
+  "purpose": "CPU-only decomposed projection-bridge positive-control candidate; not a trained result or confirmatory evidence",
+  "source_counts": {
+    "frozen_32_common_base_rows": 32,
+    "frozen_32_common_base_distinct_sources": 32,
+    "audited_v0_teacher_rows_in_source_file": 37,
+    "audit_records_in_source_file": 37,
+    "audited_rows_selected": 3,
+    "selected_ids": [
+      "external-H03-v0",
+      "external-H04-v0",
+      "external-H14-v0"
+    ],
+    "selected_audit_records": 3,
+    "rows_added_per_arm_per_rotation": 6,
+    "merged_rows_per_arm_per_rotation": 38
+  },
+  "selected_source_audits": {
+    "H03": {
+      "status": "accept",
+      "numeric": true,
+      "true_relation": true,
+      "proof": true,
+      "use": true,
+      "branches_checked": true,
+      "decisive_lemma": "the second circle-median intersection is the orthocenter's projection onto that median",
+      "reviewer_reason": "Checked the bisector intercept product, second circle root, projection identity, diameter-circle equation, and OZ=4."
+    },
+    "H04": {
+      "status": "accept",
+      "numeric": true,
+      "true_relation": true,
+      "proof": true,
+      "use": true,
+      "branches_checked": true,
+      "decisive_lemma": "AT^2=MT^2-(BC/2)^2 for the perpendicular-bisector construction",
+      "reviewer_reason": "Checked the cancellation condition from acuteness, the exterior T position, and positive AT=4."
+    },
+    "H14": {
+      "status": "accept",
+      "numeric": true,
+      "true_relation": true,
+      "proof": true,
+      "use": true,
+      "branches_checked": true,
+      "decisive_lemma": "R is the orthogonal projection of H onto AM",
+      "reviewer_reason": "Checked positive ray inversions, both defining circles, nonzero common point and projection dot product; area=24."
+    }
+  },
+  "source_hashes_sha256": {
+    "docs/research/qwen35-external-teacher-2026-09-25/heldout-near-transfer/train.json": "114f75e357d03e37fb42062c7aa26c50883fedf122d7f1d7866276c1f32b0c60",
+    "docs/research/qwen35-external-teacher-2026-09-24/train.json": "d691c1160fb9f4d7e7842ea9f42e9e95226f8a4e29e41647a071cdec36d43694",
+    "docs/research/qwen35-external-teacher-2026-09-24/audits.json": "6cf172a4d30b037c92430e5c8ef5f898c946c75dc689dddf21db991ce90897cd",
+    "qwen/.runtime/qwen35_external_teacher_20260925/train-near-32-original/tokenizer/tokenizer.json": "06b9509352d2af50381ab2247e083b80d32d5c0aba91c272ca9ff729b6a0e523"
+  },
+  "tokenizer": {
+    "path": "qwen/.runtime/qwen35_external_teacher_20260925/train-near-32-original/tokenizer/tokenizer.json",
+    "sha256": "06b9509352d2af50381ab2247e083b80d32d5c0aba91c272ca9ff729b6a0e523",
+    "counting_rule": "Qwen tokenizer answer text plus one EOS token; no model call",
+    "shared_32_row_base_assistant_target_tokens_including_eos": 19936
+  },
+  "token_budget_acceptance": {
+    "status": "exploratory_approximate_merged_dataset_match",
+    "max_relative_merged_mismatch_percent_of_larger_arm": 2.0,
+    "strict_token_match": false,
+    "added_row_mismatch_reported_separately": true
+  },
+  "rotations": {
+    "rotation-1": {
+      "omitted_target_id_audit_only": "H03",
+      "permitted_v0_source_ids": [
+        "external-H04-v0",
+        "external-H14-v0"
+      ],
+      "base_source_count": 32,
+      "added_rows_per_arm": 6,
+      "added_rows_per_source_per_arm": 3,
+      "merged_row_count_per_arm": 38,
+      "merged_unique_source_count_per_arm": 34,
+      "heldout_id_occurs_in_training_rows": false,
+      "assistant_target_tokens_in_additions_including_eos": {
+        "treatment": 1424,
+        "control": 1623,
+        "treatment_by_permitted_source": {
+          "H04": 512,
+          "H14": 912
+        },
+        "control_by_permitted_source": {
+          "H04": 486,
+          "H14": 1137
+        },
+        "absolute_mismatch": 199,
+        "relative_mismatch_percent_of_larger_arm": 12.26
+      },
+      "assistant_target_tokens_in_merged_38_row_dataset_including_eos": {
+        "shared_32_row_base": 19936,
+        "treatment": 21360,
+        "control": 21559,
+        "absolute_mismatch": 199,
+        "relative_mismatch_percent_of_larger_arm": 0.923
+      },
+      "files": {
+        "additions_treatment": "rotation-1/additions/treatment.json",
+        "additions_control": "rotation-1/additions/control.json",
+        "train_treatment": "rotation-1/train-treatment.json",
+        "train_control": "rotation-1/train-control.json"
+      }
+    },
+    "rotation-2": {
+      "omitted_target_id_audit_only": "H04",
+      "permitted_v0_source_ids": [
+        "external-H03-v0",
+        "external-H14-v0"
+      ],
+      "base_source_count": 32,
+      "added_rows_per_arm": 6,
+      "added_rows_per_source_per_arm": 3,
+      "merged_row_count_per_arm": 38,
+      "merged_unique_source_count_per_arm": 34,
+      "heldout_id_occurs_in_training_rows": false,
+      "assistant_target_tokens_in_additions_including_eos": {
+        "treatment": 1867,
+        "control": 2040,
+        "treatment_by_permitted_source": {
+          "H03": 955,
+          "H14": 912
+        },
+        "control_by_permitted_source": {
+          "H03": 903,
+          "H14": 1137
+        },
+        "absolute_mismatch": 173,
+        "relative_mismatch_percent_of_larger_arm": 8.48
+      },
+      "assistant_target_tokens_in_merged_38_row_dataset_including_eos": {
+        "shared_32_row_base": 19936,
+        "treatment": 21803,
+        "control": 21976,
+        "absolute_mismatch": 173,
+        "relative_mismatch_percent_of_larger_arm": 0.787
+      },
+      "files": {
+        "additions_treatment": "rotation-2/additions/treatment.json",
+        "additions_control": "rotation-2/additions/control.json",
+        "train_treatment": "rotation-2/train-treatment.json",
+        "train_control": "rotation-2/train-control.json"
+      }
+    },
+    "rotation-3": {
+      "omitted_target_id_audit_only": "H14",
+      "permitted_v0_source_ids": [
+        "external-H03-v0",
+        "external-H04-v0"
+      ],
+      "base_source_count": 32,
+      "added_rows_per_arm": 6,
+      "added_rows_per_source_per_arm": 3,
+      "merged_row_count_per_arm": 38,
+      "merged_unique_source_count_per_arm": 34,
+      "heldout_id_occurs_in_training_rows": false,
+      "assistant_target_tokens_in_additions_including_eos": {
+        "treatment": 1467,
+        "control": 1389,
+        "treatment_by_permitted_source": {
+          "H03": 955,
+          "H04": 512
+        },
+        "control_by_permitted_source": {
+          "H03": 903,
+          "H04": 486
+        },
+        "absolute_mismatch": 78,
+        "relative_mismatch_percent_of_larger_arm": 5.32
+      },
+      "assistant_target_tokens_in_merged_38_row_dataset_including_eos": {
+        "shared_32_row_base": 19936,
+        "treatment": 21403,
+        "control": 21325,
+        "absolute_mismatch": 78,
+        "relative_mismatch_percent_of_larger_arm": 0.364
+      },
+      "files": {
+        "additions_treatment": "rotation-3/additions/treatment.json",
+        "additions_control": "rotation-3/additions/control.json",
+        "train_treatment": "rotation-3/train-treatment.json",
+        "train_control": "rotation-3/train-control.json"
+      }
+    }
+  },
+  "created_file_hashes_sha256": {
+    "rotation-1/additions/control.json": "120198d0faaacd15a9e318ffd4a9034107f880b5192d102c6e32f2a9e39d2a68",
+    "rotation-1/additions/treatment.json": "46d1bbef1564fdcaf3d701dde9a4f81a15fc3bd526a59685b42cd4914577d8c9",
+    "rotation-1/train-control.json": "a8b00c295971c027787ca27dbf345cc56dc2908e71fc4e2686c53b8ce5ce476f",
+    "rotation-1/train-treatment.json": "b589acc694f262730810335f2e28fd999ed18e6cc9dcbedb6fe2a591e30e1697",
+    "rotation-2/additions/control.json": "d49377cd618563a1542fe81c2f015d181928e6a053c57848bdd7a6de1a0018ad",
+    "rotation-2/additions/treatment.json": "d1495a943988b30b0b973ceac5e78832ed2b8b8128ca2b3b7267a1ac3e11f3d4",
+    "rotation-2/train-control.json": "50281ff38b2305efadcfa76376f6673778a234786bf833aa83173ad80a04f8fe",
+    "rotation-2/train-treatment.json": "e3f9732820d0e0a6d0ef30566ab774d84f61090a94e203963f00799300c9ed09",
+    "rotation-3/additions/control.json": "46be20bd04f4305469eaa8d7ca15922785d420cd40a406e8c17b2b2ccff6993b",
+    "rotation-3/additions/treatment.json": "57a70c441f68929b451928525fc943e6bd61ce64ea38958f34f875bb07ebc15b",
+    "rotation-3/train-control.json": "f5fef4264da35f959b4261666bd324e3dca1a447ff6872b8475410d54ad58ce1",
+    "rotation-3/train-treatment.json": "29bc10fcd05d8a70a6823bfe6bc8d61b102b0bde37ce688167004bc13472be0b"
+  },
+  "math_caveats": {
+    "H03": [
+      "The acute angle at the active vertex gives r^2>m^2, selecting the second median-circle root in (0,1).",
+      "The angle-bisector coordinate formulas use b!=c; the source is scalene.",
+      "The assumed nondegenerate constructions identify the three-point circumcircle with the diameter-HG circle."
+    ],
+    "H04": [
+      "Acuteness gives lambda=m^2/r^2<1, so cancelling 1-lambda is valid and P!=A.",
+      "T-B-C fixes T outside BC; with the source values T is left of B and MT=BT+BC/2.",
+      "The final positive square root is used because AT is a length."
+    ],
+    "H14": [
+      "Acuteness gives delta=S-m^2>0 and 0<m^2/S<1; these select positive second-intersection and segment-projection branches.",
+      "The inversion is defined at D and E under the stated nondegeneracy; M is interior to Omega, so the positive ray intersection is unique.",
+      "The two inverted lines are distinct for the scalene source; stated nondegeneracy identifies the common point other than M.",
+      "AH=10 and AR=6 make the projected right triangle nondegenerate."
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "scope": "H01 only; exact rational samples and rational symbolic identities; no LLM, training, solver.solve, theorem dictionary or target-relation candidate injection",
+  "grammar": "all same-degree pairs of degree-1 and degree-2 monomials of 15 squared distances; coefficient p/q with 1<=p,q<=16; simplify common factors / equivalent squared relations only after mining",
+  "seeds": {
+    "train": 20260925,
+    "heldout": 20260926
+  },
+  "shape_equivalence": "canonical key (abs(u/b), v/b); mirror images and B,C exchanges are equivalent; fixed original pools, no replenishment after filtering",
+  "train_candidate_pool_count": 12,
+  "heldout_candidate_pool_count": 50,
+  "heldout_distinct_shapes_before_train_exclusion": 45,
+  "correction_note": "The earlier 47 heldout rows contained mirror-equivalent duplicates and mirror-equivalent train shapes. They represented 43 distinct shapes, only 40 unseen against train. General identity results are not numerical holdout evidence.",
+  "input_sha256": "d1a33a327ab425422f140f121a5b9c708549d17487edb53352fee0a22c8091d9",
+  "train_instance_count": 12,
+  "heldout_instance_count": 40,
+  "similarity_only_candidates": 994,
+  "similarity_only_candidates_refuted": 921,
+  "diverse_train_candidates": 73,
+  "heldout_counterexamples": [],
+  "deduplicated_candidates": 25,
+  "definition_only_count": 6,
+  "binomial_exponent_rank_not_theorem_count": 5,
+  "symbolic_verified_count": 25,
+  "symbolic_domain": "b,v != 0; u need not be nonzero for identities but is excluded in sampled scalene triangles. Primitive line denominator u^2+v^2 > 0. Assumes real coordinates. Symbolic verification establishes equalities, not arbitrary NL proofs or inequalities.",
+  "timings": {
+    "construction_seconds": 0.11901999800466001,
+    "enumeration_seconds": 0.0251087648794055,
+    "counterexample_seconds": 0.038724393118172884,
+    "symbolic_seconds": 0.09160871198400855,
+    "total_seconds": 0.2744641581084579
+  }
+}
+NON-DEFINITIONAL RELATIONS (not an independence or usefulness claim):
+{'relation': 'AB^2 * BC^2 = 4 * AM^2 * BP^2', 'identity_verified': True, 'symbolic_residual': '0', 'follows_from_midpoint_and_foot_definitions_without_orthocenter': False}
+{'relation': 'AB^2 * BM^2 = 1 * AM^2 * BP^2', 'identity_verified': True, 'symbolic_residual': '0', 'follows_from_midpoint_and_foot_definitions_without_orthocenter': False}
+{'relation': 'AB^2 * CM^2 = 1 * AM^2 * BP^2', 'identity_verified': True, 'symbolic_residual': '0', 'follows_from_midpoint_and_foot_definitions_without_orthocenter': False}
+{'relation': 'AB^2 * CP^2 = 1 * AC^2 * BP^2', 'identity_verified': True, 'symbolic_residual': '0', 'follows_from_midpoint_and_foot_definitions_without_orthocenter': False}
+{'relation': 'AB^2 * MP^2 = 1 * BM^2 * BP^2', 'identity_verified': True, 'symbolic_residual': '0', 'follows_from_midpoint_and_foot_definitions_without_orthocenter': False}
+{'relation': 'AB^2 * MP^2 = 1 * BP^2 * CM^2', 'identity_verified': True, 'symbolic_residual': '0', 'follows_from_midpoint_and_foot_definitions_without_orthocenter': False}
+{'relation': 'AB^2 * MP^2 = 1/4 * BC^2 * BP^2', 'identity_verified': True, 'symbolic_residual': '0', 'follows_from_midpoint_and_foot_definitions_without_orthocenter': False}
+{'relation': 'AC^2 * BC^2 = 4 * AM^2 * CP^2', 'identity_verified': True, 'symbolic_residual': '0', 'follows_from_midpoint_and_foot_definitions_without_orthocenter': False}
+{'relation': 'AC^2 * BM^2 = 1 * AM^2 * CP^2', 'identity_verified': True, 'symbolic_residual': '0', 'follows_from_midpoint_and_foot_definitions_without_orthocenter': False}
+{'relation': 'AC^2 * CM^2 = 1 * AM^2 * CP^2', 'identity_verified': True, 'symbolic_residual': '0', 'follows_from_midpoint_and_foot_definitions_without_orthocenter': False}
+{'relation': 'AC^2 * MP^2 = 1 * BM^2 * CP^2', 'identity_verified': True, 'symbolic_residual': '0', 'follows_from_midpoint_and_foot_definitions_without_orthocenter': False}
+{'relation': 'AC^2 * MP^2 = 1 * CM^2 * CP^2', 'identity_verified': True, 'symbolic_residual': '0', 'follows_from_midpoint_and_foot_definitions_without_orthocenter': False}
+{'relation': 'AC^2 * MP^2 = 1/4 * BC^2 * CP^2', 'identity_verified': True, 'symbolic_residual': '0', 'follows_from_midpoint_and_foot_definitions_without_orthocenter': False}
+{'relation': 'AM^2 * MP^2 = 1 * BM^2 * BM^2', 'identity_verified': True, 'symbolic_residual': '0', 'follows_from_midpoint_and_foot_definitions_without_orthocenter': False}
+{'relation': 'AM^2 * MP^2 = 1 * BM^2 * CM^2', 'identity_verified': True, 'symbolic_residual': '0', 'follows_from_midpoint_and_foot_definitions_without_orthocenter': False}
+{'relation': 'AM^2 * MP^2 = 1 * CM^2 * CM^2', 'identity_verified': True, 'symbolic_residual': '0', 'follows_from_midpoint_and_foot_definitions_without_orthocenter': False}
+{'relation': 'AM^2 * MP^2 = 1/16 * BC^2 * BC^2', 'identity_verified': True, 'symbolic_residual': '0', 'follows_from_midpoint_and_foot_definitions_without_orthocenter': False}
+{'relation': 'AM^2 * MP^2 = 1/4 * BC^2 * BM^2', 'identity_verified': True, 'symbolic_residual': '0', 'follows_from_midpoint_and_foot_definitions_without_orthocenter': False}
+{'relation': 'AM^2 * MP^2 = 1/4 * BC^2 * CM^2', 'identity_verified': True, 'symbolic_residual': '0', 'follows_from_midpoint_and_foot_definitions_without_orthocenter': False}

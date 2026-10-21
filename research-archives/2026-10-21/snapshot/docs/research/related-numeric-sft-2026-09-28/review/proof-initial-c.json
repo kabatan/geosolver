@@ -1,0 +1,48 @@
+{
+  "reviewer": "b",
+  "rubric": "AP01 self-contained proof rubric in REVIEW_RUBRIC.md; score 4 alone means complete proof. Numeric-answer specialized-theorem calibration was not applied.",
+  "cases": [
+    {
+      "case_id": "proof-00",
+      "score": 1,
+      "complete_proof": false,
+      "essential_progress": "Correctly extracts DA=DB and EA=EC from the perpendicular-bisector definitions and identifies that two genuine right angles at P and N would place both on the circle with diameter AF. These are only preparatory observations.",
+      "flaw_or_gap": "The central perpendicularities are false. In isosceles ABD the perpendicular from D to base AB is DP, not AP; likewise EN is perpendicular to AC, not AN to CE. F lies on BD and CE but that gives no right angle APF or ANF. The circle-with-diameter-AF proof therefore collapses. A direct admissible acute scalene check A=(0,0), B=(3,2), C=(4,-2) gives F=(16/7,2/7), P=(3/2,1), N=(2,-1), with (A-P)·(F-P)=-13/28 and (A-N)·(F-N)=5/7, so neither claimed right angle holds even though F is interior.",
+      "evidence_quotes": [
+        {"lines": "27-35", "quote": "Since $DA = DB$, $\\triangle ABD$ is isosceles with base $AB$ ... Therefore, $AP \\perp BD$ ... $\\angle APF = 90^\\circ$."},
+        {"lines": "38-45, 66-72", "quote": "Since $EA = EC$ ... Therefore, $AN \\perp CE$ ... $\\angle ANF = 90^\\circ$ ... the four points ... lie on the circle with diameter $AF$."}
+      ],
+      "incidental_error": "Additional local false assertions include $\\angle APB=90^\\circ$ although A,P,B are collinear (line 34), and unsupported branch/order claims (lines 74-91). The false perpendicularities are the decisive errors, not incidental.",
+      "uncertainty": "low; the asserted core relations are directly false in an admissible configuration",
+      "read_coverage": "Entire problem and answer, lines 1-103; all six response sections, including ordering, branch, sign, and conclusion."
+    },
+    {
+      "case_id": "proof-01",
+      "score": 2,
+      "complete_proof": false,
+      "essential_progress": "Derives the correct general isosceles equalities, AD=AB/(2 cos angle BAM) and AE=AC/(2 cos angle CAM), the midline PN parallel BC, and, using F interior, the correct angle BFC=2 angle A. It identifies the decisive cyclicity criterion angle AFP=angle ANP=C.",
+      "flaw_or_gap": "The required angle AFP=C is never derived from the construction. The purported step 'by properties of the complete quadrilateral or similar triangles' has no actual similarity or angle calculation, and the final proof calls the conclusion itself a known property. The lengthy ordering section is unsound: M=(0,0) with B=(-x,0), C=(y,0) requires x=y, and its claimed B<C => AD<AE is not generally justified; an admissible acute scalene example after swapping B,C in A=(0,0), B=(3,2), C=(4,-2) has B<C but AD=5/2>AE=13/6. The later answer even acknowledges that the alleged inequality does not follow.",
+      "evidence_quotes": [
+        {"lines": "197-204", "quote": "the condition for concyclicity ... is equivalent to $\\angle AFP = \\angle ANP = C$ ... $\\angle BFC = ... = 2A$."},
+        {"lines": "411-420, 463-468", "quote": "By properties of the complete quadrilateral or similar triangles, $\\angle AFP = C$ ... We claim $\\angle AFP = C$ ... This is a known property ... $F$ ... lies on the circle through $A,P,N$."}
+      ],
+      "incidental_error": "The coordinate ordering argument contradicts the midpoint constraint (lines 30, 78, 119); the later unsupported AD<AE claim is also used for branch/order justification (lines 422-424). Several exploratory false starts, including F on AM, are explicitly retracted (lines 299-337).",
+      "uncertainty": "low on incompleteness; score 2 reflects a correct, explicitly proposed core criterion and useful general angle calculation despite major missing proof",
+      "read_coverage": "Entire problem and answer, lines 1-471; ordering/algebra attempt, angle exploration, retracted errors, claimed final proof, and closing restatement."
+    },
+    {
+      "case_id": "proof-02",
+      "score": 2,
+      "complete_proof": false,
+      "essential_progress": "Correctly sets A=(0,0), M=(m,0), B=(x1,h), C=(2m-x1,-h), derives positive ray-intersection coordinates D=((x1^2+h^2)/(2x1),0) and E=((2m-x1)^2+h^2)/(2(2m-x1)),0), and obtains the conditional angle BFC=2 angle A from the isosceles equalities and F interior. It identifies a suitable same-chord angle criterion.",
+      "flaw_or_gap": "It never computes F or verifies its membership in the circle through A,P,N. At the exact point where this must be shown, it says the calculation is tedious and cites a 'theorem' whose statement is identical to the task. Its attempted proof of that theorem loops through abandoned angles and concludes by assertion. The final summary says the key angles follow by symmetry or trigonometric Ceva without showing either argument. The purported coordinate circle coefficients are also wrong: multiplying the displayed equation for P by 4 gives 2D x1+2E h, not D x1+E h, so the later D,E coefficients do not define the claimed circle.",
+      "evidence_quotes": [
+        {"lines": "101-104, 170-174", "quote": "$x^2+y^2+Dx+Ey=0$ ... $x_1^2+h^2+Dx_1+Eh=0$ ... 'This calculation is extremely tedious ... Instead, we invoke' the theorem whose conclusion is that $A,P,N,F$ are concyclic."},
+        {"lines": "498-513", "quote": "Key step: Show that $\\angle PFA=C$ and $\\angle NFA=B$. This follows from the symmetry ... or via trigonometric Ceva ... [the] detailed trigonometric expansion ... would be provided to fully satisfy the 'self-contained' requirement."}
+      ],
+      "incidental_error": "A false intermediate assertion equating angle APF with angle ABF is explicitly corrected in lines 460-474. The circle-equation factor-of-two error is unrepaired, though that algebraic route is abandoned; the essential remaining gap is no proof of F on the circle.",
+      "uncertainty": "low on incompleteness; score 2 rather than 1 credits correct ray-coordinate construction, the BFC=2A calculation, and the explicit but unproved central angle criterion",
+      "read_coverage": "Entire problem and answer, lines 1-515; coordinate setup, circle equation attempt, theorem restatement, all angle explorations, corrections, final summary, and note."
+    }
+  ]
+}

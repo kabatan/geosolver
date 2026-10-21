@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2010_P2",
+  "reviewer": "independent_review",
+  "case_sha256": "360acf38efe9ba1a96d814b9aa9b310f7994bc77318f322f5d79536faac44298",
+  "audit_sha256": "67c6cc033bf617772af7c4e428df76ee512553db138200eac44c79ef552c7671",
+  "gmbl_sha256": "973de0514b1eef5441ea263fbb94f46fedfbaf0f07c035d5b059e00650140f9a",
+  "reviewed_original_pdf_sha256": "f125038100e8d01430c6d260d53b3ee7a70902a5d0a72ffffe15deaa7c98d4cc",
+  "verdict": "pass",
+  "normalization_checked": true,
+  "conclusion_not_assumed": true,
+  "original_conditions_covered_by_gmbl": true,
+  "scope_of_coverage_ja": "原文の仮定を当該比較範囲で満たすかの監査である。原文の全境界配置を含む解集合の完全同値、GMB実装の全数値分岐の正当性、実験の実行許可を意味しない。",
+  "comparison_scope": "shared_strict_interior_configurations",
+  "sources_read": [
+    "cases/IMO_2010_P2.json",
+    "audit/IMO_2010_P2.json",
+    "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2010_P2.smt2",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2010-eng.pdf",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2010-eng.txt",
+    "AUTHORING.md",
+    "reviews/UPSTREAM_SEMANTICS.md"
+  ],
+  "official_url": "https://www.imo-official.org/assets/documents/problems/2010/2010_eng.pdf",
+  "normalization_review": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "removed_continuous_dof": 4,
+    "scale_invariant": true,
+    "reflection_fixed": false,
+    "remaining_solver_variables": [
+      "cx",
+      "cy",
+      "te",
+      "tf"
+    ],
+    "shape_fixed_beyond_original_hypotheses": false,
+    "checked_ja": "原文で相異なる二点の単位基線化だけで平行移動2・回転1・正の尺度1を除く。元の形の変数と鏡映配置を保持している。"
+  },
+  "original_goal_not_used": "DGとEIの交点がGamma上にある。交点の存在を含めて探索後に検査する。",
+  "checked_input_counts": {
+    "constructions": 9,
+    "conditions": 6
+  },
+  "method": {
+    "read_all_constructions_and_conditions": true,
+    "read_original_problem_assumptions": true,
+    "checked_domains_branches_and_non_degeneracy": true,
+    "checked_goal_separation": true,
+    "exact_algebraic_checks_only_where_documented": true,
+    "solver_executed": false,
+    "optimizer_executed": false,
+    "refinement_executed": false,
+    "prior_case_performance_used_to_adjust_input": false
+  },
+  "gmb_runtime_equivalence_claimed": false,
+  "findings": [
+    {
+      "id": "IMO_2010_P2-review-1",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "ABを単位基線、CとE,Fの位置を自由に保ち、内心I・二つ目のAI円交点D・IF中点Gを照合した。"
+    },
+    {
+      "id": "IMO_2010_P2-review-2",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "初稿はFを閉線分に許し公開GMBの開パラメータと不一致だったが、ユーザー承認後に0<tf<1を追加して共通の内部配置範囲へ統一済み。F内部なら角BAF>0からE≠C、半角未満条件からE≠Bも従う。"
+    },
+    {
+      "id": "IMO_2010_P2-review-3",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "原文side/arcをclosedと解釈した全境界配置との同値性は主張しない。これは承認済みの比較範囲の明示であり、結論DGとEIの交点の円所属を仮定に追加して端点問題を隠す修正ではない。"
+    },
+    {
+      "id": "segment_endpoint_scope",
+      "severity": "major",
+      "status": "resolved_by_user_approved_common_scope",
+      "detail_ja": "初稿の閉線分を公開GMBと同じ内部配置へ統一する変更がユーザー承認され、0<tf<1の追加とauditでの範囲明示を確認済み。"
+    }
+  ],
+  "remaining_uncertainties": []
+}

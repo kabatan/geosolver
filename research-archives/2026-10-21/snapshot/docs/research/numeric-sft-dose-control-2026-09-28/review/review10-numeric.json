@@ -1,0 +1,43 @@
+{
+  "packet": "qwen/.runtime/numeric_sft_dose_control_20260928/review-transfer-review10/index.json",
+  "rubric": "docs/research/related-numeric-sft-2026-09-28/REVIEW_RUBRIC.md",
+  "reference": "docs/research/related-numeric-sft-2026-09-28/numeric-review-reference-compact.json (DB01)",
+  "review_type": "blind_numeric",
+  "cases": [
+    {
+      "case_id": "numeric-00",
+      "derivation_status": "invalid",
+      "valid_geometric_core": false,
+      "numerical_error": false,
+      "reason": "BP·CQ=AP·AQをAP/AB+AQ/AC=1へ直す部分と、同側共通接線長YZ²=JU²−(4−1)²は正しい。しかし特殊構図の二円外接性もJU=5も導かず、最後は「contest problemらしい」「きれいな数」という推測で4を選ぶ。正しい数値4は条件付きの接線公式の算術にすぎず、幾何的導出は無効。",
+      "known_property_used": "参照DB01の正確な外接性なら数値答案では再証明不要だが、本答案はその性質を述べて適用しない。最終はJU=5の推測。",
+      "false_argument_role": "初期のPQ∥BC説は後段で疑い、midpoint説を撤回しているので、それのみを不正判定理由にしない。しかしline 330の(c−kb)(b−kc)=bc(1−k)²は不等辺では偽で、line 381の「積条件ならPQがantiparallel」という根拠を損なう。最終はこの路線も使わず、数値のきれいさが核心の外接性を置換する。",
+      "evidence_quotes": [
+        {
+          "line": 91,
+          "quote": "$1 = \\frac{AQ}{b} + \\frac{AP}{c}$."
+        },
+        {
+          "line": 286,
+          "quote": "$L = \\sqrt{d^2 - (r_1 - r_2)^2}$."
+        },
+        {
+          "line": 330,
+          "quote": "$BP \\cdot CQ = (c-kb)(b-kc) = bc - kbc - kbc + k^2 bc = bc(1-2k+k^2) = bc(1-k)^2$."
+        },
+        {
+          "line": 453,
+          "quote": "$JU=5$ leading to $YZ=4$ is the most robust guess."
+        },
+        {
+          "line": 457,
+          "quote": "Answer: 4"
+        }
+      ],
+      "uncertainty": "低い。正しい既知特殊性質の適用ではなく、最終文自身が距離の推測であると明示する。",
+      "read_coverage": "numeric-00.md全459行。初期相似説、その再検討、接線公式、最終推測まで確認。"
+    }
+  ],
+  "independent_check": "b=AC, c=AB, k>0とすると(c−kb)(b−kc)−bc(1−k)²=−k(b−c)²。したがってline 330の展開は不等辺で偽。半径1,4で外側共通接線ならYZ²=JU²−9は正しく、JU=5が別途得られた場合に限りYZ=4。",
+  "boundary_case": "過去較正では正確な既知特殊構図定理の適用を許す。本答案は二円外接を特定・適用せず、距離と答えを数値パターンから選ぶためinvalid。"
+}

@@ -1,0 +1,621 @@
+{
+  "status": "audited",
+  "inputs_sha256": {
+    "docs/research/numeric-sft-success-failure-analysis-2026-09-28/shape-residual.json": "fb708c2b34a4a6cfc7d1c26b9cfca9eda7badb28e388d422ce12b7fbfbc0b392",
+    "docs/research/numeric-sft-success-failure-analysis-2026-09-28/shape_residual.py": "b4de2844c005cb9d520547ab92e0471281aa046f35936769b01b4a56dd2beefe",
+    "docs/research/numeric-sft-success-failure-analysis-2026-09-28/shape-residual.md": "19340abdeefd65ff420e004d038d2babea0f22c5734dd42a7b961c87eef67bcd",
+    "docs/research/numeric-sft-dose-control-2026-09-28/scale-baseline.json": "cd14e72cb8cc0f0e8313f6c44967ec84b97c5ff2a9d528510f530d099d91b07b",
+    "qwen/.runtime/numeric_sft_dose_control_20260928/fit-scores.json": "4728b44c505892e67434a464b088a18fd4c6e06c31c98e5c831979276e24806d"
+  },
+  "validation": {
+    "saved_input_hashes_match": true,
+    "row_count": 430,
+    "excluded_nonpositive_count": 10,
+    "max_row_formula_abs_diff": 0.0,
+    "max_summary_formula_abs_diff": 5.551115123125783e-17,
+    "reserved_L_max_abs_diff_vs_original_baseline": 0.0,
+    "reserved_c_max_abs_diff_vs_original_baseline": 0.0
+  },
+  "independent_summary": {
+    "base": {
+      "trained_all": {
+        "n": 72,
+        "correlation": 0.05444978996894026,
+        "pair_correct": 133,
+        "pair_total": 245,
+        "ties": 0,
+        "squared_log_skill": -7.867585634542481
+      },
+      "reserved_shape": {
+        "n": 28,
+        "correlation": -0.057392920064574963,
+        "pair_correct": 16,
+        "pair_total": 27,
+        "ties": 0,
+        "squared_log_skill": -14.16345643783671
+      }
+    },
+    "correct128": {
+      "trained_all": {
+        "n": 80,
+        "correlation": 0.46456329613085157,
+        "pair_correct": 194,
+        "pair_total": 280,
+        "ties": 0,
+        "squared_log_skill": -3.007186560351168
+      },
+      "reserved_shape": {
+        "n": 30,
+        "correlation": -0.058934876367666235,
+        "pair_correct": 21,
+        "pair_total": 30,
+        "ties": 0,
+        "squared_log_skill": -5.436787249447003
+      }
+    },
+    "correct512": {
+      "trained_all": {
+        "n": 80,
+        "correlation": 0.9462943445839755,
+        "pair_correct": 259,
+        "pair_total": 280,
+        "ties": 0,
+        "squared_log_skill": 0.900489704183539
+      },
+      "reserved_shape": {
+        "n": 30,
+        "correlation": 0.1953794306915487,
+        "pair_correct": 19,
+        "pair_total": 30,
+        "ties": 0,
+        "squared_log_skill": 0.33679548804010695
+      }
+    },
+    "shuffled512": {
+      "trained_all": {
+        "n": 80,
+        "correlation": 0.1914437730499429,
+        "pair_correct": 164,
+        "pair_total": 280,
+        "ties": 0,
+        "squared_log_skill": -0.3342532125427309
+      },
+      "reserved_shape": {
+        "n": 30,
+        "correlation": 0.15498682710082598,
+        "pair_correct": 19,
+        "pair_total": 30,
+        "ties": 0,
+        "squared_log_skill": -0.5182751136676409
+      }
+    }
+  },
+  "leave_one_source_out": {
+    "correct512": {
+      "trained_all": {
+        "DA01": {
+          "n": 72,
+          "correlation": 0.9462548663065941,
+          "pair_correct": 234,
+          "pair_total": 252,
+          "squared_log_skill": 0.9004056130815042
+        },
+        "DA02": {
+          "n": 72,
+          "correlation": 0.9927946307038144,
+          "pair_correct": 239,
+          "pair_total": 252,
+          "squared_log_skill": 0.985588064629752
+        },
+        "DA03": {
+          "n": 72,
+          "correlation": 0.9429126456399248,
+          "pair_correct": 231,
+          "pair_total": 252,
+          "squared_log_skill": 0.8947687545837361
+        },
+        "DA04": {
+          "n": 72,
+          "correlation": 0.9394427628703123,
+          "pair_correct": 231,
+          "pair_total": 252,
+          "squared_log_skill": 0.8880684813524353
+        },
+        "DA06": {
+          "n": 72,
+          "correlation": 0.9453219430394919,
+          "pair_correct": 232,
+          "pair_total": 252,
+          "squared_log_skill": 0.8987868804738726
+        },
+        "DA07": {
+          "n": 72,
+          "correlation": 0.907315507341909,
+          "pair_correct": 232,
+          "pair_total": 252,
+          "squared_log_skill": 0.8107967911022466
+        },
+        "DA08": {
+          "n": 72,
+          "correlation": 0.9319924148473995,
+          "pair_correct": 231,
+          "pair_total": 252,
+          "squared_log_skill": 0.8818845207501982
+        },
+        "DA11": {
+          "n": 72,
+          "correlation": 0.9463662987011499,
+          "pair_correct": 231,
+          "pair_total": 252,
+          "squared_log_skill": 0.9005424442546308
+        },
+        "DB02": {
+          "n": 72,
+          "correlation": 0.9461626838705743,
+          "pair_correct": 234,
+          "pair_total": 252,
+          "squared_log_skill": 0.900345047116363
+        },
+        "DB12": {
+          "n": 72,
+          "correlation": 0.9463338079615994,
+          "pair_correct": 236,
+          "pair_total": 252,
+          "squared_log_skill": 0.9005485780744584
+        }
+      },
+      "reserved_shape": {
+        "DA01": {
+          "n": 27,
+          "correlation": 0.17047393093280688,
+          "pair_correct": 16,
+          "pair_total": 27,
+          "squared_log_skill": 0.33619843948837425
+        },
+        "DA02": {
+          "n": 27,
+          "correlation": 0.1728918596868797,
+          "pair_correct": 18,
+          "pair_total": 27,
+          "squared_log_skill": 0.39753990117109883
+        },
+        "DA03": {
+          "n": 27,
+          "correlation": 0.09366381493969277,
+          "pair_correct": 16,
+          "pair_total": 27,
+          "squared_log_skill": 0.31931163601159374
+        },
+        "DA04": {
+          "n": 27,
+          "correlation": 0.1566620693295922,
+          "pair_correct": 17,
+          "pair_total": 27,
+          "squared_log_skill": 0.33776472638740573
+        },
+        "DA06": {
+          "n": 27,
+          "correlation": 0.16214625653990677,
+          "pair_correct": 17,
+          "pair_total": 27,
+          "squared_log_skill": 0.3399969349168699
+        },
+        "DA07": {
+          "n": 27,
+          "correlation": 0.35097285355245994,
+          "pair_correct": 18,
+          "pair_total": 27,
+          "squared_log_skill": 0.370723379281905
+        },
+        "DA08": {
+          "n": 27,
+          "correlation": 0.28667075691582083,
+          "pair_correct": 17,
+          "pair_total": 27,
+          "squared_log_skill": 0.21965353669253274
+        },
+        "DA11": {
+          "n": 27,
+          "correlation": 0.20707089358534664,
+          "pair_correct": 18,
+          "pair_total": 27,
+          "squared_log_skill": 0.3432463069836188
+        },
+        "DB02": {
+          "n": 27,
+          "correlation": 0.19910130095050355,
+          "pair_correct": 17,
+          "pair_total": 27,
+          "squared_log_skill": 0.337548258912282
+        },
+        "DB12": {
+          "n": 27,
+          "correlation": 0.19556420268040714,
+          "pair_correct": 17,
+          "pair_total": 27,
+          "squared_log_skill": 0.33733295551374376
+        }
+      }
+    },
+    "shuffled512": {
+      "trained_all": {
+        "DA01": {
+          "n": 72,
+          "correlation": 0.18899643468691735,
+          "pair_correct": 141,
+          "pair_total": 252,
+          "squared_log_skill": -0.329025009076118
+        },
+        "DA02": {
+          "n": 72,
+          "correlation": 0.19238122571953536,
+          "pair_correct": 148,
+          "pair_total": 252,
+          "squared_log_skill": -0.35860892393021526
+        },
+        "DA03": {
+          "n": 72,
+          "correlation": 0.23700549256205167,
+          "pair_correct": 151,
+          "pair_total": 252,
+          "squared_log_skill": -0.2669103243624462
+        },
+        "DA04": {
+          "n": 72,
+          "correlation": 0.1113888627987045,
+          "pair_correct": 139,
+          "pair_total": 252,
+          "squared_log_skill": -0.4729490357542492
+        },
+        "DA06": {
+          "n": 72,
+          "correlation": 0.18629342420529546,
+          "pair_correct": 147,
+          "pair_total": 252,
+          "squared_log_skill": -0.35073511214885533
+        },
+        "DA07": {
+          "n": 72,
+          "correlation": 0.006706153189769102,
+          "pair_correct": 149,
+          "pair_total": 252,
+          "squared_log_skill": -0.8769716460167127
+        },
+        "DA08": {
+          "n": 72,
+          "correlation": 0.4065287033622523,
+          "pair_correct": 152,
+          "pair_total": 252,
+          "squared_log_skill": 0.043750942604711685
+        },
+        "DA11": {
+          "n": 72,
+          "correlation": 0.20612901210828502,
+          "pair_correct": 153,
+          "pair_total": 252,
+          "squared_log_skill": -0.2813854932638906
+        },
+        "DB02": {
+          "n": 72,
+          "correlation": 0.19414258195078188,
+          "pair_correct": 149,
+          "pair_total": 252,
+          "squared_log_skill": -0.3196881342547193
+        },
+        "DB12": {
+          "n": 72,
+          "correlation": 0.1902873264374317,
+          "pair_correct": 147,
+          "pair_total": 252,
+          "squared_log_skill": -0.3131408220627623
+        }
+      },
+      "reserved_shape": {
+        "DA01": {
+          "n": 27,
+          "correlation": 0.12962435444792986,
+          "pair_correct": 16,
+          "pair_total": 27,
+          "squared_log_skill": -0.5223080032209511
+        },
+        "DA02": {
+          "n": 27,
+          "correlation": 0.03332167273773662,
+          "pair_correct": 17,
+          "pair_total": 27,
+          "squared_log_skill": -0.45295813306106414
+        },
+        "DA03": {
+          "n": 27,
+          "correlation": 0.17027094260972483,
+          "pair_correct": 17,
+          "pair_total": 27,
+          "squared_log_skill": -0.4502642511256252
+        },
+        "DA04": {
+          "n": 27,
+          "correlation": 0.12312452023361159,
+          "pair_correct": 16,
+          "pair_total": 27,
+          "squared_log_skill": -0.4763834201935542
+        },
+        "DA06": {
+          "n": 27,
+          "correlation": 0.09973784114408903,
+          "pair_correct": 16,
+          "pair_total": 27,
+          "squared_log_skill": -0.5643266569904828
+        },
+        "DA07": {
+          "n": 27,
+          "correlation": 0.21759076559153948,
+          "pair_correct": 18,
+          "pair_total": 27,
+          "squared_log_skill": -0.7917671351328013
+        },
+        "DA08": {
+          "n": 27,
+          "correlation": 0.22790224252831606,
+          "pair_correct": 19,
+          "pair_total": 27,
+          "squared_log_skill": -0.9665014916963943
+        },
+        "DA11": {
+          "n": 27,
+          "correlation": 0.20208516385752595,
+          "pair_correct": 17,
+          "pair_total": 27,
+          "squared_log_skill": -0.3576593751476811
+        },
+        "DB02": {
+          "n": 27,
+          "correlation": 0.18836437241820964,
+          "pair_correct": 18,
+          "pair_total": 27,
+          "squared_log_skill": -0.41966145025931345
+        },
+        "DB12": {
+          "n": 27,
+          "correlation": 0.16672612186036245,
+          "pair_correct": 17,
+          "pair_total": 27,
+          "squared_log_skill": -0.4515690371818326
+        }
+      }
+    }
+  },
+  "exclude_DA07_DA08": {
+    "correct512": {
+      "trained_all": {
+        "n": 64,
+        "correlation": 0.8330919159356971,
+        "pair_correct": 204,
+        "pair_total": 224,
+        "squared_log_skill": 0.6843588922627559
+      },
+      "reserved_shape": {
+        "n": 24,
+        "correlation": 0.5777870904551853,
+        "pair_correct": 16,
+        "pair_total": 24,
+        "squared_log_skill": 0.11528284048920401
+      }
+    },
+    "shuffled512": {
+      "trained_all": {
+        "n": 64,
+        "correlation": 0.253989442404184,
+        "pair_correct": 137,
+        "pair_total": 224,
+        "squared_log_skill": -0.3175265207466118
+      },
+      "reserved_shape": {
+        "n": 24,
+        "correlation": 0.3140153085807247,
+        "pair_correct": 18,
+        "pair_total": 24,
+        "squared_log_skill": -2.38638062491291
+      }
+    }
+  },
+  "within_source_variance_fraction": {
+    "correct512": {
+      "trained_all": {
+        "DA01": {
+          "gold_fraction": 0.0011761764882341037,
+          "prediction_fraction": 0.0010879917330927772
+        },
+        "DA02": {
+          "gold_fraction": 0.06980920682324837,
+          "prediction_fraction": 0.07503047505765051
+        },
+        "DA03": {
+          "gold_fraction": 0.05973188965676189,
+          "prediction_fraction": 0.0590223150381283
+        },
+        "DA04": {
+          "gold_fraction": 0.11661444093301068,
+          "prediction_fraction": 0.11158675694445995
+        },
+        "DA06": {
+          "gold_fraction": 0.03388850431534382,
+          "prediction_fraction": 0.027605158036445986
+        },
+        "DA07": {
+          "gold_fraction": 0.4388425007160548,
+          "prediction_fraction": 0.4152668580298004
+        },
+        "DA08": {
+          "gold_fraction": 0.26674672785823367,
+          "prediction_fraction": 0.29892185680617256
+        },
+        "DA11": {
+          "gold_fraction": 0.003760572580733156,
+          "prediction_fraction": 0.0018809178757212958
+        },
+        "DB02": {
+          "gold_fraction": 0.005718959105543922,
+          "prediction_fraction": 0.00676831942061353
+        },
+        "DB12": {
+          "gold_fraction": 0.003711021522835688,
+          "prediction_fraction": 0.0028293510579146734
+        }
+      },
+      "reserved_shape": {
+        "DA01": {
+          "gold_fraction": 0.036975024109256904,
+          "prediction_fraction": 0.026443223665848406
+        },
+        "DA02": {
+          "gold_fraction": 0.1666000099804677,
+          "prediction_fraction": 0.16574355854120534
+        },
+        "DA03": {
+          "gold_fraction": 0.21979447369297173,
+          "prediction_fraction": 0.06048105161267732
+        },
+        "DA04": {
+          "gold_fraction": 0.05513198762048719,
+          "prediction_fraction": 0.041751923674187334
+        },
+        "DA06": {
+          "gold_fraction": 0.12218224606006532,
+          "prediction_fraction": 0.043798853567656476
+        },
+        "DA07": {
+          "gold_fraction": 0.12466818334393794,
+          "prediction_fraction": 0.36979555632951705
+        },
+        "DA08": {
+          "gold_fraction": 0.20887850904883468,
+          "prediction_fraction": 0.26975794461347763
+        },
+        "DA11": {
+          "gold_fraction": 0.02669767704377679,
+          "prediction_fraction": 0.009943558994985977
+        },
+        "DB02": {
+          "gold_fraction": 0.03884019244270307,
+          "prediction_fraction": 0.010575982139679363
+        },
+        "DB12": {
+          "gold_fraction": 0.0002316966574987558,
+          "prediction_fraction": 0.001708346860765173
+        }
+      }
+    },
+    "shuffled512": {
+      "trained_all": {
+        "DA01": {
+          "gold_fraction": 0.0011761764882341037,
+          "prediction_fraction": 0.0219646707270904
+        },
+        "DA02": {
+          "gold_fraction": 0.06980920682324837,
+          "prediction_fraction": 0.014661824588735824
+        },
+        "DA03": {
+          "gold_fraction": 0.05973188965676189,
+          "prediction_fraction": 0.06362559765628395
+        },
+        "DA04": {
+          "gold_fraction": 0.11661444093301068,
+          "prediction_fraction": 0.09078319472662501
+        },
+        "DA06": {
+          "gold_fraction": 0.03388850431534382,
+          "prediction_fraction": 0.016356847679335998
+        },
+        "DA07": {
+          "gold_fraction": 0.4388425007160548,
+          "prediction_fraction": 0.2338656557082782
+        },
+        "DA08": {
+          "gold_fraction": 0.26674672785823367,
+          "prediction_fraction": 0.39285980094644146
+        },
+        "DA11": {
+          "gold_fraction": 0.003760572580733156,
+          "prediction_fraction": 0.07999056292944504
+        },
+        "DB02": {
+          "gold_fraction": 0.005718959105543922,
+          "prediction_fraction": 0.028512050489905617
+        },
+        "DB12": {
+          "gold_fraction": 0.003711021522835688,
+          "prediction_fraction": 0.05737979454785855
+        }
+      },
+      "reserved_shape": {
+        "DA01": {
+          "gold_fraction": 0.036975024109256904,
+          "prediction_fraction": 0.02317306201357758
+        },
+        "DA02": {
+          "gold_fraction": 0.1666000099804677,
+          "prediction_fraction": 0.1403611272112951
+        },
+        "DA03": {
+          "gold_fraction": 0.21979447369297173,
+          "prediction_fraction": 0.0967563724903047
+        },
+        "DA04": {
+          "gold_fraction": 0.05513198762048719,
+          "prediction_fraction": 0.027282836345622827
+        },
+        "DA06": {
+          "gold_fraction": 0.12218224606006532,
+          "prediction_fraction": 0.03350994763831068
+        },
+        "DA07": {
+          "gold_fraction": 0.12466818334393794,
+          "prediction_fraction": 0.16748945634138923
+        },
+        "DA08": {
+          "gold_fraction": 0.20887850904883468,
+          "prediction_fraction": 0.010998841177847456
+        },
+        "DA11": {
+          "gold_fraction": 0.02669767704377679,
+          "prediction_fraction": 0.2910177847596097
+        },
+        "DB02": {
+          "gold_fraction": 0.03884019244270307,
+          "prediction_fraction": 0.022168594728205343
+        },
+        "DB12": {
+          "gold_fraction": 0.0002316966574987558,
+          "prediction_fraction": 0.1872419772938373
+        }
+      }
+    }
+  },
+  "reserved_shape_pair_overlap": {
+    "both_correct": 12,
+    "shuffled512_only": 7,
+    "both_wrong": 4,
+    "correct512_only": 7
+  },
+  "findings": [
+    "Formulas and saved input hashes reproduce; the scale L and c on all 30 reserved rows exactly equal the prior baseline.",
+    "Training centered correlation has high variance concentration in DA07 and DA08 but is still positive and high when either or both are excluded.",
+    "Heldout centered correlation is weak and sensitive to source exclusion; 19/30 order matches in both arms are equal totals, not identical successful pairs.",
+    "The shared normalization denominator L can create correlation under some non-geometric predictors, so these behavioral metrics do not establish the model mechanism.",
+    "Three reserved variants per source and a posthoc feature diagnostic do not support a claim that all behavior is size memorization.",
+    "The centered gold log-ratio variance per row is about 13.5 times larger in training than heldout, so the correlation drop also reflects a narrower heldout dynamic range, not just prediction quality."
+  ],
+  "gold_variation_by_split": {
+    "trained_all": {
+      "pooled_gold_centered_ss": 22.73060019933906,
+      "per_row_gold_centered_ss": 0.28413250249173827,
+      "n": 80
+    },
+    "reserved_shape": {
+      "pooled_gold_centered_ss": 0.6333820135651056,
+      "per_row_gold_centered_ss": 0.02111273378550352,
+      "n": 30
+    }
+  }
+}

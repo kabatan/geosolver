@@ -1,0 +1,17 @@
+{
+  "case_id": "IMO_2012_P5",
+  "source": {"official_url": "https://www.imo-official.org/assets/documents/problems/2012/2012_eng.pdf", "official_pdf_sha256": "3ab2564b04d805bcfc963a8c38527a7773b69a8a41cc457a260730b734ffffd6", "official_pdf_page": 2, "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2012_P5.smt2", "gmbl_sha256": "6fce608d5f05377d05cc12b74e5be8f8c1c2d8d6208d07a1ccdacca8220bc463"},
+  "normalization": {"anchors": ["C", "A"], "fixed_coordinates": {"C": ["0", "0"], "A": ["1", "0"]}, "removed_continuous_dof": 4, "justification": "正長辺CAを相似変換で単位水平線分にする。原文の角BCA=90度をB=(0,by)で表す。脚比|by|は自由で、by<0の鏡映も残す。", "scale_invariant": true, "reflection_fixed": false},
+  "clauses": [
+    {"id": "right_triangle", "statement_ja": "ABCはCを直角とする非退化三角形。", "gmbl": ["(param (A B C) (right-tri C))"], "geosolver": ["C = Point(0, 0)", "A = Point(1, 0)", "B = Point(0, by)", "by != 0"], "status": "matched_source_semantics"},
+    {"id": "altitude_interior", "statement_ja": "DはCからABへの垂足、XはCDの内部。", "gmbl": ["(define D point (foot C (line A B)))", "(param X point (on-seg C D))"], "geosolver": ["D = FootOfPerpendicular(C, Line(A, B))", "X = PointOnSegment(C, D, tx)", "0 < tx < 1"], "status": "matched"},
+    {"id": "equal_lengths_on_segments", "statement_ja": "KはAX上でBK=BC、LはBX上でAL=AC。", "gmbl": ["(param K point (on-seg A X))", "(assert (cong B K B C))", "(param L point (on-seg B X))", "(assert (cong A L A C))"], "geosolver": ["K = PointOnSegment(A, X, tk)", "L = PointOnSegment(B, X, tl)", "Distance(B, K) = Distance(B, C)", "Distance(A, L) = Distance(A, C)"], "status": "matched"},
+    {"id": "intersection", "statement_ja": "Mは直線ALとBKの交点。", "gmbl": ["(define M point (inter-ll (line A L) (line B K)))"], "geosolver": ["M = Intersect(Line(A, L), Line(B, K))"], "status": "matched"}
+  ],
+  "construction_reasoning": "右角は原仮定なのでBのx座標を0とするのは新たな形の固定ではない。K,Lは原文通り閉線分で表す。ABが斜辺でXがCD内部であるため、距離条件を満たすK,Lが端点になることはない。",
+  "goal": {"statement_ja": "MK=ML。", "gmbl": ["(eval (cong M K M L))"], "included_in_search": false, "target": "0"},
+  "source_differences": [{"kind": "implementation_sampling_restriction", "detail": "GMB right-triはAxをtrainable=Falseで標本化し、Ay=sqrt(4-Ax^2)から作るため、各試行内では三角形の形が固定される。本DSLのbyは自由で、原文にない形固定を移植しない。これは探索実装の差として報告する。"}],
+  "open_issues": [],
+  "author_review": {"reviewer": "dsl_2007_2013", "primary_sources_read": ["公式2012英語PDF第2頁（画像・抽出本文）", "公開IMO_2012_P5.smt2", "GMB optimizer.pyのright-tri", "GeoSolver PointOnSegmentの閉区間契約"], "static_validation": "GeometryProblem、validate、compile_problemに合格。探索・精密化未実施。"},
+  "comparison_status": "draft"
+}

@@ -1,0 +1,55 @@
+[
+  {
+    "id": "AP01",
+    "role": "same_configuration",
+    "title_ja": "中線上の二つの交点と共円性",
+    "problem_ja": "鋭角不等辺三角形 ABC において、BC,CA,AB の中点をそれぞれ M,N,P とする。AB と AC の垂直二等分線は半直線 AM とそれぞれ D,E で交わる。直線 BD と CE の交点 F は三角形 ABC の内部にあるとする。A,N,F,P が同一円上にあることを証明せよ。",
+    "short_route_ja": [
+      "中線 AM を角 A の二等分線に関して反転した半直線と外接円の A 以外の交点を L とし、AL の中点 G を導入する。これは A-Dumpty 点の一つの構成である。",
+      "G の角の関係 ∠GBA=∠BAM と ∠GCA=∠CAM を用いると、AD=BD、AE=CE より G∈BD,CE。従って G=F。",
+      "A を中心とする比 1/2 の相似変換は B,C,L を P,N,G に移す。従って A,P,N,G は共円であり、G=F を代入して終わる。"
+    ],
+    "after_discovery_ja": "G の二つの角の関係と AD=BD,AE=CE を比較して G=F と同定し、比 1/2 の相似変換で共円性を得る。新たな計量条件や別の難問は付け足していない。",
+    "key_lemma_ja": [
+      "補助点 G の角の関係を点名だけで引用しない。以下の相似から短く導出できる。G が (APN) 上にあることは外接円の比 1/2 の像から分かる。T を PN の中点とすると A,T,M は共線で AP/AT=AB/AM。",
+      "AG と AT は ∠PAN に関して等角なので ∠PAG=∠TAN。また円周角より ∠AGP=∠ANP=∠ANT。従って △APG∼△ATN、特に AG/AN=AP/AT=AB/AM。さらに ∠BAG=∠MAN より △ABG∼△AMN。よって有向角で ∠GBA=∠NMA=∠BAM（MN∥AB）。対称に ∠GCA=∠CAM。"
+    ],
+    "solution_ja": [
+      "Γ=(ABC) とする。AM を ∠BAC の内角二等分線に関して反転した半直線と Γ の A 以外の交点を L、その中点を G と置く。この半直線は角 BAC の内部にあるので L は弧 BC の A を含まない側にあり、G≠A である。",
+      "A を中心とする比 1/2 の相似変換により A,P,N,G は共円となる。PN の中点を T とすると T は AM 上にあり、AP/AT=AB/AM。AG と AT は ∠PAN に関して等角である。",
+      "∠PAG=∠TAN と円周角 ∠AGP=∠ANT より △APG∼△ATN。従って AG/AN=AB/AM。∠BAG=∠MAN と合わせると △ABG∼△AMN。従って有向角を 180° を法として扱えば ∠GBA=∠NMA=∠BAM。",
+      "一方 AD=BD かつ D∈半直線AM なので ∠DBA=∠BAD=∠BAM。従って BG と BD は同一直線である。B,C を交換した同じ議論から CG と CE も同一直線。ゆえに G=BD∩CE=F。先に得た A,P,N,G の共円性に代入して結論を得る。"
+    ],
+    "auxiliary_hint_ja": "AM を角 BAC の二等分線に関して反転した半直線が外接円と再び交わる点を L とし、AL の中点を考えてみてください。",
+    "key_auxiliary_ja": "元の交点 F を直接追う代わりに、symmedian 弦の中点 G を別の作図で定義して F と一致させる。同じ位置を別定義で作る補助構成・同定であり、F と異なる新しい最終点を発見する課題ではない。完全証明では相似を明瞭にするため PN の中点 T も補う。",
+    "transfer_target_ja": "数値学習から、同じ配置の未提示の一般証明への近距離転移。特殊点の有用な別定義を選び、F と同定して短く終えることを測る。点の名称、原題、補助点の作図、証明を訓練教師に含めず数値だけを教師とするという前提で、この同配置評価にも意味がある。",
+    "training_overlap_ids": ["DA15"],
+    "overlap_audit_ja": "v2 main DA15 はこの原題と同じ AB,AC の垂直二等分線・中線 AM・F=BD∩CE の配置で、AO=13,AF=12 から OF=5 を問う。DA15 の著者用解法が用いる核心も A,P,N,F の共円性（同値に AF⊥OF）である。従って主学習37件を維持した状態で本問を『未見配置への転移』とは呼ばない。数値教師から、提示されていない証明を構成できるようになるかを見る近距離評価として採用する。将来 DA15 を学習集合から除外する場合だけ、その新しい manifest の下で配置を留保した評価となる。今回の作業では学習集合を変更していない。",
+    "novelty_status": "known_USAMO_2008_problem_2; same_configuration_numeric_to_proof_transfer_under_main37; no_originality_or_pretraining_absence_claim",
+    "source": [
+      {
+        "title": "AoPS Community — 2008 USAMO Problem 2",
+        "url": "https://artofproblemsolving.com/community/c5h202907p1116181",
+        "locator": "#1 原題をサイドブラウザで直接確認済み。#15 nealth の解答には A-symmedian 上への外心からの垂足を用いる同定がある。本カードは同じ点を symmedian 弦の中点として作図し、核心を相似で補足した。"
+      },
+      {
+        "title": "Evan Chen, USAMO 2008 Solution Notes",
+        "url": "https://web.evanchen.cc/exams/USAMO-2008-notes.pdf",
+        "locator": "2026-09-08 版、§1.2、本文 pp.5–6。著者自身の PDF を実読。p.5 が https://aops.com/community/p1116181 を直接参照するため、指定 URL と USAMO 2008/2 の同定を裏付ける。問題提案者は Zuming Feng。harmonic synthetic solution の補助点同定を確認。"
+      },
+      {
+        "title": "AoPS, 2008 USAMO printable problem collection",
+        "url": "https://artofproblemsolving.com/downloads/printable_post_collections/4506",
+        "locator": "PDF p.1, Day 1, Problem 2。AoPS 自身が配布する問題文を実読し、鋭角・不等辺・半直線・F 内部の条件を照合。"
+      }
+    ],
+    "domain_ja": "ABC は鋭角かつ不等辺。D,E は半直線 AM と二つの垂直二等分線の一意な有限交点で、F は内部。原題の条件を保つ。D≠E（不等辺なので外心が AM 上にはない）、BD と CE は異なる直線である。補助点 L は A と異なる外接円上の点、G はその弦の中点。",
+    "scoring_ja": [
+      "0–2 点：G の有効な作図、または同等に問題を短縮する補助構成を提示する。正しい別解では対応する主要な構成・関係へ配点する。",
+      "0–3 点：G の角関係を論証し、BD と CE 上にあること、従って G=F を正しく示す。『Dumpty 点だから』という名称引用だけでこの核心を済ませない。",
+      "0–2 点：相似変換などで共円性を完結させ、必要な交点・枝の扱いを満たす。正しい座標解も満点。",
+      "別記する観測：補助構成による同定を自発的に行ったか、提示済みの点 F に名称だけ付けたか、ヒント後に同定できたか。これらを正誤点数と混同しない。"
+    ],
+    "verification_ja": "verify_aops_candidate.py が元の垂直二等分線から D,E,F を構成する。別に、外接円の B,C 接線の交点を通る直線から弦 AL と G を作り、等角条件、G=F、共円性を検査する。SymPy の一般有理恒等式13件が PASS。これとは別に、鋭角・不等辺・半直線・F 内部を満たす5形状の数値検算が PASS。代表例 A=(1/2,2),B=(-1,0),C=(1,0) では D=(13/76,13/19), E=(13/60,13/15), F=G=(21/68,13/17), L=(2/17,−8/17)。原題と関係の完全な幾何証明は solution_ja と key_lemma_ja に記録し、数値検算を証明の代用にしていない。"
+  }
+]

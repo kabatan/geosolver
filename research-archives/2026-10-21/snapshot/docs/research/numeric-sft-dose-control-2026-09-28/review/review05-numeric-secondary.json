@@ -1,0 +1,118 @@
+{
+  "packet": "qwen/.runtime/numeric_sft_dose_control_20260928/review-transfer-review05",
+  "rubric": "docs/research/related-numeric-sft-2026-09-28/REVIEW_RUBRIC.md",
+  "reference": "docs/research/related-numeric-sft-2026-09-28/numeric-review-reference-compact.json (DB08)",
+  "review_type": "blind_numeric_secondary",
+  "cases": [
+    {
+      "case_id": "numeric-00",
+      "derivation_status": "valid",
+      "valid_geometric_core": true,
+      "numerical_error": false,
+      "reason": "角指定されたE,FとXから作る円(KLX)にOP=PXがXで接する、という正確な特殊構図の既知性質を明示して数値計算へ使う。PZ=3+9=12、接線・割線の方べきからPX²=3·12=36、PX=6。後の「assume」や整数らしさの推測は弱い文章だが、先の正確な既知性質を撤回したり別の偽根拠で置換したりしていない。",
+      "known_property_used": "OP（P,Xを含む直線）はσ=(KLX)にXで接する。reference DB08と構成・枝が一致。",
+      "false_argument_role": "「綺麗な数値だから接線」という推測は付記・動機で、既知性質＋方べきという完結した数値核心を置換しない。",
+      "evidence_quotes": [
+        {
+          "line": 81,
+          "quote": "There is a theorem"
+        },
+        {
+          "line": 87,
+          "quote": "The configuration implies that $PX$ is tangent to $\\sigma$ at $X$."
+        },
+        {
+          "line": 99,
+          "quote": "$Power(P) = PY \\cdot PZ = 3 \\cdot 12 = 36$."
+        },
+        {
+          "line": 146,
+          "quote": "The only \"trick\" is proving $PX$ is tangent"
+        }
+      ],
+      "uncertainty": "中程度。厳格に終盤の推測のみを採るとinvalidだが、較正済みの数値基準では先行する正確な既知性質の適用を保持する。",
+      "read_coverage": "numeric-00.md 全166行を確認。"
+    },
+    {
+      "case_id": "numeric-01",
+      "derivation_status": "invalid",
+      "valid_geometric_core": false,
+      "numerical_error": false,
+      "reason": "正しい接線性を一度は既知lemmaとして述べ、条件付き計算は正しい。しかしその後、EF⊥OPかつOP対称という偽の幾何説明を接線の原因として提示し、最終的に「答えが一意だから接線に違いない」を仮定の検証として採用する。与条件から接線を正しく適用した数値核心をこの偽説明が置換していると読む。方べき36と6の算術自体は正しい。",
+      "known_property_used": "正確な接線性の言及はline 115–118にあるが、最終根拠として保持されたとは判定しない。",
+      "false_argument_role": "核心の置換。line 87のEF⊥OPは有効な角指定構図の有理座標例で偽、line 134–135の一意性論証も論理的に接線を導かない。",
+      "evidence_quotes": [
+        {
+          "line": 87,
+          "quote": "$EF$ is perpendicular to $OP$"
+        },
+        {
+          "line": 118,
+          "quote": "$X$ is the point of contact of the tangent from $P$"
+        },
+        {
+          "line": 135,
+          "quote": "Therefore, $PX$ must be tangent."
+        }
+      ],
+      "uncertainty": "中程度。寛容な読みではline 118の既知lemmaを独立した完全な核心として残しvalidにできる。今回はその後の明示的な「Verification of the assumption」と偽構図説明が核心へ組み込まれた読みを採る。",
+      "read_coverage": "numeric-01.md 全146行を確認。"
+    },
+    {
+      "case_id": "numeric-02",
+      "derivation_status": "invalid",
+      "valid_geometric_core": false,
+      "numerical_error": false,
+      "reason": "方べきPY·PZ=36と条件付きPX=6は正しいが、接線性を支えるとする「直径PXの円がΓにAで接する」という幾何論証が偽。AX⊥XPが示すのはAが直径PXの円上ではなく、Xが直径APの円上にあること。その偽前提から最終段で「likely propagates to σ」と接線性を説明しており、正しい特殊性質の独立引用ではなく誤論証が核心を置換する。",
+      "known_property_used": "line 254–255に正しい接線性を標準結果とする文はあるが、line 264の最終説明が偽の直径PX円に依存する。",
+      "false_argument_role": "核心の置換。直径PX円のAでの接線という偽事実をσへの接線性の根拠とする。",
+      "evidence_quotes": [
+        {
+          "line": 154,
+          "quote": "So $A$ lies on the circle with diameter $PX$."
+        },
+        {
+          "line": 162,
+          "quote": "the two circles $\\Gamma$ and circle with diameter $PX$ are tangent to each other at $A$."
+        },
+        {
+          "line": 264,
+          "quote": "which likely propagates to the final circle $\\sigma$."
+        }
+      ],
+      "uncertainty": "中程度。line 254–255の正しい特殊性質だけを切り出せばvalidとの寛容解釈は可能だが、本文最終説明は偽の円からの伝播を核心に採っている。",
+      "read_coverage": "numeric-02.md 全279行を確認。"
+    },
+    {
+      "case_id": "numeric-03",
+      "derivation_status": "valid",
+      "valid_geometric_core": true,
+      "numerical_error": false,
+      "reason": "OPがσ=(KLX)にXで接する、という構成に一致する既知特殊性質を明示し、その直後にPZ=3+9=12と方べきPX²=3·12から6を得る。後半のY,Zとの命名や整数らしさによる推測は接線定理の証明ではないが、既知性質を明示撤回せず、最終の番号付き解法でも同じ真の性質を採用する。",
+      "known_property_used": "line 150の正確なOP–σ接線性を、line 234–239の最終数値導出が保持。reference DB08と一致。",
+      "false_argument_role": "名称が違うからX≠Y,Zという推論や「整数だから」は不適切な付記・動機。最終数値核心の既知性質を偽の幾何関係で置換していない。",
+      "evidence_quotes": [
+        {
+          "line": 150,
+          "quote": "$OP$ is tangent to the circumcircle of $\\triangle KLX$ at $X$."
+        },
+        {
+          "line": 153,
+          "quote": "So $PX^2 = PY \\cdot PZ$."
+        },
+        {
+          "line": 237,
+          "quote": "the line $OP$ (which contains $P$ and $X$) is tangent to the circle $\\sigma$ at point $X$."
+        }
+      ],
+      "uncertainty": "中程度。厳格な読みなら「assume」と後の推測を理由にinvalidも考え得るが、過去較正では正確な既知性質＋計算を保つ答案をvalidとする。",
+      "read_coverage": "numeric-03.md 全266行を確認。"
+    }
+  ],
+  "independent_check": {
+    "numeric": "PY=3,YZ=9 gives PZ=12 and PY·PZ=36, so tangent PX gives 6.",
+    "numeric_01_false_claim_witness": "A=(0,2),B=(-1,0),C=(2,0),O=(1/2,1/2),P=(-6,0),X=(2/17,8/17),E=(-10/17,14/17),F=(14/17,20/17). Triangle acute, AC>AB, X is foot, E,F are on A-side of OP; tan(EXP)=tan(ACX)=3/5, tan(FXO)=tan(ABX)=6/7. Yet EF·OP=-159/17≠0, so EF is not perpendicular to OP. This witness challenges the claimed construction property; it is not substituted for the reference theorem.",
+    "numeric_02_false_claim": "AX⊥OP and X,P∈OP imply ∠AXP=90°, hence X lies on the circle with diameter AP. The model asserts A lies on circle diameter PX, requiring ∠PAX=90°, which does not follow and is false in general."
+  },
+  "boundary_summary": "valid numeric-00 and numeric-03 retain an exact, applicable known tangency property with correct power calculation despite tentative words and heuristic asides. invalid numeric-01 and numeric-02 adopt false/inadequate geometric rationales as the actual bridge to tangency; extracting only their isolated true sentences would give a defensible more generous reading, recorded per case."
+}

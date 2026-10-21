@@ -1,0 +1,61 @@
+{
+  "id": "JMO-2021-PRE-02",
+  "variables": [
+    "r"
+  ],
+  "constructions": [
+    {
+      "name": "V0",
+      "expression": "Point(r * cos(3 * pi / 5), r * sin(3 * pi / 5))"
+    },
+    {
+      "name": "V1",
+      "expression": "Point(r * cos(2 * pi / 5), r * sin(2 * pi / 5))"
+    },
+    {
+      "name": "V2",
+      "expression": "Point(r * cos(pi / 5), r * sin(pi / 5))"
+    },
+    {
+      "name": "V3",
+      "expression": "Point(r, 0)"
+    },
+    {
+      "name": "V4",
+      "expression": "Point(r * cos(-pi / 5), r * sin(-pi / 5))"
+    },
+    {
+      "name": "V5",
+      "expression": "Point(r * cos(-2 * pi / 5), r * sin(-2 * pi / 5))"
+    },
+    {
+      "name": "V6",
+      "expression": "Point(r * cos(-3 * pi / 5), r * sin(-3 * pi / 5))"
+    },
+    {
+      "name": "V7",
+      "expression": "Point(r * cos(-4 * pi / 5), r * sin(-4 * pi / 5))"
+    },
+    {
+      "name": "V8",
+      "expression": "Point(-r, 0)"
+    },
+    {
+      "name": "V9",
+      "expression": "Point(r * cos(4 * pi / 5), r * sin(4 * pi / 5))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Area(V0, V1, V2, V3, V4, V5, V6, V7, V8, V9)",
+      "operator": "=",
+      "right": 1
+    },
+    {
+      "left": "r",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "Area(V7, V0, V1, V2) + Area(V2, V3, V4)"
+}

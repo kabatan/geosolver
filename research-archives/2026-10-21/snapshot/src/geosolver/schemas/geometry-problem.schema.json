@@ -1,0 +1,129 @@
+{
+  "$defs": {
+    "Construction": {
+      "additionalProperties": false,
+      "properties": {
+        "expression": {
+          "title": "Expression",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "expression"
+      ],
+      "title": "Construction",
+      "type": "object"
+    },
+    "PredicateCondition": {
+      "additionalProperties": false,
+      "properties": {
+        "predicate": {
+          "title": "Predicate",
+          "type": "string"
+        }
+      },
+      "required": [
+        "predicate"
+      ],
+      "title": "PredicateCondition",
+      "type": "object"
+    },
+    "RelationCondition": {
+      "additionalProperties": false,
+      "properties": {
+        "left": {
+          "title": "Left",
+          "type": "string"
+        },
+        "operator": {
+          "enum": [
+            "=",
+            "!=",
+            "<",
+            "<=",
+            ">",
+            ">="
+          ],
+          "title": "Operator",
+          "type": "string"
+        },
+        "right": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Right"
+        }
+      },
+      "required": [
+        "left",
+        "operator",
+        "right"
+      ],
+      "title": "RelationCondition",
+      "type": "object"
+    }
+  },
+  "$id": "https://geosolver.local/schemas/geometry-problem.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "conditions": {
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/RelationCondition"
+          },
+          {
+            "$ref": "#/$defs/PredicateCondition"
+          }
+        ]
+      },
+      "title": "Conditions",
+      "type": "array"
+    },
+    "constructions": {
+      "items": {
+        "$ref": "#/$defs/Construction"
+      },
+      "title": "Constructions",
+      "type": "array"
+    },
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "target": {
+      "title": "Target",
+      "type": "string"
+    },
+    "variables": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Variables",
+      "type": "array"
+    }
+  },
+  "required": [
+    "id",
+    "variables",
+    "constructions",
+    "conditions",
+    "target"
+  ],
+  "title": "GeometryProblem",
+  "type": "object"
+}

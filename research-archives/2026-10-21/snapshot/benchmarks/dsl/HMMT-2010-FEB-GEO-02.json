@@ -1,0 +1,45 @@
+{
+  "id": "HMMT-2010-FEB-GEO-02",
+  "variables": [
+    "w"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(w,0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(w,1)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(0,1)"
+    },
+    {
+      "name": "Bp",
+      "expression": "Reflect(B,Line(A,C))"
+    },
+    {
+      "name": "E",
+      "expression": "Intersect(Line(A,Bp),Line(D,C))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "w",
+      "operator": ">",
+      "right": "1"
+    },
+    {
+      "left": "Area(A,D,E,Bp,C)",
+      "operator": "=",
+      "right": "7*w/10"
+    }
+  ],
+  "target": "w"
+}

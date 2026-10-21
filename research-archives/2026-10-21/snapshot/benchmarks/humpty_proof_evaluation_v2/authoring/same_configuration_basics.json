@@ -1,0 +1,94 @@
+[
+  {
+    "id": "N01",
+    "role": "same_configuration",
+    "family_id": "core_humpty_recognition",
+    "title_ja": "中線への垂足が作る円",
+    "problem_ja": "鋭角三角形ABCでAB≠ACとする。Hを垂心、MをBCの中点、PをHから直線AMへ下ろした垂線の足とする。B,C,H,Pが同一円周上にあることを証明せよ。",
+    "solution_ja": [
+      "Mに関してAと点対称な点A′を作る。A′B∥AC、A′C∥ABである。",
+      "BH⊥AC、CH⊥ABより∠A′BH=∠A′CH=90°。従ってB,Cは直径A′Hの円上にある。",
+      "A′,M,A,Pは一直線上にありHP⊥AMなので、∠A′PH=90°。従ってPも同じ円に属し、B,C,H,Pは共円。"
+    ],
+    "key_auxiliary_ja": "AをMに関して点対称に移したA′。問題ではPを既に与える。",
+    "transfer_target_ja": "既出配置に潜む共円性を、数値回答の再現を超えて説明できるか。新しい配置への転移とは別集計。",
+    "training_overlap_ids": [
+      "H01",
+      "H04",
+      "H08",
+      "H14"
+    ],
+    "overlap_audit_ja": "H01の問題と同じ基本作図であり、H04等の短縮にも使う性質。評価形式は証明だが、主評価の新規配置として数えない。",
+    "novelty_status": "既出配置の性質を問う診断問題。新規問題との主張はしない。",
+    "source": [
+      {
+        "title": "Evan Chen, Lemmas in AoPS Geometry",
+        "url": "https://web.evanchen.cc/handouts/GeoSlang/GeoSlang.pdf",
+        "locator": "§3.1, p.10：Humptyの基本性質"
+      }
+    ],
+    "domain_ja": [
+      "鋭角、AB≠ACによりHとPの一致を避ける。"
+    ],
+    "scoring_ja": [
+      "2点：有効なA′の導入と平行関係。",
+      "3点：B,Cが直径A′Hの円に属することの証明。",
+      "2点：Pの所属を示して結論。他の完全な証明も7点。"
+    ],
+    "verification_ja": "一般の非退化な配置について上記直角の議論で証明。v2 verify_h_revision.pyおよび一般式の検証も参照できる。",
+    "overlap_level_ja": "学習問題と同じ基本配置。数値回答から未提示の証明への転移として集計する。",
+    "selection_reason_ja": "ユーザーが希望した同配置証明の評価群。補助点の新規発見と混ぜない。",
+    "short_route_ja": [
+      "AをBCの中点に関して反転したA′を補う。",
+      "B,C,Pはいずれも直径A′Hの円上にあるので、B,C,H,Pは共円。"
+    ],
+    "after_discovery_ja": "A′を見つければ三つの直角の確認で終わる。P自体は入力されている。",
+    "key_lemma_ja": "点対称からA′B∥AC、A′C∥AB。垂心と射影の定義が三つの直角を与える。"
+  },
+  {
+    "id": "N02",
+    "role": "same_configuration",
+    "family_id": "core_dumpty_product",
+    "title_ja": "二つの接する円の交点と長さの積",
+    "problem_ja": "鋭角三角形ABCをとる。A,Bを通り直線ACにAで接する円と、A,Cを通り直線ABにAで接する円の、A以外の交点をTとする。Tは三角形ABCの内部にあるとする。AT²=BT·CTを証明せよ。",
+    "solution_ja": [
+      "接弦定理から∠TBA=∠TAC、∠TCA=∠TAB。",
+      "従って∠BTA=∠ATC=180°−∠BACであり、△BTAと△ATCはこの頂点順で相似。",
+      "対応辺からBT/AT=AT/CT、すなわちAT²=BT·CTを得る。"
+    ],
+    "key_auxiliary_ja": "新しい点を要さず、接弦定理で二つの三角形の対応を見つける。",
+    "transfer_target_ja": "数値問題から、繰り返し現れる積の関係の理由を説明できるか。",
+    "training_overlap_ids": [
+      "DA01",
+      "DA18",
+      "DB03",
+      "DB12"
+    ],
+    "overlap_audit_ja": "DA01と同じ二円の構成であり、DA18/DB03/DB12で使う基本関係そのもの。別問題への転移の主成績には入れない。",
+    "novelty_status": "既出構成の基本補題の診断。",
+    "source": [
+      {
+        "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+        "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+        "locator": "Characterizations 1–2, p.3；式(1)"
+      }
+    ],
+    "domain_ja": [
+      "二円は相異なり二点で交わる。Tは三角形内部にある。"
+    ],
+    "scoring_ja": [
+      "3点：二つの角等式を接弦定理から導く。",
+      "2点：正しい対応の相似を示す。",
+      "2点：辺の比から所望の積を導く。別の完全な証明も7点。"
+    ],
+    "verification_ja": "上記の接弦定理と相似による一般証明。v2 verify_additional_relations.pyのcheck_dumpty_coreで元の二円の一般式から積を恒等検証済み。",
+    "overlap_level_ja": "学習問題と同じ基本配置。数値回答から未提示の証明への転移として集計する。",
+    "selection_reason_ja": "ユーザーが希望した同配置証明の評価群。補助点の新規発見と混ぜない。",
+    "short_route_ja": [
+      "接弦定理で△BTAと△ATCの相似を示す。",
+      "対応辺BT/AT=AT/CTからAT²=BT·CT。"
+    ],
+    "after_discovery_ja": "相似を認識した後は辺の比を一度使うだけ。新しい点は要求しない。",
+    "key_lemma_ja": "接弦定理から∠TBA=∠TAC、∠TCA=∠TAB。名称だけの既知性質引用でなく、相似を示す。"
+  }
+]

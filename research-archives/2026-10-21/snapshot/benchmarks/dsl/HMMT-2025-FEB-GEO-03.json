@@ -1,0 +1,102 @@
+{
+  "id": "HMMT-2025-FEB-GEO-03",
+  "variables": [
+    "s",
+    "px",
+    "py",
+    "aa",
+    "bb",
+    "cc",
+    "dd"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(s, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(s, s)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(0, s)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(px, py)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "aa",
+      "operator": "=",
+      "right": "Area(P, A, B)"
+    },
+    {
+      "left": "bb",
+      "operator": "=",
+      "right": "Area(P, B, C)"
+    },
+    {
+      "left": "cc",
+      "operator": "=",
+      "right": "Area(P, C, D)"
+    },
+    {
+      "left": "dd",
+      "operator": "=",
+      "right": "Area(P, D, A)"
+    },
+    {
+      "left": "aa + bb + cc + dd",
+      "operator": "=",
+      "right": 10
+    },
+    {
+      "left": "aa * bb + aa * cc + aa * dd + bb * cc + bb * dd + cc * dd",
+      "operator": "=",
+      "right": 35
+    },
+    {
+      "left": "aa * bb * cc + aa * bb * dd + aa * cc * dd + bb * cc * dd",
+      "operator": "=",
+      "right": 50
+    },
+    {
+      "left": "aa * bb * cc * dd",
+      "operator": "=",
+      "right": 24
+    },
+    {
+      "left": "s",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "px",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "px",
+      "operator": "<",
+      "right": "s"
+    },
+    {
+      "left": "py",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "py",
+      "operator": "<",
+      "right": "s"
+    }
+  ],
+  "target": "Distance(P, A) * Distance(P, B) * Distance(P, C) * Distance(P, D)"
+}

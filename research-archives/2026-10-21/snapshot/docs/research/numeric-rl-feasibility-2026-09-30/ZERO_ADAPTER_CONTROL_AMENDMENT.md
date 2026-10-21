@@ -1,0 +1,3 @@
+# Actor反映検査のzero LoRA対照
+
+同一engineのbase/updated比較に、同一mapping・同一LoRA経路を通るB=0 adapter対照を追加する。最初のoptimizer stepではB=0からのA勾配は0なので、保存後のAは初期Aと一致する。保存後adapterの全Aを保持してBだけ厳密0にした対照を作り、sourceとcontrol全tensorを検証する。未装着base、zero LoRA、更新LoRAの3確率を保存し、重み反映の差分は更新−zeroで判定する。base−zeroはLoRA経路自体のbackend差として別記する。全completionは変更せず、固定prefix検査を12回（4系列×3）に増やすだけで、報酬・学習・4回答再生成を変更しない。元のactor_reload.pyとfreezeを保持し、追加実装の事前hashを別保存する。

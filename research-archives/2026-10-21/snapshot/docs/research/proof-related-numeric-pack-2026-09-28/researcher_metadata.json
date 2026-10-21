@@ -1,0 +1,166 @@
+[
+  {
+    "id": "PN01",
+    "source_id": "DA01",
+    "title_ja": "頂点で接する二円",
+    "connection_to_AP01_ja": "二つの接円の第2交点は、AP01のFと同じ点。中線と特殊な弦の長さを結ぶ。",
+    "source_solution_status": "proved_here",
+    "source_derivation_ja": [
+      "BCの中点をM、直線ATと外接円のAでない交点をLとする。二接円の表示からTはALの中点で、ALはA-symmedianとなる。",
+      "この弦には AL=AB·AC/AM が成り立つ。根拠は、BL:LC=AB:ACと調和四角形ABLCへのPtolemy。AをMに関して反転したA′を補えば、△BLCと△ABA′の相似から必要な辺比が出る。",
+      "中線の公式で AM²=(2·7²+2·9²−8²)/4=49。よって AT=AL/2=7·9/(2·7)=9/2。"
+    ],
+    "parameter_family_ja": "三辺b,c,aに対して2b²+2c²−a²を小さい平方数にする。b/cやa/cも変える。7,8,9の相似拡大だけを別構造として数えない。",
+    "review_notes_ja": [
+      "これは元のAIME 2019 II/11に近い自然な数値化。v1のOT²という追加queryは削除した。",
+      "rootのverify_additional_relations.pyにも、元の円の方程式からの一般恒等式による独立確認がある（本ファイルの作者は編集していない）。"
+    ]
+  },
+  {
+    "id": "PN02",
+    "source_id": "DA02",
+    "title_ja": "120°の交点と重心を通る割線",
+    "connection_to_AP01_ja": "頂角60°の場合の120°点が同じ特殊点となる。重心・円の割線へ関係を移す。",
+    "source_solution_status": "proved_here",
+    "source_derivation_ja": [
+      "∠A=60°ではTはA-Dumpty点にもなる。この特殊化では TG=|AB−AC|/3。",
+      "円BTCとの割線についてGはT,Kの間にあり、GK=2TG（原題Russian Grade 9 2021/6の比）。したがってTK=3TG。",
+      "TG=(10−8)/3=2/3なので、TK=3·(2/3)=2。"
+    ],
+    "parameter_family_ja": "∠A=60°、AB=c,AC=bでb≠c、残る角が120°未満の範囲を使う。TK=|b−c|。b/cを変えて非相似な形状を作れる。",
+    "review_notes_ja": [
+      "TGの補題の確認：x=AT,y=BT,z=CTとおくとx²=yz。面積分割からbc=x(y+z)+yz。余弦定理と重心の平方距離恒等式を合わせると9TG²=(b−c)²になる。",
+      "割線比も点の冪で確認できる。円BTCに対するAの冪はbcで、Gの冪は[3bc−(a²+b²+c²)]/9=−2TG²。従ってGT·GK=2GT²。与条件へこの比は入れていない。",
+      "Aの冪bcの確認：∠A=60°と∠BTC=120°から円BTCの半径は円ABCと同じで、両円はBCについて対称。円ABCの半径R=a/√3、外心とBCの距離R/2、Aの高さh=bc√3/(2a)より、反射した円に対するAの冪は4h·(R/2)=bc。これで割線比の一般導出が閉じる。"
+    ]
+  },
+  {
+    "id": "PN03",
+    "source_id": "DA03",
+    "title_ja": "接円と外心を通る円",
+    "connection_to_AP01_ja": "別の二円で得た同じ特殊点から外心を通る直線を作り、隠れた接線性と方べきを使う。",
+    "source_solution_status": "source_proof_checked",
+    "source_derivation_ja": [
+      "TはA-Dumpty点なので、K=OT∩BCから引いたKAはABCの外接円の接線となる（Sarkar Problem6、Lemma4）。",
+      "KC=KB+BC=49+32=81。Kの方べきはKA²=KB·KC。",
+      "AK²=49·81=7²·9²よりAK=63。"
+    ],
+    "parameter_family_ja": "BC=s, BK=t>0、K–B–CならAK=√(t(t+s))。tとt+sを平方数にすると整数解。与条件は全図形を一意には決めないが、答えは一意。外心の高さを変える非相似な存在範囲を選べる。",
+    "review_notes_ja": [
+      "代表例はA=(8,12√5),B=(0,0),C=(32,0)。TとKは元の二円から作図してBK=49を検算する。"
+    ]
+  },
+  {
+    "id": "PN04",
+    "source_id": "DA04",
+    "title_ja": "大きな円に内接する二円",
+    "connection_to_AP01_ja": "三角形を取り直すと同じ特殊点の構成になる。共通弦の中点という別の現れ方を扱う。",
+    "source_solution_status": "proved_here",
+    "source_derivation_ja": [
+      "QはXYの中点である。外円のA,Bでの接線の交点が根軸PQ上にあり、三角形XABでQをDumpty点として同定できる。v1には一般式による中点確認もある。",
+      "Pは外円の内部なので、方べきからPX·PY=PA·PB=24。QX=QY=7であり、PX·PY=7²−PQ²。",
+      "PQ²=49−24=25よりPQ=5。"
+    ],
+    "parameter_family_ja": "AP=p,PB=q,XY=2sを与え、s²−pqを正の小さい平方数にする。実在と非接触を元の二円で確認する。p/qを変えると非相似な配置も得られる。",
+    "review_notes_ja": [
+      "代表例ではABをx軸に置き、外円中心の高さh=605/(2√1679)。これは学習者向け本文に出さない。",
+      "rootのverify_additional_relations.pyにも、元の円の方程式からの一般恒等式による独立確認がある（本ファイルの作者は編集していない）。"
+    ]
+  },
+  {
+    "id": "PN05",
+    "source_id": "DA06",
+    "title_ja": "二つの接円と中線",
+    "connection_to_AP01_ja": "同じ特殊点と中線上の別の円交点を反射で関連付ける。AP01の円と外心の関係に近い。",
+    "source_solution_status": "source_proof_checked",
+    "source_derivation_ja": [
+      "DはA-Dumpty点なのでAD⊥OD。したがってOD²=AO²−AD²。",
+      "ACの中点をWとすると、DとEは直線OWについて対称（Sarkar Lemma17）。ゆえにOE=OD。",
+      "OE=√(5²−4²)=3。"
+    ],
+    "parameter_family_ja": "AO=R,AD=xを選び、R²−x²を平方数にする。同じ円と弦ALに対し、適切なBCを変えるとAO,ADを固定した非相似な三角形を作れる。AB>ACと鋭角性は生成時検査。",
+    "review_notes_ja": []
+  },
+  {
+    "id": "PN06",
+    "source_id": "DA07",
+    "title_ja": "外心側と垂心側に作る二組の円",
+    "connection_to_AP01_ja": "外心側の点はAP01のFと同じ特殊点。垂心側の点と組み合わせ、平行性・相似へつなぐ。",
+    "source_solution_status": "source_proof_checked",
+    "source_derivation_ja": [
+      "MはA-Dumpty点、NはA-Humpty点に当たり、この配置ではMN∥XY（ELMO2014/5、Sarkar Lemma7）。",
+      "A,M,XとA,N,Yがそれぞれ一直線上にあるため、△AMNと△AXYは相似。AX=4+23=27。",
+      "XY=(AX/AM)·MN=(27/4)·(8/3)=18。"
+    ],
+    "parameter_family_ja": "AM=x,MX=t,MN=sならXY=(x+t)s/x。三辺から元作図を行い、x,t,sが小さい値になる実在例を選ぶ。三つの測定値が任意独立とは主張しない。",
+    "review_notes_ja": [
+      "代表例は辺BC=3√57/2、CA=(9√13+3√21)/4、AB=(9√13−3√21)/4。これらの複雑な値は問題文には出さない。"
+    ]
+  },
+  {
+    "id": "PN07",
+    "source_id": "DA08",
+    "title_ja": "外心を通る円と平行四辺形",
+    "connection_to_AP01_ja": "平行四辺形の対角線と直線AQから同じ特殊点を構成する。円への所属が数値に現れる。",
+    "source_solution_status": "source_proof_checked",
+    "source_derivation_ja": [
+      "この平行四辺形の配置ではTも円BOC上にある（Sarkar Problem12）。",
+      "OQはその円の直径なので∠OTQ=90°。",
+      "OT=√(OQ²−QT²)=√(25²−24²)=7。"
+    ],
+    "parameter_family_ja": "OQ=d,QT=tでd²−t²が小さな平方数となる値を選ぶ。ただし鋭角三角形が実在する範囲は狭いため、任意の直角三角形の三辺を流用しない。25,24,7は元作図で確認済み。AをAQ上で局所的に動かす非相似族がある。",
+    "review_notes_ja": [
+      "13,12,5等を無条件で採用しない。与えた数値と鋭角条件が両立するかを実際の円・平行四辺形から確認した。"
+    ]
+  },
+  {
+    "id": "PN08",
+    "source_id": "DA11",
+    "title_ja": "辺の中点で接する二円",
+    "connection_to_AP01_ja": "頂点ではなく二つの中点で接する円から同じ特殊点を得る。角の関係を新しい円の半径へ移す。",
+    "source_solution_status": "source_proof_checked",
+    "source_derivation_ja": [
+      "TはA-Dumpty点である。実際、中心A・倍率2の相似で二接円を移すと、その共通点はBCの中点とsymmedian弦端点になり、Tは弦の中点と分かる。",
+      "Dumptyの角関係から∠ATB=180°−∠BAC。円ABTの半径をrとすると、AB=2r sin∠A。",
+      "元の円ではBC=2·5 sin∠Aだから、r=5·AB/BC=5·7/8=35/8。"
+    ],
+    "parameter_family_ja": "外接半径R,AB=c,BC=aに対して新半径Rc/a。三角形が鋭角・不等辺となる両角の範囲で、c/aもa/Rも変える。",
+    "review_notes_ja": [
+      "円ABTを追加したのは求値対象を作るため。T自体やその円の中心の座標を教師入力には含めない。"
+    ]
+  },
+  {
+    "id": "PN09",
+    "source_id": "DB02",
+    "title_ja": "角指定と倍長で作る交点",
+    "connection_to_AP01_ja": "角を移した二本の線と倍長で、特殊な弦の端点を得る。その弦の中点がAP01のFに対応する。",
+    "source_solution_status": "proved_here",
+    "source_derivation_ja": [
+      "角を移した二本の線と倍長の構成から、AXの中点がA-Dumpty点となる。従ってXは外接円上のsymmedian弦の端点であり、BX:CX=AB:AC=7:11。",
+      "∠BXC=180°−∠BAC。余弦定理でcos A=(7²+11²−12²)/(2·7·11)=13/77。",
+      "BX=7t,CX=11tとおくと、12²=(7²+11²+2·7·11·13/77)t²=196t²。"
+    ],
+    "parameter_family_ja": "a=BC,b=CA,c=ABについて2b²+2c²−a²が小さな平方となり、aが最大辺でa²<b²+c²の組を選ぶ。相似拡大だけを新構造と数えない。",
+    "review_notes_ja": [
+      "Sarkar Problem20とDumpty角条件による同定を使う。P,Qの内部性も独立作図で確認する。",
+      "verify_db_revision.py のcheck_general_relationsで、自由パラメータを残した一般座標形から中心・交点を計算し、短い解法で使う関係が恒等的に成立することを記号検証した。これは単一witnessの一致とは別の検証である。"
+    ]
+  },
+  {
+    "id": "PN10",
+    "source_id": "DB12",
+    "title_ja": "平行線で作る二つの円",
+    "connection_to_AP01_ja": "異なる内分点から作る二円の共通点がAP01のFと同じ特殊点。円族の固定点という別の現れ方を扱う。",
+    "source_solution_status": "source_proof_checked",
+    "source_derivation_ja": [
+      "平行線で作る円族の固定点XはA-Dumpty点。従って∠BXC=2∠BAC=90°、かつAX²=BX·CX。",
+      "直角三角形BXCでBX²+CX²=13²。一方(BX+CX)²=17²。",
+      "差をとると2BX·CX=17²−13²=120となる。"
+    ],
+    "parameter_family_ja": "45°族ではBX,CXを直角三角形の二辺と見なし、Pythagoreanな組からBCと和を設計できる。例えば5,12と8,15は非相似だが、元の円族から固定点を再現して検査する。",
+    "review_notes_ja": [
+      "内分比1:2と2:1は作図を確定するための値。固定点自体は比に依存しない。",
+      "元三角形を鋭角に限定しない。実在例はBが鈍角。"
+    ]
+  }
+]

@@ -1,0 +1,86 @@
+{
+  "scope": "Grader-only mathematical reference; never training or generation input",
+  "instruction": "Use to check claimed relations. Do not supply a missing inference on behalf of a model answer. A correctly stated known theorem with verified applicability can justify a numerical solution; distinguish this from an unsupported assertion or guess. Numerical exact-match remains the primary endpoint.",
+  "problems": [
+    {
+      "id": "H02",
+      "problem_ja": "鋭角不等辺三角形ABCで、MはBCの中点、KはAからBCへの垂足とする。BC=16、AM=10、AK=8、BK>KCとする。BC上にBD1=6、BD2=9となる点D1,D2を取る。i=1,2について、円ABDiと直線ACのA以外の交点をUi、円ACDiと直線ABのA以外の交点をViとし、円AUiViの中心をZiとする。Z1Z2を求めよ。",
+      "answer_exact": "15/4",
+      "geometry_solution_ja": [
+        "Hを垂心、PをHからAMへの垂足とする。この動点配置では円AUiViはどちらもA,Pを通る（v1で一般形を証明済み）。したがってZ1Z2⊥AM。",
+        "円ACDiに対するBの方べきからBA·BVi=BC·BDi。従って円AUiViに対するBの方べきはBC·BDi。同様にCの方べきはBC·CDiである。両者の差を取ると、ZiのBCへの垂足はDiと分かる。",
+        "AMとBCのなす角をθとするとsinθ=AK/AM=4/5。Z1Z2のBC方向への射影はD1D2=3なので、Z1Z2·(4/5)=3、従って15/4。"
+      ]
+    },
+    {
+      "id": "H03",
+      "problem_ja": "鋭角不等辺三角形ABCの外心をO、垂心をHとし、OH=6とする。各頂点について次を行う。Aでは内角・外角の二等分線の直線とBCとの交点をKa,La、BCの中点をMaとし、円AKaLaと直線AMaのAでない交点をPaとする。B,Cからも同様にPb,Pcを作る。円PaPbPcの中心をZとする。OZを求めよ。三つの円と交点は非退化とする。",
+      "answer_exact": "4",
+      "geometry_solution_ja": [
+        "この二等分線円と中線から得るPaは、HからAMaへの垂足である。Pb,Pcも巡回的に同じ性質を持つ（TSTST 2015の既知の同定）。",
+        "重心をGとすると、各中線はGを通るので∠HPaG=∠HPbG=∠HPcG=90°。従って三点の円は直径HGの円であり、ZはHGの中点。",
+        "Euler線上でOG:GH=1:2だから、OH=6からOG=2、GH=4。従ってOZ=2+4/2=4。"
+      ]
+    },
+    {
+      "id": "H08",
+      "problem_ja": "直線PQにP,Qで接する二円がPQの同じ側でA,Bに交わり、BはAよりPQに近いとする。三角形APQは鋭角不等辺とする。BをPQに関して鏡映した点をCとする。AP=6、AC=3√34/2、tan∠BAQ=3/5のとき、三角形APCの面積を求めよ。",
+      "answer_exact": "27/2",
+      "geometry_solution_ja": [
+        "二接円の角追いとBの鏡映からA,P,C,Qは共円であり、∠CAP=∠BAQとなる。これは近い交点BをHumpty、Cをsymmedian弦端点と見ると現れる等角関係である。",
+        "∠BAQは鋭角でtan=3/5だから、sin∠CAP=sin∠BAQ=3/√34。",
+        "面積は(1/2)·AP·AC·sin∠CAP=(1/2)·6·(3√34/2)·(3/√34)=27/2。"
+      ]
+    },
+    {
+      "id": "H12",
+      "problem_ja": "凸四角形ABCDは0<∠ABC=∠ADC<90°を満たす。B,Dの内角二等分線とACとの交点をE,Fとし、直線BEと直線DFの交点をPとする。MをACの中点とし、円BPDと線分BM,DMの内部との交点をそれぞれX,Yとする（B,D以外の交点）。Q=XE∩YF、VをPからACへの垂足とする。P,QはACの同じ側にあり、Qの方がACから遠い。PM=√29/2、PV=5/2、QM=√101のとき、PQを求めよ。",
+      "answer_exact": "15/2",
+      "geometry_solution_ja": [
+        "この配置のX,Yはそれぞれ三角形BAC,DACのHumpty点で、そこからPQ⊥ACが従う。v1では等角条件を保つ一般3パラメータによりこの同定と垂直性を証明済み。",
+        "従ってVはQのACへの垂足でもある。直角三角形PMVでMV²=PM²−PV²=29/4−25/4=1。",
+        "直角三角形QMVでQV=√(101−1)=10。指定された側と順序からPQ=QV−PV=10−5/2=15/2。"
+      ]
+    },
+    {
+      "id": "DA15",
+      "problem_ja": "鋭角不等辺三角形ABCの外心をO、BCの中点をMとする。AB,ACの垂直二等分線と半直線AMの交点をそれぞれD,Eとする。F=BD∩CEは三角形ABCの内部にあるとする。AO=13、AF=12のとき、OFの長さを求めよ。",
+      "answer_exact": "5",
+      "geometry_solution_ja": [
+        "AB,ACの中点をU,Vとする。原配置の性質からA,U,F,Vは共円（USAMO2008/2、FはA-Dumpty点）。",
+        "OU⊥AB、OV⊥ACなので、円AUVは直径AOの円。したがってAF⊥OF。",
+        "OF=√(13²−12²)=5。"
+      ]
+    },
+    {
+      "id": "DB01",
+      "problem_ja": "鋭角不等辺三角形ABCの外心をOとする。中心JがAからBCへの高度の直線上にありAを通る円ωが、辺AB,ACの内部でA以外に交わる点をそれぞれP,Qとする。BP·CQ=AP·AQである。円BOCの中心をUとし、JA=1、UB=4とする。ωと円BOCに共通に接し、二つの中心J,Uが同じ側にある直線を一本とり、その接点をそれぞれY,Zとする。YZを求めよ。",
+      "answer_exact": "4",
+      "geometry_solution_ja": [
+        "積条件で選ばれたωは円BOCと外接する。Dumpty点が二円の接点となる配置である。",
+        "従ってJU=1+4=5。両半径を共通外接線に垂直に引くと、斜辺JU、他の一辺4−1の直角三角形ができる。",
+        "YZ²=JU²−(4−1)²=16。"
+      ]
+    },
+    {
+      "id": "DB08",
+      "problem_ja": "鋭角三角形ABCでAC>ABとし、Γを外接円、Oを外心とする。ΓのAでの接線と直線BCの交点をP、Aから直線OPへの垂足をXとする。直線AB上のEと直線AC上のFを、ともに直線OPのA側にあり、∠EXP=∠ACX、∠FXO=∠ABXとなる一意な点として選ぶ。直線EFとΓの二交点をK,Lとし、σを三角形KLXの外接円、Uをその中心とする。Pはσの外部にある。半直線PUとσの交点を近い方からY,Zとし、PY=3、YZ=9とする。PXを求めよ。",
+      "answer_exact": "6",
+      "geometry_solution_ja": [
+        "XはA-Dumpty点として同定でき、角指定で作ったEFに対してOPは円KLXに接する。X自身がOPとσの共通点なので接点はXである。",
+        "P,Y,Zがこの順に一直線上にあり、PZ=PY+YZ=12。",
+        "Pのσに対する方べきよりPX²=PY·PZ=36。"
+      ]
+    },
+    {
+      "id": "DB16",
+      "problem_ja": "三角形ABCの外心をOとする。辺BCをBS:SC=AB²:AC²に内分する点Sをとり、半直線AS上のA以外の点Pをとる。O_1を三角形APBの外心、O_2を三角形CAPの外心とし、直線AOとO_1O_2の交点をNとする。各三角形と交点は非退化で、AO_1=4、AO_2=6、O_1O_2=8である。ANを求めよ。",
+      "answer_exact": "sqrt(10)",
+      "geometry_solution_ja": [
+        "APがA-symmedian方向であることから、AOは線分O_1O_2を二等分する。したがってNはO_1O_2の中点である。",
+        "三角形AO_1O_2の中線として、AN²=(AO_1²+AO_2²)/2−(O_1O_2/2)²。",
+        "AN²=(16+36)/2−16=10。"
+      ]
+    }
+  ]
+}

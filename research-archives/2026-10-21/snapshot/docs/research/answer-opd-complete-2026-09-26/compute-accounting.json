@@ -1,0 +1,934 @@
+{
+  "schema_version": 1,
+  "created_from_existing_artifacts": true,
+  "accounting_scope": {
+    "study": "正式OPD学習16 rounds / 128 unique rollout trajectories / 32 optimizer updates",
+    "basis": "成功計算の時間は各generation/train receiptのelapsed_secondsを1回だけ加算。32k generationは16 receipts、81k retryは4 receipts、successful trainingは16 successful train receipts。",
+    "exclusions": [
+      "calibration and preparation",
+      "waiting / idle time",
+      "unrecorded restart or recovery downtime",
+      "evaluation generation/scoring",
+      "failed training attempt from successful formal-compute total"
+    ],
+    "gpu_access": "集計作業ではGPUを照会・使用していない。receiptと保存済みartifactを読むCPU集計。",
+    "token_accounting": "generated-attempt token counts include all 32k attempts and all 81k retries; adopted tokens count only the final selected eight examples per round used by successful training."
+  },
+  "source_artifacts": {
+    "final_training_summary": {
+      "path": "docs/research/answer-opd-complete-2026-09-26/full-training-summary-final.json",
+      "sha256": "a296dc3662ed3b855b03c9c005b36d351e1ea8bef96aac0b010703d1be272c32",
+      "completed_rounds": 16,
+      "completed_examples": 128,
+      "optimizer_updates": 32
+    },
+    "combined_global32_manifest": {
+      "path": "qwen/.runtime/answer_opd_complete_20260926/combined-global32-manifest.json",
+      "sha256": "a61d87da45062e1b85a0f6d72b0bccdf43818c75143d244cfec08e7a9bc44e62",
+      "status": "complete",
+      "completed_rounds": 16,
+      "global_updates": 32,
+      "actual_saved_optimizer_updates": 32,
+      "unique_rollouts": 128,
+      "completion_tokens": 1127698,
+      "successful_train_seconds": 2225.8145885642152,
+      "all_completion_finish_stop": true,
+      "adjacent_adapter_optimizer_hashes_match": true
+    },
+    "external_interruption_record": {
+      "path": "qwen/.runtime/answer_opd_complete_20260926/external-interruption.json",
+      "sha256": "8c09be065a7b27ae1e05d8769fdcb413fabc91ffb65475c067c84b86573e78cc",
+      "status": "external_interruption_observed",
+      "time_cost_seconds": "unknown; not included",
+      "note": "Round 2 completed 32k batch was verified and reused; interruption/restart wall-clock duration is not included."
+    }
+  },
+  "totals": {
+    "rounds": 16,
+    "unique_trajectories": 128,
+    "successful_optimizer_updates": 32,
+    "rollout32k": {
+      "runs": 16,
+      "elapsed_seconds": 9515.15861360752,
+      "generation_seconds": 9264.595021267189,
+      "generated_completion_tokens": 1225059
+    },
+    "retry81k": {
+      "runs": 4,
+      "elapsed_seconds": 832.2253774905112,
+      "generation_seconds": 774.3008618950844,
+      "generated_completion_tokens": 33711
+    },
+    "successful_training": {
+      "runs": 16,
+      "elapsed_seconds": 2225.8145885642152,
+      "trained_completion_tokens": 1127698
+    },
+    "successful_formal_computation_elapsed_seconds": 12573.198579662247,
+    "generated_attempt_completion_tokens": 1258770,
+    "adopted_completion_tokens": 1127698,
+    "adopted_from_32k_completion_tokens": 1093987,
+    "adopted_from_81k_completion_tokens": 33711,
+    "generated_but_not_adopted_completion_tokens": 131072,
+    "receipt_seconds_reconciliation": {
+      "successful_training_sum_matches_manifest": true,
+      "adopted_completion_tokens_match_manifest": true,
+      "trajectory_rows_match_summary": true
+    }
+  },
+  "retry_details": [
+    {
+      "round": 3,
+      "example_id": "rollout-0018-H15-v3",
+      "initial_budget_tokens": 32768,
+      "initial_completion_tokens": 32768,
+      "initial_finish_reason": "length",
+      "retry_budget_tokens": 81920,
+      "retry_completion_tokens": 11066,
+      "retry_finish_reason": "stop",
+      "original_completion_equals_retry_prefix": false,
+      "selection_provenance_prefix_identical": false,
+      "retry_elapsed_seconds": 302.3577674429398,
+      "retry_generation_seconds": 283.772830916103,
+      "retry_generated_completion_tokens": 11066,
+      "paths": {
+        "receipt": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-003/rollout81k/receipt.json",
+        "raw_rollouts": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-003/rollout81k/raw_rollouts.json",
+        "selection_provenance": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-003/selection-provenance.json"
+      },
+      "sha256": {
+        "receipt": "b9ea72b9eddd029d20ac44689af2450279dc0b1bb978291a5a14ea4974f68b4c",
+        "raw_rollouts": "cae64ba2c4fc99f2e16440d6a5357720d10d78327a9e415103eda0f183b0810f",
+        "selection_provenance": "f99d4779b487d7e4017008c4a1c9b8765905f8d2bd17dc8b8f2f156265b0a7f0"
+      }
+    },
+    {
+      "round": 7,
+      "example_id": "rollout-0050-H15-v1",
+      "initial_budget_tokens": 32768,
+      "initial_completion_tokens": 32768,
+      "initial_finish_reason": "length",
+      "retry_budget_tokens": 81920,
+      "retry_completion_tokens": 9386,
+      "retry_finish_reason": "stop",
+      "original_completion_equals_retry_prefix": false,
+      "selection_provenance_prefix_identical": false,
+      "retry_elapsed_seconds": 229.98342534387484,
+      "retry_generation_seconds": 215.9737113469746,
+      "retry_generated_completion_tokens": 9386,
+      "paths": {
+        "receipt": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-007/rollout81k/receipt.json",
+        "raw_rollouts": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-007/rollout81k/raw_rollouts.json",
+        "selection_provenance": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-007/selection-provenance.json"
+      },
+      "sha256": {
+        "receipt": "4d102ffd226cab97fc7bd28c79f341d6e15d87c4c71dabd7d3fa0d7c108a33f8",
+        "raw_rollouts": "262be786ba53d5ba7eb9e509b6a8b304ecd11c4eb6d919945f35d65987015712",
+        "selection_provenance": "84035434ea73ab6cffdeee005238dc3fb04a630d6d7efdf00a8ede51fa7df769"
+      }
+    },
+    {
+      "round": 13,
+      "example_id": "rollout-0103-H13-v2",
+      "initial_budget_tokens": 32768,
+      "initial_completion_tokens": 32768,
+      "initial_finish_reason": "length",
+      "retry_budget_tokens": 81920,
+      "retry_completion_tokens": 5875,
+      "retry_finish_reason": "stop",
+      "original_completion_equals_retry_prefix": false,
+      "selection_provenance_prefix_identical": false,
+      "retry_elapsed_seconds": 136.4232789708767,
+      "retry_generation_seconds": 123.62618646095507,
+      "retry_generated_completion_tokens": 5875,
+      "paths": {
+        "receipt": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-013/rollout81k/receipt.json",
+        "raw_rollouts": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-013/rollout81k/raw_rollouts.json",
+        "selection_provenance": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-013/selection-provenance.json"
+      },
+      "sha256": {
+        "receipt": "5a43def0ddf7cd1a1118331b0e8789bd3d876ade514bdb8ca17c779607009719",
+        "raw_rollouts": "7efcdfd41068eb59cc897da170583040257834d0f38d620f34c40f041624cc34",
+        "selection_provenance": "b12b96ed11e08c615b0324892dca010b3af027ecc814fd538083ca4ade6d628a"
+      }
+    },
+    {
+      "round": 15,
+      "example_id": "rollout-0118-DA01-v1",
+      "initial_budget_tokens": 32768,
+      "initial_completion_tokens": 32768,
+      "initial_finish_reason": "length",
+      "retry_budget_tokens": 81920,
+      "retry_completion_tokens": 7384,
+      "retry_finish_reason": "stop",
+      "original_completion_equals_retry_prefix": false,
+      "selection_provenance_prefix_identical": false,
+      "retry_elapsed_seconds": 163.4609057328198,
+      "retry_generation_seconds": 150.92813317105174,
+      "retry_generated_completion_tokens": 7384,
+      "paths": {
+        "receipt": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-015/rollout81k/receipt.json",
+        "raw_rollouts": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-015/rollout81k/raw_rollouts.json",
+        "selection_provenance": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-015/selection-provenance.json"
+      },
+      "sha256": {
+        "receipt": "cdc7d4dbd2fbe8645882f8ea19441b8d957c91c5f03e7e6c53e8a85039017ed2",
+        "raw_rollouts": "7337aa4d61c5009564118f1fa32d9a988685b9b3e47fc6a15e95dc1f6c78934a",
+        "selection_provenance": "6e0af142070118d4e5da8817febd03de9108782df0aa2b9802909ada9733dada"
+      }
+    }
+  ],
+  "rounds": [
+    {
+      "round": 1,
+      "global_updates_after_round": 2,
+      "examples": 8,
+      "rollout32k": {
+        "status": "complete",
+        "elapsed_seconds": 322.1159390048124,
+        "generation_seconds": 294.297178639099,
+        "generated_completion_tokens": 72361,
+        "finish_reasons": [
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop"
+        ],
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal/round-001/rollout32k/receipt.json",
+        "raw_rollouts_path": "qwen/.runtime/answer_opd_complete_20260926/formal/round-001/rollout32k/raw_rollouts.json",
+        "receipt_sha256": "0db8f5d0b371437f12bc3b777fba2ffc01ce28c899dcb60e6b68e1cffa7b379f",
+        "raw_rollouts_sha256": "384b062e23287ccef8de7dac4c6cec81d700d05486c770d3e4f0db6d9d1eee1b"
+      },
+      "retry81k": null,
+      "adopted": {
+        "completion_tokens": 72361,
+        "from_32k_completion_tokens": 72361,
+        "from_81k_completion_tokens": 0,
+        "selected_raw_path": "qwen/.runtime/answer_opd_complete_20260926/formal/round-001/selected-raw.json",
+        "selected_raw_sha256": "384b062e23287ccef8de7dac4c6cec81d700d05486c770d3e4f0db6d9d1eee1b"
+      },
+      "successful_training": {
+        "status": "complete",
+        "updates": 2,
+        "elapsed_seconds": 151.82469071098603,
+        "trained_completion_tokens": 72361,
+        "global_updates_before": 0,
+        "global_updates_after": 2,
+        "batch_sha256": "a8b86b6e33cf9067095532e4a822ae597f3fd9936a9db70b22c80c381c10bd4c",
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal/round-001/train/receipt.json",
+        "receipt_sha256": "0fa7773733456b98232064e5b61e2ae6a4d04ebd30d6e765c012bb51edf2285a"
+      }
+    },
+    {
+      "round": 2,
+      "global_updates_after_round": 4,
+      "examples": 8,
+      "rollout32k": {
+        "status": "complete",
+        "elapsed_seconds": 546.3093834400643,
+        "generation_seconds": 520.5269565770868,
+        "generated_completion_tokens": 74373,
+        "finish_reasons": [
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop"
+        ],
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal/round-002/rollout32k/receipt.json",
+        "raw_rollouts_path": "qwen/.runtime/answer_opd_complete_20260926/formal/round-002/rollout32k/raw_rollouts.json",
+        "receipt_sha256": "1d07ca23d321f855efb47c9872bdb38333e42d23dc8912f52b0572b961499071",
+        "raw_rollouts_sha256": "f7171140e693ca517194fb95dad629ad0a139015d3b5feb995145d20d17b2be6"
+      },
+      "retry81k": null,
+      "adopted": {
+        "completion_tokens": 74373,
+        "from_32k_completion_tokens": 74373,
+        "from_81k_completion_tokens": 0,
+        "selected_raw_path": "qwen/.runtime/answer_opd_complete_20260926/round002-resume/selected-raw.json",
+        "selected_raw_sha256": "f7171140e693ca517194fb95dad629ad0a139015d3b5feb995145d20d17b2be6"
+      },
+      "successful_training": {
+        "status": "complete",
+        "updates": 2,
+        "elapsed_seconds": 147.3625875590369,
+        "trained_completion_tokens": 74373,
+        "global_updates_before": 2,
+        "global_updates_after": 4,
+        "batch_sha256": "edc9c2ffe1454c881677671ec487e53438e559c8b600903240b23e99a129cc70",
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/round002-resume/train/receipt.json",
+        "receipt_sha256": "96998655766962de68b7bf3a436e4384f3c37b7d0732f672bf0f2c38a07ee751"
+      }
+    },
+    {
+      "round": 3,
+      "global_updates_after_round": 6,
+      "examples": 8,
+      "rollout32k": {
+        "status": "complete",
+        "elapsed_seconds": 829.781086351024,
+        "generation_seconds": 812.7215450501535,
+        "generated_completion_tokens": 86937,
+        "finish_reasons": [
+          "stop",
+          "length",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop"
+        ],
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-003/rollout32k/receipt.json",
+        "raw_rollouts_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-003/rollout32k/raw_rollouts.json",
+        "receipt_sha256": "5a0fd8cb42c9f816453f718d82de8784ef3d2c29e14f57746a37e37248ae68e0",
+        "raw_rollouts_sha256": "1987cb19d933de85c04ea507906cf7e34e5c8ff00cb72b7d7a3ae8201367fc70"
+      },
+      "retry81k": {
+        "elapsed_seconds": 302.3577674429398,
+        "generation_seconds": 283.772830916103,
+        "generated_completion_tokens": 11066,
+        "example_id": "rollout-0018-H15-v3"
+      },
+      "adopted": {
+        "completion_tokens": 65235,
+        "from_32k_completion_tokens": 54169,
+        "from_81k_completion_tokens": 11066,
+        "selected_raw_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-003/selected-raw.json",
+        "selected_raw_sha256": "c117be3587606378f9eef543fc4eaa7b1ed859506e24d13a23503e9292ca3913"
+      },
+      "successful_training": {
+        "status": "complete",
+        "updates": 2,
+        "elapsed_seconds": 131.4422906129621,
+        "trained_completion_tokens": 65235,
+        "global_updates_before": 4,
+        "global_updates_after": 6,
+        "batch_sha256": "aab841c9bfbb7f4c8c05671f14b3f12e7806de57bb8e73c6719cc0af4c4937e9",
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-003/train/receipt.json",
+        "receipt_sha256": "e171cdc9e11a4dba147136654c93f740591711ca83ae04478010dbb6346ecb13"
+      }
+    },
+    {
+      "round": 4,
+      "global_updates_after_round": 8,
+      "examples": 8,
+      "rollout32k": {
+        "status": "complete",
+        "elapsed_seconds": 454.3009174161125,
+        "generation_seconds": 437.8317943350412,
+        "generated_completion_tokens": 55899,
+        "finish_reasons": [
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop"
+        ],
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-004/rollout32k/receipt.json",
+        "raw_rollouts_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-004/rollout32k/raw_rollouts.json",
+        "receipt_sha256": "4d03804035301a139dd644a2b78fde35686517bf70096c374ce5359acc939eb8",
+        "raw_rollouts_sha256": "6df21b4703c0eef9d8f84cb1313ed0bacc46471861399cd789f4df7938d94971"
+      },
+      "retry81k": null,
+      "adopted": {
+        "completion_tokens": 55899,
+        "from_32k_completion_tokens": 55899,
+        "from_81k_completion_tokens": 0,
+        "selected_raw_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-004/selected-raw.json",
+        "selected_raw_sha256": "6df21b4703c0eef9d8f84cb1313ed0bacc46471861399cd789f4df7938d94971"
+      },
+      "successful_training": {
+        "status": "complete",
+        "updates": 2,
+        "elapsed_seconds": 104.7369312478695,
+        "trained_completion_tokens": 55899,
+        "global_updates_before": 6,
+        "global_updates_after": 8,
+        "batch_sha256": "9780111e7cd06f0499b1317ef4218cb80d0d891a27a6c9e9618401232c10e419",
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-004/train/receipt.json",
+        "receipt_sha256": "7af79844fca9ae6e3d28d4b358c7a605b9ba0f3b35d2b3daffaa13d8a429f4c4"
+      }
+    },
+    {
+      "round": 5,
+      "global_updates_after_round": 10,
+      "examples": 8,
+      "rollout32k": {
+        "status": "complete",
+        "elapsed_seconds": 644.9285872739274,
+        "generation_seconds": 629.7346673810389,
+        "generated_completion_tokens": 82163,
+        "finish_reasons": [
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop"
+        ],
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-005/rollout32k/receipt.json",
+        "raw_rollouts_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-005/rollout32k/raw_rollouts.json",
+        "receipt_sha256": "a84987cb973507a053caac44f82a42d0f4bb1c8d985788867a8724e9e5e335a5",
+        "raw_rollouts_sha256": "0784d2628a9096d6e174d880698e1e15da3b423293d41d1b4732bcb2882b7c6d"
+      },
+      "retry81k": null,
+      "adopted": {
+        "completion_tokens": 82163,
+        "from_32k_completion_tokens": 82163,
+        "from_81k_completion_tokens": 0,
+        "selected_raw_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-005/selected-raw.json",
+        "selected_raw_sha256": "0784d2628a9096d6e174d880698e1e15da3b423293d41d1b4732bcb2882b7c6d"
+      },
+      "successful_training": {
+        "status": "complete",
+        "updates": 2,
+        "elapsed_seconds": 170.859420822002,
+        "trained_completion_tokens": 82163,
+        "global_updates_before": 8,
+        "global_updates_after": 10,
+        "batch_sha256": "d7cbb77eede5c05667a0d21aacf7af18d9bb82ff0d6801bfc5891c13fd561e4d",
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-005/train/receipt.json",
+        "receipt_sha256": "146f2917afc3407a352bdbf63fe188db58f6341647bbcf6b05725f6e6ec5bf7e"
+      }
+    },
+    {
+      "round": 6,
+      "global_updates_after_round": 12,
+      "examples": 8,
+      "rollout32k": {
+        "status": "complete",
+        "elapsed_seconds": 571.7722931059543,
+        "generation_seconds": 556.6067635819782,
+        "generated_completion_tokens": 75804,
+        "finish_reasons": [
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop"
+        ],
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-006/rollout32k/receipt.json",
+        "raw_rollouts_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-006/rollout32k/raw_rollouts.json",
+        "receipt_sha256": "27448e3ddc6bb6a9bae0209b60545967a66ef57c4a3a4ccf1e92bafdc62ca0a7",
+        "raw_rollouts_sha256": "b97a1c0863251f4b79dbdf62ec140b5a0ee319313c2caf0f3b76c927205bd120"
+      },
+      "retry81k": null,
+      "adopted": {
+        "completion_tokens": 75804,
+        "from_32k_completion_tokens": 75804,
+        "from_81k_completion_tokens": 0,
+        "selected_raw_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-006/selected-raw.json",
+        "selected_raw_sha256": "b97a1c0863251f4b79dbdf62ec140b5a0ee319313c2caf0f3b76c927205bd120"
+      },
+      "successful_training": {
+        "status": "complete",
+        "updates": 2,
+        "elapsed_seconds": 154.28757560416125,
+        "trained_completion_tokens": 75804,
+        "global_updates_before": 10,
+        "global_updates_after": 12,
+        "batch_sha256": "ee4c6e448c88f7719f7272dc1c6158bab2f084b68aca22db74798a83781220c9",
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-006/train/receipt.json",
+        "receipt_sha256": "a6bc68f9e97104935a3f91b201069fbf8bdd43d87e8cef17e763521f6bfe01af"
+      }
+    },
+    {
+      "round": 7,
+      "global_updates_after_round": 14,
+      "examples": 8,
+      "rollout32k": {
+        "status": "complete",
+        "elapsed_seconds": 794.2895340579562,
+        "generation_seconds": 780.335037834011,
+        "generated_completion_tokens": 98546,
+        "finish_reasons": [
+          "stop",
+          "length",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop"
+        ],
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-007/rollout32k/receipt.json",
+        "raw_rollouts_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-007/rollout32k/raw_rollouts.json",
+        "receipt_sha256": "ab694a65a4b07933a43197ad8adc705c81baf213a8f6e19d83d42afb2248aa51",
+        "raw_rollouts_sha256": "b353b16f17f360551c179ec65544151b36bd4f34eb92de2e54b95b2670aae44f"
+      },
+      "retry81k": {
+        "elapsed_seconds": 229.98342534387484,
+        "generation_seconds": 215.9737113469746,
+        "generated_completion_tokens": 9386,
+        "example_id": "rollout-0050-H15-v1"
+      },
+      "adopted": {
+        "completion_tokens": 75164,
+        "from_32k_completion_tokens": 65778,
+        "from_81k_completion_tokens": 9386,
+        "selected_raw_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-007/selected-raw.json",
+        "selected_raw_sha256": "53b22e5c2daeb893a8254c9dfbdc1c44b36863afc05bd3345a86113dfda8f0bc"
+      },
+      "successful_training": {
+        "status": "complete",
+        "updates": 2,
+        "elapsed_seconds": 154.16103467601351,
+        "trained_completion_tokens": 75164,
+        "global_updates_before": 12,
+        "global_updates_after": 14,
+        "batch_sha256": "eb5a846f20d3c811ba0b9f754320f8b740ff37134168a14fffe725d12da30a03",
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-007/train/receipt.json",
+        "receipt_sha256": "6354481da521d7b3fa280854b7c6b0507948b31c297e030ede1ed420b5ed97f2"
+      }
+    },
+    {
+      "round": 8,
+      "global_updates_after_round": 16,
+      "examples": 8,
+      "rollout32k": {
+        "status": "complete",
+        "elapsed_seconds": 541.811089875875,
+        "generation_seconds": 527.3684067588765,
+        "generated_completion_tokens": 67165,
+        "finish_reasons": [
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop"
+        ],
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-008/rollout32k/receipt.json",
+        "raw_rollouts_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-008/rollout32k/raw_rollouts.json",
+        "receipt_sha256": "de98be1ed36122d7a13bed9eeb6a420678aaca743c75876d21410062271352b8",
+        "raw_rollouts_sha256": "800b6d4391024cbd3e294687c6bafd0214dcdb77ae75e602654dfd4601e2cae0"
+      },
+      "retry81k": null,
+      "adopted": {
+        "completion_tokens": 67165,
+        "from_32k_completion_tokens": 67165,
+        "from_81k_completion_tokens": 0,
+        "selected_raw_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-008/selected-raw.json",
+        "selected_raw_sha256": "800b6d4391024cbd3e294687c6bafd0214dcdb77ae75e602654dfd4601e2cae0"
+      },
+      "successful_training": {
+        "status": "complete",
+        "updates": 2,
+        "elapsed_seconds": 130.4645087379031,
+        "trained_completion_tokens": 67165,
+        "global_updates_before": 14,
+        "global_updates_after": 16,
+        "batch_sha256": "7e10e1f5b3ed393bc1b00416653f083b14de54f83fed72816bfee2e71ec35ec0",
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-008/train/receipt.json",
+        "receipt_sha256": "bb81351ba69cce0ce4f110a0f55ee08d668d782f75399deaed33ac274fc7bdb2"
+      }
+    },
+    {
+      "round": 9,
+      "global_updates_after_round": 18,
+      "examples": 8,
+      "rollout32k": {
+        "status": "complete",
+        "elapsed_seconds": 515.3456277598161,
+        "generation_seconds": 501.35704347305,
+        "generated_completion_tokens": 74754,
+        "finish_reasons": [
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop"
+        ],
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-009/rollout32k/receipt.json",
+        "raw_rollouts_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-009/rollout32k/raw_rollouts.json",
+        "receipt_sha256": "7507e155216ea2cd7aff9ffc2d3ab30e263b69463e13dbed9763be741356513d",
+        "raw_rollouts_sha256": "ab452ba4a74a4d14e9de70fc71bbe02c3028469dbafe42dcb898310b33007441"
+      },
+      "retry81k": null,
+      "adopted": {
+        "completion_tokens": 74754,
+        "from_32k_completion_tokens": 74754,
+        "from_81k_completion_tokens": 0,
+        "selected_raw_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-009/selected-raw.json",
+        "selected_raw_sha256": "ab452ba4a74a4d14e9de70fc71bbe02c3028469dbafe42dcb898310b33007441"
+      },
+      "successful_training": {
+        "status": "complete",
+        "updates": 2,
+        "elapsed_seconds": 150.49713715421967,
+        "trained_completion_tokens": 74754,
+        "global_updates_before": 16,
+        "global_updates_after": 18,
+        "batch_sha256": "1c341525a8f990c8b7293bfdd2b6531b77bea632603f45af636eb67ab142f033",
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-009/train/receipt.json",
+        "receipt_sha256": "30d85a3d700deffe878bd07f84f3f459b0bd160d973b1bb022f3460ceb7aa267"
+      }
+    },
+    {
+      "round": 10,
+      "global_updates_after_round": 20,
+      "examples": 8,
+      "rollout32k": {
+        "status": "complete",
+        "elapsed_seconds": 497.7217625041958,
+        "generation_seconds": 484.0292317760177,
+        "generated_completion_tokens": 65044,
+        "finish_reasons": [
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop"
+        ],
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-010/rollout32k/receipt.json",
+        "raw_rollouts_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-010/rollout32k/raw_rollouts.json",
+        "receipt_sha256": "102222259f2f0d7a04e66988fc7a6b6aedd06d4a7a0f307913dd4ab25d5d0cbf",
+        "raw_rollouts_sha256": "55602830d66d20030a4db064c91deed440acc43d23207e7cdb07f60fe682ca53"
+      },
+      "retry81k": null,
+      "adopted": {
+        "completion_tokens": 65044,
+        "from_32k_completion_tokens": 65044,
+        "from_81k_completion_tokens": 0,
+        "selected_raw_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-010/selected-raw.json",
+        "selected_raw_sha256": "55602830d66d20030a4db064c91deed440acc43d23207e7cdb07f60fe682ca53"
+      },
+      "successful_training": {
+        "status": "complete",
+        "updates": 2,
+        "elapsed_seconds": 122.73255168483593,
+        "trained_completion_tokens": 65044,
+        "global_updates_before": 18,
+        "global_updates_after": 20,
+        "batch_sha256": "7f49174ee2855a77ff281a3247d7e7b97443f80b9c928361af54f626fb84158f",
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-010/train/receipt.json",
+        "receipt_sha256": "48b273a2335edc39ee4143e728c13ad5f83fcf45b71767c7a94d9aeaa9c18737"
+      }
+    },
+    {
+      "round": 11,
+      "global_updates_after_round": 22,
+      "examples": 8,
+      "rollout32k": {
+        "status": "complete",
+        "elapsed_seconds": 497.03346287296154,
+        "generation_seconds": 483.8845011629164,
+        "generated_completion_tokens": 69346,
+        "finish_reasons": [
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop"
+        ],
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-011/rollout32k/receipt.json",
+        "raw_rollouts_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-011/rollout32k/raw_rollouts.json",
+        "receipt_sha256": "f70740a88d2bf37b11e8bffd942228a38b004d4386988f8833ee4b187ae2549a",
+        "raw_rollouts_sha256": "494725ac48d50feb4ed8073fe022c9ac982801b190a4a2da3a9183c42e07868d"
+      },
+      "retry81k": null,
+      "adopted": {
+        "completion_tokens": 69346,
+        "from_32k_completion_tokens": 69346,
+        "from_81k_completion_tokens": 0,
+        "selected_raw_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-011/selected-raw.json",
+        "selected_raw_sha256": "494725ac48d50feb4ed8073fe022c9ac982801b190a4a2da3a9183c42e07868d"
+      },
+      "successful_training": {
+        "status": "complete",
+        "updates": 2,
+        "elapsed_seconds": 131.68009364116006,
+        "trained_completion_tokens": 69346,
+        "global_updates_before": 20,
+        "global_updates_after": 22,
+        "batch_sha256": "8006f25a7806f2ab5f5e2087f87148e666b43efbc57109b293788652e0c0df58",
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-011/train/receipt.json",
+        "receipt_sha256": "6fe8bb9f40f222b8c40feb6209051acec0234e788c4592c91767e384d66bf718"
+      }
+    },
+    {
+      "round": 12,
+      "global_updates_after_round": 24,
+      "examples": 8,
+      "rollout32k": {
+        "status": "complete",
+        "elapsed_seconds": 496.2491820389405,
+        "generation_seconds": 483.70426352787763,
+        "generated_completion_tokens": 67499,
+        "finish_reasons": [
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop"
+        ],
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-012/rollout32k/receipt.json",
+        "raw_rollouts_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-012/rollout32k/raw_rollouts.json",
+        "receipt_sha256": "fade2b145bae102f58b222bbecd91b1b2b917e2b278309d078d19a6299654bb1",
+        "raw_rollouts_sha256": "c7462c3c25d6179a5e5e8fe662aae5417c0b63b470825dbbe3d9a7e3cc3de5e8"
+      },
+      "retry81k": null,
+      "adopted": {
+        "completion_tokens": 67499,
+        "from_32k_completion_tokens": 67499,
+        "from_81k_completion_tokens": 0,
+        "selected_raw_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-012/selected-raw.json",
+        "selected_raw_sha256": "c7462c3c25d6179a5e5e8fe662aae5417c0b63b470825dbbe3d9a7e3cc3de5e8"
+      },
+      "successful_training": {
+        "status": "complete",
+        "updates": 2,
+        "elapsed_seconds": 126.75678143510595,
+        "trained_completion_tokens": 67499,
+        "global_updates_before": 22,
+        "global_updates_after": 24,
+        "batch_sha256": "9f307ef7e856492c6b076546e3ad9e0231001e08e8de7bac7bc17cbf5d7dcb0a",
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-012/train/receipt.json",
+        "receipt_sha256": "5d5ae84676b6ad3afa067dd478cbeb1fa263543358d216ab384ba0965553c3a5"
+      }
+    },
+    {
+      "round": 13,
+      "global_updates_after_round": 26,
+      "examples": 8,
+      "rollout32k": {
+        "status": "complete",
+        "elapsed_seconds": 918.237419995945,
+        "generation_seconds": 905.711102389032,
+        "generated_completion_tokens": 92711,
+        "finish_reasons": [
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "length",
+          "stop"
+        ],
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-013/rollout32k/receipt.json",
+        "raw_rollouts_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-013/rollout32k/raw_rollouts.json",
+        "receipt_sha256": "2a91020cc8b7161909238c879bc31c71a04c8f2474970087f4df70558cbdc045",
+        "raw_rollouts_sha256": "ac9a5ea3c1c50eaabd87def932670e5813b5d70e14b344f12bfb558f89315b9f"
+      },
+      "retry81k": {
+        "elapsed_seconds": 136.4232789708767,
+        "generation_seconds": 123.62618646095507,
+        "generated_completion_tokens": 5875,
+        "example_id": "rollout-0103-H13-v2"
+      },
+      "adopted": {
+        "completion_tokens": 65818,
+        "from_32k_completion_tokens": 59943,
+        "from_81k_completion_tokens": 5875,
+        "selected_raw_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-013/selected-raw.json",
+        "selected_raw_sha256": "b6e9a059e3ab3d08bd6093eb792d7c859f60ebcb668cc4af9d8df2c08172e189"
+      },
+      "successful_training": {
+        "status": "complete",
+        "updates": 2,
+        "elapsed_seconds": 121.94483965192921,
+        "trained_completion_tokens": 65818,
+        "global_updates_before": 24,
+        "global_updates_after": 26,
+        "batch_sha256": "5591848804108d617a27fc65ac7b00c2cff173947becceb366a991127a18a637",
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-013/train/receipt.json",
+        "receipt_sha256": "286800f88852a545458c32de1f5f7a9ef6b0e8bf2fd1b6292289a57d8dca5cfd"
+      }
+    },
+    {
+      "round": 14,
+      "global_updates_after_round": 28,
+      "examples": 8,
+      "rollout32k": {
+        "status": "complete",
+        "elapsed_seconds": 485.73111438797787,
+        "generation_seconds": 472.7427399971057,
+        "generated_completion_tokens": 71173,
+        "finish_reasons": [
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop"
+        ],
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-014/rollout32k/receipt.json",
+        "raw_rollouts_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-014/rollout32k/raw_rollouts.json",
+        "receipt_sha256": "32d46cc5b9af9759f30ee8f50d192d63fd26b776a68939140c19bfd39fa3f237",
+        "raw_rollouts_sha256": "8340dc38eda2d7442845ad74d86d47a0c4f143c67c93690100f25496f5b78529"
+      },
+      "retry81k": null,
+      "adopted": {
+        "completion_tokens": 71173,
+        "from_32k_completion_tokens": 71173,
+        "from_81k_completion_tokens": 0,
+        "selected_raw_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-014/selected-raw.json",
+        "selected_raw_sha256": "8340dc38eda2d7442845ad74d86d47a0c4f143c67c93690100f25496f5b78529"
+      },
+      "successful_training": {
+        "status": "complete",
+        "updates": 2,
+        "elapsed_seconds": 137.25297053088434,
+        "trained_completion_tokens": 71173,
+        "global_updates_before": 26,
+        "global_updates_after": 28,
+        "batch_sha256": "36669ff11a35bd4dc177938fb447fb3ab2b4a7b11060c4eeece9e7173fc84c86",
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-014/train/receipt.json",
+        "receipt_sha256": "8c5dd3c5f9fd8e497956c01440ef39072dc4c087a78ac165f9a8b5b59ea2773a"
+      }
+    },
+    {
+      "round": 15,
+      "global_updates_after_round": 30,
+      "examples": 8,
+      "rollout32k": {
+        "status": "complete",
+        "elapsed_seconds": 934.3895986438729,
+        "generation_seconds": 921.6464242269285,
+        "generated_completion_tokens": 100615,
+        "finish_reasons": [
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "length",
+          "stop",
+          "stop"
+        ],
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-015/rollout32k/receipt.json",
+        "raw_rollouts_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-015/rollout32k/raw_rollouts.json",
+        "receipt_sha256": "719b31f9a2e1d1576babf4bde8b7cd3f651ffadb3d6edf32477772870b5e8da7",
+        "raw_rollouts_sha256": "be1283fd706f1d2799d4f3483e08c9822c9eb03f3261af6bf823e568d167cbca"
+      },
+      "retry81k": {
+        "elapsed_seconds": 163.4609057328198,
+        "generation_seconds": 150.92813317105174,
+        "generated_completion_tokens": 7384,
+        "example_id": "rollout-0118-DA01-v1"
+      },
+      "adopted": {
+        "completion_tokens": 75231,
+        "from_32k_completion_tokens": 67847,
+        "from_81k_completion_tokens": 7384,
+        "selected_raw_path": "qwen/.runtime/answer_opd_complete_20260926/round015-retry/selected-raw.json",
+        "selected_raw_sha256": "c85b16668092d03034f22d8cbada647d431990e70108324e5d68f22c3d88cca6"
+      },
+      "successful_training": {
+        "status": "complete",
+        "updates": 2,
+        "elapsed_seconds": 147.8032818529755,
+        "trained_completion_tokens": 75231,
+        "global_updates_before": 28,
+        "global_updates_after": 30,
+        "batch_sha256": "15753b6e001b3ac1c597e3f1259ca997cc43c28ce63ff7ed86a30637a99f34bf",
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/round015-retry/train/receipt.json",
+        "receipt_sha256": "801617f449d6cfdc7e8ece7e2c8f1e0473b2ceab88a851253e374fb711469c7f"
+      }
+    },
+    {
+      "round": 16,
+      "global_updates_after_round": 32,
+      "examples": 8,
+      "rollout32k": {
+        "status": "complete",
+        "elapsed_seconds": 465.1416148780845,
+        "generation_seconds": 452.09736455697566,
+        "generated_completion_tokens": 70669,
+        "finish_reasons": [
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop",
+          "stop"
+        ],
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-final/round-016/rollout32k/receipt.json",
+        "raw_rollouts_path": "qwen/.runtime/answer_opd_complete_20260926/formal-final/round-016/rollout32k/raw_rollouts.json",
+        "receipt_sha256": "fff6e262baca5860ad5761eeebced1dd68bd726d69ea33794b190da0662920fb",
+        "raw_rollouts_sha256": "69d424b3d5d50d160e17a469783d5769882143a48ae93397583e2c0d90fa77ff"
+      },
+      "retry81k": null,
+      "adopted": {
+        "completion_tokens": 70669,
+        "from_32k_completion_tokens": 70669,
+        "from_81k_completion_tokens": 0,
+        "selected_raw_path": "qwen/.runtime/answer_opd_complete_20260926/formal-final/round-016/selected-raw.json",
+        "selected_raw_sha256": "69d424b3d5d50d160e17a469783d5769882143a48ae93397583e2c0d90fa77ff"
+      },
+      "successful_training": {
+        "status": "complete",
+        "updates": 2,
+        "elapsed_seconds": 142.0078926421702,
+        "trained_completion_tokens": 70669,
+        "global_updates_before": 30,
+        "global_updates_after": 32,
+        "batch_sha256": "ecb3f11c2dfdd811de7db2f680e19d952052c7718fa3b6033e0b336ead8f6f03",
+        "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-final/round-016/train/receipt.json",
+        "receipt_sha256": "547e2945ec3773a17967670a6bd37ae5fcca187000a8b5493ddc3ef55452740f"
+      }
+    }
+  ],
+  "separately_accounted_recovery": {
+    "round15_failed_training_attempt": {
+      "status": "failed",
+      "elapsed_seconds": 34.954036611132324,
+      "updates": 0,
+      "receipt_path": "qwen/.runtime/answer_opd_complete_20260926/formal-resume/round-015/train/receipt.json",
+      "receipt_sha256": "9d2fe796de4be0bece6d7c8b1007afb88a37111a3842df49a83f1319d19d7672",
+      "failure_observation_path": "qwen/.runtime/answer_opd_complete_20260926/round015-failure-observation.json",
+      "failure_observation_sha256": "7e4bc15e5621de9787c2a292dbb2fbb337ff3540352177361d3888e632f21776",
+      "classification": "GPU watchdog channel timeout, not established OOM",
+      "kernel_xid": 8,
+      "same_completed_batch_reused": true,
+      "counted_in_successful_formal_time": false
+    },
+    "round15_cuda_healthcheck": {
+      "status": "pass",
+      "elapsed_seconds": 0.412954238941893,
+      "learning_updates": 0,
+      "path": "qwen/.runtime/answer_opd_complete_20260926/round015-cuda-health.json",
+      "sha256": "4bbf4903d68240917c5435947146476649a32893203a96cfa222c747d02b831a",
+      "counted_in_successful_formal_time": false
+    },
+    "known_measured_failure_and_healthcheck_seconds": 35.36699085007422,
+    "unmeasured_recovery_and_restart_time": "No receipt duration found; excluded.",
+    "external_interruption": "Recorded in source_artifacts.external_interruption_record; duration unknown and excluded."
+  },
+  "interpretation": "Elapsed totals are sums of non-overlapping receipt durations rather than end-to-end wall clock. The formal total includes successful 32k generation, successful 81k replacements, and successful training only. Round 15 failed training and CUDA health check are shown separately; waiting, preparation/calibration, restart downtime, and evaluation are excluded."
+}

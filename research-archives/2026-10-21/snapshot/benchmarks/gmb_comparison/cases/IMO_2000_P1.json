@@ -1,0 +1,96 @@
+{
+  "id": "IMO_2000_P1",
+  "variables": [
+    "m",
+    "ax",
+    "ay",
+    "tn",
+    "bx"
+  ],
+  "constructions": [
+    {
+      "name": "C",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "M",
+      "expression": "PointOnSegment(C, D, m)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "omega1",
+      "expression": "Circumcircle(C, A, M)"
+    },
+    {
+      "name": "N",
+      "expression": "PointOnCircle(omega1, tn)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(bx, ay)"
+    },
+    {
+      "name": "omega2",
+      "expression": "Circumcircle(N, M, D)"
+    },
+    {
+      "name": "AB",
+      "expression": "Line(A, B)"
+    },
+    {
+      "name": "P",
+      "expression": "Intersect(Line(N, A), Line(C, M))"
+    },
+    {
+      "name": "Q",
+      "expression": "Intersect(Line(N, B), Line(M, D))"
+    },
+    {
+      "name": "E",
+      "expression": "Intersect(Line(C, A), Line(D, B))"
+    }
+  ],
+  "conditions": [
+    {
+      "predicate": "0 < m < 1"
+    },
+    {
+      "left": "OnCircle(B, omega2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(AB, omega1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(AB, omega2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "abs(N.y - A.y)",
+      "operator": ">",
+      "right": "abs(M.y - A.y)"
+    },
+    {
+      "left": "Dot(Vector(C, E), Vector(C, A))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(D, E), Vector(D, B))",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "0"
+}

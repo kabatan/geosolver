@@ -1,0 +1,170 @@
+[
+  {
+    "id": "H03",
+    "role": "heldout_transfer",
+    "problem": "鋭角不等辺三角形ABCの外心をO、垂心をHとし、OH=11とする。各頂点について次を行う。Aでは内角・外角の二等分線の直線とBCとの交点をKa,La、BCの中点をMaとし、円AKaLaと直線AMaのAでない交点をPaとする。B,Cからも同様にPb,Pcを作る。円PaPbPcの中心をZとする。OZを求めよ。三つの円と交点は非退化とする。",
+    "givens": {
+      "OH": "11"
+    },
+    "answer_exact": "22/3",
+    "params": {
+      "target": "11",
+      "bx": "-7",
+      "cx": "5",
+      "ax": "2",
+      "ay": "7"
+    },
+    "decisive_lemma_expected": "the second circle-median intersection is the orthocenter's projection onto that median",
+    "transfer_cluster": "orthocenter_median_projection"
+  },
+  {
+    "id": "H04",
+    "role": "heldout_transfer",
+    "problem": "鋭角不等辺三角形ABCの垂心をH、BCの中点をMとし、HからAMへの垂足をPとする。APの垂直二等分線と直線BCの交点をTとする。T,B,Cはこの順に並び、BT=4/3、BC=11である。ATを求めよ。",
+    "givens": {
+      "BT": "4/3",
+      "BC": "11"
+    },
+    "answer_exact": "2*sqrt(37)/3",
+    "params": {
+      "bc": "11",
+      "ax": "1",
+      "ay2": "11"
+    },
+    "decisive_lemma_expected": "AT^2=MT^2-(BC/2)^2 for the perpendicular-bisector construction",
+    "transfer_cluster": "orthocenter_median_projection"
+  },
+  {
+    "id": "H08",
+    "role": "heldout_transfer",
+    "problem": "直線PQにP,Qで接する二円がPQの同じ側でA,Bに交わり、BはAよりPQに近いとする。三角形APQは鋭角不等辺とする。BをPQに関して鏡映した点をCとする。AP=√26、AC=(10/29)√377、tan∠BAQ=3/7のとき、三角形APCの面積を求めよ。",
+    "givens": {
+      "AP": "sqrt(26)",
+      "AC": "10*sqrt(377)/29",
+      "tan_BAQ": "3/7"
+    },
+    "answer_exact": "195/29",
+    "params": {
+      "px": "1",
+      "qx": "7",
+      "ax": "2",
+      "ay": "5"
+    },
+    "decisive_lemma_expected": "angle CAP equals angle BAQ, including the ordinary acute-angle branch",
+    "transfer_cluster": "tangent_circle_reflection_near_transfer"
+  },
+  {
+    "id": "H14",
+    "role": "heldout_transfer",
+    "problem": "鋭角不等辺三角形ABCの垂心をH、BCの中点をM、外接円をΩとする。直線ABと中心C・半径CAの円のAでない交点をD、直線ACと中心B・半径BAの円のAでない交点をEとする。半直線MD,MEとΩの交点をそれぞれP,Qとする。円BPMと円CQMのMでない共通点をRとする。AH=7/10、AR=(7/148)√74のとき、三角形AHRの面積を求めよ。すべての円と交点は非退化とする。",
+    "givens": {
+      "AH": "7/10",
+      "AR": "7*sqrt(74)/148"
+    },
+    "answer_exact": "343/2960",
+    "params": {
+      "w": "17",
+      "ax": "14",
+      "ay": "10"
+    },
+    "decisive_lemma_expected": "R is the orthogonal projection of H onto AM",
+    "transfer_cluster": "orthocenter_median_projection"
+  },
+  {
+    "id": "H15",
+    "role": "heldout_transfer",
+    "problem": "∠BAC=60°の不等辺三角形ABCの外接円をΩとする。ΩのB,Cでの接線の交点をX、直線AXとΩのAでない交点をDとする。DをBCに関して鏡映した点をE、EをABに関して鏡映した点をC0、EをACに関して鏡映した点をB0とし、K=BB0∩CC0とする。AB=9、BD=(9/13)√91、AD=(18/13)√13のとき、BKを求めよ。すべての交点は有限で、二直線BB0,CC0は相異なるとする。",
+    "givens": {
+      "angle_BAC_deg": "60",
+      "AB": "9",
+      "BD": "9*sqrt(91)/13",
+      "AD": "18*sqrt(13)/13"
+    },
+    "answer_exact": "27*sqrt(13)/13",
+    "params": {
+      "b": "3",
+      "c": "9"
+    },
+    "decisive_lemma_expected": "K is the midpoint of AD",
+    "transfer_cluster": "three_reflection_midpoint_independent_case"
+  },
+  {
+    "id": "H01",
+    "role": "source_retention_control",
+    "problem": "鋭角不等辺三角形ABCの垂心をH、BCの中点をMとする。Hから直線AMに下ろした垂線の足をPとする。BC=26、AM=14のとき、APを求めよ。",
+    "givens": {
+      "BC": "26",
+      "AM": "14"
+    },
+    "answer_exact": "27/14",
+    "params": {
+      "m": "13",
+      "t": "14",
+      "u": "1/3"
+    },
+    "decisive_lemma_expected": "A dot H equals (BC/2)^2, hence the orthocenter projection parameter is (BC/2)^2/AM^2",
+    "transfer_cluster": null
+  },
+  {
+    "id": "H02",
+    "role": "source_retention_control",
+    "problem": "鋭角不等辺三角形ABCで、MはBCの中点、KはAからBCへの垂足とする。BC=28、AM=√205、AK=13、BK>KCとする。BC上にBD1=3、BD2=7となる点D1,D2を取る。i=1,2について、円ABDiと直線ACのA以外の交点をUi、円ACDiと直線ABのA以外の交点をViとし、円AUiViの中心をZiとする。Z1Z2を求めよ。",
+    "givens": {
+      "BC": "28",
+      "AM": "sqrt(205)",
+      "AK": "13",
+      "BD1": "3",
+      "BD2": "7"
+    },
+    "answer_exact": "4*sqrt(205)/13",
+    "params": {
+      "w": 14,
+      "ax": "6",
+      "ay": "13",
+      "i1": "3",
+      "i2": "7"
+    },
+    "decisive_lemma_expected": "the center of AUV is affine in the BC-coordinate of D",
+    "transfer_cluster": null
+  },
+  {
+    "id": "H07",
+    "role": "source_retention_control",
+    "problem": "直線ABにA,Bで接する二円が同じ側でM,Nに交わり、MはNよりABに近いとする。三角形NABは鋭角不等辺である。Mを通りABに平行な直線と第一の円のMでない交点をC、第二の円のMでない交点をDとする。E=AC∩BD、P=AN∩CD、Q=BN∩CDとする。OをABの中点、FをMからABへの垂足とする。AB=10、ON=(25/6)√2、MF=3のとき、三角形EPQの面積を求めよ。",
+    "givens": {
+      "AB": "10",
+      "ON": "25*sqrt(2)/6",
+      "MF": "3"
+    },
+    "answer_exact": "42/5",
+    "params": {
+      "c": "10",
+      "x0": "2",
+      "y0": "3"
+    },
+    "decisive_lemma_expected": "OM times ON equals OA squared, and E is the reflection of M over AB",
+    "transfer_cluster": null
+  },
+  {
+    "id": "H13",
+    "role": "source_retention_control",
+    "problem": "鋭角不等辺三角形ABCでBC=10、cos∠ACB=8/17とする。MをACの中点とし、円BMCのCにおける接線とBを通りBCに垂直な直線との交点をKとする。Kは直線BCに関してAと反対側にあり、BK=1000/43である。線分AKと線分BMの内部での交点をJ、円BJKの中心をZとする。CZを求めよ。",
+    "givens": {
+      "BC": "10",
+      "BK": "1000/43",
+      "cos_ACB": "8/17"
+    },
+    "answer_exact": "1700/129",
+    "params": {
+      "bc": "10",
+      "tri": [
+        8,
+        15,
+        17
+      ],
+      "scale": "1"
+    },
+    "decisive_lemma_expected": "the center Z of BJK lies on AC",
+    "transfer_cluster": null
+  }
+]

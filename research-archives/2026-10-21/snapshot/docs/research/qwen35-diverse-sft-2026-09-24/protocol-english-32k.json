@@ -1,0 +1,60 @@
+{
+  "status": "frozen_before_english_generation_or_training",
+  "supersedes": [
+    "protocol.json",
+    "protocol-v2.json",
+    "protocol-english.json",
+    "protocol-english-v2.json"
+  ],
+  "reason": "User requested English throughout and the original 32768-token generation allowance. Earlier Japanese, 6144-token English, and 16384-token English material runs were stopped and excluded; no SFT updates occurred.",
+  "model_id": "Qwen/Qwen3.5-9B",
+  "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+  "source_sha256": {
+    "benchmarks/humpty_configurations_v2/authoring/variant_templates.json": "350d567214b01339b9bbf1eda23d291df41255128384f20a27502205057a2507",
+    "benchmarks/humpty_configurations_v2/training_variants.jsonl": "a5f9c00e3912da5e9f8fc82563421c1c0332d58fbeae3145ffa12aa327723f34",
+    "benchmarks/humpty_configurations_v2/eval_variants.jsonl": "56d4986e72ab74be0a37cc1158e765a7493d68484c56634ea1767da108abd5ea",
+    "benchmarks/humpty_proof_evaluation_v2/evaluation_prompts.jsonl": "98f9892ecda409da13c4c7b02ea27a8974f165635cd302bd42dbd6ab9be23d4e",
+    "/home/kabatan/work/solver/docs/research/qwen35-diverse-sft-2026-09-24/english_templates.py": "9cd1ab4961803deeb58d4a6a3a7b33cf501dcb1cd72cf47a1e41b6c217764a92"
+  },
+  "job_sha256": {
+    "material_original": "f066c3e2169405fb61491f1f3cc5031245957cd198d825b159f8e82439b947a4",
+    "material_repeat": "db57cfb04f19ee46f425003b46ddfca70c70d42c4025fd417e186e70b0df9f4e",
+    "material_shape": "a0cd10ff15e33651ddaa0efeadbe9c290c4df49da34e12246f59df0a0deecbf2",
+    "numeric_dev": "12b17463a8ec12fa42d4fe296d2a8083d7ce3018087d8084764de1f9712b640b",
+    "proof_eval": "557efa1ad7cd588aefaa9cdc8d63d63ac30646e4820999ece3f9a7543564bef5"
+  },
+  "english_instruction": "Solve the following geometry problem. No solution is supplied. First find a nontrivial general relation specific to this construction that actually reduces the unknowns or computation. You may introduce auxiliary points, lines, or circles, and you may use coordinates or vectors. Give (1) the relation and its conditions, (2) a self-contained proof from the construction without skipping the decisive step, and (3) its application to the given numerical data and the final exact value. Do not merely assert a similarity, concyclicity, or algebraic identity. If you cannot prove a claim or solve the problem, say so rather than guessing. Write the entire answer in English. Keep the answer concise, preferably within 1200 words.\n\n",
+  "translation_checks": "English templates were manually translated from all 37 approved Japanese configuration templates; each has the identical set of numeric placeholders. Each rendered job has no Japanese script. Point/order/tangency/branch semantics require separate bilingual audit before causal interpretation.",
+  "split": "Original and shape train variants only as teacher sources, 37 dev variants as numeric evaluation (9 shape, 28 similarity), six existing proof tasks as separate evaluation (three transfer, three same configuration). Never train on dev or proof outputs.",
+  "material_first_pass": {
+    "thinking": false,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "top_k": 20,
+    "presence_penalty": 0.2,
+    "cap": 32768,
+    "samples_per_job": 1
+  },
+  "material_additional_passes": "Second original pass and 27 shape jobs are frozen; run if needed. A thinking-mode pass, if used, is an explicitly exploratory collection arm with its own receipt.",
+  "eval_numeric": {
+    "thinking": false,
+    "temperature": 1.0,
+    "top_p": 0.95,
+    "top_k": 20,
+    "presence_penalty": 1.5,
+    "cap": 32768,
+    "samples_per_job": 2
+  },
+  "eval_proof": {
+    "thinking": false,
+    "temperature": 1.0,
+    "top_p": 0.95,
+    "top_k": 20,
+    "presence_penalty": 1.5,
+    "cap": 32768,
+    "samples_per_job": 2
+  },
+  "primary_measure": "Numeric dev: exact value plus true useful general relation plus self-contained proof plus actual use; report each part, shape/similarity strata, and configuration-level successes.",
+  "secondary_measure": "Existing proof six: complete proof, transfer and same-configuration separately. Both suites are development sets and not final untouched holdouts.",
+  "teacher_gate": "At least 24 admitted own-answer examples from at least 12 distinct configurations for broad SFT; no reference solution or target relation supplied to model. If unmet, report yield and do not call a small run a broad test."
+}

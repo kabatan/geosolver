@@ -1,0 +1,207 @@
+{
+  "status": "prepared_not_executed",
+  "scope": "Exploratory checkpoint transfer audit, not a fresh confirmatory benchmark.",
+  "conditions": [
+    "base",
+    "code32",
+    "numeric32"
+  ],
+  "training_source_ids": {
+    "opd": [
+      "DA01",
+      "DA05",
+      "H01",
+      "H04",
+      "H07",
+      "H13",
+      "H14",
+      "H15"
+    ],
+    "code32": [
+      "DA01",
+      "DA05",
+      "H01",
+      "H04",
+      "H07",
+      "H13",
+      "H15"
+    ],
+    "numeric32": [
+      "DA01",
+      "DA05",
+      "H01",
+      "H04",
+      "H07",
+      "H13",
+      "H15"
+    ]
+  },
+  "configuration_overlap": {
+    "opd": [],
+    "code32": [],
+    "numeric32": []
+  },
+  "units": [
+    {
+      "source_id": "H02",
+      "group": "related_construction",
+      "legacy_structural_group": "humpty_moving_circle_family",
+      "query": {
+        "expression": "Z1Z2",
+        "meaning_ja": "二つの円の中心間距離"
+      },
+      "variant": "v0",
+      "augmentation": "original"
+    },
+    {
+      "source_id": "H03",
+      "group": "related_construction",
+      "legacy_structural_group": "three_humpty_apollonius",
+      "query": {
+        "expression": "OZ",
+        "meaning_ja": "元の外心から新しい円の中心までの距離"
+      },
+      "variant": "v0",
+      "augmentation": "original"
+    },
+    {
+      "source_id": "H08",
+      "group": "related_construction",
+      "legacy_structural_group": "humpty_symmedian_reflection",
+      "query": {
+        "expression": "area(APC)",
+        "meaning_ja": "反射点を使う三角形の面積"
+      },
+      "variant": "v0",
+      "augmentation": "original"
+    },
+    {
+      "source_id": "DA03",
+      "group": "related_construction",
+      "legacy_structural_group": "vertex_tangent_pair",
+      "query": {
+        "expression": "AK",
+        "meaning_ja": "頂点と延長上の交点の距離"
+      },
+      "variant": "v0",
+      "augmentation": "original"
+    },
+    {
+      "source_id": "DA06",
+      "group": "related_construction",
+      "legacy_structural_group": "vertex_tangent_pair",
+      "query": {
+        "expression": "OE",
+        "meaning_ja": "外心と中線上の円交点の距離"
+      },
+      "variant": "v0",
+      "augmentation": "original"
+    },
+    {
+      "source_id": "DA15",
+      "group": "related_construction",
+      "legacy_structural_group": "median_bisector_intersections",
+      "query": {
+        "expression": "OF",
+        "meaning_ja": "元の外心と交点Fの距離"
+      },
+      "variant": "v0",
+      "augmentation": "original"
+    },
+    {
+      "source_id": "H12",
+      "group": "different_construction_or_composition",
+      "legacy_structural_group": "equal_opposite_angles_bisectors_circle",
+      "query": {
+        "expression": "PQ",
+        "meaning_ja": "二つの交点間の距離"
+      },
+      "variant": "v0",
+      "augmentation": "original"
+    },
+    {
+      "source_id": "DA07",
+      "group": "different_construction_or_composition",
+      "legacy_structural_group": "paired_diameter_circles",
+      "query": {
+        "expression": "XY",
+        "meaning_ja": "二つの延長交点の距離"
+      },
+      "variant": "v0",
+      "augmentation": "original"
+    },
+    {
+      "source_id": "DA11",
+      "group": "different_construction_or_composition",
+      "legacy_structural_group": "derived_triangle_foot_midpoints_humpty",
+      "query": {
+        "expression": "radius(ABT)",
+        "meaning_ja": "派生した三点円の半径"
+      },
+      "variant": "v0",
+      "augmentation": "original"
+    },
+    {
+      "source_id": "DB01",
+      "group": "different_construction_or_composition",
+      "legacy_structural_group": "altitude_center_product_tangency",
+      "query": {
+        "expression": "YZ",
+        "meaning_ja": "共通外接線上の二接点間距離"
+      },
+      "variant": "v0",
+      "augmentation": "original"
+    },
+    {
+      "source_id": "DB08",
+      "group": "different_construction_or_composition",
+      "legacy_structural_group": "tangent_projection_angle_transversal",
+      "query": {
+        "expression": "PX",
+        "meaning_ja": "Pから射影点Xまでの距離"
+      },
+      "variant": "v0",
+      "augmentation": "original"
+    },
+    {
+      "source_id": "DB16",
+      "group": "different_construction_or_composition",
+      "legacy_structural_group": "symmedian_variable_circumcenters",
+      "query": {
+        "expression": "AN",
+        "meaning_ja": "Aから二外心の直線との交点までの長さ"
+      },
+      "variant": "v0",
+      "augmentation": "original"
+    }
+  ],
+  "configuration_count": 12,
+  "jobs_per_condition": 24,
+  "total_model_outputs": 72,
+  "replicates_are": "Two decoding seeds for one numerical problem per configuration, not independent problems or training seeds.",
+  "group_warning": "Researcher-assigned construction groups; all draw on the same broad geometry domain. No claim of disjoint underlying theorem families.",
+  "variant_warning": "Ten selected IDs have only similarity variants in the existing pool; v0 alone is used here. Independent non-similar follow-up needs new audited instances.",
+  "generation": {
+    "cap": 32768,
+    "context": 40960,
+    "samples": 1,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "top_k": 20,
+    "presence_penalty": 0.2,
+    "thinking": false
+  },
+  "truncation_policy": "Retain all outcomes. For any capped job, repeat the matched job in all three conditions at cap 81920/context 98304 with the original seed. Report both budgets; unresolved caps remain censored, not mathematical counterevidence.",
+  "source_hashes": {
+    "docs/research/answer-opd-pilot-2026-09-26/train-pool.json": "fd402b131221190424801db78b68bd19cb4b06756d99b9ee145b9ff820893b71",
+    "qwen/.runtime/program_self_training_20260926/selection/train-code.json": "90698ea82c93bc6b730ba98f01e7a9ef6a263b9b7d9043edd7bb324a9a46a219",
+    "qwen/.runtime/program_self_training_20260926/selection/train-numeric.json": "75997401673246bca334de4e173c0e7553cdc3c56d486952463873ae7c99eba2",
+    "docs/research/qwen35-diverse-sft-2026-09-24/english_templates.py": "9cd1ab4961803deeb58d4a6a3a7b33cf501dcb1cd72cf47a1e41b6c217764a92",
+    "benchmarks/humpty_configurations_v2/training_variants.jsonl": "a5f9c00e3912da5e9f8fc82563421c1c0332d58fbeae3145ffa12aa327723f34",
+    "benchmarks/humpty_configurations_v2/revisions.json": "0df7b9565265c8f47ae2deccf96c077432048850a9007e9402b69dd87e932a3a"
+  },
+  "output_hashes": {
+    "eval-jobs.json": "1c674087a0b1766470a38553c1bc990a03f91571cf9554e99ae762f0df07477a",
+    "answer-key.researcher-only.json": "293f5d588dca6be995a53cf46c7647498a5cac5edac99a76ab3fed1becd62a60"
+  }
+}

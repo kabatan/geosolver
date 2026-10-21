@@ -1,0 +1,110 @@
+{
+  "packet": "qwen/.runtime/numeric_sft_dose_control_20260928/review-transfer-review03/index.json",
+  "rubric": "docs/research/related-numeric-sft-2026-09-28/REVIEW_RUBRIC.md",
+  "reference_used": "docs/research/related-numeric-sft-2026-09-28/numeric-review-reference-compact.json",
+  "reference_entries_used": ["DB01", "H08", "DA15"],
+  "read_coverage": {
+    "packet_index": "read",
+    "answer_files": [
+      {"case_id": "numeric-00", "file": "numeric-00.md", "coverage": "full"},
+      {"case_id": "numeric-01", "file": "numeric-01.md", "coverage": "full"},
+      {"case_id": "numeric-02", "file": "numeric-02.md", "coverage": "full"},
+      {"case_id": "numeric-03", "file": "numeric-03.md", "coverage": "full"},
+      {"case_id": "numeric-04", "file": "numeric-04.md", "coverage": "full"}
+    ],
+    "restricted_material": "Only the specified packet index and five answer files were used as condition information. No private, plan, snapshot, manifest, or answer-aggregation material was read or changed."
+  },
+  "field_interpretation": {
+    "valid_geometric_core": "Whether the answer states and uses a valid answer-driving geometric relation; exploratory correct fragments alone do not qualify.",
+    "numerical_error": "Whether the reported exact numerical value or its final arithmetic is wrong. A matching answer with an invalid derivation has numerical_error=false and derivation_status=invalid."
+  },
+  "cases": [
+    {
+      "case_id": "numeric-00",
+      "source_file": "numeric-00.md",
+      "packet_sha256": "97dc3983130e0197abd3ef37b48305970963cd43743b83a9dd3bb9429021b27e",
+      "reported_answer": "4",
+      "reference_answer_exact": "4",
+      "final_answer_correct": true,
+      "derivation_status": "invalid",
+      "valid_geometric_core": false,
+      "numerical_error": false,
+      "evidence_quotes": [
+        {"location": "numeric-00.md:500-505", "quote": "JU^2 = 16 cos^2 A + 15. The derivation is solid. Why would the answer be unique?"},
+        {"location": "numeric-00.md:523-560", "quote": "Let's guess the answer is an integer ... Maybe L=4 is the intended answer."}
+      ],
+      "reason": "The problem matches reference DB01, whose exact answer is 4. The answer itself does not state or establish the reference's decisive tangency relation. Instead, its own calculation leaves the tangent length dependent on A, then it selects 4 from integer-pattern speculation. Thus the final value happens to be correct, but the explanation is not a valid derivation. The attempted earlier geometric calculations do not supply an answer-driving core that resolves this dependency.",
+      "uncertainty": "low"
+    },
+    {
+      "case_id": "numeric-01",
+      "source_file": "numeric-01.md",
+      "packet_sha256": "399e71d9f7547d1af6f4f2a4538abaff6e2f184fb1a3371aa8ff6057afce06e2",
+      "reported_answer": "13.5",
+      "reference_answer_exact": "27/2",
+      "final_answer_correct": true,
+      "derivation_status": "invalid",
+      "valid_geometric_core": false,
+      "numerical_error": false,
+      "evidence_quotes": [
+        {"location": "numeric-01.md:19-27", "quote": "Thus, the line AB is the perpendicular bisector of PQ."},
+        {"location": "numeric-01.md:442-447", "quote": "Let's guess the answer is 27/2 ... This assumes m is determined solely by AP and angle"},
+        {"location": "numeric-01.md:477-479", "quote": "I will bet on 13.5."}
+      ],
+      "reason": "The answer matches H08's exact value, but the main coordinate model assumes AB is perpendicular to PQ. The radical axis intersects PQ at its midpoint, but in general it is not perpendicular to PQ: the line of centers need not be parallel to PQ. The answer later recognizes the general case is asymmetric and that the symmetric construction contradicts the given lengths, then reuses the symmetric-only area calculation as a guess. The displayed final simplification is arithmetically correct for that unsupported model, so the numerical answer is correct by coincidence/reference while the derivation is invalid.",
+      "uncertainty": "low"
+    },
+    {
+      "case_id": "numeric-02",
+      "source_file": "numeric-02.md",
+      "packet_sha256": "8ab5fcd16d3e4f2d59ed138fed7d01a5f14b2fd694dc28ff5ef7fb95a7d949e4",
+      "reported_answer": "27/2",
+      "reference_answer_exact": "27/2",
+      "final_answer_correct": true,
+      "derivation_status": "invalid",
+      "valid_geometric_core": false,
+      "numerical_error": false,
+      "evidence_quotes": [
+        {"location": "numeric-02.md:45-52", "quote": "MP = MQ ... Therefore, the line AB is perpendicular to PQ at the midpoint of PQ."},
+        {"location": "numeric-02.md:59-68", "quote": "O1O2 || PQ ... Therefore, AB ⟂ PQ."},
+        {"location": "numeric-02.md:155-160", "quote": "line connecting centers is parallel to PQ ... Correct."}
+      ],
+      "reason": "The midpoint conclusion for AB∩PQ is valid, but perpendicularity does not follow. The centers lie on perpendiculars to PQ at distinct P and Q, so their joining line is generally oblique to PQ; the radical axis is perpendicular to that joining line, not necessarily to PQ. The answer builds its area calculation on the false vertical alignment and never uses H08's valid equal-angle relation. Its final exact value nevertheless matches H08; no final arithmetic error is present.",
+      "uncertainty": "low"
+    },
+    {
+      "case_id": "numeric-03",
+      "source_file": "numeric-03.md",
+      "packet_sha256": "06d3be9486633b69f470dbb3dc3e25f2b57ff09aaae60a81059817907e00767b",
+      "reported_answer": "5",
+      "reference_answer_exact": "5",
+      "final_answer_correct": true,
+      "derivation_status": "valid",
+      "valid_geometric_core": true,
+      "numerical_error": false,
+      "evidence_quotes": [
+        {"location": "numeric-03.md:411-415", "quote": "BD ∩ CE lies on the circle with diameter AO ... OF = sqrt(13^2 - 12^2) = 5."},
+        {"location": "numeric-03.md:417-423", "quote": "Assume the theorem ... OF^2 + AF^2 = AO^2 ... OF = 5."}
+      ],
+      "reason": "The answer explicitly states and applies the A-Dumpty point property in exactly this construction: with D and E on median AM and on the perpendicular bisectors of AB and AC, F=BD∩CE lies on the circle with diameter AO. This is the DA15 reference relation and its hypotheses match. Therefore ∠AFO=90°, and the Pythagorean calculation is correct. Earlier exploratory uncertainty does not retract or replace this correctly stated, applied theorem; the calibrated rubric does not require reproof of a known applicable theorem.",
+      "uncertainty": "low"
+    },
+    {
+      "case_id": "numeric-04",
+      "source_file": "numeric-04.md",
+      "packet_sha256": "6d22d33a3be3dcac41702e0110bdd5c004d656ebd1706b9378d8bf457f7749f2",
+      "reported_answer": "5",
+      "reference_answer_exact": "5",
+      "final_answer_correct": true,
+      "derivation_status": "valid",
+      "valid_geometric_core": true,
+      "numerical_error": false,
+      "evidence_quotes": [
+        {"location": "numeric-04.md:410-415", "quote": "There is a known result ... BD ∩ CE lies on the circle with diameter AO ... OF = sqrt(13^2 - 12^2) = 5."},
+        {"location": "numeric-04.md:474-487", "quote": "Let's trust the 'circle with diameter AO' property ... So OF=5."}
+      ],
+      "reason": "The answer has substantial unsuccessful exploration, but it eventually states the exact DA15/A-Dumpty point property for this same configuration and uses it to obtain the right angle at F and the Pythagorean result. The theorem is not an added special-case assumption: its D, E, F construction matches the stated problem and the answer does not later retract or replace it with a false relation. Under the calibrated rule, its tentative phrasing ('if this theorem holds' / 'let's trust') alone does not invalidate an accurately stated applicable theorem that is then used. The arithmetic and final value are correct.",
+      "uncertainty": "medium: theorem invocation is tentative and follows speculative alternatives, but the rubric's calibrated treatment accepts it because the exact applicable theorem is stated, applied, and not retracted."
+    }
+  ]
+}

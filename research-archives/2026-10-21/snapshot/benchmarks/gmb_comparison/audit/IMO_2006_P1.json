@@ -1,0 +1,134 @@
+{
+  "case_id": "IMO_2006_P1",
+  "source": {
+    "official_url": "https://www.imo-official.org/assets/documents/problems/2006/2006_eng.pdf",
+    "official_legacy_url": "https://www.imo-official.org/problems/2006/eng.pdf",
+    "official_pdf_sha256": "c613e8c07733b27594156eb922a9a4c3b915538ec4d550a4fe07c3e481f1d075",
+    "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2006_P1.smt2",
+    "gmbl_sha256": "f5f4c1f761c6403ac213fb3d6bc7f007bea1955dd53e6661c17d63b9f0974c7c",
+    "gmbl_commit": "f070afe18ed874b3a31db519ea6f593f40a1be00"
+  },
+  "normalization": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "fixed_coordinates": {
+      "A": [
+        "0",
+        "0"
+      ],
+      "B": [
+        "1",
+        "0"
+      ]
+    },
+    "removed_continuous_dof": 4,
+    "justification": "非退化三角形の辺ABは非零で、内心・内部点・角等式・距離不等式は相似不変。 平行移動2・回転1・正の一様拡大縮小1のみを除く。",
+    "scale_invariant": true,
+    "reflection_fixed": false
+  },
+  "clauses": [
+    {
+      "id": "triangle-incenter",
+      "statement_ja": "ABCは非退化三角形、Iは内心。",
+      "gmbl": [
+        "(param (A B C) triangle)",
+        "(define I point (incenter A B C))"
+      ],
+      "geosolver": [
+        "A = Point(0, 0)",
+        "B = Point(1, 0)",
+        "C = Point(cx, cy)",
+        "Area(A, B, C) > 0",
+        "I = Incenter(A, B, C)"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "interior-P",
+      "statement_ja": "PはABCの内部。",
+      "gmbl": [
+        "(param P point (in-poly A B C))"
+      ],
+      "geosolver": [
+        "P = Point(u*A.x + v*B.x + (1-u-v)*C.x, u*A.y + v*B.y + (1-u-v)*C.y)",
+        "u > 0; v > 0; u+v < 1"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "angle-sum",
+      "statement_ja": "角PBA+角PCA=角PBC+角PCB。",
+      "gmbl": [
+        "(assert (= (add (uangle P B A) (uangle P C A)) (add (uangle P B C) (uangle P C B))))"
+      ],
+      "geosolver": [
+        "Angle(P, B, A) + Angle(P, C, A) = Angle(P, B, C) + Angle(P, C, B)"
+      ],
+      "status": "matched"
+    }
+  ],
+  "goal": {
+    "statement_ja": "AP≥AI、等号成立はP=Iのときかつそのときに限る。",
+    "gmbl": [
+      "(eval (gte (dist A P) (dist A I)))"
+    ],
+    "geosolver_expressions": [
+      "Distance(A, P) >= Distance(A, I)"
+    ],
+    "coverage": "GMBLは不等式のみevalし、等号成立の必要十分条件は含まない。",
+    "included_in_search": false,
+    "target": "0"
+  },
+  "source_differences": [
+    {
+      "id": "gmb-global-admission",
+      "kind": "implementation_limit",
+      "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+      "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+    },
+    {
+      "id": "gmb-triangle-sampler",
+      "kind": "implementation_limit",
+      "detail_ja": "benchmarks/gmb/.runtime/source/src/optimizer.py:428-446のtriangleは単位円上の三頂点として構成する。外接半径を固定する点は相似正規化であり、GeoSolverは一辺を1へ正規化する。",
+      "comparison_effect": "正規化は異なるが三角形の形は限定しない。両出力を共通の無次元検査で採点する。"
+    },
+    {
+      "id": "positive-barycentric-weights",
+      "kind": "equivalent_parameterization",
+      "detail_ja": "u,v,1-u-vを全て正とする重心座標は三角形の内部全体を表す。GMB softmaxに由来する冗長な共通シフトのみを除く。",
+      "comparison_effect": "P=Iを含め、特別な内部点や図形の形を追加固定しない。"
+    },
+    {
+      "id": "equality-case-not-encoded",
+      "kind": "goal_coverage",
+      "detail_ja": "原文の等号成立条件P=Iは公式GMB evalにない。",
+      "comparison_effect": "不等式の数値確認と完全な定理証明を混同しない。"
+    }
+  ],
+  "open_issues": [],
+  "author_review": {
+    "author": "dsl_2000_2006",
+    "primary_sources_read": [
+      "official IMO 2006 English PDF (relevant problem text and rendered page)",
+      "pinned GMBL IMO_2006_P1.smt2",
+      "benchmarks/gmb/.runtime/source/src/optimizer.py",
+      "src/geosolver/problem/dsl-spec.json",
+      "src/geosolver/engine/standard/interpreter/context/geometry.py",
+      "src/geosolver/engine/standard/interpreter/context/high_precision.py"
+    ],
+    "static_validation": {
+      "public_model": true,
+      "validator": true,
+      "compiler": true,
+      "warnings": [],
+      "variables": 4,
+      "constructions": 5,
+      "conditions": 5
+    },
+    "solve_or_refinement_executed": false,
+    "independent_review_required": true
+  },
+  "comparison_status": "draft"
+}

@@ -1,0 +1,43 @@
+{
+  "case_id": "IMO_2007_P2",
+  "source": {
+    "official_url": "https://www.imo-official.org/assets/documents/problems/2007/2007_eng.pdf",
+    "official_pdf_sha256": "29246b496d6fbca636e4482ec18c3f86b71754e02cfc80ba9066d08443a79a46",
+    "official_pdf_page": 1,
+    "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2007_P2.smt2",
+    "gmbl_sha256": "620258798ffd18be7eb007129fbd37bf7f61469d774f16ee341d27c7cc700d7f"
+  },
+  "normalization": {
+    "anchors": ["B", "C"],
+    "fixed_coordinates": {"B": ["0", "0"], "C": ["1", "0"]},
+    "removed_continuous_dof": 4,
+    "justification": "非退化な平行四辺形の辺BCは正長。相似変換でBCを単位水平線分とするだけでDとEの形は固定しない。dyの両符号を残す。",
+    "scale_invariant": true,
+    "reflection_fixed": false
+  },
+  "clauses": [
+    {"id": "parallelogram", "statement_ja": "ABCDは非退化な平行四辺形。", "gmbl": ["(param (B C D) polygon)", "(define A point (inter-ll (para-at D (line B C)) (para-at B (line D C))))"], "geosolver": ["B, C, D", "A = Intersect(ParallelLine(Line(B, C), D), ParallelLine(Line(D, C), B))", "Area(B, C, D) > 0"], "status": "matched"},
+    {"id": "cyclic_order", "statement_ja": "B,C,E,Dはこの巡回順の円に内接する四辺形。", "gmbl": ["(param E point (on-circ (circumcircle B C D)))", "EF=EG=ECとFがDC内部という残りの仮定"], "geosolver": ["E = PointOnCircle(Omega, te)", "ConvexPolygon([B, C, E, D])"], "status": "matched_by_verified_implication"},
+    {"id": "secant", "statement_ja": "Aを通る直線lはDCの内部でF、直線BC上でGと交わる。", "gmbl": ["(define F point (inter-lc (line D C) (coa E C) (rs-neq C)))", "(assert (on-seg F D C))", "(define l line (line F A))", "(define G point (inter-ll l (line B C)))"], "geosolver": ["F = Intersect(Line(D, C), CircleThroughPoint(E, C), exclude=C)", "OnSegment(F, D, C) = 0", "Distance(F, D) > 0", "Distance(F, C) > 0", "l = Line(F, A)", "G = Intersect(l, Line(B, C))"], "status": "matched"},
+    {"id": "equal_lengths", "statement_ja": "EF=EG=EC。EF=ECはFの円上構成で表す。", "gmbl": ["(coa E C)", "(assert (cong E F E G))"], "geosolver": ["CircleThroughPoint(E, C)", "Distance(E, F) = Distance(E, G)"], "status": "matched"}
+  ],
+  "goal": {"statement_ja": "lが角DABの内角二等分線である。", "gmbl": ["(eval (eq l (i-bisector D A B)))"], "included_in_search": false, "target": "0"},
+  "source_differences": [
+    {"kind": "mathematically_redundant_condition", "detail": "公開GMBLはBCEDの巡回順を直接拘束しないが、Fの内部性とEF=EG=ECから巡回順が従う。下記の代数的含意を別担当が独立確認済み。原文にあるConvexPolygon条件は解集合を狭めない。"},
+    {"kind": "implementation_search_restriction", "detail": "GMBの3点polygonサンプラは角度・辺比を有限範囲に制限し、閉路条件を損失にする。これは原文の追加仮定ではないため移植しない。"},
+    {"kind": "implementation_guard_margin", "detail": "GMB assert on-segはbetween_gapのeps=0.2により中央部分を選好・拘束する。原文は単に開線分全体なので20%幅は移植しない。"}
+  ],
+  "verified_implication": {
+    "claim": "残りの仮定はBCEDの巡回順を含意する。",
+    "derivation": [
+      "B=(0,0), C=(1,0), D=(1+a,h), h≠0, s²=a²+h²とする。F=(1−t)D+tC,0<t<1、g=1/t>1なら直線AFとBCの交点はG=(g,0)。",
+      "EF=EG=ECよりEx=(1+g)/2、Ey=(g−1)(s²−ag)/(2hg)。BCDの円式はx²+y²−x−(s²+a)y/h=0。",
+      "Eを円式へ代入し4h²g²/(g−1)倍するとs²(g+1)(g²−s²)=0。g>1,s>0よりg=s>1。",
+      "h*Ey=(s−1)(s−a)/2>0で、CDに対するB,Eの符号付き外積の積は−s(s−1)(s−a)/2<0。従ってEは弧CDのBを含まない側にあり、B,C,E,Dの巡回順になる。"
+    ],
+    "independent_check": "independent_review担当がEx,Ey、円式、因数分解、符号の全段階を独立手展開で確認。"
+  },
+  "open_issues": [],
+  "author_review": {"reviewer": "dsl_2007_2013", "primary_sources_read": ["公式2007英語PDF第1頁（画像・抽出本文）", "公開IMO_2007_P2.smt2", "GMB src/optimizer.py: sample_polygon, between_gap", "GeoSolver DSL spec・交点選択契約"], "static_validation": "GeometryProblem、validate、compile_problemに合格。探索・精密化・GMB出力参照は未実施。"},
+  "comparison_status": "draft"
+}

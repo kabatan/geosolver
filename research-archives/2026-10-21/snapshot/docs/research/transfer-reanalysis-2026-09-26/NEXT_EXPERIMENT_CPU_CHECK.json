@@ -1,0 +1,99 @@
+{
+  "schema": "numeric-sft-cpu-check-v1",
+  "checked_on": "2026-09-27",
+  "scope": {
+    "training_gpu": "not_run",
+    "evaluation_gpu": "not_run",
+    "model_weights_loaded": false,
+    "source_training_data_modified": false,
+    "temporary_dataset_configs_receipts_retained": false
+  },
+  "source_dataset": {
+    "path": "qwen/.runtime/program_self_training_20260926/selection/train-numeric.json",
+    "sha256": "75997401673246bca334de4e173c0e7553cdc3c56d486952463873ae7c99eba2",
+    "selection_receipt_path": "qwen/.runtime/program_self_training_20260926/selection/receipt.json",
+    "selection_receipt_sha256": "f2441b1e513a450af52890dbbc2df63f3f05a186dadcd45bbbdaec6b8dce97a8",
+    "row_count": 56,
+    "source_count": 7,
+    "source_target_counts": [
+      {"source_id": "DA01", "rows": 8, "unique_numeric_targets": 8, "full_value_derangement_possible": true},
+      {"source_id": "DA05", "rows": 8, "unique_numeric_targets": 8, "full_value_derangement_possible": true},
+      {"source_id": "H01", "rows": 8, "unique_numeric_targets": 8, "full_value_derangement_possible": true},
+      {"source_id": "H04", "rows": 8, "unique_numeric_targets": 8, "full_value_derangement_possible": true},
+      {"source_id": "H07", "rows": 8, "unique_numeric_targets": 8, "full_value_derangement_possible": true},
+      {"source_id": "H13", "rows": 8, "unique_numeric_targets": 8, "full_value_derangement_possible": true},
+      {"source_id": "H15", "rows": 8, "unique_numeric_targets": 8, "full_value_derangement_possible": true}
+    ],
+    "target_values_recorded": false
+  },
+  "derangement": {
+    "training_seed": 2026092801,
+    "derangement_seed": 2026092802,
+    "algorithm": "Iterate source_id in sorted order. Use one random.Random(2026092802); for each source shuffle its ordered target list until every Decimal(target) differs from the original value at that row. Assign only targets; preserve row order, id, source_id and messages.",
+    "changed_target_values": 56,
+    "fixed_points": 0,
+    "source_target_multisets_preserved": true,
+    "prompt_identity_sha256": "c4ffccaa8203dba8f867fd4d871b24aea7a2596527c644319c89902c34c84d99",
+    "derived_dataset_serialization": "json.dumps(ensure_ascii=False, indent=2) plus newline",
+    "derived_dataset_sha256": "3b52d79ff952b0408bfd1b306e066d33edffbf23f8f3e5993522b339ec96029a",
+    "derived_dataset_persisted": false
+  },
+  "tokenization_preflight": {
+    "method": "The frozen train_sft.tokenize_rows and data_order functions; AutoTokenizer.from_pretrained(local_files_only=True); assistant target token counts include template EOS.",
+    "unique_target_tokens": {"match": 1056, "deranged": 1056, "equal": true},
+    "data_order_seed": 2026092801,
+    "presentations": {"updates_32": 128, "updates_128": 512},
+    "planned_target_tokens": {
+      "updates_32": {"match": 2414, "deranged": 2413, "deranged_minus_match": -1},
+      "updates_128": {"match": 9655, "deranged": 9656, "deranged_minus_match": 1}
+    },
+    "cycle_note": "512 presentations are 9 complete cycles of 56 rows plus the first 8 rows of another shuffled cycle; per-source target multisets therefore do not force equal planned totals at the partial-cycle boundary.",
+    "total_token_matched": false
+  },
+  "cpu_cli_checks": {
+    "python": "qwen/.runtime/vllm-venv/bin/python",
+    "python_version": "3.12",
+    "environment": {
+      "CUDA_VISIBLE_DEVICES": "",
+      "HF_HUB_OFFLINE": "1",
+      "TOKENIZERS_PARALLELISM": "false"
+    },
+    "system_python_has_torch": false,
+    "train_sft_cpu_check": {"status": "pass", "loss_gradient_equivalence": true},
+    "train_sft_preflight": {
+      "match_updates_32": "pass",
+      "deranged_updates_32": "pass"
+    },
+    "train_continue_preflight": {
+      "match_updates_128": "pass",
+      "deranged_updates_128": "pass",
+      "prior_receipt_for_cli_test": "temporary receipt containing global_updates=32 only",
+      "actual_adapter_optimizer_resume_validation": "not_run; requires the new GPU-produced 32-update checkpoint"
+    },
+    "temporary_outputs_removed": true
+  },
+  "software_and_inputs": {
+    "config_32_sha256": "caf80fb024568eaaeadda169036fed5ab94d10f5828cd0528d6832be11e05297",
+    "config_128_sha256": "c5113dc622139cafb7ab40d285bb169597a13a662683e7bbe3cec210c54f04ee",
+    "train_sft_py_sha256": "f525e7626bae22109753cd5a8deac47b94cd13f4bd4dcc13960543b4607b9857",
+    "train_continue_py_sha256": "5f78f86eb97c4c834db3b8d24100e88775e34633fa930fac36d8058eff12ae26",
+    "execution_harness_py_sha256": "574f8d2cea03fbfe93d568dc1ddf61748fc99ab62eeb64db1b902a457d718810",
+    "model_metadata_sha256": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd",
+    "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+    "package_versions": {
+      "torch": "2.13.0",
+      "transformers": "5.17.0",
+      "tokenizers": "0.23.2",
+      "peft": "0.18.0",
+      "safetensors": "0.8.0"
+    },
+    "tokenizer_assets_sha256": {
+      "chat_template.jinja": "a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715",
+      "merges.txt": "a9d356d7bdf1ef4949e3e748e95b8e10ad9d4e2e838eddc38a0a7b6b94d1db8d",
+      "tokenizer.json": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+      "tokenizer_config.json": "316230d6a809701f4db5ea8f8fc862bc3a6f3229c937c174e674ff3ca0a64ac8",
+      "vocab.json": "ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003"
+    },
+    "tokenizer_asset_set_sha256": "0756ac9b9343d39ddeda2767a3a18574f4f25cbb6281d0cf2c77572ed82ba9e9"
+  }
+}

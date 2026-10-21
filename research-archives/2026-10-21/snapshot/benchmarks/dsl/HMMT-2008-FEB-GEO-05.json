@@ -1,0 +1,64 @@
+{
+  "id": "HMMT-2008-FEB-GEO-05",
+  "variables": [
+    "x",
+    "y",
+    "e"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(1,0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(x,y)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(x,-y)"
+    },
+    {
+      "name": "E",
+      "expression": "Point(e,0)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "y",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "e",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "e",
+      "operator": "<",
+      "right": "1"
+    },
+    {
+      "predicate": "ConvexPolygon([A,B,C,D])"
+    },
+    {
+      "left": "Angle(A,D,E)",
+      "operator": "=",
+      "right": "Angle(C,D,E)"
+    },
+    {
+      "predicate": "Or(And(Distance(A,B)==Distance(A,C),Distance(A,B)==Distance(A,D),Angle(D,A,B)==4*pi/5),And(Distance(B,A)==Distance(B,C),Distance(B,A)==Distance(B,D),Angle(A,B,C)==4*pi/5),And(Distance(C,A)==Distance(C,B),Distance(C,A)==Distance(C,D),Angle(B,C,D)==4*pi/5),And(Distance(D,A)==Distance(D,B),Distance(D,A)==Distance(D,C),Angle(C,D,A)==4*pi/5))"
+    },
+    {
+      "left": "Angle(D,E,C)",
+      "operator": "<",
+      "right": "pi/2"
+    }
+  ],
+  "target": "180*Angle(D,E,C)/pi"
+}

@@ -1,0 +1,62 @@
+{
+  "id": "HMMT-2007-FEB-GEO-08",
+  "variables": [
+    "c"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "v",
+      "expression": "sin(13 * pi / 18) / sin(pi / 18)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(cos(pi / 9), sin(pi / 9))"
+    },
+    {
+      "name": "D",
+      "expression": "Point(v * cos(pi / 9), -v * sin(pi / 9))"
+    },
+    {
+      "name": "C",
+      "expression": "Point(c, 0)"
+    },
+    {
+      "name": "bc",
+      "expression": "Distance(B, C)"
+    },
+    {
+      "name": "E",
+      "expression": "Point((1 - bc / v) * v * cos(pi / 9), -(1 - bc / v) * v * sin(pi / 9))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": "Distance(C, D)"
+    },
+    {
+      "left": "c",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "bc",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "bc",
+      "operator": "<",
+      "right": "v"
+    },
+    {
+      "predicate": "ConvexPolygon([A, B, C, D])"
+    }
+  ],
+  "target": "180 * Angle(A, C, E) / pi"
+}

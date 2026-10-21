@@ -1,0 +1,20 @@
+{
+  "created_before_material_audit": true,
+  "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+  "start_weights": "unchanged Qwen3.5-9B base, never the earlier 3-example adapter",
+  "entry_gate": "at least 24 complete own-answer examples across at least 12 independently distinct configurations",
+  "dataset_selection": "all audited complete v0 and shape-variant answers; at most two per configuration in the first broad comparison, prioritized by valid proof and actual relation use rather than shorter text; no similarity-only repetitions",
+  "seed": 2026092427,
+  "epochs": 2,
+  "learning_rate": 0.00005,
+  "lora_rank": 8,
+  "lora_alpha": 16,
+  "lora_dropout": 0,
+  "micro_batch": 1,
+  "max_sequence_tokens": 8192,
+  "optimizer": "AdamW, constant learning rate, zero weight decay, gradient norm clip 1",
+  "loss_mask": "visible final assistant answer and EOS only",
+  "checkpoint": "single final adapter; no choice using evaluation responses",
+  "comparison": "unmodified base versus broad SFT with the identical frozen numeric-dev and proof-evaluation prompts, seeds, sampling, and caps",
+  "gate_failure": "if the corpus threshold is not reached, report candidate yield and do not portray a smaller run as the broad experiment"
+}

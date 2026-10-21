@@ -1,0 +1,130 @@
+[
+  {
+    "id": "EV02",
+    "title_ja": "二つの高さの足を結ぶ直線と中線",
+    "problem_ja": "鋭角三角形ABCでAB≠ACとする。垂心をH、BCの中点をM、BからACへの垂足をE、CからABへの垂足をFとする。直線EFと直線BCの交点をTとする。HT⊥AMであることを証明せよ。",
+    "solution_ja": [
+      "PをHからAMへの垂足として新たに作り、AをMに関して点対称に移した点をA*とする。A*B∥AC、A*C∥ABと垂心の定義から∠A*BH=∠A*CH=90°。またA*,P,A,Mは一直線上でHP⊥AMなので∠A*PH=90°。従ってB,C,H,Pは直径A*Hの円上にある。この核心関係を点の名前だけで済ませない。",
+      "ωを直径BCの円、σを直径AHの円、τをB,C,H,Pの円とする。BE⊥EC、BF⊥FCよりB,C,E,Fはω上にある。AE⊥EH、AF⊥FH、AP⊥PHよりA,E,F,H,Pはσ上にある。",
+      "ωとσの根軸はEF、ωとτの根軸はBC、σとτの根軸はHPである。Tは最初の二本の根軸の交点なので、根軸定理によりTはHP上にもある。",
+      "従ってHTはHPと同じ直線であり、Pの定義からHT⊥AM。AB≠ACによりEFはBCと平行でなく、P≠Hなので用いた直線は全て定義される。"
+    ],
+    "alternative_solutions_ja": [
+      {
+        "code": "DIRECT_POLAR",
+        "steps": [
+          "ωを直径BCの円とするとB,C,E,Fはω上にある。円に内接する四角形の対辺交点はA=BF∩CE、H=BE∩CF、T=BC∩EFである。",
+          "自己極三角形の定理より、ωに関するAの極線はHTである。",
+          "ωの中心はMなので、Aの極線はAMに垂直である。従ってHT⊥AM。Pの導入もHumptyの性質も不要。"
+        ]
+      }
+    ],
+    "key_auxiliary_ja": "参照証明ではP=HからAMへの垂足とA*=2M−Aを導入する。Pが三つの円のうち二つの共通点になることで、新しい根軸HPを得る。ただしこの補助点を用いない極線の別解も存在する。",
+    "transfer_target_ja": "未提示の中線への垂足を導入し、基本的な共円性を根軸へ直ちに使えるか。追加の難しい処理を要求しない。極線で直接証明した場合も満点とし、Humptyの利用とは別に記録する。",
+    "training_overlap_ids": [
+      "H01",
+      "H03",
+      "H04",
+      "H14",
+      "DA07"
+    ],
+    "overlap_audit_ja": [
+      "v2の37 mainにT=EF∩BCからHT⊥AMを問う問題はなく、その直接の数値版もない。近接するH10,H11は学習から留保されている。",
+      "H01,H04ではPそのものが入力に現れ、H03,H14,DA07では同じ点が別構成で現れる。この共円性の再利用を狙うので、核心補題自体との重複は意図的である。",
+      "三円の根軸EF,BC,HPを接続する配置は主学習の単なる数値→文字置換ではない。しかしEvan Chenの公開資料に基本性質として明記されており、学習前に既知の可能性は高い。",
+      "DIRECT_POLARはPを全く使わない短い正解である。学習後に正答しても、それだけでHumpty点の自発導入・獲得を示したとは判定しない。",
+      "EV01と同じhumpty_BCH_circle_bridgeファミリー内の補助的な一題として扱い、独立な能力の数を増やすために利用しない。"
+    ],
+    "novelty_status": "既知の基本性質を用いる留保配置。学習で未提示の配置への証明転移だが、強い原著性や未知定理発見の課題ではない。",
+    "source": [
+      {
+        "title": "Evan Chen, Lemmas in AoPS Geometry",
+        "url": "https://web.evanchen.cc/handouts/GeoSlang/GeoSlang.pdf",
+        "locator": "§3.1, Definition 3.1と直後の基本性質、PDF pp.9–10。QH,BC,EFの共点性とQ∈(BHC)が明記される。"
+      }
+    ],
+    "domain_ja": [
+      "ABCは非退化な鋭角三角形、AB≠AC。E,Fはそれぞれ辺AC,ABの内部にある。",
+      "AB≠ACによりEF∦BCでTが有限となる。またP≠Hで根軸HPが定義できる。",
+      "Tは直線どうしの交点であり、線分EFまたは線分BCの内部にあるとは指定しない。実際にはBCの外側になる。"
+    ],
+    "scoring_ja": [
+      "参照経路：0〜2点でPとA*によるB,C,H,Pの共円性、0〜2点で三つの円と根軸を同定、0〜2点で根軸定理からT∈HP、0〜1点で垂直と条件を完結する。",
+      "DIRECT_POLAR経路：0〜2点でB,C,E,Fの共円性、0〜3点で自己極三角形によりHTがAの極線と示し、0〜2点で中心Mとの垂直を結論する。これも7点の完全正解。",
+      "その他の完全な証明も7点。核心の共円性を特殊点名だけで引用したものは完答にしない。通常の極線・方べき・根軸の定理は使用可。",
+      "方法コード：HUMPTY_RADICAL_AXIS / DIRECT_POLAR / ALGEBRA / OTHER_VALID。DIRECT_POLARを補助点の自発利用に数えない。",
+      "EV01と同じ共円性を核とする一評価ファミリー内の補助問題。独立な能力を一つ増やしたとは扱わない。"
+    ],
+    "verification_ja": [
+      "公開資料に同じ共点性が明記されることを再確認。独自に作った未知定理ではない。",
+      "参照証明の三つの円を直径の円またはA*を使って構成し、根軸が実際にEF,BC,HPであることを点検した。",
+      "Pを使わないDIRECT_POLARの証明も独立に確認した。自己極三角形の頂点の対応を明記した。",
+      "verify_humpty_eval.pyは一般座標でE,Fを射影として構成し、T=EF∩BC、T∈HP、HT⊥AMを恒等確認。DIRECT_POLARについてもH,TがAの極線上にあることを同時に確認する。"
+    ],
+    "family_id": "humpty_BCH_circle_bridge",
+    "evaluation_role": "secondary_transfer_with_shortcut_control",
+    "method_codes": [
+      "HUMPTY_RADICAL_AXIS",
+      "DIRECT_POLAR",
+      "ALGEBRA",
+      "OTHER_VALID"
+    ],
+    "verification_script": "verify_humpty_eval.py",
+    "witness": {
+      "points": {
+        "A": [
+          "1/2",
+          "3/2"
+        ],
+        "B": [
+          "-1",
+          "0"
+        ],
+        "C": [
+          "1",
+          "0"
+        ],
+        "H": [
+          "1/2",
+          "1/2"
+        ],
+        "M": [
+          "0",
+          "0"
+        ],
+        "E": [
+          "4/5",
+          "3/5"
+        ],
+        "F": [
+          "0",
+          "1"
+        ],
+        "P": [
+          "1/5",
+          "3/5"
+        ],
+        "T": [
+          "2",
+          "0"
+        ]
+      },
+      "checks": [
+        "E,F reproduced by perpendicular projection",
+        "T finite and outside segment BC",
+        "(H-T) dot (A-M)=0"
+      ]
+    },
+    "authoring_file": "authoring/humpty_eval.json",
+    "role": "transfer_main",
+    "short_route_ja": [
+      "PをHからAMへの垂足として導入すると、B,C,H,Pは共円。",
+      "円(BCEF)、円(AEFHP)、円(BCHP)の根軸はEF、BC、HPだから、T∈HP。従ってHT⊥AM。"
+    ],
+    "after_discovery_ja": "共円性を認識した後は、三円の根軸を一度使うだけ。極線による別解も完全正解。",
+    "key_lemma_ja": "Mに関してAと対称なA*を補うと、BH⊥A*B、CH⊥A*C、PH⊥A*P。従ってB,C,H,Pは直径A*Hの円上にある。",
+    "auxiliary_hint_ja": "Hから直線AMへの垂足を補助点として導入して考えてください。",
+    "selection_reason_ja": "ユーザーが難度と転移の形を適切と評価した基準問題。v1の補助枠から中心課題へ移す。",
+    "overlap_level_ja": "学習にないorthicの問い。核心の共円性は既習数値配置と共通。"
+  }
+]

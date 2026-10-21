@@ -1,0 +1,15 @@
+{
+  "case_id": "IMO_2009_P4",
+  "source": {"official_url": "https://www.imo-official.org/assets/documents/problems/2009/2009_eng.pdf", "official_pdf_sha256": "fd6e575ee181acb30bd32c87944e35f42e91efe025b1d23c352f047da7ab9cb3", "official_pdf_page": 2, "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2009_P4.smt2", "gmbl_sha256": "1b4c308554dd2408638e5455b9b3ac6918770ada24c82a45ebb6569793bd5d13"},
+  "normalization": {"anchors": ["A", "B"], "fixed_coordinates": {"A": ["0", "0"], "B": ["1", "0"]}, "removed_continuous_dof": 4, "justification": "正長辺ABを1にし、AB=ACは形の条件として残す。頂角は固定しない。", "scale_invariant": true, "reflection_fixed": false},
+  "clauses": [
+    {"id": "isosceles", "statement_ja": "ABCはAB=ACを満たす非退化三角形。", "gmbl": ["(param (A B C) triangle)", "(assert (cong A B A C))"], "geosolver": ["Area(A, B, C) > 0", "Distance(A, B) = Distance(A, C)"], "status": "matched"},
+    {"id": "bisectors", "statement_ja": "角CABとABCの内角二等分線は対辺BC,CAにそれぞれD,Eで交わる。", "gmbl": ["(define D point (inter-ll (i-bisector C A B) (line B C)))", "(define E point (inter-ll (i-bisector A B C) (line C A)))"], "geosolver": ["D = Intersect(AngleBisector(C, A, B), Line(B, C))", "E = Intersect(AngleBisector(A, B, C), Line(C, A))"], "status": "matched"},
+    {"id": "incenter_angle", "statement_ja": "KはADCの内心で、角BEKは45度。", "gmbl": ["(define K point (incenter A D C))", "(assert (= (uangle B E K) (div pi 4)))"], "geosolver": ["K = Incenter(A, D, C)", "Angle(B, E, K) = pi / 4"], "status": "matched"}
+  ],
+  "goal": {"statement_ja": "角CABの可能な値をすべて求める。今回は求値ではなく仮定を満たす配置の生成のみ比較する。", "gmbl": [], "gmbl_goal_supported": false, "included_in_search": false, "target": "0"},
+  "source_differences": [{"kind": "unsupported_posthoc_goal", "detail": "公開GMBLはevalを持たない。角CABの解集合・網羅性をこの配置比較の成績に混ぜない。"}],
+  "open_issues": [],
+  "author_review": {"reviewer": "dsl_2007_2013", "primary_sources_read": ["公式2009英語PDF第2頁（画像・抽出本文）", "公開IMO_2009_P4.smt2", "GeoSolver DSL specのAngle・AngleBisector・Incenter"], "static_validation": "GeometryProblem、validate、compile_problemに合格。探索・精密化未実施。"},
+  "comparison_status": "draft"
+}

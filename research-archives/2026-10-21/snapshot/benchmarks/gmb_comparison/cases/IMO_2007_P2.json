@@ -1,0 +1,24 @@
+{
+  "id": "IMO_2007_P2",
+  "variables": ["dx", "dy", "te"],
+  "constructions": [
+    {"name": "B", "expression": "Point(0, 0)"},
+    {"name": "C", "expression": "Point(1, 0)"},
+    {"name": "D", "expression": "Point(dx, dy)"},
+    {"name": "Omega", "expression": "Circumcircle(B, C, D)"},
+    {"name": "E", "expression": "PointOnCircle(Omega, te)"},
+    {"name": "A", "expression": "Intersect(ParallelLine(Line(B, C), D), ParallelLine(Line(D, C), B))"},
+    {"name": "F", "expression": "Intersect(Line(D, C), CircleThroughPoint(E, C), exclude=C)"},
+    {"name": "l", "expression": "Line(F, A)"},
+    {"name": "G", "expression": "Intersect(l, Line(B, C))"}
+  ],
+  "conditions": [
+    {"left": "Area(B, C, D)", "operator": ">", "right": "0"},
+    {"predicate": "ConvexPolygon([B, C, E, D])"},
+    {"left": "OnSegment(F, D, C)", "operator": "=", "right": "0"},
+    {"left": "Distance(F, D)", "operator": ">", "right": "0"},
+    {"left": "Distance(F, C)", "operator": ">", "right": "0"},
+    {"left": "Distance(E, F)", "operator": "=", "right": "Distance(E, G)"}
+  ],
+  "target": "0"
+}

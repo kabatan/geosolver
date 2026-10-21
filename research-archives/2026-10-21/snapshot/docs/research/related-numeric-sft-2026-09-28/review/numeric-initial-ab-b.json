@@ -1,0 +1,85 @@
+{
+  "reviewer": "b",
+  "scope": "Anonymous review of six correct-numeric answers; derivation graded independently under REVIEW_RUBRIC.md and the supplied prior-adjudication calibration.",
+  "cases": [
+    {
+      "case_id": "numeric-12",
+      "derivation_status": "invalid",
+      "valid_geometric_core": false,
+      "numerical_error": false,
+      "evidence_quotes": [
+        {"lines": "445-448", "quote": "Hypothesis: $\\angle PAC = \\angle BAQ$. If $\\angle PAC = \\angle BAQ$, then Area = ... = 13.5."},
+        {"lines": "452-466", "quote": "Maybe $\\angle PAC = \\angle BAQ$ is a property of this configuration. Given the specificity of the numbers, and the clean result $13.5$, this is highly likely."}
+      ],
+      "reason": "The needed angle equality is only a hypothesis, followed by a conditional area computation and a numerical-neatness argument. The answer neither derives nor invokes the exact construction property as an established result. The trigonometric arithmetic after that missing premise is correct.",
+      "uncertainty": "low; strict and calibrated readings agree",
+      "read_coverage": "Entire problem and response, lines 1-477, including exploratory middle, checked for an independent derivation or retained theorem invocation."
+    },
+    {
+      "case_id": "numeric-14",
+      "derivation_status": "valid",
+      "valid_geometric_core": true,
+      "numerical_error": false,
+      "evidence_quotes": [
+        {"lines": "15-44", "quote": "Case 2: $8-x = -6 \\implies x = 14$ ... $A = (0,8)$, $B = (-14,0)$, $C = (2,0)$."},
+        {"lines": "172-174, 230-232, 285-289", "quote": "So $Z_1 = (-8, 11.75)$ ... So $Z_2 = (-5, 9.5)$ ... Distance $Z_1Z_2 = ... = \\frac{15}{4}$."},
+        {"lines": "486-495", "quote": "$V_1 = (14/65, 528/65)$. This changes everything. ... the strong hint from the first correct calculation ... the distance calculation ... is robust if the $y$-coordinates follow a linear progression."}
+      ],
+      "reason": "The answer contains a complete fixed-instance coordinate construction: it solves the given branch, intersects the specified circles with AC and AB, computes both actual circumcenters, and obtains their exact distance. I independently rechecked U1=(-46/17,320/17), V1=(-574/65,192/65), Z1=(-8,47/4), U2=(-22/17,224/17), V2=(-406/65,288/65), and Z2=(-5,19/2) from the original circles. A later symbolic recheck has a sign error and falsely proposes a different V1; this makes the presentation internally inconsistent but does not replace the already complete verified coordinate calculation, which the last paragraph calls the first correct calculation. Line 114 also has a stray constant 8 in a quadratic whose immediately preceding expansion has zero constant and whose chosen roots are correct.",
+      "uncertainty": "moderate presentation boundary; a strict final-passage-only reading could call it unclear because lines 489-496 express doubt, while full-answer mathematical review finds an intact complete derivation",
+      "read_coverage": "Entire problem and response, lines 1-501, including both numeric coordinate derivations, later symbolic recheck, and final conclusion."
+    },
+    {
+      "case_id": "numeric-16",
+      "derivation_status": "valid",
+      "valid_geometric_core": true,
+      "numerical_error": false,
+      "evidence_quotes": [
+        {"lines": "382-385", "quote": "Actually, there is a known result for this specific configuration. The point $F$ lies on the circle with diameter $AO$. Therefore, $\\angle AFO = 90^\\circ$. Thus, $OF = \\sqrt{AO^2 - AF^2} = ... = 5$."},
+        {"lines": "392-395", "quote": "Specifically, it is a known property that in this configuration, $F$ lies on the circle with diameter $AO$. Reference: ... $D, E$ are intersections of perp bisectors of $AB, AC$ with the median $AM$ ..."}
+      ],
+      "reason": "The final passage states and applies the exact independently identified diameter-AO construction theorem, with matching point definitions, then uses Thales/Pythagoras correctly. It need not reprove this known specialized result under the calibrated numerical rubric. Earlier false coordinate starts and later conditional language are exploratory and do not replace or explicitly retract this retained theorem-plus-calculation core.",
+      "uncertainty": "low under calibrated standard; stricter self-contained-proof standard would differ but is not this rubric",
+      "read_coverage": "Entire problem and response, lines 1-405, including failed coordinate attempts, corrections, exact known-property invocation, and final result."
+    },
+    {
+      "case_id": "numeric-21",
+      "derivation_status": "invalid",
+      "valid_geometric_core": false,
+      "numerical_error": false,
+      "evidence_quotes": [
+        {"lines": "446-449", "quote": "The intersection points $A$ and $B$ lie on the radical axis ... This line passes through $M(c/2, 0)$ ... Thus, points $A$, $B$, and $M$ are collinear."},
+        {"lines": "451-459, 477-480", "quote": "In the specific case where the circles have equal radii ... the triangle $APQ$ would be isosceles. However, the problem states $APQ$ is scalene. ... The calculation derived from the symmetric case is the only one yielding a clean exact number ... Thus, the area is $13.5$."}
+      ],
+      "reason": "The final calculation uses equal circle radii and AB perpendicular to PQ, making APQ isosceles contrary to the stated scalene condition. Although the final answer correctly repairs the earlier radical-axis claim to mere collinearity with the midpoint, it never derives the required general angle relation or applies it as known. The extension from a forbidden symmetric case is justified only by presumed invariance and a clean number.",
+      "uncertainty": "low; strict and calibrated readings agree",
+      "read_coverage": "Entire problem and response, lines 1-482, including initial false symmetry, correction to general radical axis, special-case calculation, and final extension."
+    },
+    {
+      "case_id": "numeric-23",
+      "derivation_status": "valid",
+      "valid_geometric_core": true,
+      "numerical_error": false,
+      "evidence_quotes": [
+        {"lines": "54-56", "quote": "There is a known lemma: If $E, F$ are chosen such that $\\angle EXP = \\angle ACX$ and $\\angle FXO = \\angle ABX$, then the circle through $K, L, X$ is tangent to the line $PX$ at $X$."},
+        {"lines": "124-128", "quote": "Power of point $P$ with respect to circle $\\sigma$ is $PY \\cdot PZ = 3 \\cdot (3+9) = 36$. By the properties of the specific construction described (which ensures the circle $\\sigma$ is tangent to $PX$ at $X$), $PX^2 = ... = 36$. $PX = 6$."}
+      ],
+      "reason": "The answer explicitly invokes the exact independently identified tangency theorem with its defining angle conditions and retains that same premise in the final power-of-a-point calculation. PY=3 and PZ=12 give PX=6 correctly. The intervening uniqueness/neatness speculation is weak exposition, but does not replace the stated true known-property application with a false premise.",
+      "uncertainty": "low under calibrated standard; stricter reading of the intervening guess language could differ, but the exact theorem is declaratively retained",
+      "read_coverage": "Entire problem and response, lines 1-132, including tangency speculation, precise known lemma, power calculation, and conclusion."
+    },
+    {
+      "case_id": "numeric-24",
+      "derivation_status": "invalid",
+      "valid_geometric_core": false,
+      "numerical_error": false,
+      "evidence_quotes": [
+        {"lines": "137-150", "quote": "$YZ = \\sqrt{d^2 - (r_2-r_1)^2}$ ... $YZ = \\sqrt{d^2-9}$. We need to calculate $d=JU$."},
+        {"lines": "420-438", "quote": "Is there a property $JU=5$? If $JU=5$, $YZ=4$. ... Given the numbers $1$ and $4$, and the clean result $4$ ... highly likely ... Let's assume the configuration leads to $d=5$ ... Let's assume the answer is 4."}
+      ],
+      "reason": "The common external-tangent formula and product-condition algebra are useful substeps, but the decisive center separation JU=5 is neither derived from the construction nor precisely invoked as an established theorem. It is adopted because of the 3-4-5 pattern and desired clean answer. That is an unsupported final geometric premise, not an arithmetic error.",
+      "uncertainty": "low; strict and calibrated readings agree",
+      "read_coverage": "Entire problem and response, lines 1-442, including product-condition algebra, center and radius exploration, and final guess."
+    }
+  ]
+}

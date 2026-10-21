@@ -1,0 +1,67 @@
+{
+  "id": "aime-2005-1-15",
+  "variables": [
+    "x",
+    "y"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(20, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(x, y)"
+    },
+    {
+      "name": "D",
+      "expression": "Midpoint(B, C)"
+    },
+    {
+      "name": "median_ad",
+      "expression": "Segment(A, D)"
+    },
+    {
+      "name": "ad_line",
+      "expression": "Line(A, D)"
+    },
+    {
+      "name": "P",
+      "expression": "PointOnSegment(A, D, 1/3)"
+    },
+    {
+      "name": "Q",
+      "expression": "PointOnSegment(A, D, 2/3)"
+    },
+    {
+      "name": "incenter",
+      "expression": "Incenter(A, B, C)"
+    },
+    {
+      "name": "incircle",
+      "expression": "Incircle(A, B, C)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "y",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(P, incircle)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(Q, incircle)",
+      "operator": "=",
+      "right": 0
+    }
+  ],
+  "target": "Area(A, B, C)"
+}

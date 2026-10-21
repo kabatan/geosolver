@@ -1,0 +1,40 @@
+{
+  "created_utc": "2026-09-23T13:25:51.323620+00:00",
+  "decision": "Proceed to collecting self-training material only if useful, algebraically verifiable model-proved material appears in at least two configurations; relation-only success supports a verifier-based search pilot, not whole-answer SFT. Twelve candidates do not establish enough diversity for training.",
+  "dtype": "bfloat16",
+  "enable_thinking": false,
+  "exclusions": [
+    "No final proof evaluation problems",
+    "No authoring references or target theorem supplied",
+    "No weight updates",
+    "No stronger-model solution repair"
+  ],
+  "feedback_policy": "At most one pair each on DA05 and DA15: choose the first by sample order with a concretely refutable central claim. Same original answer; one continuation with only a counterexample/verdict for its own claim, one generic retry without verifier information. No correct target relation or proof supplied. If no suitable failure, skip. Exploratory matched retry, not powered causal study.",
+  "gpu_memory_utilization": 0.85,
+  "initial_answers": 12,
+  "initial_source_configurations": [
+    "H01",
+    "DA05",
+    "DA15"
+  ],
+  "jobs_sha256": "5f75b23214f95617263095f84639751d0e9cc4d0a885d39d98b4b81240289460",
+  "kv_cache_dtype": "auto",
+  "max_context": 45056,
+  "max_feedback_pairs": 2,
+  "max_followup_answers": 4,
+  "max_num_batched_tokens": 1024,
+  "max_num_seqs": 2,
+  "max_output_tokens": 32768,
+  "model": "Qwen/Qwen3.5-9B",
+  "model_metadata_sha256": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd",
+  "revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+  "runtime_watchdog_seconds": 3600,
+  "sampling": {
+    "presence_penalty": 1.5,
+    "temperature": 1.0,
+    "top_k": 20,
+    "top_p": 0.95
+  },
+  "updates": 0,
+  "verification": "Freeze extracted claims before fresh numerical tests. Reconstruct from primitive definitions; check generic symbolic residuals where possible. Classify false, verified, and unresolved separately; model proof and utility separately."
+}

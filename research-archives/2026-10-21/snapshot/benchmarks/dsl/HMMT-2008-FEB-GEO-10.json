@@ -1,0 +1,102 @@
+{
+  "id": "HMMT-2008-FEB-GEO-10",
+  "variables": [
+    "ax",
+    "ay"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(2007, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(1003, 0)"
+    },
+    {
+      "name": "omega",
+      "expression": "Excircle(A, B, C, vertex='A')"
+    },
+    {
+      "name": "O",
+      "expression": "Center(omega)"
+    },
+    {
+      "name": "E",
+      "expression": "ContactPoint(omega, Line(A, C))"
+    },
+    {
+      "name": "F",
+      "expression": "ContactPoint(omega, Line(A, B))"
+    },
+    {
+      "name": "ell",
+      "expression": "PerpendicularLine(Line(A, D), O)"
+    },
+    {
+      "name": "G",
+      "expression": "Intersect(ell, Line(E, F))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 2009
+    },
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": 2008
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": 2007
+    },
+    {
+      "left": "OnCircle(D, omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(D, B, C)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(C, A, E)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(B, A, F)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Perpendicular(Line(B, C), Line(O, D))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(D, G)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "Distance(D, G)"
+}

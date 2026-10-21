@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2001_P5",
+  "reviewer": "independent_review",
+  "case_sha256": "255dd98dd3af7792e2a1db94f4ceeb759a489fe6946902e297d159fadce366ef",
+  "audit_sha256": "f722c857d46f1339e9aeee359d766d179060bb7e3b0147173630ba0830425a4b",
+  "gmbl_sha256": "1db2c50a0b604fb110ea04ecffce70693bc0c7523f30ceaab8378dac2b631353",
+  "reviewed_original_pdf_sha256": "e96730ecd9049d2db09d9f9c2ea6710d36dc87c2ebd42221bdc3bdbf5d8f6446",
+  "verdict": "pass",
+  "normalization_checked": true,
+  "conclusion_not_assumed": true,
+  "original_conditions_covered_by_gmbl": true,
+  "scope_of_coverage_ja": "原文の仮定を当該比較範囲で満たすかの監査である。原文の全境界配置を含む解集合の完全同値、GMB実装の全数値分岐の正当性、実験の実行許可を意味しない。",
+  "comparison_scope": "nondegenerate_configuration_domain",
+  "sources_read": [
+    "cases/IMO_2001_P5.json",
+    "audit/IMO_2001_P5.json",
+    "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2001_P5.smt2",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2001-eng.pdf",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2001-eng.txt",
+    "AUTHORING.md",
+    "reviews/UPSTREAM_SEMANTICS.md"
+  ],
+  "official_url": "https://www.imo-official.org/assets/documents/problems/2001/2001_eng.pdf",
+  "normalization_review": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "removed_continuous_dof": 4,
+    "scale_invariant": true,
+    "reflection_fixed": false,
+    "remaining_solver_variables": [
+      "cx",
+      "cy"
+    ],
+    "shape_fixed_beyond_original_hypotheses": false,
+    "checked_ja": "原文で相異なる二点の単位基線化だけで平行移動2・回転1・正の尺度1を除く。元の形の変数と鏡映配置を保持している。"
+  },
+  "original_goal_not_used": "ABCの取りうる角度をすべて求める。配置生成比較では角度の答えを制約に含めず、答え列挙も要求しない。",
+  "checked_input_counts": {
+    "constructions": 5,
+    "conditions": 3
+  },
+  "method": {
+    "read_all_constructions_and_conditions": true,
+    "read_original_problem_assumptions": true,
+    "checked_domains_branches_and_non_degeneracy": true,
+    "checked_goal_separation": true,
+    "exact_algebraic_checks_only_where_documented": true,
+    "solver_executed": false,
+    "optimizer_executed": false,
+    "refinement_executed": false,
+    "prior_case_performance_used_to_adjust_input": false
+  },
+  "gmb_runtime_equivalence_claimed": false,
+  "findings": [
+    {
+      "id": "IMO_2001_P5-review-1",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "A,Bの単位基線以外にCを固定せず、角BAC=π/3は原文の仮定として残す。"
+    },
+    {
+      "id": "IMO_2001_P5-review-2",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "P,Qはそれぞれ指定された内角二等分線と対辺の交点であり、AB+BP=AQ+QBも正しい組合せである。"
+    },
+    {
+      "id": "IMO_2001_P5-review-3",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "可能な角度を求める結論を入力していない。公開GMBLにevalがないことを『命題の全内容を評価済み』とは解釈しない。"
+    }
+  ],
+  "remaining_uncertainties": []
+}

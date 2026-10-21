@@ -1,0 +1,62 @@
+{
+  "id": "HMMT-2009-FEB-GEO-07",
+  "variables": [
+    "c",
+    "e",
+    "h"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(c, 0)"
+    },
+    {
+      "name": "D",
+      "expression": "Midpoint(B, C)"
+    },
+    {
+      "name": "E",
+      "expression": "Point(e, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(e, h)"
+    },
+    {
+      "name": "F",
+      "expression": "FootOfPerpendicular(D, Line(A, C))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(B, E)",
+      "operator": "=",
+      "right": 5
+    },
+    {
+      "left": "Distance(E, C)",
+      "operator": "=",
+      "right": 9
+    },
+    {
+      "left": "Area(A, B, C)",
+      "operator": "=",
+      "right": 84
+    },
+    {
+      "left": "c",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "h",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "Distance(E, F)"
+}

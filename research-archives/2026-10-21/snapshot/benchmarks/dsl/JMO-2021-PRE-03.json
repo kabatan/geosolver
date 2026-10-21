@@ -1,0 +1,96 @@
+{
+  "id": "JMO-2021-PRE-03",
+  "variables": [
+    "h",
+    "px",
+    "py"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(14, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(7, h)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(px, py)"
+    },
+    {
+      "name": "D",
+      "expression": "FootOfPerpendicular(Line(B, C), P)"
+    },
+    {
+      "name": "E",
+      "expression": "FootOfPerpendicular(Line(C, A), P)"
+    },
+    {
+      "name": "F",
+      "expression": "FootOfPerpendicular(Line(A, B), P)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(B, D)",
+      "operator": "=",
+      "right": 9
+    },
+    {
+      "left": "Distance(D, C)",
+      "operator": "=",
+      "right": 5
+    },
+    {
+      "left": "Distance(P, E)",
+      "operator": "=",
+      "right": 2
+    },
+    {
+      "left": "Distance(P, F)",
+      "operator": "=",
+      "right": 5
+    },
+    {
+      "left": "h",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "py",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "px",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "px",
+      "operator": "<",
+      "right": "14"
+    },
+    {
+      "left": "Vector(A, B).x * Vector(A, P).y - Vector(A, B).y * Vector(A, P).x",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Vector(B, C).x * Vector(B, P).y - Vector(B, C).y * Vector(B, P).x",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Vector(C, A).x * Vector(C, P).y - Vector(C, A).y * Vector(C, P).x",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "Distance(A, B)"
+}

@@ -1,0 +1,43 @@
+{
+  "id": "standard-median-6-5-7",
+  "variables": [
+    "x",
+    "y"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(6,0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(x,y)"
+    },
+    {
+      "name": "M",
+      "expression": "Midpoint(B,C)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A,B)",
+      "operator": "=",
+      "right": 5
+    },
+    {
+      "left": "Distance(A,C)",
+      "operator": "=",
+      "right": 7
+    },
+    {
+      "left": "y",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Distance(A,M)"
+}

@@ -1,0 +1,86 @@
+[
+  {
+    "case_id": "numeric-01",
+    "derivation_status": "invalid",
+    "valid_geometric_core": false,
+    "numerical_error": false,
+    "evidence_quotes": [
+      {"line": 163, "quote": "If AQ = AP = 6, then triangle APQ is isosceles."},
+      {"line": 205, "quote": "My previous assumption that A, B, C are collinear is false."},
+      {"line": 389, "quote": "Let's assume the answer is 27/2."}
+    ],
+    "reason": "The opening computation assumes AB perpendicular to PQ and equal tangent-circle radii, which forces the forbidden isosceles triangle APQ. The answer explicitly retracts this assumption, explores general radii without completing a solution, then chooses the value from the rejected symmetric configuration. Its conditional area arithmetic is correct, but the final geometry is unsupported.",
+    "uncertainty": "Low; the answer itself identifies the branch contradiction and does not repair the final derivation.",
+    "read_coverage": "Read the full problem and all 393 answer lines, including the retraction at lines 167-205 and final choice at lines 372-393; no part omitted. Output ended with stop."
+  },
+  {
+    "case_id": "numeric-02",
+    "derivation_status": "invalid",
+    "valid_geometric_core": false,
+    "numerical_error": false,
+    "evidence_quotes": [
+      {"line": 384, "quote": "If external tangent: YZ = sqrt(d^2 - (4-1)^2)."},
+      {"line": 392, "quote": "Is it possible JU = 5? Then YZ = 4."},
+      {"line": 449, "quote": "Let's guess the answer is 4 based on the numbers 1 and 4."}
+    ],
+    "reason": "The common-external-tangent formula is applicable, and the radii 1 and 4 are correct, but the necessary center distance JU=5 is neither derived nor established by a cited applicable theorem. The model's earlier coordinate path reaches an apparent contradiction and is abandoned; the final length is expressly guessed as a 3-4-5 pattern.",
+    "uncertainty": "Low; the decisive center distance is explicitly posed as a possibility rather than proved.",
+    "read_coverage": "Read the full problem and all 452 answer lines, including the initial product condition, coordinate attempt, contradiction, and final guess; no part omitted. Output ended with stop."
+  },
+  {
+    "case_id": "numeric-03",
+    "derivation_status": "invalid",
+    "valid_geometric_core": false,
+    "numerical_error": false,
+    "evidence_quotes": [
+      {"line": 40, "quote": "Pow(P, sigma) = PY * (PY + YZ) = 3 * 12 = 36."},
+      {"line": 168, "quote": "The only missing link is the proof that PX is tangent."},
+      {"line": 205, "quote": "In non-degenerate cases of this type, the property PX^2 = PY * PZ is standard."}
+    ],
+    "reason": "The secant power and arithmetic are sound. To identify PX as the tangent length, however, the response must establish tangency of PX to circle KLX from the stated E,F construction. It acknowledges this as missing and replaces it with a vague configuration-specific 'standard' claim and uniqueness heuristic. The general tangent-secant theorem cannot be applied before its tangency premise is shown.",
+    "uncertainty": "Low; the answer expressly identifies and leaves the central premise unproved.",
+    "read_coverage": "Read the full problem and all 257 answer lines, including the attempted isosceles limit and final tangency assumption; no part omitted. Output ended with stop."
+  },
+  {
+    "case_id": "numeric-07",
+    "derivation_status": "invalid",
+    "valid_geometric_core": false,
+    "numerical_error": false,
+    "evidence_quotes": [
+      {"line": 421, "quote": "VM^2 = PM^2 - PV^2 = ... = 1."},
+      {"line": 425, "quote": "Let's assume P, Q, V are collinear and PQ perpendicular to AC."},
+      {"line": 435, "quote": "The numerical values ... are consistent ... This confirms the geometric configuration"}
+    ],
+    "reason": "The calculation VM=1 is valid. The solution then assumes PQ perpendicular to AC, the nontrivial relation needed to put Q over V; it never derives this from the angle-bisector and circle construction. Numerical consistency with the given lengths cannot establish that incidence. Earlier incorrect symmetry claims are retracted before the final response and are not the main ground for invalidity.",
+    "uncertainty": "Low; the final response explicitly labels the decisive geometry as an assumption.",
+    "read_coverage": "Read the full problem and all 437 answer lines, including retracted exploratory claims and the final post-thinking derivation; no part omitted. Output ended with stop."
+  },
+  {
+    "case_id": "numeric-09",
+    "derivation_status": "invalid",
+    "valid_geometric_core": false,
+    "numerical_error": false,
+    "evidence_quotes": [
+      {"line": 206, "quote": "F = ((lambda_1-lambda_2)/(lambda_1+lambda_2)) B + ... A"},
+      {"line": 218, "quote": "So F = (u(vk-uc)/S, v^2 k/S)."},
+      {"line": 370, "quote": "Hypothesis: OF = sqrt(AO^2 - AF^2) = 5."}
+    ],
+    "reason": "The coordinate attempt does not prove AF perpendicular to OF or the resulting Pythagorean relation. It also corrupts its own vector expression for F when converting to coordinates: with B=(-c,0), the x-coordinate of L B + K A is -cL+uK, not uL+uK. The final answer is a hypothesis chosen from the 5-12-13 numbers, without an applicable derived relation.",
+    "uncertainty": "Low; the vector-to-coordinate error and the explicit final hypothesis are visible in the full response.",
+    "read_coverage": "Read the full problem and all 374 answer lines, including coordinate setup, proposed example, and final right-angle hypothesis; no part omitted. Output ended with stop."
+  },
+  {
+    "case_id": "numeric-10",
+    "derivation_status": "invalid",
+    "valid_geometric_core": false,
+    "numerical_error": false,
+    "evidence_quotes": [
+      {"line": 95, "quote": "Power of P wrt sigma is PY * PZ = 3 * 12 = 36."},
+      {"line": 199, "quote": "Let's assume the tangency holds."},
+      {"line": 224, "quote": "A known theorem ... states that under these conditions, PX is tangent"}
+    ],
+    "reason": "The central secant, diameter, power, and conditional arithmetic are correct. The essential configuration-specific tangency of PX to circle KLX is neither proved from the angle conditions nor supported by an identifiable applicable theorem; the answer explicitly assumes it and reasons from answer uniqueness and problem style. Such a claim cannot supply the premise of the tangent-secant theorem.",
+    "uncertainty": "Low; no later step supplies the missing tangency proof.",
+    "read_coverage": "Read the full problem and all 246 answer lines, including the intermediate self-correction about line PU and the final tangency claim; no part omitted. Output ended with stop."
+  }
+]

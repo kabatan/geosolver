@@ -1,0 +1,2881 @@
+{
+  "schema_version": 1,
+  "generated_by": "recipe-comparison.py; standard-library CPU audit only",
+  "inputs": {
+    "old_data": "qwen/.runtime/program_self_training_20260926/selection/train-numeric.json",
+    "new_data": "qwen/.runtime/related_numeric_sft_20260928/train.json",
+    "dose_correct_data": "qwen/.runtime/numeric_sft_dose_control_20260928/train-correct.json",
+    "saved_probe_summaries": [
+      "qwen/.runtime/related_numeric_sft_20260928/base-digit-probe/summary.json",
+      "qwen/.runtime/related_numeric_sft_20260928/sft-a-digit-probe/summary.json"
+    ]
+  },
+  "model": {
+    "download_seconds": 189.56806627498008,
+    "license": "apache-2.0",
+    "model_id": "Qwen/Qwen3.5-9B",
+    "revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+    "snapshot": "/home/kabatan/.cache/huggingface/hub/models--Qwen--Qwen3.5-9B/snapshots/c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+    "status": "complete"
+  },
+  "trainer": {
+    "path": "docs/research/program-self-training-2026-09-26/train_sft.py",
+    "sha256": "f525e7626bae22109753cd5a8deac47b94cd13f4bd4dcc13960543b4607b9857",
+    "driver_sha256_old_receipt": "f525e7626bae22109753cd5a8deac47b94cd13f4bd4dcc13960543b4607b9857",
+    "driver_sha256_new_receipt": "f525e7626bae22109753cd5a8deac47b94cd13f4bd4dcc13960543b4607b9857",
+    "harness_sha256_old_receipt": "574f8d2cea03fbfe93d568dc1ddf61748fc99ab62eeb64db1b902a457d718810",
+    "harness_sha256_new_receipt": "574f8d2cea03fbfe93d568dc1ddf61748fc99ab62eeb64db1b902a457d718810",
+    "optimizer": "torch.optim.AdamW",
+    "weight_decay": 0,
+    "target_loss_mask": "assistant target including EOS only",
+    "tokenization": "apply_chat_template; add_generation_prompt for prompt; gold assistant target plus EOS; no thinking",
+    "tokenization_receipt_note": "saved target_tokens includes EOS and each target hash was rechecked against the raw target string"
+  },
+  "datasets": {
+    "old56": {
+      "name": "old56",
+      "path": "qwen/.runtime/program_self_training_20260926/selection/train-numeric.json",
+      "sha256": "75997401673246bca334de4e173c0e7553cdc3c56d486952463873ae7c99eba2",
+      "bytes": 40523,
+      "rows": 56,
+      "unique_ids": 56,
+      "source_count": 7,
+      "examples_per_source": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      "source_ids": [
+        "DA01",
+        "DA05",
+        "H01",
+        "H04",
+        "H07",
+        "H13",
+        "H15"
+      ],
+      "source_groups": {
+        "DA01": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "prompt_tokens_min_median_max": [
+            155,
+            157.0,
+            157
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            18,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            447,
+            449.0,
+            449
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 2.568421623063982,
+            "median": 8.241232733443855,
+            "mean": 7.150231779629976,
+            "maximum": 12.913785714418458,
+            "absolute_minimum": 2.568421623063982,
+            "absolute_maximum": 12.913785714418458,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 7,
+              "10_or_more": 1
+            },
+            "decimal_places_min_median_max": [
+              15,
+              16.0,
+              16
+            ],
+            "significant_digits_min_median_max": [
+              16,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "16": 1,
+              "17": 7
+            },
+            "target_characters_min_median_max": [
+              17,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "Triangle ABC has AB=<N>, BC=<N>, and CA=<N>. One circle passes through A and B and is tangent at A to line AC. Another passes through A and C and is tangent at A to line AB. Let T be their intersection other than A. Find AT."
+        },
+        "DA05": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            4,
+            4.0,
+            4
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            2,
+            2.0,
+            2
+          ],
+          "prompt_tokens_min_median_max": [
+            163,
+            164.0,
+            164
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            18,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            504,
+            505.0,
+            505
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 1.6366178128791127,
+            "median": 5.616767168974437,
+            "mean": 6.6385626944727845,
+            "maximum": 12.506188024853657,
+            "absolute_minimum": 1.6366178128791127,
+            "absolute_maximum": 12.506188024853657,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 6,
+              "10_or_more": 2
+            },
+            "decimal_places_min_median_max": [
+              15,
+              16.0,
+              16
+            ],
+            "significant_digits_min_median_max": [
+              16,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "16": 1,
+              "17": 7
+            },
+            "target_characters_min_median_max": [
+              17,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "Let ABC be an acute scalene triangle with BC=<N>. Let ω<N> be a circle through A tangent at B to line BC, and ω<N> a circle through C tangent at B to line BA. Let D be their intersection other than B. Let M be the midpoint of BC and E=MD∩AC. The points M,D,E o"
+        },
+        "H01": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            2,
+            2.0,
+            2
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            2,
+            2.0,
+            2
+          ],
+          "prompt_tokens_min_median_max": [
+            127,
+            128.0,
+            128
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            18,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            381,
+            382.0,
+            382
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 2.6121865084394753,
+            "median": 6.7360224610935955,
+            "mean": 6.726606224123688,
+            "maximum": 13.87455693799016,
+            "absolute_minimum": 2.6121865084394753,
+            "absolute_maximum": 13.87455693799016,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 7,
+              "10_or_more": 1
+            },
+            "decimal_places_min_median_max": [
+              14,
+              16.0,
+              16
+            ],
+            "significant_digits_min_median_max": [
+              16,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "16": 1,
+              "17": 7
+            },
+            "target_characters_min_median_max": [
+              17,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "Let H be the orthocenter and M the midpoint of BC in an acute scalene triangle ABC. Let P be the foot of the perpendicular from H to line AM. If BC=<N> and AM=<N>, find AP."
+        },
+        "H04": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            2,
+            2.0,
+            2
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            2,
+            2.0,
+            2
+          ],
+          "prompt_tokens_min_median_max": [
+            150,
+            151.0,
+            151
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            18,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            467,
+            468.0,
+            468
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 11.10511583379647,
+            "median": 29.998499672030658,
+            "mean": 39.457390986147836,
+            "maximum": 88.32614857341777,
+            "absolute_minimum": 11.10511583379647,
+            "absolute_maximum": 88.32614857341777,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 0,
+              "10_or_more": 8
+            },
+            "decimal_places_min_median_max": [
+              14,
+              15.0,
+              15
+            ],
+            "significant_digits_min_median_max": [
+              16,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "16": 3,
+              "17": 5
+            },
+            "target_characters_min_median_max": [
+              17,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "In an acute scalene triangle ABC, let H be the orthocenter, M the midpoint of BC, and P the foot from H to line AM. Let T be the intersection of the perpendicular bisector of AP with line BC. The points T,B,C occur in that order, and BT=<N>, BC=<N>. Find AT."
+        },
+        "H07": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "prompt_tokens_min_median_max": [
+            218,
+            219.5,
+            220
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            19,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            626,
+            627.5,
+            628
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 1.6036299474685676,
+            "median": 15.043732414338791,
+            "mean": 20.091436742139937,
+            "maximum": 48.30483672683073,
+            "absolute_minimum": 1.6036299474685676,
+            "absolute_maximum": 48.30483672683073,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 3,
+              "10_or_more": 5
+            },
+            "decimal_places_min_median_max": [
+              15,
+              15.0,
+              16
+            ],
+            "significant_digits_min_median_max": [
+              17,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "17": 8
+            },
+            "target_characters_min_median_max": [
+              18,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "Two circles tangent to line AB at A and B intersect at M and N on the same side of AB, with M closer to AB than N. Triangle NAB is acute and scalene. A line through M parallel to AB meets the first circle again at C and the second circle again at D. Let E=AC∩B"
+        },
+        "H13": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "prompt_tokens_min_median_max": [
+            184,
+            185.0,
+            185
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            17,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            545,
+            546.0,
+            546
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 20.446118809571804,
+            "median": 36.782164036290425,
+            "mean": 249.55602347731391,
+            "maximum": 1451.2685367743145,
+            "absolute_minimum": 20.446118809571804,
+            "absolute_maximum": 1451.2685367743145,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 0,
+              "10_or_more": 8
+            },
+            "decimal_places_min_median_max": [
+              13,
+              14.5,
+              15
+            ],
+            "significant_digits_min_median_max": [
+              15,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "15": 1,
+              "17": 7
+            },
+            "target_characters_min_median_max": [
+              16,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "In an acute scalene triangle ABC, BC=<N> and cos(angle ACB)=<N>. Let M be the midpoint of AC. The tangent to circle BMC at C meets the line through B perpendicular to BC at K. Point K is on the side of BC opposite A, and BK=<N>. Segments AK and BM meet at an i"
+        },
+        "H15": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            4,
+            4.0,
+            4
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "prompt_tokens_min_median_max": [
+            210,
+            211.0,
+            212
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            19,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            610,
+            611.0,
+            612
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 1.9214613759443695,
+            "median": 7.208520281814089,
+            "mean": 6.601861109654492,
+            "maximum": 10.409537433011433,
+            "absolute_minimum": 1.9214613759443695,
+            "absolute_maximum": 10.409537433011433,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 7,
+              "10_or_more": 1
+            },
+            "decimal_places_min_median_max": [
+              15,
+              16.0,
+              16
+            ],
+            "significant_digits_min_median_max": [
+              17,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "17": 8
+            },
+            "target_characters_min_median_max": [
+              18,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "Let ABC be a scalene triangle with angle BAC=<N> degrees, and let Ω be its circumcircle. The tangents to Ω at B and C meet at X; line AX meets Ω again at D. Reflect D across BC to obtain E, reflect E across AB to obtain C0, and reflect E across AC to obtain B0"
+        }
+      },
+      "unique_normalized_shape_templates": 7,
+      "instruction_prefix": "Solve the following numerical geometry problem. Give only the requested numerical value, with at least 10 significant digits when appropriate. Do not give a proof or explanation.",
+      "instruction_prefix_characters": 178,
+      "instruction_prefix_sha256": "06852637dd33549b484432bb75567b81c0e8dd39f6418a79c3b56cdb5d871796",
+      "instruction_prefixes_all_identical": true,
+      "prompt_tokens_min_median_max": [
+        127,
+        164.0,
+        220
+      ],
+      "target_tokens_including_eos_min_median_max": [
+        17,
+        19.0,
+        19
+      ],
+      "prompt_characters_min_median_max": [
+        381,
+        505.0,
+        628
+      ],
+      "numeric_literals_per_prompt_min_median_max": [
+        2,
+        3.0,
+        4
+      ],
+      "decimal_literals_per_prompt_min_median_max": [
+        2,
+        3.0,
+        3
+      ],
+      "tokenization_rows": 56,
+      "tokenization_target_hash_matches": 56,
+      "unique_target_token_sum_including_eos": 1056,
+      "target": {
+        "count": 56,
+        "numeric_only_count": 56,
+        "exact_python_17g_count": 56,
+        "positive_count": 56,
+        "negative_count": 0,
+        "zero_count": 0,
+        "minimum": 1.6036299474685676,
+        "median": 9.394762040314117,
+        "mean": 48.03173043049752,
+        "maximum": 1451.2685367743145,
+        "absolute_minimum": 1.6036299474685676,
+        "absolute_maximum": 1451.2685367743145,
+        "scale_bins_abs": {
+          "below_1": 0,
+          "1_to_below_10": 30,
+          "10_or_more": 26
+        },
+        "decimal_places_min_median_max": [
+          13,
+          15.5,
+          16
+        ],
+        "significant_digits_min_median_max": [
+          15,
+          17.0,
+          17
+        ],
+        "significant_digits_histogram": {
+          "15": 1,
+          "16": 6,
+          "17": 49
+        },
+        "target_characters_min_median_max": [
+          16,
+          18.0,
+          18
+        ]
+      }
+    },
+    "new80": {
+      "name": "new80",
+      "path": "qwen/.runtime/related_numeric_sft_20260928/train.json",
+      "sha256": "778b87cfce6ea7271e971f8c727a5663468b783d21e7d21199bae7ccf46e26c9",
+      "bytes": 62075,
+      "rows": 80,
+      "unique_ids": 80,
+      "source_count": 10,
+      "examples_per_source": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      "source_ids": [
+        "DA01",
+        "DA02",
+        "DA03",
+        "DA04",
+        "DA06",
+        "DA07",
+        "DA08",
+        "DA11",
+        "DB02",
+        "DB12"
+      ],
+      "source_groups": {
+        "DA01": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "prompt_tokens_min_median_max": [
+            159,
+            160.0,
+            160
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            18,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            483,
+            484.0,
+            484
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 7.857671412745901,
+            "median": 9.053622260010552,
+            "mean": 9.45484608954816,
+            "maximum": 11.658375402714512,
+            "absolute_minimum": 7.857671412745901,
+            "absolute_maximum": 11.658375402714512,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 6,
+              "10_or_more": 2
+            },
+            "decimal_places_min_median_max": [
+              14,
+              16.0,
+              16
+            ],
+            "significant_digits_min_median_max": [
+              16,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "16": 2,
+              "17": 6
+            },
+            "target_characters_min_median_max": [
+              17,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "Triangle ABC has AB=<N>, BC=<N>, and CA=<N>. The circle through B tangent to line AC at A and the circle through C tangent to line AB at A meet again at T. Find the length AT. The stated circles are nondegenerate and the intersections are distinct and finite."
+        },
+        "DA02": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            4,
+            4.0,
+            4
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            2,
+            2.0,
+            2
+          ],
+          "prompt_tokens_min_median_max": [
+            161,
+            162.0,
+            162
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            18,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            518,
+            519.0,
+            519
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 1.9799714006233513,
+            "median": 5.4530407327606625,
+            "mean": 5.16421431396712,
+            "maximum": 8.451802771831547,
+            "absolute_minimum": 1.9799714006233513,
+            "absolute_maximum": 8.451802771831547,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 8,
+              "10_or_more": 0
+            },
+            "decimal_places_min_median_max": [
+              15,
+              16.0,
+              16
+            ],
+            "significant_digits_min_median_max": [
+              16,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "16": 1,
+              "17": 7
+            },
+            "target_characters_min_median_max": [
+              17,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "In triangle ABC, angle BAC is <N> degrees, AB=<N>, and AC=<N>. An interior point T satisfies angle ATB = angle BTC = angle CTA = <N> degrees. Let G be the centroid of ABC. Line TG meets circle BTC again at K. Find the length TK. The stated circle is nondegener"
+        },
+        "DA03": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            2,
+            2.0,
+            2
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            2,
+            2.0,
+            2
+          ],
+          "prompt_tokens_min_median_max": [
+            168,
+            169.0,
+            169
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            18,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            562,
+            563.0,
+            563
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 16.39055161165485,
+            "median": 33.98249448301014,
+            "mean": 36.33159054891665,
+            "maximum": 70.51765754501012,
+            "absolute_minimum": 16.39055161165485,
+            "absolute_maximum": 70.51765754501012,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 0,
+              "10_or_more": 8
+            },
+            "decimal_places_min_median_max": [
+              14,
+              15.0,
+              15
+            ],
+            "significant_digits_min_median_max": [
+              16,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "16": 1,
+              "17": 7
+            },
+            "target_characters_min_median_max": [
+              17,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "Let O be the circumcenter of an acute scalene triangle ABC. The circle through A and C tangent to line AB at A meets circle BOC again at T, other than C. Let K be the intersection of lines TO and BC, with K, B, C in that order. If BC=<N> and BK=<N>, find the l"
+        },
+        "DA04": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "prompt_tokens_min_median_max": [
+            184,
+            185.0,
+            185
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            19,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            590,
+            591.0,
+            591
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 2.8986238509036273,
+            "median": 6.502170570370607,
+            "mean": 7.043732300283983,
+            "maximum": 11.805216964963554,
+            "absolute_minimum": 2.8986238509036273,
+            "absolute_maximum": 11.805216964963554,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 7,
+              "10_or_more": 1
+            },
+            "decimal_places_min_median_max": [
+              15,
+              16.0,
+              16
+            ],
+            "significant_digits_min_median_max": [
+              17,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "17": 8
+            },
+            "target_characters_min_median_max": [
+              18,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "Point P lies inside chord AB of circle Omega, with AP=<N> and PB=<N>. A circle through A and P internally tangent to Omega at A and a circle through B and P internally tangent to Omega at B meet again at Q, other than P. Line PQ cuts Omega at X and Y. If XY=<N"
+        },
+        "DA06": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            2,
+            2.0,
+            2
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            2,
+            2.0,
+            2
+          ],
+          "prompt_tokens_min_median_max": [
+            189,
+            191.0,
+            191
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            19,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            669,
+            671.0,
+            671
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 1.0618686983781647,
+            "median": 1.348110814886446,
+            "mean": 1.4403472698529363,
+            "maximum": 2.2068629536180415,
+            "absolute_minimum": 1.0618686983781647,
+            "absolute_maximum": 2.2068629536180415,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 8,
+              "10_or_more": 0
+            },
+            "decimal_places_min_median_max": [
+              16,
+              16.0,
+              16
+            ],
+            "significant_digits_min_median_max": [
+              17,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "17": 8
+            },
+            "target_characters_min_median_max": [
+              18,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "Let O be the circumcenter and M the midpoint of BC in an acute scalene triangle ABC with AB>AC. Circle omega1 passes through A and B and is tangent to line AC at A; circle omega2 passes through A and C and is tangent to line AB at A. Let D be their intersectio"
+        },
+        "DA07": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "prompt_tokens_min_median_max": [
+            214,
+            215.0,
+            215
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            17,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            682,
+            683.0,
+            683
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 3.45698811777576,
+            "median": 7.791215784340485,
+            "mean": 13.63602225117461,
+            "maximum": 42.75247979209853,
+            "absolute_minimum": 3.45698811777576,
+            "absolute_maximum": 42.75247979209853,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 6,
+              "10_or_more": 2
+            },
+            "decimal_places_min_median_max": [
+              14,
+              16.0,
+              16
+            ],
+            "significant_digits_min_median_max": [
+              15,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "15": 1,
+              "17": 7
+            },
+            "target_characters_min_median_max": [
+              16,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "In an acute scalene triangle ABC, let O and H be the circumcenter and orthocenter. Let M be the intersection other than O of the circle through B,O,C and the circle with diameter AO. Let N be the intersection other than H of the circle through B,H,C and the ci"
+        },
+        "DA08": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            2,
+            2.0,
+            2
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            2,
+            2.0,
+            2
+          ],
+          "prompt_tokens_min_median_max": [
+            175,
+            176.0,
+            176
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            19,
+            19.5,
+            20
+          ],
+          "prompt_characters_min_median_max": [
+            553,
+            554.0,
+            554
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 0.237439591497009,
+            "median": 0.8297015252032618,
+            "mean": 1.0952340822298476,
+            "maximum": 3.1874910054260432,
+            "absolute_minimum": 0.237439591497009,
+            "absolute_maximum": 3.1874910054260432,
+            "scale_bins_abs": {
+              "below_1": 4,
+              "1_to_below_10": 4,
+              "10_or_more": 0
+            },
+            "decimal_places_min_median_max": [
+              16,
+              16.5,
+              17
+            ],
+            "significant_digits_min_median_max": [
+              17,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "17": 8
+            },
+            "target_characters_min_median_max": [
+              18,
+              18.5,
+              19
+            ]
+          },
+          "normalized_shape_preview": "In an acute scalene triangle ABC, let O be the circumcenter. On the circle through B,O,C, let Q be the point antipodal to O. Let M be the intersection of line CQ with the line through A parallel to BC. Choose N so that A,N,C,M, in that order, form a parallelog"
+        },
+        "DA11": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "prompt_tokens_min_median_max": [
+            174,
+            174.5,
+            175
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            19,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            510,
+            510.5,
+            511
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 5.3084190999703464,
+            "median": 7.544350693229523,
+            "mean": 8.566672683337991,
+            "maximum": 16.849798264995048,
+            "absolute_minimum": 5.3084190999703464,
+            "absolute_maximum": 16.849798264995048,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 6,
+              "10_or_more": 2
+            },
+            "decimal_places_min_median_max": [
+              15,
+              16.0,
+              16
+            ],
+            "significant_digits_min_median_max": [
+              17,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "17": 8
+            },
+            "target_characters_min_median_max": [
+              18,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "An acute scalene triangle ABC has AB=<N>, BC=<N>, and circumradius <N>. Let I and J be the midpoints of AB and AC, and K the midpoint of IJ. The circle through K tangent to AB at I and the circle through K tangent to AC at J meet again at T. Find the radius of"
+        },
+        "DB02": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "prompt_tokens_min_median_max": [
+            176,
+            178.0,
+            178
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            18,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            512,
+            514.0,
+            514
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 5.408814993582873,
+            "median": 10.76467518666187,
+            "mean": 10.100268778499474,
+            "maximum": 13.711916424757156,
+            "absolute_minimum": 5.408814993582873,
+            "absolute_maximum": 13.711916424757156,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 3,
+              "10_or_more": 5
+            },
+            "decimal_places_min_median_max": [
+              14,
+              15.0,
+              16
+            ],
+            "significant_digits_min_median_max": [
+              16,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "16": 1,
+              "17": 7
+            },
+            "target_characters_min_median_max": [
+              17,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "Let ABC be a triangle with AB=<N>, AC=<N>, and BC=<N>. Choose P and Q in the interior of BC so that angle PAB equals angle BCA and angle CAQ equals angle ABC. On rays AP and AQ choose M and N so that P and Q are the midpoints of AM and AN, respectively. Lines "
+        },
+        "DB12": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            7,
+            7.0,
+            7
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "prompt_tokens_min_median_max": [
+            207,
+            207.0,
+            207
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            19,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            572,
+            572.0,
+            572
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 3.911443373654705,
+            "median": 6.342267511154358,
+            "mean": 6.437641371374057,
+            "maximum": 9.758636757882659,
+            "absolute_minimum": 3.911443373654705,
+            "absolute_maximum": 9.758636757882659,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 8,
+              "10_or_more": 0
+            },
+            "decimal_places_min_median_max": [
+              16,
+              16.0,
+              16
+            ],
+            "significant_digits_min_median_max": [
+              17,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "17": 8
+            },
+            "target_characters_min_median_max": [
+              18,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "In triangle ABC, angle BAC is <N> degrees and BC=<N>. Let D_1 and D_2 divide BC internally in the ratios BD_1:D_1C=<N>:<N> and BD_2:D_2C=<N>:<N> For each i, the line through D_i parallel to AB meets AC at E_i, and the line through D_i parallel to AC meets AB a"
+        }
+      },
+      "unique_normalized_shape_templates": 10,
+      "instruction_prefix": "Solve the following numerical geometry problem. Give only the requested numerical value, with at least 10 significant digits when appropriate. Do not give a proof or explanation.",
+      "instruction_prefix_characters": 178,
+      "instruction_prefix_sha256": "06852637dd33549b484432bb75567b81c0e8dd39f6418a79c3b56cdb5d871796",
+      "instruction_prefixes_all_identical": true,
+      "prompt_tokens_min_median_max": [
+        159,
+        176.0,
+        215
+      ],
+      "target_tokens_including_eos_min_median_max": [
+        17,
+        19.0,
+        20
+      ],
+      "prompt_characters_min_median_max": [
+        483,
+        558.0,
+        683
+      ],
+      "numeric_literals_per_prompt_min_median_max": [
+        2,
+        3.0,
+        7
+      ],
+      "decimal_literals_per_prompt_min_median_max": [
+        2,
+        3.0,
+        3
+      ],
+      "tokenization_rows": 80,
+      "tokenization_target_hash_matches": 80,
+      "unique_target_token_sum_including_eos": 1517,
+      "target": {
+        "count": 80,
+        "numeric_only_count": 80,
+        "exact_python_17g_count": 80,
+        "positive_count": 80,
+        "negative_count": 0,
+        "zero_count": 0,
+        "minimum": 0.237439591497009,
+        "median": 6.554410669092547,
+        "mean": 9.927056968918482,
+        "maximum": 70.51765754501012,
+        "absolute_minimum": 0.237439591497009,
+        "absolute_maximum": 70.51765754501012,
+        "scale_bins_abs": {
+          "below_1": 4,
+          "1_to_below_10": 56,
+          "10_or_more": 20
+        },
+        "decimal_places_min_median_max": [
+          14,
+          16.0,
+          17
+        ],
+        "significant_digits_min_median_max": [
+          15,
+          17.0,
+          17
+        ],
+        "significant_digits_histogram": {
+          "15": 1,
+          "16": 5,
+          "17": 74
+        },
+        "target_characters_min_median_max": [
+          16,
+          18.0,
+          19
+        ]
+      }
+    },
+    "dose_correct80": {
+      "name": "dose_correct80",
+      "path": "qwen/.runtime/numeric_sft_dose_control_20260928/train-correct.json",
+      "sha256": "778b87cfce6ea7271e971f8c727a5663468b783d21e7d21199bae7ccf46e26c9",
+      "bytes": 62075,
+      "rows": 80,
+      "unique_ids": 80,
+      "source_count": 10,
+      "examples_per_source": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      "source_ids": [
+        "DA01",
+        "DA02",
+        "DA03",
+        "DA04",
+        "DA06",
+        "DA07",
+        "DA08",
+        "DA11",
+        "DB02",
+        "DB12"
+      ],
+      "source_groups": {
+        "DA01": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "prompt_tokens_min_median_max": [
+            159,
+            160.0,
+            160
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            18,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            483,
+            484.0,
+            484
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 7.857671412745901,
+            "median": 9.053622260010552,
+            "mean": 9.45484608954816,
+            "maximum": 11.658375402714512,
+            "absolute_minimum": 7.857671412745901,
+            "absolute_maximum": 11.658375402714512,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 6,
+              "10_or_more": 2
+            },
+            "decimal_places_min_median_max": [
+              14,
+              16.0,
+              16
+            ],
+            "significant_digits_min_median_max": [
+              16,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "16": 2,
+              "17": 6
+            },
+            "target_characters_min_median_max": [
+              17,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "Triangle ABC has AB=<N>, BC=<N>, and CA=<N>. The circle through B tangent to line AC at A and the circle through C tangent to line AB at A meet again at T. Find the length AT. The stated circles are nondegenerate and the intersections are distinct and finite."
+        },
+        "DA02": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            4,
+            4.0,
+            4
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            2,
+            2.0,
+            2
+          ],
+          "prompt_tokens_min_median_max": [
+            161,
+            162.0,
+            162
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            18,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            518,
+            519.0,
+            519
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 1.9799714006233513,
+            "median": 5.4530407327606625,
+            "mean": 5.16421431396712,
+            "maximum": 8.451802771831547,
+            "absolute_minimum": 1.9799714006233513,
+            "absolute_maximum": 8.451802771831547,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 8,
+              "10_or_more": 0
+            },
+            "decimal_places_min_median_max": [
+              15,
+              16.0,
+              16
+            ],
+            "significant_digits_min_median_max": [
+              16,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "16": 1,
+              "17": 7
+            },
+            "target_characters_min_median_max": [
+              17,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "In triangle ABC, angle BAC is <N> degrees, AB=<N>, and AC=<N>. An interior point T satisfies angle ATB = angle BTC = angle CTA = <N> degrees. Let G be the centroid of ABC. Line TG meets circle BTC again at K. Find the length TK. The stated circle is nondegener"
+        },
+        "DA03": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            2,
+            2.0,
+            2
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            2,
+            2.0,
+            2
+          ],
+          "prompt_tokens_min_median_max": [
+            168,
+            169.0,
+            169
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            18,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            562,
+            563.0,
+            563
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 16.39055161165485,
+            "median": 33.98249448301014,
+            "mean": 36.33159054891665,
+            "maximum": 70.51765754501012,
+            "absolute_minimum": 16.39055161165485,
+            "absolute_maximum": 70.51765754501012,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 0,
+              "10_or_more": 8
+            },
+            "decimal_places_min_median_max": [
+              14,
+              15.0,
+              15
+            ],
+            "significant_digits_min_median_max": [
+              16,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "16": 1,
+              "17": 7
+            },
+            "target_characters_min_median_max": [
+              17,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "Let O be the circumcenter of an acute scalene triangle ABC. The circle through A and C tangent to line AB at A meets circle BOC again at T, other than C. Let K be the intersection of lines TO and BC, with K, B, C in that order. If BC=<N> and BK=<N>, find the l"
+        },
+        "DA04": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "prompt_tokens_min_median_max": [
+            184,
+            185.0,
+            185
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            19,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            590,
+            591.0,
+            591
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 2.8986238509036273,
+            "median": 6.502170570370607,
+            "mean": 7.043732300283983,
+            "maximum": 11.805216964963554,
+            "absolute_minimum": 2.8986238509036273,
+            "absolute_maximum": 11.805216964963554,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 7,
+              "10_or_more": 1
+            },
+            "decimal_places_min_median_max": [
+              15,
+              16.0,
+              16
+            ],
+            "significant_digits_min_median_max": [
+              17,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "17": 8
+            },
+            "target_characters_min_median_max": [
+              18,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "Point P lies inside chord AB of circle Omega, with AP=<N> and PB=<N>. A circle through A and P internally tangent to Omega at A and a circle through B and P internally tangent to Omega at B meet again at Q, other than P. Line PQ cuts Omega at X and Y. If XY=<N"
+        },
+        "DA06": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            2,
+            2.0,
+            2
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            2,
+            2.0,
+            2
+          ],
+          "prompt_tokens_min_median_max": [
+            189,
+            191.0,
+            191
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            19,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            669,
+            671.0,
+            671
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 1.0618686983781647,
+            "median": 1.348110814886446,
+            "mean": 1.4403472698529363,
+            "maximum": 2.2068629536180415,
+            "absolute_minimum": 1.0618686983781647,
+            "absolute_maximum": 2.2068629536180415,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 8,
+              "10_or_more": 0
+            },
+            "decimal_places_min_median_max": [
+              16,
+              16.0,
+              16
+            ],
+            "significant_digits_min_median_max": [
+              17,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "17": 8
+            },
+            "target_characters_min_median_max": [
+              18,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "Let O be the circumcenter and M the midpoint of BC in an acute scalene triangle ABC with AB>AC. Circle omega1 passes through A and B and is tangent to line AC at A; circle omega2 passes through A and C and is tangent to line AB at A. Let D be their intersectio"
+        },
+        "DA07": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "prompt_tokens_min_median_max": [
+            214,
+            215.0,
+            215
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            17,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            682,
+            683.0,
+            683
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 3.45698811777576,
+            "median": 7.791215784340485,
+            "mean": 13.63602225117461,
+            "maximum": 42.75247979209853,
+            "absolute_minimum": 3.45698811777576,
+            "absolute_maximum": 42.75247979209853,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 6,
+              "10_or_more": 2
+            },
+            "decimal_places_min_median_max": [
+              14,
+              16.0,
+              16
+            ],
+            "significant_digits_min_median_max": [
+              15,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "15": 1,
+              "17": 7
+            },
+            "target_characters_min_median_max": [
+              16,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "In an acute scalene triangle ABC, let O and H be the circumcenter and orthocenter. Let M be the intersection other than O of the circle through B,O,C and the circle with diameter AO. Let N be the intersection other than H of the circle through B,H,C and the ci"
+        },
+        "DA08": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            2,
+            2.0,
+            2
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            2,
+            2.0,
+            2
+          ],
+          "prompt_tokens_min_median_max": [
+            175,
+            176.0,
+            176
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            19,
+            19.5,
+            20
+          ],
+          "prompt_characters_min_median_max": [
+            553,
+            554.0,
+            554
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 0.237439591497009,
+            "median": 0.8297015252032618,
+            "mean": 1.0952340822298476,
+            "maximum": 3.1874910054260432,
+            "absolute_minimum": 0.237439591497009,
+            "absolute_maximum": 3.1874910054260432,
+            "scale_bins_abs": {
+              "below_1": 4,
+              "1_to_below_10": 4,
+              "10_or_more": 0
+            },
+            "decimal_places_min_median_max": [
+              16,
+              16.5,
+              17
+            ],
+            "significant_digits_min_median_max": [
+              17,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "17": 8
+            },
+            "target_characters_min_median_max": [
+              18,
+              18.5,
+              19
+            ]
+          },
+          "normalized_shape_preview": "In an acute scalene triangle ABC, let O be the circumcenter. On the circle through B,O,C, let Q be the point antipodal to O. Let M be the intersection of line CQ with the line through A parallel to BC. Choose N so that A,N,C,M, in that order, form a parallelog"
+        },
+        "DA11": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "prompt_tokens_min_median_max": [
+            174,
+            174.5,
+            175
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            19,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            510,
+            510.5,
+            511
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 5.3084190999703464,
+            "median": 7.544350693229523,
+            "mean": 8.566672683337991,
+            "maximum": 16.849798264995048,
+            "absolute_minimum": 5.3084190999703464,
+            "absolute_maximum": 16.849798264995048,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 6,
+              "10_or_more": 2
+            },
+            "decimal_places_min_median_max": [
+              15,
+              16.0,
+              16
+            ],
+            "significant_digits_min_median_max": [
+              17,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "17": 8
+            },
+            "target_characters_min_median_max": [
+              18,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "An acute scalene triangle ABC has AB=<N>, BC=<N>, and circumradius <N>. Let I and J be the midpoints of AB and AC, and K the midpoint of IJ. The circle through K tangent to AB at I and the circle through K tangent to AC at J meet again at T. Find the radius of"
+        },
+        "DB02": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "prompt_tokens_min_median_max": [
+            176,
+            178.0,
+            178
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            18,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            512,
+            514.0,
+            514
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 5.408814993582873,
+            "median": 10.76467518666187,
+            "mean": 10.100268778499474,
+            "maximum": 13.711916424757156,
+            "absolute_minimum": 5.408814993582873,
+            "absolute_maximum": 13.711916424757156,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 3,
+              "10_or_more": 5
+            },
+            "decimal_places_min_median_max": [
+              14,
+              15.0,
+              16
+            ],
+            "significant_digits_min_median_max": [
+              16,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "16": 1,
+              "17": 7
+            },
+            "target_characters_min_median_max": [
+              17,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "Let ABC be a triangle with AB=<N>, AC=<N>, and BC=<N>. Choose P and Q in the interior of BC so that angle PAB equals angle BCA and angle CAQ equals angle ABC. On rays AP and AQ choose M and N so that P and Q are the midpoints of AM and AN, respectively. Lines "
+        },
+        "DB12": {
+          "examples": 8,
+          "normalized_shape_templates": 1,
+          "numeric_literals_per_prompt_min_median_max": [
+            7,
+            7.0,
+            7
+          ],
+          "decimal_literals_per_prompt_min_median_max": [
+            3,
+            3.0,
+            3
+          ],
+          "prompt_tokens_min_median_max": [
+            207,
+            207.0,
+            207
+          ],
+          "target_tokens_including_eos_min_median_max": [
+            19,
+            19.0,
+            19
+          ],
+          "prompt_characters_min_median_max": [
+            572,
+            572.0,
+            572
+          ],
+          "target": {
+            "count": 8,
+            "numeric_only_count": 8,
+            "exact_python_17g_count": 8,
+            "positive_count": 8,
+            "negative_count": 0,
+            "zero_count": 0,
+            "minimum": 3.911443373654705,
+            "median": 6.342267511154358,
+            "mean": 6.437641371374057,
+            "maximum": 9.758636757882659,
+            "absolute_minimum": 3.911443373654705,
+            "absolute_maximum": 9.758636757882659,
+            "scale_bins_abs": {
+              "below_1": 0,
+              "1_to_below_10": 8,
+              "10_or_more": 0
+            },
+            "decimal_places_min_median_max": [
+              16,
+              16.0,
+              16
+            ],
+            "significant_digits_min_median_max": [
+              17,
+              17.0,
+              17
+            ],
+            "significant_digits_histogram": {
+              "17": 8
+            },
+            "target_characters_min_median_max": [
+              18,
+              18.0,
+              18
+            ]
+          },
+          "normalized_shape_preview": "In triangle ABC, angle BAC is <N> degrees and BC=<N>. Let D_1 and D_2 divide BC internally in the ratios BD_1:D_1C=<N>:<N> and BD_2:D_2C=<N>:<N> For each i, the line through D_i parallel to AB meets AC at E_i, and the line through D_i parallel to AC meets AB a"
+        }
+      },
+      "unique_normalized_shape_templates": 10,
+      "instruction_prefix": "Solve the following numerical geometry problem. Give only the requested numerical value, with at least 10 significant digits when appropriate. Do not give a proof or explanation.",
+      "instruction_prefix_characters": 178,
+      "instruction_prefix_sha256": "06852637dd33549b484432bb75567b81c0e8dd39f6418a79c3b56cdb5d871796",
+      "instruction_prefixes_all_identical": true,
+      "prompt_tokens_min_median_max": [
+        159,
+        176.0,
+        215
+      ],
+      "target_tokens_including_eos_min_median_max": [
+        17,
+        19.0,
+        20
+      ],
+      "prompt_characters_min_median_max": [
+        483,
+        558.0,
+        683
+      ],
+      "numeric_literals_per_prompt_min_median_max": [
+        2,
+        3.0,
+        7
+      ],
+      "decimal_literals_per_prompt_min_median_max": [
+        2,
+        3.0,
+        3
+      ],
+      "tokenization_rows": 80,
+      "tokenization_target_hash_matches": 80,
+      "unique_target_token_sum_including_eos": 1517,
+      "target": {
+        "count": 80,
+        "numeric_only_count": 80,
+        "exact_python_17g_count": 80,
+        "positive_count": 80,
+        "negative_count": 0,
+        "zero_count": 0,
+        "minimum": 0.237439591497009,
+        "median": 6.554410669092547,
+        "mean": 9.927056968918482,
+        "maximum": 70.51765754501012,
+        "absolute_minimum": 0.237439591497009,
+        "absolute_maximum": 70.51765754501012,
+        "scale_bins_abs": {
+          "below_1": 4,
+          "1_to_below_10": 56,
+          "10_or_more": 20
+        },
+        "decimal_places_min_median_max": [
+          14,
+          16.0,
+          17
+        ],
+        "significant_digits_min_median_max": [
+          15,
+          17.0,
+          17
+        ],
+        "significant_digits_histogram": {
+          "15": 1,
+          "16": 5,
+          "17": 74
+        },
+        "target_characters_min_median_max": [
+          16,
+          18.0,
+          19
+        ]
+      }
+    }
+  },
+  "recipe_comparison": {
+    "128_update_config_fields_equal": [
+      "model_metadata_sha256",
+      "model_revision",
+      "updates",
+      "seed",
+      "learning_rate",
+      "grad_accumulation",
+      "grad_clip",
+      "lora_rank",
+      "lora_alpha",
+      "lora_modules",
+      "ce_chunk_tokens",
+      "max_target_tokens",
+      "max_sequence_tokens",
+      "enable_thinking"
+    ],
+    "128_update_config_fields_different": [],
+    "seed_old_and_new_a": 2026092701,
+    "common_example_ids": [],
+    "common_ids_with_byte_identical_full_prompt": [],
+    "old_stage32_presentations": 128,
+    "old_stage32_to128_presentations": 384,
+    "old_cumulative_presentations_at_128": 512,
+    "new_stage32_presentations": 128,
+    "new_stage32_to128_presentations": 384,
+    "new_cumulative_presentations_at_128": 512,
+    "old_avg_presentations_per_example": 9.142857142857142,
+    "new_avg_presentations_per_example": 6.4,
+    "old128_planned_target_tokens": 9656,
+    "new128_planned_target_tokens": 9711,
+    "old128_target_token_exposure_delta_new_minus_old": 55,
+    "old32_to128_prior_chain": "/home/kabatan/work/solver/qwen/.runtime/program_self_training_20260926/train-numeric/final",
+    "new_a32_to128_prior_chain": "/home/kabatan/work/solver/qwen/.runtime/related_numeric_sft_20260928/sft-a-train32/final",
+    "new_dose512_cumulative_steps": 512,
+    "new_dose512_planned_target_tokens": 38836,
+    "new_dose512_avg_presentations_per_example": 25.6,
+    "non_training_config_differences": {
+      "dataset_path_old": "/home/kabatan/work/solver/qwen/.runtime/program_self_training_20260926/selection/train-numeric.json",
+      "dataset_path_new": "/home/kabatan/work/solver/qwen/.runtime/related_numeric_sft_20260928/train.json",
+      "dataset_sha256_old": "75997401673246bca334de4e173c0e7553cdc3c56d486952463873ae7c99eba2",
+      "dataset_sha256_new": "778b87cfce6ea7271e971f8c727a5663468b783d21e7d21199bae7ccf46e26c9",
+      "protocol_sha256_old": "de1935a01c13f573970ca202e7a0d156dfdcd68274d5684c397644650afba6b6",
+      "protocol_sha256_new": "62fa1125e8dacb247e433759ecccd48ad595f249e1b63789d0262e31de2a22a9",
+      "prior_checkpoint_old": "/home/kabatan/work/solver/qwen/.runtime/program_self_training_20260926/train-numeric/final",
+      "prior_checkpoint_new": "/home/kabatan/work/solver/qwen/.runtime/related_numeric_sft_20260928/sft-a-train32/final",
+      "extension_wrapper_sha256_old": "5f78f86eb97c4c834db3b8d24100e88775e34633fa930fac36d8058eff12ae26",
+      "extension_wrapper_sha256_new": "5f78f86eb97c4c834db3b8d24100e88775e34633fa930fac36d8058eff12ae26",
+      "seed_a_fresh_chains_start_from_base": true
+    }
+  },
+  "recipes": {
+    "old32": {
+      "name": "old numeric 32-step start",
+      "config_path": "docs/research/program-self-training-2026-09-26/config-numeric.json",
+      "config_sha256": "caf80fb024568eaaeadda169036fed5ab94d10f5828cd0528d6832be11e05297",
+      "config": {
+        "dataset_sha256": "75997401673246bca334de4e173c0e7553cdc3c56d486952463873ae7c99eba2",
+        "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+        "updates": 32,
+        "seed": 2026092701,
+        "learning_rate": 5e-06,
+        "grad_accumulation": 4,
+        "grad_clip": 1.0,
+        "lora_rank": 8,
+        "lora_alpha": 16,
+        "lora_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "in_proj_qkv",
+          "in_proj_z",
+          "out_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "ce_chunk_tokens": 64,
+        "max_target_tokens": 4096,
+        "max_sequence_tokens": 8192,
+        "enable_thinking": false,
+        "prior_checkpoint": null,
+        "protocol_sha256": "de1935a01c13f573970ca202e7a0d156dfdcd68274d5684c397644650afba6b6",
+        "extension_wrapper_sha256": null
+      },
+      "receipt_path": "qwen/.runtime/program_self_training_20260926/train-numeric/receipt.json",
+      "receipt": {
+        "status": "complete",
+        "updates": 32,
+        "global_updates": 32,
+        "examples_processed": 128,
+        "n_examples": 56,
+        "dataset_sha256": "75997401673246bca334de4e173c0e7553cdc3c56d486952463873ae7c99eba2",
+        "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+        "driver_sha256": "f525e7626bae22109753cd5a8deac47b94cd13f4bd4dcc13960543b4607b9857",
+        "harness_sha256": "574f8d2cea03fbfe93d568dc1ddf61748fc99ab62eeb64db1b902a457d718810",
+        "unique_target_tokens": 1056,
+        "planned_target_tokens": 2416,
+        "trained_target_tokens": 2416,
+        "optimizer_step_min": 32,
+        "optimizer_step_max": 32,
+        "optimizer_state_loaded": false,
+        "prior_checkpoint": null,
+        "final_checkpoint": "/home/kabatan/work/solver/qwen/.runtime/program_self_training_20260926/train-numeric/final",
+        "adapter_sha256": "56d2bd4c749c21436ce80c080b00942e918cc5ad4873a02f35a5bbd3761b7b4f",
+        "vllm_adapter_sha256": "7148214176fa4dae54c7b2dea5508228bc67a9629b6bab295080682feb05d5cd",
+        "processed_order_sha256": "4414be152922104ed601457f74aaed3432c0ca4d9487bae78f58a7f69766bc2d"
+      },
+      "receipt_training_parameters": {
+        "seed": 2026092701,
+        "learning_rate": 5e-06,
+        "grad_accumulation": 4,
+        "grad_clip": 1.0,
+        "lora_rank": 8,
+        "lora_alpha": 16,
+        "lora_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "in_proj_qkv",
+          "in_proj_z",
+          "out_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "ce_chunk_tokens": 64,
+        "max_target_tokens": 4096,
+        "max_sequence_tokens": 8192,
+        "enable_thinking": false
+      }
+    },
+    "old128": {
+      "name": "old numeric cumulative 128-step final",
+      "config_path": "docs/research/program-self-training-followup-2026-09-26/config-numeric128.json",
+      "config_sha256": "c5113dc622139cafb7ab40d285bb169597a13a662683e7bbe3cec210c54f04ee",
+      "config": {
+        "dataset_sha256": "75997401673246bca334de4e173c0e7553cdc3c56d486952463873ae7c99eba2",
+        "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+        "updates": 128,
+        "seed": 2026092701,
+        "learning_rate": 5e-06,
+        "grad_accumulation": 4,
+        "grad_clip": 1.0,
+        "lora_rank": 8,
+        "lora_alpha": 16,
+        "lora_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "in_proj_qkv",
+          "in_proj_z",
+          "out_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "ce_chunk_tokens": 64,
+        "max_target_tokens": 4096,
+        "max_sequence_tokens": 8192,
+        "enable_thinking": false,
+        "prior_checkpoint": "/home/kabatan/work/solver/qwen/.runtime/program_self_training_20260926/train-numeric/final",
+        "protocol_sha256": "de1935a01c13f573970ca202e7a0d156dfdcd68274d5684c397644650afba6b6",
+        "extension_wrapper_sha256": "5f78f86eb97c4c834db3b8d24100e88775e34633fa930fac36d8058eff12ae26"
+      },
+      "receipt_path": "qwen/.runtime/program_self_training_followup_20260926/train-numeric128/receipt.json",
+      "receipt": {
+        "status": "complete",
+        "updates": 96,
+        "global_updates": 128,
+        "examples_processed": 384,
+        "n_examples": 56,
+        "dataset_sha256": "75997401673246bca334de4e173c0e7553cdc3c56d486952463873ae7c99eba2",
+        "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+        "driver_sha256": "f525e7626bae22109753cd5a8deac47b94cd13f4bd4dcc13960543b4607b9857",
+        "harness_sha256": "574f8d2cea03fbfe93d568dc1ddf61748fc99ab62eeb64db1b902a457d718810",
+        "unique_target_tokens": 1056,
+        "planned_target_tokens": 9656,
+        "trained_target_tokens": 7240,
+        "optimizer_step_min": 128,
+        "optimizer_step_max": 128,
+        "optimizer_state_loaded": true,
+        "prior_checkpoint": "/home/kabatan/work/solver/qwen/.runtime/program_self_training_20260926/train-numeric/final",
+        "final_checkpoint": "/home/kabatan/work/solver/qwen/.runtime/program_self_training_followup_20260926/train-numeric128/final",
+        "adapter_sha256": "6aacebb79b1c4b84d555cdc028d39362d96b9a2efc3fb07cf48b6afd873d6443",
+        "vllm_adapter_sha256": "aca6d2f78e713b8979322728a397839536067a4bd827ee71b8e7b3f4a77e19da",
+        "processed_order_sha256": "fc0747218a7a4267d8a7ef9efdaf3d0117f22358e8da2fcaee295b2fcdb592eb"
+      },
+      "receipt_training_parameters": {
+        "seed": 2026092701,
+        "learning_rate": 5e-06,
+        "grad_accumulation": 4,
+        "grad_clip": 1.0,
+        "lora_rank": 8,
+        "lora_alpha": 16,
+        "lora_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "in_proj_qkv",
+          "in_proj_z",
+          "out_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "ce_chunk_tokens": 64,
+        "max_target_tokens": 4096,
+        "max_sequence_tokens": 8192,
+        "enable_thinking": false
+      }
+    },
+    "new_a32": {
+      "name": "new 80-row SFT-A 32-step start",
+      "config_path": "docs/research/related-numeric-sft-2026-09-28/config-sft-a-32.json",
+      "config_sha256": "1e09137f05457ba9b8b649499897d4ba88d98344f7f7d7d6b4400ee3001c168f",
+      "config": {
+        "dataset_sha256": "778b87cfce6ea7271e971f8c727a5663468b783d21e7d21199bae7ccf46e26c9",
+        "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+        "updates": 32,
+        "seed": 2026092701,
+        "learning_rate": 5e-06,
+        "grad_accumulation": 4,
+        "grad_clip": 1.0,
+        "lora_rank": 8,
+        "lora_alpha": 16,
+        "lora_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "in_proj_qkv",
+          "in_proj_z",
+          "out_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "ce_chunk_tokens": 64,
+        "max_target_tokens": 4096,
+        "max_sequence_tokens": 8192,
+        "enable_thinking": false,
+        "prior_checkpoint": null,
+        "protocol_sha256": "62fa1125e8dacb247e433759ecccd48ad595f249e1b63789d0262e31de2a22a9",
+        "extension_wrapper_sha256": null
+      },
+      "receipt_path": "qwen/.runtime/related_numeric_sft_20260928/sft-a-train32/receipt.json",
+      "receipt": {
+        "status": "complete",
+        "updates": 32,
+        "global_updates": 32,
+        "examples_processed": 128,
+        "n_examples": 80,
+        "dataset_sha256": "778b87cfce6ea7271e971f8c727a5663468b783d21e7d21199bae7ccf46e26c9",
+        "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+        "driver_sha256": "f525e7626bae22109753cd5a8deac47b94cd13f4bd4dcc13960543b4607b9857",
+        "harness_sha256": "574f8d2cea03fbfe93d568dc1ddf61748fc99ab62eeb64db1b902a457d718810",
+        "unique_target_tokens": 1517,
+        "planned_target_tokens": 2424,
+        "trained_target_tokens": 2424,
+        "optimizer_step_min": 32,
+        "optimizer_step_max": 32,
+        "optimizer_state_loaded": false,
+        "prior_checkpoint": null,
+        "final_checkpoint": "/home/kabatan/work/solver/qwen/.runtime/related_numeric_sft_20260928/sft-a-train32/final",
+        "adapter_sha256": "d66ebac887e4db176e3ae7902d9c3042e5cfbc8e91947915185ba07050a22946",
+        "vllm_adapter_sha256": "fdc64dd87b5f1daeb5a8829b71372c97088a28a95544962ca75f9b95d199360f",
+        "processed_order_sha256": "3932fb6f5251062c9ff1e605b9615e861be5bce556aad921130a9a36c1f0c925"
+      },
+      "receipt_training_parameters": {
+        "seed": 2026092701,
+        "learning_rate": 5e-06,
+        "grad_accumulation": 4,
+        "grad_clip": 1.0,
+        "lora_rank": 8,
+        "lora_alpha": 16,
+        "lora_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "in_proj_qkv",
+          "in_proj_z",
+          "out_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "ce_chunk_tokens": 64,
+        "max_target_tokens": 4096,
+        "max_sequence_tokens": 8192,
+        "enable_thinking": false
+      }
+    },
+    "new_a128": {
+      "name": "new 80-row SFT-A cumulative 128-step final",
+      "config_path": "docs/research/related-numeric-sft-2026-09-28/config-sft-a-128.json",
+      "config_sha256": "39bdc34721fa06a9597d048352155b59a7ecb378e27e8351b26dffecb061b6e3",
+      "config": {
+        "dataset_sha256": "778b87cfce6ea7271e971f8c727a5663468b783d21e7d21199bae7ccf46e26c9",
+        "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+        "updates": 128,
+        "seed": 2026092701,
+        "learning_rate": 5e-06,
+        "grad_accumulation": 4,
+        "grad_clip": 1.0,
+        "lora_rank": 8,
+        "lora_alpha": 16,
+        "lora_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "in_proj_qkv",
+          "in_proj_z",
+          "out_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "ce_chunk_tokens": 64,
+        "max_target_tokens": 4096,
+        "max_sequence_tokens": 8192,
+        "enable_thinking": false,
+        "prior_checkpoint": "/home/kabatan/work/solver/qwen/.runtime/related_numeric_sft_20260928/sft-a-train32/final",
+        "protocol_sha256": "62fa1125e8dacb247e433759ecccd48ad595f249e1b63789d0262e31de2a22a9",
+        "extension_wrapper_sha256": "5f78f86eb97c4c834db3b8d24100e88775e34633fa930fac36d8058eff12ae26"
+      },
+      "receipt_path": "qwen/.runtime/related_numeric_sft_20260928/sft-a-train128/receipt.json",
+      "receipt": {
+        "status": "complete",
+        "updates": 96,
+        "global_updates": 128,
+        "examples_processed": 384,
+        "n_examples": 80,
+        "dataset_sha256": "778b87cfce6ea7271e971f8c727a5663468b783d21e7d21199bae7ccf46e26c9",
+        "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+        "driver_sha256": "f525e7626bae22109753cd5a8deac47b94cd13f4bd4dcc13960543b4607b9857",
+        "harness_sha256": "574f8d2cea03fbfe93d568dc1ddf61748fc99ab62eeb64db1b902a457d718810",
+        "unique_target_tokens": 1517,
+        "planned_target_tokens": 9711,
+        "trained_target_tokens": 7287,
+        "optimizer_step_min": 128,
+        "optimizer_step_max": 128,
+        "optimizer_state_loaded": true,
+        "prior_checkpoint": "/home/kabatan/work/solver/qwen/.runtime/related_numeric_sft_20260928/sft-a-train32/final",
+        "final_checkpoint": "/home/kabatan/work/solver/qwen/.runtime/related_numeric_sft_20260928/sft-a-train128/final",
+        "adapter_sha256": "c286cea776152f0a80f72c397144ad59ee96e371056494d5e0e1c425d765e59e",
+        "vllm_adapter_sha256": "34b65d72b03f1e0ca04bd302b9a5194f347991b843d9abe2497bbddf513efd06",
+        "processed_order_sha256": "8f90ba79b4d72a774ce17d2f00b42a9b12706108775116b1959252a4abe844ce"
+      },
+      "receipt_training_parameters": {
+        "seed": 2026092701,
+        "learning_rate": 5e-06,
+        "grad_accumulation": 4,
+        "grad_clip": 1.0,
+        "lora_rank": 8,
+        "lora_alpha": 16,
+        "lora_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "in_proj_qkv",
+          "in_proj_z",
+          "out_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "ce_chunk_tokens": 64,
+        "max_target_tokens": 4096,
+        "max_sequence_tokens": 8192,
+        "enable_thinking": false
+      }
+    },
+    "new_b128": {
+      "name": "new 80-row independent-seed SFT-B cumulative 128-step final",
+      "config_path": "docs/research/related-numeric-sft-2026-09-28/config-sft-b-128.json",
+      "config_sha256": "ea43a98ca311668d4f876128da94b7bbb64276600adc135e3e70a81542ed42f1",
+      "config": {
+        "dataset_sha256": "778b87cfce6ea7271e971f8c727a5663468b783d21e7d21199bae7ccf46e26c9",
+        "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+        "updates": 128,
+        "seed": 2026092901,
+        "learning_rate": 5e-06,
+        "grad_accumulation": 4,
+        "grad_clip": 1.0,
+        "lora_rank": 8,
+        "lora_alpha": 16,
+        "lora_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "in_proj_qkv",
+          "in_proj_z",
+          "out_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "ce_chunk_tokens": 64,
+        "max_target_tokens": 4096,
+        "max_sequence_tokens": 8192,
+        "enable_thinking": false,
+        "prior_checkpoint": "/home/kabatan/work/solver/qwen/.runtime/related_numeric_sft_20260928/sft-b-train32/final",
+        "protocol_sha256": "62fa1125e8dacb247e433759ecccd48ad595f249e1b63789d0262e31de2a22a9",
+        "extension_wrapper_sha256": "5f78f86eb97c4c834db3b8d24100e88775e34633fa930fac36d8058eff12ae26"
+      },
+      "receipt_path": "qwen/.runtime/related_numeric_sft_20260928/sft-b-train128/receipt.json",
+      "receipt": {
+        "status": "complete",
+        "updates": 96,
+        "global_updates": 128,
+        "examples_processed": 384,
+        "n_examples": 80,
+        "dataset_sha256": "778b87cfce6ea7271e971f8c727a5663468b783d21e7d21199bae7ccf46e26c9",
+        "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+        "driver_sha256": "f525e7626bae22109753cd5a8deac47b94cd13f4bd4dcc13960543b4607b9857",
+        "harness_sha256": "574f8d2cea03fbfe93d568dc1ddf61748fc99ab62eeb64db1b902a457d718810",
+        "unique_target_tokens": 1517,
+        "planned_target_tokens": 9710,
+        "trained_target_tokens": 7285,
+        "optimizer_step_min": 128,
+        "optimizer_step_max": 128,
+        "optimizer_state_loaded": true,
+        "prior_checkpoint": "/home/kabatan/work/solver/qwen/.runtime/related_numeric_sft_20260928/sft-b-train32/final",
+        "final_checkpoint": "/home/kabatan/work/solver/qwen/.runtime/related_numeric_sft_20260928/sft-b-train128/final",
+        "adapter_sha256": "a28d67ed4c3952cbaf8c339d5c4467ce2712efce30049dde15f8b1a9472e21ab",
+        "vllm_adapter_sha256": "eaa66bc4233b597f82ca99c2f6b7e3e113b43e43286acaae5e240329436880a7",
+        "processed_order_sha256": "aae46c84212f34a381a01a31876c9f760cf3a44e8184cf9e2cd47bde6385a46d"
+      },
+      "receipt_training_parameters": {
+        "seed": 2026092901,
+        "learning_rate": 5e-06,
+        "grad_accumulation": 4,
+        "grad_clip": 1.0,
+        "lora_rank": 8,
+        "lora_alpha": 16,
+        "lora_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "in_proj_qkv",
+          "in_proj_z",
+          "out_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "ce_chunk_tokens": 64,
+        "max_target_tokens": 4096,
+        "max_sequence_tokens": 8192,
+        "enable_thinking": false
+      }
+    },
+    "dose_correct512": {
+      "name": "same new 80-row data cumulative 512-step correct arm",
+      "config_path": "docs/research/numeric-sft-dose-control-2026-09-28/config-correct-512.json",
+      "config_sha256": "66c800687fdc0b6db0a89a93e424f88fbf8429fb2de97dac230dacaebe4d0a02",
+      "config": {
+        "dataset_sha256": "778b87cfce6ea7271e971f8c727a5663468b783d21e7d21199bae7ccf46e26c9",
+        "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+        "updates": 512,
+        "seed": 2026092701,
+        "learning_rate": 5e-06,
+        "grad_accumulation": 4,
+        "grad_clip": 1.0,
+        "lora_rank": 8,
+        "lora_alpha": 16,
+        "lora_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "in_proj_qkv",
+          "in_proj_z",
+          "out_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "ce_chunk_tokens": 64,
+        "max_target_tokens": 4096,
+        "max_sequence_tokens": 8192,
+        "enable_thinking": false,
+        "prior_checkpoint": "/home/kabatan/work/solver/qwen/.runtime/related_numeric_sft_20260928/sft-a-train128/final",
+        "protocol_sha256": "f5ef95d66ea63b8ab5c41e92ad24f090c75853b7c6b9a3d9f9c9c3a027053a42",
+        "extension_wrapper_sha256": "15c8b25ef3b8e3cd64941fc81ee7da243d4fe1609edbd73f826b5f2b3f81cb48"
+      },
+      "receipt_path": "qwen/.runtime/numeric_sft_dose_control_20260928/correct-train512/receipt.json",
+      "receipt": {
+        "status": "complete",
+        "updates": 384,
+        "global_updates": 512,
+        "examples_processed": 1536,
+        "n_examples": 80,
+        "dataset_sha256": "778b87cfce6ea7271e971f8c727a5663468b783d21e7d21199bae7ccf46e26c9",
+        "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+        "driver_sha256": "f525e7626bae22109753cd5a8deac47b94cd13f4bd4dcc13960543b4607b9857",
+        "harness_sha256": "574f8d2cea03fbfe93d568dc1ddf61748fc99ab62eeb64db1b902a457d718810",
+        "unique_target_tokens": 1517,
+        "planned_target_tokens": 38836,
+        "trained_target_tokens": 29125,
+        "optimizer_step_min": 512,
+        "optimizer_step_max": 512,
+        "optimizer_state_loaded": true,
+        "prior_checkpoint": "/home/kabatan/work/solver/qwen/.runtime/related_numeric_sft_20260928/sft-a-train128/final",
+        "final_checkpoint": "/home/kabatan/work/solver/qwen/.runtime/numeric_sft_dose_control_20260928/correct-train512/final",
+        "adapter_sha256": "ea8f091bc84b3bd4ded0e50b91f84d5b247de20005893415f6b0aec6184fe541",
+        "vllm_adapter_sha256": "d5ce2c438380cac60c25347e32a56ffec7c977985e17bc6c255802cbe705772d",
+        "processed_order_sha256": "84995460dceb936a779e693286d8b6b95f7a5cea23a9ac439ddf4bd1896ed3a3"
+      },
+      "receipt_training_parameters": {
+        "seed": 2026092701,
+        "learning_rate": 5e-06,
+        "grad_accumulation": 4,
+        "grad_clip": 1.0,
+        "lora_rank": 8,
+        "lora_alpha": 16,
+        "lora_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "in_proj_qkv",
+          "in_proj_z",
+          "out_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "ce_chunk_tokens": 64,
+        "max_target_tokens": 4096,
+        "max_sequence_tokens": 8192,
+        "enable_thinking": false
+      }
+    }
+  },
+  "digit_probe": {
+    "scope": "Existing saved token-level teacher-forced probe; scores each target token with the complete gold target prefix available.",
+    "probe_definition": "first six significant-digit tokens (leading zero ignored; sign, decimal/exponent markers, and EOS excluded), remaining digit tokens, formatting-only tokens, and EOS; tokenizer decode units were checked by the probe.",
+    "train": {
+      "base_examples": 80,
+      "sft_a_examples": 80,
+      "groups": {
+        "leading_6_digits": {
+          "token_count": 480,
+          "base_token_weighted_mean_ce": 2.4253262445718673,
+          "sft_a_token_weighted_mean_ce": 2.175456618323612,
+          "ce_delta_sft_minus_base": -0.24986962624825537,
+          "base_token_weighted_top1_accuracy": 0.10208333333333333,
+          "sft_a_token_weighted_top1_accuracy": 0.18958333333333333,
+          "top1_delta_sft_minus_base": 0.0875,
+          "contribution_to_all_target_ce_delta": -0.07906224166062134
+        },
+        "remaining_digits": {
+          "token_count": 873,
+          "base_token_weighted_mean_ce": 2.989705661045044,
+          "sft_a_token_weighted_mean_ce": 2.3007700377723195,
+          "ce_delta_sft_minus_base": -0.6889356232727244,
+          "base_token_weighted_top1_accuracy": 0.044673539518900345,
+          "sft_a_token_weighted_top1_accuracy": 0.11912943871706758,
+          "top1_delta_sft_minus_base": 0.07445589919816722,
+          "contribution_to_all_target_ce_delta": -0.3964672373876654
+        },
+        "format_only": {
+          "token_count": 84,
+          "base_token_weighted_mean_ce": 0.48159957422952476,
+          "sft_a_token_weighted_mean_ce": 0.06557817482652831,
+          "ce_delta_sft_minus_base": -0.41602139940299643,
+          "base_token_weighted_top1_accuracy": 0.8571428571428571,
+          "sft_a_token_weighted_top1_accuracy": 1.0,
+          "top1_delta_sft_minus_base": 0.1428571428571429,
+          "contribution_to_all_target_ce_delta": -0.023036122313679432
+        },
+        "eos": {
+          "token_count": 80,
+          "base_token_weighted_mean_ce": 0.1636261418258073,
+          "sft_a_token_weighted_mean_ce": 0.24890035661228466,
+          "ce_delta_sft_minus_base": 0.08527421478647737,
+          "base_token_weighted_top1_accuracy": 1.0,
+          "sft_a_token_weighted_top1_accuracy": 0.9375,
+          "top1_delta_sft_minus_base": -0.0625,
+          "contribution_to_all_target_ce_delta": 0.004496992210229525
+        },
+        "all_target": {
+          "token_count": 1517,
+          "base_token_weighted_mean_ce": 2.5232129829058434,
+          "sft_a_token_weighted_mean_ce": 2.029144373754107,
+          "ce_delta_sft_minus_base": -0.49406860915173656,
+          "base_token_weighted_top1_accuracy": 0.15820698747528017,
+          "sft_a_token_weighted_top1_accuracy": 0.23335530652603823,
+          "top1_delta_sft_minus_base": 0.07514831905075806,
+          "contribution_to_all_target_ce_delta": -0.49406860915173656
+        }
+      }
+    },
+    "new_shape": {
+      "base_examples": 10,
+      "sft_a_examples": 10,
+      "groups": {
+        "leading_6_digits": {
+          "token_count": 60,
+          "base_token_weighted_mean_ce": 2.4607792854309083,
+          "sft_a_token_weighted_mean_ce": 2.2025048340360325,
+          "ce_delta_sft_minus_base": -0.2582744513948758,
+          "base_token_weighted_top1_accuracy": 0.11666666666666667,
+          "sft_a_token_weighted_top1_accuracy": 0.26666666666666666
+        },
+        "remaining_digits": {
+          "token_count": 108,
+          "base_token_weighted_mean_ce": 2.947446581390169,
+          "sft_a_token_weighted_mean_ce": 2.3267658993049904,
+          "ce_delta_sft_minus_base": -0.6206806820851787,
+          "base_token_weighted_top1_accuracy": 0.05555555555555555,
+          "sft_a_token_weighted_top1_accuracy": 0.07407407407407407
+        },
+        "format_only": {
+          "token_count": 10,
+          "base_token_weighted_mean_ce": 0.5157906343694776,
+          "sft_a_token_weighted_mean_ce": 0.04770975593710318,
+          "ce_delta_sft_minus_base": -0.4680808784323744,
+          "base_token_weighted_top1_accuracy": 0.9,
+          "sft_a_token_weighted_top1_accuracy": 1.0
+        },
+        "eos": {
+          "token_count": 10,
+          "base_token_weighted_mean_ce": 0.09735503939446062,
+          "sft_a_token_weighted_mean_ce": 0.4128565176855773,
+          "ce_delta_sft_minus_base": 0.3155014782911167,
+          "base_token_weighted_top1_accuracy": 1.0,
+          "sft_a_token_weighted_top1_accuracy": 0.9
+        },
+        "all_target": {
+          "token_count": 188,
+          "base_token_weighted_mean_ce": 2.511183216242724,
+          "sft_a_token_weighted_mean_ce": 2.0640780314006792,
+          "ce_delta_sft_minus_base": -0.44710518484204487,
+          "base_token_weighted_top1_accuracy": 0.1702127659574468,
+          "sft_a_token_weighted_top1_accuracy": 0.22872340425531915
+        }
+      }
+    },
+    "old_56_digit_probe": "not measured in the saved recipe artifacts inspected; old training-loss diagnostic is aggregate/position-indexed teacher-forced loss, not first-significant-digit versus remaining-digit groups."
+  },
+  "new80_greedy_fit": {
+    "path": "qwen/.runtime/related_numeric_sft_20260928/greedy-fit-scores.json",
+    "status": "complete",
+    "scope": "posthoc exploratory greedy direct-number fit; not primary transfer endpoint",
+    "sft_a": {
+      "trained_all": {
+        "n": 80,
+        "median_relative_error": 0.16987018672112894,
+        "mean_relative_error": 0.3869037480382721,
+        "within_1pct": 5,
+        "within_5pct": 19,
+        "within_10pct": 29
+      },
+      "new_shape": {
+        "n": 10,
+        "median_relative_error": 0.24954162791636175,
+        "mean_relative_error": 0.6357073447193233,
+        "within_1pct": 2,
+        "within_5pct": 3,
+        "within_10pct": 3
+      }
+    },
+    "old56_direct_fit_equivalent": "not found in the inspected old recipe artifacts"
+  },
+  "old_saved_training_loss_diagnostic": {
+    "path": "docs/research/program-self-training-followup-2026-09-26/training-loss-diagnostic.json",
+    "scope": "Teacher-forced training-loss diagnostic from existing code/numeric SFT examples.jsonl only.",
+    "numeric_combined128": {
+      "examples": 512,
+      "unique_example_ids": 56,
+      "target_tokens": 9656,
+      "example_mean_loss": 2.1668037029448897,
+      "token_weighted_mean_loss": 2.166368436880021,
+      "minimum_loss": 1.9110077619552612,
+      "maximum_loss": 2.7156405448913574,
+      "unique_examples_covered": 56,
+      "coverage_fraction": 1.0,
+      "exposure_per_example_min": 9,
+      "exposure_per_example_max": 10,
+      "positions": [
+        0,
+        511
+      ]
+    },
+    "semantic_digit_groups_present": false,
+    "free_generation_fit_present_in_old_recipe_artifacts_inspected": false,
+    "note": "stored aggregate teacher-forced loss by recorded presentation/token position; not semantically grouped into significant digits, punctuation, and EOS"
+  },
+  "causal_limits": [
+    "At old128 vs new A128, optimizer/trainer settings and total presentations are matched, but dataset size, source constructions, prompts, targets, target scales, within-example repetition, and resulting order all change together.",
+    "Similar cumulative assistant-target token counts do not isolate the effect of breadth versus repeated exposure; they only show that total supervised target-token exposure is nearly matched.",
+    "The 512-step correct arm is a distinct dose condition and cannot by itself attribute the 128-step old-versus-new outcome to any single data property.",
+    "The saved 80-row digit probe is teacher-forced and does not establish free-generation or general numeric reasoning; no matching old56 semantic digit-group probe was found."
+  ]
+}

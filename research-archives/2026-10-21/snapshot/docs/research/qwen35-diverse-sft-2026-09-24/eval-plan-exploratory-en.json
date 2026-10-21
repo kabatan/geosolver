@@ -1,0 +1,32 @@
+{
+  "status": "frozen_before_updated_model_evaluation",
+  "created_utc": "2026-09-24T04:00:22.959914+00:00",
+  "numeric_jobs_sha256": "12b17463a8ec12fa42d4fe296d2a8083d7ce3018087d8084764de1f9712b640b",
+  "proof_jobs_sha256": "557efa1ad7cd588aefaa9cdc8d63d63ac30646e4820999ece3f9a7543564bef5",
+  "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+  "arms": {
+    "numeric": [
+      "base",
+      "exploratory_repeat_40_updates"
+    ],
+    "proof": [
+      "base",
+      "exploratory_2ep_10_updates",
+      "exploratory_repeat_40_updates"
+    ]
+  },
+  "generation": {
+    "thinking": false,
+    "temperature": 1.0,
+    "top_p": 0.95,
+    "top_k": 20,
+    "presence_penalty": 1.5,
+    "samples_per_job": 2,
+    "max_completion_tokens": 32768,
+    "context_tokens": 45056
+  },
+  "primary_measure": "Numeric exact answer, true useful configuration relation, self-contained decisive proof, and actual numeric use; complete requires all four. Split five trained configurations and 32 untrained configurations, and shape/similarity variants.",
+  "secondary_measure": "Six proof tasks, two samples each, complete decisive proof. Report the frozen transfer/same strata and actual training-config overlap.",
+  "gate_note": "Teacher gate failed (5 examples/5 configurations); this comparison is exploratory, not a test of the planned broad-diversity SFT.",
+  "low_dose_scope_reason": "Use six proof tasks as a compact dose check; full 37-config numeric suite reserved for base and 40-update adapter within the 24-hour budget."
+}

@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2019_P2",
+  "reviewer": "independent_review",
+  "case_sha256": "62097bf594f191978965e2a9057d97d45ad42039140c55152f6a300ca227b212",
+  "audit_sha256": "a72400ffdd2d806741f920559899e56ac6da36d4f6ce36e4f2a9ed30ddbd3d63",
+  "gmbl_sha256": "df2c83ad1c47f814095df2505fa47c7ee728c5e56ce52e6f4c92a67416c1eba4",
+  "reviewed_original_pdf_sha256": "d3509007d2f762563a041341e6b4ac359f3c42a0c4b5dae278aace36bc5adaeb",
+  "verdict": "pass",
+  "normalization_checked": true,
+  "conclusion_not_assumed": true,
+  "original_conditions_covered_by_gmbl": true,
+  "scope_of_coverage_ja": "原文の仮定を当該比較範囲で満たすかの監査である。原文の全境界配置を含む解集合の完全同値、GMB実装の全数値分岐の正当性、実験の実行許可を意味しない。",
+  "comparison_scope": "nondegenerate_configuration_domain",
+  "sources_read": [
+    "cases/IMO_2019_P2.json",
+    "audit/IMO_2019_P2.json",
+    "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2019_P2.smt2",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2019-eng.pdf",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2019-eng.txt",
+    "AUTHORING.md",
+    "reviews/UPSTREAM_SEMANTICS.md"
+  ],
+  "official_url": "https://www.imo-official.org/assets/documents/problems/2019/2019_eng.pdf",
+  "normalization_review": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "removed_continuous_dof": 4,
+    "scale_invariant": true,
+    "reflection_fixed": false,
+    "remaining_solver_variables": [
+      "cx",
+      "cy",
+      "a",
+      "b",
+      "p",
+      "r",
+      "s"
+    ],
+    "shape_fixed_beyond_original_hypotheses": false,
+    "checked_ja": "原文で相異なる二点の単位基線化だけで平行移動2・回転1・正の尺度1を除く。元の形の変数と鏡映配置を保持している。"
+  },
+  "original_goal_not_used": "P,Q,P1,Q1が同じ円上にある。",
+  "checked_input_counts": {
+    "constructions": 9,
+    "conditions": 12
+  },
+  "method": {
+    "read_all_constructions_and_conditions": true,
+    "read_original_problem_assumptions": true,
+    "checked_domains_branches_and_non_degeneracy": true,
+    "checked_goal_separation": true,
+    "exact_algebraic_checks_only_where_documented": true,
+    "solver_executed": false,
+    "optimizer_executed": false,
+    "refinement_executed": false,
+    "prior_case_performance_used_to_adjust_input": false
+  },
+  "gmb_runtime_equivalence_claimed": false,
+  "findings": [
+    {
+      "id": "IMO_2019_P2-review-1",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "AB単位基線とC、対辺の内部点A1,B1、AA1内部のPを自由変数として残し、PQ∥ABとQ∈BB1を構成する。"
+    },
+    {
+      "id": "IMO_2019_P2-review-2",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "P1=B1+r(B1-P),Q1=A1+s(A1-Q),r,s>0は正しい逆向き半直線である。二つの指定等角を照合した。"
+    },
+    {
+      "id": "IMO_2019_P2-review-3",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "GMBLにはQ∈BB1の線分条件が明記されないが、P1の角と正のrayからP.yが0とB1.yの間にあると導けるため、Qの内部guardは冗長。証明はreviews/EQUIVALENCE_ARGUMENTS.md。共円という結論は条件にしない。"
+    }
+  ],
+  "remaining_uncertainties": []
+}

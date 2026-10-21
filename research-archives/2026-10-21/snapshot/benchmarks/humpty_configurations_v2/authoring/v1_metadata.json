@@ -1,0 +1,1904 @@
+{
+  "provenance": {
+    "note_ja": "廃止したhumpty_configurations_v1から取り込んだ選定メタデータ。v2のビルドはこのファイルだけを参照し、v1ツリーには依存しない。",
+    "source_path": "benchmarks/humpty_configurations_v1/configurations.json",
+    "source_sha256": "9470af0748f9918836d4e8a19cb8683f818ffa332b7472394b878216c352d300",
+    "extracted_fields": [
+      "id",
+      "source",
+      "structural_group",
+      "title_ja",
+      "split_recommendation",
+      "problem_template_ja",
+      "numeric_queries",
+      "free_parameters"
+    ]
+  },
+  "cards": {
+    "DA01": {
+      "id": "DA01",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Problems 1–3, PDF p.5; Characterizations 1–5, PDF pp.2–3"
+        }
+      ],
+      "structural_group": "vertex_tangent_pair",
+      "title_ja": "一頂点で隣辺に接する二円の第2交点",
+      "split_recommendation": "train",
+      "problem_template_ja": "三角形 ABC の辺長は BC={a}, CA={b}, AB={c} とする。鋭角不等辺三角形 ABC をとり、O をその外心とする。 円 ω1 は B を通り、直線 AC に A で接する円とする。円 ω2 は C を通り、直線 AB に A で接する円とする。 T を ω1 と ω2 の A でない交点とする。 AT^2 の値を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "AT^2",
+          "meaning_ja": "A から二円の第2交点までの距離の二乗",
+          "why_nontrivial_ja": "二円の中心を直接解くことも、弦の中点や相似を見出して短く求めることもできる。"
+        },
+        {
+          "id": "q2",
+          "expression": "OT^2",
+          "meaning_ja": "外心から同じ交点までの距離の二乗",
+          "why_nontrivial_ja": "外心と第2交点の関係を利用できる量であり、与えた辺長そのものではない。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "順に辺 BC, CA, AB の長さ",
+          "domain_ja": "三角不等式を満たす鋭角不等辺三角形。各カードの追加条件も満たす。"
+        }
+      ]
+    },
+    "DA02": {
+      "id": "DA02",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Problems 4–5, PDF p.5"
+        }
+      ],
+      "structural_group": "sixty_degree_fermat_extensions",
+      "title_ja": "120 度の内部点と重心を結ぶ割線",
+      "split_recommendation": "train",
+      "problem_template_ja": "∠BAC=60°、AB={c}、AC={b} の三角形 ABC において、内部点 T は ∠ATB=∠BTC=∠CTA=120° を満たす。G は三角形 ABC の重心であり、直線 TG と円 BTC の T でない交点を K とする。TK^2 の値を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "TG^2",
+          "meaning_ja": "120 度の内部点と重心の距離の二乗",
+          "why_nontrivial_ja": "辺長の異なり方と内部点の位置に依存する。原題の一定比だけを返す課題にしない。"
+        },
+        {
+          "id": "q2",
+          "expression": "TK^2",
+          "meaning_ja": "内部点から割線の第2交点までの距離の二乗",
+          "why_nontrivial_ja": "120 度の点・重心・三点円の組合せをすべて用いる。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "b,c",
+          "meaning_ja": "AC, AB の長さ",
+          "domain_ja": "正、相異なる。残る二角がともに 120° 未満となり、T と G が異なる。"
+        }
+      ]
+    },
+    "DA03": {
+      "id": "DA03",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Problem 6, PDF p.9"
+        }
+      ],
+      "structural_group": "vertex_tangent_pair",
+      "title_ja": "二円の交点から外心を通って底辺へ進む構成",
+      "split_recommendation": "train",
+      "problem_template_ja": "三角形 ABC の辺長は BC={a}, CA={b}, AB={c} とする。鋭角不等辺三角形 ABC の外心を O とする。 ω を A,C を通り直線 AB に A で接する円、γ を B,O,C を通る円とする。 T を ω と γ の C でない交点とし、K を直線 TO と直線 BC の交点とする。 AK^2 の値を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "AK^2",
+          "meaning_ja": "頂点から底辺直線上の交点までの距離の二乗",
+          "why_nontrivial_ja": "第2交点から O を通す直線が作る外部点が必要。"
+        },
+        {
+          "id": "q2",
+          "expression": "KT^2",
+          "meaning_ja": "底辺直線上の交点から二円の交点までの距離の二乗",
+          "why_nontrivial_ja": "新しい K と T の両方を使い、元の AT の求値には還元しない。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "順に辺 BC, CA, AB の長さ",
+          "domain_ja": "三角不等式を満たす鋭角不等辺三角形。各カードの追加条件も満たす。"
+        }
+      ]
+    },
+    "DA04": {
+      "id": "DA04",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Problem 7, PDF p.9; Lemma 3, PDF p.6; general coordinate identification recorded here"
+        }
+      ],
+      "structural_group": "inner_circles_on_outer_chord",
+      "title_ja": "大円に内接する二円と共通弦の延長",
+      "split_recommendation": "train",
+      "problem_template_ja": "円 Ω の弦 AB の長さは {c} で、中心 O と直線 AB の距離は {h} である。線分 AB の内部に AP={p} となる P をとる。A,P を通り Ω に A で内接する円と、B,P を通り Ω に B で内接する円の P でない交点を Q とする。直線 PQ と Ω の交点を X,Y とする。XY^2 の値を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "PQ^2",
+          "meaning_ja": "二つの内接円の共通弦の長さの二乗",
+          "why_nontrivial_ja": "二円の接点と既知の共通点から、未知の共通弦を決める必要がある。"
+        },
+        {
+          "id": "q2",
+          "expression": "XY^2",
+          "meaning_ja": "共通弦直線が大円から切り取る弦の長さの二乗",
+          "why_nontrivial_ja": "二小円で決まる直線を大円まで延長する依存が必要。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "c,h,p",
+          "meaning_ja": "弦 AB の長さ、中心と弦の距離、AP",
+          "domain_ja": "c>0,h>0,0<p<c。p=c/2 は必要に応じ対称ケースとして別層にする。"
+        }
+      ]
+    },
+    "DA05": {
+      "id": "DA05",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Problem 8, PDF p.9"
+        }
+      ],
+      "structural_group": "vertex_tangent_pair",
+      "title_ja": "頂点で接する二円と底辺中点からの割線",
+      "split_recommendation": "train",
+      "problem_template_ja": "三角形 ABC の辺長は BC={a}, CA={b}, AB={c} とする。鋭角不等辺三角形 ABC をとる。 ω1 を A を通り直線 BC に B で接する円、ω2 を C を通り直線 BA に B で接する円とする。 D を ω1,ω2 の B でない交点とする。M を BC の中点とし、E を直線 MD と直線 AC の交点とする。 DE^2 の値を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "DE^2",
+          "meaning_ja": "二円の第2交点と割線の終点との距離の二乗",
+          "why_nontrivial_ja": "中点から出る割線が作る E を実際に使う。"
+        },
+        {
+          "id": "q2",
+          "expression": "BE^2",
+          "meaning_ja": "接点から割線の終点までの距離の二乗",
+          "why_nontrivial_ja": "E の二円への接続を見抜くと計算を減らせる。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "順に辺 BC, CA, AB の長さ",
+          "domain_ja": "三角不等式を満たす鋭角不等辺三角形。各カードの追加条件も満たす。"
+        }
+      ]
+    },
+    "DA06": {
+      "id": "DA06",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Problem 9, PDF p.9; Lemma 17, PDF p.11"
+        }
+      ],
+      "structural_group": "vertex_tangent_pair",
+      "title_ja": "中線と接円の第2交点を用いる外心配置",
+      "split_recommendation": "train",
+      "problem_template_ja": "AB>AC の鋭角不等辺三角形 ABC は BC={a}, CA={b}, AB={c} を満たし、O は外心、M は BC の中点である。A,B を通り直線 AC に A で接する円を ω1、A,C を通り直線 AB に A で接する円を ω2 とする。二円の A でない交点を D、直線 AM と ω2 の A でない交点を E とする。DE^2 の値を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "OE^2",
+          "meaning_ja": "外心と中線上の円交点との距離の二乗",
+          "why_nontrivial_ja": "接円と中線の交点が主対象であり、外心との位置関係を使える。"
+        },
+        {
+          "id": "q2",
+          "expression": "DE^2",
+          "meaning_ja": "二円の交点と中線上の交点との距離の二乗",
+          "why_nontrivial_ja": "同じ二円から得られる二種類の交点を結び付ける。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "BC, CA, AB の長さ",
+          "domain_ja": "鋭角不等辺三角形をなし c>b。"
+        }
+      ]
+    },
+    "DA07": {
+      "id": "DA07",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Problem 10, PDF p.9"
+        }
+      ],
+      "structural_group": "paired_diameter_circles",
+      "title_ja": "外心側と垂心側で対応する二組の直径円",
+      "split_recommendation": "train",
+      "problem_template_ja": "三角形 ABC の辺長は BC={a}, CA={b}, AB={c} とする。鋭角不等辺三角形 ABC の外心を O、垂心を H とする。 γ1 を B,O,C を通る円、γ2 を B,H,C を通る円とする。 M を直径 AO の円と γ1 の O でない交点、N を直径 AH の円と γ2 の H でない交点とする。 X を直線 AM と γ1 の M でない交点、Y を直線 AN と γ2 の N でない交点とする。 MN^2 の値を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "MN^2",
+          "meaning_ja": "二つの直径円から得られた交点間の距離の二乗",
+          "why_nontrivial_ja": "外心側と垂心側で別々に定義された点の関係が対象。"
+        },
+        {
+          "id": "q2",
+          "expression": "XY^2",
+          "meaning_ja": "両方の割線の第2交点間の距離の二乗",
+          "why_nontrivial_ja": "直径円で得た点の先まで延長する二段階の依存を使う。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "順に辺 BC, CA, AB の長さ",
+          "domain_ja": "三角不等式を満たす鋭角不等辺三角形。各カードの追加条件も満たす。"
+        }
+      ]
+    },
+    "DA08": {
+      "id": "DA08",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Problem 12, PDF p.18"
+        }
+      ],
+      "structural_group": "antipode_parallel_grid_dumpty",
+      "title_ja": "円の直径と平行四辺形から作る交点",
+      "split_recommendation": "train",
+      "problem_template_ja": "三角形 ABC の辺長は BC={a}, CA={b}, AB={c} とする。鋭角不等辺三角形 ABC の外心を O とし、γ を B,O,C を通る円とする。 Q を γ 上で O の対蹠点とする。 M は直線 CQ と A を通り BC に平行な直線との交点とし、N は ANCM がこの順で平行四辺形となる点とする。 T を直線 AQ と直線 MN の交点とする。 AT^2 の値を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "AT^2",
+          "meaning_ja": "頂点から直線 AQ と対角線 MN の交点までの距離の二乗",
+          "why_nontrivial_ja": "Q と平行四辺形の両方を経由して T を構成する。"
+        },
+        {
+          "id": "q2",
+          "expression": "TM^2",
+          "meaning_ja": "平行四辺形の頂点から同じ交点までの距離の二乗",
+          "why_nontrivial_ja": "原題の共点・円周関係を見抜くと交点の求値を整理できる。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "順に辺 BC, CA, AB の長さ",
+          "domain_ja": "三角不等式を満たす鋭角不等辺三角形。各カードの追加条件も満たす。"
+        }
+      ]
+    },
+    "DA09": {
+      "id": "DA09",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Problem 13, PDF p.19"
+        }
+      ],
+      "structural_group": "antipode_parallel_grid_dumpty",
+      "title_ja": "内心の円上の点を通る平行線格子",
+      "split_recommendation": "train",
+      "problem_template_ja": "AB={a}, AC=BC={b} の二等辺三角形 ABC の内心を I とする。円 AIB 上で三角形 ABC の内部にあり AP={p} を満たす唯一の点を P とする。P を通り CA,CB に平行な直線と AB の交点を順に D,E とする。P を通り AB に平行な直線と CA,CB の交点を順に F,G とする。直線 DF と EG の交点を T とする。CT^2 の値を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "CT^2",
+          "meaning_ja": "二等辺三角形の頂点から格子の交点までの距離の二乗",
+          "why_nontrivial_ja": "P から作る四つの平行線交点と、その先の交点 T を使う。"
+        },
+        {
+          "id": "q2",
+          "expression": "IT^2",
+          "meaning_ja": "内心から格子の交点までの距離の二乗",
+          "why_nontrivial_ja": "P を決める円の内心と最後の交点を結び付ける量。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,p",
+          "meaning_ja": "AB、等しい辺 AC=BC、AP",
+          "domain_ja": "0<a<2b。円 AIB と中心 A 半径 p の円の交点のうち ABC 内部のものがちょうど一つ。"
+        }
+      ]
+    },
+    "DA11": {
+      "id": "DA11",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Problem 16, PDF p.21"
+        }
+      ],
+      "structural_group": "derived_triangle_foot_midpoints_humpty",
+      "title_ja": "中点連結線上の点を通る二つの接円",
+      "split_recommendation": "train",
+      "problem_template_ja": "三角形 ABC の辺長は BC={a}, CA={b}, AB={c} とする。鋭角不等辺三角形 ABC をとる。 I,J をそれぞれ AB,AC の中点、K を IJ の中点とする。 ω1 を K を通り直線 AB に I で接する円、ω2 を K を通り直線 AC に J で接する円とする。 K′ を ω1 と ω2 の K でない交点とする。 AK′^2 の値を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "AK′^2",
+          "meaning_ja": "頂点から二円の新しい交点までの距離の二乗",
+          "why_nontrivial_ja": "接点が頂点でない二円から、元の三角形に対する交点を求める。"
+        },
+        {
+          "id": "q2",
+          "expression": "KK′^2",
+          "meaning_ja": "二円の共通弦の長さの二乗",
+          "why_nontrivial_ja": "K と K′ の両方を使うため、中点連結線の役割が消えない。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "順に辺 BC, CA, AB の長さ",
+          "domain_ja": "三角不等式を満たす鋭角不等辺三角形。各カードの追加条件も満たす。"
+        }
+      ]
+    },
+    "DA13": {
+      "id": "DA13",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Problem 18, PDF p.21"
+        }
+      ],
+      "structural_group": "cross_tangent_bisector_extensions",
+      "title_ja": "交わる二円の接線と二等分線から作る二つの外心",
+      "split_recommendation": "train",
+      "problem_template_ja": "半径 {r1},{r2} の円 Γ1,Γ2 の中心を O1,O2 とし、O1O2={d} とする。各中心は他方の円外にあり、二円は A,B で交わる。O1 から O2 を見て左側を A とする。Γ1 の B における接線と Γ2 の B でない交点を C、Γ2 の B における接線と Γ1 の B でない交点を D とする。∠DAB の内角二等分線と Γ1 の A でない交点を X、∠CAB の内角二等分線と Γ2 の A でない交点を Y とする。三角形 ACD と XAY の外心を順に P,Q とする。PQ^2 の値を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "PQ^2",
+          "meaning_ja": "二つの派生三角形の外心間距離の二乗",
+          "why_nontrivial_ja": "接線・角二等分線の四交点を経由した外心同士の関係を使う。"
+        },
+        {
+          "id": "q2",
+          "expression": "PO1^2",
+          "meaning_ja": "派生三角形の外心と元の円の中心との距離の二乗",
+          "why_nontrivial_ja": "元の二円と派生三角形を結び付ける量。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "r1,r2,d",
+          "meaning_ja": "元の二円の半径と中心間距離",
+          "domain_ja": "r1,r2>0、r1≠r2、max(r1,r2)<d<r1+r2。"
+        }
+      ]
+    },
+    "DA14": {
+      "id": "DA14",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Example 19, PDF p.13"
+        }
+      ],
+      "structural_group": "altitude_boc_circle_pair",
+      "title_ja": "外心を通る二直線と高さから作る二円",
+      "split_recommendation": "train",
+      "problem_template_ja": "AB={c}<AC={b}, BC={a} の鋭角不等辺三角形 ABC の外心を O、内心を I とする。A1,P は順に A,O から直線 BC に下ろした垂線の足である。D=BO∩AA1、E=CO∩AA1 とし、円 ABD と円 ACE の A でない交点を F とする。IF^2 の値を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "PF^2",
+          "meaning_ja": "外心の垂足から二円の交点までの距離の二乗",
+          "why_nontrivial_ja": "二種類の垂足・外心を通る線・派生円を経由する。"
+        },
+        {
+          "id": "q2",
+          "expression": "IF^2",
+          "meaning_ja": "内心から二円の交点までの距離の二乗",
+          "why_nontrivial_ja": "内心との角二等分線関係が距離の短い計算へつながる可能性がある。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "BC,CA,AB の長さ",
+          "domain_ja": "鋭角不等辺三角形で c<b。"
+        }
+      ]
+    },
+    "DA15": {
+      "id": "DA15",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Example 20, PDF p.13"
+        }
+      ],
+      "structural_group": "median_bisector_intersections",
+      "title_ja": "中線と二本の垂直二等分線から作る交点",
+      "split_recommendation": "train",
+      "problem_template_ja": "三角形 ABC の辺長は BC={a}, CA={b}, AB={c} とする。鋭角不等辺三角形 ABC をとり、M を BC の中点とする。 D,E を、それぞれ AB,AC の垂直二等分線と半直線 AM の交点とする。 F を直線 BD と直線 CE の交点とする。F が三角形 ABC の内部にある場合を扱う。 MF^2 の値を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "MF^2",
+          "meaning_ja": "底辺中点から二直線の交点までの距離の二乗",
+          "why_nontrivial_ja": "二本の垂直二等分線で中線上に作った点から、さらに異なる直線の交点へ進む。"
+        },
+        {
+          "id": "q2",
+          "expression": "DF^2",
+          "meaning_ja": "中線上の交点から最後の交点までの距離の二乗",
+          "why_nontrivial_ja": "D を捨てた同じ点の別名ではなく、構成の中間点との距離を使う。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "順に辺 BC, CA, AB の長さ",
+          "domain_ja": "三角不等式を満たす鋭角不等辺三角形。各カードの追加条件も満たす。"
+        }
+      ]
+    },
+    "DA16": {
+      "id": "DA16",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Example 21, PDF p.13"
+        }
+      ],
+      "structural_group": "vertex_tangent_pair",
+      "title_ja": "二円の交点から垂直方向に取った弧上点",
+      "split_recommendation": "train",
+      "problem_template_ja": "三角形 ABC の辺長は BC={a}, CA={b}, AB={c} とする。鋭角不等辺三角形 ABC の外接円を Γ とする。 M を、B を通り AC に A で接する円と、C を通り AB に A で接する円の A でない交点とする。 P を M を通り MB に垂直な直線と、C を含まない小弧 AB との交点とする。Q を M を通り MC に垂直な直線と、B を含まない小弧 AC との交点とする。 T を直線 BP と直線 CQ の交点とする。 AT^2 の値を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "AT^2",
+          "meaning_ja": "元の頂点から二本の弦直線の交点までの距離の二乗",
+          "why_nontrivial_ja": "M に依存する二つの垂直線と弧上点から最後の交点を求める。"
+        },
+        {
+          "id": "q2",
+          "expression": "MT^2",
+          "meaning_ja": "二円の交点と二弦直線の交点との距離の二乗",
+          "why_nontrivial_ja": "基礎交点と派生交点を結ぶため、追加した P,Q の役割が必要。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "順に辺 BC, CA, AB の長さ",
+          "domain_ja": "三角不等式を満たす鋭角不等辺三角形。各カードの追加条件も満たす。"
+        }
+      ]
+    },
+    "DA17": {
+      "id": "DA17",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Example 22, PDF p.14"
+        }
+      ],
+      "structural_group": "two_circles_common_tangent_secant",
+      "title_ja": "共通外接線と三点を一直線にする横断円",
+      "split_recommendation": "train",
+      "problem_template_ja": "直線 ℓ 上の点 A,B は AB={d} を満たす。ℓ の同じ側にあり ℓ にそれぞれ A,B で接する半径 {r1},{r2} の円を Γ1,Γ2 とする。二交点のうち ℓ に近い方を X、遠い方を Y とする。A,B を通る円 ω は、その中心が二円の中心と ℓ の同じ側にあり、Γ1 との A でない交点 D と Γ2 との B でない交点 C に対して Y が線分 CD の内部となる唯一の円とする。XC^2 の値を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "XC^2",
+          "meaning_ja": "元の二円の近い交点から横断円の交点までの距離の二乗",
+          "why_nontrivial_ja": "Y を通る共線条件で横断円を決め、その結果として C を求める。"
+        },
+        {
+          "id": "q2",
+          "expression": "XD^2",
+          "meaning_ja": "元の二円の近い交点からもう一方の横断交点までの距離の二乗",
+          "why_nontrivial_ja": "二つの異なる半径の円への依存があり、対称な定数値ではない。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "r1,r2,d",
+          "meaning_ja": "二円の半径と接点間距離 AB",
+          "domain_ja": "r1,r2>0、r1≠r2、0<d<2√(r1 r2)。この範囲では二円は異なる二点で交わり、条件を満たす横断円が一意に存在する。"
+        }
+      ]
+    },
+    "DA18": {
+      "id": "DA18",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Example 23, PDF p.14"
+        }
+      ],
+      "structural_group": "thirty_one_twenty_inner_cuts",
+      "title_ja": "30 度・120 度の三角形を切る二つの 60 度線",
+      "split_recommendation": "train",
+      "problem_template_ja": "∠A=∠C=30°、∠B=120°、AC={a} の三角形 ABC で、線分 AC の内部に AF={f} の点 F をとる。線分 AB の内部に ∠BFD=60° を満たす唯一の点 D、線分 BC の内部に ∠BFE=60° を満たす唯一の点 E をとる。DE+EF+FD の値を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "DE^2",
+          "meaning_ja": "両辺上に作った点間の距離の二乗",
+          "why_nontrivial_ja": "F で 60 度をなす二つの交点を同時に用いる。"
+        },
+        {
+          "id": "q2",
+          "expression": "DE+EF+FD",
+          "meaning_ja": "内部の三角形 DEF の周長",
+          "why_nontrivial_ja": "DEだけでなくFと両辺上の二点の位置に依存する。Dumptyの積関係と余弦定理によって、内部三角形の三辺をまとめて求めることができる。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,f",
+          "meaning_ja": "AC と AF の長さ",
+          "domain_ja": "a>0,0<f<a。指定 60 度の点が AB,BC の開線分上に一つずつ存在する範囲。"
+        }
+      ]
+    },
+    "DB01": {
+      "id": "DB01",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Problem 19, PDF p.21; Characterization 4, pp.3–4"
+        }
+      ],
+      "structural_group": "altitude_center_product_tangency",
+      "title_ja": "高度直線上の中心を積条件で定める円",
+      "split_recommendation": "train",
+      "problem_template_ja": "BC=a, CA=b, AB=c の鋭角不等辺三角形ABCをとり、Oを外心、H_AをAからBCへの垂足とする。 中心Jが直線AH_A上にありAを通る円ωを考える。ωと線分AB,ACのA以外の交点をそれぞれP,Qとし、P,Qは各辺の内部にあるものとする。 BP·CQ=AP·AQを満たす円ωを選ぶ。この条件を満たす円は一つに限られる。 円ωの半径の二乗を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "JA^2",
+          "meaning_ja": "円ωの半径の二乗",
+          "why_nontrivial_ja": "高さ直線上の自由な中心を二辺の積条件から決める必要がある。"
+        },
+        {
+          "id": "q2",
+          "expression": "PQ^2",
+          "meaning_ja": "弦PQの長さの二乗",
+          "why_nontrivial_ja": "一つの半径を二つの辺上の交点に結び、接触配置の形を復元する。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "BC=a, CA=b, AB=c",
+          "domain_ja": "a,b,c>0、三角不等式を満たす。追加の角・枝条件はdomain_conditions_ja参照。"
+        }
+      ]
+    },
+    "DB02": {
+      "id": "DB02",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Problem 20, PDF p.21; Characterization 1, p.3"
+        }
+      ],
+      "structural_group": "angle_ray_doubling_symmedian_endpoint",
+      "title_ja": "角指定の二つの延長点から得る交点",
+      "split_recommendation": "train",
+      "problem_template_ja": "BC=a, CA=b, AB=c の鋭角不等辺三角形ABCで、角Aは角B,角Cのいずれよりも大きいものとする。 線分BCの内部の点P,Qを、∠PAB=∠BCA、∠CAQ=∠ABCによって定める。 半直線AP,AQ上に、それぞれP,QをAM,ANの中点とする点M,Nをとる。直線BMとCNの交点をXとする。 AXの長さの二乗を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "AX^2",
+          "meaning_ja": "AXの長さの二乗",
+          "why_nontrivial_ja": "二つの角指定と倍長操作が決める交点を求める。"
+        },
+        {
+          "id": "q2",
+          "expression": "BX^2",
+          "meaning_ja": "BXの長さの二乗",
+          "why_nontrivial_ja": "交点を元の三角形の円周・相似へ戻すことが有効。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "BC=a, CA=b, AB=c",
+          "domain_ja": "a,b,c>0、三角不等式を満たす。追加の角・枝条件はdomain_conditions_ja参照。"
+        }
+      ]
+    },
+    "DB03": {
+      "id": "DB03",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Problem 21, PDF p.21"
+        }
+      ],
+      "structural_group": "excenter_arc_midpoint_spiral",
+      "title_ja": "傍心と弧の中点を結ぶ割線",
+      "split_recommendation": "train",
+      "problem_template_ja": "BC=a, CA=b, AB=c の三角形ABCをとり、I_bをB傍心、ΓをABCの外接円とする。 Aを含まない弧BCの中点をMとする。直線MI_bとΓとのM以外の交点をTとする。 TI_bの長さの二乗を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "TI_b^2",
+          "meaning_ja": "TI_bの長さの二乗",
+          "why_nontrivial_ja": "傍心から弧中点を経由する再交点に依存する。"
+        },
+        {
+          "id": "q2",
+          "expression": "MT^2",
+          "meaning_ja": "弦MTの長さの二乗",
+          "why_nontrivial_ja": "弧選択と傍心の位置の双方が必要。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "BC=a, CA=b, AB=c",
+          "domain_ja": "a,b,c>0、三角不等式を満たす。追加の角・枝条件はdomain_conditions_ja参照。"
+        }
+      ]
+    },
+    "DB04": {
+      "id": "DB04",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Problem 22, PDF p.21; Characterization 5, p.4"
+        }
+      ],
+      "structural_group": "cross_tangent_bisector_extensions",
+      "title_ja": "二接線の内外角二等分線で作る四点",
+      "split_recommendation": "train",
+      "problem_template_ja": "半径r_1,r_2、中心間距離dの二円ω_1,ω_2が異なる二点A,Bで交わる。 ω_1のAにおける接線とω_2のA以外の交点をC、ω_2のAにおける接線とω_1のA以外の交点をDとする。 角CADの内角二等分線の全直線とω_1,ω_2のA以外の交点をそれぞれE,F、外角二等分線の全直線とのA以外の交点をそれぞれX,Yとする。 KをXYの中点、Uを三角形BEFの外心とする。 三角形BEFの外接円半径の二乗を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "UE^2",
+          "meaning_ja": "三角形BEFの外接円半径の二乗",
+          "why_nontrivial_ja": "異なる二等分線が二円に作る点を統合する必要がある。"
+        },
+        {
+          "id": "q2",
+          "expression": "BK^2",
+          "meaning_ja": "BKの長さの二乗",
+          "why_nontrivial_ja": "外角二等分線側の二点から作る中点と、元の第二交点を結ぶ。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "r_1,r_2,d",
+          "meaning_ja": "二円の半径と中心間距離",
+          "domain_ja": "|r_1-r_2|<d<r_1+r_2、r_1,r_2>0。接線・二等分線の退化を除く。"
+        }
+      ]
+    },
+    "DB06": {
+      "id": "DB06",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Problem 24, PDF pp.21–22; Characterization 1, p.3"
+        }
+      ],
+      "structural_group": "harmonic_quadrilateral_dual_dumpty",
+      "title_ja": "円に内接する四角形の二組の角指定点",
+      "split_recommendation": "train",
+      "problem_template_ja": "A,B,C,Dをこの順に円周上にとる凸四角形で、AB=u, BC=v, CD=w, DA=z, AC=eとする。 対角線BDの内部の点Xを、∠BAC=∠XAD、∠BCA=∠XCDにより定める。 対角線ACの内部の点Yを、∠CBD=∠YBA、∠CDB=∠YDAにより定める。これらの条件を満たすX,Yが存在する四角形を入力とする。 XYの長さの二乗を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "XY^2",
+          "meaning_ja": "XYの長さの二乗",
+          "why_nontrivial_ja": "二つの異なる三角形に属する角条件を同時に読み替える。"
+        },
+        {
+          "id": "q2",
+          "expression": "BX^2+AY^2",
+          "meaning_ja": "BX²+AY²",
+          "why_nontrivial_ja": "角で与えられた二点の位置を長さへ変換する。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "u,v,w,z,e",
+          "meaning_ja": "四辺と対角線ACの長さ",
+          "domain_ja": "上記の凸内接四角形を定め、指定されたX,Yが存在する組に限る。"
+        }
+      ]
+    },
+    "DB08": {
+      "id": "DB08",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Problem 26, PDF p.22; Lemma 4, p.6"
+        }
+      ],
+      "structural_group": "tangent_projection_angle_transversal",
+      "title_ja": "接線の交点からの射影と角指定の横断線",
+      "split_recommendation": "train",
+      "problem_template_ja": "BC=a, CA=b, AB=c、b>cの鋭角三角形ABCをとり、Γを外接円、Oを外心とする。ΓのAでの接線と直線BCとの交点をPとする。 Aから直線OPへ下ろした垂線の足をXとする。 直線AB上の点E、直線AC上の点Fを、E,Fがともに直線OPのAを含む側にあり、∠EXP=∠ACX、∠FXO=∠ABXとなるようにとる。条件を満たすE,Fが一意となる入力に限る。 直線EFとΓとの異なる二交点をK,Lとし、Uを三角形KLXの外心とする。 三角形KLXの外接円半径の二乗を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "UK^2",
+          "meaning_ja": "三角形KLXの外接円半径の二乗",
+          "why_nontrivial_ja": "射影点を起点とする二角条件が別の円を決める。"
+        },
+        {
+          "id": "q2",
+          "expression": "EF^2",
+          "meaning_ja": "EFの長さの二乗",
+          "why_nontrivial_ja": "角条件と同じ側の枝を解く必要がある。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "BC=a, CA=b, AB=c",
+          "domain_ja": "a,b,c>0、三角不等式を満たす。追加の角・枝条件はdomain_conditions_ja参照。"
+        }
+      ]
+    },
+    "DB09": {
+      "id": "DB09",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Problem 27, PDF p.22; Characterization 1, p.3"
+        }
+      ],
+      "structural_group": "dumpty_apollonius_parallel_constraint",
+      "title_ja": "長さ制約を伴う円外の比軌跡点",
+      "split_recommendation": "train",
+      "problem_template_ja": "BC=a, CA=b, AB=c の三角形ABCでMをBCの中点、ωを直径BCの円とする。 直線ABとωのB以外の交点をD、直線ACとωのC以外の交点をEとする。 ABCの内部に、∠PBA=∠PAC、∠PCA=∠PABを満たす一意な点Pをとる。入力の三角形はさらに2PM·DE=BC²を満たすものとする。 Mを通りAPに平行な直線上で、ωの外部にありXB/XC=c/bを満たす点を考える。このうち直線BCのA側にあるものを選び、複数ある場合はMXが最大の点をXとする。 MXの長さの二乗を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "MX^2",
+          "meaning_ja": "MXの長さの二乗",
+          "why_nontrivial_ja": "特殊点の方向と円外の距離比軌跡を同時に使う。"
+        },
+        {
+          "id": "q2",
+          "expression": "XP^2",
+          "meaning_ja": "XPの長さの二乗",
+          "why_nontrivial_ja": "方向だけでなく元の特殊点の位置も必要になる。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "BC=a, CA=b, AB=c",
+          "domain_ja": "a,b,c>0、三角不等式を満たす。追加の角・枝条件はdomain_conditions_ja参照。"
+        }
+      ]
+    },
+    "DB10": {
+      "id": "DB10",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Problem 28, PDF p.22; Lemma 2, p.5"
+        }
+      ],
+      "structural_group": "sixty_degree_fermat_extensions",
+      "title_ja": "外向き正三角形と三円の根心",
+      "split_recommendation": "train",
+      "problem_template_ja": "AB=c, AC=b、∠BAC=60°の三角形ABCをとる。 辺ABのCと反対側に正三角形ABK、辺ACのBと反対側に正三角形ACLを作る。 Sを直線CKとABの交点、Rを直線BLとACの交点、Tを直線BLとCKの交点とする。 三円BSK,CLR,BTCに対する冪が等しい点をZとする。Zは二本の根軸の有限な共通点である。 AZの長さの二乗を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "AZ^2",
+          "meaning_ja": "AZの長さの二乗",
+          "why_nontrivial_ja": "正三角形から得る交点を三つの円の冪へまとめる必要がある。"
+        },
+        {
+          "id": "q2",
+          "expression": "TZ^2",
+          "meaning_ja": "TZの長さの二乗",
+          "why_nontrivial_ja": "外向き正三角形から得られる中心的交点Tと根心の関係を要求する。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "b,c",
+          "meaning_ja": "ACとABの長さ",
+          "domain_ja": "b,c>0、退化する円・交点を除く。相似を除く自由度は比b/c。"
+        }
+      ]
+    },
+    "DB12": {
+      "id": "DB12",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Section 4 configurations I–IV, PDF pp.15–18"
+        },
+        {
+          "title": "Kapil Pause, On Two Special Points in Triangle",
+          "url": "https://pregatirematematicaolimpiadejuniori.files.wordpress.com/2018/05/two_special_points__1_.pdf",
+          "locator": "Exercise 2, PDF p.6"
+        }
+      ],
+      "structural_group": "parallel_parallelogram_dumpty",
+      "title_ja": "二つの平行線配置が作る円の共通点",
+      "split_recommendation": "train",
+      "problem_template_ja": "BC=a, CA=b, AB=c の不等辺三角形ABCと、0<t<s<1を与える。BCをBからCへt:(1−t)、s:(1−s)に内分する点をそれぞれD_t,D_sとする。 i=t,sの各々について、D_iを通りABに平行な直線とACの交点をE_i、D_iを通りACに平行な直線とABの交点をF_iとする。 二円AE_tF_tとAE_sF_sのA以外の共通点をX、二円の中心をU_t,U_sとする。 AXの長さの二乗を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "AX^2",
+          "meaning_ja": "AXの長さの二乗",
+          "why_nontrivial_ja": "二つの可変円に共通する点を求める。"
+        },
+        {
+          "id": "q2",
+          "expression": "U_tU_s^2",
+          "meaning_ja": "二つの円の中心間距離の二乗",
+          "why_nontrivial_ja": "固定点だけでなく円族の実際のパラメータ依存も使う。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "BC=a, CA=b, AB=c",
+          "domain_ja": "a,b,c>0、三角不等式を満たす。追加の角・枝条件はdomain_conditions_ja参照。"
+        },
+        {
+          "name": "t,s",
+          "meaning_ja": "BC上の二点の内分パラメータ",
+          "domain_ja": "0<t<s<1。二円の一致・Aでの接触を除く。"
+        }
+      ]
+    },
+    "DB13": {
+      "id": "DB13",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "GP line, Lemma 18, PDF p.12"
+        }
+      ],
+      "structural_group": "gp_line_midpoint_tangent_circle",
+      "title_ja": "二辺の中点を通る内接円の接点",
+      "split_recommendation": "train",
+      "problem_template_ja": "BC=a, CA=b, AB=c の鋭角不等辺三角形ABCをとり、E,FをそれぞれAC,ABの中点、ΓをABCの外接円とする。 E,Fを通りΓに内接する円ωのうち、接点RがAと異なるものをとる。Wをωの中心、GをABCの重心、PをAからBCへの垂足とする。 GRの長さの二乗を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "GR^2",
+          "meaning_ja": "GRの長さの二乗",
+          "why_nontrivial_ja": "中点二点と内接条件から接点を求め、元の重心と結ぶ。"
+        },
+        {
+          "id": "q2",
+          "expression": "WE^2",
+          "meaning_ja": "円ωの半径の二乗",
+          "why_nontrivial_ja": "中心軌跡と内接条件を同時に使う。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "BC=a, CA=b, AB=c",
+          "domain_ja": "a,b,c>0、三角不等式を満たす。追加の角・枝条件はdomain_conditions_ja参照。"
+        }
+      ]
+    },
+    "DB15": {
+      "id": "DB15",
+      "source": [
+        {
+          "title": "Kapil Pause, On Two Special Points in Triangle",
+          "url": "https://pregatirematematicaolimpiadejuniori.files.wordpress.com/2018/05/two_special_points__1_.pdf",
+          "locator": "Exercise 4, PDF p.6"
+        },
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Characterization 6, PDF p.4"
+        }
+      ],
+      "structural_group": "derived_triangle_foot_midpoints_humpty",
+      "title_ja": "弦の中点と垂足を結ぶ線の切片",
+      "split_recommendation": "train",
+      "problem_template_ja": "BC=a, CA=b, AB=c の鋭角不等辺三角形ABCをとり、DをAからBCへの垂足、E,FをそれぞれCA,ABの中点とする。 線分BC上にBS:SC=c²:b²となる点Sをとり、直線ASとABCの外接円のA以外の交点をL、ALの中点をQとする。 直線DQとEFの交点をTとする。 DQの長さの二乗を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "DQ^2",
+          "meaning_ja": "DQの長さの二乗",
+          "why_nontrivial_ja": "辺比で定まる弦中点を元の高度の足と結ぶ。"
+        },
+        {
+          "id": "q2",
+          "expression": "QT^2",
+          "meaning_ja": "QTの長さの二乗",
+          "why_nontrivial_ja": "派生三角形の中線関係を利用してさらに交点まで求める。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "BC=a, CA=b, AB=c",
+          "domain_ja": "a,b,c>0、三角不等式を満たす。追加の角・枝条件はdomain_conditions_ja参照。"
+        }
+      ]
+    },
+    "DB16": {
+      "id": "DB16",
+      "source": [
+        {
+          "title": "Kapil Pause, On Two Special Points in Triangle",
+          "url": "https://pregatirematematicaolimpiadejuniori.files.wordpress.com/2018/05/two_special_points__1_.pdf",
+          "locator": "Exercise 5, PDF p.6"
+        }
+      ],
+      "structural_group": "symmedian_variable_circumcenters",
+      "title_ja": "辺比で定めた線上の点から作る二外心",
+      "split_recommendation": "train",
+      "problem_template_ja": "BC=a, CA=b, AB=c の不等辺三角形ABCをとり、Oをその外心とする。 線分BCをBS:SC=c²:b²に内分する点Sをとり、線分AS上にAP:PS=t:(1−t)、0<t<1となる点Pをとる。 O_1を三角形APBの外心、O_2を三角形CAPの外心、NをO_1O_2の中点とする。 二つの外心間の距離の二乗を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "O_1O_2^2",
+          "meaning_ja": "二つの外心間の距離の二乗",
+          "why_nontrivial_ja": "共有辺APを持つ二円の中心の動きを求める。"
+        },
+        {
+          "id": "q2",
+          "expression": "AN^2",
+          "meaning_ja": "ANの長さの二乗",
+          "why_nontrivial_ja": "二円の外心を一つの中点としてまとめる。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "BC=a, CA=b, AB=c",
+          "domain_ja": "a,b,c>0、三角不等式を満たす。追加の角・枝条件はdomain_conditions_ja参照。"
+        },
+        {
+          "name": "t",
+          "meaning_ja": "AS上の内部比パラメータ",
+          "domain_ja": "0<t<1。二つの三角形と外心が退化しない入力。"
+        }
+      ]
+    },
+    "H01": {
+      "id": "H01",
+      "source": [
+        {
+          "title": "Evan Chen, Lemmas in AoPS Geometry",
+          "url": "https://web.evanchen.cc/handouts/GeoSlang/GeoSlang.pdf",
+          "locator": "§3.1, PDF p.9"
+        }
+      ],
+      "structural_group": "humpty_core_views",
+      "title_ja": "中線への垂足と頂点までの距離",
+      "split_recommendation": "train",
+      "problem_template_ja": "相異なる辺長BC=a, CA=b, AB=cを持つ鋭角三角形ABCを考える。Hを垂心、MをBCの中点、PをHから直線AMへの垂足とする。BP²を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "BP^2",
+          "meaning_ja": "BPの長さの平方",
+          "why_nontrivial_ja": "Hと中線の射影から、もとの頂点Bへの距離を求める。"
+        },
+        {
+          "id": "q2",
+          "expression": "CP^2",
+          "meaning_ja": "CPの長さの平方",
+          "why_nontrivial_ja": "反対側の頂点Cへの距離で、同じPを通した辺長との対応を含む。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "a=BC, b=CA, c=AB",
+          "domain_ja": "相異なる正数で、三角不等式と各辺についての鋭角条件を満たす。追加の非退化条件は別欄に従う。"
+        }
+      ]
+    },
+    "H02": {
+      "id": "H02",
+      "source": [
+        {
+          "title": "Evan Chen, Lemmas in AoPS Geometry（関連する基本点の参照）",
+          "url": "https://web.evanchen.cc/handouts/GeoSlang/GeoSlang.pdf",
+          "locator": "§3.1; 円族そのものは本データセットの新しい拡張"
+        }
+      ],
+      "structural_group": "humpty_moving_circle_family",
+      "title_ja": "辺上の動点から作る二円と第三の円",
+      "split_recommendation": "train",
+      "problem_template_ja": "相異なる辺長BC=a, CA=b, AB=cを持つ鋭角三角形ABCを考える。線分BC上にBD=dとなるDを取り、円ABDと直線ACのA以外の交点をU、円ACDと直線ABのA以外の交点をVとする。円AUVの半径の平方を求めよ。 円AUVの中心をZとする。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "r^2",
+          "meaning_ja": "円AUVの半径平方",
+          "why_nontrivial_ja": "動点Dから2本の割線を経て得られる円の大きさを求める。"
+        },
+        {
+          "id": "q2",
+          "expression": "BZ^2",
+          "meaning_ja": "Bと円AUVの中心Zの距離平方",
+          "why_nontrivial_ja": "動点に依存する第三の円と元の頂点を結びつける。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "a=BC, b=CA, c=AB",
+          "domain_ja": "相異なる正数で、三角不等式と各辺についての鋭角条件を満たす。追加の非退化条件は別欄に従う。"
+        },
+        {
+          "name": "d",
+          "meaning_ja": "BD",
+          "domain_ja": "0<d<a。Aでの接線による第二交点の重複を除く。"
+        }
+      ]
+    },
+    "H03": {
+      "id": "H03",
+      "source": [
+        {
+          "title": "Kapil Pause, On Two Special Points in Triangle",
+          "url": "https://pregatirematematicaolimpiadejuniori.files.wordpress.com/2018/05/two_special_points__1_.pdf",
+          "locator": "Problem 3, PDF pp.4–5"
+        }
+      ],
+      "structural_group": "three_humpty_apollonius",
+      "title_ja": "三頂点から作る円と中線の交点",
+      "split_recommendation": "train",
+      "problem_template_ja": "相異なる辺長BC=a, CA=b, AB=cを持つ鋭角三角形ABCを考える。Aの内角・外角の二等分線の直線とBCの交点をそれぞれK_a,L_a、BCの中点をM_aとする。円AK_aL_aと直線AM_aのA以外の交点をP_aとする。B,Cについても巡回的にP_b,P_cを作る。円P_aP_bP_cの半径の平方を求めよ。 円ABCの中心をO、円P_aP_bP_cの中心をZとする。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "r^2",
+          "meaning_ja": "円P_aP_bP_cの半径平方",
+          "why_nontrivial_ja": "別々の頂点から生成した3点を一つの円で組み合わせる。"
+        },
+        {
+          "id": "q2",
+          "expression": "OZ^2",
+          "meaning_ja": "二つの外心O,Zの距離平方",
+          "why_nontrivial_ja": "元の三角形と三点からなる新しい円の位置関係が必要。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "a=BC, b=CA, c=AB",
+          "domain_ja": "相異なる正数で、三角不等式と各辺についての鋭角条件を満たす。追加の非退化条件は別欄に従う。"
+        }
+      ]
+    },
+    "H04": {
+      "id": "H04",
+      "source": [
+        {
+          "title": "Kapil Pause, On Two Special Points in Triangle",
+          "url": "https://pregatirematematicaolimpiadejuniori.files.wordpress.com/2018/05/two_special_points__1_.pdf",
+          "locator": "Problem 4, PDF p.5"
+        }
+      ],
+      "structural_group": "humpty_perpendicular_bisector_extension",
+      "title_ja": "垂足を結ぶ線分の垂直二等分線",
+      "split_recommendation": "train",
+      "problem_template_ja": "相異なる辺長BC=a, CA=b, AB=cを持つ鋭角三角形ABCを考える。Hを垂心、MをBCの中点、PをHからAMへの垂足とする。線分APの垂直二等分線と直線BCの交点をTとする。AT²を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "AT^2",
+          "meaning_ja": "ATの長さの平方",
+          "why_nontrivial_ja": "垂足を経て作った垂直二等分線と元の辺の延長との交点を扱う。"
+        },
+        {
+          "id": "q2",
+          "expression": "cos(angle ATP)^2",
+          "meaning_ja": "角ATPの余弦平方",
+          "why_nontrivial_ja": "Tから見るA,Pの角度は、垂直二等分線の長さ情報だけでは指定されない。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "a=BC, b=CA, c=AB",
+          "domain_ja": "相異なる正数で、三角不等式と各辺についての鋭角条件を満たす。追加の非退化条件は別欄に従う。"
+        }
+      ]
+    },
+    "H06": {
+      "id": "H06",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Some problems on Humpty point",
+          "url": "https://srijonsarkar.wordpress.com/wp-content/uploads/2021/07/humpty_point.pdf",
+          "locator": "Problem 3, PDF p.1"
+        }
+      ],
+      "structural_group": "tangent_pair_centerline_secants",
+      "title_ja": "交円の接線と中心線から作る割線",
+      "split_recommendation": "train",
+      "problem_template_ja": "AB=d, AX²=u, BX²=vとなる三角形AXBを取る。AでABに接しXを通る円ω1と、BでABに接しXを通る円ω2の中心をO1,O2とする。各円のXでの接線とO1O2の交点をそれぞれK,Lとする。直線AKとω1のA以外の交点をN、BLとω2のB以外の交点をM、AMとBNの交点をRとする。AR²を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "AR^2",
+          "meaning_ja": "ARの長さの平方",
+          "why_nontrivial_ja": "接線→中心線→割線という連鎖の最後の交点が必要。"
+        },
+        {
+          "id": "q2",
+          "expression": "BR^2",
+          "meaning_ja": "BRの長さの平方",
+          "why_nontrivial_ja": "同じ連鎖を反対側の接点Bから見た距離で、Rの幾何的役割を共有する。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "d,u,v",
+          "meaning_ja": "共通接点間の距離d、指定交点から第1・第2接点までの距離平方u,v",
+          "domain_ja": "d, sqrt(u), sqrt(v)が非退化三角形を作る正数。指定交点を接線の上側に取り、本文の交点・近遠条件を満たす。"
+        }
+      ]
+    },
+    "H07": {
+      "id": "H07",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Some problems on Humpty point",
+          "url": "https://srijonsarkar.wordpress.com/wp-content/uploads/2021/07/humpty_point.pdf",
+          "locator": "Problem 5, PDF p.1"
+        }
+      ],
+      "structural_group": "tangent_pair_parallel_cross_secants",
+      "title_ja": "交円を横切る平行線と四本の割線",
+      "split_recommendation": "train",
+      "problem_template_ja": "AB=d, AM²=u, BM²=vとなる三角形AMBを取る。A,BでABに接しMを通る2円のもう一つの共通点をNとし、MがNよりABに近いとする。Mを通りABに平行な直線の各円とのM以外の交点をC,Dとする。E=AC∩BD、P=AN∩CD、Q=BN∩CDとする。EP²を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "EP^2",
+          "meaning_ja": "EPの長さの平方",
+          "why_nontrivial_ja": "二円・平行線・4本の割線を組み合わせて得る距離。"
+        },
+        {
+          "id": "q2",
+          "expression": "EQ^2",
+          "meaning_ja": "EQの長さの平方",
+          "why_nontrivial_ja": "左右の構成から独立に求める距離。同じ値になるという命題は入力しない。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "d,u,v",
+          "meaning_ja": "共通接点間の距離d、指定交点から第1・第2接点までの距離平方u,v",
+          "domain_ja": "d, sqrt(u), sqrt(v)が非退化三角形を作る正数。指定交点を接線の上側に取り、本文の交点・近遠条件を満たす。"
+        }
+      ]
+    },
+    "H08": {
+      "id": "H08",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Some problems on Humpty point",
+          "url": "https://srijonsarkar.wordpress.com/wp-content/uploads/2021/07/humpty_point.pdf",
+          "locator": "Problem 6, PDF p.1"
+        }
+      ],
+      "structural_group": "humpty_symmedian_reflection",
+      "title_ja": "二交円の共通接線に関する反射",
+      "split_recommendation": "train",
+      "problem_template_ja": "PQ=d, PB²=u, QB²=vとなる三角形PBQを取る。P,QでPQに接しBを通る2円のもう一つの共通点をAとし、BがAよりPQに近いとする。Bの直線PQに関する鏡映をCとする。cos²∠CAPを求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "cos(angle CAP)^2",
+          "meaning_ja": "角CAPの余弦平方",
+          "why_nontrivial_ja": "円の第二交点と鏡映点の角度を組み合わせる。"
+        },
+        {
+          "id": "q2",
+          "expression": "AC^2",
+          "meaning_ja": "ACの長さの平方",
+          "why_nontrivial_ja": "第二交点Aと、接線を挟んだ鏡映点Cを結ぶ距離。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "d,u,v",
+          "meaning_ja": "共通接点間の距離d、指定交点から第1・第2接点までの距離平方u,v",
+          "domain_ja": "d, sqrt(u), sqrt(v)が非退化三角形を作る正数。指定交点を接線の上側に取り、本文の交点・近遠条件を満たす。"
+        }
+      ]
+    },
+    "H12": {
+      "id": "H12",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Some problems on Humpty point",
+          "url": "https://srijonsarkar.wordpress.com/wp-content/uploads/2021/07/humpty_point.pdf",
+          "locator": "Problem 10, PDF p.2"
+        }
+      ],
+      "structural_group": "equal_opposite_angles_bisectors_circle",
+      "title_ja": "等しい対角を持つ四角形の二等分線と円",
+      "split_recommendation": "train",
+      "problem_template_ja": "AC=a, AB=b, BC=c, AD=d, CD=eを持ち、0<∠ABC=∠ADC<90°を満たす凸四角形ABCDを取る。B,Dの内角二等分線の直線とACの交点をE,F、その2直線の交点をPとする。MをACの中点とし、円BPDとBM,DMのB,D以外の交点をX,Yとする。Q=XE∩YFとする。PQ²を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "PQ^2",
+          "meaning_ja": "PQの長さの平方",
+          "why_nontrivial_ja": "対角の二等分線から作る円と2本の中線方向の割線を結びつける。"
+        },
+        {
+          "id": "q2",
+          "expression": "QM^2",
+          "meaning_ja": "Qと対角線AC中点Mの距離平方",
+          "why_nontrivial_ja": "2つの第二交点から作るQと元の中点Mとの距離。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c,d,e",
+          "meaning_ja": "AC,AB,BC,AD,CDの長さ",
+          "domain_ja": "各三角形の三角不等式、凸性、(b²+c²-a²)/(2bc)=(d²+e²-a²)/(2de)が0と1の間。"
+        }
+      ]
+    },
+    "H13": {
+      "id": "H13",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Some problems on Humpty point",
+          "url": "https://srijonsarkar.wordpress.com/wp-content/uploads/2021/07/humpty_point.pdf",
+          "locator": "Problem 11, PDF p.2"
+        }
+      ],
+      "structural_group": "median_circle_tangent_right_line",
+      "title_ja": "中線を含む円への接線と高さ方向の直線",
+      "split_recommendation": "train",
+      "problem_template_ja": "相異なる辺長BC=a, CA=b, AB=cを持つ鋭角三角形ABCを考える。MをACの中点とする。円BMCのCでの接線と、Bを通りBCに垂直な直線の交点をKとする。線分AK,BMは内部でJに交わるものとする。円BJKの半径の平方を求めよ。 円BJKの中心をZとする。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "r^2",
+          "meaning_ja": "円BJKの半径平方",
+          "why_nontrivial_ja": "接線から定まるKと中線との交点Jをまとめて外接円を作る。"
+        },
+        {
+          "id": "q2",
+          "expression": "AZ^2",
+          "meaning_ja": "Aから円BJKの中心Zまでの距離平方",
+          "why_nontrivial_ja": "新しい円の中心と、最初の三角形の頂点を結ぶ。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "a=BC, b=CA, c=AB",
+          "domain_ja": "相異なる正数で、三角不等式と各辺についての鋭角条件を満たす。追加の非退化条件は別欄に従う。"
+        }
+      ]
+    },
+    "H14": {
+      "id": "H14",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Some problems on Humpty point",
+          "url": "https://srijonsarkar.wordpress.com/wp-content/uploads/2021/07/humpty_point.pdf",
+          "locator": "Problem 13, PDF p.2"
+        }
+      ],
+      "structural_group": "equal_distance_secants_second_circle_intersection",
+      "title_ja": "等距離で定めた二点からの割線と二つの円",
+      "split_recommendation": "train",
+      "problem_template_ja": "相異なる辺長BC=a, CA=b, AB=cを持つ鋭角三角形ABCを考える。Hを垂心、MをBCの中点、Ωを円ABCとする。Dを直線AB上のA以外の点でCD=CAを満たすもの、Eを直線AC上のA以外の点でBE=BAを満たすものとする。半直線MD,MEとΩの交点をP,Qとし、円BPMと円CQMのM以外の共通点をRとする。円PQRの半径の平方を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "r1^2",
+          "meaning_ja": "円PQRの半径平方",
+          "why_nontrivial_ja": "2本の割線と2円の第二交点Rを同時に使う。"
+        },
+        {
+          "id": "q2",
+          "expression": "r2^2",
+          "meaning_ja": "円AHRの半径平方",
+          "why_nontrivial_ja": "同じRと元の垂心を結びつけ、別の円を作る。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "a=BC, b=CA, c=AB",
+          "domain_ja": "相異なる正数で、三角不等式と各辺についての鋭角条件を満たす。追加の非退化条件は別欄に従う。"
+        }
+      ]
+    },
+    "H15": {
+      "id": "H15",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Some problems on Humpty point",
+          "url": "https://srijonsarkar.wordpress.com/wp-content/uploads/2021/07/humpty_point.pdf",
+          "locator": "Problem 14, PDF p.2"
+        }
+      ],
+      "structural_group": "humpty_symmedian_reflection",
+      "title_ja": "二接線で定めた弦端点の三つの鏡映",
+      "split_recommendation": "train",
+      "problem_template_ja": "相異なる辺長BC=a, CA=b, AB=cを持つ鋭角三角形ABCを考える。円ABCのB,Cでの接線の交点をX、AXと円ABCのA以外の交点をDとする。DをBCに関して鏡映した点をE、EをAB,ACに関して鏡映した点をそれぞれC0,B0とする。K=BB0∩CC0とする。AK²を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "AK^2",
+          "meaning_ja": "AKの長さの平方",
+          "why_nontrivial_ja": "円の弦端点と3つの鏡映を経た2直線の交点が必要。"
+        },
+        {
+          "id": "q2",
+          "expression": "distance(K,AD)^2",
+          "meaning_ja": "Kから直線ADへの距離平方",
+          "why_nontrivial_ja": "3直線の共点性の成否を、一般に非零の距離として数値化する。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "a=BC, b=CA, c=AB",
+          "domain_ja": "相異なる正数で、三角不等式と各辺についての鋭角条件を満たす。追加の非退化条件は別欄に従う。"
+        }
+      ]
+    },
+    "HX01": {
+      "id": "HX01",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "記号はPDF p.2、Characterization 6はp.4、Lemma 9はp.8"
+        }
+      ],
+      "structural_group": "dumpty_midpoint_altitude_second_circle_intersection",
+      "title_ja": "二つの中点と弦端点から作る二円の第二交点",
+      "split_recommendation": "train",
+      "problem_template_ja": "BC=a, CA=b, AB=cの鋭角不等辺三角形ABCを取る。D,EをBC,CAの中点、PをAからBCへの垂足とする。円ABCのB,Cでの接線の交点をX、直線AXと円ABCのA以外の交点をLとする。円CEPと円CDLのC以外の共通点をJとする。AJ²を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "AJ^2",
+          "meaning_ja": "AJの長さの平方",
+          "why_nontrivial_ja": "二円の追加交点Jを求める必要があり、Jの隠れた直線所属が分かると第二の円と既知の直線の交点へ還元できる。"
+        },
+        {
+          "id": "q2",
+          "expression": "PJ^2",
+          "meaning_ja": "垂足Pと第二交点Jの距離平方",
+          "why_nontrivial_ja": "円CEPを作る垂足と、2円を組み合わせたJとの距離。追加した円CDLを無視してはJは定まらない。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "BC,CA,ABの辺長",
+          "domain_ja": "相異なる正数で三角不等式を満たし、ABCは鋭角。定義に現れる円・交点の非退化条件を満たす。"
+        }
+      ]
+    },
+    "DA10": {
+      "id": "DA10",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Problem 15, PDF p.21"
+        }
+      ],
+      "structural_group": "external_bisector_circle",
+      "title_ja": "内外角二等分線と円の弦",
+      "split_recommendation": "reserve",
+      "problem_template_ja": "三角形 ABC の辺長は BC={a}, CA={b}, AB={c} とする。鋭角不等辺三角形 ABC の外接円を Γ とする。 M を A の外角二等分線と Γ の A でない交点とする。ここで外角二等分線は直線として扱う。 M を中心とし B を通る円と、A の内角二等分線の直線との二交点を P,Q とする。P,Q の交換で問いの値は変わらない。 PQ^2 の値を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "PQ^2",
+          "meaning_ja": "二等分線が中心 M の円から切り取る弦の長さの二乗",
+          "why_nontrivial_ja": "外接円の二等分線交点を先に求め、その円に移る必要がある。"
+        },
+        {
+          "id": "q2",
+          "expression": "MP^2",
+          "meaning_ja": "構成された円の半径の二乗",
+          "why_nontrivial_ja": "MP=MB だが MB は入力されておらず、外角二等分線と外接円から求める必要がある。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "順に辺 BC, CA, AB の長さ",
+          "domain_ja": "三角不等式を満たす鋭角不等辺三角形。各カードの追加条件も満たす。"
+        }
+      ]
+    },
+    "DA12": {
+      "id": "DA12",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Problem 17, PDF p.21"
+        }
+      ],
+      "structural_group": "arc_cevians_miquel",
+      "title_ja": "二つの弧上点を使う円の第2交点",
+      "split_recommendation": "reserve",
+      "problem_template_ja": "AB={c}<AC={b}<BC={a} の鋭角三角形 ABC の外接円で、B を含まない小弧 AC を A から C へ {t}:(1−{t}) に内分する点を D、C を含まない小弧 AB を A から B へ {u}:(1−{u}) に内分する点を E とする。K=BD∩CE とし、円 BKE と円 CKD の K でない交点を N とする。KN^2 の値を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "KN^2",
+          "meaning_ja": "二円の共通弦の長さの二乗",
+          "why_nontrivial_ja": "弧で指定した二点から直線交点を作り、さらに二円の交点を求める。"
+        },
+        {
+          "id": "q2",
+          "expression": "AN^2",
+          "meaning_ja": "頂点から新しい円交点までの距離の二乗",
+          "why_nontrivial_ja": "A と N の位置関係を問うが、原題の特別な共線条件は課さない。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c,t,u",
+          "meaning_ja": "BC,CA,AB と二つの小弧の分割率",
+          "domain_ja": "鋭角三角形で c<b<a、0<t,u<1。"
+        }
+      ]
+    },
+    "DB05": {
+      "id": "DB05",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Problem 23, PDF p.21"
+        }
+      ],
+      "structural_group": "parallel_parallelogram_dumpty",
+      "title_ja": "平行四辺形の頂点を外接円に載せる可変円",
+      "split_recommendation": "reserve",
+      "problem_template_ja": "BC=a, CA=b, AB=c の鋭角三角形ABCでMをACの中点、ΓをABCの外接円とする。 B,Mを通る円ωが線分AB,BCとB以外に交わる点をそれぞれP,Qとする。P,Qは各線分の内部とし、B,P,T,Qをこの順に頂点とする平行四辺形を作る。 TがΓ上にあるような円ωのうちBQが最大のものを選ぶ。 BTの長さの二乗を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "BT^2",
+          "meaning_ja": "BTの長さの二乗",
+          "why_nontrivial_ja": "未知円の選択、平行四辺形の完成、別の外接円の制約を同時に使う。"
+        },
+        {
+          "id": "q2",
+          "expression": "PQ^2",
+          "meaning_ja": "PQの長さの二乗",
+          "why_nontrivial_ja": "BTだけと違い実際の円の枝にも依存する。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "BC=a, CA=b, AB=c",
+          "domain_ja": "a,b,c>0、三角不等式を満たす。追加の角・枝条件はdomain_conditions_ja参照。"
+        }
+      ]
+    },
+    "DB07": {
+      "id": "DB07",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Problem 25, PDF p.22"
+        }
+      ],
+      "structural_group": "isosceles_double_circle_incenter",
+      "title_ja": "二等辺三角形の二つの円を経由する内点",
+      "split_recommendation": "reserve",
+      "problem_template_ja": "AB=AC=s、BC=aの二等辺三角形ABCをとり、DをACの中点とする。 角BACの内角二等分線と円DBCの交点のうちABCの内部にあるものをEとする。 直線BDと円AEBのB以外の交点をFとし、直線AFとBEの交点をI、直線CIとBDの交点をKとする。 IKの長さの二乗を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "IK^2",
+          "meaning_ja": "IKの長さの二乗",
+          "why_nontrivial_ja": "二円と三つの交線を経由して作る点に依存する。"
+        },
+        {
+          "id": "q2",
+          "expression": "IA^2",
+          "meaning_ja": "IAの長さの二乗",
+          "why_nontrivial_ja": "同じIを別の頂点から測り、円由来の相似と内角二等分を接続する。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "s,a",
+          "meaning_ja": "等辺と底辺の長さ",
+          "domain_ja": "s>0、0<a<2s、下記交点の存在条件を満たす。"
+        }
+      ]
+    },
+    "DB11": {
+      "id": "DB11",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Midpoint of Symmedian Chord",
+          "url": "https://www.awesomemath.org/wp-pdf-files/math-reflections/mr-2021-04/mr_4_2021_midpoint_of_symmedian_chord.pdf",
+          "locator": "Problem 29, PDF p.22"
+        }
+      ],
+      "structural_group": "tangent_isosceles_arc_projection",
+      "title_ja": "接円の小弧と射影が作る三点円",
+      "split_recommendation": "reserve",
+      "problem_template_ja": "AB=AC=s、∠BAC=αの三角形ABCと、直線AB,ACにそれぞれB,Cで接する円Ωをとる。DをACの中点、OをABCの外心とする。 A,Cを通る別の円Γを指定する。Γの中心UはACの垂直二等分線上にあり、Dを原点として直線ACに関しBを含む側を正とする有向距離DU=uで位置を与える。 ΓとΩのC以外の交点がΩの小弧BCの内部にあるものをP、Γと直線ABのA以外の交点をQとする。Γの小弧PQの中点をRとする。入力はCR⊥ABを満たすものに限る。 半直線PQと直線ACの交点をL、ALの中点をM、DRの中点をNとする。Mから直線ONへの垂足をXとし、Vを三角形DNXの外心とする。 三角形DNXの外接円半径の二乗を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "VD^2",
+          "meaning_ja": "三角形DNXの外接円半径の二乗",
+          "why_nontrivial_ja": "弧中点、二段の中点、射影がすべて必要。"
+        },
+        {
+          "id": "q2",
+          "expression": "UX^2",
+          "meaning_ja": "UXの長さの二乗",
+          "why_nontrivial_ja": "与えた円Γの中心と最後の射影点を結ぶ。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "s,α,u",
+          "meaning_ja": "等辺、頂角、円Γ中心の有向位置",
+          "domain_ja": "s>0、0<α<180°。Γの枝とCR⊥AB等の条件を満たすuに限る。"
+        }
+      ]
+    },
+    "DB14": {
+      "id": "DB14",
+      "source": [
+        {
+          "title": "Kapil Pause, On Two Special Points in Triangle",
+          "url": "https://pregatirematematicaolimpiadejuniori.files.wordpress.com/2018/05/two_special_points__1_.pdf",
+          "locator": "Exercise 3, PDF p.6"
+        }
+      ],
+      "structural_group": "semicircle_two_circle_polar",
+      "title_ja": "半円上の二点から作る二円の第二交点",
+      "split_recommendation": "reserve",
+      "problem_template_ja": "長さAB=2rの線分を直径とする円の中心をOとする。同じ開半円上に異なる二点M,Nをとり、∠BOM=μ、∠BON=ν、0<μ,ν<180°とする。 直線MNと直線ABの交点をX、二円MBOとNAOのO以外の共通点をKとする。 OKの長さの二乗を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "OK^2",
+          "meaning_ja": "OKの長さの二乗",
+          "why_nontrivial_ja": "異なる端点を使った二円の第二交点に依存する。"
+        },
+        {
+          "id": "q2",
+          "expression": "XK^2",
+          "meaning_ja": "XKの長さの二乗",
+          "why_nontrivial_ja": "半円上の弦の延長交点と二円の交点を同時に使う。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "r,μ,ν",
+          "meaning_ja": "半径と二点の中心角",
+          "domain_ja": "r>0、μ≠ν、μ+ν≠180°。両角は同じ開半円で測る。"
+        }
+      ]
+    },
+    "DB17": {
+      "id": "DB17",
+      "source": [
+        {
+          "title": "Kapil Pause, On Two Special Points in Triangle",
+          "url": "https://pregatirematematicaolimpiadejuniori.files.wordpress.com/2018/05/two_special_points__1_.pdf",
+          "locator": "Exercise 6, PDF p.6"
+        }
+      ],
+      "structural_group": "source_error_external_tangent_altitude",
+      "title_ja": "高度直線上の任意中心から作る外接円（反例診断）",
+      "split_recommendation": "exclude",
+      "problem_template_ja": "BC=a, CA=b, AB=c の鋭角不等辺三角形ABCをとり、OをABCの外心、Uを円BOCの中心、Rをその半径とする。 AからBCへの垂足をDとし、直線AD上の点Jを座標で指定する。ただしJU>Rとする。 中心J、半径JU−Rの円を作る。これは円BOCと外接する。その接点をXとする。 AXの長さの二乗を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "AX^2",
+          "meaning_ja": "AXの長さの二乗",
+          "why_nontrivial_ja": "原文条件の下で接点が実際にどこへ動くかを診断する値。"
+        },
+        {
+          "id": "q2",
+          "expression": "(JU-R)^2",
+          "meaning_ja": "中心Jの円の半径の二乗",
+          "why_nontrivial_ja": "外接が確実に成立する円を作るための確認量。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "BC=a, CA=b, AB=c",
+          "domain_ja": "a,b,c>0、三角不等式を満たす。追加の角・枝条件はdomain_conditions_ja参照。"
+        },
+        {
+          "name": "J",
+          "meaning_ja": "Aの高度直線上の中心点",
+          "domain_ja": "JU>Rを満たす任意の位置。原文にはAを通る等の追加条件がない。"
+        }
+      ]
+    },
+    "EV01": {
+      "id": "EV01",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Some problems on Humpty point",
+          "url": "https://srijonsarkar.wordpress.com/wp-content/uploads/2021/07/humpty_point.pdf",
+          "locator": "Problem 12, PDF p.2; Balkan SL 2019 G4"
+        }
+      ],
+      "structural_group": "eval_diameter_HM_tangents",
+      "title_ja": "直径HMの円への二接線（Balkan留保）",
+      "split_recommendation": "holdout",
+      "problem_template_ja": "BC=a, CA=b, AB=cの鋭角不等辺三角形ABCについて、Hを垂心、MをBCの中点とする。直径HMの円へのAからの接点をX,Yとする。XY²またはAX²を求めよ。〔証明評価版では辺長指定を外し、B,X,Y,Cが共円であることを示せ。〕",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "XY^2",
+          "meaning_ja": "接点を結ぶ弦の長さ平方",
+          "why_nontrivial_ja": "垂心と中点から作る円に対する接触弦を求める。学習には使わない。"
+        },
+        {
+          "id": "q2",
+          "expression": "AX^2",
+          "meaning_ja": "接線の長さ平方",
+          "why_nontrivial_ja": "作図した円に対するAの方べきを使う。学習には使わない。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "BC=a, CA=b, AB=c",
+          "domain_ja": "鋭角不等辺三角形をなす正の辺長。特にb≠c。"
+        }
+      ]
+    },
+    "EV02": {
+      "id": "EV02",
+      "source": [
+        {
+          "title": "Evan Chen, Lemmas in AoPS Geometry",
+          "url": "https://web.evanchen.cc/handouts/GeoSlang/GeoSlang.pdf",
+          "locator": "§3.1, PDF p.9（基本性質からのradical-axis転用。数値化は本データセットで作成）"
+        }
+      ],
+      "structural_group": "eval_orthic_radical_axis",
+      "title_ja": "二つの高さの足と辺の交点（orthic留保）",
+      "split_recommendation": "holdout",
+      "problem_template_ja": "BC=a, CA=b, AB=cの鋭角不等辺三角形ABCについて、Hを垂心、MをBCの中点とする。BからACへの垂足をE、CからABへの垂足をFとし、T=EF∩BCとする。HT²またはTM²を求めよ。〔証明評価版では辺長指定を外し、HT⊥AMを示せ。〕",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "HT^2",
+          "meaning_ja": "Hから高さの足の直線とBCの交点までの距離平方",
+          "why_nontrivial_ja": "二つの垂足と元の辺を結ぶ交点が必要。学習には使わない。"
+        },
+        {
+          "id": "q2",
+          "expression": "TM^2",
+          "meaning_ja": "TからBCの中点までの距離平方",
+          "why_nontrivial_ja": "新しい辺上の交点の位置を求める。学習には使わない。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "BC=a, CA=b, AB=c",
+          "domain_ja": "鋭角不等辺三角形をなす正の辺長。特にb≠c。"
+        }
+      ]
+    },
+    "H05": {
+      "id": "H05",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Some problems on Humpty point",
+          "url": "https://srijonsarkar.wordpress.com/wp-content/uploads/2021/07/humpty_point.pdf",
+          "locator": "Problem 2, PDF p.1"
+        }
+      ],
+      "structural_group": "orthocenter_angle_bisector_perpendiculars",
+      "title_ja": "垂心の角二等分線と二本の垂線",
+      "split_recommendation": "reserve",
+      "problem_template_ja": "相異なる辺長BC=a, CA=b, AB=cを持つ鋭角三角形ABCを考える。Hを垂心とする。角BHCの内角二等分線を含む直線が直線AB,ACと交わる点をP,Qとする。PからABに垂直な直線とQからACに垂直な直線の交点をKとする。HK²を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "HK^2",
+          "meaning_ja": "HKの長さの平方",
+          "why_nontrivial_ja": "垂心の角二等分線と2本の垂線を通じて作るKの位置が必要。"
+        },
+        {
+          "id": "q2",
+          "expression": "KM^2",
+          "meaning_ja": "KからBC中点Mまでの距離平方",
+          "why_nontrivial_ja": "新しい交点Kと、入力に独立に現れる辺の中点を結びつける。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "a=BC, b=CA, c=AB",
+          "domain_ja": "相異なる正数で、三角不等式と各辺についての鋭角条件を満たす。追加の非退化条件は別欄に従う。"
+        }
+      ]
+    },
+    "H09": {
+      "id": "H09",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Some problems on Humpty point",
+          "url": "https://srijonsarkar.wordpress.com/wp-content/uploads/2021/07/humpty_point.pdf",
+          "locator": "Problem 7, PDF p.1"
+        }
+      ],
+      "structural_group": "arc_midpoint_incenter_parallelogram_projection",
+      "title_ja": "弧の中点・平行四辺形・射影で作る円",
+      "split_recommendation": "reserve",
+      "problem_template_ja": "相異なる辺長BC=a, CA=b, AB=cを持つ鋭角三角形ABCを考える。Iを内心、Nを円ABCの弧BACの中点とする。A,B,P,Cがこの順で平行四辺形をなす点Pを取り、AのNに関する点対称点をQとする。Aから直線QIへの垂足をRとする。円PQRの半径の平方を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "r^2",
+          "meaning_ja": "円PQRの半径平方",
+          "why_nontrivial_ja": "弧中点、点対称、射影、平行四辺形という複数の構成の合成が必要。"
+        },
+        {
+          "id": "q2",
+          "expression": "PR^2",
+          "meaning_ja": "PRの長さの平方",
+          "why_nontrivial_ja": "平行四辺形の頂点と、内心を使った射影点を結ぶ。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "a=BC, b=CA, c=AB",
+          "domain_ja": "相異なる正数で、三角不等式と各辺についての鋭角条件を満たす。追加の非退化条件は別欄に従う。"
+        }
+      ]
+    },
+    "H10": {
+      "id": "H10",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Some problems on Humpty point",
+          "url": "https://srijonsarkar.wordpress.com/wp-content/uploads/2021/07/humpty_point.pdf",
+          "locator": "Problem 8, PDF p.1"
+        }
+      ],
+      "structural_group": "orthic_two_tangent_circles",
+      "title_ja": "高さの足を通り底辺に接する二円",
+      "split_recommendation": "reserve",
+      "problem_template_ja": "相異なる辺長BC=a, CA=b, AB=cを持つ鋭角三角形ABCを考える。B,Cから対辺AC,ABへの垂足をE,Fとする。A,Fを通りBCに接する2円の接点を、Pが半直線BC上、QがBからCと反対向きの半直線上となるようにP,Qと呼ぶ。S=PE∩QFとする。AS²を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "AS^2",
+          "meaning_ja": "ASの長さの平方",
+          "why_nontrivial_ja": "高さの足から作る接円の接点と、交差する2本の直線が必要。"
+        },
+        {
+          "id": "q2",
+          "expression": "ES^2",
+          "meaning_ja": "ESの長さの平方",
+          "why_nontrivial_ja": "新しい交点と一方の高さの足を結ぶ距離。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "a=BC, b=CA, c=AB",
+          "domain_ja": "相異なる正数で、三角不等式と各辺についての鋭角条件を満たす。追加の非退化条件は別欄に従う。"
+        }
+      ]
+    },
+    "H11": {
+      "id": "H11",
+      "source": [
+        {
+          "title": "Srijon Sarkar, Some problems on Humpty point",
+          "url": "https://srijonsarkar.wordpress.com/wp-content/uploads/2021/07/humpty_point.pdf",
+          "locator": "Problem 9, PDF p.1"
+        }
+      ],
+      "structural_group": "orthic_projective_center_extension",
+      "title_ja": "高さの足・接線・二つの外心を結ぶ構成",
+      "split_recommendation": "holdout",
+      "problem_template_ja": "相異なる辺長BC=a, CA=b, AB=cを持つ鋭角三角形ABCを考える。Hを垂心、E,FをB,CからAC,ABへの垂足とする。XをEFとAを通るBC平行線の交点、Yを円ABCのAでの接線とBCの交点とする。P=XY∩AB、Q=XY∩AC、Oを円APQの中心、T=AO∩BCとする。VをHからATへの垂足、MをBCの中点とする。円TVMの半径の平方を求めよ。",
+      "numeric_queries": [
+        {
+          "id": "q1",
+          "expression": "r^2",
+          "meaning_ja": "円TVMの半径平方",
+          "why_nontrivial_ja": "orthic直線から接線・外心を経由して作る最終円の大きさ。"
+        },
+        {
+          "id": "q2",
+          "expression": "HV^2",
+          "meaning_ja": "垂心からATへの射影距離平方",
+          "why_nontrivial_ja": "外心Oを経て定まるATに関する射影であり、基本中線への射影とは異なる。"
+        }
+      ],
+      "free_parameters": [
+        {
+          "name": "a,b,c",
+          "meaning_ja": "a=BC, b=CA, c=AB",
+          "domain_ja": "相異なる正数で、三角不等式と各辺についての鋭角条件を満たす。追加の非退化条件は別欄に従う。"
+        }
+      ]
+    }
+  }
+}

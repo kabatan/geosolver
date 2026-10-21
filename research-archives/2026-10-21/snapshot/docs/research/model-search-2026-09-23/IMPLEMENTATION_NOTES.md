@@ -1,0 +1,10 @@
+# 実装メモ
+
+- MiMoはvLLM 0.29.0にnativeモデル実装がある一方、config型の読み込みには独自のMiMoConfigが必要だった。固定revisionのconfiguration_mimo.pyを全文確認し、Qwen2Configの継承とnum_nextn_predict_layersフィールドの追加だけであることを確認して、MiMoに限りtrust_remote_codeを有効化した。任意のモデルコードを一括許可したものではない。
+- 修正前run_v2.pyをrun-v2-before-mimo-config.pyとして保存。既に開始したQwen3.5-4Bのreceiptは修正前ファイルのhash、後続workerは実行時のファイルhashを持つ。samplingや問題はこの変更で変えていない。
+- 各モデルの推論用全プロンプト、seed、生成token列、raw thinking、最終答案、終了理由をruntimeのgroup JSONに保存する。docsのanswers.mdは最終答案だけの閲覧用。
+- 短いLoRA技術確認は推論試験とは別のadapterに保存し、研究の学習効果や推論性能の集計には使わない。
+
+- MiMoの公式templateはsystemを省略するとhelpful assistantを補うため、初回MiMo起動前に空のsystemを明示する修正を行った（公式の空system推奨に合わせる）。Phiのtemplateは既定のPhi math expert systemを入れる。いずれも対象の幾何的性質は含まない。修正前run-v2-before-mimo-system.pyも保存。
+
+- Qwen3.5のrecurrent state精度をローカルのvLLM実装で確認した。両snapshotのtext_config.mamba_ssm_dtypeはfloat32、vLLMのQwen3_5ForConditionalGenerationConfigはautoをこの値に設定する。重みと通常のKVはBF16、Gated DeltaNetのstateはfloat32である。Nemotronもfloat32を明示した。

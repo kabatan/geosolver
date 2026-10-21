@@ -1,0 +1,29 @@
+{
+  "status": "planned_before_generation",
+  "reason": "User clarified that mathematical/geometric usefulness, rather than prompting auxiliary constructions, is central. Original 64-sample pilot is preserved.",
+  "instruction": "\nこの問題について、幾何的・数学的に意味のある解法を探してください。計算や論証を簡単にする関係、未知量を減らす見方、性質が成り立つ理由を簡潔に説明する議論を見いだし、実際の求解に使ってください。解法の方法は自由です。見いだした関係は与条件から正当化してください。",
+  "samples_per_problem": 4,
+  "problems": 8,
+  "maximum_answers": 32,
+  "model": "same immutable Qwen3-4B base as primary",
+  "seed": 2026092303,
+  "max_completion": 32512,
+  "temperature": 0.6,
+  "top_p": 0.95,
+  "top_k": 20,
+  "updates": 0,
+  "comparison": "primary normal responses; adaptive exploratory comparison, not preregistered confirmatory test",
+  "primary_criterion": "C and V and U_relation; auxiliary introduction optional and descriptive only",
+  "training": "none; final answers only are graded, not hidden reasoning",
+  "jobs_sha256": "9073723b82fcc1fb2e72468e1bc8390b7736f8c354de20af473f3b38f9311226",
+  "usefulness_calibration": {
+    "source": "User response before meaningful-condition generation",
+    "H01_projection_ratio": "weak candidate, insufficient for high additional reward",
+    "levels": {
+      "none": "No demonstrated structural simplification",
+      "weak": "Valid potentially general relation but little mathematical interpretation or material simplification",
+      "strong": "A justified relation or viewpoint materially simplifies the solution or concisely explains the configuration; no auxiliary construction requirement"
+    },
+    "important": "Original binary U is candidate tagging, not automatically high reward. Strong candidates need user review."
+  }
+}

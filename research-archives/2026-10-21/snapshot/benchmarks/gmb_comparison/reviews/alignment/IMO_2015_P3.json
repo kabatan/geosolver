@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2015_P3",
+  "reviewer": "independent_review",
+  "verdict": "pass",
+  "official_gmbl_sha256": "2ba43a10e81b0d2591fbcc6c08f7e00ccf730ccc33dd69006eaee90879c08a90",
+  "comparison_gmbl_sha256": "e3c4bf17d763144ad5c300177ce863230d54f723c302e2a9b0c3abfb0c47104b",
+  "geosolver_case_sha256": "28b2be4932fbb7764eae91c4709b252b8d31ad63aa964a0aa3f7c5ac73b54906",
+  "audit_sha256": "d34e814b1214409af83da59630c789c2c37b012162d6223f39cebb8060722773",
+  "prior_review_sha256": "b49e0c8ddd6060c1849846b179fd335c6653151a1e92ab588df2bf9833965866",
+  "assumptions_equivalent": true,
+  "conclusion_not_added": true,
+  "reflection_retained": true,
+  "only_missing_conditions_added": true,
+  "resolved_source_difference_ids": [
+    "circle_order_missing"
+  ],
+  "comparison_variant": "original_problem_aligned_v1",
+  "reviewed_paths": {
+    "official_gmbl": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2015_P3.smt2",
+    "comparison_gmbl": "benchmarks/gmb_comparison/gmbl-original-aligned/IMO_2015_P3.smt2",
+    "geosolver_case": "benchmarks/gmb_comparison/cases/IMO_2015_P3.json",
+    "audit": "benchmarks/gmb_comparison/audit/IMO_2015_P3.json",
+    "prior_review": "benchmarks/gmb_comparison/reviews/IMO_2015_P3.json"
+  },
+  "added_assertions": [
+    "(assert (opp-sides K B (line C A)))",
+    "(assert (opp-sides Q B (line K A)))"
+  ],
+  "proof_ja": [
+    "既存の非退化三角形ABCの仮定によりA,B,Cは相異なり、正半径の同じ円Γ上にある。円の向きをA→B→Cとなる向きに選ぶ。この向きの選択は証明のためだけであり、入力の鏡映を制限しない。",
+    "円の相異なる二点U,Vを結ぶ直線は円を二つの開弧へ分ける。円上の二点が直線UVについて厳密に反対側であることと、異なる開弧に属することは同値である。",
+    "第1条件opp-sides(K,B,CA)から、KはBを含まない開弧CAにある。従って円周上の順序はA→B→C→Kであり、K≠A,B,C。",
+    "この位置のKについて、B,CはともにAからKへB,Cを経由する方の開弧AKにある。第2条件opp-sides(Q,B,KA)はQを反対側の開弧KAへ入れる。従って順序はA→B→C→K→Qとなる。",
+    "逆に相異なる5点がA→B→C→K→Qの順で同円上にあれば、弦CAがK/Bを、弦KAがQ/Bをそれぞれ異なる開弧へ分けるため、2条件が成立する。両方向とも追加の角等式や結論の接線性を使っていない。",
+    "strictな外積積<0によりK=A,CやQ=A,Kなどの弦端点は不可能。K=BとQ=Bも反対側にならない。Q=Cは第1条件の位置関係からC,Bが直線KAの同じ側なので不可能。従って全5点の相違も得られる。A=B等は既存の非退化ABCで排除される。",
+    "鏡映では各外積の符号が反転するが、二つの外積の積の符号は変わらない。時計回り・反時計回りの両配置が保存される。GeoSolverの全三点外積の同符号条件も、同一円上では同じ巡回順の必要十分条件である。"
+  ],
+  "equivalence_scope_ja": "既存の非退化条件の下で、追加された数学的仮定と原文・現GeoSolver条件が同値であることを確認した。GMBの有限サンプラー範囲、soft lossの数値的受理、全境界点での収束性能を同一と主張するものではない。未改変公式GMB入力についての以前の監査判断は書き換えない。",
+  "static_verification": {
+    "official_instruction_reader_syntax_and_types_valid": true,
+    "official_instruction_count": 13,
+    "common_checker_syntax_supported": true,
+    "all_original_commands_preserved_in_original_order": true,
+    "official_command_count": 11,
+    "comparison_command_count": 13,
+    "conclusion_commands_identical": true,
+    "only_expected_assertions_added": true,
+    "optimizer_imported": false
+  },
+  "original_sources": [
+    {
+      "url": "https://www.imo-official.org/assets/documents/problems/2015/2015_eng.pdf",
+      "pdf_sha256": "5ebc0b9ca0072932e088f6fd22fa19625544e3616086da2aa1280d3a791dbeb2"
+    }
+  ],
+  "synthetic_verification": {
+    "script": "benchmarks/gmb_comparison/reviews/alignment/verify_added_conditions.py",
+    "script_sha256": "04c2145151bad54e8af8da46994c9c2e4e85e8e5b04d483a7df511d4f3952aeb",
+    "result": {
+      "base_assignments_checked": 21504,
+      "accepted_cyclic_orders": 560,
+      "duplicate_assignments_rejected": 14784,
+      "reflected_assignments_checked": 21504,
+      "mismatches": 0,
+      "arithmetic": "exact integers",
+      "scope": "order conditions only, not natural IMO configurations"
+    },
+    "note_ja": "有限人工例は一般証明の補助であり、元の自然問題を解いた試行や過去のGMB出力の採点ではない。"
+  },
+  "runtime_caveats": [
+    "GMB optimizer.pyのopp-sidesはmax(0,外積積)というsoft残差で、境界の外積積=0も残差0となる。数学的にstrictな反対側条件を満たすかは共通checkerでも検査する必要がある。",
+    "全点相違の証明は共円・非退化・厳密な反対側条件を前提とする。小さい数値残差だけから同じ証明が自動的に成立するとは扱わない。"
+  ],
+  "normalization": {
+    "anchors": [
+      "B",
+      "C"
+    ],
+    "geosolver_unchanged": true,
+    "mirror_fixed": false
+  },
+  "natural_cases_executed": 0,
+  "saved_gmb_witnesses_assessed": 0,
+  "optimizer_invocations": 0,
+  "prior_history_unchanged": true,
+  "open_issues": [],
+  "prior_review_erratum_ja": "以前のレビューの本文1行に『ABを単位基線』とあるが、実入力・audit・normalization欄は一貫してB=(0,0),C=(1,0)であり、本文のABはBCの誤記である。原ファイルの履歴を変えず、この補足で訂正する。入力や自由度の修正はない。"
+}

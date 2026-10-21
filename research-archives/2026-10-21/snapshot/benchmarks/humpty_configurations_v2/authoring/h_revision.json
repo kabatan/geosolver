@@ -1,0 +1,1313 @@
+[
+  {
+    "id": "H01",
+    "decision": "main",
+    "title_ja": "中線への垂足と中線の残りの長さ",
+    "diagnosis_ja": "三辺から二つの距離の二乗を求めるv1では、垂心と射影点の座標処理を誘発していた。",
+    "change_ja": "底辺と中線の長さを与え、頂点から垂足までの長さに変更する。点の同定の後に方べきと差を使う。",
+    "problem_ja": "鋭角不等辺三角形ABCの垂心をH、BCの中点をMとする。Hから直線AMに下ろした垂線の足をPとする。BC=12、AM=10のとき、APを求めよ。",
+    "givens": [
+      {
+        "name": "BC",
+        "value": "12",
+        "meaning_ja": "底辺"
+      },
+      {
+        "name": "AM",
+        "value": "10",
+        "meaning_ja": "中線"
+      }
+    ],
+    "query": {
+      "expression": "AP",
+      "meaning_ja": "頂点から垂足までの長さ"
+    },
+    "answer_exact": "32/5",
+    "geometry_solution_ja": [
+      "Mを中心としてAを点対称に移した点をA*とする。A*B∥AC、A*C∥ABなので、B,C,Hは直径A*Hの円上にある。HP⊥AA*よりPもこの円上にある。",
+      "Mからの方べきによりMA*·MP=MB²。鋭角三角形ではA,P,Mの順なので、MP=6²/10=18/5。",
+      "AP=AM−MP=10−18/5=32/5。"
+    ],
+    "arithmetic_ja": [
+      "12÷2=6",
+      "6²÷10=18/5",
+      "10−18/5=32/5"
+    ],
+    "why_geometry_helps_ja": "垂心Hの二本の高さの交点計算と、HのAMへの射影座標を求めずに済む。",
+    "shortcut_risk_ja": "基礎問題としては短い。ただし与えた等式の左右を置き換えるだけではなく、補助点A*、共円性、方べきを発見する必要がある。",
+    "parameter_family_ja": "BC=2m、AM=t、0<m<t。鋭角になる非対称なAの位置を動かしてもAP=t−m²/t。三角形全体を一意には決めないが求値は一意。",
+    "feasibility": {
+      "status": "verified",
+      "method_ja": "verify_h_revision.py が元の直線・円・鏡映・射影の定義から厳密座標で構成し、全与条件と答えを照合。短縮用の性質は交点の生成には使わず、生成後に検査する。",
+      "witness": {
+        "points": {
+          "A": [
+            "14/5",
+            "48/5"
+          ],
+          "B": [
+            "-6",
+            "0"
+          ],
+          "C": [
+            "6",
+            "0"
+          ],
+          "M": [
+            "0",
+            "0"
+          ],
+          "H": [
+            "14/5",
+            "44/15"
+          ],
+          "P": [
+            "126/125",
+            "432/125"
+          ]
+        },
+        "given_values": {
+          "AM": "10",
+          "BC": "12"
+        },
+        "answer": "32/5"
+      },
+      "script": "verify_h_revision.py",
+      "solution_status": "proved_here"
+    },
+    "review_notes_ja": [
+      "一般の射影点の同定・共円性はv1 verify_humpty.pyのsymbolic_core_checkでも証明済み。"
+    ]
+  },
+  {
+    "id": "H02",
+    "decision": "main",
+    "title_ja": "動く二円から作る円の中心間距離",
+    "diagnosis_ja": "一つの円AUVの半径を三辺から求めると、二つの交点と外心を順に計算する負担が残った。",
+    "change_ja": "Dを二か所に置き、中心間距離を問う。共有弦と各中心の底辺への射影を使って、二つの外心の座標を不要にする。",
+    "problem_ja": "鋭角不等辺三角形ABCで、MはBCの中点、KはAからBCへの垂足とする。BC=16、AM=10、AK=8、BK>KCとする。BC上にBD1=6、BD2=9となる点D1,D2を取る。i=1,2について、円ABDiと直線ACのA以外の交点をUi、円ACDiと直線ABのA以外の交点をViとし、円AUiViの中心をZiとする。Z1Z2を求めよ。",
+    "givens": [
+      {
+        "name": "BC",
+        "value": "16",
+        "meaning_ja": "底辺"
+      },
+      {
+        "name": "AM",
+        "value": "10",
+        "meaning_ja": "中線"
+      },
+      {
+        "name": "AK",
+        "value": "8",
+        "meaning_ja": "底辺への高さ"
+      },
+      {
+        "name": "BD1",
+        "value": "6",
+        "meaning_ja": "一つ目の動点の位置"
+      },
+      {
+        "name": "BD2",
+        "value": "9",
+        "meaning_ja": "二つ目の動点の位置"
+      }
+    ],
+    "query": {
+      "expression": "Z1Z2",
+      "meaning_ja": "二つの円の中心間距離"
+    },
+    "answer_exact": "15/4",
+    "geometry_solution_ja": [
+      "Hを垂心、PをHからAMへの垂足とする。この動点配置では円AUiViはどちらもA,Pを通る（v1で一般形を証明済み）。したがってZ1Z2⊥AM。",
+      "円ACDiに対するBの方べきからBA·BVi=BC·BDi。従って円AUiViに対するBの方べきはBC·BDi。同様にCの方べきはBC·CDiである。両者の差を取ると、ZiのBCへの垂足はDiと分かる。",
+      "AMとBCのなす角をθとするとsinθ=AK/AM=4/5。Z1Z2のBC方向への射影はD1D2=3なので、Z1Z2·(4/5)=3、従って15/4。"
+    ],
+    "arithmetic_ja": [
+      "9−6=3",
+      "8÷10=4/5",
+      "3÷(4/5)=15/4"
+    ],
+    "why_geometry_helps_ja": "Ui,Viを四点とも座標で求め、二つの外心の連立方程式を解く必要がない。共有点という性質から中心線の向きが直接決まる。",
+    "shortcut_risk_ja": "v1から二つ目の動点を追加した拡張。同一構造群に置く。単にDを二つ置いた件数増しはしない。",
+    "parameter_family_ja": "中線t、高さh、動点間隔δに対して中心間距離はδt/h。底辺とAの位置、二動点は非退化域内で動かせる。",
+    "feasibility": {
+      "status": "verified",
+      "method_ja": "verify_h_revision.py が元の直線・円・鏡映・射影の定義から厳密座標で構成し、全与条件と答えを照合。短縮用の性質は交点の生成には使わず、生成後に検査する。",
+      "witness": {
+        "points": {
+          "A": [
+            "6",
+            "8"
+          ],
+          "B": [
+            "-8",
+            "0"
+          ],
+          "C": [
+            "8",
+            "0"
+          ],
+          "M": [
+            "0",
+            "0"
+          ],
+          "K": [
+            "6",
+            "0"
+          ],
+          "D1": [
+            "-2",
+            "0"
+          ],
+          "U1": [
+            "56/17",
+            "320/17"
+          ],
+          "V1": [
+            "-184/65",
+            "192/65"
+          ],
+          "Z1": [
+            "-2",
+            "47/4"
+          ],
+          "D2": [
+            "1",
+            "0"
+          ],
+          "U2": [
+            "80/17",
+            "224/17"
+          ],
+          "V2": [
+            "-16/65",
+            "288/65"
+          ],
+          "Z2": [
+            "1",
+            "19/2"
+          ]
+        },
+        "given_values": {
+          "AM": "10",
+          "BC": "16",
+          "AK": "8",
+          "BD1": "6",
+          "BD2": "9"
+        },
+        "answer": "15/4"
+      },
+      "script": "verify_h_revision.py",
+      "solution_status": "proved_here"
+    },
+    "review_notes_ja": [
+      "固定点Pの一般形証明はv1のsymbolic_core_check。中心の射影の説明は方べきの差による合成幾何。"
+    ]
+  },
+  {
+    "id": "H03",
+    "decision": "main",
+    "title_ja": "三つの二等分線円からできる円の中心",
+    "diagnosis_ja": "三辺だけを与えて三つの交点とその外心を求めさせると、研究したい共円性に到達する前に計算が多かった。",
+    "change_ja": "外心と垂心の距離を与え、三つの新しい点の円の中心までの距離にする。直角の円とEuler線の比を組み合わせる。",
+    "problem_ja": "鋭角不等辺三角形ABCの外心をO、垂心をHとし、OH=6とする。各頂点について次を行う。Aでは内角・外角の二等分線の直線とBCとの交点をKa,La、BCの中点をMaとし、円AKaLaと直線AMaのAでない交点をPaとする。B,Cからも同様にPb,Pcを作る。円PaPbPcの中心をZとする。OZを求めよ。三つの円と交点は非退化とする。",
+    "givens": [
+      {
+        "name": "OH",
+        "value": "6",
+        "meaning_ja": "元の外心と垂心の距離"
+      }
+    ],
+    "query": {
+      "expression": "OZ",
+      "meaning_ja": "元の外心から新しい円の中心までの距離"
+    },
+    "answer_exact": "4",
+    "geometry_solution_ja": [
+      "この二等分線円と中線から得るPaは、HからAMaへの垂足である。Pb,Pcも巡回的に同じ性質を持つ（TSTST 2015の既知の同定）。",
+      "重心をGとすると、各中線はGを通るので∠HPaG=∠HPbG=∠HPcG=90°。従って三点の円は直径HGの円であり、ZはHGの中点。",
+      "Euler線上でOG:GH=1:2だから、OH=6からOG=2、GH=4。従ってOZ=2+4/2=4。"
+    ],
+    "arithmetic_ja": [
+      "6÷3=2",
+      "6−2=4",
+      "2+4÷2=4"
+    ],
+    "why_geometry_helps_ja": "三つの円と中線の交点やその外心を一つも座標化しない。各点の垂足としての解釈から同じ直径を持つ円にまとめられる。",
+    "shortcut_risk_ja": "OHだけでは元三角形は一意に決まらないが、OZは常に同じ。単に円の半径を半分にする出題より、Euler線を一段組み合わせている。",
+    "parameter_family_ja": "非退化な鋭角不等辺三角形でOH=h>0。OZ=2h/3。OH一定でも非相似な形を取り得る。",
+    "feasibility": {
+      "status": "verified",
+      "method_ja": "verify_h_revision.py が元の直線・円・鏡映・射影の定義から厳密座標で構成し、全与条件と答えを照合。短縮用の性質は交点の生成には使わず、生成後に検査する。",
+      "witness": {
+        "points": {
+          "A": [
+            "18/5",
+            "72/5"
+          ],
+          "B": [
+            "-6",
+            "0"
+          ],
+          "C": [
+            "6",
+            "0"
+          ],
+          "H": [
+            "18/5",
+            "8/5"
+          ],
+          "O": [
+            "0",
+            "32/5"
+          ],
+          "K_a": [
+            "6*(-sqrt(37) + 2*sqrt(13))/(sqrt(37) + 2*sqrt(13))",
+            "0"
+          ],
+          "L_a": [
+            "6*(sqrt(37) + 2*sqrt(13))/(-sqrt(37) + 2*sqrt(13))",
+            "0"
+          ],
+          "M_a": [
+            "0",
+            "0"
+          ],
+          "P_a": [
+            "10/17",
+            "40/17"
+          ],
+          "K_b": [
+            "74/9 - 8*sqrt(13)/9",
+            "-40/3 + 16*sqrt(13)/3"
+          ],
+          "L_b": [
+            "8*sqrt(13)/9 + 74/9",
+            "-16*sqrt(13)/3 - 40/3"
+          ],
+          "M_b": [
+            "24/5",
+            "36/5"
+          ],
+          "P_b": [
+            "18/13",
+            "64/13"
+          ],
+          "K_c": [
+            "-26 + 4*sqrt(37)",
+            "-30 + 6*sqrt(37)"
+          ],
+          "L_c": [
+            "-26 - 4*sqrt(37)",
+            "-6*sqrt(37) - 30"
+          ],
+          "M_c": [
+            "-6/5",
+            "36/5"
+          ],
+          "P_c": [
+            "4",
+            "2"
+          ],
+          "Z": [
+            "12/5",
+            "16/5"
+          ]
+        },
+        "given_values": {
+          "OH": "6"
+        },
+        "answer": "4"
+      },
+      "script": "verify_h_revision.py",
+      "solution_status": "source_proof_checked"
+    },
+    "review_notes_ja": [
+      "TSTST 2015のHumpty三点共円命題。v1の出典証明確認を継承し、v2は二等分線円から厳密に三交点を作って検算する。"
+    ]
+  },
+  {
+    "id": "H04",
+    "decision": "main",
+    "title_ja": "垂直二等分線が決める点から頂点への距離",
+    "diagnosis_ja": "三辺から垂心・垂足・垂直二等分線の交点を経由して大きな距離二乗を得ていた。",
+    "change_ja": "底辺の延長上で測れるBTとBCを与え、隠れた接線の長さを求める。",
+    "problem_ja": "鋭角不等辺三角形ABCの垂心をH、BCの中点をMとし、HからAMへの垂足をPとする。APの垂直二等分線と直線BCの交点をTとする。T,B,Cはこの順に並び、BT=2、BC=6である。ATを求めよ。",
+    "givens": [
+      {
+        "name": "BT",
+        "value": "2",
+        "meaning_ja": "底辺延長上の区間"
+      },
+      {
+        "name": "BC",
+        "value": "6",
+        "meaning_ja": "底辺"
+      }
+    ],
+    "query": {
+      "expression": "AT",
+      "meaning_ja": "新しい点から頂点までの距離"
+    },
+    "answer_exact": "4",
+    "geometry_solution_ja": [
+      "H01と同じ共円性・方べきからMA·MP=MB²が成り立つ。TはAPの垂直二等分線上なのでTA=TP。",
+      "Tを中心としA,Pを通る円を考える。Mの方べきはMA·MP=MB²だから、MT²−TA²=MB²。従ってTA²=(MT−MB)(MT+MB)=TB·TC。これはATが円ABCに接することも示す。",
+      "TC=2+6=8なので、AT=√(2·8)=4。"
+    ],
+    "arithmetic_ja": [
+      "2+6=8",
+      "2×8=16",
+      "√16=4"
+    ],
+    "why_geometry_helps_ja": "垂直二等分線と底辺の交点Tや垂足Pの座標を求めない。新しい円を一つ置くと、求値は方べきに帰着する。",
+    "shortcut_risk_ja": "主な性質は接線長への読み替え。AT=TPという定義だけでは数値は出ず、追加の円・方べきが必要。",
+    "parameter_family_ja": "T,B,Cの順でTB=u、BC=v。AT=√(u(u+v))。積が平方数になるu,vを選べるが、必ず鋭角配置の実在も検査する。",
+    "feasibility": {
+      "status": "verified",
+      "method_ja": "verify_h_revision.py が元の直線・円・鏡映・射影の定義から厳密座標で構成し、全与条件と答えを照合。短縮用の性質は交点の生成には使わず、生成後に検査する。",
+      "witness": {
+        "points": {
+          "A": [
+            "1",
+            "sqrt(7)"
+          ],
+          "B": [
+            "0",
+            "0"
+          ],
+          "C": [
+            "6",
+            "0"
+          ],
+          "H": [
+            "1",
+            "5*sqrt(7)/7"
+          ],
+          "M": [
+            "3",
+            "0"
+          ],
+          "P": [
+            "15/11",
+            "9*sqrt(7)/11"
+          ],
+          "T": [
+            "-2",
+            "0"
+          ]
+        },
+        "given_values": {
+          "BC": "6",
+          "BT": "2"
+        },
+        "answer": "4"
+      },
+      "script": "verify_h_revision.py",
+      "solution_status": "proved_here"
+    },
+    "review_notes_ja": [
+      "一般形でMA·MP=MB²を使うため、Tが無限遠になる等腰の場合は除く。"
+    ]
+  },
+  {
+    "id": "H05",
+    "decision": "defer",
+    "title_ja": "垂心の角二等分線と二本の垂線",
+    "diagnosis_ja": "H,K,Mの共線性を利用すれば計算を減らせる余地はあるが、どの派生三角形のHumptyを用いるかを特定できていない。距離比だけを追加して直線上の穴埋めにする案は採用しない。",
+    "change_ja": "v2の主学習用数値問題を採用しない。",
+    "problem_ja": null,
+    "givens": [],
+    "query": null,
+    "answer_exact": null,
+    "geometry_solution_ja": [],
+    "arithmetic_ja": [],
+    "why_geometry_helps_ja": "今回は採用できる短い求値経路を確定していない。",
+    "shortcut_risk_ja": "未確定の性質や単なる等式穴埋めを使って採用数を維持しない。",
+    "parameter_family_ja": null,
+    "feasibility": {
+      "status": "not_applicable",
+      "method_ja": "v1は変更しない。新しい数値例を作成せず、保留理由を明示。",
+      "witness": null,
+      "script": "verify_h_revision.py",
+      "solution_status": "unverified"
+    },
+    "review_notes_ja": [
+      "v1でもHumpty接続未特定のためreserve。幾何解法の核心が特定された後に再検討する。"
+    ]
+  },
+  {
+    "id": "H06",
+    "decision": "probe",
+    "title_ja": "二つの接円の割線が交わる高さ",
+    "diagnosis_ja": "中心線との共点性が有効なのに、v1ではAR²,BR²を底辺と点Xの距離からすべて求める必要があった。",
+    "change_ja": "中心からRへの自然な長さを与え、共点性を利用した高さの補間にする。ただしHumptyへの接続が間接的なのでprobeとする。",
+    "problem_ja": "同じ半平面にある中心O1,O2を持ち、半径が順に2,5の円ω1,ω2が直線ABにそれぞれA,Bで接し、AB=6とする。二円の交点のうちABに近い方をXとする。Xでの各円の接線とO1O2の交点を順にK,Lとする。AKとω1のAでない交点をN、BLとω2のBでない交点をMとし、R=AM∩BNとする。O1R=6√5/7で、RはO1,O2を通りABに平行な二直線の間にある。RからABまでの距離を求めよ。",
+    "givens": [
+      {
+        "name": "AB",
+        "value": "6",
+        "meaning_ja": "二接点の距離"
+      },
+      {
+        "name": "r1",
+        "value": "2",
+        "meaning_ja": "第一の半径"
+      },
+      {
+        "name": "r2",
+        "value": "5",
+        "meaning_ja": "第二の半径"
+      },
+      {
+        "name": "O1R",
+        "value": "6*sqrt(5)/7",
+        "meaning_ja": "第一の中心から最後の交点までの距離"
+      }
+    ],
+    "query": {
+      "expression": "dist(R,AB)",
+      "meaning_ja": "最後の交点の高さ"
+    },
+    "answer_exact": "20/7",
+    "geometry_solution_ja": [
+      "この二接円・接線・割線の配置ではAM,BN,O1O2が共点になる（IGO 2019/3の命題）。従ってRは中心線上にある。",
+      "二中心のAB方向の間隔は6、高さの差は5−2=3なので、O1O2=√(6²+3²)=3√5。よってO1R/O1O2=2/7。",
+      "与えた帯の条件によりRはO1からO2に向かう側にある。高さは2+(5−2)·2/7=20/7。"
+    ],
+    "arithmetic_ja": [
+      "√(36+9)=3√5",
+      "(6√5/7)/(3√5)=2/7",
+      "2+3·2/7=20/7"
+    ],
+    "why_geometry_helps_ja": "接線との交点K,L、円との再交点M,N、直線交点Rの座標を順に求めず、中心線上の比に落とせる。",
+    "shortcut_risk_ja": "O1Rは元の半径・底辺から決まる冗長な追加与件である。その長さを与えることで核心の共点性だけを測るprobe。主学習の独立配置数に自動加算しない。",
+    "parameter_family_ja": "二半径r1,r2、底辺d、構成されたRまでの距離ρを直接測って与える。共点性を仮定としては与えない。ρを勝手に選ばず元作図で確認する。",
+    "feasibility": {
+      "status": "verified",
+      "method_ja": "verify_h_revision.py が元の直線・円・鏡映・射影の定義から厳密座標で構成し、全与条件と答えを照合。短縮用の性質は交点の生成には使わず、生成後に検査する。",
+      "witness": {
+        "points": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "6",
+            "0"
+          ],
+          "X": [
+            "2",
+            "2"
+          ],
+          "O1": [
+            "0",
+            "2"
+          ],
+          "O2": [
+            "6",
+            "5"
+          ],
+          "K": [
+            "2",
+            "3"
+          ],
+          "L": [
+            "16/11",
+            "30/11"
+          ],
+          "M": [
+            "27/17",
+            "45/17"
+          ],
+          "N": [
+            "24/13",
+            "36/13"
+          ],
+          "R": [
+            "12/7",
+            "20/7"
+          ]
+        },
+        "given_values": {
+          "AB": "6",
+          "r1": "2",
+          "r2": "5",
+          "O1R": "6*sqrt(5)/7"
+        },
+        "answer": "20/7"
+      },
+      "script": "verify_h_revision.py",
+      "solution_status": "source_claim_only"
+    },
+    "review_notes_ja": [
+      "共点性は文献の命題であり、v2では代表例のみ厳密に確認。新しい一般証明を行ったとは主張しない。"
+    ]
+  },
+  {
+    "id": "H07",
+    "decision": "main",
+    "title_ja": "二交円を横切る弦からできる三角形の面積",
+    "diagnosis_ja": "EP²とEQ²は同じ値で、v1の数値では未知交点の計算が多かった。EPを与えてEQを答えさせるだけでは学習問題として弱い。",
+    "change_ja": "中線の積と相似を利用してPQを求め、鏡映から高さを求めて面積にする。",
+    "problem_ja": "直線ABにA,Bで接する二円が同じ側でM,Nに交わり、MはNよりABに近いとする。三角形NABは鋭角不等辺である。Mを通りABに平行な直線と第一の円のMでない交点をC、第二の円のMでない交点をDとする。E=AC∩BD、P=AN∩CD、Q=BN∩CDとする。OをABの中点、FをMからABへの垂足とする。AB=8、ON=8√10/5、MF=3のとき、三角形EPQの面積を求めよ。",
+    "givens": [
+      {
+        "name": "AB",
+        "value": "8",
+        "meaning_ja": "共通接線上の底辺"
+      },
+      {
+        "name": "ON",
+        "value": "8*sqrt(10)/5",
+        "meaning_ja": "遠い交点から底辺中点まで"
+      },
+      {
+        "name": "MF",
+        "value": "3",
+        "meaning_ja": "近い交点の高さ"
+      }
+    ],
+    "query": {
+      "expression": "area(EPQ)",
+      "meaning_ja": "最後にできる三角形の面積"
+    },
+    "answer_exact": "9",
+    "geometry_solution_ja": [
+      "Mは三角形NABのN-Humpty点である。従ってN,M,Oは一直線上で、OM·ON=OA²。OM/ON=16/(128/5)=5/8なのでNM/NO=3/8。",
+      "PQ∥ABよりPQ/AB=NM/NO。従ってPQ=8·3/8=3。また中線NO上にMがあるためMはPQの中点。",
+      "円の中心は接点AまたはBの垂直上方にあるため、平行弦CM,DMの端点の対称性からACとBDはMのABに関する鏡映Eで交わる。従ってEM=2MF=6で、EM⊥PQ。",
+      "面積は(1/2)·3·6=9。"
+    ],
+    "arithmetic_ja": [
+      "(8√10/5)²=128/5",
+      "1−16/(128/5)=3/8",
+      "8·3/8=3",
+      "3·6/2=9"
+    ],
+    "why_geometry_helps_ja": "遠い円円交点Nの座標や四本の割線の交点を求めず、中線の比と鏡映だけで底辺と高さを得る。",
+    "shortcut_risk_ja": "ONとMFは途中の自然な長さ。EP=EQそのものを入力しない。Mの中点性が分からないと高さの足の位置も決まらない。",
+    "parameter_family_ja": "AB=d、ON=t、MF=hとすると面積=d·h·(1−d²/(4t²))。非相似な実在配置を作ってからt,hを測り、近い交点と鋭角条件を保つ。",
+    "feasibility": {
+      "status": "verified",
+      "method_ja": "verify_h_revision.py が元の直線・円・鏡映・射影の定義から厳密座標で構成し、全与条件と答えを照合。短縮用の性質は交点の生成には使わず、生成後に検査する。",
+      "witness": {
+        "points": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "8",
+            "0"
+          ],
+          "M": [
+            "3",
+            "3"
+          ],
+          "N": [
+            "12/5",
+            "24/5"
+          ],
+          "C": [
+            "-3",
+            "3"
+          ],
+          "D": [
+            "13",
+            "3"
+          ],
+          "E": [
+            "3",
+            "-3"
+          ],
+          "P": [
+            "3/2",
+            "3"
+          ],
+          "Q": [
+            "9/2",
+            "3"
+          ],
+          "O": [
+            "4",
+            "0"
+          ],
+          "F": [
+            "3",
+            "0"
+          ]
+        },
+        "given_values": {
+          "AB": "8",
+          "ON": "8*sqrt(10)/5",
+          "MF": "3"
+        },
+        "answer": "9"
+      },
+      "script": "verify_h_revision.py",
+      "solution_status": "source_proof_checked"
+    },
+    "review_notes_ja": [
+      "二接円の近い交点がHumptyである標準表示とH01の中線積を使う。鏡映Eと相似による求値を追加した。",
+      "2026-09-22: 旧数値例の二等辺性を修正。鋭角不等辺条件を維持して数値を選び直し、元作図から再検証した。"
+    ]
+  },
+  {
+    "id": "H08",
+    "decision": "main",
+    "title_ja": "交円の反射点を使った三角形の面積",
+    "diagnosis_ja": "角度の二乗余弦を直接尋ねるv1は、既知の等角関係の検出にはよいが、その先の推論が薄かった。",
+    "change_ja": "等角関係から必要な正弦を取り出し、与えた二辺との面積にする。",
+    "problem_ja": "直線PQにP,Qで接する二円がPQの同じ側でA,Bに交わり、BはAよりPQに近いとする。三角形APQは鋭角不等辺とする。BをPQに関して鏡映した点をCとする。AP=6、AC=3√34/2、tan∠BAQ=3/5のとき、三角形APCの面積を求めよ。",
+    "givens": [
+      {
+        "name": "AP",
+        "value": "6",
+        "meaning_ja": "遠い交点から接点への長さ"
+      },
+      {
+        "name": "AC",
+        "value": "3*sqrt(34)/2",
+        "meaning_ja": "遠い交点から反射点への長さ"
+      },
+      {
+        "name": "tan_BAQ",
+        "value": "3/5",
+        "meaning_ja": "中線側の角の正接"
+      }
+    ],
+    "query": {
+      "expression": "area(APC)",
+      "meaning_ja": "反射点を使う三角形の面積"
+    },
+    "answer_exact": "27/2",
+    "geometry_solution_ja": [
+      "二接円の角追いとBの鏡映からA,P,C,Qは共円であり、∠CAP=∠BAQとなる。これは近い交点BをHumpty、Cをsymmedian弦端点と見ると現れる等角関係である。",
+      "∠BAQは鋭角でtan=3/5だから、sin∠CAP=sin∠BAQ=3/√34。",
+      "面積は(1/2)·AP·AC·sin∠CAP=(1/2)·6·(3√34/2)·(3/√34)=27/2。"
+    ],
+    "arithmetic_ja": [
+      "tan=3/5からsin=3/√34",
+      "6·(3√34/2)·(3/√34)/2=27/2"
+    ],
+    "why_geometry_helps_ja": "二円の中心・共通弦・反射点の座標を求めず、反射を等角性に読み替えて必要な角だけを得る。",
+    "shortcut_risk_ja": "反射先への長さACは与えるが、必要な角CAPは与えない。同じ等角関係を角度等式だけで評価する課題とは同一構造として扱う。",
+    "parameter_family_ja": "実在する二接円配置からAP,AC,tan∠BAQを測って与える。この三値を独立にランダム生成しない。",
+    "feasibility": {
+      "status": "verified",
+      "method_ja": "verify_h_revision.py が元の直線・円・鏡映・射影の定義から厳密座標で構成し、全与条件と答えを照合。短縮用の性質は交点の生成には使わず、生成後に検査する。",
+      "witness": {
+        "points": {
+          "A": [
+            "6*sqrt(5)/5",
+            "12*sqrt(5)/5"
+          ],
+          "B": [
+            "3*sqrt(5)/2",
+            "3*sqrt(5)/2"
+          ],
+          "P": [
+            "0",
+            "0"
+          ],
+          "Q": [
+            "4*sqrt(5)",
+            "0"
+          ],
+          "C": [
+            "3*sqrt(5)/2",
+            "-3*sqrt(5)/2"
+          ]
+        },
+        "given_values": {
+          "AP": "6",
+          "AC": "3*sqrt(34)/2",
+          "tan_BAQ": "3/5"
+        },
+        "answer": "27/2"
+      },
+      "script": "verify_h_revision.py",
+      "solution_status": "proved_here"
+    },
+    "review_notes_ja": [
+      "v1でHumptyの鏡映がsymmedian弦端点になる関係を一般形で検証済み。H15と既存の同群管理を継承する。",
+      "2026-09-22: 旧数値例の二等辺性を修正。鋭角不等辺条件を維持して数値を選び直し、元作図から再検証した。"
+    ]
+  },
+  {
+    "id": "H09",
+    "decision": "defer",
+    "title_ja": "弧の中点と射影から作る円",
+    "diagnosis_ja": "AIが円PQRに接するという命題を使って円の半径の求値を短くすることは可能だが、Humptyへの有効な接続が特定されていない。接線長だけを与える一般的な円の問題に変えても研究主題への寄与が弱い。",
+    "change_ja": "v2の主学習用数値問題を採用しない。",
+    "problem_ja": null,
+    "givens": [],
+    "query": null,
+    "answer_exact": null,
+    "geometry_solution_ja": [],
+    "arithmetic_ja": [],
+    "why_geometry_helps_ja": "今回は採用できる短い求値経路を確定していない。",
+    "shortcut_risk_ja": "未確定の性質や単なる等式穴埋めを使って採用数を維持しない。",
+    "parameter_family_ja": null,
+    "feasibility": {
+      "status": "not_applicable",
+      "method_ja": "v1は変更しない。新しい数値例を作成せず、保留理由を明示。",
+      "witness": null,
+      "script": "verify_h_revision.py",
+      "solution_status": "unverified"
+    },
+    "review_notes_ja": [
+      "元の複雑な外心計算を維持しない。Humptyの導入が有効な解法が見つかったときに再検討する。"
+    ]
+  },
+  {
+    "id": "H10",
+    "decision": "holdout",
+    "title_ja": "高さの足を通り底辺に接する二円",
+    "diagnosis_ja": "直交三角形の留保評価に近接するため、算術の軽量化を理由に学習へ戻さない。",
+    "change_ja": "v2の主学習用数値問題を採用しない。",
+    "problem_ja": null,
+    "givens": [],
+    "query": null,
+    "answer_exact": null,
+    "geometry_solution_ja": [],
+    "arithmetic_ja": [],
+    "why_geometry_helps_ja": "今回は採用できる短い求値経路を確定していない。",
+    "shortcut_risk_ja": "未確定の性質や単なる等式穴埋めを使って採用数を維持しない。",
+    "parameter_family_ja": null,
+    "feasibility": {
+      "status": "not_applicable",
+      "method_ja": "v1は変更しない。新しい数値例を作成せず、保留理由を明示。",
+      "witness": null,
+      "script": "verify_h_revision.py",
+      "solution_status": "unverified"
+    },
+    "review_notes_ja": [
+      "H10/H11/EVの学習除外を維持。v2学習問題の件数には含めない。"
+    ]
+  },
+  {
+    "id": "H11",
+    "decision": "holdout",
+    "title_ja": "高さの足・接線・外心を結ぶ配置",
+    "diagnosis_ja": "評価用に留保しているorthic拡張。複数外心の算術負担を減らす再設計は別の評価設計として行うべきで、学習に移さない。",
+    "change_ja": "v2の主学習用数値問題を採用しない。",
+    "problem_ja": null,
+    "givens": [],
+    "query": null,
+    "answer_exact": null,
+    "geometry_solution_ja": [],
+    "arithmetic_ja": [],
+    "why_geometry_helps_ja": "今回は採用できる短い求値経路を確定していない。",
+    "shortcut_risk_ja": "未確定の性質や単なる等式穴埋めを使って採用数を維持しない。",
+    "parameter_family_ja": null,
+    "feasibility": {
+      "status": "not_applicable",
+      "method_ja": "v1は変更しない。新しい数値例を作成せず、保留理由を明示。",
+      "witness": null,
+      "script": "verify_h_revision.py",
+      "solution_status": "unverified"
+    },
+    "review_notes_ja": [
+      "v1のholdoutを維持。ここでは数値問題を新規に公開しない。"
+    ]
+  },
+  {
+    "id": "H12",
+    "decision": "main",
+    "title_ja": "二等分線と二円の交点を結ぶ距離",
+    "diagnosis_ja": "五つの辺長から二等分線・円・二つの再交点・最後の交点を計算するv1は、本質的な垂直性を使っても算術負担が大きかった。",
+    "change_ja": "途中の三つの長さを与え、最後の直線の向きの同定と二回の三平方で距離を求める。",
+    "problem_ja": "凸四角形ABCDは0<∠ABC=∠ADC<90°を満たす。B,Dの内角二等分線とACとの交点をE,Fとし、直線BEと直線DFの交点をPとする。MをACの中点とし、円BPDと線分BM,DMの内部との交点をそれぞれX,Yとする（B,D以外の交点）。Q=XE∩YF、VをPからACへの垂足とする。P,QはACの同じ側にあり、Qの方がACから遠い。PM=√29/2、PV=5/2、QM=√101のとき、PQを求めよ。",
+    "givens": [
+      {
+        "name": "PM",
+        "value": "sqrt(29)/2",
+        "meaning_ja": "二等分線の交点から中点まで"
+      },
+      {
+        "name": "PV",
+        "value": "5/2",
+        "meaning_ja": "二等分線の交点の高さ"
+      },
+      {
+        "name": "QM",
+        "value": "sqrt(101)",
+        "meaning_ja": "最後の交点から中点まで"
+      }
+    ],
+    "query": {
+      "expression": "PQ",
+      "meaning_ja": "二つの交点間の距離"
+    },
+    "answer_exact": "15/2",
+    "geometry_solution_ja": [
+      "この配置のX,Yはそれぞれ三角形BAC,DACのHumpty点で、そこからPQ⊥ACが従う。v1では等角条件を保つ一般3パラメータによりこの同定と垂直性を証明済み。",
+      "従ってVはQのACへの垂足でもある。直角三角形PMVでMV²=PM²−PV²=29/4−25/4=1。",
+      "直角三角形QMVでQV=√(101−1)=10。指定された側と順序からPQ=QV−PV=10−5/2=15/2。"
+    ],
+    "arithmetic_ja": [
+      "29/4−25/4=1",
+      "√(101−1)=10",
+      "10−5/2=15/2"
+    ],
+    "why_geometry_helps_ja": "X,Y,Qの座標を求めなくても、最後の直線が底辺に垂直と分かれば同じ垂足Vを共有する二つの直角三角形になる。",
+    "shortcut_risk_ja": "PM,PV,QMという部分的な長さを追加する。PQ⊥ACは入力しないので、この三長さだけの一般配置ではPQは定まらない。",
+    "parameter_family_ja": "実在する等角四角形を作ってPM,PV,QMを測る。MV,QVが扱いやすい例を選び、P,Qの側と高さ順序を必ず記す。",
+    "feasibility": {
+      "status": "verified",
+      "method_ja": "verify_h_revision.py が元の直線・円・鏡映・射影の定義から厳密座標で構成し、全与条件と答えを照合。短縮用の性質は交点の生成には使わず、生成後に検査する。",
+      "witness": {
+        "points": {
+          "A": [
+            "-1",
+            "0"
+          ],
+          "B": [
+            "3/4",
+            "7/4"
+          ],
+          "C": [
+            "1",
+            "0"
+          ],
+          "D": [
+            "-1",
+            "-3/2"
+          ],
+          "E": [
+            "1/6",
+            "0"
+          ],
+          "F": [
+            "-1/4",
+            "0"
+          ],
+          "P": [
+            "1",
+            "5/2"
+          ],
+          "M": [
+            "0",
+            "0"
+          ],
+          "X": [
+            "6/29",
+            "14/29"
+          ],
+          "Y": [
+            "-4/13",
+            "-6/13"
+          ],
+          "Q": [
+            "1",
+            "10"
+          ],
+          "V": [
+            "1",
+            "0"
+          ]
+        },
+        "given_values": {
+          "PM": "sqrt(29)/2",
+          "PV": "5/2",
+          "QM": "sqrt(101)"
+        },
+        "answer": "15/2"
+      },
+      "script": "verify_h_revision.py",
+      "solution_status": "proved_here"
+    },
+    "review_notes_ja": [
+      "一般性質の根拠はv1 verify_humpty.py: symbolic_quadrilateral_check。元配置を五辺から固定する必要はなく、与えた長さから目標値が一意ならよい。",
+      "Pは内角二等分線を含む直線どうしの交点。内角二等分線の半直線どうしの交点とは限らないことを本文に明記した。"
+    ]
+  },
+  {
+    "id": "H13",
+    "decision": "main",
+    "title_ja": "中線から作った円の中心までの距離",
+    "diagnosis_ja": "v1の円の半径二乗は約8862で、中心座標の大きさが計算を支配していた。",
+    "change_ja": "外心が元の辺上にある性質を使い、既存の垂直な弦と辺の角から中心の位置を求める。",
+    "problem_ja": "鋭角不等辺三角形ABCでBC=6、cos∠ACB=3/5とする。MをACの中点とし、円BMCのCにおける接線とBを通りBCに垂直な直線との交点をKとする。Kは直線BCに関してAと反対側にあり、BK=24である。線分AKと線分BMの内部での交点をJ、円BJKの中心をZとする。CZを求めよ。",
+    "givens": [
+      {
+        "name": "BC",
+        "value": "6",
+        "meaning_ja": "元の底辺"
+      },
+      {
+        "name": "BK",
+        "value": "24",
+        "meaning_ja": "底辺に垂直な弦"
+      },
+      {
+        "name": "cos_ACB",
+        "value": "3/5",
+        "meaning_ja": "中心が乗る辺の角"
+      }
+    ],
+    "query": {
+      "expression": "CZ",
+      "meaning_ja": "元の頂点から新しい外心までの距離"
+    },
+    "answer_exact": "15",
+    "geometry_solution_ja": [
+      "Jは三角形ABCのB-Humpty点で、この接線を伴う配置では円BJKの中心Zは直線AC上にある（v1の一般形で確認済み）。",
+      "BKの中点をNとする。Zは弦BKの垂直二等分線上にあるのでZN∥BC。B∈BCよりZからBCへの距離はBK/2=12。",
+      "sin∠ACB=4/5であり、C,Zは直線AC上にあるから、CZ·4/5=12。従ってCZ=15。"
+    ],
+    "arithmetic_ja": [
+      "24÷2=12",
+      "sin=√(1−9/25)=4/5",
+      "12÷(4/5)=15"
+    ],
+    "why_geometry_helps_ja": "接線交点Kと中線交点Jから円の中心を連立して計算せず、中心が乗る辺と弦の垂直二等分線だけで距離を得る。",
+    "shortcut_risk_ja": "BKは元配置の途中の長さとして与える。Z∈ACを与えなければ数値には直結しない。BC=6は実在する元三角形を制限する与件で、最後の三角比計算には不要。",
+    "parameter_family_ja": "BK=k、0<sinC=s<1ならCZ=k/(2s)。BCと角C、BKを勝手に独立生成せず、Jが両線分内部となる鋭角配置を確認する。",
+    "feasibility": {
+      "status": "verified",
+      "method_ja": "verify_h_revision.py が元の直線・円・鏡映・射影の定義から厳密座標で構成し、全与条件と答えを照合。短縮用の性質は交点の生成には使わず、生成後に検査する。",
+      "witness": {
+        "points": {
+          "A": [
+            "6/25",
+            "192/25"
+          ],
+          "B": [
+            "0",
+            "0"
+          ],
+          "C": [
+            "6",
+            "0"
+          ],
+          "M": [
+            "78/25",
+            "96/25"
+          ],
+          "K": [
+            "0",
+            "-24"
+          ],
+          "J": [
+            "78/425",
+            "96/425"
+          ],
+          "Z": [
+            "15",
+            "-12"
+          ]
+        },
+        "given_values": {
+          "BC": "6",
+          "BK": "24",
+          "cos_ACB": "3/5"
+        },
+        "answer": "15"
+      },
+      "script": "verify_h_revision.py",
+      "solution_status": "proved_here"
+    },
+    "review_notes_ja": [
+      "外心の共線性とJのHumpty同定はv1 symbolic_extension_checkで証明済み。新例は全て厳密座標で構成。"
+    ]
+  },
+  {
+    "id": "H14",
+    "decision": "main",
+    "title_ja": "二円の共通点でできる三角形の面積",
+    "diagnosis_ja": "v1は長い作図の最後に二つの円の半径を三辺から計算する設定で、核心の交点同定が算術軽減に十分結びつかなかった。",
+    "change_ja": "元の垂心までの長さと新しい交点までの長さを与え、交点が垂足であるという再解釈を面積計算へつなげる。",
+    "problem_ja": "鋭角不等辺三角形ABCの垂心をH、BCの中点をM、外接円をΩとする。直線ABと中心C・半径CAの円のAでない交点をD、直線ACと中心B・半径BAの円のAでない交点をEとする。半直線MD,MEとΩの交点をそれぞれP,Qとする。円BPMと円CQMのMでない共通点をRとする。AH=10、AR=6のとき、三角形AHRの面積を求めよ。すべての円と交点は非退化とする。",
+    "givens": [
+      {
+        "name": "AH",
+        "value": "10",
+        "meaning_ja": "頂点から垂心まで"
+      },
+      {
+        "name": "AR",
+        "value": "6",
+        "meaning_ja": "頂点から最後の交点まで"
+      }
+    ],
+    "query": {
+      "expression": "area(AHR)",
+      "meaning_ja": "頂点・垂心・最後の交点の三角形の面積"
+    },
+    "answer_exact": "24",
+    "geometry_solution_ja": [
+      "この等距離の割線と二円の配置でRは、HからAMへ下ろした垂足と一致する。v1で元の二円の方程式に一般の射影点を代入して恒等的に証明済み。従ってAR⊥HR。",
+      "直角三角形AHRでHR=√(AH²−AR²)=√(100−36)=8。",
+      "面積はAR·HR/2=6·8/2=24。"
+    ],
+    "arithmetic_ja": [
+      "10²−6²=64",
+      "√64=8",
+      "6·8/2=24"
+    ],
+    "why_geometry_helps_ja": "D,E,P,Q,Rの五つの交点を求めず、最後のRを既存の中線への垂足と同定するだけで三平方が使える。",
+    "shortcut_risk_ja": "二辺を与えるだけなので直角性の検出に強く依存する。入力が直角三角形と言ってしまうと無意味になるため、その性質は解説側だけに置く。",
+    "parameter_family_ja": "実在する鋭角配置を作ってAH,ARを測り、両者とHRが小さなPythagorean比になる例を選ぶ。比だけから配置の実在を推測しない。",
+    "feasibility": {
+      "status": "verified",
+      "method_ja": "verify_h_revision.py が元の直線・円・鏡映・射影の定義から厳密座標で構成し、全与条件と答えを照合。短縮用の性質は交点の生成には使わず、生成後に検査する。",
+      "witness": {
+        "points": {
+          "A": [
+            "16",
+            "12"
+          ],
+          "B": [
+            "-2*sqrt(70)",
+            "0"
+          ],
+          "C": [
+            "2*sqrt(70)",
+            "0"
+          ],
+          "M": [
+            "0",
+            "0"
+          ],
+          "H": [
+            "16",
+            "2"
+          ],
+          "D": [
+            "816/61 - 28*sqrt(70)/61",
+            "52/61 + 64*sqrt(70)/61"
+          ],
+          "E": [
+            "28*sqrt(70)/61 + 816/61",
+            "52/61 - 64*sqrt(70)/61"
+          ],
+          "P": [
+            "42*sqrt(70)/629 + 8792/629",
+            "2674/629 + 784*sqrt(70)/629"
+          ],
+          "Q": [
+            "8792/629 - 42*sqrt(70)/629",
+            "2674/629 - 784*sqrt(70)/629"
+          ],
+          "R": [
+            "56/5",
+            "42/5"
+          ]
+        },
+        "given_values": {
+          "AH": "10",
+          "AR": "6"
+        },
+        "answer": "24"
+      },
+      "script": "verify_h_revision.py",
+      "solution_status": "proved_here"
+    },
+    "review_notes_ja": [
+      "AH=10,AR=6を満たす非退化鋭角例を元の円円交点から厳密に検算した。一般の同定根拠はv1 symbolic_extension_check。"
+    ]
+  },
+  {
+    "id": "H15",
+    "decision": "main",
+    "title_ja": "三つの鏡映の後に現れる中点",
+    "diagnosis_ja": "一般角での交点Kの座標や直線ADへの極小距離を求めるv1は、原題の60°構造から離れて計算量が増えていた。",
+    "change_ja": "60°条件を戻し、KがADの中点になる性質を使う。ADと二本の弦の長さから中線定理でBKを求める。",
+    "problem_ja": "∠BAC=60°の不等辺三角形ABCの外接円をΩとする。ΩのB,Cでの接線の交点をX、直線AXとΩのAでない交点をDとする。DをBCに関して鏡映した点をE、EをABに関して鏡映した点をC0、EをACに関して鏡映した点をB0とし、K=BB0∩CC0とする。AB=√19、BD=√7、AD=4のとき、BKを求めよ。すべての交点は有限で、二直線BB0,CC0は相異なるとする。",
+    "givens": [
+      {
+        "name": "angle_BAC_deg",
+        "value": "60",
+        "meaning_ja": "鏡映の特別な角条件"
+      },
+      {
+        "name": "AB",
+        "value": "sqrt(19)",
+        "meaning_ja": "元の辺"
+      },
+      {
+        "name": "BD",
+        "value": "sqrt(7)",
+        "meaning_ja": "円周上の弦"
+      },
+      {
+        "name": "AD",
+        "value": "4",
+        "meaning_ja": "接線交点を通る弦"
+      }
+    ],
+    "query": {
+      "expression": "BK",
+      "meaning_ja": "元の頂点から鏡映線の交点まで"
+    },
+    "answer_exact": "3",
+    "geometry_solution_ja": [
+      "EはA-Humpty点である。さらに∠A=60°のこの鏡映配置では、BB0,CC0はいずれもADの中点を通るためKはADの中点となる。v2 verifierで一般のAB=c,AC=bについてこの二つの共線性を恒等的に証明した。",
+      "三角形ABDでKはADの中点なので、Apolloniusの中線定理よりBK²=(2AB²+2BD²−AD²)/4。",
+      "BK²=(2·19+2·7−16)/4=9、従ってBK=3。"
+    ],
+    "arithmetic_ja": [
+      "(38+14−16)/4=9",
+      "√9=3"
+    ],
+    "why_geometry_helps_ja": "円周点の三回の鏡映と二直線の交点を座標で追わず、その交点が一つの弦の中点と分かれば中線定理一回で終わる。",
+    "shortcut_risk_ja": "一般角の設定を維持した改善ではなく、元来有用だった60°部分族へ戻した。ADの中点性を入力すると普通の中線問題になるため解説側に隔離する。",
+    "parameter_family_ja": "∠A=60°でAB,ACを変え、元作図でAB,BD,ADを得る。これら三長さを独立に選ばない。同形拡大は配置数に数えない。",
+    "feasibility": {
+      "status": "verified",
+      "method_ja": "verify_h_revision.py が元の直線・円・鏡映・射影の定義から厳密座標で構成し、全与条件と答えを照合。短縮用の性質は交点の生成には使わず、生成後に検査する。",
+      "witness": {
+        "points": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "sqrt(19)",
+            "0"
+          ],
+          "C": [
+            "sqrt(19)/3",
+            "sqrt(57)/3"
+          ],
+          "X": [
+            "7*sqrt(19)/6",
+            "sqrt(57)/2"
+          ],
+          "D": [
+            "14*sqrt(19)/19",
+            "6*sqrt(57)/19"
+          ],
+          "E": [
+            "8*sqrt(19)/19",
+            "2*sqrt(57)/19"
+          ],
+          "B0": [
+            "-sqrt(19)/19",
+            "5*sqrt(57)/19"
+          ],
+          "C0": [
+            "8*sqrt(19)/19",
+            "-2*sqrt(57)/19"
+          ],
+          "K": [
+            "7*sqrt(19)/19",
+            "3*sqrt(57)/19"
+          ]
+        },
+        "given_values": {
+          "angle_BAC_deg": "60",
+          "AB": "sqrt(19)",
+          "BD": "sqrt(7)",
+          "AD": "4"
+        },
+        "answer": "3"
+      },
+      "script": "verify_h_revision.py",
+      "solution_status": "proved_here"
+    },
+    "review_notes_ja": [
+      "中点性はv1の共点性より強い追加確認。verify_h_revision.pyのsymbolic_new_identitiesが、A=(0,0),B=(c,0),C=(b/2,√3b/2)で一般に証明する。数値例だけの推測ではない。"
+    ]
+  },
+  {
+    "id": "HX01",
+    "decision": "main",
+    "title_ja": "二つの派生円と弦上の交点",
+    "diagnosis_ja": "v1のAJ²,PJ²は円円交点を求める計算になりやすく、Jがsymmedianの弦上にある性質を使っても入力が三辺のみでは整理が長かった。",
+    "change_ja": "元の辺ACと弦ALを与え、弦の中点を補助点として方べきでAJを求める。",
+    "problem_ja": "鋭角不等辺三角形ABCの外接円をΩとする。D,EをそれぞれBC,CAの中点、PをAからBCへの垂足とする。ΩのB,Cでの接線の交点をX、直線AXとΩのAでない交点をLとする。円CEPと円CDLのCでない共通点をJとする。AC=6、AL=9のとき、AJを求めよ。二円は相異なり二点で交わり、各定義は非退化とする。",
+    "givens": [
+      {
+        "name": "AC",
+        "value": "6",
+        "meaning_ja": "元の辺"
+      },
+      {
+        "name": "AL",
+        "value": "9",
+        "meaning_ja": "二接線から得られる弦"
+      }
+    ],
+    "query": {
+      "expression": "AJ",
+      "meaning_ja": "頂点から二つの派生円の第二交点まで"
+    },
+    "answer_exact": "4",
+    "geometry_solution_ja": [
+      "ALの中点をQとする。QはA-Dumpty点であり円CEP上にある。またこの二円の第二交点Jは直線AL上にある。二つの性質はSarkarの同定とLemma 9に対応し、v1で一般形も検算済み。",
+      "円CEPに対するAの方べきは、直線AC上ではAE·AC、直線AL上ではAQ·AJである。E,Qは中点なのでAE=3、AQ=9/2。",
+      "AJ=(3·6)/(9/2)=4。"
+    ],
+    "arithmetic_ja": [
+      "6÷2=3",
+      "9÷2=9/2",
+      "18÷(9/2)=4"
+    ],
+    "why_geometry_helps_ja": "二つの円の中心・根軸・第二交点を求めず、未知のJを既存の弦上へ移し、その弦の中点を追加するだけで方べきが使える。",
+    "shortcut_risk_ja": "ALは途中の自然な長さとして与える。J∈ALまたはQ∈円CEPは入力しない。両方の性質を与えると通常の方べきの練習へ退化する。",
+    "parameter_family_ja": "AC=b,AL=ℓの実在する鋭角配置でAJ=b²/ℓ。J=Q等の重複条件ℓ²=2b²を除き、円や接線の非退化も確認する。",
+    "feasibility": {
+      "status": "verified",
+      "method_ja": "verify_h_revision.py が元の直線・円・鏡映・射影の定義から厳密座標で構成し、全与条件と答えを照合。短縮用の性質は交点の生成には使わず、生成後に検査する。",
+      "witness": {
+        "points": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "9/4",
+            "9*sqrt(15)/4"
+          ],
+          "C": [
+            "6",
+            "0"
+          ],
+          "D": [
+            "33/8",
+            "9*sqrt(15)/8"
+          ],
+          "E": [
+            "3",
+            "0"
+          ],
+          "P": [
+            "81/16",
+            "9*sqrt(15)/16"
+          ],
+          "X": [
+            "21",
+            "3*sqrt(15)"
+          ],
+          "L": [
+            "63/8",
+            "9*sqrt(15)/8"
+          ],
+          "J": [
+            "7/2",
+            "sqrt(15)/2"
+          ],
+          "Q": [
+            "63/16",
+            "9*sqrt(15)/16"
+          ]
+        },
+        "given_values": {
+          "AC": "6",
+          "AL": "9"
+        },
+        "answer": "4"
+      },
+      "script": "verify_h_revision.py",
+      "solution_status": "proved_here"
+    },
+    "review_notes_ja": [
+      "J∈ALはv1 verify_humpty_extensions.pyの一般恒等式。Q∈円CEPはSarkarのDumpty同定。v2は元の二円からJを構成して両者を厳密照合。"
+    ]
+  }
+]

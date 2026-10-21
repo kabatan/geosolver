@@ -1,0 +1,72 @@
+{
+  "id": "AIME-2011-II-04",
+  "variables": [
+    "bx",
+    "by",
+    "t"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(11, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(bx, by)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(bx * (1 - t) + 11 * t, by * (1 - t))"
+    },
+    {
+      "name": "M",
+      "expression": "Midpoint(A, D)"
+    },
+    {
+      "name": "P",
+      "expression": "Intersect(Line(A, C), Line(B, M))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 20
+    },
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": 11
+    },
+    {
+      "left": "Angle(B, A, D)",
+      "operator": "=",
+      "right": "Angle(D, A, C)"
+    },
+    {
+      "left": "Collinear(B, D, C)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "by",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "bx",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "bx",
+      "operator": "<",
+      "right": "11"
+    }
+  ],
+  "target": "Distance(C, P) / Distance(P, A)"
+}

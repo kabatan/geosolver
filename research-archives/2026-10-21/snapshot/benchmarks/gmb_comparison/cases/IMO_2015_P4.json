@@ -1,0 +1,156 @@
+{
+  "id": "IMO_2015_P4",
+  "variables": [
+    "ax",
+    "ay",
+    "d",
+    "f"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "Omega",
+      "expression": "Circumcircle(A, B, C)"
+    },
+    {
+      "name": "O",
+      "expression": "Circumcenter(A, B, C)"
+    },
+    {
+      "name": "D",
+      "expression": "PointOnSegment(B, C, d)"
+    },
+    {
+      "name": "Gamma",
+      "expression": "Circle(A, Distance(A, D))"
+    },
+    {
+      "name": "E",
+      "expression": "Intersect(Line(B, C), Gamma, exclude=D)"
+    },
+    {
+      "name": "F",
+      "expression": "PointOnCircle(Omega, f)"
+    },
+    {
+      "name": "G",
+      "expression": "Reflect(F, Line(A, O))"
+    },
+    {
+      "name": "K",
+      "expression": "Intersect(Line(A, B), Circumcircle(B, D, F), exclude=B)"
+    },
+    {
+      "name": "L",
+      "expression": "Intersect(Line(C, A), Circumcircle(C, G, E), exclude=C)"
+    },
+    {
+      "name": "X",
+      "expression": "Intersect(Line(F, K), Line(G, L))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Area(A, B, C)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "d",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "d",
+      "operator": "<",
+      "right": 1
+    },
+    {
+      "left": "E.x",
+      "operator": ">",
+      "right": "D.x"
+    },
+    {
+      "left": "E.x",
+      "operator": "<",
+      "right": 1
+    },
+    {
+      "left": "OnCircle(F, Gamma)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "((F.x-A.x)*(B.y-A.y)-(F.y-A.y)*(B.x-A.x))",
+      "operator": "!=",
+      "right": 0
+    },
+    {
+      "left": "((F.x-A.x)*(B.y-A.y)-(F.y-A.y)*(B.x-A.x))*((F.x-A.x)*(C.y-A.y)-(F.y-A.y)*(C.x-A.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((F.x-A.x)*(B.y-A.y)-(F.y-A.y)*(B.x-A.x))*((F.x-A.x)*(G.y-A.y)-(F.y-A.y)*(G.x-A.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((F.x-A.x)*(B.y-A.y)-(F.y-A.y)*(B.x-A.x))*((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((F.x-A.x)*(B.y-A.y)-(F.y-A.y)*(B.x-A.x))*((B.x-A.x)*(G.y-A.y)-(B.y-A.y)*(G.x-A.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((F.x-A.x)*(B.y-A.y)-(F.y-A.y)*(B.x-A.x))*((C.x-A.x)*(G.y-A.y)-(C.y-A.y)*(G.x-A.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((F.x-A.x)*(B.y-A.y)-(F.y-A.y)*(B.x-A.x))*((B.x-F.x)*(C.y-F.y)-(B.y-F.y)*(C.x-F.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((F.x-A.x)*(B.y-A.y)-(F.y-A.y)*(B.x-A.x))*((B.x-F.x)*(G.y-F.y)-(B.y-F.y)*(G.x-F.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((F.x-A.x)*(B.y-A.y)-(F.y-A.y)*(B.x-A.x))*((C.x-F.x)*(G.y-F.y)-(C.y-F.y)*(G.x-F.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((F.x-A.x)*(B.y-A.y)-(F.y-A.y)*(B.x-A.x))*((C.x-B.x)*(G.y-B.y)-(C.y-B.y)*(G.x-B.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(A, K), Vector(B, K))",
+      "operator": "<",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(C, L), Vector(A, L))",
+      "operator": "<",
+      "right": 0
+    }
+  ],
+  "target": "0"
+}

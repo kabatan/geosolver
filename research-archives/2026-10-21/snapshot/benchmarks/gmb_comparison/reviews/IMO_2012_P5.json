@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2012_P5",
+  "reviewer": "independent_review",
+  "case_sha256": "20d549c6c78ca72ac842e2bcbb8a0cc930f79eea7f3af595cd9aa36ab3b8c594",
+  "audit_sha256": "617897b76aa527cca58efaf7638c1a9239af7ffedce7e6f9f5c1dcdcda10f385",
+  "gmbl_sha256": "6fce608d5f05377d05cc12b74e5be8f8c1c2d8d6208d07a1ccdacca8220bc463",
+  "reviewed_original_pdf_sha256": "3ab2564b04d805bcfc963a8c38527a7773b69a8a41cc457a260730b734ffffd6",
+  "verdict": "pass",
+  "normalization_checked": true,
+  "conclusion_not_assumed": true,
+  "original_conditions_covered_by_gmbl": true,
+  "scope_of_coverage_ja": "原文の仮定を当該比較範囲で満たすかの監査である。原文の全境界配置を含む解集合の完全同値、GMB実装の全数値分岐の正当性、実験の実行許可を意味しない。",
+  "comparison_scope": "nondegenerate_configuration_domain",
+  "sources_read": [
+    "cases/IMO_2012_P5.json",
+    "audit/IMO_2012_P5.json",
+    "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2012_P5.smt2",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2012-eng.pdf",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2012-eng.txt",
+    "AUTHORING.md",
+    "reviews/UPSTREAM_SEMANTICS.md"
+  ],
+  "official_url": "https://www.imo-official.org/assets/documents/problems/2012/2012_eng.pdf",
+  "normalization_review": {
+    "anchors": [
+      "C",
+      "A"
+    ],
+    "removed_continuous_dof": 4,
+    "scale_invariant": true,
+    "reflection_fixed": false,
+    "remaining_solver_variables": [
+      "by",
+      "tx",
+      "tk",
+      "tl"
+    ],
+    "shape_fixed_beyond_original_hypotheses": false,
+    "checked_ja": "原文で相異なる二点の単位基線化だけで平行移動2・回転1・正の尺度1を除く。元の形の変数と鏡映配置を保持している。"
+  },
+  "original_goal_not_used": "MK=ML。",
+  "checked_input_counts": {
+    "constructions": 8,
+    "conditions": 5
+  },
+  "method": {
+    "read_all_constructions_and_conditions": true,
+    "read_original_problem_assumptions": true,
+    "checked_domains_branches_and_non_degeneracy": true,
+    "checked_goal_separation": true,
+    "exact_algebraic_checks_only_where_documented": true,
+    "solver_executed": false,
+    "optimizer_executed": false,
+    "refinement_executed": false,
+    "prior_case_performance_used_to_adjust_input": false
+  },
+  "gmb_runtime_equivalence_claimed": false,
+  "findings": [
+    {
+      "id": "IMO_2012_P5-review-1",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "C=(0,0),A=(1,0),B=(0,by),by≠0はCの直角と相似正規化だけを表す。脚比と鏡映の自由度は残す。"
+    },
+    {
+      "id": "IMO_2012_P5-review-2",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "DはCのABへの垂足、XはCD内部、K,LはそれぞれAX,BXの所定等長点。K,Lには閉線分関数を使うが、BK=BC,AL=ACおよびX内部により両端点は不可能なので開パラメータと同値。"
+    },
+    {
+      "id": "IMO_2012_P5-review-3",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "例えばBX<BC<BAからKはAXの端点にならず、対称にLも内部となる。MK=MLという結論は条件に含めていない。"
+    }
+  ],
+  "remaining_uncertainties": []
+}

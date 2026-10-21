@@ -1,0 +1,14 @@
+[
+  {
+    "id": "diagnostic-h14-official",
+    "source_id": "H14",
+    "seed": 2026092704,
+    "evaluation_role": "exploratory_decoder_diagnostic_not_for_training",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Write a reusable Python function solve(givens) for the geometry task below. The input is a dictionary of real-valued numerical givens; the output must be one finite real number for the requested quantity. It must work for every nondegenerate configuration satisfying the stated assumptions, including new numerical conditions. Derive a procedure from the geometry; do not hard-code a table of examples.\n\nLet H be the orthocenter, M the midpoint of BC, and \u03a9 the circumcircle of an acute scalene triangle ABC. Line AB meets the circle centered at C with radius CA again at D, and line AC meets the circle centered at B with radius BA again at E (other than A). Rays MD and ME meet \u03a9 at P and Q, respectively. Let R be the common point other than M of circles BPM and CQM. If AH=givens[\"AH\"] and AR=givens[\"AR\"], find the area of triangle AHR. Assume all circles and intersections are nondegenerate.\n\nThe dictionary has exactly these fields: AH, AR. Inputs and reference values use ordinary floating-point precision. Accuracy is checked with absolute tolerance 1e-7 plus relative tolerance 1e-6.\nYou may use ordinary Python and these standard numerical modules: math, cmath, statistics, fractions, decimal, itertools, functools. You have no geometry solver, external data, files, network, or other packages. General numerical algorithms and ordinary control flow are permitted. Do not use reflection, double-underscore attributes, eval, exec, or dynamic imports.\nReturn one closed Python code block containing the complete program and a top-level def solve(givens). Do not print results or read input; the evaluator calls solve. Return code only, without comments, docstrings, proofs or prose.\n\nObserved numerical examples (not an exhaustive test set):\n{\"givens\": {\"AH\": 2.0322999684470977, \"AR\": 1.5525513144586094}, \"output\": 1.0180249499868552}\n{\"givens\": {\"AH\": 6.164645001587171, \"AR\": 5.836338699410419}, \"output\": 5.792399726561962}\n{\"givens\": {\"AH\": 0.5051642461904624, \"AR\": 0.5010719389158185}, \"output\": 0.016076968824994695}\n{\"givens\": {\"AH\": 1.8844103508417653, \"AR\": 1.845307321324821}, \"output\": 0.3523561785344291}"
+      }
+    ]
+  }
+]

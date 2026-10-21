@@ -1,0 +1,73 @@
+{
+  "id": "H04-original-solve-audit",
+  "variables": [
+    "x",
+    "y"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(6,0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(x,y)"
+    },
+    {
+      "name": "M",
+      "expression": "Midpoint(B,C)"
+    },
+    {
+      "name": "H",
+      "expression": "Orthocenter(A,B,C)"
+    },
+    {
+      "name": "P",
+      "expression": "FootOfPerpendicular(H,Line(A,M))"
+    },
+    {
+      "name": "T",
+      "expression": "IntersectLines(PerpendicularBisector(A,P),Line(B,C))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "y",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "predicate": "AcuteTriangle(A,B,C)"
+    },
+    {
+      "left": "Distance(A,B)",
+      "operator": "!=",
+      "right": "Distance(A,C)"
+    },
+    {
+      "left": "Distance(A,B)",
+      "operator": "!=",
+      "right": "Distance(B,C)"
+    },
+    {
+      "left": "Distance(A,C)",
+      "operator": "!=",
+      "right": "Distance(B,C)"
+    },
+    {
+      "left": "Distance(B,T)",
+      "operator": "=",
+      "right": 2
+    },
+    {
+      "left": "T.x",
+      "operator": "<",
+      "right": 0
+    }
+  ],
+  "target": "Distance(A,T)"
+}

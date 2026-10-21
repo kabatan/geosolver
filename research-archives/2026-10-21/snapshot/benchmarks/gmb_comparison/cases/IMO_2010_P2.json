@@ -1,0 +1,24 @@
+{
+  "id": "IMO_2010_P2",
+  "variables": ["cx", "cy", "te", "tf"],
+  "constructions": [
+    {"name": "A", "expression": "Point(0, 0)"},
+    {"name": "B", "expression": "Point(1, 0)"},
+    {"name": "C", "expression": "Point(cx, cy)"},
+    {"name": "I", "expression": "Incenter(A, B, C)"},
+    {"name": "Gamma", "expression": "Circumcircle(A, B, C)"},
+    {"name": "D", "expression": "Intersect(Line(A, I), Gamma, exclude=A)"},
+    {"name": "E", "expression": "PointOnCircle(Gamma, te)"},
+    {"name": "F", "expression": "PointOnSegment(B, C, tf)"},
+    {"name": "G", "expression": "Midpoint(I, F)"}
+  ],
+  "conditions": [
+    {"left": "Area(A, B, C)", "operator": ">", "right": "0"},
+    {"left": "((C.x - B.x) * (D.y - B.y) - (C.y - B.y) * (D.x - B.x)) * ((C.x - B.x) * (E.y - B.y) - (C.y - B.y) * (E.x - B.x))", "operator": ">=", "right": "0"},
+    {"left": "Angle(B, A, F)", "operator": "=", "right": "Angle(C, A, E)"},
+    {"left": "Angle(C, A, E)", "operator": "<", "right": "Angle(B, A, C) / 2"},
+    {"left": "tf", "operator": ">", "right": "0"},
+    {"left": "tf", "operator": "<", "right": "1"}
+  ],
+  "target": "0"
+}

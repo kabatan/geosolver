@@ -1,0 +1,76 @@
+"""High-precision answer evaluation for pipeline IR problems."""
+
+from __future__ import annotations
+
+from collections.abc import Sequence
+from dataclasses import dataclass
+
+from mpmath import mp
+
+from geosolver.engine.standard.contracts.problem_bundle import ProblemBundle
+from geosolver.engine.standard.evaluation.high_precision_expressions import (
+    build_solution_context_high_precision,
+)
+from geosolver.engine.standard.precision.type_guards.ensure_no_float import (
+    ensure_high_precision_mode,
+)
+from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
+from geosolver.engine.standard.precision.type_guards.strict_to_mpf import strict_to_mpf
+from geosolver.problem.ir.compiler import safe_eval_expr_hp
+from geosolver.problem.ir.errors import IRCompileError
+
+from .classify_evaluation_failure import EvaluationStatus
+
+
+@dataclass(frozen=True)
+class HPAnswerEvaluation:
+    """Result of high-precision answer evaluation."""
+
+    answer_hp: MPFloat | None
+    evaluation_status: EvaluationStatus
+
+
+def evaluate_answer_hp(
+    *,
+    bundle: ProblemBundle,
+    values: Sequence[MPFloat],
+    precision: int,
+) -> HPAnswerEvaluation:
+    """Evaluate answer expression at high precision.
+
+    The caller must execute this function inside ``high_precision_mode()``.
+    """
+    ensure_high_precision_mode(context="pipeline.evaluate_answer_hp")
+    try:
+        expression = bundle.spec.answer_expr or bundle.spec.objective_expr
+        if not expression:
+            return HPAnswerEvaluation(None, EvaluationStatus.EVALUATION_FAILED)
+        context = build_solution_context_high_precision(
+            bundle.spec,
+            list(bundle.var_names),
+            list(values),
+            bundle.base_context,
+            int(precision),
+            expressions=[expression],
+        )
+        raw_value = safe_eval_expr_hp(expression, context)
+    except IRCompileError:
+        return HPAnswerEvaluation(
+            answer_hp=None,
+            evaluation_status=EvaluationStatus.EVALUATION_FAILED,
+        )
+    if raw_value is None:
+        return HPAnswerEvaluation(
+            answer_hp=None,
+            evaluation_status=EvaluationStatus.EVALUATION_FAILED,
+        )
+    answer = strict_to_mpf(raw_value, context="pipeline.evaluate_answer_hp")
+    if not mp.isfinite(answer):
+        return HPAnswerEvaluation(
+            answer_hp=answer,
+            evaluation_status=EvaluationStatus.NON_FINITE,
+        )
+    return HPAnswerEvaluation(
+        answer_hp=answer,
+        evaluation_status=EvaluationStatus.OK,
+    )

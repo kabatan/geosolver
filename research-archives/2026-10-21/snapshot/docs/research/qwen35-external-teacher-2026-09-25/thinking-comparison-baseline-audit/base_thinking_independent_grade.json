@@ -1,0 +1,149 @@
+{
+  "protocol": "STAGE_LOCALIZATION_GRADING.md",
+  "arm": "base Thinking, 81920 max generated tokens",
+  "blind_grade": true,
+  "items": [
+    {
+      "job": "diverse-en-near-transfer-fresh4-H03-fresh4-0-0.json",
+      "source_id": "H03",
+      "fresh4_instance": 1,
+      "numeric_input": {
+        "OH": "13"
+      },
+      "finish_reason": "stop",
+      "completion_tokens": 59877,
+      "think_close_count": 1,
+      "mapping_claim": "absent",
+      "mapping_proof": "not_proven",
+      "downstream_relation_claim": "incorrect",
+      "downstream_relation_proof": "not_proven",
+      "exact_value": {
+        "expected": "26/3",
+        "model": "13",
+        "correct": false
+      },
+      "complete_proof": false,
+      "evidence": "The answer identifies Pa as an inversion of A in the side-diameter circle but never links Pa to the orthocenter projection. It asserts Z=H (and “OZ=OH=13”), which is the wrong center relation; no derivation of the circle (PaPbPc) or its center is given."
+    },
+    {
+      "job": "diverse-en-near-transfer-fresh4-H03-fresh4-1-0.json",
+      "source_id": "H03",
+      "fresh4_instance": 2,
+      "numeric_input": {
+        "OH": "14"
+      },
+      "finish_reason": "stop",
+      "completion_tokens": 62861,
+      "think_close_count": 1,
+      "mapping_claim": "absent",
+      "mapping_proof": "not_proven",
+      "downstream_relation_claim": "correct",
+      "downstream_relation_proof": "unsupported",
+      "exact_value": {
+        "expected": "28/3",
+        "model": "28/3",
+        "correct": true
+      },
+      "complete_proof": false,
+      "evidence": "It states Z is the midpoint of HG and derives OZ=(2/3)OH, giving 28/3. But it does not connect any Pa to the corresponding orthocenter foot, and the center relation is asserted as a “remarkable property.” The attempted verification uses a right-isosceles triangle and contains unresolved/incorrect Pc and inverse calculations, so it does not prove the relation for acute scalene triangles."
+    },
+    {
+      "job": "diverse-en-near-transfer-fresh4-H04-fresh4-0-0.json",
+      "source_id": "H04",
+      "fresh4_instance": 1,
+      "numeric_input": {
+        "BT": "14/11",
+        "BC": "13"
+      },
+      "finish_reason": "stop",
+      "completion_tokens": 22513,
+      "think_close_count": 1,
+      "mapping_claim": "given_in_original_problem",
+      "mapping_proof": "supplied_in_prompt",
+      "downstream_relation_claim": "correct",
+      "downstream_relation_proof": "proven",
+      "exact_value": {
+        "expected": "sqrt(2198)/11",
+        "model": "14*sqrt(157)/11",
+        "correct": false
+      },
+      "complete_proof": false,
+      "evidence": "From H=(u,(s^2-u^2)/v), it derives the projection coefficient s^2/AM^2, applies TA=TP, obtains AM^2-2ut=-s^2, and uses t=-s-BT for order T,B,C to derive AT^2=BT(BT+BC). Branch and relation are correct. The arithmetic then mis-simplifies sqrt(2198) as 14*sqrt(157); since 2198=14*157 has no square factor, the exact answer is sqrt(2198)/11."
+    },
+    {
+      "job": "diverse-en-near-transfer-fresh4-H04-fresh4-1-0.json",
+      "source_id": "H04",
+      "fresh4_instance": 2,
+      "numeric_input": {
+        "BT": "5/4",
+        "BC": "14"
+      },
+      "finish_reason": "stop",
+      "completion_tokens": 29469,
+      "think_close_count": 1,
+      "mapping_claim": "given_in_original_problem",
+      "mapping_proof": "supplied_in_prompt",
+      "downstream_relation_claim": "correct",
+      "downstream_relation_proof": "partial_with_factor_justification_error",
+      "exact_value": {
+        "expected": "sqrt(305)/4",
+        "model": "sqrt(305)/4",
+        "correct": true
+      },
+      "complete_proof": false,
+      "evidence": "It derives MA·MH=MB^2 in coordinates, projects H to P, uses TA=TP, obtains AT^2=MT^2-MB^2, selects MT=MB+BT from T,B,C order, and computes sqrt(305)/4 correctly. It asserts scalene implies MA≠MB, which is false. It also notes that if MA=MB then P=A and the construction breaks down; because T is defined via a perpendicular bisector of AP, that would exclude the case and could justify cancellation. The answer does not clearly retract its false scalene implication. Under the frozen rubric’s conservative treatment of unresolved contradictions, the proof remains incomplete."
+    },
+    {
+      "job": "diverse-en-near-transfer-fresh4-H14-fresh4-0-0.json",
+      "source_id": "H14",
+      "fresh4_instance": 1,
+      "numeric_input": {
+        "AH": "13/4",
+        "AR": "39/20"
+      },
+      "finish_reason": "stop",
+      "completion_tokens": 35393,
+      "think_close_count": 1,
+      "mapping_claim": "absent",
+      "mapping_proof": "not_proven",
+      "downstream_relation_claim": "correct_conditional_right_angle",
+      "downstream_relation_proof": "unsupported",
+      "exact_value": {
+        "expected": "507/200",
+        "model": "507/200",
+        "correct": true
+      },
+      "complete_proof": false,
+      "evidence": "It states R lies on the circle with diameter AH and correctly computes HR=13/5 and area 507/200 conditional on that right angle. It never states or derives the required mapping that R is the projection of H onto AM (so R∈AM); the proof section explicitly falls back to “detailed vector calculations” without supplying them and infers the intended relation from the chosen numbers."
+    },
+    {
+      "job": "diverse-en-near-transfer-fresh4-H14-fresh4-1-0.json",
+      "source_id": "H14",
+      "fresh4_instance": 2,
+      "numeric_input": {
+        "AH": "17/3",
+        "AR": "34*sqrt(13)/39"
+      },
+      "finish_reason": "stop",
+      "completion_tokens": 36366,
+      "think_close_count": 1,
+      "mapping_claim": "absent",
+      "mapping_proof": "not_proven",
+      "downstream_relation_claim": "correct_conditional_right_angle",
+      "downstream_relation_proof": "unsupported",
+      "exact_value": {
+        "expected": "289/39",
+        "model": "289/39",
+        "correct": true
+      },
+      "complete_proof": false,
+      "evidence": "It states R lies on the circle with diameter AH and correctly computes RH=17/sqrt(13) and area 289/39 conditional on that right angle. It never states or derives the required mapping that R is the projection of H onto AM (so R∈AM); the decisive construction-to-right-angle step is only asserted via unspecified “detailed vector calculations.”"
+    }
+  ],
+  "summary": {
+    "exact_values_correct": 4,
+    "items": 6,
+    "complete_proofs": 0,
+    "note": "Exact-value correctness is scored separately from whether the geometric relation was proved; H03-1 and both H14 values are conditional on unsupported relations."
+  }
+}

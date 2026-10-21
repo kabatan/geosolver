@@ -1,0 +1,117 @@
+{
+  "status": "result_informed_supplementary_retention_diagnostic",
+  "interpretation": "Not a confirmatory transfer test. IDs were selected after reading historical untouched-base numeric development grades.",
+  "historical_baseline_source": "qwen/.runtime/qwen35_diverse_sft_20260924/eval-numeric-base-en-32k/manual-grades.json",
+  "historical_baseline_sha256": "03bde3b5d5c0c4bae4fe1f32f94814b87e8c251fdd9ae0354449a43a62052803",
+  "historical_baseline_scope": "37 configuration IDs, two generated samples per ID; only grade fields were used, not answer text.",
+  "selection_rule": "Exclude the five held-out targets and the four existing retention controls. Include all remaining source IDs with at least one complete untouched-base sample (DB02, DA18, DB06), then four remaining source IDs with 2/2 exact answer, useful relation, and application but 0/2 complete proof (H12, HX01, DA03, DA07).",
+  "selected_ids": [
+    "DB02",
+    "DA18",
+    "DB06",
+    "H12",
+    "HX01",
+    "DA03",
+    "DA07"
+  ],
+  "excluded_heldout_target_ids": [
+    "H03",
+    "H04",
+    "H08",
+    "H14",
+    "H15"
+  ],
+  "excluded_existing_retention_ids": [
+    "H01",
+    "H02",
+    "H07",
+    "H13"
+  ],
+  "selected_historical_metrics": {
+    "DB02": {
+      "sample_count": 2,
+      "successful_samples": {
+        "complete": 2,
+        "exact": 2,
+        "relation": 2,
+        "proof": 2,
+        "applied": 2
+      },
+      "selection_stratum": "historically_complete"
+    },
+    "DA18": {
+      "sample_count": 2,
+      "successful_samples": {
+        "complete": 1,
+        "exact": 1,
+        "relation": 1,
+        "proof": 1,
+        "applied": 1
+      },
+      "selection_stratum": "historically_complete"
+    },
+    "DB06": {
+      "sample_count": 2,
+      "successful_samples": {
+        "complete": 1,
+        "exact": 1,
+        "relation": 1,
+        "proof": 1,
+        "applied": 1
+      },
+      "selection_stratum": "historically_complete"
+    },
+    "H12": {
+      "sample_count": 2,
+      "successful_samples": {
+        "complete": 0,
+        "exact": 2,
+        "relation": 2,
+        "proof": 0,
+        "applied": 2
+      },
+      "selection_stratum": "historically_exact_relation_application_without_complete_proof"
+    },
+    "HX01": {
+      "sample_count": 2,
+      "successful_samples": {
+        "complete": 0,
+        "exact": 2,
+        "relation": 2,
+        "proof": 0,
+        "applied": 2
+      },
+      "selection_stratum": "historically_exact_relation_application_without_complete_proof"
+    },
+    "DA03": {
+      "sample_count": 2,
+      "successful_samples": {
+        "complete": 0,
+        "exact": 2,
+        "relation": 2,
+        "proof": 0,
+        "applied": 2
+      },
+      "selection_stratum": "historically_exact_relation_application_without_complete_proof"
+    },
+    "DA07": {
+      "sample_count": 2,
+      "successful_samples": {
+        "complete": 0,
+        "exact": 2,
+        "relation": 2,
+        "proof": 0,
+        "applied": 2
+      },
+      "selection_stratum": "historically_exact_relation_application_without_complete_proof"
+    }
+  },
+  "historical_old_prompt_reused": false,
+  "fresh_numeric_instances": true,
+  "selection_depended_on_historical_base_results": true,
+  "limits": [
+    "The fresh numeric values were not evaluated on the untouched base when selected; historical same-configuration success does not guarantee success on these values.",
+    "The same source configurations and underlying geometry families were already exposed during development.",
+    "Any observed adapter result is descriptive retention evidence and cannot confirm new-configuration transfer."
+  ]
+}

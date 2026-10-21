@@ -1,0 +1,112 @@
+{
+  "id": "AIME-2019-II-15",
+  "variables": [
+    "b",
+    "cx",
+    "cy",
+    "xx",
+    "xy",
+    "yx",
+    "yy"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(b, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "P",
+      "expression": "FootOfPerpendicular(C, Line(A, B))"
+    },
+    {
+      "name": "Q",
+      "expression": "FootOfPerpendicular(B, Line(A, C))"
+    },
+    {
+      "name": "Gamma",
+      "expression": "Circumcircle(A, B, C)"
+    },
+    {
+      "name": "X",
+      "expression": "Point(xx, xy)"
+    },
+    {
+      "name": "Y",
+      "expression": "Point(yx, yy)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "OnLine(X, P, Q)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnLine(Y, P, Q)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(X, Gamma)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(Y, Gamma)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(X, P)",
+      "operator": "=",
+      "right": 10
+    },
+    {
+      "left": "Distance(P, Q)",
+      "operator": "=",
+      "right": 25
+    },
+    {
+      "left": "Distance(Q, Y)",
+      "operator": "=",
+      "right": 15
+    },
+    {
+      "left": "OnSegment(P, X, Y)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(Q, X, Y)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "b",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Area(A, B, C)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "predicate": "AcuteTriangle(A, B, C)"
+    }
+  ],
+  "target": "Distance(A, B) * Distance(A, C)"
+}

@@ -1,0 +1,278 @@
+{
+  "source_files": {
+    "protocol": "docs/research/numeric-sft-dose-control-2026-09-28/PROTOCOL.md",
+    "scores": "qwen/.runtime/numeric_sft_dose_control_20260928/fit-scores.json",
+    "scores_protocol_sha256": "f5ef95d66ea63b8ab5c41e92ad24f090c75853b7c6b9a3d9f9c9c3a027053a42"
+  },
+  "scope": {
+    "trained_shapes": 80,
+    "reserved_shapes": 30,
+    "source_families": 10,
+    "reserved_shapes_per_family": 3,
+    "training_variants": "1–8",
+    "reserved_variants": "10–12",
+    "independent_family_units": 10
+  },
+  "protocol_gate": {
+    "eligible": false,
+    "run_transfer": false,
+    "reason": "Two base reserved responses are literal zero, so the predeclared mean absolute log ratio is undefined; correct512 has no reserved exact answers and fails precision threshold.",
+    "score_file_transfer_gate": {
+      "eligible": false,
+      "precision_gate": false,
+      "log_error_gate": false,
+      "source_wins": {
+        "shuffled512": 0,
+        "source_median": 0
+      },
+      "run_transfer": false,
+      "interpretation": "Exploratory resource-allocation rule fixed in PROTOCOL.md; not a statistical significance test."
+    },
+    "source_wins_descriptive_only": {
+      "against_shuffled512": 10,
+      "against_source_median": 9
+    }
+  },
+  "reserved": {
+    "base": {
+      "n": 30,
+      "correct": 0,
+      "length": 0,
+      "unparsed": 0,
+      "nonpositive": 2,
+      "median_relative_error": 0.8585240574714403,
+      "mean_relative_error": 1.5612819023424709,
+      "mean_absolute_log_ratio": null,
+      "within_1pct": 0,
+      "within_5pct": 1,
+      "within_10pct": 1
+    },
+    "correct128": {
+      "n": 30,
+      "correct": 0,
+      "length": 0,
+      "unparsed": 0,
+      "nonpositive": 0,
+      "median_relative_error": 0.3157820953764513,
+      "mean_relative_error": 0.3860048409463562,
+      "mean_absolute_log_ratio": 0.6388319468308294,
+      "within_1pct": 1,
+      "within_5pct": 5,
+      "within_10pct": 6
+    },
+    "correct512": {
+      "n": 30,
+      "correct": 0,
+      "length": 0,
+      "unparsed": 0,
+      "nonpositive": 0,
+      "median_relative_error": 0.16946210498938602,
+      "mean_relative_error": 0.2968765427580732,
+      "mean_absolute_log_ratio": 0.2440611119275877,
+      "within_1pct": 1,
+      "within_5pct": 8,
+      "within_10pct": 13
+    },
+    "shuffled512": {
+      "n": 30,
+      "correct": 0,
+      "length": 0,
+      "unparsed": 0,
+      "nonpositive": 0,
+      "median_relative_error": 0.4186809775439639,
+      "mean_relative_error": 0.42335517885532015,
+      "mean_absolute_log_ratio": 0.4409658991887388,
+      "within_1pct": 0,
+      "within_5pct": 1,
+      "within_10pct": 3
+    },
+    "source_median": {
+      "n": 30,
+      "correct": 0,
+      "length": 0,
+      "unparsed": 0,
+      "nonpositive": 0,
+      "median_relative_error": 0.44142269053878425,
+      "mean_relative_error": 0.45778811791869206,
+      "mean_absolute_log_ratio": 0.45083937232089705,
+      "within_1pct": 0,
+      "within_5pct": 0,
+      "within_10pct": 2
+    }
+  },
+  "reserved_correct512_comparisons": {
+    "correct128": {
+      "mean_absolute_log_ratio": 0.6388319468308294,
+      "absolute_reduction": 0.3947708349032417,
+      "relative_reduction": 0.6179572528607151,
+      "paired_shape_wins": 19,
+      "source_mean_wins": 8
+    },
+    "shuffled512": {
+      "mean_absolute_log_ratio": 0.4409658991887388,
+      "absolute_reduction": 0.1969047872611511,
+      "relative_reduction": 0.4465306447128997,
+      "paired_shape_wins": 24,
+      "source_mean_wins": 10
+    },
+    "source_median": {
+      "mean_absolute_log_ratio": 0.45083937232089705,
+      "absolute_reduction": 0.20677826039330935,
+      "relative_reduction": 0.4586517351597441,
+      "paired_shape_wins": 24,
+      "source_mean_wins": 9
+    }
+  },
+  "source_mean_absolute_log_ratio": {
+    "DA01": {
+      "correct128": 0.1058428880591391,
+      "correct512": 0.07278328782084836,
+      "shuffled512": 0.12530615495735048,
+      "source_median": 0.2658641878761658
+    },
+    "DA02": {
+      "correct128": 0.4597160575607717,
+      "correct512": 0.3223947308266973,
+      "shuffled512": 0.37793931625707516,
+      "source_median": 0.3718928410203493
+    },
+    "DA03": {
+      "correct128": 0.22677202987926331,
+      "correct512": 0.02326169444764839,
+      "shuffled512": 0.40041942234885086,
+      "source_median": 0.30063323023953137
+    },
+    "DA04": {
+      "correct128": 0.13118612755481807,
+      "correct512": 0.1976841569179865,
+      "shuffled512": 0.4198375611659989,
+      "source_median": 0.4774275741085547
+    },
+    "DA06": {
+      "correct128": 2.142245055717135,
+      "correct512": 0.3777293510994468,
+      "shuffled512": 0.5390976382110118,
+      "source_median": 0.46499892246204827
+    },
+    "DA07": {
+      "correct128": 0.4719006621571183,
+      "correct512": 0.6375786279798902,
+      "shuffled512": 0.8007301059292824,
+      "source_median": 0.5683713315068329
+    },
+    "DA08": {
+      "correct128": 2.1024955818162843,
+      "correct512": 0.5450944355944699,
+      "shuffled512": 0.6580249634779061,
+      "source_median": 0.87151791016954
+    },
+    "DA11": {
+      "correct128": 0.3297404268694217,
+      "correct512": 0.11330234743255983,
+      "shuffled512": 0.3849633465705124,
+      "source_median": 0.29352748339145524
+    },
+    "DB02": {
+      "correct128": 0.33074404313823375,
+      "correct512": 0.11562486387837731,
+      "shuffled512": 0.41554131289781676,
+      "source_median": 0.47329296157198114
+    },
+    "DB12": {
+      "correct128": 0.08767659555610868,
+      "correct512": 0.035157623277952556,
+      "shuffled512": 0.2877991700715834,
+      "source_median": 0.42086728086251146
+    }
+  },
+  "train": {
+    "base": {
+      "n": 80,
+      "correct": 0,
+      "length": 0,
+      "unparsed": 0,
+      "nonpositive": 8,
+      "median_relative_error": 0.864340077639941,
+      "mean_relative_error": 2.6270176931361577,
+      "mean_absolute_log_ratio": null,
+      "within_1pct": 0,
+      "within_5pct": 4,
+      "within_10pct": 7
+    },
+    "correct128": {
+      "n": 80,
+      "correct": 0,
+      "length": 0,
+      "unparsed": 0,
+      "nonpositive": 0,
+      "median_relative_error": 0.19045824259565905,
+      "mean_relative_error": 0.39458111551111136,
+      "mean_absolute_log_ratio": 0.5627545005498155,
+      "within_1pct": 3,
+      "within_5pct": 16,
+      "within_10pct": 30
+    },
+    "correct512": {
+      "n": 80,
+      "correct": 2,
+      "length": 0,
+      "unparsed": 0,
+      "nonpositive": 0,
+      "median_relative_error": 0.01140206433412128,
+      "mean_relative_error": 0.06607947535623414,
+      "mean_absolute_log_ratio": 0.06233152290993617,
+      "within_1pct": 38,
+      "within_5pct": 61,
+      "within_10pct": 70
+    },
+    "shuffled512": {
+      "n": 80,
+      "correct": 0,
+      "length": 0,
+      "unparsed": 0,
+      "nonpositive": 0,
+      "median_relative_error": 0.2540014629422758,
+      "mean_relative_error": 0.5582737444231505,
+      "mean_absolute_log_ratio": 0.41681763865257715,
+      "within_1pct": 8,
+      "within_5pct": 18,
+      "within_10pct": 20
+    }
+  },
+  "shuffled_assigned_label_exact_counts": {
+    "base": 0,
+    "correct128": 0,
+    "correct512": 0,
+    "shuffled512": 4
+  },
+  "base_zero_sensitivity": {
+    "zero_rows": [
+      {
+        "job_id": "fit-DA01-variant-10",
+        "source_id": "DA01",
+        "value": 0.0
+      },
+      {
+        "job_id": "fit-DA01-variant-12",
+        "source_id": "DA01",
+        "value": 0.0
+      }
+    ],
+    "valid_positive_rows": 28,
+    "denominator": 30,
+    "optimistic_mean_log_lower_bound_imputing_zero_error_for_zeros": 1.4173992351888522,
+    "correct512_mean_log": 0.2440611119275877,
+    "correct512_reduction_vs_optimistic_base_bound": 0.8278106084239072,
+    "note": "Sensitivity analysis only; zero is not a positive prediction and does not restore protocol gate eligibility."
+  },
+  "interpretation": {
+    "evidence": "Correct label pairing and 512 updates coincide with much better approximate same-construction numerical estimates than shuffled labels, 128 updates, and source-median constant.",
+    "limits": [
+      "Reserved 30 shapes are clustered within ten source constructions; they are not 30 independent mathematical families.",
+      "All models have zero exact reserved answers.",
+      "Only one training/shuffle seed; no uncertainty interval or significance claim.",
+      "The predeclared transfer gate is ineligible. Any transfer run after seeing these scores is post hoc exploratory and must be labelled separately.",
+      "Short-answer numerical fit alone does not establish unseen-construction, proof, or general theorem transfer."
+    ]
+  }
+}

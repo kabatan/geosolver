@@ -1,0 +1,53 @@
+{
+  "id": "IMO_2006_P1",
+  "variables": [
+    "cx",
+    "cy",
+    "u",
+    "v"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "I",
+      "expression": "Incenter(A, B, C)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(u*A.x + v*B.x + (1-u-v)*C.x, u*A.y + v*B.y + (1-u-v)*C.y)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Area(A, B, C)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "predicate": "u > 0"
+    },
+    {
+      "predicate": "v > 0"
+    },
+    {
+      "predicate": "u + v < 1"
+    },
+    {
+      "left": "Angle(P, B, A) + Angle(P, C, A)",
+      "operator": "=",
+      "right": "Angle(P, B, C) + Angle(P, C, B)"
+    }
+  ],
+  "target": "0"
+}

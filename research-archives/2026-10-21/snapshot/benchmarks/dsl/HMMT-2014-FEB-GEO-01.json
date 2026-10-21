@@ -1,0 +1,67 @@
+{
+  "id": "HMMT-2014-FEB-GEO-01",
+  "variables": [
+    "h",
+    "cx"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(-1, h)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(1, h)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(-cx, h)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(cx, h)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(O, A)",
+      "operator": "=",
+      "right": 4
+    },
+    {
+      "left": "Distance(O, B)",
+      "operator": "=",
+      "right": 4
+    },
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 2
+    },
+    {
+      "left": "Distance(O, C)",
+      "operator": "=",
+      "right": 6
+    },
+    {
+      "left": "Distance(O, D)",
+      "operator": "=",
+      "right": 6
+    },
+    {
+      "left": "h",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "cx",
+      "operator": ">",
+      "right": "1"
+    }
+  ],
+  "target": "Distance(C, D)"
+}

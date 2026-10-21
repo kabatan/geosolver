@@ -1,0 +1,22 @@
+{
+  "id": "IMO_2013_P3",
+  "variables": ["cx", "cy"],
+  "constructions": [
+    {"name": "A", "expression": "Point(0, 0)"},
+    {"name": "B", "expression": "Point(1, 0)"},
+    {"name": "C", "expression": "Point(cx, cy)"},
+    {"name": "IA", "expression": "Excenter(A, B, C)"},
+    {"name": "IB", "expression": "Excenter(B, A, C)"},
+    {"name": "IC", "expression": "Excenter(C, B, A)"},
+    {"name": "A1", "expression": "FootOfPerpendicular(IA, Line(B, C))"},
+    {"name": "B1", "expression": "FootOfPerpendicular(IB, Line(C, A))"},
+    {"name": "C1", "expression": "FootOfPerpendicular(IC, Line(A, B))"},
+    {"name": "O1", "expression": "Circumcenter(A1, B1, C1)"},
+    {"name": "Gamma", "expression": "Circumcircle(A, B, C)"}
+  ],
+  "conditions": [
+    {"left": "Area(A, B, C)", "operator": ">", "right": "0"},
+    {"left": "OnCircle(O1, Gamma)", "operator": "=", "right": "0"}
+  ],
+  "target": "0"
+}

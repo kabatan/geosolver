@@ -1,0 +1,121 @@
+{
+  "case_id": "IMO_2001_P1",
+  "source": {
+    "official_url": "https://www.imo-official.org/assets/documents/problems/2001/2001_eng.pdf",
+    "official_legacy_url": "https://www.imo-official.org/problems/2001/eng.pdf",
+    "official_pdf_sha256": "e96730ecd9049d2db09d9f9c2ea6710d36dc87c2ebd42221bdc3bdbf5d8f6446",
+    "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2001_P1.smt2",
+    "gmbl_sha256": "a76c296a11da73a31b3dc518c27f3a5a2f0436ad63bc39ab17b069ea5a82b1b5",
+    "gmbl_commit": "f070afe18ed874b3a31db519ea6f593f40a1be00"
+  },
+  "normalization": {
+    "anchors": [
+      "B",
+      "C"
+    ],
+    "fixed_coordinates": {
+      "B": [
+        "0",
+        "0"
+      ],
+      "C": [
+        "1",
+        "0"
+      ]
+    },
+    "removed_continuous_dof": 4,
+    "justification": "鋭角三角形の辺BCは非零で、角条件と外心・垂足は相似不変。 平行移動2・回転1・正の一様拡大縮小1のみを除く。",
+    "scale_invariant": true,
+    "reflection_fixed": false
+  },
+  "clauses": [
+    {
+      "id": "acute",
+      "statement_ja": "ABCは鋭角三角形。",
+      "gmbl": [
+        "(param (A B C) acute-tri)"
+      ],
+      "geosolver": [
+        "A = Point(ax, ay)",
+        "B = Point(0, 0)",
+        "C = Point(1, 0)",
+        "AcuteTriangle(A, B, C)"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "centers-and-foot",
+      "statement_ja": "Oは外心、PはAからBCへの垂足。",
+      "gmbl": [
+        "(define O point (circumcenter A B C))",
+        "(define P point (foot A (line B C)))"
+      ],
+      "geosolver": [
+        "O = Circumcenter(A, B, C)",
+        "P = FootOfPerpendicular(A, Line(B, C))"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "angle-hypothesis",
+      "statement_ja": "角BCAは角ABCに30度を加えた値以上。PDF画像で不等号≥を確認。",
+      "gmbl": [
+        "(assert (gte (uangle B C A) (add (uangle A B C) (div pi 6))))"
+      ],
+      "geosolver": [
+        "Angle(B, C, A) >= Angle(A, B, C) + pi/6"
+      ],
+      "status": "matched"
+    }
+  ],
+  "goal": {
+    "statement_ja": "角CABと角COPの和は90度未満。",
+    "gmbl": [
+      "(eval (lt (add (uangle C A B) (uangle C O P)) (div pi 2)))"
+    ],
+    "geosolver_expressions": [
+      "Angle(C, A, B) + Angle(C, O, P) < pi/2"
+    ],
+    "coverage": "原文の結論全体。PDF画像で厳密不等号<を確認。",
+    "included_in_search": false,
+    "target": "0"
+  },
+  "source_differences": [
+    {
+      "id": "gmb-global-admission",
+      "kind": "implementation_limit",
+      "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+      "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+    },
+    {
+      "id": "gmb-acute-sampler",
+      "kind": "implementation_limit",
+      "detail_ja": "benchmarks/gmb/.runtime/source/src/optimizer.py:448-488のacute-triはB=(-2,0),C=(2,0),Axを初期値固定、Ayを(1.1,4.1)へ制限する。このパラメータ範囲は全鋭角三角形を尽くさず、Aが鈍角になる配置も含む。公開DSL名の数学的な鋭角条件をGeoSolverでは保持する。",
+      "comparison_effect": "探索上の制限は移植しない。GMB出力にも鋭角条件を共通検査器で課す。"
+    }
+  ],
+  "open_issues": [],
+  "author_review": {
+    "author": "dsl_2000_2006",
+    "primary_sources_read": [
+      "official IMO 2001 English PDF (relevant problem text and rendered page)",
+      "pinned GMBL IMO_2001_P1.smt2",
+      "benchmarks/gmb/.runtime/source/src/optimizer.py",
+      "src/geosolver/problem/dsl-spec.json",
+      "src/geosolver/engine/standard/interpreter/context/geometry.py",
+      "src/geosolver/engine/standard/interpreter/context/high_precision.py"
+    ],
+    "static_validation": {
+      "public_model": true,
+      "validator": true,
+      "compiler": true,
+      "warnings": [],
+      "variables": 2,
+      "constructions": 5,
+      "conditions": 2
+    },
+    "solve_or_refinement_executed": false,
+    "independent_review_required": true
+  },
+  "comparison_status": "draft"
+}

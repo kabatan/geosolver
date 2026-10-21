@@ -1,0 +1,85 @@
+{
+  "packet": "qwen/.runtime/numeric_sft_dose_control_20260928/review-transfer-review04/index.json",
+  "rubric": "docs/research/related-numeric-sft-2026-09-28/REVIEW_RUBRIC.md",
+  "review_type": "blind_AP01_self_contained_proof",
+  "cases": [
+    {
+      "case_id": "proof-00",
+      "score": 2,
+      "complete_proof": false,
+      "essential_progress": "DA=DB, EA=EC から角を追い、F が内部にある枝では ∠BFC=2∠BAC を正しく導いた。円 APN の必要な角条件 ∠PFA=∠PNA=C も特定した。",
+      "flaw_or_gap": "∠PFA=C を与条件から導いていない。最終段は「既知の結果」として F∈(APN) そのものを主張し、∠BFC=2A と中点線 PN∥BC だけで円周条件になると断言する。途中の等脚極限の「反例」は垂直二等分線の傾きを誤っており採用できないが、最終論証の穴は残る。",
+      "evidence_quotes": [
+        {
+          "line": 75,
+          "quote": "Thus, $\\angle BFC = 2\\angle BAC$."
+        },
+        {
+          "line": 485,
+          "quote": "(a known result in Euclidean geometry concerning the median and perpendicular bisectors)"
+        },
+        {
+          "line": 489,
+          "quote": "one can show $\\angle PFA = \\angle PNA = C$"
+        }
+      ],
+      "incidental_error": "line 16 の AMPN は一般に平行四辺形ではない。line 244–246 の等脚例は AB の傾き・垂直二等分線の傾きを取り違え、偽の反例を作った。",
+      "uncertainty": "低い。正しい中間角と未証明の円周所属が明確に分離できる。",
+      "read_coverage": "proof-00.md 全499行、途中の等脚検討と最終版を確認。"
+    },
+    {
+      "case_id": "proof-01",
+      "score": 1,
+      "complete_proof": false,
+      "essential_progress": "DA=DB, EA=EC、底角の一致、および内部枝で ∠BFC=2∠BAC を正しく計算した。もし F が外心なら P,N が直径 AF の円に乗るという条件付き後半は正しい。",
+      "flaw_or_gap": "結論を支える F=外心という主張は誤り。line 154 と171で F が AM 上にあると扱い、∠BAF=∠BAM としているが、与条件は D,E が AM 上というだけで F は一般にそこにない。したがって FA=FB=FC と FP⊥AB, FN⊥AC は証明されない。",
+      "evidence_quotes": [
+        {
+          "line": 142,
+          "quote": "$\\angle BFC = 180^\\circ - (180^\\circ - \\alpha - \\alpha) = 2\\alpha$."
+        },
+        {
+          "line": 171,
+          "quote": "$F$ lies on $AM$"
+        },
+        {
+          "line": 241,
+          "quote": "the points $P$ and $N$ both lie on the circle with diameter $FA$."
+        }
+      ],
+      "incidental_error": "line 103 の δ=ε なら二等辺、あるいは scalene なら D≠E、という一般化も保証されない。主結論とは独立に注意を要する。",
+      "uncertainty": "低い。鋭角不等辺かつF内部の有理座標例で F≠外心を厳密確認。",
+      "read_coverage": "proof-01.md 全264行を確認。"
+    },
+    {
+      "case_id": "proof-02",
+      "score": 2,
+      "complete_proof": false,
+      "essential_progress": "内部枝で ∠BFC=2∠A を正しく導き、円周条件 ∠PFN=180°−A の正しい枝を特定した。D,E の等距離性と中点線 PN∥BC も正しい。",
+      "flaw_or_gap": "最後に必要な ∠PFN=180°−A を示していない。さらにその代用となる三角比 sinδ cosβ=sinε cosγ は BM=AB/2、CM=AC/2 という誤った長さから導かれた偽の等式であり、これが円周条件と同値だという説明もない。",
+      "evidence_quotes": [
+        {
+          "line": 248,
+          "quote": "$\\angle PFN + \\angle PAN = 180$."
+        },
+        {
+          "line": 263,
+          "quote": "$BM = c/2$."
+        },
+        {
+          "line": 348,
+          "quote": "the geometric configuration satisfies the necessary and sufficient condition for $F$ to lie on the circumcircle"
+        }
+      ],
+      "incidental_error": "line 343–344 の「A,F が対称軸上で PF=NF だから等脚台形で円周上」は不成立。",
+      "uncertainty": "低い。実際の鋭角不等辺・F内部の一例でも提示された三角比が不一致。",
+      "read_coverage": "proof-02.md 全365行、三角比の導出と最終段まで確認。"
+    }
+  ],
+  "independent_check": {
+    "configuration": "A=(0,0), B=(3,2), C=(4,-2), D=(13/6,0), E=(5/2,0), F=(16/7,2/7), circumcenter O=(33/14,-2/7)",
+    "validity": "ABC acute scalene; F barycentric (16/49,20/49,13/49) strictly interior; D,E on ray AM.",
+    "findings": "F≠O disproves proof-01 main premise. In proof-02, BM=CM=BC/2=sqrt(17)/2, whereas AB/2=sqrt(13)/2 and AC/2=sqrt(20)/2. The purported sinδ cosβ=sinε cosγ gives approximately 0.453421 versus 0.406299, so is false. In proof-00, the isosceles digression used the wrong sign for the AB perpendicular-bisector slope; this invalidates its alleged counterexample. These checks assess answer claims, not replace a general proof."
+  },
+  "boundary_case": "proof-00 and proof-02 earn 2 for a correct structural intermediate angle and a stated target circle condition despite a missing essential bridge. proof-01 earns 1 because its F=O bridge is false, leaving only useful preliminary angle calculations. No score 3 or 4."
+}

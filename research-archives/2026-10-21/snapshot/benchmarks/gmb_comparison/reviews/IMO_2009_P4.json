@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2009_P4",
+  "reviewer": "independent_review",
+  "case_sha256": "0725c293c3ac5d77e2b5096b0abbc7a88fe8beb165497ec61b0c0aa5d5d35dda",
+  "audit_sha256": "fa59e6e0a2b21874f0332a53ef8340a9aee570a66afb8ddf9c0e65cf69137aa0",
+  "gmbl_sha256": "1b4c308554dd2408638e5455b9b3ac6918770ada24c82a45ebb6569793bd5d13",
+  "reviewed_original_pdf_sha256": "fd6e575ee181acb30bd32c87944e35f42e91efe025b1d23c352f047da7ab9cb3",
+  "verdict": "pass",
+  "normalization_checked": true,
+  "conclusion_not_assumed": true,
+  "original_conditions_covered_by_gmbl": true,
+  "scope_of_coverage_ja": "原文の仮定を当該比較範囲で満たすかの監査である。原文の全境界配置を含む解集合の完全同値、GMB実装の全数値分岐の正当性、実験の実行許可を意味しない。",
+  "comparison_scope": "nondegenerate_configuration_domain",
+  "sources_read": [
+    "cases/IMO_2009_P4.json",
+    "audit/IMO_2009_P4.json",
+    "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2009_P4.smt2",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2009-eng.pdf",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2009-eng.txt",
+    "AUTHORING.md",
+    "reviews/UPSTREAM_SEMANTICS.md"
+  ],
+  "official_url": "https://www.imo-official.org/assets/documents/problems/2009/2009_eng.pdf",
+  "normalization_review": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "removed_continuous_dof": 4,
+    "scale_invariant": true,
+    "reflection_fixed": false,
+    "remaining_solver_variables": [
+      "cx",
+      "cy"
+    ],
+    "shape_fixed_beyond_original_hypotheses": false,
+    "checked_ja": "原文で相異なる二点の単位基線化だけで平行移動2・回転1・正の尺度1を除く。元の形の変数と鏡映配置を保持している。"
+  },
+  "original_goal_not_used": "角CABの可能な値をすべて求める。今回は求値ではなく仮定を満たす配置の生成のみ比較する。",
+  "checked_input_counts": {
+    "constructions": 6,
+    "conditions": 3
+  },
+  "method": {
+    "read_all_constructions_and_conditions": true,
+    "read_original_problem_assumptions": true,
+    "checked_domains_branches_and_non_degeneracy": true,
+    "checked_goal_separation": true,
+    "exact_algebraic_checks_only_where_documented": true,
+    "solver_executed": false,
+    "optimizer_executed": false,
+    "refinement_executed": false,
+    "prior_case_performance_used_to_adjust_input": false
+  },
+  "gmb_runtime_equivalence_claimed": false,
+  "findings": [
+    {
+      "id": "IMO_2009_P4-review-1",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "ABの単位基線以外にCを固定せず、AB=ACは原文の二等辺条件として保持する。"
+    },
+    {
+      "id": "IMO_2009_P4-review-2",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "D,Eは指定された内角二等分線と辺の交点、KはADCの内心。∠BEK=π/4を照合した。"
+    },
+    {
+      "id": "IMO_2009_P4-review-3",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "可能な三角形の角度を求める結論を条件にしていない。GMBLにevalがないことを記録対象とし、命題全体の求値性能とは区別する。"
+    }
+  ],
+  "remaining_uncertainties": []
+}

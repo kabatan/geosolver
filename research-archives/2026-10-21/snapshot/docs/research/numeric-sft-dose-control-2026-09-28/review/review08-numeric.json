@@ -1,0 +1,43 @@
+{
+  "packet": "qwen/.runtime/numeric_sft_dose_control_20260928/review-transfer-review08/index.json",
+  "rubric": "docs/research/related-numeric-sft-2026-09-28/REVIEW_RUBRIC.md",
+  "reference": "docs/research/related-numeric-sft-2026-09-28/numeric-review-reference-compact.json (DB01)",
+  "review_type": "blind_numeric",
+  "cases": [
+    {
+      "case_id": "numeric-00",
+      "derivation_status": "invalid",
+      "valid_geometric_core": false,
+      "numerical_error": false,
+      "reason": "BP·CQ=AP·AQをAP/AB+AQ/AC=1へ直す部分と、同側共通接線のYZ²=JU²−(4−1)²は正しい。さらにUが乗るBCの垂直二等分線をAの高度と同一視するline166–167は、不等辺ABCでは偽。決定的な二円の外接、すなわちJU=1+4=5を導かず、同構図の既知定理としても確定的に適用していない。line353では可能な定理を質問として挙げ、最終は「整数が自然」という推測からJU=5を仮定する。正解4の算術は条件付きで正しいが導出は無効。",
+      "known_property_used": "reference DB01の二円外接性は真だが、答案中では特定構図への既知性質として採用されず、問い・推測のまま。",
+      "false_argument_role": "U,J,Aが同一直線という偽の一般配置が途中の座標推論を損なう。最終的には数の綺麗さ・一意性からJU=5を選び、欠落した二円外接の幾何的核心を置き換える。",
+      "evidence_quotes": [
+        {
+          "line": 35,
+          "quote": "$1 = \\frac{AQ}{AC} + \\frac{AP}{AB}$."
+        },
+        {
+          "line": 51,
+          "quote": "$YZ = \\sqrt{JU^2 - (r_\\omega - r_{BOC})^2}$."
+        },
+        {
+          "line": 167,
+          "quote": "$O, M, A, J, U$ are all collinear on the altitude."
+        },
+        {
+          "line": 353,
+          "quote": "Is there a theorem stating that for this specific configuration"
+        },
+        {
+          "line": 365,
+          "quote": "Assume $JU = 5$."
+        }
+      ],
+      "uncertainty": "低い。過去較正で許すのは正確に適用された既知特殊性質であり、本件の疑問文と数値パターン選択はそれに当たらない。",
+      "read_coverage": "numeric-00.md 全370行を確認。"
+    }
+  ],
+  "independent_check": "同側共通接線では半径差3、中心距離dに対しYZ²=d²−9。d=5ならYZ=4は算術的に正しいが、答案がd=5を導く必要がある。",
+  "boundary_case": "特定構図の二円外接定理を正確に既知性質として適用すれば数値答案では再証明不要。本答案は定理の存在を質問し、最終に数値の自然さで仮定するためinvalid。"
+}

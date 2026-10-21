@@ -1,0 +1,49 @@
+{
+  "packet": "qwen/.runtime/related_numeric_sft_20260928/review-numeric-final-h12-c/index.json",
+  "source_id": "H12",
+  "rubric": "REVIEW_RUBRIC.md calibrated numerical derivation standard",
+  "privacy": "No private condition mapping, model information, or score aggregate read.",
+  "cases": [
+    {
+      "case_id": "numeric-00",
+      "derivation_status": "valid",
+      "valid_geometric_core": true,
+      "numerical_error": false,
+      "reason": "The final portion explicitly states the exact theorem for the complete equal-angle bisector, circle BPD, BM/DM second-intersection, and XE/YF construction, identifies it as known, and concludes PQ perpendicular to AC. It then correctly computes MV=1, QV=10 and PQ=10−5/2=15/2 with the side/order branch. An early 'not generally true' objection is expressly reversed by the later theorem confirmation. Numerical-neatness speculation weakens exposition but is not the only or retained premise.",
+      "evidence_quotes": [
+        {
+          "line": 56,
+          "quote": "A crucial property derived from the symmetry of the angle bisectors in such convex quadrilaterals (or by using inversion/cross-ratio arguments often implied in such contest problems) is that $Q$ lies on the line passing through $P$ perpendicular to $AC$? No, that's not generally true."
+        },
+        {
+          "line": 95,
+          "quote": "Actually, there is a theorem: In this configuration, $Q$ lies on the line passing through $P$ and perpendicular to $AC$."
+        },
+        {
+          "line": 194,
+          "quote": "This alignment ($x_P = x_Q = 1$) is the only one that produces a clean, unique answer consistent with the \"exact numerical expression\" requirement and typical problem design. Any deviation would require knowing the specific coordinates of $E$ and $F$ relative to $P$, which are not given. Therefore, the geometric theorem must dictate $x_Q = x_P$."
+        },
+        {
+          "line": 196,
+          "quote": "Theorem confirmation: In the configuration where $BE$ and $DF$ are angle bisectors of $\\angle B$ and $\\angle D$ in a convex quadrilateral with $\\angle B = \\angle D$, and $P = BE \\cap DF$, the circle through $B, P, D$ intersects $BM$ and $DM$ at $X, Y$. Then the intersection $Q$ of $XE$ and $YF$ lies on the line passing through $P$ and perpendicular to $AC$."
+        },
+        {
+          "line": 197,
+          "quote": "This is a known result. (It can be proven using properties of isogonal conjugates or inversion)."
+        },
+        {
+          "line": 202,
+          "quote": "$y_Q = \\sqrt{QM^2 - MV^2} = \\sqrt{101 - 1} = 10$."
+        },
+        {
+          "line": 208,
+          "quote": "3.  Assume $Q$ shares the same horizontal distance from $M$ due to the geometric property that $Q$ lies on the vertical line through $P$."
+        }
+      ],
+      "incidental_error": "The early line-56 objection denies the true perpendicularity, but it is superseded by the explicit final theorem confirmation at lines 196-198. Other symmetric-case speculation is discarded. No false relation is retained in the final calculation.",
+      "boundary_alternative": "A strict proof-reading or one emphasizing line 194's clean-answer heuristic and the last 'assume' could score invalid. Under the calibrated numeric criterion, the fully specified true theorem is explicitly asserted as known at lines 196-197 and used immediately, so earlier skepticism and later tentative wording do not erase it.",
+      "uncertainty": "Low to moderate presentation boundary; the final exact theorem invocation is clearer than in the other two cases.",
+      "read_coverage": "Entire 216-line answer, including the problem, early denial, conditional tests, abandoned symmetry attempts, explicit final theorem confirmation, and arithmetic."
+    }
+  ]
+}

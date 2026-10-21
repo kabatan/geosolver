@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2005_P1",
+  "reviewer": "independent_review",
+  "case_sha256": "015447d8af7f6a3cf6544e548b6038280d8854ef7e3633b6424b0e9c5b92a89a",
+  "audit_sha256": "b19b536045f377a1859dc2256f1b82457ab6fcde9fc0ba4ba09c5a46e20d1a49",
+  "gmbl_sha256": "c68d0fe886bbe2c6faf5e6fe91edd9636ea2c319a8d707220c68751194139bb4",
+  "reviewed_original_pdf_sha256": "d92c258ba744081fdd8e9a3e32552edef20e135cb8a97dc6fa4944592ebd4f49",
+  "verdict": "pass",
+  "normalization_checked": true,
+  "conclusion_not_assumed": true,
+  "original_conditions_covered_by_gmbl": true,
+  "scope_of_coverage_ja": "原文の仮定を当該比較範囲で満たすかの監査である。原文の全境界配置を含む解集合の完全同値、GMB実装の全数値分岐の正当性、実験の実行許可を意味しない。",
+  "comparison_scope": "nondegenerate_configuration_domain",
+  "sources_read": [
+    "cases/IMO_2005_P1.json",
+    "audit/IMO_2005_P1.json",
+    "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2005_P1.smt2",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2005-eng.pdf",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2005-eng.txt",
+    "AUTHORING.md",
+    "reviews/UPSTREAM_SEMANTICS.md"
+  ],
+  "official_url": "https://www.imo-official.org/assets/documents/problems/2005/2005_eng.pdf",
+  "normalization_review": {
+    "anchors": [
+      "B",
+      "C"
+    ],
+    "removed_continuous_dof": 4,
+    "scale_invariant": true,
+    "reflection_fixed": false,
+    "remaining_solver_variables": [
+      "h",
+      "ta1",
+      "ta2",
+      "tb1",
+      "tb2",
+      "tc1",
+      "tc2"
+    ],
+    "shape_fixed_beyond_original_hypotheses": false,
+    "checked_ja": "原文で相異なる二点の単位基線化だけで平行移動2・回転1・正の尺度1を除く。元の形の変数と鏡映配置を保持している。"
+  },
+  "original_goal_not_used": "直線A1B2,B1C2,C1A2は一点で交わる。",
+  "checked_input_counts": {
+    "constructions": 9,
+    "conditions": 13
+  },
+  "method": {
+    "read_all_constructions_and_conditions": true,
+    "read_original_problem_assumptions": true,
+    "checked_domains_branches_and_non_degeneracy": true,
+    "checked_goal_separation": true,
+    "exact_algebraic_checks_only_where_documented": true,
+    "solver_executed": false,
+    "optimizer_executed": false,
+    "refinement_executed": false,
+    "prior_case_performance_used_to_adjust_input": false
+  },
+  "gmb_runtime_equivalence_claimed": false,
+  "findings": [
+    {
+      "id": "IMO_2005_P1-review-1",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "BCを単位基線にし、A=(1/2,h), h²=3/4で原文の正三角形を表す。hの符号は固定していない。"
+    },
+    {
+      "id": "IMO_2005_P1-review-2",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "各辺の二点を順次の線分パラメータで表し、狭義凸六角形と六辺の等長を照合した。辺端点や同じ辺の二点の一致は狭義凸性から除かれるため、閉線分関数とGMBの開パラメータは全条件下で同値である。"
+    },
+    {
+      "id": "IMO_2005_P1-review-3",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "三直線の共点性は仮定に加えていない。端点同値性の根拠はreviews/EQUIVALENCE_ARGUMENTS.mdに記録した。"
+    }
+  ],
+  "remaining_uncertainties": []
+}

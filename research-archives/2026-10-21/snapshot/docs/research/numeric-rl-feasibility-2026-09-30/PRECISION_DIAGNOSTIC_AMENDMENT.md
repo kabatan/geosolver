@@ -1,0 +1,3 @@
+# 保存重みを使う精度の追加切分け
+
+BF16 learner/vLLMの更新差分のcosineが約0.042で、重み反映は見えるが方向的一致が弱かった。追加の検査は同じ保存adapter・B=0対照・4096固定completion tokensだけをFP16 actorおよびFP16 learnerでteacher forcingする。問題・報酬・学習データ・保存重みを変更せず、生成や更新は行わない。BF16との変更はbase計算とactor LoRA計算のprecisionであり、FP16更新を実際に検証したとは扱わない。比較結果で数値backend差とmapping問題の可能性を切り分ける。既存BF16結果と原fidelity gate失敗を保持する。

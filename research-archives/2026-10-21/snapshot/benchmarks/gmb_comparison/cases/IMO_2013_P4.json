@@ -1,0 +1,24 @@
+{
+  "id": "IMO_2013_P4",
+  "variables": ["cx", "cy", "tw"],
+  "constructions": [
+    {"name": "A", "expression": "Point(0, 0)"},
+    {"name": "B", "expression": "Point(1, 0)"},
+    {"name": "C", "expression": "Point(cx, cy)"},
+    {"name": "H", "expression": "Orthocenter(A, B, C)"},
+    {"name": "W", "expression": "PointOnSegment(B, C, tw)"},
+    {"name": "M", "expression": "FootOfPerpendicular(B, Line(C, A))"},
+    {"name": "N", "expression": "FootOfPerpendicular(C, Line(A, B))"},
+    {"name": "omega_1", "expression": "Circumcircle(B, W, N)"},
+    {"name": "X", "expression": "Intersect(Line(W, Center(omega_1)), omega_1, exclude=W)"},
+    {"name": "omega_2", "expression": "Circumcircle(C, W, M)"},
+    {"name": "Y", "expression": "Intersect(Line(W, Center(omega_2)), omega_2, exclude=W)"}
+  ],
+  "conditions": [
+    {"left": "Area(A, B, C)", "operator": ">", "right": "0"},
+    {"predicate": "AcuteTriangle(A, B, C)"},
+    {"left": "tw", "operator": ">", "right": "0"},
+    {"left": "tw", "operator": "<", "right": "1"}
+  ],
+  "target": "0"
+}

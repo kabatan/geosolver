@@ -1,0 +1,23 @@
+{
+  "id": "JMO-2009-PRE-02",
+  "variables": ["ax", "ay", "bx", "by"],
+  "constructions": [
+    {"name": "O1", "expression": "Point(0, 0)"},
+    {"name": "O2", "expression": "Point(6, 0)"},
+    {"name": "P", "expression": "Point(2, 0)"},
+    {"name": "C1", "expression": "Circle(O1, 2)"},
+    {"name": "C2", "expression": "Circle(O2, 4)"},
+    {"name": "A", "expression": "Point(ax, ay)"},
+    {"name": "B", "expression": "Point(bx, by)"}
+  ],
+  "conditions": [
+    {"left": "OnCircle(A, C1)", "operator": "=", "right": 0},
+    {"left": "OnCircle(B, C2)", "operator": "=", "right": 0},
+    {"left": "Collinear(A, P, B)", "operator": "=", "right": 0},
+    {"left": "Distance(A, B)", "operator": "=", "right": 4},
+    {"left": "ay", "operator": ">", "right": "0"},
+    {"left": "Distance(A,P)", "operator": ">", "right": "0"},
+    {"left": "Distance(B,P)", "operator": ">", "right": "0"}
+  ],
+  "target": "Distance(P, B)"
+}

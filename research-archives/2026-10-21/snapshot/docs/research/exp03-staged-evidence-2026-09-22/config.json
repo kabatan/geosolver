@@ -1,0 +1,111 @@
+{
+  "budget_ledger": "qwen/.runtime/exp03_staged/budget.json",
+  "data": "benchmarks/humpty_configurations_v2/training_variants.jsonl",
+  "evaluation_files": [
+    "benchmarks/humpty_configurations_v2/eval_variants.jsonl",
+    "benchmarks/humpty_proof_evaluation_v2/evaluation_prompts.jsonl",
+    "benchmarks/humpty_proof_evaluation_v2/auxiliary_hint_prompts.jsonl",
+    "benchmarks/humpty_proof_evaluation_v2/researcher_problems.json"
+  ],
+  "evaluation_reserve_hours": 8,
+  "kv_cache_dtype": "auto",
+  "lr": 5e-06,
+  "max_completion": 32512,
+  "max_seqs": 4,
+  "measure_after": false,
+  "planning": {
+    "process_overhead_seconds_per_round": 60,
+    "safety_factor": 1.15,
+    "training_tokens_per_second": 188.8502234869498,
+    "update_seconds_per_round": 240,
+    "numeric_tokens_per_second": 117.16007748112101,
+    "answer_tokens": 22000
+  },
+  "prompts_per_round": 4,
+  "readiness_gate": "qwen/.runtime/exp03_staged/readiness.json",
+  "research_scope": "Outcome-only C; primary same-configuration proofs N01/N02/AP01, secondary other-configuration EV02/DU01/OB01. Frozen review at round10; no automatic V/G or control arms. All37 training configurations retained. Labels are independently checked construction calculations, not a solver-generated corpus. Exploratory tasks previously inspected; no claim of theories absent from pretraining.",
+  "rounds": 37,
+  "route": "fp16_native",
+  "samples": 4,
+  "seed": 20260923,
+  "technical_calibration": false,
+  "wall_hours": 48,
+  "config_path": "qwen/configs/exp03_staged.json",
+  "previous_budget_ledger": "qwen/.runtime/exp03_budgeted/budget.json",
+  "calibration_gate": "qwen/.runtime/exp03_budgeted/readiness.json",
+  "calibration_environment_manifest": "qwen/.runtime/exp03_budgeted/study/training/manifest.json",
+  "planning_range_hours": [
+    24,
+    40
+  ],
+  "reward_condition": "C",
+  "review_round": 10,
+  "training_order": "representatives_first",
+  "training_audit_ids": [
+    "H01",
+    "H02",
+    "H03",
+    "H04",
+    "HX01",
+    "DA01",
+    "DA04",
+    "DA07",
+    "DA15",
+    "DB12",
+    "DB15",
+    "DB16"
+  ],
+  "evaluation_suites": {
+    "numeric": "qwen/configs/exp03_numeric_dev12.jsonl",
+    "proof": "benchmarks/humpty_proof_evaluation_v2/evaluation_prompts.jsonl"
+  },
+  "evaluation_stages": {
+    "base0": {
+      "proof": {
+        "samples": 4,
+        "seed": 20261001
+      },
+      "numeric": {
+        "samples": 2,
+        "seed": 20261001
+      }
+    },
+    "base1": {
+      "proof": {
+        "samples": 4,
+        "seed": 20261002
+      }
+    },
+    "interim": {
+      "proof": {
+        "samples": 4,
+        "seed": 20261001
+      },
+      "numeric": {
+        "samples": 2,
+        "seed": 20261001
+      }
+    },
+    "final0": {
+      "proof": {
+        "samples": 4,
+        "seed": 20261001
+      },
+      "numeric": {
+        "samples": 2,
+        "seed": 20261001
+      }
+    },
+    "final1": {
+      "proof": {
+        "samples": 4,
+        "seed": 20261002
+      }
+    }
+  },
+  "protocol_files": [
+    "docs/research/exp03-staged-protocol-2026-09-22.md",
+    "docs/research/exp03-reward-followup-plan-2026-09-22.md",
+    "qwen/configs/reward_review_rubric_v1.json"
+  ]
+}

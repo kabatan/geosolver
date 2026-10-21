@@ -1,0 +1,128 @@
+{
+  "case_id": "IMO_2003_P4",
+  "source": {
+    "official_url": "https://www.imo-official.org/assets/documents/problems/2003/2003_eng.pdf",
+    "official_legacy_url": "https://www.imo-official.org/problems/2003/eng.pdf",
+    "official_pdf_sha256": "af5d5c538beb1566d90733f08ee7f735c2745a433a3ec8d1f6223bf879950fa5",
+    "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2003_P4.smt2",
+    "gmbl_sha256": "629045e09590f6448a1bf8c57a60e3b3ad3c7a0b296297deaba260a6a828bc96",
+    "gmbl_commit": "f070afe18ed874b3a31db519ea6f593f40a1be00"
+  },
+  "normalization": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "fixed_coordinates": {
+      "A": [
+        "0",
+        "0"
+      ],
+      "B": [
+        "1",
+        "0"
+      ]
+    },
+    "removed_continuous_dof": 4,
+    "justification": "円に内接する四角形の隣接頂点A,Bは異なる。内角二等分線・垂足・距離の等式は相似不変。 平行移動2・回転1・正の一様拡大縮小1のみを除く。",
+    "scale_invariant": true,
+    "reflection_fixed": false
+  },
+  "clauses": [
+    {
+      "id": "cyclic-quadrilateral",
+      "statement_ja": "A,B,C,Dはこの順序の円に内接する非退化四角形。",
+      "gmbl": [
+        "(param (A B C D) polygon)",
+        "(assert (cycl A B C D))"
+      ],
+      "geosolver": [
+        "ConvexPolygon([A, B, C, D])",
+        "AreConcyclic(A, B, C, D) = 0"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "three-feet",
+      "statement_ja": "P,Q,RはDからAB,BC,CAへの垂足。",
+      "gmbl": [
+        "(define P point (foot D (line A B)))",
+        "(define Q point (foot D (line B C)))",
+        "(define R point (foot D (line C A)))"
+      ],
+      "geosolver": [
+        "P = FootOfPerpendicular(D, Line(A, B))",
+        "Q = FootOfPerpendicular(D, Line(B, C))",
+        "R = FootOfPerpendicular(D, Line(C, A))"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "chosen-implication",
+      "statement_ja": "原文の同値命題のうちRP=RQを仮定する向きをGMBLに合わせる。",
+      "gmbl": [
+        "(assert (cong R P R Q))"
+      ],
+      "geosolver": [
+        "Distance(R, P) = Distance(R, Q)"
+      ],
+      "status": "matched"
+    }
+  ],
+  "goal": {
+    "statement_ja": "角ABCと角CDAの内角二等分線が直線AC上で交わる。",
+    "gmbl": [
+      "(eval (concur (i-bisector A B C) (i-bisector C D A) (line A C)))"
+    ],
+    "geosolver_expressions": [
+      "OnLine(Intersect(AngleBisector(A,B,C), AngleBisector(C,D,A)), Line(A,C)) = 0"
+    ],
+    "coverage": "原文のRP=RQから共点を導く向きのみ。逆向きの検査とはしない。",
+    "included_in_search": false,
+    "target": "0"
+  },
+  "source_differences": [
+    {
+      "id": "gmb-global-admission",
+      "kind": "implementation_limit",
+      "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+      "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+    },
+    {
+      "id": "gmb-polygon-sampler",
+      "kind": "implementation_limit",
+      "detail_ja": "benchmarks/gmb/.runtime/source/src/optimizer.py:385-423のpolygonは内角と辺長比を有限範囲へ制限してsoftな閉路条件を最適化する。GeoSolverは元の狭義凸多角形の形を固定しない。",
+      "comparison_effect": "探索範囲の差として記録する。自己交差・反転・頂点重複は共通検査器で原文に従い検査する。"
+    },
+    {
+      "id": "one-direction-only",
+      "kind": "goal_coverage",
+      "detail_ja": "原文は必要十分条件。公開GMBLはRP=RQを仮定して共点を検査する片方向だけを含む。GeoSolverもその同じ問題を入力する。",
+      "comparison_effect": "同値命題全体の証明/再現を主張しない。"
+    }
+  ],
+  "open_issues": [],
+  "author_review": {
+    "author": "dsl_2000_2006",
+    "primary_sources_read": [
+      "official IMO 2003 English PDF (relevant problem text and rendered page)",
+      "pinned GMBL IMO_2003_P4.smt2",
+      "benchmarks/gmb/.runtime/source/src/optimizer.py",
+      "src/geosolver/problem/dsl-spec.json",
+      "src/geosolver/engine/standard/interpreter/context/geometry.py",
+      "src/geosolver/engine/standard/interpreter/context/high_precision.py"
+    ],
+    "static_validation": {
+      "public_model": true,
+      "validator": true,
+      "compiler": true,
+      "warnings": [],
+      "variables": 4,
+      "constructions": 7,
+      "conditions": 3
+    },
+    "solve_or_refinement_executed": false,
+    "independent_review_required": true
+  },
+  "comparison_status": "draft"
+}

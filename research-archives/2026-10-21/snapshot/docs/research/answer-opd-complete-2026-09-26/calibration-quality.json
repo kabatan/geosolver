@@ -1,0 +1,153 @@
+{
+  "study": "answer-opd-complete-2026-09-26",
+  "audit_scope": "Calibration outputs: natural termination, terminal numerical answer, substantive reasoning completion, exact numeric match.",
+  "inputs": {
+    "rollouts": "qwen/.runtime/answer_opd_complete_20260926/calibration32k/raw_rollouts.json",
+    "batch": "qwen/.runtime/answer_opd_complete_20260926/calibration32k/batch.json",
+    "calibration_pool": "docs/research/answer-opd-complete-2026-09-26/calibration-pool.json",
+    "raw_rollouts_sha256": "7754ded04f9a768351d266b1f643f9e61ce973a0511f8e5bc564c050dd568c16",
+    "batch_sha256": "dc750a941c5539000125a5070cd61da081615a46d7f078f1e4ce91ee62f3e1a6",
+    "calibration_pool_sha256": "cb533a8b748604f28322aaa797c184a96cf892dda2dcc49039427be8364d8430",
+    "id_order_and_reference_alignment": true
+  },
+  "numeric_parser": {
+    "module": "qwen/answer_check.py",
+    "version": "exact-numeric-v2",
+    "method": "Apply final_text to the rollout, then pass its last nonempty line to extract_answer and answers_equal for exact comparison.",
+    "note": "Whole prose responses do not trigger arbitrary-number extraction; each of these outputs has a standalone terminal numerical line."
+  },
+  "summary": {
+    "n": 8,
+    "natural_stop_count": 8,
+    "terminal_answer_count": 8,
+    "safeparser_comparable_count": 8,
+    "numeric_match_count": 6,
+    "numeric_mismatch_count": 2,
+    "reasoning_cut_off_before_answer_count": 0,
+    "materially_incomplete_count": 4,
+    "materially_incomplete_ids": [
+      "H14-v0",
+      "H15-v0",
+      "DA01-v0",
+      "DA05-v0"
+    ]
+  },
+  "examples": [
+    {
+      "id": "H01-v0",
+      "source_id": "H01",
+      "tokens": 10751,
+      "finish_reason": "stop",
+      "natural_stop": true,
+      "terminal_answer": "6.4",
+      "reference": "32/5",
+      "safeparser_expression": "32/5",
+      "numeric_match": true,
+      "reasoning_cut_off_before_answer": false,
+      "materially_incomplete": false,
+      "assessment": "座標と射影の説明後、AP=6.4を出力。"
+    },
+    {
+      "id": "H04-v0",
+      "source_id": "H04",
+      "tokens": 5180,
+      "finish_reason": "stop",
+      "natural_stop": true,
+      "terminal_answer": "4",
+      "reference": "4",
+      "safeparser_expression": "4",
+      "numeric_match": true,
+      "reasoning_cut_off_before_answer": false,
+      "materially_incomplete": false,
+      "assessment": "AT=4の導出と存在条件の確認を結論まで記述。"
+    },
+    {
+      "id": "H07-v0",
+      "source_id": "H07",
+      "tokens": 5685,
+      "finish_reason": "stop",
+      "natural_stop": true,
+      "terminal_answer": "9",
+      "reference": "9",
+      "safeparser_expression": "9",
+      "numeric_match": true,
+      "reasoning_cut_off_before_answer": false,
+      "materially_incomplete": false,
+      "assessment": "座標の再確認はあるが、最終的に底辺3・高さ6から面積を結論。"
+    },
+    {
+      "id": "H13-v0",
+      "source_id": "H13",
+      "tokens": 9138,
+      "finish_reason": "stop",
+      "natural_stop": true,
+      "terminal_answer": "15",
+      "reference": "15",
+      "safeparser_expression": "15",
+      "numeric_match": true,
+      "reasoning_cut_off_before_answer": false,
+      "materially_incomplete": false,
+      "assessment": "途中の算術修正を解消し、最後にCZ=15と結論。"
+    },
+    {
+      "id": "H14-v0",
+      "source_id": "H14",
+      "tokens": 9682,
+      "finish_reason": "stop",
+      "natural_stop": true,
+      "terminal_answer": "30",
+      "reference": "24",
+      "safeparser_expression": "30",
+      "numeric_match": false,
+      "reasoning_cut_off_before_answer": false,
+      "materially_incomplete": true,
+      "incompletion_mode": "repetition_and_unsupported_finalization",
+      "assessment": "円・点の候補を何度も切り替え、面積が一定か自分で疑問を残した後、AH⊥ARを根拠なく仮定して30とした。"
+    },
+    {
+      "id": "H15-v0",
+      "source_id": "H15",
+      "tokens": 8909,
+      "finish_reason": "stop",
+      "natural_stop": true,
+      "terminal_answer": "3",
+      "reference": "3",
+      "safeparser_expression": "3",
+      "numeric_match": true,
+      "reasoning_cut_off_before_answer": false,
+      "materially_incomplete": true,
+      "incompletion_mode": "repetition_and_guess",
+      "assessment": "symmedianの比を訂正し続け、Kの位置を導けないまま「きれいな数」から3を推測。最後のBK²=AD²−BD²にも導出を示していない。"
+    },
+    {
+      "id": "DA01-v0",
+      "source_id": "DA01",
+      "tokens": 13979,
+      "finish_reason": "stop",
+      "natural_stop": true,
+      "terminal_answer": "\\frac{3\\sqrt{105}}{8}",
+      "reference": "9/2",
+      "safeparser_expression": "3*sqrt(105)/8",
+      "numeric_match": false,
+      "reasoning_cut_off_before_answer": false,
+      "materially_incomplete": true,
+      "incompletion_mode": "repetition_and_unsupported_formula",
+      "assessment": "接弦定理の角度関係を複数回撤回し、公式候補も入れ替えた末、未導出の式を採用。"
+    },
+    {
+      "id": "DA05-v0",
+      "source_id": "DA05",
+      "tokens": 13399,
+      "finish_reason": "stop",
+      "natural_stop": true,
+      "terminal_answer": "5",
+      "reference": "5",
+      "safeparser_expression": "5",
+      "numeric_match": true,
+      "reasoning_cut_off_before_answer": false,
+      "materially_incomplete": true,
+      "incompletion_mode": "repetition_and_unresolved_contradiction",
+      "assessment": "接線と等しい冪から設定との矛盾を繰り返し認識するが、解消できずMD·ME=36を当てはめて5と断定。"
+    }
+  ]
+}

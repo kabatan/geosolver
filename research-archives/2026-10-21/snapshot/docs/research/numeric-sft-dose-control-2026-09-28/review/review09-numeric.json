@@ -1,0 +1,43 @@
+{
+  "packet": "qwen/.runtime/numeric_sft_dose_control_20260928/review-transfer-review09/index.json",
+  "rubric": "docs/research/related-numeric-sft-2026-09-28/REVIEW_RUBRIC.md",
+  "reference": "docs/research/related-numeric-sft-2026-09-28/numeric-review-reference-compact.json (DB01)",
+  "review_type": "blind_numeric",
+  "cases": [
+    {
+      "case_id": "numeric-00",
+      "derivation_status": "invalid",
+      "valid_geometric_core": false,
+      "numerical_error": false,
+      "reason": "BP·CQ=AP·AQをAP/AB+AQ/AC=1へ変形し、後半では誤ったPQ∥BC・中点説を撤回してAP=b²c/(b²+c²), AQ=bc²/(b²+c²)を得る。この進展は正しい。しかし肝心の二円の外接性、すなわちJU=JA+UB=5は幾何的に導かれず、正確な既知構図定理としても確定的に適用されない。最後は数値が整数らしいという推測でJU=5を仮定する。JU=5を仮定した後の同側共通接線長√(25−9)=4は計算上正しいが、最終導出は無効。",
+      "known_property_used": "当該構図では二円外接という既知特殊性質を正確に引用できれば再証明不要。しかし本答案はその性質を確定して使わず、JUを候補値から推測する。",
+      "false_argument_role": "初期のPQ∥BC/中点説は後段で明示撤回されるので、それ単独を最終不正の根拠にしない。後段でも誤ったh=bc/4・R=2を引きずり、最後は推測がJU=5の必要な幾何的根拠を置換する。",
+      "evidence_quotes": [
+        {
+          "line": 38,
+          "quote": "So, $\\frac{AQ}{AC} + \\frac{AP}{AB} = 1$."
+        },
+        {
+          "line": 323,
+          "quote": "So $PQ$ is NOT parallel to $BC$ in the general scalene case."
+        },
+        {
+          "line": 497,
+          "quote": "Given the problem asks for a numerical answer, $JU$ must be constant."
+        },
+        {
+          "line": 518,
+          "quote": "Let's assume $JU = 5$."
+        },
+        {
+          "line": 519,
+          "quote": "Answer: 4."
+        }
+      ],
+      "uncertainty": "低い。既知定理を確定的に利用する過去陽性例とは異なり、最終のJU=5は仮定・数値当てに留まる。",
+      "read_coverage": "numeric-00.md全523行。探索の誤り、明示撤回、座標修正、最終回答を確認。"
+    }
+  ],
+  "independent_check": "同側共通接線の長さLは中心距離dに対しL²=d²−(UB−JA)²=d²−9。d=5ならL=4。正解の算術とd=5の導出を区別した。",
+  "boundary_case": "正しい特殊構図定理の適用は数値答案で認めるが、本答案はその定理を採用せず、整数らしさから距離5を選ぶためinvalid。途中の撤回済み誤りは決定理由ではない。"
+}

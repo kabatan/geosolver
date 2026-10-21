@@ -1,0 +1,1315 @@
+[
+  {
+    "id": "DB01",
+    "decision": "main",
+    "title_ja": "積条件の円と二円の共通接線",
+    "diagnosis_ja": "v1は積条件から円の中心を決めて半径を求めるため、特殊点に気づいても三辺・高さ・円の中心の分数計算が残った。",
+    "change_ja": "二円の半径を自然な途中量として1と4に設定し、未提示の二円接触を発見してから共通外接線の接点間距離を求める。",
+    "problem_ja": "鋭角不等辺三角形ABCの外心をOとする。中心JがAからBCへの高度の直線上にありAを通る円ωが、辺AB,ACの内部でA以外に交わる点をそれぞれP,Qとする。BP·CQ=AP·AQである。円BOCの中心をUとし、JA=1、UB=4とする。ωと円BOCに共通に接し、二つの中心J,Uが同じ側にある直線を一本とり、その接点をそれぞれY,Zとする。YZを求めよ。",
+    "givens": [
+      {
+        "name": "JA",
+        "value": "1",
+        "meaning_ja": "円ωの半径"
+      },
+      {
+        "name": "UB",
+        "value": "4",
+        "meaning_ja": "円BOCの半径"
+      }
+    ],
+    "query": {
+      "expression": "YZ",
+      "meaning_ja": "共通外接線上の二接点間距離"
+    },
+    "answer_exact": "4",
+    "geometry_solution_ja": [
+      "積条件で選ばれたωは円BOCと外接する。Dumpty点が二円の接点となる配置である。",
+      "従ってJU=1+4=5。両半径を共通外接線に垂直に引くと、斜辺JU、他の一辺4−1の直角三角形ができる。",
+      "YZ²=JU²−(4−1)²=16。"
+    ],
+    "arithmetic_ja": [
+      "1+4=5、4−1=3。",
+      "YZ=√(5²−3²)=√16=4。"
+    ],
+    "why_geometry_helps_ja": "P,Qの座標・中心J,Uの位置を解かず、接触から中心間距離を得られる。半径を与えても接線上の距離は直接は与えていない。",
+    "shortcut_risk_ja": "接触を入力に書けば普通の二円問題になる。本文では積条件を残し、外接を解法側だけで用いる。",
+    "parameter_family_ja": "正の半径r,Rから接線長2√(rR)が軽くなる組を選ぶ。半径比を固定しても三角形の左右比を変える自由度があるが、積条件と外接の枝を元作図で検査する。",
+    "feasibility": {
+      "status": "verified",
+      "method_ja": "verify_db_revision.py が元の円・角条件・交線から全点を再構成し、本文の全ての数値与条件と答えを厳密に照合。隠す関係を答えの生成には使わず、作図後に検証した。",
+      "witness": {
+        "points": {
+          "A": [
+            "0",
+            "112/45"
+          ],
+          "B": [
+            "-16*sqrt(14)/45",
+            "0"
+          ],
+          "C": [
+            "32*sqrt(14)/45",
+            "0"
+          ],
+          "O": [
+            "8*sqrt(14)/45",
+            "8/15"
+          ],
+          "J": [
+            "0",
+            "67/45"
+          ],
+          "P": [
+            "-2*sqrt(14)/9",
+            "14/15"
+          ],
+          "Q": [
+            "4*sqrt(14)/15",
+            "14/9"
+          ],
+          "U": [
+            "8*sqrt(14)/45",
+            "-52/15"
+          ],
+          "Y": [
+            "892/1125 - 8*sqrt(14)/375",
+            "32*sqrt(14)/1125 + 2344/1125"
+          ],
+          "Z": [
+            "104*sqrt(14)/1125 + 3568/1125",
+            "-136/125 + 128*sqrt(14)/1125"
+          ]
+        },
+        "given_values": {
+          "JA": "1",
+          "UB": "4"
+        },
+        "answer": "4"
+      },
+      "script": "verify_db_revision.py",
+      "solution_status": "proved_here"
+    },
+    "review_notes_ja": [
+      "根拠はSarkar Problem19。半径1,4だけで三角形全体は一意にならないが、YZは外接関係により一意に決まる。",
+      "verify_db_revision.py のcheck_general_relationsで、自由パラメータを残した一般座標形から中心・交点を計算し、短い解法で使う関係が恒等的に成立することを記号検証した。これは単一witnessの一致とは別の検証である。"
+    ]
+  },
+  {
+    "id": "DB02",
+    "decision": "main",
+    "title_ja": "角指定と倍長で作る交点までの長さ",
+    "diagnosis_ja": "v1の一般三辺からAX²やBX²を求めると大きな分数が現れ、同定後の残余計算も重かった。",
+    "change_ja": "AB=7,AC=11,BC=12を選ぶ。symmedian弦の端点という同定後、相似比7:11と余弦定理の平方196だけでBXを得る。",
+    "problem_ja": "AB=7、AC=11、BC=12の三角形ABCをとる。辺BCの内部の点P,Qを∠PAB=∠BCA、∠CAQ=∠ABCによって定める。半直線AP,AQ上に、それぞれP,QがAM,ANの中点となる点M,Nをとる。直線BMとCNの交点をXとする。BXを求めよ。",
+    "givens": [
+      {
+        "name": "AB",
+        "value": "7",
+        "meaning_ja": "一辺"
+      },
+      {
+        "name": "AC",
+        "value": "11",
+        "meaning_ja": "一辺"
+      },
+      {
+        "name": "BC",
+        "value": "12",
+        "meaning_ja": "一辺"
+      }
+    ],
+    "query": {
+      "expression": "BX",
+      "meaning_ja": "Bから最後の交点Xまでの長さ"
+    },
+    "answer_exact": "6",
+    "geometry_solution_ja": [
+      "角を移した二本の線と倍長の構成から、AXの中点がA-Dumpty点となる。従ってXは外接円上のsymmedian弦の端点であり、BX:CX=AB:AC=7:11。",
+      "∠BXC=180°−∠BAC。余弦定理でcos A=(7²+11²−12²)/(2·7·11)=13/77。",
+      "BX=7t,CX=11tとおくと、12²=(7²+11²+2·7·11·13/77)t²=196t²。"
+    ],
+    "arithmetic_ja": [
+      "49+121−144=26、26/154=13/77。",
+      "49+121+26=196=14²。",
+      "t=12/14=6/7、BX=7t=6。"
+    ],
+    "why_geometry_helps_ja": "M,Nの座標とBM,CNの交点を解く代わりに、円周角と一本の長さ比を使う。数値設定で最後の平方根が14になる。",
+    "shortcut_risk_ja": "相似と台形の比だけを使う別解もある。座標解法を禁止しない。幾何解法の残余計算が少ないことが狙いで、唯一の解法であるとは主張しない。",
+    "parameter_family_ja": "a=BC,b=CA,c=ABについて2b²+2c²−a²が小さな平方となり、aが最大辺でa²<b²+c²の組を選ぶ。相似拡大だけを新構造と数えない。",
+    "feasibility": {
+      "status": "verified",
+      "method_ja": "verify_db_revision.py が元の円・角条件・交線から全点を再構成し、本文の全ての数値与条件と答えを厳密に照合。隠す関係を答えの生成には使わず、作図後に検証した。",
+      "witness": {
+        "points": {
+          "A": [
+            "3",
+            "2*sqrt(10)"
+          ],
+          "B": [
+            "0",
+            "0"
+          ],
+          "C": [
+            "12",
+            "0"
+          ],
+          "P": [
+            "49/12",
+            "0"
+          ],
+          "Q": [
+            "23/12",
+            "0"
+          ],
+          "M": [
+            "31/6",
+            "-2*sqrt(10)"
+          ],
+          "N": [
+            "5/6",
+            "-2*sqrt(10)"
+          ],
+          "X": [
+            "186/49",
+            "-72*sqrt(10)/49"
+          ]
+        },
+        "given_values": {
+          "AB": "7",
+          "AC": "11",
+          "BC": "12"
+        },
+        "answer": "6"
+      },
+      "script": "verify_db_revision.py",
+      "solution_status": "proved_here"
+    },
+    "review_notes_ja": [
+      "Sarkar Problem20とDumpty角条件による同定を使う。P,Qの内部性も独立作図で確認する。",
+      "verify_db_revision.py のcheck_general_relationsで、自由パラメータを残した一般座標形から中心・交点を計算し、短い解法で使う関係が恒等的に成立することを記号検証した。これは単一witnessの一致とは別の検証である。"
+    ]
+  },
+  {
+    "id": "DB03",
+    "decision": "main",
+    "title_ja": "傍心への距離と二本の弦の和",
+    "diagnosis_ja": "v1は三辺から傍心・弧中点・割線を順に求め、大きな根号や分数を扱う必要があった。",
+    "change_ja": "∠A=60°,BC=7,TB+TC=13を与える。TB,TCを個別には与えず、円周角と余弦定理で積を作ってからDumptyの積関係へ進む。",
+    "problem_ja": "∠BAC=60°、BC=7の三角形ABCをとり、I_bをB傍心、ΓをABCの外接円とする。Aを含まない弧BCの中点をM、直線MI_bとΓのM以外の交点をTとする。Tは直線BCに関してAと同じ側にあり、TB+TC=13である。TI_bを求めよ。",
+    "givens": [
+      {
+        "name": "angle_BAC_degrees",
+        "value": "60",
+        "meaning_ja": "頂角"
+      },
+      {
+        "name": "BC",
+        "value": "7",
+        "meaning_ja": "底辺"
+      },
+      {
+        "name": "TB_plus_TC",
+        "value": "13",
+        "meaning_ja": "二つの弦長の和"
+      }
+    ],
+    "query": {
+      "expression": "TI_b",
+      "meaning_ja": "再交点TからB傍心までの距離"
+    },
+    "answer_exact": "2*sqrt(10)",
+    "geometry_solution_ja": [
+      "Tは派生三角形I_bBCのI_b-Dumpty点であり、TI_b²=TB·TC。これはv1で、∠BI_bC=∠BAC/2と弧の中点によって同定した関係である。",
+      "同じ側の円周角から∠BTC=60°。x=TB,y=TCとすると49=x²+y²−xy=(x+y)²−3xy。",
+      "従ってxy=(13²−7²)/3=40、TI_b=√40。"
+    ],
+    "arithmetic_ja": [
+      "13²−7²=169−49=120。",
+      "TB·TC=120/3=40。",
+      "TI_b=√40=2√10。"
+    ],
+    "why_geometry_helps_ja": "傍心座標も個々の弦長も求める必要がなくなる。弦の和を積へ変換する第二の推論がある。",
+    "shortcut_risk_ja": "TBとTCを直接与える版は積恒等式の穴埋めになるため採用しない。本問は円周角・余弦定理による積の復元を残す。",
+    "parameter_family_ja": "角A=60°を固定するなら、和sとBC=aから(s²−a²)/3が扱いやすくなる組を選ぶ。傍心由来の枝が存在するかは必ず元作図で確認し、任意のs,aを無条件に採用しない。",
+    "feasibility": {
+      "status": "verified",
+      "method_ja": "verify_db_revision.py が元の円・角条件・交線から全点を再構成し、本文の全ての数値与条件と答えを厳密に照合。隠す関係を答えの生成には使わず、作図後に検証した。",
+      "witness": {
+        "points": {
+          "A": [
+            "596/343 - 142*sqrt(30)/343",
+            "100*sqrt(3)/1029 + 234*sqrt(10)/343"
+          ],
+          "B": [
+            "0",
+            "0"
+          ],
+          "C": [
+            "7",
+            "0"
+          ],
+          "I_b": [
+            "3*sqrt(30)/7 + 44/7",
+            "20*sqrt(3)/7 + 13*sqrt(10)/7"
+          ],
+          "M": [
+            "7/2",
+            "-7*sqrt(3)/6"
+          ],
+          "T": [
+            "44/7",
+            "20*sqrt(3)/7"
+          ]
+        },
+        "given_values": {
+          "angle_BAC_degrees": "60",
+          "BC": "7",
+          "TB_plus_TC": "13"
+        },
+        "answer": "2*sqrt(10)"
+      },
+      "script": "verify_db_revision.py",
+      "solution_status": "proved_here"
+    },
+    "review_notes_ja": [
+      "元三角形は鋭角に限定しない。この数値例ではBが鈍角である。",
+      "図形全体の一意性は不要だが、TI_bは与条件と一般関係から一意。",
+      "一般同定の根拠：V=I_bとすると∠BVC=∠A/2。VBCのV-Dumpty点Qは∠BQC=∠Aを満たして(ABC)上にあり、VQは∠BQCの二等分線の直線。従ってその円周再交点は弧BCの中点Mで、Q=Tとなる。"
+    ]
+  },
+  {
+    "id": "DB04",
+    "decision": "main",
+    "title_ja": "外角側の中点と一つの円の半径",
+    "diagnosis_ja": "v1は二円の中心・四交点・三点円の中心を計算するため、Dumptyに気づいた後も数値が膨らんだ。",
+    "change_ja": "EF=6、外角二等分線上のXY中点KについてAK=4を与え、接線と弦の間隔から半径だけを復元する。",
+    "problem_ja": "二円ω_1,ω_2は異なる二点A,Bで交わる。ω_1のAでの接線とω_2のA以外の交点をC、ω_2のAでの接線とω_1のA以外の交点をDとする。∠CADの内角二等分線の全直線がω_1,ω_2とA以外に交わる点をE,F、外角二等分線の全直線がそれぞれとA以外に交わる点をX,Yとする。KをXYの中点とする。B,E,Fは非共線で、EF=6、AK=4である。三角形BEFの外接円の半径を求めよ。",
+    "givens": [
+      {
+        "name": "EF",
+        "value": "6",
+        "meaning_ja": "内角二等分線上の弦"
+      },
+      {
+        "name": "AK",
+        "value": "4",
+        "meaning_ja": "Aから外角側の中点までの距離"
+      }
+    ],
+    "query": {
+      "expression": "radius(BEF)",
+      "meaning_ja": "三角形BEFの外接円半径"
+    },
+    "answer_exact": "25/8",
+    "geometry_solution_ja": [
+      "二接円を三角形ACDに読み替えるとBがA-Dumpty点であり、この配置ではXYの垂直二等分線ℓが円BEFに接する。",
+      "内外角二等分線は直交するのでℓはEFに平行。EFを含む直線とℓの距離はAK=4で、弦EFの半分は3。",
+      "半径をrとすると、中心から弦の中点への直角三角形より(r−4)²+3²=r²。"
+    ],
+    "arithmetic_ja": [
+      "(r−4)²+9=r²。",
+      "−8r+16+9=0、8r=25。",
+      "r=25/8。"
+    ],
+    "why_geometry_helps_ja": "Bと四交点の座標を展開せず、未提示の接線を認識して円の弦の直角三角形一つにまとめる。",
+    "shortcut_risk_ja": "接線ℓを入力にしてしまえば特徴的な配置は不要になるため、問題文にはℓの接触を記載しない。",
+    "parameter_family_ja": "EF=2a、AK=dならr=(a²+d²)/(2d)。二接円を選ぶ際はAを原点、内外二等分線を座標軸とする実在例を作り、与えたa,dを確認する。",
+    "feasibility": {
+      "status": "verified",
+      "method_ja": "verify_db_revision.py が元の円・角条件・交線から全点を再構成し、本文の全ての数値与条件と答えを厳密に照合。隠す関係を答えの生成には使わず、作図後に検証した。",
+      "witness": {
+        "points": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "1280/481",
+            "576/481"
+          ],
+          "C": [
+            "256/25",
+            "-192/25"
+          ],
+          "D": [
+            "64/25",
+            "48/25"
+          ],
+          "E": [
+            "2",
+            "0"
+          ],
+          "F": [
+            "8",
+            "0"
+          ],
+          "X": [
+            "0",
+            "8/3"
+          ],
+          "Y": [
+            "0",
+            "-32/3"
+          ],
+          "K": [
+            "0",
+            "-4"
+          ],
+          "U": [
+            "5",
+            "-7/8"
+          ],
+          "O_1": [
+            "1",
+            "4/3"
+          ],
+          "O_2": [
+            "4",
+            "-16/3"
+          ]
+        },
+        "given_values": {
+          "EF": "6",
+          "AK": "4"
+        },
+        "answer": "25/8"
+      },
+      "script": "verify_db_revision.py",
+      "solution_status": "proved_here"
+    },
+    "review_notes_ja": [
+      "Bが派生三角形ACDのDumpty点となる根拠はSarkar Characterization5、接線の関係はProblem22。",
+      "verify_db_revision.py のcheck_general_relationsで、自由パラメータを残した一般座標形から中心・交点を計算し、短い解法で使う関係が恒等的に成立することを記号検証した。これは単一witnessの一致とは別の検証である。"
+    ]
+  },
+  {
+    "id": "DB05",
+    "decision": "defer",
+    "title_ja": "平行四辺形の円族：還元未確立",
+    "diagnosis_ja": "v1ではBT/BM=√2を使うだけなら直接の穴埋めとなり、PQを残すと枝を含む重い計算が残る。Humpty/Dumptyへの具体的な還元も未確立である。",
+    "change_ja": "計算だけを隠す数値変更は行わず、主集合への採用を見送る。",
+    "problem_ja": null,
+    "givens": [],
+    "query": null,
+    "answer_exact": null,
+    "geometry_solution_ja": [],
+    "arithmetic_ja": [],
+    "why_geometry_helps_ja": "現時点では具体的な幾何による短縮を保証していない。",
+    "shortcut_risk_ja": "資料掲載や答えの小ささだけで採用しない。",
+    "parameter_family_ja": "未設定。",
+    "feasibility": {
+      "status": "not_applicable",
+      "method_ja": "v1ではBT/BM=√2を使うだけなら直接の穴埋めとなり、PQを残すと枝を含む重い計算が残る。Humpty/Dumptyへの具体的な還元も未確立である。",
+      "witness": null,
+      "script": "verify_db_revision.py",
+      "solution_status": "unverified"
+    },
+    "review_notes_ja": [
+      "v1の判定理由を維持し、与条件の調整だけで問題を採用可能と見なさない。"
+    ]
+  },
+  {
+    "id": "DB06",
+    "decision": "main",
+    "title_ja": "二つの角指定点と四角形の中点恒等式",
+    "diagnosis_ja": "v1では一般の内接四角形と角指定を座標で解き、分数の中点距離を計算していた。",
+    "change_ja": "非対称な内接四角形で平方長4,5,10,8,12,40/3を与える。角指定点の中点同定後、Eulerの四辺形恒等式を小さな数で使いXY²を求める。",
+    "problem_ja": "凸四角形ABCDはこの順に一つの円に内接し、AB²=4、BC²=5、CD²=10、DA²=8、AC²=12、BD²=40/3である。対角線BDの内部に∠BAC=∠XAD、∠BCA=∠XCDを満たす点X、対角線ACの内部に∠CBD=∠YBA、∠CDB=∠YDAを満たす点Yをとる。XY²を求めよ。",
+    "givens": [
+      {
+        "name": "AB_squared",
+        "value": "4",
+        "meaning_ja": "ABの平方長"
+      },
+      {
+        "name": "BC_squared",
+        "value": "5",
+        "meaning_ja": "BCの平方長"
+      },
+      {
+        "name": "CD_squared",
+        "value": "10",
+        "meaning_ja": "CDの平方長"
+      },
+      {
+        "name": "DA_squared",
+        "value": "8",
+        "meaning_ja": "DAの平方長"
+      },
+      {
+        "name": "AC_squared",
+        "value": "12",
+        "meaning_ja": "ACの平方長"
+      },
+      {
+        "name": "BD_squared",
+        "value": "40/3",
+        "meaning_ja": "BDの平方長"
+      }
+    ],
+    "query": {
+      "expression": "XY^2",
+      "meaning_ja": "二つの角指定点間の距離の二乗"
+    },
+    "answer_exact": "5/12",
+    "geometry_solution_ja": [
+      "円周角で角条件を書き換えるとXは三角形DACのD-Dumpty点、Yは三角形ABDのA-Dumpty点。従ってX,YはそれぞれBD,ACの中点となる。",
+      "対角線の中点間距離をmとするEulerの四辺形恒等式 4m²=AB²+BC²+CD²+DA²−AC²−BD² を使う。",
+      "4XY²=4+5+10+8−12−40/3=5/3。"
+    ],
+    "arithmetic_ja": [
+      "4+5+10+8=27、27−12=15。",
+      "15−40/3=5/3。",
+      "XY²=(5/3)/4=5/12。"
+    ],
+    "why_geometry_helps_ja": "角指定点の座標を解く作業がなくなり、一般に再利用できる中点同定と四辺形恒等式を結び付ける。",
+    "shortcut_risk_ja": "四辺の長さは全て異なり、対称性だけでX,Yを中点とする近道はない。中点の結論そのものや恒等式の値を入力には書かない。対角線の平方長を与えたことで、残余の平方根計算を避けている。",
+    "parameter_family_ja": "調和内接四角形を元三角形の円と一本の弦から生成し、六つの平方長が小さい有理数になる種を選ぶ。AB·CD=BC·DA等の整合条件を保ち、六つの数を独立には設定しない。相似拡大を別配置と数えない。",
+    "feasibility": {
+      "status": "verified",
+      "method_ja": "verify_db_revision.py が元の円・角条件・交線から全点を再構成し、本文の全ての数値与条件と答えを厳密に照合。隠す関係を答えの生成には使わず、作図後に検証した。",
+      "witness": {
+        "points": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "11*sqrt(3)/12",
+            "-sqrt(213)/12"
+          ],
+          "C": [
+            "2*sqrt(3)",
+            "0"
+          ],
+          "D": [
+            "5*sqrt(3)/6",
+            "sqrt(213)/6"
+          ],
+          "X": [
+            "7*sqrt(3)/8",
+            "sqrt(213)/24"
+          ],
+          "Y": [
+            "sqrt(3)",
+            "0"
+          ]
+        },
+        "given_values": {
+          "AB_squared": "4",
+          "BC_squared": "5",
+          "CD_squared": "10",
+          "DA_squared": "8",
+          "AC_squared": "12",
+          "BD_squared": "40/3"
+        },
+        "answer": "5/12"
+      },
+      "script": "verify_db_revision.py",
+      "solution_status": "proved_here"
+    },
+    "review_notes_ja": [
+      "中点同定はv1で円周角から一般に記述済み。",
+      "一般同定では∠BAC=∠BDC=∠XDC、∠BCA=∠BDA=∠XDAを用いる。Yも∠CBD=∠CAD=∠YAD、∠CDB=∠CAB=∠YABにより同様に角条件へ移る。",
+      "六つの平方長は同じ非対称な凸内接四角形で同時に成立することを元の角条件から再検算した。"
+    ]
+  },
+  {
+    "id": "DB07",
+    "decision": "defer",
+    "title_ja": "二等辺三角形の二円：学習接続未確立",
+    "diagnosis_ja": "内心Iの同定を使えば軽い数値問題は作れるが、どのHumpty/Dumpty点が短縮に働くかをまだ特定できていない。数値変更だけで主集合へ昇格させない。",
+    "change_ja": "計算だけを隠す数値変更は行わず、主集合への採用を見送る。",
+    "problem_ja": null,
+    "givens": [],
+    "query": null,
+    "answer_exact": null,
+    "geometry_solution_ja": [],
+    "arithmetic_ja": [],
+    "why_geometry_helps_ja": "現時点では具体的な幾何による短縮を保証していない。",
+    "shortcut_risk_ja": "資料掲載や答えの小ささだけで採用しない。",
+    "parameter_family_ja": "未設定。",
+    "feasibility": {
+      "status": "not_applicable",
+      "method_ja": "内心Iの同定を使えば軽い数値問題は作れるが、どのHumpty/Dumpty点が短縮に働くかをまだ特定できていない。数値変更だけで主集合へ昇格させない。",
+      "witness": null,
+      "script": "verify_db_revision.py",
+      "solution_status": "unverified"
+    },
+    "review_notes_ja": [
+      "v1の判定理由を維持し、与条件の調整だけで問題を採用可能と見なさない。"
+    ]
+  },
+  {
+    "id": "DB08",
+    "decision": "main",
+    "title_ja": "隠れた接線と中心を通る割線",
+    "diagnosis_ja": "v1はE,Fや二交点K,Lを求めて外接円半径を計算し、接触に気づいても多数の交点計算が残った。",
+    "change_ja": "最後の円の中心を通る自然な割線を一つ追加し、PY=3,YZ=9を与える。元の配置はOPの接触を発見するために必要で、以後は方べきだけになる。",
+    "problem_ja": "鋭角三角形ABCでAC>ABとし、Γを外接円、Oを外心とする。ΓのAでの接線と直線BCの交点をP、Aから直線OPへの垂足をXとする。直線AB上のEと直線AC上のFを、ともに直線OPのA側にあり、∠EXP=∠ACX、∠FXO=∠ABXとなる一意な点として選ぶ。直線EFとΓの二交点をK,Lとし、σを三角形KLXの外接円、Uをその中心とする。Pはσの外部にある。半直線PUとσの交点を近い方からY,Zとし、PY=3、YZ=9とする。PXを求めよ。",
+    "givens": [
+      {
+        "name": "PY",
+        "value": "3",
+        "meaning_ja": "中心を通る割線の外部部分"
+      },
+      {
+        "name": "YZ",
+        "value": "9",
+        "meaning_ja": "同じ割線の円内部分"
+      }
+    ],
+    "query": {
+      "expression": "PX",
+      "meaning_ja": "Pから射影点Xまでの距離"
+    },
+    "answer_exact": "6",
+    "geometry_solution_ja": [
+      "XはA-Dumpty点として同定でき、角指定で作ったEFに対してOPは円KLXに接する。X自身がOPとσの共通点なので接点はXである。",
+      "P,Y,Zがこの順に一直線上にあり、PZ=PY+YZ=12。",
+      "Pのσに対する方べきよりPX²=PY·PZ=36。"
+    ],
+    "arithmetic_ja": [
+      "PZ=3+9=12。",
+      "PX²=3·12=36、PX=6。"
+    ],
+    "why_geometry_helps_ja": "円KLXの中心や半径を数値的に復元する必要がない。元の角指定構成から接触を認識すれば、別の割線の短い計算へ移れる。",
+    "shortcut_risk_ja": "接触を与えれば一般的な接線・割線問題となる。本文ではOPが接線という結論を伏せる。PYとPZを直接並べるのでなく、連続する二つの自然な区間を与えた。",
+    "parameter_family_ja": "接触が得られる元図形を生成した後、中心線の外部長xと直径dを選び、x(x+d)が平方となるものを選ぶ。この二量を元図形と無関係に上書きしてはならない。",
+    "feasibility": {
+      "status": "verified",
+      "method_ja": "verify_db_revision.py が元の円・角条件・交線から全点を再構成し、本文の全ての数値与条件と答えを厳密に照合。隠す関係を答えの生成には使わず、作図後に検証した。",
+      "witness": {
+        "points": {
+          "A": [
+            "0",
+            "27*sqrt(2)/10"
+          ],
+          "B": [
+            "-9*sqrt(2)/10",
+            "0"
+          ],
+          "C": [
+            "18*sqrt(2)/5",
+            "0"
+          ],
+          "O": [
+            "27*sqrt(2)/20",
+            "3*sqrt(2)/4"
+          ],
+          "P": [
+            "-39*sqrt(2)/10",
+            "0"
+          ],
+          "X": [
+            "3*sqrt(2)/10",
+            "3*sqrt(2)/5"
+          ],
+          "E": [
+            "-3*sqrt(2)/5",
+            "9*sqrt(2)/10"
+          ],
+          "F": [
+            "6*sqrt(2)/5",
+            "9*sqrt(2)/5"
+          ],
+          "K": [
+            "3*sqrt(2)*(3 - sqrt(41))/10",
+            "3*sqrt(2)*(11 - sqrt(41))/20"
+          ],
+          "L": [
+            "3*sqrt(2)*(3 + sqrt(41))/10",
+            "3*sqrt(2)*(sqrt(41) + 11)/20"
+          ],
+          "U": [
+            "-3*sqrt(2)/20",
+            "15*sqrt(2)/4"
+          ],
+          "Y": [
+            "-12*sqrt(2)/5",
+            "3*sqrt(2)/2"
+          ],
+          "Z": [
+            "21*sqrt(2)/10",
+            "6*sqrt(2)"
+          ]
+        },
+        "given_values": {
+          "PY": "3",
+          "YZ": "9"
+        },
+        "answer": "6"
+      },
+      "script": "verify_db_revision.py",
+      "solution_status": "proved_here"
+    },
+    "review_notes_ja": [
+      "独立witnessは元のA=(0,3),B=(-1,0),C=(4,0)を相似変換したもの。E,Fは角条件から求め、接触から逆算していない。",
+      "verify_db_revision.py のcheck_general_relationsで、自由パラメータを残した一般座標形から中心・交点を計算し、短い解法で使う関係が恒等的に成立することを記号検証した。これは単一witnessの一致とは別の検証である。"
+    ]
+  },
+  {
+    "id": "DB09",
+    "decision": "probe",
+    "title_ja": "距離制約と円外点の角度（直接プローブ）",
+    "diagnosis_ja": "v1は狭い長さ制約を満たす三角形を生成し、その後に円外の比軌跡点を求めるため、簡単な一般三辺への置換ができなかった。",
+    "change_ja": "成立を確認できる∠A=30°の族を用い、原典の補角関係自体を確認するプローブに限定する。主集合には入れない。",
+    "problem_ja": "BC=2、∠BAC=30°の三角形ABCでMをBCの中点、ωを直径BCの円とする。直線ABとωのB以外の交点をD、直線ACとωのC以外の交点をEとする。ABC内部の点Pを∠PBA=∠PAC、∠PCA=∠PABによって定め、2PM·DE=BC²が成り立つとする。Mを通りAPに平行な直線上で、ωの外部、かつBCのA側にあり、XB/XC=AB/ACとなる一意な点をXとする。∠BXCを求めよ。",
+    "givens": [
+      {
+        "name": "angle_BAC_degrees",
+        "value": "30",
+        "meaning_ja": "頂角"
+      },
+      {
+        "name": "BC",
+        "value": "2",
+        "meaning_ja": "尺度を定める底辺"
+      }
+    ],
+    "query": {
+      "expression": "angle(BXC)",
+      "meaning_ja": "円外点Xにおける角（度）"
+    },
+    "answer_exact": "60",
+    "geometry_solution_ja": [
+      "PはA-Dumpty点。距離制約と比軌跡による配置では∠BXC+∠BAC=90°である。",
+      "∠BXC=90°−30°。"
+    ],
+    "arithmetic_ja": [
+      "90−30=60（度）。"
+    ],
+    "why_geometry_helps_ja": "円外点の座標を求めずに済むが、ここでは一般関係の直接確認に留まる。",
+    "shortcut_risk_ja": "一般関係の片側だけを答える設問であり、まさに直接プローブである。短い答えを理由に主問題と数えない。",
+    "parameter_family_ja": "角Aを変えるには長さ制約を再度満たす元図形を生成する必要がある。任意の鋭角三角形の角だけを30°に変更してはいけない。",
+    "feasibility": {
+      "status": "verified",
+      "method_ja": "verify_db_revision.py が元の円・角条件・交線から全点を再構成し、本文の全ての数値与条件と答えを厳密に照合。隠す関係を答えの生成には使わず、作図後に検証した。",
+      "witness": {
+        "points": {
+          "A": [
+            "sqrt(5)*(sqrt(3) + 3)/6",
+            "sqrt(3)/6 + 1/2"
+          ],
+          "B": [
+            "-1",
+            "0"
+          ],
+          "C": [
+            "1",
+            "0"
+          ],
+          "M": [
+            "0",
+            "0"
+          ],
+          "D": [
+            "(2*sqrt(3) + sqrt(15) + 3*sqrt(5) + 7)/(sqrt(15) + 3*sqrt(3) + 3*sqrt(5) + 9)",
+            "(sqrt(3) + 3 + sqrt(15) + 2*sqrt(5))/(sqrt(15) + 3*sqrt(3) + 3*sqrt(5) + 9)"
+          ],
+          "E": [
+            "(-7 - 2*sqrt(3) + sqrt(15) + 3*sqrt(5))/(-3*sqrt(5) - sqrt(15) + 3*sqrt(3) + 9)",
+            "(-2*sqrt(5) - sqrt(15) + sqrt(3) + 3)/(-3*sqrt(5) - sqrt(15) + 3*sqrt(3) + 9)"
+          ],
+          "P": [
+            "sqrt(5)/2",
+            "sqrt(3)/6"
+          ],
+          "X": [
+            "-sqrt(10*sqrt(3) + 20)/16 + sqrt(30*sqrt(3) + 60)/16 + 3*sqrt(5)/8",
+            "-sqrt(6*sqrt(3) + 12)/16 + 3*sqrt(2*sqrt(3) + 4)/16 + 3*sqrt(3)/8"
+          ]
+        },
+        "given_values": {
+          "angle_BAC_degrees": "30",
+          "BC": "2"
+        },
+        "answer": "60"
+      },
+      "script": "verify_db_revision.py",
+      "solution_status": "source_claim_only"
+    },
+    "review_notes_ja": [
+      "元の数値例はCが鈍角で、AB,ACとの交点は全直線上で取る。",
+      "Humpty学習との接続は明確だが、今回は数値構成の重さを除いた転移問題まで無理に足さずprobeに留める。"
+    ]
+  },
+  {
+    "id": "DB10",
+    "decision": "main",
+    "title_ja": "三円の根心と面積の分割",
+    "diagnosis_ja": "v1のAZ²,TZ²は、根心が中線上と分かっても根軸の定数を計算して位置を確定する必要があった。",
+    "change_ja": "自然な線分比AZ:ZM=12:19と全体面積31を与え、隠れた中線と重心的な面積分割を利用する問量へ替える。",
+    "problem_ja": "∠BAC=60°の三角形ABCの面積を31とする。ABのCと反対側に正三角形ABK、ACのBと反対側に正三角形ACLを作る。S=CK∩AB、R=BL∩AC、T=BL∩CKとし、三円BSK,CLR,BTCの根心をZとする。MをBCの中点とする。ZはABCの内部にあり、AZ:ZM=12:19である。三角形AZBの面積を求めよ。",
+    "givens": [
+      {
+        "name": "area_ABC",
+        "value": "31",
+        "meaning_ja": "元の三角形の面積"
+      },
+      {
+        "name": "AZ_over_ZM",
+        "value": "12/19",
+        "meaning_ja": "根心と頂点・底辺中点の距離比"
+      }
+    ],
+    "query": {
+      "expression": "area(AZB)",
+      "meaning_ja": "三角形AZBの面積"
+    },
+    "answer_exact": "6",
+    "geometry_solution_ja": [
+      "外向き正三角形で作るTは60°頂点のFermat=Dumpty点で、この三円の根心ZはA中線上にある。",
+      "Zは内部なのでA,Z,Mはこの順に並ぶ。AZ:AM=12:(12+19)=12:31。",
+      "MはBCの中点だから[ABM]=[ABC]/2。BからAMへの高さを共有するので[AZB]=(12/31)[ABM]。"
+    ],
+    "arithmetic_ja": [
+      "12+19=31。",
+      "[ABM]=31/2。",
+      "[AZB]=(12/31)·(31/2)=6。"
+    ],
+    "why_geometry_helps_ja": "三円の根軸を数値的に交差させる必要がなくなる。中線を見抜いた後も、距離比の変換と面積の二等分を結び付ける。",
+    "shortcut_risk_ja": "Zが中線上であることを入力に書くと元の構成が不要になるため記載しない。AZ:ZMは距離の比であり、それだけでは三点の共線性は与えられない。",
+    "parameter_family_ja": "AB=c,AC=bの族ではAZ/AM=2bc/(b²+3bc+c²)。b:c=2:3で12:31となる。比b:cを変えると非相似例を作れるが、線分比を勝手に上書きせず根心から検算する。",
+    "feasibility": {
+      "status": "verified",
+      "method_ja": "verify_db_revision.py が元の円・角条件・交線から全点を再構成し、本文の全ての数値与条件と答えを厳密に照合。隠す関係を答えの生成には使わず、作図後に検証した。",
+      "witness": {
+        "points": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "2*3**(1/4)*sqrt(62)/3",
+            "0"
+          ],
+          "C": [
+            "3**(1/4)*sqrt(62)/2",
+            "3**(3/4)*sqrt(62)/2"
+          ],
+          "K": [
+            "3**(1/4)*sqrt(62)/3",
+            "-3**(3/4)*sqrt(62)/3"
+          ],
+          "L": [
+            "-3**(1/4)*sqrt(62)/2",
+            "3**(3/4)*sqrt(62)/2"
+          ],
+          "S": [
+            "2*3**(1/4)*sqrt(62)/5",
+            "0"
+          ],
+          "R": [
+            "3**(1/4)*sqrt(62)/5",
+            "3**(3/4)*sqrt(62)/5"
+          ],
+          "T": [
+            "8*3**(1/4)*sqrt(62)/19",
+            "2*3**(3/4)*sqrt(62)/19"
+          ],
+          "M": [
+            "7*3**(1/4)*sqrt(62)/12",
+            "3**(3/4)*sqrt(62)/4"
+          ],
+          "Z": [
+            "7*3**(1/4)*sqrt(62)/31",
+            "3*3**(3/4)*sqrt(62)/31"
+          ]
+        },
+        "given_values": {
+          "area_ABC": "31",
+          "AZ_over_ZM": "12/19"
+        },
+        "answer": "6"
+      },
+      "script": "verify_db_revision.py",
+      "solution_status": "proved_here"
+    },
+    "review_notes_ja": [
+      "中線関係について二つの自由な辺b,cを持つ座標形で記号検証も行った。元作図witnessではZを二つの冪差方程式から求めた。",
+      "verify_db_revision.py のcheck_general_relationsで、自由パラメータを残した一般座標形から中心・交点を計算し、短い解法で使う関係が恒等的に成立することを記号検証した。これは単一witnessの一致とは別の検証である。"
+    ]
+  },
+  {
+    "id": "DB11",
+    "decision": "defer",
+    "title_ja": "接円の小弧と射影：実在・接続の再確認待ち",
+    "diagnosis_ja": "v1で既に弧の所属円、狭い直交条件の実在例、Humpty/Dumptyへの明示的還元が未確立だった。数値を軽くする前に配置の妥当性を確立する必要がある。",
+    "change_ja": "計算だけを隠す数値変更は行わず、主集合への採用を見送る。",
+    "problem_ja": null,
+    "givens": [],
+    "query": null,
+    "answer_exact": null,
+    "geometry_solution_ja": [],
+    "arithmetic_ja": [],
+    "why_geometry_helps_ja": "現時点では具体的な幾何による短縮を保証していない。",
+    "shortcut_risk_ja": "資料掲載や答えの小ささだけで採用しない。",
+    "parameter_family_ja": "未設定。",
+    "feasibility": {
+      "status": "not_applicable",
+      "method_ja": "v1で既に弧の所属円、狭い直交条件の実在例、Humpty/Dumptyへの明示的還元が未確立だった。数値を軽くする前に配置の妥当性を確立する必要がある。",
+      "witness": null,
+      "script": "verify_db_revision.py",
+      "solution_status": "unverified"
+    },
+    "review_notes_ja": [
+      "v1の判定理由を維持し、与条件の調整だけで問題を採用可能と見なさない。"
+    ]
+  },
+  {
+    "id": "DB12",
+    "decision": "main",
+    "title_ja": "二つの平行線円族と距離の和",
+    "diagnosis_ja": "v1のAX²を一般三辺から求めると特殊点の一般座標を計算するのに近く、固定点の発見だけでは算術が軽くならなかった。",
+    "change_ja": "固定交点Xに関する自然な距離和BX+CX=17、BC=13、∠A=45°を与え、直角と積関係を続けて使う。",
+    "problem_ja": "∠BAC=45°、BC=13の三角形ABCをとる。BCをBからCへ1:2、2:1に内分する点をD_1,D_2とする。i=1,2について、D_iを通りABに平行な直線とACの交点をE_i、D_iを通りACに平行な直線とABの交点をF_iとする。二円AE_1F_1,AE_2F_2のA以外の共通点をXとする。XはABCの内部にあり、BX+CX=17である。AXを求めよ。",
+    "givens": [
+      {
+        "name": "angle_BAC_degrees",
+        "value": "45",
+        "meaning_ja": "頂角"
+      },
+      {
+        "name": "BC",
+        "value": "13",
+        "meaning_ja": "底辺"
+      },
+      {
+        "name": "BX_plus_CX",
+        "value": "17",
+        "meaning_ja": "固定交点から底辺両端までの距離和"
+      }
+    ],
+    "query": {
+      "expression": "AX",
+      "meaning_ja": "頂点Aから二円の第二共通点までの距離"
+    },
+    "answer_exact": "2*sqrt(15)",
+    "geometry_solution_ja": [
+      "平行線で作る円族の固定点XはA-Dumpty点。従って∠BXC=2∠BAC=90°、かつAX²=BX·CX。",
+      "直角三角形BXCでBX²+CX²=13²。一方(BX+CX)²=17²。",
+      "差をとると2BX·CX=17²−13²=120となる。"
+    ],
+    "arithmetic_ja": [
+      "17²−13²=289−169=120。",
+      "BX·CX=60。",
+      "AX=√60=2√15。"
+    ],
+    "why_geometry_helps_ja": "二つの三点円を解いたり、固定点の一般座標を求めたりしなくてよい。固定点の二つの幾何的性質を、ピタゴラスと組み合わせる。",
+    "shortcut_risk_ja": "BX,CXを直接与えるだけの積関係プローブは避けた。二つの円のパラメータを替えるだけで新しい種類とは数えない。",
+    "parameter_family_ja": "45°族ではBX,CXを直角三角形の二辺と見なし、Pythagoreanな組からBCと和を設計できる。例えば5,12と8,15は非相似だが、元の円族から固定点を再現して検査する。",
+    "feasibility": {
+      "status": "verified",
+      "method_ja": "verify_db_revision.py が元の円・角条件・交線から全点を再構成し、本文の全ての数値与条件と答えを厳密に照合。隠す関係を答えの生成には使わず、作図後に検証した。",
+      "witness": {
+        "points": {
+          "A": [
+            "-sqrt(30)",
+            "-sqrt(30)"
+          ],
+          "B": [
+            "5",
+            "0"
+          ],
+          "C": [
+            "0",
+            "12"
+          ],
+          "D_1": [
+            "10/3",
+            "4"
+          ],
+          "E_1": [
+            "-2*sqrt(30)/3",
+            "4 - 2*sqrt(30)/3"
+          ],
+          "F_1": [
+            "10/3 - sqrt(30)/3",
+            "-sqrt(30)/3"
+          ],
+          "D_2": [
+            "5/3",
+            "8"
+          ],
+          "E_2": [
+            "-sqrt(30)/3",
+            "8 - sqrt(30)/3"
+          ],
+          "F_2": [
+            "5/3 - 2*sqrt(30)/3",
+            "-2*sqrt(30)/3"
+          ],
+          "X": [
+            "0",
+            "0"
+          ]
+        },
+        "given_values": {
+          "angle_BAC_degrees": "45",
+          "BC": "13",
+          "BX_plus_CX": "17"
+        },
+        "answer": "2*sqrt(15)"
+      },
+      "script": "verify_db_revision.py",
+      "solution_status": "source_proof_checked"
+    },
+    "review_notes_ja": [
+      "内分比1:2と2:1は作図を確定するための値。固定点自体は比に依存しない。",
+      "元三角形を鋭角に限定しない。実在例はBが鈍角。"
+    ]
+  },
+  {
+    "id": "DB13",
+    "decision": "main",
+    "title_ja": "内接円の接点と二つの三角形の面積比",
+    "diagnosis_ja": "v1のGR²や内接円の半径は、GP共線性が分かっても交点や接触方程式を解く必要があった。",
+    "change_ja": "PG=5,GR=13という自然な距離と接点の側を与え、GP共線性と重心の高さ比から面積比を求める。",
+    "problem_ja": "鋭角不等辺三角形ABCでE,FをそれぞれAC,ABの中点、ΓをABCの外接円とする。E,Fを通りΓに内接する円のうち、接点RがAと異なるものをとる。GをABCの重心、PをAからBCへの垂足とする。Rは直線BCに関してAと反対側にあり、PG=5、GR=13である。三角形RBCの面積を三角形ABCの面積で割った値を求めよ。",
+    "givens": [
+      {
+        "name": "PG",
+        "value": "5",
+        "meaning_ja": "垂足と重心の距離"
+      },
+      {
+        "name": "GR",
+        "value": "13",
+        "meaning_ja": "重心と接点の距離"
+      }
+    ],
+    "query": {
+      "expression": "area(RBC)/area(ABC)",
+      "meaning_ja": "共通底辺BCを持つ二つの三角形の面積比"
+    },
+    "answer_exact": "8/15",
+    "geometry_solution_ja": [
+      "この中点内接円の接点はGP直線上にある。側の条件よりR,P,Gの順に並び、PR=13−5=8。",
+      "BCからGまでの高さはAからの高さの1/3。R,P,Gが一直線なので、BCからRまでの高さはGの高さのPR/PG=8/5倍。",
+      "共通底辺BCの面積比は高さ比に等しく、8/(5·3)=8/15。"
+    ],
+    "arithmetic_ja": [
+      "PR=13−5=8。",
+      "[RBC]/[ABC]=(8/5)·(1/3)=8/15。"
+    ],
+    "why_geometry_helps_ja": "接する円の中心・半径も接点座標も求めず、接点の隠れた直線と重心の高さ比を使える。",
+    "shortcut_risk_ja": "Rの位置をGP直線上と問題文で与えてしまうと核心が消える。反対側という枝条件だけを明示する。",
+    "parameter_family_ja": "PG=g,GR=h>gを与えれば同じ枝の面積比は(h−g)/(3g)。元三角形と接円から実在するg,hを生成し、長さを独立に上書きしない。",
+    "feasibility": {
+      "status": "verified",
+      "method_ja": "verify_db_revision.py が元の円・角条件・交線から全点を再構成し、本文の全ての数値与条件と答えを厳密に照合。隠す関係を答えの生成には使わず、作図後に検証した。",
+      "witness": {
+        "points": {
+          "A": [
+            "0",
+            "12"
+          ],
+          "B": [
+            "9/2 - sqrt(561)/2",
+            "0"
+          ],
+          "C": [
+            "9/2 + sqrt(561)/2",
+            "0"
+          ],
+          "O": [
+            "9/2",
+            "1"
+          ],
+          "E": [
+            "9/4 + sqrt(561)/4",
+            "6"
+          ],
+          "F": [
+            "9/4 - sqrt(561)/4",
+            "6"
+          ],
+          "G": [
+            "3",
+            "4"
+          ],
+          "P": [
+            "0",
+            "0"
+          ],
+          "W": [
+            "9/4",
+            "-49/62"
+          ],
+          "R": [
+            "-24/5",
+            "-32/5"
+          ]
+        },
+        "given_values": {
+          "PG": "5",
+          "GR": "13"
+        },
+        "answer": "8/15"
+      },
+      "script": "verify_db_revision.py",
+      "solution_status": "proved_here"
+    },
+    "review_notes_ja": [
+      "Humptyへはsymmedian弦を経由する間接配置であり、直接のHumpty点作図を測る課題ではない。",
+      "根拠はSarkar GP-line Lemma18。この数値例は内接円の二つの枝を元作図で解き、Aで接する方を除外した。",
+      "verify_db_revision.py のcheck_general_relationsで、自由パラメータを残した一般座標形から中心・交点を計算し、短い解法で使う関係が恒等的に成立することを記号検証した。これは単一witnessの一致とは別の検証である。"
+    ]
+  },
+  {
+    "id": "DB14",
+    "decision": "defer",
+    "title_ja": "半円上の二円：Humpty接続未特定",
+    "diagnosis_ja": "反転による短い数値問題は作れるが、Humptyに必要な構造としての関連が未特定である。単なる一般の円問題を数に加えない。",
+    "change_ja": "計算だけを隠す数値変更は行わず、主集合への採用を見送る。",
+    "problem_ja": null,
+    "givens": [],
+    "query": null,
+    "answer_exact": null,
+    "geometry_solution_ja": [],
+    "arithmetic_ja": [],
+    "why_geometry_helps_ja": "現時点では具体的な幾何による短縮を保証していない。",
+    "shortcut_risk_ja": "資料掲載や答えの小ささだけで採用しない。",
+    "parameter_family_ja": "未設定。",
+    "feasibility": {
+      "status": "not_applicable",
+      "method_ja": "反転による短い数値問題は作れるが、Humptyに必要な構造としての関連が未特定である。単なる一般の円問題を数に加えない。",
+      "witness": null,
+      "script": "verify_db_revision.py",
+      "solution_status": "unverified"
+    },
+    "review_notes_ja": [
+      "v1の判定理由を維持し、与条件の調整だけで問題を採用可能と見なさない。"
+    ]
+  },
+  {
+    "id": "DB15",
+    "decision": "main",
+    "title_ja": "派生三角形に現れる中線の長さ",
+    "diagnosis_ja": "v1でDQやQTを問うと、特殊点Qの位置そのものに依存するため、点を同定した後も一般公式や分数計算が必要だった。",
+    "change_ja": "問量を直線DQがEFと交わる点TまでのDTに替え、派生三角形DEFの自然な三辺5,7,6を与える。",
+    "problem_ja": "鋭角不等辺三角形ABCでDをAからBCへの垂足、E,FをそれぞれCA,ABの中点とする。辺BC上にBS:SC=AB²:AC²となる点Sをとり、直線ASとABCの外接円のA以外の交点をL、ALの中点をQとする。直線DQとEFの交点をTとする。DE=5、DF=7、EF=6のときDTを求めよ。",
+    "givens": [
+      {
+        "name": "DE",
+        "value": "5",
+        "meaning_ja": "派生三角形の辺"
+      },
+      {
+        "name": "DF",
+        "value": "7",
+        "meaning_ja": "派生三角形の辺"
+      },
+      {
+        "name": "EF",
+        "value": "6",
+        "meaning_ja": "中点連結線分"
+      }
+    ],
+    "query": {
+      "expression": "DT",
+      "meaning_ja": "垂足Dから直線DQとEFの交点までの長さ"
+    },
+    "answer_exact": "2*sqrt(7)",
+    "geometry_solution_ja": [
+      "Qは元のABCのA-Dumpty点であり、同時に三角形DEFのD-Humpty点。したがってDQはDEFのD中線で、TはEFの中点である。",
+      "ET=FT=3。中線の長さの恒等式からDT²=(DE²+DF²)/2−ET²。",
+      "DT²=(25+49)/2−9=28。"
+    ],
+    "arithmetic_ja": [
+      "EF/2=3。",
+      "(5²+7²)/2−3²=74/2−9=28。",
+      "DT=√28=2√7。"
+    ],
+    "why_geometry_helps_ja": "Qの座標やDQの長さを求めず、点を別の三角形のHumpty点として認識するだけで中線長へ移れる。",
+    "shortcut_risk_ja": "DE,DF,EFだけではTの位置は決まらない。DQが中線という結論を入力にはしない。",
+    "parameter_family_ja": "非退化三角形DEFの小さな辺を先に選び、DをEFについて反射してA、C=2E−A,B=2F−Aとした元図形で適合を確かめる。元のABCの角域とDの辺内部性を確認する。",
+    "feasibility": {
+      "status": "verified",
+      "method_ja": "verify_db_revision.py が元の円・角条件・交線から全点を再構成し、本文の全ての数値与条件と答えを厳密に照合。隠す関係を答えの生成には使わず、作図後に検証した。",
+      "witness": {
+        "points": {
+          "A": [
+            "-2",
+            "-2*sqrt(6)"
+          ],
+          "B": [
+            "8",
+            "2*sqrt(6)"
+          ],
+          "C": [
+            "-4",
+            "2*sqrt(6)"
+          ],
+          "D": [
+            "-2",
+            "2*sqrt(6)"
+          ],
+          "E": [
+            "-3",
+            "0"
+          ],
+          "F": [
+            "3",
+            "0"
+          ],
+          "S": [
+            "2/37",
+            "2*sqrt(6)"
+          ],
+          "L": [
+            "5/7",
+            "23*sqrt(6)/7"
+          ],
+          "Q": [
+            "-9/14",
+            "9*sqrt(6)/14"
+          ],
+          "T": [
+            "0",
+            "0"
+          ]
+        },
+        "given_values": {
+          "DE": "5",
+          "DF": "7",
+          "EF": "6"
+        },
+        "answer": "2*sqrt(7)"
+      },
+      "script": "verify_db_revision.py",
+      "solution_status": "source_proof_checked"
+    },
+    "review_notes_ja": [
+      "根拠はSarkar Characterization6。直接のorthic留保課題とは異なるが派生三角形のHumpty利用なので、独立評価とは分ける。"
+    ]
+  },
+  {
+    "id": "DB16",
+    "decision": "main",
+    "title_ja": "二つの外心を横切る直線の交点",
+    "diagnosis_ja": "v1ではNを最初からO1O2の中点と定義していたため、中点関係を使わなくてもANを一般計算できた。",
+    "change_ja": "NをAOとO1O2の交点として定義し直す。自然な二円の半径4,6と中心間距離8から、中点の発見後にANを求める。Pは原典どおりsymmedian方向の半直線上を許し、AS内部に限定しない。",
+    "problem_ja": "三角形ABCの外心をOとする。辺BCをBS:SC=AB²:AC²に内分する点Sをとり、半直線AS上のA以外の点Pをとる。O_1を三角形APBの外心、O_2を三角形CAPの外心とし、直線AOとO_1O_2の交点をNとする。各三角形と交点は非退化で、AO_1=4、AO_2=6、O_1O_2=8である。ANを求めよ。",
+    "givens": [
+      {
+        "name": "AO_1",
+        "value": "4",
+        "meaning_ja": "円APBの半径"
+      },
+      {
+        "name": "AO_2",
+        "value": "6",
+        "meaning_ja": "円CAPの半径"
+      },
+      {
+        "name": "O_1O_2",
+        "value": "8",
+        "meaning_ja": "二つの円の中心間距離"
+      }
+    ],
+    "query": {
+      "expression": "AN",
+      "meaning_ja": "Aから二外心の直線との交点までの長さ"
+    },
+    "answer_exact": "sqrt(10)",
+    "geometry_solution_ja": [
+      "APがA-symmedian方向であることから、AOは線分O_1O_2を二等分する。したがってNはO_1O_2の中点である。",
+      "三角形AO_1O_2の中線として、AN²=(AO_1²+AO_2²)/2−(O_1O_2/2)²。",
+      "AN²=(16+36)/2−16=10。"
+    ],
+    "arithmetic_ja": [
+      "O_1O_2/2=4。",
+      "(4²+6²)/2−4²=52/2−16=10。",
+      "AN=√10。"
+    ],
+    "why_geometry_helps_ja": "元三角形の三辺やPの位置から二つの外心を計算する必要がなくなる。Nを交点で定義したため、隠れた二等分が問量を定めるために必要となる。",
+    "shortcut_risk_ja": "Nを中点と与える版は採用しない。この中点長の算術はDB15と同じ型であり、算術型の多様性が増えたとは数えない。",
+    "parameter_family_ja": "二円の半径r1,r2と中心間距離dが三角不等式を満たし、2r1²+2r2²−d²が小さい平方または小さな根号となる組を選ぶ。symmedianの半直線条件を元三角形で検算する。",
+    "feasibility": {
+      "status": "verified",
+      "method_ja": "verify_db_revision.py が元の円・角条件・交線から全点を再構成し、本文の全ての数値与条件と答えを厳密に照合。隠す関係を答えの生成には使わず、作図後に検証した。",
+      "witness": {
+        "points": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "135/124",
+            "129*sqrt(15)/124"
+          ],
+          "C": [
+            "-135/184",
+            "159*sqrt(15)/184"
+          ],
+          "S": [
+            "0",
+            "72*sqrt(15)/77"
+          ],
+          "P": [
+            "0",
+            "3*sqrt(15)/2"
+          ],
+          "O": [
+            "5/6",
+            "sqrt(15)/2"
+          ],
+          "O_1": [
+            "-11/4",
+            "3*sqrt(15)/4"
+          ],
+          "O_2": [
+            "21/4",
+            "3*sqrt(15)/4"
+          ],
+          "N": [
+            "5/4",
+            "3*sqrt(15)/4"
+          ]
+        },
+        "given_values": {
+          "AO_1": "4",
+          "AO_2": "6",
+          "O_1O_2": "8"
+        },
+        "answer": "sqrt(10)"
+      },
+      "script": "verify_db_revision.py",
+      "solution_status": "proved_here"
+    },
+    "review_notes_ja": [
+      "PをAS内部に限らないことはv1からの意図的な定義域変更。Sarkar/Pauseの元演習はsymmedian上の点を扱う。",
+      "Humpty点の位置そのものではなく、medianとsymmedianのisogonalな方向関係を学ぶ間接候補。",
+      "verify_db_revision.py のcheck_general_relationsで、自由パラメータを残した一般座標形から中心・交点を計算し、短い解法で使う関係が恒等的に成立することを記号検証した。これは単一witnessの一致とは別の検証である。"
+    ]
+  },
+  {
+    "id": "DB17",
+    "decision": "exclude",
+    "title_ja": "仮定不足の原典演習：除外を維持",
+    "diagnosis_ja": "原典の条件だけでは接点への線がsymmedianになるとは限らず、v1で厳密反例を作成済み。未確認の仮定を補って短い問題に変更することはしない。",
+    "change_ja": "計算だけを隠す数値変更は行わず、主集合への採用を見送る。",
+    "problem_ja": null,
+    "givens": [],
+    "query": null,
+    "answer_exact": null,
+    "geometry_solution_ja": [],
+    "arithmetic_ja": [],
+    "why_geometry_helps_ja": "現時点では具体的な幾何による短縮を保証していない。",
+    "shortcut_risk_ja": "資料掲載や答えの小ささだけで採用しない。",
+    "parameter_family_ja": "未設定。",
+    "feasibility": {
+      "status": "not_applicable",
+      "method_ja": "原典の条件だけでは接点への線がsymmedianになるとは限らず、v1で厳密反例を作成済み。未確認の仮定を補って短い問題に変更することはしない。",
+      "witness": null,
+      "script": "verify_db_revision.py",
+      "solution_status": "unverified"
+    },
+    "review_notes_ja": [
+      "v1の判定理由を維持し、与条件の調整だけで問題を採用可能と見なさない。"
+    ]
+  }
+]

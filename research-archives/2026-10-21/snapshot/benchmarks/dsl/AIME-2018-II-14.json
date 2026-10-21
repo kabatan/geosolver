@@ -1,0 +1,90 @@
+{
+  "id": "AIME-2018-II-14",
+  "variables": [
+    "cx",
+    "cy",
+    "qx",
+    "qy"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(7, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "I",
+      "expression": "Incenter(A, B, C)"
+    },
+    {
+      "name": "omega",
+      "expression": "Incircle(A, B, C)"
+    },
+    {
+      "name": "X",
+      "expression": "IncircleContactPoint(A, B, C, side='BC')"
+    },
+    {
+      "name": "Y",
+      "expression": "Intersect(Line(A, X), omega, exclude=X)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(3, 0)"
+    },
+    {
+      "name": "Q",
+      "expression": "Point(qx, qy)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": 8
+    },
+    {
+      "left": "Collinear(A, Q, C)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(Q, A, C)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnLine(Y, P, Q)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(Line(P, Q), omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "qx",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "qy",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "Distance(A, Q)"
+}

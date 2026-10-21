@@ -1,0 +1,119 @@
+{
+  "id": "JMO-2019-PRE-10",
+  "variables": [
+    "theta"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(6, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(9 * cos(theta), 9 * sin(theta))"
+    },
+    {
+      "name": "D",
+      "expression": "Point(4, 0)"
+    },
+    {
+      "name": "E",
+      "expression": "Point(6 * cos(theta), 6 * sin(theta))"
+    },
+    {
+      "name": "Gamma1",
+      "expression": "Circumcircle(A, D, E)"
+    },
+    {
+      "name": "Gamma2",
+      "expression": "Circumcircle(A, B, C)"
+    },
+    {
+      "name": "F",
+      "expression": "Intersect(Line(B, C), Gamma1, near=B)"
+    },
+    {
+      "name": "G",
+      "expression": "Intersect(Line(B, C), Gamma1, exclude=F)"
+    },
+    {
+      "name": "T",
+      "expression": "Intersect(Line(D, F), Line(E, G))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": 9
+    },
+    {
+      "left": "Distance(A, E)",
+      "operator": "=",
+      "right": 6
+    },
+    {
+      "left": "Collinear(A, E, C)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Collinear(B, F, C)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(F, B, C)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Collinear(B, G, C)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(G, B, C)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(F, Gamma1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(G, Gamma1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(T, Gamma2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "sin(theta)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "theta",
+      "operator": "<",
+      "right": "pi"
+    },
+    {
+      "left": "F.x",
+      "operator": ">",
+      "right": "G.x"
+    },
+    {
+      "predicate": "ConvexPolygon([A, B, C])"
+    }
+  ],
+  "target": "Distance(F, G) / Distance(B, C)"
+}

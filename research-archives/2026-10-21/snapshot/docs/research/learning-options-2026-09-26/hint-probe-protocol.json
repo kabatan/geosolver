@@ -1,0 +1,31 @@
+{
+  "scope": "Paired answer-hint inference diagnostic; zero weight updates",
+  "n": 8,
+  "configurations": 4,
+  "samples_per_condition": 1,
+  "selection": "Four reused development configurations, chosen before generation: two with prior self-proof material and two difficult cases. Not a random sample.",
+  "source_labels": "Existing audited numeric labels, not newly generated solver outputs",
+  "max_output_tokens": 32768,
+  "max_context": 45056,
+  "max_num_seqs": 2,
+  "sampling": {
+    "temperature": 1.0,
+    "top_p": 0.95,
+    "top_k": 20,
+    "presence_penalty": 1.5
+  },
+  "enable_thinking": false,
+  "watchdog_seconds": 2700,
+  "outcomes": [
+    "complete valid derivation",
+    "decisive claim proved",
+    "finish reason",
+    "tokens",
+    "time"
+  ],
+  "exclusions": "Do not count hinted numeric-answer accuracy as improvement. No human correction of generated reasoning. Truncation is reported, not silently excluded.",
+  "limitation": "One sample per condition; prompt conditioning is not a weight-learning or causal population effect.",
+  "sources_sha256": "d691c1160fb9f4d7e7842ea9f42e9e95226f8a4e29e41647a071cdec36d43694",
+  "labels_sha256": "31ae5d8b8d7996036b4af73ff674c17362c430f215cba6512e9f1e9062749d85",
+  "driver_sha256": "372849b1f0973d56096781d2365312b44e5df1fda0a24d09c7fe9afa856af854"
+}

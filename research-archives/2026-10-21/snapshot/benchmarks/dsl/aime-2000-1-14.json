@@ -1,0 +1,64 @@
+{
+  "id": "aime-2000-1-14",
+  "variables": [
+    "x",
+    "p",
+    "q"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, x)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(-1, 0)"
+    },
+    {
+      "name": "P",
+      "expression": "PointOnSegment(A, C, p)"
+    },
+    {
+      "name": "Q",
+      "expression": "PointOnSegment(A, B, q)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "x",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Angle(A, B, C)",
+      "operator": "=",
+      "right": "Angle(A, C, B)"
+    },
+    {
+      "predicate": "Bound(p, (0, 1), inclusive=False)"
+    },
+    {
+      "predicate": "Bound(q, (0, 1), inclusive=False)"
+    },
+    {
+      "left": "Distance(A, P)",
+      "operator": "=",
+      "right": "Distance(B, C)"
+    },
+    {
+      "left": "Distance(P, Q)",
+      "operator": "=",
+      "right": "Distance(B, C)"
+    },
+    {
+      "left": "Distance(Q, B)",
+      "operator": "=",
+      "right": "Distance(B, C)"
+    }
+  ],
+  "target": "Angle(A, C, B) / Angle(A, P, Q)"
+}

@@ -1,0 +1,41 @@
+{
+  "packet": "qwen/.runtime/numeric_sft_dose_control_20260928/review-transfer-review09/index.json",
+  "rubric": "docs/research/related-numeric-sft-2026-09-28/REVIEW_RUBRIC.md",
+  "review_type": "blind_AP01_self_contained_proof",
+  "cases": [
+    {
+      "case_id": "proof-00",
+      "score": 2,
+      "complete_proof": false,
+      "essential_progress": "DA=DB, EA=ECとFが三角形内部という枝から∠BFC=2∠BACを導く。OP⊥AB, ON⊥ACからA,P,O,Nが直径AOの円上とも正しく示す。B,C,F,Oの共円も成立する。",
+      "flaw_or_gap": "最終的に必要なAF⊥OF、すなわちFが直径AOの円上にあることを、元の構図から証明しない。line 492–497はこの目標同値の特殊性質を「標準的結果」として断言するだけ。さらに共円後の∠OFB=∠OCBという円周角の枝は一般には誤りで、そこからも垂直性は導けない。よって完全証明ではなく、局所的な代入省略にも当たらない。",
+      "evidence_quotes": [
+        {
+          "line": 468,
+          "quote": "The points $O, P, A, N$ lie on a circle with diameter $OA$."
+        },
+        {
+          "line": 481,
+          "quote": "$\\angle BFC = 180^\\circ - (180^\\circ - \\alpha - \\alpha) = 2\\alpha$."
+        },
+        {
+          "line": 488,
+          "quote": "Thus, $\\angle OFB = 90^\\circ - \\alpha$."
+        },
+        {
+          "line": 492,
+          "quote": "To complete the proof, we utilize the property that in this configuration, $AF \\perp OF$."
+        },
+        {
+          "line": 497,
+          "quote": "standard geometry results for this \"median-perpendicular bisector\" configuration confirm $AF \\perp OF$"
+        }
+      ],
+      "incidental_error": "探索部には∠PFN=Aとする円周角の枝違いもある。最終部line 486–490の円周角枝違いは補助橋に使われるため、単なる記述ミスとは扱わない。",
+      "uncertainty": "低い。核心の垂直性は明示された式から単に未展開の計算ではなく、答案が依拠する未証明の特殊命題そのもの。",
+      "read_coverage": "proof-00.md全502行。探索、途中のProof Outline、最後のFinal Answer Formulationを確認。"
+    }
+  ],
+  "independent_check": "急角・不等辺の例 A=(0,0), B=(3,2), C=(4,-2), D=(13/6,0), E=(5/2,0)ではF=(16/7,2/7), O=(33/14,-2/7)。A,B,Cの角は内積5,12,8>0で急角、Fは内部。B,C,F,Oの外接円中心はどちらの3点からも(131/28,33/112)。一方(O−F)·(B−F)=−13/14<0、(O−C)·(B−C)=17/2>0なのでline 488の等角は枝が反対。実際(A−F)·(O−F)=0だが、答案はこの垂直性を証明していない。",
+  "boundary_case": "二つの真の一般共円関係はscore2の実質的進展。AF⊥OFは結論と同値であり、特殊定理への言及だけでは自己完結したscore4にも、単純な局所省略のscore3にもならない。"
+}

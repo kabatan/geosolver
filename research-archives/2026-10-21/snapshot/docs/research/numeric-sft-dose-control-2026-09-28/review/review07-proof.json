@@ -1,0 +1,44 @@
+{
+  "packet": "qwen/.runtime/numeric_sft_dose_control_20260928/review-transfer-review07/index.json",
+  "rubric": "docs/research/related-numeric-sft-2026-09-28/REVIEW_RUBRIC.md",
+  "review_type": "blind_AP01_self_contained_proof",
+  "cases": [
+    {
+      "case_id": "proof-00",
+      "score": 2,
+      "complete_proof": false,
+      "essential_progress": "D,Eの等距離性とF内部の枝から∠BFC=2∠BACを導く。鋭角ABCで外心Oも内部にあるためB,C,F,Oが同一円上にあること、またAB,ACの中点P,NによりA,P,O,Nが直径AOの円上にあることを正しく把握した。",
+      "flaw_or_gap": "これら二つの円の関係からFが直径AOの円に乗るという核心を導いていない。途中の∠OFB=∠OCBは円周角の枝を誤り、正しい構図例でも前者は鈍角、後者は鋭角。最終の「詳細な角追いで∠AFO=90°を確認した」は実際には無証明の断言。さらに∠AFO=90°からOF⊥AOとする記述は誤りで、正しくはOF⊥AF。",
+      "evidence_quotes": [
+        {
+          "line": 97,
+          "quote": "So, $\\angle BFC = 2\\angle BAC$."
+        },
+        {
+          "line": 184,
+          "quote": "$\\angle OFB = \\angle OCB$"
+        },
+        {
+          "line": 236,
+          "quote": "$A, P, O, N$ are concyclic on a circle with diameter $AO$."
+        },
+        {
+          "line": 542,
+          "quote": "It implies $OF \\perp AO$."
+        },
+        {
+          "line": 589,
+          "quote": "Detailed angle analysis confirms that $F$ also satisfies $\\angle AFO = 90^\\circ$"
+        }
+      ],
+      "incidental_error": "line 21の「A,M,Dがこの順に並ぶ」はray AMだけからは出ず、DはMより手前にも置ける。line 99以降の円中心と円周角の混乱は最終欠落にも関係する。",
+      "uncertainty": "低い。正しい中間関係はあるが、核心の直角条件は結論として反復するだけ。明示した枝誤りは有理座標の有効構図で反証できる。",
+      "read_coverage": "proof-00.md 全592行の全体構造、自己訂正、最終結論まで確認。"
+    }
+  ],
+  "independent_check": {
+    "configuration": "A=(0,0), B=(3,2), C=(4,-2), D=(13/6,0), E=(5/2,0), F=(16/7,2/7), O=(33/14,-2/7). ABC is acute scalene; F has positive barycentric coordinates (16/49,20/49,13/49).",
+    "relations": "B,C,F,O are indeed concyclic; A,F,O do form a right angle at F in this witness, but this is the target-related fact the answer fails to derive generally. ∠OFB is obtuse since (O−F)·(B−F)=−13/14, while ∠OCB is acute since (O−C)·(B−C)=17/2, contradicting line 184. (O−F)·(O−A)=65/196≠0, contradicting OF⊥AO in line 542."
+  },
+  "boundary_case": "The answer earns 2 rather than 1 because it proves substantial true angle and circle relations. It does not earn 3 because connecting them to F∈circle(AO) remains a major unproved step, and a branch error in the attempted bridge is substantive."
+}

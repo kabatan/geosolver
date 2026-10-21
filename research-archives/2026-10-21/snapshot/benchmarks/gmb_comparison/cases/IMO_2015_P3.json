@@ -1,0 +1,135 @@
+{
+  "id": "IMO_2015_P3",
+  "variables": [
+    "ax",
+    "ay",
+    "q",
+    "k"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "Gamma",
+      "expression": "Circumcircle(A, B, C)"
+    },
+    {
+      "name": "H",
+      "expression": "Orthocenter(A, B, C)"
+    },
+    {
+      "name": "F",
+      "expression": "FootOfPerpendicular(A, Line(B, C))"
+    },
+    {
+      "name": "M",
+      "expression": "Midpoint(B, C)"
+    },
+    {
+      "name": "Q",
+      "expression": "PointOnCircle(Gamma, q)"
+    },
+    {
+      "name": "K",
+      "expression": "PointOnCircle(Gamma, k)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Area(A, B, C)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(A, B), Vector(A, C))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(B, A), Vector(B, C))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(C, A), Vector(C, B))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(A, B)",
+      "operator": ">",
+      "right": "Distance(A, C)"
+    },
+    {
+      "left": "Angle(H, Q, A)",
+      "operator": "=",
+      "right": "pi/2"
+    },
+    {
+      "left": "Angle(H, K, Q)",
+      "operator": "=",
+      "right": "pi/2"
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))",
+      "operator": "!=",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((B.x-A.x)*(K.y-A.y)-(B.y-A.y)*(K.x-A.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((B.x-A.x)*(Q.y-A.y)-(B.y-A.y)*(Q.x-A.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((C.x-A.x)*(K.y-A.y)-(C.y-A.y)*(K.x-A.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((C.x-A.x)*(Q.y-A.y)-(C.y-A.y)*(Q.x-A.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((K.x-A.x)*(Q.y-A.y)-(K.y-A.y)*(Q.x-A.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((C.x-B.x)*(K.y-B.y)-(C.y-B.y)*(K.x-B.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((C.x-B.x)*(Q.y-B.y)-(C.y-B.y)*(Q.x-B.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((K.x-B.x)*(Q.y-B.y)-(K.y-B.y)*(Q.x-B.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((K.x-C.x)*(Q.y-C.y)-(K.y-C.y)*(Q.x-C.x))",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "0"
+}

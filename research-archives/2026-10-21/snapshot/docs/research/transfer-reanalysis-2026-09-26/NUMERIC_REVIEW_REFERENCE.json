@@ -1,0 +1,832 @@
+{
+  "scope": "Grader-only mathematical reference; never training or generation input",
+  "source_sha256": "0df7b9565265c8f47ae2deccf96c077432048850a9007e9402b69dd87e932a3a",
+  "instruction": "Use to check claimed relations. Do not supply a missing inference on behalf of a model answer. A correctly stated known theorem with verified applicability can justify a numerical solution; distinguish this from an unsupported assertion or guess. Numerical exact-match remains the primary endpoint.",
+  "problems": [
+    {
+      "id": "H02",
+      "problem_ja": "鋭角不等辺三角形ABCで、MはBCの中点、KはAからBCへの垂足とする。BC=16、AM=10、AK=8、BK>KCとする。BC上にBD1=6、BD2=9となる点D1,D2を取る。i=1,2について、円ABDiと直線ACのA以外の交点をUi、円ACDiと直線ABのA以外の交点をViとし、円AUiViの中心をZiとする。Z1Z2を求めよ。",
+      "answer_exact": "15/4",
+      "geometry_solution_ja": [
+        "Hを垂心、PをHからAMへの垂足とする。この動点配置では円AUiViはどちらもA,Pを通る（v1で一般形を証明済み）。したがってZ1Z2⊥AM。",
+        "円ACDiに対するBの方べきからBA·BVi=BC·BDi。従って円AUiViに対するBの方べきはBC·BDi。同様にCの方べきはBC·CDiである。両者の差を取ると、ZiのBCへの垂足はDiと分かる。",
+        "AMとBCのなす角をθとするとsinθ=AK/AM=4/5。Z1Z2のBC方向への射影はD1D2=3なので、Z1Z2·(4/5)=3、従って15/4。"
+      ],
+      "feasibility": {
+        "status": "verified",
+        "method_ja": "verify_h_revision.py が元の直線・円・鏡映・射影の定義から厳密座標で構成し、全与条件と答えを照合。短縮用の性質は交点の生成には使わず、生成後に検査する。",
+        "witness": {
+          "points": {
+            "A": [
+              "6",
+              "8"
+            ],
+            "B": [
+              "-8",
+              "0"
+            ],
+            "C": [
+              "8",
+              "0"
+            ],
+            "M": [
+              "0",
+              "0"
+            ],
+            "K": [
+              "6",
+              "0"
+            ],
+            "D1": [
+              "-2",
+              "0"
+            ],
+            "U1": [
+              "56/17",
+              "320/17"
+            ],
+            "V1": [
+              "-184/65",
+              "192/65"
+            ],
+            "Z1": [
+              "-2",
+              "47/4"
+            ],
+            "D2": [
+              "1",
+              "0"
+            ],
+            "U2": [
+              "80/17",
+              "224/17"
+            ],
+            "V2": [
+              "-16/65",
+              "288/65"
+            ],
+            "Z2": [
+              "1",
+              "19/2"
+            ]
+          },
+          "given_values": {
+            "AM": "10",
+            "BC": "16",
+            "AK": "8",
+            "BD1": "6",
+            "BD2": "9"
+          },
+          "answer": "15/4"
+        },
+        "script": "verify_h_revision.py",
+        "solution_status": "proved_here"
+      },
+      "review_notes_ja": [
+        "固定点Pの一般形証明はv1のsymbolic_core_check。中心の射影の説明は方べきの差による合成幾何。"
+      ]
+    },
+    {
+      "id": "H03",
+      "problem_ja": "鋭角不等辺三角形ABCの外心をO、垂心をHとし、OH=6とする。各頂点について次を行う。Aでは内角・外角の二等分線の直線とBCとの交点をKa,La、BCの中点をMaとし、円AKaLaと直線AMaのAでない交点をPaとする。B,Cからも同様にPb,Pcを作る。円PaPbPcの中心をZとする。OZを求めよ。三つの円と交点は非退化とする。",
+      "answer_exact": "4",
+      "geometry_solution_ja": [
+        "この二等分線円と中線から得るPaは、HからAMaへの垂足である。Pb,Pcも巡回的に同じ性質を持つ（TSTST 2015の既知の同定）。",
+        "重心をGとすると、各中線はGを通るので∠HPaG=∠HPbG=∠HPcG=90°。従って三点の円は直径HGの円であり、ZはHGの中点。",
+        "Euler線上でOG:GH=1:2だから、OH=6からOG=2、GH=4。従ってOZ=2+4/2=4。"
+      ],
+      "feasibility": {
+        "status": "verified",
+        "method_ja": "verify_h_revision.py が元の直線・円・鏡映・射影の定義から厳密座標で構成し、全与条件と答えを照合。短縮用の性質は交点の生成には使わず、生成後に検査する。",
+        "witness": {
+          "points": {
+            "A": [
+              "18/5",
+              "72/5"
+            ],
+            "B": [
+              "-6",
+              "0"
+            ],
+            "C": [
+              "6",
+              "0"
+            ],
+            "H": [
+              "18/5",
+              "8/5"
+            ],
+            "O": [
+              "0",
+              "32/5"
+            ],
+            "K_a": [
+              "6*(-sqrt(37) + 2*sqrt(13))/(sqrt(37) + 2*sqrt(13))",
+              "0"
+            ],
+            "L_a": [
+              "6*(sqrt(37) + 2*sqrt(13))/(-sqrt(37) + 2*sqrt(13))",
+              "0"
+            ],
+            "M_a": [
+              "0",
+              "0"
+            ],
+            "P_a": [
+              "10/17",
+              "40/17"
+            ],
+            "K_b": [
+              "74/9 - 8*sqrt(13)/9",
+              "-40/3 + 16*sqrt(13)/3"
+            ],
+            "L_b": [
+              "8*sqrt(13)/9 + 74/9",
+              "-16*sqrt(13)/3 - 40/3"
+            ],
+            "M_b": [
+              "24/5",
+              "36/5"
+            ],
+            "P_b": [
+              "18/13",
+              "64/13"
+            ],
+            "K_c": [
+              "-26 + 4*sqrt(37)",
+              "-30 + 6*sqrt(37)"
+            ],
+            "L_c": [
+              "-26 - 4*sqrt(37)",
+              "-6*sqrt(37) - 30"
+            ],
+            "M_c": [
+              "-6/5",
+              "36/5"
+            ],
+            "P_c": [
+              "4",
+              "2"
+            ],
+            "Z": [
+              "12/5",
+              "16/5"
+            ]
+          },
+          "given_values": {
+            "OH": "6"
+          },
+          "answer": "4"
+        },
+        "script": "verify_h_revision.py",
+        "solution_status": "source_proof_checked"
+      },
+      "review_notes_ja": [
+        "TSTST 2015のHumpty三点共円命題。v1の出典証明確認を継承し、v2は二等分線円から厳密に三交点を作って検算する。"
+      ]
+    },
+    {
+      "id": "H08",
+      "problem_ja": "直線PQにP,Qで接する二円がPQの同じ側でA,Bに交わり、BはAよりPQに近いとする。三角形APQは鋭角不等辺とする。BをPQに関して鏡映した点をCとする。AP=6、AC=3√34/2、tan∠BAQ=3/5のとき、三角形APCの面積を求めよ。",
+      "answer_exact": "27/2",
+      "geometry_solution_ja": [
+        "二接円の角追いとBの鏡映からA,P,C,Qは共円であり、∠CAP=∠BAQとなる。これは近い交点BをHumpty、Cをsymmedian弦端点と見ると現れる等角関係である。",
+        "∠BAQは鋭角でtan=3/5だから、sin∠CAP=sin∠BAQ=3/√34。",
+        "面積は(1/2)·AP·AC·sin∠CAP=(1/2)·6·(3√34/2)·(3/√34)=27/2。"
+      ],
+      "feasibility": {
+        "status": "verified",
+        "method_ja": "verify_h_revision.py が元の直線・円・鏡映・射影の定義から厳密座標で構成し、全与条件と答えを照合。短縮用の性質は交点の生成には使わず、生成後に検査する。 さらにverify_additional_relations.pyはA=(0,0),B=(d,0),共通交点=(u,v)の一般形から二円を定め、H06の中心線上の共点、H07の鏡映・中点・反転関係、H08の共円性・等角関係を恒等式として証明する。",
+        "witness": {
+          "points": {
+            "A": [
+              "3*sqrt(10)/5",
+              "9*sqrt(10)/5"
+            ],
+            "B": [
+              "sqrt(10)",
+              "sqrt(10)"
+            ],
+            "P": [
+              "0",
+              "0"
+            ],
+            "Q": [
+              "3*sqrt(10)",
+              "0"
+            ],
+            "C": [
+              "sqrt(10)",
+              "-sqrt(10)"
+            ]
+          },
+          "given_values": {
+            "AP": "6",
+            "AC": "4*sqrt(5)",
+            "tan_BAQ": "1/2"
+          },
+          "answer": "12"
+        },
+        "script": "verify_h_revision.py",
+        "solution_status": "proved_here",
+        "general_relation_script": "verify_additional_relations.py"
+      },
+      "review_notes_ja": [
+        "v1でHumptyの鏡映がsymmedian弦端点になる関係を一般形で検証済み。H15と既存の同群管理を継承する。",
+        "2026-09-22: 旧数値例の二等辺性を修正。鋭角不等辺条件を維持して数値を選び直し、元作図から再検証した。"
+      ]
+    },
+    {
+      "id": "H12",
+      "problem_ja": "凸四角形ABCDは0<∠ABC=∠ADC<90°を満たす。B,Dの内角二等分線とACとの交点をE,Fとし、直線BEと直線DFの交点をPとする。MをACの中点とし、円BPDと線分BM,DMの内部との交点をそれぞれX,Yとする（B,D以外の交点）。Q=XE∩YF、VをPからACへの垂足とする。P,QはACの同じ側にあり、Qの方がACから遠い。PM=√29/2、PV=5/2、QM=√101のとき、PQを求めよ。",
+      "answer_exact": "15/2",
+      "geometry_solution_ja": [
+        "この配置のX,Yはそれぞれ三角形BAC,DACのHumpty点で、そこからPQ⊥ACが従う。v1では等角条件を保つ一般3パラメータによりこの同定と垂直性を証明済み。",
+        "従ってVはQのACへの垂足でもある。直角三角形PMVでMV²=PM²−PV²=29/4−25/4=1。",
+        "直角三角形QMVでQV=√(101−1)=10。指定された側と順序からPQ=QV−PV=10−5/2=15/2。"
+      ],
+      "feasibility": {
+        "status": "verified",
+        "method_ja": "verify_h_revision.py が元の直線・円・鏡映・射影の定義から厳密座標で構成し、全与条件と答えを照合。短縮用の性質は交点の生成には使わず、生成後に検査する。",
+        "witness": {
+          "points": {
+            "A": [
+              "-1",
+              "0"
+            ],
+            "B": [
+              "3/4",
+              "7/4"
+            ],
+            "C": [
+              "1",
+              "0"
+            ],
+            "D": [
+              "-1",
+              "-3/2"
+            ],
+            "E": [
+              "1/6",
+              "0"
+            ],
+            "F": [
+              "-1/4",
+              "0"
+            ],
+            "P": [
+              "1",
+              "5/2"
+            ],
+            "M": [
+              "0",
+              "0"
+            ],
+            "X": [
+              "6/29",
+              "14/29"
+            ],
+            "Y": [
+              "-4/13",
+              "-6/13"
+            ],
+            "Q": [
+              "1",
+              "10"
+            ],
+            "V": [
+              "1",
+              "0"
+            ]
+          },
+          "given_values": {
+            "PM": "sqrt(29)/2",
+            "PV": "5/2",
+            "QM": "sqrt(101)"
+          },
+          "answer": "15/2"
+        },
+        "script": "verify_h_revision.py",
+        "solution_status": "proved_here"
+      },
+      "review_notes_ja": [
+        "一般性質の根拠はv1 verify_humpty.py: symbolic_quadrilateral_check。元配置を五辺から固定する必要はなく、与えた長さから目標値が一意ならよい。",
+        "Pは内角二等分線を含む直線どうしの交点。内角二等分線の半直線どうしの交点とは限らないことを本文に明記した。"
+      ]
+    },
+    {
+      "id": "DA03",
+      "problem_ja": "鋭角不等辺三角形ABCの外心をOとする。A,Cを通り直線ABにAで接する円と、円BOCのCでない交点をTとする。Kを直線TOと直線BCの交点とし、K,B,Cはこの順に一直線上にあるとする。BC=32、BK=49のとき、AKの長さを求めよ。",
+      "answer_exact": "63",
+      "geometry_solution_ja": [
+        "TはA-Dumpty点なので、K=OT∩BCから引いたKAはABCの外接円の接線となる（Sarkar Problem6、Lemma4）。",
+        "KC=KB+BC=49+32=81。Kの方べきはKA²=KB·KC。",
+        "AK²=49·81=7²·9²よりAK=63。"
+      ],
+      "feasibility": {
+        "status": "verified",
+        "method_ja": "verify_da_revision.py が元の円・接線・割線・角条件を使って点を作り直し、すべての数値与条件と答えを相対許容誤差1e-8で確認する。表示座標は近似値。正確な答えの根拠は幾何解法であり、この数値確認だけで一般命題を証明したとはしない。",
+        "witness": {
+          "points": {
+            "A": [
+              8.0,
+              26.832815729997478
+            ],
+            "B": [
+              0.0,
+              0.0
+            ],
+            "C": [
+              32.0,
+              0.0
+            ],
+            "O": [
+              16.0,
+              9.838699100999076
+            ],
+            "T": [
+              10.693877551020412,
+              9.035539990713438
+            ],
+            "K": [
+              -49.00000000000006,
+              0.0
+            ]
+          },
+          "given_values": {
+            "BC": 32.0,
+            "BK": 49.00000000000006
+          },
+          "answer": 63.00000000000005
+        },
+        "script": "verify_da_revision.py",
+        "solution_status": "source_proof_checked"
+      },
+      "review_notes_ja": [
+        "代表例はA=(8,12√5),B=(0,0),C=(32,0)。TとKは元の二円から作図してBK=49を検算する。"
+      ]
+    },
+    {
+      "id": "DA06",
+      "problem_ja": "AB>ACの鋭角不等辺三角形ABCの外心をO、BCの中点をMとする。A,Bを通り直線ACにAで接する円をω1、A,Cを通り直線ABにAで接する円をω2とする。二円のAでない交点をD、直線AMとω2のAでない交点をEとする。AO=5、AD=4のとき、OEの長さを求めよ。",
+      "answer_exact": "3",
+      "geometry_solution_ja": [
+        "DはA-Dumpty点なのでAD⊥OD。したがってOD²=AO²−AD²。",
+        "ACの中点をWとすると、DとEは直線OWについて対称（Sarkar Lemma17）。ゆえにOE=OD。",
+        "OE=√(5²−4²)=3。"
+      ],
+      "feasibility": {
+        "status": "verified",
+        "method_ja": "verify_da_revision.py が元の円・接線・割線・角条件を使って点を作り直し、すべての数値与条件と答えを相対許容誤差1e-8で確認する。表示座標は近似値。正確な答えの根拠は幾何解法であり、この数値確認だけで一般命題を証明したとはしない。",
+        "witness": {
+          "points": {
+            "A": [
+              0.0,
+              5.0
+            ],
+            "B": [
+              -3.0,
+              -4.0
+            ],
+            "C": [
+              4.203821656050955,
+              2.707006369426751
+            ],
+            "O": [
+              0.0,
+              0.0
+            ],
+            "M": [
+              0.6019108280254777,
+              -0.6464968152866244
+            ],
+            "D": [
+              2.3999999999999995,
+              1.8000000000000007
+            ],
+            "E": [
+              0.21401273885350316,
+              2.992356687898089
+            ]
+          },
+          "given_values": {
+            "AO": 5.0,
+            "AD": 3.999999999999999
+          },
+          "answer": 3.0
+        },
+        "script": "verify_da_revision.py",
+        "solution_status": "source_proof_checked"
+      },
+      "review_notes_ja": []
+    },
+    {
+      "id": "DA07",
+      "problem_ja": "鋭角不等辺三角形ABCの外心をO、垂心をHとする。円BOCと直径AOの円のOでない交点をM、円BHCと直径AHの円のHでない交点をNとする。直線AMと円BOCのMでない交点をX、直線ANと円BHCのNでない交点をYとする。A,M,Xはこの順に並び、AM=4、MX=23、MN=8/3である。XYの長さを求めよ。",
+      "answer_exact": "18",
+      "geometry_solution_ja": [
+        "MはA-Dumpty点、NはA-Humpty点に当たり、この配置ではMN∥XY（ELMO2014/5、Sarkar Lemma7）。",
+        "A,M,XとA,N,Yがそれぞれ一直線上にあるため、△AMNと△AXYは相似。AX=4+23=27。",
+        "XY=(AX/AM)·MN=(27/4)·(8/3)=18。"
+      ],
+      "feasibility": {
+        "status": "verified",
+        "method_ja": "verify_da_revision.py が元の円・接線・割線・角条件を使って点を作り直し、すべての数値与条件と答えを相対許容誤差1e-8で確認する。表示座標は近似値。正確な答えの根拠は幾何解法であり、この数値確認だけで一般命題を証明したとはしない。",
+        "witness": {
+          "points": {
+            "A": [
+              0.7382809323313221,
+              4.616902584383194
+            ],
+            "B": [
+              0.0,
+              0.0
+            ],
+            "C": [
+              11.324751652906125,
+              0.0
+            ],
+            "O": [
+              5.662375826453063,
+              1.4620191517213454
+            ],
+            "H": [
+              0.7382809323313211,
+              1.692864280940503
+            ],
+            "M": [
+              1.4677764722012112,
+              0.6839855680567686
+            ],
+            "N": [
+              2.197272012071097,
+              3.248931448269656
+            ],
+            "X": [
+              5.662375826453069,
+              -21.93028727582015
+            ],
+            "Y": [
+              10.586470720574805,
+              -4.616902584383189
+            ]
+          },
+          "given_values": {
+            "AM": 4.000000000000002,
+            "MX": 22.999999999999982,
+            "MN": 2.6666666666666683
+          },
+          "answer": 17.999999999999982
+        },
+        "script": "verify_da_revision.py",
+        "solution_status": "source_proof_checked"
+      },
+      "review_notes_ja": [
+        "代表例は辺BC=3√57/2、CA=(9√13+3√21)/4、AB=(9√13−3√21)/4。これらの複雑な値は問題文には出さない。"
+      ]
+    },
+    {
+      "id": "DA11",
+      "problem_ja": "鋭角不等辺三角形ABCはAB=7、BC=8を満たし、外接円の半径は5である。I,JをそれぞれAB,ACの中点、KをIJの中点とする。Kを通りABにIで接する円と、Kを通りACにJで接する円のKでない交点をTとする。円ABTの半径を求めよ。",
+      "answer_exact": "35/8",
+      "geometry_solution_ja": [
+        "TはA-Dumpty点である。実際、中心A・倍率2の相似で二接円を移すと、その共通点はBCの中点とsymmedian弦端点になり、Tは弦の中点と分かる。",
+        "Dumptyの角関係から∠ATB=180°−∠BAC。円ABTの半径をrとすると、AB=2r sin∠A。",
+        "元の円ではBC=2·5 sin∠Aだから、r=5·AB/BC=5·7/8=35/8。"
+      ],
+      "feasibility": {
+        "status": "verified",
+        "method_ja": "verify_da_revision.py が元の円・接線・割線・角条件を使って点を作り直し、すべての数値与条件と答えを相対許容誤差1e-8で確認する。表示座標は近似値。正確な答えの根拠は幾何解法であり、この数値確認だけで一般命題を証明したとはしない。",
+        "witness": {
+          "points": {
+            "A": [
+              0.9206000600120029,
+              6.939199919983996
+            ],
+            "B": [
+              0.0,
+              0.0
+            ],
+            "C": [
+              8.0,
+              0.0
+            ],
+            "O": [
+              4.0,
+              3.0
+            ],
+            "I": [
+              0.46030003000600145,
+              3.469599959991998
+            ],
+            "J": [
+              4.460300030006001,
+              3.469599959991998
+            ],
+            "K": [
+              2.4603000300060014,
+              3.469599959991998
+            ],
+            "T": [
+              2.0328667995303027,
+              2.5064108008965973
+            ],
+            "Z": [
+              -2.141899939987998,
+              3.814824982496499
+            ]
+          },
+          "given_values": {
+            "AB": 7.0,
+            "BC": 8.0,
+            "R": 5.0
+          },
+          "answer": 4.375000000000001
+        },
+        "script": "verify_da_revision.py",
+        "solution_status": "source_proof_checked"
+      },
+      "review_notes_ja": [
+        "円ABTを追加したのは求値対象を作るため。T自体やその円の中心の座標を教師入力には含めない。"
+      ]
+    },
+    {
+      "id": "DA15",
+      "problem_ja": "鋭角不等辺三角形ABCの外心をO、BCの中点をMとする。AB,ACの垂直二等分線と半直線AMの交点をそれぞれD,Eとする。F=BD∩CEは三角形ABCの内部にあるとする。AO=13、AF=12のとき、OFの長さを求めよ。",
+      "answer_exact": "5",
+      "geometry_solution_ja": [
+        "AB,ACの中点をU,Vとする。原配置の性質からA,U,F,Vは共円（USAMO2008/2、FはA-Dumpty点）。",
+        "OU⊥AB、OV⊥ACなので、円AUVは直径AOの円。したがってAF⊥OF。",
+        "OF=√(13²−12²)=5。"
+      ],
+      "feasibility": {
+        "status": "verified",
+        "method_ja": "verify_da_revision.py が元の円・接線・割線・角条件を使って点を作り直し、すべての数値与条件と答えを相対許容誤差1e-8で確認する。表示座標は近似値。正確な答えの根拠は幾何解法であり、この数値確認だけで一般命題を証明したとはしない。 verify_additional_relations.pyで中線と垂直二等分線の交点からFを一般形で構成し、Fが二接円の第2交点と一致し、直径AOの円上にあることを恒等的に確認。",
+        "witness": {
+          "points": {
+            "A": [
+              0.0,
+              13.0
+            ],
+            "B": [
+              -5.0,
+              -12.0
+            ],
+            "C": [
+              12.993014508328859,
+              0.4261149919398193
+            ],
+            "O": [
+              0.0,
+              0.0
+            ],
+            "M": [
+              3.9965072541644293,
+              -5.78694250403009
+            ],
+            "D": [
+              2.8883495145631084,
+              -0.5776699029126231
+            ],
+            "E": [
+              2.267109569635095,
+              2.3426798886229268
+            ],
+            "F": [
+              4.615384615384617,
+              1.923076923076918
+            ]
+          },
+          "given_values": {
+            "AO": 13.0,
+            "AF": 12.000000000000005
+          },
+          "answer": 4.999999999999999
+        },
+        "script": "verify_da_revision.py",
+        "solution_status": "proved_here",
+        "general_relation_script": "verify_additional_relations.py"
+      },
+      "review_notes_ja": [
+        "一般的な特殊点の同定・共点性は出典の問題とwalkthroughに依存する。ここでは省略された幾何の証明をすべて独立に補完したとはせず、source_claim_only と記録する。その関係を用いた後の求値は記載の通り導出し、元作図から全与条件と答えを検算した。"
+      ]
+    },
+    {
+      "id": "DB01",
+      "problem_ja": "鋭角不等辺三角形ABCの外心をOとする。中心JがAからBCへの高度の直線上にありAを通る円ωが、辺AB,ACの内部でA以外に交わる点をそれぞれP,Qとする。BP·CQ=AP·AQである。円BOCの中心をUとし、JA=1、UB=4とする。ωと円BOCに共通に接し、二つの中心J,Uが同じ側にある直線を一本とり、その接点をそれぞれY,Zとする。YZを求めよ。",
+      "answer_exact": "4",
+      "geometry_solution_ja": [
+        "積条件で選ばれたωは円BOCと外接する。Dumpty点が二円の接点となる配置である。",
+        "従ってJU=1+4=5。両半径を共通外接線に垂直に引くと、斜辺JU、他の一辺4−1の直角三角形ができる。",
+        "YZ²=JU²−(4−1)²=16。"
+      ],
+      "feasibility": {
+        "status": "verified",
+        "method_ja": "verify_db_revision.py が元の円・角条件・交線から全点を再構成し、本文の全ての数値与条件と答えを厳密に照合。隠す関係を答えの生成には使わず、作図後に検証した。",
+        "witness": {
+          "points": {
+            "A": [
+              "0",
+              "112/45"
+            ],
+            "B": [
+              "-16*sqrt(14)/45",
+              "0"
+            ],
+            "C": [
+              "32*sqrt(14)/45",
+              "0"
+            ],
+            "O": [
+              "8*sqrt(14)/45",
+              "8/15"
+            ],
+            "J": [
+              "0",
+              "67/45"
+            ],
+            "P": [
+              "-2*sqrt(14)/9",
+              "14/15"
+            ],
+            "Q": [
+              "4*sqrt(14)/15",
+              "14/9"
+            ],
+            "U": [
+              "8*sqrt(14)/45",
+              "-52/15"
+            ],
+            "Y": [
+              "892/1125 - 8*sqrt(14)/375",
+              "32*sqrt(14)/1125 + 2344/1125"
+            ],
+            "Z": [
+              "104*sqrt(14)/1125 + 3568/1125",
+              "-136/125 + 128*sqrt(14)/1125"
+            ]
+          },
+          "given_values": {
+            "JA": "1",
+            "UB": "4"
+          },
+          "answer": "4"
+        },
+        "script": "verify_db_revision.py",
+        "solution_status": "proved_here"
+      },
+      "review_notes_ja": [
+        "根拠はSarkar Problem19。半径1,4だけで三角形全体は一意にならないが、YZは外接関係により一意に決まる。",
+        "verify_db_revision.py のcheck_general_relationsで、自由パラメータを残した一般座標形から中心・交点を計算し、短い解法で使う関係が恒等的に成立することを記号検証した。これは単一witnessの一致とは別の検証である。"
+      ]
+    },
+    {
+      "id": "DB08",
+      "problem_ja": "鋭角三角形ABCでAC>ABとし、Γを外接円、Oを外心とする。ΓのAでの接線と直線BCの交点をP、Aから直線OPへの垂足をXとする。直線AB上のEと直線AC上のFを、ともに直線OPのA側にあり、∠EXP=∠ACX、∠FXO=∠ABXとなる一意な点として選ぶ。直線EFとΓの二交点をK,Lとし、σを三角形KLXの外接円、Uをその中心とする。Pはσの外部にある。半直線PUとσの交点を近い方からY,Zとし、PY=3、YZ=9とする。PXを求めよ。",
+      "answer_exact": "6",
+      "geometry_solution_ja": [
+        "XはA-Dumpty点として同定でき、角指定で作ったEFに対してOPは円KLXに接する。X自身がOPとσの共通点なので接点はXである。",
+        "P,Y,Zがこの順に一直線上にあり、PZ=PY+YZ=12。",
+        "Pのσに対する方べきよりPX²=PY·PZ=36。"
+      ],
+      "feasibility": {
+        "status": "verified",
+        "method_ja": "verify_db_revision.py が元の円・角条件・交線から全点を再構成し、本文の全ての数値与条件と答えを厳密に照合。隠す関係を答えの生成には使わず、作図後に検証した。",
+        "witness": {
+          "points": {
+            "A": [
+              "0",
+              "27*sqrt(2)/10"
+            ],
+            "B": [
+              "-9*sqrt(2)/10",
+              "0"
+            ],
+            "C": [
+              "18*sqrt(2)/5",
+              "0"
+            ],
+            "O": [
+              "27*sqrt(2)/20",
+              "3*sqrt(2)/4"
+            ],
+            "P": [
+              "-39*sqrt(2)/10",
+              "0"
+            ],
+            "X": [
+              "3*sqrt(2)/10",
+              "3*sqrt(2)/5"
+            ],
+            "E": [
+              "-3*sqrt(2)/5",
+              "9*sqrt(2)/10"
+            ],
+            "F": [
+              "6*sqrt(2)/5",
+              "9*sqrt(2)/5"
+            ],
+            "K": [
+              "3*sqrt(2)*(3 - sqrt(41))/10",
+              "3*sqrt(2)*(11 - sqrt(41))/20"
+            ],
+            "L": [
+              "3*sqrt(2)*(3 + sqrt(41))/10",
+              "3*sqrt(2)*(sqrt(41) + 11)/20"
+            ],
+            "U": [
+              "-3*sqrt(2)/20",
+              "15*sqrt(2)/4"
+            ],
+            "Y": [
+              "-12*sqrt(2)/5",
+              "3*sqrt(2)/2"
+            ],
+            "Z": [
+              "21*sqrt(2)/10",
+              "6*sqrt(2)"
+            ]
+          },
+          "given_values": {
+            "PY": "3",
+            "YZ": "9"
+          },
+          "answer": "6"
+        },
+        "script": "verify_db_revision.py",
+        "solution_status": "proved_here"
+      },
+      "review_notes_ja": [
+        "独立witnessは元のA=(0,3),B=(-1,0),C=(4,0)を相似変換したもの。E,Fは角条件から求め、接触から逆算していない。",
+        "verify_db_revision.py のcheck_general_relationsで、自由パラメータを残した一般座標形から中心・交点を計算し、短い解法で使う関係が恒等的に成立することを記号検証した。これは単一witnessの一致とは別の検証である。"
+      ]
+    },
+    {
+      "id": "DB16",
+      "problem_ja": "三角形ABCの外心をOとする。辺BCをBS:SC=AB²:AC²に内分する点Sをとり、半直線AS上のA以外の点Pをとる。O_1を三角形APBの外心、O_2を三角形CAPの外心とし、直線AOとO_1O_2の交点をNとする。各三角形と交点は非退化で、AO_1=4、AO_2=6、O_1O_2=8である。ANを求めよ。",
+      "answer_exact": "sqrt(10)",
+      "geometry_solution_ja": [
+        "APがA-symmedian方向であることから、AOは線分O_1O_2を二等分する。したがってNはO_1O_2の中点である。",
+        "三角形AO_1O_2の中線として、AN²=(AO_1²+AO_2²)/2−(O_1O_2/2)²。",
+        "AN²=(16+36)/2−16=10。"
+      ],
+      "feasibility": {
+        "status": "verified",
+        "method_ja": "verify_db_revision.py が元の円・角条件・交線から全点を再構成し、本文の全ての数値与条件と答えを厳密に照合。隠す関係を答えの生成には使わず、作図後に検証した。",
+        "witness": {
+          "points": {
+            "A": [
+              "0",
+              "0"
+            ],
+            "B": [
+              "135/124",
+              "129*sqrt(15)/124"
+            ],
+            "C": [
+              "-135/184",
+              "159*sqrt(15)/184"
+            ],
+            "S": [
+              "0",
+              "72*sqrt(15)/77"
+            ],
+            "P": [
+              "0",
+              "3*sqrt(15)/2"
+            ],
+            "O": [
+              "5/6",
+              "sqrt(15)/2"
+            ],
+            "O_1": [
+              "-11/4",
+              "3*sqrt(15)/4"
+            ],
+            "O_2": [
+              "21/4",
+              "3*sqrt(15)/4"
+            ],
+            "N": [
+              "5/4",
+              "3*sqrt(15)/4"
+            ]
+          },
+          "given_values": {
+            "AO_1": "4",
+            "AO_2": "6",
+            "O_1O_2": "8"
+          },
+          "answer": "sqrt(10)"
+        },
+        "script": "verify_db_revision.py",
+        "solution_status": "proved_here"
+      },
+      "review_notes_ja": [
+        "PをAS内部に限らないことはv1からの意図的な定義域変更。Sarkar/Pauseの元演習はsymmedian上の点を扱う。",
+        "Humpty点の位置そのものではなく、medianとsymmedianのisogonalな方向関係を学ぶ間接候補。",
+        "verify_db_revision.py のcheck_general_relationsで、自由パラメータを残した一般座標形から中心・交点を計算し、短い解法で使う関係が恒等的に成立することを記号検証した。これは単一witnessの一致とは別の検証である。"
+      ]
+    }
+  ]
+}

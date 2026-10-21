@@ -1,0 +1,91 @@
+{
+  "id": "IMO_2018_P6",
+  "variables": [
+    "cx",
+    "cy",
+    "dx",
+    "dy",
+    "xx",
+    "xy"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(dx, dy)"
+    },
+    {
+      "name": "X",
+      "expression": "Point(xx, xy)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))",
+      "operator": "!=",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((C.x-B.x)*(D.y-B.y)-(C.y-B.y)*(D.x-B.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((D.x-C.x)*(A.y-C.y)-(D.y-C.y)*(A.x-C.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((A.x-D.x)*(B.y-D.y)-(A.y-D.y)*(B.x-D.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((B.x-A.x)*(X.y-A.y)-(B.y-A.y)*(X.x-A.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((C.x-B.x)*(X.y-B.y)-(C.y-B.y)*(X.x-B.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((D.x-C.x)*(X.y-C.y)-(D.y-C.y)*(X.x-C.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((A.x-D.x)*(X.y-D.y)-(A.y-D.y)*(X.x-D.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(A, B)*Distance(C, D)",
+      "operator": "=",
+      "right": "Distance(B, C)*Distance(D, A)"
+    },
+    {
+      "left": "Angle(X, A, B)",
+      "operator": "=",
+      "right": "Angle(X, C, D)"
+    },
+    {
+      "left": "Angle(X, B, C)",
+      "operator": "=",
+      "right": "Angle(X, D, A)"
+    }
+  ],
+  "target": "0"
+}

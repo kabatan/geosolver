@@ -1,0 +1,29 @@
+[
+  {
+    "case_id": "proof-01",
+    "score": 2,
+    "complete_proof": false,
+    "essential_progress": "The general vector construction is valid: with b=AB-vector notation in the answer reversed as b=AC, c=AB, it derives k=|c|²/[2(b·c+|c|²)], m=|b|²/[2(|b|²+b·c)] and the exact coefficients F=[k(2m-1)b+m(2k-1)c]/(k+m-1). It also correctly states that circle APN is the image of circle ABC under the homothety centered at A with ratio 1/2, so testing 2F on circle ABC is sufficient. Independent simplification of its coefficients gives F=(|c|² b+|b|² c)/|b+c|²; substituting into the circle equation is a short standard identity, not a missing new geometric theorem.",
+    "flaw_or_gap": "The answer never performs or even states the final F-circle substitution. After obtaining the correct exact F expression, it calls the formula messy and abandons it; the last proof instead says that 2F lies on the circumcircle by a known result / unspecified coordinate verification. This prevents score 4 under the requested self-contained standard. Branch and sign are also only asserted in the final section, although the vector formula's denominators can be checked positive or nonzero from acute angle A. The final angular aside claims angle BAF=angle CAM+angle B, which is impossible for interior F since angle BAF<angle A and angle B>angle BAM; it is not needed for the earlier exact-vector route.",
+    "evidence_quotes": [
+      {
+        "lines": "119-159, 165-175",
+        "quote": "$k=\\frac{|\\mathbf c|^2}{2(\\mathbf b\\cdot\\mathbf c+|\\mathbf c|^2)}$ ... '$\\vec F=\\frac{1}{k+m-1}[(2m-1)k\\mathbf b+(2k-1)m\\mathbf c]$' ... 'This looks messy. Let's simplify $k$ and $m$' ... [switches approach]."
+      },
+      {
+        "lines": "484-501, 503-517",
+        "quote": "'$h(\\Omega)$ is the circle passing through $A,P,N$' ... 'it suffices to show ... $F'=2F$ lies on $\\Omega$' ... 'It can be shown (via trigonometric Ceva or coordinate verification)' ... 'the geometric property ... ensures that $F$ is the unique point ... satisfying the cyclic condition'."
+      }
+    ],
+    "independent_core_check": "Let B=|b|², C=|c|², q=b·c>0, S=B+C+2q=|b+c|². The answer's k,m,F formulas simplify to F=(C b+B c)/S. For circumcenter O of ABC with A=0, O·b=B/2 and O·c=C/2. Consequently F·F=BC/S=O·F, so |2F|²-2O·(2F)=0. This verifies the claimed endpoint from the answer's own exact F formula without using any private source. Moreover 0<k,m<1/2, k+m-1<0; F has positive barycentric coefficients C/S and B/S summing to less than 1, so the vector branch is nondegenerate and interior.",
+    "incidental_error": "The power-of-a-point attempt incorrectly treats D as the second circle intersection, then explicitly retracts that mistake (lines 231-256, 345-356). The final angular claim at lines 503-510 is false and the answer notices a contradiction there, but it is not a premise of the earlier valid vector computation. The claim that F interior follows from theta1<B and theta2<C at lines 520-521 is not separately justified; F interior is given.",
+    "uncertainty": "moderate 2-versus-3 boundary. Score 3 credits the correct general F derivation plus correct homothety reduction, whose remaining algebraic substitution is routine and independently verified. A stricter reading focused on the abandoned calculation and final appeal to an equivalent known theorem would score 2; neither reading permits 4.",
+    "read_coverage": "Entire problem and natural-stop answer, lines 1-527; vector derivation, power detour and retraction, angular attempts, homothety reduction, final proof, ordering, and sign claims.",
+    "score_range_across_reviewers": [
+      2,
+      3
+    ],
+    "adjudication": "Conservative score 2 retained: both reviewers validate the general F formula and agree no complete proof. The response never states or verifies the circle equation and changes to an unproved, partly false angle argument. A generous partial-credit reading gives 3; this is not a complete proof under either reading.",
+    "independent_review_file": "docs/research/related-numeric-sft-2026-09-28/review/proof-boundary-independent.json"
+  }
+]

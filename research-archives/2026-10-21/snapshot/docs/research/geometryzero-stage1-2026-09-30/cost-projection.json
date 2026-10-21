@@ -1,0 +1,58 @@
+{
+  "hardware": "one RTX5090 32GiB, CPU optimizer four threads, 61GiB RAM",
+  "generation_seconds_per_question": 17.336039888128045,
+  "training_seconds_per_question": [
+    19.60806890495587,
+    20.49374819509103
+  ],
+  "actor_load_seconds": [
+    9.27727488297387,
+    8.778721126989694,
+    6.668642100994475
+  ],
+  "serial_restart_extra_seconds_per_question_range": [
+    17.020106254989514,
+    24.952114924933994
+  ],
+  "estimates": {
+    "148": {
+      "generation_hours": 0.7127038620674863,
+      "serial_compute_hours_range": [
+        1.5188133614934498,
+        1.5552246211990064
+      ],
+      "serial_operational_scenario_hours_range": [
+        2.218528840865241,
+        2.5810337903351814
+      ],
+      "batch32_amortized_compute_only_hours_range": [
+        0.9640252968763781,
+        0.9892445472023178
+      ]
+    },
+    "592": {
+      "generation_hours": 2.850815448269945,
+      "serial_compute_hours_range": [
+        6.075253445973799,
+        6.220898484796026
+      ],
+      "serial_operational_scenario_hours_range": [
+        8.874115363460964,
+        10.324135161340726
+      ],
+      "batch32_amortized_compute_only_hours_range": [
+        3.8561011875055122,
+        3.956978188809271
+      ]
+    }
+  },
+  "limits": [
+    "Only Qwen2.5-3B and current cap1024 tested; do not apply to 7B/9B or longer reasoning.",
+    "24 originals, not all148 variants; two selected groups measure finite per-group update costs.",
+    "Batch32 assumes 32 sequences=4 questions×8 and divides optimizer cost by4; actual accumulated-gradient batch throughput is unmeasured.",
+    "Restart scenario reallocation is an overhead bound; real training must retain FP32 master/moments across steps, not restart from quantized BF16 checkpoints each question.",
+    "Optimizer full resume, production actor synchronization, KL/reference overhead, stage2 quality evaluations and extra seeds are unmeasured.",
+    "Protocol2048 extension was not triggered; cap increases in later training change cost.",
+    "Current BF16 fidelity fails; operational estimates do not certify RL correctness."
+  ]
+}

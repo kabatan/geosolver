@@ -1,0 +1,39 @@
+{
+  "seed": 2026092431,
+  "lr": 1e-05,
+  "grad_clip": 1.0,
+  "lora_rank": 8,
+  "lora_alpha": 16,
+  "modules": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj",
+    "in_proj_qkv",
+    "in_proj_z",
+    "out_proj",
+    "gate_proj",
+    "up_proj",
+    "down_proj"
+  ],
+  "max_sequence_tokens": 8192,
+  "micro_batch": 1,
+  "optimizer": "AdamW, weight decay zero, constant learning rate",
+  "loss": "English visible assistant answer including EOS only; non-thinking chat template",
+  "checkpoint": "Candidate only; independent base-start protocol pending selection and audit",
+  "dataset": "/home/kabatan/work/solver/docs/research/qwen35-external-teacher-2026-09-25/paired-analogy-candidate-2026-09-25/rotation-3/train-control.json",
+  "dataset_sha256": "1c20ad95765b438a9819f4cdc070ec332ca037d9f4d5ca38ea7c5a83a00eb614",
+  "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+  "n_examples": 35,
+  "n_configurations": 33,
+  "epochs": 1,
+  "planned_updates": 35,
+  "study_arm": "external_teacher_paired_analogy_rotation-3_control",
+  "shuffle_rule": "For epoch e, random.Random(seed + e).shuffle(list(range(n_examples))); paired treatment/control row positions and seed are identical.",
+  "added_slots": "Three paired rows after the unchanged common 32; each row contains both permitted v0 sibling tasks and no omitted task.",
+  "permitted_source_ids": [
+    "H03",
+    "H04"
+  ],
+  "omitted_source_id": "H14"
+}

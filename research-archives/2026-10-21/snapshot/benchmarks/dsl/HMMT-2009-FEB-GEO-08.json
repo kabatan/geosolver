@@ -1,0 +1,69 @@
+{
+  "id": "HMMT-2009-FEB-GEO-08",
+  "variables": [
+    "Bx",
+    "By",
+    "Dx",
+    "Dy"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(281, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(Bx, By)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(Dx, Dy)"
+    },
+    {
+      "name": "M",
+      "expression": "Midpoint(A, D)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 231
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": 160
+    },
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": 281
+    },
+    {
+      "left": "Distance(A, D)",
+      "operator": "=",
+      "right": 178
+    },
+    {
+      "left": "Distance(C, D)",
+      "operator": "=",
+      "right": 153
+    },
+    {
+      "left": "By",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Dy",
+      "operator": "<",
+      "right": "0"
+    }
+  ],
+  "target": "Distance(B, M)"
+}

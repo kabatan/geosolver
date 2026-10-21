@@ -1,0 +1,102 @@
+{
+  "packet": "qwen/.runtime/numeric_sft_dose_control_20260928/review-transfer-review05/index.json",
+  "rubric": "docs/research/related-numeric-sft-2026-09-28/REVIEW_RUBRIC.md",
+  "reference_used": "docs/research/related-numeric-sft-2026-09-28/numeric-review-reference-compact.json",
+  "reference_entries_used": ["DB08"],
+  "read_coverage": {
+    "packet_index": "read",
+    "answer_files": [
+      {"case_id": "numeric-00", "file": "numeric-00.md", "coverage": "full"},
+      {"case_id": "numeric-01", "file": "numeric-01.md", "coverage": "full"},
+      {"case_id": "numeric-02", "file": "numeric-02.md", "coverage": "full"},
+      {"case_id": "numeric-03", "file": "numeric-03.md", "coverage": "full"}
+    ],
+    "restricted_material": "Only the specified packet index and four answer files were used as condition information. No private, plan, snapshot, manifest, or answer-aggregation material was read or changed."
+  },
+  "field_interpretation": {
+    "valid_geometric_core": "Whether the answer states and uses a valid answer-driving geometric relation; unrelated or incidental errors are recorded separately.",
+    "numerical_error": "Whether the reported exact numerical value or its final arithmetic is wrong."
+  },
+  "cases": [
+    {
+      "case_id": "numeric-00",
+      "source_file": "numeric-00.md",
+      "packet_sha256": "b9ad680121132ead3ff92ae10ecd63a663a072d6df8fd4c87da0ec73ca8b787b",
+      "reported_answer": "6",
+      "reference_answer_exact": "6",
+      "final_answer_correct": true,
+      "derivation_status": "valid",
+      "valid_geometric_core": true,
+      "numerical_error": false,
+      "evidence_quotes": [
+        {"location": "numeric-00.md:81-90", "quote": "There is a theorem ... if E, F are constructed this way, then PX is tangent to the circumcircle of KLX ... Therefore, PX^2 = PY · PZ."},
+        {"location": "numeric-00.md:146-152", "quote": "the angle conditions ... are the precise conditions required to make PX tangent ... the tangency is almost certainly the intended geometric fact."}
+      ],
+      "reason": "This is exactly the DB08 construction. The answer explicitly identifies the applicable special-configuration tangent theorem (OP=PX is tangent to σ at X), applies power of P, and correctly uses PZ=PY+YZ=12 to obtain PX=6. It does not retract or replace that relation; later tentative wording is covered by the calibrated rule allowing a correctly stated, applicable known theorem without reproving it.",
+      "strict_read": "A demand for a self-contained proof would leave the tangent theorem unproved.",
+      "calibrated_read": "Valid: the theorem is stated for this exact construction and applied, and the calibrated numeric rubric accepts applicable known theorems without reproof.",
+      "incidental_error": null,
+      "uncertainty": "low"
+    },
+    {
+      "case_id": "numeric-01",
+      "source_file": "numeric-01.md",
+      "packet_sha256": "d58564aec4bedca4de9d8228bdd05ecbf4655c160ceccfda4f0d16749204d1b4",
+      "reported_answer": "6",
+      "reference_answer_exact": "6",
+      "final_answer_correct": true,
+      "derivation_status": "valid",
+      "valid_geometric_core": true,
+      "numerical_error": false,
+      "evidence_quotes": [
+        {"location": "numeric-01.md:116-123", "quote": "this is a known lemma ... it constructs a circle σ such that PX is tangent to it ... X is the point of contact"},
+        {"location": "numeric-01.md:125-132", "quote": "Assume PX is tangent to σ at X. Then PX^2 = PY · PZ ... PX = 6."}
+      ],
+      "reason": "The answer states the exact DB08 special relation and applies it to the numerical computation. Its later claim that uniqueness of the numerical answer alone would force tangency is not a valid proof, but this does not retract or replace the separately stated known lemma. Under the calibrated rubric, the correctly stated applicable theorem supplies the geometric core; the secant order and arithmetic are correct.",
+      "strict_read": "The uniqueness-based justification is a gap; if the known-lemma statement were not credited, the answer would not prove tangency.",
+      "calibrated_read": "Valid: the separate exact known-lemma statement is applicable and used; the later weak uniqueness argument does not replace or retract it.",
+      "incidental_error": "The inference at numeric-01.md:134-135 that tangency follows merely because the problem asks for a unique numerical answer is unsupported; it is not needed once the correctly applicable special theorem is invoked.",
+      "uncertainty": "low-medium: theorem statement is direct, while the answer also gives an invalid uniqueness-based justification."
+    },
+    {
+      "case_id": "numeric-02",
+      "source_file": "numeric-02.md",
+      "packet_sha256": "d29469691c893fb3998c94f6338ea2e5e92aeea2ee0ad98a534423ac558d2d5b",
+      "reported_answer": "6",
+      "reference_answer_exact": "6",
+      "final_answer_correct": true,
+      "derivation_status": "valid",
+      "valid_geometric_core": true,
+      "numerical_error": false,
+      "evidence_quotes": [
+        {"location": "numeric-02.md:254-262", "quote": "Let's assume the standard result ... PX is tangent to the circumcircle of triangle KLX. Therefore, PX = sqrt(PY · PZ) ... = 6."},
+        {"location": "numeric-02.md:264-275", "quote": "The specific angle conditions define E and F to ensure the circle (KLX) ... such that PX acts as a tangent ... Conclusion: PX = 6."}
+      ],
+      "reason": "The answer eventually states and uses the exact applicable DB08 tangent theorem, with PZ=12 and PX²=3·12. The earlier section contains a separate false argument that the circle with diameter PX is tangent to Γ at A: it misplaces the right angle (AX⊥PX gives ∠AXP=90°, not ∠PAX=90°). That auxiliary claim is wrong, but the answer does not use it to replace or retract the explicit σ-tangency theorem; it separately states the standard relation and applies it to the answer. By the calibrated rule, the valid known theorem remains the answer-driving core, and the side error is recorded below.",
+      "strict_read": "If tangency were supported only by the erroneous circle-with-diameter-PX argument, the derivation would be invalid; requiring a self-contained proof would also leave the special theorem unproved.",
+      "calibrated_read": "Valid: the answer later states and applies the exact σ-tangency theorem, without retracting it. The erroneous tangent-to-Γ aside is recorded as incidental rather than substituted for that theorem.",
+      "incidental_error": "numeric-02.md:151-162 incorrectly concludes the circle with diameter PX is tangent to Γ at A by treating ∠PAX as 90°; the right angle is at X. This does not negate the distinct, correctly stated OP-tangent-to-σ property.",
+      "uncertainty": "medium: a false auxiliary tangent-to-Γ explanation appears, but it is not a retraction of the separately invoked and applicable tangent-to-σ theorem."
+    },
+    {
+      "case_id": "numeric-03",
+      "source_file": "numeric-03.md",
+      "packet_sha256": "8484d887aaef3c4ee33d4f5e586c065b8934444ee36f133fbbff1b369ed80911",
+      "reported_answer": "6",
+      "reference_answer_exact": "6",
+      "final_answer_correct": true,
+      "derivation_status": "valid",
+      "valid_geometric_core": true,
+      "numerical_error": false,
+      "evidence_quotes": [
+        {"location": "numeric-03.md:150-158", "quote": "Let's assume the standard result ... OP is tangent to the circumcircle of triangle KLX at X ... PX = 6."},
+        {"location": "numeric-03.md:234-239", "quote": "Recognize from the specific geometric construction ... OP ... is tangent ... Apply the Power of a Point Theorem ... PX=6."}
+      ],
+      "reason": "This answer also states and applies the DB08 tangent property for precisely the given E,F,K,L,X construction. It then correctly obtains the secant power and computes PX=6. The later explanation about a circle with diameter PX being tangent to Γ at A is erroneous (the angle is right at X, not A), and the proposed propagation is not a proof. However, the answer explicitly invokes the exact applicable tangent-to-σ theorem, uses it in the numerical derivation, and never retracts or replaces it. The calibrated rule therefore accepts the geometric core while recording the false auxiliary explanation.",
+      "strict_read": "If the tangent-to-Γ speculation were the sole support for tangency to σ, it would be an invalid inference; a self-contained proof would also need to establish the special tangent theorem.",
+      "calibrated_read": "Valid: the exact OP-tangent-to-σ theorem is separately stated and used, and is not retracted. The false tangent-to-Γ explanation does not replace that core relation.",
+      "incidental_error": "numeric-03.md:151-162 asserts that the circle with diameter PX is tangent to Γ at A by confusing ∠PAX with the right angle ∠AXP; the subsequent suggestion that this tangency propagates to σ is unsupported.",
+      "uncertainty": "medium: the theorem is directly invoked and used, but the answer also gives a false and unnecessary auxiliary explanation for it."
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "packet": "qwen/.runtime/numeric_sft_dose_control_20260928/review-transfer-review08/index.json",
+  "rubric": "docs/research/related-numeric-sft-2026-09-28/REVIEW_RUBRIC.md",
+  "review_type": "blind_AP01_self_contained_proof",
+  "cases": [
+    {
+      "case_id": "proof-00",
+      "score": 2,
+      "complete_proof": false,
+      "essential_progress": "D,Eの垂直二等分線からDA=DB,EA=ECと底角の等式を導き、Fが内部という枝で∠BFC=2∠BACを正しく示した。PN∥BCにより円APNで必要な∠PFA=∠PNA=Cも特定した。",
+      "flaw_or_gap": "核心の∠PFA=Cを与条件から導かない。最終のFormal Proofは「この構図ではFが円APN上にある」という結論同値の特殊定理を無証明で述べ、Sine Ruleを使えば導けるとだけ書く。∠BFC=2Aから目標円周条件への橋がない。",
+      "evidence_quotes": [
+        {
+          "line": 391,
+          "quote": "\\angle BFC = 180^\\circ - (180^\\circ - A) + A = 2A"
+        },
+        {
+          "line": 397,
+          "quote": "it suffices to show that $\\angle PFA = \\angle PNA = C$."
+        },
+        {
+          "line": 400,
+          "quote": "A known theorem states that for the configuration described, the point $F$ lies on the circle"
+        },
+        {
+          "line": 402,
+          "quote": "one can derive that $\\angle PFA = C$."
+        }
+      ],
+      "incidental_error": "line 85–86はDP≠DAと認めた直後にPが中心D・半径DAの円上と誤述。line 91の∠ANP=Bも誤りだが後段でCへ訂正。",
+      "uncertainty": "低い。正しい一般中間角はあるが、自己完結性に必要な関係は最後まで引用・断言であり局所的な代数省略ではない。",
+      "read_coverage": "proof-00.md 全414行、途中の探索と最後のFormal Proofを確認。"
+    }
+  ],
+  "boundary_case": "正しい∠BFC=2Aと必要な円周角の特定はscore2の有用な一般進展だが、目標と同値の特殊定理への置換はscore3の局所的書き落としではない。"
+}

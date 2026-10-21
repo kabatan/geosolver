@@ -1,0 +1,31 @@
+(1) 関係と条件
+点 $O, B, C, F$ は同円上に位置する。
+（条件：三角形 $ABC$ は鋭角不等辺三角形であり、点 $F$ は内部にあること）
+
+(2) 元の定義から飛躍のない一般証明
+$O$ を外心、$M$ を $BC$ 中点とする。
+$D$ は $AB$ の垂直二等分線と半直線 $AM$ の交点なので、$DA=DB$ であり、$\triangle DAB$ は二等辺三角形。
+したがって、$\angle DBA = \angle DAB$ である。
+点 $D$ は半直線 $AM$ 上にあるため、$\angle DAB = \angle MAB$ が成り立つ。
+よって、$\angle DBA = \angle MAB$ である。
+同様に、$E$ は $AC$ の垂直二等分線と半直線 $AM$ の交点なので、$EA=EC$ であり、$\angle ECA = \angle EAC = \angle MAC$ となる。
+点 $F$ は $BD$ と $CE$ の交点であり、三角形 $ABC$ の内部にあると仮定する。
+三角形 $FBC$ の内角和より、
+$\angle BFC = 180^\circ - (\angle FBC + \angle FCB)$ である。
+ここで、$\angle FBC = \angle ABC - \angle DBA = \angle B - \angle MAB$、
+$\angle FCB = \angle ACB - \angle ECA = \angle C - \angle MAC$ である。
+これらを代入すると、
+$\angle FBC + \angle FCB = (B+C) - (\angle MAB + \angle MAC) = (B+C) - A$ となる。
+三角形 $ABC$ の内角和より $B+C = 180^\circ - A$ なので、
+$\angle FBC + \angle FCB = 180^\circ - 2A$ となる。
+したがって、$\angle BFC = 180^\circ - (180^\circ - 2A) = 2A$ である。
+一方、外心 $O$ については中心角の定理より $\angle BOC = 2A$ である。
+三角形 $ABC$ が鋭角三角形であるため、$O$ は三角形の内部に位置し、$F$ も内部にある。
+よって、$F$ と $O$ は弦 $BC$ に対して同一側にある。
+$\angle BFC = \angle BOC = 2A$ かつ同一側にある点 $F, O$ があるため、点 $B, C, O, F$ は共円（同円）となる。
+（例外：$AB=AC$ の場合は $D, E$ が一致し $F=O$ となるが、不等辺三角形なので $F \neq O$ である。）
+
+(3) 短い利用例
+この関係を利用すれば、点 $F$ の位置を座標計算せずに角度で特定できる。
+例えば、$\angle BFO$ を求める場合、四角形 $OBFC$ が円周角の定理を満たすため、
+$\angle BFO = \angle BCO$ と置換できる。

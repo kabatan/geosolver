@@ -1,0 +1,16 @@
+{
+  "case_id": "IMO_2013_P3",
+  "source": {"official_url": "https://www.imo-official.org/assets/documents/problems/2013/2013_eng.pdf", "official_pdf_sha256": "d5c2d4156d8ce1de0ed5c9bc2b0fc4c2f40a89247e4171176cff89c1a40605a4", "official_pdf_page": 1, "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2013_P3.smt2", "gmbl_sha256": "3428ac5a84cda0c82996d03f1f49fea26202555bb8c4bcdcfad9ee300f5bd9d9"},
+  "normalization": {"anchors": ["A", "B"], "fixed_coordinates": {"A": ["0", "0"], "B": ["1", "0"]}, "removed_continuous_dof": 4, "justification": "非退化三角形の正長辺ABを相似変換で固定。Cの形は自由で、結論の右角を事前に課さない。", "scale_invariant": true, "reflection_fixed": false},
+  "clauses": [
+    {"id": "triangle", "statement_ja": "ABCは非退化三角形。", "gmbl": ["(param (A B C) triangle)"], "geosolver": ["Area(A, B, C) > 0"], "status": "matched"},
+    {"id": "excircle_contact_points", "statement_ja": "A,B,Cに対する傍接円の対辺への接点がそれぞれA1,B1,C1。", "gmbl": ["(foot (excenter A B C) (line B C))", "(foot (excenter B A C) (line C A))", "(foot (excenter C B A) (line A B))"], "geosolver": ["IA = Excenter(A, B, C); A1 = FootOfPerpendicular(IA, Line(B, C))", "IB = Excenter(B, A, C); B1 = FootOfPerpendicular(IB, Line(C, A))", "IC = Excenter(C, B, A); C1 = FootOfPerpendicular(IC, Line(A, B))"], "status": "matched_by_excenter_definition"},
+    {"id": "circumcenter_incidence", "statement_ja": "A1B1C1の外心O1がABCの外接円上にある。", "gmbl": ["(assert (on-circ (circumcenter A1 B1 C1) (circumcircle A B C)))"], "geosolver": ["O1 = Circumcenter(A1, B1, C1)", "Gamma = Circumcircle(A, B, C)", "OnCircle(O1, Gamma) = 0"], "status": "matched"}
+  ],
+  "construction_reasoning": "両実装のexcenterは第1引数に対する傍心。引数順(A,B,C),(B,A,C),(C,B,A)を原GMBLと同一にし、内心や別の傍心へ置き換えない。",
+  "goal": {"statement_ja": "ABCがいずれかの頂点で直角を持つ。", "gmbl": ["(eval (right-tri A B C))"], "included_in_search": false, "target": "0"},
+  "source_differences": [],
+  "open_issues": [],
+  "author_review": {"reviewer": "dsl_2007_2013", "primary_sources_read": ["公式2013英語PDF第1頁（画像・傍接円の脚注を含む）", "公開IMO_2013_P3.smt2", "両実装のexcenter・GeoSolver DSL spec"], "static_validation": "GeometryProblem、validate、compile_problemに合格。探索・精密化未実施。"},
+  "comparison_status": "draft"
+}

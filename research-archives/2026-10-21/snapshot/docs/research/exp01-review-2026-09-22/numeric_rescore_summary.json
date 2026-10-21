@@ -1,0 +1,819 @@
+{
+  "parser_version": "exact-numeric-v2",
+  "source_hashes": {
+    "baseline_dev.jsonl": "9f11c637738eafcffcee2407ded199386693805d41511bbb2f2ca9b5aa2b21ee",
+    "trained_dev.jsonl": "249a288b4fd9f85a7cf00af4a4ea4fba818864b9227eac3827315eaaf11e0b89"
+  },
+  "historical_issues": {
+    "H07": {
+      "status": "wrong_label",
+      "reason": "E=AP∩BQ implies E=N; label is for E=AC∩BD",
+      "as_written_answer": "32/15"
+    },
+    "H08": {
+      "status": "invalid_witness",
+      "reason": "Original/scaled witness is isosceles despite the scalene condition; not certified as a valid evaluation instance"
+    },
+    "H14": {
+      "status": "ambiguous_construction",
+      "reason": "diameter-circle prose differs from verified circles"
+    },
+    "DA09": {
+      "status": "missing_definition",
+      "reason": "I and branch condition PA<PB deleted"
+    },
+    "DB15": {
+      "status": "missing_question",
+      "reason": "DTを求めよ deleted"
+    },
+    "H13": {
+      "status": "extra_hint",
+      "reason": "Z,A,C collinearity supplied unlike the approved task"
+    },
+    "HX01": {
+      "status": "extra_hint",
+      "reason": "J,A,L collinearity and midpoint-circle incidence supplied"
+    }
+  },
+  "scope": "Existing historical outputs, not outputs on the repaired dev set.",
+  "models": {
+    "baseline": {
+      "all": {
+        "correct": 45,
+        "n": 148
+      },
+      "eligible_subset": {
+        "correct": 35,
+        "n": 120
+      },
+      "unparsed": 13,
+      "rescued_correct": [
+        {
+          "id": "H02",
+          "sample": 1
+        },
+        {
+          "id": "H02",
+          "sample": 2
+        },
+        {
+          "id": "H15",
+          "sample": 0
+        },
+        {
+          "id": "H15",
+          "sample": 2
+        },
+        {
+          "id": "DB15",
+          "sample": 0
+        },
+        {
+          "id": "DB15",
+          "sample": 1
+        },
+        {
+          "id": "DB15",
+          "sample": 2
+        }
+      ],
+      "changed_verdicts": 16
+    },
+    "trained": {
+      "all": {
+        "correct": 49,
+        "n": 148
+      },
+      "eligible_subset": {
+        "correct": 38,
+        "n": 120
+      },
+      "unparsed": 12,
+      "rescued_correct": [
+        {
+          "id": "H02",
+          "sample": 0
+        },
+        {
+          "id": "H02",
+          "sample": 2
+        },
+        {
+          "id": "DB15",
+          "sample": 0
+        },
+        {
+          "id": "DB15",
+          "sample": 1
+        },
+        {
+          "id": "DB15",
+          "sample": 2
+        },
+        {
+          "id": "DB15",
+          "sample": 3
+        },
+        {
+          "id": "DB16",
+          "sample": 0
+        }
+      ],
+      "changed_verdicts": 13
+    }
+  },
+  "comparison": {
+    "all": {
+      "n_configurations": 37,
+      "per_configuration_counts": {
+        "H01": {
+          "baseline": [
+            4,
+            4
+          ],
+          "trained": [
+            4,
+            4
+          ]
+        },
+        "H02": {
+          "baseline": [
+            2,
+            4
+          ],
+          "trained": [
+            2,
+            4
+          ]
+        },
+        "H03": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "H04": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "H07": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "H08": {
+          "baseline": [
+            1,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "H12": {
+          "baseline": [
+            2,
+            4
+          ],
+          "trained": [
+            1,
+            4
+          ]
+        },
+        "H13": {
+          "baseline": [
+            4,
+            4
+          ],
+          "trained": [
+            4,
+            4
+          ]
+        },
+        "H14": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "H15": {
+          "baseline": [
+            2,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "HX01": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "DA01": {
+          "baseline": [
+            3,
+            4
+          ],
+          "trained": [
+            3,
+            4
+          ]
+        },
+        "DA02": {
+          "baseline": [
+            3,
+            4
+          ],
+          "trained": [
+            3,
+            4
+          ]
+        },
+        "DA03": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "DA04": {
+          "baseline": [
+            1,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "DA05": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            1,
+            4
+          ]
+        },
+        "DA06": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            1,
+            4
+          ]
+        },
+        "DA07": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "DA08": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            2,
+            4
+          ]
+        },
+        "DA09": {
+          "baseline": [
+            2,
+            4
+          ],
+          "trained": [
+            3,
+            4
+          ]
+        },
+        "DA11": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            1,
+            4
+          ]
+        },
+        "DA13": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            1,
+            4
+          ]
+        },
+        "DA15": {
+          "baseline": [
+            1,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "DA16": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "DA17": {
+          "baseline": [
+            1,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "DA18": {
+          "baseline": [
+            3,
+            4
+          ],
+          "trained": [
+            2,
+            4
+          ]
+        },
+        "DB01": {
+          "baseline": [
+            2,
+            4
+          ],
+          "trained": [
+            1,
+            4
+          ]
+        },
+        "DB02": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            2,
+            4
+          ]
+        },
+        "DB03": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "DB04": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "DB06": {
+          "baseline": [
+            3,
+            4
+          ],
+          "trained": [
+            4,
+            4
+          ]
+        },
+        "DB08": {
+          "baseline": [
+            4,
+            4
+          ],
+          "trained": [
+            2,
+            4
+          ]
+        },
+        "DB10": {
+          "baseline": [
+            2,
+            4
+          ],
+          "trained": [
+            4,
+            4
+          ]
+        },
+        "DB12": {
+          "baseline": [
+            2,
+            4
+          ],
+          "trained": [
+            1,
+            4
+          ]
+        },
+        "DB13": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            2,
+            4
+          ]
+        },
+        "DB15": {
+          "baseline": [
+            3,
+            4
+          ],
+          "trained": [
+            4,
+            4
+          ]
+        },
+        "DB16": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            1,
+            4
+          ]
+        }
+      },
+      "equal_configuration_delta_pp": 2.7027027027027026,
+      "configuration_bootstrap_95_percentile_pp": [
+        -5.405405405405405,
+        10.81081081081081
+      ],
+      "limitation": "Exploratory interval; related configurations may remain dependent. Eligible subset is a post-hoc data-quality exclusion, not a new held-out test. No claim about the maximum possible effect or about proof transfer."
+    },
+    "eligible_subset": {
+      "n_configurations": 30,
+      "per_configuration_counts": {
+        "H01": {
+          "baseline": [
+            4,
+            4
+          ],
+          "trained": [
+            4,
+            4
+          ]
+        },
+        "H02": {
+          "baseline": [
+            2,
+            4
+          ],
+          "trained": [
+            2,
+            4
+          ]
+        },
+        "H03": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "H04": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "H12": {
+          "baseline": [
+            2,
+            4
+          ],
+          "trained": [
+            1,
+            4
+          ]
+        },
+        "H15": {
+          "baseline": [
+            2,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "DA01": {
+          "baseline": [
+            3,
+            4
+          ],
+          "trained": [
+            3,
+            4
+          ]
+        },
+        "DA02": {
+          "baseline": [
+            3,
+            4
+          ],
+          "trained": [
+            3,
+            4
+          ]
+        },
+        "DA03": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "DA04": {
+          "baseline": [
+            1,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "DA05": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            1,
+            4
+          ]
+        },
+        "DA06": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            1,
+            4
+          ]
+        },
+        "DA07": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "DA08": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            2,
+            4
+          ]
+        },
+        "DA11": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            1,
+            4
+          ]
+        },
+        "DA13": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            1,
+            4
+          ]
+        },
+        "DA15": {
+          "baseline": [
+            1,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "DA16": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "DA17": {
+          "baseline": [
+            1,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "DA18": {
+          "baseline": [
+            3,
+            4
+          ],
+          "trained": [
+            2,
+            4
+          ]
+        },
+        "DB01": {
+          "baseline": [
+            2,
+            4
+          ],
+          "trained": [
+            1,
+            4
+          ]
+        },
+        "DB02": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            2,
+            4
+          ]
+        },
+        "DB03": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "DB04": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            0,
+            4
+          ]
+        },
+        "DB06": {
+          "baseline": [
+            3,
+            4
+          ],
+          "trained": [
+            4,
+            4
+          ]
+        },
+        "DB08": {
+          "baseline": [
+            4,
+            4
+          ],
+          "trained": [
+            2,
+            4
+          ]
+        },
+        "DB10": {
+          "baseline": [
+            2,
+            4
+          ],
+          "trained": [
+            4,
+            4
+          ]
+        },
+        "DB12": {
+          "baseline": [
+            2,
+            4
+          ],
+          "trained": [
+            1,
+            4
+          ]
+        },
+        "DB13": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            2,
+            4
+          ]
+        },
+        "DB16": {
+          "baseline": [
+            0,
+            4
+          ],
+          "trained": [
+            1,
+            4
+          ]
+        }
+      },
+      "equal_configuration_delta_pp": 2.5,
+      "configuration_bootstrap_95_percentile_pp": [
+        -7.5,
+        12.5
+      ],
+      "limitation": "Exploratory interval; related configurations may remain dependent. Eligible subset is a post-hoc data-quality exclusion, not a new held-out test. No claim about the maximum possible effect or about proof transfer."
+    }
+  }
+}

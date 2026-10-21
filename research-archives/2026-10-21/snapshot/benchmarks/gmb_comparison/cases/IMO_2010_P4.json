@@ -1,0 +1,24 @@
+{
+  "id": "IMO_2010_P4",
+  "variables": ["cx", "cy", "u", "v"],
+  "constructions": [
+    {"name": "A", "expression": "Point(0, 0)"},
+    {"name": "B", "expression": "Point(1, 0)"},
+    {"name": "C", "expression": "Point(cx, cy)"},
+    {"name": "P", "expression": "Point(u + v * cx, v * cy)"},
+    {"name": "Gamma", "expression": "Circumcircle(A, B, C)"},
+    {"name": "O", "expression": "Center(Gamma)"},
+    {"name": "K", "expression": "Intersect(Line(A, P), Gamma, exclude=A)"},
+    {"name": "L", "expression": "Intersect(Line(B, P), Gamma, exclude=B)"},
+    {"name": "M", "expression": "Intersect(Line(C, P), Gamma, exclude=C)"},
+    {"name": "S", "expression": "Intersect(PerpendicularLine(Line(C, O), C), Line(A, B))"}
+  ],
+  "conditions": [
+    {"left": "Area(A, B, C)", "operator": ">", "right": "0"},
+    {"left": "u", "operator": ">", "right": "0"},
+    {"left": "v", "operator": ">", "right": "0"},
+    {"left": "u + v", "operator": "<", "right": "1"},
+    {"left": "Distance(S, C)", "operator": "=", "right": "Distance(S, P)"}
+  ],
+  "target": "0"
+}

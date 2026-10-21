@@ -1,0 +1,48 @@
+{
+  "status": "preflight_pass",
+  "round": 1,
+  "n_examples": 1,
+  "training_parameters": {
+    "seed": 2026092631,
+    "max_completion_tokens": 81920,
+    "max_sequence_tokens": 98304,
+    "learning_rate": 5e-06,
+    "grad_accumulation": 4,
+    "grad_clip": 1.0,
+    "kl_chunk_tokens": 32,
+    "lora_rank": 8,
+    "lora_alpha": 16,
+    "lora_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "in_proj_qkv",
+      "in_proj_z",
+      "out_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ],
+    "activation_offload": "cpu",
+    "cpu_offload_max_gib": 12,
+    "cpu_offload_reserve_gib": 4,
+    "engine": "streamed_hidden_full_vocab_kl_v1"
+  },
+  "prior_parameter_revision": null,
+  "batch_sha256": "1d60c94d1e8305c14feaeb800ff1daff482254b6f1fad3e4511c0e81e3b0f2d7",
+  "config_sha256": "877508479cbd5c5b0615dc74e4e856bb9dd0acaa878b08b2134f53878a1bf3fa",
+  "engine_sha256": "b23d1aaf62758397aea44cd037ce579ed3e581e01e8e15f9588f464b6e17a554",
+  "student_sequence_tokens": [
+    2375
+  ],
+  "teacher_sequence_tokens": [
+    2388
+  ],
+  "completion_tokens": [
+    2265
+  ],
+  "no_completion_truncation": true,
+  "cuda_executed": false,
+  "fixture_note": "CPU-only CLI validation using the naturally stopped H01 original round-one rollout; not part of the new study dataset."
+}

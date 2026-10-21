@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2015_P3",
+  "purpose": "input_semantics_counterexample_not_performance_evaluation",
+  "reviewer": "independent_review",
+  "source": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2015_P3.smt2",
+  "gmbl_sha256": "2ba43a10e81b0d2591fbcc6c08f7e00ccf730ccc33dd69006eaee90879c08a90",
+  "official_url": "https://www.imo-official.org/assets/documents/problems/2015/2015_eng.pdf",
+  "derivation_note_ja": "一般の三角形A=(a,h),B=(0,0),C=(1,0)から垂心と2本の円の根軸を手で求め、a=3/5,h=2を代入した。以下の残差はPython Fractionによる厳密有理演算のみで検算した。GMB/GeoSolver、最適化、精密化、seed探索、自然問題計測は実行していない。",
+  "coordinates": {
+    "A": [
+      "3/5",
+      "2"
+    ],
+    "B": [
+      "0",
+      "0"
+    ],
+    "C": [
+      "1",
+      "0"
+    ],
+    "H": [
+      "3/5",
+      "3/25"
+    ],
+    "F": [
+      "3/5",
+      "0"
+    ],
+    "M": [
+      "1/2",
+      "0"
+    ],
+    "Q": [
+      "93/61",
+      "75/61"
+    ],
+    "K": [
+      "136782/147365",
+      "-1026/29473"
+    ]
+  },
+  "circle_Gamma_equation": "x**2+y**2-x-47*y/25=0",
+  "gmbl_assumptions": [
+    {
+      "source": "(param (A B C) acute-tri)",
+      "verified_by": [
+        "acute_at_A_dot",
+        "acute_at_B_dot",
+        "acute_at_C_dot"
+      ],
+      "requirement": "all > 0"
+    },
+    {
+      "source": "(assert (gt (dist A B) (dist A C)))",
+      "verified_by": [
+        "AB_squared",
+        "AC_squared"
+      ],
+      "requirement": "AB_squared > AC_squared"
+    },
+    {
+      "source": "(define Gamma circle (circumcircle A B C))",
+      "verified_by": [
+        "A_on_Gamma_residual",
+        "B_on_Gamma_residual",
+        "C_on_Gamma_residual"
+      ],
+      "requirement": "all = 0; A,B,C noncollinear"
+    },
+    {
+      "source": "(define H point (orthocenter A B C))",
+      "verified_by": [
+        "orthocenter_A_altitude_dot",
+        "orthocenter_B_altitude_dot",
+        "orthocenter_C_altitude_dot"
+      ],
+      "requirement": "all = 0"
+    },
+    {
+      "source": "(define F point (foot A (line B C)))",
+      "verified_by": [
+        "F_on_BC_cross",
+        "AF_perpendicular_BC_dot"
+      ],
+      "requirement": "both = 0"
+    },
+    {
+      "source": "(define M point (midp B C))",
+      "verified_by": [],
+      "requirement": "M=(B+C)/2=(1/2,0)"
+    },
+    {
+      "source": "(param Q point (on-circ Gamma))",
+      "verified_by": [
+        "Q_on_Gamma_residual"
+      ],
+      "requirement": "= 0"
+    },
+    {
+      "source": "(assert (right H Q A))",
+      "verified_by": [
+        "HQA_right_dot"
+      ],
+      "requirement": "= 0, nonzero rays"
+    },
+    {
+      "source": "(param K point (on-circ Gamma))",
+      "verified_by": [
+        "K_on_Gamma_residual"
+      ],
+      "requirement": "= 0"
+    },
+    {
+      "source": "(assert (right H K Q))",
+      "verified_by": [
+        "HKQ_right_dot"
+      ],
+      "requirement": "= 0, nonzero rays"
+    }
+  ],
+  "exact_checks": {
+    "acute_at_A_dot": "94/25",
+    "acute_at_B_dot": "3/5",
+    "acute_at_C_dot": "2/5",
+    "AB_squared": "109/25",
+    "AC_squared": "104/25",
+    "orthocenter_A_altitude_dot": "0",
+    "orthocenter_B_altitude_dot": "0",
+    "orthocenter_C_altitude_dot": "0",
+    "F_on_BC_cross": "0",
+    "AF_perpendicular_BC_dot": "0",
+    "HQA_right_dot": "0",
+    "HKQ_right_dot": "0",
+    "orientation_ABC": "2",
+    "orientation_BCK": "-1026/29473",
+    "original_order_orientation_product": "-2052/29473",
+    "A_on_Gamma_residual": "0",
+    "B_on_Gamma_residual": "0",
+    "C_on_Gamma_residual": "0",
+    "Q_on_Gamma_residual": "0",
+    "K_on_Gamma_residual": "0"
+  },
+  "all_declared_points_pairwise_distinct": true,
+  "violated_original_assumption": {
+    "statement_ja": "A,B,C,K,Qが相異なりこの順にΓ上へ並ぶ。",
+    "evidence_ja": "orientation(A,B,C)=2>0なのにorientation(B,C,K)=-1026/29473<0。従ってこれら5点は指定順の凸な円周順序ではない。"
+  },
+  "conclusion_evaluated": false,
+  "interpretation_ja": "公開GMBLの数学条件が原文の円周順序を含意しないことの反例。GMBのacute-tri実装のサンプリング範囲外となることは、この名義上の条件不一致を解消しない。一方、この反例をGMB実装が実際に受理したとの主張でもない。",
+  "required_action_ja": "原文順序をGeoSolverにだけ課して既存GMB成績と直接比較しない。原文条件を共通採点へ追加する等の比較契約を別途決定する。"
+}

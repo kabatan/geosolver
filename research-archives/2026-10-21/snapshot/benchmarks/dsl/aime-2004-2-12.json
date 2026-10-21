@@ -1,0 +1,138 @@
+{
+  "id": "aime-2004-2-12",
+  "variables": [
+    "x",
+    "y",
+    "r"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(3, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(-3, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(-2, x)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(2, x)"
+    },
+    {
+      "name": "O",
+      "expression": "Point(0, y)"
+    },
+    {
+      "name": "trapezoid",
+      "expression": "Polygon([A, B, C, D])"
+    },
+    {
+      "name": "ab_line",
+      "expression": "Line(A, B)"
+    },
+    {
+      "name": "bc_line",
+      "expression": "Line(B, C)"
+    },
+    {
+      "name": "cd_line",
+      "expression": "Line(C, D)"
+    },
+    {
+      "name": "da_line",
+      "expression": "Line(D, A)"
+    },
+    {
+      "name": "circle_A",
+      "expression": "Circle(A, 3)"
+    },
+    {
+      "name": "circle_B",
+      "expression": "Circle(B, 3)"
+    },
+    {
+      "name": "circle_C",
+      "expression": "Circle(C, 2)"
+    },
+    {
+      "name": "circle_D",
+      "expression": "Circle(D, 2)"
+    },
+    {
+      "name": "omega",
+      "expression": "Circle(O, r)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "x",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "y",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "r",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": 5
+    },
+    {
+      "left": "y",
+      "operator": "<",
+      "right": "x"
+    },
+    {
+      "left": "Distance(O, ab_line)",
+      "operator": ">",
+      "right": "r"
+    },
+    {
+      "left": "Distance(O, bc_line)",
+      "operator": ">",
+      "right": "r"
+    },
+    {
+      "left": "Distance(O, cd_line)",
+      "operator": ">",
+      "right": "r"
+    },
+    {
+      "left": "Distance(O, da_line)",
+      "operator": ">",
+      "right": "r"
+    },
+    {
+      "left": "Distance(O, A)",
+      "operator": "=",
+      "right": "r + 3"
+    },
+    {
+      "left": "Distance(O, B)",
+      "operator": "=",
+      "right": "r + 3"
+    },
+    {
+      "left": "Distance(O, C)",
+      "operator": "=",
+      "right": "r + 2"
+    },
+    {
+      "left": "Distance(O, D)",
+      "operator": "=",
+      "right": "r + 2"
+    }
+  ],
+  "target": "Radius(omega)"
+}

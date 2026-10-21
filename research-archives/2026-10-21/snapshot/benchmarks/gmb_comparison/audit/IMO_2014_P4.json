@@ -1,0 +1,176 @@
+{
+  "case_id": "IMO_2014_P4",
+  "source": {
+    "official_url": "https://www.imo-official.org/assets/documents/problems/2014/2014_eng.pdf",
+    "official_landing_url": "https://www.imo-official.org/problems/2014/",
+    "official_pdf_path": "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2014-eng.pdf",
+    "official_pdf_sha256": "8642358ce5518c8bd93a92d6b02ddb39f59d30dcfc63e581fdca9d11f01b138a",
+    "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2014_P4.smt2",
+    "gmbl_sha256": "80ad365eddd45ba86a4d349a4e40856d07dec459042b28a0c78422b06fcd0a5b",
+    "upstream_commit": "f070afe18ed874b3a31db519ea6f593f40a1be00"
+  },
+  "normalization": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "fixed_coordinates": {
+      "A": [
+        "0",
+        "0"
+      ],
+      "B": [
+        "1",
+        "0"
+      ]
+    },
+    "removed_continuous_dof": 4,
+    "justification": "三角形の辺ABは非零。指定条件に絶対長さはない。 平行移動2自由度・回転1自由度・正の一様拡大縮小1自由度のみを除く。残りの図形の形は固定しない。",
+    "scale_invariant": true,
+    "reflection_fixed": false
+  },
+  "clauses": [
+    {
+      "id": "H01",
+      "statement_ja": "ABCは鋭角三角形。",
+      "gmbl": [
+        "(param (A B C) acute-tri)"
+      ],
+      "geosolver": [
+        "A = Point(0, 0)",
+        "B = Point(1, 0)",
+        "C = Point(cx, cy)",
+        "conditions[0]: Area(A, B, C) > 0",
+        "conditions[1]: Dot(Vector(A, B), Vector(A, C)) > 0",
+        "conditions[2]: Dot(Vector(B, A), Vector(B, C)) > 0",
+        "conditions[3]: Dot(Vector(C, A), Vector(C, B)) > 0"
+      ],
+      "condition_indices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "construction_names": [
+        "A",
+        "B",
+        "C"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H02",
+      "statement_ja": "PとQは辺BCの内部。",
+      "gmbl": [
+        "(param P point (on-seg B C)); (param Q point (on-seg B C))"
+      ],
+      "geosolver": [
+        "P = PointOnSegment(B, C, p)",
+        "Q = PointOnSegment(B, C, q)",
+        "conditions[4]: p > 0",
+        "conditions[5]: p < 1",
+        "conditions[6]: q > 0",
+        "conditions[7]: q < 1"
+      ],
+      "condition_indices": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "construction_names": [
+        "P",
+        "Q"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H03",
+      "statement_ja": "PAB=BCA、CAQ=ABC。",
+      "gmbl": [
+        "(assert (= (uangle P A B) (uangle B C A))); (assert (= (uangle C A Q) (uangle A B C)))"
+      ],
+      "geosolver": [
+        "conditions[8]: Angle(P, A, B) = Angle(B, C, A)",
+        "conditions[9]: Angle(C, A, Q) = Angle(A, B, C)"
+      ],
+      "condition_indices": [
+        8,
+        9
+      ],
+      "construction_names": [],
+      "status": "matched"
+    },
+    {
+      "id": "H04",
+      "statement_ja": "PはAMの中点、QはANの中点。M,N自体をAP,AQの中点と取り違えない。",
+      "gmbl": [
+        "(define M point (midp-from P A)); (define N point (midp-from Q A))"
+      ],
+      "geosolver": [
+        "M = Point(2*P.x-A.x, 2*P.y-A.y)",
+        "N = Point(2*Q.x-A.x, 2*Q.y-A.y)"
+      ],
+      "condition_indices": [],
+      "construction_names": [
+        "M",
+        "N"
+      ],
+      "status": "matched"
+    }
+  ],
+  "goal": {
+    "statement_ja": "BMとCNがABCの外接円上で交わる。交点の存在と円上所属は採点側で確認し、探索条件には追加しない。",
+    "gmbl": [
+      "(eval (on-circ (inter-ll (line B M) (line C N)) (circumcircle A B C)))"
+    ],
+    "included_in_solver_conditions": false,
+    "solver_target": "0",
+    "assessment_only": true
+  },
+  "source_differences": [
+    {
+      "id": "gmb_runtime_distinctness",
+      "kind": "runtime_acceptance_policy",
+      "blocking": false,
+      "description_ja": "GMBは全登録点の最小距離0.1とweighted soft lossで受理する。原文にない全点相異・最小距離0.1はGeoSolver条件に移さず、両者の出力を別の共通検査器で再検査する。"
+    },
+    {
+      "id": "gmb_acute_sampler",
+      "kind": "runtime_parameterization",
+      "blocking": false,
+      "description_ja": "optimizer.py sample_triangleのacute-triはB=(-2,0),C=(2,0)、Ax∈[-1.2,1.2]を試行中固定、Ay=1.1+3 sigmoid(z)。一部の形に制限し、Ax²+Ay²≤4の鈍角Aも数式上可能。GeoSolverでは形は固定せず、三頂点の内積が正という原文の鋭角条件を課す。"
+    }
+  ],
+  "open_issues": [],
+  "witness_bindings": {
+    "A": "A",
+    "B": "B",
+    "C": "C",
+    "P": "P",
+    "Q": "Q",
+    "M": "M",
+    "N": "N"
+  },
+  "author_review": {
+    "author": "dsl_2014_2020",
+    "materials_read": [
+      "official IMO 2014 English problem sheet",
+      "GMB IMO_2014_P4.smt2",
+      "GMB optimizer.py / instruction_reader.py / tf_optimizer.py",
+      "GeoSolver dsl-spec.json / public compiler / geometry implementations"
+    ],
+    "pdf_visual_check": "official_text_and_pdf_source_checked",
+    "static_validation": {
+      "public_model": true,
+      "validator_valid": true,
+      "compiler_valid": true,
+      "solver_executed": false
+    },
+    "independent_review_status": "pending",
+    "notes_ja": [
+      "M=2P-A、N=2Q-Aを公開GMBのmidp_from(M,A)=2M-A実装と原文双方で確認。"
+    ]
+  },
+  "comparison_status": "draft"
+}

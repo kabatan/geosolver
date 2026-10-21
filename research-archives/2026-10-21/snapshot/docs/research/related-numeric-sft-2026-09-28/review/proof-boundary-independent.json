@@ -1,0 +1,79 @@
+{
+  "case_id": "AP01",
+  "score": 2,
+  "complete_proof": false,
+  "essential_progress": [
+    "The answer gives a valid vector setup for D and E and derives a correct coordinate expression for F=BD∩CE.",
+    "It correctly observes that the circle through A, P, N is the image of the circumcircle of ABC under the homothety centered at A with ratio 1/2. This reduces the target to F'=2F lying on the circumcircle, but the answer does not establish that condition."
+  ],
+  "valid_general_results": [
+    {
+      "claim": "With A=0, B=c, C=b and W=b·c, the perpendicular-bisector intersections are D=k(b+c), E=m(b+c), where k=|c|²/[2(W+|c|²)] and m=|b|²/[2(|b|²+W)].",
+      "evidence": "proof-01.md:110-129",
+      "independent_check": "The equidistance equations are X·c=|c|²/2 and Y·b=|b|²/2. Substituting the stated points gives the displayed k and m. The denominators are positive for acute angle A."
+    },
+    {
+      "claim": "The BD and CE parameter equations yield u=(2m−1)/(k+m−1), v=(2k−1)/(k+m−1), and F=[k(2m−1)/(k+m−1)]b+[m(2k−1)/(k+m−1)]c.",
+      "evidence": "proof-01.md:131-159",
+      "independent_check": "Equating b,c coefficients gives uk=1+v(m−1), 1+u(k−1)=vm. Solving these equations gives the stated u and v; substituting gives both stated F coefficients. Since angle A is acute, k,m<1/2, so k+m−1<0 and this denominator is nonzero."
+    },
+    {
+      "claim": "The homothety centered at A with ratio 1/2 maps the circumcircle of ABC to the circle through A,P,N, so cyclicity is equivalent to F'=2F lying on the circumcircle of ABC.",
+      "evidence": "proof-01.md:436-440 and 484-490",
+      "independent_check": "The homothety maps B to P and C to N, and maps circles to circles. This is a correct equivalence, not a proof that F' lies on the circle."
+    },
+    {
+      "claim": "PN is parallel to BC and APN is similar to ABC with ratio 1/2.",
+      "evidence": "proof-01.md:86-89 and 176-180",
+      "independent_check": "This is the midpoint theorem and its immediate similarity consequence."
+    }
+  ],
+  "flaw_or_gap": {
+    "essential_gap": "The answer never proves F∈circumcircle(APN), equivalently F'=2F∈circumcircle(ABC). The vector calculation stops at F's coordinates (lines 155-159) and is abandoned as messy (lines 165-172); no circle-membership equation is stated or checked. The later 'formal proof' replaces the missing implication with 'It can be shown' by coordinate verification and a claimed known property (lines 501, 471-473, 517), despite the problem explicitly requiring a self-contained justification.",
+    "false_core_claim": "The final attempt asserts ∠BAF=β+B at line 503, where β=∠CAM and B=∠ABC. This is false even for a configuration satisfying the hypotheses. For A=(0,0), B=(4,0), C=(1,3), all three angles are acute and the side lengths 4, √10, 3√2 are distinct. The verified vector formulas give k=2/5, m=5/14 and F=(28/17,24/17), whose barycentric weights at A,B,C are 4/17,5/17,8/17, so F is strictly interior. Here tan(∠BAF)=6/7=tan β, whereas B=45°, so ∠BAF=β and not β+B. Thus this asserted angle step cannot establish the desired circle condition.",
+    "why_not_just_omitted_algebra": "A routine expansion can be omitted after a stated, correct target identity. Here the answer supplies no target identity relating its F coordinates to the circle, gives no claimed substitution result, and pivots to an unproved and in part false angle assertion. The missing step is the central implication, not merely intermediate algebra rows.",
+    "retraction_or_replacement": "The answer correctly retracts the proposed BF·BD=c²/2 argument after noticing D is not the second circle intersection (lines 345-356), and repeats that correction at lines 472 and 514. It does not replace that failed route with a valid proof. The unsupported angle claim at line 503 is questioned indirectly in lines 508-512 but is not repaired; the answer returns to an unsupported uniqueness/property assertion and the conclusion."
+  },
+  "evidence_quotes": [
+    {
+      "location": "proof-01.md:155-159",
+      "quote": "So F = ... [k(2m-1)/(k+m-1)] b + [m(2k-1)/(k+m-1)] c.",
+      "assessment": "The coordinate formula is independently verified and is genuine general progress, but no subsequent circle test is performed."
+    },
+    {
+      "location": "proof-01.md:471-473",
+      "quote": "Since a full coordinate proof is lengthy, we invoke the property derived from the symmetry ... However, the concyclicity is a known lemma in this configuration.",
+      "assessment": "This is the essential missing argument and is not permitted as a bare citation under the prompt and rubric."
+    },
+    {
+      "location": "proof-01.md:501-503",
+      "quote": "It can be shown (via trigonometric Ceva or coordinate verification) ... In triangle ABF ... derive that ∠BAF = β + B ...",
+      "assessment": "No derivation is supplied; the specific angle claim is false in the valid acute scalene interior example recorded above."
+    },
+    {
+      "location": "proof-01.md:163-165",
+      "quote": "F = 2/(k+m-1) ( k(2m-1)/2 N + m(2k-1)/2 P )? ... Since b=2N, this is ... 2k(2m-1)/(k+m-1) N.",
+      "assessment": "The tentative N,P expression has a factor-of-two conversion error; the following b-coefficient sentence notices a different scaling but the full N,P expression is not resolved or used later. This is local to an abandoned vector expression, not the main reason the proof fails."
+    }
+  ],
+  "incidental_error": [
+    {
+      "location": "proof-01.md:163-164",
+      "finding": "The attempted conversion from b,c to N,P in line 163 includes an erroneous factor 1/2. It is not used in the final argument; the correct b,c coordinate formula at lines 155-159 remains valid."
+    },
+    {
+      "location": "proof-01.md:79-81 and 520",
+      "finding": "The explanation that θ1<B follows because otherwise the median would fail to meet BC is not a valid justification. The problem already assumes F is interior, so this auxiliary claim is not needed to prove the requested result."
+    }
+  ],
+  "read_coverage": {
+    "proof": "Read all of proof-01.md, lines 1-527, including the entire scratch work, vector derivation, both later proof attempts, and the final conclusion.",
+    "rubric": "Read the full REVIEW_RUBRIC.md, including AP01 scoring and the calibration section.",
+    "not_read": "No other review JSON or Markdown files, private condition table, or evaluation output was read."
+  },
+  "uncertainty": {
+    "level": "low",
+    "note": "The vector formulas and counterexample were independently checked. Score 2 follows the rubric's major-gap category; it is above score 1 because the answer gives a correct general intersection formula and attempts the core equivalence, but below score 3 because the essential circle-membership derivation is absent and its final key angle claim is false."
+  },
+  "boundary_3_4_reason": "Neither score 3 nor 4 is warranted. Score 3 allows only local notation or branch-check gaps after an essential general derivation has succeeded; here the central implication F'∈circumcircle(ABC) is never derived, and a claimed angle relation used in its place is false. Score 4 additionally requires a self-contained complete proof, which the answer itself acknowledges it has not supplied."
+}

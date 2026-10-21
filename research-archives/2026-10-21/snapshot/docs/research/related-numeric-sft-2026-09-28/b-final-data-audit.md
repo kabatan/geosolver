@@ -1,0 +1,11 @@
+# Frozen numerical data audit
+
+Audited the actual frozen files in `qwen/.runtime/related_numeric_sft_20260928`, without regenerating examples. The SHA-256 hashes of `data-provenance.json`, `train.json`, `diagnostic-jobs.json`, and `diagnostic-answer-key.json` match `data-freeze.json`. Detailed counts and distances are in [b-final-data-audit.json](b-final-data-audit.json).
+
+**Result: pass.** The provenance contains 120 shapes, 12 for each of PN01–PN10. All 120 listed givens agree with the stored points and appear in `problem_en` using the stored float's `.17g` rendering. Every target is a `.17g` numeric string and agrees with an independent measurement of its requested query from the stored points. The largest relative given residual is `2.44e-16`; the largest relative query residual is `2.11e-16`. PN08 was measured specifically as the circumradius of the three points A, B, T, using their three side lengths and area; all 12 cases passed.
+
+The 80 training rows have only `id`, `source_id`, `kind`, `messages`, and `target`. Their user messages match the corresponding provenance question, and contain no points, audit fields, shape signatures, theorem names, hidden relationships, worked solutions, or proof content. The common instruction says “Do not give a proof or explanation”; that instruction is the only occurrence of the word “proof.” The 80 targets match the provenance exactly.
+
+For each source, the ninth diagnostic case has a normalized shape signature distinct from all eight training cases. The minimum ninth-to-training distance across all ten sources is `0.0182218` (DA06). The diagnostic answer keys and prompts also match their designated first or ninth provenance case. All applicable source branch checks passed, including PN02's interior 120° point, PN03's K–B–C order, PN06's A–M–X order, PN09's original angle rays, and PN10's interior X. Stored construction audit residuals have maximum `2.25e-12`.
+
+The frozen data retain some near-neighbor shapes outside the ninth diagnostic comparison: DA02's closest pair among all 12 signatures is `0.0002010`. This is a diversity limitation, not a label or split-overlap failure; the DA02 ninth case is `0.0544455` from its closest training case.

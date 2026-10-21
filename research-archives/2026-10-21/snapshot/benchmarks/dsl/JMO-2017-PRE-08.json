@@ -1,0 +1,95 @@
+{
+  "id": "JMO-2017-PRE-08",
+  "variables": [
+    "ax",
+    "ay",
+    "d",
+    "e"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(11, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(d, 0)"
+    },
+    {
+      "name": "E",
+      "expression": "Point(e, 0)"
+    },
+    {
+      "name": "Gamma1",
+      "expression": "Circumcircle(A, B, E)"
+    },
+    {
+      "name": "Gamma2",
+      "expression": "Circumcircle(A, D, C)"
+    },
+    {
+      "name": "X",
+      "expression": "Intersect(Gamma1, Gamma2, exclude=A)"
+    },
+    {
+      "name": "F",
+      "expression": "Intersect(Line(A, X), Line(B, C))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Angle(B, A, D)",
+      "operator": "=",
+      "right": "Angle(A, C, E)"
+    },
+    {
+      "left": "Angle(A, B, D)",
+      "operator": "=",
+      "right": "Angle(C, A, E)"
+    },
+    {
+      "left": "Distance(B, F)",
+      "operator": "=",
+      "right": 5
+    },
+    {
+      "left": "Distance(C, F)",
+      "operator": "=",
+      "right": 6
+    },
+    {
+      "left": "Distance(X, D)",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "d",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "d",
+      "operator": "<",
+      "right": "e"
+    },
+    {
+      "left": "e",
+      "operator": "<",
+      "right": "11"
+    }
+  ],
+  "target": "Distance(X, E)"
+}

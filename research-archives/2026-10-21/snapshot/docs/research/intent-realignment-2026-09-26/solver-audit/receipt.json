@@ -1,0 +1,487 @@
+{
+  "created_utc": "2026-09-25T16:27:14.873717+00:00",
+  "python": "3.12.11",
+  "platform": "Linux-7.0.0-31-generic-x86_64-with-glibc2.43",
+  "git_head": "754b5e3fdbd901752e2de4f965c07dac4a9cd7ed",
+  "script_sha256": "93059e202ead96853df0c88b14490601d922e8f47c07bb2f35b1039415f33e80",
+  "options": {
+    "time_limit_seconds": 180,
+    "cores": 1,
+    "seed": 0
+  },
+  "external_cancel_seconds_per_case": 35,
+  "cases": [
+    {
+      "id": "standard-median-6-5-7",
+      "validation": {
+        "valid": true,
+        "issues": [],
+        "warnings": [],
+        "normalized_problem": {
+          "id": "standard-median-6-5-7",
+          "variables": [
+            "x",
+            "y"
+          ],
+          "constructions": [
+            {
+              "name": "B",
+              "expression": "Point(0,0)"
+            },
+            {
+              "name": "C",
+              "expression": "Point(6,0)"
+            },
+            {
+              "name": "A",
+              "expression": "Point(x,y)"
+            },
+            {
+              "name": "M",
+              "expression": "Midpoint(B,C)"
+            }
+          ],
+          "conditions": [
+            {
+              "left": "Distance(A,B)",
+              "operator": "=",
+              "right": 5
+            },
+            {
+              "left": "Distance(A,C)",
+              "operator": "=",
+              "right": 7
+            },
+            {
+              "left": "y",
+              "operator": ">",
+              "right": 0
+            }
+          ],
+          "target": "Distance(A,M)"
+        }
+      },
+      "expected_reference": "2*sqrt(7)",
+      "status": "solved",
+      "elapsed_wall_seconds": 2.184182367986068,
+      "measured_cpu_seconds": 2.194748,
+      "termination_reason": "answer_found",
+      "completeness": "unknown",
+      "censored_by_external_watchdog": false,
+      "answers": [
+        {
+          "kind": "algebraic",
+          "value": {
+            "minimal_polynomial": [
+              "1",
+              "0",
+              "-28"
+            ],
+            "real_root_index": 1,
+            "isolating_interval": [
+              "11825407085502761641061807771684/2234791878595816480895314546591",
+              "9156316745224492335776336532607/1730381216657168963720255496504"
+            ],
+            "decimal": "5.2915026221291811810032315072785208514205183661649"
+          }
+        }
+      ],
+      "expected_minimal_polynomial": [
+        "1",
+        "0",
+        "-28"
+      ],
+      "single_answer_matches_reference": true,
+      "error": null,
+      "solver_process_info": {
+        "pid": 2095125,
+        "effective_cores": 1,
+        "deadline_monotonic": 1791202.746298447,
+        "solver_completed_monotonic": 1791024.800390903,
+        "artifact_conversion_seconds": 0.015615900047123432,
+        "installed_dependencies": {
+          "annotated-types": "0.8.0",
+          "attrs": "26.1.0",
+          "click": "8.4.2",
+          "coverage": "7.15.2",
+          "iniconfig": "2.3.0",
+          "jsonschema": "4.25.1",
+          "jsonschema-specifications": "2025.9.1",
+          "markdown-it-py": "4.2.0",
+          "mdurl": "0.1.2",
+          "mpmath": "1.3.0",
+          "numpy": "2.5.1",
+          "packaging": "26.2",
+          "pluggy": "1.6.0",
+          "psutil": "7.0.0",
+          "pydantic": "2.11.7",
+          "pydantic-core": "2.33.2",
+          "pygments": "2.20.0",
+          "pynomadbbo": "4.5.1",
+          "pytest": "8.4.1",
+          "pytest-cov": "6.2.1",
+          "referencing": "0.37.0",
+          "rich": "15.0.0",
+          "rpds-py": "2026.6.3",
+          "ruff": "0.12.8",
+          "scipy": "1.18.0",
+          "shellingham": "1.5.4",
+          "sympy": "1.14.0",
+          "typer": "0.16.1",
+          "typing-extensions": "4.16.0",
+          "typing-inspection": "0.4.2"
+        },
+        "import_root": "/home/kabatan/work/solver/src/geosolver",
+        "cpu_affinity": [
+          0
+        ],
+        "cpu_seconds": 1.82,
+        "returncode": 0,
+        "peak_rss_bytes": 223424512,
+        "resource_sampling_interval_seconds": 0.05,
+        "artifact_commit": {
+          "request_id": "45a1114db40e44e6bfc03ea456c4dddb",
+          "sha256": "b715ed37d102cf1c547d598405fb08ae70a1dd495a5e020dfac36f4f6e381e00",
+          "size_bytes": 506171,
+          "solver_completed_monotonic": 1791024.800390903,
+          "commit_started_monotonic": 1791024.841441656,
+          "committed_monotonic": 1791024.846681956,
+          "serialization_seconds": 0.005085479933768511,
+          "write_seconds": 9.640981443226337e-05,
+          "fsync_seconds": 2.300133928656578e-06
+        }
+      }
+    },
+    {
+      "id": "H01-original-solve-audit",
+      "validation": {
+        "valid": true,
+        "issues": [],
+        "warnings": [],
+        "normalized_problem": {
+          "id": "H01-original-solve-audit",
+          "variables": [
+            "x",
+            "y"
+          ],
+          "constructions": [
+            {
+              "name": "B",
+              "expression": "Point(-6,0)"
+            },
+            {
+              "name": "C",
+              "expression": "Point(6,0)"
+            },
+            {
+              "name": "A",
+              "expression": "Point(x,y)"
+            },
+            {
+              "name": "M",
+              "expression": "Midpoint(B,C)"
+            },
+            {
+              "name": "H",
+              "expression": "Orthocenter(A,B,C)"
+            },
+            {
+              "name": "P",
+              "expression": "FootOfPerpendicular(H,Line(A,M))"
+            }
+          ],
+          "conditions": [
+            {
+              "left": "y",
+              "operator": ">",
+              "right": 0
+            },
+            {
+              "predicate": "AcuteTriangle(A,B,C)"
+            },
+            {
+              "left": "Distance(A,B)",
+              "operator": "!=",
+              "right": "Distance(A,C)"
+            },
+            {
+              "left": "Distance(A,B)",
+              "operator": "!=",
+              "right": "Distance(B,C)"
+            },
+            {
+              "left": "Distance(A,C)",
+              "operator": "!=",
+              "right": "Distance(B,C)"
+            },
+            {
+              "left": "Distance(A,M)",
+              "operator": "=",
+              "right": 10
+            }
+          ],
+          "target": "Distance(A,P)"
+        }
+      },
+      "expected_reference": "32/5",
+      "status": "solved",
+      "elapsed_wall_seconds": 3.6643789471127093,
+      "measured_cpu_seconds": 4.168929,
+      "termination_reason": "answer_found",
+      "completeness": "unknown",
+      "censored_by_external_watchdog": false,
+      "answers": [
+        {
+          "kind": "algebraic",
+          "value": {
+            "minimal_polynomial": [
+              "5",
+              "-32"
+            ],
+            "real_root_index": 0,
+            "isolating_interval": [
+              "32/5",
+              "32/5"
+            ],
+            "decimal": "6.4000000000000000000000000000000000000000000000000"
+          }
+        }
+      ],
+      "expected_minimal_polynomial": [
+        "5",
+        "-32"
+      ],
+      "single_answer_matches_reference": true,
+      "error": null,
+      "solver_process_info": {
+        "pid": 2095199,
+        "effective_cores": 1,
+        "deadline_monotonic": 1791204.943776404,
+        "solver_completed_monotonic": 1791028.410120209,
+        "artifact_conversion_seconds": 0.042662096908316016,
+        "installed_dependencies": {
+          "annotated-types": "0.8.0",
+          "attrs": "26.1.0",
+          "click": "8.4.2",
+          "coverage": "7.15.2",
+          "iniconfig": "2.3.0",
+          "jsonschema": "4.25.1",
+          "jsonschema-specifications": "2025.9.1",
+          "markdown-it-py": "4.2.0",
+          "mdurl": "0.1.2",
+          "mpmath": "1.3.0",
+          "numpy": "2.5.1",
+          "packaging": "26.2",
+          "pluggy": "1.6.0",
+          "psutil": "7.0.0",
+          "pydantic": "2.11.7",
+          "pydantic-core": "2.33.2",
+          "pygments": "2.20.0",
+          "pynomadbbo": "4.5.1",
+          "pytest": "8.4.1",
+          "pytest-cov": "6.2.1",
+          "referencing": "0.37.0",
+          "rich": "15.0.0",
+          "rpds-py": "2026.6.3",
+          "ruff": "0.12.8",
+          "scipy": "1.18.0",
+          "shellingham": "1.5.4",
+          "sympy": "1.14.0",
+          "typer": "0.16.1",
+          "typing-extensions": "4.16.0",
+          "typing-inspection": "0.4.2"
+        },
+        "import_root": "/home/kabatan/work/solver/src/geosolver",
+        "cpu_affinity": [
+          0
+        ],
+        "cpu_seconds": 3.58,
+        "returncode": 0,
+        "peak_rss_bytes": 224985088,
+        "resource_sampling_interval_seconds": 0.05,
+        "artifact_commit": {
+          "request_id": "815a018d73a54c2c8dbf258a7256e30a",
+          "sha256": "4c2195190f159c192d87002c72c1dd82fdcdf467811bd010bb76a3dd1764de21",
+          "size_bytes": 1987984,
+          "solver_completed_monotonic": 1791028.410120209,
+          "commit_started_monotonic": 1791028.476700924,
+          "committed_monotonic": 1791028.491935306,
+          "serialization_seconds": 0.014939462998881936,
+          "write_seconds": 0.00021342909894883633,
+          "fsync_seconds": 2.949964255094528e-06
+        }
+      }
+    },
+    {
+      "id": "H04-original-solve-audit",
+      "validation": {
+        "valid": true,
+        "issues": [],
+        "warnings": [],
+        "normalized_problem": {
+          "id": "H04-original-solve-audit",
+          "variables": [
+            "x",
+            "y"
+          ],
+          "constructions": [
+            {
+              "name": "B",
+              "expression": "Point(0,0)"
+            },
+            {
+              "name": "C",
+              "expression": "Point(6,0)"
+            },
+            {
+              "name": "A",
+              "expression": "Point(x,y)"
+            },
+            {
+              "name": "M",
+              "expression": "Midpoint(B,C)"
+            },
+            {
+              "name": "H",
+              "expression": "Orthocenter(A,B,C)"
+            },
+            {
+              "name": "P",
+              "expression": "FootOfPerpendicular(H,Line(A,M))"
+            },
+            {
+              "name": "T",
+              "expression": "IntersectLines(PerpendicularBisector(A,P),Line(B,C))"
+            }
+          ],
+          "conditions": [
+            {
+              "left": "y",
+              "operator": ">",
+              "right": 0
+            },
+            {
+              "predicate": "AcuteTriangle(A,B,C)"
+            },
+            {
+              "left": "Distance(A,B)",
+              "operator": "!=",
+              "right": "Distance(A,C)"
+            },
+            {
+              "left": "Distance(A,B)",
+              "operator": "!=",
+              "right": "Distance(B,C)"
+            },
+            {
+              "left": "Distance(A,C)",
+              "operator": "!=",
+              "right": "Distance(B,C)"
+            },
+            {
+              "left": "Distance(B,T)",
+              "operator": "=",
+              "right": 2
+            },
+            {
+              "left": "T.x",
+              "operator": "<",
+              "right": 0
+            }
+          ],
+          "target": "Distance(A,T)"
+        }
+      },
+      "expected_reference": "4",
+      "status": "solved",
+      "elapsed_wall_seconds": 7.8673073060344905,
+      "measured_cpu_seconds": 9.080766,
+      "termination_reason": "answer_found",
+      "completeness": "unknown",
+      "censored_by_external_watchdog": false,
+      "answers": [
+        {
+          "kind": "algebraic",
+          "value": {
+            "minimal_polynomial": [
+              "1",
+              "-4"
+            ],
+            "real_root_index": 0,
+            "isolating_interval": [
+              "4",
+              "4"
+            ],
+            "decimal": "4.0000000000000000000000000000000000000000000000000"
+          }
+        }
+      ],
+      "expected_minimal_polynomial": [
+        "1",
+        "-4"
+      ],
+      "single_answer_matches_reference": true,
+      "error": null,
+      "solver_process_info": {
+        "pid": 2095375,
+        "effective_cores": 1,
+        "deadline_monotonic": 1791208.617592796,
+        "solver_completed_monotonic": 1791036.321352837,
+        "artifact_conversion_seconds": 0.03407100006006658,
+        "installed_dependencies": {
+          "annotated-types": "0.8.0",
+          "attrs": "26.1.0",
+          "click": "8.4.2",
+          "coverage": "7.15.2",
+          "iniconfig": "2.3.0",
+          "jsonschema": "4.25.1",
+          "jsonschema-specifications": "2025.9.1",
+          "markdown-it-py": "4.2.0",
+          "mdurl": "0.1.2",
+          "mpmath": "1.3.0",
+          "numpy": "2.5.1",
+          "packaging": "26.2",
+          "pluggy": "1.6.0",
+          "psutil": "7.0.0",
+          "pydantic": "2.11.7",
+          "pydantic-core": "2.33.2",
+          "pygments": "2.20.0",
+          "pynomadbbo": "4.5.1",
+          "pytest": "8.4.1",
+          "pytest-cov": "6.2.1",
+          "referencing": "0.37.0",
+          "rich": "15.0.0",
+          "rpds-py": "2026.6.3",
+          "ruff": "0.12.8",
+          "scipy": "1.18.0",
+          "shellingham": "1.5.4",
+          "sympy": "1.14.0",
+          "typer": "0.16.1",
+          "typing-extensions": "4.16.0",
+          "typing-inspection": "0.4.2"
+        },
+        "import_root": "/home/kabatan/work/solver/src/geosolver",
+        "cpu_affinity": [
+          0
+        ],
+        "cpu_seconds": 7.779999999999999,
+        "returncode": 0,
+        "peak_rss_bytes": 227549184,
+        "resource_sampling_interval_seconds": 0.05,
+        "artifact_commit": {
+          "request_id": "cc2d4777ecd74fd9ba2131ad079a1340",
+          "sha256": "a5dea1ebc1c6cbb40a452e454e0dc704e134cdba8dbd5f62fe17de65b9df34d4",
+          "size_bytes": 1680843,
+          "solver_completed_monotonic": 1791036.321352837,
+          "commit_started_monotonic": 1791036.373968366,
+          "committed_monotonic": 1791036.384716215,
+          "serialization_seconds": 0.010515408823266625,
+          "write_seconds": 0.00016910978592932224,
+          "fsync_seconds": 2.100132405757904e-06
+        }
+      }
+    }
+  ],
+  "elapsed_wall_seconds": 13.76991291390732,
+  "measured_cpu_seconds": 15.491916000000002
+}

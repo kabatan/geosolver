@@ -1,0 +1,34 @@
+{
+  "models": [
+    "qwen35_4b",
+    "qwen35_9b",
+    "phi4_mini",
+    "mimo7b",
+    "nemotron9b",
+    "qwen3_2507_en"
+  ],
+  "phase": "primary_screen",
+  "jobs_sha256": "18ca0b1558c227852ddeeb84364fe046ff9dcd45332e77388ea6a77a7c4e1edd",
+  "samples_per_job": 2,
+  "seed": 2026092317,
+  "dtype": "bfloat16",
+  "max_context": 32768,
+  "max_completion": 32000,
+  "temperature": 0.6,
+  "top_p": 0.95,
+  "top_k": -1,
+  "system_prompt": "empty, except Nemotron /think mode control",
+  "official_chat_template": true,
+  "hints": false,
+  "training_eligible": false,
+  "budget": "60 minutes watchdog per model; adapt only for documented startup incompatibility; top candidates get new-task confirmation",
+  "selection": "Require valid reasoning plus useful self-generated solutions, not numerical answer alone",
+  "limitations": [
+    "English translations change language from previous diagnostic; a 2507 English baseline is rerun",
+    "Each tokenizer differs: same token cap is a practical budget, not equal compute",
+    "Generic shared sampling is not separately optimized per model",
+    "6 selected development tasks; not a held-out transfer score",
+    "Model selector sees task results; later confirmation remains model-selection data",
+    "High usefulness calibrated against user: H01 projection and DA15 routine coordinate identity are weak only"
+  ]
+}

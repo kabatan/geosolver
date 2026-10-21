@@ -1,0 +1,372 @@
+{
+  "audit_date": "2026-09-28",
+  "audit_snapshot_utc": "2026-09-28T07:56:02+00:00",
+  "scope": "Read-only consistency audit of frozen numeric SFT study inputs, configs, training receipts/order, amended diagnostic prompts, generation manifests, and completed output integrity. No model weights or GPU were used.",
+  "overall_status": "TRAINING_AND_FROZEN_INPUTS_CONSISTENT; EVALUATION_INCOMPLETE",
+  "freeze_integrity": {
+    "main": {
+      "pass": true,
+      "count": 4,
+      "mismatches": []
+    },
+    "data": {
+      "pass": true,
+      "count": 14,
+      "mismatches": []
+    },
+    "pre_amendment_backup": {
+      "files_present": true,
+      "old_freeze_hashes_checked": 12,
+      "hash_mismatches": [],
+      "old_and_new_job_ids_same": true,
+      "all_20_prompts_changed": true
+    }
+  },
+  "data": {
+    "rows": 80,
+    "constructed_shapes": 120,
+    "sources": {
+      "DA01": 8,
+      "DA02": 8,
+      "DA03": 8,
+      "DA04": 8,
+      "DA06": 8,
+      "DA07": 8,
+      "DA08": 8,
+      "DA11": 8,
+      "DB02": 8,
+      "DB12": 8
+    },
+    "training_sha256": "778b87cfce6ea7271e971f8c727a5663468b783d21e7d21199bae7ccf46e26c9",
+    "provenance_sha256": "4a810fddbbc9fcedb49914806b2323ce5cc9974ef5e36d91350212f1090b26eb",
+    "teacher": "numeric only .17g; original construction oracle",
+    "teacher_prefix": "Solve the following numerical geometry problem. Give only the requested numerical value, with at least 10 significant digits when appropriate. Do not give a proof or explanation.\n\n",
+    "all_targets_finite_numeric_roundtrip_17g": true,
+    "messages_match_prefix_and_provenance": true,
+    "all_targets_match_provenance": true,
+    "errors": [],
+    "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+    "model_metadata_sha256": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd"
+  },
+  "training": {
+    "shared_recipe_fields": [
+      "learning_rate",
+      "grad_accumulation",
+      "grad_clip",
+      "lora_rank",
+      "lora_alpha",
+      "lora_modules",
+      "ce_chunk_tokens",
+      "max_target_tokens",
+      "max_sequence_tokens",
+      "enable_thinking",
+      "dataset_sha256",
+      "model_revision",
+      "model_metadata_sha256",
+      "protocol_sha256"
+    ],
+    "both_seeds": {
+      "sft-a": {
+        "seed": 2026092701,
+        "config_sha256": {
+          "32": "1e09137f05457ba9b8b649499897d4ba88d98344f7f7d7d6b4400ee3001c168f",
+          "128": "39bdc34721fa06a9597d048352155b59a7ecb378e27e8351b26dffecb061b6e3"
+        },
+        "dataset_sha256": "778b87cfce6ea7271e971f8c727a5663468b783d21e7d21199bae7ccf46e26c9",
+        "recipe_matches_across_32_and_128": true,
+        "fresh_base_32": {
+          "status": "complete",
+          "prior_checkpoint": null,
+          "optimizer_state_loaded": false,
+          "updates": 32,
+          "global_updates": 32,
+          "optimizer_step_min_max": [
+            32,
+            32
+          ],
+          "adapter_sha256": "d66ebac887e4db176e3ae7902d9c3042e5cfbc8e91947915185ba07050a22946",
+          "optimizer_sha256": "7b4945cd3a14b983e6bbda69a5e4a6ef216d7c0a1aa81b3de6e45e3aa242072c"
+        },
+        "continued_128": {
+          "status": "complete",
+          "updates_added": 96,
+          "global_updates": 128,
+          "optimizer_state_loaded": true,
+          "prior_adapter_matches_32": true,
+          "prior_optimizer_matches_32": true,
+          "optimizer_step_min_max": [
+            128,
+            128
+          ],
+          "adapter_sha256": "c286cea776152f0a80f72c397144ad59ee96e371056494d5e0e1c425d765e59e",
+          "optimizer_sha256": "807afd9c265162248e924e07d7bbacbab90ac28c75377bf552d55b52a8fbb61d"
+        },
+        "examples": {
+          "presentations": 512,
+          "distinct_ids": 80,
+          "all_ids_are_train_ids": true,
+          "min_max_presentations": [
+            6,
+            7
+          ],
+          "all_positions_unique_and_complete": true,
+          "configured_32_order_is_128_prefix": true,
+          "processed_order_hashes_match": true,
+          "event_mismatches": [],
+          "target_token_sum": 9711
+        },
+        "loss_summary_recomputed": {
+          "first_mean_ce": 2.4811712950468063,
+          "last_mean_ce": 2.045133684575558,
+          "all_80_last_losses_lower": true,
+          "matches_saved_summary": true
+        }
+      },
+      "sft-b": {
+        "seed": 2026092901,
+        "config_sha256": {
+          "32": "ae37bf0643ee53c24cd4539f8b541befe8917594f421832a0a8a0d9b5e84f890",
+          "128": "ea43a98ca311668d4f876128da94b7bbb64276600adc135e3e70a81542ed42f1"
+        },
+        "dataset_sha256": "778b87cfce6ea7271e971f8c727a5663468b783d21e7d21199bae7ccf46e26c9",
+        "recipe_matches_across_32_and_128": true,
+        "fresh_base_32": {
+          "status": "complete",
+          "prior_checkpoint": null,
+          "optimizer_state_loaded": false,
+          "updates": 32,
+          "global_updates": 32,
+          "optimizer_step_min_max": [
+            32,
+            32
+          ],
+          "adapter_sha256": "cb0a830052db82f1ded77b195609241ef534d6ad870ea7f5372e465362a88afc",
+          "optimizer_sha256": "2263de31d08d2b325e26cd14768f29161e1503dde4d49a57c420a64d608d79f7"
+        },
+        "continued_128": {
+          "status": "complete",
+          "updates_added": 96,
+          "global_updates": 128,
+          "optimizer_state_loaded": true,
+          "prior_adapter_matches_32": true,
+          "prior_optimizer_matches_32": true,
+          "optimizer_step_min_max": [
+            128,
+            128
+          ],
+          "adapter_sha256": "a28d67ed4c3952cbaf8c339d5c4467ce2712efce30049dde15f8b1a9472e21ab",
+          "optimizer_sha256": "87c467bccb9c24ec8dc86cc563a92627398b082f2e46fd908a82d3932b57028b"
+        },
+        "examples": {
+          "presentations": 512,
+          "distinct_ids": 80,
+          "all_ids_are_train_ids": true,
+          "min_max_presentations": [
+            6,
+            7
+          ],
+          "all_positions_unique_and_complete": true,
+          "configured_32_order_is_128_prefix": true,
+          "processed_order_hashes_match": true,
+          "event_mismatches": [],
+          "target_token_sum": 9710
+        },
+        "loss_summary_recomputed": {
+          "first_mean_ce": 2.48105828166008,
+          "last_mean_ce": 2.0456947863101957,
+          "all_80_last_losses_lower": true,
+          "matches_saved_summary": true
+        }
+      }
+    },
+    "independent_fresh_chains": true,
+    "recipe": "Qwen3.5-9B pinned revision; BF16; LoRA r8/alpha16/dropout0; AdamW 5e-6, weight decay 0; grad accumulation 4, clip 1.0; assistant target+EOS only; thinking disabled; max target/sequence 4096/8192."
+  },
+  "evaluation_manifests": {
+    "main": {
+      "jobs": 24,
+      "job_sources": {
+        "H02": 2,
+        "H03": 2,
+        "H08": 2,
+        "DA15": 2,
+        "H12": 2,
+        "DB01": 2,
+        "DB08": 2,
+        "DB16": 2,
+        "AP01": 4,
+        "easy-triangle-median": 1,
+        "easy-right-circumradius": 1,
+        "easy-angle-bisector": 1,
+        "easy-intersecting-chords": 1
+      },
+      "answer_key_entries": 20,
+      "answer_key_covers_all_non_proof_jobs": true,
+      "AP01_proof_jobs_without_numeric_answer_key": [
+        "AP01-proof-00",
+        "AP01-proof-01",
+        "AP01-proof-02",
+        "AP01-proof-03"
+      ],
+      "train_source_overlap": [],
+      "train_id_overlap": [],
+      "job_ids_overlap_diagnostic": [],
+      "freeze_hash_matches": true
+    },
+    "diagnostic_after_amendment": {
+      "jobs": 20,
+      "trained_example_jobs": 10,
+      "trained_prompt_exact_matches": 10,
+      "new_shape_jobs": 10,
+      "new_shape_variant09_heldout_prompt_matches": 10,
+      "new_shape_ids_overlap_training": [],
+      "answer_key_entries": 20,
+      "job_ids_match_answer_key": true,
+      "answer_fields_in_jobs": [],
+      "data_freeze_job_hash_matches": true,
+      "amendment_and_script_hashes_match": true
+    },
+    "conditional_exact_prompt": {
+      "jobs": 10,
+      "now_duplicate_of_trained_example_diagnostic": true,
+      "instruction": "If protocol condition triggers, reuse amended diagnostic trained_example results; do not generate duplicate exact-prompt jobs."
+    },
+    "answer_isolation": {
+      "pass": true,
+      "generate_driver_reads_answer_key": false,
+      "per_job_answer_field_assert_present": true
+    }
+  },
+  "completed_generation_snapshot": {
+    "base": {
+      "status": "complete",
+      "completed_jobs": 24,
+      "output_files": 24,
+      "expected_jobs": 24,
+      "jobs_hash_matches_freeze": true,
+      "model_revision_matches": true,
+      "adapter_matches_final": true,
+      "finish_reason_counts": {
+        "stop": 23,
+        "length": 1
+      },
+      "answer_fields_in_outputs": [],
+      "unexpected_output_ids": [],
+      "unobserved_expected_ids": []
+    },
+    "sft-a": {
+      "status": "complete",
+      "completed_jobs": 24,
+      "output_files": 24,
+      "expected_jobs": 24,
+      "jobs_hash_matches_freeze": true,
+      "model_revision_matches": true,
+      "adapter_matches_final": true,
+      "finish_reason_counts": {
+        "stop": 21,
+        "length": 3
+      },
+      "answer_fields_in_outputs": [],
+      "unexpected_output_ids": [],
+      "unobserved_expected_ids": []
+    },
+    "sft-b": {
+      "status": "running",
+      "completed_jobs": 8,
+      "output_files": 8,
+      "expected_jobs": 24,
+      "jobs_hash_matches_freeze": true,
+      "model_revision_matches": true,
+      "adapter_matches_final": true,
+      "finish_reason_counts": {
+        "stop": 7,
+        "length": 1
+      },
+      "answer_fields_in_outputs": [],
+      "unexpected_output_ids": [],
+      "unobserved_expected_ids": [
+        "AP01-proof-00",
+        "AP01-proof-01",
+        "AP01-proof-02",
+        "AP01-proof-03",
+        "numeric-elementary-easy-angle-bisector",
+        "numeric-elementary-easy-intersecting-chords",
+        "numeric-elementary-easy-right-circumradius",
+        "numeric-elementary-easy-triangle-median",
+        "numeric-transfer-db01-s1",
+        "numeric-transfer-db01-s2",
+        "numeric-transfer-db08-s1",
+        "numeric-transfer-db08-s2",
+        "numeric-transfer-db16-s1",
+        "numeric-transfer-db16-s2",
+        "numeric-transfer-h12-s1",
+        "numeric-transfer-h12-s2"
+      ]
+    }
+  },
+  "evaluation_status_snapshot": {
+    "base-main": {
+      "status": "complete",
+      "completed_jobs": 24,
+      "output_files": 24,
+      "expected_jobs": 24
+    },
+    "sft-a-main": {
+      "status": "complete",
+      "completed_jobs": 24,
+      "output_files": 24,
+      "expected_jobs": 24
+    },
+    "sft-b-main": {
+      "status": "running",
+      "completed_jobs": 8,
+      "output_files": 8,
+      "expected_jobs": 24
+    },
+    "base-diagnostic": {
+      "status": "not_started",
+      "completed_jobs": null,
+      "output_files": 0,
+      "expected_jobs": 20
+    },
+    "sft-a-diagnostic": {
+      "status": "not_started",
+      "completed_jobs": null,
+      "output_files": 0,
+      "expected_jobs": 20
+    },
+    "sft-b-diagnostic": {
+      "status": "not_started",
+      "completed_jobs": null,
+      "output_files": 0,
+      "expected_jobs": 20
+    }
+  },
+  "pending_un_audited": {
+    "seed_b_main_remaining": "16 of 24 jobs at snapshot",
+    "all_three_diagnostics": "not started; 20 jobs/arm",
+    "length_extension_jobs": "not started; base and seed-A main had 1 and 3 initial length finishes; seed-B observed outputs include 1 length finish",
+    "generation_complete_json_exists": false,
+    "final_cap_by_job_exists": false,
+    "final_scoring_and_anonymous_review": "not audited; do not draw final evaluation conclusions from this snapshot"
+  },
+  "notes": [
+    "The 80-example study prompt and target were checked against provenance; training data contains no AP01 target/proof.",
+    "The 10 trained-example diagnostics intentionally repeat 10 training IDs/prompts; the 10 variant-09 new-shape IDs do not overlap training IDs.",
+    "Completed base and seed-A main files match the frozen 24-job manifest, model revision, and (for seed A) final adapter hash; their first-pass outputs are not final because length-triggered extension remains pending.",
+    "At 2026-09-28T07:56:02+00:00, base and seed-A main generation are complete for the first 32k pass; seed-B main is running with 8/24 outputs. Observed base/A output IDs and receipts match the frozen manifest/model, and seed-A uses its final adapter hash."
+  ],
+  "integrity_checks": {
+    "main_freeze_all_hashes_match": true,
+    "data_freeze_all_hashes_match": true,
+    "pre_amendment_backup_hashes_match": true,
+    "training_dataset_and_provenance_match": true,
+    "seed_a_fresh_32_to_optimizer_128_order_verified": true,
+    "seed_b_fresh_32_to_optimizer_128_order_verified": true,
+    "two_chains_independent_and_fresh": true,
+    "main_jobs_no_train_overlap_and_keys_separate": true,
+    "amended_diagnostics_10_exact_10_heldout_variant09": true,
+    "generation_jobs_and_driver_keep_keys_separate": true,
+    "completed_base_seed_a_main_generation_manifest_and_adapter_match": true
+  }
+}

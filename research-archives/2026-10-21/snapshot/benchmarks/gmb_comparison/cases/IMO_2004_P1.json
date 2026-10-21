@@ -1,0 +1,52 @@
+{
+  "id": "IMO_2004_P1",
+  "variables": [
+    "ax",
+    "ay"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "O",
+      "expression": "Midpoint(B, C)"
+    },
+    {
+      "name": "omega",
+      "expression": "CircleThroughPoint(O, B)"
+    },
+    {
+      "name": "M",
+      "expression": "Intersect(Line(A, B), omega, exclude=B)"
+    },
+    {
+      "name": "N",
+      "expression": "Intersect(Line(A, C), omega, exclude=C)"
+    },
+    {
+      "name": "R",
+      "expression": "Intersect(AngleBisector(B, A, C), AngleBisector(M, O, N))"
+    }
+  ],
+  "conditions": [
+    {
+      "predicate": "AcuteTriangle(A, B, C)"
+    },
+    {
+      "left": "Distance(A, B)",
+      "operator": "!=",
+      "right": "Distance(A, C)"
+    }
+  ],
+  "target": "0"
+}

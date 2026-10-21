@@ -1,0 +1,349 @@
+{
+  "title": "Balanced true/false relation-QA comparison against exact repeats",
+  "status": "Re-audited balanced true/false QA dataset with six self-contained proof targets; separate from the integrated direct-multi dataset.",
+  "candidate_qa": {
+    "count": 6,
+    "true_count": 3,
+    "false_count": 3,
+    "ids": [
+      "balanced-H01-v0-relation-qa",
+      "balanced-H01-v1-relation-qa",
+      "balanced-H01-v2-relation-qa",
+      "balanced-H07-v0-relation-qa",
+      "balanced-H07-v1-relation-qa",
+      "balanced-H07-v2-relation-qa"
+    ],
+    "truth_by_case": {
+      "balanced-H01-v0-relation-qa": false,
+      "balanced-H01-v1-relation-qa": true,
+      "balanced-H01-v2-relation-qa": false,
+      "balanced-H07-v0-relation-qa": true,
+      "balanced-H07-v1-relation-qa": false,
+      "balanced-H07-v2-relation-qa": true
+    },
+    "false_formula_only_in_user_prompts": true
+  },
+  "datasets": {
+    "repeat": {
+      "path": "train-38-repeat.json",
+      "rows": 38,
+      "unique_ids": 38,
+      "unique_sources": 32,
+      "added_ids": [
+        "repeat-H01-v0-copy1",
+        "repeat-H01-v0-copy2",
+        "repeat-H01-v0-copy3",
+        "repeat-H07-v0-copy1",
+        "repeat-H07-v0-copy2",
+        "repeat-H07-v0-copy3"
+      ]
+    },
+    "balanced_qa": {
+      "path": "train-38-balanced-qa.json",
+      "rows": 38,
+      "unique_ids": 38,
+      "unique_sources": 32,
+      "added_ids": [
+        "balanced-H01-v0-relation-qa",
+        "balanced-H01-v1-relation-qa",
+        "balanced-H01-v2-relation-qa",
+        "balanced-H07-v0-relation-qa",
+        "balanced-H07-v1-relation-qa",
+        "balanced-H07-v2-relation-qa"
+      ]
+    }
+  },
+  "base": {
+    "path": "/home/kabatan/work/solver/docs/research/qwen35-external-teacher-2026-09-25/heldout-near-transfer/train.json",
+    "sha256": "114f75e357d03e37fb42062c7aa26c50883fedf122d7f1d7866276c1f32b0c60",
+    "rows": 32,
+    "ordered_ids": [
+      "external-H01-v0",
+      "external-H02-v0",
+      "external-H07-v0",
+      "external-H12-v0",
+      "external-H13-v0",
+      "external-HX01-v0",
+      "external-DA01-v0",
+      "external-DA02-v0",
+      "external-DA03-v0",
+      "external-DA04-v0",
+      "external-DA05-v0",
+      "external-DA06-v0",
+      "external-DA07-v0",
+      "external-DA08-v0",
+      "external-DA09-v0",
+      "external-DA11-v0",
+      "external-DA13-v0",
+      "external-DA15-v0",
+      "external-DA16-v0",
+      "external-DA17-v0",
+      "external-DA18-v0",
+      "external-DB01-v0",
+      "external-DB02-v0",
+      "external-DB03-v0",
+      "external-DB04-v0",
+      "external-DB06-v0",
+      "external-DB08-v0",
+      "external-DB10-v0",
+      "external-DB12-v0",
+      "external-DB13-v0",
+      "external-DB15-v0",
+      "external-DB16-v0"
+    ],
+    "excluded_sources": [
+      "H03",
+      "H04",
+      "H08",
+      "H14",
+      "H15"
+    ],
+    "excluded_occurrences": 0
+  },
+  "slot_pairing": [
+    {
+      "slot": 1,
+      "source": "H01",
+      "balanced_qa_id": "balanced-H01-v0-relation-qa",
+      "repeat_id": "repeat-H01-v0-copy1"
+    },
+    {
+      "slot": 2,
+      "source": "H01",
+      "balanced_qa_id": "balanced-H01-v1-relation-qa",
+      "repeat_id": "repeat-H01-v0-copy2"
+    },
+    {
+      "slot": 3,
+      "source": "H01",
+      "balanced_qa_id": "balanced-H01-v2-relation-qa",
+      "repeat_id": "repeat-H01-v0-copy3"
+    },
+    {
+      "slot": 4,
+      "source": "H07",
+      "balanced_qa_id": "balanced-H07-v0-relation-qa",
+      "repeat_id": "repeat-H07-v0-copy1"
+    },
+    {
+      "slot": 5,
+      "source": "H07",
+      "balanced_qa_id": "balanced-H07-v1-relation-qa",
+      "repeat_id": "repeat-H07-v0-copy2"
+    },
+    {
+      "slot": 6,
+      "source": "H07",
+      "balanced_qa_id": "balanced-H07-v2-relation-qa",
+      "repeat_id": "repeat-H07-v0-copy3"
+    }
+  ],
+  "matched_design": {
+    "same_ordered_base": true,
+    "same_added_slot_source_order": true,
+    "same_shuffle_seed": 2026092431,
+    "same_train_order_index_permutation": true,
+    "shuffle_indices": [
+      19,
+      8,
+      13,
+      12,
+      21,
+      30,
+      28,
+      15,
+      0,
+      26,
+      4,
+      5,
+      20,
+      24,
+      36,
+      17,
+      7,
+      27,
+      16,
+      3,
+      14,
+      25,
+      32,
+      11,
+      1,
+      10,
+      18,
+      35,
+      37,
+      23,
+      29,
+      31,
+      34,
+      6,
+      22,
+      9,
+      33,
+      2
+    ],
+    "repeat_ids_in_update_order": [
+      "external-DA17-v0",
+      "external-DA03-v0",
+      "external-DA08-v0",
+      "external-DA07-v0",
+      "external-DB01-v0",
+      "external-DB15-v0",
+      "external-DB12-v0",
+      "external-DA11-v0",
+      "external-H01-v0",
+      "external-DB08-v0",
+      "external-H13-v0",
+      "external-HX01-v0",
+      "external-DA18-v0",
+      "external-DB04-v0",
+      "repeat-H07-v0-copy2",
+      "external-DA15-v0",
+      "external-DA02-v0",
+      "external-DB10-v0",
+      "external-DA13-v0",
+      "external-H12-v0",
+      "external-DA09-v0",
+      "external-DB06-v0",
+      "repeat-H01-v0-copy1",
+      "external-DA06-v0",
+      "external-H02-v0",
+      "external-DA05-v0",
+      "external-DA16-v0",
+      "repeat-H07-v0-copy1",
+      "repeat-H07-v0-copy3",
+      "external-DB03-v0",
+      "external-DB13-v0",
+      "external-DB16-v0",
+      "repeat-H01-v0-copy3",
+      "external-DA01-v0",
+      "external-DB02-v0",
+      "external-DA04-v0",
+      "repeat-H01-v0-copy2",
+      "external-H07-v0"
+    ],
+    "source_presentations_each_arm": {
+      "H01": 4,
+      "H07": 4,
+      "other_sources": 1
+    },
+    "repeat_additions_are_exact_v0_prompt_answer_copies": true,
+    "balanced_qa_ids_in_update_order": [
+      "external-DA17-v0",
+      "external-DA03-v0",
+      "external-DA08-v0",
+      "external-DA07-v0",
+      "external-DB01-v0",
+      "external-DB15-v0",
+      "external-DB12-v0",
+      "external-DA11-v0",
+      "external-H01-v0",
+      "external-DB08-v0",
+      "external-H13-v0",
+      "external-HX01-v0",
+      "external-DA18-v0",
+      "external-DB04-v0",
+      "balanced-H07-v1-relation-qa",
+      "external-DA15-v0",
+      "external-DA02-v0",
+      "external-DB10-v0",
+      "external-DA13-v0",
+      "external-H12-v0",
+      "external-DA09-v0",
+      "external-DB06-v0",
+      "balanced-H01-v0-relation-qa",
+      "external-DA06-v0",
+      "external-H02-v0",
+      "external-DA05-v0",
+      "external-DA16-v0",
+      "balanced-H07-v0-relation-qa",
+      "balanced-H07-v2-relation-qa",
+      "external-DB03-v0",
+      "external-DB13-v0",
+      "external-DB16-v0",
+      "balanced-H01-v2-relation-qa",
+      "external-DA01-v0",
+      "external-DB02-v0",
+      "external-DA04-v0",
+      "balanced-H01-v1-relation-qa",
+      "external-H07-v0"
+    ]
+  },
+  "qa_math_and_geometry_checks": {
+    "sympy_version": "1.14.0",
+    "all_exact_checks": [
+      {
+        "case": "balanced-H01-v0-relation-qa",
+        "t2_minus_m2": "64",
+        "projection_factor": "9/25",
+        "MP": "18/5",
+        "AP": "32/5",
+        "branch_checked": true
+      },
+      {
+        "case": "balanced-H01-v1-relation-qa",
+        "t2_minus_m2": "48",
+        "projection_factor": "121/169",
+        "MP": "121/13",
+        "AP": "48/13",
+        "branch_checked": true
+      },
+      {
+        "case": "balanced-H01-v2-relation-qa",
+        "t2_minus_m2": "40",
+        "projection_factor": "81/121",
+        "MP": "81/11",
+        "AP": "40/11",
+        "branch_checked": true
+      },
+      {
+        "case": "balanced-H07-v0-relation-qa",
+        "lambda": "5/8",
+        "0<lambda<1": true,
+        "area": "9"
+      },
+      {
+        "case": "balanced-H07-v1-relation-qa",
+        "lambda": "37/49",
+        "0<lambda<1": true,
+        "area": "36/7"
+      },
+      {
+        "case": "balanced-H07-v2-relation-qa",
+        "lambda": "13/16",
+        "0<lambda<1": true,
+        "area": "9/2"
+      }
+    ],
+    "circle_mapping_explicit_in_H07_direct_qa": true,
+    "H01_proof_basis": "Every answer derives H=(x,(m^2−x^2)/y), A·H=m^2, P=(m^2/t^2)A, and the acute branch t^2−m^2>0.",
+    "H07_proof_basis": "Every answer writes both tangent-circle equations, derives the common chord through O and lambda by the two radial roots, then computes reflected E, P,Q, PQ, height, and area.",
+    "assistant_answers_open_false_claim_with_true_false_label": true,
+    "assistant_does_not_repeat_false_equation_symbolically": true,
+    "all_six_assistant_targets_self_contain_decisive_derivations": true,
+    "circle_mapping_explicit_in_H07_relation_qa": true
+  },
+  "protocol_parity": {
+    "seed": 2026092431,
+    "lr": 1e-05,
+    "epochs": 1,
+    "planned_updates": 38,
+    "n_configurations": 32,
+    "same_optimizer_and_lora_as_low_dose_protocol": true,
+    "protocols_equal_except_dataset_path_hash_and_study_arm": true,
+    "eval_job_file_is_preexisting_input_only": "/home/kabatan/work/solver/docs/research/qwen35-diverse-sft-2026-09-24/eval-proof-jobs-en.json",
+    "eval_job_input_sha256": "557efa1ad7cd588aefaa9cdc8d63d63ac30646e4820999ece3f9a7543564bef5"
+  },
+  "hashes": {
+    "candidate-qa.json": "14ab637661b4397b60d47a30ea357e20b44b0808c1f2d514042abf35ca723f13",
+    "train-38-balanced-qa.json": "da66b08c3d83ddd50bc7c1802030bee0da497b0821fb3378ef0cf07229326291",
+    "train-38-repeat.json": "67c4836e9c89054b15b46587683a58ce6049dfdaadfafe441b7593c41a86bf7a",
+    "balanced-qa-protocol.json": "91a2593481c632cee7251503779327bbd6c524a932ed42540a6a7d051474944d",
+    "balanced-qa-repeat-protocol.json": "f9bdecb8f5c4b18261a86aa2e0f59be39a6ff164414af7c70cbd8894a06bd9bb",
+    "balanced-qa-token-audit.json": "7edac432c2691ecbe22654448afc429814fc2370ef54aedeb057cfc5c8438cf3",
+    "qa-answer-key.json": "5fd9d650d4971003b696a648bcb63139f9930dc2418138364eb96c7a558c9eb4"
+  },
+  "archive_note": "train-38-balanced-qa.json contains the shared 32-row base plus six balanced relation-check QA examples. train-38-direct-multi.json is a separate dataset of integrated worked-answer examples; the datasets are not interchangeable. This audit describes the balanced QA dataset only.",
+  "qa_answer_key": "qa-answer-key.json"
+}

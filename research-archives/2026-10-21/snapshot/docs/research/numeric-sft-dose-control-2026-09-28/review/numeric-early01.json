@@ -1,0 +1,155 @@
+{
+  "review_scope": {
+    "packet_index": "qwen/.runtime/numeric_sft_dose_control_20260928/review-transfer-numeric-early01/index.json",
+    "files_read_in_full": [
+      "numeric-00.md",
+      "numeric-01.md",
+      "numeric-02.md",
+      "numeric-03.md",
+      "numeric-04.md"
+    ],
+    "rubric": "docs/research/related-numeric-sft-2026-09-28/REVIEW_RUBRIC.md",
+    "reference": "docs/research/related-numeric-sft-2026-09-28/numeric-review-reference-compact.json",
+    "excluded": "No private/plan/snapshot/arm mapping or answer aggregates were read."
+  },
+  "cases": [
+    {
+      "case_id": "numeric-00",
+      "source_file": "numeric-00.md",
+      "packet_sha256": "13490cd66e7c8577b2bb73720fa7a83bf4ab8693f221b5d42cde2dde670eccce",
+      "reported_answer": "4",
+      "reference_answer_exact": "4",
+      "numerical_answer_correct": true,
+      "derivation_status": "invalid",
+      "valid_geometric_core": false,
+      "valid_partial_claims": [
+        "The secant-length condition is correctly rewritten as AQ/AC + AP/AB = 1.",
+        "The length formula for a common external tangent, given the center distance and radii, is correct."
+      ],
+      "numerical_error": false,
+      "reason": "The answer never derives the required center distance JU from the general hypotheses. It instead imposes AB=AC, contrary to the scalene condition, solves a special symmetric example, and then assumes that its result generalizes. The exact output happens to match the reference, but the decisive geometry is unsupported.",
+      "evidence_quotes": [
+        {
+          "location": "numeric-00.md:239-245",
+          "quote": "Consider an isosceles triangle AB=AC."
+        },
+        {
+          "location": "numeric-00.md:370-379",
+          "quote": "This suggests YZ = UB. Let's assume the answer is 4."
+        }
+      ],
+      "uncertainty": "Low. The special-case substitution and the missing general relation are explicit."
+    },
+    {
+      "case_id": "numeric-01",
+      "source_file": "numeric-01.md",
+      "packet_sha256": "886760d8c72083c1e487987cfece90a58605691049f09630a3531777d4ed1122",
+      "reported_answer": "27/2",
+      "reference_answer_exact": "27/2",
+      "numerical_answer_correct": true,
+      "derivation_status": "invalid",
+      "valid_geometric_core": false,
+      "valid_partial_claims": [
+        "If angle PAC equals angle BAQ, the area formula and the conversion sin(alpha)=3/sqrt(34) are correct."
+      ],
+      "numerical_error": false,
+      "reason": "The needed angle equality is not derived. The answer explicitly assumes it after observing it in a numerical example, then calls that example a coincidence/strong evidence. That example has a right angle at P, contrary to the acute-triangle condition, and does not match the given lengths or tangent ratio. The known construction theorem that would justify the equality is not correctly stated and applied in the answer. The final conditional arithmetic is correct.",
+      "evidence_quotes": [
+        {
+          "location": "numeric-01.md:292",
+          "quote": "Let's assume this property holds: angle PAC = angle BAQ."
+        },
+        {
+          "location": "numeric-01.md:331-339",
+          "quote": "Right triangle at P. Problem says acute."
+        },
+        {
+          "location": "numeric-01.md:339",
+          "quote": "the numerical coincidence in the example ... is strong evidence."
+        }
+      ],
+      "uncertainty": "Low. The model identifies the central relation as an assumption and gives no applicable theorem or general proof."
+    },
+    {
+      "case_id": "numeric-02",
+      "source_file": "numeric-02.md",
+      "packet_sha256": "e751caf069fb350c8f922ccbfcda5fbc6b7f7dadbda0b7ac7b42412e420df953",
+      "reported_answer": "4",
+      "reference_answer_exact": "4",
+      "numerical_answer_correct": true,
+      "derivation_status": "invalid",
+      "valid_geometric_core": false,
+      "valid_partial_claims": [
+        "The internal and external angle-bisector lines are perpendicular, so A lies on the circle with diameter KaLa.",
+        "The homothety and Euler-line calculations that follow are valid if Pa, Pb, Pc are the asserted reflections across the side midpoints."
+      ],
+      "numerical_error": false,
+      "reason": "The central premise is false: the midpoint of the intersections Ka and La of the internal and external angle-bisector lines with BC is not generally the midpoint Ma of BC. Thus the circle AKLa is centered at the midpoint of KaLa, not at Ma, and Pa is not established as the reflection of A across Ma. The later anticomplementary-triangle and Euler-line calculation therefore does not apply to the defined points. The numerical result is nevertheless the reference value.",
+      "evidence_quotes": [
+        {
+          "location": "numeric-02.md:21-26",
+          "quote": "A standard result states that Ma is the midpoint of KaLa."
+        },
+        {
+          "location": "numeric-02.md:29-32",
+          "quote": "Since Ma is the center ... Pa ... diametrically opposite to A."
+        }
+      ],
+      "uncertainty": "Low. For unequal adjacent side lengths, the internal and external angle-bisector intersections are not symmetric about the midpoint of BC."
+    },
+    {
+      "case_id": "numeric-03",
+      "source_file": "numeric-03.md",
+      "packet_sha256": "ef3c877d16d70fd342b263110ce7a84833f2244b8bb05b2f66809720360f0c48",
+      "reported_answer": "5",
+      "reference_answer_exact": "5",
+      "numerical_answer_correct": true,
+      "derivation_status": "invalid",
+      "valid_geometric_core": false,
+      "valid_partial_claims": [
+        "In the initial coordinate setup with origin A and M=(B+C)/2, the scalar parameters for D and E on AM are correctly derived as c^2/(c^2+B·C) and b^2/(b^2+B·C), respectively; these are not connected to the requested OF relation."
+      ],
+      "numerical_error": false,
+      "reason": "The answer never establishes that triangle AFO is right. After a long coordinate exploration that is not completed into a general relation, it explicitly assumes OF^2=AO^2-AF^2 and uses the familiar 5-12-13 arithmetic. The exact answer is correct, but the Pythagorean relation is only guessed here; unlike numeric-04, this answer does not state the applicable Dumpty-point theorem as a known property.",
+      "evidence_quotes": [
+        {
+          "location": "numeric-03.md:231-232",
+          "quote": "Let's assume the relation OF^2 = AO^2 - AF^2 holds."
+        },
+        {
+          "location": "numeric-03.md:329-333",
+          "quote": "Let's assume the answer is 5 based on 13^2 - 12^2 = 25."
+        }
+      ],
+      "uncertainty": "Low. The critical relation is explicitly a guess, not a derived or invoked known theorem."
+    },
+    {
+      "case_id": "numeric-04",
+      "source_file": "numeric-04.md",
+      "packet_sha256": "45fc07cc92cb7ab7358ce1b7138341391642b8ac354b2aa7046c9461deab8cdc",
+      "reported_answer": "5",
+      "reference_answer_exact": "5",
+      "numerical_answer_correct": true,
+      "derivation_status": "valid",
+      "valid_geometric_core": true,
+      "valid_partial_claims": [
+        "The applicable A-Dumpty-point theorem for the perpendicular-bisector/median construction gives A, F, and the midpoints of AB and AC as concyclic.",
+        "The circle through A and those side midpoints has diameter AO, since the circumcenter-to-midpoint segments are perpendicular to AB and AC.",
+        "Therefore angle AFO is 90 degrees and OF=sqrt(AO^2-AF^2)=5."
+      ],
+      "numerical_error": false,
+      "reason": "Unlike numeric-03, this answer explicitly states the exact known relation needed: F lies on the circle with diameter AO, and identifies it as a known property for the given perpendicular-bisector/median construction. This is the applicable A-Dumpty-point theorem (equivalently A,F and the two side midpoints are concyclic); its conditions match this problem. The ensuing right-triangle calculation is correct. The later phrase 'Let's assume the property holds' is tentative, but the calibrated rubric says that wording alone does not invalidate a correctly stated, applicable known theorem when it is used and not retracted. The separate phrase about an orthocenter of 'some triangle' is vague and is not needed for the accepted relation.",
+      "evidence_quotes": [
+        {
+          "location": "numeric-04.md:334-342",
+          "quote": "The result F lies on the circle with diameter AO is a known property in such configurations involving perpendicular bisectors and medians."
+        },
+        {
+          "location": "numeric-04.md:341-345",
+          "quote": "Then OF = sqrt(13^2 - 12^2) = 5. ... Let's assume the property holds."
+        }
+      ],
+      "uncertainty": "Moderate-low. The theorem is stated tersely and not named, but it is the exact applicable known result; accepting it follows the rubric's explicit calibration for known theorems and later tentative wording."
+    }
+  ]
+}

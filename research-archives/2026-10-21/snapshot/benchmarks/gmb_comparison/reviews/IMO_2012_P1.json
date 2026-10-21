@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2012_P1",
+  "reviewer": "independent_review",
+  "case_sha256": "2d49a82f46f6b13c00e661340904a31ef71cdef7c330d6f0db2b5f0daa2d0c3b",
+  "audit_sha256": "1850e886d5e110d4016324d702ff54e53a331377e6c19d50b5e6b1fcaa37ee03",
+  "gmbl_sha256": "203ade98ac2547bdd97cfc8fe33ab7368bd0584167eeb53319fc954a08a5c97d",
+  "reviewed_original_pdf_sha256": "3ab2564b04d805bcfc963a8c38527a7773b69a8a41cc457a260730b734ffffd6",
+  "verdict": "pass",
+  "normalization_checked": true,
+  "conclusion_not_assumed": true,
+  "original_conditions_covered_by_gmbl": true,
+  "scope_of_coverage_ja": "原文の仮定を当該比較範囲で満たすかの監査である。原文の全境界配置を含む解集合の完全同値、GMB実装の全数値分岐の正当性、実験の実行許可を意味しない。",
+  "comparison_scope": "nondegenerate_configuration_domain",
+  "sources_read": [
+    "cases/IMO_2012_P1.json",
+    "audit/IMO_2012_P1.json",
+    "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2012_P1.smt2",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2012-eng.pdf",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2012-eng.txt",
+    "AUTHORING.md",
+    "reviews/UPSTREAM_SEMANTICS.md"
+  ],
+  "official_url": "https://www.imo-official.org/assets/documents/problems/2012/2012_eng.pdf",
+  "normalization_review": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "removed_continuous_dof": 4,
+    "scale_invariant": true,
+    "reflection_fixed": false,
+    "remaining_solver_variables": [
+      "cx",
+      "cy"
+    ],
+    "shape_fixed_beyond_original_hypotheses": false,
+    "checked_ja": "原文で相異なる二点の単位基線化だけで平行移動2・回転1・正の尺度1を除く。元の形の変数と鏡映配置を保持している。"
+  },
+  "original_goal_not_used": "MはSTの中点。",
+  "checked_input_counts": {
+    "constructions": 11,
+    "conditions": 1
+  },
+  "method": {
+    "read_all_constructions_and_conditions": true,
+    "read_original_problem_assumptions": true,
+    "checked_domains_branches_and_non_degeneracy": true,
+    "checked_goal_separation": true,
+    "exact_algebraic_checks_only_where_documented": true,
+    "solver_executed": false,
+    "optimizer_executed": false,
+    "refinement_executed": false,
+    "prior_case_performance_used_to_adjust_input": false
+  },
+  "gmb_runtime_equivalence_claimed": false,
+  "findings": [
+    {
+      "id": "IMO_2012_P1-review-1",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "AB以外のCを固定せず、JはAの対辺側の傍心である。GeoSolver Excenter(A,B,C)とGMBのexcenterの符号・辺対応を確認した。"
+    },
+    {
+      "id": "IMO_2012_P1-review-2",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "M,K,LはBC,CA,ABへの接点としての垂足。F=LM∩BJ、G=KM∩CJ、S=AF∩BC、T=AG∩BCの交点順を照合した。"
+    },
+    {
+      "id": "IMO_2012_P1-review-3",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "結論MがSTの中点であることは入力へ加えていない。Jを内心や別の傍心に取り違えていない。"
+    }
+  ],
+  "remaining_uncertainties": []
+}

@@ -1,0 +1,33 @@
+{
+  "seed": 2026092402,
+  "epochs": 2,
+  "lr": 2e-05,
+  "grad_clip": 1.0,
+  "lora_rank": 8,
+  "lora_alpha": 16,
+  "modules": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj",
+    "in_proj_qkv",
+    "in_proj_z",
+    "out_proj",
+    "gate_proj",
+    "up_proj",
+    "down_proj"
+  ],
+  "max_sequence_tokens": 4096,
+  "micro_batch": 1,
+  "optimizer": "AdamW, weight decay zero, constant learning rate",
+  "loss": "Assistant answer only including EOS; native non-thinking chat template",
+  "checkpoint": "Single final adapter, no selection using evaluation answers",
+  "decision": "Train only on independently checked same-model self-generated complete proofs from more than one configuration; otherwise label any run as single-configuration technical probe.",
+  "dataset": "docs/research/qwen35-sft-pilot-2026-09-24/train-h01-technical.json",
+  "dataset_sha256": "2a54f84c2b33121a3c13669ee29acd24502c68362a21406bedc5f5c177286610",
+  "eval_jobs_sha256": "e7fb94a5f2d6759a0c552bd38bff763c669acc2290cdf5f25a0ba567c5c5f3f5",
+  "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+  "n_examples": 1,
+  "n_configurations": 1,
+  "study_arm": "single_configuration_technical_only"
+}

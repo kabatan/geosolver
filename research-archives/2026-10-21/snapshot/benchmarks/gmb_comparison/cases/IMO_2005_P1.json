@@ -1,0 +1,104 @@
+{
+  "id": "IMO_2005_P1",
+  "variables": [
+    "h",
+    "ta1",
+    "ta2",
+    "tb1",
+    "tb2",
+    "tc1",
+    "tc2"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(1/2, h)"
+    },
+    {
+      "name": "A1",
+      "expression": "PointOnSegment(B, C, ta1)"
+    },
+    {
+      "name": "A2",
+      "expression": "PointOnSegment(A1, C, ta2)"
+    },
+    {
+      "name": "B1",
+      "expression": "PointOnSegment(C, A, tb1)"
+    },
+    {
+      "name": "B2",
+      "expression": "PointOnSegment(B1, A, tb2)"
+    },
+    {
+      "name": "C1",
+      "expression": "PointOnSegment(A, B, tc1)"
+    },
+    {
+      "name": "C2",
+      "expression": "PointOnSegment(C1, B, tc2)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "h**2",
+      "operator": "=",
+      "right": "3/4"
+    },
+    {
+      "predicate": "ConvexPolygon([A1, A2, B1, B2, C1, C2])"
+    },
+    {
+      "predicate": "0 <= ta1 <= 1"
+    },
+    {
+      "predicate": "0 <= ta2 <= 1"
+    },
+    {
+      "predicate": "0 <= tb1 <= 1"
+    },
+    {
+      "predicate": "0 <= tb2 <= 1"
+    },
+    {
+      "predicate": "0 <= tc1 <= 1"
+    },
+    {
+      "predicate": "0 <= tc2 <= 1"
+    },
+    {
+      "left": "Distance(A1, A2)",
+      "operator": "=",
+      "right": "Distance(A2, B1)"
+    },
+    {
+      "left": "Distance(A1, A2)",
+      "operator": "=",
+      "right": "Distance(B1, B2)"
+    },
+    {
+      "left": "Distance(A1, A2)",
+      "operator": "=",
+      "right": "Distance(B2, C1)"
+    },
+    {
+      "left": "Distance(A1, A2)",
+      "operator": "=",
+      "right": "Distance(C1, C2)"
+    },
+    {
+      "left": "Distance(A1, A2)",
+      "operator": "=",
+      "right": "Distance(C2, A1)"
+    }
+  ],
+  "target": "0"
+}

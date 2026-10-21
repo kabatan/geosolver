@@ -1,0 +1,95 @@
+{
+  "map": "w = sum(1/(conj(z)-c) for c in [-1,0,1]); physical output D1=5*w/3",
+  "home_state": [
+    [
+      -0.6931044772345082,
+      0.2717627720084027
+    ],
+    [
+      -1.1839487723541708e-16,
+      0.8201108196195582
+    ],
+    [
+      0.6931044772345076,
+      0.2717627720084025
+    ]
+  ],
+  "home_control": [
+    0.0,
+    2.2
+  ],
+  "critical_controls": [
+    [
+      0.5899798397854931,
+      2.201834737520806
+    ],
+    [
+      -0.5899798397854931,
+      2.2018347375208056
+    ],
+    [
+      -0.589979839785493,
+      -2.2018347375208056
+    ],
+    [
+      0.5899798397854932,
+      -2.201834737520806
+    ]
+  ],
+  "links": 26,
+  "joints": 21,
+  "fixed_joints": 3,
+  "moving_joints": 18,
+  "loops": {
+    "A": {
+      "permutation_zero_based": [
+        1,
+        0,
+        2
+      ],
+      "steps": 900,
+      "max_matched_step": 0.003233046471320062,
+      "min_state_separation": 0.5426944738381725,
+      "min_pole_distance": 0.2988785542849181,
+      "max_pole_distance": 2.0022387698172865,
+      "min_rational_derivative_abs": 0.8884159648682538,
+      "sampled_full_jacobian_min_sigma": 0.0029627553116473183,
+      "jacobian_configurations_checked": 903,
+      "max_normalized_bar_residual": 2.930988785010413e-14,
+      "max_output_error": 3.0057327753883307e-14
+    },
+    "B": {
+      "permutation_zero_based": [
+        0,
+        2,
+        1
+      ],
+      "steps": 900,
+      "max_matched_step": 0.003233046471318637,
+      "min_state_separation": 0.5426944738381728,
+      "min_pole_distance": 0.2988785542849181,
+      "max_pole_distance": 2.002238769817287,
+      "min_rational_derivative_abs": 0.888415964868254,
+      "sampled_full_jacobian_min_sigma": 0.0029054136651835943,
+      "jacobian_configurations_checked": 903,
+      "max_normalized_bar_residual": 2.3092638912203256e-14,
+      "max_output_error": 2.467793789664406e-14
+    }
+  },
+  "A_then_B": [
+    2,
+    0,
+    1
+  ],
+  "B_then_A": [
+    1,
+    2,
+    0
+  ],
+  "limitations": [
+    "Sampled numerical checks; no interval certificate.",
+    "No physical fabrication or rod collision/layer-routing validation.",
+    "This script uses an analytic discovery model, not the repository solver.",
+    "S3 acts on three reachable states in one initialized component; many other inverse-cell assemblies exist."
+  ]
+}

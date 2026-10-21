@@ -1,0 +1,296 @@
+{
+  "$defs": {
+    "AffinePiAnswer": {
+      "additionalProperties": false,
+      "properties": {
+        "constant": {
+          "$ref": "#/$defs/AlgebraicNumberDescriptor"
+        },
+        "decimal": {
+          "title": "Decimal",
+          "type": "string"
+        },
+        "kind": {
+          "const": "affine_pi",
+          "default": "affine_pi",
+          "title": "Kind",
+          "type": "string"
+        },
+        "pi_coefficient": {
+          "$ref": "#/$defs/AlgebraicNumberDescriptor"
+        }
+      },
+      "required": [
+        "pi_coefficient",
+        "constant",
+        "decimal"
+      ],
+      "title": "AffinePiAnswer",
+      "type": "object"
+    },
+    "AlgebraicAnswer": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "algebraic",
+          "default": "algebraic",
+          "title": "Kind",
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/AlgebraicNumberDescriptor"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "AlgebraicAnswer",
+      "type": "object"
+    },
+    "AlgebraicNumberDescriptor": {
+      "additionalProperties": false,
+      "description": "Canonical identity and isolation data for one real algebraic number.",
+      "properties": {
+        "decimal": {
+          "title": "Decimal",
+          "type": "string"
+        },
+        "isolating_interval": {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Isolating Interval",
+          "type": "array"
+        },
+        "minimal_polynomial": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Minimal Polynomial",
+          "type": "array"
+        },
+        "real_root_index": {
+          "title": "Real Root Index",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "minimal_polynomial",
+        "real_root_index",
+        "isolating_interval",
+        "decimal"
+      ],
+      "title": "AlgebraicNumberDescriptor",
+      "type": "object"
+    },
+    "Completeness": {
+      "enum": [
+        "proven",
+        "unknown"
+      ],
+      "title": "Completeness",
+      "type": "string"
+    },
+    "EngineIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "dependency_lock_hash": {
+          "title": "Dependency Lock Hash",
+          "type": "string"
+        },
+        "name": {
+          "const": "standard",
+          "default": "standard",
+          "title": "Name",
+          "type": "string"
+        },
+        "resolved_config_hash": {
+          "title": "Resolved Config Hash",
+          "type": "string"
+        },
+        "source_hash": {
+          "title": "Source Hash",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_hash",
+        "resolved_config_hash",
+        "dependency_lock_hash"
+      ],
+      "title": "EngineIdentity",
+      "type": "object"
+    },
+    "ResourceUsage": {
+      "additionalProperties": false,
+      "properties": {
+        "cores": {
+          "title": "Cores",
+          "type": "integer"
+        },
+        "seed": {
+          "title": "Seed",
+          "type": "integer"
+        },
+        "time_limit_seconds": {
+          "title": "Time Limit Seconds",
+          "type": "number"
+        }
+      },
+      "required": [
+        "time_limit_seconds",
+        "cores",
+        "seed"
+      ],
+      "title": "ResourceUsage",
+      "type": "object"
+    },
+    "ResultStatus": {
+      "enum": [
+        "solved",
+        "no_answer_found",
+        "cancelled",
+        "invalid_problem",
+        "resource_error",
+        "unsupported_platform",
+        "engine_error"
+      ],
+      "title": "ResultStatus",
+      "type": "string"
+    },
+    "SolveError": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "SolveError",
+      "type": "object"
+    },
+    "TerminationReason": {
+      "enum": [
+        "answer_found",
+        "no_answer_found",
+        "time_limit_reached",
+        "exact_search_complete",
+        "cancelled",
+        "engine_failed",
+        "no_progress"
+      ],
+      "title": "TerminationReason",
+      "type": "string"
+    }
+  },
+  "$id": "https://geosolver.local/schemas/solve-result.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "answers": {
+      "items": {
+        "discriminator": {
+          "mapping": {
+            "affine_pi": "#/$defs/AffinePiAnswer",
+            "algebraic": "#/$defs/AlgebraicAnswer"
+          },
+          "propertyName": "kind"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/$defs/AlgebraicAnswer"
+          },
+          {
+            "$ref": "#/$defs/AffinePiAnswer"
+          }
+        ]
+      },
+      "title": "Answers",
+      "type": "array"
+    },
+    "completeness": {
+      "$ref": "#/$defs/Completeness",
+      "default": "unknown"
+    },
+    "diagnostics": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Diagnostics"
+    },
+    "elapsed_seconds": {
+      "title": "Elapsed Seconds",
+      "type": "number"
+    },
+    "engine": {
+      "$ref": "#/$defs/EngineIdentity"
+    },
+    "error": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SolveError"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "problem_hash": {
+      "title": "Problem Hash",
+      "type": "string"
+    },
+    "requested_resources": {
+      "$ref": "#/$defs/ResourceUsage"
+    },
+    "status": {
+      "$ref": "#/$defs/ResultStatus"
+    },
+    "termination_reason": {
+      "$ref": "#/$defs/TerminationReason"
+    },
+    "used_resources": {
+      "$ref": "#/$defs/ResourceUsage"
+    },
+    "warnings": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Warnings",
+      "type": "array"
+    }
+  },
+  "required": [
+    "status",
+    "engine",
+    "problem_hash",
+    "requested_resources",
+    "used_resources",
+    "elapsed_seconds",
+    "termination_reason"
+  ],
+  "title": "SolveResult",
+  "type": "object"
+}

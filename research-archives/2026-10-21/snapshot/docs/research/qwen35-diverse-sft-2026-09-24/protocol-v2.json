@@ -1,0 +1,43 @@
+{
+  "status": "frozen_before_v2_material_generation_or_weight_update",
+  "replaces": "protocol.json: its ad hoc ten-configuration evaluation was stopped before any SFT and is excluded from the primary comparison",
+  "model_id": "Qwen/Qwen3.5-9B",
+  "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+  "train_source": "benchmarks/humpty_configurations_v2/training_variants.jsonl",
+  "train_source_sha256": "a5f9c00e3912da5e9f8fc82563421c1c0332d58fbeae3145ffa12aa327723f34",
+  "numeric_dev_source": "benchmarks/humpty_configurations_v2/eval_variants.jsonl",
+  "numeric_dev_source_sha256": "56d4986e72ab74be0a37cc1158e765a7493d68484c56634ea1767da108abd5ea",
+  "proof_source": "benchmarks/humpty_proof_evaluation_v2/evaluation_prompts.jsonl",
+  "proof_source_sha256": "98f9892ecda409da13c4c7b02ea27a8974f165635cd302bd42dbd6ab9be23d4e",
+  "jobs_sha256": {
+    "material_original": "8556f0c7bb816edca70c78e915ea5b5ac1d7fbf8cd94aba8f17a41bebf1d5345",
+    "material_original_repeat": "ce30a5cd7778bf30d9d2a0d29f89903a35a568bdab7a7216a018cb461116c64d",
+    "material_shape": "79e609708a8301e99aaa81fc7b10feabc2ecf3aefabe0da892ca1620d94f9364",
+    "numeric_dev": "80dfab44e9f402d80130a47912cf9cdd0e32094596465d5786db192633c77370"
+  },
+  "first_material_pass": "All 37 v0 training configurations, one self-generation each. Further frozen passes are 37 new seeds and 27 shape variants; similarity-only variants are excluded from material diversity counts.",
+  "numeric_dev": "The existing one-per-configuration dev variants, 37 questions, each sampled twice. Nine are shape variants and 28 similarity variants; score these strata separately. Same configuration as training, new numerical parameters; not a new-structure test.",
+  "proof_eval": "The existing six proof prompts; retain three transfer and three same-configuration groups. Prior base outputs are available, but the after-SFT arm must use the same frozen prompts and generation settings.",
+  "material_sampling": {
+    "thinking": true,
+    "temperature": 0.7,
+    "top_p": 0.95,
+    "top_k": 20,
+    "presence_penalty": 0.2,
+    "max_tokens": 12288
+  },
+  "numeric_eval_sampling": {
+    "thinking": false,
+    "temperature": 1.0,
+    "top_p": 0.95,
+    "top_k": 20,
+    "presence_penalty": 1.5,
+    "max_tokens": 8192,
+    "samples_per_configuration": 2
+  },
+  "primary_measure": "Per-answer complete on numeric dev: exact answer, true nontrivial useful relation, self-contained proof, and application of that relation. Also report per-configuration success and truncation.",
+  "secondary_measure": "Complete proof on the existing six-problem proof evaluation, transfer and same-configuration separately; auxiliary hint prompts excluded.",
+  "material_admission": "Only own visible final self-contained relation/proof/use with exact numeric value verified against the separate label. No human or stronger-model repair, no reference solution or target relation in prompt. Record all generation attempts and admit reasons.",
+  "training_gate": "Aim for at least 12 distinct admitted configurations and 24 complete examples before broad SFT. If short after the frozen passes, report the observed yield and do not label an inadequate corpus as a broad test.",
+  "interpretation": "Pre-existing numeric dev uses the same 37 configurations and is a variant-generalization measure. Existing proof transfer group is the configuration-transfer measure. Existing problems may be known from earlier research or pretraining."
+}

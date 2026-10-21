@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "profile": "original_statement_aligned",
+  "approved_by_user": true,
+  "approval_date": "2026-08-31",
+  "interpretation_ja": "原本は数学の原問題を指す。原問題に条件をそろえ、公式GMB入力との差を明示する。",
+  "gmb_commit": "f070afe18ed874b3a31db519ea6f593f40a1be00",
+  "official_inputs_preserved": true,
+  "past_measurements_preserved": true,
+  "selection_rule": "Use the listed aligned input for these two cases; use the unchanged official input for every other case.",
+  "variants": {
+    "IMO_2000_P1": {
+      "official_gmbl_sha256": "c7546705b4a2984f1fd8828b56f5f0b2ba47ba67f66ed418ef22276828d13b4a",
+      "comparison_relative_path": "gmbl-original-aligned/IMO_2000_P1.smt2",
+      "comparison_gmbl_sha256": "931aace52bf6810a7f6459ffdc25d749581f50dfb86c196af61060f1eb0d9f02",
+      "review_relative_path": "reviews/alignment/IMO_2000_P1.json",
+      "added_assertions": [
+        "(assert (gt (dist N (foot N (line A B))) (dist M (foot M (line A B)))))"
+      ],
+      "resolved_source_difference_ids": [
+        "nearer-M-branch-missing"
+      ],
+      "reason_ja": "原問題が指定する、NよりMに近い方の共通接線という枝条件を補う。"
+    },
+    "IMO_2015_P3": {
+      "official_gmbl_sha256": "2ba43a10e81b0d2591fbcc6c08f7e00ccf730ccc33dd69006eaee90879c08a90",
+      "comparison_relative_path": "gmbl-original-aligned/IMO_2015_P3.smt2",
+      "comparison_gmbl_sha256": "e3c4bf17d763144ad5c300177ce863230d54f723c302e2a9b0c3abfb0c47104b",
+      "review_relative_path": "reviews/alignment/IMO_2015_P3.json",
+      "added_assertions": [
+        "(assert (opp-sides K B (line C A)))",
+        "(assert (opp-sides Q B (line K A)))"
+      ],
+      "resolved_source_difference_ids": [
+        "circle_order_missing"
+      ],
+      "reason_ja": "既存の共円条件の下で、原問題のA,B,C,K,Qの円周順序と同値な二つの反対側条件を補う。"
+    }
+  }
+}
+

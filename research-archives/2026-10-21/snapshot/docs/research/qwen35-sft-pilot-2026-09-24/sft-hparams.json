@@ -1,0 +1,26 @@
+{
+  "seed": 2026092402,
+  "epochs": 2,
+  "lr": 0.00002,
+  "grad_clip": 1.0,
+  "lora_rank": 8,
+  "lora_alpha": 16,
+  "modules": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj",
+    "in_proj_qkv",
+    "in_proj_z",
+    "out_proj",
+    "gate_proj",
+    "up_proj",
+    "down_proj"
+  ],
+  "max_sequence_tokens": 4096,
+  "micro_batch": 1,
+  "optimizer": "AdamW, weight decay zero, constant learning rate",
+  "loss": "Assistant answer only including EOS; native non-thinking chat template",
+  "checkpoint": "Single final adapter, no selection using evaluation answers",
+  "decision": "Train only on independently checked same-model self-generated complete proofs from more than one configuration; otherwise label any run as single-configuration technical probe."
+}

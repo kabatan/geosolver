@@ -1,0 +1,926 @@
+{
+  "audit_type": "Independent read-only training receipt audit",
+  "audited_at_utc": "2026-09-28T09:52:28.788Z",
+  "overall_status": "pass_with_one_token_count_difference_explained",
+  "scope": {
+    "included": [
+      "six requested training stages",
+      "the six training configs and referenced training dataset file hashes",
+      "tokenization.json and example-order.json",
+      "final adapter, vLLM adapter, optimizer files and receipts"
+    ],
+    "excluded": [
+      "all model evaluation results, predictions, and score files"
+    ],
+    "execution": "No GPU or training started; audit calculations were CPU-only."
+  },
+  "common_checks": {
+    "all_stages_complete": true,
+    "all_config_and_dataset_hashes_match": true,
+    "all_tokenization_and_order_hashes_match": true,
+    "all_final_artifact_hashes_match": true,
+    "training_parameters_identical": true,
+    "model_revision_and_metadata_identical": true,
+    "trainer_harness_mapping_helper_identical": true,
+    "all_stages_have_80_unique_ids_and_10_sources": true,
+    "all_numeric_target_kind": true,
+    "same_id_epoch_order_across_arms": true,
+    "same_order_prefixes_across_each_chain": true,
+    "per_source_target_hash_multiset_preserved_in_shuffle": true,
+    "all_80_target_hashes_change_under_shuffle": true,
+    "prompt_token_count_by_id_unchanged": true,
+    "same_source_id_by_id": true
+  },
+  "order": {
+    "cross_arm": {
+      "at32": true,
+      "at128": true,
+      "at512": true
+    },
+    "chain_prefixes": {
+      "correct32_prefix_of_correct128": true,
+      "correct128_prefix_of_correct512": true,
+      "shuffled32_prefix_of_shuffled128": true,
+      "shuffled128_prefix_of_shuffled512": true
+    },
+    "planned_order_sha256": {
+      "at_32": "c830772d619c82d75bc7d095bc4f40dbd22fd60e2ad68092ca093709dc534ec2",
+      "at_128": "8ad3af9332feb29215022548fa19f4556d982ae2781d3fe657a3c1cc98602cdc",
+      "at_512": "86c2757cf16dd5bcd92d76d200099a4493e461aacaa1e82d382c1683de1eee16"
+    },
+    "processed_prefix_sha256": {
+      "at_32": "3932fb6f5251062c9ff1e605b9615e861be5bce556aad921130a9a36c1f0c925",
+      "at_128": "8f90ba79b4d72a774ce17d2f00b42a9b12706108775116b1959252a4abe844ce",
+      "at_512": "84995460dceb936a779e693286d8b6b95f7a5cea23a9ac439ddf4bd1896ed3a3"
+    }
+  },
+  "initial_settings": {
+    "seed": 2026092701,
+    "learning_rate": 0.000005,
+    "grad_accumulation": 4,
+    "grad_clip": 1,
+    "lora_rank": 8,
+    "lora_alpha": 16,
+    "lora_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "in_proj_qkv",
+      "in_proj_z",
+      "out_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ],
+    "ce_chunk_tokens": 64,
+    "max_target_tokens": 4096,
+    "max_sequence_tokens": 8192,
+    "enable_thinking": false,
+    "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+    "model_metadata_sha256": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd",
+    "driver_sha256": "f525e7626bae22109753cd5a8deac47b94cd13f4bd4dcc13960543b4607b9857",
+    "initial_lora_checkpoint_hash_recorded": false
+  },
+  "dataset_hashes": {
+    "correct": "778b87cfce6ea7271e971f8c727a5663468b783d21e7d21199bae7ccf46e26c9",
+    "shuffled": "9858b82131a70352ba5a890a0681282bb6a161b16fe642afa6457e51a8d451d8",
+    "distinct": true,
+    "correct_hash_stable_across_32_128_512": true,
+    "shuffled_hash_stable_across_32_128_512": true,
+    "per_stage_configs_and_actual_files_match": true
+  },
+  "continuity": {
+    "correct32_to_correct128": {
+      "adapter_recorded": "d66ebac887e4db176e3ae7902d9c3042e5cfbc8e91947915185ba07050a22946",
+      "adapter_matches_parent": true,
+      "vllm_adapter_recorded": "fdc64dd87b5f1daeb5a8829b71372c97088a28a95544962ca75f9b95d199360f",
+      "vllm_adapter_matches_parent": true,
+      "optimizer_recorded": "7b4945cd3a14b983e6bbda69a5e4a6ef216d7c0a1aa81b3de6e45e3aa242072c",
+      "optimizer_matches_parent": true
+    },
+    "correct128_to_correct512": {
+      "adapter_recorded": "c286cea776152f0a80f72c397144ad59ee96e371056494d5e0e1c425d765e59e",
+      "adapter_matches_parent": true,
+      "vllm_adapter_recorded": "34b65d72b03f1e0ca04bd302b9a5194f347991b843d9abe2497bbddf513efd06",
+      "vllm_adapter_matches_parent": true,
+      "optimizer_recorded": "807afd9c265162248e924e07d7bbacbab90ac28c75377bf552d55b52a8fbb61d",
+      "optimizer_matches_parent": true
+    },
+    "shuffled32_to_shuffled128": {
+      "adapter_recorded": "a861fbf032eaf42c230255724c4d08cc2af2767485f482ac666b3fdf0389f7be",
+      "adapter_matches_parent": true,
+      "vllm_adapter_recorded": "f1ca5b836b7894e6fa836a1b602bb68a948b218decb5cdfaeed8a51efb4a8f5d",
+      "vllm_adapter_matches_parent": true,
+      "optimizer_recorded": "c1397b279cb7f97de13995013b777e15ce0fa3bf8b9541904040fcbcae2ff3f8",
+      "optimizer_matches_parent": true
+    },
+    "shuffled128_to_shuffled512": {
+      "adapter_recorded": "47ebff8b8595e2a0e63339b359584e29f3ba758e857a429aedc781eabdb5a5db",
+      "adapter_matches_parent": true,
+      "vllm_adapter_recorded": "f0e2a4b1411d0eff848bece0a97e27432456acbc0840cf54cb29a85f73f3cce3",
+      "vllm_adapter_matches_parent": true,
+      "optimizer_recorded": "8d56a99b6dc0ff494570820ed3d933aa60579c9a1bdc1d0ede0dcb4978c66d3a",
+      "optimizer_matches_parent": true
+    }
+  },
+  "exposure_totals": {
+    "correct": {
+      "stages": [
+        {
+          "name": "correct32",
+          "global_updates": 32,
+          "stage_local_updates": 32,
+          "example_presentations": 128,
+          "target_token_presentations": 2424
+        },
+        {
+          "name": "correct128",
+          "global_updates": 128,
+          "stage_local_updates": 96,
+          "example_presentations": 384,
+          "target_token_presentations": 7287
+        },
+        {
+          "name": "correct512",
+          "global_updates": 512,
+          "stage_local_updates": 384,
+          "example_presentations": 1536,
+          "target_token_presentations": 29125
+        }
+      ],
+      "cumulative_optimizer_updates": 512,
+      "cumulative_example_presentations": 2048,
+      "cumulative_target_token_presentations": 38836,
+      "full_schedule_examples": 2048,
+      "full_schedule_target_tokens": 38836,
+      "unique_target_tokens_per_dataset": 1517
+    },
+    "shuffled": {
+      "stages": [
+        {
+          "name": "shuffled32",
+          "global_updates": 32,
+          "stage_local_updates": 32,
+          "example_presentations": 128,
+          "target_token_presentations": 2426
+        },
+        {
+          "name": "shuffled128",
+          "global_updates": 128,
+          "stage_local_updates": 96,
+          "example_presentations": 384,
+          "target_token_presentations": 7286
+        },
+        {
+          "name": "shuffled512",
+          "global_updates": 512,
+          "stage_local_updates": 384,
+          "example_presentations": 1536,
+          "target_token_presentations": 29123
+        }
+      ],
+      "cumulative_optimizer_updates": 512,
+      "cumulative_example_presentations": 2048,
+      "cumulative_target_token_presentations": 38835,
+      "full_schedule_examples": 2048,
+      "full_schedule_target_tokens": 38835,
+      "unique_target_tokens_per_dataset": 1517
+    }
+  },
+  "token_count_note": "Loss mask is assistant target including EOS only. Each stage token count was independently recomputed by summing tokenization target_tokens over the exact example-order suffix; all six stage sums match their receipts. Correct and shuffled each have 1517 unique target tokens/example-sum. Across 512 updates the schedules share 25 complete passes (25×1517=37925 tokens) plus a 48-example tail; the tail has 911 correct versus 910 shuffled tokens, accounting for the one-token cumulative difference (38836 vs 38835).",
+  "shuffle_tokenization_check": {
+    "same_ids": true,
+    "same_source_by_id": true,
+    "same_prompt_token_count_by_id": true,
+    "per_source_target_text_hash_multisets_equal": true,
+    "rows_with_changed_target_text_hash": 80,
+    "total_rows": 80,
+    "note": "Checked only tokenization metadata hashes and source IDs; raw target values and mathematical label correctness were not adjudicated."
+  },
+  "stages": {
+    "correct32": {
+      "arm": "correct",
+      "stage_updates": 32,
+      "global_updates": 32,
+      "prior_global_updates": 0,
+      "examples_processed": 128,
+      "expected_examples_processed": 128,
+      "n_examples": 80,
+      "unique_training_ids": 80,
+      "source_count": 10,
+      "target_kind": "numeric",
+      "status": "complete",
+      "final_status": "complete",
+      "paths": {
+        "run": "qwen/.runtime/related_numeric_sft_20260928/sft-a-train32",
+        "config": "docs/research/related-numeric-sft-2026-09-28/config-sft-a-32.json",
+        "dataset": "qwen/.runtime/related_numeric_sft_20260928/train.json",
+        "prior_checkpoint": null
+      },
+      "hashes": {
+        "config": {
+          "expected": "1e09137f05457ba9b8b649499897d4ba88d98344f7f7d7d6b4400ee3001c168f",
+          "actual": "1e09137f05457ba9b8b649499897d4ba88d98344f7f7d7d6b4400ee3001c168f",
+          "match": true
+        },
+        "dataset": {
+          "expected": "778b87cfce6ea7271e971f8c727a5663468b783d21e7d21199bae7ccf46e26c9",
+          "configured": "778b87cfce6ea7271e971f8c727a5663468b783d21e7d21199bae7ccf46e26c9",
+          "actual": "778b87cfce6ea7271e971f8c727a5663468b783d21e7d21199bae7ccf46e26c9",
+          "match": true
+        },
+        "model_metadata": {
+          "expected": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd",
+          "configured": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd",
+          "actual": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd",
+          "match": true
+        },
+        "tokenization": {
+          "expected": "17ac2ed6e7df42f2e9ee0a35b4c0578a5e8067665d9f3acb9134ce2c63f8903a",
+          "actual": "17ac2ed6e7df42f2e9ee0a35b4c0578a5e8067665d9f3acb9134ce2c63f8903a",
+          "match": true
+        },
+        "example_order": {
+          "expected": "c830772d619c82d75bc7d095bc4f40dbd22fd60e2ad68092ca093709dc534ec2",
+          "actual": "c830772d619c82d75bc7d095bc4f40dbd22fd60e2ad68092ca093709dc534ec2",
+          "match": true
+        },
+        "processed_prefix": {
+          "expected": "3932fb6f5251062c9ff1e605b9615e861be5bce556aad921130a9a36c1f0c925",
+          "actual": "3932fb6f5251062c9ff1e605b9615e861be5bce556aad921130a9a36c1f0c925",
+          "match": true
+        },
+        "artifacts": {
+          "adapter": {
+            "expected": "d66ebac887e4db176e3ae7902d9c3042e5cfbc8e91947915185ba07050a22946",
+            "actual": "d66ebac887e4db176e3ae7902d9c3042e5cfbc8e91947915185ba07050a22946",
+            "match": true
+          },
+          "vllm_adapter": {
+            "expected": "fdc64dd87b5f1daeb5a8829b71372c97088a28a95544962ca75f9b95d199360f",
+            "actual": "fdc64dd87b5f1daeb5a8829b71372c97088a28a95544962ca75f9b95d199360f",
+            "match": true
+          },
+          "optimizer": {
+            "expected": "7b4945cd3a14b983e6bbda69a5e4a6ef216d7c0a1aa81b3de6e45e3aa242072c",
+            "actual": "7b4945cd3a14b983e6bbda69a5e4a6ef216d7c0a1aa81b3de6e45e3aa242072c",
+            "match": true
+          }
+        }
+      },
+      "target_tokens": {
+        "unique_per_dataset_recorded": 1517,
+        "unique_per_dataset_calculated": 1517,
+        "planned_full_run_recorded": 2424,
+        "planned_full_run_calculated": 2424,
+        "stage_suffix_recorded": 2424,
+        "stage_suffix_calculated": 2424,
+        "loss_mask": "assistant target including EOS only"
+      },
+      "optimizer": {
+        "step_min": 32,
+        "step_max": 32,
+        "state_entries": 400
+      },
+      "training_parameters": {
+        "seed": 2026092701,
+        "learning_rate": 0.000005,
+        "grad_accumulation": 4,
+        "grad_clip": 1,
+        "lora_rank": 8,
+        "lora_alpha": 16,
+        "lora_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "in_proj_qkv",
+          "in_proj_z",
+          "out_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "ce_chunk_tokens": 64,
+        "max_target_tokens": 4096,
+        "max_sequence_tokens": 8192,
+        "enable_thinking": false
+      },
+      "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+      "driver_sha256": "f525e7626bae22109753cd5a8deac47b94cd13f4bd4dcc13960543b4607b9857",
+      "harness_sha256": "574f8d2cea03fbfe93d568dc1ddf61748fc99ab62eeb64db1b902a457d718810",
+      "mapping_helper_sha256": "5cd0a3c1c0c6e26f68d0f3e279e105bb1ffb1ce093c0acbb1874a32d697497ca",
+      "prior_hashes": null,
+      "final_receipt_matches_root": true
+    },
+    "correct128": {
+      "arm": "correct",
+      "stage_updates": 96,
+      "global_updates": 128,
+      "prior_global_updates": 32,
+      "examples_processed": 384,
+      "expected_examples_processed": 384,
+      "n_examples": 80,
+      "unique_training_ids": 80,
+      "source_count": 10,
+      "target_kind": "numeric",
+      "status": "complete",
+      "final_status": "complete",
+      "paths": {
+        "run": "qwen/.runtime/related_numeric_sft_20260928/sft-a-train128",
+        "config": "docs/research/related-numeric-sft-2026-09-28/config-sft-a-128.json",
+        "dataset": "qwen/.runtime/related_numeric_sft_20260928/train.json",
+        "prior_checkpoint": "qwen/.runtime/related_numeric_sft_20260928/sft-a-train32/final"
+      },
+      "hashes": {
+        "config": {
+          "expected": "39bdc34721fa06a9597d048352155b59a7ecb378e27e8351b26dffecb061b6e3",
+          "actual": "39bdc34721fa06a9597d048352155b59a7ecb378e27e8351b26dffecb061b6e3",
+          "match": true
+        },
+        "dataset": {
+          "expected": "778b87cfce6ea7271e971f8c727a5663468b783d21e7d21199bae7ccf46e26c9",
+          "configured": "778b87cfce6ea7271e971f8c727a5663468b783d21e7d21199bae7ccf46e26c9",
+          "actual": "778b87cfce6ea7271e971f8c727a5663468b783d21e7d21199bae7ccf46e26c9",
+          "match": true
+        },
+        "model_metadata": {
+          "expected": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd",
+          "configured": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd",
+          "actual": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd",
+          "match": true
+        },
+        "tokenization": {
+          "expected": "17ac2ed6e7df42f2e9ee0a35b4c0578a5e8067665d9f3acb9134ce2c63f8903a",
+          "actual": "17ac2ed6e7df42f2e9ee0a35b4c0578a5e8067665d9f3acb9134ce2c63f8903a",
+          "match": true
+        },
+        "example_order": {
+          "expected": "8ad3af9332feb29215022548fa19f4556d982ae2781d3fe657a3c1cc98602cdc",
+          "actual": "8ad3af9332feb29215022548fa19f4556d982ae2781d3fe657a3c1cc98602cdc",
+          "match": true
+        },
+        "processed_prefix": {
+          "expected": "8f90ba79b4d72a774ce17d2f00b42a9b12706108775116b1959252a4abe844ce",
+          "actual": "8f90ba79b4d72a774ce17d2f00b42a9b12706108775116b1959252a4abe844ce",
+          "match": true
+        },
+        "artifacts": {
+          "adapter": {
+            "expected": "c286cea776152f0a80f72c397144ad59ee96e371056494d5e0e1c425d765e59e",
+            "actual": "c286cea776152f0a80f72c397144ad59ee96e371056494d5e0e1c425d765e59e",
+            "match": true
+          },
+          "vllm_adapter": {
+            "expected": "34b65d72b03f1e0ca04bd302b9a5194f347991b843d9abe2497bbddf513efd06",
+            "actual": "34b65d72b03f1e0ca04bd302b9a5194f347991b843d9abe2497bbddf513efd06",
+            "match": true
+          },
+          "optimizer": {
+            "expected": "807afd9c265162248e924e07d7bbacbab90ac28c75377bf552d55b52a8fbb61d",
+            "actual": "807afd9c265162248e924e07d7bbacbab90ac28c75377bf552d55b52a8fbb61d",
+            "match": true
+          }
+        }
+      },
+      "target_tokens": {
+        "unique_per_dataset_recorded": 1517,
+        "unique_per_dataset_calculated": 1517,
+        "planned_full_run_recorded": 9711,
+        "planned_full_run_calculated": 9711,
+        "stage_suffix_recorded": 7287,
+        "stage_suffix_calculated": 7287,
+        "loss_mask": "assistant target including EOS only"
+      },
+      "optimizer": {
+        "step_min": 128,
+        "step_max": 128,
+        "state_entries": 400
+      },
+      "training_parameters": {
+        "seed": 2026092701,
+        "learning_rate": 0.000005,
+        "grad_accumulation": 4,
+        "grad_clip": 1,
+        "lora_rank": 8,
+        "lora_alpha": 16,
+        "lora_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "in_proj_qkv",
+          "in_proj_z",
+          "out_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "ce_chunk_tokens": 64,
+        "max_target_tokens": 4096,
+        "max_sequence_tokens": 8192,
+        "enable_thinking": false
+      },
+      "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+      "driver_sha256": "f525e7626bae22109753cd5a8deac47b94cd13f4bd4dcc13960543b4607b9857",
+      "harness_sha256": "574f8d2cea03fbfe93d568dc1ddf61748fc99ab62eeb64db1b902a457d718810",
+      "mapping_helper_sha256": "5cd0a3c1c0c6e26f68d0f3e279e105bb1ffb1ce093c0acbb1874a32d697497ca",
+      "prior_hashes": {
+        "adapter_recorded": "d66ebac887e4db176e3ae7902d9c3042e5cfbc8e91947915185ba07050a22946",
+        "adapter_matches_parent": true,
+        "vllm_adapter_recorded": "fdc64dd87b5f1daeb5a8829b71372c97088a28a95544962ca75f9b95d199360f",
+        "vllm_adapter_matches_parent": true,
+        "optimizer_recorded": "7b4945cd3a14b983e6bbda69a5e4a6ef216d7c0a1aa81b3de6e45e3aa242072c",
+        "optimizer_matches_parent": true
+      },
+      "final_receipt_matches_root": true
+    },
+    "correct512": {
+      "arm": "correct",
+      "stage_updates": 384,
+      "global_updates": 512,
+      "prior_global_updates": 128,
+      "examples_processed": 1536,
+      "expected_examples_processed": 1536,
+      "n_examples": 80,
+      "unique_training_ids": 80,
+      "source_count": 10,
+      "target_kind": "numeric",
+      "status": "complete",
+      "final_status": "complete",
+      "paths": {
+        "run": "qwen/.runtime/numeric_sft_dose_control_20260928/correct-train512",
+        "config": "docs/research/numeric-sft-dose-control-2026-09-28/config-correct-512.json",
+        "dataset": "qwen/.runtime/numeric_sft_dose_control_20260928/train-correct.json",
+        "prior_checkpoint": "qwen/.runtime/related_numeric_sft_20260928/sft-a-train128/final"
+      },
+      "hashes": {
+        "config": {
+          "expected": "66c800687fdc0b6db0a89a93e424f88fbf8429fb2de97dac230dacaebe4d0a02",
+          "actual": "66c800687fdc0b6db0a89a93e424f88fbf8429fb2de97dac230dacaebe4d0a02",
+          "match": true
+        },
+        "dataset": {
+          "expected": "778b87cfce6ea7271e971f8c727a5663468b783d21e7d21199bae7ccf46e26c9",
+          "configured": "778b87cfce6ea7271e971f8c727a5663468b783d21e7d21199bae7ccf46e26c9",
+          "actual": "778b87cfce6ea7271e971f8c727a5663468b783d21e7d21199bae7ccf46e26c9",
+          "match": true
+        },
+        "model_metadata": {
+          "expected": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd",
+          "configured": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd",
+          "actual": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd",
+          "match": true
+        },
+        "tokenization": {
+          "expected": "17ac2ed6e7df42f2e9ee0a35b4c0578a5e8067665d9f3acb9134ce2c63f8903a",
+          "actual": "17ac2ed6e7df42f2e9ee0a35b4c0578a5e8067665d9f3acb9134ce2c63f8903a",
+          "match": true
+        },
+        "example_order": {
+          "expected": "86c2757cf16dd5bcd92d76d200099a4493e461aacaa1e82d382c1683de1eee16",
+          "actual": "86c2757cf16dd5bcd92d76d200099a4493e461aacaa1e82d382c1683de1eee16",
+          "match": true
+        },
+        "processed_prefix": {
+          "expected": "84995460dceb936a779e693286d8b6b95f7a5cea23a9ac439ddf4bd1896ed3a3",
+          "actual": "84995460dceb936a779e693286d8b6b95f7a5cea23a9ac439ddf4bd1896ed3a3",
+          "match": true
+        },
+        "artifacts": {
+          "adapter": {
+            "expected": "ea8f091bc84b3bd4ded0e50b91f84d5b247de20005893415f6b0aec6184fe541",
+            "actual": "ea8f091bc84b3bd4ded0e50b91f84d5b247de20005893415f6b0aec6184fe541",
+            "match": true
+          },
+          "vllm_adapter": {
+            "expected": "d5ce2c438380cac60c25347e32a56ffec7c977985e17bc6c255802cbe705772d",
+            "actual": "d5ce2c438380cac60c25347e32a56ffec7c977985e17bc6c255802cbe705772d",
+            "match": true
+          },
+          "optimizer": {
+            "expected": "29c6b37a525856cd95ef4f5830a8d339892f7a9dff0c6b7bd85cb6fa9d72b00c",
+            "actual": "29c6b37a525856cd95ef4f5830a8d339892f7a9dff0c6b7bd85cb6fa9d72b00c",
+            "match": true
+          }
+        }
+      },
+      "target_tokens": {
+        "unique_per_dataset_recorded": 1517,
+        "unique_per_dataset_calculated": 1517,
+        "planned_full_run_recorded": 38836,
+        "planned_full_run_calculated": 38836,
+        "stage_suffix_recorded": 29125,
+        "stage_suffix_calculated": 29125,
+        "loss_mask": "assistant target including EOS only"
+      },
+      "optimizer": {
+        "step_min": 512,
+        "step_max": 512,
+        "state_entries": 400
+      },
+      "training_parameters": {
+        "seed": 2026092701,
+        "learning_rate": 0.000005,
+        "grad_accumulation": 4,
+        "grad_clip": 1,
+        "lora_rank": 8,
+        "lora_alpha": 16,
+        "lora_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "in_proj_qkv",
+          "in_proj_z",
+          "out_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "ce_chunk_tokens": 64,
+        "max_target_tokens": 4096,
+        "max_sequence_tokens": 8192,
+        "enable_thinking": false
+      },
+      "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+      "driver_sha256": "f525e7626bae22109753cd5a8deac47b94cd13f4bd4dcc13960543b4607b9857",
+      "harness_sha256": "574f8d2cea03fbfe93d568dc1ddf61748fc99ab62eeb64db1b902a457d718810",
+      "mapping_helper_sha256": "5cd0a3c1c0c6e26f68d0f3e279e105bb1ffb1ce093c0acbb1874a32d697497ca",
+      "prior_hashes": {
+        "adapter_recorded": "c286cea776152f0a80f72c397144ad59ee96e371056494d5e0e1c425d765e59e",
+        "adapter_matches_parent": true,
+        "vllm_adapter_recorded": "34b65d72b03f1e0ca04bd302b9a5194f347991b843d9abe2497bbddf513efd06",
+        "vllm_adapter_matches_parent": true,
+        "optimizer_recorded": "807afd9c265162248e924e07d7bbacbab90ac28c75377bf552d55b52a8fbb61d",
+        "optimizer_matches_parent": true
+      },
+      "final_receipt_matches_root": true
+    },
+    "shuffled32": {
+      "arm": "shuffled",
+      "stage_updates": 32,
+      "global_updates": 32,
+      "prior_global_updates": 0,
+      "examples_processed": 128,
+      "expected_examples_processed": 128,
+      "n_examples": 80,
+      "unique_training_ids": 80,
+      "source_count": 10,
+      "target_kind": "numeric",
+      "status": "complete",
+      "final_status": "complete",
+      "paths": {
+        "run": "qwen/.runtime/numeric_sft_dose_control_20260928/shuffled-train32",
+        "config": "docs/research/numeric-sft-dose-control-2026-09-28/config-shuffled-32.json",
+        "dataset": "qwen/.runtime/numeric_sft_dose_control_20260928/train-shuffled.json",
+        "prior_checkpoint": null
+      },
+      "hashes": {
+        "config": {
+          "expected": "f9157985d261d5902321fcd8cf121dd89460996aa268e0e9653e768a4ecedb38",
+          "actual": "f9157985d261d5902321fcd8cf121dd89460996aa268e0e9653e768a4ecedb38",
+          "match": true
+        },
+        "dataset": {
+          "expected": "9858b82131a70352ba5a890a0681282bb6a161b16fe642afa6457e51a8d451d8",
+          "configured": "9858b82131a70352ba5a890a0681282bb6a161b16fe642afa6457e51a8d451d8",
+          "actual": "9858b82131a70352ba5a890a0681282bb6a161b16fe642afa6457e51a8d451d8",
+          "match": true
+        },
+        "model_metadata": {
+          "expected": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd",
+          "configured": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd",
+          "actual": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd",
+          "match": true
+        },
+        "tokenization": {
+          "expected": "e01e590a91140f2741b7510bb09842bfb17b892635ac656409f28fa1fa7340ba",
+          "actual": "e01e590a91140f2741b7510bb09842bfb17b892635ac656409f28fa1fa7340ba",
+          "match": true
+        },
+        "example_order": {
+          "expected": "c830772d619c82d75bc7d095bc4f40dbd22fd60e2ad68092ca093709dc534ec2",
+          "actual": "c830772d619c82d75bc7d095bc4f40dbd22fd60e2ad68092ca093709dc534ec2",
+          "match": true
+        },
+        "processed_prefix": {
+          "expected": "3932fb6f5251062c9ff1e605b9615e861be5bce556aad921130a9a36c1f0c925",
+          "actual": "3932fb6f5251062c9ff1e605b9615e861be5bce556aad921130a9a36c1f0c925",
+          "match": true
+        },
+        "artifacts": {
+          "adapter": {
+            "expected": "a861fbf032eaf42c230255724c4d08cc2af2767485f482ac666b3fdf0389f7be",
+            "actual": "a861fbf032eaf42c230255724c4d08cc2af2767485f482ac666b3fdf0389f7be",
+            "match": true
+          },
+          "vllm_adapter": {
+            "expected": "f1ca5b836b7894e6fa836a1b602bb68a948b218decb5cdfaeed8a51efb4a8f5d",
+            "actual": "f1ca5b836b7894e6fa836a1b602bb68a948b218decb5cdfaeed8a51efb4a8f5d",
+            "match": true
+          },
+          "optimizer": {
+            "expected": "c1397b279cb7f97de13995013b777e15ce0fa3bf8b9541904040fcbcae2ff3f8",
+            "actual": "c1397b279cb7f97de13995013b777e15ce0fa3bf8b9541904040fcbcae2ff3f8",
+            "match": true
+          }
+        }
+      },
+      "target_tokens": {
+        "unique_per_dataset_recorded": 1517,
+        "unique_per_dataset_calculated": 1517,
+        "planned_full_run_recorded": 2426,
+        "planned_full_run_calculated": 2426,
+        "stage_suffix_recorded": 2426,
+        "stage_suffix_calculated": 2426,
+        "loss_mask": "assistant target including EOS only"
+      },
+      "optimizer": {
+        "step_min": 32,
+        "step_max": 32,
+        "state_entries": 400
+      },
+      "training_parameters": {
+        "seed": 2026092701,
+        "learning_rate": 0.000005,
+        "grad_accumulation": 4,
+        "grad_clip": 1,
+        "lora_rank": 8,
+        "lora_alpha": 16,
+        "lora_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "in_proj_qkv",
+          "in_proj_z",
+          "out_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "ce_chunk_tokens": 64,
+        "max_target_tokens": 4096,
+        "max_sequence_tokens": 8192,
+        "enable_thinking": false
+      },
+      "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+      "driver_sha256": "f525e7626bae22109753cd5a8deac47b94cd13f4bd4dcc13960543b4607b9857",
+      "harness_sha256": "574f8d2cea03fbfe93d568dc1ddf61748fc99ab62eeb64db1b902a457d718810",
+      "mapping_helper_sha256": "5cd0a3c1c0c6e26f68d0f3e279e105bb1ffb1ce093c0acbb1874a32d697497ca",
+      "prior_hashes": null,
+      "final_receipt_matches_root": true
+    },
+    "shuffled128": {
+      "arm": "shuffled",
+      "stage_updates": 96,
+      "global_updates": 128,
+      "prior_global_updates": 32,
+      "examples_processed": 384,
+      "expected_examples_processed": 384,
+      "n_examples": 80,
+      "unique_training_ids": 80,
+      "source_count": 10,
+      "target_kind": "numeric",
+      "status": "complete",
+      "final_status": "complete",
+      "paths": {
+        "run": "qwen/.runtime/numeric_sft_dose_control_20260928/shuffled-train128",
+        "config": "docs/research/numeric-sft-dose-control-2026-09-28/config-shuffled-128.json",
+        "dataset": "qwen/.runtime/numeric_sft_dose_control_20260928/train-shuffled.json",
+        "prior_checkpoint": "qwen/.runtime/numeric_sft_dose_control_20260928/shuffled-train32/final"
+      },
+      "hashes": {
+        "config": {
+          "expected": "4e92c533ab566a462d4e203c2f9d8a34298da3ca39b235f67315ff12f4e6114d",
+          "actual": "4e92c533ab566a462d4e203c2f9d8a34298da3ca39b235f67315ff12f4e6114d",
+          "match": true
+        },
+        "dataset": {
+          "expected": "9858b82131a70352ba5a890a0681282bb6a161b16fe642afa6457e51a8d451d8",
+          "configured": "9858b82131a70352ba5a890a0681282bb6a161b16fe642afa6457e51a8d451d8",
+          "actual": "9858b82131a70352ba5a890a0681282bb6a161b16fe642afa6457e51a8d451d8",
+          "match": true
+        },
+        "model_metadata": {
+          "expected": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd",
+          "configured": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd",
+          "actual": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd",
+          "match": true
+        },
+        "tokenization": {
+          "expected": "e01e590a91140f2741b7510bb09842bfb17b892635ac656409f28fa1fa7340ba",
+          "actual": "e01e590a91140f2741b7510bb09842bfb17b892635ac656409f28fa1fa7340ba",
+          "match": true
+        },
+        "example_order": {
+          "expected": "8ad3af9332feb29215022548fa19f4556d982ae2781d3fe657a3c1cc98602cdc",
+          "actual": "8ad3af9332feb29215022548fa19f4556d982ae2781d3fe657a3c1cc98602cdc",
+          "match": true
+        },
+        "processed_prefix": {
+          "expected": "8f90ba79b4d72a774ce17d2f00b42a9b12706108775116b1959252a4abe844ce",
+          "actual": "8f90ba79b4d72a774ce17d2f00b42a9b12706108775116b1959252a4abe844ce",
+          "match": true
+        },
+        "artifacts": {
+          "adapter": {
+            "expected": "47ebff8b8595e2a0e63339b359584e29f3ba758e857a429aedc781eabdb5a5db",
+            "actual": "47ebff8b8595e2a0e63339b359584e29f3ba758e857a429aedc781eabdb5a5db",
+            "match": true
+          },
+          "vllm_adapter": {
+            "expected": "f0e2a4b1411d0eff848bece0a97e27432456acbc0840cf54cb29a85f73f3cce3",
+            "actual": "f0e2a4b1411d0eff848bece0a97e27432456acbc0840cf54cb29a85f73f3cce3",
+            "match": true
+          },
+          "optimizer": {
+            "expected": "8d56a99b6dc0ff494570820ed3d933aa60579c9a1bdc1d0ede0dcb4978c66d3a",
+            "actual": "8d56a99b6dc0ff494570820ed3d933aa60579c9a1bdc1d0ede0dcb4978c66d3a",
+            "match": true
+          }
+        }
+      },
+      "target_tokens": {
+        "unique_per_dataset_recorded": 1517,
+        "unique_per_dataset_calculated": 1517,
+        "planned_full_run_recorded": 9712,
+        "planned_full_run_calculated": 9712,
+        "stage_suffix_recorded": 7286,
+        "stage_suffix_calculated": 7286,
+        "loss_mask": "assistant target including EOS only"
+      },
+      "optimizer": {
+        "step_min": 128,
+        "step_max": 128,
+        "state_entries": 400
+      },
+      "training_parameters": {
+        "seed": 2026092701,
+        "learning_rate": 0.000005,
+        "grad_accumulation": 4,
+        "grad_clip": 1,
+        "lora_rank": 8,
+        "lora_alpha": 16,
+        "lora_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "in_proj_qkv",
+          "in_proj_z",
+          "out_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "ce_chunk_tokens": 64,
+        "max_target_tokens": 4096,
+        "max_sequence_tokens": 8192,
+        "enable_thinking": false
+      },
+      "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+      "driver_sha256": "f525e7626bae22109753cd5a8deac47b94cd13f4bd4dcc13960543b4607b9857",
+      "harness_sha256": "574f8d2cea03fbfe93d568dc1ddf61748fc99ab62eeb64db1b902a457d718810",
+      "mapping_helper_sha256": "5cd0a3c1c0c6e26f68d0f3e279e105bb1ffb1ce093c0acbb1874a32d697497ca",
+      "prior_hashes": {
+        "adapter_recorded": "a861fbf032eaf42c230255724c4d08cc2af2767485f482ac666b3fdf0389f7be",
+        "adapter_matches_parent": true,
+        "vllm_adapter_recorded": "f1ca5b836b7894e6fa836a1b602bb68a948b218decb5cdfaeed8a51efb4a8f5d",
+        "vllm_adapter_matches_parent": true,
+        "optimizer_recorded": "c1397b279cb7f97de13995013b777e15ce0fa3bf8b9541904040fcbcae2ff3f8",
+        "optimizer_matches_parent": true
+      },
+      "final_receipt_matches_root": true
+    },
+    "shuffled512": {
+      "arm": "shuffled",
+      "stage_updates": 384,
+      "global_updates": 512,
+      "prior_global_updates": 128,
+      "examples_processed": 1536,
+      "expected_examples_processed": 1536,
+      "n_examples": 80,
+      "unique_training_ids": 80,
+      "source_count": 10,
+      "target_kind": "numeric",
+      "status": "complete",
+      "final_status": "complete",
+      "paths": {
+        "run": "qwen/.runtime/numeric_sft_dose_control_20260928/shuffled-train512",
+        "config": "docs/research/numeric-sft-dose-control-2026-09-28/config-shuffled-512.json",
+        "dataset": "qwen/.runtime/numeric_sft_dose_control_20260928/train-shuffled.json",
+        "prior_checkpoint": "qwen/.runtime/numeric_sft_dose_control_20260928/shuffled-train128/final"
+      },
+      "hashes": {
+        "config": {
+          "expected": "b511aab96f305c71935a9b55c8cef374638b15abff4217d1a417e96fb6bbc9bf",
+          "actual": "b511aab96f305c71935a9b55c8cef374638b15abff4217d1a417e96fb6bbc9bf",
+          "match": true
+        },
+        "dataset": {
+          "expected": "9858b82131a70352ba5a890a0681282bb6a161b16fe642afa6457e51a8d451d8",
+          "configured": "9858b82131a70352ba5a890a0681282bb6a161b16fe642afa6457e51a8d451d8",
+          "actual": "9858b82131a70352ba5a890a0681282bb6a161b16fe642afa6457e51a8d451d8",
+          "match": true
+        },
+        "model_metadata": {
+          "expected": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd",
+          "configured": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd",
+          "actual": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd",
+          "match": true
+        },
+        "tokenization": {
+          "expected": "e01e590a91140f2741b7510bb09842bfb17b892635ac656409f28fa1fa7340ba",
+          "actual": "e01e590a91140f2741b7510bb09842bfb17b892635ac656409f28fa1fa7340ba",
+          "match": true
+        },
+        "example_order": {
+          "expected": "86c2757cf16dd5bcd92d76d200099a4493e461aacaa1e82d382c1683de1eee16",
+          "actual": "86c2757cf16dd5bcd92d76d200099a4493e461aacaa1e82d382c1683de1eee16",
+          "match": true
+        },
+        "processed_prefix": {
+          "expected": "84995460dceb936a779e693286d8b6b95f7a5cea23a9ac439ddf4bd1896ed3a3",
+          "actual": "84995460dceb936a779e693286d8b6b95f7a5cea23a9ac439ddf4bd1896ed3a3",
+          "match": true
+        },
+        "artifacts": {
+          "adapter": {
+            "expected": "6bac452077aa0490f495ad15ac32308c1625b0bddf6195a4d211a8dd77849a15",
+            "actual": "6bac452077aa0490f495ad15ac32308c1625b0bddf6195a4d211a8dd77849a15",
+            "match": true
+          },
+          "vllm_adapter": {
+            "expected": "498aed7e518d566b59310f14b5815bc014adc8b5119daf6bbbf6fd951197b50f",
+            "actual": "498aed7e518d566b59310f14b5815bc014adc8b5119daf6bbbf6fd951197b50f",
+            "match": true
+          },
+          "optimizer": {
+            "expected": "38332f32d3c8284a4d7f749842a1c0b221f5a37599229a93914e5f577b124810",
+            "actual": "38332f32d3c8284a4d7f749842a1c0b221f5a37599229a93914e5f577b124810",
+            "match": true
+          }
+        }
+      },
+      "target_tokens": {
+        "unique_per_dataset_recorded": 1517,
+        "unique_per_dataset_calculated": 1517,
+        "planned_full_run_recorded": 38835,
+        "planned_full_run_calculated": 38835,
+        "stage_suffix_recorded": 29123,
+        "stage_suffix_calculated": 29123,
+        "loss_mask": "assistant target including EOS only"
+      },
+      "optimizer": {
+        "step_min": 512,
+        "step_max": 512,
+        "state_entries": 400
+      },
+      "training_parameters": {
+        "seed": 2026092701,
+        "learning_rate": 0.000005,
+        "grad_accumulation": 4,
+        "grad_clip": 1,
+        "lora_rank": 8,
+        "lora_alpha": 16,
+        "lora_modules": [
+          "q_proj",
+          "k_proj",
+          "v_proj",
+          "o_proj",
+          "in_proj_qkv",
+          "in_proj_z",
+          "out_proj",
+          "gate_proj",
+          "up_proj",
+          "down_proj"
+        ],
+        "ce_chunk_tokens": 64,
+        "max_target_tokens": 4096,
+        "max_sequence_tokens": 8192,
+        "enable_thinking": false
+      },
+      "model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+      "driver_sha256": "f525e7626bae22109753cd5a8deac47b94cd13f4bd4dcc13960543b4607b9857",
+      "harness_sha256": "574f8d2cea03fbfe93d568dc1ddf61748fc99ab62eeb64db1b902a457d718810",
+      "mapping_helper_sha256": "5cd0a3c1c0c6e26f68d0f3e279e105bb1ffb1ce093c0acbb1874a32d697497ca",
+      "prior_hashes": {
+        "adapter_recorded": "47ebff8b8595e2a0e63339b359584e29f3ba758e857a429aedc781eabdb5a5db",
+        "adapter_matches_parent": true,
+        "vllm_adapter_recorded": "f0e2a4b1411d0eff848bece0a97e27432456acbc0840cf54cb29a85f73f3cce3",
+        "vllm_adapter_matches_parent": true,
+        "optimizer_recorded": "8d56a99b6dc0ff494570820ed3d933aa60579c9a1bdc1d0ede0dcb4978c66d3a",
+        "optimizer_matches_parent": true
+      },
+      "final_receipt_matches_root": true
+    }
+  },
+  "limitations": [
+    "Receipt audit confirms trace integrity and tokenization/order consistency, not mathematical correctness of the correct-label targets.",
+    "The trainer receipts do not record an initial LoRA weight-file hash; matching seed, model revision, code, and recipe confirm the same initialization settings but not a standalone bytewise initial-state proof.",
+    "No evaluation outputs or scores were read."
+  ]
+}

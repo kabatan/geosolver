@@ -1,0 +1,179 @@
+[
+  {
+    "id": "H03",
+    "role": "heldout_transfer",
+    "problem": "鋭角不等辺三角形ABCの外心をO、垂心をHとし、OH=7とする。各頂点について次を行う。Aでは内角・外角の二等分線の直線とBCとの交点をKa,La、BCの中点をMaとし、円AKaLaと直線AMaのAでない交点をPaとする。B,Cからも同様にPb,Pcを作る。円PaPbPcの中心をZとする。OZを求めよ。三つの円と交点は非退化とする。",
+    "givens": {
+      "OH": "7"
+    },
+    "answer_exact": "14/3",
+    "params": {
+      "target": "7",
+      "bx": "-7",
+      "cx": "5",
+      "ax": "2",
+      "ay": "7"
+    },
+    "decisive_lemma_expected": "the second circle-median intersection is the orthocenter's projection onto that median",
+    "transfer_cluster": "orthocenter_median_projection",
+    "train_overlap_note": "The second circle-median intersection is the orthocenter projection onto that median; H01 teaches the projection parameter (BC/2)^2/AM^2."
+  },
+  {
+    "id": "H04",
+    "role": "heldout_transfer",
+    "problem": "鋭角不等辺三角形ABCの垂心をH、BCの中点をMとし、HからAMへの垂足をPとする。APの垂直二等分線と直線BCの交点をTとする。T,B,Cはこの順に並び、BT=3/2、BC=10である。ATを求めよ。",
+    "givens": {
+      "BT": "3/2",
+      "BC": "10"
+    },
+    "answer_exact": "sqrt(69)/2",
+    "params": {
+      "bc": "10",
+      "ax": "1",
+      "ay2": "11"
+    },
+    "decisive_lemma_expected": "AT^2=MT^2-(BC/2)^2 for the perpendicular-bisector construction",
+    "transfer_cluster": "orthocenter_median_projection",
+    "train_overlap_note": "Target lemma: AT^2=MT^2-(BC/2)^2. H01 teaches the same half-base-square projection term; DA05 independently uses MD·ME=(BC/2)^2. These are meaningful lemma-level overlaps."
+  },
+  {
+    "id": "H08",
+    "role": "heldout_transfer",
+    "problem": "直線PQにP,Qで接する二円がPQの同じ側でA,Bに交わり、BはAよりPQに近いとする。三角形APQは鋭角不等辺とする。BをPQに関して鏡映した点をCとする。AP=√34、AC=√34、tan∠BAQ=5/12のとき、三角形APCの面積を求めよ。",
+    "givens": {
+      "AP": "sqrt(34)",
+      "AC": "sqrt(34)",
+      "tan_BAQ": "5/12"
+    },
+    "answer_exact": "85/13",
+    "params": {
+      "px": "0",
+      "qx": "4",
+      "ax": "3",
+      "ay": "5"
+    },
+    "decisive_lemma_expected": "angle CAP equals angle BAQ, including the ordinary acute-angle branch",
+    "transfer_cluster": "tangent_circle_reflection_near_transfer",
+    "train_overlap_note": "Target lemma: angle CAP=angle BAQ on the acute branch. H07 teaches tangent-circle equations and a reflection across the base; DA01/DA04/DA06/DA11/DA16/DB01 contain related tangent-circle methods, but none of their audited decisive lemmas is this angle equality."
+  },
+  {
+    "id": "H14",
+    "role": "heldout_transfer",
+    "problem": "鋭角不等辺三角形ABCの垂心をH、BCの中点をM、外接円をΩとする。直線ABと中心C・半径CAの円のAでない交点をD、直線ACと中心B・半径BAの円のAでない交点をEとする。半直線MD,MEとΩの交点をそれぞれP,Qとする。円BPMと円CQMのMでない共通点をRとする。AH=19/12、AR=(19/122)√61のとき、三角形AHRの面積を求めよ。すべての円と交点は非退化とする。",
+    "givens": {
+      "AH": "19/12",
+      "AR": "19*sqrt(61)/122"
+    },
+    "answer_exact": "1805/2928",
+    "params": {
+      "w": "15",
+      "ax": "10",
+      "ay": "12"
+    },
+    "decisive_lemma_expected": "R is the orthogonal projection of H onto AM",
+    "transfer_cluster": "orthocenter_median_projection",
+    "train_overlap_note": "R is the orthogonal projection of H onto AM; H01 teaches the matching orthocenter projection formula. This is direct lemma-family overlap."
+  },
+  {
+    "id": "H15",
+    "role": "heldout_transfer",
+    "problem": "∠BAC=60°の不等辺三角形ABCの外接円をΩとする。ΩのB,Cでの接線の交点をX、直線AXとΩのAでない交点をDとする。DをBCに関して鏡映した点をE、EをABに関して鏡映した点をC0、EをACに関して鏡映した点をB0とし、K=BB0∩CC0とする。AB=8、BD=(56/97)√97、AD=(48/97)√97のとき、BKを求めよ。すべての交点は有限で、二直線BB0,CC0は相異なるとする。",
+    "givens": {
+      "angle_BAC_deg": "60",
+      "AB": "8",
+      "BD": "56*sqrt(97)/97",
+      "AD": "48*sqrt(97)/97"
+    },
+    "answer_exact": "64*sqrt(97)/97",
+    "params": {
+      "b": "3",
+      "c": "8"
+    },
+    "decisive_lemma_expected": "K is the midpoint of AD",
+    "transfer_cluster": "three_reflection_midpoint_independent_case",
+    "train_overlap_note": "K is the midpoint of AD after three reflections. H07 teaches one reflection with tangent circles; DA15 has perpendicular-bisector intersections, but no audited teacher gives the three-reflection midpoint lemma."
+  },
+  {
+    "id": "H01",
+    "role": "source_retention_control",
+    "problem": "鋭角不等辺三角形ABCの垂心をH、BCの中点をMとする。Hから直線AMに下ろした垂線の足をPとする。BC=24、AM=13のとき、APを求めよ。",
+    "givens": {
+      "BC": "24",
+      "AM": "13"
+    },
+    "answer_exact": "25/13",
+    "params": {
+      "m": "12",
+      "t": "13",
+      "u": "1/3"
+    },
+    "decisive_lemma_expected": "A dot H equals (BC/2)^2, hence the orthocenter projection parameter is (BC/2)^2/AM^2",
+    "transfer_cluster": null,
+    "train_overlap_note": "Source configuration is trained; the numeric parameters are fresh."
+  },
+  {
+    "id": "H02",
+    "role": "source_retention_control",
+    "problem": "鋭角不等辺三角形ABCで、MはBCの中点、KはAからBCへの垂足とする。BC=26、AM=√178、AK=13、BK>KCとする。BC上にBD1=3、BD2=7となる点D1,D2を取る。i=1,2について、円ABDiと直線ACのA以外の交点をUi、円ACDiと直線ABのA以外の交点をViとし、円AUiViの中心をZiとする。Z1Z2を求めよ。",
+    "givens": {
+      "BC": "26",
+      "AM": "sqrt(178)",
+      "AK": "13",
+      "BD1": "3",
+      "BD2": "7"
+    },
+    "answer_exact": "4*sqrt(178)/13",
+    "params": {
+      "w": 13,
+      "ax": "3",
+      "ay": "13",
+      "i1": "3",
+      "i2": "7"
+    },
+    "decisive_lemma_expected": "the center of AUV is affine in the BC-coordinate of D",
+    "transfer_cluster": null,
+    "train_overlap_note": "Source configuration is trained; the numeric parameters are fresh."
+  },
+  {
+    "id": "H07",
+    "role": "source_retention_control",
+    "problem": "直線ABにA,Bで接する二円が同じ側でM,Nに交わり、MはNよりABに近いとする。三角形NABは鋭角不等辺である。Mを通りABに平行な直線と第一の円のMでない交点をC、第二の円のMでない交点をDとする。E=AC∩BD、P=AN∩CD、Q=BN∩CDとする。OをABの中点、FをMからABへの垂足とする。AB=9、ON=(81/122)√61、MF=3のとき、三角形EPQの面積を求めよ。",
+    "givens": {
+      "AB": "9",
+      "ON": "81*sqrt(61)/122",
+      "MF": "3"
+    },
+    "answer_exact": "20/3",
+    "params": {
+      "c": "9",
+      "x0": "2",
+      "y0": "3"
+    },
+    "decisive_lemma_expected": "OM times ON equals OA squared, and E is the reflection of M over AB",
+    "transfer_cluster": null,
+    "train_overlap_note": "Source configuration is trained; the numeric parameters are fresh."
+  },
+  {
+    "id": "H13",
+    "role": "source_retention_control",
+    "problem": "鋭角不等辺三角形ABCでBC=9、cos∠ACB=5/13とする。MをACの中点とし、円BMCのCにおける接線とBを通りBCに垂直な直線との交点をKとする。Kは直線BCに関してAと反対側にあり、BK=1944/79である。線分AKと線分BMの内部での交点をJ、円BJKの中心をZとする。CZを求めよ。",
+    "givens": {
+      "BC": "9",
+      "BK": "1944/79",
+      "cos_ACB": "5/13"
+    },
+    "answer_exact": "1053/79",
+    "params": {
+      "bc": "9",
+      "tri": [
+        5,
+        12,
+        13
+      ],
+      "scale": "1"
+    },
+    "decisive_lemma_expected": "the center Z of BJK lies on AC",
+    "transfer_cluster": null,
+    "train_overlap_note": "Source configuration is trained; the numeric parameters are fresh."
+  }
+]

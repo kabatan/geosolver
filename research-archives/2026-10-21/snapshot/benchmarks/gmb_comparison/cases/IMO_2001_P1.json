@@ -1,0 +1,40 @@
+{
+  "id": "IMO_2001_P1",
+  "variables": [
+    "ax",
+    "ay"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "O",
+      "expression": "Circumcenter(A, B, C)"
+    },
+    {
+      "name": "P",
+      "expression": "FootOfPerpendicular(A, Line(B, C))"
+    }
+  ],
+  "conditions": [
+    {
+      "predicate": "AcuteTriangle(A, B, C)"
+    },
+    {
+      "left": "Angle(B, C, A)",
+      "operator": ">=",
+      "right": "Angle(A, B, C) + pi/6"
+    }
+  ],
+  "target": "0"
+}

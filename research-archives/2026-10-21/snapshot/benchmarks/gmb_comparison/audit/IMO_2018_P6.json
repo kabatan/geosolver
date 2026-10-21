@@ -1,0 +1,172 @@
+{
+  "case_id": "IMO_2018_P6",
+  "source": {
+    "official_url": "https://www.imo-official.org/assets/documents/problems/2018/2018_eng.pdf",
+    "official_landing_url": "https://www.imo-official.org/problems/2018/",
+    "official_pdf_path": "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2018-eng.pdf",
+    "official_pdf_sha256": "3118f981f520aa9f9238ec97d63614aff5f7c2c26bb9c2ea24517b4d5d9dbb6c",
+    "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2018_P6.smt2",
+    "gmbl_sha256": "962fa6925bc3e056b836bcbf2f1b2cfe4e37312d202d63321551cd2321aecfa8",
+    "upstream_commit": "f070afe18ed874b3a31db519ea6f593f40a1be00"
+  },
+  "normalization": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "fixed_coordinates": {
+      "A": [
+        "0",
+        "0"
+      ],
+      "B": [
+        "1",
+        "0"
+      ]
+    },
+    "removed_continuous_dof": 4,
+    "justification": "凸四角形の辺ABは非零。辺長の積の等式、内部、角度等式は相似不変。 平行移動2自由度・回転1自由度・正の一様拡大縮小1自由度のみを除く。残りの図形の形は固定しない。",
+    "scale_invariant": true,
+    "reflection_fixed": false
+  },
+  "clauses": [
+    {
+      "id": "H01",
+      "statement_ja": "ABCDは凸四角形。",
+      "gmbl": [
+        "(param (A B C D) polygon)"
+      ],
+      "geosolver": [
+        "A = Point(0, 0)",
+        "B = Point(1, 0)",
+        "C = Point(cx, cy)",
+        "D = Point(dx, dy)",
+        "conditions[0]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x)) != 0",
+        "conditions[1]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((C.x-B.x)*(D.y-B.y)-(C.y-B.y)*(D.x-B.x)) > 0",
+        "conditions[2]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((D.x-C.x)*(A.y-C.y)-(D.y-C.y)*(A.x-C.x)) > 0",
+        "conditions[3]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((A.x-D.x)*(B.y-D.y)-(A.y-D.y)*(B.x-D.x)) > 0"
+      ],
+      "condition_indices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "construction_names": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H02",
+      "statement_ja": "XはABCDの厳密内部。",
+      "gmbl": [
+        "(param X point (in-poly A B C D))"
+      ],
+      "geosolver": [
+        "X = Point(xx, xy)",
+        "conditions[4]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((B.x-A.x)*(X.y-A.y)-(B.y-A.y)*(X.x-A.x)) > 0",
+        "conditions[5]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((C.x-B.x)*(X.y-B.y)-(C.y-B.y)*(X.x-B.x)) > 0",
+        "conditions[6]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((D.x-C.x)*(X.y-C.y)-(D.y-C.y)*(X.x-C.x)) > 0",
+        "conditions[7]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((A.x-D.x)*(X.y-D.y)-(A.y-D.y)*(X.x-D.x)) > 0"
+      ],
+      "condition_indices": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "construction_names": [
+        "X"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H03",
+      "statement_ja": "AB·CD=BC·DA。",
+      "gmbl": [
+        "(assert (eq-ratio A B B C D A C D))"
+      ],
+      "geosolver": [
+        "conditions[8]: Distance(A, B)*Distance(C, D) = Distance(B, C)*Distance(D, A)"
+      ],
+      "condition_indices": [
+        8
+      ],
+      "construction_names": [],
+      "status": "matched"
+    },
+    {
+      "id": "H04",
+      "statement_ja": "XAB=XCD、XBC=XDA。",
+      "gmbl": [
+        "(assert (= (uangle X A B) (uangle X C D))); (assert (= (uangle X B C) (uangle X D A)))"
+      ],
+      "geosolver": [
+        "conditions[9]: Angle(X, A, B) = Angle(X, C, D)",
+        "conditions[10]: Angle(X, B, C) = Angle(X, D, A)"
+      ],
+      "condition_indices": [
+        9,
+        10
+      ],
+      "construction_names": [],
+      "status": "matched"
+    }
+  ],
+  "goal": {
+    "statement_ja": "角BXAとDXCの和がπになる。",
+    "gmbl": [
+      "(eval (= (add (uangle B X A) (uangle D X C)) pi))"
+    ],
+    "included_in_solver_conditions": false,
+    "solver_target": "0",
+    "assessment_only": true
+  },
+  "source_differences": [
+    {
+      "id": "gmb_runtime_distinctness",
+      "kind": "runtime_acceptance_policy",
+      "blocking": false,
+      "description_ja": "GMBは全登録点の最小距離0.1とweighted soft lossで受理する。原文にない全点相異・最小距離0.1はGeoSolver条件に移さず、両者の出力を別の共通検査器で再検査する。"
+    },
+    {
+      "id": "gmb_polygon_sampler",
+      "kind": "runtime_parameterization",
+      "blocking": false,
+      "description_ja": "GMB polygonは角のtanh範囲（四角形は30°～150°）と基準辺の1/2～3/2の辺長範囲、弱い閉鎖lossを用いる。GeoSolverは凸性だけを数式で課し、原文にない角・辺長範囲は移さない。"
+    }
+  ],
+  "open_issues": [],
+  "witness_bindings": {
+    "A": "A",
+    "B": "B",
+    "C": "C",
+    "D": "D",
+    "X": "X"
+  },
+  "author_review": {
+    "author": "dsl_2014_2020",
+    "materials_read": [
+      "official IMO 2018 English problem sheet",
+      "GMB IMO_2018_P6.smt2",
+      "GMB optimizer.py / instruction_reader.py / tf_optimizer.py",
+      "GeoSolver dsl-spec.json / public compiler / geometry implementations"
+    ],
+    "pdf_visual_check": "official_text_and_pdf_source_checked",
+    "static_validation": {
+      "public_model": true,
+      "validator_valid": true,
+      "compiler_valid": true,
+      "solver_executed": false
+    },
+    "independent_review_status": "pending",
+    "notes_ja": [
+      "GMB eq-ratioの引数順AB/BC=DA/CDを確認して、正の辺長により交差乗算した。"
+    ]
+  },
+  "comparison_status": "draft"
+}

@@ -1,0 +1,85 @@
+{
+  "packet": "qwen/.runtime/numeric_sft_dose_control_20260928/review-transfer-review02/index.json",
+  "rubric": "docs/research/related-numeric-sft-2026-09-28/REVIEW_RUBRIC.md",
+  "review_type": "blind_AP01_self_contained_proof",
+  "cases": [
+    {
+      "case_id": "proof-00",
+      "score": 1,
+      "complete_proof": false,
+      "essential_progress": "D,E が各垂直二等分線上にあることから DA=DB, EA=EC と底角の等式を正しく得た。F=O なら P,N が直径 AF の円に乗るという条件付き最終段は正しい。",
+      "flaw_or_gap": "核心の F=ABC の外心 O は誤り。F は一般には AM 上になく、line 65 の ∠FAB=∠MAB は導けない。したがって FA=FB=FC も、そこからの円周結論も成立する推論ではない。",
+      "evidence_quotes": [
+        {
+          "line": 65,
+          "quote": "$\\angle FAB = \\angle MAB = \\alpha_1$"
+        },
+        {
+          "line": 120,
+          "quote": "From these two results, $FB = FA = FC$."
+        },
+        {
+          "line": 198,
+          "quote": "the circle with diameter $AF$ passes through $P$ and $N$."
+        }
+      ],
+      "incidental_error": "枝を検討する過程で、F が B,D と同じ ray 上にあることと F が AM 上にあることを混同している。中心的誤りに従属。",
+      "uncertainty": "低い。与条件を満たす有理座標例で F≠O を厳密確認。",
+      "read_coverage": "proof-00.md 全202行を確認。"
+    },
+    {
+      "case_id": "proof-01",
+      "score": 2,
+      "complete_proof": false,
+      "essential_progress": "A を原点、AM を x 軸とする一般座標化で D,E の位置 d=(u²+h²)/(2u), e=(v²+h²)/(2v) と F の交点 x 座標を導き、円 APN の方程式を立てた。別途、内部枝から ∠BFC=2∠A を正しく導いた。",
+      "flaw_or_gap": "F を円方程式へ代入して0と示す核心の計算を行わず、最終段では目標と同値の「known geometric property」に置き換える。∠BFC=2A のみでは F∈(APN) は従わない。さらに line 455 の必要十分条件 ∠PFN=∠PAN=A は円周角の枝が逆で、F が内部で四点が円周上なら両角の和が180°。",
+      "evidence_quotes": [
+        {
+          "line": 164,
+          "quote": "Now we must verify if $F(x_F, y_F)$ satisfies $x_F^2 + y_F^2 + D x_F + E y_F = 0$."
+        },
+        {
+          "line": 455,
+          "quote": "is that $\\angle PFN = \\angle PAN = A$"
+        },
+        {
+          "line": 500,
+          "quote": "it is a geometric theorem that for this construction, $F$ lies on the circumcircle of $\\triangle APN$."
+        }
+      ],
+      "incidental_error": "line 461–462 の「acute なら D,E が ray 上で F が内部」は与条件からの過剰な一般化。",
+      "uncertainty": "低い。一般座標の準備は有用だが、答案自身が核心の代入を未検証として別経路へ移り、最後は同値命題を引用する。",
+      "read_coverage": "proof-01.md 全512行の構成・最終版を確認。"
+    },
+    {
+      "case_id": "proof-02",
+      "score": 2,
+      "complete_proof": false,
+      "essential_progress": "冒頭の誤った ∠FBC,∠FCB の取り方を明示的に訂正し、内部枝で ∠BFC=2∠A を導く。また P,N と外心 O が直径 AO の円上にあることを正しく確認した。",
+      "flaw_or_gap": "結論に必要な F が直径 AO の円に乗ることを証明せず、最終版は同じ構図の結論を「known geometric property」として引用する。等脚極限から連続性だけで一般の scalene 構図への円周所属は出ない。途中の ∠PFN=A も正しい円周角枝ではなく、実際は 180°−A。",
+      "evidence_quotes": [
+        {
+          "line": 157,
+          "quote": "$$ \\angle BFC = 2\\angle BAC $$"
+        },
+        {
+          "line": 509,
+          "quote": "A known geometric property states that for this specific construction"
+        },
+        {
+          "line": 510,
+          "quote": "By continuity and the uniqueness of the intersection for scalene triangles, $F$ must lie on $\\omega$."
+        }
+      ],
+      "incidental_error": "line 239 の OP=ON=R/2 は一般に偽。line 318–320 の等脚例の円中心計算にも代数誤りがあるが、後段で F=O の等脚結論を別途正しく確認している。",
+      "uncertainty": "低い。後半の複数の最終版まで確認し、同値命題の引用が撤回・補証されていない。",
+      "read_coverage": "proof-02.md 全560行の構成・自己訂正・最終版を確認。"
+    }
+  ],
+  "independent_check": {
+    "configuration": "A=(0,0), B=(3,2), C=(4,-2); D=(13/6,0), E=(5/2,0), F=(16/7,2/7), O=(33/14,-2/7)",
+    "validity": "ABC acute scalene (acute dot products 8,5,12); F barycentric (16/49,20/49,13/49) strictly interior; D,E on positive AM ray.",
+    "findings": "F≠O, disproving proof-00 core. F satisfies circle APN equation F·(F−O)=0. At A the dot product of AP,AN is +2 (acute); at F the dot product of FP,FN is −34/49 (obtuse), so ∠PFN=180°−∠PAN, not ∠PAN. This numerical configuration only checks claimed identities; it is not a substitute for a general proof."
+  },
+  "boundary_case": "proof-01 gives substantial general-coordinate setup, but explicitly leaves the crucial F-in-circle substitution undone and then asserts the target as a special theorem; this is score 2 rather than 3. proof-02 similarly has a valid intermediate ∠BFC=2A but no bridge to the target. No answer reaches 3 or 4."
+}

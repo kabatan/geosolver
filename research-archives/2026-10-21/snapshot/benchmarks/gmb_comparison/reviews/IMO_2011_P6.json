@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2011_P6",
+  "reviewer": "independent_review",
+  "case_sha256": "68e32ea1bd5c5a025454d04724cedd1d4a4596970e16de4dc1953195d07765f8",
+  "audit_sha256": "381c27cefababc08f5278d377cf21ddc75a2af6f5688e64dc212d2e96cedfb5a",
+  "gmbl_sha256": "840ce61302f6acd94ae4a69030316d89143be464e25e5e3f8b71174aab0c1957",
+  "reviewed_original_pdf_sha256": "e09b2c59d3571663af614cbeb752c1283285f0306f15e6e4f67f36aa87c77a68",
+  "verdict": "pass",
+  "normalization_checked": true,
+  "conclusion_not_assumed": true,
+  "original_conditions_covered_by_gmbl": true,
+  "scope_of_coverage_ja": "原文の仮定を当該比較範囲で満たすかの監査である。原文の全境界配置を含む解集合の完全同値、GMB実装の全数値分岐の正当性、実験の実行許可を意味しない。",
+  "comparison_scope": "nondegenerate_configuration_domain",
+  "sources_read": [
+    "cases/IMO_2011_P6.json",
+    "audit/IMO_2011_P6.json",
+    "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2011_P6.smt2",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2011-eng.pdf",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2011-eng.txt",
+    "AUTHORING.md",
+    "reviews/UPSTREAM_SEMANTICS.md"
+  ],
+  "official_url": "https://www.imo-official.org/assets/documents/problems/2011/2011_eng.pdf",
+  "normalization_review": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "removed_continuous_dof": 4,
+    "scale_invariant": true,
+    "reflection_fixed": false,
+    "remaining_solver_variables": [
+      "cx",
+      "cy",
+      "tt"
+    ],
+    "shape_fixed_beyond_original_hypotheses": false,
+    "checked_ja": "原文で相異なる二点の単位基線化だけで平行移動2・回転1・正の尺度1を除く。元の形の変数と鏡映配置を保持している。"
+  },
+  "original_goal_not_used": "la,lb,lcでできる三角形の外接円はGammaに接する。交点・外接円の計算は探索後の結論検査に属する。",
+  "checked_input_counts": {
+    "constructions": 11,
+    "conditions": 2
+  },
+  "method": {
+    "read_all_constructions_and_conditions": true,
+    "read_original_problem_assumptions": true,
+    "checked_domains_branches_and_non_degeneracy": true,
+    "checked_goal_separation": true,
+    "exact_algebraic_checks_only_where_documented": true,
+    "solver_executed": false,
+    "optimizer_executed": false,
+    "refinement_executed": false,
+    "prior_case_performance_used_to_adjust_input": false
+  },
+  "gmb_runtime_equivalence_claimed": false,
+  "findings": [
+    {
+      "id": "IMO_2011_P6-review-1",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "AB単位基線にCとTの円周位置を残し、鋭角性と外心Oを構成する。"
+    },
+    {
+      "id": "IMO_2011_P6-review-2",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "V=T+90度回転(T-O)としてl=TVを接線にする表現は、半径の垂線そのものである。各辺への直線鏡映は二つの点の鏡映で一致する。"
+    },
+    {
+      "id": "IMO_2011_P6-review-3",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "witnessにはl,la,lb,lcを点の推測でなく明示的な直線として渡す必要がある。反射三直線の作る円と元円の接線という結論は別検査である。"
+    }
+  ],
+  "remaining_uncertainties": []
+}

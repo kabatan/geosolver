@@ -1,0 +1,167 @@
+{
+  "source_tree_hash": "sha256:d8fd9bb8392ad2984276bab3386e033669246ee79586317917c322d31b4541f5",
+  "resolved_config_hash": "sha256:98810edcd2beb35fb7d31ba65620de8f3cebd3fc289c11a526b8a623adf6d70f",
+  "dependency_lock_hash": "sha256:aa93c94b893ed67b359af271ca6fb62e97d3551fc874a4b9e45a66c8c5e52930",
+  "runtime_defaults_unchanged": true,
+  "dependency_lock_unchanged": true,
+  "tests": {
+    "passed": 1712,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 72.09,
+    "command": ".venv/bin/python -m pytest --import-mode=importlib"
+  },
+  "checks": [
+    {
+      "name": "ruff",
+      "command": [
+        "/home/kabatan/work/solver/.venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "src",
+        "tests",
+        "benchmarks",
+        ".github/scripts"
+      ],
+      "returncode": 0,
+      "seconds": 0.014,
+      "log": "local/validation/ruff.log"
+    },
+    {
+      "name": "compileall",
+      "command": [
+        "/home/kabatan/work/solver/.venv/bin/python",
+        "-m",
+        "compileall",
+        "-q",
+        "src",
+        "tests"
+      ],
+      "returncode": 0,
+      "seconds": 0.058,
+      "log": "local/validation/compileall.log"
+    },
+    {
+      "name": "schemas",
+      "command": [
+        "/home/kabatan/work/solver/.venv/bin/python",
+        "-m",
+        "geosolver.schemas.generate",
+        "--check"
+      ],
+      "returncode": 0,
+      "seconds": 0.085,
+      "log": "local/validation/schemas.log"
+    },
+    {
+      "name": "corpus",
+      "command": [
+        "/home/kabatan/work/solver/.venv/bin/python",
+        "benchmarks/research_runner.py",
+        "validate"
+      ],
+      "returncode": 0,
+      "seconds": 0.822,
+      "log": "local/validation/corpus.log"
+    },
+    {
+      "name": "gmb-preflight",
+      "command": [
+        "/home/kabatan/work/solver/.venv/bin/python",
+        "-m",
+        "benchmarks.gmb_comparison.prepare",
+        "--require-ready",
+        "--output",
+        "/home/kabatan/work/solver-experiment/research-archives/2026-10-21/local/validation/gmb-preflight.json"
+      ],
+      "returncode": 0,
+      "seconds": 0.734,
+      "log": "local/validation/gmb-preflight.log"
+    },
+    {
+      "name": "solver-doctor",
+      "command": [
+        "/home/kabatan/work/solver/.venv/bin/geosolver",
+        "doctor"
+      ],
+      "returncode": 0,
+      "seconds": 0.865,
+      "log": "local/validation/solver-doctor.log"
+    },
+    {
+      "name": "gmb-doctor",
+      "command": [
+        "/home/kabatan/work/solver/.venv/bin/python",
+        "benchmarks/gmb/environment.py",
+        "doctor"
+      ],
+      "returncode": 0,
+      "seconds": 3.713,
+      "log": "local/validation/gmb-doctor.log"
+    },
+    {
+      "name": "gmb-smoke",
+      "command": [
+        "/home/kabatan/work/solver/.venv/bin/python",
+        "benchmarks/gmb/environment.py",
+        "smoke"
+      ],
+      "returncode": 0,
+      "seconds": 4.112,
+      "log": "local/validation/gmb-smoke.log"
+    },
+    {
+      "name": "build",
+      "command": [
+        "uv",
+        "build"
+      ],
+      "returncode": 0,
+      "seconds": 0.62,
+      "log": "local/validation/build.log"
+    },
+    {
+      "name": "installed-wheel",
+      "command": [
+        "/home/kabatan/work/solver/.venv/bin/python",
+        ".github/scripts/verify_wheel.py"
+      ],
+      "returncode": 0,
+      "seconds": 18.469,
+      "log": "local/validation/installed-wheel.log"
+    }
+  ],
+  "solver_corpus": {
+    "valid": true,
+    "inventory_count": 323,
+    "runnable_count": 323,
+    "reference_only_count": 0,
+    "migration_blocked_count": 0,
+    "truth_verified_count": 323,
+    "unique_natural_problem_count": 323,
+    "dsl_file_count": 323,
+    "issues": []
+  },
+  "gmb_comparison": {
+    "input_count": 36,
+    "static_valid_count": 36,
+    "independently_reviewed_count": 36,
+    "input_ready_count": 36,
+    "all_inputs_ready": true,
+    "global_issues": []
+  },
+  "performance_campaign_rerun": false,
+  "benchmark_inputs_and_reviews_byte_identical_to_snapshot": true,
+  "retired_modules": [
+    "geosolver.engine.standard.search.discrete.lattice_segments",
+    "geosolver.engine.standard.search.sampling.positive_radius"
+  ],
+  "test_import_fixes": [
+    "tests/__init__.py",
+    "tests/test_algebraic_branch_boxes.py",
+    "tests/test_primary_completion_review.py",
+    "tests/test_overfit_strict_defaults.py"
+  ],
+  "generated_artifacts_moved": "/home/kabatan/work/solver-experiment/research-archives/2026-10-21/local/post-validation"
+}

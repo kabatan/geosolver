@@ -1,0 +1,92 @@
+{
+  "id": "IMO_2014_P4",
+  "variables": [
+    "cx",
+    "cy",
+    "p",
+    "q"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "P",
+      "expression": "PointOnSegment(B, C, p)"
+    },
+    {
+      "name": "Q",
+      "expression": "PointOnSegment(B, C, q)"
+    },
+    {
+      "name": "M",
+      "expression": "Point(2*P.x-A.x, 2*P.y-A.y)"
+    },
+    {
+      "name": "N",
+      "expression": "Point(2*Q.x-A.x, 2*Q.y-A.y)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Area(A, B, C)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(A, B), Vector(A, C))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(B, A), Vector(B, C))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(C, A), Vector(C, B))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "p",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "p",
+      "operator": "<",
+      "right": 1
+    },
+    {
+      "left": "q",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "q",
+      "operator": "<",
+      "right": 1
+    },
+    {
+      "left": "Angle(P, A, B)",
+      "operator": "=",
+      "right": "Angle(B, C, A)"
+    },
+    {
+      "left": "Angle(C, A, Q)",
+      "operator": "=",
+      "right": "Angle(A, B, C)"
+    }
+  ],
+  "target": "0"
+}

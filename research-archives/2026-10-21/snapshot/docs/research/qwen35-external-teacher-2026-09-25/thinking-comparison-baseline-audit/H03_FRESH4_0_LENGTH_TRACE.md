@@ -1,0 +1,11 @@
+# H03 fresh4-0 Thinking trace audit
+
+Scope: the untouched base model's single unhinted H03 fresh4-0 run, compared with the frozen H03 answer key and stage-localization rubric. This is a **partial generation**, not a final-answer grade.
+
+- Output: `qwen/.runtime/qwen35_external_teacher_20260925/eval-thinking-fresh4-base-en-32k/diverse-en-near-transfer-fresh4-H03-fresh4-0-0.json`. It ends with `finish_reason=length` at 32,768 generated tokens. The raw text has neither a generated `<think>` nor a `</think>` marker; the model never exited its thinking span or gave a final answer.
+- **Construction-to-foot bridge:** Not reached. The trace discusses angle-bisector points, power of the median midpoint, and an inversion conjecture for `P_a`, but never identifies `P_a,P_b,P_c` as the projections of `H` onto their medians, let alone proves the selected second-intersection branch. Its uses of “foot” refer to angle-bisector intersections, not those orthogonal projections.
+- **Downstream circle/center:** Not reached. It never derives the circle with diameter `HG` or its midpoint center. It mentions centroid `G` only as a guess or in unrelated special-case observations. It alternates among conjectures `Z=O`, `Z=H`, and `Z` equal to the nine-point center, without validating any. The true `OZ=(2/3)OH` relation is absent.
+- **Exact result:** The answer key is `26/3` for `OH=13`. The trace never obtains this value. It tries `0`, `13`, `6.5`, and later a shape-dependent `117 sqrt(2)/16`, among other exploratory expressions; none is a settled result.
+- **Where it loops:** After setting up harmonic division/circle power, it repeatedly changes the sign and interpretation of the midpoint power, then tests guesses for `Z` using equilateral and right-triangle limits. Those special cases are outside the stated acute-scalene/nondegenerate setup and generate further contradictory branches. Near the 32,768-token cutoff it is still recalculating one right-triangle example and its proposed inversion image, with no general proof in progress.
+
+The trace provides evidence of prolonged, unproductive search on the construction-to-foot step. It does **not** establish that the model would never solve the problem with a larger token budget, nor should any conjecture inside this unfinished thinking span be counted as an answer.

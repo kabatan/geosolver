@@ -1,0 +1,35 @@
+{
+  "status": "frozen_before_gpu",
+  "unique_numeric_conditions": 32,
+  "scheduled_rollouts": 256,
+  "optimizer_updates": 64,
+  "schedule_seed": 2026092631,
+  "hashes": {
+    "PROTOCOL.md": "27d86123ba659b69869bca512509272e587c1438387a64604501b7fdcc3ecb48",
+    "GRADING.md": "b47a8af4ca033c15b4117c3ac0e2f6e446d006a956cfbcedf8d046de7e9a49d1",
+    "config.json": "4c309f9a4cef30f3eb0ca160ec5d265ad200fe00f647d92df07623a7b3ee9b7f",
+    "train-pool.json": "fd402b131221190424801db78b68bd19cb4b06756d99b9ee145b9ff820893b71",
+    "train-schedule.json": "5603e6d636fc49ab89eed8246724e223ae896e43edd105a19e80e57b5c87bdbe",
+    "eval-jobs.json": "4bfc6b2163a7397def77a85d8ba6d3250cf6188c1759d1c413e77adae6e90822",
+    "eval-answer-key.json": "e74c5f390de4e731272788b03010f2d5a6cbc119d5e08363822d4965ad8a3a2b",
+    "train_worker.py": "5cd0a3c1c0c6e26f68d0f3e279e105bb1ffb1ce093c0acbb1874a32d697497ca",
+    "rollout_worker.py": "59fa04b120123fd8809f01b6c712bd7c7391887ec0448ec9caa8f9eda94ed6bd",
+    "run_study.py": "d38f50d6eb7d613604818ec0923e276fca7f4f71e1b8fe2b2184b383a3c748d2"
+  },
+  "post_freeze_amendment": {
+    "file": "post-freeze-implementation-amendment.json",
+    "sha256": "0d52e1f73a10b6e2f33ce785c21f537a4fba353275b6707bcbe865d678d3611d",
+    "scope": "Training rollout concurrency and timing receipt only; all other frozen hashes preserved",
+    "previous_config_sha256": "900875229922a6c5e665b54595aee749c2d24e3f93f0715fa7ddb0d3170c72f9",
+    "previous_rollout_worker_sha256": "261aca44a04b61c56bdc2684f5b73a5345482ed0a8bad10b0c87662072d175f4"
+  },
+  "runtime_fallback": {
+    "file": "stage1-seq4-fallback-amendment.json",
+    "sha256": "7c5dcfe7941c13b904ca06db4f1a0ffe3d34bf29bb9ea12c1d705282811e00ef",
+    "changed_field": "rollout.max_num_seqs",
+    "original_value": 8,
+    "resume_value": 4,
+    "resume_config": "config-rollout-seq4.json",
+    "resume_config_sha256": "3dd5279c762e1806cb00c4043a446cddd5a9608dddfc504b5a682b432e365cc6"
+  }
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "DA15-retry-self-revision",
+    "source_id": "DA15",
+    "stage": "adaptive_self_revision",
+    "sample": 0,
+    "seed": 2026092405,
+    "parent": "DA15-initial-0-retry",
+    "parent_answer_excerpt_rule": "last 4000 Unicode characters of the model own answer",
+    "training_eligible": false,
+    "messages": [
+      {
+        "role": "user",
+        "content": "鋭角不等辺三角形ABCの外心をO、BCの中点をMとする。AB,ACの垂直二等分線と半直線AMの交点をそれぞれD,Eとする。F=BD∩CEは三角形ABCの内部にあるとする。\n\nこの配置で成り立つ、数学的に意味のある関係を一つ見いだしてください。後でこの配置の長さ・角度などを求めたり、幾何的性質を説明したりするときに、未知量や計算・論証を実際に減らせる関係を目指してください。構成の定義の言い換えだけでは不十分です。補助点を導入する必要はありません。方法は自由で、座標・ベクトルも使えます。\n\n次の順で回答してください。\n1. 採用する関係を一つ、必要な条件とともに明確に述べる。\n2. その関係を、与えられた構成と基本的な数学から論証する。既知の点・高度な補題の名前だけで核心を済ませない。\n3. 何をどのように簡単にできるかを、式または短い具体的な利用例で示す。\n\n三角形の数値は固定されていません。一つの特殊な三角形での一致を一般的な証明にしないでください。証明できなかった場合は、未証明の予想であると明記してください。"
+      },
+      {
+        "role": "assistant",
+        "content": " = 180^\\circ - (B - A/2) - (C - A/2) = 180^\\circ - (B+C) + A = A + A = 2A$**.\n>\n> **これが正解です！**\n> **$\\angle BFC = 2A$**\n>\n> これは非常に有意義です。なぜなら：\n> 1.  $A, B, C$ は既知量（三角形の形状を決めるパラメータ）。\n> 2.  点 $F$ の絶対的な位置（長さなど）を求めなくても、角度だけを知れば多くの計算が省略できる。\n> 3.  特に $F$ が外接円上の点であれば良いが、$\\angle BFC = 2A$ という条件は、点 $F$ が「弧 $BC$ の中点を向いた線分から特定の距離にある」ことを示唆する。もし $F$ が外接円上の点ならば $\\angle BFC = \\angle BAC = A$ (同側の弧) または $180-A$ となるはずだが、$2A$ となる場合は $F$ は外接円上にはいない（例外：$A=60^\\circ$ の場合 $2A=120^\\circ=180-60$ となり、円周角の定理を満たす可能性がある）。\n>\n> **検証：**\n> $\\triangle ABD$ は等腰なので、$\\angle ABD = \\angle BAD = A/2$.\n> $\\triangle ACE$ は等腰なので、$\\angle ACE = \\angle CAE = A/2$.\n> 線分 $BM$ と $CN$ (垂線ではない、単に $F$ を通る線) を引く。\n> $\\angle FBC = \\angle ABC - \\angle ABF$. ここで $\\angle ABF$ は何か？\n> $D$ は $AM$ 上にある。$B, D, F$ は一直線上にある。\n> $\\angle ABF = \\angle ABD = A/2$.\n> よって $\\angle FBC = B - A/2$.\n> 同様に $\\angle FCB = C - A/2$.\n> $\\triangle FBC$ の内角和より：\n> $\\angle BFC = 180^\\circ - (B - A/2) - (C - A/2)$\n> $= 180^\\circ - (B+C) + A$\n> $= 180^\\circ - (180^\\circ - A) + A$\n> $= 2A$.\n>\n> **完璧です。** この関係は補助点なしで、定義のみから厳密に導けます。\n\n---\n\n### 回答\n\n#### 1. 採用する関係\n三角形 $ABC$ ($A < 90^\\circ$) において、問題で定義された点 $F$ に対して、以下の角度の関係が成り立ちます。\n$$ \\angle BFC = 2\\angle BAC $$\nまた、$F$ が三角形 $ABC$ の内部にある条件（鋭角三角形かつ $A < 60^\\circ$ か？）については、問題設定で「内部にある」と仮定されているため、そのまま利用可能です。\n\n#### 2. 論証\n与えられた構成から直接導出できます。\n\n1.  **等しい脚を持つ三角形の確認**:\n    *   $D$ は $AB$ の垂直二等分線上にある点かつ、半直線 $AM$（$\\angle A$ の二等分線）上にあります。\n        *   したがって、$\\triangle ABD$ は $DA=DB$ を満たす二等辺三角形です。\n        *   頂角は $\\angle DAB = \\frac{1}{2}\\angle BAC = \\frac{A}{2}$ です。\n        *   底角は $\\angle ABD = \\angle ADB$ より、$\\angle ABD = \\angle DAB = \\frac{A}{2}$ となります。\n    *   同様に、$E$ は $AC$ の垂直二等分線上かつ半直線 $AM$ 上にあるため、$\\triangle ACE$ は $EA=EC$ の二等辺三角形です。\n        *   頂角は $\\angle EAC = \\frac{A}{2}$ です。\n        *   底角は $\\angle ACE = \\angle AEC = \\frac{A}{2}$ となります。\n\n2.  **角度の計算**:\n    *   点 $F$ は $BD$ と $CE$ の交点です。\n    *   点 $B, F, D$ は一直線上にあり、点 $C, F, E$ は一直線上にいます。\n    *   三角形 $ABC$ 内の角 $\\angle ABC = B$, $\\angle ACB = C$ とします。\n    *   $\\angle FBC$ を求めるには、$\\angle ABC$ から $\\angle ABF$ を引きます。\n        *   $\\angle ABF = \\angle ABD = \\frac{A}{2}$ (1 の結果より)。\n        *   よって、$\\angle FBC = B - \\frac{A}{2}$。\n    *   同様に、$\\angle FCB$ を求めます。\n        *   $\\angle FCB = \\angle ACB - \\angle ACE = C - \\frac{A}{2}$。\n\n3.  **結論の導出**:\n    *   三角形 $FBC$ の内角の和は $180^\\circ$ です。\n    *   $\\angle BFC = 180^\\circ - (\\angle FBC + \\angle FCB)$\n    *   $\\angle BFC = 180^\\circ - \\left[ \\left(B - \\frac{A}{2}\\right) + \\left(C - \\frac{A}{2}\\right) \\right]$\n    *   $\\angle BFC = 180^\\circ - (B + C - A)$\n    *   三角形 $ABC$ において $A+B+C = 180^\\circ$ ですので、$B+C = 180^\\circ - A$ です。これを代入します。\n    *   $\\angle BFC = 180^\\circ - (180^\\circ - A - A) = 180^\\circ - (180^\\circ - 2A) = 2A$。\n\nしたがって、$\\angle BFC = 2\\angle BAC$ が厳密に成り立ちます。\n\n#### 3. 利用例と効果\n\nこの関係 $\\angle BFC = 2A$ は、以下の計算や考察を劇的に簡素化します。\n\n*   **ケース A: 四点共圆的判定**\n    *   もし三角形 $ABC$ が $A=60^\\circ$ の場合、$\\angle BFC = 120^\\circ$ となります。このとき、$\\angle BFC + \\angle BAC = 180^\\circ$ ではなく、$\\angle BFC = 180^\\circ - 60^\\circ$ となるため、$A, B, F, C$ は四点共円ではありません。ただし、他の点（例えば外接円の弧の中点など）との関係を考える際、「角が $2A$ になる点」という極限定理を適用できるようになります。\n    *   もし $A=30^\\circ$ の場合、$\\angle BFC = 60^\\circ$。この特定の角度 knowing by itself reduces the complexity of finding intersection points in complex geometric constructions.\n\n*   **ケース B: 長さの計算（余弦定理の利用）**\n    *   通常、点 $F$ の位置を座標で求めるには、連立方程式を解く必要があります。しかし、この関係を使えば、「$F$ 是從 $B, C$ 見て角度が $2A$ になっている点である」という制約だけで、三角形 $FBC$ の面積や、$F$ からの辺までの距離などを求める公式（例：$S_{FBC} = \\frac{1}{2} FB \\cdot FC \\sin(2A)$）に直接代入でき、中間の変数を減らせます。\n    *   例えば、「$F$ から $BC$ へ下ろした垂線の足を $H'$ とした時の $BH':HC'$ の比」を問われる場合でも、角度 $2A$ が既知であれば、スネルの法則のような角度ベースの近似や解析が可能になります。\n\n*   **ケース C: 極限行为の解析**\n    *   三角形が退化する場合（例：$A \\to 0$）や直角三角形 ($A \\to 90^\\circ$) に近づく場合でも、この関係は連続して有効です。特に $A=90^\\circ$ のときは $\\angle BFC = 180^\\circ$ となり、$B, F, C$ が一直線上になる（$F$ が $BC$ 上にある）ことが理論的に保証されます（実際、直角三角形では $D, E$ が辺上の特殊な点になり、交点が $BC$ 上にくるかどうかは詳細検討が必要ですが、角度関係は形式維持）。\n\nこの「$\\angle BFC = 2A$」という関係は、座標計算の代わりに幾何的な視座を提供し、未知の長さ $AF, BF, CF$ を求める際の三角関数の設定を単純化する核心的なヒントとなります。"
+      },
+      {
+        "role": "user",
+        "content": "あなたが提案した ∠BFC=2∠BAC は正しい候補ですが、途中の ∠ABD=A/2 は一般には成り立ちません。元の作図から、誤った箇所を修正し、核心を省かず短い一般証明を組み立ててください。成立を示せなければ未証明と明記してください。"
+      }
+    ]
+  }
+]

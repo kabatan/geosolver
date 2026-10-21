@@ -1,0 +1,95 @@
+{
+  "id": "IMO_2016_P1",
+  "variables": [
+    "b",
+    "dx",
+    "dy",
+    "ex",
+    "ey"
+  ],
+  "constructions": [
+    {
+      "name": "C",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "F",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "M",
+      "expression": "Midpoint(C, F)"
+    },
+    {
+      "name": "B",
+      "expression": "PointOnCircle(Circle(M, 1/2), b)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(1+Distance(F, B), 0)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(dx, dy)"
+    },
+    {
+      "name": "E",
+      "expression": "Point(ex, ey)"
+    },
+    {
+      "name": "bis_DAB",
+      "expression": "AngleBisector(D, A, B)"
+    },
+    {
+      "name": "bis_EAC",
+      "expression": "AngleBisector(E, A, C)"
+    },
+    {
+      "name": "X",
+      "expression": "Point(M.x+E.x-A.x, M.y+E.y-A.y)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Area(B, C, F)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(D, A)",
+      "operator": "=",
+      "right": "Distance(D, C)"
+    },
+    {
+      "left": "OnLine(C, bis_DAB)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(A, C), Vector(A, D)/Distance(A, D)+Vector(A, B)/Distance(A, B))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(E, A)",
+      "operator": "=",
+      "right": "Distance(E, D)"
+    },
+    {
+      "left": "OnLine(D, bis_EAC)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(A, D), Vector(A, E)/Distance(A, E)+Vector(A, C)/Distance(A, C))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Area(A, M, E)",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "0"
+}

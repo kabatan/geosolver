@@ -1,0 +1,47 @@
+{
+  "id": "IMO_2001_P5",
+  "variables": [
+    "cx",
+    "cy"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "P",
+      "expression": "Intersect(AngleBisector(B, A, C), Line(B, C))"
+    },
+    {
+      "name": "Q",
+      "expression": "Intersect(AngleBisector(A, B, C), Line(C, A))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Area(A, B, C)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Angle(B, A, C)",
+      "operator": "=",
+      "right": "pi/3"
+    },
+    {
+      "left": "Distance(A, B) + Distance(B, P)",
+      "operator": "=",
+      "right": "Distance(A, Q) + Distance(Q, B)"
+    }
+  ],
+  "target": "0"
+}

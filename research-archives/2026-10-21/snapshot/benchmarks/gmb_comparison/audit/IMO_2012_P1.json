@@ -1,0 +1,16 @@
+{
+  "case_id": "IMO_2012_P1",
+  "source": {"official_url": "https://www.imo-official.org/assets/documents/problems/2012/2012_eng.pdf", "official_pdf_sha256": "3ab2564b04d805bcfc963a8c38527a7773b69a8a41cc457a260730b734ffffd6", "official_pdf_page": 1, "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2012_P1.smt2", "gmbl_sha256": "203ade98ac2547bdd97cfc8fe33ab7368bd0584167eeb53319fc954a08a5c97d"},
+  "normalization": {"anchors": ["A", "B"], "fixed_coordinates": {"A": ["0", "0"], "B": ["1", "0"]}, "removed_continuous_dof": 4, "justification": "相似不変で正長辺ABを1にする。Cの形・上下を固定しない。", "scale_invariant": true, "reflection_fixed": false},
+  "clauses": [
+    {"id": "excenter", "statement_ja": "Jは非退化三角形ABCのAに対する傍心。", "gmbl": ["(param (A B C) triangle)", "(define J point (excenter A B C))"], "geosolver": ["Area(A, B, C) > 0", "J = Excenter(A, B, C)"], "status": "matched"},
+    {"id": "contact_points", "statement_ja": "A傍接円のBC,AB,ACへの接点がM,K,L。K,LはそれぞれAB,ACのB,Cより先に位置する。", "gmbl": ["(foot J (line B C))", "(foot J (line A B))", "(foot J (line A C))"], "geosolver": ["M = FootOfPerpendicular(J, Line(B, C))", "K = FootOfPerpendicular(J, Line(A, B))", "L = FootOfPerpendicular(J, Line(A, C))"], "status": "matched_by_excenter_definition"},
+    {"id": "intersections", "statement_ja": "F=LM∩BJ、G=KM∩CJ、S=AF∩BC、T=AG∩BC。線分内とは限定しない。", "gmbl": ["(inter-ll (line L M) (line B J))", "(inter-ll (line K M) (line C J))", "(inter-ll (line A F) (line B C))", "(inter-ll (line A G) (line B C))"], "geosolver": ["F = Intersect(Line(L, M), Line(B, J))", "G = Intersect(Line(K, M), Line(C, J))", "S = Intersect(Line(A, F), Line(B, C))", "T = Intersect(Line(A, G), Line(B, C))"], "status": "matched"}
+  ],
+  "construction_reasoning": "両実装のExcenter(A,B,C)は辺長a=BC,b=CA,c=ABに対して(-a*A+b*B+c*C)/(-a+b+c)を返し、Aに対する傍心で一致する。K,Lの延長側・Mの辺内部はこの定義の性質であり、別の傍心を選ばない。",
+  "goal": {"statement_ja": "MはSTの中点。", "gmbl": ["(eval (midp M S T))"], "included_in_search": false, "target": "0"},
+  "source_differences": [],
+  "open_issues": [],
+  "author_review": {"reviewer": "dsl_2007_2013", "primary_sources_read": ["公式2012英語PDF第1頁（画像・傍接円の脚注を含む）", "公開IMO_2012_P1.smt2", "GMB optimizer.pyのexcenter", "GeoSolver operations/triangle_excircles.pyとDSL spec"], "static_validation": "GeometryProblem、validate、compile_problemに合格。探索・精密化未実施。"},
+  "comparison_status": "draft"
+}

@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2008_P6",
+  "reviewer": "independent_review",
+  "case_sha256": "6ab6da9a5a299f088957e913c356e1d9679afdd6df47d638e5dbb29842377daa",
+  "audit_sha256": "455fbbe7ed701af08b0064928fb63e532cc68fe7048214fceb53a5c20f0c464f",
+  "gmbl_sha256": "003abc3eeb2037e128212c6e59881f34663ffb1ee437f24cf1e2a37385d86da0",
+  "reviewed_original_pdf_sha256": "d6975d8903404668d5cd534990af75347593ac501d61624ba387aa6b12f13318",
+  "verdict": "pass",
+  "normalization_checked": true,
+  "conclusion_not_assumed": true,
+  "original_conditions_covered_by_gmbl": true,
+  "scope_of_coverage_ja": "原文の仮定を当該比較範囲で満たすかの監査である。原文の全境界配置を含む解集合の完全同値、GMB実装の全数値分岐の正当性、実験の実行許可を意味しない。",
+  "comparison_scope": "nondegenerate_configuration_domain",
+  "sources_read": [
+    "cases/IMO_2008_P6.json",
+    "audit/IMO_2008_P6.json",
+    "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2008_P6.smt2",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2008-eng.pdf",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2008-eng.txt",
+    "AUTHORING.md",
+    "reviews/UPSTREAM_SEMANTICS.md"
+  ],
+  "official_url": "https://www.imo-official.org/assets/documents/problems/2008/2008_eng.pdf",
+  "normalization_review": {
+    "anchors": [
+      "B",
+      "A"
+    ],
+    "removed_continuous_dof": 4,
+    "scale_invariant": true,
+    "reflection_fixed": false,
+    "remaining_solver_variables": [
+      "cx",
+      "cy",
+      "dx",
+      "dy",
+      "ox",
+      "oy"
+    ],
+    "shape_fixed_beyond_original_hypotheses": false,
+    "checked_ja": "原文で相異なる二点の単位基線化だけで平行移動2・回転1・正の尺度1を除く。元の形の変数と鏡映配置を保持している。"
+  },
+  "original_goal_not_used": "omega_1,omega_2の共通外接線の交点がomega上にある。",
+  "checked_input_counts": {
+    "constructions": 10,
+    "conditions": 8
+  },
+  "method": {
+    "read_all_constructions_and_conditions": true,
+    "read_original_problem_assumptions": true,
+    "checked_domains_branches_and_non_degeneracy": true,
+    "checked_goal_separation": true,
+    "exact_algebraic_checks_only_where_documented": true,
+    "solver_executed": false,
+    "optimizer_executed": false,
+    "refinement_executed": false,
+    "prior_case_performance_used_to_adjust_input": false
+  },
+  "gmb_runtime_equivalence_claimed": false,
+  "findings": [
+    {
+      "id": "IMO_2008_P6-review-1",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "B,Aの単位基線、C,Dと接円中心Oの座標を残す。円の半径はOからBAへの距離であり、負半径や同一直線上中心は許さない。"
+    },
+    {
+      "id": "IMO_2008_P6-review-2",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "BA上の接点がAより先、BC/AD/CDへの接線、凸性、BA≠BCを照合した。BC接点がCより先という原文条件はGMBLに明記がないが、他の接線・凸性条件から従うことを独立に証明した。"
+    },
+    {
+      "id": "IMO_2008_P6-review-3",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "接線式s(s-1)(1-α)=βc(s-k)からBC=c<sを導く記録はreviews/EQUIVALENCE_ARGUMENTS.md参照。内接円二つの関係という結論は入力していない。"
+    }
+  ],
+  "remaining_uncertainties": []
+}

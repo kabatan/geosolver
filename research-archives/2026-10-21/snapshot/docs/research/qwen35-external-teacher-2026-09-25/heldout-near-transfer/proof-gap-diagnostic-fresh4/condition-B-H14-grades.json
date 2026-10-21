@@ -1,0 +1,99 @@
+{
+  "grading_basis": {
+    "condition": "B_general_lemma",
+    "rubrics": [
+      "docs/research/qwen35-external-teacher-2026-09-25/STAGE_LOCALIZATION_GRADING.md",
+      "docs/research/qwen35-external-teacher-2026-09-25/heldout-near-transfer/GRADE_RUBRIC.md"
+    ],
+    "graded_field": "final_text only",
+    "note": "The general projection lemma is supplied in the prompt; it receives no independent-discovery credit. H14 mapping still must be model-generated and proved from the construction."
+  },
+  "items": [
+    {
+      "job_id": "diverse-en-near-transfer-fresh4-H14-fresh4-0",
+      "source_id": "H14",
+      "fresh4_instance": 1,
+      "seed": 1708281607,
+      "output_file": "qwen/.runtime/qwen35_external_teacher_20260925/eval-why-fail-fresh4-lemma-base-en-32k/diverse-en-near-transfer-fresh4-H14-fresh4-0-0.json",
+      "completion_tokens": 10221,
+      "finish_reason": "stop",
+      "exact": false,
+      "relation": false,
+      "proof": false,
+      "use": false,
+      "complete": false,
+      "mapping_claim": {
+        "correct": false,
+        "model_generated": true,
+        "status": "incorrect_model_claim",
+        "observed": "The answer repeatedly identifies R as the reflection of H across M (and as A's antipode), then ends by asserting AH perpendicular AR. It never correctly identifies R as the foot of the perpendicular from H to AM.",
+        "expected": "R is the orthogonal projection of H onto line AM."
+      },
+      "mapping_proof": {
+        "passed": false,
+        "decisive_step_note": "No construction argument establishes R on AM and HR perpendicular AM. The text instead speculates about P being a projection, derives a contradiction, and does not resolve the target-specific mapping."
+      },
+      "downstream": {
+        "right_triangle_relation_correct": false,
+        "proof": false,
+        "use": false,
+        "observed": "The final calculation assumes AH perpendicular AR and gives (1/2)(13/4)(39/20). This is not the right-triangle relation needed: the valid right angle is at R, with AR along AM and HR perpendicular AM.",
+        "required": "Derive HR perpendicular AR from the proved projection mapping, then use HR=sqrt(AH^2-AR^2) with the positive length branch."
+      },
+      "branch": {
+        "non_M_circle_intersection_justified": false,
+        "ray_intersection_branch_justified": false,
+        "positive_right_triangle_root_used": false,
+        "nonzero_conditions_checked": false,
+        "note": "The answer does not establish that the selected non-M circle intersection is the projection, nor select/justify the positive HR root."
+      },
+      "expected_exact": "507/200",
+      "model_final_exact": "507/160",
+      "uncertain": false,
+      "decisive_step_note": "The answer contains unresolved, mutually inconsistent conjectures (reflection, projection, and AH perpendicular AR). The final value is arithmetically consistent with its unsupported false right-angle assumption, but it does not match the key or prove the required construction relation."
+    },
+    {
+      "job_id": "diverse-en-near-transfer-fresh4-H14-fresh4-1",
+      "source_id": "H14",
+      "fresh4_instance": 2,
+      "seed": 975753222,
+      "output_file": "qwen/.runtime/qwen35_external_teacher_20260925/eval-why-fail-fresh4-lemma-base-en-32k/diverse-en-near-transfer-fresh4-H14-fresh4-1-0.json",
+      "completion_tokens": 12465,
+      "finish_reason": "stop",
+      "exact": false,
+      "relation": false,
+      "proof": false,
+      "use": false,
+      "complete": false,
+      "mapping_claim": {
+        "correct": false,
+        "model_generated": true,
+        "status": "incorrect_model_claim",
+        "observed": "The answer claims R is the reflection of H across M / the antipode of A. Its vector statement MR=MH also conflicts with the reflection equation R=2M-H. It never correctly identifies R as the foot from H to AM.",
+        "expected": "R is the orthogonal projection of H onto line AM."
+      },
+      "mapping_proof": {
+        "passed": false,
+        "decisive_step_note": "The coordinate exploration is incomplete and self-correcting; it never proves R lies on AM or HR perpendicular AM from the two circle intersections. The supplied lemma is not validly applied to R."
+      },
+      "downstream": {
+        "right_triangle_relation_correct": false,
+        "proof": false,
+        "use": false,
+        "observed": "The response does not derive HR perpendicular AR and finishes from the unsupported reflection claim, ultimately asserting area 17/2.",
+        "required": "Use the projection mapping to establish HR perpendicular AR, then apply the positive right-triangle height HR=sqrt(AH^2-AR^2) and exact arithmetic."
+      },
+      "branch": {
+        "non_M_circle_intersection_justified": false,
+        "ray_intersection_branch_justified": false,
+        "positive_right_triangle_root_used": false,
+        "nonzero_conditions_checked": false,
+        "note": "No selected intersection or sign/positive-root argument is established for the construction-to-projection mapping or the area computation."
+      },
+      "expected_exact": "289/39",
+      "model_final_exact": "17/2",
+      "uncertain": false,
+      "decisive_step_note": "The answer persists with a false reflection mapping and offers contradictory vector claims; it never proves the right-triangle relation required by the target mapping. The exact value does not match the key."
+    }
+  ]
+}

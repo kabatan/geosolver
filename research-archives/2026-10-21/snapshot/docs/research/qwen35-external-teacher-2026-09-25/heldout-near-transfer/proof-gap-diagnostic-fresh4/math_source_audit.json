@@ -1,0 +1,66 @@
+{
+  "status": "passed_cpu_prompt_and_symbolic_math_review",
+  "scope": "prepare two matched English diagnostic conditions; no model evaluation",
+  "gpu_used": false,
+  "model_outputs_opened": false,
+  "scores_inspected": false,
+  "answer_key_read_by_builder": false,
+  "selected_inputs": [
+    {
+      "source_id": "H03",
+      "fresh4_id": "diverse-en-near-transfer-fresh4-H03-fresh4-0",
+      "seed": 979978593,
+      "fresh4_instance": 1,
+      "same_numeric_problem_in_C_and_D": true,
+      "expected_answer_in_prompt": false
+    },
+    {
+      "source_id": "H04",
+      "fresh4_id": "diverse-en-near-transfer-fresh4-H04-fresh4-0",
+      "seed": 1044806172,
+      "fresh4_instance": 1,
+      "same_numeric_problem_in_C_and_D": true,
+      "expected_answer_in_prompt": false
+    },
+    {
+      "source_id": "H14",
+      "fresh4_id": "diverse-en-near-transfer-fresh4-H14-fresh4-0",
+      "seed": 1708281607,
+      "fresh4_instance": 1,
+      "same_numeric_problem_in_C_and_D": true,
+      "expected_answer_in_prompt": false
+    }
+  ],
+  "condition_c_claims": {
+    "H03": "For each vertex, each problem-defined second intersection P_a, P_b, P_c is the orthogonal projection of H onto the corresponding median AM_a, BM_b, CM_c.",
+    "H04": "For the intersection T selected by the stated order, AT^2 = MT^2 - (BC/2)^2.",
+    "H14": "The problem-defined point R is the orthogonal projection of H onto line AM."
+  },
+  "condition_c_scoring": "The stated claim is not accepted as established; grade its proof/refutation from the problem construction, branch and nonzero checks, and downstream solution.",
+  "condition_d_scoring": "The supplied bridge is not independent evidence and receives no proof/transfer credit; grade only downstream relation execution, branch/sign, and application.",
+  "math_checks": {
+    "H03": [
+      "Angle-bisector intercepts k=m(r-q)/(r+q) and l=m(r+q)/(r-q) are finite for scalene q!=r and satisfy kl=m^2.",
+      "The median-circle parameter roots have product m^2/(x^2+y^2); one root is A (s=1), so the second root is m^2/(x^2+y^2).",
+      "Acuteness gives x^2+y^2-m^2=(B-A) dot (C-A)>0; hence the second root is distinct and lies in (0,1).",
+      "H=(x,(m^2-x^2)/y), H dot A=m^2; with P=(m^2/(x^2+y^2))A, (H-P) dot A=0, proving the foot mapping. Cyclic relabeling covers all three points.",
+      "Given the foot mapping, each P_i lies on the diameter-HG circle because P_i lies on its median with G and HP_i is perpendicular to that median. Its center is the midpoint of H and G. The usual vector identity h=a+b+c for O-origin circumradius vectors yields g=h/3 and z=2h/3; the prompt asks the model to derive these downstream steps."
+    ],
+    "H04": [
+      "The foot P is explicit. In centered coordinates H=(x,(m^2-x^2)/y), so H dot A=m^2 and P=lambda A implies lambda=m^2/rho^2.",
+      "Acuteness yields rho^2-m^2>0 and lambda<1, justifying division by 1-lambda.",
+      "TA=TP with T=(t,0) gives 2tx=rho^2+m^2; therefore AT^2=t^2-m^2=MT^2-m^2. The T,B,C order selects T before B and the positive length branch."
+    ],
+    "H14": [
+      "With delta=S-m^2>0, the second-radius-circle root on AB is t=2delta/AB^2>0 and lies on the reflected circumcircle Omega*; symmetry gives E on Omega*.",
+      "Inversion I(X)=m^2 X/|X|^2 maps Omega* to Omega and preserves positive rays. M is inside Omega, so P=I(D) and Q=I(E) are the selected ray intersections.",
+      "Inversion maps AB to a circle through M,B,I(A), containing P=I(D); likewise AC maps to a circle through M,C,I(A), containing Q=I(E). Thus R=I(A) is the non-M common point.",
+      "R=(m^2/S)A with 0<m^2/S<1. Since H dot A=m^2=R dot A, HR is perpendicular to AM, proving the foot mapping and the selected branch."
+    ]
+  },
+  "limits": [
+    "Only one repeated numeric item per source ID is used; repeated IDs are not independent geometry families.",
+    "The source families were examined in prior work; this is not an untouched confirmatory evaluation.",
+    "C versus D is a deliberately unequal-help stage-localization contrast and should not be described as a clean estimate of a training effect."
+  ]
+}

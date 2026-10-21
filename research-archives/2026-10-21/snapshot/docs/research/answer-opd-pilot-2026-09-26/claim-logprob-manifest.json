@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "status": "frozen_pre_run_claim_manifest",
+  "selection_scope": "Post-hoc selected audited spans from the fixed original round-001 batch; not a random sample and not the study's main endpoint.",
+  "scoring_scope": "Mean log probability of the original observed completion tokens in each claim span, under the frozen base q0 prompt without the numeric hint and qhint prompt with the correct exact numeric-answer hint. No proof is generated or repaired.",
+  "token_scope": "Half-open token_range indexes into the original completion_ids. Token i is scored conditioned on its original prompt IDs and completion_ids before i.",
+  "tokenizer_alignment": {
+    "decode_call": "tokenizer.decode(ids, skip_special_tokens=False), matching rollout_worker.py",
+    "method": "Decode original completion ID prefixes; require exact raw-text boundaries and exact span decode. No claim text is re-tokenized.",
+    "tokenizer_model_revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+    "transformers_version": "5.17.0"
+  },
+  "mode": "non-thinking; original round-001 student_prompt_ids and teacher_prompt_ids",
+  "model": {
+    "model_id": "Qwen/Qwen3.5-9B",
+    "revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a"
+  },
+  "source_paths": {
+    "batch": "/home/kabatan/work/solver/qwen/.runtime/answer_opd_pilot_20260926/stage1/round-001/rollout/batch.json",
+    "raw_rollouts": "/home/kabatan/work/solver/qwen/.runtime/answer_opd_pilot_20260926/stage1/round-001/rollout/raw_rollouts.json",
+    "train_pool_numeric_labels": "/home/kabatan/work/solver/docs/research/answer-opd-pilot-2026-09-26/train-pool.json",
+    "model_metadata": "/home/kabatan/work/solver/docs/research/qwen35-self-materials-2026-09-23/model.json",
+    "study_config": "/home/kabatan/work/solver/docs/research/answer-opd-pilot-2026-09-26/config.json"
+  },
+  "source_hashes": {
+    "batch_sha256": "33a86d4e1c1cca322050a1c21cd2fe7397fa2fb3abda0e95c1aeadf06d118587",
+    "raw_rollouts_sha256": "b9c53447bd528f289e6046c883009aee1e8f8f35e550aeb09e375b7a182e2094",
+    "train_pool_sha256": "fd402b131221190424801db78b68bd19cb4b06756d99b9ee145b9ff820893b71",
+    "model_metadata_sha256": "d94aec53251ab3133064cd590399d879f6987c42d51be1ceb1b7434453e3f0dd",
+    "config_sha256": "4c309f9a4cef30f3eb0ca160ec5d265ad200fe00f647d92df07623a7b3ee9b7f"
+  },
+  "claims": [
+    {
+      "claim_id": "H04_projection_product",
+      "rollout_id": "rollout-0001-H04-v1",
+      "source_id": "H04",
+      "variant": "v1",
+      "math_label": "verified_valid",
+      "scope": "The audited coordinate derivation gives MP*MA=9=MB^2 for this numeric case.",
+      "text": "MP \\cdot MA = 9",
+      "char_range": [
+        11686,
+        11701
+      ],
+      "token_range": [
+        4006,
+        4013
+      ],
+      "exact_full_decode": true,
+      "special_token_suffix": "",
+      "numeric_answer_hint": "9*sqrt(5)/2",
+      "finish_reason": "length",
+      "completion_token_count": 4096,
+      "completion_ids_sha256": "a163724ee301317bdff27aa08bbb39356678174118f0c442dfe48b2ceb126550",
+      "raw_text_sha256": "e1ce3e06e00c39a37bf6d5e57533df8051efb4f87cefc8956debc69a4337381e",
+      "student_prompt_ids_sha256": "088a97be5256cfbb01d322164e617e55dec3b909a3629506c034effd6333a610",
+      "teacher_prompt_ids_sha256": "5e2060184b25f9e7e84526ef19e98595a8d0fe7580c8f957e0a8716dc6ad80e7"
+    },
+    {
+      "claim_id": "H01_general_projection_factor",
+      "rollout_id": "rollout-0003-H01-v2",
+      "source_id": "H01",
+      "variant": "v2",
+      "math_label": "verified_valid",
+      "scope": "The audited coordinate derivation identifies the projection factor k for the general BC and AM values.",
+      "text": "k = \\frac{(BC/2)^2}{AM^2}",
+      "char_range": [
+        5223,
+        5248
+      ],
+      "token_range": [
+        2083,
+        2098
+      ],
+      "exact_full_decode": true,
+      "special_token_suffix": "",
+      "numeric_answer_hint": "40/11",
+      "finish_reason": "stop",
+      "completion_token_count": 2265,
+      "completion_ids_sha256": "1ce3e6802f5eee58f242f7bb99c7fca9b424637eb2cef2e67dd80bd24ea1d10d",
+      "raw_text_sha256": "20361a09348e4459e3cdf4a171982d909b984f69febda8a798ce2dfc1d026215",
+      "student_prompt_ids_sha256": "b1216834ca1a958e445790e4e579aaa72dd94d8109ac1f690190d8ce40b99d1e",
+      "teacher_prompt_ids_sha256": "ace36913b0e8ff8b61ca5ed2f94b1a6d5e4349f6756311a51ef6f29358e63364"
+    },
+    {
+      "claim_id": "DA01_mispaired_similarity_ratio",
+      "rollout_id": "rollout-0002-DA01-v2",
+      "source_id": "DA01",
+      "variant": "v2",
+      "math_label": "definitely_false",
+      "scope": "The angle correspondence is A-to-C, B-to-A, T-to-T; this side ratio mispairs the sides and drives an invalid congruence inference.",
+      "text": "$$ \\frac{AB}{TC} = \\frac{BT}{CA} = \\frac{AT}{TA} $$",
+      "char_range": [
+        11480,
+        11531
+      ],
+      "token_range": [
+        3811,
+        3836
+      ],
+      "exact_full_decode": true,
+      "special_token_suffix": "",
+      "numeric_answer_hint": "27/4",
+      "finish_reason": "length",
+      "completion_token_count": 4096,
+      "completion_ids_sha256": "31a10b29a8e514526f05e600f4113d4af934e39683b71adad418575c4cee1037",
+      "raw_text_sha256": "a0696be2bb2192d1ff346a1cdcae4b6aeee8902fa4af3001d0e51840d594fa1a",
+      "student_prompt_ids_sha256": "d3fbd862225b079c72d5ae15cca4814b599547418483cacd8396e129823af334",
+      "teacher_prompt_ids_sha256": "fc67941484366984e6195472123a79369e892530d833e32221c9f34ca1629183"
+    },
+    {
+      "claim_id": "H07_wrong_second_intersection_root",
+      "rollout_id": "rollout-0005-H07-v3",
+      "source_id": "H07",
+      "variant": "v3",
+      "math_label": "definitely_false",
+      "scope": "For the stated circle intersection at y=2, the quadratic roots sum to 5, not 10.",
+      "text": " x_M + x_D = 10 \\implies x_D = 10 - x_M",
+      "char_range": [
+        5766,
+        5805
+      ],
+      "token_range": [
+        2512,
+        2533
+      ],
+      "exact_full_decode": true,
+      "special_token_suffix": "",
+      "numeric_answer_hint": "16/5",
+      "finish_reason": "length",
+      "completion_token_count": 4096,
+      "completion_ids_sha256": "5e129fd2a358aeb69992791fa6b8cca6b2b0dc77229168fd6e0d3f30ba82bc92",
+      "raw_text_sha256": "ace4e1ffc17fb2eae0f0f353dacf45f438a43e1bf4008da1d284722ddd053d90",
+      "student_prompt_ids_sha256": "0948929e3f565e28d7d771db3a0a2a7cd9fbcaaec593a69201a060166eeaf0e0",
+      "teacher_prompt_ids_sha256": "50380504bdcbec62aae711f375decd7bd281f7821b2facc45efe0fb94acede97"
+    },
+    {
+      "claim_id": "H15_false_symmedian_sine_ratio",
+      "rollout_id": "rollout-0008-H15-v2",
+      "source_id": "H15",
+      "variant": "v2",
+      "math_label": "definitely_false",
+      "scope": "The symmedian cevian area ratio includes a side factor; the sine ratio should be c/b, not c^2/b^2.",
+      "text": "$$ \\frac{\\sin \\alpha_1}{\\sin(60^\\circ - \\alpha_1)} = \\frac{c^2}{b^2}",
+      "char_range": [
+        5788,
+        5856
+      ],
+      "token_range": [
+        2199,
+        2234
+      ],
+      "exact_full_decode": true,
+      "special_token_suffix": "",
+      "numeric_answer_hint": "16*sqrt(93)/93",
+      "finish_reason": "length",
+      "completion_token_count": 4096,
+      "completion_ids_sha256": "cb01dcbb43b945f32fd9162b9a17546889ddd54de8c41c271fc3d7703027583f",
+      "raw_text_sha256": "570ed6487ae60fe41c159a939c16e287b1d270d9d3f17cef4367567b30155ab1",
+      "student_prompt_ids_sha256": "fa636d01a344173e4dad3dc22327203ac224140e573c5cf37ca92c926f91d158",
+      "teacher_prompt_ids_sha256": "92c4204f4d7f752e7b1ce02b99da377e1e52acd4383f05422ecc791bb9499540"
+    },
+    {
+      "claim_id": "H14_unsupported_right_triangle_premise",
+      "rollout_id": "rollout-0007-H14-v2",
+      "source_id": "H14",
+      "variant": "v2",
+      "math_label": "unsupported_but_not_false",
+      "scope": "The right-triangle premise is not derived from the construction. It is kept separate from false claims; the span is a tentative assumption, not a verified theorem.",
+      "text": "So $AH$ must be the hypotenuse?",
+      "char_range": [
+        10051,
+        10082
+      ],
+      "token_range": [
+        3740,
+        3751
+      ],
+      "exact_full_decode": true,
+      "special_token_suffix": "",
+      "numeric_answer_hint": "3125/183",
+      "finish_reason": "length",
+      "completion_token_count": 4096,
+      "completion_ids_sha256": "1558b0f8c7d5650ce75d2ff7df457f251c8c35d409722cdeb9360020b7b8bfd3",
+      "raw_text_sha256": "785cafbe329e22ba851729d16a76190c622522dd984da25e9d870cddf1e021ed",
+      "student_prompt_ids_sha256": "8f1b439d582fee5331b4ab2e55f6f211f7417d98ff8c10b199cc311bd756f139",
+      "teacher_prompt_ids_sha256": "790b0396f5efeb3a8bd4751983e5a9c61fb438eaf51d8efd3f5bc4036f9742c9"
+    }
+  ]
+}

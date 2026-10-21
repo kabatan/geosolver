@@ -1,0 +1,44 @@
+{
+  "id": "HMMT-2015-FEB-GEO-06",
+  "variables": [],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(1 + sqrt(5), 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(2 * cos(3 * pi / 10), 2 * sin(3 * pi / 10))"
+    },
+    {
+      "name": "D",
+      "expression": "Point(2 * sqrt(5), 0)"
+    },
+    {
+      "name": "M",
+      "expression": "Midpoint(B, D)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 2
+    },
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": "1 + sqrt(5)"
+    },
+    {
+      "left": "Distance(C, D)",
+      "operator": "=",
+      "right": "sqrt(5) - 1"
+    }
+  ],
+  "target": "180 * Angle(A, C, M) / pi"
+}

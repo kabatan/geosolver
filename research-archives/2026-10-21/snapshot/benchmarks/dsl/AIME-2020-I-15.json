@@ -1,0 +1,106 @@
+{
+  "id": "AIME-2020-I-15",
+  "variables": [
+    "bx",
+    "cx",
+    "cy",
+    "xx",
+    "xy",
+    "yx",
+    "yy"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(bx, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "H",
+      "expression": "Orthocenter(A, B, C)"
+    },
+    {
+      "name": "omega",
+      "expression": "Circumcircle(A, B, C)"
+    },
+    {
+      "name": "gamma",
+      "expression": "Circumcircle(H, B, C)"
+    },
+    {
+      "name": "L",
+      "expression": "Tangent(H, gamma)"
+    },
+    {
+      "name": "X",
+      "expression": "Point(xx, xy)"
+    },
+    {
+      "name": "Y",
+      "expression": "Point(yx, yy)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "OnCircle(X, omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(Y, omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnLine(X, L)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnLine(Y, L)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(A, H)",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "Distance(H, X)",
+      "operator": "=",
+      "right": 2
+    },
+    {
+      "left": "Distance(H, Y)",
+      "operator": "=",
+      "right": 6
+    },
+    {
+      "left": "bx",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Area(A, B, C)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "predicate": "AcuteTriangle(A, B, C)"
+    }
+  ],
+  "target": "Area(A, B, C)"
+}

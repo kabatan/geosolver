@@ -1,0 +1,81 @@
+{
+  "id": "IMO_2019_P6",
+  "variables": [
+    "ax",
+    "ay"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "I",
+      "expression": "Incenter(A, B, C)"
+    },
+    {
+      "name": "omega",
+      "expression": "Incircle(A, B, C)"
+    },
+    {
+      "name": "D",
+      "expression": "FootOfPerpendicular(I, Line(B, C))"
+    },
+    {
+      "name": "E",
+      "expression": "FootOfPerpendicular(I, Line(C, A))"
+    },
+    {
+      "name": "F",
+      "expression": "FootOfPerpendicular(I, Line(A, B))"
+    },
+    {
+      "name": "R",
+      "expression": "Intersect(PerpendicularLine(Line(E, F), D), omega, exclude=D)"
+    },
+    {
+      "name": "P",
+      "expression": "Intersect(Line(A, R), omega, exclude=R)"
+    },
+    {
+      "name": "Q",
+      "expression": "Intersect(Circumcircle(P, C, E), Circumcircle(P, B, F), exclude=P)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Area(A, B, C)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(A, B), Vector(A, C))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(B, A), Vector(B, C))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(C, A), Vector(C, B))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(A, B)",
+      "operator": "!=",
+      "right": "Distance(A, C)"
+    }
+  ],
+  "target": "0"
+}

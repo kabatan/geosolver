@@ -1,0 +1,30 @@
+[
+  {
+    "id": "diverse-en-compact-DB06-v0-0",
+    "source_id": "DB06",
+    "variant": "v0",
+    "augmentation": "self_revision_compact",
+    "seed": 848600070,
+    "initial_answer_sha256": "5557fd434984957b11264e1bae933fdb01aa6eee65f2e2db155e9e2a1dabd940",
+    "prior_visible_span": [
+      0,
+      2219
+    ],
+    "feedback": "The midpoint proof above is useful. Complete the entire solution concisely, including the final number. For the diagonal-midpoint vector identity, explicitly expand (i) the squared norm of A+C-B-D, (ii) the four squared sides, and (iii) the two squared diagonals. Match all vertex norm and dot-product coefficients before stating the identity. Do not include trial calculations or an unproved reference. Write only a clean English answer.",
+    "prompt_tokens": 1157,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Solve the following geometry problem. No solution is supplied. First find a nontrivial general relation specific to this construction that actually reduces the unknowns or computation. You may introduce auxiliary points, lines, or circles, and you may use coordinates or vectors. Give (1) the relation and its conditions, (2) a self-contained proof from the construction without skipping the decisive step, and (3) its application to the given numerical data and the final exact value. Do not merely assert a similarity, concyclicity, or algebraic identity. If you cannot prove a claim or solve the problem, say so rather than guessing. Write the entire answer in English. Keep the answer concise, preferably within 1200 words.\n\nA convex quadrilateral ABCD is inscribed in a circle in that order, with AB²=4, BC²=5, CD²=10, DA²=8, AC²=12, and BD²=40/3. Choose X inside diagonal BD such that angle BAC=angle XAD and angle BCA=angle XCD. Choose Y inside diagonal AC such that angle CBD=angle YBA and angle CDB=angle YDA. Find XY²."
+      },
+      {
+        "role": "assistant",
+        "content": "### 1. General Relation and Conditions\nLet $ABCD$ be a convex cyclic quadrilateral. Let $X$ lie on $BD$ such that $\\angle BAC = \\angle XAD$ and $\\angle BCA = \\angle XCD$. Let $Y$ lie on $AC$ such that $\\angle CBD = \\angle YBA$ and $\\angle CDB = \\angle YDA$.\nIf the product of opposite sides satisfies $AB \\cdot CD = AD \\cdot BC$, then $X$ is the midpoint of $BD$ and $Y$ is the midpoint of $AC$.\nUnder these conditions, the squared distance between the midpoints is given by the identity:\n$$ XY^2 = \\frac{AB^2 + BC^2 + CD^2 + DA^2 - (AC^2 + BD^2)}{4} $$\n\n### 2. Proof of Midpoints and Vector Identity\n\n**Proof that $X$ and $Y$ are midpoints:**\nLet $R$ be the circumradius. By the Extended Sine Rule, $AB = 2R \\sin \\angle ADB$, $BC = 2R \\sin \\angle BAC$, $CD = 2R \\sin \\angle CAD$, and $DA = 2R \\sin \\angle ABD$. Note that $\\angle ADB = \\angle ACB$ and $\\angle ABD = \\angle ACD$.\n\nFor point $X$ on $BD$:\nUsing the Sine Rule on $\\triangle ABX$ and $\\triangle ADX$ with common altitude from $A$:\n$$ \\frac{BX}{XD} = \\frac{AB \\sin \\angle BAX}{AD \\sin \\angle DAX} $$\nGiven $\\angle DAX = \\angle BAC$, and noting $\\angle BAX = \\angle BAD - \\angle BAC = \\angle CAD$, we have:\n$$ \\frac{BX}{XD} = \\frac{AB}{AD} \\cdot \\frac{\\sin \\angle CAD}{\\sin \\angle BAC} = \\frac{AB}{AD} \\cdot \\frac{CD}{BC} = \\frac{AB \\cdot CD}{AD \\cdot BC} $$\nSimilarly, using $\\angle BCA = \\angle XCD$:\n$$ \\frac{BX}{XD} = \\frac{BC}{CD} \\cdot \\frac{\\sin \\angle ACD}{\\sin \\angle BCA} = \\frac{BC}{CD} \\cdot \\frac{AD}{AB} = \\frac{AD \\cdot BC}{AB \\cdot CD} $$\nEquating the two expressions yields $\\left(\\frac{AB \\cdot CD}{AD \\cdot BC}\\right)^2 = 1$. Given $AB \\cdot CD = AD \\cdot BC$, the ratio is 1, so $X$ is the midpoint of $BD$.\n\nFor point $Y$ on $AC$:\nUsing the Sine Rule on $\\triangle ABY$ and $\\triangle CBY$ with common altitude from $B$:\n$$ \\frac{AY}{YC} = \\frac{AB \\sin \\angle ABY}{BC \\sin \\angle CBY} $$\nGiven $\\angle ABY = \\angle CBD$, and $\\angle CBY = \\angle ABC - \\angle CBD = \\angle ABD$:\n$$ \\frac{AY}{YC} = \\frac{AB}{BC} \\cdot \\frac{\\sin \\angle CBD}{\\sin \\angle ABD} = \\frac{AB}{BC} \\cdot \\frac{CD}{AD} = \\frac{AB \\cdot CD}{BC \\cdot AD} $$\nUsing the condition $AB \\cdot CD = AD \\cdot BC$, this ratio becomes 1. Thus, $Y$ is the midpoint of $AC$."
+      },
+      {
+        "role": "user",
+        "content": "The midpoint proof above is useful. Complete the entire solution concisely, including the final number. For the diagonal-midpoint vector identity, explicitly expand (i) the squared norm of A+C-B-D, (ii) the four squared sides, and (iii) the two squared diagonals. Match all vertex norm and dot-product coefficients before stating the identity. Do not include trial calculations or an unproved reference. Write only a clean English answer."
+      }
+    ]
+  }
+]

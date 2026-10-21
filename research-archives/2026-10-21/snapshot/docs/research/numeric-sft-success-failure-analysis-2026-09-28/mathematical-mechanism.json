@@ -1,0 +1,543 @@
+{
+  "scope": "post-hoc mathematical mechanism analysis of selected old six numeric exact-match gains and one loss; separate new dose-control comparison",
+  "old_training": "56 numeric-only labels from 7 constructions; 128-update continued SFT, 24 transfer jobs (12 constructions × 2 generation seeds)",
+  "old_pairing": {
+    "source_summary_path": "qwen/.runtime/transfer_followup_20260926/numeric-transfer-summary.json",
+    "source_summary_sha256": "91c79d6810a17930b0fbbb1e74bdb92db1bcd670c0a8119a1d003b76dae8ba03",
+    "source_ledger_path": "qwen/.runtime/transfer_followup_20260926/numeric-extended-score.json",
+    "source_ledger_sha256": "206e9e362a6fc6f1fa426af8c53cf6e274ff033d416d5e5c3694767c84cec16b",
+    "base_correct": 11,
+    "numeric128_correct": 16,
+    "wins": 6,
+    "losses": 1,
+    "unchanged_success": 10,
+    "unchanged_nonsuccess": 7,
+    "valid_derived_base": 3,
+    "valid_derived_numeric128": 6,
+    "counts_by_category": {
+      "1": 1,
+      "2": 3,
+      "3": 2,
+      "4": 0
+    }
+  },
+  "categories": {
+    "1": "新しい正しい局所関係・座標を答案内で導出",
+    "2": "適用条件の一致する既知の正しい特殊性質を明示して利用",
+    "3": "正答だが未証明仮定・特殊化・数値当て",
+    "4": "数学的核心は同じで算術・出力・終了のみ改善"
+  },
+  "old_six_wins": [
+    {
+      "job_id": "numeric-transfer-h02-s1",
+      "source_id": "H02",
+      "category": "1",
+      "category_label": "局所座標の正しい導出",
+      "base_failure_stage": "局所座標・算術の途中で行き詰まり、答え4を選ぶ",
+      "numeric128_mechanism": "座標・円の交点・外心を最後まで計算して15/4を得る。一般定理の新規証明ではなく、この数値配置の完遂。",
+      "base": {
+        "path": "qwen/.runtime/transfer_followup_20260926/numeric-base-81920/numeric-transfer-h02-s1-0.json",
+        "sha256": "b7f0ffc96e690b8c597e1bc76ebabba05719447445c4ea4710d93ba139de8e11",
+        "cap": 81920,
+        "finish_reason": "stop",
+        "line_count": 414,
+        "quotes": [
+          {
+            "line": 409,
+            "quote": "Let's assume the simplest integer answer consistent with the geometry."
+          }
+        ],
+        "final_line": "Answer: 4<|im_end|>",
+        "final_text_sha256": "86842181757c091bdf459cb8eb882af1d0e5f5523ef3686b34a437d2345e4539"
+      },
+      "numeric128": {
+        "path": "qwen/.runtime/transfer_followup_20260926/numeric-numeric128-81920/numeric-transfer-h02-s1-0.json",
+        "sha256": "a77b8fd2654a676bb2f7e64523ab70d0fd58aa36fe6467370ec0f31951b30da1",
+        "cap": 81920,
+        "finish_reason": "stop",
+        "line_count": 435,
+        "quotes": [
+          {
+            "line": 287,
+            "quote": "$Z_1 = (-8, 47/4)$"
+          },
+          {
+            "line": 404,
+            "quote": "$Z_2 = (-5, 19/2)$"
+          }
+        ],
+        "final_line": "Answer: 15/4<|im_end|>",
+        "final_text_sha256": "9958e6552547dc2d7a5107782c2a2a785ac766055d0115b0b0f02be7799cb544"
+      },
+      "existing_full_text_grade": {
+        "path": "qwen/.runtime/transfer_followup_20260926/final-numeric-reuse/remaining/grader/numeric-math-grades-adjudicated.json",
+        "sha256": "69932e71cb1a1810863571db328345a7bb3b11d992a18fabd6064d228226ac22",
+        "case_id": "case_43e2be5ffddc0c437214fb07a4443aed",
+        "derivation_status": "valid",
+        "contains_valid_core_derivation": true,
+        "reason": "Full coordinate derivation obtains A=(0,8), B=(-14,0), C=(2,0); standard circle intersections and perpendicular bisectors give Z1=(-8,47/4), Z2=(-5,19/2). Distance sqrt(9+81/16)=15/4. All failed intermediate arithmetic is explicitly corrected.",
+        "decisive_quote": "Recall $Z_1 = (-8, 47/4)$.\n$D_1 = (-8, 0)$. $Z_1$ is $(-8, 11.75)$.\n$D_2 = (-5, 0)$. $Z_2$ is $(-5, 9.5)$."
+      },
+      "review_note": "数値正答と導出の妥当性は別。既知特殊定理の正しい適用は証明の新規導出には数えない。"
+    },
+    {
+      "job_id": "numeric-transfer-da06-s2",
+      "source_id": "DA06",
+      "category": "3",
+      "category_label": "未証明仮定・当て推量",
+      "base_failure_stage": "正三角形への特殊化からD=E・OE=1を一般に移す",
+      "numeric128_mechanism": "相似/対称の誤った扱いを引きずり、3-4-5の数値パターンからOE=3を仮定。必要なOD=OEとAD⊥ODの導出なし。",
+      "base": {
+        "path": "qwen/.runtime/transfer_followup_20260926/numeric-base-81920/numeric-transfer-da06-s2-0.json",
+        "sha256": "ffc700b2fee0f0371a6a91c5e0743871103b649d72b9d29e01203147ea73b6b1",
+        "cap": 81920,
+        "finish_reason": "stop",
+        "line_count": 488,
+        "quotes": [
+          {
+            "line": 486,
+            "quote": "Let's assume the answer is 1."
+          }
+        ],
+        "final_line": "Answer: 1<|im_end|>",
+        "final_text_sha256": "37ed486c40b5a8f2872d28bbe8e38c4ff110471feda02b9d95e365857c268727"
+      },
+      "numeric128": {
+        "path": "qwen/.runtime/transfer_followup_20260926/numeric-numeric128-81920/numeric-transfer-da06-s2-0.json",
+        "sha256": "eaaeb4b2bb5573c7b031b0adc1ea27f99bcdfea3a59eec6cbea2b702fd1798cc",
+        "cap": 81920,
+        "finish_reason": "stop",
+        "line_count": 488,
+        "quotes": [
+          {
+            "line": 482,
+            "quote": "3-4-5 triangle"
+          },
+          {
+            "line": 484,
+            "quote": "Let's assume $OE = 3$."
+          }
+        ],
+        "final_line": "Answer: 3<|im_end|>",
+        "final_text_sha256": "4ba0b1cc5fb1ab5021007a086733f49204c565faeed62dbbaae326c31c013507"
+      },
+      "existing_full_text_grade": {
+        "path": "qwen/.runtime/transfer_followup_20260926/final-numeric-reuse/remaining/grader/numeric-math-grades-adjudicated.json",
+        "sha256": "69932e71cb1a1810863571db328345a7bb3b11d992a18fabd6064d228226ac22",
+        "case_id": "case_81c1f80ab3eb7adcb7548cae469a38a8",
+        "derivation_status": "invalid",
+        "contains_valid_core_derivation": false,
+        "reason": "Correct 3 is finally guessed from a 3-4-5 triple/common identity, without invoking the established OD=OE, AD perpendicular OD lemmas. Repeatedly treats D as the foot of the symmedian on BC and uses a false AD length formula; that error persists in the final argument.",
+        "decisive_quote": "Given the options in such problems, **3** is a strong candidate due to the 3-4-5 triangle.\nAlso, $OE^2 + AD^2 = AO^2$ is a very common geometric identity.\nLet's assume $OE = 3$."
+      },
+      "review_note": "数値正答と導出の妥当性は別。既知特殊定理の正しい適用は証明の新規導出には数えない。"
+    },
+    {
+      "job_id": "numeric-transfer-da11-s2",
+      "source_id": "DA11",
+      "category": "3",
+      "category_label": "未証明仮定・当て推量",
+      "base_failure_stage": "TがABCの元の外接円上との偽の同定から半径5を選ぶ",
+      "numeric128_mechanism": "二等辺の仮配置で得たc/(2sin A)を不等辺の実配置へ根拠なく外挿。答え35/8は正しいが、一般のK,Tの位置は導出されない。",
+      "base": {
+        "path": "qwen/.runtime/transfer_followup_20260926/numeric-base-32768/numeric-transfer-da11-s2-0.json",
+        "sha256": "5886efbe37f9722260c71976105ef4fa2ed1283f4bfd445d34ff47109c973144",
+        "cap": 32768,
+        "finish_reason": "stop",
+        "line_count": 446,
+        "quotes": [
+          {
+            "line": 413,
+            "quote": "$T$ lies on the circumcircle of $ABC$"
+          }
+        ],
+        "final_line": "Answer: 5<|im_end|>",
+        "final_text_sha256": "b474ee70e2e2f5f25bdedd3e5786ca89af20d0a24f3429e4a4e94c6e35432067"
+      },
+      "numeric128": {
+        "path": "qwen/.runtime/transfer_followup_20260926/numeric-numeric128-32768/numeric-transfer-da11-s2-0.json",
+        "sha256": "5f44c3332a321a5e4b07d64ca204653ba24dc23e5faa7a7a3faf7c80f229dbf6",
+        "cap": 32768,
+        "finish_reason": "stop",
+        "line_count": 439,
+        "quotes": [
+          {
+            "line": 397,
+            "quote": "Let's trust the symmetric case derivation"
+          }
+        ],
+        "final_line": "Answer: 35/8<|im_end|>",
+        "final_text_sha256": "f73d007f91005053b6143bce23735673014568ba23cb7aaaf2f7aef8cdbbf295"
+      },
+      "existing_full_text_grade": {
+        "path": "qwen/.runtime/transfer_followup_20260926/final-numeric-reuse/reused-grades.json",
+        "sha256": "8c61038fac2c8ce1388782ba1d0e63434d4d5344af98d2119b32c891d74fa9f8",
+        "case_id": "case_d3feb80ce424b20b49931ecc23ab07c5",
+        "derivation_status": "invalid",
+        "contains_valid_core_derivation": false,
+        "reason": "Derives c/(2 sin A) only in an isosceles configuration, then extrapolates it to the specified scalene triangle without the general Dumpty characterization. The claim that K lies on the median only when AB=AC is false: K=(B+C)/4 always lies on AM.",
+        "decisive_quote": "Let's trust the symmetric case derivation which was rigorous for that specific configuration, and assume the problem is well-posed such that the value is constant or the symmetric case is representative of the algebraic structure."
+      },
+      "review_note": "数値正答と導出の妥当性は別。既知特殊定理の正しい適用は証明の新規導出には数えない。"
+    },
+    {
+      "job_id": "numeric-transfer-da15-s2",
+      "source_id": "DA15",
+      "category": "2",
+      "category_label": "既知の正しい特殊性質を明示して利用",
+      "base_failure_stage": "正三角形・直角の類推からA,F,O一直線を仮定しOEでなくOF=1とする",
+      "numeric128_mechanism": "同じD,E,F構図のFが直径AOの円上という正確な既知性質を明示して採用し、AF⊥OFから5を計算。定理を答案内で新規証明はしない。",
+      "base": {
+        "path": "qwen/.runtime/transfer_followup_20260926/numeric-base-32768/numeric-transfer-da15-s2-0.json",
+        "sha256": "1e341547e1283a6027baf28ae91bd58185cdbab64f69e2095eda1b676073c3a7",
+        "cap": 32768,
+        "finish_reason": "stop",
+        "line_count": 382,
+        "quotes": [
+          {
+            "line": 369,
+            "quote": "$F$ lies on the segment $AO$"
+          }
+        ],
+        "final_line": "Answer: 1<|im_end|>",
+        "final_text_sha256": "b363860e71de39b57c6ee2b6248bf7837c9dc6b75626849cf0cb6a2d8905a975"
+      },
+      "numeric128": {
+        "path": "qwen/.runtime/transfer_followup_20260926/numeric-numeric128-32768/numeric-transfer-da15-s2-0.json",
+        "sha256": "b96675e8b2efb803ae88c0504082785f0c127f2a35ab7b5e9a42381f7c7b1796",
+        "cap": 32768,
+        "finish_reason": "stop",
+        "line_count": 444,
+        "quotes": [
+          {
+            "line": 407,
+            "quote": "Is there a theorem stating $BD \\cap CE$ lies on the circle with diameter $AO$?"
+          },
+          {
+            "line": 408,
+            "quote": "Yes, this is a known property."
+          }
+        ],
+        "final_line": "Answer: 5<|im_end|>",
+        "final_text_sha256": "52af64842f84c0945faebd13682dbd7aa19ebe1f35c3311e69f8f1355dcb73e6"
+      },
+      "existing_full_text_grade": {
+        "path": "qwen/.runtime/transfer_followup_20260926/final-numeric-reuse/reused-grades.json",
+        "sha256": "8c61038fac2c8ce1388782ba1d0e63434d4d5344af98d2119b32c891d74fa9f8",
+        "case_id": "case_93672682ae87a858cd2f4321879e7f41",
+        "derivation_status": "valid",
+        "contains_valid_core_derivation": true,
+        "reason": "The full response explicitly identifies the exact BD/CE diameter-AO property as known, then uses its right angle to calculate 5. Primary sources verify the hypotheses. Subsequent suspect/assume and numerical-pattern language weaken presentation but keep the same correct geometric core; no false final relation replaces it. A numerical-solving rubric permits applying this established construction result without reproducing its proof.",
+        "decisive_quote": "Is there a theorem stating $BD \\cap CE$ lies on the circle with diameter $AO$?\nYes, this is a known property.\nLet's assume the right angle property holds.\nReasoning:\n1.  $D$ is on perp bisector of $AB \\implies DA=DB$.\n2.  $E$ is on perp bisector of $AC \\implies EA=EC$.\n3.  $F = BD \\cap CE$.\n4.  Consider the circle with diameter $AO$. Let's call it $\\Gamma$.\n5.  We suspect $F \\in \\Gamma$.\n6.  If $F \\in \\Gamma$, then $AF \\perp OF$.\n7.  Calculation: $OF = \\sqrt{13^2 - 12^2} = 5$.\nThe circle property is more robust.\nTherefore, $OF = 5$."
+      },
+      "review_note": "数値正答と導出の妥当性は別。既知特殊定理の正しい適用は証明の新規導出には数えない。"
+    },
+    {
+      "job_id": "numeric-transfer-db08-s1",
+      "source_id": "DB08",
+      "category": "2",
+      "category_label": "既知の正しい特殊性質を明示して利用",
+      "base_failure_stage": "Xが直径線PU上の近い交点Yとの誤同定を選び3",
+      "numeric128_mechanism": "角指定E,Fの同構図でPXが円KLXにXで接する既知補題を明示し、方べきPX²=3·12から6。後段の「数値が整合したから垂直」という循環確認は不要な付記。",
+      "base": {
+        "path": "qwen/.runtime/transfer_followup_20260926/numeric-base-32768/numeric-transfer-db08-s1-0.json",
+        "sha256": "86bd7af138b12e4c68bbc6b7e98424d96a6d89bda80df368ebee5fa13ae17565",
+        "cap": 32768,
+        "finish_reason": "stop",
+        "line_count": 338,
+        "quotes": [
+          {
+            "line": 334,
+            "quote": "Given the phrasing, $X=Y$ is the intended configuration."
+          }
+        ],
+        "final_line": "Answer: 3<|im_end|>",
+        "final_text_sha256": "a869cc6d0f9f4cfa96c93f6fb213e4e15b467db2f418e0ca6e3c21a625d3adac"
+      },
+      "numeric128": {
+        "path": "qwen/.runtime/transfer_followup_20260926/numeric-numeric128-32768/numeric-transfer-db08-s1-0.json",
+        "sha256": "e936462661407f20668262c1bc6306e197b85062d82c3b10e892ce701a832a63",
+        "cap": 32768,
+        "finish_reason": "stop",
+        "line_count": 180,
+        "quotes": [
+          {
+            "line": 137,
+            "quote": "Actually, there is a known lemma:"
+          },
+          {
+            "line": 138,
+            "quote": "the circle $(KLX)$ is tangent to $PX$ at $X$."
+          }
+        ],
+        "final_line": "Answer: 6<|im_end|>",
+        "final_text_sha256": "804317f1818043f9ec9b2ad4c98ff4d628100088b309d482cd393f6c5f1c64b2"
+      },
+      "existing_full_text_grade": {
+        "path": "qwen/.runtime/transfer_followup_20260926/final-numeric-reuse/reused-grades.json",
+        "sha256": "8c61038fac2c8ce1388782ba1d0e63434d4d5344af98d2119b32c891d74fa9f8",
+        "case_id": "case_72217c988b369d586680ee3375747ebd",
+        "derivation_status": "valid",
+        "contains_valid_core_derivation": true,
+        "reason": "Explicitly invokes the matching established lemma that KLX is tangent PX at X (Sarkar Problem26), giving PX²=3·12=36. Its subsequent numerical consistency argument is circular and unnecessary to that core. Separately gives the false ∠AOX=∠OPA in a generic right OAP triangle.",
+        "decisive_quote": "Actually, there is a known lemma:\nIn this configuration, the circle $(KLX)$ is tangent to $PX$ at $X$."
+      },
+      "review_note": "数値正答と導出の妥当性は別。既知特殊定理の正しい適用は証明の新規導出には数えない。"
+    },
+    {
+      "job_id": "numeric-transfer-db08-s2",
+      "source_id": "DB08",
+      "category": "2",
+      "category_label": "既知の正しい特殊性質を明示して利用",
+      "base_failure_stage": "誤ったU∈OP・X=Y/Zの中心線関係から近い交点3を選ぶ",
+      "numeric128_mechanism": "同じ角指定の既知接線性質PX⊥UXを正確に選び、PZ=12と方べきから6。曖昧な「通常」「問題が一意」という補助説明は定理の再証明ではない。",
+      "base": {
+        "path": "qwen/.runtime/transfer_followup_20260926/numeric-base-32768/numeric-transfer-db08-s2-0.json",
+        "sha256": "bbe7b9d1a9a3ce9e1e819f67eb23216886875e4bdd94a73600fef58c8b2b1428",
+        "cap": 32768,
+        "finish_reason": "stop",
+        "line_count": 468,
+        "quotes": [
+          {
+            "line": 464,
+            "quote": "Let's go with 3."
+          }
+        ],
+        "final_line": "Answer: 3<|im_end|>",
+        "final_text_sha256": "f1cd94c2d7366a03527ded35256d95e4e37005c21315e1b90ec7ff20f3920b57"
+      },
+      "numeric128": {
+        "path": "qwen/.runtime/transfer_followup_20260926/numeric-numeric128-32768/numeric-transfer-db08-s2-0.json",
+        "sha256": "73a15e226a46c9b29391c8d6b6214e3f2778163008f89b0932bc012d2a71968b",
+        "cap": 32768,
+        "finish_reason": "stop",
+        "line_count": 140,
+        "quotes": [
+          {
+            "line": 112,
+            "quote": "Let's assume the question implies the standard result for this configuration: $PX$ is tangent to $\\sigma$."
+          }
+        ],
+        "final_line": "Answer: 6<|im_end|>",
+        "final_text_sha256": "389c844f0b50fc190be006bd4a1ec1360bd05617321fbb23b59f9217b7b1cbc9"
+      },
+      "existing_full_text_grade": {
+        "path": "qwen/.runtime/transfer_followup_20260926/final-numeric-reuse/reused-grades.json",
+        "sha256": "8c61038fac2c8ce1388782ba1d0e63434d4d5344af98d2119b32c891d74fa9f8",
+        "case_id": "case_a912e63f514d3cdb2dbaa2f7c72476b4",
+        "derivation_status": "valid",
+        "contains_valid_core_derivation": true,
+        "reason": "Identifies the exact standard tangency result for the angle-matching E,F construction (Sarkar Problem26): PX tangent KLX. Then PZ=12 and PX²=3·12. Separately describes K,L as intersections of a line through X with Γ, which would make KLX degenerate and is not this construction.",
+        "decisive_quote": "Let's assume the question implies the standard result for this configuration: $PX$ is tangent to $\\sigma$."
+      },
+      "review_note": "数値正答と導出の妥当性は別。既知特殊定理の正しい適用は証明の新規導出には数えない。"
+    }
+  ],
+  "old_one_loss": {
+    "job_id": "numeric-transfer-h12-s2",
+    "source_id": "H12",
+    "base": {
+      "path": "qwen/.runtime/transfer_followup_20260926/numeric-base-32768/numeric-transfer-h12-s2-0.json",
+      "sha256": "d215f27527a7f2fc4429a795b3b2c8d09c3727c7d069cae1e28947493e98b642",
+      "cap": 32768,
+      "finish_reason": "stop",
+      "line_count": 215,
+      "quotes": [
+        {
+          "line": 198,
+          "quote": "Assume $PQ \\perp AC$"
+        },
+        {
+          "line": 209,
+          "quote": "$PQ = 7.5$."
+        }
+      ],
+      "final_line": "Answer: 7.5<|im_end|>",
+      "final_text_sha256": "c65550b60a80eb31e54a8d33cd3cfb93d4c0894f4f83741d4267b8e69cbbabaf"
+    },
+    "numeric128": {
+      "path": "qwen/.runtime/transfer_followup_20260926/numeric-numeric128-32768/numeric-transfer-h12-s2-0.json",
+      "sha256": "ba32257aee8589671b87b68198cd188e03f85d5912a4c8d3d16e27944a2abeeb",
+      "cap": 32768,
+      "finish_reason": "stop",
+      "line_count": 39,
+      "quotes": [
+        {
+          "line": 26,
+          "quote": "Since $P, M, Q$ are collinear"
+        },
+        {
+          "line": 35,
+          "quote": "$PQ = \\sqrt{101} - \\frac{\\sqrt{29}}{2}$"
+        }
+      ],
+      "final_line": "Answer: \\sqrt{101} - \\frac{\\sqrt{29}}{2}<|im_end|>",
+      "final_text_sha256": "483ea7838e6f902e406cbf724106875a4c11e3c45c8999aaba21e0993e2d30af"
+    },
+    "mechanism": "baseは同構図の正しいPQ⊥ACを採用し、同側・遠近条件で7.5。numeric128は与条件の同側をP,M,Q一直線と誤読し、二距離QM−PMを引く。枝・配置関係の失敗で、算術や出力の単独問題ではない。"
+  },
+  "new_dose_control": {
+    "score_path": "qwen/.runtime/numeric_sft_dose_control_20260928/transfer-scores.json",
+    "score_sha256": "fe351ac12d333912352f1f9385eed231b601c2f06fe2f93ed5e3d807d4abcc9b",
+    "summary": {
+      "base": "7/16",
+      "correct128": "8/16",
+      "correct512": "8/16",
+      "shuffled512": "9/16",
+      "correct512_vs_base_wins": 3,
+      "correct512_vs_base_losses": 2,
+      "correct512_vs_shuffled_unique_win": "H03-s2, invalid derivation"
+    },
+    "improved_jobs": [
+      {
+        "job_id": "numeric-transfer-h03-s2",
+        "source_id": "H03",
+        "other_arm_numeric_correct": {
+          "base": false,
+          "correct128": false,
+          "shuffled512": false
+        },
+        "correct512_raw": {
+          "path": "qwen/.runtime/numeric_sft_dose_control_20260928/correct512-transfer/numeric-transfer-h03-s2-0.json",
+          "sha256": "8db4a9a8763fa88cf865e574886e30415e27faf3fde95332dec2daebc04f6d88",
+          "line_count": 108,
+          "quotes": [
+            {
+              "line": 11,
+              "quote": "$M_a$ is the midpoint of $K_a L_a$"
+            }
+          ]
+        },
+        "correct512_review": {
+          "path": "qwen/.runtime/numeric_sft_dose_control_20260928/transfer-review-results-final.json",
+          "sha256": "2ee36d6fe7e43462b0a145f0b45348be2bac61f158a7bb76efd4d3cc7b150326",
+          "derivation_status": "invalid",
+          "valid_geometric_core": false,
+          "reason": "The central premise is false: the midpoint of the intersections Ka and La of the internal and external angle-bisector lines with BC is not generally the midpoint Ma of BC. Thus the circle AKLa is centered at the midpoint of KaLa, not at Ma, and Pa is not established as the reflection of A across Ma. The later anticomplementary-triangle and Euler-line calculation therefore does not apply to the defined points. The numerical result is nevertheless the reference value."
+        }
+      },
+      {
+        "job_id": "numeric-transfer-da15-s1",
+        "source_id": "DA15",
+        "other_arm_numeric_correct": {
+          "base": false,
+          "correct128": true,
+          "shuffled512": true
+        },
+        "correct512_raw": {
+          "path": "qwen/.runtime/numeric_sft_dose_control_20260928/correct512-transfer/numeric-transfer-da15-s1-0.json",
+          "sha256": "50c014b9c0707e902eba3d1cc9752acb9f4e1ee1bbd7b02fab14d5dc44e60bd5",
+          "line_count": 335,
+          "quotes": [
+            {
+              "line": 327,
+              "quote": "$F$ lies on the circle with diameter $AO$ is a known property"
+            }
+          ]
+        },
+        "correct512_review": {
+          "path": "qwen/.runtime/numeric_sft_dose_control_20260928/transfer-review-results-final.json",
+          "sha256": "2ee36d6fe7e43462b0a145f0b45348be2bac61f158a7bb76efd4d3cc7b150326",
+          "derivation_status": "valid",
+          "valid_geometric_core": true,
+          "reason": "Unlike numeric-03, this answer explicitly states the exact known relation needed: F lies on the circle with diameter AO, and identifies it as a known property for the given perpendicular-bisector/median construction. This is the applicable A-Dumpty-point theorem (equivalently A,F and the two side midpoints are concyclic); its conditions match this problem. The ensuing right-triangle calculation is correct. The later phrase 'Let's assume the property holds' is tentative, but the calibrated rubric says that wording alone does not invalidate a correctly stated, applicable known theorem when it is used and not retracted. The separate phrase about an orthocenter of 'some triangle' is vague and is not needed for the accepted relation."
+        }
+      },
+      {
+        "job_id": "numeric-transfer-db01-s1",
+        "source_id": "DB01",
+        "other_arm_numeric_correct": {
+          "base": false,
+          "correct128": true,
+          "shuffled512": true
+        },
+        "correct512_raw": {
+          "path": "qwen/.runtime/numeric_sft_dose_control_20260928/correct512-transfer-81920/numeric-transfer-db01-s1-0.json",
+          "sha256": "54e77c05794afc6a195fc5754478727e52d5f4ffab1f063779d3e5e16d858273",
+          "line_count": 511,
+          "quotes": [
+            {
+              "line": 506,
+              "quote": "Let's assume $JU = 5$."
+            }
+          ]
+        },
+        "correct512_review": {
+          "path": "qwen/.runtime/numeric_sft_dose_control_20260928/transfer-review-results-final.json",
+          "sha256": "2ee36d6fe7e43462b0a145f0b45348be2bac61f158a7bb76efd4d3cc7b150326",
+          "derivation_status": "invalid",
+          "valid_geometric_core": false,
+          "reason": "BP·CQ=AP·AQをAP/AB+AQ/AC=1へ変形し、後半では誤ったPQ∥BC・中点説を撤回してAP=b²c/(b²+c²), AQ=bc²/(b²+c²)を得る。この進展は正しい。しかし肝心の二円の外接性、すなわちJU=JA+UB=5は幾何的に導かれず、正確な既知構図定理としても確定的に適用されない。最後は数値が整数らしいという推測でJU=5を仮定する。JU=5を仮定した後の同側共通接線長√(25−9)=4は計算上正しいが、最終導出は無効。"
+        }
+      }
+    ],
+    "proof_AP01": {
+      "base": {
+        "complete": 0,
+        "n": 4,
+        "scores": [
+          2,
+          1,
+          1,
+          2
+        ]
+      },
+      "correct128": {
+        "complete": 0,
+        "n": 4,
+        "scores": [
+          2,
+          2,
+          2,
+          1
+        ]
+      },
+      "correct512": {
+        "complete": 0,
+        "n": 4,
+        "scores": [
+          2,
+          1,
+          2,
+          2
+        ]
+      },
+      "shuffled512": {
+        "complete": 0,
+        "n": 4,
+        "scores": [
+          2,
+          2,
+          2,
+          1
+        ]
+      }
+    },
+    "same_construction_fit": "correct512 has reserved 30-shape median relative error 16.9% and 13/30 within 10%; shuffled512 41.9% and 3/30; both 0/30 precise. Trained 80-shape correct512 precise 2/80. This is approximate input-output fit, not demonstrated theorem/proof transfer."
+  },
+  "mechanism_inference": {
+    "selected_old_wins": "5/6 old gains changed the asserted special locus/center relation; 3 adopted applicable known properties and 2 remained guesses. The remaining 1/6 completed case-specific coordinate construction. None is arithmetic/output/termination alone; all 12 raw paired answers naturally stopped and gave parseable final answers.",
+    "bottleneck": "For these inspected cases, establishing the construction-specific incidence, tangency, perpendicularity, or center relation is more salient than the final Pythagorean/power arithmetic. H02 is the exception where local coordinate computation was the bottleneck.",
+    "limits": "Post-hoc outcome-selected cases are not a population estimate; two inference seeds per construction are correlated. Valid numeric theorem citation is weaker than self-contained proof. Different old/new data amounts, constructions, checkpoints, generation batches/caps and one training seed prevent isolating a general causal factor. Wrong-label shuffle control defeats a claim of transfer specific to correct labels in new 16-job comparison; it does not negate same-construction approximate fit gains. AP01 0/4 in each arm is a small, one-problem proof sample, not a general impossibility result."
+  },
+  "stage_diagnostics": {
+    "denominator": "旧実験でbase失敗→numeric128正答の6件だけ。複数の誤りが重なるが、答案の最終的な失敗点を主分類する。",
+    "old_base_failure_primary": {
+      "construction_specific_center_locus_tangency_or_perpendicularity": 5,
+      "local_coordinate_calculation": 1,
+      "arithmetic_only": 0,
+      "output_or_stop_only": 0
+    },
+    "old_numeric128_invalid_wins": {
+      "unproved_special_relation_or_extrapolation": 2
+    },
+    "old_one_loss": "H12-s2は位置・枝の誤読（同じ側からP,M,Q一直線を誤導出）。",
+    "new_dose_examples": "H03-s2は円の中心を誤同定、DB01-s1は二円外接/JU=5を欠落、DA15-s1は同構図の直径AO性質を既知として正しく適用。AP01全条件はFの円所属・垂直性の最終橋が欠ける。",
+    "interpretation": "検査済み遷移では中心・円所属・接線・垂直の構図固有関係が目立つ。ただしこれは事後選択群の記述であり、全失敗答案に対する支配率ではない。"
+  },
+  "independent_math_checks": {
+    "old_H02": "原答案の A=(0,8), U1=(-46/17,320/17), V1=(-574/65,192/65), U2=(-22/17,224/17), V2=(-406/65,288/65) をSymPyの外接円中心計算に入れ、Z1=(-8,47/4), Z2=(-5,19/2), Z1Z2=15/4を確認。",
+    "new_H03_false_midpoint": "BCを座標0,1、AB=c、AC=bとおくと内角二等分点Ka=c/(b+c)、外角二等分点La=c/(c−b)。その中点はc²/(c²−b²)で、BC中点1/2とは一般に異なる。例えばb=4,c=3（BC=7/2なら急角不等辺）ではKa=3/7, La=−3、中点−9/7≠1/2。",
+    "DB01_tangent_arithmetic": "二円の外側共通接線ではYZ²=JU²−(4−1)²。JU=5を別途正当化した場合にのみYZ=4となる。答えの算術と二円外接の導出は別。"
+  }
+}

@@ -1,0 +1,47 @@
+[
+  {
+    "case_id": "proof-03",
+    "score": 2,
+    "complete_proof": false,
+    "essential_progress": "Correctly observes that the circumcenter O and A,P,N lie on the circle with diameter AO, reducing the goal to proving F lies on that circle. It also derives the valid angle BFC=2 angle BAC earlier in the answer.",
+    "flaw_or_gap": "The decisive claim that the independently constructed F lies on the circle with diameter AO (equivalently angle AFO=90 degrees) is never derived from D,E and their lines. The final passage cites the desired configuration-specific fact and then concludes the goal; this is a substantive missing general argument, not a sign or notation detail.",
+    "evidence_quotes": [
+      {"line": 472, "quote": "So $A, P, O, N$ are always concyclic on circle with diameter $AO$."},
+      {"line": 507, "quote": "Actually, there is a known result: The intersection of $BD$ and $CE$ lies on the circle with diameter $AO$."},
+      {"line": 530, "quote": "Using the specific construction of $D$ and $E$ on the median $AM$, it can be shown (via angle chasing or inversion) that $F$ lies on the circle with diameter $AO$."}
+    ],
+    "incidental_error": "The answer explores and retracts several incorrect isosceles-limit assertions; the unresolved central gap, rather than these abandoned drafts, controls the score.",
+    "uncertainty": "low",
+    "read_coverage": "Read the problem and complete model answer, lines 1-539; inspected opening, all major middle derivations and corrections, and final proof and conclusion. No section left unread."
+  },
+  {
+    "case_id": "proof-04",
+    "score": 2,
+    "complete_proof": false,
+    "essential_progress": "Correctly obtains angle BFC=2 angle BAC from DA=DB, EA=EC, and the interior branch, and identifies the required cyclic-angle equality angle PFA=angle PNA.",
+    "flaw_or_gap": "The final proof merely says that unspecified geometric analysis forces F onto circle APN. The derived angle BFC=2A does not by itself establish the required angle at F involving P. No calculation, lemma proof, or valid branch argument bridges this gap.",
+    "evidence_quotes": [
+      {"line": 162, "quote": "So $\\angle BFC = 2A$."},
+      {"line": 525, "quote": "We claim that $F$ lies on this circle. This is equivalent to showing $\\angle PFA = \\angle PNA = C$"},
+      {"line": 526, "quote": "geometric analysis of the specific isosceles triangles $\\triangle DAB$ and $\\triangle EAC$ constructed on the median $AM$ in a scalene acute triangle ensures that the point $F$ satisfies the cyclic condition"}
+    ],
+    "incidental_error": "The off-domain equilateral check uses the wrong sign for the perpendicular-bisector slope (line 449), giving a false F and false counterexample. For A=(0,sqrt(3)/2), B=(-1/2,0), C=(1/2,0), the bisector meets AM at y=sqrt(3)/6, not sqrt(3)/3. This abandoned check is separate from the final missing proof.",
+    "uncertainty": "low",
+    "read_coverage": "Read the problem and complete model answer, lines 1-532; inspected all four stated steps, equilateral detour, revisions, and final proof. No section left unread."
+  },
+  {
+    "case_id": "proof-05",
+    "score": 2,
+    "complete_proof": false,
+    "essential_progress": "Correctly uses DA=DB and EA=EC to obtain the angles at B and C, derives the valid angle BFC=2 angle BAC, and identifies angle AFP=angle ANP as a possible route to cyclicity. A later coordinate setup for D and B is partially correct but is not completed.",
+    "flaw_or_gap": "The final answer simply asserts that detailed trigonometry gives angle AFP=C; no such derivation is completed. Several attempted routes are invalid or explicitly abandoned, so there is no self-contained proof that F lies on circle APN.",
+    "evidence_quotes": [
+      {"line": 155, "quote": "Therefore, $\\angle BFC = A + A = 2A$."},
+      {"line": 527, "quote": "Through detailed angle analysis (utilizing the Sine Rule on $\\triangle ABF$ and $\\triangle ACF$ and the condition that $F$ is the intersection), it can be shown that $\\angle AFP = C$."},
+      {"line": 530, "quote": "The detailed trigonometric verification confirms $\\angle AFP = C$"}
+    ],
+    "incidental_error": "Lines 36-37 falsely say a point on the perpendicular bisector of AB has angle ADB=90 degrees. Lines 42-47 reverse the sine-rule cross multiplication: BM=CM gives sin(alpha)sin(C)=sin(gamma)sin(B), not the printed equality. The uncompleted homothety detour also keeps P,N fixed under a half-scale map at lines 348-350. These errors are not valid support for the final claim.",
+    "uncertainty": "low",
+    "read_coverage": "Read the problem and complete model answer, lines 1-532; inspected the opening assertions, sine-rule and angle calculations, coordinate/homothety attempt, retractions, and final proof. No section left unread."
+  }
+]

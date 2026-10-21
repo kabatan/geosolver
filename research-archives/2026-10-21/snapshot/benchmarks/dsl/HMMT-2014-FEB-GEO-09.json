@@ -1,0 +1,89 @@
+{
+  "id": "HMMT-2014-FEB-GEO-09",
+  "variables": [
+    "x4",
+    "y4",
+    "r4"
+  ],
+  "constructions": [
+    {
+      "name": "O1",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "O2",
+      "expression": "Point(23, 0)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(10, 0)"
+    },
+    {
+      "name": "omega1",
+      "expression": "Circle(O1, 10)"
+    },
+    {
+      "name": "omega2",
+      "expression": "Circle(O2, 13)"
+    },
+    {
+      "name": "O3",
+      "expression": "Point(10, 2 * sqrt(2))"
+    },
+    {
+      "name": "omega3",
+      "expression": "Circle(O3, 2 * sqrt(2))"
+    },
+    {
+      "name": "O4",
+      "expression": "Point(x4, y4)"
+    },
+    {
+      "name": "omega4",
+      "expression": "Circle(O4, r4)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(O1, O2)",
+      "operator": "=",
+      "right": 23
+    },
+    {
+      "left": "Distance(O1, P)",
+      "operator": "=",
+      "right": 10
+    },
+    {
+      "left": "Distance(O2, P)",
+      "operator": "=",
+      "right": 13
+    },
+    {
+      "left": "Distance(O1, O4)",
+      "operator": "=",
+      "right": "10 + r4"
+    },
+    {
+      "left": "Distance(O2, O4)",
+      "operator": "=",
+      "right": "13 + r4"
+    },
+    {
+      "left": "Distance(O3, O4)",
+      "operator": "=",
+      "right": "sqrt(8 + r4 * r4)"
+    },
+    {
+      "left": "r4",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "y4",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "r4"
+}

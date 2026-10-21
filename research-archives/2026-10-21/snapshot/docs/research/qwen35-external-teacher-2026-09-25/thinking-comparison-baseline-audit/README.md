@@ -1,0 +1,9 @@
+# Full-visible-answer audit of seven non-Thinking fresh4 outputs
+
+The non-Thinking template had already closed its empty `<think>...</think>` block before generation. Seven of the 24 saved non-Thinking completions emitted a stray `</think>` within their answer. The earlier grader read only the saved `final_text` suffix for these seven. Under the frozen [Thinking comparison protocol](../THINKING_COMPARISON_PROTOCOL.md), the entire generated `raw_text` is the visible answer in this mode.
+
+I independently regraded those seven full answers against the frozen [stage-localization rubric](../STAGE_LOCALIZATION_GRADING.md). [Per-item grades and decisive reasons](raw-text-regrade.json) include condition, job ID, raw-text SHA-256, completion tokens and finish reason. All seven ended with `stop`. **No exact, relation, proof, use or complete-proof decision changes** from the prior suffix-only grading. This is a mode-extraction audit; it does not inspect or grade any new Thinking-mode output.
+
+The extra prefix matters for interpretation. The unhinted base H04 fresh4-1 prefix shows extended self-correction before a valid final coordinate proof, so it remains a complete proof. The claim-supplied H04 prefix tries to refute the given identity, but its supposed counterexample sets `M=(0,0)`, `B=(-b,0)`, `C=(c,0)` with `b≠c`, violating that M is the midpoint. It eventually assumes the supplied identity; proof remains false, although its conditional branch calculation is correct. The H14 claim-supplied prefix proves an early reflection fact about D and E but never transports it through P, Q and the two circles to R. The other prefixes reiterate or add false conjectures and do not repair their missing construction proofs.
+
+Correct numerical answers without a construction proof remain component successes. They are not counted as self-derived geometric transfer.

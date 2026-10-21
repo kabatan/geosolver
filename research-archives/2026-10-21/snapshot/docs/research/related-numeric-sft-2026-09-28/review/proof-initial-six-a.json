@@ -1,0 +1,47 @@
+[
+  {
+    "case_id": "proof-00",
+    "score": 1,
+    "complete_proof": false,
+    "essential_progress": "Correctly derives the nontrivial general relation angle BFC = 2 angle BAC from DA=DB, EA=EC and the interior branch. This also supports B,C,O,F concyclic. It does not establish the requested A,N,F,P circle.",
+    "flaw_or_gap": "The decisive step F lying on the circle through A,N,P is asserted as a configuration-specific known property. The homothety of the ABC circumcircle determines the circle through A,N,P but gives no reason that F lies on it. The claimed implication from B,C,O,F being concyclic to A,N,F,P being concyclic is neither established nor generally a standalone implication.",
+    "evidence_quotes": [
+      {"line": 436, "quote": "angle BFC = ... = 2A"},
+      {"line": 450, "quote": "It is a known property of this specific configuration ..."},
+      {"line": 466, "quote": "But F is on the circle (A, P, N)."}
+    ],
+    "incidental_error": "Line 245 incorrectly says angle ANP is supplementary to angle PNA, although these name the same angle; this is separate from the final proof gap. Several exploratory equilateral and ordering remarks are confused but do not supply the missing proof.",
+    "uncertainty": "Low. The angle BFC relation was independently verified from the original line and perpendicular-bisector construction; the target incidence remains wholly unproved in the answer.",
+    "read_coverage": "Read the complete 470-line file, including problem, exploratory reasoning, coordinate outline, and final proof (lines 1-470); no portion omitted. Output ended with stop."
+  },
+  {
+    "case_id": "proof-01",
+    "score": 1,
+    "complete_proof": false,
+    "essential_progress": "Correctly obtains angle BFC = 2 angle BAC and identifies the circle through A,N,P as the half-scale image of the circumcircle of ABC. These are useful but do not connect F to that circle.",
+    "flaw_or_gap": "The final proof explicitly omits the angle calculation required to show F lies on the circle through A,N,P. It asserts angle PFA = C through unspecified angle chasing, then immediately concludes cyclicity. No coordinate, angle, or power computation derives this incidence.",
+    "evidence_quotes": [
+      {"line": 224, "quote": "angle BFC = ... = 2 angle A"},
+      {"line": 498, "quote": "The detailed algebraic verification of the angle equality is omitted"},
+      {"line": 525, "quote": "Through detailed angle chasing (omitted for brevity ...), one can deduce that angle PFA = C."}
+    ],
+    "incidental_error": "Lines 151-154 propose that D and E lie beyond M, which is false for ordinary acute scalene examples; the answer later questions that ordering. This is separate from the unproved final incidence.",
+    "uncertainty": "Low. The valid intermediate relation was independently checked; the purported final angle equality is stated without the derivation required by the prompt.",
+    "read_coverage": "Read the complete 529-line file, including all exploratory sections and the final proof (lines 1-529); no portion omitted. Output ended with stop."
+  },
+  {
+    "case_id": "proof-02",
+    "score": 1,
+    "complete_proof": false,
+    "essential_progress": "Correctly derives angle BFC = 2 angle BAC, along with the midpoint similarity between APN and ABC. The sine-rule exploration does not complete a valid bridge to the target circle.",
+    "flaw_or_gap": "The final proof invokes a 'known geometric result' that F lies on the circle through A,N,P, which is exactly the requested claim. It then asserts angle PFN = 180 degrees minus A from an unexplained symmetry. Neither claim is derived from the preceding angle BFC calculation or from the original construction.",
+    "evidence_quotes": [
+      {"line": 72, "quote": "angle BFC = ... = 2A"},
+      {"line": 509, "quote": "we assert the concyclicity based on the derived angle sum property"},
+      {"line": 534, "quote": "it is a known geometric result ... that F lies on the circumcircle of triangle ANP"}
+    ],
+    "incidental_error": "Line 16 calls AMPN a parallelogram and assigns AM = AB/2; this is false for the stated midpoints. Lines 263-373 pursue and later retract an incorrect identification of rays FP and FB. These mistakes are separate from the final circular assertion.",
+    "uncertainty": "Low. The final proof contains an explicit unproved equivalent of the conclusion, despite a correct preliminary angle computation.",
+    "read_coverage": "Read the complete 539-line file, including all exploratory calculations, self-corrections, and final proof (lines 1-539); no portion omitted. Output ended with stop."
+  }
+]

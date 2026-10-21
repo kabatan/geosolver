@@ -1,0 +1,18 @@
+{
+  "id": "IMO_2009_P4",
+  "variables": ["cx", "cy"],
+  "constructions": [
+    {"name": "A", "expression": "Point(0, 0)"},
+    {"name": "B", "expression": "Point(1, 0)"},
+    {"name": "C", "expression": "Point(cx, cy)"},
+    {"name": "D", "expression": "Intersect(AngleBisector(C, A, B), Line(B, C))"},
+    {"name": "E", "expression": "Intersect(AngleBisector(A, B, C), Line(C, A))"},
+    {"name": "K", "expression": "Incenter(A, D, C)"}
+  ],
+  "conditions": [
+    {"left": "Area(A, B, C)", "operator": ">", "right": "0"},
+    {"left": "Distance(A, B)", "operator": "=", "right": "Distance(A, C)"},
+    {"left": "Angle(B, E, K)", "operator": "=", "right": "pi / 4"}
+  ],
+  "target": "0"
+}

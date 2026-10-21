@@ -1,0 +1,7 @@
+# Transfer review handoff
+
+After `transfer-scores.json` is complete, run `prepare_transfer_review.py --label final`. It makes an arm-blind `review-transfer-final/` packet in the runtime, reuses exact-content grades from the earlier `review-bank.json` and registered partial reviews, and writes the private mapping outside the packet. Reusing a label is refused. `--arms` and `--exclude-jobs` can narrow a run. To review already completed answers while generation continues, pass `--scores-file PATH` for a same-schema partial scores snapshot and use another label. The final run reuses those reviews only when the final answer's messages, entire raw text, and finish reason match exactly.
+
+Put only new grades in this directory as JSON lists (or objects with `cases`). A proof grade needs `case_id`, integer `score` 0–4, and Boolean `complete_proof` (`true` exactly when score is 4). A numeric grade needs `case_id` and `derivation_status` (`valid`, `invalid`, `unclear`, or `no_derivation`). Include evidence and review reasoning as in `REVIEW_RUBRIC.md`.
+
+The parent updates `transfer-review-manifest.json` with entries such as `{"kind":"proof","label":"final","file":"proof-final-a.json"}`. Run `collect_transfer_reviews.py --label final` afterward. It verifies each answer file, packet, and exact content hash, then writes `transfer-review-results-final.json` in the runtime with reused/new grades and missing cases. The manifest may include earlier packet labels; only matching content is joined.

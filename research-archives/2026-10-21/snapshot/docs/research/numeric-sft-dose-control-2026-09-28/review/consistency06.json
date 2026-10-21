@@ -1,0 +1,323 @@
+{
+  "review_scope": "Independent blind consistency review of the eight DB08 packets; no private arm mapping or earlier review05 grades consulted",
+  "reference": "related-numeric-sft-2026-09-28/REVIEW_RUBRIC.md and numeric-review-reference-compact.json, DB08",
+  "criterion": "An exactly applicable, correctly stated special tangency result may be used without proof or a theorem name. A false geometric rationale that replaces that result in the final deduction makes the derivation invalid. Numerical agreement is separate.",
+  "reference_answer_exact": "6",
+  "cases": [
+    {
+      "case_id": "case-00",
+      "derivation_status": "valid",
+      "permissive_status": "valid",
+      "strict_status": "unclear",
+      "valid_geometric_core": true,
+      "numerical_answer_correct": true,
+      "final_answer": "6",
+      "numerical_error": false,
+      "false_or_unsupported_explanation_role": "incidental: an incorrect A,O,P,X cyclic assertion and problem-design speculation do not supply the final tangent-secant calculation; the exact applicable tangency lemma is stated separately and retained",
+      "reason": "The answer explicitly invokes the correct special result for these E,F,K,L,X and uses it, without retracting it, to apply power of a point. Under the calibrated rule, the lemma needs no reproof. A stricter reader could call the repeated 'assume/intended' phrasing uncertain, but that alone is not grounds for invalidity under this rubric.",
+      "evidence_quotes": [
+        {
+          "line": 54,
+          "quote": "A, O, P, X are concyclic",
+          "role": "incorrect but ancillary exploratory statement",
+          "source_line": "Also, $\\angle OAP = 90^\\circ$. So $A, O, P, X$ are concyclic on the circle with diameter $AP$."
+        },
+        {
+          "line": 81,
+          "quote": "if E, F are constructed this way, then PX is tangent",
+          "role": "correct construction-specific result",
+          "source_line": "There is a theorem (often related to the \"Butterfly theorem\" or specific configurations involving tangents and symmedians) stating that if $E, F$ are constructed this way, then $PX$ is tangent to the circumcircle of $KLX$."
+        },
+        {
+          "line": 87,
+          "quote": "The configuration implies that PX is tangent to σ at X",
+          "role": "retained geometric premise",
+          "source_line": "The configuration implies that $PX$ is tangent to $\\sigma$ at $X$."
+        },
+        {
+          "line": 129,
+          "quote": "PY × PZ = 3 × 12 = 36",
+          "role": "correct numerical application",
+          "source_line": "Power of $P$ wrt $\\sigma$: $PY \\times PZ = 3 \\times 12 = 36$."
+        }
+      ],
+      "uncertainty": "Boundary only in tone: later conjectural language could obscure the explicit correct lemma, but does not replace it in the final calculation.",
+      "read_coverage": "Lines 1–166, full prompt, exploratory middle, final deduction and final answer."
+    },
+    {
+      "case_id": "case-01",
+      "derivation_status": "valid",
+      "permissive_status": "valid",
+      "strict_status": "unclear",
+      "valid_geometric_core": true,
+      "numerical_answer_correct": true,
+      "final_answer": "6",
+      "numerical_error": false,
+      "false_or_unsupported_explanation_role": "incidental: several speculative angle/circle possibilities are rejected or left unused; the final chain identifies the exact construction-specific tangency",
+      "reason": "Despite many tentative digressions, the answer finally identifies OP=PX as tangent to (KLX) at X in this construction and then uses the valid tangent-secant relation and correct PZ=12. The known special property can be cited without a proof. Strict reading may regard 'assume' as an insufficient assertion, but the calibrated standard accepts the explicit applicable result.",
+      "evidence_quotes": [
+        {
+          "line": 150,
+          "quote": "OP is tangent to the circumcircle of triangle KLX at X",
+          "role": "correct special result",
+          "source_line": "Let's assume the standard result for this configuration: **$OP$ is tangent to the circumcircle of $\\triangle KLX$ at $X$.**"
+        },
+        {
+          "line": 231,
+          "quote": "PX² = PY · PZ = 3 · 12 = 36",
+          "role": "correct calculation",
+          "source_line": "$PX^2 = PY \\cdot PZ = 3 \\cdot 12 = 36$"
+        },
+        {
+          "line": 237,
+          "quote": "Recognize from the specific geometric construction ... OP ... is tangent",
+          "role": "final explanation retains result",
+          "source_line": "3.  Recognize from the specific geometric construction (tangent at A, foot of altitude to OP, specific angle conditions for E and F) that the line $OP$ (which contains $P$ and $X$) is tangent to the circle $\\sigma$ at point $X$."
+        }
+      ],
+      "uncertainty": "The statement is introduced with 'assume', but the final proof uses it as the known construction property, not a withdrawn guess.",
+      "read_coverage": "Lines 1–266, full prompt, exploratory middle, final deduction and final answer."
+    },
+    {
+      "case_id": "case-02",
+      "derivation_status": "invalid",
+      "permissive_status": "invalid",
+      "strict_status": "invalid",
+      "valid_geometric_core": false,
+      "numerical_answer_correct": false,
+      "final_answer": "3",
+      "numerical_error": false,
+      "answer_error_type": "Wrong numerical answer follows a false geometric identification, not an arithmetic slip.",
+      "false_or_unsupported_explanation_role": "core: it retracts the correct tangency, wrongly identifies PU with PO without establishing U∈OP, then guesses X=Y",
+      "reason": "An early correct tangency lemma is explicitly rejected later. The final argument assumes U lies on OP, although U is the different circle's center and is not given collinear with O,P; it then guesses the nearer intersection. Thus the final answer 3 does not follow from the construction. Its earlier 3×12=36 arithmetic was correct but abandoned.",
+      "evidence_quotes": [
+        {
+          "line": 77,
+          "quote": "there is a known result ... OP is tangent",
+          "role": "correct result stated early",
+          "source_line": "There is a known result (often associated with the \"Miquel Point\" or specific tangential configurations): If $XE$ and $XF$ are drawn such that they are tangent to $(ACX)$ and $(ABX)$ respectively, and $E \\in AB, F \\in AC$, then the circle passing through $X$ and the intersections of $EF$ with $\\Gamma$ has the property that $OP$ is tangent to it at $X$."
+        },
+        {
+          "line": 109,
+          "quote": "This implies σ is NOT tangent to OP at X",
+          "role": "explicit retraction after conflating PU and PO",
+          "source_line": "This implies $\\sigma$ is NOT tangent to $OP$ at $X$."
+        },
+        {
+          "line": 295,
+          "quote": "The center U ... lies on the line OP",
+          "role": "false replacement premise",
+          "source_line": "There is a known result: The center $U$ of the circle $(KLX)$ lies on the line $OP$."
+        },
+        {
+          "line": 301,
+          "quote": "Thus PX = 3",
+          "role": "unsupported conclusion",
+          "source_line": "Thus $PX = 3$."
+        }
+      ],
+      "uncertainty": "None material: final reasoning rejects the valid lemma and depends on unestablished collinearity.",
+      "read_coverage": "Lines 1–314, full prompt, middle revisions, final deduction and final answer."
+    },
+    {
+      "case_id": "case-03",
+      "derivation_status": "invalid",
+      "permissive_status": "valid",
+      "strict_status": "invalid",
+      "valid_geometric_core": false,
+      "numerical_answer_correct": true,
+      "final_answer": "6",
+      "numerical_error": false,
+      "false_or_unsupported_explanation_role": "core replacement: after naming the correct lemma, it asserts that uniqueness of a numerical answer forces tangency; this inference is false and becomes the stated deduction",
+      "reason": "The exact applicable tangency result is mentioned, so a permissive extraction of that sentence gives a valid tangent-secant calculation. But the answer repeatedly makes its operative justification the claim that a unique numerical problem can only yield PX²=power, which does not follow; other geometric relations could determine PX. Its final step expressly uses this false uniqueness argument rather than simply applying the known result.",
+      "evidence_quotes": [
+        {
+          "line": 56,
+          "quote": "There is a known lemma ... tangent to the line PX at X",
+          "role": "correct result available",
+          "source_line": "There is a known lemma: If $E, F$ are chosen such that $\\angle EXP = \\angle ACX$ and $\\angle FXO = \\angle ABX$, then the circle through $K, L, X$ is tangent to the line $PX$ at $X$."
+        },
+        {
+          "line": 67,
+          "quote": "The only geometric relationship that fixes a length PX ... is PX² = k",
+          "role": "false core inference",
+          "source_line": "For the answer to be unique, $PX$ must be determined solely by this power. The only geometric relationship that fixes a length $PX$ given a power $k$ is $PX^2 = k$ (tangency) or some other fixed ratio."
+        },
+        {
+          "line": 108,
+          "quote": "Deduce PX is the tangent length due to the problem's nature requiring a unique solution",
+          "role": "final replacement of lemma",
+          "source_line": "2. Deduce $PX$ is the tangent length due to the problem's nature requiring a unique solution independent of triangle parameters."
+        },
+        {
+          "line": 125,
+          "quote": "PY · PZ = 3 · (3+9) = 36",
+          "role": "arithmetic itself correct",
+          "source_line": "Power of point $P$ with respect to circle $\\sigma$ is $PY \\cdot PZ = 3 \\cdot (3+9) = 36$."
+        }
+      ],
+      "uncertainty": "Boundary: accepting line 56 as the independently invoked theorem yields valid; reading the stated final deduction as written yields invalid.",
+      "read_coverage": "Lines 1–132, full prompt, exploratory middle, final deduction and final answer."
+    },
+    {
+      "case_id": "case-04",
+      "derivation_status": "invalid",
+      "permissive_status": "valid",
+      "strict_status": "invalid",
+      "valid_geometric_core": false,
+      "numerical_answer_correct": true,
+      "final_answer": "6",
+      "numerical_error": false,
+      "false_or_unsupported_explanation_role": "core replacement: unsupported EF symmetry/perpendicularity and a uniqueness-of-answer inference are offered as reasons tangency must hold",
+      "reason": "The correct special tangency lemma is stated at line 116, which can support a permissive valid reading. The actual explanatory chain first claims an unsupported symmetry of EF, then derives tangency because the problem has one answer; neither establishes the key relation. The final numbered calculation again says 'assume' rather than consistently applying the cited lemma.",
+      "evidence_quotes": [
+        {
+          "line": 87,
+          "quote": "EF is perpendicular to OP and symmetric with respect to it ... makes X the point of tangency",
+          "role": "unsupported proposed mechanism",
+          "source_line": "It turns out that this specific construction ensures that the line $EF$ is perpendicular to $OP$ and symmetric with respect to it in a way that makes $X$ the point of tangency from $P$ to the circle passing through $K, L, X$."
+        },
+        {
+          "line": 116,
+          "quote": "construction of E and F ... is a known lemma",
+          "role": "correct result also stated",
+          "source_line": "The construction of $E$ and $F$ via those specific angles ($\\angle EXP = \\angle ACX$, etc.) is a known lemma in advanced Euclidean geometry."
+        },
+        {
+          "line": 130,
+          "quote": "Assume PX is tangent",
+          "role": "final conditional step",
+          "source_line": "5.  Assume $PX$ is tangent to $\\sigma$ at $X$. Then $PX^2 = PY \\cdot PZ$."
+        },
+        {
+          "line": 135,
+          "quote": "the only fixed relationship ... is the tangency",
+          "role": "false final justification",
+          "source_line": "If $PX$ were not tangent, the length $PX$ would depend on the angle $\\angle XPY$, which depends on the specific shape of $\\triangle ABC$. Since the problem implies a unique numerical answer derived solely from $PY$ and $YZ$, the configuration must enforce a fixed relationship. The only fixed relationship for a point $X$ on a circle defined by a secant from $P$ (where the secant passes through the center) that yields a unique scalar is the tangency. Any other position of $X$ would vary with the triangle's angles. Therefore, $PX$ must be tangent."
+        }
+      ],
+      "uncertainty": "A reader isolating the correct construction-specific lemma could rate valid; the dominant final rationale instead uses unsupported symmetry and uniqueness.",
+      "read_coverage": "Lines 1–146, full prompt, exploratory middle, final deduction and final answer."
+    },
+    {
+      "case_id": "case-05",
+      "derivation_status": "invalid",
+      "permissive_status": "valid",
+      "strict_status": "invalid",
+      "valid_geometric_core": false,
+      "numerical_answer_correct": true,
+      "final_answer": "6",
+      "numerical_error": false,
+      "false_or_unsupported_explanation_role": "core replacement: a false right-angle/circle-diameter claim is asserted as the initial geometric setup and is said to propagate to the tangency of σ",
+      "reason": "AX⊥OP makes ∠AXP=90°, not ∠PAX=90°. Therefore A is generally not on the circle with diameter PX, and the claim that this circle and Γ touch at A is false. The answer calls that setup crucial to its final σ-tangency explanation. Although it later states the correct construction-specific tangency as a known result, its own final causal rationale depends on the false circle claim. The calculation 3×12 and its square root are correct.",
+      "evidence_quotes": [
+        {
+          "line": 151,
+          "quote": "angle PAX = 90° (since AX ⟂ OP)",
+          "role": "false angle inference",
+          "source_line": "Angle between tangent $PA$ and chord $AX$ in circle $(PX)$ is $\\angle PAX = 90^\\circ$ (since $AX \\perp OP$ and $P, X, O$ collinear)."
+        },
+        {
+          "line": 162,
+          "quote": "the two circles Γ and circle with diameter PX are tangent ... at A",
+          "role": "false geometric setup",
+          "source_line": "Since $PA$ is also the tangent to $\\Gamma$ at $A$, the two circles $\\Gamma$ and circle with diameter $PX$ are tangent to each other at $A$."
+        },
+        {
+          "line": 254,
+          "quote": "In this configuration, PX is tangent to ... KLX",
+          "role": "correct lemma also stated",
+          "source_line": "Let's assume the standard result for this type of problem (often found in Olympiad training):"
+        },
+        {
+          "line": 264,
+          "quote": "initial setup ... is crucial ... likely propagates to the final circle σ",
+          "role": "false setup retained in final explanation",
+          "source_line": "The reasoning holds together. The specific angle conditions define $E$ and $F$ to ensure the circle $(KLX)$ is the \"polar\" or related circle such that $PX$ acts as a tangent from $P$. The fact that $X$ is the projection of $A$ on $OP$ is crucial for the initial setup (tangency of circle diameter $PX$ to $\\Gamma$), which likely propagates to the final circle $\\sigma$."
+        }
+      ],
+      "uncertainty": "Permissive reading can discard the false diameter-circle path and use the later correct known result alone; the written final explanation does not discard it.",
+      "read_coverage": "Lines 1–279, full prompt, exploratory middle, final deduction and final answer. Independent check: in a right OAP with O=(0,0), A=(0,1), P=(2,1), foot X=(0.4,0.2), (P−A)·(X−A)=0.8≠0."
+    },
+    {
+      "case_id": "case-06",
+      "derivation_status": "invalid",
+      "permissive_status": "valid",
+      "strict_status": "invalid",
+      "valid_geometric_core": false,
+      "numerical_answer_correct": true,
+      "final_answer": "6",
+      "numerical_error": false,
+      "false_or_unsupported_explanation_role": "core replacement: asymmetry of ABC is treated as proof U∉OP and then the alleged need for a unique value as proof of tangency",
+      "reason": "The exact construction-specific tangency theorem is eventually stated correctly, permitting a generous valid extraction. But the final reasoning asserts AC>AB forces U off OP and then that the only way to obtain a unique PX is tangency. Neither inference is licensed; a circle center's location cannot be deduced merely from that asymmetry, and well-posedness is not a tangency theorem. This false chain is used immediately before the final calculation.",
+      "evidence_quotes": [
+        {
+          "line": 215,
+          "quote": "if U were on OP, then E and F would have to be symmetric ... contradicts AC > AB",
+          "role": "unsupported core premise",
+          "source_line": "Furthermore, if $U$ were on $OP$, then $E$ and $F$ would have to be symmetric or the circle symmetric, which contradicts $AC > AB$ unless the specific angles force it, which is unlikely."
+        },
+        {
+          "line": 218,
+          "quote": "Given the 'find PX' with only PY, YZ, it must be the tangent case",
+          "role": "false inference",
+          "source_line": "Given the \"find PX\" with only $PY, YZ$, it must be the tangent case."
+        },
+        {
+          "line": 224,
+          "quote": "under these conditions, PX is tangent to ... KLX",
+          "role": "correct theorem also stated",
+          "source_line": "A known theorem (possibly related to the \"Butterfly Theorem\" variants or specific olympiad problems) states that under these conditions, $PX$ is tangent to the circumcircle of $KLX$."
+        },
+        {
+          "line": 226,
+          "quote": "we proceed with the assumption that PX is tangent",
+          "role": "final conditional reliance",
+          "source_line": "Therefore, we proceed with the assumption that $PX$ is tangent to $\\sigma$."
+        }
+      ],
+      "uncertainty": "The true specialized theorem at line 224 could be treated as the sole premise, but the surrounding final argument substitutes unsupported asymmetry and uniqueness claims.",
+      "read_coverage": "Lines 1–246, full prompt, exploratory middle, final deduction and final answer."
+    },
+    {
+      "case_id": "case-07",
+      "derivation_status": "invalid",
+      "permissive_status": "valid",
+      "strict_status": "invalid",
+      "valid_geometric_core": false,
+      "numerical_answer_correct": true,
+      "final_answer": "6",
+      "numerical_error": false,
+      "false_or_unsupported_explanation_role": "core replacement: it repeatedly substitutes a well-posedness/clean-number heuristic for the tangency lemma in the final argument; the isosceles digression is largely withdrawn as singular",
+      "reason": "The answer names the correct special tangency result, so one could permissively keep that sentence and the valid power computation. Its lengthy later conclusion instead says uniqueness of the requested value and the neat square root force PX to be tangent. That is not a valid deduction, and it remains the operative reason at the end. The invalid isosceles limiting construction is acknowledged as excluded and is not itself the decisive flaw.",
+      "evidence_quotes": [
+        {
+          "line": 130,
+          "quote": "In this configuration ... PX is tangent",
+          "role": "correct lemma stated",
+          "source_line": "Actually, there is a known theorem (related to the \"Miquel Point\" or similar configurations in triangle geometry):"
+        },
+        {
+          "line": 203,
+          "quote": "the construction breaks down ... isosceles",
+          "role": "earlier digression withdrawn",
+          "source_line": "Thus, the isosceles case might not be a valid limit for the construction as defined, or the \"A-side\" condition forces $E, F$ to behave differently."
+        },
+        {
+          "line": 216,
+          "quote": "Let's trust the 'unique numerical answer' heuristic",
+          "role": "false replacement rationale",
+          "source_line": "Let's trust the \"unique numerical answer\" heuristic. The numbers 3 and 9 yield 36 as the product. The square root is 6."
+        },
+        {
+          "line": 252,
+          "quote": "For the length to be determined uniquely ... PX must be the tangent length",
+          "role": "final core inference",
+          "source_line": "For the length to be determined uniquely by $PY$ and $YZ$, $PX$ must be the tangent length."
+        }
+      ],
+      "uncertainty": "Boundary: a theorem-only extraction is valid, but the final stated justification relies on a uniqueness heuristic rather than that theorem.",
+      "read_coverage": "Lines 1–257, full prompt, exploratory middle, final deduction and final answer."
+    }
+  ]
+}

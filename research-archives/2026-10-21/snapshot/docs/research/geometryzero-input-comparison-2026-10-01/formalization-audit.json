@@ -1,0 +1,2552 @@
+[
+  {
+    "id": "H01",
+    "problem_en": "Let H be the orthocenter and M the midpoint of BC in an acute scalene triangle ABC. Let P be the foot of the perpendicular from H to line AM. If BC=12 and AM=10, find AP.",
+    "facts": [
+      {
+        "source_given": "triangle ABC",
+        "statement": "Triangle(A,B,C)"
+      },
+      {
+        "source_given": "H is the orthocenter; generic definition",
+        "statement": "Perpendicular(Line(A,H),Line(B,C))"
+      },
+      {
+        "source_given": "H is the orthocenter; generic definition",
+        "statement": "Perpendicular(Line(B,H),Line(A,C))"
+      },
+      {
+        "source_given": "H is the orthocenter; generic definition",
+        "statement": "Perpendicular(Line(C,H),Line(A,B))"
+      },
+      {
+        "source_given": "M is midpoint of BC",
+        "statement": "IsMidpointOf(M,Line(B,C))"
+      },
+      {
+        "source_given": "P is foot from H to AM",
+        "statement": "PointLiesOnLine(P,Line(A,M))"
+      },
+      {
+        "source_given": "P is foot from H to AM",
+        "statement": "Perpendicular(Line(H,P),Line(A,M))"
+      },
+      {
+        "source_given": "given length BC=12",
+        "statement": "Equals(LengthOf(Line(B,C)),12)"
+      },
+      {
+        "source_given": "given length AM=10",
+        "statement": "Equals(LengthOf(Line(A,M)),10)"
+      },
+      {
+        "source_given": "quantity asked in original question",
+        "statement": "Find(LengthOf(Line(A,P)))"
+      }
+    ],
+    "line_instances": [
+      "AH",
+      "BC",
+      "BH",
+      "AC",
+      "CH",
+      "AB",
+      "AM",
+      "HP",
+      "AP"
+    ],
+    "unencoded_given_policy": "All original English givens remain verbatim. No inferred target relation is supplied."
+  },
+  {
+    "id": "H02",
+    "problem_en": "In an acute scalene triangle ABC, let M be the midpoint of BC and K the foot from A to BC. Suppose BC=16, AM=10, AK=8, and BK>KC. Choose D1,D2 on BC with BD1=6 and BD2=9. For i=1,2, let Ui be the intersection other than A of circle ABDi with line AC, and Vi the intersection other than A of circle ACDi with line AB. Let Zi be the center of circle AUiVi. Find Z1Z2.",
+    "facts": [
+      {
+        "source_given": "triangle ABC",
+        "statement": "Triangle(A,B,C)"
+      },
+      {
+        "source_given": "M is midpoint of BC",
+        "statement": "IsMidpointOf(M,Line(B,C))"
+      },
+      {
+        "source_given": "K is foot from A to BC",
+        "statement": "PointLiesOnLine(K,Line(B,C))"
+      },
+      {
+        "source_given": "K is foot from A to BC",
+        "statement": "Perpendicular(Line(A,K),Line(B,C))"
+      },
+      {
+        "source_given": "given length BC=16",
+        "statement": "Equals(LengthOf(Line(B,C)),16)"
+      },
+      {
+        "source_given": "given length AM=10",
+        "statement": "Equals(LengthOf(Line(A,M)),10)"
+      },
+      {
+        "source_given": "given length AK=8",
+        "statement": "Equals(LengthOf(Line(A,K)),8)"
+      },
+      {
+        "source_given": "Di is on BC",
+        "statement": "PointLiesOnLine(D1,Line(B,C))"
+      },
+      {
+        "source_given": "given length BD1=6",
+        "statement": "Equals(LengthOf(Line(B,D1)),6)"
+      },
+      {
+        "source_given": "circle ABDi meets AC again at Ui",
+        "statement": "Circle(c_ABD1)"
+      },
+      {
+        "source_given": "circle ABDi meets AC again at Ui",
+        "statement": "PointLiesOnCircle(A,Circle(c_ABD1))"
+      },
+      {
+        "source_given": "circle ABDi meets AC again at Ui",
+        "statement": "PointLiesOnCircle(B,Circle(c_ABD1))"
+      },
+      {
+        "source_given": "circle ABDi meets AC again at Ui",
+        "statement": "PointLiesOnCircle(D1,Circle(c_ABD1))"
+      },
+      {
+        "source_given": "circle ABDi meets AC again at Ui",
+        "statement": "PointLiesOnCircle(U1,Circle(c_ABD1))"
+      },
+      {
+        "source_given": "Ui is on AC",
+        "statement": "PointLiesOnLine(U1,Line(A,C))"
+      },
+      {
+        "source_given": "circle ACDi meets AB again at Vi",
+        "statement": "Circle(c_ACD1)"
+      },
+      {
+        "source_given": "circle ACDi meets AB again at Vi",
+        "statement": "PointLiesOnCircle(A,Circle(c_ACD1))"
+      },
+      {
+        "source_given": "circle ACDi meets AB again at Vi",
+        "statement": "PointLiesOnCircle(C,Circle(c_ACD1))"
+      },
+      {
+        "source_given": "circle ACDi meets AB again at Vi",
+        "statement": "PointLiesOnCircle(D1,Circle(c_ACD1))"
+      },
+      {
+        "source_given": "circle ACDi meets AB again at Vi",
+        "statement": "PointLiesOnCircle(V1,Circle(c_ACD1))"
+      },
+      {
+        "source_given": "Vi is on AB",
+        "statement": "PointLiesOnLine(V1,Line(A,B))"
+      },
+      {
+        "source_given": "Zi is center of circle AUiVi",
+        "statement": "Circle(Z1)"
+      },
+      {
+        "source_given": "Zi is center of circle AUiVi",
+        "statement": "PointLiesOnCircle(A,Circle(Z1))"
+      },
+      {
+        "source_given": "Zi is center of circle AUiVi",
+        "statement": "PointLiesOnCircle(U1,Circle(Z1))"
+      },
+      {
+        "source_given": "Zi is center of circle AUiVi",
+        "statement": "PointLiesOnCircle(V1,Circle(Z1))"
+      },
+      {
+        "source_given": "Di is on BC",
+        "statement": "PointLiesOnLine(D2,Line(B,C))"
+      },
+      {
+        "source_given": "given length BD2=9",
+        "statement": "Equals(LengthOf(Line(B,D2)),9)"
+      },
+      {
+        "source_given": "circle ABDi meets AC again at Ui",
+        "statement": "Circle(c_ABD2)"
+      },
+      {
+        "source_given": "circle ABDi meets AC again at Ui",
+        "statement": "PointLiesOnCircle(A,Circle(c_ABD2))"
+      },
+      {
+        "source_given": "circle ABDi meets AC again at Ui",
+        "statement": "PointLiesOnCircle(B,Circle(c_ABD2))"
+      },
+      {
+        "source_given": "circle ABDi meets AC again at Ui",
+        "statement": "PointLiesOnCircle(D2,Circle(c_ABD2))"
+      },
+      {
+        "source_given": "circle ABDi meets AC again at Ui",
+        "statement": "PointLiesOnCircle(U2,Circle(c_ABD2))"
+      },
+      {
+        "source_given": "Ui is on AC",
+        "statement": "PointLiesOnLine(U2,Line(A,C))"
+      },
+      {
+        "source_given": "circle ACDi meets AB again at Vi",
+        "statement": "Circle(c_ACD2)"
+      },
+      {
+        "source_given": "circle ACDi meets AB again at Vi",
+        "statement": "PointLiesOnCircle(A,Circle(c_ACD2))"
+      },
+      {
+        "source_given": "circle ACDi meets AB again at Vi",
+        "statement": "PointLiesOnCircle(C,Circle(c_ACD2))"
+      },
+      {
+        "source_given": "circle ACDi meets AB again at Vi",
+        "statement": "PointLiesOnCircle(D2,Circle(c_ACD2))"
+      },
+      {
+        "source_given": "circle ACDi meets AB again at Vi",
+        "statement": "PointLiesOnCircle(V2,Circle(c_ACD2))"
+      },
+      {
+        "source_given": "Vi is on AB",
+        "statement": "PointLiesOnLine(V2,Line(A,B))"
+      },
+      {
+        "source_given": "Zi is center of circle AUiVi",
+        "statement": "Circle(Z2)"
+      },
+      {
+        "source_given": "Zi is center of circle AUiVi",
+        "statement": "PointLiesOnCircle(A,Circle(Z2))"
+      },
+      {
+        "source_given": "Zi is center of circle AUiVi",
+        "statement": "PointLiesOnCircle(U2,Circle(Z2))"
+      },
+      {
+        "source_given": "Zi is center of circle AUiVi",
+        "statement": "PointLiesOnCircle(V2,Circle(Z2))"
+      },
+      {
+        "source_given": "quantity asked in original question",
+        "statement": "Find(LengthOf(Line(Z1,Z2)))"
+      }
+    ],
+    "line_instances": [
+      "BC",
+      "AK",
+      "AM",
+      "BD1",
+      "AC",
+      "AB",
+      "BD2",
+      "Z1Z2"
+    ],
+    "unencoded_given_policy": "All original English givens remain verbatim. No inferred target relation is supplied."
+  },
+  {
+    "id": "H03",
+    "problem_en": "Let O and H be the circumcenter and orthocenter of an acute scalene triangle ABC, with OH=6. At A, let Ka and La be where the internal and external angle bisectors meet line BC, respectively, and let Ma be the midpoint of BC. Let Pa be the intersection other than A of circle AKaLa with line AMa. Define Pb and Pc cyclically at B and C. Let Z be the center of circle PaPbPc. Find OZ. Assume all circles and intersections are nondegenerate.",
+    "facts": [
+      {
+        "source_given": "triangle ABC",
+        "statement": "Triangle(A,B,C)"
+      },
+      {
+        "source_given": "H is the orthocenter; generic definition",
+        "statement": "Perpendicular(Line(A,H),Line(B,C))"
+      },
+      {
+        "source_given": "H is the orthocenter; generic definition",
+        "statement": "Perpendicular(Line(B,H),Line(A,C))"
+      },
+      {
+        "source_given": "H is the orthocenter; generic definition",
+        "statement": "Perpendicular(Line(C,H),Line(A,B))"
+      },
+      {
+        "source_given": "O is circumcenter",
+        "statement": "Circle(O)"
+      },
+      {
+        "source_given": "O is circumcenter",
+        "statement": "PointLiesOnCircle(A,Circle(O))"
+      },
+      {
+        "source_given": "O is circumcenter",
+        "statement": "PointLiesOnCircle(B,Circle(O))"
+      },
+      {
+        "source_given": "O is circumcenter",
+        "statement": "PointLiesOnCircle(C,Circle(O))"
+      },
+      {
+        "source_given": "given length OH=6",
+        "statement": "Equals(LengthOf(Line(O,H)),6)"
+      },
+      {
+        "source_given": "internal angle bisector meets opposite line at K",
+        "statement": "PointLiesOnLine(Ka,Line(B,C))"
+      },
+      {
+        "source_given": "external angle bisector meets opposite line at L",
+        "statement": "PointLiesOnLine(La,Line(B,C))"
+      },
+      {
+        "source_given": "internal angle bisector",
+        "statement": "BisectsAngle(Line(A,Ka),Angle(B,A,C))"
+      },
+      {
+        "source_given": "Ma is midpoint of BC",
+        "statement": "IsMidpointOf(Ma,Line(B,C))"
+      },
+      {
+        "source_given": "circle AKL meets AM again at P",
+        "statement": "Circle(c_AKL)"
+      },
+      {
+        "source_given": "circle AKL meets AM again at P",
+        "statement": "PointLiesOnCircle(A,Circle(c_AKL))"
+      },
+      {
+        "source_given": "circle AKL meets AM again at P",
+        "statement": "PointLiesOnCircle(Ka,Circle(c_AKL))"
+      },
+      {
+        "source_given": "circle AKL meets AM again at P",
+        "statement": "PointLiesOnCircle(La,Circle(c_AKL))"
+      },
+      {
+        "source_given": "circle AKL meets AM again at P",
+        "statement": "PointLiesOnCircle(Pa,Circle(c_AKL))"
+      },
+      {
+        "source_given": "P on AM",
+        "statement": "PointLiesOnLine(Pa,Line(A,Ma))"
+      },
+      {
+        "source_given": "internal angle bisector meets opposite line at K",
+        "statement": "PointLiesOnLine(Kb,Line(C,A))"
+      },
+      {
+        "source_given": "external angle bisector meets opposite line at L",
+        "statement": "PointLiesOnLine(Lb,Line(C,A))"
+      },
+      {
+        "source_given": "internal angle bisector",
+        "statement": "BisectsAngle(Line(B,Kb),Angle(C,B,A))"
+      },
+      {
+        "source_given": "Mb is midpoint of CA",
+        "statement": "IsMidpointOf(Mb,Line(C,A))"
+      },
+      {
+        "source_given": "circle AKL meets AM again at P",
+        "statement": "Circle(c_BKL)"
+      },
+      {
+        "source_given": "circle AKL meets AM again at P",
+        "statement": "PointLiesOnCircle(B,Circle(c_BKL))"
+      },
+      {
+        "source_given": "circle AKL meets AM again at P",
+        "statement": "PointLiesOnCircle(Kb,Circle(c_BKL))"
+      },
+      {
+        "source_given": "circle AKL meets AM again at P",
+        "statement": "PointLiesOnCircle(Lb,Circle(c_BKL))"
+      },
+      {
+        "source_given": "circle AKL meets AM again at P",
+        "statement": "PointLiesOnCircle(Pb,Circle(c_BKL))"
+      },
+      {
+        "source_given": "P on AM",
+        "statement": "PointLiesOnLine(Pb,Line(B,Mb))"
+      },
+      {
+        "source_given": "internal angle bisector meets opposite line at K",
+        "statement": "PointLiesOnLine(Kc,Line(A,B))"
+      },
+      {
+        "source_given": "external angle bisector meets opposite line at L",
+        "statement": "PointLiesOnLine(Lc,Line(A,B))"
+      },
+      {
+        "source_given": "internal angle bisector",
+        "statement": "BisectsAngle(Line(C,Kc),Angle(A,C,B))"
+      },
+      {
+        "source_given": "Mc is midpoint of AB",
+        "statement": "IsMidpointOf(Mc,Line(A,B))"
+      },
+      {
+        "source_given": "circle AKL meets AM again at P",
+        "statement": "Circle(c_CKL)"
+      },
+      {
+        "source_given": "circle AKL meets AM again at P",
+        "statement": "PointLiesOnCircle(C,Circle(c_CKL))"
+      },
+      {
+        "source_given": "circle AKL meets AM again at P",
+        "statement": "PointLiesOnCircle(Kc,Circle(c_CKL))"
+      },
+      {
+        "source_given": "circle AKL meets AM again at P",
+        "statement": "PointLiesOnCircle(Lc,Circle(c_CKL))"
+      },
+      {
+        "source_given": "circle AKL meets AM again at P",
+        "statement": "PointLiesOnCircle(Pc,Circle(c_CKL))"
+      },
+      {
+        "source_given": "P on AM",
+        "statement": "PointLiesOnLine(Pc,Line(C,Mc))"
+      },
+      {
+        "source_given": "Z center of circle PaPbPc",
+        "statement": "Circle(Z)"
+      },
+      {
+        "source_given": "Z center of circle PaPbPc",
+        "statement": "PointLiesOnCircle(Pa,Circle(Z))"
+      },
+      {
+        "source_given": "Z center of circle PaPbPc",
+        "statement": "PointLiesOnCircle(Pb,Circle(Z))"
+      },
+      {
+        "source_given": "Z center of circle PaPbPc",
+        "statement": "PointLiesOnCircle(Pc,Circle(Z))"
+      },
+      {
+        "source_given": "quantity asked in original question",
+        "statement": "Find(LengthOf(Line(O,Z)))"
+      }
+    ],
+    "line_instances": [
+      "AH",
+      "BC",
+      "BH",
+      "AC",
+      "CH",
+      "AB",
+      "OH",
+      "AKa",
+      "AMa",
+      "CA",
+      "BKb",
+      "BMb",
+      "CKc",
+      "CMc",
+      "OZ"
+    ],
+    "unencoded_given_policy": "All original English givens remain verbatim. No inferred target relation is supplied."
+  },
+  {
+    "id": "H04",
+    "problem_en": "In an acute scalene triangle ABC, let H be the orthocenter, M the midpoint of BC, and P the foot from H to line AM. Let T be the intersection of the perpendicular bisector of AP with line BC. The points T,B,C occur in that order, and BT=2, BC=6. Find AT.",
+    "facts": [
+      {
+        "source_given": "triangle ABC",
+        "statement": "Triangle(A,B,C)"
+      },
+      {
+        "source_given": "H is the orthocenter; generic definition",
+        "statement": "Perpendicular(Line(A,H),Line(B,C))"
+      },
+      {
+        "source_given": "H is the orthocenter; generic definition",
+        "statement": "Perpendicular(Line(B,H),Line(A,C))"
+      },
+      {
+        "source_given": "H is the orthocenter; generic definition",
+        "statement": "Perpendicular(Line(C,H),Line(A,B))"
+      },
+      {
+        "source_given": "M is midpoint of BC",
+        "statement": "IsMidpointOf(M,Line(B,C))"
+      },
+      {
+        "source_given": "P is foot from H to AM",
+        "statement": "PointLiesOnLine(P,Line(A,M))"
+      },
+      {
+        "source_given": "P is foot from H to AM",
+        "statement": "Perpendicular(Line(H,P),Line(A,M))"
+      },
+      {
+        "source_given": "T intersection with BC",
+        "statement": "PointLiesOnLine(T,Line(B,C))"
+      },
+      {
+        "source_given": "T on perpendicular bisector of AP",
+        "statement": "IsPerpendicularBisectorOf(Line(bisector_AP),Line(A,P))"
+      },
+      {
+        "source_given": "T on perpendicular bisector of AP",
+        "statement": "PointLiesOnLine(T,Line(bisector_AP))"
+      },
+      {
+        "source_given": "given length BT=2",
+        "statement": "Equals(LengthOf(Line(B,T)),2)"
+      },
+      {
+        "source_given": "given length BC=6",
+        "statement": "Equals(LengthOf(Line(B,C)),6)"
+      },
+      {
+        "source_given": "quantity asked in original question",
+        "statement": "Find(LengthOf(Line(A,T)))"
+      }
+    ],
+    "line_instances": [
+      "AH",
+      "BC",
+      "BH",
+      "AC",
+      "CH",
+      "AB",
+      "AM",
+      "HP",
+      "AP",
+      "BT",
+      "AT"
+    ],
+    "unencoded_given_policy": "All original English givens remain verbatim. No inferred target relation is supplied."
+  },
+  {
+    "id": "H07",
+    "problem_en": "Two circles tangent to line AB at A and B intersect at M and N on the same side of AB, with M closer to AB than N. Triangle NAB is acute and scalene. A line through M parallel to AB meets the first circle again at C and the second circle again at D. Let E=AC∩BD, P=AN∩CD, and Q=BN∩CD. Let O be the midpoint of AB and F the foot from M to AB. If AB=8, ON=8*sqrt(10)/5, and MF=3, find the area of triangle EPQ.",
+    "facts": [
+      {
+        "source_given": "triangle NAB",
+        "statement": "Triangle(N,A,B)"
+      },
+      {
+        "source_given": "first circle through its tangency and intersection points",
+        "statement": "Circle(c1)"
+      },
+      {
+        "source_given": "first circle through its tangency and intersection points",
+        "statement": "PointLiesOnCircle(A,Circle(c1))"
+      },
+      {
+        "source_given": "first circle through its tangency and intersection points",
+        "statement": "PointLiesOnCircle(M,Circle(c1))"
+      },
+      {
+        "source_given": "first circle through its tangency and intersection points",
+        "statement": "PointLiesOnCircle(N,Circle(c1))"
+      },
+      {
+        "source_given": "first circle through its tangency and intersection points",
+        "statement": "PointLiesOnCircle(C,Circle(c1))"
+      },
+      {
+        "source_given": "second circle through its tangency and intersection points",
+        "statement": "Circle(c2)"
+      },
+      {
+        "source_given": "second circle through its tangency and intersection points",
+        "statement": "PointLiesOnCircle(B,Circle(c2))"
+      },
+      {
+        "source_given": "second circle through its tangency and intersection points",
+        "statement": "PointLiesOnCircle(M,Circle(c2))"
+      },
+      {
+        "source_given": "second circle through its tangency and intersection points",
+        "statement": "PointLiesOnCircle(N,Circle(c2))"
+      },
+      {
+        "source_given": "second circle through its tangency and intersection points",
+        "statement": "PointLiesOnCircle(D,Circle(c2))"
+      },
+      {
+        "source_given": "circles tangent to AB at A,B",
+        "statement": "Tangent(Line(A,B),Circle(c1))"
+      },
+      {
+        "source_given": "circles tangent to AB at A,B",
+        "statement": "Tangent(Line(A,B),Circle(c2))"
+      },
+      {
+        "source_given": "line CD through M",
+        "statement": "PointLiesOnLine(M,Line(C,D))"
+      },
+      {
+        "source_given": "CD parallel AB",
+        "statement": "Parallel(Line(C,D),Line(A,B))"
+      },
+      {
+        "source_given": "E=AC intersection BD",
+        "statement": "PointLiesOnLine(E,Line(A,C))"
+      },
+      {
+        "source_given": "E=AC intersection BD",
+        "statement": "PointLiesOnLine(E,Line(B,D))"
+      },
+      {
+        "source_given": "P=AN intersection CD",
+        "statement": "PointLiesOnLine(P,Line(A,N))"
+      },
+      {
+        "source_given": "P=AN intersection CD",
+        "statement": "PointLiesOnLine(P,Line(C,D))"
+      },
+      {
+        "source_given": "Q=BN intersection CD",
+        "statement": "PointLiesOnLine(Q,Line(B,N))"
+      },
+      {
+        "source_given": "Q=BN intersection CD",
+        "statement": "PointLiesOnLine(Q,Line(C,D))"
+      },
+      {
+        "source_given": "O is midpoint of AB",
+        "statement": "IsMidpointOf(O,Line(A,B))"
+      },
+      {
+        "source_given": "F is foot from M to AB",
+        "statement": "PointLiesOnLine(F,Line(A,B))"
+      },
+      {
+        "source_given": "F is foot from M to AB",
+        "statement": "Perpendicular(Line(M,F),Line(A,B))"
+      },
+      {
+        "source_given": "given length AB=8",
+        "statement": "Equals(LengthOf(Line(A,B)),8)"
+      },
+      {
+        "source_given": "given length ON=8*sqrt(10)/5",
+        "statement": "Equals(LengthOf(Line(O,N)),8*sqrt(10)/5)"
+      },
+      {
+        "source_given": "given length MF=3",
+        "statement": "Equals(LengthOf(Line(M,F)),3)"
+      },
+      {
+        "source_given": "quantity asked in original question",
+        "statement": "Find(AreaOf(Triangle(E,P,Q)))"
+      }
+    ],
+    "line_instances": [
+      "AB",
+      "CD",
+      "AC",
+      "BD",
+      "AN",
+      "BN",
+      "MF",
+      "ON"
+    ],
+    "unencoded_given_policy": "All original English givens remain verbatim. No inferred target relation is supplied."
+  },
+  {
+    "id": "H08",
+    "problem_en": "Two circles tangent to line PQ at P and Q intersect at A and B on the same side of PQ, with B closer to PQ than A. Triangle APQ is acute and scalene. Reflect B across PQ to obtain C. If AP=6, AC=3*sqrt(34)/2, and tan(angle BAQ)=3/5, find the area of triangle APC.",
+    "facts": [
+      {
+        "source_given": "triangle APQ",
+        "statement": "Triangle(A,P,Q)"
+      },
+      {
+        "source_given": "first circle tangent at P and intersections A,B",
+        "statement": "Circle(c1)"
+      },
+      {
+        "source_given": "first circle tangent at P and intersections A,B",
+        "statement": "PointLiesOnCircle(P,Circle(c1))"
+      },
+      {
+        "source_given": "first circle tangent at P and intersections A,B",
+        "statement": "PointLiesOnCircle(A,Circle(c1))"
+      },
+      {
+        "source_given": "first circle tangent at P and intersections A,B",
+        "statement": "PointLiesOnCircle(B,Circle(c1))"
+      },
+      {
+        "source_given": "second circle tangent at Q and intersections A,B",
+        "statement": "Circle(c2)"
+      },
+      {
+        "source_given": "second circle tangent at Q and intersections A,B",
+        "statement": "PointLiesOnCircle(Q,Circle(c2))"
+      },
+      {
+        "source_given": "second circle tangent at Q and intersections A,B",
+        "statement": "PointLiesOnCircle(A,Circle(c2))"
+      },
+      {
+        "source_given": "second circle tangent at Q and intersections A,B",
+        "statement": "PointLiesOnCircle(B,Circle(c2))"
+      },
+      {
+        "source_given": "circles tangent to PQ",
+        "statement": "Tangent(Line(P,Q),Circle(c1))"
+      },
+      {
+        "source_given": "circles tangent to PQ",
+        "statement": "Tangent(Line(P,Q),Circle(c2))"
+      },
+      {
+        "source_given": "C reflection of B in PQ; generic definition",
+        "statement": "IsPerpendicularBisectorOf(Line(P,Q),Line(B,C))"
+      },
+      {
+        "source_given": "given length AP=6",
+        "statement": "Equals(LengthOf(Line(A,P)),6)"
+      },
+      {
+        "source_given": "given length AC=3*sqrt(34)/2",
+        "statement": "Equals(LengthOf(Line(A,C)),3*sqrt(34)/2)"
+      },
+      {
+        "source_given": "tan angle BAQ=3/5",
+        "statement": "Equals(TanOf(Angle(B,A,Q)),3/5)"
+      },
+      {
+        "source_given": "quantity asked in original question",
+        "statement": "Find(AreaOf(Triangle(A,P,C)))"
+      }
+    ],
+    "line_instances": [
+      "PQ",
+      "BC",
+      "AP",
+      "AC"
+    ],
+    "unencoded_given_policy": "All original English givens remain verbatim. No inferred target relation is supplied."
+  },
+  {
+    "id": "H12",
+    "problem_en": "A convex quadrilateral ABCD satisfies 0<angle ABC=angle ADC<90 degrees. The internal angle bisectors at B and D meet AC at E and F, and P=BE∩DF. Let M be the midpoint of AC. Circle BPD meets the interiors of segments BM and DM again at X and Y, respectively (other than B and D). Let Q=XE∩YF and let V be the foot from P to AC. Points P,Q lie on the same side of AC, with Q farther from AC. If PM=sqrt(29)/2, PV=5/2, and QM=sqrt(101), find PQ.",
+    "facts": [
+      {
+        "source_given": "quadrilateral ABCD",
+        "statement": "Quadrilateral(A,B,C,D)"
+      },
+      {
+        "source_given": "quadrilateral ABCD",
+        "statement": "Equals(MeasureOf(Angle(A,B,C)),MeasureOf(Angle(A,D,C)))"
+      },
+      {
+        "source_given": "E on AC",
+        "statement": "PointLiesOnLine(E,Line(A,C))"
+      },
+      {
+        "source_given": "F on AC",
+        "statement": "PointLiesOnLine(F,Line(A,C))"
+      },
+      {
+        "source_given": "internal angle bisectors BE,DF",
+        "statement": "BisectsAngle(Line(B,E),Angle(A,B,C))"
+      },
+      {
+        "source_given": "internal angle bisectors BE,DF",
+        "statement": "BisectsAngle(Line(D,F),Angle(A,D,C))"
+      },
+      {
+        "source_given": "P=BE intersection DF",
+        "statement": "PointLiesOnLine(P,Line(B,E))"
+      },
+      {
+        "source_given": "P=BE intersection DF",
+        "statement": "PointLiesOnLine(P,Line(D,F))"
+      },
+      {
+        "source_given": "M is midpoint of AC",
+        "statement": "IsMidpointOf(M,Line(A,C))"
+      },
+      {
+        "source_given": "circle BPD meets BM and DM again at X,Y",
+        "statement": "Circle(c_BPD)"
+      },
+      {
+        "source_given": "circle BPD meets BM and DM again at X,Y",
+        "statement": "PointLiesOnCircle(B,Circle(c_BPD))"
+      },
+      {
+        "source_given": "circle BPD meets BM and DM again at X,Y",
+        "statement": "PointLiesOnCircle(P,Circle(c_BPD))"
+      },
+      {
+        "source_given": "circle BPD meets BM and DM again at X,Y",
+        "statement": "PointLiesOnCircle(D,Circle(c_BPD))"
+      },
+      {
+        "source_given": "circle BPD meets BM and DM again at X,Y",
+        "statement": "PointLiesOnCircle(X,Circle(c_BPD))"
+      },
+      {
+        "source_given": "circle BPD meets BM and DM again at X,Y",
+        "statement": "PointLiesOnCircle(Y,Circle(c_BPD))"
+      },
+      {
+        "source_given": "X on BM",
+        "statement": "PointLiesOnLine(X,Line(B,M))"
+      },
+      {
+        "source_given": "Y on DM",
+        "statement": "PointLiesOnLine(Y,Line(D,M))"
+      },
+      {
+        "source_given": "Q=XE intersection YF",
+        "statement": "PointLiesOnLine(Q,Line(X,E))"
+      },
+      {
+        "source_given": "Q=XE intersection YF",
+        "statement": "PointLiesOnLine(Q,Line(Y,F))"
+      },
+      {
+        "source_given": "V is foot from P to AC",
+        "statement": "PointLiesOnLine(V,Line(A,C))"
+      },
+      {
+        "source_given": "V is foot from P to AC",
+        "statement": "Perpendicular(Line(P,V),Line(A,C))"
+      },
+      {
+        "source_given": "given length PM=sqrt(29)/2",
+        "statement": "Equals(LengthOf(Line(P,M)),sqrt(29)/2)"
+      },
+      {
+        "source_given": "given length PV=5/2",
+        "statement": "Equals(LengthOf(Line(P,V)),5/2)"
+      },
+      {
+        "source_given": "given length QM=sqrt(101)",
+        "statement": "Equals(LengthOf(Line(Q,M)),sqrt(101))"
+      },
+      {
+        "source_given": "quantity asked in original question",
+        "statement": "Find(LengthOf(Line(P,Q)))"
+      }
+    ],
+    "line_instances": [
+      "AC",
+      "BE",
+      "DF",
+      "BM",
+      "DM",
+      "XE",
+      "YF",
+      "PV",
+      "PM",
+      "QM",
+      "PQ"
+    ],
+    "unencoded_given_policy": "All original English givens remain verbatim. No inferred target relation is supplied."
+  },
+  {
+    "id": "H13",
+    "problem_en": "In an acute scalene triangle ABC, BC=6 and cos(angle ACB)=3/5. Let M be the midpoint of AC. The tangent to circle BMC at C meets the line through B perpendicular to BC at K. Point K is on the side of BC opposite A, and BK=24. Segments AK and BM meet at an interior point J. Let Z be the center of circle BJK. Find CZ.",
+    "facts": [
+      {
+        "source_given": "triangle ABC",
+        "statement": "Triangle(A,B,C)"
+      },
+      {
+        "source_given": "given length BC=6",
+        "statement": "Equals(LengthOf(Line(B,C)),6)"
+      },
+      {
+        "source_given": "cos angle ACB=3/5",
+        "statement": "Equals(CosOf(Angle(A,C,B)),3/5)"
+      },
+      {
+        "source_given": "M is midpoint of AC",
+        "statement": "IsMidpointOf(M,Line(A,C))"
+      },
+      {
+        "source_given": "circle BMC",
+        "statement": "Circle(c_BMC)"
+      },
+      {
+        "source_given": "circle BMC",
+        "statement": "PointLiesOnCircle(B,Circle(c_BMC))"
+      },
+      {
+        "source_given": "circle BMC",
+        "statement": "PointLiesOnCircle(M,Circle(c_BMC))"
+      },
+      {
+        "source_given": "circle BMC",
+        "statement": "PointLiesOnCircle(C,Circle(c_BMC))"
+      },
+      {
+        "source_given": "CK tangent at C; BK perpendicular BC",
+        "statement": "Tangent(Line(C,K),Circle(c_BMC))"
+      },
+      {
+        "source_given": "CK tangent at C; BK perpendicular BC",
+        "statement": "Perpendicular(Line(B,K),Line(B,C))"
+      },
+      {
+        "source_given": "given length BK=24",
+        "statement": "Equals(LengthOf(Line(B,K)),24)"
+      },
+      {
+        "source_given": "J=AK intersection BM",
+        "statement": "PointLiesOnLine(J,Line(A,K))"
+      },
+      {
+        "source_given": "J=AK intersection BM",
+        "statement": "PointLiesOnLine(J,Line(B,M))"
+      },
+      {
+        "source_given": "Z center of circle BJK",
+        "statement": "Circle(Z)"
+      },
+      {
+        "source_given": "Z center of circle BJK",
+        "statement": "PointLiesOnCircle(B,Circle(Z))"
+      },
+      {
+        "source_given": "Z center of circle BJK",
+        "statement": "PointLiesOnCircle(J,Circle(Z))"
+      },
+      {
+        "source_given": "Z center of circle BJK",
+        "statement": "PointLiesOnCircle(K,Circle(Z))"
+      },
+      {
+        "source_given": "quantity asked in original question",
+        "statement": "Find(LengthOf(Line(C,Z)))"
+      }
+    ],
+    "line_instances": [
+      "BC",
+      "AC",
+      "CK",
+      "BK",
+      "AK",
+      "BM",
+      "CZ"
+    ],
+    "unencoded_given_policy": "All original English givens remain verbatim. No inferred target relation is supplied."
+  },
+  {
+    "id": "DA01",
+    "problem_en": "Triangle ABC has AB=7, BC=8, and CA=9. One circle passes through A and B and is tangent at A to line AC. Another passes through A and C and is tangent at A to line AB. Let T be their intersection other than A. Find AT.",
+    "facts": [
+      {
+        "source_given": "triangle ABC",
+        "statement": "Triangle(A,B,C)"
+      },
+      {
+        "source_given": "given length AB=7",
+        "statement": "Equals(LengthOf(Line(A,B)),7)"
+      },
+      {
+        "source_given": "given length BC=8",
+        "statement": "Equals(LengthOf(Line(B,C)),8)"
+      },
+      {
+        "source_given": "given length CA=9",
+        "statement": "Equals(LengthOf(Line(C,A)),9)"
+      },
+      {
+        "source_given": "first circle through A,B,T",
+        "statement": "Circle(c1)"
+      },
+      {
+        "source_given": "first circle through A,B,T",
+        "statement": "PointLiesOnCircle(A,Circle(c1))"
+      },
+      {
+        "source_given": "first circle through A,B,T",
+        "statement": "PointLiesOnCircle(B,Circle(c1))"
+      },
+      {
+        "source_given": "first circle through A,B,T",
+        "statement": "PointLiesOnCircle(T,Circle(c1))"
+      },
+      {
+        "source_given": "second circle through A,C,T",
+        "statement": "Circle(c2)"
+      },
+      {
+        "source_given": "second circle through A,C,T",
+        "statement": "PointLiesOnCircle(A,Circle(c2))"
+      },
+      {
+        "source_given": "second circle through A,C,T",
+        "statement": "PointLiesOnCircle(C,Circle(c2))"
+      },
+      {
+        "source_given": "second circle through A,C,T",
+        "statement": "PointLiesOnCircle(T,Circle(c2))"
+      },
+      {
+        "source_given": "tangencies at A",
+        "statement": "Tangent(Line(A,C),Circle(c1))"
+      },
+      {
+        "source_given": "tangencies at A",
+        "statement": "Tangent(Line(A,B),Circle(c2))"
+      },
+      {
+        "source_given": "quantity asked in original question",
+        "statement": "Find(LengthOf(Line(A,T)))"
+      }
+    ],
+    "line_instances": [
+      "AB",
+      "BC",
+      "CA",
+      "AC",
+      "AT"
+    ],
+    "unencoded_given_policy": "All original English givens remain verbatim. No inferred target relation is supplied."
+  },
+  {
+    "id": "DA02",
+    "problem_en": "In triangle ABC, angle BAC=60 degrees, AB=10, and AC=8. Let T be an interior point such that angle ATB=angle BTC=angle CTA=120 degrees. Let G be the centroid of ABC, and let K be the intersection other than T of line TG with circle BTC. Find TK.",
+    "facts": [
+      {
+        "source_given": "triangle ABC",
+        "statement": "Triangle(A,B,C)"
+      },
+      {
+        "source_given": "given angle BAC=60 degrees",
+        "statement": "Equals(MeasureOf(Angle(B,A,C)),60)"
+      },
+      {
+        "source_given": "given length AB=10",
+        "statement": "Equals(LengthOf(Line(A,B)),10)"
+      },
+      {
+        "source_given": "given length AC=8",
+        "statement": "Equals(LengthOf(Line(A,C)),8)"
+      },
+      {
+        "source_given": "given angle ATB=120 degrees",
+        "statement": "Equals(MeasureOf(Angle(A,T,B)),120)"
+      },
+      {
+        "source_given": "given angle BTC=120 degrees",
+        "statement": "Equals(MeasureOf(Angle(B,T,C)),120)"
+      },
+      {
+        "source_given": "given angle CTA=120 degrees",
+        "statement": "Equals(MeasureOf(Angle(C,T,A)),120)"
+      },
+      {
+        "source_given": "G centroid",
+        "statement": "IsCentroidOf(G,Triangle(A,B,C))"
+      },
+      {
+        "source_given": "K intersection with circle BTC",
+        "statement": "Circle(c_BTC)"
+      },
+      {
+        "source_given": "K intersection with circle BTC",
+        "statement": "PointLiesOnCircle(B,Circle(c_BTC))"
+      },
+      {
+        "source_given": "K intersection with circle BTC",
+        "statement": "PointLiesOnCircle(T,Circle(c_BTC))"
+      },
+      {
+        "source_given": "K intersection with circle BTC",
+        "statement": "PointLiesOnCircle(C,Circle(c_BTC))"
+      },
+      {
+        "source_given": "K intersection with circle BTC",
+        "statement": "PointLiesOnCircle(K,Circle(c_BTC))"
+      },
+      {
+        "source_given": "K on TG",
+        "statement": "PointLiesOnLine(K,Line(T,G))"
+      },
+      {
+        "source_given": "quantity asked in original question",
+        "statement": "Find(LengthOf(Line(T,K)))"
+      }
+    ],
+    "line_instances": [
+      "AB",
+      "AC",
+      "TG",
+      "TK"
+    ],
+    "unencoded_given_policy": "All original English givens remain verbatim. No inferred target relation is supplied."
+  },
+  {
+    "id": "DA03",
+    "problem_en": "Let O be the circumcenter of an acute scalene triangle ABC. A circle through A,C tangent at A to line AB meets circle BOC again at T (other than C). Let K=TO∩BC, with K,B,C occurring in that order on a line. If BC=32 and BK=49, find AK.",
+    "facts": [
+      {
+        "source_given": "triangle ABC",
+        "statement": "Triangle(A,B,C)"
+      },
+      {
+        "source_given": "O circumcenter",
+        "statement": "Circle(O)"
+      },
+      {
+        "source_given": "O circumcenter",
+        "statement": "PointLiesOnCircle(A,Circle(O))"
+      },
+      {
+        "source_given": "O circumcenter",
+        "statement": "PointLiesOnCircle(B,Circle(O))"
+      },
+      {
+        "source_given": "O circumcenter",
+        "statement": "PointLiesOnCircle(C,Circle(O))"
+      },
+      {
+        "source_given": "circle through A,C tangent at A meets BOC at T",
+        "statement": "Circle(c1)"
+      },
+      {
+        "source_given": "circle through A,C tangent at A meets BOC at T",
+        "statement": "PointLiesOnCircle(A,Circle(c1))"
+      },
+      {
+        "source_given": "circle through A,C tangent at A meets BOC at T",
+        "statement": "PointLiesOnCircle(C,Circle(c1))"
+      },
+      {
+        "source_given": "circle through A,C tangent at A meets BOC at T",
+        "statement": "PointLiesOnCircle(T,Circle(c1))"
+      },
+      {
+        "source_given": "tangent at A to AB",
+        "statement": "Tangent(Line(A,B),Circle(c1))"
+      },
+      {
+        "source_given": "circle BOC contains T",
+        "statement": "Circle(c_BOC)"
+      },
+      {
+        "source_given": "circle BOC contains T",
+        "statement": "PointLiesOnCircle(B,Circle(c_BOC))"
+      },
+      {
+        "source_given": "circle BOC contains T",
+        "statement": "PointLiesOnCircle(O,Circle(c_BOC))"
+      },
+      {
+        "source_given": "circle BOC contains T",
+        "statement": "PointLiesOnCircle(C,Circle(c_BOC))"
+      },
+      {
+        "source_given": "circle BOC contains T",
+        "statement": "PointLiesOnCircle(T,Circle(c_BOC))"
+      },
+      {
+        "source_given": "K=TO intersection BC",
+        "statement": "PointLiesOnLine(K,Line(T,O))"
+      },
+      {
+        "source_given": "K=TO intersection BC",
+        "statement": "PointLiesOnLine(K,Line(B,C))"
+      },
+      {
+        "source_given": "given length BC=32",
+        "statement": "Equals(LengthOf(Line(B,C)),32)"
+      },
+      {
+        "source_given": "given length BK=49",
+        "statement": "Equals(LengthOf(Line(B,K)),49)"
+      },
+      {
+        "source_given": "quantity asked in original question",
+        "statement": "Find(LengthOf(Line(A,K)))"
+      }
+    ],
+    "line_instances": [
+      "AB",
+      "TO",
+      "BC",
+      "BK",
+      "AK"
+    ],
+    "unencoded_given_policy": "All original English givens remain verbatim. No inferred target relation is supplied."
+  },
+  {
+    "id": "DA04",
+    "problem_en": "Let P be an interior point of a chord AB of circle Ω, with AP=3 and PB=8. A circle through A,P is internally tangent to Ω at A; another circle through B,P is internally tangent to Ω at B. Let Q be their intersection other than P. Line PQ meets Ω at X and Y. If XY=14, find PQ.",
+    "facts": [
+      {
+        "source_given": "circle Omega contains chord AB and intersections X,Y",
+        "statement": "Circle(c_Omega)"
+      },
+      {
+        "source_given": "circle Omega contains chord AB and intersections X,Y",
+        "statement": "PointLiesOnCircle(A,Circle(c_Omega))"
+      },
+      {
+        "source_given": "circle Omega contains chord AB and intersections X,Y",
+        "statement": "PointLiesOnCircle(B,Circle(c_Omega))"
+      },
+      {
+        "source_given": "circle Omega contains chord AB and intersections X,Y",
+        "statement": "PointLiesOnCircle(X,Circle(c_Omega))"
+      },
+      {
+        "source_given": "circle Omega contains chord AB and intersections X,Y",
+        "statement": "PointLiesOnCircle(Y,Circle(c_Omega))"
+      },
+      {
+        "source_given": "P interior AB",
+        "statement": "PointLiesOnLine(P,Line(A,B))"
+      },
+      {
+        "source_given": "given length AP=3",
+        "statement": "Equals(LengthOf(Line(A,P)),3)"
+      },
+      {
+        "source_given": "given length PB=8",
+        "statement": "Equals(LengthOf(Line(P,B)),8)"
+      },
+      {
+        "source_given": "first inner circle",
+        "statement": "Circle(c1)"
+      },
+      {
+        "source_given": "first inner circle",
+        "statement": "PointLiesOnCircle(A,Circle(c1))"
+      },
+      {
+        "source_given": "first inner circle",
+        "statement": "PointLiesOnCircle(P,Circle(c1))"
+      },
+      {
+        "source_given": "first inner circle",
+        "statement": "PointLiesOnCircle(Q,Circle(c1))"
+      },
+      {
+        "source_given": "second inner circle",
+        "statement": "Circle(c2)"
+      },
+      {
+        "source_given": "second inner circle",
+        "statement": "PointLiesOnCircle(B,Circle(c2))"
+      },
+      {
+        "source_given": "second inner circle",
+        "statement": "PointLiesOnCircle(P,Circle(c2))"
+      },
+      {
+        "source_given": "second inner circle",
+        "statement": "PointLiesOnCircle(Q,Circle(c2))"
+      },
+      {
+        "source_given": "X on PQ",
+        "statement": "PointLiesOnLine(X,Line(P,Q))"
+      },
+      {
+        "source_given": "Y on PQ",
+        "statement": "PointLiesOnLine(Y,Line(P,Q))"
+      },
+      {
+        "source_given": "given length XY=14",
+        "statement": "Equals(LengthOf(Line(X,Y)),14)"
+      },
+      {
+        "source_given": "quantity asked in original question",
+        "statement": "Find(LengthOf(Line(P,Q)))"
+      }
+    ],
+    "line_instances": [
+      "AB",
+      "AP",
+      "PB",
+      "PQ",
+      "XY"
+    ],
+    "unencoded_given_policy": "All original English givens remain verbatim. No inferred target relation is supplied."
+  },
+  {
+    "id": "DA05",
+    "problem_en": "Let ABC be an acute scalene triangle with BC=12. Let ω1 be a circle through A tangent at B to line BC, and ω2 a circle through C tangent at B to line BA. Let D be their intersection other than B. Let M be the midpoint of BC and E=MD∩AC. The points M,D,E occur in that order and MD=4. Find DE.",
+    "facts": [
+      {
+        "source_given": "triangle ABC",
+        "statement": "Triangle(A,B,C)"
+      },
+      {
+        "source_given": "given length BC=12",
+        "statement": "Equals(LengthOf(Line(B,C)),12)"
+      },
+      {
+        "source_given": "circle omega1 contains A,B,D",
+        "statement": "Circle(c1)"
+      },
+      {
+        "source_given": "circle omega1 contains A,B,D",
+        "statement": "PointLiesOnCircle(A,Circle(c1))"
+      },
+      {
+        "source_given": "circle omega1 contains A,B,D",
+        "statement": "PointLiesOnCircle(B,Circle(c1))"
+      },
+      {
+        "source_given": "circle omega1 contains A,B,D",
+        "statement": "PointLiesOnCircle(D,Circle(c1))"
+      },
+      {
+        "source_given": "circle omega2 contains C,B,D",
+        "statement": "Circle(c2)"
+      },
+      {
+        "source_given": "circle omega2 contains C,B,D",
+        "statement": "PointLiesOnCircle(C,Circle(c2))"
+      },
+      {
+        "source_given": "circle omega2 contains C,B,D",
+        "statement": "PointLiesOnCircle(B,Circle(c2))"
+      },
+      {
+        "source_given": "circle omega2 contains C,B,D",
+        "statement": "PointLiesOnCircle(D,Circle(c2))"
+      },
+      {
+        "source_given": "given tangencies",
+        "statement": "Tangent(Line(B,C),Circle(c1))"
+      },
+      {
+        "source_given": "given tangencies",
+        "statement": "Tangent(Line(B,A),Circle(c2))"
+      },
+      {
+        "source_given": "M is midpoint of BC",
+        "statement": "IsMidpointOf(M,Line(B,C))"
+      },
+      {
+        "source_given": "E=MD intersection AC",
+        "statement": "PointLiesOnLine(E,Line(M,D))"
+      },
+      {
+        "source_given": "E=MD intersection AC",
+        "statement": "PointLiesOnLine(E,Line(A,C))"
+      },
+      {
+        "source_given": "given length MD=4",
+        "statement": "Equals(LengthOf(Line(M,D)),4)"
+      },
+      {
+        "source_given": "quantity asked in original question",
+        "statement": "Find(LengthOf(Line(D,E)))"
+      }
+    ],
+    "line_instances": [
+      "BC",
+      "BA",
+      "MD",
+      "AC",
+      "DE"
+    ],
+    "unencoded_given_policy": "All original English givens remain verbatim. No inferred target relation is supplied."
+  },
+  {
+    "id": "DA06",
+    "problem_en": "In an acute scalene triangle ABC with AB>AC, let O be the circumcenter and M the midpoint of BC. Let ω1 be the circle through A,B tangent at A to AC, and ω2 the circle through A,C tangent at A to AB. Let D be their intersection other than A, and E the intersection other than A of line AM with ω2. If AO=5 and AD=4, find OE.",
+    "facts": [
+      {
+        "source_given": "triangle ABC",
+        "statement": "Triangle(A,B,C)"
+      },
+      {
+        "source_given": "O circumcenter",
+        "statement": "Circle(O)"
+      },
+      {
+        "source_given": "O circumcenter",
+        "statement": "PointLiesOnCircle(A,Circle(O))"
+      },
+      {
+        "source_given": "O circumcenter",
+        "statement": "PointLiesOnCircle(B,Circle(O))"
+      },
+      {
+        "source_given": "O circumcenter",
+        "statement": "PointLiesOnCircle(C,Circle(O))"
+      },
+      {
+        "source_given": "M is midpoint of BC",
+        "statement": "IsMidpointOf(M,Line(B,C))"
+      },
+      {
+        "source_given": "omega1 through A,B,D",
+        "statement": "Circle(c1)"
+      },
+      {
+        "source_given": "omega1 through A,B,D",
+        "statement": "PointLiesOnCircle(A,Circle(c1))"
+      },
+      {
+        "source_given": "omega1 through A,B,D",
+        "statement": "PointLiesOnCircle(B,Circle(c1))"
+      },
+      {
+        "source_given": "omega1 through A,B,D",
+        "statement": "PointLiesOnCircle(D,Circle(c1))"
+      },
+      {
+        "source_given": "omega2 through A,C,D,E",
+        "statement": "Circle(c2)"
+      },
+      {
+        "source_given": "omega2 through A,C,D,E",
+        "statement": "PointLiesOnCircle(A,Circle(c2))"
+      },
+      {
+        "source_given": "omega2 through A,C,D,E",
+        "statement": "PointLiesOnCircle(C,Circle(c2))"
+      },
+      {
+        "source_given": "omega2 through A,C,D,E",
+        "statement": "PointLiesOnCircle(D,Circle(c2))"
+      },
+      {
+        "source_given": "omega2 through A,C,D,E",
+        "statement": "PointLiesOnCircle(E,Circle(c2))"
+      },
+      {
+        "source_given": "given tangencies at A",
+        "statement": "Tangent(Line(A,C),Circle(c1))"
+      },
+      {
+        "source_given": "given tangencies at A",
+        "statement": "Tangent(Line(A,B),Circle(c2))"
+      },
+      {
+        "source_given": "E on AM",
+        "statement": "PointLiesOnLine(E,Line(A,M))"
+      },
+      {
+        "source_given": "given length AO=5",
+        "statement": "Equals(LengthOf(Line(A,O)),5)"
+      },
+      {
+        "source_given": "given length AD=4",
+        "statement": "Equals(LengthOf(Line(A,D)),4)"
+      },
+      {
+        "source_given": "quantity asked in original question",
+        "statement": "Find(LengthOf(Line(O,E)))"
+      }
+    ],
+    "line_instances": [
+      "BC",
+      "AC",
+      "AB",
+      "AM",
+      "AO",
+      "AD",
+      "OE"
+    ],
+    "unencoded_given_policy": "All original English givens remain verbatim. No inferred target relation is supplied."
+  },
+  {
+    "id": "DA07",
+    "problem_en": "Let O and H be the circumcenter and orthocenter of an acute scalene triangle ABC. Let M be the intersection other than O of circle BOC with the circle of diameter AO, and N the intersection other than H of circle BHC with the circle of diameter AH. Let X be the intersection other than M of line AM with circle BOC, and Y the intersection other than N of line AN with circle BHC. Points A,M,X occur in that order, and AM=4, MX=23, MN=8/3. Find XY.",
+    "facts": [
+      {
+        "source_given": "triangle ABC",
+        "statement": "Triangle(A,B,C)"
+      },
+      {
+        "source_given": "H is the orthocenter; generic definition",
+        "statement": "Perpendicular(Line(A,H),Line(B,C))"
+      },
+      {
+        "source_given": "H is the orthocenter; generic definition",
+        "statement": "Perpendicular(Line(B,H),Line(A,C))"
+      },
+      {
+        "source_given": "H is the orthocenter; generic definition",
+        "statement": "Perpendicular(Line(C,H),Line(A,B))"
+      },
+      {
+        "source_given": "O circumcenter",
+        "statement": "Circle(O)"
+      },
+      {
+        "source_given": "O circumcenter",
+        "statement": "PointLiesOnCircle(A,Circle(O))"
+      },
+      {
+        "source_given": "O circumcenter",
+        "statement": "PointLiesOnCircle(B,Circle(O))"
+      },
+      {
+        "source_given": "O circumcenter",
+        "statement": "PointLiesOnCircle(C,Circle(O))"
+      },
+      {
+        "source_given": "circle BOC contains M,X",
+        "statement": "Circle(c_BOC)"
+      },
+      {
+        "source_given": "circle BOC contains M,X",
+        "statement": "PointLiesOnCircle(B,Circle(c_BOC))"
+      },
+      {
+        "source_given": "circle BOC contains M,X",
+        "statement": "PointLiesOnCircle(O,Circle(c_BOC))"
+      },
+      {
+        "source_given": "circle BOC contains M,X",
+        "statement": "PointLiesOnCircle(C,Circle(c_BOC))"
+      },
+      {
+        "source_given": "circle BOC contains M,X",
+        "statement": "PointLiesOnCircle(M,Circle(c_BOC))"
+      },
+      {
+        "source_given": "circle BOC contains M,X",
+        "statement": "PointLiesOnCircle(X,Circle(c_BOC))"
+      },
+      {
+        "source_given": "circle BHC contains N,Y",
+        "statement": "Circle(c_BHC)"
+      },
+      {
+        "source_given": "circle BHC contains N,Y",
+        "statement": "PointLiesOnCircle(B,Circle(c_BHC))"
+      },
+      {
+        "source_given": "circle BHC contains N,Y",
+        "statement": "PointLiesOnCircle(H,Circle(c_BHC))"
+      },
+      {
+        "source_given": "circle BHC contains N,Y",
+        "statement": "PointLiesOnCircle(C,Circle(c_BHC))"
+      },
+      {
+        "source_given": "circle BHC contains N,Y",
+        "statement": "PointLiesOnCircle(N,Circle(c_BHC))"
+      },
+      {
+        "source_given": "circle BHC contains N,Y",
+        "statement": "PointLiesOnCircle(Y,Circle(c_BHC))"
+      },
+      {
+        "source_given": "circle with diameter AO",
+        "statement": "Circle(c_AO)"
+      },
+      {
+        "source_given": "circle with diameter AO",
+        "statement": "PointLiesOnCircle(A,Circle(c_AO))"
+      },
+      {
+        "source_given": "circle with diameter AO",
+        "statement": "PointLiesOnCircle(O,Circle(c_AO))"
+      },
+      {
+        "source_given": "circle with diameter AO",
+        "statement": "PointLiesOnCircle(M,Circle(c_AO))"
+      },
+      {
+        "source_given": "circle with diameter AH",
+        "statement": "Circle(c_AH)"
+      },
+      {
+        "source_given": "circle with diameter AH",
+        "statement": "PointLiesOnCircle(A,Circle(c_AH))"
+      },
+      {
+        "source_given": "circle with diameter AH",
+        "statement": "PointLiesOnCircle(H,Circle(c_AH))"
+      },
+      {
+        "source_given": "circle with diameter AH",
+        "statement": "PointLiesOnCircle(N,Circle(c_AH))"
+      },
+      {
+        "source_given": "given diameters",
+        "statement": "IsDiameterOf(Line(A,O),Circle(c_AO))"
+      },
+      {
+        "source_given": "given diameters",
+        "statement": "IsDiameterOf(Line(A,H),Circle(c_AH))"
+      },
+      {
+        "source_given": "X on AM",
+        "statement": "PointLiesOnLine(X,Line(A,M))"
+      },
+      {
+        "source_given": "Y on AN",
+        "statement": "PointLiesOnLine(Y,Line(A,N))"
+      },
+      {
+        "source_given": "given length AM=4",
+        "statement": "Equals(LengthOf(Line(A,M)),4)"
+      },
+      {
+        "source_given": "given length MX=23",
+        "statement": "Equals(LengthOf(Line(M,X)),23)"
+      },
+      {
+        "source_given": "given length MN=8/3",
+        "statement": "Equals(LengthOf(Line(M,N)),8/3)"
+      },
+      {
+        "source_given": "quantity asked in original question",
+        "statement": "Find(LengthOf(Line(X,Y)))"
+      }
+    ],
+    "line_instances": [
+      "AH",
+      "BC",
+      "BH",
+      "AC",
+      "CH",
+      "AB",
+      "AO",
+      "AM",
+      "AN",
+      "MX",
+      "MN",
+      "XY"
+    ],
+    "unencoded_given_policy": "All original English givens remain verbatim. No inferred target relation is supplied."
+  },
+  {
+    "id": "DA08",
+    "problem_en": "Let O be the circumcenter of an acute scalene triangle ABC. On circle BOC, let Q be the point antipodal to O. Let M be the intersection of line CQ with the line through A parallel to BC, and let N make ANCM a parallelogram in that order. Let T=AQ∩MN. If OQ=25 and QT=24, find OT.",
+    "facts": [
+      {
+        "source_given": "triangle ABC",
+        "statement": "Triangle(A,B,C)"
+      },
+      {
+        "source_given": "O circumcenter",
+        "statement": "Circle(O)"
+      },
+      {
+        "source_given": "O circumcenter",
+        "statement": "PointLiesOnCircle(A,Circle(O))"
+      },
+      {
+        "source_given": "O circumcenter",
+        "statement": "PointLiesOnCircle(B,Circle(O))"
+      },
+      {
+        "source_given": "O circumcenter",
+        "statement": "PointLiesOnCircle(C,Circle(O))"
+      },
+      {
+        "source_given": "Q on circle BOC",
+        "statement": "Circle(c_BOC)"
+      },
+      {
+        "source_given": "Q on circle BOC",
+        "statement": "PointLiesOnCircle(B,Circle(c_BOC))"
+      },
+      {
+        "source_given": "Q on circle BOC",
+        "statement": "PointLiesOnCircle(O,Circle(c_BOC))"
+      },
+      {
+        "source_given": "Q on circle BOC",
+        "statement": "PointLiesOnCircle(C,Circle(c_BOC))"
+      },
+      {
+        "source_given": "Q on circle BOC",
+        "statement": "PointLiesOnCircle(Q,Circle(c_BOC))"
+      },
+      {
+        "source_given": "Q antipodal to O",
+        "statement": "IsDiameterOf(Line(O,Q),Circle(c_BOC))"
+      },
+      {
+        "source_given": "M on CQ",
+        "statement": "PointLiesOnLine(M,Line(C,Q))"
+      },
+      {
+        "source_given": "line AM parallel BC",
+        "statement": "Parallel(Line(A,M),Line(B,C))"
+      },
+      {
+        "source_given": "line AM parallel BC",
+        "statement": "Parallelogram(A,N,C,M)"
+      },
+      {
+        "source_given": "T=AQ intersection MN",
+        "statement": "PointLiesOnLine(T,Line(A,Q))"
+      },
+      {
+        "source_given": "T=AQ intersection MN",
+        "statement": "PointLiesOnLine(T,Line(M,N))"
+      },
+      {
+        "source_given": "given length OQ=25",
+        "statement": "Equals(LengthOf(Line(O,Q)),25)"
+      },
+      {
+        "source_given": "given length QT=24",
+        "statement": "Equals(LengthOf(Line(Q,T)),24)"
+      },
+      {
+        "source_given": "quantity asked in original question",
+        "statement": "Find(LengthOf(Line(O,T)))"
+      }
+    ],
+    "line_instances": [
+      "OQ",
+      "CQ",
+      "AM",
+      "BC",
+      "AQ",
+      "MN",
+      "QT",
+      "OT"
+    ],
+    "unencoded_given_policy": "All original English givens remain verbatim. No inferred target relation is supplied."
+  },
+  {
+    "id": "DB01",
+    "problem_en": "Let O be the circumcenter of an acute scalene triangle ABC. A circle ω through A has center J on the altitude line from A to BC, and meets the interiors of AB and AC again at P and Q, respectively. Assume BP·CQ=AP·AQ. Let U be the center of circle BOC, with JA=1 and UB=4. Choose a common tangent to ω and circle BOC on whose same side the centers J,U lie, and let its points of tangency be Y and Z, respectively. Find YZ.",
+    "facts": [
+      {
+        "source_given": "triangle ABC",
+        "statement": "Triangle(A,B,C)"
+      },
+      {
+        "source_given": "O circumcenter",
+        "statement": "Circle(O)"
+      },
+      {
+        "source_given": "O circumcenter",
+        "statement": "PointLiesOnCircle(A,Circle(O))"
+      },
+      {
+        "source_given": "O circumcenter",
+        "statement": "PointLiesOnCircle(B,Circle(O))"
+      },
+      {
+        "source_given": "O circumcenter",
+        "statement": "PointLiesOnCircle(C,Circle(O))"
+      },
+      {
+        "source_given": "omega centered J contains A,P,Q and tangency Y",
+        "statement": "Circle(J)"
+      },
+      {
+        "source_given": "omega centered J contains A,P,Q and tangency Y",
+        "statement": "PointLiesOnCircle(A,Circle(J))"
+      },
+      {
+        "source_given": "omega centered J contains A,P,Q and tangency Y",
+        "statement": "PointLiesOnCircle(P,Circle(J))"
+      },
+      {
+        "source_given": "omega centered J contains A,P,Q and tangency Y",
+        "statement": "PointLiesOnCircle(Q,Circle(J))"
+      },
+      {
+        "source_given": "omega centered J contains A,P,Q and tangency Y",
+        "statement": "PointLiesOnCircle(Y,Circle(J))"
+      },
+      {
+        "source_given": "J on altitude from A to BC",
+        "statement": "Perpendicular(Line(A,J),Line(B,C))"
+      },
+      {
+        "source_given": "P on AB",
+        "statement": "PointLiesOnLine(P,Line(A,B))"
+      },
+      {
+        "source_given": "Q on AC",
+        "statement": "PointLiesOnLine(Q,Line(A,C))"
+      },
+      {
+        "source_given": "given BP*CQ=AP*AQ",
+        "statement": "Equals(Mul(LengthOf(Line(B,P)),LengthOf(Line(C,Q))),Mul(LengthOf(Line(A,P)),LengthOf(Line(A,Q))))"
+      },
+      {
+        "source_given": "U center of circle BOC; Z tangency point",
+        "statement": "Circle(U)"
+      },
+      {
+        "source_given": "U center of circle BOC; Z tangency point",
+        "statement": "PointLiesOnCircle(B,Circle(U))"
+      },
+      {
+        "source_given": "U center of circle BOC; Z tangency point",
+        "statement": "PointLiesOnCircle(O,Circle(U))"
+      },
+      {
+        "source_given": "U center of circle BOC; Z tangency point",
+        "statement": "PointLiesOnCircle(C,Circle(U))"
+      },
+      {
+        "source_given": "U center of circle BOC; Z tangency point",
+        "statement": "PointLiesOnCircle(Z,Circle(U))"
+      },
+      {
+        "source_given": "given length JA=1",
+        "statement": "Equals(LengthOf(Line(J,A)),1)"
+      },
+      {
+        "source_given": "given length UB=4",
+        "statement": "Equals(LengthOf(Line(U,B)),4)"
+      },
+      {
+        "source_given": "common tangent at Y,Z",
+        "statement": "Tangent(Line(Y,Z),Circle(J))"
+      },
+      {
+        "source_given": "common tangent at Y,Z",
+        "statement": "Tangent(Line(Y,Z),Circle(U))"
+      },
+      {
+        "source_given": "quantity asked in original question",
+        "statement": "Find(LengthOf(Line(Y,Z)))"
+      }
+    ],
+    "line_instances": [
+      "AJ",
+      "BC",
+      "AB",
+      "AC",
+      "BP",
+      "CQ",
+      "AP",
+      "AQ",
+      "JA",
+      "UB",
+      "YZ"
+    ],
+    "unencoded_given_policy": "All original English givens remain verbatim. No inferred target relation is supplied."
+  },
+  {
+    "id": "DB02",
+    "problem_en": "Let ABC be a triangle with AB=7, AC=11, and BC=12. Choose interior points P,Q of BC such that angle PAB=angle BCA and angle CAQ=angle ABC. On rays AP and AQ choose M,N so that P and Q are the midpoints of AM and AN, respectively. Let X=BM∩CN. Find BX.",
+    "facts": [
+      {
+        "source_given": "triangle ABC",
+        "statement": "Triangle(A,B,C)"
+      },
+      {
+        "source_given": "given length AB=7",
+        "statement": "Equals(LengthOf(Line(A,B)),7)"
+      },
+      {
+        "source_given": "given length AC=11",
+        "statement": "Equals(LengthOf(Line(A,C)),11)"
+      },
+      {
+        "source_given": "given length BC=12",
+        "statement": "Equals(LengthOf(Line(B,C)),12)"
+      },
+      {
+        "source_given": "P interior BC",
+        "statement": "PointLiesOnLine(P,Line(B,C))"
+      },
+      {
+        "source_given": "Q interior BC",
+        "statement": "PointLiesOnLine(Q,Line(B,C))"
+      },
+      {
+        "source_given": "given equal angles",
+        "statement": "Equals(MeasureOf(Angle(P,A,B)),MeasureOf(Angle(B,C,A)))"
+      },
+      {
+        "source_given": "given equal angles",
+        "statement": "Equals(MeasureOf(Angle(C,A,Q)),MeasureOf(Angle(A,B,C)))"
+      },
+      {
+        "source_given": "P is midpoint of AM",
+        "statement": "IsMidpointOf(P,Line(A,M))"
+      },
+      {
+        "source_given": "Q is midpoint of AN",
+        "statement": "IsMidpointOf(Q,Line(A,N))"
+      },
+      {
+        "source_given": "X=BM intersection CN",
+        "statement": "PointLiesOnLine(X,Line(B,M))"
+      },
+      {
+        "source_given": "X=BM intersection CN",
+        "statement": "PointLiesOnLine(X,Line(C,N))"
+      },
+      {
+        "source_given": "quantity asked in original question",
+        "statement": "Find(LengthOf(Line(B,X)))"
+      }
+    ],
+    "line_instances": [
+      "AB",
+      "AC",
+      "BC",
+      "AM",
+      "AN",
+      "BM",
+      "CN",
+      "BX"
+    ],
+    "unencoded_given_policy": "All original English givens remain verbatim. No inferred target relation is supplied."
+  },
+  {
+    "id": "DB03",
+    "problem_en": "Let ABC be a triangle with angle BAC=60 degrees and BC=7. Let I_b be the B-excenter and Γ the circumcircle. Let M be the midpoint of the arc BC not containing A, and let T be the intersection other than M of line MI_b with Γ. Point T lies on the same side of line BC as A, and TB+TC=13. Find TI_b.",
+    "facts": [
+      {
+        "source_given": "triangle ABC",
+        "statement": "Triangle(A,B,C)"
+      },
+      {
+        "source_given": "given angle BAC=60 degrees",
+        "statement": "Equals(MeasureOf(Angle(B,A,C)),60)"
+      },
+      {
+        "source_given": "given length BC=7",
+        "statement": "Equals(LengthOf(Line(B,C)),7)"
+      },
+      {
+        "source_given": "circumcircle Gamma contains arc midpoint M,T",
+        "statement": "Circle(c_Gamma)"
+      },
+      {
+        "source_given": "circumcircle Gamma contains arc midpoint M,T",
+        "statement": "PointLiesOnCircle(A,Circle(c_Gamma))"
+      },
+      {
+        "source_given": "circumcircle Gamma contains arc midpoint M,T",
+        "statement": "PointLiesOnCircle(B,Circle(c_Gamma))"
+      },
+      {
+        "source_given": "circumcircle Gamma contains arc midpoint M,T",
+        "statement": "PointLiesOnCircle(C,Circle(c_Gamma))"
+      },
+      {
+        "source_given": "circumcircle Gamma contains arc midpoint M,T",
+        "statement": "PointLiesOnCircle(M,Circle(c_Gamma))"
+      },
+      {
+        "source_given": "circumcircle Gamma contains arc midpoint M,T",
+        "statement": "PointLiesOnCircle(T,Circle(c_Gamma))"
+      },
+      {
+        "source_given": "T on M I_b",
+        "statement": "PointLiesOnLine(T,Line(M,I_b))"
+      },
+      {
+        "source_given": "given TB+TC=13",
+        "statement": "Equals(SumOf(LengthOf(Line(T,B)),LengthOf(Line(T,C))),13)"
+      },
+      {
+        "source_given": "quantity asked in original question",
+        "statement": "Find(LengthOf(Line(T,I_b)))"
+      }
+    ],
+    "line_instances": [
+      "BC",
+      "MI_b",
+      "TB",
+      "TC",
+      "TI_b"
+    ],
+    "unencoded_given_policy": "All original English givens remain verbatim. No inferred target relation is supplied."
+  },
+  {
+    "id": "DB04",
+    "problem_en": "Two circles ω1,ω2 meet at distinct points A,B. The tangent to ω1 at A meets ω2 again at C other than A, and the tangent to ω2 at A meets ω1 again at D. The full line of the internal bisector of angle CAD meets ω1 and ω2 again at E and F, respectively, other than A. The full line of the external bisector meets them again at X and Y, respectively. Let K be the midpoint of XY. Points B,E,F are noncollinear, EF=6, and AK=4. Find the circumradius of triangle BEF.",
+    "facts": [
+      {
+        "source_given": "omega1 contains these points",
+        "statement": "Circle(c1)"
+      },
+      {
+        "source_given": "omega1 contains these points",
+        "statement": "PointLiesOnCircle(A,Circle(c1))"
+      },
+      {
+        "source_given": "omega1 contains these points",
+        "statement": "PointLiesOnCircle(B,Circle(c1))"
+      },
+      {
+        "source_given": "omega1 contains these points",
+        "statement": "PointLiesOnCircle(D,Circle(c1))"
+      },
+      {
+        "source_given": "omega1 contains these points",
+        "statement": "PointLiesOnCircle(E,Circle(c1))"
+      },
+      {
+        "source_given": "omega1 contains these points",
+        "statement": "PointLiesOnCircle(X,Circle(c1))"
+      },
+      {
+        "source_given": "omega2 contains these points",
+        "statement": "Circle(c2)"
+      },
+      {
+        "source_given": "omega2 contains these points",
+        "statement": "PointLiesOnCircle(A,Circle(c2))"
+      },
+      {
+        "source_given": "omega2 contains these points",
+        "statement": "PointLiesOnCircle(B,Circle(c2))"
+      },
+      {
+        "source_given": "omega2 contains these points",
+        "statement": "PointLiesOnCircle(C,Circle(c2))"
+      },
+      {
+        "source_given": "omega2 contains these points",
+        "statement": "PointLiesOnCircle(F,Circle(c2))"
+      },
+      {
+        "source_given": "omega2 contains these points",
+        "statement": "PointLiesOnCircle(Y,Circle(c2))"
+      },
+      {
+        "source_given": "given tangent lines at A",
+        "statement": "Tangent(Line(A,C),Circle(c1))"
+      },
+      {
+        "source_given": "given tangent lines at A",
+        "statement": "Tangent(Line(A,D),Circle(c2))"
+      },
+      {
+        "source_given": "E,F on internal bisector line",
+        "statement": "PointLiesOnLine(F,Line(A,E))"
+      },
+      {
+        "source_given": "internal bisector of CAD",
+        "statement": "BisectsAngle(Line(A,E),Angle(C,A,D))"
+      },
+      {
+        "source_given": "X,Y on external bisector line",
+        "statement": "PointLiesOnLine(Y,Line(A,X))"
+      },
+      {
+        "source_given": "K is midpoint of XY",
+        "statement": "IsMidpointOf(K,Line(X,Y))"
+      },
+      {
+        "source_given": "given length EF=6",
+        "statement": "Equals(LengthOf(Line(E,F)),6)"
+      },
+      {
+        "source_given": "given length AK=4",
+        "statement": "Equals(LengthOf(Line(A,K)),4)"
+      },
+      {
+        "source_given": "circumcircle of requested triangle BEF",
+        "statement": "Circle(c_BEF)"
+      },
+      {
+        "source_given": "circumcircle of requested triangle BEF",
+        "statement": "PointLiesOnCircle(B,Circle(c_BEF))"
+      },
+      {
+        "source_given": "circumcircle of requested triangle BEF",
+        "statement": "PointLiesOnCircle(E,Circle(c_BEF))"
+      },
+      {
+        "source_given": "circumcircle of requested triangle BEF",
+        "statement": "PointLiesOnCircle(F,Circle(c_BEF))"
+      },
+      {
+        "source_given": "quantity asked in original question",
+        "statement": "Find(RadiusOf(Circle(c_BEF)))"
+      }
+    ],
+    "line_instances": [
+      "AC",
+      "AD",
+      "AE",
+      "AX",
+      "XY",
+      "EF",
+      "AK"
+    ],
+    "unencoded_given_policy": "All original English givens remain verbatim. No inferred target relation is supplied."
+  },
+  {
+    "id": "DB06",
+    "problem_en": "A convex quadrilateral ABCD is inscribed in a circle in that order, with AB²=4, BC²=5, CD²=10, DA²=8, AC²=12, and BD²=40/3. Choose X inside diagonal BD such that angle BAC=angle XAD and angle BCA=angle XCD. Choose Y inside diagonal AC such that angle CBD=angle YBA and angle CDB=angle YDA. Find XY².",
+    "facts": [
+      {
+        "source_given": "cyclic quadrilateral ABCD",
+        "statement": "Quadrilateral(A,B,C,D)"
+      },
+      {
+        "source_given": "ABCD inscribed in circle",
+        "statement": "Circle(c0)"
+      },
+      {
+        "source_given": "ABCD inscribed in circle",
+        "statement": "PointLiesOnCircle(A,Circle(c0))"
+      },
+      {
+        "source_given": "ABCD inscribed in circle",
+        "statement": "PointLiesOnCircle(B,Circle(c0))"
+      },
+      {
+        "source_given": "ABCD inscribed in circle",
+        "statement": "PointLiesOnCircle(C,Circle(c0))"
+      },
+      {
+        "source_given": "ABCD inscribed in circle",
+        "statement": "PointLiesOnCircle(D,Circle(c0))"
+      },
+      {
+        "source_given": "given AB squared=4",
+        "statement": "Equals(SquareOf(LengthOf(Line(A,B))),4)"
+      },
+      {
+        "source_given": "given BC squared=5",
+        "statement": "Equals(SquareOf(LengthOf(Line(B,C))),5)"
+      },
+      {
+        "source_given": "given CD squared=10",
+        "statement": "Equals(SquareOf(LengthOf(Line(C,D))),10)"
+      },
+      {
+        "source_given": "given DA squared=8",
+        "statement": "Equals(SquareOf(LengthOf(Line(D,A))),8)"
+      },
+      {
+        "source_given": "given AC squared=12",
+        "statement": "Equals(SquareOf(LengthOf(Line(A,C))),12)"
+      },
+      {
+        "source_given": "given BD squared=40/3",
+        "statement": "Equals(SquareOf(LengthOf(Line(B,D))),40/3)"
+      },
+      {
+        "source_given": "X interior BD",
+        "statement": "PointLiesOnLine(X,Line(B,D))"
+      },
+      {
+        "source_given": "Y interior AC",
+        "statement": "PointLiesOnLine(Y,Line(A,C))"
+      },
+      {
+        "source_given": "given angle equalities",
+        "statement": "Equals(MeasureOf(Angle(B,A,C)),MeasureOf(Angle(X,A,D)))"
+      },
+      {
+        "source_given": "given angle equalities",
+        "statement": "Equals(MeasureOf(Angle(B,C,A)),MeasureOf(Angle(X,C,D)))"
+      },
+      {
+        "source_given": "given angle equalities",
+        "statement": "Equals(MeasureOf(Angle(C,B,D)),MeasureOf(Angle(Y,B,A)))"
+      },
+      {
+        "source_given": "given angle equalities",
+        "statement": "Equals(MeasureOf(Angle(C,D,B)),MeasureOf(Angle(Y,D,A)))"
+      },
+      {
+        "source_given": "quantity asked in original question",
+        "statement": "Find(SquareOf(LengthOf(Line(X,Y))))"
+      }
+    ],
+    "line_instances": [
+      "AB",
+      "BC",
+      "CD",
+      "DA",
+      "AC",
+      "BD",
+      "XY"
+    ],
+    "unencoded_given_policy": "All original English givens remain verbatim. No inferred target relation is supplied."
+  },
+  {
+    "id": "DB08",
+    "problem_en": "In an acute triangle ABC with AC>AB, let Γ be the circumcircle and O the circumcenter. The tangent to Γ at A meets line BC at P, and X is the foot from A to line OP. Choose unique points E on line AB and F on line AC, both on the A-side of line OP, such that angle EXP=angle ACX and angle FXO=angle ABX. Line EF meets Γ at K,L; let σ be the circumcircle of triangle KLX with center U. Point P lies outside σ. Ray PU meets σ at Y,Z in that order, nearer first. If PY=3 and YZ=9, find PX.",
+    "facts": [
+      {
+        "source_given": "triangle ABC",
+        "statement": "Triangle(A,B,C)"
+      },
+      {
+        "source_given": "Gamma circumcircle contains K,L",
+        "statement": "Circle(O)"
+      },
+      {
+        "source_given": "Gamma circumcircle contains K,L",
+        "statement": "PointLiesOnCircle(A,Circle(O))"
+      },
+      {
+        "source_given": "Gamma circumcircle contains K,L",
+        "statement": "PointLiesOnCircle(B,Circle(O))"
+      },
+      {
+        "source_given": "Gamma circumcircle contains K,L",
+        "statement": "PointLiesOnCircle(C,Circle(O))"
+      },
+      {
+        "source_given": "Gamma circumcircle contains K,L",
+        "statement": "PointLiesOnCircle(K,Circle(O))"
+      },
+      {
+        "source_given": "Gamma circumcircle contains K,L",
+        "statement": "PointLiesOnCircle(L,Circle(O))"
+      },
+      {
+        "source_given": "AP tangent at A",
+        "statement": "Tangent(Line(A,P),Circle(O))"
+      },
+      {
+        "source_given": "P on BC",
+        "statement": "PointLiesOnLine(P,Line(B,C))"
+      },
+      {
+        "source_given": "X is foot from A to OP",
+        "statement": "PointLiesOnLine(X,Line(O,P))"
+      },
+      {
+        "source_given": "X is foot from A to OP",
+        "statement": "Perpendicular(Line(A,X),Line(O,P))"
+      },
+      {
+        "source_given": "E on AB",
+        "statement": "PointLiesOnLine(E,Line(A,B))"
+      },
+      {
+        "source_given": "F on AC",
+        "statement": "PointLiesOnLine(F,Line(A,C))"
+      },
+      {
+        "source_given": "given angle equalities",
+        "statement": "Equals(MeasureOf(Angle(E,X,P)),MeasureOf(Angle(A,C,X)))"
+      },
+      {
+        "source_given": "given angle equalities",
+        "statement": "Equals(MeasureOf(Angle(F,X,O)),MeasureOf(Angle(A,B,X)))"
+      },
+      {
+        "source_given": "K on EF",
+        "statement": "PointLiesOnLine(K,Line(E,F))"
+      },
+      {
+        "source_given": "L on EF",
+        "statement": "PointLiesOnLine(L,Line(E,F))"
+      },
+      {
+        "source_given": "sigma center U through K,L,X and intersections Y,Z",
+        "statement": "Circle(U)"
+      },
+      {
+        "source_given": "sigma center U through K,L,X and intersections Y,Z",
+        "statement": "PointLiesOnCircle(K,Circle(U))"
+      },
+      {
+        "source_given": "sigma center U through K,L,X and intersections Y,Z",
+        "statement": "PointLiesOnCircle(L,Circle(U))"
+      },
+      {
+        "source_given": "sigma center U through K,L,X and intersections Y,Z",
+        "statement": "PointLiesOnCircle(X,Circle(U))"
+      },
+      {
+        "source_given": "sigma center U through K,L,X and intersections Y,Z",
+        "statement": "PointLiesOnCircle(Y,Circle(U))"
+      },
+      {
+        "source_given": "sigma center U through K,L,X and intersections Y,Z",
+        "statement": "PointLiesOnCircle(Z,Circle(U))"
+      },
+      {
+        "source_given": "Y on PU",
+        "statement": "PointLiesOnLine(Y,Line(P,U))"
+      },
+      {
+        "source_given": "Z on PU",
+        "statement": "PointLiesOnLine(Z,Line(P,U))"
+      },
+      {
+        "source_given": "given length PY=3",
+        "statement": "Equals(LengthOf(Line(P,Y)),3)"
+      },
+      {
+        "source_given": "given length YZ=9",
+        "statement": "Equals(LengthOf(Line(Y,Z)),9)"
+      },
+      {
+        "source_given": "quantity asked in original question",
+        "statement": "Find(LengthOf(Line(P,X)))"
+      }
+    ],
+    "line_instances": [
+      "AP",
+      "BC",
+      "OP",
+      "AX",
+      "AB",
+      "AC",
+      "EF",
+      "PU",
+      "PY",
+      "YZ",
+      "PX"
+    ],
+    "unencoded_given_policy": "All original English givens remain verbatim. No inferred target relation is supplied."
+  },
+  {
+    "id": "DB10",
+    "problem_en": "Let triangle ABC have angle BAC=60 degrees and area 31. Construct equilateral triangle ABK on the side of AB opposite C and equilateral triangle ACL on the side of AC opposite B. Let S=CK∩AB, R=BL∩AC, and T=BL∩CK. Let Z be the radical center of circles BSK, CLR, and BTC, and M the midpoint of BC. Point Z lies inside ABC and AZ:ZM=12:19. Find the area of triangle AZB.",
+    "facts": [
+      {
+        "source_given": "triangle ABC",
+        "statement": "Triangle(A,B,C)"
+      },
+      {
+        "source_given": "given angle BAC=60 degrees",
+        "statement": "Equals(MeasureOf(Angle(B,A,C)),60)"
+      },
+      {
+        "source_given": "area ABC=31",
+        "statement": "Equals(AreaOf(Triangle(A,B,C)),31)"
+      },
+      {
+        "source_given": "equilateral ABK,ACL",
+        "statement": "Equilateral(Triangle(A,B,K))"
+      },
+      {
+        "source_given": "equilateral ABK,ACL",
+        "statement": "Equilateral(Triangle(A,C,L))"
+      },
+      {
+        "source_given": "S=CK intersection AB",
+        "statement": "PointLiesOnLine(S,Line(C,K))"
+      },
+      {
+        "source_given": "S=CK intersection AB",
+        "statement": "PointLiesOnLine(S,Line(A,B))"
+      },
+      {
+        "source_given": "R=BL intersection AC",
+        "statement": "PointLiesOnLine(R,Line(B,L))"
+      },
+      {
+        "source_given": "R=BL intersection AC",
+        "statement": "PointLiesOnLine(R,Line(A,C))"
+      },
+      {
+        "source_given": "T=BL intersection CK",
+        "statement": "PointLiesOnLine(T,Line(B,L))"
+      },
+      {
+        "source_given": "T=BL intersection CK",
+        "statement": "PointLiesOnLine(T,Line(C,K))"
+      },
+      {
+        "source_given": "circle BSK",
+        "statement": "Circle(c_BSK)"
+      },
+      {
+        "source_given": "circle BSK",
+        "statement": "PointLiesOnCircle(B,Circle(c_BSK))"
+      },
+      {
+        "source_given": "circle BSK",
+        "statement": "PointLiesOnCircle(S,Circle(c_BSK))"
+      },
+      {
+        "source_given": "circle BSK",
+        "statement": "PointLiesOnCircle(K,Circle(c_BSK))"
+      },
+      {
+        "source_given": "circle CLR",
+        "statement": "Circle(c_CLR)"
+      },
+      {
+        "source_given": "circle CLR",
+        "statement": "PointLiesOnCircle(C,Circle(c_CLR))"
+      },
+      {
+        "source_given": "circle CLR",
+        "statement": "PointLiesOnCircle(L,Circle(c_CLR))"
+      },
+      {
+        "source_given": "circle CLR",
+        "statement": "PointLiesOnCircle(R,Circle(c_CLR))"
+      },
+      {
+        "source_given": "circle BTC",
+        "statement": "Circle(c_BTC)"
+      },
+      {
+        "source_given": "circle BTC",
+        "statement": "PointLiesOnCircle(B,Circle(c_BTC))"
+      },
+      {
+        "source_given": "circle BTC",
+        "statement": "PointLiesOnCircle(T,Circle(c_BTC))"
+      },
+      {
+        "source_given": "circle BTC",
+        "statement": "PointLiesOnCircle(C,Circle(c_BTC))"
+      },
+      {
+        "source_given": "M is midpoint of BC",
+        "statement": "IsMidpointOf(M,Line(B,C))"
+      },
+      {
+        "source_given": "given AZ:ZM=12:19",
+        "statement": "Equals(RatioOf(LengthOf(Line(A,Z)),LengthOf(Line(Z,M))),12/19)"
+      },
+      {
+        "source_given": "quantity asked in original question",
+        "statement": "Find(AreaOf(Triangle(A,Z,B)))"
+      }
+    ],
+    "line_instances": [
+      "CK",
+      "AB",
+      "BL",
+      "AC",
+      "BC",
+      "AZ",
+      "ZM"
+    ],
+    "unencoded_given_policy": "All original English givens remain verbatim. No inferred target relation is supplied."
+  },
+  {
+    "id": "DB12",
+    "problem_en": "Let triangle ABC have angle BAC=45 degrees and BC=13. Let D1,D2 divide BC internally from B to C in ratios 1:2 and 2:1, respectively. For i=1,2, the line through Di parallel to AB meets AC at Ei, and the line through Di parallel to AC meets AB at Fi. Let X be the common point other than A of circles AE1F1 and AE2F2. Point X lies inside ABC and BX+CX=17. Find AX.",
+    "facts": [
+      {
+        "source_given": "triangle ABC",
+        "statement": "Triangle(A,B,C)"
+      },
+      {
+        "source_given": "given angle BAC=45 degrees",
+        "statement": "Equals(MeasureOf(Angle(B,A,C)),45)"
+      },
+      {
+        "source_given": "given length BC=13",
+        "statement": "Equals(LengthOf(Line(B,C)),13)"
+      },
+      {
+        "source_given": "Di divides BC internally",
+        "statement": "PointLiesOnLine(D1,Line(B,C))"
+      },
+      {
+        "source_given": "given division ratio",
+        "statement": "Equals(RatioOf(LengthOf(Line(B,D1)),LengthOf(Line(D1,C))),1/2)"
+      },
+      {
+        "source_given": "Ei on AC",
+        "statement": "PointLiesOnLine(E1,Line(A,C))"
+      },
+      {
+        "source_given": "Fi on AB",
+        "statement": "PointLiesOnLine(F1,Line(A,B))"
+      },
+      {
+        "source_given": "given parallel lines",
+        "statement": "Parallel(Line(D1,E1),Line(A,B))"
+      },
+      {
+        "source_given": "given parallel lines",
+        "statement": "Parallel(Line(D1,F1),Line(A,C))"
+      },
+      {
+        "source_given": "X second common point of circles AEiFi",
+        "statement": "Circle(c_AEF1)"
+      },
+      {
+        "source_given": "X second common point of circles AEiFi",
+        "statement": "PointLiesOnCircle(A,Circle(c_AEF1))"
+      },
+      {
+        "source_given": "X second common point of circles AEiFi",
+        "statement": "PointLiesOnCircle(E1,Circle(c_AEF1))"
+      },
+      {
+        "source_given": "X second common point of circles AEiFi",
+        "statement": "PointLiesOnCircle(F1,Circle(c_AEF1))"
+      },
+      {
+        "source_given": "X second common point of circles AEiFi",
+        "statement": "PointLiesOnCircle(X,Circle(c_AEF1))"
+      },
+      {
+        "source_given": "Di divides BC internally",
+        "statement": "PointLiesOnLine(D2,Line(B,C))"
+      },
+      {
+        "source_given": "given division ratio",
+        "statement": "Equals(RatioOf(LengthOf(Line(B,D2)),LengthOf(Line(D2,C))),2)"
+      },
+      {
+        "source_given": "Ei on AC",
+        "statement": "PointLiesOnLine(E2,Line(A,C))"
+      },
+      {
+        "source_given": "Fi on AB",
+        "statement": "PointLiesOnLine(F2,Line(A,B))"
+      },
+      {
+        "source_given": "given parallel lines",
+        "statement": "Parallel(Line(D2,E2),Line(A,B))"
+      },
+      {
+        "source_given": "given parallel lines",
+        "statement": "Parallel(Line(D2,F2),Line(A,C))"
+      },
+      {
+        "source_given": "X second common point of circles AEiFi",
+        "statement": "Circle(c_AEF2)"
+      },
+      {
+        "source_given": "X second common point of circles AEiFi",
+        "statement": "PointLiesOnCircle(A,Circle(c_AEF2))"
+      },
+      {
+        "source_given": "X second common point of circles AEiFi",
+        "statement": "PointLiesOnCircle(E2,Circle(c_AEF2))"
+      },
+      {
+        "source_given": "X second common point of circles AEiFi",
+        "statement": "PointLiesOnCircle(F2,Circle(c_AEF2))"
+      },
+      {
+        "source_given": "X second common point of circles AEiFi",
+        "statement": "PointLiesOnCircle(X,Circle(c_AEF2))"
+      },
+      {
+        "source_given": "given BX+CX=17",
+        "statement": "Equals(SumOf(LengthOf(Line(B,X)),LengthOf(Line(C,X))),17)"
+      },
+      {
+        "source_given": "quantity asked in original question",
+        "statement": "Find(LengthOf(Line(A,X)))"
+      }
+    ],
+    "line_instances": [
+      "BC",
+      "BD1",
+      "D1C",
+      "AC",
+      "AB",
+      "D1E1",
+      "D1F1",
+      "BD2",
+      "D2C",
+      "D2E2",
+      "D2F2",
+      "BX",
+      "CX",
+      "AX"
+    ],
+    "unencoded_given_policy": "All original English givens remain verbatim. No inferred target relation is supplied."
+  }
+]

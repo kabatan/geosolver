@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2018_P1",
+  "reviewer": "independent_review",
+  "case_sha256": "e465d769ceb24193bc6e9fa98469301f74e178a4a5b6a19a9358d24c4dc0bb13",
+  "audit_sha256": "9cd2cabe64b4abfa53c08315de68505b557eb57192383e6131e329a9579b6292",
+  "gmbl_sha256": "02b336dcead6fb5f3562b161ac4f26544571c8e9477952ac5373944a0ff8c5a7",
+  "reviewed_original_pdf_sha256": "3118f981f520aa9f9238ec97d63614aff5f7c2c26bb9c2ea24517b4d5d9dbb6c",
+  "verdict": "pass",
+  "normalization_checked": true,
+  "conclusion_not_assumed": true,
+  "original_conditions_covered_by_gmbl": true,
+  "scope_of_coverage_ja": "原文の仮定を当該比較範囲で満たすかの監査である。原文の全境界配置を含む解集合の完全同値、GMB実装の全数値分岐の正当性、実験の実行許可を意味しない。",
+  "comparison_scope": "nondegenerate_configuration_domain",
+  "sources_read": [
+    "cases/IMO_2018_P1.json",
+    "audit/IMO_2018_P1.json",
+    "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2018_P1.smt2",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2018-eng.pdf",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2018-eng.txt",
+    "AUTHORING.md",
+    "reviews/UPSTREAM_SEMANTICS.md"
+  ],
+  "official_url": "https://www.imo-official.org/assets/documents/problems/2018/2018_eng.pdf",
+  "normalization_review": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "removed_continuous_dof": 4,
+    "scale_invariant": true,
+    "reflection_fixed": false,
+    "remaining_solver_variables": [
+      "cx",
+      "cy",
+      "d",
+      "e",
+      "f",
+      "g"
+    ],
+    "shape_fixed_beyond_original_hypotheses": false,
+    "checked_ja": "原文で相異なる二点の単位基線化だけで平行移動2・回転1・正の尺度1を除く。元の形の変数と鏡映配置を保持している。"
+  },
+  "original_goal_not_used": "DEとFGが平行、または同じ直線である。採点で一致直線を誤って除外しない。",
+  "checked_input_counts": {
+    "constructions": 10,
+    "conditions": 13
+  },
+  "method": {
+    "read_all_constructions_and_conditions": true,
+    "read_original_problem_assumptions": true,
+    "checked_domains_branches_and_non_degeneracy": true,
+    "checked_goal_separation": true,
+    "exact_algebraic_checks_only_where_documented": true,
+    "solver_executed": false,
+    "optimizer_executed": false,
+    "refinement_executed": false,
+    "prior_case_performance_used_to_adjust_input": false
+  },
+  "gmb_runtime_equivalence_claimed": false,
+  "findings": [
+    {
+      "id": "IMO_2018_P1-review-1",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "AB単位基線とC、D∈AB,E∈ACの内部位置、F,Gの円周位置を残す。鋭角性とAD=AEを照合した。"
+    },
+    {
+      "id": "IMO_2018_P1-review-2",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "F,Gを各垂直二等分線とΓへの所属、指定点と反対側という条件で表し、GMBの幾何的selectorを保っている。根番号や事前計測した座標を使わない。"
+    },
+    {
+      "id": "IMO_2018_P1-review-3",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "直線DEに関する原文の平行性等は結論に分離した。D/Eの端点は関連する垂直二等分線又はDEの定義域を壊すため内部指定と整合する。"
+    }
+  ],
+  "remaining_uncertainties": []
+}
