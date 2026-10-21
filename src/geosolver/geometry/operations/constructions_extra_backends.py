@@ -169,22 +169,6 @@ def circle_through_three_points_numpy_impl(p1: Any, p2: Any, p3: Any) -> list[An
 
 
 def circle_through_three_points_mpmath_impl(p1: Point, p2: Point, p3: Point) -> Circle | None:
-    from mpmath import sqrt
+    from geosolver.geometry.mp.mp_impl import mp_circumcircle
 
-    from geosolver.geometry.mp.mp_core_types import MPCircle, MPPoint
-
-    x1, y1 = p1.x, p1.y
-    x2, y2 = p2.x, p2.y
-    x3, y3 = p3.x, p3.y
-    D = 2 * (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2))
-    if abs(D) < 1e-20:
-        return None
-    Ux = (
-        (x1**2 + y1**2) * (y2 - y3) + (x2**2 + y2**2) * (y3 - y1) + (x3**2 + y3**2) * (y1 - y2)
-    ) / D
-    Uy = (
-        (x1**2 + y1**2) * (x3 - x2) + (x2**2 + y2**2) * (x1 - x3) + (x3**2 + y3**2) * (x2 - x1)
-    ) / D
-    dx = x1 - Ux
-    dy = y1 - Uy
-    return MPCircle(MPPoint(Ux, Uy), sqrt(dx**2 + dy**2))
+    return mp_circumcircle(p1, p2, p3)

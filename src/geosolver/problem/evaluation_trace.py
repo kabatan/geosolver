@@ -3,9 +3,25 @@
 from contextlib import contextmanager
 from contextvars import ContextVar
 
+from geosolver.runtime.deadline import check_deadline
+
 _call_site = ContextVar("dsl_call_site", default="")
 _calls = ContextVar("dsl_calls", default=None)
 _scope = ContextVar("dsl_evaluation_scope", default="")
+_PUBLIC_PARAMETER_NAMES = {
+    "Line": ("A", "B"),
+    "Triangle": ("points",),
+    "Polygon": ("arg1",),
+    "PointOnSegment": ("A", "B", "t"),
+    "PointOnCircle": ("omega", "t"),
+    "PointOnLine": ("line", "t"),
+}
+
+
+def replay_calls(records):
+    destination = _calls.get()
+    if destination is not None:
+        destination.extend(records)
 
 
 @contextmanager
@@ -21,6 +37,10 @@ def current_call_site():
     return _call_site.get()
 
 
+def current_evaluation_scope():
+    return _scope.get()
+
+
 @contextmanager
 def capture_calls():
     records = []
@@ -32,13 +52,10 @@ def capture_calls():
 
 
 def runtime_call(site, name, function, *args, **kwargs):
+    check_deadline()
     site = f"{_scope.get()}:{site}"
     # Bind the public names independently of backend implementation signatures.
-    parameter_names = {
-        "PointOnSegment": ("A", "B", "t"),
-        "PointOnCircle": ("omega", "t"),
-        "PointOnLine": ("line", "t"),
-    }.get(name)
+    parameter_names = _PUBLIC_PARAMETER_NAMES.get(name)
     if parameter_names is not None and kwargs:
         values = list(args)
         for index, parameter in enumerate(parameter_names):
@@ -66,6 +83,7 @@ def runtime_call(site, name, function, *args, **kwargs):
     token = _call_site.set(site)
     try:
         result = function(*args, **kwargs)
+        check_deadline()
         records = _calls.get()
         if records is not None:
             records.append((site, name, args, dict(kwargs), result))

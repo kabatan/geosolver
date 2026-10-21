@@ -10,6 +10,7 @@ import argparse
 import ast
 import hashlib
 import json
+import math
 import os
 import re
 import subprocess
@@ -363,7 +364,8 @@ def _run_one(record: CaseRecord, seed: int, campaign: Path, cpu: int | None = No
 
     if not record.runnable or record.dsl_path is None or record.dsl is None:
         raise CampaignError(f"case {record.identifier} is not runnable")
-    output = campaign / "runs" / record.identifier / f"{seed}.json"
+    # The worker CLI runs from ROOT, which can differ from the caller's cwd.
+    output = campaign.resolve() / "runs" / record.identifier / f"{seed}.json"
     output.parent.mkdir(parents=True, exist_ok=True)
     temporary_solver_output = output.with_suffix(".solver.tmp.json")
     command = [
@@ -497,10 +499,15 @@ def run_campaign(
             )
     manifest = _manifest(records, seeds)
     manifest["development_allow_dirty"] = allow_dirty
-    destination.mkdir(parents=True, exist_ok=True)
-    _atomic_json(destination / "campaign-manifest.json", manifest)
     cpus = _independent_cpus()
     worker_count = min(int(jobs), len(cpus))
+    manifest["execution_layout"] = {
+        "requested_jobs": int(jobs),
+        "worker_count": worker_count,
+        "physical_core_representatives": cpus[:worker_count],
+    }
+    destination.mkdir(parents=True, exist_ok=True)
+    _atomic_json(destination / "campaign-manifest.json", manifest)
     available = Queue()
     for cpu in cpus[:worker_count]:
         available.put(cpu)
@@ -576,6 +583,7 @@ def read_run_outcome(raw):
         "termination_reason": result.get("termination_reason"),
         "rejection_tags": diagnostics.get("rejection_tags", assembly.get("rejection_tags", [])),
         "wall_seconds": result.get("elapsed_seconds", process.get("elapsed_seconds")),
+        "process_wall_seconds": process.get("elapsed_seconds"),
         "cpu_seconds": info.get("cpu_seconds"),
         "peak_rss_bytes": info.get("peak_rss_bytes"),
         "phase_timings": diagnostics.get("phase_timings", {}),
@@ -730,11 +738,13 @@ def summarize_campaign(destination: Path) -> None:
             sorted(Counter(row.get("failure_stage") or "none" for row in rows).items())
         ),
     }
-    for metric in ("wall_seconds", "cpu_seconds", "peak_rss_bytes"):
+    for metric in ("wall_seconds", "process_wall_seconds", "cpu_seconds", "peak_rss_bytes"):
         values = [row[metric] for row in rows if isinstance(row.get(metric), int | float)]
         summary[metric] = {
             "observed_count": len(values),
             "median": median(values) if values else None,
+            "p95": sorted(values)[max(0, math.ceil(0.95 * len(values)) - 1)] if values else None,
+            "maximum": max(values) if values else None,
             "total": sum(values) if values else None,
         }
     for metric in ("phase_timings", "counters"):

@@ -1,0 +1,148 @@
+{
+  "case_id": "IMO_2005_P1",
+  "source": {
+    "official_url": "https://www.imo-official.org/assets/documents/problems/2005/2005_eng.pdf",
+    "official_legacy_url": "https://www.imo-official.org/problems/2005/eng.pdf",
+    "official_pdf_sha256": "d92c258ba744081fdd8e9a3e32552edef20e135cb8a97dc6fa4944592ebd4f49",
+    "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2005_P1.smt2",
+    "gmbl_sha256": "c68d0fe886bbe2c6faf5e6fe91edd9636ea2c319a8d707220c68751194139bb4",
+    "gmbl_commit": "f070afe18ed874b3a31db519ea6f593f40a1be00"
+  },
+  "normalization": {
+    "anchors": [
+      "B",
+      "C"
+    ],
+    "fixed_coordinates": {
+      "B": [
+        "0",
+        "0"
+      ],
+      "C": [
+        "1",
+        "0"
+      ]
+    },
+    "removed_continuous_dof": 4,
+    "justification": "正三角形の辺BCは非零。等辺・共点・凸性は相似不変。A=(1/2,h),h²=3/4として鏡映の両側を残す。 平行移動2・回転1・正の一様拡大縮小1のみを除く。",
+    "scale_invariant": true,
+    "reflection_fixed": false
+  },
+  "clauses": [
+    {
+      "id": "equilateral",
+      "statement_ja": "ABCは正三角形。",
+      "gmbl": [
+        "(param (A B C) equi-tri)"
+      ],
+      "geosolver": [
+        "B = Point(0, 0)",
+        "C = Point(1, 0)",
+        "A = Point(1/2, h)",
+        "h**2 = 3/4"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "side-points-order",
+      "statement_ja": "A1,A2はBC、B1,B2はCA、C1,C2はAB上で、この順序に狭義凸六角形を作る。",
+      "gmbl": [
+        "(param A1 point (on-seg B C))",
+        "(param A2 point (on-seg A1 C))",
+        "(param B1 point (on-seg C A))",
+        "(param B2 point (on-seg B1 A))",
+        "(param C1 point (on-seg A B))",
+        "(param C2 point (on-seg C1 B))"
+      ],
+      "geosolver": [
+        "A1 = PointOnSegment(B, C, ta1); A2 = PointOnSegment(A1, C, ta2)",
+        "B1 = PointOnSegment(C, A, tb1); B2 = PointOnSegment(B1, A, tb2)",
+        "C1 = PointOnSegment(A, B, tc1); C2 = PointOnSegment(C1, B, tc2)",
+        "全てのtについて0 <= t <= 1",
+        "ConvexPolygon([A1, A2, B1, B2, C1, C2])"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "equal-six-sides",
+      "statement_ja": "六角形の六辺は等長。",
+      "gmbl": [
+        "(assert (cong A1 A2 A2 B1))",
+        "(assert (cong A1 A2 B1 B2))",
+        "(assert (cong A1 A2 B2 C1))",
+        "(assert (cong A1 A2 C1 C2))",
+        "(assert (cong A1 A2 C2 A1))"
+      ],
+      "geosolver": [
+        "Distance(A1, A2) = Distance(A2, B1)",
+        "Distance(A1, A2) = Distance(B1, B2)",
+        "Distance(A1, A2) = Distance(B2, C1)",
+        "Distance(A1, A2) = Distance(C1, C2)",
+        "Distance(A1, A2) = Distance(C2, A1)"
+      ],
+      "status": "matched"
+    }
+  ],
+  "goal": {
+    "statement_ja": "直線A1B2,B1C2,C1A2は一点で交わる。",
+    "gmbl": [
+      "(eval (concur (line A1 B2) (line B1 C2) (line C1 A2)))"
+    ],
+    "geosolver_expressions": [
+      "OnLine(Intersect(Line(A1,B2), Line(B1,C2)), Line(C1,A2)) = 0"
+    ],
+    "coverage": "原文の結論全体",
+    "included_in_search": false,
+    "target": "0"
+  },
+  "source_differences": [
+    {
+      "id": "gmb-global-admission",
+      "kind": "implementation_limit",
+      "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+      "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+    },
+    {
+      "id": "equilateral-orientation",
+      "kind": "implementation_limit",
+      "detail_ja": "GMBのequi-triは辺BC=4の上側正三角形のみ。新入力はBC=1に正規化しhの両符号を残す。原文は向きを指定しない。",
+      "comparison_effect": "形の違いでなく相似・鏡映の重複。"
+    },
+    {
+      "id": "open-versus-closed-parameters",
+      "kind": "equivalent_domain",
+      "detail_ja": "GMBのon-seg parameterizationは開区間、新入力は閉区間＋狭義凸性。もしA1=BならC1,C2,A1が連続する共線3頂点、A2=CならA2,B1,B2が共線となる。他の端点も同様で、端点配置は狭義凸性から排除される。",
+      "comparison_effect": "全条件を同時に見ると領域は同値。閉区間記号だけを見て非同値と判断しない。"
+    },
+    {
+      "id": "convexity-explicit",
+      "kind": "equivalent_domain",
+      "detail_ja": "GMBは3辺上の内点を順に選ぶことで凸な六角形を構成する。新入力はこの意味をConvexPolygonでも明示する。",
+      "comparison_effect": "不等式の追加で形の自由度を削ったわけではない。"
+    }
+  ],
+  "open_issues": [],
+  "author_review": {
+    "author": "dsl_2000_2006",
+    "primary_sources_read": [
+      "official IMO 2005 English PDF (relevant problem text and rendered page)",
+      "pinned GMBL IMO_2005_P1.smt2",
+      "benchmarks/gmb/.runtime/source/src/optimizer.py",
+      "src/geosolver/problem/dsl-spec.json",
+      "src/geosolver/engine/standard/interpreter/context/geometry.py",
+      "src/geosolver/engine/standard/interpreter/context/high_precision.py"
+    ],
+    "static_validation": {
+      "public_model": true,
+      "validator": true,
+      "compiler": true,
+      "warnings": [],
+      "variables": 7,
+      "constructions": 9,
+      "conditions": 13
+    },
+    "solve_or_refinement_executed": false,
+    "independent_review_required": true
+  },
+  "comparison_status": "draft"
+}

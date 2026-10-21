@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2000_P1",
+  "purpose": "input_semantics_counterexample_not_performance_evaluation",
+  "reviewer": "independent_review",
+  "source": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2000_P1.smt2",
+  "gmbl_sha256": "c7546705b4a2984f1fd8828b56f5f0b2ba47ba67f66ed418ef22276828d13b4a",
+  "official_short_statement_url": "https://www.imo-official.org/assets/documents/problems/2000/2000_eng.pdf",
+  "contemporaneous_primary_statement": {
+    "url": "https://www.imo-register.org.uk/2000-report.pdf",
+    "title": "41st International Mathematical Olympiad: Report by Imre Leader (UK Team Leader)",
+    "pdf_page": 4,
+    "meaning_ja": "P,Qは直線AN/CD、BN/CDの交点。共通接線はNよりMに近いものを選ぶ。",
+    "pdf_sha256": "ac90daf78bc52b8ebdc870aab0ab17b7accadaed8b058cef61a7b0a30284b503",
+    "asset_path": "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2000-uk-report.pdf"
+  },
+  "derivation_note_ja": "C=(0,0),D=(1,0),M=(m,0),A=(m/2,h),B=((1+m)/2,h)とし、二つの円の方程式の差から他方の交点Nを手で求めた。m=2/5,h=1を代入した全所属・接線・ray条件をFractionによる厳密分数演算で検算。GMB/GeoSolver、最適化、精密化、性能runは実行していない。",
+  "coordinates": {
+    "C": [
+      "0",
+      "0"
+    ],
+    "D": [
+      "1",
+      "0"
+    ],
+    "M": [
+      "2/5",
+      "0"
+    ],
+    "A": [
+      "1/5",
+      "1"
+    ],
+    "B": [
+      "7/10",
+      "1"
+    ],
+    "N": [
+      "896/2005",
+      "376/401"
+    ],
+    "E": [
+      "2/5",
+      "2"
+    ],
+    "P": [
+      "104/25",
+      "0"
+    ],
+    "Q": [
+      "-84/25",
+      "0"
+    ]
+  },
+  "circles": {
+    "omega1": {
+      "center": [
+        "1/5",
+        "12/25"
+      ],
+      "radius": "13/25",
+      "equation": "x**2+y**2-2*x/5-24*y/25=0"
+    },
+    "omega2": {
+      "center": [
+        "7/10",
+        "91/200"
+      ],
+      "radius": "109/200",
+      "equation": "x**2+y**2-7*x/5-91*y/100+2/5=0"
+    }
+  },
+  "common_tangent": "y=1",
+  "exact_checks": {
+    "M_segment_parameter": "2/5",
+    "AB_parallel_CD_cross": "0",
+    "P_on_AN_cross": "0",
+    "P_on_CM_cross": "0",
+    "Q_on_BN_cross": "0",
+    "Q_on_MD_cross": "0",
+    "E_on_CA_cross": "0",
+    "E_on_DB_cross": "0",
+    "E_CA_ray_parameter": "2",
+    "E_DB_ray_parameter": "2",
+    "omega1_radius": "13/25",
+    "omega2_radius": "109/200",
+    "omega1_tangent_distance": "13/25",
+    "omega2_tangent_distance": "109/200",
+    "M_distance_to_AB": "1",
+    "N_distance_to_AB": "25/401",
+    "omega1_C_residual": "0",
+    "omega1_A_residual": "0",
+    "omega1_M_residual": "0",
+    "omega1_N_residual": "0",
+    "omega2_N_residual": "0",
+    "omega2_M_residual": "0",
+    "omega2_B_residual": "0",
+    "omega2_D_residual": "0"
+  },
+  "gmbl_assumptions": [
+    {
+      "source": "(param M point (on-seg C D))",
+      "verified_by": [
+        "M_segment_parameter"
+      ],
+      "requirement": "0 < 2/5 < 1"
+    },
+    {
+      "source": "(param N point (on-circ (circ C A M)))",
+      "verified_by": [
+        "omega1_C_residual",
+        "omega1_A_residual",
+        "omega1_M_residual",
+        "omega1_N_residual"
+      ],
+      "requirement": "all = 0; C,A,M noncollinear"
+    },
+    {
+      "source": "(define B point (inter-lc (para-at A (line C D)) (circ N M D) rs-arbitrary))",
+      "verified_by": [
+        "omega2_N_residual",
+        "omega2_M_residual",
+        "omega2_D_residual",
+        "omega2_B_residual",
+        "AB_parallel_CD_cross"
+      ],
+      "requirement": "all = 0; positive radius and actual tangency"
+    },
+    {
+      "source": "(assert (tangent-lc (line A B) (circ C A M)))",
+      "verified_by": [
+        "omega1_radius",
+        "omega1_tangent_distance"
+      ],
+      "requirement": "both = 13/25 > 0"
+    },
+    {
+      "source": "(assert (tangent-lc (line A B) (circ N M B)))",
+      "verified_by": [
+        "omega2_N_residual",
+        "omega2_M_residual",
+        "omega2_B_residual",
+        "omega2_radius",
+        "omega2_tangent_distance"
+      ],
+      "requirement": "circle residuals = 0; radius and tangent distance both = 109/200 > 0"
+    },
+    {
+      "source": "P=(AN intersect CM), Q=(BN intersect MD), E=(CA intersect DB)",
+      "verified_by": [
+        "P_on_AN_cross",
+        "P_on_CM_cross",
+        "Q_on_BN_cross",
+        "Q_on_MD_cross",
+        "E_on_CA_cross",
+        "E_on_DB_cross"
+      ],
+      "requirement": "all = 0; each supporting line pair nonparallel"
+    },
+    {
+      "source": "(assert (on-ray E D B)); (assert (on-ray E C A))",
+      "verified_by": [
+        "E_DB_ray_parameter",
+        "E_CA_ray_parameter"
+      ],
+      "requirement": "both = 2 > 0"
+    }
+  ],
+  "violated_original_assumption": {
+    "statement_ja": "共通接線はNよりMに近い方を選ぶ。",
+    "required": "distance(M,AB) < distance(N,AB)",
+    "actual": "1 > 25/401"
+  },
+  "conclusion_evaluated": false,
+  "interpretation_ja": "短縮版公式文と公開GMBLでは失われた枝条件の反例。初稿DSLもこの欠落を継承していたため本評価前にnear-M条件を追加済み。原文とGMBLの入力差であり、GMBの実際の出力・数値誤受理を測定した結果ではない。旧成績に合わせた調整ではない。",
+  "required_action_ja": "原文の枝条件を双方の共通採点等へ加える比較契約を確定するまで、元問題に忠実な比較としてreadyにしない。",
+  "current_geosolver_nearer_tangent_condition_false_by_exact_substitution": true
+}

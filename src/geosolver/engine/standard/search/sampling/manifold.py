@@ -15,11 +15,15 @@ import math
 from dataclasses import dataclass
 from typing import Protocol
 
+from mpmath import mp
+
 from geosolver.engine.standard.contracts.candidate_record import FloatCandidate
 from geosolver.engine.standard.contracts.evaluator_port import EvaluatorPort
 from geosolver.engine.standard.evaluation.classify_evaluation_failure import EvaluationStatus
+from geosolver.engine.standard.evaluation.snapshots import EvaluationStore
 from geosolver.engine.standard.problem.load_problem_bundle import ProblemBundle
-from geosolver.problem.ir.compiler import safe_eval_expr
+
+from .affine_guards import AffineGuardSampler
 
 EXACT_DISTANCE_SAMPLE_COUNT = 12
 
@@ -69,16 +73,21 @@ def _collect_fixed_point_coordinates(bundle: ProblemBundle) -> dict[str, tuple[f
     if not construction:
         return {}
     resolved: dict[str, tuple[float, float]] = {}
-    context = dict(bundle.base_context)
-    for item in construction:
-        try:
-            value = safe_eval_expr(item.expr, context)
-        except Exception:
-            continue
-        context[item.name] = value
-        coordinates = _resolve_point_coordinates(value)
-        if coordinates is not None:
-            resolved[item.name] = coordinates
+    store = EvaluationStore(bundle)
+    with mp.workprec(53):
+        # Missing variables stay missing. Only genuinely fixed constructions
+        # can enter the structure-aware sampler; no dummy coordinates are used.
+        snapshot = store.fixed_snapshot()
+        for item in construction:
+            try:
+                context = snapshot.for_expressions([item.name])
+                coordinates = _resolve_point_coordinates(context[item.name])
+            except TimeoutError:
+                raise
+            except Exception:
+                continue
+            if coordinates is not None:
+                resolved[item.name] = coordinates
     return resolved
 
 
@@ -243,7 +252,10 @@ class DistanceCircleSampler:
                         origin_seed=-1,
                         origin_start_point_index=int(sample_index),
                         candidate_id=int(next_candidate_id),
-                        hard_feasible=True,
+                        hard_feasible=None,
+                        origin_phase="probe",
+                        origin_backend="manifold",
+                        origin_evaluation_index=next_candidate_id,
                         hard_violation_tags=(),
                         validity_margin_float=None,
                     )
@@ -264,7 +276,10 @@ class DistanceCircleSampler:
         )
 
 
-DEFAULT_MANIFOLD_SAMPLE_STRATEGIES: tuple[ManifoldSampleStrategy, ...] = (DistanceCircleSampler(),)
+DEFAULT_MANIFOLD_SAMPLE_STRATEGIES: tuple[ManifoldSampleStrategy, ...] = (
+    DistanceCircleSampler(),
+    AffineGuardSampler(),
+)
 
 
 def augment_with_manifold_samples(

@@ -13,9 +13,11 @@ from geosolver.engine.standard.contracts.baseline_search_policy import (
     SearchAttemptConfig,
 )
 from geosolver.engine.standard.contracts.candidate_record import (
+    CandidateKey,
     RefinedCandidate,
     RefinementBatchResult,
     SearchBatchResult,
+    candidate_record,
 )
 from geosolver.engine.standard.contracts.external_pipeline_config import (
     SEARCH_MODE_HYBRID_LEGACY_NOMAD,
@@ -336,6 +338,7 @@ def _run_pipeline_stage(
     seed_base: int | None,
     refiner: MpmathRefiner,
     runtime_budget: RuntimeBudget,
+    allow_algebraic: bool = True,
 ) -> _PipelineStageState:
     initial_probe_seed_count = _resolve_search_seed_count(pipeline_config.search)
     initial_probe_seeds = (
@@ -343,17 +346,28 @@ def _run_pipeline_stage(
         if seed_base is not None
         else None
     )
-    initial_probe_result = run_initial_probe(
-        evaluator=evaluator,
-        bounds=bounds,
-        **({"seeds": initial_probe_seeds} if initial_probe_seeds is not None else {}),
+    from geosolver.engine.standard.search.algebraic_branches import search_algebraic_branches
+
+    algebraic_search = (
+        search_algebraic_branches(bundle=bundle, evaluator=evaluator) if allow_algebraic else None
     )
-    initial_probe_result = augment_initial_probe_with_exact_distance_samples(
-        bundle=bundle,
-        evaluator=evaluator,
-        bounds=bounds,
-        initial_probe_result=initial_probe_result,
-    )
+    if algebraic_search is None:
+        initial_probe_result = run_initial_probe(
+            evaluator=evaluator,
+            bounds=bounds,
+            **({"seeds": initial_probe_seeds} if initial_probe_seeds is not None else {}),
+        )
+        initial_probe_result = augment_initial_probe_with_exact_distance_samples(
+            bundle=bundle,
+            evaluator=evaluator,
+            bounds=bounds,
+            initial_probe_result=initial_probe_result,
+        )
+    else:
+        initial_probe_result = InitialProbeResult(
+            candidates=algebraic_search.candidates,
+            metrics={"algebraic_branch_discovery": True},
+        )
     constraint_scales = getattr(initial_probe_result, "constraint_scales", None)
     search_search_config = pipeline_config.search
     remaining_before_search = runtime_budget.remaining_sec()
@@ -374,7 +388,7 @@ def _run_pipeline_stage(
                 remaining_before_search,
             ),
         )
-    search_result = run_search(
+    search_result = algebraic_search or run_search(
         bundle=bundle,
         evaluator=evaluator,
         bounds=bounds,
@@ -384,6 +398,7 @@ def _run_pipeline_stage(
         guard_feasible_prefix_min=pipeline_config.guard_feasible_prefix_min,
         guard_feasible_prefix_multiplier=pipeline_config.guard_feasible_prefix_multiplier,
         constraint_scales=constraint_scales,
+        allow_integer_shortcuts=allow_algebraic,
     )
     refinement_result = run_refinement(
         bundle=bundle,
@@ -462,6 +477,8 @@ def _complete_pipeline_stage(
                 ),
                 elapsed_sec=rescue_result.elapsed_sec,
             )
+            rescue_search_summary["box_runs"] = list(rescue_result.box_runs)
+            rescue_search_summary["executed_box_count"] = len(rescue_result.box_runs)
         if rescue_result is not None and rescue_result.candidates:
             rescued_refinement = refine_added_candidates(
                 bundle=bundle,
@@ -515,27 +532,88 @@ def _execute_ordered_search_attempt(
     refiner: MpmathRefiner,
     runtime_budget: RuntimeBudget,
 ) -> _OrderedSearchAttemptOutcome:
-    stage_state = _run_pipeline_stage(
-        bundle=bundle,
-        evaluator=evaluator,
-        bounds=bounds,
-        pipeline_config=attempt.pipeline_config,
-        seed_base=attempt.initial_probe_seed_base,
-        refiner=refiner,
-        runtime_budget=runtime_budget,
-    )
-    return _OrderedSearchAttemptOutcome(
-        attempt=attempt,
-        completed_stage_state=_complete_pipeline_stage(
+    from geosolver.engine.standard.contracts.candidate_record import candidate_attempt
+
+    with candidate_attempt(0 if attempt.attempt_id == "primary" else 1):
+        stage_state = _run_pipeline_stage(
             bundle=bundle,
             evaluator=evaluator,
             bounds=bounds,
-            stage_state=stage_state,
             pipeline_config=attempt.pipeline_config,
+            seed_base=attempt.initial_probe_seed_base,
             refiner=refiner,
             runtime_budget=runtime_budget,
-        ),
-    )
+            allow_algebraic=attempt.attempt_id == SEARCH_ATTEMPT_PRIMARY,
+        )
+        if (
+            attempt.attempt_id == SEARCH_ATTEMPT_PRIMARY
+            and _algebraic_provenance_incomplete(stage_state)
+            and runtime_budget.remaining_sec() > 0
+        ):
+            # An optional enumeration replaces neither the ordinary primary
+            # search nor its policy. If any proposed branch remains unresolved,
+            # run that same primary seed/backend before considering hybrid search.
+            with candidate_attempt(2):
+                numeric_stage = _run_pipeline_stage(
+                    bundle=bundle,
+                    evaluator=evaluator,
+                    bounds=bounds,
+                    pipeline_config=attempt.pipeline_config,
+                    seed_base=attempt.initial_probe_seed_base,
+                    refiner=refiner,
+                    runtime_budget=runtime_budget,
+                    allow_algebraic=False,
+                )
+                completed_numeric = _complete_pipeline_stage(
+                    bundle=bundle,
+                    evaluator=evaluator,
+                    bounds=bounds,
+                    stage_state=numeric_stage,
+                    pipeline_config=attempt.pipeline_config,
+                    refiner=refiner,
+                    runtime_budget=runtime_budget,
+                )
+            completed_optional = _CompletedPipelineStageState(
+                initial_probe_result=stage_state.initial_probe_result,
+                search_result=stage_state.search_result,
+                refinement_result=stage_state.refinement_result,
+                exact_assembly_result=stage_state.exact_assembly_result,
+                rescue_search_summary={},
+                integer_fallback_summary={},
+            )
+            optional = _OrderedSearchAttemptOutcome(attempt, completed_optional)
+            numeric = _OrderedSearchAttemptOutcome(attempt, completed_numeric)
+            combined = _union_partially_verified_algebraic_attempts(optional, numeric)
+            completed = combined.selected_outcome.completed_stage_state
+            search = replace(
+                completed.search_result,
+                search_diagnostics={
+                    **completed.search_result.search_diagnostics,
+                    "finite_enumeration_numeric_primary_completion": {
+                        "search_mode": attempt.pipeline_config.global_search_mode,
+                        "seed_values": list(attempt.pipeline_config.search.seed_values),
+                        "accepted_count": len(
+                            completed_numeric.exact_assembly_result.accepted_candidates
+                        ),
+                    },
+                },
+            )
+            return replace(
+                combined.selected_outcome,
+                completed_stage_state=replace(completed, search_result=search),
+            )
+        return _OrderedSearchAttemptOutcome(
+            attempt=attempt,
+            completed_stage_state=_complete_pipeline_stage(
+                bundle=bundle,
+                evaluator=evaluator,
+                bounds=bounds,
+                stage_state=stage_state,
+                pipeline_config=attempt.pipeline_config,
+                refiner=refiner,
+                runtime_budget=runtime_budget,
+            ),
+        )
 
 
 def _select_ordered_search_attempt_outcome(
@@ -563,6 +641,92 @@ def _select_ordered_search_attempt_outcome(
     )
 
 
+def _algebraic_provenance_incomplete(stage):
+    from geosolver.engine.standard.search.algebraic_branch_boxes import accepted_within_origin_box
+
+    if stage.search_result.search_diagnostics.get("finite_enumeration_numeric_primary_completion"):
+        return False
+    # Float rejection is not a mathematical nonexistence certificate. Retain
+    # every finitely enumerated square root in the completion obligation.
+    records = (
+        *stage.search_result.candidates,
+        *(
+            candidate
+            for candidate in stage.search_result.all_records
+            if getattr(candidate, "origin_backend", None) == "integer_square_difference"
+        ),
+    )
+    proposals = {
+        candidate.candidate_key: candidate
+        for candidate in records
+        if getattr(candidate, "origin_backend", None)
+        in {"exact_polynomial", "integer_square_difference"}
+    }
+    if not proposals:
+        return False
+    verified_origins = {
+        candidate.source.candidate_key
+        for candidate in stage.exact_assembly_result.accepted_candidates
+        if candidate.source is not None
+        and candidate.source.candidate_key in proposals
+        and accepted_within_origin_box(candidate, proposals[candidate.source.candidate_key])
+    }
+    return not proposals.keys() <= verified_origins
+
+
+def _union_partially_verified_algebraic_attempts(primary_outcome, fallback_outcome):
+    """Preserve every independently verified record from both attempts.
+
+    This merge is restricted to completion of a partially verified finite
+    enumeration. No candidate is admitted by branch or answer counts. The
+    original record identities, revisions, and verification receipts survive.
+    """
+    first = primary_outcome.completed_stage_state
+    second = fallback_outcome.completed_stage_state
+    a, b = first.search_result, second.search_result
+    search = SearchBatchResult(
+        candidates=(*a.candidates, *b.candidates),
+        evaluation_count=a.evaluation_count + b.evaluation_count,
+        failure_ratio=(a.failed_evaluations + b.failed_evaluations)
+        / max(1, a.evaluation_count + b.evaluation_count),
+        evaluation_failure_count=a.failed_evaluations + b.failed_evaluations,
+        all_records=(*a.all_records, *b.all_records),
+        guard_feasible_ledger=(*a.guard_feasible_ledger, *b.guard_feasible_ledger),
+        search_diagnostics={
+            **a.search_diagnostics,
+            "partial_algebraic_numeric_completion": b.search_diagnostics,
+        },
+    )
+    a, b = first.exact_assembly_result, second.exact_assembly_result
+    assembly = ExactAssemblyResult(
+        numeric_feasible_candidates=(
+            *a.numeric_feasible_candidates,
+            *b.numeric_feasible_candidates,
+        ),
+        accepted_candidates=(*a.accepted_candidates, *b.accepted_candidates),
+        exact_results=(*a.exact_results, *b.exact_results),
+        candidate_records=(*a.candidate_records, *b.candidate_records),
+        answer_values=(*a.answer_values, *b.answer_values),
+        rejected_false_positive_count=a.rejected_false_positive_count
+        + b.rejected_false_positive_count,
+        rejection_tags=tuple(dict.fromkeys((*a.rejection_tags, *b.rejection_tags))),
+        verification_records=(*a.verification_records, *b.verification_records),
+    )
+    combined = replace(
+        second,
+        search_result=search,
+        refinement_result=merge_refinement_results(
+            first.refinement_result, second.refinement_result
+        ),
+        exact_assembly_result=assembly,
+    )
+    return _OrderedSearchAttemptSelection(
+        primary_outcome=primary_outcome,
+        fallback_outcome=fallback_outcome,
+        selected_outcome=replace(fallback_outcome, completed_stage_state=combined),
+    )
+
+
 def _run_ordered_search_attempts(
     *,
     ordered_attempts: tuple[_OrderedSearchAttemptDescriptor, ...],
@@ -581,8 +745,22 @@ def _run_ordered_search_attempts(
         refiner=refiner,
         runtime_budget=runtime_budget,
     )
+    primary_has_answers = bool(
+        primary_outcome.completed_stage_state.exact_assembly_result.accepted_candidates
+    )
+    incomplete_polynomial = _algebraic_provenance_incomplete(primary_outcome.completed_stage_state)
+    numeric_completion = primary_outcome.completed_stage_state.search_result.search_diagnostics.get(
+        "finite_enumeration_numeric_primary_completion"
+    )
+    # The ordinary primary attempt controls escalation even if the optional
+    # prepass already found an answer. Preserve those records in either outcome.
+    numeric_primary_has_answers = (
+        bool(numeric_completion["accepted_count"])
+        if numeric_completion is not None
+        else primary_has_answers
+    )
     if (
-        len(primary_outcome.completed_stage_state.exact_assembly_result.accepted_candidates) > 0
+        (numeric_primary_has_answers and not incomplete_polynomial)
         or len(ordered_attempts) == 1
         or runtime_budget.remaining_sec() <= 0
     ):
@@ -596,6 +774,8 @@ def _run_ordered_search_attempts(
         refiner=refiner,
         runtime_budget=runtime_budget,
     )
+    if primary_has_answers and (incomplete_polynomial or numeric_completion is not None):
+        return _union_partially_verified_algebraic_attempts(primary_outcome, fallback_outcome)
     return _select_ordered_search_attempt_outcome(
         primary_outcome=primary_outcome,
         fallback_outcome=fallback_outcome,
@@ -608,7 +788,7 @@ def _build_debug_candidates(
     accepted_candidates: tuple[RefinedCandidate, ...],
     limit: int,
 ) -> tuple[dict[str, object], ...]:
-    accepted_ids = {candidate.candidate_id for candidate in accepted_candidates}
+    accepted_ids = {candidate.candidate_key for candidate in accepted_candidates}
     ordered = sorted(refined_candidates, key=lambda candidate: candidate.residual_norm_hp)
     debug_entries: list[dict[str, object]] = []
     for candidate in ordered[: max(0, int(limit))]:
@@ -626,7 +806,9 @@ def _build_debug_candidates(
                 "hard_violation_tags": list(candidate.hard_violation_tags),
                 "refinement_status": candidate.refinement_status,
                 "rejection_tag": (
-                    None if candidate.candidate_id in accepted_ids else "rejected_by_exact_assembly"
+                    None
+                    if candidate.candidate_key in accepted_ids
+                    else "rejected_by_exact_assembly"
                 ),
             }
         )
@@ -636,7 +818,6 @@ def _build_debug_candidates(
 def _run_external_pipeline_without_variables(
     evaluator: object,
     *,
-    pipeline_config: ExternalPipelineConfig,
     runtime_budget: RuntimeBudget,
 ) -> ExternalPipelineResult:
     float_eval = evaluator.evaluate_float_residual([])
@@ -677,7 +858,8 @@ def _run_external_pipeline_without_variables(
             phase_history=("direct:120:target_reached",),
             source=None,
             candidate_id=1,
-            hard_feasible=guard_ok,
+            origin_key=CandidateKey("direct", "constant", 0, None, -1, 0, 0),
+            hard_feasible=None,
             hard_violation_tags=() if guard_ok else tuple(guard_violations),
             validity_margin_hp=None,
         )
@@ -747,7 +929,11 @@ def _run_external_pipeline_without_variables(
     summary["pipeline_backend"] = "direct_evaluation"
     summary["verification_records"] = list(exact_assembly_result.verification_records)
     summary["exact_candidate_records"] = [
-        asdict(record) for record in exact_assembly_result.candidate_records
+        {
+            "candidate": candidate_record(record.candidate),
+            "exact_result": asdict(record.exact_result),
+        }
+        for record in exact_assembly_result.candidate_records
     ]
     summary["exact_assembly"]["rejection_tags"] = list(exact_assembly_result.rejection_tags)
     summary["exact_assembly"]["rejected_false_positive_count"] = (
@@ -775,6 +961,12 @@ def _run_external_pipeline_without_variables(
         exact_results=exact_results,
         summary=summary,
         accepted_candidate_ids=tuple(accepted_candidate_ids),
+        accepted_candidate_uids=tuple(
+            c.candidate_uid for c in exact_assembly_result.accepted_candidates
+        ),
+        accepted_candidate_revisions=tuple(
+            (c.candidate_uid, c.revision) for c in exact_assembly_result.accepted_candidates
+        ),
     )
 
 
@@ -846,7 +1038,6 @@ def _run_external_pipeline(
     if len(bundle.var_names) == 0:
         return _run_external_pipeline_without_variables(
             evaluator,
-            pipeline_config=active_pipeline_config,
             runtime_budget=runtime_budget,
         )
     bounds = infer_problem_bounds(bundle)
@@ -908,4 +1099,10 @@ def _run_external_pipeline(
         exact_results=exact_assembly_result.exact_results,
         summary=summary,
         accepted_candidate_ids=accepted_candidate_ids,
+        accepted_candidate_uids=tuple(
+            c.candidate_uid for c in exact_assembly_result.accepted_candidates
+        ),
+        accepted_candidate_revisions=tuple(
+            (c.candidate_uid, c.revision) for c in exact_assembly_result.accepted_candidates
+        ),
     )

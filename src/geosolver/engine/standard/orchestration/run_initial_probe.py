@@ -113,6 +113,8 @@ def run_initial_probe(
     best_residual = float("inf")
     per_constraint_abs: list[list[float]] = []
     residual_vectors = []
+    cache = getattr(evaluator, "probe_cache", {})
+    reused_points = 0
     for seed in seeds:
         rng = random.Random(int(seed))
         for point_index in range(int(points_per_seed)):
@@ -122,7 +124,19 @@ def run_initial_probe(
                 break
             point = [rng.uniform(low, high) for low, high in bounds]
             total_points += 1
-            float_eval = evaluator.evaluate_float_residual(point)
+            key = (tuple(bounds), int(seed), int(points_per_seed), point_index)
+            cached = cache.get(key)
+            if cached is None:
+                float_eval = evaluator.evaluate_float_residual(point)
+                guard = (
+                    evaluator.evaluate_guard(point)
+                    if float_eval.evaluation_status is EvaluationStatus.OK
+                    else None
+                )
+                cache[key] = (float_eval, guard)
+            else:
+                float_eval, guard = cached
+                reused_points += 1
             if float_eval.evaluation_status is not EvaluationStatus.OK:
                 continue
             finite_points += 1
@@ -132,7 +146,7 @@ def run_initial_probe(
                 for i, r in enumerate(float_eval.residual_vector):
                     if math.isfinite(r):
                         per_constraint_abs[i].append(abs(r))
-            guard_ok, _violations = evaluator.evaluate_guard(point)
+            guard_ok, _violations = guard
             if guard_ok:
                 guard_pass_points += 1
             residual = float_eval.residual_norm_float
@@ -150,7 +164,10 @@ def run_initial_probe(
                     origin_seed=int(seed),
                     origin_start_point_index=int(point_index),
                     candidate_id=int(total_points),
-                    hard_feasible=bool(guard_ok),
+                    hard_feasible=None,
+                    origin_phase="probe",
+                    origin_backend="random",
+                    origin_evaluation_index=point_index,
                     hard_violation_tags=() if guard_ok else ("guard_failed",),
                     validity_margin_float=None,
                 )
@@ -171,6 +188,7 @@ def run_initial_probe(
     ]
     metrics = {
         "total_random_points": total_points,
+        "reused_random_points": reused_points,
         "finite_residual_ratio": 0.0 if total_points == 0 else (finite_points / total_points),
         "guard_pass_ratio": 0.0 if total_points == 0 else (guard_pass_points / total_points),
         "best_random_residual": None if best_point is None else best_residual,

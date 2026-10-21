@@ -1,0 +1,278 @@
+{
+  "case_id": "IMO_2015_P4",
+  "source": {
+    "official_url": "https://www.imo-official.org/assets/documents/problems/2015/2015_eng.pdf",
+    "official_landing_url": "https://www.imo-official.org/problems/2015/",
+    "official_pdf_path": "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2015-eng.pdf",
+    "official_pdf_sha256": "5ebc0b9ca0072932e088f6fd22fa19625544e3616086da2aa1280d3a791dbeb2",
+    "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2015_P4.smt2",
+    "gmbl_sha256": "d6cb852d6d92b893cc382cbadc614cd0615587676a57780d3f98c8d0cbd52c5d",
+    "upstream_commit": "f070afe18ed874b3a31db519ea6f593f40a1be00"
+  },
+  "normalization": {
+    "anchors": [
+      "B",
+      "C"
+    ],
+    "fixed_coordinates": {
+      "B": [
+        "0",
+        "0"
+      ],
+      "C": [
+        "1",
+        "0"
+      ]
+    },
+    "removed_continuous_dof": 4,
+    "justification": "三角形の辺BCは非零。辺の内部順序、中心、円交点は相似不変。 平行移動2自由度・回転1自由度・正の一様拡大縮小1自由度のみを除く。残りの図形の形は固定しない。",
+    "scale_invariant": true,
+    "reflection_fixed": false
+  },
+  "clauses": [
+    {
+      "id": "H01",
+      "statement_ja": "ABCの外接円Ωと外心Oを作る。",
+      "gmbl": [
+        "(param (A B C) triangle); (define Omega circle (circumcircle A B C)); (define O point (circumcenter A B C))"
+      ],
+      "geosolver": [
+        "A = Point(ax, ay)",
+        "B = Point(0, 0)",
+        "C = Point(1, 0)",
+        "Omega = Circumcircle(A, B, C)",
+        "O = Circumcenter(A, B, C)",
+        "conditions[0]: Area(A, B, C) > 0"
+      ],
+      "condition_indices": [
+        0
+      ],
+      "construction_names": [
+        "A",
+        "B",
+        "C",
+        "Omega",
+        "O"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H02",
+      "statement_ja": "ΓはA中心でDを通り、BCとの2交点がB,D,E,Cの順で相異なる。",
+      "gmbl": [
+        "(param D point (on-seg B C)); (define Gamma circle (coa A D)); (define E point (inter-lc (line B C) Gamma (rs-neq D))); (assert (on-seg E B C)); (assert (on-seg E D C))"
+      ],
+      "geosolver": [
+        "D = PointOnSegment(B, C, d)",
+        "Gamma = Circle(A, Distance(A, D))",
+        "E = Intersect(Line(B, C), Gamma, exclude=D)",
+        "conditions[1]: d > 0",
+        "conditions[2]: d < 1",
+        "conditions[3]: E.x > D.x",
+        "conditions[4]: E.x < 1"
+      ],
+      "condition_indices": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "construction_names": [
+        "D",
+        "Gamma",
+        "E"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H03",
+      "statement_ja": "F,GはΓとΩの異なる交点。",
+      "gmbl": [
+        "(define F point (inter-cc Gamma Omega rs-arbitrary)); (define G point (inter-cc Gamma Omega (rs-neq F)))"
+      ],
+      "geosolver": [
+        "F = PointOnCircle(Omega, f)",
+        "G = Reflect(F, Line(A, O))",
+        "conditions[5]: OnCircle(F, Gamma) = 0"
+      ],
+      "condition_indices": [
+        5
+      ],
+      "construction_names": [
+        "F",
+        "G"
+      ],
+      "status": "equivalent_construction"
+    },
+    {
+      "id": "H04",
+      "statement_ja": "Ω上でA,F,B,C,Gがこの順に並ぶ。",
+      "gmbl": [
+        "公開GMBLに順序条件なし。コメントではorder isn't explicitly statedとされるが公式原文は明示する。"
+      ],
+      "geosolver": [
+        "conditions[6]: ((F.x-A.x)*(B.y-A.y)-(F.y-A.y)*(B.x-A.x)) != 0",
+        "conditions[7]: ((F.x-A.x)*(B.y-A.y)-(F.y-A.y)*(B.x-A.x))*((F.x-A.x)*(C.y-A.y)-(F.y-A.y)*(C.x-A.x)) > 0",
+        "conditions[8]: ((F.x-A.x)*(B.y-A.y)-(F.y-A.y)*(B.x-A.x))*((F.x-A.x)*(G.y-A.y)-(F.y-A.y)*(G.x-A.x)) > 0",
+        "conditions[9]: ((F.x-A.x)*(B.y-A.y)-(F.y-A.y)*(B.x-A.x))*((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x)) > 0",
+        "conditions[10]: ((F.x-A.x)*(B.y-A.y)-(F.y-A.y)*(B.x-A.x))*((B.x-A.x)*(G.y-A.y)-(B.y-A.y)*(G.x-A.x)) > 0",
+        "conditions[11]: ((F.x-A.x)*(B.y-A.y)-(F.y-A.y)*(B.x-A.x))*((C.x-A.x)*(G.y-A.y)-(C.y-A.y)*(G.x-A.x)) > 0",
+        "conditions[12]: ((F.x-A.x)*(B.y-A.y)-(F.y-A.y)*(B.x-A.x))*((B.x-F.x)*(C.y-F.y)-(B.y-F.y)*(C.x-F.x)) > 0",
+        "conditions[13]: ((F.x-A.x)*(B.y-A.y)-(F.y-A.y)*(B.x-A.x))*((B.x-F.x)*(G.y-F.y)-(B.y-F.y)*(G.x-F.x)) > 0",
+        "conditions[14]: ((F.x-A.x)*(B.y-A.y)-(F.y-A.y)*(B.x-A.x))*((C.x-F.x)*(G.y-F.y)-(C.y-F.y)*(G.x-F.x)) > 0",
+        "conditions[15]: ((F.x-A.x)*(B.y-A.y)-(F.y-A.y)*(B.x-A.x))*((C.x-B.x)*(G.y-B.y)-(C.y-B.y)*(G.x-B.x)) > 0"
+      ],
+      "condition_indices": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "construction_names": [],
+      "status": "implied_by_other_hypotheses"
+    },
+    {
+      "id": "H05",
+      "statement_ja": "Kは円BDFとABのB以外の交点で辺ABの内部。",
+      "gmbl": [
+        "(define K point (inter-lc (line A B) (circumcircle B D F) (rs-neq B))); (assert (on-seg K A B))"
+      ],
+      "geosolver": [
+        "K = Intersect(Line(A, B), Circumcircle(B, D, F), exclude=B)",
+        "conditions[16]: Dot(Vector(A, K), Vector(B, K)) < 0"
+      ],
+      "condition_indices": [
+        16
+      ],
+      "construction_names": [
+        "K"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H06",
+      "statement_ja": "Lは円CGEとCAのC以外の交点で辺CAの内部。",
+      "gmbl": [
+        "(define L point (inter-lc (line C A) (circumcircle C G E) (rs-neq C))); (assert (on-seg L C A))"
+      ],
+      "geosolver": [
+        "L = Intersect(Line(C, A), Circumcircle(C, G, E), exclude=C)",
+        "conditions[17]: Dot(Vector(C, L), Vector(A, L)) < 0"
+      ],
+      "condition_indices": [
+        17
+      ],
+      "construction_names": [
+        "L"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H07",
+      "statement_ja": "FKとGLは異なり有限な交点Xを持つ。",
+      "gmbl": [
+        "(define X point (inter-ll (line F K) (line G L)))"
+      ],
+      "geosolver": [
+        "X = Intersect(Line(F, K), Line(G, L))"
+      ],
+      "condition_indices": [],
+      "construction_names": [
+        "X"
+      ],
+      "status": "matched"
+    }
+  ],
+  "goal": {
+    "statement_ja": "Xが直線AO上にある。",
+    "gmbl": [
+      "(eval (coll X A O))"
+    ],
+    "included_in_solver_conditions": false,
+    "solver_target": "0",
+    "assessment_only": true
+  },
+  "source_differences": [
+    {
+      "id": "gmb_runtime_distinctness",
+      "kind": "runtime_acceptance_policy",
+      "blocking": false,
+      "description_ja": "GMBは全登録点の最小距離0.1とweighted soft lossで受理する。原文にない全点相異・最小距離0.1はGeoSolver条件に移さず、両者の出力を別の共通検査器で再検査する。"
+    },
+    {
+      "id": "gmb_numeric_root_selector",
+      "kind": "runtime_selector",
+      "blocking": false,
+      "description_ja": "GMBのrs-neqは数値距離1e-6で候補を分ける。GeoSolverのexcludeは指定点が共通交点である通常の非退化幾何を使い、唯一の異なる交点を要求する。接点重複や不明な枝を勝手に選ばない。"
+    },
+    {
+      "id": "circle_order_missing",
+      "kind": "redundant_statement_condition",
+      "blocking": false,
+      "description_ja": "GMBLコメントは原文に順序が明記されないと述べるが、実際の原文はA,F,B,C,Gの順序を明記する。ただし非退化なGMBL配置ではD,Eの線分条件とK∈ABからこの順序を導ける。以下の独立証明をauthor側でも確認したため、明示順序のないこと自体は解集合の欠落ではない。GeoSolverの順序guardは原文の冗長な条件を明示したものである。",
+      "implication_proof": {
+        "provided_by": "independent_review",
+        "checked_by": "dsl_2014_2020",
+        "uses_conclusion": false,
+        "steps_ja": [
+          "証明に限り必要なら鏡映し、B=(0,0),C=(1,0),A=(a,h),h>0,D=(d,0),E=(e,0)とする。線分条件、exclude、circ(B,D,F)とcirc(C,G,E)の非退化性から0<d<e<1。AD=AEよりa=(d+e)/2、Γの半径はr²=h²+(a−d)²。",
+          "AB²−r²=de>0、AC²−r²=(1−d)(1−e)>0。Γの内部にA、外部にB,Cがあるため、ΩとΓの二つの交点はΩの弧AB（Cを含まない）と弧AC（Bを含まない）に一つずつある。どちらもy>0で、A,B,Cのいずれとも異なる。",
+          "Ωの方程式をx²+y²−x+w y=0、w=(a−|A|²)/hとし、F=(fx,fy)とする。円BDFはx²+y²−d x+v y=0で、v=w−(1−d)fx/fy。K=λAを代入するとλ=1−(1−d)(a−h fx/fy)/|A|²。",
+          "K∈ABかつK≠Bより0<λ≤1。λ=1ならa fy−h fx=0となり、Fが直線ABとΩの共通点AまたはBとなるので不可能。従ってλ<1からa fy−h fx>0。すなわちFは直線ABについてCと反対側なので、Fが弧AB上、他方のGが弧AC上にあり、A,F,B,C,Gの巡回順序が従う。",
+          "鏡映した場合も巡回順序を反転して同じ結論が得られる。証明はX∈AOという問題の結論も、GMBの機械的なrs-arbitrary枝番号も用いていない。"
+        ]
+      }
+    },
+    {
+      "id": "unsatisfied_exclude_avoided",
+      "kind": "translation_representation",
+      "blocking": false,
+      "description_ja": "FをΩ上の未知点としてOnCircle(F,Γ)=0を課す。Gをexclude=Fで構成すると未収束のFではexcludeが曖昧になるため、両円の中心線AOに関するFの鏡映とする。AO上の鏡映はΩもΓも保つので、Fが両円上かつ円周順序でF≠GならGは唯一の他方の共通点。結論X∈AOを利用していない。"
+    }
+  ],
+  "open_issues": [],
+  "witness_bindings": {
+    "B": "B",
+    "C": "C",
+    "A": "A",
+    "Omega": "Omega",
+    "O": "O",
+    "D": "D",
+    "Gamma": "Gamma",
+    "E": "E",
+    "F": "F",
+    "G": "G",
+    "K": "K",
+    "L": "L",
+    "X": "X"
+  },
+  "author_review": {
+    "author": "dsl_2014_2020",
+    "materials_read": [
+      "official IMO 2015 English problem sheet",
+      "GMB IMO_2015_P4.smt2",
+      "GMB optimizer.py / instruction_reader.py / tf_optimizer.py",
+      "GeoSolver dsl-spec.json / public compiler / geometry implementations"
+    ],
+    "pdf_visual_check": "completed_relevant_pages",
+    "static_validation": {
+      "public_model": true,
+      "validator_valid": true,
+      "compiler_valid": true,
+      "solver_executed": false
+    },
+    "independent_review_status": "pending",
+    "notes_ja": [
+      "rs-arbitraryをn=1へ置換していない。Fの両円所属と元の順序条件を未知量へ課す。",
+      "独立レビューで探索中のexclude=Fが未定義になる障壁を検出し、一般の二円に使える中心線鏡映へ修正した。",
+      "独立監査の巡回順序の含意証明をauthor側でも確認し、順序が未証明というblocked理由を解除した。比較入力本体は変更していない。"
+    ]
+  },
+  "comparison_status": "draft"
+}

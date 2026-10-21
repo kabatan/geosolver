@@ -160,6 +160,7 @@ class NomadBackend(GlobalSearchPort):
             candidates=selected,
             evaluation_count=total_evals,
             failure_ratio=failure_ratio,
+            evaluation_failure_count=total_failures,
             all_records=tuple(all_records),
             guard_feasible_ledger=guard_feasible_ledger,
         )

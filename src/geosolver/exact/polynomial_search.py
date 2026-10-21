@@ -188,12 +188,15 @@ def _find_minimal_polynomial_current_precision(
             verbose=verbose,
         )
         canonical = None if coeffs is None else canonicalize_polynomial(coeffs, r)
-        if canonical is not None and _verify_polynomial(canonical, r, precision):
+        if canonical is not None and verify_polynomial(canonical, r, precision):
             if verbose:
                 _emit_log(f"  次数{degree}の最小因子を発見: {canonical}")
             return canonical
 
         for s in scale_candidates_for_value(r):
+            if s == 1:
+                # The unscaled PSLQ call above already tried this exact input.
+                continue
             try:
                 y = r / s
             except Exception:
@@ -232,7 +235,7 @@ def _find_minimal_polynomial_current_precision(
                 coeffs_x = [-c for c in coeffs_x]
 
             canonical_x = canonicalize_polynomial(coeffs_x, r)
-            if canonical_x is not None and _verify_polynomial(canonical_x, r, precision):
+            if canonical_x is not None and verify_polynomial(canonical_x, r, precision):
                 if verbose:
                     _emit_log(f"  次数{degree}の最小因子を発見(スケール{s}): {canonical_x}")
                 return canonical_x

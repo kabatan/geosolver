@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2013_P3",
+  "reviewer": "independent_review",
+  "case_sha256": "2701849e559c18797efb593f27dee3055e22321fdf95b8526df0c909d98d9cce",
+  "audit_sha256": "dcc7b9184b4d84b491c1d12068f14fa0385064128214868c1e6a10fd573f5f59",
+  "gmbl_sha256": "3428ac5a84cda0c82996d03f1f49fea26202555bb8c4bcdcfad9ee300f5bd9d9",
+  "reviewed_original_pdf_sha256": "d5c2d4156d8ce1de0ed5c9bc2b0fc4c2f40a89247e4171176cff89c1a40605a4",
+  "verdict": "pass",
+  "normalization_checked": true,
+  "conclusion_not_assumed": true,
+  "original_conditions_covered_by_gmbl": true,
+  "scope_of_coverage_ja": "原文の仮定を当該比較範囲で満たすかの監査である。原文の全境界配置を含む解集合の完全同値、GMB実装の全数値分岐の正当性、実験の実行許可を意味しない。",
+  "comparison_scope": "nondegenerate_configuration_domain",
+  "sources_read": [
+    "cases/IMO_2013_P3.json",
+    "audit/IMO_2013_P3.json",
+    "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2013_P3.smt2",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2013-eng.pdf",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2013-eng.txt",
+    "AUTHORING.md",
+    "reviews/UPSTREAM_SEMANTICS.md"
+  ],
+  "official_url": "https://www.imo-official.org/assets/documents/problems/2013/2013_eng.pdf",
+  "normalization_review": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "removed_continuous_dof": 4,
+    "scale_invariant": true,
+    "reflection_fixed": false,
+    "remaining_solver_variables": [
+      "cx",
+      "cy"
+    ],
+    "shape_fixed_beyond_original_hypotheses": false,
+    "checked_ja": "原文で相異なる二点の単位基線化だけで平行移動2・回転1・正の尺度1を除く。元の形の変数と鏡映配置を保持している。"
+  },
+  "original_goal_not_used": "ABCがいずれかの頂点で直角を持つ。",
+  "checked_input_counts": {
+    "constructions": 11,
+    "conditions": 2
+  },
+  "method": {
+    "read_all_constructions_and_conditions": true,
+    "read_original_problem_assumptions": true,
+    "checked_domains_branches_and_non_degeneracy": true,
+    "checked_goal_separation": true,
+    "exact_algebraic_checks_only_where_documented": true,
+    "solver_executed": false,
+    "optimizer_executed": false,
+    "refinement_executed": false,
+    "prior_case_performance_used_to_adjust_input": false
+  },
+  "gmb_runtime_equivalence_claimed": false,
+  "findings": [
+    {
+      "id": "IMO_2013_P3-review-1",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "ABを単位基線にしCを自由に残す。三つの傍接円の接点A1,B1,C1と辺の対応を照合した。"
+    },
+    {
+      "id": "IMO_2013_P3-review-2",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "O1はA1B1C1の外心であり、原文のO1がABCの外接円上という仮定だけを課している。"
+    },
+    {
+      "id": "IMO_2013_P3-review-3",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "ABCが直角三角形という結論は入力していない。原問を解いた形を先に代入して容易な作図へ変えていない。"
+    }
+  ],
+  "remaining_uncertainties": []
+}

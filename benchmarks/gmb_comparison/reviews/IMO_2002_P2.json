@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2002_P2",
+  "reviewer": "independent_review",
+  "case_sha256": "08420b565c9f171ba9380272c776cb6cbba9dc0749ae06dd48eca658af1aee5d",
+  "audit_sha256": "74dee2a4e5d95be5d854d565a76fc861b663760e3129ec7479aff1b8afb7b470",
+  "gmbl_sha256": "b3a5024416c03817ff75a29e12670e988ec25cc3bbb7fbf99068e770fc716574",
+  "reviewed_original_pdf_sha256": "a48da72a1ab173a09e61ebcf619e7fc427a671339d3bcc5a23762012c15fa0f9",
+  "verdict": "pass",
+  "normalization_checked": true,
+  "conclusion_not_assumed": true,
+  "original_conditions_covered_by_gmbl": true,
+  "scope_of_coverage_ja": "原文の仮定を当該比較範囲で満たすかの監査である。原文の全境界配置を含む解集合の完全同値、GMB実装の全数値分岐の正当性、実験の実行許可を意味しない。",
+  "comparison_scope": "nondegenerate_configuration_domain",
+  "sources_read": [
+    "cases/IMO_2002_P2.json",
+    "audit/IMO_2002_P2.json",
+    "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2002_P2.smt2",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2002-eng.pdf",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2002-eng.txt",
+    "AUTHORING.md",
+    "reviews/UPSTREAM_SEMANTICS.md"
+  ],
+  "official_url": "https://www.imo-official.org/assets/documents/problems/2002/2002_eng.pdf",
+  "normalization_review": {
+    "anchors": [
+      "B",
+      "C"
+    ],
+    "removed_continuous_dof": 4,
+    "scale_invariant": true,
+    "reflection_fixed": false,
+    "remaining_solver_variables": [
+      "ta",
+      "te"
+    ],
+    "shape_fixed_beyond_original_hypotheses": false,
+    "checked_ja": "原文で相異なる二点の単位基線化だけで平行移動2・回転1・正の尺度1を除く。元の形の変数と鏡映配置を保持している。"
+  },
+  "original_goal_not_used": "Jは三角形CEFの内心。",
+  "checked_input_counts": {
+    "constructions": 12,
+    "conditions": 3
+  },
+  "method": {
+    "read_all_constructions_and_conditions": true,
+    "read_original_problem_assumptions": true,
+    "checked_domains_branches_and_non_degeneracy": true,
+    "checked_goal_separation": true,
+    "exact_algebraic_checks_only_where_documented": true,
+    "solver_executed": false,
+    "optimizer_executed": false,
+    "refinement_executed": false,
+    "prior_case_performance_used_to_adjust_input": false
+  },
+  "gmb_runtime_equivalence_claimed": false,
+  "findings": [
+    {
+      "id": "IMO_2002_P2-review-1",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "B,Cを直径の両端(0,0),(1,0)に正規化し、Aの円周位置を自由変数のまま残す。"
+    },
+    {
+      "id": "IMO_2002_P2-review-2",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "EをAOの垂直二等分線上の未知点とし円所属を課し、FはAOについて鏡映する。名前の交換を許す二交点の集合を表し、交点番号を固定しない。"
+    },
+    {
+      "id": "IMO_2002_P2-review-3",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "DはCを含まない弧ABの中点。CはBの対蹠点なので、この非退化条件では短弧ABと一致する。AOCの角条件、OJ∥ADとJ∈ACを照合した。JがCEFの内心であるという結論は探索に用いていない。"
+    }
+  ],
+  "remaining_uncertainties": []
+}

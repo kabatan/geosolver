@@ -1,0 +1,203 @@
+{
+  "case_id": "IMO_2019_P2",
+  "source": {
+    "official_url": "https://www.imo-official.org/assets/documents/problems/2019/2019_eng.pdf",
+    "official_landing_url": "https://www.imo-official.org/problems/2019/",
+    "official_pdf_path": "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2019-eng.pdf",
+    "official_pdf_sha256": "d3509007d2f762563a041341e6b4ac359f3c42a0c4b5dae278aace36bc5adaeb",
+    "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2019_P2.smt2",
+    "gmbl_sha256": "df2c83ad1c47f814095df2505fa47c7ee728c5e56ce52e6f4c92a67416c1eba4",
+    "upstream_commit": "f070afe18ed874b3a31db519ea6f593f40a1be00"
+  },
+  "normalization": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "fixed_coordinates": {
+      "A": [
+        "0",
+        "0"
+      ],
+      "B": [
+        "1",
+        "0"
+      ]
+    },
+    "removed_continuous_dof": 4,
+    "justification": "三角形の辺ABは非零。平行・内分・半直線・角度は相似不変。 平行移動2自由度・回転1自由度・正の一様拡大縮小1自由度のみを除く。残りの図形の形は固定しない。",
+    "scale_invariant": true,
+    "reflection_fixed": false
+  },
+  "clauses": [
+    {
+      "id": "H01",
+      "statement_ja": "ABCは非退化三角形。",
+      "gmbl": [
+        "(param (A B C) triangle)"
+      ],
+      "geosolver": [
+        "A = Point(0, 0)",
+        "B = Point(1, 0)",
+        "C = Point(cx, cy)",
+        "conditions[0]: Area(A, B, C) > 0"
+      ],
+      "condition_indices": [
+        0
+      ],
+      "construction_names": [
+        "A",
+        "B",
+        "C"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H02",
+      "statement_ja": "A1∈BC、B1∈AC。",
+      "gmbl": [
+        "(param A1 point (on-seg B C)); (param B1 point (on-seg A C))"
+      ],
+      "geosolver": [
+        "A1 = PointOnSegment(B, C, a)",
+        "B1 = PointOnSegment(A, C, b)",
+        "conditions[1]: a > 0",
+        "conditions[2]: a < 1",
+        "conditions[3]: b > 0",
+        "conditions[4]: b < 1"
+      ],
+      "condition_indices": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "construction_names": [
+        "A1",
+        "B1"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H03",
+      "statement_ja": "P∈AA1、Q∈BB1でPQ∥AB。",
+      "gmbl": [
+        "(param P point (on-seg A A1)); (define Q point (inter-ll (line B B1) (para-at P (line A B))))"
+      ],
+      "geosolver": [
+        "P = PointOnSegment(A, A1, p)",
+        "Q = Intersect(Line(B, B1), ParallelLine(Line(A, B), P))",
+        "conditions[5]: p > 0",
+        "conditions[6]: p < 1",
+        "conditions[7]: Dot(Vector(B, Q), Vector(B1, Q)) < 0"
+      ],
+      "condition_indices": [
+        5,
+        6,
+        7
+      ],
+      "construction_names": [
+        "P",
+        "Q"
+      ],
+      "status": "matched_by_implication"
+    },
+    {
+      "id": "H04",
+      "statement_ja": "P1はPB1上でB1がPとP1の厳密間、PP1C=BAC。",
+      "gmbl": [
+        "(param P1 point (on-ray-opp B1 P)); (assert (= (uangle P P1 C) (uangle B A C)))"
+      ],
+      "geosolver": [
+        "P1 = Point(B1.x+r*(B1.x-P.x), B1.y+r*(B1.y-P.y))",
+        "conditions[8]: r > 0",
+        "conditions[10]: Angle(P, P1, C) = Angle(B, A, C)"
+      ],
+      "condition_indices": [
+        8,
+        10
+      ],
+      "construction_names": [
+        "P1"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H05",
+      "statement_ja": "Q1はQA1上でA1がQとQ1の厳密間、CQ1Q=CBA。",
+      "gmbl": [
+        "(param Q1 point (on-ray-opp A1 Q)); (assert (= (uangle C Q1 Q) (uangle C B A)))"
+      ],
+      "geosolver": [
+        "Q1 = Point(A1.x+s*(A1.x-Q.x), A1.y+s*(A1.y-Q.y))",
+        "conditions[9]: s > 0",
+        "conditions[11]: Angle(C, Q1, Q) = Angle(C, B, A)"
+      ],
+      "condition_indices": [
+        9,
+        11
+      ],
+      "construction_names": [
+        "Q1"
+      ],
+      "status": "matched"
+    }
+  ],
+  "goal": {
+    "statement_ja": "P,Q,P1,Q1が同じ円上にある。",
+    "gmbl": [
+      "(eval (on-circ P (circ Q P1 Q1)))"
+    ],
+    "included_in_solver_conditions": false,
+    "solver_target": "0",
+    "assessment_only": true
+  },
+  "source_differences": [
+    {
+      "id": "gmb_runtime_distinctness",
+      "kind": "runtime_acceptance_policy",
+      "blocking": false,
+      "description_ja": "GMBは全登録点の最小距離0.1とweighted soft lossで受理する。原文にない全点相異・最小距離0.1はGeoSolver条件に移さず、両者の出力を別の共通検査器で再検査する。"
+    },
+    {
+      "id": "q_segment_implicit",
+      "kind": "implicit_statement_condition",
+      "blocking": false,
+      "description_ja": "GMBLはQ∈BB1を明示しないが、P1の角度・半直線条件から従う。鏡映でC.y>0と置き、B1=bC、v=P−B1、P1=B1−rv (r>0) とする。Pが三角形内部なのでcross(v,C)>0。vからCまでの小さい正角φについて、(1−b)C+rvはその内部にあり、∠PP1Cは0とφの厳密間。これがα=∠BACならφ>αなのでarg(v)=α−φ<0、P.y<B1.y。一方P.y>0かつPQ∥ABだからQはBB1の内部。Qdot<0は原文の明示条件だがGMBの他条件に冗長で、双方の解集合を変えない。"
+    }
+  ],
+  "open_issues": [],
+  "witness_bindings": {
+    "A": "A",
+    "B": "B",
+    "C": "C",
+    "A1": "A1",
+    "B1": "B1",
+    "P": "P",
+    "Q": "Q",
+    "P1": "P1",
+    "Q1": "Q1"
+  },
+  "author_review": {
+    "author": "dsl_2014_2020",
+    "materials_read": [
+      "official IMO 2019 English problem sheet",
+      "GMB IMO_2019_P2.smt2",
+      "GMB optimizer.py / instruction_reader.py / tf_optimizer.py",
+      "GeoSolver dsl-spec.json / public compiler / geometry implementations"
+    ],
+    "pdf_visual_check": "official_text_and_pdf_source_checked",
+    "static_validation": {
+      "public_model": true,
+      "validator_valid": true,
+      "compiler_valid": true,
+      "solver_executed": false
+    },
+    "independent_review_status": "pending",
+    "notes_ja": [
+      "r,s>0でB1とA1を超える半直線を直接表し、PointOnSegmentの範囲外利用はしない。",
+      "Qの線分所属はGMBLに明示されないがP1条件から従うことを、独立reviewerの証明とauthorの再確認で確認。入力に明記しても元の仮定集合を強くしない。"
+    ]
+  },
+  "comparison_status": "draft"
+}

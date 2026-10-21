@@ -7,17 +7,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from mpmath import (
-    acos as mp_acos,
-)
-from mpmath import (
-    asin as mp_asin,
-)
-from mpmath import (
     mp,
     mpf,
-)
-from mpmath import (
-    pi as mp_pi,
 )
 from mpmath import (
     sqrt as mp_sqrt,
@@ -80,43 +71,19 @@ def mp_line_line_intersection(l1: MPLine, l2: MPLine) -> MPPoint | None:
 
 
 def mp_angle_between_vectors(v1: MPPoint, v2: MPPoint) -> mpf:
-    original_dps = mp.dps
-    precision_scope = mp.workdps(original_dps * 2 + 50)
-    precision_scope.__enter__()
+    cross, dot = _angle_products(v1, v2)
+    return mp.atan2(abs(cross), dot)
 
-    try:
-        norm1 = v1.norm()
-        norm2 = v2.norm()
 
-        if norm1 == 0 or norm2 == 0:
-            raise ValueError("Angle undefined for zero-length vector")
-
-        point_cls = _mp_point_class()
-        n1 = point_cls(v1.x / norm1, v1.y / norm1)
-        n2 = point_cls(v2.x / norm2, v2.y / norm2)
-
-        cos_angle = n1.dot(n2)
-        sin_angle = n1.x * n2.y - n1.y * n2.x
-
-        abs_cos = abs(cos_angle)
-        abs_sin = abs(sin_angle)
-
-        if abs_cos > abs_sin:
-            if abs_sin > 1:
-                abs_sin = mpf("1")
-            angle = mp_asin(abs_sin)
-            if cos_angle < 0:
-                angle = mp_pi - angle
-        else:
-            if cos_angle > 1:
-                cos_angle = mpf("1")
-            elif cos_angle < -1:
-                cos_angle = mpf("-1")
-            angle = mp_acos(cos_angle)
-
-        return +angle
-    finally:
-        precision_scope.__exit__(None, None, None)
+def _angle_products(v1: MPPoint, v2: MPPoint) -> tuple[mpf, mpf]:
+    if (v1.x == 0 and v1.y == 0) or (v2.x == 0 and v2.y == 0):
+        raise ValueError("Angle undefined for zero-length vector")
+    # fdot accumulates exact binary products before rounding the sum once.  This
+    # avoids cancellation in nearly parallel/perpendicular directions without
+    # doubling the precision of every norm, division and inverse trig function.
+    cross = mp.fdot((v1.x, v1.y), (v2.y, -v2.x))
+    dot = mp.fdot((v1.x, v1.y), (v2.x, v2.y))
+    return cross, dot
 
 
 def mp_parallelism_measure(l1: MPLine, l2: MPLine, method: str = "cross") -> mpf:
@@ -144,35 +111,5 @@ def mp_parallelism_measure(l1: MPLine, l2: MPLine, method: str = "cross") -> mpf
 
 
 def mp_angle_between_lines(l1: MPLine, l2: MPLine) -> mpf:
-    original_dps = mp.dps
-    precision_scope = mp.workdps(original_dps * 2 + 50)
-    precision_scope.__enter__()
-
-    try:
-        v1 = l1.direction_vector()
-        v2 = l2.direction_vector()
-
-        norm1 = v1.norm()
-        norm2 = v2.norm()
-
-        if norm1 == 0 or norm2 == 0:
-            raise ValueError("Angle undefined for zero-length line direction")
-
-        cross = v1.x * v2.y - v1.y * v2.x
-        sin_angle = cross / (norm1 * norm2)
-        abs_sin = abs(sin_angle)
-
-        if abs_sin < mpf("0.5"):
-            if abs_sin > 1:
-                abs_sin = mpf("1")
-            angle = mp_asin(abs_sin)
-        else:
-            cos_angle = v1.dot(v2) / (norm1 * norm2)
-            if cos_angle > 1:
-                cos_angle = mpf("1")
-            elif cos_angle < -1:
-                cos_angle = mpf("-1")
-            angle = mp_acos(abs(cos_angle))
-        return +angle
-    finally:
-        precision_scope.__exit__(None, None, None)
+    cross, dot = _angle_products(l1.direction_vector(), l2.direction_vector())
+    return mp.atan2(abs(cross), abs(dot))

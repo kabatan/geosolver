@@ -1,0 +1,15 @@
+{
+  "case_id": "IMO_2010_P4",
+  "source": {"official_url": "https://www.imo-official.org/assets/documents/problems/2010/2010_eng.pdf", "official_pdf_sha256": "f125038100e8d01430c6d260d53b3ee7a70902a5d0a72ffffe15deaa7c98d4cc", "official_pdf_page": 2, "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2010_P4.smt2", "gmbl_sha256": "8e322298d89f64e0ea9155d17e8096888d3f3311ae2ca1d4d588df00b31903f3"},
+  "normalization": {"anchors": ["A", "B"], "fixed_coordinates": {"A": ["0", "0"], "B": ["1", "0"]}, "removed_continuous_dof": 4, "justification": "正長辺ABだけを相似変換で固定。Cと内部点Pの形の自由度を残す。", "scale_invariant": true, "reflection_fixed": false},
+  "clauses": [
+    {"id": "interior", "statement_ja": "ABCは非退化三角形でPはその内部。", "gmbl": ["(param (A B C) triangle)", "(param P point (in-poly A B C))"], "geosolver": ["Area(A, B, C) > 0", "P = Point(u + v * cx, v * cy)", "u > 0", "v > 0", "u + v < 1"], "status": "matched"},
+    {"id": "second_intersections", "statement_ja": "AP,BP,CPの外接円Gammaとの元の頂点以外の交点をK,L,Mとする。", "gmbl": ["(circumcircle A B C)", "(inter-lc (line A P) Gamma (rs-neq A))", "(inter-lc (line B P) Gamma (rs-neq B))", "(inter-lc (line C P) Gamma (rs-neq C))"], "geosolver": ["Gamma = Circumcircle(A, B, C)", "K = Intersect(Line(A, P), Gamma, exclude=A)", "L = Intersect(Line(B, P), Gamma, exclude=B)", "M = Intersect(Line(C, P), Gamma, exclude=C)"], "status": "matched"},
+    {"id": "tangent_and_equality", "statement_ja": "CでのGammaの接線と直線ABの交点をSとし、SC=SP。", "gmbl": ["(inter-ll (perp-at C (line C (origin Gamma))) (line A B))", "(assert (cong S C S P))"], "geosolver": ["O = Center(Gamma)", "S = Intersect(PerpendicularLine(Line(C, O), C), Line(A, B))", "Distance(S, C) = Distance(S, P)"], "status": "matched"}
+  ],
+  "goal": {"statement_ja": "MK=ML。", "gmbl": ["(eval (cong M K M L))"], "included_in_search": false, "target": "0"},
+  "source_differences": [{"kind": "equivalent_parameterization", "detail": "GMBはsoftmaxによる内部点、GeoSolverは独立な正の重心係数u,v,1−u−vを使う。三角形内部という集合は同じで、形や点位置を固定しない。"}],
+  "open_issues": [],
+  "author_review": {"reviewer": "dsl_2007_2013", "primary_sources_read": ["公式2010英語PDF第2頁（画像・抽出本文）", "公開IMO_2010_P4.smt2", "GMB optimizer.py: parameterize_in_poly", "GeoSolver DSL specのIntersect・PerpendicularLine"], "static_validation": "GeometryProblem、validate、compile_problemに合格。探索・精密化未実施。"},
+  "comparison_status": "draft"
+}

@@ -9,6 +9,7 @@ from fractions import Fraction
 from typing import TYPE_CHECKING
 
 from geosolver.problem.expression_source import source_expression
+from geosolver.problem.logical_equalities import evaluation_sources
 
 if TYPE_CHECKING:
     from sympy import Expr
@@ -50,7 +51,11 @@ def parameter_expressions(node: ast.Call, source: str) -> tuple[str, ...]:
 
 def domain_guards(spec) -> tuple[str, ...]:
     result = []
-    expressions = [item.expr for item in spec.construction] + list(spec.constraints)
+    expressions = [item.expr for item in spec.construction] + [
+        source
+        for expression in spec.constraints
+        for source in evaluation_sources(expression, spec.logical_plans)
+    ]
     expressions += [spec.answer_expr] if spec.answer_expr else []
     for source in expressions:
         source = source.replace("^", "**")
@@ -181,14 +186,21 @@ def search_bounds(spec) -> list[tuple[float, float]]:
     scales = {name: 10.0 for name in names}
     constructions = {item.name: item.expr for item in spec.construction}
 
+    dependency_cache = {}
+    variable_names = set(names)
+
     def dependencies(source, seen):
+        if source in dependency_cache:
+            return dependency_cache[source]
         tree = ast.parse(source.replace("^", "**"), mode="eval")
-        variables = {node.id for node in ast.walk(tree) if isinstance(node, ast.Name)} & set(names)
-        constants = []
+        variables = {
+            node.id for node in ast.walk(tree) if isinstance(node, ast.Name)
+        } & variable_names
+        constants = [0.0]
 
         def visit(node):
             if isinstance(node, ast.Constant) and type(node.value) in (int, float):
-                constants.append(abs(float(node.value)))
+                constants[0] = max(constants[0], abs(float(node.value)))
             elif isinstance(node, ast.BinOp) and isinstance(node.op, ast.Pow):
                 visit(node.left)
             elif isinstance(node, ast.keyword) and node.arg in {"n", "use_first"}:
@@ -198,16 +210,25 @@ def search_bounds(spec) -> list[tuple[float, float]]:
                     visit(child)
 
         visit(tree)
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Name) and node.id in constructions and node.id not in seen:
-                vs, cs = dependencies(constructions[node.id], seen | {node.id})
+        references = {node.id for node in ast.walk(tree) if isinstance(node, ast.Name)}
+        for name in sorted(references & constructions.keys()):
+            if name in seen:
+                raise ValueError("cyclic construction dependency")
+            if name in constructions:
+                vs, cs = dependencies(constructions[name], seen | {name})
                 variables.update(vs)
-                constants.extend(cs)
-        return variables, constants
+                constants[0] = max(constants[0], cs[0])
+        result = frozenset(variables), tuple(constants)
+        dependency_cache[source] = result
+        return result
 
     for index, expr in enumerate(spec.constraints):
         target = (spec.v or [0] * len(spec.constraints))[index]
-        variables, constants = dependencies(f"({expr})-({target})", set())
+        variables, constants = set(), []
+        for source in evaluation_sources(expr, spec.logical_plans):
+            dependent, magnitudes = dependencies(f"({source})-({target})", set())
+            variables.update(dependent)
+            constants.extend(magnitudes)
         scale = min(20000.0, max([10.0] + [2 * c for c in constants]))
         for name in variables:
             scales[name] = max(scales[name], scale)

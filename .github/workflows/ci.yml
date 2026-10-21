@@ -29,16 +29,23 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install Python dependencies
+        id: dependencies
         run: uv sync --all-extras --frozen
-      - name: Verify Python and worker behavior
-        run: uv run pytest
-      - name: Lint research core
+      - name: Test solver, benchmarks and GMB
+        run: uv run python -m pytest --import-mode=importlib
+      - name: Lint solver and benchmarks
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
         run: uv run ruff check src tests benchmarks .github/scripts
       - name: Compile source
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
         run: uv run python -m compileall -q src tests
       - name: Verify generated schemas
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
         run: uv run python -m geosolver.schemas.generate --check
       - name: Build clean wheel
+        id: wheel
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
         run: uv build
       - name: Verify installed wheel without repository imports
+        if: ${{ !cancelled() && steps.wheel.outcome == 'success' }}
         run: uv run python .github/scripts/verify_wheel.py

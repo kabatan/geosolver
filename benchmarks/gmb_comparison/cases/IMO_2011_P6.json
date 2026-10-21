@@ -1,0 +1,22 @@
+{
+  "id": "IMO_2011_P6",
+  "variables": ["cx", "cy", "tt"],
+  "constructions": [
+    {"name": "A", "expression": "Point(0, 0)"},
+    {"name": "B", "expression": "Point(1, 0)"},
+    {"name": "C", "expression": "Point(cx, cy)"},
+    {"name": "Gamma", "expression": "Circumcircle(A, B, C)"},
+    {"name": "O", "expression": "Center(Gamma)"},
+    {"name": "T", "expression": "PointOnCircle(Gamma, tt)"},
+    {"name": "V", "expression": "Point(T.x - (T.y - O.y), T.y + (T.x - O.x))"},
+    {"name": "l", "expression": "Line(T, V)"},
+    {"name": "la", "expression": "Line(Reflect(T, Line(B, C)), Reflect(V, Line(B, C)))"},
+    {"name": "lb", "expression": "Line(Reflect(T, Line(C, A)), Reflect(V, Line(C, A)))"},
+    {"name": "lc", "expression": "Line(Reflect(T, Line(A, B)), Reflect(V, Line(A, B)))"}
+  ],
+  "conditions": [
+    {"left": "Area(A, B, C)", "operator": ">", "right": "0"},
+    {"predicate": "AcuteTriangle(A, B, C)"}
+  ],
+  "target": "0"
+}

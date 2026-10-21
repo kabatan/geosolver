@@ -10,8 +10,9 @@ from geosolver.engine.standard.interpreter.context.aliases import apply_geometry
 from geosolver.engine.standard.interpreter.context.geometry import _get_geometry_context
 from geosolver.engine.standard.precision.type_guards.ensure_mpf import ensure_mpf
 from geosolver.engine.standard.precision.type_guards.strict_to_mpf import strict_to_mpf
+from geosolver.geometry.mp.signed_tangency import signed_tangency
 from geosolver.geometry.registry import MultiFunctionWrapper
-from geosolver.problem.dsl_spec import public_symbol_names
+from geosolver.problem.dsl_spec import dsl_spec, public_symbol_names
 
 try:
     import numpy as np
@@ -166,6 +167,7 @@ def _build_hp_context_dict() -> dict[str, Any]:
             "_RawFloat": _raw_float_bridge,
             "mpf": ensure_mpf,
             "ensure_mpf": ensure_mpf,
+            "_SignedTangency": signed_tangency,
         }
     )
     for name in dir(mp_api):
@@ -178,6 +180,14 @@ def _build_hp_context_dict() -> dict[str, Any]:
         if alias in public_symbol_names():
             context[alias] = value
 
+    # Rebind aliases *after* selecting the backend.  Copying the symbolic context
+    # otherwise leaves aliases such as midpoint bound to a symbolic fallback.
+    for symbol in dsl_spec().symbols:
+        if symbol.name in context:
+            for alias in symbol.aliases:
+                context[alias] = context[symbol.name]
+    # These compatibility closures capture backend-specific constructors.
+    context.pop("Triangle", None)
     context = apply_geometry_aliases(context)
     context = _attach_float_return_tracer(context)
     if "Midpoint" in context:

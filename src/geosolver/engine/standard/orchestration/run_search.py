@@ -16,9 +16,6 @@ from geosolver.engine.standard.contracts.external_pipeline_config import (
 )
 from geosolver.engine.standard.contracts.global_search_port import GlobalSearchPort
 from geosolver.engine.standard.contracts.problem_bundle import ProblemBundle
-from geosolver.engine.standard.evaluation.classify_evaluation_failure import (
-    EvaluationStatus,
-)
 from geosolver.engine.standard.search.build_guard_feasible_ledger import (
     build_guard_feasible_ledger,
 )
@@ -45,7 +42,11 @@ def _merge_search_diagnostics(
         return dict(second)
     if not second:
         return dict(first)
-    merged = dict(first)
+    merged = {**first, **second}
+    # Retain the individual batches as evidence for non-additive diagnostics.
+    merged["batches"] = tuple(first.get("batches", (dict(first),))) + tuple(
+        second.get("batches", (dict(second),))
+    )
     first_events = first.get("local_start_events", ())
     second_events = second.get("local_start_events", ())
     local_start_events = list(first_events) if isinstance(first_events, tuple | list) else []
@@ -113,6 +114,7 @@ def _attach_search_diagnostic(
         candidates=result.candidates,
         evaluation_count=result.evaluation_count,
         failure_ratio=result.failure_ratio,
+        evaluation_failure_count=result.evaluation_failure_count,
         all_records=result.all_records,
         guard_feasible_ledger=result.guard_feasible_ledger,
         search_diagnostics=diagnostics,
@@ -210,14 +212,13 @@ def _merge_search_results(
             min_per_seed=int(config.min_per_seed_after_dedup),
         )
     evaluation_count = int(primary.evaluation_count) + int(supplemental.evaluation_count)
-    failure_count = sum(
-        1 for candidate in all_records if candidate.evaluation_status is not EvaluationStatus.OK
-    )
+    failure_count = primary.failed_evaluations + supplemental.failed_evaluations
     failure_ratio = 1.0 if evaluation_count == 0 else (failure_count / evaluation_count)
     return SearchBatchResult(
         candidates=selected,
         evaluation_count=evaluation_count,
         failure_ratio=failure_ratio,
+        evaluation_failure_count=failure_count,
         all_records=all_records,
         guard_feasible_ledger=guard_feasible_ledger,
         search_diagnostics=_merge_search_diagnostics(
@@ -245,14 +246,13 @@ def _merge_search_batch_results(
     all_records = tuple(first.all_records) + tuple(second.all_records)
     guard_feasible_ledger = tuple(first.guard_feasible_ledger) + tuple(second.guard_feasible_ledger)
     evaluation_count = int(first.evaluation_count) + int(second.evaluation_count)
-    failure_count = sum(
-        1 for candidate in all_records if candidate.evaluation_status is not EvaluationStatus.OK
-    )
+    failure_count = first.failed_evaluations + second.failed_evaluations
     failure_ratio = 1.0 if evaluation_count == 0 else (failure_count / evaluation_count)
     return SearchBatchResult(
         candidates=candidates,
         evaluation_count=evaluation_count,
         failure_ratio=failure_ratio,
+        evaluation_failure_count=failure_count,
         all_records=all_records,
         guard_feasible_ledger=guard_feasible_ledger,
         search_diagnostics=_merge_search_diagnostics(
@@ -305,9 +305,7 @@ def _run_supplemental_search_pass(
     )
 
 
-@timed_phase("search")
-@uses_deadline
-def run_search(
+def _run_search_baseline(
     *,
     bundle: ProblemBundle,
     evaluator: EvaluatorPort,
@@ -318,6 +316,7 @@ def run_search(
     guard_feasible_prefix_min: int = 64,
     guard_feasible_prefix_multiplier: int = 8,
     constraint_scales: tuple[float, ...] | None = None,
+    _skip_integer_squares: bool = False,
 ) -> SearchBatchResult:
     """Run phase A search with phase-0-derived start points."""
     start_points = select_search_start_points(
@@ -330,6 +329,34 @@ def run_search(
         int(config.keep_after_dedup) * int(guard_feasible_prefix_multiplier),
         int(guard_feasible_prefix_min),
     )
+    if len(bounds) == 1 and not _skip_integer_squares:
+        from geosolver.engine.standard.search.discrete.square_difference import (
+            scan_integer_square_branches,
+        )
+
+        integer_result = scan_integer_square_branches(
+            bundle=bundle,
+            evaluator=evaluator,
+            config=config,
+            constraint_scales=constraint_scales,
+        )
+        if integer_result is not None and integer_result.candidates:
+            diagnostics = integer_result.search_diagnostics["integer_square_difference"]
+            if diagnostics["all_finite_seeds_admissible"]:
+                return integer_result
+            baseline = _run_search_baseline(
+                bundle=bundle,
+                evaluator=evaluator,
+                bounds=bounds,
+                initial_probe_result=initial_probe_result,
+                config=config,
+                search_mode=search_mode,
+                guard_feasible_prefix_min=guard_feasible_prefix_min,
+                guard_feasible_prefix_multiplier=guard_feasible_prefix_multiplier,
+                constraint_scales=constraint_scales,
+                _skip_integer_squares=True,
+            )
+            return _merge_search_batch_results(first=integer_result, second=baseline)
     if search_mode == SEARCH_MODE_HYBRID_LEGACY_NOMAD:
         search_deadline = _search_deadline_monotonic(config)
         try:
@@ -404,6 +431,25 @@ def run_search(
             config=config,
             guard_feasible_prefix_count=prefix_count,
         )
+    scalar_result = None
+    if len(bounds) == 1 and search_mode == SEARCH_MODE_DISCO_MADS:
+        from geosolver.engine.standard.search.scalar_branch_scan import scan_scalar_branches
+
+        scan_started = time.monotonic()
+        scalar_result = scan_scalar_branches(
+            evaluator=evaluator,
+            bounds=bounds,
+            config=config,
+            prefix_count=prefix_count,
+            constraint_scales=constraint_scales,
+        )
+        if scalar_result.candidates:
+            return scalar_result
+        if config.max_time_sec is not None:
+            config = replace(
+                config,
+                max_time_sec=max(0.0, config.max_time_sec - (time.monotonic() - scan_started)),
+            )
     backend = _build_search_backend(
         config=config,
         start_points=start_points,
@@ -411,7 +457,7 @@ def run_search(
         constraint_scales=constraint_scales,
     )
     try:
-        return backend.run_search(
+        result = backend.run_search(
             bundle=bundle,
             evaluator=evaluator,
             bounds=bounds,
@@ -421,7 +467,7 @@ def run_search(
     except ImportError as exc:
         if search_mode == SEARCH_MODE_SCIPY_MULTISTART:
             raise
-        return _run_scipy_search_pass(
+        result = _run_scipy_search_pass(
             bundle=bundle,
             evaluator=evaluator,
             bounds=bounds,
@@ -431,3 +477,65 @@ def run_search(
             constraint_scales=constraint_scales,
             fallback_reason=exc,
         )
+    if scalar_result is not None:
+        return _merge_search_batch_results(first=scalar_result, second=result)
+    return result
+
+
+@timed_phase("search")
+@uses_deadline
+def run_search(
+    *,
+    bundle: ProblemBundle,
+    evaluator: EvaluatorPort,
+    bounds: list[tuple[float, float]],
+    initial_probe_result: InitialProbeResult,
+    config: NomadConfig,
+    search_mode: str = "disco_mads",
+    guard_feasible_prefix_min: int = 64,
+    guard_feasible_prefix_multiplier: int = 8,
+    constraint_scales: tuple[float, ...] | None = None,
+    allow_integer_shortcuts: bool = True,
+) -> SearchBatchResult:
+    """Preserve ordinary search and add explicit finite-guard branch proposals."""
+    from geosolver.engine.standard.search.finite_guard_search import search_finite_guards
+
+    started = time.monotonic()
+    supplemental = search_finite_guards(
+        bundle=bundle,
+        evaluator=evaluator,
+        bounds=bounds,
+        initial_probe_result=initial_probe_result,
+        config=config,
+        constraint_scales=constraint_scales,
+    )
+    from geosolver.engine.standard.search.scale_chart import search_positive_scale_chart
+
+    chart = search_positive_scale_chart(bundle=bundle, evaluator=evaluator)
+    if chart is not None:
+        supplemental = (
+            chart
+            if supplemental is None
+            else _merge_search_batch_results(first=chart, second=supplemental)
+        )
+    if config.max_time_sec is not None:
+        config = replace(
+            config, max_time_sec=max(0.0, config.max_time_sec - (time.monotonic() - started))
+        )
+    baseline = _run_search_baseline(
+        bundle=bundle,
+        evaluator=evaluator,
+        bounds=bounds,
+        initial_probe_result=initial_probe_result,
+        config=config,
+        search_mode=search_mode,
+        guard_feasible_prefix_min=guard_feasible_prefix_min,
+        guard_feasible_prefix_multiplier=guard_feasible_prefix_multiplier,
+        constraint_scales=constraint_scales,
+        _skip_integer_squares=not allow_integer_shortcuts,
+    )
+    if supplemental is None:
+        return baseline
+    # Concatenate rather than compact: no candidate or ledger entry produced by
+    # the ordinary backend may disappear because an optional proposal ran first.
+    return _merge_search_batch_results(first=supplemental, second=baseline)

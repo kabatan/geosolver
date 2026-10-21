@@ -1,0 +1,238 @@
+{
+  "case_id": "IMO_2015_P3",
+  "source": {
+    "official_url": "https://www.imo-official.org/assets/documents/problems/2015/2015_eng.pdf",
+    "official_landing_url": "https://www.imo-official.org/problems/2015/",
+    "official_pdf_path": "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2015-eng.pdf",
+    "official_pdf_sha256": "5ebc0b9ca0072932e088f6fd22fa19625544e3616086da2aa1280d3a791dbeb2",
+    "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2015_P3.smt2",
+    "gmbl_sha256": "2ba43a10e81b0d2591fbcc6c08f7e00ccf730ccc33dd69006eaee90879c08a90",
+    "upstream_commit": "f070afe18ed874b3a31db519ea6f593f40a1be00"
+  },
+  "normalization": {
+    "anchors": [
+      "B",
+      "C"
+    ],
+    "fixed_coordinates": {
+      "B": [
+        "0",
+        "0"
+      ],
+      "C": [
+        "1",
+        "0"
+      ]
+    },
+    "removed_continuous_dof": 4,
+    "justification": "三角形の辺BCは非零。直角・辺長大小・円周順序はいずれも相似不変。 平行移動2自由度・回転1自由度・正の一様拡大縮小1自由度のみを除く。残りの図形の形は固定しない。",
+    "scale_invariant": true,
+    "reflection_fixed": false
+  },
+  "clauses": [
+    {
+      "id": "H01",
+      "statement_ja": "ABCは鋭角でAB>AC。",
+      "gmbl": [
+        "(param (A B C) acute-tri); (assert (gt (dist A B) (dist A C)))"
+      ],
+      "geosolver": [
+        "A = Point(ax, ay)",
+        "B = Point(0, 0)",
+        "C = Point(1, 0)",
+        "conditions[0]: Area(A, B, C) > 0",
+        "conditions[1]: Dot(Vector(A, B), Vector(A, C)) > 0",
+        "conditions[2]: Dot(Vector(B, A), Vector(B, C)) > 0",
+        "conditions[3]: Dot(Vector(C, A), Vector(C, B)) > 0",
+        "conditions[4]: Distance(A, B) > Distance(A, C)"
+      ],
+      "condition_indices": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "construction_names": [
+        "A",
+        "B",
+        "C"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H02",
+      "statement_ja": "Γは外接円、Hは垂心、FはAの高さの足、MはBCの中点。",
+      "gmbl": [
+        "(define Gamma circle (circumcircle A B C)); (define H point (orthocenter A B C)); (define F point (foot A (line B C))); (define M point (midp B C))"
+      ],
+      "geosolver": [
+        "Gamma = Circumcircle(A, B, C)",
+        "H = Orthocenter(A, B, C)",
+        "F = FootOfPerpendicular(A, Line(B, C))",
+        "M = Midpoint(B, C)"
+      ],
+      "condition_indices": [],
+      "construction_names": [
+        "Gamma",
+        "H",
+        "F",
+        "M"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H03",
+      "statement_ja": "QはΓ上でHQAが直角、KはΓ上でHKQが直角。",
+      "gmbl": [
+        "(param Q point (on-circ Gamma)); (assert (right H Q A)); (param K point (on-circ Gamma)); (assert (right H K Q))"
+      ],
+      "geosolver": [
+        "Q = PointOnCircle(Gamma, q)",
+        "K = PointOnCircle(Gamma, k)",
+        "conditions[5]: Angle(H, Q, A) = pi/2",
+        "conditions[6]: Angle(H, K, Q) = pi/2"
+      ],
+      "condition_indices": [
+        5,
+        6
+      ],
+      "construction_names": [
+        "Q",
+        "K"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H04",
+      "statement_ja": "A,B,C,K,Qは相異なり、この円周順序に並ぶ。向きは反転も許す。",
+      "gmbl": [
+        "公開GMBLに順序条件の明示なし。"
+      ],
+      "geosolver": [
+        "conditions[7]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x)) != 0",
+        "conditions[8]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((B.x-A.x)*(K.y-A.y)-(B.y-A.y)*(K.x-A.x)) > 0",
+        "conditions[9]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((B.x-A.x)*(Q.y-A.y)-(B.y-A.y)*(Q.x-A.x)) > 0",
+        "conditions[10]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((C.x-A.x)*(K.y-A.y)-(C.y-A.y)*(K.x-A.x)) > 0",
+        "conditions[11]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((C.x-A.x)*(Q.y-A.y)-(C.y-A.y)*(Q.x-A.x)) > 0",
+        "conditions[12]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((K.x-A.x)*(Q.y-A.y)-(K.y-A.y)*(Q.x-A.x)) > 0",
+        "conditions[13]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((C.x-B.x)*(K.y-B.y)-(C.y-B.y)*(K.x-B.x)) > 0",
+        "conditions[14]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((C.x-B.x)*(Q.y-B.y)-(C.y-B.y)*(Q.x-B.x)) > 0",
+        "conditions[15]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((K.x-B.x)*(Q.y-B.y)-(K.y-B.y)*(Q.x-B.x)) > 0",
+        "conditions[16]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((K.x-C.x)*(Q.y-C.y)-(K.y-C.y)*(Q.x-C.x)) > 0"
+      ],
+      "condition_indices": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "construction_names": [],
+      "status": "source_omission_confirmed"
+    }
+  ],
+  "goal": {
+    "statement_ja": "三角形KQHとFKMの外接円が互いに接する。",
+    "gmbl": [
+      "(eval (tangent-cc (circumcircle K Q H) (circumcircle F K M)))"
+    ],
+    "included_in_solver_conditions": false,
+    "solver_target": "0",
+    "assessment_only": true
+  },
+  "source_differences": [
+    {
+      "id": "gmb_runtime_distinctness",
+      "kind": "runtime_acceptance_policy",
+      "blocking": false,
+      "description_ja": "GMBは全登録点の最小距離0.1とweighted soft lossで受理する。原文にない全点相異・最小距離0.1はGeoSolver条件に移さず、両者の出力を別の共通検査器で再検査する。"
+    },
+    {
+      "id": "gmb_acute_sampler",
+      "kind": "runtime_parameterization",
+      "blocking": false,
+      "description_ja": "optimizer.py sample_triangleのacute-triはB=(-2,0),C=(2,0)、Ax∈[-1.2,1.2]を試行中固定、Ay=1.1+3 sigmoid(z)。一部の形に制限し、Ax²+Ay²≤4の鈍角Aも数式上可能。GeoSolverでは形は固定せず、三頂点の内積が正という原文の鋭角条件を課す。"
+    },
+    {
+      "id": "circle_order_missing",
+      "kind": "statement_vs_gmbl",
+      "blocking": true,
+      "description_ja": "公式原文のA,B,C,K,Qの円周順序は公開GMBLの他条件からは導けない。独立監査が与えた以下の有理座標はGMBLの数学的仮定を厳密に満たすが、Kが直線BCについてAと反対側にあり指定順序に反する。これは保存済みGMBモデルやoptimizerの実行結果ではなく、原文条件の欠落を示す代数的反例である。GeoSolverだけ順序を追加した成績を既存GMB集計と無条件比較しない。",
+      "exact_counterexample": {
+        "provided_by": "independent_review",
+        "checked_by": "dsl_2014_2020",
+        "verification_method": "exact rational substitution using fractions.Fraction; no solver or GMB optimizer executed",
+        "points": {
+          "A": ["3/5", "2"],
+          "B": ["0", "0"],
+          "C": ["1", "0"],
+          "H": ["3/5", "3/25"],
+          "F": ["3/5", "0"],
+          "M": ["1/2", "0"],
+          "Q": ["93/61", "75/61"],
+          "K": ["136782/147365", "-1026/29473"]
+        },
+        "circle_equation": "x^2+y^2-x-(47/25)y=0",
+        "exact_checks": {
+          "circle_residuals_A_B_C_Q_K": ["0", "0", "0", "0", "0"],
+          "dot_H_minus_Q_A_minus_Q": "0",
+          "dot_H_minus_K_Q_minus_K": "0",
+          "acute_vertex_dot_products_A_B_C": ["94/25", "3/5", "2/5"],
+          "AB_squared_minus_AC_squared": "1/5",
+          "cross_B_minus_A_C_minus_A": "2",
+          "cross_C_minus_B_K_minus_B": "-1026/29473",
+          "all_named_points_distinct": true
+        },
+        "scope_ja": "GMBLの名義上の数学的条件と原文の不一致を示す。GMBのacute-tri samplerがこの特定の形を実際に生成できるという主張ではなく、GMBの既存成功率・出力の誤りをこの反例だけから推定しない。"
+      }
+    },
+    {
+      "id": "strict_length_margin",
+      "kind": "runtime_acceptance_policy",
+      "blocking": false,
+      "description_ja": "GMB gtはdist(AB)≥dist(AC)+0.1をsoft lossで要求する。GeoSolverのAB>ACへ固定0.1は移さない。"
+    }
+  ],
+  "open_issues": [
+    "円周順序の欠落は厳密有理反例で確認済み。GMB出力を原文の順序条件でも検査する共通の追加検査を確定するか、双方入力を修正した別実験として分離するまで比較ロックを解除しない。"
+  ],
+  "witness_bindings": {
+    "B": "B",
+    "C": "C",
+    "A": "A",
+    "Gamma": "Gamma",
+    "H": "H",
+    "F": "F",
+    "M": "M",
+    "Q": "Q",
+    "K": "K"
+  },
+  "author_review": {
+    "author": "dsl_2014_2020",
+    "materials_read": [
+      "official IMO 2015 English problem sheet",
+      "GMB IMO_2015_P3.smt2",
+      "GMB optimizer.py / instruction_reader.py / tf_optimizer.py",
+      "GeoSolver dsl-spec.json / public compiler / geometry implementations"
+    ],
+    "pdf_visual_check": "completed_relevant_pages",
+    "static_validation": {
+      "public_model": true,
+      "validator_valid": true,
+      "compiler_valid": true,
+      "solver_executed": false
+    },
+    "independent_review_status": "pending",
+    "notes_ja": [
+      "円周上にある5点について、指定順序から取った全三点の有向面積が同符号となる条件で順序と相異性を表した。これは原文条件の表現であり結論ではない。",
+      "独立監査の有理反例をauthor側でも分数演算で確認した。両直角、円所属、鋭角、AB>AC、全登録点の相異性を満たす一方、ABCとBCKの有向面積が逆符号なので原文順序は満たさない。既存の36問solveや保存モデル採点は行っていない。"
+    ]
+  },
+  "comparison_status": "blocked"
+}

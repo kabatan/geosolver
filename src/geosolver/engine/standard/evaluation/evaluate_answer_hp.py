@@ -8,12 +8,15 @@ from dataclasses import dataclass
 from mpmath import mp
 
 from geosolver.engine.standard.contracts.problem_bundle import ProblemBundle
-from geosolver.engine.standard.interpreter.answer.evaluate_hp import _evaluate_answer_high_precision
+from geosolver.engine.standard.evaluation.high_precision_expressions import (
+    build_solution_context_high_precision,
+)
 from geosolver.engine.standard.precision.type_guards.ensure_no_float import (
     ensure_high_precision_mode,
 )
 from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
 from geosolver.engine.standard.precision.type_guards.strict_to_mpf import strict_to_mpf
+from geosolver.problem.ir.compiler import safe_eval_expr_hp
 from geosolver.problem.ir.errors import IRCompileError
 
 from .classify_evaluation_failure import EvaluationStatus
@@ -39,12 +42,18 @@ def evaluate_answer_hp(
     """
     ensure_high_precision_mode(context="pipeline.evaluate_answer_hp")
     try:
-        raw_value = _evaluate_answer_high_precision(
+        expression = bundle.spec.answer_expr or bundle.spec.objective_expr
+        if not expression:
+            return HPAnswerEvaluation(None, EvaluationStatus.EVALUATION_FAILED)
+        context = build_solution_context_high_precision(
             bundle.spec,
-            bundle.var_names,
+            list(bundle.var_names),
             list(values),
-            precision=int(precision),
+            bundle.base_context,
+            int(precision),
+            expressions=[expression],
         )
+        raw_value = safe_eval_expr_hp(expression, context)
     except IRCompileError:
         return HPAnswerEvaluation(
             answer_hp=None,

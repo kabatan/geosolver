@@ -1,0 +1,55 @@
+{
+  "id": "IMO_2003_P4",
+  "variables": [
+    "cx",
+    "cy",
+    "dx",
+    "dy"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(dx, dy)"
+    },
+    {
+      "name": "P",
+      "expression": "FootOfPerpendicular(D, Line(A, B))"
+    },
+    {
+      "name": "Q",
+      "expression": "FootOfPerpendicular(D, Line(B, C))"
+    },
+    {
+      "name": "R",
+      "expression": "FootOfPerpendicular(D, Line(C, A))"
+    }
+  ],
+  "conditions": [
+    {
+      "predicate": "ConvexPolygon([A, B, C, D])"
+    },
+    {
+      "left": "AreConcyclic(A, B, C, D)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(R, P)",
+      "operator": "=",
+      "right": "Distance(R, Q)"
+    }
+  ],
+  "target": "0"
+}

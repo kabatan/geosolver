@@ -1,0 +1,30 @@
+{
+  "id": "IMO_2008_P1",
+  "variables": ["cx", "cy", "ta", "tb", "tc"],
+  "constructions": [
+    {"name": "A", "expression": "Point(0, 0)"},
+    {"name": "B", "expression": "Point(1, 0)"},
+    {"name": "C", "expression": "Point(cx, cy)"},
+    {"name": "H", "expression": "Orthocenter(A, B, C)"},
+    {"name": "Ma", "expression": "Midpoint(B, C)"},
+    {"name": "Mb", "expression": "Midpoint(C, A)"},
+    {"name": "Mc", "expression": "Midpoint(A, B)"},
+    {"name": "OmegaA", "expression": "CircleThroughPoint(Ma, H)"},
+    {"name": "OmegaB", "expression": "CircleThroughPoint(Mb, H)"},
+    {"name": "OmegaC", "expression": "CircleThroughPoint(Mc, H)"},
+    {"name": "A1", "expression": "PointOnLine(Line(B, C), ta)"},
+    {"name": "A2", "expression": "Point(2 * Ma.x - A1.x, 2 * Ma.y - A1.y)"},
+    {"name": "B1", "expression": "PointOnLine(Line(C, A), tb)"},
+    {"name": "B2", "expression": "Point(2 * Mb.x - B1.x, 2 * Mb.y - B1.y)"},
+    {"name": "C1", "expression": "PointOnLine(Line(A, B), tc)"},
+    {"name": "C2", "expression": "Point(2 * Mc.x - C1.x, 2 * Mc.y - C1.y)"}
+  ],
+  "conditions": [
+    {"left": "Area(A, B, C)", "operator": ">", "right": "0"},
+    {"predicate": "AcuteTriangle(A, B, C)"},
+    {"left": "OnCircle(A1, OmegaA)", "operator": "=", "right": "0"},
+    {"left": "OnCircle(B1, OmegaB)", "operator": "=", "right": "0"},
+    {"left": "OnCircle(C1, OmegaC)", "operator": "=", "right": "0"}
+  ],
+  "target": "0"
+}

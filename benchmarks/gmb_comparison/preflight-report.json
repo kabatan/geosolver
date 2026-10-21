@@ -1,0 +1,4549 @@
+{
+  "schema_version": 2,
+  "natural_cases_executed": 0,
+  "comparison_profile": "original_statement_aligned",
+  "input_count": 36,
+  "official_input_count": 34,
+  "original_aligned_input_count": 2,
+  "source_asset_count": 44,
+  "gmb_checkout_revision": "f070afe18ed874b3a31db519ea6f593f40a1be00",
+  "static_valid_count": 36,
+  "independently_reviewed_count": 36,
+  "input_ready_count": 36,
+  "global_issues": [],
+  "issue_counts": {},
+  "all_inputs_ready": true,
+  "execution_unlocked": false,
+  "execution_note": "Static validation never executes natural cases; main execution separately requires explicit user authorization, a passing canary and a sealed campaign manifest",
+  "solver_lock": {
+    "valid": true,
+    "message": "sha256:6f0d24e23d2aa6210fa66a6e072c1117cd730a719f2382da08dce1f9f1fbbf0b",
+    "identity": {
+      "source_hash": "sha256:6f0d24e23d2aa6210fa66a6e072c1117cd730a719f2382da08dce1f9f1fbbf0b",
+      "resolved_config_hash": "sha256:01d7484acce36b57593029e5fcff7f60110f5daf201f5b68499cd524d6c23df2",
+      "dependency_lock_hash": "sha256:89449168db266c6414a6377be9ac90832624d1b340f558b0305872d6f22d53d5"
+    }
+  },
+  "protocol": {
+    "schema_version": 1,
+    "status": "main_measurement_authorized",
+    "main_run_authorized": true,
+    "main_run_authorization_date": "2026-08-31",
+    "main_run_authorization_text": "では本測定を開始してください",
+    "study": "GMB_original_statement_aligned_IMO36_single_configuration_comparison",
+    "input_profile": "original_statement_aligned",
+    "input_adjustments_manifest": "input-adjustments.json",
+    "original_alignment_approved": true,
+    "original_alignment_approval_date": "2026-08-31",
+    "official_input_count": 34,
+    "original_aligned_input_count": 2,
+    "solver_tag": "solver-a0",
+    "solver_commit": "9d2d328bfa0c01101b6aa8ca63da7c0dd2172f7c",
+    "gmb_commit": "f070afe18ed874b3a31db519ea6f593f40a1be00",
+    "available_case_count": 36,
+    "publication_frame_count": 39,
+    "public_target": "0",
+    "primary_question": "Find one nondegenerate configuration satisfying the original assumptions",
+    "normalization": "Remove translation, rotation and positive scale only; retain shape freedoms",
+    "time_limit_seconds": 180,
+    "cores_per_run": 1,
+    "cpu": 4,
+    "initial_seeds": [
+      0,
+      1,
+      2
+    ],
+    "formal_repetition_count": null,
+    "parallel_jobs": 1,
+    "gpu": false,
+    "threads_per_runtime": 1,
+    "invocations_per_case_seed": 1,
+    "automatic_failure_retry": false,
+    "execution_order": "GeoSolver: seed 0 then 1 then 2, case ID order within each seed; then aligned GMB cases in the same seed-major order",
+    "legacy_gmb_reuse": "Reuse immutable seed 0/1/2 raw for 34 unchanged official inputs; run each of the two aligned inputs anew at all three seeds",
+    "conclusion_in_solver_conditions": false,
+    "refine_after_run_for_assessment": false,
+    "common_tolerance": "1e-6",
+    "sensitivity_tolerances": [
+      "1e-3",
+      "1e-6",
+      "1e-9"
+    ],
+    "checker_dps": 80,
+    "tolerance_selection": "synthetic fixtures only; no saved GMB configurations inspected",
+    "primary_acceptance": "native accepted output passes common GMBL checker and independent original-condition coverage is approved",
+    "unaccepted_internal_candidates": "diagnostics only, never primary successes against GMB's native accepted models",
+    "intermediate_candidate_instrumentation_in_primary_run": false,
+    "common_scope_exceptions": {
+      "IMO_2010_P2": "User approved 0 < tf < 1; exclude original endpoint configurations on both sides (2026-08-31)",
+      "IMO_2014_P4": "Both inputs already use interior points P,Q; do not claim coverage of original closed-side boundary configurations"
+    },
+    "unresolved_or_unsupported_check": "not a success; preserve the reason",
+    "proof_claim": false,
+    "enumeration_completeness_claim": false,
+    "goals": "secondary diagnostics on the first valid configuration; never search feedback",
+    "timing": {
+      "origin": "parent monotonic clock immediately before spawning the fresh worker",
+      "includes": "imports, public-input validation, output materialization and instrumentation",
+      "primary": "time to first emitted witness passing independent checks; measured after atomic witness write",
+      "geosolver_time_field": "model_materialized event emitted_seconds",
+      "existing_gmb_time_field": "model_materialized event elapsed_seconds (after its atomic witness write)",
+      "materialized_seconds": "intermediate computation timestamp only; never the primary emitted-witness time",
+      "geosolver_primary_observation_point": "accepted_candidates at finite exact assembly return, after native acceptance",
+      "geosolver_diagnostic_observation_points": [
+        "refinement return",
+        "verified candidate revision"
+      ],
+      "not_measured": "earliest unexported float iterate or earliest acceptance inside an unfinished batch",
+      "improved_revision": "new coordinates always receive a new materialization time",
+      "offline_checker_time": "reported separately; not added to search time",
+      "instrumentation_parity_gate": "synthetic canary must pass before any natural-case run",
+      "speed_claims_without_materialization_events": false
+    },
+    "source_discrepancies": "Use original mathematical assumptions; preserve official GMB inputs and explicitly label the two separately repaired comparison inputs",
+    "official_replication_and_aligned_comparison": "Different input profiles; do not relabel or combine their outcomes as the same experiment",
+    "modified_case_prior_outcomes": "Existing GMB outcomes for the two modified inputs are not replacement runs for the aligned inputs",
+    "existing_gmb_artifacts": "immutable; common-checker reassessment is a separate later step",
+    "benchmark_outputs": "new directories only; preserve raw witnesses, process state, stdout, stderr and hashes",
+    "completed_process_vs_first_output": "A timely native-accepted, independently valid emitted witness counts for the first-output metric even if the process later times out or crashes; completion status is reported separately",
+    "evidence_integrity": "Affinity violations, surviving owned descendants, observation errors and inconsistent or missing emission identity are not primary successes; report these as evidence issues, not geometry failures",
+    "main_run_gate": "A fresh passing synthetic canary, approved static input audit and hash-bound campaign manifest are required; no natural-case retry or outcome-dependent edits",
+    "preparation_must_not_run_the_36_cases": true
+  },
+  "checker_policy": {
+    "version": "gmbl-geometric-witness-v1",
+    "default_tolerance": "1e-6",
+    "reporting_tolerances": [
+      "1e-3",
+      "1e-6",
+      "1e-9"
+    ],
+    "default_dps": 80,
+    "normalization": "first distinct declared point pair; otherwise first positive circle radius",
+    "scalar_measurements": "length/area literals retain the original witness units",
+    "local_scales": "construction feature lengths reused by incidence; not all-point diameter",
+    "line_comparison": "angle and local construction-anchor incidence; unanchored free lines use chart origin",
+    "equality": "dimensionless absolute residual <= tolerance",
+    "strict": "positive margin > tolerance; positive smaller margin is unresolved",
+    "closed": "nonnegative margin; small negative margins are unresolved, never passed",
+    "param_on_segment": "open segment (finite logistic parameter)",
+    "assert_on_segment": "closed segment, without upstream's artificial 20% inset",
+    "param_on_ray": "positive ray parameter, excluding origin",
+    "assert_on_ray": "nonnegative ray parameter, including origin",
+    "polygon": "strictly convex polygon in the declared cyclic order, either orientation",
+    "param_in_polygon": "strict interior of a strictly convex polygon",
+    "assert_in_polygon": "closed interior of a strictly convex polygon",
+    "minor_arc": "strict minor arc; coincident or antipodal endpoints unresolved/invalid",
+    "arbitrary_intersection": "either distinct real branch; no invented choice for unnamed terms",
+    "selector_tie": "unresolved (no arbitrary tie-breaking)",
+    "nonintersecting_figures": "failed or unresolved near numerical boundary; never fake points",
+    "all_point_distinctness": "not imposed",
+    "original_problem_validation": "requires independent original-text supplements",
+    "independent_existence_proof": false
+  },
+  "file_sha256": {
+    "AUTHORING.md": "2da7dbe0ad18d59cde79b88789c18498f4549e9fa00e93ca90c012cfe2ba165b",
+    "README.md": "c354103fb73775e2b807e86b6513f2b501eb069b92ed41f729a70b51a2c73b58",
+    "__init__.py": "145c4d59cb9d39b1abce212bc8785750ee6443cb9486ba7552621da5dfaf5f7a",
+    "alignment.py": "dbdc490fa4d341b519a5637716e599912656a8b67f2b7a9cecb8f6235b7d339c",
+    "assessment.py": "dac41109dacbbe6065419953a1936fbb91550bf167eff2e006e4160908163eac",
+    "audit/IMO_2000_P1.json": "91ad852808bf7b88f175b06807f412543c7a1297a0c48076629bf7ea115d5c9f",
+    "audit/IMO_2000_P6.json": "1994e5b84d934092b94f4884ab3d7005580513a0e4f58b673a1b1c1e2d86556f",
+    "audit/IMO_2001_P1.json": "5685fd60134d23167b04e4db56ee2066e65e786f6ab8835bc01cc66118f15029",
+    "audit/IMO_2001_P5.json": "f722c857d46f1339e9aeee359d766d179060bb7e3b0147173630ba0830425a4b",
+    "audit/IMO_2002_P2.json": "74dee2a4e5d95be5d854d565a76fc861b663760e3129ec7479aff1b8afb7b470",
+    "audit/IMO_2003_P3.json": "b91ce96ff2ec9d2f30d235b2ae86a37d3151022a7a568d858866c15280dbb581",
+    "audit/IMO_2003_P4.json": "cc8a80f7a9813e5b3e47e67d6ab309958b0a9b395aa3ad3760d0107acf2c0755",
+    "audit/IMO_2004_P1.json": "20f4087751e64e9d16ca5682620c033eead6c839302714b791131d2a63856bdf",
+    "audit/IMO_2004_P5.json": "a84a0eb24c73d8ac786a1026e511239ab152f60586c432c97a40fc2768ef14d8",
+    "audit/IMO_2005_P1.json": "b19b536045f377a1859dc2256f1b82457ab6fcde9fc0ba4ba09c5a46e20d1a49",
+    "audit/IMO_2005_P5.json": "7f95e0e4c78cde7fb0f449569d4103d5a7925efecdf4fe754007d92cd1830b81",
+    "audit/IMO_2006_P1.json": "6836c81eebf7348cf4bb94f0d75584648ed8c95555e7623e8202fc763863af5e",
+    "audit/IMO_2007_P2.json": "664a7289ea0f782b0c770fb6882b5c1696af84f27e3f6b6c02c9657e402a5995",
+    "audit/IMO_2007_P4.json": "ea9155a72646023a88525c2541b761605185fdc28265f75b19652ad46cbe4b35",
+    "audit/IMO_2008_P1.json": "0d94e62b8b2143b39ce788f0a401cd638de2e477a4a621ed4eb24e7142a69ccd",
+    "audit/IMO_2008_P6.json": "455fbbe7ed701af08b0064928fb63e532cc68fe7048214fceb53a5c20f0c464f",
+    "audit/IMO_2009_P2.json": "1a23b9be8dcbb292f2b737707cab5ea8c3579f3c98794d72521ca9d8c3a2b046",
+    "audit/IMO_2009_P4.json": "fa59e6e0a2b21874f0332a53ef8340a9aee570a66afb8ddf9c0e65cf69137aa0",
+    "audit/IMO_2010_P2.json": "67c6cc033bf617772af7c4e428df76ee512553db138200eac44c79ef552c7671",
+    "audit/IMO_2010_P4.json": "2ba45244ebb7ce4f3be5f21f8cdf7a22060c5be38762c3703d2d952fc3da878d",
+    "audit/IMO_2011_P6.json": "381c27cefababc08f5278d377cf21ddc75a2af6f5688e64dc212d2e96cedfb5a",
+    "audit/IMO_2012_P1.json": "1850e886d5e110d4016324d702ff54e53a331377e6c19d50b5e6b1fcaa37ee03",
+    "audit/IMO_2012_P5.json": "617897b76aa527cca58efaf7638c1a9239af7ffedce7e6f9f5c1dcdcda10f385",
+    "audit/IMO_2013_P3.json": "dcc7b9184b4d84b491c1d12068f14fa0385064128214868c1e6a10fd573f5f59",
+    "audit/IMO_2013_P4.json": "9733db32e26ba47782c47d402599b25c5b2ab0ad9748607b61903a85bee00bd6",
+    "audit/IMO_2014_P3.json": "100f6108c44bd3791e507efa70240991af5fe5ccea4ac20f8e7739442bd75af4",
+    "audit/IMO_2014_P4.json": "c669a523abd9f7418680550f2c4f482369ab693e6233707a37b9ab61485cff53",
+    "audit/IMO_2015_P3.json": "d34e814b1214409af83da59630c789c2c37b012162d6223f39cebb8060722773",
+    "audit/IMO_2015_P4.json": "660be7a98258165e063dfdc874967d1a2f8c19e3e5e48bcd04818f9f8bac85dc",
+    "audit/IMO_2016_P1.json": "51c59bbb57e4810ae0bd77724fcb44a0ba8bbe2dc35716b02d0f8e43e6d5e770",
+    "audit/IMO_2017_P4.json": "5d3ff7cb5178cdf476e5d0f5b6fd2a0d8c6f287eacc5ab5728a000d44531c58b",
+    "audit/IMO_2018_P1.json": "9cd2cabe64b4abfa53c08315de68505b557eb57192383e6131e329a9579b6292",
+    "audit/IMO_2018_P6.json": "40cecefc3097aae6316e32fad717ec62c2f0637549dcd5f2209ca80fc0bb0efb",
+    "audit/IMO_2019_P2.json": "a72400ffdd2d806741f920559899e56ac6da36d4f6ce36e4f2a9ed30ddbd3d63",
+    "audit/IMO_2019_P6.json": "ea35728b71676fac6bcbfe52895e6908c95245dc5452af11c7f7b254376890e9",
+    "audit/IMO_2020_P1.json": "941fb5b6dd99d4d9c04cc3b2cbe43ac0120724140886272a2107090c051641c5",
+    "authorization.py": "2c030d7ccc7d4825df2818228f01d5acbcbe4b92ddb75b368a6eaf1e01d3c70b",
+    "campaign.py": "075c77eb1046baa2e11aed53b2c0ac59c0e924ce341497a6371cc3ad6d51c1cf",
+    "canary-evidence-original-aligned.json": "b5615230ab9a2f4ed1f7e132e725125eadc23575a10a0ac9ffb18533e5b6ec8f",
+    "canary-evidence.json": "ec19fa642ee4788ed8882ae1f31580d3f76586521e2a779e7f243fcf2e9899a8",
+    "canary.py": "fda1a628eddd7b3b48eb2c9d9bff612f0275bd4e392d4c6bc232378496885dd7",
+    "cases/IMO_2000_P1.json": "f854875d69a311a8fff2b41ce8146c8ec73ade3f60233dbdf99f90a41b39abac",
+    "cases/IMO_2000_P6.json": "2adf19a77b54e2b885a0e5d42e4c0f71a574a16a4071b92dda8482c837f528eb",
+    "cases/IMO_2001_P1.json": "ea0ca2c08abd10f2e5e65cc031154c130a2957283588b5cb5df0b9e2a82f856f",
+    "cases/IMO_2001_P5.json": "255dd98dd3af7792e2a1db94f4ceeb759a489fe6946902e297d159fadce366ef",
+    "cases/IMO_2002_P2.json": "08420b565c9f171ba9380272c776cb6cbba9dc0749ae06dd48eca658af1aee5d",
+    "cases/IMO_2003_P3.json": "c935acce3bd81ab892aa09227923a2aaa33f25b101361360a90ad6d3d471bef6",
+    "cases/IMO_2003_P4.json": "e8d7571b8d01deda649fcb51ee2ef2b13f39584038d63abb420bfbb854e56229",
+    "cases/IMO_2004_P1.json": "65a1cc0b9c0ef669e7207e461f40970fdc8e0351aa0da0e93c284015975dd769",
+    "cases/IMO_2004_P5.json": "3b8ba2d245b6793b5c0b2620e8f527783e5c3bb1c465e663fb5ff8abddb4aaad",
+    "cases/IMO_2005_P1.json": "015447d8af7f6a3cf6544e548b6038280d8854ef7e3633b6424b0e9c5b92a89a",
+    "cases/IMO_2005_P5.json": "840851e17d85a24a6f3373319df360b670496fe2fcf1871603ea87e6ba45670b",
+    "cases/IMO_2006_P1.json": "de0ec523a925e92b2a0494c381e9b51bbb8ed2d5229f42063e71e964050aeaa4",
+    "cases/IMO_2007_P2.json": "6d1e58f299cb9d88e0a44cf3bb40a38f33c930313273c5381b2fa4aad61e249e",
+    "cases/IMO_2007_P4.json": "0eba66d8d8a8128a33ad83782f6ad57baee741bbe3b174a139f45c072ee29d5a",
+    "cases/IMO_2008_P1.json": "b60e435f27cd4706fffedabc64d82444c265358972397687af5ef969639b96d1",
+    "cases/IMO_2008_P6.json": "6ab6da9a5a299f088957e913c356e1d9679afdd6df47d638e5dbb29842377daa",
+    "cases/IMO_2009_P2.json": "ebeeae22a7d795cb3b774980a81bbc3e3691c6ffbef5fc46bf40b6f44e9e8a96",
+    "cases/IMO_2009_P4.json": "0725c293c3ac5d77e2b5096b0abbc7a88fe8beb165497ec61b0c0aa5d5d35dda",
+    "cases/IMO_2010_P2.json": "360acf38efe9ba1a96d814b9aa9b310f7994bc77318f322f5d79536faac44298",
+    "cases/IMO_2010_P4.json": "03e6e0b05bc476848395b4da3eb62f28dba1bb9020411d41ba4fff0771ab6ee2",
+    "cases/IMO_2011_P6.json": "68e32ea1bd5c5a025454d04724cedd1d4a4596970e16de4dc1953195d07765f8",
+    "cases/IMO_2012_P1.json": "2d49a82f46f6b13c00e661340904a31ef71cdef7c330d6f0db2b5f0daa2d0c3b",
+    "cases/IMO_2012_P5.json": "20d549c6c78ca72ac842e2bcbb8a0cc930f79eea7f3af595cd9aa36ab3b8c594",
+    "cases/IMO_2013_P3.json": "2701849e559c18797efb593f27dee3055e22321fdf95b8526df0c909d98d9cce",
+    "cases/IMO_2013_P4.json": "63776ec34ffb8ee157cd887756a57ba8b15f200b6fd0152d5340f8d30c538a72",
+    "cases/IMO_2014_P3.json": "64e2557160612d812d88f7808094a1791daeb2f880a28435bb4a0e77392dac56",
+    "cases/IMO_2014_P4.json": "d891e8166e55a88ec7b6fd6c897cdbf2d73f309a3a11893721ab1f9db2fc0d59",
+    "cases/IMO_2015_P3.json": "28b2be4932fbb7764eae91c4709b252b8d31ad63aa964a0aa3f7c5ac73b54906",
+    "cases/IMO_2015_P4.json": "0c788e44cb4706b7cd9d772b422270c8502e5a97a270f73662525219e578dd76",
+    "cases/IMO_2016_P1.json": "6c4c0c53282e677edabb92f2ca6044558bf318186092df7d5d818978d3f648bc",
+    "cases/IMO_2017_P4.json": "2c5c0e45d971fb9e17b971cee4a0e1e62c4ba8ec6be2e87b5a391ebece8288ba",
+    "cases/IMO_2018_P1.json": "e465d769ceb24193bc6e9fa98469301f74e178a4a5b6a19a9358d24c4dc0bb13",
+    "cases/IMO_2018_P6.json": "151e5aae5af9dcbcaec010e701f84edada9b837105f4d0cbb7d33a9c5a2e51cb",
+    "cases/IMO_2019_P2.json": "62097bf594f191978965e2a9057d97d45ad42039140c55152f6a300ca227b212",
+    "cases/IMO_2019_P6.json": "1a80b54b76908eb8ec65f86042932d04c9e519aa658e5a9de2197205efeecc64",
+    "cases/IMO_2020_P1.json": "45ca07c2afe43ebbab889f12fbd72d2dd3dc702c5279e1222847d3f692e88e05",
+    "checker.py": "f5c1c42e8f78bf7d0c6044c7025dc19834c922f50540a16f96c2c0bef1845938",
+    "checker_geometry.py": "cca38008b22d1a0946ea664baed3dfb4ee9ecabe8b9eea796c7f2a077cc53ced",
+    "gmbl-original-aligned/IMO_2000_P1.smt2": "931aace52bf6810a7f6459ffdc25d749581f50dfb86c196af61060f1eb0d9f02",
+    "gmbl-original-aligned/IMO_2015_P3.smt2": "e3c4bf17d763144ad5c300177ce863230d54f723c302e2a9b0c3abfb0c47104b",
+    "gmbl-original-aligned/LICENSE": "cb51ce96ec3fb2388edc1de91d08032cb17496374ae946b392add530f8fb4665",
+    "gmbl-original-aligned/README.md": "26adaf5999bda64502d2503bb83a145de2f7b084ffeee60009144ea3b3791196",
+    "input-adjustments.json": "ec2335cabb59dd5bb644bad1cd10f3f88750b563e0d7f29c355e5458e3c1cafd",
+    "measurement_worker.py": "c1074a496ff358e1ea0cdeed3f4fbd043032dcd5bfeb5dc6e5fc9ad4145a0119",
+    "observation.py": "7c9526090f2aea276999cc9a8dc202e26acf7d2e17dd7532e52e9b67b5d08704",
+    "prepare.py": "47fd0246288662f131d1318e9ef0f277903ffe6340c4b3c5f3682f386f9c3576",
+    "protocol.json": "f9508a0db71193756721254f64d8a1f7012a9e639cf9025f876a953fc59c0c9f",
+    "reviews/EQUIVALENCE_ARGUMENTS.md": "c972f41ab95b1dfcbe6bda00b04ac6c52a7ae13b036005382cc504a416cb928b",
+    "reviews/IMO_2000_P1.json": "e00e821437ac2b96ca4ab02df8dcd75c62a66911bc0ee08aaf727382c5a12c15",
+    "reviews/IMO_2000_P6.json": "7d30fe254bc90520cbe2cb31e48d7f88bfd7a240bf9ca2a87c547f59b3590bb4",
+    "reviews/IMO_2001_P1.json": "667afb567de22969a564a9ce89687bda095c6e76f930e65854369921657413b1",
+    "reviews/IMO_2001_P5.json": "e98e25efb5e511d689531180bde4ed51c0899e327ba495fe280ba8886799ef04",
+    "reviews/IMO_2002_P2.json": "cf3e1d5deb4a6cb3ea10e2f52d60acef6dcf48661effd3da9333d049ed1daca5",
+    "reviews/IMO_2003_P3.json": "ca4125f2be0825bd7241ec60a00ab44f044bd4a7d88a02305157d124218bef37",
+    "reviews/IMO_2003_P4.json": "18225770a919ee962d69b878cba3dd0ffde4746eddf87231c2fd63cd572764f7",
+    "reviews/IMO_2004_P1.json": "7458d77d645411debb6db730eb9d29ec5a90ce207d33007151f6cff30691ab0a",
+    "reviews/IMO_2004_P5.json": "d8dddb2568c6b417a60c4897fb175d6317b80028285a23fbd1f6efeb03d6e263",
+    "reviews/IMO_2005_P1.json": "a09465ee52fa735a38afffcfd0c6a352d7068cc587c80dffdc3454cb9a147c05",
+    "reviews/IMO_2005_P5.json": "3ced7e6b70d714bb6f5a2f1a8975bb6c07c80178c7cc1bd7ab1c6b0538932b2c",
+    "reviews/IMO_2006_P1.json": "758dd15abe020c13eae2fb82e06ac6a6b940e52bce458ba4f932b5db61f6afac",
+    "reviews/IMO_2007_P2.json": "4d794f8d92e167e08033eee69249c6b39df21e0f0c72aed43d003ec3562aad38",
+    "reviews/IMO_2007_P4.json": "510573774577d23fb25d656f2a0ca08a46c6da1ab903cd4b042d1ffeefe0206f",
+    "reviews/IMO_2008_P1.json": "54dbaad3e70ec106507459994d19bbaaaebe521e18b60cb57eda704bb2231792",
+    "reviews/IMO_2008_P6.json": "9bfbe9f394ef2b7c355b57b8289707081819d1928f74f189066542b87414b902",
+    "reviews/IMO_2009_P2.json": "ddc04a66a3cceb1b670cff3276bd407e3098ff40623c60cab3f8cef83ae2ed49",
+    "reviews/IMO_2009_P4.json": "5ada8c6ff1839ac16e90a6ae9ec9583d43627f894ea3b15fa97d21b26e0d5ae5",
+    "reviews/IMO_2010_P2.json": "67284b2a62d86868c8105500c06ad194c46eeb9f55c97890fe9424b0fbedd2b9",
+    "reviews/IMO_2010_P4.json": "84447122420ff67623ed3ed409d374af728428a696b65715e2af413cb3bc34ba",
+    "reviews/IMO_2011_P6.json": "5e6569f1e014e74b57dc0a4484fa00532c8e0391519a2c0b59f543daa63fb9e9",
+    "reviews/IMO_2012_P1.json": "27e07df3639eaae09bed6f3b7907d5db5481fc356dd89ed3e59989657a3239fd",
+    "reviews/IMO_2012_P5.json": "29d9b9d6a7e4d62fd352d7c63e0c7afd2c923f73813975f6c81f8609d2af8c42",
+    "reviews/IMO_2013_P3.json": "2a6602d46a060f3ed2479af8873275a733b2d9088b7a162e97d8291bd4bca871",
+    "reviews/IMO_2013_P4.json": "edd7726f5e95feea27680c519c6b26a6b01b14dfef22cb404cf1ac4e8268ff9f",
+    "reviews/IMO_2014_P3.json": "e521d2390695aff8cd203304777f2384394a688f6cc7c3fef068b890c9ac60d9",
+    "reviews/IMO_2014_P4.json": "9fdf2ae3ea5998adda21e44c90570da81b1397eab7ccf263034d557e14abe4ed",
+    "reviews/IMO_2015_P3.json": "b49e0c8ddd6060c1849846b179fd335c6653151a1e92ab588df2bf9833965866",
+    "reviews/IMO_2015_P4.json": "ff358e95e1962af7f19aa1906e48fdc40c01c01f08b212297a80724982d1cad0",
+    "reviews/IMO_2016_P1.json": "d38ea53587d486ad305986da22882aa0799bd521068b7643e0d9bb745e35faf9",
+    "reviews/IMO_2017_P4.json": "19f6349653084d28b33667a5524de49858372404880a07463c283ae2f74289e7",
+    "reviews/IMO_2018_P1.json": "bdce50ee85c31ad7a01dd2f31500f8e712f77966df0e1cf3abc8c1ae627787a7",
+    "reviews/IMO_2018_P6.json": "2e8a0e085d486baa24c78e384461d96e5466400401bd0dfbcacb5c27db250512",
+    "reviews/IMO_2019_P2.json": "e3ab92f53e27236561d2594f561cc03d96c3efcb91ce18b55e9fc488be6e6c28",
+    "reviews/IMO_2019_P6.json": "44ba64e2ac21fb17287d51952d0afcc3be0300ef60d170b52d89181415df7c65",
+    "reviews/IMO_2020_P1.json": "15afe97297afcf61597916afc9f143b584dbc91f0a27b3b1e2136aab9c139cd9",
+    "reviews/README.md": "74af5279d29b1a5353b2312cf1c9e6fbc73a432de7671195aed6494b1929abb3",
+    "reviews/UPSTREAM_SEMANTICS.md": "2c8a367a1fe022b83a01249291cc03068eb750cec3e3b58f0e062b6d51295599",
+    "reviews/alignment/IMO_2000_P1.json": "03ae0c5beb9fee23c4f4ca97bcadcd1cc154cad6d7b30e96dd641678356221a3",
+    "reviews/alignment/IMO_2015_P3.json": "ab3dd140475d506f7ef7fbd2cf8e7a6df178900f9782e210bb8aa7e8d5c3be9d",
+    "reviews/alignment/synthetic-evidence.json": "0af99c852408bf2e46468993045ea12fb01f94615dbec6337773cfa1ed8817da",
+    "reviews/alignment/verify_added_conditions.py": "04c2145151bad54e8af8da46994c9c2e4e85e8e5b04d483a7df511d4f3952aeb",
+    "reviews/counterexample_2000_p1_tangent_branch.json": "57e677599a92ffefe0a3b036364d28ad634c1cdb47260a8cc71e90018259d9c0",
+    "reviews/counterexample_2015_p3_order.json": "efe391ca74d4830eff700bb0ce16d11a631705040c1151f61fdc7a9d56b60105",
+    "source-manifest.json": "b9551137ee51bf4bec6ab1e7aabf2c7b537b21abd291a2526573b6bd24f073f3",
+    "sources.py": "7ecbf0c80a2c622dab9a940247105ec4af749d71edcff3221e4de2896bcfb442",
+    "witness.py": "d245a63bcb3ab08d197ffac165f5f3c74ba2a3b24217f24de39c87810eab4537"
+  },
+  "cases": [
+    {
+      "case_id": "IMO_2000_P1",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "C": "point",
+          "D": "point",
+          "M": "point",
+          "A": "point",
+          "N": "point",
+          "B": "point",
+          "P": "point",
+          "Q": "point",
+          "E": "point"
+        },
+        "symbols": [
+          "circ",
+          "cong",
+          "dist",
+          "foot",
+          "gt",
+          "inter-lc",
+          "inter-ll",
+          "line",
+          "on-circ",
+          "on-ray",
+          "on-seg",
+          "para-at",
+          "tangent-lc"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "f854875d69a311a8fff2b41ce8146c8ec73ade3f60233dbdf99f90a41b39abac",
+      "validation_issues": [],
+      "variable_count": 5,
+      "condition_count": 7,
+      "construction_count": 12,
+      "audit_sha256": "91ad852808bf7b88f175b06807f412543c7a1297a0c48076629bf7ea115d5c9f",
+      "normalization": {
+        "anchors": [
+          "C",
+          "D"
+        ],
+        "fixed_coordinates": {
+          "C": [
+            "0",
+            "0"
+          ],
+          "D": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "MがCとDの間にあるためC≠D。接線・共円・平行・共線・半直線と等距離の条件は全て相似不変。 平行移動2・回転1・正の一様拡大縮小1のみを除く。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "id": "gmb-global-admission",
+          "kind": "implementation_limit",
+          "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+          "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+        },
+        {
+          "id": "arbitrary-B",
+          "kind": "representation_choice",
+          "detail_ja": "GMBのrs-arbitraryをn=1へ変えず、Bの水平線上の座標bxを残し円所属を課す。接線条件が成立する配置ではBは第二円の接点であり一意。",
+          "comparison_effect": "原文が指示する配置の枝を人為的に除かない。"
+        },
+        {
+          "id": "second-circle-definition",
+          "kind": "equivalent_construction",
+          "detail_ja": "GMBの第二の接線assertはcirc(N,M,B)を使用する。新入力ではcirc(N,M,D)を再利用するが、N,M,D非共線・Bの円所属・ABの非退化から同一円となる。",
+          "comparison_effect": "既知の幾何演算の再表現。結論PE=QEは使用していない。"
+        },
+        {
+          "id": "rays-margin",
+          "kind": "implementation_limit",
+          "detail_ja": "benchmarks/gmb/.runtime/source/src/optimizer.py:1117-1122のonray_gapは始点を方向ベクトルの0.2倍だけずらす。原文にないその余裕は仮定に追加しない。",
+          "comparison_effect": "半直線上の存在と正の方向を共通検査する。"
+        },
+        {
+          "id": "chord-wording",
+          "kind": "source_wording",
+          "detail_ja": "現行公式PDFのchords NA and CM meetという短縮表現に対し、2000年英国団長報告p4はANとCD、BNとCDをそれぞれ支持直線として交わらせると明記する。GMBLおよび本DSLの直線交点による表現はこの一次資料と一致する。",
+          "comparison_effect": "弦分内への条件を追加しない。支持直線か弦分かという解釈上の保留は追加一次資料により解消した。"
+        },
+        {
+          "id": "nearer-M-branch-missing",
+          "kind": "missing_original_assumption",
+          "blocking": false,
+          "detail_ja": "2000年英国団長報告p4は接線ABがNよりMに近いことを指定する。現行公式PDFの短縮表現と公開GMBLはこの条件を持たず、接線の平行・円所属・接する条件・MがCDの内部にある条件・Eが半直線上にある条件からも導かれない。新DSLには原文どおりの距離比較を追加した。",
+          "evidence": [
+            "benchmarks/gmb_comparison/reviews/counterexample_2000_p1_tangent_branch.json",
+            "benchmarks/gmb_comparison/reviews/EQUIVALENCE_ARGUMENTS.md"
+          ],
+          "comparison_effect": "修正後DSLと未変更の公開GMBLは同じ仮定集合ではないため比較をblockedとする。GMB原本や既存artifactを黙って変更せず、共通の原文条件による検査・計測契約を決定するまで公平な直接比較へ含めない。",
+          "comparison_resolution": "reviews/alignment/IMO_2000_P1.json"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "m",
+        "ax",
+        "ay",
+        "tn",
+        "bx"
+      ],
+      "review_sha256": "e00e821437ac2b96ca4ab02df8dcd75c62a66911bc0ee08aaf727382c5a12c15",
+      "review_findings": [
+        {
+          "id": "IMO_2000_P1-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "C,Dを(0,0),(1,0)にし、Mの位置、Aの高さと横位置、Nの円周位置、Bの横位置を残している。AB平行CDは同じy座標で表すだけで、特殊な図形の形を固定していない。"
+        },
+        {
+          "id": "IMO_2000_P1-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "Bの円所属と二つの接線条件、Eの正向き半直線条件を確認した。P,QはNA/CMおよびNB/MDの支持直線の交点であり、公開GMBLとは対応する。"
+        },
+        {
+          "id": "IMO_2000_P1-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "UK Team Leaderの同時代報告によりP,Qは支持直線の交点と確認できた。一方『接線はNよりMに近い方』の枝指定が短縮版公式PDFとGMBLにはないことが厳密反例で確認された。新DSLには原文どおりabs(N.y-A.y)>abs(M.y-A.y)が追加され、その正しさを再確認した。結論PE=QEを探索に加えていない。"
+        },
+        {
+          "id": "original_nearer_tangent_missing",
+          "severity": "blocking",
+          "status": "unresolved_comparison_contract",
+          "detail_ja": "公開GMBLは同時代のUK Team Leader一次報告のnear-M枝条件を欠く。修正後DSLは原文に忠実だが、既存の共通GMBL検査だけではこの原文仮定を検査できない。",
+          "evidence": "reviews/counterexample_2000_p1_tangent_branch.json"
+        },
+        {
+          "id": "nearer_tangent_condition_added",
+          "severity": "major",
+          "status": "resolved_before_evaluation",
+          "detail_ja": "水平なABへの距離比較abs(N.y-A.y)>abs(M.y-A.y)を条件へ追加したことを再確認。Case DSLの修正と、元のGMBLとの比較契約の未解決を分離する。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "original_statement_aligned",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb_comparison/gmbl-original-aligned/IMO_2000_P1.smt2",
+        "sha256": "931aace52bf6810a7f6459ffdc25d749581f50dfb86c196af61060f1eb0d9f02",
+        "official_gmbl_sha256": "c7546705b4a2984f1fd8828b56f5f0b2ba47ba67f66ed418ef22276828d13b4a",
+        "added_assertions": [
+          "(assert (gt (dist N (foot N (line A B))) (dist M (foot M (line A B)))))"
+        ],
+        "reason_ja": "原問題が指定する、NよりMに近い方の共通接線という枝条件を補う。"
+      },
+      "official_pairing": {
+        "issues": [
+          "author_blocked",
+          "unresolved_source_difference",
+          "author_open_issues",
+          "original_assumptions_not_covered_by_common_checker"
+        ],
+        "original_assumptions_covered": false,
+        "independently_reviewed": true,
+        "source_differences": [
+          {
+            "id": "gmb-global-admission",
+            "kind": "implementation_limit",
+            "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+            "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+          },
+          {
+            "id": "arbitrary-B",
+            "kind": "representation_choice",
+            "detail_ja": "GMBのrs-arbitraryをn=1へ変えず、Bの水平線上の座標bxを残し円所属を課す。接線条件が成立する配置ではBは第二円の接点であり一意。",
+            "comparison_effect": "原文が指示する配置の枝を人為的に除かない。"
+          },
+          {
+            "id": "second-circle-definition",
+            "kind": "equivalent_construction",
+            "detail_ja": "GMBの第二の接線assertはcirc(N,M,B)を使用する。新入力ではcirc(N,M,D)を再利用するが、N,M,D非共線・Bの円所属・ABの非退化から同一円となる。",
+            "comparison_effect": "既知の幾何演算の再表現。結論PE=QEは使用していない。"
+          },
+          {
+            "id": "rays-margin",
+            "kind": "implementation_limit",
+            "detail_ja": "benchmarks/gmb/.runtime/source/src/optimizer.py:1117-1122のonray_gapは始点を方向ベクトルの0.2倍だけずらす。原文にないその余裕は仮定に追加しない。",
+            "comparison_effect": "半直線上の存在と正の方向を共通検査する。"
+          },
+          {
+            "id": "chord-wording",
+            "kind": "source_wording",
+            "detail_ja": "現行公式PDFのchords NA and CM meetという短縮表現に対し、2000年英国団長報告p4はANとCD、BNとCDをそれぞれ支持直線として交わらせると明記する。GMBLおよび本DSLの直線交点による表現はこの一次資料と一致する。",
+            "comparison_effect": "弦分内への条件を追加しない。支持直線か弦分かという解釈上の保留は追加一次資料により解消した。"
+          },
+          {
+            "id": "nearer-M-branch-missing",
+            "kind": "missing_original_assumption",
+            "blocking": true,
+            "detail_ja": "2000年英国団長報告p4は接線ABがNよりMに近いことを指定する。現行公式PDFの短縮表現と公開GMBLはこの条件を持たず、接線の平行・円所属・接する条件・MがCDの内部にある条件・Eが半直線上にある条件からも導かれない。新DSLには原文どおりの距離比較を追加した。",
+            "evidence": [
+              "benchmarks/gmb_comparison/reviews/counterexample_2000_p1_tangent_branch.json",
+              "benchmarks/gmb_comparison/reviews/EQUIVALENCE_ARGUMENTS.md"
+            ],
+            "comparison_effect": "修正後DSLと未変更の公開GMBLは同じ仮定集合ではないため比較をblockedとする。GMB原本や既存artifactを黙って変更せず、共通の原文条件による検査・計測契約を決定するまで公平な直接比較へ含めない。"
+          }
+        ],
+        "open_issues": [
+          "GMBLにはnearer-M-tangent条件がない。原文準拠DSLとの比較をどう行うかを決定するまで、このケースの性能比較は保留する。"
+        ]
+      },
+      "alignment_review": {
+        "path": "/home/kabatan/work/solver/benchmarks/gmb_comparison/reviews/alignment/IMO_2000_P1.json",
+        "sha256": "03ae0c5beb9fee23c4f4ca97bcadcd1cc154cad6d7b30e96dd641678356221a3",
+        "resolved_source_difference_ids": [
+          "nearer-M-branch-missing"
+        ],
+        "findings": []
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2000_P6",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A1": "point",
+          "A2": "point",
+          "A3": "point",
+          "K1": "point",
+          "K2": "point",
+          "K3": "point",
+          "L1": "point",
+          "L2": "point",
+          "L3": "point",
+          "refl1": "line",
+          "refl2": "line",
+          "refl3": "line"
+        },
+        "symbols": [
+          "acute-tri",
+          "foot",
+          "incircle",
+          "inter-lc",
+          "inter-ll",
+          "line",
+          "on-circ",
+          "reflect-ll"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "2adf19a77b54e2b885a0e5d42e4c0f71a574a16a4071b92dda8482c837f528eb",
+      "validation_issues": [],
+      "variable_count": 2,
+      "condition_count": 1,
+      "construction_count": 28,
+      "audit_sha256": "1994e5b84d934092b94f4884ab3d7005580513a0e4f58b673a1b1c1e2d86556f",
+      "normalization": {
+        "anchors": [
+          "A2",
+          "A3"
+        ],
+        "fixed_coordinates": {
+          "A2": [
+            "0",
+            "0"
+          ],
+          "A3": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "鋭角三角形の一辺A2A3は非零であり、垂足・内接円・鏡映の構成は相似不変。 平行移動2・回転1・正の一様拡大縮小1のみを除く。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "id": "gmb-global-admission",
+          "kind": "implementation_limit",
+          "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+          "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+        },
+        {
+          "id": "gmb-acute-sampler",
+          "kind": "implementation_limit",
+          "detail_ja": "benchmarks/gmb/.runtime/source/src/optimizer.py:448-488のacute-triはB=(-2,0),C=(2,0),Axを初期値固定、Ayを(1.1,4.1)へ制限する。このパラメータ範囲は全鋭角三角形を尽くさず、Aが鈍角になる配置も含む。公開DSL名の数学的な鋭角条件をGeoSolverでは保持する。",
+          "comparison_effect": "探索上の制限は移植しない。GMB出力にも鋭角条件を共通検査器で課す。"
+        },
+        {
+          "id": "tangent-intersections",
+          "kind": "equivalent_construction",
+          "detail_ja": "LiのGMBLはrs-arbitraryだが、内接円と各辺との交点は唯一の接点。直接の接点構成へ変換し、二交点から枝を選んだわけではない。",
+          "comparison_effect": "接点存在・一意性は非退化三角形と内接円の定義による。"
+        },
+        {
+          "id": "line-reflection",
+          "kind": "equivalent_construction",
+          "detail_ja": "GeoSolverのReflectの公開形は点の鏡映であり、直線鏡映を二端点の鏡映で構成する。",
+          "comparison_effect": "構成上の恒等変換のみで結論の円所属は課さない。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "ax",
+        "ay"
+      ],
+      "review_sha256": "7d30fe254bc90520cbe2cb31e48d7f88bfd7a240bf9ca2a87c547f59b3590bb4",
+      "review_findings": [
+        {
+          "id": "IMO_2000_P6-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "A2,A3を単位基線にし、A1の二座標を残す。鋭角性を明示し、上半面だけへの固定はしていない。"
+        },
+        {
+          "id": "IMO_2000_P6-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "三つの垂足K1,K2,K3、内接円の対応辺の接点L1,L2,L3を照合した。K1K2をL1L2に関して鏡映し、同様に巡回する。反射点を2*foot-pointとして作る表現はこの直線鏡映と同値であり、反射軸と反射対象を逆にしていない。"
+        },
+        {
+          "id": "IMO_2000_P6-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "反射された三直線が作る三角形の各頂点が内接円上にあるという結論は条件に加えていない。GMBのacute-triサンプラーの形制限・鋭角性の不完全さは入力追加条件とは分離する。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2000_P6.smt2",
+        "sha256": "00e032f3959ac400430c25257b13228c7566c9dc9924f8d7601ed27adae2079a"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2001_P1",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "O": "point",
+          "P": "point"
+        },
+        "symbols": [
+          "acute-tri",
+          "add",
+          "circumcenter",
+          "div",
+          "foot",
+          "gte",
+          "line",
+          "lt",
+          "uangle"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "ea0ca2c08abd10f2e5e65cc031154c130a2957283588b5cb5df0b9e2a82f856f",
+      "validation_issues": [],
+      "variable_count": 2,
+      "condition_count": 2,
+      "construction_count": 5,
+      "audit_sha256": "5685fd60134d23167b04e4db56ee2066e65e786f6ab8835bc01cc66118f15029",
+      "normalization": {
+        "anchors": [
+          "B",
+          "C"
+        ],
+        "fixed_coordinates": {
+          "B": [
+            "0",
+            "0"
+          ],
+          "C": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "鋭角三角形の辺BCは非零で、角条件と外心・垂足は相似不変。 平行移動2・回転1・正の一様拡大縮小1のみを除く。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "id": "gmb-global-admission",
+          "kind": "implementation_limit",
+          "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+          "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+        },
+        {
+          "id": "gmb-acute-sampler",
+          "kind": "implementation_limit",
+          "detail_ja": "benchmarks/gmb/.runtime/source/src/optimizer.py:448-488のacute-triはB=(-2,0),C=(2,0),Axを初期値固定、Ayを(1.1,4.1)へ制限する。このパラメータ範囲は全鋭角三角形を尽くさず、Aが鈍角になる配置も含む。公開DSL名の数学的な鋭角条件をGeoSolverでは保持する。",
+          "comparison_effect": "探索上の制限は移植しない。GMB出力にも鋭角条件を共通検査器で課す。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "ax",
+        "ay"
+      ],
+      "review_sha256": "667afb567de22969a564a9ce89687bda095c6e76f930e65854369921657413b1",
+      "review_findings": [
+        {
+          "id": "IMO_2001_P1-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "B,Cを単位基線とし、Aを自由な二座標にする。鋭角条件と角C≥角B+π/6の向きを原文PDFの画像でも照合した。"
+        },
+        {
+          "id": "IMO_2001_P1-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "Oは外心、PはAからBCへの垂足であり、追加の形やPの位置は固定しない。"
+        },
+        {
+          "id": "IMO_2001_P1-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "角BAC+角COP<π/2は結論としてのみ保持され、targetは0である。条件の≥と結論の<を取り違えていない。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2001_P1.smt2",
+        "sha256": "a76c296a11da73a31b3dc518c27f3a5a2f0436ad63bc39ab17b069ea5a82b1b5"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2001_P5",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "P": "point",
+          "Q": "point"
+        },
+        "symbols": [
+          "=",
+          "add",
+          "dist",
+          "div",
+          "i-bisector",
+          "inter-ll",
+          "line",
+          "triangle",
+          "uangle"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "255dd98dd3af7792e2a1db94f4ceeb759a489fe6946902e297d159fadce366ef",
+      "validation_issues": [],
+      "variable_count": 2,
+      "condition_count": 3,
+      "construction_count": 5,
+      "audit_sha256": "f722c857d46f1339e9aeee359d766d179060bb7e3b0147173630ba0830425a4b",
+      "normalization": {
+        "anchors": [
+          "A",
+          "B"
+        ],
+        "fixed_coordinates": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "非退化三角形の一辺ABは非零。角と長さ和の等式は相似不変。 平行移動2・回転1・正の一様拡大縮小1のみを除く。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "id": "gmb-global-admission",
+          "kind": "implementation_limit",
+          "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+          "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+        },
+        {
+          "id": "gmb-triangle-sampler",
+          "kind": "implementation_limit",
+          "detail_ja": "benchmarks/gmb/.runtime/source/src/optimizer.py:428-446のtriangleは単位円上の三頂点として構成する。外接半径を固定する点は相似正規化であり、GeoSolverは一辺を1へ正規化する。",
+          "comparison_effect": "正規化は異なるが三角形の形は限定しない。両出力を共通の無次元検査で採点する。"
+        },
+        {
+          "id": "goal-not-encoded",
+          "kind": "goal_coverage",
+          "detail_ja": "GMBLには元の角度求値に対応するevalがない。",
+          "comparison_effect": "結論チェック率の分母へ入れず、配置生成の仮定検査だけに含める。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "cx",
+        "cy"
+      ],
+      "review_sha256": "e98e25efb5e511d689531180bde4ed51c0899e327ba495fe280ba8886799ef04",
+      "review_findings": [
+        {
+          "id": "IMO_2001_P5-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "A,Bの単位基線以外にCを固定せず、角BAC=π/3は原文の仮定として残す。"
+        },
+        {
+          "id": "IMO_2001_P5-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "P,Qはそれぞれ指定された内角二等分線と対辺の交点であり、AB+BP=AQ+QBも正しい組合せである。"
+        },
+        {
+          "id": "IMO_2001_P5-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "可能な角度を求める結論を入力していない。公開GMBLにevalがないことを『命題の全内容を評価済み』とは解釈しない。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2001_P5.smt2",
+        "sha256": "1db2c50a0b604fb110ea04ecffce70693bc0c7523f30ceaab8378dac2b631353"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2002_P2",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "B": "point",
+          "C": "point",
+          "O": "point",
+          "A": "point",
+          "E": "point",
+          "F": "point",
+          "D": "point",
+          "J": "point"
+        },
+        "symbols": [
+          "amidp-opp",
+          "coa",
+          "div",
+          "gt",
+          "incenter",
+          "inter-lc",
+          "inter-ll",
+          "line",
+          "midp",
+          "on-circ",
+          "para-at",
+          "perp-bis",
+          "rs-neq",
+          "uangle"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "08420b565c9f171ba9380272c776cb6cbba9dc0749ae06dd48eca658af1aee5d",
+      "validation_issues": [],
+      "variable_count": 2,
+      "condition_count": 3,
+      "construction_count": 12,
+      "audit_sha256": "74dee2a4e5d95be5d854d565a76fc861b663760e3129ec7479aff1b8afb7b470",
+      "normalization": {
+        "anchors": [
+          "B",
+          "C"
+        ],
+        "fixed_coordinates": {
+          "B": [
+            "0",
+            "0"
+          ],
+          "C": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "BCは円の直径で非零。円・角・弧中点・平行線・内心はいずれも相似不変。 平行移動2・回転1・正の一様拡大縮小1のみを除く。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "id": "gmb-global-admission",
+          "kind": "implementation_limit",
+          "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+          "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+        },
+        {
+          "id": "arbitrary-chord-order",
+          "kind": "equivalent_construction",
+          "detail_ja": "rs-arbitraryは交点番号にせずEを垂直二等分線上の未知点とする。中心Oを通るAOに関する鏡映は円とその垂直二等分線を保ち、E≠Fなら残る唯一の交点になる。E/F交換も残す。",
+          "comparison_effect": "配置の集合を保つ。ここで使う鏡映恒等式は内心という結論と無関係。"
+        },
+        {
+          "id": "minor-arc",
+          "kind": "equivalent_construction",
+          "detail_ja": "CはBの対蹠点なので、A≠B,CのときCを含まない弧ABは短弧。GMB amidp-opp(A,B,C)と一致。A=Cは角AOC>60度で排除される。",
+          "comparison_effect": "補助的なn selectorや向き固定を用いない。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "ta",
+        "te"
+      ],
+      "review_sha256": "cf3e1d5deb4a6cb3ea10e2f52d60acef6dcf48661effd3da9333d049ed1daca5",
+      "review_findings": [
+        {
+          "id": "IMO_2002_P2-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "B,Cを直径の両端(0,0),(1,0)に正規化し、Aの円周位置を自由変数のまま残す。"
+        },
+        {
+          "id": "IMO_2002_P2-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "EをAOの垂直二等分線上の未知点とし円所属を課し、FはAOについて鏡映する。名前の交換を許す二交点の集合を表し、交点番号を固定しない。"
+        },
+        {
+          "id": "IMO_2002_P2-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "DはCを含まない弧ABの中点。CはBの対蹠点なので、この非退化条件では短弧ABと一致する。AOCの角条件、OJ∥ADとJ∈ACを照合した。JがCEFの内心であるという結論は探索に用いていない。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2002_P2.smt2",
+        "sha256": "b3a5024416c03817ff75a29e12670e988ec25cc3bbb7fbf99068e770fc716574"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2003_P3",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "D": "point",
+          "E": "point",
+          "F": "point"
+        },
+        "symbols": [
+          "=",
+          "add",
+          "dist",
+          "div",
+          "eq",
+          "midp",
+          "mul",
+          "polygon",
+          "sqrt",
+          "uangle"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "c935acce3bd81ab892aa09227923a2aaa33f25b101361360a90ad6d3d471bef6",
+      "validation_issues": [],
+      "variable_count": 8,
+      "condition_count": 4,
+      "construction_count": 6,
+      "audit_sha256": "b91ce96ff2ec9d2f30d235b2ae86a37d3151022a7a568d858866c15280dbb581",
+      "normalization": {
+        "anchors": [
+          "A",
+          "B"
+        ],
+        "fixed_coordinates": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "狭義凸六角形の隣接頂点A,Bは相異なる。中点間距離と辺長和の比例条件は相似不変。 平行移動2・回転1・正の一様拡大縮小1のみを除く。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "id": "gmb-global-admission",
+          "kind": "implementation_limit",
+          "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+          "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+        },
+        {
+          "id": "gmb-polygon-sampler",
+          "kind": "implementation_limit",
+          "detail_ja": "benchmarks/gmb/.runtime/source/src/optimizer.py:385-423のpolygonは内角と辺長比を有限範囲へ制限してsoftな閉路条件を最適化する。GeoSolverは元の狭義凸多角形の形を固定しない。",
+          "comparison_effect": "探索範囲の差として記録する。自己交差・反転・頂点重複は共通検査器で原文に従い検査する。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "cx",
+        "cy",
+        "dx",
+        "dy",
+        "ex",
+        "ey",
+        "fx",
+        "fy"
+      ],
+      "review_sha256": "ca4125f2be0825bd7241ec60a00ab44f044bd4a7d88a02305157d124218bef37",
+      "review_findings": [
+        {
+          "id": "IMO_2003_P3-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "A,Bの単位基線以外の四頂点の八座標を自由に残し、六角形は指定頂点順の狭義凸性で検査する。"
+        },
+        {
+          "id": "IMO_2003_P3-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "向かい合う辺の中点間距離が対応する二辺長の和の√3/2倍になる三条件を巡回順も含めて照合した。"
+        },
+        {
+          "id": "IMO_2003_P3-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "全内角が等しいという結論は条件に加えていない。GMB polygonの有限な角・辺サンプラーを数学的な追加拘束に移していない。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2003_P3.smt2",
+        "sha256": "d9aa609660e63aba669811561aa7eeae48e0ed5bdb6736abe51eb9930d27c9c7"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2003_P4",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "D": "point",
+          "P": "point",
+          "Q": "point",
+          "R": "point"
+        },
+        "symbols": [
+          "concur",
+          "cong",
+          "cycl",
+          "foot",
+          "i-bisector",
+          "line",
+          "polygon"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "e8d7571b8d01deda649fcb51ee2ef2b13f39584038d63abb420bfbb854e56229",
+      "validation_issues": [],
+      "variable_count": 4,
+      "condition_count": 3,
+      "construction_count": 7,
+      "audit_sha256": "cc8a80f7a9813e5b3e47e67d6ab309958b0a9b395aa3ad3760d0107acf2c0755",
+      "normalization": {
+        "anchors": [
+          "A",
+          "B"
+        ],
+        "fixed_coordinates": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "円に内接する四角形の隣接頂点A,Bは異なる。内角二等分線・垂足・距離の等式は相似不変。 平行移動2・回転1・正の一様拡大縮小1のみを除く。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "id": "gmb-global-admission",
+          "kind": "implementation_limit",
+          "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+          "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+        },
+        {
+          "id": "gmb-polygon-sampler",
+          "kind": "implementation_limit",
+          "detail_ja": "benchmarks/gmb/.runtime/source/src/optimizer.py:385-423のpolygonは内角と辺長比を有限範囲へ制限してsoftな閉路条件を最適化する。GeoSolverは元の狭義凸多角形の形を固定しない。",
+          "comparison_effect": "探索範囲の差として記録する。自己交差・反転・頂点重複は共通検査器で原文に従い検査する。"
+        },
+        {
+          "id": "one-direction-only",
+          "kind": "goal_coverage",
+          "detail_ja": "原文は必要十分条件。公開GMBLはRP=RQを仮定して共点を検査する片方向だけを含む。GeoSolverもその同じ問題を入力する。",
+          "comparison_effect": "同値命題全体の証明/再現を主張しない。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "cx",
+        "cy",
+        "dx",
+        "dy"
+      ],
+      "review_sha256": "18225770a919ee962d69b878cba3dd0ffde4746eddf87231c2fd63cd572764f7",
+      "review_findings": [
+        {
+          "id": "IMO_2003_P4-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "単位基線ABと残るC,Dの四座標により、凸な円内接四角形の形を残している。"
+        },
+        {
+          "id": "IMO_2003_P4-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "P,Q,RはDからBC,CA,ABへの垂足で、RP=RQの向き・点対応が正しい。"
+        },
+        {
+          "id": "IMO_2003_P4-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "原問の同値命題のうちGMBLが符号化する向きに揃え、RP=RQから角二等分線の共点性を調べる。逆向きの実験まで実施する入力ではない。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2003_P4.smt2",
+        "sha256": "629045e09590f6448a1bf8c57a60e3b3ad3c7a0b296297deaba260a6a828bc96"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2004_P1",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "M": "point",
+          "N": "point",
+          "O": "point",
+          "R": "point"
+        },
+        "symbols": [
+          "acute-tri",
+          "circumcircle",
+          "cong",
+          "diam",
+          "i-bisector",
+          "inter-cc",
+          "inter-lc",
+          "inter-ll",
+          "line",
+          "midp",
+          "not",
+          "on-seg",
+          "rs-neq"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "65a1cc0b9c0ef669e7207e461f40970fdc8e0351aa0da0e93c284015975dd769",
+      "validation_issues": [],
+      "variable_count": 2,
+      "condition_count": 2,
+      "construction_count": 8,
+      "audit_sha256": "20f4087751e64e9d16ca5682620c033eead6c839302714b791131d2a63856bdf",
+      "normalization": {
+        "anchors": [
+          "B",
+          "C"
+        ],
+        "fixed_coordinates": {
+          "B": [
+            "0",
+            "0"
+          ],
+          "C": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "鋭角三角形の辺BCは非零で、円の直径・内角二等分線・円の共通点の条件は相似不変。 平行移動2・回転1・正の一様拡大縮小1のみを除く。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "id": "gmb-global-admission",
+          "kind": "implementation_limit",
+          "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+          "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+        },
+        {
+          "id": "gmb-acute-sampler",
+          "kind": "implementation_limit",
+          "detail_ja": "benchmarks/gmb/.runtime/source/src/optimizer.py:448-488のacute-triはB=(-2,0),C=(2,0),Axを初期値固定、Ayを(1.1,4.1)へ制限する。このパラメータ範囲は全鋭角三角形を尽くさず、Aが鈍角になる配置も含む。公開DSL名の数学的な鋭角条件をGeoSolverでは保持する。",
+          "comparison_effect": "探索上の制限は移植しない。GMB出力にも鋭角条件を共通検査器で課す。"
+        },
+        {
+          "id": "second-point-side-membership",
+          "kind": "equivalent_construction",
+          "detail_ja": "原文のM,Nは辺上だが、鋭角三角形ではBC直径円との第二交点がそれぞれAB,ACの内部にある。GMBLと同じ第二交点構成を使い、辺の延長枝は選ばない。",
+          "comparison_effect": "共通検査器では辺上も確認する。"
+        },
+        {
+          "id": "goal-segment-margin",
+          "kind": "implementation_limit",
+          "detail_ja": "benchmarks/gmb/.runtime/source/src/optimizer.py:1110-1115のon-seg predicateは辺の両端20%を除いた内側に対する余裕を用いる。原文にはこの数値的な追加条件はない。",
+          "comparison_effect": "原文の線分所属とGMB自身のevalは分けて報告する。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "ax",
+        "ay"
+      ],
+      "review_sha256": "7458d77d645411debb6db730eb9d29ec5a90ce207d33007151f6cff30691ab0a",
+      "review_findings": [
+        {
+          "id": "IMO_2004_P1-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "B,Cを単位基線とし、Aの二座標・両側の鏡映配置を残す。鋭角性とAB≠ACを原文どおり課す。"
+        },
+        {
+          "id": "IMO_2004_P1-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "BCを直径とする円のAB,ACとの二つ目の交点をそれぞれB,C除外で取る。除外点は構成上常に円と直線の共通点であり、途中配置の未知点を不安定にexcludeしていない。"
+        },
+        {
+          "id": "IMO_2004_P1-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "指定された内角二等分線とRを照合した。結論の二つの円がBC上で交わることは検索条件から分離されている。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2004_P1.smt2",
+        "sha256": "c063c59ea57ea2e1eaff43606fada513fa291e5216e5c3c0490ca591412c8561"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2004_P5",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "D": "point",
+          "P": "point"
+        },
+        "symbols": [
+          "=",
+          "cong",
+          "cycl",
+          "i-bisector",
+          "in-poly",
+          "not",
+          "on-line",
+          "polygon",
+          "uangle"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "3b8ba2d245b6793b5c0b2620e8f527783e5c3bb1c465e663fb5ff8abddb4aaad",
+      "validation_issues": [],
+      "variable_count": 7,
+      "condition_count": 10,
+      "construction_count": 5,
+      "audit_sha256": "a84a0eb24c73d8ac786a1026e511239ab152f60586c432c97a40fc2768ef14d8",
+      "normalization": {
+        "anchors": [
+          "A",
+          "B"
+        ],
+        "fixed_coordinates": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "狭義凸四角形の辺ABは非零。内部点、角等式、共円、距離の等式はいずれも相似不変。 平行移動2・回転1・正の一様拡大縮小1のみを除く。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "id": "gmb-global-admission",
+          "kind": "implementation_limit",
+          "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+          "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+        },
+        {
+          "id": "gmb-polygon-sampler",
+          "kind": "implementation_limit",
+          "detail_ja": "benchmarks/gmb/.runtime/source/src/optimizer.py:385-423のpolygonは内角と辺長比を有限範囲へ制限してsoftな閉路条件を最適化する。GeoSolverは元の狭義凸多角形の形を固定しない。",
+          "comparison_effect": "探索範囲の差として記録する。自己交差・反転・頂点重複は共通検査器で原文に従い検査する。"
+        },
+        {
+          "id": "positive-weights",
+          "kind": "equivalent_parameterization",
+          "detail_ja": "四角形内部点を4頂点の全て正の重みで表す。任意の内部点はそのような重みを持つため、特定の三角形への偏りや対角線上の点の排除はない。重みの冗長性は形固定ではない。",
+          "comparison_effect": "GMB softmaxと数学的な到達領域は同じ。"
+        },
+        {
+          "id": "one-direction-only",
+          "kind": "goal_coverage",
+          "detail_ja": "原文は共円とAP=CPの同値。公開GMBLが選んだ共円を仮定する片方向を比較する。",
+          "comparison_effect": "原文の全同値命題の証明比較とはしない。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "cx",
+        "cy",
+        "dx",
+        "dy",
+        "u",
+        "v",
+        "w"
+      ],
+      "review_sha256": "d8dddb2568c6b417a60c4897fb175d6317b80028285a23fbd1f6efeb03d6e263",
+      "review_findings": [
+        {
+          "id": "IMO_2004_P5-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "A,Bのみ単位基線に固定し、C,Dは自由。Pの正の四頂点重みは凸四角形の全内部を表せるため、特殊な内部点に固定していない。"
+        },
+        {
+          "id": "IMO_2004_P5-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "BDが指定二角のどちらの内角二等分線でもないこと、Pについての二つの等角条件を照合した。"
+        },
+        {
+          "id": "IMO_2004_P5-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "GMBLが採用する円内接⇒AP=CPの向きに揃えて円内接を仮定とし、AP=CPを結論に分離した。原問の逆向きまで実験したとは扱わない。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2004_P5.smt2",
+        "sha256": "336bafdec3c4c0f0c875de3787575f57216cb955e6ace67f34d19fad724eea47"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2005_P1",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "A1": "point",
+          "A2": "point",
+          "B1": "point",
+          "B2": "point",
+          "C1": "point",
+          "C2": "point"
+        },
+        "symbols": [
+          "concur",
+          "cong",
+          "equi-tri",
+          "line",
+          "on-seg"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "015447d8af7f6a3cf6544e548b6038280d8854ef7e3633b6424b0e9c5b92a89a",
+      "validation_issues": [],
+      "variable_count": 7,
+      "condition_count": 13,
+      "construction_count": 9,
+      "audit_sha256": "b19b536045f377a1859dc2256f1b82457ab6fcde9fc0ba4ba09c5a46e20d1a49",
+      "normalization": {
+        "anchors": [
+          "B",
+          "C"
+        ],
+        "fixed_coordinates": {
+          "B": [
+            "0",
+            "0"
+          ],
+          "C": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "正三角形の辺BCは非零。等辺・共点・凸性は相似不変。A=(1/2,h),h²=3/4として鏡映の両側を残す。 平行移動2・回転1・正の一様拡大縮小1のみを除く。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "id": "gmb-global-admission",
+          "kind": "implementation_limit",
+          "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+          "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+        },
+        {
+          "id": "equilateral-orientation",
+          "kind": "implementation_limit",
+          "detail_ja": "GMBのequi-triは辺BC=4の上側正三角形のみ。新入力はBC=1に正規化しhの両符号を残す。原文は向きを指定しない。",
+          "comparison_effect": "形の違いでなく相似・鏡映の重複。"
+        },
+        {
+          "id": "open-versus-closed-parameters",
+          "kind": "equivalent_domain",
+          "detail_ja": "GMBのon-seg parameterizationは開区間、新入力は閉区間＋狭義凸性。もしA1=BならC1,C2,A1が連続する共線3頂点、A2=CならA2,B1,B2が共線となる。他の端点も同様で、端点配置は狭義凸性から排除される。",
+          "comparison_effect": "全条件を同時に見ると領域は同値。閉区間記号だけを見て非同値と判断しない。"
+        },
+        {
+          "id": "convexity-explicit",
+          "kind": "equivalent_domain",
+          "detail_ja": "GMBは3辺上の内点を順に選ぶことで凸な六角形を構成する。新入力はこの意味をConvexPolygonでも明示する。",
+          "comparison_effect": "不等式の追加で形の自由度を削ったわけではない。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "h",
+        "ta1",
+        "ta2",
+        "tb1",
+        "tb2",
+        "tc1",
+        "tc2"
+      ],
+      "review_sha256": "a09465ee52fa735a38afffcfd0c6a352d7068cc587c80dffdc3454cb9a147c05",
+      "review_findings": [
+        {
+          "id": "IMO_2005_P1-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "BCを単位基線にし、A=(1/2,h), h²=3/4で原文の正三角形を表す。hの符号は固定していない。"
+        },
+        {
+          "id": "IMO_2005_P1-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "各辺の二点を順次の線分パラメータで表し、狭義凸六角形と六辺の等長を照合した。辺端点や同じ辺の二点の一致は狭義凸性から除かれるため、閉線分関数とGMBの開パラメータは全条件下で同値である。"
+        },
+        {
+          "id": "IMO_2005_P1-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "三直線の共点性は仮定に加えていない。端点同値性の根拠はreviews/EQUIVALENCE_ARGUMENTS.mdに記録した。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2005_P1.smt2",
+        "sha256": "c68d0fe886bbe2c6faf5e6fe91edd9636ea2c319a8d707220c68751194139bb4"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2005_P5",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "D": "point",
+          "E": "point",
+          "F": "point",
+          "P": "point",
+          "Q": "point",
+          "R": "point"
+        },
+        "symbols": [
+          "cong",
+          "inter-ll",
+          "line",
+          "not",
+          "on-seg",
+          "para",
+          "polygon"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "840851e17d85a24a6f3373319df360b670496fe2fcf1871603ea87e6ba45670b",
+      "validation_issues": [],
+      "variable_count": 6,
+      "condition_count": 7,
+      "construction_count": 9,
+      "audit_sha256": "7f95e0e4c78cde7fb0f449569d4103d5a7925efecdf4fe754007d92cd1830b81",
+      "normalization": {
+        "anchors": [
+          "A",
+          "B"
+        ],
+        "fixed_coordinates": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "固定する四角形の形は未知のまま残し、非零の辺ABを1にするだけ。等辺・非平行・交点は相似不変。 平行移動2・回転1・正の一様拡大縮小1のみを除く。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "id": "gmb-global-admission",
+          "kind": "implementation_limit",
+          "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+          "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+        },
+        {
+          "id": "gmb-polygon-sampler",
+          "kind": "implementation_limit",
+          "detail_ja": "benchmarks/gmb/.runtime/source/src/optimizer.py:385-423のpolygonは内角と辺長比を有限範囲へ制限してsoftな閉路条件を最適化する。GeoSolverは元の狭義凸多角形の形を固定しない。",
+          "comparison_effect": "探索範囲の差として記録する。自己交差・反転・頂点重複は共通検査器で原文に従い検査する。"
+        },
+        {
+          "id": "endpoints-degenerate",
+          "kind": "equivalent_domain",
+          "detail_ja": "BE=DFとBC=DAからE=BならF=DでEF=BD、E=CならF=AでEF=ACとなり、QまたはRが一意に定まらない。よって非退化PQRを扱う範囲では両パラメータを開区間にできる。",
+          "comparison_effect": "原文の円が定義されない境界を正常な配置に数えない。"
+        },
+        {
+          "id": "triangle-existence",
+          "kind": "implicit_domain_explicit",
+          "detail_ja": "GMBLにはArea(P,Q,R)>0が明示されていないが、元の結論はPQRの外接円を要求する。新入力はその定義域を明示する。",
+          "comparison_effect": "共通検査器でもP,Q,Rの非退化性を検査する。"
+        },
+        {
+          "id": "fixed-versus-sampled-quadrilateral",
+          "kind": "goal_coverage",
+          "detail_ja": "原文の固定ABCDに対する可変E,Fの円群を、公開GMBLはABCDもサンプルする一配置として扱う。",
+          "comparison_effect": "配置比較のみとし、円群の不変量の発見・証明はこの実験の成果に数えない。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "cx",
+        "cy",
+        "dx",
+        "dy",
+        "te",
+        "tf"
+      ],
+      "review_sha256": "3ced7e6b70d714bb6f5a2f1a8975bb6c07c80178c7cc1bd7ab1c6b0538932b2c",
+      "review_findings": [
+        {
+          "id": "IMO_2005_P5-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "AB以外の二頂点を自由にし、凸性、BC=DA、BCとDAの非平行性を残す。E,Fは対応する辺上でBE=DFを課す。"
+        },
+        {
+          "id": "IMO_2005_P5-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "EFと両対角線の交点Q,Rおよび対角線交点Pを照合した。Area(P,Q,R)>0は仮定の強化ではなく、等長と非平行性から従うことを独立に証明した。"
+        },
+        {
+          "id": "IMO_2005_P5-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "端点では一意な三角形PQRを作れない。非退化性と交点存在の証明はreviews/EQUIVALENCE_ARGUMENTS.mdを参照。原問のE,Fを動かす円族の共通点を入力には使っていない。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2005_P5.smt2",
+        "sha256": "380ffd4ca3c383d62a55a812f41dc552f2f0b8bb43d7205c9dc1db9dabb1b9b7"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2006_P1",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "I": "point",
+          "P": "point"
+        },
+        "symbols": [
+          "=",
+          "add",
+          "dist",
+          "gte",
+          "in-poly",
+          "incenter",
+          "triangle",
+          "uangle"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "de0ec523a925e92b2a0494c381e9b51bbb8ed2d5229f42063e71e964050aeaa4",
+      "validation_issues": [],
+      "variable_count": 4,
+      "condition_count": 5,
+      "construction_count": 5,
+      "audit_sha256": "6836c81eebf7348cf4bb94f0d75584648ed8c95555e7623e8202fc763863af5e",
+      "normalization": {
+        "anchors": [
+          "A",
+          "B"
+        ],
+        "fixed_coordinates": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "非退化三角形の辺ABは非零で、内心・内部点・角等式・距離不等式は相似不変。 平行移動2・回転1・正の一様拡大縮小1のみを除く。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "id": "gmb-global-admission",
+          "kind": "implementation_limit",
+          "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+          "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+        },
+        {
+          "id": "gmb-triangle-sampler",
+          "kind": "implementation_limit",
+          "detail_ja": "benchmarks/gmb/.runtime/source/src/optimizer.py:428-446のtriangleは単位円上の三頂点として構成する。外接半径を固定する点は相似正規化であり、GeoSolverは一辺を1へ正規化する。",
+          "comparison_effect": "正規化は異なるが三角形の形は限定しない。両出力を共通の無次元検査で採点する。"
+        },
+        {
+          "id": "positive-barycentric-weights",
+          "kind": "equivalent_parameterization",
+          "detail_ja": "u,v,1-u-vを全て正とする重心座標は三角形の内部全体を表す。GMB softmaxに由来する冗長な共通シフトのみを除く。",
+          "comparison_effect": "P=Iを含め、特別な内部点や図形の形を追加固定しない。"
+        },
+        {
+          "id": "equality-case-not-encoded",
+          "kind": "goal_coverage",
+          "detail_ja": "原文の等号成立条件P=Iは公式GMB evalにない。",
+          "comparison_effect": "不等式の数値確認と完全な定理証明を混同しない。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "cx",
+        "cy",
+        "u",
+        "v"
+      ],
+      "review_sha256": "758dd15abe020c13eae2fb82e06ac6a6b940e52bce458ba4f932b5db61f6afac",
+      "review_findings": [
+        {
+          "id": "IMO_2006_P1-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "A,Bを単位基線にしCを自由に残し、Pを正の三頂点重みで三角形内部全体から表す。"
+        },
+        {
+          "id": "IMO_2006_P1-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "内心Iと、∠PBA+∠PCA=∠PBC+∠PCBの四つの角の頂点・順を照合した。"
+        },
+        {
+          "id": "IMO_2006_P1-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "AP≥AIは結論のみ。原文の等号成立P=Iという主張はGMBのevalでは独立に扱われておらず、この入力から同値条件まで検証したとは主張しない。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2006_P1.smt2",
+        "sha256": "f5f4c1f761c6403ac213fb3d6bc7f007bea1955dd53e6661c17d63b9f0974c7c"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2007_P2",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "B": "point",
+          "C": "point",
+          "D": "point",
+          "E": "point",
+          "A": "point",
+          "F": "point",
+          "l": "line",
+          "G": "point"
+        },
+        "symbols": [
+          "circumcircle",
+          "coa",
+          "cong",
+          "eq",
+          "i-bisector",
+          "inter-lc",
+          "inter-ll",
+          "line",
+          "on-circ",
+          "on-seg",
+          "para-at",
+          "polygon",
+          "rs-neq"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "6d1e58f299cb9d88e0a44cf3bb40a38f33c930313273c5381b2fa4aad61e249e",
+      "validation_issues": [],
+      "variable_count": 3,
+      "condition_count": 6,
+      "construction_count": 9,
+      "audit_sha256": "664a7289ea0f782b0c770fb6882b5c1696af84f27e3f6b6c02c9657e402a5995",
+      "normalization": {
+        "anchors": [
+          "B",
+          "C"
+        ],
+        "fixed_coordinates": {
+          "B": [
+            "0",
+            "0"
+          ],
+          "C": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "非退化な平行四辺形の辺BCは正長。相似変換でBCを単位水平線分とするだけでDとEの形は固定しない。dyの両符号を残す。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "kind": "mathematically_redundant_condition",
+          "detail": "公開GMBLはBCEDの巡回順を直接拘束しないが、Fの内部性とEF=EG=ECから巡回順が従う。下記の代数的含意を別担当が独立確認済み。原文にあるConvexPolygon条件は解集合を狭めない。"
+        },
+        {
+          "kind": "implementation_search_restriction",
+          "detail": "GMBの3点polygonサンプラは角度・辺比を有限範囲に制限し、閉路条件を損失にする。これは原文の追加仮定ではないため移植しない。"
+        },
+        {
+          "kind": "implementation_guard_margin",
+          "detail": "GMB assert on-segはbetween_gapのeps=0.2により中央部分を選好・拘束する。原文は単に開線分全体なので20%幅は移植しない。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "dx",
+        "dy",
+        "te"
+      ],
+      "review_sha256": "4d794f8d92e167e08033eee69249c6b39df21e0f0c72aed43d003ec3562aad38",
+      "review_findings": [
+        {
+          "id": "IMO_2007_P2-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "B,Cのみ単位基線にしD,Eを自由に残し、平行四辺形Aは幾何的に構成する。FのDC内部条件とG=AF∩BC、EF=EC=EGの対応を照合した。"
+        },
+        {
+          "id": "IMO_2007_P2-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "公開GMBLにBCEDの順序が明記されていないが、他の仮定からその巡回順が従うことを独立に代数確認した。追加のConvexPolygon([B,C,E,D])は冗長である。"
+        },
+        {
+          "id": "IMO_2007_P2-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "g=1/tと置いた円所属の因数分解s²(g+1)(g²-s²)=0およびside符号による証明をreviews/EQUIVALENCE_ARGUMENTS.mdに残した。直線lが角DABの内角二等分線であるという結論を仮定にしていない。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2007_P2.smt2",
+        "sha256": "620258798ffd18be7eb007129fbd37bf7f61469d774f16ee341d27c7cc700d7f"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2007_P4",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "R": "point",
+          "P": "point",
+          "Q": "point",
+          "K": "point",
+          "L": "point"
+        },
+        "symbols": [
+          "=",
+          "area",
+          "circumcircle",
+          "i-bisector",
+          "inter-lc",
+          "inter-ll",
+          "midp",
+          "perp-bis",
+          "rs-neq",
+          "triangle"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "0eba66d8d8a8128a33ad83782f6ad57baee741bbe3b174a139f45c072ee29d5a",
+      "validation_issues": [],
+      "variable_count": 2,
+      "condition_count": 1,
+      "construction_count": 10,
+      "audit_sha256": "ea9155a72646023a88525c2541b761605185fdc28265f75b19652ad46cbe4b35",
+      "normalization": {
+        "anchors": [
+          "A",
+          "B"
+        ],
+        "fixed_coordinates": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "三角形の辺ABは正長。相似変換でABを単位水平線分にし、C=(cx,cy)の形・上下は自由に残す。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "kind": "implementation_acceptance_policy",
+          "detail": "GMBの全保存点間min_distは原文にない。P,Q等が一致する特殊配置を一律には除外しない。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "cx",
+        "cy"
+      ],
+      "review_sha256": "510573774577d23fb25d656f2a0ca08a46c6da1ab903cd4b042d1ffeefe0206f",
+      "review_findings": [
+        {
+          "id": "IMO_2007_P4-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "ABのみ単位基線、Cの二座標を残す。Cの内角二等分線と外接円の二つ目の交点Rを確認した。"
+        },
+        {
+          "id": "IMO_2007_P4-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "P,Qの二つの垂直二等分線、K,Lの各中点との対応が一致する。全点間距離や任意の図形固定は追加されていない。"
+        },
+        {
+          "id": "IMO_2007_P4-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "二三角形の面積の比較は結論として分離している。結論中の三角形の退化は、入力への秘密の追加仮定ではなく後段の結論検査で区別する。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2007_P4.smt2",
+        "sha256": "8a05850e3c754e27208f18035b0545a70a0279d5c1a386f9b135da4333e9647f"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2008_P1",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "H": "point",
+          "A1": "point",
+          "A2": "point",
+          "B1": "point",
+          "B2": "point",
+          "C1": "point",
+          "C2": "point"
+        },
+        "symbols": [
+          "acute-tri",
+          "coa",
+          "cycl",
+          "inter-lc",
+          "line",
+          "midp",
+          "orthocenter",
+          "rs-neq"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "b60e435f27cd4706fffedabc64d82444c265358972397687af5ef969639b96d1",
+      "validation_issues": [],
+      "variable_count": 5,
+      "condition_count": 5,
+      "construction_count": 16,
+      "audit_sha256": "0d94e62b8b2143b39ce788f0a401cd638de2e477a4a621ed4eb24e7142a69ccd",
+      "normalization": {
+        "anchors": [
+          "A",
+          "B"
+        ],
+        "fixed_coordinates": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "鋭角三角形の正長辺ABを単位水平線分にする。鋭角の形の自由度と鏡映を残す。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "kind": "implementation_sampling_and_domain",
+          "detail": "GMB acute-triは固定Ax∈[-1.2,1.2], Ay∈(1.1,4.1), B=(-2,0), C=(2,0)を使い、鋭角性の全域・厳密保証ではない。GeoSolverは原文通り鋭角条件を検査する。"
+        },
+        {
+          "kind": "implementation_branch",
+          "detail": "GMB rs-arbitraryは内部P2を返すが原文は2交点のラベルを区別しない。本DSLは両方のラベルを保持し、採点も交点対の集合として扱う必要がある。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "cx",
+        "cy",
+        "ta",
+        "tb",
+        "tc"
+      ],
+      "review_sha256": "54dbaad3e70ec106507459994d19bbaaaebe521e18b60cb57eda704bb2231792",
+      "review_findings": [
+        {
+          "id": "IMO_2008_P1-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "AB単位基線とCの二座標を残し、鋭角性・垂心Hを正しく構成する。"
+        },
+        {
+          "id": "IMO_2008_P1-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "各辺中点を中心としHを通る三円と辺との交点対を、未知の一交点と中心対称な相方として表す。未知点が円上に収束する前でも構成でき、番号由来の枝を固定しない。"
+        },
+        {
+          "id": "IMO_2008_P1-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "どちらのラベル交換も元問題の同じ交点対を表すため、採点は入力された名前付き点が同じ幾何的枝を満たすかを検査すべきで、GMB内部のP1/P2番号との一致を要求しない。六交点の共円性は結論のみ。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2008_P1.smt2",
+        "sha256": "e706ba2c8cf34ed7dcdaa74776771f8a468687d46e12d98b21cb0e6ca9497a52"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2008_P6",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "D": "point",
+          "omega_1": "circle",
+          "omega_2": "circle",
+          "omega": "circle"
+        },
+        "symbols": [
+          "cong",
+          "incircle",
+          "inter-lc",
+          "line",
+          "not",
+          "on-ray",
+          "on-seg",
+          "polygon",
+          "tangent-cl",
+          "tangent-lc"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "6ab6da9a5a299f088957e913c356e1d9679afdd6df47d638e5dbb29842377daa",
+      "validation_issues": [],
+      "variable_count": 6,
+      "condition_count": 8,
+      "construction_count": 10,
+      "audit_sha256": "455fbbe7ed701af08b0064928fb63e532cc68fe7048214fceb53a5c20f0c464f",
+      "normalization": {
+        "anchors": [
+          "B",
+          "A"
+        ],
+        "fixed_coordinates": {
+          "B": [
+            "0",
+            "0"
+          ],
+          "A": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "凸四辺形の辺BAは正長。BAを単位水平線分にする。C,D,円中心の自由度と鏡映を残す。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "kind": "mathematically_redundant_condition",
+          "detail": "BC接点のbeyond CはGMBLに明示されないが、凸性とBA,BC,ADへの接線条件から従う。下記の含意を別担当が独立確認済みで、原文にある点順条件は解集合を狭めない。"
+        },
+        {
+          "kind": "implementation_sampling_and_guards",
+          "detail": "GMB polygonの角度/辺比範囲、on-ray・not on-segの固定幅による処理は、数学的な凸四辺形・厳密な点順と同一ではない。GeoSolverへ追加仮定として移さない。"
+        },
+        {
+          "kind": "unsupported_posthoc_goal",
+          "detail": "公開GMBLにはevalがない。配置生成と、外接線交点に関する追加の独立検査は別指標とする。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "cx",
+        "cy",
+        "dx",
+        "dy",
+        "ox",
+        "oy"
+      ],
+      "review_sha256": "9bfbe9f394ef2b7c355b57b8289707081819d1928f74f189066542b87414b902",
+      "review_findings": [
+        {
+          "id": "IMO_2008_P6-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "B,Aの単位基線、C,Dと接円中心Oの座標を残す。円の半径はOからBAへの距離であり、負半径や同一直線上中心は許さない。"
+        },
+        {
+          "id": "IMO_2008_P6-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "BA上の接点がAより先、BC/AD/CDへの接線、凸性、BA≠BCを照合した。BC接点がCより先という原文条件はGMBLに明記がないが、他の接線・凸性条件から従うことを独立に証明した。"
+        },
+        {
+          "id": "IMO_2008_P6-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "接線式s(s-1)(1-α)=βc(s-k)からBC=c<sを導く記録はreviews/EQUIVALENCE_ARGUMENTS.md参照。内接円二つの関係という結論は入力していない。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2008_P6.smt2",
+        "sha256": "003abc3eeb2037e128212c6e59881f34663ffb1ee437f24cf1e2a37385d86da0"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2009_P2",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "O": "point",
+          "P": "point",
+          "Q": "point",
+          "K": "point",
+          "L": "point",
+          "M": "point",
+          "Gamma": "circle"
+        },
+        "symbols": [
+          "circ",
+          "circumcenter",
+          "cong",
+          "line",
+          "midp",
+          "on-seg",
+          "tangent-lc",
+          "triangle"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "ebeeae22a7d795cb3b774980a81bbc3e3691c6ffbef5fc46bf40b6f44e9e8a96",
+      "validation_issues": [],
+      "variable_count": 4,
+      "condition_count": 6,
+      "construction_count": 10,
+      "audit_sha256": "1a23b9be8dcbb292f2b737707cab5ea8c3579f3c98794d72521ca9d8c3a2b046",
+      "normalization": {
+        "anchors": [
+          "A",
+          "B"
+        ],
+        "fixed_coordinates": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "三角形の正長辺ABを相似変換で固定。Cの形とP,Qの位置は固定しない。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "kind": "implementation_acceptance_policy",
+          "detail": "GMBの全点min_distやon-seg parameterの正則化は追加仮定にしない。共通検査で開線分と接線条件を独立確認する。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "cx",
+        "cy",
+        "tp",
+        "tq"
+      ],
+      "review_sha256": "ddc04a66a3cceb1b670cff3276bd407e3098ff40623c60cab3f8cef83ae2ed49",
+      "review_findings": [
+        {
+          "id": "IMO_2009_P2-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "ABの単位基線だけを固定し、CとCA,AB上の内部点P,Qの位置を残す。"
+        },
+        {
+          "id": "IMO_2009_P2-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "P,Qの各線分、指定された三つの中点、外接円とPQの接線条件を原文およびGMBLと照合した。"
+        },
+        {
+          "id": "IMO_2009_P2-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "OP=OQという結論を入力へ混ぜていない。接線条件は接点を勝手に選ぶ構成へ置き換えず、円と直線の関係として残している。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2009_P2.smt2",
+        "sha256": "7d2388672efe50d6c17300ed27e6cf342055aea6dcfef3cc53498900839a6c6b"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2009_P4",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "D": "point",
+          "E": "point",
+          "K": "point"
+        },
+        "symbols": [
+          "=",
+          "cong",
+          "div",
+          "i-bisector",
+          "incenter",
+          "inter-ll",
+          "line",
+          "triangle",
+          "uangle"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "0725c293c3ac5d77e2b5096b0abbc7a88fe8beb165497ec61b0c0aa5d5d35dda",
+      "validation_issues": [],
+      "variable_count": 2,
+      "condition_count": 3,
+      "construction_count": 6,
+      "audit_sha256": "fa59e6e0a2b21874f0332a53ef8340a9aee570a66afb8ddf9c0e65cf69137aa0",
+      "normalization": {
+        "anchors": [
+          "A",
+          "B"
+        ],
+        "fixed_coordinates": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "正長辺ABを1にし、AB=ACは形の条件として残す。頂角は固定しない。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "kind": "unsupported_posthoc_goal",
+          "detail": "公開GMBLはevalを持たない。角CABの解集合・網羅性をこの配置比較の成績に混ぜない。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "cx",
+        "cy"
+      ],
+      "review_sha256": "5ada8c6ff1839ac16e90a6ae9ec9583d43627f894ea3b15fa97d21b26e0d5ae5",
+      "review_findings": [
+        {
+          "id": "IMO_2009_P4-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "ABの単位基線以外にCを固定せず、AB=ACは原文の二等辺条件として保持する。"
+        },
+        {
+          "id": "IMO_2009_P4-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "D,Eは指定された内角二等分線と辺の交点、KはADCの内心。∠BEK=π/4を照合した。"
+        },
+        {
+          "id": "IMO_2009_P4-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "可能な三角形の角度を求める結論を条件にしていない。GMBLにevalがないことを記録対象とし、命題全体の求値性能とは区別する。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2009_P4.smt2",
+        "sha256": "1b4c308554dd2408638e5455b9b3ac6918770ada24c82a45ebb6569793bd5d13"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2010_P2",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "I": "point",
+          "Gamma": "circle",
+          "D": "point",
+          "E": "point",
+          "F": "point",
+          "G": "point"
+        },
+        "symbols": [
+          "=",
+          "circumcircle",
+          "incenter",
+          "inter-lc",
+          "inter-ll",
+          "line",
+          "lt",
+          "midp",
+          "mul",
+          "on-circ",
+          "on-seg",
+          "rs-neq",
+          "same-side",
+          "triangle",
+          "uangle"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "360acf38efe9ba1a96d814b9aa9b310f7994bc77318f322f5d79536faac44298",
+      "validation_issues": [],
+      "variable_count": 4,
+      "condition_count": 6,
+      "construction_count": 9,
+      "audit_sha256": "67c6cc033bf617772af7c4e428df76ee512553db138200eac44c79ef552c7671",
+      "normalization": {
+        "anchors": [
+          "A",
+          "B"
+        ],
+        "fixed_coordinates": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "相似不変でABは正長。Cの形、E,Fの位置を自由に残す。上下の符号は選ばない。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "kind": "user_approved_common_scope",
+          "detail": "原文のside/arcはinteriorと明記されず、閉と読むとF=B,E=Cも成立する。一方、公開GMBのparam on-segは開線分を生成する。ユーザーの明示承認によりGeoSolver側にも0<tf<1を課し、原文の端点配置を除く共通範囲で比較する。原文の全境界を含む問題と同値とは主張しない。GMB原本と原文資料は変更しない。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "cx",
+        "cy",
+        "te",
+        "tf"
+      ],
+      "review_sha256": "67284b2a62d86868c8105500c06ad194c46eeb9f55c97890fe9424b0fbedd2b9",
+      "review_findings": [
+        {
+          "id": "IMO_2010_P2-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "ABを単位基線、CとE,Fの位置を自由に保ち、内心I・二つ目のAI円交点D・IF中点Gを照合した。"
+        },
+        {
+          "id": "IMO_2010_P2-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "初稿はFを閉線分に許し公開GMBの開パラメータと不一致だったが、ユーザー承認後に0<tf<1を追加して共通の内部配置範囲へ統一済み。F内部なら角BAF>0からE≠C、半角未満条件からE≠Bも従う。"
+        },
+        {
+          "id": "IMO_2010_P2-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "原文side/arcをclosedと解釈した全境界配置との同値性は主張しない。これは承認済みの比較範囲の明示であり、結論DGとEIの交点の円所属を仮定に追加して端点問題を隠す修正ではない。"
+        },
+        {
+          "id": "segment_endpoint_scope",
+          "severity": "major",
+          "status": "resolved_by_user_approved_common_scope",
+          "detail_ja": "初稿の閉線分を公開GMBと同じ内部配置へ統一する変更がユーザー承認され、0<tf<1の追加とauditでの範囲明示を確認済み。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2010_P2.smt2",
+        "sha256": "973de0514b1eef5441ea263fbb94f46fedfbaf0f07c035d5b059e00650140f9a"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2010_P4",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "P": "point",
+          "Gamma": "circle",
+          "K": "point",
+          "L": "point",
+          "M": "point",
+          "S": "point"
+        },
+        "symbols": [
+          "circumcircle",
+          "cong",
+          "in-poly",
+          "inter-lc",
+          "inter-ll",
+          "line",
+          "origin",
+          "perp-at",
+          "rs-neq",
+          "triangle"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "03e6e0b05bc476848395b4da3eb62f28dba1bb9020411d41ba4fff0771ab6ee2",
+      "validation_issues": [],
+      "variable_count": 4,
+      "condition_count": 5,
+      "construction_count": 10,
+      "audit_sha256": "2ba45244ebb7ce4f3be5f21f8cdf7a22060c5be38762c3703d2d952fc3da878d",
+      "normalization": {
+        "anchors": [
+          "A",
+          "B"
+        ],
+        "fixed_coordinates": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "正長辺ABだけを相似変換で固定。Cと内部点Pの形の自由度を残す。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "kind": "equivalent_parameterization",
+          "detail": "GMBはsoftmaxによる内部点、GeoSolverは独立な正の重心係数u,v,1−u−vを使う。三角形内部という集合は同じで、形や点位置を固定しない。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "cx",
+        "cy",
+        "u",
+        "v"
+      ],
+      "review_sha256": "84447122420ff67623ed3ed409d374af728428a696b65715e2af413cb3bc34ba",
+      "review_findings": [
+        {
+          "id": "IMO_2010_P4-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "ABの単位基線とC、三角形内部のPを自由変数で残す。"
+        },
+        {
+          "id": "IMO_2010_P4-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "AP,BP,CPと各円の二つ目の交点K,L,M、Cでの接線とABの交点S、SC=SPを照合した。excludeの指定点は構成上も共通交点である。"
+        },
+        {
+          "id": "IMO_2010_P4-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "MK=MLという結論は探索条件へ入っていない。Pを特別な中心や有理座標に固定していない。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2010_P4.smt2",
+        "sha256": "8e322298d89f64e0ea9155d17e8096888d3f3311ae2ca1d4d588df00b31903f3"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2011_P6",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "Gamma": "circle",
+          "l": "line",
+          "la": "line",
+          "lb": "line",
+          "lc": "line"
+        },
+        "symbols": [
+          "acute-tri",
+          "circumcircle",
+          "inter-ll",
+          "line",
+          "reflect-ll",
+          "tangent-cc",
+          "tangent-lc"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "68e32ea1bd5c5a025454d04724cedd1d4a4596970e16de4dc1953195d07765f8",
+      "validation_issues": [],
+      "variable_count": 3,
+      "condition_count": 2,
+      "construction_count": 11,
+      "audit_sha256": "381c27cefababc08f5278d377cf21ddc75a2af6f5688e64dc212d2e96cedfb5a",
+      "normalization": {
+        "anchors": [
+          "A",
+          "B"
+        ],
+        "fixed_coordinates": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "鋭角三角形の正長辺ABだけを相似変換で固定。接線の接点TとCの位置、鏡映を残す。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "kind": "implementation_sampling_and_domain",
+          "detail": "GMB acute-triのAx固定・Ay有限範囲・鋭角性の非保証は実装の制限。原文どおり鋭角を条件にし、GMBが返す配置にも共通検査を適用する。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "cx",
+        "cy",
+        "tt"
+      ],
+      "review_sha256": "5e6569f1e014e74b57dc0a4484fa00532c8e0391519a2c0b59f543daa63fb9e9",
+      "review_findings": [
+        {
+          "id": "IMO_2011_P6-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "AB単位基線にCとTの円周位置を残し、鋭角性と外心Oを構成する。"
+        },
+        {
+          "id": "IMO_2011_P6-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "V=T+90度回転(T-O)としてl=TVを接線にする表現は、半径の垂線そのものである。各辺への直線鏡映は二つの点の鏡映で一致する。"
+        },
+        {
+          "id": "IMO_2011_P6-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "witnessにはl,la,lb,lcを点の推測でなく明示的な直線として渡す必要がある。反射三直線の作る円と元円の接線という結論は別検査である。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2011_P6.smt2",
+        "sha256": "840ce61302f6acd94ae4a69030316d89143be464e25e5e3f8b71174aab0c1957"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2012_P1",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "J": "point",
+          "M": "point",
+          "K": "point",
+          "L": "point",
+          "F": "point",
+          "G": "point",
+          "S": "point",
+          "T": "point"
+        },
+        "symbols": [
+          "excenter",
+          "foot",
+          "inter-ll",
+          "line",
+          "midp",
+          "triangle"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "2d49a82f46f6b13c00e661340904a31ef71cdef7c330d6f0db2b5f0daa2d0c3b",
+      "validation_issues": [],
+      "variable_count": 2,
+      "condition_count": 1,
+      "construction_count": 11,
+      "audit_sha256": "1850e886d5e110d4016324d702ff54e53a331377e6c19d50b5e6b1fcaa37ee03",
+      "normalization": {
+        "anchors": [
+          "A",
+          "B"
+        ],
+        "fixed_coordinates": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "相似不変で正長辺ABを1にする。Cの形・上下を固定しない。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "cx",
+        "cy"
+      ],
+      "review_sha256": "27e07df3639eaae09bed6f3b7907d5db5481fc356dd89ed3e59989657a3239fd",
+      "review_findings": [
+        {
+          "id": "IMO_2012_P1-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "AB以外のCを固定せず、JはAの対辺側の傍心である。GeoSolver Excenter(A,B,C)とGMBのexcenterの符号・辺対応を確認した。"
+        },
+        {
+          "id": "IMO_2012_P1-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "M,K,LはBC,CA,ABへの接点としての垂足。F=LM∩BJ、G=KM∩CJ、S=AF∩BC、T=AG∩BCの交点順を照合した。"
+        },
+        {
+          "id": "IMO_2012_P1-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "結論MがSTの中点であることは入力へ加えていない。Jを内心や別の傍心に取り違えていない。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2012_P1.smt2",
+        "sha256": "203ade98ac2547bdd97cfc8fe33ab7368bd0584167eeb53319fc954a08a5c97d"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2012_P5",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "D": "point",
+          "X": "point",
+          "K": "point",
+          "L": "point",
+          "M": "point"
+        },
+        "symbols": [
+          "cong",
+          "foot",
+          "inter-ll",
+          "line",
+          "on-seg",
+          "right-tri"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "20d549c6c78ca72ac842e2bcbb8a0cc930f79eea7f3af595cd9aa36ab3b8c594",
+      "validation_issues": [],
+      "variable_count": 4,
+      "condition_count": 5,
+      "construction_count": 8,
+      "audit_sha256": "617897b76aa527cca58efaf7638c1a9239af7ffedce7e6f9f5c1dcdcda10f385",
+      "normalization": {
+        "anchors": [
+          "C",
+          "A"
+        ],
+        "fixed_coordinates": {
+          "C": [
+            "0",
+            "0"
+          ],
+          "A": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "正長辺CAを相似変換で単位水平線分にする。原文の角BCA=90度をB=(0,by)で表す。脚比|by|は自由で、by<0の鏡映も残す。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "kind": "implementation_sampling_restriction",
+          "detail": "GMB right-triはAxをtrainable=Falseで標本化し、Ay=sqrt(4-Ax^2)から作るため、各試行内では三角形の形が固定される。本DSLのbyは自由で、原文にない形固定を移植しない。これは探索実装の差として報告する。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "by",
+        "tx",
+        "tk",
+        "tl"
+      ],
+      "review_sha256": "29d9b9d6a7e4d62fd352d7c63e0c7afd2c923f73813975f6c81f8609d2af8c42",
+      "review_findings": [
+        {
+          "id": "IMO_2012_P5-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "C=(0,0),A=(1,0),B=(0,by),by≠0はCの直角と相似正規化だけを表す。脚比と鏡映の自由度は残す。"
+        },
+        {
+          "id": "IMO_2012_P5-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "DはCのABへの垂足、XはCD内部、K,LはそれぞれAX,BXの所定等長点。K,Lには閉線分関数を使うが、BK=BC,AL=ACおよびX内部により両端点は不可能なので開パラメータと同値。"
+        },
+        {
+          "id": "IMO_2012_P5-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "例えばBX<BC<BAからKはAXの端点にならず、対称にLも内部となる。MK=MLという結論は条件に含めていない。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2012_P5.smt2",
+        "sha256": "6fce608d5f05377d05cc12b74e5be8f8c1c2d8d6208d07a1ccdacca8220bc463"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2013_P3",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "A1": "point",
+          "B1": "point",
+          "C1": "point"
+        },
+        "symbols": [
+          "circumcenter",
+          "circumcircle",
+          "excenter",
+          "foot",
+          "line",
+          "on-circ",
+          "right-tri",
+          "triangle"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "2701849e559c18797efb593f27dee3055e22321fdf95b8526df0c909d98d9cce",
+      "validation_issues": [],
+      "variable_count": 2,
+      "condition_count": 2,
+      "construction_count": 11,
+      "audit_sha256": "dcc7b9184b4d84b491c1d12068f14fa0385064128214868c1e6a10fd573f5f59",
+      "normalization": {
+        "anchors": [
+          "A",
+          "B"
+        ],
+        "fixed_coordinates": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "非退化三角形の正長辺ABを相似変換で固定。Cの形は自由で、結論の右角を事前に課さない。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "cx",
+        "cy"
+      ],
+      "review_sha256": "2a6602d46a060f3ed2479af8873275a733b2d9088b7a162e97d8291bd4bca871",
+      "review_findings": [
+        {
+          "id": "IMO_2013_P3-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "ABを単位基線にしCを自由に残す。三つの傍接円の接点A1,B1,C1と辺の対応を照合した。"
+        },
+        {
+          "id": "IMO_2013_P3-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "O1はA1B1C1の外心であり、原文のO1がABCの外接円上という仮定だけを課している。"
+        },
+        {
+          "id": "IMO_2013_P3-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "ABCが直角三角形という結論は入力していない。原問を解いた形を先に代入して容易な作図へ変えていない。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2013_P3.smt2",
+        "sha256": "3428ac5a84cda0c82996d03f1f49fea26202555bb8c4bcdcfad9ee300f5bd9d9"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2013_P4",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "H": "point",
+          "W": "point",
+          "M": "point",
+          "N": "point",
+          "omega_1": "circle",
+          "X": "point",
+          "omega_2": "circle",
+          "Y": "point"
+        },
+        "symbols": [
+          "acute-tri",
+          "circumcircle",
+          "coll",
+          "foot",
+          "inter-lc",
+          "line",
+          "on-seg",
+          "origin",
+          "orthocenter",
+          "rs-neq"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "63776ec34ffb8ee157cd887756a57ba8b15f200b6fd0152d5340f8d30c538a72",
+      "validation_issues": [],
+      "variable_count": 3,
+      "condition_count": 4,
+      "construction_count": 11,
+      "audit_sha256": "9733db32e26ba47782c47d402599b25c5b2ab0ad9748607b61903a85bee00bd6",
+      "normalization": {
+        "anchors": [
+          "A",
+          "B"
+        ],
+        "fixed_coordinates": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "鋭角三角形の正長辺ABを相似変換で固定。Cの形、Wの辺上位置、鏡映を残す。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "kind": "implementation_sampling_and_domain",
+          "detail": "GMB acute-triの狭い形の範囲・Ax固定・鋭角性を保証しないサンプラは、原文の条件と区別する。GeoSolverでは鋭角を検査し、全点min_distは追加しない。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "cx",
+        "cy",
+        "tw"
+      ],
+      "review_sha256": "edd7726f5e95feea27680c519c6b26a6b01b14dfef22cb404cf1ac4e8268ff9f",
+      "review_findings": [
+        {
+          "id": "IMO_2013_P4-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "ABを単位基線としてCとBC内部のWを自由に残す。鋭角性、WからAB,ACへの垂足を確認した。"
+        },
+        {
+          "id": "IMO_2013_P4-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "BWNとCWMの円、AWを直径とする円とのW以外の各交点X,Yを原文の名前対応で照合した。"
+        },
+        {
+          "id": "IMO_2013_P4-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "X,Y,Hの共線性は結論のみであり、WやABCの形を特定の値に固定していない。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2013_P4.smt2",
+        "sha256": "81602812fae5d2602f752a047537140a7917c1a1cf5ee0616f79d7d67d9a3425"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2014_P3",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "D": "point",
+          "H": "point",
+          "S": "point",
+          "T": "point"
+        },
+        "symbols": [
+          "=",
+          "circumcircle",
+          "div",
+          "foot",
+          "in-poly",
+          "line",
+          "on-seg",
+          "polygon",
+          "right",
+          "sub",
+          "tangent-lc",
+          "uangle"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "64e2557160612d812d88f7808094a1791daeb2f880a28435bb4a0e77392dac56",
+      "validation_issues": [],
+      "variable_count": 6,
+      "condition_count": 15,
+      "construction_count": 7,
+      "audit_sha256": "100f6108c44bd3791e507efa70240991af5fe5ccea4ac20f8e7739442bd75af4",
+      "normalization": {
+        "anchors": [
+          "A",
+          "B"
+        ],
+        "fixed_coordinates": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "凸四角形の辺ABは非零であり、指定条件は直角・所属・角度差・接線で尺度不変。 平行移動2自由度・回転1自由度・正の一様拡大縮小1自由度のみを除く。残りの図形の形は固定しない。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "id": "gmb_runtime_distinctness",
+          "kind": "runtime_acceptance_policy",
+          "blocking": false,
+          "description_ja": "GMBは全登録点の最小距離0.1とweighted soft lossで受理する。原文にない全点相異・最小距離0.1はGeoSolver条件に移さず、両者の出力を別の共通検査器で再検査する。"
+        },
+        {
+          "id": "gmb_polygon_sampler",
+          "kind": "runtime_parameterization",
+          "blocking": false,
+          "description_ja": "GMB polygonは角のtanh範囲（四角形は30°～150°）と基準辺の1/2～3/2の辺長範囲、弱い閉鎖lossを用いる。GeoSolverは凸性だけを数式で課し、原文にない角・辺長範囲は移さない。"
+        },
+        {
+          "id": "in_poly_boundary",
+          "kind": "runtime_relaxation",
+          "blocking": false,
+          "description_ja": "GMBのin-poly assertは符号の非負をsoft lossで検査し境界も零になり得る。原文insideは厳密内部として各辺の符号積>0を使う。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "cx",
+        "cy",
+        "dx",
+        "dy",
+        "s",
+        "t"
+      ],
+      "review_sha256": "e521d2390695aff8cd203304777f2384394a688f6cc7c3fef068b890c9ac60d9",
+      "review_findings": [
+        {
+          "id": "IMO_2014_P3-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "ABを単位基線にしC,D,S,Tの形・位置を残す。四つの同符号外積で頂点順ABCDの狭義凸性を両向きとも表す。"
+        },
+        {
+          "id": "IMO_2014_P3-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "B,Dの直角、Hの垂足、HがSCTの内部にある三つの符号、二つの角の差がπ/2である条件を照合した。"
+        },
+        {
+          "id": "IMO_2014_P3-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "半直線のゼロ長を許さずS,Tを対応辺内部に取る。S=A又はT=Aも角差条件とH内部条件に反するため、原文の非退化配置を取り落とさない。BDとTSH外接円の接線性は結論のみ。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2014_P3.smt2",
+        "sha256": "9bb28cab1c38c8ad0a3ba7a9ec06505b22795672b96a0a971dc49e6e40bcc4b6"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2014_P4",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "P": "point",
+          "Q": "point",
+          "M": "point",
+          "N": "point"
+        },
+        "symbols": [
+          "=",
+          "acute-tri",
+          "circumcircle",
+          "inter-ll",
+          "line",
+          "midp-from",
+          "on-circ",
+          "on-seg",
+          "uangle"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "d891e8166e55a88ec7b6fd6c897cdbf2d73f309a3a11893721ab1f9db2fc0d59",
+      "validation_issues": [],
+      "variable_count": 4,
+      "condition_count": 10,
+      "construction_count": 7,
+      "audit_sha256": "c669a523abd9f7418680550f2c4f482369ab693e6233707a37b9ab61485cff53",
+      "normalization": {
+        "anchors": [
+          "A",
+          "B"
+        ],
+        "fixed_coordinates": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "三角形の辺ABは非零。指定条件に絶対長さはない。 平行移動2自由度・回転1自由度・正の一様拡大縮小1自由度のみを除く。残りの図形の形は固定しない。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "id": "gmb_runtime_distinctness",
+          "kind": "runtime_acceptance_policy",
+          "blocking": false,
+          "description_ja": "GMBは全登録点の最小距離0.1とweighted soft lossで受理する。原文にない全点相異・最小距離0.1はGeoSolver条件に移さず、両者の出力を別の共通検査器で再検査する。"
+        },
+        {
+          "id": "gmb_acute_sampler",
+          "kind": "runtime_parameterization",
+          "blocking": false,
+          "description_ja": "optimizer.py sample_triangleのacute-triはB=(-2,0),C=(2,0)、Ax∈[-1.2,1.2]を試行中固定、Ay=1.1+3 sigmoid(z)。一部の形に制限し、Ax²+Ay²≤4の鈍角Aも数式上可能。GeoSolverでは形は固定せず、三頂点の内積が正という原文の鋭角条件を課す。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "cx",
+        "cy",
+        "p",
+        "q"
+      ],
+      "review_sha256": "9fdf2ae3ea5998adda21e44c90570da81b1397eab7ccf263034d557e14abe4ed",
+      "review_findings": [
+        {
+          "id": "IMO_2014_P4-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "AB単位基線とC、BC内部のP,Qを変数として残す。鋭角三角形の形を固定していない。"
+        },
+        {
+          "id": "IMO_2014_P4-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "∠PAB=∠BCAと∠CAQ=∠ABC、M=2P-A、N=2Q-Aを照合した。中点指定をM,Nが中点であると逆に取り違えていない。"
+        },
+        {
+          "id": "IMO_2014_P4-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "GMB paramと新DSLはともにP,Qを開線分に取る共通の内部配置範囲で一致する。原文sideをclosedと読んだ場合の正三角形P=C,Q=B等まで網羅する同値変換とは主張しない。BM,CNの交点の円所属は結論のみ。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2014_P4.smt2",
+        "sha256": "80ad365eddd45ba86a4d349a4e40856d07dec459042b28a0c78422b06fcd0a5b"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2015_P3",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "Gamma": "circle",
+          "H": "point",
+          "F": "point",
+          "M": "point",
+          "Q": "point",
+          "K": "point"
+        },
+        "symbols": [
+          "acute-tri",
+          "circumcircle",
+          "dist",
+          "foot",
+          "gt",
+          "line",
+          "midp",
+          "on-circ",
+          "opp-sides",
+          "orthocenter",
+          "right",
+          "tangent-cc"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "28b2be4932fbb7764eae91c4709b252b8d31ad63aa964a0aa3f7c5ac73b54906",
+      "validation_issues": [],
+      "variable_count": 4,
+      "condition_count": 17,
+      "construction_count": 9,
+      "audit_sha256": "d34e814b1214409af83da59630c789c2c37b012162d6223f39cebb8060722773",
+      "normalization": {
+        "anchors": [
+          "B",
+          "C"
+        ],
+        "fixed_coordinates": {
+          "B": [
+            "0",
+            "0"
+          ],
+          "C": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "三角形の辺BCは非零。直角・辺長大小・円周順序はいずれも相似不変。 平行移動2自由度・回転1自由度・正の一様拡大縮小1自由度のみを除く。残りの図形の形は固定しない。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "id": "gmb_runtime_distinctness",
+          "kind": "runtime_acceptance_policy",
+          "blocking": false,
+          "description_ja": "GMBは全登録点の最小距離0.1とweighted soft lossで受理する。原文にない全点相異・最小距離0.1はGeoSolver条件に移さず、両者の出力を別の共通検査器で再検査する。"
+        },
+        {
+          "id": "gmb_acute_sampler",
+          "kind": "runtime_parameterization",
+          "blocking": false,
+          "description_ja": "optimizer.py sample_triangleのacute-triはB=(-2,0),C=(2,0)、Ax∈[-1.2,1.2]を試行中固定、Ay=1.1+3 sigmoid(z)。一部の形に制限し、Ax²+Ay²≤4の鈍角Aも数式上可能。GeoSolverでは形は固定せず、三頂点の内積が正という原文の鋭角条件を課す。"
+        },
+        {
+          "id": "circle_order_missing",
+          "kind": "statement_vs_gmbl",
+          "blocking": false,
+          "description_ja": "公式原文のA,B,C,K,Qの円周順序は公開GMBLの他条件からは導けない。独立監査が与えた以下の有理座標はGMBLの数学的仮定を厳密に満たすが、Kが直線BCについてAと反対側にあり指定順序に反する。これは保存済みGMBモデルやoptimizerの実行結果ではなく、原文条件の欠落を示す代数的反例である。GeoSolverだけ順序を追加した成績を既存GMB集計と無条件比較しない。",
+          "exact_counterexample": {
+            "provided_by": "independent_review",
+            "checked_by": "dsl_2014_2020",
+            "verification_method": "exact rational substitution using fractions.Fraction; no solver or GMB optimizer executed",
+            "points": {
+              "A": [
+                "3/5",
+                "2"
+              ],
+              "B": [
+                "0",
+                "0"
+              ],
+              "C": [
+                "1",
+                "0"
+              ],
+              "H": [
+                "3/5",
+                "3/25"
+              ],
+              "F": [
+                "3/5",
+                "0"
+              ],
+              "M": [
+                "1/2",
+                "0"
+              ],
+              "Q": [
+                "93/61",
+                "75/61"
+              ],
+              "K": [
+                "136782/147365",
+                "-1026/29473"
+              ]
+            },
+            "circle_equation": "x^2+y^2-x-(47/25)y=0",
+            "exact_checks": {
+              "circle_residuals_A_B_C_Q_K": [
+                "0",
+                "0",
+                "0",
+                "0",
+                "0"
+              ],
+              "dot_H_minus_Q_A_minus_Q": "0",
+              "dot_H_minus_K_Q_minus_K": "0",
+              "acute_vertex_dot_products_A_B_C": [
+                "94/25",
+                "3/5",
+                "2/5"
+              ],
+              "AB_squared_minus_AC_squared": "1/5",
+              "cross_B_minus_A_C_minus_A": "2",
+              "cross_C_minus_B_K_minus_B": "-1026/29473",
+              "all_named_points_distinct": true
+            },
+            "scope_ja": "GMBLの名義上の数学的条件と原文の不一致を示す。GMBのacute-tri samplerがこの特定の形を実際に生成できるという主張ではなく、GMBの既存成功率・出力の誤りをこの反例だけから推定しない。"
+          },
+          "comparison_resolution": "reviews/alignment/IMO_2015_P3.json"
+        },
+        {
+          "id": "strict_length_margin",
+          "kind": "runtime_acceptance_policy",
+          "blocking": false,
+          "description_ja": "GMB gtはdist(AB)≥dist(AC)+0.1をsoft lossで要求する。GeoSolverのAB>ACへ固定0.1は移さない。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "ax",
+        "ay",
+        "q",
+        "k"
+      ],
+      "review_sha256": "b49e0c8ddd6060c1849846b179fd335c6653151a1e92ab588df2bf9833965866",
+      "review_findings": [
+        {
+          "id": "IMO_2015_P3-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "ABを単位基線にしてC,Q,Kの位置を自由に残し、鋭角性、AB>AC、垂心H・垂足F・中点Mと二つの直角を照合した。"
+        },
+        {
+          "id": "IMO_2015_P3-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "新DSLの全三点外積の同符号条件は原文の相異なるA,B,C,K,Qという円周順序を正しく表し、向きの鏡映も残している。"
+        },
+        {
+          "id": "IMO_2015_P3-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "公開GMBLには円周順序が本当に欠ける。有理反例をreviews/counterexample_2015_p3_order.jsonに保存した。新DSL自体は原文に忠実だが既存GMB成績との直接比較は不可。二円の接線という結論は仮定にしていない。"
+        },
+        {
+          "id": "original_cyclic_order_missing",
+          "severity": "blocking",
+          "status": "unresolved_comparison_contract",
+          "detail_ja": "原文のA,B,C,K,Q円周順序を公開GMBLが欠く。現DSLは原文に忠実だが、現在の共通GMBL検査だけでは原文に対する成功と判定できない。",
+          "evidence": "reviews/counterexample_2015_p3_order.json"
+        }
+      ],
+      "comparison_input": {
+        "origin": "original_statement_aligned",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb_comparison/gmbl-original-aligned/IMO_2015_P3.smt2",
+        "sha256": "e3c4bf17d763144ad5c300177ce863230d54f723c302e2a9b0c3abfb0c47104b",
+        "official_gmbl_sha256": "2ba43a10e81b0d2591fbcc6c08f7e00ccf730ccc33dd69006eaee90879c08a90",
+        "added_assertions": [
+          "(assert (opp-sides K B (line C A)))",
+          "(assert (opp-sides Q B (line K A)))"
+        ],
+        "reason_ja": "既存の共円条件の下で、原問題のA,B,C,K,Qの円周順序と同値な二つの反対側条件を補う。"
+      },
+      "official_pairing": {
+        "issues": [
+          "author_blocked",
+          "unresolved_source_difference",
+          "author_open_issues",
+          "original_assumptions_not_covered_by_common_checker"
+        ],
+        "original_assumptions_covered": false,
+        "independently_reviewed": true,
+        "source_differences": [
+          {
+            "id": "gmb_runtime_distinctness",
+            "kind": "runtime_acceptance_policy",
+            "blocking": false,
+            "description_ja": "GMBは全登録点の最小距離0.1とweighted soft lossで受理する。原文にない全点相異・最小距離0.1はGeoSolver条件に移さず、両者の出力を別の共通検査器で再検査する。"
+          },
+          {
+            "id": "gmb_acute_sampler",
+            "kind": "runtime_parameterization",
+            "blocking": false,
+            "description_ja": "optimizer.py sample_triangleのacute-triはB=(-2,0),C=(2,0)、Ax∈[-1.2,1.2]を試行中固定、Ay=1.1+3 sigmoid(z)。一部の形に制限し、Ax²+Ay²≤4の鈍角Aも数式上可能。GeoSolverでは形は固定せず、三頂点の内積が正という原文の鋭角条件を課す。"
+          },
+          {
+            "id": "circle_order_missing",
+            "kind": "statement_vs_gmbl",
+            "blocking": true,
+            "description_ja": "公式原文のA,B,C,K,Qの円周順序は公開GMBLの他条件からは導けない。独立監査が与えた以下の有理座標はGMBLの数学的仮定を厳密に満たすが、Kが直線BCについてAと反対側にあり指定順序に反する。これは保存済みGMBモデルやoptimizerの実行結果ではなく、原文条件の欠落を示す代数的反例である。GeoSolverだけ順序を追加した成績を既存GMB集計と無条件比較しない。",
+            "exact_counterexample": {
+              "provided_by": "independent_review",
+              "checked_by": "dsl_2014_2020",
+              "verification_method": "exact rational substitution using fractions.Fraction; no solver or GMB optimizer executed",
+              "points": {
+                "A": [
+                  "3/5",
+                  "2"
+                ],
+                "B": [
+                  "0",
+                  "0"
+                ],
+                "C": [
+                  "1",
+                  "0"
+                ],
+                "H": [
+                  "3/5",
+                  "3/25"
+                ],
+                "F": [
+                  "3/5",
+                  "0"
+                ],
+                "M": [
+                  "1/2",
+                  "0"
+                ],
+                "Q": [
+                  "93/61",
+                  "75/61"
+                ],
+                "K": [
+                  "136782/147365",
+                  "-1026/29473"
+                ]
+              },
+              "circle_equation": "x^2+y^2-x-(47/25)y=0",
+              "exact_checks": {
+                "circle_residuals_A_B_C_Q_K": [
+                  "0",
+                  "0",
+                  "0",
+                  "0",
+                  "0"
+                ],
+                "dot_H_minus_Q_A_minus_Q": "0",
+                "dot_H_minus_K_Q_minus_K": "0",
+                "acute_vertex_dot_products_A_B_C": [
+                  "94/25",
+                  "3/5",
+                  "2/5"
+                ],
+                "AB_squared_minus_AC_squared": "1/5",
+                "cross_B_minus_A_C_minus_A": "2",
+                "cross_C_minus_B_K_minus_B": "-1026/29473",
+                "all_named_points_distinct": true
+              },
+              "scope_ja": "GMBLの名義上の数学的条件と原文の不一致を示す。GMBのacute-tri samplerがこの特定の形を実際に生成できるという主張ではなく、GMBの既存成功率・出力の誤りをこの反例だけから推定しない。"
+            }
+          },
+          {
+            "id": "strict_length_margin",
+            "kind": "runtime_acceptance_policy",
+            "blocking": false,
+            "description_ja": "GMB gtはdist(AB)≥dist(AC)+0.1をsoft lossで要求する。GeoSolverのAB>ACへ固定0.1は移さない。"
+          }
+        ],
+        "open_issues": [
+          "円周順序の欠落は厳密有理反例で確認済み。GMB出力を原文の順序条件でも検査する共通の追加検査を確定するか、双方入力を修正した別実験として分離するまで比較ロックを解除しない。"
+        ]
+      },
+      "alignment_review": {
+        "path": "/home/kabatan/work/solver/benchmarks/gmb_comparison/reviews/alignment/IMO_2015_P3.json",
+        "sha256": "ab3dd140475d506f7ef7fbd2cf8e7a6df178900f9782e210bb8aa7e8d5c3be9d",
+        "resolved_source_difference_ids": [
+          "circle_order_missing"
+        ],
+        "findings": []
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2015_P4",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "Omega": "circle",
+          "O": "point",
+          "D": "point",
+          "Gamma": "circle",
+          "E": "point",
+          "F": "point",
+          "G": "point",
+          "K": "point",
+          "L": "point",
+          "X": "point"
+        },
+        "symbols": [
+          "circumcenter",
+          "circumcircle",
+          "coa",
+          "coll",
+          "inter-cc",
+          "inter-lc",
+          "inter-ll",
+          "line",
+          "on-seg",
+          "rs-neq",
+          "triangle"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "0c788e44cb4706b7cd9d772b422270c8502e5a97a270f73662525219e578dd76",
+      "validation_issues": [],
+      "variable_count": 4,
+      "condition_count": 18,
+      "construction_count": 13,
+      "audit_sha256": "660be7a98258165e063dfdc874967d1a2f8c19e3e5e48bcd04818f9f8bac85dc",
+      "normalization": {
+        "anchors": [
+          "B",
+          "C"
+        ],
+        "fixed_coordinates": {
+          "B": [
+            "0",
+            "0"
+          ],
+          "C": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "三角形の辺BCは非零。辺の内部順序、中心、円交点は相似不変。 平行移動2自由度・回転1自由度・正の一様拡大縮小1自由度のみを除く。残りの図形の形は固定しない。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "id": "gmb_runtime_distinctness",
+          "kind": "runtime_acceptance_policy",
+          "blocking": false,
+          "description_ja": "GMBは全登録点の最小距離0.1とweighted soft lossで受理する。原文にない全点相異・最小距離0.1はGeoSolver条件に移さず、両者の出力を別の共通検査器で再検査する。"
+        },
+        {
+          "id": "gmb_numeric_root_selector",
+          "kind": "runtime_selector",
+          "blocking": false,
+          "description_ja": "GMBのrs-neqは数値距離1e-6で候補を分ける。GeoSolverのexcludeは指定点が共通交点である通常の非退化幾何を使い、唯一の異なる交点を要求する。接点重複や不明な枝を勝手に選ばない。"
+        },
+        {
+          "id": "circle_order_missing",
+          "kind": "redundant_statement_condition",
+          "blocking": false,
+          "description_ja": "GMBLコメントは原文に順序が明記されないと述べるが、実際の原文はA,F,B,C,Gの順序を明記する。ただし非退化なGMBL配置ではD,Eの線分条件とK∈ABからこの順序を導ける。以下の独立証明をauthor側でも確認したため、明示順序のないこと自体は解集合の欠落ではない。GeoSolverの順序guardは原文の冗長な条件を明示したものである。",
+          "implication_proof": {
+            "provided_by": "independent_review",
+            "checked_by": "dsl_2014_2020",
+            "uses_conclusion": false,
+            "steps_ja": [
+              "証明に限り必要なら鏡映し、B=(0,0),C=(1,0),A=(a,h),h>0,D=(d,0),E=(e,0)とする。線分条件、exclude、circ(B,D,F)とcirc(C,G,E)の非退化性から0<d<e<1。AD=AEよりa=(d+e)/2、Γの半径はr²=h²+(a−d)²。",
+              "AB²−r²=de>0、AC²−r²=(1−d)(1−e)>0。Γの内部にA、外部にB,Cがあるため、ΩとΓの二つの交点はΩの弧AB（Cを含まない）と弧AC（Bを含まない）に一つずつある。どちらもy>0で、A,B,Cのいずれとも異なる。",
+              "Ωの方程式をx²+y²−x+w y=0、w=(a−|A|²)/hとし、F=(fx,fy)とする。円BDFはx²+y²−d x+v y=0で、v=w−(1−d)fx/fy。K=λAを代入するとλ=1−(1−d)(a−h fx/fy)/|A|²。",
+              "K∈ABかつK≠Bより0<λ≤1。λ=1ならa fy−h fx=0となり、Fが直線ABとΩの共通点AまたはBとなるので不可能。従ってλ<1からa fy−h fx>0。すなわちFは直線ABについてCと反対側なので、Fが弧AB上、他方のGが弧AC上にあり、A,F,B,C,Gの巡回順序が従う。",
+              "鏡映した場合も巡回順序を反転して同じ結論が得られる。証明はX∈AOという問題の結論も、GMBの機械的なrs-arbitrary枝番号も用いていない。"
+            ]
+          }
+        },
+        {
+          "id": "unsatisfied_exclude_avoided",
+          "kind": "translation_representation",
+          "blocking": false,
+          "description_ja": "FをΩ上の未知点としてOnCircle(F,Γ)=0を課す。Gをexclude=Fで構成すると未収束のFではexcludeが曖昧になるため、両円の中心線AOに関するFの鏡映とする。AO上の鏡映はΩもΓも保つので、Fが両円上かつ円周順序でF≠GならGは唯一の他方の共通点。結論X∈AOを利用していない。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "ax",
+        "ay",
+        "d",
+        "f"
+      ],
+      "review_sha256": "ff358e95e1962af7f19aa1906e48fdc40c01c01f08b212297a80724982d1cad0",
+      "review_findings": [
+        {
+          "id": "IMO_2015_P4-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "BCの単位基線とA,D,Fを変数として残す。B,D,E,Cの順序、Γの中心A、Ωとの交点、K∈AB,L∈CA、FKとGLの一意な交点Xを照合した。"
+        },
+        {
+          "id": "IMO_2015_P4-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "Fを未知のΩ上の点としてΓ所属を等式にした場合、G=Intersect(Γ,Ω,exclude=F)は途中配置で未定義となる欠陥を指摘した。authorはG=Reflect(F,Line(A,O))へ修正済み。両円の中心線鏡映なので最終条件下では同値であり、結論X∈AOの流用ではない。"
+        },
+        {
+          "id": "IMO_2015_P4-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "A,F,B,C,Gの原文順序は後続のK∈ABから従うことを独立に証明した。よってGMBLコメントの欠落を直ちに入力非同値とはしない。詳細はreviews/EQUIVALENCE_ARGUMENTS.md。"
+        },
+        {
+          "id": "unknown_intersection_exclude_domain_barrier",
+          "severity": "major",
+          "status": "resolved_before_evaluation",
+          "detail_ja": "未知点Fがまだ両円の交点でない途中配置でexclude=Fを用いる構成を指摘し、中心線についての鏡映に変更された。手計算による同値性を確認済み。",
+          "evidence": "reviews/EQUIVALENCE_ARGUMENTS.md"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2015_P4.smt2",
+        "sha256": "d6cb852d6d92b893cc382cbadc614cd0615587676a57780d3f98c8d0cbd52c5d"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2016_P1",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "B": "point",
+          "C": "point",
+          "F": "point",
+          "A": "point",
+          "D": "point",
+          "E": "point",
+          "M": "point",
+          "X": "point"
+        },
+        "symbols": [
+          "coa",
+          "concur",
+          "cong",
+          "i-bisector",
+          "inter-lc",
+          "inter-ll",
+          "line",
+          "midp",
+          "para-at",
+          "right-tri",
+          "rs-opp-sides"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "6c4c0c53282e677edabb92f2ca6044558bf318186092df7d5d818978d3f648bc",
+      "validation_issues": [],
+      "variable_count": 5,
+      "condition_count": 8,
+      "construction_count": 10,
+      "audit_sha256": "51c59bbb57e4810ae0bd77724fcb44a0ba8bbe2dc35716b02d0f8e43e6d5e770",
+      "normalization": {
+        "anchors": [
+          "C",
+          "F"
+        ],
+        "fixed_coordinates": {
+          "C": [
+            "0",
+            "0"
+          ],
+          "F": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "直角三角形BCFの斜辺CFは非零。CFを単位長さにし、Bはその直径円の両半円を動ける。 平行移動2自由度・回転1自由度・正の一様拡大縮小1自由度のみを除く。残りの図形の形は固定しない。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "id": "gmb_runtime_distinctness",
+          "kind": "runtime_acceptance_policy",
+          "blocking": false,
+          "description_ja": "GMBは全登録点の最小距離0.1とweighted soft lossで受理する。原文にない全点相異・最小距離0.1はGeoSolver条件に移さず、両者の出力を別の共通検査器で再検査する。"
+        },
+        {
+          "id": "right_triangle_shape_fixed",
+          "kind": "runtime_parameterization",
+          "blocking": false,
+          "description_ja": "GMB right-triではshape用のAxがtrainable=FalseでAyがそこから決まり、三角形の形が試行中固定される。GeoSolverは円周変数bを残し、相似以外の自由度を固定しない。"
+        },
+        {
+          "id": "internal_bisector_semantics",
+          "kind": "runtime_predicate",
+          "blocking": false,
+          "description_ja": "GMB i-bisectorのsin型残差は単体ではmod πの角二等分だが、本問は他の等長条件が内角・正向きrayを強制する。C=(0,0),F=(1,0),A=(a,0),a>1で0<B.x<1、DA=DCからD.x=a/2なのでAD,ABはAC方向への射影がともに正。さらにEA=EDから(E−A)·(D−A)=|D−A|²/2>0、(C−A)·(D−A)=a²/2>0。従って両角二等分線に外角・反対rayの枝は残らない。GeoSolverの正射影条件は新しい仮定ではない。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "b",
+        "dx",
+        "dy",
+        "ex",
+        "ey"
+      ],
+      "review_sha256": "d38ea53587d486ad305986da22882aa0799bd521068b7643e0d9bb745e35faf9",
+      "review_findings": [
+        {
+          "id": "IMO_2016_P1-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "斜辺CFのみ単位基線にし、Bは直径CF円上を動くため直角三角形の形・鏡映が残る。A=(1+FB,0)はFがC,Aの間かつFA=FBの指定そのものである。"
+        },
+        {
+          "id": "IMO_2016_P1-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "DA=DC、EA=ED、二つの内角二等分線と正向きray、Mの中点、X=M+E-Aの平行四辺形を照合した。"
+        },
+        {
+          "id": "IMO_2016_P1-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "GMBのmodπ二等分残差の外角枝は本問の等長条件から排除されることを独立に証明した。正向きdot条件は新たな仮定ではない。三直線の共点性は結論のみ。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2016_P1.smt2",
+        "sha256": "dc1b5194cea5cde497f3396800fbce7ace827068c0f6bb55c1236915c38933f1"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2017_P4",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "Omega": "circle",
+          "R": "point",
+          "S": "point",
+          "l": "line",
+          "T": "point",
+          "J": "point",
+          "Gamma": "circle",
+          "A": "point",
+          "K": "point"
+        },
+        "symbols": [
+          "circumcircle",
+          "coll",
+          "eq",
+          "inter-lc",
+          "line",
+          "midp-from",
+          "not",
+          "on-circ",
+          "on-minor-arc",
+          "origin",
+          "perp-at",
+          "rs-closer-to-p",
+          "rs-neq",
+          "tangent-lc"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "2c5c0e45d971fb9e17b971cee4a0e1e62c4ba8ec6be2e87b5a391ebece8288ba",
+      "validation_issues": [],
+      "variable_count": 2,
+      "condition_count": 4,
+      "construction_count": 11,
+      "audit_sha256": "5d3ff7cb5178cdf476e5d0f5b6fd2a0d8c6f287eacc5ab5728a000d44531c58b",
+      "normalization": {
+        "anchors": [
+          "R",
+          "S"
+        ],
+        "fixed_coordinates": {
+          "R": [
+            "0",
+            "0"
+          ],
+          "S": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "原文でR,Sは相異なる。RSを単位長さにすると円中心は(1/2,oy)、半径はOR。oy≠0が非直径条件。 平行移動2自由度・回転1自由度・正の一様拡大縮小1自由度のみを除く。残りの図形の形は固定しない。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "id": "gmb_runtime_distinctness",
+          "kind": "runtime_acceptance_policy",
+          "blocking": false,
+          "description_ja": "GMBは全登録点の最小距離0.1とweighted soft lossで受理する。原文にない全点相異・最小距離0.1はGeoSolver条件に移さず、両者の出力を別の共通検査器で再検査する。"
+        },
+        {
+          "id": "gmb_numeric_root_selector",
+          "kind": "runtime_selector",
+          "blocking": false,
+          "description_ja": "GMBのrs-neqは数値距離1e-6で候補を分ける。GeoSolverのexcludeは指定点が共通交点である通常の非退化幾何を使い、唯一の異なる交点を要求する。接点重複や不明な枝を勝手に選ばない。"
+        },
+        {
+          "id": "minor_arc_unbounded_parameter",
+          "kind": "runtime_parameterization_defect",
+          "blocking": false,
+          "description_ja": "GMB parameterize_on_minor_arcのzは初期0.1〜0.9だが、tf_optimizer.mkvarは学習中の区間拘束を設定していない。弧外の配置を返し得る実装上の危険として、共通検査器で短弧所属を再検査する。数学入力は短弧のまま変更しない。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "oy",
+        "j"
+      ],
+      "review_sha256": "19f6349653084d28b33667a5524de49858372404880a07463c283ae2f74289e7",
+      "review_findings": [
+        {
+          "id": "IMO_2017_P4-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "相異なるR,Sだけを単位基線にし、円中心(1/2,oy),oy≠0で非直径条件を表す。円の形とJの位置の自由度を残す。"
+        },
+        {
+          "id": "IMO_2017_P4-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "J∈ΩかつJ.y*oy<0は中心と弦の反対側であり、厳密な短弧RS内部を表す。SがRT中点という条件からT=(2,0)は正当。"
+        },
+        {
+          "id": "IMO_2017_P4-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "lとΓの異なる二交点のうちRに近いAを取り、距離tieを許さず、KはAJとΩのJと異なる交点。KTがΓに接する結論は条件に入っていない。GMBのminor-arc変数が実行中に弧外へ出る危険は共通検査対象である。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2017_P4.smt2",
+        "sha256": "550b1f6c9693454bc11f002ff73f0dc1964302cb4fb46834f627c8a26d45ace3"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2018_P1",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "Gamma": "circle",
+          "D": "point",
+          "E": "point",
+          "F": "point",
+          "G": "point"
+        },
+        "symbols": [
+          "acute-tri",
+          "circumcircle",
+          "cong",
+          "inter-lc",
+          "line",
+          "on-seg",
+          "para",
+          "perp-bis",
+          "rs-opp-sides"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "e465d769ceb24193bc6e9fa98469301f74e178a4a5b6a19a9358d24c4dc0bb13",
+      "validation_issues": [],
+      "variable_count": 6,
+      "condition_count": 13,
+      "construction_count": 10,
+      "audit_sha256": "9cd2cabe64b4abfa53c08315de68505b557eb57192383e6131e329a9579b6292",
+      "normalization": {
+        "anchors": [
+          "A",
+          "B"
+        ],
+        "fixed_coordinates": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "鋭角三角形の辺ABは非零で、等長・垂直二等分・短弧は尺度不変。 平行移動2自由度・回転1自由度・正の一様拡大縮小1自由度のみを除く。残りの図形の形は固定しない。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "id": "gmb_runtime_distinctness",
+          "kind": "runtime_acceptance_policy",
+          "blocking": false,
+          "description_ja": "GMBは全登録点の最小距離0.1とweighted soft lossで受理する。原文にない全点相異・最小距離0.1はGeoSolver条件に移さず、両者の出力を別の共通検査器で再検査する。"
+        },
+        {
+          "id": "gmb_acute_sampler",
+          "kind": "runtime_parameterization",
+          "blocking": false,
+          "description_ja": "optimizer.py sample_triangleのacute-triはB=(-2,0),C=(2,0)、Ax∈[-1.2,1.2]を試行中固定、Ay=1.1+3 sigmoid(z)。一部の形に制限し、Ax²+Ay²≤4の鈍角Aも数式上可能。GeoSolverでは形は固定せず、三頂点の内積が正という原文の鋭角条件を課す。"
+        },
+        {
+          "id": "opposite_side_selector_lowering",
+          "kind": "translation_representation",
+          "blocking": false,
+          "description_ja": "GeoSolverにrs-opp-sides selectorがないため、F,GをΓ上の未知点とし、垂直二等分線への所属と符号積<0で同じ枝条件を課した。ABCが鋭角ならCは短弧ABの反対側、Bは短弧ACの反対側である。幾何枝を座標辞書順へ置換していない。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "cx",
+        "cy",
+        "d",
+        "e",
+        "f",
+        "g"
+      ],
+      "review_sha256": "bdce50ee85c31ad7a01dd2f31500f8e712f77966df0e1cf3abc8c1ae627787a7",
+      "review_findings": [
+        {
+          "id": "IMO_2018_P1-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "AB単位基線とC、D∈AB,E∈ACの内部位置、F,Gの円周位置を残す。鋭角性とAD=AEを照合した。"
+        },
+        {
+          "id": "IMO_2018_P1-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "F,Gを各垂直二等分線とΓへの所属、指定点と反対側という条件で表し、GMBの幾何的selectorを保っている。根番号や事前計測した座標を使わない。"
+        },
+        {
+          "id": "IMO_2018_P1-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "直線DEに関する原文の平行性等は結論に分離した。D/Eの端点は関連する垂直二等分線又はDEの定義域を壊すため内部指定と整合する。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2018_P1.smt2",
+        "sha256": "02b336dcead6fb5f3562b161ac4f26544571c8e9477952ac5373944a0ff8c5a7"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2018_P6",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "D": "point",
+          "X": "point"
+        },
+        "symbols": [
+          "=",
+          "add",
+          "eq-ratio",
+          "in-poly",
+          "polygon",
+          "uangle"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "151e5aae5af9dcbcaec010e701f84edada9b837105f4d0cbb7d33a9c5a2e51cb",
+      "validation_issues": [],
+      "variable_count": 6,
+      "condition_count": 11,
+      "construction_count": 5,
+      "audit_sha256": "40cecefc3097aae6316e32fad717ec62c2f0637549dcd5f2209ca80fc0bb0efb",
+      "normalization": {
+        "anchors": [
+          "A",
+          "B"
+        ],
+        "fixed_coordinates": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "凸四角形の辺ABは非零。辺長の積の等式、内部、角度等式は相似不変。 平行移動2自由度・回転1自由度・正の一様拡大縮小1自由度のみを除く。残りの図形の形は固定しない。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "id": "gmb_runtime_distinctness",
+          "kind": "runtime_acceptance_policy",
+          "blocking": false,
+          "description_ja": "GMBは全登録点の最小距離0.1とweighted soft lossで受理する。原文にない全点相異・最小距離0.1はGeoSolver条件に移さず、両者の出力を別の共通検査器で再検査する。"
+        },
+        {
+          "id": "gmb_polygon_sampler",
+          "kind": "runtime_parameterization",
+          "blocking": false,
+          "description_ja": "GMB polygonは角のtanh範囲（四角形は30°～150°）と基準辺の1/2～3/2の辺長範囲、弱い閉鎖lossを用いる。GeoSolverは凸性だけを数式で課し、原文にない角・辺長範囲は移さない。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "cx",
+        "cy",
+        "dx",
+        "dy",
+        "xx",
+        "xy"
+      ],
+      "review_sha256": "2e8a0e085d486baa24c78e384461d96e5466400401bd0dfbcacb5c27db250512",
+      "review_findings": [
+        {
+          "id": "IMO_2018_P6-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "ABだけ単位基線に固定しC,D,Xを自由に残す。四角形の狭義凸性とXの内部性をそれぞれ対応する外積で表す。"
+        },
+        {
+          "id": "IMO_2018_P6-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "AB*CD=BC*DAおよび二つの所定等角条件を点順も含めて照合した。"
+        },
+        {
+          "id": "IMO_2018_P6-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "∠BXA+∠DXC=180度という結論は条件に加えていない。内部点Xを特定の中心へ置き換えていない。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2018_P6.smt2",
+        "sha256": "962fa6925bc3e056b836bcbf2f1b2cfe4e37312d202d63321551cd2321aecfa8"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2019_P2",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "A1": "point",
+          "B1": "point",
+          "P": "point",
+          "Q": "point",
+          "P1": "point",
+          "Q1": "point"
+        },
+        "symbols": [
+          "=",
+          "circ",
+          "inter-ll",
+          "line",
+          "on-circ",
+          "on-ray-opp",
+          "on-seg",
+          "para-at",
+          "triangle",
+          "uangle"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "62097bf594f191978965e2a9057d97d45ad42039140c55152f6a300ca227b212",
+      "validation_issues": [],
+      "variable_count": 7,
+      "condition_count": 12,
+      "construction_count": 9,
+      "audit_sha256": "a72400ffdd2d806741f920559899e56ac6da36d4f6ce36e4f2a9ed30ddbd3d63",
+      "normalization": {
+        "anchors": [
+          "A",
+          "B"
+        ],
+        "fixed_coordinates": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "三角形の辺ABは非零。平行・内分・半直線・角度は相似不変。 平行移動2自由度・回転1自由度・正の一様拡大縮小1自由度のみを除く。残りの図形の形は固定しない。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "id": "gmb_runtime_distinctness",
+          "kind": "runtime_acceptance_policy",
+          "blocking": false,
+          "description_ja": "GMBは全登録点の最小距離0.1とweighted soft lossで受理する。原文にない全点相異・最小距離0.1はGeoSolver条件に移さず、両者の出力を別の共通検査器で再検査する。"
+        },
+        {
+          "id": "q_segment_implicit",
+          "kind": "implicit_statement_condition",
+          "blocking": false,
+          "description_ja": "GMBLはQ∈BB1を明示しないが、P1の角度・半直線条件から従う。鏡映でC.y>0と置き、B1=bC、v=P−B1、P1=B1−rv (r>0) とする。Pが三角形内部なのでcross(v,C)>0。vからCまでの小さい正角φについて、(1−b)C+rvはその内部にあり、∠PP1Cは0とφの厳密間。これがα=∠BACならφ>αなのでarg(v)=α−φ<0、P.y<B1.y。一方P.y>0かつPQ∥ABだからQはBB1の内部。Qdot<0は原文の明示条件だがGMBの他条件に冗長で、双方の解集合を変えない。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "cx",
+        "cy",
+        "a",
+        "b",
+        "p",
+        "r",
+        "s"
+      ],
+      "review_sha256": "e3ab92f53e27236561d2594f561cc03d96c3efcb91ce18b55e9fc488be6e6c28",
+      "review_findings": [
+        {
+          "id": "IMO_2019_P2-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "AB単位基線とC、対辺の内部点A1,B1、AA1内部のPを自由変数として残し、PQ∥ABとQ∈BB1を構成する。"
+        },
+        {
+          "id": "IMO_2019_P2-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "P1=B1+r(B1-P),Q1=A1+s(A1-Q),r,s>0は正しい逆向き半直線である。二つの指定等角を照合した。"
+        },
+        {
+          "id": "IMO_2019_P2-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "GMBLにはQ∈BB1の線分条件が明記されないが、P1の角と正のrayからP.yが0とB1.yの間にあると導けるため、Qの内部guardは冗長。証明はreviews/EQUIVALENCE_ARGUMENTS.md。共円という結論は条件にしない。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2019_P2.smt2",
+        "sha256": "df2c83ad1c47f814095df2505fa47c7ee728c5e56ce52e6f4c92a67416c1eba4"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2019_P6",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "I": "point",
+          "omega": "circle",
+          "D": "point",
+          "E": "point",
+          "F": "point",
+          "R": "point",
+          "P": "point",
+          "Q": "point"
+        },
+        "symbols": [
+          "acute-tri",
+          "circ",
+          "concur",
+          "cong",
+          "incenter",
+          "incircle",
+          "inter-cc",
+          "inter-lc",
+          "line",
+          "not",
+          "perp-at",
+          "rs-neq"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "1a80b54b76908eb8ec65f86042932d04c9e519aa658e5a9de2197205efeecc64",
+      "validation_issues": [],
+      "variable_count": 2,
+      "condition_count": 5,
+      "construction_count": 11,
+      "audit_sha256": "ea35728b71676fac6bcbfe52895e6908c95245dc5452af11c7f7b254376890e9",
+      "normalization": {
+        "anchors": [
+          "B",
+          "C"
+        ],
+        "fixed_coordinates": {
+          "B": [
+            "0",
+            "0"
+          ],
+          "C": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "鋭角三角形の辺BCは非零。AB≠AC・内接円・垂線・交点は尺度不変。 平行移動2自由度・回転1自由度・正の一様拡大縮小1自由度のみを除く。残りの図形の形は固定しない。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "id": "gmb_runtime_distinctness",
+          "kind": "runtime_acceptance_policy",
+          "blocking": false,
+          "description_ja": "GMBは全登録点の最小距離0.1とweighted soft lossで受理する。原文にない全点相異・最小距離0.1はGeoSolver条件に移さず、両者の出力を別の共通検査器で再検査する。"
+        },
+        {
+          "id": "gmb_acute_sampler",
+          "kind": "runtime_parameterization",
+          "blocking": false,
+          "description_ja": "optimizer.py sample_triangleのacute-triはB=(-2,0),C=(2,0)、Ax∈[-1.2,1.2]を試行中固定、Ay=1.1+3 sigmoid(z)。一部の形に制限し、Ax²+Ay²≤4の鈍角Aも数式上可能。GeoSolverでは形は固定せず、三頂点の内積が正という原文の鋭角条件を課す。"
+        },
+        {
+          "id": "gmb_numeric_root_selector",
+          "kind": "runtime_selector",
+          "blocking": false,
+          "description_ja": "GMBのrs-neqは数値距離1e-6で候補を分ける。GeoSolverのexcludeは指定点が共通交点である通常の非退化幾何を使い、唯一の異なる交点を要求する。接点重複や不明な枝を勝手に選ばない。"
+        },
+        {
+          "id": "tangent_point_arbitrary",
+          "kind": "translation_representation",
+          "blocking": false,
+          "description_ja": "D,E,Fのrs-arbitraryは内接円と三角形の辺の接点なので、数学的には相異なる実交点が1個。GeoSolverではIから各辺への垂足として一意に構成し、無根拠なn=1を使わない。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "ax",
+        "ay"
+      ],
+      "review_sha256": "44ba64e2ac21fb17287d51952d0afcc3be0300ef60d170b52d89181415df7c65",
+      "review_findings": [
+        {
+          "id": "IMO_2019_P6-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "AB単位基線とCを変数として残し、鋭角性とAB≠AC、内接円・内心I・各辺接点D,E,Fを原文と照合した。"
+        },
+        {
+          "id": "IMO_2019_P6-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "DでのEFへの垂線と内接円の二つ目の交点R、ARと内接円のP、PCEとPBFの二つ目の交点Qの枝を指定点の除外で保持する。"
+        },
+        {
+          "id": "IMO_2019_P6-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "各exclude点は先行構成により実際の共通交点であり、不確定な未知点を除外していない。DI等の共点性という結論は探索条件へ追加していない。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2019_P6.smt2",
+        "sha256": "38e4a50bc2636f027f4cf14360f06d7ba59c9784bb6f04d96b9fd17941d6de42"
+      },
+      "input_ready": true
+    },
+    {
+      "case_id": "IMO_2020_P1",
+      "issues": [],
+      "static_valid": true,
+      "independently_reviewed": true,
+      "original_assumptions_covered": true,
+      "checker_coverage": {
+        "supported": true,
+        "declarations": {
+          "A": "point",
+          "B": "point",
+          "C": "point",
+          "D": "point",
+          "P": "point"
+        },
+        "symbols": [
+          "=",
+          "concur",
+          "div",
+          "i-bisector",
+          "in-poly",
+          "perp-bis",
+          "polygon",
+          "uangle"
+        ],
+        "issues": [],
+        "statement": "syntax coverage only; not original-text approval"
+      },
+      "case_sha256": "45ca07c2afe43ebbab889f12fbd72d2dd3dc702c5279e1222847d3f692e88e05",
+      "validation_issues": [],
+      "variable_count": 6,
+      "condition_count": 12,
+      "construction_count": 5,
+      "audit_sha256": "941fb5b6dd99d4d9c04cc3b2cbe43ac0120724140886272a2107090c051641c5",
+      "normalization": {
+        "anchors": [
+          "A",
+          "B"
+        ],
+        "fixed_coordinates": {
+          "A": [
+            "0",
+            "0"
+          ],
+          "B": [
+            "1",
+            "0"
+          ]
+        },
+        "removed_continuous_dof": 4,
+        "justification": "凸四角形の辺ABは非零で、全指定条件は角度比と内部条件。 平行移動2自由度・回転1自由度・正の一様拡大縮小1自由度のみを除く。残りの図形の形は固定しない。",
+        "scale_invariant": true,
+        "reflection_fixed": false
+      },
+      "source_differences": [
+        {
+          "id": "gmb_runtime_distinctness",
+          "kind": "runtime_acceptance_policy",
+          "blocking": false,
+          "description_ja": "GMBは全登録点の最小距離0.1とweighted soft lossで受理する。原文にない全点相異・最小距離0.1はGeoSolver条件に移さず、両者の出力を別の共通検査器で再検査する。"
+        },
+        {
+          "id": "gmb_polygon_sampler",
+          "kind": "runtime_parameterization",
+          "blocking": false,
+          "description_ja": "GMB polygonは角のtanh範囲（四角形は30°～150°）と基準辺の1/2～3/2の辺長範囲、弱い閉鎖lossを用いる。GeoSolverは凸性だけを数式で課し、原文にない角・辺長範囲は移さない。"
+        }
+      ],
+      "open_issues": [],
+      "compiled_coordinate_names": [
+        "cx",
+        "cy",
+        "dx",
+        "dy",
+        "px",
+        "py"
+      ],
+      "review_sha256": "15afe97297afcf61597916afc9f143b584dbc91f0a27b3b1e2136aab9c139cd9",
+      "review_findings": [
+        {
+          "id": "IMO_2020_P1-review-1",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "AB単位基線とC,D,Pを変数にし、指定頂点順の狭義凸性・Pの厳密内部を確認した。"
+        },
+        {
+          "id": "IMO_2020_P1-review-2",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "二つの角比1:2:3をそれぞれ基準角で表す四つの等式で保持する。二つの基準角を同じ角と誤って等置していない。"
+        },
+        {
+          "id": "IMO_2020_P1-review-3",
+          "severity": "info",
+          "status": "checked",
+          "detail_ja": "三直線の共点性は結論に分離し、Pの座標や四角形の形は固定していない。"
+        }
+      ],
+      "comparison_input": {
+        "origin": "official_gmb",
+        "path": "/home/kabatan/work/solver/benchmarks/gmb/.runtime/source/problems/IMO/IMO_2020_P1.smt2",
+        "sha256": "a29e203296c74eae3ed4df5472016d6ccea014cea6de8e5983796780fdd56444"
+      },
+      "input_ready": true
+    }
+  ]
+}

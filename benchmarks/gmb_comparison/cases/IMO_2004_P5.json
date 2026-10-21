@@ -1,0 +1,77 @@
+{
+  "id": "IMO_2004_P5",
+  "variables": [
+    "cx",
+    "cy",
+    "dx",
+    "dy",
+    "u",
+    "v",
+    "w"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(dx, dy)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(u*A.x + v*B.x + w*C.x + (1-u-v-w)*D.x, u*A.y + v*B.y + w*C.y + (1-u-v-w)*D.y)"
+    }
+  ],
+  "conditions": [
+    {
+      "predicate": "ConvexPolygon([A, B, C, D])"
+    },
+    {
+      "predicate": "u > 0"
+    },
+    {
+      "predicate": "v > 0"
+    },
+    {
+      "predicate": "w > 0"
+    },
+    {
+      "predicate": "u + v + w < 1"
+    },
+    {
+      "left": "OnLine(D, AngleBisector(A, B, C))",
+      "operator": "!=",
+      "right": 0
+    },
+    {
+      "left": "OnLine(B, AngleBisector(C, D, A))",
+      "operator": "!=",
+      "right": 0
+    },
+    {
+      "left": "Angle(P, B, C)",
+      "operator": "=",
+      "right": "Angle(D, B, A)"
+    },
+    {
+      "left": "Angle(P, D, C)",
+      "operator": "=",
+      "right": "Angle(B, D, A)"
+    },
+    {
+      "left": "AreConcyclic(A, B, C, D)",
+      "operator": "=",
+      "right": 0
+    }
+  ],
+  "target": "0"
+}

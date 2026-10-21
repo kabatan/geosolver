@@ -1,0 +1,96 @@
+{
+  "id": "IMO_2020_P1",
+  "variables": [
+    "cx",
+    "cy",
+    "dx",
+    "dy",
+    "px",
+    "py"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(dx, dy)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(px, py)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))",
+      "operator": "!=",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((C.x-B.x)*(D.y-B.y)-(C.y-B.y)*(D.x-B.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((D.x-C.x)*(A.y-C.y)-(D.y-C.y)*(A.x-C.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((A.x-D.x)*(B.y-D.y)-(A.y-D.y)*(B.x-D.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((B.x-A.x)*(P.y-A.y)-(B.y-A.y)*(P.x-A.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((C.x-B.x)*(P.y-B.y)-(C.y-B.y)*(P.x-B.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((D.x-C.x)*(P.y-C.y)-(D.y-C.y)*(P.x-C.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((A.x-D.x)*(P.y-D.y)-(A.y-D.y)*(P.x-D.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "2*Angle(P, A, D)",
+      "operator": "=",
+      "right": "Angle(P, B, A)"
+    },
+    {
+      "left": "3*Angle(P, A, D)",
+      "operator": "=",
+      "right": "Angle(D, P, A)"
+    },
+    {
+      "left": "2*Angle(C, B, P)",
+      "operator": "=",
+      "right": "Angle(B, A, P)"
+    },
+    {
+      "left": "3*Angle(C, B, P)",
+      "operator": "=",
+      "right": "Angle(B, P, C)"
+    }
+  ],
+  "target": "0"
+}

@@ -1,0 +1,75 @@
+{
+  "id": "IMO_2002_P2",
+  "variables": [
+    "ta",
+    "te"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "O",
+      "expression": "Midpoint(B, C)"
+    },
+    {
+      "name": "omega",
+      "expression": "CircleThroughPoint(O, B)"
+    },
+    {
+      "name": "A",
+      "expression": "PointOnCircle(omega, ta)"
+    },
+    {
+      "name": "bisectorAO",
+      "expression": "PerpendicularBisector(A, O)"
+    },
+    {
+      "name": "E",
+      "expression": "PointOnLine(bisectorAO, te)"
+    },
+    {
+      "name": "H",
+      "expression": "FootOfPerpendicular(E, Line(A, O))"
+    },
+    {
+      "name": "F",
+      "expression": "Point(2*H.x - E.x, 2*H.y - E.y)"
+    },
+    {
+      "name": "arcAB",
+      "expression": "Arc(omega, A, B, excluding=C)"
+    },
+    {
+      "name": "D",
+      "expression": "PointOnArc(arcAB, 1/2)"
+    },
+    {
+      "name": "J",
+      "expression": "Intersect(ParallelLine(Line(A, D), O), Line(A, C))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Angle(A, O, C)",
+      "operator": ">",
+      "right": "pi/3"
+    },
+    {
+      "left": "OnCircle(E, omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(E, F)",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "0"
+}

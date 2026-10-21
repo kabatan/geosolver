@@ -21,12 +21,6 @@ def _mp_point_class() -> type[MPPoint]:
     return MPPoint
 
 
-def _mp_area_tolerance(scale_len: mpf) -> mpf:
-    from geosolver.geometry.mp.mp_impl import _mp_area_tolerance
-
-    return _mp_area_tolerance(scale_len)
-
-
 def _mp_triangle_area(A: MPPoint, B: MPPoint, C: MPPoint) -> mpf:
     from geosolver.geometry.mp.mp_impl import mp_triangle_area
 
@@ -37,12 +31,6 @@ def _mp_circumcircle(A: MPPoint, B: MPPoint, C: MPPoint):
     from geosolver.geometry.mp.mp_impl import mp_circumcircle
 
     return mp_circumcircle(A, B, C)
-
-
-def _mp_midpoint(A: MPPoint, B: MPPoint) -> MPPoint:
-    from geosolver.geometry.mp.mp_impl import mp_midpoint
-
-    return mp_midpoint(A, B)
 
 
 def _mp_line_through_two_points(A: MPPoint, B: MPPoint):
@@ -57,22 +45,10 @@ def _mp_line_line_intersection(l1, l2):
     return mp_line_line_intersection(l1, l2)
 
 
-def _mp_incircle(A: MPPoint, B: MPPoint, C: MPPoint):
-    from geosolver.geometry.mp.mp_impl import mp_incircle
-
-    return mp_incircle(A, B, C)
-
-
 def _mp_nine_point_circle(A: MPPoint, B: MPPoint, C: MPPoint):
     from geosolver.geometry.mp.mp_impl import mp_nine_point_circle
 
     return mp_nine_point_circle(A, B, C)
-
-
-def _mp_centroid(A: MPPoint, B: MPPoint, C: MPPoint) -> MPPoint:
-    from geosolver.geometry.mp.mp_impl import mp_centroid
-
-    return mp_centroid(A, B, C)
 
 
 def _contact_point_on_segment(p1: MPPoint, p2: MPPoint, dist_from_p1: mpf, tol: mpf) -> MPPoint:
@@ -86,20 +62,24 @@ def _contact_point_on_segment(p1: MPPoint, p2: MPPoint, dist_from_p1: mpf, tol: 
 
 def mp_triangle_center(A: MPPoint, B: MPPoint, C: MPPoint, n: int) -> MPPoint | None:
     point_cls = _mp_point_class()
-    tol = mpf(10) ** (-(mp.dps - 10))
+    from geosolver.geometry.mp.mp_impl import _mp_area_tolerance_squared
 
-    a = B.distance_to(C)
-    b = C.distance_to(A)
-    c = A.distance_to(B)
-
+    a2 = (B.x - C.x) ** 2 + (B.y - C.y) ** 2
+    b2 = (C.x - A.x) ** 2 + (C.y - A.y) ** 2
+    c2 = (A.x - B.x) ** 2 + (A.y - B.y) ** 2
     area = _mp_triangle_area(A, B, C)
-    scale = max(mpf("1"), a, b, c)
-    if area < max(tol, _mp_area_tolerance(scale)):
+    scale_squared = max(a2, b2, c2)
+    if area == 0 or area < _mp_area_tolerance_squared(scale_squared):
         return None
-
+    if n in (13, 14, 15, 16):
+        return compute_special_triangle_center(A, B, C, n, point_cls)
+    if n in (1, 7, 8, 9, 10, 11):
+        a, b, c = mp.sqrt(a2), mp.sqrt(b2), mp.sqrt(c2)
+        scale = max(a, b, c)
+        tol = 32 * mp.eps * scale
     if n == 1:
         total = a + b + c
-        if total < tol:
+        if total <= tol:
             return None
         return point_cls(
             (a * A.x + b * B.x + c * C.x) / total, (a * A.y + b * B.y + c * C.y) / total
@@ -116,15 +96,14 @@ def mp_triangle_center(A: MPPoint, B: MPPoint, C: MPPoint, n: int) -> MPPoint | 
         O = circ.center
         return point_cls(A.x + B.x + C.x - 2 * O.x, A.y + B.y + C.y - 2 * O.y)
     if n == 5:
-        orthocenter = mp_triangle_center(A, B, C, 4)
-        circumcenter = mp_triangle_center(A, B, C, 3)
-        if orthocenter is None or circumcenter is None:
+        circ = _mp_circumcircle(A, B, C)
+        if circ is None:
             return None
-        return _mp_midpoint(orthocenter, circumcenter)
+        O = circ.center
+        return point_cls((A.x + B.x + C.x - O.x) / 2, (A.y + B.y + C.y - O.y) / 2)
     if n == 6:
-        a2, b2, c2 = a**2, b**2, c**2
         total = a2 + b2 + c2
-        if total < tol:
+        if total <= 32 * mp.eps * scale_squared:
             return None
         return point_cls(
             (a2 * A.x + b2 * B.x + c2 * C.x) / total, (a2 * A.y + b2 * B.y + c2 * C.y) / total
@@ -157,31 +136,30 @@ def mp_triangle_center(A: MPPoint, B: MPPoint, C: MPPoint, n: int) -> MPPoint | 
             (wa * A.x + wb * B.x + wc * C.x) / total, (wa * A.y + wb * B.y + wc * C.y) / total
         )
     if n == 10:
-        Ma = _mp_midpoint(B, C)
-        Mb = _mp_midpoint(C, A)
-        Mc = _mp_midpoint(A, B)
-        return mp_triangle_center(Ma, Mb, Mc, 1)
+        total = 2 * (a + b + c)
+        return point_cls(
+            ((b + c) * A.x + (c + a) * B.x + (a + b) * C.x) / total,
+            ((b + c) * A.y + (c + a) * B.y + (a + b) * C.y) / total,
+        )
     if n == 11:
-        inc = _mp_incircle(A, B, C)
         nine = _mp_nine_point_circle(A, B, C)
-        if inc is None or nine is None:
+        if nine is None:
             return None
-        I = inc.center
+        perimeter = a + b + c
+        I = point_cls(
+            (a * A.x + b * B.x + c * C.x) / perimeter, (a * A.y + b * B.y + c * C.y) / perimeter
+        )
         N = nine.center
         R9 = nine.radius
         dx = I.x - N.x
         dy = I.y - N.y
         d2 = dx * dx + dy * dy
-        if d2 < tol:
-            return I
+        if d2 <= tol * tol:
+            from geosolver.errors import GeometryDomainError
+
+            raise GeometryDomainError("Feuerbach point is not uniquely resolved")
         d = mp_sqrt(d2)
-        if d == 0:
-            return I
         t = R9 / d
         return point_cls(N.x + t * dx, N.y + t * dy)
-
-    special_center = compute_special_triangle_center(A, B, C, n, tol, point_cls, _mp_centroid)
-    if special_center is not None:
-        return special_center
 
     raise ValueError(f"Unsupported triangle center: n={n}")

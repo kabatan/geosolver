@@ -68,9 +68,9 @@ def triangle_center_numpy_impl(A: Any, B: Any, C: Any, n: int, triangle_ops: Any
         cos_c_minus_a = cos_c * cos_a + sin_c * sin_a
         cos_a_minus_b = cos_a * cos_b + sin_a * sin_b
 
-        u = 1 - cos_b_minus_c
-        v = 1 - cos_c_minus_a
-        w = 1 - cos_a_minus_b
+        u = a * (1 - cos_b_minus_c)
+        v = b * (1 - cos_c_minus_a)
+        w = c * (1 - cos_a_minus_b)
     elif n in (13, 14, 15, 16):
         cos_a = (b**2 + c**2 - a**2) / (2 * b * c)
         cos_b = (c**2 + a**2 - b**2) / (2 * c * a)
@@ -101,7 +101,9 @@ def triangle_center_numpy_impl(A: Any, B: Any, C: Any, n: int, triangle_ops: Any
         return None
 
     total = u + v + w
-    if abs(total) < 1e-12:
-        return None
+    if abs(total) <= 32 * np.finfo(float).eps * (abs(u) + abs(v) + abs(w)):
+        from geosolver.errors import GeometryDomainError
+
+        raise GeometryDomainError("triangle center has no resolved finite barycentrics")
     point = (u * a_arr + v * b_arr + w * c_arr) / total
     return [point[0], point[1]]

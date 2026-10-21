@@ -214,8 +214,9 @@ def _RegularPolygon_mpmath(p1, p2, n, ccw=True):
 
     from geosolver.geometry.mp.mp_impl import MPPoint
     from geosolver.geometry.mp.mp_polygon import MPPolygon
+    from geosolver.runtime.deadline import check_deadline
 
-    if int(n) != n or n < 3 or p1 == p2:
+    if int(n) != n or n < 3 or (p1.x == p2.x and p1.y == p2.y):
         raise ValueError("RegularPolygon requires distinct vertices and integer n >= 3")
     n = int(n)
 
@@ -225,11 +226,11 @@ def _RegularPolygon_mpmath(p1, p2, n, ccw=True):
         angle_step = -angle_step
     current_p = p2
     prev_p = p1
+    c, s = cos(angle_step), sin(angle_step)
     for _ in range(2, n):
+        check_deadline()
         dx = current_p.x - prev_p.x
         dy = current_p.y - prev_p.y
-        c = cos(angle_step)
-        s = sin(angle_step)
         rx = dx * c - dy * s
         ry = dx * s + dy * c
         next_p = MPPoint(current_p.x + rx, current_p.y + ry)

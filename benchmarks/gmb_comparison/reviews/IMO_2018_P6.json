@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2018_P6",
+  "reviewer": "independent_review",
+  "case_sha256": "151e5aae5af9dcbcaec010e701f84edada9b837105f4d0cbb7d33a9c5a2e51cb",
+  "audit_sha256": "40cecefc3097aae6316e32fad717ec62c2f0637549dcd5f2209ca80fc0bb0efb",
+  "gmbl_sha256": "962fa6925bc3e056b836bcbf2f1b2cfe4e37312d202d63321551cd2321aecfa8",
+  "reviewed_original_pdf_sha256": "3118f981f520aa9f9238ec97d63614aff5f7c2c26bb9c2ea24517b4d5d9dbb6c",
+  "verdict": "pass",
+  "normalization_checked": true,
+  "conclusion_not_assumed": true,
+  "original_conditions_covered_by_gmbl": true,
+  "scope_of_coverage_ja": "原文の仮定を当該比較範囲で満たすかの監査である。原文の全境界配置を含む解集合の完全同値、GMB実装の全数値分岐の正当性、実験の実行許可を意味しない。",
+  "comparison_scope": "nondegenerate_configuration_domain",
+  "sources_read": [
+    "cases/IMO_2018_P6.json",
+    "audit/IMO_2018_P6.json",
+    "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2018_P6.smt2",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2018-eng.pdf",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2018-eng.txt",
+    "AUTHORING.md",
+    "reviews/UPSTREAM_SEMANTICS.md"
+  ],
+  "official_url": "https://www.imo-official.org/assets/documents/problems/2018/2018_eng.pdf",
+  "normalization_review": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "removed_continuous_dof": 4,
+    "scale_invariant": true,
+    "reflection_fixed": false,
+    "remaining_solver_variables": [
+      "cx",
+      "cy",
+      "dx",
+      "dy",
+      "xx",
+      "xy"
+    ],
+    "shape_fixed_beyond_original_hypotheses": false,
+    "checked_ja": "原文で相異なる二点の単位基線化だけで平行移動2・回転1・正の尺度1を除く。元の形の変数と鏡映配置を保持している。"
+  },
+  "original_goal_not_used": "角BXAとDXCの和がπになる。",
+  "checked_input_counts": {
+    "constructions": 5,
+    "conditions": 11
+  },
+  "method": {
+    "read_all_constructions_and_conditions": true,
+    "read_original_problem_assumptions": true,
+    "checked_domains_branches_and_non_degeneracy": true,
+    "checked_goal_separation": true,
+    "exact_algebraic_checks_only_where_documented": true,
+    "solver_executed": false,
+    "optimizer_executed": false,
+    "refinement_executed": false,
+    "prior_case_performance_used_to_adjust_input": false
+  },
+  "gmb_runtime_equivalence_claimed": false,
+  "findings": [
+    {
+      "id": "IMO_2018_P6-review-1",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "ABだけ単位基線に固定しC,D,Xを自由に残す。四角形の狭義凸性とXの内部性をそれぞれ対応する外積で表す。"
+    },
+    {
+      "id": "IMO_2018_P6-review-2",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "AB*CD=BC*DAおよび二つの所定等角条件を点順も含めて照合した。"
+    },
+    {
+      "id": "IMO_2018_P6-review-3",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "∠BXA+∠DXC=180度という結論は条件に加えていない。内部点Xを特定の中心へ置き換えていない。"
+    }
+  ],
+  "remaining_uncertainties": []
+}

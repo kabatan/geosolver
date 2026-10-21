@@ -1,0 +1,159 @@
+{
+  "case_id": "IMO_2000_P6",
+  "source": {
+    "official_url": "https://www.imo-official.org/assets/documents/problems/2000/2000_eng.pdf",
+    "official_legacy_url": "https://www.imo-official.org/problems/2000/eng.pdf",
+    "official_pdf_sha256": "04d49b95b4351ba08d5f41279f4589a27b7aa32572f0f073d47eacc55896180b",
+    "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2000_P6.smt2",
+    "gmbl_sha256": "00e032f3959ac400430c25257b13228c7566c9dc9924f8d7601ed27adae2079a",
+    "gmbl_commit": "f070afe18ed874b3a31db519ea6f593f40a1be00"
+  },
+  "normalization": {
+    "anchors": [
+      "A2",
+      "A3"
+    ],
+    "fixed_coordinates": {
+      "A2": [
+        "0",
+        "0"
+      ],
+      "A3": [
+        "1",
+        "0"
+      ]
+    },
+    "removed_continuous_dof": 4,
+    "justification": "鋭角三角形の一辺A2A3は非零であり、垂足・内接円・鏡映の構成は相似不変。 平行移動2・回転1・正の一様拡大縮小1のみを除く。",
+    "scale_invariant": true,
+    "reflection_fixed": false
+  },
+  "clauses": [
+    {
+      "id": "acute-triangle",
+      "statement_ja": "A1A2A3は鋭角三角形。",
+      "gmbl": [
+        "(param (A1 A2 A3) acute-tri)"
+      ],
+      "geosolver": [
+        "A2 = Point(0, 0)",
+        "A3 = Point(1, 0)",
+        "A1 = Point(ax, ay)",
+        "AcuteTriangle(A1, A2, A3)"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "altitude-feet",
+      "statement_ja": "KiはAiから対辺の直線に下ろした垂線の足。",
+      "gmbl": [
+        "(define K1 point (foot A1 (line A2 A3)))",
+        "(define K2 point (foot A2 (line A1 A3)))",
+        "(define K3 point (foot A3 (line A1 A2)))"
+      ],
+      "geosolver": [
+        "K1 = FootOfPerpendicular(A1, Line(A2, A3))",
+        "K2 = FootOfPerpendicular(A2, Line(A1, A3))",
+        "K3 = FootOfPerpendicular(A3, Line(A1, A2))"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "incircle-contacts",
+      "statement_ja": "Liは内接円とAiの対辺の接点。",
+      "gmbl": [
+        "(define L1 point (inter-lc (line A2 A3) (incircle A1 A2 A3) rs-arbitrary))",
+        "(define L2 point (inter-lc (line A1 A3) (incircle A1 A2 A3) rs-arbitrary))",
+        "(define L3 point (inter-lc (line A1 A2) (incircle A1 A2 A3) rs-arbitrary))"
+      ],
+      "geosolver": [
+        "omega = Incircle(A1, A2, A3)",
+        "L1 = IncircleContactPoint(A1, A2, A3, side='BC')",
+        "L2 = IncircleContactPoint(A1, A2, A3, side='CA')",
+        "L3 = IncircleContactPoint(A1, A2, A3, side='AB')"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "reflections",
+      "statement_ja": "K1K2,K2K3,K3K1をそれぞれL1L2,L2L3,L3L1に関して鏡映した直線。",
+      "gmbl": [
+        "(define refl1 line (reflect-ll (line K1 K2) (line L1 L2)))",
+        "(define refl2 line (reflect-ll (line K2 K3) (line L2 L3)))",
+        "(define refl3 line (reflect-ll (line K3 K1) (line L3 L1)))"
+      ],
+      "geosolver": [
+        "axis1 = Line(L1, L2); axis2 = Line(L2, L3); axis3 = Line(L3, L1)",
+        "各端点Kの鏡映を、垂足HによるPoint(2*H.x-K.x, 2*H.y-K.y)で構成",
+        "refl1 = Line(U1, V1); refl2 = Line(U2, V2); refl3 = Line(U3, V3)"
+      ],
+      "status": "matched"
+    }
+  ],
+  "goal": {
+    "statement_ja": "鏡映後の3直線が作る三角形の3頂点が内接円上にある。",
+    "gmbl": [
+      "(eval (on-circ (inter-ll refl1 refl2) (incircle A1 A2 A3)))",
+      "(eval (on-circ (inter-ll refl1 refl3) (incircle A1 A2 A3)))",
+      "(eval (on-circ (inter-ll refl2 refl3) (incircle A1 A2 A3)))"
+    ],
+    "geosolver_expressions": [
+      "OnCircle(Intersect(refl1, refl2), omega) = 0",
+      "OnCircle(Intersect(refl1, refl3), omega) = 0",
+      "OnCircle(Intersect(refl2, refl3), omega) = 0"
+    ],
+    "coverage": "3頂点の円所属。三角形の非退化性も評価器で別確認する。",
+    "included_in_search": false,
+    "target": "0"
+  },
+  "source_differences": [
+    {
+      "id": "gmb-global-admission",
+      "kind": "implementation_limit",
+      "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+      "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+    },
+    {
+      "id": "gmb-acute-sampler",
+      "kind": "implementation_limit",
+      "detail_ja": "benchmarks/gmb/.runtime/source/src/optimizer.py:448-488のacute-triはB=(-2,0),C=(2,0),Axを初期値固定、Ayを(1.1,4.1)へ制限する。このパラメータ範囲は全鋭角三角形を尽くさず、Aが鈍角になる配置も含む。公開DSL名の数学的な鋭角条件をGeoSolverでは保持する。",
+      "comparison_effect": "探索上の制限は移植しない。GMB出力にも鋭角条件を共通検査器で課す。"
+    },
+    {
+      "id": "tangent-intersections",
+      "kind": "equivalent_construction",
+      "detail_ja": "LiのGMBLはrs-arbitraryだが、内接円と各辺との交点は唯一の接点。直接の接点構成へ変換し、二交点から枝を選んだわけではない。",
+      "comparison_effect": "接点存在・一意性は非退化三角形と内接円の定義による。"
+    },
+    {
+      "id": "line-reflection",
+      "kind": "equivalent_construction",
+      "detail_ja": "GeoSolverのReflectの公開形は点の鏡映であり、直線鏡映を二端点の鏡映で構成する。",
+      "comparison_effect": "構成上の恒等変換のみで結論の円所属は課さない。"
+    }
+  ],
+  "open_issues": [],
+  "author_review": {
+    "author": "dsl_2000_2006",
+    "primary_sources_read": [
+      "official IMO 2000 English PDF (relevant problem text and rendered page)",
+      "pinned GMBL IMO_2000_P6.smt2",
+      "benchmarks/gmb/.runtime/source/src/optimizer.py",
+      "src/geosolver/problem/dsl-spec.json",
+      "src/geosolver/engine/standard/interpreter/context/geometry.py",
+      "src/geosolver/engine/standard/interpreter/context/high_precision.py"
+    ],
+    "static_validation": {
+      "public_model": true,
+      "validator": true,
+      "compiler": true,
+      "warnings": [],
+      "variables": 2,
+      "constructions": 28,
+      "conditions": 1
+    },
+    "solve_or_refinement_executed": false,
+    "independent_review_required": true
+  },
+  "comparison_status": "draft"
+}

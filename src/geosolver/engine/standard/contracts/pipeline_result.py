@@ -42,3 +42,5 @@ class ExternalPipelineResult:
     exact_results: tuple[ExactIdentificationResult, ...]
     summary: dict[str, object]
     accepted_candidate_ids: tuple[int, ...] = ()
+    accepted_candidate_uids: tuple[str, ...] = ()
+    accepted_candidate_revisions: tuple[tuple[str, int], ...] = ()

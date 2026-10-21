@@ -8,6 +8,7 @@ version = "1.0.0"
 description = "Cross-platform numerical geometry solver with exact answer assembly"
 requires-python = ">=3.12,<3.13"
 dependencies = [
+  "gmpy2==2.3.2",
   "mpmath==1.3.0",
   "numpy==2.5.1",
   "PyNomadBBO==4.5.1; platform_machine == 'x86_64' or platform_machine == 'AMD64' or platform_system == 'Darwin'",
@@ -44,6 +45,13 @@ testpaths = ["tests"]
 addopts = "-q"
 
 [tool.ruff]
+# Runtime outputs and local scratch are not repository source. In particular,
+# restored review scripts must not enter CI lint through recursive discovery.
+extend-exclude = [
+  "benchmarks/local-evaluation",
+  "benchmarks/diagnostics",
+  "benchmarks/gmb/.runtime",
+]
 target-version = "py312"
 line-length = 100
 

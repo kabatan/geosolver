@@ -14,8 +14,8 @@
 - raw artifactは参照値を含まない。正誤比較は別工程で数学的なcanonical keyの集合を比較する。
 - campaign出力先は空ディレクトリ限定。参照値と問題のhashを固定し、既存runとの混在・重複seedを拒否する。
 
-## 固定条件
+## 検証条件
 
 Linuxを正式な評価環境とし、Windows・macOSはclean wheelとworkerのCIで検証する。ローカルLinuxでの合格をWindows実測済みとは扱わない。
 
-反例試験、全テスト、Ruff、compileall、schema整合、import順、clean wheel、corpus整合が必須。正式な性能評価には固定hostでの再実行が必要であり、旧rc1の同一CPU競合canary時間は使用しない。
+反例試験、全テスト、Ruff、compileall、schema整合、import順、clean wheel、corpus整合が必須。正式な性能評価には同一host・CPU割当・依存環境での比較が必要。

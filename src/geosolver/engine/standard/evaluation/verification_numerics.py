@@ -14,6 +14,12 @@ from geosolver.engine.standard.evaluation.verification_sampling import precision
 from geosolver.problem.expression_source import source_expression
 from geosolver.problem.ir.compiler import extract_names
 from geosolver.problem.ir.errors import IRCompileError
+from geosolver.problem.logical_equalities import (
+    LOGICAL_CONTEXT,
+    SMOOTH_LOGICAL_CONTEXT,
+    component_references,
+    evaluation_sources,
+)
 from geosolver.runtime.deadline import check_deadline
 
 DIFFERENCE_REFINEMENTS = 8
@@ -166,6 +172,12 @@ def _smooth_zero_equation(source):
     for an equality whose complete normalized residual must be zero.
     """
 
+    references = component_references(source)
+    if references:
+        for name, _, _ in references:
+            source = source.replace(name, name.replace(LOGICAL_CONTEXT, SMOOTH_LOGICAL_CONTEXT, 1))
+        return source
+
     def walk(node):
         if isinstance(node, ast.IfExp):
             return (
@@ -184,6 +196,9 @@ def _smooth_zero_equation(source):
             )
             return f"({left}){'*' if isinstance(node.op, ast.Mult) else '/'}({right})"
         if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and not node.keywords:
+            if node.func.id == "IsTangent" and len(node.args) == 2:
+                arguments = ",".join(source_expression(arg, source) for arg in node.args)
+                return f"_SignedTangency({arguments})"
             if node.func.id in {"abs", "Abs"} and len(node.args) == 1:
                 return walk(node.args[0])
             if node.func.id == "Area" and len(node.args) == 3:
@@ -234,17 +249,34 @@ def prepare_equations(evaluator):
     equations = []
     from geosolver.runtime.symbolic import request
 
-    normalized = request(
-        "normalize",
-        [
-            (source, str(evaluator.bundle.targets[i]))
-            for i, source in enumerate(evaluator.bundle.spec.constraints)
-        ],
+    problem = evaluator.bundle.spec
+    ordinary = [
+        (i, source)
+        for i, source in enumerate(problem.constraints)
+        if not component_references(source)
+    ]
+    leaves = tuple(dict.fromkeys(leaf for plan in problem.logical_plans for leaf in plan.leaves))
+    # Normalize each equality leaf once, not the exponentially repeated source
+    # of a conditional vector. Selection still uses the original residuals.
+    payload = [(source, str(evaluator.bundle.targets[i])) for i, source in ordinary] + [
+        (leaf, "0") for leaf in leaves
+    ]
+    results = request("normalize", payload) if payload else []
+    normalized = {i: result for (i, _), result in zip(ordinary, results, strict=False)}
+    evaluator.evaluation_store.logical_zero_sources.update(
+        {
+            leaf: _smooth_zero_equation(text)
+            for leaf, (text, _) in zip(leaves, results[len(ordinary) :], strict=True)
+        }
     )
-    for index, _source in enumerate(evaluator.bundle.spec.constraints):
-        text, constant = normalized[index]
+    for index, source in enumerate(problem.constraints):
+        text, constant = normalized.get(index, (source, None))
         text = _smooth_zero_equation(text)
-        names = set(extract_names(text))
+        names = {
+            name
+            for leaf in evaluation_sources(text, problem.logical_plans)
+            for name in extract_names(leaf)
+        }
         needed = []
         for item in reversed(evaluator.bundle.spec.construction):
             if item.name in names:
@@ -263,18 +295,38 @@ def prepare_equations(evaluator):
         if len(terms) > 1 and constant is None:
             scale_spec = replace(spec, constraints=terms, v=[0] * len(terms))
             scale_evaluator = build_ir_evaluator(
-                replace(bundle, spec=scale_spec, targets=(0,) * len(terms))
+                replace(bundle, spec=scale_spec, targets=(0,) * len(terms)),
+                evaluation_store=evaluator.evaluation_store,
             )
         equations.append(
-            Equation(build_ir_evaluator(bundle), frozenset(names), constant, text, scale_evaluator)
+            Equation(
+                build_ir_evaluator(bundle, evaluation_store=evaluator.evaluation_store),
+                frozenset(names),
+                constant,
+                text,
+                scale_evaluator,
+            )
         )
     return tuple(equations)
 
 
-def linearization(equations, point, names, scales, precision):
+def linearization(equations, point, names, scales, precision, *, base_samples=None, batch=True):
     residuals, jacobian, errors, term_scales = [], [], [], []
-    for equation in equations:
-        base = equation.sample(point, precision)
+    system = None
+    if batch and equations and all(isinstance(e, Equation) for e in equations):
+        from .verification_system import VerificationSystem
+
+        system = VerificationSystem(equations)
+    all_indices = tuple(range(len(equations)))
+    columns = tuple(tuple(i for i, e in enumerate(equations) if name in e.names) for name in names)
+    for i, equation in enumerate(equations):
+        base = (
+            system.sample(i, point, precision, all_indices)
+            if system is not None
+            else equation.sample(point, precision)
+        )
+        if base_samples is not None:
+            base_samples.append(base)
         residuals.append(base[0])
         term_scales.append(max(equation.term_scale(point, precision), base[2] / mp.eps))
         row, err = [], []
@@ -282,8 +334,13 @@ def linearization(equations, point, names, scales, precision):
             if name not in equation.names:
                 derivative = (mp.mpf(0), mp.mpf(0))
             else:
+                function = (
+                    (lambda p, i=i, j=j: system.sample(i, p, precision, columns[j]))
+                    if system is not None
+                    else (lambda p, equation=equation: equation.sample(p, precision))
+                )
                 derivative = differentiate(
-                    lambda p, equation=equation: equation.sample(p, precision),
+                    function,
                     point,
                     j,
                     scales[j],

@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2006_P1",
+  "reviewer": "independent_review",
+  "case_sha256": "de0ec523a925e92b2a0494c381e9b51bbb8ed2d5229f42063e71e964050aeaa4",
+  "audit_sha256": "6836c81eebf7348cf4bb94f0d75584648ed8c95555e7623e8202fc763863af5e",
+  "gmbl_sha256": "f5f4c1f761c6403ac213fb3d6bc7f007bea1955dd53e6661c17d63b9f0974c7c",
+  "reviewed_original_pdf_sha256": "c613e8c07733b27594156eb922a9a4c3b915538ec4d550a4fe07c3e481f1d075",
+  "verdict": "pass",
+  "normalization_checked": true,
+  "conclusion_not_assumed": true,
+  "original_conditions_covered_by_gmbl": true,
+  "scope_of_coverage_ja": "原文の仮定を当該比較範囲で満たすかの監査である。原文の全境界配置を含む解集合の完全同値、GMB実装の全数値分岐の正当性、実験の実行許可を意味しない。",
+  "comparison_scope": "nondegenerate_configuration_domain",
+  "sources_read": [
+    "cases/IMO_2006_P1.json",
+    "audit/IMO_2006_P1.json",
+    "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2006_P1.smt2",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2006-eng.pdf",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2006-eng.txt",
+    "AUTHORING.md",
+    "reviews/UPSTREAM_SEMANTICS.md"
+  ],
+  "official_url": "https://www.imo-official.org/assets/documents/problems/2006/2006_eng.pdf",
+  "normalization_review": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "removed_continuous_dof": 4,
+    "scale_invariant": true,
+    "reflection_fixed": false,
+    "remaining_solver_variables": [
+      "cx",
+      "cy",
+      "u",
+      "v"
+    ],
+    "shape_fixed_beyond_original_hypotheses": false,
+    "checked_ja": "原文で相異なる二点の単位基線化だけで平行移動2・回転1・正の尺度1を除く。元の形の変数と鏡映配置を保持している。"
+  },
+  "original_goal_not_used": "AP≥AI、等号成立はP=Iのときかつそのときに限る。",
+  "checked_input_counts": {
+    "constructions": 5,
+    "conditions": 5
+  },
+  "method": {
+    "read_all_constructions_and_conditions": true,
+    "read_original_problem_assumptions": true,
+    "checked_domains_branches_and_non_degeneracy": true,
+    "checked_goal_separation": true,
+    "exact_algebraic_checks_only_where_documented": true,
+    "solver_executed": false,
+    "optimizer_executed": false,
+    "refinement_executed": false,
+    "prior_case_performance_used_to_adjust_input": false
+  },
+  "gmb_runtime_equivalence_claimed": false,
+  "findings": [
+    {
+      "id": "IMO_2006_P1-review-1",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "A,Bを単位基線にしCを自由に残し、Pを正の三頂点重みで三角形内部全体から表す。"
+    },
+    {
+      "id": "IMO_2006_P1-review-2",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "内心Iと、∠PBA+∠PCA=∠PBC+∠PCBの四つの角の頂点・順を照合した。"
+    },
+    {
+      "id": "IMO_2006_P1-review-3",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "AP≥AIは結論のみ。原文の等号成立P=Iという主張はGMBのevalでは独立に扱われておらず、この入力から同値条件まで検証したとは主張しない。"
+    }
+  ],
+  "remaining_uncertainties": []
+}

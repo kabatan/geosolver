@@ -1,0 +1,119 @@
+{
+  "id": "IMO_2014_P3",
+  "variables": [
+    "cx",
+    "cy",
+    "dx",
+    "dy",
+    "s",
+    "t"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(dx, dy)"
+    },
+    {
+      "name": "H",
+      "expression": "FootOfPerpendicular(A, Line(B, D))"
+    },
+    {
+      "name": "S",
+      "expression": "PointOnSegment(A, B, s)"
+    },
+    {
+      "name": "T",
+      "expression": "PointOnSegment(A, D, t)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))",
+      "operator": "!=",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((C.x-B.x)*(D.y-B.y)-(C.y-B.y)*(D.x-B.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((D.x-C.x)*(A.y-C.y)-(D.y-C.y)*(A.x-C.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((A.x-D.x)*(B.y-D.y)-(A.y-D.y)*(B.x-D.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(B, A), Vector(B, C))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(D, C), Vector(D, A))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "s",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "s",
+      "operator": "<",
+      "right": 1
+    },
+    {
+      "left": "t",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "t",
+      "operator": "<",
+      "right": 1
+    },
+    {
+      "left": "((C.x-S.x)*(T.y-S.y)-(C.y-S.y)*(T.x-S.x))*((C.x-S.x)*(H.y-S.y)-(C.y-S.y)*(H.x-S.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((C.x-S.x)*(T.y-S.y)-(C.y-S.y)*(T.x-S.x))*((T.x-C.x)*(H.y-C.y)-(T.y-C.y)*(H.x-C.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((C.x-S.x)*(T.y-S.y)-(C.y-S.y)*(T.x-S.x))*((S.x-T.x)*(H.y-T.y)-(S.y-T.y)*(H.x-T.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Angle(C, H, S)-Angle(C, S, B)",
+      "operator": "=",
+      "right": "pi/2"
+    },
+    {
+      "left": "Angle(T, H, C)-Angle(D, T, C)",
+      "operator": "=",
+      "right": "pi/2"
+    }
+  ],
+  "target": "0"
+}

@@ -1,0 +1,113 @@
+{
+  "id": "IMO_2019_P2",
+  "variables": [
+    "cx",
+    "cy",
+    "a",
+    "b",
+    "p",
+    "r",
+    "s"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "A1",
+      "expression": "PointOnSegment(B, C, a)"
+    },
+    {
+      "name": "B1",
+      "expression": "PointOnSegment(A, C, b)"
+    },
+    {
+      "name": "P",
+      "expression": "PointOnSegment(A, A1, p)"
+    },
+    {
+      "name": "Q",
+      "expression": "Intersect(Line(B, B1), ParallelLine(Line(A, B), P))"
+    },
+    {
+      "name": "P1",
+      "expression": "Point(B1.x+r*(B1.x-P.x), B1.y+r*(B1.y-P.y))"
+    },
+    {
+      "name": "Q1",
+      "expression": "Point(A1.x+s*(A1.x-Q.x), A1.y+s*(A1.y-Q.y))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Area(A, B, C)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "a",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "a",
+      "operator": "<",
+      "right": 1
+    },
+    {
+      "left": "b",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "b",
+      "operator": "<",
+      "right": 1
+    },
+    {
+      "left": "p",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "p",
+      "operator": "<",
+      "right": 1
+    },
+    {
+      "left": "Dot(Vector(B, Q), Vector(B1, Q))",
+      "operator": "<",
+      "right": 0
+    },
+    {
+      "left": "r",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "s",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Angle(P, P1, C)",
+      "operator": "=",
+      "right": "Angle(B, A, C)"
+    },
+    {
+      "left": "Angle(C, Q1, Q)",
+      "operator": "=",
+      "right": "Angle(C, B, A)"
+    }
+  ],
+  "target": "0"
+}

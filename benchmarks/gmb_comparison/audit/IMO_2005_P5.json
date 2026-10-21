@@ -1,0 +1,153 @@
+{
+  "case_id": "IMO_2005_P5",
+  "source": {
+    "official_url": "https://www.imo-official.org/assets/documents/problems/2005/2005_eng.pdf",
+    "official_legacy_url": "https://www.imo-official.org/problems/2005/eng.pdf",
+    "official_pdf_sha256": "d92c258ba744081fdd8e9a3e32552edef20e135cb8a97dc6fa4944592ebd4f49",
+    "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2005_P5.smt2",
+    "gmbl_sha256": "380ffd4ca3c383d62a55a812f41dc552f2f0b8bb43d7205c9dc1db9dabb1b9b7",
+    "gmbl_commit": "f070afe18ed874b3a31db519ea6f593f40a1be00"
+  },
+  "normalization": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "fixed_coordinates": {
+      "A": [
+        "0",
+        "0"
+      ],
+      "B": [
+        "1",
+        "0"
+      ]
+    },
+    "removed_continuous_dof": 4,
+    "justification": "固定する四角形の形は未知のまま残し、非零の辺ABを1にするだけ。等辺・非平行・交点は相似不変。 平行移動2・回転1・正の一様拡大縮小1のみを除く。",
+    "scale_invariant": true,
+    "reflection_fixed": false
+  },
+  "clauses": [
+    {
+      "id": "convex-quadrilateral",
+      "statement_ja": "ABCDは狭義凸四角形。",
+      "gmbl": [
+        "(param (A B C D) polygon)"
+      ],
+      "geosolver": [
+        "ConvexPolygon([A, B, C, D])"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "equal-nonparallel-sides",
+      "statement_ja": "BC=DAかつBCとDAは平行でない。",
+      "gmbl": [
+        "(assert (cong B C D A))",
+        "(assert (not (para (line B C) (line D A))))"
+      ],
+      "geosolver": [
+        "Distance(B, C) = Distance(D, A)",
+        "Parallel(Line(B, C), Line(D, A)) != 0"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "paired-moving-points",
+      "statement_ja": "E∈BC,F∈DAでBE=DF。三角形PQRが定義できない端点・交点の一致は採用しない。",
+      "gmbl": [
+        "(param E point (on-seg B C))",
+        "(param F point (on-seg D A))",
+        "(assert (cong B E D F))"
+      ],
+      "geosolver": [
+        "E = PointOnSegment(B, C, te)",
+        "F = PointOnSegment(D, A, tf)",
+        "0 < te < 1; 0 < tf < 1",
+        "Distance(B, E) = Distance(D, F)"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "three-intersections",
+      "statement_ja": "P=AC∩BD,Q=BD∩EF,R=EF∩AC。外接円を持つ非退化三角形PQRを対象とする。",
+      "gmbl": [
+        "(define P point (inter-ll (line A C) (line B D)))",
+        "(define Q point (inter-ll (line B D) (line E F)))",
+        "(define R point (inter-ll (line E F) (line A C)))"
+      ],
+      "geosolver": [
+        "P = Intersect(Line(A, C), Line(B, D))",
+        "Q = Intersect(Line(B, D), Line(E, F))",
+        "R = Intersect(Line(E, F), Line(A, C))",
+        "Area(P, Q, R) > 0"
+      ],
+      "status": "matched"
+    }
+  ],
+  "goal": {
+    "statement_ja": "同一のABCDに対してE,Fを動かしたとき、三角形PQRの外接円群にP以外の共通点がある。",
+    "gmbl": [],
+    "geosolver_expressions": [],
+    "coverage": "公式GMBLにevalなし。単一配置では円群の共通点を検証できないので、仮定の配置検査だけ。",
+    "included_in_search": false,
+    "target": "0"
+  },
+  "source_differences": [
+    {
+      "id": "gmb-global-admission",
+      "kind": "implementation_limit",
+      "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+      "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+    },
+    {
+      "id": "gmb-polygon-sampler",
+      "kind": "implementation_limit",
+      "detail_ja": "benchmarks/gmb/.runtime/source/src/optimizer.py:385-423のpolygonは内角と辺長比を有限範囲へ制限してsoftな閉路条件を最適化する。GeoSolverは元の狭義凸多角形の形を固定しない。",
+      "comparison_effect": "探索範囲の差として記録する。自己交差・反転・頂点重複は共通検査器で原文に従い検査する。"
+    },
+    {
+      "id": "endpoints-degenerate",
+      "kind": "equivalent_domain",
+      "detail_ja": "BE=DFとBC=DAからE=BならF=DでEF=BD、E=CならF=AでEF=ACとなり、QまたはRが一意に定まらない。よって非退化PQRを扱う範囲では両パラメータを開区間にできる。",
+      "comparison_effect": "原文の円が定義されない境界を正常な配置に数えない。"
+    },
+    {
+      "id": "triangle-existence",
+      "kind": "implicit_domain_explicit",
+      "detail_ja": "GMBLにはArea(P,Q,R)>0が明示されていないが、元の結論はPQRの外接円を要求する。新入力はその定義域を明示する。",
+      "comparison_effect": "共通検査器でもP,Q,Rの非退化性を検査する。"
+    },
+    {
+      "id": "fixed-versus-sampled-quadrilateral",
+      "kind": "goal_coverage",
+      "detail_ja": "原文の固定ABCDに対する可変E,Fの円群を、公開GMBLはABCDもサンプルする一配置として扱う。",
+      "comparison_effect": "配置比較のみとし、円群の不変量の発見・証明はこの実験の成果に数えない。"
+    }
+  ],
+  "open_issues": [],
+  "author_review": {
+    "author": "dsl_2000_2006",
+    "primary_sources_read": [
+      "official IMO 2005 English PDF (relevant problem text and rendered page)",
+      "pinned GMBL IMO_2005_P5.smt2",
+      "benchmarks/gmb/.runtime/source/src/optimizer.py",
+      "src/geosolver/problem/dsl-spec.json",
+      "src/geosolver/engine/standard/interpreter/context/geometry.py",
+      "src/geosolver/engine/standard/interpreter/context/high_precision.py"
+    ],
+    "static_validation": {
+      "public_model": true,
+      "validator": true,
+      "compiler": true,
+      "warnings": [],
+      "variables": 6,
+      "constructions": 9,
+      "conditions": 7
+    },
+    "solve_or_refinement_executed": false,
+    "independent_review_required": true
+  },
+  "comparison_status": "draft"
+}

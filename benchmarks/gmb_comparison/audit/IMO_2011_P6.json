@@ -1,0 +1,17 @@
+{
+  "case_id": "IMO_2011_P6",
+  "source": {"official_url": "https://www.imo-official.org/assets/documents/problems/2011/2011_eng.pdf", "official_pdf_sha256": "e09b2c59d3571663af614cbeb752c1283285f0306f15e6e4f67f36aa87c77a68", "official_pdf_page": 2, "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2011_P6.smt2", "gmbl_sha256": "840ce61302f6acd94ae4a69030316d89143be464e25e5e3f8b71174aab0c1957"},
+  "normalization": {"anchors": ["A", "B"], "fixed_coordinates": {"A": ["0", "0"], "B": ["1", "0"]}, "removed_continuous_dof": 4, "justification": "鋭角三角形の正長辺ABだけを相似変換で固定。接線の接点TとCの位置、鏡映を残す。", "scale_invariant": true, "reflection_fixed": false},
+  "clauses": [
+    {"id": "acute_circle", "statement_ja": "ABCは鋭角三角形、Gammaはその外接円。", "gmbl": ["(param (A B C) acute-tri)", "(define Gamma circle (circumcircle A B C))"], "geosolver": ["Area(A, B, C) > 0", "AcuteTriangle(A, B, C)", "Gamma = Circumcircle(A, B, C)"], "status": "matched_source_semantics"},
+    {"id": "tangent", "statement_ja": "lはGammaの任意の接線。", "gmbl": ["(param l line (tangent-lc Gamma))"], "geosolver": ["O = Center(Gamma)", "T = PointOnCircle(Gamma, tt)", "V = Point(T.x - (T.y - O.y), T.y + (T.x - O.x))", "l = Line(T, V)"], "status": "matched"},
+    {"id": "reflections", "statement_ja": "la,lb,lcはlを直線BC,CA,ABで鏡映した直線。", "gmbl": ["(define la line (reflect-ll l (line B C)))", "(define lb line (reflect-ll l (line C A)))", "(define lc line (reflect-ll l (line A B)))"], "geosolver": ["la = Line(Reflect(T, Line(B, C)), Reflect(V, Line(B, C)))", "lb = Line(Reflect(T, Line(C, A)), Reflect(V, Line(C, A)))", "lc = Line(Reflect(T, Line(A, B)), Reflect(V, Line(A, B)))"], "status": "matched"}
+  ],
+  "construction_reasoning": "Tは円上でTVはOTの90度回転ベクトルなのでlはTでの接線。半径>0よりT≠V。直線の鏡映はその異なる二点の鏡映を結んで表す。GeoSolver Reflectが点だけを扱うことを実装で確認し、未対応のReflect(line, axis)は呼ばない。",
+  "goal": {"statement_ja": "la,lb,lcでできる三角形の外接円はGammaに接する。交点・外接円の計算は探索後の結論検査に属する。", "gmbl": ["(eval (tangent-cc Gamma (circumcircle (inter-ll la lb) (inter-ll la lc) (inter-ll lb lc))))"], "included_in_search": false, "target": "0"},
+  "source_differences": [{"kind": "implementation_sampling_and_domain", "detail": "GMB acute-triのAx固定・Ay有限範囲・鋭角性の非保証は実装の制限。原文どおり鋭角を条件にし、GMBが返す配置にも共通検査を適用する。"}],
+  "checker_requirements": [{"requirement": "declared line l,la,lb,lcの係数を出力し、元の接線・鏡映の定義と照合する。", "status": "implemented_pending_final_apparatus_gate", "evidence": ["WitnessExporterはdeclared MPLineからa,b,cを出力する。", "checker.pyはdeclared lineの係数と構成式から独立計算した直線の向き・位置を照合する。", "test_line_reflection_parallelism_perpendicularity_and_sign_normalizationと全36入力の無探索binding compile試験が合格。"], "gate": "装置全体の最終独立監査・人工例試験の合格は統合工程で確認する。入力の数学的未確定事項ではない。"}],
+  "open_issues": [],
+  "author_review": {"reviewer": "dsl_2007_2013", "primary_sources_read": ["公式2011英語PDF第2頁（画像・抽出本文）", "公開IMO_2011_P6.smt2", "GMB optimizer.py: parameterize_line_tangentC", "GeoSolver operations/transforms.pyのReflect実装"], "static_validation": "GeometryProblem、validate、compile_problemに合格。探索・精密化未実施。"},
+  "comparison_status": "draft"
+}

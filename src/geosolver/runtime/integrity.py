@@ -50,7 +50,7 @@ def _sha256_json(value: object) -> str:
         ensure_ascii=False,
         sort_keys=True,
         separators=(",", ":"),
-        default=lambda item: {"mpf_binary": item._mpf_},
+        default=lambda item: {"mpf_binary": tuple(map(int, item._mpf_))},
     )
     return f"sha256:{hashlib.sha256(encoded.encode('utf-8')).hexdigest()}"
 
@@ -82,7 +82,7 @@ def resolved_config_hash() -> str:
             "engine": "standard",
             "default_time_limit_seconds": 180,
             "default_cores": 1,
-            "artifact_protocol_version": 3,
+            "artifact_protocol_version": 4,
             "pipeline": asdict(
                 ExternalPipelineConfig.production_baseline_tier(seed=0, total_time_budget_sec=178.0)
             ),
@@ -104,7 +104,7 @@ def expected_engine_lock() -> dict[str, Any]:
     source_hash = source_tree_hash()
     return {
         "schema_version": 2,
-        "artifact_protocol_version": 3,
+        "artifact_protocol_version": 4,
         "source_tree_hash": source_hash,
         "resolved_config_hash": resolved_config_hash(),
         "dependency_lock_hash": dependency_lock_hash(),
@@ -129,7 +129,7 @@ def verify_engine_lock() -> tuple[bool, str]:
             False,
             f"source tree hash mismatch: expected {lock.get('source_tree_hash')}, got {actual}",
         )
-    if lock.get("schema_version") != 2 or lock.get("artifact_protocol_version") != 3:
+    if lock.get("schema_version") != 2 or lock.get("artifact_protocol_version") != 4:
         return False, "unsupported engine lock or artifact protocol version"
     if set(lock.get("engines", {})) != {"standard"}:
         return False, "engine lock must contain only the standard engine"

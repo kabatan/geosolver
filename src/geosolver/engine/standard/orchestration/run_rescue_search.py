@@ -39,6 +39,7 @@ class RescueSearchResult:
     boxes: tuple[BranchBox, ...]
     candidates: tuple[FloatCandidate, ...]
     elapsed_sec: float
+    box_runs: tuple[dict[str, object], ...] = ()
 
 
 @timed_phase("rescue")
@@ -55,7 +56,6 @@ def run_rescue_search(
 ) -> RescueSearchResult:
     """Run conditional rescue search over selected rescue boxes."""
     started_at = time.monotonic()
-    runtime_budget.reserve_or_fail(pipeline_config.rescue_time_budget_sec)
     boxes = select_rescue_boxes(
         search_result.guard_feasible_ledger,
         bounds,
@@ -73,6 +73,7 @@ def run_rescue_search(
         max_time_sec=min(runtime_budget.remaining_sec(), pipeline_config.rescue_time_budget_sec),
     )
     rescued_candidates: list[FloatCandidate] = []
+    box_runs = []
     seed = int(rescue_config.seed_values[0]) if rescue_config.seed_values else 0
     for box_index, box in enumerate(boxes):
         remaining = min(
@@ -81,7 +82,10 @@ def run_rescue_search(
         )
         if remaining <= 0.0:
             break
-        rescue_config = replace(rescue_config, max_time_sec=remaining)
+        quota = remaining / (len(boxes) - box_index)
+        box_started = time.monotonic()
+        box_deadline = min(float(runtime_budget.deadline_monotonic), box_started + quota)
+        rescue_config = replace(rescue_config, max_time_sec=quota)
         adapter = NomadBlackboxAdapter(
             evaluator=evaluator,
             config=rescue_config,
@@ -94,10 +98,7 @@ def run_rescue_search(
             origin_phase="rescue",
             origin_backend="nomad",
             origin_box_index=int(box_index),
-            deadline_monotonic=min(
-                float(runtime_budget.deadline_monotonic),
-                started_at + pipeline_config.rescue_time_budget_sec,
-            ),
+            deadline_monotonic=box_deadline,
         )
         py_nomad.setSeed(seed)
         params = rescue_config.build_params(
@@ -111,6 +112,18 @@ def run_rescue_search(
             list(box.lower_bounds),
             list(box.upper_bounds),
             params,
+        )
+        box_finished = time.monotonic()
+        box_runs.append(
+            {
+                "box_index": box_index,
+                "quota_seconds": quota,
+                "elapsed_seconds": box_finished - box_started,
+                "evaluation_count": adapter.evaluation_count,
+                "stop_reason": "time_limit"
+                if box_finished >= box_deadline
+                else "backend_completed",
+            }
         )
         run_top = sorted(adapter.records, key=lambda item: item.score)[
             : int(pipeline_config.keep_per_rescue_box)
@@ -129,4 +142,5 @@ def run_rescue_search(
         boxes=tuple(boxes),
         candidates=tuple(deduped),
         elapsed_sec=float(elapsed_sec),
+        box_runs=tuple(box_runs),
     )

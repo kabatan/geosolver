@@ -1,0 +1,21 @@
+{
+  "id": "IMO_2012_P1",
+  "variables": ["cx", "cy"],
+  "constructions": [
+    {"name": "A", "expression": "Point(0, 0)"},
+    {"name": "B", "expression": "Point(1, 0)"},
+    {"name": "C", "expression": "Point(cx, cy)"},
+    {"name": "J", "expression": "Excenter(A, B, C)"},
+    {"name": "M", "expression": "FootOfPerpendicular(J, Line(B, C))"},
+    {"name": "K", "expression": "FootOfPerpendicular(J, Line(A, B))"},
+    {"name": "L", "expression": "FootOfPerpendicular(J, Line(A, C))"},
+    {"name": "F", "expression": "Intersect(Line(L, M), Line(B, J))"},
+    {"name": "G", "expression": "Intersect(Line(K, M), Line(C, J))"},
+    {"name": "S", "expression": "Intersect(Line(A, F), Line(B, C))"},
+    {"name": "T", "expression": "Intersect(Line(A, G), Line(B, C))"}
+  ],
+  "conditions": [
+    {"left": "Area(A, B, C)", "operator": ">", "right": "0"}
+  ],
+  "target": "0"
+}

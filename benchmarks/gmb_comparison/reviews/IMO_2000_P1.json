@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2000_P1",
+  "reviewer": "independent_review",
+  "case_sha256": "f854875d69a311a8fff2b41ce8146c8ec73ade3f60233dbdf99f90a41b39abac",
+  "audit_sha256": "91ad852808bf7b88f175b06807f412543c7a1297a0c48076629bf7ea115d5c9f",
+  "gmbl_sha256": "c7546705b4a2984f1fd8828b56f5f0b2ba47ba67f66ed418ef22276828d13b4a",
+  "reviewed_original_pdf_sha256": "04d49b95b4351ba08d5f41279f4589a27b7aa32572f0f073d47eacc55896180b",
+  "verdict": "pass",
+  "normalization_checked": true,
+  "conclusion_not_assumed": true,
+  "original_conditions_covered_by_gmbl": false,
+  "scope_of_coverage_ja": "原文の仮定を当該比較範囲で満たすかの監査である。原文の全境界配置を含む解集合の完全同値、GMB実装の全数値分岐の正当性、実験の実行許可を意味しない。",
+  "comparison_scope": "nondegenerate_configuration_domain",
+  "sources_read": [
+    "cases/IMO_2000_P1.json",
+    "audit/IMO_2000_P1.json",
+    "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2000_P1.smt2",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2000-eng.pdf",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2000-eng.txt",
+    "AUTHORING.md",
+    "reviews/UPSTREAM_SEMANTICS.md",
+    "https://www.imo-register.org.uk/2000-report.pdf (Problem 1, PDF page 4)",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2000-uk-report.pdf"
+  ],
+  "official_url": "https://www.imo-official.org/assets/documents/problems/2000/2000_eng.pdf",
+  "normalization_review": {
+    "anchors": [
+      "C",
+      "D"
+    ],
+    "removed_continuous_dof": 4,
+    "scale_invariant": true,
+    "reflection_fixed": false,
+    "remaining_solver_variables": [
+      "m",
+      "ax",
+      "ay",
+      "tn",
+      "bx"
+    ],
+    "shape_fixed_beyond_original_hypotheses": false,
+    "checked_ja": "原文で相異なる二点の単位基線化だけで平行移動2・回転1・正の尺度1を除く。元の形の変数と鏡映配置を保持している。"
+  },
+  "original_goal_not_used": "PE=QEを証明する。",
+  "checked_input_counts": {
+    "constructions": 12,
+    "conditions": 7
+  },
+  "method": {
+    "read_all_constructions_and_conditions": true,
+    "read_original_problem_assumptions": true,
+    "checked_domains_branches_and_non_degeneracy": true,
+    "checked_goal_separation": true,
+    "exact_algebraic_checks_only_where_documented": true,
+    "solver_executed": false,
+    "optimizer_executed": false,
+    "refinement_executed": false,
+    "prior_case_performance_used_to_adjust_input": false
+  },
+  "gmb_runtime_equivalence_claimed": false,
+  "findings": [
+    {
+      "id": "IMO_2000_P1-review-1",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "C,Dを(0,0),(1,0)にし、Mの位置、Aの高さと横位置、Nの円周位置、Bの横位置を残している。AB平行CDは同じy座標で表すだけで、特殊な図形の形を固定していない。"
+    },
+    {
+      "id": "IMO_2000_P1-review-2",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "Bの円所属と二つの接線条件、Eの正向き半直線条件を確認した。P,QはNA/CMおよびNB/MDの支持直線の交点であり、公開GMBLとは対応する。"
+    },
+    {
+      "id": "IMO_2000_P1-review-3",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "UK Team Leaderの同時代報告によりP,Qは支持直線の交点と確認できた。一方『接線はNよりMに近い方』の枝指定が短縮版公式PDFとGMBLにはないことが厳密反例で確認された。新DSLには原文どおりabs(N.y-A.y)>abs(M.y-A.y)が追加され、その正しさを再確認した。結論PE=QEを探索に加えていない。"
+    },
+    {
+      "id": "original_nearer_tangent_missing",
+      "severity": "blocking",
+      "status": "unresolved_comparison_contract",
+      "detail_ja": "公開GMBLは同時代のUK Team Leader一次報告のnear-M枝条件を欠く。修正後DSLは原文に忠実だが、既存の共通GMBL検査だけではこの原文仮定を検査できない。",
+      "evidence": "reviews/counterexample_2000_p1_tangent_branch.json"
+    },
+    {
+      "id": "nearer_tangent_condition_added",
+      "severity": "major",
+      "status": "resolved_before_evaluation",
+      "detail_ja": "水平なABへの距離比較abs(N.y-A.y)>abs(M.y-A.y)を条件へ追加したことを再確認。Case DSLの修正と、元のGMBLとの比較契約の未解決を分離する。"
+    }
+  ],
+  "remaining_uncertainties": [
+    "near-M枝条件を双方の共通採点に加えるか等、原文と短縮GMBLの差への対応を未決定。"
+  ],
+  "reviewed_supplementary_pdf_sha256": "ac90daf78bc52b8ebdc870aab0ab17b7accadaed8b058cef61a7b0a30284b503"
+}

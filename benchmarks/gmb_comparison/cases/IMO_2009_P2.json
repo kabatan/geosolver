@@ -1,0 +1,25 @@
+{
+  "id": "IMO_2009_P2",
+  "variables": ["cx", "cy", "tp", "tq"],
+  "constructions": [
+    {"name": "A", "expression": "Point(0, 0)"},
+    {"name": "B", "expression": "Point(1, 0)"},
+    {"name": "C", "expression": "Point(cx, cy)"},
+    {"name": "O", "expression": "Circumcenter(A, B, C)"},
+    {"name": "P", "expression": "PointOnSegment(C, A, tp)"},
+    {"name": "Q", "expression": "PointOnSegment(A, B, tq)"},
+    {"name": "K", "expression": "Midpoint(B, P)"},
+    {"name": "L", "expression": "Midpoint(C, Q)"},
+    {"name": "M", "expression": "Midpoint(P, Q)"},
+    {"name": "Gamma", "expression": "Circumcircle(K, L, M)"}
+  ],
+  "conditions": [
+    {"left": "Area(A, B, C)", "operator": ">", "right": "0"},
+    {"left": "tp", "operator": ">", "right": "0"},
+    {"left": "tp", "operator": "<", "right": "1"},
+    {"left": "tq", "operator": ">", "right": "0"},
+    {"left": "tq", "operator": "<", "right": "1"},
+    {"left": "IsTangent(Line(P, Q), Gamma)", "operator": "=", "right": "0"}
+  ],
+  "target": "0"
+}

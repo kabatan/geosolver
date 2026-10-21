@@ -1,0 +1,197 @@
+{
+  "case_id": "IMO_2018_P1",
+  "source": {
+    "official_url": "https://www.imo-official.org/assets/documents/problems/2018/2018_eng.pdf",
+    "official_landing_url": "https://www.imo-official.org/problems/2018/",
+    "official_pdf_path": "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2018-eng.pdf",
+    "official_pdf_sha256": "3118f981f520aa9f9238ec97d63614aff5f7c2c26bb9c2ea24517b4d5d9dbb6c",
+    "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2018_P1.smt2",
+    "gmbl_sha256": "02b336dcead6fb5f3562b161ac4f26544571c8e9477952ac5373944a0ff8c5a7",
+    "upstream_commit": "f070afe18ed874b3a31db519ea6f593f40a1be00"
+  },
+  "normalization": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "fixed_coordinates": {
+      "A": [
+        "0",
+        "0"
+      ],
+      "B": [
+        "1",
+        "0"
+      ]
+    },
+    "removed_continuous_dof": 4,
+    "justification": "鋭角三角形の辺ABは非零で、等長・垂直二等分・短弧は尺度不変。 平行移動2自由度・回転1自由度・正の一様拡大縮小1自由度のみを除く。残りの図形の形は固定しない。",
+    "scale_invariant": true,
+    "reflection_fixed": false
+  },
+  "clauses": [
+    {
+      "id": "H01",
+      "statement_ja": "ABCは鋭角三角形でΓは外接円。",
+      "gmbl": [
+        "(param (A B C) acute-tri); (define Gamma circle (circumcircle A B C))"
+      ],
+      "geosolver": [
+        "A = Point(0, 0)",
+        "B = Point(1, 0)",
+        "C = Point(cx, cy)",
+        "Gamma = Circumcircle(A, B, C)",
+        "conditions[0]: Area(A, B, C) > 0",
+        "conditions[1]: Dot(Vector(A, B), Vector(A, C)) > 0",
+        "conditions[2]: Dot(Vector(B, A), Vector(B, C)) > 0",
+        "conditions[3]: Dot(Vector(C, A), Vector(C, B)) > 0"
+      ],
+      "condition_indices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "construction_names": [
+        "A",
+        "B",
+        "C",
+        "Gamma"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H02",
+      "statement_ja": "D∈AB、E∈ACかつAD=AE。D=BやE=Cでは垂直二等分線が未定義、D=E=Aでは結論の直線DEが未定義なので非退化内部を使う。",
+      "gmbl": [
+        "(param D point (on-seg A B)); (param E point (on-seg A C)); (assert (cong A D A E))"
+      ],
+      "geosolver": [
+        "D = PointOnSegment(A, B, d)",
+        "E = PointOnSegment(A, C, e)",
+        "conditions[4]: d > 0",
+        "conditions[5]: d < 1",
+        "conditions[6]: e > 0",
+        "conditions[7]: e < 1",
+        "conditions[8]: Distance(A, D) = Distance(A, E)"
+      ],
+      "condition_indices": [
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "construction_names": [
+        "D",
+        "E"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H03",
+      "statement_ja": "FはBDの垂直二等分線とΓの短弧ABの交点。",
+      "gmbl": [
+        "(define F point (inter-lc (perp-bis B D) Gamma (rs-opp-sides C (line A B))))"
+      ],
+      "geosolver": [
+        "F = PointOnCircle(Gamma, f)",
+        "bis_BD = PerpendicularBisector(B, D)",
+        "conditions[9]: OnLine(F, bis_BD) = 0",
+        "conditions[11]: ((B.x-A.x)*(F.y-A.y)-(B.y-A.y)*(F.x-A.x))*((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x)) < 0"
+      ],
+      "condition_indices": [
+        9,
+        11
+      ],
+      "construction_names": [
+        "F",
+        "bis_BD"
+      ],
+      "status": "equivalent_construction"
+    },
+    {
+      "id": "H04",
+      "statement_ja": "GはCEの垂直二等分線とΓの短弧ACの交点。",
+      "gmbl": [
+        "(define G point (inter-lc (perp-bis C E) Gamma (rs-opp-sides B (line A C))))"
+      ],
+      "geosolver": [
+        "G = PointOnCircle(Gamma, g)",
+        "bis_CE = PerpendicularBisector(C, E)",
+        "conditions[10]: OnLine(G, bis_CE) = 0",
+        "conditions[12]: ((C.x-A.x)*(G.y-A.y)-(C.y-A.y)*(G.x-A.x))*((C.x-A.x)*(B.y-A.y)-(C.y-A.y)*(B.x-A.x)) < 0"
+      ],
+      "condition_indices": [
+        10,
+        12
+      ],
+      "construction_names": [
+        "G",
+        "bis_CE"
+      ],
+      "status": "equivalent_construction"
+    }
+  ],
+  "goal": {
+    "statement_ja": "DEとFGが平行、または同じ直線である。採点で一致直線を誤って除外しない。",
+    "gmbl": [
+      "(eval (para (line D E) (line F G)))"
+    ],
+    "included_in_solver_conditions": false,
+    "solver_target": "0",
+    "assessment_only": true
+  },
+  "source_differences": [
+    {
+      "id": "gmb_runtime_distinctness",
+      "kind": "runtime_acceptance_policy",
+      "blocking": false,
+      "description_ja": "GMBは全登録点の最小距離0.1とweighted soft lossで受理する。原文にない全点相異・最小距離0.1はGeoSolver条件に移さず、両者の出力を別の共通検査器で再検査する。"
+    },
+    {
+      "id": "gmb_acute_sampler",
+      "kind": "runtime_parameterization",
+      "blocking": false,
+      "description_ja": "optimizer.py sample_triangleのacute-triはB=(-2,0),C=(2,0)、Ax∈[-1.2,1.2]を試行中固定、Ay=1.1+3 sigmoid(z)。一部の形に制限し、Ax²+Ay²≤4の鈍角Aも数式上可能。GeoSolverでは形は固定せず、三頂点の内積が正という原文の鋭角条件を課す。"
+    },
+    {
+      "id": "opposite_side_selector_lowering",
+      "kind": "translation_representation",
+      "blocking": false,
+      "description_ja": "GeoSolverにrs-opp-sides selectorがないため、F,GをΓ上の未知点とし、垂直二等分線への所属と符号積<0で同じ枝条件を課した。ABCが鋭角ならCは短弧ABの反対側、Bは短弧ACの反対側である。幾何枝を座標辞書順へ置換していない。"
+    }
+  ],
+  "open_issues": [],
+  "witness_bindings": {
+    "A": "A",
+    "B": "B",
+    "C": "C",
+    "Gamma": "Gamma",
+    "D": "D",
+    "E": "E",
+    "F": "F",
+    "G": "G"
+  },
+  "author_review": {
+    "author": "dsl_2014_2020",
+    "materials_read": [
+      "official IMO 2018 English problem sheet",
+      "GMB IMO_2018_P1.smt2",
+      "GMB optimizer.py / instruction_reader.py / tf_optimizer.py",
+      "GeoSolver dsl-spec.json / public compiler / geometry implementations"
+    ],
+    "pdf_visual_check": "official_text_and_pdf_source_checked",
+    "static_validation": {
+      "public_model": true,
+      "validator_valid": true,
+      "compiler_valid": true,
+      "solver_executed": false
+    },
+    "independent_review_status": "pending",
+    "notes_ja": [
+      "F/Gを得るためだけに新たな定理や結果を追加せず、原文の所属条件を直接残差にした。"
+    ]
+  },
+  "comparison_status": "draft"
+}

@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2003_P3",
+  "reviewer": "independent_review",
+  "case_sha256": "c935acce3bd81ab892aa09227923a2aaa33f25b101361360a90ad6d3d471bef6",
+  "audit_sha256": "b91ce96ff2ec9d2f30d235b2ae86a37d3151022a7a568d858866c15280dbb581",
+  "gmbl_sha256": "d9aa609660e63aba669811561aa7eeae48e0ed5bdb6736abe51eb9930d27c9c7",
+  "reviewed_original_pdf_sha256": "af5d5c538beb1566d90733f08ee7f735c2745a433a3ec8d1f6223bf879950fa5",
+  "verdict": "pass",
+  "normalization_checked": true,
+  "conclusion_not_assumed": true,
+  "original_conditions_covered_by_gmbl": true,
+  "scope_of_coverage_ja": "原文の仮定を当該比較範囲で満たすかの監査である。原文の全境界配置を含む解集合の完全同値、GMB実装の全数値分岐の正当性、実験の実行許可を意味しない。",
+  "comparison_scope": "nondegenerate_configuration_domain",
+  "sources_read": [
+    "cases/IMO_2003_P3.json",
+    "audit/IMO_2003_P3.json",
+    "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2003_P3.smt2",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2003-eng.pdf",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2003-eng.txt",
+    "AUTHORING.md",
+    "reviews/UPSTREAM_SEMANTICS.md"
+  ],
+  "official_url": "https://www.imo-official.org/assets/documents/problems/2003/2003_eng.pdf",
+  "normalization_review": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "removed_continuous_dof": 4,
+    "scale_invariant": true,
+    "reflection_fixed": false,
+    "remaining_solver_variables": [
+      "cx",
+      "cy",
+      "dx",
+      "dy",
+      "ex",
+      "ey",
+      "fx",
+      "fy"
+    ],
+    "shape_fixed_beyond_original_hypotheses": false,
+    "checked_ja": "原文で相異なる二点の単位基線化だけで平行移動2・回転1・正の尺度1を除く。元の形の変数と鏡映配置を保持している。"
+  },
+  "original_goal_not_used": "六つの内角はすべて等しい。",
+  "checked_input_counts": {
+    "constructions": 6,
+    "conditions": 4
+  },
+  "method": {
+    "read_all_constructions_and_conditions": true,
+    "read_original_problem_assumptions": true,
+    "checked_domains_branches_and_non_degeneracy": true,
+    "checked_goal_separation": true,
+    "exact_algebraic_checks_only_where_documented": true,
+    "solver_executed": false,
+    "optimizer_executed": false,
+    "refinement_executed": false,
+    "prior_case_performance_used_to_adjust_input": false
+  },
+  "gmb_runtime_equivalence_claimed": false,
+  "findings": [
+    {
+      "id": "IMO_2003_P3-review-1",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "A,Bの単位基線以外の四頂点の八座標を自由に残し、六角形は指定頂点順の狭義凸性で検査する。"
+    },
+    {
+      "id": "IMO_2003_P3-review-2",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "向かい合う辺の中点間距離が対応する二辺長の和の√3/2倍になる三条件を巡回順も含めて照合した。"
+    },
+    {
+      "id": "IMO_2003_P3-review-3",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "全内角が等しいという結論は条件に加えていない。GMB polygonの有限な角・辺サンプラーを数学的な追加拘束に移していない。"
+    }
+  ],
+  "remaining_uncertainties": []
+}

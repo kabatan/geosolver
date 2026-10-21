@@ -8,6 +8,44 @@ from functools import wraps
 _deadline = ContextVar("solve_deadline", default=None)
 _timings = ContextVar("solve_timings", default=None)
 _counters = ContextVar("solve_counters", default=None)
+_progress = ContextVar("solve_progress", default=None)
+
+
+class RuntimeTimings(dict):
+    """Telemetry survives context cleanup, including an exceptional exit."""
+
+    def __init__(self):
+        super().__init__()
+        self.counters = {}
+        self.candidates = {}
+        self.exact_records = {}
+        self.verification_records = []
+
+
+def retain_candidates(candidates):
+    state = _progress.get()
+    if state is None:
+        return
+    for candidate in candidates:
+        key = candidate.candidate_key
+        previous = state.candidates.get(key)
+        if previous is None or candidate.revision >= previous.revision:
+            state.candidates[key] = candidate
+
+
+def retain_exact_record(record):
+    """Only atomically completed, independently checked records can survive."""
+    state = _progress.get()
+    if state is not None and record.exact_identified:
+        candidate = record.candidate
+        state.exact_records[candidate.candidate_key] = record
+        retain_candidates((candidate,))
+
+
+def retain_verifications(records):
+    state = _progress.get()
+    if state is not None:
+        state.verification_records.extend(records)
 
 
 def current_deadline():
@@ -52,21 +90,32 @@ def runtime_session(deadline):
     client = SymbolicClient(deadline)
     client_token = _client.set(client)
     token = _deadline.set(deadline)
-    timings = {}
+    timings = RuntimeTimings()
     timing_token = _timings.set(timings)
-    counter_token = _counters.set({})
+    counter_token = _counters.set(timings.counters)
+    progress_token = _progress.set(timings)
     try:
         yield timings
     finally:
-        client.close()
-        _client.reset(client_token)
-        _deadline.reset(token)
-        _timings.reset(timing_token)
-        _counters.reset(counter_token)
+        try:
+            client.close()
+        finally:
+            _client.reset(client_token)
+            _deadline.reset(token)
+            _timings.reset(timing_token)
+            _counters.reset(counter_token)
+            _progress.reset(progress_token)
 
 
 def counters_snapshot():
     return dict(_counters.get() or {})
+
+
+def count_event(name, amount=1):
+    """Record actual work separately from public evaluator request counts."""
+    counters = _counters.get()
+    if counters is not None:
+        counters[name] = counters.get(name, 0) + amount
 
 
 def counted(function):

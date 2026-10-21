@@ -1,0 +1,159 @@
+{
+  "case_id": "IMO_2002_P2",
+  "source": {
+    "official_url": "https://www.imo-official.org/assets/documents/problems/2002/2002_eng.pdf",
+    "official_legacy_url": "https://www.imo-official.org/problems/2002/eng.pdf",
+    "official_pdf_sha256": "a48da72a1ab173a09e61ebcf619e7fc427a671339d3bcc5a23762012c15fa0f9",
+    "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2002_P2.smt2",
+    "gmbl_sha256": "b3a5024416c03817ff75a29e12670e988ec25cc3bbb7fbf99068e770fc716574",
+    "gmbl_commit": "f070afe18ed874b3a31db519ea6f593f40a1be00"
+  },
+  "normalization": {
+    "anchors": [
+      "B",
+      "C"
+    ],
+    "fixed_coordinates": {
+      "B": [
+        "0",
+        "0"
+      ],
+      "C": [
+        "1",
+        "0"
+      ]
+    },
+    "removed_continuous_dof": 4,
+    "justification": "BCは円の直径で非零。円・角・弧中点・平行線・内心はいずれも相似不変。 平行移動2・回転1・正の一様拡大縮小1のみを除く。",
+    "scale_invariant": true,
+    "reflection_fixed": false
+  },
+  "clauses": [
+    {
+      "id": "diameter",
+      "statement_ja": "BCは中心Oの円の直径。",
+      "gmbl": [
+        "(param B point)",
+        "(param C point)",
+        "(define O point (midp B C))"
+      ],
+      "geosolver": [
+        "B = Point(0, 0)",
+        "C = Point(1, 0)",
+        "O = Midpoint(B, C)",
+        "omega = CircleThroughPoint(O, B)"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "point-A",
+      "statement_ja": "Aは円上で角AOC>60度。弧ABの定義よりA≠B。",
+      "gmbl": [
+        "(param A point (on-circ (coa O B)))",
+        "(assert (gt (uangle A O C) (div pi 3)))"
+      ],
+      "geosolver": [
+        "A = PointOnCircle(omega, ta)",
+        "Angle(A, O, C) > pi/3",
+        "arcAB = Arc(omega, A, B, excluding=C)"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "chord-EF",
+      "statement_ja": "EFの支持直線はAOの垂直二等分線、E,Fは円との異なる二交点。",
+      "gmbl": [
+        "(define E point (inter-lc (perp-bis A O) (coa O B) rs-arbitrary))",
+        "(define F point (inter-lc (perp-bis A O) (coa O B) (rs-neq E)))"
+      ],
+      "geosolver": [
+        "bisectorAO = PerpendicularBisector(A, O)",
+        "E = PointOnLine(bisectorAO, te)",
+        "OnCircle(E, omega) = 0",
+        "H = FootOfPerpendicular(E, Line(A, O))",
+        "F = Point(2*H.x - E.x, 2*H.y - E.y)",
+        "Distance(E, F) > 0"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "arc-midpoint",
+      "statement_ja": "Dは短い弧ABの中点。",
+      "gmbl": [
+        "(define D point (amidp-opp A B C))"
+      ],
+      "geosolver": [
+        "arcAB = Arc(omega, A, B, excluding=C)",
+        "D = PointOnArc(arcAB, 1/2)"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "parallel-intersection",
+      "statement_ja": "Oを通りADに平行な直線とACの交点がJ。",
+      "gmbl": [
+        "(define J point (inter-ll (para-at O (line A D)) (line A C)))"
+      ],
+      "geosolver": [
+        "J = Intersect(ParallelLine(Line(A, D), O), Line(A, C))"
+      ],
+      "status": "matched"
+    }
+  ],
+  "goal": {
+    "statement_ja": "Jは三角形CEFの内心。",
+    "gmbl": [
+      "(eval (incenter J C E F))"
+    ],
+    "geosolver_expressions": [
+      "Distance(J, Incenter(C, E, F)) = 0"
+    ],
+    "coverage": "原文の結論全体",
+    "included_in_search": false,
+    "target": "0"
+  },
+  "source_differences": [
+    {
+      "id": "gmb-global-admission",
+      "kind": "implementation_limit",
+      "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+      "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+    },
+    {
+      "id": "arbitrary-chord-order",
+      "kind": "equivalent_construction",
+      "detail_ja": "rs-arbitraryは交点番号にせずEを垂直二等分線上の未知点とする。中心Oを通るAOに関する鏡映は円とその垂直二等分線を保ち、E≠Fなら残る唯一の交点になる。E/F交換も残す。",
+      "comparison_effect": "配置の集合を保つ。ここで使う鏡映恒等式は内心という結論と無関係。"
+    },
+    {
+      "id": "minor-arc",
+      "kind": "equivalent_construction",
+      "detail_ja": "CはBの対蹠点なので、A≠B,CのときCを含まない弧ABは短弧。GMB amidp-opp(A,B,C)と一致。A=Cは角AOC>60度で排除される。",
+      "comparison_effect": "補助的なn selectorや向き固定を用いない。"
+    }
+  ],
+  "open_issues": [],
+  "author_review": {
+    "author": "dsl_2000_2006",
+    "primary_sources_read": [
+      "official IMO 2002 English PDF (relevant problem text and rendered page)",
+      "pinned GMBL IMO_2002_P2.smt2",
+      "benchmarks/gmb/.runtime/source/src/optimizer.py",
+      "src/geosolver/problem/dsl-spec.json",
+      "src/geosolver/engine/standard/interpreter/context/geometry.py",
+      "src/geosolver/engine/standard/interpreter/context/high_precision.py"
+    ],
+    "static_validation": {
+      "public_model": true,
+      "validator": true,
+      "compiler": true,
+      "warnings": [],
+      "variables": 2,
+      "constructions": 12,
+      "conditions": 3
+    },
+    "solve_or_refinement_executed": false,
+    "independent_review_required": true
+  },
+  "comparison_status": "draft"
+}

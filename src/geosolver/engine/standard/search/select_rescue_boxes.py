@@ -28,7 +28,7 @@ def _nearest_representative_distance(
             bounds=bounds,
         )
         for other in representatives
-        if other.candidate_id != candidate.candidate_id
+        if other.candidate_key != candidate.candidate_key
     ]
     if not distances:
         return 1.0

@@ -6,6 +6,8 @@ from collections.abc import Callable
 from functools import partial
 from typing import Any
 
+from geosolver.errors import GeometryDomainError
+
 
 def _center_alias(obj: Any) -> Any:
     if hasattr(obj, "center"):
@@ -16,12 +18,26 @@ def _center_alias(obj: Any) -> Any:
     raise TypeError(f"Center is not defined for {type(obj)}")
 
 
+def _triangle_vertices(points: tuple[Any, ...]) -> list[Any]:
+    if len(points) == 1 and isinstance(points[0], list | tuple):
+        points = tuple(points[0])
+    if len(points) != 3:
+        raise GeometryDomainError("Triangle requires exactly three vertices")
+    a, b, c = points
+    area2 = (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x)
+    if area2 == 0:
+        raise GeometryDomainError("Triangle requires three non-collinear vertices")
+    return list(points)
+
+
 def _triangle_as_polygon(*points: Any, polygon_ctor: Callable[..., Any]) -> Any:
-    return polygon_ctor(*points)
+    # Both backends accept a single sequence. The ordinary Polygon constructor
+    # does not accept the variadic historical spelling supported by MP_Polygon.
+    return polygon_ctor(_triangle_vertices(points))
 
 
 def _triangle_as_points(*points: Any) -> list[Any]:
-    return list(points)
+    return _triangle_vertices(points)
 
 
 def _contact_point_alias(

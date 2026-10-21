@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from functools import lru_cache
 
-from mpmath import mpf
+from mpmath import mp, mpf
 
 from .mp_arc_entities import MPArc
 from .mp_aux_entities import MPRay, MPSegment, MPVector
@@ -137,7 +137,7 @@ def mp_radius(circle: MPCircle) -> mpf:
 
 
 def mp_circumference(circle: MPCircle) -> mpf:
-    return 2 * _impl_module().mp_pi * circle.radius
+    return 2 * mp.pi * circle.radius
 
 
 def mp_nine_point_center(A: MPPoint, B: MPPoint, C: MPPoint) -> MPPoint | None:

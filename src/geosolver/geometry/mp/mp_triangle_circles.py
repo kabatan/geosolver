@@ -18,24 +18,6 @@ def _mp_circle_class() -> type[MPCircle]:
     return MPCircle
 
 
-def _mp_midpoint(a: MPPoint, b: MPPoint) -> MPPoint:
-    from geosolver.geometry.mp.mp_impl import mp_midpoint
-
-    return mp_midpoint(a, b)
-
-
-def _mp_triangle_center(a: MPPoint, b: MPPoint, c: MPPoint, n: int):
-    from geosolver.geometry.mp.mp_impl import mp_triangle_center
-
-    return mp_triangle_center(a, b, c, n)
-
-
-def _mp_circumcenter(a: MPPoint, b: MPPoint, c: MPPoint):
-    from geosolver.geometry.mp.mp_impl import mp_circumcenter
-
-    return mp_circumcenter(a, b, c)
-
-
 def _mp_circumcircle(a: MPPoint, b: MPPoint, c: MPPoint):
     from geosolver.geometry.mp.mp_impl import mp_circumcircle
 
@@ -48,26 +30,21 @@ def _mp_triangle_area(a: MPPoint, b: MPPoint, c: MPPoint) -> mpf:
     return mp_triangle_area(a, b, c)
 
 
-def _tol() -> mpf:
-    return mpf(10) ** (-(mp.dps - 10))
-
-
 def mp_nine_point_center(A: MPPoint, B: MPPoint, C: MPPoint) -> MPPoint | None:
-    orthocenter = _mp_triangle_center(A, B, C, 4)
-    circumcenter = _mp_circumcenter(A, B, C)
-    if orthocenter is None or circumcenter is None:
+    circ = _mp_circumcircle(A, B, C)
+    if circ is None:
         return None
-    return _mp_midpoint(orthocenter, circumcenter)
+    center_o = circ.center
+    return type(A)((A.x + B.x + C.x - center_o.x) / 2, (A.y + B.y + C.y - center_o.y) / 2)
 
 
 def mp_nine_point_circle(A: MPPoint, B: MPPoint, C: MPPoint) -> MPCircle | None:
-    center = mp_nine_point_center(A, B, C)
-    circumcircle = _mp_circumcircle(A, B, C)
-    if center is None or circumcircle is None:
+    circ = _mp_circumcircle(A, B, C)
+    if circ is None:
         return None
-
-    circle_cls = _mp_circle_class()
-    return circle_cls(center, circumcircle.radius / 2)
+    center_o = circ.center
+    center = type(A)((A.x + B.x + C.x - center_o.x) / 2, (A.y + B.y + C.y - center_o.y) / 2)
+    return _mp_circle_class()(center, circ.radius / 2)
 
 
 def mp_excircle(A: MPPoint, B: MPPoint, C: MPPoint, vertex: str = "A") -> MPCircle | None:
@@ -76,9 +53,9 @@ def mp_excircle(A: MPPoint, B: MPPoint, C: MPPoint, vertex: str = "A") -> MPCirc
     c = A.distance_to(B)
     s = (a + b + c) / 2
 
-    tol = _tol()
+    tol = 32 * mp.eps * max(a, b, c)
     area = _mp_triangle_area(A, B, C)
-    if area < tol:
+    if area == 0 or area < tol * max(a, b, c):
         return None
 
     vertex_u = vertex.upper()

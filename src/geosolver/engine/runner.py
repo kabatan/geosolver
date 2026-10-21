@@ -20,6 +20,7 @@ from geosolver.platform.processes import (
     spawn_process,
     terminate_process_tree,
 )
+from geosolver.runtime.artifact_commit import read_receipt
 from geosolver.runtime.protocol import WorkerArtifact, WorkerRequest
 
 
@@ -147,14 +148,20 @@ class EngineRunner:
                 self._process = process
             peak_rss = 0
             cpu_by_process = {}
+            stopped_after_commit = False
             try:
                 while process.poll() is None:
                     if self._cancel_event.is_set():
                         terminate_process_tree(process)
                         raise EngineCancelled
                     if time.monotonic() >= deadline:
+                        receipt = read_receipt(output_path)
                         terminate_process_tree(process)
-                        raise EngineTimedOut
+                        if receipt is None or not receipt.matches(request.request_id, deadline):
+                            raise EngineTimedOut
+                        # Saving finished on time; only worker cleanup remained.
+                        stopped_after_commit = True
+                        break
                     memory = process_tree_memory_bytes(process.pid)
                     peak_rss = max(peak_rss, memory)
                     try:
@@ -196,20 +203,32 @@ class EngineRunner:
                     f"worker exited with code {process.returncode} without an artifact",
                 )
             try:
-                artifact = WorkerArtifact.model_validate_json(
-                    output_path.read_text(encoding="utf-8")
-                )
+                payload = output_path.read_bytes()
+                artifact = WorkerArtifact.model_validate_json(payload)
             except (OSError, ValidationError, ValueError, json.JSONDecodeError) as error:
                 raise EngineFailure(
                     "artifact_invalid", f"invalid worker artifact: {error}"
                 ) from error
-            if process.returncode != 0 or artifact.status != "completed":
+            if (
+                process.returncode != 0 and not stopped_after_commit
+            ) or artifact.status != "completed":
                 error = artifact.error
                 code = error.code if error is not None else "worker_failed"
                 message = error.message if error is not None else "worker did not complete"
                 if code == "time_limit_reached":
                     raise EngineTimedOut
                 raise EngineFailure(code, message)
+            receipt = read_receipt(output_path)
+            if (
+                artifact.protocol_version != 4
+                or artifact.request_id != request.request_id
+                or receipt is None
+                or receipt.request_id != request.request_id
+                or not receipt.verify_bytes(payload)
+            ):
+                raise EngineFailure("artifact_invalid", "missing or inconsistent save receipt")
+            if not receipt.matches(request.request_id, deadline):
+                raise EngineTimedOut
             artifact = artifact.model_copy(
                 update={
                     "stdout": stdout,
@@ -225,6 +244,7 @@ class EngineRunner:
                             artifact.process_info.get("cpu_seconds", 0),
                         ),
                         "resource_sampling_interval_seconds": 0.05,
+                        "artifact_commit": receipt.model_dump(),
                     },
                 }
             )

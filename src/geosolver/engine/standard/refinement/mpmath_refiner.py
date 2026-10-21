@@ -5,9 +5,9 @@ from __future__ import annotations
 import ast
 import time
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from fractions import Fraction
-from functools import partial
+from functools import lru_cache, partial
 
 from mpmath import mp
 
@@ -24,6 +24,7 @@ from geosolver.engine.standard.evaluation.high_precision_expressions import (
     build_solution_context_high_precision,
     to_mpf_value,
 )
+from geosolver.engine.standard.evaluation.snapshots import uses_evaluation_store
 from geosolver.engine.standard.precision.type_guards.boundary_float_to_mpf import (
     BoundaryOrigin,
     boundary_float_to_mpf,
@@ -31,8 +32,16 @@ from geosolver.engine.standard.precision.type_guards.boundary_float_to_mpf impor
 from geosolver.engine.standard.precision.type_guards.high_precision_mode import high_precision_mode
 from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
 from geosolver.problem.ir.compiler import safe_eval_expr_hp
-from geosolver.runtime.deadline import timed_phase, uses_deadline
+from geosolver.problem.logical_equalities import evaluation_sources
+from geosolver.runtime.deadline import (
+    count_event,
+    expired,
+    retain_candidates,
+    timed_phase,
+    uses_deadline,
+)
 
+from .analytic_jacobian import derivative_plan, evaluate_jacobian
 from .finite_difference_jacobian import compute_finite_difference_jacobian
 from .levenberg_marquardt_step import compute_levenberg_marquardt_step
 from .line_search import _point_within_bounds, run_line_search
@@ -47,6 +56,7 @@ MAX_ITERS = "max_iters"
 INTEGER_CLOSURE_PHASE = "integer_closure"
 _BINARY_ARITY = 2
 _RANK_AWARE_MAX_STEPS = 64
+_WARM_NEWTON_MAX_STEPS = 12
 
 
 class _ClosureDeadlineExceeded(RuntimeError):
@@ -71,7 +81,7 @@ def _problem_contains_call(spec: object, function_name: str) -> bool:
     for attribute in ("constraints",):
         for expression in getattr(spec, attribute, ()) or ():
             if isinstance(expression, str):
-                texts.append(expression)
+                texts.extend(evaluation_sources(expression, getattr(spec, "logical_plans", ())))
     # ``answer_expr`` is evaluated after refinement and is not part of the
     # residual Jacobian.  Including it here would change the finite-difference
     # policy for an otherwise smooth problem merely because its requested
@@ -81,6 +91,12 @@ def _problem_contains_call(spec: object, function_name: str) -> bool:
         if isinstance(expression, str):
             texts.append(expression)
 
+    return _expressions_contain_call(tuple(texts), function_name)
+
+
+@lru_cache(maxsize=2048)
+def _expressions_contain_call(texts: tuple[str, ...], function_name: str) -> bool:
+    """An immutable expression property, never parse it at every LM step."""
     for expression in texts:
         try:
             tree = ast.parse(expression, mode="eval")
@@ -96,6 +112,54 @@ def _problem_contains_call(spec: object, function_name: str) -> bool:
 
 def _vector_norm(values: list[MPFloat]) -> MPFloat:
     return mp.sqrt(mp.fsum(value * value for value in values))
+
+
+@dataclass(frozen=True)
+class CandidateEvaluationSnapshot:
+    """One completed evaluation of the original residual system and hard checks."""
+
+    point: tuple
+    precision: int
+    evaluator: object
+    residual_norm: object
+    hard: object
+
+    def matches(self, point, precision, evaluator):
+        return (
+            self.point == tuple(point)
+            and self.precision == precision
+            and self.evaluator is evaluator
+        )
+
+
+def _deferred_refined_candidate(
+    *,
+    candidate: FloatCandidate,
+    point: list[MPFloat],
+    candidate_id: int,
+    answer_dps: int,
+    phase_history: tuple[str, ...],
+    integer_closures=(),
+) -> RefinedCandidate:
+    """Retain an iterate at a phase cutoff, never an unverified answer.
+
+    Phase C must independently re-evaluate and verify this draft under the
+    remaining solve budget. No further geometry evaluation belongs here.
+    """
+    count_event("refinement_deadline_drafts")
+    return RefinedCandidate(
+        x_hp=tuple(point),
+        residual_norm_hp=mp.inf,
+        answer_hp=None,
+        refinement_status="deadline_reached",
+        phase_history=(*phase_history, "final_evaluation_deferred"),
+        source=candidate,
+        candidate_id=int(candidate_id),
+        coordinate_precision_dps=int(answer_dps),
+        derivation_kind="integer_closure" if integer_closures else "",
+        constraint_indices=tuple(c.constraint_index for c in integer_closures),
+        target_integers=tuple(int(c.target_integer) for c in integer_closures),
+    )
 
 
 @dataclass(frozen=True)
@@ -152,6 +216,8 @@ def _is_zero_target(target: object) -> bool:
         return target.strip() == "0"
     try:
         return mp.mpf(target) == mp.mpf("0")
+    except TimeoutError:
+        raise
     except Exception:
         return False
 
@@ -164,11 +230,9 @@ def _extract_isinteger_inner_expression(constraint_expression: str) -> str | Non
     original ``IsPrime`` residual after projection.
     """
 
-    try:
-        parsed = ast.parse(constraint_expression, mode="eval")
-    except SyntaxError:
-        return None
-    call = parsed.body
+    from geosolver.engine.standard.problem.zero_test_source import zero_test_call
+
+    call = zero_test_call(constraint_expression)
     if not isinstance(call, ast.Call):
         return None
     if call.keywords or len(call.args) != 1:
@@ -188,15 +252,33 @@ def _integer_target_tuple_candidate_id(
     base_candidate_id: int,
     target_integers: tuple[MPFloat, ...],
 ) -> int:
-    """Derive a stable negative id for one explicit integer-target tuple."""
+    """Bounded display ID; only CandidateKey provides exact tuple identity."""
 
-    encoded = abs(int(base_candidate_id)) + 1
-    for target in target_integers:
-        integer_value = int(mp.nint(target))
-        sign_bit = 1 if integer_value < 0 else 0
-        magnitude = abs(integer_value)
-        encoded = encoded * 1_000_003 + magnitude * 2 + sign_bit
-    return -encoded
+    import hashlib
+
+    def encode_integer(value):
+        integer = _nearest_integer(value)
+        return (str(integer) if integer.bit_length() <= 1024 else hex(integer)).encode("ascii")
+
+    encoded = encode_integer(base_candidate_id) + b":"
+    encoded += b",".join(encode_integer(target) for target in target_integers)
+    if len(encoded) > 128:
+        encoded = hashlib.sha256(encoded).digest()
+    return -int.from_bytes(b"\x01" + encoded, "big")
+
+
+def _nearest_integer(value):
+    """Do not round a stored high-precision integer at a lower ambient precision."""
+    if isinstance(value, int):
+        return value
+    precision = max(mp.prec, getattr(value, "_mpf_", (0, 0, 0, 0))[3])
+    with mp.workprec(precision):
+        return int(mp.nint(value))
+
+
+def _exact_integer_mpf(value):
+    integer = _nearest_integer(value)
+    return mp.mpf(integer, prec=max(mp.prec, integer.bit_length() + 1))
 
 
 def _build_hp_context(
@@ -222,6 +304,11 @@ def build_integer_constraint_specs(
 ) -> tuple[IntegerConstraintSpec, ...]:
     """Return all top-level zero-target integer or prime constraints."""
 
+    plan = getattr(bundle, "analysis_plan", None)
+    return plan.integer_specs if plan is not None else _build_integer_specs(bundle=bundle)
+
+
+def _build_integer_specs(*, bundle):
     specs: list[IntegerConstraintSpec] = []
     for index, constraint_expression in enumerate(bundle.spec.constraints):
         if index >= len(bundle.targets) or not _is_zero_target(bundle.targets[index]):
@@ -267,6 +354,8 @@ def evaluate_integer_constraint_values(
                     )
                 )
         return tuple(values)
+    except TimeoutError:
+        raise
     except Exception:
         return None
 
@@ -286,7 +375,7 @@ def build_integer_constraint_closures_from_targets(
             IntegerConstraintClosure(
                 constraint_index=spec.constraint_index,
                 inner_expression=spec.inner_expression,
-                target_integer=mp.mpf(mp.nint(target)),
+                target_integer=_exact_integer_mpf(target),
             )
         )
     return tuple(closures)
@@ -409,12 +498,13 @@ def _evaluate_integer_closure_residuals(
                 )
                 overrides[closure.constraint_index] = inner_value - closure.target_integer
         return overrides
+    except TimeoutError:
+        raise
     except Exception:
         return None
 
 
 def _residual_vector_without_integer_constraints(
-    bundle: ProblemBundle,
     evaluator: EvaluatorPort,
     point: list[MPFloat],
     dps: int,
@@ -436,6 +526,25 @@ def _residual_vector_without_integer_constraints(
     return residuals
 
 
+@lru_cache(maxsize=256)
+def _zero_constraint_plans(constraints, targets):
+    from geosolver.engine.standard.problem.zero_test_source import zero_test_call
+
+    plans = {}
+    for index, expression in enumerate(constraints):
+        if index >= len(targets) or not _is_zero_target(targets[index]):
+            continue
+        node = zero_test_call(expression)
+        if not isinstance(node, ast.Call) or node.keywords or len(node.args) != _BINARY_ARITY:
+            continue
+        if not isinstance(node.func, ast.Name):
+            continue
+        kind = node.func.id.lower()
+        if kind in {"distance", "istangent"}:
+            plans[index] = kind, tuple(ast.get_source_segment(expression, arg) for arg in node.args)
+    return plans
+
+
 def _smooth_zero_constraint_residuals(
     *,
     bundle: ProblemBundle,
@@ -454,40 +563,51 @@ def _smooth_zero_constraint_residuals(
 
     * point--point distance zero -> ``(dx, dy)``;
     * line--circle tangency -> signed squared distance minus ``r**2``.
+    * circle--circle tangency -> the nearer signed inner/outer distance gap.
 
     The original evaluator remains the certification source; this helper only
     changes the residuals supplied to an optimization step.  Constraints that
     do not match these exact top-level forms are returned unchanged.
     """
-    plans: dict[int, tuple[str, tuple[str, str]]] = {}
-    for index, constraint_expression in enumerate(bundle.spec.constraints):
-        if index >= len(residuals) or index >= len(bundle.targets):
-            continue
-        if not _is_zero_target(bundle.targets[index]):
-            continue
-        try:
-            node = ast.parse(constraint_expression, mode="eval").body
-        except (SyntaxError, TypeError, ValueError):
-            continue
-        if not isinstance(node, ast.Call) or node.keywords or len(node.args) != _BINARY_ARITY:
-            continue
-        if not isinstance(node.func, ast.Name):
-            continue
-        kind = node.func.id.lower()
-        if kind not in {"distance", "istangent"}:
-            continue
-        plans[index] = (
-            kind,
-            tuple(ast.get_source_segment(constraint_expression, arg) for arg in node.args),
-        )
-    if not plans:
+    from geosolver.engine.standard.problem.tangency_contacts import distance_contact_sources
+
+    equalities = tuple(
+        zip(bundle.spec.constraints, (str(target) for target in bundle.targets), strict=True)
+    )
+    contact_sources = distance_contact_sources(
+        tuple((item.name, item.expr) for item in bundle.spec.construction), equalities
+    )
+    from geosolver.engine.standard.problem.positive_radius_contacts import (
+        positive_radius_contact_sources,
+    )
+
+    radius_deflations = positive_radius_contact_sources(
+        tuple(bundle.var_names),
+        tuple((item.name, item.expr) for item in bundle.spec.construction),
+        equalities,
+    )
+    plans = _zero_constraint_plans(tuple(bundle.spec.constraints), tuple(bundle.targets))
+    if not plans and not contact_sources and not radius_deflations:
         return residuals
 
     try:
         with mp.workdps(int(dps)), high_precision_mode():
-            context = _build_hp_context(bundle=bundle, point=point, dps=int(dps))
+            context = build_solution_context_high_precision(
+                bundle.spec,
+                list(bundle.var_names),
+                point,
+                bundle.base_context,
+                int(dps),
+                expressions=[expr for _, expressions in plans.values() for expr in expressions]
+                + list(contact_sources.values())
+                + list(radius_deflations),
+            )
             rewritten: list[MPFloat] = []
             for index, residual in enumerate(residuals):
+                contact_source = contact_sources.get(index)
+                if contact_source is not None:
+                    rewritten.append(mp.mpf(safe_eval_expr_hp(contact_source, context)))
+                    continue
                 plan = plans.get(index)
                 if plan is None:
                     rewritten.append(mp.mpf(residual))
@@ -505,6 +625,32 @@ def _smooth_zero_constraint_residuals(
                         )
                         continue
                 else:
+                    from geosolver.engine.standard.problem.tangency_contacts import (
+                        contact_tangency_source,
+                    )
+
+                    contact_source = contact_tangency_source(
+                        left_expr,
+                        right_expr,
+                        tuple((item.name, item.expr) for item in bundle.spec.construction),
+                        tuple(
+                            zip(
+                                bundle.spec.constraints,
+                                (str(target) for target in bundle.targets),
+                                strict=True,
+                            )
+                        ),
+                    )
+                    if contact_source is not None:
+                        rewritten.append(mp.mpf(safe_eval_expr_hp(contact_source, context)))
+                        continue
+                    left = getattr(left, "circle", left)
+                    right = getattr(right, "circle", right)
+                    if hasattr(left, "radius") and hasattr(right, "radius"):
+                        from geosolver.geometry.mp.signed_tangency import signed_tangency
+
+                        rewritten.append(signed_tangency(left, right))
+                        continue
                     line = circle = None
                     if (
                         hasattr(left, "a")
@@ -534,7 +680,15 @@ def _smooth_zero_constraint_residuals(
                         )
                         continue
                 rewritten.append(mp.mpf(residual))
+            # These are necessary consequences after dividing by a radius
+            # proven nonzero by its original Circle construction domain.
+            # Keep every original row as well as the auxiliary equations.
+            rewritten.extend(
+                mp.mpf(safe_eval_expr_hp(source, context)) for source in radius_deflations
+            )
             return rewritten
+    except TimeoutError:
+        raise
     except Exception:
         # This is an optimization aid, never a second failure path for the
         # evaluator.  Keep the source residuals if a construction is not a
@@ -588,6 +742,21 @@ def _select_rank_revealing_subsystem(
         matrix = [[mp.mpf(value) for value in row] for row in jacobian]
         if any(not mp.isfinite(value) for row in matrix for value in row):
             return None
+        # Explicit error bounds (used by final verification) are already in
+        # scaled units and must retain their original rank threshold.
+        if relative_tolerance is None:
+            # Equilibrate equations and coordinates before testing numerical rank.
+            # Nonzero diagonal scaling preserves rank and avoids discarding an
+            # independent equation merely because its units make it very small.
+            for row in matrix:
+                row_scale = max(abs(value) for value in row)
+                if row_scale:
+                    row[:] = [value / row_scale for value in row]
+            for column in range(column_count):
+                column_scale = max(abs(row[column]) for row in matrix)
+                if column_scale:
+                    for row in matrix:
+                        row[column] /= column_scale
         scale = max(abs(value) for row in matrix for value in row)
         if scale == 0:
             return None
@@ -652,6 +821,8 @@ def _run_rank_aware_findroot(
     target_residual: MPFloat,
     max_steps: int,
     one_sided_at_cusp: bool = False,
+    initial_jacobian: list[list[MPFloat]] | None = None,
+    derivative_fn: Callable[[list[MPFloat]], list[list[MPFloat]] | None] | None = None,
 ) -> list[MPFloat] | None:
     """Refine on a local full-rank chart of a residual manifold.
 
@@ -665,22 +836,29 @@ def _run_rank_aware_findroot(
             return list(evaluate_residuals(point))
         except _ClosureDeadlineExceeded:
             raise
+        except TimeoutError:
+            raise
         except Exception:
             return None
 
-    jacobian = compute_finite_difference_jacobian(
-        point=start_point,
-        dps=int(dps),
-        residual_fn=jacobian_residual_fn,
-        one_sided_at_cusp=bool(one_sided_at_cusp),
-    )
+    jacobian = initial_jacobian
+    if jacobian is None and derivative_fn is not None:
+        jacobian = derivative_fn(start_point)
+    if jacobian is None:
+        jacobian = compute_finite_difference_jacobian(
+            point=start_point,
+            dps=int(dps),
+            residual_fn=jacobian_residual_fn,
+            one_sided_at_cusp=bool(one_sided_at_cusp),
+        )
     if jacobian is None:
         return None
     subsystem = _select_rank_revealing_subsystem(jacobian, dps=int(dps))
     if subsystem is None:
         return None
     residual_indices, variable_indices = subsystem
-    fixed_point = [mp.mpf(value) for value in start_point]
+    with mp.workdps(int(dps)):
+        fixed_point = [+mp.mpf(value) for value in start_point]
 
     def assemble_point(active_values: tuple[MPFloat, ...]) -> list[MPFloat]:
         point = [mp.mpf(value) for value in fixed_point]
@@ -692,6 +870,15 @@ def _run_rank_aware_findroot(
         residuals = evaluate_residuals(assemble_point(tuple(active_values)))
         return tuple(residuals[index] for index in residual_indices)
 
+    def selected_jacobian(*active_values):
+        values = derivative_fn(assemble_point(tuple(active_values)))
+        if values is not None:
+            return mp.matrix([[values[i][j] for j in variable_indices] for i in residual_indices])
+        from mpmath.calculus.optimization import jacobian
+
+        return jacobian(mp, selected_residuals, mp.matrix(active_values))
+
+    options = {"J": selected_jacobian} if derivative_fn is not None else {}
     active_start = tuple(fixed_point[index] for index in variable_indices)
     try:
         with mp.workdps(int(dps)):
@@ -705,12 +892,19 @@ def _run_rank_aware_findroot(
                     active_start[0],
                     solver="secant",
                     tol=mp.mpf(target_residual),
-                    maxsteps=min(int(max_steps), _RANK_AWARE_MAX_STEPS),
+                    # A redundant scalar equation must not reduce the ordinary
+                    # precision-scaled scalar budget to the multivariate chart cap.
+                    maxsteps=(
+                        int(max_steps)
+                        if len(start_point) == 1
+                        else min(int(max_steps), _RANK_AWARE_MAX_STEPS)
+                    ),
                 )
             else:
                 root = mp.findroot(
                     selected_residuals,
                     active_start,
+                    **options,
                     solver="mnewton",
                     tol=mp.mpf(target_residual),
                     maxsteps=min(int(max_steps), _RANK_AWARE_MAX_STEPS),
@@ -720,12 +914,23 @@ def _run_rank_aware_findroot(
         return None
     if normalized_active is None or len(normalized_active) != len(variable_indices):
         return None
-    return assemble_point(tuple(normalized_active))
+    with mp.workdps(int(dps)):
+        return assemble_point(tuple(normalized_active))
 
 
 def _convert_problem_bounds(
     bundle: ProblemBundle,
 ) -> tuple[tuple[MPFloat | None, MPFloat | None], ...]:
+    plan = getattr(bundle, "analysis_plan", None)
+    precision = max(mp.dps, 530)
+    return (
+        plan.mathematical_bounds_at_precision(precision)
+        if plan is not None
+        else _convert_bounds_uncached(bundle, precision)
+    )
+
+
+def _convert_bounds_uncached(bundle, precision):
     from geosolver.engine.standard.interpreter.context.high_precision import (
         _get_high_precision_context,
     )
@@ -734,7 +939,7 @@ def _convert_problem_bounds(
     domains = mathematical_bounds(bundle.spec)
     # Bounds are shared by all refinement stages, including the 500-digit
     # closure. Do not evaluate irrational limits through float or ambient dps.
-    with mp.workdps(max(mp.dps, 530)), high_precision_mode():
+    with mp.workdps(precision), high_precision_mode():
         context = _get_high_precision_context(mp.dps)
         return tuple(
             tuple(
@@ -756,9 +961,11 @@ def _run_findroot_closure(
     residual_fn: Callable[[list[MPFloat], int], list[MPFloat] | None] | None = None,
     deadline_monotonic: float | None = None,
     one_sided_at_cusp: bool = False,
+    solver_tolerance: MPFloat | None = None,
 ) -> tuple[list[MPFloat], MPFloat] | None:
     if len(start_point) == 0:
         return None
+    tolerance = target_residual if solver_tolerance is None else solver_tolerance
 
     def evaluate_residuals(point: list[MPFloat]) -> tuple[MPFloat, ...]:
         if deadline_monotonic is not None and time.monotonic() >= float(deadline_monotonic):
@@ -768,12 +975,12 @@ def _run_findroot_closure(
                 values = residual_fn(point, int(dps))
             if values is None:
                 raise ValueError("closure residual evaluation failed")
-            return tuple(mp.mpf(value) for value in values)
+            return tuple(values)
         with mp.workdps(int(dps)), high_precision_mode():
             hp_eval = evaluator.evaluate_hp_residual(point, precision=int(dps))
         if hp_eval.evaluation_status is not EvaluationStatus.OK:
             raise ValueError(f"findroot residual status={hp_eval.evaluation_status.value}")
-        return tuple(mp.mpf(value) for value in hp_eval.residual_vector)
+        return tuple(hp_eval.residual_vector)
 
     def certify(point: list[MPFloat] | None) -> tuple[list[MPFloat], MPFloat] | None:
         if deadline_monotonic is not None and time.monotonic() >= float(deadline_monotonic):
@@ -786,7 +993,8 @@ def _run_findroot_closure(
             hp_eval = evaluator.evaluate_hp_residual(point, precision=int(dps))
         if hp_eval.evaluation_status is not EvaluationStatus.OK:
             return None
-        residual_norm = _vector_norm([mp.mpf(value) for value in hp_eval.residual_vector])
+        with mp.workdps(int(dps)):
+            residual_norm = _vector_norm(list(hp_eval.residual_vector))
         # ``mp.findroot`` can stop because its step became small even when the
         # residual is still far above the requested tolerance.  A rank-aware
         # chart changes only the Newton coordinates, never this certification
@@ -795,11 +1003,44 @@ def _run_findroot_closure(
             return None
         return point, residual_norm
 
+    # The incoming point can retain more bits than this closure's arithmetic.
+    # Keep those bits if every original residual already meets the requested
+    # target. Otherwise Newton must start at its own working precision: its
+    # damping loop detects stagnation by exact equality of consecutive points.
+    certified_start = certify(list(start_point))
+    if certified_start is not None:
+        return certified_start
+    with mp.workdps(int(dps)):
+        start_point = [+mp.mpf(value) for value in start_point]
+
     try:
-        initial_residuals = evaluate_residuals([mp.mpf(value) for value in start_point])
+        initial_residuals = evaluate_residuals(list(start_point))
     except (TypeError, ValueError, ZeroDivisionError, IndexError, _ClosureDeadlineExceeded):
         return None
     standard_point: list[MPFloat] | None = None
+    native_residuals = residual_fn is None or (
+        isinstance(residual_fn, partial)
+        and getattr(residual_fn.func, "__name__", None) == "_residual_vector_for_stage"
+        and not residual_fn.keywords.get("integer_closures")
+    )
+    plan = derivative_plan(getattr(evaluator, "bundle", None)) if native_residuals else None
+    if plan is not None and (
+        plan["rows"] != len(initial_residuals)
+        or (
+            plan["requires_smoothing"]
+            and not (
+                isinstance(residual_fn, partial)
+                and residual_fn.keywords.get("smooth_zero_constraints")
+            )
+        )
+    ):
+        plan = None
+
+    def analytic_values(point):
+        if deadline_monotonic is not None and time.monotonic() >= float(deadline_monotonic):
+            raise _ClosureDeadlineExceeded
+        with high_precision_mode():
+            return evaluate_jacobian(plan, point, int(dps))
 
     if len(start_point) == 1:
 
@@ -822,7 +1063,7 @@ def _run_findroot_closure(
                         scalar_residual,
                         mp.mpf(start_point[0]),
                         solver="secant",
-                        tol=mp.mpf(target_residual),
+                        tol=mp.mpf(tolerance),
                         maxsteps=int(max_steps),
                     )
                 else:
@@ -837,7 +1078,7 @@ def _run_findroot_closure(
                         overdetermined_scalar_residual,
                         mp.mpf(start_point[0]),
                         solver="mnewton",
-                        tol=mp.mpf(target_residual),
+                        tol=mp.mpf(tolerance),
                         maxsteps=int(max_steps),
                     )
         except (TypeError, ValueError, ZeroDivisionError, IndexError, _ClosureDeadlineExceeded):
@@ -851,13 +1092,25 @@ def _run_findroot_closure(
             point = [mp.mpf(value) for value in args]
             return evaluate_residuals(point)
 
+        def closure_jacobian(*args):
+            if deadline_monotonic is not None and time.monotonic() >= float(deadline_monotonic):
+                raise _ClosureDeadlineExceeded
+            values = analytic_values(list(args))
+            if values is not None:
+                return mp.matrix(values)
+            from mpmath.calculus.optimization import jacobian
+
+            return jacobian(mp, residuals, mp.matrix(args))
+
+        options = {"J": closure_jacobian} if plan is not None else {}
         try:
             with mp.workdps(int(dps)):
                 root = mp.findroot(
                     residuals,
                     tuple(start_point),
+                    **options,
                     solver="mnewton",
-                    tol=mp.mpf(target_residual),
+                    tol=mp.mpf(tolerance),
                     maxsteps=int(max_steps),
                 )
         except (TypeError, ValueError, ZeroDivisionError, IndexError, _ClosureDeadlineExceeded):
@@ -876,11 +1129,12 @@ def _run_findroot_closure(
     try:
         rank_aware_point = _run_rank_aware_findroot(
             evaluate_residuals=evaluate_residuals,
-            start_point=[mp.mpf(value) for value in start_point],
+            start_point=list(start_point),
             dps=int(dps),
-            target_residual=mp.mpf(target_residual),
+            target_residual=tolerance,
             max_steps=int(max_steps),
             one_sided_at_cusp=bool(one_sided_at_cusp),
+            derivative_fn=analytic_values if plan is not None else None,
         )
     except _ClosureDeadlineExceeded:
         return None
@@ -895,6 +1149,7 @@ class MpmathRefiner(LocalRefinerPort):
 
     @timed_phase("refinement")
     @uses_deadline
+    @uses_evaluation_store()
     def refine_candidates(
         self,
         *,
@@ -907,18 +1162,36 @@ class MpmathRefiner(LocalRefinerPort):
         refined_list: list[RefinedCandidate] = []
         attempted_count = 0
         for candidate in candidates:
-            if deadline_monotonic is not None and time.monotonic() >= float(deadline_monotonic):
+            if expired(deadline_monotonic):
                 break
             attempted_count += 1
-            refined_list.extend(
-                self._refine_single_candidate(
+            try:
+                completed = self._refine_single_candidate(
                     bundle=bundle,
                     evaluator=evaluator,
                     candidate=candidate,
                     bounds=bounds,
                     deadline_monotonic=deadline_monotonic,
                 )
-            )
+                refined_list.extend(completed)
+                retain_candidates(completed)
+            except TimeoutError:
+                # Inner stages preserve their latest completed update. This
+                # fallback covers a cutoff during the initial direct probe,
+                # before any such update exists.
+                draft = _deferred_refined_candidate(
+                    candidate=candidate,
+                    point=[
+                        boundary_float_to_mpf(value, origin=BoundaryOrigin.INITIAL_POINT)
+                        for value in candidate.x_float
+                    ],
+                    candidate_id=int(candidate.candidate_id),
+                    answer_dps=int(mp.dps),
+                    phase_history=(),
+                )
+                refined_list.append(draft)
+                retain_candidates((draft,))
+                break
         refined = tuple(refined_list)
         ordered = tuple(sorted(refined, key=lambda candidate: candidate.residual_norm_hp))
         converged_count = sum(
@@ -932,6 +1205,7 @@ class MpmathRefiner(LocalRefinerPort):
             hard_feasible_count=sum(1 for candidate in ordered if candidate.hard_feasible),
         )
 
+    @uses_evaluation_store()
     def refine_candidate_with_integer_targets(
         self,
         *,
@@ -943,6 +1217,7 @@ class MpmathRefiner(LocalRefinerPort):
     ) -> RefinedCandidate | None:
         """Run the explicit integer-closure path for one audited target tuple."""
 
+        completion_snapshot = []
         specs = build_integer_constraint_specs(bundle=bundle)
         if not specs or len(specs) != len(target_integers):
             return None
@@ -953,7 +1228,7 @@ class MpmathRefiner(LocalRefinerPort):
                 for value in candidate.x_float
             ]
         else:
-            current = [mp.mpf(value) for value in start_point]
+            current = list(start_point)
         closures = build_integer_constraint_closures_from_targets(
             specs=specs,
             target_integers=target_integers,
@@ -970,6 +1245,7 @@ class MpmathRefiner(LocalRefinerPort):
         )
         closure_point, closure_history, closure_status, closure_answer_dps = (
             self._apply_post_lm_closure_polish(
+                completion_snapshot=completion_snapshot,
                 bundle=bundle,
                 evaluator=evaluator,
                 bounds=bounds,
@@ -980,7 +1256,8 @@ class MpmathRefiner(LocalRefinerPort):
                 integer_closures=closures,
             )
         )
-        return self._build_refined_candidate(
+        refined = self._build_refined_candidate(
+            evaluation_snapshot=completion_snapshot[-1] if completion_snapshot else None,
             bundle=bundle,
             candidate=candidate,
             evaluator=evaluator,
@@ -989,11 +1266,14 @@ class MpmathRefiner(LocalRefinerPort):
             stage_status=closure_status,
             candidate_id=_integer_target_tuple_candidate_id(
                 int(candidate.candidate_id),
-                tuple(mp.mpf(target) for target in target_integers),
+                target_integers,
             ),
             answer_dps=closure_answer_dps,
             integer_closures=closures,
         )
+        # An explicit retry may revisit an automatic closure's parent/targets
+        # from another start. It must not overwrite that candidate's evidence.
+        return replace(refined, derivation_kind="integer_target_enumeration")
 
     def project_point_to_noninteger_constraint_manifold(
         self,
@@ -1011,12 +1291,11 @@ class MpmathRefiner(LocalRefinerPort):
         integer_constraint_indices = tuple(int(spec.constraint_index) for spec in specs)
         residual_fn = partial(
             _residual_vector_without_integer_constraints,
-            bundle,
             evaluator,
             integer_constraint_indices=integer_constraint_indices,
         )
         bounds = _convert_problem_bounds(bundle)
-        current = [mp.mpf(value) for value in start_point]
+        current = list(start_point)
         stage_status, projected_point, projected_norm = self._run_stage(
             bundle=bundle,
             evaluator=evaluator,
@@ -1027,7 +1306,8 @@ class MpmathRefiner(LocalRefinerPort):
             preserve_hard_feasibility=False,
             residual_fn=residual_fn,
         )
-        _ = stage_status
+        if stage_status == "deadline_reached":
+            return None
         projection_threshold = _closure_start_threshold(self.config, int(dps))
         if projected_norm > projection_threshold:
             return None
@@ -1051,6 +1331,7 @@ class MpmathRefiner(LocalRefinerPort):
             integer_values=tuple(integer_values),
         )
 
+    @uses_evaluation_store()
     def _residual_vector_for_stage(
         self,
         bundle: ProblemBundle,
@@ -1068,7 +1349,7 @@ class MpmathRefiner(LocalRefinerPort):
             hp_eval = evaluator.evaluate_hp_residual(point, precision=int(dps))
         if hp_eval.evaluation_status is not EvaluationStatus.OK:
             return None
-        residuals = [mp.mpf(value) for value in hp_eval.residual_vector]
+        residuals = list(hp_eval.residual_vector)
         if not integer_closures:
             if smooth_zero_constraints:
                 residuals = _smooth_zero_constraint_residuals(
@@ -1115,7 +1396,11 @@ class MpmathRefiner(LocalRefinerPort):
         integer_closures: tuple[IntegerConstraintClosure, ...] = (),
         residual_fn: Callable[[list[MPFloat], int], list[MPFloat] | None] | None = None,
     ) -> tuple[str, list[MPFloat], MPFloat]:
+        row_dependencies = None
         if residual_fn is None:
+            plan = getattr(bundle, "analysis_plan", None)
+            if plan is not None:
+                row_dependencies = plan.residual_variable_dependencies
             residual_fn = partial(
                 self._residual_vector_for_stage,
                 bundle,
@@ -1123,12 +1408,17 @@ class MpmathRefiner(LocalRefinerPort):
                 integer_closures=integer_closures,
                 smooth_zero_constraints=True,
             )
-        current = [mp.mpf(value) for value in start_point]
-        current_vec = residual_fn(current, int(dps))
+        current = list(start_point)
+        if expired():
+            return "deadline_reached", current, mp.inf
+        try:
+            current_vec = residual_fn(current, int(dps))
+        except TimeoutError:
+            return "deadline_reached", current, mp.inf
         if current_vec is None:
-            return NON_FINITE_INITIAL, current, mp.inf
+            return "deadline_reached" if expired() else NON_FINITE_INITIAL, current, mp.inf
         current_norm = _vector_norm(current_vec)
-        best = [mp.mpf(value) for value in current]
+        best = list(current)
         best_norm = current_norm
         damping = mp.mpf(self.config.damping_initial)
         damping_min = mp.mpf(self.config.damping_min)
@@ -1136,6 +1426,7 @@ class MpmathRefiner(LocalRefinerPort):
         stage_tolerance = mp.mpf(self.config.stage_tolerance)
         stalled_count = 0
         line_failures = 0
+        current_jacobian = None
         status = MAX_ITERS
         trial_filter = None
         if preserve_hard_feasibility:
@@ -1149,39 +1440,30 @@ class MpmathRefiner(LocalRefinerPort):
                 ).hard_feasible
 
         for _ in range(int(self.config.max_stage_iters)):
-            from geosolver.runtime.deadline import expired
-
             if expired():
                 return "deadline_reached", best, best_norm
             if best_norm <= target_residual:
                 status = TARGET_REACHED
                 break
-            jacobian = compute_finite_difference_jacobian(
-                point=current,
-                dps=int(dps),
-                residual_fn=residual_fn,
-                one_sided_at_cusp=_problem_contains_call(bundle.spec, "Angle"),
-                base_residual=current_vec,
-            )
-            if jacobian is None:
-                status = BRANCH_INSTABILITY
-                break
-            step = compute_levenberg_marquardt_step(
-                jacobian=jacobian,
-                residual_vector=current_vec,
-                damping=damping,
-            )
-            trial, trial_vec, improved = run_line_search(
-                point=current,
-                current_norm=current_norm,
-                step=step,
-                dps=int(dps),
-                max_steps=int(self.config.line_search_max_steps),
-                residual_fn=residual_fn,
-                bounds=bounds,
-                trial_filter=trial_filter,
-            )
-            if not improved and preserve_hard_feasibility and integer_closures:
+            try:
+                if current_jacobian is None:
+                    current_jacobian = compute_finite_difference_jacobian(
+                        point=current,
+                        dps=int(dps),
+                        residual_fn=residual_fn,
+                        one_sided_at_cusp=_problem_contains_call(bundle.spec, "Angle"),
+                        base_residual=current_vec,
+                        row_dependencies=row_dependencies,
+                    )
+                jacobian = current_jacobian
+                if jacobian is None:
+                    status = "deadline_reached" if expired() else BRANCH_INSTABILITY
+                    break
+                step = compute_levenberg_marquardt_step(
+                    jacobian=jacobian,
+                    residual_vector=current_vec,
+                    damping=damping,
+                )
                 trial, trial_vec, improved = run_line_search(
                     point=current,
                     current_norm=current_norm,
@@ -1190,19 +1472,35 @@ class MpmathRefiner(LocalRefinerPort):
                     max_steps=int(self.config.line_search_max_steps),
                     residual_fn=residual_fn,
                     bounds=bounds,
-                    trial_filter=None,
+                    trial_filter=trial_filter,
                 )
+                if not improved and preserve_hard_feasibility and integer_closures:
+                    trial, trial_vec, improved = run_line_search(
+                        point=current,
+                        current_norm=current_norm,
+                        step=step,
+                        dps=int(dps),
+                        max_steps=int(self.config.line_search_max_steps),
+                        residual_fn=residual_fn,
+                        bounds=bounds,
+                        trial_filter=None,
+                    )
+            except TimeoutError:
+                # A deadline can expire inside any residual/guard callback,
+                # not just at the iteration boundary above.
+                return "deadline_reached", best, best_norm
             if improved and trial_vec is not None:
                 trial_norm = _vector_norm(trial_vec)
                 improvement = (current_norm - trial_norm) / max(
                     abs(current_norm),
                     mp.mpf("1e-30"),
                 )
-                current = [mp.mpf(value) for value in trial]
-                current_vec = [mp.mpf(value) for value in trial_vec]
+                current = list(trial)
+                current_vec = list(trial_vec)
+                current_jacobian = None
                 current_norm = trial_norm
                 if trial_norm < best_norm:
-                    best = [mp.mpf(value) for value in current]
+                    best = list(current)
                     best_norm = trial_norm
                 damping = max(damping_min, damping / damping_scale)
                 line_failures = 0
@@ -1235,45 +1533,62 @@ class MpmathRefiner(LocalRefinerPort):
         candidate_id: int,
         answer_dps: int,
         integer_closures: tuple[IntegerConstraintClosure, ...] = (),
+        evaluation_snapshot: CandidateEvaluationSnapshot | None = None,
     ) -> RefinedCandidate:
-        from geosolver.runtime.deadline import expired
-
-        if expired():
-            # Preserve the last iterate, without doing more work after Phase B's
-            # cutoff. Phase C evaluates this draft under the remaining solve
-            # budget; an absent answer/infinite placeholder is not a solution.
-            return RefinedCandidate(
-                x_hp=tuple(point),
-                residual_norm_hp=mp.inf,
-                answer_hp=None,
-                refinement_status="deadline_reached",
-                phase_history=(*phase_history, "final_evaluation_deferred"),
-                source=candidate,
-                candidate_id=int(candidate_id),
-                coordinate_precision_dps=int(answer_dps),
-            )
-        final_vector = self._residual_vector_for_stage(
-            bundle=bundle,
-            evaluator=evaluator,
-            point=point,
-            dps=int(answer_dps),
-        )
-        final_norm = mp.inf if final_vector is None else _vector_norm(final_vector)
-        hard_snapshot = _evaluate_hard_feasibility(
-            evaluator,
-            point,
-            int(answer_dps),
-        )
-        answer = _exact_answer_from_integer_closures(
-            bundle=bundle,
-            closures=integer_closures,
-            precision=max(120, int(answer_dps)),
-        )
-        if answer is None:
-            answer = self._evaluate_answer(
-                evaluator=evaluator,
+        if stage_status == "deadline_reached" or expired():
+            return _deferred_refined_candidate(
+                candidate=candidate,
                 point=point,
-                dps=int(answer_dps),
+                candidate_id=int(candidate_id),
+                answer_dps=int(answer_dps),
+                phase_history=phase_history,
+                integer_closures=integer_closures,
+            )
+        try:
+            if evaluation_snapshot is not None and evaluation_snapshot.matches(
+                point, int(answer_dps), evaluator
+            ):
+                final_norm, hard_snapshot = (
+                    evaluation_snapshot.residual_norm,
+                    evaluation_snapshot.hard,
+                )
+                if final_norm is None:
+                    vector = self._residual_vector_for_stage(
+                        bundle=bundle,
+                        evaluator=evaluator,
+                        point=point,
+                        dps=int(answer_dps),
+                    )
+                    final_norm = mp.inf if vector is None else _vector_norm(vector)
+                count_event("refinement_snapshot_reuses")
+            else:
+                final_vector = self._residual_vector_for_stage(
+                    bundle=bundle,
+                    evaluator=evaluator,
+                    point=point,
+                    dps=int(answer_dps),
+                )
+                final_norm = mp.inf if final_vector is None else _vector_norm(final_vector)
+                hard_snapshot = _evaluate_hard_feasibility(evaluator, point, int(answer_dps))
+            answer = _exact_answer_from_integer_closures(
+                bundle=bundle,
+                closures=integer_closures,
+                precision=max(120, int(answer_dps)),
+            )
+            if answer is None:
+                answer = self._evaluate_answer(
+                    evaluator=evaluator,
+                    point=point,
+                    dps=int(answer_dps),
+                )
+        except TimeoutError:
+            return _deferred_refined_candidate(
+                candidate=candidate,
+                point=point,
+                candidate_id=int(candidate_id),
+                answer_dps=int(answer_dps),
+                phase_history=phase_history,
+                integer_closures=integer_closures,
             )
         return RefinedCandidate(
             x_hp=tuple(point),
@@ -1286,6 +1601,11 @@ class MpmathRefiner(LocalRefinerPort):
             hard_feasible=hard_snapshot.hard_feasible,
             hard_violation_tags=tuple(hard_snapshot.failure_tags),
             validity_margin_hp=hard_snapshot.min_margin,
+            coordinate_precision_dps=int(answer_dps),
+            answer_precision_dps=int(answer_dps),
+            derivation_kind="integer_closure" if integer_closures else "",
+            constraint_indices=tuple(c.constraint_index for c in integer_closures),
+            target_integers=tuple(int(c.target_integer) for c in integer_closures),
         )
 
     def _direct_accept_candidate(
@@ -1311,6 +1631,8 @@ class MpmathRefiner(LocalRefinerPort):
             return None
         try:
             threshold = mp.mpf(raw_threshold)
+        except TimeoutError:
+            raise
         except Exception:
             return None
         if threshold <= mp.mpf("0"):
@@ -1344,6 +1666,9 @@ class MpmathRefiner(LocalRefinerPort):
             stage_status="direct_evaluation",
             candidate_id=int(candidate.candidate_id),
             answer_dps=direct_dps,
+            evaluation_snapshot=CandidateEvaluationSnapshot(
+                tuple(point), direct_dps, evaluator, final_norm, hard_snapshot
+            ),
         )
 
     def _apply_post_lm_closure_polish(
@@ -1358,26 +1683,40 @@ class MpmathRefiner(LocalRefinerPort):
         answer_dps: int,
         integer_closures: tuple[IntegerConstraintClosure, ...] = (),
         deadline_monotonic: float | None = None,
+        completion_snapshot=None,
     ) -> tuple[list[MPFloat], tuple[str, ...], str, int]:
-        current = [mp.mpf(value) for value in point]
+        current = list(point)
         history = list(phase_history)
+        if stage_status == "deadline_reached" or expired(deadline_monotonic):
+            return current, tuple(history), "deadline_reached", answer_dps
         final_dps = int(max(self.config.schedule_dps))
-        final_vector = self._residual_vector_for_stage(
-            bundle=bundle,
-            evaluator=evaluator,
-            point=current,
-            dps=final_dps,
-            integer_closures=integer_closures,
-            smooth_zero_constraints=not bool(integer_closures),
-        )
-        if final_vector is None:
-            return current, tuple(history), stage_status, answer_dps
-        final_norm = _vector_norm(final_vector)
-        hard_snapshot = _evaluate_hard_feasibility(
-            evaluator,
-            current,
-            final_dps,
-        )
+        try:
+            final_vector = self._residual_vector_for_stage(
+                bundle=bundle,
+                evaluator=evaluator,
+                point=current,
+                dps=final_dps,
+                integer_closures=integer_closures,
+                smooth_zero_constraints=not bool(integer_closures),
+            )
+            if final_vector is None:
+                if expired(deadline_monotonic):
+                    stage_status = "deadline_reached"
+                return current, tuple(history), stage_status, answer_dps
+            final_norm = _vector_norm(final_vector)
+            hard_snapshot = _evaluate_hard_feasibility(
+                evaluator,
+                current,
+                final_dps,
+            )
+        except TimeoutError:
+            return current, tuple(history), "deadline_reached", answer_dps
+        if completion_snapshot is not None:
+            completion_snapshot[:] = [
+                CandidateEvaluationSnapshot(
+                    tuple(current), final_dps, evaluator, None, hard_snapshot
+                )
+            ]
         closure_threshold = _closure_start_threshold(self.config, final_dps)
         if not hard_snapshot.hard_feasible or final_norm > closure_threshold:
             return current, tuple(history), stage_status, answer_dps
@@ -1392,7 +1731,8 @@ class MpmathRefiner(LocalRefinerPort):
             smooth_zero_constraints=not bool(integer_closures),
         )
         for closure_dps in closure_stages:
-            if deadline_monotonic is not None and time.monotonic() >= float(deadline_monotonic):
+            if expired(deadline_monotonic):
+                stage_status = "deadline_reached"
                 break
             # ``findroot`` may spend dozens of iterations merely propagating
             # additional digits once a geometric branch is close to a root.
@@ -1406,25 +1746,34 @@ class MpmathRefiner(LocalRefinerPort):
                 int(self.config.max_stage_iters),
                 2 * int(closure_dps),
             )
-            closed = _run_findroot_closure(
-                evaluator=evaluator,
-                start_point=current,
-                bounds=bounds,
-                dps=closure_dps,
-                target_residual=mp.mpf(self.config.target_for_dps(closure_dps)),
-                max_steps=closure_max_steps,
-                residual_fn=closure_residual_fn,
-                deadline_monotonic=deadline_monotonic,
-                one_sided_at_cusp=_problem_contains_call(bundle.spec, "Angle"),
-            )
-            if closed is None:
-                continue
-            closed_point, closed_norm = closed
-            closed_hard_snapshot = _evaluate_hard_feasibility(
-                evaluator,
-                closed_point,
-                closure_dps,
-            )
+            try:
+                closed = _run_findroot_closure(
+                    evaluator=evaluator,
+                    start_point=current,
+                    bounds=bounds,
+                    dps=closure_dps,
+                    target_residual=mp.mpf(self.config.target_for_dps(closure_dps)),
+                    max_steps=closure_max_steps,
+                    residual_fn=closure_residual_fn,
+                    deadline_monotonic=deadline_monotonic,
+                    one_sided_at_cusp=_problem_contains_call(bundle.spec, "Angle"),
+                )
+                if closed is None:
+                    if expired(deadline_monotonic):
+                        stage_status = "deadline_reached"
+                        break
+                    continue
+                closed_point, closed_norm = closed
+                closed_hard_snapshot = _evaluate_hard_feasibility(
+                    evaluator,
+                    closed_point,
+                    closure_dps,
+                )
+            except TimeoutError:
+                # Keep the last *completed* precision, not an interrupted
+                # closure's coordinates or an old objective at a new point.
+                stage_status = "deadline_reached"
+                break
             if not closed_hard_snapshot.hard_feasible:
                 continue
             # A finite-precision evaluation can round both the current and
@@ -1435,13 +1784,13 @@ class MpmathRefiner(LocalRefinerPort):
             # is useful even when the displayed residual is tied.
             if closed_norm >= final_norm and closure_dps <= answer_dps:
                 continue
+            if completion_snapshot is not None:
+                completion_snapshot[:] = [
+                    CandidateEvaluationSnapshot(
+                        tuple(closed_point), closure_dps, evaluator, None, closed_hard_snapshot
+                    )
+                ]
             current = closed_point
-            final_vector = self._residual_vector_for_stage(
-                bundle=bundle,
-                evaluator=evaluator,
-                point=current,
-                dps=closure_dps,
-            )
             final_norm = closed_norm
             answer_dps = closure_dps
             stage_status = TARGET_REACHED
@@ -1458,7 +1807,7 @@ class MpmathRefiner(LocalRefinerPort):
         preserve_hard_feasibility: bool,
         integer_closures: tuple[IntegerConstraintClosure, ...],
     ) -> tuple[str, list[MPFloat], int, tuple[str, ...]]:
-        current = [mp.mpf(value) for value in start_point]
+        current = list(start_point)
         history: list[str] = []
         target_summary = ",".join(
             f"{closure.constraint_index}:{closure.target_integer}" for closure in integer_closures
@@ -1481,6 +1830,8 @@ class MpmathRefiner(LocalRefinerPort):
             )
             answer_dps = int(dps)
             history.append(f"{INTEGER_CLOSURE_PHASE}:{dps}:{stage_status}:{stage_norm}")
+            if stage_status == "deadline_reached":
+                break
             if stage_norm <= target:
                 continue
             if stage_norm <= promotion_threshold:
@@ -1499,10 +1850,17 @@ class MpmathRefiner(LocalRefinerPort):
         bounds: tuple[tuple[MPFloat | None, MPFloat | None], ...],
         deadline_monotonic: float | None = None,
     ) -> tuple[RefinedCandidate, ...]:
-        current = [
-            boundary_float_to_mpf(value, origin=BoundaryOrigin.INITIAL_POINT)
-            for value in candidate.x_float
-        ]
+        completion_snapshot = []
+        with mp.workdps(max(200, int(max(self.config.schedule_dps)))):
+            current = (
+                [mp.mpf(value) for value in candidate.initial_point_decimal]
+                if len(candidate.initial_point_decimal) == len(candidate.x_float)
+                and candidate.initial_point_decimal
+                else [
+                    boundary_float_to_mpf(value, origin=BoundaryOrigin.INITIAL_POINT)
+                    for value in candidate.x_float
+                ]
+            )
         direct_candidate = self._direct_accept_candidate(
             bundle=bundle,
             evaluator=evaluator,
@@ -1510,18 +1868,23 @@ class MpmathRefiner(LocalRefinerPort):
             point=current,
         )
         if direct_candidate is not None:
+            if direct_candidate.refinement_status == "deadline_reached":
+                return (direct_candidate,)
             # A direct numerical acceptance is not an exactness certificate
             # when the problem contains explicit integer-valued constraints.
             # Close those constraints first so the answer is evaluated on the
             # certified integer branch (rather than, e.g., at 21 + 1e-85).
-            integer_closures = _build_integer_constraint_closures(
-                bundle=bundle,
-                point=current,
-                dps=max(
-                    int(self.config.direct_accept_dps),
-                    int(max(self.config.schedule_dps)),
-                ),
-            )
+            try:
+                integer_closures = _build_integer_constraint_closures(
+                    bundle=bundle,
+                    point=current,
+                    dps=max(
+                        int(self.config.direct_accept_dps),
+                        int(max(self.config.schedule_dps)),
+                    ),
+                )
+            except TimeoutError:
+                return (direct_candidate,)
             if integer_closures:
                 closure_status, closure_point, closure_answer_dps, closure_history = (
                     self._run_integer_closure_path(
@@ -1539,6 +1902,7 @@ class MpmathRefiner(LocalRefinerPort):
                     polished_status,
                     polished_answer_dps,
                 ) = self._apply_post_lm_closure_polish(
+                    completion_snapshot=completion_snapshot,
                     bundle=bundle,
                     evaluator=evaluator,
                     bounds=bounds,
@@ -1549,9 +1913,12 @@ class MpmathRefiner(LocalRefinerPort):
                     integer_closures=integer_closures,
                     deadline_monotonic=deadline_monotonic,
                 )
-                if polished_status == TARGET_REACHED:
+                if polished_status in (TARGET_REACHED, "deadline_reached"):
                     return (
                         self._build_refined_candidate(
+                            evaluation_snapshot=completion_snapshot[-1]
+                            if completion_snapshot
+                            else None,
                             bundle=bundle,
                             candidate=candidate,
                             evaluator=evaluator,
@@ -1578,6 +1945,7 @@ class MpmathRefiner(LocalRefinerPort):
             # acceptance never bypasses exactification work.
             polished_point, polished_history, polished_status, polished_answer_dps = (
                 self._apply_post_lm_closure_polish(
+                    completion_snapshot=completion_snapshot,
                     bundle=bundle,
                     evaluator=evaluator,
                     bounds=bounds,
@@ -1591,9 +1959,14 @@ class MpmathRefiner(LocalRefinerPort):
                     deadline_monotonic=deadline_monotonic,
                 )
             )
-            if polished_status == TARGET_REACHED and not integer_closures:
+            if polished_status == "deadline_reached" or (
+                polished_status == TARGET_REACHED and not integer_closures
+            ):
                 return (
                     self._build_refined_candidate(
+                        evaluation_snapshot=completion_snapshot[-1]
+                        if completion_snapshot
+                        else None,
                         bundle=bundle,
                         candidate=candidate,
                         evaluator=evaluator,
@@ -1605,7 +1978,49 @@ class MpmathRefiner(LocalRefinerPort):
                     ),
                 )
         history: list[str] = []
+        # A float search point close to a regular root can usually gain the
+        # first high-precision digits with undamped Newton rather than dozens
+        # of damped LM/backtracking iterations. This is only a warm start:
+        # every configured LM stage, closure and final verification still runs.
+        # Failed or infeasible Newton attempts leave the original point intact.
+        if (
+            len(current) > 1
+            and len(bundle.spec.constraints) >= len(current)
+            and candidate.hard_feasible
+            and not build_integer_constraint_specs(bundle=bundle)
+            and not expired(deadline_monotonic)
+        ):
+            warm_dps = int(max(self.config.schedule_dps))
+            warm_target = mp.mpf(self.config.target_for_dps(warm_dps))
+            count_event("warm_newton_attempts")
+            closed = _run_findroot_closure(
+                evaluator=evaluator,
+                start_point=current,
+                bounds=bounds,
+                dps=warm_dps,
+                target_residual=warm_target,
+                # mpmath checks a squared residual against tol. The returned
+                # root must also meet the original unsquared residual target.
+                solver_tolerance=warm_target * warm_target,
+                max_steps=_WARM_NEWTON_MAX_STEPS,
+                residual_fn=partial(
+                    self._residual_vector_for_stage,
+                    bundle,
+                    evaluator,
+                    smooth_zero_constraints=True,
+                ),
+                deadline_monotonic=deadline_monotonic,
+                one_sided_at_cusp=_problem_contains_call(bundle.spec, "Angle"),
+            )
+            if closed is not None:
+                warm_point, warm_norm = closed
+                hard = _evaluate_hard_feasibility(evaluator, warm_point, warm_dps)
+                if hard.hard_feasible:
+                    current = warm_point
+                    history.append(f"{warm_dps}:warm_newton:{warm_norm}")
+                    count_event("warm_newton_successes")
         stage_status = MAX_ITERS
+        answer_dps = int(max(self.config.schedule_dps))
         for dps in self.config.schedule_dps:
             target = mp.mpf(self.config.target_for_dps(int(dps)))
             promotion_threshold = mp.mpf(self.config.promotion_threshold_for_dps(int(dps)))
@@ -1619,6 +2034,9 @@ class MpmathRefiner(LocalRefinerPort):
                 preserve_hard_feasibility=bool(candidate.hard_feasible),
             )
             history.append(f"{dps}:{stage_status}:{stage_norm}")
+            answer_dps = int(dps)
+            if stage_status == "deadline_reached":
+                break
             if stage_norm <= target:
                 continue
             if stage_norm <= promotion_threshold:
@@ -1627,8 +2045,10 @@ class MpmathRefiner(LocalRefinerPort):
             if stage_status != TARGET_REACHED:
                 break
         final_dps = int(max(self.config.schedule_dps))
-        answer_dps = final_dps
+        if stage_status != "deadline_reached":
+            answer_dps = final_dps
         current, phase_history, stage_status, answer_dps = self._apply_post_lm_closure_polish(
+            completion_snapshot=completion_snapshot,
             bundle=bundle,
             evaluator=evaluator,
             bounds=bounds,
@@ -1639,6 +2059,7 @@ class MpmathRefiner(LocalRefinerPort):
             deadline_monotonic=deadline_monotonic,
         )
         primary_candidate = self._build_refined_candidate(
+            evaluation_snapshot=completion_snapshot[-1] if completion_snapshot else None,
             bundle=bundle,
             candidate=candidate,
             evaluator=evaluator,
@@ -1651,11 +2072,14 @@ class MpmathRefiner(LocalRefinerPort):
         results: list[RefinedCandidate] = [primary_candidate]
         if primary_candidate.refinement_status == "deadline_reached":
             return tuple(results)
-        closures = _build_integer_constraint_closures(
-            bundle=bundle,
-            point=current,
-            dps=final_dps,
-        )
+        try:
+            closures = _build_integer_constraint_closures(
+                bundle=bundle,
+                point=current,
+                dps=final_dps,
+            )
+        except TimeoutError:
+            return tuple(results)
         if not closures:
             return tuple(results)
         closure_status, closure_point, closure_answer_dps, closure_history = (
@@ -1670,6 +2094,7 @@ class MpmathRefiner(LocalRefinerPort):
         )
         closure_point, polished_closure_history, closure_status, closure_answer_dps = (
             self._apply_post_lm_closure_polish(
+                completion_snapshot=completion_snapshot,
                 bundle=bundle,
                 evaluator=evaluator,
                 bounds=bounds,
@@ -1682,6 +2107,7 @@ class MpmathRefiner(LocalRefinerPort):
             )
         )
         closure_candidate = self._build_refined_candidate(
+            evaluation_snapshot=completion_snapshot[-1] if completion_snapshot else None,
             bundle=bundle,
             candidate=candidate,
             evaluator=evaluator,

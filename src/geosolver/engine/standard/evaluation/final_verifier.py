@@ -5,6 +5,7 @@ from fractions import Fraction
 
 from mpmath import mp
 
+from geosolver.engine.standard.evaluation.snapshots import uses_evaluation_store
 from geosolver.engine.standard.evaluation.verification_domains import DomainVerifier
 from geosolver.engine.standard.evaluation.verification_numerics import (
     correction,
@@ -39,9 +40,14 @@ class FinalVerificationResult:
 
 
 def _variable_scales(evaluator, values):
-    bounds = infer_problem_bounds(evaluator.bundle)
+    plan = getattr(evaluator.bundle, "analysis_plan", None)
+    bounds = (
+        plan.bounds_at_precision(mp.dps)
+        if plan is not None
+        else infer_problem_bounds(evaluator.bundle)
+    )
     return tuple(
-        max(abs(mp.mpf(str(hi)) - mp.mpf(str(lo))), abs(v), mp.mpf(1))
+        max(abs(mp.mpf(hi) - mp.mpf(lo)), abs(v), mp.mpf(1))
         for v, (lo, hi) in zip(values, bounds, strict=True)
     )
 
@@ -75,6 +81,7 @@ def _exact_linear_configuration(equations, names, point):
     return True
 
 
+@uses_evaluation_store()
 def verify_final_candidate(*, evaluator, values, precision_schedule=FINAL_PRECISION_SCHEDULE):
     """Refine on independent coordinates, but validate every original condition.
 
@@ -84,11 +91,13 @@ def verify_final_candidate(*, evaluator, values, precision_schedule=FINAL_PRECIS
     point = tuple(values)
     scales = _variable_scales(evaluator, point)
     equations = evaluator.verification_equations
-    active_columns = tuple(
-        j
-        for j, name in enumerate(evaluator.bundle.var_names)
-        if any(equation.constant is None and name in equation.names for equation in equations)
-    )
+    active_columns = getattr(evaluator, "active_verification_columns", None)
+    if active_columns is None:
+        active_columns = tuple(
+            j
+            for j, name in enumerate(evaluator.bundle.var_names)
+            if any(equation.constant is None and name in equation.names for equation in equations)
+        )
     previous_point, previous_residuals, previous_valid = None, None, False
     latest = None
     for precision in precision_schedule:
@@ -111,8 +120,14 @@ def verify_final_candidate(*, evaluator, values, precision_schedule=FINAL_PRECIS
                 # Arithmetic below is local to this pass; retain the best point.
                 uncertainty = tuple(mp.mpf(0) for _ in point)
                 for update in range(9):
+                    base_samples = []
                     residuals, jacobian, errors, term_scales = linearization(
-                        equations, point, evaluator.bundle.var_names, scales, precision
+                        equations,
+                        point,
+                        evaluator.bundle.var_names,
+                        scales,
+                        precision,
+                        base_samples=base_samples,
                     )
                     if any(not mp.isfinite(r) for r in residuals):
                         raise ValueError("non-finite residual during verification")
@@ -151,9 +166,12 @@ def verify_final_candidate(*, evaluator, values, precision_schedule=FINAL_PRECIS
 
                     trial_residuals = []
                     follows_branch = True
-                    for equation in equations:
-                        _, at, _ = equation.sample(point, precision)
-                        b, bt, _ = equation.sample(trial, precision)
+                    from .verification_system import sample_equations
+
+                    trial_samples = sample_equations(equations, trial, precision)
+                    for trial_sample, base_sample in zip(trial_samples, base_samples, strict=True):
+                        _, at, _ = base_sample
+                        b, bt, _ = trial_sample
                         follows_branch &= same_branches(at, bt)
                         trial_residuals.append(b)
                     if not follows_branch or any(not mp.isfinite(r) for r in trial_residuals):

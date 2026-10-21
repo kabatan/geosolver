@@ -6,50 +6,20 @@ from typing import Any
 
 from mpmath import mp
 
-from geosolver.engine.standard.interpreter.context import _get_high_precision_context
+from geosolver.engine.standard.evaluation.selection_trace import (
+    capture_selection_trace,
+    replay_selection_trace,
+)
+from geosolver.engine.standard.evaluation.snapshots import numerical_snapshot
 from geosolver.engine.standard.interpreter.guards.compile import (
     compile_guards,
     guard_hard_satisfied,
     guard_margin_value,
     guard_violation_value,
 )
-from geosolver.engine.standard.precision.type_guards.boundary_float_to_mpf import (
-    BoundaryOrigin,
-    boundary_float_to_mpf,
-)
-from geosolver.engine.standard.precision.type_guards.strict_to_mpf import strict_to_mpf
-from geosolver.problem.ir.compiler import safe_eval_expr_hp
+from geosolver.problem.evaluation_trace import capture_calls, replay_calls
 from geosolver.problem.ir.schema import IRSpec
-
-
-def _guard_context(
-    spec: IRSpec,
-    var_names: list[str],
-    values: list[Any],
-    base_context: dict[str, Any],
-) -> dict[str, Any]:
-    context = dict(base_context)
-    context.update(_get_high_precision_context(80))
-    for index, (name, value) in enumerate(zip(var_names, values, strict=True)):
-        if isinstance(value, float):
-            context[name] = boundary_float_to_mpf(
-                value,
-                origin=BoundaryOrigin.SCIPY_OPTIMIZE,
-            )
-        else:
-            try:
-                context[name] = strict_to_mpf(value, context=f"guard_variable:{name}[{index}]")
-            except Exception:
-                context[name] = boundary_float_to_mpf(
-                    float(value),
-                    origin=BoundaryOrigin.SCIPY_OPTIMIZE,
-                )
-    for item in spec.construction:
-        try:
-            context[item.name] = safe_eval_expr_hp(item.expr, context)
-        except Exception:
-            continue
-    return context
+from geosolver.runtime.deadline import check_deadline, count_event
 
 
 def guard_violation_penalty(
@@ -64,14 +34,20 @@ def guard_violation_penalty(
         return 0.0
     with mp.workdps(max(int(mp.dps), 80)):
         try:
-            context = _guard_context(spec, var_names, values, base_context)
+            snapshot = numerical_snapshot(spec, var_names, values, base_context)
+            context = snapshot.for_expressions(spec.guards, partial=True)
+        except TimeoutError:
+            raise
         except Exception:
             return 1.0
         guard_irs = compiled_guards if compiled_guards is not None else compile_guards(spec.guards)
         total = mp.mpf("0")
         for guard_ir in guard_irs:
+            check_deadline()
             try:
                 value = guard_violation_value(guard_ir, context)
+            except TimeoutError:
+                raise
             except Exception:
                 total += 1
                 continue
@@ -92,25 +68,44 @@ def collect_guard_evidence(
         return [], ()
     with mp.workdps(max(int(mp.dps), 80)):
         try:
-            context = _guard_context(spec, var_names, values, base_context)
+            snapshot = numerical_snapshot(spec, var_names, values, base_context)
+            key = ("guard_evidence", tuple(spec.guards), bool(include_margins))
+        except TimeoutError:
+            raise
         except Exception as error:
             return [f"context_error: {error}"], tuple(None for _ in spec.guards)
-        guard_irs = compiled_guards if compiled_guards is not None else compile_guards(spec.guards)
-        violations: list[str] = []
-        margins: list[Any | None] = []
-        for index, guard_ir in enumerate(guard_irs):
-            try:
-                if not guard_hard_satisfied(guard_ir, context):
-                    violations.append(f"guard[{index}] returned False")
-                    margins.append(None)
-                else:
-                    margins.append(
-                        guard_margin_value(guard_ir, context) if include_margins else mp.inf
-                    )
-            except Exception as error:
-                violations.append(f"guard[{index}] raised: {error}")
+        if key not in snapshot.memo:
+            with capture_calls() as calls, capture_selection_trace() as trace:
+                context = snapshot.for_expressions(spec.guards, partial=True)
+                guard_irs = (
+                    compiled_guards if compiled_guards is not None else compile_guards(spec.guards)
+                )
+                violations, margins = _evaluate_guards(guard_irs, context, include_margins)
+            snapshot.memo[key] = tuple(violations), tuple(margins), tuple(calls), tuple(trace)
+        else:
+            count_event("guard_evidence_cache_hits")
+        violations, margins, calls, trace = snapshot.memo[key]
+        replay_calls(calls)
+        replay_selection_trace(trace)
+        return list(violations), margins
+
+
+def _evaluate_guards(guards, context, include_margins):
+    violations, margins = [], []
+    for index, guard in enumerate(guards):
+        check_deadline()
+        try:
+            if not guard_hard_satisfied(guard, context):
+                violations.append(f"guard[{index}] returned False")
                 margins.append(None)
-        return violations, tuple(margins)
+            else:
+                margins.append(guard_margin_value(guard, context) if include_margins else mp.inf)
+        except TimeoutError:
+            raise
+        except Exception as error:
+            violations.append(f"guard[{index}] raised: {error}")
+            margins.append(None)
+    return violations, margins
 
 
 def collect_guard_violations(
@@ -127,5 +122,6 @@ def collect_guard_violations(
         var_names=var_names,
         base_context=base_context,
         compiled_guards=compiled_guards,
+        include_margins=False,
     )
     return violations

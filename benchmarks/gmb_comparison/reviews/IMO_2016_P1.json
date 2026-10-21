@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2016_P1",
+  "reviewer": "independent_review",
+  "case_sha256": "6c4c0c53282e677edabb92f2ca6044558bf318186092df7d5d818978d3f648bc",
+  "audit_sha256": "51c59bbb57e4810ae0bd77724fcb44a0ba8bbe2dc35716b02d0f8e43e6d5e770",
+  "gmbl_sha256": "dc1b5194cea5cde497f3396800fbce7ace827068c0f6bb55c1236915c38933f1",
+  "reviewed_original_pdf_sha256": "14fe21101f62f2d8efab6e4a746e627c14055be95ef6dc3dc121c3cb516c242d",
+  "verdict": "pass",
+  "normalization_checked": true,
+  "conclusion_not_assumed": true,
+  "original_conditions_covered_by_gmbl": true,
+  "scope_of_coverage_ja": "原文の仮定を当該比較範囲で満たすかの監査である。原文の全境界配置を含む解集合の完全同値、GMB実装の全数値分岐の正当性、実験の実行許可を意味しない。",
+  "comparison_scope": "nondegenerate_configuration_domain",
+  "sources_read": [
+    "cases/IMO_2016_P1.json",
+    "audit/IMO_2016_P1.json",
+    "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2016_P1.smt2",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2016-eng.pdf",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2016-eng.txt",
+    "AUTHORING.md",
+    "reviews/UPSTREAM_SEMANTICS.md"
+  ],
+  "official_url": "https://www.imo-official.org/assets/documents/problems/2016/2016_eng.pdf",
+  "normalization_review": {
+    "anchors": [
+      "C",
+      "F"
+    ],
+    "removed_continuous_dof": 4,
+    "scale_invariant": true,
+    "reflection_fixed": false,
+    "remaining_solver_variables": [
+      "b",
+      "dx",
+      "dy",
+      "ex",
+      "ey"
+    ],
+    "shape_fixed_beyond_original_hypotheses": false,
+    "checked_ja": "原文で相異なる二点の単位基線化だけで平行移動2・回転1・正の尺度1を除く。元の形の変数と鏡映配置を保持している。"
+  },
+  "original_goal_not_used": "BD、FX、MEの3直線が一点で交わる。",
+  "checked_input_counts": {
+    "constructions": 10,
+    "conditions": 8
+  },
+  "method": {
+    "read_all_constructions_and_conditions": true,
+    "read_original_problem_assumptions": true,
+    "checked_domains_branches_and_non_degeneracy": true,
+    "checked_goal_separation": true,
+    "exact_algebraic_checks_only_where_documented": true,
+    "solver_executed": false,
+    "optimizer_executed": false,
+    "refinement_executed": false,
+    "prior_case_performance_used_to_adjust_input": false
+  },
+  "gmb_runtime_equivalence_claimed": false,
+  "findings": [
+    {
+      "id": "IMO_2016_P1-review-1",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "斜辺CFのみ単位基線にし、Bは直径CF円上を動くため直角三角形の形・鏡映が残る。A=(1+FB,0)はFがC,Aの間かつFA=FBの指定そのものである。"
+    },
+    {
+      "id": "IMO_2016_P1-review-2",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "DA=DC、EA=ED、二つの内角二等分線と正向きray、Mの中点、X=M+E-Aの平行四辺形を照合した。"
+    },
+    {
+      "id": "IMO_2016_P1-review-3",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "GMBのmodπ二等分残差の外角枝は本問の等長条件から排除されることを独立に証明した。正向きdot条件は新たな仮定ではない。三直線の共点性は結論のみ。"
+    }
+  ],
+  "remaining_uncertainties": []
+}

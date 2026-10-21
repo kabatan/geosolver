@@ -19,6 +19,18 @@ _ACTIVE_SYMBOL: ContextVar[str | None] = ContextVar(
 )
 
 
+def replay_selection_trace(entries):
+    destination = _ACTIVE_TRACE.get()
+    if destination is not None:
+        destination.extend(entries)
+
+
+def selection_evaluation_identity():
+    from geosolver.problem.evaluation_trace import current_evaluation_scope
+
+    return _ACTIVE_SYMBOL.get(), current_evaluation_scope()
+
+
 @contextmanager
 def capture_selection_trace() -> Iterator[list[SelectionTraceEntry]]:
     """Capture selection traces emitted while evaluating constructions."""

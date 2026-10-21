@@ -70,6 +70,7 @@ name = "geosolver"
 version = "1.0.0"
 source = { editable = "." }
 dependencies = [
+    { name = "gmpy2" },
     { name = "mpmath" },
     { name = "numpy" },
     { name = "psutil" },
@@ -90,6 +91,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "gmpy2", specifier = "==2.3.2" },
     { name = "jsonschema", marker = "extra == 'dev'", specifier = "==4.25.1" },
     { name = "mpmath", specifier = "==1.3.0" },
     { name = "numpy", specifier = "==2.5.1" },
@@ -104,6 +106,27 @@ requires-dist = [
     { name = "typer", specifier = "==0.16.1" },
 ]
 provides-extras = ["dev"]
+
+[[package]]
+name = "gmpy2"
+version = "2.3.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/0b/3d/1c648af871024438207d5a017fb3f0ebc6da6b59bb9ff6f5047464a3192d/gmpy2-2.3.2.tar.gz", hash = "sha256:f20b7e2f8fd16f8d6846bb5b73359c3cc5aa41ec5cf266321d362f547c8fd097", size = 301349, upload-time = "2026-10-04T01:58:12.383Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/39/d5/078a64abd6fdf8266456d3f4c9f86d7ac3376bd6ffcb2eaff907523e2f5c/gmpy2-2.3.2-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:32140d926db9b220154cf75bc1257c7f124022128ea45f5d1af8b13540414d1b", size = 861175, upload-time = "2026-10-04T01:56:29.259Z" },
+    { url = "https://files.pythonhosted.org/packages/b4/a9/f5fd0102385b1e8b757bd7a7685c2dcbebfa539aa43384407afd5fc40f19/gmpy2-2.3.2-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:063ec72b67018710e95e573f39d2175d139685d88a527b48765f9fb3f9e10a93", size = 712743, upload-time = "2026-10-04T01:56:30.648Z" },
+    { url = "https://files.pythonhosted.org/packages/09/d1/a852022f360ce73bc56a80964dfbc6146b79592252fb1d4cfa680a0d76a0/gmpy2-2.3.2-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:83838f152e2adef68ae8ec7b81109f9cefca1358adb1cbccc6c7960e8794f25e", size = 1672977, upload-time = "2026-10-04T01:56:32.067Z" },
+    { url = "https://files.pythonhosted.org/packages/9c/f8/76dcf2f0ab305725bd6371f4ee6695cefa2aa60d720023dd24493b36f5de/gmpy2-2.3.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:c3021ec352e1b26baf4752f99d88adc9e930f115a053162c127d1c1b2f5783c2", size = 1776397, upload-time = "2026-10-04T01:56:33.53Z" },
+    { url = "https://files.pythonhosted.org/packages/0e/22/bb54ba74e03a538dd678d4f8aa1d18982e18bab94dace65390d9be2fe427/gmpy2-2.3.2-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:7efed0b3780e25a517f9d7ff21057f04421552cb6770e0c3cc61dade2bbd8391", size = 1692342, upload-time = "2026-10-04T01:56:35.402Z" },
+    { url = "https://files.pythonhosted.org/packages/5c/d7/42af8ea2cb39978cf15bfc98867d4eddd3b1a79f2e55162d447e541b9ebf/gmpy2-2.3.2-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:ff8348059e27d5a770ab1d8bdbbe4efdee9ae409b022ed392adf753a35f340ec", size = 1727612, upload-time = "2026-10-04T01:56:36.799Z" },
+    { url = "https://files.pythonhosted.org/packages/82/93/a6412972ce31c6ed28a09a23aed1809a20f6556907a503dd83186df39645/gmpy2-2.3.2-cp312-cp312-win_amd64.whl", hash = "sha256:753baf48bf00b391297622cecc4d33fb3e10966fe3e61c2e6e22a3f387fa6446", size = 1145868, upload-time = "2026-10-04T01:56:38.692Z" },
+    { url = "https://files.pythonhosted.org/packages/20/92/7e80d6a20151dc815c59c60f47f3c3b76a4bf2cf8949ab358efbb7287c5a/gmpy2-2.3.2-cp312-cp312-win_arm64.whl", hash = "sha256:530a129ed24bcae138a314acbbcc90eb2d492b77808fb13642dfc0aa83435fe3", size = 770544, upload-time = "2026-10-04T01:56:40.248Z" },
+    { url = "https://files.pythonhosted.org/packages/3f/0e/232607f6a2dcd3a0ff21d061ddc626b16d0fa29551f16a2ecbd6132c2078/gmpy2-2.3.2-pp312-pypy312_pp80-macosx_10_15_x86_64.whl", hash = "sha256:1f08a49ba134b6641f94b97b0039471bd392f8c6e71e247c3ae665f8d7b4be43", size = 856498, upload-time = "2026-10-04T01:58:04.358Z" },
+    { url = "https://files.pythonhosted.org/packages/16/0c/1ae251c7e59c01076090a3f444615b027f37d0d9fd9ae2799f0159b7c0cd/gmpy2-2.3.2-pp312-pypy312_pp80-macosx_11_0_arm64.whl", hash = "sha256:71b2f43164ff5f3648aee650647bdd7dee3047311aa37071ce5234001fe44971", size = 703916, upload-time = "2026-10-04T01:58:05.722Z" },
+    { url = "https://files.pythonhosted.org/packages/df/7b/457c5a2a33e1271af17bdc5d09b17585b62bea3d991505d4009793dbf929/gmpy2-2.3.2-pp312-pypy312_pp80-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:4e3d7d0ba6245d1180e23180eecf46d63532515f1edfbb088ced03834dededce", size = 949596, upload-time = "2026-10-04T01:58:07.426Z" },
+    { url = "https://files.pythonhosted.org/packages/d1/b5/3c025cafff1dbc1d34594d33e65803108dd1f4d32abc14bf23dfdbcdb09b/gmpy2-2.3.2-pp312-pypy312_pp80-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:ef36677b9fdc6cf38f2bba2290e6e58ddbb2d991d1b67766daa183a52d8eed41", size = 1052654, upload-time = "2026-10-04T01:58:09.156Z" },
+    { url = "https://files.pythonhosted.org/packages/3c/12/c15869d72eeb12fd3e8e54a99c89186278e4bb2bff6964ac160dd7e874f7/gmpy2-2.3.2-pp312-pypy312_pp80-win_amd64.whl", hash = "sha256:605b84f9e9ce9ed4287e463586664b8a784537d48a918c552188b6e11187577e", size = 1186052, upload-time = "2026-10-04T01:58:10.811Z" },
+]
 
 [[package]]
 name = "iniconfig"

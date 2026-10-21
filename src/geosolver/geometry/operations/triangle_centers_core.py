@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from sympy import sqrt
+from sympy import Rational, sqrt
 
 from geosolver.geometry.entities.base import Point
 from geosolver.geometry.operations.triangle_centers_numpy_backend import (
@@ -19,7 +19,7 @@ def _triangle_ops():
 
 def _sin_shifted_symbolic(sin_value: Any, cos_value: Any, sign: int) -> Any:
     sqrt3_div_2 = sqrt(3) / 2
-    half = 0.5
+    half = Rational(1, 2)
     return sin_value * half + cos_value * sign * sqrt3_div_2
 
 
@@ -91,9 +91,9 @@ def TriangleCenter(A: Point, B: Point, C: Point, n: int) -> Point | None:
         cos_c_minus_a = cos_c * cos_a + sin_c * sin_a
         cos_a_minus_b = cos_a * cos_b + sin_a * sin_b
 
-        u = 1 - cos_b_minus_c
-        v = 1 - cos_c_minus_a
-        w = 1 - cos_a_minus_b
+        u = a * (1 - cos_b_minus_c)
+        v = b * (1 - cos_c_minus_a)
+        w = c * (1 - cos_a_minus_b)
     elif n in (13, 14, 15, 16):
         cos_a = (b2 + c2 - a2) / (2 * b * c)
         cos_b = (c2 + a2 - b2) / (2 * c * a)
@@ -120,6 +120,10 @@ def TriangleCenter(A: Point, B: Point, C: Point, n: int) -> Point | None:
         return None
 
     total = u + v + w
+    if total == 0:
+        from geosolver.errors import GeometryDomainError
+
+        raise GeometryDomainError("triangle center has no finite barycentrics")
     return Point((u * A.x + v * B.x + w * C.x) / total, (u * A.y + v * B.y + w * C.y) / total)
 
 

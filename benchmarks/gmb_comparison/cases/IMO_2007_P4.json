@@ -1,0 +1,20 @@
+{
+  "id": "IMO_2007_P4",
+  "variables": ["cx", "cy"],
+  "constructions": [
+    {"name": "A", "expression": "Point(0, 0)"},
+    {"name": "B", "expression": "Point(1, 0)"},
+    {"name": "C", "expression": "Point(cx, cy)"},
+    {"name": "Gamma", "expression": "Circumcircle(A, B, C)"},
+    {"name": "bisector", "expression": "AngleBisector(B, C, A)"},
+    {"name": "R", "expression": "Intersect(bisector, Gamma, exclude=C)"},
+    {"name": "P", "expression": "Intersect(bisector, PerpendicularBisector(B, C))"},
+    {"name": "Q", "expression": "Intersect(bisector, PerpendicularBisector(A, C))"},
+    {"name": "K", "expression": "Midpoint(B, C)"},
+    {"name": "L", "expression": "Midpoint(A, C)"}
+  ],
+  "conditions": [
+    {"left": "Area(A, B, C)", "operator": ">", "right": "0"}
+  ],
+  "target": "0"
+}

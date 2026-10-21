@@ -47,6 +47,9 @@ def load_problem_bundle(
     from geosolver.problem.logical_equalities import lower_logical_equalities
 
     spec = lower_construction_contracts(spec)
+    from geosolver.problem.incidence_residuals import lower_incidence_equalities
+
+    spec = lower_incidence_equalities(spec)
     spec = lower_logical_equalities(spec)
     targets = tuple(spec.v) if spec.v is not None else (0,) * len(spec.constraints)
     spec = replace(spec, guards=list(dict.fromkeys([*spec.guards, *domain_guards(spec)])))

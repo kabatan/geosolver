@@ -1,0 +1,22 @@
+{
+  "id": "IMO_2012_P5",
+  "variables": ["by", "tx", "tk", "tl"],
+  "constructions": [
+    {"name": "C", "expression": "Point(0, 0)"},
+    {"name": "A", "expression": "Point(1, 0)"},
+    {"name": "B", "expression": "Point(0, by)"},
+    {"name": "D", "expression": "FootOfPerpendicular(C, Line(A, B))"},
+    {"name": "X", "expression": "PointOnSegment(C, D, tx)"},
+    {"name": "K", "expression": "PointOnSegment(A, X, tk)"},
+    {"name": "L", "expression": "PointOnSegment(B, X, tl)"},
+    {"name": "M", "expression": "Intersect(Line(A, L), Line(B, K))"}
+  ],
+  "conditions": [
+    {"left": "by", "operator": "!=", "right": "0"},
+    {"left": "tx", "operator": ">", "right": "0"},
+    {"left": "tx", "operator": "<", "right": "1"},
+    {"left": "Distance(B, K)", "operator": "=", "right": "Distance(B, C)"},
+    {"left": "Distance(A, L)", "operator": "=", "right": "Distance(A, C)"}
+  ],
+  "target": "0"
+}

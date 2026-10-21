@@ -1,0 +1,134 @@
+{
+  "case_id": "IMO_2001_P5",
+  "source": {
+    "official_url": "https://www.imo-official.org/assets/documents/problems/2001/2001_eng.pdf",
+    "official_legacy_url": "https://www.imo-official.org/problems/2001/eng.pdf",
+    "official_pdf_sha256": "e96730ecd9049d2db09d9f9c2ea6710d36dc87c2ebd42221bdc3bdbf5d8f6446",
+    "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2001_P5.smt2",
+    "gmbl_sha256": "1db2c50a0b604fb110ea04ecffce70693bc0c7523f30ceaab8378dac2b631353",
+    "gmbl_commit": "f070afe18ed874b3a31db519ea6f593f40a1be00"
+  },
+  "normalization": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "fixed_coordinates": {
+      "A": [
+        "0",
+        "0"
+      ],
+      "B": [
+        "1",
+        "0"
+      ]
+    },
+    "removed_continuous_dof": 4,
+    "justification": "非退化三角形の一辺ABは非零。角と長さ和の等式は相似不変。 平行移動2・回転1・正の一様拡大縮小1のみを除く。",
+    "scale_invariant": true,
+    "reflection_fixed": false
+  },
+  "clauses": [
+    {
+      "id": "triangle",
+      "statement_ja": "ABCは非退化三角形。",
+      "gmbl": [
+        "(param (A B C) triangle)"
+      ],
+      "geosolver": [
+        "A = Point(0, 0)",
+        "B = Point(1, 0)",
+        "C = Point(cx, cy)",
+        "Area(A, B, C) > 0"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "bisectors",
+      "statement_ja": "APとBQはA,Bの内角二等分線で、P∈BC,Q∈CA。",
+      "gmbl": [
+        "(define P point (inter-ll (i-bisector B A C) (line B C)))",
+        "(define Q point (inter-ll (i-bisector A B C) (line C A)))"
+      ],
+      "geosolver": [
+        "P = Intersect(AngleBisector(B, A, C), Line(B, C))",
+        "Q = Intersect(AngleBisector(A, B, C), Line(C, A))"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "angle",
+      "statement_ja": "角BAC=60度。",
+      "gmbl": [
+        "(assert (= (uangle B A C) (div pi 3)))"
+      ],
+      "geosolver": [
+        "Angle(B, A, C) = pi/3"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "length-sum",
+      "statement_ja": "AB+BP=AQ+QB。",
+      "gmbl": [
+        "(assert (= (add (dist A B) (dist B P)) (add (dist A Q) (dist Q B))))"
+      ],
+      "geosolver": [
+        "Distance(A, B) + Distance(B, P) = Distance(A, Q) + Distance(Q, B)"
+      ],
+      "status": "matched"
+    }
+  ],
+  "goal": {
+    "statement_ja": "ABCの取りうる角度をすべて求める。配置生成比較では角度の答えを制約に含めず、答え列挙も要求しない。",
+    "gmbl": [],
+    "geosolver_expressions": [],
+    "coverage": "公式GMBLにevalなし。配置の仮定検査のみ。",
+    "included_in_search": false,
+    "target": "0"
+  },
+  "source_differences": [
+    {
+      "id": "gmb-global-admission",
+      "kind": "implementation_limit",
+      "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+      "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+    },
+    {
+      "id": "gmb-triangle-sampler",
+      "kind": "implementation_limit",
+      "detail_ja": "benchmarks/gmb/.runtime/source/src/optimizer.py:428-446のtriangleは単位円上の三頂点として構成する。外接半径を固定する点は相似正規化であり、GeoSolverは一辺を1へ正規化する。",
+      "comparison_effect": "正規化は異なるが三角形の形は限定しない。両出力を共通の無次元検査で採点する。"
+    },
+    {
+      "id": "goal-not-encoded",
+      "kind": "goal_coverage",
+      "detail_ja": "GMBLには元の角度求値に対応するevalがない。",
+      "comparison_effect": "結論チェック率の分母へ入れず、配置生成の仮定検査だけに含める。"
+    }
+  ],
+  "open_issues": [],
+  "author_review": {
+    "author": "dsl_2000_2006",
+    "primary_sources_read": [
+      "official IMO 2001 English PDF (relevant problem text and rendered page)",
+      "pinned GMBL IMO_2001_P5.smt2",
+      "benchmarks/gmb/.runtime/source/src/optimizer.py",
+      "src/geosolver/problem/dsl-spec.json",
+      "src/geosolver/engine/standard/interpreter/context/geometry.py",
+      "src/geosolver/engine/standard/interpreter/context/high_precision.py"
+    ],
+    "static_validation": {
+      "public_model": true,
+      "validator": true,
+      "compiler": true,
+      "warnings": [],
+      "variables": 2,
+      "constructions": 5,
+      "conditions": 3
+    },
+    "solve_or_refinement_executed": false,
+    "independent_review_required": true
+  },
+  "comparison_status": "draft"
+}

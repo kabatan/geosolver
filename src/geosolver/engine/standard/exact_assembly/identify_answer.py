@@ -158,11 +158,12 @@ def _identify_affine_pi_result(
     answer_hp: MPFloat,
     config: ExactTierConfig,
     input_precision_dps: int,
+    rational_only: bool = False,
 ) -> ExactIdentificationResult | None:
     candidate = identify_affine_pi(
         numeric_value=answer_hp,
         precision_dps=int(input_precision_dps),
-        max_total_degree=int(config.max_affine_pi_total_degree),
+        max_total_degree=1 if rational_only else int(config.max_affine_pi_total_degree),
         max_coeff=int(config.max_coeff),
         max_steps=int(config.max_steps),
     )
@@ -347,17 +348,35 @@ def _identify_answer_proposal(
 
 
 def identify_answer(
-    *, answer_hp, tier, input_precision_dps, answer_uncertainty=None, closed_source=None
+    *,
+    answer_hp,
+    tier,
+    input_precision_dps,
+    answer_uncertainty=None,
+    closed_source=None,
+    reusable_results=(),
+    prefer_affine_pi=False,
+    geometry_hint=None,
 ):
     """Bounded discovery followed by root-distance validation and a descriptor."""
     from geosolver.runtime.symbolic import request
-    from geosolver.runtime.symbolic_operations import decode_identification
+    from geosolver.runtime.symbolic_operations import decode_identification, encode_identification
 
     payload = {
-        "value": answer_hp._mpf_,
+        "value": tuple(map(int, answer_hp._mpf_)),
         "tier": tier,
         "precision": input_precision_dps,
-        "uncertainty": None if answer_uncertainty is None else answer_uncertainty._mpf_,
+        "uncertainty": None
+        if answer_uncertainty is None
+        else tuple(map(int, answer_uncertainty._mpf_)),
         "closed_source": closed_source,
+        "prefer_affine_pi": bool(prefer_affine_pi),
+        "geometry_hint": geometry_hint,
+        "reusable_results": [encode_identification(result) for result in reusable_results],
     }
-    return decode_identification(request("identify", payload))
+    result = decode_identification(request("identify", payload))
+    if result.identification_method == "verified_descriptor_reuse":
+        from geosolver.runtime.deadline import count_event
+
+        count_event("exact_descriptor_reuses")
+    return result

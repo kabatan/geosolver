@@ -10,7 +10,8 @@ from mpmath import mp
 from geosolver.engine.standard.contracts.candidate_record import FloatCandidate
 from geosolver.engine.standard.contracts.evaluator_port import EvaluatorPort
 from geosolver.engine.standard.evaluation.classify_evaluation_failure import EvaluationStatus
-from geosolver.runtime.deadline import expired
+from geosolver.engine.standard.evaluation.search_point import evaluate_search_point
+from geosolver.runtime.deadline import deadline_scope, expired
 
 from .nomad_config import NomadConfig
 
@@ -60,15 +61,25 @@ class NomadBlackboxAdapter:
     candidate_namespace: int = _NOMAD_CANDIDATE_NAMESPACE
     origin_phase: str = "search"
     origin_backend: str = "nomad"
-    origin_attempt: int = 0
+    origin_attempt: int | None = None
     origin_box_index: int | None = None
     records: list[FloatCandidate] = field(default_factory=list)
     evaluation_count: int = 0
     failure_count: int = 0
+    deadline_reached: bool = False
     deadline_monotonic: float | None = None
 
     def __call__(self, point: NomadPointLike) -> int:
+        with deadline_scope(self.deadline_monotonic):
+            try:
+                return self._evaluate(point)
+            except TimeoutError:
+                self.deadline_reached = True
+                return 0
+
+    def _evaluate(self, point: NomadPointLike) -> int:
         if expired(self.deadline_monotonic):
+            self.deadline_reached = True
             return 0
         coords = [float(point.get_coord(index)) for index in range(point.size())]
         self.evaluation_count += 1
@@ -79,6 +90,9 @@ class NomadBlackboxAdapter:
             namespace=self.candidate_namespace,
         )
         float_eval = self.evaluator.evaluate_float_residual(coords)
+        if expired(self.deadline_monotonic):
+            self.deadline_reached = True
+            return 0
         if float_eval.evaluation_status is not EvaluationStatus.OK:
             self.failure_count += 1
             self.records.append(
@@ -102,11 +116,13 @@ class NomadBlackboxAdapter:
                 )
             )
             return 0
-        hard_snapshot = self.evaluator.evaluate_float_hard_feasibility(
-            coords,
-            include_margins=False,
+        evaluation = evaluate_search_point(
+            evaluator=self.evaluator, values=coords, residual=float_eval
         )
-        guard_ok, _violations = self.evaluator.evaluate_guard(coords)
+        hard_snapshot, guard_ok = evaluation.hard, evaluation.guard_ok
+        if expired(self.deadline_monotonic):
+            self.deadline_reached = True
+            return 0
         penalty = 0.0 if hard_snapshot.hard_feasible else self.config.guard_penalty
         if self.constraint_scales is not None:
             scaled = [

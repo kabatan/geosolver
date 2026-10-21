@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2015_P3",
+  "reviewer": "independent_review",
+  "case_sha256": "28b2be4932fbb7764eae91c4709b252b8d31ad63aa964a0aa3f7c5ac73b54906",
+  "audit_sha256": "d34e814b1214409af83da59630c789c2c37b012162d6223f39cebb8060722773",
+  "gmbl_sha256": "2ba43a10e81b0d2591fbcc6c08f7e00ccf730ccc33dd69006eaee90879c08a90",
+  "reviewed_original_pdf_sha256": "5ebc0b9ca0072932e088f6fd22fa19625544e3616086da2aa1280d3a791dbeb2",
+  "verdict": "pass",
+  "normalization_checked": true,
+  "conclusion_not_assumed": true,
+  "original_conditions_covered_by_gmbl": false,
+  "scope_of_coverage_ja": "原文の仮定を当該比較範囲で満たすかの監査である。原文の全境界配置を含む解集合の完全同値、GMB実装の全数値分岐の正当性、実験の実行許可を意味しない。",
+  "comparison_scope": "nondegenerate_configuration_domain",
+  "sources_read": [
+    "cases/IMO_2015_P3.json",
+    "audit/IMO_2015_P3.json",
+    "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2015_P3.smt2",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2015-eng.pdf",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2015-eng.txt",
+    "AUTHORING.md",
+    "reviews/UPSTREAM_SEMANTICS.md"
+  ],
+  "official_url": "https://www.imo-official.org/assets/documents/problems/2015/2015_eng.pdf",
+  "normalization_review": {
+    "anchors": [
+      "B",
+      "C"
+    ],
+    "removed_continuous_dof": 4,
+    "scale_invariant": true,
+    "reflection_fixed": false,
+    "remaining_solver_variables": [
+      "ax",
+      "ay",
+      "q",
+      "k"
+    ],
+    "shape_fixed_beyond_original_hypotheses": false,
+    "checked_ja": "原文で相異なる二点の単位基線化だけで平行移動2・回転1・正の尺度1を除く。元の形の変数と鏡映配置を保持している。"
+  },
+  "original_goal_not_used": "三角形KQHとFKMの外接円が互いに接する。",
+  "checked_input_counts": {
+    "constructions": 9,
+    "conditions": 17
+  },
+  "method": {
+    "read_all_constructions_and_conditions": true,
+    "read_original_problem_assumptions": true,
+    "checked_domains_branches_and_non_degeneracy": true,
+    "checked_goal_separation": true,
+    "exact_algebraic_checks_only_where_documented": true,
+    "solver_executed": false,
+    "optimizer_executed": false,
+    "refinement_executed": false,
+    "prior_case_performance_used_to_adjust_input": false
+  },
+  "gmb_runtime_equivalence_claimed": false,
+  "findings": [
+    {
+      "id": "IMO_2015_P3-review-1",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "ABを単位基線にしてC,Q,Kの位置を自由に残し、鋭角性、AB>AC、垂心H・垂足F・中点Mと二つの直角を照合した。"
+    },
+    {
+      "id": "IMO_2015_P3-review-2",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "新DSLの全三点外積の同符号条件は原文の相異なるA,B,C,K,Qという円周順序を正しく表し、向きの鏡映も残している。"
+    },
+    {
+      "id": "IMO_2015_P3-review-3",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "公開GMBLには円周順序が本当に欠ける。有理反例をreviews/counterexample_2015_p3_order.jsonに保存した。新DSL自体は原文に忠実だが既存GMB成績との直接比較は不可。二円の接線という結論は仮定にしていない。"
+    },
+    {
+      "id": "original_cyclic_order_missing",
+      "severity": "blocking",
+      "status": "unresolved_comparison_contract",
+      "detail_ja": "原文のA,B,C,K,Q円周順序を公開GMBLが欠く。現DSLは原文に忠実だが、現在の共通GMBL検査だけでは原文に対する成功と判定できない。",
+      "evidence": "reviews/counterexample_2015_p3_order.json"
+    }
+  ],
+  "remaining_uncertainties": [
+    "原文の円周順序を双方の共通採点に加えるか等、入力差への対応を未決定。"
+  ]
+}

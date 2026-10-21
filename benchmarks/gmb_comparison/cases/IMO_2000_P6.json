@@ -1,0 +1,127 @@
+{
+  "id": "IMO_2000_P6",
+  "variables": [
+    "ax",
+    "ay"
+  ],
+  "constructions": [
+    {
+      "name": "A2",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "A3",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "A1",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "K1",
+      "expression": "FootOfPerpendicular(A1, Line(A2, A3))"
+    },
+    {
+      "name": "K2",
+      "expression": "FootOfPerpendicular(A2, Line(A1, A3))"
+    },
+    {
+      "name": "K3",
+      "expression": "FootOfPerpendicular(A3, Line(A1, A2))"
+    },
+    {
+      "name": "omega",
+      "expression": "Incircle(A1, A2, A3)"
+    },
+    {
+      "name": "L1",
+      "expression": "IncircleContactPoint(A1, A2, A3, side='BC')"
+    },
+    {
+      "name": "L2",
+      "expression": "IncircleContactPoint(A1, A2, A3, side='CA')"
+    },
+    {
+      "name": "L3",
+      "expression": "IncircleContactPoint(A1, A2, A3, side='AB')"
+    },
+    {
+      "name": "axis1",
+      "expression": "Line(L1, L2)"
+    },
+    {
+      "name": "H1a",
+      "expression": "FootOfPerpendicular(K1, axis1)"
+    },
+    {
+      "name": "H1b",
+      "expression": "FootOfPerpendicular(K2, axis1)"
+    },
+    {
+      "name": "U1",
+      "expression": "Point(2*H1a.x - K1.x, 2*H1a.y - K1.y)"
+    },
+    {
+      "name": "V1",
+      "expression": "Point(2*H1b.x - K2.x, 2*H1b.y - K2.y)"
+    },
+    {
+      "name": "refl1",
+      "expression": "Line(U1, V1)"
+    },
+    {
+      "name": "axis2",
+      "expression": "Line(L2, L3)"
+    },
+    {
+      "name": "H2a",
+      "expression": "FootOfPerpendicular(K2, axis2)"
+    },
+    {
+      "name": "H2b",
+      "expression": "FootOfPerpendicular(K3, axis2)"
+    },
+    {
+      "name": "U2",
+      "expression": "Point(2*H2a.x - K2.x, 2*H2a.y - K2.y)"
+    },
+    {
+      "name": "V2",
+      "expression": "Point(2*H2b.x - K3.x, 2*H2b.y - K3.y)"
+    },
+    {
+      "name": "refl2",
+      "expression": "Line(U2, V2)"
+    },
+    {
+      "name": "axis3",
+      "expression": "Line(L3, L1)"
+    },
+    {
+      "name": "H3a",
+      "expression": "FootOfPerpendicular(K3, axis3)"
+    },
+    {
+      "name": "H3b",
+      "expression": "FootOfPerpendicular(K1, axis3)"
+    },
+    {
+      "name": "U3",
+      "expression": "Point(2*H3a.x - K3.x, 2*H3a.y - K3.y)"
+    },
+    {
+      "name": "V3",
+      "expression": "Point(2*H3b.x - K1.x, 2*H3b.y - K1.y)"
+    },
+    {
+      "name": "refl3",
+      "expression": "Line(U3, V3)"
+    }
+  ],
+  "conditions": [
+    {
+      "predicate": "AcuteTriangle(A1, A2, A3)"
+    }
+  ],
+  "target": "0"
+}

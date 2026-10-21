@@ -192,29 +192,26 @@ def _to_mpf(value):
 
 
 def _mp_area_tolerance(scale_len: mpf) -> mpf:
-    """Return an area tolerance for degeneracy checks.
+    """Precision-relative area uncertainty, with explicit opt-in legacy floors.
 
-    mpmath runs at very high dps (hundreds of digits) during HP refinement.
-    Using only a dps-based tolerance can allow extremely thin triangles that are
-    numerically valid but geometrically meaningless for typical contest problems,
-    and can create spurious "solutions".
-
-    We therefore add a scale-aware floor: tol >= rel_floor * scale^2.
-    Override with env vars if needed.
+    A length scale must be squared even for microscopic figures.  The former
+    absolute precision floor (and max(scale,1)) rejected ordinary triangles
+    solely because they were small, especially at binary64 precision.
     """
+    return _mp_area_tolerance_squared(_to_mpf(scale_len) ** 2)
+
+
+def _mp_area_tolerance_squared(scale_squared: mpf) -> mpf:
     try:
-        rel_floor = mp.mpf(get_mp_degenerate_rel_floor())
+        rel_floor = mp.mpf(get_mp_degenerate_rel_floor(default="0"))
     except Exception:
-        rel_floor = mp.mpf("1e-30")
+        rel_floor = mp.mpf("0")
     try:
         abs_floor = mp.mpf(get_mp_degenerate_abs_floor())
     except Exception:
         abs_floor = mp.mpf("0")
 
-    # dps-based tolerance (very small at high dps)
-    dps_tol = mpf(10) ** (-(mp.dps - 10)) if mp.dps > 20 else mpf("1e-10")
-    s = max(mpf("1"), _to_mpf(scale_len))
-    return max(dps_tol, abs_floor, rel_floor * (s * s))
+    return max(abs_floor, max(32 * mp.eps, rel_floor) * abs(scale_squared))
 
 
 def mp_triangle_area(A: MPPoint, B: MPPoint, C: MPPoint) -> mpf:
@@ -240,31 +237,21 @@ def mp_midpoint(A: MPPoint, B: MPPoint) -> MPPoint:
 
 def mp_circumcircle(A: MPPoint, B: MPPoint, C: MPPoint) -> MPCircle | None:
     """外接円"""
-    ax, ay = A.x, A.y
-    bx, by = B.x, B.y
-    cx, cy = C.x, C.y
-
-    d = mpf(2) * (ax * (by - cy) + bx * (cy - ay) + cx * (ay - by))
+    # Translate before squaring, avoiding cancellation from a remote origin.
+    bx, by = B.x - A.x, B.y - A.y
+    cx, cy = C.x - A.x, C.y - A.y
+    d = 2 * mp.fdot((bx, by), (cy, -cx))
 
     # Degeneracy guard: near-collinear points make circumcircle ill-defined.
     # Use a scale-aware tolerance to avoid ultra-thin triangles.
-    try:
-        a_len = B.distance_to(C)
-        b_len = C.distance_to(A)
-        c_len = A.distance_to(B)
-        scale = max(mpf("1"), a_len, b_len, c_len)
-    except Exception:
-        scale = mpf("1")
-    tol = _mp_area_tolerance(scale)
-    if abs(d) < tol:
-        return None
-
-    ax2_ay2 = ax**2 + ay**2
     bx2_by2 = bx**2 + by**2
     cx2_cy2 = cx**2 + cy**2
-
-    ux = (ax2_ay2 * (by - cy) + bx2_by2 * (cy - ay) + cx2_cy2 * (ay - by)) / d
-    uy = (ax2_ay2 * (cx - bx) + bx2_by2 * (ax - cx) + cx2_cy2 * (bx - ax)) / d
+    scale_squared = max(bx2_by2, cx2_cy2, (bx - cx) ** 2 + (by - cy) ** 2)
+    tol = _mp_area_tolerance_squared(scale_squared)
+    if d == 0 or abs(d) < tol:
+        return None
+    ux = A.x + (bx2_by2 * cy - cx2_cy2 * by) / d
+    uy = A.y + (cx2_cy2 * bx - bx2_by2 * cx) / d
 
     center = MPPoint(ux, uy)
     radius = center.distance_to(A)

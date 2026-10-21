@@ -75,6 +75,10 @@ def _is_hp_active() -> bool:
 
 
 def _check_float_operand(other: Any, op: str) -> None:
+    # Exact mpf and int operands cannot be float contamination. Avoid reading
+    # context state for these common operands; subclasses keep the full check.
+    if type(other) is mpf or type(other) is int:
+        return
     if _is_hp_active() and isinstance(other, _FLOAT_TYPES):
         raise HighPrecisionContaminationError(f"mpf {op} float: {other!r}")
 

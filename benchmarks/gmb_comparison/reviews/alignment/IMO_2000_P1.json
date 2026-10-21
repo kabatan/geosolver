@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2000_P1",
+  "reviewer": "independent_review",
+  "verdict": "pass",
+  "official_gmbl_sha256": "c7546705b4a2984f1fd8828b56f5f0b2ba47ba67f66ed418ef22276828d13b4a",
+  "comparison_gmbl_sha256": "931aace52bf6810a7f6459ffdc25d749581f50dfb86c196af61060f1eb0d9f02",
+  "geosolver_case_sha256": "f854875d69a311a8fff2b41ce8146c8ec73ade3f60233dbdf99f90a41b39abac",
+  "audit_sha256": "91ad852808bf7b88f175b06807f412543c7a1297a0c48076629bf7ea115d5c9f",
+  "prior_review_sha256": "e00e821437ac2b96ca4ab02df8dcd75c62a66911bc0ee08aaf727382c5a12c15",
+  "assumptions_equivalent": true,
+  "conclusion_not_added": true,
+  "reflection_retained": true,
+  "only_missing_conditions_added": true,
+  "resolved_source_difference_ids": [
+    "nearer-M-branch-missing"
+  ],
+  "comparison_variant": "original_problem_aligned_v1",
+  "reviewed_paths": {
+    "official_gmbl": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2000_P1.smt2",
+    "comparison_gmbl": "benchmarks/gmb_comparison/gmbl-original-aligned/IMO_2000_P1.smt2",
+    "geosolver_case": "benchmarks/gmb_comparison/cases/IMO_2000_P1.json",
+    "audit": "benchmarks/gmb_comparison/audit/IMO_2000_P1.json",
+    "prior_review": "benchmarks/gmb_comparison/reviews/IMO_2000_P1.json"
+  },
+  "added_assertions": [
+    "(assert (gt (dist N (foot N (line A B))) (dist M (foot M (line A B)))))"
+  ],
+  "proof_ja": [
+    "非退化な直線ABに対するXの垂足をH_Xとすると、ユークリッド距離|XH_X|は点Xから直線ABへの非負距離である。",
+    "追加式はdistance(N,AB)>distance(M,AB)そのものであり、当時の一次問題文の『共通接線はNよりMに近い方』という指定と同値である。符号付き距離の大小ではないため、直線の両側を取り違えない。",
+    "現GeoSolver入力ではA.y=B.yでABが水平なので、同じ条件がabs(N.y-A.y)>abs(M.y-A.y)となる。一般座標のGMB式とこの正規化済み式は相似変換後に一致する。",
+    "等距離の場合はstrictな不等式を満たさず採用しない。A=Bは直線と垂足の定義域外で、既存のABおよび接線条件によっても排除される。",
+    "正の一様拡大縮小では両距離が同じ正数倍となり、平行移動・回転・鏡映では変わらない。既存の円・接線・交点・半直線条件および結論PE=QEは変更しない。"
+  ],
+  "equivalence_scope_ja": "既存の非退化条件の下で、追加された数学的仮定と原文・現GeoSolver条件が同値であることを確認した。GMBの有限サンプラー範囲、soft lossの数値的受理、全境界点での収束性能を同一と主張するものではない。未改変公式GMB入力についての以前の監査判断は書き換えない。",
+  "static_verification": {
+    "official_instruction_reader_syntax_and_types_valid": true,
+    "official_instruction_count": 15,
+    "common_checker_syntax_supported": true,
+    "all_original_commands_preserved_in_original_order": true,
+    "official_command_count": 14,
+    "comparison_command_count": 15,
+    "conclusion_commands_identical": true,
+    "only_expected_assertions_added": true,
+    "optimizer_imported": false
+  },
+  "original_sources": [
+    {
+      "url": "https://www.imo-official.org/assets/documents/problems/2000/2000_eng.pdf",
+      "pdf_sha256": "04d49b95b4351ba08d5f41279f4589a27b7aa32572f0f073d47eacc55896180b"
+    },
+    {
+      "url": "https://www.imo-register.org.uk/2000-report.pdf",
+      "pdf_sha256": "ac90daf78bc52b8ebdc870aab0ab17b7accadaed8b058cef61a7b0a30284b503",
+      "printed_page": 4
+    }
+  ],
+  "synthetic_verification": {
+    "script": "benchmarks/gmb_comparison/reviews/alignment/verify_added_conditions.py",
+    "script_sha256": "04c2145151bad54e8af8da46994c9c2e4e85e8e5b04d483a7df511d4f3952aeb",
+    "result": {
+      "base_examples": 6,
+      "transformed_examples_checked": 24,
+      "tie_cases_rejected": 2,
+      "degenerate_line_rejected": true,
+      "mismatches": 0,
+      "arithmetic": "exact rational foot and squared distance",
+      "scope": "distance-order condition only, not natural IMO configurations"
+    },
+    "note_ja": "有限人工例は一般証明の補助であり、元の自然問題を解いた試行や過去のGMB出力の採点ではない。"
+  },
+  "runtime_caveats": [
+    "GMB optimizer.pyのgtは既存仕様どおり絶対量0.1の余裕をsoft残差へ含める。今回その実装や余裕は変更していない。原文の数学的距離不等式と、GMBの数値的受理契約は区別して報告する。"
+  ],
+  "normalization": {
+    "anchors": [
+      "C",
+      "D"
+    ],
+    "geosolver_unchanged": true,
+    "mirror_fixed": false
+  },
+  "natural_cases_executed": 0,
+  "saved_gmb_witnesses_assessed": 0,
+  "optimizer_invocations": 0,
+  "prior_history_unchanged": true,
+  "open_issues": []
+}

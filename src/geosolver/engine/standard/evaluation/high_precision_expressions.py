@@ -6,17 +6,18 @@ from typing import Any
 
 from mpmath import mp
 
+from geosolver.engine.standard.evaluation.snapshots import (
+    evaluate_scalar_expression,
+    numerical_snapshot,
+)
 from geosolver.engine.standard.interpreter.answer import _eval_exact_to_mpf
-from geosolver.engine.standard.interpreter.context import _get_high_precision_context
-from geosolver.engine.standard.precision.type_guards.ensure_no_float import ensure_no_float
 from geosolver.engine.standard.precision.type_guards.high_precision_contamination_error import (
     HighPrecisionContaminationError,
 )
 from geosolver.engine.standard.precision.type_guards.hp_contract import hp_contract
 from geosolver.engine.standard.precision.type_guards.strict_to_mpf import strict_to_mpf
-from geosolver.problem.evaluation_trace import evaluation_scope
-from geosolver.problem.ir.compiler import safe_eval_expr_hp
 from geosolver.problem.ir.schema import IRSpec
+from geosolver.runtime.deadline import check_deadline
 
 
 def to_mpf_value(value: Any, *, precision: int, context: str) -> Any:
@@ -55,17 +56,13 @@ def build_solution_context_high_precision(
     values: list[Any],
     base_context: dict[str, Any],
     precision: int,
+    *,
+    expressions: list[str] | None = None,
 ) -> dict[str, Any]:
-    context = dict(base_context)
-    context.update(_get_high_precision_context(int(precision)))
-    for name, value in zip(var_names, values, strict=True):
-        value_hp = to_mpf_value(value, precision=int(precision), context=f"variable:{name}")
-        ensure_no_float(value_hp, context=f"hp_variable:{name}")
-        context[name] = value_hp
-    for item in spec.construction:
-        with evaluation_scope(item.name):
-            context[item.name] = safe_eval_expr_hp(item.expr, context)
-    return context
+    snapshot = numerical_snapshot(spec, var_names, values, base_context)
+    if expressions is not None:
+        return snapshot.for_expressions(expressions)
+    return snapshot.materialize(item.name for item in spec.construction)
 
 
 def evaluate_target_high_precision(
@@ -75,7 +72,11 @@ def evaluate_target_high_precision(
     precision: int,
     index: int,
 ) -> Any:
-    value = safe_eval_expr_hp(target, context) if isinstance(target, str) else target
+    value = (
+        evaluate_scalar_expression(target, context, constants_only=True)
+        if isinstance(target, str)
+        else target
+    )
     return to_mpf_value(value, precision=int(precision), context=f"target:{index}")
 
 
@@ -98,8 +99,9 @@ def compute_residual_vector_high_precision(
             values,
             base_context,
             int(precision),
+            expressions=[*spec.constraints, *(t for t in targets if isinstance(t, str))],
         )
-    except HighPrecisionContaminationError:
+    except (HighPrecisionContaminationError, TimeoutError):
         raise
     except Exception:
         if failure_indices is not None:
@@ -108,9 +110,10 @@ def compute_residual_vector_high_precision(
 
     residuals: list[Any] = []
     for index, constraint_expr in enumerate(spec.constraints):
+        check_deadline()
         try:
             lhs = to_mpf_value(
-                safe_eval_expr_hp(constraint_expr, context),
+                evaluate_scalar_expression(constraint_expr, context, constants_only=True),
                 precision=int(precision),
                 context=f"constraint_lhs:{index}",
             )
@@ -126,7 +129,7 @@ def compute_residual_vector_high_precision(
                 failure_indices is not None
             ):
                 failure_indices.append(index)
-        except HighPrecisionContaminationError:
+        except (HighPrecisionContaminationError, TimeoutError):
             raise
         except Exception:
             residuals.append(mp.nan)

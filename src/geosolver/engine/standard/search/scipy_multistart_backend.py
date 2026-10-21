@@ -8,8 +8,6 @@ from dataclasses import dataclass, field
 
 import numpy as np
 from mpmath import mp
-from scipy.optimize import brentq, least_squares, minimize, minimize_scalar
-from scipy.stats import qmc
 
 from geosolver.engine.standard.contracts.candidate_record import (
     FloatCandidate,
@@ -24,13 +22,16 @@ from geosolver.engine.standard.evaluation.classify_evaluation_failure import (
 from geosolver.engine.standard.evaluation.guard_penalty import (
     guard_violation_penalty,
 )
+from geosolver.engine.standard.evaluation.snapshots import uses_evaluation_store
 from geosolver.engine.standard.problem.infer_problem_bounds import (
     _infer_parametric_variable_names,
 )
+from geosolver.runtime.deadline import deadline_scope
 
 from .build_guard_feasible_ledger import build_guard_feasible_ledger
 from .deduplicate_search_candidates import deduplicate_search_candidates
 from .nomad_config import NomadConfig
+from .scipy_lazy import brentq, least_squares, minimize, minimize_scalar
 
 _LOCAL_FLOAT_TIME_BUDGET_SECONDS = 45.0
 _PARAMETRIC_LOCAL_FLOAT_TIME_BUDGET_SECONDS = 60.0
@@ -122,14 +123,20 @@ class _AugmentedResidualVectorFn:
     def __call__(self, raw_values: object) -> np.ndarray:
         _raise_if_deadline_exceeded(self.deadline_monotonic)
         values = np.array(raw_values, dtype=float)
-        return _evaluate_augmented_residual_vector(
-            bundle=self.bundle,
-            evaluator=self.evaluator,
-            values=values,
-            n_constraints=self.n_constraints,
-            telemetry=self.telemetry,
-            constraint_scales=self.constraint_scales,
-        )
+        with deadline_scope(self.deadline_monotonic):
+            try:
+                result = _evaluate_augmented_residual_vector(
+                    bundle=self.bundle,
+                    evaluator=self.evaluator,
+                    values=values,
+                    n_constraints=self.n_constraints,
+                    telemetry=self.telemetry,
+                    constraint_scales=self.constraint_scales,
+                )
+            except TimeoutError as error:
+                raise _SearchDeadlineExceeded() from error
+            _raise_if_deadline_exceeded(self.deadline_monotonic)
+            return result
 
 
 @dataclass
@@ -200,7 +207,7 @@ def _append_unique_starts(
     extra_starts: list[np.ndarray],
 ) -> None:
     for start in extra_starts:
-        key = tuple(np.round(np.array(start, dtype=float), 12))
+        key = tuple(float(value) for value in start)
         if key in seen:
             continue
         seen.add(key)
@@ -274,6 +281,8 @@ def _build_halton_starts(
     n_vars = lower.size
     if n_vars == 0 or n_starts <= 0:
         return []
+    from scipy.stats import qmc
+
     sampler = qmc.Halton(
         d=n_vars,
         scramble=True,
@@ -455,6 +464,8 @@ def _evaluate_guard_penalty(
             base_context=dict(bundle.base_context),
             compiled_guards=getattr(evaluator, "compiled_guards", None),
         )
+    except TimeoutError:
+        raise
     except Exception:
         return 1e6
     penalty_float = float(penalty)
@@ -473,6 +484,8 @@ def _evaluate_hard_feasibility_penalty(
             list(values),
             include_margins=False,
         )
+    except TimeoutError:
+        raise
     except Exception:
         return 1e3
     if not snapshot.hard_feasible:
@@ -483,6 +496,7 @@ def _evaluate_hard_feasibility_penalty(
     return float(_FLOAT_HARD_FEASIBILITY_MARGIN_MIN / safe_margin)
 
 
+@uses_evaluation_store()
 def _evaluate_augmented_residual_vector(
     *,
     bundle: ProblemBundle,
@@ -500,6 +514,8 @@ def _evaluate_augmented_residual_vector(
         vector = np.array(result.residual_vector, dtype=float)
         if vector.size != n_constraints or not np.all(np.isfinite(vector)):
             return np.full(n_constraints + 2, _NONFINITE_RESIDUAL_PENALTY, dtype=float)
+    except TimeoutError:
+        raise
     except Exception:
         telemetry.record_exception()
         return np.full(n_constraints + 2, _NONFINITE_RESIDUAL_PENALTY, dtype=float)
@@ -531,6 +547,8 @@ def _evaluate_float_residual_norm(
     try:
         residual_eval = evaluator.evaluate_float_residual(list(values))
         telemetry.record_status(residual_eval.evaluation_status)
+    except (TimeoutError, _SearchDeadlineExceeded):
+        raise
     except Exception:
         telemetry.record_exception()
         return None
@@ -539,7 +557,7 @@ def _evaluate_float_residual_norm(
     residual_vector = np.array(residual_eval.residual_vector, dtype=float)
     if not np.all(np.isfinite(residual_vector)):
         return None
-    return float(np.linalg.norm(residual_vector))
+    return math.hypot(*residual_vector)
 
 
 def _collect_local_start_record(
@@ -586,6 +604,8 @@ def _collect_local_start_record(
                 gtol=1e-14,
             )
     except _SearchDeadlineExceeded:
+        raise
+    except TimeoutError:
         raise
     except Exception:
         return None
@@ -634,6 +654,9 @@ def _build_candidate(
             origin_seed=int(origin_seed),
             origin_start_point_index=int(origin_start_point_index),
             candidate_id=candidate_id,
+            origin_backend="scipy",
+            origin_family=str(family_code),
+            origin_evaluation_index=origin_start_point_index,
             hard_feasible=False,
             hard_violation_tags=("out_of_bounds",),
             validity_margin_float=None,
@@ -646,6 +669,8 @@ def _build_candidate(
     try:
         float_eval = evaluator.evaluate_float_residual(point)
         telemetry.record_status(float_eval.evaluation_status)
+    except (TimeoutError, _SearchDeadlineExceeded):
+        raise
     except Exception:
         telemetry.record_exception()
         return FloatCandidate(
@@ -657,6 +682,9 @@ def _build_candidate(
             origin_seed=int(origin_seed),
             origin_start_point_index=int(origin_start_point_index),
             candidate_id=candidate_id,
+            origin_backend="scipy",
+            origin_family=str(family_code),
+            origin_evaluation_index=origin_start_point_index,
             hard_feasible=False,
             hard_violation_tags=("eval_status:evaluation_failed",),
             validity_margin_float=None,
@@ -671,15 +699,17 @@ def _build_candidate(
             origin_seed=int(origin_seed),
             origin_start_point_index=int(origin_start_point_index),
             candidate_id=candidate_id,
+            origin_backend="scipy",
+            origin_family=str(family_code),
+            origin_evaluation_index=origin_start_point_index,
             hard_feasible=False,
             hard_violation_tags=(f"eval_status:{float_eval.evaluation_status.value}",),
             validity_margin_float=None,
         )
-    hard_snapshot = evaluator.evaluate_float_hard_feasibility(
-        point,
-        include_margins=False,
-    )
-    guard_ok, _violations = evaluator.evaluate_guard(point)
+    from geosolver.engine.standard.evaluation.search_point import evaluate_search_point
+
+    evaluation = evaluate_search_point(evaluator=evaluator, values=point, residual=float_eval)
+    hard_snapshot, guard_ok = evaluation.hard, evaluation.guard_ok
     penalty = 0.0 if hard_snapshot.hard_feasible else float(config.guard_penalty)
     validity_margin_float = None
     if hard_snapshot.min_margin is not None and math.isfinite(float(hard_snapshot.min_margin)):
@@ -695,6 +725,9 @@ def _build_candidate(
         origin_seed=int(origin_seed),
         origin_start_point_index=int(origin_start_point_index),
         candidate_id=candidate_id,
+        origin_backend="scipy",
+        origin_family=str(family_code),
+        origin_evaluation_index=origin_start_point_index,
         hard_feasible=bool(hard_snapshot.hard_feasible),
         hard_violation_tags=tuple(hard_snapshot.failure_tags),
         validity_margin_float=validity_margin_float,
@@ -728,6 +761,8 @@ def _rank_bounded_trf_starts(
         )
         try:
             guard_ok, _ = evaluator.evaluate_guard(list(start))
+        except (TimeoutError, _SearchDeadlineExceeded):
+            raise
         except Exception:
             guard_ok = False
         try:
@@ -737,6 +772,8 @@ def _rank_bounded_trf_starts(
                     include_margins=False,
                 ).hard_feasible
             )
+        except (TimeoutError, _SearchDeadlineExceeded):
+            raise
         except Exception:
             hard_feasible = False
         priority = (
@@ -808,6 +845,8 @@ def _collect_bounded_trf_records(
             )
         except _SearchDeadlineExceeded:
             break
+        except TimeoutError:
+            raise
         except Exception:
             continue
         records.append(
@@ -832,16 +871,18 @@ def _one_dimensional_grid_size(config: NomadConfig) -> int:
     return max(81, min(401, eval_budget + 1))
 
 
-def _evaluate_one_dimensional_residual(
+def _evaluate_one_dimensional_vector(
     *,
     evaluator: EvaluatorPort,
     x_value: float,
     telemetry: _SearchTelemetry,
-) -> tuple[float | None, float | None]:
-    """Return (first residual, residual norm) at a scalar point."""
+) -> tuple[tuple[float, ...] | None, float | None]:
+    """Evaluate every equation once at a scalar point."""
     try:
         residual_eval = evaluator.evaluate_float_residual([float(x_value)])
         telemetry.record_status(residual_eval.evaluation_status)
+    except (TimeoutError, _SearchDeadlineExceeded):
+        raise
     except Exception:
         telemetry.record_exception()
         return None, None
@@ -850,7 +891,22 @@ def _evaluate_one_dimensional_residual(
     vector = np.array(residual_eval.residual_vector, dtype=float)
     if vector.size == 0 or not np.all(np.isfinite(vector)):
         return None, None
-    return float(vector[0]), float(np.linalg.norm(vector))
+    return tuple(float(value) for value in vector), math.hypot(*vector)
+
+
+def _evaluate_one_dimensional_residual(
+    *,
+    evaluator,
+    x_value,
+    telemetry,
+    residual_index=0,
+):
+    vector, norm = _evaluate_one_dimensional_vector(
+        evaluator=evaluator,
+        x_value=x_value,
+        telemetry=telemetry,
+    )
+    return (None if vector is None else vector[residual_index]), norm
 
 
 def _safe_brentq_root(
@@ -862,6 +918,7 @@ def _safe_brentq_root(
     f_right: float,
     telemetry: _SearchTelemetry,
     deadline_monotonic: float | None,
+    residual_index: int = 0,
 ) -> float | None:
     if deadline_monotonic is not None and time.monotonic() > deadline_monotonic:
         return None
@@ -871,7 +928,7 @@ def _safe_brentq_root(
         return float(left)
     if f_right == 0.0:
         return float(right)
-    if f_left * f_right > 0.0:
+    if (f_left < 0.0) == (f_right < 0.0):
         return None
 
     def scalar_fn(raw: float) -> float:
@@ -880,6 +937,7 @@ def _safe_brentq_root(
             evaluator=evaluator,
             x_value=float(raw),
             telemetry=telemetry,
+            residual_index=residual_index,
         )
         if residual is None or not math.isfinite(residual):
             raise ValueError("non-finite residual in brentq")
@@ -887,8 +945,19 @@ def _safe_brentq_root(
 
     try:
         return float(
-            brentq(scalar_fn, float(left), float(right), xtol=1e-12, rtol=1e-12, maxiter=80)
+            brentq(
+                scalar_fn,
+                float(left),
+                float(right),
+                xtol=np.nextafter(0.0, 1.0),
+                rtol=4 * np.finfo(float).eps,
+                maxiter=80,
+            )
         )
+    except _SearchDeadlineExceeded:
+        return None
+    except TimeoutError:
+        raise
     except Exception:
         return None
 
@@ -915,7 +984,7 @@ def _safe_minimize_scalar_root(
         )
         if norm is None or not math.isfinite(norm):
             return _NONFINITE_RESIDUAL_PENALTY
-        return float(norm * norm)
+        return float(norm)
 
     try:
         result = minimize_scalar(
@@ -926,6 +995,8 @@ def _safe_minimize_scalar_root(
         )
     except _SearchDeadlineExceeded:
         return None
+    except TimeoutError:
+        raise
     except Exception:
         return None
     if not getattr(result, "success", False):
@@ -933,10 +1004,14 @@ def _safe_minimize_scalar_root(
         try:
             if not math.isfinite(float(result.x)):
                 return None
+        except (TimeoutError, _SearchDeadlineExceeded):
+            raise
         except Exception:
             return None
     try:
         return float(result.x)
+    except (TimeoutError, _SearchDeadlineExceeded):
+        raise
     except Exception:
         return None
 
@@ -946,7 +1021,6 @@ def _run_one_dimensional_search(
     evaluator: EvaluatorPort,
     bounds: list[tuple[float, float]],
     config: NomadConfig,
-    seed: int,
     deadline_monotonic: float | None,
     telemetry: _SearchTelemetry,
 ) -> tuple[tuple[float, ...], dict[str, object]]:
@@ -962,54 +1036,55 @@ def _run_one_dimensional_search(
     upper = float(upper)
     if not (math.isfinite(lower) and math.isfinite(upper) and lower < upper):
         return (), {"enabled": False, "reason": "invalid_bounds"}
-    # Avoid evaluating exactly on open-ish guard boundaries; hard feasibility still filters later.
-    width = upper - lower
-    eps = max(width * 1e-10, 1e-10)
-    scan_lower = lower + eps
-    scan_upper = upper - eps
-    if scan_lower >= scan_upper:
-        scan_lower, scan_upper = lower, upper
+    # Include mathematical endpoints; the original guards decide admissibility.
+    # Adjacent interior points also cover open boundaries without a fixed inset.
     grid_size = _one_dimensional_grid_size(config)
-    xs = np.linspace(scan_lower, scan_upper, grid_size, dtype=float)
-    observations: list[tuple[float, float | None, float | None]] = []
+    xs = np.unique(
+        np.concatenate(
+            (
+                np.linspace(lower, upper, grid_size, dtype=float),
+                [np.nextafter(lower, upper), np.nextafter(upper, lower)],
+            )
+        )
+    )
+    observations = []
     for x_value in xs:
         if deadline_monotonic is not None and time.monotonic() > deadline_monotonic:
             break
-        residual, norm = _evaluate_one_dimensional_residual(
+        vector, norm = _evaluate_one_dimensional_vector(
             evaluator=evaluator,
             x_value=float(x_value),
             telemetry=telemetry,
         )
-        observations.append((float(x_value), residual, norm))
+        observations.append((float(x_value), vector, norm))
     if not observations:
         return (), {"enabled": True, "grid_size": grid_size, "observation_count": 0}
 
     root_values: list[float] = []
-    # Exact-ish grid hits and sign-change brackets for scalar equations.
-    for x_value, residual, norm in observations:
+    # Bracket all equations, then check the full system downstream. A constant
+    # or redundant first equation must not hide sign changes in other equations.
+    for x_value, _vector, norm in observations:
         if norm is not None and math.isfinite(norm) and norm <= 1e-7:
             root_values.append(float(x_value))
-        if residual is not None and math.isfinite(residual) and abs(residual) <= 1e-8:
-            root_values.append(float(x_value))
-    for (left, f_left, _n_left), (right, f_right, _n_right) in zip(
-        observations, observations[1:], strict=False
-    ):
-        if f_left is None or f_right is None:
+    for (left, v_left, _), (right, v_right, _) in zip(observations, observations[1:], strict=False):
+        if v_left is None or v_right is None:
             continue
-        if not (math.isfinite(f_left) and math.isfinite(f_right)):
-            continue
-        if f_left == 0.0 or f_right == 0.0 or f_left * f_right <= 0.0:
-            root = _safe_brentq_root(
-                evaluator=evaluator,
-                left=left,
-                right=right,
-                f_left=f_left,
-                f_right=f_right,
-                telemetry=telemetry,
-                deadline_monotonic=deadline_monotonic,
-            )
-            if root is not None:
-                root_values.append(root)
+        for residual_index, (f_left, f_right) in enumerate(zip(v_left, v_right, strict=True)):
+            if f_left == f_right == 0.0:
+                continue
+            if f_left == 0.0 or f_right == 0.0 or (f_left < 0.0) != (f_right < 0.0):
+                root = _safe_brentq_root(
+                    evaluator=evaluator,
+                    left=left,
+                    right=right,
+                    f_left=f_left,
+                    f_right=f_right,
+                    residual_index=residual_index,
+                    telemetry=telemetry,
+                    deadline_monotonic=deadline_monotonic,
+                )
+                if root is not None:
+                    root_values.append(root)
     # Refine the best few residual-norm basins. This catches tangent/double roots.
     finite_norms = [
         (float(norm), index)
@@ -1017,8 +1092,17 @@ def _run_one_dimensional_search(
         if norm is not None and math.isfinite(norm)
     ]
     finite_norms.sort(key=lambda item: item[0])
+    basin_norms = [
+        (norm, index)
+        for norm, index in finite_norms
+        if all(
+            observations[neighbor][2] is None or norm <= observations[neighbor][2]
+            for neighbor in (index - 1, index + 1)
+            if 0 <= neighbor < len(observations)
+        )
+    ]
     minimized_intervals: set[tuple[int, int]] = set()
-    for _norm, index in finite_norms[: min(10, len(finite_norms))]:
+    for _norm, index in basin_norms[:10]:
         left_index = max(0, index - 1)
         right_index = min(len(observations) - 1, index + 1)
         if left_index == right_index:
@@ -1041,15 +1125,11 @@ def _run_one_dimensional_search(
         root_values.append(float(observations[index][0]))
 
     deduped: list[float] = []
-    seen: set[int] = set()
-    tolerance = max(width * 1e-9, 1e-9)
+    seen: set[float] = set()
     for value in sorted(root_values):
-        if not (lower <= value <= upper):
+        if not (lower <= value <= upper) or value in seen:
             continue
-        bucket = int(round((value - lower) / tolerance)) if tolerance > 0 else int(round(value, 12))
-        if bucket in seen:
-            continue
-        seen.add(bucket)
+        seen.add(value)
         deduped.append(float(value))
     diagnostics = {
         "enabled": True,
@@ -1113,7 +1193,6 @@ class ScipyMultistartBackend(GlobalSearchPort):
                 evaluator=evaluator,
                 bounds=bounds,
                 config=self.config,
-                seed=int(seed_values[0]),
                 deadline_monotonic=one_d_deadline,
                 telemetry=telemetry,
             )
@@ -1181,6 +1260,7 @@ class ScipyMultistartBackend(GlobalSearchPort):
                     candidates=selected,
                     evaluation_count=telemetry.evaluation_count,
                     failure_ratio=failure_ratio,
+                    evaluation_failure_count=telemetry.failure_count,
                     all_records=records,
                     guard_feasible_ledger=guard_feasible_ledger,
                     search_diagnostics=diagnostics,
@@ -1327,6 +1407,7 @@ class ScipyMultistartBackend(GlobalSearchPort):
             candidates=selected,
             evaluation_count=evaluation_count,
             failure_ratio=failure_ratio,
+            evaluation_failure_count=failure_count,
             all_records=records,
             guard_feasible_ledger=guard_feasible_ledger,
             search_diagnostics=_build_local_start_diagnostics(telemetry=telemetry),

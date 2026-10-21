@@ -1,0 +1,81 @@
+{
+  "id": "IMO_2005_P5",
+  "variables": [
+    "cx",
+    "cy",
+    "dx",
+    "dy",
+    "te",
+    "tf"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(dx, dy)"
+    },
+    {
+      "name": "E",
+      "expression": "PointOnSegment(B, C, te)"
+    },
+    {
+      "name": "F",
+      "expression": "PointOnSegment(D, A, tf)"
+    },
+    {
+      "name": "P",
+      "expression": "Intersect(Line(A, C), Line(B, D))"
+    },
+    {
+      "name": "Q",
+      "expression": "Intersect(Line(B, D), Line(E, F))"
+    },
+    {
+      "name": "R",
+      "expression": "Intersect(Line(E, F), Line(A, C))"
+    }
+  ],
+  "conditions": [
+    {
+      "predicate": "ConvexPolygon([A, B, C, D])"
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": "Distance(D, A)"
+    },
+    {
+      "left": "Parallel(Line(B, C), Line(D, A))",
+      "operator": "!=",
+      "right": 0
+    },
+    {
+      "predicate": "0 < te < 1"
+    },
+    {
+      "predicate": "0 < tf < 1"
+    },
+    {
+      "left": "Distance(B, E)",
+      "operator": "=",
+      "right": "Distance(D, F)"
+    },
+    {
+      "left": "Area(P, Q, R)",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "0"
+}

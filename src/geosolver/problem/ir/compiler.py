@@ -237,7 +237,7 @@ def safe_eval_expr(expr: str, context: dict[str, Any]) -> Any:
     try:
         code = _compile_expr_safe_cached(expr)
         return eval(code, {"__builtins__": {}, "_dsl_call": runtime_call}, context)
-    except (IRCompileError, IRSecurityError):
+    except (IRCompileError, IRSecurityError, TimeoutError):
         raise
     except Exception as e:
         raise IRCompileError(f"評価エラー: {e}", expr=expr, cause=e) from e
@@ -263,7 +263,7 @@ def safe_eval_expr_hp(expr: str, context: dict[str, Any]) -> Any:
     try:
         code = _compile_expr_hp_cached(expr)
         return eval(code, {"__builtins__": {}, "_dsl_call": runtime_call}, context)
-    except (IRCompileError, IRSecurityError):
+    except (IRCompileError, IRSecurityError, TimeoutError):
         raise
     except Exception as e:
         raise IRCompileError(f"評価エラー (HP モード): {e}", expr=expr, cause=e) from e

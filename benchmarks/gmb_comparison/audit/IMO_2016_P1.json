@@ -1,0 +1,202 @@
+{
+  "case_id": "IMO_2016_P1",
+  "source": {
+    "official_url": "https://www.imo-official.org/assets/documents/problems/2016/2016_eng.pdf",
+    "official_landing_url": "https://www.imo-official.org/problems/2016/",
+    "official_pdf_path": "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2016-eng.pdf",
+    "official_pdf_sha256": "14fe21101f62f2d8efab6e4a746e627c14055be95ef6dc3dc121c3cb516c242d",
+    "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2016_P1.smt2",
+    "gmbl_sha256": "dc1b5194cea5cde497f3396800fbce7ace827068c0f6bb55c1236915c38933f1",
+    "upstream_commit": "f070afe18ed874b3a31db519ea6f593f40a1be00"
+  },
+  "normalization": {
+    "anchors": [
+      "C",
+      "F"
+    ],
+    "fixed_coordinates": {
+      "C": [
+        "0",
+        "0"
+      ],
+      "F": [
+        "1",
+        "0"
+      ]
+    },
+    "removed_continuous_dof": 4,
+    "justification": "直角三角形BCFの斜辺CFは非零。CFを単位長さにし、Bはその直径円の両半円を動ける。 平行移動2自由度・回転1自由度・正の一様拡大縮小1自由度のみを除く。残りの図形の形は固定しない。",
+    "scale_invariant": true,
+    "reflection_fixed": false
+  },
+  "clauses": [
+    {
+      "id": "H01",
+      "statement_ja": "三角形BCFはBが直角で非退化。",
+      "gmbl": [
+        "(param (B C F) (right-tri B))"
+      ],
+      "geosolver": [
+        "B = PointOnCircle(Circle(M, 1/2), b)",
+        "C = Point(0, 0)",
+        "F = Point(1, 0)",
+        "conditions[0]: Area(B, C, F) > 0"
+      ],
+      "condition_indices": [
+        0
+      ],
+      "construction_names": [
+        "B",
+        "C",
+        "F"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H02",
+      "statement_ja": "AはCF上でFA=FB、FがAとCの間。",
+      "gmbl": [
+        "(define A point (inter-lc (line C F) (coa F B) (rs-opp-sides C (line F B))))"
+      ],
+      "geosolver": [
+        "A = Point(1+Distance(F, B), 0)"
+      ],
+      "condition_indices": [],
+      "construction_names": [
+        "A"
+      ],
+      "status": "equivalent_construction"
+    },
+    {
+      "id": "H03",
+      "statement_ja": "DA=DC、ACの半直線はDABの内角二等分。",
+      "gmbl": [
+        "(param D point); (assert (cong D A D C)); (assert (i-bisector C D A B))"
+      ],
+      "geosolver": [
+        "D = Point(dx, dy)",
+        "bis_DAB = AngleBisector(D, A, B)",
+        "conditions[1]: Distance(D, A) = Distance(D, C)",
+        "conditions[2]: OnLine(C, bis_DAB) = 0",
+        "conditions[3]: Dot(Vector(A, C), Vector(A, D)/Distance(A, D)+Vector(A, B)/Distance(A, B)) > 0"
+      ],
+      "condition_indices": [
+        1,
+        2,
+        3
+      ],
+      "construction_names": [
+        "D",
+        "bis_DAB"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H04",
+      "statement_ja": "EA=ED、ADの半直線はEACの内角二等分。",
+      "gmbl": [
+        "(param E point); (assert (cong E A E D)); (assert (i-bisector D E A C))"
+      ],
+      "geosolver": [
+        "E = Point(ex, ey)",
+        "bis_EAC = AngleBisector(E, A, C)",
+        "conditions[4]: Distance(E, A) = Distance(E, D)",
+        "conditions[5]: OnLine(D, bis_EAC) = 0",
+        "conditions[6]: Dot(Vector(A, D), Vector(A, E)/Distance(A, E)+Vector(A, C)/Distance(A, C)) > 0"
+      ],
+      "condition_indices": [
+        4,
+        5,
+        6
+      ],
+      "construction_names": [
+        "E",
+        "bis_EAC"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H05",
+      "statement_ja": "MはCF中点。AMXEは非退化平行四辺形。",
+      "gmbl": [
+        "(define M point (midp C F)); (define X point (inter-ll (para-at E (line M A)) (para-at M (line A E))))"
+      ],
+      "geosolver": [
+        "M = Midpoint(C, F)",
+        "X = Point(M.x+E.x-A.x, M.y+E.y-A.y)",
+        "conditions[7]: Area(A, M, E) > 0"
+      ],
+      "condition_indices": [
+        7
+      ],
+      "construction_names": [
+        "M",
+        "X"
+      ],
+      "status": "matched"
+    }
+  ],
+  "goal": {
+    "statement_ja": "BD、FX、MEの3直線が一点で交わる。",
+    "gmbl": [
+      "(eval (concur (line B D) (line F X) (line M E)))"
+    ],
+    "included_in_solver_conditions": false,
+    "solver_target": "0",
+    "assessment_only": true
+  },
+  "source_differences": [
+    {
+      "id": "gmb_runtime_distinctness",
+      "kind": "runtime_acceptance_policy",
+      "blocking": false,
+      "description_ja": "GMBは全登録点の最小距離0.1とweighted soft lossで受理する。原文にない全点相異・最小距離0.1はGeoSolver条件に移さず、両者の出力を別の共通検査器で再検査する。"
+    },
+    {
+      "id": "right_triangle_shape_fixed",
+      "kind": "runtime_parameterization",
+      "blocking": false,
+      "description_ja": "GMB right-triではshape用のAxがtrainable=FalseでAyがそこから決まり、三角形の形が試行中固定される。GeoSolverは円周変数bを残し、相似以外の自由度を固定しない。"
+    },
+    {
+      "id": "internal_bisector_semantics",
+      "kind": "runtime_predicate",
+      "blocking": false,
+      "description_ja": "GMB i-bisectorのsin型残差は単体ではmod πの角二等分だが、本問は他の等長条件が内角・正向きrayを強制する。C=(0,0),F=(1,0),A=(a,0),a>1で0<B.x<1、DA=DCからD.x=a/2なのでAD,ABはAC方向への射影がともに正。さらにEA=EDから(E−A)·(D−A)=|D−A|²/2>0、(C−A)·(D−A)=a²/2>0。従って両角二等分線に外角・反対rayの枝は残らない。GeoSolverの正射影条件は新しい仮定ではない。"
+    }
+  ],
+  "open_issues": [],
+  "witness_bindings": {
+    "B": "B",
+    "C": "C",
+    "F": "F",
+    "A": "A",
+    "D": "D",
+    "E": "E",
+    "M": "M",
+    "X": "X"
+  },
+  "author_review": {
+    "author": "dsl_2014_2020",
+    "materials_read": [
+      "official IMO 2016 English problem sheet",
+      "GMB IMO_2016_P1.smt2",
+      "GMB optimizer.py / instruction_reader.py / tf_optimizer.py",
+      "GeoSolver dsl-spec.json / public compiler / geometry implementations"
+    ],
+    "pdf_visual_check": "completed_relevant_pages",
+    "static_validation": {
+      "public_model": true,
+      "validator_valid": true,
+      "compiler_valid": true,
+      "solver_executed": false
+    },
+    "independent_review_status": "pending",
+    "notes_ja": [
+      "A=F+(FB/CF)(F-C)をC=(0,0),F=(1,0)の座標で直接表した。FがA,Cの間という指定の実装で、追加定理は使用していない。",
+      "内角二等分線は直線と半直線を区別し、単なる等角だけでは反対向きのrayを受理しない。",
+      "独立レビュー担当の内角枝の含意証明をauthor側でも確認した。sin型残差の一般的な曖昧さを本問固有の欠落と誤認しない。"
+    ]
+  },
+  "comparison_status": "draft"
+}

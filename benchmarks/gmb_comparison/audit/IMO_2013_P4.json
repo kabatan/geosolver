@@ -1,0 +1,15 @@
+{
+  "case_id": "IMO_2013_P4",
+  "source": {"official_url": "https://www.imo-official.org/assets/documents/problems/2013/2013_eng.pdf", "official_pdf_sha256": "d5c2d4156d8ce1de0ed5c9bc2b0fc4c2f40a89247e4171176cff89c1a40605a4", "official_pdf_page": 2, "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2013_P4.smt2", "gmbl_sha256": "81602812fae5d2602f752a047537140a7917c1a1cf5ee0616f79d7d67d9a3425"},
+  "normalization": {"anchors": ["A", "B"], "fixed_coordinates": {"A": ["0", "0"], "B": ["1", "0"]}, "removed_continuous_dof": 4, "justification": "鋭角三角形の正長辺ABを相似変換で固定。Cの形、Wの辺上位置、鏡映を残す。", "scale_invariant": true, "reflection_fixed": false},
+  "clauses": [
+    {"id": "acute_altitudes", "statement_ja": "ABCは鋭角三角形でHは垂心。M,NはB,Cからの垂足。", "gmbl": ["(param (A B C) acute-tri)", "(orthocenter A B C)", "(foot B (line C A))", "(foot C (line A B))"], "geosolver": ["Area(A, B, C) > 0", "AcuteTriangle(A, B, C)", "H = Orthocenter(A, B, C)", "M = FootOfPerpendicular(B, Line(C, A))", "N = FootOfPerpendicular(C, Line(A, B))"], "status": "matched_source_semantics"},
+    {"id": "interior_w", "statement_ja": "WはBCの厳密な内部。", "gmbl": ["(param W point (on-seg B C))"], "geosolver": ["W = PointOnSegment(B, C, tw)", "0 < tw < 1"], "status": "matched"},
+    {"id": "diameters", "statement_ja": "omega_1,omega_2はBWN,CWMの外接円。WX,WYは各円の直径。", "gmbl": ["(circumcircle B W N)", "(inter-lc (line W (origin omega_1)) omega_1 (rs-neq W))", "(circumcircle C W M)", "(inter-lc (line W (origin omega_2)) omega_2 (rs-neq W))"], "geosolver": ["omega_1 = Circumcircle(B, W, N)", "X = Intersect(Line(W, Center(omega_1)), omega_1, exclude=W)", "omega_2 = Circumcircle(C, W, M)", "Y = Intersect(Line(W, Center(omega_2)), omega_2, exclude=W)"], "status": "matched"}
+  ],
+  "goal": {"statement_ja": "X,Y,Hは共線。", "gmbl": ["(eval (coll X Y H))"], "included_in_search": false, "target": "0"},
+  "source_differences": [{"kind": "implementation_sampling_and_domain", "detail": "GMB acute-triの狭い形の範囲・Ax固定・鋭角性を保証しないサンプラは、原文の条件と区別する。GeoSolverでは鋭角を検査し、全点min_distは追加しない。"}],
+  "open_issues": [],
+  "author_review": {"reviewer": "dsl_2007_2013", "primary_sources_read": ["公式2013英語PDF第2頁（画像・strictly betweenを確認）", "公開IMO_2013_P4.smt2", "GeoSolver DSL specのIntersect・PointOnSegment"], "static_validation": "GeometryProblem、validate、compile_problemに合格。探索・精密化未実施。"},
+  "comparison_status": "draft"
+}

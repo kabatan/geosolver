@@ -2,48 +2,46 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
-from inspect import signature
-from typing import Any
+from functools import wraps
+from inspect import Parameter, signature
 
 from .ensure_no_float import ensure_high_precision_mode, ensure_no_float
 
 
-class _HPContractWrapped:
-    def __init__(self, func: Callable[..., Any], input_names: tuple[str, ...]) -> None:
-        self._func = func
-        self._input_names = input_names
-        self.__name__ = getattr(func, "__name__", self.__class__.__name__)
-        self.__doc__ = getattr(func, "__doc__", None)
-        self.__module__ = getattr(func, "__module__", None)
-        self.__wrapped__ = func
+def hp_contract(*, input_names: tuple[str, ...] = ()):
+    """Check actual input values and results; compile only argument locations."""
 
-    def __call__(self, *args: Any, **kwargs: Any) -> Any:
-        ensure_high_precision_mode(context=f"hp_contract:{self.__name__}")
-        bound = signature(self._func).bind_partial(*args, **kwargs)
-        bound.apply_defaults()
-        for name in self._input_names:
-            if name in bound.arguments:
-                ensure_no_float(
-                    bound.arguments[name], context=f"hp_contract:{self.__name__}.input:{name}"
+    def decorate(function):
+        call_signature = signature(function)
+        parameters = tuple(call_signature.parameters.items())
+        variadic = any(
+            p.kind in (Parameter.VAR_POSITIONAL, Parameter.VAR_KEYWORD) for _, p in parameters
+        )
+        inputs = tuple(
+            (name, index, parameter.default)
+            for index, (name, parameter) in enumerate(parameters)
+            if name in input_names
+        )
+        label = f"hp_contract:{function.__name__}"
+
+        @wraps(function)
+        def checked(*args, **kwargs):
+            ensure_high_precision_mode(context=label)
+            if variadic:
+                bound = call_signature.bind_partial(*args, **kwargs)
+                bound.apply_defaults()
+            for name, index, default in inputs:
+                value = (
+                    bound.arguments.get(name, Parameter.empty)
+                    if variadic
+                    else kwargs.get(name, args[index] if index < len(args) else default)
                 )
-        result = self._func(*args, **kwargs)
-        ensure_no_float(result, context=f"hp_contract:{self.__name__}.output")
-        return result
+                if value is not Parameter.empty:
+                    ensure_no_float(value, context=f"{label}.input:{name}")
+            result = function(*args, **kwargs)
+            ensure_no_float(result, context=f"{label}.output")
+            return result
 
+        return checked
 
-class _HPContractDecorator:
-    def __init__(self, input_names: tuple[str, ...]) -> None:
-        self._input_names = input_names
-
-    def __call__(self, func: Callable[..., Any]) -> _HPContractWrapped:
-        return _HPContractWrapped(func=func, input_names=self._input_names)
-
-
-def hp_contract(*, input_names: tuple[str, ...] = ()) -> _HPContractDecorator:
-    """Create a high-precision runtime contract decorator.
-
-    Args:
-        input_names: Named arguments that must pass ``ensure_no_float`` at entry.
-    """
-    return _HPContractDecorator(input_names=tuple(input_names))
+    return decorate

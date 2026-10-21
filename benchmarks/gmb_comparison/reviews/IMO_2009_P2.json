@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2009_P2",
+  "reviewer": "independent_review",
+  "case_sha256": "ebeeae22a7d795cb3b774980a81bbc3e3691c6ffbef5fc46bf40b6f44e9e8a96",
+  "audit_sha256": "1a23b9be8dcbb292f2b737707cab5ea8c3579f3c98794d72521ca9d8c3a2b046",
+  "gmbl_sha256": "7d2388672efe50d6c17300ed27e6cf342055aea6dcfef3cc53498900839a6c6b",
+  "reviewed_original_pdf_sha256": "fd6e575ee181acb30bd32c87944e35f42e91efe025b1d23c352f047da7ab9cb3",
+  "verdict": "pass",
+  "normalization_checked": true,
+  "conclusion_not_assumed": true,
+  "original_conditions_covered_by_gmbl": true,
+  "scope_of_coverage_ja": "原文の仮定を当該比較範囲で満たすかの監査である。原文の全境界配置を含む解集合の完全同値、GMB実装の全数値分岐の正当性、実験の実行許可を意味しない。",
+  "comparison_scope": "nondegenerate_configuration_domain",
+  "sources_read": [
+    "cases/IMO_2009_P2.json",
+    "audit/IMO_2009_P2.json",
+    "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2009_P2.smt2",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2009-eng.pdf",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2009-eng.txt",
+    "AUTHORING.md",
+    "reviews/UPSTREAM_SEMANTICS.md"
+  ],
+  "official_url": "https://www.imo-official.org/assets/documents/problems/2009/2009_eng.pdf",
+  "normalization_review": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "removed_continuous_dof": 4,
+    "scale_invariant": true,
+    "reflection_fixed": false,
+    "remaining_solver_variables": [
+      "cx",
+      "cy",
+      "tp",
+      "tq"
+    ],
+    "shape_fixed_beyond_original_hypotheses": false,
+    "checked_ja": "原文で相異なる二点の単位基線化だけで平行移動2・回転1・正の尺度1を除く。元の形の変数と鏡映配置を保持している。"
+  },
+  "original_goal_not_used": "OP=OQ。",
+  "checked_input_counts": {
+    "constructions": 10,
+    "conditions": 6
+  },
+  "method": {
+    "read_all_constructions_and_conditions": true,
+    "read_original_problem_assumptions": true,
+    "checked_domains_branches_and_non_degeneracy": true,
+    "checked_goal_separation": true,
+    "exact_algebraic_checks_only_where_documented": true,
+    "solver_executed": false,
+    "optimizer_executed": false,
+    "refinement_executed": false,
+    "prior_case_performance_used_to_adjust_input": false
+  },
+  "gmb_runtime_equivalence_claimed": false,
+  "findings": [
+    {
+      "id": "IMO_2009_P2-review-1",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "ABの単位基線だけを固定し、CとCA,AB上の内部点P,Qの位置を残す。"
+    },
+    {
+      "id": "IMO_2009_P2-review-2",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "P,Qの各線分、指定された三つの中点、外接円とPQの接線条件を原文およびGMBLと照合した。"
+    },
+    {
+      "id": "IMO_2009_P2-review-3",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "OP=OQという結論を入力へ混ぜていない。接線条件は接点を勝手に選ぶ構成へ置き換えず、円と直線の関係として残している。"
+    }
+  ],
+  "remaining_uncertainties": []
+}

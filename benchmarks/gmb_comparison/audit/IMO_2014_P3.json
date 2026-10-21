@@ -1,0 +1,232 @@
+{
+  "case_id": "IMO_2014_P3",
+  "source": {
+    "official_url": "https://www.imo-official.org/assets/documents/problems/2014/2014_eng.pdf",
+    "official_landing_url": "https://www.imo-official.org/problems/2014/",
+    "official_pdf_path": "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2014-eng.pdf",
+    "official_pdf_sha256": "8642358ce5518c8bd93a92d6b02ddb39f59d30dcfc63e581fdca9d11f01b138a",
+    "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2014_P3.smt2",
+    "gmbl_sha256": "9bb28cab1c38c8ad0a3ba7a9ec06505b22795672b96a0a971dc49e6e40bcc4b6",
+    "upstream_commit": "f070afe18ed874b3a31db519ea6f593f40a1be00"
+  },
+  "normalization": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "fixed_coordinates": {
+      "A": [
+        "0",
+        "0"
+      ],
+      "B": [
+        "1",
+        "0"
+      ]
+    },
+    "removed_continuous_dof": 4,
+    "justification": "凸四角形の辺ABは非零であり、指定条件は直角・所属・角度差・接線で尺度不変。 平行移動2自由度・回転1自由度・正の一様拡大縮小1自由度のみを除く。残りの図形の形は固定しない。",
+    "scale_invariant": true,
+    "reflection_fixed": false
+  },
+  "clauses": [
+    {
+      "id": "H01",
+      "statement_ja": "ABCDは非退化な凸四角形。鏡像の両向きを残す。",
+      "gmbl": [
+        "(param (A B C D) polygon)"
+      ],
+      "geosolver": [
+        "A = Point(0, 0)",
+        "B = Point(1, 0)",
+        "C = Point(cx, cy)",
+        "D = Point(dx, dy)",
+        "conditions[0]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x)) != 0",
+        "conditions[1]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((C.x-B.x)*(D.y-B.y)-(C.y-B.y)*(D.x-B.x)) > 0",
+        "conditions[2]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((D.x-C.x)*(A.y-C.y)-(D.y-C.y)*(A.x-C.x)) > 0",
+        "conditions[3]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((A.x-D.x)*(B.y-D.y)-(A.y-D.y)*(B.x-D.x)) > 0"
+      ],
+      "condition_indices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "construction_names": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H02",
+      "statement_ja": "BとDの内角が直角。",
+      "gmbl": [
+        "(assert (right A B C)); (assert (right C D A))"
+      ],
+      "geosolver": [
+        "conditions[4]: Dot(Vector(B, A), Vector(B, C)) = 0",
+        "conditions[5]: Dot(Vector(D, C), Vector(D, A)) = 0"
+      ],
+      "condition_indices": [
+        4,
+        5
+      ],
+      "construction_names": [],
+      "status": "matched"
+    },
+    {
+      "id": "H03",
+      "statement_ja": "HはAからBDへの垂足。",
+      "gmbl": [
+        "(define H point (foot A (line B D)))"
+      ],
+      "geosolver": [
+        "H = FootOfPerpendicular(A, Line(B, D))"
+      ],
+      "condition_indices": [],
+      "construction_names": [
+        "H"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H04",
+      "statement_ja": "SはAB、TはADの内部に置く。",
+      "gmbl": [
+        "(param S point (on-seg A B)); (param T point (on-seg A D))"
+      ],
+      "geosolver": [
+        "S = PointOnSegment(A, B, s)",
+        "T = PointOnSegment(A, D, t)",
+        "conditions[6]: s > 0",
+        "conditions[7]: s < 1",
+        "conditions[8]: t > 0",
+        "conditions[9]: t < 1"
+      ],
+      "condition_indices": [
+        6,
+        7,
+        8,
+        9
+      ],
+      "construction_names": [
+        "S",
+        "T"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H05",
+      "statement_ja": "Hは三角形SCTの厳密内部。",
+      "gmbl": [
+        "(assert (in-poly H S C T))"
+      ],
+      "geosolver": [
+        "conditions[10]: ((C.x-S.x)*(T.y-S.y)-(C.y-S.y)*(T.x-S.x))*((C.x-S.x)*(H.y-S.y)-(C.y-S.y)*(H.x-S.x)) > 0",
+        "conditions[11]: ((C.x-S.x)*(T.y-S.y)-(C.y-S.y)*(T.x-S.x))*((T.x-C.x)*(H.y-C.y)-(T.y-C.y)*(H.x-C.x)) > 0",
+        "conditions[12]: ((C.x-S.x)*(T.y-S.y)-(C.y-S.y)*(T.x-S.x))*((S.x-T.x)*(H.y-T.y)-(S.y-T.y)*(H.x-T.x)) > 0"
+      ],
+      "condition_indices": [
+        10,
+        11,
+        12
+      ],
+      "construction_names": [],
+      "status": "matched"
+    },
+    {
+      "id": "H06",
+      "statement_ja": "CHSとCSBの角度差はπ/2。",
+      "gmbl": [
+        "(assert (= (div pi 2) (sub (uangle C H S) (uangle C S B))))"
+      ],
+      "geosolver": [
+        "conditions[13]: Angle(C, H, S)-Angle(C, S, B) = pi/2"
+      ],
+      "condition_indices": [
+        13
+      ],
+      "construction_names": [],
+      "status": "matched"
+    },
+    {
+      "id": "H07",
+      "statement_ja": "THCとDTCの角度差はπ/2。",
+      "gmbl": [
+        "(assert (= (div pi 2) (sub (uangle T H C) (uangle D T C))))"
+      ],
+      "geosolver": [
+        "conditions[14]: Angle(T, H, C)-Angle(D, T, C) = pi/2"
+      ],
+      "condition_indices": [
+        14
+      ],
+      "construction_names": [],
+      "status": "matched"
+    }
+  ],
+  "goal": {
+    "statement_ja": "BDは三角形TSHの外接円に接する。",
+    "gmbl": [
+      "(eval (tangent-lc (line B D) (circumcircle T S H)))"
+    ],
+    "included_in_solver_conditions": false,
+    "solver_target": "0",
+    "assessment_only": true
+  },
+  "source_differences": [
+    {
+      "id": "gmb_runtime_distinctness",
+      "kind": "runtime_acceptance_policy",
+      "blocking": false,
+      "description_ja": "GMBは全登録点の最小距離0.1とweighted soft lossで受理する。原文にない全点相異・最小距離0.1はGeoSolver条件に移さず、両者の出力を別の共通検査器で再検査する。"
+    },
+    {
+      "id": "gmb_polygon_sampler",
+      "kind": "runtime_parameterization",
+      "blocking": false,
+      "description_ja": "GMB polygonは角のtanh範囲（四角形は30°～150°）と基準辺の1/2～3/2の辺長範囲、弱い閉鎖lossを用いる。GeoSolverは凸性だけを数式で課し、原文にない角・辺長範囲は移さない。"
+    },
+    {
+      "id": "in_poly_boundary",
+      "kind": "runtime_relaxation",
+      "blocking": false,
+      "description_ja": "GMBのin-poly assertは符号の非負をsoft lossで検査し境界も零になり得る。原文insideは厳密内部として各辺の符号積>0を使う。"
+    }
+  ],
+  "open_issues": [],
+  "witness_bindings": {
+    "A": "A",
+    "B": "B",
+    "C": "C",
+    "D": "D",
+    "H": "H",
+    "S": "S",
+    "T": "T"
+  },
+  "author_review": {
+    "author": "dsl_2014_2020",
+    "materials_read": [
+      "official IMO 2014 English problem sheet",
+      "GMB IMO_2014_P3.smt2",
+      "GMB optimizer.py / instruction_reader.py / tf_optimizer.py",
+      "GeoSolver dsl-spec.json / public compiler / geometry implementations"
+    ],
+    "pdf_visual_check": "official_text_and_pdf_source_checked",
+    "static_validation": {
+      "public_model": true,
+      "validator_valid": true,
+      "compiler_valid": true,
+      "solver_executed": false
+    },
+    "independent_review_status": "pending",
+    "notes_ja": [
+      "S,TはGMB on-segの開区間を保持する。原文sideの端点を一般に許す解釈との関係は独立監査で確認する。",
+      "凸四角形の連続3点の向きが全て同じという条件を使い、固定の向きには制限していない。"
+    ]
+  },
+  "comparison_status": "draft"
+}

@@ -1,0 +1,60 @@
+{
+  "id": "IMO_2003_P3",
+  "variables": [
+    "cx",
+    "cy",
+    "dx",
+    "dy",
+    "ex",
+    "ey",
+    "fx",
+    "fy"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(dx, dy)"
+    },
+    {
+      "name": "E",
+      "expression": "Point(ex, ey)"
+    },
+    {
+      "name": "F",
+      "expression": "Point(fx, fy)"
+    }
+  ],
+  "conditions": [
+    {
+      "predicate": "ConvexPolygon([A, B, C, D, E, F])"
+    },
+    {
+      "left": "Distance(Midpoint(A, B), Midpoint(D, E))",
+      "operator": "=",
+      "right": "sqrt(3)/2 * (Distance(A, B) + Distance(D, E))"
+    },
+    {
+      "left": "Distance(Midpoint(B, C), Midpoint(E, F))",
+      "operator": "=",
+      "right": "sqrt(3)/2 * (Distance(B, C) + Distance(E, F))"
+    },
+    {
+      "left": "Distance(Midpoint(C, D), Midpoint(F, A))",
+      "operator": "=",
+      "right": "sqrt(3)/2 * (Distance(C, D) + Distance(F, A))"
+    }
+  ],
+  "target": "0"
+}

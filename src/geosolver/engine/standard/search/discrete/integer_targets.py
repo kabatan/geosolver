@@ -14,6 +14,7 @@ from itertools import product
 from mpmath import mp
 
 from geosolver.engine.standard.contracts.candidate_record import (
+    CandidateKey,
     FloatCandidate,
     RefinedCandidate,
     RefinementBatchResult,
@@ -33,7 +34,13 @@ from geosolver.engine.standard.refinement.mpmath_refiner import (
     build_integer_constraint_specs,
     evaluate_integer_constraint_values,
 )
-from geosolver.runtime.deadline import deadline_scope, expired, timed_phase, uses_deadline
+from geosolver.runtime.deadline import (
+    check_deadline,
+    deadline_scope,
+    expired,
+    timed_phase,
+    uses_deadline,
+)
 
 DISCRETE_TARGET_STRATEGY_ID = "discrete.integer_target_enumeration"
 
@@ -114,9 +121,9 @@ def _integer_observation_candidates(
     search_result: SearchBatchResult,
 ) -> tuple[FloatCandidate, ...]:
     observation_candidates: list[FloatCandidate] = []
-    seen_candidate_ids: set[int] = set()
+    seen_candidate_ids = set()
     for candidate in tuple(search_result.candidates) + tuple(search_result.guard_feasible_ledger):
-        candidate_id = int(candidate.candidate_id)
+        candidate_id = candidate.candidate_key
         if candidate_id in seen_candidate_ids:
             continue
         if (
@@ -346,12 +353,17 @@ def _augment_integer_target_observations(
 
         if expired():
             break
-        projected = refiner.project_point_to_noninteger_constraint_manifold(
-            bundle=bundle,
-            evaluator=evaluator,
-            start_point=sample_point,
-            dps=int(dps),
-        )
+        try:
+            projected = refiner.project_point_to_noninteger_constraint_manifold(
+                bundle=bundle,
+                evaluator=evaluator,
+                start_point=sample_point,
+                dps=int(dps),
+            )
+        except TimeoutError:
+            # Retain completed samples at this local refinement cutoff. The
+            # enclosing phase checks the solve deadline after leaving its scope.
+            break
         if projected is None:
             continue
         observation = IntegerTargetObservation(
@@ -380,13 +392,13 @@ def _augment_integer_target_observations(
 
 def _best_refined_starts_by_source_id(
     refined_candidates: tuple[RefinedCandidate, ...],
-) -> dict[int, tuple[MPFloat, ...]]:
-    best: dict[int, tuple[MPFloat, tuple[MPFloat, ...]]] = {}
+) -> dict[CandidateKey, tuple[MPFloat, ...]]:
+    best: dict[CandidateKey, tuple[MPFloat, tuple[MPFloat, ...]]] = {}
     for candidate in refined_candidates:
         source = candidate.source
         if source is None:
             continue
-        source_id = int(source.candidate_id)
+        source_id = source.candidate_key
         existing = best.get(source_id)
         if existing is None or candidate.residual_norm_hp < existing[0]:
             best[source_id] = (
@@ -499,6 +511,7 @@ def run_discrete_target_completion(
             dps=dps,
             tuple_cap=tuple_cap,
         )
+    check_deadline(runtime_budget.deadline_monotonic)
     intervals = _derive_integer_target_intervals(observations=observations)
     tuple_count = _integer_tuple_product(intervals)
     if tuple_count <= 0 or tuple_count > tuple_cap:
@@ -514,7 +527,7 @@ def run_discrete_target_completion(
         return refinement_result, exact_assembly_result, summary
     refined_starts_by_source_id = _best_refined_starts_by_source_id(refinement_result.candidates)
     fallback_candidates: list[RefinedCandidate] = []
-    fallback_candidate_targets: dict[int, tuple[int, ...]] = {}
+    fallback_candidate_targets: dict[CandidateKey, tuple[int, ...]] = {}
     attempted_tuple_count = 0
     completed_enumeration = True
     best_residual = mp.inf
@@ -523,7 +536,8 @@ def run_discrete_target_completion(
             completed_enumeration = False
             break
         attempted_tuple_count += 1
-        target_tuple = tuple(mp.mpf(value) for value in raw_tuple)
+        # Retain exact integers until the closure builder sets their precision.
+        target_tuple = tuple(raw_tuple)
         source_observation = _nearest_integer_target_source(
             target_tuple=target_tuple,
             observations=observations,
@@ -531,7 +545,7 @@ def run_discrete_target_completion(
         source_candidate = source_observation.source_candidate
         start_point = source_observation.start_point
         if start_point is None:
-            start_point = refined_starts_by_source_id.get(int(source_candidate.candidate_id))
+            start_point = refined_starts_by_source_id.get(source_candidate.candidate_key)
         with deadline_scope(refinement_deadline):
             refined_candidate = refiner.refine_candidate_with_integer_targets(
                 bundle=bundle,
@@ -543,7 +557,7 @@ def run_discrete_target_completion(
         if refined_candidate is None:
             continue
         fallback_candidates.append(refined_candidate)
-        fallback_candidate_targets[int(refined_candidate.candidate_id)] = tuple(
+        fallback_candidate_targets[refined_candidate.candidate_key] = tuple(
             int(value) for value in raw_tuple
         )
         if refined_candidate.residual_norm_hp < best_residual:
@@ -563,9 +577,9 @@ def run_discrete_target_completion(
             deadline_monotonic=float(runtime_budget.deadline_monotonic),
         )
     solved_tuples = [
-        list(fallback_candidate_targets[int(candidate.candidate_id)])
+        list(fallback_candidate_targets[candidate.candidate_key])
         for candidate in merged_exact_assembly.accepted_candidates
-        if int(candidate.candidate_id) in fallback_candidate_targets
+        if candidate.candidate_key in fallback_candidate_targets
     ]
     return (
         merged_refinement,

@@ -1,0 +1,134 @@
+{
+  "case_id": "IMO_2003_P3",
+  "source": {
+    "official_url": "https://www.imo-official.org/assets/documents/problems/2003/2003_eng.pdf",
+    "official_legacy_url": "https://www.imo-official.org/problems/2003/eng.pdf",
+    "official_pdf_sha256": "af5d5c538beb1566d90733f08ee7f735c2745a433a3ec8d1f6223bf879950fa5",
+    "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2003_P3.smt2",
+    "gmbl_sha256": "d9aa609660e63aba669811561aa7eeae48e0ed5bdb6736abe51eb9930d27c9c7",
+    "gmbl_commit": "f070afe18ed874b3a31db519ea6f593f40a1be00"
+  },
+  "normalization": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "fixed_coordinates": {
+      "A": [
+        "0",
+        "0"
+      ],
+      "B": [
+        "1",
+        "0"
+      ]
+    },
+    "removed_continuous_dof": 4,
+    "justification": "狭義凸六角形の隣接頂点A,Bは相異なる。中点間距離と辺長和の比例条件は相似不変。 平行移動2・回転1・正の一様拡大縮小1のみを除く。",
+    "scale_invariant": true,
+    "reflection_fixed": false
+  },
+  "clauses": [
+    {
+      "id": "convex-hexagon",
+      "statement_ja": "頂点順A,B,C,D,E,Fの狭義凸六角形。",
+      "gmbl": [
+        "(param (A B C D E F) polygon)"
+      ],
+      "geosolver": [
+        "A = Point(0, 0)",
+        "B = Point(1, 0)",
+        "C = Point(cx, cy); D = Point(dx, dy); E = Point(ex, ey); F = Point(fx, fy)",
+        "ConvexPolygon([A, B, C, D, E, F])"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "opposite-AB-DE",
+      "statement_ja": "ABとDEの中点間距離=(√3/2)(AB+DE)。",
+      "gmbl": [
+        "(assert (= (dist (midp A B) (midp D E)) (mul (div (sqrt 3) 2) (add (dist A B) (dist D E)))))"
+      ],
+      "geosolver": [
+        "Distance(Midpoint(A, B), Midpoint(D, E)) = sqrt(3)/2 * (Distance(A, B) + Distance(D, E))"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "opposite-BC-EF",
+      "statement_ja": "BCとEFの中点間距離=(√3/2)(BC+EF)。",
+      "gmbl": [
+        "(assert (= (dist (midp B C) (midp E F)) (mul (div (sqrt 3) 2) (add (dist B C) (dist E F)))))"
+      ],
+      "geosolver": [
+        "Distance(Midpoint(B, C), Midpoint(E, F)) = sqrt(3)/2 * (Distance(B, C) + Distance(E, F))"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "opposite-CD-FA",
+      "statement_ja": "CDとFAの中点間距離=(√3/2)(CD+FA)。",
+      "gmbl": [
+        "(assert (= (dist (midp C D) (midp F A)) (mul (div (sqrt 3) 2) (add (dist C D) (dist F A)))))"
+      ],
+      "geosolver": [
+        "Distance(Midpoint(C, D), Midpoint(F, A)) = sqrt(3)/2 * (Distance(C, D) + Distance(F, A))"
+      ],
+      "status": "matched"
+    }
+  ],
+  "goal": {
+    "statement_ja": "六つの内角はすべて等しい。",
+    "gmbl": [
+      "(eval (eq (uangle A B C) (uangle B C D)))",
+      "(eval (eq (uangle A B C) (uangle C D E)))",
+      "(eval (eq (uangle A B C) (uangle D E F)))",
+      "(eval (eq (uangle A B C) (uangle E F A)))",
+      "(eval (eq (uangle A B C) (uangle F A B)))"
+    ],
+    "geosolver_expressions": [
+      "Angle(A,B,C) = Angle(B,C,D) = Angle(C,D,E) = Angle(D,E,F) = Angle(E,F,A) = Angle(F,A,B)"
+    ],
+    "coverage": "原文の結論全体",
+    "included_in_search": false,
+    "target": "0"
+  },
+  "source_differences": [
+    {
+      "id": "gmb-global-admission",
+      "kind": "implementation_limit",
+      "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+      "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+    },
+    {
+      "id": "gmb-polygon-sampler",
+      "kind": "implementation_limit",
+      "detail_ja": "benchmarks/gmb/.runtime/source/src/optimizer.py:385-423のpolygonは内角と辺長比を有限範囲へ制限してsoftな閉路条件を最適化する。GeoSolverは元の狭義凸多角形の形を固定しない。",
+      "comparison_effect": "探索範囲の差として記録する。自己交差・反転・頂点重複は共通検査器で原文に従い検査する。"
+    }
+  ],
+  "open_issues": [],
+  "author_review": {
+    "author": "dsl_2000_2006",
+    "primary_sources_read": [
+      "official IMO 2003 English PDF (relevant problem text and rendered page)",
+      "pinned GMBL IMO_2003_P3.smt2",
+      "benchmarks/gmb/.runtime/source/src/optimizer.py",
+      "src/geosolver/problem/dsl-spec.json",
+      "src/geosolver/engine/standard/interpreter/context/geometry.py",
+      "src/geosolver/engine/standard/interpreter/context/high_precision.py"
+    ],
+    "static_validation": {
+      "public_model": true,
+      "validator": true,
+      "compiler": true,
+      "warnings": [],
+      "variables": 8,
+      "constructions": 6,
+      "conditions": 4
+    },
+    "solve_or_refinement_executed": false,
+    "independent_review_required": true
+  },
+  "comparison_status": "draft"
+}

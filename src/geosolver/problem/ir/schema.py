@@ -5,8 +5,13 @@ LLMが生成するAIMO IR JSONの構造を定義。
 Pydanticではなくdataclassを使用して依存を最小化。
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
+
+if TYPE_CHECKING:
+    from geosolver.problem.logical_equalities import LogicalEqualityPlan
 
 TaskKind = Literal["solve", "optimize"]
 
@@ -86,3 +91,6 @@ class IRSpec:
 
     objective_expr: str | None = None
     maximize: bool = False
+
+    # Compiler-owned metadata, never accepted as a public JSON field.
+    logical_plans: tuple[LogicalEqualityPlan, ...] = ()

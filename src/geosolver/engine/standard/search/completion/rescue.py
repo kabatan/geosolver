@@ -11,7 +11,7 @@ from geosolver.engine.standard.contracts.candidate_record import (
     FloatCandidate,
     RefinedCandidate,
     SearchBatchResult,
-    assert_candidate_id_consistency,
+    assert_candidate_key_consistency,
 )
 from geosolver.engine.standard.contracts.runtime_budget import RuntimeBudget
 
@@ -63,7 +63,7 @@ def merge_search_candidates_with_rescue(
 
     merged_candidates = list(search_result.candidates)
     all_candidates = tuple(merged_candidates) + tuple(rescued_candidates)
-    assert_candidate_id_consistency(all_candidates)
+    assert_candidate_key_consistency(all_candidates)
     seen = {candidate.candidate_uid for candidate in merged_candidates}
     for rescued in rescued_candidates:
         if rescued.candidate_uid in seen:

@@ -31,6 +31,7 @@ from geosolver.engine.standard.precision.type_guards.boundary_float_to_mpf impor
 )
 from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
 from geosolver.engine.standard.precision.type_guards.strict_to_mpf import strict_to_mpf
+from geosolver.runtime.deadline import check_deadline
 
 LINE_MARGIN_MIN = mp.mpf("1e-12")
 TRIANGLE_MARGIN_MIN = mp.mpf("1e-14")
@@ -262,6 +263,8 @@ def _build_runtime_state(
             with use_selection_symbol(item.name):
                 try:
                     context[item.name] = eval_expr(item.expr, context)
+                except TimeoutError:
+                    raise
                 except Exception:
                     context[item.name] = None
     return HardFeasibilityRuntimeState(
@@ -342,6 +345,7 @@ def evaluate_hard_feasibility(
     guard_ok: bool,
     guard_violations: tuple[str, ...],
     guard_margins: tuple[MPFloat | None, ...] = (),
+    state: HardFeasibilityRuntimeState | None = None,
 ) -> HardFeasibilitySnapshot:
     """Evaluate hard-feasibility checks and return aggregated snapshot."""
     if not checks:
@@ -357,12 +361,15 @@ def evaluate_hard_feasibility(
             min_margin=None,
         )
     try:
-        state = _build_runtime_state(
-            bundle=bundle,
-            values=values,
-            eval_expr=eval_expr,
-            cast_value=cast_value,
-        )
+        if state is None:
+            state = _build_runtime_state(
+                bundle=bundle,
+                values=values,
+                eval_expr=eval_expr,
+                cast_value=cast_value,
+            )
+    except TimeoutError:
+        raise
     except Exception as exc:
         return HardFeasibilitySnapshot(
             hard_feasible=False,
@@ -372,6 +379,7 @@ def evaluate_hard_feasibility(
     failure_tags: list[str] = []
     passed_margins: list[MPFloat] = []
     for check in checks:
+        check_deadline()
         ok, failure_tag, margin = _evaluate_single_check(
             check=check,
             state=state,

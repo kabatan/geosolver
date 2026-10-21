@@ -1,0 +1,174 @@
+{
+  "case_id": "IMO_2020_P1",
+  "source": {
+    "official_url": "https://www.imo-official.org/assets/documents/problems/2020/2020_eng.pdf",
+    "official_landing_url": "https://www.imo-official.org/problems/2020/",
+    "official_pdf_path": "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2020-eng.pdf",
+    "official_pdf_sha256": "f15dff36d956750b0126f1c792dfacf6daa291d62818cb25b926d5017ace59ac",
+    "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2020_P1.smt2",
+    "gmbl_sha256": "a29e203296c74eae3ed4df5472016d6ccea014cea6de8e5983796780fdd56444",
+    "upstream_commit": "f070afe18ed874b3a31db519ea6f593f40a1be00"
+  },
+  "normalization": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "fixed_coordinates": {
+      "A": [
+        "0",
+        "0"
+      ],
+      "B": [
+        "1",
+        "0"
+      ]
+    },
+    "removed_continuous_dof": 4,
+    "justification": "凸四角形の辺ABは非零で、全指定条件は角度比と内部条件。 平行移動2自由度・回転1自由度・正の一様拡大縮小1自由度のみを除く。残りの図形の形は固定しない。",
+    "scale_invariant": true,
+    "reflection_fixed": false
+  },
+  "clauses": [
+    {
+      "id": "H01",
+      "statement_ja": "ABCDは凸四角形。",
+      "gmbl": [
+        "(param (A B C D) polygon)"
+      ],
+      "geosolver": [
+        "A = Point(0, 0)",
+        "B = Point(1, 0)",
+        "C = Point(cx, cy)",
+        "D = Point(dx, dy)",
+        "conditions[0]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x)) != 0",
+        "conditions[1]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((C.x-B.x)*(D.y-B.y)-(C.y-B.y)*(D.x-B.x)) > 0",
+        "conditions[2]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((D.x-C.x)*(A.y-C.y)-(D.y-C.y)*(A.x-C.x)) > 0",
+        "conditions[3]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((A.x-D.x)*(B.y-D.y)-(A.y-D.y)*(B.x-D.x)) > 0"
+      ],
+      "condition_indices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "construction_names": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H02",
+      "statement_ja": "PはABCDの厳密内部。",
+      "gmbl": [
+        "(param P point (in-poly A B C D))"
+      ],
+      "geosolver": [
+        "P = Point(px, py)",
+        "conditions[4]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((B.x-A.x)*(P.y-A.y)-(B.y-A.y)*(P.x-A.x)) > 0",
+        "conditions[5]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((C.x-B.x)*(P.y-B.y)-(C.y-B.y)*(P.x-B.x)) > 0",
+        "conditions[6]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((D.x-C.x)*(P.y-C.y)-(D.y-C.y)*(P.x-C.x)) > 0",
+        "conditions[7]: ((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))*((A.x-D.x)*(P.y-D.y)-(A.y-D.y)*(P.x-D.x)) > 0"
+      ],
+      "condition_indices": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "construction_names": [
+        "P"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H03",
+      "statement_ja": "PAD:PBA:DPA=1:2:3。",
+      "gmbl": [
+        "(assert (= (div (uangle P A D) (uangle P B A)) 0.5)); (assert (= (div (uangle P A D) (uangle D P A)) (div 1 3)))"
+      ],
+      "geosolver": [
+        "conditions[8]: 2*Angle(P, A, D) = Angle(P, B, A)",
+        "conditions[9]: 3*Angle(P, A, D) = Angle(D, P, A)"
+      ],
+      "condition_indices": [
+        8,
+        9
+      ],
+      "construction_names": [],
+      "status": "matched"
+    },
+    {
+      "id": "H04",
+      "statement_ja": "CBP:BAP:BPC=1:2:3。",
+      "gmbl": [
+        "(assert (= (div (uangle C B P) (uangle B A P)) 0.5)); (assert (= (div (uangle C B P) (uangle B P C)) (div 1 3)))"
+      ],
+      "geosolver": [
+        "conditions[10]: 2*Angle(C, B, P) = Angle(B, A, P)",
+        "conditions[11]: 3*Angle(C, B, P) = Angle(B, P, C)"
+      ],
+      "condition_indices": [
+        10,
+        11
+      ],
+      "construction_names": [],
+      "status": "matched"
+    }
+  ],
+  "goal": {
+    "statement_ja": "ADPの内角二等分線、PCBの内角二等分線、ABの垂直二等分線が一点で交わる。",
+    "gmbl": [
+      "(eval (concur (i-bisector A D P) (i-bisector P C B) (perp-bis A B)))"
+    ],
+    "included_in_solver_conditions": false,
+    "solver_target": "0",
+    "assessment_only": true
+  },
+  "source_differences": [
+    {
+      "id": "gmb_runtime_distinctness",
+      "kind": "runtime_acceptance_policy",
+      "blocking": false,
+      "description_ja": "GMBは全登録点の最小距離0.1とweighted soft lossで受理する。原文にない全点相異・最小距離0.1はGeoSolver条件に移さず、両者の出力を別の共通検査器で再検査する。"
+    },
+    {
+      "id": "gmb_polygon_sampler",
+      "kind": "runtime_parameterization",
+      "blocking": false,
+      "description_ja": "GMB polygonは角のtanh範囲（四角形は30°～150°）と基準辺の1/2～3/2の辺長範囲、弱い閉鎖lossを用いる。GeoSolverは凸性だけを数式で課し、原文にない角・辺長範囲は移さない。"
+    }
+  ],
+  "open_issues": [],
+  "witness_bindings": {
+    "A": "A",
+    "B": "B",
+    "C": "C",
+    "D": "D",
+    "P": "P"
+  },
+  "author_review": {
+    "author": "dsl_2014_2020",
+    "materials_read": [
+      "official IMO 2020 English problem sheet",
+      "GMB IMO_2020_P1.smt2",
+      "GMB optimizer.py / instruction_reader.py / tf_optimizer.py",
+      "GeoSolver dsl-spec.json / public compiler / geometry implementations"
+    ],
+    "pdf_visual_check": "official_text_and_pdf_source_checked",
+    "static_validation": {
+      "public_model": true,
+      "validator_valid": true,
+      "compiler_valid": true,
+      "solver_executed": false
+    },
+    "independent_review_status": "pending",
+    "notes_ja": [
+      "Pが凸四角形の厳密内部なので対象角は0でもπでもない。比の分母が0でないことを保証したうえで正整数倍の等式へ移した。"
+    ]
+  },
+  "comparison_status": "draft"
+}

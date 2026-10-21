@@ -1,0 +1,76 @@
+{
+  "id": "IMO_2017_P4",
+  "variables": [
+    "oy",
+    "j"
+  ],
+  "constructions": [
+    {
+      "name": "R",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "S",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "O",
+      "expression": "Point(1/2, oy)"
+    },
+    {
+      "name": "Omega",
+      "expression": "Circle(O, Distance(O, R))"
+    },
+    {
+      "name": "T",
+      "expression": "Point(2, 0)"
+    },
+    {
+      "name": "l",
+      "expression": "PerpendicularLine(Line(O, R), R)"
+    },
+    {
+      "name": "J",
+      "expression": "PointOnCircle(Omega, j)"
+    },
+    {
+      "name": "Gamma",
+      "expression": "Circumcircle(J, S, T)"
+    },
+    {
+      "name": "A",
+      "expression": "Intersect(l, Gamma, near=R)"
+    },
+    {
+      "name": "A_other",
+      "expression": "Intersect(l, Gamma, exclude=A)"
+    },
+    {
+      "name": "K",
+      "expression": "Intersect(Line(A, J), Omega, exclude=J)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "oy",
+      "operator": "!=",
+      "right": 0
+    },
+    {
+      "left": "J.y*oy",
+      "operator": "<",
+      "right": 0
+    },
+    {
+      "left": "Distance(A, A_other)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(A, R)",
+      "operator": "<",
+      "right": "Distance(A_other, R)"
+    }
+  ],
+  "target": "0"
+}

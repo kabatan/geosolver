@@ -1,0 +1,23 @@
+{
+  "case_id": "IMO_2010_P2",
+  "source": {"official_url": "https://www.imo-official.org/assets/documents/problems/2010/2010_eng.pdf", "official_pdf_sha256": "f125038100e8d01430c6d260d53b3ee7a70902a5d0a72ffffe15deaa7c98d4cc", "official_pdf_page": 1, "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2010_P2.smt2", "gmbl_sha256": "973de0514b1eef5441ea263fbb94f46fedfbaf0f07c035d5b059e00650140f9a"},
+  "normalization": {"anchors": ["A", "B"], "fixed_coordinates": {"A": ["0", "0"], "B": ["1", "0"]}, "removed_continuous_dof": 4, "justification": "相似不変でABは正長。Cの形、E,Fの位置を自由に残す。上下の符号は選ばない。", "scale_invariant": true, "reflection_fixed": false},
+  "clauses": [
+    {"id": "centers_second_intersection", "statement_ja": "IはABCの内心、Gammaは外接円。AIとGammaのA以外の交点がD。", "gmbl": ["(param (A B C) triangle)", "(incenter A B C)", "(circumcircle A B C)", "(inter-lc (line A I) Gamma (rs-neq A))"], "geosolver": ["Area(A, B, C) > 0", "I = Incenter(A, B, C)", "Gamma = Circumcircle(A, B, C)", "D = Intersect(Line(A, I), Gamma, exclude=A)"], "status": "matched"},
+    {"id": "arc_and_side", "statement_ja": "EはDを含む弧BC上、Fは辺BC上。比較ではユーザー承認によりFを辺BCの内部に限定し、原文の端点配置を除く共通範囲を用いる。", "gmbl": ["(param E point (on-circ Gamma))", "(assert (same-side D E (line B C)))", "(param F point (on-seg B C))"], "geosolver": ["E = PointOnCircle(Gamma, te)", "cross(C-B,D-B) * cross(C-B,E-B) >= 0（conditions[1]の座標式）", "F = PointOnSegment(B, C, tf)", "0 < tf < 1"], "status": "user_approved_common_scope"},
+    {"id": "angle_relation", "statement_ja": "角BAFとCAEは等しく、角BACの半分より小さい。すべて通常の0〜piの角。", "gmbl": ["(assert (= (uangle B A F) (uangle C A E)))", "(assert (lt (uangle C A E) (mul 0.5 (uangle B A C))))"], "geosolver": ["Angle(B, A, F) = Angle(C, A, E)", "Angle(C, A, E) < Angle(B, A, C) / 2"], "status": "matched"},
+    {"id": "midpoint", "statement_ja": "GはIFの中点。", "gmbl": ["(define G point (midp I F))"], "geosolver": ["G = Midpoint(I, F)"], "status": "matched"}
+  ],
+  "goal": {"statement_ja": "DGとEIの交点がGamma上にある。交点の存在を含めて探索後に検査する。", "gmbl": ["(eval (on-circ (inter-ll (line D G) (line E I)) Gamma))"], "included_in_search": false, "target": "0"},
+  "source_differences": [{"kind": "user_approved_common_scope", "detail": "原文のside/arcはinteriorと明記されず、閉と読むとF=B,E=Cも成立する。一方、公開GMBのparam on-segは開線分を生成する。ユーザーの明示承認によりGeoSolver側にも0<tf<1を課し、原文の端点配置を除く共通範囲で比較する。原文の全境界を含む問題と同値とは主張しない。GMB原本と原文資料は変更しない。"}],
+  "comparison_scope": {
+    "kind": "user_approved_common_scope",
+    "restriction": "Fは辺BCの厳密な内部。",
+    "authorization": "ユーザーがFを辺BC内部に統一し、原文の端点配置を除く共通範囲での比較と明記することを明示承認。",
+    "not_claimed": "原文を閉線分・閉弧と解釈した全境界配置まで含む解集合との同値性。",
+    "endpoint_implication": "FがBC内部でABCが非退化なので∠BAF>0。角の等式から∠CAE>0となりE≠C。E=Bなら∠CAE=∠CABとなって半角未満の条件に反するのでE≠B。従ってEも弧BCの端点から外れる。"
+  },
+  "open_issues": [],
+  "author_review": {"reviewer": "dsl_2007_2013", "primary_sources_read": ["公式2010英語PDF第1頁（弧BDCの画像も確認）", "公開IMO_2010_P2.smt2", "GMB optimizer.py: same-side, parameterize_on_seg", "GeoSolver DSL specのAngle・PointOnSegment"], "static_validation": "GeometryProblem、validate、compile_problemに合格。探索・精密化未実施。"},
+  "comparison_status": "draft"
+}

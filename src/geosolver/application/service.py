@@ -205,16 +205,7 @@ def solve(
             ),
         )
     elapsed = time.monotonic() - started
-    if elapsed >= parsed_options.resolved_time_limit:
-        return _base_result(
-            status=ResultStatus.RESOURCE_ERROR,
-            problem=parsed_problem,
-            options=parsed_options,
-            cores=cores,
-            elapsed=elapsed,
-            termination=TerminationReason.TIME_LIMIT,
-            error=SolveError(code="time_limit_reached", message="solve exceeded its deadline"),
-        )
+    # EngineRunner validates the completed save time, not subsequent read/cleanup time.
     base = _base_result(
         status=ResultStatus.SOLVED if answers else ResultStatus.NO_ANSWER,
         problem=parsed_problem,

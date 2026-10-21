@@ -1,0 +1,20 @@
+{
+  "case_id": "IMO_2008_P1",
+  "source": {"official_url": "https://www.imo-official.org/assets/documents/problems/2008/2008_eng.pdf", "official_pdf_sha256": "d6975d8903404668d5cd534990af75347593ac501d61624ba387aa6b12f13318", "official_pdf_page": 1, "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2008_P1.smt2", "gmbl_sha256": "e706ba2c8cf34ed7dcdaa74776771f8a468687d46e12d98b21cb0e6ca9497a52"},
+  "normalization": {"anchors": ["A", "B"], "fixed_coordinates": {"A": ["0", "0"], "B": ["1", "0"]}, "removed_continuous_dof": 4, "justification": "鋭角三角形の正長辺ABを単位水平線分にする。鋭角の形の自由度と鏡映を残す。", "scale_invariant": true, "reflection_fixed": false},
+  "clauses": [
+    {"id": "acute_orthocenter", "statement_ja": "ABCは鋭角三角形でHは垂心。", "gmbl": ["(param (A B C) acute-tri)", "(define H point (orthocenter A B C))"], "geosolver": ["Area(A, B, C) > 0", "AcuteTriangle(A, B, C)", "H = Orthocenter(A, B, C)"], "status": "matched_source_semantics"},
+    {"id": "three_circles", "statement_ja": "各辺の中点を中心としHを通る3円。", "gmbl": ["(coa (midp B C) H)", "(coa (midp C A) H)", "(coa (midp A B) H)"], "geosolver": ["Ma, Mb, Mc", "OmegaA = CircleThroughPoint(Ma, H)", "OmegaB = CircleThroughPoint(Mb, H)", "OmegaC = CircleThroughPoint(Mc, H)"], "status": "matched"},
+    {"id": "intersection_pairs", "statement_ja": "各円と対応する辺の直線の2交点をA1,A2等とする。枝番号による片側固定はしない。", "gmbl": ["A1, B1, C1: inter-lc with rs-arbitrary", "A2, B2, C2: inter-lc with rs-neq A1/B1/C1"], "geosolver": ["A1 = PointOnLine(Line(B, C), ta); OnCircle(A1, OmegaA) = 0", "A2 = Point(2 * Ma.x - A1.x, 2 * Ma.y - A1.y)", "B1 = PointOnLine(Line(C, A), tb); OnCircle(B1, OmegaB) = 0", "B2 = Point(2 * Mb.x - B1.x, 2 * Mb.y - B1.y)", "C1 = PointOnLine(Line(A, B), tc); OnCircle(C1, OmegaC) = 0", "C2 = Point(2 * Mc.x - C1.x, 2 * Mc.y - C1.y)"], "status": "matched_set_with_both_labelings"}
+  ],
+  "branch_reasoning": "直線は円の中心を通る。正半径円のその直線との交点Pに対して2O−Pが唯一のもう一方の交点である。各ta,tb,tcに2根を残すので、任意の片側へ固定しない。これは交点作図の同値変形であって6点共円という結論は使わない。",
+  "goal": {"statement_ja": "A1,A2,B1,B2,C1,C2が同一の円に乗る。", "gmbl": ["(eval (cycl A1 A2 B1 B2 C1 C2))"], "included_in_search": false, "target": "0"},
+  "source_differences": [
+    {"kind": "implementation_sampling_and_domain", "detail": "GMB acute-triは固定Ax∈[-1.2,1.2], Ay∈(1.1,4.1), B=(-2,0), C=(2,0)を使い、鋭角性の全域・厳密保証ではない。GeoSolverは原文通り鋭角条件を検査する。"},
+    {"kind": "implementation_branch", "detail": "GMB rs-arbitraryは内部P2を返すが原文は2交点のラベルを区別しない。本DSLは両方のラベルを保持し、採点も交点対の集合として扱う必要がある。"}
+  ],
+  "checker_requirements": [{"requirement": "採点時に各交点対のラベル交換を不一致と扱わない。任意交点はどちらの実根も許し、もう一方はrs-neqの所属・非一致を検査する。", "status": "implemented_pending_final_apparatus_gate", "evidence": ["checker.pyはnamed arbitrary交点を返却座標のhintと所属条件で照合する。", "test_arbitrary_named_intersection_accepts_both_real_branchesとtest_exclude_selector_checks_excluded_point_is_a_rootが合格。", "別の人工2交点対でX/Y両ラベルを受理し、同一根を重複したYは拒否することを確認。"], "gate": "装置全体の最終独立監査・人工例試験の合格は統合工程で確認する。入力の数学的未確定事項ではない。"}],
+  "open_issues": [],
+  "author_review": {"reviewer": "dsl_2007_2013", "primary_sources_read": ["公式2008英語PDF第1頁（画像・抽出本文）", "公開IMO_2008_P1.smt2", "GMB optimizer.pyのacute-triと交点処理", "GeoSolver DSL specのPointOnLine・CircleThroughPoint"], "static_validation": "GeometryProblem、validate、compile_problemに合格。探索・精密化未実施。"},
+  "comparison_status": "draft"
+}

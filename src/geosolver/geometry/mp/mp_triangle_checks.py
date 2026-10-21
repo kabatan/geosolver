@@ -14,9 +14,14 @@ if TYPE_CHECKING:
 
 def mp_triangle_type(A: MPPoint, B: MPPoint, C: MPPoint) -> str | None:
     cross = (B.x - A.x) * (C.y - A.y) - (B.y - A.y) * (C.x - A.x)
-    tol = mpf(10) ** (-(mp.dps - 5))
+    scale2 = max(
+        (B.x - A.x) ** 2 + (B.y - A.y) ** 2,
+        (C.x - A.x) ** 2 + (C.y - A.y) ** 2,
+        (C.x - B.x) ** 2 + (C.y - B.y) ** 2,
+    )
+    tol = 32 * mp.eps * scale2
 
-    if abs(cross) < tol:
+    if cross == 0 or abs(cross) < tol:
         return None
 
     a2 = (B.x - C.x) ** 2 + (B.y - C.y) ** 2
@@ -27,7 +32,7 @@ def mp_triangle_type(A: MPPoint, B: MPPoint, C: MPPoint) -> str | None:
     cos_B = c2 + a2 - b2
     cos_C = a2 + b2 - c2
 
-    tol_angle = mpf(10) ** (-(mp.dps // 2))
+    tol_angle = mpf(10) ** (-(mp.dps // 2)) * scale2
     if abs(cos_A) < tol_angle or abs(cos_B) < tol_angle or abs(cos_C) < tol_angle:
         return "right"
     if cos_A < 0 or cos_B < 0 or cos_C < 0:
@@ -37,8 +42,13 @@ def mp_triangle_type(A: MPPoint, B: MPPoint, C: MPPoint) -> str | None:
 
 def mp_middle_point_on_line(A: MPPoint, B: MPPoint, C: MPPoint) -> MPPoint | None:
     cross = (B.x - A.x) * (C.y - A.y) - (B.y - A.y) * (C.x - A.x)
-    tol = mpf(10) ** (-(mp.dps - 5))
-    if abs(cross) >= tol:
+    scale2 = max(
+        (B.x - A.x) ** 2 + (B.y - A.y) ** 2,
+        (C.x - A.x) ** 2 + (C.y - A.y) ** 2,
+        (C.x - B.x) ** 2 + (C.y - B.y) ** 2,
+    )
+    tol = 32 * mp.eps * scale2
+    if abs(cross) > tol:
         return None
 
     dAB = (A.x - B.x) ** 2 + (A.y - B.y) ** 2
@@ -56,29 +66,34 @@ def mp_orthic_triangle(
     A: MPPoint, B: MPPoint, C: MPPoint
 ) -> tuple[MPPoint, MPPoint, MPPoint] | None:
     cross = (B.x - A.x) * (C.y - A.y) - (B.y - A.y) * (C.x - A.x)
-    tol = mpf(10) ** (-(mp.dps - 5))
-    if abs(cross) < tol:
+    scale2 = max(
+        (B.x - A.x) ** 2 + (B.y - A.y) ** 2,
+        (C.x - A.x) ** 2 + (C.y - A.y) ** 2,
+        (C.x - B.x) ** 2 + (C.y - B.y) ** 2,
+    )
+    tol = 32 * mp.eps * scale2
+    if cross == 0 or abs(cross) < tol:
         return None
 
     point_cls = type(A)
 
     BC = C - B
     BC_len2 = BC.x**2 + BC.y**2
-    if BC_len2 < tol:
+    if BC_len2 == 0 or BC_len2 < tol:
         return None
     t_a = ((A.x - B.x) * BC.x + (A.y - B.y) * BC.y) / BC_len2
     Ha = point_cls(B.x + t_a * BC.x, B.y + t_a * BC.y)
 
     CA = A - C
     CA_len2 = CA.x**2 + CA.y**2
-    if CA_len2 < tol:
+    if CA_len2 == 0 or CA_len2 < tol:
         return None
     t_b = ((B.x - C.x) * CA.x + (B.y - C.y) * CA.y) / CA_len2
     Hb = point_cls(C.x + t_b * CA.x, C.y + t_b * CA.y)
 
     AB = B - A
     AB_len2 = AB.x**2 + AB.y**2
-    if AB_len2 < tol:
+    if AB_len2 == 0 or AB_len2 < tol:
         return None
     t_c = ((C.x - A.x) * AB.x + (C.y - A.y) * AB.y) / AB_len2
     Hc = point_cls(A.x + t_c * AB.x, A.y + t_c * AB.y)

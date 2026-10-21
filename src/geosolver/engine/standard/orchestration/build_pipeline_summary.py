@@ -11,6 +11,7 @@ from geosolver.engine.standard.contracts.candidate_record import (
     RefinedCandidate,
     RefinementBatchResult,
     SearchBatchResult,
+    candidate_record,
 )
 from geosolver.engine.standard.evaluation.classify_evaluation_failure import EvaluationStatus
 
@@ -62,7 +63,7 @@ def _build_candidate_ledger(search_result: SearchBatchResult) -> list[dict[str, 
             "score": float(candidate.score),
             "residual_norm": float(candidate.residual_norm_float),
             "guard_ok": bool(candidate.guard_ok),
-            "hard_feasible": bool(candidate.hard_feasible),
+            "hard_feasible": candidate.hard_feasible,
             "origin_seed": int(candidate.origin_seed),
             "origin_start_point_index": int(candidate.origin_start_point_index),
             "candidate_uid": candidate.candidate_uid,
@@ -159,7 +160,13 @@ def build_pipeline_summary(
     best_candidate_id = _candidate_id(selected_candidate)
     accepted_candidate_ids = _candidate_ids(assembly_result.accepted_candidates)
     summary = {
-        "exact_candidate_records": [asdict(record) for record in assembly_result.candidate_records],
+        "exact_candidate_records": [
+            {
+                "candidate": candidate_record(record.candidate),
+                "exact_result": asdict(record.exact_result),
+            }
+            for record in assembly_result.candidate_records
+        ],
         "verification_records": list(assembly_result.verification_records),
         "initial_probe": dict(initial_probe_result.metrics),
         "search": search_summary,

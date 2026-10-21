@@ -1,0 +1,155 @@
+{
+  "case_id": "IMO_2004_P5",
+  "source": {
+    "official_url": "https://www.imo-official.org/assets/documents/problems/2004/2004_eng.pdf",
+    "official_legacy_url": "https://www.imo-official.org/problems/2004/eng.pdf",
+    "official_pdf_sha256": "b94ed994dca8ad6c22827535132d67eae37935cbf6d3bdeb196c5fa362282062",
+    "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2004_P5.smt2",
+    "gmbl_sha256": "336bafdec3c4c0f0c875de3787575f57216cb955e6ace67f34d19fad724eea47",
+    "gmbl_commit": "f070afe18ed874b3a31db519ea6f593f40a1be00"
+  },
+  "normalization": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "fixed_coordinates": {
+      "A": [
+        "0",
+        "0"
+      ],
+      "B": [
+        "1",
+        "0"
+      ]
+    },
+    "removed_continuous_dof": 4,
+    "justification": "狭義凸四角形の辺ABは非零。内部点、角等式、共円、距離の等式はいずれも相似不変。 平行移動2・回転1・正の一様拡大縮小1のみを除く。",
+    "scale_invariant": true,
+    "reflection_fixed": false
+  },
+  "clauses": [
+    {
+      "id": "convex",
+      "statement_ja": "ABCDは狭義凸四角形。",
+      "gmbl": [
+        "(param (A B C D) polygon)"
+      ],
+      "geosolver": [
+        "ConvexPolygon([A, B, C, D])"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "not-bisected",
+      "statement_ja": "BDは角ABCも角CDAも二等分しない。",
+      "gmbl": [
+        "(assert (not (on-line D (i-bisector A B C))))",
+        "(assert (not (on-line B (i-bisector C D A))))"
+      ],
+      "geosolver": [
+        "OnLine(D, AngleBisector(A, B, C)) != 0",
+        "OnLine(B, AngleBisector(C, D, A)) != 0"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "interior-P",
+      "statement_ja": "PはABCDの内部。正の4重みの和を1とする凸結合で全内部を表す。",
+      "gmbl": [
+        "(param P point (in-poly A B C D))"
+      ],
+      "geosolver": [
+        "P = Point(u*A.x + v*B.x + w*C.x + (1-u-v-w)*D.x, u*A.y + v*B.y + w*C.y + (1-u-v-w)*D.y)",
+        "u > 0; v > 0; w > 0; u+v+w < 1"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "two-angle-equations",
+      "statement_ja": "角PBC=角DBA、角PDC=角BDA。",
+      "gmbl": [
+        "(assert (= (uangle P B C) (uangle D B A)))",
+        "(assert (= (uangle P D C) (uangle B D A)))"
+      ],
+      "geosolver": [
+        "Angle(P, B, C) = Angle(D, B, A)",
+        "Angle(P, D, C) = Angle(B, D, A)"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "chosen-implication",
+      "statement_ja": "原文の同値命題のうちABCDが共円である向きをGMBLと同じく仮定する。",
+      "gmbl": [
+        "(assert (cycl A B C D))"
+      ],
+      "geosolver": [
+        "AreConcyclic(A, B, C, D) = 0"
+      ],
+      "status": "matched"
+    }
+  ],
+  "goal": {
+    "statement_ja": "AP=CP。",
+    "gmbl": [
+      "(eval (cong A P C P))"
+    ],
+    "geosolver_expressions": [
+      "Distance(A, P) = Distance(C, P)"
+    ],
+    "coverage": "原文の共円⇒AP=CPの向きだけ。逆向きを同時に検証したとはしない。",
+    "included_in_search": false,
+    "target": "0"
+  },
+  "source_differences": [
+    {
+      "id": "gmb-global-admission",
+      "kind": "implementation_limit",
+      "detail_ja": "GMBはnamed point間の最小距離0.1などの数値的な受理条件・soft lossを使う。原文が要求しない全点相異・絶対距離下限をGeoSolverの仮定へ追加しない。",
+      "comparison_effect": "共通検査器で原文の非退化条件を別に検査する。内部受理率のみで幾何学的正解率を比較しない。"
+    },
+    {
+      "id": "gmb-polygon-sampler",
+      "kind": "implementation_limit",
+      "detail_ja": "benchmarks/gmb/.runtime/source/src/optimizer.py:385-423のpolygonは内角と辺長比を有限範囲へ制限してsoftな閉路条件を最適化する。GeoSolverは元の狭義凸多角形の形を固定しない。",
+      "comparison_effect": "探索範囲の差として記録する。自己交差・反転・頂点重複は共通検査器で原文に従い検査する。"
+    },
+    {
+      "id": "positive-weights",
+      "kind": "equivalent_parameterization",
+      "detail_ja": "四角形内部点を4頂点の全て正の重みで表す。任意の内部点はそのような重みを持つため、特定の三角形への偏りや対角線上の点の排除はない。重みの冗長性は形固定ではない。",
+      "comparison_effect": "GMB softmaxと数学的な到達領域は同じ。"
+    },
+    {
+      "id": "one-direction-only",
+      "kind": "goal_coverage",
+      "detail_ja": "原文は共円とAP=CPの同値。公開GMBLが選んだ共円を仮定する片方向を比較する。",
+      "comparison_effect": "原文の全同値命題の証明比較とはしない。"
+    }
+  ],
+  "open_issues": [],
+  "author_review": {
+    "author": "dsl_2000_2006",
+    "primary_sources_read": [
+      "official IMO 2004 English PDF (relevant problem text and rendered page)",
+      "pinned GMBL IMO_2004_P5.smt2",
+      "benchmarks/gmb/.runtime/source/src/optimizer.py",
+      "src/geosolver/problem/dsl-spec.json",
+      "src/geosolver/engine/standard/interpreter/context/geometry.py",
+      "src/geosolver/engine/standard/interpreter/context/high_precision.py"
+    ],
+    "static_validation": {
+      "public_model": true,
+      "validator": true,
+      "compiler": true,
+      "warnings": [],
+      "variables": 7,
+      "constructions": 5,
+      "conditions": 10
+    },
+    "solve_or_refinement_executed": false,
+    "independent_review_required": true
+  },
+  "comparison_status": "draft"
+}

@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2005_P5",
+  "reviewer": "independent_review",
+  "case_sha256": "840851e17d85a24a6f3373319df360b670496fe2fcf1871603ea87e6ba45670b",
+  "audit_sha256": "7f95e0e4c78cde7fb0f449569d4103d5a7925efecdf4fe754007d92cd1830b81",
+  "gmbl_sha256": "380ffd4ca3c383d62a55a812f41dc552f2f0b8bb43d7205c9dc1db9dabb1b9b7",
+  "reviewed_original_pdf_sha256": "d92c258ba744081fdd8e9a3e32552edef20e135cb8a97dc6fa4944592ebd4f49",
+  "verdict": "pass",
+  "normalization_checked": true,
+  "conclusion_not_assumed": true,
+  "original_conditions_covered_by_gmbl": true,
+  "scope_of_coverage_ja": "原文の仮定を当該比較範囲で満たすかの監査である。原文の全境界配置を含む解集合の完全同値、GMB実装の全数値分岐の正当性、実験の実行許可を意味しない。",
+  "comparison_scope": "nondegenerate_configuration_domain",
+  "sources_read": [
+    "cases/IMO_2005_P5.json",
+    "audit/IMO_2005_P5.json",
+    "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2005_P5.smt2",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2005-eng.pdf",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2005-eng.txt",
+    "AUTHORING.md",
+    "reviews/UPSTREAM_SEMANTICS.md"
+  ],
+  "official_url": "https://www.imo-official.org/assets/documents/problems/2005/2005_eng.pdf",
+  "normalization_review": {
+    "anchors": [
+      "A",
+      "B"
+    ],
+    "removed_continuous_dof": 4,
+    "scale_invariant": true,
+    "reflection_fixed": false,
+    "remaining_solver_variables": [
+      "cx",
+      "cy",
+      "dx",
+      "dy",
+      "te",
+      "tf"
+    ],
+    "shape_fixed_beyond_original_hypotheses": false,
+    "checked_ja": "原文で相異なる二点の単位基線化だけで平行移動2・回転1・正の尺度1を除く。元の形の変数と鏡映配置を保持している。"
+  },
+  "original_goal_not_used": "同一のABCDに対してE,Fを動かしたとき、三角形PQRの外接円群にP以外の共通点がある。",
+  "checked_input_counts": {
+    "constructions": 9,
+    "conditions": 7
+  },
+  "method": {
+    "read_all_constructions_and_conditions": true,
+    "read_original_problem_assumptions": true,
+    "checked_domains_branches_and_non_degeneracy": true,
+    "checked_goal_separation": true,
+    "exact_algebraic_checks_only_where_documented": true,
+    "solver_executed": false,
+    "optimizer_executed": false,
+    "refinement_executed": false,
+    "prior_case_performance_used_to_adjust_input": false
+  },
+  "gmb_runtime_equivalence_claimed": false,
+  "findings": [
+    {
+      "id": "IMO_2005_P5-review-1",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "AB以外の二頂点を自由にし、凸性、BC=DA、BCとDAの非平行性を残す。E,Fは対応する辺上でBE=DFを課す。"
+    },
+    {
+      "id": "IMO_2005_P5-review-2",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "EFと両対角線の交点Q,Rおよび対角線交点Pを照合した。Area(P,Q,R)>0は仮定の強化ではなく、等長と非平行性から従うことを独立に証明した。"
+    },
+    {
+      "id": "IMO_2005_P5-review-3",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "端点では一意な三角形PQRを作れない。非退化性と交点存在の証明はreviews/EQUIVALENCE_ARGUMENTS.mdを参照。原問のE,Fを動かす円族の共通点を入力には使っていない。"
+    }
+  ],
+  "remaining_uncertainties": []
+}

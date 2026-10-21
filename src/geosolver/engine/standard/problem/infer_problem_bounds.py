@@ -6,7 +6,8 @@ from geosolver.problem.domain_bounds import parameter_expressions, search_bounds
 
 
 def infer_problem_bounds(bundle):
-    return search_bounds(bundle.spec)
+    plan = getattr(bundle, "analysis_plan", None)
+    return list(plan.bounds) if plan is not None else search_bounds(bundle.spec)
 
 
 def _infer_parametric_variable_names(bundle):

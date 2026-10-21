@@ -4,6 +4,7 @@ Polygon helper functions extracted from mp_impl.
 
 from __future__ import annotations
 
+from functools import lru_cache
 from typing import TYPE_CHECKING
 
 from mpmath import cos as mp_cos
@@ -88,7 +89,7 @@ def _segments_intersect(p1: MPPoint, p2: MPPoint, p3: MPPoint, p4: MPPoint, rel_
     return bool(o4 == 0 and _on_segment(p3, p2, p4, rel_tol))
 
 
-def mp_is_convex(*points: MPPoint) -> bool | None:
+def _is_convex_uncached(*points: MPPoint) -> bool | None:
     if len(points) < 3:
         return None
 
@@ -138,7 +139,7 @@ def mp_is_convex(*points: MPPoint) -> bool | None:
     return True
 
 
-def mp_has_self_intersection(*points: MPPoint) -> bool | None:
+def _has_self_intersection_uncached(*points: MPPoint) -> bool | None:
     if len(points) < 3:
         return None
 
@@ -158,6 +159,39 @@ def mp_has_self_intersection(*points: MPPoint) -> bool | None:
             if _segments_intersect(p1, p2, p3, p4, rel_tol):
                 return True
     return False
+
+
+def _polygon_coordinates(points):
+    try:
+        return tuple((p.x._mpf_, p.y._mpf_) for p in points)
+    except AttributeError:
+        return None
+
+
+@lru_cache(maxsize=512)
+def _cached_polygon_predicate(kind, precision, coordinates):
+    # MPPoint is mutable and has tolerance-based equality. Retain exact numeric
+    # values, never point identities or rounded decimal representations. The
+    # active precision is part of the key because predicate tolerances use it.
+    from geosolver.geometry.mp.mp_core_types import MPPoint
+
+    points = tuple(MPPoint(mp.make_mpf(x), mp.make_mpf(y)) for x, y in coordinates)
+    predicate = _is_convex_uncached if kind == "convex" else _has_self_intersection_uncached
+    return predicate(*points)
+
+
+def mp_is_convex(*points: MPPoint) -> bool | None:
+    coordinates = _polygon_coordinates(points)
+    if coordinates is None:
+        return _is_convex_uncached(*points)
+    return _cached_polygon_predicate("convex", mp.prec, coordinates)
+
+
+def mp_has_self_intersection(*points: MPPoint) -> bool | None:
+    coordinates = _polygon_coordinates(points)
+    if coordinates is None:
+        return _has_self_intersection_uncached(*points)
+    return _cached_polygon_predicate("self_intersection", mp.prec, coordinates)
 
 
 def mp_polygon_area(*points: MPPoint) -> mpf:

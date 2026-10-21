@@ -1,0 +1,121 @@
+{
+  "id": "IMO_2018_P1",
+  "variables": [
+    "cx",
+    "cy",
+    "d",
+    "e",
+    "f",
+    "g"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "Gamma",
+      "expression": "Circumcircle(A, B, C)"
+    },
+    {
+      "name": "D",
+      "expression": "PointOnSegment(A, B, d)"
+    },
+    {
+      "name": "E",
+      "expression": "PointOnSegment(A, C, e)"
+    },
+    {
+      "name": "F",
+      "expression": "PointOnCircle(Gamma, f)"
+    },
+    {
+      "name": "G",
+      "expression": "PointOnCircle(Gamma, g)"
+    },
+    {
+      "name": "bis_BD",
+      "expression": "PerpendicularBisector(B, D)"
+    },
+    {
+      "name": "bis_CE",
+      "expression": "PerpendicularBisector(C, E)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Area(A, B, C)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(A, B), Vector(A, C))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(B, A), Vector(B, C))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(C, A), Vector(C, B))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "d",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "d",
+      "operator": "<",
+      "right": 1
+    },
+    {
+      "left": "e",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "e",
+      "operator": "<",
+      "right": 1
+    },
+    {
+      "left": "Distance(A, D)",
+      "operator": "=",
+      "right": "Distance(A, E)"
+    },
+    {
+      "left": "OnLine(F, bis_BD)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnLine(G, bis_CE)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(F.y-A.y)-(B.y-A.y)*(F.x-A.x))*((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))",
+      "operator": "<",
+      "right": 0
+    },
+    {
+      "left": "((C.x-A.x)*(G.y-A.y)-(C.y-A.y)*(G.x-A.x))*((C.x-A.x)*(B.y-A.y)-(C.y-A.y)*(B.x-A.x))",
+      "operator": "<",
+      "right": 0
+    }
+  ],
+  "target": "0"
+}

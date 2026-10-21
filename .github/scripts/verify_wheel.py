@@ -53,7 +53,8 @@ def main() -> int:
         directory = Path(temporary)
         environment = os.environ.copy()
         environment.pop("PYTHONPATH", None)
-        venv.create(directory / "venv", with_pip=True)
+        # Preserve the interpreter installation layout on POSIX (notably macOS).
+        venv.create(directory / "venv", with_pip=True, symlinks=os.name != "nt")
         if os.name == "nt":
             python = directory / "venv" / "Scripts" / "python.exe"
             cli = directory / "venv" / "Scripts" / "geosolver.exe"
@@ -99,6 +100,23 @@ degrees = solved('Degrees(Angle(B, A, C))', [
     {'name': 'C', 'expression': 'Point(0, 1)'},
 ])
 assert degrees.kind == 'algebraic' and degrees.decimal.startswith('90'), degrees
+
+branches = solve(
+    GeometryProblem(
+        id='wheel-scalar-branches', variables=['x'], constructions=[],
+        conditions=[
+            {'left': '0', 'operator': '=', 'right': 0},
+            {'left': '(x-2)*(x+3)', 'operator': '=', 'right': 0},
+        ],
+        target='x',
+    ),
+    SolveOptions(time_limit_seconds=180, cores=1, seed=0),
+)
+assert branches.status == 'solved', branches
+assert all(answer.kind == 'algebraic' for answer in branches.answers), branches
+assert {tuple(answer.minimal_polynomial) for answer in branches.answers} == {
+    ('1', '-2'), ('1', '3'),
+}, branches
 """
         run([str(python), "-c", smoke], cwd=directory, env=environment)
     return 0

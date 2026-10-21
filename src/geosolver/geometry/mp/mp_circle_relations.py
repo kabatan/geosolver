@@ -84,5 +84,4 @@ def mp_radical_axis(c1: MPCircle, c2: MPCircle) -> MPLine | None:
 
 
 def mp_power_of_point(point: MPPoint, circle: MPCircle) -> mpf:
-    d = point.distance_to(circle.center)
-    return d**2 - circle.radius**2
+    return (point.x - circle.center.x) ** 2 + (point.y - circle.center.y) ** 2 - circle.radius**2

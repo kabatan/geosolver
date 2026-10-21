@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "case_id": "IMO_2015_P4",
+  "reviewer": "independent_review",
+  "case_sha256": "0c788e44cb4706b7cd9d772b422270c8502e5a97a270f73662525219e578dd76",
+  "audit_sha256": "660be7a98258165e063dfdc874967d1a2f8c19e3e5e48bcd04818f9f8bac85dc",
+  "gmbl_sha256": "d6cb852d6d92b893cc382cbadc614cd0615587676a57780d3f98c8d0cbd52c5d",
+  "reviewed_original_pdf_sha256": "5ebc0b9ca0072932e088f6fd22fa19625544e3616086da2aa1280d3a791dbeb2",
+  "verdict": "pass",
+  "normalization_checked": true,
+  "conclusion_not_assumed": true,
+  "original_conditions_covered_by_gmbl": true,
+  "scope_of_coverage_ja": "原文の仮定を当該比較範囲で満たすかの監査である。原文の全境界配置を含む解集合の完全同値、GMB実装の全数値分岐の正当性、実験の実行許可を意味しない。",
+  "comparison_scope": "nondegenerate_configuration_domain",
+  "sources_read": [
+    "cases/IMO_2015_P4.json",
+    "audit/IMO_2015_P4.json",
+    "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2015_P4.smt2",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2015-eng.pdf",
+    "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2015-eng.txt",
+    "AUTHORING.md",
+    "reviews/UPSTREAM_SEMANTICS.md"
+  ],
+  "official_url": "https://www.imo-official.org/assets/documents/problems/2015/2015_eng.pdf",
+  "normalization_review": {
+    "anchors": [
+      "B",
+      "C"
+    ],
+    "removed_continuous_dof": 4,
+    "scale_invariant": true,
+    "reflection_fixed": false,
+    "remaining_solver_variables": [
+      "ax",
+      "ay",
+      "d",
+      "f"
+    ],
+    "shape_fixed_beyond_original_hypotheses": false,
+    "checked_ja": "原文で相異なる二点の単位基線化だけで平行移動2・回転1・正の尺度1を除く。元の形の変数と鏡映配置を保持している。"
+  },
+  "original_goal_not_used": "Xが直線AO上にある。",
+  "checked_input_counts": {
+    "constructions": 13,
+    "conditions": 18
+  },
+  "method": {
+    "read_all_constructions_and_conditions": true,
+    "read_original_problem_assumptions": true,
+    "checked_domains_branches_and_non_degeneracy": true,
+    "checked_goal_separation": true,
+    "exact_algebraic_checks_only_where_documented": true,
+    "solver_executed": false,
+    "optimizer_executed": false,
+    "refinement_executed": false,
+    "prior_case_performance_used_to_adjust_input": false
+  },
+  "gmb_runtime_equivalence_claimed": false,
+  "findings": [
+    {
+      "id": "IMO_2015_P4-review-1",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "BCの単位基線とA,D,Fを変数として残す。B,D,E,Cの順序、Γの中心A、Ωとの交点、K∈AB,L∈CA、FKとGLの一意な交点Xを照合した。"
+    },
+    {
+      "id": "IMO_2015_P4-review-2",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "Fを未知のΩ上の点としてΓ所属を等式にした場合、G=Intersect(Γ,Ω,exclude=F)は途中配置で未定義となる欠陥を指摘した。authorはG=Reflect(F,Line(A,O))へ修正済み。両円の中心線鏡映なので最終条件下では同値であり、結論X∈AOの流用ではない。"
+    },
+    {
+      "id": "IMO_2015_P4-review-3",
+      "severity": "info",
+      "status": "checked",
+      "detail_ja": "A,F,B,C,Gの原文順序は後続のK∈ABから従うことを独立に証明した。よってGMBLコメントの欠落を直ちに入力非同値とはしない。詳細はreviews/EQUIVALENCE_ARGUMENTS.md。"
+    },
+    {
+      "id": "unknown_intersection_exclude_domain_barrier",
+      "severity": "major",
+      "status": "resolved_before_evaluation",
+      "detail_ja": "未知点Fがまだ両円の交点でない途中配置でexclude=Fを用いる構成を指摘し、中心線についての鏡映に変更された。手計算による同値性を確認済み。",
+      "evidence": "reviews/EQUIVALENCE_ARGUMENTS.md"
+    }
+  ],
+  "remaining_uncertainties": []
+}

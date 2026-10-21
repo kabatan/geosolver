@@ -1,0 +1,202 @@
+{
+  "case_id": "IMO_2019_P6",
+  "source": {
+    "official_url": "https://www.imo-official.org/assets/documents/problems/2019/2019_eng.pdf",
+    "official_landing_url": "https://www.imo-official.org/problems/2019/",
+    "official_pdf_path": "/home/kabatan/work/solver-research-assets/gmb-comparison-source-materials/imo/2019-eng.pdf",
+    "official_pdf_sha256": "d3509007d2f762563a041341e6b4ac359f3c42a0c4b5dae278aace36bc5adaeb",
+    "gmbl_relative_path": "benchmarks/gmb/.runtime/source/problems/IMO/IMO_2019_P6.smt2",
+    "gmbl_sha256": "38e4a50bc2636f027f4cf14360f06d7ba59c9784bb6f04d96b9fd17941d6de42",
+    "upstream_commit": "f070afe18ed874b3a31db519ea6f593f40a1be00"
+  },
+  "normalization": {
+    "anchors": [
+      "B",
+      "C"
+    ],
+    "fixed_coordinates": {
+      "B": [
+        "0",
+        "0"
+      ],
+      "C": [
+        "1",
+        "0"
+      ]
+    },
+    "removed_continuous_dof": 4,
+    "justification": "鋭角三角形の辺BCは非零。AB≠AC・内接円・垂線・交点は尺度不変。 平行移動2自由度・回転1自由度・正の一様拡大縮小1自由度のみを除く。残りの図形の形は固定しない。",
+    "scale_invariant": true,
+    "reflection_fixed": false
+  },
+  "clauses": [
+    {
+      "id": "H01",
+      "statement_ja": "ABCは鋭角でAB≠AC。",
+      "gmbl": [
+        "(param (A B C) acute-tri); (assert (not (cong A B A C)))"
+      ],
+      "geosolver": [
+        "A = Point(ax, ay)",
+        "B = Point(0, 0)",
+        "C = Point(1, 0)",
+        "conditions[0]: Area(A, B, C) > 0",
+        "conditions[1]: Dot(Vector(A, B), Vector(A, C)) > 0",
+        "conditions[2]: Dot(Vector(B, A), Vector(B, C)) > 0",
+        "conditions[3]: Dot(Vector(C, A), Vector(C, B)) > 0",
+        "conditions[4]: Distance(A, B) != Distance(A, C)"
+      ],
+      "condition_indices": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "construction_names": [
+        "A",
+        "B",
+        "C"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H02",
+      "statement_ja": "Iは内心、ωは内接円。D,E,FはそれぞれBC,CA,ABへの接点。",
+      "gmbl": [
+        "(define I point (incenter A B C)); (define omega circle (incircle A B C)); (define D point (inter-lc (line B C) omega rs-arbitrary)); (define E point (inter-lc (line C A) omega rs-arbitrary)); (define F point (inter-lc (line A B) omega rs-arbitrary))"
+      ],
+      "geosolver": [
+        "I = Incenter(A, B, C)",
+        "omega = Incircle(A, B, C)",
+        "D = FootOfPerpendicular(I, Line(B, C))",
+        "E = FootOfPerpendicular(I, Line(C, A))",
+        "F = FootOfPerpendicular(I, Line(A, B))"
+      ],
+      "condition_indices": [],
+      "construction_names": [
+        "I",
+        "omega",
+        "D",
+        "E",
+        "F"
+      ],
+      "status": "equivalent_construction"
+    },
+    {
+      "id": "H03",
+      "statement_ja": "Dを通りEFに垂直な直線とωのD以外の交点R。",
+      "gmbl": [
+        "(define R point (inter-lc (perp-at D (line E F)) omega (rs-neq D)))"
+      ],
+      "geosolver": [
+        "R = Intersect(PerpendicularLine(Line(E, F), D), omega, exclude=D)"
+      ],
+      "condition_indices": [],
+      "construction_names": [
+        "R"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H04",
+      "statement_ja": "ARとωのR以外の交点P。",
+      "gmbl": [
+        "(define P point (inter-lc (line A R) omega (rs-neq R)))"
+      ],
+      "geosolver": [
+        "P = Intersect(Line(A, R), omega, exclude=R)"
+      ],
+      "condition_indices": [],
+      "construction_names": [
+        "P"
+      ],
+      "status": "matched"
+    },
+    {
+      "id": "H05",
+      "statement_ja": "円PCEとPBFのP以外の交点Q。",
+      "gmbl": [
+        "(define Q point (inter-cc (circ P C E) (circ P B F) (rs-neq P)))"
+      ],
+      "geosolver": [
+        "Q = Intersect(Circumcircle(P, C, E), Circumcircle(P, B, F), exclude=P)"
+      ],
+      "condition_indices": [],
+      "construction_names": [
+        "Q"
+      ],
+      "status": "matched"
+    }
+  ],
+  "goal": {
+    "statement_ja": "DIとPQの交点が、Aを通りAIに垂直な直線上にある。",
+    "gmbl": [
+      "(eval (concur (line D I) (line P Q) (perp-at A (line A I))))"
+    ],
+    "included_in_solver_conditions": false,
+    "solver_target": "0",
+    "assessment_only": true
+  },
+  "source_differences": [
+    {
+      "id": "gmb_runtime_distinctness",
+      "kind": "runtime_acceptance_policy",
+      "blocking": false,
+      "description_ja": "GMBは全登録点の最小距離0.1とweighted soft lossで受理する。原文にない全点相異・最小距離0.1はGeoSolver条件に移さず、両者の出力を別の共通検査器で再検査する。"
+    },
+    {
+      "id": "gmb_acute_sampler",
+      "kind": "runtime_parameterization",
+      "blocking": false,
+      "description_ja": "optimizer.py sample_triangleのacute-triはB=(-2,0),C=(2,0)、Ax∈[-1.2,1.2]を試行中固定、Ay=1.1+3 sigmoid(z)。一部の形に制限し、Ax²+Ay²≤4の鈍角Aも数式上可能。GeoSolverでは形は固定せず、三頂点の内積が正という原文の鋭角条件を課す。"
+    },
+    {
+      "id": "gmb_numeric_root_selector",
+      "kind": "runtime_selector",
+      "blocking": false,
+      "description_ja": "GMBのrs-neqは数値距離1e-6で候補を分ける。GeoSolverのexcludeは指定点が共通交点である通常の非退化幾何を使い、唯一の異なる交点を要求する。接点重複や不明な枝を勝手に選ばない。"
+    },
+    {
+      "id": "tangent_point_arbitrary",
+      "kind": "translation_representation",
+      "blocking": false,
+      "description_ja": "D,E,Fのrs-arbitraryは内接円と三角形の辺の接点なので、数学的には相異なる実交点が1個。GeoSolverではIから各辺への垂足として一意に構成し、無根拠なn=1を使わない。"
+    }
+  ],
+  "open_issues": [],
+  "witness_bindings": {
+    "B": "B",
+    "C": "C",
+    "A": "A",
+    "I": "I",
+    "omega": "omega",
+    "D": "D",
+    "E": "E",
+    "F": "F",
+    "R": "R",
+    "P": "P",
+    "Q": "Q"
+  },
+  "author_review": {
+    "author": "dsl_2014_2020",
+    "materials_read": [
+      "official IMO 2019 English problem sheet",
+      "GMB IMO_2019_P6.smt2",
+      "GMB optimizer.py / instruction_reader.py / tf_optimizer.py",
+      "GeoSolver dsl-spec.json / public compiler / geometry implementations"
+    ],
+    "pdf_visual_check": "official_text_and_pdf_source_checked",
+    "static_validation": {
+      "public_model": true,
+      "validator_valid": true,
+      "compiler_valid": true,
+      "solver_executed": false
+    },
+    "independent_review_status": "pending",
+    "notes_ja": [
+      "接点を2重根の交差計算で作らず、原文で明示された接点を垂足という標準構成で表した。"
+    ]
+  },
+  "comparison_status": "draft"
+}

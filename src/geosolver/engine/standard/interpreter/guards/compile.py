@@ -279,6 +279,50 @@ def _compile_condition_expr(source: str, expr: str) -> GuardIR:
     call = _extract_call_signature(expr)
     if call is not None:
         func_name, body = call
+        if func_name in {"Order", "AssumeOrder"} and isinstance(parsed, ast.Call):
+            arguments = list(parsed.args[:3])
+            keywords = {keyword.arg: keyword.value for keyword in parsed.keywords}
+            for name in ("P1", "P2", "P3")[len(arguments) :]:
+                if name not in keywords:
+                    break
+                arguments.append(keywords[name])
+            if len(arguments) == 3:
+                a, p, b = (f"({source_expression(arg, expr)})" for arg in arguments)
+                dx, dy = f"({b}.x-{a}.x)", f"({b}.y-{a}.y)"
+                px, py = f"({p}.x-{a}.x)", f"({p}.y-{a}.y)"
+                length_squared = f"({dx}**2+{dy}**2)"
+                cross = f"({px}*{dy}-{py}*{dx})/{length_squared}"
+                projection = f"({px}*{dx}+{py}*{dy})/{length_squared}"
+                parts = (
+                    (length_squared, ">", "0"),
+                    (cross, "==", "0"),
+                    (projection, ">=", "0"),
+                    (projection, "<=", "1"),
+                )
+                return GuardIR(
+                    source=source,
+                    kind="logical_and",
+                    children=tuple(
+                        _compile_compare_guard(f"{left}{op}{right}", left, right, op)
+                        for left, op, right in parts
+                    ),
+                )
+        triangle_class = get_triangle_class(func_name) or {
+            "AcuteTriangle": "acute",
+            "ObtuseTriangle": "obtuse",
+            "RightTriangle": "right",
+        }.get(func_name)
+        if triangle_class is not None and isinstance(parsed, ast.Call):
+            arguments = list(parsed.args)
+            keywords = {keyword.arg: keyword.value for keyword in parsed.keywords}
+            for name in ("A", "B", "C")[len(arguments) :]:
+                if name not in keywords:
+                    break
+                arguments.append(keywords[name])
+            if len(arguments) == 3:
+                return _compile_triangle_class_guard(
+                    source, triangle_class, [source_expression(arg, expr) for arg in arguments]
+                )
         if func_name == "Bound":
             bound_guard = _compile_bound_call(source, body)
             if bound_guard is not None:
@@ -363,15 +407,15 @@ def compile_guard_expr(guard_expr: str) -> GuardIR:
             return _compile_condition_expr(text, parts[0])
         return _compile_raw_condition(text, text)
 
-    if func_name in {"And", "Or", "Not"}:
+    if func_name in {"And", "Or", "Not", "Order", "AssumeOrder"}:
         return _compile_condition_expr(text, text)
 
-    triangle_class = get_triangle_class(func_name)
-    if triangle_class is not None:
-        parts = _split_top_level_args(body, expected_parts=3)
-        if parts:
-            return _compile_triangle_class_guard(text, triangle_class, parts)
-        return _compile_raw_condition(text, text)
+    if get_triangle_class(func_name) is not None or func_name in {
+        "AcuteTriangle",
+        "ObtuseTriangle",
+        "RightTriangle",
+    }:
+        return _compile_condition_expr(text, text)
 
     residual_template = get_residual_guard_template(func_name)
     if residual_template is not None:
@@ -394,7 +438,9 @@ def _guard_numeric_tolerance() -> Any:
 
 
 def _safe_eval_numeric(expr: str, context: dict[str, Any]) -> Any:
-    return safe_eval_expr_hp(expr, context)
+    from geosolver.engine.standard.evaluation.snapshots import evaluate_scalar_expression
+
+    return evaluate_scalar_expression(expr, context)
 
 
 def _as_mpf(value: Any) -> Any:

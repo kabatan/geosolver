@@ -9,9 +9,16 @@ from functools import lru_cache
 
 from geosolver.problem.expression_source import annotate_source, source_expression
 from geosolver.problem.ir.compiler import safe_eval_expr_hp
+from geosolver.problem.logical_equalities import component_references
 
 
 def active_source(source, context):
+    references = component_references(source)
+    if references:
+        if len(references) != 1:
+            return source
+        name, identity, column = references[0]
+        source = context[name][identity].selected_source(column)
     node = annotate_source(ast.parse(source, mode="eval"), source).body
     while isinstance(node, ast.IfExp):
         condition = safe_eval_expr_hp(source_expression(node.test), context)
