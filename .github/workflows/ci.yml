@@ -36,9 +36,8 @@ jobs:
       - uses: astral-sh/setup-uv@v10.3.0
         with:
           enable-cache: true
-      - uses: actions/setup-python@v7.0.0
-        with:
-          python-version-file: .python-version
+      - name: Install pinned Python
+        run: uv python install
       - name: Install Python dependencies
         id: dependencies
         run: uv sync --all-extras --frozen
