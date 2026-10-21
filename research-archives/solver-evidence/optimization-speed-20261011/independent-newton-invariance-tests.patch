@@ -1,0 +1,50 @@
+--- /dev/null
++++ b/tests/test_independent_newton_invariance.py
+@@ -0,0 +1,47 @@
++"""Native-convergent counterexamples across units, translations and nonlinearities."""
++import pytest
++from mpmath import mp
++
++from geosolver.engine.standard.refinement.newton_line_search import findroot_least_squares
++
++
++@pytest.mark.parametrize("unit_string", ["1e-12", "1", "1e12"])
++@pytest.mark.parametrize("family,start", [
++    ("atan", "1e15"), ("tanh", "50"),
++    ("normalized_rational", "1e8"), ("expm1", "-50"),
++])
++def test_native_convergent_translated_system_retains_a_fallback(family, start, unit_string):
++    with mp.workdps(200):
++        unit = mp.mpf(unit_string)
++        shift = unit*mp.mpf("1e60")
++        functions = {
++            "atan": (mp.atan, lambda t: 1/(1+t*t)),
++            "tanh": (mp.tanh, lambda t: 1/mp.cosh(t)**2),
++            "normalized_rational": (lambda t: t/mp.sqrt(1+t*t), lambda t: (1+t*t)**mp.mpf("-1.5")),
++            "expm1": (mp.expm1, mp.exp),
++        }
++        function, derivative = functions[family]
++        def residual(x, y):
++            return function((x-shift)/unit), y-1
++        def jacobian(x, y):
++            return mp.matrix([[derivative((x-shift)/unit)/unit, 0], [0, 1]])
++        initial = (shift+unit*mp.mpf(start), mp.mpf(1))
++        tolerance = mp.mpf("1e-130")
++        native = mp.findroot(residual, initial, J=jacobian, tol=tolerance, maxsteps=80)
++        assert mp.norm(residual(*native), 2)**2 <= tolerance
++        candidate = findroot_least_squares(residual, initial, J=jacobian, tol=tolerance, maxsteps=80)
++        assert mp.norm(residual(*candidate), 2)**2 <= tolerance
++
++
++def test_merit_improvement_in_other_row_does_not_lose_native_convergent_start():
++    with mp.workdps(120):
++        def residual(x, y):
++            return mp.tanh(x), y-1
++        def jacobian(x, y):
++            return mp.matrix([[1/mp.cosh(x)**2, 0], [0, 1]])
++        initial = (mp.mpf(10), mp.mpf("0.25"))
++        tolerance = mp.mpf("1e-70")
++        native = mp.findroot(residual, initial, J=jacobian, tol=tolerance, maxsteps=80)
++        assert mp.norm(residual(*native), 2)**2 <= tolerance
++        candidate = findroot_least_squares(residual, initial, J=jacobian, tol=tolerance, maxsteps=80)
++        assert mp.norm(residual(*candidate), 2)**2 <= tolerance

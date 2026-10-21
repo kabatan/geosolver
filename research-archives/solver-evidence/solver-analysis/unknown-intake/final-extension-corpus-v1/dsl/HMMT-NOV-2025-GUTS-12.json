@@ -1,0 +1,45 @@
+{
+  "id": "HMMT-NOV-2025-GUTS-12",
+  "variables": [
+    "d"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(-7,0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(0,8)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(-d,8)"
+    },
+    {
+      "name": "O",
+      "expression": "Midpoint(A,D)"
+    },
+    {
+      "name": "omega",
+      "expression": "Circle(O,Distance(A,D)/2)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "IsTangent(Line(B,C),omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "d",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Distance(C,D)"
+}

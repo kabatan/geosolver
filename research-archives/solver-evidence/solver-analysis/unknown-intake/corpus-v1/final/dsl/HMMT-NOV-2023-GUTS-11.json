@@ -1,0 +1,66 @@
+{
+  "id": "HMMT-NOV-2023-GUTS-11",
+  "variables": [
+    "s"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(-1,1)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(1,1)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(1,-1)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(-1,-1)"
+    },
+    {
+      "name": "W",
+      "expression": "Point(-s,s)"
+    },
+    {
+      "name": "X",
+      "expression": "Point(s,s)"
+    },
+    {
+      "name": "Y",
+      "expression": "Point(s,-s)"
+    },
+    {
+      "name": "Z",
+      "expression": "Point(-s,-s)"
+    },
+    {
+      "name": "P",
+      "expression": "Intersect(Line(C,X),Line(A,B))"
+    },
+    {
+      "name": "Q",
+      "expression": "Intersect(Line(C,Z),Line(A,D))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Collinear(P,W,Q)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "s",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "s",
+      "operator": "<",
+      "right": 1
+    }
+  ],
+  "target": "Distance(A,B)/Distance(W,X)"
+}

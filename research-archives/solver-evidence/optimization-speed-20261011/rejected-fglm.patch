@@ -1,0 +1,35 @@
+--- benchmarks/local-evaluation/optimization-speed-20261011/baseline-source/src/geosolver/engine/standard/search/algebraic_branches.py	2026-10-11 16:12:58.180657879 +0900
++++ benchmarks/local-evaluation/optimization-speed-20261011/algebra-source/src/geosolver/engine/standard/search/algebraic_branches.py	2026-10-11 17:42:39.778835501 +0900
+@@ -366,12 +366,12 @@
+         if len(active) > 1:
+             if len(active) > 7 or any(p.total_degree() > 4 for p in reduced):
+                 return None
+-            basis = sp.groebner(reduced, *active, order="lex", extension=True)
++            basis = lex_basis(reduced, active)
+             if basis == sp.groebner([1], *active):
+                 return []
+             augmented = augment_zero_rows(list(basis.polys), active)
+             if len(augmented) > len(basis.polys):
+-                basis = sp.groebner(augmented, *active, order="lex", extension=True)
++                basis = lex_basis(augmented, active)
+                 if basis == sp.groebner([1], *active):
+                     return []
+             if not basis.is_zero_dimensional:
+@@ -389,6 +389,17 @@
+             return None
+         return separating_shape(reduced, active)
+ 
++    def lex_basis(rows, active):
++        # Zero-dimensional reduced bases generate the identical ideal under
++        # an FGLM change of order. Positive-dimensional ideals keep the direct
++        # lex path: the later real-zero consequences may still make them finite.
++        graded = sp.groebner(rows, *active, order="grevlex", extension=True)
++        if len(graded.polys) == 1 and graded.polys[0].is_one:
++            return sp.groebner([1], *active, order="lex", extension=True)
++        if graded.is_zero_dimensional:
++            return graded.fglm(order="lex")
++        return sp.groebner(rows, *active, order="lex", extension=True)
++
+     def shape_solutions(reduced, active):
+         parameter = active[-1]
+         scalar_rows = [

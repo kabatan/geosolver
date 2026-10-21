@@ -1,0 +1,56 @@
+{
+  "created_utc": "2026-09-10T22:11:14.952351+00:00",
+  "script_sha256": "088f25f41b0f63078adfb0c1fb830a92e416d70b4effbc6212b64cb8045da7f1",
+  "inputs": {
+    "analysis/baseline-v1/strata.json": "0247c648d1e338df6ad57eedf0aba25103062044a525109213d9adcc35e77c08",
+    "analysis/baseline-v1/run-index.jsonl": "157125c3eb66a9bee129831bc807f943d4dade7de529dd317b62e65853448a6f",
+    "analysis/stage-v2b/rows.jsonl": "dff72716ee6969561289967a7cf64f6589bba810c954cbbb7976def1b1b89316",
+    "development/damping-campaign-v1/runs/JMO-2013-PRE-05/0/original__floor_1e-24_carry_0.json": "169ac060d0bcf369ff4cd4bd2b548ae4aa5018453cba4e120e02e532604ad674",
+    "development/damping-campaign-v1/runs/JMO-2013-PRE-05/0/original__floor_1e-24_carry_1.json": "aa3e94e2846afcfe7ef72eab27570df2d1960e99c759690f6d0f88cef9d21b81",
+    "analysis/stage-v3/rows.jsonl": "eb96246ccb5efbfbbc84b73e1507a663bc3ad73319b51f3c1025b32596310c34",
+    "unknown-local-v1/probes/mid/summary.json": "c59875c76605d48bab82e190426e4472976594453a025e59e5d50877d4247e52",
+    "unknown-local-v1/probes/final/summary.json": "50ca67151193cb9eae108a6186647571aacc88f06aaf26742f96ac809505a4ce",
+    "development/denominator-pair-v1/baseline.json": "e0f6597708b9f2e4f438dfc4719f52406906c900bb12871b56981124f1664bff",
+    "development/denominator-pair-v1/lower-denominator.json": "a0cfd5cbb0437c3ac2a242ca41710a9fc97834fc06b7ca8f8cad5e5f478f3470",
+    "unknown-intake/rootfree-stop-v1/assessment.json": "de4de3a85a59b323cf8708e3d89c3c1118d1d3c0873a387fa00a7150cdf518ba"
+  },
+  "figures": [
+    {
+      "name": "baseline-stages",
+      "caption": "全323問×5seed。数値配置はsolver診断。時刻は最終returnであり最初の正答の発見時刻ではない。"
+    },
+    {
+      "name": "jmo-precision",
+      "caption": "同じ保持107開始点、最大80LM反復。点は個々の開始点、線は中央値、縦線は四分位範囲。verifier前の保存座標を独立式で評価。"
+    },
+    {
+      "name": "damping-stage",
+      "caption": "保持台帳の先頭点を固定して表示。元残差、λfloor=1e−24。100桁段階だけを比較し、全107点の効果と開始点の一致は本文の対応集計を参照。"
+    },
+    {
+      "name": "goal-pullback",
+      "caption": "General6の他条件を厳密に消去した正のh枝を独立式で評価。solver軌道でも未知一般化の成績でもない。"
+    },
+    {
+      "name": "hmmt-paired",
+      "caption": "緑はsigned腕で20桁以上、赤は未達。全点を表示し、合法な枝へ到達しなかった点を除外しない。"
+    },
+    {
+      "name": "hmmt-destinations",
+      "caption": "同じ149開始点からの終了座標を、r1–r2平面へ投影。全点を表示し、禁止境界・合法解の記号は独立な解析値。重なった点は一つに見える。tと元条件の成立は別の検査表を参照。"
+    },
+    {
+      "name": "prospective-orders",
+      "caption": "各点は証明した方向・目標。複数方向は独立した問題ではない。混合相殺方向は予測が保留なら指数比較へ入れない。"
+    },
+    {
+      "name": "stop-certificates",
+      "caption": "左：同じJMO段階入口から分母床だけを変更し、38回まで座標が完全一致。右：根中心でないpilot開始点からの有理上界による補足。各4開始は1自然問題で、全体は2問題。保留も表示。"
+    }
+  ],
+  "libraries": {
+    "matplotlib": "3.10.0",
+    "numpy": "2.5.3"
+  },
+  "font": "/usr/share/fonts/opentype/ipafont-gothic/ipagp.ttf"
+}

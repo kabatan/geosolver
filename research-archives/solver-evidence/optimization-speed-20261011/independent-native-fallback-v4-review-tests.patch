@@ -1,0 +1,96 @@
+--- /dev/null
++++ b/tests/test_independent_native_fallback_review.py
+@@ -0,0 +1,93 @@
++"""Independent preservation and deadline checks around the original Newton retry."""
++import pytest
++from mpmath import mp
++
++from geosolver.engine.standard.refinement import newton_line_search as newton
++from geosolver.runtime.deadline import deadline_scope
++
++
++def test_native_retry_uses_original_initial_tolerance_jacobian_budget_and_precision(monkeypatch):
++    original = mp.findroot
++    calls = []
++    with mp.workdps(180):
++        initial = (mp.mpf(10)+mp.mpf("1e-150"), mp.mpf("0.25"))
++        tolerance = mp.mpf("1e-70")+mp.mpf("1e-170")
++    with mp.workdps(120):
++        precision = mp.prec
++        def residual(x, y):
++            return mp.tanh(x), y-1
++        def jacobian(x, y):
++            return mp.matrix([[1/mp.cosh(x)**2, 0], [0, 1]])
++        def observed(function, point, **kwargs):
++            calls.append((point, kwargs.copy(), mp.prec))
++            return original(function, point, **kwargs)
++        monkeypatch.setattr(mp, "findroot", observed)
++        result = newton.findroot_least_squares(residual, initial, tol=tolerance, maxsteps=80, J=jacobian)
++        assert mp.norm(residual(*result), 2)**2 <= tolerance
++        assert len(calls) == 1
++        point, options, actual_precision = calls[0]
++        assert [x._mpf_ for x in point] == [x._mpf_ for x in initial]
++        assert options["tol"]._mpf_ == tolerance._mpf_
++        assert options["maxsteps"] == 80
++        assert options["J"].__wrapped__ is jacobian
++        assert actual_precision == precision == mp.prec
++
++
++def test_original_source_admission_rejection_retries_native_from_original_start(monkeypatch):
++    calls = []
++    original = mp.findroot
++    def observed(function, point, **kwargs):
++        calls.append(tuple(point))
++        return original(function, point, **kwargs)
++    monkeypatch.setattr(mp, "findroot", observed)
++    with mp.workdps(100):
++        initial = (mp.mpf(0), mp.mpf(0))
++        result = newton.findroot_least_squares(
++            lambda x, y: (x-1, y-2), initial, tol=mp.mpf("1e-80"), maxsteps=7,
++            J=lambda *point: mp.eye(2), accept_root=lambda point: False,
++        )
++        assert calls == [initial]
++        assert list(result) == [1, 2]
++
++
++@pytest.mark.parametrize("expired_callback", ["residual", "jacobian"])
++def test_no_native_callback_is_invoked_after_global_deadline(monkeypatch, expired_callback):
++    clock = [0]
++    residual_calls, jacobian_calls = [], []
++    monkeypatch.setattr("geosolver.runtime.deadline.time.monotonic", lambda: clock[0])
++    def force_fallback(*args, **kwargs):
++        raise ValueError("independent test forces original retry")
++    monkeypatch.setattr(newton, "_findroot_bounded", force_fallback)
++    cutoff_call = 1 if expired_callback == "residual" else 2
++    def residual(x, y):
++        residual_calls.append(1)
++        if len(residual_calls) == cutoff_call:
++            clock[0] = 2
++        return x-1, y-2
++    def jacobian(x, y):
++        jacobian_calls.append(1)
++        return mp.eye(2)
++    with deadline_scope(1), pytest.raises(TimeoutError):
++        newton.findroot_least_squares(residual, (mp.mpf(0), mp.mpf(0)),
++                                     J=jacobian, tol=mp.mpf("1e-60"), maxsteps=4)
++    assert len(residual_calls) == cutoff_call and not jacobian_calls
++
++
++def test_native_jacobian_timeout_stops_before_any_trial_residual(monkeypatch):
++    clock = [0]
++    residual_calls, jacobian_calls = [], []
++    monkeypatch.setattr("geosolver.runtime.deadline.time.monotonic", lambda: clock[0])
++    def force_fallback(*args, **kwargs):
++        raise ValueError("independent test forces original retry")
++    monkeypatch.setattr(newton, "_findroot_bounded", force_fallback)
++    def residual(x, y):
++        residual_calls.append(1)
++        return x-1, y-2
++    def jacobian(x, y):
++        jacobian_calls.append(1)
++        clock[0] = 2
++        return mp.eye(2)
++    with deadline_scope(1), pytest.raises(TimeoutError):
++        newton.findroot_least_squares(residual, (mp.mpf(0), mp.mpf(0)),
++                                     J=jacobian, tol=mp.mpf("1e-60"), maxsteps=4)
++    assert len(jacobian_calls) == 1 and len(residual_calls) == 2

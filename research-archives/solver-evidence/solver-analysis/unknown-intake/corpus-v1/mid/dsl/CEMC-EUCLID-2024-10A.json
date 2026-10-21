@@ -1,0 +1,125 @@
+{
+  "id": "CEMC-EUCLID-2024-10A",
+  "variables": [
+    "t",
+    "u",
+    "v"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(-1,0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(0,4)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(1,0)"
+    },
+    {
+      "name": "S",
+      "expression": "Point(1,0)"
+    },
+    {
+      "name": "T",
+      "expression": "Point(-t,0)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(u-1,4*u)"
+    },
+    {
+      "name": "Q",
+      "expression": "Point(v,4*(1-v))"
+    },
+    {
+      "name": "X",
+      "expression": "Intersect(Line(S,P),Line(T,Q))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Area(A,P,X,T)",
+      "operator": "=",
+      "right": "Area(A,B,C)/4"
+    },
+    {
+      "left": "Area(B,P,X,Q)",
+      "operator": "=",
+      "right": "Area(A,B,C)/4"
+    },
+    {
+      "left": "Area(C,Q,X)",
+      "operator": "=",
+      "right": "Area(A,B,C)/4"
+    },
+    {
+      "left": "Area(T,X,C)",
+      "operator": "=",
+      "right": "Area(A,B,C)/4"
+    },
+    {
+      "left": "t",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "t",
+      "operator": "<=",
+      "right": 1
+    },
+    {
+      "left": "u",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "u",
+      "operator": "<",
+      "right": 1
+    },
+    {
+      "left": "v",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "v",
+      "operator": "<",
+      "right": 1
+    },
+    {
+      "left": "OnSegment(X,S,P)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(X,S)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(X,P)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(X,T,Q)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(X,T)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(X,Q)",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "P.x"
+}

@@ -1,0 +1,45 @@
+--- a/src/geosolver/geometry/mp/mp_core_types.py
++++ b/src/geosolver/geometry/mp/mp_core_types.py
+@@ -6,6 +6,7 @@
+ 
+ from mpmath import mp, mpf
+ from mpmath import sqrt as mp_sqrt
++from mpmath.libmp import mpf_add, mpf_pow_int, mpf_sqrt, mpf_sub
+ 
+ from geosolver.errors import InvalidCircleError
+ from geosolver.geometry.mp.mp_conversion import to_mpf
+@@ -52,9 +53,34 @@
+         return self.x * other.y - self.y * other.x
+ 
+     def norm(self) -> mpf:
++        if type(self) is MPPoint and type(self.x) is mpf and type(self.y) is mpf:
++            prec, rounding = mp._prec_rounding
++            squared = mpf_add(
++                mpf_pow_int(self.x._mpf_, 2, prec, rounding),
++                mpf_pow_int(self.y._mpf_, 2, prec, rounding),
++                prec,
++                rounding,
++            )
++            return mp.make_mpf(mpf_sqrt(squared, prec, rounding))
+         return mp_sqrt(self.x**2 + self.y**2)
+ 
+     def distance_to(self, other) -> mpf:
++        # These are precisely the original rounded operations, without their
++        # intermediate Python scalar objects. Mutable coordinates and subclasses
++        # are inspected on every call and retain the guarded operator path.
++        if type(self) is MPPoint and type(other) is MPPoint:
++            ax, ay, bx, by = self.x, self.y, other.x, other.y
++            if type(ax) is mpf and type(ay) is mpf and type(bx) is mpf and type(by) is mpf:
++                prec, rounding = mp._prec_rounding
++                dx = mpf_sub(ax._mpf_, bx._mpf_, prec, rounding)
++                dy = mpf_sub(ay._mpf_, by._mpf_, prec, rounding)
++                squared = mpf_add(
++                    mpf_pow_int(dx, 2, prec, rounding),
++                    mpf_pow_int(dy, 2, prec, rounding),
++                    prec,
++                    rounding,
++                )
++                return mp.make_mpf(mpf_sqrt(squared, prec, rounding))
+         return mp_sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2)
+ 
+     def to_float_tuple(self) -> tuple[float, float]:

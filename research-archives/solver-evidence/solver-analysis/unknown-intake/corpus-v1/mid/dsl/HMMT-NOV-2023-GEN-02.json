@@ -1,0 +1,38 @@
+{
+  "id": "HMMT-NOV-2023-GEN-02",
+  "variables": [
+    "n"
+  ],
+  "constructions": [
+    {
+      "name": "P1",
+      "expression": "Point(1,0)"
+    },
+    {
+      "name": "P7",
+      "expression": "Point(cos(12*pi/n),sin(12*pi/n))"
+    },
+    {
+      "name": "P8",
+      "expression": "Point(cos(14*pi/n),sin(14*pi/n))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "IsInteger(n)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "n",
+      "operator": ">",
+      "right": 7
+    },
+    {
+      "left": "Angle(P1,P7,P8)",
+      "operator": "=",
+      "right": "178*pi/180"
+    }
+  ],
+  "target": "n"
+}

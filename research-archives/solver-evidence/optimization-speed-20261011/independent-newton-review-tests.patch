@@ -1,0 +1,111 @@
+--- /dev/null
++++ b/tests/test_independent_newton_review.py
+@@ -0,0 +1,108 @@
++"""Independent review of bounded Newton and its full-source admission boundary."""
++import time
++from dataclasses import replace
++from types import SimpleNamespace
++
++import pytest
++from mpmath import mp
++
++from geosolver.engine.standard.evaluation.classify_evaluation_failure import EvaluationStatus
++from geosolver.engine.standard.refinement import mpmath_refiner as refinement
++from geosolver.engine.standard.refinement import newton_line_search as newton
++from geosolver.runtime.deadline import runtime_session
++
++
++@pytest.mark.parametrize('dps', [30, 80, 180, 500])
++def test_overdetermined_consistent_system_and_precision_restoration(dps):
++    with mp.workdps(dps):
++        initial_prec = mp.prec
++        root = newton.findroot_least_squares(
++            lambda x, y: (x+y-3, 2*x-y, 3*x-3), (mp.mpf(0), mp.mpf(0)),
++            tol=mp.power(10, -dps+10), maxsteps=10,
++        )
++        assert mp.prec == initial_prec
++        assert abs(root[0]-1) + abs(root[1]-2) < mp.power(10, -dps+10)
++
++
++@pytest.mark.parametrize('dps', [30, 80, 180])
++def test_inconsistent_system_declines_its_nonzero_stationary_point(dps):
++    with mp.workdps(dps), pytest.raises(ValueError):
++        newton.findroot_least_squares(
++            lambda x: (x-1, x-2), mp.mpf(0), tol=mp.power(10, -dps+10), maxsteps=10,
++        )
++
++
++def test_rejects_finite_but_non_descent_wrong_jacobian_with_bounded_evaluations():
++    calls = 0
++    def residual(x):
++        nonlocal calls
++        calls += 1
++        return (x-1,)
++    with mp.workdps(80), pytest.raises(ValueError):
++        newton.findroot_least_squares(residual, mp.mpf(0), J=lambda x: mp.matrix([[-1]]), tol=mp.mpf('1e-60'), maxsteps=4)
++    assert calls <= newton.LINE_SEARCH_MAX_STEPS + 2
++
++
++@pytest.mark.parametrize('bad', [mp.inf, mp.ninf, mp.nan])
++def test_nonfinite_initial_residuals_decline(bad):
++    with mp.workdps(80), pytest.raises((ValueError, ZeroDivisionError)):
++        newton.findroot_least_squares(lambda x: (bad,), mp.mpf(0), tol=mp.mpf('1e-60'), maxsteps=4)
++
++
++def test_timeout_propagates_and_restores_precision_after_an_accepted_step(monkeypatch):
++    calls = 0
++    original_prec = mp.prec
++    def jacobian(x):
++        nonlocal calls
++        calls += 1
++        if calls == 2:
++            raise TimeoutError('review cutoff after first accepted Newton update')
++        return mp.matrix([[2*x]])
++    with pytest.raises(TimeoutError):
++        newton.findroot_least_squares(lambda x: (x*x-2,), mp.mpf(2), J=jacobian, tol=mp.mpf('1e-60'), maxsteps=4)
++    assert calls == 2 and mp.prec == original_prec
++
++
++def test_preexpired_direct_helper_does_not_evaluate_callback():
++    calls = 0
++    def residual(x):
++        nonlocal calls
++        calls += 1
++        return (x-1,)
++    with runtime_session(time.monotonic()-1), pytest.raises(TimeoutError):
++        newton.findroot_least_squares(residual, mp.mpf(0), tol=mp.mpf('1e-60'), maxsteps=4)
++    assert calls == 0
++
++
++def test_final_recheck_nan_is_a_rejection():
++    calls = 0
++    def residual(x):
++        nonlocal calls
++        calls += 1
++        return (mp.nan,) if calls >= 4 else (x-1,)
++    with pytest.raises(ValueError):
++        newton.findroot_least_squares(residual, mp.mpf(0), J=lambda x: mp.matrix([[1]]), tol=mp.mpf('1e-60'), maxsteps=4)
++
++
++def test_closure_full_source_certification_rejects_a_subset_root(monkeypatch):
++    class Evaluator:
++        bundle = None
++        def evaluate_hp_residual(self, point, *, precision):
++            return SimpleNamespace(evaluation_status=EvaluationStatus.OK, residual_vector=(point[0]-1, mp.mpf(1)))
++    monkeypatch.setattr(refinement, 'findroot_least_squares', lambda *args, **kwargs: mp.matrix([1]))
++    monkeypatch.setattr(refinement, '_run_rank_aware_findroot', lambda **kwargs: [mp.mpf(1)])
++    with mp.workdps(80):
++        root = refinement._run_findroot_closure(evaluator=Evaluator(), start_point=[mp.mpf(0)], bounds=((None,None),), dps=80, target_residual=mp.mpf('1e-60'), max_steps=4, residual_fn=lambda p, dps: [p[0]-1])
++    assert root is None
++
++
++def test_closure_rejects_root_outside_original_bounds(monkeypatch):
++    class Evaluator:
++        bundle = None
++        def evaluate_hp_residual(self, point, *, precision):
++            return SimpleNamespace(evaluation_status=EvaluationStatus.OK, residual_vector=(point[0]-1, mp.mpf(0)))
++    monkeypatch.setattr(refinement, 'findroot_least_squares', lambda *args, **kwargs: mp.matrix([1]))
++    monkeypatch.setattr(refinement, '_run_rank_aware_findroot', lambda **kwargs: [mp.mpf(1)])
++    with mp.workdps(80):
++        root = refinement._run_findroot_closure(evaluator=Evaluator(), start_point=[mp.mpf(0)], bounds=((mp.mpf(-1),mp.mpf('0.5')),), dps=80, target_residual=mp.mpf('1e-60'), max_steps=4)
++    assert root is None

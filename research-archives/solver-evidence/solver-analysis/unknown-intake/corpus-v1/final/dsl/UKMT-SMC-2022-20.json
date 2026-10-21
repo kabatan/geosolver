@@ -1,0 +1,72 @@
+{
+  "id": "UKMT-SMC-2022-20",
+  "variables": [
+    "x",
+    "y",
+    "s"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "omega",
+      "expression": "Circle(O,10)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(x-s/2,y+s/2)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(x+s/2,y+s/2)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(x+s/2,y-s/2)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(x-s/2,y-s/2)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "A.x",
+      "operator": "=",
+      "right": "A.y"
+    },
+    {
+      "left": "B.x",
+      "operator": "=",
+      "right": "-B.y"
+    },
+    {
+      "left": "OnCircle(C,omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(D,omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "s",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "A.y",
+      "operator": "<",
+      "right": 0
+    },
+    {
+      "left": "B.y",
+      "operator": "<",
+      "right": 0
+    }
+  ],
+  "target": "Area(A,B,C,D)"
+}

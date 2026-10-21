@@ -1,0 +1,57 @@
+--- benchmarks/local-evaluation/optimization-speed-20261011/baseline-source/src/geosolver/engine/standard/refinement/mpmath_refiner.py	2026-10-11 15:31:11.294761429 +0900
++++ benchmarks/local-evaluation/optimization-speed-20261011/refinement-source/src/geosolver/engine/standard/refinement/mpmath_refiner.py	2026-10-11 17:38:46.806423993 +0900
+@@ -1042,6 +1042,54 @@
+         with high_precision_mode():
+             return evaluate_jacobian(plan, point, int(dps))
+ 
++    # Discover a deficient local chart before asking an overdetermined Newton
++    # system to solve singular normal equations. This is proposal generation
++    # only: every source residual remains mandatory in certify(), and an
++    # unsuccessful chart leaves the ordinary full-system solve available.
++    if len(start_point) > 1 and len(initial_residuals) >= len(start_point):
++        def probe_residuals(point, _dps):
++            try:
++                return list(evaluate_residuals(point))
++            except _ClosureDeadlineExceeded:
++                raise
++            except TimeoutError:
++                raise
++            except Exception:
++                return None
++
++        try:
++            initial_jacobian = analytic_values(start_point) if plan is not None else None
++            if initial_jacobian is None:
++                initial_jacobian = compute_finite_difference_jacobian(
++                    point=start_point,
++                    dps=int(dps),
++                    residual_fn=probe_residuals,
++                    base_residual=initial_residuals,
++                    one_sided_at_cusp=bool(one_sided_at_cusp),
++                )
++            subsystem = (
++                _select_rank_revealing_subsystem(initial_jacobian, dps=int(dps))
++                if initial_jacobian is not None else None
++            )
++            if subsystem is not None and len(subsystem[1]) < len(start_point):
++                count_event("closure_rank_first_attempts")
++                chart_point = _run_rank_aware_findroot(
++                    evaluate_residuals=evaluate_residuals,
++                    start_point=list(start_point),
++                    dps=int(dps),
++                    target_residual=tolerance,
++                    max_steps=int(max_steps),
++                    one_sided_at_cusp=bool(one_sided_at_cusp),
++                    initial_jacobian=initial_jacobian,
++                    derivative_fn=analytic_values if plan is not None else None,
++                )
++                certified_chart = certify(chart_point)
++                if certified_chart is not None:
++                    count_event("closure_rank_first_successes")
++                    return certified_chart
++        except _ClosureDeadlineExceeded:
++            return None
++
+     if len(start_point) == 1:
+ 
+         def evaluate_scalar_residuals(arg: MPFloat) -> tuple[MPFloat, ...]:

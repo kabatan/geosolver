@@ -1,0 +1,152 @@
+{
+  "decision": "reject_all_production_changes_for_this_round",
+  "baseline_source_hash": "sha256:f92ee9ba5bea9b124f19e79e95d89e47e66252fede326bb1a569eb1d318e969b",
+  "frozen_research_source_hash": "sha256:70c75c6a18dde0844d0488fe838c3db5f1691770d704238cab00afad4fe0c510",
+  "snapshot": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/algebra-source",
+  "source_files": [
+    {
+      "path": "src/geosolver/engine/standard/search/finite_target_image.py",
+      "sha256": "0b93749d035bd739552e7ceb62a140e24e6c511a9f2e2beb7dc740aeb28f53cd",
+      "new_file": true
+    },
+    {
+      "path": "src/geosolver/engine/standard/search/target_elimination.py",
+      "sha256": "abb113f078913af7322f4ed8bd5bdc6347a7697fc8dd28adf3f7ec0102cdeadb",
+      "new_file": true
+    }
+  ],
+  "patch": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/algebra-research.patch",
+  "production_integration": false,
+  "original_product_files_modified": [],
+  "new_research_modules_invoked_by_solver": false,
+  "engine_lock_refreshed": false,
+  "engine_lock_note": "Research-only modules are uninvoked; this is not a release-ready production snapshot. Original baseline files are byte-identical.",
+  "full_process_solve_comparison": "Not run: no production candidate retained. Discovery results and archived baseline exact descriptors were compared; these are not a new end-to-end speed claim.",
+  "independent_original_verification": "No admission/precision/domain/branch/independent-confirmation code changed.",
+  "experiments": {
+    "named_cartesian_dag_memoization": {
+      "baseline_all_224_seconds": 26.143590667983517,
+      "first_cached_other_core_seconds": 35.09547824796755,
+      "same_core_cached_repeat_seconds": 29.898450957174646,
+      "all_discovery_outputs_identical": true,
+      "decision": "rejected; benefit not demonstrated, aggregate timings regressed; cross-run timing/load uncertainty applies"
+    },
+    "grevlex_to_fglm": {
+      "baseline_finite": 102,
+      "prototype_finite": 96,
+      "baseline_seconds": 26.143590667983517,
+      "prototype_seconds": 27.018079639266944,
+      "lost_finite": [
+        {
+          "id": "AIME-2011-II-02",
+          "reason": "inner_cpu_timeout"
+        },
+        {
+          "id": "AIME-2011-II-10",
+          "reason": "inner_cpu_timeout"
+        },
+        {
+          "id": "AIME-2021-II-02",
+          "reason": "NotInvertible"
+        },
+        {
+          "id": "HMMT-2021-FEB-GEO-05",
+          "reason": "NotInvertible"
+        },
+        {
+          "id": "JMO-2010-PRE-08",
+          "reason": "NotInvertible"
+        },
+        {
+          "id": "JMO-2017-PRE-01",
+          "reason": "NotInvertible"
+        },
+        {
+          "id": "JMO-2023-PRE-03",
+          "reason": "NotInvertible"
+        }
+      ],
+      "gained_finite": [
+        "JMO-2018-PRE-06"
+      ],
+      "decision": "rejected; five NotInvertible errors and two optional timing losses; one gained finite enumeration does not justify deployment"
+    },
+    "exact_original_target_image": {
+      "finite_coordinate_sets": 102,
+      "reasons": {
+        "proved": 60,
+        "cpu_timeout": 4,
+        "unresolved_image": 38
+      },
+      "total_cpu_seconds": 5.811154638000004,
+      "duplicate_image_sets": 3,
+      "decision": "research only; small duplicate coverage and unresolved domains/targets; no stopping integration"
+    },
+    "necessary_target_ideal_projection": {
+      "eligible": 224,
+      "reasons": {
+        "unresolved": 57,
+        "proved": 74,
+        "unsupported_or_budget": 93
+      },
+      "total_cpu_seconds": 20.038405602999976,
+      "positive_dimensional_proofs": 6,
+      "proofs": 74,
+      "covered_runs": 66,
+      "proofs_covered_all_three_seeds": 22,
+      "target_root_counts": {
+        "2": 31,
+        "4": 7,
+        "1": 22,
+        "8": 1,
+        "6": 1,
+        "3": 11,
+        "10": 1
+      },
+      "positive_dimensional_covered": 2,
+      "incremental_over_coordinate_path_covered": 2,
+      "decision": "research only; blanket prepass overhead-dominated; only two additional covered cases beyond coordinate enumeration"
+    }
+  },
+  "proof_contract": [
+    "Original valid configurations imply every supplied necessary equality.",
+    "Original valid targets imply the denominator-cleared, radical-norm target lift; no denominator-zero branch is discarded or localized.",
+    "A nonzero QQ univariate elimination polynomial vanishes at every original valid target even with positive-dimensional coordinate fibers.",
+    "Squarefree factorization preserves all roots; exact irreducible-factor coefficients and real-root indices define obligations.",
+    "Only symbolically proved target nonnegativity excludes strictly negative exact root intervals. Unknown signs stay obligations.",
+    "Every remaining exact identity must match independently verified accepted algebraic descriptors; decimal proximity, answer counts, and coordinate boxes do not establish equality.",
+    "The prototype helpers do not certify supplied equation provenance or authorize stopping; orchestration was not changed."
+  ],
+  "tests": {
+    "new_structural_adversarial_tests": 37,
+    "existing_focused_tests": 165,
+    "new_test_files": [
+      "tests/test_finite_target_image.py",
+      "tests/test_target_elimination.py"
+    ],
+    "ruff": "passed",
+    "focused_total_passed": 202
+  },
+  "sources": [
+    {
+      "title": "SymPy 1.14 polynomial reference: GroebnerBasis.fglm, zero-dimensionality, exact interval isolation",
+      "url": "https://docs.sympy.org/latest/modules/polys/reference.html"
+    }
+  ],
+  "fresh_holdout_accessed": false,
+  "resources": "Direct algebraic scans CPU10 or11, one core per process; existing0.5 CPU optional budget retained, original180s1core contract unchanged",
+  "analytic_functions_independent_review": {
+    "snapshot": "analytic-functions-source",
+    "evidence": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/algebra-analytic-review.json",
+    "smooth_comparisons": 144,
+    "precision_dps": [
+      80,
+      180,
+      500
+    ],
+    "smooth_declines": 0,
+    "verdict": "No mathematical correctness blocker found; independent atan2/trig derivatives agree on all tested smooth branches.",
+    "near_collinearity": "The acos derivative form loses precision through cancellation or returns None; remains an optional Newton proposal only.",
+    "source_writes_to_reviewed_snapshot": false
+  }
+}

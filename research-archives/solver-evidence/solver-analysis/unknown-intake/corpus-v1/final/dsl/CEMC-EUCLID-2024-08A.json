@@ -1,0 +1,153 @@
+{
+  "id": "CEMC-EUCLID-2024-08A",
+  "variables": [
+    "cx",
+    "cy",
+    "m",
+    "n"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(0,3)"
+    },
+    {
+      "name": "omegaA",
+      "expression": "Circle(A,4)"
+    },
+    {
+      "name": "omegaB",
+      "expression": "Circle(B,3)"
+    },
+    {
+      "name": "M",
+      "expression": "Point(m,-4)"
+    },
+    {
+      "name": "N",
+      "expression": "Point(n,-4)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx,cy)"
+    },
+    {
+      "name": "F0",
+      "expression": "ClosestPoint(A,Line(C,M))"
+    },
+    {
+      "name": "F1",
+      "expression": "ClosestPoint(B,Line(C,M))"
+    },
+    {
+      "name": "F2",
+      "expression": "ClosestPoint(A,Line(C,N))"
+    },
+    {
+      "name": "F3",
+      "expression": "ClosestPoint(B,Line(C,N))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "IsTangent(Line(C,M),omegaA)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(Line(C,M),omegaB)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(Line(C,N),omegaA)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(Line(C,N),omegaB)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "m",
+      "operator": "<",
+      "right": 0
+    },
+    {
+      "left": "n",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": 6
+    },
+    {
+      "left": "OnSegment(F0,C,M)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(F0,C)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(F0,M)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(F1,C,M)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(F1,C)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(F1,M)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(F2,C,N)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(F2,C)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(F2,N)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(F3,C,N)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(F3,C)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(F3,N)",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Area(M,N,C)"
+}

@@ -1,0 +1,43 @@
+--- a/src/geosolver/engine/standard/evaluation/snapshots.py
++++ b/src/geosolver/engine/standard/evaluation/snapshots.py
+@@ -128,6 +128,7 @@
+         self.errors = {}
+         self.evidence = {}
+         self.memo = {}
++        self.materialized_slices = {}
+ 
+     def materialize(self, names, *, partial=False):
+         """Return a context and replay evidence for exactly the requested slice."""
+@@ -135,6 +136,13 @@
+         if self.precision_bits != mp.prec:
+             raise RuntimeError("evaluation snapshot used at a different precision")
+         names = tuple(names)
++        completed_slice = self.materialized_slices.get(names)
++        if completed_slice is not None:
++            calls, trace = completed_slice
++            replay_calls(calls)
++            replay_selection_trace(trace)
++            return self.context
++        all_calls, all_trace = [], []
+         for name in names:
+             if name not in self.completed and name in self.constant_cache:
+                 value, evidence = self.constant_cache[name]
+@@ -161,12 +169,18 @@
+                 self.store.construction_evaluations += 1
+                 count_event("numerical_construction_evaluations")
+             calls, trace = self.evidence[name]
++            all_calls.extend(calls)
++            all_trace.extend(trace)
+             replay_calls(calls)
+             replay_selection_trace(trace)
+             if name in self.errors and not partial:
+                 # Re-raising a cached exception must not grow its traceback
+                 # on every repeated infeasible evaluation.
+                 raise self.errors[name].with_traceback(None)
++        # Evidence is immutable after a successful construction completes.
++        # Keep its original order, and preserve the full path for cached errors.
++        if not self.errors and len(self.materialized_slices) < 128:
++            self.materialized_slices[names] = tuple(all_calls), tuple(all_trace)
+         return self.context
+ 
+     def for_expressions(self, expressions, *, partial=False):

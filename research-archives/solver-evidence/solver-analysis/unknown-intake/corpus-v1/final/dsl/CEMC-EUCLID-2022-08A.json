@@ -1,0 +1,50 @@
+{
+  "id": "CEMC-EUCLID-2022-08A",
+  "variables": [
+    "a",
+    "x1",
+    "x2"
+  ],
+  "constructions": [
+    {
+      "name": "V",
+      "expression": "Point(0,2)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(x1,a*x1**2+2)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(x2,a*x2**2+2)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "B.y",
+      "operator": "=",
+      "right": "-B.x+4*a"
+    },
+    {
+      "left": "C.y",
+      "operator": "=",
+      "right": "-C.x+4*a"
+    },
+    {
+      "left": "Area(V,B,C)",
+      "operator": "=",
+      "right": "72/5"
+    },
+    {
+      "left": "a",
+      "operator": ">",
+      "right": "1/2"
+    },
+    {
+      "left": "x1",
+      "operator": "<",
+      "right": "x2"
+    }
+  ],
+  "target": "a"
+}

@@ -1,0 +1,165 @@
+{
+  "common": {
+    "planned_frontend_arms": 70,
+    "available": 66,
+    "completed_phase_c": 66,
+    "planned_zero_variable_arms": 8,
+    "nonzero_cases": 8,
+    "by_backend": {
+      "nomad": {
+        "arms": 35,
+        "matched": 20,
+        "numeric_any": 25,
+        "search_censored": 0
+      },
+      "scipy": {
+        "arms": 35,
+        "matched": 20,
+        "numeric_any": 25,
+        "search_censored": 0
+      }
+    },
+    "by_backend_and_stratum": [
+      {
+        "backend": "nomad",
+        "stratum": "zero",
+        "arms": 4,
+        "available": 0,
+        "matched": 0,
+        "numeric_any": 0,
+        "optimizer_comparison_applicable": false
+      },
+      {
+        "backend": "nomad",
+        "stratum": "scalar",
+        "arms": 12,
+        "available": 12,
+        "matched": 12,
+        "numeric_any": 12,
+        "optimizer_comparison_applicable": true
+      },
+      {
+        "backend": "nomad",
+        "stratum": "multivariate",
+        "arms": 19,
+        "available": 19,
+        "matched": 8,
+        "numeric_any": 13,
+        "optimizer_comparison_applicable": true
+      },
+      {
+        "backend": "scipy",
+        "stratum": "zero",
+        "arms": 4,
+        "available": 4,
+        "matched": 4,
+        "numeric_any": 4,
+        "optimizer_comparison_applicable": false
+      },
+      {
+        "backend": "scipy",
+        "stratum": "scalar",
+        "arms": 12,
+        "available": 12,
+        "matched": 12,
+        "numeric_any": 12,
+        "optimizer_comparison_applicable": true
+      },
+      {
+        "backend": "scipy",
+        "stratum": "multivariate",
+        "arms": 19,
+        "available": 19,
+        "matched": 4,
+        "numeric_any": 9,
+        "optimizer_comparison_applicable": true
+      }
+    ],
+    "zero_variable_limit": "The frozen plan accidentally included one zero-variable case (8 arms). All4 direct NOMAD calls exited with SIGSEGV, and SciPy has no optimization variable. Preserve those attempts; exclude the zero stratum only from optimization comparisons, never recast it as a production GeoSolver failure. No optimizer rerun of that case.",
+    "scope": "Nine outcome-selected development cases, common evaluable starts, fixed actual calls, common original HP and Phase C. Per-arm successes are paired; not independent trials.",
+    "cross_scope": "Fresh original/signed HP restarts share each frozen frontend selection for two central cases."
+  },
+  "multiplicity_proposal": {
+    "planned": 428,
+    "available": 428,
+    "arms": [
+      {
+        "multiplicity": "original",
+        "proposal": "original",
+        "n": 107,
+        "input_gate": {
+          "accepted": 107
+        },
+        "identified_correct": 0,
+        "method": {
+          "insufficient_accuracy": 107
+        }
+      },
+      {
+        "multiplicity": "original",
+        "proposal": "continue_after_rejection",
+        "n": 107,
+        "input_gate": {
+          "accepted": 107
+        },
+        "identified_correct": 0,
+        "method": {
+          "insufficient_accuracy": 107
+        }
+      },
+      {
+        "multiplicity": "projection",
+        "proposal": "original",
+        "n": 107,
+        "input_gate": {
+          "accepted": 107
+        },
+        "identified_correct": 107,
+        "method": {
+          "pslq-symbolic": 107
+        }
+      },
+      {
+        "multiplicity": "projection",
+        "proposal": "continue_after_rejection",
+        "n": 107,
+        "input_gate": {
+          "accepted": 107
+        },
+        "identified_correct": 107,
+        "method": {
+          "pslq-symbolic": 107
+        }
+      }
+    ],
+    "mean_interaction": 0,
+    "scope": "107 dependent source candidates from one development problem; each proposal pair uses the identical saved verifier result."
+  },
+  "selection": {
+    "planned_runs": 120,
+    "available": 120,
+    "condition_groups": 48,
+    "source_points": 107,
+    "source_ledgers": 3,
+    "by_variant": {
+      "original": {
+        "groups": 24,
+        "numeric_and_goal20": 0,
+        "median_best_goal_digits": 7.958146046365789
+      },
+      "projection": {
+        "groups": 24,
+        "numeric_and_goal20": 24,
+        "median_best_goal_digits": 78.18456108854208
+      }
+    },
+    "scope": "One natural problem; all rankings are reference blind but the assessment is outcome informed. No unconditional ranking superiority was preregistered.",
+    "order_limitation": "Equal per-point allocations cannot test pure order effects on the final union; K1/K4 tests retained set and budget allocation."
+  },
+  "script_sha256": "e2099facd0d4288a082c214745948e77144a3772e028147f20b47e7bc884ee83",
+  "reference_file_sha256": "c5f92269783add80779a38b4159f298b7f49300386bca0008bb02d3c82d3fccb",
+  "receipt_hashes": {
+    "/home/kabatan/work/solver-experiment/research-archives/solver-analysis/development/common-completion-batch-v1/completion.json": "6fbb0e6a0702d5a0710123b84c018b3824c95ade17eaca88571d7b00f5ac57b5",
+    "/home/kabatan/work/solver-experiment/research-archives/solver-analysis/development/selection-replay-v2/batch/completion.json": "be9fd2d130bf05938083792f976d0437b2d60a17ec0a93b17ca72436693d3565"
+  }
+}

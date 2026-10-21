@@ -1,0 +1,73 @@
+{
+  "snapshot": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/evaluation-review-fallback-v4-source",
+  "source_hash": "sha256:0d1a9570cc73cb3eee1196b839b7282f1c3de83f0a653713a940d2439124d954",
+  "main_source_modified": false,
+  "implementation_snapshot_modified": false,
+  "fresh_holdout_read": false,
+  "decision": "No remaining mathematical, deadline or original-final-certification blocker found in v4. Recommend integration for parent whole-process corpus screening; do not infer speed adoption from local solver tests.",
+  "grid": {
+    "rows": 180,
+    "native_success": 172,
+    "candidate_success": 172,
+    "native_success_candidate_failure": 0,
+    "previous_v2_regressions": 48,
+    "same_conditions": "evaluation-trust-invariance-v2.py; dps200/350,unit1e-12/1/1e12,shift0/1e60,5nonlinear families,3starts each,tol1e-130,maxsteps80",
+    "raw": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/evaluation-fallback-v4-invariance.jsonl",
+    "raw_sha256": "77e4161ae94c376c36d3e94c4efab42f6ea615793ca71e9ffe39af66e61fe2af"
+  },
+  "tests": [
+    {
+      "path": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/evaluation-review-fallback-v4-source/independent-fallback-v4-regression.xml",
+      "stats": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "89",
+          "time": "3.324",
+          "timestamp": "2026-10-11T18:18:00.018478+09:00",
+          "hostname": "kabatan-superPC"
+        }
+      ]
+    },
+    {
+      "path": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/evaluation-review-fallback-v4-source/independent-fallback-v4-callbacks.xml",
+      "stats": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "5",
+          "time": "0.139",
+          "timestamp": "2026-10-11T18:18:23.772424+09:00",
+          "hostname": "kabatan-superPC"
+        }
+      ]
+    }
+  ],
+  "preservation": "Spy confirms original initial mpf binary values, including excess input precision, original tol bits, full original maxsteps and ambient precision. J wrapper __wrapped__ is original mathematical J. Admission rejection retries from original initial. All13counterexamples and all previous16adversarial tests pass.",
+  "final_admission": "mpmath_refiner.certify remains independent full original source/bounds/status/finite norm gate for both bounded and native point. Rank chart reassembles original coordinates and validate_point callback triggers retry on omitted/fullsource mismatch. Native helper return remains subject to caller certify.",
+  "limits": [
+    "This is convergence/generalization and numerical safety evidence, not whole-process speed proof.",
+    "8of180 systems fail both methods; no universal convergence claim.",
+    "No root source or implementation snapshots modified; added tests only in own frozen review copy; fresh holdout not inspected."
+  ],
+  "test_files": [
+    "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/evaluation-review-fallback-v4-source/tests/test_independent_newton_invariance.py",
+    "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/evaluation-review-fallback-v4-source/tests/test_independent_native_fallback_review.py"
+  ],
+  "unique_tests": 90,
+  "test_count_note": "89 regression tests passed; then5 callback-focused tests passed,4 overlap and1 new post-J-deadline test,90unique.",
+  "resolved_finding": {
+    "file": "src/geosolver/engine/standard/refinement/newton_line_search.py",
+    "function": "findroot_least_squares native options J",
+    "evidence": "Original J is passed unwrapped; an expired globaldeadline at native Jacobian callback entry still invokes J once, then later helper check raises TimeoutError. Residual callback entry is guarded and test passes.",
+    "test": "test_no_native_callback_is_invoked_after_global_deadline[jacobian]",
+    "recommended_fix": "checked_J wrapper checks deadline before/after invoking original J. Preserve original mathematical Jacobian and arguments.",
+    "production_limit": "Production closure analytic/evaluator paths have additional deadline checks; no invalid final publication demonstrated.",
+    "resolution": "v4 wraps original J with functools.wraps and checks global deadline before and after callback. Independent tests now run actual native findroot: expiration at residual callback1/2 prevents subsequent residual/J callback; expiration during J prevents trial residual evaluation."
+  },
+  "parent_v3_receipt": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/evaluation-fallback-review-receipt.json"
+}

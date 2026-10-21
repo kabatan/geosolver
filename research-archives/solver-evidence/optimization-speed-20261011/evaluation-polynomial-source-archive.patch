@@ -1,0 +1,126 @@
+--- a/src/geosolver/engine/standard/exact_assembly/identify_answer.py
++++ b/src/geosolver/engine/standard/exact_assembly/identify_answer.py
+@@ -11,6 +11,7 @@
+ from geosolver.exact.affine_pi_search import identify_affine_pi
+ from geosolver.exact.polynomial_search import (
+     canonicalize_polynomial,
++    exact_real_roots,
+     find_minimal_polynomial,
+ )
+ 
+@@ -76,10 +77,8 @@
+         import sympy as sp
+     except Exception:
+         return None
+-    x = sp.Symbol("x")
+-    poly_expr = sum(int(c) * x ** (len(coefficients) - 1 - i) for i, c in enumerate(coefficients))
+-    try:
+-        roots = sp.real_roots(poly_expr, x)
++    try:
++        roots = exact_real_roots(coefficients)
+     except Exception:
+         return None
+     if not roots:
+--- a/src/geosolver/exact/polynomial_search.py
++++ b/src/geosolver/exact/polynomial_search.py
+@@ -3,6 +3,7 @@
+ from __future__ import annotations
+ 
+ from collections.abc import Sequence
++from functools import lru_cache
+ from typing import Any
+ 
+ from mpmath import mp, mpf
+@@ -61,16 +62,20 @@
+     if normalized is None:
+         return None
+     try:
+-        import sympy as sp
+-
+-        symbol = sp.Symbol("x")
+-        polynomial = sp.Poly.from_list(normalized, gens=symbol, domain=sp.ZZ)
+-        _content, factors = sp.factor_list(polynomial.as_expr())
++        factors = _factor_integer_polynomial(tuple(normalized))
+     except Exception:
+-        # Exact factorisation is an acceptance prerequisite.  Returning None
+-        # here fails closed instead of allowing a repeated relation through
+-        # the residual check when SymPy is unavailable or cannot factor it.
+-        return None
++        return None
++    return None if factors is None else [list(factor) for factor in factors]
++
++
++@lru_cache(maxsize=256)
++def _factor_integer_polynomial(normalized: tuple[int, ...]) -> tuple[tuple[int, ...], ...] | None:
++    """Cache immutable exact factors, independent of numerical coordinates."""
++    import sympy as sp
++
++    symbol = sp.Symbol("x")
++    polynomial = sp.Poly.from_list(normalized, gens=symbol, domain=sp.ZZ)
++    _content, factors = sp.factor_list(polynomial.as_expr())
+ 
+     result: list[list[int]] = []
+     for factor, _multiplicity in factors:
+@@ -85,7 +90,35 @@
+             continue
+         if factor_coefficients is not None:
+             result.append(factor_coefficients)
+-    return result or None
++    return tuple(tuple(factor) for factor in result) or None
++
++
++@lru_cache(maxsize=256)
++def _exact_real_roots(coefficients: tuple[int, ...]) -> tuple:
++    import sympy as sp
++
++    symbol = sp.Symbol("x")
++    polynomial = sp.Poly.from_list(coefficients, gens=symbol, domain=sp.ZZ)
++    return tuple(sp.real_roots(polynomial.as_expr(), symbol))
++
++
++def exact_real_roots(coefficients: Sequence[int]) -> tuple:
++    """Return exact immutable roots of an integer polynomial, never nearby roots."""
++    normalized = _normalize_integer_polynomial(coefficients)
++    return () if normalized is None else _exact_real_roots(tuple(normalized))
++
++
++@lru_cache(maxsize=256)
++def _real_root_binary_values(coefficients: tuple[int, ...], precision: int, rounding: str) -> tuple:
++    import sympy as sp
++
++    # The caller supplies the active rounding as part of the key. Numerical
++    # values are stored as immutable binary tuples; every caller gets new mpfs.
++    with mp.workdps(precision):
++        assert mp._prec_rounding[1] == rounding
++        return tuple(
++            mp.mpf(str(sp.N(root, precision)))._mpf_ for root in _exact_real_roots(coefficients)
++        )
+ 
+ 
+ def nearest_real_root_distance(coefficients: Sequence[int], value: Any) -> Any:
+@@ -100,11 +133,7 @@
+     if normalized is None:
+         return mp.inf
+     try:
+-        import sympy as sp
+-
+-        symbol = sp.Symbol("x")
+-        polynomial = sp.Poly.from_list(normalized, gens=symbol, domain=sp.ZZ)
+-        roots = sp.real_roots(polynomial.as_expr(), symbol)
++        roots = _exact_real_roots(tuple(normalized))
+     except Exception:
+         return mp.inf
+     if not roots:
+@@ -114,8 +143,11 @@
+         numeric_value = to_mpf_sanitized(value)
+         root_precision = max(80, int(mp.dps) + 20)
+         with mp.workdps(root_precision):
++            binary = _real_root_binary_values(
++                tuple(normalized), root_precision, mp._prec_rounding[1]
++            )
+             return min(
+-                abs(mp.mpf(str(sp.N(root, root_precision))) - numeric_value) for root in roots
++                abs(mp.make_mpf(root) - numeric_value) for root in binary
+             )
+     except Exception:
+         return mp.inf

@@ -1,0 +1,75 @@
+{
+  "id": "UKMT-SMC-2023-21",
+  "variables": [
+    "s"
+  ],
+  "constructions": [
+    {
+      "name": "Q",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "R",
+      "expression": "Point(s,0)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(s/2,s*sqrt(3)/2)"
+    },
+    {
+      "name": "O",
+      "expression": "Point(P.x+sqrt(3)/2,P.y-3/2)"
+    },
+    {
+      "name": "X",
+      "expression": "ClosestPoint(O,Line(Q,R))"
+    },
+    {
+      "name": "E",
+      "expression": "Point(P.x+sqrt(3),P.y-3)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(O,Line(Q,R))",
+      "operator": "=",
+      "right": "sqrt(3)"
+    },
+    {
+      "left": "s",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(X,Q,R)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(X,Q)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(X,R)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(E,P,R)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(E,P)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(E,R)",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Distance(Q,X)"
+}

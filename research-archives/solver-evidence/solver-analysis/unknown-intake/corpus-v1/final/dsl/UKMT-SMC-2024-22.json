@@ -1,0 +1,95 @@
+{
+  "id": "UKMT-SMC-2024-22",
+  "variables": [
+    "b",
+    "fx",
+    "fy",
+    "i",
+    "k",
+    "j"
+  ],
+  "constructions": [
+    {
+      "name": "G",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "H",
+      "expression": "Point(b,0)"
+    },
+    {
+      "name": "F",
+      "expression": "Point(fx,fy)"
+    },
+    {
+      "name": "I",
+      "expression": "Point((1-i)*fx+i*b,(1-i)*fy)"
+    },
+    {
+      "name": "K",
+      "expression": "Point(k*fx,k*fy)"
+    },
+    {
+      "name": "J",
+      "expression": "Point(j*fx,j*fy)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Area(G,K,I)",
+      "operator": "=",
+      "right": 12
+    },
+    {
+      "left": "Area(K,J,I)",
+      "operator": "=",
+      "right": 8
+    },
+    {
+      "left": "Area(J,F,I)",
+      "operator": "=",
+      "right": 4
+    },
+    {
+      "left": "Area(G,I,H)",
+      "operator": "=",
+      "right": 8
+    },
+    {
+      "left": "b",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "fy",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "i",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "k",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "i",
+      "operator": "<",
+      "right": 1
+    },
+    {
+      "left": "k",
+      "operator": "<",
+      "right": "j"
+    },
+    {
+      "left": "j",
+      "operator": "<",
+      "right": 1
+    }
+  ],
+  "target": "Area(I,K,H)"
+}

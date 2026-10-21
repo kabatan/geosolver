@@ -1,0 +1,93 @@
+{
+  "id": "UKMT-SMC-2022-08",
+  "variables": [
+    "r"
+  ],
+  "constructions": [
+    {
+      "name": "H0",
+      "expression": "Point((r)*cos(2*0*pi/6),(r)*sin(2*0*pi/6))"
+    },
+    {
+      "name": "H1",
+      "expression": "Point((r)*cos(2*1*pi/6),(r)*sin(2*1*pi/6))"
+    },
+    {
+      "name": "H2",
+      "expression": "Point((r)*cos(2*2*pi/6),(r)*sin(2*2*pi/6))"
+    },
+    {
+      "name": "H3",
+      "expression": "Point((r)*cos(2*3*pi/6),(r)*sin(2*3*pi/6))"
+    },
+    {
+      "name": "H4",
+      "expression": "Point((r)*cos(2*4*pi/6),(r)*sin(2*4*pi/6))"
+    },
+    {
+      "name": "H5",
+      "expression": "Point((r)*cos(2*5*pi/6),(r)*sin(2*5*pi/6))"
+    },
+    {
+      "name": "E0",
+      "expression": "Line(H0,H2)"
+    },
+    {
+      "name": "E1",
+      "expression": "Line(H2,H4)"
+    },
+    {
+      "name": "E2",
+      "expression": "Line(H4,H0)"
+    },
+    {
+      "name": "E3",
+      "expression": "Line(H1,H3)"
+    },
+    {
+      "name": "E4",
+      "expression": "Line(H3,H5)"
+    },
+    {
+      "name": "E5",
+      "expression": "Line(H5,H1)"
+    },
+    {
+      "name": "P0",
+      "expression": "Intersect(E0,E3)"
+    },
+    {
+      "name": "P1",
+      "expression": "Intersect(E0,E5)"
+    },
+    {
+      "name": "P2",
+      "expression": "Intersect(E2,E5)"
+    },
+    {
+      "name": "P3",
+      "expression": "Intersect(E2,E4)"
+    },
+    {
+      "name": "P4",
+      "expression": "Intersect(E1,E4)"
+    },
+    {
+      "name": "P5",
+      "expression": "Intersect(E1,E3)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Area(H0,H1,H2,H3,H4,H5)",
+      "operator": "=",
+      "right": 216
+    },
+    {
+      "left": "r",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Area(P0,P1,P2,P3,P4,P5)"
+}

@@ -1,0 +1,576 @@
+--- /dev/null
++++ b/src/geosolver/engine/standard/search/finite_target_image.py
+@@ -0,0 +1,179 @@
++"""Optional exact target-image receipts for a finite relaxation superset.
++
++If every original valid configuration occurs in S and f agrees with the
++original target on its valid domain, every valid answer is in f(S). Computing
++all exact identities in f(S) therefore gives a target coverage obligation.
++Undefined, unsupported, non-real or nonalgebraic images leave it unresolved.
++This module supplies no geometric admission or numerical stopping decision.
++"""
++
++
++def exact_algebraic_identity(value):
++    """Canonical minimal polynomial/root index, with exact interval evidence.
++
++    Root selection uses rational interval arithmetic on the exact expression;
++    decimal proximity, branch boxes and numerical candidate values are unused.
++    """
++    import sympy as sp
++
++    from .algebraic_branch_boxes import exact_algebraic_interval_evaluator
++
++    if value.is_real is not True or value.is_finite is not True or value.is_algebraic is not True:
++        return None
++    if sp.count_ops(value) > 250:
++        return None
++    generator = sp.Dummy("target_identity")
++    minimal = sp.Poly(sp.minimal_polynomial(value, generator), generator, domain=sp.QQ)
++    _, primitive = minimal.clear_denoms(convert=True)
++    primitive = primitive.primitive()[1]
++    if primitive.LC() < 0:
++        primitive = -primitive
++    if not 1 <= primitive.degree() <= 16:
++        return None
++    if any(abs(int(c)).bit_length() > 4096 for c in primitive.all_coeffs()):
++        return None
++    isolated = primitive.intervals(eps=sp.Rational(1, 2**128))
++    if not isolated:
++        return None
++    lower, upper = exact_algebraic_interval_evaluator(sp.Rational(1, 2**512))(value)
++    matches = [
++        index
++        for index, ((left, right), multiplicity) in enumerate(isolated)
++        if multiplicity == 1 and left <= lower <= upper <= right
++    ]
++    if len(matches) != 1:
++        return None
++    return {
++        "minimal_polynomial": [str(c) for c in primitive.all_coeffs()],
++        "real_root_index": matches[0],
++        "exact_enclosure": [str(lower), str(upper)],
++    }
++
++
++def finite_target_image(target, variables, solutions):
++    """Return every exact target identity, or None if any image is unresolved.
++
++    The caller must separately establish that solutions is the entire real
++    relaxation superset. Empty or truncated inputs never establish coverage.
++    No exceptional root is discarded, and equal images use canonical exact
++    algebraic identities rather than numerical tolerances.
++    """
++    import sympy as sp
++
++    if not solutions or len(solutions) > 16 or not target.free_symbols <= set(variables):
++        return None
++    values, root_image_indices = [], []
++    identities = {}
++    try:
++        for solution in solutions:
++            if len(solution) != len(variables):
++                return None
++            value = target.xreplace(dict(zip(variables, solution, strict=True)))
++            receipt = exact_algebraic_identity(value)
++            if receipt is None:
++                return None
++            key = tuple(receipt["minimal_polynomial"]), receipt["real_root_index"]
++            if key not in identities:
++                identities[key] = len(values)
++                values.append(receipt)
++            root_image_indices.append(identities[key])
++    except (ValueError, TypeError, ArithmeticError, NotImplementedError, sp.PolynomialError):
++        return None
++    return {"values": values, "root_image_indices": root_image_indices}
++
++
++def finite_original_target_image(source, constructions, variables, solutions):
++    """Interpret the original target at each root before any cancellation.
++
++    This deliberately supports only finite real algebraic intermediate
++    scalars. Unsupported/unknown domains at even one root decline the entire
++    proof. In particular, a canceled pole or unused invalid circle radius may
++    not be hidden by a symbolically simplified target formula.
++    """
++    import ast
++
++    import sympy as sp
++
++    from .cartesian_polynomials import CartesianPolynomials, squared_distance
++
++    def checked(value):
++        if (
++            value.is_real is not True
++            or value.is_finite is not True
++            or value.is_algebraic is not True
++        ):
++            raise ValueError("unresolved exact original target domain")
++        return value
++
++    class ExactTargetGeometry(CartesianPolynomials):
++        def __init__(self, substitutions):
++            super().__init__(dict(constructions))
++            self.substitutions = substitutions
++
++        def scalar(self, node):
++            if isinstance(node, ast.Name) and node.id in self.substitutions:
++                return checked(self.substitutions[node.id])
++            return checked(super().scalar(node))
++
++        def point(self, node):
++            resolved = self.resolve(node)
++            if (
++                isinstance(resolved, ast.Call)
++                and isinstance(resolved.func, ast.Name)
++                and resolved.func.id == "PointOnSegment"
++                and len(resolved.args) == 3
++            ):
++                first, second = (self.point(arg) for arg in resolved.args[:2])
++                parameter = self.scalar(resolved.args[2])
++                if (
++                    squared_distance(first, second).is_positive is not True
++                    or parameter.is_nonnegative is not True
++                    or (1 - parameter).is_nonnegative is not True
++                ):
++                    raise ValueError("unresolved original segment domain")
++            return tuple(checked(value) for value in super().point(node))
++
++        def line(self, node):
++            values = tuple(checked(value) for value in super().line(node))
++            if (values[0] ** 2 + values[1] ** 2).is_positive is not True:
++                raise ValueError("unresolved original line domain")
++            return values
++
++        def circle(self, node):
++            resolved = self.resolve(node)
++            if (
++                isinstance(resolved, ast.Call)
++                and isinstance(resolved.func, ast.Name)
++                and resolved.func.id == "Circle"
++                and len(resolved.args) == 2
++                and self.scalar(resolved.args[1]).is_positive is not True
++            ):
++                raise ValueError("unresolved original circle radius domain")
++            center, square = super().circle(node)
++            center = tuple(checked(value) for value in center)
++            square = checked(square)
++            if square.is_positive is not True:
++                raise ValueError("unresolved original circle domain")
++            return center, square
++
++    if not solutions or len(solutions) > 16:
++        return None
++    values, indices, identities = [], [], {}
++    try:
++        for solution in solutions:
++            if len(solution) != len(variables):
++                return None
++            substitutions = {str(v): value for v, value in zip(variables, solution, strict=True)}
++            geometry = ExactTargetGeometry(substitutions)
++            value = geometry.scalar(geometry.parse(source))
++            receipt = exact_algebraic_identity(value)
++            if receipt is None:
++                return None
++            key = tuple(receipt["minimal_polynomial"]), receipt["real_root_index"]
++            if key not in identities:
++                identities[key] = len(values)
++                values.append(receipt)
++            indices.append(identities[key])
++    except (ValueError, TypeError, ArithmeticError, NotImplementedError, sp.PolynomialError):
++        return None
++    return {"values": values, "root_image_indices": indices}
+--- /dev/null
++++ b/src/geosolver/engine/standard/search/target_elimination.py
+@@ -0,0 +1,152 @@
++"""Research-only finite target upper bounds from necessary polynomial ideals.
++
++For every original valid configuration x, the necessary rows vanish and the
++target lift vanishes at u=target(x). A nonzero univariate member P(u) of this
++ideal therefore vanishes at every valid answer, even if x has free dimensions.
++Denominators are only cleared; no variable division or localization occurs.
++All candidate answers still require independent original verification.
++"""
++
++
++def necessary_target_polynomial(target, variables, parameter):
++    """Conservative rational norm elimination; unsupported means None.
++
++    Angles/transcendental target expressions are not converted through the
++    condition-only angle identities. Every norm is merely an implication,
++    retaining both signs and every denominator-zero relaxation branch.
++    """
++    import sympy as sp
++
++    expression = target - parameter
++    if expression.has(sp.acos, sp.sin, sp.cos, sp.tan):
++        return None
++    for step in range(4):
++        numerator = sp.together(expression).as_numer_denom()[0]
++        try:
++            result = sp.Poly(numerator, *variables, parameter, domain=sp.QQ)
++            if result.total_degree() > 8 or len(result.terms()) > 60:
++                return None
++            return result
++        except sp.polys.polyerrors.BasePolynomialError:
++            if step == 3 or sp.count_ops(numerator) > 250:
++                return None
++            atoms = [
++                atom for atom in numerator.atoms(sp.Pow)
++                if atom.exp == sp.Rational(1, 2) and atom.has(*variables, parameter)
++            ] + [atom for atom in numerator.atoms(sp.Abs) if atom.has(*variables, parameter)]
++            if not atoms:
++                return None
++            radical = max(atoms, key=lambda atom: (sp.count_ops(atom), sp.default_sort_key(atom)))
++            temporary = sp.Dummy("target_radical")
++            lifted = sp.Poly(numerator.xreplace({radical: temporary}), temporary)
++            if lifted.degree() > 4:
++                return None
++            radicand = radical.args[0] ** 2 if isinstance(radical, sp.Abs) else radical.base
++            lifted = lifted.rem(sp.Poly(temporary**2 - radicand, temporary))
++            a, b = lifted.nth(0), lifted.nth(1)
++            expression = sp.expand(a * a - b * b * radicand)
++            if sp.count_ops(expression) > 250:
++                return None
++    return None
++
++
++def target_elimination_receipt(equations, target, variables):
++    """Compute a bounded exact root superset; caller supplies its CPU budget.
++
++    Equations must already be sound necessary equalities on every original
++    valid configuration. This helper itself does not certify their provenance
++    or authorize stopping. Rational-only arithmetic is deliberate here.
++    """
++    import sympy as sp
++
++    if not 1 <= len(variables) <= 7 or not 1 <= len(equations) <= 32:
++        return None
++    if not target.free_symbols <= set(variables) or sp.count_ops(target) > 250:
++        return None
++    if any(
++        not p.domain.is_QQ or p.total_degree() > 4 or len(p.terms()) > 60
++        for p in equations
++    ):
++        return None
++    parameter = sp.Dummy("target", real=True)
++    relation = necessary_target_polynomial(target, variables, parameter)
++    if relation is None:
++        return None
++    basis = sp.groebner(
++        [*(p.as_expr() for p in equations), relation.as_expr()],
++        *variables, parameter, order="lex", domain=sp.QQ,
++    )
++    scalar_rows = [
++        sp.Poly(p.as_expr(), parameter, domain=sp.QQ)
++        for p in basis.polys if p.as_expr().free_symbols <= {parameter}
++    ]
++    if not scalar_rows:
++        return None
++    scalar = scalar_rows[0]
++    for row in scalar_rows[1:]:
++        scalar = sp.gcd(scalar, row)
++    scalar = scalar.sqf_part()
++    if not 1 <= scalar.degree() <= 16:
++        return None
++    if any(
++        max(abs(int(c.p)).bit_length(), int(c.q).bit_length()) > 4096
++        for c in scalar.all_coeffs()
++    ):
++        return None
++    identities, exclusions = [], []
++    # On the original valid real domain, a symbolically proved nonnegative
++    # target cannot equal a strictly negative isolated real root. Unknown
++    # signs retain their entire root obligation.
++    nonnegative = target.is_nonnegative is True
++    for factor, _multiplicity in sp.factor_list(scalar)[1]:
++        _, primitive = factor.clear_denoms(convert=True)
++        primitive = primitive.primitive()[1]
++        if primitive.LC() < 0:
++            primitive = -primitive
++        for root_index, ((left, right), _root_multiplicity) in enumerate(
++            primitive.intervals(eps=sp.Rational(1, 2**128))
++        ):
++            value = {
++                "minimal_polynomial": [str(c) for c in primitive.all_coeffs()],
++                "real_root_index": root_index,
++                "isolating_interval": [str(left), str(right)],
++            }
++            if nonnegative and right < 0:
++                exclusions.append(value)
++            else:
++                identities.append(value)
++    if not identities:
++        return None
++    return {
++        "target_lift": str(relation.as_expr()),
++        "elimination_polynomial": str(scalar.as_expr()),
++        "values": identities,
++        "nonnegative_target": nonnegative,
++        "proved_negative_root_exclusions": exclusions,
++        "zero_dimensional_configuration_ideal": basis.is_zero_dimensional,
++    }
++
++
++def covered_by_verified_answers(receipt, accepted_answers):
++    """Compare exact identities supplied by independent original verification.
++
++    This checks only coverage, never candidate validity or receipt provenance.
++    Callers must pass final accepted ExactAnswer records, not reconstruction
++    guesses. Missing roots, unknown answer kinds and contradictory extra
++    algebraic identities leave the coverage obligation unresolved.
++    """
++    from geosolver.problem.models import AlgebraicAnswer
++
++    if receipt is None or not receipt.get("values") or not accepted_answers:
++        return False
++    try:
++        required = {
++            (tuple(value["minimal_polynomial"]), value["real_root_index"])
++            for value in receipt["values"]
++        }
++        if any(not isinstance(answer, AlgebraicAnswer) for answer in accepted_answers):
++            return False
++        accepted = {answer.value.canonical_key() for answer in accepted_answers}
++    except (AttributeError, TypeError, KeyError):
++        return False
++    return required == accepted
+--- /dev/null
++++ b/tests/test_finite_target_image.py
+@@ -0,0 +1,107 @@
++"""Exact target upper bounds; no numerical geometry witness is fabricated."""
++
++import pytest
++import sympy as sp
++
++from geosolver.engine.standard.search.finite_target_image import (
++    exact_algebraic_identity,
++    finite_original_target_image,
++    finite_target_image,
++)
++
++
++def keys(image):
++    return {
++        (tuple(value["minimal_polynomial"]), value["real_root_index"])
++        for value in image["values"]
++    }
++
++
++@pytest.mark.parametrize("name,scale,shift", [("x", 1, 0), ("renamed", 7, -3), ("z", -5, 11)])
++def test_target_image_covers_all_branches_and_deduplicates_exactly(name, scale, shift):
++    x = sp.Symbol(name, real=True)
++    roots = [[sp.Integer(shift + scale * s)] for s in (-1, 1)]
++    target = ((x - shift) / scale) ** 2
++    image = finite_target_image(target, (x,), roots)
++    assert keys(image) == {(("1", "-1"), 0)}
++    assert image["root_image_indices"] == [0, 0]
++    signed = finite_target_image((x - shift) / scale, (x,), roots)
++    assert keys(signed) == {(("1", "1"), 0), (("1", "-1"), 0)}
++
++
++def test_same_minimal_polynomial_different_real_roots_are_distinct():
++    x = sp.Symbol("x", real=True)
++    image = finite_target_image(x, (x,), [[-sp.sqrt(2)], [sp.sqrt(2)]])
++    assert keys(image) == {(("1", "0", "-2"), 0), (("1", "0", "-2"), 1)}
++
++
++def test_equivalent_algebraic_expressions_have_same_canonical_identity():
++    t = sp.Symbol("t")
++    root = sp.CRootOf(t**3 - 2, 0)
++    assert exact_algebraic_identity(root)["minimal_polynomial"] == ["1", "0", "0", "-2"]
++    first = exact_algebraic_identity(sp.sqrt(2) + sp.sqrt(8))
++    second = exact_algebraic_identity(3 * sp.sqrt(2))
++    assert first["minimal_polynomial"] == second["minimal_polynomial"] == ["1", "0", "-18"]
++    assert first["real_root_index"] == second["real_root_index"] == 1
++
++
++def test_cartesian_product_is_not_silently_projected_or_truncated():
++    x, y = sp.symbols("x y", real=True)
++    roots = [[sp.Integer(a), sp.Integer(b)] for a in (-1, 1) for b in (-2, 2)]
++    image = finite_target_image(x * y, (x, y), roots)
++    assert keys(image) == {(("1", "-2"), 0), (("1", "2"), 0)}
++    assert len(image["root_image_indices"]) == 4
++    assert finite_target_image(x, (x, y), [[sp.S.One]]) is None
++    assert finite_target_image(x, (x,), []) is None
++    assert finite_target_image(x, (x,), [[sp.Integer(i)] for i in range(17)]) is None
++
++
++@pytest.mark.parametrize("target,roots", [
++    (lambda x: 1 / x, [0, 1]),
++    (lambda x: sp.sqrt(x), [-1, 1]),
++    (lambda x: sp.pi * x, [1, 2]),
++    (lambda x: sp.acos(x), [sp.Rational(1, 2)]),
++    (lambda x: x + sp.Symbol("free", real=True), [1]),
++])
++def test_any_undefined_nonreal_transcendental_or_free_image_declines(target, roots):
++    x = sp.Symbol("x", real=True)
++    assert finite_target_image(target(x), (x,), [[sp.sympify(r)] for r in roots]) is None
++
++
++def test_root_identity_never_uses_decimal_proximity(monkeypatch):
++    def forbidden(*args, **kwargs):
++        raise AssertionError("decimal approximation is not an equality proof")
++    monkeypatch.setattr(sp, "N", forbidden)
++    value = exact_algebraic_identity(sp.sqrt(3) / 7)
++    assert value["minimal_polynomial"] == ["49", "0", "-3"]
++    assert value["real_root_index"] == 1
++
++
++def test_exact_interval_failure_leaves_identity_unresolved(monkeypatch):
++    from geosolver.engine.standard.search import algebraic_branch_boxes as boxes
++    monkeypatch.setattr(
++        boxes, "exact_algebraic_interval_evaluator", lambda width: lambda value: (-10, 10)
++    )
++    assert exact_algebraic_identity(sp.sqrt(2)) is None
++
++
++@pytest.mark.parametrize("source,root", [
++    ("0*(1/x)", 0),
++    ("(x-1)/(x-1)", 1),
++    ("sqrt(x)**2", -1),
++    ("Center(Circle(Point(0,0),x)).x", -1),
++    ("PointOnSegment(Point(0,0),Point(1,0),x).x", 2),
++    ("Line(Point(0,0),Point(0,0)).a", 1),
++    ("Radius(Circle(Point(0,0),x))", 0),
++])
++def test_original_target_checks_every_intermediate_before_simplifying(source, root):
++    x = sp.Symbol("x", real=True)
++    assert finite_original_target_image(source, {}, (x,), [[sp.Integer(root)]]) is None
++
++
++def test_original_source_image_matches_two_radical_branches():
++    x = sp.Symbol("x", real=True)
++    constructions = {"A": "Point(x,0)", "B": "Point(0,0)", "d": "Distance(A,B)"}
++    image = finite_original_target_image("d", constructions, (x,), [[-sp.sqrt(2)], [sp.sqrt(2)]])
++    assert keys(image) == {(("1", "0", "-2"), 1)}
++    assert image["root_image_indices"] == [0, 0]
+--- /dev/null
++++ b/tests/test_target_elimination.py
+@@ -0,0 +1,126 @@
++"""Conditional ideal-projection proofs over structurally diverse systems."""
++
++import pytest
++import sympy as sp
++
++from geosolver.engine.standard.search.target_elimination import (
++    covered_by_verified_answers,
++    target_elimination_receipt,
++)
++
++
++def receipt(expressions, target, variables):
++    return target_elimination_receipt(
++        [sp.Poly(p, *variables, domain=sp.QQ) for p in expressions], target, variables
++    )
++
++
++def keys(result):
++    return {
++        (tuple(v["minimal_polynomial"]), v["real_root_index"])
++        for v in result["values"]
++    }
++
++
++@pytest.mark.parametrize("names,scale,offset", [(("x", "y"), 1, 0), (("a", "b"), 7, -3)])
++def test_positive_dimensional_affine_target_is_finite(names, scale, offset):
++    x, y = sp.symbols(" ".join(names), real=True)
++    target = (x + y - offset) / scale
++    result = receipt([x + y - offset - 2 * scale], target, (x, y))
++    assert keys(result) == {(("1", "-2"), 0)}
++    assert result["zero_dimensional_configuration_ideal"] is False
++
++
++def test_all_finite_target_branches_are_retained_on_free_configuration_fibers():
++    x, y = sp.symbols("x y", real=True)
++    result = receipt([(x + y) ** 2 - 2], x + y, (x, y))
++    assert keys(result) == {(("1", "0", "-2"), 0), (("1", "0", "-2"), 1)}
++    assert result["zero_dimensional_configuration_ideal"] is False
++
++
++def test_radical_norm_target_on_positive_dimensional_circle():
++    x, y = sp.symbols("x y", real=True)
++    result = receipt([x*x + y*y - 25], sp.sqrt(x*x + y*y), (x, y))
++    assert keys(result) == {(("1", "-5"), 0)}
++    assert result["zero_dimensional_configuration_ideal"] is False
++    assert len(result["proved_negative_root_exclusions"]) == 1
++
++
++def test_nested_radicals_keep_all_norm_sign_relaxations():
++    x, y = sp.symbols("x y", real=True)
++    result = receipt([x - 3, y - 4], sp.sqrt(x + sp.sqrt(y)), (x, y))
++    assert keys(result) == {
++        (("1", "-1"), 0), (("1", "1"), 0),
++        (("1", "0", "-5"), 0), (("1", "0", "-5"), 1),
++    }
++
++
++def test_rational_target_keeps_denominator_zero_relaxation_branch_unresolved():
++    x, y = sp.symbols("x y", real=True)
++    # Original x/y=1 wherever y!=0, but clearing denominators also leaves
++    # x=y=0 with arbitrary target. Without a denominator-domain proof the
++    # unsaturated necessary ideal must not return the desired singleton.
++    assert receipt([x - y], x / y, (x, y)) is None
++
++
++def test_proved_nonnegative_target_can_exclude_strictly_negative_roots():
++    x = sp.Symbol("x", real=True)
++    result = receipt([x**2 - 2], sp.Abs(x), (x,))
++    assert keys(result) == {(("1", "0", "-2"), 1)}
++    assert len(result["proved_negative_root_exclusions"]) == 1
++
++
++def test_unknown_target_sign_retains_extraneous_radical_sign_branch():
++    x = sp.Symbol("x", real=True)
++    result = receipt([x**2 - 1], sp.sqrt(x), (x,))
++    assert keys(result) == {(("1", "-1"), 0), (("1", "1"), 0)}
++    assert result["nonnegative_target"] is False
++
++
++def test_repeated_roots_and_reducible_polynomial_are_canonicalized():
++    x, y = sp.symbols("x y", real=True)
++    result = receipt([(x - 1)**2 * (x + 2)**2], x, (x, y))
++    assert keys(result) == {(("1", "-1"), 0), (("1", "2"), 0)}
++
++
++@pytest.mark.parametrize("target", [lambda x: sp.acos(x), lambda x: sp.sin(x), lambda x: sp.pi*x])
++def test_angle_and_transcendental_targets_decline(target):
++    x = sp.Symbol("x", real=True)
++    assert receipt([x**2 - 1], target(x), (x,)) is None
++
++
++def test_free_target_no_polynomial_cannot_claim_coverage():
++    x, y = sp.symbols("x y", real=True)
++    assert receipt([x**2 - 1], y, (x, y)) is None
++
++
++def test_same_polynomial_different_root_indices_remain_obligations():
++    x = sp.Symbol("x", real=True)
++    result = receipt([x**3 - 3*x + 1], x, (x,))
++    assert keys(result) == {(("1", "0", "-3", "1"), i) for i in range(3)}
++
++
++def test_coverage_requires_every_exact_identity_after_independent_verification():
++    from geosolver.exact.descriptors import describe_exact
++    x = sp.Symbol("x", real=True)
++    result = receipt([x**2 - 2], x, (x,))
++    negative, positive = describe_exact(-sp.sqrt(2)), describe_exact(sp.sqrt(2))
++    assert not covered_by_verified_answers(result, [positive])
++    assert covered_by_verified_answers(result, [positive, negative])
++    assert covered_by_verified_answers(result, [negative, positive, positive])
++    assert not covered_by_verified_answers(result, [negative, positive, describe_exact(7)])
++    assert not covered_by_verified_answers(result, [])
++    assert not covered_by_verified_answers(None, [positive])
++    assert not covered_by_verified_answers(result, [positive.model_dump(), negative.model_dump()])
++
++
++def test_coverage_does_not_consult_decimal_proximity():
++    from geosolver.exact.descriptors import describe_exact
++    x = sp.Symbol("x", real=True)
++    result = receipt([x**2 - 2], x, (x,))
++    negative = describe_exact(-sp.sqrt(2))
++    positive = describe_exact(sp.sqrt(2))
++    negative.value.decimal = positive.value.decimal
++    assert covered_by_verified_answers(result, [negative, positive])
++    positive.value.real_root_index = 0
++    assert not covered_by_verified_answers(result, [negative, positive])

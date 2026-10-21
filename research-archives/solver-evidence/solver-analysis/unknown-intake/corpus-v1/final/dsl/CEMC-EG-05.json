@@ -1,0 +1,72 @@
+{
+  "id": "CEMC-EG-05",
+  "variables": [
+    "w",
+    "h",
+    "e"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0,h)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(w,h)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(w,0)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "E",
+      "expression": "Point(e,0)"
+    },
+    {
+      "name": "F",
+      "expression": "Intersect(Line(A,E),Line(B,D))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A,F)",
+      "operator": "=",
+      "right": 4
+    },
+    {
+      "left": "Distance(D,F)",
+      "operator": "=",
+      "right": 2
+    },
+    {
+      "left": "Dot(Vector(A,E),Vector(B,D))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "w",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "h",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "e",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "e",
+      "operator": "<",
+      "right": "w"
+    }
+  ],
+  "target": "Area(B,C,E,F)"
+}

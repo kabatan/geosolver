@@ -1,0 +1,58 @@
+{
+  "id": "GENERATED-PARABOLA-NORMAL-SPLIT",
+  "variables": [
+    "t",
+    "lam"
+  ],
+  "constructions": [
+    {
+      "name": "P",
+      "expression": "Point(t,t**2/2)"
+    },
+    {
+      "name": "F",
+      "expression": "Point(0,1/2)"
+    },
+    {
+      "name": "N",
+      "expression": "Point(t*(1-lam),t**2/2+lam)"
+    },
+    {
+      "name": "K",
+      "expression": "Point(-1,5/2+(1/100))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "N.x",
+      "operator": "=",
+      "right": "K.x"
+    },
+    {
+      "left": "N.y",
+      "operator": "=",
+      "right": "K.y"
+    },
+    {
+      "left": "t",
+      "operator": ">",
+      "right": "1/2"
+    },
+    {
+      "left": "t",
+      "operator": "<",
+      "right": "3/2"
+    },
+    {
+      "left": "lam",
+      "operator": ">",
+      "right": 1
+    },
+    {
+      "left": "lam",
+      "operator": "<",
+      "right": 3
+    }
+  ],
+  "target": "Distance(F,P)"
+}

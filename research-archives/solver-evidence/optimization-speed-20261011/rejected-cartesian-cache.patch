@@ -1,0 +1,81 @@
+--- benchmarks/local-evaluation/optimization-speed-20261011/baseline-source/src/geosolver/engine/standard/search/cartesian_polynomials.py	2026-10-11 15:50:53.519397821 +0900
++++ benchmarks/local-evaluation/optimization-speed-20261011/algebra-source/src/geosolver/engine/standard/search/cartesian_polynomials.py	2026-10-11 17:39:43.766830795 +0900
+@@ -6,6 +6,7 @@
+ 
+ import ast
+ import operator
++from types import MappingProxyType
+ 
+ import sympy as sp
+ 
+@@ -58,6 +59,34 @@
+ 
+ 
+ class CartesianPolynomials(ScalarGeometry):
++    def __init__(self, constructions, *, allow_opaque=False):
++        # A symbolic request describes one fixed construction DAG. Keep a
++        # private immutable snapshot so exact expressions can be reused across
++        # different constraint rows without stale dependency results.
++        super().__init__(MappingProxyType(dict(constructions)), allow_opaque=allow_opaque)
++        self._named_values = {kind: {} for kind in ("point", "line", "circle", "scalar")}
++        self._named_active = set()
++
++    def _named_value(self, kind, name):
++        self.visits += 1
++        if self.visits > 1000:
++            raise ValueError("Cartesian expression too large")
++        values = self._named_values[kind]
++        if name in values:
++            return values[name]
++        key = kind, name
++        if key in self._named_active:
++            raise ValueError("cyclic Cartesian construction")
++        self._named_active.add(key)
++        try:
++            value = getattr(self, kind)(self.parse(self.definitions[name]))
++        finally:
++            self._named_active.remove(key)
++        # SymPy scalars and coordinate tuples are immutable. A failed
++        # interpretation (e.g. trying a line as a point) never enters the cache.
++        values[name] = value
++        return value
++
+     def resolve(self, node):
+         while isinstance(node, ast.Name) and node.id in self.definitions:
+             self.visits += 1
+@@ -67,6 +96,8 @@
+         return node
+ 
+     def line(self, node):
++        if isinstance(node, ast.Name) and node.id in self.definitions:
++            return self._named_value("line", node.id)
+         node = self.resolve(node)
+         if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Name):
+             raise ValueError("unsupported exact line")
+@@ -108,6 +139,8 @@
+         return a[0] + (bs * cy - cs * by) / denominator, a[1] + (cs * bx - bs * cx) / denominator
+ 
+     def circle(self, node):
++        if isinstance(node, ast.Name) and node.id in self.definitions:
++            return self._named_value("circle", node.id)
+         node = self.resolve(node)
+         if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Name):
+             raise ValueError("unsupported exact circle")
+@@ -120,6 +153,8 @@
+         raise ValueError("unsupported exact circle")
+ 
+     def point(self, node):
++        if isinstance(node, ast.Name) and node.id in self.definitions:
++            return self._named_value("point", node.id)
+         node = self.resolve(node)
+         if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
+             name, args = node.func.id, node.args
+@@ -161,6 +196,8 @@
+         return super().point(node)
+ 
+     def scalar(self, node):
++        if isinstance(node, ast.Name) and node.id != "pi" and node.id in self.definitions:
++            return self._named_value("scalar", node.id)
+         if isinstance(node, ast.Attribute) and node.attr in {"a", "b", "c"}:
+             a, b, c = self.line(node.value)
+             return (a, b, c)["abc".index(node.attr)] / sp.sqrt(a * a + b * b)

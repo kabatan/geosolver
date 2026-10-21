@@ -1,0 +1,49 @@
+{
+  "id": "HMMT-NOV-2023-THM-04",
+  "variables": [
+    "x",
+    "y"
+  ],
+  "constructions": [
+    {
+      "name": "L",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "O",
+      "expression": "Point(23,0)"
+    },
+    {
+      "name": "V",
+      "expression": "Point(23,20)"
+    },
+    {
+      "name": "E",
+      "expression": "Point(0,20)"
+    },
+    {
+      "name": "R",
+      "expression": "Point(x,y)"
+    },
+    {
+      "name": "omega",
+      "expression": "Circumcircle(R,O,V)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(R,L)",
+      "operator": "=",
+      "right": 23
+    },
+    {
+      "left": "Distance(R,E)",
+      "operator": "=",
+      "right": 23
+    },
+    {
+      "predicate": "ConvexPolygon([L,O,V,E,R])"
+    }
+  ],
+  "target": "Radius(omega)"
+}

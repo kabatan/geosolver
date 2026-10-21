@@ -1,0 +1,284 @@
+{
+  "scope": "Generic high-precision nonlinear closure refinement; no case-specific recognizers or new geometry families",
+  "run_root": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011",
+  "version": 4,
+  "candidate": "original_native_fallback_v4",
+  "versions": {
+    "baseline": {
+      "source_hash": "sha256:f92ee9ba5bea9b124f19e79e95d89e47e66252fede326bb1a569eb1d318e969b",
+      "disposition": "baseline"
+    },
+    "rank_first": {
+      "source_hash": "sha256:14a948a36031a3e0ac16f351d806d1df05b70530a8e80612aa1ef12850ad0ec7",
+      "disposition": "rejected; no rank-deficient initial-J opportunity on diagnostic",
+      "patch": "rank-first-negative.patch"
+    },
+    "norm2_only": {
+      "source_hash": "sha256:87ea43d3bece1afd02898f3fc27177e4f86c4d191423029be143be7b849fc448",
+      "disposition": "not selected; diagnostic unchanged, paired timing mixed",
+      "snapshot": "refinement-source",
+      "paired_raw": "refinement-source/paired.jsonl"
+    },
+    "centered_fd": {
+      "source_hash": "sha256:e945408668002b1fc629411b18cb5d3e1dafaba04ecaf6b10914125fb600df9d",
+      "disposition": "rejected; diagnostic unchanged",
+      "snapshot": "refinement-centered-source"
+    },
+    "bounded_armijo_v1": {
+      "source_hash": "sha256:46746c91bd039794957e170234f66d497772139432b1be60095978a65031efbf",
+      "snapshot": "refinement-armijo-source",
+      "disposition": "rejected; native success lost for distant atan initial point",
+      "screen": "refinement-armijo-screen",
+      "screen_full_raw_answer_sets_equal": 24,
+      "screen_truth_matches": 23,
+      "screen_size": 24,
+      "timing_limitation": "baseline6parallel versus candidate1parallel, not comparable for adoption"
+    },
+    "scaled_trust_v2": {
+      "source_hash": "sha256:d67bbb5aaca48837b3e33cc872b24c4570239de2f99b737f689e659f1a0d1583",
+      "snapshot": "refinement-trust-source",
+      "disposition": "rejected; 48 independent shifted nonlinear native-convergence regressions",
+      "screen": "refinement-trust-screen",
+      "matched_comparison": "refinement-trust-matched-comparison.json",
+      "screen_full_raw_answer_sets_equal": 24,
+      "screen_truth_matches": 23,
+      "screen_size": 24,
+      "independent_grid": {
+        "total": 180,
+        "native_success": 172,
+        "candidate_success": 124,
+        "native_success_lost": 48
+      },
+      "tests": {
+        "passed": 176,
+        "log": "refinement-trust-source/trust-tests-final.log"
+      }
+    },
+    "original_native_fallback_v3": {
+      "source_hash": "sha256:3e1873d909a08ba77bd1bc1730e99d0f027f4f4d4555a0f5c7db18b7cb913a3c",
+      "snapshot": "refinement-fallback-source",
+      "disposition": "frozen development candidate; parent public323 campaign running; superseded by v4 deadline hardening",
+      "parent_screen": "refinement-fallback-public-seed0",
+      "tests": {
+        "passed": 179,
+        "seconds": 5.74,
+        "log": "refinement-fallback-source/fallback-tests-final.log"
+      },
+      "independent_grid": {
+        "total": 180,
+        "native_success": 172,
+        "candidate_success": 172,
+        "native_success_lost": 0
+      },
+      "independent_tests_passed": 85
+    },
+    "original_native_fallback_v4": {
+      "source_hash": "sha256:0d1a9570cc73cb3eee1196b839b7282f1c3de83f0a653713a940d2439124d954",
+      "snapshot": "refinement-fallback-v4-source",
+      "disposition": "Rejected for speed after fixed24samecoreABBA: all exact sets preserved but total/mean process time +8.77%",
+      "tests": {
+        "passed": 183,
+        "seconds": 7.09,
+        "log": "refinement-fallback-v4-source/v4-tests-final.log"
+      },
+      "ruff": "refinement-fallback-v4-source/v4-ruff-final.log",
+      "patch": "refinement-fallback-v4.patch",
+      "patch_sha256": "sha256:c5e95c466283258b71aad639cf9bcefcc3bbe10e5bf0ffeef095b987c6ea664d",
+      "changed_files": [
+        "src/geosolver/engine/standard/refinement/mpmath_refiner.py",
+        "src/geosolver/engine/standard/refinement/newton_line_search.py",
+        "tests/test_closure_termination.py",
+        "tests/test_closure_armijo.py",
+        "tests/test_independent_newton_review.py",
+        "tests/test_independent_native_fallback_review.py"
+      ],
+      "lock": "snapshot engine-lock.json refreshed separately; integration patch excludes lock",
+      "patch_apply_check": "git apply --check against baseline-source passed before test-format-only changes",
+      "ruff_scope": "all changed source and tests"
+    }
+  },
+  "profiling": {
+    "artifact": "refinement-source/JMO-2017-PRE-10-profile.txt",
+    "profile_scope": "diagnostic only; profiler overhead changes optional time budgets",
+    "native_newton_iterations": 903,
+    "residual_callbacks": 159822,
+    "newton_seconds": 166.842,
+    "full_closure_seconds": 167.05,
+    "hypothesis": "MDNewton halves until point equality at current precision, which can require hundreds of residual evaluations when the step fails to descend; overdetermined LS direction uses2norm while native acceptance defaults to infinity norm."
+  },
+  "algorithm": {
+    "bounded_proposal": "least-squares2norm merit Armijo, original20-step LM line limit followed by one coordinate-scaled restart of20 trials; original fullNewton proposal tried first",
+    "native_fallback": "On bounded numericalfailure or original full-source/bounds admission failure, retry original mp.findroot from ORIGINAL initial coordinates, ORIGINAL maxsteps/tol/J, at ORIGINAL ambient precision. The bound does not constrain native convergence.",
+    "guarding": "Global deadline checked at entry, each bounded iteration/trial, native residual callback, before/after native analytic-J callback, and before return. TimeoutError is never converted to local failure. Nonfinite initial/final/native residuals are rejected.",
+    "admission": "Original full source residual norm and original bounds are checked before treating bounded proposal as successful; scalar rank charts retain original scalar secant. Full later verification/exact assembly is unchanged."
+  },
+  "preserved_contract": {
+    "seconds_per_problem": 180,
+    "cores_per_problem": 1,
+    "seeds_in_development_screen": [
+      0
+    ],
+    "precision_and_verification_schedules": "unchanged",
+    "exact_answer_descriptors": "unchanged",
+    "domains_and_sampler_exclusions": "unchanged; prior lattice and positive-radius exclusions preserved",
+    "nearby_point_verification_reuse": false,
+    "one_answer_early_stop": false,
+    "main_root_source_edited": false,
+    "new_holdout_accessed": false
+  },
+  "counterexamples_and_fixes": [
+    "V1 bounded20 loses native success for atan from1e10/1e12. V2 scaled restart addressed these narrow examples but did not establish general convergence.",
+    "V2 loses48native-success cases across shifted atan/tanh/normalizedrational/expm1 families; shift1e60 and varying units/dps expose lack of translation invariance. Rejected despite24public exact-set matches.",
+    "Least-squares norm can accept a tanh overshoot because another residual improves; its best iterate can have a degenerate Jacobian. V3 original-initial native fallback is mandatory, not best-iterate fallback.",
+    "A bounded exact root can violate original bounds or omitted source equations. V3 admission callback retries original native solve before accepting that proposal.",
+    "Independent review found missing entry deadline and nonfinite final-norm rejection inV1; fixed beforeV2.",
+    "IndependentV3review found nativeJcallback unguarded; V4 adds before/afterdeadline wrapper retaining exact originalJmathematics."
+  ],
+  "limitations": [
+    "No universal global convergence or finite-answer-set completeness claim is made for nonlinear numerical search.",
+    "Fallback can restore the long backtracking tail and erase the apparent large speedup. Broad parent measurements decide adoption; no speed target claimed achieved.",
+    "V1aggregate timings had different host concurrency; matchedV2jobs1 runs have samehost/singlecore settings but differentCPU and elapsedhost phases. Neither overrides failed independent mathematical regressions.",
+    "Norm-only exploratory paired AIME2020I15 timing overlapped short focusedtests oncore6; not adoption evidence.",
+    "Full repository pytest was not claimed: snapshot excludes unrelated night/GMB/authoring modules. Meaningful selectedAPI/math/precision/deadline suites passed.",
+    "Earlier draft best-iterate fallback was never benchmarked or selected; original-initial fallback superseded it."
+  ],
+  "jmo_diagnostic": {
+    "case": "JMO-2017-PRE-10",
+    "seed": 0,
+    "baseline": {
+      "seconds": 173.418,
+      "refinement_seconds": 168.197
+    },
+    "rank_first": {
+      "seconds": 173.38307197598624,
+      "refinement_seconds": 168.1736089529877
+    },
+    "norm2_only": {
+      "seconds": 173.87906662200112,
+      "refinement_seconds": 167.91325916501228
+    },
+    "centered_fd": {
+      "seconds": 173.34409569599666,
+      "refinement_seconds": 165.94472253101412
+    },
+    "armijo_v1_pre_final_helper_format": {
+      "seconds": 29.55251597199822,
+      "refinement_seconds": 22.48895841400372,
+      "artifact": "refinement-armijo-source/armijo-JMO-2017-PRE-10.json",
+      "actual_source_hash": "sha256:af7cd1bca4050747404d789954de58f92692cbd8c9475851f96b5b9fe8977932"
+    },
+    "trust_v2": {
+      "seconds": 26.05610467400402,
+      "refinement_seconds": 20.09980665499461,
+      "artifact": "refinement-trust-source/trust-JMO-2017-PRE-10.json"
+    },
+    "native_fallback_v3": {
+      "status": "solved",
+      "seconds": 173.53156838699942,
+      "source_hash": "sha256:3e1873d909a08ba77bd1bc1730e99d0f027f4f4d4555a0f5c7db18b7cb913a3c",
+      "phases": {
+        "phase_rescue": 1.3605219239834696,
+        "phase_discrete_completion": 0.0,
+        "initial_probe": 0.01885742601007223,
+        "search": 2.0933493170014117,
+        "refinement": 168.16084606395452,
+        "exact_assembly": 1.2789312989916652,
+        "rescue": 1.3605542440200225,
+        "discrete_completion": 9.69000393524766e-06,
+        "descriptors": 5.900015821680427e-06
+      },
+      "counters": {
+        "evaluate_float_residual": 730,
+        "numerical_construction_evaluations": 1254900,
+        "evaluate_guard": 50,
+        "scalar_leaf_evaluations": 7092,
+        "scalar_leaf_cache_hits": 5723,
+        "constant_scalar_cache_hits": 12812,
+        "constant_construction_cache_hits": 1254740,
+        "evaluation_snapshot_hits": 6566,
+        "guard_evidence_cache_hits": 19,
+        "evaluate_float_hard_feasibility": 601,
+        "evaluate_hp_residual": 417821,
+        "warm_newton_attempts": 8,
+        "analytic_jacobian_plan_requests": 25,
+        "analytic_jacobian_plan_unsupported": 25,
+        "newton_backtracks": 1052,
+        "newton_native_fallbacks": 12,
+        "evaluate_hp_hard_feasibility": 1135,
+        "newton_scaled_trust_restarts": 10,
+        "newton_line_search_exhausted": 7,
+        "refinement_deadline_drafts": 2,
+        "verification_system_evaluations": 1984,
+        "verification_equation_evaluations": 9696,
+        "domain_margin_system_samples": 714,
+        "warm_newton_successes": 6,
+        "refinement_snapshot_reuses": 6,
+        "evaluate_answer_hp": 6,
+        "newton_stagnant_steps": 3,
+        "exact_descriptor_reuses": 5,
+        "final_verification_cache_hits": 1,
+        "evaluation_count": 236,
+        "exact_answer_attempt_count": 6,
+        "exact_answer_identified_count": 6
+      },
+      "answers": [
+        {
+          "kind": "algebraic",
+          "value": {
+            "minimal_polynomial": [
+              "2",
+              "-9"
+            ],
+            "real_root_index": 0,
+            "isolating_interval": [
+              "9/2",
+              "9/2"
+            ],
+            "decimal": "4.5000000000000000000000000000000000000000000000000"
+          }
+        }
+      ],
+      "artifact": "refinement-fallback-source/fallback-JMO-2017-PRE-10.json"
+    },
+    "all_completed_variants_full_exact_answers_equal": true
+  },
+  "same_core_abba_v4": {
+    "cases": 24,
+    "runs": 96,
+    "include_failures": true,
+    "same_core_per_case": true,
+    "canonical_equal_cases": 24,
+    "raw_descriptor_equal_cases": 24,
+    "status_equal_cases": 24,
+    "baseline-source": {
+      "sum_problem_means_seconds": 347.01167657400947,
+      "mean_problem_means_seconds": 14.458819857250395,
+      "median_problem_means_seconds": 0.9789202932515764,
+      "raw_run_sum_seconds": 694.0233531480189,
+      "status_counts": {
+        "no_answer_found": 2,
+        "solved": 46
+      }
+    },
+    "refinement-fallback-v4-source": {
+      "sum_problem_means_seconds": 377.4369391830405,
+      "mean_problem_means_seconds": 15.726539132626689,
+      "median_problem_means_seconds": 0.9239791425061412,
+      "raw_run_sum_seconds": 754.873878366081,
+      "status_counts": {
+        "no_answer_found": 2,
+        "solved": 46
+      }
+    },
+    "process_sum_change_percent": 8.76779217040038,
+    "path": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/refinement-fallback-v4-abba",
+    "manifest": "manifest.json",
+    "raw": "records.jsonl",
+    "case_summary": "summary.json",
+    "limitation": "Fixed24 development screen, seed0 only; full public323x3 and fresh holdout remain parent responsibility.",
+    "recommendation": "Do not adopt v4 for speed: total process time +8.77%, mean14.459\u219215.727sec including failures; median0.979\u21920.924sec. All24canonical and rawexact answer sets match across allfour runs.",
+    "driver": "refinement_fallback_v4_abba.py",
+    "driver_sha256": "sha256:0636c19fe3f5d67063c4b9e69eb70d44a4642ff788873fb4731bec1fce63b29f",
+    "candidate_source_hash_unchanged_after_campaign": true
+  }
+}

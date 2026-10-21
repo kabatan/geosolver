@@ -1,0 +1,54 @@
+{
+  "id": "HMMT-NOV-2023-THM-02",
+  "variables": [
+    "k",
+    "s"
+  ],
+  "constructions": [
+    {
+      "name": "L",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "O",
+      "expression": "Point(0,s)"
+    },
+    {
+      "name": "R",
+      "expression": "Point(s,s)"
+    },
+    {
+      "name": "E",
+      "expression": "Point(s,0)"
+    },
+    {
+      "name": "K",
+      "expression": "Point(k,0)"
+    },
+    {
+      "name": "F",
+      "expression": "Point(k,s)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(R,L)",
+      "operator": "=",
+      "right": 12
+    },
+    {
+      "left": "Distance(R,K)",
+      "operator": "=",
+      "right": 11
+    },
+    {
+      "left": "s",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "predicate": "k != 0"
+    }
+  ],
+  "target": "Area(R,K,L)"
+}

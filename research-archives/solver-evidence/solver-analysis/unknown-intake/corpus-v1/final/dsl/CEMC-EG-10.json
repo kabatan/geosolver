@@ -1,0 +1,81 @@
+{
+  "id": "CEMC-EG-10",
+  "variables": [
+    "a",
+    "c"
+  ],
+  "constructions": [
+    {
+      "name": "D",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(c,0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(a,20)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(a+c,20)"
+    },
+    {
+      "name": "E",
+      "expression": "Point(a,0)"
+    },
+    {
+      "name": "F",
+      "expression": "ClosestPoint(A,Line(B,C))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A,F)",
+      "operator": "=",
+      "right": 32
+    },
+    {
+      "left": "cos(Angle(E,A,F))",
+      "operator": "=",
+      "right": "1/3"
+    },
+    {
+      "left": "c",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(E,D,C)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(E,D)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(E,C)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(F,C,B)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(F,C)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(F,B)",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Area(A,E,C,F)"
+}

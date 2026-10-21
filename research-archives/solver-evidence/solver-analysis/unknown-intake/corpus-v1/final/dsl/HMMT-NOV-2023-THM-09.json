@@ -1,0 +1,86 @@
+{
+  "id": "HMMT-NOV-2023-THM-09",
+  "variables": [
+    "u",
+    "v",
+    "w",
+    "t"
+  ],
+  "constructions": [
+    {
+      "name": "N",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "O",
+      "expression": "Point(u,0)"
+    },
+    {
+      "name": "W",
+      "expression": "Point(v,w)"
+    },
+    {
+      "name": "S",
+      "expression": "Point(u/3,0)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(2*u/3,0)"
+    },
+    {
+      "name": "K",
+      "expression": "Point(v/3,w/3)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(2*v/3,2*w/3)"
+    },
+    {
+      "name": "E",
+      "expression": "Point((1-t)*u+t*v,t*w)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(E,P)",
+      "operator": "=",
+      "right": 5
+    },
+    {
+      "left": "Distance(E,K)",
+      "operator": "=",
+      "right": 5
+    },
+    {
+      "left": "Distance(E,A)",
+      "operator": "=",
+      "right": 6
+    },
+    {
+      "left": "Distance(E,S)",
+      "operator": "=",
+      "right": 6
+    },
+    {
+      "left": "u",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "w",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "t",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "t",
+      "operator": "<",
+      "right": 1
+    }
+  ],
+  "target": "Distance(O,W)"
+}

@@ -1,0 +1,45 @@
+{
+  "id": "CEMC-EUCLID-2024-04A",
+  "variables": [
+    "d"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0,12)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(-6,0)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(d,0)"
+    },
+    {
+      "name": "P",
+      "expression": "ClosestPoint(C,Line(A,D))"
+    },
+    {
+      "name": "N",
+      "expression": "Intersect(Line(C,P),Line(A,B))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Angle(A,D,B)",
+      "operator": "=",
+      "right": "pi/4"
+    },
+    {
+      "left": "d",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Area(A,P,N)"
+}

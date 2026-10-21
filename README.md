@@ -86,4 +86,6 @@ reserved until the owner explicitly chooses a license.
 
 ## GeoSolver experiment archive
 
+The [GeoSolver evidence index](research-archives/solver-evidence/README.md) contains the compact performance reports, rejected experiments, mechanism analysis, reproducibility code and original frozen 88 generated inputs. The index distinguishes files included in Git from large local measurement archives. Research's [generated-88 benchmark](https://github.com/kabatan/geosolver/tree/research/benchmarks/generated-88) provides the inputs for the current evaluation runner.
+
 The [2026-09-08 archive](research-archives/2026-09-08/README.md) preserves the solver-improvement and GMB measurement records moved from `research`. Its manifest identifies the GeoSolver source commit; the GeoTarget implementation in this branch is not the measured source.

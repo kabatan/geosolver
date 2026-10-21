@@ -1,0 +1,51 @@
+{
+  "id": "UKMT-SMC-2023-05",
+  "variables": [
+    "x",
+    "y"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(6,0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(x,y)"
+    },
+    {
+      "name": "omegaA",
+      "expression": "Circle(A,3)"
+    },
+    {
+      "name": "omegaB",
+      "expression": "Circle(B,3)"
+    },
+    {
+      "name": "omegaC",
+      "expression": "Circle(C,2)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A,C)",
+      "operator": "=",
+      "right": 5
+    },
+    {
+      "left": "Distance(B,C)",
+      "operator": "=",
+      "right": 5
+    },
+    {
+      "left": "y",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Area(A,B,C)"
+}

@@ -1,0 +1,116 @@
+{
+  "id": "HMMT-NOV-2023-GUTS-29",
+  "variables": [
+    "x",
+    "y",
+    "r"
+  ],
+  "constructions": [
+    {
+      "name": "A0",
+      "expression": "Point(11*sqrt(3)*cos(0*pi/3),11*sqrt(3)*sin(0*pi/3))"
+    },
+    {
+      "name": "A1",
+      "expression": "Point(11*sqrt(3)*cos(1*pi/3),11*sqrt(3)*sin(1*pi/3))"
+    },
+    {
+      "name": "A2",
+      "expression": "Point(11*sqrt(3)*cos(2*pi/3),11*sqrt(3)*sin(2*pi/3))"
+    },
+    {
+      "name": "A3",
+      "expression": "Point(11*sqrt(3)*cos(3*pi/3),11*sqrt(3)*sin(3*pi/3))"
+    },
+    {
+      "name": "A4",
+      "expression": "Point(11*sqrt(3)*cos(4*pi/3),11*sqrt(3)*sin(4*pi/3))"
+    },
+    {
+      "name": "A5",
+      "expression": "Point(11*sqrt(3)*cos(5*pi/3),11*sqrt(3)*sin(5*pi/3))"
+    },
+    {
+      "name": "B0",
+      "expression": "Point(x+r*cos(0*pi/3),y+r*sin(0*pi/3))"
+    },
+    {
+      "name": "B1",
+      "expression": "Point(x+r*cos(1*pi/3),y+r*sin(1*pi/3))"
+    },
+    {
+      "name": "B2",
+      "expression": "Point(x+r*cos(2*pi/3),y+r*sin(2*pi/3))"
+    },
+    {
+      "name": "B3",
+      "expression": "Point(x+r*cos(3*pi/3),y+r*sin(3*pi/3))"
+    },
+    {
+      "name": "B4",
+      "expression": "Point(x+r*cos(4*pi/3),y+r*sin(4*pi/3))"
+    },
+    {
+      "name": "B5",
+      "expression": "Point(x+r*cos(5*pi/3),y+r*sin(5*pi/3))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(B0,Line(A0,A1))",
+      "operator": "=",
+      "right": 7
+    },
+    {
+      "left": "Distance(B1,Line(A1,A2))",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "Distance(B2,Line(A2,A3))",
+      "operator": "=",
+      "right": 8
+    },
+    {
+      "left": "r",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "r",
+      "operator": "<",
+      "right": "11*sqrt(3)"
+    },
+    {
+      "left": "(A1.x-A0.x)*(B0.y-A0.y)-(A1.y-A0.y)*(B0.x-A0.x)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "(A2.x-A1.x)*(B1.y-A1.y)-(A2.y-A1.y)*(B1.x-A1.x)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "(A3.x-A2.x)*(B2.y-A2.y)-(A3.y-A2.y)*(B2.x-A2.x)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "(A4.x-A3.x)*(B3.y-A3.y)-(A4.y-A3.y)*(B3.x-A3.x)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "(A5.x-A4.x)*(B4.y-A4.y)-(A5.y-A4.y)*(B4.x-A4.x)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "(A0.x-A5.x)*(B5.y-A5.y)-(A0.y-A5.y)*(B5.x-A5.x)",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "r"
+}

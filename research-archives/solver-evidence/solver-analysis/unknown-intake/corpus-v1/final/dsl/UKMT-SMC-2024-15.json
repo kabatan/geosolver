@@ -1,0 +1,60 @@
+{
+  "id": "UKMT-SMC-2024-15",
+  "variables": [
+    "s",
+    "t"
+  ],
+  "constructions": [
+    {
+      "name": "J",
+      "expression": "Point(0,s)"
+    },
+    {
+      "name": "K",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "L",
+      "expression": "Point(s,0)"
+    },
+    {
+      "name": "M",
+      "expression": "Point(s,s)"
+    },
+    {
+      "name": "N",
+      "expression": "Point(0,t)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(t,0)"
+    },
+    {
+      "name": "O",
+      "expression": "Point(t,t)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(N,L)",
+      "operator": "=",
+      "right": 10
+    },
+    {
+      "left": "Area(J,K,L,M)-Area(N,K,P,O)",
+      "operator": "=",
+      "right": 62
+    },
+    {
+      "left": "t",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "s",
+      "operator": ">",
+      "right": "t"
+    }
+  ],
+  "target": "Distance(K,N)"
+}

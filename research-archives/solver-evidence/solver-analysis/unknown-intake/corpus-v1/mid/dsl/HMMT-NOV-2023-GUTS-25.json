@@ -1,0 +1,81 @@
+{
+  "id": "HMMT-NOV-2023-GUTS-25",
+  "variables": [
+    "a",
+    "b",
+    "r"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(a,0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(0,b)"
+    },
+    {
+      "name": "O",
+      "expression": "Point(r,r)"
+    },
+    {
+      "name": "omega",
+      "expression": "Circle(O,r)"
+    },
+    {
+      "name": "X",
+      "expression": "Point(27*a/28,b/28)"
+    },
+    {
+      "name": "Y",
+      "expression": "Point(3*a/28,25*b/28)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(B,C)",
+      "operator": "=",
+      "right": 28
+    },
+    {
+      "left": "OnCircle(X,omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(Y,omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "a",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "b",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "r",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "r",
+      "operator": "<",
+      "right": "a"
+    },
+    {
+      "left": "r",
+      "operator": "<",
+      "right": "b"
+    }
+  ],
+  "target": "Area(A,B,C)"
+}

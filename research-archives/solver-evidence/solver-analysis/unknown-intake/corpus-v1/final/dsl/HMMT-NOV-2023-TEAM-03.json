@@ -1,0 +1,72 @@
+{
+  "id": "HMMT-NOV-2023-TEAM-03",
+  "variables": [
+    "x",
+    "y",
+    "z"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(-x,0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(x,0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(0,y)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(0,-y)"
+    },
+    {
+      "name": "E",
+      "expression": "Point(0,z)"
+    },
+    {
+      "name": "F",
+      "expression": "Point(0,-z)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Area(A,B,C,D)",
+      "operator": "=",
+      "right": 1
+    },
+    {
+      "left": "Area(A,E,C,F)",
+      "operator": "=",
+      "right": 9
+    },
+    {
+      "left": "y/x",
+      "operator": "=",
+      "right": "x/z"
+    },
+    {
+      "left": "x",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "y",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "z",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "y",
+      "operator": "<",
+      "right": "z"
+    }
+  ],
+  "target": "Distance(A,E)"
+}

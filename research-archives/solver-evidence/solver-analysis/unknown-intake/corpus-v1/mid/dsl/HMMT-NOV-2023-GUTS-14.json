@@ -1,0 +1,58 @@
+{
+  "id": "HMMT-NOV-2023-GUTS-14",
+  "variables": [
+    "b",
+    "c"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(5,b)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(6,c)"
+    },
+    {
+      "name": "D",
+      "expression": "Intersect(Line(B,C),Line(A,Point(1,0)))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Angle(B,A,D)",
+      "operator": "=",
+      "right": "Angle(D,A,C)"
+    },
+    {
+      "left": "b",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "c",
+      "operator": "<",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(D,B,C)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(D,B)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(D,C)",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Distance(A,D)"
+}

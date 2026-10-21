@@ -1,0 +1,563 @@
+{
+  "case_id": "HMMT-2013-FEB-GEO-04",
+  "seed": 0,
+  "audit": "read-only saved artifact and source comparison; no solve performed; CPU9 parsing only; CPU8 unused",
+  "conclusion": "Larger answer was absent from pre-refinement search proposals after existing optional positive-scale-chart CPU cutoff. Evidence does not show a new Newton branch losing an available larger-root candidate.",
+  "artifacts": {
+    "baseline": {
+      "artifact": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-20261011/final-public/runs/HMMT-2013-FEB-GEO-04/0.json",
+      "artifact_sha256": "0b64674f5e555e3647cbb798ee9c6c836a3475d37cab57bf4eb62183ffdda61f",
+      "source_hash": "sha256:f92ee9ba5bea9b124f19e79e95d89e47e66252fede326bb1a569eb1d318e969b",
+      "problem_hash": "ff29b50f0003192e9728d850506e9f1c53cdceab47afc8f739386a4c5df02962",
+      "outer_wall_seconds": 5.488475992984604,
+      "timed_out": false,
+      "solver_status": "solved",
+      "termination_reason": "answer_found",
+      "answers": [
+        {
+          "kind": "algebraic",
+          "value": {
+            "minimal_polynomial": [
+              "1",
+              "1",
+              "-1"
+            ],
+            "real_root_index": 1,
+            "isolating_interval": [
+              "555565404224292694404015791808/898923707008479989274290850145",
+              "898923707008479989274290850145/1454489111232772683678306641953"
+            ],
+            "decimal": "0.61803398874989484820458683436563811772030917980576"
+          }
+        },
+        {
+          "kind": "algebraic",
+          "value": {
+            "minimal_polynomial": [
+              "1",
+              "-1",
+              "-1"
+            ],
+            "real_root_index": 1,
+            "isolating_interval": [
+              "1454489111232772683678306641953/898923707008479989274290850145",
+              "2353412818241252672952597492098/1454489111232772683678306641953"
+            ],
+            "decimal": "1.6180339887498948482045868343656381177203091798058"
+          }
+        }
+      ],
+      "phase_timings": {
+        "phase_rescue": 0.0,
+        "phase_discrete_completion": 0.0,
+        "initial_probe": 0.022127648000605404,
+        "search": 1.655233112978749,
+        "refinement": 0.4101390430005267,
+        "exact_assembly": 2.610779517010087,
+        "discrete_completion": 8.130009518936276e-06,
+        "descriptors": 6.2699837144464254e-06,
+        "rescue": 0.0
+      },
+      "search": {
+        "evaluation_count": 203,
+        "failure_ratio": 0.0,
+        "selected_candidates": 23,
+        "all_record_count": 203,
+        "guard_feasible_record_count": 200,
+        "guard_feasible_ledger_count": 160,
+        "compact_candidate_count": 23,
+        "positive_scale_chart": {
+          "positive_variable": "r1",
+          "target_degree": 0,
+          "method": "rational_univariate_isolation",
+          "branch_count": 3,
+          "original_global_search_retained": true
+        }
+      },
+      "refinement": {
+        "attempted_count": 23,
+        "converged_count": 23,
+        "best_residual": "0.0",
+        "solver_name": "mpmath_refiner",
+        "hard_feasible_count": 22
+      },
+      "exact_assembly": {
+        "numeric_feasible_count": 9,
+        "accepted_count": 9,
+        "answer_values": [
+          "-1/2 + sqrt(5)/2",
+          "-1/2 + sqrt(5)/2",
+          "-1/2 + sqrt(5)/2",
+          "-1/2 + sqrt(5)/2",
+          "-1/2 + sqrt(5)/2",
+          "-1/2 + sqrt(5)/2",
+          "-1/2 + sqrt(5)/2",
+          "-1/2 + sqrt(5)/2",
+          "1/2 + sqrt(5)/2"
+        ],
+        "rejected_false_positive_count": 14,
+        "rejection_tags": [
+          "verification_unresolved",
+          "guard[4] returned False",
+          "domain_violation",
+          "domain_boundary_unresolved"
+        ]
+      },
+      "scale_chart_counters": {
+        "positive_scale_chart_imports_wall_microseconds": 17,
+        "positive_scale_chart_imports_cpu_microseconds": 0,
+        "positive_scale_chart_polynomial_conversion_wall_microseconds": 11484,
+        "positive_scale_chart_polynomial_conversion_cpu_microseconds": 11212,
+        "positive_scale_chart_affine_consequences_wall_microseconds": 404,
+        "positive_scale_chart_affine_consequences_cpu_microseconds": 0,
+        "positive_scale_chart_affine_elimination_wall_microseconds": 393,
+        "positive_scale_chart_affine_elimination_cpu_microseconds": 1010,
+        "positive_scale_chart_finite_elimination_wall_microseconds": 70105,
+        "positive_scale_chart_finite_elimination_cpu_microseconds": 61644,
+        "positive_scale_chart_root_isolation_wall_microseconds": 3103,
+        "positive_scale_chart_root_isolation_cpu_microseconds": 3009,
+        "positive_scale_chart_coordinate_reconstruction_wall_microseconds": 7139,
+        "positive_scale_chart_coordinate_reconstruction_cpu_microseconds": 6991,
+        "positive_scale_chart_proof_setup_wall_microseconds": 154,
+        "positive_scale_chart_proof_setup_cpu_microseconds": 0,
+        "positive_scale_chart_exact_guards_wall_microseconds": 103858,
+        "positive_scale_chart_exact_guards_cpu_microseconds": 90465,
+        "positive_scale_chart_norm_signs_wall_microseconds": 172156,
+        "positive_scale_chart_norm_signs_cpu_microseconds": 147395,
+        "positive_scale_chart_decimal_coordinates_wall_microseconds": 53317,
+        "positive_scale_chart_decimal_coordinates_cpu_microseconds": 49990,
+        "positive_scale_chart_branch_boxes_wall_microseconds": 52585,
+        "positive_scale_chart_branch_boxes_cpu_microseconds": 44868
+      },
+      "chart_observed_cpu_seconds": 0.416584,
+      "chart_observed_wall_seconds": 0.474715,
+      "exact_origins": [
+        {
+          "candidate_id": 9000000000062,
+          "origin": "nomad",
+          "minimal_polynomial": [
+            "1",
+            "1",
+            "-1"
+          ],
+          "root_index": 1,
+          "verification_history_count": 2
+        },
+        {
+          "candidate_id": 9000000000035,
+          "origin": "nomad",
+          "minimal_polynomial": [
+            "1",
+            "1",
+            "-1"
+          ],
+          "root_index": 1,
+          "verification_history_count": 2
+        },
+        {
+          "candidate_id": 9000000000101,
+          "origin": "nomad",
+          "minimal_polynomial": [
+            "1",
+            "1",
+            "-1"
+          ],
+          "root_index": 1,
+          "verification_history_count": 2
+        },
+        {
+          "candidate_id": 9000000000092,
+          "origin": "nomad",
+          "minimal_polynomial": [
+            "1",
+            "1",
+            "-1"
+          ],
+          "root_index": 1,
+          "verification_history_count": 2
+        },
+        {
+          "candidate_id": 9000000000099,
+          "origin": "nomad",
+          "minimal_polynomial": [
+            "1",
+            "1",
+            "-1"
+          ],
+          "root_index": 1,
+          "verification_history_count": 2
+        },
+        {
+          "candidate_id": 9000000000105,
+          "origin": "nomad",
+          "minimal_polynomial": [
+            "1",
+            "1",
+            "-1"
+          ],
+          "root_index": 1,
+          "verification_history_count": 2
+        },
+        {
+          "candidate_id": 9000000000041,
+          "origin": "nomad",
+          "minimal_polynomial": [
+            "1",
+            "1",
+            "-1"
+          ],
+          "root_index": 1,
+          "verification_history_count": 2
+        },
+        {
+          "candidate_id": 910000,
+          "origin": "positive_scale_chart",
+          "minimal_polynomial": [
+            "1",
+            "1",
+            "-1"
+          ],
+          "root_index": 1,
+          "verification_history_count": 2
+        },
+        {
+          "candidate_id": 910002,
+          "origin": "positive_scale_chart",
+          "minimal_polynomial": [
+            "1",
+            "-1",
+            "-1"
+          ],
+          "root_index": 1,
+          "verification_history_count": 2
+        }
+      ]
+    },
+    "campaign_v3": {
+      "artifact": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/refinement-fallback-public-seed0/runs/HMMT-2013-FEB-GEO-04/0.json",
+      "artifact_sha256": "7d690c22bf50f417faeb7d4bd38d698383ff339e3bb2d72b4d0e26b970461c00",
+      "source_hash": "sha256:3e1873d909a08ba77bd1bc1730e99d0f027f4f4d4555a0f5c7db18b7cb913a3c",
+      "problem_hash": "ff29b50f0003192e9728d850506e9f1c53cdceab47afc8f739386a4c5df02962",
+      "outer_wall_seconds": 8.127187737001805,
+      "timed_out": false,
+      "solver_status": "solved",
+      "termination_reason": "answer_found",
+      "answers": [
+        {
+          "kind": "algebraic",
+          "value": {
+            "minimal_polynomial": [
+              "1",
+              "1",
+              "-1"
+            ],
+            "real_root_index": 1,
+            "isolating_interval": [
+              "555565404224292694404015791808/898923707008479989274290850145",
+              "898923707008479989274290850145/1454489111232772683678306641953"
+            ],
+            "decimal": "0.61803398874989484820458683436563811772030917980576"
+          }
+        }
+      ],
+      "phase_timings": {
+        "phase_rescue": 0.0,
+        "phase_discrete_completion": 0.0,
+        "initial_probe": 0.017487208999227732,
+        "search": 2.4049264610221144,
+        "refinement": 0.6789275789924432,
+        "exact_assembly": 3.905769485019846,
+        "discrete_completion": 1.2230011634528637e-05,
+        "descriptors": 9.490002412348986e-06,
+        "rescue": 0.0
+      },
+      "search": {
+        "evaluation_count": 200,
+        "failure_ratio": 0.0,
+        "selected_candidates": 20,
+        "all_record_count": 200,
+        "guard_feasible_record_count": 200,
+        "guard_feasible_ledger_count": 160,
+        "compact_candidate_count": 20
+      },
+      "refinement": {
+        "attempted_count": 20,
+        "converged_count": 20,
+        "best_residual": "5.20315474280029775888073230026200947649775001104954605062873489664621816914148863056294130630649009256345675027504183903501146015147986735684440768044407785579809259688980455191033e-489",
+        "solver_name": "mpmath_refiner",
+        "hard_feasible_count": 20
+      },
+      "exact_assembly": {
+        "numeric_feasible_count": 7,
+        "accepted_count": 7,
+        "answer_values": [
+          "-1/2 + sqrt(5)/2",
+          "-1/2 + sqrt(5)/2",
+          "-1/2 + sqrt(5)/2",
+          "-1/2 + sqrt(5)/2",
+          "-1/2 + sqrt(5)/2",
+          "-1/2 + sqrt(5)/2",
+          "-1/2 + sqrt(5)/2"
+        ],
+        "rejected_false_positive_count": 13,
+        "rejection_tags": [
+          "verification_unresolved",
+          "domain_boundary_unresolved"
+        ]
+      },
+      "scale_chart_counters": {
+        "positive_scale_chart_stop_inner_cpu_timeout": 1,
+        "positive_scale_chart_interrupted_branch_boxes": 1,
+        "positive_scale_chart_imports_wall_microseconds": 29,
+        "positive_scale_chart_imports_cpu_microseconds": 0,
+        "positive_scale_chart_polynomial_conversion_wall_microseconds": 13147,
+        "positive_scale_chart_polynomial_conversion_cpu_microseconds": 12853,
+        "positive_scale_chart_affine_consequences_wall_microseconds": 486,
+        "positive_scale_chart_affine_consequences_cpu_microseconds": 0,
+        "positive_scale_chart_affine_elimination_wall_microseconds": 424,
+        "positive_scale_chart_affine_elimination_cpu_microseconds": 1007,
+        "positive_scale_chart_finite_elimination_wall_microseconds": 89162,
+        "positive_scale_chart_finite_elimination_cpu_microseconds": 73623,
+        "positive_scale_chart_root_isolation_wall_microseconds": 6953,
+        "positive_scale_chart_root_isolation_cpu_microseconds": 3623,
+        "positive_scale_chart_coordinate_reconstruction_wall_microseconds": 11217,
+        "positive_scale_chart_coordinate_reconstruction_cpu_microseconds": 8638,
+        "positive_scale_chart_proof_setup_wall_microseconds": 279,
+        "positive_scale_chart_proof_setup_cpu_microseconds": 133,
+        "positive_scale_chart_exact_guards_wall_microseconds": 127572,
+        "positive_scale_chart_exact_guards_cpu_microseconds": 107030,
+        "positive_scale_chart_norm_signs_wall_microseconds": 217893,
+        "positive_scale_chart_norm_signs_cpu_microseconds": 180029,
+        "positive_scale_chart_decimal_coordinates_wall_microseconds": 58615,
+        "positive_scale_chart_decimal_coordinates_cpu_microseconds": 57119,
+        "positive_scale_chart_branch_boxes_wall_microseconds": 61154,
+        "positive_scale_chart_branch_boxes_cpu_microseconds": 51205
+      },
+      "chart_observed_cpu_seconds": 0.49526,
+      "chart_observed_wall_seconds": 0.586931,
+      "exact_origins": [
+        {
+          "candidate_id": 9000000000062,
+          "origin": "nomad",
+          "minimal_polynomial": [
+            "1",
+            "1",
+            "-1"
+          ],
+          "root_index": 1,
+          "verification_history_count": 2
+        },
+        {
+          "candidate_id": 9000000000035,
+          "origin": "nomad",
+          "minimal_polynomial": [
+            "1",
+            "1",
+            "-1"
+          ],
+          "root_index": 1,
+          "verification_history_count": 2
+        },
+        {
+          "candidate_id": 9000000000101,
+          "origin": "nomad",
+          "minimal_polynomial": [
+            "1",
+            "1",
+            "-1"
+          ],
+          "root_index": 1,
+          "verification_history_count": 2
+        },
+        {
+          "candidate_id": 9000000000092,
+          "origin": "nomad",
+          "minimal_polynomial": [
+            "1",
+            "1",
+            "-1"
+          ],
+          "root_index": 1,
+          "verification_history_count": 2
+        },
+        {
+          "candidate_id": 9000000000099,
+          "origin": "nomad",
+          "minimal_polynomial": [
+            "1",
+            "1",
+            "-1"
+          ],
+          "root_index": 1,
+          "verification_history_count": 2
+        },
+        {
+          "candidate_id": 9000000000105,
+          "origin": "nomad",
+          "minimal_polynomial": [
+            "1",
+            "1",
+            "-1"
+          ],
+          "root_index": 1,
+          "verification_history_count": 2
+        },
+        {
+          "candidate_id": 9000000000041,
+          "origin": "nomad",
+          "minimal_polynomial": [
+            "1",
+            "1",
+            "-1"
+          ],
+          "root_index": 1,
+          "verification_history_count": 2
+        }
+      ]
+    }
+  },
+  "candidate_comparison": {
+    "same_nomad_candidate_ids": true,
+    "same_nomad_initial_float_coordinates": true,
+    "same_nomad_converged_answer_branch": true,
+    "same_nomad_final_admission": true,
+    "baseline_only_candidate_ids": [
+      910000,
+      910001,
+      910002
+    ],
+    "all_nomad_accepted_answer_polynomial": [
+      "1",
+      "1",
+      "-1"
+    ],
+    "nomad_accepted_count": 7
+  },
+  "source_equality": [
+    {
+      "file": "src/geosolver/engine/standard/search/scale_chart.py",
+      "identical": true,
+      "sha256": "4946169bb678034635bfa28c3ecae48311e7f56a44de8f12a7796fa7bb8f16a9"
+    },
+    {
+      "file": "src/geosolver/engine/standard/search/algebraic_branches.py",
+      "identical": true,
+      "sha256": "22b5b7e11646e5d44c9166fe2df69ea5fd258973612e94fb119a1d9a3abe33a7"
+    },
+    {
+      "file": "src/geosolver/engine/standard/search/algebraic_branch_boxes.py",
+      "identical": true,
+      "sha256": "fc56a629eea5ee60d9b61469dbfcfa0c6ebfef6a355254a5b1e8181bd4557751"
+    },
+    {
+      "file": "src/geosolver/engine/standard/search/cartesian_polynomials.py",
+      "identical": true,
+      "sha256": "ed1e930ed1227cb29177f2aa0a655a6d86f056923afb437f224bdec1645ceaed"
+    },
+    {
+      "file": "src/geosolver/engine/standard/orchestration/run_search.py",
+      "identical": true,
+      "sha256": "1a0cd8196e13aef315fee95d8e995f25f1db4566be61dc517e77b3a7e911ebaa"
+    }
+  ],
+  "budget": {
+    "inner_cpu_seconds": 0.5,
+    "outer_wall_seconds": 1.5,
+    "limit_source": "baseline-source/src/geosolver/engine/standard/search/algebraic_branches.py:481",
+    "outer_source": "baseline-source/src/geosolver/engine/standard/search/scale_chart.py:41",
+    "interrupted_phase": "branch_boxes",
+    "observed_event": "positive_scale_chart_stop_inner_cpu_timeout=1; positive_scale_chart_interrupted_branch_boxes=1",
+    "all_or_nothing": "AlgebraicWorkLimit catch returnsNone; scale_chart returnsNone without proposals. No partial discovery branch points survive."
+  },
+  "causal_order": "run_search.run_search calls scale chart before global search batch and all local refinement; files controlling this stage are byte-identical between baseline andcampaignv3. Changed Newton arithmetic therefore did not directly execute before or inside the interrupted stage.",
+  "lost_branch": "Baseline candidate910002 origin positive_scale_chart is the only accepted witness for polynomial x\u00b2\u2212x\u22121 positive root1.618; chart910000 supplies redundant smaller root and chart910001 answer1 fails original admission. Campaign lacks all910000..910002, leaving same20NOMAD sources and same7smaller-root admissions.",
+  "paired_same_core_followup": {
+    "path": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/newton-root-loss-diagnostic/records.jsonl",
+    "results": [
+      {
+        "variant": "baseline-source",
+        "outer_wall_seconds": 6.6948015190137085,
+        "answer_count": 2,
+        "answer_polynomials": [
+          [
+            "1",
+            "1",
+            "-1"
+          ],
+          [
+            "1",
+            "-1",
+            "-1"
+          ]
+        ],
+        "chart_stop_counters": {},
+        "chart_cpu_seconds": 0.451787
+      },
+      {
+        "variant": "refinement-fallback-v4-source",
+        "outer_wall_seconds": 6.392938278004294,
+        "answer_count": 2,
+        "answer_polynomials": [
+          [
+            "1",
+            "1",
+            "-1"
+          ],
+          [
+            "1",
+            "-1",
+            "-1"
+          ]
+        ],
+        "chart_stop_counters": {},
+        "chart_cpu_seconds": 0.44164
+      },
+      {
+        "variant": "refinement-fallback-v4-source",
+        "outer_wall_seconds": 6.324198566027917,
+        "answer_count": 2,
+        "answer_polynomials": [
+          [
+            "1",
+            "1",
+            "-1"
+          ],
+          [
+            "1",
+            "-1",
+            "-1"
+          ]
+        ],
+        "chart_stop_counters": {},
+        "chart_cpu_seconds": 0.440586
+      },
+      {
+        "variant": "baseline-source",
+        "outer_wall_seconds": 6.643331194994971,
+        "answer_count": 2,
+        "answer_polynomials": [
+          [
+            "1",
+            "1",
+            "-1"
+          ],
+          [
+            "1",
+            "-1",
+            "-1"
+          ]
+        ],
+        "chart_stop_counters": {},
+        "chart_cpu_seconds": 0.429825
+      }
+    ],
+    "interpretation": "All4baseline/v4 ABBA runs return both roots and complete chart with .429825\u2013.451787 CPU seconds, supporting budget-boundary variability rather than deterministic Newton branch regression."
+  },
+  "prior_relation": "Matches the previously observed supplemental-scale-chart timeout class. Independently recorded in evaluation-negative-receipt.json slice experiment: same baseline hash sometimes returns1descriptor/20candidates when chart does not complete, versus2descriptors/23candidates when it completes. No need to infer a new geometry or Newton branch rule.",
+  "recommendation": "Report campaign answer-set mismatch transparently as optional-search CPU-budget confound and retain paired followup. Do not treat this case as equal-work speed evidence or weaken CPU budget/final verification.",
+  "limitations": [
+    "The saved artifacts identify the precise cutoff and missing proposal path, but do not identify hardware frequency/cache/process-state cause of .416584\u2192.495260 observed CPU time.",
+    "Same-core ABBA usesv4 while fullcampaign artifact usesv3; v4 adds only fallback-J deadline wrapper after the unchanged search stage.",
+    "No source files changed, no fresh holdout accessed."
+  ]
+}

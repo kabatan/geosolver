@@ -1,0 +1,44 @@
+{
+  "id": "UKMT-SMC-2023-23",
+  "variables": [],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(3,0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(3,1)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(0,1)"
+    },
+    {
+      "name": "M",
+      "expression": "Midpoint(A,C)"
+    },
+    {
+      "name": "fold",
+      "expression": "PerpendicularLine(Line(A,C),M)"
+    },
+    {
+      "name": "E",
+      "expression": "Intersect(fold,Line(A,B))"
+    },
+    {
+      "name": "F",
+      "expression": "Intersect(fold,Line(D,C))"
+    },
+    {
+      "name": "Dp",
+      "expression": "Reflect(D,fold)"
+    }
+  ],
+  "conditions": [],
+  "target": "Area(E,B,C,Dp,F)/Area(A,B,C,D)"
+}

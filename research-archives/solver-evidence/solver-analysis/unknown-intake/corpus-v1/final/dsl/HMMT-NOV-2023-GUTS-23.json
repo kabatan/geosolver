@@ -1,0 +1,69 @@
+{
+  "id": "HMMT-NOV-2023-GUTS-23",
+  "variables": [
+    "x",
+    "y"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(4,1/4)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(-5,-1/5)"
+    },
+    {
+      "name": "O",
+      "expression": "Midpoint(A,B)"
+    },
+    {
+      "name": "omega",
+      "expression": "Circle(O,Distance(A,B)/2)"
+    },
+    {
+      "name": "X",
+      "expression": "Point(x,1/x)"
+    },
+    {
+      "name": "Y",
+      "expression": "Point(y,1/y)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "OnCircle(X,omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(Y,omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "x",
+      "operator": "<",
+      "right": "y"
+    },
+    {
+      "predicate": "x != 0"
+    },
+    {
+      "predicate": "x != 4"
+    },
+    {
+      "predicate": "x != -5"
+    },
+    {
+      "predicate": "y != 0"
+    },
+    {
+      "predicate": "y != 4"
+    },
+    {
+      "predicate": "y != -5"
+    }
+  ],
+  "target": "Distance(X,Y)"
+}

@@ -1,0 +1,80 @@
+{
+  "id": "HMMT-NOV-2023-GUTS-05",
+  "variables": [
+    "b",
+    "cx",
+    "cy",
+    "dx",
+    "dy",
+    "ex",
+    "ey"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(b,0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx,cy)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(dx,dy)"
+    },
+    {
+      "name": "E",
+      "expression": "Point(ex,ey)"
+    },
+    {
+      "name": "M0",
+      "expression": "Midpoint(A,B)"
+    },
+    {
+      "name": "M1",
+      "expression": "Midpoint(B,C)"
+    },
+    {
+      "name": "M2",
+      "expression": "Midpoint(C,D)"
+    },
+    {
+      "name": "M3",
+      "expression": "Midpoint(D,E)"
+    },
+    {
+      "name": "M4",
+      "expression": "Midpoint(E,A)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A,B)+Distance(B,C)+Distance(C,D)+Distance(D,E)+Distance(E,A)",
+      "operator": "=",
+      "right": 64
+    },
+    {
+      "left": "Distance(A,C)+Distance(C,E)+Distance(E,B)+Distance(B,D)+Distance(D,A)",
+      "operator": "=",
+      "right": 72
+    },
+    {
+      "predicate": "ConvexPolygon([A,B,C,D,E])"
+    },
+    {
+      "left": "b",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Distance(M0,M1)+Distance(M1,M2)+Distance(M2,M3)+Distance(M3,M4)+Distance(M4,M0)"
+}

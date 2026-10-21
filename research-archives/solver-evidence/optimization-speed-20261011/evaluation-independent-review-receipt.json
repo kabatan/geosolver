@@ -1,0 +1,108 @@
+{
+  "role": "independent numerical/verification review; no implementation sources edited",
+  "main_source_modified": false,
+  "fresh_holdout_read": false,
+  "armijo": {
+    "review_snapshot": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/evaluation-review-armijo-source",
+    "source_hash": "sha256:46746c91bd039794957e170234f66d497772139432b1be60095978a65031efbf",
+    "reviewed_files": [
+      "src/geosolver/engine/standard/refinement/newton_line_search.py",
+      "src/geosolver/engine/standard/refinement/mpmath_refiner.py"
+    ],
+    "added_test": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/evaluation-review-armijo-source/tests/test_independent_newton_review.py",
+    "tests": [
+      {
+        "path": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/evaluation-review-armijo-source/independent-newton.xml",
+        "suites": [
+          {
+            "name": "pytest",
+            "errors": "0",
+            "failures": "2",
+            "skipped": "0",
+            "tests": "16",
+            "time": "0.242",
+            "timestamp": "2026-10-11T17:54:35.971342+09:00",
+            "hostname": "kabatan-superPC"
+          }
+        ],
+        "failed_tests": [
+          "test_preexpired_direct_helper_does_not_evaluate_callback",
+          "test_final_recheck_nan_is_a_rejection"
+        ]
+      },
+      {
+        "path": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/evaluation-review-armijo-source/independent-armijo-regression.xml",
+        "suites": [
+          {
+            "name": "pytest",
+            "errors": "0",
+            "failures": "0",
+            "skipped": "0",
+            "tests": "34",
+            "time": "1.082",
+            "timestamp": "2026-10-11T17:58:07.785530+09:00",
+            "hostname": "kabatan-superPC"
+          }
+        ],
+        "failed_tests": []
+      }
+    ],
+    "findings": [
+      {
+        "id": "A1",
+        "file": "src/geosolver/engine/standard/refinement/newton_line_search.py",
+        "line": 74,
+        "severity": "private helper deadline hardening",
+        "evidence": "Preexpired global runtime deadline causes two residual callbacks before TimeoutError; no entry checkpoint before initial residual evaluations.",
+        "recommended_fix": "check_deadline before helper callback and iterator initial evaluation.",
+        "production_boundary": "Production callbacks independently check global/closure deadline; no production cutoff violation demonstrated."
+      },
+      {
+        "id": "A2",
+        "file": "src/geosolver/engine/standard/refinement/newton_line_search.py",
+        "line": 86,
+        "severity": "private helper nonfinite final recheck",
+        "evidence": "Stateful callback becomes NaN on final reevaluation; comparison NaN**2 > tol is false, helper returns root.",
+        "recommended_fix": "Evaluate final norm once and require mp.isfinite(final_norm) before tolerance comparison.",
+        "production_boundary": "Caller certify re-evaluates all original residuals and requires finite vector norm; subset, bounds and nonfinite admission remain protected."
+      }
+    ],
+    "assessment": "Real least-squares Armijo derivative and sufficient-decrease sign are correct. Trial finiteness, descent rejection, bounded backtracks and timeout propagation retained. Recommend fix A1/A2 before integration, then rerun adversarial tests. No performance adoption recommendation made.",
+    "retention": "34 existing regression tests pass, including interruption during LM and later closure timeout retaining last completed point and precision. New iterator raises Timeout rather than returning unfinished Newton point; full-source certify and rank-aware fallback unchanged."
+  },
+  "elementary_derivatives": {
+    "review_snapshot": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/evaluation-review-analytic-source",
+    "source_hash": "sha256:f7ae7c25eb101fe55cf096bf70a76e35d836b78d082396ef8c9c2577dcbf12e9",
+    "reviewed_files": [
+      "src/geosolver/engine/standard/refinement/analytic_jacobian.py"
+    ],
+    "added_test": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/evaluation-review-analytic-source/tests/test_independent_elementary_review.py",
+    "tests": [
+      {
+        "path": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/evaluation-review-analytic-source/independent-elementary.xml",
+        "suites": [
+          {
+            "name": "pytest",
+            "errors": "0",
+            "failures": "0",
+            "skipped": "0",
+            "tests": "83",
+            "time": "1.119",
+            "timestamp": "2026-10-11T17:57:45.984034+09:00",
+            "hostname": "kabatan-superPC"
+          }
+        ],
+        "failed_tests": []
+      }
+    ],
+    "assessment": "83 tests pass (38 independent added +45 existing). No incorrect smooth-branch derivative, swallowed global deadline or bypass of original residual certification found.",
+    "checked": "Point unsigned Angle against native atan2 derivative on rotated rays in four quadrants; acute line Angle under orientation reversal; 80/180/500dps; near-parallel conditioning; smooth cos(Angle) at collinearity; nonfinite inputs; precision restoration; evaluation-error decline; ordinary Timeout propagation; numeric-Jacobian fallback then certification of both original residual rows.",
+    "limits": "Angle acos lowering can lose precision near parallel rays and decline at nondifferentiable/degenerate cases. Optional derivative is not domain authority. Branch/denominator simplification can yield finite derivatives at a canceled domain hole, but original residual evaluation and certification remain mandatory. No corpus-wide runtime claim from these tests."
+  },
+  "commands": "taskset -c 8 or9 env PYTHONPATH=<absolute review snapshot>/src /home/kabatan/work/solver/.venv/bin/python -m pytest; no dependency sync",
+  "negative_experiments_receipt": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/evaluation-negative-receipt.json",
+  "limits": [
+    "Focused solver tests only; no new holdout access or whole-corpus speed assessment in independent review.",
+    "Initial analytic review command had wrong import path, fixed test-only before successful run; initial Armijo regression command referenced nonexistent test_newton_line_search.py, corrected to test_newton_warm_start.py."
+  ]
+}

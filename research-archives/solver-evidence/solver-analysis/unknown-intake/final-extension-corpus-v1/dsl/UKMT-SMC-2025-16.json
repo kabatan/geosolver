@@ -1,0 +1,82 @@
+{
+  "id": "UKMT-SMC-2025-16",
+  "variables": [
+    "x",
+    "y",
+    "s"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(x,y)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(s,0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(s,s)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(0,s)"
+    },
+    {
+      "name": "omega",
+      "expression": "Circle(O,2)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "IsTangent(Line(A,B),omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(Line(A,D),omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(Line(B,D),omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "x",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "y",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "s",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "x",
+      "operator": "<",
+      "right": "s"
+    },
+    {
+      "left": "y",
+      "operator": "<",
+      "right": "s"
+    },
+    {
+      "left": "x+y",
+      "operator": "<",
+      "right": "s"
+    }
+  ],
+  "target": "Distance(A,B)"
+}

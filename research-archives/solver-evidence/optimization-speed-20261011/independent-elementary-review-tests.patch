@@ -1,0 +1,130 @@
+--- /dev/null
++++ b/tests/test_independent_elementary_review.py
+@@ -0,0 +1,127 @@
++"""Independent branch, conditioning and fallback review of optional derivatives."""
++import pytest
++from mpmath import mp
++
++from geosolver.engine.standard.evaluation.ir_evaluator import build_ir_evaluator
++from geosolver.engine.standard.precision.type_guards.high_precision_mode import high_precision_mode
++from geosolver.engine.standard.refinement import analytic_jacobian as analytic
++from geosolver.engine.standard.refinement import mpmath_refiner as refinement
++from geosolver.engine.standard.problem.load_problem_bundle import load_problem_bundle
++
++
++@pytest.fixture(autouse=True)
++def hp_mode():
++    with high_precision_mode():
++        yield
++
++
++@pytest.mark.parametrize("dps", [80, 180, 500])
++@pytest.mark.parametrize("x,y", [(7, 11), (-7, 11), (-7, -11), (7, -11)])
++def test_rotated_point_angle_matches_native_atan2_derivative(dps, x, y):
++    plan = analytic.compile_jacobian((("x", "y"), (), (
++        "Angle(Point(2,3),Point(-1,-2),Point(x,y))",
++    ), ("0",)))
++    assert plan is not None
++    with mp.workdps(dps):
++        xx, yy = mp.mpf(x), mp.mpf(y)
++        def original(a, b):
++            u, v = a+1, b+2
++            return mp.atan2(abs(3*v-5*u), 3*u+5*v)
++        expected = [mp.diff(lambda a: original(a, yy), xx),
++                    mp.diff(lambda b: original(xx, b), yy)]
++        actual = analytic.evaluate_jacobian(plan, [xx, yy], dps)
++        assert actual is not None
++        assert max(abs(a-b) for a, b in zip(actual[0], expected)) < mp.power(10, -dps+8)
++
++
++@pytest.mark.parametrize("dps", [80, 180, 500])
++@pytest.mark.parametrize("orientation", [1, -1])
++def test_line_orientation_reversal_matches_native_acute_angle(dps, orientation):
++    plan = analytic.compile_jacobian((("x", "y"), (), (
++        f"Angle(Line({3*orientation},{5*orientation},7),Line(x,y,-11))",
++    ), ("0",)))
++    assert plan is not None
++    with mp.workdps(dps):
++        xx, yy = mp.mpf(-7), mp.mpf(11)
++        def original(a, b):
++            return mp.atan2(abs(3*b-5*a), abs(3*a+5*b))
++        expected = [mp.diff(lambda a: original(a, yy), xx),
++                    mp.diff(lambda b: original(xx, b), yy)]
++        actual = analytic.evaluate_jacobian(plan, [xx, yy], dps)
++        assert actual is not None
++        assert max(abs(a-b) for a, b in zip(actual[0], expected)) < mp.power(10, -dps+8)
++
++
++@pytest.mark.parametrize("dps,exponent", [(80, 20), (180, 60), (500, 180)])
++@pytest.mark.parametrize("sign", [1, -1])
++def test_near_parallel_angle_either_declines_or_has_conditioned_correct_derivative(dps, exponent, sign):
++    plan = analytic.compile_jacobian((("x", "y"), (), (
++        "Angle(Point(1,0),Point(0,0),Point(x,y))",
++    ), ("0",)))
++    with mp.workdps(dps):
++        y = sign*mp.power(10, -exponent)
++        actual = analytic.evaluate_jacobian(plan, [mp.mpf(1), y], dps)
++        if actual is not None:
++            expected = [-sign*y/(1+y*y), sign/(1+y*y)]
++            # acos loses about twice the small-angle decimal exponent here.
++            assert max(abs(a-b) for a, b in zip(actual[0], expected)) < mp.power(10, -dps+2*exponent+8)
++
++
++@pytest.mark.parametrize("dps", [80, 180, 500])
++def test_cos_of_angle_has_smooth_derivative_at_collinear_nonzero_rays(dps):
++    plan = analytic.compile_jacobian((("x", "y"), (), (
++        "cos(Angle(Point(1,0),Point(0,0),Point(x,y)))",
++    ), ("0",)))
++    assert plan is not None
++    for x in (-1, 1):
++        assert analytic.evaluate_jacobian(plan, [mp.mpf(x), mp.mpf(0)], dps) == [[0, 0]]
++
++
++@pytest.mark.parametrize("expression", [
++    "Angle(Point(1,0),Point(0,0),Point(x,y))",
++    "tan(Angle(Point(1,0),Point(0,0),Point(x,y)))",
++    "sin(x)+cos(y)+tan(x-y)",
++])
++@pytest.mark.parametrize("bad", [mp.inf, mp.ninf, mp.nan])
++def test_nonfinite_geometry_and_elementary_inputs_decline(expression, bad):
++    plan = analytic.compile_jacobian((("x", "y"), (), (expression,), ("0",)))
++    assert plan is not None
++    assert analytic.evaluate_jacobian(plan, [bad, mp.mpf(1)], 180) is None
++
++
++def test_evaluation_failure_restores_precision_and_deadline_is_not_swallowed(monkeypatch):
++    plan = analytic.compile_jacobian((("x", "y"), (), ("sin(x)+cos(y)",), ("0",)))
++    initial = mp.prec
++    def failure(*args):
++        raise ValueError("optional derivative cannot be evaluated")
++    monkeypatch.setattr(analytic, "safe_eval_expr_hp", failure)
++    assert analytic.evaluate_jacobian(plan, [mp.mpf(1), mp.mpf(2)], 180) is None
++    assert mp.prec == initial
++    def timeout(*args):
++        raise TimeoutError("deadline during elementary expression")
++    monkeypatch.setattr(analytic, "safe_eval_expr_hp", timeout)
++    with pytest.raises(TimeoutError):
++        analytic.evaluate_jacobian(plan, [mp.mpf(1), mp.mpf(2)], 180)
++    assert mp.prec == initial
++
++
++def test_declined_elementary_derivative_falls_back_and_certifies_original_rows(monkeypatch):
++    evaluator = build_ir_evaluator(load_problem_bundle({
++        "task": "solve", "variables": {"names": ["x", "y"]},
++        "constraints": ["sin(x)+y-2", "x-y-1"], "answer": "x+y",
++    }))
++    calls = []
++    def decline(*args):
++        calls.append(1)
++        return None
++    monkeypatch.setattr(refinement, "evaluate_jacobian", decline)
++    with mp.workdps(180):
++        result = refinement._run_findroot_closure(
++            evaluator=evaluator, start_point=[mp.mpf("1.5"), mp.mpf("0.5")],
++            bounds=((None, None),)*2, dps=120, target_residual=mp.mpf("1e-85"),
++            solver_tolerance=mp.mpf("1e-170"), max_steps=40,
++        )
++        assert calls and result is not None
++        checked = evaluator.evaluate_hp_residual(result[0], precision=120)
++        assert len(checked.residual_vector) == 2
++        assert max(map(abs, checked.residual_vector)) < mp.mpf("1e-85")

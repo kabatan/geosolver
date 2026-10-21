@@ -1,0 +1,67 @@
+{
+  "id": "CEMC-EUCLID-2023-05B",
+  "variables": [
+    "a",
+    "b",
+    "u"
+  ],
+  "constructions": [
+    {
+      "name": "Q",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(a,0)"
+    },
+    {
+      "name": "R",
+      "expression": "Point(b*cos(pi/3),b*sin(pi/3))"
+    },
+    {
+      "name": "S",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "T",
+      "expression": "Point(a*cos(pi/6),a*sin(pi/6))"
+    },
+    {
+      "name": "U",
+      "expression": "Point(u,0)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(P,R)",
+      "operator": "=",
+      "right": 21
+    },
+    {
+      "left": "Distance(T,U)",
+      "operator": "=",
+      "right": "b"
+    },
+    {
+      "left": "sin(Angle(T,U,S))",
+      "operator": "=",
+      "right": "4/5"
+    },
+    {
+      "left": "a",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "b",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "u",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "a+b"
+}

@@ -1,0 +1,104 @@
+{
+  "id": "HMMT-NOV-2023-GUTS-17",
+  "variables": [
+    "x",
+    "y",
+    "r"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(15,0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(15/2,15*sqrt(3)/2)"
+    },
+    {
+      "name": "Ab",
+      "expression": "Point(3,0)"
+    },
+    {
+      "name": "Ac",
+      "expression": "Point(3/2,3*sqrt(3)/2)"
+    },
+    {
+      "name": "Ba",
+      "expression": "Point(11,0)"
+    },
+    {
+      "name": "Bc",
+      "expression": "Point(13,2*sqrt(3))"
+    },
+    {
+      "name": "Ca",
+      "expression": "Point(5,5*sqrt(3))"
+    },
+    {
+      "name": "Cb",
+      "expression": "Point(10,5*sqrt(3))"
+    },
+    {
+      "name": "O",
+      "expression": "Point(x,y)"
+    },
+    {
+      "name": "omega",
+      "expression": "Circle(O,r)"
+    },
+    {
+      "name": "F0",
+      "expression": "ClosestPoint(O,Line(Ab,Ac))"
+    },
+    {
+      "name": "F1",
+      "expression": "ClosestPoint(O,Line(Ba,Bc))"
+    },
+    {
+      "name": "F2",
+      "expression": "ClosestPoint(O,Line(Ca,Cb))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "IsTangent(Line(Ab,Ac),omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(Line(Ba,Bc),omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(Line(Ca,Cb),omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(F0,Ab,Ac)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(F1,Ba,Bc)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(F2,Ca,Cb)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "r",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "r"
+}

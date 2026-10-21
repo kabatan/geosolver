@@ -1,0 +1,151 @@
+{
+  "id": "CEMC-EG-08",
+  "variables": [
+    "a",
+    "theta"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "omega",
+      "expression": "Circle(O,1)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(-1,0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(-1,a)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(-1,-a-1)"
+    },
+    {
+      "name": "E",
+      "expression": "Point(cos(theta),sin(theta))"
+    },
+    {
+      "name": "V",
+      "expression": "Point(A.x+sin(35*pi/180),A.y-cos(35*pi/180))"
+    },
+    {
+      "name": "F",
+      "expression": "Intersect(Line(A,V),PerpendicularLine(Line(O,E),E))"
+    },
+    {
+      "name": "P",
+      "expression": "Intersect(Line(A,F),omega,near=A)"
+    },
+    {
+      "name": "R",
+      "expression": "Intersect(Line(A,F),omega,far=A)"
+    },
+    {
+      "name": "Q",
+      "expression": "Intersect(Line(A,F),Line(B,E))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Angle(E,F,A)",
+      "operator": "=",
+      "right": "30*pi/180"
+    },
+    {
+      "left": "Angle(F,P,E)",
+      "operator": "=",
+      "right": "25*pi/180"
+    },
+    {
+      "left": "a",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "theta",
+      "operator": ">",
+      "right": "-pi"
+    },
+    {
+      "left": "theta",
+      "operator": "<",
+      "right": "pi"
+    },
+    {
+      "left": "Distance(B,E)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(A,F),Vector(A,V))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(P,A,F)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(P,A)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(P,F)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(R,P,F)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(R,P)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(R,F)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(Q,P,R)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(Q,P)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(Q,R)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(Q,B,E)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(Q,B)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(Q,E)",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Angle(P,E,Q)*180/pi"
+}

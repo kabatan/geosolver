@@ -1,0 +1,29 @@
+{
+  "id": "oriented_similarity_target-2-form0",
+  "variables": [
+    "x",
+    "y"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(4,8)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(4+x,8+y)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(4-9*y,8+9*x)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(O,A)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "Area(O,A,B)/Distance(O,A)**2"
+}

@@ -1,0 +1,118 @@
+{
+  "id": "UKMT-SMC-2023-24",
+  "variables": [
+    "x",
+    "y",
+    "s"
+  ],
+  "constructions": [
+    {
+      "name": "H0",
+      "expression": "Point((1)*cos(2*0*pi/6),(1)*sin(2*0*pi/6))"
+    },
+    {
+      "name": "H1",
+      "expression": "Point((1)*cos(2*1*pi/6),(1)*sin(2*1*pi/6))"
+    },
+    {
+      "name": "H2",
+      "expression": "Point((1)*cos(2*2*pi/6),(1)*sin(2*2*pi/6))"
+    },
+    {
+      "name": "H3",
+      "expression": "Point((1)*cos(2*3*pi/6),(1)*sin(2*3*pi/6))"
+    },
+    {
+      "name": "H4",
+      "expression": "Point((1)*cos(2*4*pi/6),(1)*sin(2*4*pi/6))"
+    },
+    {
+      "name": "H5",
+      "expression": "Point((1)*cos(2*5*pi/6),(1)*sin(2*5*pi/6))"
+    },
+    {
+      "name": "A",
+      "expression": "Point(x-s/2,y+s/2)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(x+s/2,y+s/2)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(x+s/2,y-s/2)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(x-s/2,y-s/2)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "OnSegment(A,H2,H3)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(A,H2)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(A,H3)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(B,H0,H1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(B,H0)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(B,H1)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(C,H5,H0)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(C,H5)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(C,H0)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(D,H3,H4)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(D,H3)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(D,H4)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "s",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "s"
+}

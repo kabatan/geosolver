@@ -1,0 +1,143 @@
+{
+  "id": "HMMT-NOV-2025-GEN-08",
+  "variables": [
+    "a",
+    "b",
+    "alpha",
+    "beta"
+  ],
+  "constructions": [
+    {
+      "name": "P",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "Q",
+      "expression": "Point(0,10)"
+    },
+    {
+      "name": "O1",
+      "expression": "Point(a,5)"
+    },
+    {
+      "name": "O2",
+      "expression": "Point(b,5)"
+    },
+    {
+      "name": "omega1",
+      "expression": "Circle(O1,sqrt(a**2+25))"
+    },
+    {
+      "name": "omega2",
+      "expression": "Circle(O2,sqrt(b**2+25))"
+    },
+    {
+      "name": "L1a",
+      "expression": "Point(3*cos(alpha),3*sin(alpha))"
+    },
+    {
+      "name": "L1b",
+      "expression": "Point(L1a.x-sin(alpha),L1a.y+cos(alpha))"
+    },
+    {
+      "name": "L2a",
+      "expression": "Point(12*cos(beta),12*sin(beta))"
+    },
+    {
+      "name": "L2b",
+      "expression": "Point(L2a.x-sin(beta),L2a.y+cos(beta))"
+    },
+    {
+      "name": "ell1",
+      "expression": "Line(L1a,L1b)"
+    },
+    {
+      "name": "ell2",
+      "expression": "Line(L2a,L2b)"
+    },
+    {
+      "name": "U1",
+      "expression": "ClosestPoint(O1,ell1)"
+    },
+    {
+      "name": "U2",
+      "expression": "ClosestPoint(O1,ell2)"
+    },
+    {
+      "name": "V1",
+      "expression": "ClosestPoint(O2,ell1)"
+    },
+    {
+      "name": "V2",
+      "expression": "ClosestPoint(O2,ell2)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "IsTangent(ell1,omega1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(ell1,omega2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(ell2,omega1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(ell2,omega2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "a",
+      "operator": "<",
+      "right": "b"
+    },
+    {
+      "left": "alpha",
+      "operator": ">",
+      "right": "-pi"
+    },
+    {
+      "left": "alpha",
+      "operator": "<",
+      "right": "pi"
+    },
+    {
+      "left": "beta",
+      "operator": ">",
+      "right": "-pi"
+    },
+    {
+      "left": "beta",
+      "operator": "<",
+      "right": "pi"
+    },
+    {
+      "left": "a*cos(alpha)+5*sin(alpha)",
+      "operator": "<",
+      "right": 3
+    },
+    {
+      "left": "b*cos(alpha)+5*sin(alpha)",
+      "operator": "<",
+      "right": 3
+    },
+    {
+      "left": "a*cos(beta)+5*sin(beta)",
+      "operator": "<",
+      "right": 12
+    },
+    {
+      "left": "b*cos(beta)+5*sin(beta)",
+      "operator": "<",
+      "right": 12
+    }
+  ],
+  "target": "Area(U1,U2,V2,V1)"
+}

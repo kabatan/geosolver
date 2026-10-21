@@ -1,0 +1,38 @@
+{
+  "created_at": "2026-10-11T08:36:47.458400+00:00",
+  "baseline_source_hash": "sha256:f92ee9ba5bea9b124f19e79e95d89e47e66252fede326bb1a569eb1d318e969b",
+  "baseline_campaign": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-20261011/final-public",
+  "targets": {
+    "median_process_wall_seconds_below": 1,
+    "mean_process_wall_seconds_aspirational": 3
+  },
+  "contract": {
+    "seconds": 180,
+    "cores": 1,
+    "final_seeds": [
+      0,
+      1,
+      2
+    ],
+    "include_failures": true,
+    "all_original_verification_retained": true
+  },
+  "rules": [
+    "No problem-ID, answer-value or narrow geometry recognizer rescue",
+    "Keep previous lattice and radius-sampler production exclusions",
+    "No reuse of nearby candidate verification; exact coordinate/precision semantics only",
+    "No one-answer early stop unless mathematically justified branch/target coverage",
+    "Treat prior public and generated sets as development data",
+    "Create fresh holdout before experiments; freeze selected candidate before first holdout solve",
+    "Report accuracy/speed regressions and negative experiments"
+  ],
+  "source_writes": "Agents only edit private snapshots; parent integrates after review",
+  "fresh_holdout": {
+    "path": "fresh-holdout/cases.jsonl",
+    "cases_sha256": "48ed6a6a4f3776ea74a655e94a8fa491f8c9eb4a706c4df6999a2cee1f0392f8",
+    "frozen_at": "2026-10-11T08:42:43.976596+00:00",
+    "inputs": 88,
+    "structural_families": 11,
+    "solve_status": "not run; only static DSL validation"
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "id": "CEMC-EG-13",
+  "variables": [
+    "x",
+    "y"
+  ],
+  "constructions": [
+    {
+      "name": "E",
+      "expression": "Point(0,10)"
+    },
+    {
+      "name": "F",
+      "expression": "Point(10,10)"
+    },
+    {
+      "name": "G",
+      "expression": "Point(10,0)"
+    },
+    {
+      "name": "H",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "W",
+      "expression": "Point(x,y+6)"
+    },
+    {
+      "name": "X",
+      "expression": "Point(x+6,y+6)"
+    },
+    {
+      "name": "Y",
+      "expression": "Point(x+6,y)"
+    },
+    {
+      "name": "Z",
+      "expression": "Point(x,y)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "x",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "x",
+      "operator": "<",
+      "right": 4
+    },
+    {
+      "left": "y",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "y",
+      "operator": "<",
+      "right": 4
+    }
+  ],
+  "target": "Area(E,F,X,W)+Area(G,H,Z,Y)"
+}

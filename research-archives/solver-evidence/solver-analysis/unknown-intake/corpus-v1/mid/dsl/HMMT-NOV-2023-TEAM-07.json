@@ -1,0 +1,46 @@
+{
+  "id": "HMMT-NOV-2023-TEAM-07",
+  "variables": [
+    "t"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(20,0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(28,21)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(0,21)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(28*t,21*t)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Dot(Vector(P,B),Vector(P,D))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "t",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "t",
+      "operator": "<",
+      "right": 1
+    }
+  ],
+  "target": "Distance(A,P)"
+}

@@ -1,0 +1,52 @@
+{
+  "id": "UKMT-SMC-2022-23",
+  "variables": [],
+  "constructions": [
+    {
+      "name": "P",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "O",
+      "expression": "Point(sqrt(10),0)"
+    },
+    {
+      "name": "N",
+      "expression": "Point(sqrt(10)+sqrt(90),0)"
+    },
+    {
+      "name": "M",
+      "expression": "Point(sqrt(10)+sqrt(90)+sqrt(40),0)"
+    },
+    {
+      "name": "G",
+      "expression": "Point(P.x,sqrt(10))"
+    },
+    {
+      "name": "H",
+      "expression": "Point(O.x,sqrt(90))"
+    },
+    {
+      "name": "J",
+      "expression": "Point(N.x,sqrt(90))"
+    },
+    {
+      "name": "K",
+      "expression": "Point(M.x,sqrt(40))"
+    },
+    {
+      "name": "I",
+      "expression": "Intersect(Line(G,H),Line(J,K))"
+    },
+    {
+      "name": "F",
+      "expression": "Intersect(Line(G,H),Line(P,M))"
+    },
+    {
+      "name": "L",
+      "expression": "Intersect(Line(J,K),Line(P,M))"
+    }
+  ],
+  "conditions": [],
+  "target": "Area(F,I,L)"
+}

@@ -1,0 +1,111 @@
+{
+  "snapshot": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/evaluation-review-trust-source",
+  "source_hash": "sha256:d67bbb5aaca48837b3e33cc872b24c4570239de2f99b737f689e659f1a0d1583",
+  "implementation_source_modified": false,
+  "main_source_modified": false,
+  "fresh_holdout_read": false,
+  "decision": "Do not integrate current bounded trust implementation without a general fallback; systematic native-convergent regressions remain.",
+  "existing_and_prior_adversarial_tests": [
+    {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "69",
+      "time": "1.347",
+      "timestamp": "2026-10-11T18:08:52.161122+09:00",
+      "hostname": "kabatan-superPC"
+    }
+  ],
+  "new_counterexample_tests": [
+    {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "13",
+      "skipped": "0",
+      "tests": "13",
+      "time": "0.401",
+      "timestamp": "2026-10-11T18:10:35.462185+09:00",
+      "hostname": "kabatan-superPC"
+    }
+  ],
+  "grid": {
+    "rows": 180,
+    "native_success": 172,
+    "candidate_success": 124,
+    "native_success_candidate_failure": 48,
+    "cases": {
+      "dps": [
+        200,
+        350
+      ],
+      "unit": [
+        "1e-12",
+        "1",
+        "1e12"
+      ],
+      "translation_in_units": [
+        "0",
+        "1e60"
+      ],
+      "nonlinearities": [
+        "atan",
+        "tanh",
+        "normalized rational t/sqrt(1+t\u00b2)",
+        "expm1",
+        "cubic control"
+      ],
+      "starts_per_family": 3,
+      "tol": "1e-130",
+      "maxsteps": 80,
+      "dimension": 2
+    },
+    "failure_counts": {
+      "atan": 12,
+      "tanh": 12,
+      "normalized_rational": 12,
+      "expm1": 12
+    },
+    "all_failures_translated": true,
+    "raw": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/evaluation-trust-invariance-v2.jsonl",
+    "script": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/evaluation-trust-invariance-v2.py"
+  },
+  "counterexample": {
+    "source_hash": "sha256:d67bbb5aaca48837b3e33cc872b24c4570239de2f99b737f689e659f1a0d1583",
+    "dps": 200,
+    "family": "atan",
+    "start": "1e15",
+    "unit": "1",
+    "shift_in_units": "1e60",
+    "native": {
+      "success": true,
+      "residual_norm": "0.0",
+      "root_in_units": "0.0",
+      "calls": 994,
+      "seconds": 0.03082437999546528
+    },
+    "candidate": {
+      "success": false,
+      "exception": "ValueError",
+      "message": "bounded Newton did not produce an improved point",
+      "calls": 42,
+      "seconds": 0.0014175440010149032
+    }
+  },
+  "cause": "Trust scales abs(current coordinate) depend on translation. For shift C >> Newton step, ratio is small, so second restart merely adds20 halvings. Native can converge after >40 halvings; candidate exhausts before any accepted step.",
+  "other_regression": {
+    "source": "evaluation-trust-invariance.jsonl",
+    "system": "F(x,y)=(tanh(x),y-1), start=(10,0.25), exact J=diag(sech\u00b2(x),1), dps120,tol1e-70,maxsteps80",
+    "native": "converges, residual about1.69e-90,48 residual callbacks",
+    "candidate": "accepts enormous full first step because second residual improves L2 merit; next Jacobian numerically singular after3 callbacks",
+    "evidence": "test_merit_improvement_in_other_row_does_not_lose_native_convergent_start"
+  },
+  "minimal_general_remedy": "On bounded proposal failure, invalid/degenerate Jacobian, or residual-check failure, retain original initial coordinates and try original MDNewton with every callback guarded by check_deadline; independently certify every original residual and bounds. This preserves original fallback behavior while allowing bounded success fast path. An absolute-coordinate scale tweak alone does not fix translation invariance or mixed-merit overshoot.",
+  "limitations": [
+    "These are local-solver correctness/generalization counterexamples, not whole-solver runtime comparisons. Outer LM/rank-aware paths may recover some failures; current bounded helper itself loses systematic native convergence.",
+    "Initial180 grid used shift1e90,dps120/180,tol1e-70; native relative stopping at large coordinate contaminated translated comparisons. Do not use initial translated cases as evidence. Repeated at shift1e60,dps200/350,tol1e-130 so native final residual certification succeeds. Initial unshifted mixed-merit counter remains valid.",
+    "No claim all nonlinear systems should converge; comparisons require the native method to pass the same final residual test."
+  ],
+  "test_patch": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/independent-newton-invariance-tests.patch",
+  "raw_sha256": "25bb45d014381a9deb02279cca02b0f31bc0c2b656f1a715e5f148faadf02c87"
+}

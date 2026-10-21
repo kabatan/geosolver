@@ -1,0 +1,58 @@
+{
+  "reviewed_snapshot": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/analytic-stable-v3-source",
+  "reviewed_source_hash": "sha256:90570110199e15ee876ab64858db1dc3aabfe69adaa8125a29151c2777d06544",
+  "reviewed_analytic_file_sha256": "4f14bd3164b351374a0facc3bec96a4cdd0d97e2aabada8abeacda1b481b9c95",
+  "verdict": "No remaining mathematical correctness blocker found in reviewed change. Previous coincident/moving-zero-ray cancellation counterexamples now decline while valid constant-angle branches retain zero derivatives.",
+  "mathematical_basis": [
+    "Three-point Angle uses original atan2(abs(det(u,v)),dot(u,v)) exactly, on nonzero rays.",
+    "Two-line Angle uses atan2(abs(det(n1,n2)),abs(dot(n1,n2))), equal to original acos(abs(normalized_dot)) for nonzero normals; values lie in[0,pi/2].",
+    "Derivatives on each smooth branch share denominator det^2+dot^2 rather than a cancellation-prone 1-cos^2 expression.",
+    "Retaining both ray/normal squared norms before simplification prevents an undefined angle from disappearing when atan2 or the full residual simplifies.",
+    "Abs branch cusps conservatively decline; known constant-angle parameterizations remain differentiable away from zero rays/normals.",
+    "Jacobian plans remain optional Newton proposals; original residual, domain, independent final verification and exact answer contracts are untouched."
+  ],
+  "comparisons": {
+    "smooth_independent_native_atan2_or_trig": 144,
+    "smooth_declines": 0,
+    "smooth_precision_dps": [
+      80,
+      180,
+      500
+    ],
+    "smooth_error_bound": "10**(-dps+12) relative scaled",
+    "near_collinear_cases": 30,
+    "near_collinear_declines": 0,
+    "near_collinear_relative_error_bound": "10**(-dps+8), both signs, y=1e-5 through1e-200,80/180/500dps",
+    "exact_point_and_line_cusps_declined": 6,
+    "invalid_domain_cases_declined": 6,
+    "valid_constant_angle_zero_derivatives_retained": 8
+  },
+  "independent_new_tests": {
+    "passed": 21,
+    "ruff": "passed",
+    "path": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/algebra-review-tests/test_analytic_stable_domains.py",
+    "coverage": [
+      "Moving collinear/parallel/perpendicular constant-angle families, both signs,80/180/500dps.",
+      "Zero ray/normal excluded at x=0 while valid x in{-2,-1,1,2} returns zero derivatives.",
+      "0*Angle and sin(Angle) cannot erase the moving angle domain.",
+      "Named scalar angle aliases, exact row cancellation, and angle expressions on the equality RHS retain domain obligations."
+    ]
+  },
+  "artifacts": [
+    {
+      "path": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/algebra-analytic-stable-v3-review.py",
+      "sha256": "0e579756e034b5c2dac1970862f67d317fb3e16590c103650a525731a72f910e"
+    },
+    {
+      "path": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/algebra-analytic-stable-v3-review.json",
+      "sha256": "68c898f9dcbd1330baab399c7971db79f0bf395a02a65eb7012038b7cff7dbd1"
+    },
+    {
+      "path": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/algebra-review-tests/test_analytic_stable_domains.py",
+      "sha256": "1ecff4c0e687ed31cbdc3cc7399f5d6fccdc8630bdef3babb15386c608ec0ac4"
+    }
+  ],
+  "reviewed_source_writes": false,
+  "fresh_holdout_accessed": false,
+  "cpu_affinity": 10
+}

@@ -1,0 +1,253 @@
+--- a/src/geosolver/engine/standard/refinement/mpmath_refiner.py
++++ b/src/geosolver/engine/standard/refinement/mpmath_refiner.py
+@@ -45,6 +45,7 @@
+ from .finite_difference_jacobian import compute_finite_difference_jacobian
+ from .levenberg_marquardt_step import compute_levenberg_marquardt_step
+ from .line_search import _point_within_bounds, run_line_search
++from .newton_line_search import findroot_least_squares
+ from .refiner_config import RefinerConfig
+ 
+ NON_FINITE_INITIAL = "non_finite_initial"
+@@ -901,7 +902,7 @@
+                     ),
+                 )
+             else:
+-                root = mp.findroot(
++                root = findroot_least_squares(
+                     selected_residuals,
+                     active_start,
+                     **options,
+@@ -1074,7 +1075,7 @@
+                     # multidimensional Newton path supports this overdetermined
+                     # scalar case and lets the variable-dependent residual
+                     # determine the root.
+-                    root = mp.findroot(
++                    root = findroot_least_squares(
+                         overdetermined_scalar_residual,
+                         mp.mpf(start_point[0]),
+                         solver="mnewton",
+@@ -1105,7 +1106,7 @@
+         options = {"J": closure_jacobian} if plan is not None else {}
+         try:
+             with mp.workdps(int(dps)):
+-                root = mp.findroot(
++                root = findroot_least_squares(
+                     residuals,
+                     tuple(start_point),
+                     **options,
+--- /dev/null
++++ b/src/geosolver/engine/standard/refinement/newton_line_search.py
+@@ -0,0 +1,88 @@
++"""Damped Newton with the same bounded line-search policy as staged LM."""
++
++from mpmath import mp
++from mpmath.calculus.optimization import MDNewton
++
++from geosolver.runtime.deadline import check_deadline, count_event
++
++from .refiner_config import LINE_SEARCH_MAX_STEPS
++
++
++class LeastSquaresNewton(MDNewton):
++    """Accept Newton steps by sufficient decrease of the least-squares merit.
++
++    An overdetermined Newton step minimizes ||F + J s||_2. Its descent
++    property is for ||F||_2**2, rather than mpmath's default infinity norm.
++    Backtracking follows the existing LM limit; exhausting it terminates this
++    optional proposal so the caller can try its other refinement paths.
++    """
++
++    def __iter__(self):
++        ctx, function, point = self.ctx, self.f, self.x0
++        residual = ctx.matrix(function(*point))
++        norm = ctx.norm(residual, 2)
++        armijo = ctx.mpf("0.0001")
++        while True:
++            check_deadline()
++            jacobian = self.J(*point)
++            step = ctx.lu_solve(jacobian, -residual)
++            projected = jacobian * step
++            directional = ctx.fdot(residual, projected)
++            # J*s is the least-squares projection of -F. A nonnegative
++            # derivative cannot supply a descent certificate at this precision.
++            if not ctx.isfinite(directional) or directional >= 0:
++                count_event("newton_non_descent_directions")
++                return
++            squared = norm * norm
++            alpha = ctx.one
++            for _ in range(LINE_SEARCH_MAX_STEPS):
++                check_deadline()
++                trial = point + alpha * step
++                if trial == point:
++                    count_event("newton_stagnant_steps")
++                    return
++                values = ctx.matrix(function(*trial))
++                trial_norm = ctx.norm(values, 2)
++                if ctx.isfinite(trial_norm) and (
++                    trial_norm < norm
++                    and trial_norm * trial_norm <= squared + 2 * armijo * alpha * directional
++                ):
++                    point, residual, norm = trial, values, trial_norm
++                    yield point, norm
++                    break
++                count_event("newton_backtracks")
++                alpha /= 2
++            else:
++                count_event("newton_line_search_exhausted")
++                return
++
++
++def findroot_least_squares(function, initial, *, tol, maxsteps, J=None, **kwargs):
++    """Run bounded Newton with mpmath's working precision and stop checks.
++
++    mpmath.findroot unconditionally chooses MDNewton for vector functions,
++    even when passed a custom solver. Run its iteration protocol explicitly.
++    Full source certification is performed separately by the caller.
++    """
++    with mp.workprec(mp.prec + 20):
++        initial_values = initial if isinstance(initial, list | tuple | mp.matrix) else (initial,)
++        point = mp.matrix([mp.mpf(value) for value in initial_values])
++
++        def norm(values):
++            return mp.norm(values, 2)
++
++        values = mp.matrix(function(*point))
++        if norm(values) == 0:
++            return point
++        options = {"norm": norm, "verbose": False}
++        if J is not None:
++            options["J"] = J
++        iterations = LeastSquaresNewton(mp, function, point, **options)
++        completed = False
++        for index, (point, error) in enumerate(iterations, 1):
++            completed = True
++            if error < tol * max(1, norm(point)) or index >= int(maxsteps):
++                break
++        if not completed or norm(mp.matrix(function(*point))) ** 2 > tol:
++            raise ValueError("bounded Newton did not meet its residual tolerance")
++        return point
+--- a/tests/test_closure_termination.py
++++ b/tests/test_closure_termination.py
+@@ -52,7 +52,7 @@
+     ev = evaluator()
+     with mp.workdps(240):
+         point = [mp.sqrt(2) + mp.mpf("1e-40"), mp.sqrt(3)]
+-    original = mp.findroot
++    original = implementation.findroot_least_squares
+     calls = []
+ 
+     def inspect_precision(function, initial, **kwargs):
+@@ -60,7 +60,7 @@
+         assert all(x._mpf_[3] <= mp.prec for x in initial)
+         return original(function, initial, **kwargs)
+ 
+-    monkeypatch.setattr(mp, "findroot", inspect_precision)
++    monkeypatch.setattr(implementation, "findroot_least_squares", inspect_precision)
+     result = closure(ev, point, solver_tolerance=mp.mpf("1e-160"))
+     assert calls and result is not None
+     assert result[1] <= mp.mpf("1e-80")
+--- /dev/null
++++ b/tests/test_closure_armijo.py
+@@ -0,0 +1,102 @@
++"""Least-squares Newton proposals keep full residual and timeout contracts."""
++
++import pytest
++from mpmath import mp
++
++from geosolver.engine.standard.evaluation.ir_evaluator import build_ir_evaluator
++from geosolver.engine.standard.problem.load_problem_bundle import load_problem_bundle
++from geosolver.engine.standard.refinement import mpmath_refiner as implementation
++
++
++def make_evaluator(constraints):
++    return build_ir_evaluator(load_problem_bundle({
++        "task": "solve", "variables": {"names": ["u", "v"]},
++        "constraints": constraints, "answer": "u+v",
++    }))
++
++
++def run(evaluator, point, **kwargs):
++    with mp.workdps(120):
++        return implementation._run_findroot_closure(
++            evaluator=evaluator, start_point=[mp.mpf(x) for x in point],
++            bounds=((None, None), (None, None)), dps=120,
++            target_residual=mp.mpf("1e-80"), max_steps=240, **kwargs,
++        )
++
++
++@pytest.mark.parametrize("equation,dependent,point", [
++    ("u+v-3", "7*(u+v-3)", ["1", "1"]),
++    ("u*u+v*v-5", "(u*u+v*v-5)*3", ["1", "1.8"]),
++    ("u*v-2", "u*u*v*v-4", ["1.4", "1.4"]),
++    ("sqrt(u*u+v*v)-3", "u*u+v*v-9", ["1", "2.5"]),
++])
++def test_dependent_manifolds_close_using_full_source_residuals(equation, dependent, point):
++    evaluator = make_evaluator([equation, dependent])
++    result = run(evaluator, point)
++    assert result is not None
++    assert result[1] <= mp.mpf("1e-80")
++
++
++def test_chart_cannot_certify_an_omitted_inconsistent_residual(monkeypatch):
++    evaluator = make_evaluator(["u+v-3", "u+v-4"])
++    monkeypatch.setattr(implementation, "derivative_plan", lambda _: None)
++    result = run(evaluator, ["1", "1"])
++    assert result is None
++
++
++
++def test_global_timeout_during_newton_propagates(monkeypatch):
++    evaluator = make_evaluator(["u+v-3", "2*(u+v-3)"])
++    def timeout(*args, **kwargs):
++        raise TimeoutError("global deadline")
++    monkeypatch.setattr(implementation, "findroot_least_squares", timeout)
++    with pytest.raises(TimeoutError, match="global deadline"):
++        run(evaluator, ["1", "1"])
++
++
++def test_least_squares_descent_need_not_decrease_infinity_norm():
++    # Overdetermined scalar Jacobian: s=-(J.T J)^-1 J.T F.
++    # This linearized step descends in the norm that defines least squares.
++    with mp.workdps(80):
++        residual = mp.matrix([1, mp.mpf("0.9")])
++        jacobian = mp.matrix([[1], [-10]])
++        step = mp.lu_solve(jacobian, -residual)
++        trial = residual + jacobian * step
++        assert mp.norm(trial, 2) < mp.norm(residual, 2)
++        assert mp.norm(trial, mp.inf) > mp.norm(residual, mp.inf)
++
++
++
++def test_line_search_exhaustion_does_not_leak_an_unverified_answer(monkeypatch):
++    from geosolver.engine.standard.refinement.newton_line_search import findroot_least_squares
++    with mp.workdps(100), pytest.raises(ValueError):
++        findroot_least_squares(
++            lambda u, v: (mp.mpf(1), mp.mpf(1)), (mp.mpf(2), mp.mpf(3)),
++            tol=mp.mpf("1e-80"), maxsteps=80,
++            J=lambda *point: mp.eye(2),
++        )
++
++
++@pytest.mark.parametrize("power,start", [(3, "1.2"), (5, "0.7"), (9, "2")])
++def test_repeated_roots_retain_precision_budget(power, start):
++    evaluator = make_evaluator([f"(u-1)**{power}", "v*v-2"])
++    assert run(evaluator, [start, "1.4"]) is not None
++
++
++def test_ill_conditioned_but_full_rank_system_keeps_all_equations():
++    evaluator = make_evaluator(["u+v-3", "u+(1+1e-40)*v-3-2e-40"])
++    result = run(evaluator, ["1.1", "1.8"])
++    assert result is not None
++    with mp.workdps(120):
++        assert abs(result[0][0]-1) < mp.mpf("1e-70")
++        assert abs(result[0][1]-2) < mp.mpf("1e-70")
++
++
++def test_overdetermined_scalar_accepts_scalar_initial_point():
++    from geosolver.engine.standard.refinement.newton_line_search import findroot_least_squares
++    with mp.workdps(100):
++        root = findroot_least_squares(
++            lambda u: (u*u-2, 3*(u*u-2)), mp.mpf("1.4"),
++            tol=mp.mpf("1e-80"), maxsteps=80,
++        )
++        assert abs(root[0]-mp.sqrt(2)) < mp.mpf("1e-80")

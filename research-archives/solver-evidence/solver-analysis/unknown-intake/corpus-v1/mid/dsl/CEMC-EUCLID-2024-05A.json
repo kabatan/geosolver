@@ -1,0 +1,67 @@
+{
+  "id": "CEMC-EUCLID-2024-05A",
+  "variables": [
+    "w",
+    "h",
+    "x",
+    "y"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0,h)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(w,0)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(w,h)"
+    },
+    {
+      "name": "X",
+      "expression": "Point(x,y)"
+    }
+  ],
+  "conditions": [
+    {
+      "predicate": "Or(And((x*(h-y)) == 2,((w-x)*(h-y)) == 3,(x*y) == 6),And((x*(h-y)) == 2,((w-x)*(h-y)) == 6,(x*y) == 3),And((x*(h-y)) == 3,((w-x)*(h-y)) == 2,(x*y) == 6),And((x*(h-y)) == 3,((w-x)*(h-y)) == 6,(x*y) == 2),And((x*(h-y)) == 6,((w-x)*(h-y)) == 2,(x*y) == 3),And((x*(h-y)) == 6,((w-x)*(h-y)) == 3,(x*y) == 2))"
+    },
+    {
+      "left": "w",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "h",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "x",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "y",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "x",
+      "operator": "<",
+      "right": "w"
+    },
+    {
+      "left": "y",
+      "operator": "<",
+      "right": "h"
+    }
+  ],
+  "target": "(w-x)*y"
+}

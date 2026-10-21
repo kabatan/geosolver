@@ -1,0 +1,48 @@
+{
+  "id": "UKMT-SMC-2023-13",
+  "variables": [],
+  "constructions": [
+    {
+      "name": "P",
+      "expression": "Point(cos(2*0*pi/5),sin(2*0*pi/5))"
+    },
+    {
+      "name": "Q",
+      "expression": "Point(cos(2*1*pi/5),sin(2*1*pi/5))"
+    },
+    {
+      "name": "R",
+      "expression": "Point(cos(2*2*pi/5),sin(2*2*pi/5))"
+    },
+    {
+      "name": "S",
+      "expression": "Point(cos(2*3*pi/5),sin(2*3*pi/5))"
+    },
+    {
+      "name": "T",
+      "expression": "Point(cos(2*4*pi/5),sin(2*4*pi/5))"
+    },
+    {
+      "name": "U",
+      "expression": "Intersect(Line(S,T),PerpendicularLine(Line(P,Q),P))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "OnSegment(U,S,T)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(U,S)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(U,T)",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Angle(P,U,T)/Angle(P,T,U)"
+}

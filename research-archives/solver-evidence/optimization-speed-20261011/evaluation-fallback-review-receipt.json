@@ -1,0 +1,69 @@
+{
+  "snapshot": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/evaluation-review-fallback-source",
+  "source_hash": "sha256:3e1873d909a08ba77bd1bc1730e99d0f027f4f4d4555a0f5c7db18b7cb913a3c",
+  "main_source_modified": false,
+  "implementation_snapshot_modified": false,
+  "fresh_holdout_read": false,
+  "decision": "Native retry resolves tested convergence regressions; recommend guarded Jacobian callback hardening before integration. Whole-solver speed decision belongs to parent paired corpus run.",
+  "grid": {
+    "rows": 180,
+    "native_success": 172,
+    "candidate_success": 172,
+    "native_success_candidate_failure": 0,
+    "previous_v2_regressions": 48,
+    "same_conditions": "evaluation-trust-invariance-v2.py; dps200/350,unit1e-12/1/1e12,shift0/1e60,5nonlinear families,3starts each,tol1e-130,maxsteps80",
+    "raw": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/evaluation-fallback-invariance.jsonl",
+    "raw_sha256": "02b2de008d87f5e77fcaf23921e3ac64371db87a9d1a6664ce24bc0e6c83a357"
+  },
+  "tests": [
+    {
+      "path": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/evaluation-review-fallback-source/independent-fallback-regression.xml",
+      "stats": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "85",
+          "time": "2.050",
+          "timestamp": "2026-10-11T18:14:56.205743+09:00",
+          "hostname": "kabatan-superPC"
+        }
+      ]
+    },
+    {
+      "path": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/evaluation-review-fallback-source/independent-native-fallback.xml",
+      "stats": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "1",
+          "skipped": "0",
+          "tests": "4",
+          "time": "0.107",
+          "timestamp": "2026-10-11T18:15:42.566609+09:00",
+          "hostname": "kabatan-superPC"
+        }
+      ]
+    }
+  ],
+  "preservation": "Spy confirms fallback uses original mpf binary initial values (including excess input precision), original tolerance bits, same original J, full originalmaxsteps and restored ambient precision, rather than bounded lastpoint or consumedbudget. Admission callback rejection invokes original retry. Old13counterexamples plus prior16adversarial and deadline/stage/fullsource tests pass.",
+  "final_admission": "mpmath_refiner.certify remains independent full original source/bounds/status/finite norm gate for both bounded and native point. Rank chart reassembles original coordinates and validate_point callback triggers retry on omitted/fullsource mismatch. Native helper return remains subject to caller certify.",
+  "finding": {
+    "file": "src/geosolver/engine/standard/refinement/newton_line_search.py",
+    "function": "findroot_least_squares native options J",
+    "evidence": "Original J is passed unwrapped; an expired globaldeadline at native Jacobian callback entry still invokes J once, then later helper check raises TimeoutError. Residual callback entry is guarded and test passes.",
+    "test": "test_no_native_callback_is_invoked_after_global_deadline[jacobian]",
+    "recommended_fix": "checked_J wrapper checks deadline before/after invoking original J. Preserve original mathematical Jacobian and arguments.",
+    "production_limit": "Production closure analytic/evaluator paths have additional deadline checks; no invalid final publication demonstrated."
+  },
+  "limits": [
+    "Grid is convergence/generalization evidence, not whole-solver speed proof.",
+    "8 of180 systems fail both methods; comparison does not require universal convergence.",
+    "Private callback test uses native-entry probe to isolate absence of J guard; original solver can also cross deadline between residual return and next J evaluation."
+  ],
+  "test_files": [
+    "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/evaluation-review-fallback-source/tests/test_independent_newton_invariance.py",
+    "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-speed-20261011/evaluation-review-fallback-source/tests/test_independent_native_fallback_review.py"
+  ]
+}

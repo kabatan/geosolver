@@ -1,0 +1,309 @@
+{
+  "completed_at_utc": "2026-10-11T09:36:42.452332+00:00",
+  "decision": "No additional production changes adopted; retain the previously accepted implementation.",
+  "targets_achieved": {
+    "median_below_one_second": false,
+    "mean_around_three_seconds": false
+  },
+  "production_source_hash": "sha256:f92ee9ba5bea9b124f19e79e95d89e47e66252fede326bb1a569eb1d318e969b",
+  "production_engine_lock_valid": true,
+  "production_changes_this_round": [],
+  "documentation_changes_this_round": [
+    "README.md: include arithmetic mean and document rejected experiments, full comparison, paired measurements, and unused holdout"
+  ],
+  "parallel_review_model": "gpt-6.1-sol high; three specialist agents with independent cross-review",
+  "contract": {
+    "time_limit_seconds": 180,
+    "cores_per_solve": 1,
+    "include_failures_in_wall_statistics": true,
+    "original_high_precision_and_final_verification_retained": true,
+    "independent_exact_confirmation_retained": true,
+    "case_id_or_answer_based_exceptions_added": false
+  },
+  "incumbent_results": {
+    "campaign": "/home/kabatan/work/solver/benchmarks/local-evaluation/optimization-20261011/final-public",
+    "measured_before_this_round": true,
+    "runs": 969,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "exact_set_matches": 958,
+    "median_process_wall_seconds": 3.124237922980683,
+    "mean_process_wall_seconds": 14.46387156709877,
+    "p95_process_wall_seconds": 95.32853148301365,
+    "rerun_this_round": false
+  },
+  "newton_v3_full_development_comparison": {
+    "baseline": {
+      "runs": 323,
+      "exact_set_matches": 321,
+      "mean_process_wall_seconds": 14.568928622665359,
+      "median_process_wall_seconds": 2.9973676779773086,
+      "total_process_wall_seconds": 4705.763945120911,
+      "total_cpu_seconds": 3944.25,
+      "non_normal_completion_count": 0,
+      "failures_included": true
+    },
+    "candidate": {
+      "runs": 323,
+      "exact_set_matches": 320,
+      "mean_process_wall_seconds": 15.912442388786374,
+      "median_process_wall_seconds": 3.280458669003565,
+      "total_process_wall_seconds": 5139.718891577999,
+      "total_cpu_seconds": 4257.26,
+      "non_normal_completion_count": 0,
+      "failures_included": true
+    },
+    "answer_set_agreements": 322,
+    "answer_set_changes": [
+      {
+        "case_id": "HMMT-2013-FEB-GEO-04",
+        "baseline_wall": 5.488475992984604,
+        "candidate_wall": 8.127187737001805,
+        "wall_delta": 2.6387117440172005,
+        "baseline_cpu": 4.55,
+        "candidate_cpu": 6.43,
+        "baseline_matched": true,
+        "candidate_matched": false,
+        "same_answer_set": false,
+        "baseline_answers": [
+          [
+            "algebraic",
+            [
+              "1",
+              "-1",
+              "-1"
+            ],
+            1
+          ],
+          [
+            "algebraic",
+            [
+              "1",
+              "1",
+              "-1"
+            ],
+            1
+          ]
+        ],
+        "candidate_answers": [
+          [
+            "algebraic",
+            [
+              "1",
+              "1",
+              "-1"
+            ],
+            1
+          ]
+        ]
+      }
+    ],
+    "caution": "Campaigns are not interleaved paired timings; consult same-core ABBA experiments before attributing small timing differences to code."
+  },
+  "newton_v4_same_core_abba": {
+    "cases": 24,
+    "runs": 96,
+    "include_failures": true,
+    "same_core_per_case": true,
+    "canonical_equal_cases": 24,
+    "raw_descriptor_equal_cases": 24,
+    "status_equal_cases": 24,
+    "baseline-source": {
+      "sum_problem_means_seconds": 347.01167657400947,
+      "mean_problem_means_seconds": 14.458819857250395,
+      "median_problem_means_seconds": 0.9789202932515764,
+      "raw_run_sum_seconds": 694.0233531480189,
+      "status_counts": {
+        "no_answer_found": 2,
+        "solved": 46
+      }
+    },
+    "refinement-fallback-v4-source": {
+      "sum_problem_means_seconds": 377.4369391830405,
+      "mean_problem_means_seconds": 15.726539132626689,
+      "median_problem_means_seconds": 0.9239791425061412,
+      "raw_run_sum_seconds": 754.873878366081,
+      "status_counts": {
+        "no_answer_found": 2,
+        "solved": 46
+      }
+    },
+    "process_sum_change_percent": 8.76779217040038
+  },
+  "analytic_v3_same_core_abba": {
+    "record_count": 96,
+    "complete_problem_count": 24,
+    "all_four_answer_set_agreement_count": 24,
+    "sum_of_baseline_problem_means": 286.1613851794682,
+    "sum_of_candidate_problem_means": 282.43565563800803,
+    "median_baseline_problem_means": 3.7016636920016026,
+    "median_candidate_problem_means": 3.3903623577498365,
+    "gain_count": 15,
+    "loss_count": 9,
+    "tie_count": 0,
+    "gain_at_least_10_percent_count": 5,
+    "loss_at_least_10_percent_count": 5,
+    "both_repeats_faster_count": 8,
+    "sum_problem_means_reduction": 0.013019679573900378,
+    "median_of_per_problem_relative_reductions": 0.010070597318644403,
+    "source_hashes": {
+      "baseline-source": [
+        "sha256:f92ee9ba5bea9b124f19e79e95d89e47e66252fede326bb1a569eb1d318e969b"
+      ],
+      "analytic-stable-v3-source": [
+        "sha256:2ff72df3d13e50ba6f586a4a57fb50ee519b0036a5c538b76e05039d49e9856a"
+      ]
+    },
+    "process_status_counts": {
+      "solved": 96
+    },
+    "all_complete": true,
+    "answer_gain_case_count": 0,
+    "answer_loss_case_count": 0,
+    "candidate_analytic_used_case_count": 24,
+    "gain_loss_definition": "Compare candidate versus baseline mean of two fresh-process wall times per case; positive reduction is faster. Tiny differences include shared-host noise.",
+    "mean_baseline_problem_means": 11.923391049144508,
+    "mean_candidate_problem_means": 11.768152318250335,
+    "median_problem_means_reduction": 0.08409768151666852,
+    "phase_sum_of_problem_means": {
+      "baseline-source": {
+        "search": 79.11875100643374,
+        "refinement": 114.5185236010293,
+        "exact_assembly": 54.35491074400488
+      },
+      "analytic-stable-v3-source": {
+        "search": 82.09283059595327,
+        "refinement": 110.28061893800623,
+        "exact_assembly": 51.44218099550926
+      }
+    }
+  },
+  "rejections": [
+    {
+      "family": "Bounded Newton / scaled trust step without native fallback",
+      "reason": "Five nonlinear families over 180 parameterizations: native succeeded in 172, candidate in 124. Forty-eight native-success losses under translation; another unshifted tanh overshoot also reproduced. Apparent JMO speedup cannot be used."
+    },
+    {
+      "family": "Bounded Newton with original-start native fallback",
+      "reason": "Independent 180-grid convergence restored (172/180 each) and 1541 core tests pass, but JMO reverts to 173.532s and fixed 24-case ABBA average worsens 8.7678%. Full v3 campaign also worsens median and mean. v4 adds only native-J deadline guards."
+    },
+    {
+      "family": "Stable analytic Angle/sin/cos/tan derivatives",
+      "reason": "All 24 newly supported development cases retain answers across four processes. Sum of problem means improves only 1.30197%; five cases improve >=10% and five regress >=10%. A 9.895s to 19.342s regression is reproduced in both repeats; no strong general speed evidence."
+    },
+    {
+      "family": "Low-level multiprecision arithmetic, polynomial/root caches, construction-slice replay cache",
+      "reason": "Microbench gains did not translate into end-to-end improvement; original verification semantics and precision remained intact. See evaluation-negative-receipt.json."
+    },
+    {
+      "family": "Cartesian DAG memoization, FGLM, finite target image, target elimination",
+      "reason": "No candidate with sufficient speed or coverage gain was retained; some cost more or lose finite discoveries. Research modules were not integrated or invoked in production. See algebra-negative-receipt.json."
+    }
+  ],
+  "root_loss_audit": {
+    "case": "HMMT-2013-FEB-GEO-04",
+    "classification": "Existing supplementary positive-scale-chart inner CPU budget interruption, before Newton refinement; not evidence of a changed Newton basin. Same-core diagnostic ABBA returned both roots in all four runs.",
+    "record": "evaluation-hmmt2013-root-loss-audit.json",
+    "still_counted_as_mismatch_in_full_campaign": true
+  },
+  "validation": {
+    "newton_v4_core_test_suite": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "1541",
+      "time": "104.078",
+      "timestamp": "2026-10-11T18:18:33.340127+09:00",
+      "hostname": "kabatan-superPC"
+    },
+    "newton_v4_independent_review_unique_tests": 90,
+    "newton_v4_parameterized_numerical_systems": 180,
+    "newton_v4_native_and_candidate_successes": 172,
+    "analytic_v3_focused_tests": 116,
+    "candidate_sources_ruff_passed": true
+  },
+  "fresh_holdout": {
+    "structural_families": 11,
+    "inputs": 88,
+    "cases_sha256": "48ed6a6a4f3776ea74a655e94a8fa491f8c9eb4a706c4df6999a2cee1f0392f8",
+    "first_solve_performed": false,
+    "status": "Preserved unused because no new implementation passed development selection. No new generalization improvement is claimed."
+  },
+  "remaining_cost": {
+    "baseline_refinement_seconds": 6634.771744704252,
+    "baseline_search_seconds": 3191.515050144313,
+    "baseline_exact_assembly_seconds": 3207.6823790154594,
+    "hypothetical_mean_with_refinement_time_removed_and_other_work_unchanged": 7.616841902801296,
+    "interpretation": "This accounting illustration is not a theoretical lower bound. Mean 3s requires substantial reduction outside refinement too."
+  },
+  "limits": [
+    "The 323 public problems and all screens are development data.",
+    "The 24-case screen median below 1s is not a full-corpus median target result.",
+    "ABBA timing uses two fresh processes per variant on the same core; small timing differences include shared-host noise.",
+    "The full v3 campaign and prior incumbent campaign were not interleaved.",
+    "No unchanged-incumbent 969-run repetition or unused-holdout solve was needed after all candidates were rejected.",
+    "No general convergence, complete answer enumeration, or arbitrary unseen-family guarantee is claimed."
+  ],
+  "evidence": [
+    {
+      "path": "protocol.json",
+      "sha256": "023889c191ca3291c6e0ff651da52e380ee72cb51a9d71277b88f74c0e18faf7"
+    },
+    {
+      "path": "baseline-profile-summary.json",
+      "sha256": "4ae3288cc1d7f91d32aad81456e92b43196a88292c6d8c9cd9309e7bca27b578"
+    },
+    {
+      "path": "algebra-negative-receipt.json",
+      "sha256": "49e57a4fc619e33c026e1cd6618300b55751db06637037ca8be64b34237338a2"
+    },
+    {
+      "path": "evaluation-negative-receipt.json",
+      "sha256": "3ba111c71e8852073aedfb6afaadb6f9b6e3f9d5efec65107ffbeb68c17384f4"
+    },
+    {
+      "path": "refinement-receipt.json",
+      "sha256": "f709bb33fe605ed4b8f3c50b3b37c9df303272b6825162fe70ade278f6dfc0c1"
+    },
+    {
+      "path": "evaluation-trust-review-receipt.json",
+      "sha256": "b582ef71942403a9480bd36e2ee53a09cd6fad4908a2719737662645927614a3"
+    },
+    {
+      "path": "evaluation-fallback-v4-review-receipt.json",
+      "sha256": "5d65914fa4bade9240c912d346b8a21e82f2d2ed3f4315fd1ee68174b0174a91"
+    },
+    {
+      "path": "evaluation-hmmt2013-root-loss-audit.json",
+      "sha256": "279d461b7e3dcf62ad8b58bc94ab53c1382dd121743996feeccbf7543acc0160"
+    },
+    {
+      "path": "refinement-fallback-public-seed0/baseline-comparison.json",
+      "sha256": "101f16896d1085fdbc75ff72eddeeafbb6a1289d7b99d51ba75117440b9f87ed"
+    },
+    {
+      "path": "refinement-fallback-public-seed0/campaign-manifest.json",
+      "sha256": "4e169d5a3ac83fa0611ce585f1c8105c9e278b7dd2c88aa19162d890807f0faf"
+    },
+    {
+      "path": "refinement-fallback-v4-abba/manifest.json",
+      "sha256": "6bfecba6ebdb2dc86ef9e03c375a24bc6b0e89851cbb39ac171bd6175faeafb9"
+    },
+    {
+      "path": "refinement-fallback-v4-abba/summary.json",
+      "sha256": "e5b6db6f59220a5908e20734c17924ff38e56b86d4e6d0b952ec122e439a0d8d"
+    },
+    {
+      "path": "algebra-analytic-stable-v3-paired/receipt.json",
+      "sha256": "dc23bba37b7dc46883a9964f8c98adcce45c5399e6f59b5e1dc5bf5fd8fdf10f"
+    },
+    {
+      "path": "refinement-v4-regression.xml",
+      "sha256": "c79bb67e1220c2ec611c8820ab68ab80ac569514f923d87f14acbaf5353739bf"
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "id": "CEMC-EUCLID-2026-08A",
+  "variables": [
+    "x",
+    "y"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(2,0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(-2,0)"
+    },
+    {
+      "name": "omega",
+      "expression": "Circle(O,2)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(x,y)"
+    },
+    {
+      "name": "U",
+      "expression": "Intersect(omega,Line(B,C),exclude=B)"
+    },
+    {
+      "name": "V",
+      "expression": "Reflect(U,O)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "IsTangent(Line(A,C),omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(B,U)",
+      "operator": "=",
+      "right": "2*Distance(U,C)"
+    },
+    {
+      "left": "y",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(O,C)",
+      "operator": ">",
+      "right": 2
+    },
+    {
+      "left": "OnSegment(U,B,C)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(B,U)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(U,C)",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Area(C,U,V)"
+}

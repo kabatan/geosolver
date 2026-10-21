@@ -1,0 +1,41 @@
+{
+  "id": "CEMC-EUCLID-2022-04B",
+  "variables": [
+    "x"
+  ],
+  "constructions": [
+    {
+      "name": "P",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "Q",
+      "expression": "Point(x,0)"
+    },
+    {
+      "name": "S",
+      "expression": "Point(0,-x-3)"
+    },
+    {
+      "name": "L",
+      "expression": "Distance(Q,S)"
+    },
+    {
+      "name": "R",
+      "expression": "Point(x+8*(x+3)/L,-8*x/L)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(R,S)",
+      "operator": "=",
+      "right": "x+8"
+    },
+    {
+      "left": "x",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Distance(P,Q)+Distance(Q,R)+Distance(R,S)+Distance(S,P)"
+}

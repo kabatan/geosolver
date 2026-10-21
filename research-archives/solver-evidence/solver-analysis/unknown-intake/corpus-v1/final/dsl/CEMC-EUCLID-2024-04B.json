@@ -1,0 +1,41 @@
+{
+  "id": "CEMC-EUCLID-2024-04B",
+  "variables": [
+    "m"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(2,0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(0,6)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(0,1)"
+    },
+    {
+      "name": "C",
+      "expression": "Intersect(Line(A,B),Line(D,Point(1,m+1)))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Area(A,C,D)",
+      "operator": "=",
+      "right": "Area(A,B,O)/2"
+    },
+    {
+      "left": "m",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "C.x"
+}
