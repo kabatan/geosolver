@@ -1,0 +1,57 @@
+{
+  "id": "HMMT-2026-FEB-GEO-04",
+  "variables": [
+    "ax",
+    "ay",
+    "t"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "X",
+      "expression": "Point(4, 0)"
+    },
+    {
+      "name": "Y",
+      "expression": "Point(9, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(12, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "T",
+      "expression": "PointOnSegment(A, C, t)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Degrees(Angle(B, A, C))",
+      "operator": "=",
+      "right": 90
+    },
+    {
+      "left": "Distance(T, A)",
+      "operator": "=",
+      "right": "Distance(T, X)"
+    },
+    {
+      "left": "Distance(T, A)",
+      "operator": "=",
+      "right": "Distance(T, Y)"
+    },
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Distance(T, A)"
+}

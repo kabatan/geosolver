@@ -1,0 +1,80 @@
+{
+  "id": "JMO-2026-PRE-06",
+  "variables": [
+    "b",
+    "dx",
+    "dy",
+    "e"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(b, 0)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(dx, dy)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(b + dx, dy)"
+    },
+    {
+      "name": "E",
+      "expression": "PointOnSegment(C, D, e)"
+    },
+    {
+      "name": "M",
+      "expression": "Midpoint(A, E)"
+    },
+    {
+      "name": "F",
+      "expression": "Intersect(Line(B, M), Line(A, D))"
+    }
+  ],
+  "conditions": [
+    {
+      "predicate": "Bound(e, (0, 1), inclusive=False)"
+    },
+    {
+      "left": "Dot(Vector(F, A), Vector(F, D))",
+      "operator": "<=",
+      "right": 0
+    },
+    {
+      "left": "Distance(C, E)",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "Distance(D, F)",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "Distance(M, B)",
+      "operator": "=",
+      "right": 5
+    },
+    {
+      "left": "Distance(M, C)",
+      "operator": "=",
+      "right": 4
+    },
+    {
+      "left": "b",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "dy",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Distance(A, B)"
+}

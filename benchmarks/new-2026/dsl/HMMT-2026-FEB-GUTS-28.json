@@ -1,0 +1,43 @@
+{
+  "id": "HMMT-2026-FEB-GUTS-28",
+  "variables": [
+    "px",
+    "py"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(12 * sqrt(2), 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(17 * cos(105 * pi / 180), 17 * sin(105 * pi / 180))"
+    },
+    {
+      "name": "P",
+      "expression": "Point(px, py)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Degrees(Angle(A, P, B))",
+      "operator": "=",
+      "right": 60
+    },
+    {
+      "left": "Degrees(Angle(A, P, C))",
+      "operator": "=",
+      "right": 60
+    },
+    {
+      "left": "Dot(Vector(FootOfPerpendicular(P, Line(B, C)), P), Vector(FootOfPerpendicular(A, Line(B, C)), A))",
+      "operator": "<",
+      "right": 0
+    }
+  ],
+  "target": "Distance(A, P)"
+}

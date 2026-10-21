@@ -1,0 +1,62 @@
+{
+  "id": "HMMT-2026-FEB-GEO-10",
+  "variables": [
+    "a",
+    "ax",
+    "ay"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(a, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "G",
+      "expression": "Centroid(A, B, C)"
+    },
+    {
+      "name": "O",
+      "expression": "Circumcenter(A, B, C)"
+    },
+    {
+      "name": "Hh",
+      "expression": "Orthocenter(A, G, O)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 11
+    },
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": 13
+    },
+    {
+      "left": "OnLine(Hh, Line(B, C))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "a",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Distance(B, C)"
+}

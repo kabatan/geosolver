@@ -1,0 +1,67 @@
+{
+  "id": "HMMT-2026-FEB-GUTS-18",
+  "variables": [
+    "b",
+    "cx",
+    "dx",
+    "h"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(b, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, h)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(dx, h)"
+    },
+    {
+      "name": "P",
+      "expression": "Intersect(Line(A, C), Line(B, D))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(P, Line(A, B))",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "Distance(P, Line(B, C))",
+      "operator": "=",
+      "right": 6
+    },
+    {
+      "left": "Distance(P, Line(C, D))",
+      "operator": "=",
+      "right": 8
+    },
+    {
+      "left": "Distance(P, Line(D, A))",
+      "operator": "=",
+      "right": 8
+    },
+    {
+      "predicate": "ConvexPolygon([A, B, C, D])"
+    },
+    {
+      "left": "b",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "h",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Distance(A, B) + Distance(B, C) + Distance(C, D) + Distance(D, A)"
+}

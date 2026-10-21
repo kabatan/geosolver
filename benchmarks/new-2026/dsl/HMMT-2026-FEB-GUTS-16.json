@@ -1,0 +1,62 @@
+{
+  "id": "HMMT-2026-FEB-GUTS-16",
+  "variables": [
+    "b",
+    "ax",
+    "ay"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(-b, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(b, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "O",
+      "expression": "Circumcenter(A, B, C)"
+    },
+    {
+      "name": "G",
+      "expression": "Centroid(A, B, C)"
+    },
+    {
+      "name": "M",
+      "expression": "Midpoint(B, C)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(O, G)",
+      "operator": "=",
+      "right": 1
+    },
+    {
+      "left": "Distance(O, M)",
+      "operator": "=",
+      "right": "sqrt(2)"
+    },
+    {
+      "left": "Distance(G, M)",
+      "operator": "=",
+      "right": "sqrt(3)"
+    },
+    {
+      "left": "b",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Area(A, B, C)"
+}

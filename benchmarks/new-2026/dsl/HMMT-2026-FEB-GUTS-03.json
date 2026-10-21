@@ -1,0 +1,48 @@
+{
+  "id": "HMMT-2026-FEB-GUTS-03",
+  "variables": [
+    "t"
+  ],
+  "constructions": [
+    {
+      "name": "S0",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "S1",
+      "expression": "Point(10, 0)"
+    },
+    {
+      "name": "S2",
+      "expression": "Point(10, 10)"
+    },
+    {
+      "name": "S3",
+      "expression": "Point(0, 10)"
+    },
+    {
+      "name": "R1",
+      "expression": "Point(4, 0)"
+    },
+    {
+      "name": "R2",
+      "expression": "Point(4, 2)"
+    },
+    {
+      "name": "R3",
+      "expression": "Point(0, 2)"
+    },
+    {
+      "name": "P",
+      "expression": "PointOnSegment(S3, S2, t)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(R3, R2) + Distance(R2, P) + Distance(P, S3) + Distance(S3, R3)",
+      "operator": "=",
+      "right": "Distance(R2, R1) + Distance(R1, S1) + Distance(S1, S2) + Distance(S2, P) + Distance(P, R2)"
+    }
+  ],
+  "target": "abs(Area(R3, R2, P, S3) - Area(R2, R1, S1, S2, P))"
+}
