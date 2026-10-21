@@ -15,6 +15,7 @@ from geosolver.engine.standard.search.algebraic_branches import discover_polynom
 from geosolver.geometry.entities import Point
 from geosolver.geometry.operations.basic import AreConcyclic, OnLine
 from geosolver.problem.adapter import to_engine_document
+from tests.helpers.capabilities import requires_cpu_timer
 
 
 def family(names=("a", "b", "c")):
@@ -46,6 +47,7 @@ def family(names=("a", "b", "c")):
     )
 
 
+@requires_cpu_timer
 @pytest.mark.parametrize("names", [("a", "b", "c"), ("u", "v", "w")])
 @pytest.mark.parametrize("scale", [1, 3, 11])
 def test_origin_reference_lines_and_excluded_circle_contact_have_all_scale_orbits(names, scale):

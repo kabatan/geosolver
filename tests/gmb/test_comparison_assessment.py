@@ -83,9 +83,9 @@ class SyntheticCampaign:
             self.entries.append(
                 {
                     "case_id": case_id,
-                    "geo_input": str(geo_input.relative_to(self.root)),
+                    "geo_input": geo_input.relative_to(self.root).as_posix(),
                     "geo_sha256": assessment.sha256(geo_input),
-                    "gmbl_input": str(gmbl_input.relative_to(self.root)),
+                    "gmbl_input": gmbl_input.relative_to(self.root).as_posix(),
                     "gmbl_sha256": assessment.sha256(gmbl_input),
                     "original_assumptions_covered": True,
                     "input_origin": "original_statement_aligned" if aligned else "official_gmb",

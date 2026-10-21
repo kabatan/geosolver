@@ -67,7 +67,7 @@ def test_raw_campaign_artifact_contains_no_reference_answer(tmp_path: Path, monk
         return Process()
 
     monkeypatch.chdir(tmp_path)
-    monkeypatch.setattr(runner.subprocess, "Popen", spawn)
+    monkeypatch.setattr("geosolver.platform.processes.spawn_process", spawn)
     runner._pin_process = lambda process, cpu: None
 
     output = runner._run_one(record, 7, Path("campaign"))

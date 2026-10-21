@@ -2,6 +2,7 @@
 
 import json
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 import pytest
@@ -137,6 +138,8 @@ def test_spawn_process_uses_platform_process_groups(
         captured.update(options)
         return sentinel
 
+    # This unit test isolates Popen flags from Windows Job ownership.
+    monkeypatch.setattr(processes, "os", SimpleNamespace(name="posix"))
     monkeypatch.setattr(processes.sys, "platform", platform_name)
     monkeypatch.setattr(processes.subprocess, "CREATE_NEW_PROCESS_GROUP", 512, raising=False)
     monkeypatch.setattr(processes.subprocess, "Popen", popen)

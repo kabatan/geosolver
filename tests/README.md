@@ -24,3 +24,5 @@ solver内でも、`test_compilation.py`、`test_contacts.py`、`test_refinement.
 
 GMBのテストは主に人工入力と保存形式の検査です。固定GMB環境を使う任意の統合テストは、環境がない場合にskipします。
 自然問題の求解や新しい性能campaignは、通常のテストでは実行しません。
+
+任意の代数的候補生成を検証するテストは、実装と同じ`ITIMER_PROF` CPUタイマーが使える環境で実行します。未対応環境では該当する候補生成テストだけをskipし、数値経路・厳密値の再構成・worker・wheel導入の検証は継続します。

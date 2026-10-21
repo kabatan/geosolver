@@ -92,7 +92,7 @@ def test_rejected_worker_request_cannot_modify_existing_evidence(tmp_path, monke
     }
     request_path = tmp_path / "request.json"
     campaign.write_json(request_path, request)
-    monkeypatch.setattr(worker.os, "sched_getaffinity", lambda pid: {4})
+    monkeypatch.setattr(worker.os, "sched_getaffinity", lambda pid: {4}, raising=False)
     assert worker.main(request_path) == 1
     assert expected == {p.name: p.read_bytes() for p in old.iterdir()}
 
@@ -172,7 +172,7 @@ def test_copy_requires_expected_hash_and_never_overwrites(tmp_path):
     with pytest.raises(RuntimeError, match="Input changed"):
         campaign.copy_checked(source, destination, "bad-digest")
     campaign.copy_checked(source, destination, campaign.sha256(source))
-    assert destination.read_text() == "unchanged"
+    assert destination.read_text(encoding="utf-8") == "unchanged"
     with pytest.raises(RuntimeError, match="overwrite"):
         campaign.copy_checked(source, destination, campaign.sha256(source))
 
@@ -238,7 +238,7 @@ def test_production_launcher_uses_one_cpu_and_frozen_worker_request(tmp_path, mo
 
 
 def test_production_protocol_does_not_change_agreed_comparison():
-    protocol = json.loads((campaign.HERE / "protocol.json").read_text())
+    protocol = json.loads((campaign.HERE / "protocol.json").read_text(encoding="utf-8"))
     assert protocol["main_run_authorized"]
     assert protocol["common_tolerance"] == "1e-6"
     assert protocol["sensitivity_tolerances"] == ["1e-3", "1e-6", "1e-9"]

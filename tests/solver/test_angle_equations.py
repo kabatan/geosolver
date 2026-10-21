@@ -10,6 +10,7 @@ from geosolver.engine.standard.search.angle_equations import necessary_angle_equ
 from geosolver.engine.standard.search.cartesian_polynomials import CartesianPolynomials
 from geosolver.problem.ir.compiler import safe_eval_expr_hp
 from geosolver.problem.ir.errors import IRCompileError
+from tests.helpers.capabilities import requires_cpu_timer
 
 
 @pytest.mark.parametrize(
@@ -64,6 +65,7 @@ def test_unsupported_angle_relations_decline_instead_of_guessing(equation):
         necessary_angle_equation(equation(x, y))
 
 
+@requires_cpu_timer
 @pytest.mark.parametrize("scale,translate", [(1, 0), (7, 13), (sp.Rational(1, 100), -4)])
 def test_circle_fixed_angle_retains_both_signed_height_branches(scale, translate):
     p = {
@@ -108,6 +110,7 @@ def test_all_principal_angle_endpoints_and_coefficient_scaling_are_preserved(a, 
     assert sp.simplify(value) == 0
 
 
+@requires_cpu_timer
 @pytest.mark.parametrize(
     "theta,expected",
     [
@@ -138,6 +141,7 @@ def test_norm_ledger_keeps_every_original_circle_branch_without_coordinate_guard
         assert result["proved_norm_sign_exclusions"] == 2
 
 
+@requires_cpu_timer
 @pytest.mark.parametrize("theta", ["-pi/3", "5*pi/3", "7*pi/3"])
 def test_impossible_original_angles_remain_unresolved_instead_of_claiming_equivalence(theta):
     # Applying cosine may admit these false branches. Original verification must

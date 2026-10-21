@@ -11,7 +11,7 @@ def _encoded(value):
 
 def test_active_corpus_has_neither_duplicate_identity_nor_duplicate_dsl():
     path = REPO_ROOT / "benchmarks/cases.jsonl"
-    rows = list(map(json.loads, path.read_text().splitlines()))
+    rows = list(map(json.loads, path.read_text(encoding="utf-8").splitlines()))
     identities = {row.get("dedupe_key", row["id"]) for row in rows}
     problems = set()
     for row in rows:

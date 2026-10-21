@@ -12,6 +12,7 @@ from geosolver.engine.standard.search.algebraic_branch_boxes import (
 )
 from geosolver.engine.standard.search.algebraic_branches import discover_polynomial_branches
 from tests.helpers.algebraic import outcome, pipeline, refined, source
+from tests.helpers.capabilities import requires_cpu_timer
 
 
 def test_exact_boxes_enclose_rational_function_images_of_rootof():
@@ -26,6 +27,7 @@ def test_exact_boxes_enclose_rational_function_images_of_rootof():
         assert sp.Rational(left) < value < sp.Rational(right)
 
 
+@requires_cpu_timer
 def test_disjoint_boxes_separate_close_repeated_roots_exactly():
     data = discover_polynomial_branches(
         {
@@ -42,6 +44,7 @@ def test_disjoint_boxes_separate_close_repeated_roots_exactly():
     assert data["original_root_count"] == 2
 
 
+@requires_cpu_timer
 def test_branch_indices_survive_proven_guard_exclusion():
     data = discover_polynomial_branches(
         {

@@ -2,7 +2,17 @@ name: GeoSolver CI
 
 on:
   push:
+    branches: [main, research]
   pull_request:
+    branches: [main, research]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: geosolver-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   verify:
@@ -20,14 +30,15 @@ jobs:
           - name: macOS Apple Silicon
             os: macos-15
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v6
+      - uses: actions/checkout@v7.0.1
+      - uses: astral-sh/setup-uv@v10.3.0
         with:
           enable-cache: true
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7.0.0
         with:
-          python-version: "3.12"
+          python-version-file: .python-version
       - name: Install Python dependencies
         id: dependencies
         run: uv sync --all-extras --frozen

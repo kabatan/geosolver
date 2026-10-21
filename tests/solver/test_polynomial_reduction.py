@@ -24,6 +24,7 @@ from geosolver.engine.standard.search.polynomial_zero_consequences import (
     squarefree_zero_consequences,
 )
 from geosolver.problem.ir.compiler import safe_eval_expr_hp
+from tests.helpers.capabilities import requires_cpu_timer
 
 
 def condition(a, b, c, absolute=False):
@@ -72,6 +73,7 @@ def test_exact_rootof_sign_uses_isolating_intervals():
     assert proved_norm_sign_violation([ledger], {x: roots[1]}) is ledger
 
 
+@requires_cpu_timer
 def test_quadratic_norm_extraneous_branch_is_excluded_with_original_root_mapping():
     data = discover_polynomial_branches(
         {"variables": ["x"], "construction": [], "constraints": ["sqrt(x+1)+x-1"], "targets": [0]}
@@ -84,6 +86,7 @@ def test_quadratic_norm_extraneous_branch_is_excluded_with_original_root_mapping
     assert data["proved_norm_sign_exclusions"] == 1
 
 
+@requires_cpu_timer
 def test_nested_radical_ledger_keeps_genuine_branch():
     data = discover_polynomial_branches(
         {
@@ -97,6 +100,7 @@ def test_nested_radical_ledger_keeps_genuine_branch():
     assert any(abs(float(p[0]) - (5 - 13**0.5) / 2) < 1e-12 for p in data["points"])
 
 
+@requires_cpu_timer
 def test_absolute_value_norm_sign_filters_wrong_nonzero_target_sign():
     data = discover_polynomial_branches(
         {"variables": ["x"], "construction": [], "constraints": ["Abs(x)+x-2"], "targets": [0]}
@@ -105,6 +109,7 @@ def test_absolute_value_norm_sign_filters_wrong_nonzero_target_sign():
     assert [list(map(float, p)) for p in data["points"]] == [[1]]
 
 
+@requires_cpu_timer
 @pytest.mark.parametrize(
     "root,radical,scale",
     [
@@ -210,6 +215,7 @@ def test_algebraic_field_and_huge_coefficients_decline_optional_sos_subset():
     )
 
 
+@requires_cpu_timer
 @pytest.mark.parametrize("scale,reverse", [(1, False), (-7, True)])
 def test_real_quadratic_sos_makes_complex_positive_dimensional_relaxation_finite(scale, reverse):
     names = ["x", "y", "z"]
@@ -226,6 +232,7 @@ def test_real_quadratic_sos_makes_complex_positive_dimensional_relaxation_finite
     assert len(data["branch_boxes"]) == 1
 
 
+@requires_cpu_timer
 def test_zero_distance_expands_to_necessary_affine_coordinates_without_gauge_fixing():
     payload = {
         "variables": ["x", "y"],
@@ -240,6 +247,7 @@ def test_zero_distance_expands_to_necessary_affine_coordinates_without_gauge_fix
     assert discover_polynomial_branches(free) is None
 
 
+@requires_cpu_timer
 def test_positive_definite_quadratic_certificate_correctly_proves_no_real_zeros():
     data = discover_polynomial_branches(
         {"variables": ["x", "y"], "construction": [], "constraints": ["x*x+y*y+1"], "targets": [0]}
@@ -376,6 +384,7 @@ def test_exact_algebraic_coefficient_fields_are_unified_without_fuzzy_pivots():
     )
 
 
+@requires_cpu_timer
 @pytest.mark.parametrize(
     "count,radius_squared,reverse", [(4, 7, False), (5, 11, True), (6, 13, False)]
 )

@@ -14,6 +14,7 @@ from geosolver.engine.standard.exact_assembly.identify_answer import identify_an
 from geosolver.engine.standard.interpreter.context.high_precision import _get_high_precision_context
 from geosolver.problem.ir.compiler import safe_eval_expr_hp
 from geosolver.runtime.symbolic import OptionalSymbolicTimeout
+from tests.helpers.capabilities import HAS_CPU_TIMER, requires_cpu_timer
 
 
 @pytest.mark.parametrize("denominator", [7, 9, 11])
@@ -28,9 +29,12 @@ def test_zero_variable_chord_bisector_hint_declines_descriptor_and_uses_existing
     if normalize:
         source = f"({source})*({2 * denominator})/pi"
     hint = constant_geometry_expression({"source": source, "constructions": []})
-    assert hint is not None
-    with pytest.raises(sp.polys.polyerrors.NotAlgebraic):
-        sp.minimal_polynomial(sp.sympify(hint))
+    if HAS_CPU_TIMER:
+        assert hint is not None
+        with pytest.raises(sp.polys.polyerrors.NotAlgebraic):
+            sp.minimal_polynomial(sp.sympify(hint))
+    else:
+        assert hint is None
     with mp.workdps(300):
         original = safe_eval_expr_hp(source, _get_high_precision_context(250))
         expected = mp.mpf(1) if normalize else mp.pi / (2 * denominator)
@@ -109,6 +113,7 @@ def test_global_deadline_is_not_caught_as_optional_hint_failure(monkeypatch):
         )
 
 
+@requires_cpu_timer
 @pytest.mark.parametrize("scale", ["1/1000", "1", "1000"])
 @pytest.mark.parametrize("rename", [False, True])
 def test_translated_rotated_constant_geometry(scale, rename):
@@ -134,6 +139,7 @@ def test_unsupported_or_nonconstant_has_no_hint(source):
     assert constant_geometry_expression({"source": source, "constructions": []}) is None
 
 
+@requires_cpu_timer
 def test_decimal_tokens_remain_exact():
     source = "Distance(Point(0,0),Point(0.123456789012345678901234567890123456789,0))"
     assert sp.sympify(
