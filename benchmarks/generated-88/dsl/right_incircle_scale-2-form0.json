@@ -1,0 +1,48 @@
+{
+  "id": "right_incircle_scale-2-form0",
+  "variables": [
+    "x",
+    "y"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(x,0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(0,y)"
+    },
+    {
+      "name": "K",
+      "expression": "Incircle(O,A,B)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "3*x",
+      "operator": "=",
+      "right": "4*y"
+    },
+    {
+      "left": "x",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "y",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Radius(K)",
+      "operator": "=",
+      "right": "4"
+    }
+  ],
+  "target": "Distance(O,A)+Distance(A,B)+Distance(B,O)"
+}

@@ -8,6 +8,7 @@ GeoSolverは、有限個の値を答えとして持つ2次元幾何問題を数�
 |---|---|
 | solver・Python API・CLI | [`src/geosolver`](src/geosolver) |
 | solver用323問・DSL・評価runner | [`benchmarks`](benchmarks/README.md) |
+| 追加評価用の生成88入力・正解の導出 | [`benchmarks/generated-88`](benchmarks/generated-88/README.md) |
 | GMB独立実行環境 | [`benchmarks/gmb`](benchmarks/gmb/README.md) |
 | GMB比較入力・独立検査器・評価runner | [`benchmarks/gmb_comparison`](benchmarks/gmb_comparison/README.md) |
 | 回帰テスト・CI・実行契約 | [`tests`](tests)、[REQUIREMENTS.md](REQUIREMENTS.md)、`.github/` |

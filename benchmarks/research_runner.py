@@ -54,6 +54,7 @@ class CaseRecord:
     authoring_status: str
     truth_status: str
     dedupe_key: str
+    problem_kind: str = "natural"
 
     @property
     def runnable(self) -> bool:
@@ -178,6 +179,7 @@ def _load_cases(path: Path = DEFAULT_CASES) -> list[CaseRecord]:
                 authoring_status=str(row.get("authoring_status", "runnable")),
                 truth_status=str(row.get("truth_status", "verified")),
                 dedupe_key=str(row.get("dedupe_key", identifier)),
+                problem_kind=str(row.get("problem_kind", "natural")),
             )
         )
     return records
@@ -189,6 +191,8 @@ def validate_corpus(path: Path = DEFAULT_CASES) -> dict[str, Any]:
     seen: set[str] = set()
     declared_paths: set[Path] = set()
     for record in records:
+        if record.problem_kind not in {"natural", "generated"}:
+            issues.append({"code": "invalid_problem_kind", "case": record.identifier})
         if not record.identifier:
             issues.append({"code": "empty_id", "case": ""})
         elif record.identifier in seen:
@@ -252,7 +256,10 @@ def validate_corpus(path: Path = DEFAULT_CASES) -> dict[str, Any]:
             record.authoring_status == "migration_blocked" for record in records
         ),
         "truth_verified_count": sum(record.truth_status == "verified" for record in records),
-        "unique_natural_problem_count": len({record.dedupe_key for record in records}),
+        "unique_natural_problem_count": len(
+            {record.dedupe_key for record in records if record.problem_kind == "natural"}
+        ),
+        "generated_input_count": sum(record.problem_kind == "generated" for record in records),
         "dsl_file_count": len(actual_paths),
         "issues": issues,
     }
@@ -293,6 +300,7 @@ def _manifest(records: Iterable[CaseRecord], seeds: list[int]) -> dict[str, Any]
                 _canonical_json(list(record.references)).encode("utf-8")
             ),
             "dedupe_key": record.dedupe_key,
+            **({"problem_kind": record.problem_kind} if record.problem_kind != "natural" else {}),
             "problem_hash": (
                 _sha256_bytes(_canonical_json(record.dsl).encode("utf-8"))
                 if record.dsl is not None

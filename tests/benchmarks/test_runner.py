@@ -31,6 +31,7 @@ def test_checked_in_corpus_has_one_to_one_dsl_mapping() -> None:
         "migration_blocked_count": 0,
         "truth_verified_count": 323,
         "unique_natural_problem_count": 323,
+        "generated_input_count": 0,
         "dsl_file_count": 323,
         "issues": [],
     }

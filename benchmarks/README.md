@@ -4,6 +4,8 @@
 
 幾何ベンチマークでは`cases.jsonl`と`dsl/`が現行入力の定義元です。過去の実行結果・一時診断・修復用資料は通常の作業ツリーへ置かず、`benchmarks/local-evaluation/`（Git対象外）を使います。
 
+追加評価用に[生成88入力](generated-88/README.md)も保持しています。11構造族のパラメータ・等価表現であり、自然問題323問とは別の集合です。`--cases benchmarks/generated-88/cases.jsonl`で既存runnerを使えます。取り込み時点では静的検証のみで、求解成績は未測定です。
+
 GMBとの比較準備には[GMB独立実行環境](gmb/README.md)を使います。GeoSolverの依存環境とは分離し、公式GMBと専用venvをGit対象外の領域に置きます。比較入力の監査・原典情報・整合性確認の資料は[gmb_comparison](gmb_comparison/README.md)に保持します。
 
 ## solver評価runner

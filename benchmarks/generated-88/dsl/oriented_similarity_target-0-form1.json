@@ -1,0 +1,34 @@
+{
+  "id": "oriented_similarity_target-0-form1",
+  "variables": [
+    "q_1",
+    "q_0"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(3, 10)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(3 + q_0, 10 + q_1)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(3 - 4 * q_1, 10 + 4 * q_0)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(O, A)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "0",
+      "operator": "=",
+      "right": "0"
+    }
+  ],
+  "target": "Area(O, A, B) / Distance(O, A) ** 2"
+}
