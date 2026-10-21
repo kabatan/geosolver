@@ -1,0 +1,111 @@
+{
+  "id": "HMMT-2013-FEB-GEO-05.C",
+  "variables": [
+    "s",
+    "Ax",
+    "Ay",
+    "xK",
+    "yK",
+    "xD",
+    "yD",
+    "xO",
+    "yO"
+  ],
+  "constructions": [
+    {
+      "name": "M",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(-s, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(s, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(Ax, Ay)"
+    },
+    {
+      "name": "K",
+      "expression": "Point(xK, yK)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(xD, yD)"
+    },
+    {
+      "name": "O",
+      "expression": "Point(xO, yO)"
+    },
+    {
+      "name": "Gamma",
+      "expression": "CircleThroughPoint(K, A)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Angle(B, A, C)",
+      "operator": "=",
+      "right": "pi / 4"
+    },
+    {
+      "left": "Distance(A, M)",
+      "operator": "=",
+      "right": "2 * Distance(M, D)"
+    },
+    {
+      "left": "s",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Ay",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(A, M)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(K, A)",
+      "operator": "=",
+      "right": "Distance(K, B)"
+    },
+    {
+      "left": "Distance(K, A)",
+      "operator": "=",
+      "right": "Distance(K, C)"
+    },
+    {
+      "left": "Collinear(A, M, D)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(K, D)",
+      "operator": "=",
+      "right": "Distance(K, A)"
+    },
+    {
+      "left": "Distance(D, A)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(O, A)",
+      "operator": "=",
+      "right": "Distance(O, B)"
+    },
+    {
+      "left": "Distance(O, A)",
+      "operator": "=",
+      "right": "Distance(O, C)"
+    }
+  ],
+  "target": "cos(Angle(A, O, D))"
+}

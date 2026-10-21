@@ -1,0 +1,98 @@
+{
+  "id": "AIME-2013-I-12.R",
+  "variables": [
+    "r",
+    "zx",
+    "zy",
+    "ux",
+    "uy",
+    "sg"
+  ],
+  "constructions": [
+    {
+      "name": "Q",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "R",
+      "expression": "Point(r,0)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(r/(1+sqrt(3)),sqrt(3)*r/(1+sqrt(3)))"
+    },
+    {
+      "name": "A",
+      "expression": "Point(zx + ux * cos(0 * pi / 3) - sg * uy * sin(0 * pi / 3), zy + uy * cos(0 * pi / 3) + sg * ux * sin(0 * pi / 3))"
+    },
+    {
+      "name": "B",
+      "expression": "Point(zx + ux * cos(1 * pi / 3) - sg * uy * sin(1 * pi / 3), zy + uy * cos(1 * pi / 3) + sg * ux * sin(1 * pi / 3))"
+    },
+    {
+      "name": "C",
+      "expression": "Point(zx + ux * cos(2 * pi / 3) - sg * uy * sin(2 * pi / 3), zy + uy * cos(2 * pi / 3) + sg * ux * sin(2 * pi / 3))"
+    },
+    {
+      "name": "D",
+      "expression": "Point(zx + ux * cos(3 * pi / 3) - sg * uy * sin(3 * pi / 3), zy + uy * cos(3 * pi / 3) + sg * ux * sin(3 * pi / 3))"
+    },
+    {
+      "name": "E",
+      "expression": "Point(zx + ux * cos(4 * pi / 3) - sg * uy * sin(4 * pi / 3), zy + uy * cos(4 * pi / 3) + sg * ux * sin(4 * pi / 3))"
+    },
+    {
+      "name": "F",
+      "expression": "Point(zx + ux * cos(5 * pi / 3) - sg * uy * sin(5 * pi / 3), zy + uy * cos(5 * pi / 3) + sg * ux * sin(5 * pi / 3))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "ux * ux + uy * uy",
+      "operator": "=",
+      "right": 1
+    },
+    {
+      "left": "sg * sg",
+      "operator": "=",
+      "right": 1
+    },
+    {
+      "left": "r",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "OnSegment(A,P,Q)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "OnSegment(B,P,Q)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "OnSegment(C,Q,R)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "OnSegment(D,Q,R)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "predicate": "Or(And((Vector(P,Q).x*Vector(P,E).y-Vector(P,Q).y*Vector(P,E).x)>=0,(Vector(Q,R).x*Vector(Q,E).y-Vector(Q,R).y*Vector(Q,E).x)>=0,(Vector(R,P).x*Vector(R,E).y-Vector(R,P).y*Vector(R,E).x)>=0),And((Vector(P,Q).x*Vector(P,E).y-Vector(P,Q).y*Vector(P,E).x)<=0,(Vector(Q,R).x*Vector(Q,E).y-Vector(Q,R).y*Vector(Q,E).x)<=0,(Vector(R,P).x*Vector(R,E).y-Vector(R,P).y*Vector(R,E).x)<=0))"
+    },
+    {
+      "predicate": "Or(And((Vector(P,Q).x*Vector(P,F).y-Vector(P,Q).y*Vector(P,F).x)>=0,(Vector(Q,R).x*Vector(Q,F).y-Vector(Q,R).y*Vector(Q,F).x)>=0,(Vector(R,P).x*Vector(R,F).y-Vector(R,P).y*Vector(R,F).x)>=0),And((Vector(P,Q).x*Vector(P,F).y-Vector(P,Q).y*Vector(P,F).x)<=0,(Vector(Q,R).x*Vector(Q,F).y-Vector(Q,R).y*Vector(Q,F).x)<=0,(Vector(R,P).x*Vector(R,F).y-Vector(R,P).y*Vector(R,F).x)<=0))"
+    },
+    {
+      "left": "min(Distance(E,Line(P,R)),Distance(F,Line(P,R)))",
+      "operator": "=",
+      "right": "0"
+    }
+  ],
+  "target": "Area(P,Q,R)"
+}

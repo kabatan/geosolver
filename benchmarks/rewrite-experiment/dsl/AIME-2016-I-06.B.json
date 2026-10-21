@@ -1,0 +1,71 @@
+{
+  "id": "AIME-2016-I-06.B",
+  "variables": [
+    "b",
+    "cx",
+    "cy"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(b, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "I",
+      "expression": "Incenter(A, B, C)"
+    },
+    {
+      "name": "L",
+      "expression": "Intersect(Line(C, I), Line(A, B))"
+    },
+    {
+      "name": "Gamma",
+      "expression": "Circumcircle(A, B, C)"
+    },
+    {
+      "name": "D",
+      "expression": "Intersect(Line(C, L), Gamma, exclude=C)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(L, I)",
+      "operator": "=",
+      "right": 2
+    },
+    {
+      "left": "Distance(L, D)",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "b",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Area(A, B, C)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "(Distance(L, I)) + (Distance(L, D))",
+      "operator": "=",
+      "right": "(2) + (3)"
+    }
+  ],
+  "target": "Distance(I, C)"
+}

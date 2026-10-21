@@ -1,0 +1,197 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(I, A)",
+      "operator": "=",
+      "right": 12
+    },
+    {
+      "left": "Distance(I, B)",
+      "operator": "=",
+      "right": 16
+    },
+    {
+      "left": "Distance(I, C)",
+      "operator": "=",
+      "right": 14
+    },
+    {
+      "left": "Distance(I, D)",
+      "operator": "=",
+      "right": 11
+    },
+    {
+      "left": "Distance(I, Line(A, B))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(I, Line(B, C))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(I, Line(C, D))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(I, Line(D, A))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "r",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "predicate": "ConvexPolygon([A, B, C, D])"
+    },
+    {
+      "predicate": "Or(And((Vector(A,B).x*Vector(A,I).y-Vector(A,B).y*Vector(A,I).x)>0,(Vector(B,C).x*Vector(B,I).y-Vector(B,C).y*Vector(B,I).x)>0,(Vector(C,D).x*Vector(C,I).y-Vector(C,D).y*Vector(C,I).x)>0,(Vector(D,A).x*Vector(D,I).y-Vector(D,A).y*Vector(D,I).x)>0),And((Vector(A,B).x*Vector(A,I).y-Vector(A,B).y*Vector(A,I).x)<0,(Vector(B,C).x*Vector(B,I).y-Vector(B,C).y*Vector(B,I).x)<0,(Vector(C,D).x*Vector(C,I).y-Vector(C,D).y*Vector(C,I).x)<0,(Vector(D,A).x*Vector(D,I).y-Vector(D,A).y*Vector(D,I).x)<0))"
+    },
+    {
+      "left": "Dot(Vector(T4, A), Vector(I, T4))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(T1, A), Vector(I, T1))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(T1, B), Vector(I, T1))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(T2, B), Vector(I, T2))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(T2, C), Vector(I, T2))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(T3, C), Vector(I, T3))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(T3, D), Vector(I, T3))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(T4, D), Vector(I, T4))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Vector(A, M).x",
+      "operator": "=",
+      "right": "Vector(M, C).x"
+    },
+    {
+      "left": "Vector(A, M).y",
+      "operator": "=",
+      "right": "Vector(M, C).y"
+    },
+    {
+      "left": "Vector(B, N).x",
+      "operator": "=",
+      "right": "Vector(N, D).x"
+    },
+    {
+      "left": "Vector(B, N).y",
+      "operator": "=",
+      "right": "Vector(N, D).y"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "I"
+    },
+    {
+      "expression": "Point(r, 0)",
+      "name": "T1"
+    },
+    {
+      "expression": "Point(r * (1 - t2 * t2) / (1 + t2 * t2), r * 2 * t2 / (1 + t2 * t2))",
+      "name": "T2"
+    },
+    {
+      "expression": "Point(r * (1 - t3 * t3) / (1 + t3 * t3), r * 2 * t3 / (1 + t3 * t3))",
+      "name": "T3"
+    },
+    {
+      "expression": "Point(r * (1 - t4 * t4) / (1 + t4 * t4), r * 2 * t4 / (1 + t4 * t4))",
+      "name": "T4"
+    },
+    {
+      "expression": "PerpendicularLine(Line(I, T1), T1)",
+      "name": "l1"
+    },
+    {
+      "expression": "PerpendicularLine(Line(I, T2), T2)",
+      "name": "l2"
+    },
+    {
+      "expression": "PerpendicularLine(Line(I, T3), T3)",
+      "name": "l3"
+    },
+    {
+      "expression": "PerpendicularLine(Line(I, T4), T4)",
+      "name": "l4"
+    },
+    {
+      "name": "A",
+      "expression": "Point(xA, yA)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(xB, yB)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(xC, yC)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(xD, yD)"
+    },
+    {
+      "name": "M",
+      "expression": "Point(xM, yM)"
+    },
+    {
+      "name": "N",
+      "expression": "Point(xN, yN)"
+    }
+  ],
+  "id": "HMMT-2017-FEB-GEO-10.C",
+  "target": "Distance(I, M) / Distance(I, N)",
+  "variables": [
+    "r",
+    "t2",
+    "t3",
+    "t4",
+    "xA",
+    "yA",
+    "xB",
+    "yB",
+    "xC",
+    "yC",
+    "xD",
+    "yD",
+    "xM",
+    "yM",
+    "xN",
+    "yN"
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "id": "HMMT-2010-FEB-GEO-10.R",
+  "variables": [
+    "r1",
+    "r2",
+    "ax",
+    "ay",
+    "bx",
+    "by"
+  ],
+  "constructions": [
+    {
+      "name": "P",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "Q",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "O1",
+      "expression": "Point(0, r1)"
+    },
+    {
+      "name": "O2",
+      "expression": "Point(1, r2)"
+    },
+    {
+      "name": "omega1",
+      "expression": "Circle(O1, r1)"
+    },
+    {
+      "name": "omega2",
+      "expression": "Circle(O2, r2)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(bx, by)"
+    },
+    {
+      "name": "X",
+      "expression": "Intersect(ParallelLine(Line(Q, B), P), omega1, exclude=P)"
+    },
+    {
+      "name": "Y",
+      "expression": "Intersect(ParallelLine(Line(P, B), Q), omega2, exclude=Q)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "OnCircle(A, omega1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(A, omega2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(B, omega1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(B, omega2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Angle(A, P, Q)",
+      "operator": "=",
+      "right": "pi / 6"
+    },
+    {
+      "left": "Angle(P, Q, A)",
+      "operator": "=",
+      "right": "pi / 12"
+    },
+    {
+      "left": "r1",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "r2",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(A, B)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "A.y",
+      "operator": "<",
+      "right": "B.y"
+    },
+    {
+      "left": "Distance(A, X)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(A, Y)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "Distance(A, X) / Distance(A, Y)"
+}

@@ -1,0 +1,123 @@
+{
+  "id": "AIME-2016-I-06.C",
+  "variables": [
+    "b",
+    "cx",
+    "cy",
+    "xI",
+    "yI",
+    "xL",
+    "yL",
+    "xK",
+    "yK",
+    "xD",
+    "yD"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(b, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "I",
+      "expression": "Point(xI, yI)"
+    },
+    {
+      "name": "L",
+      "expression": "Point(xL, yL)"
+    },
+    {
+      "name": "K",
+      "expression": "Point(xK, yK)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(xD, yD)"
+    },
+    {
+      "name": "Gamma",
+      "expression": "CircleThroughPoint(K, A)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(L, I)",
+      "operator": "=",
+      "right": 2
+    },
+    {
+      "left": "Distance(L, D)",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "b",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Area(A, B, C)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(B, C) * Vector(I, A).x + Distance(C, A) * Vector(I, B).x + Distance(A, B) * Vector(I, C).x",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(B, C) * Vector(I, A).y + Distance(C, A) * Vector(I, B).y + Distance(A, B) * Vector(I, C).y",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Collinear(C, I, L)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Collinear(A, B, L)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(K, A)",
+      "operator": "=",
+      "right": "Distance(K, B)"
+    },
+    {
+      "left": "Distance(K, A)",
+      "operator": "=",
+      "right": "Distance(K, C)"
+    },
+    {
+      "left": "Collinear(C, L, D)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(K, D)",
+      "operator": "=",
+      "right": "Distance(K, A)"
+    },
+    {
+      "left": "Distance(D, C)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "Distance(I, C)"
+}

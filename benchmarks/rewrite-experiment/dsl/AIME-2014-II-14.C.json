@@ -1,0 +1,150 @@
+{
+  "id": "AIME-2014-II-14.C",
+  "variables": [
+    "cx",
+    "cy",
+    "xH",
+    "yH",
+    "xI",
+    "yI",
+    "xD",
+    "yD",
+    "xM",
+    "yM",
+    "xN",
+    "yN",
+    "xP",
+    "yP"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(10, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "H",
+      "expression": "Point(xH, yH)"
+    },
+    {
+      "name": "I",
+      "expression": "Point(xI, yI)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(xD, yD)"
+    },
+    {
+      "name": "M",
+      "expression": "Point(xM, yM)"
+    },
+    {
+      "name": "N",
+      "expression": "Point(xN, yN)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(xP, yP)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Angle(B, A, C)",
+      "operator": "=",
+      "right": "30 * pi / 180"
+    },
+    {
+      "left": "Angle(A, C, B)",
+      "operator": "=",
+      "right": "45 * pi / 180"
+    },
+    {
+      "left": "cx",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Area(A, B, C)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Dot(Vector(A, D), Vector(A, P))",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Collinear(B, C, H)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(H, A), Vector(B, C))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(B, C) * Vector(I, A).x + Distance(C, A) * Vector(I, B).x + Distance(A, B) * Vector(I, C).x",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(B, C) * Vector(I, A).y + Distance(C, A) * Vector(I, B).y + Distance(A, B) * Vector(I, C).y",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Collinear(A, I, D)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Collinear(B, C, D)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Vector(B, M).x",
+      "operator": "=",
+      "right": "Vector(M, C).x"
+    },
+    {
+      "left": "Vector(B, M).y",
+      "operator": "=",
+      "right": "Vector(M, C).y"
+    },
+    {
+      "left": "Vector(H, N).x",
+      "operator": "=",
+      "right": "Vector(N, M).x"
+    },
+    {
+      "left": "Vector(H, N).y",
+      "operator": "=",
+      "right": "Vector(N, M).y"
+    },
+    {
+      "left": "Collinear(A, D, P)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(N, P), Vector(B, C))",
+      "operator": "=",
+      "right": 0
+    }
+  ],
+  "target": "Distance(A, P) ** 2"
+}

@@ -1,0 +1,83 @@
+{
+  "id": "AIME-2013-I-12.A",
+  "variables": [
+    "r"
+  ],
+  "constructions": [
+    {
+      "name": "Q",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "R",
+      "expression": "Point(r,0)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(r/(1+sqrt(3)),sqrt(3)*r/(1+sqrt(3)))"
+    },
+    {
+      "name": "A",
+      "expression": "Point(1,sqrt(3))"
+    },
+    {
+      "name": "B",
+      "expression": "Point(1/2,sqrt(3)/2)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(1,0)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(2,0)"
+    },
+    {
+      "name": "E",
+      "expression": "Point(5/2,sqrt(3)/2)"
+    },
+    {
+      "name": "F",
+      "expression": "Point(2,sqrt(3))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "r",
+      "operator": ">",
+      "right": "2"
+    },
+    {
+      "left": "OnSegment(A,P,Q)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "OnSegment(B,P,Q)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "OnSegment(C,Q,R)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "OnSegment(D,Q,R)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "predicate": "Or(And((Vector(P,Q).x*Vector(P,E).y-Vector(P,Q).y*Vector(P,E).x)>=0,(Vector(Q,R).x*Vector(Q,E).y-Vector(Q,R).y*Vector(Q,E).x)>=0,(Vector(R,P).x*Vector(R,E).y-Vector(R,P).y*Vector(R,E).x)>=0),And((Vector(P,Q).x*Vector(P,E).y-Vector(P,Q).y*Vector(P,E).x)<=0,(Vector(Q,R).x*Vector(Q,E).y-Vector(Q,R).y*Vector(Q,E).x)<=0,(Vector(R,P).x*Vector(R,E).y-Vector(R,P).y*Vector(R,E).x)<=0))"
+    },
+    {
+      "predicate": "Or(And((Vector(P,Q).x*Vector(P,F).y-Vector(P,Q).y*Vector(P,F).x)>=0,(Vector(Q,R).x*Vector(Q,F).y-Vector(Q,R).y*Vector(Q,F).x)>=0,(Vector(R,P).x*Vector(R,F).y-Vector(R,P).y*Vector(R,F).x)>=0),And((Vector(P,Q).x*Vector(P,F).y-Vector(P,Q).y*Vector(P,F).x)<=0,(Vector(Q,R).x*Vector(Q,F).y-Vector(Q,R).y*Vector(Q,F).x)<=0,(Vector(R,P).x*Vector(R,F).y-Vector(R,P).y*Vector(R,F).x)<=0))"
+    },
+    {
+      "left": "min(Distance(E,Line(P,R)),Distance(F,Line(P,R)))",
+      "operator": "=",
+      "right": "0"
+    }
+  ],
+  "target": "Area(P,Q,R)"
+}

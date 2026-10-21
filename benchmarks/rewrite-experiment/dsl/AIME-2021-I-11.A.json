@@ -1,0 +1,89 @@
+{
+  "id": "AIME-2021-I-11.A",
+  "variables": [
+    "cx",
+    "cy",
+    "dx",
+    "dy"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(4, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(dx, dy)"
+    },
+    {
+      "name": "A1",
+      "expression": "FootOfPerpendicular(A, Line(B, D))"
+    },
+    {
+      "name": "C1",
+      "expression": "FootOfPerpendicular(C, Line(B, D))"
+    },
+    {
+      "name": "B1",
+      "expression": "FootOfPerpendicular(B, Line(A, C))"
+    },
+    {
+      "name": "D1",
+      "expression": "FootOfPerpendicular(D, Line(A, C))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 4
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": 5
+    },
+    {
+      "left": "Distance(C, D)",
+      "operator": "=",
+      "right": 6
+    },
+    {
+      "left": "Distance(D, A)",
+      "operator": "=",
+      "right": 7
+    },
+    {
+      "left": "AreConcyclic(A, B, C, D)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "dy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "predicate": "ConvexPolygon([A, B, C, D])"
+    },
+    {
+      "left": "Distance(A1, B1)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "Perimeter(A1, B1, C1, D1)"
+}

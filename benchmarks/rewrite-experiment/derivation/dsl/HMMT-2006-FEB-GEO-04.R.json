@@ -1,0 +1,61 @@
+{
+  "id": "HMMT-2006-FEB-GEO-04.R",
+  "variables": [
+    "o"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(4, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(11 / 8, 3 * sqrt(15) / 8)"
+    },
+    {
+      "name": "O",
+      "expression": "Point(o, 0)"
+    },
+    {
+      "name": "r",
+      "expression": "Distance(O, Line(A, B))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 2
+    },
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": 4
+    },
+    {
+      "left": "Distance(O, Line(A, B))",
+      "operator": "=",
+      "right": "Distance(O, Line(A, C))"
+    },
+    {
+      "left": "o",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "o",
+      "operator": "<",
+      "right": "4"
+    }
+  ],
+  "target": "pi * r * r / 2"
+}

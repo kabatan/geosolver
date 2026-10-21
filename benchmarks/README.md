@@ -5,6 +5,7 @@
 幾何ベンチマークでは`cases.jsonl`と`dsl/`が現行入力の定義元です。過去の実行結果・一時診断・修復用資料は通常の作業ツリーへ置かず、`benchmarks/local-evaluation/`（Git対象外）を使います。
 
 監査で見つかった問題を直したDSLの別版は[dsl-revisions](dsl-revisions/README.md)にあります（323問の凍結版は変えていません）。
+書き換え実験の入力（表現A/B/C、事前導出を外した版）は[rewrite-experiment](rewrite-experiment/PROTOCOL.md)にあります。
 
 追加評価用に[生成88入力](generated-88/README.md)も保持しています。11構造族のパラメータ・等価表現であり、自然問題323問とは別の集合です。`--cases benchmarks/generated-88/cases.jsonl`で既存runnerを使えます。取り込み時点では静的検証のみで、求解成績は未測定です。
 

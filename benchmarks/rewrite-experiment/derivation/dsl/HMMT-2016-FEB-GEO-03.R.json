@@ -1,0 +1,44 @@
+{
+  "id": "HMMT-2016-FEB-GEO-03.R",
+  "variables": [],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0,0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(5,0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(5/2,5*sqrt(3)/2)"
+    },
+    {
+      "name": "O",
+      "expression": "Centroid(A,B,C)"
+    },
+    {
+      "name": "omega",
+      "expression": "Circle(O,2)"
+    },
+    {
+      "name": "P",
+      "expression": "Intersect(Line(A, B), omega, near=A)"
+    },
+    {
+      "name": "Q",
+      "expression": "Intersect(Line(A, C), omega, near=A)"
+    },
+    {
+      "name": "R",
+      "expression": "Intersect(Line(B, C), omega, near=B)"
+    },
+    {
+      "name": "S",
+      "expression": "Intersect(Line(B, C), omega, near=C)"
+    }
+  ],
+  "conditions": [],
+  "target": "(Area(A, P, O, Q) - 2 * Angle(P, O, Q)) - (2 * Angle(R, O, S) - Area(O, R, S))"
+}

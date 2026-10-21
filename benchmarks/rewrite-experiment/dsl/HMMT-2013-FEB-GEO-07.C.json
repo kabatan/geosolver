@@ -1,0 +1,76 @@
+{
+  "id": "HMMT-2013-FEB-GEO-07.C",
+  "variables": [
+    "Ax",
+    "Ay",
+    "xO",
+    "yO",
+    "xD",
+    "yD"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(Ax, Ay)"
+    },
+    {
+      "name": "O",
+      "expression": "Point(xO, yO)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(xD, yD)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Angle(A, B, C)",
+      "operator": "=",
+      "right": "pi / 12"
+    },
+    {
+      "left": "Distance(O, D) * Distance(O, D) + Distance(O, C) * Distance(D, C)",
+      "operator": "=",
+      "right": "Distance(O, C) * Distance(O, C)"
+    },
+    {
+      "left": "Ay",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Angle(B, A, C)",
+      "operator": ">",
+      "right": "pi / 2"
+    },
+    {
+      "left": "Distance(O, A)",
+      "operator": "=",
+      "right": "Distance(O, B)"
+    },
+    {
+      "left": "Distance(O, A)",
+      "operator": "=",
+      "right": "Distance(O, C)"
+    },
+    {
+      "left": "Collinear(A, O, D)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Collinear(B, C, D)",
+      "operator": "=",
+      "right": 0
+    }
+  ],
+  "target": "180 * Angle(A, C, B) / pi"
+}
