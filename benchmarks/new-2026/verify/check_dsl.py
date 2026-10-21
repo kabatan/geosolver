@@ -36,7 +36,10 @@ DPS = 60
 
 
 def load(path):
-    dsl = json.load(open(path, encoding="utf-8"))
+    return load_dict(json.load(open(path, encoding="utf-8")))
+
+
+def load_dict(dsl):
     problem = GeometryProblem.model_validate(dsl)
     report = validate(problem)
     issues = [f"{i.path}: {i.message}" for i in report.issues]
