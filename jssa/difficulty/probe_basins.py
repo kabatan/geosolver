@@ -29,6 +29,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import re
 import sys
 import time
 from pathlib import Path
@@ -58,9 +59,25 @@ def load_case(case_id: str) -> dict:
     raise KeyError(case_id)
 
 
+def _ascii_expr(text: str) -> str:
+    """Turn reference answers such as '9√15' or '64(2-√3)' into SymPy syntax."""
+    s = str(text).replace("−", "-").replace("×", "*").replace("π", "pi")
+    s = re.sub(r"\\sqrt\{([^}]*)\}", r"sqrt(\1)", s)
+    s = re.sub(r"∛\s*(\d+|\([^)]*\))", r"cbrt(\1)", s)
+    s = re.sub(r"√\s*\(", "sqrt(", s)
+    s = re.sub(r"√\s*(\d+(?:\.\d+)?|[A-Za-z_]\w*)", r"sqrt(\1)", s)
+    s = re.sub(r"(\d|\))\s*(sqrt|pi|\()", r"\1*\2", s)
+    return s
+
+
 def reference_values(answer) -> list[float]:
     items = answer if isinstance(answer, list) else [answer]
-    return [float(sp.N(sp.sympify(str(item)), 30)) for item in items]
+    flat = []
+    for item in items:
+        text = re.sub(r"\(\d+個\)", "", str(item))
+        flat.extend(part for part in (text.split(",") if "CRootOf" not in text else [text]) if part.strip())
+    items = flat
+    return [float(sp.N(sp.sympify(_ascii_expr(item), locals={"cbrt": sp.cbrt, "CRootOf": sp.CRootOf}), 30)) for item in items]
 
 
 def answer_float(evaluator, x) -> float | None:
