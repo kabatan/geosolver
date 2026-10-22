@@ -24,7 +24,7 @@ sys.path.insert(0, str(HERE))
 from algebraize import Unsupported, translate  # noqa: E402
 
 CASES = HERE.parent / "cases.jsonl"
-MEM_BYTES = 6 << 30
+MEM_BYTES = int(float(os.environ.get("EXACT_MEM_GB", "6")) * (1 << 30))
 
 
 def load_case(cid):

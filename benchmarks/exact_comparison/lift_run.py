@@ -9,7 +9,8 @@ from lift_check import lift
 cid, res, out = sys.argv[1:4]
 case = load_case(cid)
 r = json.load(open(res))
-recs = r['diagnostics']['pipeline_summary'].get('exact_candidate_records', [])
+r = r.get('solver_result') or r  # research_runner raw record or plain solver output
+recs = ((r.get('diagnostics') or {}).get('pipeline_summary') or {}).get('exact_candidate_records', [])
 bundle, _ = verifier_for(case)
 rec = {'id': cid}
 if not recs:
