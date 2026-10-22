@@ -135,6 +135,7 @@ def main() -> None:
     ap.add_argument("--budget", type=float, default=120.0)
     ap.add_argument("--dsl", help="use this DSL JSON instead of the case's own")
     ap.add_argument("--init-from", help="k=0 DSL: start extra point variables at their constructed position")
+    ap.add_argument("--zero-prefix", help="start variables whose name begins with this prefix at 0 (offset variants)")
     args = ap.parse_args()
 
     case = load_case(args.case_id)
@@ -152,6 +153,7 @@ def main() -> None:
         "starts_requested": args.starts,
         "seed": args.seed,
         "init_from": args.init_from,
+        "zero_prefix": args.zero_prefix,
     }
     if not bundle.var_names:
         out["status"] = "no_variables"
@@ -184,6 +186,10 @@ def main() -> None:
                 v = answer_float(ev, [value_of[n] for n in base_names])
                 if v is not None and math.isfinite(v):
                     start[names.index(var)] = v
+        if args.zero_prefix:
+            for j, n in enumerate(names):
+                if n.startswith(args.zero_prefix):
+                    start[j] = 0.0
         t0 = time.monotonic()
         n0 = telemetry.evaluation_count
         try:
