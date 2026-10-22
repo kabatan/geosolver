@@ -201,6 +201,9 @@ def main() -> None:
             err = None
         dt = time.monotonic() - t0
         rec = {"k": k, "sec": dt, "nfev": telemetry.evaluation_count - n0}
+        if cand is not None:
+            rec["x"] = [float(v) for v in cand.x_float]
+            rec["start"] = [float(v) for v in start]
         if cand is None:
             rec["cls"] = "error"
             rec["err"] = err
