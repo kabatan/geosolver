@@ -8,14 +8,14 @@ OUT=$1; JOBS=$2; DSL_DIR=${3:-}
 HERE=$(cd "$(dirname "$0")" && pwd)
 PY="$HERE/../../.venv/bin/python"
 mkdir -p "$OUT"
-INIT=${INIT:-}
-export OUT DSL_DIR HERE PY INIT
+INIT=${INIT:-}; SEED=${SEED:-0}
+export OUT DSL_DIR HERE PY INIT SEED
 xargs -P "$JOBS" -I{} bash -c '
   id="{}"; [ -s "$OUT/$id.json" ] && exit 0
   ulimit -v $((4*1024*1024))
   if [ -n "$DSL_DIR" ]; then
-    timeout 300 "$PY" "$HERE/probe_basins.py" "${id%.k*}" "$OUT/$id.json" --dsl "$DSL_DIR/$id.json" ${INIT:+--init-from "$DSL_DIR/${id%.k*}.k0.json"} --starts 200 --budget 120 > "$OUT/$id.log" 2>&1
+    timeout 300 "$PY" "$HERE/probe_basins.py" "${id%.k*}" "$OUT/$id.json" --dsl "$DSL_DIR/$id.json" ${INIT:+--init-from "$DSL_DIR/${id%.k*}.k0.json"} --starts 200 --budget 120 --seed ${SEED:-0} > "$OUT/$id.log" 2>&1
   else
-    timeout 300 "$PY" "$HERE/probe_basins.py" "$id" "$OUT/$id.json" --starts 200 --budget 120 > "$OUT/$id.log" 2>&1
+    timeout 300 "$PY" "$HERE/probe_basins.py" "$id" "$OUT/$id.json" --starts 200 --budget 120 --seed ${SEED:-0} > "$OUT/$id.log" 2>&1
   fi
   echo "$id rc=$?"'
