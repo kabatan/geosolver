@@ -78,6 +78,7 @@ def main() -> None:
     ap.add_argument("--z", required=True)
     ap.add_argument("--starts", type=int, default=100)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--budget", type=float, default=1500.0, help="stop starting new rows after this many seconds")
     args = ap.parse_args()
 
     refs = reference_values(load_case(args.case_id)["answer"])
@@ -120,6 +121,8 @@ def main() -> None:
     rows = []
     t_start = time.monotonic()
     for k in range(args.starts):
+        if time.monotonic() - t_start > args.budget:
+            break
         rng = np.random.default_rng([args.seed, k])
         u0 = e_box[:, 0] + rng.random(len(base)) * (e_box[:, 1] - e_box[:, 0])
         h0 = h_of(u0)
