@@ -21,7 +21,13 @@ how degenerate (tangent / double-root-like) the correct configuration is.
 The solver source is not modified (frozen 60db4b6); private helpers are
 imported read-only.
 
+With ``--init-from BASE.json`` (the k=0 DSL of an extra-variables variant),
+the extra point variables x_N, y_N are not drawn at random: they start at the
+position the original construction gives for the random base variables, so
+the start lies on the extra equations and only the search space is larger.
+
 Usage: python probe_basins.py CASE_ID OUT.json [--starts 200] [--seed 0] [--budget 120]
+       [--dsl VARIANT.json [--init-from BASE.json]]
 """
 
 from __future__ import annotations
@@ -106,6 +112,20 @@ def equality_jacobian_svals(evaluator, x, h=1e-6):
     return [float(v) for v in s], int(base.size)
 
 
+def construction_coordinates(base_dsl: dict, names: list[str]):
+    """Evaluators giving the constructed position of each point in ``names`` from the base variables."""
+    out = {}
+    for name in names:
+        for axis in ("x", "y"):
+            dsl = json.loads(json.dumps(base_dsl))
+            dsl["constructions"] = [{"name": "ORIGINZ", "expression": "Point(0, 0)"}] + dsl["constructions"]
+            dsl["target"] = f"Vector(ORIGINZ, {name}).{axis}"
+            dsl["conditions"] = [c for c in dsl["conditions"] if c.get("operator") == "="][:1] or dsl["conditions"][:1]
+            bundle = load_problem_bundle(GeometryProblem.model_validate(dsl).engine_document())
+            out[f"{axis}_{name}"] = (list(bundle.var_names), build_ir_evaluator(bundle))
+    return out
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("case_id")
@@ -114,6 +134,7 @@ def main() -> None:
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--budget", type=float, default=120.0)
     ap.add_argument("--dsl", help="use this DSL JSON instead of the case's own")
+    ap.add_argument("--init-from", help="k=0 DSL: start extra point variables at their constructed position")
     args = ap.parse_args()
 
     case = load_case(args.case_id)
@@ -130,6 +151,7 @@ def main() -> None:
         "references": refs,
         "starts_requested": args.starts,
         "seed": args.seed,
+        "init_from": args.init_from,
     }
     if not bundle.var_names:
         out["status"] = "no_variables"
@@ -142,6 +164,12 @@ def main() -> None:
     config = ExternalPipelineConfig.production_baseline_tier(seed=args.seed, total_time_budget_sec=180.0).search
     telemetry = smb._SearchTelemetry()
     rng = np.random.default_rng(args.seed)
+    names = list(bundle.var_names)
+    init = {}
+    if args.init_from:
+        base_dsl = json.loads(Path(args.init_from).read_text())
+        extra = sorted({v[2:] for v in names if re.match(r"^[xy]_", v) and v not in base_dsl["variables"]})
+        init = construction_coordinates(base_dsl, extra)
     t_start = time.monotonic()
     deadline = t_start + args.budget
     records = []
@@ -150,6 +178,12 @@ def main() -> None:
         if time.monotonic() > deadline:
             break
         start = lower + rng.random(lower.size) * (upper - lower)
+        if init:
+            value_of = dict(zip(names, start))
+            for var, (base_names, ev) in init.items():
+                v = answer_float(ev, [value_of[n] for n in base_names])
+                if v is not None and math.isfinite(v):
+                    start[names.index(var)] = v
         t0 = time.monotonic()
         n0 = telemetry.evaluation_count
         try:
