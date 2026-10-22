@@ -4,7 +4,7 @@ the LM column scale of the u-variables in the free-point system Y.
 For each start u0 (same RNG as probe_common), compute by central differences
   H (2q x d) and J_R (m x d, equality residuals of E),
 and report median over starts of  ratio_j = |[J_R; -H] e_j| / |J_R e_j|  (median over j).
-Usage: construction_jacobian.py OUT.csv CASE...
+Usage: [KDIR=dir K=k] construction_jacobian.py OUT.csv CASE...
 """
 import csv, math, sys
 from pathlib import Path
@@ -15,11 +15,13 @@ from probe_common import build  # noqa: E402
 from geosolver.engine.standard.problem.infer_problem_bounds import infer_problem_bounds  # noqa: E402
 import json
 
-D = Path("benchmarks/extra-variables/dsl")
+import os
+D = Path(os.environ.get("KDIR", "benchmarks/extra-variables/dsl"))
+K = os.environ.get("K", "3")
 rows = []
 for case in sys.argv[2:]:
     dsl, b, ev = build(D / f"{case}.k0.json")
-    y = json.loads((D / f"{case}.k3.json").read_text())
+    y = json.loads((D / f"{case}.k{K}.json").read_text())
     picks = sorted({v[2:] for v in y["variables"] if v[:2] in ("x_", "y_") and v not in dsl["variables"]})
     hc = construction_coordinates(dsl, picks)
     box = np.array(infer_problem_bounds(b), dtype=float)
