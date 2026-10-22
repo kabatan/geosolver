@@ -1,0 +1,114 @@
+{
+ "conditions": [
+  {
+   "left": "Angle(B, A, C)",
+   "operator": "=",
+   "right": "30 * pi / 180"
+  },
+  {
+   "left": "Angle(A, C, B)",
+   "operator": "=",
+   "right": "45 * pi / 180"
+  },
+  {
+   "left": "cx",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "cy",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Area(A, B, C)",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Dot(Vector(A, D), Vector(A, P))",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Collinear(A, I, D)",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "Collinear(B, C, D)",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "Vector(B, M).x",
+   "operator": "=",
+   "right": "Vector(M, C).x"
+  },
+  {
+   "left": "Vector(B, M).y",
+   "operator": "=",
+   "right": "Vector(M, C).y"
+  },
+  {
+   "left": "Vector(H, N).x",
+   "operator": "=",
+   "right": "Vector(N, M).x"
+  },
+  {
+   "left": "Vector(H, N).y",
+   "operator": "=",
+   "right": "Vector(N, M).y"
+  }
+ ],
+ "constructions": [
+  {
+   "expression": "Point(0, 0)",
+   "name": "A"
+  },
+  {
+   "expression": "Point(10, 0)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(cx, cy)",
+   "name": "C"
+  },
+  {
+   "expression": "FootOfPerpendicular(Line(B, C), A)",
+   "name": "H"
+  },
+  {
+   "expression": "Incenter(A, B, C)",
+   "name": "I"
+  },
+  {
+   "name": "D",
+   "expression": "Point(x_D, y_D)"
+  },
+  {
+   "name": "M",
+   "expression": "Point(x_M, y_M)"
+  },
+  {
+   "name": "N",
+   "expression": "Point(x_N, y_N)"
+  },
+  {
+   "expression": "Intersect(Line(A, D), PerpendicularLine(Line(B, C), N))",
+   "name": "P"
+  }
+ ],
+ "id": "AIME-2014-II-14.k3",
+ "target": "Distance(A, P) ** 2",
+ "variables": [
+  "cx",
+  "cy",
+  "x_D",
+  "y_D",
+  "x_M",
+  "y_M",
+  "x_N",
+  "y_N"
+ ]
+}

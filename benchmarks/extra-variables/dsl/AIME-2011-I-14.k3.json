@@ -1,0 +1,212 @@
+{
+ "conditions": [
+  {
+   "left": "Perpendicular(R1, R3)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "Perpendicular(R3, R5)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "Perpendicular(R5, R7)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "Perpendicular(R7, R1)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "Distance(B1, B3)",
+   "operator": "=",
+   "right": "Distance(A1, A2)"
+  },
+  {
+   "left": "Dot(Vector(M1, Point(0, 0)), Vector(M1, Point(M1.x + cos(theta), M1.y + sin(theta))))",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Dot(Vector(M3, Point(0, 0)), Vector(M3, Point(M3.x - sin(theta), M3.y + cos(theta))))",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Dot(Vector(M5, Point(0, 0)), Vector(M5, Point(M5.x - cos(theta), M5.y - sin(theta))))",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Dot(Vector(M7, Point(0, 0)), Vector(M7, Point(M7.x + sin(theta), M7.y - cos(theta))))",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Dot(Vector(M1, B1), Vector(M1, Point(M1.x + cos(theta), M1.y + sin(theta))))",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Dot(Vector(M3, B1), Vector(M3, Point(M3.x - sin(theta), M3.y + cos(theta))))",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Dot(Vector(M3, B3), Vector(M3, Point(M3.x - sin(theta), M3.y + cos(theta))))",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Dot(Vector(M5, B3), Vector(M5, Point(M5.x - cos(theta), M5.y - sin(theta))))",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Dot(Vector(M5, B5), Vector(M5, Point(M5.x - cos(theta), M5.y - sin(theta))))",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Dot(Vector(M7, B5), Vector(M7, Point(M7.x + sin(theta), M7.y - cos(theta))))",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Dot(Vector(M7, B7), Vector(M7, Point(M7.x + sin(theta), M7.y - cos(theta))))",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Dot(Vector(M1, B7), Vector(M1, Point(M1.x + cos(theta), M1.y + sin(theta))))",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Vector(A1, M1).x",
+   "operator": "=",
+   "right": "Vector(M1, A2).x"
+  },
+  {
+   "left": "Vector(A1, M1).y",
+   "operator": "=",
+   "right": "Vector(M1, A2).y"
+  },
+  {
+   "left": "Vector(A3, M3).x",
+   "operator": "=",
+   "right": "Vector(M3, A4).x"
+  },
+  {
+   "left": "Vector(A3, M3).y",
+   "operator": "=",
+   "right": "Vector(M3, A4).y"
+  },
+  {
+   "left": "Vector(A5, M5).x",
+   "operator": "=",
+   "right": "Vector(M5, A6).x"
+  },
+  {
+   "left": "Vector(A5, M5).y",
+   "operator": "=",
+   "right": "Vector(M5, A6).y"
+  }
+ ],
+ "constructions": [
+  {
+   "expression": "Point(1, 0)",
+   "name": "A1"
+  },
+  {
+   "expression": "Point(1 / sqrt(2), 1 / sqrt(2))",
+   "name": "A2"
+  },
+  {
+   "expression": "Point(0, 1)",
+   "name": "A3"
+  },
+  {
+   "expression": "Point(-1 / sqrt(2), 1 / sqrt(2))",
+   "name": "A4"
+  },
+  {
+   "expression": "Point(-1, 0)",
+   "name": "A5"
+  },
+  {
+   "expression": "Point(-1 / sqrt(2), -1 / sqrt(2))",
+   "name": "A6"
+  },
+  {
+   "expression": "Point(0, -1)",
+   "name": "A7"
+  },
+  {
+   "expression": "Point(1 / sqrt(2), -1 / sqrt(2))",
+   "name": "A8"
+  },
+  {
+   "name": "M1",
+   "expression": "Point(x_M1, y_M1)"
+  },
+  {
+   "name": "M3",
+   "expression": "Point(x_M3, y_M3)"
+  },
+  {
+   "name": "M5",
+   "expression": "Point(x_M5, y_M5)"
+  },
+  {
+   "expression": "Midpoint(A7, A8)",
+   "name": "M7"
+  },
+  {
+   "expression": "Line(M1, Point(M1.x + cos(theta), M1.y + sin(theta)))",
+   "name": "R1"
+  },
+  {
+   "expression": "Line(M3, Point(M3.x - sin(theta), M3.y + cos(theta)))",
+   "name": "R3"
+  },
+  {
+   "expression": "Line(M5, Point(M5.x - cos(theta), M5.y - sin(theta)))",
+   "name": "R5"
+  },
+  {
+   "expression": "Line(M7, Point(M7.x + sin(theta), M7.y - cos(theta)))",
+   "name": "R7"
+  },
+  {
+   "expression": "Intersect(R1, R3)",
+   "name": "B1"
+  },
+  {
+   "expression": "Intersect(R3, R5)",
+   "name": "B3"
+  },
+  {
+   "expression": "Intersect(R5, R7)",
+   "name": "B5"
+  },
+  {
+   "expression": "Intersect(R7, R1)",
+   "name": "B7"
+  }
+ ],
+ "id": "AIME-2011-I-14.k3",
+ "target": "cos(2 * Angle(A3, M3, B1))",
+ "variables": [
+  "theta",
+  "x_M1",
+  "y_M1",
+  "x_M3",
+  "y_M3",
+  "x_M5",
+  "y_M5"
+ ]
+}

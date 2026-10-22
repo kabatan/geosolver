@@ -1,0 +1,138 @@
+{
+ "conditions": [
+  {
+   "left": "Distance(A, C)",
+   "operator": "=",
+   "right": 13
+  },
+  {
+   "left": "Distance(B, C)",
+   "operator": "=",
+   "right": 14
+  },
+  {
+   "left": "OnLine(D, A, C)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "OnSegment(D, A, C)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "OnLine(E, A, B)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "OnSegment(E, A, B)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "OnCircle(P, g1)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "OnCircle(P, g2)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "OnLine(Q, B, C)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "OnSegment(Q, B, C)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "cy",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Dot(Vector(A, P), Vector(A, Q))",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Distance(B, Q)",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Distance(Q, C)",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Vector(A, M).x",
+   "operator": "=",
+   "right": "Vector(M, C).x"
+  },
+  {
+   "left": "Vector(A, M).y",
+   "operator": "=",
+   "right": "Vector(M, C).y"
+  }
+ ],
+ "constructions": [
+  {
+   "expression": "Point(0, 0)",
+   "name": "A"
+  },
+  {
+   "expression": "Point(15, 0)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(cx, cy)",
+   "name": "C"
+  },
+  {
+   "name": "M",
+   "expression": "Point(x_M, y_M)"
+  },
+  {
+   "expression": "Midpoint(A, B)",
+   "name": "N"
+  },
+  {
+   "expression": "Intersect(AngleBisector(A, B, C), Line(A, C))",
+   "name": "D"
+  },
+  {
+   "expression": "Intersect(AngleBisector(A, C, B), Line(A, B))",
+   "name": "E"
+  },
+  {
+   "expression": "Circumcircle(A, M, N)",
+   "name": "g1"
+  },
+  {
+   "expression": "Circumcircle(A, D, E)",
+   "name": "g2"
+  },
+  {
+   "expression": "Intersect(g1, g2, exclude=A)",
+   "name": "P"
+  },
+  {
+   "expression": "Intersect(Line(A, P), Line(B, C))",
+   "name": "Q"
+  }
+ ],
+ "id": "AIME-2010-II-15.k1",
+ "target": "Distance(B, Q) / Distance(Q, C)",
+ "variables": [
+  "cx",
+  "cy",
+  "x_M",
+  "y_M"
+ ]
+}

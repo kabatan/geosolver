@@ -1,0 +1,88 @@
+{
+ "conditions": [
+  {
+   "left": "s",
+   "operator": ">",
+   "right": "0"
+  }
+ ],
+ "constructions": [
+  {
+   "expression": "Point(s, 0)",
+   "name": "A"
+  },
+  {
+   "expression": "Point(s / 2, sqrt(3) * s / 2)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(-s / 2, sqrt(3) * s / 2)",
+   "name": "C"
+  },
+  {
+   "expression": "Point(-s, 0)",
+   "name": "D"
+  },
+  {
+   "expression": "Point(-s / 2, -sqrt(3) * s / 2)",
+   "name": "E"
+  },
+  {
+   "expression": "Point(s / 2, -sqrt(3) * s / 2)",
+   "name": "F"
+  },
+  {
+   "expression": "Midpoint(A, B)",
+   "name": "G"
+  },
+  {
+   "expression": "Midpoint(B, C)",
+   "name": "H"
+  },
+  {
+   "expression": "Midpoint(C, D)",
+   "name": "I"
+  },
+  {
+   "expression": "Midpoint(D, E)",
+   "name": "J"
+  },
+  {
+   "expression": "Midpoint(E, F)",
+   "name": "K"
+  },
+  {
+   "expression": "Midpoint(F, A)",
+   "name": "L"
+  },
+  {
+   "expression": "Intersect(Line(A, H), Line(B, I))",
+   "name": "U"
+  },
+  {
+   "expression": "Intersect(Line(B, I), Line(C, J))",
+   "name": "V"
+  },
+  {
+   "expression": "Intersect(Line(C, J), Line(D, K))",
+   "name": "W"
+  },
+  {
+   "expression": "Intersect(Line(D, K), Line(E, L))",
+   "name": "X"
+  },
+  {
+   "expression": "Intersect(Line(E, L), Line(F, G))",
+   "name": "Y"
+  },
+  {
+   "expression": "Intersect(Line(F, G), Line(A, H))",
+   "name": "Z"
+  }
+ ],
+ "id": "AIME-2010-II-09.k0",
+ "target": "Area(U, V, W, X, Y, Z) / Area(A, B, C, D, E, F)",
+ "variables": [
+  "s"
+ ]
+}

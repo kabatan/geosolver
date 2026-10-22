@@ -1,0 +1,79 @@
+{
+ "conditions": [
+  {
+   "left": "Distance(B, C)",
+   "operator": "=",
+   "right": 15
+  },
+  {
+   "left": "Distance(A, D)",
+   "operator": "=",
+   "right": 24
+  },
+  {
+   "left": "Distance(A, Q)",
+   "operator": "=",
+   "right": 20
+  },
+  {
+   "left": "u",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "u",
+   "operator": "<",
+   "right": "15"
+  },
+  {
+   "left": "Angle(A, B, C)",
+   "operator": "<",
+   "right": "pi / 2"
+  },
+  {
+   "left": "Angle(B, C, A)",
+   "operator": "<",
+   "right": "pi / 2"
+  },
+  {
+   "left": "Angle(C, A, B)",
+   "operator": "<",
+   "right": "pi / 2"
+  }
+ ],
+ "constructions": [
+  {
+   "expression": "Point(0, 0)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(15, 0)",
+   "name": "C"
+  },
+  {
+   "expression": "Point(u, 24)",
+   "name": "A"
+  },
+  {
+   "expression": "Point(u, 0)",
+   "name": "D"
+  },
+  {
+   "expression": "FootOfPerpendicular(B, Line(C, A))",
+   "name": "E"
+  },
+  {
+   "expression": "FootOfPerpendicular(C, Line(A, B))",
+   "name": "F"
+  },
+  {
+   "expression": "FootOfPerpendicular(A, Line(E, F))",
+   "name": "Q"
+  }
+ ],
+ "id": "HMMT-2024-FEB-GEO-07.k0",
+ "target": "Distance(D, E) + Distance(E, F) + Distance(F, D)",
+ "variables": [
+  "u"
+ ]
+}

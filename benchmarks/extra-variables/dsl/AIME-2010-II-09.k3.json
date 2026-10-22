@@ -1,0 +1,124 @@
+{
+ "conditions": [
+  {
+   "left": "s",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Vector(A, G).x",
+   "operator": "=",
+   "right": "Vector(G, B).x"
+  },
+  {
+   "left": "Vector(A, G).y",
+   "operator": "=",
+   "right": "Vector(G, B).y"
+  },
+  {
+   "left": "Vector(B, H).x",
+   "operator": "=",
+   "right": "Vector(H, C).x"
+  },
+  {
+   "left": "Vector(B, H).y",
+   "operator": "=",
+   "right": "Vector(H, C).y"
+  },
+  {
+   "left": "Vector(C, I).x",
+   "operator": "=",
+   "right": "Vector(I, D).x"
+  },
+  {
+   "left": "Vector(C, I).y",
+   "operator": "=",
+   "right": "Vector(I, D).y"
+  }
+ ],
+ "constructions": [
+  {
+   "expression": "Point(s, 0)",
+   "name": "A"
+  },
+  {
+   "expression": "Point(s / 2, sqrt(3) * s / 2)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(-s / 2, sqrt(3) * s / 2)",
+   "name": "C"
+  },
+  {
+   "expression": "Point(-s, 0)",
+   "name": "D"
+  },
+  {
+   "expression": "Point(-s / 2, -sqrt(3) * s / 2)",
+   "name": "E"
+  },
+  {
+   "expression": "Point(s / 2, -sqrt(3) * s / 2)",
+   "name": "F"
+  },
+  {
+   "name": "G",
+   "expression": "Point(x_G, y_G)"
+  },
+  {
+   "name": "H",
+   "expression": "Point(x_H, y_H)"
+  },
+  {
+   "name": "I",
+   "expression": "Point(x_I, y_I)"
+  },
+  {
+   "expression": "Midpoint(D, E)",
+   "name": "J"
+  },
+  {
+   "expression": "Midpoint(E, F)",
+   "name": "K"
+  },
+  {
+   "expression": "Midpoint(F, A)",
+   "name": "L"
+  },
+  {
+   "expression": "Intersect(Line(A, H), Line(B, I))",
+   "name": "U"
+  },
+  {
+   "expression": "Intersect(Line(B, I), Line(C, J))",
+   "name": "V"
+  },
+  {
+   "expression": "Intersect(Line(C, J), Line(D, K))",
+   "name": "W"
+  },
+  {
+   "expression": "Intersect(Line(D, K), Line(E, L))",
+   "name": "X"
+  },
+  {
+   "expression": "Intersect(Line(E, L), Line(F, G))",
+   "name": "Y"
+  },
+  {
+   "expression": "Intersect(Line(F, G), Line(A, H))",
+   "name": "Z"
+  }
+ ],
+ "id": "AIME-2010-II-09.k3",
+ "target": "Area(U, V, W, X, Y, Z) / Area(A, B, C, D, E, F)",
+ "variables": [
+  "s",
+  "x_G",
+  "y_G",
+  "x_H",
+  "y_H",
+  "x_I",
+  "y_I"
+ ]
+}

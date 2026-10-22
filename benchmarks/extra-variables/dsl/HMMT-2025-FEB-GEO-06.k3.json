@@ -1,0 +1,113 @@
+{
+ "conditions": [
+  {
+   "left": "Parallel(Line(A, B), Line(C, D))",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "Distance(A, B)",
+   "operator": "=",
+   "right": 11
+  },
+  {
+   "left": "Distance(B, C)",
+   "operator": "=",
+   "right": 8
+  },
+  {
+   "left": "Distance(C, D)",
+   "operator": "=",
+   "right": 19
+  },
+  {
+   "left": "Distance(D, A)",
+   "operator": "=",
+   "right": 4
+  },
+  {
+   "left": "dy",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "predicate": "SimplePolygon([A, B, C, D])"
+  },
+  {
+   "left": "Distance(O_BCD, B)",
+   "operator": "=",
+   "right": "Distance(O_BCD, C)"
+  },
+  {
+   "left": "Distance(O_BCD, B)",
+   "operator": "=",
+   "right": "Distance(O_BCD, D)"
+  },
+  {
+   "left": "Distance(O_CDA, C)",
+   "operator": "=",
+   "right": "Distance(O_CDA, D)"
+  },
+  {
+   "left": "Distance(O_CDA, C)",
+   "operator": "=",
+   "right": "Distance(O_CDA, A)"
+  },
+  {
+   "left": "Distance(O_DAB, D)",
+   "operator": "=",
+   "right": "Distance(O_DAB, A)"
+  },
+  {
+   "left": "Distance(O_DAB, D)",
+   "operator": "=",
+   "right": "Distance(O_DAB, B)"
+  }
+ ],
+ "constructions": [
+  {
+   "expression": "Point(0, 0)",
+   "name": "A"
+  },
+  {
+   "expression": "Point(11, 0)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(dx, dy)",
+   "name": "D"
+  },
+  {
+   "expression": "Point(dx + 19, dy)",
+   "name": "C"
+  },
+  {
+   "name": "O_BCD",
+   "expression": "Point(x_O_BCD, y_O_BCD)"
+  },
+  {
+   "name": "O_CDA",
+   "expression": "Point(x_O_CDA, y_O_CDA)"
+  },
+  {
+   "name": "O_DAB",
+   "expression": "Point(x_O_DAB, y_O_DAB)"
+  },
+  {
+   "expression": "Circumcenter(A, B, C)",
+   "name": "O_ABC"
+  }
+ ],
+ "id": "HMMT-2025-FEB-GEO-06.k3",
+ "target": "Area(O_BCD, O_CDA, O_DAB, O_ABC)",
+ "variables": [
+  "dx",
+  "dy",
+  "x_O_BCD",
+  "y_O_BCD",
+  "x_O_CDA",
+  "y_O_CDA",
+  "x_O_DAB",
+  "y_O_DAB"
+ ]
+}

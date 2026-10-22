@@ -1,0 +1,89 @@
+{
+ "conditions": [
+  {
+   "left": "Parallel(Line(A, B), Line(C, D))",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "Distance(A, B)",
+   "operator": "=",
+   "right": 11
+  },
+  {
+   "left": "Distance(B, C)",
+   "operator": "=",
+   "right": 8
+  },
+  {
+   "left": "Distance(C, D)",
+   "operator": "=",
+   "right": 19
+  },
+  {
+   "left": "Distance(D, A)",
+   "operator": "=",
+   "right": 4
+  },
+  {
+   "left": "dy",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "predicate": "SimplePolygon([A, B, C, D])"
+  },
+  {
+   "left": "Distance(O_BCD, B)",
+   "operator": "=",
+   "right": "Distance(O_BCD, C)"
+  },
+  {
+   "left": "Distance(O_BCD, B)",
+   "operator": "=",
+   "right": "Distance(O_BCD, D)"
+  }
+ ],
+ "constructions": [
+  {
+   "expression": "Point(0, 0)",
+   "name": "A"
+  },
+  {
+   "expression": "Point(11, 0)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(dx, dy)",
+   "name": "D"
+  },
+  {
+   "expression": "Point(dx + 19, dy)",
+   "name": "C"
+  },
+  {
+   "name": "O_BCD",
+   "expression": "Point(x_O_BCD, y_O_BCD)"
+  },
+  {
+   "expression": "Circumcenter(C, D, A)",
+   "name": "O_CDA"
+  },
+  {
+   "expression": "Circumcenter(D, A, B)",
+   "name": "O_DAB"
+  },
+  {
+   "expression": "Circumcenter(A, B, C)",
+   "name": "O_ABC"
+  }
+ ],
+ "id": "HMMT-2025-FEB-GEO-06.k1",
+ "target": "Area(O_BCD, O_CDA, O_DAB, O_ABC)",
+ "variables": [
+  "dx",
+  "dy",
+  "x_O_BCD",
+  "y_O_BCD"
+ ]
+}
