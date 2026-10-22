@@ -13,17 +13,9 @@ p_any = share of starts that reached a reference configuration (starts done in b
 | AIME-2025-II-05 | 0.980 (200) | 0.770 (200) | 0.695 (174) | 0.574 (101) |
 | HMMT-2011-FEB-ALGGEO-08 | 1.000 (200) | 1.000 (200) | 1.000 (200) | 1.000 (200) |
 | HMMT-2021-FEB-GEO-03 | 0.775 (200) | 0.800 (200) | 0.820 (200) | 0.835 (200) |
-| HMMT-2024-FEB-GEO-07 | - | - | - | - |
-| HMMT-2025-FEB-GEO-06 | - | - | - | - |
+| HMMT-2024-FEB-GEO-07 | 1.000 (200) | 0.810 (200) | 0.890 (200) | 0.780 (200) |
+| HMMT-2025-FEB-GEO-06 | 0.990 (200) | 0.600 (200) | 0.320 (200) | 0.115 (200) |
 | JMO-2013-PRE-03 | 0.525 (200) | 0.082 (110) | 0.093 (86) | 0.027 (73) |
 | JMO-2014-PRE-09 | 0.165 (200) | 0.030 (200) | 0.020 (200) | 0.030 (200) |
 
-cases with output: 52/60
-missing: HMMT-2024-FEB-GEO-07.k0: SyntaxError: invalid syntax (<string>, line 1)
-missing: HMMT-2024-FEB-GEO-07.k1: SyntaxError: invalid syntax (<string>, line 1)
-missing: HMMT-2024-FEB-GEO-07.k2: SyntaxError: invalid syntax (<string>, line 1)
-missing: HMMT-2024-FEB-GEO-07.k3: SyntaxError: invalid syntax (<string>, line 1)
-missing: HMMT-2025-FEB-GEO-06.k0: SyntaxError: invalid syntax (<string>, line 1)
-missing: HMMT-2025-FEB-GEO-06.k1: SyntaxError: invalid syntax (<string>, line 1)
-missing: HMMT-2025-FEB-GEO-06.k2: SyntaxError: invalid syntax (<string>, line 1)
-missing: HMMT-2025-FEB-GEO-06.k3: SyntaxError: invalid syntax (<string>, line 1)
+cases with output: 60/60
