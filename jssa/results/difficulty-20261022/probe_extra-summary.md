@@ -1,0 +1,29 @@
+p_any = share of starts that reached a reference configuration (starts done in brackets)
+
+| problem | k=0 | k=1 | k=2 | k=3 |
+|---|---|---|---|---|
+| AIME-2009-I-05 | 1.000 (136) | 0.849 (53) | 0.333 (3) | 0.000 (2) |
+| AIME-2010-II-09 | 1.000 (200) | 0.985 (200) | 1.000 (200) | 1.000 (200) |
+| AIME-2010-II-15 | 0.925 (200) | 0.930 (200) | 0.830 (200) | 0.458 (96) |
+| AIME-2011-I-14 | 0.955 (200) | 0.955 (200) | 0.940 (200) | 0.925 (200) |
+| AIME-2014-II-14 | 1.000 (200) | 0.285 (200) | 0.230 (187) | 0.194 (129) |
+| AIME-2015-II-11 | 0.080 (200) | 0.010 (200) | 0.055 (200) | 0.033 (184) |
+| AIME-2021-I-11 | 0.430 (200) | 0.450 (200) | 0.401 (187) | 0.377 (154) |
+| AIME-2024-II-05 | 0.000 (149) | 0.000 (95) | 0.000 (76) | 0.000 (68) |
+| AIME-2025-II-05 | 0.980 (200) | 0.770 (200) | 0.695 (174) | 0.574 (101) |
+| HMMT-2011-FEB-ALGGEO-08 | 1.000 (200) | 1.000 (200) | 1.000 (200) | 1.000 (200) |
+| HMMT-2021-FEB-GEO-03 | 0.775 (200) | 0.800 (200) | 0.820 (200) | 0.835 (200) |
+| HMMT-2024-FEB-GEO-07 | - | - | - | - |
+| HMMT-2025-FEB-GEO-06 | - | - | - | - |
+| JMO-2013-PRE-03 | 0.525 (200) | 0.082 (110) | 0.093 (86) | 0.027 (73) |
+| JMO-2014-PRE-09 | 0.165 (200) | 0.030 (200) | 0.020 (200) | 0.030 (200) |
+
+cases with output: 52/60
+missing: HMMT-2024-FEB-GEO-07.k0: SyntaxError: invalid syntax (<string>, line 1)
+missing: HMMT-2024-FEB-GEO-07.k1: SyntaxError: invalid syntax (<string>, line 1)
+missing: HMMT-2024-FEB-GEO-07.k2: SyntaxError: invalid syntax (<string>, line 1)
+missing: HMMT-2024-FEB-GEO-07.k3: SyntaxError: invalid syntax (<string>, line 1)
+missing: HMMT-2025-FEB-GEO-06.k0: SyntaxError: invalid syntax (<string>, line 1)
+missing: HMMT-2025-FEB-GEO-06.k1: SyntaxError: invalid syntax (<string>, line 1)
+missing: HMMT-2025-FEB-GEO-06.k2: SyntaxError: invalid syntax (<string>, line 1)
+missing: HMMT-2025-FEB-GEO-06.k3: SyntaxError: invalid syntax (<string>, line 1)
