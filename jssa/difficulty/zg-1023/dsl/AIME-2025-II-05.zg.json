@@ -1,0 +1,143 @@
+{
+ "conditions": [
+  {
+   "left": "Angle(B, A, C)",
+   "operator": "=",
+   "right": "84 * pi / 180"
+  },
+  {
+   "left": "Angle(A, B, C)",
+   "operator": "=",
+   "right": "60 * pi / 180"
+  },
+  {
+   "left": "Angle(A, C, B)",
+   "operator": "=",
+   "right": "36 * pi / 180"
+  },
+  {
+   "left": "OnSegment(G, B, D)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "OnSegment(H, A, E)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "OnSegment(J, A, F)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "ay",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Vector(B, D).x",
+   "operator": "=",
+   "right": "Vector(D, C).x"
+  },
+  {
+   "left": "Vector(B, D).y",
+   "operator": "=",
+   "right": "Vector(D, C).y"
+  },
+  {
+   "left": "Vector(A, E).x",
+   "operator": "=",
+   "right": "Vector(E, C).x"
+  },
+  {
+   "left": "Vector(A, E).y",
+   "operator": "=",
+   "right": "Vector(E, C).y"
+  },
+  {
+   "left": "Vector(A, F).x",
+   "operator": "=",
+   "right": "Vector(F, B).x"
+  },
+  {
+   "left": "Vector(A, F).y",
+   "operator": "=",
+   "right": "Vector(F, B).y"
+  }
+ ],
+ "constructions": [
+  {
+   "name": "ORIGINZ",
+   "expression": "Point(0, 0)"
+  },
+  {
+   "expression": "Point(0, 0)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(6, 0)",
+   "name": "C"
+  },
+  {
+   "expression": "Point(ax, ay)",
+   "name": "A"
+  },
+  {
+   "name": "DZC",
+   "expression": "Midpoint(B, C)"
+  },
+  {
+   "name": "D",
+   "expression": "Point(Vector(ORIGINZ, DZC).x + ofsx_D, Vector(ORIGINZ, DZC).y + ofsy_D)"
+  },
+  {
+   "name": "EZC",
+   "expression": "Midpoint(A, C)"
+  },
+  {
+   "name": "E",
+   "expression": "Point(Vector(ORIGINZ, EZC).x + ofsx_E, Vector(ORIGINZ, EZC).y + ofsy_E)"
+  },
+  {
+   "name": "FZC",
+   "expression": "Midpoint(A, B)"
+  },
+  {
+   "name": "F",
+   "expression": "Point(Vector(ORIGINZ, FZC).x + ofsx_F, Vector(ORIGINZ, FZC).y + ofsy_F)"
+  },
+  {
+   "expression": "Circumcircle(D, E, F)",
+   "name": "Gamma"
+  },
+  {
+   "expression": "Circumcenter(D, E, F)",
+   "name": "O"
+  },
+  {
+   "expression": "Intersect(Line(B, D), Gamma, exclude=D)",
+   "name": "G"
+  },
+  {
+   "expression": "Intersect(Line(A, E), Gamma, exclude=E)",
+   "name": "H"
+  },
+  {
+   "expression": "Intersect(Line(A, F), Gamma, exclude=F)",
+   "name": "J"
+  }
+ ],
+ "id": "AIME-2025-II-05.z3.zg",
+ "target": "180 * (Angle(D, O, E) + 2 * Angle(H, O, J) + 3 * Angle(F, O, G)) / pi",
+ "variables": [
+  "ax",
+  "ay",
+  "ofsx_D",
+  "ofsy_D",
+  "ofsx_E",
+  "ofsy_E",
+  "ofsx_F",
+  "ofsy_F"
+ ]
+}

@@ -1,0 +1,130 @@
+{
+ "conditions": [
+  {
+   "left": "Angle(B, A, C)",
+   "operator": "=",
+   "right": "30 * pi / 180"
+  },
+  {
+   "left": "Angle(A, C, B)",
+   "operator": "=",
+   "right": "45 * pi / 180"
+  },
+  {
+   "left": "cx",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "cy",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Area(A, B, C)",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Dot(Vector(A, D), Vector(A, P))",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Collinear(A, I, D)",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "Collinear(B, C, D)",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "Vector(B, M).x",
+   "operator": "=",
+   "right": "Vector(M, C).x"
+  },
+  {
+   "left": "Vector(B, M).y",
+   "operator": "=",
+   "right": "Vector(M, C).y"
+  },
+  {
+   "left": "Vector(H, N).x",
+   "operator": "=",
+   "right": "Vector(N, M).x"
+  },
+  {
+   "left": "Vector(H, N).y",
+   "operator": "=",
+   "right": "Vector(N, M).y"
+  }
+ ],
+ "constructions": [
+  {
+   "name": "ORIGINZ",
+   "expression": "Point(0, 0)"
+  },
+  {
+   "expression": "Point(0, 0)",
+   "name": "A"
+  },
+  {
+   "expression": "Point(10, 0)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(cx, cy)",
+   "name": "C"
+  },
+  {
+   "expression": "FootOfPerpendicular(Line(B, C), A)",
+   "name": "H"
+  },
+  {
+   "expression": "Incenter(A, B, C)",
+   "name": "I"
+  },
+  {
+   "name": "DZC",
+   "expression": "Intersect(Line(A, I), Line(B, C))"
+  },
+  {
+   "name": "D",
+   "expression": "Point(Vector(ORIGINZ, DZC).x + ofsx_D, Vector(ORIGINZ, DZC).y + ofsy_D)"
+  },
+  {
+   "name": "MZC",
+   "expression": "Midpoint(B, C)"
+  },
+  {
+   "name": "M",
+   "expression": "Point(Vector(ORIGINZ, MZC).x + ofsx_M, Vector(ORIGINZ, MZC).y + ofsy_M)"
+  },
+  {
+   "name": "NZC",
+   "expression": "Midpoint(H, M)"
+  },
+  {
+   "name": "N",
+   "expression": "Point(Vector(ORIGINZ, NZC).x + ofsx_N, Vector(ORIGINZ, NZC).y + ofsy_N)"
+  },
+  {
+   "expression": "Intersect(Line(A, D), PerpendicularLine(Line(B, C), N))",
+   "name": "P"
+  }
+ ],
+ "id": "AIME-2014-II-14.z3.zg",
+ "target": "Distance(A, P) ** 2",
+ "variables": [
+  "cx",
+  "cy",
+  "ofsx_D",
+  "ofsy_D",
+  "ofsx_M",
+  "ofsy_M",
+  "ofsx_N",
+  "ofsy_N"
+ ]
+}

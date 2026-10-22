@@ -1,0 +1,88 @@
+{
+ "conditions": [
+  {
+   "left": "Angle(A, B, C)",
+   "operator": "=",
+   "right": "pi / 12"
+  },
+  {
+   "left": "Distance(O, D) * Distance(O, D) + Distance(O, C) * Distance(D, C)",
+   "operator": "=",
+   "right": "Distance(O, C) * Distance(O, C)"
+  },
+  {
+   "left": "Ay",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Angle(B, A, C)",
+   "operator": ">",
+   "right": "pi / 2"
+  },
+  {
+   "left": "Distance(O, A)",
+   "operator": "=",
+   "right": "Distance(O, B)"
+  },
+  {
+   "left": "Distance(O, A)",
+   "operator": "=",
+   "right": "Distance(O, C)"
+  },
+  {
+   "left": "Collinear(A, O, D)",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "Collinear(B, C, D)",
+   "operator": "=",
+   "right": "0"
+  }
+ ],
+ "constructions": [
+  {
+   "name": "ORIGINZ",
+   "expression": "Point(0, 0)"
+  },
+  {
+   "expression": "Point(0, 0)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(1, 0)",
+   "name": "C"
+  },
+  {
+   "expression": "Point(Ax, Ay)",
+   "name": "A"
+  },
+  {
+   "name": "OZC",
+   "expression": "Circumcenter(A, B, C)"
+  },
+  {
+   "name": "O",
+   "expression": "Point(Vector(ORIGINZ, OZC).x + ofsx_O, Vector(ORIGINZ, OZC).y + ofsy_O)"
+  },
+  {
+   "name": "DZC",
+   "expression": "Intersect(Line(A, O), Line(B, C))"
+  },
+  {
+   "name": "D",
+   "expression": "Point(Vector(ORIGINZ, DZC).x + ofsx_D, Vector(ORIGINZ, DZC).y + ofsy_D)"
+  }
+ ],
+ "id": "HMMT-2013-FEB-GEO-07.z2.zg",
+ "target": "180 * Angle(A, C, B) / pi",
+ "variables": [
+  "Ax",
+  "Ay",
+  "ofsx_O",
+  "ofsy_O",
+  "ofsx_D",
+  "ofsy_D"
+ ]
+}

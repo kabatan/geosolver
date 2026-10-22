@@ -1,0 +1,102 @@
+{
+ "conditions": [
+  {
+   "left": "Distance(B, C)",
+   "operator": "=",
+   "right": 1
+  },
+  {
+   "left": "Distance(A, B) + Distance(B, C) + Distance(C, A)",
+   "operator": "=",
+   "right": 6
+  },
+  {
+   "left": "Area(B, C, N)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "ay",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Distance(A, B)",
+   "operator": "<",
+   "right": "Distance(A, C)"
+  },
+  {
+   "left": "Area(A, B, C)",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Distance(O, A)",
+   "operator": "=",
+   "right": "Distance(O, B)"
+  },
+  {
+   "left": "Distance(O, A)",
+   "operator": "=",
+   "right": "Distance(O, C)"
+  },
+  {
+   "left": "Vector(O, N).x",
+   "operator": "=",
+   "right": "Vector(N, H).x"
+  },
+  {
+   "left": "Vector(O, N).y",
+   "operator": "=",
+   "right": "Vector(N, H).y"
+  }
+ ],
+ "constructions": [
+  {
+   "name": "ORIGINZ",
+   "expression": "Point(0, 0)"
+  },
+  {
+   "expression": "Point(0, 0)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(1, 0)",
+   "name": "C"
+  },
+  {
+   "expression": "Point(ax, ay)",
+   "name": "A"
+  },
+  {
+   "expression": "Orthocenter(A, B, C)",
+   "name": "H"
+  },
+  {
+   "name": "OZC",
+   "expression": "Circumcenter(A, B, C)"
+  },
+  {
+   "name": "O",
+   "expression": "Point(Vector(ORIGINZ, OZC).x + ofsx_O, Vector(ORIGINZ, OZC).y + ofsy_O)"
+  },
+  {
+   "name": "NZC",
+   "expression": "Midpoint(O, H)"
+  },
+  {
+   "name": "N",
+   "expression": "Point(Vector(ORIGINZ, NZC).x + ofsx_N, Vector(ORIGINZ, NZC).y + ofsy_N)"
+  }
+ ],
+ "id": "HMMT-2019-FEB-GEO-08.z2.zg",
+ "target": "Area(A, B, C)",
+ "variables": [
+  "ax",
+  "ay",
+  "ofsx_O",
+  "ofsy_O",
+  "ofsx_N",
+  "ofsy_N"
+ ]
+}

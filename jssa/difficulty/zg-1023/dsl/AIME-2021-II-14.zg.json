@@ -1,0 +1,113 @@
+{
+ "conditions": [
+  {
+   "left": "2 * Angle(A, B, C)",
+   "operator": "=",
+   "right": "13 * Angle(B, C, A)"
+  },
+  {
+   "left": "17 * Angle(B, C, A)",
+   "operator": "=",
+   "right": "2 * Angle(X, O, Y)"
+  },
+  {
+   "left": "bx",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "cy",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Angle(B, A, C)",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "predicate": "AcuteTriangle(A, B, C)"
+  },
+  {
+   "left": "Distance(O, A)",
+   "operator": "=",
+   "right": "Distance(O, B)"
+  },
+  {
+   "left": "Distance(O, A)",
+   "operator": "=",
+   "right": "Distance(O, C)"
+  },
+  {
+   "left": "Collinear(X, G, Y)",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "Collinear(B, C, Y)",
+   "operator": "=",
+   "right": "0"
+  }
+ ],
+ "constructions": [
+  {
+   "name": "ORIGINZ",
+   "expression": "Point(0, 0)"
+  },
+  {
+   "expression": "Point(0, 0)",
+   "name": "A"
+  },
+  {
+   "expression": "Point(bx, 0)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(cx, cy)",
+   "name": "C"
+  },
+  {
+   "expression": "Circumcircle(A, B, C)",
+   "name": "Gamma"
+  },
+  {
+   "name": "OZC",
+   "expression": "Circumcenter(A, B, C)"
+  },
+  {
+   "name": "O",
+   "expression": "Point(Vector(ORIGINZ, OZC).x + ofsx_O, Vector(ORIGINZ, OZC).y + ofsy_O)"
+  },
+  {
+   "expression": "Centroid(A, B, C)",
+   "name": "G"
+  },
+  {
+   "expression": "Tangent(A, Gamma)",
+   "name": "tA"
+  },
+  {
+   "expression": "Intersect(tA, PerpendicularLine(G, Line(G, O)))",
+   "name": "X"
+  },
+  {
+   "name": "YZC",
+   "expression": "Intersect(Line(X, G), Line(B, C))"
+  },
+  {
+   "name": "Y",
+   "expression": "Point(Vector(ORIGINZ, YZC).x + ofsx_Y, Vector(ORIGINZ, YZC).y + ofsy_Y)"
+  }
+ ],
+ "id": "AIME-2021-II-14.z2.zg",
+ "target": "180 * Angle(B, A, C) / pi",
+ "variables": [
+  "bx",
+  "cx",
+  "cy",
+  "ofsx_O",
+  "ofsy_O",
+  "ofsx_Y",
+  "ofsy_Y"
+ ]
+}

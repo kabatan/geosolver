@@ -1,0 +1,109 @@
+{
+ "conditions": [
+  {
+   "left": "x",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "u",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "u",
+   "operator": "<",
+   "right": "1"
+  },
+  {
+   "left": "Distance(O,Line(A,B))",
+   "operator": "=",
+   "right": "Distance(O,Line(B,C))"
+  },
+  {
+   "left": "Parallel(Line(M,Np),Line(A,C))",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "Collinear(A, B, M)",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "Dot(Vector(M, O), Vector(A, B))",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "Collinear(Bp, Cp, Np)",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "Dot(Vector(Np, C), Vector(Bp, Cp))",
+   "operator": "=",
+   "right": "0"
+  }
+ ],
+ "constructions": [
+  {
+   "name": "ORIGINZ",
+   "expression": "Point(0, 0)"
+  },
+  {
+   "expression": "Point(0,0)",
+   "name": "A"
+  },
+  {
+   "expression": "Point(x,0)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(x,1)",
+   "name": "C"
+  },
+  {
+   "expression": "Reflect(B,Line(A,C))",
+   "name": "D"
+  },
+  {
+   "expression": "Point(u*x,u)",
+   "name": "O"
+  },
+  {
+   "name": "MZC",
+   "expression": "FootOfPerpendicular(O,Line(A,B))"
+  },
+  {
+   "name": "M",
+   "expression": "Point(Vector(ORIGINZ, MZC).x + ofsx_M, Vector(ORIGINZ, MZC).y + ofsy_M)"
+  },
+  {
+   "expression": "Point(x/u,0)",
+   "name": "Bp"
+  },
+  {
+   "expression": "Point(x/u,1/u)",
+   "name": "Cp"
+  },
+  {
+   "name": "NpZC",
+   "expression": "FootOfPerpendicular(C,Line(Bp,Cp))"
+  },
+  {
+   "name": "Np",
+   "expression": "Point(Vector(ORIGINZ, NpZC).x + ofsx_Np, Vector(ORIGINZ, NpZC).y + ofsy_Np)"
+  }
+ ],
+ "id": "HMMT-2009-FEB-GEO-04.z2.zg",
+ "target": "Distance(A,B)/Distance(B,C)",
+ "variables": [
+  "x",
+  "u",
+  "ofsx_M",
+  "ofsy_M",
+  "ofsx_Np",
+  "ofsy_Np"
+ ]
+}
