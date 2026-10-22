@@ -79,6 +79,8 @@ def main() -> None:
     ap.add_argument("--starts", type=int, default=100)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--budget", type=float, default=1500.0, help="stop starting new rows after this many seconds")
+    ap.add_argument("--near", type=float, default=None,
+                    help="start at u* + near * (box width) * U(-1/2, 1/2), u* = an endpoint where E hits")
     args = ap.parse_args()
 
     refs = reference_values(load_case(args.case_id)["answer"])
@@ -120,11 +122,31 @@ def main() -> None:
     systems = {"E": (e_b, e_ev), "Y": (y_b, y_ev), "Z": (z_b, z_ev)}
     rows = []
     t_start = time.monotonic()
+    u_star = None
+    if args.near is not None:
+        rng = np.random.default_rng([args.seed, 10**6])
+        for _ in range(400):
+            u0 = e_box[:, 0] + rng.random(len(base)) * (e_box[:, 1] - e_box[:, 0])
+            cand, _ = local_solve(e_b, e_ev, u0, config, telemetry, 0)
+            if cand is None or not math.isfinite(cand.residual_norm_float) or cand.residual_norm_float > RES_TOL:
+                continue
+            if not (bool(cand.guard_ok) and cand.hard_feasible is not False):
+                continue
+            value = answer_float(e_ev, cand.x_float)
+            if value is not None and any(abs(value - r) <= ANS_RTOL * max(1.0, abs(r)) for r in refs) \
+                    and in_region(list(cand.x_float), h_of(list(cand.x_float))):
+                u_star = np.array(cand.x_float, dtype=float)
+                break
+        if u_star is None:
+            Path(args.out).write_text(json.dumps({"case_id": args.case_id, "near": args.near, "no_u_star": True}))
+            return
     for k in range(args.starts):
         if time.monotonic() - t_start > args.budget:
             break
         rng = np.random.default_rng([args.seed, k])
         u0 = e_box[:, 0] + rng.random(len(base)) * (e_box[:, 1] - e_box[:, 0])
+        if u_star is not None:
+            u0 = u_star + args.near * (e_box[:, 1] - e_box[:, 0]) * (rng.random(len(base)) - 0.5)
         h0 = h_of(u0)
         if not all(math.isfinite(v) for v in h0.values()):
             rows.append({"k": k, "start_undefined": True})
@@ -170,7 +192,7 @@ def main() -> None:
             c[r[s]["cls"]] = c.get(r[s]["cls"], 0) + 1
         summary[s] = {"counts": c, "p": c.get("hit", 0) / max(1, len(done)),
                       "sec_median": float(np.median([r[s]["sec"] for r in done])) if done else None}
-    out = {"case_id": args.case_id, "extra": extra, "n_base": len(base), "starts": len(done),
+    out = {"case_id": args.case_id, "near": args.near, "u_star": None if u_star is None else list(u_star), "extra": extra, "n_base": len(base), "starts": len(done),
            "start_undefined": len(rows) - len(done), "elapsed": time.monotonic() - t_start,
            "summary": summary, "rows": rows}
     Path(args.out).write_text(json.dumps(out))
