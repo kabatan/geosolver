@@ -1,0 +1,66 @@
+From a4c11c362da5a03845f52cea0c6d4da0b777de76 Mon Sep 17 00:00:00 2001
+From: kabatan <bakatan.kabatan@gmail.com>
+Date: Thu, 22 Oct 2026 13:54:01 +0900
+Subject: [PATCH] gmb campaign: allow recorded upstream option overrides for
+ sensitivity runs
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ benchmarks/gmb/campaign.py | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/benchmarks/gmb/campaign.py b/benchmarks/gmb/campaign.py
+index f7c3755..60e6554 100644
+--- a/benchmarks/gmb/campaign.py
++++ b/benchmarks/gmb/campaign.py
+@@ -179,7 +179,7 @@ def inventory():
+     return sorted(entries, key=lambda item: item["case_id"])
+ 
+ 
+-def prepare(directory, cpu, timeout, *, smoke=False):
++def prepare(directory, cpu, timeout, *, smoke=False, overrides=None):
+     env.source_identity()
+     cpu = env.choose_cpu(cpu)
+     if not math.isfinite(timeout) or timeout <= 0:
+@@ -191,6 +191,11 @@ def prepare(directory, cpu, timeout, *, smoke=False):
+     (directory / "inputs").mkdir()
+     upstream_defaults = defaults()
+     options = dict(upstream_defaults, verbosity=-1, plot_freq=-1, loss_freq=-1, losses_freq=-1)
++    # Upstream CLI options changed for a sensitivity run (recorded in the manifest).
++    for key, value in (overrides or {}).items():
++        if key not in upstream_defaults:
++            raise ValueError(f"unknown upstream option: {key}")
++        options[key] = type(upstream_defaults[key])(value)
+     if smoke:
+         entries = [
+             {
+@@ -261,6 +266,7 @@ def prepare(directory, cpu, timeout, *, smoke=False):
+         "termination_grace_seconds": 2.0,
+         "upstream_defaults": upstream_defaults,
+         "options": options,
++        "option_overrides": dict(overrides or {}),
+         "host": host_snapshot(cpu),
+         "entries": entries,
+         "independent_geometry_validation": "not_performed",
+@@ -674,12 +680,17 @@ def main():
+     parser.add_argument("directory", type=Path)
+     parser.add_argument("--cpu", type=int, default=4)
+     parser.add_argument("--timeout", type=float, default=180.0)
++    parser.add_argument("--option", action="append", default=[], metavar="KEY=VALUE",
++                        help="override an upstream GMB CLI option (prepare only)")
+     args = parser.parse_args()
+     directory = args.directory.resolve()
+     if sys.platform != "linux":
+         parser.error("this protocol is Linux-only")
+     if args.command in {"prepare", "smoke"}:
+-        prepare(directory, args.cpu, args.timeout, smoke=args.command == "smoke")
++        overrides = dict(item.split("=", 1) for item in args.option)
++        prepare(
++            directory, args.cpu, args.timeout, smoke=args.command == "smoke", overrides=overrides
++        )
+         if args.command == "smoke":
+             run_campaign(directory)
+             recorded = read_json(directory / "runs/synthetic_recorded/0/models/000.json")
+-- 
+2.53.0
+
