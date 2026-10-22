@@ -1,0 +1,33 @@
+option(redSB);
+LIB "primdec.lib";
+ring r = 0, (x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,x16), dp;
+ideal I = -x14^2 - x15^2 + x6^2,
+-x12^2 - x13^2 + x9^2,
+x10^2 - x12^2 + 2*x12*x14 - x13^2 + 2*x13*x15 - x14^2 - x15^2,
+x0*x10 + x0*x6 + x0*x9 - x12*x6 - x14*x9,
+x1*x10 + x1*x6 + x1*x9 - x13*x6 - x15*x9,
+x0*x12*x15 - x0*x13*x14 + x0*x13*x2 - x0*x15*x2 - x1*x12*x2 + x1*x14*x2,
+x0*x13*x3 - x0*x15*x3 + x1*x12*x15 - x1*x12*x3 - x1*x13*x14 + x1*x14*x3,
+x12*x15*x2 - x12*x3*x4 - x13*x14*x2 + x13*x2*x4 + 2*x14*x3*x4 - 2*x15*x2*x4,
+x12*x15*x3 - x12*x3*x5 - x13*x14*x3 + x13*x2*x5 + 2*x14*x3*x5 - 2*x15*x2*x5,
+x9 - 450,
+x6 - 300,
+x4^2 + x5^2 - x7^2,
+x7 - 180,
+x2^2 - 2*x2*x4 + x3^2 - 2*x3*x5 + x4^2 + x5^2 - x8^2,
+-x11 + x8,
+-x0*x10*x12*x13*x16*x3 + x0*x10*x12*x15*x16*x3 + x0*x10*x13^2*x16*x2 + 2*x0*x10*x13*x14*x16*x3 - 3*x0*x10*x13*x15*x16*x2 - 2*x0*x10*x14*x15*x16*x3 + 2*x0*x10*x15^2*x16*x2 - x0*x12*x13*x16*x3*x6 - x0*x12*x13*x16*x3*x9 + x0*x12*x15*x16*x3*x6 + x0*x12*x15*x16*x3*x9 + x0*x13^2*x16*x2*x6 + x0*x13^2*x16*x2*x9 + 2*x0*x13*x14*x16*x3*x6 + 2*x0*x13*x14*x16*x3*x9 - 3*x0*x13*x15*x16*x2*x6 - 3*x0*x13*x15*x16*x2*x9 - 2*x0*x14*x15*x16*x3*x6 - 2*x0*x14*x15*x16*x3*x9 + 2*x0*x15^2*x16*x2*x6 + 2*x0*x15^2*x16*x2*x9 + x1*x10*x12^2*x16*x3 - x1*x10*x12*x13*x16*x2 - 3*x1*x10*x12*x14*x16*x3 + 2*x1*x10*x12*x15*x16*x2 + x1*x10*x13*x14*x16*x2 + 2*x1*x10*x14^2*x16*x3 - 2*x1*x10*x14*x15*x16*x2 + x1*x12^2*x16*x3*x6 + x1*x12^2*x16*x3*x9 - x1*x12*x13*x16*x2*x6 - x1*x12*x13*x16*x2*x9 - 3*x1*x12*x14*x16*x3*x6 - 3*x1*x12*x14*x16*x3*x9 + 2*x1*x12*x15*x16*x2*x6 + 2*x1*x12*x15*x16*x2*x9 + x1*x13*x14*x16*x2*x6 + x1*x13*x14*x16*x2*x9 + 2*x1*x14^2*x16*x3*x6 + 2*x1*x14^2*x16*x3*x9 - 2*x1*x14*x15*x16*x2*x6 - 2*x1*x14*x15*x16*x2*x9 - 1;
+int t0 = rtimer; ideal G = std(I);
+print("DIM"); print(dim(G)); print("INDEP"); print(indepSet(G));
+poly P = x11 - 72;
+poly red = reduce(P, G);
+print("MEMBER"); print(red == 0);
+ideal E = eliminate(I, x0*x1*x2*x3*x4*x5*x6*x7*x8*x9*x10*x12*x13*x14*x15*x16);
+print("ELIM"); print(E); print("ENDELIM");
+poly Q; if (red == 0) { Q = P; } else { Q = E[1]; }
+if (Q == 0) { print("COFACTORS"); print("@END"); quit; }
+matrix C = lift(I, Q);
+print("CHECK"); poly chk = Q; int i; for (i = 1; i <= ncols(I); i++) { chk = chk - C[i,1]*I[i]; } print(chk == 0);
+print("COFACTORS"); for (i = 1; i <= ncols(I); i++) { print("@C"); print(C[i,1]); } print("@END");
+print("TIME"); print(rtimer - t0);
+quit;

@@ -1,0 +1,19 @@
+option(redSB);
+LIB "primdec.lib";
+ring r = 0, (x0,x1,x2,x3), dp;
+ideal I = x0^2 - 625*x3^2,
+25*x1^2 - 1296*x3^2 + 2592*x3 - 1296,
+125*x2 - 36;
+int t0 = rtimer; ideal G = std(I);
+print("DIM"); print(dim(G)); print("INDEP"); print(indepSet(G));
+poly P = 125*x2 - 36;
+poly red = reduce(P, G);
+print("MEMBER"); print(red == 0);
+ideal E = eliminate(I, x0*x1*x3);
+print("ELIM"); print(E); print("ENDELIM");
+poly Q; if (red == 0) { Q = P; } else { Q = E[1]; }
+matrix C = lift(I, Q);
+print("CHECK"); poly chk = Q; int i; for (i = 1; i <= ncols(I); i++) { chk = chk - C[i,1]*I[i]; } print(chk == 0);
+print("COFACTORS"); for (i = 1; i <= ncols(I); i++) { print("@C"); print(C[i,1]); } print("@END");
+print("TIME"); print(rtimer - t0);
+quit;
