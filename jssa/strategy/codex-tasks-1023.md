@@ -151,3 +151,9 @@ jssa/difficulty/full-solver-redraw-cloud/ のランナーの差し替え方（si
 
 ## Q7（astra）：文献調査
 幾何制約ソルバー（CAD の geometric constraint solving）、数値代数幾何、自動幾何、制約付き非線形最小二乗で、「不等式・非退化条件を探索中に強制すると収束域が分断・縮小される」こと、extreme/progressive barrier、penalty の段差と LM の受理判定の相互作用が、どこまで知られているかを調べ、本研究の Q1 の主張がどこまで新しいかを書く。出力：jssa/strategy/astra-consult-17/Q7/。
+
+## Q8・Q9（astra、自走型。2本、互いに独立）
+背景・データ・既存の候補と結果（astra-consult-17/G〜L、GPT-Pro 相談16・17）を読んだうえで、それらと重ならない中心成果の候補を自分で1つ選び、予測の固定 → 予備実験 → 判定まで1本回す。基準は「人間と solver の難しさのずれについて、本人にも事前に当てられない、広がりのある主張」か「この solver で従来できなかったことができる」。弱ければ弱いと書き、2本目の候補に移ってよい。出力：jssa/strategy/astra-consult-17/Q8/、Q9/。
+
+## Q10（astra）：本当に図が動く16問で、値を返す・証明する（astra-H の続き）
+astra-H が「本当に図が動く」とした16問について、(1) 目標量の直接消去（適切に座標を固定し、目標変数を入れた消去、msolve -e 等）と、solver の数値候補＋PSLQ＋証明書（P の恒等式。E の場合は余分な根の排除まで）を、同じ予算で比べる。(2) 証明書が P で閉じない問題で、余分な根を原問の実数条件で除けるかを全部確かめる。出力：jssa/strategy/astra-consult-17/Q10/。
