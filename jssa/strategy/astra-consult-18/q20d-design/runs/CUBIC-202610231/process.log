@@ -1,0 +1,41 @@
+╭───────────────────── Traceback (most recent call last) ──────────────────────╮
+│ /tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987b │
+│ bce/scratchpad/wt/src/geosolver/application/cli.py:51 in solve               │
+│                                                                              │
+│   48 │   seed: Annotated[int, typer.Option("--seed")] = 0,                   │
+│   49 │   output: Annotated[Path | None, typer.Option("--output")] = None,    │
+│   50 ) -> None:                                                              │
+│ ❱ 51 │   options = SolveOptions(                                             │
+│   52 │   │   time_limit_seconds=time_limit_seconds,                          │
+│   53 │   │   cores=_cores(cores),                                            │
+│   54 │   │   seed=seed,                                                      │
+│                                                                              │
+│ ╭───────────────────────────────── locals ─────────────────────────────────╮ │
+│ │              cores = '1'                                                 │ │
+│ │             output = PosixPath('/tmp/claude-1000/-home-kabatan-work-sol… │ │
+│ │            problem = PosixPath('/tmp/claude-1000/-home-kabatan-work-sol… │ │
+│ │               seed = 202610231                                           │ │
+│ │ time_limit_seconds = 60.0                                                │ │
+│ ╰──────────────────────────────────────────────────────────────────────────╯ │
+│                                                                              │
+│ /home/kabatan/work/solver/.venv/lib/python3.12/site-packages/pydantic/main.p │
+│ y:253 in __init__                                                            │
+│                                                                              │
+│    250 │   │   """                                                           │
+│    251 │   │   # `__tracebackhide__` tells pytest and some other tools to om │
+│    252 │   │   __tracebackhide__ = True                                      │
+│ ❱  253 │   │   validated_self = self.__pydantic_validator__.validate_python( │
+│    254 │   │   if self is not validated_self:                                │
+│    255 │   │   │   warnings.warn(                                            │
+│    256 │   │   │   │   'A custom validator is returning a value other than ` │
+│                                                                              │
+│ ╭────────────────────────────── locals ──────────────────────────────╮       │
+│ │ data = {'time_limit_seconds': 60.0, 'cores': 1, 'seed': 202610231} │       │
+│ │ self = SolveOptions()                                              │       │
+│ ╰────────────────────────────────────────────────────────────────────╯       │
+╰──────────────────────────────────────────────────────────────────────────────╯
+ValidationError: 1 validation error for SolveOptions
+time_limit_seconds
+  Value error, time_limit_seconds must be between 180 and 900 [type=value_error,
+input_value=60.0, input_type=float]
+    For further information visit https://errors.pydantic.dev/2.11/v/value_error

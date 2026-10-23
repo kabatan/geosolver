@@ -1,0 +1,62 @@
+{
+  "id": "CUBIC",
+  "variables": [
+    "u",
+    "v"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(2, 0)"
+    },
+    {
+      "name": "U",
+      "expression": "Point(u, 0)"
+    },
+    {
+      "name": "V",
+      "expression": "Point(v, 0)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(O, U)**2",
+      "operator": "=",
+      "right": "Distance(O, A)*Distance(O, V)"
+    },
+    {
+      "left": "Distance(O, U)*Distance(O, V)",
+      "operator": "=",
+      "right": "Distance(O, A)*Distance(O, B)"
+    },
+    {
+      "left": "u",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "u",
+      "operator": "<",
+      "right": "2"
+    },
+    {
+      "left": "v",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "v",
+      "operator": "<",
+      "right": "2"
+    }
+  ],
+  "target": "Distance(O, U)"
+}
