@@ -1,0 +1,355 @@
+{
+  "batch": 2,
+  "block": 0,
+  "mode": "variable_order",
+  "seed": 380101,
+  "case_ids": [
+    "HMMT-2021-FEB-GEO-03",
+    "HMMT-2023-FEB-GEO-04",
+    "HMMT-2006-FEB-GEO-01",
+    "JMO-2019-PRE-04"
+  ],
+  "started_at_utc": "2026-10-23T16:56:14.316573+00:00",
+  "state": "complete",
+  "controller_pid": 25,
+  "load_samples": [
+    {
+      "at_utc": "2026-10-23T16:56:14.317681+00:00",
+      "command": "run",
+      "loadavg": [
+        14.4013671875,
+        12.330078125,
+        13.802734375
+      ],
+      "children": []
+    },
+    {
+      "at_utc": "2026-10-23T16:56:24.318191+00:00",
+      "command": "run",
+      "loadavg": [
+        14.265625,
+        12.369140625,
+        13.7998046875
+      ],
+      "children": [
+        {
+          "pid": 75,
+          "affinity": [
+            3
+          ],
+          "threads": 1
+        },
+        {
+          "pid": 79,
+          "affinity": [
+            3
+          ],
+          "threads": 2
+        },
+        {
+          "pid": 85,
+          "affinity": [
+            3
+          ],
+          "threads": 2
+        }
+      ]
+    },
+    {
+      "at_utc": "2026-10-23T16:56:30.646167+00:00",
+      "command": "assess",
+      "loadavg": [
+        16.72705078125,
+        12.9111328125,
+        13.9677734375
+      ],
+      "children": []
+    },
+    {
+      "at_utc": "2026-10-23T16:56:31.011007+00:00",
+      "command": "summarize",
+      "loadavg": [
+        16.72705078125,
+        12.9111328125,
+        13.9677734375
+      ],
+      "children": []
+    }
+  ],
+  "commands": [
+    {
+      "label": "run",
+      "argv": [
+        "prlimit",
+        "--fsize=4900000:4900000",
+        "--",
+        "/tmp/q38-58e3993-venv/bin/python",
+        "-B",
+        "-m",
+        "benchmarks.research_runner",
+        "run",
+        "/tmp/q38-58e3993-repaired-execution/campaigns/b00-s380101-variable_order",
+        "--cases",
+        "jssa/difficulty/relabel-invariance/inputs/variable_order/cases.jsonl",
+        "--seeds",
+        "380101",
+        "--jobs",
+        "4",
+        "--case-id",
+        "HMMT-2021-FEB-GEO-03",
+        "--case-id",
+        "HMMT-2023-FEB-GEO-04",
+        "--case-id",
+        "HMMT-2006-FEB-GEO-01",
+        "--case-id",
+        "JMO-2019-PRE-04"
+      ],
+      "pid": 26,
+      "started_at_utc": "2026-10-23T16:56:14.317528+00:00",
+      "returncode": 0,
+      "finished_at_utc": "2026-10-23T16:56:30.645446+00:00",
+      "log_bytes": 0
+    },
+    {
+      "label": "assess",
+      "argv": [
+        "prlimit",
+        "--fsize=4900000:4900000",
+        "--",
+        "/tmp/q38-58e3993-venv/bin/python",
+        "-B",
+        "-m",
+        "benchmarks.research_runner",
+        "assess",
+        "/tmp/q38-58e3993-repaired-execution/campaigns/b00-s380101-variable_order",
+        "--cases",
+        "jssa/difficulty/relabel-invariance/inputs/variable_order/cases.jsonl"
+      ],
+      "pid": 94,
+      "started_at_utc": "2026-10-23T16:56:30.646039+00:00",
+      "returncode": 0,
+      "finished_at_utc": "2026-10-23T16:56:31.010248+00:00",
+      "log_bytes": 0
+    },
+    {
+      "label": "summarize",
+      "argv": [
+        "prlimit",
+        "--fsize=4900000:4900000",
+        "--",
+        "/tmp/q38-58e3993-venv/bin/python",
+        "-B",
+        "-m",
+        "benchmarks.research_runner",
+        "summarize",
+        "/tmp/q38-58e3993-repaired-execution/campaigns/b00-s380101-variable_order"
+      ],
+      "pid": 95,
+      "started_at_utc": "2026-10-23T16:56:31.010839+00:00",
+      "returncode": 0,
+      "finished_at_utc": "2026-10-23T16:56:31.074564+00:00",
+      "log_bytes": 0
+    }
+  ],
+  "summary": {
+    "schema_version": 2,
+    "run_count": 4,
+    "assessed_count": 4,
+    "unassessed_count": 0,
+    "matched_count": 4,
+    "match_rate": 1.0,
+    "completeness": "unknown",
+    "status_counts": {
+      "solved": 4
+    },
+    "set_relation_counts": {
+      "equal": 4
+    },
+    "failure_stage_counts": {
+      "none": 4
+    },
+    "wall_seconds": {
+      "observed_count": 4,
+      "median": 4.7435777354985476,
+      "p95": 15.640798344044015,
+      "maximum": 15.640798344044015,
+      "total": 25.948196015087888
+    },
+    "process_wall_seconds": {
+      "observed_count": 4,
+      "median": 5.118901703972369,
+      "p95": 15.976869871141389,
+      "maximum": 15.976869871141389,
+      "total": 27.20028423401527
+    },
+    "cpu_seconds": {
+      "observed_count": 4,
+      "median": 2.265,
+      "p95": 8.7,
+      "maximum": 8.7,
+      "total": 13.94
+    },
+    "peak_rss_bytes": {
+      "observed_count": 4,
+      "median": 184905728.0,
+      "p95": 193249280,
+      "maximum": 193249280,
+      "total": 738140160
+    },
+    "phase_timings": {
+      "descriptors": {
+        "total": 3.0839117243885994e-05,
+        "median": 8.094473741948605e-06
+      },
+      "discrete_completion": {
+        "total": 4.039984196424484e-05,
+        "median": 9.804847650229931e-06
+      },
+      "exact_assembly": {
+        "total": 8.114708482054994,
+        "median": 1.1266653154743835
+      },
+      "initial_probe": {
+        "total": 0.07122258609160781,
+        "median": 0.0219435520702973
+      },
+      "phase_discrete_completion": {
+        "total": 0.0,
+        "median": 0.0
+      },
+      "phase_rescue": {
+        "total": 0.0,
+        "median": 0.0
+      },
+      "refinement": {
+        "total": 9.893095597624779,
+        "median": 1.15131229092367
+      },
+      "rescue": {
+        "total": 0.0,
+        "median": 0.0
+      },
+      "search": {
+        "total": 2.4256121390499175,
+        "median": 0.6423173245275393
+      }
+    },
+    "counters": {
+      "analytic_jacobian_plan_requests": {
+        "total": 136,
+        "median": 40.5
+      },
+      "analytic_jacobian_plan_unsupported": {
+        "total": 136,
+        "median": 40.5
+      },
+      "constant_construction_cache_hits": {
+        "total": 7822,
+        "median": 1086.0
+      },
+      "constant_scalar_cache_hits": {
+        "total": 12462,
+        "median": 1041.5
+      },
+      "domain_margin_sample_cache_hits": {
+        "total": 1933,
+        "median": 42.5
+      },
+      "domain_margin_system_samples": {
+        "total": 1933,
+        "median": 42.5
+      },
+      "evaluate_answer_hp": {
+        "total": 62,
+        "median": 20.0
+      },
+      "evaluate_float_hard_feasibility": {
+        "total": 579,
+        "median": 189.5
+      },
+      "evaluate_float_residual": {
+        "total": 751,
+        "median": 250.0
+      },
+      "evaluate_guard": {
+        "total": 151,
+        "median": 50.0
+      },
+      "evaluate_hp_hard_feasibility": {
+        "total": 1396,
+        "median": 390.5
+      },
+      "evaluate_hp_residual": {
+        "total": 12159,
+        "median": 2603.0
+      },
+      "evaluation_count": {
+        "total": 601,
+        "median": 200.0
+      },
+      "evaluation_snapshot_hits": {
+        "total": 13237,
+        "median": 3625.0
+      },
+      "exact_answer_attempt_count": {
+        "total": 48,
+        "median": 13.5
+      },
+      "exact_answer_identified_count": {
+        "total": 48,
+        "median": 13.5
+      },
+      "exact_descriptor_reuses": {
+        "total": 37,
+        "median": 9.0
+      },
+      "guard_evidence_cache_hits": {
+        "total": 162,
+        "median": 48.5
+      },
+      "numerical_construction_evaluations": {
+        "total": 113190,
+        "median": 15771.5
+      },
+      "refinement_snapshot_reuses": {
+        "total": 62,
+        "median": 20.0
+      },
+      "scalar_leaf_cache_hits": {
+        "total": 3774,
+        "median": 136.0
+      },
+      "scalar_leaf_evaluations": {
+        "total": 4102,
+        "median": 835.5
+      },
+      "verification_equation_evaluations": {
+        "total": 25106,
+        "median": 2885.0
+      },
+      "verification_system_evaluations": {
+        "total": 8468,
+        "median": 2173.0
+      },
+      "verified_coordinate_cache_hits": {
+        "total": 44,
+        "median": 3.0
+      },
+      "warm_newton_attempts": {
+        "total": 20,
+        "median": 0.0
+      },
+      "warm_newton_successes": {
+        "total": 12,
+        "median": 0.0
+      }
+    }
+  },
+  "finished_at_utc": "2026-10-23T16:56:31.074736+00:00",
+  "final_loadavg": [
+    16.72705078125,
+    12.9111328125,
+    13.9677734375
+  ],
+  "max_artifact_bytes": 2188879
+}

@@ -1,0 +1,84 @@
+{
+  "recorded_at_utc": "2026-10-23T17:11:22.771219+00:00",
+  "solver_calls_for_diagnosis": 0,
+  "batch": 21,
+  "case_id": "HMMT-2017-FEB-GEO-05",
+  "mode": "original_repeat",
+  "seed": 380101,
+  "run_returncode": 0,
+  "assess_returncode": 1,
+  "solver_result": {
+    "status": "engine_error",
+    "completeness": "unknown",
+    "engine": {
+      "name": "standard",
+      "source_hash": "sha256:d8fd9bb8392ad2984276bab3386e033669246ee79586317917c322d31b4541f5",
+      "resolved_config_hash": "sha256:98810edcd2beb35fb7d31ba65620de8f3cebd3fc289c11a526b8a623adf6d70f",
+      "dependency_lock_hash": "sha256:aa93c94b893ed67b359af271ca6fb62e97d3551fc874a4b9e45a66c8c5e52930"
+    },
+    "problem_hash": "df08ed0c5f0cb8a17f0683c9ba3e82e2286df96fd91589cf14e507f250ac4ed7",
+    "requested_resources": {
+      "time_limit_seconds": 180.0,
+      "cores": 1,
+      "seed": 380101
+    },
+    "used_resources": {
+      "time_limit_seconds": 180.0,
+      "cores": 1,
+      "seed": 380101
+    },
+    "elapsed_seconds": 18.05847729719244,
+    "answers": [],
+    "termination_reason": "engine_failed",
+    "warnings": [],
+    "error": {
+      "code": "artifact_missing",
+      "message": "worker exited with code 1 without an artifact"
+    },
+    "diagnostics": null
+  },
+  "process": {
+    "assigned_cpu": 2,
+    "actual_affinity": [
+      2
+    ],
+    "returncode": 2,
+    "timed_out": false,
+    "elapsed_seconds": 18.341976789059117,
+    "stdout": "",
+    "stderr": ""
+  },
+  "execution_contract_issues": [],
+  "failed_worker_import_root_observed": false,
+  "observable_normal_worker_import_roots": [
+    "/tmp/q38-58e3993-clean/src/geosolver"
+  ],
+  "observable_normal_worker_count": 87,
+  "grader_failure": {
+    "path": "benchmarks/research_runner.py",
+    "line": 565,
+    "function": "read_run_outcome",
+    "expression": "info = diagnostics.get(\"process_info\", {})",
+    "exception": "AttributeError: 'NoneType' object has no attribute 'get'",
+    "preceding_field": "solver_result.diagnostics is null"
+  },
+  "underlying_worker_failure_cause": "Unknown. Saved public result only reports worker exit 1 without an artifact; worker stderr is not retained in the error result.",
+  "static_source_evidence": {
+    "path": "src/geosolver/engine/runner.py",
+    "lines": [
+      194,
+      199,
+      201,
+      202,
+      203,
+      235
+    ],
+    "description": "stdout/stderr are read from a temporary directory, but artifact_missing raises before attaching these to a successful WorkerArtifact. TemporaryDirectory cleans up the directory."
+  },
+  "file_limit": 4900000,
+  "largest_preserved_file": 4435183,
+  "file_size_limit_causation": "Not established. No preserved traceback or size of the failed worker artifact; a transient size-limit failure cannot be confirmed or ruled out.",
+  "why_no_continuation": "The fixed plan stops on a failed batch. Handling null diagnostics in the existing grader, substituting grading, skipping the failed batch, or retrying this new failure is outside the authorized environment-only repair. No such action taken.",
+  "new_assessment_created_for_stopped_batch": false,
+  "new_solver_runs_after_stop": 0
+}

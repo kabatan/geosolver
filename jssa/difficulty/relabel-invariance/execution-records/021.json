@@ -1,0 +1,208 @@
+{
+  "batch": 21,
+  "block": 1,
+  "mode": "original_repeat",
+  "seed": 380101,
+  "case_ids": [
+    "aime-2000-1-2",
+    "AIME-2012-II-15",
+    "HMMT-2017-FEB-GEO-05",
+    "HMMT-2022-FEB-GEO-03"
+  ],
+  "started_at_utc": "2026-10-23T17:04:22.227467+00:00",
+  "state": "stopped",
+  "controller_pid": 25,
+  "load_samples": [
+    {
+      "at_utc": "2026-10-23T17:04:22.229169+00:00",
+      "command": "run",
+      "loadavg": [
+        17.53515625,
+        17.623046875,
+        15.9482421875
+      ],
+      "children": []
+    },
+    {
+      "at_utc": "2026-10-23T17:04:32.229815+00:00",
+      "command": "run",
+      "loadavg": [
+        16.9912109375,
+        17.5029296875,
+        15.9267578125
+      ],
+      "children": [
+        {
+          "pid": 71,
+          "affinity": [
+            0
+          ],
+          "threads": 1
+        },
+        {
+          "pid": 75,
+          "affinity": [
+            2
+          ],
+          "threads": 1
+        },
+        {
+          "pid": 77,
+          "affinity": [
+            3
+          ],
+          "threads": 1
+        },
+        {
+          "pid": 80,
+          "affinity": [
+            3
+          ],
+          "threads": 2
+        },
+        {
+          "pid": 85,
+          "affinity": [
+            3
+          ],
+          "threads": 2
+        },
+        {
+          "pid": 79,
+          "affinity": [
+            2
+          ],
+          "threads": 2
+        },
+        {
+          "pid": 82,
+          "affinity": [
+            2
+          ],
+          "threads": 2
+        },
+        {
+          "pid": 81,
+          "affinity": [
+            0
+          ],
+          "threads": 2
+        },
+        {
+          "pid": 91,
+          "affinity": [
+            0
+          ],
+          "threads": 2
+        }
+      ]
+    },
+    {
+      "at_utc": "2026-10-23T17:04:42.230304+00:00",
+      "command": "run",
+      "loadavg": [
+        21.4326171875,
+        18.44091796875,
+        16.2490234375
+      ],
+      "children": [
+        {
+          "pid": 71,
+          "affinity": [
+            0
+          ],
+          "threads": 1
+        },
+        {
+          "pid": 81,
+          "affinity": [
+            0
+          ],
+          "threads": 2
+        },
+        {
+          "pid": 91,
+          "affinity": [
+            0
+          ],
+          "threads": 2
+        }
+      ]
+    },
+    {
+      "at_utc": "2026-10-23T17:04:50.764480+00:00",
+      "command": "assess",
+      "loadavg": [
+        20.28955078125,
+        18.29443359375,
+        16.224609375
+      ],
+      "children": []
+    }
+  ],
+  "commands": [
+    {
+      "label": "run",
+      "argv": [
+        "prlimit",
+        "--fsize=4900000:4900000",
+        "--",
+        "/tmp/q38-58e3993-venv/bin/python",
+        "-B",
+        "-m",
+        "benchmarks.research_runner",
+        "run",
+        "/tmp/q38-58e3993-repaired-execution/campaigns/b01-s380101-original_repeat",
+        "--cases",
+        "jssa/difficulty/relabel-invariance/inputs/original/cases.jsonl",
+        "--seeds",
+        "380101",
+        "--jobs",
+        "4",
+        "--case-id",
+        "aime-2000-1-2",
+        "--case-id",
+        "AIME-2012-II-15",
+        "--case-id",
+        "HMMT-2017-FEB-GEO-05",
+        "--case-id",
+        "HMMT-2022-FEB-GEO-03"
+      ],
+      "pid": 26,
+      "started_at_utc": "2026-10-23T17:04:22.228957+00:00",
+      "returncode": 0,
+      "finished_at_utc": "2026-10-23T17:04:50.763645+00:00",
+      "log_bytes": 0
+    },
+    {
+      "label": "assess",
+      "argv": [
+        "prlimit",
+        "--fsize=4900000:4900000",
+        "--",
+        "/tmp/q38-58e3993-venv/bin/python",
+        "-B",
+        "-m",
+        "benchmarks.research_runner",
+        "assess",
+        "/tmp/q38-58e3993-repaired-execution/campaigns/b01-s380101-original_repeat",
+        "--cases",
+        "jssa/difficulty/relabel-invariance/inputs/original/cases.jsonl"
+      ],
+      "pid": 94,
+      "started_at_utc": "2026-10-23T17:04:50.764312+00:00",
+      "returncode": 1,
+      "finished_at_utc": "2026-10-23T17:04:51.078374+00:00",
+      "log_bytes": 822
+    }
+  ],
+  "error": "RuntimeError('assess returned 1; stop without retry')",
+  "traceback": "Traceback (most recent call last):\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/relabel-invariance/stage2.py\", line 205, in batch_run\n    raise RuntimeError(f'{label} returned {code}; stop without retry')\nRuntimeError: assess returned 1; stop without retry\n",
+  "finished_at_utc": "2026-10-23T17:04:51.080445+00:00",
+  "final_loadavg": [
+    20.28955078125,
+    18.29443359375,
+    16.224609375
+  ],
+  "max_artifact_bytes": 4435183
+}

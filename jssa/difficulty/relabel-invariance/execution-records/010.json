@@ -1,0 +1,412 @@
+{
+  "batch": 10,
+  "block": 0,
+  "mode": "orders_combined",
+  "seed": 380102,
+  "case_ids": [
+    "HMMT-2021-FEB-GEO-03",
+    "HMMT-2023-FEB-GEO-04",
+    "HMMT-2006-FEB-GEO-01",
+    "JMO-2019-PRE-04"
+  ],
+  "started_at_utc": "2026-10-23T16:59:29.268967+00:00",
+  "state": "complete",
+  "controller_pid": 25,
+  "load_samples": [
+    {
+      "at_utc": "2026-10-23T16:59:29.270166+00:00",
+      "command": "run",
+      "loadavg": [
+        20.3203125,
+        15.64892578125,
+        14.77685546875
+      ],
+      "children": []
+    },
+    {
+      "at_utc": "2026-10-23T16:59:39.270746+00:00",
+      "command": "run",
+      "loadavg": [
+        19.26171875,
+        15.5771484375,
+        14.76318359375
+      ],
+      "children": [
+        {
+          "pid": 77,
+          "affinity": [
+            3
+          ],
+          "threads": 1
+        },
+        {
+          "pid": 81,
+          "affinity": [
+            3
+          ],
+          "threads": 2
+        },
+        {
+          "pid": 94,
+          "affinity": [
+            3
+          ],
+          "threads": 2
+        }
+      ]
+    },
+    {
+      "at_utc": "2026-10-23T16:59:49.271543+00:00",
+      "command": "run",
+      "loadavg": [
+        20.66943359375,
+        16.01513671875,
+        14.91552734375
+      ],
+      "children": [
+        {
+          "pid": 77,
+          "affinity": [
+            3
+          ],
+          "threads": 1
+        },
+        {
+          "pid": 81,
+          "affinity": [
+            3
+          ],
+          "threads": 2
+        },
+        {
+          "pid": 94,
+          "affinity": [
+            3
+          ],
+          "threads": 2
+        }
+      ]
+    },
+    {
+      "at_utc": "2026-10-23T16:59:59.272347+00:00",
+      "command": "run",
+      "loadavg": [
+        19.79736328125,
+        15.9814453125,
+        14.91650390625
+      ],
+      "children": [
+        {
+          "pid": 77,
+          "affinity": [
+            3
+          ],
+          "threads": 1
+        },
+        {
+          "pid": 81,
+          "affinity": [
+            3
+          ],
+          "threads": 1
+        }
+      ]
+    },
+    {
+      "at_utc": "2026-10-23T16:59:59.587597+00:00",
+      "command": "assess",
+      "loadavg": [
+        19.79736328125,
+        15.9814453125,
+        14.91650390625
+      ],
+      "children": []
+    },
+    {
+      "at_utc": "2026-10-23T16:59:59.902517+00:00",
+      "command": "summarize",
+      "loadavg": [
+        19.79736328125,
+        15.9814453125,
+        14.91650390625
+      ],
+      "children": []
+    }
+  ],
+  "commands": [
+    {
+      "label": "run",
+      "argv": [
+        "prlimit",
+        "--fsize=4900000:4900000",
+        "--",
+        "/tmp/q38-58e3993-venv/bin/python",
+        "-B",
+        "-m",
+        "benchmarks.research_runner",
+        "run",
+        "/tmp/q38-58e3993-repaired-execution/campaigns/b00-s380102-orders_combined",
+        "--cases",
+        "jssa/difficulty/relabel-invariance/inputs/orders_combined/cases.jsonl",
+        "--seeds",
+        "380102",
+        "--jobs",
+        "4",
+        "--case-id",
+        "HMMT-2021-FEB-GEO-03",
+        "--case-id",
+        "HMMT-2023-FEB-GEO-04",
+        "--case-id",
+        "HMMT-2006-FEB-GEO-01",
+        "--case-id",
+        "JMO-2019-PRE-04"
+      ],
+      "pid": 26,
+      "started_at_utc": "2026-10-23T16:59:29.269983+00:00",
+      "returncode": 0,
+      "finished_at_utc": "2026-10-23T16:59:59.586682+00:00",
+      "log_bytes": 0
+    },
+    {
+      "label": "assess",
+      "argv": [
+        "prlimit",
+        "--fsize=4900000:4900000",
+        "--",
+        "/tmp/q38-58e3993-venv/bin/python",
+        "-B",
+        "-m",
+        "benchmarks.research_runner",
+        "assess",
+        "/tmp/q38-58e3993-repaired-execution/campaigns/b00-s380102-orders_combined",
+        "--cases",
+        "jssa/difficulty/relabel-invariance/inputs/orders_combined/cases.jsonl"
+      ],
+      "pid": 97,
+      "started_at_utc": "2026-10-23T16:59:59.587422+00:00",
+      "returncode": 0,
+      "finished_at_utc": "2026-10-23T16:59:59.901610+00:00",
+      "log_bytes": 0
+    },
+    {
+      "label": "summarize",
+      "argv": [
+        "prlimit",
+        "--fsize=4900000:4900000",
+        "--",
+        "/tmp/q38-58e3993-venv/bin/python",
+        "-B",
+        "-m",
+        "benchmarks.research_runner",
+        "summarize",
+        "/tmp/q38-58e3993-repaired-execution/campaigns/b00-s380102-orders_combined"
+      ],
+      "pid": 98,
+      "started_at_utc": "2026-10-23T16:59:59.902340+00:00",
+      "returncode": 0,
+      "finished_at_utc": "2026-10-23T16:59:59.966139+00:00",
+      "log_bytes": 0
+    }
+  ],
+  "summary": {
+    "schema_version": 2,
+    "run_count": 4,
+    "assessed_count": 4,
+    "unassessed_count": 0,
+    "matched_count": 4,
+    "match_rate": 1.0,
+    "completeness": "unknown",
+    "status_counts": {
+      "solved": 4
+    },
+    "set_relation_counts": {
+      "equal": 4
+    },
+    "failure_stage_counts": {
+      "none": 4
+    },
+    "wall_seconds": {
+      "observed_count": 4,
+      "median": 3.529518399038352,
+      "p95": 29.474165108054876,
+      "maximum": 29.474165108054876,
+      "total": 37.46278176200576
+    },
+    "process_wall_seconds": {
+      "observed_count": 4,
+      "median": 3.8635431120637804,
+      "p95": 29.904240804957226,
+      "maximum": 29.904240804957226,
+      "total": 38.73364346008748
+    },
+    "cpu_seconds": {
+      "observed_count": 4,
+      "median": 2.165,
+      "p95": 14.83,
+      "maximum": 14.83,
+      "total": 19.96
+    },
+    "peak_rss_bytes": {
+      "observed_count": 4,
+      "median": 184573952.0,
+      "p95": 192012288,
+      "maximum": 192012288,
+      "total": 736415744
+    },
+    "phase_timings": {
+      "descriptors": {
+        "total": 3.558001480996609e-05,
+        "median": 8.380040526390076e-06
+      },
+      "discrete_completion": {
+        "total": 4.2360275983810425e-05,
+        "median": 1.05701619759202e-05
+      },
+      "exact_assembly": {
+        "total": 11.312257768120617,
+        "median": 0.8325062184594572
+      },
+      "initial_probe": {
+        "total": 0.10220687696710229,
+        "median": 0.014958241954445839
+      },
+      "phase_discrete_completion": {
+        "total": 0.0,
+        "median": 0.0
+      },
+      "phase_rescue": {
+        "total": 0.0,
+        "median": 0.0
+      },
+      "refinement": {
+        "total": 15.13031068793498,
+        "median": 0.7416662949835882
+      },
+      "rescue": {
+        "total": 0.0,
+        "median": 0.0
+      },
+      "search": {
+        "total": 4.295712677761912,
+        "median": 0.5260740119265392
+      }
+    },
+    "counters": {
+      "analytic_jacobian_plan_requests": {
+        "total": 134,
+        "median": 40.5
+      },
+      "analytic_jacobian_plan_unsupported": {
+        "total": 134,
+        "median": 40.5
+      },
+      "constant_construction_cache_hits": {
+        "total": 8554,
+        "median": 1452.0
+      },
+      "constant_scalar_cache_hits": {
+        "total": 12470,
+        "median": 1109.5
+      },
+      "domain_margin_sample_cache_hits": {
+        "total": 2269,
+        "median": 42.5
+      },
+      "domain_margin_system_samples": {
+        "total": 2269,
+        "median": 42.5
+      },
+      "evaluate_answer_hp": {
+        "total": 62,
+        "median": 20.0
+      },
+      "evaluate_float_hard_feasibility": {
+        "total": 563,
+        "median": 181.5
+      },
+      "evaluate_float_residual": {
+        "total": 751,
+        "median": 250.0
+      },
+      "evaluate_guard": {
+        "total": 151,
+        "median": 50.0
+      },
+      "evaluate_hp_hard_feasibility": {
+        "total": 1433,
+        "median": 416.0
+      },
+      "evaluate_hp_residual": {
+        "total": 15063,
+        "median": 2591.5
+      },
+      "evaluation_count": {
+        "total": 601,
+        "median": 200.0
+      },
+      "evaluation_snapshot_hits": {
+        "total": 14107,
+        "median": 3528.5
+      },
+      "exact_answer_attempt_count": {
+        "total": 53,
+        "median": 16.0
+      },
+      "exact_answer_identified_count": {
+        "total": 53,
+        "median": 16.0
+      },
+      "exact_descriptor_reuses": {
+        "total": 37,
+        "median": 9.0
+      },
+      "guard_evidence_cache_hits": {
+        "total": 153,
+        "median": 44.0
+      },
+      "numerical_construction_evaluations": {
+        "total": 146114,
+        "median": 15645.5
+      },
+      "refinement_snapshot_reuses": {
+        "total": 62,
+        "median": 20.0
+      },
+      "scalar_leaf_cache_hits": {
+        "total": 3713,
+        "median": 146.5
+      },
+      "scalar_leaf_evaluations": {
+        "total": 4091,
+        "median": 857.0
+      },
+      "verification_equation_evaluations": {
+        "total": 32342,
+        "median": 2757.0
+      },
+      "verification_system_evaluations": {
+        "total": 9848,
+        "median": 2081.0
+      },
+      "verified_coordinate_cache_hits": {
+        "total": 38,
+        "median": 0.0
+      },
+      "warm_newton_attempts": {
+        "total": 20,
+        "median": 0.0
+      },
+      "warm_newton_successes": {
+        "total": 7,
+        "median": 0.0
+      }
+    }
+  },
+  "finished_at_utc": "2026-10-23T16:59:59.966338+00:00",
+  "final_loadavg": [
+    19.79736328125,
+    15.9814453125,
+    14.91650390625
+  ],
+  "max_artifact_bytes": 2092375
+}

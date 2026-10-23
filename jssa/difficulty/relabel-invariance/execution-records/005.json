@@ -1,0 +1,355 @@
+{
+  "batch": 5,
+  "block": 0,
+  "mode": "orders_combined",
+  "seed": 380101,
+  "case_ids": [
+    "HMMT-2021-FEB-GEO-03",
+    "HMMT-2023-FEB-GEO-04",
+    "HMMT-2006-FEB-GEO-01",
+    "JMO-2019-PRE-04"
+  ],
+  "started_at_utc": "2026-10-23T16:57:14.342969+00:00",
+  "state": "complete",
+  "controller_pid": 25,
+  "load_samples": [
+    {
+      "at_utc": "2026-10-23T16:57:14.344107+00:00",
+      "command": "run",
+      "loadavg": [
+        14.5546875,
+        12.87548828125,
+        13.904296875
+      ],
+      "children": []
+    },
+    {
+      "at_utc": "2026-10-23T16:57:24.344551+00:00",
+      "command": "run",
+      "loadavg": [
+        14.40234375,
+        12.896484375,
+        13.900390625
+      ],
+      "children": [
+        {
+          "pid": 77,
+          "affinity": [
+            3
+          ],
+          "threads": 1
+        },
+        {
+          "pid": 79,
+          "affinity": [
+            3
+          ],
+          "threads": 2
+        },
+        {
+          "pid": 85,
+          "affinity": [
+            3
+          ],
+          "threads": 2
+        }
+      ]
+    },
+    {
+      "at_utc": "2026-10-23T16:57:32.722389+00:00",
+      "command": "assess",
+      "loadavg": [
+        14.3701171875,
+        12.9150390625,
+        13.9013671875
+      ],
+      "children": []
+    },
+    {
+      "at_utc": "2026-10-23T16:57:33.087225+00:00",
+      "command": "summarize",
+      "loadavg": [
+        14.3701171875,
+        12.9150390625,
+        13.9013671875
+      ],
+      "children": []
+    }
+  ],
+  "commands": [
+    {
+      "label": "run",
+      "argv": [
+        "prlimit",
+        "--fsize=4900000:4900000",
+        "--",
+        "/tmp/q38-58e3993-venv/bin/python",
+        "-B",
+        "-m",
+        "benchmarks.research_runner",
+        "run",
+        "/tmp/q38-58e3993-repaired-execution/campaigns/b00-s380101-orders_combined",
+        "--cases",
+        "jssa/difficulty/relabel-invariance/inputs/orders_combined/cases.jsonl",
+        "--seeds",
+        "380101",
+        "--jobs",
+        "4",
+        "--case-id",
+        "HMMT-2021-FEB-GEO-03",
+        "--case-id",
+        "HMMT-2023-FEB-GEO-04",
+        "--case-id",
+        "HMMT-2006-FEB-GEO-01",
+        "--case-id",
+        "JMO-2019-PRE-04"
+      ],
+      "pid": 26,
+      "started_at_utc": "2026-10-23T16:57:14.343961+00:00",
+      "returncode": 0,
+      "finished_at_utc": "2026-10-23T16:57:32.721658+00:00",
+      "log_bytes": 0
+    },
+    {
+      "label": "assess",
+      "argv": [
+        "prlimit",
+        "--fsize=4900000:4900000",
+        "--",
+        "/tmp/q38-58e3993-venv/bin/python",
+        "-B",
+        "-m",
+        "benchmarks.research_runner",
+        "assess",
+        "/tmp/q38-58e3993-repaired-execution/campaigns/b00-s380101-orders_combined",
+        "--cases",
+        "jssa/difficulty/relabel-invariance/inputs/orders_combined/cases.jsonl"
+      ],
+      "pid": 94,
+      "started_at_utc": "2026-10-23T16:57:32.722261+00:00",
+      "returncode": 0,
+      "finished_at_utc": "2026-10-23T16:57:33.086422+00:00",
+      "log_bytes": 0
+    },
+    {
+      "label": "summarize",
+      "argv": [
+        "prlimit",
+        "--fsize=4900000:4900000",
+        "--",
+        "/tmp/q38-58e3993-venv/bin/python",
+        "-B",
+        "-m",
+        "benchmarks.research_runner",
+        "summarize",
+        "/tmp/q38-58e3993-repaired-execution/campaigns/b00-s380101-orders_combined"
+      ],
+      "pid": 95,
+      "started_at_utc": "2026-10-23T16:57:33.087086+00:00",
+      "returncode": 0,
+      "finished_at_utc": "2026-10-23T16:57:33.150785+00:00",
+      "log_bytes": 0
+    }
+  ],
+  "summary": {
+    "schema_version": 2,
+    "run_count": 4,
+    "assessed_count": 4,
+    "unassessed_count": 0,
+    "matched_count": 4,
+    "match_rate": 1.0,
+    "completeness": "unknown",
+    "status_counts": {
+      "solved": 4
+    },
+    "set_relation_counts": {
+      "equal": 4
+    },
+    "failure_stage_counts": {
+      "none": 4
+    },
+    "wall_seconds": {
+      "observed_count": 4,
+      "median": 4.6064279730198905,
+      "p95": 17.64722584397532,
+      "maximum": 17.64722584397532,
+      "total": 27.838629566133022
+    },
+    "process_wall_seconds": {
+      "observed_count": 4,
+      "median": 4.936711932066828,
+      "p95": 17.97706118784845,
+      "maximum": 17.97706118784845,
+      "total": 29.024418098153546
+    },
+    "cpu_seconds": {
+      "observed_count": 4,
+      "median": 2.205,
+      "p95": 8.950000000000001,
+      "maximum": 8.950000000000001,
+      "total": 14.22
+    },
+    "peak_rss_bytes": {
+      "observed_count": 4,
+      "median": 184827904.0,
+      "p95": 194826240,
+      "maximum": 194826240,
+      "total": 739745792
+    },
+    "phase_timings": {
+      "descriptors": {
+        "total": 3.341003321111202e-05,
+        "median": 9.029987268149853e-06
+      },
+      "discrete_completion": {
+        "total": 4.031904973089695e-05,
+        "median": 1.0014977306127548e-05
+      },
+      "exact_assembly": {
+        "total": 9.15851201210171,
+        "median": 1.1562204910442233
+      },
+      "initial_probe": {
+        "total": 0.09580013598315418,
+        "median": 0.022976244566962123
+      },
+      "phase_discrete_completion": {
+        "total": 0.0,
+        "median": 0.0
+      },
+      "phase_rescue": {
+        "total": 0.0,
+        "median": 0.0
+      },
+      "refinement": {
+        "total": 9.325553854228929,
+        "median": 1.1241742934798822
+      },
+      "rescue": {
+        "total": 0.0,
+        "median": 0.0
+      },
+      "search": {
+        "total": 2.9464678338263184,
+        "median": 0.8340602088719606
+      }
+    },
+    "counters": {
+      "analytic_jacobian_plan_requests": {
+        "total": 136,
+        "median": 40.5
+      },
+      "analytic_jacobian_plan_unsupported": {
+        "total": 136,
+        "median": 40.5
+      },
+      "constant_construction_cache_hits": {
+        "total": 7822,
+        "median": 1086.0
+      },
+      "constant_scalar_cache_hits": {
+        "total": 12486,
+        "median": 1053.5
+      },
+      "domain_margin_sample_cache_hits": {
+        "total": 1933,
+        "median": 42.5
+      },
+      "domain_margin_system_samples": {
+        "total": 1933,
+        "median": 42.5
+      },
+      "evaluate_answer_hp": {
+        "total": 62,
+        "median": 20.0
+      },
+      "evaluate_float_hard_feasibility": {
+        "total": 579,
+        "median": 189.5
+      },
+      "evaluate_float_residual": {
+        "total": 751,
+        "median": 250.0
+      },
+      "evaluate_guard": {
+        "total": 151,
+        "median": 50.0
+      },
+      "evaluate_hp_hard_feasibility": {
+        "total": 1396,
+        "median": 390.5
+      },
+      "evaluate_hp_residual": {
+        "total": 11791,
+        "median": 2603.0
+      },
+      "evaluation_count": {
+        "total": 601,
+        "median": 200.0
+      },
+      "evaluation_snapshot_hits": {
+        "total": 13312,
+        "median": 3625.0
+      },
+      "exact_answer_attempt_count": {
+        "total": 48,
+        "median": 13.5
+      },
+      "exact_answer_identified_count": {
+        "total": 48,
+        "median": 13.5
+      },
+      "exact_descriptor_reuses": {
+        "total": 37,
+        "median": 9.0
+      },
+      "guard_evidence_cache_hits": {
+        "total": 162,
+        "median": 48.5
+      },
+      "numerical_construction_evaluations": {
+        "total": 113678,
+        "median": 15771.5
+      },
+      "refinement_snapshot_reuses": {
+        "total": 62,
+        "median": 20.0
+      },
+      "scalar_leaf_cache_hits": {
+        "total": 3774,
+        "median": 136.0
+      },
+      "scalar_leaf_evaluations": {
+        "total": 4102,
+        "median": 835.5
+      },
+      "verification_equation_evaluations": {
+        "total": 27650,
+        "median": 2885.0
+      },
+      "verification_system_evaluations": {
+        "total": 8996,
+        "median": 2173.0
+      },
+      "verified_coordinate_cache_hits": {
+        "total": 44,
+        "median": 3.0
+      },
+      "warm_newton_attempts": {
+        "total": 20,
+        "median": 0.0
+      },
+      "warm_newton_successes": {
+        "total": 12,
+        "median": 0.0
+      }
+    }
+  },
+  "finished_at_utc": "2026-10-23T16:57:33.150960+00:00",
+  "final_loadavg": [
+    14.3701171875,
+    12.9150390625,
+    13.9013671875
+  ],
+  "max_artifact_bytes": 2189118
+}

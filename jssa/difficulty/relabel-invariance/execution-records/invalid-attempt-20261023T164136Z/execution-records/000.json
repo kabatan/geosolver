@@ -1,0 +1,124 @@
+{
+  "batch": 0,
+  "block": 0,
+  "mode": "point_names",
+  "seed": 380101,
+  "case_ids": [
+    "HMMT-2021-FEB-GEO-03",
+    "HMMT-2023-FEB-GEO-04",
+    "HMMT-2006-FEB-GEO-01",
+    "JMO-2019-PRE-04"
+  ],
+  "started_at_utc": "2026-10-23T16:41:36.592354+00:00",
+  "state": "stopped",
+  "controller_pid": 26,
+  "load_samples": [
+    {
+      "at_utc": "2026-10-23T16:41:36.594319+00:00",
+      "command": "run",
+      "loadavg": [
+        12.4150390625,
+        18.76806640625,
+        18.64501953125
+      ],
+      "children": []
+    },
+    {
+      "at_utc": "2026-10-23T16:41:46.594830+00:00",
+      "command": "run",
+      "loadavg": [
+        11.962890625,
+        18.4619140625,
+        18.54638671875
+      ],
+      "children": [
+        {
+          "pid": 74,
+          "affinity": [
+            0
+          ],
+          "threads": 1
+        },
+        {
+          "pid": 78,
+          "affinity": [
+            3
+          ],
+          "threads": 1
+        },
+        {
+          "pid": 80,
+          "affinity": [
+            3
+          ],
+          "threads": 2
+        },
+        {
+          "pid": 86,
+          "affinity": [
+            3
+          ],
+          "threads": 2
+        },
+        {
+          "pid": 82,
+          "affinity": [
+            0
+          ],
+          "threads": 2
+        },
+        {
+          "pid": 89,
+          "affinity": [
+            0
+          ],
+          "threads": 2
+        }
+      ]
+    }
+  ],
+  "commands": [
+    {
+      "label": "run",
+      "argv": [
+        "prlimit",
+        "--fsize=4900000:4900000",
+        "--",
+        "/home/kabatan/work/solver/.venv/bin/python",
+        "-B",
+        "-m",
+        "benchmarks.research_runner",
+        "run",
+        "/tmp/q38-58e3993-execution/campaigns/b00-s380101-point_names",
+        "--cases",
+        "jssa/difficulty/relabel-invariance/inputs/point_names/cases.jsonl",
+        "--seeds",
+        "380101",
+        "--jobs",
+        "4",
+        "--case-id",
+        "HMMT-2021-FEB-GEO-03",
+        "--case-id",
+        "HMMT-2023-FEB-GEO-04",
+        "--case-id",
+        "HMMT-2006-FEB-GEO-01",
+        "--case-id",
+        "JMO-2019-PRE-04"
+      ],
+      "pid": 27,
+      "started_at_utc": "2026-10-23T16:41:36.594171+00:00",
+      "returncode": 2,
+      "finished_at_utc": "2026-10-23T16:41:50.764881+00:00",
+      "log_bytes": 135
+    }
+  ],
+  "error": "RuntimeError('run returned 2; stop without retry')",
+  "traceback": "Traceback (most recent call last):\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/relabel-invariance/stage2.py\", line 205, in batch_run\n    raise RuntimeError(f'{label} returned {code}; stop without retry')\nRuntimeError: run returned 2; stop without retry\n",
+  "finished_at_utc": "2026-10-23T16:41:50.766927+00:00",
+  "final_loadavg": [
+    11.8857421875,
+    18.337890625,
+    18.50537109375
+  ],
+  "max_artifact_bytes": 2285879
+}

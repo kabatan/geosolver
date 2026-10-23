@@ -1,0 +1,408 @@
+{
+  "batch": 12,
+  "block": 0,
+  "mode": "point_names",
+  "seed": 380102,
+  "case_ids": [
+    "HMMT-2021-FEB-GEO-03",
+    "HMMT-2023-FEB-GEO-04",
+    "HMMT-2006-FEB-GEO-01",
+    "JMO-2019-PRE-04"
+  ],
+  "started_at_utc": "2026-10-23T17:00:28.007060+00:00",
+  "state": "complete",
+  "controller_pid": 25,
+  "load_samples": [
+    {
+      "at_utc": "2026-10-23T17:00:28.008870+00:00",
+      "command": "run",
+      "loadavg": [
+        22.97265625,
+        16.990234375,
+        15.2763671875
+      ],
+      "children": []
+    },
+    {
+      "at_utc": "2026-10-23T17:00:38.009567+00:00",
+      "command": "run",
+      "loadavg": [
+        22.1337890625,
+        17.0078125,
+        15.30029296875
+      ],
+      "children": [
+        {
+          "pid": 76,
+          "affinity": [
+            3
+          ],
+          "threads": 1
+        },
+        {
+          "pid": 77,
+          "affinity": [
+            0
+          ],
+          "threads": 1
+        },
+        {
+          "pid": 81,
+          "affinity": [
+            0
+          ],
+          "threads": 2
+        },
+        {
+          "pid": 90,
+          "affinity": [
+            0
+          ],
+          "threads": 2
+        },
+        {
+          "pid": 80,
+          "affinity": [
+            3
+          ],
+          "threads": 2
+        },
+        {
+          "pid": 88,
+          "affinity": [
+            3
+          ],
+          "threads": 2
+        }
+      ]
+    },
+    {
+      "at_utc": "2026-10-23T17:00:48.010262+00:00",
+      "command": "run",
+      "loadavg": [
+        23.5419921875,
+        17.49658203125,
+        15.478515625
+      ],
+      "children": [
+        {
+          "pid": 76,
+          "affinity": [
+            3
+          ],
+          "threads": 1
+        },
+        {
+          "pid": 80,
+          "affinity": [
+            3
+          ],
+          "threads": 2
+        },
+        {
+          "pid": 88,
+          "affinity": [
+            3
+          ],
+          "threads": 2
+        }
+      ]
+    },
+    {
+      "at_utc": "2026-10-23T17:00:51.533286+00:00",
+      "command": "assess",
+      "loadavg": [
+        22.77783203125,
+        17.4384765625,
+        15.47021484375
+      ],
+      "children": []
+    },
+    {
+      "at_utc": "2026-10-23T17:00:51.848071+00:00",
+      "command": "summarize",
+      "loadavg": [
+        22.77783203125,
+        17.4384765625,
+        15.47021484375
+      ],
+      "children": []
+    }
+  ],
+  "commands": [
+    {
+      "label": "run",
+      "argv": [
+        "prlimit",
+        "--fsize=4900000:4900000",
+        "--",
+        "/tmp/q38-58e3993-venv/bin/python",
+        "-B",
+        "-m",
+        "benchmarks.research_runner",
+        "run",
+        "/tmp/q38-58e3993-repaired-execution/campaigns/b00-s380102-point_names",
+        "--cases",
+        "jssa/difficulty/relabel-invariance/inputs/point_names/cases.jsonl",
+        "--seeds",
+        "380102",
+        "--jobs",
+        "4",
+        "--case-id",
+        "HMMT-2021-FEB-GEO-03",
+        "--case-id",
+        "HMMT-2023-FEB-GEO-04",
+        "--case-id",
+        "HMMT-2006-FEB-GEO-01",
+        "--case-id",
+        "JMO-2019-PRE-04"
+      ],
+      "pid": 26,
+      "started_at_utc": "2026-10-23T17:00:28.008474+00:00",
+      "returncode": 0,
+      "finished_at_utc": "2026-10-23T17:00:51.532436+00:00",
+      "log_bytes": 0
+    },
+    {
+      "label": "assess",
+      "argv": [
+        "prlimit",
+        "--fsize=4900000:4900000",
+        "--",
+        "/tmp/q38-58e3993-venv/bin/python",
+        "-B",
+        "-m",
+        "benchmarks.research_runner",
+        "assess",
+        "/tmp/q38-58e3993-repaired-execution/campaigns/b00-s380102-point_names",
+        "--cases",
+        "jssa/difficulty/relabel-invariance/inputs/point_names/cases.jsonl"
+      ],
+      "pid": 94,
+      "started_at_utc": "2026-10-23T17:00:51.533111+00:00",
+      "returncode": 0,
+      "finished_at_utc": "2026-10-23T17:00:51.847240+00:00",
+      "log_bytes": 0
+    },
+    {
+      "label": "summarize",
+      "argv": [
+        "prlimit",
+        "--fsize=4900000:4900000",
+        "--",
+        "/tmp/q38-58e3993-venv/bin/python",
+        "-B",
+        "-m",
+        "benchmarks.research_runner",
+        "summarize",
+        "/tmp/q38-58e3993-repaired-execution/campaigns/b00-s380102-point_names"
+      ],
+      "pid": 95,
+      "started_at_utc": "2026-10-23T17:00:51.847887+00:00",
+      "returncode": 0,
+      "finished_at_utc": "2026-10-23T17:00:51.911666+00:00",
+      "log_bytes": 0
+    }
+  ],
+  "summary": {
+    "schema_version": 2,
+    "run_count": 4,
+    "assessed_count": 4,
+    "unassessed_count": 0,
+    "matched_count": 4,
+    "match_rate": 1.0,
+    "completeness": "unknown",
+    "status_counts": {
+      "solved": 4
+    },
+    "set_relation_counts": {
+      "equal": 4
+    },
+    "failure_stage_counts": {
+      "none": 4
+    },
+    "wall_seconds": {
+      "observed_count": 4,
+      "median": 10.166492668678984,
+      "p95": 22.572596987942234,
+      "maximum": 22.572596987942234,
+      "total": 43.95578704518266
+    },
+    "process_wall_seconds": {
+      "observed_count": 4,
+      "median": 10.742100128438324,
+      "p95": 23.02821144205518,
+      "maximum": 23.02821144205518,
+      "total": 45.78558820998296
+    },
+    "cpu_seconds": {
+      "observed_count": 4,
+      "median": 4.885,
+      "p95": 11.400000000000002,
+      "maximum": 11.400000000000002,
+      "total": 22.03
+    },
+    "peak_rss_bytes": {
+      "observed_count": 4,
+      "median": 188989440.0,
+      "p95": 226025472,
+      "maximum": 226025472,
+      "total": 779194368
+    },
+    "phase_timings": {
+      "descriptors": {
+        "total": 5.486002191901207e-05,
+        "median": 1.1695083230733871e-05
+      },
+      "discrete_completion": {
+        "total": 4.832982085645199e-05,
+        "median": 1.2209988199174404e-05
+      },
+      "exact_assembly": {
+        "total": 11.95773241110146,
+        "median": 1.6453183100093156
+      },
+      "initial_probe": {
+        "total": 0.1252221108879894,
+        "median": 0.02556325646582991
+      },
+      "phase_discrete_completion": {
+        "total": 0.0,
+        "median": 0.0
+      },
+      "phase_rescue": {
+        "total": 0.0,
+        "median": 0.0
+      },
+      "refinement": {
+        "total": 19.78416524012573,
+        "median": 5.070011495030485
+      },
+      "rescue": {
+        "total": 0.0,
+        "median": 0.0
+      },
+      "search": {
+        "total": 4.507142532849684,
+        "median": 1.2432494319509715
+      }
+    },
+    "counters": {
+      "analytic_jacobian_plan_requests": {
+        "total": 146,
+        "median": 46.0
+      },
+      "analytic_jacobian_plan_unsupported": {
+        "total": 146,
+        "median": 46.0
+      },
+      "constant_construction_cache_hits": {
+        "total": 8203,
+        "median": 1276.5
+      },
+      "constant_scalar_cache_hits": {
+        "total": 40380,
+        "median": 1020.5
+      },
+      "domain_margin_sample_cache_hits": {
+        "total": 2164,
+        "median": 42.5
+      },
+      "domain_margin_system_samples": {
+        "total": 2164,
+        "median": 42.5
+      },
+      "evaluate_answer_hp": {
+        "total": 62,
+        "median": 20.0
+      },
+      "evaluate_float_hard_feasibility": {
+        "total": 547,
+        "median": 173.5
+      },
+      "evaluate_float_residual": {
+        "total": 783,
+        "median": 250.0
+      },
+      "evaluate_guard": {
+        "total": 183,
+        "median": 50.0
+      },
+      "evaluate_hp_hard_feasibility": {
+        "total": 1592,
+        "median": 351.5
+      },
+      "evaluate_hp_residual": {
+        "total": 25870,
+        "median": 4506.5
+      },
+      "evaluation_count": {
+        "total": 601,
+        "median": 200.0
+      },
+      "evaluation_snapshot_hits": {
+        "total": 13803,
+        "median": 3814.0
+      },
+      "exact_answer_attempt_count": {
+        "total": 48,
+        "median": 13.5
+      },
+      "exact_answer_identified_count": {
+        "total": 48,
+        "median": 13.5
+      },
+      "exact_descriptor_reuses": {
+        "total": 39,
+        "median": 10.0
+      },
+      "guard_evidence_cache_hits": {
+        "total": 143,
+        "median": 39.0
+      },
+      "numerical_construction_evaluations": {
+        "total": 176086,
+        "median": 44413.5
+      },
+      "refinement_snapshot_reuses": {
+        "total": 62,
+        "median": 20.0
+      },
+      "scalar_leaf_cache_hits": {
+        "total": 4498,
+        "median": 143.0
+      },
+      "scalar_leaf_evaluations": {
+        "total": 4894,
+        "median": 799.5
+      },
+      "verification_equation_evaluations": {
+        "total": 27656,
+        "median": 3347.0
+      },
+      "verification_system_evaluations": {
+        "total": 9456,
+        "median": 2496.0
+      },
+      "verified_coordinate_cache_hits": {
+        "total": 40,
+        "median": 1.0
+      },
+      "warm_newton_attempts": {
+        "total": 20,
+        "median": 0.0
+      },
+      "warm_newton_successes": {
+        "total": 13,
+        "median": 0.0
+      }
+    }
+  },
+  "finished_at_utc": "2026-10-23T17:00:51.911853+00:00",
+  "final_loadavg": [
+    22.77783203125,
+    17.4384765625,
+    15.47021484375
+  ],
+  "max_artifact_bytes": 2092625
+}
