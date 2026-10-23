@@ -69,6 +69,7 @@ def analyze(partial=False):
             core_blocks.append({"id": cid, "group": case["group"], "seed": seed, "pattern_1_2_4_8": pattern,
                                 "all_observed": all(r["observed"] for r in block),
                                 "same_answer_set": all(r["answer_keys"] == block[0]["answer_keys"] for r in block),
+                                "same_counters": all(r["counters"] == block[0]["counters"] for r in block),
                                 "answer_sets": [r["answer_keys"] for r in block],
                                 "times": [r["wall_seconds"] for r in block]})
             for low, high in ((1, 2), (1, 4), (1, 8), (2, 4), (2, 8), (4, 8)):
@@ -134,7 +135,7 @@ def analyze(partial=False):
            "min_tmp_free_bytes": min((r["tmp_free"] for r in telemetry), default=None),
            "min_available_memory_bytes": min((r["available_memory"] for r in telemetry), default=None),
            "worker_cpu_wall_ratio": stats([r["cpu_wall_ratio"] for r in rows]),
-           "interference_caveat": "CPU/wall <1 includes I/O and waits; host usage includes other jobs and our jobs. No owner attribution or causal correction."}
+           "interference_caveat": "Worker CPU seconds exclude symbolic child processes; CPU/wall <1 includes child work, I/O and waits. Host usage includes other jobs and our jobs. See interference.json for recorded concurrent Q37 intervals; no causal correction."}
     condition_rows = []
     for budget, cores, seed_group in [(180, c, seeds[:2]) for c in (1, 2, 4, 8)] + [(180, 1, seeds[2:])] + [(t, 1, seeds[:2]) for t in (360, 900)]:
         block = [r for r in rows if r["budget"] == budget and r["cores"] == cores and r["seed"] in seed_group]
@@ -150,6 +151,9 @@ def analyze(partial=False):
                "core_effective_counts": dict(Counter(r["used_cores"] for r in rows if r["observed"])),
                "core_patterns": dict(Counter(r["pattern_1_2_4_8"] for r in core_blocks)),
                "core_any_loss_problems": sorted({r["id"] for r in core_pairs if r["loss"]}),
+               "core_any_gain_problems": sorted({r["id"] for r in core_pairs if r["gain"]}),
+               "core_same_answer_blocks": sum(r["all_observed"] and r["same_answer_set"] for r in core_blocks),
+               "core_same_counter_blocks": sum(r["all_observed"] and r["same_counters"] for r in core_blocks),
                "core_1to8_loss_problems": sorted({r["id"] for r in core_pairs if r["loss"] and (r["low"], r["high"]) == (1, 8)}),
                "core_1to8_time_ratios": stats([r["time_ratio"] for r in core_pairs if (r["low"], r["high"]) == (1, 8)]),
                "seed_summary": {label: {"denominator": 20, "observed_cases": sum(r["all_observed"] for r in seed_rows if r["label"] == label),
@@ -158,6 +162,9 @@ def analyze(partial=False):
                                 for label in ("a1", "a2", "b1", "b2", "all4")},
                "budget_patterns": dict(Counter(r["pattern_180_360_900"] for r in budget_blocks)),
                "budget_loss_problems": sorted({r["id"] for r in budget_pairs if r["loss"]}),
+               "seed_mixed_success_problems": [r["id"] for r in cases if "0" in r["seed_pattern_1core"] and "1" in r["seed_pattern_1core"]],
+               "seed_primary_pair_discordant": [r["id"] for r in cases if set(r["seed_pattern_1core"][:2]) == {"0", "1"}],
+               "seed_extra_pair_discordant": [r["id"] for r in cases if set(r["seed_pattern_1core"][2:]) == {"0", "1"}],
                "environment": env}
     if partial:
         print(json.dumps({"observed": len(receipts), "scheduled": len(rows), "status_counts": summary["status_counts"],

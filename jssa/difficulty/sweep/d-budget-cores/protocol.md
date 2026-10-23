@@ -25,3 +25,12 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:. /home/kabatan/work/solver/.venv/bin/p
 ```
 
 `prepare` は既存manifestの上書きを拒否する。`run` は完了receiptを再実行せず、開始記録だけが残るセルは自動再試行しない。結果を捨てて再試行したり、問題を入れ替えたりしない。216本すべて上限までかかる場合、固定レーンの最大は約5.1時間。短く終了する問題ではそれより早い。
+
+再開時の追記（測定規則・採点規則の変更なし）:
+
+- ホストの `ps` で元のsupervisor（PID 3834325）と子プロセスの生存を確認した。会話は中断していたが実験は継続しており、停止・二重起動・追加試行はしない。元の3レーン・順序・CPU割付をそのまま採用する。
+- 既存走行は開始時の共有worktree由来で、各試行の直前に凍結版との一致を確認する実装だった。生きている実験を移し替えず、完了後に公開出力のsource hash・依存関係・入力hash・開始記録も独立に監査する。
+- 解析は凍結commitの展開先 `/tmp/q43d-clean` をimport先にする。2026年問題と座標評価用helperは元bytesをコピーしてhashを記録した（[analysis-source.json](analysis-source.json)）。solver・採点器・manifest・`run.py` は変更しない。
+- [interference.py](interference.py) は他タスクQ37の完了receiptから、同じ論理CPUへの割付と実行区間の重複だけを集計する。相手の未完了・欠測区間や他のタスクを含まないので、干渉量の完全な測定ではない。ホストのプロセス一覧の抜粋も生ログ側に保存する。
+- `process_info.cpu_seconds` はworker自身の `time.process_time()` で、symbolic子プロセスのCPU秒を含まない。CPU秒/経過秒だけから他ジョブの寄与を推定しない。
+- 完了後の再集計は依存環境のPythonで `analyze.py`、`figures.py`、`interference.py`、`audit.py`、`report_metrics.py` を順に実行する。新しい探索は行わない。`report_metrics.py` の時間比2倍は観測後の記述用閾値で、予測や採点閾値ではない。図のseed比較は、両方が正答かつ図を保存した組だけで変化を判定し、図の欠測は変化と区別する。分母は20問のまま。

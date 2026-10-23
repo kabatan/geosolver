@@ -16,8 +16,10 @@ import sys
 
 BASE = Path(__file__).resolve().parent
 ROOT = BASE.parents[3]
+ANALYSIS_SOURCE = json.loads((BASE / "analysis-source.json").read_text())
+FROZEN_ROOT = Path(ANALYSIS_SOURCE["clean_root"])
 sys.dont_write_bytecode = True
-sys.path[:0] = [str(ROOT / "src"), str(ROOT / "jssa/difficulty"), str(ROOT)]
+sys.path[:0] = [str(FROZEN_ROOT / "src"), str(FROZEN_ROOT / "jssa/difficulty"), str(FROZEN_ROOT)]
 from probe_basins import answer_float, construction_coordinates
 from geosolver import GeometryProblem
 from geosolver.engine.standard.problem.load_problem_bundle import load_problem_bundle
@@ -56,8 +58,8 @@ def main(preview=False):
     for case in manifest["cases"]:
         if preview and any(j["job"] not in receipts for j in manifest["jobs"] if j["id"] == case["id"]):
             continue
-        dsl = json.loads((ROOT / case["dsl_path"]).read_text())
-        assert hashlib.sha256((ROOT / case["dsl_path"]).read_bytes()).hexdigest() == case["dsl_sha256"]
+        dsl = json.loads((FROZEN_ROOT / case["dsl_path"]).read_text())
+        assert hashlib.sha256((FROZEN_ROOT / case["dsl_path"]).read_bytes()).hexdigest() == case["dsl_sha256"]
         bundle = load_problem_bundle(GeometryProblem.model_validate(dsl).engine_document())
         var_names = list(bundle.var_names)
         names = [c["name"] for c in dsl["constructions"] if c["expression"].split("(")[0] not in
@@ -134,7 +136,10 @@ def main(preview=False):
                           "congruence_changes_primary_seeds": shape_changes,
                           "core_diagrams_available_both_seeds": all(core_observable),
                           "seed_pair_coordinate_change": seed_changes, "seed_pair_congruence_change": seed_shape_changes,
-                          "point_names": sorted(evaluators), "unavailable_names": unavailable_names})
+                          "point_names": sorted({name for conf in configurations for name in conf["points"]}),
+                          "coordinate_evaluator_names": sorted(evaluators),
+                          "unavailable_names": unavailable_names,
+                          "point_evaluation_failures": sorted({name for conf in configurations for name in conf["unavailable_points"]})})
         details[case["id"]] = {"variable_order": var_names, "configurations": configurations, "jobs": jobs,
                                "point_evaluation_issues": unavailable_names}
     full = raw / ("preview-evaluated-figures.json" if preview else "evaluated-figures.json")
@@ -146,7 +151,8 @@ def main(preview=False):
     write_csv("figure-per-problem.csv", cases_out)
     summary = {"tolerance": TOL, "comparison": "Componentwise |a-b| <= 1e-7 max(1,|a|,|b|); greedy representatives in fixed job order.",
                "meaning": "Accepted saved configurations only; labelled pairwise distances quotient translation/rotation/reflection, retain scale. Empty sets mean no saved accepted figure, not proof of no figure.",
-               "probe_basins_sha256": hashlib.sha256((ROOT / "jssa/difficulty/probe_basins.py").read_bytes()).hexdigest(),
+               "probe_basins_sha256": hashlib.sha256((FROZEN_ROOT / "jssa/difficulty/probe_basins.py").read_bytes()).hexdigest(),
+               "analysis_source_root": str(FROZEN_ROOT),
                "source_hash": source_tree_hash(), "details_path": str(full), "details_sha256": hashlib.sha256(full.read_bytes()).hexdigest(),
                "cases": cases_out}
     (BASE / "figure-summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n")
