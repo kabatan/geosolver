@@ -1,0 +1,130 @@
+{
+  "id": "AIME-1992-14",
+  "variables": [
+    "cx",
+    "cy",
+    "t",
+    "s",
+    "q",
+    "ox",
+    "oy"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "Ap",
+      "expression": "PointOnSegment(B,C,t)"
+    },
+    {
+      "name": "Bp",
+      "expression": "PointOnSegment(A,C,s)"
+    },
+    {
+      "name": "Cp",
+      "expression": "PointOnSegment(A,B,q)"
+    },
+    {
+      "name": "O",
+      "expression": "Point(ox, oy)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "t",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "1",
+      "operator": ">",
+      "right": "t"
+    },
+    {
+      "left": "s",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "1",
+      "operator": ">",
+      "right": "s"
+    },
+    {
+      "left": "q",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "1",
+      "operator": ">",
+      "right": "q"
+    },
+    {
+      "left": "((B.x-A.x)*(O.y-A.y)-(B.y-A.y)*(O.x-A.x))",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "((C.x-B.x)*(O.y-B.y)-(C.y-B.y)*(O.x-B.x))",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "((A.x-C.x)*(O.y-C.y)-(A.y-C.y)*(O.x-C.x))",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "OnLine(O,Line(A,Ap))",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "OnLine(O,Line(B,Bp))",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "OnLine(O,Line(C,Cp))",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "Distance(O,Ap)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(O,Bp)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(O,Cp)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(A,O)/Distance(O,Ap)+Distance(B,O)/Distance(O,Bp)+Distance(C,O)/Distance(O,Cp)",
+      "operator": "=",
+      "right": "92"
+    }
+  ],
+  "target": "(Distance(A,O)/Distance(O,Ap))*(Distance(B,O)/Distance(O,Bp))*(Distance(C,O)/Distance(O,Cp))"
+}

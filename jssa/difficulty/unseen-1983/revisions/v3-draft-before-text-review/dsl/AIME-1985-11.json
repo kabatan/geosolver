@@ -1,0 +1,39 @@
+{
+  "id": "AIME-1985-11",
+  "variables": [
+    "t",
+    "L"
+  ],
+  "constructions": [
+    {
+      "name": "F1",
+      "expression": "Point(9, 20)"
+    },
+    {
+      "name": "F2",
+      "expression": "Point(49, 55)"
+    },
+    {
+      "name": "T",
+      "expression": "Point(t, 0)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(T,F1)+Distance(T,F2)",
+      "operator": "=",
+      "right": "L"
+    },
+    {
+      "left": "(t-9)/Distance(T,F1)+(t-49)/Distance(T,F2)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "L",
+      "operator": ">",
+      "right": "Distance(F1,F2)"
+    }
+  ],
+  "target": "L"
+}

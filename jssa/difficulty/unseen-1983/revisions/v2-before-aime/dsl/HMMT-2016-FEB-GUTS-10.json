@@ -1,0 +1,61 @@
+{
+  "id": "HMMT-2016-FEB-GUTS-10",
+  "variables": [
+    "ax",
+    "ay"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(14, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "O",
+      "expression": "Circumcenter(A, B, C)"
+    },
+    {
+      "name": "U",
+      "expression": "Circumcenter(A, O, B)"
+    },
+    {
+      "name": "V",
+      "expression": "Circumcenter(A, O, C)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 13
+    },
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": 15
+    },
+    {
+      "left": "Area(A, O, B)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Area(A, O, C)",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Distance(U, V)"
+}

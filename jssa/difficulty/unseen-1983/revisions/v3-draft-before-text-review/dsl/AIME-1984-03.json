@@ -1,0 +1,119 @@
+{
+  "id": "AIME-1984-03",
+  "variables": [
+    "b",
+    "cx",
+    "cy",
+    "px",
+    "py"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(b, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(px, py)"
+    },
+    {
+      "name": "WA",
+      "expression": "Point(P.x+C.x-B.x, P.y+C.y-B.y)"
+    },
+    {
+      "name": "LA",
+      "expression": "Line(P, WA)"
+    },
+    {
+      "name": "EA",
+      "expression": "Intersect(LA, Line(A, B))"
+    },
+    {
+      "name": "FA",
+      "expression": "Intersect(LA, Line(A, C))"
+    },
+    {
+      "name": "WB",
+      "expression": "Point(P.x+A.x-C.x, P.y+A.y-C.y)"
+    },
+    {
+      "name": "LB",
+      "expression": "Line(P, WB)"
+    },
+    {
+      "name": "EB",
+      "expression": "Intersect(LB, Line(B, C))"
+    },
+    {
+      "name": "FB",
+      "expression": "Intersect(LB, Line(B, A))"
+    },
+    {
+      "name": "WC",
+      "expression": "Point(P.x+B.x-A.x, P.y+B.y-A.y)"
+    },
+    {
+      "name": "LC",
+      "expression": "Line(P, WC)"
+    },
+    {
+      "name": "EC",
+      "expression": "Intersect(LC, Line(C, A))"
+    },
+    {
+      "name": "FC",
+      "expression": "Intersect(LC, Line(C, B))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "b",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "((B.x-A.x)*(P.y-A.y)-(B.y-A.y)*(P.x-A.x))",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "((C.x-B.x)*(P.y-B.y)-(C.y-B.y)*(P.x-B.x))",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "((A.x-C.x)*(P.y-C.y)-(A.y-C.y)*(P.x-C.x))",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Area(P, EA, FB)",
+      "operator": "=",
+      "right": "4"
+    },
+    {
+      "left": "Area(P, FA, EC)",
+      "operator": "=",
+      "right": "9"
+    },
+    {
+      "left": "Area(P, EB, FC)",
+      "operator": "=",
+      "right": "49"
+    }
+  ],
+  "target": "Area(A,B,C)"
+}

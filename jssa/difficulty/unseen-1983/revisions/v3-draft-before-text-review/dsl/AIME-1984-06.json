@@ -1,0 +1,47 @@
+{
+  "id": "AIME-1984-06",
+  "variables": [
+    "nx",
+    "ny"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(14, 92)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(17, 76)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(19, 84)"
+    },
+    {
+      "name": "W",
+      "expression": "Point(17-ny, 76+nx)"
+    },
+    {
+      "name": "ell",
+      "expression": "Line(B,W)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "nx**2+ny**2",
+      "operator": "=",
+      "right": "1"
+    },
+    {
+      "left": "ny",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "(9*acos(-(max([-3,min([3,-3*nx+16*ny])]))/3)+(max([-3,min([3,-3*nx+16*ny])]))*sqrt(9-(max([-3,min([3,-3*nx+16*ny])]))**2))+9*pi/2+(9*acos(-(max([-3,min([3,2*nx+8*ny])]))/3)+(max([-3,min([3,2*nx+8*ny])]))*sqrt(9-(max([-3,min([3,2*nx+8*ny])]))**2))",
+      "operator": "=",
+      "right": "27*pi/2"
+    }
+  ],
+  "target": "abs(nx/ny)"
+}

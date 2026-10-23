@@ -1,0 +1,129 @@
+{
+  "id": "AIME-1986-09",
+  "variables": [
+    "cx",
+    "cy",
+    "px",
+    "py",
+    "d"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(425, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(px, py)"
+    },
+    {
+      "name": "WA",
+      "expression": "Point(P.x+C.x-B.x, P.y+C.y-B.y)"
+    },
+    {
+      "name": "LA",
+      "expression": "Line(P, WA)"
+    },
+    {
+      "name": "EA",
+      "expression": "Intersect(LA, Line(A, B))"
+    },
+    {
+      "name": "FA",
+      "expression": "Intersect(LA, Line(A, C))"
+    },
+    {
+      "name": "WB",
+      "expression": "Point(P.x+A.x-C.x, P.y+A.y-C.y)"
+    },
+    {
+      "name": "LB",
+      "expression": "Line(P, WB)"
+    },
+    {
+      "name": "EB",
+      "expression": "Intersect(LB, Line(B, C))"
+    },
+    {
+      "name": "FB",
+      "expression": "Intersect(LB, Line(B, A))"
+    },
+    {
+      "name": "WC",
+      "expression": "Point(P.x+B.x-A.x, P.y+B.y-A.y)"
+    },
+    {
+      "name": "LC",
+      "expression": "Line(P, WC)"
+    },
+    {
+      "name": "EC",
+      "expression": "Intersect(LC, Line(C, A))"
+    },
+    {
+      "name": "FC",
+      "expression": "Intersect(LC, Line(C, B))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(B,C)",
+      "operator": "=",
+      "right": "450"
+    },
+    {
+      "left": "Distance(A,C)",
+      "operator": "=",
+      "right": "510"
+    },
+    {
+      "left": "((B.x-A.x)*(P.y-A.y)-(B.y-A.y)*(P.x-A.x))",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "((C.x-B.x)*(P.y-B.y)-(C.y-B.y)*(P.x-B.x))",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "((A.x-C.x)*(P.y-C.y)-(A.y-C.y)*(P.x-C.x))",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "d",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(EA,FA)",
+      "operator": "=",
+      "right": "d"
+    },
+    {
+      "left": "Distance(EB,FB)",
+      "operator": "=",
+      "right": "d"
+    },
+    {
+      "left": "Distance(EC,FC)",
+      "operator": "=",
+      "right": "d"
+    }
+  ],
+  "target": "d"
+}

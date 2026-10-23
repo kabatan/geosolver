@@ -1,0 +1,122 @@
+{
+  "id": "HMMT-2022-FEB-GEO-07",
+  "variables": [
+    "x",
+    "y",
+    "a",
+    "b",
+    "h",
+    "k"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(10, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(10, 10)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(0, 10)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(x, y)"
+    },
+    {
+      "name": "O1",
+      "expression": "Circumcenter(P, A, B)"
+    },
+    {
+      "name": "O2",
+      "expression": "Circumcenter(P, B, C)"
+    },
+    {
+      "name": "O3",
+      "expression": "Circumcenter(P, C, D)"
+    },
+    {
+      "name": "O4",
+      "expression": "Circumcenter(P, D, A)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "x",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "x",
+      "operator": "<",
+      "right": 10
+    },
+    {
+      "left": "y",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "y",
+      "operator": "<",
+      "right": 10
+    },
+    {
+      "left": "Distance(P,A)+Distance(P,B)+Distance(P,C)+Distance(P,D)",
+      "operator": "=",
+      "right": "23*sqrt(2)"
+    },
+    {
+      "left": "Area(O1, O2, O3, O4)",
+      "operator": "=",
+      "right": 50
+    },
+    {
+      "left": "(max([min(Distance(O1, O2), Distance(O2, O3)), min(Distance(O1, O2), Distance(O3, O4)), min(Distance(O1, O2), Distance(O4, O1)), min(Distance(O2, O3), Distance(O3, O4)), min(Distance(O2, O3), Distance(O4, O1)), min(Distance(O3, O4), Distance(O4, O1))]))**2",
+      "operator": "=",
+      "right": "a/b"
+    },
+    {
+      "left": "IsInteger(a)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsInteger(b)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsInteger(h)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsInteger(k)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "a",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "b",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "h*a+k*b",
+      "operator": "=",
+      "right": 1
+    }
+  ],
+  "target": "100*a+b"
+}

@@ -1,0 +1,91 @@
+{
+  "id": "HMMT-2017-FEB-GUTS-06",
+  "variables": [
+    "bx",
+    "by",
+    "dx",
+    "dy"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(7, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(bx, by)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(dx, dy)"
+    },
+    {
+      "name": "M",
+      "expression": "Midpoint(A, B)"
+    },
+    {
+      "name": "P",
+      "expression": "Midpoint(B, C)"
+    },
+    {
+      "name": "N",
+      "expression": "Midpoint(C, D)"
+    },
+    {
+      "name": "Q",
+      "expression": "Midpoint(D, A)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(B, D)",
+      "operator": "=",
+      "right": 17
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(D.y-A.y)-(B.y-A.y)*(D.x-A.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((C.x-B.x)*(A.y-B.y)-(C.y-B.y)*(A.x-B.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((C.x-B.x)*(D.y-B.y)-(C.y-B.y)*(D.x-B.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((D.x-C.x)*(A.y-C.y)-(D.y-C.y)*(A.x-C.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((D.x-C.x)*(B.y-C.y)-(D.y-C.y)*(B.x-C.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((A.x-D.x)*(B.y-D.y)-(A.y-D.y)*(B.x-D.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((A.x-D.x)*(C.y-D.y)-(A.y-D.y)*(C.x-D.x))",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Distance(M, N)**2 + Distance(P, Q)**2"
+}

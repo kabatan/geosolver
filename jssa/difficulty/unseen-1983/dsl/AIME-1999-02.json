@@ -1,0 +1,132 @@
+{
+  "id": "AIME-1999-02",
+  "variables": [
+    "e",
+    "p",
+    "q",
+    "m",
+    "n",
+    "u",
+    "v"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(10, 45)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(10, 114)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(28, 153)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(28, 84)"
+    },
+    {
+      "name": "O",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "V0",
+      "expression": "A if e == 0 else B"
+    },
+    {
+      "name": "V1",
+      "expression": "B if e == 0 else C"
+    },
+    {
+      "name": "V2",
+      "expression": "C if e == 0 else D"
+    },
+    {
+      "name": "V3",
+      "expression": "D if e == 0 else A"
+    },
+    {
+      "name": "X",
+      "expression": "PointOnSegment(V0,V1,p)"
+    },
+    {
+      "name": "Y",
+      "expression": "PointOnSegment(V2,V3,q)"
+    }
+  ],
+  "conditions": [
+    {
+      "predicate": "(e == 0) or (e == 1)"
+    },
+    {
+      "left": "p",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "1",
+      "operator": ">",
+      "right": "p"
+    },
+    {
+      "left": "q",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "1",
+      "operator": ">",
+      "right": "q"
+    },
+    {
+      "left": "X.y*n",
+      "operator": "=",
+      "right": "X.x*m"
+    },
+    {
+      "left": "Y.y*n",
+      "operator": "=",
+      "right": "Y.x*m"
+    },
+    {
+      "predicate": "(Distance(X,V1) == Distance(Y,V3) and Distance(X,V2) == Distance(Y,V0) and Distance(X,Y) == Distance(Y,X) and Distance(V1,V2) == Distance(V3,V0) and Distance(V1,Y) == Distance(V3,X) and Distance(V2,Y) == Distance(V0,X)) or (Distance(X,V1) == Distance(V3,V0) and Distance(X,V2) == Distance(V3,X) and Distance(X,Y) == Distance(V3,Y) and Distance(V1,V2) == Distance(V0,X) and Distance(V1,Y) == Distance(V0,Y) and Distance(V2,Y) == Distance(X,Y)) or (Distance(X,V1) == Distance(V0,X) and Distance(X,V2) == Distance(V0,Y) and Distance(X,Y) == Distance(V0,V3) and Distance(V1,V2) == Distance(X,Y) and Distance(V1,Y) == Distance(X,V3) and Distance(V2,Y) == Distance(Y,V3)) or (Distance(X,V1) == Distance(X,Y) and Distance(X,V2) == Distance(X,V3) and Distance(X,Y) == Distance(X,V0) and Distance(V1,V2) == Distance(Y,V3) and Distance(V1,Y) == Distance(Y,V0) and Distance(V2,Y) == Distance(V3,V0)) or (Distance(X,V1) == Distance(Y,X) and Distance(X,V2) == Distance(Y,V0) and Distance(X,Y) == Distance(Y,V3) and Distance(V1,V2) == Distance(X,V0) and Distance(V1,Y) == Distance(X,V3) and Distance(V2,Y) == Distance(V0,V3)) or (Distance(X,V1) == Distance(V3,Y) and Distance(X,V2) == Distance(V3,X) and Distance(X,Y) == Distance(V3,V0) and Distance(V1,V2) == Distance(Y,X) and Distance(V1,Y) == Distance(Y,V0) and Distance(V2,Y) == Distance(X,V0)) or (Distance(X,V1) == Distance(V0,V3) and Distance(X,V2) == Distance(V0,Y) and Distance(X,Y) == Distance(V0,X) and Distance(V1,V2) == Distance(V3,Y) and Distance(V1,Y) == Distance(V3,X) and Distance(V2,Y) == Distance(Y,X)) or (Distance(X,V1) == Distance(X,V0) and Distance(X,V2) == Distance(X,V3) and Distance(X,Y) == Distance(X,Y) and Distance(V1,V2) == Distance(V0,V3) and Distance(V1,Y) == Distance(V0,Y) and Distance(V2,Y) == Distance(V3,Y))"
+    },
+    {
+      "left": "IsInteger(m)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(n)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(u)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(v)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "n",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "u*m+v*n",
+      "operator": "=",
+      "right": "1"
+    },
+    {
+      "left": "m",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "m+n"
+}

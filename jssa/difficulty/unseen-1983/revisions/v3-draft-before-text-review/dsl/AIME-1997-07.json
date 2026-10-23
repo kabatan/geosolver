@@ -1,0 +1,48 @@
+{
+  "id": "AIME-1997-07",
+  "variables": [
+    "t1",
+    "t2"
+  ],
+  "constructions": [
+    {
+      "name": "C1",
+      "expression": "Point(2*t1/3, 0)"
+    },
+    {
+      "name": "S1",
+      "expression": "Point(t1/2, 110-t1/2)"
+    },
+    {
+      "name": "C2",
+      "expression": "Point(2*t2/3, 0)"
+    },
+    {
+      "name": "S2",
+      "expression": "Point(t2/2, 110-t2/2)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "t1",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "t2",
+      "operator": ">",
+      "right": "t1"
+    },
+    {
+      "left": "Distance(C1,S1)",
+      "operator": "=",
+      "right": "51"
+    },
+    {
+      "left": "Distance(C2,S2)",
+      "operator": "=",
+      "right": "51"
+    }
+  ],
+  "target": "(t1+t2)/2"
+}

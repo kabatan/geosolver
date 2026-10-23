@@ -1,0 +1,140 @@
+{
+  "id": "AIME-1992-09",
+  "variables": [
+    "dx",
+    "h",
+    "p",
+    "r",
+    "m",
+    "n",
+    "u",
+    "v"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(92, 0)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(dx, h)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(dx+19, h)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(p, 0)"
+    },
+    {
+      "name": "omega",
+      "expression": "Circle(P,r)"
+    },
+    {
+      "name": "E",
+      "expression": "FootOfPerpendicular(P,Line(B,C))"
+    },
+    {
+      "name": "F",
+      "expression": "FootOfPerpendicular(P,Line(A,D))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "h",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(B,C)",
+      "operator": "=",
+      "right": "50"
+    },
+    {
+      "left": "Distance(A,D)",
+      "operator": "=",
+      "right": "70"
+    },
+    {
+      "left": "p",
+      "operator": ">=",
+      "right": "0"
+    },
+    {
+      "left": "p",
+      "operator": "<=",
+      "right": "92"
+    },
+    {
+      "left": "r",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(P,E)",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(P,F)",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(B,E)+Distance(E,C)",
+      "operator": "=",
+      "right": "Distance(B,C)"
+    },
+    {
+      "left": "Distance(A,F)+Distance(F,D)",
+      "operator": "=",
+      "right": "Distance(A,D)"
+    },
+    {
+      "left": "Distance(A,P)",
+      "operator": "=",
+      "right": "m/n"
+    },
+    {
+      "left": "IsInteger(m)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(n)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(u)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(v)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "n",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "u*m+v*n",
+      "operator": "=",
+      "right": "1"
+    },
+    {
+      "left": "m",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "m+n"
+}

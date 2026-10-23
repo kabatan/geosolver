@@ -1,0 +1,47 @@
+{
+  "id": "AIME-1983-04",
+  "variables": [
+    "x",
+    "y"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(0, 6)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(2, 0)"
+    },
+    {
+      "name": "O",
+      "expression": "Point(x, y)"
+    },
+    {
+      "name": "omega",
+      "expression": "Circle(O, sqrt(50))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "OnCircle(A, omega)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "OnCircle(C, omega)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "sqrt(50)",
+      "operator": ">",
+      "right": "Distance(O, B)"
+    }
+  ],
+  "target": "Distance(B, O)**2"
+}

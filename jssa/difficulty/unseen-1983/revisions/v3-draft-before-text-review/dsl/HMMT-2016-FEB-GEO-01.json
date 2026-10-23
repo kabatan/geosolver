@@ -1,0 +1,355 @@
+{
+  "id": "HMMT-2016-FEB-GEO-01",
+  "variables": [
+    "ax",
+    "ay",
+    "rx",
+    "ry",
+    "tx",
+    "ty",
+    "zx",
+    "zy",
+    "sx",
+    "sy",
+    "px",
+    "py",
+    "hx",
+    "hy",
+    "ix",
+    "iy",
+    "nx",
+    "ny",
+    "xx",
+    "xy"
+  ],
+  "constructions": [
+    {
+      "name": "Q",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "W",
+      "expression": "Point(2, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "R",
+      "expression": "Point(rx, ry)"
+    },
+    {
+      "name": "T",
+      "expression": "Point(tx, ty)"
+    },
+    {
+      "name": "Z",
+      "expression": "Point(zx, zy)"
+    },
+    {
+      "name": "S",
+      "expression": "Point(sx, sy)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(px, py)"
+    },
+    {
+      "name": "H",
+      "expression": "Point(hx, hy)"
+    },
+    {
+      "name": "I",
+      "expression": "Point(ix, iy)"
+    },
+    {
+      "name": "N",
+      "expression": "Point(nx, ny)"
+    },
+    {
+      "name": "X",
+      "expression": "Point(xx, xy)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Perpendicular(Line(Q, W), Line(W, A))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(W, A)",
+      "operator": "=",
+      "right": 2
+    },
+    {
+      "left": "Perpendicular(Line(W, A), Line(A, R))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(A, R)",
+      "operator": "=",
+      "right": 2
+    },
+    {
+      "left": "Perpendicular(Line(A, R), Line(R, T))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(R, T)",
+      "operator": "=",
+      "right": 2
+    },
+    {
+      "left": "Perpendicular(Line(R, T), Line(T, Z))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(T, Z)",
+      "operator": "=",
+      "right": 2
+    },
+    {
+      "left": "Perpendicular(Line(T, Z), Line(Z, S))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(Z, S)",
+      "operator": "=",
+      "right": 2
+    },
+    {
+      "left": "Perpendicular(Line(Z, S), Line(S, P))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(S, P)",
+      "operator": "=",
+      "right": 2
+    },
+    {
+      "left": "Perpendicular(Line(S, P), Line(P, H))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(P, H)",
+      "operator": "=",
+      "right": 2
+    },
+    {
+      "left": "Perpendicular(Line(P, H), Line(H, I))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(H, I)",
+      "operator": "=",
+      "right": 2
+    },
+    {
+      "left": "Perpendicular(Line(H, I), Line(I, N))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(I, N)",
+      "operator": "=",
+      "right": 2
+    },
+    {
+      "left": "Perpendicular(Line(I, N), Line(N, X))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(N, X)",
+      "operator": "=",
+      "right": 2
+    },
+    {
+      "left": "Perpendicular(Line(N, X), Line(X, Q))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(X, Q)",
+      "operator": "=",
+      "right": 2
+    },
+    {
+      "left": "Perpendicular(Line(X, Q), Line(Q, W))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "predicate": "(max(Q.x,W.x)<min(A.x,R.x)) or (max(A.x,R.x)<min(Q.x,W.x)) or (max(Q.y,W.y)<min(A.y,R.y)) or (max(A.y,R.y)<min(Q.y,W.y))"
+    },
+    {
+      "predicate": "(max(Q.x,W.x)<min(R.x,T.x)) or (max(R.x,T.x)<min(Q.x,W.x)) or (max(Q.y,W.y)<min(R.y,T.y)) or (max(R.y,T.y)<min(Q.y,W.y))"
+    },
+    {
+      "predicate": "(max(Q.x,W.x)<min(T.x,Z.x)) or (max(T.x,Z.x)<min(Q.x,W.x)) or (max(Q.y,W.y)<min(T.y,Z.y)) or (max(T.y,Z.y)<min(Q.y,W.y))"
+    },
+    {
+      "predicate": "(max(Q.x,W.x)<min(Z.x,S.x)) or (max(Z.x,S.x)<min(Q.x,W.x)) or (max(Q.y,W.y)<min(Z.y,S.y)) or (max(Z.y,S.y)<min(Q.y,W.y))"
+    },
+    {
+      "predicate": "(max(Q.x,W.x)<min(S.x,P.x)) or (max(S.x,P.x)<min(Q.x,W.x)) or (max(Q.y,W.y)<min(S.y,P.y)) or (max(S.y,P.y)<min(Q.y,W.y))"
+    },
+    {
+      "predicate": "(max(Q.x,W.x)<min(P.x,H.x)) or (max(P.x,H.x)<min(Q.x,W.x)) or (max(Q.y,W.y)<min(P.y,H.y)) or (max(P.y,H.y)<min(Q.y,W.y))"
+    },
+    {
+      "predicate": "(max(Q.x,W.x)<min(H.x,I.x)) or (max(H.x,I.x)<min(Q.x,W.x)) or (max(Q.y,W.y)<min(H.y,I.y)) or (max(H.y,I.y)<min(Q.y,W.y))"
+    },
+    {
+      "predicate": "(max(Q.x,W.x)<min(I.x,N.x)) or (max(I.x,N.x)<min(Q.x,W.x)) or (max(Q.y,W.y)<min(I.y,N.y)) or (max(I.y,N.y)<min(Q.y,W.y))"
+    },
+    {
+      "predicate": "(max(Q.x,W.x)<min(N.x,X.x)) or (max(N.x,X.x)<min(Q.x,W.x)) or (max(Q.y,W.y)<min(N.y,X.y)) or (max(N.y,X.y)<min(Q.y,W.y))"
+    },
+    {
+      "predicate": "(max(W.x,A.x)<min(R.x,T.x)) or (max(R.x,T.x)<min(W.x,A.x)) or (max(W.y,A.y)<min(R.y,T.y)) or (max(R.y,T.y)<min(W.y,A.y))"
+    },
+    {
+      "predicate": "(max(W.x,A.x)<min(T.x,Z.x)) or (max(T.x,Z.x)<min(W.x,A.x)) or (max(W.y,A.y)<min(T.y,Z.y)) or (max(T.y,Z.y)<min(W.y,A.y))"
+    },
+    {
+      "predicate": "(max(W.x,A.x)<min(Z.x,S.x)) or (max(Z.x,S.x)<min(W.x,A.x)) or (max(W.y,A.y)<min(Z.y,S.y)) or (max(Z.y,S.y)<min(W.y,A.y))"
+    },
+    {
+      "predicate": "(max(W.x,A.x)<min(S.x,P.x)) or (max(S.x,P.x)<min(W.x,A.x)) or (max(W.y,A.y)<min(S.y,P.y)) or (max(S.y,P.y)<min(W.y,A.y))"
+    },
+    {
+      "predicate": "(max(W.x,A.x)<min(P.x,H.x)) or (max(P.x,H.x)<min(W.x,A.x)) or (max(W.y,A.y)<min(P.y,H.y)) or (max(P.y,H.y)<min(W.y,A.y))"
+    },
+    {
+      "predicate": "(max(W.x,A.x)<min(H.x,I.x)) or (max(H.x,I.x)<min(W.x,A.x)) or (max(W.y,A.y)<min(H.y,I.y)) or (max(H.y,I.y)<min(W.y,A.y))"
+    },
+    {
+      "predicate": "(max(W.x,A.x)<min(I.x,N.x)) or (max(I.x,N.x)<min(W.x,A.x)) or (max(W.y,A.y)<min(I.y,N.y)) or (max(I.y,N.y)<min(W.y,A.y))"
+    },
+    {
+      "predicate": "(max(W.x,A.x)<min(N.x,X.x)) or (max(N.x,X.x)<min(W.x,A.x)) or (max(W.y,A.y)<min(N.y,X.y)) or (max(N.y,X.y)<min(W.y,A.y))"
+    },
+    {
+      "predicate": "(max(W.x,A.x)<min(X.x,Q.x)) or (max(X.x,Q.x)<min(W.x,A.x)) or (max(W.y,A.y)<min(X.y,Q.y)) or (max(X.y,Q.y)<min(W.y,A.y))"
+    },
+    {
+      "predicate": "(max(A.x,R.x)<min(T.x,Z.x)) or (max(T.x,Z.x)<min(A.x,R.x)) or (max(A.y,R.y)<min(T.y,Z.y)) or (max(T.y,Z.y)<min(A.y,R.y))"
+    },
+    {
+      "predicate": "(max(A.x,R.x)<min(Z.x,S.x)) or (max(Z.x,S.x)<min(A.x,R.x)) or (max(A.y,R.y)<min(Z.y,S.y)) or (max(Z.y,S.y)<min(A.y,R.y))"
+    },
+    {
+      "predicate": "(max(A.x,R.x)<min(S.x,P.x)) or (max(S.x,P.x)<min(A.x,R.x)) or (max(A.y,R.y)<min(S.y,P.y)) or (max(S.y,P.y)<min(A.y,R.y))"
+    },
+    {
+      "predicate": "(max(A.x,R.x)<min(P.x,H.x)) or (max(P.x,H.x)<min(A.x,R.x)) or (max(A.y,R.y)<min(P.y,H.y)) or (max(P.y,H.y)<min(A.y,R.y))"
+    },
+    {
+      "predicate": "(max(A.x,R.x)<min(H.x,I.x)) or (max(H.x,I.x)<min(A.x,R.x)) or (max(A.y,R.y)<min(H.y,I.y)) or (max(H.y,I.y)<min(A.y,R.y))"
+    },
+    {
+      "predicate": "(max(A.x,R.x)<min(I.x,N.x)) or (max(I.x,N.x)<min(A.x,R.x)) or (max(A.y,R.y)<min(I.y,N.y)) or (max(I.y,N.y)<min(A.y,R.y))"
+    },
+    {
+      "predicate": "(max(A.x,R.x)<min(N.x,X.x)) or (max(N.x,X.x)<min(A.x,R.x)) or (max(A.y,R.y)<min(N.y,X.y)) or (max(N.y,X.y)<min(A.y,R.y))"
+    },
+    {
+      "predicate": "(max(A.x,R.x)<min(X.x,Q.x)) or (max(X.x,Q.x)<min(A.x,R.x)) or (max(A.y,R.y)<min(X.y,Q.y)) or (max(X.y,Q.y)<min(A.y,R.y))"
+    },
+    {
+      "predicate": "(max(R.x,T.x)<min(Z.x,S.x)) or (max(Z.x,S.x)<min(R.x,T.x)) or (max(R.y,T.y)<min(Z.y,S.y)) or (max(Z.y,S.y)<min(R.y,T.y))"
+    },
+    {
+      "predicate": "(max(R.x,T.x)<min(S.x,P.x)) or (max(S.x,P.x)<min(R.x,T.x)) or (max(R.y,T.y)<min(S.y,P.y)) or (max(S.y,P.y)<min(R.y,T.y))"
+    },
+    {
+      "predicate": "(max(R.x,T.x)<min(P.x,H.x)) or (max(P.x,H.x)<min(R.x,T.x)) or (max(R.y,T.y)<min(P.y,H.y)) or (max(P.y,H.y)<min(R.y,T.y))"
+    },
+    {
+      "predicate": "(max(R.x,T.x)<min(H.x,I.x)) or (max(H.x,I.x)<min(R.x,T.x)) or (max(R.y,T.y)<min(H.y,I.y)) or (max(H.y,I.y)<min(R.y,T.y))"
+    },
+    {
+      "predicate": "(max(R.x,T.x)<min(I.x,N.x)) or (max(I.x,N.x)<min(R.x,T.x)) or (max(R.y,T.y)<min(I.y,N.y)) or (max(I.y,N.y)<min(R.y,T.y))"
+    },
+    {
+      "predicate": "(max(R.x,T.x)<min(N.x,X.x)) or (max(N.x,X.x)<min(R.x,T.x)) or (max(R.y,T.y)<min(N.y,X.y)) or (max(N.y,X.y)<min(R.y,T.y))"
+    },
+    {
+      "predicate": "(max(R.x,T.x)<min(X.x,Q.x)) or (max(X.x,Q.x)<min(R.x,T.x)) or (max(R.y,T.y)<min(X.y,Q.y)) or (max(X.y,Q.y)<min(R.y,T.y))"
+    },
+    {
+      "predicate": "(max(T.x,Z.x)<min(S.x,P.x)) or (max(S.x,P.x)<min(T.x,Z.x)) or (max(T.y,Z.y)<min(S.y,P.y)) or (max(S.y,P.y)<min(T.y,Z.y))"
+    },
+    {
+      "predicate": "(max(T.x,Z.x)<min(P.x,H.x)) or (max(P.x,H.x)<min(T.x,Z.x)) or (max(T.y,Z.y)<min(P.y,H.y)) or (max(P.y,H.y)<min(T.y,Z.y))"
+    },
+    {
+      "predicate": "(max(T.x,Z.x)<min(H.x,I.x)) or (max(H.x,I.x)<min(T.x,Z.x)) or (max(T.y,Z.y)<min(H.y,I.y)) or (max(H.y,I.y)<min(T.y,Z.y))"
+    },
+    {
+      "predicate": "(max(T.x,Z.x)<min(I.x,N.x)) or (max(I.x,N.x)<min(T.x,Z.x)) or (max(T.y,Z.y)<min(I.y,N.y)) or (max(I.y,N.y)<min(T.y,Z.y))"
+    },
+    {
+      "predicate": "(max(T.x,Z.x)<min(N.x,X.x)) or (max(N.x,X.x)<min(T.x,Z.x)) or (max(T.y,Z.y)<min(N.y,X.y)) or (max(N.y,X.y)<min(T.y,Z.y))"
+    },
+    {
+      "predicate": "(max(T.x,Z.x)<min(X.x,Q.x)) or (max(X.x,Q.x)<min(T.x,Z.x)) or (max(T.y,Z.y)<min(X.y,Q.y)) or (max(X.y,Q.y)<min(T.y,Z.y))"
+    },
+    {
+      "predicate": "(max(Z.x,S.x)<min(P.x,H.x)) or (max(P.x,H.x)<min(Z.x,S.x)) or (max(Z.y,S.y)<min(P.y,H.y)) or (max(P.y,H.y)<min(Z.y,S.y))"
+    },
+    {
+      "predicate": "(max(Z.x,S.x)<min(H.x,I.x)) or (max(H.x,I.x)<min(Z.x,S.x)) or (max(Z.y,S.y)<min(H.y,I.y)) or (max(H.y,I.y)<min(Z.y,S.y))"
+    },
+    {
+      "predicate": "(max(Z.x,S.x)<min(I.x,N.x)) or (max(I.x,N.x)<min(Z.x,S.x)) or (max(Z.y,S.y)<min(I.y,N.y)) or (max(I.y,N.y)<min(Z.y,S.y))"
+    },
+    {
+      "predicate": "(max(Z.x,S.x)<min(N.x,X.x)) or (max(N.x,X.x)<min(Z.x,S.x)) or (max(Z.y,S.y)<min(N.y,X.y)) or (max(N.y,X.y)<min(Z.y,S.y))"
+    },
+    {
+      "predicate": "(max(Z.x,S.x)<min(X.x,Q.x)) or (max(X.x,Q.x)<min(Z.x,S.x)) or (max(Z.y,S.y)<min(X.y,Q.y)) or (max(X.y,Q.y)<min(Z.y,S.y))"
+    },
+    {
+      "predicate": "(max(S.x,P.x)<min(H.x,I.x)) or (max(H.x,I.x)<min(S.x,P.x)) or (max(S.y,P.y)<min(H.y,I.y)) or (max(H.y,I.y)<min(S.y,P.y))"
+    },
+    {
+      "predicate": "(max(S.x,P.x)<min(I.x,N.x)) or (max(I.x,N.x)<min(S.x,P.x)) or (max(S.y,P.y)<min(I.y,N.y)) or (max(I.y,N.y)<min(S.y,P.y))"
+    },
+    {
+      "predicate": "(max(S.x,P.x)<min(N.x,X.x)) or (max(N.x,X.x)<min(S.x,P.x)) or (max(S.y,P.y)<min(N.y,X.y)) or (max(N.y,X.y)<min(S.y,P.y))"
+    },
+    {
+      "predicate": "(max(S.x,P.x)<min(X.x,Q.x)) or (max(X.x,Q.x)<min(S.x,P.x)) or (max(S.y,P.y)<min(X.y,Q.y)) or (max(X.y,Q.y)<min(S.y,P.y))"
+    },
+    {
+      "predicate": "(max(P.x,H.x)<min(I.x,N.x)) or (max(I.x,N.x)<min(P.x,H.x)) or (max(P.y,H.y)<min(I.y,N.y)) or (max(I.y,N.y)<min(P.y,H.y))"
+    },
+    {
+      "predicate": "(max(P.x,H.x)<min(N.x,X.x)) or (max(N.x,X.x)<min(P.x,H.x)) or (max(P.y,H.y)<min(N.y,X.y)) or (max(N.y,X.y)<min(P.y,H.y))"
+    },
+    {
+      "predicate": "(max(P.x,H.x)<min(X.x,Q.x)) or (max(X.x,Q.x)<min(P.x,H.x)) or (max(P.y,H.y)<min(X.y,Q.y)) or (max(X.y,Q.y)<min(P.y,H.y))"
+    },
+    {
+      "predicate": "(max(H.x,I.x)<min(N.x,X.x)) or (max(N.x,X.x)<min(H.x,I.x)) or (max(H.y,I.y)<min(N.y,X.y)) or (max(N.y,X.y)<min(H.y,I.y))"
+    },
+    {
+      "predicate": "(max(H.x,I.x)<min(X.x,Q.x)) or (max(X.x,Q.x)<min(H.x,I.x)) or (max(H.y,I.y)<min(X.y,Q.y)) or (max(X.y,Q.y)<min(H.y,I.y))"
+    },
+    {
+      "predicate": "(max(I.x,N.x)<min(X.x,Q.x)) or (max(X.x,Q.x)<min(I.x,N.x)) or (max(I.y,N.y)<min(X.y,Q.y)) or (max(X.y,Q.y)<min(I.y,N.y))"
+    }
+  ],
+  "target": "Area(S, I, X)"
+}

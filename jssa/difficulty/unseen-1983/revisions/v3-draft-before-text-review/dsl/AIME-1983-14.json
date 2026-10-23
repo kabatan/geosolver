@@ -1,0 +1,89 @@
+{
+  "id": "AIME-1983-14",
+  "variables": [
+    "px",
+    "py",
+    "qx",
+    "qy",
+    "rx",
+    "ry"
+  ],
+  "constructions": [
+    {
+      "name": "O1",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "O2",
+      "expression": "Point(12, 0)"
+    },
+    {
+      "name": "c1",
+      "expression": "Circle(O1, 8)"
+    },
+    {
+      "name": "c2",
+      "expression": "Circle(O2, 6)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(px, py)"
+    },
+    {
+      "name": "Q",
+      "expression": "Point(qx, qy)"
+    },
+    {
+      "name": "R",
+      "expression": "Point(rx, ry)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "py",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "OnCircle(P,c1)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "OnCircle(P,c2)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "OnCircle(Q,c1)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "OnCircle(R,c2)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "OnLine(R,Line(Q,P))",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "Distance(Q,P)",
+      "operator": "=",
+      "right": "Distance(P,R)"
+    },
+    {
+      "left": "Distance(Q,P)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "0",
+      "operator": ">",
+      "right": "((Q.x-P.x)*(R.x-P.x)+(Q.y-P.y)*(R.y-P.y))"
+    }
+  ],
+  "target": "Distance(Q,P)**2"
+}

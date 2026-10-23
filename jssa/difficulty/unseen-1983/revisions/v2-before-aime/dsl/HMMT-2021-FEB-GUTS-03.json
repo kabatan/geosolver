@@ -1,0 +1,97 @@
+{
+  "id": "HMMT-2021-FEB-GUTS-03",
+  "variables": [
+    "cx",
+    "cy",
+    "jx",
+    "jy",
+    "r"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(2021, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(-2021, 0)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(0, 2021)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "J",
+      "expression": "Point(jx, jy)"
+    },
+    {
+      "name": "small",
+      "expression": "Circle(J, r)"
+    },
+    {
+      "name": "E",
+      "expression": "Point(2021*jx/Distance(O, J), 2021*jy/Distance(O, J))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(O, C)",
+      "operator": "=",
+      "right": 2021
+    },
+    {
+      "left": "cx",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "r",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "jx",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "jy",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "cy*jx-cx*jy",
+      "operator": "=",
+      "right": "2021*r"
+    },
+    {
+      "left": "Distance(O, J) + r",
+      "operator": "=",
+      "right": 2021
+    },
+    {
+      "left": "Distance(O, J)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(C, D)",
+      "operator": "=",
+      "right": "Distance(C, E)"
+    }
+  ],
+  "target": "r // 1"
+}

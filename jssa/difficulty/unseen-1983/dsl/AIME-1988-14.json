@@ -1,0 +1,65 @@
+{
+  "id": "AIME-1988-14",
+  "variables": [
+    "b",
+    "c",
+    "d",
+    "k"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "W",
+      "expression": "Point(1, 2)"
+    },
+    {
+      "name": "ell",
+      "expression": "Line(O,W)"
+    },
+    {
+      "name": "E1",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "E2",
+      "expression": "Point(0, 1)"
+    },
+    {
+      "name": "U",
+      "expression": "Reflect(E1,ell)"
+    },
+    {
+      "name": "V",
+      "expression": "Reflect(E2,ell)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "k*U.x*U.y",
+      "operator": "=",
+      "right": "12"
+    },
+    {
+      "left": "k*(U.x*V.y+V.x*U.y)",
+      "operator": "=",
+      "right": "b"
+    },
+    {
+      "left": "k*V.x*V.y",
+      "operator": "=",
+      "right": "c"
+    },
+    {
+      "left": "-k",
+      "operator": "=",
+      "right": "d"
+    },
+    {
+      "predicate": "k != 0"
+    }
+  ],
+  "target": "b*c"
+}

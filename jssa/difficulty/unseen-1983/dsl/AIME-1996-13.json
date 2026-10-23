@@ -1,0 +1,112 @@
+{
+  "id": "AIME-1996-13",
+  "variables": [
+    "cx",
+    "cy",
+    "t",
+    "m",
+    "n",
+    "u",
+    "v"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(sqrt(30), 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "M",
+      "expression": "Midpoint(B,C)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(A.x+t*(M.x-A.x), A.y+t*(M.y-A.y))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(A,C)",
+      "operator": "=",
+      "right": "sqrt(6)"
+    },
+    {
+      "left": "Distance(B,C)",
+      "operator": "=",
+      "right": "sqrt(15)"
+    },
+    {
+      "left": "t",
+      "operator": ">=",
+      "right": "1"
+    },
+    {
+      "left": "Distance(A,D)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(B,D)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "((A.x-D.x)*(B.x-D.x)+(A.y-D.y)*(B.y-D.y))",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "Area(A,D,B)/Area(A,B,C)",
+      "operator": "=",
+      "right": "m/n"
+    },
+    {
+      "left": "IsInteger(m)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(n)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(u)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(v)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "n",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "u*m+v*n",
+      "operator": "=",
+      "right": "1"
+    },
+    {
+      "left": "m",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "m+n"
+}

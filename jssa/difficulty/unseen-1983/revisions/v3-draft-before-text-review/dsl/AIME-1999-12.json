@@ -1,0 +1,56 @@
+{
+  "id": "AIME-1999-12",
+  "variables": [
+    "cx",
+    "cy"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(23+27, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(23, 0)"
+    },
+    {
+      "name": "I",
+      "expression": "Incenter(A,B,C)"
+    },
+    {
+      "name": "T",
+      "expression": "FootOfPerpendicular(I,Line(A,B))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "T.x",
+      "operator": "=",
+      "right": "P.x"
+    },
+    {
+      "left": "T.y",
+      "operator": "=",
+      "right": "P.y"
+    },
+    {
+      "left": "Distance(I,T)",
+      "operator": "=",
+      "right": "21"
+    }
+  ],
+  "target": "Distance(A,B)+Distance(B,C)+Distance(C,A)"
+}

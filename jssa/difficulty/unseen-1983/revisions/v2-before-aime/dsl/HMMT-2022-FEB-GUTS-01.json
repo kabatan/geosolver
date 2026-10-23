@@ -1,0 +1,33 @@
+{
+  "id": "HMMT-2022-FEB-GUTS-01",
+  "variables": [
+    "r"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(r, 0)"
+    },
+    {
+      "name": "Q",
+      "expression": "Point(r*cos(2*pi/2022), r*sin(2*pi/2022))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "r",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "2022*Distance(P, Q)",
+      "operator": "=",
+      "right": "157/25"
+    }
+  ],
+  "target": "(2022*Area(O, P, Q)+1/2) // 1"
+}

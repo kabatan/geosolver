@@ -1,0 +1,125 @@
+{
+  "id": "AIME-1993-12",
+  "variables": [
+    "k",
+    "m",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(0, 420)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(560, 0)"
+    },
+    {
+      "name": "P1",
+      "expression": "Point(k, m)"
+    },
+    {
+      "name": "L1",
+      "expression": "Point(560 if z1 == 2 else 0, 420 if z1 == 1 else 0)"
+    },
+    {
+      "name": "P2",
+      "expression": "Midpoint(P1,L1)"
+    },
+    {
+      "name": "L2",
+      "expression": "Point(560 if z2 == 2 else 0, 420 if z2 == 1 else 0)"
+    },
+    {
+      "name": "P3",
+      "expression": "Midpoint(P2,L2)"
+    },
+    {
+      "name": "L3",
+      "expression": "Point(560 if z3 == 2 else 0, 420 if z3 == 1 else 0)"
+    },
+    {
+      "name": "P4",
+      "expression": "Midpoint(P3,L3)"
+    },
+    {
+      "name": "L4",
+      "expression": "Point(560 if z4 == 2 else 0, 420 if z4 == 1 else 0)"
+    },
+    {
+      "name": "P5",
+      "expression": "Midpoint(P4,L4)"
+    },
+    {
+      "name": "L5",
+      "expression": "Point(560 if z5 == 2 else 0, 420 if z5 == 1 else 0)"
+    },
+    {
+      "name": "P6",
+      "expression": "Midpoint(P5,L5)"
+    },
+    {
+      "name": "L6",
+      "expression": "Point(560 if z6 == 2 else 0, 420 if z6 == 1 else 0)"
+    },
+    {
+      "name": "P7",
+      "expression": "Midpoint(P6,L6)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "k",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "m",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "1",
+      "operator": ">",
+      "right": "k/560+m/420"
+    },
+    {
+      "predicate": "(z1 == 0) or (z1 == 1) or (z1 == 2)"
+    },
+    {
+      "predicate": "(z2 == 0) or (z2 == 1) or (z2 == 2)"
+    },
+    {
+      "predicate": "(z3 == 0) or (z3 == 1) or (z3 == 2)"
+    },
+    {
+      "predicate": "(z4 == 0) or (z4 == 1) or (z4 == 2)"
+    },
+    {
+      "predicate": "(z5 == 0) or (z5 == 1) or (z5 == 2)"
+    },
+    {
+      "predicate": "(z6 == 0) or (z6 == 1) or (z6 == 2)"
+    },
+    {
+      "left": "P7.x",
+      "operator": "=",
+      "right": "14"
+    },
+    {
+      "left": "P7.y",
+      "operator": "=",
+      "right": "92"
+    }
+  ],
+  "target": "k+m"
+}

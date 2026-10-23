@@ -1,0 +1,113 @@
+{
+  "id": "AIME-1993-15",
+  "variables": [
+    "cx",
+    "cy",
+    "m",
+    "n",
+    "u",
+    "v"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(1995, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "H",
+      "expression": "FootOfPerpendicular(C,Line(A,B))"
+    },
+    {
+      "name": "I1",
+      "expression": "Incenter(A,C,H)"
+    },
+    {
+      "name": "I2",
+      "expression": "Incenter(B,C,H)"
+    },
+    {
+      "name": "R",
+      "expression": "FootOfPerpendicular(I1,Line(C,H))"
+    },
+    {
+      "name": "S",
+      "expression": "FootOfPerpendicular(I2,Line(C,H))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(A,C)",
+      "operator": "=",
+      "right": "1994"
+    },
+    {
+      "left": "Distance(B,C)",
+      "operator": "=",
+      "right": "1993"
+    },
+    {
+      "left": "H.x",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "1995",
+      "operator": ">",
+      "right": "H.x"
+    },
+    {
+      "left": "Distance(R,S)",
+      "operator": "=",
+      "right": "m/n"
+    },
+    {
+      "left": "IsInteger(m)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(n)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(u)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(v)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "n",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "u*m+v*n",
+      "operator": "=",
+      "right": "1"
+    },
+    {
+      "left": "m",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "m+n"
+}

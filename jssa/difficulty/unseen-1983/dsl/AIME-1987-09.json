@@ -1,0 +1,75 @@
+{
+  "id": "AIME-1987-09",
+  "variables": [
+    "a",
+    "c",
+    "x",
+    "y"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(a, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(0, c)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(x, y)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "a",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "c",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "x",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "y",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "1",
+      "operator": ">",
+      "right": "x/a+y/c"
+    },
+    {
+      "left": "Distance(P,A)",
+      "operator": "=",
+      "right": "10"
+    },
+    {
+      "left": "Distance(P,B)",
+      "operator": "=",
+      "right": "6"
+    },
+    {
+      "left": "Angle(A,P,B)",
+      "operator": "=",
+      "right": "Angle(B,P,C)"
+    },
+    {
+      "left": "Angle(B,P,C)",
+      "operator": "=",
+      "right": "Angle(C,P,A)"
+    }
+  ],
+  "target": "Distance(P,C)"
+}

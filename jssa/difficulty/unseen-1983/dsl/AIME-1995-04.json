@@ -1,0 +1,93 @@
+{
+  "id": "AIME-1995-04",
+  "variables": [
+    "x",
+    "y",
+    "nx",
+    "ny",
+    "h",
+    "ax",
+    "ay",
+    "bx",
+    "by"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "U",
+      "expression": "Point(9-3, 0)"
+    },
+    {
+      "name": "V",
+      "expression": "Point(x, y)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(bx, by)"
+    },
+    {
+      "name": "big",
+      "expression": "Circle(O,9)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(O,V)",
+      "operator": "=",
+      "right": "9-6"
+    },
+    {
+      "left": "Distance(U,V)",
+      "operator": "=",
+      "right": "3+6"
+    },
+    {
+      "left": "nx**2+ny**2",
+      "operator": "=",
+      "right": "1"
+    },
+    {
+      "left": "nx*U.x+ny*U.y-h",
+      "operator": "=",
+      "right": "3"
+    },
+    {
+      "left": "nx*V.x+ny*V.y-h",
+      "operator": "=",
+      "right": "6"
+    },
+    {
+      "left": "nx*A.x+ny*A.y",
+      "operator": "=",
+      "right": "h"
+    },
+    {
+      "left": "nx*B.x+ny*B.y",
+      "operator": "=",
+      "right": "h"
+    },
+    {
+      "left": "OnCircle(A,big)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "OnCircle(B,big)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "Distance(A,B)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "Distance(A,B)**2"
+}

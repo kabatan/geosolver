@@ -1,0 +1,82 @@
+{
+  "id": "AIME-1998-06",
+  "variables": [
+    "b",
+    "dx",
+    "dy",
+    "t"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(b, 0)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(dx, dy)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(b+dx, dy)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(-t*dx, -t*dy)"
+    },
+    {
+      "name": "Q",
+      "expression": "Intersect(Line(P,C),Line(A,B))"
+    },
+    {
+      "name": "R",
+      "expression": "Intersect(Line(P,C),Line(D,B))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "b",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "dy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "t",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(P,Q)",
+      "operator": "=",
+      "right": "735"
+    },
+    {
+      "left": "Distance(Q,R)",
+      "operator": "=",
+      "right": "112"
+    },
+    {
+      "left": "Distance(A,Q)+Distance(Q,B)",
+      "operator": "=",
+      "right": "Distance(A,B)"
+    },
+    {
+      "left": "Distance(D,R)+Distance(R,B)",
+      "operator": "=",
+      "right": "Distance(D,B)"
+    },
+    {
+      "left": "Distance(P,Q)+Distance(Q,R)+Distance(R,C)",
+      "operator": "=",
+      "right": "Distance(P,C)"
+    }
+  ],
+  "target": "Distance(R,C)"
+}

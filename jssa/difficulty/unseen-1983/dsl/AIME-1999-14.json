@@ -1,0 +1,114 @@
+{
+  "id": "AIME-1999-14",
+  "variables": [
+    "cx",
+    "cy",
+    "px",
+    "py",
+    "m",
+    "n",
+    "u",
+    "v"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(13, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(px, py)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(B,C)",
+      "operator": "=",
+      "right": "14"
+    },
+    {
+      "left": "Distance(C,A)",
+      "operator": "=",
+      "right": "15"
+    },
+    {
+      "left": "((B.x-A.x)*(P.y-A.y)-(B.y-A.y)*(P.x-A.x))",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "((C.x-B.x)*(P.y-B.y)-(C.y-B.y)*(P.x-B.x))",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "((A.x-C.x)*(P.y-C.y)-(A.y-C.y)*(P.x-C.x))",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Angle(P,A,B)",
+      "operator": "=",
+      "right": "Angle(P,B,C)"
+    },
+    {
+      "left": "Angle(P,B,C)",
+      "operator": "=",
+      "right": "Angle(P,C,A)"
+    },
+    {
+      "left": "tan(Angle(P,A,B))",
+      "operator": "=",
+      "right": "m/n"
+    },
+    {
+      "left": "IsInteger(m)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(n)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(u)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(v)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "n",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "u*m+v*n",
+      "operator": "=",
+      "right": "1"
+    },
+    {
+      "left": "m",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "m+n"
+}

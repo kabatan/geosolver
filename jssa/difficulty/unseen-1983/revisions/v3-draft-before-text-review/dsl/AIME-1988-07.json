@@ -1,0 +1,42 @@
+{
+  "id": "AIME-1988-07",
+  "variables": [
+    "h"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(3+17, 0)"
+    },
+    {
+      "name": "H",
+      "expression": "Point(3, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(3, h)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "h",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "tan(Angle(C,A,B))",
+      "operator": "=",
+      "right": "22/7"
+    },
+    {
+      "left": "pi/2",
+      "operator": ">",
+      "right": "Angle(C,A,B)"
+    }
+  ],
+  "target": "Area(A,B,C)"
+}

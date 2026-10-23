@@ -1,0 +1,71 @@
+{
+  "id": "AIME-1986-15",
+  "variables": [
+    "ax",
+    "ay",
+    "bx",
+    "by",
+    "cx",
+    "cy"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(bx, by)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "M",
+      "expression": "Midpoint(B,C)"
+    },
+    {
+      "name": "N",
+      "expression": "Midpoint(A,C)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A,B)",
+      "operator": "=",
+      "right": "60"
+    },
+    {
+      "left": "((A.x-C.x)*(B.x-C.x)+(A.y-C.y)*(B.y-C.y))",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "Area(A,B,C)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "A.y",
+      "operator": "=",
+      "right": "A.x+3"
+    },
+    {
+      "left": "M.y",
+      "operator": "=",
+      "right": "M.x+3"
+    },
+    {
+      "left": "B.y",
+      "operator": "=",
+      "right": "2*B.x+4"
+    },
+    {
+      "left": "N.y",
+      "operator": "=",
+      "right": "2*N.x+4"
+    }
+  ],
+  "target": "Area(A,B,C)"
+}

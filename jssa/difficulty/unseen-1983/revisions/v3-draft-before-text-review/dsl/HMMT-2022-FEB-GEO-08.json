@@ -1,0 +1,95 @@
+{
+  "id": "HMMT-2022-FEB-GEO-08",
+  "variables": [
+    "f",
+    "fx",
+    "fy",
+    "dx",
+    "dy"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(-f, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(f, 0)"
+    },
+    {
+      "name": "T",
+      "expression": "Point(0, 7)"
+    },
+    {
+      "name": "F",
+      "expression": "Point(fx, fy)"
+    },
+    {
+      "name": "H",
+      "expression": "Orthocenter(F, A, B)"
+    },
+    {
+      "name": "W",
+      "expression": "Point(H.x+dx, H.y+dy)"
+    },
+    {
+      "name": "line_d",
+      "expression": "Line(H, W)"
+    },
+    {
+      "name": "U",
+      "expression": "FootOfPerpendicular(A, line_d)"
+    },
+    {
+      "name": "V",
+      "expression": "FootOfPerpendicular(B, line_d)"
+    },
+    {
+      "name": "K",
+      "expression": "FootOfPerpendicular(F, line_d)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "f",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(T, A)+Distance(T, B)",
+      "operator": "=",
+      "right": 50
+    },
+    {
+      "left": "Distance(F, A)+Distance(F, B)",
+      "operator": "=",
+      "right": 50
+    },
+    {
+      "left": "fy",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "dx**2+dy**2",
+      "operator": "=",
+      "right": 1
+    },
+    {
+      "left": "Distance(A, F)",
+      "operator": "=",
+      "right": "Distance(A, U)"
+    },
+    {
+      "left": "Distance(B, F)",
+      "operator": "=",
+      "right": "Distance(B, V)"
+    },
+    {
+      "left": "Distance(F, K)",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Distance(A, H)**2+Distance(B, H)**2"
+}

@@ -1,0 +1,120 @@
+{
+  "id": "AIME-1993-13",
+  "variables": [
+    "j",
+    "k",
+    "t",
+    "m",
+    "n",
+    "u",
+    "v"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "J0",
+      "expression": "Point(j, -100)"
+    },
+    {
+      "name": "K0",
+      "expression": "Point(k, 100)"
+    },
+    {
+      "name": "J1",
+      "expression": "Point(j+t, -100)"
+    },
+    {
+      "name": "K1",
+      "expression": "Point(k+3*t, 100)"
+    },
+    {
+      "name": "F0",
+      "expression": "FootOfPerpendicular(O,Line(J0,K0))"
+    },
+    {
+      "name": "F1",
+      "expression": "FootOfPerpendicular(O,Line(J1,K1))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(J0,K0)",
+      "operator": "=",
+      "right": "200"
+    },
+    {
+      "left": "Distance(O,F0)",
+      "operator": "=",
+      "right": "50"
+    },
+    {
+      "left": "Distance(O,F1)",
+      "operator": "=",
+      "right": "50"
+    },
+    {
+      "left": "t",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "0",
+      "operator": ">",
+      "right": "j+k"
+    },
+    {
+      "left": "Distance(J0,F0)+Distance(F0,K0)",
+      "operator": "=",
+      "right": "Distance(J0,K0)"
+    },
+    {
+      "left": "Distance(J1,F1)+Distance(F1,K1)",
+      "operator": "=",
+      "right": "Distance(J1,K1)"
+    },
+    {
+      "left": "t",
+      "operator": "=",
+      "right": "m/n"
+    },
+    {
+      "left": "IsInteger(m)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(n)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(u)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(v)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "n",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "u*m+v*n",
+      "operator": "=",
+      "right": "1"
+    },
+    {
+      "left": "m",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "m+n"
+}

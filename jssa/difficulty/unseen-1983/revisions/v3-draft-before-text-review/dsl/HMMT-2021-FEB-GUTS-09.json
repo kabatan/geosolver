@@ -1,0 +1,77 @@
+{
+  "id": "HMMT-2021-FEB-GUTS-09",
+  "variables": [
+    "bx",
+    "by",
+    "cx",
+    "cy"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(7/2, 0)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(-7/2, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(bx, by)"
+    },
+    {
+      "name": "E",
+      "expression": "Point(-bx, -by)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "F",
+      "expression": "Point(-cx, -cy)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(B, E)",
+      "operator": "=",
+      "right": 10
+    },
+    {
+      "left": "Distance(C, F)",
+      "operator": "=",
+      "right": 18
+    },
+    {
+      "left": "4*bx**2",
+      "operator": "=",
+      "right": "bx**2+by**2"
+    },
+    {
+      "left": "4*cx**2",
+      "operator": "=",
+      "right": "cx**2+cy**2"
+    },
+    {
+      "left": "4*(bx*cx+by*cy)**2",
+      "operator": "=",
+      "right": "(bx**2+by**2)*(cx**2+cy**2)"
+    },
+    {
+      "left": "Distance(A, B)",
+      "operator": "<",
+      "right": "Distance(A, E)"
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "<",
+      "right": "Distance(B, F)"
+    }
+  ],
+  "target": "sqrt(3)*(Area(A, B, C)+Area(B, C, D)+Area(C, D, E)+Area(D, E, F)+Area(E, F, A)+Area(F, A, B))"
+}

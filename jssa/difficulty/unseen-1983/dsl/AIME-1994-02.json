@@ -1,0 +1,99 @@
+{
+  "id": "AIME-1994-02",
+  "variables": [
+    "s",
+    "y",
+    "m",
+    "n"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(-20, 0)"
+    },
+    {
+      "name": "Q",
+      "expression": "Point(-20+10, 0)"
+    },
+    {
+      "name": "U",
+      "expression": "Point(-20+10/2, 0)"
+    },
+    {
+      "name": "big",
+      "expression": "Circle(O,20)"
+    },
+    {
+      "name": "small",
+      "expression": "Circle(U,10/2)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(Q.x+s, y)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(Q.x+s, y+s)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(Q.x, y+s)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(Q.x, y)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "s",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "0",
+      "operator": ">",
+      "right": "y"
+    },
+    {
+      "left": "y+s",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "OnCircle(A,big)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "OnCircle(B,big)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "s",
+      "operator": "=",
+      "right": "m+sqrt(n)"
+    },
+    {
+      "left": "IsInteger(m)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(n)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "n",
+      "operator": ">=",
+      "right": "0"
+    }
+  ],
+  "target": "m+n"
+}

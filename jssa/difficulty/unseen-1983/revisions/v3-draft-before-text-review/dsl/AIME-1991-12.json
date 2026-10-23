@@ -1,0 +1,145 @@
+{
+  "id": "AIME-1991-12",
+  "variables": [
+    "w",
+    "h",
+    "rx",
+    "sy",
+    "m",
+    "n",
+    "u",
+    "v"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(w, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(w, h)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(0, h)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(w-15, 0)"
+    },
+    {
+      "name": "Q",
+      "expression": "Point(w, 20)"
+    },
+    {
+      "name": "R",
+      "expression": "Point(rx, h)"
+    },
+    {
+      "name": "S",
+      "expression": "Point(0, sy)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "w",
+      "operator": ">",
+      "right": "15"
+    },
+    {
+      "left": "h",
+      "operator": ">",
+      "right": "20"
+    },
+    {
+      "left": "rx",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "w",
+      "operator": ">",
+      "right": "rx"
+    },
+    {
+      "left": "sy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "h",
+      "operator": ">",
+      "right": "sy"
+    },
+    {
+      "left": "Distance(P,Q)",
+      "operator": "=",
+      "right": "Distance(Q,R)"
+    },
+    {
+      "left": "Distance(Q,R)",
+      "operator": "=",
+      "right": "Distance(R,S)"
+    },
+    {
+      "left": "Distance(R,S)",
+      "operator": "=",
+      "right": "Distance(S,P)"
+    },
+    {
+      "left": "Distance(P,R)",
+      "operator": "=",
+      "right": "30"
+    },
+    {
+      "left": "Distance(Q,S)",
+      "operator": "=",
+      "right": "40"
+    },
+    {
+      "left": "2*(w+h)",
+      "operator": "=",
+      "right": "m/n"
+    },
+    {
+      "left": "IsInteger(m)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(n)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(u)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(v)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "n",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "u*m+v*n",
+      "operator": "=",
+      "right": "1"
+    },
+    {
+      "left": "m",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "m+n"
+}

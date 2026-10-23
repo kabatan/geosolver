@@ -1,40 +1,539 @@
 {
-  "input_freeze_manifest_sha256": "43db092a823c1cee4a3b9cf284204d10e25436415c42b0350f0cf452cc78a6f3",
-  "official_answers_available": 4,
-  "official_answers_missing": 14,
+  "input_freeze_manifest_sha256": "f87942435fc314a5a45efd6595b4e8f24ef54a5aae9ddd99525dd672b15126ca",
+  "aime_secondary_answers_transcribed": 36,
+  "aime_official_answers_verified": 0,
+  "hmmt_answers_preserved": 18,
+  "hmmt_saved_official_transcriptions_preserved": 4,
+  "hmmt_official_missing": 14,
+  "hmmt_original_provenance": "revisions/v2-before-aime/answer-provenance.json",
   "official_online_verification": false,
+  "official_booklet_verification": false,
+  "input_artifacts_unchanged": true,
   "dsl_unchanged": true,
   "manifest_unchanged": true,
+  "input_artifact_hashes": {
+    "manifest.json": "f87942435fc314a5a45efd6595b4e8f24ef54a5aae9ddd99525dd672b15126ca",
+    "cases.jsonl": "5306e39fb5bac60f32657a61bc22ac4175b7bdba5ad68a1e44d2e0b6e78cc6f5",
+    "statements.jsonl": "61b4d722d3368df60f6e24f43f6c3e7e9419925be2e86e77b3a2e44bcc369621",
+    "cards.md": "ec14f728435685559de55fff546252a6b468becf33c2406a278429d8e4baf3dd",
+    "authoring-rules.md": "d68c04231769aaaadb8f36f7a5023d99790fdb3ff713dbbaeefccdaf846607b1",
+    "build_cases.py": "f19dad4180c3ca5d8e5b6c2884f5bea78813b0d92909afd7c6cb81ca1db543c4",
+    "aime_definitions.py": "e1b743445107d29a941c3d24f278a886b71bb2717443fe5318aaead96d18dadf",
+    "aime_decisions.py": "7137d4d2d1070999cf828786a44b98821bcc04d48324e886101eceb9a2278ee8",
+    "verify_static.py": "a4d4f0c919bd43788a3e66867edd5a435e6d77d3bb46279adf8711ede7384e15",
+    "revisions/v3-input-freeze.json": "4f66beb11ff2d75b16468415c2df60f158eb34a76541710b15da9c7e25621197",
+    "revisions/v3-selection-freeze.json": "c19ceb2d33949ba939bd3a77f064ecebb5dacdb3bde79b5743d8d57259be79e7",
+    "dsl/AIME-1983-04.json": "f3604f59255096023114b8a5890e59d9541a16a59d673017d123c0a519874c2e",
+    "dsl/AIME-1983-12.json": "b6ebcb828da4aa856c94f583431e96d46d171a2c344225bcf3e7e0f9127e3c12",
+    "dsl/AIME-1983-14.json": "1c650b81b9da5ef8710901c41f08bd46b3167ed28cf8ae407e09701751172a24",
+    "dsl/AIME-1984-03.json": "aa9d451654881d05e52066b736cfee0579e03b61009221c561a6f018394552af",
+    "dsl/AIME-1984-06.json": "d9ab59d29bd6d6e317d77e830123c358228c9e8ac6d6ef955a0bac67fb9a69bb",
+    "dsl/AIME-1985-09.json": "c25e7b6d3c57b5e4cfb1e1039caf3627f2dc2f8eba095903ab7f42bee4a707ac",
+    "dsl/AIME-1985-11.json": "b03635c60b7fdfee52deb646fb857176c4955637a2b49ea2796d06f0a2c43fcc",
+    "dsl/AIME-1986-09.json": "56e6d24e071e76c80761cbc23f53c0b32c2fb3c92cdb642782d9c4df3d759e46",
+    "dsl/AIME-1986-15.json": "9b076391befdc6d07689ab6a89f2daec0b8f528ffc7ed7962f7fff8c7d56eda9",
+    "dsl/AIME-1987-09.json": "6b4e8d418c7fe5c79e3c6dd616ff21c4606f2e9766b1570239f2559a81cf79aa",
+    "dsl/AIME-1988-07.json": "05945ea140756eb257a5a078a116506f66763a5a2a7008f2ec45e625640cdbfb",
+    "dsl/AIME-1988-14.json": "3366dde319cf1965e899c07947ff6337f1f0121f071a9b3f24a66e0abc96a632",
+    "dsl/AIME-1990-07.json": "a61bcf002e60671d69c5206276c3d1f07cf7883365a9b662f08577f859999df8",
+    "dsl/AIME-1991-02.json": "99ada126dc065aac5d43f33d1da86f0f56c0edc2b0550ba4d158166e3efe5af0",
+    "dsl/AIME-1991-12.json": "22894bbff4eb2193bffebea194058d78fc8d555e3ff71a5567fb5d5ee59ece02",
+    "dsl/AIME-1991-14.json": "1eedb2130ca5e84f291b06ccf4b409bea117441e79b51776821ea96426968417",
+    "dsl/AIME-1992-09.json": "ee2cc903a768efe7bbc2964b6dc26374d0b48a8b5760f879d4544f5147e59a1e",
+    "dsl/AIME-1992-14.json": "0f56c79c096ce1439294fb1e2043308a689ffd1bc6fab965323e9cd0f1b5e41c",
+    "dsl/AIME-1993-02.json": "e10774b7008ae6ec98998e321a0904755771e66cd2626084805b3a0f3615156a",
+    "dsl/AIME-1993-12.json": "41851d9dd407a3d246dcb705db1ba49a0e28ed3855f208b3724086231eb0d72d",
+    "dsl/AIME-1993-13.json": "42e0b4aad9580a5185a4cbc28625c8e8b4f374243703b6541506c2589e77ff78",
+    "dsl/AIME-1993-15.json": "ea0eb84003d0660c4216f31177a735dbf55d79a0060560214d43031aba128788",
+    "dsl/AIME-1994-02.json": "19168ed238ff33503e0406359c3591e7e3faba41457a15ed4d13ea44aa3bb837",
+    "dsl/AIME-1994-08.json": "ef3343be85707a0b7774990cf28a2922bee7c0482f78f3253d03d264e31af05e",
+    "dsl/AIME-1994-10.json": "13eaa39b72e8bffc6d9e4ca60949e631c082d6f3fda21a678a11f52099c9d762",
+    "dsl/AIME-1995-04.json": "f56bf681d1128051135ccf4249ed6ed23078c3a02513e8e326cf89d749d576c8",
+    "dsl/AIME-1995-09.json": "39cfb4e30c3e10d5e2a02fde6c131f362551c644330715c91e84c7c41152787e",
+    "dsl/AIME-1996-13.json": "26d32973acac9f90b467cc3c78198dd8ebafef2d4d1e37290e38856940514a07",
+    "dsl/AIME-1996-15.json": "6a6aae4721e04df587587ff6001a6c44ea2628241ab9164a2bee87887a8ad568",
+    "dsl/AIME-1997-04.json": "a5d74a6a0925ee13cbaffe63227fefc600dd173fe1562796ff3b922a0c27bd43",
+    "dsl/AIME-1997-07.json": "5b1706a435bde7cb7911dea329f41ce6d108e1fce5dc0f1ec51430fb274ac246",
+    "dsl/AIME-1998-06.json": "7865b7a85754ba34efa870093a01fed654709fb7345695952f24b03f28fa9690",
+    "dsl/AIME-1999-02.json": "132bce8a265a34029130ccc90139234ef501a8731c4f693efb845477fc7d8c18",
+    "dsl/AIME-1999-09.json": "ebc441e7a5d1608cf31a923f9600cd3fb6696cd47073f269f33c01704b5ca02a",
+    "dsl/AIME-1999-12.json": "64424fee99d9fb38475b505e85f337a0bc98811ced197bb35571c62e8303c563",
+    "dsl/AIME-1999-14.json": "03533e821553e1b9876e96c3f801cc1c7a27a223cca469600cc4956050e49814",
+    "dsl/HMMT-2012-FEB-GUTS-01.json": "313cfb118f2e6a515463eb234419a3c10a3ff79fadc9f812120e7bee9b40e227",
+    "dsl/HMMT-2013-FEB-TEAM-03.json": "c20487e7f105b3f6ab9f1d7b1b78bbbbb4e0f3316b6c779bbe196566ddd4e69a",
+    "dsl/HMMT-2014-FEB-TEAM-08.json": "f8cdba7960fd49d2b2a4075a569b812c06d24ace51ba1f6256477911b8b18e80",
+    "dsl/HMMT-2015-FEB-GUTS-02.json": "5ff4313c102fe91dbeafbf9e5df8d2554ac4a8a823c4ab435798a877a79c9778",
+    "dsl/HMMT-2016-FEB-GEO-01.json": "40f7619eabc820552c73d68a1a2220eb0e2ea3c4113561ee37cc32db6ebba736",
+    "dsl/HMMT-2016-FEB-GUTS-03.json": "d1fb9bf24c8b4e78a6942569cabce083a685e37b5d646c5b7478d8ebce09e0b7",
+    "dsl/HMMT-2016-FEB-GUTS-10.json": "689c97d307e6a8f035ae7827493a0c4871d0f4b245094c4aea3ec1e01ca56ed7",
+    "dsl/HMMT-2016-FEB-TEAM-03.json": "951d79daa648bf6ccf00fbd7068152c0830a11584c6867208a1604a7d3aad7fe",
+    "dsl/HMMT-2017-FEB-GUTS-06.json": "651c1227a28e07084cd971dbfe1b27f2d4ad4e290b1152c3465bd6ad2baafb32",
+    "dsl/HMMT-2020-FEB-GUTS-02.json": "b712d9961fa8ad073e5c9aca81073ecb16f238b830b253f9a881a9f047d823d6",
+    "dsl/HMMT-2021-FEB-GUTS-03.json": "d3b5dc0fb2f2d5822e45c8fabb253d8041ced67d2c4bfc21d6811f28da15cd53",
+    "dsl/HMMT-2021-FEB-GUTS-09.json": "78a43411f568b7c8ce022dae1c310b372d6b1b9598398b61abc7d39ab051e48c",
+    "dsl/HMMT-2022-FEB-GEO-07.json": "243b7dec3e96f2a9eed6ba61a8246b4ed9cec9257a71c9bce2a20e42da15ac84",
+    "dsl/HMMT-2022-FEB-GEO-08.json": "044153464a2f3a8ac6eb0310f7b741815cee84f0f026b672229f7f07d804e078",
+    "dsl/HMMT-2022-FEB-GUTS-01.json": "245ebd5d0cb564e7a429242f303e3ad0f92a8fc4b1da4ddb0d16cd6b6c37faba",
+    "dsl/HMMT-2022-FEB-TEAM-03.json": "cbebab77bf813e4d823a774e9aa54262871a1aede013a8997ace0557c51058c8",
+    "dsl/HMMT-2023-FEB-GEO-06.json": "b878de21b4753343976d47a908b007e1af0de8bcd0a1974bba8f5a88c42aa76b",
+    "dsl/HMMT-2024-FEB-GUTS-06.json": "b1835a5e644475fabe725fe842dfccbf589f3aa53ee0efaf4b0153004ee35e6a",
+    "cards/AIME-1983-04.md": "294d49744b56d6adf140fe7026197e33a4fd096bc3e09ece547601be4e434eb2",
+    "cards/AIME-1983-12.md": "64740c82e26b72487ddaec764f3166d6362d7197c5b31828d72e2f3f1ca14873",
+    "cards/AIME-1983-14.md": "fcae016e1a16bdb8a085c1851af97230ac954e624d9b5453f67beb359c6adfa7",
+    "cards/AIME-1984-03.md": "982efe132c901f9e66cf16c4154964e0f2b1c22bf77372b8d168b6d402bc30a1",
+    "cards/AIME-1984-06.md": "cc879f7976f60ee2de66d5dba11ea9a7f6f45d9de007352074ae774784371c2b",
+    "cards/AIME-1985-09.md": "a4b1d8d8ba4c8fce03a18e39e0a4304b2534bc09d9e6ad474cd2eac485028bef",
+    "cards/AIME-1985-11.md": "79d80be6dc295ba12d813684b7409faa13c52683e9dda584d4687c6b2bd80a27",
+    "cards/AIME-1986-09.md": "52f19733e8b13c079441e7d0700786eaf07fe2c9da21589305a00a7ff03233e3",
+    "cards/AIME-1986-15.md": "283d12021ebacef5e2f0b45e966c460358acb2221bb4abada272f3ca28dbad3c",
+    "cards/AIME-1987-09.md": "13644d31d0c191eae29d3cb25df6d479f2e60267a926ac415a9dd6481e933704",
+    "cards/AIME-1988-07.md": "4375b5bc2a485db3db1ac667f0b2e1548bdfdd96beace14faf0682d1878afbf4",
+    "cards/AIME-1988-14.md": "f43eed43dcc0c806f825093ed74a1fc55c1b38189411ea045a01afe2bbd74099",
+    "cards/AIME-1990-07.md": "caad03ebdf5c62d8d006c4208fa57165e119e4fa4c37f4350a6dff6137efdbfe",
+    "cards/AIME-1991-02.md": "bb024fe0f21f6fa3e03419bbe88846cd973eee00c834792e028c13e7cb1f5009",
+    "cards/AIME-1991-12.md": "d75062cf661c7e6ade61cc703ec48701fc059232d3862879c4bc136ff3d173ce",
+    "cards/AIME-1991-14.md": "487f2692cbe081cded038479e4e8f11f85646965c9c8b1833c67e38eb2a769ea",
+    "cards/AIME-1992-09.md": "80b19689f5892b4262c3d9573d3d8376c48fe9dbb2216284a14a062469de17bb",
+    "cards/AIME-1992-14.md": "eb2c7439f45f172df413237d65c9e3dd547c568cf7873a9e886b24874aaed7ed",
+    "cards/AIME-1993-02.md": "93f63f269c85ee2bc44470dfda3d7f00d796fe68dfe07de2a17542660e7712a2",
+    "cards/AIME-1993-12.md": "07ca7077f6d44e0d39decad3f013002ed03f84410e2e31ba3afcb3c8ea29e9d9",
+    "cards/AIME-1993-13.md": "fb21d46ecf25120c4ddcf1e25c4c91748311cdffc6566b3cfe57ce854be78706",
+    "cards/AIME-1993-15.md": "983c583a1cae9b36640598ec72dedb57b32dc53df57c2f9b7fe335d4a76d7661",
+    "cards/AIME-1994-02.md": "f1aac1d3721c46e71d77bdb2cf1c28e159cb6fbfb77cd5493812426184033610",
+    "cards/AIME-1994-08.md": "8765d46299788004d96af25da823366403923040692a3479b2ab284fa9e16912",
+    "cards/AIME-1994-10.md": "a6d3e4e51f2f5f7b1f892ea8849fd9948173e131cd477d81d531539f722591f1",
+    "cards/AIME-1995-04.md": "c2b8cbe8028cfd929cdd7df1d2d44e23d37cc08086079acf42fafb473840285c",
+    "cards/AIME-1995-09.md": "161a2b7701219f5617cffa68584ff3e46589eb5b118be86dd2008ae9f5ca209c",
+    "cards/AIME-1996-13.md": "1d7d60b884bc03c3f77aa8014338d75756dc93289d651559277105ad3bc78e66",
+    "cards/AIME-1996-15.md": "3328a35f139a64c3f66f1ad772615dd012444d7d1154c9050b2f7d6a1aef42dc",
+    "cards/AIME-1997-04.md": "0b5190a3d59f7652d5aa83f541e6e48f9cc48f647a5936f92fa74c18abe7458b",
+    "cards/AIME-1997-07.md": "2b36a40a8e270b173a64b4039a114a90dd25fa0dda6f80fb12fee805279c5ec7",
+    "cards/AIME-1998-06.md": "97c1011fb86027448907cb3afec6ab242272d8cf8dca7c19e66c526ce9eae30b",
+    "cards/AIME-1999-02.md": "4b505e1b822f54692ee5045b9a663b8e978b9fd742e972a31ec9adb5577ee4c9",
+    "cards/AIME-1999-09.md": "912583af33426525f32365d14fee642389b25f6b0f9333b9c899b82f07b57a8f",
+    "cards/AIME-1999-12.md": "d59074d2480457def53a4cf0b356a12854c67ff6bde88e05d2e49327ad6ca6ae",
+    "cards/AIME-1999-14.md": "cd81969b9809d74c27f489297d71b8037b63eae6eb0119639f276c06c56e84ea",
+    "cards/HMMT-2012-FEB-GUTS-01.md": "fdf1bc3e0eee08037bc1e56c5ee0056fff52d7375aab1ad58dbcc3e9b25e107c",
+    "cards/HMMT-2013-FEB-TEAM-03.md": "3dff4b7bae47b483f255945b88a632c4ff4ac35c72dd2255a658bae5ccaae377",
+    "cards/HMMT-2014-FEB-TEAM-08.md": "5572a60c95e8cf61a6547290117cd8657188890044689f7f4ba6bb50a614168f",
+    "cards/HMMT-2015-FEB-GUTS-02.md": "15cab4a1c3ac727f66e755e206f8223fc60ca204ad2a9eeac0cc675b3e4d2085",
+    "cards/HMMT-2016-FEB-GEO-01.md": "2b2d4f4b555e2fe2d8c308a175a41a8095b92504efc30b92b490f0469907e021",
+    "cards/HMMT-2016-FEB-GUTS-03.md": "759eab2150f22292b9ea95a9ccac8fc390e4a647f120c9b5fd06b825b2c6a96f",
+    "cards/HMMT-2016-FEB-GUTS-10.md": "3a0e89890d9877864aae1a973741424f5830562362e8c0605bacfad94e3aad28",
+    "cards/HMMT-2016-FEB-TEAM-03.md": "27717d1a75af5c5a042007578ab0d82077e01f838bc1c6712cc6010a29dae922",
+    "cards/HMMT-2017-FEB-GUTS-06.md": "063b6198f048a962085085d9135c206325a0954aaee092c16687a81a38679d04",
+    "cards/HMMT-2020-FEB-GUTS-02.md": "05c3b4af189736efaec0e50f8b1e11d8aceda2981a30afcce5f533ab4961135a",
+    "cards/HMMT-2021-FEB-GUTS-03.md": "2c6710585cdaf913b766fbd23b4d5f1e0fa7828ca2406e901c33303ed47aee8a",
+    "cards/HMMT-2021-FEB-GUTS-09.md": "7fd0e3b409cdffabe1be713b74f437815400a9f6e3147b979f3ecf350951cf9c",
+    "cards/HMMT-2022-FEB-GEO-07.md": "7a8e6bede5c52eeaad9a4cd7860809c80f5afb8b49d1b52672c2e0218e267d3d",
+    "cards/HMMT-2022-FEB-GEO-08.md": "f408cfd21295859f001cfdad57cc0c26327e0722f9490c4d3005e86dfce47215",
+    "cards/HMMT-2022-FEB-GUTS-01.md": "226340c5c584e9f724d5e2451af4b45ec0313893bee71b1f5248b93dd01681e1",
+    "cards/HMMT-2022-FEB-TEAM-03.md": "16cbe71d6dea9d0286dbaf80905cb80239b29069ffb45bbb900147bc109f1eb8",
+    "cards/HMMT-2023-FEB-GEO-06.md": "6f52b6765f6143412fa2e166a8c13a57fae76a514ae666185e94f23a63b05590",
+    "cards/HMMT-2024-FEB-GUTS-06.md": "98edd2744ecbcb7f9b0ce3a5fa8b877962ebecd78f19550a726d17dff66f429b"
+  },
+  "validation_sha256": "3a869a7fa1f71a3e5cedcbb804ac9e2c2648760e91ac3db432ccf220b5f65fa0",
+  "official_answers_sha256": "8078ab77fa989697dbe7125d61fc1645f6a1eb6966394ca25499b0edb3d1f0b1",
+  "source_sha256": "5b29347ce7c807ab1ce23951577ca8530c2c10b18e52c9da8099e3e443779012",
   "solver_run": false,
-  "note": "保存済み公式解答テキストのAnswer行。manifest内のofficial_answers_verified=0は入力固定時の状態。オンラインの出典再検証はしていない。",
+  "local_search_run": false,
+  "note": "AIMEは全件二次資料・未照合。公式答えというファイル名でもofficial_answerはnull。答えを見た後の採否・入力変更はしない。HMMT18行はv2を保持。",
   "rows": [
     {
-      "id": "HMMT-2016-FEB-GEO-01",
-      "source_path": "/home/kabatan/work/solver-research-assets/corpus97-sources/hmmt-2016-geo-solutions.txt",
-      "source_sha256": "bfc7692606116b3cc8cdf7747cf8e7ee2b6f77f2a6696525fb72fe596f5862cd",
-      "answer_line": "Answer: 2, 6",
-      "online_source_verified": false
+      "id": "AIME-1983-04",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 4,
+        "source_id": "1983-4"
+      },
+      "statement_sha256": "456ccfc7d33963783249ea126eaf34743fbe53441baac56efdece969ad9276b2",
+      "input_sha256": "f3604f59255096023114b8a5890e59d9541a16a59d673017d123c0a519874c2e"
     },
     {
-      "id": "HMMT-2022-FEB-GEO-07",
-      "source_path": "/home/kabatan/work/solver-research-assets/corpus97-sources/hmmt-2022-geo-solutions.txt",
-      "source_sha256": "fe0f78521382bbcb9ad426269a4c59e375794b28f57e1b0bcdabaaf9183112d5",
-      "answer_line": "Answer: 16902",
-      "online_source_verified": false
+      "id": "AIME-1983-12",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 12,
+        "source_id": "1983-12"
+      },
+      "statement_sha256": "30df8527621872aafa0c38e7e0cd63e39f0de470ceb7a671bfe7ab66872e32a5",
+      "input_sha256": "b6ebcb828da4aa856c94f583431e96d46d171a2c344225bcf3e7e0f9127e3c12"
     },
     {
-      "id": "HMMT-2022-FEB-GEO-08",
-      "source_path": "/home/kabatan/work/solver-research-assets/corpus97-sources/hmmt-2022-geo-solutions.txt",
-      "source_sha256": "fe0f78521382bbcb9ad426269a4c59e375794b28f57e1b0bcdabaaf9183112d5",
-      "answer_line": "Answer: 2402",
-      "online_source_verified": false
+      "id": "AIME-1983-14",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 14,
+        "source_id": "1983-14"
+      },
+      "statement_sha256": "1370fd798fd1704f5af4e9cc243e14563344ae8dd7a83b5141a063ca1dd89461",
+      "input_sha256": "1c650b81b9da5ef8710901c41f08bd46b3167ed28cf8ae407e09701751172a24"
     },
     {
-      "id": "HMMT-2023-FEB-GEO-06",
-      "source_path": "/home/kabatan/work/solver-research-assets/corpus97-sources/hmmt-2023-geo-solutions.txt",
-      "source_sha256": "e6c7e1211373596015ddf254474dd7bc9af986d70985314cfe673566e4bdeccb",
-      "answer_line": "Answer: 68",
-      "online_source_verified": false
+      "id": "AIME-1984-03",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 18,
+        "source_id": "1984-3"
+      },
+      "statement_sha256": "11ee2b0577d208e44bcf990b13c3d734b9d2b34cd187566b4da9cd7b80493f19",
+      "input_sha256": "aa9d451654881d05e52066b736cfee0579e03b61009221c561a6f018394552af"
+    },
+    {
+      "id": "AIME-1984-06",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 21,
+        "source_id": "1984-6"
+      },
+      "statement_sha256": "e002af6c30c399e113b8ebb206f63d91901d828b19312bc6dc45caf4a0c2a372",
+      "input_sha256": "d9ab59d29bd6d6e317d77e830123c358228c9e8ac6d6ef955a0bac67fb9a69bb"
+    },
+    {
+      "id": "AIME-1985-09",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 38,
+        "source_id": "1985-9"
+      },
+      "statement_sha256": "49c76147e5e12551babf5bf9f97086fd8e371a983b3ccf79195eda879b19b766",
+      "input_sha256": "c25e7b6d3c57b5e4cfb1e1039caf3627f2dc2f8eba095903ab7f42bee4a707ac"
+    },
+    {
+      "id": "AIME-1985-11",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 40,
+        "source_id": "1985-11"
+      },
+      "statement_sha256": "d0d603d0a1fce8dfcbd9d39014d0380142c5bfbc99ea7f23e5c75758c91fc098",
+      "input_sha256": "b03635c60b7fdfee52deb646fb857176c4955637a2b49ea2796d06f0a2c43fcc"
+    },
+    {
+      "id": "AIME-1986-09",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 52,
+        "source_id": "1986-9"
+      },
+      "statement_sha256": "32127ea86a8b982ca838f2913453b55afaec07885cf8362abd6b15b983d791c2",
+      "input_sha256": "56e6d24e071e76c80761cbc23f53c0b32c2fb3c92cdb642782d9c4df3d759e46"
+    },
+    {
+      "id": "AIME-1986-15",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 58,
+        "source_id": "1986-15"
+      },
+      "statement_sha256": "cc3f0bb7614536f5412af59694e91948c8b2485448a51400705b83c187b175f1",
+      "input_sha256": "9b076391befdc6d07689ab6a89f2daec0b8f528ffc7ed7962f7fff8c7d56eda9"
+    },
+    {
+      "id": "AIME-1987-09",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 67,
+        "source_id": "1987-9"
+      },
+      "statement_sha256": "3e798caf7f1f206f4b57a8a22e7f079619be6a5d086f8b1ce97c384e8ec14062",
+      "input_sha256": "6b4e8d418c7fe5c79e3c6dd616ff21c4606f2e9766b1570239f2559a81cf79aa"
+    },
+    {
+      "id": "AIME-1988-07",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 76,
+        "source_id": "1988-7"
+      },
+      "statement_sha256": "5b13a4618b340f9879cd5d3e4649289ce5b8713efbc87d307698c683c7e69108",
+      "input_sha256": "05945ea140756eb257a5a078a116506f66763a5a2a7008f2ec45e625640cdbfb"
+    },
+    {
+      "id": "AIME-1988-14",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 81,
+        "source_id": "1988-14"
+      },
+      "statement_sha256": "6cdc2ea623f4b70baefdee5f575dca762e7acdb477d0f5f5148361590282075e",
+      "input_sha256": "3366dde319cf1965e899c07947ff6337f1f0121f071a9b3f24a66e0abc96a632"
+    },
+    {
+      "id": "AIME-1990-07",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 97,
+        "source_id": "1990-7"
+      },
+      "statement_sha256": "a5dd59938dcf14e25988170d229a313e093fce7469040f766786b1433d987816",
+      "input_sha256": "a61bcf002e60671d69c5206276c3d1f07cf7883365a9b662f08577f859999df8"
+    },
+    {
+      "id": "AIME-1991-02",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 105,
+        "source_id": "1991-2"
+      },
+      "statement_sha256": "6d08c44ad9d08f3e602d37975c7799d83422f358161e7064fdaf196693d8bf60",
+      "input_sha256": "99ada126dc065aac5d43f33d1da86f0f56c0edc2b0550ba4d158166e3efe5af0"
+    },
+    {
+      "id": "AIME-1991-12",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 112,
+        "source_id": "1991-12"
+      },
+      "statement_sha256": "8d704a699c8f5d378ea62f2178e09eeca0c6e052e532b00bf889e4d5561045c3",
+      "input_sha256": "22894bbff4eb2193bffebea194058d78fc8d555e3ff71a5567fb5d5ee59ece02"
+    },
+    {
+      "id": "AIME-1991-14",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 114,
+        "source_id": "1991-14"
+      },
+      "statement_sha256": "f53c23181fd19027c73d75827cd05ad79b2a2b3fda9edfa39dec78eef601d96d",
+      "input_sha256": "1eedb2130ca5e84f291b06ccf4b409bea117441e79b51776821ea96426968417"
+    },
+    {
+      "id": "AIME-1992-09",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 123,
+        "source_id": "1992-9"
+      },
+      "statement_sha256": "69956a2c16fd348bda27b9b7a647d1f8a7ab2924fd6642616ab4af3ef1972f61",
+      "input_sha256": "ee2cc903a768efe7bbc2964b6dc26374d0b48a8b5760f879d4544f5147e59a1e"
+    },
+    {
+      "id": "AIME-1992-14",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 128,
+        "source_id": "1992-14"
+      },
+      "statement_sha256": "6fb91eb941f658d014b028add079ad3ff15aaf66d68d2acf35554312f2f9e979",
+      "input_sha256": "0f56c79c096ce1439294fb1e2043308a689ffd1bc6fab965323e9cd0f1b5e41c"
+    },
+    {
+      "id": "AIME-1993-02",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 131,
+        "source_id": "1993-2"
+      },
+      "statement_sha256": "05996f8cfe4905f5684a93ec6e20ceb73d05a6750ae0370aead563bc8e12d0ed",
+      "input_sha256": "e10774b7008ae6ec98998e321a0904755771e66cd2626084805b3a0f3615156a"
+    },
+    {
+      "id": "AIME-1993-12",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 140,
+        "source_id": "1993-12"
+      },
+      "statement_sha256": "a9047778fb67b5f496e59880009a5b91deb6a1fb4376cca5cd2ee3e239096765",
+      "input_sha256": "41851d9dd407a3d246dcb705db1ba49a0e28ed3855f208b3724086231eb0d72d"
+    },
+    {
+      "id": "AIME-1993-13",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 141,
+        "source_id": "1993-13"
+      },
+      "statement_sha256": "6d7da601b0421bfdcbd56332d841888ada46e4aafcc4f2f86b7c384bc1ec6d2b",
+      "input_sha256": "42e0b4aad9580a5185a4cbc28625c8e8b4f374243703b6541506c2589e77ff78"
+    },
+    {
+      "id": "AIME-1993-15",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 143,
+        "source_id": "1993-15"
+      },
+      "statement_sha256": "e8dcd1e6addf369b3d9b2207c93ac8bce8608ed5e78a871520c963326e93f08e",
+      "input_sha256": "ea0eb84003d0660c4216f31177a735dbf55d79a0060560214d43031aba128788"
+    },
+    {
+      "id": "AIME-1994-02",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 145,
+        "source_id": "1994-2"
+      },
+      "statement_sha256": "9b8968ba02092d422586c2bf036cf1d94354eb3494ccca7664c66edcc9199f89",
+      "input_sha256": "19168ed238ff33503e0406359c3591e7e3faba41457a15ed4d13ea44aa3bb837"
+    },
+    {
+      "id": "AIME-1994-08",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 146,
+        "source_id": "1994-8"
+      },
+      "statement_sha256": "757d3d887ffb8b13c141f5ab51937e8da802da3afe5b2b963d954c48a8db0910",
+      "input_sha256": "ef3343be85707a0b7774990cf28a2922bee7c0482f78f3253d03d264e31af05e"
+    },
+    {
+      "id": "AIME-1994-10",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 148,
+        "source_id": "1994-10"
+      },
+      "statement_sha256": "a7cedc3ab84ef001aa415d5ac994b78a95610324eb16f1aa809f8b0a6fe0215e",
+      "input_sha256": "13eaa39b72e8bffc6d9e4ca60949e631c082d6f3fda21a678a11f52099c9d762"
+    },
+    {
+      "id": "AIME-1995-04",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 156,
+        "source_id": "1995-4"
+      },
+      "statement_sha256": "72941f9a477ecd805371633f21cd553792dc45ebdbcccbe18b3e53531eda95b1",
+      "input_sha256": "f56bf681d1128051135ccf4249ed6ed23078c3a02513e8e326cf89d749d576c8"
+    },
+    {
+      "id": "AIME-1995-09",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 160,
+        "source_id": "1995-9"
+      },
+      "statement_sha256": "097e691aefb53adfab6425b766c49816ce6a5225a63459d510fae2d0060672ee",
+      "input_sha256": "39cfb4e30c3e10d5e2a02fde6c131f362551c644330715c91e84c7c41152787e"
+    },
+    {
+      "id": "AIME-1996-13",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 178,
+        "source_id": "1996-13"
+      },
+      "statement_sha256": "21b2779dd82d1d4af90411a6b2ba17905b89dc03bcb49a620788eee631f00882",
+      "input_sha256": "26d32973acac9f90b467cc3c78198dd8ebafef2d4d1e37290e38856940514a07"
+    },
+    {
+      "id": "AIME-1996-15",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 180,
+        "source_id": "1996-15"
+      },
+      "statement_sha256": "517b7ea8776c993701c7d37740c64bd94720ecd22d05c612fd3a04aeb8c99839",
+      "input_sha256": "6a6aae4721e04df587587ff6001a6c44ea2628241ab9164a2bee87887a8ad568"
+    },
+    {
+      "id": "AIME-1997-04",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 184,
+        "source_id": "1997-4"
+      },
+      "statement_sha256": "f5b413e7fa98d7ba4720b474d2eb5941d535b80d66aeaf00829f81e8326798af",
+      "input_sha256": "a5d74a6a0925ee13cbaffe63227fefc600dd173fe1562796ff3b922a0c27bd43"
+    },
+    {
+      "id": "AIME-1997-07",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 187,
+        "source_id": "1997-7"
+      },
+      "statement_sha256": "b5ee21b974597946b52f7a70ebe335403b84d4635a5987b4de501ffe9c4f2c65",
+      "input_sha256": "5b1706a435bde7cb7911dea329f41ce6d108e1fce5dc0f1ec51430fb274ac246"
+    },
+    {
+      "id": "AIME-1998-06",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 200,
+        "source_id": "1998-6"
+      },
+      "statement_sha256": "381040384b04efbcb1b5f7ce2ce4e6229b08e49a655882a2be21b07f09b0bd99",
+      "input_sha256": "7865b7a85754ba34efa870093a01fed654709fb7345695952f24b03f28fa9690"
+    },
+    {
+      "id": "AIME-1999-02",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 211,
+        "source_id": "1999-2"
+      },
+      "statement_sha256": "55dce185409741e48883c81f4fdd0af09d70d83a2dfd6ef1996fa09545d6efab",
+      "input_sha256": "132bce8a265a34029130ccc90139234ef501a8731c4f693efb845477fc7d8c18"
+    },
+    {
+      "id": "AIME-1999-09",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 218,
+        "source_id": "1999-9"
+      },
+      "statement_sha256": "1ad4f5e82e0b79377e3efc439871a20970882842533d253825335b0c334a37ac",
+      "input_sha256": "ebc441e7a5d1608cf31a923f9600cd3fb6696cd47073f269f33c01704b5ca02a"
+    },
+    {
+      "id": "AIME-1999-12",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 221,
+        "source_id": "1999-12"
+      },
+      "statement_sha256": "4b4a9c0028c653a7f763510cbd94fc8e50b134da13aa1f71dae73d239da0bc6c",
+      "input_sha256": "64424fee99d9fb38475b505e85f337a0bc98811ced197bb35571c62e8303c563"
+    },
+    {
+      "id": "AIME-1999-14",
+      "status": "二次資料・未照合",
+      "source_row": {
+        "source_path": "jssa/difficulty/unseen-1983/source-evidence/aime-1983-1999/aime-1983-1999.jsonl",
+        "row_idx": 223,
+        "source_id": "1999-14"
+      },
+      "statement_sha256": "82b7c063710fc6533b8c417bafb1b13870e3d0e6eb573f6ddaca417a1dd624df",
+      "input_sha256": "03533e821553e1b9876e96c3f801cc1c7a27a223cca469600cc4956050e49814"
     }
   ]
 }

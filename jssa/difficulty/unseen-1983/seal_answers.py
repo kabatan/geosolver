@@ -1,62 +1,81 @@
-"""入力固定後に保存済み公式解答のAnswer行だけを別ファイルに転記する。
+"""入力・採否固定後だけAIMEの二次資料Answerを別ファイルへ転記する。
 
-DSLや採否は変更しない。解法を入力へ戻さない。ネットワークやsolverを呼ばない。
+答えの値を表示・評価しない。DSL/manifest/cardを書き換えない。
+v2のHMMT答え18行は保存版から保持し、公式冊子の再照合は行わない。
 """
 import hashlib
 import json
-import re
 from pathlib import Path
 
 OUT = Path(__file__).resolve().parent
-SAVED = Path("/home/kabatan/work/solver-research-assets/corpus97-sources")
-KEYS = {"HMMT-2016-FEB-GEO-01": (2016, 1), "HMMT-2022-FEB-GEO-07": (2022, 7),
-        "HMMT-2022-FEB-GEO-08": (2022, 8), "HMMT-2023-FEB-GEO-06": (2023, 6)}
+BASE = OUT / "revisions/v2-before-aime"
 
 
 def sha(data):
     return hashlib.sha256(data).hexdigest()
 
 
+def rows(path):
+    return [json.loads(s) for s in path.read_text().splitlines()]
+
+
+def input_hashes():
+    paths = [OUT/name for name in ["manifest.json","cases.jsonl","statements.jsonl","cards.md",
+             "authoring-rules.md","build_cases.py","aime_definitions.py","aime_decisions.py","verify_static.py",
+             "revisions/v3-input-freeze.json","revisions/v3-selection-freeze.json"]]
+    paths += sorted((OUT/"dsl").glob("*.json"))+sorted((OUT/"cards").glob("*.md"))
+    return {str(p.relative_to(OUT)):sha(p.read_bytes()) for p in paths}
+
+
 def main():
-    manifest_bytes = (OUT / "manifest.json").read_bytes()
-    manifest = json.loads(manifest_bytes)
-    validation = json.loads((OUT / "validation.json").read_text())
-    assert validation["passed"] and validation["cases"] == manifest["selected_count"] == 18
-    before = {p.name: sha(p.read_bytes()) for p in (OUT / "dsl").glob("*.json")}
-    for row in manifest["rows"]:
-        if row["status"] == "selected_candidate":
-            assert before[row["id"]+".json"] == row["input_sha256"]
-    answers = [json.loads(s) for s in (OUT / "official_answers.jsonl").read_text().splitlines()]
-    receipts = []
-    for row in answers:
-        if row["id"] not in KEYS:
+    manifest = json.loads((OUT/"manifest.json").read_text())
+    freeze = json.loads((OUT/"revisions/v3-input-freeze.json").read_text())
+    validation = json.loads((OUT/"validation.json").read_text())
+    assert validation["passed"] and validation["cases"] == manifest["selected_count"]
+    assert sha((OUT/"manifest.json").read_bytes()) == freeze["manifest_sha256"]
+    selected = [r for r in manifest["rows"] if r["status"] == "selected_candidate"]
+    for r in selected:
+        assert sha((OUT/r["dsl_path"]).read_bytes()) == freeze["input_hashes"][r["id"]] == r["input_sha256"]
+    before = input_hashes()
+    source_path = OUT/"source-evidence/aime-1983-1999/aime-1983-1999.jsonl"
+    assert sha(source_path.read_bytes()) == json.loads((OUT/"revisions/v3-selection-freeze.json").read_text())["source_sha256"]
+    # この行以降だけAnswer欄へアクセスする。値による分岐や採否への戻しはない。
+    by_slot = {(int(r["Year"]),int(r["Problem Number"])):r for r in rows(source_path)}
+    answers, receipts = [], []
+    for r in selected:
+        if not r["id"].startswith("AIME-"):
             continue
-        year, number = KEYS[row["id"]]
-        path = SAVED / f"hmmt-{year}-geo-solutions.txt"
-        source = path.read_text()
-        # 問題見出し以後の最初のAnswer行のみ。解法の本文は転記しない。
-        head = re.search(rf"^\s*{number}\.\s", source, re.M)
-        assert head is not None
-        answer = re.search(r"^\s*Answer:\s*([^\n]+)", source[head.end():], re.M)
-        assert answer is not None
-        value = answer.group(1).strip()
-        assert re.fullmatch(r"\d+(?:,\s*\d+)*", value), value
-        values = [int(s.strip()) for s in value.split(",")]
-        row.update(official_answer=values if len(values)>1 else values[0],
-                   official_source=str(path), status="transcribed_from_saved_official_solution_text",
-                   reference_usage="入力・採否・hash固定後のAnswer行転記のみ。DSLへのフィードバックなし。")
-        receipts.append(dict(id=row["id"], source_path=str(path), source_sha256=sha(path.read_bytes()),
-                             answer_line="Answer: " + value, online_source_verified=False))
-    (OUT / "official_answers.jsonl").write_text("".join(json.dumps(r, ensure_ascii=False, sort_keys=True)+"\n" for r in answers))
-    assert before == {p.name: sha(p.read_bytes()) for p in (OUT / "dsl").glob("*.json")}
-    assert manifest_bytes == (OUT / "manifest.json").read_bytes()
-    receipt = dict(input_freeze_manifest_sha256=sha(manifest_bytes), official_answers_available=len(receipts),
-                   official_answers_missing=18-len(receipts), official_online_verification=False,
-                   dsl_unchanged=True, manifest_unchanged=True, solver_run=False,
-                   note="保存済み公式解答テキストのAnswer行。manifest内のofficial_answers_verified=0は入力固定時の状態。オンラインの出典再検証はしていない。",
+        source = by_slot[(r["year"],r["number"])]
+        answers.append(dict(id=r["id"],official_answer=None,official_source=None,
+                            secondary_answer=source["Answer"],status="secondary_unverified",
+                            source_status="二次資料・未照合",official_booklet_verified=False,
+                            reference_source=dict(path=str(source_path.relative_to(OUT)),source_id=source["ID"],
+                                                  row_idx=r["source_row"]["row_idx"],sha256=sha(source_path.read_bytes())),
+                            reference_usage="採否・DSL・manifest・入力hash固定後の転記のみ。公式冊子との照合は未了。答えを入力に使用しない。"))
+        receipts.append(dict(id=r["id"],status="二次資料・未照合",source_row=r["source_row"],
+                             statement_sha256=r["statement_sha256"],input_sha256=r["input_sha256"]))
+    inherited = rows(BASE/"official_answers.jsonl")
+    assert len(inherited) == 18
+    answers += inherited
+    assert [r["id"] for r in answers] == [r["id"] for r in selected]
+    assert len(receipts) == manifest["aime_selected_count"]
+    (OUT/"official_answers.jsonl").write_text("".join(json.dumps(r,ensure_ascii=False,sort_keys=True)+"\n" for r in answers))
+    after = input_hashes()
+    assert before == after
+    receipt = dict(input_freeze_manifest_sha256=freeze["manifest_sha256"],
+                   aime_secondary_answers_transcribed=len(receipts),aime_official_answers_verified=0,
+                   hmmt_answers_preserved=18,hmmt_saved_official_transcriptions_preserved=4,hmmt_official_missing=14,
+                   hmmt_original_provenance="revisions/v2-before-aime/answer-provenance.json",
+                   official_online_verification=False,official_booklet_verification=False,
+                   input_artifacts_unchanged=True,dsl_unchanged=True,manifest_unchanged=True,
+                   input_artifact_hashes=before,validation_sha256=sha((OUT/"validation.json").read_bytes()),
+                   official_answers_sha256=sha((OUT/"official_answers.jsonl").read_bytes()),
+                   source_sha256=sha(source_path.read_bytes()),solver_run=False,local_search_run=False,
+                   note="AIMEは全件二次資料・未照合。公式答えというファイル名でもofficial_answerはnull。答えを見た後の採否・入力変更はしない。HMMT18行はv2を保持。",
                    rows=receipts)
-    (OUT / "answer-provenance.json").write_text(json.dumps(receipt, ensure_ascii=False, indent=2)+"\n")
-    print(json.dumps({k:v for k,v in receipt.items() if k != "rows"}, ensure_ascii=False, indent=2))
+    (OUT/"answer-provenance.json").write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+"\n")
+    print(json.dumps({k:receipt[k] for k in ["aime_secondary_answers_transcribed","aime_official_answers_verified",
+          "hmmt_answers_preserved","input_artifacts_unchanged","dsl_unchanged","manifest_unchanged","solver_run"]},ensure_ascii=False,indent=2))
 
 
 if __name__ == "__main__":

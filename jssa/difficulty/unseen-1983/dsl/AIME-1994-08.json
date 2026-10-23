@@ -1,0 +1,39 @@
+{
+  "id": "AIME-1994-08",
+  "variables": [
+    "a",
+    "b"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(a, 11)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(b, 37)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(O,A)",
+      "operator": "=",
+      "right": "Distance(A,B)"
+    },
+    {
+      "left": "Distance(A,B)",
+      "operator": "=",
+      "right": "Distance(B,O)"
+    },
+    {
+      "left": "Area(O,A,B)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "a*b"
+}

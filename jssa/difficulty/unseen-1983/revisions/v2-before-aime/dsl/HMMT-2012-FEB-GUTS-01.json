@@ -1,0 +1,45 @@
+{
+  "id": "HMMT-2012-FEB-GUTS-01",
+  "variables": [
+    "x",
+    "y"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(2, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(2, 2)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(0, 2)"
+    },
+    {
+      "name": "X",
+      "expression": "Point(x, y)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, X)",
+      "operator": "=",
+      "right": "sqrt(2)"
+    },
+    {
+      "left": "Distance(X, B)",
+      "operator": "=",
+      "right": "sqrt(2)"
+    },
+    {
+      "predicate": "(x < 0) or (x > 2) or (y < 0) or (y > 2)"
+    }
+  ],
+  "target": "max([Distance(A, B), Distance(A, C), Distance(X, C), Distance(X, D), Distance(B, D)])"
+}
