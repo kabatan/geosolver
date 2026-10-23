@@ -1,0 +1,95 @@
+{
+  "id": "HMMT-2006-FEB-GEO-07",
+  "input_sha256": "8550ba454c4261b0b4136bd9181709b03c99ce8881fb2bf264cde048f583f793",
+  "status": "complete",
+  "answer_set": [
+    {
+      "rational": "3/7"
+    }
+  ],
+  "answer_decimals": [
+    "0.428571428571428571428571428571"
+  ],
+  "anchor": {
+    "condition": "condition:1",
+    "source_expression": "-(r*sqrt(16*r**2 + 25) - sqrt(16*r**2 - 56*r + 49)*Abs(r))/sqrt(16*r**2 + 25)",
+    "polynomial": "7*r**2 - 3*r",
+    "coefficients": [
+      "7",
+      "-3",
+      "0"
+    ],
+    "degree": 2,
+    "branches": [
+      {
+        "abs_signs": [
+          -1
+        ],
+        "unrad": true,
+        "factor": "7*r**2 - 3*r"
+      },
+      {
+        "abs_signs": [
+          1
+        ],
+        "unrad": true,
+        "factor": "7*r**2 - 3*r"
+      }
+    ],
+    "candidate_count": 2,
+    "failed_anchors": [
+      {
+        "label": "condition:0",
+        "reason": "an absolute-value branch has no finite anchor"
+      }
+    ]
+  },
+  "roots": [
+    {
+      "index": 0,
+      "root": {
+        "rational": "0"
+      },
+      "root_decimal": "0",
+      "isolating_interval": [
+        "0",
+        "0"
+      ],
+      "status": "rejected",
+      "reason": "construction:omega1:circle radius",
+      "checked_atoms_or_formulas": 3
+    },
+    {
+      "index": 1,
+      "root": {
+        "rational": "3/7"
+      },
+      "root_decimal": "0.428571428571428571428571",
+      "isolating_interval": [
+        "3/7",
+        "3/7"
+      ],
+      "status": "accepted",
+      "target": "3/7",
+      "target_wire": {
+        "rational": "3/7"
+      },
+      "target_decimal": "0.428571428571428571428571428571",
+      "checked_atoms_or_formulas": 15
+    }
+  ],
+  "rewrites": [],
+  "domain_count": 11,
+  "condition_count": 4,
+  "n_real_roots": 2,
+  "n_accepted": 1,
+  "n_rejected": 1,
+  "processing_seconds": 0.12223086599260569,
+  "last_stage": "classify_root:1/2",
+  "max_rss_kib": 58724,
+  "blocked_reads": [],
+  "input_file_sha256": "5a04be65250dce0864154669e269e8d25590a0d9ea6b5d17c08474d7560e7729",
+  "preregistration_sha256": "7f87cd89bd6bccfde0a3ba4c9cd3809dd1462c26d2a908b80e23e1a26da811e8",
+  "sympy_version": "1.14.0",
+  "wall_seconds_including_startup": 0.42459580511786044
+}

@@ -1,0 +1,87 @@
+{
+  "id": "aime-2000-2-6",
+  "arm": "A",
+  "seed": 10423,
+  "status": "timeout",
+  "attempts": [],
+  "input_sha256": "081137535179c4c847a7d21a6610716181d7f299cc670d91f53b94311456cf31",
+  "official_answer_loaded": false,
+  "existing_P_loaded": false,
+  "budget_seconds": 120,
+  "encoding_seconds": 0.11277187312953174,
+  "variables": 14,
+  "equations": 12,
+  "target_symbol": "t8",
+  "nondeg": [
+    "v_base_length",
+    "v_height",
+    "v_top_left_x - v_top_right_x",
+    "s4",
+    "s3",
+    "s7"
+  ],
+  "nondeg_audit": [
+    {
+      "condition": {
+        "left": "base_length",
+        "operator": ">",
+        "right": 0
+      },
+      "nonzero": "v_base_length",
+      "status": "included"
+    },
+    {
+      "condition": {
+        "left": "height",
+        "operator": ">",
+        "right": 0
+      },
+      "nonzero": "v_height",
+      "status": "included"
+    },
+    {
+      "condition": {
+        "left": "top_right_x",
+        "operator": ">",
+        "right": "top_left_x"
+      },
+      "nonzero": "-v_top_left_x + v_top_right_x",
+      "status": "included"
+    },
+    {
+      "condition": {
+        "left": "Area(A, B, N, M)",
+        "operator": ">",
+        "right": 0
+      },
+      "nonzero": "s4",
+      "status": "included"
+    },
+    {
+      "condition": {
+        "left": "Area(M, N, C, D)",
+        "operator": ">",
+        "right": 0
+      },
+      "nonzero": "s3",
+      "status": "included"
+    },
+    {
+      "condition": {
+        "left": "Distance(P, Q)",
+        "operator": ">",
+        "right": 0
+      },
+      "nonzero": "s7",
+      "status": "included"
+    }
+  ],
+  "bounds": [
+    "0",
+    "oo",
+    "True",
+    "False"
+  ],
+  "error": "Limit: time budget",
+  "seconds": 120.03348539816216
+}

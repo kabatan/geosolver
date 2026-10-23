@@ -1,0 +1,140 @@
+{
+  "id": "HMMT-2012-FEB-GEO-01",
+  "input_sha256": "b97e4f2f40ab15dc2a443b160612c9251a712357e7dd3b243f73034f88b72f35",
+  "status": "complete",
+  "answer_set": [
+    {
+      "op": "Mul",
+      "args": [
+        {
+          "rational": "1/3"
+        },
+        {
+          "op": "Pow",
+          "args": [
+            {
+              "rational": "17"
+            },
+            {
+              "rational": "1/2"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "answer_decimals": [
+    "1.37436854187255351660713661866"
+  ],
+  "anchor": {
+    "condition": "condition:3",
+    "source_expression": "-2*Abs(t - 1) + Abs(t + 1)",
+    "polynomial": "3*t**2 - 10*t + 3",
+    "coefficients": [
+      "3",
+      "-10",
+      "3"
+    ],
+    "degree": 2,
+    "branches": [
+      {
+        "abs_signs": [
+          -1,
+          -1
+        ],
+        "unrad": false,
+        "factor": "t - 3"
+      },
+      {
+        "abs_signs": [
+          -1,
+          1
+        ],
+        "unrad": false,
+        "factor": "3*t - 1"
+      },
+      {
+        "abs_signs": [
+          1,
+          -1
+        ],
+        "unrad": false,
+        "factor": "1 - 3*t"
+      },
+      {
+        "abs_signs": [
+          1,
+          1
+        ],
+        "unrad": false,
+        "factor": "3 - t"
+      }
+    ],
+    "candidate_count": 1,
+    "failed_anchors": []
+  },
+  "roots": [
+    {
+      "index": 0,
+      "root": {
+        "rational": "1/3"
+      },
+      "root_decimal": "0.333333333333333333333333",
+      "isolating_interval": [
+        "1/3",
+        "1/3"
+      ],
+      "status": "accepted",
+      "target": "sqrt(17)/3",
+      "target_wire": {
+        "op": "Mul",
+        "args": [
+          {
+            "rational": "1/3"
+          },
+          {
+            "op": "Pow",
+            "args": [
+              {
+                "rational": "17"
+              },
+              {
+                "rational": "1/2"
+              }
+            ]
+          }
+        ]
+      },
+      "target_decimal": "1.37436854187255351660713661866",
+      "checked_atoms_or_formulas": 14
+    },
+    {
+      "index": 1,
+      "root": {
+        "rational": "3"
+      },
+      "root_decimal": "3.00000000000000000000000",
+      "isolating_interval": [
+        "3",
+        "3"
+      ],
+      "status": "rejected",
+      "reason": "condition:5",
+      "checked_atoms_or_formulas": 14
+    }
+  ],
+  "rewrites": [],
+  "domain_count": 8,
+  "condition_count": 6,
+  "n_real_roots": 2,
+  "n_accepted": 1,
+  "n_rejected": 1,
+  "processing_seconds": 0.07431457098573446,
+  "last_stage": "classify_root:1/2",
+  "max_rss_kib": 60032,
+  "blocked_reads": [],
+  "input_file_sha256": "9d7856ad405b2c128274e7cd77ad1707f05dcac9faf25e72a27152e1b392e005",
+  "preregistration_sha256": "7f87cd89bd6bccfde0a3ba4c9cd3809dd1462c26d2a908b80e23e1a26da811e8",
+  "sympy_version": "1.14.0",
+  "wall_seconds_including_startup": 0.3161379040684551
+}

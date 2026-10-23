@@ -1,0 +1,56 @@
+{
+  "id": "HMMT-2006-FEB-GEO-03",
+  "arm": "A",
+  "seed": 10423,
+  "status": "timeout",
+  "attempts": [],
+  "input_sha256": "344c44fd40153490399ab575f7b1171fe82bcb563aa3bd24d6482326aeb6065f",
+  "official_answer_loaded": false,
+  "existing_P_loaded": false,
+  "budget_seconds": 120,
+  "encoding_seconds": 0.09312604297883809,
+  "variables": 11,
+  "equations": 10,
+  "target_symbol": "t8",
+  "nondeg": [
+    "a1*v_s - a2*v_c - 27*a2/7",
+    "v_s"
+  ],
+  "nondeg_audit": [
+    {
+      "condition": {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      },
+      "nonzero": "v_s",
+      "status": "included"
+    },
+    {
+      "condition": {
+        "left": "a",
+        "operator": ">",
+        "right": "0"
+      },
+      "nonzero": "v_a",
+      "status": "included"
+    },
+    {
+      "condition": {
+        "left": "a",
+        "operator": "<",
+        "right": "pi"
+      },
+      "status": "not_encoded",
+      "reason": "ValueError: nonrational scalar condition"
+    }
+  ],
+  "bounds": [
+    "0",
+    "oo",
+    "False",
+    "False"
+  ],
+  "error": "Limit: time budget",
+  "seconds": 120.00100872782059
+}

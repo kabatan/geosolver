@@ -1,0 +1,141 @@
+{
+  "id": "HMMT-2008-FEB-GEO-07",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(O1, O2)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(O1, K)",
+        "operator": "=",
+        "right": "r - 2"
+      },
+      {
+        "left": "Distance(O2, K)",
+        "operator": "=",
+        "right": "r - 3"
+      },
+      {
+        "left": "Distance(O1, A)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Distance(K, A)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Area(O1, K, A)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(O2, B)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(K, B)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Area(O2, K, B)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Perpendicular(Line(A, T), Line(A, K))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Perpendicular(Line(B, T), Line(B, K))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(T, A)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "5"
+      },
+      {
+        "left": "Ky",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(O1, O2, K)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "O1"
+      },
+      {
+        "expression": "Point(5, 0)",
+        "name": "O2"
+      },
+      {
+        "expression": "2 + r / 5",
+        "name": "Kx"
+      },
+      {
+        "expression": "sqrt((r - 2) * (r - 2) - Kx * Kx)",
+        "name": "Ky"
+      },
+      {
+        "expression": "Point(Kx, Ky)",
+        "name": "K"
+      },
+      {
+        "expression": "Circle(O1, 2)",
+        "name": "C1"
+      },
+      {
+        "expression": "Circle(O2, 3)",
+        "name": "C2"
+      },
+      {
+        "expression": "Circle(K, r)",
+        "name": "C3"
+      },
+      {
+        "expression": "Line(O1, K)",
+        "name": "segment_extension_A"
+      },
+      {
+        "expression": "PointOnLine(segment_extension_A, -segment_extension_A.b*(O1.x+(-2 / (r - 2))*(K.x-O1.x))+segment_extension_A.a*(O1.y+(-2 / (r - 2))*(K.y-O1.y)))",
+        "name": "A"
+      },
+      {
+        "expression": "Line(O2, K)",
+        "name": "segment_extension_B"
+      },
+      {
+        "expression": "PointOnLine(segment_extension_B, -segment_extension_B.b*(O2.x+(-3 / (r - 3))*(K.x-O2.x))+segment_extension_B.a*(O2.y+(-3 / (r - 3))*(K.y-O2.y)))",
+        "name": "B"
+      },
+      {
+        "expression": "Intersect(PerpendicularLine(Line(K, A), A), PerpendicularLine(Line(K, B), B))",
+        "name": "T"
+      }
+    ],
+    "id": "HMMT-2008-FEB-GEO-07",
+    "target": "r",
+    "variables": [
+      "r"
+    ]
+  }
+}

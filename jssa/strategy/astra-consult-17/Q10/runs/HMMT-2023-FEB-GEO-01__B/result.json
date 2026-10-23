@@ -1,0 +1,215 @@
+{
+  "id": "HMMT-2023-FEB-GEO-01",
+  "arm": "B",
+  "seed": 10423,
+  "status": "multiple_or_no_allowed_roots",
+  "attempts": [
+    {
+      "start_index": 0,
+      "start": [
+        83.4776415204371,
+        35.53369806891649,
+        55.57682457262307
+      ],
+      "search_seconds": 0.32763822888955474,
+      "x": [
+        8.52913441785817,
+        -2.035132695762048,
+        2.6966394094860267
+      ],
+      "float_residual": 1.0658141036401503e-14,
+      "guard_ok": true,
+      "hard_feasible": true,
+      "hp_residual": "0.0",
+      "rank": 2,
+      "numeric_fixed_columns": [
+        1
+      ],
+      "iterations": 3,
+      "hp_seconds": 0.003820457961410284,
+      "value": "189.0",
+      "hp_coordinates": [
+        "8.529134417858171282260393551583429767370041305768761801406679615760153258955221225237510918870794756",
+        "-2.035132695762048",
+        "2.6966394094860261011838461340649414132354951009114445311782150004429542011567369004143589726413111"
+      ],
+      "original_hp_hard": true,
+      "pslq_seconds": 0.0003868378698825836,
+      "P": "t5 - 189",
+      "P_member": false,
+      "reflection_member": false,
+      "candidate_status": "multiple_or_no_allowed_roots",
+      "Q": "t5**4 - 38322*t5**2 + 92910321",
+      "certificate_kind": "E_fallback",
+      "root_check": {
+        "range": [
+          "0",
+          "oo",
+          false,
+          false
+        ],
+        "real_root_intervals": [
+          [
+            "-189",
+            "-189"
+          ],
+          [
+            "-51",
+            "-51"
+          ],
+          [
+            "51",
+            "51"
+          ],
+          [
+            "189",
+            "189"
+          ]
+        ],
+        "allowed_intervals": [
+          [
+            "51",
+            "51"
+          ],
+          [
+            "189",
+            "189"
+          ]
+        ],
+        "allowed_root_count": 2,
+        "candidate_root_count": 1,
+        "unique": false
+      }
+    }
+  ],
+  "input_sha256": "41c7af337a3ce5e640f9c67c358c4f802da046858c6769e56ccbcaf9aeb7215d",
+  "official_answer_loaded": false,
+  "existing_P_loaded": false,
+  "budget_seconds": 120,
+  "encoding_seconds": 0.052358299028128386,
+  "variables": 8,
+  "equations": 8,
+  "target_symbol": "t5",
+  "nondeg": [
+    "v_s",
+    "v_py",
+    "s1*v_s - 2*v_py",
+    "s1"
+  ],
+  "nondeg_audit": [
+    {
+      "condition": {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      },
+      "nonzero": "v_s",
+      "status": "included"
+    },
+    {
+      "condition": {
+        "left": "py",
+        "operator": ">",
+        "right": "0"
+      },
+      "nonzero": "v_py",
+      "status": "included"
+    },
+    {
+      "condition": {
+        "left": "py",
+        "operator": "<",
+        "right": "sqrt(3) * s / 2"
+      },
+      "nonzero": "-s1*v_s + 2*v_py",
+      "status": "included"
+    },
+    {
+      "condition": {
+        "left": "px",
+        "operator": ">",
+        "right": "-s + py / sqrt(3)"
+      },
+      "nonzero": "s1*v_px + s1*v_s - v_py",
+      "status": "included"
+    },
+    {
+      "condition": {
+        "left": "px",
+        "operator": "<",
+        "right": "s - py / sqrt(3)"
+      },
+      "nonzero": "s1*v_px - s1*v_s + v_py",
+      "status": "included"
+    }
+  ],
+  "bounds": [
+    "0",
+    "oo",
+    "False",
+    "False"
+  ],
+  "search_box": [
+    [
+      0.0,
+      92.0
+    ],
+    [
+      -46.0,
+      46.0
+    ],
+    [
+      0.0,
+      92.0
+    ]
+  ],
+  "setup_seconds": 0.0744302561506629,
+  "numeric_seconds": 0.33218237292021513,
+  "zero_dimensional": true,
+  "proof_seconds": 0.28682683501392603,
+  "certificate_kind": "E_fallback",
+  "P": "t5 - 189",
+  "verification_seconds": 0.001329702092334628,
+  "root_seconds": 0.001524822087958455,
+  "Q": "t5**4 - 38322*t5**2 + 92910321",
+  "root_check": {
+    "range": [
+      "0",
+      "oo",
+      false,
+      false
+    ],
+    "real_root_intervals": [
+      [
+        "-189",
+        "-189"
+      ],
+      [
+        "-51",
+        "-51"
+      ],
+      [
+        "51",
+        "51"
+      ],
+      [
+        "189",
+        "189"
+      ]
+    ],
+    "allowed_intervals": [
+      [
+        "51",
+        "51"
+      ],
+      [
+        "189",
+        "189"
+      ]
+    ],
+    "allowed_root_count": 2,
+    "candidate_root_count": 1,
+    "unique": false
+  },
+  "seconds": 0.6969164849724621
+}

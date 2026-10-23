@@ -1,0 +1,120 @@
+{
+  "id": "HMMT-2023-FEB-GEO-01",
+  "arm": "A",
+  "seed": 10423,
+  "status": "multiple_or_no_allowed_roots",
+  "attempts": [],
+  "input_sha256": "41c7af337a3ce5e640f9c67c358c4f802da046858c6769e56ccbcaf9aeb7215d",
+  "official_answer_loaded": false,
+  "existing_P_loaded": false,
+  "budget_seconds": 120,
+  "encoding_seconds": 0.05266592698171735,
+  "variables": 8,
+  "equations": 8,
+  "target_symbol": "t5",
+  "nondeg": [
+    "v_s",
+    "v_py",
+    "s1*v_s - 2*v_py",
+    "s1"
+  ],
+  "nondeg_audit": [
+    {
+      "condition": {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      },
+      "nonzero": "v_s",
+      "status": "included"
+    },
+    {
+      "condition": {
+        "left": "py",
+        "operator": ">",
+        "right": "0"
+      },
+      "nonzero": "v_py",
+      "status": "included"
+    },
+    {
+      "condition": {
+        "left": "py",
+        "operator": "<",
+        "right": "sqrt(3) * s / 2"
+      },
+      "nonzero": "-s1*v_s + 2*v_py",
+      "status": "included"
+    },
+    {
+      "condition": {
+        "left": "px",
+        "operator": ">",
+        "right": "-s + py / sqrt(3)"
+      },
+      "nonzero": "s1*v_px + s1*v_s - v_py",
+      "status": "included"
+    },
+    {
+      "condition": {
+        "left": "px",
+        "operator": "<",
+        "right": "s - py / sqrt(3)"
+      },
+      "nonzero": "s1*v_px - s1*v_s + v_py",
+      "status": "included"
+    }
+  ],
+  "bounds": [
+    "0",
+    "oo",
+    "False",
+    "False"
+  ],
+  "proof_seconds": 0.33372221514582634,
+  "zero_dimensional": true,
+  "certificate_kind": "E",
+  "verification_seconds": 0.0021679371129721403,
+  "root_seconds": 0.0019234099891036749,
+  "Q": "t5**4 - 38322*t5**2 + 92910321",
+  "root_check": {
+    "range": [
+      "0",
+      "oo",
+      false,
+      false
+    ],
+    "real_root_intervals": [
+      [
+        "-189",
+        "-189"
+      ],
+      [
+        "-51",
+        "-51"
+      ],
+      [
+        "51",
+        "51"
+      ],
+      [
+        "189",
+        "189"
+      ]
+    ],
+    "allowed_intervals": [
+      [
+        "51",
+        "51"
+      ],
+      [
+        "189",
+        "189"
+      ]
+    ],
+    "allowed_root_count": 2,
+    "candidate_root_count": 2,
+    "unique": false
+  },
+  "seconds": 0.3926287570502609
+}

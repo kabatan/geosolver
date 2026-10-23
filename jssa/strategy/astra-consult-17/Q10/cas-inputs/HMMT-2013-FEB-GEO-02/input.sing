@@ -1,0 +1,14 @@
+option(redSB);
+ring r=0,(x0,x1,x2,x3,x4,x5,x6,x7),dp;
+ideal I=4*x0^2 - 4*x5^2 - 25,
+4*x1^2 - 4*x3^2 + 44*x3 - 4*x4^2 + 8*x4*x5 - 4*x5^2 - 121,
+x0 - x1,
+2*x3^2 - 11*x3 + 2*x4^2 - 2*x4*x5,
+x2^2 - x3^2 - x4^2,
+x2 - x7,
+x2*x5*x6 - 1;
+int startTime=rtimer;
+ideal E=eliminate(I,x0*x1*x2*x3*x4*x5*x6);
+print("ELIM");print(E);
+if (E[1]!=0) { matrix C=lift(I,E[1]); poly chk=E[1]; int i; for(i=1;i<=size(I);i++){chk=chk-C[i,1]*I[i];} print("CHECK");print(chk==0);print("COFACTORS");print(C); }
+print("TICKS");print(rtimer-startTime);quit;

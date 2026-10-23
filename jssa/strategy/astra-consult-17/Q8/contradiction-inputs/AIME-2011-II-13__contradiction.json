@@ -1,0 +1,67 @@
+{
+  "id": "AIME-2011-II-13__contradiction",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Angle(O1, P, O2)",
+        "operator": "=",
+        "right": "2 * pi / 3"
+      },
+      {
+        "left": "OnSegment(P, A, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "p",
+        "operator": ">",
+        "right": "6"
+      },
+      {
+        "left": "p",
+        "operator": "<",
+        "right": "12"
+      },
+      {
+        "left": "Distance(A, P)",
+        "operator": ">",
+        "right": "1 + 2*sqrt(2)*(sqrt(3) + 3)"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(12, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(12, 12)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(0, 12)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(p, p)",
+        "name": "P"
+      },
+      {
+        "expression": "Circumcenter(A, B, P)",
+        "name": "O1"
+      },
+      {
+        "expression": "Circumcenter(C, D, P)",
+        "name": "O2"
+      }
+    ],
+    "id": "AIME-2011-II-13__contradiction",
+    "target": "Distance(A, P)",
+    "variables": [
+      "p"
+    ]
+  }
+}

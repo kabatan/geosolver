@@ -1,0 +1,145 @@
+{
+  "id": "AIME-2013-II-08",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(O, A)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(O, B)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(O, C)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(O, D)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(O, E)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(O, F)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 22
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 22
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 20
+      },
+      {
+        "left": "Distance(D, E)",
+        "operator": "=",
+        "right": 22
+      },
+      {
+        "left": "Distance(E, F)",
+        "operator": "=",
+        "right": 22
+      },
+      {
+        "left": "Distance(F, A)",
+        "operator": "=",
+        "right": 20
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "11"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, C, D)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, D, E)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C, D, E, F])"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "O"
+      },
+      {
+        "expression": "1 - 22 * 22 / (2 * r * r)",
+        "name": "c22"
+      },
+      {
+        "expression": "22 * sqrt(4 * r * r - 22 * 22) / (2 * r * r)",
+        "name": "s22"
+      },
+      {
+        "expression": "1 - 20 * 20 / (2 * r * r)",
+        "name": "c20"
+      },
+      {
+        "expression": "20 * sqrt(4 * r * r - 20 * 20) / (2 * r * r)",
+        "name": "s20"
+      },
+      {
+        "expression": "Point(r, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(r * c22, r * s22)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(B.x * c22 - B.y * s22, B.x * s22 + B.y * c22)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(C.x * c20 - C.y * s20, C.x * s20 + C.y * c20)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(D.x * c22 - D.y * s22, D.x * s22 + D.y * c22)",
+        "name": "E"
+      },
+      {
+        "expression": "Point(E.x * c22 - E.y * s22, E.x * s22 + E.y * c22)",
+        "name": "F"
+      },
+      {
+        "expression": "Circle(O, r)",
+        "name": "Gamma"
+      }
+    ],
+    "id": "AIME-2013-II-08",
+    "target": "r",
+    "variables": [
+      "r"
+    ]
+  }
+}

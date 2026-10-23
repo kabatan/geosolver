@@ -1,0 +1,222 @@
+{
+  "id": "AIME-2011-II-13",
+  "input_sha256": "cd9b872943c23c6e024abea83d31b9380f891d5ae9c65c33c533d92b15fbe653",
+  "status": "complete",
+  "answer_set": [
+    {
+      "op": "Mul",
+      "args": [
+        {
+          "rational": "2"
+        },
+        {
+          "op": "Pow",
+          "args": [
+            {
+              "rational": "2"
+            },
+            {
+              "rational": "1/2"
+            }
+          ]
+        },
+        {
+          "poly_coefficients": [
+            "1",
+            "-6",
+            "6"
+          ],
+          "index": 1
+        }
+      ]
+    }
+  ],
+  "answer_decimals": [
+    "13.3842608598049264892047004947"
+  ],
+  "anchor": {
+    "condition": "condition:0",
+    "source_expression": "(2*p**2 - 24*p + sqrt(p**4 - 24*p**3 + 288*p**2 - 1728*p + 5184))/(2*Abs(p**2 - 12*p + 72))",
+    "polynomial": "p**4 - 24*p**3 + 96*p**2 + 576*p - 1728",
+    "coefficients": [
+      "1",
+      "-24",
+      "96",
+      "576",
+      "-1728"
+    ],
+    "degree": 4,
+    "branches": [
+      {
+        "abs_signs": [
+          -1
+        ],
+        "unrad": true,
+        "factor": "p**4 - 24*p**3 + 96*p**2 + 576*p - 1728"
+      },
+      {
+        "abs_signs": [
+          1
+        ],
+        "unrad": true,
+        "factor": "p**4 - 24*p**3 + 96*p**2 + 576*p - 1728"
+      }
+    ],
+    "candidate_count": 1,
+    "failed_anchors": []
+  },
+  "roots": [
+    {
+      "index": 0,
+      "root": {
+        "op": "Mul",
+        "args": [
+          {
+            "rational": "2"
+          },
+          {
+            "poly_coefficients": [
+              "1",
+              "-6",
+              "-18"
+            ],
+            "index": 0
+          }
+        ]
+      },
+      "root_decimal": "-4.39230484541326376116468",
+      "isolating_interval": [
+        "-1542841/351260",
+        "-17576515/4001661"
+      ],
+      "status": "rejected",
+      "reason": "condition:0",
+      "checked_atoms_or_formulas": 13
+    },
+    {
+      "index": 1,
+      "root": {
+        "op": "Mul",
+        "args": [
+          {
+            "rational": "2"
+          },
+          {
+            "poly_coefficients": [
+              "1",
+              "-6",
+              "6"
+            ],
+            "index": 0
+          }
+        ]
+      },
+      "root_decimal": "2.53589838486224541294511",
+      "isolating_interval": [
+        "2672279/1053780",
+        "3912488/1542841"
+      ],
+      "status": "rejected",
+      "reason": "condition:2",
+      "checked_atoms_or_formulas": 15
+    },
+    {
+      "index": 2,
+      "root": {
+        "op": "Mul",
+        "args": [
+          {
+            "rational": "2"
+          },
+          {
+            "poly_coefficients": [
+              "1",
+              "-6",
+              "6"
+            ],
+            "index": 1
+          }
+        ]
+      },
+      "root_decimal": "9.46410161513775458705489",
+      "isolating_interval": [
+        "14601604/1542841",
+        "9973081/1053780"
+      ],
+      "status": "accepted",
+      "target": "2*sqrt(2)*CRootOf(x**2 - 6*x + 6, 1)",
+      "target_wire": {
+        "op": "Mul",
+        "args": [
+          {
+            "rational": "2"
+          },
+          {
+            "op": "Pow",
+            "args": [
+              {
+                "rational": "2"
+              },
+              {
+                "rational": "1/2"
+              }
+            ]
+          },
+          {
+            "poly_coefficients": [
+              "1",
+              "-6",
+              "6"
+            ],
+            "index": 1
+          }
+        ]
+      },
+      "target_decimal": "13.3842608598049264892047004947",
+      "checked_atoms_or_formulas": 16
+    },
+    {
+      "index": 3,
+      "root": {
+        "op": "Mul",
+        "args": [
+          {
+            "rational": "2"
+          },
+          {
+            "poly_coefficients": [
+              "1",
+              "-6",
+              "-18"
+            ],
+            "index": 1
+          }
+        ]
+      },
+      "root_decimal": "16.3923048454132637611647",
+      "isolating_interval": [
+        "65596447/4001661",
+        "5757961/351260"
+      ],
+      "status": "rejected",
+      "reason": "condition:0",
+      "checked_atoms_or_formulas": 13
+    }
+  ],
+  "rewrites": [
+    "condition:0:acos monotonicity"
+  ],
+  "domain_count": 12,
+  "condition_count": 4,
+  "n_real_roots": 4,
+  "n_accepted": 1,
+  "n_rejected": 3,
+  "processing_seconds": 2.6510808628518134,
+  "last_stage": "classify_root:3/4",
+  "max_rss_kib": 63324,
+  "blocked_reads": [],
+  "input_file_sha256": "a341e8df7d159f1e00704492fee8dbaaa044ff8154d0ac7748338f2bd6889685",
+  "preregistration_sha256": "7f87cd89bd6bccfde0a3ba4c9cd3809dd1462c26d2a908b80e23e1a26da811e8",
+  "sympy_version": "1.14.0",
+  "wall_seconds_including_startup": 2.9621926420368254
+}

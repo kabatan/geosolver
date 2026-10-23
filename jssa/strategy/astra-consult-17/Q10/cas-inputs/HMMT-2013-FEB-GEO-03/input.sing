@@ -1,0 +1,31 @@
+option(redSB);
+ring r=0,(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,x16,x17,x18,x19,x20,x21),dp;
+ideal I=x0*x19 - x16*x19 + x17*x18,
+x1*x15*x19 - x15*x16*x19 + x15*x17*x18 - x15*x18*x19 + x16*x18*x19 - x17*x18^2,
+-x15*x19 + x15*x2 + x16*x19 - x17*x18,
+x15*x17 - x15*x19 - x17*x18 + x19*x3,
+-x17*x18 + x19*x4,
+-x15*x17*x18 + x15*x18*x19 + x15*x19*x5 - x16*x18*x19 + x17*x18^2,
+-x15*x17 + x15*x19 + x15*x6 - x16*x19 + x17*x18,
+-x15*x17 + x15*x19 - x16*x19 + x17*x18 + x19*x7,
+x14^2 - x15^2,
+-x15^2 + 2*x15*x18 - x18^2 - x19^2 + x8^2,
+-x18^2 - x19^2 + x9^2,
+-4*x10^2 + x6^2*x7^2,
+x10 - 1,
+x0^2*x17^2 - 2*x0^2*x17*x19 + x0^2*x19^2 - 2*x0*x17^2*x7 + 4*x0*x17*x19*x7 - 2*x0*x19^2*x7 - 4*x11^2 + x17^2*x7^2 - 2*x17*x19*x7^2 + x19^2*x7^2,
+x11 - 4,
+x0^2*x2^2 - 2*x0*x15*x2^2 - 4*x12^2 + x15^2*x2^2,
+x12 - 9,
+x1*x19 - x16*x19 + x17*x18 - x18*x2,
+x1*x19 - x15*x19 + x15*x2 - x18*x2,
+-x18*x6 + x19*x5,
+-x15*x17 + x15*x19 + x15*x6 - x16*x19 + x17*x18 - x18*x6 + x19*x5,
+x0^2*x2^2 + 2*x0*x1*x17*x2 + 2*x0*x17*x2*x3 - 2*x0*x17*x2*x4 - 2*x0*x17*x2*x5 - 2*x0*x2^2*x3 + 2*x0*x2*x4*x6 - 2*x0*x2*x6*x7 + x1^2*x17^2 + 2*x1*x17^2*x3 - 2*x1*x17^2*x4 - 2*x1*x17^2*x5 - 2*x1*x17*x2*x3 + 2*x1*x17*x4*x6 - 2*x1*x17*x6*x7 - 4*x13^2 + x17^2*x3^2 - 2*x17^2*x3*x4 - 2*x17^2*x3*x5 + x17^2*x4^2 + 2*x17^2*x4*x5 + x17^2*x5^2 - 2*x17*x2*x3^2 + 2*x17*x2*x3*x4 + 2*x17*x2*x3*x5 + 2*x17*x3*x4*x6 - 2*x17*x3*x6*x7 - 2*x17*x4^2*x6 - 2*x17*x4*x5*x6 + 2*x17*x4*x6*x7 + 2*x17*x5*x6*x7 + x2^2*x3^2 - 2*x2*x3*x4*x6 + 2*x2*x3*x6*x7 + x4^2*x6^2 - 2*x4*x6^2*x7 + x6^2*x7^2,
+x13 - x21,
+x13*x15*x19*x20 - 1;
+int startTime=rtimer;
+ideal E=eliminate(I,x0*x1*x2*x3*x4*x5*x6*x7*x8*x9*x10*x11*x12*x13*x14*x15*x16*x17*x18*x19*x20);
+print("ELIM");print(E);
+if (E[1]!=0) { matrix C=lift(I,E[1]); poly chk=E[1]; int i; for(i=1;i<=size(I);i++){chk=chk-C[i,1]*I[i];} print("CHECK");print(chk==0);print("COFACTORS");print(C); }
+print("TICKS");print(rtimer-startTime);quit;

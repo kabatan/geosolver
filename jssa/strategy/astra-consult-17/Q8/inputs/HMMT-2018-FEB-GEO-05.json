@@ -1,0 +1,65 @@
+{
+  "id": "HMMT-2018-FEB-GEO-05",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Area(R, A, M)",
+        "operator": "=",
+        "right": "Area(R, E, M)"
+      },
+      {
+        "left": "theta",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "theta",
+        "operator": "<",
+        "right": "pi"
+      },
+      {
+        "predicate": "ConvexPolygon([M, A, R, E])"
+      },
+      {
+        "left": "Area(M, A, R, E)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "O"
+      },
+      {
+        "expression": "Circle(O, 1)",
+        "name": "omega"
+      },
+      {
+        "expression": "Point(1, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(-1, 0)",
+        "name": "M"
+      },
+      {
+        "expression": "Point(cos(theta), sin(theta))",
+        "name": "R"
+      },
+      {
+        "expression": "AngleBisector(R, A, M)",
+        "name": "bis"
+      },
+      {
+        "expression": "Intersect(bis, omega, exclude=A)",
+        "name": "E"
+      }
+    ],
+    "id": "HMMT-2018-FEB-GEO-05",
+    "target": "Area(M, A, R, E)",
+    "variables": [
+      "theta"
+    ]
+  }
+}

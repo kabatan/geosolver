@@ -1,0 +1,19 @@
+option(redSB);
+ring r=0,(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13),dp;
+ideal I=x0^2 - x7^2,
+x1^2 - x10^2 + 2*x10*x11 - x11^2,
+x0 - x1 - 100,
+-9*x10^2*x8^2 + 18*x10*x11*x8^2 + 6*x10*x7*x8^2 - 9*x11^2*x8^2 - 6*x11*x7*x8^2 + 64*x2^2 - x7^2*x8^2,
+-x10^2*x8^2 + 2*x10*x11*x8^2 + 6*x10*x7*x8^2 - x11^2*x8^2 - 6*x11*x7*x8^2 + 64*x3^2 - 9*x7^2*x8^2,
+3*x2 - 2*x3,
+-x10^2*x8^2*x9^4 + 2*x10*x11*x8^2*x9^4 - 2*x10*x7*x8^2*x9^4 + 4*x10*x7*x8^2*x9^3 - x11^2*x8^2*x9^4 + 2*x11*x7*x8^2*x9^4 - 4*x11*x7*x8^2*x9^3 + 4*x4^2 - x7^2*x8^2*x9^4 + 4*x7^2*x8^2*x9^3 - 4*x7^2*x8^2*x9^2,
+-x10^2*x8^2 + 2*x10*x11*x8^2 + 2*x10*x7*x8^2 - x11^2*x8^2 - 2*x11*x7*x8^2 + 4*x5^2 - x7^2*x8^2,
+2*x4 - x5,
+-x10^2*x9^2 + 2*x10*x11*x9^2 - 2*x10*x7*x9^2 + 2*x10*x7*x9 - x11^2*x9^2 + 2*x11*x7*x9^2 - 2*x11*x7*x9 + x6^2 - x7^2*x9^2 + 2*x7^2*x9 - x7^2,
+-x13 + x6,
+x10*x12*x2*x3*x6*x7*x8 - x11*x12*x2*x3*x6*x7*x8 - 1;
+int startTime=rtimer;
+ideal E=eliminate(I,x0*x1*x2*x3*x4*x5*x6*x7*x8*x9*x10*x11*x12);
+print("ELIM");print(E);
+if (E[1]!=0) { matrix C=lift(I,E[1]); poly chk=E[1]; int i; for(i=1;i<=size(I);i++){chk=chk-C[i,1]*I[i];} print("CHECK");print(chk==0);print("COFACTORS");print(C); }
+print("TICKS");print(rtimer-startTime);quit;

@@ -1,0 +1,847 @@
+{
+  "JMO-2017-PRE-01": {
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, B)",
+          "operator": "=",
+          "right": 4
+        },
+        {
+          "left": "Distance(B, C)",
+          "operator": "=",
+          "right": "2 * sqrt(3)"
+        },
+        {
+          "left": "Angle(D, A, B)",
+          "operator": "=",
+          "right": "pi / 6"
+        },
+        {
+          "left": "Angle(A, B, C)",
+          "operator": "=",
+          "right": "pi / 6"
+        },
+        {
+          "left": "Angle(B, C, D)",
+          "operator": "=",
+          "right": "pi / 6"
+        },
+        {
+          "left": "dy",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Area(A, B, C)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Area(A, C, D)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "predicate": "SimplePolygon([A,B,C,D])"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(4, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(1, sqrt(3))",
+          "name": "C"
+        },
+        {
+          "expression": "Point(dx, dy)",
+          "name": "D"
+        }
+      ],
+      "id": "JMO-2017-PRE-01",
+      "target": "Area(A, B, C, D)",
+      "variables": [
+        "dx",
+        "dy"
+      ]
+    },
+    "answer": [
+      "3*sqrt(3)/2"
+    ],
+    "source_in_case": "https://www.imojp.org/archive/mo2017/jmo2017/problems/jmo27yq.html#problem-1",
+    "bounds": [
+      [
+        -12.0,
+        12.0
+      ],
+      [
+        0.0,
+        24.0
+      ]
+    ],
+    "summary": {
+      "id": "JMO-2017-PRE-01",
+      "n": 200,
+      "method": "LM",
+      "classification_mismatches": 0,
+      "missing_coordinates": 0,
+      "F_n": 151,
+      "F_original": {
+        "left_box": 120,
+        "hit": 16,
+        "stuck": 15
+      },
+      "F_without_box": {
+        "stuck": 135,
+        "hit": 16
+      },
+      "F_left_box_without_box": {
+        "stuck": 120
+      },
+      "F_left_box_res": {
+        "n": 120,
+        "min": 1.1708024551838758,
+        "median": 1.1708024577718221,
+        "max": 1.1708024623653983
+      },
+      "F_left_box_ans_ok": 0,
+      "I_n": 49,
+      "I_original": {
+        "stuck": 24,
+        "hit": 22,
+        "left_box": 3
+      },
+      "I_without_box": {
+        "stuck": 27,
+        "hit": 22
+      },
+      "I_left_box_without_box": {
+        "stuck": 3
+      },
+      "I_left_box_res": {
+        "n": 3,
+        "min": 0.5235988738417,
+        "median": 0.5235988991014461,
+        "max": 0.5235989076423629
+      },
+      "I_left_box_ans_ok": 0
+    },
+    "left_box_radius_over_4": {
+      "n": 123,
+      "min": 6.233127012998724,
+      "median": 38.98263105410352,
+      "max": 1347.7975988604767
+    },
+    "left_box_radius_gt100": 24,
+    "left_box_cross_normalized": {
+      "n": 123,
+      "min": -0.8660254040265074,
+      "median": 1.859637008177438e-09,
+      "max": 5.303987297293442e-09
+    },
+    "left_box_answer": {
+      "n": 123,
+      "min": 3.4641016181181565,
+      "median": 3.464101830684275,
+      "max": 4665.44373844262
+    },
+    "side_outcomes": {
+      "F:positive:left_box": 120,
+      "F:positive:hit": 15,
+      "I:negative:stuck": 24,
+      "I:negative:hit": 22,
+      "I:negative:left_box": 3,
+      "F:positive:stuck": 15,
+      "F:negative:hit": 1
+    },
+    "seed1": {
+      "n": 200,
+      "counts": {
+        "left_box": 126,
+        "hit": 53,
+        "stuck": 21
+      },
+      "records_with_start": 0,
+      "records_with_x": 0,
+      "sha256": "ee0da68c0d9906074b6d126338d1f39b2271a70dc28ddac0e872c277f2b24e15"
+    }
+  },
+  "HMMT-2024-FEB-GEO-02": {
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Perpendicular(Line(A, B), Line(A, C))",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Angle(B, A, E)",
+          "operator": "=",
+          "right": "Angle(E, A, C)"
+        },
+        {
+          "left": "Distance(D, E)",
+          "operator": "=",
+          "right": 3
+        },
+        {
+          "left": "Distance(E, F)",
+          "operator": "=",
+          "right": 5
+        },
+        {
+          "left": "s",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "v",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "u",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "u",
+          "operator": "<",
+          "right": "s"
+        },
+        {
+          "left": "e",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "e",
+          "operator": "<",
+          "right": "s"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(s, 0)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(u, v)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(u, 0)",
+          "name": "D"
+        },
+        {
+          "expression": "Point(e, 0)",
+          "name": "E"
+        },
+        {
+          "expression": "Midpoint(B, C)",
+          "name": "F"
+        }
+      ],
+      "id": "HMMT-2024-FEB-GEO-02",
+      "target": "Distance(B, C)",
+      "variables": [
+        "s",
+        "u",
+        "v",
+        "e"
+      ]
+    },
+    "answer": [
+      "20"
+    ],
+    "source_in_case": "https://hmmt-archive.s3.amazonaws.com/tournaments/2024/feb/geo/problems.pdf",
+    "bounds": [
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        20.0
+      ]
+    ],
+    "summary": {
+      "id": "HMMT-2024-FEB-GEO-02",
+      "n": 200,
+      "method": "LM",
+      "classification_mismatches": 0,
+      "missing_coordinates": 0,
+      "F_n": 74,
+      "F_original": {
+        "left_box": 66,
+        "stuck": 2,
+        "hit": 6
+      },
+      "F_without_box": {
+        "stuck": 65,
+        "hit": 8,
+        "wrong_answer": 1
+      },
+      "F_left_box_without_box": {
+        "stuck": 63,
+        "hit": 2,
+        "wrong_answer": 1
+      },
+      "F_left_box_res": {
+        "n": 66,
+        "min": 3.3766115072321297e-16,
+        "median": 3.689669339924004e-08,
+        "max": 1.8984604497793357e-07
+      },
+      "F_left_box_ans_ok": 2,
+      "I_n": 126,
+      "I_original": {
+        "hit": 30,
+        "left_box": 78,
+        "stuck": 18
+      },
+      "I_without_box": {
+        "hit": 35,
+        "stuck": 91
+      },
+      "I_left_box_without_box": {
+        "stuck": 73,
+        "hit": 5
+      },
+      "I_left_box_res": {
+        "n": 78,
+        "min": 1.8285005833896366e-15,
+        "median": 7.285914734125349e-07,
+        "max": 3.499623476160657
+      },
+      "I_left_box_ans_ok": 5
+    },
+    "seed1": {
+      "n": 200,
+      "counts": {
+        "stuck": 24,
+        "hit": 37,
+        "left_box": 139
+      },
+      "records_with_start": 0,
+      "records_with_x": 0,
+      "sha256": "313c4add219bcd72188dc34fb947811f154f9bb588e57a7badb9e7452c2c9fa4"
+    }
+  },
+  "JMO-2017-PRE-04": {
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(O, A)",
+          "operator": "=",
+          "right": "r"
+        },
+        {
+          "left": "Distance(O, D)",
+          "operator": "=",
+          "right": "r"
+        },
+        {
+          "left": "Distance(O, Line(A, C))",
+          "operator": "=",
+          "right": "r"
+        },
+        {
+          "left": "Distance(O, Line(D, C))",
+          "operator": "=",
+          "right": "r"
+        },
+        {
+          "left": "Perpendicular(Line(O, A), Line(A, C))",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Perpendicular(Line(O, D), Line(D, C))",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "h",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "r",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(-2, 0)",
+          "name": "D"
+        },
+        {
+          "expression": "Point(0, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(2, 0)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(1,h)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(ox, oy)",
+          "name": "O"
+        },
+        {
+          "expression": "Circle(O, r)",
+          "name": "Gamma"
+        },
+        {
+          "expression": "Intersect(Line(A, B), Gamma, exclude=A)",
+          "name": "E"
+        },
+        {
+          "expression": "Intersect(Line(C, E), Gamma, exclude=E)",
+          "name": "F"
+        }
+      ],
+      "id": "JMO-2017-PRE-04",
+      "target": "Distance(E, F)",
+      "variables": [
+        "h",
+        "ox",
+        "oy",
+        "r"
+      ]
+    },
+    "answer": [
+      "6"
+    ],
+    "source_in_case": "https://www.imojp.org/archive/mo2017/jmo2017/problems/jmo27yq.html#problem-4",
+    "bounds": [
+      [
+        0.0,
+        20.0
+      ],
+      [
+        -10.0,
+        10.0
+      ],
+      [
+        -10.0,
+        10.0
+      ],
+      [
+        0.0,
+        20.0
+      ]
+    ],
+    "summary": {
+      "id": "JMO-2017-PRE-04",
+      "n": 200,
+      "method": "LM",
+      "classification_mismatches": 0,
+      "missing_coordinates": 0,
+      "F_n": 156,
+      "F_original": {
+        "hit": 71,
+        "left_box": 65,
+        "stuck": 20
+      },
+      "F_without_box": {
+        "hit": 71,
+        "stuck": 85
+      },
+      "F_left_box_without_box": {
+        "stuck": 65
+      },
+      "F_left_box_res": {
+        "n": 65,
+        "min": 0.0017409093422849139,
+        "median": 0.0017606868327734704,
+        "max": 8.954777709778611
+      },
+      "F_left_box_ans_ok": 0,
+      "I_n": 44,
+      "I_original": {
+        "left_box": 16,
+        "hit": 26,
+        "stuck": 2
+      },
+      "I_without_box": {
+        "stuck": 18,
+        "hit": 26
+      },
+      "I_left_box_without_box": {
+        "stuck": 16
+      },
+      "I_left_box_res": {
+        "n": 16,
+        "min": 0.0007386194810862292,
+        "median": 0.0017533724649219616,
+        "max": 5.693402923777712
+      },
+      "I_left_box_ans_ok": 0
+    },
+    "seed1": {
+      "n": 200,
+      "counts": {
+        "left_box": 100,
+        "hit": 77,
+        "stuck": 23
+      },
+      "records_with_start": 0,
+      "records_with_x": 0,
+      "sha256": "7ba0d7867ef76c7d4115743910c6a02c5ad3e539f3a61c88bac1fef2009ced50"
+    }
+  },
+  "HMMT-2007-FEB-GEO-04": {
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(O, A)",
+          "operator": "=",
+          "right": 13
+        },
+        {
+          "left": "IsTangent(Line(B, C), omega)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(B, C)",
+          "operator": "=",
+          "right": 7
+        },
+        {
+          "left": "u",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "v",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Distance(A, B)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Distance(A, C)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Area(A, B, C)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Area(A, B, C)",
+          "operator": "!=",
+          "right": "0"
+        },
+        {
+          "left": "(Vector(B, C).x * Vector(B, O).y - Vector(B, C).y * Vector(B, O).x) * (Vector(B, C).x * Vector(B, A).y - Vector(B, C).y * Vector(B, A).x)",
+          "operator": "<",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "O"
+        },
+        {
+          "expression": "Point(13, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Circle(O, 5)",
+          "name": "omega"
+        },
+        {
+          "expression": "Point(13 - 12 * u / 13, 5 * u / 13)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(13 - 12 * v / 13, -5 * v / 13)",
+          "name": "C"
+        }
+      ],
+      "id": "HMMT-2007-FEB-GEO-04",
+      "target": "Distance(A, B) + Distance(A, C)",
+      "variables": [
+        "u",
+        "v"
+      ]
+    },
+    "answer": [
+      "17"
+    ],
+    "source_in_case": "https://hmmt-archive.s3.amazonaws.com/tournaments/2007/feb/geo/problems.pdf",
+    "bounds": [
+      [
+        0.0,
+        52.0
+      ],
+      [
+        0.0,
+        52.0
+      ]
+    ],
+    "summary": {
+      "id": "HMMT-2007-FEB-GEO-04",
+      "n": 200,
+      "method": "LM",
+      "classification_mismatches": 0,
+      "missing_coordinates": 0,
+      "F_n": 64,
+      "F_original": {
+        "hit": 16,
+        "wrong_answer": 48
+      },
+      "F_without_box": {
+        "hit": 16,
+        "wrong_answer": 48
+      },
+      "F_left_box_without_box": {},
+      "F_left_box_res": {
+        "n": 0
+      },
+      "F_left_box_ans_ok": 0,
+      "I_n": 136,
+      "I_original": {
+        "wrong_answer": 35,
+        "hit": 97,
+        "stuck": 4
+      },
+      "I_without_box": {
+        "wrong_answer": 35,
+        "hit": 97,
+        "stuck": 4
+      },
+      "I_left_box_without_box": {},
+      "I_left_box_res": {
+        "n": 0
+      },
+      "I_left_box_ans_ok": 0
+    },
+    "wrong_answer_coinc": {
+      "n": 83,
+      "min": 1.8338940334403913e-18,
+      "median": 1.4614631387688977e-16,
+      "max": 4.746159643331866e-15
+    },
+    "wrong_answer_min_uv": {
+      "n": 83,
+      "min": 6.198561833028522e-17,
+      "median": 1.752223110492632e-15,
+      "max": 6.238510412495069e-14
+    },
+    "wrong_answer_saturated_polynomial": {
+      "n": 83,
+      "min": 844.9999999999905,
+      "median": 844.9999999999998,
+      "max": 845.0000000000075
+    },
+    "F_wrong_answer_near": 48,
+    "wrong_answer_res": {
+      "n": 83,
+      "min": 8.881784197001252e-16,
+      "median": 1.9860273225978185e-15,
+      "max": 9.180946994883758e-14
+    },
+    "seed1": {
+      "n": 200,
+      "counts": {
+        "hit": 125,
+        "wrong_answer": 75
+      },
+      "records_with_start": 0,
+      "records_with_x": 0,
+      "sha256": "0ac6c539ecd55a0025d28329a985eff10b0ff68f011c0b17fabcb02740816414"
+    }
+  },
+  "AIME-2021-II-14": {
+    "dsl": {
+      "conditions": [
+        {
+          "left": "2 * Angle(A, B, C)",
+          "operator": "=",
+          "right": "13 * Angle(B, C, A)"
+        },
+        {
+          "left": "17 * Angle(B, C, A)",
+          "operator": "=",
+          "right": "2 * Angle(X, O, Y)"
+        },
+        {
+          "left": "bx",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "cy",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Angle(B, A, C)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "predicate": "AcuteTriangle(A, B, C)"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(bx, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(cx, cy)",
+          "name": "C"
+        },
+        {
+          "expression": "Circumcircle(A, B, C)",
+          "name": "Gamma"
+        },
+        {
+          "expression": "Circumcenter(A, B, C)",
+          "name": "O"
+        },
+        {
+          "expression": "Centroid(A, B, C)",
+          "name": "G"
+        },
+        {
+          "expression": "Tangent(A, Gamma)",
+          "name": "tA"
+        },
+        {
+          "expression": "Intersect(tA, PerpendicularLine(G, Line(G, O)))",
+          "name": "X"
+        },
+        {
+          "expression": "Intersect(Line(X, G), Line(B, C))",
+          "name": "Y"
+        }
+      ],
+      "id": "AIME-2021-II-14",
+      "target": "180 * Angle(B, A, C) / pi",
+      "variables": [
+        "bx",
+        "cx",
+        "cy"
+      ]
+    },
+    "answer": [
+      "585/7"
+    ],
+    "source_in_case": "https://huggingface.co/datasets/gneubig/aime-1983-2024/resolve/main/AIME_Dataset_1983_2024.csv",
+    "bounds": [
+      [
+        0.0,
+        68.0
+      ],
+      [
+        -34.0,
+        34.0
+      ],
+      [
+        0.0,
+        68.0
+      ]
+    ],
+    "summary": {
+      "id": "AIME-2021-II-14",
+      "n": 200,
+      "method": "Powell",
+      "classification_mismatches": 0,
+      "missing_coordinates": 0,
+      "F_n": 62,
+      "F_original": {
+        "left_box": 24,
+        "hit": 38
+      },
+      "F_without_box": {
+        "hit": 62
+      },
+      "F_left_box_without_box": {
+        "hit": 24
+      },
+      "F_left_box_res": {
+        "n": 24,
+        "min": 4.461109983245728e-10,
+        "median": 4.4697390294970917e-10,
+        "max": 4.477746682924662e-10
+      },
+      "F_left_box_ans_ok": 24,
+      "F_normalized": {
+        "hit": 62
+      },
+      "I_n": 138,
+      "I_original": {
+        "hit": 106,
+        "left_box": 31,
+        "stuck": 1
+      },
+      "I_without_box": {
+        "hit": 137,
+        "stuck": 1
+      },
+      "I_left_box_without_box": {
+        "hit": 31
+      },
+      "I_left_box_res": {
+        "n": 31,
+        "min": 4.377701645109785e-10,
+        "median": 4.4701153966838363e-10,
+        "max": 4.5557951384506407e-10
+      },
+      "I_left_box_ans_ok": 31,
+      "I_normalized": {
+        "hit": 137,
+        "stuck": 1
+      }
+    },
+    "seed1": {
+      "n": 200,
+      "counts": {
+        "left_box": 47,
+        "hit": 151,
+        "stuck": 2
+      },
+      "records_with_start": 0,
+      "records_with_x": 0,
+      "sha256": "3a6f2ce5af28aec6fde4efcf7f539a21b86b89b21959dfc70ef2fbb6b5439f6d"
+    }
+  }
+}
