@@ -1,0 +1,85 @@
+{
+  "batch": 49,
+  "wave": 1,
+  "state": "stopped",
+  "started_at_utc": "2026-10-23T19:37:27.092025Z",
+  "mode": "original_repeat",
+  "seed": 380102,
+  "case_ids": [
+    "JMO-2022-PRE-04"
+  ],
+  "destination": "/tmp/q38-null-diagnostics-authorized-resume/waves/049-1",
+  "argv": [
+    "prlimit",
+    "--fsize=4900000:4900000",
+    "--",
+    "/tmp/q38-58e3993-venv/bin/python",
+    "-B",
+    "-m",
+    "benchmarks.research_runner",
+    "run",
+    "/tmp/q38-null-diagnostics-authorized-resume/waves/049-1",
+    "--cases",
+    "jssa/difficulty/relabel-invariance/inputs/original/cases.jsonl",
+    "--seeds",
+    "380102",
+    "--jobs",
+    "1",
+    "--case-id",
+    "JMO-2022-PRE-04"
+  ],
+  "load_samples": [
+    {
+      "at_utc": "2026-10-23T19:37:27.099570Z",
+      "loadavg": [
+        19.36962890625,
+        21.3408203125,
+        24.33056640625
+      ],
+      "children": []
+    },
+    {
+      "at_utc": "2026-10-23T19:37:37.100401Z",
+      "loadavg": [
+        20.8056640625,
+        21.56494140625,
+        24.37060546875
+      ],
+      "children": [
+        {
+          "pid": 91,
+          "affinity": [
+            0
+          ],
+          "threads": 1
+        },
+        {
+          "pid": 92,
+          "affinity": [
+            0
+          ],
+          "threads": 2
+        },
+        {
+          "pid": 93,
+          "affinity": [
+            0
+          ],
+          "threads": 2
+        }
+      ]
+    }
+  ],
+  "implementation_sha256": "abd1afa86834393e1ae55b55a3885d080c941711d50b8eee3536d0cff95cb4ba",
+  "pid": 46,
+  "returncode": 2,
+  "error": "RuntimeError('Frozen runner returned 2; stop without retry')",
+  "traceback": "Traceback (most recent call last):\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/relabel-invariance/resume_null_stage2.py\", line 193, in wave\n    s.require(code == 0, f'Frozen runner returned {code}; stop without retry')\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/relabel-invariance/amendment-null-diagnostics/support.py\", line 51, in require\n    raise RuntimeError(message)\nRuntimeError: Frozen runner returned 2; stop without retry\n",
+  "finished_at_utc": "2026-10-23T19:37:42.680167Z",
+  "elapsed_seconds": 15.588030261918902,
+  "final_loadavg": [
+    20.02001953125,
+    21.38916015625,
+    24.29833984375
+  ]
+}

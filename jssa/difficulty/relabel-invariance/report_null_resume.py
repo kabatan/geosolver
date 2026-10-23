@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 import csv
 import datetime as dt
+import hashlib
 import json
 import math
 import statistics
@@ -36,15 +37,45 @@ def load_rows(path):
     return [json.loads(line) for line in path.read_text().splitlines()] if path.exists() else []
 
 
+def check_supplement_evidence(historical_answer):
+    """Verify the sealed report version after publishing a new final answer.
+
+    Only the explicitly archived old answer has a new storage path. Every byte
+    is still checked against the unmodified supplement lock; all other entries
+    are checked at their original paths. This never changes execution checks.
+    """
+    if historical_answer is None:
+        return s.check_supplement_lock()
+    lock = s.read(s.HERE / 'prediction-supplement.lock.json')
+    answer_name = 'jssa/difficulty/relabel-invariance/answer.md'
+    s.require(answer_name in lock['files'], 'Historical answer is not in the sealed manifest')
+    s.require(historical_answer.resolve() != (s.REPO / answer_name).resolve(),
+              'Supply the preserved historical report, not the newly published answer')
+    for name, entry in lock['files'].items():
+        path = historical_answer if name == answer_name else s.REPO / name
+        s.require(s.sha(path) == entry['sha256'] and path.stat().st_size == entry['bytes'],
+                  'Sealed evidence mismatch: ' + name)
+    s.require(hashlib.sha256(s.canonical(lock['files'])).hexdigest() == lock['file_manifest_sha256'],
+              'Supplement manifest mismatch')
+    s.require(s.sha(s.HERE / 'prediction-supplement.md') == lock['prediction_sha256'],
+              'Supplement text changed')
+    return {'files': len(lock['files']), 'lock_sha256': s.sha(s.HERE / 'prediction-supplement.lock.json'),
+            'historical_answer_archive': str(historical_answer.resolve()),
+            'historical_answer_sha256': s.sha(historical_answer),
+            'note': 'The sealed old report is preserved verbatim; the final answer is a new report version.'}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--stopped', action='store_true')
+    parser.add_argument('--historical-answer', type=Path,
+                        help='Explicit byte-identical archive of the report sealed by the amendment')
     args = parser.parse_args()
     s.require(not args.output.exists(), 'Use a new report directory')
     guard = s.install_no_solver_guard()
     original_lock = s.check_original_lock(BASE)
-    supplement_lock = s.check_supplement_lock()
+    supplement_lock = check_supplement_evidence(args.historical_answer)
     s.check_patch()
     preserved = s.read(s.HERE / 'rescore-84/preserved-inputs.json')
     for name, entry in preserved['files'].items():
@@ -58,6 +89,8 @@ def main():
     s.require(not any(p['state'] in ('starting', 'running') for p in all_receipts),
               'Execution still active; do not make a final report')
     wave_receipts = [p for p in all_receipts if 'wave' in p]
+    attempted_wave_cells = {(p['batch'], identifier, p['seed'])
+                            for p in wave_receipts for identifier in p['case_ids']}
     final_receipts = {p['batch']:p for p in all_receipts if 'wave' not in p}
     for previous, current in zip(wave_receipts, wave_receipts[1:]):
         s.require(previous['finished_at_utc'] <= current['started_at_utc'], 'Execution waves overlapped')
@@ -113,8 +146,11 @@ def main():
                               and assessment['failure_stage'] == 'runtime', 'Missing worker must be incorrect')
             wall = assessment['wall_seconds'] if assessment else None
             cost = (min(wall, 180) if matched else 180) if assessment else None
+            attempted = number < 22 or (number, identifier, batch['seed']) in attempted_wave_cells
             row = {'batch':number, 'id':identifier, 'mode':batch['mode'], 'seed':batch['seed'],
-                   'state':'assessed' if assessment else 'unassessed_saved_raw' if raw else 'no_raw',
+                   'state':'assessed' if assessment else 'unassessed_saved_raw' if raw else
+                           'missing_outer_run_after_attempt' if attempted else 'unexecuted',
+                   'execution_attempted':attempted,
                    'matched':matched, 'wall_seconds':wall, 'capped_cost':cost,
                    'worker_artifact_missing':missing,
                    'diagnostics_null': result.get('diagnostics', {}) is None if raw else None,
@@ -244,6 +280,10 @@ def main():
     summary = {'status':'complete' if fully_complete else 'stopped_incomplete', 'generated_at_utc':s.now(),
                'analysis_solver_calls':0, 'analysis_grading_calls':0,
                'planned_runs':840, 'raw_received':len(manifests),
+               'attempted_runs':sum(x['execution_attempted'] for x in rows),
+               'raw_missing_after_attempt':sum(x['state'] == 'missing_outer_run_after_attempt' for x in rows),
+               'unexecuted_runs':sum(x['state'] == 'unexecuted' for x in rows),
+               'unassessed_saved_runs':sum(x['state'] == 'unassessed_saved_raw' for x in rows),
                'assessed_runs':sum(x['matched'] is not None for x in rows),
                'matched':sum(x['matched'] is True for x in rows),
                'incorrect':sum(x['matched'] is False for x in rows),
@@ -263,6 +303,10 @@ def main():
                'discordant_seed_pairs':sum(p['correctness_discordant'] is True for p in main_pairs),
                'point_names_A':point_A,'point_names_T':point_T,'variable_order_T_problem_count':len(variable_T_ids),
                'predictions':predictions, 'complete_problem_count':sum(p['all_21_assessed'] for p in problems),
+               'complete_subset_A_count':sum(p['A'] is True for p in problems if p['all_21_assessed']),
+               'complete_subset_T_count':sum(p['T'] is True for p in problems if p['all_21_assessed']),
+               'complete_subset_repeat_A_count':sum(p['repeat_A'] is True for p in problems if p['all_21_assessed']),
+               'complete_subset_repeat_T_count':sum(p['repeat_T'] is True for p in problems if p['all_21_assessed']),
                'worker_import_observed_count':sum(bool(x['worker_import_root']) for x in rows),
                'worker_import_roots':sorted({x['worker_import_root'] for x in rows if x['worker_import_root']}),
                'loadavg_min':[min(x[i] for x in loads) for i in range(3)],
