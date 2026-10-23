@@ -1,0 +1,4813 @@
+[
+  {
+    "id": "AIME-2006-II-09",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "IsTangent(t1, C1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(t1, C2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(t2, C2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(t2, C3)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "m1",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "m2",
+          "operator": "<",
+          "right": "0"
+        },
+        {
+          "left": "b1 * (12 * m1 + b1)",
+          "operator": "<",
+          "right": "0"
+        },
+        {
+          "left": "(12 * m2 + b2) * (24 * m2 + b2)",
+          "operator": "<",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "O1"
+        },
+        {
+          "expression": "Point(12, 0)",
+          "name": "O2"
+        },
+        {
+          "expression": "Point(24, 0)",
+          "name": "O3"
+        },
+        {
+          "expression": "Circle(O1, 1)",
+          "name": "C1"
+        },
+        {
+          "expression": "Circle(O2, 2)",
+          "name": "C2"
+        },
+        {
+          "expression": "Circle(O3, 4)",
+          "name": "C3"
+        },
+        {
+          "expression": "Line(m1, -1, b1)",
+          "name": "t1"
+        },
+        {
+          "expression": "Line(m2, -1, b2)",
+          "name": "t2"
+        },
+        {
+          "expression": "Intersect(t1, t2)",
+          "name": "T"
+        }
+      ],
+      "id": "AIME-2006-II-09",
+      "target": "T.x",
+      "variables": [
+        "m1",
+        "b1",
+        "m2",
+        "b2"
+      ]
+    },
+    "dsl_sha256": "4891404dae4099d97c81e3ce88cb0bf1258e9614ab735e23898d71541e76f6b6",
+    "raw_sha256": "b494ba6ca7621ab4b6ea102f76fdf59556f62945cf4fed2007fa0977a58e18d1",
+    "old12": false,
+    "diagnosis": {
+      "n_vars": 4,
+      "n_equalities": 4,
+      "tangencies": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 61,
+    "missing_reason": null
+  },
+  {
+    "id": "AIME-2013-II-04",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, C)",
+          "operator": "=",
+          "right": "Distance(A, B)"
+        },
+        {
+          "left": "Distance(B, C)",
+          "operator": "=",
+          "right": "Distance(A, B)"
+        },
+        {
+          "left": "Distance(P, Centroid(A, B, C))",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "cx",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "cy",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "px",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "py",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(1, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(2, 2 * sqrt(3))",
+          "name": "B"
+        },
+        {
+          "expression": "Point(cx, cy)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(px, py)",
+          "name": "P"
+        }
+      ],
+      "id": "AIME-2013-II-04",
+      "target": "px * py",
+      "variables": [
+        "cx",
+        "cy",
+        "px",
+        "py"
+      ]
+    },
+    "dsl_sha256": "283b87ba7d8f5d8a5f40fda4e13291f77102b5e7a6f08817fa2acf36d7ff2483",
+    "raw_sha256": "f4deffd7273bc9a1f5c8e44ce0caf4abc6f8eb8a090afcfb9162498f1f52f928",
+    "old12": false,
+    "diagnosis": {
+      "n_vars": 4,
+      "n_equalities": 3,
+      "tangencies": [],
+      "distances": [
+        2
+      ],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": false,
+      "d_applicable": true,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 88,
+    "missing_reason": null
+  },
+  {
+    "id": "AIME-2015-II-15",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "OnCircle(B, omega1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(C, omega2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(Line(B, C), omega1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(Line(B, C), omega2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(D, omega1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(E, omega2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnLine(E, A, D)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Area(D, B, A)",
+          "operator": "=",
+          "right": "Area(A, C, E)"
+        },
+        {
+          "left": "(Vector(A, B).x * Vector(A, D).y - Vector(A, B).y * Vector(A, D).x) * (Vector(A, C).x * Vector(A, D).y - Vector(A, C).y * Vector(A, D).x)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Distance(A, D)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Distance(A, E)",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "O1"
+        },
+        {
+          "expression": "Point(5, 0)",
+          "name": "O2"
+        },
+        {
+          "expression": "Point(1, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Circle(O1, 1)",
+          "name": "omega1"
+        },
+        {
+          "expression": "Circle(O2, 4)",
+          "name": "omega2"
+        },
+        {
+          "expression": "Point(-3 / 5, 4 / 5)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(13 / 5, 16 / 5)",
+          "name": "C"
+        },
+        {
+          "expression": "Line(A, Point(A.x + cos(theta), A.y + sin(theta)))",
+          "name": "L"
+        },
+        {
+          "expression": "Intersect(L, omega1, exclude=A)",
+          "name": "D"
+        },
+        {
+          "expression": "Intersect(L, omega2, exclude=A)",
+          "name": "E"
+        }
+      ],
+      "id": "AIME-2015-II-15",
+      "target": "Area(D, B, A)",
+      "variables": [
+        "theta"
+      ]
+    },
+    "dsl_sha256": "f2f2764536d7f36bab149783ce65b457c666649e6f40eaa626eb4e1a76464935",
+    "raw_sha256": "6f253847eab840463775f5dc05594142da2f70835839a9ccdbe7af7d1915121e",
+    "old12": true,
+    "diagnosis": {
+      "n_vars": 1,
+      "n_equalities": 8,
+      "tangencies": [
+        2,
+        3
+      ],
+      "distances": [],
+      "contacts": [
+        {
+          "index": 2,
+          "source": "((Center(omega1).x-(B).x)*((C).x-(B).x)+(Center(omega1).y-(B).y)*((C).y-(B).y))/Distance((B),(C))",
+          "variables": [],
+          "incidence": "other_equalities",
+          "active": false
+        },
+        {
+          "index": 3,
+          "source": "((Center(omega2).x-(C).x)*((C).x-(B).x)+(Center(omega2).y-(C).y)*((C).y-(B).y))/Distance((B),(C))",
+          "variables": [],
+          "incidence": "other_equalities",
+          "active": false
+        }
+      ],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 159,
+    "missing_reason": null
+  },
+  {
+    "id": "AIME-2016-I-15",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "OnCircle(X, omega1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(X, omega2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(Y, omega1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(Y, omega2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(Line(A, B), omega1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(Line(A, B), omega2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(D, omega1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(C, omega2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(C, omega)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnLine(C, Y, D)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(X, C)",
+          "operator": "=",
+          "right": 67
+        },
+        {
+          "left": "Distance(X, Y)",
+          "operator": "=",
+          "right": 47
+        },
+        {
+          "left": "Distance(X, D)",
+          "operator": "=",
+          "right": 37
+        },
+        {
+          "left": "b",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "r1",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "r2",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Distance(X, Line(A, B))",
+          "operator": "<",
+          "right": "Distance(Y, Line(A, B))"
+        },
+        {
+          "left": "Distance(D, A)",
+          "operator": "!=",
+          "right": "0"
+        },
+        {
+          "left": "Distance(C, B)",
+          "operator": "!=",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(b, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(0, r1)",
+          "name": "O1"
+        },
+        {
+          "expression": "Point(b, r2)",
+          "name": "O2"
+        },
+        {
+          "expression": "Circle(O1, r1)",
+          "name": "omega1"
+        },
+        {
+          "expression": "Circle(O2, r2)",
+          "name": "omega2"
+        },
+        {
+          "expression": "Midpoint(A, B)",
+          "name": "M"
+        },
+        {
+          "expression": "Intersect(omega1, omega2, near=M)",
+          "name": "X"
+        },
+        {
+          "expression": "Intersect(omega1, omega2, exclude=X)",
+          "name": "Y"
+        },
+        {
+          "expression": "Point(dx, dy)",
+          "name": "D"
+        },
+        {
+          "expression": "Circumcircle(A, B, D)",
+          "name": "omega"
+        },
+        {
+          "expression": "Intersect(omega, omega2, exclude=B)",
+          "name": "C"
+        }
+      ],
+      "id": "AIME-2016-I-15",
+      "target": "Distance(A, B) * Distance(A, B)",
+      "variables": [
+        "b",
+        "r1",
+        "r2",
+        "dx",
+        "dy"
+      ]
+    },
+    "dsl_sha256": "f6d2281db4ca0830da4c1cb61403b6038cc4f57c577821afa50a96a88cd9a2f8",
+    "raw_sha256": "15f6cb61fa9314ec581e43899c2173205d56adbcb932d6a8f2ed44266d1842e5",
+    "old12": false,
+    "diagnosis": {
+      "n_vars": 5,
+      "n_equalities": 13,
+      "tangencies": [
+        4,
+        5
+      ],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 2,
+    "raw_count": 118,
+    "usable_count": 2,
+    "missing_reason": null
+  },
+  {
+    "id": "AIME-2018-II-14",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, C)",
+          "operator": "=",
+          "right": 8
+        },
+        {
+          "left": "Collinear(A, Q, C)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(Q, A, C)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnLine(Y, P, Q)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(Line(P, Q), omega)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "cy",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "qx",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "qy",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(7, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(cx, cy)",
+          "name": "C"
+        },
+        {
+          "expression": "Incenter(A, B, C)",
+          "name": "I"
+        },
+        {
+          "expression": "Incircle(A, B, C)",
+          "name": "omega"
+        },
+        {
+          "expression": "IncircleContactPoint(A, B, C, side='BC')",
+          "name": "X"
+        },
+        {
+          "expression": "Intersect(Line(A, X), omega, exclude=X)",
+          "name": "Y"
+        },
+        {
+          "expression": "Point(3, 0)",
+          "name": "P"
+        },
+        {
+          "expression": "Point(qx, qy)",
+          "name": "Q"
+        }
+      ],
+      "id": "AIME-2018-II-14",
+      "target": "Distance(A, Q)",
+      "variables": [
+        "cx",
+        "cy",
+        "qx",
+        "qy"
+      ]
+    },
+    "dsl_sha256": "70666dda58d30627bb6740037421c0c29a5c5d4c7ede8ca4f67309cb5ac79fe0",
+    "raw_sha256": "55f1ea3527de9443d0aafff2d5ccd3f72b97c5de1380bcbf9d6a1c3f84303183",
+    "old12": true,
+    "diagnosis": {
+      "n_vars": 4,
+      "n_equalities": 6,
+      "tangencies": [
+        4
+      ],
+      "distances": [],
+      "contacts": [
+        {
+          "index": 4,
+          "source": "((Center(omega).x-(Y).x)*((Q).x-(P).x)+(Center(omega).y-(Y).y)*((Q).y-(P).y))/Distance((P),(Q))",
+          "variables": [
+            "cx",
+            "cy",
+            "qx",
+            "qy"
+          ],
+          "incidence": "other_equalities",
+          "active": true
+        }
+      ],
+      "radius_sources": [],
+      "q_active": true,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 143,
+    "missing_reason": null
+  },
+  {
+    "id": "AIME-2020-II-04",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(RA, Ap)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(RB, Bp)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(RC, Cp)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "m",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "m",
+          "operator": "<",
+          "right": "180"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(0, 12)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(16, 0)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(24, 18)",
+          "name": "Ap"
+        },
+        {
+          "expression": "Point(36, 18)",
+          "name": "Bp"
+        },
+        {
+          "expression": "Point(24, 2)",
+          "name": "Cp"
+        },
+        {
+          "expression": "Point(x, y)",
+          "name": "K"
+        },
+        {
+          "expression": "Rotate(A, -m * pi / 180, K)",
+          "name": "RA"
+        },
+        {
+          "expression": "Rotate(B, -m * pi / 180, K)",
+          "name": "RB"
+        },
+        {
+          "expression": "Rotate(C, -m * pi / 180, K)",
+          "name": "RC"
+        }
+      ],
+      "id": "AIME-2020-II-04",
+      "target": "m + x + y",
+      "variables": [
+        "m",
+        "x",
+        "y"
+      ]
+    },
+    "dsl_sha256": "30c6ab0a3a280b64220f338cfe88f76f0523b2302dfa22835e5318737facf302",
+    "raw_sha256": "909cf15f7a23cf0a35b9564f08b79d09f3a95a63e98c892181c4101a98c9eaf3",
+    "old12": false,
+    "diagnosis": {
+      "n_vars": 3,
+      "n_equalities": 3,
+      "tangencies": [],
+      "distances": [
+        0,
+        1,
+        2
+      ],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": false,
+      "d_applicable": true,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 175,
+    "missing_reason": null
+  },
+  {
+    "id": "AIME-2022-I-11",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "OnCircle(P, omega)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(Q, omega)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnLine(P, A, C)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnLine(Q, A, C)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(Line(D, A), omega)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(Line(A, B), omega)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(Line(B, C), omega)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(A, P)",
+          "operator": "=",
+          "right": 3
+        },
+        {
+          "left": "Distance(P, Q)",
+          "operator": "=",
+          "right": 9
+        },
+        {
+          "left": "Distance(Q, C)",
+          "operator": "=",
+          "right": 16
+        },
+        {
+          "left": "by",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "r",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Dot(Vector(A, B), Vector(A, D))",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(bx, by)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(28, 0)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(28 - bx, -by)",
+          "name": "D"
+        },
+        {
+          "expression": "Point(3, 0)",
+          "name": "P"
+        },
+        {
+          "expression": "Point(12, 0)",
+          "name": "Q"
+        },
+        {
+          "expression": "Point(15 / 2, oy)",
+          "name": "O"
+        },
+        {
+          "expression": "Distance(O, P)",
+          "name": "r"
+        },
+        {
+          "expression": "Circle(O, r)",
+          "name": "omega"
+        }
+      ],
+      "id": "AIME-2022-I-11",
+      "target": "Area(A, B, C, D)",
+      "variables": [
+        "bx",
+        "by",
+        "oy"
+      ]
+    },
+    "dsl_sha256": "527eade4e290cb1316f6e6d5d69ce3f35aee4eada991dfa01920c63ecde1b613",
+    "raw_sha256": "23edccfc968565ba536d05fba362f5822bbe64f23d47155972b003afeb13317e",
+    "old12": false,
+    "diagnosis": {
+      "n_vars": 3,
+      "n_equalities": 10,
+      "tangencies": [
+        4,
+        5,
+        6
+      ],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 78,
+    "missing_reason": null
+  },
+  {
+    "id": "AIME-2022-II-07",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "IsTangent(l1, C1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(l1, C2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(l2, C1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(l2, C2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "m",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "O1"
+        },
+        {
+          "expression": "Point(30, 0)",
+          "name": "O2"
+        },
+        {
+          "expression": "Circle(O1, 6)",
+          "name": "C1"
+        },
+        {
+          "expression": "Circle(O2, 24)",
+          "name": "C2"
+        },
+        {
+          "expression": "Point(6, 0)",
+          "name": "T"
+        },
+        {
+          "expression": "Line(Point(6, 0), Point(6, 1))",
+          "name": "l0"
+        },
+        {
+          "expression": "Line(m, -1, b)",
+          "name": "l1"
+        },
+        {
+          "expression": "Line(-m, -1, -b)",
+          "name": "l2"
+        },
+        {
+          "expression": "Intersect(l1, l2)",
+          "name": "V"
+        },
+        {
+          "expression": "Intersect(l0, l1)",
+          "name": "W1"
+        },
+        {
+          "expression": "Intersect(l0, l2)",
+          "name": "W2"
+        }
+      ],
+      "id": "AIME-2022-II-07",
+      "target": "Area(V, W1, W2)",
+      "variables": [
+        "m",
+        "b"
+      ]
+    },
+    "dsl_sha256": "f408b663ea831cc1b62bfa0bf44285a75ab44427a25a3c8d816b48c20193ac10",
+    "raw_sha256": "942f5fedeaf4019d50b3f6f0931ba22cf177bc93843cd5682c3f01dd84964f07",
+    "old12": false,
+    "diagnosis": {
+      "n_vars": 2,
+      "n_equalities": 4,
+      "tangencies": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 14,
+    "missing_reason": null
+  },
+  {
+    "id": "AIME-2022-II-11",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, B)",
+          "operator": "=",
+          "right": 2
+        },
+        {
+          "left": "Distance(A, D)",
+          "operator": "=",
+          "right": 7
+        },
+        {
+          "left": "Distance(C, D)",
+          "operator": "=",
+          "right": 3
+        },
+        {
+          "left": "Distance(M, Line(A, I1))",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(M, Line(D, I2))",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "by",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "dy",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "cy",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "predicate": "ConvexPolygon([A, B, C, D])"
+        },
+        {
+          "left": "Angle(D, A, B)",
+          "operator": "<",
+          "right": "pi / 2"
+        },
+        {
+          "left": "Angle(A, D, C)",
+          "operator": "<",
+          "right": "pi / 2"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(bx, by)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(cx, cy)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(dx, dy)",
+          "name": "D"
+        },
+        {
+          "expression": "Midpoint(B, C)",
+          "name": "M"
+        },
+        {
+          "expression": "Incenter(A, B, D)",
+          "name": "I1"
+        },
+        {
+          "expression": "Incenter(A, C, D)",
+          "name": "I2"
+        }
+      ],
+      "id": "AIME-2022-II-11",
+      "target": "Area(A, B, C, D) ** 2",
+      "variables": [
+        "bx",
+        "by",
+        "dx",
+        "dy",
+        "cx",
+        "cy"
+      ]
+    },
+    "dsl_sha256": "db835770c3c3602023fcbe2a613876f4fad7019de12ff59e712dfb02e20758f9",
+    "raw_sha256": "ae0215c2e0abe1138a8952bb6ccd74e3c12684a14f264e2e9ff2b0a9da149c90",
+    "old12": false,
+    "diagnosis": {
+      "n_vars": 6,
+      "n_equalities": 5,
+      "tangencies": [],
+      "distances": [
+        3,
+        4
+      ],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": false,
+      "d_applicable": true,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 4,
+    "usable_count": 3,
+    "missing_reason": null
+  },
+  {
+    "id": "HMMT-2006-FEB-GEO-01",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, Aclose)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "g",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "h",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(1, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(1 + sqrt(2), sqrt(2))",
+          "name": "C"
+        },
+        {
+          "expression": "Point(1 + sqrt(2), 3 + sqrt(2))",
+          "name": "D"
+        },
+        {
+          "expression": "Point(1 - sqrt(2), 3 + 3 * sqrt(2))",
+          "name": "E"
+        },
+        {
+          "expression": "Point(-1 - sqrt(2), 3 + 3 * sqrt(2))",
+          "name": "F"
+        },
+        {
+          "expression": "Point(-1 - 2 * sqrt(2), 3 + 2 * sqrt(2))",
+          "name": "G"
+        },
+        {
+          "expression": "Point(-1 - 2 * sqrt(2), 3 + 2 * sqrt(2) - g)",
+          "name": "H"
+        },
+        {
+          "expression": "Point(-1 - 2 * sqrt(2) + h / sqrt(2), 3 + 2 * sqrt(2) - g - h / sqrt(2))",
+          "name": "Aclose"
+        }
+      ],
+      "id": "HMMT-2006-FEB-GEO-01",
+      "target": "1 + 2 + 3 + 4 + 2 + 2 + g + h",
+      "variables": [
+        "g",
+        "h"
+      ]
+    },
+    "dsl_sha256": "2f42e2ee3672a2b40b2c98dccaf806e548feae2835d04e3561bbd875b5780046",
+    "raw_sha256": "54fd66945632bf7d35ec8bb0c6cadd46ca9fcc3e681e805a4e84bc737c9f5554",
+    "old12": false,
+    "diagnosis": {
+      "n_vars": 2,
+      "n_equalities": 1,
+      "tangencies": [],
+      "distances": [
+        0
+      ],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": false,
+      "d_applicable": true,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 200,
+    "missing_reason": null
+  },
+  {
+    "id": "HMMT-2006-FEB-GEO-10",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, B)",
+          "operator": "=",
+          "right": 65
+        },
+        {
+          "left": "Distance(B, C)",
+          "operator": "=",
+          "right": 33
+        },
+        {
+          "left": "Distance(A, C)",
+          "operator": "=",
+          "right": 56
+        },
+        {
+          "left": "Distance(O, T)",
+          "operator": "=",
+          "right": "Radius(Gamma) - r"
+        },
+        {
+          "left": "r",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "r",
+          "operator": "<",
+          "right": "33"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(56, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(0, 33)",
+          "name": "B"
+        },
+        {
+          "expression": "Circumcircle(A, B, C)",
+          "name": "Gamma"
+        },
+        {
+          "expression": "Center(Gamma)",
+          "name": "O"
+        },
+        {
+          "expression": "Point(r, r)",
+          "name": "T"
+        },
+        {
+          "expression": "Circle(T, r)",
+          "name": "omega"
+        }
+      ],
+      "id": "HMMT-2006-FEB-GEO-10",
+      "target": "r",
+      "variables": [
+        "r"
+      ]
+    },
+    "dsl_sha256": "f0002addefe5f01a76ed079cc5e4b7febc62ba14a56b9a48731c9ba272d967fb",
+    "raw_sha256": "725a7b310e17ad80400edb360984012d89d847f44cfbacaa2ca15bea15cecf97",
+    "old12": false,
+    "diagnosis": {
+      "n_vars": 1,
+      "n_equalities": 4,
+      "tangencies": [],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [
+        "2*(((0)-Center(Gamma).x)*(1)+((0)-Center(Gamma).y)*(1)+Radius(Gamma))+r*(((1)**2)+((1)**2)-1)"
+      ],
+      "q_active": false,
+      "s_applicable": false,
+      "d_applicable": false,
+      "r_applicable": true
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 200,
+    "missing_reason": null
+  },
+  {
+    "id": "HMMT-2007-FEB-GEO-04",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(O, A)",
+          "operator": "=",
+          "right": 13
+        },
+        {
+          "left": "IsTangent(Line(B, C), omega)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(B, C)",
+          "operator": "=",
+          "right": 7
+        },
+        {
+          "left": "u",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "v",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Distance(A, B)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Distance(A, C)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Area(A, B, C)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Area(A, B, C)",
+          "operator": "!=",
+          "right": "0"
+        },
+        {
+          "left": "(Vector(B, C).x * Vector(B, O).y - Vector(B, C).y * Vector(B, O).x) * (Vector(B, C).x * Vector(B, A).y - Vector(B, C).y * Vector(B, A).x)",
+          "operator": "<",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "O"
+        },
+        {
+          "expression": "Point(13, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Circle(O, 5)",
+          "name": "omega"
+        },
+        {
+          "expression": "Point(13 - 12 * u / 13, 5 * u / 13)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(13 - 12 * v / 13, -5 * v / 13)",
+          "name": "C"
+        }
+      ],
+      "id": "HMMT-2007-FEB-GEO-04",
+      "target": "Distance(A, B) + Distance(A, C)",
+      "variables": [
+        "u",
+        "v"
+      ]
+    },
+    "dsl_sha256": "e98a932af8de9c99636e7012b1e131580e72903931cf06e8a4468efb62682e70",
+    "raw_sha256": "aa6a3bbd5f8585274df23a4b4a786b0fe44ed1992e34c663bef3d0f2d9c54672",
+    "old12": false,
+    "diagnosis": {
+      "n_vars": 2,
+      "n_equalities": 3,
+      "tangencies": [
+        1
+      ],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 199,
+    "missing_reason": null
+  },
+  {
+    "id": "HMMT-2008-FEB-GEO-09",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(B, I)",
+          "operator": "=",
+          "right": 6
+        },
+        {
+          "left": "Distance(C, I)",
+          "operator": "=",
+          "right": 5
+        },
+        {
+          "left": "Distance(D, I)",
+          "operator": "=",
+          "right": 3
+        },
+        {
+          "left": "IsTangent(Line(A, B), incircle)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(Line(A, C), incircle)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "ay",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Distance(D, P)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Distance(D, Q)",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "D"
+        },
+        {
+          "expression": "Point(0, 3)",
+          "name": "I"
+        },
+        {
+          "expression": "Circle(I, 3)",
+          "name": "incircle"
+        },
+        {
+          "expression": "Point(-3 * sqrt(3), 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(4, 0)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(ax, ay)",
+          "name": "A"
+        },
+        {
+          "expression": "Circle(Midpoint(A, I), Distance(A, I) / 2)",
+          "name": "Delta"
+        },
+        {
+          "expression": "Intersect(Line(B, I), Delta, exclude=I)",
+          "name": "P"
+        },
+        {
+          "expression": "Intersect(Line(C, I), Delta, exclude=I)",
+          "name": "Q"
+        }
+      ],
+      "id": "HMMT-2008-FEB-GEO-09",
+      "target": "Distance(D, P) / Distance(D, Q) * (Distance(D, P) / Distance(D, Q))",
+      "variables": [
+        "ax",
+        "ay"
+      ]
+    },
+    "dsl_sha256": "a40cffcc7d9181e326ff822f3be8d08c8c18c6891d4d31c05965075b1ef9fe20",
+    "raw_sha256": "9e214031c433d4ac68d8041dc1109909d73650b964821018dc0c77e5fc90465c",
+    "old12": true,
+    "diagnosis": {
+      "n_vars": 2,
+      "n_equalities": 5,
+      "tangencies": [
+        3,
+        4
+      ],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 136,
+    "missing_reason": null
+  },
+  {
+    "id": "HMMT-2009-FEB-GEO-01",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "f",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "g",
+          "operator": ">",
+          "right": "f"
+        },
+        {
+          "left": "g",
+          "operator": "<",
+          "right": "8"
+        },
+        {
+          "left": "Distance(U,V)",
+          "operator": "=",
+          "right": "0"
+        },
+        {
+          "predicate": "Or(And((Vector(A,B).x*Vector(A,U).y-Vector(A,B).y*Vector(A,U).x)>0,(Vector(B,G).x*Vector(B,U).y-Vector(B,G).y*Vector(B,U).x)>0,(Vector(G,F).x*Vector(G,U).y-Vector(G,F).y*Vector(G,U).x)>0,(Vector(F,A).x*Vector(F,U).y-Vector(F,A).y*Vector(F,U).x)>0),And((Vector(A,B).x*Vector(A,U).y-Vector(A,B).y*Vector(A,U).x)<0,(Vector(B,G).x*Vector(B,U).y-Vector(B,G).y*Vector(B,U).x)<0,(Vector(G,F).x*Vector(G,U).y-Vector(G,F).y*Vector(G,U).x)<0,(Vector(F,A).x*Vector(F,U).y-Vector(F,A).y*Vector(F,U).x)<0))"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0,0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(8,0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(8,5)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(0,5)",
+          "name": "D"
+        },
+        {
+          "expression": "Point(f,5)",
+          "name": "F"
+        },
+        {
+          "expression": "Point(g,5)",
+          "name": "G"
+        },
+        {
+          "expression": "Reflect(D,Line(A,F))",
+          "name": "U"
+        },
+        {
+          "expression": "Reflect(C,Line(B,G))",
+          "name": "V"
+        }
+      ],
+      "id": "HMMT-2009-FEB-GEO-01",
+      "target": "Area(A,B,G,F)",
+      "variables": [
+        "f",
+        "g"
+      ]
+    },
+    "dsl_sha256": "2d3e36bd15da93a58a296009b65df7fdd6f7c8ffe60422553cae9eb2b246408b",
+    "raw_sha256": "0ae852254220e5040186b4c7da599ac29405b5f0799f14013abda2261a7266ef",
+    "old12": false,
+    "diagnosis": {
+      "n_vars": 2,
+      "n_equalities": 1,
+      "tangencies": [],
+      "distances": [
+        0
+      ],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": false,
+      "d_applicable": true,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 195,
+    "missing_reason": null
+  },
+  {
+    "id": "HMMT-2009-FEB-GEO-10",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, B)",
+          "operator": "=",
+          "right": 7
+        },
+        {
+          "left": "Area(P, C, D)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(Line(C, D), omega)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Perpendicular(Line(A, D), Line(A, O))",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Perpendicular(Line(B, C), Line(B, O))",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(B, C)",
+          "operator": "=",
+          "right": 2
+        },
+        {
+          "left": "Distance(A, D)",
+          "operator": "=",
+          "right": 3
+        },
+        {
+          "left": "p",
+          "operator": ">",
+          "right": "7"
+        },
+        {
+          "left": "k",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "u",
+          "operator": "!=",
+          "right": "0"
+        },
+        {
+          "left": "v",
+          "operator": "!=",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(7, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(p, 0)",
+          "name": "P"
+        },
+        {
+          "expression": "Point(3.5, k)",
+          "name": "O"
+        },
+        {
+          "expression": "Circle(O, sqrt(k * k + 12.25))",
+          "name": "omega"
+        },
+        {
+          "expression": "Point(7 + v * k, v * 3.5)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(u * k, -u * 3.5)",
+          "name": "D"
+        }
+      ],
+      "id": "HMMT-2009-FEB-GEO-10",
+      "target": "Distance(B, P)",
+      "variables": [
+        "p",
+        "k",
+        "u",
+        "v"
+      ]
+    },
+    "dsl_sha256": "a5a388354fb1337e6ed0d4284a7e8bbb0ccf012ac08d5e2ab1725ae3c3e0ab0a",
+    "raw_sha256": "2e88aa259e71e1684032c2c015b119d14b9cb64ea4f98c9181adba06f28281a7",
+    "old12": true,
+    "diagnosis": {
+      "n_vars": 4,
+      "n_equalities": 7,
+      "tangencies": [
+        2
+      ],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 17,
+    "missing_reason": null
+  },
+  {
+    "id": "HMMT-2010-FEB-GEO-09",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "IsTangent(Line(A, B), omega)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(Line(B, C), omega)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(Line(C, D), omega)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(Line(D, A), omega)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Angle(I, D, E)",
+          "operator": "=",
+          "right": "35 * pi / 180"
+        },
+        {
+          "left": "a",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "d",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "predicate": "ConvexPolygon([A, B, C, D])"
+        },
+        {
+          "left": "Area(A, C, D)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Distance(D, E)",
+          "operator": "!=",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(1, 0)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(cos(70 * pi / 180), sin(70 * pi / 180))",
+          "name": "ABray"
+        },
+        {
+          "expression": "Point(1 + cos(120 * pi / 180), sin(120 * pi / 180))",
+          "name": "CDray"
+        },
+        {
+          "expression": "Point(cos(35 * pi / 180), sin(35 * pi / 180))",
+          "name": "BIray"
+        },
+        {
+          "expression": "Point(1 + cos(150 * pi / 180), sin(150 * pi / 180))",
+          "name": "CIray"
+        },
+        {
+          "expression": "Point(a * cos(70 * pi / 180), a * sin(70 * pi / 180))",
+          "name": "A"
+        },
+        {
+          "expression": "Point(1 - d / 2, d * sqrt(3) / 2)",
+          "name": "D"
+        },
+        {
+          "expression": "Intersect(Line(B, BIray), Line(C, CIray))",
+          "name": "I"
+        },
+        {
+          "expression": "Circle(I, Distance(I, Line(B, C)))",
+          "name": "omega"
+        },
+        {
+          "expression": "Intersect(Line(C, I), Line(A, B))",
+          "name": "E"
+        }
+      ],
+      "id": "HMMT-2010-FEB-GEO-09",
+      "target": "Angle(C, D, A) * 180 / pi",
+      "variables": [
+        "a",
+        "d"
+      ]
+    },
+    "dsl_sha256": "cffa197d62db149d1ca07c0fd891a3dd6a297af5ae2447e168fb36e17eec25de",
+    "raw_sha256": "c9975d46a6ac5f22ffa914a3db02dc9e38e9878d9556dfeb9824e63f2bd6011a",
+    "old12": true,
+    "diagnosis": {
+      "n_vars": 2,
+      "n_equalities": 5,
+      "tangencies": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 86,
+    "missing_reason": null
+  },
+  {
+    "id": "HMMT-2011-two-circles-tangent-line",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "IsTangent(l, omega1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(l, omega2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(A, omega1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(A, omega2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Angle(A, P, Q)",
+          "operator": "=",
+          "right": "pi / 4"
+        },
+        {
+          "left": "Angle(A, Q, P)",
+          "operator": "=",
+          "right": "pi / 6"
+        },
+        {
+          "left": "OnLine(R, P, A)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnLine(S, Q, A)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(P, Q)",
+          "operator": "=",
+          "right": "Distance(A, R)"
+        },
+        {
+          "left": "Distance(P, Q)",
+          "operator": "=",
+          "right": "Distance(A, S)"
+        },
+        {
+          "left": "Distance(P, R)",
+          "operator": "=",
+          "right": "Distance(P, A) + Distance(A, R)"
+        },
+        {
+          "left": "Distance(Q, S)",
+          "operator": "=",
+          "right": "Distance(Q, A) + Distance(A, S)"
+        },
+        {
+          "left": "OnCircle(C, omega1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(C, A)",
+          "operator": "=",
+          "right": "Distance(C, P)"
+        },
+        {
+          "left": "OnCircle(D, omega2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(D, A)",
+          "operator": "=",
+          "right": "Distance(D, Q)"
+        },
+        {
+          "left": "Distance(A, l)",
+          "operator": "<",
+          "right": "Distance(B, l)"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "P"
+        },
+        {
+          "expression": "Point(1, 0)",
+          "name": "Q"
+        },
+        {
+          "expression": "(sqrt(3) - 1) / 2",
+          "name": "lam"
+        },
+        {
+          "expression": "Point(0, lam)",
+          "name": "O1"
+        },
+        {
+          "expression": "Point(1, 2 * lam)",
+          "name": "O2"
+        },
+        {
+          "expression": "Circle(O1, lam)",
+          "name": "omega1"
+        },
+        {
+          "expression": "Circle(O2, 2 * lam)",
+          "name": "omega2"
+        },
+        {
+          "expression": "Line(P, Q)",
+          "name": "l"
+        },
+        {
+          "expression": "Point(lam, lam)",
+          "name": "A"
+        },
+        {
+          "expression": "Intersect(omega1, omega2, exclude=A)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(A.x + (A.x - P.x) / Distance(A, P), A.y + (A.y - P.y) / Distance(A, P))",
+          "name": "R"
+        },
+        {
+          "expression": "Point(A.x + (A.x - Q.x) / Distance(A, Q), A.y + (A.y - Q.y) / Distance(A, Q))",
+          "name": "S"
+        },
+        {
+          "expression": "Circumcenter(A, S, R)",
+          "name": "O"
+        },
+        {
+          "expression": "Midpoint(A, P)",
+          "name": "MAP"
+        },
+        {
+          "expression": "Midpoint(A, Q)",
+          "name": "MAQ"
+        },
+        {
+          "expression": "Point(O1.x - lam * (MAP.x - O1.x) / Distance(MAP, O1), O1.y - lam * (MAP.y - O1.y) / Distance(MAP, O1))",
+          "name": "C"
+        },
+        {
+          "expression": "Point(O2.x - 2 * lam * (MAQ.x - O2.x) / Distance(MAQ, O2), O2.y - 2 * lam * (MAQ.y - O2.y) / Distance(MAQ, O2))",
+          "name": "D"
+        }
+      ],
+      "id": "HMMT-2011-two-circles-tangent-line",
+      "target": "180 * Angle(C, O, D) / pi",
+      "variables": []
+    },
+    "dsl_sha256": "3d4648c06d0694acc37e7e79d1a3c39d49d36e4a88bf39ef2cf2cb3f3a746130",
+    "raw_sha256": "242d2fe6bfd0e2f570742afcba7ba1dc9ae483775a813e4742d2e431156541e0",
+    "old12": false,
+    "diagnosis": {
+      "n_vars": 0,
+      "n_equalities": 16,
+      "tangencies": [
+        0,
+        1
+      ],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 0,
+    "raw_count": 0,
+    "usable_count": 0,
+    "missing_reason": "no_variables"
+  },
+  {
+    "id": "HMMT-2014-FEB-GEO-08",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, B)",
+          "operator": "=",
+          "right": 6
+        },
+        {
+          "left": "Distance(B, C)",
+          "operator": "=",
+          "right": 10
+        },
+        {
+          "left": "Distance(C, A)",
+          "operator": "=",
+          "right": 8
+        },
+        {
+          "left": "IsTangent(Line(A, N), Gamma)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "t",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Area(N, A, Y)",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(6, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(0, 8)",
+          "name": "C"
+        },
+        {
+          "expression": "Midpoint(B, A)",
+          "name": "M"
+        },
+        {
+          "expression": "Midpoint(B, C)",
+          "name": "N"
+        },
+        {
+          "expression": "Point(6 * t / 2, 8 * (1 - t))",
+          "name": "Y"
+        },
+        {
+          "expression": "Circumcircle(A, M, Y)",
+          "name": "Gamma"
+        }
+      ],
+      "id": "HMMT-2014-FEB-GEO-08",
+      "target": "Area(N, A, Y)",
+      "variables": [
+        "t"
+      ]
+    },
+    "dsl_sha256": "a9d211486eee0135dac328551703a58db037bf90e6d9a8a0e20dfe609e66c1ba",
+    "raw_sha256": "cf7c7427fb81052e2de0ba0546763f5083d6c00865a5e4e9066076be221df8fb",
+    "old12": false,
+    "diagnosis": {
+      "n_vars": 1,
+      "n_equalities": 4,
+      "tangencies": [
+        3
+      ],
+      "distances": [],
+      "contacts": [
+        {
+          "index": 3,
+          "source": "((Center(Gamma).x-(A).x)*((N).x-(A).x)+(Center(Gamma).y-(A).y)*((N).y-(A).y))/Distance((A),(N))",
+          "variables": [
+            "t"
+          ],
+          "incidence": "construction",
+          "active": true
+        }
+      ],
+      "radius_sources": [],
+      "q_active": true,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 200,
+    "missing_reason": null
+  },
+  {
+    "id": "HMMT-2016-FEB-GEO-10",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, B)",
+          "operator": "=",
+          "right": "sqrt(3)"
+        },
+        {
+          "left": "Distance(A, C)",
+          "operator": "=",
+          "right": 2
+        },
+        {
+          "left": "IsTangent(Line(B, A), omegaB)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(Line(B, C), omegaB)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(omegaB, Gamma)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(Line(C, A), omegaC)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(Line(C, B), omegaC)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(omegaC, Gamma)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Perpendicular(Line(D, H), Line(OB, OC))",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "sin(theta)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "theta",
+          "operator": "<",
+          "right": "pi"
+        },
+        {
+          "left": "rb",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "rc",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "rb",
+          "operator": "<",
+          "right": "Radius(Gamma)"
+        },
+        {
+          "left": "Distance(OB,Circumcenter(A,B,C))",
+          "operator": "=",
+          "right": "Radius(Gamma)-rb"
+        },
+        {
+          "left": "rc",
+          "operator": "<",
+          "right": "Radius(Gamma)"
+        },
+        {
+          "left": "Distance(OC,Circumcenter(A,B,C))",
+          "operator": "=",
+          "right": "Radius(Gamma)-rc"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(sqrt(3),0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(2 * cos(theta), 2 * sin(theta))",
+          "name": "C"
+        },
+        {
+          "expression": "IncircleContactPoint(A, B, C, 0)",
+          "name": "D"
+        },
+        {
+          "expression": "Orthocenter(A, B, C)",
+          "name": "H"
+        },
+        {
+          "expression": "Circumcircle(A, B, C)",
+          "name": "Gamma"
+        },
+        {
+          "expression": "A.x - B.x",
+          "name": "BAx"
+        },
+        {
+          "expression": "A.y - B.y",
+          "name": "BAy"
+        },
+        {
+          "expression": "C.x - B.x",
+          "name": "BCx"
+        },
+        {
+          "expression": "C.y - B.y",
+          "name": "BCy"
+        },
+        {
+          "expression": "BAx / Distance(B, A) + BCx / Distance(B, C)",
+          "name": "uBx"
+        },
+        {
+          "expression": "BAy / Distance(B, A) + BCy / Distance(B, C)",
+          "name": "uBy"
+        },
+        {
+          "expression": "sqrt(uBx * uBx + uBy * uBy)",
+          "name": "uBn"
+        },
+        {
+          "expression": "sqrt((1 - Dot(Vector(B, A), Vector(B, C)) / (Distance(B, A) * Distance(B, C))) / 2)",
+          "name": "sB2"
+        },
+        {
+          "expression": "A.x - C.x",
+          "name": "CAx"
+        },
+        {
+          "expression": "A.y - C.y",
+          "name": "CAy"
+        },
+        {
+          "expression": "B.x - C.x",
+          "name": "CBx"
+        },
+        {
+          "expression": "B.y - C.y",
+          "name": "CBy"
+        },
+        {
+          "expression": "CAx / Distance(C, A) + CBx / Distance(C, B)",
+          "name": "uCx"
+        },
+        {
+          "expression": "CAy / Distance(C, A) + CBy / Distance(C, B)",
+          "name": "uCy"
+        },
+        {
+          "expression": "sqrt(uCx * uCx + uCy * uCy)",
+          "name": "uCn"
+        },
+        {
+          "expression": "sqrt((1 - Dot(Vector(C, A), Vector(C, B)) / (Distance(C, A) * Distance(C, B))) / 2)",
+          "name": "sC2"
+        },
+        {
+          "expression": "Point(B.x + rb * uBx / (uBn * sB2), B.y + rb * uBy / (uBn * sB2))",
+          "name": "OB"
+        },
+        {
+          "expression": "Point(C.x + rc * uCx / (uCn * sC2), C.y + rc * uCy / (uCn * sC2))",
+          "name": "OC"
+        },
+        {
+          "expression": "Circle(OB, rb)",
+          "name": "omegaB"
+        },
+        {
+          "expression": "Circle(OC, rc)",
+          "name": "omegaC"
+        }
+      ],
+      "id": "HMMT-2016-FEB-GEO-10",
+      "target": "Distance(B, C)",
+      "variables": [
+        "theta",
+        "rb",
+        "rc"
+      ]
+    },
+    "dsl_sha256": "4546c9ea8bcd19fc1a52b2b9f6c03770b35789a6be4a459449f3569a1d15e28a",
+    "raw_sha256": "9b761aab7667749e1ec468519bc59387a862b0d351bc09a0e28eaa7a9539355b",
+    "old12": false,
+    "diagnosis": {
+      "n_vars": 3,
+      "n_equalities": 11,
+      "tangencies": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [
+        "2*(((B.x)-Center(Gamma).x)*((uBx)/(uBn * sB2))+((B.y)-Center(Gamma).y)*((uBy)/(uBn * sB2))+Radius(Gamma))+rb*((((uBx)/(uBn * sB2))**2)+(((uBy)/(uBn * sB2))**2)-1)",
+        "2*(((C.x)-Center(Gamma).x)*((uCx)/(uCn * sC2))+((C.y)-Center(Gamma).y)*((uCy)/(uCn * sC2))+Radius(Gamma))+rc*((((uCx)/(uCn * sC2))**2)+(((uCy)/(uCn * sC2))**2)-1)"
+      ],
+      "q_active": false,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": true
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 145,
+    "missing_reason": null
+  },
+  {
+    "id": "HMMT-2019-FEB-GEO-07",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, B)",
+          "operator": "=",
+          "right": 13
+        },
+        {
+          "left": "Distance(B, C)",
+          "operator": "=",
+          "right": 14
+        },
+        {
+          "left": "Distance(C, A)",
+          "operator": "=",
+          "right": 15
+        },
+        {
+          "left": "IsTangent(Omega, GammaA)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(Omega, GammaB)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(Omega, GammaC)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Radius(Omega)",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(5, 12)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(0, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(14, 0)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(5, 15 / 4)",
+          "name": "H"
+        },
+        {
+          "expression": "Circumcircle(A, H, B)",
+          "name": "GammaA"
+        },
+        {
+          "expression": "Circumcircle(B, H, C)",
+          "name": "GammaB"
+        },
+        {
+          "expression": "Circumcircle(C, H, A)",
+          "name": "GammaC"
+        },
+        {
+          "expression": "Point(9, -12)",
+          "name": "A0"
+        },
+        {
+          "expression": "Point(19, 12)",
+          "name": "B0"
+        },
+        {
+          "expression": "Point(-9, 12)",
+          "name": "C0"
+        },
+        {
+          "expression": "Circumcircle(A0, B0, C0)",
+          "name": "Omega"
+        }
+      ],
+      "id": "HMMT-2019-FEB-GEO-07",
+      "target": "Radius(Omega)",
+      "variables": []
+    },
+    "dsl_sha256": "56052f84cfc45be6c5b7f4f3898f6a96f8fb55ebf546af43acaef7177a88c7e2",
+    "raw_sha256": "1fb00fdd0dfe9165d81dd4670ab1352bb1f286057a1260a4fb76a6c5ebd799ef",
+    "old12": false,
+    "diagnosis": {
+      "n_vars": 0,
+      "n_equalities": 6,
+      "tangencies": [
+        3,
+        4,
+        5
+      ],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 0,
+    "raw_count": 0,
+    "usable_count": 0,
+    "missing_reason": "no_variables"
+  },
+  {
+    "id": "HMMT-2020-FEB-GEO-04",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "h",
+          "operator": ">",
+          "right": "1"
+        },
+        {
+          "left": "e",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "e",
+          "operator": "<",
+          "right": "h"
+        },
+        {
+          "left": "h-1",
+          "operator": ">=",
+          "right": "e"
+        },
+        {
+          "predicate": "Or(And((Vector(B,C).x*Vector(B,I).y-Vector(B,C).y*Vector(B,I).x)>0,(Vector(C,D).x*Vector(C,I).y-Vector(C,D).y*Vector(C,I).x)>0,(Vector(D,E).x*Vector(D,I).y-Vector(D,E).y*Vector(D,I).x)>0,(Vector(E,B).x*Vector(E,I).y-Vector(E,B).y*Vector(E,I).x)>0),And((Vector(B,C).x*Vector(B,I).y-Vector(B,C).y*Vector(B,I).x)<0,(Vector(C,D).x*Vector(C,I).y-Vector(C,D).y*Vector(C,I).x)<0,(Vector(D,E).x*Vector(D,I).y-Vector(D,E).y*Vector(D,I).x)<0,(Vector(E,B).x*Vector(E,I).y-Vector(E,B).y*Vector(E,I).x)<0))"
+        },
+        {
+          "left": "Distance(I,Line(B,E))",
+          "operator": "=",
+          "right": "1"
+        },
+        {
+          "left": "Distance(T1,T2)",
+          "operator": "=",
+          "right": "0"
+        },
+        {
+          "left": "OnSegment(T1,B,E)",
+          "operator": "=",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0,0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(2,0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(2,h)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(0,h)",
+          "name": "D"
+        },
+        {
+          "expression": "Point(0,e)",
+          "name": "E"
+        },
+        {
+          "expression": "Point(1,h-1)",
+          "name": "I"
+        },
+        {
+          "expression": "Circle(I,1)",
+          "name": "omega1"
+        },
+        {
+          "expression": "Incircle(A,B,E)",
+          "name": "omega2"
+        },
+        {
+          "expression": "Incenter(A,B,E)",
+          "name": "J"
+        },
+        {
+          "expression": "FootOfPerpendicular(I,Line(B,E))",
+          "name": "T1"
+        },
+        {
+          "expression": "FootOfPerpendicular(J,Line(B,E))",
+          "name": "T2"
+        }
+      ],
+      "id": "HMMT-2020-FEB-GEO-04",
+      "target": "Radius(omega1)/Radius(omega2)",
+      "variables": [
+        "h",
+        "e"
+      ]
+    },
+    "dsl_sha256": "e6ce855ab6cf51ce29e01d32b1c32a1f529a7da38825885025ec3768a57ffd00",
+    "raw_sha256": "f6683de7a2a699d59c57aa0fe9c2326b801578c8550ea0ada29ea28f6c077e1f",
+    "old12": false,
+    "diagnosis": {
+      "n_vars": 2,
+      "n_equalities": 3,
+      "tangencies": [],
+      "distances": [
+        1
+      ],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": false,
+      "d_applicable": true,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 200,
+    "missing_reason": null
+  },
+  {
+    "id": "HMMT-2020-FEB-GEO-07",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "OnCircle(X1, Gamma)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(X1, omega1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(X2, Gamma)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(X2, omega2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(O, O1)",
+          "operator": "=",
+          "right": 10
+        },
+        {
+          "left": "Distance(O, O2)",
+          "operator": "=",
+          "right": 9
+        },
+        {
+          "left": "OnCircle(T1, omega1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(T2, omega2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(l, omega1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(l, omega2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(X1, T1)",
+          "operator": "=",
+          "right": "Distance(X2, T2) / 2"
+        },
+        {
+          "left": "h",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "h",
+          "operator": "<",
+          "right": "6"
+        },
+        {
+          "left": "Distance(T1, T2)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Distance(A, B)",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, h)",
+          "name": "O"
+        },
+        {
+          "expression": "Circle(O, 12)",
+          "name": "Gamma"
+        },
+        {
+          "expression": "sqrt(100 - (h - 2) * (h - 2))",
+          "name": "u"
+        },
+        {
+          "expression": "sqrt(81 - (h + 3) * (h + 3))",
+          "name": "v"
+        },
+        {
+          "expression": "Point(u, 2)",
+          "name": "O1"
+        },
+        {
+          "expression": "Point(v, -3)",
+          "name": "O2"
+        },
+        {
+          "expression": "Circle(O1, 2)",
+          "name": "omega1"
+        },
+        {
+          "expression": "Circle(O2, 3)",
+          "name": "omega2"
+        },
+        {
+          "expression": "Point(O.x + 12 / 10 * (O1.x - O.x), O.y + 12 / 10 * (O1.y - O.y))",
+          "name": "X1"
+        },
+        {
+          "expression": "Point(O.x + 12 / 9 * (O2.x - O.x), O.y + 12 / 9 * (O2.y - O.y))",
+          "name": "X2"
+        },
+        {
+          "expression": "Point(u, 0)",
+          "name": "T1"
+        },
+        {
+          "expression": "Point(v, 0)",
+          "name": "T2"
+        },
+        {
+          "expression": "Line(Point(0, 0), Point(1, 0))",
+          "name": "l"
+        },
+        {
+          "expression": "Intersect(l,Gamma,n=1)",
+          "name": "A"
+        },
+        {
+          "expression": "Intersect(l, Gamma, exclude=A)",
+          "name": "B"
+        }
+      ],
+      "id": "HMMT-2020-FEB-GEO-07",
+      "target": "Distance(A, B)",
+      "variables": [
+        "h"
+      ]
+    },
+    "dsl_sha256": "00fd63e002ae845e35825804f16f070b8cc2b00930546f40a4a60a13461d36f2",
+    "raw_sha256": "99ae6279bf8ee635fe5af55d8fd87f6379298a5b162649752e1520930e52a763",
+    "old12": false,
+    "diagnosis": {
+      "n_vars": 1,
+      "n_equalities": 11,
+      "tangencies": [
+        8,
+        9
+      ],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 200,
+    "missing_reason": null
+  },
+  {
+    "id": "HMMT-2020-FEB-GEO-09",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, B)",
+          "operator": "=",
+          "right": "341 + rb"
+        },
+        {
+          "left": "Distance(B, C)",
+          "operator": "=",
+          "right": "rb + rc"
+        },
+        {
+          "left": "Distance(C, A)",
+          "operator": "=",
+          "right": "rc + 341"
+        },
+        {
+          "left": "OnCircle(D, omegaB)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(D, omegaC)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnLine(D, B, C)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(E, omegaC)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(E, omegaA)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnLine(E, C, A)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(F, omegaA)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(F, omegaB)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnLine(F, A, B)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(L, omegaA)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(L, omegaB)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(L, omegaC)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(W, A)",
+          "operator": "=",
+          "right": "341 + 49"
+        },
+        {
+          "left": "Distance(W, B)",
+          "operator": "=",
+          "right": "rb + 49"
+        },
+        {
+          "left": "Distance(W, C)",
+          "operator": "=",
+          "right": "rc + 49"
+        },
+        {
+          "left": "p",
+          "operator": ">",
+          "right": "1"
+        },
+        {
+          "left": "p",
+          "operator": "<",
+          "right": "sqrt(341) / 7"
+        },
+        {
+          "left": "Distance(T, L)",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "sqrt(341) * p / (sqrt(341) - 7 * p)",
+          "name": "q"
+        },
+        {
+          "expression": "49 * p * p",
+          "name": "rb"
+        },
+        {
+          "expression": "49 * q * q",
+          "name": "rc"
+        },
+        {
+          "expression": "Point(0, 341)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(2 * sqrt(341 * 49) * p, rb)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(2 * sqrt(341 * 49) * q, rc)",
+          "name": "C"
+        },
+        {
+          "expression": "Circle(A, 341)",
+          "name": "omegaA"
+        },
+        {
+          "expression": "Circle(B, rb)",
+          "name": "omegaB"
+        },
+        {
+          "expression": "Circle(C, rc)",
+          "name": "omegaC"
+        },
+        {
+          "expression": "PointOnSegment(B, C, rb / (rb + rc))",
+          "name": "D"
+        },
+        {
+          "expression": "PointOnSegment(C, A, rc / (rc + 341))",
+          "name": "E"
+        },
+        {
+          "expression": "PointOnSegment(A, B, 341 / (341 + rb))",
+          "name": "F"
+        },
+        {
+          "expression": "Line(Point(0, 0), Point(1, 0))",
+          "name": "L"
+        },
+        {
+          "expression": "Intersect(Circle(A, 341 + 49), Circle(B, rb + 49), near=C)",
+          "name": "W"
+        },
+        {
+          "expression": "Intersect(Line(B, E), Line(C, F))",
+          "name": "T"
+        }
+      ],
+      "id": "HMMT-2020-FEB-GEO-09",
+      "target": "Distance(T, L)",
+      "variables": [
+        "p"
+      ]
+    },
+    "dsl_sha256": "de13e3baedad2f28249e7aa0ed9cb1c61bf22a15690988a381f7d318ef838891",
+    "raw_sha256": "6fe6cadb53152788f0f529400aa2d61bf653990e468da964f632a27f839e5a21",
+    "old12": true,
+    "diagnosis": {
+      "n_vars": 1,
+      "n_equalities": 18,
+      "tangencies": [
+        12,
+        13,
+        14
+      ],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 199,
+    "missing_reason": null
+  },
+  {
+    "id": "HMMT-2022-FEB-GEO-10",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "OnCircle(A, omega)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(B, omega)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(C, omega)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(D, omega)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Perpendicular(Line(A, C), Line(B, D))",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(A, C)",
+          "operator": "=",
+          "right": "2 * sqrt(61)"
+        },
+        {
+          "left": "Distance(B, D)",
+          "operator": "=",
+          "right": "6 * sqrt(7)"
+        },
+        {
+          "left": "IsTangent(c1, c2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(c3, c4)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "px * px + py * py",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "predicate": "ConvexPolygon([A, B, C, D])"
+        },
+        {
+          "left": "(Vector(A, B).x * Vector(A, P).y - Vector(A, B).y * Vector(A, P).x) * (Vector(B, C).x * Vector(B, P).y - Vector(B, C).y * Vector(B, P).x)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "(Vector(A, B).x * Vector(A, P).y - Vector(A, B).y * Vector(A, P).x) * (Vector(C, D).x * Vector(C, P).y - Vector(C, D).y * Vector(C, P).x)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "(Vector(A, B).x * Vector(A, P).y - Vector(A, B).y * Vector(A, P).x) * (Vector(D, A).x * Vector(D, P).y - Vector(D, A).y * Vector(D, P).x)",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "O"
+        },
+        {
+          "expression": "Circle(O, 8)",
+          "name": "omega"
+        },
+        {
+          "expression": "Point(-sqrt(61), sqrt(3))",
+          "name": "A"
+        },
+        {
+          "expression": "Point(1, -3 * sqrt(7))",
+          "name": "B"
+        },
+        {
+          "expression": "Point(sqrt(61), sqrt(3))",
+          "name": "C"
+        },
+        {
+          "expression": "Point(1, 3 * sqrt(7))",
+          "name": "D"
+        },
+        {
+          "expression": "Point(px, py)",
+          "name": "P"
+        },
+        {
+          "expression": "Circumcircle(A, B, P)",
+          "name": "c1"
+        },
+        {
+          "expression": "Circumcircle(C, D, P)",
+          "name": "c2"
+        },
+        {
+          "expression": "Circumcircle(A, D, P)",
+          "name": "c3"
+        },
+        {
+          "expression": "Circumcircle(B, C, P)",
+          "name": "c4"
+        }
+      ],
+      "id": "HMMT-2022-FEB-GEO-10",
+      "target": "Distance(O, P)",
+      "variables": [
+        "px",
+        "py"
+      ]
+    },
+    "dsl_sha256": "ec4f378737ac597c040c78debcd112009e0ad3b71424ebad232617f511411bee",
+    "raw_sha256": "66336907eae05627d45382d094ef3620c7c2fc3addbaf09b1a273e2d564bf2cc",
+    "old12": true,
+    "diagnosis": {
+      "n_vars": 2,
+      "n_equalities": 9,
+      "tangencies": [
+        7,
+        8
+      ],
+      "distances": [],
+      "contacts": [
+        {
+          "index": 7,
+          "source": "((Center(c1).x-(P).x)*(Center(c2).y-(P).y)-(Center(c1).y-(P).y)*(Center(c2).x-(P).x))/Radius(c1)",
+          "variables": [
+            "px",
+            "py"
+          ],
+          "incidence": "construction",
+          "active": true
+        },
+        {
+          "index": 8,
+          "source": "((Center(c3).x-(P).x)*(Center(c4).y-(P).y)-(Center(c3).y-(P).y)*(Center(c4).x-(P).x))/Radius(c3)",
+          "variables": [
+            "px",
+            "py"
+          ],
+          "incidence": "construction",
+          "active": true
+        }
+      ],
+      "radius_sources": [],
+      "q_active": true,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 30,
+    "missing_reason": null
+  },
+  {
+    "id": "HMMT-2023-FEB-GEO-07",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "OnCircle(A, Gamma)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(B, Gamma)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(C, Gamma)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(D, Gamma)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(A, gamma)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(E, gamma)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(gamma, Gamma)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(E, delta)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(delta, gamma)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(Line(C, D), delta)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "g1",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "g2",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "g3",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "g1 + g2 + g3",
+          "operator": "<",
+          "right": "2 * pi"
+        },
+        {
+          "predicate": "ConvexPolygon([A, B, C, D])"
+        },
+        {
+          "left": "Distance(B, D)",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "O"
+        },
+        {
+          "expression": "Circle(O, 3)",
+          "name": "Gamma"
+        },
+        {
+          "expression": "Point(gx, gy)",
+          "name": "G"
+        },
+        {
+          "expression": "Circle(G, 2)",
+          "name": "gamma"
+        },
+        {
+          "expression": "Point(3, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(3 * cos(g1), 3 * sin(g1))",
+          "name": "B"
+        },
+        {
+          "expression": "Point(3 * cos(g1 + g2), 3 * sin(g1 + g2))",
+          "name": "C"
+        },
+        {
+          "expression": "Point(3 * cos(g1 + g2 + g3), 3 * sin(g1 + g2 + g3))",
+          "name": "D"
+        },
+        {
+          "expression": "Intersect(Line(A, C), Line(B, D))",
+          "name": "E"
+        },
+        {
+          "expression": "Circumcircle(B, C, E)",
+          "name": "delta"
+        }
+      ],
+      "id": "HMMT-2023-FEB-GEO-07",
+      "target": "Distance(B, D)",
+      "variables": [
+        "gx",
+        "gy",
+        "g1",
+        "g2",
+        "g3"
+      ]
+    },
+    "dsl_sha256": "5e511ba2d85d07e6d66e479dac2ac5a1920670dde7199956ace5909d0f34fd9c",
+    "raw_sha256": "7844ce520009a61ad0a89c4c86ce5e23b068670f66fb970979c8320c1d27ff27",
+    "old12": true,
+    "diagnosis": {
+      "n_vars": 5,
+      "n_equalities": 10,
+      "tangencies": [
+        6,
+        8,
+        9
+      ],
+      "distances": [],
+      "contacts": [
+        {
+          "index": 6,
+          "source": "((Center(gamma).x-(A).x)*(Center(Gamma).y-(A).y)-(Center(gamma).y-(A).y)*(Center(Gamma).x-(A).x))/Radius(gamma)",
+          "variables": [
+            "gx",
+            "gy"
+          ],
+          "incidence": "other_equalities",
+          "active": true
+        },
+        {
+          "index": 8,
+          "source": "((Center(delta).x-(E).x)*(Center(gamma).y-(E).y)-(Center(delta).y-(E).y)*(Center(gamma).x-(E).x))/Radius(delta)",
+          "variables": [
+            "g1",
+            "g2",
+            "g3",
+            "gx",
+            "gy"
+          ],
+          "incidence": "other_equalities",
+          "active": true
+        },
+        {
+          "index": 9,
+          "source": "((Center(delta).x-(C).x)*((D).x-(C).x)+(Center(delta).y-(C).y)*((D).y-(C).y))/Distance((C),(D))",
+          "variables": [
+            "g1",
+            "g2",
+            "g3"
+          ],
+          "incidence": "construction",
+          "active": true
+        }
+      ],
+      "radius_sources": [],
+      "q_active": true,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 185,
+    "usable_count": 6,
+    "missing_reason": null
+  },
+  {
+    "id": "HMMT-2025-FEB-GEO-02",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(Midpoint(T1, T2), Midpoint(T3, T4))",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(T1, T2)",
+          "operator": "=",
+          "right": "Distance(T3, T4)"
+        },
+        {
+          "left": "Perpendicular(Line(T1, T2), Line(T3, T4))",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "H",
+          "operator": ">",
+          "right": "49"
+        },
+        {
+          "left": "Distance(T1, T2)",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(x1, H - 16)",
+          "name": "T1"
+        },
+        {
+          "expression": "Point(x2, H - 36)",
+          "name": "T2"
+        },
+        {
+          "expression": "Point(x3, 25)",
+          "name": "T3"
+        },
+        {
+          "expression": "Point(x4, 49)",
+          "name": "T4"
+        }
+      ],
+      "id": "HMMT-2025-FEB-GEO-02",
+      "target": "H",
+      "variables": [
+        "H",
+        "x1",
+        "x2",
+        "x3",
+        "x4"
+      ]
+    },
+    "dsl_sha256": "ccb40bf06e63e9bba67e34da0f575dfc6a1794a586acda24a7821c9e2a5c8eb6",
+    "raw_sha256": "adca77a407569ac770f2f07d0ed790a53e87030dee23deb86d222b63d549f849",
+    "old12": false,
+    "diagnosis": {
+      "n_vars": 5,
+      "n_equalities": 3,
+      "tangencies": [],
+      "distances": [
+        0
+      ],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": false,
+      "d_applicable": true,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 68,
+    "usable_count": 67,
+    "missing_reason": null
+  },
+  {
+    "id": "JMO-2013-PRE-05",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(X, R)",
+          "operator": "=",
+          "right": 9
+        },
+        {
+          "left": "Distance(X, S)",
+          "operator": "=",
+          "right": 2
+        },
+        {
+          "left": "Collinear(P, R, X)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Collinear(Q, S, X)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(Line(P, R), O1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(Line(Q, S), O2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "theta",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "theta",
+          "operator": "<",
+          "right": "pi"
+        },
+        {
+          "left": "p",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "q",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "X"
+        },
+        {
+          "expression": "Point(9, 0)",
+          "name": "R"
+        },
+        {
+          "expression": "Point(2 * cos(theta), 2 * sin(theta))",
+          "name": "S"
+        },
+        {
+          "expression": "Point(p, 0)",
+          "name": "P"
+        },
+        {
+          "expression": "Point(q * cos(theta), q * sin(theta))",
+          "name": "Q"
+        },
+        {
+          "expression": "Circumcircle(P, Q, S)",
+          "name": "O1"
+        },
+        {
+          "expression": "Circumcircle(P, Q, R)",
+          "name": "O2"
+        }
+      ],
+      "id": "JMO-2013-PRE-05",
+      "target": "Radius(O1) / Radius(O2)",
+      "variables": [
+        "theta",
+        "p",
+        "q"
+      ]
+    },
+    "dsl_sha256": "53cd4b3c13a4cc267a166a13be6777b1057becf330af5ae0b17e6eb2749b6a8e",
+    "raw_sha256": "50462fb80a1ac9a95e1c3bfab679cddb32304ddcb012a719a5aed50bd9b467a4",
+    "old12": true,
+    "diagnosis": {
+      "n_vars": 3,
+      "n_equalities": 6,
+      "tangencies": [
+        4,
+        5
+      ],
+      "distances": [],
+      "contacts": [
+        {
+          "index": 4,
+          "source": "((Center(O1).x-(P).x)*((R).x-(P).x)+(Center(O1).y-(P).y)*((R).y-(P).y))/Distance((P),(R))",
+          "variables": [
+            "p",
+            "q",
+            "theta"
+          ],
+          "incidence": "construction",
+          "active": true
+        },
+        {
+          "index": 5,
+          "source": "((Center(O2).x-(Q).x)*((S).x-(Q).x)+(Center(O2).y-(Q).y)*((S).y-(Q).y))/Distance((Q),(S))",
+          "variables": [
+            "p",
+            "q",
+            "theta"
+          ],
+          "incidence": "construction",
+          "active": true
+        }
+      ],
+      "radius_sources": [],
+      "q_active": true,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 115,
+    "missing_reason": null
+  },
+  {
+    "id": "JMO-2014-PRE-01",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "OnCircle(P, C1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(O1, Line(O, P))",
+          "operator": "=",
+          "right": "r"
+        },
+        {
+          "left": "OnCircle(Q, C2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Collinear(O, P, Q)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Collinear(O, P, R)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(P, Q)",
+          "operator": "=",
+          "right": "Distance(Q, R)"
+        },
+        {
+          "left": "r",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "r",
+          "operator": "<",
+          "right": "9"
+        },
+        {
+          "left": "py",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "qy",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "rx",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "O"
+        },
+        {
+          "expression": "Point(0, 9)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(0, 9 - r)",
+          "name": "O1"
+        },
+        {
+          "expression": "Circle(O1, r)",
+          "name": "C1"
+        },
+        {
+          "expression": "Circle(O, 9)",
+          "name": "C2"
+        },
+        {
+          "expression": "Point(px, py)",
+          "name": "P"
+        },
+        {
+          "expression": "Point(qx, qy)",
+          "name": "Q"
+        },
+        {
+          "expression": "Point(rx, 9)",
+          "name": "R"
+        }
+      ],
+      "id": "JMO-2014-PRE-01",
+      "target": "Distance(O, P)",
+      "variables": [
+        "r",
+        "px",
+        "py",
+        "qx",
+        "qy",
+        "rx"
+      ]
+    },
+    "dsl_sha256": "dc95c4109b1e74820bf70e0f05ff78db2985e85215c13b198f1eef6495dc69db",
+    "raw_sha256": "44713d94590f37b0659e9efec0320102f09c3ce051468f7834b75461c1656db1",
+    "old12": false,
+    "diagnosis": {
+      "n_vars": 6,
+      "n_equalities": 6,
+      "tangencies": [],
+      "distances": [],
+      "contacts": [
+        {
+          "index": 1,
+          "source": "((Center(C1).x-(P).x)*((P).x-(O).x)+(Center(C1).y-(P).y)*((P).y-(O).y))/Distance((O),(P))",
+          "variables": [
+            "px",
+            "py",
+            "r"
+          ],
+          "incidence": "other_equalities",
+          "active": true
+        }
+      ],
+      "radius_sources": [],
+      "q_active": true,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 122,
+    "missing_reason": null
+  },
+  {
+    "id": "JMO-2014-PRE-04",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(O, A)",
+          "operator": "=",
+          "right": "r"
+        },
+        {
+          "left": "Distance(O, B)",
+          "operator": "=",
+          "right": "r"
+        },
+        {
+          "left": "Distance(O, C)",
+          "operator": "=",
+          "right": "r"
+        },
+        {
+          "left": "Distance(O, D)",
+          "operator": "=",
+          "right": "r"
+        },
+        {
+          "left": "Distance(O, E)",
+          "operator": "=",
+          "right": "r"
+        },
+        {
+          "left": "Distance(O, F)",
+          "operator": "=",
+          "right": "r"
+        },
+        {
+          "left": "Distance(A, B)",
+          "operator": "=",
+          "right": 1
+        },
+        {
+          "left": "Distance(B, C)",
+          "operator": "=",
+          "right": 2
+        },
+        {
+          "left": "Distance(C, D)",
+          "operator": "=",
+          "right": 3
+        },
+        {
+          "left": "Distance(D, E)",
+          "operator": "=",
+          "right": 4
+        },
+        {
+          "left": "Distance(E, F)",
+          "operator": "=",
+          "right": 5
+        },
+        {
+          "left": "Distance(T, Line(C, F))",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "r",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Area(A, B, C)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Area(A, C, D)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Area(A, D, E)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "g1",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "g2",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "g3",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "g4",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "g5",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "g1 + g2 + g3 + g4 + g5",
+          "operator": "<",
+          "right": "2 * pi"
+        },
+        {
+          "predicate": "ConvexPolygon([A, B, C, D, E, F])"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "O"
+        },
+        {
+          "expression": "Point(r, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(r * cos(g1), r * sin(g1))",
+          "name": "B"
+        },
+        {
+          "expression": "Point(r * cos(g1 + g2), r * sin(g1 + g2))",
+          "name": "C"
+        },
+        {
+          "expression": "Point(r * cos(g1 + g2 + g3), r * sin(g1 + g2 + g3))",
+          "name": "D"
+        },
+        {
+          "expression": "Point(r * cos(g1 + g2 + g3 + g4), r * sin(g1 + g2 + g3 + g4))",
+          "name": "E"
+        },
+        {
+          "expression": "Point(r * cos(g1 + g2 + g3 + g4 + g5), r * sin(g1 + g2 + g3 + g4 + g5))",
+          "name": "F"
+        },
+        {
+          "expression": "Circle(O, r)",
+          "name": "omega"
+        },
+        {
+          "expression": "Intersect(Line(A, D), Line(B, E))",
+          "name": "T"
+        }
+      ],
+      "id": "JMO-2014-PRE-04",
+      "target": "Distance(F, A)",
+      "variables": [
+        "r",
+        "g1",
+        "g2",
+        "g3",
+        "g4",
+        "g5"
+      ]
+    },
+    "dsl_sha256": "a607e2ce00af7e1687419daed3c27a877aa4a24c427e3f9a0db3781beaea2884",
+    "raw_sha256": "09284fa2970fdf54c0df77fee0d8b569e3137bf6bbf6fab1fe0836e56cf2d7bc",
+    "old12": false,
+    "diagnosis": {
+      "n_vars": 6,
+      "n_equalities": 12,
+      "tangencies": [],
+      "distances": [
+        11
+      ],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": false,
+      "d_applicable": true,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 111,
+    "usable_count": 9,
+    "missing_reason": null
+  },
+  {
+    "id": "JMO-2015-PRE-02",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(P, B)",
+          "operator": "=",
+          "right": 4
+        },
+        {
+          "left": "Distance(P, C)",
+          "operator": "=",
+          "right": 4
+        },
+        {
+          "left": "Distance(A, B)",
+          "operator": "=",
+          "right": 3
+        },
+        {
+          "left": "IsTangent(Line(P, B), Gamma)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(Line(P, C), Gamma)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Parallel(Line(A, B), Line(P, C))",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "cy",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "ay",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "P"
+        },
+        {
+          "expression": "Point(4, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(cx, cy)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(ax, ay)",
+          "name": "A"
+        },
+        {
+          "expression": "Circumcircle(A, B, C)",
+          "name": "Gamma"
+        }
+      ],
+      "id": "JMO-2015-PRE-02",
+      "target": "Distance(B, C)",
+      "variables": [
+        "cx",
+        "cy",
+        "ax",
+        "ay"
+      ]
+    },
+    "dsl_sha256": "fd918c20dc33743ddb04e83c262ee423906998aaeebae5f99c579329c5fa6c81",
+    "raw_sha256": "0c1b96e6a6b58d8b74af3a84fa9da82b858df79e16a41ec610524bd730244556",
+    "old12": false,
+    "diagnosis": {
+      "n_vars": 4,
+      "n_equalities": 6,
+      "tangencies": [
+        3,
+        4
+      ],
+      "distances": [],
+      "contacts": [
+        {
+          "index": 3,
+          "source": "((Center(Gamma).x-(B).x)*((B).x-(P).x)+(Center(Gamma).y-(B).y)*((B).y-(P).y))/Distance((P),(B))",
+          "variables": [
+            "ax",
+            "ay",
+            "cx",
+            "cy"
+          ],
+          "incidence": "construction",
+          "active": true
+        },
+        {
+          "index": 4,
+          "source": "((Center(Gamma).x-(C).x)*((C).x-(P).x)+(Center(Gamma).y-(C).y)*((C).y-(P).y))/Distance((P),(C))",
+          "variables": [
+            "ax",
+            "ay",
+            "cx",
+            "cy"
+          ],
+          "incidence": "construction",
+          "active": true
+        }
+      ],
+      "radius_sources": [],
+      "q_active": true,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 85,
+    "missing_reason": null
+  },
+  {
+    "id": "JMO-2017-PRE-04",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(O, A)",
+          "operator": "=",
+          "right": "r"
+        },
+        {
+          "left": "Distance(O, D)",
+          "operator": "=",
+          "right": "r"
+        },
+        {
+          "left": "Distance(O, Line(A, C))",
+          "operator": "=",
+          "right": "r"
+        },
+        {
+          "left": "Distance(O, Line(D, C))",
+          "operator": "=",
+          "right": "r"
+        },
+        {
+          "left": "Perpendicular(Line(O, A), Line(A, C))",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Perpendicular(Line(O, D), Line(D, C))",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "h",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "r",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(-2, 0)",
+          "name": "D"
+        },
+        {
+          "expression": "Point(0, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(2, 0)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(1,h)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(ox, oy)",
+          "name": "O"
+        },
+        {
+          "expression": "Circle(O, r)",
+          "name": "Gamma"
+        },
+        {
+          "expression": "Intersect(Line(A, B), Gamma, exclude=A)",
+          "name": "E"
+        },
+        {
+          "expression": "Intersect(Line(C, E), Gamma, exclude=E)",
+          "name": "F"
+        }
+      ],
+      "id": "JMO-2017-PRE-04",
+      "target": "Distance(E, F)",
+      "variables": [
+        "h",
+        "ox",
+        "oy",
+        "r"
+      ]
+    },
+    "dsl_sha256": "7c275cddb639b746c1b62cb49967f00498b56b6013064f2782dc9440fcfb864a",
+    "raw_sha256": "8940fcca26b6f2089ff5fdf2d51fade7443951a601642a10d5b609889bb5b22e",
+    "old12": false,
+    "diagnosis": {
+      "n_vars": 4,
+      "n_equalities": 6,
+      "tangencies": [],
+      "distances": [],
+      "contacts": [
+        {
+          "index": 2,
+          "source": "((Center(Gamma).x-(A).x)*((C).x-(A).x)+(Center(Gamma).y-(A).y)*((C).y-(A).y))/Distance((A),(C))",
+          "variables": [
+            "h",
+            "ox",
+            "oy",
+            "r"
+          ],
+          "incidence": "other_equalities",
+          "active": true
+        },
+        {
+          "index": 3,
+          "source": "((Center(Gamma).x-(D).x)*((C).x-(D).x)+(Center(Gamma).y-(D).y)*((C).y-(D).y))/Distance((D),(C))",
+          "variables": [
+            "ox",
+            "oy",
+            "r"
+          ],
+          "incidence": "other_equalities",
+          "active": true
+        }
+      ],
+      "radius_sources": [],
+      "q_active": true,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 97,
+    "missing_reason": null
+  },
+  {
+    "id": "JMO-2021-PRE-07",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, B)",
+          "operator": "=",
+          "right": 10
+        },
+        {
+          "left": "Distance(A, C)",
+          "operator": "=",
+          "right": 11
+        },
+        {
+          "left": "Distance(H1, H2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "ay",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "c",
+          "operator": ">",
+          "right": "6"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(c, 0)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(ax, ay)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(5, 0)",
+          "name": "P"
+        },
+        {
+          "expression": "Point(c - 6, 0)",
+          "name": "Q"
+        },
+        {
+          "expression": "Orthocenter(A, C, P)",
+          "name": "H1"
+        },
+        {
+          "expression": "Orthocenter(A, B, Q)",
+          "name": "H2"
+        }
+      ],
+      "id": "JMO-2021-PRE-07",
+      "target": "c",
+      "variables": [
+        "c",
+        "ax",
+        "ay"
+      ]
+    },
+    "dsl_sha256": "d47f1a487f02d308e628112846cb2477b2595e4d97e558701c97d75f8ef43307",
+    "raw_sha256": "69318c2dcea9b8d0ec3bc44af0f2b2cab329bb674140df9c65d8693388b940b6",
+    "old12": false,
+    "diagnosis": {
+      "n_vars": 3,
+      "n_equalities": 3,
+      "tangencies": [],
+      "distances": [
+        2
+      ],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": false,
+      "d_applicable": true,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 186,
+    "missing_reason": null
+  },
+  {
+    "id": "JMO-2024-PRE-06",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, B)",
+          "operator": "=",
+          "right": 5
+        },
+        {
+          "left": "Distance(A, C)",
+          "operator": "=",
+          "right": 5
+        },
+        {
+          "left": "Distance(A, D)",
+          "operator": "=",
+          "right": 3
+        },
+        {
+          "left": "Collinear(B, E, C)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(E, B, C)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(O, B)",
+          "operator": "=",
+          "right": "r"
+        },
+        {
+          "left": "OnCircle(E, omega)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(Line(A, B), omega)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(omega, Gamma)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(C, F)",
+          "operator": "=",
+          "right": 10
+        },
+        {
+          "left": "cy",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "r",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Distance(E, B)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Distance(E, C)",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(5, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(cx, cy)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(3, 0)",
+          "name": "D"
+        },
+        {
+          "expression": "Point(ex, ey)",
+          "name": "E"
+        },
+        {
+          "expression": "Point(ox, oy)",
+          "name": "O"
+        },
+        {
+          "expression": "Circle(O, r)",
+          "name": "omega"
+        },
+        {
+          "expression": "Circumcircle(A, D, E)",
+          "name": "Gamma"
+        },
+        {
+          "expression": "Intersect(omega, Line(A, E), exclude=E)",
+          "name": "F"
+        }
+      ],
+      "id": "JMO-2024-PRE-06",
+      "target": "Distance(B, C)",
+      "variables": [
+        "cx",
+        "cy",
+        "ex",
+        "ey",
+        "ox",
+        "oy",
+        "r"
+      ]
+    },
+    "dsl_sha256": "fdc8a6a4d93a563fd92a71ad99878668a422a1440ffeca905cb1fdc9b1535ac5",
+    "raw_sha256": "4750c1949aaa859053f41f2761a6a00292e7d3adaade187a0c6f6671e7c803f6",
+    "old12": true,
+    "diagnosis": {
+      "n_vars": 7,
+      "n_equalities": 11,
+      "tangencies": [
+        7,
+        8
+      ],
+      "distances": [],
+      "contacts": [
+        {
+          "index": 7,
+          "source": "((Center(omega).x-(B).x)*((B).x-(A).x)+(Center(omega).y-(B).y)*((B).y-(A).y))/Distance((A),(B))",
+          "variables": [
+            "ox",
+            "oy",
+            "r"
+          ],
+          "incidence": "other_equalities",
+          "active": true
+        },
+        {
+          "index": 8,
+          "source": "((Center(omega).x-(E).x)*(Center(Gamma).y-(E).y)-(Center(omega).y-(E).y)*(Center(Gamma).x-(E).x))/Radius(omega)",
+          "variables": [
+            "ex",
+            "ey",
+            "ox",
+            "oy",
+            "r"
+          ],
+          "incidence": "other_equalities",
+          "active": true
+        }
+      ],
+      "radius_sources": [],
+      "q_active": true,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 154,
+    "usable_count": 7,
+    "missing_reason": null
+  },
+  {
+    "id": "aime-2001-2-7",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "x",
+          "operator": ">",
+          "right": 0
+        },
+        {
+          "left": "x",
+          "operator": "<",
+          "right": 120
+        },
+        {
+          "left": "y",
+          "operator": ">",
+          "right": 0
+        },
+        {
+          "left": "y",
+          "operator": "<",
+          "right": 90
+        },
+        {
+          "predicate": "Bound(t, (0, 1))"
+        },
+        {
+          "predicate": "Bound(v, (0, 1))"
+        },
+        {
+          "left": "Perpendicular(st_line, pr_line)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(st_line, C1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Perpendicular(uv_line, pq_line)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(uv_line, C1)",
+          "operator": "=",
+          "right": 0
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "P"
+        },
+        {
+          "expression": "Point(90, 0)",
+          "name": "Q"
+        },
+        {
+          "expression": "Point(0, 120)",
+          "name": "R"
+        },
+        {
+          "expression": "PointOnSegment(P, R, x / 120)",
+          "name": "S"
+        },
+        {
+          "expression": "PointOnSegment(Q, R, t)",
+          "name": "T"
+        },
+        {
+          "expression": "PointOnSegment(P, Q, y / 90)",
+          "name": "U"
+        },
+        {
+          "expression": "PointOnSegment(Q, R, v)",
+          "name": "V"
+        },
+        {
+          "expression": "Line(P, R)",
+          "name": "pr_line"
+        },
+        {
+          "expression": "Line(P, Q)",
+          "name": "pq_line"
+        },
+        {
+          "expression": "Line(S, T)",
+          "name": "st_line"
+        },
+        {
+          "expression": "Line(U, V)",
+          "name": "uv_line"
+        },
+        {
+          "expression": "Incircle(P, Q, R)",
+          "name": "C1"
+        },
+        {
+          "expression": "Incircle(R, S, T)",
+          "name": "C2"
+        },
+        {
+          "expression": "Incircle(Q, U, V)",
+          "name": "C3"
+        }
+      ],
+      "id": "aime-2001-2-7",
+      "target": "Distance(Center(C2), Center(C3))",
+      "variables": [
+        "x",
+        "y",
+        "t",
+        "v"
+      ]
+    },
+    "dsl_sha256": "eba34da542818f66d1f7dd4b342018f11eb20b558c77b2c86d91edf09d007d2b",
+    "raw_sha256": "09d3fc28620b4bd9cec48a14c8dbaebfc76dc060467afbbf2b7c07ec37f0e4c2",
+    "old12": true,
+    "diagnosis": {
+      "n_vars": 4,
+      "n_equalities": 4,
+      "tangencies": [
+        1,
+        3
+      ],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 155,
+    "missing_reason": null
+  },
+  {
+    "id": "aime-2002-2-14",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "x",
+          "operator": ">",
+          "right": 0
+        },
+        {
+          "left": "y",
+          "operator": ">",
+          "right": 0
+        },
+        {
+          "left": "z",
+          "operator": ">",
+          "right": 0
+        },
+        {
+          "left": "z",
+          "operator": "<",
+          "right": "x"
+        },
+        {
+          "left": "Distance(A, P) + Distance(P, M) + Distance(M, A)",
+          "operator": "=",
+          "right": 152
+        },
+        {
+          "left": "IsTangent(am_line, omega)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(pm_line, omega)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(contact_am, A, M)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(contact_pm, P, M)",
+          "operator": "=",
+          "right": 0
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(x, 0)",
+          "name": "P"
+        },
+        {
+          "expression": "Point(0, y)",
+          "name": "M"
+        },
+        {
+          "expression": "Point(z, 0)",
+          "name": "O"
+        },
+        {
+          "expression": "Circle(O, 19)",
+          "name": "omega"
+        },
+        {
+          "expression": "Line(A, M)",
+          "name": "am_line"
+        },
+        {
+          "expression": "Line(P, M)",
+          "name": "pm_line"
+        },
+        {
+          "expression": "ContactPoint(omega, am_line)",
+          "name": "contact_am"
+        },
+        {
+          "expression": "ContactPoint(omega, pm_line)",
+          "name": "contact_pm"
+        }
+      ],
+      "id": "aime-2002-2-14",
+      "target": "Distance(O, P)",
+      "variables": [
+        "x",
+        "y",
+        "z"
+      ]
+    },
+    "dsl_sha256": "17260365d31726e64faa6dc9e1471760b520a604812c3f3408f7f13eeb5212e7",
+    "raw_sha256": "fb55a5088be0eea7293a9126602ab5c307e5ad17a5d77451083156006d7c3889",
+    "old12": true,
+    "diagnosis": {
+      "n_vars": 3,
+      "n_equalities": 5,
+      "tangencies": [
+        1,
+        2
+      ],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 189,
+    "missing_reason": null
+  },
+  {
+    "id": "aime-2002-2-15",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "x",
+          "operator": ">",
+          "right": 0
+        },
+        {
+          "left": "y",
+          "operator": ">",
+          "right": 0
+        },
+        {
+          "left": "z",
+          "operator": ">",
+          "right": 0
+        },
+        {
+          "left": "w",
+          "operator": ">",
+          "right": 0
+        },
+        {
+          "left": "m",
+          "operator": ">",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(I, C1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(I, C2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "y * w",
+          "operator": "=",
+          "right": 68
+        },
+        {
+          "left": "IsTangent(m_line, C1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "IsTangent(m_line, C2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(Center(C1), Center(C2))",
+          "operator": ">",
+          "right": "abs(y - w)"
+        },
+        {
+          "left": "Distance(Center(C1), Center(C2))",
+          "operator": "<",
+          "right": "y + w"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Circle(Point(x, y), y)",
+          "name": "C1"
+        },
+        {
+          "expression": "Circle(Point(z, w), w)",
+          "name": "C2"
+        },
+        {
+          "expression": "Point(9, 6)",
+          "name": "I"
+        },
+        {
+          "expression": "Line(Point(0, 0), Point(1, m))",
+          "name": "m_line"
+        }
+      ],
+      "id": "aime-2002-2-15",
+      "target": "m",
+      "variables": [
+        "x",
+        "y",
+        "z",
+        "w",
+        "m"
+      ]
+    },
+    "dsl_sha256": "648e296e746f938aade38487a24894a5c6193c7a05375d88169558947a5e1732",
+    "raw_sha256": "b452332785a090550e93cef5982580330994e0691006a0ca1034ddcbc0114ced",
+    "old12": false,
+    "diagnosis": {
+      "n_vars": 5,
+      "n_equalities": 5,
+      "tangencies": [
+        3,
+        4
+      ],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "n_candidates": 3,
+    "raw_count": 200,
+    "usable_count": 70,
+    "missing_reason": null
+  }
+]

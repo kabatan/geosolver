@@ -1,0 +1,70 @@
+{
+  "id": "HMMT-2007-FEB-GEO-09",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Angle(B, A, C)",
+        "operator": "=",
+        "right": "pi / 2"
+      },
+      {
+        "left": "Distance(B, D)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(B, E)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "d",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "c",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(C, E)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(d, 0)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(d + 1, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(0, c)",
+        "name": "C"
+      },
+      {
+        "expression": "FootOfPerpendicular(A, Line(B, C))",
+        "name": "E"
+      }
+    ],
+    "id": "HMMT-2007-FEB-GEO-09",
+    "target": "Distance(A, D)",
+    "variables": [
+      "d",
+      "c"
+    ]
+  }
+}

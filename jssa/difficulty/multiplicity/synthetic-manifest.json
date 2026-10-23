@@ -1,0 +1,204 @@
+[
+  {
+    "name": "contact",
+    "dsl": {
+      "id": "Q4-contact",
+      "variables": [
+        "h"
+      ],
+      "constructions": [
+        {
+          "name": "P",
+          "expression": "Point(1,0)"
+        },
+        {
+          "name": "Q",
+          "expression": "Point(0,1)"
+        },
+        {
+          "name": "Z",
+          "expression": "Point(-1,0)"
+        },
+        {
+          "name": "C",
+          "expression": "Circumcircle(P,Q,Z)"
+        },
+        {
+          "name": "L",
+          "expression": "Line(P,Point(1+h,1))"
+        }
+      ],
+      "conditions": [
+        {
+          "left": "IsTangent(L,C)",
+          "operator": "=",
+          "right": 0
+        }
+      ],
+      "target": "h"
+    },
+    "diagnosis": {
+      "n_vars": 1,
+      "n_equalities": 1,
+      "tangencies": [
+        0
+      ],
+      "distances": [],
+      "contacts": [
+        {
+          "index": 0,
+          "source": "((Center(C).x-(P).x)*((Point(1 + h, 1)).x-(P).x)+(Center(C).y-(P).y)*((Point(1 + h, 1)).y-(P).y))/Distance((P),(Point(1 + h, 1)))",
+          "variables": [
+            "h"
+          ],
+          "incidence": "construction",
+          "active": true
+        }
+      ],
+      "radius_sources": [],
+      "q_active": true,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    }
+  },
+  {
+    "name": "generic_tangent",
+    "dsl": {
+      "id": "Q4-generic",
+      "variables": [
+        "h"
+      ],
+      "constructions": [
+        {
+          "name": "C",
+          "expression": "Circle(Point(0,0),1)"
+        },
+        {
+          "name": "L",
+          "expression": "Line(Point(0,1+h),Point(1,1+h))"
+        }
+      ],
+      "conditions": [
+        {
+          "left": "IsTangent(L,C)",
+          "operator": "=",
+          "right": 0
+        }
+      ],
+      "target": "h"
+    },
+    "diagnosis": {
+      "n_vars": 1,
+      "n_equalities": 1,
+      "tangencies": [
+        0
+      ],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": true,
+      "d_applicable": false,
+      "r_applicable": false
+    }
+  },
+  {
+    "name": "zero_distance",
+    "dsl": {
+      "id": "Q4-distance",
+      "variables": [
+        "h"
+      ],
+      "constructions": [
+        {
+          "name": "P",
+          "expression": "Point(h,2*h)"
+        },
+        {
+          "name": "O",
+          "expression": "Point(0,0)"
+        }
+      ],
+      "conditions": [
+        {
+          "left": "Distance(P,O)",
+          "operator": "=",
+          "right": 0
+        }
+      ],
+      "target": "h"
+    },
+    "diagnosis": {
+      "n_vars": 1,
+      "n_equalities": 1,
+      "tangencies": [],
+      "distances": [
+        0
+      ],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": false,
+      "d_applicable": true,
+      "r_applicable": false
+    }
+  },
+  {
+    "name": "positive_radius",
+    "dsl": {
+      "id": "Q4-radius",
+      "variables": [
+        "r"
+      ],
+      "constructions": [
+        {
+          "name": "B",
+          "expression": "Point(0,0)"
+        },
+        {
+          "name": "A",
+          "expression": "Point(2,0)"
+        },
+        {
+          "name": "C",
+          "expression": "Point(0,2)"
+        },
+        {
+          "name": "G",
+          "expression": "Circumcircle(A,B,C)"
+        },
+        {
+          "name": "T",
+          "expression": "Point(r,r)"
+        },
+        {
+          "name": "c",
+          "expression": "Circle(T,r)"
+        }
+      ],
+      "conditions": [
+        {
+          "left": "Distance(T,Center(G))",
+          "operator": "=",
+          "right": "Radius(G)-r"
+        }
+      ],
+      "target": "r"
+    },
+    "diagnosis": {
+      "n_vars": 1,
+      "n_equalities": 1,
+      "tangencies": [],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [
+        "2*(((0)-Center(G).x)*(1)+((0)-Center(G).y)*(1)+Radius(G))+r*(((1)**2)+((1)**2)-1)"
+      ],
+      "q_active": false,
+      "s_applicable": false,
+      "d_applicable": false,
+      "r_applicable": true
+    }
+  }
+]
