@@ -1,0 +1,184 @@
+{
+  "id": "AIME-2011-II-04",
+  "experiment": "paired",
+  "lock_created_utc": "2026-10-23T15:27:45.789297+00:00",
+  "created_utc": "2026-10-23T15:28:09.398620+00:00",
+  "sympy": "1.14.0",
+  "arms": [
+    {
+      "label": "original",
+      "input_variables": [
+        "p1",
+        "s10",
+        "s2",
+        "s7",
+        "s8",
+        "s9",
+        "t11",
+        "v_bx",
+        "v_by",
+        "v_t",
+        "zz"
+      ],
+      "input_equations": [
+        "p1*v_t + p1 - 11*v_t",
+        "s2**2 - v_bx**2 - v_by**2",
+        "s2 - 20",
+        "s7**2 - 121*v_by**2*v_t**2",
+        "s8**2 - 121*v_by**2*v_t**2 + 242*v_by**2*v_t - 121*v_by**2",
+        "s7*v_bx*v_t - s7*v_bx - 11*s7*v_t - s8*v_bx**2*v_t/11 + s8*v_bx**2/11 + s8*v_bx*v_t - s8*v_by**2*v_t/11 + s8*v_by**2/11",
+        "p1**2 - 22*p1 - s9**2 + 121",
+        "p1**2 - s10**2",
+        "s10*t11 - s9",
+        "s10*v_by*v_t*zz + s10*v_by*zz - 1"
+      ],
+      "cap_seconds": 30,
+      "linear_substitutions": [],
+      "basis_complete": false,
+      "certificate_verified": false,
+      "preprocessing_seconds": 0.0,
+      "output_variables": [
+        "p1",
+        "s10",
+        "s2",
+        "s7",
+        "s8",
+        "s9",
+        "v_bx",
+        "v_by",
+        "v_t",
+        "zz",
+        "t11"
+      ],
+      "output_equations": [
+        "p1*v_t + p1 - 11*v_t",
+        "s2**2 - v_bx**2 - v_by**2",
+        "s2 - 20",
+        "s7**2 - 121*v_by**2*v_t**2",
+        "s8**2 - 121*v_by**2*v_t**2 + 242*v_by**2*v_t - 121*v_by**2",
+        "s7*v_bx*v_t - s7*v_bx - 11*s7*v_t - s8*v_bx**2*v_t/11 + s8*v_bx**2/11 + s8*v_bx*v_t - s8*v_by**2*v_t/11 + s8*v_by**2/11",
+        "p1**2 - 22*p1 - s9**2 + 121",
+        "p1**2 - s10**2",
+        "s10*t11 - s9",
+        "s10*v_by*v_t*zz + s10*v_by*zz - 1"
+      ],
+      "status": "basis_timeout",
+      "basis_seconds": 30.00012463494204,
+      "total_seconds": 30.039620314957574
+    },
+    {
+      "label": "linear",
+      "input_variables": [
+        "p1",
+        "s10",
+        "s2",
+        "s7",
+        "s8",
+        "s9",
+        "t11",
+        "v_bx",
+        "v_by",
+        "v_t",
+        "zz"
+      ],
+      "input_equations": [
+        "p1*v_t + p1 - 11*v_t",
+        "s2**2 - v_bx**2 - v_by**2",
+        "s2 - 20",
+        "s7**2 - 121*v_by**2*v_t**2",
+        "s8**2 - 121*v_by**2*v_t**2 + 242*v_by**2*v_t - 121*v_by**2",
+        "s7*v_bx*v_t - s7*v_bx - 11*s7*v_t - s8*v_bx**2*v_t/11 + s8*v_bx**2/11 + s8*v_bx*v_t - s8*v_by**2*v_t/11 + s8*v_by**2/11",
+        "p1**2 - 22*p1 - s9**2 + 121",
+        "p1**2 - s10**2",
+        "s10*t11 - s9",
+        "s10*v_by*v_t*zz + s10*v_by*zz - 1"
+      ],
+      "cap_seconds": 8,
+      "linear_substitutions": [
+        {
+          "variable": "s2",
+          "value": "20",
+          "pivot": "s2 - 20",
+          "pivot_index": 2,
+          "before_equations": [
+            "p1*v_t + p1 - 11*v_t",
+            "s2**2 - v_bx**2 - v_by**2",
+            "s2 - 20",
+            "s7**2 - 121*v_by**2*v_t**2",
+            "s8**2 - 121*v_by**2*v_t**2 + 242*v_by**2*v_t - 121*v_by**2",
+            "s7*v_bx*v_t - s7*v_bx - 11*s7*v_t - s8*v_bx**2*v_t/11 + s8*v_bx**2/11 + s8*v_bx*v_t - s8*v_by**2*v_t/11 + s8*v_by**2/11",
+            "p1**2 - 22*p1 - s9**2 + 121",
+            "p1**2 - s10**2",
+            "s10*t11 - s9",
+            "s10*v_by*v_t*zz + s10*v_by*zz - 1"
+          ],
+          "after_equations": [
+            "p1*v_t + p1 - 11*v_t",
+            "-v_bx**2 - v_by**2 + 400",
+            "s7**2 - 121*v_by**2*v_t**2",
+            "s8**2 - 121*v_by**2*v_t**2 + 242*v_by**2*v_t - 121*v_by**2",
+            "s7*v_bx*v_t - s7*v_bx - 11*s7*v_t - s8*v_bx**2*v_t/11 + s8*v_bx**2/11 + s8*v_bx*v_t - s8*v_by**2*v_t/11 + s8*v_by**2/11",
+            "p1**2 - 22*p1 - s9**2 + 121",
+            "p1**2 - s10**2",
+            "s10*t11 - s9",
+            "s10*v_by*v_t*zz + s10*v_by*zz - 1"
+          ]
+        },
+        {
+          "variable": "s9",
+          "value": "s10*t11",
+          "pivot": "s10*t11 - s9",
+          "pivot_index": 7,
+          "before_equations": [
+            "p1*v_t + p1 - 11*v_t",
+            "-v_bx**2 - v_by**2 + 400",
+            "s7**2 - 121*v_by**2*v_t**2",
+            "s8**2 - 121*v_by**2*v_t**2 + 242*v_by**2*v_t - 121*v_by**2",
+            "s7*v_bx*v_t - s7*v_bx - 11*s7*v_t - s8*v_bx**2*v_t/11 + s8*v_bx**2/11 + s8*v_bx*v_t - s8*v_by**2*v_t/11 + s8*v_by**2/11",
+            "p1**2 - 22*p1 - s9**2 + 121",
+            "p1**2 - s10**2",
+            "s10*t11 - s9",
+            "s10*v_by*v_t*zz + s10*v_by*zz - 1"
+          ],
+          "after_equations": [
+            "p1*v_t + p1 - 11*v_t",
+            "-v_bx**2 - v_by**2 + 400",
+            "s7**2 - 121*v_by**2*v_t**2",
+            "s8**2 - 121*v_by**2*v_t**2 + 242*v_by**2*v_t - 121*v_by**2",
+            "s7*v_bx*v_t - s7*v_bx - 11*s7*v_t - s8*v_bx**2*v_t/11 + s8*v_bx**2/11 + s8*v_bx*v_t - s8*v_by**2*v_t/11 + s8*v_by**2/11",
+            "p1**2 - 22*p1 - s10**2*t11**2 + 121",
+            "p1**2 - s10**2",
+            "s10*v_by*v_t*zz + s10*v_by*zz - 1"
+          ]
+        }
+      ],
+      "basis_complete": false,
+      "certificate_verified": false,
+      "preprocessing_seconds": 0.03418549196794629,
+      "output_variables": [
+        "p1",
+        "s10",
+        "s7",
+        "s8",
+        "v_bx",
+        "v_by",
+        "v_t",
+        "zz",
+        "t11"
+      ],
+      "output_equations": [
+        "p1*v_t + p1 - 11*v_t",
+        "-v_bx**2 - v_by**2 + 400",
+        "s7**2 - 121*v_by**2*v_t**2",
+        "s8**2 - 121*v_by**2*v_t**2 + 242*v_by**2*v_t - 121*v_by**2",
+        "s7*v_bx*v_t - s7*v_bx - 11*s7*v_t - s8*v_bx**2*v_t/11 + s8*v_bx**2/11 + s8*v_bx*v_t - s8*v_by**2*v_t/11 + s8*v_by**2/11",
+        "p1**2 - 22*p1 - s10**2*t11**2 + 121",
+        "p1**2 - s10**2",
+        "s10*v_by*v_t*zz + s10*v_by*zz - 1"
+      ],
+      "status": "basis_timeout",
+      "basis_seconds": 8.000349748879671,
+      "total_seconds": 8.045331778936088
+    }
+  ]
+}

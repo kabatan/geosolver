@@ -1,0 +1,160 @@
+{
+  "id": "HMMT-2009-FEB-GEO-01",
+  "experiment": "paired",
+  "lock_created_utc": "2026-10-23T15:27:45.789297+00:00",
+  "created_utc": "2026-10-23T15:31:26.122050+00:00",
+  "sympy": "1.14.0",
+  "arms": [
+    {
+      "label": "original",
+      "input_variables": [
+        "p1",
+        "p2",
+        "p3",
+        "p4",
+        "s5",
+        "s6",
+        "t7",
+        "v_f",
+        "v_g"
+      ],
+      "input_equations": [
+        "p1*v_f**2 + 25*p1 - 50*v_f",
+        "p2*v_f**2 + 25*p2 + 5*v_f**2 - 125",
+        "p3*v_g**2 - 16*p3*v_g + 89*p3 - 8*v_g**2 + 78*v_g - 312",
+        "p4*v_g**2 - 16*p4*v_g + 89*p4 + 5*v_g**2 - 80*v_g + 195",
+        "p1**2 - 2*p1*p3 + p2**2 - 2*p2*p4 + p3**2 + p4**2 - s5**2",
+        "s5",
+        "s6**2 - 25*v_f**2/4 + 25*v_f*v_g/2 + 100*v_f - 25*v_g**2/4 - 100*v_g - 400",
+        "s6 - t7"
+      ],
+      "cap_seconds": 30,
+      "linear_substitutions": [],
+      "basis_complete": false,
+      "certificate_verified": false,
+      "preprocessing_seconds": 0.0,
+      "output_variables": [
+        "p1",
+        "p2",
+        "p3",
+        "p4",
+        "s5",
+        "s6",
+        "v_f",
+        "v_g",
+        "t7"
+      ],
+      "output_equations": [
+        "p1*v_f**2 + 25*p1 - 50*v_f",
+        "p2*v_f**2 + 25*p2 + 5*v_f**2 - 125",
+        "p3*v_g**2 - 16*p3*v_g + 89*p3 - 8*v_g**2 + 78*v_g - 312",
+        "p4*v_g**2 - 16*p4*v_g + 89*p4 + 5*v_g**2 - 80*v_g + 195",
+        "p1**2 - 2*p1*p3 + p2**2 - 2*p2*p4 + p3**2 + p4**2 - s5**2",
+        "s5",
+        "s6**2 - 25*v_f**2/4 + 25*v_f*v_g/2 + 100*v_f - 25*v_g**2/4 - 100*v_g - 400",
+        "s6 - t7"
+      ],
+      "status": "basis_timeout",
+      "basis_seconds": 30.011214701924473,
+      "total_seconds": 30.022743279114366
+    },
+    {
+      "label": "linear",
+      "input_variables": [
+        "p1",
+        "p2",
+        "p3",
+        "p4",
+        "s5",
+        "s6",
+        "t7",
+        "v_f",
+        "v_g"
+      ],
+      "input_equations": [
+        "p1*v_f**2 + 25*p1 - 50*v_f",
+        "p2*v_f**2 + 25*p2 + 5*v_f**2 - 125",
+        "p3*v_g**2 - 16*p3*v_g + 89*p3 - 8*v_g**2 + 78*v_g - 312",
+        "p4*v_g**2 - 16*p4*v_g + 89*p4 + 5*v_g**2 - 80*v_g + 195",
+        "p1**2 - 2*p1*p3 + p2**2 - 2*p2*p4 + p3**2 + p4**2 - s5**2",
+        "s5",
+        "s6**2 - 25*v_f**2/4 + 25*v_f*v_g/2 + 100*v_f - 25*v_g**2/4 - 100*v_g - 400",
+        "s6 - t7"
+      ],
+      "cap_seconds": 8,
+      "linear_substitutions": [
+        {
+          "variable": "s5",
+          "value": "0",
+          "pivot": "s5",
+          "pivot_index": 5,
+          "before_equations": [
+            "p1*v_f**2 + 25*p1 - 50*v_f",
+            "p2*v_f**2 + 25*p2 + 5*v_f**2 - 125",
+            "p3*v_g**2 - 16*p3*v_g + 89*p3 - 8*v_g**2 + 78*v_g - 312",
+            "p4*v_g**2 - 16*p4*v_g + 89*p4 + 5*v_g**2 - 80*v_g + 195",
+            "p1**2 - 2*p1*p3 + p2**2 - 2*p2*p4 + p3**2 + p4**2 - s5**2",
+            "s5",
+            "s6**2 - 25*v_f**2/4 + 25*v_f*v_g/2 + 100*v_f - 25*v_g**2/4 - 100*v_g - 400",
+            "s6 - t7"
+          ],
+          "after_equations": [
+            "p1*v_f**2 + 25*p1 - 50*v_f",
+            "p2*v_f**2 + 25*p2 + 5*v_f**2 - 125",
+            "p3*v_g**2 - 16*p3*v_g + 89*p3 - 8*v_g**2 + 78*v_g - 312",
+            "p4*v_g**2 - 16*p4*v_g + 89*p4 + 5*v_g**2 - 80*v_g + 195",
+            "p1**2 - 2*p1*p3 + p2**2 - 2*p2*p4 + p3**2 + p4**2",
+            "s6**2 - 25*v_f**2/4 + 25*v_f*v_g/2 + 100*v_f - 25*v_g**2/4 - 100*v_g - 400",
+            "s6 - t7"
+          ]
+        },
+        {
+          "variable": "s6",
+          "value": "t7",
+          "pivot": "s6 - t7",
+          "pivot_index": 6,
+          "before_equations": [
+            "p1*v_f**2 + 25*p1 - 50*v_f",
+            "p2*v_f**2 + 25*p2 + 5*v_f**2 - 125",
+            "p3*v_g**2 - 16*p3*v_g + 89*p3 - 8*v_g**2 + 78*v_g - 312",
+            "p4*v_g**2 - 16*p4*v_g + 89*p4 + 5*v_g**2 - 80*v_g + 195",
+            "p1**2 - 2*p1*p3 + p2**2 - 2*p2*p4 + p3**2 + p4**2",
+            "s6**2 - 25*v_f**2/4 + 25*v_f*v_g/2 + 100*v_f - 25*v_g**2/4 - 100*v_g - 400",
+            "s6 - t7"
+          ],
+          "after_equations": [
+            "p1*v_f**2 + 25*p1 - 50*v_f",
+            "p2*v_f**2 + 25*p2 + 5*v_f**2 - 125",
+            "p3*v_g**2 - 16*p3*v_g + 89*p3 - 8*v_g**2 + 78*v_g - 312",
+            "p4*v_g**2 - 16*p4*v_g + 89*p4 + 5*v_g**2 - 80*v_g + 195",
+            "p1**2 - 2*p1*p3 + p2**2 - 2*p2*p4 + p3**2 + p4**2",
+            "t7**2 - 25*v_f**2/4 + 25*v_f*v_g/2 + 100*v_f - 25*v_g**2/4 - 100*v_g - 400"
+          ]
+        }
+      ],
+      "basis_complete": false,
+      "certificate_verified": false,
+      "preprocessing_seconds": 0.016847505932673812,
+      "output_variables": [
+        "p1",
+        "p2",
+        "p3",
+        "p4",
+        "v_f",
+        "v_g",
+        "t7"
+      ],
+      "output_equations": [
+        "p1*v_f**2 + 25*p1 - 50*v_f",
+        "p2*v_f**2 + 25*p2 + 5*v_f**2 - 125",
+        "p3*v_g**2 - 16*p3*v_g + 89*p3 - 8*v_g**2 + 78*v_g - 312",
+        "p4*v_g**2 - 16*p4*v_g + 89*p4 + 5*v_g**2 - 80*v_g + 195",
+        "p1**2 - 2*p1*p3 + p2**2 - 2*p2*p4 + p3**2 + p4**2",
+        "t7**2 - 25*v_f**2/4 + 25*v_f*v_g/2 + 100*v_f - 25*v_g**2/4 - 100*v_g - 400"
+      ],
+      "status": "basis_timeout",
+      "basis_seconds": 8.005049906903878,
+      "total_seconds": 8.029478232143447
+    }
+  ]
+}

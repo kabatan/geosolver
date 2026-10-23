@@ -1,0 +1,193 @@
+{
+  "id": "AIME-2013-II-04",
+  "experiment": "paired",
+  "lock_created_utc": "2026-10-23T15:27:45.789297+00:00",
+  "created_utc": "2026-10-23T15:32:29.806634+00:00",
+  "sympy": "1.14.0",
+  "arms": [
+    {
+      "label": "original",
+      "input_variables": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "t6",
+        "v_cx",
+        "v_cy",
+        "v_px",
+        "v_py"
+      ],
+      "input_equations": [
+        "s1**2 - 3",
+        "s2**2 - v_cx**2 + 2*v_cx - v_cy**2 - 1",
+        "s1**2 - s3**2/4 + 1/4",
+        "s2 - s3",
+        "s1**2 - s1*v_cy - s4**2/4 + v_cx**2/4 - v_cx + v_cy**2/4 + 1",
+        "s3 - s4",
+        "s1**2 + s1*v_cy - 3*s1*v_py - 9*s5**2/4 + v_cx**2/4 - 3*v_cx*v_px/2 + 3*v_cx/2 + v_cy**2/4 - 3*v_cy*v_py/2 + 9*v_px**2/4 - 9*v_px/2 + 9*v_py**2/4 + 9/4",
+        "s5",
+        "t6 - v_px*v_py"
+      ],
+      "cap_seconds": 30,
+      "linear_substitutions": [],
+      "basis_complete": false,
+      "certificate_verified": false,
+      "preprocessing_seconds": 0.0,
+      "output_variables": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "v_cx",
+        "v_cy",
+        "v_px",
+        "v_py",
+        "t6"
+      ],
+      "output_equations": [
+        "s1**2 - 3",
+        "s2**2 - v_cx**2 + 2*v_cx - v_cy**2 - 1",
+        "s1**2 - s3**2/4 + 1/4",
+        "s2 - s3",
+        "s1**2 - s1*v_cy - s4**2/4 + v_cx**2/4 - v_cx + v_cy**2/4 + 1",
+        "s3 - s4",
+        "s1**2 + s1*v_cy - 3*s1*v_py - 9*s5**2/4 + v_cx**2/4 - 3*v_cx*v_px/2 + 3*v_cx/2 + v_cy**2/4 - 3*v_cy*v_py/2 + 9*v_px**2/4 - 9*v_px/2 + 9*v_py**2/4 + 9/4",
+        "s5",
+        "t6 - v_px*v_py"
+      ],
+      "status": "basis_timeout",
+      "basis_seconds": 30.000291504897177,
+      "total_seconds": 30.029703827109188
+    },
+    {
+      "label": "linear",
+      "input_variables": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "t6",
+        "v_cx",
+        "v_cy",
+        "v_px",
+        "v_py"
+      ],
+      "input_equations": [
+        "s1**2 - 3",
+        "s2**2 - v_cx**2 + 2*v_cx - v_cy**2 - 1",
+        "s1**2 - s3**2/4 + 1/4",
+        "s2 - s3",
+        "s1**2 - s1*v_cy - s4**2/4 + v_cx**2/4 - v_cx + v_cy**2/4 + 1",
+        "s3 - s4",
+        "s1**2 + s1*v_cy - 3*s1*v_py - 9*s5**2/4 + v_cx**2/4 - 3*v_cx*v_px/2 + 3*v_cx/2 + v_cy**2/4 - 3*v_cy*v_py/2 + 9*v_px**2/4 - 9*v_px/2 + 9*v_py**2/4 + 9/4",
+        "s5",
+        "t6 - v_px*v_py"
+      ],
+      "cap_seconds": 8,
+      "linear_substitutions": [
+        {
+          "variable": "s5",
+          "value": "0",
+          "pivot": "s5",
+          "pivot_index": 7,
+          "before_equations": [
+            "s1**2 - 3",
+            "s2**2 - v_cx**2 + 2*v_cx - v_cy**2 - 1",
+            "s1**2 - s3**2/4 + 1/4",
+            "s2 - s3",
+            "s1**2 - s1*v_cy - s4**2/4 + v_cx**2/4 - v_cx + v_cy**2/4 + 1",
+            "s3 - s4",
+            "s1**2 + s1*v_cy - 3*s1*v_py - 9*s5**2/4 + v_cx**2/4 - 3*v_cx*v_px/2 + 3*v_cx/2 + v_cy**2/4 - 3*v_cy*v_py/2 + 9*v_px**2/4 - 9*v_px/2 + 9*v_py**2/4 + 9/4",
+            "s5",
+            "t6 - v_px*v_py"
+          ],
+          "after_equations": [
+            "s1**2 - 3",
+            "s2**2 - v_cx**2 + 2*v_cx - v_cy**2 - 1",
+            "s1**2 - s3**2/4 + 1/4",
+            "s2 - s3",
+            "s1**2 - s1*v_cy - s4**2/4 + v_cx**2/4 - v_cx + v_cy**2/4 + 1",
+            "s3 - s4",
+            "s1**2 + s1*v_cy - 3*s1*v_py + v_cx**2/4 - 3*v_cx*v_px/2 + 3*v_cx/2 + v_cy**2/4 - 3*v_cy*v_py/2 + 9*v_px**2/4 - 9*v_px/2 + 9*v_py**2/4 + 9/4",
+            "t6 - v_px*v_py"
+          ]
+        },
+        {
+          "variable": "s2",
+          "value": "s3",
+          "pivot": "s2 - s3",
+          "pivot_index": 3,
+          "before_equations": [
+            "s1**2 - 3",
+            "s2**2 - v_cx**2 + 2*v_cx - v_cy**2 - 1",
+            "s1**2 - s3**2/4 + 1/4",
+            "s2 - s3",
+            "s1**2 - s1*v_cy - s4**2/4 + v_cx**2/4 - v_cx + v_cy**2/4 + 1",
+            "s3 - s4",
+            "s1**2 + s1*v_cy - 3*s1*v_py + v_cx**2/4 - 3*v_cx*v_px/2 + 3*v_cx/2 + v_cy**2/4 - 3*v_cy*v_py/2 + 9*v_px**2/4 - 9*v_px/2 + 9*v_py**2/4 + 9/4",
+            "t6 - v_px*v_py"
+          ],
+          "after_equations": [
+            "s1**2 - 3",
+            "s3**2 - v_cx**2 + 2*v_cx - v_cy**2 - 1",
+            "s1**2 - s3**2/4 + 1/4",
+            "s1**2 - s1*v_cy - s4**2/4 + v_cx**2/4 - v_cx + v_cy**2/4 + 1",
+            "s3 - s4",
+            "s1**2 + s1*v_cy - 3*s1*v_py + v_cx**2/4 - 3*v_cx*v_px/2 + 3*v_cx/2 + v_cy**2/4 - 3*v_cy*v_py/2 + 9*v_px**2/4 - 9*v_px/2 + 9*v_py**2/4 + 9/4",
+            "t6 - v_px*v_py"
+          ]
+        },
+        {
+          "variable": "s3",
+          "value": "s4",
+          "pivot": "s3 - s4",
+          "pivot_index": 4,
+          "before_equations": [
+            "s1**2 - 3",
+            "s3**2 - v_cx**2 + 2*v_cx - v_cy**2 - 1",
+            "s1**2 - s3**2/4 + 1/4",
+            "s1**2 - s1*v_cy - s4**2/4 + v_cx**2/4 - v_cx + v_cy**2/4 + 1",
+            "s3 - s4",
+            "s1**2 + s1*v_cy - 3*s1*v_py + v_cx**2/4 - 3*v_cx*v_px/2 + 3*v_cx/2 + v_cy**2/4 - 3*v_cy*v_py/2 + 9*v_px**2/4 - 9*v_px/2 + 9*v_py**2/4 + 9/4",
+            "t6 - v_px*v_py"
+          ],
+          "after_equations": [
+            "s1**2 - 3",
+            "s4**2 - v_cx**2 + 2*v_cx - v_cy**2 - 1",
+            "s1**2 - s4**2/4 + 1/4",
+            "s1**2 - s1*v_cy - s4**2/4 + v_cx**2/4 - v_cx + v_cy**2/4 + 1",
+            "s1**2 + s1*v_cy - 3*s1*v_py + v_cx**2/4 - 3*v_cx*v_px/2 + 3*v_cx/2 + v_cy**2/4 - 3*v_cy*v_py/2 + 9*v_px**2/4 - 9*v_px/2 + 9*v_py**2/4 + 9/4",
+            "t6 - v_px*v_py"
+          ]
+        }
+      ],
+      "basis_complete": false,
+      "certificate_verified": false,
+      "preprocessing_seconds": 0.029156543081626296,
+      "output_variables": [
+        "s1",
+        "s4",
+        "v_cx",
+        "v_cy",
+        "v_px",
+        "v_py",
+        "t6"
+      ],
+      "output_equations": [
+        "s1**2 - 3",
+        "s4**2 - v_cx**2 + 2*v_cx - v_cy**2 - 1",
+        "s1**2 - s4**2/4 + 1/4",
+        "s1**2 - s1*v_cy - s4**2/4 + v_cx**2/4 - v_cx + v_cy**2/4 + 1",
+        "s1**2 + s1*v_cy - 3*s1*v_py + v_cx**2/4 - 3*v_cx*v_px/2 + 3*v_cx/2 + v_cy**2/4 - 3*v_cy*v_py/2 + 9*v_px**2/4 - 9*v_px/2 + 9*v_py**2/4 + 9/4",
+        "t6 - v_px*v_py"
+      ],
+      "status": "basis_timeout",
+      "basis_seconds": 8.000079880002886,
+      "total_seconds": 8.040925680892542
+    }
+  ]
+}
