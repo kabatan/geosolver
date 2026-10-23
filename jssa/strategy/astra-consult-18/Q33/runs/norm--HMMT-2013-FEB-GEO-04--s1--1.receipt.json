@@ -1,0 +1,112 @@
+{
+  "group": "norm",
+  "case": "HMMT-2013-FEB-GEO-04",
+  "seed": 1,
+  "index": 1,
+  "variant": "stage11-norm-source",
+  "cpu": 31,
+  "process_wall_seconds": 5.696685416856781,
+  "solver_budget_seconds": 180,
+  "external_cap_seconds": 75,
+  "timed_out": false,
+  "returncode": 0,
+  "mpmath_backend": "python",
+  "command": [
+    "taskset",
+    "-c",
+    "31",
+    "/home/kabatan/work/solver/.venv/bin/python",
+    "-m",
+    "geosolver.application.cli",
+    "solve",
+    "/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/strategy/astra-consult-18/Q33/inputs/HMMT-2013-FEB-GEO-04.json",
+    "--time-limit-seconds",
+    "180",
+    "--cores",
+    "1",
+    "--seed",
+    "1",
+    "--output",
+    "/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/strategy/astra-consult-18/Q33/runs/norm--HMMT-2013-FEB-GEO-04--s1--1.json"
+  ],
+  "source": "/home/kabatan/work/solver-experiment/research-archives/2026-09-08/local/benchmarks/local-evaluation/solver-improvement-20260907/stage11-norm-source",
+  "stdout_tail": "",
+  "stderr_tail": "",
+  "status": "solved",
+  "answers": [
+    {
+      "kind": "algebraic",
+      "value": {
+        "minimal_polynomial": [
+          "1",
+          "1",
+          "-1"
+        ],
+        "real_root_index": 1,
+        "isolating_interval": [
+          "555565404224292694404015791808/898923707008479989274290850145",
+          "898923707008479989274290850145/1454489111232772683678306641953"
+        ],
+        "decimal": "0.61803398874989484820458683436563811772030917980576"
+      }
+    },
+    {
+      "kind": "algebraic",
+      "value": {
+        "minimal_polynomial": [
+          "1",
+          "-1",
+          "-1"
+        ],
+        "real_root_index": 1,
+        "isolating_interval": [
+          "1454489111232772683678306641953/898923707008479989274290850145",
+          "2353412818241252672952597492098/1454489111232772683678306641953"
+        ],
+        "decimal": "1.6180339887498948482045868343656381177203091798058"
+      }
+    }
+  ],
+  "engine": {
+    "name": "standard",
+    "source_hash": "sha256:e5c6c22096b5cac2b55cb337606e1a21495cfbcbc3fc9b79cc51a331b9f420a3",
+    "resolved_config_hash": "sha256:98810edcd2beb35fb7d31ba65620de8f3cebd3fc289c11a526b8a623adf6d70f",
+    "dependency_lock_hash": "sha256:89449168db266c6414a6377be9ac90832624d1b340f558b0305872d6f22d53d5"
+  },
+  "artifact_sha256": "dad525b168770618cec93ceb9b54ce64eaaeb748ede8a64cfd953b622a445e3a",
+  "phase_timings": {
+    "phase_rescue": 0.0,
+    "phase_discrete_completion": 0.0,
+    "initial_probe": 0.015329116955399513,
+    "search": 0.6670867688953876,
+    "refinement": 1.217420405941084,
+    "exact_assembly": 2.8292745128273964,
+    "discrete_completion": 7.3499977588653564e-06,
+    "descriptors": 6.909947842359543e-06,
+    "rescue": 0.0
+  },
+  "counters": {
+    "evaluate_float_residual": 250,
+    "numerical_construction_evaluations": 40483,
+    "evaluate_guard": 50,
+    "scalar_leaf_evaluations": 3891,
+    "constant_scalar_cache_hits": 5039,
+    "constant_construction_cache_hits": 10009,
+    "evaluation_snapshot_hits": 6526,
+    "guard_evidence_cache_hits": 1,
+    "evaluate_float_hard_feasibility": 200,
+    "evaluate_hp_residual": 5326,
+    "evaluate_hp_hard_feasibility": 548,
+    "scalar_leaf_cache_hits": 1160,
+    "refinement_snapshot_reuses": 20,
+    "evaluate_answer_hp": 20,
+    "verification_system_evaluations": 4704,
+    "verification_equation_evaluations": 14560,
+    "domain_margin_system_samples": 2352,
+    "domain_margin_sample_cache_hits": 2352,
+    "exact_descriptor_reuses": 5,
+    "evaluation_count": 200,
+    "exact_answer_attempt_count": 8,
+    "exact_answer_identified_count": 8
+  }
+}

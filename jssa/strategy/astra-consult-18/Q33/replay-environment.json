@@ -1,0 +1,85 @@
+{
+  "scratch": "/tmp/q33-replay-bxlf98fa",
+  "sources": {
+    "stage10-score-source": "/home/kabatan/work/solver-experiment/research-archives/2026-09-08/local/benchmarks/local-evaluation/solver-improvement-20260907/stage10-score-source",
+    "stage11-norm-source": "/home/kabatan/work/solver-experiment/research-archives/2026-09-08/local/benchmarks/local-evaluation/solver-improvement-20260907/stage11-norm-source",
+    "stage8-scalar-budget-source": "/home/kabatan/work/solver-experiment/research-archives/2026-09-08/local/benchmarks/local-evaluation/solver-improvement-20260907/stage8-scalar-budget-source",
+    "stage9-noadaptive-source": "/home/kabatan/work/solver-experiment/research-archives/2026-09-08/local/benchmarks/local-evaluation/solver-improvement-20260907/stage9-noadaptive-source",
+    "baseline-source": "/tmp/q33-replay-bxlf98fa/baseline-source",
+    "analytic-stable-v3-source": "/tmp/q33-replay-bxlf98fa/analytic-stable-v3-source"
+  },
+  "differences": {
+    "norm": [
+      {
+        "path": "geosolver/engine/standard/evaluation/float_expressions.py",
+        "before": "2c2040a9f2569b85156ff2610b290a19d5ae95e04d00f86cd5d618caa14d59c9",
+        "after": "4aef117017f53923b1e634b6ff26c734106c2d729cb2069f8cd63349d403e13e"
+      }
+    ],
+    "stability": [
+      {
+        "path": "geosolver/engine/standard/refinement/mpmath_refiner.py",
+        "before": "3e3f1432c2fa088206a35626686f0b37018f7c1bb9b4bbae08b894d0bb4350a0",
+        "after": "b1c9ceb097601238c1b9507d1359e9a8695ef9f8028dfd005b2dd3be1d2a9cfe"
+      }
+    ],
+    "analytic": [
+      {
+        "path": "geosolver/engine/standard/refinement/analytic_jacobian.py",
+        "before": "6c004e989e344c0e458ad036090f2d01419368b25649a248eeca031947682017",
+        "after": "2719311c4fca36a15ff74eade1ee38711da4212d39ad1a6bfb9ae34ed625b8e8"
+      }
+    ]
+  },
+  "inputs": {
+    "HMMT-2011-FEB-ALGGEO-18": {
+      "source": "/home/kabatan/work/solver-experiment/research-archives/2026-10-21/snapshot/benchmarks/cases.jsonl",
+      "sha256": "c1ecca203f79df5e8a4fc84f98b6c1cce91e3f0bdc09d7e28c701ab15c3616b0",
+      "reference": [
+        "7",
+        "35/11"
+      ]
+    },
+    "HMMT-2013-FEB-GEO-04": {
+      "source": "/home/kabatan/work/solver-experiment/research-archives/2026-10-21/snapshot/benchmarks/cases.jsonl",
+      "sha256": "d188ac9216312b14957e655ee75e1ecbe192fbd867254ad1e90cc0ec0ea02e7f",
+      "reference": [
+        "(-1+√5)/2",
+        "(1+√5)/2"
+      ]
+    },
+    "HMMT-2023-FEB-GEO-04": {
+      "source": "/home/kabatan/work/solver-experiment/research-archives/2026-10-21/snapshot/benchmarks/cases.jsonl",
+      "sha256": "0e5c226f28c60d725c6d421f9af986224c9e2296f116a66e525dd31fc505178a",
+      "reference": [
+        "√5"
+      ]
+    },
+    "HMMT-2024-FEB-GEO-10": {
+      "source": "/home/kabatan/work/solver-experiment/research-archives/2026-10-21/snapshot/benchmarks/cases.jsonl",
+      "sha256": "f6b619383a0182cc56a493ad8b006fa660abdab1164c0da954dd78ac570957cd",
+      "reference": [
+        "9√410/5"
+      ]
+    },
+    "zero-distance-precision": {
+      "source": "/home/kabatan/work/solver-experiment/research-archives/2026-10-21/snapshot/tests/test_solver_improvement_regressions.py:19",
+      "reference": "2+sqrt(2)",
+      "sha256": "c1cd23f41cc88a1b95be6d674ef1c3ffe4d8e5e5806d0f88e4ee37d9d7bb7ebb"
+    }
+  },
+  "extracted_files": 512,
+  "archive": "/home/kabatan/work/solver-experiment/research-archives/solver-evidence/optimization-speed-20261011/source-snapshots.tar.gz",
+  "archive_sha256": "673c02ed84efee91545eb5120e0465864f5a65071652e1b8c1200ab5bede2988",
+  "cpu": 31,
+  "python": "/home/kabatan/work/solver/.venv/bin/python",
+  "versions": {
+    "numpy": "2.5.1",
+    "scipy": "1.18.0",
+    "sympy": "1.14.0",
+    "mpmath": "1.3.0",
+    "gmpy2": "2.3.2",
+    "PyNomadBBO": "4.5.1",
+    "pydantic": "2.11.7"
+  }
+}
