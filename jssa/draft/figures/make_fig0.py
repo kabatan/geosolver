@@ -48,11 +48,11 @@ ax2.text(0,0.98,txt,va='top',fontsize=8.6,family='IPAGothic',linespacing=1.5,bbo
 ax3=fig.add_axes([0.72,0.02,0.28,0.9]);ax3.axis('off')
 txt3=('③ solver の出力（12.9秒）\n\n'
  '探索：候補 20個（1.4秒）\n'
- '精密化：14個が収束、6個は偽\n'
+ '精密化：14個が収束、6個は不採用\n'
  '値：4.10169491525423…\n'
  '同定（PSLQ）：59τ − 242 = 0\n'
  '確認：120桁以上で条件と枝\n\n'
- '答え  242/59')
+ '答え（周長）  242/59\n（原問の回答は 242+59 = 301）')
 ax3.text(0,0.98,txt3,va='top',fontsize=8.6,linespacing=1.5,bbox=dict(boxstyle='round,pad=0.6',fc='#eef4fc',ec='#bcd3f0'))
 fig.text(0.29,0.62,'→',fontsize=20,color='#8a8985');fig.text(0.675,0.62,'→',fontsize=20,color='#8a8985')
-fig.savefig('/mnt/project-files/jssa/draft/figures/fig0_pipeline_example.png',dpi=200)
+fig.savefig(__import__('pathlib').Path(__file__).resolve().parent / 'fig0_pipeline_example.png',dpi=200)
