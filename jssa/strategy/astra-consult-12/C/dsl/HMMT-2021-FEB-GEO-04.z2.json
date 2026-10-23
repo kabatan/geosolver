@@ -1,0 +1,106 @@
+{
+ "conditions": [
+  {
+   "left": "Distance(A, D)",
+   "operator": "=",
+   "right": 7
+  },
+  {
+   "left": "Distance(B, C)",
+   "operator": "=",
+   "right": 9
+  },
+  {
+   "left": "Distance(C, D)",
+   "operator": "=",
+   "right": 10
+  },
+  {
+   "left": "Distance(A, B)",
+   "operator": "=",
+   "right": 5
+  },
+  {
+   "left": "h",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "u",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "ofsx_E",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "ofsy_E",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "ofsx_M",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "ofsy_M",
+   "operator": "=",
+   "right": "0"
+  }
+ ],
+ "constructions": [
+  {
+   "name": "ORIGINZ",
+   "expression": "Point(0, 0)"
+  },
+  {
+   "expression": "Point(0, 0)",
+   "name": "A"
+  },
+  {
+   "expression": "Point(5, 0)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(u, h)",
+   "name": "D"
+  },
+  {
+   "expression": "Point(u + 10, h)",
+   "name": "C"
+  },
+  {
+   "name": "EZC",
+   "expression": "Intersect(Line(B, C), Line(D, A))"
+  },
+  {
+   "name": "E",
+   "expression": "Point(Vector(ORIGINZ, EZC).x + ofsx_E, Vector(ORIGINZ, EZC).y + ofsy_E)"
+  },
+  {
+   "name": "MZC",
+   "expression": "Midpoint(C, D)"
+  },
+  {
+   "name": "M",
+   "expression": "Point(Vector(ORIGINZ, MZC).x + ofsx_M, Vector(ORIGINZ, MZC).y + ofsy_M)"
+  },
+  {
+   "expression": "Intersect(Circumcircle(B, M, C), Circumcircle(D, M, A), exclude=M)",
+   "name": "N"
+  }
+ ],
+ "id": "HMMT-2021-FEB-GEO-04.k0.z2",
+ "target": "Distance(E, N) ** 2",
+ "variables": [
+  "u",
+  "h",
+  "ofsx_E",
+  "ofsy_E",
+  "ofsx_M",
+  "ofsy_M"
+ ]
+}
