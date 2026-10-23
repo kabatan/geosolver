@@ -1,0 +1,338 @@
+         13th Annual Harvard-MIT Mathematics Tournament
+                                     Saturday 20 February 2010
+                                           Team Round A
+1. You are trying to sink a submarine. Every second, you launch a missile at a point of your choosing on
+   the x-axis. If the submarine is at that point at that time, you sink it. A firing sequence is a sequence
+   of real numbers that specify where you will fire at each second. For example, the firing sequence
+   2, 3, 5, 6, . . . means that you will fire at 2 after one second, 3 after two seconds, 5 after three seconds,
+   6 after four seconds, and so on.
+
+    (a) [5] Suppose that the submarine starts at the origin and travels along the positive x-axis with an
+        (unknown) positive integer velocity. Show that there is a firing sequence that is guaranteed to hit
+        the submarine eventually.
+        Solution: The firing sequence 1, 4, 9, . . . , n2 , . . . works. If the velocity of the submarine is v,
+        then after v seconds it will be at x = v 2 , the same location where the mine explodes at time v.
+    (b) [10] Suppose now that the submarine starts at an unknown integer point on the non-negative
+        x-axis and again travels with an unknown positive integer velocity. Show that there is still a
+        firing sequence that is guaranteed to hit the submarine eventually.
+        Solution: Represent the submarine’s motion by an ordered pair (a, b), where a is the starting
+        point of the submarine and b is its velocity. We want to find a way to map each positive integer
+        to a possible ordered pair so that every ordered pair is covered. This way, if we fire at bn n + an
+        at time n, where (an , bn ) is the point that n maps to, then we will eventually hit the submarine.
+        (Keep in mind that bn n + an would be the location of the submarine at time n.) There are many
+        such ways to map the positive integers to possible points; here is one way:
+
+           1 → (1, 1), 2 → (2, 1), 3 → (1, 2), 4 → (3, 1), 5 → (2, 2), 6 → (1, 3), 7 → (4, 1), 8 → (3, 2),
+
+            9 → (2, 3), 10 → (1, 4), 11 → (5, 1), 12 → (4, 2), 13 → (3, 3), 14 → (2, 4), 15 → (1, 5), . . .
+
+        (The path of points trace out diagonal lines that sweep every lattice point in the coordinate plane.)
+        Since we cover every point, we will eventually hit the submarine.
+        Remark: The mapping shown above is known as a bijection between the positive integers and
+        ordered pairs of integers (a, b) where b > 0.
+
+2. [15] Consider the following two-player game. Player 1 starts with a number, N . He then subtracts a
+   proper divisor of N from N and gives the result to player 2 (a proper divisor of N is a positive divisor
+   of N that is not equal to 1 or N ). Player 2 does the same thing with the number she gets from player 1,
+   and gives the result back to player 1. The two players continue until a player is given a prime number
+   or 1, at which point that player loses. For which values of N does player 1 have a winning strategy?
+   Answer: All even numbers except for odd powers of 2. First we show that if you are stuck with an
+   odd number, then you are guaranteed to lose. Suppose you have an odd number ab, where a and b are
+   odd numbers, and you choose to subtract a. You pass your opponent the number a(b − 1). This cannot
+   be a power of 2 (otherwise a is a power of 2 and hence a = 1, which is not allowed), so your opponent
+   can find an odd proper divisor of a(b − 1), and you will have a smaller odd number. Eventually you
+   will get to an odd prime and lose.
+   Now consider even numbers that aren’t powers of 2. As with before, you can find an odd proper divisor
+   of N and pass your opponent an odd number, so you are guaranteed to win.
+   Finally consider powers of 2. If you have the number N = 2k , it would be unwise to choose a proper
+   divisor other than 2k−1 ; otherwise you would give your opponent an even number that isn’t a power
+   of 2. Therefore if k is odd, you will end up with 2 and lose. If k is even, though, your opponent will
+   end up with 2 and you will win.
+   Therefore player 1 has a winning strategy for all even numbers except for odd powers of 2.
+
+
+                                              Team Round A
+3. [15] Call a positive integer in base 10 k-good if we can split it into two integers y and z, such that y
+   is all digits on the left and z is all digits on the right, and such that y = k · z. For example, 2010 is
+   2-good because we can split it into 20 and 10 and 20 = 2 · 10. 20010 is also 2-good, because we can
+   split it into 20 and 010. In addition, it is 20-good, because we can split it into 200 and 10.
+   Show that there exists a 48-good perfect square.
+   Solution: We wish to find integers a, z such that 48z · 10a + z = z(48 · 10a + 1) a perfect square,
+   where z < 10a . This would prove that there exists a 48-good perfect square because we are pulling
+   off the last a digits of the number and get two integers 48z and z. To make z small by keeping the
+   product a perfect square, we’d like 48 · 10a + 1 to be divisible by some reasonably large square. Take
+   a = 42 = ϕ(49). By Euler’s theorem, 1042 ≡ 1 (mod 49), so 48 · 10a + 1 is a multiple of 49. Then we
+                                                                                                             2
+                      a
+                                                                                                   48·1042 +1
+   can take z = 48·1049
+                        +1
+                           . (Clearly z < 10 a
+                                               , so we’re fine.) Then we have z(48 · 10 a
+                                                                                          + 1) =       7         .
+
+4. [20] Let
+                                                   ex + ey = A
+                                                  xex + yey = B
+                                                 x2 ex + y 2 ey = C
+                                                 x3 ex + y 3 ey = D
+                                                 x4 ex + y 4 ey = E.
+   Prove that if A, B, C, and D are all rational, then so is E.
+   Solution: We can express x + y in two ways:
+
+                                                         AD − BC
+                                                x+y =
+                                                         AC − B 2
+                                                         AE − C 2
+                                                x+y =
+                                                         AD − BC
+   (We have to be careful if AC − B 2 or AD − BC is zero. We’ll deal with that case later.) It is easy to
+   check that these equations hold by substituting the expressions for A, B, C, D, and E. Setting these
+   two expressions for x + y equal to each other, we get
+
+                                             AD − BC    AE − C 2
+                                                    2
+                                                      =          ,
+                                             AC − B     AD − BC
+   which we can easily solve for E as a rational function of A, B, C, and D. Therefore if A, B, C, and
+   D are all rational, then E will be rational as well.
+   Now, we have to check what happens if AC − B 2 = 0 or AD − BC = 0. If AC − B 2 = 0, then writing
+   down the expressions for A, B, and C gives us that (x − y)2 ex+y = 0, meaning that x = y. If x = y,
+   and x 6= 0, A and D are also non-zero, and B       E               B
+                                                  A = D = x. Since A is rational and D is rational, this
+   implies that E is rational. If x = y = 0, then E = 0 and so is certainly rational.
+   We finally must check what happens if AD − BC = 0. Since AD − BC = (x + y)(AC − B 2 ), either
+   AC − B 2 = 0 (a case we have already dealt with), or x + y = 0. But if x + y = 0 then AE − C 2 = 0,
+                               2
+   which implies that E = CA (we know that A 6= 0 because ex and ey are both positive). Since A and C
+   are rational, this implies that E is also rational.
+   So, we have shown E to be rational in all cases, as desired.
+5. [20] Show that, for every positive integer n, there exists a monic polynomial of degree n with integer
+   coefficients such that the coefficients are decreasing and the roots of the polynomial are all integers.
+   Solution: We claim we can find values a and b such that p(x) = (x − a)(x + b)n is a polynomial of
+   degree n + 1 that satisfies these constraints. We show that its coefficients are decreasing by finding a
+   general formula for the coefficient of xk .
+
+
+                                              Team Round A
+   The coefficient of xk is bk nk − abk−1 k−1
+                                            n
+                                              
+                                                 , which can be seen by expanding out (x + b)n and then
+   multiplying by (x − a). Then we must prove that
+                                                                      
+                               k+1    n        k n        k n       k−1    n
+                             b             − ab        <b       − ab           ,
+                                     k+1           k         k           k−1
+   or                                                                
+                                           n         n                   n       n
+                                 abk−1 b       −            > bk b           −        .
+                                           k       k−1                k+1        k
+                        n 
+                          (k )
+   Choose b > max          n       in order to make sure the right-hand term in each product on each side of
+                         (k−1  )
+   the inequality
+                   sign is positive
+                                      (we’ll be dividing by it, so this makes things much easier), and choose
+                     n
+               b(b(k+1 )−(nk))
+   a > max       b(n     n         to make sure the inequality always holds. Since there are only finite values
+                   k )−(k−1)
+
+   that k can take on given a fixed n (namely, integers between 0 and n inclusive), we can always find
+   values of a and b that satisfy these constraints.
+6. [20] Let S be a convex set in the plane with a finite area a. Prove that either a = 0 or S is bounded.
+   Note: a set is bounded if it is contained in a circle of finite radius. Note: a set is convex if, whenever
+   two points A and B are in the set, the line segment between them is also in the set.
+   Solution: If all points in S lie on a straight line, then a = 0.
+   Otherwise we may pick three points A, B, and C that are not collinear. Let ω be the incircle of 4ABC,
+   with I its center and r its radius. Since S is convex, S must contain ω.
+
+                                                                                 X
+                                            A
+
+                                             Y
+                                            ω
+                                                     M
+                                                 I
+
+                                                         Z                   B
+                                 C
+
+                                                                                              q
+                                                                                                      2
+   Suppose S also contains a point X at a distance d from I, with d > R. We will show that d ≤ r2 + ar2 ,
+   which implies
+         q       that the S is bounded since all points are contained within the circle centered at I of
+                   2
+   radius   r2 + ar2 .
+   Let Y and Z be on ω such that XY and XZ are tangents to ω. Because S is convex, it must contain
+   kite IY XZ, whose area we can compute in terms of d and r.
+   Let M be the midpoint of Y Z. Since 4IY X ∼ 4IM Y , we know that IM                  IY
+                                                                                   IY = IX , that is, IM =
+         2    2
+                             q
+   (IY )    r                          4
+                               r2 − dr 2 = r 1 − ( dr )2 = 21 Y Z.
+                                            p
+    IX = d . Then M Y =
+                                                             √
+   The area of IY XZ is 12 (Y Z)(IX) = rd 1 − ( dr )2 = r d2 − r2 . This must be less than or equal to a,
+                                            p
+                                                               2
+                                                                                     q
+                                                                                            2
+   the area of S. This yields a2 ≥ r2 d2 − r4 or d2 ≤ r2 + ar2 . It follows that d ≤ r2 + ar2 , as desired.
+
+7. [25] Point P lies inside a convex pentagon AF QDC such that F P DQ is a parallelogram. Given that
+   ∠F AQ = ∠P AC = 10◦ , and ∠P F A = ∠P DC = 15◦ . What is ∠AQC?
+   Answer: 12 π
+                  Let C 0 be the point such that there is a spiral similarity between 4AF P and 4AQC 0 .
+   In other words, one triangle can be formed from the other by dilating and rotating about one of the
+
+
+                                             Team Round A
+   triangle’s vertices (in this case, A). We will show that C 0 is C, so our answer will be ∠AQC =
+   ∠AQC 0 = ∠AF P = 15◦ . By the spiral similarity theorem, 4AF Q ∼ 4AP C 0 (this is intuitive by
+   looking at a diagram), so ∠P AC = ∠F AQ = 10◦ , so to show that C 0 is C, it is sufficient to show that
+   ∠P DC 0 = 15◦ .
+
+                                                                                   10◦ A
+                                                                                       10◦
+
+
+                                       F                           P
+                                           15◦
+
+                                   X                          C0
+
+                          Q                            D
+
+
+   Let X be the fourth point of the parallelogram F P C 0 X (see the above diagram). The angle between
+   lines F P and F A is 15◦ . Since XC 0 k F P , the angle between F A and XC 0 is 15◦ as well. In addition,
+   the angle between QA and QC 0 is ∠AQC 0 = 15◦ , so ∠XC 0 Q = ∠F AQ. Further, because F P C 0 X is a
+                    QC 0    QC 0                                         0 QC
+                                                                              0
+                                                                                     QA
+   parallelogram, XC   0 = F P . By similar triangles 4AF P and 4AQC , F P = F A . By SAS similarity,
+
+   there is a spiral similarity between 4XC Q and 4F AQ, so ∠F QX = ∠AQC = 15◦ .
+                                              0                                    0
+
+   Note that the segments F P , XC 0 , and QD are all parallel and equal in length. Therefore, 4F QX ∼    =
+   4P DC 0 are congruent, and ∠P DC 0 = 15◦ as well. So C 0 is C, and ∠AQC = 15◦ .
+8. [30] A knight moves on a two-dimensional grid. From any square, it can move 2 units in one axis-
+   parallel direction, then move 1 unit in an orthogonal direction, the way a regular knight moves in a
+   game of chess. The knight starts at the origin. As it moves, it keeps track of a number t, which is
+   initially 0. When the knight lands at the point (a, b), the number is changed from x to ax + b.
+   Show that, for any integers a and b, it is possible for the knight to land at the points (1, a) and (−1, a)
+   with t equal to b.
+   Solution: For convenience, we will refer to (a, b) as [ax + b], the function it represents. This will
+   make it easier to follow the trajectory of t over a given sequence of moves.
+   Suppose we start at [x + 1] with t = a. Taking the path [x + 1] → [−x] → [x − 1] → [−x] → [x + 1]
+   will yield t = a + 2. So we can go from t = a to t = a + 2 at [x + 1].
+   We can also move until we get to [−3], then go [−3] → [x − 1] to end up with t = −4 at [x − 1]. But
+   going [x − 1] → [3x] → [x − 1] means we can go from t = a to t = 3a − 1 at x − 1. Since we can start
+   with t = −4, this means we can therefore get arbitrarily small even and odd numbers at [x − 1], hence
+   also [3x], hence also at [x + 1].
+   This implies we can get any value of t we want at [x + 1], so we can also get any value of t we want at
+   [−x], [x − 1], [−x − 2], [x − 3], etc., as well as [−x + 2], [x + 3], [−x + 4], [x + 5], etc. We can do a similar
+   thing starting at [−x + 1] to get from t = a to t = a + 2, and use the [−x − 1] → [−3x] → [−x − 1] loop
+   to get arbitrarily small integers of both parities. So we can get any value of t we want at all points of
+   the form [±x + k] for any integer k.
+
+9. [30] Let p(x) = an xn + an−1 xn−1 + . . . + a0 be a polynomial with complex coefficients such that ai 6= 0
+                                             ai−1
+   for all i. Prove that |r| ≤ 2 maxn−1
+                                     i=0 | ai | for all roots r of all such polynomials p. Here we let |z|
+   denote the absolute value of the complex number z.
+   Solution: If r is a root, then −an rn = an−1 rn−1 + . . . + a0 . By the Triangle Inequality, |−an rn | ≤
+   |an−1 rn−1 | + ... + |a0 |. Rearranging this inequality yields |an rn | − |an−1 rn−1 | − ... − |a0 | ≤ 0.
+   Now suppose |r| = k max | ai−1
+                              ai |. Applying this over values of i ranging from m + 1 to n (assuming
+                                           n
+   m + 1 ≤ n), we get |am rm | ≤ |a nr |
+                                 kn−m . This, along with the above equation, yields:
+
+
+
+                                                 Team Round A
+                                                                           
+                                        n       1  1   1           1
+                                   |an r | · 1 − − 2 − 3 − . . . − n            =0
+                                                k k   k           k
+
+    This is only true when an = 0, r = 0, or (1 − k1 − k12 − . . .) = 0. The first option is impossible by the
+    constraints in the problem. The second option implies k = 0. The third option implies that k < 2;
+                                                                                                      ai−1
+    otherwise (1 − k1 − k12 − . . . − k1n ) would always remain positive. Either way, |r| ≤ 2 maxn−1
+                                                                                                 i=0 | ai |.
+
+10. Call an 2n-digit base-10 number special if we can split its digits into two sets of size n such that the
+    sum of the numbers in the two sets is the same. Let pn be the probability that a randomly-chosen
+    2n-digit number is special. (We allow leading zeros in 2n-digit numbers).
+
+     (a) [20] The sequence pn converges to a constant c. Find c.
+         Answer: 21 We first claim that if a 2n-digit number x has at least eight 0’s and at least eight
+         1’s and the sum of its digits is even, then x is special.
+         Let A be a set of eight 0’s and eight 1’s and let B be  P the set P
+                                                                           of all the other digits. We split
+         b arbitrily into two sets Y and Z of equal size. If | y∈Y y − z∈Z z| > 8, then we swap the
+         biggest element of the set with the bigger sum with the smallest element of the other set. This
+         transposition always decreases the absolute value of the sum: in the worst case, a 9 from the
+         bigger set is swapped for a 0 from the smaller set, which P changesPthe difference by at most 18.
+         Therefore, after a finite number of steps, we will have | y∈Y y − z∈Z z| ≤ 8.
+         Note that this absolute P  value is even,
+                                               P since the sum of all the digits is even. Without loss of
+         generality, suppose that y∈Y y − z∈Z z is 2k, where 0 ≤ k ≤ 4. If we add k 0’s and 8 − k 1’s
+         to Y , and we add the other elements of A to Z, then the two sets will balance, so x is special.
+     (b) [45] Let qn = pn − c. There exists a unique positive constant r such that rqnn converges to a
+         constant d. Find r and d.
+         Answer: r = 41 , d = −1 To get the next asymptotic term after the constant term of 12 , we need
+         to consider what happens when the digit sum is even; we want to find the probability that such
+         a number isn’t balanced. We claim that the configuration that contributes the vast majority of
+         unbalanced numbers is when all numbers are even and the sum is 2 mod 4, or such a configuration
+                                                                                                     2n        n
+         with all numbers increased by 1. Clearly this gives qn being asymptotic to − 12 · 2 · 21        = − 14 ,
+         so r = 41 and d = −1.
+         To prove the claim, first note that the asymptotic probability that there are at most 4 digits that
+                                                                                   n
+         occur more than 10 times is asymptotically much smaller than 21 , so we can assume that there
+         exist 5 digits that each occur at least 10 times. If any of those digits are consecutive, then the
+         digit sum being even implies that the number is balanced (by an argument similar to part (a)).
+         So, we can assume that none of the numbers are consecutive. We would like to say that this
+         implies that the numbers are either 0, 2, 4, 6, 8 or 1, 3, 5, 7, 9. However, we can’t quite say this yet,
+         as we need to rule out possibilities like 0, 2, 4, 7, 9. In this case, though, we can just pair 0 and 7
+         up with 2 and 4; by using the same argument as in part (a), except using 0 and 7 both (to get a
+         sum of 7) and 2 and 4 both (to get a sum of 6) to balance out the two sets at the end.
+         In general, if there is ever a gap of size 3, consider the number right after it and the 3 numbers
+         before it (so we have k − 4, k − 2, k, k + 3 for some k), and pair them up such that one pair has a
+         sum that’s exactly one more than the other (i.e. pair k − 4 with k + 3 and k − 2 with k). Since
+         we again have pairs of numbers whose sums differ by 1, we can use the technique from part (a)
+         of balancing out the sets at the end.
+         So, we can assume there is no gap of size 3, which together with the condition that no two numbers
+         are adjacent implies that the 5 digits are either 0, 2, 4, 6, 8 or 1, 3, 5, 7, 9. For the remainder of the
+         solution, we will deal with the 0, 2, 4, 6, 8 case, since it is symmetric with the other case under the
+         transformation x 7→ 9 − x.
+         If we can distribute the odd digits into two sets S1 and S2 such that (i) the differense in sums of
+         S1 and S2 is small; and (ii) the difference in sums of S1 and S2 , plus the sum of the even digits,
+         is divisible by 4, then the same argument as in part (a) implies that the number is good.
+
+
+                                                Team Round A
+In fact, if there are any odd digits, then we can use them at the beginning to fix the parity mod
+4 (by adding them all in such that the sums of the two sets remain close, and then potentially
+switching one with an even digit). Therefore, if there are any odd digits then the number is good.
+Also, even if there are no odd digits, if the sum of the digits is divisible by 4 then the number is
+good.
+So, we have shown that almost all non-good numbers come from having all numbers being even
+with a digit sum that is 2 mod 4, or the analogous case under the mapping x 7→ 9 − x. This
+formalizes the claim we made in the first paragraph, so r = 14 and d = −1, as claimed.
+
+
+
+
+                                    Team Round A
+

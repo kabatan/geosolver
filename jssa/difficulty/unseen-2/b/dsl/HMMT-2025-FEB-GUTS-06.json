@@ -1,0 +1,73 @@
+{
+  "id": "HMMT-2025-FEB-GUTS-06",
+  "variables": [
+    "ax",
+    "ay",
+    "t",
+    "u"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(1+4, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "E",
+      "expression": "Point(ax+t*(1+4-ax), ay*(1-t))"
+    },
+    {
+      "name": "F",
+      "expression": "Point(ax*(1-u), ay*(1-u))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A,B)",
+      "operator": "=",
+      "right": "Distance(B,C)"
+    },
+    {
+      "left": "Distance(A,C)",
+      "operator": "=",
+      "right": "Distance(B,C)"
+    },
+    {
+      "left": "E.x+F.x",
+      "operator": "=",
+      "right": "2*D.x"
+    },
+    {
+      "left": "E.y+F.y",
+      "operator": "=",
+      "right": "2*D.y"
+    },
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "t",
+      "operator": ">=",
+      "right": 0
+    },
+    {
+      "left": "u",
+      "operator": ">=",
+      "right": 0
+    }
+  ],
+  "target": "Distance(E,F)"
+}

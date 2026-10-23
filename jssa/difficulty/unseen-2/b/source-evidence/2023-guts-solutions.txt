@@ -1,0 +1,899 @@
+                                  HMMT February 2023
+                                            February 18, 2023
+                                              Guts Round
+1. [10] Suppose a and b are positive integers such that ab = 22023 . Compute the smallest possible value
+   of ba .
+   Proposed by: Milan Haiman
+   Answer:        1
+   Solution: By taking a = 22023 and b = 1, we get ba = 1, which is clearly the minimum.
+
+
+
+2. [10] Let n be a positive integer, and let s be the sum of the digits of the base-four representation of
+   2n − 1. If s = 2023 (in base ten), compute n (in base ten).
+   Proposed by: Dongyao Jiang
+   Answer:        1349
+   Solution: Every power of 2 is either represented in base 4 as 100 . . . 004 or 200..004 with some number
+   of zeros. That means every positive integer in the form 2n − 1 is either represented in base 4 as
+   333 . . . 334 or 133 . . . 33 for some number threes. Note that 2023 = 2022 + 1 = 674 · 3 + 1, meaning
+   2n − 1 must be 133 . . . 3334 with 674 threes. Converting this to base 2 results in
+
+                             133 . . . 334 = 200 . . . 004 − 1 = 2 · 4674 − 1 = 21349 − 1
+
+   for an answer of 1349.
+
+
+
+3. [10] Let ABCD be a convex quadrilateral such that ∠ABD = ∠BCD = 90◦ , and let M be the
+   midpoint of segment BD. Suppose that CM = 2 and AM = 3. Compute AD.
+   Proposed by: Luke Robitaille, Milan Haiman
+                √
+   Answer:        21
+   Solution: Since triangle BCD is√a right triangle, we have CM = BM = DM = 2. With AM = 3
+   and ∠ABM = 90◦ , we get AB = 5. Now
+
+                                       AD2 = AB 2 + BD2 = 5 + 16 = 21,
+             √
+   so AD =       21.
+
+
+
+4. [10] A standard n-sided die has n sides labeled 1 to n. Luis, Luke, and Sean play a game in which they
+   roll a fair standard 4-sided die, a fair standard 6-sided die, and a fair standard 8-sided die, respectively.
+   They lose the game if Luis’s roll is less than Luke’s roll, and Luke’s roll is less than Sean’s roll. Compute
+   the probability that they lose the game.
+   Proposed by: Isabella Quan
+                  1
+   Answer:        4
+
+   Solution: We perform casework on Luke’s roll. If Luke rolls n, with 2 ≤ n ≤ 5, then the probability
+   Luis rolls less than Luke is n−1                                                     8−n
+                                  4 , and the probability Sean rolls more than Luke is 8 . If Luke rolls
+   6 then Luis will definitely roll less than Luke, and Sean rolls more than Luke with probability 28 = 14 .
+   (If Luke rolls 1 then they cannot lose the game.) Thus, the probability they lose is
+                                                                 
+                            1 1 6 2 5 3 4 4 3 1                          48     1
+                                   · + · + · + · +                  =         = .
+                            6 4 8 4 8 4 8 4 8 4                       6·4·8     4
+                                                                                                  2
+5. [11] If a and b are positive real numbers such that a · 2b = 8 and ab = 2, compute alog2 a 2b .
+   Proposed by: Daniel Hong
+   Answer:      128
+                                                                                                            2
+   Solution: Taking log2 of both equations gives log2 a+b = 3 and b log2 a = 1. We wish to find alog2 a 2b ;
+   taking log2 of that gives (log2 a)2 + b2 , which is equal to (log2 a + b)2 − 2b log2 a = 32 − 2 = 7. Hence,
+   our answer is 27 = 128.
+
+
+
+6. [11] Let A, E, H, L, T , and V be chosen independently and at random from the set 0, 12 , 1 . Compute
+                                                                                    
+
+   the probability that bT · H · Ec = L · A · V · A.
+   Proposed by: Luke Robitaille
+                 55
+   Answer:       81
+
+   Solution: There are 33 − 23 = 19 ways to choose L, A, and V such that L · A · V · A = 0, since at least
+   one of {L, A, V } must be 0, and 33 − 1 = 26 ways to choose T , H, and E such that bT · H · Ec = 0,
+   since at least one of {T, H, E} must not be 1, for a total of 19 · 26 = 494 ways. There is only one way
+   to make bT · H · Ec = L · A · V · A = 1, namely setting every variable equal to 1, so there are 495 total
+                                                                     55
+   ways that work out of a possible 36 = 729, for a probability of 81   .
+
+
+
+7. [11] Let Ω be a sphere of radius 4 and Γ be a sphere of radius 2. Suppose that the center of Γ lies
+   on the surface of Ω. The intersection of the surfaces of Ω and Γ is a circle. Compute this circle’s
+   circumference.
+   Proposed by: Luke Robitaille
+                 √
+   Answer:      π 15
+   Solution: Take a cross-section of a plane through the centers of Ω and Γ, call them O1 and O2 ,
+   respectively. The resulting figure is two circles, one of radius 4 and center O1 , and the other with
+   radius 2 and center O2 on the circle of radius 4. Let these two circles intersect at A and B. Note that
+   AB is a diameter of the desired circle, so we will find AB.
+   Focus on triangle O1 O2 A. The sides of this triangle are O1 O2 = O1 A = 4 and O2 A = 2. The height
+                      √           √                                                               √
+   from O1 to AO2 is 42 − 12 = 15, and because O1 O2 = 2 · AO2 , the height from A to O1 O2 is 215 .
+                                               √
+   Then the distance AB is two times this, or 15.
+                                                     √
+   Thus, the circumference of the desired circle is π 15.
+
+
+
+
+                                                                        √
+                                                                    q p
+8. [11] Suppose a, b, and c are distinct positive integers such that a b c is an integer. Compute the
+   least possible value of a + b + c.
+   Proposed by: Sean Li
+   Answer:      7
+   Solution: First, check thatq    no permutation of (1, 2, 3) works, so the sum must be more than 6. Then
+                                     p √
+   since (a, b, c) = (2, 4, 1) has 2 4 1 = 2, the answer must be 2 + 4 + 1 = 7.
+ 9. [13] One hundred points labeled 1 to 100 are arranged in a 10 × 10 grid such that adjacent points are
+    one unit apart. The labels are increasing left to right, top to bottom (so the first row has labels 1 to
+    10, the second row has labels 11 to 20, and so on).
+    Convex polygon P has the property that every point with a label divisible by 7 is either on the boundary
+    or in the interior of P. Compute the smallest possible area of P.
+    Proposed by: Eric Shen
+    Answer:      63
+    Solution: The vertices of the smallest P are located at the points on the grid corresponding to the
+    numbers 7, 21, 91, 98, and 70. The entire grid has area 81, and the portion of the grid not in P is
+    composed of three triangles of areas 6, 9, 3. Thus the area of P is 81 − 6 − 9 − 3 = 63.
+
+
+
+10. [13] The number
+                                                     32016000000000001
+                                     316990099009901 =
+                                                             101
+    is the product of two distinct prime numbers. Compute the smaller of these two primes.
+    Proposed by: Rishabh Das
+    Answer:      4002001
+    Solution: Let x = 2000, so the numerator is
+
+                                     x5 + x4 + 1 = (x2 + x + 1)(x3 − x + 1).
+
+    (This latter factorization can be noted by the fact that plugging in ω or ω 2 into x5 + x4 + 1 gives 0.)
+    Then x2 + x + 1 = 4002001 divides the numerator. However, it can easily by checked that 101 doesn’t
+    divide 4002001 (since, for example, 101 - 1 − 20 + 0 − 4), so 4002001 is one of the primes. Then the
+    other one is
+                                 20003 − 2000 + 1    20003
+                                                  ≈        > 20002 ≈ 4002001,
+                                       101            101
+    so 4002001 is the smaller of the primes.
+
+
+
+11. [13] The Fibonacci numbers are defined recursively by F0 = 0, F1 = 1, and Fi = Fi−1 + Fi−2 for i ≥ 2.
+    Given 15 wooden blocks of weights F2 , F3 , . . . , F16 , compute the number of ways to paint each block
+    either red or blue such that the total weight of the red blocks equals the total weight of the blue blocks.
+    Proposed by: Albert Wang
+    Answer:      32
+    Solution: Partition the blocks into sets
+
+                                  {F2 , F3 , F4 }, {F5 , F6 , F7 }, . . . , {F14 , F15 , F16 }.
+
+    We can show by bounding that F16 belongs on the opposite side as F15 and F14 , and, in general,
+    that F3k+1 is on the opposite side as F3k and F3k−1 . Hence, it suffices to choose which side each of
+    F4 , F7 , . . . , F16 go. This gives 25 = 32 ways.
+
+
+
+12. [13] The number 770 is written on a blackboard. Melody repeatedly performs moves, where a move
+    consists of subtracting either 40 or 41 from the number on the board. She performs moves until the
+    number is not positive, and then she stops. Let N be the number of sequences of moves that Melody
+    could perform. Suppose N = a · 2b where a is an odd positive integer and b is a nonnegative integer.
+    Compute 100a + b.
+    Proposed by: Albert Wang
+    Answer:      318
+    Solution:
+      770
+                Notice that if we use the 41 move nine times or less, we will have to make a total
+                                                                                                  770
+                                                                                                         of
+      40    = 20 moves,  and  if we use it ten  times  or more, we will have to make  a total  of  40   = 19
+    moves. So, doing casework on the number of 40s we use gives
+                                                            20
+                                                                            
+                    19      19       19             19      10     20       20            20
+                        +         +        + ··· +        +     +       +       + ··· +        .
+                    0        1        2              9      2      11       11            20
+                  |                 {z                  } |                {z                }
+                                19 moves                               20 moves
+
+                                                                       19   20
+    Using the row sums of Pascal’s triangle we have this sum equal to 22 + 22 = 3·218 . The answer is 318.
+
+
+
+13. [14] Suppose a, b, c, and d are pairwise distinct positive perfect squares such that ab = cd . Compute
+    the smallest possible value of a + b + c + d.
+    Proposed by: Luke Robitaille
+    Answer:      305
+    Solution: Note that if a and c are divisible by more than one distinct prime, then we can just take
+    the prime powers of a specific prime. Thus, assume a and c are powers of a prime p. Assume a = 4x
+    and c = 4y . Then xb = yd.
+    Because b and d are squares, the ratio of x to y is a square, so assume x = 1 and y = 4. We can’t take
+    b = 4 and c = 1, but we instead can take b = 36 and c = 9. It can be checked that other values of x
+    and y are too big. This gives 436 = 2569 , which gives a sum of 305.
+    If a and c are powers of 9, then max(a, c) ≥ 94 , which is already too big. Thus, 305 is optimal.
+
+
+
+14. [14] Acute triangle ABC has circumcenter O. The bisector of ∠ABC and the altitude from C to side
+    AB intersect at X. Suppose that there is a circle passing through B, O, X, and C. If ∠BAC = n◦ ,
+    where n is a positive integer, compute the largest possible value of n.
+    Proposed by: Luke Robitaille
+    Answer:      67
+    Solution: We have ∠XBC = B/2 and ∠XCB = 90◦ − B. Thus, ∠BXC = 90◦ + B/2. We have
+    ∠BOC = 2A, so
+                                     90◦ + B/2 = 2A.
+    This gives B = 4A − 180◦ , which gives C = 360◦ − 5A.
+    In order for 0◦ < B < 90◦ , we need 45◦ < A < 67.5◦ . In order for 0◦ < C < 90◦ , we require
+    54◦ < A < 72◦ . The largest integer value in degrees satisfying these inequalities is A = 67◦ .
+
+
+
+15. [14] Let A and B be points in space for which AB = 1. Let R be the region of points P for which
+    AP ≤ 1 and BP ≤ 1. Compute the largest possible side length of a cube contained within R.
+    Proposed by: Henry Stennes
+                 √
+                  10−1
+    Answer:        3
+
+    Solution: Let h be the distance between the center of one sphere and the center of the opposite face
+    of the cube. Let x be the side length of the cube. Then we can draw a right triangle by connecting
+    the center of the sphere, the center of
+                                         √
+                                            the opposite face of the cube, and one of the vertices that make
+                                    2      2x 2
+    up that face. This gives us h + ( 2 ) = 1. Because the centers of the spheres are 1 unit apart,
+                                                            √                                   √
+    h = 21 x + 12 , giving us the quadratic ( 21 x + 12 )2 + ( 22x )2 = 1. Solving yields x =       10−1
+                                                                                                     3   .
+
+
+
+16. [14] The graph of the equation x + y = bx2 + y 2 c consists of several line segments. Compute the sum
+    of their lengths.
+    Proposed by: Sean Li
+                    √    √
+    Answer:      4+ 6− 2
+    Solution: We split into cases on the integer k = bx2 + y 2 c. Note that x + y = k but x2 + y 2 ≥
+    1        2  1 2      2    2
+    2 (x + y) = 2 k and x + y < k + 1, which forces k ≤ 2.
+                                                                                                             √   √
+    If k = 0, the region defined by 0 ≤ x2 + y 2 < 1 and x + y = 0 is the diameter from ( 22 , − 22 ) to
+       √   √
+    (− 22 , 22 ), which has length 2.
+    If k = 1, the region 1 ≤ x2 + y 2 < 2 and x + y = 1 consists of two segments,
+                                                                         q√       which is the chord on
+                                                                                   √        √
+    x + y = 2 minus the chord on x + y = 1. The former has length 2 ( 2)2 − ( 22 )2 = 6, and the
+      2    2                          2   2
+                       q      √        √                             √     √
+    latter has length 2 12 − ( 22 )2 = 2. So the total length here is 6 − 2.
+    Ifqk = 2, the region 2 ≤ x2 + y 2 < 3 and x + y = 1 is the chord on x2 + y 2 = 3, which has length
+         √       √
+    2 ( 3)2 − ( 2)2 = 2.
+                             √   √              √    √
+    Our final answer is 2 + ( 6 − 2) + 2 = 4 + 6 − 2.
+
+
+
+
+17. [16] An equilateral triangle lies in the Cartesian plane such that the x-coordinates of its vertices are
+    pairwise distinct and all satisfy the equation x3 − 9x2 + 10x + 5 = 0. Compute the side length of the
+    triangle.
+    Proposed by: Pitchayut Saengrungkongka
+                 √       √
+    Answer:        68 = 2 17
+    Solution: Let three points be A, B, and C with x-coordinates a, b, and c, respectively. Let the
+    circumcircle of 4ABC meet the line y = b at point P . Then, we have ∠BP C = 60◦ =⇒ P C =
+    √2 (c − b). Similarly, AP = √2 (b − a). Thus, by the Law of Cosines,
+      3                           3
+
+                                  AC 2 = AP 2 + P C 2 − 2 · AP · P C cos 120◦
+                                         4
+                                       = (c − b)2 + (b − a)2 + (c − b)(b − a)
+                                                                              
+                                         3
+                                         4
+                                       = a2 + b2 + c2 − ab − bc − ca
+                                                                        
+                                         3
+                                         4
+                                       = (a + b + c)2 − 3(ab + bc + ca) .
+                                                                           
+                                         3
+    By Vieta’s we have a + b + c = 9 and ab + bc + ca = 10, so we have AC 2 = 34 (81 − 30) = 68, implying
+                      √       √
+    that the answer is 68 = 2 17.
+
+
+
+18. [16] Elisenda has a piece of paper in the shape of a triangle with vertices A, B, and C such that
+    AB = 42. She chooses a point D on segment AC, and she folds the paper along line BD so that A
+    lands at a point E on segment BC. Then, she folds the paper along line DE. When she does this, B
+    lands at the midpoint of segment DC. Compute the perimeter of the original unfolded triangle.
+    Proposed by: Drake Du, Eric Shen
+                         √
+    Answer:      168 + 48 7
+    Solution: Let F be the midpoint of segment DC.
+    Evidently ∠ADB = 60◦ = ∠BDE = ∠EDC. Moreover, we have BD = DF = F C, AD = DE, and
+    AB = BE. Hence angle bisector on BDC gives us that BE = 42, EC = 84, and hence angle bisector
+    on ABC gives us that if AD √= x then CD = 3x. Now this gives BD = 3x/2, so thus the Law of
+    Cosines on ADB gives x = 12 7.
+                                              √                              √            √
+    Hence, BC = 42 + 84 = 126 and AC = 4x = 48 7. The answer is 42 + 126 + 48 7 = 168 + 48 7.
+
+
+
+19. [16] Compute the number of ways to select 99 cells of a 19 × 19 square grid such that no two selected
+    cells share an edge or vertex.
+    Proposed by: Sean Li
+    Answer:      1000
+    Solution: We claim the number of ways to select n2 − 1 such cells from a (2n − 1) × (2n − 1) grid is
+    exactly n3 , which implies the answer to this question is 1000.
+    Partition the board into n2 regions, as pictured. Also, shade red every cell in an odd row and column
+    red, so there are n2 red cells. Say a region is blank if it has no selected cell; normal if the selected cell
+    is red; up-wack if the selected cell is above the red cell; and right-wack if the selected cell is to the
+    right of the red cell. Note a 2 × 2 region could be both up-wack and right-wack.
+    The key idea is that we have at most one blank region, which restricts things significantly. We have
+    two cases:
+      • Case 1: no wack regions. Then we pick a region to be blank, of which we have n2 choices.
+       • Case 2: some wack region. Note that (1) any region directly above an up-wack region must
+         be either blank or up-wack; and (2) any region directly to the right of a right-wack region must be
+         either blank or right-wack. In particular, there is at most one wack region (and we cannot have
+         any up-wack and right-wack regions), since every wack region corresponds to at least one blank
+         region.
+         Suppose some    region is up-wack. There are n columns that could contain this up-wack region,
+         and n+1
+                   
+                 2   ways to pick an up-wack region and, optionally, a blank region above it. Similarly,
+         there are n n+1    cases if there is some up-wack region, for a total of 2n n+1
+                                                                                       
+                       2                                                              2   choices.
+
+    In total, we have n2 + 2n n+1
+                                    
+                                 2    = n3 possibilities, as desired.
+
+
+
+20. [16] Five people take a true-or-false test with five questions. Each person randomly guesses on every
+    question. Given that, for each question, a majority of test-takers answered it correctly, let p be the
+    probability that every person answers exactly three questions correctly. Suppose that p = 2ab where a
+    is an odd positive integer and b is a nonnegative integer. Compute 100a + b.
+    Proposed by: Evan Erickson, Leo Yao, Reagan Choi
+    Answer:      25517
+    Solution: There are a total of 165 ways for the people to collectively ace the test. Consider groups of
+    people who share the same problems that they got incorrect. We either have a group of 2 and a group
+    of 3, or a group 5.
+    In the first case, we can pick the group of two in 52 ways, the problems they got wrong in 52 ways.
+                                                                                                   
+
+    Then there are 3! ways for the problems of group 3. There are 600 cases here.
+    In the second case, we can 5! · 4!/2 = 120 · 12 ways to organize the five cycle (4!/2 to pick a cycle and
+    5! ways to assign a problem to each edge in the cycle).
+    Thus, the solution is 255
+                          217 and the answer is 25517.
+21. [18] Let x, y, and N be real numbers, with y nonzero, such that the sets {(x + y)2 , (x − y)2 , xy, x/y}
+    and {4, 12.8, 28.8, N } are equal. Compute the sum of the possible values of N .
+    Proposed by: Sean Li
+                   426
+    Answer:         5
+
+    Solution: First, suppose that x and y were of different signs. Then xy < 0 and x/y < 0, but the set
+    has at most one negative value, a contradiction. Hence, x and y have the same sign; without loss of
+    generality, we say x and y are both positive.
+    Let (s, d) := (x + y, x − y). Then the set given is equal to {s2 , d2 , 41 (s2 − d2 ), s−d
+                                                                                           s+d
+                                                                                               }. We split into two
+    cases:
+       • Case 1: s−d
+                   s+d
+                       = N . This forces s2 = 28.8 and d2 = 12.8, since 14 (28.8 − 12.8) = 4. Then
+               √              √                    12+8
+         s = 12 0.2 and d = ±8 0.2, so N is either 12−8 = 5 or 12−8
+                                                               12+8 = 0.2.
+
+       • Case 2: s−ds+d                   s+d
+                         6= N . Suppose s−d   = k, so (s, d) = ((k + 1)t, (k − 1)t) for some t. Then s2 : d2 :
+         1 2      2             2          2
+         4 (s − d ) = (k + 1) : (k − 1) : k. Trying k = 4, 12.8, 28.8 reveals that only k = 4 is possible,
+                                                                  2
+         since 28.8 : 12.8 = (4 − 1)2 : 4. This forces N = s2 = 54 · 12.8 = 80.
+    Hence, our final total is 5 + 0.2 + 80 = 85.2.
+
+
+
+22. [18] Let a0 , a1 , a2 , . . . be an infinite sequence where each term is independently and uniformly random
+    in the set {1, 2, 3, 4}. Define an infinite sequence b0 , b1 , b2 , . . . recursively by b0 = 1 and bi+1 = abi i .
+    Compute the expected value of the smallest positive integer k such that bk ≡ 1 (mod 5).
+    Proposed by: Raymond Feng
+                   35
+    Answer:        16
+
+    Solution: Do casework on what a0 is.
+    If a0 = 1 then k = 1.
+    If a0 = 4 then k = 2.
+    If a0 = 3 then
+       • if a1 = 1, then k = 2
+       • if a1 = 2 or 4, then k = 3
+       • if a1 = 3, then you make no progress.
+
+    so in expectation it requires E = (2 + 3 + (E + 1) + 3)/4 =⇒ E = 3.
+    If a0 = 2 then
+       • if a1 = 1 or 4, then k = 2
+       • if a1 = 2, then k = 3
+       • if a1 = 3, then it can be checked that if a2 = 1 we get k = 3, if a2 = 2 or 4 then k = 4, and
+         if a2 = 3 then we make no progress. Thus, this case is equivalent to the case of a0 = 3 except
+         shifted over by one, so it is 3 + 1 = 4 in expectation.
+    So this case is (2 + 3 + 4 + 2)/4 in expectation.
+    This means the answer is (1 + (11/4) + 3 + 2)/4 = 35/16.
+23. [18] A subset S of the set {1, 2, . . . , 10} is chosen randomly, with all possible subsets being equally
+    likely. Compute the expected number of positive integers which divide the product of the elements of
+    S. (By convention, the product of the elements of the empty set is 1.)
+    Proposed by: Sean Li
+    Answer:      375/8
+    Solution: For primes p = 2, 3, 5, 7, let the random variable Xp denote the number of factors of p in
+    the product of the elements of S, plus 1. Then we wish to find E(X2 X3 X5 X7 ).
+    If there were only prime powers between 1 and 10, then all Xp would be independent. However, 6 and
+    10 are non-prime powers, so we will do casework on whether these elements are included:
+       • Case 1: none included. Note that E(X2 | 6, 10 6∈ S) = 1 + 21 (1 + 2 + 3) = 4, since each
+         of {2, 4, 8} has a 1/2 chance of being included in S. Similarly, E(X3 | 6, 10 6∈ S) = 25 and
+         E(X5 | 6, 10 6∈ S) = E(X7 | 6, 10 6∈ S) = 32 . The values of X2 , X3 , X5 , and X7 are independent
+         given that 6, 10 6∈ S, so E(X2 X3 X5 X7 | 6, 10 6∈ S) = 4 · 25 · 32 · 32 = 45
+                                                                                     2 .
+       • Case 2: 6 included. Now, we have E(X2 | 6 ∈ S, 10 6∈ S) = 5 and E(X3 | 6 ∈ S, 10 6∈ S) = 27 ,
+         since we know 6 ∈ S. We still have E(X5 | 6 ∈ S, 10 6∈ S) = E(X7 | 6 ∈ S, 10 6∈ S) = 32 . The
+         values of X2 , X3 , X5 , and X7 are independent given that 6 ∈ S but 10 6∈ S, so E(X2 X3 X5 X7 |
+         6 ∈ S, 10 6∈ S) = 5 · 27 · 23 · 32 = 315
+                                               8 .
+       • Case 3: 10 included. We have E(X2 | 10 ∈ S, 6 6∈ S) = 5 and E(X5 | 10 ∈ S, 6 6∈ S) = 25 , since
+         we know 10 ∈ S. We also have E(X3 | 10 ∈ S, 6 6∈ S) = 52 and E(X7 | 10 ∈ S, 6 6∈ S) = 23 , hence
+         E(X2 X3 X5 X7 | 10 ∈ S, 6 6∈ S) = 5 · 52 · 52 · 23 = 375
+                                                               8 .
+       • Case 4: 6 and 10 included. We have E(X2 | 6, 10 ∈ S) = 6, E(X3 | 6, 10 ∈ S) = 72 , and
+         E(X5 | 6, 10 ∈ S) = 25 . We still have E(X7 | 6, 10 ∈ S) = 23 , hence E(X2 X3 X5 X7 | 6, 10 ∈ S) =
+         6 · 27 · 52 · 32 = 315
+                             4 .
+
+    The average of these quantities is 14 ( 45 315 375 315   375
+                                            2 + 8 + 8 + 4 ) = 8 , as desired.
+
+
+
+
+24. [18] Let AXBY be a cyclic quadrilateral, and let line AB and line XY intersect at C. Suppose
+    AX · AY = 6, BX · BY = 5, and CX · CY = 4. Compute AB 2 .
+    Proposed by: Luke Robitaille
+                 242
+    Answer:       15
+
+    Solution: Observe that
+                                                          AC   CY
+                                      4ACX ∼ 4Y CB =⇒        =
+                                                          AX   BY
+                                                          AC   CX
+                                    4ACY ∼ 4XCB =⇒           =
+                                                          AY   BX
+    Mulitplying these two equations together, we get that
+                                              (CX · CY )(AX · AY )   24
+                                     AC 2 =                        =    .
+                                                    BX · BY          5
+    Analogously, we obtain that
+                                              (CX · CY )(BX · BY )   10
+                                     BC 2 =                        =    .
+                                                    AX · AY          3
+    Hence, we have                                    r          r          √
+                                                          24         10   11 30
+                                   AB = AC + BC =            +          =       ,
+                                                          5           3     15
+    implying the answer.
+                                                                                                 Pn−1
+25. [20] The spikiness of a sequence a1 , a2 , . . . , an of at least two real numbers is the sum i=1 |ai+1 −ai |.
+    Suppose x1 , x2 , . . . , x9 are chosen uniformly and randomly from the interval [0, 1]. Let M be the largest
+    possible value of the spikiness of a permutation of x1 , x2 , . . . , x9 . Compute the expected value of M .
+    Proposed by: Gabriel Wu
+                   79
+    Answer:        20
+
+    Solution: Our job is to arrange the nine numbers in a way that maximizes the spikiness. Let an
+    element be a peak if it is higher than its neighbor(s) and a valley if it is lower than its neighbor(s). It
+    is not hard to show that an optimal arrangement has every element either a peak or a valley (if you
+    have some number that is neither, just move it to the end to increase spikiness). Since 9 is odd, there
+    are two possibilities: the end points are either both peaks or both valleys.
+    Sort the numbers from least to greatest: x1 , . . . , x9 . If we arrange them in such a way that it starts
+    and ends with peaks, the factor of xi added to the final result will be [−2, −2, −2, −2, 1, 1, 2, 2, 2], respec-
+    tively. If we choose the other way (starting and ending with valleys), we get [−2, −2, −2, −1, −1, 2, 2, 2, 2].
+    Notice that both cases have a base value of [−2, −2, −2, −1, 0, 1, 2, 2, 2], but then we add on max(x6 −
+                                                       i                    2                4    6      2
+    x5 , x5 − x4 ). Since the expected value of xi is 10 , our answer is − 10 (1 + 2 + 3) − 10  + 10 + 10  (7 + 8 +
+                                                                          3                3   2
+    9) + E(max(x6 − x5 , x5 − x4 )). This last term actually has value 4 E(x6 − x4 ) = 4 · 10 . This is because
+    if we fix all values except x5 , then x5 is uniformly distributed in [x4 , x6 ]. Geometric probability tells
+    us that the distance from x5 to its farthest neighbor is 43 to total distance betwen its two neighbors
+    (x6 − x4 ). We add this all up to get 79
+                                           20 .
+
+
+
+
+26. [20] Let P ABC be a tetrahedron such that ∠AP B = ∠AP C = ∠BP C = 90◦ , ∠ABC = 30◦ , and
+    AP 2 equals the area of triangle ABC. Compute tan ∠ACB.
+    Proposed by: Luke Robitaille
+                     √
+    Answer:      8+5 3
+    Solution: Observe that
+                                  1
+                                    · AB · AC · sin ∠BAC = [ABC] = AP 2
+                                  2
+                                                           1
+                                                         = (AB 2 + AC 2 − BC 2 )
+                                                           2
+                                                         = AB · AC · cos ∠BAC,
+
+    so tan ∠BAC = 2. Also, we have tan ∠ABC = √13 . Also, for any angles α, β, γ summing to 180◦ ,
+    one can see that tan α + tan β + tan γ = tan α · tan β · tan γ. Thus we have tan ∠ACB + 2 + √13 =
+                                            √
+    tan ∠ACB · 2 · √13 , so tan ∠ACB = 8 + 5 3.
+
+
+
+27. [20] Suppose m > n > 1 are positive integers such that there exist n complex numbers x1 , x2 , . . . , xn
+    for which
+       • xk1 + xk2 + · · · + xkn = 1 for k = 1, 2, . . . , n − 1;
+       • xn1 + xn2 + · · · + xnn = 2; and
+       • xm    m            m
+          1 + x2 + · · · + xn = 4.
+
+    Compute the smallest possible value of m + n.
+    Proposed by: Rishabh Das
+    Answer:        34
+                           n
+                           X
+    Solution: Let Sk =            xkj , so S1 = S2 = · · · = Sn−1 = 1, Sn = 2, and Sm = 4. The first of these
+                            j=1
+    conditions gives that x1 , . . . , xn are the roots of P (x) = xn − xn−1 − c for some constant c. Then
+    xni = xn−1
+           i   + c, and thus
+                                             2 = Sn = Sn−1 + cn = 1 + cn,
+    so c = n1 .
+    Thus, we have the recurrence Sk = Sk−1 + Sk−n                        j
+                                               n . This gives Sn+j = 2 + n for 0 ≤ j ≤ n − 1, and then
+                                                   2
+    S2n = 3 + n1 . Then S2n+j = 3 + 2j+1   j +j
+                                      n + 2n2 for 0 ≤ j ≤ n − 1. In particular, S3n−1 > 4, so we have
+    m ∈ [2n, 3n − 1]. Let m = 2n + j. Then
+
+                              2j + 1 j 2 + j
+                         3+         +        = 4 =⇒ 2n2 − 2n(2j + 1) − (j 2 + j) = 0.
+                                n      2n2
+    Viewing this as a quadratic in n, the discriminant 4(2j +1)2 +8(j 2 +j) = 24j 2 +24j +4 = 4(6j 2 +6j +1)
+    must be a perfect square, so 6j 2 + 6j + 1 is a square. Then
+
+                    6j 2 + 6j + 1 = y 2 =⇒ 12j 2 + 12j + 2 = 2y 2 =⇒ 3(2j + 1)2 − 2y 2 = 1.
+
+    The case j = 0 gives n = 1, a contradiction. After this, the smallest j that works is j = 4 (and y = 11).
+    Plugging this back into our quadratic,
+
+                                     2n2 − 18n − 20 = 0 =⇒ n2 − 9n − 10 = 0,
+
+    so n = 10. Then m = 2n + j = 24, so m + n = 34.
+
+
+
+28. [20] Suppose ABCD is a convex quadrilateral with ∠ABD = 105◦ , ∠ADB = 15◦ , AC = 7, and
+    BC = CD = 5. Compute the sum of all possible values of BD.
+    Proposed by: Luke Robitaille
+                 √
+    Answer:        291
+    Solution: Let O be the cirumcenter of triangle ABD. By the inscribed angle theorem, ∠AOC = 90◦
+    and ∠BOC = 60◦ . Let AO = BO = CO = x and CO = y. By the Pythagorean theorem on triangle
+    AOC,
+
+                                                       x2 + y 2 = 49
+
+    and by the Law of Cosines on triangle BOC,
+
+                                                   x2 − xy + y 2 = 25.
+                                                                   √
+    It suffices to find the sum of all possible values of BD =         3x.
+    Since the two conditions on x and y are both symmetric, the answer is equal to
+                              √                p                                  √
+                                  3(x + y) =    9(x2 + y 2 ) − 6(x2 − xy + y 2 ) = 291 .
+
+    It is easy to check that both solutions generate valid configurations.
+29. [23] Let P1 (x), P2 (x), . . . , Pk (x) be monic polynomials of degree 13 with integer coefficients. Suppose
+    there are pairwise distinct positive integers n1 , n2 , . . . , nk for which, for all positive integers i and j
+    less than or equal to k, the statement “ni divides Pj (m) for every integer m” holds if and only if i = j.
+    Compute the largest possible value of k.
+    Proposed by: Reagan Choi
+    Answer:      144
+    Solution: We first consider which integers can divide a polynomial Pi (x) for all x. Assume that
+    c|Pi (x) for all x. Then, c must also divide the finite difference Q(x) = Qi (x + 1) − Qi (x). Since Qi (x)
+    is degree 13 and monic, the leading term of Q(x) is the leading term of (x + 1)13 − x13 , which is 13x12 .
+    Continuing this process finding finite differences, we see that c must divide R(x) = Q(x + 1) − Q(x),
+    which has a leading term 13 · 12x11 . At the end, we will see that c|13!, so these are the only possible
+    values of c. To show that all of these values of c work, consider the polynomial Pi (x) = x(x + 1) · · · (x +
+    12) + c. It can be easily seen that the product of thirteen consecutive integers is always divisible by
+    13!, so this polynomial is always divisible by c and nothing more, as Pi (0) = c.
+    Now, we find the maximum possible value of k. Note that if two polynomials have values of ni and nj ,
+    we cannot have ni |nj since then ni |Pj (x) for all x. Hence, we wish to find as many values of c|13! as
+    possible that do not divide each other.
+    We prime factorize 13! = 210 · 35 · 52 · 7 · 11 · 13. We claim that the maximum number of polynomials is
+    k = 144. This is a maximum since there are 6 · 3 · 2 · 2 · 2 = 144 odd factors of 13!; and if two values ni
+                                                                                                 n
+    and nj have the same odd component by the Pigeonhole Principle, then either nnji or nji is a power of
+    2. In addition, k = 144 is attainable by taking 2a · 3b · 5c · 7d · 11e · 13f for a + b + c + d + e + f = 10,
+    in which there is exactly one solution for a for each of the 144 valid quintuples (b, c, d, e, f ). Hence,
+    k = 144 is the maximum.
+
+
+
+30. [23] Five pairs of twins are randomly arranged around a circle. Then they perform zero or more swaps,
+    where each swap switches the positions of two adjacent people. They want to reach a state where no
+    one is adjacent to their twin. Compute the expected value of the smallest number of swaps needed to
+    reach such a state.
+    Proposed by: Amy Feng
+                  926
+    Answer:       945
+
+    Solution: First, let’s characterize the minimum number of swaps needed given a configuration. Each
+    swap destroys 0, 1, or 2 adjacent pairs. If at least one pair is destroyed, no other adjacent pairs can
+    be formed. Therefore, we only care about the count of adjacent pairs and should never create any new
+    ones. In a maximal block of k adjacent pairs, defined as k consecutive (circular) adjacent pairs, we
+    need at least d k2 e swaps. Maximal blocks are independent as we never create new ones. Thus, we need
+    P ki
+      i d 2 e over maximal blocks.
+    Now we focus on counting the desired quantity over all configurations. As the expression above is
+    linear and because expectation is linear, our answer is the sum of the number of 1−maximal blocks,
+    2−maximal blocks, . . . , 5−maximal blocks. Note that there can’t be a 4− maximal block. This can
+    be computed as
+
+                          E[AA] − E[AABB] + E[AABBCC] − E[AABBCCDDEE],
+
+    where AA . . . denotes a (not necessarily maximal) block of adjacent pairs and E[AA . . .] is the expected
+    count of such. (This counts a block of AA as 1, a block of AABB as 1, a block of AABBCC as 2, and
+    a block of AABBCCDDEE as 3 overall, as desired).
+    Lastly, we compute this quantity. Say there’s n pairs. Let’s treat each of the 2n people as distin-
+    guishable. The expected number of k consecutive adjacent pairs (not necessarily as a maximal block)
+    equals
+                                                    
+                                               1    n
+                                                 n    k!(2n − 2k)!2k
+                                              2n    k
+   The first n comes from choosing the start of this chain, nk from choosing which pairs are in this chain,
+                                                              
+
+   k! from permuting these pairs, 2k from ordering the people in each pair in the chain, and (2n − 2k)!
+   from permuting the other people.
+   We plug in n = 5 to obtain 926
+                              945 .
+
+
+
+
+31. [23] Let
+                                                   2016
+                                                   Y                 2
+                                             P =           i3 − i − 1 .
+                                                     i=0
+
+   The remainder when P is divided by the prime 2017 is not zero. Compute this remainder.
+   Proposed by: Srinath Mahankali
+   Answer:      1994
+   Solution 1: Let Q(x) = x3 − x − 1 = (x − a)(x − b)(x − c), for a, b, c ∈ Fp3 . Then, we can write
+                                               2016
+                                               Y
+                                         P =         (i − a)(i − b)(i − c).
+                                               i=0
+
+   If we consider each root separately, then
+
+                                    P = −(a2017 − a)(b2017 − b)(c2017 − c).
+
+   The key observation is that a2017 , b2017 , c2017 is some nontrivial cycle of a, b, c. This is because by
+   Frobenius’ identity, (a + b)p = ap + bp . So, if P (x) = 0, P (x2017 ) = 0. But, x2017 6= x, since x 6∈ Fp .
+   This implies the claim. So, in the end, we wish to compute
+
+                                            (b − a)2 (c − b)2 (a − c)2 .
+
+   Note that P 0 (x) = 3x2 − 1 = (x − b)(x − c) + (x − a)(x − b) + (x − c)(x − a). So it suffices to compute
+                                                                               
+                                  2        2         2             1          1
+                           (1 − 3a )(1 − 3b )(1 − 3c ) = −27P √        P −√         .
+                                                                    3           3
+                                                            
+                                                2           2
+   We can compute this is equal to −27 1 − 3√     3
+                                                       1 +  √
+                                                           3 3
+                                                                 = −23.
+   Alternatively, this is the discriminant of P (x). We utilize the well-known formula that the discriminant
+   of x3 + ax + b is −4a3 − 27b2 = −23. So, the answer is 1994.
+
+
+
+32. [23] Let ABC be a triangle with ∠BAC > 90◦ . Let D be the foot of the perpendicular from A to side
+    BC. Let M and N be the midpoints of segments BC and BD, respectively. Suppose that AC = 2,
+    ∠BAN = ∠M AC, and AB · BC = AM . Compute the distance from B to line AM .
+   Proposed by: Luke Robitaille, Pitchayut Saengrungkongka
+                 √
+                  285
+   Answer:        38
+
+   Solution:
+                                                                                         Y
+                              A
+                                                                                             1
+                                                              2                              2
+
+
+                        B                                                                    C
+                            N D                         M
+                                                                                                 1
+                                                                                                 2
+
+                                                                                    H
+                                                                                             X
+
+
+
+
+    Extend AM to meet the circumcircle of 4ABC at X. Then, we have 4ABM ∼ 4CXM , which
+                 CX   AB
+    implies that CM = AM . Using the condition AB · BC = AM , we get that CX = 21 .
+    Now, the key observation is that 4AN B ∼ 4ACX. Thus, if we let Y be the  √ reflection of X p
+                                                                                               across
+    point C, we get that ∠AY C =p90◦ . Thus, Pythagorean’s theorem gives AY = AC 2 − CY 2 = 15/4
+                √
+    and AX 2 = AY 2 + XY 2 = 19/4.
+    Finally, note that the distance from B and C to line AM are equal. Thus, let H be the foot from C
+    to AM . Then, from 4XCH ∼ 4XAY , we get that
+                                                    √              √
+                                             CX       15   1/2       285
+                                  CH = AY ·      =       ·√      =       .
+                                             AX       2     19/2    38
+
+
+
+
+33. [25] Given a function f , let π(f ) = f ◦ f ◦ f ◦ f ◦ f . The attached sheet has the graphs of ten smooth
+    functions from the interval (0, 1) to itself. The left-hand side consists of five functions:
+       • F1 (x) = 0.005 + 12 sin 2x + 14 sin 4x + 18 sin 8x + 16
+                                                               1           1
+                                                                 sin 16x + 32 sin 32x;
+       • F2 (x) = F1 (F1 (x + 0.25));
+       • F3 (x) = F1 ((1 − x)F1 ((1 − x)2 ));
+       • F4 (x) = F1 (x) + 0.05 sin(2πx);
+       • F5 (x) = F1 (x + 1.45) + 0.65.
+    The right-hand side consists of the five functions A, B, C, D, and E, which are π(F1 ), . . . , π(F5 ) in
+    some order. Compute which of the functions {A, B, C, D, E} correspond to π(Fk ) for k = 1, 2, 3, 4, 5.
+    Your answer should be a five-character string containing A, B, C, D, E, or X for blank. For instance,
+    if you think π(F1 ) = A and π(F5 ) = E, then you would answer AXXXE. If you attempt to identify
+    n functions and get them all correct, then you will receive n2 points. Otherwise, you will receive 0
+    points.
+    Proposed by: Sean Li
+F1.   A.
+
+
+
+
+F2.   B.
+
+
+
+
+F3.   C.
+
+
+
+
+F4.   D.
+
+
+
+
+F5.   E.
+    Answer:        DACBE
+    Solution: First, note that F5 and E are the only functions whose range is outside the range (0, 0.7),
+    so they must be matched.
+    For graphs F2 and F3 , split the square [0, 1]2 into a three by three grid of 31 × 13 squares. The only
+    squares that the graphs pass through are [ 13 , 23 ) × I and possibly [ 23 , 1] × [0, 13 ), so after five iterates the
+    range of these graphs stabilizes to f ([ 13 , 23 )). Graph F3 corresponds to the flatter graph C, while graph
+    F2 to the bumpier graph A. This is good enough for 9 points.
+    It remains to distinguish between F1 and F4 . The details are a bit messy, so here are two ideas:
+
+       • Split the grid in a 5 × 5 grid of 51 -by- 15 squares. It is clear these will distinguish F1 and F4 since
+         B does not pass through [0.2, 0.4) × [0.4, 0.6) but D does not.
+       • Observing the definitions of F1 and F4 , we have that the phases of the waves that make up F1
+         “agree” much more than they do in F4 , since π is irrational. This suggests that π(F4 ) will have
+         more chaotic behavior than π(F1 ).
+
+    The final answer is DACBE.
+    Remark. The graphs were made using gnuplot.
+
+
+
+
+34. [25] The number 2027 is prime. For i = 1, 2, . . . , 2026, let pi be the smallest prime number such that
+    pi ≡ i (mod 2027). Estimate max(p1 , . . . , p2026 ).
+    Submit a positive integer E. If the correct answer is A, you will receive b25 min((E/A)8 , (A/E)8 )c
+    points. (If you do not submit a positive integer, you will receive zero points for this question.)
+    Proposed by: Luke Robitaille, Brian Liu, Maxim Li, Misheel Otgonbayar, Sean Li, William Wang
+    Answer:        113779
+    Solution: In this solution, all logs are in base e. Let p1 , p2 , . . . be the primes in sorted order. Let
+    qi = pi mod 2027. Since the residues of primes modulo 2027 should be uniformly distributed, we can
+    make the probabilistic approximation that the qi are random variables uniformly distributed among
+    1, . . . , 2026. This becomes the famous ”coupon collector” problem: the random variables qi are coupons
+    with 2026 different types, and we keep collecting coupons until we have encountered one of each type.
+    In other words, we seek to find the smallest k such that {q1 , . . . , qk } = {1, . . . , 2026}, and then the
+    answer to the problem is pk .
+    It is known that the expected value of k is 2026( 11 + 12 + · · · + 2026
+                                                                         1
+                                                                             ) ≈ 2026 log 2026. This is because we
+    must draw an expected 2026 coupons until we get our first distinct coupon type, then an expected 2026
+                              2026
+                                                                                                              2025
+    coupons until we get our second new coupon type, and so on. The standard deviation of k is a small
+    fraction of its its expectation, so we can safely assume that k is approximately 2026 log 2026. Since the
+    n-th prime is approximately n log n, our estimate is
+
+                                          E ≈ 2026 log 2026 log(2026 log 2026)
+                                             ≈ 2026 log2 2026
+                                             ≈ 117448
+
+    This achieves A/E ≈ 0.969, which scores 19 out of 25 points.
+
+
+
+35. [25] The Fibonacci numbers are defined
+                                        √ recursively
+                                              √             √ F0 = 0, F1 = 1, and Fi = Fi−1 + Fi−2 for i ≥ 2.
+                                                           by
+    Given 30 wooden blocks of weights 3 F2 , 3 F3 , . . . , 3 F31 , estimate the number of ways to paint each
+    block either red or blue such that the total weight of the red blocks and the total weight of the blue
+    blocks differ by at most 1.
+   Submit a positive integer E. If the correct answer is A, you will receive b25 min((E/A)8 , (A/E)8 )c
+   points. (If you do not submit a positive integer, you will receive zero points for this question.)
+   Proposed by: Albert Wang, Luke Robitaille
+   Answer:      3892346
+   Solution: To get within   √ an order of magnitude, one approach is to let Xn be a random variable
+   whichPtakes the value ± 3 Fn , with the sign chosen uniformly at random. We want the probability that
+           31
+   S = i=2 Xi is in [−1, 1]. We can attempt to approximate the distribution of S as normal (this is
+   loosely justified because√it is the sum of many independent random variables). Using the approximation
+   Fn ≈ √15 ϕn for φ = 1+2 5 , the variance of S is:
+
+                                                    31
+                                                    X
+                                      Var(S) =            Var(Xi )
+                                                    i=2
+                                                    31
+                                                           2/3
+                                                    X
+                                                =         Fi
+                                                    i=2
+                                                    31
+                                                    X
+                                                ≈         5−1/3 ϕ2i/3
+                                                    i=2
+                                                                     ϕ62/3
+                                                                               
+                                                ≈ 5−1/3 ·
+                                                                   1 − ϕ−2/3
+
+   Now, we use the fact that if √ 1         S is standard normal, then the probability that S ∈ [−1, 1] is
+                                   Var(S)
+   approximately
+                                                                          p
+                                  1   2                                       1 − ϕ−2/3
+                                                          q
+                                                               2·51/3
+                                 √ ·p       ≈                    π    ·
+                                  2π Var(S)                                    ϕ31/3
+
+   When we multiply this by 230 , we get an approximation of E ≈ 4064598, which achieves A/E ≈ 0.96
+   and would score 17 out of 25 points.
+
+
+
+36. [25] After the Guts round ends, the HMMT organizers will calculate A, the total number of points
+    earned over all participating teams on questions 33, 34, and 35 of this round (that is, the other
+    estimation questions). Estimate A.
+   Submit a positive integer E. You will receive max(0, 25 − 3 · |E − A|) points. (If you do not submit a
+   positive integer, you will receive zero points for this question.)
+   For your information, there are about 70 teams competing.
+   Proposed by: Luke Robitaille, Sean Li
+   Answer:      13
+   Solution: Only 8 teams scored a positive number of combined points on questions 33, 34, and 35.
+   A total of 3 points were scored on question 33, 6 points on question 34, and 4 points on question 35.
+   Extended results can be found in our archive.
+

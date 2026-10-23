@@ -1,0 +1,818 @@
+        15th Annual Harvard-MIT Mathematics Tournament
+                                     Saturday 11 February 2012
+                                                  Guts
+                                                                                                   √
+1. [2] Square ABCD has side length 2, and X is a point outside the square such that AX = XB = 2.
+   What is the length of the longest diagonal of pentagon AXBCD?
+              √                           √
+   Answer:      10 Since AX = XB = 2 and AB = 2, we have ∠AXB = 90◦ . Hence, the distance
+   from X to AB√is 1 and the distance from X to CD is 3. By inspection, the largest diagonals are thus
+   BX = CX = 32 + 12 .
+                                                                                                 an
+2. [2] Let a0 , a1 , a2 , . . . denote the sequence of real numbers such that a0 = 2 and an+1 = 1+a n
+                                                                                                      for n ≥ 0.
+   Compute a2012 .
+                2                                                                                   2
+   Answer: 4025       Calculating out the first few terms, note that they follow the pattern an = 2n+1 .
+   Plugging this back into the recursion shows that it indeed works.
+
+3. [2] Suppose x and y are real numbers such that −1 < x < y < 1. Let G be the sum of the geometric
+   series whose first term is x and whose ratio is y, and let G′ be the sum of the geometric series whose
+   first term is y and ratio is x. If G = G′ , find x + y.
+   Answer: 1 We note that G = x/(1 − y) and G′ = y/(1 − x). Setting them equal gives x/(1 − y) =
+   y/(1 − x) ⇒ x2 − x = y 2 − x ⇒ (x + y − 1)(x − y) = 0, so we get that x + y − 1 = 0 ⇒ x + y = 1.
+
+4. [2] Luna has an infinite supply of red, blue, orange, and green socks. She wants to arrange 2012 socks
+   in a line such that no red sock is adjacent to a blue sock and no orange sock is adjacent to a green
+   sock. How many ways can she do this?
+   Answer: 4 · 32011     Luna has 4 choices for the first sock. After that, she has 3 choices for each of
+   2011 remaining socks for a total of 4 · 32011 .
+
+5. [3] Mr. Canada chooses a positive real a uniformly at random from (0, 1], chooses a positive real b
+   uniformly at random from (0, 1], and then sets c = a/(a + b). What is the probability that c lies
+   between 1/4 and 3/4?
+   Answer: 2/3        From c ≥ 1/4 we get
+
+                                               a   1
+                                                  ≥ ⇐⇒ b ≤ 3a
+                                              a+b  4
+   and similarly c ≤ 3/4 gives
+                                              a   3
+                                                 ≤ ⇐⇒ a ≤ 3b.
+                                             a+b  4
+   Choosing a and b randomly from [0, 1] is equivalent to choosing a single point uniformly and randomly
+   from the unit square, with a on the horizontal axis and b on the vertical axis:
+
+                                              b = 3a
+
+
+
+                                                             a = 3b
+
+
+   To find the probability that b ≤ 3a and a ≤ 3b, we need to find the area of the shaded region of the
+   square. The area of each of the triangles on the side is (1/2)(1)(1/3) = 1/6, and so the area of the
+   shaded region is 1 − 2(1/6) = 2/3.
+
+
+
+                                                   Guts
+ 6. [3] Let rectangle ABCD have lengths AB = 20 and BC = 12. Extend ray BC to Z such that CZ = 18.
+    Let E be the point in the interior of ABCD such that the perpendicular distance from E to AB is
+    6 and the perpendicular distance from E to AD is 6. Let line EZ intersect AB at X and CD at Y .
+    Find the area of quadrilateral AXY D.
+    Answer: 72       Draw the line parallel to AD through E, intersecting AB at F and CD at G. It
+    is clear that XF E and Y GE are congruent, so the area of AXY D is equal to that of AF GD. But
+    AF GD is simply a 12 by 6 rectangle, so the answer must be 72. (Note: It is also possible to directly
+    compute the values of AX and DY , then use the formula for the area of a trapezoid.)
+
+ 7. [3] M is an 8 × 8 matrix. For 1 ≤ i ≤ 8, all entries in row i are at least i, and all entries on column i
+    are at least i. What is the minimum possible sum of the entries of M ?
+    Answer: 372        Let sn be the minimum possible sum for an n by n matrix. Then, we note that
+    increasing it by adding row n + 1 and column n + 1 gives 2n + 1 additional entries, each of which has
+    minimal size at least n + 1. Consequently, we obtain sn+1 = sn + (2n + 1)(n + 1) = sn + 2n2 + 3n + 1.
+    Since s0 = 0, we get that s8 = 2(72 + . . . + 02 ) + 3(7 + . . . + 0) + 8 = 372.
+
+ 8. [3] Amy and Ben need to eat 1000 total carrots and 1000 total muffins. The muffins can not be eaten
+    until all the carrots are eaten. Furthermore, Amy can not eat a muffin within 5 minutes of eating a
+    carrot and neither can Ben. If Amy eats 40 carrots per minute and 70 muffins per minute and Ben
+    eats 60 carrots per minute and 30 muffins per minute, what is the minimum number of minutes it will
+    take them to finish the food?
+    Answer: 23.5 or 47/2          Amy and Ben will continuously eat carrots, then stop (not necessarily at
+    the same time), and continuously eat muffins until no food is left. Suppose that Amy and Ben finish
+    eating the carrots in T1 minutes and the muffins T2 minutes later; we wish to find the minimum value
+    of T1 + T2 . Furthermore, suppose Amy finishes eating the carrots at time a1 , and Ben does so at time
+    b1 , so that T1 = max(a1 , b1 ).
+    First, suppose that a1 ≤ b1 , and let b1 − a1 = c. We have 40(T1 − c) + 60T1 = 1000, so T1 is minimized
+    when c = 0. Also, 30(T2 − 5) + 70(T2 − max(5 − c, 0)) = 1000. Wee see that T1 + T2 is minimized when
+    c = 5, and T1 + T2 = 23.5. In a similar way, we see that when b1 ≤ a1 , T1 + T2 > 23.5, so our answer
+    is 23.5.
+
+ 9. [5] Given △ABC with AB < AC, the altitude AD, angle bisector AE, and median AF are drawn
+    from A, with D, E, F all lying on BC. If ∡BAD = 2∡DAE = 2∡EAF = ∡F AC, what are all possible
+    values of ∡ACB?
+    Answer: 30◦ or π/6 radians Let H and O be the orthocenter and circumcenter of ABC, respctively:
+    it is well-known (and not difficult to check) that ∡BAH = ∡CAO. However, note that ∡BAH =
+    ∡BAD = ∡CAF , so ∡CAF = ∡CAO, that is, O lies on median AF , and since AB < AC, it follows
+    that F = O. Therefore, ∡BAC = 90◦ .
+    Now, we compute ∡ACB = ∡BAD = 62 ∡BAC = 30◦ .
+
+10. [5] Let P be a polynomial such that P (x) = P (0) + P (1)x + P (2)x2 and P (−1) = 1. Compute P (3).
+    Answer: 5 Plugging in x = −1, 1, 2 results in the trio of equations 1 = P (−1) = P (0)−P (1)+P (2),
+    P (1) = P (0) + P (1) + P (2) ⇒ P (1) + P (2) = 0, and P (2) = P (0) + 2P (1) + 4P (2). Solving these
+    as a system of equations in P (0), P (1), P (2) gives P (0) = −1, P (1) = −1, P (2) = 1. Consequently,
+    P (x) = x2 − x − 1 ⇒ P (3) = 5.
+
+11. [5] Knot is on an epic quest to save the land of Hyruler from the evil Gammadorf. To do this, he must
+    collect the two pieces of the Lineforce, then go to the Temple of Lime. As shown on the figure, Knot
+    starts on point K, and must travel to point T , where OK = 2 and OT = 4. However, he must first
+    reach both solid lines in the figure below to collect the pieces of the Lineforce. What is the minimal
+    distance Knot must travel to do so?
+
+
+
+
+                                                   Guts
+                                                                   T
+
+
+                                                     15◦ K        15◦
+                                                          30◦
+
+                                                              O
+
+
+
+
+                    √
+    Answer: 2 5            Let l1 and l2 be the lines as labeled in the above diagram. First, suppose Knot
+    visits l1 first, at point P1 , then l2 , at point P2 . Let K ′ be the reflection of K over l1 , and let T ′ be the
+    reflection of T over l2 . The length of Knot’s path is at least
+
+                                KP1 + P1 P2 + P2 T = K ′ P1 + P1 P2 + P2 T ′ ≥ K ′ T ′
+
+    by the Triangle Inequality (This bound can be achieved by taking P1 , P2 to be             √ the intersections of
+    K ′ T ′ with l1 , l2 , respectively.) Also, note that ∡K ′ OT ′ = 90◦ , so that K ′ T ′ = 2 5.
+    Now, suppose Knot instead visits l2 first, at point Q2 , then l1 , at point Q1 . Letting K ′′ be the reflection
+    of K over l2 and T ′′ be the reflection of T over l1 , by similar logic to before the length√of his path is
+    at least the length of K ′′ T ′′ . However, by inspection K ′′ T ′′ > K ′ T ′ , so our answer is 2 5.
+
+12. [5] Knot is ready to face Gammadorf in a card game. In this game, there is a deck with twenty cards
+    numbered from 1 to 20. Each player starts with a five card hand drawn from this deck. In each round,
+    Gammadorf plays a card in his hand, then Knot plays a card in his hand. Whoever played a card
+    with greater value gets a point. At the end of five rounds, the player with the most points wins. If
+    Gammadorf starts with a hand of 1, 5, 10, 15, 20, how many five-card hands of the fifteen remaining
+    cards can Knot draw which always let Knot win (assuming he plays optimally)?
+    Answer: 2982 Knot can only lose if all of his cards are lower than 10; if not he can win by playing
+    the lowest ¡card
+                 ¢ that beats Gammadorf’s card,
+                                             ¡ ¢ or¡7if¢ this is not possible, his lowest card, each turn.
+    There are 75 = 21 losing hands, so he has 15
+                                              5 − 5 possible winning hands.
+
+13. [7] Niffy’s favorite number is a positive integer, and Stebbysaurus is trying to guess what it is. Niffy
+    tells her that when expressed in decimal without any leading zeros, her favorite number satisfies the
+    following:
+
+       • Adding 1 to the number results in an integer divisible by 210.
+       • The sum of the digits of the number is twice its number of digits.
+       • The number has no more than 12 digits.
+       • The number alternates in even and odd digits.
+    Given this information, what are all possible values of Niffy’s favorite number?
+    Answer: 1010309          Note that Niffy’s favorite number must end in 9, since adding 1 makes it
+    divisible by 10. Also, the sum of the digits of Niffy’s favorite number must be even (because it is equal
+    to twice the number of digits) and congruent to 2 modulo 3 (because adding 1 gives a multiple of 3).
+    Furthermore, the sum of digits can be at most 24, because there at most 12 digits in Niffy’s favorite
+    number, and must be at least 9, because the last digit is 9. This gives the possible sums of digits 14
+    and 20. However, if the sum of the digits of the integer is 20, there are 10 digits, exactly 5 of which
+    are odd, giving an odd sum of digits, which is impossible. Thus, Niffy’s favorite number is a 7 digit
+    number with sum of digits 14.
+
+
+                                                       Guts
+    The integers which we seek must be of the form ABCDEF 9, where A, C, E are odd, B, D, F are even,
+    and A + B + C + D + E + F = 5. Now, note that {A, C, E} = {1, 1, 1} or {1, 1, 3}, and these correspond
+    to {B, D, F } = {0, 0, 2} and {0, 0, 0}, respectively. It suffices to determine which of these six integers
+    are congruent to −1 (mod 7), and we see that Niffy’s favorite number must be 1010309.
+14. [7] Let triangle ABC have AB = 5, BC = 6, and AC = 7, with circumcenter O. Extend ray AB to
+    point D such that BD = 5, and extend ray BC to point E such that OD = OE. Find CE.
+                √
+    Answer:       59 − 3 Because OD = OE, D and E have equal power with respect to the circle, so
+    (EC)(EB)√= (DB)(DA) = 50. Letting EC = x, we have x(x + 6) = 50, and taking the positive root
+    gives x = 59 − 3.
+15. [7] Let f (x) = x2 + ax + b and g(x) = x2 + cx + d be two distinct real polynomials such that the
+    x-coordinate of the vertex of f is a root of g, the x-coordinate of the vertex of g is a root of f and both
+    f and g have the same minimum value. If the graphs of the two polynomials intersect at the point
+    (2012, −2012), what is the value of a + c?
+    Answer: −8048        It is clear, by symmetry, that 2012 is the equidistant from the vertices of the
+    two quadratics. Then it is clear that reflecting f about the line x = 2012 yields g and vice versa.
+    Thus the average of each pair of roots is 2012. Thus the sum of the four roots of f and g is 8048, so
+    a + c = −8048.
+16. [7] Let A, B, C, and D be points randomly selected independently and uniformly within the unit
+    square. What is the probability that the six lines AB, AC, AD, BC, BD, and CD all have positive
+    slope?
+                 1
+    Answer: 24         Consider the sets of x-coordinates and y-coordinates of the points. In order to
+    make 6 lines of positive slope, we must have smallest x-coordinate must be paired with the smallest
+    y-coordinate, the second smallest together, and so forth. If we fix the order of the x-coordinates, the
+    probability that the corresponding y-coordinates are in the same order is 1/24.
+17. [11] Mark and William are playing a game. Two walls are placed 1 meter apart, with Mark and
+    William each starting an orb at one of the walls. Simultaneously, they release their orbs directly
+    toward the other. Both orbs are enchanted such that, upon colliding with each other, they instantly
+    reverse direction and go at double their previous speed. Furthermore, Mark has enchanted his orb so
+    that when it collides with a wall it instantly reverses direction and goes at double its previous speed
+                                                                                           1
+    (William’s reverses direction at the same speed). Initially, Mark’s orb is moving at 1000 meters/s, and
+    William’s orb is moving at 1 meter/s. Mark wins when his orb passes the halfway point between the
+    two walls. How fast, in meters/s, is his orb going when this first happens?
+    Answer: 217 /125 If the two orbs leave their respective walls at the same time, then they will return
+    to their walls at the same time (because colliding affects both their speeds). After returning to the
+                                              4n
+    wall n times, Mark’s orb will travel at 1000  meter/s and William’s will travel at 2n meter/s. Mark
+                                                      410   217
+    wins when his orb is traveling faster at n = 10. 1000 = 125
+18. [11] Let x and y be positive real numbers such that x2 + y 2 = 1 and (3x − 4x3 )(3y − 4y 3 ) = − 21 .
+    Compute x + y.
+                √
+                  6
+    Answer:      2     Solution 1: Let x = cos(θ) and y = sin(θ). Then, by the triple angle formulae, we
+    have that 3x − 4x3 = − cos(3θ) and 3y − 4y 3 = sin(3θ), so − sin(3θ) cos(3θ) = − 12 . We can write
+    this as 2 sin(3θ) cos(3θ) = sin(6θ) = 1, so θ = 61 sin−1 (1) = 12
+                                                                   π
+                                                                                         ¡π¢      ¡π¢
+                                                                      . Thus, x + y = cos 12 + sin 12 =
+    √ √        √ √       √
+      6+ 2       6− 2      6
+       4    +     4    =  2  .
+
+    Solution 2: Expanding gives 9xy + 16x3 y 3 − 12xy 3 − 12x3 y = 9(xy) + 16(xy)3 − 12(xy)(x2 + y 2 ) = − 21 ,
+    and since x2 + y 2 = 1, this is −3(xy) + 16(xy)3 = − 12 , giving xy = − 21 , 41 . However, since x and y are
+                                                                                q               q      √
+    positive reals, we must have xy = 41 . Then, x + y = x2 + y 2 + 2xy = 1 + 2 · 41 = 23 = 26 .
+                                                          p
+
+
+                                                    Guts
+19. [11] Given that P is a real polynomial of degree at most 2012 such that P (n) = 2n for n = 1, 2, . . . , 2012,
+    what choice(s) of P (0) produce the minimal possible value of P (0)2 + P (2013)2 ?
+    Answer: 1 − 22012        Define ∆1 (n) = P (n + 1) − P (n) and ∆i (n) = ∆i−1 (n + 1) − ∆i−1 (n) for
+    i > 1. Since P (n) has degree at most 2012, we know that ∆2012 (n) is constant. Computing, we
+    obtain ∆1 (0) = 2 − P (0) and ∆i (0) = 2i−1 for 1 < i ≤ 2012. We see that continuing on gives
+    ∆2012 (0) = ∆2012 (1) = P (0) and ∆i (2012 − i) = 22013−i for 1 ≤ i ≤ 2011. Then, P (2013) =
+    P (2012) + ∆1 (2012) = . . . = P (2012) + ∆1 (2011) + . . . + ∆2012 (0) = P (0) + 22013 − 2. Now, we want
+    to minimize the value of P (0)2 + P (2013)2 = 2P (0)2 + 2P (0)(22013 − 2) + (22013 − 2)2 , but this occurs
+    simply when P (0) = − 12 (22013 − 2) = 1 − 22012 .
+
+20. [11] Let n be the maximum number of bishops that can be placed on the squares of a 6 × 6 chessboard
+    such that no two bishops are attacking each other. Let k be the number of ways to put n bishops on
+    an 6 × 6 chessboard such that no two bishops are attacking each other. Find n + k. (Two bishops are
+    considered to be attacking each other if they lie on the same diagonal. Equivalently, if we label the
+    squares with coordinates (x, y), with 1 ≤ x, y ≤ 6, then the bishops on (a, b) and (c, d) are attacking
+    each other if and only if |a − c| = |b − d|.)
+    Answer: 74          Color the square with coordinates (i, j) black if i + j is odd and white otherwise,
+    for all 1 ≤ i, j ≤ 6. Looking at the black squares only, we note that there are six distinct diagonals
+    which run upward and to the right, but that two of them consist only of a corner square; we cannot
+    simultaneously place bishops on both of these corner squares. Consequently, we can place at most five
+    bishops on black squares. (This can be achieved by placing bishops on (1, 2), (1, 4), (6, 1), (6, 3), (6, 5).)
+    If there are five bishops on black squares, there must be exactly one bishop on one of the two black
+    corner squares, (6, 1) and (1, 6): suppose without loss of generality that we place a bishop on (1, 6).
+    Then, exactly one of (3, 6) and (1, 4) must also contain a bishop, and there are 2 ways to place two
+    bishops on the four remaining black squares that are not yet under attack. Thus, we have a total of
+    2 · 2 · 2 possible placements on black squares.
+    Similarly, there are at most 5 bishops which can be placed on white squares and 23 ways to place them,
+    so that n = 10 and k = 26 . Finally, n + k = 10 + 26 = 74.
+
+21. [13] Let N be a three-digit integer such that the difference between any two positive integer factors
+    of N is divisible by 3. Let d(N ) denote the number of positive integers which divide N . Find the
+    maximum possible value of N · d(N ).
+    Answer: 5586 We first note that all the prime factors of n must be 1 modulo 3 (and thus 1 modulo
+    6). The smallest primes with this property are 7, 13, 19, . . .. Since 74 = 2401 > 1000, the number can
+    have at most 3 prime factors (including repeats). Since 7·13·19 = 1729 > 1000, the most factors N can
+    have is 6. Consider the number 72 ·19 = 931, which has 6 factors. For this choice of N , N ·d(N ) = 5586.
+    For another N to do better, it must have at least 6 factors, for otherwise, N · d(N ) < 1000 · 5 = 5000.
+    It is easy to verify that 72 · 19 is the greatest number with 6 prime factors satisfying our conditions, so
+    the answer must be 5586.
+
+22. [13] For each positive integer n, there is a circle around the origin with radius n. Rainbow Dash starts
+    off somewhere  on the plane, but not on a circle. She takes off in√ some direction in a straight path. She
+           √                                         √
+    moves 5 units before crossing a circle, then 5 units, then 3 5 5 units. What distance will she travel
+             5
+
+    before she crosses another circle?
+                 √      √
+    Answer: 2 170−9 5
+                         5
+                              Note that the distance from Rainbow Dash’s starting point to the first place in
+    which she hits a circle is irrelevant, except in checking that this distance is small enough that she does
+    not hit another circle beforehand. It will be clear at the end that our configuration does not allow this
+    (by the Triangle Inequality). Let O be the      origin, and let Rainbow Dash’s first three meeting points
+                                √                √
+                                                3 5
+    be A, B, C so that AB = 5 and BC = 5 .
+    Consider the lengths of OA, OB, OC. First, note that if OA = OC = n (i.e. A and C lie on the same
+    circle), then we need OB = n−1, but since she only crosses the circle containing B once, it follows that
+    the circle passing through B is tangent to AC, which is impossible since AB 6= AC. If OA = OB = n,
+
+
+                                                     Guts
+    note that OC = n + 1. Dropping a perpendicular from O to AB, we see that by the Pythagorean
+    Theorem,
+                                                5              121
+                                          n2 − = (n + 1)2 −        ,
+                                                4               20
+    from which we get that n is not an integer. Similarly, when OB = OC = n, we have OA = n + 1, and
+    n is not an integer.
+    Therefore, either OA = n + 2, OB = n + 1, OC = n or OA = n, OB = n + 1, OC = n + 2. In the first
+    case, by Stewart’s Theorem,
+                               √                 √                         √
+                             24 5               8 5       √               3 5
+                                   + (n + 1)2 ·     = n2 · 5 + (n + 2)2 ·     .
+                               5                 5                         5
+    This gives a negative value of n, so the configuration is impossible. In the final case, we have, again
+    by Stewart’s Theorem,
+                                √                 √                          √
+                             24 5            2 8 5              2
+                                                                  √      2 3 5
+                                    + (n + 1) ·      = (n + 2) · 5 + n ·         .
+                               5                  5                           5
+    Solving gives n = 3, so OA = 3, OB = 4, OC = 5.
+                                                                                                  √
+                                                           1
+    Next, we compute, by the Law of Cosines, cos ∠OAB = − 3√ 5
+                                                               , so that sin ∠OAB = 23√11
+                                                                                       5
+                                                                                          . Let the
+                                                                √
+    projection from O to line AC be P ; we get that OP = 2√11
+                                                           5
+                                                              . Rainbow Dash will next hit the circle of
+                                                                √       √
+    radius 6 at D. Our answer is now CD = P D − P C = 2 5170 − 9 5 5 by the Pythagorean Theorem.
+
+23. [13] Points X and Y are inside a unit square. The score of a vertex of the square is the minimum
+    distance from that vertex to X or Y . What is the minimum possible sum of the scores of the vertices
+    of the square?
+                √   √
+                  6+ 2
+    Answer:        2     Let the square be ABCD. First, suppose that all four vertices are closer to X than
+    Y . Then, by the triangle inequality, the sum of the scores is AX + BX + CX + DX ≥ AB + CD = 2.
+    Similarly, suppose exactly two vertices are closer to X than Y . Here, we have two distinct cases: the
+    vertices closer to X are either adjacent or opposite. Again, by the Triangle Inequality, it follows that
+    the sum of the scores of the vertices is at least 2.
+    On the other hand, suppose that A is closer to X and B, C, D are closer to Y . We wish to compute
+    the minimum value of AX + BY + CY + DY , but note that we can make X = A to simply minimize
+    BY + CY + DY . We now want Y to be the Fermat point of triangle BCD, so that ∡BY C =
+    ∡CY D = ∡DY B = 120◦ . Note that by symmetry, we must have ∡BCY = ∡DCY = 45◦ , so
+    ∡CBY = ∡CDY = 15◦ .
+                                                            ◦                   ◦
+                                                      sin 45            sin 15
+    And now we use the law of sines: BY = DY = sin       120◦ and CY = sin 120◦ . Now, we have BY + CY +
+          √ √
+    DY = 2+ 2
+              6
+                , which is less than 2, so this is our answer.
+
+24. [13] Franklin has four bags, numbered 1 through 4. Initially, the first bag contains fifteen balls,
+    numbered 1 through 15, and the other bags are empty. Franklin randomly pulls a pair of balls out of
+    the first bag, throws away the ball with the lower number, and moves the ball with the higher number
+    into the second bag. He does this until there is only one ball left in the first bag. He then repeats this
+    process in the second and third bag until there is exactly one ball in each bag. What is the probability
+    that ball 14 is in one of the bags at the end?
+    Answer: 23         Pretend there is a 16th ball numbered 16. This process is equivalent to randomly
+    drawing a tournament bracket for the 16 balls, and playing a tournament where the higher ranked ball
+    always wins. The probability that a ball is left in a bag at the end is the probability that it loses to
+    ball 16. Of the three balls 14, 15, 16, there is a 31 chance 14 plays 15 first, a 31 chance 14 plays 16
+    first, and a 31 chance 15 plays 16 first. In the first case, 14 does not lose to 16, and instead loses to 15;
+    otherwise 14 loses to 16, and ends up in a bag. So the answer is 23 .
+
+
+                                                    Guts
+25. [17] FemtoPravis is walking on an 8×8 chessboard that wraps around at its edges (so squares on the left
+    edge of the chessboard are adjacent to squares on the right edge, and similarly for the top and bottom
+    edges). Each femtosecond, FemtoPravis moves in one of the four diagonal directions uniformly at
+    random. After 2012 femtoseconds, what is the probability that FemtoPravis is at his original location?
+                ³         ´2
+                  1+21005
+    Answer:        2 1007     We note the probability that he ends up in the same row is equal to the
+    probability that he ends up in the same column by symmetry. Clearly these are independent, so we
+    calculate the probability that he ends up in the same row.
+    Now we number the rows 0 − 7 where 0 and 7 are adjacent. Suppose he starts at row 0. After two
+    more turns, the probability he is in row 2 (or row 6) is 14 , and the probability he is in row 0 again is 21 .
+    Let an , bn , cn and dn denote the probability he is in row 0,2,4,6 respectively after 2n moves.
+    We have a0 = 1, and for n ≥ 0 we have the following equations:
+                                                             1     1    1
+                                                    an+1 =     an + bn + dn
+                                                             2     4    4
+                                               1     1    1
+                                                    bn+1 =
+                                                 bn + an + cn
+                                               2     4    4
+                                               1     1    1
+                                        cn+1 = cn + bn + dn
+                                               2     4    4
+                                               1     1    1
+                                        dn+1 = dn + an + cn
+                                               2     4    4
+    From which we get the following equations:
+                                                                         1
+                                                         an + cn =
+                                                                         2
+                                                              1                  xn−1
+                                      xn = an − cn =            (an−1 − cn−1 ) =
+                                                              2                    2
+    So
+                                                                             1
+                                                       a1006 + c1006 =
+                                                                             2
+                                                                             1
+                                                     x0 = 1, x1006 =
+                                                                         21006
+                                                                    1 + 21005
+                                                       a1006 =
+                                                                      21007
+                             ³             ´2
+                                 1+21005
+    And thus the answer is        21007         .
+
+26. [17] Suppose ABC is a triangle with circumcenter O and orthocenter H such that A, B, C, O, and H
+    are all on distinct points with integer coordinates. What is the second smallest possible value of the
+    circumradius of ABC?
+                √
+    Answer:       10 Assume without loss of generality that the circumcenter is at the origin. By well
+    known properties of the Euler line, the centroid G is such that O, G, and H are collinear, with G in
+    between O and H, such that GH = 2GO. Thus, since G = 31 (A + B + C), and we are assuming O is
+    the origin, we have H = A + B + C. This means that as long as A, B, and C are integer points, H
+    will be as well.
+    However, since H needs to be distinct from A, B, and C, we must have △ABC not be a right triangle,
+    since in right triangles, the orthocenter is the vertex where the right angle is.
+    Now, if a circle centered at the origin has any integer points, it will have at least four integer points.
+    (If it has a point of the form (a, 0), then it will also have (−a, 0), (0, a), and (0, −a). If it has a point
+    of the form (a, b), with a, b 6= 0, it will have each point of the form (±a, ±b).) But in any of these cases
+    where there are only four points, any triangle which can be made from those points is a right triangle.
+
+
+                                                             Guts
+    Thus√we need the√circumcircle to contain at least eight lattice points. The smallest radius this occurs
+    at is 12 + 22 = 5, which contains the eight points (±1, ±2) and (±2, ±1). We get at least one valid
+    triangle with this circumradius:
+
+                                           A = (−1, 2), B = (1, 2), C = (2, 1).
+                                       √            √
+    The next valid circumradius is         12 + 32 = 10 which has the valid triangle
+
+                                           A = (−1, 3), B = (1, 3), C = (3, 1).
+
+27. [17] Let S be the set {1, 2, . . . , 2012}. A perfectutation is a bijective function h from S to itself such
+    that there exists an a ∈ S such that h(a) 6= a, and that for any pair of integers a ∈ S and b ∈ S such
+    that h(a) 6= a, h(b) 6= b, there exists a positive integer k such that hk (a) = b. Let n be the number of
+    ordered pairs of perfectutations (f, g) such that f (g(i)) = g(f (i)) for all i ∈ S, but f 6= g. Find the
+    remainder when n is divided by 2011.
+    Answer: 2 Note that both f and g, when written in cycle notation, must contain exactly one cycle
+    that contains more than 1 element. Assume f has k fixed points, and that the other 2012 − k elements
+    form a cycle, (of which there are (2011 − k)! ways).
+    Then note that if f fixes a then f (g(a)) = g(f (a)) = g(a) implies f fixes g(a) So g must send fixed
+    points of f to fixed points of f . It must, therefore send non-fixed points to non-fixed points. This
+    partitions S into two sets, at least one of which must be fixed by g, since g is a perfectutation.
+    If g fixes all of the the non-fixed points of f , then, since any function commutes with
+                                                                                         Pk−2the ¡identity, g fixes
+                                                                                                   k
+                                                                                                     ¢
+    some m of the fixed points and cycles the rest in (k − m − 1)! ways. So there are m=0 m            (k − m − 1)!
+                         Pk−2       k!
+    choices, which is m=0 (k−m)m!       .
+    If g fixes all of the fixed points of f , then order the non-fixed points of f a1 , a2 , . . . , a2012−k such that
+    f (ai ) = ai+1 . If g(ai ) = aj then f (g(ai )) = aj+1 thus g(ai+1 ) = aj+1 . Therefore the choice of g(a1 )
+    uniquely determines g(ai ) for the rest of the i, and g(am ) = am+j−i . But g has to be a perfectutation,
+    so g cycles through all the non-fixed points of f , which happens if and only if j − i is relatively prime
+    to 2012 − k. So there are φ(2012 − k) choices.
+                                     Pk−2        k!
+    Therefore for any f there are m=0 (k−m)m!         + φ(2012 − k) choices of g, but one of them will be g = f ,
+                                                                                  Pk−2          k!
+    which we cannot have by the problem statement. So there are −1 + m=0 (k−m)m!                        + φ(2012 − k)
+    options.
+                                                                                  P2010 ¡
+    Now note that a permutation can not fix all but one element. So n = k=0 2012
+                                                                                                   ¢
+                                                                                               k     (2011 − k)!(−1 +
+    Pk−2        k!
+       m=0 (k−m)m! + φ(2012 − k))
+
+    Modulo 2011 (which is prime), note that all terms in the summand except the one where k = 1 vanish.
+    Thus, n ≡ (2010)!(−1 + (−1)) ≡ 2 (mod 2011) by Wilson’s Theorem.
+28. [17] Alice is sitting in a teacup ride with infinitely many layers of spinning disks. The largest disk has
+    radius 5. Each succeeding disk has its center attached to a point on the circumference of the previous
+    disk and has a radius equal to 2/3 of the previous disk. Each disk spins around its center (relative to
+    the disk it is attached to) at a rate of π/6 radians per second. Initially, at t = 0, the centers of the
+    disks are aligned on a single line, going outward. Alice is sitting at the limit point of all these disks.
+    After 12 seconds, what is the length of the trajectory that Alice has traced out?
+    Answer: 18π Suppose the center of the largest teacup is at the origin in the complex plane, and
+    let z = 32 eπit/6 . The center of the second disk is at 5eπit/6 at time t; that is, 15
+                                                                                         2 z. Then the center of
+    the third disk relative to the center of the second disk is at 152 z 2
+                                                                           , and so on. Summing  up a geometric
+    series, we get that Alice’s position is
+                                15                            15                            15
+                                   (z + z 2 + z 3 + · · · ) =    (1 + z 2 + z 3 + · · · ) −
+                                 2                            2 µ         ¶                 2
+                                                              15     1          15
+                                                            =               − .
+                                                              2 1−z              2
+
+
+                                                        Guts
+    Now, after 12 seconds, z has made a full circle in the complex plane centered at 0 and of radius 2/3.
+    Thus 1 − z is a circle centered at 1 of radius 2/3.
+                                                                         1
+    So 1 − z traces a circle, and now we need to find the path that 1−z       traces. In the complex plane,
+    taking the reciprocal corresponds to a reflection about the real axis followed by a geometric inversion
+    about the unit circle centered at 0. It is well known that geometric inversion maps circles not passing
+    through the center of the inversion to circles.
+    Now, the circle traced by 1 − z contains the points 1 − 2/3 = 1/3, and 1 + 2/3 = 5/3. Therefore the
+             1
+    circle 1−z contains the points 3 and 3/5, with the center lying halfway between. So the radius of the
+    circle is                                    µ       ¶
+                                               1       3     6
+                                                   3−      =
+                                               2       5     5
+    and so the perimeter is 2π(6/5) = 12π/5. Scaling by 15/2 gives an answer of
+                                                µ     ¶
+                                             15 12π
+                                                        = 18π.
+                                              2    5
+
+
+29. [19] Consider the cube whose vertices are the eight points (x, y, z) for which each of x, y, and z is
+    either 0 or 1. How many ways are there to color its vertices black or white such that, for any vertex,
+    if all of its neighbors are the same color then it is also that color? Two vertices are neighbors if they
+    are the two endpoints of some edge of the cube.
+    Answer: 118 Divide the 8 vertices of the cube into two sets A and B such that each set contains
+    4 vertices, any two of which are diagonally adjacent across a face of the cube. We do casework based
+    on the number of vertices of each color in set A.
+
+       • Case 1: 4 black. Then all the vertices in B must be black, for 1 possible coloring.
+       • Case 2: 3 black, 1 white. Then there are 4 ways to assign the white vertex. The vertex in B
+         surrounded by the black vertices must also be black. Meanwhile, the three remaining vertices in
+         B may be any configuration except all black, for a total of 4(23 − 1) = 28 possible colorings.
+       • Case 3: 2 black, 2 white. Then, there are 6 ways to assign the 2 white vertices. The 4 vertices of B
+         cannot all be the same color. Additionally, we cannot have 3 black vertices of B surround a white
+         vertex of A with the other vertex of B white, and vice-versa, so we have a total of 6(24 −2−4) = 60
+         possible colorings.
+       • Case 4: 1 black, 3 white. As in case 2, there are 28 possible colorings.
+       • Case 5: 5 white. As in case 1, there is 1 possible coloring.
+
+    So there is a total of 1 + 28 + 60 + 28 + 1 = 118 possible colorings.
+
+30. [19] You have a twig of length 1. You repeatedly do the following: select two points on the twig
+    independently and uniformly at random, make cuts on these two points, and keep only the largest
+    piece. After 2012 repetitions, what is the expected length of the remaining piece?
+    Answer: (11/18)2012      First let p(x) be the probability density of x being the longest length.
+                                                      R1                          R1
+    Let an be the expected length after n cuts. an = 0 p(x) · (xan−1 )dx = an−1 0 xp(x)dx = a1 an−1 .
+    It follows that an = an1 , so our answer is (a1 )2012 . We now calculate a1 .
+    Let P (z) be the probability that the longest section is ≤ z. Clearly P (z) = 0 for z ≤ 31 .
+    To simulate making two cuts we pick two random numbers x, y from [0, 1], and assume without loss
+    of generality that x ≤ y. Then picking two such points is equivalent to picking a point in the top
+    left triangle half of the unit square. This figure has area 21 so our P (z) will be double the area where
+    x ≤ z, y ≥ 1 − z and y − x ≤ z. For 13 ≤ z ≤ 21 the probability is double the area bounded by
+    x = z, 1 − z = y, y − x = z. This is 2( 12 (3z − 1)2 ) = (3z − 1)2 .
+
+
+                                                     Guts
+    For 12 ≤ z ≤ 1 this value is double the hexagon bounded by x = 0, y = 1 − z, y = x, x = z, y = 1,
+                                                                                                2
+    y = x+z. The complement of this set, however, is three triangles of area (1−z)
+                                                                                2  , so P (z) = 1−3(1−z)2
+          1
+    for 2 ≤ z ≤ 1.
+                                                                              R1             R1
+    Now note that P ′ (z) = p(z). Therefore by integration by parts a1 = 0 zp(z)dz = 0 zP ′ (z)dz =
+                  1
+    [10 zP (z) − 0 P (z)dz. This equals
+                R
+
+                                               Z 21                    Z 1
+                                          1−          (3z − 1)2 dz −         1 − 3(1 − z)2 dz
+                                                1                       1
+                                                3                       2
+
+
+                                                        1 (3z − 1)3  1
+                                           = 1 − [ 21               − + [11 (z − 1)3
+                                                        3     9      2    2
+
+    .
+                                                             1   1 1 1 1
+                                                    =1−        − + = +
+                                                            72 2 8   2 9
+                                                                  11
+                                                                =
+                                                                  18
+    So the answer is ( 11
+                       18 )
+                           2012
+                                .
+31. [19] Let S7 denote all the permutations of 1, 2, . . . , 7. For any π ∈ S7 , let f (π) bePthe smallest positive
+    integer i such that π(1), π(2), . . . , π(i) is a permutation of 1, 2, . . . , i. Compute π∈S7 f (π).
+    Answer: 29093            Extend the definition of f to apply for any permutation of 1, 2, . . . , n, for any
+    positive integer n. For positive integer n, let g(n) denote the number of permutations π of 1, 2, . . . , n
+    such that f (π) = n. We have g(1) = 1. For fixed n, k (with k ≤ n), the number of permutations
+    π of 1, 2, . . . , n such that f (π) = k is g(k)(n − k)!. This gives us the recursive formula g(n) =
+        Pn−1
+    n!− k=1 g(k)(n−k)!. Using this formula, we find that the first 7 values of g are 1, 1, 3, 13, 71, 461, 3447.
+                                  P7
+    Our sum is then equal to k=1 k · g(k)(7 − k)!. Using our computed values of g, we get that the sum
+    evaluates to 29093.
+32. [19] Let S be a set of size 3. How many collections T of subsets of S have the property that for any
+    two subsets U ∈ T and V ∈ T , both U ∩ V and U ∪ V are in T ?
+                                                                                                   S
+    Answer: 74 Let us consider the collections T grouped based on the size of the set X = U ∈T U ,
+    which we can see also must be in T as long as T contains at least one set. This leads us to count
+    the number of collections on a set of size at most 3 satisfying the desired property with the additional
+    property that the entire set must be in the collection.  Let
+                                                               ¡ ¢Cn denote
+                                                                       ¡ ¢ that¡ number   of such collections
+    on a set of size n. Our answer will then be 1 + 30 C0 + 31 C1 + 32 C2 + 33 C3 , with the additional 1
+                                                      ¡¢                          ¢
+
+    coming from the empty collection.
+                                                                              T
+    Now for such a collection T on a set of n elements, consider the set I = U ∈T U . Suppose this set has
+    size k. Then removing all these elements from consideration gives us another such collection on a set
+    of size n − k, but now containing the empty set. We can see that for each particular choice of I, this
+    gives a bijection to the collections on the set S to the collections on the set S − I. This leads us to
+    consider the further restricted collections that must contain both the entire set and the empty set.
+    It turns out that such restricted collections are a well-studied class of objects called topological spaces.
+    Let Tn¡ be
+             ¢ the number of topological spaces on n elements. Our argument before shows that Cn =
+    P  n    n
+       k=0 k Tk . It is relatively straightforward to see that T0 = 1, T1 = 1, and T2 = 4. For a set of size
+    3, there are the following spaces. The number of symmetric versions is shown in parentheses.
+        • ∅, {a, b, c} (1)
+        • ∅, {a, b}, {a, b, c} (3)
+        • ∅, {a}, {a, b, c} (3)
+        • ∅, {a}, {a, b}, {a, b, c} (6)
+        • ∅, {a}, {b, c}, {a, b, c} (3)
+
+
+                                                             Guts
+       • ∅, {a}, {a, b}, {a, c}, {a, b, c} (3)
+       • ∅, {a}, {b}, {a, b}.{a, b, c} (3)
+       • ∅, {a}, {b}, {a, b}, {a, c}, {a, b, c} (6)
+       • ∅, {a}, {b}, {c}, {a, b}, {a, c}, {b, c}, {a, b, c} (1)
+
+    which gives T3 = 29. Tracing back our reductions, we have that C0 = 00 T0 = 1, C1 = 10 T0 + 11 T1 =
+                                                                           ¡¢          ¡¢      ¡¢
+            ¡ 2¢    ¡2 ¢     ¡2 ¢             ¡3 ¢    ¡3 ¢    ¡ 3¢    ¡ 3¢
+    2, C2 = 0 T0 + 1 T1 + 2 T2 = 7, C3 = 0 T0 + 1 T1 + 2 T2 + 3 T3 = 45, and then our answer is
+    1 + 30 C0 + 31 C1 + 32 C2 + 33 C3 = 1 + 1 + 6 + 21 + 45 = 74.
+        ¡¢       ¡¢      ¡¢       ¡¢
+
+                                             √
+33. [23] Compute the decimal expansion of π. Your score will be min(23, k), where k is the number of
+    consecutive correct digits immediately following the decimal point in your answer.
+    Answer: 1.77245385090551602729816... For this problem,     √ it is useful to know the following √
+                                                                                                    square
+    root algorithm that allows for digit-by-digit extraction of x and gives one decimal place of x for
+    each
+      √ two decimal places of x. We will illustrate
+                                             √      how to extract the second digit after the decimal point
+    of π, knowing that π = 3.1415 · · · and π = 1.7 · · · .
+    Let d be the next decimal digit. Then d should be the largest digit such that (1.7 + 0.01d)2 < π, which
+    in this case we will treat as (1.7 + 0.01d)2 < 3.1415. Expanding this, we get 2.89 + 0.034d + 0.0001d2 <
+    3.1415, from which we get the value of d to be approximately ⌊ 3.1415−2.89
+                                                                          0.034  ⌋ = ⌊ 0.2515
+                                                                                        0.034 ⌋ = 7, since √
+                                                                                                           the
+             2
+    0.0001d term is negligible. Indeed, 7 is the largest such digit, and so d = 7 is the second digit of π.
+    Because we are constantly subtracting the square of our extracted answer so far, we can record the
+    difference in a manner similar to long division, which yields a quick method of extracting square roots
+    by hand.
+
+34. [23] Let Q be the product of the sizes of all the non-empty subsets of {1, 2, . . . , 2012}, and let M =
+                 j Giveklower and upper bounds L and U for M . If 0 < L ≤ M ≤ U , then your score will
+    log2 (log2 (Q)).
+                     23
+    be min(23,    3(U −L)   ). Otherwise, your score will be 0.
+
+    Answer: 2015.318180...         In this solution, all logarithms will be taken in base 2. It is clear that
+              P2012 ¡                                                    P2011
+    log(Q) = k=1 2012               By paring k with 2012 − k, we get k=1 0.5 ∗ log(k(2012 − k)) 2012
+                         ¢                                                                           ¡    ¢
+                       k   log(k).                                                                     k    +
+                                                  P2012 ¡2012¢                P2012 ¡2012¢
+    log(2012), which is between 0.5 ∗ log(2012) k=0 k and log(2012) k=0 k ; i.e., the answer is
+    between log(2012)22011 and log(2012)22012 . Thus log(log(Q)) is between 2011 + log(log(2012)) and
+    2012 + log(log(2012)). Also 3 < log(log(2012)) < 4. So we get 2014 < M < 2016.
+                                                     Q2012 k
+35. [23] Let N be the number of distinct roots of k=1    j (x − 1).
+                                                                  k Give lower and upper bounds L and U
+                                                             23
+    on N . If 0 < L ≤ N ≤ U , then your score will be (U/L)1.7 . Otherwise, your score will be 0.
+
+    Answer: 1231288 For x to be such a number is equivalent to x being an k th root of unity for some
+    k up to 2012. For each k, there are ϕ(k) primitive k th roots of unity, so the total number of roots is
+    P2012
+      k=1 ϕ(k).
+    We will give a good(approximation of this number using well known facts about the Möbius function,
+                         0        if n is not squarefree                                        P
+    defined by µ(n) =         r
+                                                                 . It turns out that if f (n) = d|n g(d),
+                         (−1) if n has r distinct prime factors
+    then g(n) = d|n µ(d)f ( nd ). Using this fact, since n = d|n ϕ(d), we have that ϕ(n) = d|n µ(d) nd .
+                 P                                           P                               P
+                                                      P2012 P                                  P2012 P
+    Now we have reduced the problem to estimating k=1 d|k µ(d) kd . Let a = kd , so we obtain k=1 d|k aµ(d).
+
+
+
+
+                                                         Guts
+   We can interchange the order of summation by writing
+                                          2012
+                                     X ⌊X
+                                     2012 d ⌋              2012
+                                                           X             1
+                                                                             µ
+                                                                                     2012
+                                                                                              ¶2
+                                                 aµ(d) ≈          µ(d)           ⌊        ⌋
+                                                                         2            d
+                                     d=1 a=1               d=1
+                                                           2012
+                                                           X             20122
+                                                      ≈           µ(d)
+                                                                          2d2
+                                                           d=1
+                                                                    2012
+                                                           20122 X µ(d)
+                                                      =
+                                                             2      d2
+                                                                    d=1
+                                                                     ∞
+                                                        20122 X µ(d)
+                                                      ≈
+                                                          2      d2
+                                                                    d=1
+
+                                                                       (
+                                                                  P     1 if n = 1
+   The Möbius function also satisfies the property that d|n µ(d) =                  , which can be seen
+                                                                        0 otherwise
+                                                                     (
+                                                                      1 if n = 1
+   as a special case of the theorem above (letting f (n) = 1, g(n) =              ). We can then see that
+                                                                      0 otherwise
+   ³P           ´ ¡P
+       ∞ µ(d)        ∞    1
+                            ¢   1
+                                         P∞ µ(d)         6
+                                                                               P2012         3        2
+       d=1 d2        c=1 c2 = 12 = 1, so    d=1 d2 = π 2 . Therefore, we have    k=1 ϕ(k) ≈ π 2 · 2012 =
+   1230488.266... 2012 is large enough that all of our approximations are pretty accurate and we should
+   be comfortable perturbing this estimate by a small factor to give bounding values.
+36. [23] Maria is hopping up a flight of stairs with 100 steps. At every hop, she advances some integer
+    number of steps. Each hop she makes has fewer steps. However, the positive difference between the
+    length of consecutive hops decreases. Let P be the number of distinct ways she can hop up the
+                                                                                               ¹ stairs.
+                                                                                                      º
+   Find lower and upper bounds L and U for P . If 0 < L ≤ P ≤ U , your score will be                       √23     .
+                                                                                                             U/L
+   Otherwise, your score will be 0.
+   Answer: 6922                Consider the sequence of hops backwards. It is an increasing sequence where
+   the first finite differences are increasing, so all the second finite differences are all positive integers.
+   Furthermore, given positive integers a, e0 (representing the initial value and initial first finite difference),
+   and a sequence of positive integers e1 , e2 , . . . , ek , representing the second finite differences,
+                                                                                                    Pi−2 we obtain a
+   sequence of k +2 integers satisfying our constraints where the i-th term is equal to a+ j=0 (i−j −1)ej .
+                                                         Pk
+   The sum of these values is equal to (k + 2)a + j=0 (j+1)(j+2)     2     ek−j . The number of sequences of length
+                                                                                             Pk
+   k + 2 with sum 100 is then the number of positive integer solutions to (k + 2)a + j=0 (j+1)(j+2)      2   ek−j =
+   100 in a, e0 , . . . , ek .
+   We can now approximate a count of the total number of solutions by caseworking over the possible
+   values of k. First, we must consider all sequences of length 1 or 2; it easy to see that there are 1 and
+   49 of these, respectively. Otherwise, we want to consider the following equations:
+
+                                                                   x1 + 3x2 + 3x3 = 100,
+                                                             x1 + 4x2 + 3x3 + 6x4 = 100,
+                                                 x1 + 5x2 + 3x3 + 6x4 + 10x5 = 100,
+                                          x1 + 6x2 + 3x3 + 6x4 + 10x5 + 15x6 = 100,
+                                   x1 + 7x2 + 3x3 + 6x4 + 10x5 + 15x6 + 21x7 = 100,
+                           x1 + 8x2 + 3x3 + 6x4 + 10x5 + 15x6 + 21x7 + 28x8 = 100.
+
+   (Any larger values of k will yield equations with no solutions, as the sum of the coefficients will
+   be greater than 100 in all of these.) We can compute the number of solutions to the last equation
+   easily: there are 8. For the remaining 5 equations, we can use the following observation to estimate
+   the number of solutions. Suppose we wanted to count the number of positive integer solutions to
+
+
+                                                     Guts
+Pk
+       c x = n, where ci = 1. This is equivalent to finding the number of nonnegative integer solutions
+    Pk i i
+   i=1               Pk
+to i=1 ci xi = n − i=1 ci , which is also equivalent to finding the number of nonnegative integer
+             Pk               Pk                       Pk                                            ′
+solutions to i=2 ci xi ≤ n − i=1 ci . Let n′ = n − i=1 ci . Each xi can take values from 0 to nci ,
+                ′ k−1
+               (n )
+giving about Q   k      choices. Of course, not all of these choices work; we try to estimate the probability
+                 i=2 ci
+that one does. We can think of a random selection of xi as approximated     Pk by choosing Xi uniformly
+                                        ′
+from [0, 1], then setting xi = Xi · nci . The condition would then be i=2 Xk ≤ 1. The probability
+                                                                                      ′ k−1
+                      1                                                        (n )
+of this occuring is (k−1)! , so an approximate number of solutions would be (k−1)! Qk             . We can use
+                                                                                         i=2 ci
+                                                                                          ′
+these values to get a lower bound of around 4000, and we can also use n instead of n for a reasonable
+upper bound of 16000.
+
+
+
+
+                                                Guts
+

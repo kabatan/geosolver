@@ -1,0 +1,656 @@
+                                        February 2017
+                                           February 18, 2017
+                                                  Guts
+1. [4] A random number generator will always output 7. Sam uses this random number generator once.
+   What is the expected value of the output?
+   Proposed by: Sam Korsky
+   Answer:       7
+   The only output is 7, so the expected value is 7.
+2. [4] Let A, B, C, D, E, F be 6 points on a circle in that order. Let X be the intersection of AD and BE,
+   Y is the intersection of AD and CF , and Z is the intersection of CF and BE. X lies on segments BZ
+   and AY and Y lies on segment CZ. Given that AX = 3, BX = 2, CY = 4, DY = 10, EZ = 16, and
+   F Z = 12, find the perimeter of triangle XY Z.
+   Proposed by: Sam Korsky
+                 77
+   Answer:        6
+
+   Let XY = z, Y Z = x, and ZX = y. By Power of a Point, we have that
+
+                  3(z + 10) = 2(y + 16), 4(x + 12) = 10(z + 3), and 12(x + 4) = 16(y + 2).
+
+   Solving this system gives XY = 11           14         9
+                                   3 and Y Z = 3 and ZX = 2 . Therefore, our answer if XY + Y Z +
+          77
+   ZX = 6 .
+
+3. [4] Find the number of pairs of integers (x, y) such that x2 + 2y 2 < 25.
+   Proposed by: Allen Liu
+   Answer:       55
+   We do casework on y.
+   If y = 0, we have x2 < 25, so we get 9 values of x. If y = ±1, then x2 < 23, so we still have 9 values
+   of x. If y = ±2, we have x2 < 17, so we have 9 values of x. If y = ±3, we have x2 < 7, we get 5 values
+   of x.
+   Therefore, the final answer is 9 + 2(9 + 9 + 5) = 55.
+4. [4] Find the number of ordered triples of nonnegative integers (a, b, c) that satisfy
+
+                                          (ab + 1)(bc + 1)(ca + 1) = 84.
+
+   Proposed by: Evan Chen
+   Answer:       12
+   The solutions are (0, 1, 83) and (1, 2, 3) up to permutation. First, we do the case where at least one
+   of a, b, c is 0. WLOG, say a = 0. Then we have 1 + bc = 84 =⇒ bc = 83. As 83 is prime, the only
+   solution is (0, 1, 83) up to permutation.
+
+   Otherwise, we claim that at least one of a, b, c is equal to 1. Otherwise, all are at least 2, so (1 +
+   ab)(1 + bc)(1 + ac) ≥ 53 > 84. So WLOG, set a = 1. We now need (b + 1)(c + 1)(bc + 1) = 84.
+   Now, WLOG, say b ≤ c. If b = 1, then (c + 1)2 = 42, which has no solution. If b ≥ 3, then
+   (b + 1)(c + 1)(bc + 1) ≥ 42 · 10 = 160 > 84. So we need b = 2. Then we need (c + 1)(2c + 1) = 21.
+   Solving this gives c = 3, for the solution (1, 2, 3).
+   Therefore, the answer is 6 + 6 = 12.
+5. [6] Find the number of ordered triples of positive integers (a, b, c) such that
+
+                                             6a + 10b + 15c = 3000.
+
+   Proposed by: Yang Liu
+   Answer:       4851
+   Note that 6a must be a multiple of 5, so a must be a multiple of 5. Similarly, b must be a multiple of
+   3, and c must be a multiple of 2.
+   Set a = 5A, b = 3B, c = 2C. Then the equation reduces to A + B + C = 100. This has 99
+                                                                                               
+                                                                                              2 = 4851
+   solutions.
+6. [6] Let ABCD be a convex quadrilateral with AC = 7 and BD = 17. Let M, P, N, Q be the midpoints
+   of sides AB, BC, CD, DA respectively. Compute M N 2 + P Q2
+   Proposed by: Sam Korsky
+   Answer:       169
+   M P N Q is a parallelogram whose side lengths are 3.5 and 8.5 so the sum of squares of its diagonals is
+   72 +172
+      2    = 169
+7. [6] An ordered pair of sets (A, B) is good if A is not a subset of B and B is not a subset of A. How
+   many ordered pairs of subsets of {1, 2, . . . , 2017} are good?
+   Proposed by: Alexander Katz
+   Answer:       42017 − 2 · 32017 + 22017
+   Firstly, there are 42017 possible pairs of subsets, as each of the 2017 elements can be in neither subset,
+   in A only, in B only, or in both.
+   Now let us count the number of pairs of subsets for which A is a subset of B. Under these conditions,
+   each of the 2017 elements could be in neither subset, in B only, or in both A and B. So there are 32017
+   such pairs.
+   By symmetry, there are also 32017 pairs of subsets where B is a subset of A. But this overcounts the
+   pairs in which A is a subset of B and B is a subset of A, i.e. A = B. There are 22017 such subsets.
+   Thus, in total, there are 42017 − 2 · 32017 + 22017 good pairs of subsets.
+8. [6] You have 128 teams in a single elimination tournament. The Engineers and the Crimson are two of
+   these teams. Each of the 128 teams in the tournament is equally strong, so during each match, each
+   team has an equal probability of winning.
+   Now, the 128 teams are randomly put into the bracket.
+   What is the probability that the Engineers play the Crimson sometime during the tournament?
+   Proposed by: Yang Liu
+                  1
+   Answer:       64
+               128
+                 
+   There are    2    = 127 · 64 pairs of teams. In each tournament, 127 of these pairs play.
+                               127      1
+   By symmetry, the answer is 127·64 = 64 .
+9. [7] Jeffrey writes the numbers 1 and 100000000 = 108 on the blackboard. Every minute, if x, y are on
+   the board, Jeffrey replaces them with
+                                                             −1
+                                        x+y            1    1
+                                               and 2     +        .
+                                          2            x y
+
+   After 2017 minutes the two numbers are a and b. Find min(a, b) to the nearest integer.
+   Proposed by: Yang Liu
+    Answer:        10000
+    Note that the product of the integers on the board is a constant. Indeed, we have that
+                                                                    −1
+                                             x+y             1   1
+                                                 ·2            +           = xy.
+                                              2              x y
+                                                                                       √
+    Therefore, we expect that the answer to the problem is approximately                   1 · 108 = 104 .
+
+    To be more rigorous, we have to show that the process indeed converges quickly enough. To show this,
+    we bound the difference between the integers on the board at time i. Say that at time i, the integers
+    on the board are ai < bi . Note that
+                                                                    −1
+                                                                          (ai − bi )2
+                                                         
+                                              ai + bi       1    1
+                         di+1 = bi+1 − ai+1 =         −2       +        =
+                                                 2          ai   bi       2(ai + bi )
+
+                                                       bi − ai  di
+                                                   <           = .
+                                                          2     2
+    The inequality at the end follows from that obvious fact that bi − ai < bi + ai . Therefore, di+1 ≤ d2i , so
+               8
+    d2017 < 210
+             2017 , which is extremely small. So the difference is essentially 0 at time 2017, which completes
+
+    the argument.
+10. [7] Let ABC be a triangle in the plane with AB = 13, BC = 14, AC = 15. Let Mn denote the smallest
+                                            1
+    possible value of (AP n + BP n + CP n ) n over all points P in the plane. Find limn→∞ Mn .
+    Proposed by: Yang Liu
+    Answer:        65/8
+    Let R denote the circumradius of triangle ABC. As ABC is an acute triangle, it isn’t hard to check
+    that for any point P , we have either AP ≥ R, BP ≥ R, or CP ≥ R. Also, note that if we choose
+    P = O (the circumcenter) then (AP n + BP n + CP n ) = 3 · Rn . Therefore, we have the inequality
+                                                                      1            1          1
+                               R ≤ min2 (AP n + BP n + CP n ) n ≤ (3Rn ) n = R · 3 n .
+                                    P ∈R
+
+    Taking n → ∞ yields
+                                                 R ≤ lim Mn ≤ R
+                                                         n→∞
+                   1
+    (as limn→∞ 3   n   = 1), so the answer is R = 65
+                                                   8 .
+
+11. [7] Consider the graph in 3-space of
+
+                                 0 = xyz(x + y)(y + z)(z + x)(x − y)(y − z)(z − x).
+
+    This graph divides 3-space into N connected regions. What is N ?
+    Proposed by: Evan Chen
+    Answer:        48
+    Note that reflecting for each choice of sign for x, y, z, we get new regions. Therefore, we can restrict to
+    the case where x, y, z > 0. In this case, the sign of the expression only depends on (x − y)(y − z)(z − x).
+    It is easy to see that for this expression, every one of the 3! = 6 orderings for {x, y, z} contributes a
+    region.
+    Therefore, our answer is 23 · 3! = 48.
+12. [7] In a certain college containing 1000 students, students may choose to major in exactly one of math,
+    computer science, finance, or English. The diversity ratio d(s) of a student s is the defined as number
+    of students in a different major from s divided by the number of students in the same major as s
+    (including s). The diversity D of the college is the sum of all the diversity ratios d(s).
+    Determine all possible values of D.
+    Proposed by: Evan Chen
+     Answer:      {0, 1000, 2000, 3000}
+    It is easy to check that if n majors are present, the diversity is 1000(n − 1). Therefore, taking n =
+    1, 2, 3, 4 gives us all possible answers.
+13. [9] The game of Penta is played with teams of five players each, and there are five roles the players can
+    play. Each of the five players chooses two of five roles they wish to play. If each player chooses their
+    roles randomly, what is the probability that each role will have exactly two players?
+    Proposed by: Alexander Katz
+    Consider a graph with five vertices corresponding to the roles, and draw an edge between two vertices
+    if a player picks both roles. Thus there are exactly 5 edges in the graph, and we want to find the
+    probability that each vertex has degree 2. In particular, we want to find the probability that the graph
+    is composed entirely of cycles.
+    Thus there are two cases. The first case is when the graph is itself a 5-cycle. There are 4! ways to
+    choose such a directed cycle (pick an arbitrary vertex A and consider a vertex it connects to, etc.),
+    and thus 4!
+              2 = 12 ways for the undirected graph to be a 5-cycle. Now, there are 5! ways to assign the
+    edges in this cycle to people, giving a total contribution of 12 · 5!.
+
+    The second case is when the graph is composed of a 2-cycle  and a 3-cycle, which only requires choosing
+    the two vertices to be the 2-cycle, and so there are 52 = 10 ways. To assign the players to edges, there
+                                                           
+
+    are 52 = 10 ways to assign the players to the 2-cycle. For the 3-cycle, any of the 3! = 6 permutations
+          
+
+    of the remaining 3 players work. The total contribution is 10 · 10 · 6.
+
+    Therefore, out answer is
+                                          12 · 120 + 10 · 10 · 6    51
+                                                                 =      .
+                                                   105             2500
+
+14. [9] Mrs. Toad has a class of 2017 students, with unhappiness levels 1, 2, . . . , 2017 respectively. Today
+    in class, there is a group project and Mrs. Toad wants to split the class in exactly 15 groups. The
+    unhappiness level of a group is the average unhappiness of its members, and the unhappiness of the
+    class is the sum of the unhappiness of all 15 groups. What’s the minimum unhappiness of the class
+    Mrs. Toad can achieve by splitting the class into 15 groups?
+    Proposed by: Yang Liu
+    One can show that the optimal configuration is {1}, {2}, . . . , {14}, {15, . . . , 2017}. This would give us
+    an answer of 1 + 2 + · · · + 14 + 15+2017
+                                         2    = 105 + 1016 = 1121.
+15. [9] Start by writing the integers 1, 2, 4, 6 on the blackboard. At each step, write the smallest positive
+    integer n that satisfies both of the following properties on the board.
+
+       • n is larger than any integer on the board currently.
+       • n cannot be written as the sum of 2 distinct integers on the board.
+
+    Find the 100-th integer that you write on the board. Recall that at the beginning, there are already 4
+    integers on the board.
+    Proposed by: Yang Liu
+     Answer:      388
+    The sequence goes
+                                                1, 2, 4, 6, 9, 12, 17, 20, 25, . . . .
+    Common differences are 5, 3, 5, 3, 5, 3, . . . , starting from 12. Therefore, the answer is 12 + 47 × 8 = 388.
+16. [9] Let a and b be complex numbers satisfying the two equations
+
+                                                       a3 − 3ab2 = 36
+                                                        b3 − 3ba2 = 28i.
+
+    Let M be the maximum possible magnitude of a. Find all a such that |a| = M .
+    Proposed by: Alexander Katz
+                              √             √
+     Answer:      3, − 23 + 3i2 3 , − 32 − 3i2 3
+    Notice that
+
+
+                                        (a − bi)3 = a3 − 3a2 bi − 3ab2 + b3 i
+                                                      = (a3 − 3ab2 ) + (b3 − 3ba2 )i
+                                                      = 36 + i(28i)
+                                                      =8
+
+    so that a − bi = 2 + i. Additionally
+
+                                        (a + bi)3 = a3 + 3a2 bi − 3ab2 − b3 i
+                                                      = (a3 − 3ab2 ) − (b3 − 3ba2 )i
+                                                      = 36 − i(28i)
+                                                      = 64
+
+    It follows that a − bi = 2ω and a + bi = 4ω 0 where ω, ω 0 are third roots of unity. So a = ω + 2ω 0 . From
+    the triangle inequality |a| ≤ |ω| + |2ω 0 | = 3, with equality when ω and ω 0 point in the same direction
+    (and thus ω = ω 0 ). It follows that a = 3, 3ω, 3ω 2 , and so
+                                                        √      √
+                                                    3 3i 3 3 3i 3
+                                            a = 3, − +    ,− −
+                                                    2   2   2  2
+17. [10] Sean is a biologist, and is looking at a string of length 66 composed of the letters A, T, C, G. A
+    substring of a string is a contiguous sequence of letters in the string. For example, the string AGT C has
+    10 substrings: A, G, T, C, AG, GT, T C, AGT, GT C, AGT C. What is the maximum number of distinct
+    substrings of the string Sean is looking at?
+    Proposed by: Yang Liu
+     Answer:      2100
+    Let’s consider the number of distinct substrings of length `. On one hand, there are obviously at most
+    4` distinct substrings. On the other hand, there are 67 − ` substrings of length ` in a length 66 string.
+    Therefore, the number of distinct substrings is at most
+                                                66
+                                                X
+                                                      min(4` , 67 − `) = 2100.
+                                                `=1
+
+    To show that this bound is achievable, one can do a construction using deBrujin sequences that we
+    won’t elaborate on here.
+18. [10] Let ABCD be a quadrilateral with side lengths AB = 2, BC = 3, CD = 5, and DA = 4. What
+    is the maximum possible radius of a circle inscribed in quadrilateral ABCD?
+    Proposed by: Sam Korsky
+                    √
+                   2 30
+    Answer:          7
+
+    Let the tangent lengths be a, b, c, d so that
+
+                                                       a+b=2
+
+                                                       b+c=3
+                                                       c+d=5
+                                                      d+a=4
+    Then b = 2 − a and c = 1 + a and d = 4 − a. The radius of the inscribed circle of quadrilateral ABCD
+    is given by                r                          r
+                                  abc + abd + acd + bcd      −7a2 + 16a + 8
+                                                        =
+                                      a+b+c+d                        7
+                                                                                √
+                                        8
+                                                                     q
+                                                                        120    2 30
+    This is clearly maximized when a = 7 which leads to a radius of      49 =         .
+                                                                                 7
+19. [10] Find (in terms of n ≥ 1) the number of terms with odd coefficients after expanding the product:
+                                                Y
+                                                     (xi + xj )
+                                                  1≤i<j≤n
+
+
+    e.g., for n = 3 the expanded product is given by x21 x2 + x21 x3 + x22 x3 + x22 x1 + x23 x1 + x23 x2 + 2x1 x2 x3
+    and so the answer would be 6.
+    Proposed by: Sam Korsky
+    Answer:        n!
+    Note that if we take (mod 2), we get that
+                               Y                          Y
+                                     (xi + xj ) ≡                (xj − xi ) = det(M ),
+                                 1≤i<j≤n               1≤i<j≤n
+
+
+    where M is the matrix with Mij = xj−1
+                                      i   . This is called a Vandermonde determinant. Expanding this
+    determinant using the formula
+                                                    XY   n
+                                        det(M ) =           xi−1
+                                                             σ(i) ,
+                                                            σ i=1
+
+    where the sum if over all n! permutations σ, gives the result.
+20. [10] For positive integers a and N , let r(a, N ) ∈ {0, 1, . . . , N − 1} denote the remainder of a when
+    divided by N . Determine the number of positive integers n ≤ 1000000 for which
+
+                                               r(n, 1000) > r(n, 1001).
+
+    Proposed by: Pakawut Jiradilok
+    Answer:        499500
+    Note that 0 ≤ r(n, 1000) ≤ 999 and 0 ≤ r(n, 1001) ≤ 1000. Consider the 1000
+                                                                                     
+                                                                                   2   = 499500 ways to
+    choose pairs (i, j) such that i > j.By the Chinese Remainder Theorem, there is exactly one n such that
+    1 ≤ n ≤ 1000 · 1001 such that n ≡ i (mod 1000) and n ≡ j (mod 1001). Finally, it is easy to check that
+    none of the n in the range 1000001 to 1001000 satisfy the condition, so the answer is exactly 499500.
+21. [12] Let P and A denote the perimeter and area respectively of a right triangle with relatively prime
+                                                                        2
+    integer side-lengths. Find the largest possible integral value of PA
+    Proposed by: Sam Korsky
+    Assume WLOG that the side lengths of the triangle are pairwise coprime. Then they can be written
+    as m2 − n2 , 2mn, m2 + n2 for some coprime integers m and n where m > n and mn is even. Then we
+    obtain
+                                             P2    4m(m + n)
+                                                 =
+                                             A      n(m − n)
+    But n, m − n, m, m + n are all pairwise coprime so for this to be an integer we need n(m − n)|4 and by
+    checking each case we find that (m, n) = (5, 4) yields the maximum ratio of 45 .
+22. [12] Kelvin the Frog and 10 of his relatives are at a party. Every pair of frogs is either friendly or
+    unfriendly. When 3 pairwise friendly frogs meet up, they will gossip about one another and end up in
+    a fight (but stay friendly anyway). When 3 pairwise unfriendly frogs meet up, they will also end up
+    in a fight. In all other cases, common ground is found and there is no fight. If all 11
+                                                                                          3 triples of frogs
+    meet up exactly once, what is the minimum possible number of fights?
+    Proposed by: Alexander Katz
+    Answer:        28
+    Consider a graph G with 11 vertices – one for each of the frogs at the party – where two vertices are
+    connected by an edge if and only if they are friendly. Denote by d(v) the number of edges emanating
+    from v; i.e. the number of friends frog v has. Note that d(1) + d(2) + . . . + d(11) = 2e, where e is the
+    number of edges in this graph.
+    Focus on a single vertex v, and choose two other vertices u, w such that uv is an edge but wv is not.
+    There are then d(v) choices for u and 10 − d(v) choices for w, so there are d(v)(10 − d(v)) sets of three
+    frogs that include v and do not result in a fight. Each set, however, is counted twice – if uw is an edge,
+    then we count this set both when we focus on v and when we focus on w, and otherwise we count it
+    when we focus on v and when we focus on u. As such, there are a total of
+                                                  1X
+                                                      d(v)(10 − d(v))
+                                                  2 v
+
+    sets of 3 frogs that do not result in a fight.
+    Note that d(v)+10−d(v)
+                                   p
+                     2      = 5 ≥ d(v)(10 − d(v)) =⇒ d(v)(10 − d(v)) ≤ 25 by AM-GM. Thus there are
+    a maximum of
+                                    1X                     1            275
+                                          d(v)(10 − d(v)) ≤ (25 · 11) =
+                                    2 v                    2             2
+    sets of three frogs that do not result in a fight; since
+                                                           this number must be an integer, there are a
+    maximum of 137 such sets. As there are a total of 11 3 = 165 sets of 3 frogs, this results in a minimum
+    165 − 137 = 28 number of fights.
+    It remains to show that such an arrangement can be constructed. Set d(1) = d(2) = . . . = d(10) = 5
+    and d(11) = 4. Arrange these in a circle, and connect each to the nearest two clockwise neighbors; this
+    gives each vertex 4 edges. To get the final edge for the first ten vertices, connect 1 to 10, 2 to 9, 3 to
+    8, 4 to 7, and 5 to 6. Thus 28 is constructable, and is thus the true minimum.
+23. [12] Five points are chosen uniformly at random on a segment of length 1. What is the expected
+    distance between the closest pair of points?
+    Proposed by: Meghal Gupta
+                     1
+    Answer:         24
+
+    Choose five points arbitrarily at a1 , a2 , a3 , a4 , a5 in increasing order. Then the intervals (a2 −x, a2 ), (a3 −
+    x, a3 ), (a4 − x, a4 ), (a5 − x, a5 ) must all be unoccupied. The probability that this happens is the same
+    as doing the process in reverse: first defining these intervals, then choosing five random points none of
+    which lie in the four intervals. This transformed process clearly has a (1 − 4x)5 probability of success.
+    It follows that the desired probability is
+                                            Z 1/4
+                                                                     1
+                                                    (1 − 4x)5 dx =
+                                             0                       24
+
+24. [12] At a recent math contest, Evan was asked to find 22016 (mod p) for a given prime number p with
+    100 < p < 500. Evan has forgotten what the prime p was, but still remembers how he solved it:
+       • Evan first tried taking 2016 modulo p − 1, but got a value e larger than 100.
+       • However, Evan noted that e − 21 (p − 1) = 21, and then realized the answer was −221 (mod p).
+    What was the prime p?
+    Proposed by: Evan Chen
+    Answer:        211
+    Answer is p = 211. Let p = 2d + 1, 50 < d < 250. The information in the problem boils down to
+
+                                           2016 = d + 21      (mod 2d).
+
+    From this we can at least read off d | 1995.
+    Now factor 1995 = 3 · 5 · 7 · 19. The values of d in this interval are 57, 95, 105, 133. The prime values
+    of 2d + 1 are then 191 and 211. Of these, we take 211 since (2/191) = +1 while (2/211) = −1.
+    Also, this is (almost) a true story: the contest in question was the PUMaC 2016 Live Round.
+                                                                      √
+25. [15] Find all real numbers x satisfying the equation x3 − 8 = 16 3 x + 1.
+    Proposed by: Alexander Katz
+                        √
+    Answer:      −2, 1 ± 5
+                   3                        √           √
+    Let f (x) = x 8−8 . Then f −1 (x) = 3 8x + 8 = 2 3 x + 1, and so the given equation is equivalent to
+    f (x) = f −1 (x). This implies f (f (x)) = x. However, as f is monotonically increasing, this implies that
+                                        3
+    f (x) = x. As a result, we have x 8−8 = x =⇒ x3 − 8x − 8 = 0 =⇒ (x + 2)(x2 − 2x − 4) = 0, and so
+                  √
+    x = −2, 1 ± 5.
+26. [15] Kelvin the Frog is hopping on a number line (extending to infinity in both directions). Kelvin
+    starts at 0. Every minute, he has a 31 chance of moving 1 unit left, a 31 chance of moving 1 unit right
+    and 13 chance of getting eaten. Find the expected number of times Kelvin returns to 0 (not including
+    the start) before getting eaten.
+    Proposed by: Allen Liu
+    First we compute probability that the mouse returns to 0 before  being eaten. Then probability that
+                                                              1 2n
+    it is at 0 in 2n minutes without being eaten is given by 32n  n . Therefore, the overall expectation is
+    given by
+                                     X 2n                 X 2n
+                                               9−n = −1 +             9−n
+                                           n                      n
+                                     n≥1                    n≥0
+                                                                      √
+                                              1               3      3 5−5
+                                  = −1 + p           = −1 + √ =
+                                            1 − 4/9             5       5
+    where we use the well known fact that
+                                            X 2n         1
+                                                  xn = √        .
+                                                n        1 − 4x
+                                            n≥0
+
+    for x = 19 .
+27. [15] Find the smallest possible value of x + y where x, y ≥ 1 and x and y are integers that satisfy
+    x2 − 29y 2 = 1
+    Proposed by: Sam Korsky
+     Answer:       11621
+                                     √
+    Continued fraction convergents to 29 are 5, 11   16 27 70                 2         2
+                                                 2 , 3 , 5 , 13 and you get 70 − 29 · 13 = −1 so since
+            √ 2                 √
+    (70 + 13 29) = 9801 + 1820 29 the answer is 9801 + 1820 = 11621
+28. [15] Let . . . , a−1 , a0 , a1 , a2 , . . . be a sequence of positive integers satisfying the following relations:
+    an = 0 for n < 0, a0 = 1, and for n ≥ 1,
+
+                an = an−1 + 2(n − 1)an−2 + 9(n − 1)(n − 2)an−3 + 8(n − 1)(n − 2)(n − 3)an−4 .
+
+    Compute
+                                                       X 10n an
+                                                                  .
+                                                             n!
+                                                       n≥0
+
+    Proposed by: Yang Liu
+     Answer:     e23110 .
+                   n
+    Let y = n≥0 x n!an . Then y 0 = (1 + 2x + 9x2 + 8x3 )y by definition. So y = C exp(x + x2 + 3x3 + 2x4 ).
+           P
+    Take x = 0 to get C = 1. Take x = 10 to get the answer.
+29. [17] Yang has the sequence of integers 1, 2, . . . , 2017. He makes 2016 swaps in order, where a swap
+    changes the positions of two integers in the sequence. His goal is to end with 2, 3, . . . , 2017, 1. How
+    many different sequences of swaps can Yang do to achieve his goal?
+    Proposed by: Yang Liu
+     Answer:       20172015
+    Let n = 2017. The problem is asking to write a cycle permutation of n integers as the product of n − 1
+    transpositions. Say that the transpositions Yang uses are (ai , bi ) (i.e. swapping the ai -th integer in
+    the sequence with the bi -th integer in the sequence). Draw the graph with edges (ai , bi ). One can
+    show that the result is a cycle if and only if the resulting graph is acyclic, so it must be a tree. There
+    are nn−2 trees by Cayley’s formula, and for each tree, it can be made in (n − 1)! ways (any ordering
+    of the edges). So the total number of ways to end with a cycle is nn−2 · (n − 1)!. By symmetry, each
+    cycle can be made in the same number of ways, so in particular the cycle 2, 3, . . . , n, 1 can be made in
+    nn−2 ·(n−1)!
+       (n−1)!    = nn−2 ways.
+
+30. [17] Consider an equilateral triangular grid G with 20 points on a side, where each row consists of
+    points spaced 1 unit apart. More specifically, there is a single point in the first row, two points in the
+    second row, . . . , and 20 points in the last row, for a total of 210 points. Let S be a closed non-self-
+    intersecting polygon which has 210 vertices, using each point in G exactly once. Find the sum of all
+    possible values of the area of S.
+    Proposed by: Sammy Luo
+                   √
+    Answer:      52 3
+    Imagine deforming the triangle lattice such that now it looks like a lattice of 45-45-90 right triangles
+    with legs of length 1. Note that by doing this, the area has multiplied by √23 , so we need to readjust
+                                                                      √
+    out answer on the isosceles triangle lattice by a factor of 23 at the end. By Pick’s Theorem, the area
+                                                                                                 √       √
+    in the new lattice is given by I + P2 − 1 = 0 + 105 − 1 = 104. Therefore, the answer is 104 · 23 = 52 3.
+
+31. [17] A baseball league has 6 teams. To decide the schedule for the league, for each pair of teams, a
+    coin is flipped. If it lands head, they will play a game this season, in which one team wins and one
+    team loses. If it lands tails, they don’t play a game this season. Define the imbalance of this schedule
+    to be the minimum number of teams that will end up undefeated, i.e. lose 0 games. Find the expected
+    value of the imbalance in this league.
+    Proposed by: Yang Liu
+    Let n denote the number of teams.
+
+    Lemma: Given a connected graph G, the imbalance of G is 1 iff G is a tree. Let’s just talk in terms of
+    directed graphs and indegree/outdegree.
+
+
+    Proof. If there is a cycle, direct the cycle such that it is a directed cycle. Then from this cycle, point
+    all remaining edges outwards. If G is a tree, induct on the size. Take any leaf. If it wins its game, it
+    is undefeated. Otherwise, it must lose to its neighbor. Then induct on the tree resulting after deleting
+    the leaf.
+
+    Now the finish is a simple counting argument using expected values. Using Cayley’s formula, for each
+    subset of vertices, we compute the probability that it is a maximal connected component and is a tree.
+    This ends up being
+                                                  n  
+                                            n X      n              n−i
+                                         2−( 2 )         · ii−2 · 2( 2 ) .
+                                                 i=1
+                                                     i
+
+    This evaluates to 5055
+                       215 for n = 6.
+
+32. [17] Let a, b, c be non-negative real numbers such that ab + bc + ca = 3. Suppose that
+                                                                                     9
+                                         a3 b + b3 c + c3 a + 2abc(a + b + c) =        .
+                                                                                     2
+    What is the minimum possible value of ab3 + bc3 + ca3 ?
+    Proposed by: Pakawut Jiradilok
+    Answer:        18
+                                      ab(b + c − 2a)2 ≥ 0 gives
+                                P
+    Expanding the inequality
+                                cyc
+
+                              X             X          X
+                                    ab3 + 4   a3 b − 4   a2 b2 − abc(a + b + c) ≥ 0
+                                                            
+                              cyc                cyc                     cyc
+
+
+             a b + 2abc(a + b + c) = 29 in the inequality above yields
+            P 3 
+    Using
+            cyc
+
+                  X                              X         X
+                        ab3 − 4(ab + bc + ca)2 ≥   ab3 − 4   a2 b2 − 9abc(a + b + c) ≥ −18
+                                                                
+                  cyc                                       cyc                cyc
+
+
+                                               ab3 ≥ 18 as desired.
+                                         P
+    Since ab + bc + ca = 3, we have
+                                         cyc
+                                                  q
+                                                       3
+                                                            √
+    The equality occurs when (a, b, c) ∼ (             2,       6, 0).
+                                           cyc
+
+33. [20] Welcome to the USAYNO, where each question has a yes/no answer. Choose any subset of the
+    following six problems to answer. If you answer n problems and get them all correct, you will receive
+    max(0, (n − 1)(n − 2)) points. If any of them are wrong, you will receive 0 points.
+    Your answer should be a six-character string containing ’Y’ (for yes), ’N’ (for no), or ’B’ (for blank).
+    For instance if you think 1, 2, and 6 are ’yes’ and 3 and 4 are ’no’, you would answer YYNNBY (and
+    receive 12 points if all five answers are correct, 0 points if any are wrong).
+     (a) a, b, c, d, A, B, C, and D are positive real numbers such that ab > B
+                                                                             A
+                                                                               and dc > D
+                                                                                        C
+                                                                                          . Is it necessarily
+                      a+c     A+C
+         true that b+d > B+D ?
+    (b) Do there exist irrational numbers α and β such that the sequence bαc + bβc, b2αc + b2βc, b3αc +
+        b3βc, . . . is arithmetic?
+     (c) For any set of primes P, let SP denote the set of integers whose prime divisors all lie in P. For
+         instance S{2,3} = {2a 3b | a, b ≥ 0} = {1, 2, 3, 4, 6, 8, 9, 12, . . .}. Does there exist a finite set of
+         primes P and integer polynomials P and Q such that gcd(P (x), Q(y)) ∈ SP for all x, y?
+    (d) A function f is called P-recursive if there exists a positive integer m and real polynomials
+        p0 (n), p1 (n), . . . , pm (n) satisfying
+
+                              pm (n)f (n + m) = pm−1 (n)f (n + m − 1) + . . . + p0 (n)f (n)
+
+           for all n. Does there exist a P-recursive function f satisfying limn→∞ fn(n)
+                                                                                    √
+                                                                                      2
+                                                                                        = 1?
+     (e) Does there exist a nonpolynomial function f : Z → Z such that a − b divides f (a) − f (b) for all
+         integers a 6= b?
+     (f) Do there exist periodic functions f, g : R → R such that f (x) + g(x) = x for all x?
+
+    Proposed by: Alexander Katz
+    Answer:        NNNYYY
+34. [20]
+     (a) Can 1000 queens be placed on a 2017 × 2017 chessboard such that every square is attacked by
+         some queen? A square is attacked by a queen if it lies in the same row, column, or diagonal as
+         the queen.
+    (b) A 2017 × 2017 grid of squares originally contains a 0 in each square. At any step, Kelvin the Frog
+        chooses two adjacent squares (two squares are adjacent if they share a side) and increments the
+        numbers in both of them by 1. Can Kelvin make every square contain a different power of 2?
+     (c) A tournament consists of single games between every pair of players, where each game has a
+         winner and loser with no ties. A set of people is dominated if there exists a player who beats all
+         of them. Does there exist a tournament in which every set of 2017 people is dominated?
+    (d) Every cell of a 19 × 19 grid is colored either red, yellow, green, or blue. Does there necessarily
+        exist a rectangle whose sides are parallel to the grid, all of whose vertices are the same color?
+     (e) Does there exist a c ∈ R+ such that max(|A · A|, |A + A|) ≥ c|A| log2 |A| for all finite sets A ⊂ Z?
+     (f) Can the set {1, 2, . . . , 1093} be partitioned into 7 subsets such that each subset is sum-free (i.e.
+         no subset contains a, b, c with a + b = c)?
+    Proposed by: Alexander Katz
+    Answer:        NNYYYY
+
+35. [20]
+     (a) Does there exist a finite set of points, not all collinear, such that a line between any two points
+         in the set passes through a third point in the set?
+    (b) Let ABC be a triangle and P be a point. The isogonal conjugate of P is the intersection of the
+        reflection of line AP over the A-angle bisector, the reflection of line BP over the B-angle bisector,
+        and the reflection of line CP over the C-angle bisector. Clearly the incenter is its own isogonal
+        conjugate. Does there exist another point that is its own isogonal conjugate?
+     (c) Let F be a convex figure in a plane, and let P be the largest pentagon that can be inscribed in
+         F . Is it necessarily true that the area of P is at least 34 the area of F ?
+    (d) Is it possible to cut an equilateral triangle into 2017 pieces, and rearrange the pieces into a square?
+     (e) Let ABC be an acute triangle and P be a point in its interior. Let D, E, F lie on BC, CA, AB re-
+         spectively so that P D bisects ∠BP C, P E bisects ∠CP A, and P F bisects ∠AP B. Is it necessarily
+         true that AP + BP + CP ≥ 2(P D + P E + P F )?
+     (f) Let P2018 be the surface area of the 2018-dimensional unit sphere, and let P2017 be the surface
+         area of the 2017-dimensional unit sphere. Is P2018 > P2017 ?
+
+    Proposed by: Alexander Katz
+    Answer:      NYYYYN
+36. [20]
+               Pp−1
+     (a) Does i=1 1i ≡ 0 (mod p2 ) for all odd prime numbers p? (Note that 1i denotes the number such
+         that i · 1i ≡ 1 (mod p2 ))
+    (b) Do there exist 2017 positive perfect cubes that sum to a perfect cube?
+     (c) Does there exist a right triangle with rational side lengths and area 5?
+    (d) A magic square is a 3 × 3 grid of numbers, all of whose rows, columns, and major diagonals sum
+        to the same value. Does there exist a magic square whose entries are all prime numbers?
+           Q 2 +1       2
+                          +1 32 +1 52 +1 72 +1
+    (e) Is p pp2 −1 = 222 −1 · 32 −1 · 52 −1 · 72 −1 · . . . a rational number?
+     (f) Do there exist an infinite number of pairs of distinct integers (a, b) such that a and b have the
+         same set of prime divisors, and a + 1 and b + 1 also have the same set of prime divisors?
+
+    Proposed by: Alexander Katz
+    Answer:      NYYYYY
+

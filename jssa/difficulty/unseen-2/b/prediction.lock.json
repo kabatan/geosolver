@@ -1,0 +1,809 @@
+{
+  "schema_version": 1,
+  "task": "Q30b",
+  "stage": 1,
+  "status": "prediction_locked_execution_not_authorized",
+  "locked_at_utc": "2026-10-23T16:03:14Z",
+  "solver_executions_this_task": 0,
+  "local_search_executions_this_task": 0,
+  "network_used_this_task": false,
+  "commit_or_push_performed_by_this_task": false,
+  "authorization_required": [
+    "Verify user committed AND pushed these exact artifacts",
+    "Explicit solver permission in a separate task"
+  ],
+  "prediction_sha256": "1ca8ac37c0d7df670cd2bcee7264a7527759ac33ead5dfc9776d45d36182b727",
+  "hash_contract": "SHA-256 of exact file bytes including final LF. Paths in artifacts_sha256 are relative to this directory. The lock itself is not self-hashed; a future user commit anchors it.",
+  "frozen_source": {
+    "commit": "60db4b679b04167175c51c479c87c22fa663fda0",
+    "git_src_tree": "ab7b6ceabc60b205d78bd4fc9d8a08b5f605aae3",
+    "file_count": 251,
+    "sha256": "d8216df91303dfee97f23b62a0726f818932f1fa206fabba96ca64ec9efc17c9",
+    "sha256_contract": "SHA-256 of UTF-8 canonical JSON (sorted keys, separators comma/colon) mapping every tracked src file path at the frozen commit to its SHA-256; current bytes verified against that commit"
+  },
+  "control_file_sha256": {
+    "benchmarks/research_runner.py": "b9ddace01355d8ac4e5c0ae75f61c4543c976d46bc430e8a44203926e42f4b81",
+    "jssa/difficulty/unseen-1983/prereg/score_q19.py": "fbeaa52a9b97f3beeed4b0e4e63328e671f6f5530754ff0ee6115e9ef04a2c25",
+    "jssa/strategy/codex-tasks-1023.md": "27a7e525c77aa43bcbbb995bc873e231824eddaa8e7dc4ba38d60e096e8a0430",
+    "jssa/difficulty/new2026/README.md": "3d8df220a960c17c8e1f7009271694975e9d89af0ba45ae8fd6893cf9c8ce92e",
+    "benchmarks/cases.jsonl": "c5f92269783add80779a38b4159f298b7f49300386bca0008bb02d3c82d3fccb",
+    "jssa/difficulty/new2026/cases.jsonl": "17b09a2ca22c6d40a2a07948022590b50d26e1f04a8e5ea109f7e0a10e421733",
+    "jssa/difficulty/unseen-1983/cases.jsonl": "5306e39fb5bac60f32657a61bc22ac4175b7bdba5ad68a1e44d2e0b6e78cc6f5",
+    "jssa/difficulty/unseen-1983/statements.jsonl": "61b4d722d3368df60f6e24f43f6c3e7e9419925be2e86e77b3a2e44bcc369621",
+    "jssa/difficulty/unseen-1983/manifest.json": "f87942435fc314a5a45efd6595b4e8f24ef54a5aae9ddd99525dd672b15126ca",
+    "pyproject.toml": "a62f8d9013908fbcb05d0ccb81896f763a6814d55c0edc2e0494e0e83f4825a7",
+    "uv.lock": "70025f7a37e2ec2aa3c7b41d7c0e51a5b6ae11d723ee22f551ba040c5008e1e8"
+  },
+  "run_conditions": {
+    "status": "PREPARED_NOT_AUTHORIZED",
+    "required_before_any_execution": [
+      "User has committed AND pushed these exact prediction files and inputs; verify commit and remote state",
+      "Explicit solver execution authorization in a separate task"
+    ],
+    "source_commit": "60db4b679b04167175c51c479c87c22fa663fda0",
+    "time_limit_seconds": 180,
+    "cores_per_run": 1,
+    "max_parallel_runs": 4,
+    "seeds": [
+      301,
+      302,
+      303,
+      304,
+      305
+    ],
+    "planned_runs": 85,
+    "runner": "benchmarks/research_runner.py",
+    "scoring": "Unmodified assess_campaign: normal_completion AND exact equality of canonical answer sets; same criterion as score_q19.py",
+    "grading_references": "cases.jsonl answer fields are the geometric quantities normalized from the official answer/solution; integer display conversions are outside the DSL",
+    "command_sizing": "One batch at a time, up to four case IDs with one seed; each worker has the existing 180+8 second watchdog. Do not run the entire 85-run campaign in one long command.",
+    "no_retry": true,
+    "no_result_based_exclusion": true,
+    "missing_runs_count_as_incorrect": true,
+    "fixed_denominators": {
+      "runs": 85,
+      "problems": 17,
+      "successes_per_problem_required": 3
+    },
+    "max_file_bytes_exclusive": 5000000,
+    "batches": [
+      {
+        "batch_id": "seed-301-batch-01",
+        "seed": 301,
+        "case_ids": [
+          "HMMT-2010-FEB-GUTS-13",
+          "HMMT-2011-FEB-GUTS-01",
+          "HMMT-2012-FEB-GUTS-06",
+          "HMMT-2013-FEB-GUTS-01"
+        ],
+        "max_parallel_workers": 4
+      },
+      {
+        "batch_id": "seed-301-batch-02",
+        "seed": 301,
+        "case_ids": [
+          "HMMT-2014-FEB-GUTS-03",
+          "HMMT-2015-FEB-GUTS-24",
+          "HMMT-2016-FEB-GUTS-14",
+          "HMMT-2017-FEB-GUTS-02"
+        ],
+        "max_parallel_workers": 4
+      },
+      {
+        "batch_id": "seed-301-batch-03",
+        "seed": 301,
+        "case_ids": [
+          "HMMT-2018-FEB-GUTS-01",
+          "HMMT-2019-FEB-GUTS-17",
+          "HMMT-2020-FEB-GUTS-13",
+          "HMMT-2021-FEB-GUTS-14"
+        ],
+        "max_parallel_workers": 4
+      },
+      {
+        "batch_id": "seed-301-batch-04",
+        "seed": 301,
+        "case_ids": [
+          "HMMT-2022-FEB-GUTS-11",
+          "HMMT-2023-FEB-GUTS-03",
+          "HMMT-2024-FEB-GUTS-04",
+          "HMMT-2025-FEB-GUTS-06"
+        ],
+        "max_parallel_workers": 4
+      },
+      {
+        "batch_id": "seed-301-batch-05",
+        "seed": 301,
+        "case_ids": [
+          "HMMT-2010-FEB-TEAM1-07"
+        ],
+        "max_parallel_workers": 1
+      },
+      {
+        "batch_id": "seed-302-batch-01",
+        "seed": 302,
+        "case_ids": [
+          "HMMT-2010-FEB-GUTS-13",
+          "HMMT-2011-FEB-GUTS-01",
+          "HMMT-2012-FEB-GUTS-06",
+          "HMMT-2013-FEB-GUTS-01"
+        ],
+        "max_parallel_workers": 4
+      },
+      {
+        "batch_id": "seed-302-batch-02",
+        "seed": 302,
+        "case_ids": [
+          "HMMT-2014-FEB-GUTS-03",
+          "HMMT-2015-FEB-GUTS-24",
+          "HMMT-2016-FEB-GUTS-14",
+          "HMMT-2017-FEB-GUTS-02"
+        ],
+        "max_parallel_workers": 4
+      },
+      {
+        "batch_id": "seed-302-batch-03",
+        "seed": 302,
+        "case_ids": [
+          "HMMT-2018-FEB-GUTS-01",
+          "HMMT-2019-FEB-GUTS-17",
+          "HMMT-2020-FEB-GUTS-13",
+          "HMMT-2021-FEB-GUTS-14"
+        ],
+        "max_parallel_workers": 4
+      },
+      {
+        "batch_id": "seed-302-batch-04",
+        "seed": 302,
+        "case_ids": [
+          "HMMT-2022-FEB-GUTS-11",
+          "HMMT-2023-FEB-GUTS-03",
+          "HMMT-2024-FEB-GUTS-04",
+          "HMMT-2025-FEB-GUTS-06"
+        ],
+        "max_parallel_workers": 4
+      },
+      {
+        "batch_id": "seed-302-batch-05",
+        "seed": 302,
+        "case_ids": [
+          "HMMT-2010-FEB-TEAM1-07"
+        ],
+        "max_parallel_workers": 1
+      },
+      {
+        "batch_id": "seed-303-batch-01",
+        "seed": 303,
+        "case_ids": [
+          "HMMT-2010-FEB-GUTS-13",
+          "HMMT-2011-FEB-GUTS-01",
+          "HMMT-2012-FEB-GUTS-06",
+          "HMMT-2013-FEB-GUTS-01"
+        ],
+        "max_parallel_workers": 4
+      },
+      {
+        "batch_id": "seed-303-batch-02",
+        "seed": 303,
+        "case_ids": [
+          "HMMT-2014-FEB-GUTS-03",
+          "HMMT-2015-FEB-GUTS-24",
+          "HMMT-2016-FEB-GUTS-14",
+          "HMMT-2017-FEB-GUTS-02"
+        ],
+        "max_parallel_workers": 4
+      },
+      {
+        "batch_id": "seed-303-batch-03",
+        "seed": 303,
+        "case_ids": [
+          "HMMT-2018-FEB-GUTS-01",
+          "HMMT-2019-FEB-GUTS-17",
+          "HMMT-2020-FEB-GUTS-13",
+          "HMMT-2021-FEB-GUTS-14"
+        ],
+        "max_parallel_workers": 4
+      },
+      {
+        "batch_id": "seed-303-batch-04",
+        "seed": 303,
+        "case_ids": [
+          "HMMT-2022-FEB-GUTS-11",
+          "HMMT-2023-FEB-GUTS-03",
+          "HMMT-2024-FEB-GUTS-04",
+          "HMMT-2025-FEB-GUTS-06"
+        ],
+        "max_parallel_workers": 4
+      },
+      {
+        "batch_id": "seed-303-batch-05",
+        "seed": 303,
+        "case_ids": [
+          "HMMT-2010-FEB-TEAM1-07"
+        ],
+        "max_parallel_workers": 1
+      },
+      {
+        "batch_id": "seed-304-batch-01",
+        "seed": 304,
+        "case_ids": [
+          "HMMT-2010-FEB-GUTS-13",
+          "HMMT-2011-FEB-GUTS-01",
+          "HMMT-2012-FEB-GUTS-06",
+          "HMMT-2013-FEB-GUTS-01"
+        ],
+        "max_parallel_workers": 4
+      },
+      {
+        "batch_id": "seed-304-batch-02",
+        "seed": 304,
+        "case_ids": [
+          "HMMT-2014-FEB-GUTS-03",
+          "HMMT-2015-FEB-GUTS-24",
+          "HMMT-2016-FEB-GUTS-14",
+          "HMMT-2017-FEB-GUTS-02"
+        ],
+        "max_parallel_workers": 4
+      },
+      {
+        "batch_id": "seed-304-batch-03",
+        "seed": 304,
+        "case_ids": [
+          "HMMT-2018-FEB-GUTS-01",
+          "HMMT-2019-FEB-GUTS-17",
+          "HMMT-2020-FEB-GUTS-13",
+          "HMMT-2021-FEB-GUTS-14"
+        ],
+        "max_parallel_workers": 4
+      },
+      {
+        "batch_id": "seed-304-batch-04",
+        "seed": 304,
+        "case_ids": [
+          "HMMT-2022-FEB-GUTS-11",
+          "HMMT-2023-FEB-GUTS-03",
+          "HMMT-2024-FEB-GUTS-04",
+          "HMMT-2025-FEB-GUTS-06"
+        ],
+        "max_parallel_workers": 4
+      },
+      {
+        "batch_id": "seed-304-batch-05",
+        "seed": 304,
+        "case_ids": [
+          "HMMT-2010-FEB-TEAM1-07"
+        ],
+        "max_parallel_workers": 1
+      },
+      {
+        "batch_id": "seed-305-batch-01",
+        "seed": 305,
+        "case_ids": [
+          "HMMT-2010-FEB-GUTS-13",
+          "HMMT-2011-FEB-GUTS-01",
+          "HMMT-2012-FEB-GUTS-06",
+          "HMMT-2013-FEB-GUTS-01"
+        ],
+        "max_parallel_workers": 4
+      },
+      {
+        "batch_id": "seed-305-batch-02",
+        "seed": 305,
+        "case_ids": [
+          "HMMT-2014-FEB-GUTS-03",
+          "HMMT-2015-FEB-GUTS-24",
+          "HMMT-2016-FEB-GUTS-14",
+          "HMMT-2017-FEB-GUTS-02"
+        ],
+        "max_parallel_workers": 4
+      },
+      {
+        "batch_id": "seed-305-batch-03",
+        "seed": 305,
+        "case_ids": [
+          "HMMT-2018-FEB-GUTS-01",
+          "HMMT-2019-FEB-GUTS-17",
+          "HMMT-2020-FEB-GUTS-13",
+          "HMMT-2021-FEB-GUTS-14"
+        ],
+        "max_parallel_workers": 4
+      },
+      {
+        "batch_id": "seed-305-batch-04",
+        "seed": 305,
+        "case_ids": [
+          "HMMT-2022-FEB-GUTS-11",
+          "HMMT-2023-FEB-GUTS-03",
+          "HMMT-2024-FEB-GUTS-04",
+          "HMMT-2025-FEB-GUTS-06"
+        ],
+        "max_parallel_workers": 4
+      },
+      {
+        "batch_id": "seed-305-batch-05",
+        "seed": 305,
+        "case_ids": [
+          "HMMT-2010-FEB-TEAM1-07"
+        ],
+        "max_parallel_workers": 1
+      }
+    ]
+  },
+  "prediction": {
+    "total_runs": 85,
+    "point_correct_runs": 78,
+    "point_run_accuracy": 0.9176470588235294,
+    "point_problems_at_least_3_of_5": 16,
+    "total_problems": 17,
+    "success_threshold_correct_runs": 77,
+    "success_threshold_problems_at_least_3_of_5": 16,
+    "subjective_expected_correct_runs": 78.25,
+    "subjective_mean_run_probability": 0.9205882352941177,
+    "per_seed_expected_correct": {
+      "301": 15.65,
+      "302": 15.65,
+      "303": 15.65,
+      "304": 15.65,
+      "305": 15.65
+    },
+    "independent_seeds_assumed": false,
+    "nonzero_variable_subset": {
+      "problems": 14,
+      "runs": 70,
+      "point_correct_runs": 63,
+      "point_problems_at_least_3_of_5": 13
+    }
+  },
+  "adopted_problem_ids": [
+    "HMMT-2010-FEB-GUTS-13",
+    "HMMT-2011-FEB-GUTS-01",
+    "HMMT-2012-FEB-GUTS-06",
+    "HMMT-2013-FEB-GUTS-01",
+    "HMMT-2014-FEB-GUTS-03",
+    "HMMT-2015-FEB-GUTS-24",
+    "HMMT-2016-FEB-GUTS-14",
+    "HMMT-2017-FEB-GUTS-02",
+    "HMMT-2018-FEB-GUTS-01",
+    "HMMT-2019-FEB-GUTS-17",
+    "HMMT-2020-FEB-GUTS-13",
+    "HMMT-2021-FEB-GUTS-14",
+    "HMMT-2022-FEB-GUTS-11",
+    "HMMT-2023-FEB-GUTS-03",
+    "HMMT-2024-FEB-GUTS-04",
+    "HMMT-2025-FEB-GUTS-06",
+    "HMMT-2010-FEB-TEAM1-07"
+  ],
+  "adopted_problems": [
+    {
+      "id": "HMMT-2010-FEB-GUTS-13",
+      "dsl_path": "dsl/HMMT-2010-FEB-GUTS-13.json",
+      "dsl_sha256": "7af9d007cc4e3d95da5ac24561d4bee695261bfbc6d51a779978852e91190bd2",
+      "target": "Area(A,B,C)",
+      "geometric_reference": [
+        "17/2"
+      ],
+      "official_output": "17/2",
+      "n_variables": 6,
+      "subjective_single_run_success_probability": 0.8,
+      "rationale": "6変数とmin/maxの非滑らかな射影条件。2配置の代入は合格だが探索上の難しさは残る。"
+    },
+    {
+      "id": "HMMT-2011-FEB-GUTS-01",
+      "dsl_path": "dsl/HMMT-2011-FEB-GUTS-01.json",
+      "dsl_sha256": "3bcfa037835a44668040b49593d9caabb7fc9e61080d940f4a432d42375af2e4",
+      "target": "Area(F,B,C)",
+      "geometric_reference": [
+        "1/3"
+      ],
+      "official_output": "1/3",
+      "n_variables": 5,
+      "subjective_single_run_success_probability": 0.98,
+      "rationale": "面積・平行・比・鏡映の直接記述。形と尺度の自由度が残るが、単純な等式が中心。"
+    },
+    {
+      "id": "HMMT-2012-FEB-GUTS-06",
+      "dsl_path": "dsl/HMMT-2012-FEB-GUTS-06.json",
+      "dsl_sha256": "ce782ec2329ddf93ce7710901394536878809be15a4863407566dae82e982e73",
+      "target": "Area(A,X,Y,D)",
+      "geometric_reference": [
+        "72"
+      ],
+      "official_output": "72",
+      "n_variables": 2,
+      "subjective_single_run_success_probability": 0.99,
+      "rationale": "未知Eの2座標を2距離で制約する小さい系。残りは直線交点。"
+    },
+    {
+      "id": "HMMT-2013-FEB-GUTS-01",
+      "dsl_path": "dsl/HMMT-2013-FEB-GUTS-01.json",
+      "dsl_sha256": "bf182d6adcc32f058cd11ceff6566f03352486c306815f788417264bbe41e233",
+      "target": "Distance(P,Q)",
+      "geometric_reference": [
+        "93"
+      ],
+      "official_output": "93",
+      "n_variables": 1,
+      "subjective_single_run_success_probability": 0.99,
+      "rationale": "正の実数1変数と距離1条件。目標も同じ直線上の距離。"
+    },
+    {
+      "id": "HMMT-2014-FEB-GUTS-03",
+      "dsl_path": "dsl/HMMT-2014-FEB-GUTS-03.json",
+      "dsl_sha256": "025ebf25905c38f329c2e025ecc6925a8ddf9e3165d2a50528f2dce11d686603",
+      "target": "pi*Radius(P)**2/Area(A,B,D,E)",
+      "geometric_reference": [
+        "pi*sqrt(3)/12"
+      ],
+      "official_output": "pi*sqrt(3)/12",
+      "n_variables": 0,
+      "subjective_single_run_success_probability": 0.99,
+      "rationale": "未知変数0。正六角形と内接円の定義的な評価・厳密値組立が中心。"
+    },
+    {
+      "id": "HMMT-2015-FEB-GUTS-24",
+      "dsl_path": "dsl/HMMT-2015-FEB-GUTS-24.json",
+      "dsl_sha256": "aded7c7b37565f67ad40b92082766e6e90a7c39a90fa6ce0122da3f1225530bf",
+      "target": "r",
+      "geometric_reference": [
+        "sqrt(8463)/7"
+      ],
+      "official_output": "sqrt(8463)/7",
+      "n_variables": 7,
+      "subjective_single_run_success_probability": 0.75,
+      "rationale": "7変数、共円性、3接線の接点が線分上という枝条件が重なる。"
+    },
+    {
+      "id": "HMMT-2016-FEB-GUTS-14",
+      "dsl_path": "dsl/HMMT-2016-FEB-GUTS-14.json",
+      "dsl_sha256": "f56b79362a5b85e3941c5651884f87fd04e715a872b1e1b60bf009f1fca907bc",
+      "target": "Area(U,V,W)",
+      "geometric_reference": [
+        "462/5"
+      ],
+      "official_output": "462/5",
+      "n_variables": 2,
+      "subjective_single_run_success_probability": 0.98,
+      "rationale": "未知2座標だけ。既知三辺から垂足・円・3接線を構成する。"
+    },
+    {
+      "id": "HMMT-2017-FEB-GUTS-02",
+      "dsl_path": "dsl/HMMT-2017-FEB-GUTS-02.json",
+      "dsl_sha256": "84d7ee7a90236b6b91a17bc6562029bd1c312d41b7c1b3441caa34eb416cb99a",
+      "target": "Distance(X,Y)+Distance(Y,Z)+Distance(Z,X)",
+      "geometric_reference": [
+        "77/6"
+      ],
+      "official_output": "77/6",
+      "n_variables": 3,
+      "subjective_single_run_success_probability": 0.9,
+      "rationale": "未知3変数だが、円の構成・3共円条件・6点の順序が結合する。"
+    },
+    {
+      "id": "HMMT-2018-FEB-GUTS-01",
+      "dsl_path": "dsl/HMMT-2018-FEB-GUTS-01.json",
+      "dsl_sha256": "1d6dcfd7fd2005abc9b4b1700dba70ed2c62b84e1a3fe10ab361387248cf0362",
+      "target": "Area(A,B,C,D)",
+      "geometric_reference": [
+        "4"
+      ],
+      "official_output": "4",
+      "n_variables": 1,
+      "subjective_single_run_success_probability": 0.99,
+      "rationale": "正の辺長1変数。公式図の4小正方形の面積条件は容易。"
+    },
+    {
+      "id": "HMMT-2019-FEB-GUTS-17",
+      "dsl_path": "dsl/HMMT-2019-FEB-GUTS-17.json",
+      "dsl_sha256": "36da06552ac53814324186e024520194b746c89c5bd3afd4a1cb96b6b048ad8a",
+      "target": "Area(A1,A2,B1,B2,C1,C2)",
+      "geometric_reference": [
+        "(12+22*sqrt(3))/15"
+      ],
+      "official_output": "(12+22*sqrt(3))/15",
+      "n_variables": 11,
+      "subjective_single_run_success_probability": 0.8,
+      "rationale": "11変数、3つの正三角形の共通辺長、6線分点、凸順序が結合する。"
+    },
+    {
+      "id": "HMMT-2020-FEB-GUTS-13",
+      "dsl_path": "dsl/HMMT-2020-FEB-GUTS-13.json",
+      "dsl_sha256": "77820a20d204be38e378b814d058bb618a321b632f091df5ca81aef80465903a",
+      "target": "Distance(X,Y)",
+      "geometric_reference": [
+        "112/65"
+      ],
+      "official_output": "112/65",
+      "n_variables": 6,
+      "subjective_single_run_success_probability": 0.9,
+      "rationale": "6変数、角三等分と円の第2交点。既知交点Cを除く枝がある。"
+    },
+    {
+      "id": "HMMT-2021-FEB-GUTS-14",
+      "dsl_path": "dsl/HMMT-2021-FEB-GUTS-14.json",
+      "dsl_sha256": "661808aa626b9d944de1a9ed2c2442848c9e51559bfddf495990202ff19d23b3",
+      "target": "Distance(A,B)",
+      "geometric_reference": [
+        "sqrt(73)-3"
+      ],
+      "official_output": "7303",
+      "n_variables": 3,
+      "subjective_single_run_success_probability": 0.96,
+      "rationale": "3変数、2距離と角の倍角関係。整数出力表現を探索から外してある。"
+    },
+    {
+      "id": "HMMT-2022-FEB-GUTS-11",
+      "dsl_path": "dsl/HMMT-2022-FEB-GUTS-11.json",
+      "dsl_sha256": "85db0cbce5c92a1230236c5c678af60a353aeba223a6e96486f7d53123235bf8",
+      "target": "Angle(P2,O,P4)/2-Area(O,X,Y)",
+      "geometric_reference": [
+        "pi/6-sqrt(3)/12"
+      ],
+      "official_output": "45",
+      "n_variables": 0,
+      "subjective_single_run_success_probability": 0.99,
+      "rationale": "未知変数0。単位正十二角形の交点と扇形面積。床は入力にない。"
+    },
+    {
+      "id": "HMMT-2023-FEB-GUTS-03",
+      "dsl_path": "dsl/HMMT-2023-FEB-GUTS-03.json",
+      "dsl_sha256": "0c121571455af9e9c2816e833473964787e5ec7fea616b9ffbe5a340312c8c62",
+      "target": "Distance(A,D)",
+      "geometric_reference": [
+        "sqrt(21)"
+      ],
+      "official_output": "sqrt(21)",
+      "n_variables": 4,
+      "subjective_single_run_success_probability": 0.96,
+      "rationale": "4変数でCが動く系。直角・中点距離・凸性を満たす異なる2配置を確認。"
+    },
+    {
+      "id": "HMMT-2024-FEB-GUTS-04",
+      "dsl_path": "dsl/HMMT-2024-FEB-GUTS-04.json",
+      "dsl_sha256": "7c9f1e17333b5e628df23a95c2eeb319fda828480fc23d78d1acd04fc62f5e4b",
+      "target": "Angle(F,E,G)",
+      "geometric_reference": [
+        "4*pi/15"
+      ],
+      "official_output": "4*pi/15",
+      "n_variables": 0,
+      "subjective_single_run_success_probability": 0.99,
+      "rationale": "未知変数0。正五角形と外側への60度回転を評価する角度問題。"
+    },
+    {
+      "id": "HMMT-2025-FEB-GUTS-06",
+      "dsl_path": "dsl/HMMT-2025-FEB-GUTS-06.json",
+      "dsl_sha256": "d7d88fa9766606bcc7cbdb5259b06a6ebdfcf64512fb99ed93f528435d256817",
+      "target": "Distance(E,F)",
+      "geometric_reference": [
+        "2*sqrt(13)"
+      ],
+      "official_output": "2*sqrt(13)",
+      "n_variables": 4,
+      "subjective_single_run_success_probability": 0.98,
+      "rationale": "4変数。正三角形の2条件と中点の2座標条件。半直線の枝を保持。"
+    },
+    {
+      "id": "HMMT-2010-FEB-TEAM1-07",
+      "dsl_path": "dsl/HMMT-2010-FEB-TEAM1-07.json",
+      "dsl_sha256": "aa1ab0b66e7f4bfc51d1bd4c75f72c419ec664720510b7d1f3279dcd885c5032",
+      "target": "Angle(A,Q,C)",
+      "geometric_reference": [
+        "pi/12"
+      ],
+      "official_output": "pi/12",
+      "n_variables": 6,
+      "subjective_single_run_success_probability": 0.7,
+      "rationale": "6変数、4角条件、凸五角形、内部点の5不等式。今回最も保守的に予測する。"
+    }
+  ],
+  "audits": {
+    "all_17_passed": true,
+    "analytic_witnesses": 20,
+    "condition_checks": 144,
+    "proof_scope": "Existence at explicit configurations plus semantic review, not exhaustive solution enumeration",
+    "duplicate_reference_counts": [
+      323,
+      20,
+      54
+    ]
+  },
+  "artifacts_sha256": {
+    "AUDIT.md": "ab7e4db55a60d28e0b00738e03f29a3993e629516236a7e364187aeb246b1d10",
+    "README.md": "2c2148f7f751ca2b13aeca2b8c3f0630e500a4450f1952a2941a3c6fccce4529",
+    "audit/audit.csv": "3084522ce8d750a5d4274f55a52ed3b518a5ba62d39a381ab0d59508b8b6341f",
+    "audit/duplicates.json": "afe6a4ca39ee9b5e7add7cbb1c713f2775091ccb9ca64a669ffd8940605e3995",
+    "audit/semantic.json": "c7ba1e7973ba39278452083351471c6a04dcb77e452bc658d36538826094e34e",
+    "audit/static.json": "32b1bd7b4cb5820458d292de0d8d9d505d2cba50b2d8ce95920869dfd5ec67fd",
+    "audit/substitution.json": "880eba98e8d7b52dc83b643517b584af0d0ec784da1a73447929b895b44bd4c4",
+    "audit_static.py": "61b5f56267e486f58d0e23a46b6fe2fcf2f08906cbb8c18e10c5ffc4b87e3899",
+    "audit_substitution.py": "4a136e8527eb2b1902ba6ef35b9dc6fb32f2707d195216ed9490273fa369437b",
+    "authoring-rules.md": "a4cb67f2ee61241d7cb621ca3dea0fb5928fca7555b9bf44e0f80d79464356bf",
+    "build_cases.py": "7fbbe05af4c26ddcff60935589b0b4dd8dd0faf36ea70fc33d474c784d3e00e0",
+    "cards/HMMT-2010-FEB-GUTS-13.md": "52f65a45e668697dfa805c725baa37e960a740e304832c2e6db4228c07357153",
+    "cards/HMMT-2010-FEB-TEAM1-07.md": "1367d728fe6c7de8bf2f3d2a27c5f88747ebfdc983849956a867ff777038f862",
+    "cards/HMMT-2011-FEB-GUTS-01.md": "bd80a9d6d6fe11ec4e914225aad93ed3f4161d7987afd0c67c31d6ec6e000ce0",
+    "cards/HMMT-2012-FEB-GUTS-06.md": "757c646128cae70b01a6b75505d92c952014fcd77d1e50b699648d5c6a8c803b",
+    "cards/HMMT-2013-FEB-GUTS-01.md": "b7b30b6628a75677b4c9b286942537a3328033a84217fa810786ae7dbecc6774",
+    "cards/HMMT-2014-FEB-GUTS-03.md": "1a9153a04a93bfb797e2f1be001dc128e1cc2b2f8486df03d47085f319026c1d",
+    "cards/HMMT-2015-FEB-GUTS-24.md": "66248fb969f5b74f15e56c400a042616e3104a016335b895b9e73580ed1d9c01",
+    "cards/HMMT-2016-FEB-GUTS-14.md": "149085170c434675d43b2fa0978ee19a4e282c20009b9a8f2633944139350b89",
+    "cards/HMMT-2017-FEB-GUTS-02.md": "5d8737ecc43314675f6772c9b8381273191aa1c0c7de8f2c6f373a92c510f11c",
+    "cards/HMMT-2018-FEB-GUTS-01.md": "a8565b051f4222b21b94e2c8051d63e8e9964d31ffe1c59e88730238416eb0a6",
+    "cards/HMMT-2019-FEB-GUTS-17.md": "0813fa89e01e2b07c37d822e4b24c1ee3cba9210fbdecfcf117df5e5932aecc3",
+    "cards/HMMT-2020-FEB-GUTS-13.md": "8c450c6395803624f3c81bbada9abbce6df781f3c56f89fe3504526cd94de72a",
+    "cards/HMMT-2021-FEB-GUTS-14.md": "246a8251ad7b4fa75e8325444a3b309c56da4a2216ede872f61b321bf19e9aa0",
+    "cards/HMMT-2022-FEB-GUTS-11.md": "d4022e36ca313b9cd24752b4ff1f762ae45cfc42b78b5997c444efdd7ec88248",
+    "cards/HMMT-2023-FEB-GUTS-03.md": "b2a1bd2d4133545a594fc7eb33074f185eb4d09c6adfe797abdfe4bfe9da905b",
+    "cards/HMMT-2024-FEB-GUTS-04.md": "86de0f80f70aa573ccdd73476eb30bd42d9bda271fbd7522eedf89007cc42e13",
+    "cards/HMMT-2025-FEB-GUTS-06.md": "f36265b1fa851921a1b918e6151c7085de932e2b7b43a364a738dca470e46c52",
+    "cases.jsonl": "8c889bdfd609aa6c88eb615feead95ba9ac80071ec2e715d5df899f0ebe624f1",
+    "dsl/HMMT-2010-FEB-GUTS-13.json": "7af9d007cc4e3d95da5ac24561d4bee695261bfbc6d51a779978852e91190bd2",
+    "dsl/HMMT-2010-FEB-TEAM1-07.json": "aa1ab0b66e7f4bfc51d1bd4c75f72c419ec664720510b7d1f3279dcd885c5032",
+    "dsl/HMMT-2011-FEB-GUTS-01.json": "3bcfa037835a44668040b49593d9caabb7fc9e61080d940f4a432d42375af2e4",
+    "dsl/HMMT-2012-FEB-GUTS-06.json": "ce782ec2329ddf93ce7710901394536878809be15a4863407566dae82e982e73",
+    "dsl/HMMT-2013-FEB-GUTS-01.json": "bf182d6adcc32f058cd11ceff6566f03352486c306815f788417264bbe41e233",
+    "dsl/HMMT-2014-FEB-GUTS-03.json": "025ebf25905c38f329c2e025ecc6925a8ddf9e3165d2a50528f2dce11d686603",
+    "dsl/HMMT-2015-FEB-GUTS-24.json": "aded7c7b37565f67ad40b92082766e6e90a7c39a90fa6ce0122da3f1225530bf",
+    "dsl/HMMT-2016-FEB-GUTS-14.json": "f56b79362a5b85e3941c5651884f87fd04e715a872b1e1b60bf009f1fca907bc",
+    "dsl/HMMT-2017-FEB-GUTS-02.json": "84d7ee7a90236b6b91a17bc6562029bd1c312d41b7c1b3441caa34eb416cb99a",
+    "dsl/HMMT-2018-FEB-GUTS-01.json": "1d6dcfd7fd2005abc9b4b1700dba70ed2c62b84e1a3fe10ab361387248cf0362",
+    "dsl/HMMT-2019-FEB-GUTS-17.json": "36da06552ac53814324186e024520194b746c89c5bd3afd4a1cb96b6b048ad8a",
+    "dsl/HMMT-2020-FEB-GUTS-13.json": "77820a20d204be38e378b814d058bb618a321b632f091df5ca81aef80465903a",
+    "dsl/HMMT-2021-FEB-GUTS-14.json": "661808aa626b9d944de1a9ed2c2442848c9e51559bfddf495990202ff19d23b3",
+    "dsl/HMMT-2022-FEB-GUTS-11.json": "85db0cbce5c92a1230236c5c678af60a353aeba223a6e96486f7d53123235bf8",
+    "dsl/HMMT-2023-FEB-GUTS-03.json": "0c121571455af9e9c2816e833473964787e5ec7fea616b9ffbe5a340312c8c62",
+    "dsl/HMMT-2024-FEB-GUTS-04.json": "7c9f1e17333b5e628df23a95c2eeb319fda828480fc23d78d1acd04fc62f5e4b",
+    "dsl/HMMT-2025-FEB-GUTS-06.json": "d7d88fa9766606bcc7cbdb5259b06a6ebdfcf64512fb99ed93f528435d256817",
+    "fetch_sources.py": "ce2e084d4574d38c0dc0da5728b87da7cc843b31b8a62d4f3b295cd4bba330ff",
+    "import_sources.py": "e2e52dbc52276e583fb9c9225b2a5348aaa2cfde78929c9e7bf8dd2dd5981964",
+    "mapping.json": "7b9d43e98b61c250899d0a96b8b2f76617f3780adc7c3bc1373e0dcd4233164a",
+    "prereg/execution-plan.json": "3c58d5937ca7bfa7e1784f2f6833c32a3ddca843fc8ba60bcd7f36034fa05404",
+    "prereg/target-17.txt": "f911fe3befbdbc600907204d6a00c09f28f67c7d875ebafdd9b46a96f4c4f76a",
+    "problem-list.csv": "5ba58ded807a6a10688b5c2c708a9b83636bda0a0fef974ad7ad5735df5f56dd",
+    "problem-list.md": "0d94ca4172c7f723ee12042b57c4095fe9efb4d9f7087ccbcb0c96c536a110bf",
+    "revisions/resumed-authoring-rules.md": "2b58e699b02838a249795353f6f1a0277a988a2fe27f1a72a8e14fafafda279c",
+    "revisions/substitution-first-pass.json": "8ca421279c111a34e9bf452e7cd20dcd062fa38993c32ec04a1f54be54b21dee",
+    "seal_prediction.py": "850cdbcc9e9d60e1d2213c57ae1c71eb5577b3ee8b38ac39003fe8db46fb4ebf",
+    "selection.csv": "62303f174a72007049ba6ccc6f0a9ce2633ca7fa04f294432f27620179f6d3da",
+    "source-evidence/2010-guts-problems.pdf": "4a2cd55e8eea5407c37e4f8aec2a2a6752bb4dfbfdbd4f046eaca580c8ac62cf",
+    "source-evidence/2010-guts-problems.source.json": "4c85434b208a953fa82aefa00be939ed6c64711d0f4ad1da1a9489b52ca26596",
+    "source-evidence/2010-guts-problems.txt": "a51602868e0c16b93356c1bccc777394a106a946d558bd93060d89df60c173a3",
+    "source-evidence/2010-guts-solutions.pdf": "7f0755377505eb98485e68da7e45b0bf8b1e1157b64c76a8c142aca540cb3728",
+    "source-evidence/2010-guts-solutions.source.json": "19451bfbf06349c4260e94f8291cf033925c29698e21674ec886f5106d6abfbe",
+    "source-evidence/2010-guts-solutions.txt": "782a5f862614b12d9a1e1a2e59ee0b4b9ffa98680caef27027c2904f43c2b700",
+    "source-evidence/2010-team1-problems.pdf": "7a2e36575b8b7c007ebcce57105dac4c62e20ff5ede435397f6dc7788826aacb",
+    "source-evidence/2010-team1-problems.source.json": "99346e46518b8f983b639ac70f9a8bfcece08b0e1169475b93f4c0865061e49f",
+    "source-evidence/2010-team1-problems.txt": "44a3d69656d14e49a31fb129b4ec064b93b10113f9f2b5d3a41257b5202747b4",
+    "source-evidence/2010-team1-solutions.pdf": "531b8313f44a41ff91558d17ac7a04b813d97733e275d221ff67e3427ac86bd4",
+    "source-evidence/2010-team1-solutions.source.json": "1ab41f007054ea633f74625cf2bc14bc503b6958562218fde31a8339597cd936",
+    "source-evidence/2010-team1-solutions.txt": "f87442911da384d3666e880a27b914c4baf7b058a219d2549e41f937b4b7d1f6",
+    "source-evidence/2011-guts-problems.pdf": "8f6ae5c69b549cbd95fac14bc95d080fd5a06f0945820c95bb3e0ee1b70d65c8",
+    "source-evidence/2011-guts-problems.source.json": "7c53fb9e771638e567aaf53cfc31bce7aab9c78152fec5ba5ec7e7a262d8e645",
+    "source-evidence/2011-guts-problems.txt": "7f091ccca9842819e5bad7b6890441db0752a160ef6d234427964307eeb571a4",
+    "source-evidence/2011-guts-solutions.pdf": "35ebea78b21c22234a0e94a15ac3c250561986880221c0e6a514cf02053aacbe",
+    "source-evidence/2011-guts-solutions.source.json": "23c076c332a1fe91432376a1aac98756ea3863478e823cdce91dd904bc4a70a1",
+    "source-evidence/2011-guts-solutions.txt": "c2869244d26826e6d437c977c7890002a6315292277fd7411c5a8a07cbe496fc",
+    "source-evidence/2012-guts-problems.pdf": "2dbd33a9d7dbea709c87311b2a34fb6cea293bfd694d95cbb8a0add3fa650750",
+    "source-evidence/2012-guts-problems.source.json": "9e685806cb939a9e97c1322e7ee3122b050df77f225d2ed2093e587c55abfaad",
+    "source-evidence/2012-guts-problems.txt": "7133a91f94ab2281364c1eec36d2c540338352f217ead431d05e42bbdb2df436",
+    "source-evidence/2012-guts-solutions.pdf": "b1f7144157807ea45f016fef6898c708d090fac5bdddfedf3ea8ae37fc5859e4",
+    "source-evidence/2012-guts-solutions.source.json": "739fc08252c664d4f9b0c8d3cb7876fdb4e74249525a86fdd0731f8225dd3df1",
+    "source-evidence/2012-guts-solutions.txt": "37cb6cf06244e93e285c9faf44be1fdbdb2eccf3147d6fb0d509ce705410ebbe",
+    "source-evidence/2013-guts-problems.pdf": "5e48aae0a348c04a9a54acb8de9b4c06eb5617e941a56810c66d47ab6ad4e8a6",
+    "source-evidence/2013-guts-problems.source.json": "03cbb3cf637dc09d3a17cbf9a5ea54d6b9b1061d2da8a36dd3d48ccc8dffbaf8",
+    "source-evidence/2013-guts-problems.txt": "6739a55411f390a1b28664f8a0d95fb5a155db9a587e39a7d8c807240ae2912d",
+    "source-evidence/2013-guts-solutions.pdf": "e10f17cbb8eb6447cc213c243b008075985524fb39da61f3cf0cf6e983e89cc3",
+    "source-evidence/2013-guts-solutions.source.json": "ca2a98c2e0608239561de4e781d205db39916a0ee508bd0a15dd0a6f9795518e",
+    "source-evidence/2013-guts-solutions.txt": "4d6672030d85ff2ec9316c57131e689653458a3976213bec9abf5ef1843effb3",
+    "source-evidence/2014-guts-problems.pdf": "03a20d807fa7842fb13058386e8246ce17a03779195eb3091fabaa11ff58103d",
+    "source-evidence/2014-guts-problems.source.json": "a7c49b0bf331eb9463e1deee277595e7923d6c03aa0c4d017855db729f0b0906",
+    "source-evidence/2014-guts-problems.txt": "e16ba26e6f267c24a4622cd9bc0c38e87e6c513ad1a834633b5657add13274f4",
+    "source-evidence/2014-guts-solutions.pdf": "67f628a9d70fc82efc94fbd3f892964962cf447303963334a2cfb7beddd408f4",
+    "source-evidence/2014-guts-solutions.source.json": "b42107c1bb73cf091af146d8dcff7d97cd1db811b64d9c39b654e86c097d1ed8",
+    "source-evidence/2014-guts-solutions.txt": "6446d115f48e2d7105fb13e5b75c2c810dd83e584ed942367e055dee6d9c4d24",
+    "source-evidence/2015-guts-problems.pdf": "e3d7060c1842d816d60495fdeca41edeae82a132c9a15de4ddafa986ed97f565",
+    "source-evidence/2015-guts-problems.source.json": "77f99f673afee6690cdef891e2b21d8f7350ba2528bfe1fd34feaad49c02eb26",
+    "source-evidence/2015-guts-problems.txt": "3cd2495727da18834e3a55d196f271cea6ab86de65f179dd8301ea79651d8f4e",
+    "source-evidence/2015-guts-solutions.pdf": "560cfe13cc4d0ac7de6ff4981b3ee4266efa6c94d24152acd948837652adfa9b",
+    "source-evidence/2015-guts-solutions.source.json": "7116f83ae355622f237479f31b05a64ffed60876e9894dfe4ef296b4adbf0c34",
+    "source-evidence/2015-guts-solutions.txt": "ec96fba6e334ad6065c7aedc27955aa7d7f948d14c133eed524bdfd76fee1739",
+    "source-evidence/2016-guts-problems.pdf": "4ad10a6e4890c919742bb3303d945ce64597b702b74665f602d58a69ddb4a9c3",
+    "source-evidence/2016-guts-problems.source.json": "6261e694aeeeeed768980c65ae19ca8abf85ff17618fae3807ad5448898bd37f",
+    "source-evidence/2016-guts-problems.txt": "5c678ccc13c045a22dc3cb4213fee80e853e22996ebfb094caf3f175fecf426b",
+    "source-evidence/2016-guts-solutions.pdf": "03186fdce205e7c8de2f467fca83e92d42badcc0ad454f0d74c2f4f33e64b6ce",
+    "source-evidence/2016-guts-solutions.source.json": "b59462629dee04be6293773e98b1eb97aae8bc6423d8e3e44a2da16f0cb47269",
+    "source-evidence/2016-guts-solutions.txt": "01acf57392783aa60eaca02d865b65238ecf37d6eb397b99d9b7c3a8a9748fb7",
+    "source-evidence/2017-guts-problems.pdf": "405511cbfd408801980eccfba92249c819cd1c784823ebd0fa0ccb0305a62db4",
+    "source-evidence/2017-guts-problems.source.json": "b074640511cae2fec945037dd8f1877808f252a971198a73b29421d8e3cd54d5",
+    "source-evidence/2017-guts-problems.txt": "fdbc94c12b6e2f331a399316a5fa24d94932e854d633a4ee90431d29652bd610",
+    "source-evidence/2017-guts-solutions.pdf": "e8e35d1acf067e658f2dbf8d4b839643130f71a0fb8e9e4ee3da274b1c6cf374",
+    "source-evidence/2017-guts-solutions.source.json": "efd5586a65e61b747861a2e3b6d08b0ea0ec2264040ae96df9cb1fc144680d6d",
+    "source-evidence/2017-guts-solutions.txt": "aa935cc5060c5e3beb6edbcdb1983bc4f4fdc5a23b58e733ed277ba37aa905ad",
+    "source-evidence/2018-guts-problems.pdf": "5b8c1c69351ac03af0df3ec0ef4108f059c824f19158556a791d81795de29daa",
+    "source-evidence/2018-guts-problems.source.json": "f18875b76de1696b13861ea5a3d1336ee8190fbe1e2f3fff13aef07f86706bd7",
+    "source-evidence/2018-guts-problems.txt": "f229577d213468a0c10f697623c972891df8a880b4548efdd14cec6d3f89eb33",
+    "source-evidence/2018-guts-solutions.pdf": "0467337253bd554910c7db7781745a33b4d9d48356b64a5849e8ece49065f5e6",
+    "source-evidence/2018-guts-solutions.source.json": "7085f1fa6b357f15f063a9ac50f79628c10235c0b48d59be71b5e76c94c3bd1f",
+    "source-evidence/2018-guts-solutions.txt": "ab1c1c9e5e3c642625f4d96b38656a8db5e94c947ebdf18b9679b8ff8c48bf9b",
+    "source-evidence/2019-guts-problems.pdf": "94173a33d33d3666a1a5f6a4d4a02a6e60e4401aca949eb8d5e1a9ab27802df1",
+    "source-evidence/2019-guts-problems.source.json": "8c51c6fdd513f70c978ebcd949f7d85476091b01f82aa1683a388bc7aeccd91f",
+    "source-evidence/2019-guts-problems.txt": "8e1780e14ee911d74562c7ac1b0f83b7c19f5eced8aac93b65baebc3c5cdbe3b",
+    "source-evidence/2019-guts-solutions.pdf": "0735b47440056700b7914ab1df1583841e565691580dea1712ba76fcba1b59a5",
+    "source-evidence/2019-guts-solutions.source.json": "790c6a0b55b9f219983fde48af5a057d862f62efb96a1a82ec137ff4cacf28ae",
+    "source-evidence/2019-guts-solutions.txt": "39af3441a03f6bedcd4f263f0562ee6ac98a5502b865bf049f9c62fa4b1990df",
+    "source-evidence/2020-guts-problems.pdf": "af71e8df1ad736c59c97fd1acba49e642975b5286df8922d805ebb17cab768b8",
+    "source-evidence/2020-guts-problems.source.json": "0a4d0da3180d76ece25615f16f12c3ff7ae9568849056fb459245e4f2c58b0b5",
+    "source-evidence/2020-guts-problems.txt": "d8392bf4328cf18ae04cdc8a78bc3a33a6a95dc503d1ded4ed543cc5e614efcf",
+    "source-evidence/2020-guts-solutions.pdf": "0a5c89f63c12ac83b51e11625de39f4a5f657f1648e2bffe7ab8c4edc8784f38",
+    "source-evidence/2020-guts-solutions.source.json": "bbe8f64d9fc4438b766462de416ae65b8742a52217f3b9703f2e0988ed1e7e0e",
+    "source-evidence/2020-guts-solutions.txt": "4e8e47eacf9bdb0e1ce20bbf92b6b58288abee3f8c1f418145d508dd29291e26",
+    "source-evidence/2021-guts-problems.pdf": "e17504091b3051dd870ae446763e121c02163b988feb347eb2fa864804bc1e8d",
+    "source-evidence/2021-guts-problems.source.json": "47ba789d39a0f249b1acc84824f5402e5f02b6f02a32d9436f25949fd039c432",
+    "source-evidence/2021-guts-problems.txt": "fe7ffbf94f48f18c714bb42b22337c0d0b60269e63b3880582ed5b64d150ad14",
+    "source-evidence/2021-guts-solutions.pdf": "66e3b4d1b9b048b3fa974420a1b97985921231e61c786142bd82632bf2999203",
+    "source-evidence/2021-guts-solutions.source.json": "e86686233f4d4c10b7ea85afca0ecf13c2315cbd48314ca492725b728f0cc370",
+    "source-evidence/2021-guts-solutions.txt": "0724e53e37b25b603e0a800d097273b1806decad4f6dc8e6cddb60ca06beb5b0",
+    "source-evidence/2022-guts-problems.pdf": "be444019a89992f2babcf390629d9b6f63a89922eb68f6e5e2c7cbbe73ce1cff",
+    "source-evidence/2022-guts-problems.source.json": "d7a18b18f14e907e5a67b1186c7c44bc6b383dab61a06fc06199996068f24007",
+    "source-evidence/2022-guts-problems.txt": "da425bcca54bb20b972549ec63c5bcaf2116f060c2196c3c32a98e2420e07c1b",
+    "source-evidence/2022-guts-solutions.pdf": "d59d1076c40d617e6939ef8032d684ee20a85aa93d8e791959053232415398cd",
+    "source-evidence/2022-guts-solutions.source.json": "b2592642e0e9057dba5016bf60f73c4a02d798a7a834b9c406941740b204ac4d",
+    "source-evidence/2022-guts-solutions.txt": "110c02ad0d8779f670098f129f32bdc7792e7e653df4f40d8dfad858df398e9d",
+    "source-evidence/2023-guts-problems.pdf": "2183613c3025c6aa58a7596ed8ef21a50b5161457f624c73c3635369369a11f4",
+    "source-evidence/2023-guts-problems.source.json": "fbe15408052329eacb5c8cc9f7e24e00f0e67fd56b6db744d099552a4fa65a7a",
+    "source-evidence/2023-guts-problems.txt": "d5f659dabfcbe4ca820b93e3c1ab5bfccde8478ad36b7e08d3355f91c799c1f6",
+    "source-evidence/2023-guts-solutions.pdf": "e935ac60dc6964f780ad04661048ef8832cf0c259c64f43ddb562276e2f7acee",
+    "source-evidence/2023-guts-solutions.source.json": "06c338051042e4b6b247bc85be6ab5a87581b2c9c27d57780cab0327fe98ea65",
+    "source-evidence/2023-guts-solutions.txt": "a127eae63d89637511dcbbec1bc727b9398cd77b2cb3ba1fa036b22b85517ce7",
+    "source-evidence/2024-guts-problems.pdf": "a8774d321b756415e6cb831020b9979c80f2fcede95e6e54d171305d7d6c6e41",
+    "source-evidence/2024-guts-problems.source.json": "6171a008e6113fd56a7927bcf2682f0620230a2910d9868e7fff721c8dad7bad",
+    "source-evidence/2024-guts-problems.txt": "ed7cbe304f794c2f373f56e6a71f8e3a97a626e700b140200b90db080b2536ff",
+    "source-evidence/2024-guts-solutions.pdf": "f8c3ce0a71c808fb04f16e368ae408a5ddd94b57f2e7f5771795b802fa2e9bb4",
+    "source-evidence/2024-guts-solutions.source.json": "efc1d93bbd918669b56879f32dd84744bfa3a0cd48e1c6ece155b591d854de04",
+    "source-evidence/2024-guts-solutions.txt": "7977ff667147ad0e55c37426d9faf69c14d2c47c36d285a2d0235356b0f2a883",
+    "source-evidence/2025-guts-problems.pdf": "cd95fc5dbbe200a61d3ec0fcba6d2d47002bbbc19539ec186215ac77ce21ea70",
+    "source-evidence/2025-guts-problems.source.json": "b6696b2211fe5cd4c2f523d4c779d1077519ae4dd11e31f9238321c5b1959d12",
+    "source-evidence/2025-guts-problems.txt": "2034f67ba78d9af9688c42e3c0f9b5450756ec921ca2cbb2b4ea1cab2e2b65e6",
+    "source-evidence/2025-guts-solutions.pdf": "d3aeba4b9a805c3374f4d76b462252a8c37925021494620d2a74305b42a96115",
+    "source-evidence/2025-guts-solutions.source.json": "602245c3ae0d09c8ea4c966f289f8b5cab957ddac683704bcf4d4d050f6e5e63",
+    "source-evidence/2025-guts-solutions.txt": "7169298e8198625a342addb8931fb1a3fc8320095f3ea50b194c9f37446f1f53",
+    "source-evidence/HMMT-2010-FEB-GUTS-13-problems-excerpt.txt": "48150a1cc4ab8bb77837164922859b6cdb438770e7cb3e7e34aebe2f354a30e3",
+    "source-evidence/HMMT-2010-FEB-GUTS-13-solutions-excerpt.txt": "6cbd5cdc37f55618632611df01f5b532cb1f9060237a8d66002c1456e86126b9",
+    "source-evidence/HMMT-2010-FEB-TEAM1-07-problems-excerpt.txt": "a6007025015d5117c58ca22e57c3e5c6f166f4350ea5048ed247d6d2dfeb475f",
+    "source-evidence/HMMT-2010-FEB-TEAM1-07-solutions-excerpt.txt": "6050ed0e3a0cdc148e0625dd9be89b1c83eb0c41ce5c54b84d90a343cb4d97c3",
+    "source-evidence/HMMT-2011-FEB-GUTS-01-problems-excerpt.txt": "31ff6f4899a9032169bceb8879f4d238f2aa561cbfd0938502ea5c8eedc01a8c",
+    "source-evidence/HMMT-2011-FEB-GUTS-01-solutions-excerpt.txt": "f1c6b25312823ece46f722935ff890da41d183b3f3c7dece1637693009be9e4c",
+    "source-evidence/HMMT-2012-FEB-GUTS-06-problems-excerpt.txt": "864a18bac171027780392b22b02c8174465efebaed2c8992efce85de04de078b",
+    "source-evidence/HMMT-2012-FEB-GUTS-06-solutions-excerpt.txt": "c30a4dcbb339a2f3758a10c24c7dcac5f8e400058b3aa13008639a7063366719",
+    "source-evidence/HMMT-2013-FEB-GUTS-01-problems-excerpt.txt": "ec5d6cb23998a0aa0e7f06d94d1e56c2162bf45e74c10f723e2593a65d0a4c4b",
+    "source-evidence/HMMT-2013-FEB-GUTS-01-solutions-excerpt.txt": "3b40f5b8627fd5293bc18b945e0f0de286d343397da478dabe79f76743d7bfab",
+    "source-evidence/HMMT-2014-FEB-GUTS-03-problems-excerpt.txt": "99e63a117b5f1bb8b624b6fd32e0631a753303fb4cd76a6b126c1ad675d5ef3e",
+    "source-evidence/HMMT-2014-FEB-GUTS-03-solutions-excerpt.txt": "4ffea98900c6665f6987e96f3d6a305d6f7ef8466fcf3e05177732671c6824ca",
+    "source-evidence/HMMT-2015-FEB-GUTS-24-problems-excerpt.txt": "46c07956161e5c8a1ce0a16c78b94018060f4a006ca2e7bd17cf274f2a2a41f2",
+    "source-evidence/HMMT-2015-FEB-GUTS-24-solutions-excerpt.txt": "f802a73a771f4877602276c5f2c2d970c1bb7e3881a2b2ac08dda582d412adf4",
+    "source-evidence/HMMT-2016-FEB-GUTS-14-problems-excerpt.txt": "1e2079c6306f16b1610001c9403c2f61a37f886d327c3238bb61527e28942949",
+    "source-evidence/HMMT-2016-FEB-GUTS-14-solutions-excerpt.txt": "82d30200a34cc0e94df9a01834136f89055ae53fb0c0e85720192b64f9c52d5c",
+    "source-evidence/HMMT-2017-FEB-GUTS-02-problems-excerpt.txt": "60ea190295ba7e36a95bebb59e115315e6b745ffa9683e3067ee7f24a4d0879d",
+    "source-evidence/HMMT-2017-FEB-GUTS-02-solutions-excerpt.txt": "c733fb2fe12ef804f086d986ed08fcd56c70ba5a07436307a266ff470d59204c",
+    "source-evidence/HMMT-2018-FEB-GUTS-01-problems-excerpt.txt": "3093d3c33cf9cce3ebd91595249d0f1594c140854d199127de704ade9954f7af",
+    "source-evidence/HMMT-2018-FEB-GUTS-01-solutions-excerpt.txt": "51010fd0c4887877128017b85ef6c1bfa6416fe4df318eeb5f62d7cba2f09076",
+    "source-evidence/HMMT-2019-FEB-GUTS-17-problems-excerpt.txt": "279e0de0ff93c8f64c1f5c46a772d0de60d0ab1ecbd7e3cc3c458598488183f3",
+    "source-evidence/HMMT-2019-FEB-GUTS-17-solutions-excerpt.txt": "b68522c9a53553dcce673c34feb3df064d3c45e02f227aedf50c973698b9938a",
+    "source-evidence/HMMT-2020-FEB-GUTS-13-problems-excerpt.txt": "f80482f02a1c0553a72ce98cb289d62413202c75186bc47c92e392f3d9a3644c",
+    "source-evidence/HMMT-2020-FEB-GUTS-13-solutions-excerpt.txt": "4c05b978988201ae13ca8a6eb9fc62622511fa9526fd7cb4bf72f4a1e9030039",
+    "source-evidence/HMMT-2021-FEB-GUTS-14-problems-excerpt.txt": "66271046fc1958c4ccf7293df59571264338565291fecf03135e6ced769d28b0",
+    "source-evidence/HMMT-2021-FEB-GUTS-14-solutions-excerpt.txt": "459e4d1a00edabda60ff6e44ac92d54fe12d2c1c5350048faca642b9b1a2f97a",
+    "source-evidence/HMMT-2022-FEB-GUTS-11-problems-excerpt.txt": "ffff8d7698fdb829f8793b3d2d24128fd203ca8176de5d43cc50eeb146b3727e",
+    "source-evidence/HMMT-2022-FEB-GUTS-11-solutions-excerpt.txt": "408ee532bdfa3f8de72a274888226f1ac2f316c4c22dc6663c31b14af860e0a3",
+    "source-evidence/HMMT-2023-FEB-GUTS-03-problems-excerpt.txt": "ae4c67a14381cb1f1e6e7ba93fb0b16438eb2d4f7e0898e902b3eb042463e440",
+    "source-evidence/HMMT-2023-FEB-GUTS-03-solutions-excerpt.txt": "edf6d859f7a7e74d7eb20a9c9c0c6bc3d17b17728da4533b65170e7950d4eb33",
+    "source-evidence/HMMT-2024-FEB-GUTS-04-problems-excerpt.txt": "a66f7296cfdeb6166705814fcfba5dd2da95834a39490da33ebcf1052e5ff28c",
+    "source-evidence/HMMT-2024-FEB-GUTS-04-solutions-excerpt.txt": "364e84cb9bf183bb1f63ba7ce9f659c5266399884783c88426809bc7610f8979",
+    "source-evidence/HMMT-2025-FEB-GUTS-06-problems-excerpt.txt": "92fd7a80c1dff8ce2ed990815956d25aae2b03a0196be82bebf37aedb3a5d02e",
+    "source-evidence/HMMT-2025-FEB-GUTS-06-solutions-excerpt.txt": "08e1e6a0fe3e401cd0e1966b50da7f1d70dc6a001061d1486da001264c2f80d6",
+    "source-evidence/manifest.json": "7458ad226a1b37d7198a84bd2e9d135dbbbe97b71c801c652b31fd085c77a726",
+    "source_plan.py": "675b4b5d52ee180b797f1303ec5b675b04608d42a5183171f229cd2846d8eb80",
+    "write_audit_reports.py": "9c801d7ede911cda799a13f81bb296126152ccb393c408e65bc1c9c02f45f392",
+    "prediction.md": "1ca8ac37c0d7df670cd2bcee7264a7527759ac33ead5dfc9776d45d36182b727"
+  },
+  "max_file_bytes_exclusive": 5000000
+}

@@ -1,0 +1,846 @@
+                                HMMT February 2016
+                                         February 20, 2016
+                                                 Guts
+                                                              √
+1. [5] Let x and y be complex numbers such that x + y =           20 and x2 + y 2 = 15. Compute |x − y|.
+   Proposed by: Evan Chen
+                √
+   Answer:        10
+                                                                                    √
+   We have (x − y)2 + (x + y)2 = 2(x2 + y 2 ), so (x − y)2 = 10, hence |x − y| =        10.
+
+2. [5] Sherry is waiting for a train. Every minute, there is a 75% chance that a train will arrive. However,
+   she is engrossed in her game of sudoku, so even if a train arrives she has a 75% chance of not noticing
+   it (and hence missing the train). What is the probability that Sherry catches the train in the next five
+   minutes?
+   Proposed by:
+                       13 5
+                          
+   Answer:        1−   16
+                                                                                             2
+   During any given minute, the probability that Sherry doesn’t catch the train is 14 + 43 = 13   16 . The
+   desired probability is thus one minus the probability that she doesn’t catch the train for the next five
+                    5
+   minutes: 1 − 13
+                 16 .
+
+3. [5] Let P ROBLEM Z be a regular octagon inscribed in a circle of unit radius. Diagonals M R, OZ
+   meet at I. Compute LI.
+   Proposed by: Evan Chen
+                √
+   Answer:        2
+   If W is the center of the circle then I is the √incenter of 4RW Z. Moreover, P RIZ  √ is a rhombus.
+                                                                                                   √ It
+   follows that P I is twice the inradius of a 1-1- 2 triangle, hence the answer of 2 − 2. So LI = 2.
+   Alternatively, one can show (note, really) that the triangle OIL is isosceles.
+
+4. [5] Consider a three-person game involving the following three types of fair six-sided dice.
+     • Dice of type A have faces labelled 2, 2, 4, 4, 9, 9.
+     • Dice of type B have faces labelled 1, 1, 6, 6, 8, 8.
+     • Dice of type C have faces labelled 3, 3, 5, 5, 7, 7.
+
+   All three players simultaneously choose a die (more than one person can choose the same type of die,
+   and the players don’t know one another’s choices) and roll it. Then the score of a player P is the
+   number of players whose roll is less than P ’s roll (and hence is either 0, 1, or 2). Assuming all three
+   players play optimally, what is the expected score of a particular player?
+   Proposed by:
+                  8
+   Answer:        9
+
+   Short version: third player doesn’t matter; against 1 opponent, by symmetry, you’d both play the same
+   strategy. Type A beats B, B beats C, and C beats A all with probability 5/9. It can be determined
+   that choosing each die with probability 1/3 is the best strategy. Then, whatever you pick, there is a
+   1/3 of dominating, a 1/3 chance of getting dominated, and a 1/3 chance of picking the same die (which
+   gives a 1/3 · 2/3 + 1/3 · 1/3 = 1/3 chance of rolling a higher number). Fix your selection; then the
+   expected payout is then 1/3 · 5/9 + 1/3 · 4/9 + 1/3 · 1/3 = 1/3 + 1/9 = 4/9. Against 2 players, your
+   EV is just E(p1) + E(p2) = 2E(p1) = 8/9
+5. [6] Patrick and Anderson are having a snowball fight. Patrick throws a snowball at Anderson which is
+   shaped like a sphere with a radius of 10 centimeters. Anderson catches the snowball and uses the snow
+   from the snowball to construct snowballs with radii of 4 centimeters. Given that the total volume of
+   the snowballs that Anderson constructs cannot exceed the volume of the snowball that Patrick threw,
+   how many snowballs can Anderson construct?
+  Proposed by:
+   Answer:       15
+                                         $        3 %        
+                                              10            125
+                                                          =       = 15.
+                                              4              8
+
+6. [6] Consider a 2 × n grid of points and a path consisting of 2n − 1 straight line segments connecting
+   all these 2n points, starting from the bottom left corner and ending at the upper right corner. Such
+   a path is called efficient if each point is only passed through once and no two line segments intersect.
+   How many efficient paths are there when n = 2016?
+  Proposed by: Casey Fu
+                     
+                 4030
+   Answer:
+                 2015
+                                 
+                          2(n − 1)
+  The general answer is             : Simply note that the points in each column must be taken in order,
+                           n−1
+  and anything satisfying this avoids intersections, so just choose the steps during which to be in the
+  first column.
+7. [6] A contest has six problems worth seven points each. On any given problem, a contestant can score
+   either 0, 1, or 7 points. How many possible total scores can a contestant achieve over all six problems?
+  Proposed by: Evan Chen
+   Answer:       28
+  For 0 ≤ k ≤ 6, to obtain a score that is k (mod 6) exactly k problems must get a score of 1. The
+  remaining 6 − k problems can generate any multiple of 7 from 0 to 7(6 − k), of which there are 7 − k.
+                                            6
+                                            P
+  So the total number of possible scores is   (7 − k) = 28.
+                                            k=0
+
+8. [6] For each positive integer n and non-negative integer k, define W (n, k) recursively by
+                                            (
+                                              nn                      k=0
+                                 W (n, k) =
+                                              W (W (n, k − 1), k − 1) k > 0.
+
+  Find the last three digits in the decimal representation of W (555, 2).
+  Proposed by:
+   Answer:       875
+  For any n, we have
+                                                                            n      n+1
+                                W (n, 1) = W (W (n, 0), 0) = (nn )n = nn                 .
+  Thus,
+                                                                  556
+                                           W (555, 1) = 555555          .
+  Let N = W (555, 1) for brevity, and note that N ≡ 0 (mod 125), and N ≡ 3 (mod 8). Then,
+                                                                            N +1
+                                      W (555, 2) = W (N, 1) = N N
+
+  is 0 (mod 125) and 3 (mod 8).
+  From this we can conclude (by the Chinese Remainder Theorem) that the answer is 875.
+ 9. [7] Victor has a drawer with two red socks, two green socks, two blue socks, two magenta socks, two
+    lavender socks, two neon socks, two mauve socks, two wisteria socks, and 2000 copper socks, for a total
+    of 2016 socks. He repeatedly draws two socks at a time from the drawer at random, and stops if the
+    socks are of the same color. However, Victor is red-green colorblind, so he also stops if he sees a red
+    and green sock.
+    What is the probability that Victor stops with two socks of the same color? Assume Victor returns
+    both socks to the drawer at each step.
+    Proposed by: Evan Chen
+                    1999008
+     Answer:        1999012
+                          
+                2000        2
+    There are          +8       = 1999008 ways to get socks which are matching colors, and four extra
+                  2         2
+    ways to get a red-green pair, hence the answer.
+10. [7] Let ABC be a triangle with AB = 13, BC = 14, CA = 15. Let O be the circumcenter of ABC.
+    Find the distance between the circumcenters of triangles AOB and AOC.
+    Proposed by: Evan Chen
+                    91
+     Answer:         6
+
+    Let S, T be the intersections of the tangents to the circumcircle of ABC at A, C and at A, B respectively.
+    Note that ASCO is cyclic with diameter SO, so the circumcenter of AOC is the midpoint of OS, and
+    similarly for the other side. So the length we want is 21 ST . The circumradius R of ABC can be
+    computed by Heron’s formula and K = abc                       65
+                                                4R , giving R = 8 . A few applications of the Pythagorean
+                                                                                91
+    theorem and similar triangles gives AT = 65             39
+                                                  6 , AS = 2 , so the answer is 6 .
+
+
+11. [7] Define φ! (n) as the product of all positive integers less than or equal to n and relatively prime to
+    n. Compute the remainder when                    X
+                                                            φ! (n)
+                                                   2≤n≤50
+                                                 gcd(n,50)=1
+
+    is divided by 50.
+    Proposed by: Evan Chen
+     Answer:        12
+            !
+    First, φ (n) is even for all odd n, so it vanishes modulo 2.
+    To compute the remainder modulo 25, we first evaluate φ! (3) + φ! (7) + φ! (9) ≡ 2 + 5 · 4 + 5 · 3 ≡ 12
+    (mod 25). Now, for n ≥ 11 the contribution modulo 25 vanishes as long as 5 - n.
+    We conclude the answer is 12.
+12. [7] Let R be the rectangle in the Cartesian plane with vertices at (0, 0), (2, 0), (2, 1), and (0, 1). R can
+    be divided into two unit squares, as shown; the resulting figure has seven edges.
+
+
+
+
+    Compute the number of ways to choose one or more of the seven edges such that the resulting figure
+    is traceable without lifting a pencil. (Rotations and reflections are considered distinct.)
+    Proposed by: Joy Zheng
+     Answer:        61
+    We have two cases, depending on whether we choose the middle edge. If so, then either all the remaining
+    edges are either to the left of or to the right of this edge, or there are edges on both sides, or neither;
+    in the first two cases there are 6 ways each, in the third there are 16 + 1 = 17 ways, and in the last
+    there is 1 way. Meanwhile, if we do not choose the middle edge, then we have to choose a beginning
+    and endpoint, plus the case where we have a loop, for a total of 6 · 5 + 1 = 31 cases. This gives a total
+    of 6 + 6 + 17 + 1 + 31 = 61 possible cases.
+                                                    √
+13. [9] A right triangle has side lengths a, b, and 2016 in some order, where a and b are positive integers.
+    Determine the smallest possible perimeter of the triangle.
+    Proposed by: Evan Chen
+                     √
+    Answer:      48 + 2016
+    There are no integer solutions to a2 + b2 = 2016 due to the presence of the prime 7 on the right-hand
+    side (by Fermat’ s Christmas Theorem). Assuming a < b, the minimal solution (a, b) = (3, 45) which
+    gives the answer above.
+14. [9] Let ABC be a triangle such that AB = 13, BC = 14, CA = 15 and let E, F be the feet of the
+    altitudes from B and C, respectively. Let the circumcircle of triangle AEF be ω. We draw three lines,
+    tangent to the circumcircle of triangle AEF at A, E, and F . Compute the area of the triangle these
+    three lines determine.
+    Proposed by: Christopher Shao
+                   462
+     Answer:        5
+
+    Note that AEF ∼ ABC. Let the vertices of the triangle whose area we wish to compute be P, Q, R,
+    opposite A, E, F respectively. Since H, O are isogonal conjugates, line AH passes through the circum-
+    center of AEF , so QR k BC.
+    Let M be the midpoint of BC. We claim that M = P . This can be seen by angle chasing at E, F to
+    find that ∠P F B = ∠ABC, ∠P EC = ∠ACB, and noting that M is the circumcenter of BF EC. So,
+    the height from P to QR is the height from A to BC, and thus if K is the area of ABC, the area we
+            QR
+    want is BC  K.
+    Heron’s formula gives K = 84, and similar triangles QAF, M BF and RAE, M CE give QA = BC tan B
+                                                                                           2 tan A ,
+              tan C          QR   tan B+tan C
+    RA = BC2 tan A , so that BC =    2 tan A  = tan B tan
+                                                       2
+                                                          C−1
+                                                              = 11
+                                                                10 ,
+
+                                                                                           462
+    since the height from A to BC is 12. So our answer is                                      .
+                                                                                            5
+                         π             2π             3π
+                                                         
+15. [9] Compute tan      7       tan    7       tan    7       .
+    Proposed by: Alexander Katz
+                 √
+    Answer:        7
+    Consider the polynomial P (z) = z 7 − 1. Let z = eix = cos x + i sin x. Then
+                                                                                          
+                                  7                     7                    7
+              z 7 − 1 = cos7 x −      cos5 x sin2 x +      cos3 x sin4 x −      cos x sin6 x − 1
+                                  2                     4                    6
+                                                                                            
+                                         7                   7                    7
+                       + i − sin7 x +       sin5 x cos2 x −      sin3 x cos4 x +      sin x cos 6x
+                                         2                   4                    6
+                                                                             7
+    Consider the real part of this equation. We may simplify it                x − . . . − 1, where the middle
+                                                                  Q7to 64 cos2πk
+                                                 2π 4π                                  1
+    terms are irrelevant. The roots of P are x = 7 , 7 , . . ., so k=1 cos 7 = 64         . But
+
+                                                  7                                3                   !2
+                                                  Y                    2πk           Y               kπ
+                                                        cos                      =         cos
+                                                                        7                             7
+                                                  k=1                                k=1
+         Q3         kπ
+                             = 18 .
+                         
+    so    k=1 cos    7
+    Now consider the imaginary part of this equation. We may simplify it to −64 sin11 x + . . . + 7 sin x,
+    where again the middle terms are irrelevant. We can factor out             get −64 sin10 x + . . . + 7, and
+                                                                    Q6sin x to 2πk
+                                  2π         12π                                          7
+    this polynomial has roots x = 7 , . . . , 7 (but not 0). Hence k=1 sin 7 = − 64         . But, like before,
+    we have
+                                    6                     3          !2
+                                   Y           2πk         Y        2πk
+                                        sin          =−       sin
+                                                 7                   7
+                                             k=1                     k=1
+              Q3         kπ
+                                     √
+                                       7
+                                                                                √
+                                                                                     7       √
+    hence      k=1 sin       7   =    8 . As a result, our final answer is
+                                                                                    8
+                                                                                    1    =       7.
+                                                                                    8
+
+
+16. [9] Determine the number of integers 2 ≤ n ≤ 2016 such that nn − 1 is divisible by 2, 3, 5, 7.
+    Proposed by: Evan Chen
+    Answer:         9
+    Only n ≡ 1 (mod 210) work. Proof: we require gcd(n, 210) = 1. Note that ∀p ≤ 7 the order of n
+    (mod p) divides p − 1, hence is relatively prime to any p ≤ 7. So nn ≡ 1 (mod p) ⇐⇒ n ≡ 1 (mod p)
+    for each of these p.
+17. [11] Compute the sum of all integers 1 ≤ a ≤ 10 with the following property: there exist integers p
+    and q such that p, q, p2 + a and q 2 + a are all distinct prime numbers.
+    Proposed by: Evan Chen
+    Answer:         20
+    Odd a fail for parity reasons and a ≡ 2 (mod 3) fail for mod 3 reasons. This leaves a ∈ {4, 6, 10}. It
+    is easy to construct p and q for each of these, take (p, q) = (3, 5), (5, 11), (3, 7), respectively.
+18. [11] Alice and Bob play a game on a circle with 8 marked points. Alice places an apple beneath one of
+    the points, then picks five of the other seven points and reveals that none of them are hiding the apple.
+    Bob then drops a bomb on any of the points, and destroys the apple if he drops the bomb either on
+    the point containing the apple or on an adjacent point. Bob wins if he destroys the apple, and Alice
+    wins if he fails. If both players play optimally, what is the probability that Bob destroys the apple?
+    Proposed by:
+                    1
+    Answer:         2
+
+    Let the points be 0, . . . , 7 (mod 8), and view Alice’s reveal as revealing the three possible locations of
+    the apple. If Alice always picks 0, 2, 4 and puts the apple randomly at 0 or 4, by symmetry Bob cannot
+    achieve more than 12 . Here’s a proof that 12 is always possible.
+    Among the three revealed indices a, b, c, positioned on a circle, two must (in the direction in which
+    they’re adjacent) have distance at least 3, so without loss of generality the three are 0, b, c where
+    1 ≤ b < c ≤ 5. Modulo reflection and rotation, the cases are: (0, 1, 2): Bob places at 1 and wins.
+    (0, 1, 3): Bob places at 1 half the time and 3 half the time, so wherever the apple is Bob wins with
+    probability 12 . (0, 1, 4): Bob places at 1 or 4, same as above. (0, 2, 4): Bob places at 1 or 3, same as
+    above. (0, 2, 5): Bob places at 1 or 5, same as above.
+    These cover all cases, so we’re done.
+19. [11] Let
+                                                             2016           n    n
+                                                                                        
+                                                                            i  i+2
+                                                             X
+                                                                       i
+                                                   A = lim         (−1) ·
+                                                       n→∞                    n 2
+                                                                                
+                                                             i=0             i+1
+
+    Find the largest integer less than or equal to A1 .
+    The following decimal approximation might be useful: 0.6931 < ln(2) < 0.6932, where ln denotes the
+    natural logarithm function.
+    Proposed by: Pakawut Jiradilok
+     Answer:       1
+    Note
+                                        2016               n   n               2016
+                                                                      
+                                        X
+                                                   i       i i+2
+                                                                               X               (i + 1)(n − i − 1)
+                                              (−1) ·                       =         (−1)i ·                      ,
+                                                            n 2                                   (i + 2)(n − i)
+                                                               
+                                        i=0                i+1                 i=0
+
+    So
+                                 2016              n   n               2016                         2016
+                                                              
+                                 X
+                                               i   i i+2
+                                                                       X                (i + 1)     X    (−1)i
+                       lim             (−1) ·                      =         (−1)i ·            =1−            ≈ ln(2).
+                       n→∞                          n 2                                 (i + 2)            i
+                                                      
+                                 i=0               i+1                 i=0                          i=2
+
+                1
+    Then A1 ≈ ln(2) ≈ 1.44, so the answer is 1.
+
+20. [11] Let ABC be a triangle with AB = 13, AC = 14, and BC = 15. Let G be the point on AC such
+    that the reflection of BG over the angle bisector of ∠B passes through the midpoint of AC. Let Y be
+                                                                      AX
+    the midpoint of GC and X be a point on segment AG such that XG       = 3. Construct F and H on AB
+    and BC, respectively, such that F X k BG k HY . If AH and CF concur at Z and W is on AC such
+    that W Z k BG, find W Z.
+    Proposed by: Ritesh Ragavender
+                        √
+                    1170 37
+     Answer:          1379
+                                                                                          2
+                                                    AG
+    Observe that BG is the B-symmedian, and thus GC    = ac 2 . Stewart’s theorem gives us
+                         s                                                          √
+                              2a2 c2 b   a2 b2 c2     ac p 2           2     2
+                                                                                 390 37
+                  BG =                 −          = 2          2(a + c ) − b =           .
+                            b(a2 + c2 ) a2 + c2    a + c2                          197
+
+    Then by similar triangles,
+                                                                         √
+                                            ZA      Y C ZA      16   1170 37
+                                    ZW = HY    = BG        = BG    =
+                                            HA      GC HA       27     1379
+          ZA
+    where HA is found with mass points or Ceva.
+21. [12] Tim starts with a number n, then repeatedly flips a fair coin. If it lands heads he subtracts 1
+    from his number and if it lands tails he subtracts 2. Let En be the expected number of flips Tim does
+    before his number is zero or negative. Find the pair (a, b) such that
+
+                                                                   lim (En − an − b) = 0.
+                                                               n→∞
+
+
+    Proposed by:
+     Answer:       ( 32 , 29 )
+
+    We have the recurrence En = 12 (En−1 + 1) + 12 (En−2 + 1), or En = 1 + 12 (En−1 + En−2 ), for n ≥ 2.
+    Let Fn = En − 32 n. By directly plugging this into the recurrence for En , we get the recurrence Fn =
+    1                                                                                           1
+    2 (Fn−1 + Fn−1 ). The roots of the characteristic polynomial of this recurrence are 1 and − 2 , so Fn =
+             1 n
+    A + B(− 2 ) for some A and B depending on the initial conditions. But clearly we have E0 = 0 and
+    E1 = 1 so F0 = 0 and F1 = 13 so A = 29 and B = − 92 .
+    Hence, En = 23 n + 29 − 29 (− 12 )n , so limn→∞ (En − 32 n − 29 ) = 0. Hence ( 23 , 29 ) is the desired pair.
+22. [12] On the Cartesian plane R2 , a circle is said to be nice if its center is at the origin (0, 0) and it passes
+    through at least one lattice point (i.e. a point with integer coordinates). Define the points A = (20, 15)
+    and B = (20, 16). How many nice circles intersect the open segment AB?
+    For reference, the numbers 601, 607, 613, 617, 619, 631, 641, 643, 647, 653, 659, 661, 673, 677, 683,
+    691 are the only prime numbers between 600 and 700.
+    Proposed by:
+    Answer:        10
+    The square of the radius of a nice circle is the sum of the square of two integers.
+    The nice circle of radius r intersects (the open segment) AB if and only if a point on AB is a distance
+    r from the√ origin. AB√consists of the points (20, t) where t√ranges over (15, 16). The
+                                                                                         √ distance
+                                                                                               √ from the
+    origin is 202 + t2 = 400 + t2 . As t ranges over (15, 16), 400 + t2 ranges over ( 625, 656), so the
+    nice circle of radius r intersects AB if and only if 625 < r2 < 656.
+    The possible values of r2 are those in this range that are the sum of two perfect squares, and each such
+    value corresponds to a unique nice circle. By Fermat’s Christmas theorem, an integer is the sum of
+    two squares if an only if in its prime factorization, each prime that is 3 mod 4 appears with an even
+    exponent (possibly 0.) In addition, since squares are 0, 1, or 4 mod 8, we can quickly eliminate integers
+    that are 3, 6, or 7 mod 8.
+    Now I will list all the integers that aren’t 3, 6, or 7 mod 8 in the range and either supply the bad prime
+    factor or write ”nice” with the prime factorization.
+    626: nice (2 · 313)
+    628: nice (22 · 157)
+    629: nice (17 · 37)
+    632: 79
+    633: 3
+    634: nice (2 · 317)
+    636: 3
+    637: nice (72 · 13)
+    640: nice (27 · 5)
+    641: nice (641)
+    642: 3
+    644: 7
+    645: 3
+    648: nice (23 · 34 )
+    649: 11
+    650: nice (2 · 52 · 13)
+    652: 163
+    653: nice (653). There are 10 nice circles that intersect AB.
+23. [12] Let t = 2016 and p = ln 2. Evaluate in closed form the sum
+                                      ∞        k−1
+                                                          !
+                                      X        X e−t tn            k−1
+                                           1−               (1 − p)    p.
+                                               n=0
+                                                     n!
+                                       k=1
+
+
+    Proposed by: Aaron Landesman
+                        2016
+    Answer:      1 − 21
+    Let q = 1 − p. Then
+                    ∞          k−1                            ∞                 ∞ k−1
+                                              !
+                    X          X e−t tn                       X                 X X e−t tn
+                          1−                      q k−1 p =         q k−1 p −                   q k−1 p
+                             n=0
+                                  n!                                                       n!
+                    k=1                                       k=1               k=1 n=0
+                                                                    X k−1
+                                                                    ∞ X       e−t tn k−1
+                                                         =1−                        q    p
+                                                                          n=0
+                                                                               n!
+                                                                    k=1
+                                                                     ∞     ∞
+                                                                    X      X e−t tn k−1
+                                                         =1−                       q    p
+                                                                    n=0 k=n+1
+                                                                              n!
+                                                                     ∞
+                                                                    X −t n
+                                                                        e t n
+                                                         =1−                q
+                                                                    n=0
+                                                                         n!
+                                                                    ∞
+                                                                    X e−t (qt)n
+                                                         =1−                        = 1 − e−t eqt = 1 − e−pt .
+                                                                    n=0
+                                                                             n!
+
+                               1 2016
+                                
+    Thus the answer is 1 −     2        .
+                                                              CA1
+                                                                     √
+24. [12] Let ∆A1 B1 C be a triangle with ∠A1 B1 C = 90◦ and CB  1
+                                                                   = 5 + 2. For any i ≥ 2, define Ai to
+    be the point on the line A1 C such that Ai Bi−1 ⊥ A1 C and define Bi to be the point on the line B1 C
+    such that Ai Bi ⊥ B1 C. Let Γ1 be the incircle of ∆A1 B1 C and for i ≥ 2, Γi be the circle tangent to
+    Γi−1 , A1 C, B1 C which is smaller than Γi−1 .
+    How many integers k are there such that the line A1 B2016 intersects Γk ?
+    Proposed by:
+    Answer:        4030
+    We claim that √ Γ2 is the incircle of 4B1 A2 C. This is because 4B1 A2 C is similar to A1 B1 C with
+    dilation factor 5 − 2, and by simple trigonometry, one can prove that Γ2 is similar to Γ1 with the
+    same dilation factor. By similarities, we can see that for every k, the incircle of 4Ak Bk C is Γ2k−1 ,
+    and the incircle of 4Bk Ak+1 C is Γ2k . Therefore, A1 B2016 intersects all Γ1 , . . . , Γ4030 but not Γk for
+    any k ≥ 4031.
+25. [14] A particular coin can land on heads (H), on tails (T), or in the middle (M), each with proba-
+    bility 31 . Find the expected number of flips necessary to observe the contiguous sequence HMMTH-
+    MMT...HMMT, where the sequence HMMT is repeated 2016 times.
+    Proposed by: Ritesh Ragavender
+                   38068 −81
+    Answer:           80
+
+    Let E0 be the expected number of flips needed. Let E1 be the expected number more of flips needed
+    if the first flip landed on H. Let E2 be the expected number more if the first two landed on HM. In
+    general, let Ek be the expected number more of flips needed if the first k flips landed on the first k
+    values of the sequence HMMTHMMT...HMMT.
+    We have
+                                            1 + 13 Ei+1 + 13 E1 + 31 E0
+                                      
+                                                                                   i 6≡ 0 (mod 4)
+                               Ei =
+                                            1 + 13 Ei+1 + 23 E0                    i ≡ 0 (mod 4)
+
+    Using this relation for i = 0 gives us E1 = E0 − 3. Let Fi = 31i Ei . By simple algebraic manipulations
+    we have
+
+                                                           2
+                                                   
+                                                       − 3i+1 · E0                i 6≡ 0   (mod 4)
+                               Fi+1 − Fi =               1      2
+                                                       − 3i − 3i+1 · E0           i≡0      (mod 4)
+
+    We clearly have F2016·4 = 0 and F0 = E0 . So adding up the above relations for i = 0 to i = 2016 · 4 − 1
+    gives
+                                                    2016·4      2015
+                                                              X 1
+                                                     X   1
+                                      −E0 = −2E0            −
+                                                   i=1
+                                                         3i        34k
+                                                              k=0
+                                                                          1
+                                                                  1 − 32016·4
+                                                            
+                                                    1
+                                          = E0           −  1  −       80
+                                                 32016·4               81
+
+              8068
+                 −81
+    so E0 = 3   80   .
+
+26. [14] For positive integers a, b, a ↑↑ b is defined as follows: a ↑↑ 1 = a, and a ↑↑ b = aa↑↑(b−1) if b > 1.
+    Find the smallest positive integer n for which there exists a positive integer a such that a ↑↑ 6 6≡ a ↑↑ 7
+    mod n.
+    Proposed by: Sammy Luo
+     Answer:         283
+    We see that the smallest such n must be a prime power, because if two numbers are distinct mod n,
+    they must be distinct mod at least one of the prime powers that divide n. For k ≥ 2, if a ↑↑ k and
+    a ↑↑ (k + 1) are distinct mod pr , then a ↑↑ (k − 1) and a ↑↑ k must be distinct mod φ(pr ). In fact they
+                                r
+    need to be distinct mod φ(p2 ) if p = 2 and r ≥ 3 because then there are no primitive roots mod pr .
+    Using this, for 1 ≤ k ≤ 5 we find the smallest prime p such that there exists a such that a ↑↑ k and
+    a ↑↑ (k + 1) are distinct mod p. The list is: 3, 5, 11, 23, 47. We can easily check that the next largest
+    prime for k = 5 is 139, and also any prime power other than 121 for which a ↑↑ 5 and a ↑↑ 6 are
+    distinct is also larger than 139.
+    Now if a ↑↑ 6 and a ↑↑ 7 are distinct mod p, then p − 1 must be a multiple of 47 or something that is
+    either 121or at least 139. It is easy to see that 283 is the smallest prime that satisfies this.
+    If n is a prime power less than 283 such that a ↑↑ 6 and a ↑↑ 7 are distinct mod n, then the prime can
+    be at most 13 and clearly this doesn’t work because φ(pr ) = pr−1 (p − 1).
+    To show that 283 works, choose a so that a is a primitive root mod 283, 47, 23, 11, 5 and 3. This is
+    possible by the Chinese Remainder theorem, and it is easy to see that this a works by induction.
+27. [14] Find the smallest possible area of an ellipse passing through (2, 0), (0, 3), (0, 7), and (6, 0).
+    Proposed by: Calvin Deng
+                        √
+                     56π 3
+     Answer:           9
+
+    Let Γ be an ellipse passing through A = (2, 0), B = (0, 3), C = (0, 7), D = (6, 0), and let P = (0, 0) be
+                                        Area of Γ
+    the intersection of AD and BC. Area    of ABCD is unchanged under an affine transformation, so we just
+    have to minimize this quantity over situations where Γ is a circle and PP DA           PB
+                                                                                  = 13 and BC   = 37 . In fact,
+                                √                              √
+    we may assume that P A = 7, P B = 3, P C = 7, P D = 3 7. If ∠P = θ, then we can compute lengths
+    to get                                                     √
+                                     Area of Γ          32 − 20 7 cos θ + 21 cos2 θ
+                              r=                     =π          √
+                                  Area of ABCD                  9 7 · sin3 θ
+    Let x = cos θ. Then if we treat r as a function of x,
+                                                                      √
+                                        r0        3x         42x − 20 7
+                                    0=      =         +          √
+                                         r     1 − x2    32 − 20x 7 + 21x2
+                                  √                 √                      √
+    which means that 21x3 − 40x 7 + 138x − 20 7 = 0. Letting y = x 7 gives
+
+                          0 = 3y 3 − 40y 2 + 138y − 140 = (y − 2)(3y 2 − 34y + 70)
+                                                           √
+    The other quadratic has roots that are greater than 7, which means that the minimum ratio is
+    attained when cos θ = x = √y7 = √27 . Plugging that back in gives that the optimum Area
+                                                                                         Area of Γ
+                                                                                            of ABCD is
+       √                                                                                √
+    28π 3                                                                            56π 3
+      81  , so putting this back into the original configuration gives Area   of Γ ≥   9   .   If you want to
+    check on Geogebra, this minimum occurs when the center of Γ is ( 38 , 73 ).
+28. [14] Among citizens of Cambridge there exist 8 different types of blood antigens. In a crowded lecture
+    hall are 256 students, each of whom has a blood type corresponding to a distinct subset of the antigens;
+    the remaining of the antigens are foreign to them.
+    Quito the Mosquito flies around the lecture hall, picks a subset of the students uniformly at random,
+    and bites the chosen students in a random order. After biting a student, Quito stores a bit of any
+    antigens that student had. A student bitten while Quito had k blood antigen foreign to him/her will
+    suffer for k hours. What is the expected total suffering of all 256 students, in hours?
+    Proposed by: Sammy Luo
+                   2135 −2128 +1
+    Answer:          2119 ·129
+
+    Let n = 8.
+    First, consider any given student S and an antigen a foreign to him/her. Assuming S has been bitten,
+    we claim the probability S will suffer due to a is
+                                                            n−1
+                                                           22     +1
+                                                                       −1
+                                                  1−   2n−1
+                                                                             .
+                                                       2        (2n−1 + 1)
+
+    Indeed, let N = 2n−1 denote the number of students with a. So considering just these students and
+    summing over the number bitten, we obtain a probability
+                                           N   
+                                        1 X N    N  t     1 2N N − 2N + 1
+                                                       =                  .
+                                       2N t=0 t  t t+1   2N     N +1
+
+    We now use linearity over all pairs (S, a) of students S and antigens a foreign to them. Noting that
+    each student is bitten with probability 12 , and retaining the notation N = 2n−1 , we get
+                                   n      N
+                                              2 N − 2N + 1      nN (2N N − 2N + 1)
+                                                           
+                            1X           n
+                                           ·k   N
+                                                              =                    .
+                            2            k     2 (N + 1)           2N +1 (N + 1)
+                              k=0
+
+
+    Finally, setting n = 8 = 23 and N = 2n−1 = 27 = 128, we get the claimed answer.
+29. [16] Katherine has a piece of string that is 2016 millimeters long. She cuts the string at a location
+    chosen uniformly at random, and takes the left half. She continues this process until the remaining
+    string is less than one millimeter long. What is the expected number of cuts that she makes?
+    Proposed by:
+    Answer:        1 + log(2016)
+    Letting f (x) be the expected
+                              R x number of cuts if the initial
+                                                             R x length of the string is x, we get the integral
+    equation f (x) = 1 + x1 1 f (y)dy. Letting g(x) = 1 f (y)dy, we get dg/dx = 1 + x1 g(x). Using
+    integrating factors, we see that this has as its solution g(x) = x log(x), and thus f (x) = 1 + log(x).
+30. [16] Determine the number of triples 0 ≤ k, m, n ≤ 100 of integers such that
+
+                                                   2m n − 2n m = 2k .
+
+    Proposed by: Casey Fu
+    Answer:        22
+    First consider when n ≥ m, so let n = m + d where d ≥ 0. Then we have 2m (m + d − 2d m) =
+    2m (m(1 − 2d ) + d), which is non-positive unless m = 0. So our first set of solutions is m = 0, n = 2j .
+    Now, we can assume that m > n, so let m = n + d where d > 0. Rewrite 2m n − 2n m = 2n+d n −
+    2n (n + d) = 2n ((2d − 1)n − d). In order for this to be a power of 2, (2d − 1)n − d must be a power of
+    2. This implies that for some j, 2j ≡ −d (mod 2d − 1). But notice that the powers of 2 (mod 2d − 1)
+    are 1, 2, 4, . . . , 2d−1 (2d ≡ 1 so the cycle repeats).
+    In order for the residues to match, we need 2j + d = c(2d − 1), where 0 ≤ j ≤ d − 1 and c ≥ 1. In order
+    for this to be true, we must have 2d−1 + d ≥ 2d − 1 ⇐⇒ d + 1 ≥ 2d−1 . This inequality is only true
+    for d = 1, 2, 3. We plug each of these into the original expression (2d − 1)n − d.
+    For d = 1: n − 1 is a power of 2. This yields the set of solutions (2j + 2, 2j + 1) for j ≥ 0.
+    For d = 2: 3n − 2 is a power of 2. Note that powers of 2 are −2 (mod 3) if and only if it is an even
+                   2j                                     2j      2j
+    power, so n = 2 3+2 . This yields the solution set ( 2 3+8 , 2 3+2 ), j ≥ 0.
+    For d = 3: 7n − 3 is a power of 2. Powers of 2 have a period of 3 when taken (mod 7), so inspection
+                                                           3j+2      3j+2
+    tells us 7n − 3 = 23j+2 , yielding the solution set ( 2 7 +24 , 2 7 +3 ), j ≥ 0.
+    Therefore, all the solutions are of the form
+
+                                           (m, n) = (0, 2j ), (2j + 2, 2j + 1)
+                                       22j + 8 22j + 2 23j+2 + 24 23j+2 + 3
+                                   (          ,       ), (       ,          )
+                                          3       3        7          7
+    for j ≥ 0.
+    Restricting this family to m, n ≤ 100 gives 7 + 7 + 5 + 3 = 22.
+
+31. [16] For a positive integer n, denote by τ (n) the number of positive integer divisors of n, and denote
+    by φ(n) the number of positive integers that are less than or equal to n and relatively prime to n.
+    Call a positive integer n good if ϕ(n) + 4τ (n) = n. For example, the number 44 is good because
+    ϕ(44) + 4τ (44) = 44.
+    Find the sum of all good positive integers n.
+    Proposed by: Lawrence Sun
+    Answer:       172
+    We claim that 44, 56, 72 are the only good numbers. It is easy to check that these numbers work.
+    Now we prove none others work. First, remark that as n = 1,√
+                                                               2 fail so we have ϕ(n) is even, thus
+                                                                                                  √ n is
+    even. This gives us ϕ(n) ≤ n/2. Now remark that τ (n) < 2 n, so it follows we need n/2 + 8 n >
+    n =⇒ n ≤ 256. This gives us a preliminary bound. Note that in addition we have 8τ (n) > n.
+    Now, it is easy to see that powers of 2 fail. Thus let n = 2a pb1 where p1 is an odd prime. From
+    8τ (n) > n we get 8(a + 1)(b + 1) > 2a pb1 ≥ 2a 3b from which we get that (a, b) is one of
+
+                               (1, 1), (1, 2), (1, 3), (2, 1), (2, 2), (3, 1), (3, 2), (4, 1).
+                     q
+    Remark that p1 ≤ b 8(a+1)(b+1)
+                           2a      . From this we can perform some casework:
+
+      • If a = 1, b = 1 then p1 − 1 + 16 = 2p1 but then p = 15, absurd.
+      • If a = 1, b = 2 then we have p1 ≤ 5 which is obviously impossible.
+      • If a = 1, b = 3 then p1 ≤ 4 which is impossible.
+      • If a = 2, b = 1 then p1 ≤ 12 and it is easy to check that p1 = 11 and thus n = 44 is the only
+        solution.
+      • If a = 2, b = 2 then p1 ≤ 4 which is impossible.
+      • If a = 3, b = 1 then p1 ≤ 8 and only p1 = 7 or n = 56 works.
+      • If a = 3, b = 2 then p1 ≤ 3 and p1 = 3, n = 72 works.
+      • If a = 4, b = 1 then p1 ≤ 1 which is absurd.
+    Now suppose n is the product of 3 distinct primes, so n = 2a pb1 pc2 so we have 8(a + 1)(b + 1)(c + 1) >
+    2a 3b 5c then we must have (a, b, c) equal to one of
+                                         (1, 1, 1), (1, 2, 1), (2, 1, 1), (3, 1, 1).
+    Again, we can do some casework:
+       • If a = b = c = 1 then 8τ (n) = 64 > 2p1 p2 but then p1 = 3, p2 = 5 or p1 = 3, p2 = 7 is forced
+         neither of which work.
+       • If a = 1, b = 2, c = 1 then 8τ (n) = 96 > 2p21 p2 but then p1 = 3, p2 = 5 is forced which does not
+         work.
+       • If a = 2, b = 1, c = 1 then 8τ (n) = 96 > 4p1 p2 forces p1 = 3, p2 = 5 or p1 = 3, p2 = 7 neither of
+         which work.
+       • If a = 3, b = 1, c = 1 then 8τ (n) = 108 > 8p1 p2 which has no solutions for p1 , p2 .
+    Finally, take the case where n is the product of at least 4 distinct primes. But then n ≥ 2 · 3 · 5 · 7 = 210
+    and as 2 · 3 · 5 · 11 > 256, it suffices to check only the case of 210. But 210 clearly fails, so it follows
+    that 44, 56, 72 are the only good numbers so we are done.
+                                                             √
+32. [16] How many equilateral hexagons of side length 13 have one vertex at (0, 0) and the other five
+    vertices at lattice points?
+    (A lattice point is a point whose Cartesian coordinates are both integers. A hexagon may be concave
+    but not self-intersecting.)
+    Proposed by: Casey Fu
+     Answer:       216
+    We perform casework on the point three vertices away from (0, 0). By inspection, that point can be
+    (±8, ±3), (±7, ±2), (±4, ±3), (±3, ±2), (±2, ±1) or their reflections across the line y = x. The cases
+    are as follows:
+    If the third vertex is at any of (±8, ±3) or (±3, ±8), then there are 7 possible hexagons. There are 8
+    points of this form, contributing 56 hexagons.
+    If the third vertex is at any of (±7, ±2) or (±2, ±7), there are 6 possible hexagons, contributing 48
+    hexagons.
+    If the third vertex is at any of (±4, ±3) or (±3, ±4), there are again 6 possible hexagons, contributing
+    48 more hexagons.
+    If the third vertex is at any of (±3, ±2) or (±2, ±3), then there are again 6 possible hexagons, con-
+    tributing 48 more hexagons.
+    Finally, if the third vertex is at any of (±2, ±1), then there are 2 possible hexagons only, contributing
+    16 hexagons.
+    Adding up, we get our answer of 216 .
+33. [20] (Lucas Numbers) The Lucas numbers are defined by L0 = 2, L1 = 1, and Ln+2 = Ln+1 + Ln
+    for every n ≥ 0. There are N integers 1 ≤ n ≤ 2016 such that Ln contains the digit 1. Estimate N .
+    An estimate of E earns b20 − 2|N − E|c or 0 points, whichever is greater.
+    Proposed by: Evan Chen
+     Answer:       1984
+
+    lucas_ones n = length . filter (elem ’1’) $ take (n + 1) lucas_strs
+      where
+        lucas = 2 : 1 : zipWith (+) lucas (tail lucas)
+        lucas_strs = map show lucas
+
+    main = putStrLn . show $ lucas_ones 2016
+34. [20] (Caos) A cao [sic] has 6 legs, 3 on each side. A walking pattern for the cao is defined as an
+    ordered sequence of raising and lowering each of the legs exactly once (altogether 12 actions), starting
+    and ending with all legs on the ground. The pattern is safe if at any point, he has at least 3 legs on
+    the ground and not all three legs are on the same side. Estimate N , the number of safe patterns.
+                                                     
+    An estimate of E > 0 earns 20 min(N/E, E/N )4 points.
+    Proposed by:
+    Answer:        1416528
+
+    # 1 = on ground, 0 = raised, 2 = back on ground
+    cache = {}
+
+    def pangzi(legs):
+      if legs == (2,2,2,2,2,2): return 1
+      elif legs.count(0) > 3: return 0
+      elif legs[0] + legs[1] + legs[2] == 0: return 0
+      elif legs[3] + legs[4] + legs[5] == 0: return 0
+      elif cache.has_key(legs): return cache[legs]
+
+      cache[legs] = 0
+      for i in xrange(6): # raise a leg
+        if legs[i] == 1:
+          new = list(legs)
+          new[i] = 0
+          cache[legs] += pangzi(tuple(new))
+        elif legs[i] == 0: # lower a leg
+          new = list(legs)
+          new[i] = 2
+          cache[legs] += pangzi(tuple(new))
+      return cache[legs]
+
+    print pangzi((1,1,1,1,1,1))
+
+35. [20] (Maximal Determinant) In a 17 × 17 matrix M , all entries are ±1. The maximum possible
+    value of |det M | is N . Estimate N .
+                                                
+    An estimate of E > 0 earns 20 min(N/E, E/N )2 points.
+    Proposed by: Evan Chen
+    Answer:        327680 · 216
+                                                                                       1
+    This is Hadamard’s maximal determinant problem. There’s an upper bound of n 2 n which empirically
+    seems to give reasonably good estimates, but in fact this is open for general n.
+36. [20] (Self-Isogonal Cubics) Let ABC be a triangle with AB = 2, AC = 3, BC = 4. The isogonal
+    conjugate of a point P , denoted P ∗ , is the point obtained by intersecting the reflection of lines P A,
+    P B, P C across the angle bisectors of ∠A, ∠B, and ∠C, respectively.
+    Given a point Q, let K(Q) denote the unique cubic plane curve which passes through all points P such
+    that line P P ∗ contains Q. Consider:
+     (a) the M’Cay cubic K(O), where O is the circumcenter of 4ABC,
+     (b) the Thomson cubic K(G), where G is the centroid of 4ABC,
+     (c) the Napoleon-Feurerbach cubic K(N ), where N is the nine-point center of 4ABC,
+     (d) the Darboux cubic K(L), where L is the de Longchamps point (the reflection of the orthocenter
+         across point O),
+ (e) the Neuberg cubic K(X30 ), where X30 is the point at infinity along line OG,
+ (f) the nine-point circle of 4ABC,
+(g) the incircle of 4ABC, and
+(h) the circumcircle of 4ABC.
+Estimate   N , the
+                  number of points lying on at least two of these eight curves. An estimate of E earns
+ 20 · 2−|N −E|/6 points.
+
+
+Proposed by: Evan Chen
+Answer:       49
+The first main insight is that all the cubics pass through the points A, B, C, H (orthocenter), O,
+and the incenter and three excenters. Since two cubics intersect in at most nine points, this is all the
+intersections of a cubic with a cubic.
+On the other hand, it is easy to see that among intersections of circles with circles, there are exactly
+3 points; the incircle is tangent to the nine-point circle at the Feurerbach point while being contained
+completely in the circumcircle; on the other hand for this obtuse triangle the nine-point circle and the
+circumcircle intersect exactly twice.
+All computations up until now are exact, so it remains to estimate:
+  • Intersection of the circumcircle with cubics. Each cubic intersects the circumcircle at an even
+    number of points, and moreover we already know that A, B, C are among these, so the number
+    of additional intersections contributed is either 1 or 3; it is the former only for the Neuberg cubic
+    which has a “loop”. Hence the actual answer in this case is 1 + 3 + 3 + 3 + 3 = 13 (but an estimate
+    of 3 · 5 = 15 is very reasonable).
+  • Intersection of the incircle with cubics. Since ∠A is large the incircle is small, but on the other
+    hand we know I lies on each cubic. Hence it’s very likely that each cubic intersects the incircle
+    twice (once “coming in” and once “coming out”). This is the case, giving 2 · 5 = 10 new points.
+  • Intersection of the nine-point with cubics. We guess this is close to the 10 points of the incircle,
+    as we know the nine-point circle and the incircle are tangent to each other. In fact, the exact
+    count is 14 points; just two additional branches appear.
+In total, N = 9 + 3 + 13 + 10 + 14 = 49.
+     IA
+                                           H
+
+
+                                                                           IB
+
+
+                                           A
+                        IC
+                                                  N
+
+                                              I
+
+
+                             B           Fe                           C
+
+
+                                                      O
+

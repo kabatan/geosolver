@@ -1,0 +1,837 @@
+                                HMMT February 2022
+                                         February 19, 2022
+                                           Guts Round
+1. [5] A regular 2022-gon has perimeter 6.28. To the nearest positive integer, compute the area of the
+   2022-gon.
+  Proposed by: Akash Das
+  Answer:       3
+  Solution: Note that the area of a regular 2022-gon is approximately equal to the area of its circum-
+  circle, and the perimeter of a regular 2022-gon approximately equals the perimeter of its circumcircle.
+  Since the perimeter is 6.28 ≈ 2π, the circumradius R ≈ 1, so the area of the 2022-gon is approximately
+  R2 π ≈ π ≈ 3.
+
+
+
+2. [5] Three distinct vertices are randomly selected among the five vertices of a regular pentagon. Let p
+   be the probability that the triangle formed by the chosen vertices is acute. Compute 10p.
+  Proposed by: Sheldon Kieren Tan
+  Answer:       5
+  Solution: The only way for the three vertices to form an acute triangle is if they consist of two
+                                                                                                   ad-
+  jacent vertices and the vertex opposite their side. Since there are 5 ways to choose this and 53 = 10
+                                                   5
+  ways to choose the three vertices, we have p = 10  = 12 .
+
+
+
+3. [5] Herbert rolls 6 fair standard dice and computes the product of all of his rolls. If the probability
+   that the product is prime can be expressed as ab for relatively prime positive integers a and b, compute
+   100a + b.
+  Proposed by: Akash Das
+  Answer:       2692
+  Solution: The only way this can happen is if 5 of the dice roll 1 and the last die rolls a prime number
+  (2, 3, or 5). There are 6 ways to choose the die that rolls the prime, and 3 ways to choose the prime.
+  Thus, the probability is 3·6    1
+                            66 = 2592 .
+
+
+
+
+4. [5] For a real number x, let [x] be x rounded to the nearest integer and ⟨x⟩ be x rounded to the nearest
+   tenth. Real numbers a and b satisfy ⟨a⟩ + [b] = 98.6 and [a] + ⟨b⟩ = 99.3. Compute the minimum
+   possible value of [10(a + b)].
+  (Here, any number equally between two integers or tenths of integers, respectively, is rounded up. For
+  example, [−4.5] = −4 and ⟨4.35⟩ = 4.4.)
+  Proposed by: Sean Li
+  Answer:       988
+  Solution: Without loss of generality, let a and b have the same integer part or integer parts that differ
+  by at most 1, as we can always repeatedly subtract 1 from the larger number and add 1 to the smaller
+  to get another solution.
+  Next, we note that the decimal part of a must round to .6 and the decimal part of b must round to .3.
+  We note that (a, b) = (49.55, 49.25) is a solution and is clearly minimal in fractional parts, giving us
+  [10(a + b)] = 988.
+5. [6] Compute the remainder when
+
+                        10002000400080016003200640128025605121024204840968192
+
+   is divided by 100020004000800160032.
+   Proposed by: Ankit Bisain
+   Answer:      40968192
+   Solution: Let Xk denote 2k except with leading zeroes added to make it four digits long. Let abc · · ·
+   denote the number obtained upon concatenating a, b, c, . . .. We have
+
+                                       26 · X0 X1 . . . X5 = X6 X7 . . . X11 .
+
+   Therefore, X0 X1 . . . X5 divides X0 X1 . . . X11 , meaning the remainder when X0 X1 . . . X13 is divided by
+   X0 X1 . . . X5 is
+                                                 X12 X13 = 40968192.
+
+
+
+
+6. [6] Regular polygons ICAO, V EN T I, and ALBEDO lie on a plane. Given that IN = 1, compute
+   the number of possible values of ON .
+   Proposed by: Sean Li
+   Answer:      2
+   Solution: First, place ALBEDO. We then note that ICAO has two orientations, both of which have
+   I on EO. Next, we note that for any given orientation of ICAO, the two orientations of V EN T I have
+   N symmetric to line EI. Thus, for any given orientation of ICAO, we have that ON is the same in
+   both orientations of V EN T I, which gives a total of 2 possible values for ON .
+
+
+
+7. [6] A jar contains 8 red balls and 2 blue balls. Every minute, a ball is randomly removed. The
+   probability that there exists a time during this process where there are more blue balls than red balls
+   in the jar can be expressed as ab for relatively prime integers a and b. Compute 100a + b.
+   Proposed by: Brian Liu
+   Answer:      209
+   Solution: One can show that the condition in the problem is satisfied if and only the last ball drown
+   is blue (which happens with probability 51 ), or the blue balls are drawn second-to-last and third-to-last
+                                     1       1
+   (which happens with probability 10    = 45  ). Thus the total probability is 10    2
+                                                                                 45 = 9 .
+                                    (2)
+
+
+8. [6] For any positive integer n, let τ (n) denote the number of positive divisors of n. If n is a positive
+                          2
+                                           τ (n7 )
+   integer such that ττ(n   )
+                        (n) = 3, compute τ (n) .
+   Proposed by: Sean Li
+   Answer:      29
+   Solution: Let the prime factorization of n be n = pe11 pe22 · · · pekk . Then, the problem condition is
+   equivalent to
+                                             k
+                                            Y  2ei + 1
+                                                       = 3.
+                                                e +1
+                                            i=1 i
+    Note that since 2x+1                            3
+                     x+1 ≥ 1.5 for x ≥ 1, and 1.5 > 3, we have k ≤ 2. Also, k = 1 implies 2e1 + 1 =
+    3(e1 + 1), which implies e1 is negative. Thus, we must have k = 2. Then, our equation becomes
+
+                                       (2e1 + 1)(2e2 + 1) = 3(e1 + 1)(e2 + 1),
+
+    which simplifies to (e1 − 1)(e2 − 1) = 3. This gives us e1 = 2 and e2 = 4. Thus, we have n = p2 q 4 for
+                            7
+                                τ (p14 q 28 )
+    primes p and q, so ττ(n   )               15·29
+                          (n) = τ (p2 q 4 ) = 3·5 = 29.
+
+
+
+
+ 9. [7] An E-shape is a geometric figure in the two-dimensional plane consisting of three rays pointing in
+    the same direction, along with a line segment such that
+       • the endpoints of the rays all lie on the segment,
+       • the segment is perpendicular to all three rays,
+       • both endpoints of the segment are endpoints of rays.
+    Suppose two E-shapes intersect each other N times in the plane for some positive integer N . Compute
+    the maximum possible value of N .
+    Proposed by: Daniel Xianzhe Hong
+    Answer:       11
+    Solution: Define a C-shape to be an E-shape without the middle ray. Then, an E-shape consists of
+    a ray and a C-shape. Two C-shapes can intersect at most 6 times, a C-shape and a ray can intersect
+    at most 2 times, and two rays can intersect at most 1 time. Thus, the number of intersections of two
+    E-shapes is at most 6 + 2 + 2 + 1 = 11.
+
+
+
+10. [7] A positive integer n is loose it has six positive divisors and satisfies the property that any two
+    positive divisors a < b of n satisfy b ≥ 2a. Compute the sum of all loose positive integers less than 100.
+    Proposed by: Daniel Zhu
+    Answer:       512
+    Solution: Note that the condition in the problem implies that for any divisor d of n, if d is odd then
+    all other divisors of n cannot lie in the interval [⌈ d2 ⌉, 2d − 1]. If d is even, then all other divisors cannot
+    lie in the interval [ d2 + 1, 2d − 1].
+    We first find that n must be of the form p5 or p2 q for primes p and q. If n = p5 , the only solution is
+    when p = 2 and n = 32.
+    Otherwise, n = p2 q. Since 100 > n > p2 , so p ≤ 7. Now we can do casework on p. When p = 2,
+    we find that q cannot lie in [2, 3] or [3, 7], so we must have q ≥ 11. All such values for q work, giving
+    solutions n = 44, 52, 68, 76, 92. When p = 3, we find that q cannot lie in [2, 5] or [5, 17], so we must
+    have that q ≥ 19, so there are no solutions in this case. When p = 5 or p = 7, the only solution occurs
+    when q = 2 (since otherwise n > 100). This gives us the solutions n = 50 and n = 98. Adding these
+    values of n gives 512.
+
+
+
+11. [7] A regular dodecagon P1 P2 · · · P12 is inscribed in a unit circle with center O. Let X be the intersection
+    of P1 P5 and OP2 , and let Y be the intersection of P1 P5 and OP4 . Let A be the area of the region
+    bounded by XY , XP2 , Y P4 , and minor arc P[      2 P4 . Compute ⌊120A⌋.
+
+    Proposed by: Gabriel Wu
+    Answer:       45
+    Solution: The area of sector OP2 P4 is one sixth the area of the circle because its angle is 60◦ .
+    The desired area is just that of the sector subtracted by the area of equilateral triangle OXY .
+    Note that the altitude of this triangle is the distance from O to P1 P5 , which is 21 . Thus, the side
+                              √                              √                                 √
+    length of the triangle is 33 , implying that the area is 123 . Thus, we find that A = π6 − 123 . Thus,
+                     √
+    120A = 20π − 10 3 ≈ 62.8 − 17.3, which has floor 45.
+
+
+
+12. [7] A unit square ABCD and a circle Γ have the following property: if P is a point in the plane not
+    contained in the interior of Γ, then min(∠AP B, ∠BP C, ∠CP D, ∠DP A) ≤ 60◦ . The minimum possible
+    area of Γ can be expressed as aπ  b for relatively prime positive integers a and b. Compute 100a + b.
+    Proposed by: Daniel Zhu
+    Answer:       106
+    Solution: Note that the condition for Γ in the problem is equivalent to the following condition: if
+    min(∠AP B, ∠BP C, ∠CP D, ∠DP A) > 60◦ , then P is contained in the interior of Γ. Let X1 , X2 , X3 ,
+    and X4 be the four points in ABCD such that ABX1 , BCX2 , CDX3 , and DAX4 are all equilat-
+    eral triangles. Now, let Ω1 , Ω2 , Ω3 , and Ω4 be the respective circumcircles of these triangles, and
+    let the centers of these circles be O1 , O2 , O3 , and O4 . Note that the set of points P such that
+    ∠AP B, ∠BP C, ∠CP D, ∠DP A > 60◦ is the intersection of Ω1 , Ω2 , Ω3 , and Ω4 . We want to find
+    the area of the minimum circle containing this intersection.
+    Let Γ1 and Γ2 intersect at B and B ′ . Define C ′ , D′ and A′ similarly. It is not hard to see that the
+    circumcircle of square A′ B ′ C ′ D′ is the desired circle. Now observe that ∠AB ′ D′ = ∠AB ′ D = 60◦ .
+    Similarly, ∠AD′ B ′ = 60◦√, so AB ′ D′ is equilateral. Its height is the distance from A to B ′ D′ , which is
+    √1 , so its side length is  6                                                                  π 6     π
+      2                        3 . This is also the diameter of the desired circle, so its area is 4 · 9 = 6 .
+
+
+
+
+13. [9] Let z1 , z2 , z3 , z4 be√the solutions to the equation x4 +3x3 +3x2 +3x+1 = 0. Then |z1 |+|z2 |+|z3 |+|z4 |
+    can be written as a+bd c , where c is a square-free positive integer, and a, b, d are positive integers with
+    gcd(a, b, d) = 1. Compute 1000a + 100b + 10c + d.
+    Proposed by: Daniel Zhu
+    Answer:       7152
+    Solution: Note that x = 0 is clearly not a solution, so we can divide the equation by x2 to √        get
+     x2 + 2 + x12 +3 x + x1 +1 = 0. Letting y = x+ x1 , we get that y 2 +3y +1 = 0, so y = x+ x1 = −3±2 5 .
+                            
+               √
+    Since −3+2 5 has absolute value less than 2, the associated x are on the unit circle, and thus the two
+                                                                 √
+    solutions for x in this case each have magnitude 1. For −3−2 5 , the roots are negative reals that are
+    reciprocals √
+                of each other. Thus, the sum of their absolute values is the absolute value
+                                                                                          √
+                                                                                             of their
+                                                                                                  √
+                                                                                                       sum,
+    which is 3+2 5 . Thus, the sum of the magnitudes of the four solutions are 1 + 1 + 3+2 5 = 7+2 5 .
+
+
+
+14. [9] The area of the largest√regular hexagon that can fit inside of a rectangle with side lengths 20 and
+    22 can be expressed as a b − c, for positive integers a, b, and c, where b is squarefree. Compute
+    100a + 10b + c.
+    Proposed by: Akash Das
+    Answer:       134610
+    Solution: Let s be the sidelength
+                                   √ of the hexagon. We can view this problem as finding the maximal
+    rectangle of with sides s and s 3 that can fit inside this rectangle. Let ABCD be a rectangle with
+    AB = 20 and BC = 22   √ and let XY ZW be an inscribed rectangle with X on AB and Y on BC with   √
+    XY = s and√Y Z = s 3. Let BX = √     a and BY = b.√ Then, by similar triangles, we have√AX = b 3
+    and CY = a 3. Thus, we have a + b 3 = 20 and a 3 + b = 22. Solving gives us      a = 11 3 − 10 and
+          √                                 √                                   2
+                                                                                   √        √
+    b = 10 3−11, so s2 = a2 +b2 = 884−440 3. Thus, the area of the hexagon is s ·32 3 = 1326 3−1980.
+15. [9] Let N be the number of triples of positive integers (a, b, c) satisfying
+
+                                  a ≤ b ≤ c,         gcd(a, b, c) = 1,          abc = 62020 .
+
+    Compute the remainder when N is divided by 1000.
+    Proposed by: Benjamin Wu
+    Answer:       602
+    Solution: Let n = 2020. If we let a = 2p1 · 3q1 , b = 2p2 · 3q2 , c = 2p3 · 3q3 , then the number of ordered
+    triples (a, b, c) that satisfy the second and third conditions is the number of nonnegative solutions to
+    p1 + p2 + p3 = n and q1 + q2 + q3 = n, where at least one of p1 , p2 , p3 is zero and at least one of q1 , q2 , q3
+    is zero (otherwise, gcd(a, b, c) > 1). By complementary counting, the number is
+                                                        2
+                                                n+2     n−1
+                                                     −          = 9n2 .
+                                                 2       2
+
+    Let ℓ be the number of unordered triples (a, b, c) with a, b, c distinct, and m the number of unordered
+    triples (a, b, c) with two numbers equal. Since it is impossible for a = b = c, we have 9n2 = 6ℓ + 3m.
+    We now count m. Without loss of generality, assume a = b. For the factors of 2, we have two choices:
+    either assign 22020 to c or assign 21010 to both a and b. We have a similar two choices for the factors
+    of 3. Therefore m = 4.
+    Our final answer is
+                               6ℓ + 3m + 3m   9 · 20202 + 12
+              N =m+n=                       =                = 2 + 6 · 10102 ≡ 602              (mod 1000).
+                                     6               6
+
+
+
+
+16. [9] Let ABC be an acute triangle with A-excircle Γ. Let the line through A perpendicular to BC
+    intersect BC at D and intersect
+                                 √ √
+                                    Γ at E and F . Suppose that AD = DE = EF . If the maximum value
+    of sin B can be expressed as a+ c
+                                       b
+                                         for positive integers a, b, and c, compute the minimum possible
+    value of a + b + c.
+    Proposed by: Akash Das
+    Answer:       705
+    Solution: First note that we can assume AB < AC. Suppose Γ is tangent to BC at T . Let AD√=
+    DE = EF = x. Then, by Power of a Point, we have DT 2 = DE · DF = x · 2x = 2x2 =⇒ DT = x 2.
+                                                                                     2
+    Note that CT                                                              √have s = AE ·AF
+              √ = s−b, and since the length of the tangent from A to Γ√is s, we                 6x2 ,
+                                                                                             √ =√
+    so CT = x 6−b. Since BC
+                          √ = BD+DT +T C, we√       have√BD = BC−x 2−(x 6−b) = a+b−x( 2+ 6).
+    Since a+b = 2s−c = 2x 6−c, we have√  BD√  = x(   6−   2)−c. Now, by Pythagorean
+                                                                                 √ Theorem,√ we √
+                                                                                                have
+    c2 = AB 2 = AD2 + BD2 = x2 + [x( 6 − 2) − c]2 . Simplifying gives x2 (9 − 4 3) = xc(2 6 − 2 2).
+    This yields                    √     √        √       √     √       √
+                             x    2 6−2 2        6 2 + 10 6       72 + 600
+                               =        √    =                =               .
+                             c     9−4 3              33              33
+
+
+
+
+17. [11] Compute the number of positive real numbers x that satisfy
+                                                                  16
+                                               3 · 2⌊log2 x⌋ − x         = 2022x13 .
+
+    Proposed by: Daniel Zhu
+    Answer:         9
+    Solution: Let f (x) = 3·2⌊log2 x⌋ −x. Note that for each integer i, if x ∈ [2i , 2i+1 ), then f (x) = 3·2i −x.
+    This is a line segment from (2i , 2i+1 ) to (2i+1 , 2i ), including the first endpoint but not the second.
+    Now consider the function f (x)16 /x13 . This consists of segments of decreasing functions connecting
+    (2i , 23i+16 ) and (2i+1 , 23i−13 ). Note that for each −1 ≤ i ≤ 7, we have that 23i−13 ≤ 210 < 2022 <
+    211 ≤ 23i+16 . This gives us 9 solutions in total.
+
+
+
+18. [11] Compute the number of permutations π of the set {1, 2, . . . , 10} so that for all (not necessarily
+    distinct) m, n ∈ {1, 2, . . . , 10} where m + n is prime, π(m) + π(n) is prime.
+    Proposed by: Sheldon Kieren Tan
+    Answer:         4
+    Solution: Since π sends pairs (m, n) with m + n prime to pairs (m′ , n′ ) with m′ + n′ prime, and there
+    are only finitely many such pairs, we conclude that if m + n is composite, then so is π(m) + π(n).
+    Also note that 2π(1) = π(1) + π(1) is prime because 2 = 1 + 1 is prime. Thus, π(1) = 1. Now, since
+    1 + 2, 1 + 4, 1 + 6, and 1 + 10 are all prime, we know that π(2), π(4), π(6), and π(10) are all even.
+    Additionally, since 8 + 2, 8 + 6, 8 + 6, and 8 + 10 are all composite, it is not hard to see that π(8) must
+    also be even. Therefore π preserves parity.
+    Now, draw a bipartite graph between the odd and even numbers where we have an edge between a
+    and b if and only if a + b composite. We now only need to compute automorphisms of this graph that
+    fix 1. Note that the edges are precisely 1 − 8 − 7 − 2, 3 − 6 − 9, and 4 − 5 − 10. Since 1 is a fixed point
+    of π, we know that π fixes 1, 8, 7, and 2. Additionally, π(6) = 6 and π(5) = 5. We can swap 3 and 9,
+    as well as 4 and 10. Thus, there are 2 · 2 = 4 possible permutations.
+
+
+
+19. [11] In right triangle ABC, a point D is on hypotenuse AC such that BD ⊥ AC. Let ω be a circle
+    with center O, passing through C and D and tangent to line AB at a point other than B. Point X
+    is chosen on BC such that AX ⊥ BO. If AB = 2 and BC = 5, then BX can be expressed as ab for
+    relatively prime positive integers a and b. Compute 100a + b.
+    Proposed by: Akash Das
+    Answer:         8041
+    Solution: Note that since AD · AC = AB 2 , we have the tangency point of ω and AB is B ′ , the
+    reflection of B across A. Let Y be the second intersection of ω and BC. Note that by power of point,
+                                                         2
+    we have BY · BC = BB ′2 = 4AB 2 =⇒ BY = 4AB       BC . Note that AX is the radical axis of ω and the
+    degenerate circle at B, so we have XB 2 = XY · XC, so
+
+                        BX 2 = (BC − BX)(BY − BX) = BX 2 − BX(BC + BY ) + BC · BY.
+
+    This gives us
+                                            BC · BY    4AB 2 · BC    80
+                                    BX =            =              =    .
+                                            BC + BY   4AB 2 + BC 2   41
+
+
+
+
+20. [11] Let π be a uniformly random permutation of the set {1, 2, . . . , 100}. The probability that π 20 (20) =
+    20 and π 21 (21) = 21 can be expressed as ab , where a and b are relatively prime positive integers.
+    Compute 100a + b. (Here, π k means π iterated k times.)
+    Proposed by: Sean Li
+    Answer:         1025
+    Solution: We look at the cycles formed by π. Let ordπ (n) denote the smallest m such that π m (n) = n.
+    In particular, the condition implies that ordπ (20) | 20 and ordπ (21) | 21.
+    Claim 1. 20 and 21 cannot be in the same cycle.
+    Proof. If 20 and 21 were in the same cycle, then x = ordπ (20) = ordπ (21) for some x. Then x > 1
+    since the cycle contains both 20 and 21, but x | 20, x | 21 implies x = 1, a contradiction.
+    Claim 2. The probability that a = ordπ (20), b = ordπ (21) for some fixed a, b such that a + b ≤ 100 is
+       1
+    99·100 .
+    Proof. We can just count these permutations. We first choose a − 1 elements of [100] \ {20, 21} to be
+    in the cycle of 20, then we similarly choose b − 1 to be in the cycle of 21. We then have (a − 1)! ways
+    to reorder within the cycle of 20, (b − 1)! ways to reorder within the cycle of 21, and (100 − a − b)!
+    ways to permute the remaining elements. The total number of ways is just
+
+                                     98!
+                                                      · (a − 1)!(b − 1)!(100 − a − b)! = 98!,
+                       (a − 1)!(b − 1)!(100 − a − b)!
+                                             98!    1
+    so the probability this happens is just 100! = 9900 .
+    Now, since ordπ (20) | 20 and ordπ (21) | 21, we have 6 possible values for ordπ (20) and 4 for ordπ (21),
+                           6·4    2
+    so in total we have a 9900 = 825 probability that the condition is satisfied.
+
+
+
+21. [12] In the Cartesian plane, let A = (0, 0), B = (200, 100), and C = (30, 330). Compute the number
+    of ordered pairs (x, y) of integers so that (x + 12 , y + 12 ) is in the interior of triangle ABC.
+    Proposed by: Ankit Bisain
+    Answer:      31480
+    Solution: We use Pick’s Theorem, which states that in a lattice polygon with I lattice points in its
+    interior and B lattice points on its boundary, the area is I + B/2 − 1. Also, call a point center if it is
+    of the form (x + 12 , y + 21 ) for integers x and y.
+                               following – suppose we draw in the center points, rotate 45◦ degrees about
+    The key observation is the √
+    the origin and scale up by 2. Then, the area of the triangle goes to 2K, and the set of old lattice
+    points and center points becomes a lattice. Hence, we can also apply Pick’s theorem to this new lattice.
+    Let the area of the original triangle be K, let I1 and B1 be the number of interior lattice points and
+    boundary lattice points, respectively. Let Ic and Bc be the number of interior and boundary points
+    that are center points in the original triangle. Finally, let I2 and B2 be the number of interior and
+    boundary points that are either lattice points or center points in the new triangle. By Pick’s Theorem
+    on both lattices,
+                                                        K = I1 + B1 /2 − 1
+                                                   2K = I2 + B2 /2 − 1
+                                                               B1 − B2
+                                           =⇒ (I2 − I1 ) = K −
+                                                                    2
+                                                               Bc
+                                                =⇒ Ic = K −       .
+                                                               2
+    One can compute that the area is 31500. The number of center points that lie on on AB, BC, and
+    CA are 0, 10, and 30, respectively. Thus, the final answer is 31500 − 0+10+30
+                                                                             2    = 31480.
+
+
+
+22. [12] The function f (x) is of the form ax2 + bx + c for some integers a, b, and c. Given that
+
+      {f (177 883), f (348 710), f (796 921), f (858 522)}
+                               = {1 324 754 875 645, 1 782 225 466 694, 1 984 194 627 862, 4 388 794 883 485},
+    compute a.
+    Proposed by: Daniel Zhu
+    Answer:      23
+    Solution: We first match the outputs to the inputs. To start, we observe that since a ≥ 0 (since the
+    answer to the problem is nonnegative), we must either have f (858522) ≈ 4.39 · 1012 or f (177883) ≈
+    4.39 · 1012 . However, since 858522 is relatively close to 796921, the first case is unrealistic, meaning
+    that the second case must be true.
+    Now, looking mod 2, we find that f (796921) ≈ 1.32 · 1012 . Additionally, we find that mod 5, f (1) ≡
+    f (3) ≡ 0 (mod 5), so f (x) ≡ a(x−1)(x−3) (mod 5). Modulo 5, we now have {3a, 4a} = {f (0), f (2)} =
+    {2, 4}, so it follows that a ≡ 3 (mod 5), f (349710) ≈ 1.78 · 1012 and f (858522) ≈ 1.98 · 1012 .
+    There are several ways to finish from here. One (somewhat tedious) method is to use mod 9, which
+    tells us that f (7) = 7, f (5) = 8, f (3) = 4, which tells you that a ≡ 5 (mod 9) (take a finite difference).
+    This tells you that a ≡ 23 (mod 45), and a ≥ 68 can be ruled out for being too large.
+    Another method is to work with the numbers themselves. One way to do this is to note that for
+    quadratic polynomials,                   
+                                          x+y     f (y) − f (x)
+                                     f′         =               .
+                                           2          y−x
+    Using this for {177883, 348710} and {796921, 858522}, we find that f ′ (260000) ≈ −1500000 and
+    f ′ (830000) ≈ 1000000. Thus f ′ (which we know must be linear with slope 2a) has slope just less
+    than 50.
+    Either way, we find that a = 23. The actual polynomial is 8529708870514 − 27370172x + 23x2 .
+
+
+
+23. [12] Let ABCD be an isosceles trapezoid such that AB = 17, BC = DA = 25, and CD = 31. Points
+    P and Q are selected on sides AD and BC, respectively, such that AP = CQ and P Q = 25. Suppose
+    that the circle with diameter P Q intersects the sides AB and CD at four points which are vertices of
+    a convex quadrilateral. Compute the area of this quadrilateral.
+    Proposed by: Fedir Yudin
+    Answer:      168
+    Solution:
+    Let the midpoint of P Q be M ; note that M lies on the midline of ABCD. Let B ′ C ′ be a translate of
+    BC (parallel to AB and CD) so that M is the midpoint of B ′ and C ′ . Since M B ′ = M C ′ = 25/2 =
+    M P = M Q, B ′ and C ′ are one of the four intersections of the circle with diameter P Q and the sides
+    AB and CD. We may also define A′ and D′ similarly and get that they are also among the four points.
+    It follows that the desired quadrilateral is B ′ D′ C ′ A′ , which is a rectangle with height equal to the
+    height of ABCD (which is 24), and width equal to 21 (31 − 17) = 7. Thus the area is 24 · 7 = 168.
+
+
+
+24. [12] Let S0 be a unit square in the Cartesian plane with horizontal and vertical sides. For any n > 0,
+    the shape Sn is formed by adjoining 9 copies of Sn−1 in a 3 × 3 grid, and then removing the center
+    copy. For example, S3 is shown below:
+    Let an be the expected value of |x − x′ | + |y − y ′ |, where (x, y) and (x′ , y ′ ) are two points chosen
+    randomly within Sn . There exist relatively prime positive integers a and b such that
+                                                          an       a
+                                                    lim        =     .
+                                                    n→∞ 3n         b
+    Compute 100a + b.
+    Proposed by: Gabriel Wu
+    Answer:       1217
+    Solution: By symmetry, we only need to consider the x-distance, then we can multiply our answer by
+    2. Let this quantity be g(n) = an /2.
+    Divide the nth iteration fractal into three meta-columns of equal width. Then the probability that a
+    random point is in the first, second, and third meta-columns is 83 , 28 , and 38 , respectively. If the two
+    points end up in neighboring meta columns, the expected value of their x-distance is simply the width
+    of a meta-column, which is 3n−1 . If they end up in opposite meta-columns (the left and right ones), it
+    is twice this amount, which is 2 · 3n−1 . Finally, if the two points lie in the same meta-column, which
+    happens with probability ( 83 )2 + ( 82 )2 + ( 38 )2 = 32
+                                                            11
+                                                               , the expected x-distance is just g(n − 1). Thus, we
+    have
+                                                                    
+               n−1     3 2         2 3                 n−1
+                                                                  3 3      11             15 n−1 11
+      g(n) = 3       2· · +2· ·              + 2·3             2· ·      + g(n − 1) =         ·3    + g(n − 1).
+                       8 8         8 8                             8 8      32             16          32
+
+    As n grows, say this is asymptotic to g(n) = 3n C. For some constant C. Then we can write
+           15
+    3n C = 16 · 3n−1 + 11
+                       32 · 3
+                              n−1           6
+                                  C =⇒ C = 17 . Our final answer is twice this, which is 12
+                                                                                         17 .
+
+
+
+
+25. [14] Let ABC be an acute scalene triangle with circumcenter O and centroid G. Given that AGO is
+    a right triangle, AO = 9, and BC = 15, let S be the sum of all possible values for the area of triangle
+    AGO. Compute S 2 .
+    Proposed by: Akash Das
+    Answer:       288
+    Solution: Note that we know that O, H, and G are collinear √   and that HG = 2OG. Thus, let OG = x
+                                                                    11
+    and HG = 2x. We also have sin A = BC    2R =   5
+                                                   6 , so cos A  =  6 . Then, if AG ⊥ OG, then we have
+    x + AG = OG + AG = AO = 81 and HG + AG = 4x2 + AG2 = AH 2 = (2R cos A)2 = √99.
+      2      2       2       2      2                  2       2
+                          √              √                                                √     √
+    Solving gives us x = 6 and AG = 5 3. Thus, the area of AGO in this case is 12 · 6 · 5 3 = 5 2 3 .
+                                                                                                   √
+    If we have AO ⊥ OG, then we have 99 = AH 2 = AO         2
+                                                              + OH 2 = 81 + 9x2 . This gives us x = 2. In
+                                              √           √                                           √
+    this case, we have the area of AGO is 12 · 2 · 9 = 9 2 2 . Adding up the two areas gives us S = 12 2.
+    Squaring gives S 2 = 288.
+26. [14] Diana is playing a card game against a computer. She starts with a deck consisting of a single
+    card labeled 0.9. Each turn, Diana draws a random card from her deck, while the computer generates
+    a card with a random real number drawn uniformly from the interval [0, 1]. If the number on Diana’s
+    card is larger, she keeps her current card and also adds the computer’s card to her deck. Otherwise,
+    the computer takes Diana’s card. After k turns, Diana’s deck is empty. Compute the expected value
+    of k.
+    Proposed by: Gabriel Wu
+    Answer:       100
+    Solution: By linearity of expectation, we can treat the number of turns each card contributes to the
+    total independently. Let f (x) be the expected number of turns a card of value x contributes (we want
+    f (0.9)). If we have a card of value x, we lose it after 1 turn with probability 1 − x. If we don’t lose it
+    after the first turn, which happensR x with probability x, then given this, the expected number of turns
+    this card contributes is f (x) + x1 0 f (t)dt. Thus, we can write the equation
+                                                                Z x
+                                           f (x) = 1 + xf (x) +     f (t)dt.
+                                                                      0
+
+    Differentiating both sides gives us
+                                                                           f ′ (x)    2
+                               f ′ (x) = xf ′ (x) + f (x) + f (x) =⇒               =     .
+                                                                           f (x)     1−x
+                                                                                    C
+                                                                    e
+    Integrating gives us ln f (x) = −2 ln(1 − x) + C =⇒ f (x) = (1−x) 2 . Since f (0) = 1, we know that
+                              −2                                 −2
+    C = 0, so f (x) = (1 − x) . Thus, we have f (0.9) = (1 − 0.9) = 100.
+
+
+
+27. [14] In three-dimensional space, let S be the region of points (x, y, z) satisfying −1 ≤ z ≤ 1. Let
+    S1 , S2 , . . . , S2022 be 2022 independent random rotations of S about the origin (0, 0, 0). The expected
+    volume of the region S1 ∩ S2 ∩ · · · ∩ S2022 can be expressed as aπb , for relatively prime positive integers
+    a and b. Compute 100a + b.
+    Proposed by: Daniel Zhu
+    Answer:       271619
+    Solution: Consider a point P of distance r from the origin. The distance from the origin of a random
+    projection of P onto a line is uniform from 0 to r. Therefore, if r < 1 then the probability of P being
+    in all the sets is 1, while for r ≥ 1 it is r−2022 . Therefore the volume is
+                                        Z ∞                               
+                               4π              2 −2022            1     1       2696π
+                                   + 4π       r r       dr = 4π     +        =        .
+                                3        1                        3 2019         2019
+
+
+
+
+28. [14] Compute the nearest integer to
+                                                     ∞
+                                                     X               π
+                                               100         3n sin3         .
+                                                     n=1
+                                                                     3n
+
+    Proposed by: Akash Das
+    Answer:       236
+    Solution: Note that we have
+                                                                               1
+                           sin 3x = 3 sin x − 4 sin3 x =⇒ sin3 x =               (3 sin x − sin 3x),
+                                                                               4
+    which implies that
+                                               sin3 x
+                                                                                        
+                                                        1          sin x sin 3x
+                                                      =                 −                    .
+                                                 3x     4            x     3x
+    Substituting x = 3πn and simplifying gives us
+                                                                                           π
+                                                                      sin 3πn
+                                                                                                
+                                          n    π3  3π                                sin 3n−1
+                                         3 sin n =                      π       −        π           .
+                                               3    4                   3n             3n−1
+
+    Summing this from n = 1 to N and telescoping gives us
+                                       N
+                                                                             sin 3πN
+                                                                                                    
+                                       X               π         3π                      sin π
+                                             3n sin3           =                 π     −                 .
+                                       n=1
+                                                          3n        4           3N
+                                                                                             π
+
+    Taking N → ∞ gives us an answer of
+                                                                  3π
+                                                          100 ·      ≈ 236.
+                                                                   4
+
+
+
+
+29. [16] Let a ̸= b be positive real numbers and m, n be positive integers. An m+n-gon P has the property
+    that m sides have length a and n sides have length b. Further suppose that P can be inscribed in a
+    circle of radius a + b. Compute the number of ordered pairs (m, n), with m, n ≤ 100, for which such a
+    polygon P exists for some distinct values of a and b.
+    Proposed by: Daniel Zhu
+    Answer:        940
+                           a
+    Solution: Letting x = a+b , we have to solve
+
+                                                           x            1−x
+                                              m arcsin       + n arcsin     = π.
+                                                           2             2
+    This is convex in x, so if it is to have a solution, we must find that the LHS exceeds π at one of the
+    endpoints. Thus max(m, n) ≥ 7. If min(m, n) ≤ 5 we can find a solution by by the intermediate value
+    theorem. Also if min(m, n) ≥ 7 then
+                                              x            1−x
+                                   m arcsin     + n arcsin     ≥ 14 arcsin(1/4) > π.
+                                              2             2
+                                 π
+    The inequality arcsin(1/4) > 14 can be verified by noting that
+
+                                                          π    π    3.5  1
+                                                    sin      <    <     = .
+                                                          14   14   14   4
+
+    The final case is when min(m, n) = 6. We claim that this doesn’t actually work. If we assume that
+    n = 6, we may compute the derivative at 0 to be
+                                                         √
+                                       m        1    m − 48
+                                          −6·  √   =          > 0,
+                                       2         3      2
+
+    so no solution exists.
+
+
+
+30. [16] Let (x1 , y1 ), . . . , (xk , yk ) be the distinct real solutions to the equation
+
+                                       (x2 + y 2 )6 = (x2 − y 2 )4 = (2x3 − 6xy 2 )3 .
+         Pk
+    Then i=1 (xi +yi ) can be expressed as ab , where a and b are relatively prime positive integers. Compute
+    100a + b.
+    Proposed by: Akash Das
+    Answer:       516
+    Solution: Using polar coordinates, we can transform the problem to finding the intersections between
+    r = cos 2θ and r = 2 cos 3θ. Drawing this out gives us a four-leaf clover and a large 3-leaf clover, which
+    intersect at 7 points (one point being the origin). Note that since this graph is symmetric about the x-
+    axis, we are only interested in finding the x-coordinates, which is r cos θ = cos 2θ cos θ = 2 cos3 θ −cos θ.
+    Now note that all points of intersection satisfy
+
+                            cos 2θ = 2 cos 3θ ⇐⇒ 8 cos3 θ − 2 cos2 θ − 6 cos θ + 1 = 0.
+
+    Now, we want to compute the sum of 2 cos3 θ − cos θ over all values of cos θ that satisfy thePabove cubic.
+    In other words, if the solutions for cos θ to the above cubic are a, b, and c, we want 2 cyc 2a3 − a,
+    since each value for cos θ generates two solutions (symmetric about the x-axis).
+    This is                                X                   X           1
+                                                  4a3 − 2a =       a2 + a − ,
+                                            cyc                cyc
+                                                                           2
+
+    where we have used the fact that a3 = a2 + 3a − 21 . By Vieta’s formulas, a + b + c = 41 , while
+                                                           2
+                                                           1      3  25
+                                         a2 + b2 + c2 =        +2· =    .
+                                                           4      4  16
+                              5
+    Thus the final answer is 16 .
+
+
+
+31. [16] For a point P = (x, y) in the Cartesian plane, let f (P ) = (x2 − y 2 , 2xy − y 2 ). If S is the set of all
+    P so that the √sequence P, f (P ), f (f (P )), f (f (f (P ))), . . . approaches (0, 0), then the area of S can be
+    expressed as π r for some positive real number r. Compute ⌊100r⌋.
+    Proposed by: Daniel Zhu
+    Answer:       133
+    Solution: For a point P = (x, y), let z(P ) = x + yω, where ω is a nontrivial third root of unity. Then
+
+       z(f (P )) = (x2 − y 2 ) + (2xy − y 2 )ω = x2 + 2xyω + y 2 (−1 − ω)
+                                                                       = x2 + 2xyω + y 2 ω 2 = (x + yω)2 = z(P )2 .
+                                                                                                         n
+    Applying this recursively gives us z(f n (P )) = z(f n−1 (P ))2 = z(f n−2 (P ))4 = · · · = z(P )2 . Thus the
+    condition f n (P ) → (0, 0) is equivalent to |z(P )| < 1. The region
+                                                                  √
+                                                                         of such points is the preimage of the
+                                                               1    3
+    unit disk (area π) upon the “shear” sending (0, 1) to (− 2 , 2 ). This shear multiplies areas by a factor
+       √                                      q
+    of 23 , so the original area was √2π
+                                        3
+                                          = π    4
+                                                 3.
+
+
+
+
+32. [16] An ant starts at the point (0, 0) in the Cartesian plane. In the first minute, the ant faces towards
+    (1, 0) and walks one unit. Each subsequent minute, the ant chooses an angle θ uniformly at random
+    in the interval [−90◦ , 90◦ ], and then turns an angle of θ clockwise (negative values of θ correspond to
+    counterclockwise rotations). Then, the ant walks one unit. After n minutes, the ant’s distance from
+    (0, 0) is dn . Let the expected value of d2n be an . Compute the closest integer to
+                                                                an
+                                                       10 lim      .
+                                                          n→∞   n
+    Proposed by: Carl Schildkraut
+    Answer:      45
+    Solution: Let αk be a random variable that represents the turn made after step k, choosing αk
+    uniformly at random on the complex plane among the arc of the unit circle containing 1 from −i to i.
+    It is well known that E[αk ] = π2 . We have that
+                                                                              j−1
+                                                   n X
+                                                     n
+                                                                 " i−1                     #
+                                                   X               Y          Y
+                                          an =               E           αk         αk−1       .
+                                                   i=1 j=1        k=1         k=1
+
+    Separating the sum based on |i − j|,
+                                         n−1                                         n−1               t
+                                         X                                           X                 2
+                            an = n + 2         (n − t)E [α1 · · · αt ] = n + 2              (n − t)        .
+                                         t=1                                          t=1
+                                                                                                       π
+
+    Since terms with large t get very small, we can write
+                             ∞        t       ∞              t       ∞  t
+             an             X      t    2        X            t    2        X   2
+         lim    = lim 1 + 2     1−          =1+2      lim 1 −          =1+2         .
+        n→∞ n    n→∞               n    π            n→∞      n    π            π
+                            t=1                  t=1                        t=1
+
+    This gives that
+                                                                 π+2
+                                                          x=         .
+                                                                 π−2
+    To estimate this quantity we use the approximation π ≈ 22/7, which gives us
+                                                          22 + 14
+                                                     x≈           = 4.5.
+                                                          22 − 14
+
+
+
+
+33. [20] In last year’s HMMT Spring competition, 557 students submitted at least one answer to each of
+    the three individual tests. Let S be the set of these students, and let P be the set containing the 30
+    problems on the individual tests. Estimate A, the number of subsets R ⊆ P for which some student in
+    S answered the questions in R correctly but no others. An estimate of E earns max(0, ⌊20 − 23 |A − E|⌋)
+    points.
+    Proposed by: Daniel Zhu
+    Answer:      450
+
+
+
+
+34. [20] Estimate A, the number of unordered triples of integers (a, b, c) so that there exists a nondegenerate
+    triangle with side lengths a, b, and c fitting inside a 100 × 100 square. An estimate of E earns
+    max(0, ⌊20 − |A − E|/1000⌋) points.
+    Proposed by: Daniel Zhu
+    Answer:      194162
+    Solution: Let’s first count the number of such triangles with perimeter equal to p. By Stars and Bars,
+                     2
+    there are p2 ≈ p2 ordered triples of positive integers that sum to p. Additionally, note that only about
+                
+                                                                                      2
+    a quarter of them satisfy the triangle inequality, we have only p8 possible triples. Dividing by 3! gives
+                        2
+    us approximately p48 nondegenerate triangles with perimeter p. Summing this from p = 1 to n gives
+                      n3
+    us approximately 144 triangles with perimeter at most n.
+    Now, note that there are two “extremes” for our triangles. One extreme√ is a triangle that is very close
+    to a line. In that case, we have that the maximum perimeter is 200 2 ≈ 283. In the other extreme,
+    we have a triangle that is very close to an equilateral triangle, in which case we have the maximum
+    perimeter is 3 · cos100
+                         15◦ ≈ 311. Thus, as a compromise between these extremes, we can plug in n = 300
+                       3003
+    to get a value of 144 = 187500, which would have earned 13 points.
+
+
+
+
+35. [20] A random permutation of {1, 2, . . . , 100} is given. It is then sorted to obtain the sequence
+    (1, 2, . . . , 100) as follows: at each step, two of the numbers which are not in their correct positions
+    are selected at random, and the two numbers are swapped. If s is the expected number of steps (i.e.
+    swaps) required to obtain the sequence (1, 2, · · · , 100), then estimate A = ⌊s⌋. An estimate of E earns
+    max(0, ⌊20 − 21 |A − E|⌋) points.
+    Proposed by: Sheldon Kieren Tan
+    Answer:       2427
+    Solution: Let f (n) be the expected number of steps if there are n elements out of order. Let’s consider
+    one of these permutations and suppose that a and b are random elements that are out of order. The
+                                                                       1
+    probability that swapping a and b sends a to the proper place is n−1  , and the probability that it sends
+                              1
+    b to the proper place is n−1 . Thus we can approximate
+
+                                                     2              n−3
+                                     f (n) ≈ 1 +        f (n − 1) +     f (n).
+                                                    n−1             n−1
+    (The chance that both get sent to the right place decreases the overall probability that the number of
+    fixed points increases, but also decreases the expected number of moves after the swap. These effects
+    largely cancel out.)
+    As a result, we conclude that
+                                                                     n−1
+                                               f (n) ≈ f (n − 1) +       ,
+                                                                      2
+    and since f (0) = 0 we have f (n) ≈ n(n−1)
+                                             4   . At the beginning, the expected number of elements that
+    are in the right place is 1, so the answer is approximately f (99) ≈ 99·98
+                                                                           4   ≈ 2425. This is good enough
+    for 19 points.
+
+
+
+36. [20] For a cubic polynomial P (x) with complex roots z1 , z2 , z3 , let
+
+                                               max(|z1 − z2 |, |z1 − z3 |, |z2 − z3 |)
+                                    M (P ) =                                           .
+                                               min(|z1 − z2 |, |z1 − z3 |, |z2 − z3 |)
+
+    Over all polynomials P (x) = x3 + ax2 + bx + c, where a, b, c are nonnegative integers at most 100 and
+    P (x) has no repeated roots, the twentieth largest possible value of M (P ) is m. Estimate A = ⌊m⌋.
+    An estimate of E earns max(0, ⌊20 − 20|3 ln(A/E)|1/2 ⌋) points.
+    Proposed by: Daniel Zhu
+    Answer:       8097
+    Solution: Consider fixing a and b. Then, we know that P ′ (x) = 3x2 + 2ax + b, which has a root at
+    approximately r ≈ −b/2a, which is rather small compared to 100. Then P (r) ≈ −b2 /4a. Assuming
+    that this is greater than about −100, then the value of c that produces the roots that are closest
+    together is the closest integer to −P (r) (the chance when this creates a double root is pretty rare. Let
+    −P (r) = c + s, so that we can now assume that s is uniformly distributed in (−1/2, 1/2). One can
+                                                         p
+show that the difference between these roots is about 2 |s|/a. p Since these roots are rather small, by
+Vieta’s formulas the other root is near −a, so M (P ) is about 12 a3 /|s|.
+It’s clear from this discussion that a needs to be reasonably large for M (P ) to be large. Thus the
+condition P (r) > −100 is satisfied close to all the time—we will henceforth ignore it.
+Set some L and let’s consider the expected number of P so that M (P ) > L. Then, for a given a, b,
+we need |s| < a3 /(2L)2 . Summing over all a and b, we find the probability is 2 · 100 · 1004 /4 · 1/(2L)2 .
+Setting this equal to 20 gives us
+                                            1010
+                                     L2 =        =⇒ L ≈ 7900.
+                                            160
+This is good enough for 14 points.
+

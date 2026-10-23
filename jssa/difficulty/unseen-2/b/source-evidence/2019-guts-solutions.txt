@@ -1,0 +1,1005 @@
+                                 HMMT February 2019
+                                           February 16, 2019
+                                             Guts Round
+1. [3] Find the sum of all real solutions to x2 + cos x = 2019.
+   Proposed by: Evan Chen
+   Answer:       0
+   The left-hand side is an even function, hence for each x that solves the equation, −x will also be a
+   solution. Pairing the solutions up in this way, we get that the sum must be 0.
+2. [3] There are 100 people in a room with ages 1, 2, . . . , 100. A pair of people is called cute if each of
+   them is at least seven years older than half the age of the other person in the pair. At most how many
+   pairwise disjoint cute pairs can be formed in this room?
+   Proposed by: Yuan Yao
+   Answer:       43
+   For a cute pair (a, b) we would have
+
+                                                  b         a
+                                             a≥     + 7, b ≥ + 7.
+                                                  2         2
+   Solving the system, we get that a and b must both be at least 14. However 14 could only be paired
+   with itself or a smaller number; therefore, only people with age 15 or above can be paired with someone
+   of different age. Pairing consecutive numbers (15, 16), (17, 18), . . . , (99, 100) works, giving 100−14
+                                                                                                        2   = 43
+   pairs.
+3. [3] Let S(x) denote the sum of the digits of a positive integer x. Find the maximum possible value of
+   S(x + 2019) − S(x).
+   Proposed by: Alec Sun
+   Answer:       12
+   We note that S(a + b) ≤ S(a) + S(b) for all positive a and b, since carrying over will only decrease the
+   sum of digits. (A bit more rigorously, one can show that S(x + a · 10b ) − S(x) ≤ a for 0 ≤ a ≤ 9.)
+   Hence we have S(x + 2019) − S(x) ≤ S(2019) = 12, and equality can be achieved with x = 100000 for
+   example.
+4. [3] Tessa has a figure created by adding a semicircle of radius 1 on each side of an equilateral triangle
+   with side length 2, with semicircles oriented outwards. She then marks two points on the boundary of
+   the figure. What is the greatest possible distance between the two points?
+   Proposed by: Yuan Yao
+   Answer:       3
+   Note that both points must be in different semicircles to reach the maximum distance. Let these points
+   be M and N , and O1 and O2 be the centers of the two semicircles where they lie respectively. Then
+
+                                          M N ≤ M O1 + O1 O2 + O2 N.
+
+   Note that the the right side will always be equal to 3 (M O1 = O2 N = 1 from the radius condition,
+   and O1 O2 = 1 from being a midline of the equliateral triangle), hence M N can be at most 3. Finally,
+   if the four points are collinear (when M and N are defined as the intersection of line O1 O2 with the
+   two semicircles), then equality will hold. Therefore, the greatest possible distance between M and N
+   is 3.
+5. [4] Call a positive integer n weird if n does not divide (n−2)!. Determine the number of weird numbers
+   between 2 and 100 inclusive.
+   Proposed by: Yuan Yao
+   Answer:       26
+   We claim that all the weird numbers are all the prime numbers and 4. Since no numbers between 1
+   and p − 2 divide prime p, (p − 2)! will not be divisible by p. We also have 2! = 2 not being a multiple
+   of 4.
+   Now we show that all other numbers are not weird. If n = pq where p 6= q and p, q ≥ 2, then since
+   p and q both appear in 1, 2, . . . , n − 2 and are distinct, we have pq | (n − 2)!. This leaves the only
+   case of n = p2 for prime p ≥ 3. In this case, we can note that p and 2p are both less than p2 − 2, so
+   2p2 | (n − 2)! and we are similarly done.
+   Since there are 25 prime numbers not exceeding 100, there are 25 + 1 = 26 weird numbers.
+6. [4] The pairwise products ab, bc, cd, and da of positive integers a, b, c, and d are 64, 88, 120, and 165 in
+   some order. Find a + b + c + d.
+   Proposed by: Anders Olsen
+   Answer:       42
+   The sum ab + bc + cd + da = (a + c)(b + d) = 437 = 19 · 23, so {a + c, b + d} = {19, 23} as having either
+   pair sum to 1 is impossible. Then the sum of all 4 is 19 + 23 = 42. (In fact, it is not difficult to see that
+   the only possible solutions are (a, b, c, d) = (8, 8, 11, 15) or its cyclic permutations and reflections.)
+
+7. [4] For any real number α, define
+                                                    
+                                                    +1 if α > 0,
+                                                    
+                                           sign(α) = 0   if α = 0,
+                                                    
+                                                      −1 if α < 0.
+                                                    
+
+   How many triples (x, y, z) ∈ R3 satisfy the following system of equations
+
+                                         x = 2018 − 2019 · sign(y + z),
+                                         y = 2018 − 2019 · sign(z + x),
+                                         z = 2018 − 2019 · sign(x + y)?
+
+   Proposed by: Pakawut Jiradilok
+   Answer:       3
+   Since sign(x + y) can take one of 3 values, z can be one of 3 values: 4037, 2018, or −1. The same
+   is true of x and y. However, this shows that x + y cannot be 0, so z can only be 4037 or −1. The
+   same is true of x and y. Now note that, if any two of x, y, z are −1, then the third one must be 4037.
+   Furthermore, if any one of x, y, z is 4037, then the other two must be −1. Thus, the only possibility
+   is to have exactly two of x, y, z be −1 and the third one be 4037. This means that the only remaining
+   triples are (−1, −1, 4037) and its permutations. These all work, so there are exactly 3 ordered triples.
+8. [4] A regular hexagon P ROF IT has area 1. Every minute, greedy George places the largest possible
+   equilateral triangle that does not overlap with other already-placed triangles in the hexagon, with ties
+   broken arbitrarily. How many triangles would George need to cover at least 90% of the hexagon’s area?
+   Proposed by: Yuan Yao
+   Answer:       46
+   It’s not difficult to see that the first triangle must connect three non-adjacent vertices (e.g. P OI),
+   which covers area 21 , and leaves three 30-30-120 triangles of area 16 each. Then, the next three triangles
+                                                                                                     1
+   cover 31 of the respective small triangle they are in, and leave six 30-30-120 triangles of area 18  each.
+    This process continues, doubling the number of 30-30-120 triangles each round and the area of each
+    triangle is divided by 3 each round. After 1 + 3 + 6 + 12 + 24 = 46 triangles, the remaining area is
+    3·24    48      8                                                        1
+    6·34 = 486 = 81 < 0.1, and the last triangle removed triangle has area 486 , so this is the minimum
+    number necessary.
+ 9. [5] Define P = {S, T} and let P be the set of all proper subsets of P . (A proper subset is a subset that
+    is not the set itself.) How many ordered pairs (S, T ) of proper subsets of P are there such that
+     (a) S is not a proper subset of T and T is not a proper subset of S; and
+     (b) for any sets S ∈ S and T ∈ T , S is not a proper subset of T and T is not a proper subset of S?
+    Proposed by: Yuan Yao
+    Answer:         7
+    For ease of notation, we let 0 = ∅, 1 = {S}, 2 = {T}. Then both S and T are proper subsets of
+    {0, 1, 2}. We consider the following cases:
+    Case 1. If S = ∅, then S is a proper subset of anyset except the empty set, so we must have T = ∅.
+    Case 2. If S = {0}, then T cannot be empty, nor can it contain either 1 or 2, so we must have
+    T = {0}. This also implies that if S contains another element, then there would be no choice of T
+    because {0} would be a proper subset.
+    Case 3. If S = {1}, then T cannot contain 0, and cannot contain both 1 and 2 (or it becomes a proper
+    superset of S), so it can only be {1} or {2}, and both work. The similar apply when S = {2}.
+    Case 4. If S = {1, 2}, then since T cannot contain 0, it must contain both 1 and 2 (or it becomes a
+    proper subset of S), so T = {1, 2}.
+    Hence, all the possibilities are
+
+               (S, T ) = (∅, ∅), ({0}, {0}), ({1}, {1}), ({1}, {2}), ({2}, {1}), ({2}, {2}), ({1, 2}, {1, 2}),
+
+    for 7 possible pairs in total.
+10. [5] Let
+                √     √     √        √   √     √       √    √     √        √     √   √
+      A = (1 + 2 2 + 3 3 + 6 6)(2 + 6 2 + 3 + 3 6)(3 + 2 + 6 3 + 2 6)(6 + 3 2 + 2 3 + 6),
+                √     √     √       √    √     √        √   √     √        √     √   √
+      B = (1 + 3 2 + 2 3 + 6 6)(2 + 2 + 6 3 + 3 6)(3 + 6 2 + 3 + 2 6)(6 + 2 2 + 3 3 + 6).
+    Compute the value of A/B.
+    Proposed by: Yuan Yao
+    Answer:         1
+    Note that
+                         √        √        √        √        √        √        √      √
+              A = ((1 + 2 2)(1 + 3 3))((2 + 3)(1 + 3 2))((3 + 2)(1 + 2 3))((3 + 3)(2 + 2)),
+                         √        √        √        √        √        √        √      √
+              B = ((1 + 3 2)(1 + 2 3))((2 + 2)(1 + 3 3))((3 + 3)(1 + 2 2))((2 + 3)(3 + 2)).
+    It is not difficult to check that they have the exact same set of factors, so A = B and thus the ratio is
+    1.
+11. [5] In the Year 0 of Cambridge there is one squirrel and one rabbit. Both animals multiply in numbers
+    quickly. In particular, if there are m squirrels and n rabbits in Year k, then there will be 2m + 2019
+    squirrels and 4n − 2 rabbits in Year k + 1. What is the first year in which there will be strictly more
+    rabbits than squirrels?
+    Proposed by: Yuan Yao
+    Answer:         13
+    In year k, the number of squirrels is
+
+     2(2(· · · (2 · 1 + 2019) + 2019) + · · · ) + 2019 = 2k + 2019 · (2k−1 + 2k−2 + · · · + 1) = 2020 · 2k − 2019
+
+    and the number of rabbits is
+                                                                                                   4k + 2
+                 4(4(· · · (4 · 1 − 2) − 2) − · · · ) − 2 = 4k − 2 · (4k−1 + 4k−2 + · · · + 1) =          .
+                                                                                                      3
+    For the number of rabbits to exceed that of squirrels, we need
+
+                                      4k + 2 > 6060 · 2k − 6057 ⇔ 2k > 6059.
+
+    Since 213 > 6059 > 212 , k = 13 is the first year for which there are more rabbits than squirrels.
+12. [5] Bob is coloring lattice points in the coordinate plane. Find the number of ways Bob can color five
+    points in {(x, y) | 1 ≤ x, y ≤ 5} blue such that the distance between any two blue points is not an
+    integer.
+    Proposed by: Michael Ren
+     Answer:       80
+    We can see that no two blue points can have the same x or y coordinate. The blue points then must
+    make a permutation of 1, 2, 3, 4, 5 that avoid the pattern of 3-4-5 triangles. It is not hard to use
+    complementary counting to get the answer from here.
+    There are 8 possible pairs of points that are a distance of 5 apart while not being in the same row
+    or column (i.e. a pair that is in the 3-4-5 position). If such a pair of points is included in the choice
+    of five points, then there are 3! = 6 possibilities for the remaining three points, yielding 8 × 6 = 48
+    configurations that have violations. However, we now need to consider overcounting.
+    The only way to have more than one violation in one configuration is to have a corner point and then
+    two points adjacent to the opposite corner, e.g. (1, 1), (4, 5), (5, 4). In each such case, there are exactly
+    2! = 2 possibilities for the other two points, and there are exactly two violations so there are a total of
+    2 × 4 = 8 configurations that are double-counted.
+    Therefore, there are 48 − 8 = 40 permutations that violate the no-integer-condition, leaving 120 − 40 =
+    80 good configurations.
+13. [7] Reimu has 2019 coins C0 , C1 , . . . , C2018 , one of which is fake, though they look identical to each
+    other (so each of them is equally likely to be fake). She has a machine that takes any two coins and
+    picks one that is not fake. If both coins are not fake, the machine picks one uniformly at random. For
+    each i = 1, 2, . . . , 1009, she puts C0 and Ci into the machine once, and machine picks Ci . What is the
+    probability that C0 is fake?
+    Proposed by: Yuan Yao
+                      21009
+     Answer:       21009 +1009
+
+    Let E denote the event that C0 is fake, and let F denote the event that the machine picks Ci over C0 for
+    all i = 1, 2, ...1009. By the definition of conditional probability, P (E|F ) = P P(E∩F      )
+                                                                                            (F ) . Since E implies F,
+                               1
+    P (E∩F ) = P (E) = 2019       . Now we want to compute P (F ). If C0 is fake, F is guaranteed to happen. If Ci
+    is fake for some 1 ≤ i ≤ 1009, then F is impossible. Finally, if Ci is fake for some 1010 ≤ i ≤ 2018, then
+    F occurs with probability 2−1009 , since there is a 21 probability for each machine decision. Therefore,
+                                                        1009
+                1                             −1009                                           21009
+    P (F ) = 2019    · 1 + 1009       1009
+                           2019 · 0 + 2019 · 2      = 22019·2+1009
+                                                              1009 . Therefore, P (E|F ) = 21009 +1009 .
+
+
+14. [7] Let ABC be a triangle where AB = 9, BC = 10, CA = 17. Let Ω be its circumcircle, and let
+    A1 , B1 , C1 be the diametrically opposite points from A, B, C, respectively, on Ω. Find the area of the
+    convex hexagon with the vertices A, B, C, A1 , B1 , C1 .
+    Proposed by: Yuan Yao
+                    1155
+    Answer:          4
+                                                                          2    2   2
+    We first compute the circumradius of ABC: Since cos A = 9 −17       −10
+                                                                    2·9·17     = − 15                     8
+                                                                                     17 , we have sin A = 17 and
+           a      170                                                         1
+    R = 2 sin A =  16 . Moreover, we get that the area of triangle ABC     is 2 bc sin A  =  36.
+    Note that triangle ABC is obtuse, The area of the hexagon is equal to twice the area of triangle ABC
+    (which is really [ABC] + p
+                             [A1 B1 C1 ]) plus the area of rectangle ACA1 C1 . The dimensions of ACA1 C1
+    are AC = 17 and A1 C = (2R)2 − AC 2 = 51                                                      51 1155
+                                                  4 , so the area of the hexagon is 36 · 2 + 17 · 4 = 4 .
+
+15. [7] Five people are at a party. Each pair of them are friends, enemies, or frenemies (which is equivalent
+    to being both friends and enemies). It is known that given any three people A, B, C:
+       • If A and B are friends and B and C are friends, then A and C are friends;
+       • If A and B are enemies and B and C are enemies, then A and C are friends;
+       • If A and B are friends and B and C are enemies, then A and C are enemies.
+    How many possible relationship configurations are there among the five people?
+    Proposed by: Yuan Yao
+    Answer:         17
+    If A and B are frenemies, then regardless of whether another person C is friends or enemies with A,
+    C will have to be frenemies with B and vice versa. Therefore, if there is one pair of frenemies then all
+    of them are frenemies with each other, and there is only one possibility.
+    If there are no frenemies, then one can always separate the five people into two possibly “factions”
+    (one of which may be empty) such that two people are friends if and only if they belong to the same
+    faction. Since the factions are unordered, there are 25 /2 = 16 ways to assign the “alignments” that
+    each gives a unique configuration of relations. So in total there are 16 + 1 = 17 possibilities.
+16. [7] Let R be the set of real numbers. Let f : R → R be a function such that for all real numbers x and
+    y, we have
+                                       f (x2 ) + f (y 2 ) = f (x + y)2 − 2xy.
+                2019
+                 P
+    Let S =              f (n). Determine the number of possible values of S.
+              n=−2019
+    Proposed by: Yuan Yao
+                                    2020
+                                       
+    Answer:         2039191 OR       2     +1
+    Letting y = −x gives
+                                                f (x2 ) + f (x2 ) = f (0)2 + 2x2
+    for all x. When x = 0 the equation above gives f (0) = 0 or f (0) = 2.
+    If f (0) = 2, then f (x) = x + 2 for all nonegative x, so the LHS becomes x2 + y 2 + 4, and RHS becomes
+    x2 + y 2 + 4x + 4y + 4 for all x + y ≥ 0, which cannot be equal to LHS if x + y > 0.
+    If f (0) = 0 then f (x) = x for all nonnegative x. Moreover, letting y = 0 gives
+
+                                                f (x2 ) = f (x)2 ⇒ f (x) = ±x
+
+    for all x. Since negative values are never used as inputs on the LHS and the output on the RHS is
+    always squared, we may conclude that for all negative x, f (x) = x and f (x) = −x are both possible
+    (and the values are independent). Therefore, the value of S can be written as
+                                                                                                     2019
+                                                                                                     X
+              S = f (0) + (f (1) + f (−1)) + (f (2) + f (−2)) + · · · + (f (2019) + f (−2019)) = 2          iδi
+                                                                                                     i=1
+
+    for δ1 , δ2 , . . . , δ2019 ∈ {0, 1}. It is not difficult to see that S2 can take any integer value between 0 and
+    2020·2019
+        2        = 2039190 inclusive, so there are 2039191 possible values of S.
+17. [9] Let ABC be a triangle with AB = 3, BC = 4, and CA = 5. Let A1 , A2 be points on side BC,
+    B1 , B2 be points on side CA, and C1 , C2 be points on side AB. Suppose that there exists a point P
+    such that P A1 A2 , P B1 B2 , and P C1 C2 are congruent equilateral triangles. Find the area of convex
+    hexagon A1 A2 B1 B2 C1 C2 .
+    Proposed by: Michael Ren
+                        √
+                  12+22 3
+    Answer:          15
+
+    Since P is the shared vertex between the three equilateral triangles, we note that P is the incenter
+    of ABC since it is equidistant to all three sides. Since the area is 6 and the semiperimeter is also 6,
+    we can calculate the inradius, i.e. the altitude, as 1, which in turn implies that the side length of the
+    equilateral triangle is √23 . Furthermore, since the incenter is the intersection of angle bisectors, it is
+    easy to see that AB2 = AC1 , BC2 = BA1 , and CA2 = CB1 . Using the fact that the altitudes from
+    P to AB and CB form a square with the sides, we use the side lengths of the equilateral triangle to
+    compute that AB2 = AC1 = 2 − √13 , BA1 = BC2 = 1 − √13 , and CB1 = CA2 = 3 − √13 . We have that
+    the area of the hexagon is therefore
+                                    2                 2              2     !          √
+                        1         1      4 1          1       1        1       3     12 + 22 3
+                 6−         2− √        · +     1− √        +    3− √        ·     =            .
+                        2          3     5 2           3      2         3      5         15
+
+18. [9] 2019 points are chosen independently and uniformly at random on the interval [0, 1]. Tairitsu
+    picks 1000 of them randomly and colors them black, leaving the remaining ones white. Hikari then
+    computes the sum of the positions of the leftmost white point and the rightmost black point. What is
+    the probability that this sum is at most 1?
+    Proposed by: Yuan Yao
+                  1019
+    Answer:       2019
+
+    Note that each point is chosen uniformly and independently from 0 to 1, so we can apply symmetry.
+    Given any coloring, suppose that we flip all the positions of the black points: then the problem becomes
+    computing the probability that the leftmost white point is to the left of the leftmost black point, which
+    is a necessary and sufficient condition for the sum of the original leftmost white point and the original
+    rightmost black point being at most 1. This condition, however, is equivalent to the leftmost point of
+    all 2019 points being white. Since there are 1019 white points and 1000 black points and each point is
+                                                                       1019
+    equally likely to be the leftmost, this happens with probability 2019   .
+19. [9] Complex numbers a, b, c form an equilateral triangle with side length 18 in the complex plane. If
+    |a + b + c| = 36, find |bc + ca + ab|.
+    Proposed by: Henrik Boecken
+    Answer:       432
+    Using basic properties of vectors, we see that the complex number d = a+b+c    3    is the center of the
+    triangle. From the given, |a + b + c| = 36 =⇒ |d| = 12. Then, let a0 = a − d, b0 = b − d, and c0 = c − d.
+    Due to symmetry, |a0 + b0 + c0 | = 0 and |b0 c0 + c0 a0 + a0 b0 | = 0.
+    Finally, we compute
+
+                     |bc + ca + ab| = |(b0 + d)(c0 + d) + (c0 + d)(a0 + d) + (a0 + d)(b0 + d)|
+                                    = |b0 c0 + c0 a0 + a0 b0 + 2d(a0 + b0 + c0 ) + 3d2 |
+                                    = |3d2 | = 3 · 122 = 432.
+
+20. [9] On floor 0 of a weird-looking building, you enter an elevator that only has one button. You press
+    the button twice and end up on floor 1. Thereafter, every time you press the button, you go up by
+    one floor with probability XY , where X is your current floor, and Y is the total number of times you
+    have pressed the button thus far (not including the current one); otherwise, the elevator does nothing.
+   Between the third and the 100th press inclusive, what is the expected number of pairs of consecutive
+   presses that both take you up a floor?
+   Proposed by: Kevin Yang
+                  97
+    Answer:        3
+
+   By induction, we can determine that after n total button presses, your current floor is uniformly
+   distributed from 1 to n − 1: the base case n = 2 is trivial to check, and for the n + 1th press, the
+                                               1
+   probability that you are now on floor i is n−1 (1 − ni ) + n−1
+                                                               1
+                                                                  ( i−1    1
+                                                                     n ) = n for i = 1, 2, . . . , n, finishing the
+   inductive step.
+   Hence, the probability that the (n + 1)-th and (n + 2)-th press both take you up a floor is
+                             n−1                             (n−1)n(2n−1)
+                                                                          + n(n−1)
+                                             Pn−1 2
+                         1 X i i+1             i=1 i + i           6           2    1
+                                  ·      =                 =                       = .
+                       n − 1 i=1 n n + 1   (n − 1)n(n + 1)      (n − 1)n(n + 1)     3
+
+   Since there are 100 − 3 = 97 possible pairs of consecutive presses, the expected value is 97
+                                                                                              3 .
+
+21. [12] A regular hexagon ABCDEF has side length 1 and center O. Parabolas P1 , P2 , . . . , P6 are
+    constructed with common focus O and directrices AB, BC, CD, DE, EF, F A respectively. Let χ be
+    the set of all distinct points on the plane that lie on at least two of the six parabolas. Compute
+                                                    X
+                                                         |OX|.
+                                                     X∈χ
+
+
+   (Recall that the focus is the point and the directrix is the line such that the parabola is the locus of
+   points that are equidistant from the focus and the directrix.)
+   Proposed by: Yuan Yao
+                  √
+   Answer:      35 3
+   Recall the focus and the directrix are such that the parabola is the locus of points equidistant from
+   the focus and the directrix. We will consider pairs of parabolas and find their points of intersections
+   (we label counterclockwise):
+   (1): P1 ∩ P2 , two parabolas with directrices adjacent edges on the hexagon (sharing vertex A). The
+   intersection inside the hexagon can be found by using similar triangles: by symmetry this X must lie
+   on OA and must have that its distance from AB and F A are equal to |OX| = x, which is to say
+                                      √
+                                        3       x         x              √
+                            sin 60◦ =     =           =        =⇒ x = 2 3 − 3.
+                                       2    |OA| − x    1−x
+   By symmetry also, the second intersection point, outside the hexagon, must lie on OD. Furthermore,
+   X must have that its distance AB and F A are equal to |OX|. Then again by similar triangles
+                                   √
+                                ◦    3        x          x              √
+                          sin 60 =     =            =         =⇒ x = 2 3 + 3.
+                                    2     |OA| + x     1+x
+
+   (2): P1 ∩ P3 , two parabolas with directrices edges one apart on the hexagon, say AB and CD. The
+   intersection inside the hexagon is clearly immediately the circumcenter of triangle BOC (equidistance
+   condition), which gives                             √
+                                                         3
+                                                  x=       .
+                                                        3
+   Again by symmetry the X outside the hexagon must   √ lie on the lie through O and the midpoint of EF ;
+   then one can either observe immediately that x = 3 or set up
+                                                   1     x        √
+                                       sin 30◦ =     =    √ =⇒ x = 3
+                                                   2   x+ 3
+                    √
+    where we notice 3 is the distance from O to the intersection of AB with the line through O and the
+    midpoint of BC.
+    (3): P1 ∩ P4 , two parabolas with directrices edges opposite on the hexagon, say AB and DE. Clearly
+    the two intersection points are both inside the hexagon and must lie on CF , which gives
+                                                         √
+                                                           3
+                                                    x=       .
+                                                          2
+
+    These together give that the sum desired is
+                                                              √ !                       √ !
+                            √            √                      3     √                   3     √
+                         6(2 3 − 3) + 6(2 3 + 3) + 6              + 6( 3) + 6               = 35 3.
+                                                               3                         2
+
+22. [12] Determine the number of subsets S of {1, 2, . . . , 1000} that satisfy the following conditions:
+       • S has 19 elements, and
+       • the sum of the elements in any non-empty subset of S is not divisible by 20.
+    Proposed by: Alec Sun
+                 8 · 50
+                       
+    Answer:          19
+
+    First we prove that each subset must consist of elements that have the same residue mod 20. Let a
+    subset consist of elements a1 , . . . , a19 , and consider two lists of partial sums
+
+                                 a1 , a1 + a2 , a1 + a2 + a3 , . . . , a1 + a2 + · · · + a19
+
+                                 a2 , a1 + a2 , a1 + a2 + a3 , . . . , a1 + a2 + · · · + a19 .
+    The residues mod 20 of the partial sums in each list must be pairwise distinct, otherwise subtracting
+    the sum with less terms from the sum with more terms yields a subset whose sum of elements is 0
+    (mod 20). Since the residues must also be nonzero, each list forms a complete nonzero residue class
+    mod 20. Since the latter 18 sums in the two lists are identical, a1 ≡ a2 (mod 20). By symmetric
+    arguments, ai ≡ aj (mod 20) for any i, j.
+    Furthermore this residue 1 ≤ r ≤ 20 must be relatively prime to 20, because if d = gcd(r, 20) > 1
+    then any 20/d elements of the subset will sum to a multiple of 20. Hence there are ϕ(20) = 8 possible
+    residues. Since there are 50 elements in each residue class, the answer is 50
+                                                                               19 . We can see that any
+    such subset whose elements are a relatively prime residue r (mod 20) works because the sum of any
+    1 ≤ k ≤ 19 elements will be kr 6= 0 (mod 20).
+23. [12] Find the smallest positive integer n such that
+                                                   2
+                                              2···
+                                              2
+                                            |2 {z } > ((· · · ((100!)!)! · · · )!)! .
+                                                      |           {z              }
+                                             n 2’s           100 factorials
+
+
+    Proposed by: Zack Chroman
+     Answer:       104
+                 22
+    Note that 22      > 1002 . We claim that a > b2 =⇒ 2a > (b!)2 , for b > 2. This is because
+
+                                             2a > b2b ⇐⇒ a > 2b log2 (b),
+
+    and log2 (b) < b2 /2 for b > 2. Then since bb > b! this bound works. Then
+                                                  2...2
+                                             (22  ) > ((((100!)!)!)! . . . )2
+                                             | {z } |         {z            }
+                                               m 2’s           m−4 factorials
+    for all m ≥ 4 by induction. So n = 104 works. The lower bound follows from the fact that n! > 2n for
+                              2
+    n > 3, and since 100 > 22 , we have
+                                                                       100
+                                                                ...2            ...2
+                                      (((100!)!)!)! . . . ) > 2| 2 {z } > |22{z } .
+                                      |      {z           }
+                                         100 factorials       100 2’s        103 2’s
+
+
+24. [12] Let S be the set of all positive factors of 6000. What is the probability of a random quadruple
+    (a, b, c, d) ∈ S 4 satisfies
+
+                              lcm(gcd(a, b), gcd(c, d)) = gcd(lcm(a, b), lcm(c, d))?
+
+    Proposed by: Yuan Yao
+                   41
+    Answer:       512
+
+    For each prime factor, let the greatest power that divides a, b, c, d be p, q, r, s. WLOG assume that
+    p ≤ q and r ≤ s, and further WLOG assume that p ≤ r. Then we need r = min(q, s). If q = r then
+    we have p ≤ q = r ≤ s, and if r = s then we have p ≤ r = s ≤ q, and in either case the condition
+    reduces to the two “medians” among p, q, r, s are equal. (It is not difficult to see that this condition is
+    also sufficient.)
+    Now we compute the number of quadruples (p, q, r, s) of integers between 0 and n inclusive that satisfy
+    the above condition. If there are three distinct numbers then there are n+1 3   ways to choose the three
+    numbers and 4!/2 = 12 ways to assign them (it must be a 1-2-1 split). If there are two distinct numbers
+    then there are n+1 2   ways to choose the numbers and 4 + 4 = 8 ways to assign them (it must be a 3-1
+    or a 1-3 split). If there is one distinct number then there are n + 1 ways to assign. Together we have
+                          
+         n+1           n+1
+    12           +8            + (n + 1) = 2(n + 1)n(n − 1) + 4(n + 1)n + (n + 1) = (n + 1)(2n(n + 1) + 1)
+           3             2
+    possible quadruples. So if we choose a random quadruple then the probability that it satisfies the
+    condition is (n+1)(2n(n+1)+1)
+                      (n+1)4      = 2n(n+1)+1
+                                      (n+1)3 .
+
+    Since 6000 = 24 · 53 · 31 and the power of different primes are independent, we plug in n = 4, 3, 1 to get
+    the overall probability to be
+                                                41 25 5         41
+                                                     ·   · =       .
+                                               125 64 8        512
+25. [15] A 5 by 5 grid of unit squares is partitioned into 5 pairwise incongruent rectangles with sides lying
+    on the gridlines. Find the maximum possible value of the product of their areas.
+    Proposed by: Yuan Yao
+    Answer:       2304
+    The greatest possible value for the product is 3 · 4 · 4 · 6 · 8 = 2304, achieved when the rectangles are
+    3 × 1, 1 × 4, 2 × 2, 2 × 3, 4 × 2. To see that this is possible, orient these rectangles so that the first
+    number is the horizontal dimension and the second number is the vertical dimension. Then, place the
+    bottom-left corners of these rectangles at (2, 4), (4, 0), (2, 2), (0, 2), (0, 0) respectively on the grid.
+    We will now prove that no larger product can be achieved. Suppose that there is at least one rectangle
+    of area at most 2. Then the product is at most 2·5.754 = 2·33.06252 < 2·1100 = 2200 by AM-GM. Now
+    suppose that there is at least one rectangle of area at least 9. Then the product is at most 9 · 44 = 2304
+    by AM-GM. (Neither of these is tight, since you cannot have non-integer areas, nor can you have four
+    rectangles all of area 4.)
+    Now consider the last possibility that is not covered by any of the above: that there are no rectangles of
+    size at most 2 and no rectangles of area at least 9. There can be at most one rectangle of area 3, 5, 6, 8
+    each, at most two rectangles of area 4, and no rectangles of area 7. The only way to achieve a sum of
+    25 with these constraints is 3, 4, 4, 6, 8, which produces a product of 2304. We have shown through the
+    earlier cases that a larger product cannot be achieved, so this is indeed the maximum.
+26. [15] Let ABC be a triangle with AB = 13, BC = 14, CA = 15. Let IA , IB , IC be the A, B, C excenters
+    of this triangle, and let O be the circumcenter of the triangle. Let γA , γB , γC be the corresponding
+    excircles and ω be the circumcircle. X is one of the intersections between γA and ω. Likewise, Y is an
+    intersection of γB and ω, and Z is an intersection of γC and ω. Compute
+
+                                       cos ∠OXIA + cos ∠OY IB + cos ∠OZIC .
+
+    Proposed by: Andrew Gu
+                     49
+    Answer:        − 65
+                                                                           p
+    Let rA , rB , rC be the exradii. Using OX = R, XIA = rA , OIA =            R(R + 2rA ) (Euler’s theorem for
+    excircles), and the Law of Cosines, we obtain
+
+                                                   R2 + rA
+                                                         2
+                                                           − R(R + 2rA )   rA
+                                  cos ∠OXIA =                            =    − 1.
+                                                           2RrA            2R
+
+    Therefore it suffices to compute rA +r2R
+                                           B +rC
+                                                 − 3. Since
+                                                                        
+                                    1             1         1      1             8abc   abc
+    rA + rB + rC − r = 2K                   +           +     −            = 2K       =     = 4R
+                                −a + b + c a − b + c a + b − c a + b + c        (4K)2   K
+                                                        r
+    where K = [ABC], this desired quantity the same as 2R − 1. For this triangle, r = 4 and R = 65
+                                                                                                8 , so
+                    4          49
+    the answer is 65/4 − 1 = − 65 .
+
+27. [15] Consider the eighth-sphere {(x, y, z) | x, y, z ≥ 0, x2 + y 2 + z 2 = 1}. What is the area of its
+    projection onto the plane x + y + z = 1?
+    Proposed by: Yuan Yao
+                     √
+                    π 3
+    Answer:          4
+
+    Consider the three flat faces of the eighth-ball. Each of these is a quarter-circle of radius 1, so each has
+    area π4 . Furthermore, the projections of these faces cover the desired area without overlap. To find the
+    projection factor one can find the cosine of the angle θ between the planes, which is the same as the
+    angle between their normal vectors. Using the dot product formula for the cosine of the angle between
+                           (1,0,0)·(1,1,1)
+    two vectors, cos θ = |(1,0,0)||(1,1,1)| = √13 . Therefore, each area is multiplied by √13 by the projection,
+                                                       √
+    so the area of the projection is 3 · π4 · √13 = π 4 3 .
+
+28. [15] How many positive integers 2 ≤ a ≤ 101 have the property that there exists a positive integer N
+                                                                     n
+    for which the last two digits in the decimal representation of a2 is the same for all n ≥ N ?
+    Proposed by: Pakawut Jiradilok
+    Answer:        36
+    Solution 1. It suffices to consider the remainder mod 100. We start with the four numbers that have
+    the same last two digits when squared: 0, 1, 25, 76.
+    We can now go backwards, repeatedly solving equations of the form x2 ≡ n (mod 100) where n is a
+    number that already satisfies the condition.
+    0 and 25 together gives all multiples of 5, for 20 numbers in total.
+    1 gives 1, 49, 51, 99, and 49 then gives 7, 43, 57, 93. Similarly 76 gives 24, 26, 74, 76, and 24 then gives
+    18, 32, 68, 82, for 16 numbers in total.
+    Hence there are 20 + 16 = 36 such numbers in total.
+    Solution 2. An equivalent formulation of the problem is to ask for how many elements of Z100 the
+    map x 7→ x2 reaches a fixed point. We may separately solve this modulo 4 and modulo 25.
+    Modulo 4, it is easy to see that all four elements work.
+    Modulo 25, all multiples of 5 will work, of which there are 5. For the remaining 25 elements that are
+    coprime to 5, we may use the existence of a primitive root to equivalently ask for how many elements
+    of Z20 the map y 7→ 2y reaches a fixed point. The only fixed point is 0, so the only valid choices are
+    the multiples of 5 again. There are 5 + 4 = 9 solutions here.
+    Finally, the number of solutions modulo 100 is 4 × 9 = 36.
+29. [20] Yannick picks a number N randomly from the set of positive integers such that the probability
+    that n is selected is 2−n for each positive integer n. He then puts N identical slips of paper numbered
+    1 through N into a hat and gives the hat to Annie. Annie does not know the value of N, but she draws
+    one of the slips uniformly at random and discovers that it is the number 2. What is the expected value
+    of N given Annie’s information?
+    Proposed by: Yuan Yao
+                      1
+     Answer:      2 ln 2−1
+
+    Let S denote the value drawn from the hat. The probability that 2 is picked is n1 if n ≥ 2 and 0 if
+    n = 1. Thus, the total probability X that 2 is picked is
+                                                                ∞
+                                                                X 2−k
+                                               P (S = 2) =                  .
+                                                                       k
+                                                                k=2
+                                                                                           −n
+    By the definition of conditional probability, P (N = n|S = 2) = P (N =n,S=2)
+                                                                       P (S=2)   = 2 X/n if n ≥ 2 and 0 if
+    n = 1. Thus the conditional expectation of N is
+                                 ∞                               ∞                      ∞
+                                 X                               X          2−n /n   1 X −n     1
+                 E[N |S = 2] =         n · P (N = n|S = 2) =           n·          =       2 =    .
+                                 n=1                             n=2
+                                                                              X      X n=2     2X
+                                             P∞        k      1
+    It remains to compute X. Note that         k=0 x       = 1−x for |x| < 1. Integrating both sides with respect
+    to x yields
+                                             ∞
+                                             X     xk
+                                                      = − ln(1 − x) + C
+                                                   k
+                                             k=1
+
+    for some constant C, and plugging in x = 0 shows that C = 0. Plugging in x = 21 shows that
+    P∞ 2−k                                                                                             1
+       k=1 k = ln 2. Note that X is exactly this summation but without the first term. Thus, X = ln 2− 2 ,
+        1       1
+    so 2X = 2 ln 2−1 .
+30. [20] Three points are chosen inside a unit cube uniformly and independently at random. What is the
+    probability that there exists a cube with side length 12 and edges parallel to those of the unit cube that
+    contains all three points?
+    Proposed by: Yuan Yao
+                  1
+     Answer:      8
+
+    Let the unit cube be placed on a xyz-coordinate system, with edges parallel to the x, y, z axes. Suppose
+    the three points are labeled A, B, C. If there exists a cube with side length 12 and edges parallel to
+    the edges of the unit cube that contain all three points, then there must exist a segment of length 21
+    that contains all three projections of A, B, C onto the x-axis. The same is true for the y- and z- axes.
+    Likewise, if there exists segments of length 21 that contains each of the projections of A, B, C onto the
+    x,y, and z axes, then there must exist a unit cube of side length 12 that contains A, B, C. It is easy
+    to see that the projection of a point onto the x-axis is uniform across a segment of length 1, and that
+    each of the dimensions are independent. The problem is therefore equivalent to finding the cube of the
+    probability that a segment of length 12 can cover three points chosen randomly on a segment of length
+    1.
+    Note that selecting three numbers p < q < r uniformly and independently at random from 0 to 1 splits
+    the number line into four intervals. That is, we can equivalently sample four positive numbers a, b, c, d
+    uniformly satisfying a + b + c + d = 1 (here, we set a = p, b = q − p, c = r − q, d = 1 − r). The probability
+    that the points p, q, r all lie on a segment of length 12 is the probability that r − q ≤ 12 , or b + c ≤ 12 .
+    Since a + d and b + c are symmetric, we have that this probability is 12 and our final answer is ( 12 )3 = 18 .
+31. [20] Let ABC be a triangle with AB = 6, AC = 7, BC = 8. Let I be the incenter of ABC. Points Z
+    and Y lie on the interior of segments AB and AC respectively such that Y Z is tangent to the incircle.
+    Given point P such that
+                                           ∠ZP C = ∠Y P B = 90◦ ,
+    find the length of IP .
+    Proposed by: Zack Chroman
+                   √
+                    30
+    Answer:         2
+
+    Solution 1. Let P U, P V tangent from P to the incircle. We will invoke the dual of the Desargues
+    Involution Theorem, which states the following:
+    Given a point P in the plane and four lines `1 , `2 , `3 , `4 , consider the set of conics tangent to all four
+    lines. Then we define a function on the pencil of lines through P by mapping one tangent from P
+    to each conic to the other. This map is well defined and is a projective involution, and in particular
+    maps P A → P D, P B → P E, P C → P F , where ABCDEF is the complete quadrilateral given by the
+    pairwise intersections of `1 , `2 , `3 , `4 . 
+    An overview of the projective background behind the (Dual) Desargues Involution Theorem can be
+    found here: https://www.scribd.com/document/384321704/Desargues-Involution-Theorem, and
+    a proof can be found at https://www2.washjeff.edu/users/mwoltermann/Dorrie/63.pdf.
+    Now, we apply this to the point P and the lines AB, AC, BC, Y Z, to get that the pairs
+
+                                          (P U, P V ), (P Y, P B), (P Z, P C)
+
+    are swapped by some involution. But we know that the involution on lines through P which rotates
+    by 90◦ swaps the latter two pairs, thus it must also swap√ the first one and ∠U P V = 90. It follows
+    by equal tangents
+                  √
+                       that √
+                            IU P V is a square, √thus IP = r 2 where r is the inradius of ABC. Since
+          2K
+    r = a+b+c = 21 2115/2 = 215 , we have IP = 230 .
+    Solution 2. Let H be the orthocenter of ABC.
+    Lemma. HI 2 = 2r2 − 4R2 cos(A) cos(B) cos(C), where r is the inradius and R is the circumradius.
+    Proof. This follows from barycentric coordinates or the general result that for a point X in the plane,
+
+                         aXA2 + bXB 2 + cXC 2 = (a + b + c)XI 2 + aAI 2 + bBI 2 + cCI 2 ,
+
+    which itself is a fact about vectors that follows from barycentric coordinates. This can also be computed
+    directly using trigonometry.
+    Let E = BH ∩ AC, F = CH ∩ AB, then note that B, P, E, Y are concyclic on the circle of diameter
+    BY , and C, P, F, Z are concyclic on the circle of diameter CZ. Let Q be the second intersection of
+    these circles. Since BCY Z is a tangential quadrilateral, the midpoints of BY and CZ are collinear
+    with I (this is known as Newton’s theorem), which implies that IP = IQ by symmetry. Note that as
+    BH · HE = CH · HF , H lies on the radical axis of the two circles, which is P Q. Thus, if IP = IQ = x,
+    BH · HE is the power of H with respect to the circle centered at I with radius x, which implies
+    BH · HE = x2 − HI 2 .
+                                                    √
+    As with the first solution, we claim that x = r 2, which by the lemma is equivalent to BH · HE =
+    4R2 cos(A) cos(B) cos(C). Then note that
+
+                          BH · HE = BH · CH cos(A) = (2R cos(B))(2R cos(C)) cos(A),
+
+    so our claim holds and we finish as with the first solution.
+    Note. Under the assumption that the problem is well-posed (the answer
+                                                                        √ does not depend on the choice
+    of Y, Z, or P ), then here is an alternative method to obtain IP = r 2 by making convenient choices.
+    Let U be the point where Y Z is tangent to the incircle, and choose U so that IU k BC (and therefore
+    Y Z ⊥ BC). Note that Y Z ∩ BC is a valid choice for P , so assume that P is the foot from√U to BC.
+    If D is the point where BC is tangent to the incircle, then IU P D is a square so IP = r 2. (This
+    disregards the condition that Y and Z are in the interior of segments AC and AB, but there is no
+    reason to expect that this condition is important.)
+32. [20] For positive integers a and b such that a is coprime to b, define ordb (a) as the least positive integer
+    k such that b | ak − 1, and define ϕ(a) to be the number of positive integers less than or equal to a
+    which are coprime to a. Find the least positive integer n such that
+
+                                                                 ϕ(n)
+                                                  ordn (m) <
+                                                                  10
+    for all positive integers m coprime to n.
+    Proposed by: Andrew Gu
+     Answer:       240
+    The maximum order of an element modulo n is the Carmichael function, denoted λ(n). The following
+    properties of the Carmichael function are established:
+
+       • For primes p > 2 and positive integers k, λ(pk ) = (p − 1)pk−1 .
+       • For a positive integer k,                        (
+                                                   k          2k−2   if k ≥ 3
+                                                λ(2 ) =                       .
+                                                              2k−1   if k ≤ 2
+
+       • For a positive integer n with prime factorization n = pki i ,
+                                                                Q
+
+                                                                              
+                                          λ(n) = lcm λ(pk11 ), λ(pk22 ), . . .
+
+    Meanwhile, for n = pki i , we have ϕ(n) = (pi − 1)pki i −1 . Hence the intuition is roughly that the
+                           Q                        Q
+
+    (pi − 1)pki i −1 terms must share divisors in order to reach a high value of ϕ(n)
+                                                                                 λ(n) .
+
+    We will now show that n ≥ 240 by doing casework on the prime divisors of z = ϕ(n)
+                                                                                 λ(n) . Suppose p | z
+    and p > 2. This requires two terms among λ(pk11 ), λ(pk22 ), . . . to be multiples of p because λ(n) is the
+    lcm of the terms whereas the product of these numbers has the same number of factors of p as ϕ(n)
+    (note that this does not hold for p = 2 because λ(2k ) 6= 2k−1 in general). These correspond to either
+    p2 | n or q | n with q ≡ 1 (mod p). Therefore
+
+                                       n ≥ max(p2 (2p + 1), (2p + 1)(4p + 1))
+
+    because the smallest primes congruent to 1 (mod p) are at least 2p + 1 and 4p + 1. For p ≥ 5 this gives
+    n > 240, so we may assume p ≤ 3.
+    First we address the case p = 3. This means that two numbers among 9, 7, 13, 19, 31, 37, . . . divide n.
+    As 7 × 37 > 240, we discard primes greater than 31. Of the remaining numbers, we have
+
+                              λ(9) = 6, λ(7) = 6, λ(13) = 12, λ(19) = 18, λ(31) = 30.
+
+    No candidate value of n is the product of just two of these numbers as the gcd of any two of the
+    associated λ values is at most 6. Furthermore, multiplying by just 2 will not affect ϕ(n) or λ(n), so
+    we must multiply at least two of these numbers by a number greater than 2. Throwing out numbers
+    greater than 240, this leaves only 3 × 9 × 7, which does not work. (A close candidate is 3 × 7 × 13 = 273,
+    for which ϕ(n) = 144, λ(n) = 12.)
+    The remaining case is when the only prime divisors of ϕ(n)
+                                                             λ(n) are 2. It is not hard to see that λ(n) ≥ 4
+    when n - 24 (and when n | 24 it’s clear that φ(n) ≤ 8, so we do not need to consider them). When
+    λ(n) = 4, we need ϕ(n) ≥ 4 · 24 = 64 and v2 (n) ≤ 4, so the smallest such integer is n = 24 · 3 · 5 = 240,
+    which we can check does indeed satisfy ϕ(n)
+                                            λ(n) > 10. It is not difficult to check that higher values of λ(n)
+    will not yield any n below 240, so 240 is indeed the smallest possible n.
+    Note: The sequence ϕ(n)
+                       λ(n) is given by A034380 in the OEIS.
+
+H1 . Let r = H1 be the answer to this problem. Given that r is a nonzero real number, what is the value
+     of r4 + 4r3 + 6r2 + 4r?
+     Answer:       −1
+    Since H1 is the answer, we know r4 + 4r3 + 6r2 + 4r = r ⇒ (r + 1)4 = r + 1. Either r + 1 = 0, or
+    (r + 1)3 = 1 ⇒ r = 0. Since r is nonzero, r = −1.
+H2 . Given two distinct points A, B and line ` that is not perpendicular to AB, what is the maximum
+     possible number of points P on ` such that ABP is an isosceles triangle?
+     Answer:       5
+    In an isosceles triangle, one vertex lies on the perpendicular bisector of the opposite side. Thus, either
+    P is the intersection of AB and `, or P lies on the circle centered at A with radius AB, or P lies on
+    the circle centered at B with radius AB. Each circle-line intersection has at most two solutions, and
+    the line-line intersection has at most one, giving 5. This can be easily constructed by taking any AB,
+    and taking ` that isn’t a diameter but intersects both relevant circles twice.
+H3 . Let A = H1 , B = H6 + 1. A real number x is chosen randomly and uniformly in the interval [A, B].
+     Find the probability that x2 > x3 > x.
+                   1
+     Answer:       4
+
+    A = −1, B = 3. For x3 > x, either x > 1 or −1 < x < 0. However, for x > 1, x2 < x3 , so there are no
+    solutions. −1 < x < 0 also satisfies x2 > x3 , so our answer is 1/4.
+H4 . Let A = d1/H3 e, B = dH5 /2e. How many ways are there to partition the set {1, 2, . . . , A + B} into
+     two sets U and V with size A and B respectively such that the probability that a number chosen from
+     U uniformly at random is greater than a number chosen from V uniformly at random is exactly 21 ?
+     Answer:       24
+    A = 4, B = 7. There are 28 total ways of choosing an element from U and V , so there must be 14
+    ways where U ’s is larger. If we relabel the elements to be 0, 1, · · · , 10, then element i is greater than
+    exactly i elements in the set. However, we overcount other elements in U , so the four elements in
+    U = {a, b, c, d} must satisfy
+
+                         (a − 0) + (b − 1) + (c − 2) + (d − 3) = 14 ⇒ a + b + c + d = 20.
+
+    To remove the uniqueness condition, we subtract 1 from b, 2 from c, and 3 from d, so we wish to find
+    solutions a ≤ b ≤ c ≤ d ≤ 7 to a + b + c + d = 14. From here, we do casework. If a = 0, b = 0, 1, 2, 3, 4
+    give 1, 1, 2, 2, 3 solutions, respectively. If a = 1, b = 1, 2, 3, 4 give 2, 2, 3, 1 solutions, respectively. If
+    a = 2, b = 2, 3, 4 give 3, 2, 1 solutions, respectively. If a = 3, the only solution is 3, 3, 4, 4. Thus, the
+    answer is (1 + 1 + 2 + 2 + 3) + (2 + 2 + 3 + 1) + (3 + 2 + 1) + 1 = 24.
+H5 . Let A = H2 , B = H7 . Two circles with radii A and B respectively are given in the plane. If the length
+     of their common external tangent is twice the length of their common internal tangent (where both
+     tangents are considered as segments with endpoints being the points of tangency), find the distance
+     between the two centers.
+                    √
+                   2 429
+     Answer:         3
+    Let the distance between the centers be d. The length of the commonq       external tangent is E =
+    p                √
+      d2 − (7 − 5)2 = d2 − 4, and the length of the internal tangent is I = 12
+                                                                            5
+                                                                                   5
+                                                                                ( 12 d)2 − 52 . Solving the
+                                   √
+    equation E = 2I gives d = 2 3429 (≈ 13.8).
+H6 . How many ways are there to arrange the numbers 21, 22, 33, 35 in a row such that any two adjacent
+     numbers are relatively prime?
+     Answer:       2
+    21 cannot be adjacent to 33 or 35, so it must be on one end bordering 22. 33 cannot be adjacent to 21
+    or 22, so it must be on the other end bording 35. Thus, there are only 2 orderings: 21, 22, 35, 33, and
+    33, 35, 22, 21.
+H7 . How many pairs of integers (x, y) are there such that |x2 − 2y 2 | ≤ 1 and |3x − 4y| ≤ 1?
+     Answer:       7
+    Note that if (x, y) is a solution, so is (−x, −y). Thus, we consider x ≥ 0.
+    When x ≡ 0 (mod 4), y = 3x/4 by inequality 2. Inequality 1 gives |x2 /9| ≤ 1, so x ≤ 3, so x = 0.
+    When x ≡ 1 (mod 4), y = (3x + 1)/4 by inequality 2. Beyond x = 1, 2y 2 − x2 > 1, so there are no
+    more solutions.
+    When x ≡ 2 (mod 4), there are no solutions for y.
+    When x ≡ 3 (mod 4), y = (3x − 1)/4 by inequality 2. Beyond x = 7, 2y 2 − x2 > 1, so there are no
+    more solutions.
+    Thus, the solutions are (0, 0), (1, 1), (3, 2), (7, 5), and the negations of the latter three, giving 7 solutions.
+
+M1 . Let S = M10 . Determine the number of ordered triples (a, b, c) of nonnegative integers such that
+     a + 2b + 4c = S.
+     Answer:       196
+    S = 53. Firstly, the number of solutions is the same as the number of solutions to a + 2b + 4c = 52,
+    since 2b, 4c are both even. Then, a + 2b = 2x has x + 1 solutions in nonnegative integers, so we wish
+    to find 27 + 25 + · · · + 1. This is the sum of the first 14 odd numbers, which is 142 = 196.
+M2 . Let S = bM5 c. Two integers m and n are chosen between 1 and S inclusive uniformly and independently
+     at random. What is the probability that mn = nm ?
+                    7
+     Answer:       72
+
+    S = 12. The solutions are (x, x) for all x, and (2, 4), (4, 2). Thus, there are S + 2 = 14 solutions out
+    of S 2 = 196 possibilities, so the answer is 14/144 = 7/72.
+M3 . Let S = dM7 e. In right triangle ABC, ∠C = 90◦ , AC = 27, BC = 36. A circle with radius S is
+     tangent to both AC and BC and intersects AB at X and Y . Find the length of XY .
+                    √
+      Answer:     16 3
+    S = 14. We first note that the distance from the center of the circle to AB (which has length
+    45 by Pythagorean theorem) is 27·36−27·14−36·14 = 2, so the length of the chord XY is equal to
+     √            √                      45
+         2   2
+    2 14 − 2 = 16 3.
+M4 . Let S = M13 + 5. Compute the product of all positive divisors of S.
+     Answer:       810000
+    S = 30 = 2 · 3 · 5. The divisors of S are 1, 2, 3, 5, 6, 10, 15, 30. Each prime factor appears 4 times, so
+    the product is 24 34 54 = 304 = 810000.
+              √
+M5 . Let A = M1 , B = dM11 e. Given complex numbers x and y such that x + y1 = A, x1 + y = B, compute
+                        1
+     the value of xy + xy .
+      Answer:       12
+      A = 14, B = 1. Multiplying the two given equations gives xy + 1/(xy) + 2 = 14, so the answer is
+      14 − 2 = 12.
+M6 . Let A = b1/M2 c, B = bM32 /100c. Let P and Q both be quadratic polynomials. Given that the real
+     roots of P (Q(x)) = 0 are 0, A, B, C in some order, find the sum of all possible values of C.
+      Answer:       17
+      A = 10, B = 7. Let the roots of P (x) = 0 be p, q. Then, the roots of P (Q(x)) = 0 are when Q(x) = p
+      or Q(x) = q. If these are r, s, t, u in order, then note that (r + s)/2 = (t + u)/2 must both be the center
+      of the parabola Q. Thus, 0, 10, 7, C must divide into two pairs with equal sum. When we consider the
+      three possible groupings, we get that the possible values are 10+7−0 = 17, 10+0−7 = 3, 7+0−10 = −3.
+      Therefore the sum is 17 + (−3) + 3 = 17.
+
+M7 . Let A = dlog2 M4 e, B = M12 + 1. A 5-term sequence of positive reals satisfy that the first three terms
+     and the last three terms both form an arithmetic sequence and the middle three terms form a geometric
+     sequence. If the first term is A and the fifth term is B, determine the third term of the sequence.
+                    40
+      Answer:        3
+
+      A = 20, B = 8. If the middle term is x, then (x + 20)/2, x, (x + 8)/2 forms a geometric series.This
+      means that (x + 20)/2 · (x + 8)/2 = x2 , which upon solving gives x = 40/3 or x = −4 (which we discard
+      because x > 0).
+M8 . Let A = bM52 c, B = bM62 c. A regular A-gon, a regular B-gon, and a circle are given in the plane.
+     What is the greatest possible number of regions that these shapes divide the plane into?
+      Answer:       1156
+      A = 144, B = 289. First, note that with only the circle, there are 2 regions. If the three shapes never
+      coincide at a point, then each intersection adds precisely one region. Optimistically, we wish to have
+      the maximal number of intersections where all intersections have both shapes. The maximum number
+      of intersections between the 289-gon and the circle is 578, since each side can only intersect the circle
+      twice. Similarly, the 144-gon and the circle add at most 288. Finally, each side of the 144-gon can
+      only intersect the 289-gon twice, so this adds another 288. This maximum can be achieved when all
+      three shapes have the same circumcenter and circumradius, and are rotated slightly. The answer is
+      2 + 598 + 288 + 288 = 1156.
+M9 . Let A and B be the unit digits of d7M6 e and b6M7 c respectively. When all the positive integers not
+     containing digit A or B are written in increasing order, what is the 2019th number in the list?
+      Answer:       3743
+      A = 9, B = 0. First, there are 8 numbers with 1 digit, 64 with two digits, and 512 with three digits.
+      This leaves 2019 − 512 − 64 − 8 = 1435 of four-digit numbers we have to go through, starting with 1111.
+      Since we don’t have two digits 0 and 9, we are basically counting in base 8, where the digits 01234567
+      in base 8 are actually 12345678, and 111110 = 00008 . Converting 1435 to base 8, we get 26338 , and
+      mapping this back, we get 3744. However, we must remember that 1111 is 08 under our mapping, so
+      the 1435th four-digit number is actually 3743.
+M10 . What is the smallest positive integer with remainder 2, 3, 4 when divided by 3, 5, 7 respectively?
+      Answer:       53
+      We note that if we double the number then it leaves a remainder of 1 when divided by all of 3, 5, and
+      7. The smallest even number satisfying this is 3 · 5 · 7 + 1 = 106, so the smallest possible number is
+      106/2 = 53.
+M11 . An equiangular hexagon has side lengths 1, 2, 3, 4, 5, 6 in some order. Find the nonnegative difference
+      between the largest and the smallest possible area of this hexagon.
+                     √
+                       3
+      Answer:         2
+
+      Extending three sides of the equiangular hexagon gives an equilateral triangle. Thus, if the sides
+      are a, b, c, d, e, f , in order, then a + b + c = a + f + e ⇒ b + c = e + f ⇒ f − c = b − e. By a
+      symmetric argument, we see that d − a = f − c = b − e holds, which means that they must be separated
+      into three groups of two with equal differences. If the grouping is (1, 2), (3, 4), (5, 6), then we have
+      1, 4, 5, 2, 3, 6 around the hexagon. If the grouping is (1, 4), (2, 5), (3, 6), then we get 1, 5, 3, 4, 2, 6 as the
+      other possibility. Finally, we can use our equilateral triangle trick to find the areas. For the first, we
+      get a big triangle √   of side 1 +√
+                                        4 + 5 = 10, and must subtract smaller triangles√ of sides√ 1, 5, 3. This gives
+      (100 − 1 − 25 − 9) 3/4 = 65√ 3/4. For the other, we get (81 − 1 − 9 − 4) 3/4 = 67 3/4. The positive
+      difference between these is 3/2.
+M12 . Determine the second smallest positive integer n such that n3 + n2 + n + 1 is a perfect square.
+      Answer:        7
+      n + n + n + 1 = (n + 1)(n2 + 1). Note that gcd(n2 + 1, n + 1) = gcd(2, n + 1) = 1 or 2, and since
+       3     2
+
+      n2 + 1 is not a perfect square for n ≥ 1, we must have n2 + 1 = 2p2 and n + 1 = 2q 2 for some integers
+      p and q. The first equation is a variant of Pell’s equation, which (either by brute-forcing small cases
+      or using the known recurrence) gives solutions (n, p) = (1, 1), (7, 5), . . . . Incidentally, both smallest
+      solutions n = 1 and n = 7 allows an integer solution to the second equation, so n = 7 is the second
+      smallest integer that satisfy the condition.
+M13 . Given that A, B are nonzero base-10 digits such that A · AB + B = BB, find AB.
+      Answer:        25
+      We know A · AB ends in 0. Since neither is 0, they must be 2, 5 in some order. We easily find that
+      A = 2, B = 5 works while the opposite doesn’t, so AB = 25.
+                                                                                                 √
+ T1 . Let S, P, A, C, E be (not necessarily distinct) decimal digits where E 6= 0. Given that N = ESCAP E
+      is a positive integer, find the minimum possible value of N .
+      Answer:        319
+      Since E 6= 0, the 6-digit number ESCAP E is at least 105 , so N ≥ 317. If N were 317 or 318, the last
+      digit of N 2 would not match the first digit of N 2 , which contradicts the condition. However, N = 319
+      will work, since the first and last digit of N 2 are both 1.
+ T2 . Let X = bT1 /8c, Y = T3 − 1, Z = T4 − 2. A point P lies inside the triangle ABC such that P A =
+      X, P B = Y, P C = Z. Find the largest possible area of the triangle.
+      Answer:        1344
+      X = 39, Y = 33, Z = 25. Fix some position for P , A, and B, and we shall find the optimal position
+      for C. Letting AB be the base of the triangle, we wish to maximize the height. The legal positions
+      for C are a subset of the circle with center P and radius P C, so the height is maximized when P C
+      is orthogonal to AB. Symmetrically, we deduce that P is the orthocenter of ABC when the area is
+      maximized (moreover, P must be inside the triangle). If ray BP intersects AC at E, then since AEB
+      is similar to P EC, we have
+          √             √
+            392 − x2      252 − x2
+                      =            ⇒ x2 (x + 33)2 = (392 − x2 )(252 − x2 ) ⇒ 66x3 + 3235x2 − 950625 = 0.
+            33 + x          x
+      The LHS factors to (x − 15)(66x2 + 4225x + 63375), meaning that x = 15 is the only positive solution,
+      giving AE = 36, BE = 20, and therefore the maximum area of triangle ABC is (33 + 15)(36 + 20)/2 =
+      1344.
+T3 . How many ways can one tile a 2 × 8 board with 1 × 1 and 2 × 2 tiles? Rotations and reflections of the
+     same configuration are considered distinct.
+     Answer:      34
+    Let f (n) denote the number of ways to fill a 2×n board. One can fill the leftmost column with two 1×1
+    tiles, leaving f (n − 1) ways, or one can fill the leftmost two columns with one 2 × 2 tile, leaving f (n − 2)
+    ways. Therefore, f (n) = f (n − 1) + f (n − 2). One can also directly verify that f (0) = f (1) = 1.
+    Therefore, f (n) = Fn+1 , where Fn is the nth Fibonacci number. Easy calculation shows that the
+    desired quantity is f (8) = F9 = 34.
+T4 . Let S = T5 . Given real numbers a, b, c such that a2 + b2 + c2 + (a + b + c)2 = S, find the maximum
+     possible value of (a + b)(b + c)(c + a).
+     Answer:      27
+    Notice that S = 27 = a2 + b2 + c2 + (a + b + c)2 = (a + b)2 + (b + c)2 + (c + a)2 . By AM-GM,
+    S                           2/3
+    3 ≥ ((a + b)(b + c)(c + a))     with equality if and only if a + b = b + c = c + a, i.e. a = b = c. Thus,
+                                       3/2
+    the maximum possible value is S3        = 27, achieved at a = b = c = 32 .
+T5 . A regular tetrahedron has volume 8. What is the volume of the set of all the points in the space (not
+     necessarily inside the tetrahedron) that are closer to the center of the tetrahedron than any of the four
+     vertices?
+     Answer:      27
+    Let h denote the height of the tetrahedron. The center of the tetrahedron is a distance h4 from each
+    face. Therefore, the perpendicular bisector plane of the segment connecting the center to a vertex lies
+    a distance 83 h away from both the vertex and the center. Symmetrical considerations with the other
+    three vertices will thus show that the desired region is also a regular tetrahedron, with the center of
+    the original tetrahedron a distance 83 h away from each face. Based on the distance from the center to
+    a face, one can see that the scale factor of this tetrahedron is 3h   h
+                                                                      8 : 4 = 3 : 2 relative to the original
+                                          3
+    tetrahedron, so its volume is 8 · 32 = 27.
+                                        
+
+33. [25] Determine the value of H4 .
+    Proposed by: Yuan Yao
+     Answer:      24
+34. [25] Determine the value of M8 .
+    Proposed by: Yuan Yao
+     Answer:      1156
+
+35. [25] Determine the value of M9 .
+    Proposed by: Yuan Yao
+     Answer:      3743
+
+36. [25] Determine the value of T2 .
+    Proposed by: Yuan Yao
+     Answer:      1344
+

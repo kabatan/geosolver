@@ -1,0 +1,869 @@
+                                 HMMT Spring 2021
+                                           March 06, 2021
+                                            Guts Round
+1. [8] Amelia wrote down a sequence of consecutive positive integers, erased one integer, and scrambled
+   the rest, leaving the sequence below. What integer did she erase?
+
+                                  6, 12, 1, 3, 11, 10, 8, 15, 13, 9, 7, 4, 14, 5, 2
+
+  Proposed by: Andrew Gu
+  Answer:      16
+  Solution: The sequence of positive integers exactly contains every integer between 1 and 15, inclusive.
+  16 is the only positive integer that could be added to this sequence such that the resulting sequence
+  could be reordered to make a sequence of consecutive positive integers. Therefore, Amelia must have
+  erased the integer 16.
+
+
+
+2. [8] Suppose there exists a convex n-gon such that each of its angle measures, in degrees, is an odd
+   prime number. Compute the difference between the largest and smallest possible values of n.
+  Proposed by: Andrew Gu
+  Answer:      356
+  Solution: We can’t have n = 3 since the sum of the angles must be 180◦ but the sum of three
+  odd numbers is odd. On the other hand, for n = 4 we can take a quadrilateral with angle measures
+  83◦ , 83◦ , 97◦ , 97◦ .
+  The largest possible value of n is 360. For larger n we can’t even have all angles have integer measure,
+  and 179 happens to be prime.
+  So, the answer is 360 − 4 = 356.
+
+
+
+3. [8] A semicircle with radius 2021 has diameter AB and center O. Points C and D lie on the semicircle
+   such that ∠AOC < ∠AOD = 90◦ . A circle of radius r is inscribed in the sector bounded by OA and
+   OC and is tangent to the semicircle at E. If CD = CE, compute brc.
+  Proposed by: Hahn Lheem
+  Answer:      673
+  Solution: We are given
+                                            m∠EOC = m∠COD
+  and
+                          m∠AOC + m∠COD = 2m∠EOC + m∠COD = 90◦ .
+  So m∠EOC = 30◦ and m∠AOC = 60◦ . Letting the radius of the semicircle be R, we have
+                                                                           1
+                                     (R − r) sin ∠AOC = r ⇒ r =              R,
+                                                                           3
+  so                                                        
+                                                        2021
+                                            brc =              = 673.
+                                                          3
+4. [8] In a 3 by 3 grid of unit squares, an up-right path is a path from the bottom left corner to the top
+   right corner that travels only up and right in steps of 1 unit. For such a path p, let Ap denote the
+   number of unit squares under the path p. Compute the sum of Ap over all up-right paths p.
+   Proposed by: Freddie Zhao
+   Answer:      90
+   Solution: Each path consists of 3 steps up and 3 steps to the right, so there are 63 = 20 total paths.
+                                                                                         
+
+   Consider the sum of the areas of the regions above all of these paths. By symmetry, this is the same
+   as the answer to the problem. For any path, the sum of the areas of the regions above and below it is
+   32 = 9, so the sum of the areas of the regions above and below all paths is 9 · 20 = 180. Therefore, our
+   final answer is 21 · 180 = 90.
+
+
+
+5. [9] Let m, n > 2 be integers. One of the angles of a regular n-gon is dissected into m angles of equal
+   size by (m − 1) rays. If each of these rays intersects the polygon again at one of its vertices, we say n
+   is m-cut. Compute the smallest positive integer n that is both 3-cut and 4-cut.
+   Proposed by: Carl Schildkraut
+   Answer:      14
+   Solution: For the sake of simplicity, inscribe the regular polygon in a circle. Note that each interior
+   angle of the regular n−gon will subtend n − 2 of the n arcs on the circle. Thus, if we dissect an interior
+   angle into m equal angles, then each must be represented by a total of n−2 m arcs. However, since each
+   of the rays also passes through another vertex of the polygon, that means n−2 m is an integer and thus
+   our desired criteria is that m divides n − 2.
+   That means we want the smallest integer n > 2 such that n − 2 is divisible by 3 and 4 which is just
+   12 + 2 = 14.
+
+
+
+6. [9] In a group of 50 children, each of the children in the group have all of their siblings in the group.
+   Each child with no older siblings announces how many siblings they have; however, each child with an
+   older sibling is too embarrassed, and says they have 0 siblings.
+   If the average of the numbers everyone says is 12
+                                                  25 , compute the number of different sets of siblings
+   represented in the group.
+   Proposed by: Vincent Bian
+   Answer:      26
+   Solution: For i ≥ 1, let ai be the number of families that have i members in the group. Then, among
+   each family with i children in the group, the oldest child will say i − 1, and the rest will say 0. Thus,
+                                                                                12
+   the sum of all the numbers said will be a2 + 2a3 + 3a4 + 4a5 + · · · = 50 × 25  = 24.
+   Also because there are 50 children total, we know that a1 + 2a2 + 3a3 + · · · = 50. We can subtract
+   these two equations to get a1 + a2 + a3 + · · · = 50 − 24 = 26.
+
+
+
+7. [9] Milan has a bag of 2020 red balls and 2021 green balls. He repeatedly draws 2 balls out of the
+   bag uniformly at random. If they are the same color, he changes them both to the opposite color and
+   returns them to the bag. If they are different colors, he discards them. Eventually the bag has 1 ball
+   left. Let p be the probability that it is green. Compute b2021pc.
+   Proposed by: Milan Haiman
+   Answer:      2021
+   Solution: The difference between the number of green balls and red balls in the bag is always 1
+   modulo 4. Thus the last ball must be green and p = 1.
+ 8. [9] Compute the product of all positive integers b ≥ 2 for which the base b number 111111b has exactly
+    b distinct prime divisors.
+    Proposed by: Esha Bhatia
+    Answer:        24
+    Solution: Notice that this value, in base b, is
+
+                                       b6 − 1
+                                              = (b + 1)(b2 − b + 1)(b2 + b + 1).
+                                        b−1
+
+    This means that, if b satisfies the problem condition, (b + 1)(b2 − b + 1)(b2 + b + 1) > p1 . . . pb , where
+    pi is the ith smallest prime.
+    We claim that, if b ≥ 7, then p1 . . . pb > (b + 1)(b2 − b + 1)(b2 + b + 1). This is true for b = 7 by
+    calculation, and can be proven for larger b by induction and the estimate pi ≥ i.
+    All we have to do is to check b ∈ 2, 3, 4, 5, 6. Notice that for b = 6, the primes cannot include 2, 3
+                                6
+    and hence we want 6 5−1 to be divisible product of 6 primes the smallest of which is 5. However,
+                        6
+    5 · 7 · · · · 17 > 6 5−1 , and by checking we rule out 5 too. All that is left is {2, 3, 4}, all of which work,
+    giving us an answer of 24.
+
+
+
+ 9. [10] Let AD, BE, and CF be segments sharing a common midpoint, with AB < AE and BC < BF .
+    Suppose that each pair of segments forms a 60◦ angle, and that AD = 7, BE = 10, and CF = 18. Let
+    K denote the sum of√the areas of the six triangles 4ABC, 4BCD, 4CDE, 4DEF , 4EF A, and
+    4F AB. Compute K 3.
+    Proposed by: Milan Haiman
+    Answer:        141
+    Solution: Let M be the common midpoint, and let x = 7, y = 10, z = 18. One can verify that hexagon
+    ABCDEF is convex. We have
+                                         √              √               √          √
+                                      1     3 x y 1        3 y z 1        3 x z      3(xy + yz − zx)
+    [ABC] = [ABM ]+[BCM ]−[ACM ] = ·         · · + ·         · · − ·       · · =                     .
+                                      2 2 2 2 2 2 2 2 2 2 2 2                               16
+    Summing similar expressions for all 6 triangles, we have
+                                               √
+                                                 3(2xy + 2yz + 2zx)
+                                         K=                         .
+                                                        16
+                                     √
+    Substituting x, y, z gives K = 47 3, for an answer of 141.
+    Remark: As long as hexagon ABCDEF is convex, K is the area of this hexagon.
+
+
+
+10. [10] Let a1 , a2 , . . . , an be a sequence of distinct positive integers such that a1 + a2 + · · · + an = 2021 and
+    a1 a2 · · · an is maximized. If M = a1 a2 · · · an , compute the largest positive integer k such that 2k | M .
+    Proposed by: Sheldon Kieren Tan
+    Answer:        62
+    Solution: We claim that the optimal set is {2, 3, · · · , 64} \ {58}. We first show that any optimal set
+    is either of the form {b, b + 1, b + 2, . . . , d} or {b, b + 1, . . . , d} \ {c}, for some b < c < d.
+    Without loss of generality, assume that the sequence a1 < a2 < · · · < an has the maximum product.
+    Suppose aj+1 > aj + 2. Then, increasing aj by 1 and decreasing aj+1 by 1 will increase the product
+    M, contradicting the assumption that the sequence has the optimal product. Thus, any ”gaps” in the
+    ai can only have size 1.
+    Now, we show that there can only be one such gap. Suppose aj+1 = aj + 2, and ak+1 = ak + 2, for
+    j < k. Then, we can increase aj by 1 and decrease ai+1 by 1 to increase the total product. Thus, there
+    is at most one gap, and the sequence ai is of one of the forms described before.
+    We now show that either b = 2 or b = 3. Consider any set of the form {b, b + 1, b + 2, . . . , d} or
+    {b, b + 1, . . . , d} \ {c}. If b = 1, then we can remove b and increase d by 1 to increase the product. If
+    b > 4, then we can remove b and replace it with 2 and b − 2 to increase the product. Thus, we have
+    b = 2, 3, or 4.
+    Suppose b = 4. If the next element is 5, we can replace it with a 2 and a 3 to increase the product, and
+    if the next element is 6, we can replace it with a 1, 2, and 3 without making the product any smaller.
+    Thus, we can assume that either b = 2 or b = 3.
+    The nearest triangular number to 2021 is 2016 = 1+2+· · ·+64. Using this, we can compute that if b = 2,
+    our set must be {2, 3, · · · , 64} \ {58}, leading to a product of 64!
+                                                                       58 . If b = 3, our set is {3, · · · , 64} \ {56},
+                                64!
+    leading to a product of 2·56    .
+    Thus, the maximum product is 64! 58 . We now compute the highest power of 2 that divides this expres-
+    sion. 64! includes 32 elements that contribute at least one power of 2, 16 that contribute at least two
+    powers of 2, and so on until the one element that contributes at least six powers of 2. This means the
+    highest power of 2 that divides 64! is 32 + 16 + · · · + 2 + 1 = 63. Finally, dividing by 58 removes one
+    of these powers of 2, making the answer 62.
+
+
+
+11. [10] For each positive integer 1 ≤ m ≤ 10, Krit chooses an integer 0 ≤ am < m uniformly at random.
+    Let p be the probability that there exists an integer n for which n ≡ am (mod m) for all m. If p can
+    be written as ab for relatively prime positive integers a and b, compute 100a + b.
+    Proposed by: Daniel Zhu
+    Answer:       1540
+    Solution: Tuples of valid am correspond with residues mod lcm(1, 2, . . . , 10), so the answer is
+
+                                      lcm(1, 2, . . . , 10)   23 · 32 · 5 · 7     1
+                                                            = 8 4 2           =      .
+                                             10!             2 ·3 ·5 ·7         1440
+
+
+
+
+12. [10] Compute the number of labelings f : {0, 1}3 → {0, 1, . . . , 7} of the vertices of the unit cube such
+    that
+                                       |f (vi ) − f (vj )| ≥ d(vi , vj )2
+    for all vertices vi , vj of the unit cube, where d(vi , vj ) denotes the Euclidean distance between vi and
+    vj .
+    Proposed by: Krit Boonsiriseth
+    Answer:       144
+    Solution: Let B = {0, 1}3 , let E = {(x, y, z) ∈ B : x + y + z is even}, √
+                                                                             and let O = {(x, y, z) ∈ B :
+    x + y + z is odd}. As all pairs of vertices within E (and within O) are 2 apart, is easy to see that
+    {f (E), f (O)} = {{0, 2, 4, 6}, {1, 3, 5, 7}}.
+       • There are two ways to choose f (E) and f (O); from now on WLOG assume f (E) = {0, 2, 4, 6}.
+       • There are 4! ways to assign the four labels to the four vertices in E.
+      • The vertex opposite the vertex labeled 0 is in O, and it must be labeled 3, 5, or 7. It is easy
+        to check that for each possible label of this vertex, there is exactly one way to label the three
+        remaining vertices.
+   Therefore the total number of labelings is 2 · 4! · 3 = 144.
+
+
+
+13. [11] A tournament among 2021 ranked teams is played over 2020 rounds. In each round, two teams
+    are selected uniformly at random among all remaining teams to play against each other. The better
+    ranked team always wins, and the worse ranked team is eliminated. Let p be the probability that the
+    second best ranked team is eliminated in the last round. Compute b2021pc.
+   Proposed by: Milan Haiman
+   Answer:      674
+   Solution: In any given round, the second-best team is only eliminated if it plays against the best team.
+   If there are k teams left and the second-best team has not been eliminated, the second-best team plays
+   the best team with probability 1k , so the second-best team survives the round with probability
+                                    (2)
+
+                                1                  2       k2 − k − 2   (k + 1)(k − 2)
+                           1−   k
+                                   =1−                  =            =                .
+                                2
+                                                k(k − 1)    k(k − 1)       k(k − 1)
+
+   So, the probability that the second-best team survives every round before the last round is
+                                                   2021
+                                                   Y      (k + 1)(k − 2)
+                                                                         ,
+                                                             k(k − 1)
+                                                   k=3
+
+   which telescopes to
+                          2022! 2019!
+                           3! · 0!             2022! · 2019! 2! · 1!   2022 1  337
+                          2021! 2020!
+                                           =                ·        =     · =      = p.
+                           2! · 1!
+                                               2021! · 2020! 3! · 0!   2020 3  1010
+
+   So,                                                                 
+                                       2021 · 337                      1
+                       b2021pc =                   = 337 · 2 + 337 ·        = 337 · 2 = 674.
+                                         1010                        1010
+
+
+
+                                                                                           √
+14. [11] In triangle ABC, ∠A = 2∠C. Suppose that AC = 6, BC = 8, and AB =                      a − b, where a and b
+    are positive integers. Compute 100a + b.
+   Proposed by: Freddie Zhao, Milan Haiman
+   Answer:      7303
+   Solution: Let x = AB, and ∠C = θ, then ∠A = 2θ and ∠B = 180 − 3θ.
+   Extend ray BA to D so that AD = AC. We know that ∠CAD = 180−2θ, and since 4ADC is isosceles,
+   it follows that ∠ADC = ∠ACD = θ, and so ∠DCB = 2θ = ∠BAC, meaning that 4BAC ∼ 4BCD.
+   Therefore, we have
+                                               x+6   8
+                                                   =   =⇒ x(x + 6) = 82
+                                                8    x
+                                       √
+   Since x > 0, we have x = −3 +           73. So 100a + b = 7303.
+15. [11] Two circles Γ1 and Γ2 of radius 1 and 2, respectively, are centered at the origin. A particle is
+    placed at (2, 0) and is shot towards Γ1 . When it reaches Γ1 , it bounces off the circumference and heads
+    back towards Γ2 . The particle continues bouncing off the two circles in this fashion.
+    If the particle is shot at an acute angle√θ above the x-axis, it will bounce 11 times before returning to
+    (2, 0) for the first time. If cot θ = a − b for positive integers a and b, compute 100a + b.
+    Proposed by: Hahn Lheem
+    Answer:       403
+    Solution: By symmetry, the particle must bounce off of Γ2 at points that make angles of 60◦ , 120◦ ,
+    180◦ , 240◦ , and 300◦ with the positive x-axis. Similarly, the particle must bounce off of Γ1 at points
+    that make angles of 30◦ , 90◦ , 150◦ , 210◦ , 270◦ , and 330◦ with the positive x-axis.
+    In particular, the first point that the ball touches on Γ1 is (cos 30◦ , sin 30◦ ). So,
+                                                     2 − cos 30◦      √
+                                           cot θ =           ◦
+                                                                 = 4 − 3.
+                                                       sin 30
+
+
+
+
+16. [11] Let f : Z2 → Z be a function such that, for all positive integers a and b,
+                                       
+                                       b
+                                                       if a > b
+                             f (a, b) = f (2a, b)       if a ≤ b and f (2a, b) < a
+                                       
+                                         f (2a, b) − a otherwise.
+                                       
+
+    Compute f (1000, 32021 ).
+    Proposed by: Akash Das
+    Answer:       203
+    Solution: Note that f (a, b) is the remainder of b when divided by a. If a > b then f (a, b) is exactly b
+    mod a. If instead a ≤ b, our ”algorithm” doubles our a by n times until we have a × 2n > b. At this
+    point, we subtract a2n−1 from f (a · 2n , b) and iterate back down until we get a > b − a · k > 0 and
+    f (a, b) = b − a · k for some positive integer k. This expression is equivalent to b − a · k mod a, or b mod
+    a.
+    Thus, we want to compute 32021 mod 1000. This is equal to 3 mod 8 and 78 mod 125. By CRT, this
+    implies that the answer is 203.
+
+
+
+17. [12] Let k be the answer to this problem. The probability that an integer chosen uniformly at random
+    from {1, 2, . . . , k} is a multiple of 11 can be written as ab for relatively prime positive integers a and b.
+    Compute 100a + b.
+    Proposed by: Carl Schildkraut, Hahn Lheem
+    Answer:       1000
+    Solution: We write k = 11q + r for integers q, r with 0 ≤ r < 11. There are q multiples of 11 from 1
+                                                  q
+    to k, inclusive, so our probability is ab = 11q+r . Let d = gcd(q, r) = gcd(q, 11q + r), so that the fraction
+       q/d                             q
+    (11q+r)/d is how we would write 11q+r      in simplified form. Since we require that a and b be relatively
+    prime, we find a = dq and b = 11q+r
+                                    d .
+    Plugging these into the equation k = 100a + b, we find 11q + r = 100 dq + 11q+r
+                                                                                d , or d(11q + r) = 111q + r.
+    Since d divides r and r ≤ 10, we have d ≤ 10.
+    If we test the case d = 10, our equation becomes q = 9r. Since r = 10 is the only valid value that is a
+    multiple of d, we get q = 90 and k = 1000. 10 is, in fact, the gcd of q and r, so we have found that
+    k = 1000 satisfies the problem. Testing other values of d does not produce a valid answer.
+
+
+
+18. [12] Triangle ABC has side lengths AB = 19, BC = 20, and CA = 21. Points X and Y are selected
+    on sides AB and AC, respectively, such that AY = XY and XY is tangent to the incircle of 4ABC.
+    If the length of segment AX can be written as ab , where a and b are relatively prime positive integers,
+    compute 100a + b.
+    Proposed by: Hahn Lheem
+    Answer:      6710
+    Solution: Note that the incircle of 4ABC is the A-excenter of 4AXY . Let r be the radius of this
+    circle. We can compute the area of 4AXY in two ways:
+                                              1
+                                        KAXY =   · AX · AY sin A
+                                              2
+                                            = r · (AX + AY − XY )/2
+                                                 r
+                                      =⇒ AY =
+                                              sin A
+
+    We also know that
+                                                  1
+                                           KABC =    · 19 · 21 sin A
+                                                  2
+                                                = r · (19 + 20 + 21)/2
+                                            r     19 · 21      133
+                                       =⇒       =           =
+                                          sin A      60         20
+    so AY = 133/20.
+    Let the incircle of 4ABC be tangent to AB and AC at D and E, respectively. We know that
+    AX + AY + XY = AD + AE = 19 + 21 − 20, so AX = 20 − 133   67
+                                                         10 = 10 .
+
+
+
+
+19. [12] Almondine has a bag with N balls, each of which is red, white, or blue. If Almondine picks three
+    balls from the bag without replacement, the probabilitythat
+                                                               she picks one ball of each color is larger
+    than 23 percent. Compute the largest possible value of N3 .
+    Proposed by: James Lin
+    Answer:      29
+                                                                               3
+    Solution: If k = b N3 c, then the maximum possible probability is (3k)(3k−1)(3k−2)
+                                                                             6k
+                                                                                       . with equality when
+                                                                                       k      k+1
+    there are k balls of each of the three colors. Going from 3k → 3k + 1 replaces 3k−2 → 3k+1    , which is
+                                                         k      k+1
+    smaller, and going from 3k + 1 → 3k + 2 replaces 3k−1 → 3k+2 , which is again smaller. For this to be
+                 23
+    larger than 100 , we find we need 0 > 7k 2 − 207k + 46, and so k = 29 is the maximal value.
+
+
+
+20. [12] Let f (x) = x3 − 3x. Compute the number of positive divisors of
+                                        
+                                                           5
+                                f f f f f f f f                          ,
+                                                           2
+
+    where f is applied 8 times.
+    Proposed by: Akash Das
+    Answer:      6562
+    Solution: Note that f (y + y1 ) = (y + y1 )3 − 3(y + y1 ) = y 3 + y13 . Thus, f (2 + 12 ) = 23 + 213 , and in
+                           k
+    general f k 2 + 21 = 23 + 31k , where f is applied k times. It follows that we just need to find the
+                      
+                         j 8 2 k          8
+    number of divisors of 23 + 2138 = 23 , which is just 38 + 1 = 6562.
+
+
+
+21. [14] Bob knows that Alice has 2021 secret positive integers x1 , . . . , x2021 that are pairwise relatively
+    prime. Bob would like to figure out Alice’s integers. He is allowed to choose a set S ⊆ {1, 2, . . . , 2021}
+    and ask her for the product of xi over i ∈ S. Alice must answer each of Bob’s queries truthfully, and
+    Bob may use Alice’s previous answers to decide his next query. Compute the minimum number of
+    queries Bob needs to guarantee that he can figure out each of Alice’s integers.
+    Proposed by: David Vulakh
+    Answer:       11
+    Solution: In general, Bob can find the values of all n integers asking only blog2 nc + 1 queries.
+    For each of Alice’s numbers xi , let Qi be the set of queries S such that i ∈ S. Notice that all Qi must
+    be nonempty and distinct. If there exists an empty Qi , Bob has asked no queries that include xi and
+    has no information about its value. If there exist i, j, i 6= j such that Qi = Qj , xi and xj could be
+    interchanged without the answer to any query changing, so there does not exist a unique sequence of
+    numbers described by the answers to Bob’s queries (Alice can make her numbers distinct).
+    From the above, blog2 nc + 1 is a lower bound on the number of queries, because the number of distinct
+    nonempty subsets of {1, . . . , n} is 2n − 1.
+    If Bob asks any set of queries such that all Qi are nonempty and disjoint, he can uniquely determine
+    Alice’s numbers. In particular, since the values x1 , . . . , x2021 are relatively prime, each prime factor
+    of xi occurs in the answer to query Sj iff j ∈ Q(i) (and that prime factor will occur in each answer
+    exactly to the power with which it appears in the factorization of xi ). Since all Q(i) are unique, all xi
+    can therefore be uniquely recovered by computing the product of the prime powers that occur exactly
+    in the answers to queries Q(i).
+    It is possible for Bob to ask blog2 nc + 1 queries so that each i is contained in a unique nonempty subset
+    of them. One possible construction is to include the index i in the jth query iff the 2i−1 -value bit is
+    set in the binary representation of j. So the answer is blog2 2021c + 1 = 11.
+
+
+
+22. [14] Let E be a three-dimensional ellipsoid. For a plane p, let E(p) be the projection of E onto the
+    plane p. The minimum and maximum areas of E(p) are 9π and 25π, and there exists a p where E(p)
+    is a circle of area 16π. If V is the volume of E, compute V /π.
+    Proposed by: Daniel Zhu
+    Answer:       75
+    Solution: Let the three radii of E be a < b < c. We know that ab = 9 and bc = 25.
+    Consider the plane p where projection E(p) has area 9π. Fixing p, rotate E on the axis passing through
+    the radius with length b until E(p) has area 25π. The projection onto p will be an ellipse with radii b
+    and r, where r increases monotonically from a to c.
+    By Intermediate Value Theorem, there must exist a circular projection with radius b. As the area of
+    this projection is 16π, b = 4. Thus,
+
+                                               4          4 225
+                                         V =     π · abc = ·    π = 75π.
+                                               3          3 4
+23. [14] Let f : N → N be a strictly increasing function such that f (1) = 1 and f (2n)f (2n + 1) =
+    9f (n)2 + 3f (n) for all n ∈ N. Compute f (137).
+    Proposed by: Sheldon Kieren Tan
+    Answer:      2215.
+    Solution: Plugging in n = 1 gives f (2)f (3) = 12, therefore (f (2), f (3)) = (2, 6) or (3, 4). However,
+    the former implies
+                             f (4)f (5) ≥ (6 + 1)(6 + 2) > 42 = 9 · 22 + 3 · 2,
+    which is impossible; therefore f (2) = 3 and f (3) = 4. We now show by induction with step size 2 that
+    f (2n) = 3f (n) and f (2n + 1) = 3f (n) + 1 for all n; the base case n = 1 has already been proven.
+    Assume the statement is true for n < 2k. Applying the given and the inductive hypothesis, we have
+
+                     f (4k)f (4k + 1) = (3f (2k))(3f (2k) + 1) = (9f (k))(9f (k) + 1)
+                 f (4k + 2)f (4k + 3) = (3f (2k + 1))(3f (2k + 1) + 1) = (9f (k) + 3)(9f (k) + 4)
+                                                                              p
+    Let xp = f (4k +  1).  Since f  is strictly increasing, this implies x ≥    f (4k)f (4k + 1) > 9f (k) and
+    x ≤ f (4k + 2)f (4k + 3) − 1 < 9f (k) + 3. So x = 9f (k) + 1 or x = 9f (k) + 2. Since 9f (k) + 2 does
+    not divide 9f (k)(9f (k) + 1), we must have f (4k + 1) = x = 9f (k) + 1 and f (4k) = 9f (k). A similar
+    argument shows that f (4k + 2) = 9f (k) + 3 and f (4k + 3) = 9f (k) + 4, and this completes the inductive
+    step.
+    Now it is a straightforward induction to show that f is the function that takes a number’s binary digits
+    and treats it as base 3. Since 137 = 100010012 in binary, f (137) = 100010013 = 37 + 33 + 1 = 2215.
+    Remark: 137 = 20214 .
+
+
+
+24. [14] Let P be a point selected uniformly at random in the cube [0, 1]3 . The plane parallel to x+y+z = 0
+    passing through P intersects the cube in a two-dimensional region R. Let t be the expected value of
+    the perimeter of R. If t2 can be written as ab , where a and b are relatively prime positive integers,
+    compute 100a + b.
+    Proposed by: Michael Ren
+    Answer:      12108
+    Solution: We can divide the cube into 3 regions based on the value of x + y + z which defines the
+    plane: x + y + z < 1, 1 ≤ x + y + z ≤ 2, and x + y + z > 2. The two regions on the ends create
+    tetrahedra, each of which has volume 1/6. The middle region is a triangular antiprism with volume
+    2/3.
+                                                                                                 √
+    If our point P lies in the middle region, we can see that we will always get the same value 3 2 for the
+    perimeter of R.
+    Now let us compute the expected perimeter given that we pick√ a point P in the first region x+y +z < 1.
+    If x + y + z = a, then the perimeter of R will just be 3 2a, so it is sufficient to find the expected
+    value of a. a is bounded between 0 and 1, and forms a continuous probability distribution with value
+    proportional to a2 , so we can see with a bit of calculus that its expected value is 3/4.
+    The region x + y + z > 2 is identical to √
+                                             the region x + y + z < 1, so we get the same expected
+                                                                                               √ perimeter.
+    Thus we have a 2/3 of a guaranteed 3 2 perimeter, and a 1/3 of having an expected 94 2 perimeter,
+                                                 √           √       √
+    which gives an expected perimeter of 23 · 3 2 + 31 · 94 2 = 114 2 . The square of this is 121
+                                                                                                8 , giving an
+    extraction of 12108.
+
+
+
+25. [16] Let n be a positive integer. Claudio has n cards, each labeled with a different number from 1 to
+    n. He takes a subset of these cards, and multiplies together the numbers on the cards. He remarks
+    that, given any positive integer m, it is possible to select some subset of the cards so that the difference
+    between their product and m is divisible by 100. Compute the smallest possible value of n.
+    Proposed by: Carl Schildkraut
+    Answer:        17
+    Solution: We require that n ≥ 15 so that the product can be divisible by 25 without being even. In
+    addition, for any n > 15, if we can acquire all residues relatively prime to 100, we may multiply them
+    by some product of {1, 2, 4, 5, 15} to achieve all residues modulo 100, so it suffices to acquire only those
+    residues. For n = 15, we have the numbers {3, 7, 9, 11, 13} to work with (as 1 is superfluous); these
+    give only 25 = 32 distinct products, so they cannot be sufficient. So, we must have n ≥ 17, whence we
+    have the numbers {3, 7, 9, 11, 13, 17}. These generators are in fact sufficient. The following calculations
+    are motivated by knowledge of factorizations of some small numbers, as well as careful consideration
+    of which sets of numbers we have and haven’t used. It is also possible to simply write out a table of
+    which residues relatively prime to 100 are included once each number is added, which likely involves
+    fewer calculations.
+    First, consider the set {3, 11, 13, 17}. This set generates, among other numbers, those in {1, 11, 21, 31, 51, 61}.
+    Since {7, 9} generates {1, 7, 9, 63}, which spans every residue class mod 10 relatively prime to 10, we
+    need only worry about
+                                             {41, 71, 81, 91} × {1, 7, 9, 63}.
+    Since 41 can be generated as 3 · 7 · 13 · 17 and 91 can be generated as 7 · 13, we need not worry about
+    these times 1 and 9, and we may verify
+
+                                    41 · 7 ≡ 87 ≡ 11 · 17, 91 · 63 ≡ 33 ≡ 3 · 11.
+
+    and
+                                          91 · 7 ≡ 37 ≡ 3 · 9 · 11 · 13 · 17,
+    using the method we used to generate 49 earlier. So, we only need to worry about
+
+                                               {71, 81} × {1, 7, 9, 63}.
+
+    We calculate
+                           71 ≡ 7 · 9 · 17, 71 · 9 ≡ 39 ≡ 3 · 13, 71 · 63 ≡ 73 ≡ 3 · 7 · 13,
+    each of which doesn’t use 11, allowing us to get all of
+
+                                                {71, 81} × {1, 9, 63},
+
+    so we are only missing 71 · 7 ≡ 97 and 81 · 7 ≡ 67. We find
+
+                                                    97 ≡ 3 · 9 · 11
+
+    and
+                                                 67 ≡ 3 · 9 · 13 · 17,
+    so all numbers are achievable and we are done.
+
+
+
+26. [16] Let triangle ABC have incircle ω, which touches BC, CA, and AB at D, E, and F , respectively.
+    Then, let ω1 and ω2 be circles tangent to AD and internally tangent to ω at E and F , respectively.
+    Let P be the intersection of line EF and the line passing through the centers of ω1 and ω2 . If ω1 and
+    ω2 have radii 5 and 6, respectively, compute P E · P F .
+    Proposed by: Akash Das
+    Answer:        3600
+    Solution: Let the centers of ω1 and ω2 be O1 and O2 . Let DE intersect ω1 again at Q, and let DF
+    intersect ω2 again at R. Note that since ω1 and ω2 must be tangent to AD at the same point (by equal
+    tangents), so AD must be the radical axis of ω1 and ω2 , so RQEF is cyclic. Thus, we have
+
+                        ∠O1 QR = ∠EQR − ∠O1 QE = 180◦ − ∠EF D − ∠O1 EQ = 90◦
+
+    Thus, we have QR is tangent to ω1 , and similarly it must be tangent to ω2 as well.
+    Now, note that by Monge’s theorem on ω, ω1 , and ω2 , we have that P must be the intersection of the
+    external tangents of ω1 and ω2 . Since RQ is an external tangent, we have P , √
+                                                                                  Q, and R are collinear.
+                                                                                                    √
+    Thus, by power of a point, we have P E · P F = P R · P Q. Note that P R = 10 30 and P Q = 12 30.
+    Thus, we have P E · P F = 3600.
+
+
+
+27. [16] Let P be the set of points
+
+                                         {(x, y) | 0 ≤ x, y ≤ 25, x, y ∈ Z},
+
+    and let T be the set of triangles formed by picking three distinct points in P (rotations, reflections,
+    and translations count as distinct triangles). Compute the number of triangles in T that have area
+    larger than 300.
+    Proposed by: Andrew Lin, Haneul Shin
+    Answer:      436
+    Solution: Lemma: The area of any triangle inscribed in an a by b rectangle is at most ab        2 . (Any
+    triangle’s area can be increased by moving one of its sides to a side of the rectangle). Given this,
+    because any triangle in T is inscribed in a 25 × 25 square, we know that the largest possible area of
+                     2
+    a triangle is 252 , and any triangle which does not use the full range of x or y-values will have area no
+                25·24
+    more than 2 = 300.
+    There are 4 · 25 = 100 triangles of maximal area: pick a side of the square and pick one of the 26
+    vertices on the other side of our region; each triangle with three vertices at the corners of the square
+    is double-counted once. To get areas between 25·242   and 25·25
+                                                                2 , we need to pick a vertex of the square
+                                                                                                      2
+    ((0, 0) without loss of generality), as well as (25, y) and (x, 25). By Shoelace, this has area 25 2−xy , and
+                                                                                      2
+    since x and y must both be integers, there are d(n) ways to get an area of 25 2−n in this configuration,
+    where d(n) denotes the number of divisors of n.
+                                                                                                             2
+    Since we can pick any of the four vertices to be our corner, there are then 4d(n) triangles of area 25 2−n
+    for 1 ≤ n ≤ 25. So, we compute the answer to be
+
+                         |P | = 100 + 4(d(1) + . . . + d(24))
+                                  X  24 
+                              =4
+                                        k
+                                  k≤24
+
+                             = 100 + 4(24 + 12 + 8 + 6 + 4 + 4 + 3 + 3 + 2 · 4 + 1 · 12)
+                             = 436.
+
+
+
+
+28. [16] Caroline starts with the number 1, and every second she flips a fair coin; if it lands heads, she
+    adds 1 to her number, and if it lands tails she multiplies her number by 2. Compute the expected
+    number of seconds it takes for her number to become a multiple of 2021.
+    Proposed by: Carl Schildkraut, Krit Boonsiriseth
+    Answer:      4040
+   Solution: Consider this as a Markov chain on Z/2021Z. This Markov chain is aperiodic (since 0 can
+   go to 0) and any number can be reached from any other number (by adding 1), so it has a unique
+   stationary distribution π, which is uniform (since the uniform distribution is stationary).
+   It is a well-known theorem on Markov chains that the expected return time from a state i back to i is
+   equal to the inverse of the probability πi of i in the stationary distribution. (One way to see this is to
+   take a length n → ∞ random walk on this chain, and note that i occurs roughly πi of the time.) Since
+                            1
+   the probability of 0 is 2021 , the expected return time from 0 to 0 is 2021.
+   After the first step (from 0), we are at 1 with probability 1/2 and 0 with probability 1/2, so the number
+   of turns it takes to get from 1 to 0 on expectation is 2 · 2021 − 2 = 4040.
+
+
+
+29. [18] Compute the number of complex numbers z with |z| = 1 that satisfy
+
+                                  1 + z 5 + z 10 + z 15 + z 18 + z 21 + z 24 + z 27 = 0.
+
+   Proposed by: Daniel Zhu
+   Answer:        11
+   Solution: Let the polynomial be f (z). One can observe that
+
+                                        1 − z 15     15 1 − z
+                                                              15
+                                                                   1 − z 20     18 1 − z
+                                                                                         12
+                              f (z) =            + z             =          + z             ,
+                                        1 − z5          1 − z3     1 − z5          1 − z3
+   so all primitive 15th roots of unity are roots, along with −1 and ±i.
+   To show that there are no more, we can try to find gcd(f (z), f (1/z)). One can show that there exist
+   a, b so that z a f (z) − z b f (1/z) can be either of these four polynomials:
+
+                                   (1 + z 5 + z 10 )(1 − z 32 ),   (1 + z 5 + z 10 + z 15 )(1 − z 30 ),
+                        (1 + z 3 + z 6 + z 9 + z 12 )(z 32 − 1), (1 + z 3 + z 6 + z 9 )(z 30 − 1).
+
+   Thus any unit circle root of f (z) must divide the four polynomials (1 − z 15 )(1 − z 32 )/(1 − z 5 ),
+   (1 − z 20 )(1 − z 30 )/(1 − z 5 ), (1 − z 15 )(1 − z 32 )/(1 − z 3 ), (1 − z 12 )(1 − z 30 )/(1 − z 3 ). This implies
+   that z must be a primitive kth root of unity, where k ∈ {1, 2, 4, 15}. The case k = 1 is clearly extrane-
+   ous, so we are done.
+
+
+
+30. [18] Let f (n) be the largest prime factor of n2 + 1. Compute the least positive integer n such that
+    f (f (n)) = n.
+   Proposed by: Milan Haiman
+   Answer:        89
+   Solution: Suppose f (f (n)) = n, and let m = f (n). Note that we have mn | m2 + n2 + 1.
+   First we find all pairs of positive integers that satisfy this condition, using Vieta root jumping.
+   Suppose m2 + n2 + 1 = kmn, for some positive integer k. Considering this as a quadratic in m, let
+   the other root (besides m) be m0 . We have m0 + m = kn, so m0 is an integer. Also, mm0 = n2 + 1.
+   So if m > n then m0 ≤ n. So if we have a solution (m, n) we can find a smaller solution (n, m0 ). In
+   particular, it suffices to find all small solutions to describe all solutions. A minimal solution must have
+   m = n, which gives only m = n = 1. We have that k = 3.
+   Now the recurrence a0 = a1 = 1, an + an+2 = 3an+1 describes all solutions with consecutive terms. In
+   fact this recurrence gives precisely other Fibonacci number: 1, 1, 2, 5, 13, 34, 89, 233, . . .
+   Checking these terms gives an answer of 89.
+31. [18] Roger initially has 20 socks in a drawer, each of which is either white or black. He chooses a sock
+    uniformly at random from the drawer and throws it away. He repeats this action until there are equal
+    numbers of white and black socks remaining.
+    Suppose that the probability he stops before all socks are gone is p. If the sum of all distinct possible
+    values of p over all initial combinations of socks is ab for relatively prime positive integers a and b,
+    compute 100a + b.
+    Proposed by: Michael Diao
+    Answer:      20738
+    Solution: Let bi and wi be the number of black and white socks left after i socks have been thrown
+    out. In particular, b0 + w0 = 20.
+                                                  bi
+    The key observation is that the ratio ri = bi +w i
+                                                       is a martingale (the expected value of ri+1 given ri is
+    just ri ).
+    Suppose WLOG that b0 < w0 (we will deal with the case b0 = w0 later). Say that we stop at i if bi = 0
+    or bi = wi . Then the expected value of ri when we stop is
+                                          1                        b0
+                                            · p + 0 · (1 − p) =
+                                          2                     b0 + w0
+
+    This rearranges to p = b02b
+                             +w0 .
+                                0
+
+
+    Meanwhile, if b0 = w0 = 10, we can reduce to the case b1 = 9 < 10 = w1 . Hence
+                                 10        9
+                                                  !
+                                 X        X   2b0      18    9 18      207
+                                     p=             +     = +       =      .
+                                               20      19    2 19       38
+                                  b0 =0       b0
+
+
+
+
+32. [18] Let acute triangle ABC have circumcenter O, and let M be the midpoint of BC. Let P be the
+    unique point such that ∠BAP = ∠CAM , ∠CAP = ∠BAM , and ∠AP O = 90◦ . If AO = 53, OM = 28,
+    and AM = 75, compute the perimeter of 4BP C.
+    Proposed by: Jeffrey Lu
+    Answer:      192
+    Solution: The point P has many well-known properties, including the property that ∠BAP = ∠ACP
+    and ∠CAP = ∠BAP . We prove this for completeness.
+                            √
+    Invert at A with radius AB · AC and reflect about the A-angle bisector. Let P 0 be the image of P .
+    The angle conditions translate to
+      • P 0 lies on line AM
+      • P 0 lies on the line parallel to BC that passes through the reflection of A about BC (since P lies
+        on the circle with diameter AO)
+    In other words, P 0 is the reflection of A about M . Then BP 0 k AC and CP 0 k AB, so the circumcircles
+    of 4ABP and 4ACP are tangent to AC and AB, respectively. This gives the desired result. 
+    Extend BP and CP to meet the circumcircle of 4ABC again at B 0 and C 0 , respectively. Then
+    ∠C 0 BA = ∠ACP = ∠BAP , so BC 0 k AP . Similarly, CB 0 k AP , so BCB 0 C 0 is an isosceles trapezoid.
+    In particular, this means B 0 P = CP , so BP + P C = BB 0 . Now observe that ∠ABP = ∠CAP =
+    ∠BAM , so if AM meets the circumcircle of 4ABC again at A0 , then AA0 = BB 0 . Thus the perimeter
+    of 4BP C is BP + P C + BC = BB 0 + BC = AA0 + BC.
+    Now we compute. We have
+                                           p              √
+                                     BC = 2 AO2 − OM 2 = 2 81 · 25 = 90
+    and Power of a Point gives
+                                                     BM 2   452
+                                            M A0 =        =     = 27.
+                                                     AM     75
+    Thus AA0 + BC = 75 + 27 + 90 = 192.
+
+
+
+
+33. [20] After the Guts round ends, HMMT organizers will collect all answers submitted to all 66 questions
+    (including this one) during the individual rounds and the guts round. Estimate N , the smallest positive
+    integer that no one will have submitted at any point during the tournament.
+    An estimate of E will receive max (0, 24 − 4|E − N |) points.
+    Proposed by: Carl Schildkraut
+    Answer:       139
+    Solution: The correct answer was 139.
+    Remark: Until the end of the Guts round, no team had submitted 71 as the answer to any question.
+    One team, however, submitted 71 as their answer to this question, increasing the answer up to 139.
+
+
+
+34. [20] Let f (n) be the largest prime factor of n. Estimate
+                                             $       P106         2
+                                                                       %
+                                                       n=2  f   n   − 1
+                                        N = 104 ·      P106                .
+                                                          n=2 f (n)
+                                                            1/3 
+    An estimate of E will receive max 0, 20 − 20 |E−N   103
+                                                             |
+                                                                        points.
+
+    Proposed by: Carl Schildkraut
+    Answer:       18215
+    Solution: We remark that
+                                      f (n2 − 1) = max(f (n − 1), f (n + 1)).
+    Let X be a random variable that evaluates to f (n) for a randomly chosen 2 ≤ n ≤ 106 ; we essentially
+    want to estimate
+                                               E[max(X1 , X2 )]
+                                                   E[X3 ]
+    where Xi denotes a variable with distribution identical to X (this is assuming that the largest prime
+    factors of n − 1 and n + 1 are roughly independent).
+    A crude estimate can be compiled by approximating that f (n) is roughly 106 whenever n is prime and
+    0 otherwise. Since a number in this interval should be prime with ”probability” ln 1106 , we may replace
+    each Xi with a Bernoulli random variable that is 1 with probability ln 1106 ∼ 14
+                                                                                  1
+                                                                                     and 0 otherwise. This
+    gives us an estimate of
+                                               1 · 2·14−1
+                                                     142    27
+                                                    1     =    .
+                                                    14
+                                                            14
+    However, this estimate has one notable flaw: n−1 and n+1 are more likely to share the same primality
+    than arbitrarily chosen numbers, since they share the same parity. So, if we restrict our sums to only
+    considering f (n) for odd numbers, we essentially replace each Xi with a Bernoulli random variable
+    with expectation 1/7, giving us an estimate of 13
+                                                   7 , good for 5 points.
+    This estimate can be substantially improved if we consider other possible factors, which increases the
+    correlation between f (n − 1) and f (n + 1) and thus decreases one’s estimate. The correct value of N
+    is 18215.
+35. [20] Geoff walks on the number line for 40 minutes, starting at the point 0. On the nth minute, he
+    flips a fair coin. If it comes up heads he walks n1 in the positive direction and if it comes up tails he
+    walks n1 in the negative direction. Let p be the probability that he never leaves the interval [−2, 2].
+    Estimate N = b104 pc.
+                                                           1/3 
+    An estimate of E will receive max 0, 20 − 20 |E−N   160
+                                                            |
+                                                                      points.
+
+    Proposed by: Michael Ren
+    Answer:       8101
+    Solution: To estimate it by hand, we’ll do casework on the most likely ways that Geoff will go past
+    +2, and double the answer. If Geoff starts with one of the three sequences below, he will be past 2 or
+    very close to 2:
+                             (+, +, +, +), (+, +, +, −, +, +), (+, +, −, +, +, +).
+                                                  1    2   3                                   3
+    The probability of one of these happening is 16 + 64 = 32 . This gives an estimate of p = 16 , which
+    gives E = 8125 and earns 9 points.
+    We can justify throwing out other starting sequences as follows. For example, suppose we start with
+    (+, +, −, −). At this point we are at 11
+                                          12 . The variance of the rest of our random walk is
+
+                                     40
+                                     X  1           π2    1 1  1
+                                                <      −1− − −   < 0.25.
+                                     n=5
+                                           n2       6     4 9 16
+
+                                                                                                         13
+    So, the standard deviation of the rest of our walk is bounded by 0.5, which is much less than the 12
+    Geoff needs to go to get to +2. One can use similar estimates for other sequences to justify them as
+    negligible. Furthermore, we can even use similar estimates to justify that if Geoff get close enough to
+    +2, he is very likely to escape the interval [−2, 2].
+    The exact value for p is 0.8101502670..., giving N = 8101.
+
+
+
+36. [20] A set of 6 distinct lattice points is chosen uniformly at random from the set {1, 2, 3, 4, 5, 6}2 . Let
+    A be the expected area of the convex hull of these 6 points. Estimate N = b104 Ac.
+                                                            1/3 
+    An estimate of E will receive max 0, 20 − 20 |E−N    104
+                                                             |
+                                                                       points.
+
+    Proposed by: Milan Haiman
+    Answer:       104552
+    Solution: The main tools we will use are linearity of expectation and Pick’s theorem. Note that the
+    resulting polygon is a lattice polygon, and this the expected area A satisfies
+                                                              B
+                                                     A=I+       − 1,
+                                                              2
+    where I is the expected number of interior points and B is the expected number of boundary points.
+    We may now use linearity of expectation to write this as
+                                                      X
+                                       A = −1 +              E[Xp ],
+                                                        p∈{1,2,...,6}2
+
+
+    where Xp is 1 if the point is inside the polygon, 1/2 if the point is on the boundary, and 0 otherwise.
+    Letting f (p) = E[Xp ], we may write this by symmetry as
+
+                    A = −1 + 4f (1, 1) + 8f (1, 2) + 8f (1, 3) + 4f (2, 2) + 8f (2, 3) + 4f (3, 3).
+There are many ways to continue the estimation from here; we outline one approach. Since X(1,1) is
+1/2 if and only if (1, 1) is one of the selected points (and 0 otherwise), we see
+                                                          1
+                                             f (1, 1) =      .
+                                                          12
+On the other hand, we may estimate that a central point is exceedingly likely to be within the polygon,
+and guess f (3, 3) ≈ 1. We may also estimate f (1, y) for y ∈ {2, 3}; such a point is on the boundary if
+and only if (1, y) is selected or (1, z) is selected for some z < y and for some z > y. The first event
+happens with probability 1/6, and the second event happens with some smaller probability that can
+be estimated by choosing the 6 points independently (without worrying about them being distinct);
+this works out to give the slight overestimate
+                                                                 1
+                                          f (1, 2), f (1, 3) ≈     .
+                                                                 8
+From here, it is not so clear how to estimate f (2, 2) and f (2, 3), but one way is to make f (x, y)
+somewhat linear in each component; this works out to give
+                                                    1             1
+                                       f (2, 2) ≈     , f (2, 3) ≈ .
+                                                    4             2
+(In actuality the estimates we’d get would be slightly higher, but each of our estimates for f (x, y) up
+until this point have been slight overestimates.) Summing these up gives us an estimate of A ≈ 31   3 or
+E = 103333, which earns 10 points. The actual value of A is 10.4552776..., and so N = 104552.
+

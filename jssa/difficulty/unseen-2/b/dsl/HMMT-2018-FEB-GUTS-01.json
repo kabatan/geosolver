@@ -1,0 +1,72 @@
+{
+  "id": "HMMT-2018-FEB-GUTS-01",
+  "variables": [
+    "s"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(s, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(s, s)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(0, s)"
+    },
+    {
+      "name": "O",
+      "expression": "Midpoint(A,C)"
+    },
+    {
+      "name": "M",
+      "expression": "Midpoint(A,B)"
+    },
+    {
+      "name": "N",
+      "expression": "Midpoint(B,C)"
+    },
+    {
+      "name": "P",
+      "expression": "Midpoint(C,D)"
+    },
+    {
+      "name": "Q",
+      "expression": "Midpoint(D,A)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Area(A,M,O,Q)",
+      "operator": "=",
+      "right": 1
+    },
+    {
+      "left": "Area(M,B,N,O)",
+      "operator": "=",
+      "right": 1
+    },
+    {
+      "left": "Area(O,N,C,P)",
+      "operator": "=",
+      "right": 1
+    },
+    {
+      "left": "Area(Q,O,P,D)",
+      "operator": "=",
+      "right": 1
+    },
+    {
+      "left": "s",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Area(A,B,C,D)"
+}

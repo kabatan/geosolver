@@ -1,0 +1,1524 @@
+[
+  {
+    "id": "HMMT-2010-FEB-GUTS-13",
+    "gauge": "原文のxy座標を保持。頂点の任意ラベルA,B,Cを導入し、尺度・原点・回転を変えない。",
+    "notes": [],
+    "mapping": [
+      {
+        "path": "constructions[0]",
+        "source_clause": "未知三角形の頂点",
+        "expression": "Point(ax, ay)"
+      },
+      {
+        "path": "constructions[1]",
+        "source_clause": "未知三角形の頂点",
+        "expression": "Point(bx, by)"
+      },
+      {
+        "path": "constructions[2]",
+        "source_clause": "未知三角形の頂点",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "path": "conditions[0]",
+        "source_clause": "軸への射影線分の端点",
+        "expression": "min(ax, bx, cx) = 1"
+      },
+      {
+        "path": "conditions[1]",
+        "source_clause": "軸への射影線分の端点",
+        "expression": "max(ax, bx, cx) = 5"
+      },
+      {
+        "path": "conditions[2]",
+        "source_clause": "軸への射影線分の端点",
+        "expression": "min(ay, by, cy) = 8"
+      },
+      {
+        "path": "conditions[3]",
+        "source_clause": "軸への射影線分の端点",
+        "expression": "max(ay, by, cy) = 13"
+      },
+      {
+        "path": "conditions[4]",
+        "source_clause": "y=xへの直交射影の座標の定義と下端(5,5)",
+        "expression": "min((ax+ay)/2, (bx+by)/2, (cx+cy)/2) = 5"
+      },
+      {
+        "path": "conditions[5]",
+        "source_clause": "同上、上端(7.5,7.5)。15/2は原文7.5の正確な表記。",
+        "expression": "max((ax+ay)/2, (bx+by)/2, (cx+cy)/2) = 15/2"
+      },
+      {
+        "path": "conditions[6]",
+        "source_clause": "非退化な三角形",
+        "expression": "Area(A,B,C) > 0"
+      },
+      {
+        "path": "target",
+        "source_clause": "三角形の面積",
+        "expression": "Area(A,B,C)"
+      }
+    ],
+    "input_sha256": "7af9d007cc4e3d95da5ac24561d4bee695261bfbc6d51a779978852e91190bd2",
+    "geometric_reference": "17/2",
+    "official_output": "17/2",
+    "output_conversion": "identity"
+  },
+  {
+    "id": "HMMT-2011-FEB-GUTS-01",
+    "gauge": "B=(0,0), C=(b,0), b>0, Aは上半平面。剛体変換と鏡映だけ。面積1なので尺度固定しない。",
+    "notes": [],
+    "mapping": [
+      {
+        "path": "constructions[0]",
+        "source_clause": "座標固定",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "path": "constructions[1]",
+        "source_clause": "座標固定",
+        "expression": "Point(b, 0)"
+      },
+      {
+        "path": "constructions[2]",
+        "source_clause": "未知頂点",
+        "expression": "Point(x, y)"
+      },
+      {
+        "path": "constructions[3]",
+        "source_clause": "DはAB上",
+        "expression": "PointOnSegment(A,B,u)"
+      },
+      {
+        "path": "constructions[4]",
+        "source_clause": "EはAC上",
+        "expression": "PointOnSegment(A,C,v)"
+      },
+      {
+        "path": "constructions[5]",
+        "source_clause": "Aの直線DEに関する鏡像",
+        "expression": "Reflect(A,Line(D,E))"
+      },
+      {
+        "path": "conditions[0]",
+        "source_clause": "面積1",
+        "expression": "Area(A,B,C) = 1"
+      },
+      {
+        "path": "conditions[1]",
+        "source_clause": "DEとBCは平行",
+        "expression": "Parallel(Line(D,E),Line(B,C)) = 0"
+      },
+      {
+        "path": "conditions[2]",
+        "source_clause": "DE/BC=1/3",
+        "expression": "Distance(D,E)/Distance(B,C) = 1/3"
+      },
+      {
+        "path": "conditions[3]",
+        "source_clause": "BC>0",
+        "expression": "b > 0"
+      },
+      {
+        "path": "conditions[4]",
+        "source_clause": "非退化・鏡映固定",
+        "expression": "y > 0"
+      },
+      {
+        "path": "conditions[5]",
+        "source_clause": "DはAB上",
+        "expression": "u >= 0"
+      },
+      {
+        "path": "conditions[6]",
+        "source_clause": "DはAB上",
+        "expression": "u <= 1"
+      },
+      {
+        "path": "conditions[7]",
+        "source_clause": "EはAC上",
+        "expression": "v >= 0"
+      },
+      {
+        "path": "conditions[8]",
+        "source_clause": "EはAC上",
+        "expression": "v <= 1"
+      },
+      {
+        "path": "target",
+        "source_clause": "FBCの面積",
+        "expression": "Area(F,B,C)"
+      }
+    ],
+    "input_sha256": "3bcfa037835a44668040b49593d9caabb7fc9e61080d940f4a432d42375af2e4",
+    "geometric_reference": "1/3",
+    "official_output": "1/3",
+    "output_conversion": "identity"
+  },
+  {
+    "id": "HMMT-2012-FEB-GUTS-06",
+    "gauge": "ABをx軸、ADをy軸に置く。長さ20,12は原文どおり。",
+    "notes": [],
+    "mapping": [
+      {
+        "path": "constructions[0]",
+        "source_clause": "長方形ABCD、BCのC側への延長CZ=18、内部点Eの定義",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "path": "constructions[1]",
+        "source_clause": "長方形ABCD、BCのC側への延長CZ=18、内部点Eの定義",
+        "expression": "Point(20, 0)"
+      },
+      {
+        "path": "constructions[2]",
+        "source_clause": "長方形ABCD、BCのC側への延長CZ=18、内部点Eの定義",
+        "expression": "Point(20, 12)"
+      },
+      {
+        "path": "constructions[3]",
+        "source_clause": "長方形ABCD、BCのC側への延長CZ=18、内部点Eの定義",
+        "expression": "Point(0, 12)"
+      },
+      {
+        "path": "constructions[4]",
+        "source_clause": "長方形ABCD、BCのC側への延長CZ=18、内部点Eの定義",
+        "expression": "Point(20, 12+18)"
+      },
+      {
+        "path": "constructions[5]",
+        "source_clause": "長方形ABCD、BCのC側への延長CZ=18、内部点Eの定義",
+        "expression": "Point(ex, ey)"
+      },
+      {
+        "path": "constructions[6]",
+        "source_clause": "EZとABの交点",
+        "expression": "IntersectLines(Line(E,Z),Line(A,B))"
+      },
+      {
+        "path": "constructions[7]",
+        "source_clause": "EZとCDの交点",
+        "expression": "IntersectLines(Line(E,Z),Line(C,D))"
+      },
+      {
+        "path": "conditions[0]",
+        "source_clause": "EからABの垂直距離6",
+        "expression": "Distance(E,Line(A,B)) = 6"
+      },
+      {
+        "path": "conditions[1]",
+        "source_clause": "EからADの垂直距離6",
+        "expression": "Distance(E,Line(A,D)) = 6"
+      },
+      {
+        "path": "conditions[2]",
+        "source_clause": "Eは長方形内部",
+        "expression": "ex > 0"
+      },
+      {
+        "path": "conditions[3]",
+        "source_clause": "Eは長方形内部",
+        "expression": "ex < 20"
+      },
+      {
+        "path": "conditions[4]",
+        "source_clause": "Eは長方形内部",
+        "expression": "ey > 0"
+      },
+      {
+        "path": "conditions[5]",
+        "source_clause": "Eは長方形内部",
+        "expression": "ey < 12"
+      },
+      {
+        "path": "target",
+        "source_clause": "四角形AXYDの面積",
+        "expression": "Area(A,X,Y,D)"
+      }
+    ],
+    "input_sha256": "ce782ec2329ddf93ce7710901394536878809be15a4863407566dae82e982e73",
+    "geometric_reference": "72",
+    "official_output": "72",
+    "output_conversion": "identity"
+  },
+  {
+    "id": "HMMT-2013-FEB-GUTS-01",
+    "gauge": "原文の座標を保持。差4の任意の2マーカーの差ベクトルは(4,4k)なのでn=1と1+4を代表として用いる。整数変数を導入しない。",
+    "notes": [],
+    "mapping": [
+      {
+        "path": "constructions[0]",
+        "source_clause": "マーカー(n,nk)の定義",
+        "expression": "Point(1, (1)*k)"
+      },
+      {
+        "path": "constructions[1]",
+        "source_clause": "マーカー(n,nk)の定義",
+        "expression": "Point(1+4, (1+4)*k)"
+      },
+      {
+        "path": "constructions[2]",
+        "source_clause": "マーカー(n,nk)の定義",
+        "expression": "Point(7, (7)*k)"
+      },
+      {
+        "path": "constructions[3]",
+        "source_clause": "マーカー(n,nk)の定義",
+        "expression": "Point(19, (19)*k)"
+      },
+      {
+        "path": "conditions[0]",
+        "source_clause": "kは正の実数",
+        "expression": "k > 0"
+      },
+      {
+        "path": "conditions[1]",
+        "source_clause": "x座標差4のマーカー間距離31",
+        "expression": "Distance(U,V) = 31"
+      },
+      {
+        "path": "target",
+        "source_clause": "(7,7k)と(19,19k)の距離",
+        "expression": "Distance(P,Q)"
+      }
+    ],
+    "input_sha256": "bf182d6adcc32f058cd11ceff6566f03352486c306815f788417264bbe41e233",
+    "geometric_reference": "93",
+    "official_output": "93",
+    "output_conversion": "identity"
+  },
+  {
+    "id": "HMMT-2014-FEB-GUTS-03",
+    "gauge": "面積比なので中心を原点、外接半径を1に固定できる。",
+    "notes": [],
+    "mapping": [
+      {
+        "path": "constructions[0]",
+        "source_clause": "正6角形の中心角の定義。中心原点、半径1。",
+        "expression": "Point(cos(2*pi*0/6), sin(2*pi*0/6))"
+      },
+      {
+        "path": "constructions[1]",
+        "source_clause": "正6角形の中心角の定義。中心原点、半径1。",
+        "expression": "Point(cos(2*pi*1/6), sin(2*pi*1/6))"
+      },
+      {
+        "path": "constructions[2]",
+        "source_clause": "正6角形の中心角の定義。中心原点、半径1。",
+        "expression": "Point(cos(2*pi*2/6), sin(2*pi*2/6))"
+      },
+      {
+        "path": "constructions[3]",
+        "source_clause": "正6角形の中心角の定義。中心原点、半径1。",
+        "expression": "Point(cos(2*pi*3/6), sin(2*pi*3/6))"
+      },
+      {
+        "path": "constructions[4]",
+        "source_clause": "正6角形の中心角の定義。中心原点、半径1。",
+        "expression": "Point(cos(2*pi*4/6), sin(2*pi*4/6))"
+      },
+      {
+        "path": "constructions[5]",
+        "source_clause": "正6角形の中心角の定義。中心原点、半径1。",
+        "expression": "Point(cos(2*pi*5/6), sin(2*pi*5/6))"
+      },
+      {
+        "path": "constructions[6]",
+        "source_clause": "BDFの内接円",
+        "expression": "Incircle(B,D,F)"
+      },
+      {
+        "path": "target",
+        "source_clause": "円Pの面積/長方形ABDEの面積",
+        "expression": "pi*Radius(P)**2/Area(A,B,D,E)"
+      }
+    ],
+    "input_sha256": "025ebf25905c38f329c2e025ecc6925a8ddf9e3165d2a50528f2dce11d686603",
+    "geometric_reference": "pi*sqrt(3)/12",
+    "official_output": "pi*sqrt(3)/12",
+    "output_conversion": "identity"
+  },
+  {
+    "id": "HMMT-2015-FEB-GUTS-24",
+    "gauge": "A=(0,0), B=(10,0)。Dを上半平面に置く鏡映固定。尺度は変更しない。円omegaが四角形に内包されるとは追加しない。",
+    "notes": [],
+    "mapping": [
+      {
+        "path": "constructions[0]",
+        "source_clause": "原文の点、接円の未知中心W",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "path": "constructions[1]",
+        "source_clause": "原文の点、接円の未知中心W",
+        "expression": "Point(10, 0)"
+      },
+      {
+        "path": "constructions[2]",
+        "source_clause": "原文の点、接円の未知中心W",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "path": "constructions[3]",
+        "source_clause": "原文の点、接円の未知中心W",
+        "expression": "Point(dx, dy)"
+      },
+      {
+        "path": "constructions[4]",
+        "source_clause": "原文の点、接円の未知中心W",
+        "expression": "Point(wx, wy)"
+      },
+      {
+        "path": "constructions[5]",
+        "source_clause": "ABCDの共円条件のための円ABC",
+        "expression": "Circumcircle(A,B,C)"
+      },
+      {
+        "path": "conditions[0]",
+        "source_clause": "BC=8",
+        "expression": "Distance(B,C) = 8"
+      },
+      {
+        "path": "conditions[1]",
+        "source_clause": "CD=25",
+        "expression": "Distance(C,D) = 25"
+      },
+      {
+        "path": "conditions[2]",
+        "source_clause": "DA=12",
+        "expression": "Distance(D,A) = 12"
+      },
+      {
+        "path": "conditions[3]",
+        "source_clause": "Dも円ABC上",
+        "expression": "Distance(Center(Gamma),D) = Radius(Gamma)"
+      },
+      {
+        "path": "constructions[6]",
+        "source_clause": "接点は中心WからDAへの垂足",
+        "expression": "FootOfPerpendicular(Line(D,A),W)"
+      },
+      {
+        "path": "conditions[4]",
+        "source_clause": "半径rの円が直線DAに接する",
+        "expression": "Distance(W,T0) = r"
+      },
+      {
+        "path": "conditions[5]",
+        "source_clause": "接点が線分DA上（延長線ではない）",
+        "expression": "(T0.x-D.x)*(A.x-D.x)+(T0.y-D.y)*(A.y-D.y) >= 0"
+      },
+      {
+        "path": "conditions[6]",
+        "source_clause": "接点が線分DA上（延長線ではない）",
+        "expression": "(T0.x-D.x)*(A.x-D.x)+(T0.y-D.y)*(A.y-D.y) <= Distance(D,A)**2"
+      },
+      {
+        "path": "constructions[7]",
+        "source_clause": "接点は中心WからABへの垂足",
+        "expression": "FootOfPerpendicular(Line(A,B),W)"
+      },
+      {
+        "path": "conditions[7]",
+        "source_clause": "半径rの円が直線ABに接する",
+        "expression": "Distance(W,T1) = r"
+      },
+      {
+        "path": "conditions[8]",
+        "source_clause": "接点が線分AB上（延長線ではない）",
+        "expression": "(T1.x-A.x)*(B.x-A.x)+(T1.y-A.y)*(B.y-A.y) >= 0"
+      },
+      {
+        "path": "conditions[9]",
+        "source_clause": "接点が線分AB上（延長線ではない）",
+        "expression": "(T1.x-A.x)*(B.x-A.x)+(T1.y-A.y)*(B.y-A.y) <= Distance(A,B)**2"
+      },
+      {
+        "path": "constructions[8]",
+        "source_clause": "接点は中心WからBCへの垂足",
+        "expression": "FootOfPerpendicular(Line(B,C),W)"
+      },
+      {
+        "path": "conditions[10]",
+        "source_clause": "半径rの円が直線BCに接する",
+        "expression": "Distance(W,T2) = r"
+      },
+      {
+        "path": "conditions[11]",
+        "source_clause": "接点が線分BC上（延長線ではない）",
+        "expression": "(T2.x-B.x)*(C.x-B.x)+(T2.y-B.y)*(C.y-B.y) >= 0"
+      },
+      {
+        "path": "conditions[12]",
+        "source_clause": "接点が線分BC上（延長線ではない）",
+        "expression": "(T2.x-B.x)*(C.x-B.x)+(T2.y-B.y)*(C.y-B.y) <= Distance(B,C)**2"
+      },
+      {
+        "path": "conditions[13]",
+        "source_clause": "通常の非自己交差な共円四角形の頂点順",
+        "expression": "ConvexPolygon([A,B,C,D])"
+      },
+      {
+        "path": "conditions[14]",
+        "source_clause": "鏡映固定",
+        "expression": "dy > 0"
+      },
+      {
+        "path": "conditions[15]",
+        "source_clause": "円の半径は正",
+        "expression": "r > 0"
+      },
+      {
+        "path": "target",
+        "source_clause": "接円omegaの半径",
+        "expression": "r"
+      }
+    ],
+    "input_sha256": "aded7c7b37565f67ad40b92082766e6e90a7c39a90fa6ce0122da3f1225530bf",
+    "geometric_reference": "sqrt(8463)/7",
+    "official_output": "sqrt(8463)/7",
+    "output_conversion": "identity"
+  },
+  {
+    "id": "HMMT-2016-FEB-GUTS-14",
+    "gauge": "A=(0,0), B=(13,0), Cは上半平面。剛体変換と鏡映のみ。",
+    "notes": [],
+    "mapping": [
+      {
+        "path": "constructions[0]",
+        "source_clause": "座標固定",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "path": "constructions[1]",
+        "source_clause": "AB=13",
+        "expression": "Point(13, 0)"
+      },
+      {
+        "path": "constructions[2]",
+        "source_clause": "未知頂点C",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "path": "conditions[0]",
+        "source_clause": "BC=14",
+        "expression": "Distance(B,C) = 14"
+      },
+      {
+        "path": "conditions[1]",
+        "source_clause": "CA=15",
+        "expression": "Distance(C,A) = 15"
+      },
+      {
+        "path": "conditions[2]",
+        "source_clause": "非退化・鏡映固定",
+        "expression": "cy > 0"
+      },
+      {
+        "path": "constructions[3]",
+        "source_clause": "BからACへの垂足",
+        "expression": "FootOfPerpendicular(Line(A,C),B)"
+      },
+      {
+        "path": "constructions[4]",
+        "source_clause": "CからABへの垂足",
+        "expression": "FootOfPerpendicular(Line(A,B),C)"
+      },
+      {
+        "path": "constructions[5]",
+        "source_clause": "AEFの外接円",
+        "expression": "Circumcircle(A,E,F)"
+      },
+      {
+        "path": "constructions[6]",
+        "source_clause": "接線は接点の半径に垂直な直線という定義",
+        "expression": "PerpendicularLine(Line(Center(omega),A),A)"
+      },
+      {
+        "path": "constructions[7]",
+        "source_clause": "接線は接点の半径に垂直な直線という定義",
+        "expression": "PerpendicularLine(Line(Center(omega),E),E)"
+      },
+      {
+        "path": "constructions[8]",
+        "source_clause": "接線は接点の半径に垂直な直線という定義",
+        "expression": "PerpendicularLine(Line(Center(omega),F),F)"
+      },
+      {
+        "path": "constructions[9]",
+        "source_clause": "指定3接線の交点",
+        "expression": "IntersectLines(lA,lE)"
+      },
+      {
+        "path": "constructions[10]",
+        "source_clause": "指定3接線の交点",
+        "expression": "IntersectLines(lE,lF)"
+      },
+      {
+        "path": "constructions[11]",
+        "source_clause": "指定3接線の交点",
+        "expression": "IntersectLines(lF,lA)"
+      },
+      {
+        "path": "target",
+        "source_clause": "3接線が囲む三角形の面積",
+        "expression": "Area(U,V,W)"
+      }
+    ],
+    "input_sha256": "f56b79362a5b85e3941c5651884f87fd04e715a872b1e1b60bf009f1fca907bc",
+    "geometric_reference": "462/5",
+    "official_output": "462/5",
+    "output_conversion": "identity"
+  },
+  {
+    "id": "HMMT-2017-FEB-GUTS-02",
+    "gauge": "X=(0,0), Y=(t,0), t>0, Zは上半平面。指定線分順序と長さを単位方向ベクトルで直接構成する。",
+    "notes": [],
+    "mapping": [
+      {
+        "path": "constructions[0]",
+        "source_clause": "AX=3, DY=10, A-X-Y-Dの順序",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "path": "constructions[1]",
+        "source_clause": "AX=3, DY=10, A-X-Y-Dの順序",
+        "expression": "Point(t, 0)"
+      },
+      {
+        "path": "constructions[2]",
+        "source_clause": "AX=3, DY=10, A-X-Y-Dの順序",
+        "expression": "Point(zx, zy)"
+      },
+      {
+        "path": "constructions[3]",
+        "source_clause": "AX=3, DY=10, A-X-Y-Dの順序",
+        "expression": "Point(-3, 0)"
+      },
+      {
+        "path": "constructions[4]",
+        "source_clause": "AX=3, DY=10, A-X-Y-Dの順序",
+        "expression": "Point(t+10, 0)"
+      },
+      {
+        "path": "constructions[5]",
+        "source_clause": "BX=2, B-X-Zの順序",
+        "expression": "Point(-2*zx/Distance(X,Z), -2*zy/Distance(X,Z))"
+      },
+      {
+        "path": "constructions[6]",
+        "source_clause": "EZ=16, 円周上の順序よりB-X-Z-E",
+        "expression": "Point(zx+16*zx/Distance(X,Z), zy+16*zy/Distance(X,Z))"
+      },
+      {
+        "path": "constructions[7]",
+        "source_clause": "CY=4, C-Y-Zの順序",
+        "expression": "Point(t+4*(t-zx)/Distance(Y,Z), -4*zy/Distance(Y,Z))"
+      },
+      {
+        "path": "constructions[8]",
+        "source_clause": "FZ=12, 円周上の順序よりC-Y-Z-F",
+        "expression": "Point(zx+12*(zx-t)/Distance(Y,Z), zy+12*zy/Distance(Y,Z))"
+      },
+      {
+        "path": "constructions[9]",
+        "source_clause": "原文の共通円",
+        "expression": "Circumcircle(A,B,C)"
+      },
+      {
+        "path": "conditions[0]",
+        "source_clause": "6頂点が同一円周上",
+        "expression": "Distance(Center(omega),D) = Radius(omega)"
+      },
+      {
+        "path": "conditions[1]",
+        "source_clause": "6頂点が同一円周上",
+        "expression": "Distance(Center(omega),E) = Radius(omega)"
+      },
+      {
+        "path": "conditions[2]",
+        "source_clause": "6頂点が同一円周上",
+        "expression": "Distance(Center(omega),F) = Radius(omega)"
+      },
+      {
+        "path": "conditions[3]",
+        "source_clause": "X,Yの順序",
+        "expression": "t > 0"
+      },
+      {
+        "path": "conditions[4]",
+        "source_clause": "非退化・鏡映固定",
+        "expression": "zy > 0"
+      },
+      {
+        "path": "conditions[5]",
+        "source_clause": "A,B,C,D,E,Fの円周順序",
+        "expression": "ConvexPolygon([A,B,C,D,E,F])"
+      },
+      {
+        "path": "target",
+        "source_clause": "三角形XYZの周長",
+        "expression": "Distance(X,Y)+Distance(Y,Z)+Distance(Z,X)"
+      }
+    ],
+    "input_sha256": "84d7ee7a90236b6b91a17bc6562029bd1c312d41b7c1b3441caa34eb416cb99a",
+    "geometric_reference": "77/6",
+    "official_output": "77/6",
+    "output_conversion": "identity"
+  },
+  {
+    "id": "HMMT-2018-FEB-GUTS-01",
+    "gauge": "正方形を軸に沿わせる。辺長sは未知。原図の中線による四等分をそのまま構成。",
+    "notes": [],
+    "mapping": [
+      {
+        "path": "constructions[0]",
+        "source_clause": "外側の正方形",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "path": "constructions[1]",
+        "source_clause": "外側の正方形",
+        "expression": "Point(s, 0)"
+      },
+      {
+        "path": "constructions[2]",
+        "source_clause": "外側の正方形",
+        "expression": "Point(s, s)"
+      },
+      {
+        "path": "constructions[3]",
+        "source_clause": "外側の正方形",
+        "expression": "Point(0, s)"
+      },
+      {
+        "path": "constructions[4]",
+        "source_clause": "原図の中点・中心",
+        "expression": "Midpoint(A,C)"
+      },
+      {
+        "path": "constructions[5]",
+        "source_clause": "原図の中点・中心",
+        "expression": "Midpoint(A,B)"
+      },
+      {
+        "path": "constructions[6]",
+        "source_clause": "原図の中点・中心",
+        "expression": "Midpoint(B,C)"
+      },
+      {
+        "path": "constructions[7]",
+        "source_clause": "原図の中点・中心",
+        "expression": "Midpoint(C,D)"
+      },
+      {
+        "path": "constructions[8]",
+        "source_clause": "原図の中点・中心",
+        "expression": "Midpoint(D,A)"
+      },
+      {
+        "path": "conditions[0]",
+        "source_clause": "4つの合同な小正方形は各面積1",
+        "expression": "Area(A,M,O,Q) = 1"
+      },
+      {
+        "path": "conditions[1]",
+        "source_clause": "4つの合同な小正方形は各面積1",
+        "expression": "Area(M,B,N,O) = 1"
+      },
+      {
+        "path": "conditions[2]",
+        "source_clause": "4つの合同な小正方形は各面積1",
+        "expression": "Area(O,N,C,P) = 1"
+      },
+      {
+        "path": "conditions[3]",
+        "source_clause": "4つの合同な小正方形は各面積1",
+        "expression": "Area(Q,O,P,D) = 1"
+      },
+      {
+        "path": "conditions[4]",
+        "source_clause": "正方形の辺長は正",
+        "expression": "s > 0"
+      },
+      {
+        "path": "target",
+        "source_clause": "外側の正方形の面積",
+        "expression": "Area(A,B,C,D)"
+      }
+    ],
+    "input_sha256": "1d6dcfd7fd2005abc9b4b1700dba70ed2c62b84e1a3fe10ab361387248cf0362",
+    "geometric_reference": "4",
+    "official_output": "4",
+    "output_conversion": "identity"
+  },
+  {
+    "id": "HMMT-2019-FEB-GUTS-17",
+    "gauge": "B=(0,0), C=(4,0), Aは上半平面。Pを内心とする解法は入力に使用しない。",
+    "notes": [],
+    "mapping": [
+      {
+        "path": "constructions[0]",
+        "source_clause": "座標固定",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "path": "constructions[1]",
+        "source_clause": "BC=4",
+        "expression": "Point(4, 0)"
+      },
+      {
+        "path": "constructions[2]",
+        "source_clause": "未知頂点",
+        "expression": "Point(ax, ay)"
+      },
+      {
+        "path": "constructions[3]",
+        "source_clause": "原文で存在する点P",
+        "expression": "Point(px, py)"
+      },
+      {
+        "path": "conditions[0]",
+        "source_clause": "AB=3",
+        "expression": "Distance(A,B) = 3"
+      },
+      {
+        "path": "conditions[1]",
+        "source_clause": "CA=5",
+        "expression": "Distance(C,A) = 5"
+      },
+      {
+        "path": "conditions[2]",
+        "source_clause": "非退化・鏡映固定",
+        "expression": "ay > 0"
+      },
+      {
+        "path": "conditions[3]",
+        "source_clause": "3つの合同な正三角形の未知辺長",
+        "expression": "s > 0"
+      },
+      {
+        "path": "constructions[4]",
+        "source_clause": "A1は辺BC上",
+        "expression": "PointOnSegment(B,C,t1)"
+      },
+      {
+        "path": "conditions[4]",
+        "source_clause": "A1は線分上",
+        "expression": "t1 >= 0"
+      },
+      {
+        "path": "conditions[5]",
+        "source_clause": "A1は線分上",
+        "expression": "t1 <= 1"
+      },
+      {
+        "path": "constructions[5]",
+        "source_clause": "A2は辺BC上",
+        "expression": "PointOnSegment(B,C,t2)"
+      },
+      {
+        "path": "conditions[6]",
+        "source_clause": "A2は線分上",
+        "expression": "t2 >= 0"
+      },
+      {
+        "path": "conditions[7]",
+        "source_clause": "A2は線分上",
+        "expression": "t2 <= 1"
+      },
+      {
+        "path": "conditions[8]",
+        "source_clause": "3つの合同な正三角形の9辺が共通長s",
+        "expression": "Distance(P,A1) = s"
+      },
+      {
+        "path": "conditions[9]",
+        "source_clause": "3つの合同な正三角形の9辺が共通長s",
+        "expression": "Distance(P,A2) = s"
+      },
+      {
+        "path": "conditions[10]",
+        "source_clause": "3つの合同な正三角形の9辺が共通長s",
+        "expression": "Distance(A1,A2) = s"
+      },
+      {
+        "path": "constructions[6]",
+        "source_clause": "B1は辺CA上",
+        "expression": "PointOnSegment(C,A,u1)"
+      },
+      {
+        "path": "conditions[11]",
+        "source_clause": "B1は線分上",
+        "expression": "u1 >= 0"
+      },
+      {
+        "path": "conditions[12]",
+        "source_clause": "B1は線分上",
+        "expression": "u1 <= 1"
+      },
+      {
+        "path": "constructions[7]",
+        "source_clause": "B2は辺CA上",
+        "expression": "PointOnSegment(C,A,u2)"
+      },
+      {
+        "path": "conditions[13]",
+        "source_clause": "B2は線分上",
+        "expression": "u2 >= 0"
+      },
+      {
+        "path": "conditions[14]",
+        "source_clause": "B2は線分上",
+        "expression": "u2 <= 1"
+      },
+      {
+        "path": "conditions[15]",
+        "source_clause": "3つの合同な正三角形の9辺が共通長s",
+        "expression": "Distance(P,B1) = s"
+      },
+      {
+        "path": "conditions[16]",
+        "source_clause": "3つの合同な正三角形の9辺が共通長s",
+        "expression": "Distance(P,B2) = s"
+      },
+      {
+        "path": "conditions[17]",
+        "source_clause": "3つの合同な正三角形の9辺が共通長s",
+        "expression": "Distance(B1,B2) = s"
+      },
+      {
+        "path": "constructions[8]",
+        "source_clause": "C1は辺AB上",
+        "expression": "PointOnSegment(A,B,v1)"
+      },
+      {
+        "path": "conditions[18]",
+        "source_clause": "C1は線分上",
+        "expression": "v1 >= 0"
+      },
+      {
+        "path": "conditions[19]",
+        "source_clause": "C1は線分上",
+        "expression": "v1 <= 1"
+      },
+      {
+        "path": "constructions[9]",
+        "source_clause": "C2は辺AB上",
+        "expression": "PointOnSegment(A,B,v2)"
+      },
+      {
+        "path": "conditions[20]",
+        "source_clause": "C2は線分上",
+        "expression": "v2 >= 0"
+      },
+      {
+        "path": "conditions[21]",
+        "source_clause": "C2は線分上",
+        "expression": "v2 <= 1"
+      },
+      {
+        "path": "conditions[22]",
+        "source_clause": "3つの合同な正三角形の9辺が共通長s",
+        "expression": "Distance(P,C1) = s"
+      },
+      {
+        "path": "conditions[23]",
+        "source_clause": "3つの合同な正三角形の9辺が共通長s",
+        "expression": "Distance(P,C2) = s"
+      },
+      {
+        "path": "conditions[24]",
+        "source_clause": "3つの合同な正三角形の9辺が共通長s",
+        "expression": "Distance(C1,C2) = s"
+      },
+      {
+        "path": "conditions[25]",
+        "source_clause": "原文の凸六角形とラベル順序",
+        "expression": "ConvexPolygon([A1,A2,B1,B2,C1,C2])"
+      },
+      {
+        "path": "target",
+        "source_clause": "凸六角形の面積",
+        "expression": "Area(A1,A2,B1,B2,C1,C2)"
+      }
+    ],
+    "input_sha256": "36da06552ac53814324186e024520194b746c89c5bd3afd4a1cb96b6b048ad8a",
+    "geometric_reference": "(12+22*sqrt(3))/15",
+    "official_output": "(12+22*sqrt(3))/15",
+    "output_conversion": "identity"
+  },
+  {
+    "id": "HMMT-2020-FEB-GUTS-13",
+    "gauge": "C=(0,0), B=(1,0), Aは上半平面。原文は直線AC,BCなのでX,Yのパラメータの正負は制限せず、Cとの相違だけを課す。",
+    "notes": [],
+    "mapping": [
+      {
+        "path": "constructions[0]",
+        "source_clause": "座標固定",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "path": "constructions[1]",
+        "source_clause": "BC=1",
+        "expression": "Point(1, 0)"
+      },
+      {
+        "path": "constructions[2]",
+        "source_clause": "未知頂点",
+        "expression": "Point(ax, ay)"
+      },
+      {
+        "path": "constructions[3]",
+        "source_clause": "角三等分線とABの交点",
+        "expression": "PointOnSegment(A,B,u)"
+      },
+      {
+        "path": "constructions[4]",
+        "source_clause": "もう一方の三等分線とABの交点",
+        "expression": "PointOnSegment(A,B,v)"
+      },
+      {
+        "path": "constructions[5]",
+        "source_clause": "CDEの外接円",
+        "expression": "Circumcircle(C,D,E)"
+      },
+      {
+        "path": "constructions[6]",
+        "source_clause": "直線CA上の未知の第2交点",
+        "expression": "Point(tx*ax, tx*ay)"
+      },
+      {
+        "path": "constructions[7]",
+        "source_clause": "直線CB上の未知の第2交点",
+        "expression": "Point(ty, 0)"
+      },
+      {
+        "path": "conditions[0]",
+        "source_clause": "AB=7",
+        "expression": "Distance(A,B) = 7"
+      },
+      {
+        "path": "conditions[1]",
+        "source_clause": "CA=4sqrt(3)",
+        "expression": "Distance(C,A) = 4*sqrt(3)"
+      },
+      {
+        "path": "conditions[2]",
+        "source_clause": "三等分",
+        "expression": "Angle(A,C,D) = Angle(D,C,E)"
+      },
+      {
+        "path": "conditions[3]",
+        "source_clause": "三等分",
+        "expression": "Angle(D,C,E) = Angle(E,C,B)"
+      },
+      {
+        "path": "conditions[4]",
+        "source_clause": "第2交点が外接円上",
+        "expression": "Distance(Center(omega),X) = Radius(omega)"
+      },
+      {
+        "path": "conditions[5]",
+        "source_clause": "第2交点が外接円上",
+        "expression": "Distance(Center(omega),Y) = Radius(omega)"
+      },
+      {
+        "path": "conditions[6]",
+        "source_clause": "非退化・鏡映固定",
+        "expression": "ay > 0"
+      },
+      {
+        "path": "conditions[7]",
+        "source_clause": "内角三等分線の交点",
+        "expression": "u > 0"
+      },
+      {
+        "path": "conditions[8]",
+        "source_clause": "内角三等分線の交点",
+        "expression": "u < 1"
+      },
+      {
+        "path": "conditions[9]",
+        "source_clause": "D,EをAからBの順にラベル付け（原文のX,YはD,Eを交換しても同じ）",
+        "expression": "v > u"
+      },
+      {
+        "path": "conditions[10]",
+        "source_clause": "D,EをAからBの順にラベル付け（原文のX,YはD,Eを交換しても同じ）",
+        "expression": "v < 1"
+      },
+      {
+        "path": "conditions[11]",
+        "source_clause": "Xは既知交点C以外",
+        "expression": "tx != 0"
+      },
+      {
+        "path": "conditions[12]",
+        "source_clause": "Yは既知交点C以外",
+        "expression": "ty != 0"
+      },
+      {
+        "path": "target",
+        "source_clause": "XYの長さ",
+        "expression": "Distance(X,Y)"
+      }
+    ],
+    "input_sha256": "77820a20d204be38e378b814d058bb618a321b632f091df5ca81aef80465903a",
+    "geometric_reference": "112/65",
+    "official_output": "112/65",
+    "output_conversion": "identity"
+  },
+  {
+    "id": "HMMT-2021-FEB-GUTS-14",
+    "gauge": "A=(0,0), B=(b,0), b>0, Cは上半平面。a,bの整数出力表現は導入せず、幾何量ABを求める。DSLのbは辺長の実数パラメータ。",
+    "notes": [],
+    "mapping": [
+      {
+        "path": "constructions[0]",
+        "source_clause": "座標固定",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "path": "constructions[1]",
+        "source_clause": "未知辺長AB",
+        "expression": "Point(b, 0)"
+      },
+      {
+        "path": "constructions[2]",
+        "source_clause": "未知頂点",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "path": "conditions[0]",
+        "source_clause": "AC=6",
+        "expression": "Distance(A,C) = 6"
+      },
+      {
+        "path": "conditions[1]",
+        "source_clause": "BC=8",
+        "expression": "Distance(B,C) = 8"
+      },
+      {
+        "path": "conditions[2]",
+        "source_clause": "角A=2角C",
+        "expression": "Angle(B,A,C) = 2*Angle(B,C,A)"
+      },
+      {
+        "path": "conditions[3]",
+        "source_clause": "辺長は正",
+        "expression": "b > 0"
+      },
+      {
+        "path": "conditions[4]",
+        "source_clause": "非退化・鏡映固定",
+        "expression": "cy > 0"
+      },
+      {
+        "path": "target",
+        "source_clause": "幾何量AB。sqrt(a)-bから100a+bへの変換は参照答側に分離。",
+        "expression": "Distance(A,B)"
+      }
+    ],
+    "input_sha256": "661808aa626b9d944de1a9ed2c2442848c9e51559bfddf495990202ff19d23b3",
+    "geometric_reference": "sqrt(73)-3",
+    "official_output": "7303",
+    "output_conversion": "100a+b for sqrt(a)-b"
+  },
+  {
+    "id": "HMMT-2022-FEB-GUTS-11",
+    "gauge": "原文の単位円を中心原点、P1=(1,0)に剛体固定。円弧領域の面積を、原文の放射線で分かれる扇形から三角形OXYを除いた定義式で表す。",
+    "notes": [],
+    "mapping": [
+      {
+        "path": "constructions[0]",
+        "source_clause": "単位円の中心",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "path": "constructions[1]",
+        "source_clause": "正12角形の中心角の定義。中心原点、半径1。",
+        "expression": "Point(cos(2*pi*0/12), sin(2*pi*0/12))"
+      },
+      {
+        "path": "constructions[2]",
+        "source_clause": "正12角形の中心角の定義。中心原点、半径1。",
+        "expression": "Point(cos(2*pi*1/12), sin(2*pi*1/12))"
+      },
+      {
+        "path": "constructions[3]",
+        "source_clause": "正12角形の中心角の定義。中心原点、半径1。",
+        "expression": "Point(cos(2*pi*2/12), sin(2*pi*2/12))"
+      },
+      {
+        "path": "constructions[4]",
+        "source_clause": "正12角形の中心角の定義。中心原点、半径1。",
+        "expression": "Point(cos(2*pi*3/12), sin(2*pi*3/12))"
+      },
+      {
+        "path": "constructions[5]",
+        "source_clause": "正12角形の中心角の定義。中心原点、半径1。",
+        "expression": "Point(cos(2*pi*4/12), sin(2*pi*4/12))"
+      },
+      {
+        "path": "constructions[6]",
+        "source_clause": "正12角形の中心角の定義。中心原点、半径1。",
+        "expression": "Point(cos(2*pi*5/12), sin(2*pi*5/12))"
+      },
+      {
+        "path": "constructions[7]",
+        "source_clause": "正12角形の中心角の定義。中心原点、半径1。",
+        "expression": "Point(cos(2*pi*6/12), sin(2*pi*6/12))"
+      },
+      {
+        "path": "constructions[8]",
+        "source_clause": "正12角形の中心角の定義。中心原点、半径1。",
+        "expression": "Point(cos(2*pi*7/12), sin(2*pi*7/12))"
+      },
+      {
+        "path": "constructions[9]",
+        "source_clause": "正12角形の中心角の定義。中心原点、半径1。",
+        "expression": "Point(cos(2*pi*8/12), sin(2*pi*8/12))"
+      },
+      {
+        "path": "constructions[10]",
+        "source_clause": "正12角形の中心角の定義。中心原点、半径1。",
+        "expression": "Point(cos(2*pi*9/12), sin(2*pi*9/12))"
+      },
+      {
+        "path": "constructions[11]",
+        "source_clause": "正12角形の中心角の定義。中心原点、半径1。",
+        "expression": "Point(cos(2*pi*10/12), sin(2*pi*10/12))"
+      },
+      {
+        "path": "constructions[12]",
+        "source_clause": "正12角形の中心角の定義。中心原点、半径1。",
+        "expression": "Point(cos(2*pi*11/12), sin(2*pi*11/12))"
+      },
+      {
+        "path": "constructions[13]",
+        "source_clause": "指定の交点X",
+        "expression": "IntersectLines(Line(P1,P5),Line(O,P2))"
+      },
+      {
+        "path": "constructions[14]",
+        "source_clause": "指定の交点Y",
+        "expression": "IntersectLines(Line(P1,P5),Line(O,P4))"
+      },
+      {
+        "path": "target",
+        "source_clause": "半径1の小扇形の面積theta/2から三角形OXYを引いた領域面積A。床変換は入力に置かない。",
+        "expression": "Angle(P2,O,P4)/2-Area(O,X,Y)"
+      }
+    ],
+    "input_sha256": "85db0cbce5c92a1230236c5c678af60a353aeba223a6e96486f7d53123235bf8",
+    "geometric_reference": "pi/6-sqrt(3)/12",
+    "official_output": "45",
+    "output_conversion": "floor(120*A)"
+  },
+  {
+    "id": "HMMT-2023-FEB-GUTS-03",
+    "gauge": "B=(0,0), D=(d,0), d>0。ABDが直角なのでA=(0,a)、鏡映によりa>0。",
+    "notes": [],
+    "mapping": [
+      {
+        "path": "constructions[0]",
+        "source_clause": "原文の頂点と直角ABDの座標表現",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "path": "constructions[1]",
+        "source_clause": "原文の頂点と直角ABDの座標表現",
+        "expression": "Point(d, 0)"
+      },
+      {
+        "path": "constructions[2]",
+        "source_clause": "原文の頂点と直角ABDの座標表現",
+        "expression": "Point(0, a)"
+      },
+      {
+        "path": "constructions[3]",
+        "source_clause": "原文の頂点と直角ABDの座標表現",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "path": "constructions[4]",
+        "source_clause": "BDの中点",
+        "expression": "Midpoint(B,D)"
+      },
+      {
+        "path": "conditions[0]",
+        "source_clause": "BCD=90度",
+        "expression": "Angle(B,C,D) = pi/2"
+      },
+      {
+        "path": "conditions[1]",
+        "source_clause": "CM=2",
+        "expression": "Distance(C,M) = 2"
+      },
+      {
+        "path": "conditions[2]",
+        "source_clause": "AM=3",
+        "expression": "Distance(A,M) = 3"
+      },
+      {
+        "path": "conditions[3]",
+        "source_clause": "BDは正",
+        "expression": "d > 0"
+      },
+      {
+        "path": "conditions[4]",
+        "source_clause": "鏡映固定",
+        "expression": "a > 0"
+      },
+      {
+        "path": "conditions[5]",
+        "source_clause": "原文の凸四角形",
+        "expression": "ConvexPolygon([A,B,C,D])"
+      },
+      {
+        "path": "target",
+        "source_clause": "ADの長さ",
+        "expression": "Distance(A,D)"
+      }
+    ],
+    "input_sha256": "0c121571455af9e9c2816e833473964787e5ec7fea616b9ffbe5a340312c8c62",
+    "geometric_reference": "sqrt(21)",
+    "official_output": "sqrt(21)",
+    "output_conversion": "identity"
+  },
+  {
+    "id": "HMMT-2024-FEB-GUTS-04",
+    "gauge": "角度は相似不変。正五角形の中心原点・外接半径1。反時計回りのAB,BCの外側へ60度回して正三角形の第3頂点を定義する。",
+    "notes": [],
+    "mapping": [
+      {
+        "path": "constructions[0]",
+        "source_clause": "正5角形の中心角の定義。中心原点、半径1。",
+        "expression": "Point(cos(2*pi*0/5), sin(2*pi*0/5))"
+      },
+      {
+        "path": "constructions[1]",
+        "source_clause": "正5角形の中心角の定義。中心原点、半径1。",
+        "expression": "Point(cos(2*pi*1/5), sin(2*pi*1/5))"
+      },
+      {
+        "path": "constructions[2]",
+        "source_clause": "正5角形の中心角の定義。中心原点、半径1。",
+        "expression": "Point(cos(2*pi*2/5), sin(2*pi*2/5))"
+      },
+      {
+        "path": "constructions[3]",
+        "source_clause": "正5角形の中心角の定義。中心原点、半径1。",
+        "expression": "Point(cos(2*pi*3/5), sin(2*pi*3/5))"
+      },
+      {
+        "path": "constructions[4]",
+        "source_clause": "正5角形の中心角の定義。中心原点、半径1。",
+        "expression": "Point(cos(2*pi*4/5), sin(2*pi*4/5))"
+      },
+      {
+        "path": "constructions[5]",
+        "source_clause": "辺ABの外側の正三角形",
+        "expression": "Rotate(B,-pi/3,A)"
+      },
+      {
+        "path": "constructions[6]",
+        "source_clause": "辺BCの外側の正三角形",
+        "expression": "Rotate(C,-pi/3,B)"
+      },
+      {
+        "path": "target",
+        "source_clause": "角FEG（ラジアン）。公式は4pi/15も明記。",
+        "expression": "Angle(F,E,G)"
+      }
+    ],
+    "input_sha256": "7c9f1e17333b5e628df23a95c2eeb319fda828480fc23d78d1acd04fc62f5e4b",
+    "geometric_reference": "4*pi/15",
+    "official_output": "4*pi/15",
+    "output_conversion": "identity; official also gives 48 degrees"
+  },
+  {
+    "id": "HMMT-2025-FEB-GUTS-06",
+    "gauge": "B=(0,0), D=(1,0), C=(1+4,0)。和1+4は原文の隣接線分BD,DCの配置。Aの座標は解かず未知にする。",
+    "notes": [],
+    "mapping": [
+      {
+        "path": "constructions[0]",
+        "source_clause": "原文の線分BCと内部点D、未知頂点A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "path": "constructions[1]",
+        "source_clause": "原文の線分BCと内部点D、未知頂点A",
+        "expression": "Point(1, 0)"
+      },
+      {
+        "path": "constructions[2]",
+        "source_clause": "原文の線分BCと内部点D、未知頂点A",
+        "expression": "Point(1+4, 0)"
+      },
+      {
+        "path": "constructions[3]",
+        "source_clause": "原文の線分BCと内部点D、未知頂点A",
+        "expression": "Point(ax, ay)"
+      },
+      {
+        "path": "constructions[4]",
+        "source_clause": "半直線ACのパラメータt>=0",
+        "expression": "Point(ax+t*(1+4-ax), ay*(1-t))"
+      },
+      {
+        "path": "constructions[5]",
+        "source_clause": "半直線ABのパラメータu>=0",
+        "expression": "Point(ax*(1-u), ay*(1-u))"
+      },
+      {
+        "path": "conditions[0]",
+        "source_clause": "正三角形",
+        "expression": "Distance(A,B) = Distance(B,C)"
+      },
+      {
+        "path": "conditions[1]",
+        "source_clause": "正三角形",
+        "expression": "Distance(A,C) = Distance(B,C)"
+      },
+      {
+        "path": "conditions[2]",
+        "source_clause": "DがEFの中点",
+        "expression": "E.x+F.x = 2*D.x"
+      },
+      {
+        "path": "conditions[3]",
+        "source_clause": "DがEFの中点",
+        "expression": "E.y+F.y = 2*D.y"
+      },
+      {
+        "path": "conditions[4]",
+        "source_clause": "非退化・鏡映固定",
+        "expression": "ay > 0"
+      },
+      {
+        "path": "conditions[5]",
+        "source_clause": "Eは半直線AC上",
+        "expression": "t >= 0"
+      },
+      {
+        "path": "conditions[6]",
+        "source_clause": "Fは半直線AB上",
+        "expression": "u >= 0"
+      },
+      {
+        "path": "target",
+        "source_clause": "EFの長さ",
+        "expression": "Distance(E,F)"
+      }
+    ],
+    "input_sha256": "d7d88fa9766606bcc7cbdb5259b06a6ebdfcf64512fb99ed93f528435d256817",
+    "geometric_reference": "2*sqrt(13)",
+    "official_output": "2*sqrt(13)",
+    "output_conversion": "identity"
+  },
+  {
+    "id": "HMMT-2010-FEB-TEAM1-07",
+    "gauge": "角度だけなのでA=(0,0),Q=(1,0)。Fを下半平面に置く鏡映固定。P=F+D-Qは平行四辺形FPDQの定義。",
+    "notes": [],
+    "mapping": [
+      {
+        "path": "constructions[0]",
+        "source_clause": "原文の頂点、平行四辺形によるPの定義",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "path": "constructions[1]",
+        "source_clause": "原文の頂点、平行四辺形によるPの定義",
+        "expression": "Point(1, 0)"
+      },
+      {
+        "path": "constructions[2]",
+        "source_clause": "原文の頂点、平行四辺形によるPの定義",
+        "expression": "Point(fx, fy)"
+      },
+      {
+        "path": "constructions[3]",
+        "source_clause": "原文の頂点、平行四辺形によるPの定義",
+        "expression": "Point(dx, dy)"
+      },
+      {
+        "path": "constructions[4]",
+        "source_clause": "原文の頂点、平行四辺形によるPの定義",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "path": "constructions[5]",
+        "source_clause": "原文の頂点、平行四辺形によるPの定義",
+        "expression": "Point(fx+dx-1, fy+dy)"
+      },
+      {
+        "path": "conditions[0]",
+        "source_clause": "指定角10度",
+        "expression": "Angle(F,A,Q) = 10*pi/180"
+      },
+      {
+        "path": "conditions[1]",
+        "source_clause": "指定角10度",
+        "expression": "Angle(P,A,C) = 10*pi/180"
+      },
+      {
+        "path": "conditions[2]",
+        "source_clause": "指定角15度",
+        "expression": "Angle(P,F,A) = 15*pi/180"
+      },
+      {
+        "path": "conditions[3]",
+        "source_clause": "指定角15度",
+        "expression": "Angle(P,D,C) = 15*pi/180"
+      },
+      {
+        "path": "conditions[4]",
+        "source_clause": "原文の凸五角形",
+        "expression": "ConvexPolygon([A,F,Q,D,C])"
+      },
+      {
+        "path": "conditions[5]",
+        "source_clause": "鏡映固定",
+        "expression": "fy < 0"
+      },
+      {
+        "path": "conditions[6]",
+        "source_clause": "Pは凸五角形の内部。各有向辺の内側にあることを表す。",
+        "expression": "(F.x-A.x)*(P.y-A.y)-(F.y-A.y)*(P.x-A.x) > 0"
+      },
+      {
+        "path": "conditions[7]",
+        "source_clause": "Pは凸五角形の内部。各有向辺の内側にあることを表す。",
+        "expression": "(Q.x-F.x)*(P.y-F.y)-(Q.y-F.y)*(P.x-F.x) > 0"
+      },
+      {
+        "path": "conditions[8]",
+        "source_clause": "Pは凸五角形の内部。各有向辺の内側にあることを表す。",
+        "expression": "(D.x-Q.x)*(P.y-Q.y)-(D.y-Q.y)*(P.x-Q.x) > 0"
+      },
+      {
+        "path": "conditions[9]",
+        "source_clause": "Pは凸五角形の内部。各有向辺の内側にあることを表す。",
+        "expression": "(C.x-D.x)*(P.y-D.y)-(C.y-D.y)*(P.x-D.x) > 0"
+      },
+      {
+        "path": "conditions[10]",
+        "source_clause": "Pは凸五角形の内部。各有向辺の内側にあることを表す。",
+        "expression": "(A.x-C.x)*(P.y-C.y)-(A.y-C.y)*(P.x-C.x) > 0"
+      },
+      {
+        "path": "target",
+        "source_clause": "角AQC（ラジアン）。公式答pi/12。",
+        "expression": "Angle(A,Q,C)"
+      }
+    ],
+    "input_sha256": "aa1ab0b66e7f4bfc51d1bd4c75f72c419ec664720510b7d1f3279dcd885c5032",
+    "geometric_reference": "pi/12",
+    "official_output": "pi/12",
+    "output_conversion": "identity; official also gives 15 degrees"
+  }
+]

@@ -1,0 +1,1229 @@
+                                   HMMT February 2020
+                                            February 15, 2020
+                                              Guts Round
+1. [4] Submit an integer x as your answer to this problem. The number of points you receive will be
+   max(0, 8 − |8x − 100|). (Non-integer answers will be given 0 points.)
+  Proposed by: Andrew Gu, Andrew Lin
+  Answer:      12 or 13
+  Solution: We want to minimize |8x−100|, so x should equal either the floor or the ceiling of 100
+                                                                                                8 = 12.5.
+  Note that no other answers receive any points, while both 12 and 13 receive 4 points.
+
+
+
+2. [4] Let ABC be a triangle and ω be its circumcircle. The point M is the midpoint of arc BC not
+   containing A on ω and D is chosen so that DM is tangent to ω and is on the same side of AM as C.
+   It is given that AM = AC and ∠DM C = 38◦ . Find the measure of angle ∠ACB.
+  Proposed by: Joseph Heerens
+  Answer:      33◦
+  Solution: By inscribed angles, we know that ∠BAC = 38◦ ·2 = 76◦ which means that ∠C = 104◦ −∠B.
+  Since AM = AC, we have ∠ACM = ∠AM C = 90◦ − ∠M2AC = 71◦ . Once again by inscribed angles,
+  this means that ∠B = 71◦ which gives ∠C = 33◦ .
+
+                                                 A
+
+
+
+
+                                             B                        C
+
+
+                                                         M            D
+
+
+
+
+3. [4] Let ABC be a triangle and D, E, and F be the midpoints of sides BC, CA, and AB respectively.
+   What is the maximum number of circles which pass through at least 3 of these 6 points?
+  Proposed by: Andrew Gu
+  Answer:      17
+  Solution: All 63 = 20 triples of points can produce distinct circles aside from the case where the
+                    
+
+  three points are collinear (BDC, CEA, AF B).
+
+
+                              √
+4. [4] Compute the value of       1053 − 1043 , given that it is a positive integer.
+  Proposed by: Andrew Gu
+  Answer:      181
+  Solution 1: First compute 1053 − 1043 = 1052 + 105 · 104 + 1042 = 3 · 105 · 104 + 1 = 32761. Note
+  that 1802 = 32400, so 1812 = 1802 + 2 · 180 + 1 = 32761 as desired.
+   Solution 2: We have 1053 − 1043 = 1052 + 105 · 104 + 1042 . Thus
+                                      √     p                   √
+                                   104 3 < 1053 − 1043 < 105 3.
+                                            √          √
+   Now estimating gives the bounds 180 < 104 3 and 105 3 < 182. So the answer is 181.
+
+
+
+5. [5] Alice, Bob, and Charlie roll a 4, 5, and 6-sided die, respectively. What is the probability that a
+   number comes up exactly twice out of the three rolls?
+   Proposed by: Andrew Lin
+                 13
+   Answer:       30
+
+   Solution 1: There are 4 · 5 · 6 = 120 different ways that the dice can come up. The common number
+   can be any of 1, 2, 3, 4, or 5: there are 3 + 4 + 5 = 12 ways for it to be each of 1, 2, 3, or 4, because we
+   pick one of the three people’s rolls to disagree, and there are 3, 4, and 5 ways that roll can come up
+   (for Alice, Bob, and Charlie respectively). Finally, there are 4 ways for Bob and Charlie to both roll
+   a 5 and Alice to roll any number. Thus there are 52 different ways to satisfy the problem condition,
+                       52
+   and our answer is 120   = 13
+                              30 .
+
+   Solution 2: If Bob rolls the same as Alice, Charlie must roll a different number. Otherwise Charlie
+   must roll the same as either Alice or Bob. So the answer is
+                                              1 5 4 2  13
+                                               · + · =    .
+                                              5 6 5 6  30
+
+
+   Solution 3: By complementary counting, the answer is
+                                                 1 1 4 4  13
+                                            1−    · − · =    .
+                                                 5 6 5 6  30
+   The first and second products correspond to rolling the same number three times and rolling three
+   distinct numbers, respectively.
+
+
+
+6. [5] Two sides of a regular n-gon are extended to meet at a 28◦ angle. What is the smallest possible
+   value for n?
+   Proposed by: James Lin
+   Answer:      45
+   Solution: We note that if we inscribe the n-gon in a circle, then according to the inscribed angle
+   theorem, the angle between two sides is 21 times some x − y, where x and y are integer multiples of the
+   arc measure of one side of the n-gon. Thus, the angle is equal to 12 times an integer multiple of 360
+                                                                                                       n , so
+   1       360
+   2 · k ·  n  = 28 for some integer k. Simplifying gives 7n = 45k, and   since all k are clearly attainable,
+   the smallest possible value of n is 45.
+
+
+
+7. [5] Ana and Banana are rolling a standard six-sided die. Ana rolls the die twice, obtaining a1 and a2 ,
+   then Banana rolls the die twice, obtaining b1 and b2 . After Ana’s two rolls but before Banana’s two
+   rolls, they compute the probability p that a1 b1 + a2 b2 will be a multiple of 6. What is the probability
+   that p = 16 ?
+   Proposed by: James Lin
+                 2
+   Answer:       3
+    Solution: If either a1 or a2 is relatively prime to 6, then p = 61 . If one of them is a multiple of 2
+    but not 6, while the other is a multiple of 3 but not 6, we also have p = 16 . In other words, p = 61
+                                                                                                  2      2
+    if gcd(a1 , a2 ) is coprime to 6, and otherwise p 6= 16 . The probability that p = 16 is (3 −1)(2
+                                                                                                  62
+                                                                                                      −1)
+                                                                                                          = 23
+            2
+    where q q−1
+             2  corresponds to the probability that at least one of a1 and a2 is not divisible by q for q = 2, 3.
+
+
+
+ 8. [5] Tessa picks three real numbers x, y, z and computes the values of the eight expressions of the form
+    ±x ± y ± z. She notices that the eight values are all distinct, so she writes the expressions down in
+    increasing order. For example, if x = 2, y = 3, z = 4, then the order she writes them down is
+
+     −x − y − z, +x − y − z, −x + y − z, −x − y + z, +x + y − z, +x − y + z, −x + y + z, +x + y + z.
+
+    How many possible orders are there?
+    Proposed by: Yuan Yao
+    Answer:       96
+    Solution: There are 23 = 8 ways to choose the sign for each of x, y, and z. Furthermore, we can order
+    |x|, |y|, and |z| in 3! = 6 different ways. Now assume without loss of generality that 0 < x < y < z.
+    Then there are only two possible orders depending on the sign of x + y − z:
+
+        −x − y − z, +x − y − z, −x + y − z, −x − y + z, x + y − z, x − y + z, −x + y + z, x + y + z
+
+        −x − y − z, +x − y − z, −x + y − z, x + y − z, −x − y + z, x − y + z, −x + y + z, x + y + z
+    Thus, the answer is 8 · 6 · 2 = 96.
+
+
+
+ 9. [6] Let P (x) be the monic polynomial with rational coefficients of minimal degree such that √12 ,
+    √1 , √1 , . . . , √ 1   are roots of P . What is the sum of the coefficients of P ?
+      3    4           1000
+    Proposed by: Carl Joshua Quines
+                    1
+    Answer:       16000
+
+    Solution: For irrational √1r , − √1r must also be a root of P . Therefore
+
+                                             x2 − 12 x2 − 13 · · · x2 − 1000
+                                                                          1
+                                                                           
+                                     P (x) =                               .
+                                               x + 12 x + 13 · · · x + 31
+                                                                        1
+                                                           
+
+    We get the sum of the coefficients of P by setting x = 1, so we use telescoping to get
+                                                   1 2
+                                                     · · · · 999      1
+                                           P (1) = 23 34 1000  32 = 16000 .
+                                                      ·
+                                                    2 3  · · · 31
+
+
+
+
+10. [6] Jarris is a weighted tetrahedral die with faces F1 , F2 , F3 , F4 . He tosses himself onto a table, so that
+    the probability he lands on a given face is proportional to the area of that face (i.e. the probability
+    he lands on face Fi is [F1 ]+[F2[F i]
+                                    ]+[F3 ]+[F4 ] where [K] is the area of K). Let k be the maximum distance
+    any part of Jarris is from the table after he rolls himself. Given that Jarris has an inscribed sphere of
+    radius 3 and circumscribed sphere of radius 10, find the minimum possible value of the expected value
+    of k.
+    Proposed by: James Lin
+    Answer:       12
+    Solution: Since the maximum distance to the table is just the height, the expected value is equal to
+     4
+     P
+         hi [Fi ]
+                                                                                                         4      
+                                                                   1                                  r
+    i=1
+                                                                                                         P
+      P4          . Let V be the volume of Jarris. Recall that V = 3 hi [Fi ] for any i, but also V = 3     [Fi ]
+        [Fi ]                                                                                                     i=1
+     i=1
+    where r is the inradius (by decomposing into four tetrahedra with a vertex at the incenter). Therefore
+                                               4
+                                               P
+                                                   hi [Fi ]
+                                               i=1                12V
+                                                              =         = 4r = 12.
+                                                 4
+                                                 P                3V /r
+                                                     [Fi ]
+                                                i=1
+
+
+
+
+11. [6] Find the number of ordered pairs of positive integers (x, y) with x, y ≤ 2020 such that 3x2 + 10xy +
+    3y 2 is the power of some prime.
+    Proposed by: James Lin
+    Answer:        29
+                                                                        3x+y
+    Solution: We can factor as (3x + y)(x + 3y). If x ≥ y, we need x+3y      ∈ {1, 2} to be an integer. So we
+    get the case where x = y, in which we need both to be a power of 2, or the case x = 5y, in which case we
+    need y to be a power of 2. This gives us 11 + 9 + 9 = 29 solutions, where we account for y = 5x as well.
+
+
+
+12. [6] An 11 × 11 grid is labeled with consecutive rows 0, 1, 2, . . . , 10 and columns 0, 1, 2, . . . , 10 so that
+    it is filled with integers from 1 to 210 , inclusive, and the sum of all of the numbers in row n and in
+    column n are both divisible by 2n . Find the number of possible distinct grids.
+    Proposed by: Joseph Heerens
+    Answer:        21100
+    Solution: We begin by filling the 10 by 10 grid formed by rows and columns 1 through 10 with any
+    values, which we can do in (210 )100 = 21000 ways. Then in column 0, there is at most 1 way to fill in the
+    square in row 10, 2 ways for the square in row 9, down to 210 ways in row 0. Similarly, there is 1 way to
+    fill in the square in row 0 and column 10, 2 ways to fill in the square in row 0 and column 9, etc. Overall,
+    the number of ways to fill out the squares in row or column 0 is 21 · 22 · 23 · · · 29 · 210 · 29 · 28 · · · 21 = 2100 ,
+    so the number of possible distinct grids 21000 · 2100 = 21100 .
+
+
+                                                                      √
+13. [8] Let 4ABC be a triangle with AB = 7, BC = 1, and CA = 4 3. The angle trisectors of C
+    intersect AB at D and E, and lines AC and BC intersect the circumcircle of 4CDE again at X and
+    Y , respectively. Find the length of XY .
+    Proposed by: Hahn Lheem
+                   112
+    Answer:         65
+
+    Solution: Let O be the cirumcenter   √ of 4CDE. Observe that 4ABC ∼ 4XY C. Moreover, 4ABC
+    is a right triangle because 12 + (4 3)2 = 72 , so the length XY is just equal to 2r, where r is the
+    radius of the circumcircle of 4CDE. Since D and E are on the angle trisectors of angle C, we √see
+    that 4ODE, 4XDO, and 4Y EO are equilateral. The length of the altitude from C to AB is 4 7 3 .
+                                             √           √
+    The distance from C to XY is XY   AB  · 4 3
+                                             7   = 2r 4 3
+                                                    7  · 7 , while the distance between lines XY and AB is
+      √
+    r 3
+        . Hence  we have
+      2                                        √           √       √
+                                             4 3      2r 4 3 r 3
+                                                   =     ·     +      .
+                                               7      7    7       2
+                                 56
+    Solving for r gives that r = 65 , so XY = 11265 .
+                                                                                              C
+                                                                            X                 Y
+                                                                                     O
+
+
+                A                                                                D       E    B
+
+
+
+
+14. [8] Let ϕ(n) denote the number of positive integers less than or equal to n which are relatively prime
+                                                             2n
+    to n. Let S be the set of positive integers n such that ϕ(n) is an integer. Compute the sum
+
+                                                      X1
+                                                                .
+                                                            n
+                                                      n∈S
+
+    Proposed by: Joseph Heerens, James Lin
+                 10
+    Answer:       3
+
+    Solution: Let Tn be the set of prime factors of n. Then
+                                                 2n     Y p
+                                                     =2      .
+                                                φ(n)     p−1
+                                                          p∈T
+
+    We can check that this is an integer for the following possible sets:
+
+                                       ∅, {2}, {3}, {2, 3}, {2, 5}, {2, 3, 7}.
+
+    For each set T , the sum of the reciprocals of the positive integers having that set of prime factors is
+                                                 ∞
+                                                        !
+                                          Y X         1      Y 1
+                                                      m
+                                                          =            .
+                                                m=1
+                                                     p            p−1
+                                          p∈T                       p∈T
+
+    Therefore the desired sum is
+                                                  1 1 1  1   10
+                                        1+1+       + + +   =    .
+                                                  2 2 4 12    3
+
+
+
+
+15. [8] You have six blocks in a row, labeled 1 through 6, each with weight 1. Call two blocks x ≤ y
+    connected when, for all x ≤ z ≤ y, block z has not been removed. While there is still at least one block
+    remaining, you choose a remaining block uniformly at random and remove it. The cost of this operation
+    is the sum of the weights of the blocks that are connected to the block being removed, including itself.
+    Compute the expected total cost of removing all the blocks.
+    Proposed by: Benjamin Qi
+                 163
+    Answer:       10
+
+    Solution: Note that the total cost is the total number of ordered pairs (x, y) with 1 ≤ x, y ≤ 6 such
+    that x and y are connected right before x gets removed.
+                                                                                                  1
+    The probability that blocks x and y are connected just before block x is removed is simply |x−y|+1 , since
+    all of the |x − y| + 1 relevant blocks are equally likely to be removed first. Summing over 1 ≤ x, y ≤ 6,
+    combining terms with the same value of |x − y|, we get
+                                              2 4 6 8 10     163
+                                               + + + +   +6=     .
+                                              6 5 4 3  2     10
+
+
+
+
+16. [8] Determine all triplets of real numbers (x, y, z) satisfying the system of equations
+
+                                                           x2 y + y 2 z = 1040
+                                                           x2 z + z 2 y = 260
+                                               (x − y)(y − z)(z − x) = −540.
+
+    Proposed by: Krit Boonsiriseth
+    Answer:        (16, 4, 1), (1, 16, 4)
+    Solution: Call the three equations (1), (2), (3). (1)/(2) gives y = 4z. (3) + (1) − (2) gives
+
+                                                 (y 2 − z 2 )x = 15z 2 x = 240,
+
+    so z 2 x = 16. Therefore
+                                                                                 81
+                                            z(x + 2z)2 = x2 z + z 2 y + 4z 2 x =
+                                                                                 5
+                                                                                 49
+                                            z(x − 2z)2 = x2 z + z 2 y − 4z 2 x =
+                                                                                 5
+         x+2z
+    so   x−2z   = 97 . Thus either x = 16z or x = z4 .
+    If x = 16z, then (1) becomes 1024z 3 + 16z 3 = 1040, so (x, y, z) = (16, 4, 1).
+    If x = z4 , then (1) becomes 14 z 3 + 16z 3 = 1040, so (x, y, z) = (1, 16, 4).
+
+
+
+17. [10] Let ABC be a triangle with incircle tangent to the perpendicular bisector of BC. If BC = AE =
+    20, where E is the point where the A-excircle touches BC, then compute the area of 4ABC.
+    Proposed by: Tristan Shin
+                    √
+    Answer:      100 2
+    Solution: Let the incircle and BC touch at D, the incircle and perpendicular bisector touch at X, Y
+    be the point opposite D on the incircle, and M be the midpoint of BC. Recall that A, Y , and E are
+    collinear by homothety at A. Additionally, we have M D = M X = M E so ∠DXY = ∠DXE = 90◦ .
+    Therefore E, X, and Y are collinear. Since M X ⊥ BC, we have ∠AEB = 45◦ . The area of ABC is
+                                              1                         √
+                                                BC · AE · sin ∠AEB = 100 2.
+                                              2
+                                              A
+
+
+
+                                                     Y
+
+                                                                     X
+                                                      I
+
+
+
+                                             B           D           M      E      C
+
+
+
+
+18. [10] A vertex-induced subgraph is a subset of the vertices of a graph together with any edges whose
+    endpoints are both in this subset.
+   An undirected graph contains 10 nodes and m edges, with no loops or multiple edges. What is the
+   minimum possible value of m such that this graph must contain a nonempty vertex-induced subgraph
+   where all vertices have degree at least 5?
+   Proposed by: Benjamin Qi
+   Answer:       31
+   Solution: Suppose that we want to find the vertex-induced subgraph of maximum size where each
+   vertex has degree at least 5. To do so, we start with the entire graph and repeatedly remove any vertex
+   with degree less than 5.
+   If there are vertices left after this process terminates, then the subgraph induced by these vertices
+   must have all degrees at least 5. Conversely, if there is a vertex-induced subgraph where all degrees are
+   at least 5, then none of these vertices can be removed during the removing process. Thus, there are
+   vertices remaining after this process if and only if such a vertex-induced subgraph exists.
+   If the process ends with an empty graph, the largest possible number of edges are removed when the
+   first 5 removed vertices all have 4 edges at the time of removal, and the last 5 vertices are all con-
+   nected to each other, resulting in 5×4+4+3+2+1+0 = 30 removed edges. The answer is 30+1 = 31.
+
+
+
+19. [10] The Fibonacci numbers are defined by F0 = 0, F1 = 1, and Fn = Fn−1 + Fn−2 for n ≥ 2. There
+    exist unique positive integers n1 , n2 , n3 , n4 , n5 , n6 such that
+             100 X
+             X   100 X
+                     100 X
+                         100 X
+                             100
+                                             Fi1 +i2 +i3 +i4 +i5 = Fn1 − 5Fn2 + 10Fn3 − 10Fn4 + 5Fn5 − Fn6 .
+             i1 =0 i2 =0 i3 =0 i4 =0 i5 =0
+
+   Find n1 + n2 + n3 + n4 + n5 + n6 .
+   Proposed by: Andrew Gu
+   Answer:       1545
+   Solution: We make use of the identity
+                                                          `
+                                                          X
+                                                                Fi = F`+2 − 1,
+                                                          i=0
+    (easily proven by induction) which implies
+                                                      `
+                                                      X
+                                                            Fi = F`+2 − Fk+1 .
+                                                      i=k
+
+    Applying this several times yields
+                            100 X
+                            X   100 X
+                                    100 X
+                                        100 X
+                                            100
+                                                            Fi1 +i2 +i3 +i4 +i5
+                            i1 =0 i2 =0 i3 =0 i4 =0 i5 =0
+                            100 X
+                            X   100 X
+                                    100 X
+                                        100
+                        =                           (Fi1 +i2 +i3 +i4 +102 − Fi1 +i2 +i3 +i4 +1 )
+                            i1 =0 i2 =0 i3 =0 i4 =0
+                            100 X
+                            X   100 X
+                                    100
+                        =                    (Fi1 +i2 +i3 +204 − 2Fi1 +i2 +i3 +103 + Fi1 +i2 +i3 +2 )
+                            i1 =0 i2 =0 i3 =0
+                            100 X
+                            X   100
+                        =              (Fi1 +i2 +306 − 3Fi1 +i2 +205 + 3Fi1 +i2 +104 − Fi1 +i2 +3 )
+                            i1 =0 i2 =0
+                            100
+                            X
+                        =         (Fi1 +408 − 4Fi1 +307 + 6Fi1 +206 − 4Fi1 +105 + Fi1 +4 )
+                            i1 =0
+
+                        =F510 − 5F409 + 10F308 − 10F207 + 5F106 − F5 .
+
+    This representation is unique because the Fibonacci terms grow exponentially quickly, so e.g. the F510
+    term dominates, forcing n1 = 510 and similarly for the other terms. The final answer is
+
+                                          510 + 409 + 308 + 207 + 106 + 5 = 1545.
+
+
+
+
+20. [10] There exist several solutions to the equation
+
+                                                               sin x   sin 3x
+                                                       1+            =        ,
+                                                              sin 4x   sin 2x
+    where x is expressed in degrees and 0◦ < x < 180◦ . Find the sum of all such solutions.
+    Proposed by: Benjamin Qi
+    Answer:      320◦
+    Solution: We first apply sum-to-product and product-to-sum:
+                                                      sin 4x + sin x   sin 3x
+                                                                     =
+                                                          sin 4x       sin 2x
+                                    2 sin(2.5x) cos(1.5x) sin(2x) = sin(4x) sin(3x)
+    Factoring out sin(2x) = 0,
+                                            sin(2.5x) cos(1.5x) = cos(2x) sin(3x)
+    Factoring out cos(1.5x) = 0 (which gives us 60◦ as a solution),
+
+                                                 sin(2.5x) = 2 cos(2x) sin(1.5x)
+
+                                                sin(2.5x) = sin(3.5x) − sin(0.5x)
+    Convert into complex numbers, we get
+
+                                   (x3.5 − x−3.5 ) − (x0.5 − x−0.5 ) = (x2.5 − x−2.5 )
+
+                                            x7 − x6 − x4 + x3 + x − 1 = 0
+                                                (x − 1)(x6 − x3 + 1) = 0
+                                                9
+    We recognize the latter expression as xx3 +1
+                                              +1
+                                                 , giving us
+
+                                       x = 0◦ , 20◦ , 100◦ , 140◦ , 220◦ , 260◦ , 340◦ .
+
+    The sum of the solutions is
+                                           20◦ + 60◦ + 100◦ + 140◦ = 320◦ .
+
+
+
+
+21. [12] We call a positive integer t good if there is a sequence a0 , a1 , . . . of positive integers satisfying
+    a0 = 15, a1 = t, and
+                                        an−1 an+1 = (an − 1)(an + 1)
+    for all positive integers n. Find the sum of all good numbers.
+    Proposed by: Krit Boonsiriseth
+    Answer:       296
+    Solution: By the condition of the problem statement, we have
+
+                                       a2n − an−1 an+1 = 1 = a2n−1 − an−2 an .
+
+    This is equivalent to
+                                              an−2 + an   an−1 + an+1
+                                                        =             .
+                                                an−1          an
+    Let k = a0a+a
+                1
+                  2
+                    . Then we have
+
+                        an−1 + an+1   an−2 + an   an−3 + an−1         a0 + a2
+                                    =           =             = ··· =         = k.
+                            an          an−1         an−2                a1
+    Therefore we have an+1 = kan − an−1 for all n ≥ 1. We know that k is a positive rational number
+    because a0 , a1 , and a2 are all positive integers. We claim that k must be an integer. Suppose that
+    k = pq with gcd(p, q) = 1. Since kan = an−1 + an+1 is always an integer for n ≥ 1, we must have q | an
+    for all n ≥ 1. This contradicts a22 − a1 a3 = 1. Conversely, if k is an integer, inductively all ai are
+    integers.
+                               2                    2
+                              −1
+    Now we compute a2 = t 15     , so k = t +224
+                                            15t   is an integer. Therefore 15k − t = 224 t is an integer.
+    Combining with the condition that a2 is an integer limits the possible values of t to 1, 4, 14, 16, 56,
+    224. The values t < 15 all lead to an = 0 for some n whereas t > 15 leads to a good sequence. The
+    sum of the solutions is
+                                           16 + 56 + 224 = 296.
+
+
+
+
+22. [12] Let A be a set of integers such that for each integer m, there exists an integer a ∈ A and positive
+    integer n such that an ≡ m (mod 100). What is the smallest possible value of |A|?
+    Proposed by: Daniel Zhu
+    Answer:       41
+    Solution: Work in R = Z/100Z ∼
+                                 = Z/4Z × Z/25Z.
+    Call an element r ∈ R type (s, t) if s = ν2 (r) ≤ 2 and t = ν5 (r) ≤ 2. Also, define an element r ∈ R to
+    be coprime if it is of type (0, 0), powerful if it is of types (0, 2), (2, 0), or (2, 2), and marginal otherwise.
+    Then, note that if if r ∈ R is marginal, then any power of r is powerful. Therefore all marginal elements
+    must be in A.
+    We claim that all powerful elements are the cube of some marginal element. To show this take a
+    powerful element r. In modulo 4 or 25, if r is a unit, then since 3 is coprime to both the sizes of
+    (Z/4Z)× and (Z/25Z)× , it is the cube of some element. Otherwise, if r is zero then it is the cube of 2
+    or 5, respectively (since this case happens at least once this means that the constructed cube root is
+    marginal).
+    We now claim that 4 additional elements are needed to generate the coprime elements. To see this,
+    note that R× ∼
+                 = Z/2Z × Z/20Z since there are primitive roots mod 4 and 25. Under this isomorphism,
+    one can show that (1, 1), (1, 2), (1, 4), and (0, 1) generate anything, and that no element in R× has
+    more than one of these as a multiple.
+    To wrap up, note that there are 100 − (20 + 1)(2 + 1) = 37 marginal elements, so 41 elements are
+    needed in total.
+
+
+
+23. [12] A function f : A → A is called idempotent if f (f (x)) = f (x) for all x ∈ A. Let In be the number
+    of idempotent functions from {1, 2, . . . , n} to itself. Compute
+                                                            ∞
+                                                            X In
+                                                                       .
+                                                           n=1
+                                                                  n!
+
+    Proposed by: Carl Schildkraut
+    Answer:       ee − 1
+    Solution: Let Ak,n denote the number of idempotent functions on a set of size n with k fixed points.
+    We have the formula                              
+                                                      n n−k
+                                            Ak,n =      k
+                                                      k
+    for 1 ≤ k ≤ n because there are nk ways to choose the fixed points and all n − k remaining elements
+                                      
+
+    must map to fixed points, which can happen in k n−k ways. Hence
+                                            ∞              ∞ X
+                                                             n
+                                            X In           X   Ak,n
+                                                       =
+                                            n=1
+                                                  n!       n=1 k=1
+                                                                           n!
+                                                            ∞ X n
+                                                           X              k n−k
+                                                       =
+                                                           n=1 k=1
+                                                                       k!(n − k)!
+                                                            ∞      ∞
+                                                           X     1
+                                                                 X           k n−k
+                                                       =
+                                                                 k!         (n − k)!
+                                                           k=1        n=k
+                                                            ∞          ∞
+                                                           X     1 X kn
+                                                       =
+                                                                 k! n=0 n!
+                                                           k=1
+                                                            ∞
+                                                           X     1 k
+                                                       =            e
+                                                                 k!
+                                                           k=1
+                                                            e
+                                                       = e − 1.
+24. [12] In 4ABC, ω is the circumcircle, I is the incenter and IA is the A-excenter. Let M be the
+    midpoint of arc BAC
+                     \ on ω, and suppose that X, Y are the projections of I onto M IA and IA onto
+    M I, respectively. If 4XY IA is an equilateral triangle with side length 1, compute the area of 4ABC.
+    Proposed by: Michael Diao
+                 √
+                   6
+    Answer:       7
+
+    Solution 1: Using Fact 5, we know that IIA intersects the circle (ABC) at MA , which is the center
+    of (IIA BCXY ). Let R be the radius of the latter circle. We have R = √13 .
+    We have ∠AIM = ∠Y IIA = ∠Y IX = π3 . Also, ∠IIA M = ∠IM IA by calculating the angles from the
+    equilateral triangle. Using 90-60-30 triangles, we have:
+
+                                              1       1
+                                            AI =M I = IIA = R
+                                              2       2
+                                                √
+                                                  3      √
+                                          AM =      M I = 3R
+                                                 2
+                                       M MA2 = AM 2 + AMA2 = 7R2
+
+    Now, let J and N be the feet of the altitudes from A and B respectively on M MA . Note that as M is
+    an arc midpoint of BC, N is actually the midpoint of BC.
+
+                                                     AMA2   4
+                                            MA J =        =√ R
+                                                     M MA    7
+                                                     BMA2   1
+                                            MA N =        =√ R
+                                                     M MA    7
+    Thus JN = √37 R. Also, we have,
+
+                                                                    6 2
+                                        BN 2 = MA N · M N =           R
+                                                                    7
+                                                 √       √
+    Now, [ABC] = 12 JN · BC = JN · BN = 3 7 6 R2 =         6
+                                                          7 .
+
+    Solution 2: By Fact 5, we construct the diagram first with 4XY IA as the reference triangle.
+
+                                                         M
+
+
+
+
+                                   A
+
+
+                                                                X
+                                             I
+
+                                        B                                 C
+                                                     D
+
+                                                     MA
+                                       Y
+
+
+                                                                    IA
+    Let MA be the circumcenter of 4XY IA and let Ω be the circumcircle, which has circumradius R = √13 .
+    Then by Fact 5, MA is the midpoint of minor arc BC,
+                                                      d and B, C ∈ Ω. Now we show the following
+    result:
+    Claim. b + c = 2a.
+
+    Proof. Letting D be the intersection of IIA with BC, we have MA D = 12 R. Then by the Shooting
+    Lemma,
+                                   MA A · MA D = R2 =⇒ MA A = 2R.
+    On the other hand, by Ptolemy,
+
+                         MA B · AC + MA C · AB = MA A · BC =⇒ R · (b + c) = 2R · a,
+
+    whence the result follows.
+
+    By the triangle area formula, we have
+                                                        1               3
+                                       [ABC] = sr =       (a + b + c)r = ar.
+                                                        2               2
+    Therefore, we are left to compute a and r.
+    Since MA is the antipode of M on (ABC) we get M B, M C are tangent to Ω; in particular, M BMA C
+    is a kite with M B = M C and MA B = MA C. Then by Power of a Point, we get
+
+                                    M B 2 = M C 2 = M I · M Y = 2R · 3R = 2,
+
+    where M I = IIA = 2R and IY = R.
+    Since ID = DMA , we know that r is the length of the projection from MA to BC. Finally, given our
+    above information, we can compute
+
+                                           BMA2       BMA2        1
+                                      r=        =p              =√
+                                          MA M          2
+                                                    BMA + M B 2    21
+                                                    √
+                                             BMA   2 2
+                                      a = 2r     =     .
+                                             MB     7
+    The area of ABC is then                       √ !       √
+                                             3   2 2    1       6
+                                                 √     √     =    .
+                                             2     7     21    7
+
+
+
+
+25. [15] Let S be the set of 34 points in four-dimensional space where each coordinate is in {−1, 0, 1}. Let
+    N be the number of sequences of points P1 , P2 , . . . , P2020 in S such that Pi Pi+1 = 2 for all 1 ≤ i ≤ 2020
+    and P1 = (0, 0, 0, 0). (Here P2021 = P1 .) Find the largest integer n such that 2n divides N .
+    Proposed by: James Lin
+    Answer:       4041
+    Solution: From (0, 0, 0, 0) we have to go to (±1, ±1, ±1, ±1), and from (1, 1, 1, 1) (or any of the other
+    similar points), we have to go to (0, 0, 0, 0) or (−1, 1, 1, 1) and its cyclic shifts. If ai is the number
+    of ways to go from (1, 1, 1, 1) to point of the form (±1, ±1, ±1, ±1) in i steps, then we need to find
+    ν2 (16a2018 ). To find a recurrence relation for ai , note that to get to some point in (±1, ±1, ±1, ±1), we
+    must either come from a previous point of the form (±1, ±1, ±1, ±1) or the point (0, 0, 0, 0). In order
+    to go to one point of the form (±1, ±1, ±1, ±1) through (0, 0, 0, 0) from the point (±1, ±1, ±1, ±1),
+    we have one way of going to the origin and 16 ways to pick which point we go to after the origin.
+    Additionally, if the previous point we visit is another point of the form (±1, ±1, ±1, ±1) then we have
+    4 possible directions to go in. Therefore the recurrence relation for ai is ai = 4ai−1 + 16ai−2 . Solving
+    the linear recurrence yields
+                                       1      √       1      √
+                                 ai = √ (2 + 2 5)i − √ (2 − 2 5)i = 4i Fi+1 ,
+                                        5              5
+    so it suffices to find ν2 (F2019 ). We have Fn ≡ 0, 1, 1, 2, 3, 1 (mod 4) for n ≡ 0, 1, 2, 3, 4, 5 (mod 6), so
+    ν2 (F2019 ) = 1, and the answer is 4 + 2 · 2018 + 1 = 4041.
+
+
+
+26. [15] Let ABCD be a cyclic quadrilateral, and let segments AC and BD intersect at E. Let W and
+    Y be the feet of the altitudes from E to sides DA and BC, respectively, and let X and Z be the
+    midpoints of sides AB and CD, respectively. Given that the area of AED is 9, the area of BEC is 25,
+    and ∠EBC − ∠ECB = 30◦ , then compute the area of W XY Z.
+    Proposed by: James Lin
+                         √
+    Answer:      17 + 15
+                      2    3
+    Solution: Reflect E across DA to EW , and across BC to EY . As ABCD is cyclic, 4AED and
+    4BEC are similar. Thus EW AED and EBEY C are similar too.
+    Now since W is the midpoint of EW E, X is the midpoint of AB, Y is the midpoint of EEY , and Z is
+    the midpoint of DC, we have that W XY Z is similar to EW AED and EBEY C.
+
+                                                       X          B
+                                            A
+                               EW
+                                          W
+                                                                     Y                EY
+                                                   E
+
+
+
+
+                                 D
+
+
+                                                   Z
+
+
+                                                                         C
+
+    From the given conditions, we have EW : EY = 3 : 5pand ∠W EY = 150◦ . Suppose EW = 3x and
+                                                                  √
+    EY = 5x. Then by the law of cosines, we have W Y = 34 + 15 3x.
+                           p        √
+    Thus, EW E : W Y = 6 : 34 + 15 3. So by the similarity ratio,
+                                           p       √ !2                             √ !
+                                            34 + 15 3                        34 + 15 3         15 √
+                [W XY Z] = [EW AED]                     =2·9·                           = 17 +      3.
+                                               6                                 36            2
+
+
+
+
+27. [15] Let {ai }i≥0 be a sequence of real numbers defined by
+
+                                                                 1
+                                              an+1 = a2n −
+                                                             22020·2n −1
+    for n ≥ 0. Determine the largest value for a0 such that {ai }i≥0 is bounded.
+    Proposed by: Joshua Lee
+                       1
+    Answer:      1 + 22020
+
+    Solution: Let a0 = √ 12020 t + 1t , with t ≥ 1. (If a0 < √ 12018 then no real t exists, but we ignore
+                                       
+                           2                                    2
+    these values because a0 is smaller.) Then, we can prove by induction that
+                                                                  
+                                                  1       2n     1
+                                         an = √ 2020·2n t + 2n .
+                                                2              t
+
+    For this to be bounded, it is easy to see that we just need
+                                                   n
+                                                                         !2n
+                                              t2                 t
+                                           √ 2020·2n =         √ 2020
+                                            2                   2
+
+    to be bounded, since the second term approaches 0. We see that this is is equivalent to t ≤ 22020/2 ,
+    which means                                          2020 !
+                                          √ 2020
+                                                   
+                                     1                1                  1
+                             a0 ≤ √ 2020    2    + √             = 1 + 2020 .
+                                    2                  2              2
+
+
+
+
+28. [15] Let 4ABC be a triangle inscribed in a unit circle with center O. Let I be the incenter of 4ABC,
+    and let D be the intersection of BC and the angle bisector of ∠BAC. Suppose that the circumcircle
+                                                                                       12
+    of 4ADO intersects BC again at a point E such that E lies on IO. If cos A = 13        , find the area of
+    4ABC.
+    Proposed by: Michael Diao
+                  15
+    Answer:      169
+
+    Solution: Consider the following lemma:
+    Lemma. AD ⊥ EO.
+
+    Proof. By the Shooting Lemma, the reflection of the midpoint M of arc BC not containing A over
+    BC lies on (ADO). Hence
+
+                       ]ADE + ]DEO = ]M DC + ]DM 0 O = ]M DC + ]M 0 M D = 90◦ .
+
+    This is enough to imply AD ⊥ EO.
+
+                                                       A
+
+
+
+
+                                                                  O
+                                                           I
+                                                                         M0
+
+
+                              E               B                      D         C
+
+
+                                                                     M
+   Thus I is the foot from O onto AD. Now
+
+                                                    AI 2 + IO2 = AO2 .
+
+   By Euler’s formula,
+                                                      !2
+                                               r
+                                                           + R2 − 2Rr = R2 .
+                                             sin A2
+   Hence
+                                                                      A
+                                                      r = 2R sin2       .
+                                                                      2
+   Then
+                                                r
+                                  s=a+               = a + R sin A = 3R sin A
+                                              tan A2
+   and                                                                   
+                                                                      A
+                                  [ABC] = rs =              2R sin2           (3R sin A) .
+                                                                      2
+   Since R = 1, we get
+                                         [ABC] = 3 (1 − cos A) sin A.
+                        5             12
+   Plugging in sin A = 13 and cos A = 13 , we get
+                                                              1 5     15
+                                         [ABC] = 3 ·            ·   =     .
+                                                              13 13   169
+                                                                                                        5
+   Remark. On the contest, this problem stated that 4ABC is an acute triangle and that sin A = 13         ,
+                       12
+   rather than cos A = 13 . This is erroneous because there is no acute triangle satisfying the conditions
+   of the problem statement (the given diagram is not accurate). We apologize for the mistake.
+
+
+
+29. [18] Let ABCD be a tetrahedron such that its circumscribed sphere of radius R and its inscribed
+    sphere of radius r are concentric. Given that AB = AC = 1 ≤ BC and R = 4r, find BC 2 .
+   Proposed by: Michael Ren
+                   q
+                     7
+   Answer:      1 + 15
+
+   Solution: Let O be the common center of the two spheres. Projecting O onto each face of the
+   tetrahedron will divide it into three isosceles triangles. Unfolding the tetrahedron into its net, the
+   reflection of any of these triangles about a side of the tetrahedron will coincide with another one of
+   these triangles. Using this property, we can see that each of the faces is broken up into the same three
+   triangles. It follows that the tetrahedron is isosceles, i.e. AB = CD, AC = BD, and AD = BC.
+   Let P be the projection
+                  √        of O √
+                                onto ABC and x = BC. By the Pythagorean Theorem on triangle P OA,
+   P has distance R2 − r2 = r 15 from A, B, and C. Using the area-circumcenter formula, we compute
+                                                      AB · AC · BC    x
+                                     [ABC] =                       = √ .
+                                                          4P A      4r 15
+   However, by breaking up the volume of the tetrahedron into the four tetrahedra OABC, OABD,
+   OACD, OBCD, we can write [ABC] = 4Vr , where V = [ABCD]. Comparing these two expressions
+                          √              3
+
+   for [ABC], we get x = 3 15V .
+   Using the formula
+                  q for the volume of an isosceles tetrahedron (or some manual calculations), we can
+                       1
+   compute V = x2              2
+                      72 (2 − x ). Substituting into the previous equation (and taking the solution which
+                                         q
+                                              7
+   is ≥ 1), we eventually get x2 = 1 +       15 .
+30. [18] Let S = {(x, y) | x > 0, y > 0, x + y < 200, and x, y ∈ Z}. Find the number of parabolas P with
+    vertex V that satisfy the following conditions:
+
+       • P goes through both (100, 100) and at least one point in S,
+       • V has integer coordinates, and
+       • P is tangent to the line x + y = 0 at V .
+
+    Proposed by: James Lin
+    Answer:       264
+    Solution: We perform the linear   transformation (x, y) → (x − y, x + y), which has the reverse trans-
+                             b−a
+    formation (a, b) → a+b
+                                 
+                         2 ,  2    . Then  the equivalent problem has a parabola has a vertical axis of
+    symmetry, goes through A = (0, 200), a point B = (u, v) in
+
+                        S 0 = {(x, y) | x + y > 0, x > y, y < 200, x, y ∈ Z, and x ≡ y mod 2},
+
+                                                                      u 2      v
+                                                                       
+    and a new vertex W = (w, 0) on y = 0 with w even. Then 1 − w          = 200  . The only way the RHS
+                                                       0
+                                                 u   v                    0 2
+    can be the square of a rational number is if w = 10 where v = 2(10 − v ) . Since v is even, we can find
+    conditions so that u, w are both even:
+
+                                        v 0 ∈ {1, 3, 7, 9} =⇒ (2v 0 ) | u, 20 | w
+                                        v 0 ∈ {2, 4, 6, 8} =⇒ v 0 | u, 10 | w
+                                                 v 0 = 5 =⇒ 2 | u, 4 | w
+
+    It follows that any parabola that goes through v 0 ∈ {3, 7, 9} has a point with v 0 = 1, and any parabola
+    that goes through v 0 ∈ {4, 6, 8} has a point with v 0 = 2. We then count the following parabolas:
+
+       • The number of parabolas going through (2k, 162), where k is a nonzero integer with |2k| < 162.
+       • The number of parabolas going through (2k, 128) not already counted, where k is a nonzero integer
+         with |2k| < 128. (Note that this passes through (k, 162).)
+       • The number of parabolas going through (2k, 50) not already     counted, where k is a nonzero integer
+         with |2k| < 50. (Note that this passes through 2k
+                                                                 
+                                                         5 , 162   , and any overlap must have been counted
+         in the first case.)
+    The number of solutions is then
+                                                                   
+                                                 1      4
+                                           2 80 + · 64 + · 25           = 264.
+                                                 2      5
+
+
+
+
+31. [18] Anastasia is taking a walk in the plane, starting from (1, 0). Each second, if she is at (x, y), she
+    moves to one of the points (x − 1, y), (x + 1, y), (x, y − 1), and (x, y + 1), each with 41 probability. She
+    stops as soon as she hits a point of the form (k, k). What is the probability that k is divisible by 3
+    when she stops?
+    Proposed by: Michael Ren
+                    √
+                  3− 3
+    Answer:         3  or 1 − √13
+
+    Solution: The key idea is to consider (a + b, a − b), where (a, b) is where Anastasia walks on. Then,
+    the first and second coordinates are independent random walks starting at 1, and we want to find the
+    probability that the first is divisible by 3 when the second reaches 0 for the first time. Let Cn be the
+    nth Catalan number. The probability that the second random walk first reaches 0 after 2n − 1 steps is
+    Cn−1                                                                                 1
+                                                                                             P          2n−1
+                                                                                                            
+    22n−1 , and the probability that the first is divisible by 3 after 2n − 1 steps is 22n−1  i≡n mod 3   i
+    (by letting i be the number of −1 steps). We then need to compute
+                                      ∞
+                                                                  !
+                                     X Cn−1         X 2n − 1
+                                                                    .
+                                     n=1
+                                           42n−1              i
+                                                        i≡n mod 3
+
+    By a standard root of unity filter,
+
+                                                                      4n + 2
+                                                                 
+                                               X            2n − 1
+                                                                    =        .
+                                                               i         6
+                                            i≡n mod 3
+
+    Letting
+                                                                ∞
+                                                        2       X
+                                          P (x) =      √      =    C n xn
+                                                    1 + 1 − 4x n=0
+    be the generating function for the Catalan numbers, we find that the answer is
+                                                                         √
+                            1    1      1      1    1    1       2       3− 3
+                              P      + P          = +       ·     q =           .
+                            6    4      12    16    3 12 1 + 3              3
+                                                                    4
+
+
+
+
+32. [18] Find the smallest real constant α such that for all positive integers n and real numbers 0 = y0 <
+    y1 < · · · < yn , the following inequality holds:
+                                           n                  n
+                                          X   (k + 1)3/2     X   k 2 + 3k + 3
+                                     α        p            ≥                  .
+                                                       2
+                                                yk2 − yk−1            yk
+                                          k=1                k=1
+
+
+    Proposed by: Andrew Gu
+                   √
+                 16 2
+    Answer:        9
+
+    Solution: We first prove the following lemma:
+    Lemma. For positive reals a, b, c, d, the inequality
+
+                                              a3/2  b3/2   (a + b)3/2
+                                               1/2
+                                                   + 1/2 ≥
+                                              c     d      (c + d)1/2
+
+    holds.
+
+    Proof. Apply Hölder’s inequality in the form
+                                       3/2        2
+                                       a      b3/2
+                                            +         (c + d) ≥ (a + b)3 .
+                                       c1/2   d1/2
+
+    For k ≥ 2, applying the lemma to a = (k − 1)2 , b = 8k + 8, c = yk−1
+                                                                     2
+                                                                         , d = yk2 − yk−1
+                                                                                      2
+                                                                                          yields
+
+                                      (k − 1)3  (8k + 8)3/2   (k + 3)3
+                                               +p 2         ≥          .
+                                        yk−1            2
+                                                  yk − yk−1      yk
+
+    We also have the equality
+                                              (8 · 1 + 8)3/2   (1 + 3)3
+                                                p            =          .
+                                                   y12 − y02      y1
+    Summing the inequality from k = 2 to k = n with the equality yields
+                        n                  n                         n
+                       X   (8k + 8)3/2    X   (k + 3)3 − k 3   n3   X   9(k 2 + 3k + 3)
+                           p            ≥                    +    ≥                     .
+                                    2
+                             yk2 − yk−1            yk          yn              yk
+                       k=1                k=1                       k=1
+                                           √
+    Hence the inequality holds for α = 169 2 . In the reverse direction, this is sharp when yn = n(n + 1)(n +
+    2)(n + 3) (so that yk−1 = k−1
+                              k+3 yk for k = 2, . . . , n) and n → ∞.
+
+
+
+
+33. [22] Estimate
+                                                        ∞
+                                                        Y          −1.25
+                                                 N=           nn           .
+                                                        n=1
+
+    An estimate of E > 0 will receive b22 min(N/E, E/N )c points.
+    Proposed by: Sujay Kazi
+    Answer:      ≈ 8282580
+    Solution: We approximate
+                                                          ∞
+                                                          X   ln n
+                                                 ln N =
+                                                          n=1
+                                                              n5/4
+    with an integral as
+                                  Z ∞                                            ∞
+                                        ln x      
+                                                        −1/4            −1/4
+                                                                             
+                                             dx =   −4x      ln x − 16x
+                                   1    x5/4
+                                                                                 1
+                                                = 16.
+
+    Therefore e16 is a good approximation. We can estimate e16 by repeated squaring:
+
+                                                    e ≈ 2.72
+                                                   e2 ≈ 7.4
+                                                   e4 ≈ 55
+                                                   e8 ≈ 3000
+                                                  e16 ≈ 9000000.
+
+    The true value of e16 is around 8886111, which is reasonably close to the value of N . Both e16 and
+    9000000 would be worth 20 points.
+
+
+
+34. [22] For odd primes p, let f (p) denote the smallest positive integer a for which there does not exist an
+    integer n satisfying p | n2 − a. Estimate N , the sum of f (p)2 over the first 105 odd primes p.
+    An estimate of E > 0 will receive b22 min(N/E, E/N )3 c points.
+    Proposed by: Michael Ren
+    Answer:      2266067
+    Solution: Note that the smallest quadratic nonresidue a is always a prime, because if a = bc with
+    b, c > 1 then one of b and c is also a quadratic nonresidue. We apply the following heuristic: if p1 ,
+    p    . . . are the primes in increasing order, then given a “uniform random prime” q, the values of
+    2 , 
+      p1
+       q    , pq2 , . . . are independent and are 1 with probability 12 and −1 with probability 21 .
+    Of course, there
+                  is no such   thing as a uniform random prime. More rigorously, for any n, the joint dis-
+    tributions of pq1 , . . . , pqn where q is a uniform random prime less than N converges in distribution
+    to n independent coin flips between 1 and −1 as N → ∞. For ease of explanation, we won’t adopt
+    this more formal view, but it is possible to make the following argument rigorous by looking at primes
+    q < N and sending N → ∞. Given any n, the residue of q mod n is uniform over the ϕ(n) residues
+    mod n that are relatively prime to n. By quadratic reciprocity, conditioned
+                                                                           on either q ≡ 1 (mod 4) or
+    q ≡ 3 (mod 4), exactly half of the nonzero residues mod pn satisfy pqn = 1 and exactly half satisfy
+     
+      pn
+       q  = −1 for odd pn (the case of pn = 2 is slightly different and one must look mod 8, but the result
+    is the same). The residue of q mod 8, p2 , p3 , . . . , pn are independent as these are pairwise relatively
+    prime, yielding our heuristic.
+    Thus, we may model our problem of finding the smallest quadratic nonresidue with the following
+    process: independent fair coins are flipped for each prime, and we take the smallest prime that flipped
+                                                             P∞ p2
+    heads. We can estimate the expected value of f (p)2 as n=1 2nn . Looking at the first few terms gives
+    us
+                     22    32    52    72    112    132    172   192    232    292
+                        +     +     +      +     +      +      +     +      +      ≈ 22.
+                     2     4     8     16     32     64    128 256 512 1024
+    The terms after this decay rapidly, so a good approximation is E = 22 · 105 , good enough for 20 points.
+    The more inaccurate E = 20 · 105 earns 15 points.
+    This Python code computes the exact answer:
+
+    def smallest_nqr(p):
+        for a in range(1,p):
+            if pow(a,(p-1)//2,p)==p-1:
+                return a
+
+    import sympy
+    print(sum([smallest_nqr(p)**2 for p in sympy.ntheory.primerange(3,sympy.prime(10**5+2))]))
+
+    Remark. In 1961,P∞Erdős showed that as N → ∞, the average value of f (p) over odd primes p < N
+    will converge to n=1 p2nn ≈ 3.675.
+
+
+
+35. [22] A collection S of 10000 points is formed by picking each point uniformly at random inside a circle
+    of radius 1. Let N be the expected number of points of S which are vertices of the convex hull of the
+    S. (The convex hull is the smallest convex polygon containing every point of S.) Estimate N .
+    An estimate of E > 0 will earn max(b22 − |E − N |c, 0) points.
+    Proposed by: Shengtong Zhang
+    Answer:        ≈ 72.8
+    Solution: Here is C++ code by Benjamin Qi to estimate the answer via simulation. It is known that
+    the expected number of vertices of the convex hull of n points chosen uniformly at random inside a
+    circle is O(n1/3 ). See “On the Expected Complexity of Random Convex Hulls” by Har-Peled.
+
+
+
+36. [22] A snake of length k is an animal which occupies an ordered k-tuple (s1 , . . . , sk ) of cells in a n × n
+    grid of square unit cells. These cells must be pairwise distinct, and si and si+1 must share a side for
+    i = 1, . . . , k − 1. If the snake is currently occupying (s1 , . . . , sk ) and s is an unoccupied cell sharing a
+    side with s1 , the snake can move to occupy (s, s1 , . . . , sk−1 ) instead.
+    Initially, a snake of length 4 is in the grid {1, 2, . . . , 30}2 occupying the positions (1, 1), (1, 2), (1, 3), (1, 4)
+    with (1, 1) as its head. The snake repeatedly makes a move uniformly at random among moves it can
+    legally make. Estimate N , the expected number of moves the snake makes before it has no legal moves
+    remaining.
+An estimate of E > 0 will earn b22 min(N/E, E/N )4 c points.
+Proposed by: Andrew Gu
+Answer:      ≈ 4571.8706930
+Solution: Let n = 30. The snake can get stuck in only 8 positions, while the total number of positions
+                                                                   2
+is about n2 × 4 × 3 × 3 = 36n2 . We can estimate the answer as 36n
+                                                                 8 = 4050, which is good enough for
+13 points.
+Let’s try to compute the answer as precisely as possible. For each head position (a, b) and tail orien-
+tation c ∈ [0, 36), let x = 36(na + b) + c be an integer denoting the current state of the snake. Let Ex
+by the expected number of moves the snake makes if it starts at state x. If from state x the snake can
+transition to any of states y1 , y2 , . . . , yk , then add an equation of the form
+                                                     k
+                                                  1X
+                                           Ex −        Ey = 1.
+                                                  k i=1 i
+
+Otherwise, if there are no transitions out of state x then set Ex = 0.
+It suffices to solve a system of 36n2 linear equations for E0 , E1 , . . . , E36n2 −1 . Then the answer will
+equal Ei , where i corresponds to the state described in the problem statement. Naively, using Gaussian
+elimination would require about (36n2 )3 ≈ 3.4 · 1013 operations, which is too slow. Also, it will require
+too much memory to store (36n2 )2 real numbers at once.
+We can use the observation that initially, the maximum difference between any two indices within
+the same equation is at most ≈ 72n, so Gaussian elimination only needs to perform approximately
+(36n2 ) · (72n)2 ≈ 1.5 · 1011 operations. Furthermore, we’ll only need to store ≈ (36n2 ) · (72n) real
+numbers at a time. Benjamin Qi’s solution ends up finishing in less than two minutes for n = 30 (C++
+code).
+Here are some more examples of problems in which Gaussian elimination can be sped up by exploiting
+some sort of special structure:
+
+  • https://codeforces.com/contest/963/problem/E
+  • https://codeforces.com/gym/102501/problem/E
+

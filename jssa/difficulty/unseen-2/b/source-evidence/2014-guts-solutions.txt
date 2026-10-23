@@ -1,0 +1,814 @@
+                                            HMMT 2014
+                                       Saturday 22 February 2014
+                                                    Guts
+1. [4] Compute the prime factorization of 159999.
+    Answer: 3 · 7 · 19 · 401        We have 159999 = 160000 − 1 = 204 − 1 = (20 − 1)(20 + 1)(202 + 1) =
+   3 · 7 · 19 · 401.
+2. [4] Let x1 , . . . , x100 be defined so that for each i, xi is a (uniformly) random integer between 1 and 6
+   inclusive. Find the expected number of integers in the set {x1 , x1 + x2 , . . . , x1 + x2 + . . . + x100 } that
+   are multiples of 6.
+                50
+    Answer:      3    Note that for any i, the probability that x1 + x2 + . . . + xi is a multiple of 6 is 16
+   because exactly 1 value out of 6 possible values of xi works. Because these 100 events are independent,
+   the expected value is 100 · 61 = 50
+                                    3 .
+
+3. [4] Let ABCDEF be a regular hexagon. Let P be the circle inscribed in 4BDF . Find the ratio of
+   the area of circle P to the area of rectangle ABDE.
+                   √
+                  π 3
+                                                                                           √
+    Answer:        12    Let the side length of the hexagon be s. The length of BD is s 3, so the area
+                              √                                                   √
+   of rectangle ABDE is√s2 3. Equilateral triangle BDF has side length s 3. The inradius of an
+   equilateral triangle is 3/6 times the length of its side, and so has length 2s . Thus, the area of circle
+           2                    2       √
+   P is πs4 , so the ratio is πs  /4
+                                 √ = π 3.
+                              s2 3    12
+
+4. [4] Let D be the set of divisors of 100. Let Z be the set of integers between 1 and 100, inclusive. Mark
+   chooses an element d of D and an element z of Z uniformly at random. What is the probability that
+   d divides z?
+                217
+    Answer:     900   As 100 = 22 · 52 , there are 3 · 3 = 9 divisors of 100, so there are 900 possible pairs
+   of d and z that can be chosen.
+                               100
+                        P are100 d possible
+   If d is chosen, then there               values of z such that d divides z, so the total number of valid
+   pairs of d and z is d|100 d = d|100 d = (1 + 2 + 22 )(1 + 5 + 52 ) = 7 · 31 = 217. The answer is
+                                    P
+              217
+   therefore 900  .
+5. [5] If four fair six-sided dice are rolled, what is the probability that the lowest number appearing on
+   any die is exactly 3?
+                                                                                              4
+    Answer:       175/1296     The probability that all the die rolls are at least 3 is 64 . The probability
+                               4
+   they are all at least 4 is 36 . The probability of being in the former category but not the latter is thus
+   44   34     256−81     175
+   6 − 6 = 1296 = 1296 .
+
+                                        n3 + 8
+6. [5] Find all integers n for which           is an integer.
+                                        n2 − 4
+                                                3               2              2
+                                                             −2n+4)
+    Answer:        0, 1, 3, 4, 6    We have nn2 −4
+                                                +8
+                                                   = (n+2)(n
+                                                       (n+2)(n−2)   = n −2n+4
+                                                                        n−2   for all n 6= −2. Then
+   n2 −2n+4           4                                            4
+      n−2      = n + n−2 , which is an integer if and only if n−2       is an integer. This happens when
+   n − 2 = −4, −2, −1, 1, 2, 4, corresponding to n = −2, 0, 1, 3, 4, 6, but we have n 6= −2 so the answers
+   are 0, 1, 3, 4, 6.
+7. [5] The Evil League of Evil is plotting to poison the city’s water supply. They plan to set out from
+   their headquarters at (5, 1) and put poison in two pipes, one along the line y = x and one along the line
+   x = 7. However, they need to get the job done quickly before Captain Hammer catches them. What’s
+   the shortest distance they can travel to visit both pipes and then return to their headquarters?
+                   √
+    Answer:      4 5 After they go to y = x, we reflect the remainder of their path in y = x, along
+   with the second pipe and their headquarters. Now, they must go from (5, 1) to y = 7 crossing y = x,
+    and then go to (1, 5). When they reach y = 7, we reflect the remainder of their path again, so now
+    their reflected headquarters is at (1, 9). Thus, they just go from (5, 1) to (1, 9) in some path that
+    inevitably crosses
+    √             √ y = x and y = 7. The shortest path they can take is a straight line with length
+      42 + 82 = 4 5.
+    Comment. These ideas can be used to prove that the orthic triangle of an acute triangle has the
+    smallest possible perimeter of all inscribed triangles.
+    Also, see if you can find an alternative solution using Minkowski’s inequality!
+ 8. [5] The numbers 20 , 21 , · · · , 215 , 216 = 65536 are written on a blackboard. You repeatedly take two
+    numbers on the blackboard, subtract one from the other, erase them both, and write the result of the
+    subtraction on the blackboard. What is the largest possible number that can remain on the blackboard
+    when there is only one number left?
+     Answer:       131069 If we reverse the order of the numbers in the final subtraction we perform,
+    then the final number will be negated. Thus, the possible final numbers come in pairs with opposite
+    signs. Therefore, the largest possible number is the negative of the smallest possible number. To get
+    the smallest possible number, clearly we can take the smallest number originally on the board and
+    subtract all of the other numbers from it (you can make this rigorous pretty easily if needed), so the
+                                   P16
+    smallest possible number is 1− k=1 2k = 1−131070 = −131069, and thus the largest possible number
+    is 131069.
+ 9. [6] Compute the side length of the largest cube contained in the region
+
+                                    {(x, y, z) : x2 + y 2 + z 2 ≤ 25 and x ≥ 0}
+
+    of three-dimensional space.
+                   √
+     Answer: 5 3 6 The given region is a hemisphere, so the largest cube that can fit inside it has one
+    face centered at the origin and the four vertices of the opposite face on the spherical surface. Let the
+    side length of this
+                   √
+                        cube be s. Then, the radius of the circle is the hypotenuse
+                                                                               √
+                                                                                     of a triangle with side
+                     2                                                           6
+    lengths s and 2 s. So, by the Pythagorean Theorem, the radius equals 2 s. Since the radius of the
+                                                     √
+    hemisphere is 5, the side length of the cube is 5 3 6 .
+
+10. [6] Find the number of nonempty sets F of subsets of the set {1, . . . , 2014} such that:
+     (a) For any subsets S1 , S2 ∈ F, S1 ∩ S2 ∈ F.
+     (b) If S ∈ F, T ⊆ {1, . . . , 2014}, and S ⊆ T , then T ∈ F.
+
+     Answer: 22014 For a subset S of {1, . . . , 2014}, let FS be the set of all sets T such that S ⊆ T ⊆
+    {1, . . . , 2014}. It can be checked that the sets FS satisfy the conditions 1 and 2. We claim that the
+    FS are the only sets of subsets of {1, . . . , 2014} satisfying the conditions 1 and 2. (Thus, the answer is
+    the number of subsets S of {1, . . . , 2014}, which is 22014 .)
+    Suppose that F satisfies the conditions 1 and 2, and let S be the intersection of all the sets of F. We
+    claim that F = FS . First, by definition of S, all elements T ∈ F are supersets of S, so F ⊆ FS . On
+    the other hand, by iterating condition 1, it follows that S is an element of F, so by condition 2 any set
+    T with S ⊆ T ⊆ {1, . . . , 2014} is an element of F. So F ⊇ FS . Thus F = FS .
+
+11. [6] Two fair octahedral dice, each with the numbers 1 through 8 on their faces, are rolled. Let N be
+    the remainder when the product of the numbers showing on the two dice is divided by 8. Find the
+    expected value of N .
+                   11
+     Answer:       4    If the first die is odd, which has 12 probability, then N can be any of 0, 1, 2, 3,
+    4, 5, 6, 7 with equal probability, because multiplying each element of {0, . . . , 7} with an odd number
+    and taking modulo 8 results in the same numbers, as all odd numbers are relatively prime to 8. The
+    expected value in this case is 3.5.
+    If the first die is even but not a multiple of 4, which has 41 probability, then using similar reasoning,
+    N can be any of 0, 2, 4, 6 with equal probability, so the expected value is 3.
+    If the first die is 4, which has 81 probability, then N can by any of 0, 4 with equal probability, so the
+    expected value is 2.
+    Finally, if the first die is 8, which has 18 probability, then N = 0. The total expected value is 12 (3.5) +
+    1       1        1       11
+    4 (3) + 8 (2) + 8 (0) = 4 .
+
+12. [6] Find
+           √ a nonzero
+                  √       monic polynomial P (x) with integer coefficients and minimal degree such that
+    P (1 − 3 2 + 3 4) = 0. (A polynomial is called monic if its leading coefficient is 1.)
+                                                        √      √           √                    √      √
+     Answer: x3 − 3x2 + 9x − 9 Note that (1 − 3 2 + 3 4)(1 + 3 2) = 3, so 1 − 3 2 + 3 4 = 1+33√2 .
+                                      √
+    Now, if f (x)
+               √  = x3 −2,
+                        √  we have f ( 3 2) = 0, so if we let g(x) = f (x−1) = (x−1)3 −2 = x3 −3x2√           +3x−3,
+    then g(1+ 3 2) = f ( 3 2) = 0. Finally, we let h(x) = g( x3 ) = x273 − x272 + x9 −3 so h( 1+33√2 ) = g(1+ 3 2) = 0.
+                                                                       3
+    To make this a monic polynomial, we multiply h(x) by − x3 to get x3 − 3x2 + 9x − 9.
+13. [8] An auditorium has two rows of seats, with 50 seats in each row. 100 indistinguishable people sit
+    in the seats one at a time, subject to the condition that each person, except for the first person to sit
+    in each row, must sit to the left or right of an occupied seat, and no two people can sit in the same
+    seat. In how many ways can this process occur?
+                   100 98
+                      
+     Answer:        50 2     First, note that there are 249 ways a single row can be filled, because each of
+    the 49 people after the first in a row must sit to the left or to the right of the current group of people
+    in the row, so there are 2 possibilities for each of these 49 people.
+    Now, there are 100
+                        
+                      50 ways to choose the order     in which people are added to the rows, and 249 ways to
+                                                 100 98
+                                                    
+    fill up each row separately, for a total of 50 2 ways to fill up the auditorium.
+14. [8] Let ABCD be a trapezoid with AB k CD and ∠D = 90◦ . Suppose that there is a point E on CD
+    such that AE = BE and that triangles AED and CEB are similar, but not congruent. Given that
+    CD                BC
+     AB = 2014, find AD .
+                  √
+     Answer:        4027 Let M be the midpoint of AB. Let AM = M B = ED = a, M E = AD = b,
+    and AE = BE = c. Since 4BEC ∼ 4DEA, but 4BEC is not congruent to 4DAE, we must have
+    4BEC ∼ 4DEA. Thus, BC/BE = AD/DE = b/a, so BC = bc/a, and CE/EB = AE/ED = c/a,
+                                                              c2           2                      2
+                                                               a +a      c     1          c
+    so EC = c2 /a. We are given that CD/AB =                   2a     = 2a 2 + 2 = 2014 ⇒ a2 = 4027. Thus,
+                        √
+    BC/AD = bc/a
+              b = c/a =   4027.
+15. [8] Given a regular pentagon of area 1, a pivot line is a line not passing through any of the pentagon’s
+    vertices such that there are 3 vertices of the pentagon on one side of the line and 2 on the other. A
+    pivot point is a point inside the pentagon with only finitely many non-pivot lines passing through it.
+    Find the area of the region of pivot points.
+                   1
+                           √
+     Answer:       2 (7 − 3 5)   Let the pentagon be labeled ABCDE. First, no pivot point can be on
+    the same side of AC as vertex B. Any such point P has the infinite set of non-pivot lines within the
+    hourglass shape formed by the acute angles between lines P A and P C. Similar logic can be applied
+    to points on the same side of BD as C, and so on. The set of pivot points is thus a small pentagon
+    with sides on AC, BD, CE, DA, EB. The side ratio of this small pentagon to the large pentagon is
+                                                                  √
+                                                     ◦ 2     3− 5
+                                            (2 cos(72 )) =           ,
+                                                                 2
+    so the area of the small pentagon is
+                                                   √ !2
+                                                3− 5     1      √
+                                                        = (7 − 3 5).
+                                                  2      2
+16. [8] Suppose that x and y are positive real numbers such that x2 − xy + 2y 2 = 8. Find the maximum
+    possible value of x2 + xy + 2y 2 .
+                         √
+                   72+32 2
+                                                                √                 u
+     Answer:           7      Let u = x2 + 2y 2 . By AM-GM, u ≥ 8xy, so xy ≤ √ . If we let xy = ku
+                                                                                   8
+                 1
+    where k ≤   √   , then we have
+                  8
+                                                  u(1 − k) = 8
+                                              u(1 + k) = x2 + xy + 2y 2
+                        1+k
+    that is, u(1 + k) = 8 · . It is not hard to see that the maximum value of this expression occurs at
+                        1−k                                √
+         1                              1 + √18    72 + 32 2
+    k = √ , so the maximum value is 8 ·         =             .
+          8                             1 − √1      8
+                                                       7
+
+17. [11] Let f : N → N be a function satisfying the following conditions:
+     (a) f (1) = 1.
+     (b) f (a) ≤ f (b) whenever a and b are positive integers with a ≤ b.
+     (c) f (2a) = f (a) + 1 for all positive integers a.
+    How many possible values can the 2014-tuple (f (1), f (2), ..., f (2014)) take?
+     Answer: 1007 Note that f (2014) = f (1007)+1, so there must be exactly one index 1008 ≤ i ≤ 2014
+    such that f (i) = f (i − 1) + 1, and for all 1008 ≤ j ≤ 2014, j 6= i we must have f (j) = f (j − 1). We
+    first claim that each value of i corresponds to exactly one 2014-tuple (f (1), . . . , f (2014)). To prove
+    this, note that f (1024) = 11, so each i uniquely determines the values of f (1007), . . . , f (2014). Then
+    all of f (1), . . . , f (1006) can be uniquely determined from these values because for any 1 ≤ k ≤ 1006,
+    there exists a unique n such that 1007 ≤ k · 2n ≤ 2014. It’s also clear that these values satisfy the
+    condition that f is nondecreasing, so we have a correspondence from each 1008 ≤ i ≤ 2014 to a unique
+    2014-tuple.
+    Also, given any valid 2014-tuple (f (1), . . . , f (2014)), we know that f (1), . . . , f (1006) can be uniquely
+    determined by f (1007), . . . , f (2014), which yields some 1008 ≤ i ≤ 2014 where f (i) = f (i − 1) + 1, so
+    we actually have a bijection between possible values of i and 2014-tuples. Therefore, the total number
+    of possible 2014-tuples is 1007.
+18. [11] Find the number of ordered quadruples of positive integers (a, b, c, d) such that a, b, c, and d are
+    all (not necessarily distinct) factors of 30 and abcd > 900.
+                                                                                           4 3
+                    1940 Since abcd > 900 ⇐⇒ 30             30 30 30
+                                                                                            
+     Answer:                                              a b c d < 900, and there are 2         solutions to
+                                    1 4     4 3
+             2 2 2
+                                              
+    abcd = 2 3 5 , the answer is 2 (8 − 2 ) = 1940 by symmetry.
+19. [11] Let ABCD be a trapezoid with AB k CD. The bisectors of ∠CDA and ∠DAB meet at E, the
+    bisectors of ∠ABC and ∠BCD meet at F , the bisectors of ∠BCD and ∠CDA meet at G, and the
+    bisectors of ∠DAB and ∠ABC meet at H. Quadrilaterals EABF and EDCF have areas 24 and 36,
+    respectively, and triangle ABH has area 25. Find the area of triangle CDG.
+     Answer: 256    7   Let M, N be the midpoints of AD, BC respectively. Since AE and DE are bisectors
+    of supplementary angles, the triangle AED is right with right angle E. Then EM is the median of
+    a right triangle from the right angle, so triangles EM A and EM D are isosceles with vertex M . But
+    then ∠M EA = ∠EAM = ∠EAB, so EM k AB. Similarly, F N k BA. Thus, both E and F are on
+    the midline of this trapezoid. Let the length of EF be x. Triangle EF H has area 1 and is similar to
+    triangle ABH, which has area 25, so AB = 5x. Then, letting the heights of trapezoids EABF and
+    EDCF be h (they are equal since EF is on the midline), the area of trapezoid EABF is 6xh      2 = 24. So
+    the area of trapezoid EDCF is 36 = 9xh  2  . Thus  DC   = 8x. Then,  triangle GEF   is similar to and has
+     1                                                                     64
+    64  times the  area of triangle CDG. So  the area of triangle CDG   is 63 times the area  of quadrilateral
+    EDCF , or 256 7 .
+20. [11] A deck of 8056 cards has 2014 ranks numbered 1–2014. Each rank has four suits—hearts,
+    diamonds, clubs, and spades. Each card has a rank and a suit, and no two cards have the same rank
+    and the same suit. How many subsets of the set of cards in this deck have cards from an odd number
+    of distinct ranks?
+     Answer: 12 (162014 − 142014 ) There are 2014
+                                                   
+                                                k    ways to pick k ranks, and 15 ways to pick the suits
+    in each rank (because there are16 subsets of  suits,  and we must    exclude the empty one). We therefore
+    want to evaluate the sum 2014             2014                2014
+                                       1             3
+                                                                       2013
+                                 1  15   +     3   15  +  · · · + 2013 15     .
+    Note that (1 + 15)2014 = 1 + 2014      151 + 2014    152 + . . . + 2014
+                                                                             2013
+                                     1                                  2013 15      + 152014 and (1 − 15)2014 =
+                                              20132                                            2014      2014
+          2014         2014              2014
+                                                      + 152014 , so our sum is simply (1+15) −(1−15)
+               1           2
+    1 − 1 15 + 2 15 − . . . − 2013 15                                                                2         =
+    1    2014
+    2 (16     − 142014 ).
+21. [14] Compute the number of ordered quintuples of nonnegative integers (a1 , a2 , a3 , a4 , a5 ) such that
+    0 ≤ a1 , a2 , a3 , a4 , a5 ≤ 7 and 5 divides 2a1 + 2a2 + 2a3 + 2a4 + 2a5 .
+     Answer: 6528 Let f (n) denote the number of n-tuples (a1 , . . . , an ) such that 0 ≤ a1 , . . . , an ≤ 7
+    and 5 | 2a1 +. . .+2an . To compute f (n+1) from f (n), we note that given any n-tuple (a1 , . . . , an ) such
+    that 0 ≤ a1 , . . . , an ≤ 7 and 5 - 2a1 + . . . + 2an , there are exactly two possible values for an+1 such that
+    0 ≤ an+1 ≤ 7 and 5 | 2a1 +. . .+2an+1 , because 2n ≡ 1, 2, 4, 3, 1, 2, 4, 3 (mod 5) for n = 0, 1, 2, 3, 4, 5, 6, 7
+    respectively.
+    Also, given any valid (n + 1)-tuple (a1 , . . . , an+1 ), we can remove an+1 to get an n-tuple (a1 , . . . , an )
+    such that 0 ≤ a1 , . . . , an ≤ 7 and 5 - 2a1 + . . . + 2an , so these are in bijection. There are a total of 8n
+    n-tuples, f (n) of which satisfy 5 | 2a1 + . . . + 2an , so there are 8n − f (n) for which 5 - 2a1 + . . . + 2an .
+    Therefore, f (n + 1) = 2(8n − f (n)).
+    We now have f (1) = 0, f (2) = 2(8 − 0) = 16, f (3) = 2(64 − 16) = 96, f (4) = 2(512 − 96) = 832,
+    f (5) = 2(4096 − 832) = 6528.
+22. [14] Let ω be a circle, and let ABCD be a quadrilateral inscribed in ω. Suppose that BD and AC
+    intersect at a point E. The tangent to ω at B meets line AC at a point F , so that C lies between E
+    and F . Given that AE = 6, EC = 4, BE = 2, and BF = 12, find DA.
+                   √
+     Answer: 2 42 By power of a point, we have ED ·EB = EA·EC, whence ED = 12. Additionally,
+    by power of a point, we have 144 = F B 2 = F C · F A = F C(F C + 10), so F C = 8. Note that ∠F BC =
+    ∠F AB and ∠CF B = ∠AF B, so 4F BC ∼ 4F AB. Thus, AB/BC = F A/F B = 18/12 = 3/2, so
+    AB = 3k and BC = 2k for some k. Since 4BEC ∼ 4AED, we have AD/BC = AE/BE = 3, so
+    AD = 3BC = 6k. By Stewart’s theorem on 4EBF , we have
+
+                      (4)(8)(12) + (2k)2 (12) = (2)2 (8) + (12)2 (4) =⇒ 8 + k 2 = 8/12 + 12,
+
+    whence k 2 = 14/3. Thus,                                √
+                                                  p           42    √
+                                       DA = 6k = 6 14/3 = 6      = 2 42.
+                                                             3
+23. [14] Let S = {−100, −99, −98, . . . , 99, 100}. Choose a 50-element subset T of S at random. Find the
+    expected number of elements of the set {|x| : x ∈ T }.
+                   8825
+    Answer:        201    Let us solve a more generalized version of the problem: Let S be a set with 2n + 1
+    elements, and partition S into sets A0 , A1 , . . . , An such that |A0 | = 1 and |A1 | = |A2 | = · · · = |An | = 2.
+    (In this problem, we have A0 = {0} and Ak = {k, −k} for k = 1, 2, . . . , 100.) Let T be a randomly
+    chosen m-element subset of S. What is the expected number of Ak ’s that have a representative in T ?
+                                           T ∩ Ak 6= ∅ and 0 otherwise, so that the number of Ak ’s that have
+    For k = 0, 1, . . . , n, let wk = 1 if P
+                                             n
+    a representative in T is equal to k=0 wk . It follows that the expected number of Ak ’s that have a
+    representative in T is equal to
+
+                    E[w0 + w1 + · · · + wn ] = E[w0 ] + E[w1 ] + · · · + E[wn ] = E[w0 ] + n E[w1 ],
+    since E[w1 ] = E[w2 ] = · · · = E[wn ] by symmetry.
+    Now E[w0 ] is equal to the probability that T ∩ A0 6= ∅, that is, the probability that the single element
+    of A0 is in T , which is T |/|S| = m/(2n + 1). Similarly, E[w1 ] is the probability that T ∩ A1 6= ∅, that is,
+    the probability that at least one of the two elements of A1 is in T . Since there are 2n−1   m     m-element
+    subsets of S that exclude both elements of A1 , and there are 2n+1
+                                                                             
+                                                                          m    m-element   subsets of  S in total,
+    we have that
+                                              2n−1
+                                                   
+                                                m           (2n − m)(2n − m + 1)
+                                 E[w1 ] = 1 − 2n+1  =1−                             .
+                                                m
+                                                                 2n(2n + 1)
+    Putting this together, we find that the expected number of Ak ’s that have a representative in T is
+
+                                              m        (2n − m + 1)(2n − m)
+                                                   +n−                      .
+                                            2n + 1           2(2n + 1)
+
+    In this particular problem, we have n = 100 and m = 50, so substituting these values gives our answer
+        8825
+    of        .
+        201
+24. [14] Let A = {a1 , a2 , . . . , a7 } be a set of distinct positive integers such that the mean of the elements
+    of any nonempty subset of A is an integer. Find the smallest possible value of the sum of the elements
+    in A.
+     Answer: 1267 For 2 ≤ i ≤ 6, we claim that a1 ≡ . . . ≡ a7 (mod i). This is because if we consider
+    any i − 1 of the 7 numbers, the other 7 − (i − 1) = 8 − i of them must all be equal modulo i, because
+    we want the sum of all subsets of size i to be a multiple of i. However, 8 − i ≥ 2, and this argument
+    applies to any 8 − i of the 7 integers, so in fact all of them must be equal modulo i.
+    We now have that all of the integers are equivalent modulo all of 2, . . . , 6, so they are equivalent modulo
+    60, their least common multiple. Therefore, if the smallest integer is k, then the other 6 integers must
+    be at least k + 60, k + 60 · 2, . . . , k + 60 · 6. This means the sum is 7k + 60 · 21 ≥ 7 + 60 · 21 = 1267.
+    1267 is achievable with {1, 1 + 60, . . . , 1 + 60 · 6}, so it is the answer.
+25. [17] Let ABC be an equilateral triangle of side length 6 inscribed in a circle ω. Let A1 , A2 be the
+    points (distinct from A) where the lines through A passing through the two trisection points of BC
+    meet ω. Define B1 , B2 , C1 , C2 similarly. Given that A1 , A2 , B1 , B2 , C1 , C2 appear on ω in that order,
+    find the area of hexagon A1 A2 B1 B2 C1 C2 .
+                     √
+     Answer:      846 3
+                    49  Let A0 be the point on BC such that 2BA0 = A0 C. By law of cosines on triangle
+                                √
+    AA0 B, we find that AA0 = 2 7. By power of a point, A0 A1 = 22∗4
+                                                                  √ = √4 . Using side length ratios,
+                                                                   7      7
+                         √
+                        2 7+ √47
+    A1 A2 = 2 AA
+              AA0 = 2
+                 1         √
+                          2 7
+                                   = 18
+                                      7 .
+
+
+    Now our hexagon can be broken down into equilateral triangle A1 B1 C1 and three copies of triangle
+    A1 C1 C2 . Since our hexagon has rotational symmetry, ∠C2 = 120, and using law of cosines on this
+    triangle with side lengths 18                                        30
+                                7 and 6, a little algebra yields A1 C2 = 7 (this is a 3-5-7 triangle with an
+    angle 120).
+
+                                                 2
+                                                     √                       √          √
+    The area of the hexagon is therefore 6 4 3 + 3 ∗ 21 18 30 3
+                                                         7 7 2 =
+                                                                 846 3
+                                                                   49
+
+26. [17] For 1 ≤ j ≤ 2014, define
+                                                                 2014
+                                                                 Y
+                                                         2014
+                                              bj = j                       (i2014 − j 2014 )
+                                                                i=1,i6=j
+
+    where the product is over all i ∈ {1, . . . , 2014} except i = j. Evaluate
+                                                     1    1            1
+                                                        +    + ··· +       .
+                                                     b1   b2         b2014
+                           1
+     Answer:           2014!2014          We perform Lagrange interpolation on the polynomial P (x) = 1 through the
+               2014    2014
+    points 1          ,2       , . . . , 20142014 . We have
+                                                                    2014    Q2014            2014
+                                                                              i=1,i6=j (x − i     )
+                                                                    X
+                                                  1 = P (x) =              Q2014                           .
+                                                                                          2014 − i2014 )
+                                                                    j=1     i=1,i6=j (j
+
+    Thus,
+                                                                                                 2014
+                                                            2014
+                                                            X      ((−1)2013 ) 2014!
+                                                                                  j 2014
+                                            1 = P (0) =               Q2014                        ,
+                                                                 2013              2014 − j 2014 )
+                                                        j=1 (−1)       i=1,i6=j (i
+
+    which equals
+                                   2014                                                                                        
+                                   X                       1                                            1    1            1
+                  2014!2014                       Q2014                            = 2014!2014             +    + ··· +             ,
+                                   j=1 j
+                                           2014
+                                                    i=1,i6=j (i
+                                                               2014 − j 2014 )                          b1   b2         b2014
+
+    so the desired sum is 2014!12014 .
+27. [17] Suppose that (a1 , . . . , a20 ) and (b1 , . . . , b20 ) are two sequences of integers such that the sequence
+    (a1 , . . . , a20 , b1 , . . . , b20 ) contains each of the numbers 1, . . . , 40 exactly once. What is the maximum
+    possible value of the sum
+                                                            X20 X
+                                                                20
+                                                                   min(ai , bj )?
+                                                                i=1 j=1
+
+
+     Answer:      5530 Let xk , for 1 ≤ k ≤ 40, be the number of integers i with 1 ≤ i ≤ 20 such that
+    ai ≥ k. Let yk , for 1 ≤ k ≤ 40, be the number of integers j with 1 ≤ j ≤ 20 such that bj ≥ k. It
+    follows from the problem statement that xk + yk is the number of elements of the set {1, . . . , 40} which
+    are greater than or equal to 40, which is just 41 − k.
+    Note that if 1 ≤ i, j ≤ 20, and 1 ≤ k ≤ 40, then min(ai , bj ) ≥ k if and only if ai ≥ k and bj ≥ k. So
+    for a fixed k with 1 ≤ k ≤ 40, the number of pairs (i, j) with 1 ≤ i, j ≤ 20 such that min(ai , bj ) ≥ k is
+    equal to xk yk . So we can rewrite
+                                                          20 X
+                                                          X  20                        40
+                                                                                       X
+                                                                    min(ai , bj ) =          xk yk .
+                                                          i=1 j=1                      k=1
+
+
+    Since xk + yk = 41 − k for 1 ≤ k ≤ 40, we have
+                                                                
+                                                  41 − k    41 − k
+                                        xk yk ≤
+                                                     2         2
+    by a convexity argument. So
+                                          20 X
+                                             20                       40                 
+                                          X                           X    41 − k    41 − k
+                                                    min(ai , bj ) ≤                                       = 5530.
+                                          i=1 j=1
+                                                                                   2            2
+                                                                      k=1
+
+    Equality holds when (a1 , . . . , a20 ) = (2, 4, . . . , 38, 40) and (b1 , . . . , b20 ) = (1, 3, . . . , 37, 39).
+28. [17] Let f (n) and g(n) be polynomials of degree 2014 such that f (n) + (−1)n g(n) = 2n for n =
+    1, 2, . . . , 4030. Find the coefficient of x2014 in g(x).
+                              32014
+     Answer:               22014 ·2014!    Define the polynomial functions h1 and h2 by h1 (x) = f (2x) + g(2x) and
+    h2 (x) = f (2x−1)−g(2x−1). Then, the problem conditions tell us that h1 (x) = 22x and h2 (x) = 22x−1
+    for x = 1, 2, . . . , 2015.
+    By the Lagrange interpolation formula, the polynomial h1 is given by
+                                                                2015         2015
+                                                                X            Y   x−j
+                                                     h1 (x) =          22i           .
+                                                                i=1          j=1
+                                                                                 i−j
+                                                                             i6=j
+
+
+    So the coefficient of x2014 in h1 (x) is
+                         2015         2015            2015
+                                                                                   4 · 32014
+                                                                              
+                         X            Y    1      1 X 2i                  2014
+                                22i           =            2 (−1)2015−i          =
+                         i=1          j=1
+                                          i−j   2014! i=1                 i−1       2014!
+                                      i6=j
+
+    where the last equality follows from the binomial theorem. By a similar argument, the coefficient of
+                           2014
+    x2014 in h2 (x) is 2·3
+                        2014! .
+    We can write g(x) = 12 (h1 (x/2) − h2 ((x + 1)/2)). So, the coefficient of x2014 in g(x) is
+
+                                                4 · 32014     2 · 32014                         32014
+                                                                                   
+                                      1
+                                                           −                            =                 .
+                                      2       22014 · 2014! 22014 · 2014!                   22014 · 2014!
+
+29. [20] Natalie has a copy of the unit interval [0, 1] that is colored white. She also has a black marker,
+    and she colors the interval in the following manner: at each step, she selects a value x ∈ [0, 1] uniformly
+    at random, and
+
+     (a) If x ≤ 21 she colors the interval [x, x + 21 ] with her marker.
+     (b) If x > 12 she colors the intervals [x, 1] and [0, x − 21 ] with her marker.
+    What is the expected value of the number of steps Natalie will need to color the entire interval black?
+     Answer: 5 The first choice always wipes out half the interval. So we calculate the expected value
+    of the amount of time needed to wipe out the other half.
+    Solution 1 (non-calculus):
+    We assume the interval has 2n points and we start with the last n colored black. We let f (k) be the
+    expected value of the number of turns we need if there are k white points left. So we must calculate
+    f (n).
+    We observe that
+                                                                                                     Pk−1
+                                               (n − k + 1) · 0 + (n − k + 1) · f (k) + 2                i=1 f (i)
+                          f (k) = 1 +
+                                                                          2n
+                                                                           Pk−1
+                                                        n+k−1                   f (i)
+                                                 f (k)             = 1 + i=1
+                                                            2n                n
+                                                                           Pk
+                                                             n+k                f (i)
+                                                  f (k + 1)        = 1 + i=1
+                                                               2n             n
+                                                                         n+k+1
+                                                      f (k + 1) = f (k)
+                                                                           n+k
+                                                                         n+k
+                                                           f (k) = f (1)
+                                                                         n+1
+                                        4n
+    And note that f (1) = 2 so f (n) = n+1 and limn→∞ f (n) = 4.
+    Therefore adding the first turn, the expected value is 5.
+    Solution 2 (calculus):
+    We let f (x) be the expected value with length x uncolored. Like above, limx→0 f (x) = 2.
+    Similarly we have the recursion
+                                                                                      Z x
+                                                        1
+                                           f (x) = 1 + ( − x)f (x) + 2                         f (y)dy
+                                                        2                              0
+
+                                                     1
+                                        f 0 (x) = 0 + f 0 (x) − f (x) − xf 0 (x) + 2f (x)
+                                                     2
+                                                       f 0 (x)      1
+                                                               =
+                                                        f (x)     x + 12
+    And solving yields f (x) = c( 12 + x) and since limx→0 f (x) = 2, c = 4. So f (x) = 2 + 4x and f ( 12 ) = 4.
+    Therefore adding the first turn, our expected value is 5.
+30. [20] Let ABC be a triangle with circumcenter O, incenter I, ∠B = 45◦ , and OI k BC. Find cos ∠C.
+                       √
+    Answer:      1 − 22 Let M be the midpoint of BC, and D the foot of the perpendicular of I with BC.
+    Because OI||BC, we have OM = ID. Since ∠BOC = 2∠A, the length of OM is OA cos ∠BOM =
+    OA cos A = R cos A, and the length of ID is r, where R and r are the circumradius and inradius of
+    4ABC, respectively.
+    Thus, r = R cos A, so 1 + cos A = (R + r)/R. √
+                                                 By Carnot’s theorem, (R +
+                                                                         √
+                                                                            r)/R = cos A + cos B + cos C,
+                                                   2                       2
+    so we have cos B + cos C = 1. Since cos B = 2 , we have cos C = 1 − 2 .
+31. [20] Compute
+                                                         1007
+                                                         X                      2014
+                                                                            πk
+                                                                 cos                       .
+                                                                           1007
+                                                         k=1
+
+
+                 2014(1+(2013
+                          1007))                         2πi
+    Answer:           22014
+                                                                                            πk
+                                       Let ω = e 2014 . We have ω 2014 = 1. Note that cos( 1007 ) = 21 (ω k + ω −k ).
+    Our desired expression is
+                                                                 1007
+                                                           1     X
+                                                                       (ω k + ω −k )2014
+                                                         22014
+                                                                 k=1
+    Using binomial expansion and switching the order of the resulting summation, this is equal to
+                                                     2014       1007
+                                                     1
+                                                     X      2014 X 2014−2j k
+                                                                      (ω  )
+                                               22014 j=0      j
+                                                                             k=1
+    .
+    Note that unless ω 2014−2j = 1, the summand
+                                                               1007
+                                                               X
+                                                                     (ω 2014−2j )k
+                                                               k=1
+
+    is the sum of roots of unity spaced evenly around the unit circle in the complex plane (in particular
+    the 1007th, 19th, and 53rd roots of unity), so it is zero. Thus, we must only sum over those j for which
+    ω 2014−2j = 1, which holds for j = 0, 1007, 2014. This yields the answer
+
+                                                                     2014 1 + 2013
+                                                                                
+                             1                   2014                           1007
+                                   1007 + 1007           + 1007 =                      .
+                           22014                 1007                     22014
+
+32. [20] Find all ordered pairs (a, b) of complex numbers with a2 +b2 6= 0, a+ a210b               10a
+                                                                                  +b2 = 5, and b+ a2 +b2 = 4.
+
+     Answer:      (1, 2), (4, 2), ( 52 , 2 ± 32 i)       Solution 1. First, it is easy to see that ab 6= 0. Thus, we can
+    write
+                                                         5−a   4−b     10
+                                                             =     = 2     .
+                                                          b     a   a + b2
+    Then, we have
+                                   10      4a − ab   5b − ab   4a + 5b − 2ab
+                                         =         =         =               .
+                                 a2 + b2     a2         b2        a2 + b2
+    Therefore, 4a + 5b − 2ab = 10, so (2a − 5)(b − 2) = 0. Now we just plug back in and get the four
+    solutions: (1, 2), (4, 2), ( 52 , 2 ± 32 i). It’s not hard to check that they all work.
+    Solution 2. The first equation plus i times the second yields 5 + 4i = a + bi + 10(b+ai)            10i
+                                                                                     a2 +b2 = a + bi − a+bi ,
+    which is equivalent to a + bi = (5±3)+4i
+                                       2     by the quadratic formula.
+                                                                                    10i
+    Similarly, the second equation plus i times the first yields 4 + 5i = b + ai − b+ai , which is equivalent
+    to b + ai = 4+(5±3)i
+                   2     .
+    Letting 1 , 2 ∈ {−1, 1} be the signs in a+bi and b+ai, we get (a, b) = 21 (a+bi, b+ai)− 12 i(b+ai, a+bi) =
+    ( 10+(41 +2 )3 , 8+(24−1 )3i ).
+    Comment. Many alternative approaches are possible. For instance, 5−a        b  = 4−ba  =⇒ b − 2 =
+     p                                                                                            p
+     (a − 1)(a − 4) for some  ∈ {−1, 1}, and substituting in and expanding gives 0 = (−2a2 +5a) (a − 1)(a − 4).
+                                                                                   λ
+    More symmetrically, we may write a = λ(4 − b), b = λ(5 − a) to get (a, b) = 1−λ  2 (4 − 5λ, 5 − 4λ), and
+
+    then plug into a2 + b2 = 10λ to get 0 = 10(λ4 + 1) − 41(λ3 + λ) + 60λ2 = (λ − 2)(2λ − 1)(5λ2 − 8λ + 5).
+33. [25] An up-right path from (a, b) ∈ R2 to (c, d) ∈ R2 is a finite sequence (x1 , y1 ), . . . , (xk , yk ) of
+    points in R2 such that (a, b) = (x1 , y1 ), (c, d) = (xk , yk ), and for each 1 ≤ i < k we have that either
+    (xi+1 , yi+1 ) = (xi + 1, yi ) or (xi+1 , yi+1 ) = (xi , yi + 1).
+    Let S be the set of all up-right paths from (−400, −400) to (400, 400). What fraction of the paths in
+    S do not contain any point (x, y) such that |x|, |y| ≤ 10? Express your answer as a decimal number
+    between 0 and 1.
+    If C is the actual answer to this question and A is your answer, then your score on this problem is
+    dmax{25(1 − 10|C − A|), 0}e.
+     Answer: 0.2937156494680644 . . . Note that any up-right path must pass through exactly one point
+    of the form (n, −n) (i.e. a point on the upper-left to lower-right diagonal), and the number of such
+               800 2                      800
+                                              
+    paths is 400−n   because there are 400−n     up-right paths from (−400, −400) to (n, −n) and another
+       800
+           
+     400−n from (n, −n) to (400, 400). An up-right path contains a point (x, y) with |x|, |y| ≤ 10 if and
+    only if −10 ≤ n ≤ 10, so the probability that this happens is
+                                      P10     800 2    P10       800 2
+                                                                    
+                                       n=−10 400−n      n=−10 400−n
+                                     P400           =
+                                               800 2       1600
+                                                                
+                                      n=−400 400−n          800
+
+
+    To estimate this, recall that if we normalize 800
+                                                        
+                                                      n   to be a probability density function, then it will
+    be approximately normal with mean 400 and variance 800 · 41 = 200. If this is squared, then it is
+    proportional to a normal distribution with half the variance and the same mean, because the probability
+                                                                       (x−µ)2
+    density function of a normal distribution is proportional to e− 2σ2 , where µ is the mean and σ 2 is
+    the variance.
+                      2
+    Therefore, the 800
+                    n    probability density function is roughly proportional to a normal distribution with
+                                                                  P10       800 2
+                                                                                 
+    mean 400 and variance 100, or standard deviation 10. So n=−10 400−n             represents roughly one
+    standard deviation. Recall that approximately 68 percent of a normal distribution lies within one
+    standard deviation of the mean (look up the 68-95-99.7 rule to read more), so a good guess would be
+    around .32. This guess can be improved by noting that we’re actually summing 21 values instead of
+                                          21
+    20, so you’d have approximately .68 · 20 ≈ .71 of the normal distribution, giving an answer of .29.
+
+34. [25] Consider a number line, with a lily pad placed at each integer point. A frog is standing at the
+    lily pad at the point 0 on the number line, and wants to reach the lily pad at the point 2014 on the
+    number line. If the frog stands at the point n on the number line, it can jump directly to either point
+n + 2 or point n + 3 on the number line. Each of the lily pads at the points 1, · · · , 2013 on the number
+line has, independently and with probability 1/2, a snake. Let p be the probability that the frog can
+make some sequence of jumps to reach the lily pad at the point 2014 on the number line, without ever
+landing on a lily pad containing a snake. What is p1/2014 ? Express your answer as a decimal number.
+If C is the actual answer to this question and A is your answer, then your score on this problem is
+dmax{25(1 − 20|C − A|), 0}e.
+Answer:      0.9102805441016536
+First, we establish a rough upper bound for the probability p. Let q be the probability that the frog
+can reach the lily pad at the point 2014 on the number line if it is allowed to jump from a point n
+on the number line to the point n + 1, in addition to the points n + 2 and n + 3. Clearly, p ≤ q.
+Furthermore, p is approximated by q; it should be easy to convince one’s self that jumps from a point
+n to the point n + 1 are only useful for reaching the lily pad at point 2014 in very few situations.
+Now we compute q. We note that, if the frog can jump from points n to points n + 1, n + 2, and n + 3,
+then it can reach the lily pad at the point 2014 on the number line if and only if each snake-free lily
+pad is at most 3 units away from the closest snake-free lily pad on the left.
+Define the sequence {am }∞   m=1 by a0 = 1, a1 = 1, a2 = 2, and am+3 = am+2 + am+1 + am for m ≥ 0.
+Then, it can be shown by induction that am is the number of possible arrangements of snakes on lily
+pads at points 1, · · · , m − 1 so that the frog can make some sequence of jumps (of size 1, 2, or 3) from
+the lily pad at point 0 to the lily pad at point m without landing on a lily pad containing a snake. It
+follows that q = a2014 /22013 . So
+                     p1/2014 ≈ q 1/2014 = (a2014 )1/2014 /22013/2014 ≈ (a2014 )1/2014 /2.
+Analyzing the recurrence relation am+3 = am+2 + am+1 + am yields that (a2014 )1/2014 is approximately
+equal to the largest real root r of the characteristic polynomial equation r3 − r2 − r − 1 = 0. So to
+roughly approximate p, it suffices to find the largest real root of this equation.
+For this, we apply Newton’s method, or one of many other methods for computing the roots of a
+polynomial. With an initial guess of 2, one iteration of Newton’s method yields r ≈ 13/7, so p ≈ r/2 ≈
+13/14 ≈ 0.928571. A second iteration yields r ≈ 1777/966, so p ≈ r/2 ≈ 1777/1932 ≈ 0.919772. (It
+turns out that the value of r is 1.839286 . . ., yielding p ≈ r/2 = 0.919643 . . ..)
+Using tools from probability theory, we can get an even better estimate for p. We model the problem
+using a discrete-time Markov chain. The state of the Markov chain at time n, for n = 0, 1, . . . , 2013,
+indicates which of the lily pads at positions n − 2, n − 1, n are reachable by the frog. It is clear that
+the state of the Markov chain at time n only depends (randomly) on its state at time n − 1. There are
+23 = 8 possible states for this Markov chain, because each of the lily pads at positions n−2, n−1, n can
+be either reachable or unreachable by the frog. Number each state using the number 1 + d2 + 2d1 + 4d0 ,
+where di is 1 if the lily pad at point n − i is reachable, and 0 otherwise. So, for example, at time
+n = 0, the lily pad at point n is reachable (d0 = 1) whereas the lily pads at points n − 1 and n − 2 are
+unreachable (d1 = d2 = 0), so the Markov chain is in state number 1 + d2 + 2d1 + 4d0 = 5.
+The transition matrix M for the Markov chain can now be computed directly from the conditions of
+the problem. It is equal to
+                                     1 0 0 0 21 0 0 0
+                                                             
+                                    0 0 0 0 1 0 0 0 
+                                                   2
+                                    0 1 0 0 0 1 0 0 
+                                                             
+                                                     2       
+                                    0 0 0 0 0 1 0 0 
+                              M :=                  2       .
+                                            1             1
+                                    0 0 21 0 0 0 21 0 
+                                                              
+                                    0 0       0   0  0     0 
+                                           2             2   
+                                    0 0 0 1 0 0 0 1 
+                                               2            2
+                                     0 0 0 12 0 0 0 21
+(The verification of this transition matrix is left as an exercise for the reader.) So the state vector v
+for the Markov chain at time 2013 is
+                                      v := M 2014 [0, 1, 0, 0, 0, 0, 0, 0]t .
+    Now, the lily pad at point 2014 is reachable by the frog if and only if the Markov chain is in state
+    3, 4, 5, 6, 7, or 8 at time 2013. This happens with probability
+
+                                             p = [0, 0, 1, 1, 1, 1, 1, 1] v.
+
+    By expanding [0, 1, 0, 0, 0, 0, 0, 0]t in an eigenbasis for M , we find that p1/2014 is approximately equal
+    to the second-largest real eigenvalue of the matrix M . The characteristic polynomial of M is
+                                                      λ3   3λ4   λ6   3λ7
+                                 det(λI − M ) = −        +     +    −     + λ8 ,
+                                                      8     8    4     2
+    so its eigenvalues are the roots of this polynomial. The largest real root of this characteristic polynomial
+    is λ = 1, and the second-largest real root is 0.9105247383471604 . . . (which can be found, again, using
+    Newton’s method, after factoring out (λ − 1)λ3 from the polynomial), which is a good approximation
+    for p.
+35. [25] How many times does the letter “e” occur in all problem statements in this year’s HMMT February
+    competition?
+    If C is the actual answer to this question and A is your answer, then your score on this problem is
+    dmax{25(1 − | log2 (C/A)|), 0}e.
+     Answer:    1661 It is possible to arrive at a good estimate using Fermi estimation. See http:
+    //en.wikipedia.org/wiki/Fermi_problem for more details.
+    For example, there are 76 problems on the HMMT this year. You might guess that the average number
+    of words in a problem is approximately 40, and the average number of of letters in a word is about 5.
+    The frequency of the letter ”e” in the English language is about 10%, resulting in an estimate of
+
+                                              76 · 40 · 5 · 0.1 = 1520.
+
+    This is remarkably close to the actual answer.
+36. [25] We have two concentric circles C1 and C2 with radii 1 and 2, respectively. A random chord of C2
+    is chosen. What is the probability that it intersects C1 ?
+    Your answer to this problem must be expressed in the form m   n , where m and n are positive integers. If
+    your answer is in this form, your score for this problem will be b 25·X
+                                                                        Y c, where X is the total number of
+    teams who submit the answer m   n (including  your  own team), and   Y is the total number of teams who
+    submit a valid answer. Otherwise, your score is 0. (Your answer is not graded based on correctness,
+    whether your fraction is in lowest terms, whether it is at most 1, etc.)
+     Answer: N/A The question given at the beginning of the problem statement is a famous problem
+    in probability theory widely known as Bertrand’s paradox. Depending on the interpretation of the
+    phrase “random chord,” there are at least three different possible answers to this question:
+      • If the random chord is chosen by choosing two (uniform) random endpoints on circle C2 and
+        taking the chord joining them, the answer to the question is 1/3.
+      • If the random chord is chosen by choosing a (uniformly) random point P the interior of C2 (other
+        than the center) and taking the chord with midpoint P , the answer to the question becomes 1/4.
+      • If the random chord is chosen by choosing a (uniformly) random diameter d of C, choosing a
+        point P on d, and taking the chord passing through P and perpendicular to d, the answer to
+        the question becomes 1/2. (This is also the answer resulting from taking a uniformly random
+        horizontal chord of C2 .)
+    You can read more about Bertrand’s paradox online at http://en.wikipedia.org/wiki/Bertrand_
+    paradox_(probability). We expect that many of the valid submissions to this problem will be equal
+    to 1/2, 1/3, or 1/4.
+    However, your score on this problem is not based on correctness, but is rather proportional to the
+    number of teams who wrote the same answer as you! Thus, this becomes a problem of finding what
+is known in game theory as the “focal point,” or “Schelling point.” You can read more about focal
+points at http://en.wikipedia.org/wiki/Focal_point_(game_theory) or in economist Thomas
+Schelling’s book The Strategy Of Conflict.
+

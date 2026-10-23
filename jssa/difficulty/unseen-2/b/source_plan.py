@@ -1,0 +1,83 @@
+"""Primary-source transcription, selected before any solver execution."""
+SELECTED = [
+    (2010, 'guts', 13, '17/2', '17/2', 'identity'),
+    (2011, 'guts', 1, '1/3', '1/3', 'identity'),
+    (2012, 'guts', 6, '72', '72', 'identity'),
+    (2013, 'guts', 1, '93', '93', 'identity'),
+    (2014, 'guts', 3, 'pi*sqrt(3)/12', 'pi*sqrt(3)/12', 'identity'),
+    (2015, 'guts', 24, 'sqrt(8463)/7', 'sqrt(8463)/7', 'identity'),
+    (2016, 'guts', 14, '462/5', '462/5', 'identity'),
+    (2017, 'guts', 2, '77/6', '77/6', 'identity'),
+    (2018, 'guts', 1, '4', '4', 'identity'),
+    (2019, 'guts', 17, '(12+22*sqrt(3))/15', '(12+22*sqrt(3))/15', 'identity'),
+    (2020, 'guts', 13, '112/65', '112/65', 'identity'),
+    (2021, 'guts', 14, 'sqrt(73)-3', '7303', '100a+b for sqrt(a)-b'),
+    (2022, 'guts', 11, 'pi/6-sqrt(3)/12', '45', 'floor(120*A)'),
+    (2023, 'guts', 3, 'sqrt(21)', 'sqrt(21)', 'identity'),
+    (2024, 'guts', 4, '4*pi/15', '4*pi/15', 'identity; official also gives 48 degrees'),
+    (2025, 'guts', 6, '2*sqrt(13)', '2*sqrt(13)', 'identity'),
+    (2010, 'team1', 7, 'pi/12', 'pi/12', 'identity; official also gives 15 degrees'),
+]
+
+def identifier(year, section, number):
+    return f'HMMT-{year}-FEB-{section.upper()}-{number:02}'
+
+# The PDF page image, not pdftotext's radical/fraction layout, is authoritative.
+TRANSCRIPTIONS = {
+ 'HMMT-2010-FEB-GUTS-13': 'A triangle in the xy-plane is such that when projected onto the x-axis, y-axis, and the line y=x, the results are line segments whose endpoints are (1,0) and (5,0), (0,8) and (0,13), and (5,5) and (7.5,7.5), respectively. What is the triangle\'s area?',
+ 'HMMT-2011-FEB-GUTS-01': 'Let ABC be a triangle with area 1. Let points D and E lie on AB and AC, respectively, such that DE is parallel to BC and DE/BC=1/3. If F is the reflection of A across DE, find the area of triangle FBC.',
+ 'HMMT-2012-FEB-GUTS-06': 'Let rectangle ABCD have lengths AB=20 and BC=12. Extend ray BC to Z such that CZ=18. Let E be the point in the interior of ABCD such that the perpendicular distance from E to AB is 6 and the perpendicular distance from E to AD is 6. Let line EZ intersect AB at X and CD at Y. Find the area of quadrilateral AXYD.',
+ 'HMMT-2013-FEB-GUTS-01': 'Arpon chooses a positive real number k. For each positive integer n, he places a marker at the point (n,nk) in the (x,y) plane. Suppose that two markers whose x coordinates differ by 4 have distance 31. What is the distance between the markers at (7,7k) and (19,19k)?',
+ 'HMMT-2014-FEB-GUTS-03': 'Let ABCDEF be a regular hexagon. Let P be the circle inscribed in triangle BDF. Find the ratio of the area of circle P to the area of rectangle ABDE.',
+ 'HMMT-2015-FEB-GUTS-24': 'ABCD is a cyclic quadrilateral with sides AB=10, BC=8, CD=25, and DA=12. A circle omega is tangent to segments DA, AB, and BC. Find the radius of omega.',
+ 'HMMT-2016-FEB-GUTS-14': 'Let ABC be a triangle such that AB=13, BC=14, CA=15 and let E,F be the feet of the altitudes from B,C, respectively. Let the circumcircle of triangle AEF be omega. We draw three lines, tangent to the circumcircle of triangle AEF at A,E,F. Compute the area of the triangle these three lines determine.',
+ 'HMMT-2017-FEB-GUTS-02': 'Let A,B,C,D,E,F be 6 points on a circle in that order. Let X be the intersection of AD and BE, Y the intersection of AD and CF, and Z the intersection of CF and BE. X lies on segments BZ and AY and Y lies on segment CZ. Given AX=3, BX=2, CY=4, DY=10, EZ=16, and FZ=12, find the perimeter of triangle XYZ.',
+ 'HMMT-2018-FEB-GUTS-01': 'A square can be divided into four congruent figures as shown (the diagram is a square split by its horizontal and vertical midlines into four equal squares). If each of the congruent figures has area 1, what is the area of the square?',
+ 'HMMT-2019-FEB-GUTS-17': 'Let ABC be a triangle with AB=3, BC=4, CA=5. Let A1,A2 be points on side BC, B1,B2 points on side CA, and C1,C2 points on side AB. Suppose that there exists a point P such that PA1A2, PB1B2, and PC1C2 are congruent equilateral triangles. Find the area of convex hexagon A1A2B1B2C1C2.',
+ 'HMMT-2020-FEB-GUTS-13': 'Let ABC be a triangle with AB=7, BC=1, CA=4*sqrt(3). The angle trisectors of C intersect AB at D and E, and lines AC and BC intersect the circumcircle of triangle CDE again at X and Y, respectively. Find the length of XY.',
+ 'HMMT-2021-FEB-GUTS-14': 'In triangle ABC, angle A=2*angle C. Suppose AC=6, BC=8, and AB=sqrt(a)-b, where a and b are positive integers. Compute 100a+b.',
+ 'HMMT-2022-FEB-GUTS-11': 'A regular dodecagon P1 P2 ... P12 is inscribed in a unit circle with center O. Let X be the intersection of P1P5 and OP2, and Y the intersection of P1P5 and OP4. Let A be the area of the region bounded by XY, XP2, YP4, and minor arc P2P4. Compute floor(120*A).',
+ 'HMMT-2023-FEB-GUTS-03': 'Let ABCD be a convex quadrilateral such that angle ABD=angle BCD=90 degrees, and let M be the midpoint of BD. Suppose CM=2 and AM=3. Compute AD.',
+ 'HMMT-2024-FEB-GUTS-04': 'Equilateral triangles ABF and BCG are constructed outside regular pentagon ABCDE. Compute angle FEG.',
+ 'HMMT-2025-FEB-GUTS-06': 'Let ABC be an equilateral triangle. Point D lies on segment BC such that BD=1 and DC=4. Points E and F lie on rays AC and AB, respectively, such that D is the midpoint of EF. Compute EF.',
+ 'HMMT-2010-FEB-TEAM1-07': 'Point P lies inside a convex pentagon AFQDC such that FPDQ is a parallelogram. Given that angle FAQ=angle PAC=10 degrees, and angle PFA=angle PDC=15 degrees. What is angle AQC?',
+}
+
+# Only prefixes inspected before the first eligible Guts problem are classified.
+# Other prefix entries are arithmetic/combinatorics/probability, not planar value tasks.
+SPECIAL_EXCLUSIONS = {
+ (2010,8): ('optimization','minimum enclosing rectangle'),
+ (2010,9): ('expectation','random motion on a segment'),
+ (2010,10): ('expectation','expected area'),
+ (2010,11): ('reachable_set_area','all reachable points'),
+ (2012,1): ('duplicate','unseen-1983 HMMT-2012-FEB-GUTS-01'),
+ (2015,1): ('counting','grid paths'), (2015,2): ('duplicate','unseen-1983 HMMT-2015-FEB-GUTS-02'),
+ (2015,5): ('not_planar','four-dimensional hypercube'), (2015,6): ('counting','noncongruent triangles'),
+ (2015,7): ('not_planar','cube probability'), (2015,16): ('not_planar','three-dimensional lattice'),
+ (2015,22): ('optimization','minimum over 2015 circle points'),
+ (2016,3): ('duplicate','unseen-1983 HMMT-2016-FEB-GUTS-03'),
+ (2016,5): ('not_planar','sphere volume'), (2016,6): ('counting','grid paths'),
+ (2016,10): ('duplicate','unseen-1983 HMMT-2016-FEB-GUTS-10'),
+ (2016,12): ('counting','traceable grid subgraphs'),
+ (2016,13): ('integer_optimization','integer side lengths and minimum perimeter'),
+ (2019,4): ('optimization','greatest distance over a continuous boundary'),
+ (2019,8): ('greedy_covering','iterative largest-triangle covering'),
+ (2019,12): ('counting','lattice coloring'),
+ (2019,14): ('unsupported_unordered_hull','no ConvexHull primitive; do not derive ordering/area from the solution'),
+ (2020,2): ('duplicate','unseen-1983 HMMT-2020-FEB-GUTS-02'),
+ (2020,3): ('counting','maximum number of circles'),
+ (2020,6): ('integer_optimization','smallest polygon vertex count'),
+ (2020,10): ('not_planar','tetrahedral die expectation'),
+ (2021,2): ('integer_optimization','prime angles and vertex counts'),
+ (2021,3): ('duplicate','unseen-1983 HMMT-2021-FEB-GUTS-03'),
+ (2021,4): ('counting','sum of areas over grid paths'),
+ (2021,5): ('integer_optimization','minimum polygon vertex count'),
+ (2021,9): ('duplicate','unseen-1983 HMMT-2021-FEB-GUTS-09'),
+ (2021,12): ('not_planar','cube vertex labeling'),
+ (2022,1): ('duplicate','unseen-1983 HMMT-2022-FEB-GUTS-01'),
+ (2022,2): ('probability','random triangle'),
+ (2022,6): ('counting','number of possible lengths'),
+ (2022,9): ('count_optimization','maximum intersections of rays'),
+ (2025,4): ('optimization','minimum PA across points'),
+ (2025,5): ('optimization','largest inscribed circle'),
+}

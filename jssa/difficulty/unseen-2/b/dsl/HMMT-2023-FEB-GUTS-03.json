@@ -1,0 +1,62 @@
+{
+  "id": "HMMT-2023-FEB-GUTS-03",
+  "variables": [
+    "d",
+    "a",
+    "cx",
+    "cy"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(d, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(0, a)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "M",
+      "expression": "Midpoint(B,D)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Angle(B,C,D)",
+      "operator": "=",
+      "right": "pi/2"
+    },
+    {
+      "left": "Distance(C,M)",
+      "operator": "=",
+      "right": 2
+    },
+    {
+      "left": "Distance(A,M)",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "d",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "a",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "predicate": "ConvexPolygon([A,B,C,D])"
+    }
+  ],
+  "target": "Distance(A,D)"
+}

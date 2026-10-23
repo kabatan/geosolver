@@ -1,0 +1,902 @@
+        13th Annual Harvard-MIT Mathematics Tournament
+                                   Saturday 20 February 2010
+                                           Guts Round
+ .......................................................................................................
+13th ANNUAL HARVARD-MIT MATHEMATICS TOURNAMENT, 20 FEBRUARY 2010 — GUTS ROUND
+                                                                        √
+1. [4] If A = 109 − 987654321 and B = 123456789+1
+                                           10     , what is the value of AB?
+                                                            √
+   Answer: 12345679 Both A and B equal 12345679, so AB = 12345679 as well.
+2. [4] Suppose that x, y, and z are non-negative real numbers such that x + y + z = 1. What is the
+   maximum possible value of x + y 2 + z 3 ?
+  Answer: 1 Since 0 ≤ y, z ≤ 1, we have y 2 ≤ y and z 3 ≤ z. Therefore x + y 2 + z 3 ≤ x + y + z = 1.
+  We can get x + y 2 + z 3 = 1 by setting (x, y, z) = (1, 0, 0).
+3. [4] In a group of people, there are 13 who like apples, 9 who like blueberries, 15 who like cantaloupe,
+   and 6 who like dates. (A person can like more than 1 kind of fruit.) Each person who likes blueberries
+   also likes exactly one of apples and cantaloupe. Each person who likes cantaloupe also likes exactly
+   one of blueberries and dates. Find the minimum possible number of people in the group.
+  Answer: 22 Everyone who likes cantaloupe likes exactly one of blueberries and dates. However,
+  there are 15 people who like cantaloupe, 9 who like blueberries, and 6 who like dates. Thus, everyone
+  who likes blueberries or dates must also like cantaloupes (because if any of them didn’t, we would end
+  up with less than 15 people who like cantaloupe).
+  Since everyone who likes blueberries likes cantaloupes, none of them can like apples. However, the 6
+  people who like both cantaloupe and dates can also like apples. So, we could have a group where 7
+  people like apples alone, 9 like blueberries and cantaloupe, and 6 like apples, cantaloupe, and dates.
+  This gives 22 people in the group, which is optimal.
+   .....................................................................................................
+
+   13th ANNUAL HARVARD-MIT MATHEMATICS TOURNAMENT, 20 FEBRUARY 2010 — GUTS ROUND
+
+
+4. [5] To set up for a Fourth of July party, David is making a string of red, white, and blue balloons. He
+   places them according to the following rules:
+     • No red balloon is adjacent to another red balloon.
+     • White balloons appear in groups of exactly two, and groups of white balloons are separated by
+       at least two non-white balloons.
+     • Blue balloons appear in groups of exactly three, and groups of blue balloons are separated by at
+       least three non-blue balloons.
+  If David uses over 600 balloons, determine the smallest number of red balloons that he can use.
+  Answer: 99       It is possible to achieve 99 red balloons with the arrangement
+
+                           WWBBBWW |RBBBWWRBBBWW
+                                              {z . . . RBBBWW},
+                                                       99 RBBBWW’s
+
+  which contains 99 · 6 + 7 = 601 balloons.
+  Now assume that one can construct a chain with 98 or fewer red balloons. Then there can be 99
+  blocks of non-red balloons, which in total must contain more than 502 balloons. The only valid
+  combinations of white and blue balloons are WWBBB, BBBWW, and WWBBBWW (Any others
+  contain the subsequence BBBWWBBB, which is invalid). The sequence . . . WWR must be followed
+  by BBBWW; otherwise two groups of white balloons would be too close. Similarly, the sequence
+
+
+                                              Guts Round
+   RWW . . . must be preceded by WWBBB. It follows that WWBBBWW can be used at most once in a
+   valid sequence, meaning that there can be at most 98 · 5 + 7 = 497 non-red balloons. Contradiction.
+   Therefore the minimum is 99 red balloons. (Better if the party’s outdoors; then we’d have 99 red
+   balloons floating in the summer sky. :-p)
+5. [5] You have a length of string and 7 beads in the 7 colors of the rainbow. You place the beads on
+   the string as follows – you randomly pick a bead that you haven’t used yet, then randomly add it to
+   either the left end or the right end of the string. What is the probability that, at the end, the colors of
+   the beads are the colors of the rainbow in order? (The string cannot be flipped, so the red bead must
+   appear on the left side and the violet bead on the right side.)
+                1
+   Answer: 5040      The threading method does not depend on the colors of the beads, so at the end all
+   configurations are equally likely. Since there are 7! = 5040 configurations in total, the probability of
+                                     1
+   any particular configuration is 5040 .
+6. [5] How many different numbers are obtainable from five 5s by first concatenating some of the 5s, then
+   multiplying them together? For example, we could do 5 · 55 · 55, 555 · 55, or 55555, but not 5 · 5 or 2525.
+   Answer: 7      If we do 55555, then we’re done.
+   Note that 5, 55, 555, and 5555 all have completely distinguishable prime factorizations. This means
+   that if we are given a product of them, we can obtain the individual terms. The number of 5555’s is
+   the exponent of 101, the number of 555’s is the exponent of 37, the number of 55’s is the exponent
+   of 11 minus the exponent of 101, and the number of 5’s is just whatever we need to get the proper
+   exponent of 5. Then the answer is the number of ways we can split the five 5’s into groups of at least
+   one. This is the number of unordered partitions of 5, which is 7.
+   .....................................................................................................
+
+   13th ANNUAL HARVARD-MIT MATHEMATICS TOURNAMENT, 20 FEBRUARY 2010 — GUTS ROUND
+
+
+7. [6] What are the last 8 digits of
+
+                             11 × 101 × 1001 × 10001 × 100001 × 1000001 × 111?
+
+   Answer: 19754321       Multiply terms in a clever order.
+
+
+                                       11 · 101 · 10001   =   11, 111, 111,
+                                 111 · 1001 · 1000001     =   111, 111, 111, 111.
+
+   The last eight digits of 11, 111, 111 · 111, 111, 111, 111 are 87654321. We then just need to compute the
+   last 8 digits of 87654321 · 100001 = 87654321 + . . . 32100000, which are 19754321.
+8. [6] Each square in the following hexomino has side length 1. Find the minimum area of any rectangle
+   that contains the entire hexomino.
+
+
+
+
+   Answer: 21  2   If a rectangle contains the entire hexomino, it must also contain its convex hull, which is
+   an origin-symmetric hexagon. It is fairly clear that the smallest rectangle that contains such a hexagon
+   must share one set of parallel sides with the hexagon. There are three such rectangles, and checking
+   them all, we find that the one shown below is the smallest. It has area 21  2 .
+
+
+                                               Guts Round
+   9. [6] Indecisive Andy starts out at the midpoint of the 1-unit-long segment HT . He flips 2010 coins. On
+      each flip, if the coin is heads, he moves halfway towards endpoint H, and if the coin is tails, he moves
+      halfway towards endpoint T . After his 2010 moves, what is the expected distance between Andy and
+      the midpoint of HT ?
+                   1
+      Answer:      4   Let Andy’s position be x units from the H end after 2009 flips. If Any moves towards
+      the H end, he ends up at x2 , a distance of 1−x
+                                                   2 from the midpoint. If Andy moves towards the T end,
+      he ends up at 1+x
+                     2  , a distance of x
+                                        2 from the midpoint. His expected distance from the midpoint is then
+
+                                                       1−x  x
+                                                        2 + 2        1
+                                                                 =     .
+                                                           2         4
+      Since this does not depend on x, 14 is the answer.
+      .....................................................................................................
+
+      13th ANNUAL HARVARD-MIT MATHEMATICS TOURNAMENT, 20 FEBRUARY 2010 — GUTS ROUND
+
+
+ 10. [7] Let ABC be a triangle with AB = 8, BC = 15, and AC = 17. Point X is chosen at random on
+     line segment AB. Point Y is chosen at random on line segment BC. Point Z is chosen at random on
+     line segment CA. What is the expected area of triangle XY Z?
+      Answer: 15       Let E(X) denote the expected value of X, and let [S] denote the area of S. Then
+
+
+                       E([4XY Z])      = E([4ABC] − [4XY B] − [4ZY C] − [4XBZ])
+                                       =    [4ABC] − E([4XY B]) − E([4ZY C]) − [4XBZ]),
+
+      where the last step follows from linearity of expectation1 . But [4XY B] = 12 · BX · BY · sin(B).
+      The 21 sin(B) term is constant, and BX and BY are both independent with expected values AB2 and
+       2 , respectively. Thus E([4XY B]) = 8 AB · BC · sin(B) = 4 [4ABC]. Similarly, E([4ZY C]) =
+      BC                                       1                     1
+
+      E([4ZBX]) = 41 [4ABC].
+      Then we have E([4XY Z]) = (1 − 14 − 41 − 14 )[4ABC] = 14 [4ABC] = 15.
+
+      Note: We can also solve this problem (and the more general case of polygons) by noting that the
+      area of XY Z is linear in the coordinates of X, Y , and Z, so the expected area of XY Z is the same
+      as the area of X 0 Y 0 Z 0 , where X 0 is the expected location of X, Y 0 is the expected location of Y , and
+      Z 0 is the expected location of Z. In our case, this corresponds to the midpoints of the three sides AB,
+      BC, and CA.
+   1 See http://www-math.mit.edu/ spielman/AdvComplexity/handout.ps for an introduction to linearity of expectation and
+                                    ~
+other important tools in probability
+
+
+
+                                                    Guts Round
+11. [7] From the point (x, y), a legal move is a move to ( x3 + u, y3 + v), where u and v are real numbers
+    such that u2 + v 2 ≤ 1. What is the area of the set of points that can be reached from (0, 0) in a finite
+    number of legal moves?
+    Answer:     9π
+                 4   We claim that the set of points is the disc with radius 32 centered at the origin, which
+    clearly has area 9π
+                      4 .
+    First, we show that the set is contained in this disc. This is because if we are currently at a distance
+    of r from the origin, then we can’t end up at a distance of greater than 3r + 1 from the origin after a
+    single move. Since 3r + 1 < 32 if r < 23 , we will always end up in the disc of radius 32 if we start in it.
+    Since the origin is inside this disc, any finite number of moves will leave us inside this disc.
+    Next, we show that all points in this disc can be reached in a finite number of moves. Indeed, after
+    one move we can get all points within a distance of 1. After two moves, we can get all points within
+    a distance of 34 . After three moves, we can get all points within a distance of 13
+                                                                                      9 . In general, after n
+    moves we can get all points within a distance of 32 − 2·31k−1 . This means that for any distance d < 23 ,
+    we will eventually get all points within a distance of d, so all points in the disc of radius 32 can be
+    reached after some number of moves.
+12. [7] How many different collections of 9 letters are there? A letter can appear multiple times in a
+    collection. Two collections are equal if each letter appears the same number of times in both collections.
+    Answer: 34
+                   
+                 9    We put these collections in bijections with binary strings of length 34 containing 9
+    zeroes and 25 ones. Take any such string - the 9 zeroes will correspond to the 9 letters in the collection.
+    If there are n ones before a zero, then that zero corresponds to the (n + 1)st letter of the alphabet.
+    This scheme is an injective map from the binary strings to the collections, and it has an inverse, so the
+    number of collections is 349 .
+    .....................................................................................................
+
+    13th ANNUAL HARVARD-MIT MATHEMATICS TOURNAMENT, 20 FEBRUARY 2010 — GUTS ROUND
+
+
+13. [8] A triangle in the xy-plane is such that when projected onto the x-axis, y-axis, and the line y = x,
+    the results are line segments whose endpoints are (1, 0) and (5, 0), (0, 8) and (0, 13), and (5, 5) and
+    (7.5, 7.5), respectively. What is the triangle’s area?
+    Answer: 17    2     Sketch the lines x = 1, x = 5, y = 8, y = 13,y = 10 − x, and y = 15 − x. The
+    triangle has to be contained in the hexagonal region contained in all these lines. If all the projections
+    are correct, every other vertex of the hexagon must be a vertex of the triangle, which gives us two
+    possibilities for the triangle. One of these triangles has vertices at (2, 8), (1, 13), and (5, 10), and has
+    an area of 172 . It is easy to check that the other triangle has the same area, so the answer is unique.
+
+14. [8] In how many ways can you fill a 3 × 3 table with the numbers 1 through 9 (each used once) such
+    that all pairs of adjacent numbers (sharing one side) are relatively prime?
+    Answer: 2016 The numbers can be separated into four sets. Numbers in the set A = {1, 5, 7} can
+    be placed next to anything. The next two sets are B = {2, 4, 8} and C = {3, 9}. The number 6, which
+    forms the final set D, can only be placed next to elements of A. The elements of each group can be
+    interchanged without violating the condition, so without loss of generality, we can pretend we have
+    three 1’s, three 2’s, two 3’s, and one 6, as long as we multiply our answer by 3!3!2! at the end. The
+    available arrangements are, grouped by the position of the 6, are:
+    When 6 is in contact with three numbers:
+     1 2 3
+     6 1 2
+     1 2 3
+    When 6 is in contact with two numbers:
+
+
+
+                                                Guts Round
+     6   1    2     6     1   2
+     1   2    3     1     1   3
+     2   3    1     2     3   2
+
+    The next two can be flipped diagonally to create different arrangements:
+     6   1    2     6     1   2
+     1   2    3     1     2   3
+     1   3    2     3     1   2
+
+    Those seven arrangements can be rotated 90, 180, and 270 degrees about the center to generate a total
+    of 28 arrangements. 28 · 3!3!2! = 2016.
+15. [8] Pick a random integer between 0 and 4095, inclusive. Write it in base 2 (without any leading zeroes).
+    What is the expected number of consecutive digits that are not the same (that is, the expected number
+    of occurrences of either 01 or 10 in the base 2 representation)?
+                  20481
+    Answer:        4096   Note that every number in the range can be written as a 12-digit binary string. For
+    i = 1, 2, . . . 11, let Ri be a random variable which is 1 if the ith
+                                                                       P and (i +P
+                                                                                 1)st digits differ in a randomly
+    chosen number in the range. By linearity of expectation, E( i Ri ) = E(Ri ).
+    Since we choose every binary string of length 12 with equal probability, the sum of the expectations
+    is 11
+       2 . However, this is not the expected number of 01s and 10s - we need to subtract the occasions
+    where the leading digit is zero. There is a 12 chance that the number starts with a 0, in which case we
+    must ignore the first digit change - unless the number was 0, in which case there are no digit changes.
+    Therefore, our answer is 112 − 2 + 4096 = 4096 .
+                                    1    1      20481
+
+    .....................................................................................................
+
+    13th ANNUAL HARVARD-MIT MATHEMATICS TOURNAMENT, 20 FEBRUARY 2010 — GUTS ROUND
+
+
+16. [9] Jessica has three marbles colored red, green, and blue. She randomly selects a non-empty subset of
+    them (such that each subset is equally likely) and puts them in a bag. You then draw three marbles
+    from the bag with replacement. The colors you see are red, blue, red. What is the probability that the
+    only marbles in the bag are red and blue?
+    Answer: 35   27
+                      There are two possible sets of marbles in the bag, {red,blue} and {red,blue,green}.
+    Initially, both these sets are equally likely to be in the bag. However, the probability of red, blue, red
+    being drawn from a set S of marbles is proportional to |S|−3 , as long as red and blue are both in S. By
+                                                                                                        3
+    Bayes’s Rule, we must weight the probability of these two sets by |S|−3 . The answer is (1/2)(1/2)
+                                                                                                    3 +(1/3)3 .
+
+
+
+17. [9] An ant starts at the origin, facing in the positive x-direction. Each second, it moves 1 unit forward,
+    then turns counterclockwise by sin−1 ( 35 ) degrees. What is the least upper bound on the distance
+    between the ant and the origin? (The least upper bound is the smallest real number r that is at least
+    as big as every distance that the ant ever is from the origin.)
+                √                                                                          √
+    Answer:       10 We claim that the points the ant visits lie on a circle of radius 210 . We show this
+                                                          √
+                                                           10                 1 3
+    by saying that the ant stays a constant distance       2 from the point ( 2 , 2 ).
+    Suppose the ant moves on a plane P . Consider a transformation of the plane P 0 such that after the first
+    move, the ant is at the origin of P 0 and facing in the direction of the x0 axis (on P 0 ). The transformation
+    to get from P to P 0 can be gotten by rotating P about the origin counterclockwise through an angle
+    sin−1 ( 53 ) and then translating it 1 unit to the right. Observe that the point ( 12 , 32 ) is fixed under this
+    transformation, which can be shown through the expression ( 12 + 32 i)( 45 + 35 i) + 1 = 12 + 32 i. It follows
+    that at every point the ant stops, it will always be the same distance from ( 12 , 32 ). Since it starts at
+                                   √
+    (0, 0), this fixed distance is 210 .
+
+
+
+
+                                                  Guts Round
+                                                    ( 12 , 32 )
+
+
+
+
+                                                                  x0
+                                                    x
+
+    Since sin−1 ( 35 ) is not a rational multiple of π, the points the ant stops at form a dense subset of the
+    circle in question. As a result, the least√ upper bound on the distance between the ant and the origin
+    is the diameter of the circle, which is 10.
+18. [9] Find two lines of symmetry of the graph of the function y = x + x1 . Express your answer as two
+    equations of the form y = ax + b.
+                         √                    √
+    Answer: y = (1 + 2)x and y = (1 − 2)x The graph of the function y = x + x1 is a hyperbola. We
+                                                                                        2            2
+    can see this more clearly by writing it out in the standard form x2 −xy +1 = 0 or y2 − x − 21 y = 1.
+    The hyperbola has asymptotes given by x = 0 and y = x, so the lines of symmetry will be the (interior
+    and exterior) angle bisectors of these two lines. This means that they willq   be y = tan(67.5◦ )x and
+                                                                                    1+cos(x)
+    y = − cot(67.5◦ )x, which, using the tangent half-angle formula tan x2 =
+                                                                             
+                                                                                    1−cos(x) , gives the two
+                  √                    √
+    lines y = (1 + 2)x and y = (1 − 2)x.
+    .....................................................................................................
+
+    13th ANNUAL HARVARD-MIT MATHEMATICS TOURNAMENT, 20 FEBRUARY 2010 — GUTS ROUND
+
+
+19. [10] A 5-dimensional ant starts at one vertex of a 5-dimensional hypercube√of side length 1. A move
+    is when the ant travels from one vertex to another vertex at a distance of 2 away. How many ways
+    can the ant make 5 moves and end up on the same vertex it started at?
+    Answer: 6240 We let the cube lie in R5 with each corner with coordinates 1 or 0. Assume the ant
+    starts at (0, 0, 0, 0, 0). Every move the ant adds or subtracts 1 to two of the places. Note that this
+    means the antcan only land on a vertex with the sum of its coordinates an even number. Every move
+    the ant has 52 = 10 choices.
+    From any vertex there are 10 two-move sequences that put the ant at the same vertex it started at.
+    There are 6 two-move sequences to move from one vertex to a different, chosen vertex. If your chosen
+    vertex differs from your current vertex by 2 of the 5 coordinates, your first move corrects for one of
+    these two. There are 2 ways to choose which coordinate to correct for on the first move, and there
+    are 3 ways to choose the second coordinate you change, yielding 6 sequences. If your chosen vertex
+    differs from your
+                    current vertex by 4 of the 5 coordinates, each move corrects for two of these four.
+    This yields 42 = 6 sequences.
+    Finally, there are 60 three-move sequences that put the ant at the same vertex it started at. There are
+    10 ways to choose the first move, and there are 6 ways to make two moves to return to your original
+    position.
+    The motion of the ant can be split into two cases.
+    Case 1: After the 3rd move the ant is on the vertex it started at. There are (60)(10) = 600 different
+    possible paths.
+    Case 2: After the third move the ant is on a vertex different from the one it started on. There are
+    (103 − 60)(6) = (940)(6) = 5640 different possible paths.
+    So there are 6240 total possible paths.
+
+
+                                               Guts Round
+20. [10] Find the volume of the set of points (x, y, z) satisfying
+                                                   x, y, z   ≥ 0
+                                                    x+y      ≤ 1
+                                                    y+z      ≤ 1
+                                                    z+x      ≤ 1
+
+    Answer:     1
+                4   Without loss of generality, assume that x ≥ y - half the volume of the solid is on this
+    side of the plane x = y. For each value of c from 0 to 21 , the region of the intersection of this half of
+    the solid with the plane y = c is a trapezoid. The trapezoid has height 1 − 2c and average base 12 , so
+    it has an area of 21 − c.
+    The total volume of this region is 12 times the average area of the trapezoids, which is 12 · 41 = 18 . Double
+    that to get the total volume, which is 41 .
+21. [10] Let 4ABC be a scalene triangle. Let ha be the locus of points P such that |P B−P C| = |AB−AC|.
+    Let hb be the locus of points P such that |P C − P A| = |BC − BA|. Let hc be the locus of points P
+    such that |P A − P B| = |CA − CB|. In how many points do all of ha , hb , and hc concur?
+    Answer: 2 The idea is similar to the proof that the angle bisectors concur or that the perpendicular
+    bisectors concur. Assume WLOG that BC > AB > CA. Note that ha and hb are both hyperbolas.
+    Therefore, ha and hb intersect in four points (each branch of ha intersects exactly once with each branch
+    of hb ). Note that the branches of ha correspond to the cases when P B > P C and when P B < P C.
+    Similarly, the branches of hb correspond to the cases when P C > P A and P C < P A.
+
+    If either P A < P B < P C or P C < P B < P A (which each happens for exactly one point of intersection
+    of ha and hb ), then |P C − P A| = |P C − P B| + |P B − P A| = |AB − AC| + |BC − BA| = |BC − AC|,
+    and so P also lies on hc . So, exactly two of the four points of intersection of ha and hb lie on hc ,
+    meaning that ha , hb , and hc concur in four points.
+    .....................................................................................................
+
+    13th ANNUAL HARVARD-MIT MATHEMATICS TOURNAMENT, 20 FEBRUARY 2010 — GUTS ROUND
+
+
+22. [12] You are the general of an army. You and the opposing general both have an equal number of troops
+    to distribute among three battlefields. Whoever has more troops on a battlefield always wins (you win
+    ties). An order is an ordered triple of non-negative real numbers (x, y, z) such that x + y + z = 1, and
+    corresponds to sending a fraction x of the   troops to the first field, y to the second, and z to the third.
+    Suppose that you give the order 41 , 14 , 12 and that the other general issues an order chosen uniformly
+    at random from all possible orders. What is the probability that you win two out of the three battles?
+    Answer: 85 Let x be the portion of soldiers the opposing general sends to the first battlefield, and
+    y the portion he sends to the second. Then 1 − x − y is the portion he sends to the third. Then x ≥ 0,
+    y ≥ 0, and x + y ≤ 1. Furthermore, you win if one of the three conditions is satisfied: x ≤ 41 and
+    y ≤ 41 , x ≤ 14 and 1 − x − y ≤ 12 , or y ≤ 14 and 1 − x − y ≤ 21 . This is illustrated in the picture below.
+
+
+
+
+                                                 Guts Round
+      This triangle is a linear projection of the region of feasible orders, so it preserves area and probability
+      ratios. The probability that you win, then is given by the portion of the triangle that satisfies one of
+      the three above constraints — in other words, the area of the shaded region divided by the area of the
+                                                            5
+                                                                  5
+      entire triangle. We can easily calculate this to be 161 = 8.
+                                                              2
+
+
+ 23. [12] In the country of Francisca, there are 2010 cities, some of which are connected by roads. Between
+     any two cities, there is a unique path which runs along the roads and which does not pass through any
+     city twice. What is the maximum possible number of cities in Francisca which have at least 3 roads
+     running out of them?
+      Answer: 1004 The restrictions on how roads connect cities directly imply that the graph of the
+      cities of Francisca with the roads as edges is a tree. Therefore the sum of the degrees of all the vertices
+      is 2009 · 2 = 4018. Suppose that b vertices have degree ≥ 3. The other 2010 − b vertices must have a
+      degree of at least 1, so 3b + (2010 − b) ≤ 4018 or 2b ≤ 2008. So b is at most 1004. We can achieve
+      b = 1004 with the following graph:
+
+                                                            ···
+
+
+
+ 24. [12] Define a sequence of polynomials as follows: let a1 = 3x2 − x, let a2 = 3x2 − 7x + 3, and for n ≥ 1,
+     let an+2 = 52 an+1 − an . As n tends to infinity, what is the limit of the sum of the roots of an ?
+                  13
+      Answer:     3    By using standard methods for solving linear recurrences2 , we see that this recurrence
+      has a characteristic polynomial of x2 − 52 x + 1 = (x − 12 )(x − 2), hence an (x) = c(x) · 2n + d(x) · 2−n
+      for some polynomials c and d. Plugging in n = 1 and n = 2 gives
+
+                                                       1
+                                                2c(x) + d(x) = 3x2 − x
+                                                       2
+      and
+
+                                                    1
+                                             4c(x) + d(x) = 3x2 − 7x + 3.
+                                                    4
+      Subtracting the first equation from two times the second equation gives 6c(x) = 3x2 − 13x + 6, so
+                2
+      c(x) = 3x −13x+6
+                  6     . As n grows large, the c(x)2n term dominates compared to the d(x)2−n term, so
+      the roots of an (x) converge to the roots of c(x). Thus the roots of an (x) converge to the roots of
+      3x2 − 13x + 6, which by Vieta’s formula3 have a sum of 13
+                                                              3 .
+      .....................................................................................................
+
+      13th ANNUAL HARVARD-MIT MATHEMATICS TOURNAMENT, 20 FEBRUARY 2010 — GUTS ROUND
+
+
+ 25. [15] How many functions f : {1, 2, 3, 4, 5} → {1, 2, 3, 4, 5} have the property that f ({1, 2, 3}) and
+     f (f ({1, 2, 3})) are disjoint?
+      Answer: 94 Let f ({1, 2, 3}) be A. Then A∩f (A) = ∅, so A must be a subset of {4, 5}. If B = {4, 5},
+      there are 23 − 2 ways to assign each element in {1, 2, 3} to a value in {4, 5}, and 9 ways to assign each
+      element of {4, 5} to a value in {1, 2, 3}, for a total of 54 choices of f . If A = {4}, there is 1 possible
+      value for each element of {1, 2, 3}, 4 ways to assign {4} with a value from {1, 2, 3, 5}, and 5 ways to
+      assign a value to {5}. Similarly, if A = {5}, there are 4 · 5 = 20 choices for f . In total, there are
+      54 + 20 · 2 = 94 possible functions.
+   2 See the sections “Linear homogeneous recurrence relations with constant coefficients” and “Theorem” at http://en.
+
+wikipedia.org/wiki/Recurrence_relation.
+   3 See http://mathworld.wolfram.com/VietasFormulas.html.
+
+
+
+
+                                                    Guts Round
+26. [15] Express the following in closed form, as a function of x:
+
+    sin2 (x)+sin2 (2x) cos2 (x)+sin2 (4x) cos2 (2x) cos2 (x)+· · ·+sin2 (22010 x) cos2 (22009 x) · · · cos2 (2x) cos2 (x).
+
+                          2   2011
+    Answer: 1 − 4sin (2      x)
+                  2011 sin2 (x)        Note that
+
+
+         sin2 (x) + sin2 (2x) cos2 (x) + · · · + sin2 (22010 x) cos2 (22009 x) · · · cos2 (2x) cos2 (x)
+            =    (1 − cos2 (x)) + (1 − cos2 (2x)) cos2 (x) + · · · + (1 − cos2 (22010 x)) cos2 (22009 x) · · · cos2 (x),
+
+    which telescopes to 1−cos2 (x) cos2 (2x) cos2 (4x) · · · cos2 (22010 x). To evaluate cos2 (x) cos2 (2x) · · · cos2 (22010 x),
+    multiply and divide by sin2 (x). We then get
+
+                                              sin2 (x) cos2 (x) cos2 (2x) · · · cos2 (22010 x)
+                                        1−                                                     .
+                                                                 sin2 (x)
+                                                                                             2
+    Using the double-angle formula for sin, we get that sin2 (y) cos2 (y) = sin 4(2y) . Applying this 2011 times
+    makes the above expression
+
+                                                                sin2 (22011 x)
+                                                         1−                    ,
+                                                                42011 sin2 (x)
+
+    which is in closed form.
+27. [15] Suppose that there are real numbers a, b, c ≥ 1 and that there are positive reals x, y, z such that
+
+                                                              ax + by + cz    =    4
+                                                          x        y      z
+                                                       xa + yb + zc           =    6
+                                                   x2 ax + y 2 by + z 2 cz    =    9.
+
+    What is the maximum possible value of c?
+                       √
+    Answer: 3 4 The Cauchy-Schwarz inequality states that given 2 sequences of n real numbers
+    x1 , x2 , . . . , xn and y1 , y2 , . . . , yn , then (x21 +x22 +. . .+x2n )(y12 +y22 +. . .+yn2 ) ≥ (x1 y1 +x2 y2 +. . .+xn yn )2
+    with equality holding if and only if xy11 = xy22 = . . . = xynn . Applying this to {ax/2 , by/2 , cz/2 } and
+    {xax/2 , yby/2 , zcz/2 } yields (ax + by + cz )(x2 ax + y 2 by + z 2 cz ) ≥ (xax + yby + zbz )2 with equality holding
+    if and only if x = y = z.
+    However, equality does hold (both sides evaluate to 36), so x = y = z. The second equation then
+    becomes x(ax + bx + cx ) = 6, which implies x = 23 . Then we have a3/2 + b3/2 + c3/2 = 4. To maximize
+                                                                       √
+    c, we minimize a and b by setting a = b = 1. Then c3/2 = 2 or c = 3 4.
+    .....................................................................................................
+
+    13th ANNUAL HARVARD-MIT MATHEMATICS TOURNAMENT, 20 FEBRUARY 2010 — GUTS ROUND
+
+
+28. [18] Danielle Bellatrix Robinson is organizing a poker tournament with 9 people. The tournament will
+    have 4 rounds, and in each round the 9 players are split into 3 groups of 3. During the tournament,
+    each player plays every other player exactly once. How many different ways can Danielle divide the 9
+    people into three groups in each round to satisfy these requirements?
+                                                                                             (9)(6)(3)
+    Answer: 20160 We first split the 9 people up arbitrarily into groups of 3. There are 3 3!3 3 = 280
+    ways of doing this. Without loss of generality, label the people 1 through 9 so that the first round
+    groups are {1, 2, 3}, {4, 5, 6}, and {7, 8, 9}. We will use this numbering to count the number of ways
+    DBR can divide the 9 players in rounds 2, 3, and 4.
+
+
+                                                         Guts Round
+    In round 2, because players 1, 2, and 3 are together in the first round, they must be in separate groups,
+    and likewise for {4, 5, 6} and {7, 8, 9}. Disregarding ordering of the three groups in a single round,
+    we will first place 1, 2, and 3 into their groups, then count the number of ways to place {4, 5, 6} and
+    {7, 8, 9} in the groups with them. We do this by placing one member from each of {4, 5, 6} and {7, 8, 9}
+    into each group. There are (3!)2 ways to do this. Now, because of symmetry, we can use the round 2
+    grouping {1, 4, 7}, {2, 5, 8}, {3, 6, 9} to list out the remaining possibilities for round 3 and 4 groupings.
+    Casework shows that there are 2 ways to group the players in the remaining two rounds. We multiply
+    280 · (3!)2 · 2 to get 20160.
+29. [18] Compute the remainder when
+                                                              30303
+                                                               X
+                                                                      kk
+                                                               k=1
+
+    is divided by 101.
+    Answer: 29          The main idea is the following lemma:
+                                                                           Pn+p2 −p
+    Lemma. For any non-negative integer n and prime p,                       k=n+1     k k ≡ 1 (mod p).
+
+    Proof. Note that ab depends only on the value of a (mod p) and the value of b (mod p − 1). Since p
+    and p − 1 are relatively prime, the Chinese Remainder Theorem4 implies that any p2 − p consecutive
+    integers will take on each possible pair of a residue mod p and a residue mod p − 1. In other words, if
+    we let (a, b) = (k (mod p), k (mod p − 1)), then as k ranges through p2 − p consecutive integers, (a, b)
+    will range through all p2 − p ordered pairs of residues mod p and residues mod p − 1. This implies that
+
+                                                         2
+                                                      X−p
+                                                     n+p              p−1 X
+                                                                      X   p
+                                                             kk ≡               ab .
+                                                     k=n+1            b=1 a=1
+
+
+                                          −1 p − 1 | b
+                                             
+                               Pp
+    It is well-known that              b
+                                  a=1 a =              . We will sketch a proof here. When p − 1 | b, the
+                                            0 p−1-b
+    result follows from Fermat’s Little Theorem5 . When p − 1 - b, it suffices to consider the case when
+    b | p − 1, since the bth powers mod p are the same as the gcd(b, p − 1)th powers mod p, and there are
+    an equal number of every non-zero bth power. But in this case, the bth powers are just the solutions
+          p−1
+    to x b − 1, which add up to zero by Vieta’s formulas.
+                                 P b
+    Now, using the formula for      a , we get that
+
+                                                  p−1 X
+                                                  X   p
+                                                            ab ≡ −1        (mod p),
+                                                  b=1 a=1
+
+    which completes the lemma.
+                                                                                                 P30303 k
+    We
+    P now apply
+                     the lemma with p = 101 and n = 3, 10103, and 20103 to get that               k=1 k  ≡
+       3                   P3
+       k=1 k k
+                 − 3.  But   k=1 k k
+                                     = 11
+                                          + 2 2
+                                                + 3 3
+                                                      = 1 + 4 + 27 = 32, so the answer is 32 − 3 = 29.
+
+30. [18] A monomial term xi1 xi2 . . . xik in the variables x1 , x2 , . . . x8 is square-free if i1 , i2 , . . . ik are distinct.
+    (A constant term such as 1 is considered square-free.) What is the sum of the coefficients of the square-
+    free terms in the following product?            Y
+                                                           (1 + xi xj )
+                                                       1≤i<j≤8
+
+ 4 See http://en.wikipedia.org/wiki/Chinese_remainder_theorem.
+ 5 See http://en.wikipedia.org/wiki/Fermat’s_little_theorem.
+
+
+
+
+                                                        Guts Round
+                                                                                            Q
+    Answer: 764 Let an be the sum of the coefficients of the square-terms in the product 1≤i<j≤n (1 +
+    xi xj ). Square-free terms in this product come in two types: either they include xn , or they do not.
+    The sum of the coefficients of the terms that include xn is (n − 1)an−2 , since we can choose any
+    of the n − 1 other variables to be paired with xn , and then choose any square-free term from the
+    product taken over the other n − 2 variables. The sum of the coefficients of the terms that do not
+    include xn are an−1 , because they all come from the product over the other n − 1 variables. Therefore,
+    an = an−1 + (n − 1)an−2 .
+    We use this recursion to find a8 . As base cases, a0 and a1 are both 1. Then a2 = 2, a3 = 4, a4 = 10,
+    a5 = 26, a6 = 76, a7 = 232, and finally, a8 = 764.
+    .....................................................................................................
+
+    13th ANNUAL HARVARD-MIT MATHEMATICS TOURNAMENT, 20 FEBRUARY 2010 — GUTS ROUND
+
+
+31. [21] In the Democratic Republic of Irun, 5 people are voting in an election among 5 candidates. If
+    each person votes for a single candidate at random, what is the expected number of candidates that
+    will be voted for?
+    Answer: 2101 625   The probability that a chosen candidate will receive no votes at all is ( 45 )5 , or the
+    probability that every person will vote for someone other than that one candidate. Then the probability
+    that a chosen candidate will receive at least one vote is 1 − ( 54 )5 = 2101
+                                                                            3125 . By linearity of expectations,
+    the final answer is this probability times the number of candidates, or 5 · 2101       2101
+                                                                                   3125 = 625 .
+
+32. [21] There are 101 people participating in a Secret Santa gift exchange. As usual each person is
+    randomly assigned another person for whom (s)he has to get a gift, such that each person gives and
+    receives exactly one gift and no one gives a gift to themself. What is the probability that the first
+    person neither gives gifts to or receives gifts from the second or third person? Express your answer as
+    a decimal rounded to five decimal places.
+    Answer: 0.96039 Let Dk denote the number of derangements of {1, 2, . . . , k}. (A derangement is a
+    permutation in which no element appears in its original position.)
+    Call the first three people A, B, and C. Let X → Y denote that X gives a gift to Y and let X 6→ Y
+    denote that X gives a gift to anyone other than Y . We are fine unless we have A → B, B → A,
+    A → C, or C → A. We will compute the number of ways for various things to occur, then combine it
+    into what we want.
+    There are Dn−1 ways to have A → B 6→ A. This is because if A → B, we can treat A and B as
+    a single vertex, and since B 6→ A, we have a derangement. Similarly, there are Dn−1 ways to have
+    B → A 6→ B. Thirdly, there are Dn−2 ways to have A → B → A, since Dn−2 says how many ways
+    the other n − 2 people can exchange their gifts. So there are 2Dn−1 + Dn−2 ways to have a conflict
+    between A and B.
+    Similarly, there are 2Dn−1 + Dn−2 ways to have a conflict between A and C.
+    Using similar arguments, we can show that there are Dn−2 ways for B → A → C 6→ B to occur and
+    Dn−3 ways for B → A → C → B to occur. We get the same results when B and C are reversed. This
+    gives 2Dn−2 + 2Dn−3 ways for a conflict to occur within all three people.
+    By the Principle of Inclusion-Exclusion, the total number of ways to have a conflict is
+
+    (# conflicts between A and B)+(# conflicts between A and C)−(# conflicts between A, B, and C),
+
+    which evaluates to 4Dn−1 − 2Dn−3 .
+    Approximating Dn as n!e (the actual formula is this quantity rounded to the nearest integer, so this is
+    a great approximation), we find that the probability of no conflicts is
+
+        4Dn−1 − 2Dn−3             (n − 1)!/e        (n − 3)!/e     n(n − 1)(n − 2) − 4(n − 1)(n − 2) − 2
+                                                            
+    1−                  ≈ 1−4                  −2                =                                        .
+              Dn                     n!/e              n!/e                   n(n − 1)(n − 2)
+
+
+                                                Guts Round
+    Substitute m = n − 1 (this makes m = 100, so the expression is easier to evaluate) to get a probability
+    of
+        m3 − m − 4m2 + 4m − 2   m3 − 4m2 + 3m − 2   1,000,000 − 40,000 + 300 − 2    960298
+                              =                   =                              =
+               m −m
+                 3                   m3 − m                  100 · 9999            100 · 9999
+              = 0.960208 · (1.000100010001 . . .) = 0.960208 + 0.0000960208 + . . . = 0.9603940 . . .
+
+    To five decimal places, the desired probability is 0.96039.
+33. [21] Let a1 = 3, and for n > 1, let an be the largest real number such that
+
+                                         4 a2n−1 + a2n = 10an−1 an − 9.
+                                                      
+
+    What is the largest positive integer less than a8 ?
+                                                                                                        √
+    Answer: 335 Let tn be the larger real such that an = tn + t1n . Then t1 = 3+2 5 . We claim that
+    tn = 2tn−1 . Writing the recurrence as a quadratic polynomial in an , we have:
+
+                                     4a2n − 10an−1 an + 4a2n−1 + 9 = 0.
+                                                              q
+    Using the quadratic formula, we see that an = 45 an−1 + 34 a2n−1 − 4. (We ignore the negative square
+                                                                                                1
+    root, since an is the largest real number satisfying the polynomial.) Substituting tn−1 + tn−1 for an−1 ,
+                 q              q
+    we see that a2n−1 − 4 = t2n−1 − 2 + t21 , so we have:
+                                                    n−1
+
+
+                                                            s               2
+                            5                 1           3              1                        1
+                       an =         tn−1 +              +      tn−1 −               = 2tn−1 +
+                            4                tn−1         4             tn−1                    2tn−1
+                                                          √
+    so tn = 2tn−1 , as claimed. Then a8 = 128(3+
+                                               2
+                                                   5)        2 √
+                                                      + 128(3+      . The second term is vanishingly small,
+                        √                     √                  5)
+    so ba8 c = b64(3 + 5)c. We approximate
+                                      √          5 to two decimal places as 2.24, making this expression
+    b335.36c = 335. Since our value of 5 is correct to within 0.005, the decimal is correct to within 0.32,
+    which means the final answer is exact.
+    .....................................................................................................
+
+    13th ANNUAL HARVARD-MIT MATHEMATICS TOURNAMENT, 20 FEBRUARY 2010 — GUTS ROUND
+
+
+34. [25] 3000 people each go into one of three rooms randomly. What is the most likely value for the
+    maximum number of people in any of the rooms? Your score for this problem will be 0 if you write
+                                                                                |A−C|
+    down a number less than or equal to 1000. Otherwise, it will be 25 − 27 min(A,C)−1000 .
+    Answer: 1019 To get a rough approximation, we can use the fact that a sum of identical random
+    variables converges to√a Gaussian distribution,6 in this case with a mean of 1000 and a variance of
+    3000 · 29 = 667. Since 667 ≈ 26, 1026 is a good guess, as Gaussians tend to differ from their mean by
+    approximately their variance.
+    The actual answer was computed with the following python program:
+
+    facts = [0]*3001
+    facts[0]=1
+    for a in range(1,3001):
+      facts[a]=a*facts[a-1]
+
+    def binom(n,k):
+      return facts[n]/(facts[k]*facts[n-k])
+6 See http://en.wikipedia.org/wiki/Central_limit_theorem.
+
+
+
+
+                                                     Guts Round
+    maxes = [0]*3001
+
+    M = 1075
+
+    for a in range(0,3001):
+      for b in range(0,3001-a):
+        c = 3000-a-b
+        m = max(a,max(b,c))
+        if m < M:
+          maxes[m] += facts[3000]/(facts[a]*facts[b]*facts[c])
+          print [a,b]
+
+    best = 1000
+    for a in range(1000,1050):
+      print maxes[a],a
+      if maxes[best] <= maxes[a]:
+        best = a
+
+    print maxes[best]
+    print best
+
+    We can use arguments involving the Chernoff bound7 to show that the answer is necessarily less than
+    1075. Alternately, if we wanted to be really careful, we could just set M = 3001, but then we’d have
+    to wait a while for the script to finish.
+
+35. [25] Call an positive integer almost-square if it can be written as a · b, where a and b are integers and
+    a ≤ b ≤ 34 a. How many almost-square positive integers are less than or equal to 1000000? Your score
+                              |A−C|
+    will be equal to 25 − 65 min(A,C) .
+
+    Answer: 130348 To get a good estimate for the number of almost-square integers, note that any
+    number of the form a · b, with b ≤ 34 a, will be by definition almost-square. Let’s assume that it’s
+    relatively unlikely that a number is almost-square in more than one way. Then the number of almost-
+    square numbers less than n will be approximately
+                                      √   4          √
+                                      n 3a               n
+                                     X X          1X       1√ √   
+                                               1=       a=   n n+1 ,
+                                     a=1 b=a
+                                                  3 a=1    6
+
+    which is about n6 . So, n6 will be a fairly good estimate for the number of almost-square numbers less
+    than n, making 160000 a reasonable guess.
+                                                                a                   √
+    We can do better, though. For example, we      √ summed 3 all the way up to n, but nwe are really
+    overcounting here because when a is close to n, a · b will be less than n only when b ≤ a , as opposed
+    to b ≤ 4a
+            3 . So we should really be taking the sum
+7 See http://en.wikipedia.org/wiki/Chernoff_bound.
+
+
+
+
+                                                Guts Round
+                         √ 3n 4a             √        n
+                                             n
+                         X4 3X              X  a
+                                               X
+                                   1+                      1
+                         a=1 b=a
+                                             √ 3n b=a
+                                        a=       4
+                               √ 3n              √
+                                           n 
+                               X4 a       X    n   
+                           =            +        −a
+                                  a=1
+                                      3   √    a
+                                                      3n
+                                              a=       4
+                                                            ! 
+                                            √
+                                                      r               
+                               1 3n                     3n      n 3n
+                           ≈        + n log( n) − log(     ) −    −
+                               6 4                       4      2   8
+                               n      log(4) − log(3) n
+                           =      +n                 −
+                               8             2         8
+                                 log(4) − log(3)
+                           =   n                 .
+                                        2
+
+In the process of taking the sum, we saw that we had something between n8 and n6 , so we could also
+guess something between 166000 and 125000, which would give us about 145000, an even better answer.
+If we actually calculate log(4)−log(3)
+                               2       , we see that it’s about 0.14384, so 143840 would be the best guess
+if we were to use this strategy. In reality, we would want to round down a bit in both cases, since
+we are overcounting (because numbers could be square-free in multiple ways), so we should probably
+answer something like 140000.
+A final refinement to our calculation (and perhaps easier than the previous one), is to assume that the
+products a · b that we consider are randomly distributed between 1 and n, and to compute the expected
+number of distinct numbers we end up with. This is the same type of problem as number 31 on this
+contest, and we compute
+                          that if we randomly distribute k numbers between 1 and n then we expect
+                               k
+to end up with n 1 − 1 − n1         distinct numbers. When k = n log(4)−log(3)
+                                                                       2       , we get that this equals
+
+                                                               
+                                         n  log(4)−log(3)
+                                       1              2                   p               
+                    n 1 −        1−                               = n 1 − elog(3)−log(4)
+                                       n
+                                                                           r !
+                                                                              3
+                                                                    = n 1−
+                                                                              4
+                                                                           √ !
+                                                                             3
+                                                                    = n 1−
+                                                                            2
+                                                                    ≈ 0.134n,
+
+Giving us an answer of 134000, which is very close to the correct answer.
+The actual answer was found by computer, using the following C++ program:
+
+#include <stdio.h>
+
+using namespace std;
+
+bool isAlmostSquare(int n){
+  for(int k=1;k*k<=n;k++)
+    if(n%k==0 && 3*(n/k) <= 4*k) return true;
+  return false;
+}
+
+
+                                                     Guts Round
+    int main(){
+      int c = 0;
+      for(int n=1;n<=1000000;n++)
+        if(isAlmostSquare(n)) c++;
+      printf("%d\n",c);
+      return 0;
+    }
+
+36. [25] Consider an infinite grid of unit squares. An n-omino is a subset of n squares that is connected.
+    Below are depicted examples of 8-ominoes. Two n-ominoes are considered equivalent if one can be
+    obtained from the other by translations and rotations. What is the number of distinct 15-ominoes?
+    Your score will be equal to 25 − 13| ln(A) − ln(C)|.
+
+
+
+
+                                                                    n−1
+    Answer: 3426576 We claim that there are approximately 3 4 n-ominoes. First, we define an order
+    on the squares in an n-omino, as follows: we order the squares from left to right, and within a column,
+    we order the squares from top to bottom.
+    We construct an n-omino by starting with a single square and attaching squares, one by one, as close
+    to order we just defined as possible. After the first square is placed, the next square can be attached to
+    its bottom or right side. If the second square is right of the first, then the third square can be attached
+    to the top, right, or bottom edges of the second. The third square cannot be attached to the first
+    square, because the first column must be completed before the second is begun. If the second square
+    is below the first, the third square can be attached to the bottom or right sides of the second square,
+    or the right side of the first way. In either case, there are 3 choices for the third square.
+    Suppose that m squares have been added, and that k squares are in the right-most column right now.
+    If k = 1, then the next square can be attached to the top, right, or bottom side of this square. If k > 1,
+    then the next square can be added to the bottom or right side of the last square in this column. The
+    next square can also be added to the right of the top square in this column, so there are still 3 choices
+    for the next square. Therefore, there are 3n−1 ways to build up the entire n-omino.
+    Almost all n-omines have no rotational symmetry, so they can be built in 4 different ways by this
+                                                        n−1
+    method. This correction gives us our estimate of 3 4 for the number of n-ominoes. This reasoning
+    is not exactly correct, because some n-ominoes are highly non-convex, and do not admit an in-order
+    traversal like the one described above. If some columns in the n-ominoes have gaps, they are not
+                                           n−1
+    enumerated by this construction, so 3 4 is an underestimate. We estimate that there are 1195742
+    15-ominoes. The actual value of 3426576, which can be found in the Sloane Encyclopedia of Integer
+    Sequences, differes from the estimate by less than a factor of 3.
+
+
+
+
+                                                Guts Round
+

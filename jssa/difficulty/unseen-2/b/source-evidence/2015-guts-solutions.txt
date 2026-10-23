@@ -1,0 +1,1132 @@
+                                  HMMT February 2015
+                                        Saturday 21 February 2015
+                                                  Guts
+1. [4] Let R be the rectangle in the Cartesian plane with vertices at (0, 0), (2, 0), (2, 1), and (0, 1). R can
+   be divided into two unit squares, as shown.
+
+
+
+
+   The resulting figure has 7 segments of unit length, connecting neighboring lattice points (those lying
+   on or inside R). Compute the number of paths from (0, 1) (the upper left corner) to (2, 0) (the lower
+   right corner) along these 7 segments, where each segment can be used at most once.
+    Answer: 4 Just count them directly. If the first step is to the right, there are 2 paths. If the first
+   step is downwards (so the next step must be to the right), there are again 2 paths. This gives a total
+   of 4 paths.
+2. [4] Let ABCDE be a convex pentagon such that ∠ABC = ∠ACD = ∠ADE = 90◦ and AB = BC =
+   CD = DE = 1. Compute AE.
+   Answer:      2      By Pythagoras,
+
+                                  AE 2 = AD2 + 1 = AC 2 + 2 = AB 2 + 3 = 4,
+
+   so AE = 2.
+3. [4] Find the number of pairs of union/intersection operations (1 , 2 ) ∈ {∪, ∩}2 satisfying the fol-
+   lowing condition: for any sets S, T , function f : S → T , and subsets X, Y, Z of S, we have equality of
+   sets
+                                 f (X)1 (f (Y )2 f (Z)) = f (X1 (Y 2 Z)) ,
+   where f (X) denotes the image of X: the set {f (x) : x ∈ X}, which is a subset of T . The images f (Y )
+   (of Y ) and f (Z) (of Z) are similarly defined.
+   Answer:      1 If and only if 1 = 2 = ∪. See http://math.stackexchange.com/questions/359693/overview-of-b
+4. [4] Consider the function z(x, y) describing the paraboloid
+
+                                            z = (2x − y)2 − 2y 2 − 3y.
+
+   Archimedes and Brahmagupta are playing a game. Archimedes first chooses x. Afterwards, Brah-
+   magupta chooses y. Archimedes wishes to minimize z while Brahmagupta wishes to maximize z.
+   Assuming that Brahmagupta will play optimally, what value of x should Archimedes choose?
+   Answer:      − 83    Viewing x as a constant and completing the square, we find that
+
+                                  z = 4x2 − 4xy + y 2 − 2y 2 − 3y
+                                    = −y 2 − (4x + 3)y + 4x2
+                                                    2           2
+                                              4x + 3        4x + 3
+                                    =− y+               +             + 4x2 .
+                                                 2            2
+
+   Bhramagupta wishes to maximize z, so regardless of the value of x, he will pick y = − 4x+3
+                                                                                           2 . The
+   expression for z then simplifies to
+                                                         9
+                                         z = 8x2 + 6x + .
+                                                         4
+
+                                                   Guts
+      Archimedes knows this and will therefore pick x to minimize the above expression. By completing the
+      square, we find that x = − 38 minimizes z.
+      Alternatively, note that z is convex in x and concave in y, so we can use the minimax theorem to switch
+      the order of moves. If Archimedes goes second, he will set x = y2 to minimize z, so Brahmagupta will
+      maximize −2y 2 − 3y by setting y = − 43 . Thus Archimedes should pick x = − 83 , as above.
+
+   5. [5] Let H be the unit hypercube of dimension 4 with a vertex at (x, y, z, w) for each choice of x, y, z, w ∈
+      {0, 1}. (Note that H has 24 = 16 vertices.) A bug starts at the vertex (0, 0, 0, 0). In how many ways
+      can the bug move to (1, 1, 1, 1) (the opposite corner of H) by taking exactly 4 steps along the edges of
+      H?
+       Answer: 24 You may think of this as sequentially adding 1 to each coordinate of (0, 0, 0, 0). There
+      are 4 ways to choose the first coordinate, 3 ways to choose the second, and 2 ways to choose the third.
+      The product is 24.
+
+   6. [5] Let D be a regular ten-sided polygon with edges of length 1. A triangle T is defined by choosing
+      three vertices of D and connecting them with edges. How many different (non-congruent) triangles T
+      can be formed?
+       Answer: 8 The problem is equivalent to finding the number of ways to partition 10 into a sum of
+      three (unordered) positive integers. These can be computed by hand to be (1, 1, 8), (1, 2, 7), (1, 3, 6),
+      (1, 4, 5), (2, 2, 6), (2, 3, 5), (2, 4, 4), (3, 3, 4).
+
+   7. [5] Let C be a cube of side length 2. We color each of the faces of C blue, then subdivide it into
+      23 = 8 unit cubes. We then randomly rearrange these cubes (possibly with rotation) to form a new
+      3-dimensional cube.
+      What is the probability that its exterior is still completely blue?
+                    1     1         1
+       Answer:     224 or 88 or 16777216    Each vertex of the original cube must end up as a vertex of the
+      new cube in order for all the old blue faces to show. There are 8 such vertices, each corresponding to
+      one unit cube, and each has a probability 18 of being oriented with the old outer vertex as a vertex of
+      the new length-2 cube. Multiplying gives the answer.
+
+   8. [5] Evaluate
+                               sin(arcsin(0.4) + arcsin(0.5)) · sin(arcsin(0.5) − arcsin(0.4)),
+      where for x ∈ [−1, 1], arcsin(x) denotes the unique real number y ∈ [−π, π] such that sin(y) = x.
+                              9
+       Answer:       0.09 OR 100 Use the difference of squares identity1 sin(a−b) sin(a+b) = sin(a)2 −sin(b)2
+                                          9
+      to get 0.52 − 0.42 = 0.32 = 0.09 = 100 .
+
+   9. [6] Let a, b, c be integers. Define f (x) = ax2 + bx + c. Suppose there exist pairwise distinct integers
+      u, v, w such that f (u) = 0, f (v) = 0, and f (w) = 2. Find the maximum possible value of the
+      discriminant b2 − 4ac of f .
+       Answer:      16 By the factor theorem, f (x) = a(x − u)(x − v), so the constraints essentially boil
+      down to 2 = f (w) = a(w − u)(w − v). (It’s not so important that u 6= v; we merely specified it for a
+      shorter problem statement.)
+      We want to maximize the discriminant b2 −4ac = a2 [(u+v)2 −4uv] = a2 (u−v)2 = a2 [(w−v)−(w−u)]2 .
+      Clearly a | 2. If a > 0, then (w − u)(w − v) = 2/a > 0 means the difference |u − v| is less than 2/a,
+      whereas if a < 0, since at least one of |w − u| and |w − v| equals 1, the difference |u − v| of factors is
+      greater than 2/|a|.
+      So the optimal choice occurs either for a = −1 and |u − v| = 3, or a = −2 and |u − v| = 2. The latter
+      wins, giving a discriminant of (−2)2 · 22 = 16.
+   1 proven most easily with complex numbers or the product-to-sum identity on sin(a − b) sin(a + b) (followed by the double
+
+angle formula for cosine)
+
+
+
+
+                                                           Guts
+10. [6] Let b(x) = x2 + x + 1. The polynomial x2015 + x2014 + · · · + x + 1 has a unique “base b(x)”
+    representation
+                                                              N
+                                                              X
+                              x2015 + x2014 + · · · + x + 1 =   ak (x)b(x)k ,
+                                                                 k=0
+
+    where
+
+      • N is a nonnegative integer;
+      • each “digit” ak (x) (for 0 ≤ k ≤ N ) is either the zero polynomial (i.e. ak (x) = 0) or a nonzero
+        polynomial of degree less than deg b = 2; and
+      • the “leading digit aN (x)” is nonzero (i.e. not the zero polynomial).
+
+    Find aN (0) (the “leading digit evaluated at 0”).
+     Answer: −1006         Comparing degrees easily gives N = 1007. By ignoring terms of degree at most
+    2013, we see
+                                aN (x)(x2 + x + 1)1007 ∈ x2015 + x2014 + O(x2013 ).
+    Write aN (x) = ux + v, so
+
+                        aN (x)(x2 + x + 1)1007 ∈ (ux + v)(x2014 + 1007x2013 + O(x2012 ))
+                                                ⊆ ux2015 + (v + 1007u)x2014 + O(x2013 ).
+
+    Finally, matching terms gives u = 1 and v + 1007u = 1, so v = 1 − 1007 = −1006.
+    Remark. This problem illustrates the analogy between integers and polynomials, with the nonconstant
+    (degree ≥ 1) polynomial b(x) = x2 + x + 1 taking the role of a positive integer base b > 1.
+
+11. [6] Find                                         q
+                                                              
+                                              ∞ 1 +   2000000 
+                                              X         4k    
+                                                              ,
+                                                      2
+                                              k=0
+
+    where ⌊x⌋ denotes the largest integer less than or equal to x.
+     Answer:       1414 The kth floor (for k ≥ 0) counts the number of positive integer solutions to
+    4k (2x − 1)2 ≤ 2 · 106 . So summing over all k, we want the number of integer solutions to 4k (2x − 1)2 ≤
+    2 · 106 with k ≥ 0 and x ≥ 1. But each positive integer√can be uniquely represented as a power of 2
+    times an odd (positive) integer, so there are simply ⌊103 2⌋ = 1414 solutions.
+
+12. [6] For integers a, b, c, d, let f (a, b, c, d) denote the number of ordered pairs of integers (x, y) ∈
+    {1, 2, 3, 4, 5}2 such that ax + by and cx + dy are both divisible by 5. Find the sum of all possible
+    values of f (a, b, c, d).
+     Answer: 31 Standard linear algebra over the field F5 (the integers modulo 5). The dimension of
+    the solution set is at least 0 and at most 2, and any intermediate value can also be attained. So the
+    answer is 1 + 5 + 52 = 31.
+    This also can be easily reformulated in more concrete equation/congruence-solving terms, especially
+    since there are few variables/equations.
+
+13. [8] Let P (x) = x3 + ax2 + bx + 2015 be a polynomial all of whose roots are integers. Given that
+    P (x) ≥ 0 for all x ≥ 0, find the sum of all possible values of P (−1).
+     Answer: 9496 Since all the roots of P (x) are integers, we can factor it as P (x) = (x−r)(x−s)(x−t)
+    for integers r, s, t. By Viete’s formula, the product of the roots is rst = −2015, so we need three integers
+    to multiply to −2015.
+    P (x) cannot have two distinct positive roots u, v since otherwise, P (x) would be negative at least in
+    some infinitesimal region x < u or x > v, or P (x) < 0 for u < x < v. Thus, in order to have two
+
+
+                                                    Guts
+    positive roots, we must have a double root. Since 2015 = 5 × 13 × 31, the only positive double root is
+    a perfect square factor of 2015, which is at x = 1, giving us a possibility of P (x) = (x − 1)2 (x + 2015).
+    Now we can consider when P (x) only has negative roots. The possible unordered triplets are (−1, −1, −2015), (−1, −5, −4
+    (−1, −31, −65), (−5, −13, −31),              which          yield         the         polynomials
+    (x + 1)2 (x + 2015), (x + 1)(x + 5)(x + 403), (x + 1)(x + 13)(x + 155), (x + 1)(x + 31)(x + 65), (x + 5)(x +
+    13)(x + 31), respectively.
+    Noticing that P (−1) = 0 for four of these polynomials, we see that the nonzero values are P (−1) =
+    (−1 − 1)2 (2014), (5 − 1)(13 − 1)(31 − 1), which sum to 8056 + 1440 = 9496.
+14. [8] Find the smallest integer n ≥ 5 for which there exists a set of n distinct pairs (x1 , y1 ), . . . , (xn , yn )
+    of positive integers with 1 ≤ xi , yi ≤ 4 for i = 1, 2, . . . , n, such that for any indices r, s ∈ {1, 2, . . . , n}
+    (not necessarily distinct), there exists an index t ∈ {1, 2, . . . , n} such that 4 divides xr + xs − xt and
+    yr + ys − yt .
+     Answer: 8 In other words, we have a set S of n pairs in (Z/4Z)2 closed under addition. Since
+    1 + 1 + 1 + 1 ≡ 0 (mod 4) and 1 + 1 + 1 ≡ −1 (mod 4), (0, 0) ∈ S and S is closed under (additive)
+    inverses. Thus S forms a group under addition (a subgroup of (Z/4Z)2 ). By Lagrange’s theorem
+    (from basic group theory), n | 42 , so n ≥ 8. To achieve this bound, one possible construction is
+    {1, 2, 3, 4} × {2, 4}.
+    Remark. In fact, S is a finite abelian group. Such groups have a very clean classification; this is
+    clarified by the fact that abelian groups are the same as modules over Z, the ring of integers.
+15. [8] Find the maximum possible value of H · M · M · T over all ordered triples (H, M, T ) of integers
+    such that H · M · M · T = H + M + M + T .
+     Answer: 8 If any of H, M, T are zero, the product is 0. We can do better (examples below), so
+    we may now restrict attention to the case when H, M, T 6= 0.
+    When M ∈ {−2, −1, 1, 2}, a little casework gives all the possible (H, M, T ) = (2, 1, 4), (4, 1, 2), (−1, −2, 1), (1, −2, −1).
+
+       • If M = −2, i.e. H − 4 + T = 4HT , then −15 = (4H − 1)(4T − 1), so 4H − 1 ∈ {±1, ±3, ±5, ±15}
+         (only −1, +3, −5, +15 are possible) corresponding to 4T −1 ∈ {∓15, ∓5, ∓3, ∓1} (only +15, −5, +3, −1
+         are possible). But H, T are nonzero, we can only have 4H − 1 ∈ {+3, −5}, yielding (−1, −2, 1)
+         and (1, −2, −1).
+       • If M = +2, i.e. H + 4 + T = 4HT , then 17 = (4H − 1)(4T − 1), so 4H − 1 ∈ {±1, ±17} (only
+         −1, −17 are possible) corresponding to 4T − 1 ∈ {±17, ±1} (only −17, −1 are possible). But H, T
+         are nonzero, so there are no possibilities here.
+       • If M = −1, i.e. H − 2 + T = HT , then −1 = (H − 1)(T − 1), so we have H − 1 ∈ {±1} and
+         T − 1 ∈ {∓1}, neither of which is possible (as H, T 6= 0).
+       • If M = +1, i.e. H + 2 + T = HT , then 3 = (H − 1)(T − 1), so we have H − 1 ∈ {±1, ±3}. Since
+         H, T 6= 0, H − 1 ∈ {+1, +3}, yielding (2, 1, 4) and (4, 1, 2).
+
+    Now suppose there is such a triple (H, M, T ) for |M | ≥ 3. The equation in the problem gives (M 2 H −
+    1)(M 2 T − 1) = 2M 3 + 1. Note that since H, T 6= 0, |2M 3 + 1| = |M 2 H − 1| · |M 2 T − 1| ≥ min(M 2 −
+    1, M 2 + 1)2 = M 4 − 2M 2 + 1 > 2|M |3 + 1 gives a contradiction.
+16. [8] Determine the number of unordered triples of distinct points in the 4 × 4 × 4 lattice grid
+    {0, 1, 2, 3}3 that are collinear in R3 (i.e. there exists a line passing through the three points).
+     Answer: 376 Define a main plane to be one of the xy, yz, zx planes. Define a space diagonal to
+    be a set of collinear points not parallel to a main plane. We classify the lines as follows:
+
+     (a) Lines parallel to two axes (i.e. orthogonal to a main plane). Notice that given a plane
+         of the form v = k, where v ∈ {x, y, z}, k ∈ {0, 1, 2, 3}, there are 8 such lines, four in one direction
+         and four in a perpendicular direction. There are 4 × 3 = 12 such planes. However, each line lies
+         in two of these (v, k) planes, so there are 8×4×3
+                                                       2    = 48 such lines. Each of these lines has 4 points,
+         so there are 4 possible ways to choose 3 collinear points, giving 4 × 48 = 192 triplets.
+
+
+                                                        Guts
+    (b) Diagonal lines containing four points parallel to some main plane. Consider a plane of
+        the form (v, k), as defined above. These each have 2 diagonals that contain 4 collinear points.
+        Each of these diagonals uniquely determines v, k so these diagonals are each counted once. There
+        are 12 possible (v, k) pairs, yielding 12 × 2 × 4 = 96 triplets.
+     (c) Diagonal lines containing three points parallel to some main plane. Again, consider a
+         plane (v, k). By inspection, there are four such lines and one way to choose the triplet of points
+         for each of these lines. This yields 4 × 12 = 48 triplets.
+    (d) Main diagonals. There are four main diagonals, each with 4 collinear points, yielding 4 × 4 = 16
+        triplets.
+     (e) Space diagonals containing three points. Choose one of the points in the set {1, 2}3 to be
+         the midpoint of the line. Since these 8 possibilities are symmetric, say we take the point (1, 1, 1).
+         There are four space diagonals passing through this point, but one is a main diagonal. So each of
+         the 8 points has 3 such diagonals with 3 points each, yielding 8 × 3 = 24 ways.
+
+    Adding all these yields 192 + 96 + 48 + 16 + 24 = 376.
+
+17. [11] Find the least positive integer N > 1 satisfying the following two properties:
+
+       • There exists a positive integer a such that N = a(2a − 1).
+       • The sum 1 + 2 + · · · + (N − 1) is divisible by k for every integer 1 ≤ k ≤ 10.
+
+     Answer: 2016 The second condition implies that 16 divides a(2a − 1)(2a2 − a − 1), which shows
+    that a ≡ 0 or 1 modulo 16. The case a = 1 would contradict the triviality-avoiding condition N > 1.
+    a cannot be 16, because 7 does not divide a(2a − 1)(2a2 − a − 1). a cannot be 17, because 9 does not
+    divide a(2a − 1)(2a2 − a − 1). It can be directly verified that a = 32 is the smallest positive integer
+    for which 1 + 2 + · · · + (N − 1) = 24 · 32 · 5 · 7 · 13 · 31 which is divisible by 1, 2, . . . , 10. For this a, we
+    compute N = 32(2 · 32 − 1) = 2016.
+
+18. [11] Let f : Z → Z be a function such that for any integers x, y, we have
+
+                                    f (x2 − 3y 2 ) + f (x2 + y 2 ) = 2(x + y)f (x − y).
+
+    Suppose that f (n) > 0 for all n > 0 and that f (2015) · f (2016) is a perfect square. Find the minimum
+    possible value of f (1) + f (2).
+     Answer:      246 Plugging in −y in place of y in the equation and comparing the result with the
+    original equation gives
+                                   (x − y)f (x + y) = (x + y)f (x − y)
+    This shows that whenever a, b ∈ Z − {0} with a ≡ b(mod 2), we have
+
+                                                       f (a)   f (b)
+                                                             =
+                                                         a       b
+    which implies that there are constants α = f (1) ∈ Z>0 , β = f (2) ∈ Z>0 for which f satisfies the
+    equation (∗):                             (
+                                                n · α when 2 ∤ n
+                                       f (n) = n
+                                                2 ·β   when 2|n
+
+    Therefore, f (2015)f (2016) = 2015α · 1008β = 24 · 32 · 5 · 7 · 13 · 31αβ, so αβ = 5 · 7 · 13 · 31 · t2 for
+    some t ∈ Z>0 . We claim that (α, β, t) = (5 · 31, 7 · 13, 1) is a triple which gives the minimum α + β. In
+    particular, we claim α + β ≥ 246.
+                                                                             √          √
+    Consider the case t ≥ 2 first. We have, by AM-GM, α + β ≥ 2 · αβ ≥ 4 · 14105 > 246. Suppose
+    t = 1. We have α · β = 5 · 7 · 13 · 31. Because (α + β)2 − (α − β)2 = 4αβ is fixed, we want to have α
+    as close as β as possible. This happens when one of α, β is 5 · 31 and the other is 7 · 13. In this case,
+    α + β = 91 + 155 = 246.
+
+
+                                                       Guts
+    Finally, we note that the equality f (1) + f (2) = 246 can be attained. Consider f : Z → Z such that
+    f (n) = 91n for every odd n ∈ Z and f (n) = 155   2 n for every even n ∈ Z. It can be verified that f
+    satisfies the condition in the problem and f (1) + f (2) = 246 as claimed.
+
+19. [11] Find the smallest positive integer n such that the polynomial (x + 1)n − 1 is “divisible by x2 + 1
+    modulo 3”, or more precisely, either of the following equivalent conditions holds:
+
+      • there exist polynomials P, Q with integer coefficients such that (x+1)n −1 = (x2 +1)P (x)+3Q(x);
+      • or more conceptually, the remainder when (the polynomial) (x + 1)n − 1 is divided by (the
+        polynomial) x2 + 1 is a polynomial with (integer) coefficients all divisible by 3.
+
+     Answer: 8 Solution 1. We have (x + 1)2 = x2 + 2x + 1 ≡ 2x, (x + 1)4 ≡ (2x)2 ≡ −4 ≡ −1, and
+    (x + 1)8 ≡ (−1)2 = 1. So the order n divides 8, as x + 1 and x2 + 1 are relatively prime polynomials
+    modulo 3 (or more conceptually, in F3 [x]), but cannot be smaller by our computations of the 2nd and
+    4th powers.
+    Remark. This problem illustrates the analogy between integers and polynomials (specifically here,
+    polynomials over the finite field of integers modulo 3), with x2 + 1 (mod 3) taking the role of a
+                                                                                                 deg(x2 +1)
+    prime number. Indeed, we can prove analogously to Fermat’s little theorem that f (x)3         ≡ f (x)
+    (mod x2 + 1, 3) for any polynomial f (x): try to work out the proof yourself! (This kind of problem,
+    with 3 replaced by any prime p and x2 + 1 by any irreducible polynomial modulo p, is closely related
+    to the theory of (extensions of ) finite fields.)
+    Solution 2. Here’s a solution avoiding the terminology of groups and fields. Let R(x) = (x + 1)n − 1 −
+    P (x)(x2 + 1) = 3Q(x) be the remainder (here P is the quotient), whose coefficients (upon expansion)
+    must all be divisible by 3. Now consider R(i). The coefficients of the even and odd powers of x are
+    divisible by 3, so R(i) must have real and imaginary parts divisible by 3. Notice that (1 + i)2 = 2i,
+    (1 + i)4 = −4, (1 + i)6 = −8i, (1 + i)8 = 16, and that (1 + i)8 − 1 = 15, which has real and imaginary
+    parts divisible by 3. Since any even power of (1 + i) (for n ≤ 6) yields a purely real or purely imaginary
+    number with a coefficient not divisible by 3, multiplying it by 1 + i will yield an imaginary part not
+    divisible by 3. To see that n = 8 works, notice that, when taken modulo 3,
+
+                          (x + 1)8 − 1 = x8 + 8x7 + 28x6 + 56x5 + 70x4 + 56x3 + 28x2 + 8x
+                                      ≡ x8 − x7 + x6 − x5 + x4 − x3 + x2 − x
+                                      = (x2 + 1)(x6 − x5 + x2 − x)           (mod 3),
+
+    as desired.
+20. [11] What is the largest real number θ less than π (i.e. θ < π) such that
+                                                    10
+                                                    Y
+                                                          cos(2k θ) 6= 0
+                                                    k=0
+
+    and
+                                               10                     
+                                               Y               1
+                                                      1+                   = 1?
+                                                           cos(2k θ)
+                                              k=0
+
+                  2046π
+    Answer:        2047     For equality to hold, note that θ cannot be an integer multiple of π (or else sin = 0
+    and cos = ±1).
+    Let z = eiθ/2 6= ±1. Then in terms of complex numbers, we want
+                                   10                          10      k      k
+                                   Y              2           Y    (z 2 + z −2 )2
+                                       (1 + 2k+1           )=                      ,
+                                   k=0
+                                           z     + z −2k+1    k=0
+                                                                  z 2k+1 + z −2k+1
+
+
+
+                                                       Guts
+    which partially telescopes to
+                                                                       10
+                                                      z + z −1 Y 2k        k
+
+                                                    2 11    −2 11 (z + z −2 ).
+                                                   z +z
+                                                                       k=0
+
+    Using a classical telescoping argument (or looking at binary representation; if you wish we may note
+    that z − z −1 6= 0, so the ultimate telescoping identity holds2 ), this simplifies to
+                                                                  11          11
+                                                 z + z −1 z 2 − z −2                   tan(210 θ)
+                                                                                   =              .
+                                              z 2 + z −211 z − z −1
+                                                 11
+                                                                                       tan(θ/2)
+
+    Since tan x is injective modulo π (i.e. π-periodic and injective on any given period), θ works if and
+    only if θ2 + ℓπ = 1024θ for some integer ℓ, so θ = 2047
+                                                        2ℓπ
+                                                            . The largest value for ℓ such that θ < π is at
+    ℓ = 1023, which gives θ = 2046π
+                                2047 . 3
+
+    Remark. It’s also possible to do this without complex numbers, but it’s less systematic. The steps
+                                                                            2 k−1
+                                                                2k θ
+    are the same, though, first note that 1 + sec 2k θ = 1+cos
+                                                           cos 2k θ
+                                                                     = 2 cos  2
+                                                                          cos 2k θ
+                                                                                   θ
+                                                                                     using the identity cos 2x =
+         2
+    2 cos x − 1 (what does this correspond to in complex numbers?). hen we telescope using the identity
+    2 cos x = sin 2x
+               sin x (again, what does this correspond to in complex numbers?).
+
+21. [14] Define a sequence ai,j of integers such that a1,n = nn for n ≥ 1 and ai,j = ai−1,j + ai−1,j+1 for
+    all i, j ≥ 1. Find the last (decimal) digit of a128,1 .
+     Answer: 4 By applying the recursion multiple times, we find that a1,1 = 1, a2,n = nn + (n + 1)n+1 ,
+    and a3,n = nn + 2(n + 1)n+1 + (n + 2)n+2 . At this point, we can conjecture and prove by induction
+    that
+                                  m−1                        X m − 1
+                                   X    m−1             n+k
+                          am,n =                (n + k)      =               (n + k)n+k .
+                                          k                             k
+                                   k=0                         k≥0
+
+    (The second expression is convenient for dealing with boundary cases. The induction relies on m
+                                                                                                         
+                                                                                                       0   =
+     m−1                                       m      m−1       m−1
+                                                                  
+       0  on the k = 0 boundary, as well as k =  k          + k−1 for k ≥ 1.) We fix m = 128. Note that
+     127                                          127
+      k    ≡ 1 (mod  2) for all 1 ≤ k ≤ 127 and    k  ≡   0  (mod  5) for 3 ≤ k ≤ 124, by Lucas’ theorem on
+    binomial coefficients. Therefore, we find that
+                                         127                               127
+                                         X     127                           X
+                              a128,1 =                 (k + 1)k+1 ≡                (k + 1)k+1 ≡ 0     (mod 2)
+                                                  k
+                                         k=0                                 k=0
+
+    and                                                                  
+                                                      X               127
+                                   a128,1 ≡                                 (k + 1)k+1 ≡ 4 (mod 5).
+                                                                       k
+                                              k∈[0,2]∪[125,127]
+
+    Therefore, a128,1 ≡ 4 (mod 10).
+
+22. [14] Let A1 ,A2 , . . .,A2015 be distinct points on the unit circle with center O. For every two distinct
+    integers i, j, let Pij be the midpoint of Ai and Aj . Find the smallest possible value of
+                                                      X
+                                                             OPij2 .
+                                                           1≤i<j≤2015
+
+
+                   2015·2013
+                             OR 4056195                     |ai + aj |2 /4 =   (2 + 2ai · aj )/4 = 12 2015
+                                                        P                    P                             
+     Answer:           4            4     Use vectors.                                                  2    +
+    1                               2014   2015   2015·2013
+         P 2 P          2
+                                                                                            P
+    4 (|  ai | − |ai | ) ≥ 2015 · 4 − 4 =             4     , with equality if and only if     ai = 0, which
+    occurs for instance for a regular 2015-gon.
+2 The identity still holds even if z 2k − z −2k = 0 for some k ≥ 1 used in the telescoping argument: why?
+3 This indeed works, since
+                             Q10       k
+                              k=0 cos(2 θ) 6= 0: why?
+
+
+
+
+                                                              Guts
+23. [14] Let S = {1, 2, 4, 8, 16, 32, 64, 128, 256}. A subset P of S is called squarely if it is nonempty and
+    the sum of its elements is a perfect square. A squarely set Q is called super squarely if it is not a proper
+    subset of any squarely set. Find the number of super squarely sets.
+    (A set A is said to be a proper subset of a set B if A is a subset of B and A 6= B.)
+     Answer:           5 Clearly we may biject squarely sets with binary representations of perfect squares
+    between 1 and 20 + · · · + 28 = 29 − 1 = 511, so there are 22 squarely sets, corresponding to n2 for
+    n = 1, 2, . . . , 22. For convenience, we say N is (super) squarely if and only if the set corresponding to
+    N is (super) squarely.
+    The general strategy is to rule out lots of squares at time, by searching for squares with few missing
+    digits (and ideally most 1’s consecutive, for simplicity). We can restrict ourselves (for now) to odds;
+    (2k)2 is just k 2 with two additional zeros at the end. 1, 9, 25, 49, 81 are ineffective, but 121 = 27 − 7 =
+    26 + 25 + 24 + 23 + 20 immediately rules out all odd squares up to 92 , as they must be 1 (mod 8).
+    Fortunately, 222 = 4 · 112 is in our range (i.e. less than 512), ruling out all even squares up to 202 as
+    well.
+    This leaves us with 112 , 132 , 152 , 172 , 192 , 212 , 222 , with binary representations 001111001, 010101001,
+    011100001, 100100001, 101101001 (kills 172 ), 110111001 (kills 132 ), 111100100 (kills nothing by parity).
+    Thus 112 , 152 , 192 , 212 , 222 are the only super squarely numbers, for a total of 5.
+
+24. [14] ABCD is a cyclic quadrilateral with sides AB = 10, BC = 8, CD = 25, and DA = 12. A circle
+    ω is tangent to segments DA, AB, and BC. Find the radius of ω.
+                  q          √
+                     1209      8463
+     Answer:           7  OR    7   Denote E an intersection point of AD and BC. Let x = EA and
+    y = EB. Because ABCD is a cyclic quadrilateral, △EAB is similar to △ECD. Therefore, y+8  25
+                                                                                         x = 10
+          x+12    25               128      152
+    and y = 10 . We get x = 21 and y = 21 . Note that ω is the E-excircle of △EAB, so we may
+    finish by standard calculations.
+    Indeed, first we compute the semiperimeter s = EA+AB+BE
+                                                        2      = x+y+10
+                                                                    2   = 35 3 . Now the radius of ω is
+    (by Heron’s formula for area)
+                                          r                   r         √
+                                 [EAB]      s(s − x)(s − y)     1209      8463
+                           rE =         =                   =         =         .
+                                 s − AB          s − 10           7        7
+
+25. [17] Let r1 , . . . , rn be the distinct real zeroes of the equation
+
+                                           x8 − 14x4 − 8x3 − x2 + 1 = 0.
+
+    Evaluate r12 + · · · + rn2 .
+     Answer:        8   Observe that
+
+                          x8 − 14x4 − 8x3 − x2 + 1 = (x8 + 2x4 + 1) − (16x4 + 8x3 + x2 )
+                                                    = (x4 + 4x2 + x + 1)(x4 − 4x2 − x + 1).
+
+    The polynomial x4 + 4x2 + x + 1 = x4 + 15           2     x     2
+                                                     4 x + ( 2 + 1) has no real roots. On the other hand,
+                  4     2
+    let P (x) = x − 4x − x + 1. Observe that P (−∞) = +∞ > 0, P (−1) = −1 < 0, P (0) = 1 > 0,
+    P (1) = −3 < 0, P (+∞) = +∞ > 0, so by the intermediate value theorem, P (x) = 0 has four distinct
+    real roots, which are precisely the real roots of the original degree 8 equation. By Vieta’s formula on
+    P (x),
+                                                                                  X
+                            r12 + r22 + r32 + r42 = (r1 + r2 + r3 + r4 )2 − 2 · (   ri rj )
+                                                                                i<j
+                                                     2
+                                                 = 0 − 2(−4) = 8.
+
+
+
+                                                      Guts
+                    √               √              √
+26. [17] Let a = 17 and b = i 19, where i = −1. Find the maximum possible value of the ratio
+    |a − z|/|b − z| over all complex numbers z of magnitude 1 (i.e. over the unit circle |z| = 1).
+     Answer: 43 Let |a − z|/|b − z| = k. We wish to determine the minimum and maximum value of k.
+    Squaring and expansion give:
+
+                                                  |a − z|2 = |b − z|2 · k 2
+                                         |a|2 − 2a · z + 1 = (|b|2 − 2b · z + 1)k 2
+                                  |a|2 + 1 − (|b|2 + 1)k 2 = 2(a − bk 2 ) · z,
+
+    where · is a dot product of complex numbers, i.e., the dot product of vectors corresponding to the
+    complex numbers in the complex plane. Now, since z has modulus 1 but can assume any direction,
+    the only constraint on the value of k is
+
+                                      ||a|2 + 1 − (|b|2 + 1)k 2 | ≤ 2|a − bk 2 |.
+
+    Squaring again and completing the square, the inequality reduces to:
+
+                   (|a|2 − 1)2 + (|b|2 − 1)2 k 4 + 2(4a · b − (|a|2 + 1)(|b|2 + 1))k 2 ≤ 0
+                                         ((|a|2 − 1) − (|b|2 − 1)k 2 )2 − 4|a − b|2 k 2 ≤ 0
+                                                            |(|a|2 − 1) − (|b|2 − 1)k 2 | ≤ 2|a − b|k.
+
+    At this stage all the relevant expressions are constant real numbers. Denote, for simplicity, A =
+    |a|2 − 1, B = |b|2 − 1, and C = |a − b|. Then, we are looking for k such that |A − Bk 2 | ≤ 2Ck. If B = 0,
+                A                               A
+    then k ≥ | 2C |, so the minimum value is | 2C | and the maximum value is +∞. Otherwise, consider
+
+                             C 2 + AB = (|a|2 − 2a · b + |b|2 ) + (|a|2 − 1)(|b|2 − 1)
+                                        = |ab|2 − 2a · b + 1
+                                        = |ab|2 − 2ℜ(ab) + 1
+                                        = |ab − 1|2
+                       √
+    So let D = |ab−1| = C 2 + AB. We may assume B > 0 (the another case is analogous: just substitute
+    A, B with −A, −B). Then, k is determined by the following inequalities:
+
+                                                Bk 2 + 2Ck − A ≥ 0
+                                                Bk 2 − 2Ck − A ≤ 0
+
+    The first inequality gives k ≤ −C−D
+                                     B  or k ≥ −C+D
+                                                 B  , and the second gives C−D
+                                                                            B  ≤ k ≤ C+D
+                                                                                      B . Combining,
+                C−D           C+D
+    this gives | B | ≤ k ≤ | B |, as claimed.
+    To summarize the general answer, let A = |a|2 − 1, B = |b|2 − 1, C = |a − b|, D = |ab − 1|. Then, if
+                       A
+    |b| = 1, min is | 2C | and max is +∞; otherwise, min is | C−D              C+D
+                                                               B | and max is | B |.
+                               √           √                                     √   √         √
+    In the special case a = 17 and b = 19i, we have A = 16, B = 18, C = 17 − 19i = 36 = 6,
+              √
+    and D = 17 · 19 + 1 = 18. Thus the answer is C+D  B    = 6+18    4
+                                                               18 = 3 .
+
+27. [17] Let a, b be integers chosen independently and uniformly at random from the
+                                                                                  set {0, 1, 2, . . . , 80}.
+    Compute the expected value of the remainder when the binomial coefficient ab = b!(a−b)!
+                                                                                        a!
+                                                                                               is divided
+                  0            a
+                                
+    by 3. (Here 0 = 1 and b = 0 whenever a < b.)
+                 1816
+    Answer:      6561   By Lucas’ Theorem we’re looking at
+
+                                                      4  
+                                                      Y  ai
+                                                      i=1
+                                                              bi
+
+
+                                                      Guts
+    where the ai and bi are the digits of a and b in base 3. If any ai < bi , then the product is zero modulo
+    3.
+    Otherwise, the potential residues are 20 = 1, 21 = 2, 22 = 1, 10 = 1, 11 = 1, 00 = 1.
+                                                                                     
+
+    So each term in the product has a 13 chance of being zero; given that everything is nonzero, each term
+    has a 16 chance of being 2 and a 65 chance of being 1. The probability that an even number of terms
+    are 1 given that none are zero is then given by the roots of unity filter
+
+                                 ( 56 + 16 · (1))4 + ( 56 + 61 · (−1))4   81 + 16    97
+                                                                        =         =     .
+                                                    2                       162     162
+
+    Thus the expected value is
+                                              4         
+                                              2         97     1816
+                                                    2−       =      .
+                                              3        162     6561
+
+28. [17] Let w, x, y, and z be positive real numbers such that
+
+                                                 0 6= cos w cos x cos y cos z
+                                                2π = w + x + y + z
+                                           3 tan w = k(1 + sec w)
+                                           4 tan x = k(1 + sec x)
+                                            5 tan y = k(1 + sec y)
+                                            6 tan z = k(1 + sec z).
+                          1
+    (Here sec t denotes cos t when cos t 6= 0.) Find k.
+                  √
+     Answer:        19 From the identity tan u2 = 1+cos
+                                                      sin u                                      w         x
+                                                            u , the conditions work out to 3 tan 2 = 4 tan 2 =
+          y                                                            y
+    5 tan 2 = 6 tan z2 = k. Let a = tan w2 , b = tan x2 , c = tan 2 , and d = tan z2 . Using the identity
+                     tan M +tan N
+    tan(M + N ) = 1−tan   M tan N , we obtain
+
+                                                           w+x
+                                                                 + tan y+z
+                                                                                      
+                                                       tan
+                                              
+                                 w+x y+z                     2          2
+                       tan          +              =
+                                                     1 − tan w+x    tan y+z
+                                                                           
+                                  2   2                        2         2
+                                                          a+b    c+d
+                                                         1−ab + 1−cd
+                                                   =                            
+                                                                 a+b         c+d
+                                                       1−       1−ab        1−cd
+
+                                                   a + b + c + d − abc − abd − bcd − acd
+                                                   =                                     .
+                                                  1 + abcd − ab − ac − ad − bc − bd − cd
+
+    Because x + y + z + w = π, we get that tan x+y+z+w
+                                                            
+                                                       2      = 0 and thus a+b+c+d = abc+abd+bcd+acd.
+    Substituting
+               √ a, b, c,
+                       √  d corresponding to the variable k,  we obtain that k 3 − 19k = 0. Therefore,√k can
+    be only 0, 19, − 19. However, k = 0 is impossible√ as w, x, y, z will all be 0. Also, k = − 19 is
+    impossible as w, x, y, z will exceed π. Therefore, k = 19.
+
+29. [20] Let ABC be a triangle whose incircle has center I and is tangent to BC, CA, AB, at D, E, F .
+                                           \ of the circumcircle of ABC. Suppose P is a point on
+    Denote by X the midpoint of major arc BAC
+    line XI such that DP ⊥ EF .
+    Given that AB = 14, AC = 15, and BC = 13, compute DP .
+                  √
+     Answer: 4 5 5 Let H be the orthocenter of triangle DEF . We claim that P is the midpoint of DH.
+    Indeed, consider an inversion at the incicrle of ABC, denoting the inverse of a point with an asterik.
+    It maps ABC to the nine-point circle of △DEF . According to ∠IAX = 90◦ , we have ∠A∗ X ∗ I = 90◦ .
+    Hence line XI passes through the point diametrically opposite to A∗ , which is the midpoint of DH,
+    as claimed.
+
+
+                                                       Guts
+    The rest is a straightforward computation. The inradius of △ABC is r = 4. The length of EF is given
+                         16
+    by EF = 2 AF   ·r
+                 AI =
+                        √
+                          5
+                            . Then,
+                                                   2
+                                             1               1                   64   16
+                                DP 2 =                         4r2 − EF 2 = 42 −
+                                                                         
+                                               DH        =                          =    .
+                                             2               4                    5    5
+                   √
+    Hence DP = 4 5 5 .
+    Remark. This is also not too bad of a coordinate bash.
+30. [20] Find the sum of squares of all distinct complex numbers x satisfying the equation
+
+                   0 = 4x10 − 7x9 + 5x8 − 8x7 + 12x6 − 12x5 + 12x4 − 8x3 + 5x2 − 7x + 4.
+
+
+                    7
+     Answer:      − 16     For convenience denote the polynomial by P (x). Notice 4 + 8 = 7 + 5 = 12 and
+    that the consecutive terms 12x6 − 12x5 + 12x4 are the leading terms of 12Φ14 (x), which is suggestive.
+    Indeed, consider ω a primitive 14-th root of unity; since ω 7 = −1, we have 4ω 10 = −4ω 3 , −7ω 9 = 7ω 2 ,
+    and so on, so that
+                                P (ω) = 12(ω 6 − ω 5 + · · · + 1) = 12Φ14 (ω) = 0.
+    Dividing, we find
+                                      P (x) = Φ14 (x)(4x4 − 3x3 − 2x2 − 3x + 4).
+    This second polynomial is symmetric; since 0 is clearly not a root, we have
+                                                                          1 2        1
+                       4x4 − 3x3 − 2x2 − 3x + 4 = 0 ⇐⇒ 4(x +                ) − 3(x + ) − 10 = 0.
+                                                                          x          x
+    Setting y = x + 1/x and solving the quadratic gives y = 2 and y = −5/4 as solutions; replacing
+    y with √x + 1/x and solving the two resulting quadratics give the double root x = 1 and the roots
+    (−5 ± i 39)/8 respectively. Together with the primitive fourteenth roots of unity, these are all the
+    roots of our polynomial.
+    Explicitly, the roots are
+                                                                                             √
+                            eπi/7 , e3πi/7 , e5πi/7 , e9πi/7 , e11πi/7 , e13πi/7 , 1, (−5 ± i 39)/8.
+
+    The sum of squares of the roots of unity (including 1) is just 0 by symmetry (or a number of other
+                                                                       2
+    methods). The sum of the squares of the final conjugate pair is 2(5 8−39)
+                                                                         2    = − 14      7
+                                                                                  32 = − 16 .
+
+31. [20] Define a power cycle to be a set S consisting of the nonnegative integer powers of an integer a,
+    i.e. S = {1, a, a2 , . . . } for some integer a. What is the minimum number of power cycles required such
+    that given any odd integer n, there exists some integer k in one of the power cycles such that n ≡ k
+    (mod 1024)?
+    Answer:      10      Solution 1. Partition the odd residues mod 1024 into 10 classes:
+
+       • Class 1: 1 (mod 4).
+       • Class n (2 ≤ n ≤ 9): 2n − 1 (mod 2n+1 ).
+       • Class 10: −1 (mod 1024).
+
+    Let Sa be the power cycle generated by a. If a is in class 1, all of Sa is in class 1. If a is in class n
+    (2 ≤ n ≤ 9), then Sa is in the union of class n and the residues 1 (mod 2n+1 ). If a is in class 10, then
+    Sa is in the union of class n and the residues 1 (mod 1024). Therefore, Sa cannot contain two of the
+    following residues: 5, 22 − 1, 23 − 1, . . . 210 − 1, and that at least 10 cycles are needed.
+    Note that 5128 −1 = (5−1)(5+1)(52 +1) · · · (564 +1) has exactly 9 factors of 2 in its prime factorization,
+    while 5256 − 1 = (5128 − 1)(5128 + 1) is divisible by 1024 so the order of 5 modulo 1024, the smallest
+
+
+                                                             Guts
+    positive power of 5 that is congruent to 1, is 256. Observe that among 50 , 51 , . . . 5255 , the ratio between
+    any two is a positive power of 5 smaller than 5256 , so the ratio is not congruent to 1 and any two terms
+    are not congruent mod 1024. In addition, all terms are in class 1, and class 1 has 256 members, so S5
+    contains members congruent to each element of class 1.
+    Similarly, let 2 ≤ n ≤ 9. Then the order of a, where a = 2n − 1, is 210−n . The 29−n terms
+                       10−n
+    a1 , a3 , . . . a2      −1
+                               are pairwise not congruent and all in class n. Class n only has 29−n members,
+    so Sa contains members congruent to each element of class n.
+    Finally, S−1 contains members congruent to the element of class 10.
+    The cycles S5 , S−1 , and 8 cycles Sa cover all the residues mod 1024, so the answer is 10.
+    Solution 2. Lemma. Given a positive integer n ≥ 3, there exists an odd integer x such that the
+    order of x modulo 2n is 2n−2 .
+    Proof. We apply induction on n. The base cases of n = 3, 4 are clearly true with x = 3, so suppose we
+    have the statement holds for n − 1 and we wish to show it for n where n ≥ 5. Suppose no such integer
+                            n−3                                                       n−4         n−4
+    x exists, so we have x2     ≡ 1 (mod 2n ) for all odd x. But then remark that (x2     − 1)(x2     + 1) ≡ 0
+                                         n−4
+            n                          2
+    (mod 2 ). As n − 4 ≥ 1 we have x         + 1 ≡ 2 (mod 4) as all squares are 1 (mod 4), so it follows for
+                                                              n−4
+    the above relation to be true we require 2n−1 divides x2      − 1 for all odd x. However, by taking x to
+    have order 2n−3 modulo 2n−1 (which exists by the inductive hypothesis) we get a contradiction so we
+    are done. 
+    Now, let x have order 28 modulo 210 . Remark that if for some integer k we had xk ≡ −1 (mod 210 ), we
+    would have x2k ≡ 1 (mod 210 ) so 27 | k. In that case k is even so as x is odd we have xk ≡ 1 (mod 4)
+    but −1 + 1024m is never 1 (mod 4) for any integer m so it follows −1 is not equal to xk modulo 1024
+    for any integer k. Thus it follows that when we let S to be the set of powers of x, then no two elements
+    in S and −S are congruent modulo 1024. As the order of x is 256 and there are 512 possible odd
+    remainders upon dividing by 1024, it immediately follows that every integer x is congruent modulo
+    1024 to ±xk for some 1 ≤ k ≤ 256 and some choice of sign.
+                                                              7     8
+    Now, it is easy so see that x, −x, −x2 , −x4 , . . . , −x2 , −x2 generating 10 power cycles works (xa for
+                                                k                                                      k
+    any a is in the first, and then −x2 a for odd a is in the power cycle generated by −x2 ). To show
+    that we cannot do any better suppose there exist 9 power cycles which include all odd integers modulo
+                                          k
+    1024. Then remark that −x2 is congruent to a number in a power cycle modulo 1024 if and only if
+                                                                          k
+    the power cycle is generated by an integer congruent to x−2 ·a (mod 1024) where a is an odd integer.
+    It follows that 9 integers must be congruent to −xa1 , −x2a2 , . . . , −x256a9 (mod 1024) for some odd
+    integers a1 , a2 , . . . , a9 . But then 3 is clearly not in any of the power cycles, contradiction so it follows
+    we must have at least 10 power cycles so we are done.
+32. [20] A wealthy king has his blacksmith fashion him a large cup, whose inside is a cone of height 9
+    inches and base diameter 6 inches (that is, the opening at the top of the cup is 6 inches in diameter).
+    At one of his many feasts, he orders the mug to be filled to the brim with cranberry juice.
+    For each positive integer n, the king stirs his drink vigorously and takes a sip such that the height
+    of fluid left in his cup after the sip goes down by n12 inches. Shortly afterwards, while the king is
+    distracted, the court jester adds pure Soylent to the cup until it’s once again full. The king takes sips
+    precisely every minute, and his first sip is exactly one minute after the feast begins.
+    As time progresses, the amount of juice consumed by the king (in cubic inches) approaches a number
+    r. Find r.
+                      3
+                             √
+                      −2187 3
+     Answer: 216π 8π    2       First, we find the total amount of juice consumed. We can simply subtract
+    the amount of juice remaining at infinity from the initial amount of juice in the cup, which of course
+    is simply the volume of the cup; we’ll denote this value by V .
+    Since volume in the cup varies as the cube of height, the amount of juice remaining in the cup after m
+    minutes is
+                                    m           3          m          ! 3
+                                    Y    9 − n12            Y         1
+                               V ·                  =V ·        1− 2          .
+                                   n=1
+                                            9               n=1
+                                                                    9n
+
+
+                                                      Guts
+    We can now factor the term inside the product to find
+                                  m
+                                                      !3                3
+                                 Y   (3n + 1)(3n − 1)          (3m + 1)!
+                             V                            =V                .
+                                 n=1
+                                            9n2                33m (m!)3
+
+    If remains to evaluate the limit of this expression as m goes to infinity.
+    However, by Stirling’s approximation, we have
+
+                                                         ( 3n+1  3n+1
+                                                                          p
+                                       (3m + 1)!             e )         · 2π(3n + 1)
+                                   lim           = lim
+                                  m→∞ 33m (m!)3                ( 3n
+                                                                         p
+                                                   m→∞
+                                                                  e )
+                                                                      3n   (2πn)3
+                                                                    √            3n
+                                                         (3n + 1) 3 3n + 1
+                                                 = lim
+                                                   m→∞       2πne            3n
+                                                    √
+                                                   3 3
+                                                 =     .
+                                                    2π
+    Therefore the total amount of juice the king consumes is
+                              √ !3  2                          √ !                √
+                                                      8π 3 − 81 3     216π 3 − 2187 3
+                                                  
+                            3 3           3 ·π·9
+                     V −V            =                              =                 .
+                             2π               3            8π 3              8π 2
+
+    Remark. We present another way to calculate the limit at m → ∞ of f (m) = 3(3m+1)!
+                                                                                3m (m!)3 . We have
+
+
+
+                                                (3m + 4)!                    (m + 32 )(m + 34 )
+                                f (m + 1) =                      = f (m)                        ,
+                                              33m+3 (m + 1)!3                   (m + 1)2
+    whence we can write
+                                                        cΓ(m + 23 )Γ(m + 34 )
+                                              f (m) =
+                                                            Γ(m + 1)2
+    for some constant c. We can find c by equating the expressions at m = 0; we have
+                                                               cΓ( 32 )Γ( 43 )
+                                                1 = f (0) =                    ,
+                                                                 Γ(1)2
+
+    so that c = Γ(1)2 /Γ( 23 )Γ( 43 ).
+    Of course, Γ(1) = 0! = 1. We can evaluate the other product as follows:
+                                              
+                               2     4     1     2      1     1      π       2π
+                           Γ      Γ      = Γ        Γ      = ·            = √ .
+                               3     3     3     3      3     3 sin π/3     3 3
+    Here the first step follows
+                         √      from Γ(n + 1) = nΓ(n), while the second follows from Euler’s reflection
+    formula. Thus c = 3 3/2π. We can now compute
+                                                              √
+                                     cΓ(m + 32 )Γ(m + 43 )   3 3      Γ(m + 32 )Γ(m + 43 )
+                   lim f (m) = lim                 2
+                                                           =      lim                      .
+                  m→∞           m→∞       Γ(m + 1)            2π m→∞     Γ(m + 1)2
+                                                                               √
+    Since limn→∞ Γ(n + α)/[Γ(n)nα ] = 1, this final limit is 1 and f (m) → 3 3/2π as m → ∞.
+33. [25] Let N denote the sum of the decimal digits of 1000
+                                                                
+                                                             100 . Estimate the value of N . If your answer is
+    a positive integer A written fully in decimal notation (for example, 521495223), your score will be the
+                                               |A−N |
+    greatest integer not exceeding 25 · (0.99)        . Otherwise, your score will be zero.
+     Answer:       621    http://www.wolframalpha.com/input/?i=sum+of+digits+of+nCr(1000,100)
+    To see this, one can estimate there are about 150 digits, and we expect the digits to be roughly random,
+    for 150 · 4.5 ≈ 675, which is already very close to the actual answer. The actual number of digits is
+    140, and here 140 · 4.5 = 630 is within 9 of the actual answer.
+
+
+                                                        Guts
+34. [25] For an integer n, let f (n) denote the number of pairs (x, y) of integers such that x2 + xy + y 2 = n.
+    Compute the sum
+                                                      6
+                                                   10
+                                                   X
+                                                        nf (n).
+                                                     n=1
+                                          b
+    Write your answer in the form a · 10 , where b is an integer and 1 ≤ a < 10 is a decimal number.
+    If your answer is written in this form, your score will be max{0, 25 − ⌊100|log10 (A/N )|⌋)}, where
+    N = a · 10b is your answer to this problem and A is the actual answer. Otherwise, your score will be
+    zero.
+     Answer:     1.813759629294 · 1012    Rewrite the sum as
+                                              X
+                                                       (x2 + xy + y 2 ),
+                                           x2 +xy+y 2 ≤106
+
+    where the sum is over all pairs (x, y) of integers with x2 + xy + y 2 ≤ 106 . We can find a crude upper
+    bound for this sum by noting that
+                                                     3     x     2     3
+                                   x2 + xy + y 2 = x2 +        + y ≥ x2 ,
+                                                     4       2           4
+    so each term of this sum has |x| ≤ √23 103 . Similarly, |y| ≤ √23 103 . Therefore, the number of terms in
+    the sum is at most                                   2
+                                                4
+                                               √ 103 + 1 ≈ 106 .
+                                                 3
+    (We are throwing away “small” factors like 16  3 in the approximation.) Furthermore, each term in the
+    sum is at most 106 , so the total sum is less than about 1012 . The answer 1 · 1012 would unfortunately
+    still get a score of 0.
+    For a better answer, we can approximate the sum by an integral:
+                          X                       ZZ
+                                   2         2
+                                 (x + xy + y ) ≈                 (x2 + xy + y 2 ) dy dx.
+                      x2 +xy+y 2 ≤106                        x2 +xy+y 2 ≤106
+
+                                                      √            
+    Performing the change of variables (u, v) = 23 x, 21 x + y and then switching to polar coordinates
+              √
+    (r, θ) = ( u2 + v 2 , tan−1 (v/u)) yields
+                                                                 2
+                    ZZ                                              ZZ
+                                       (x2 + xy + y 2 ) dy dx = √                 (u2 + v 2 ) dv du
+                           2      2
+                         x +xy+y ≤10 6                            3     2    2
+                                                                       u +v ≤10 6
+
+                                                                    Z 2π Z 103
+                                                                 2
+                                                              =√               r3 dr dθ
+                                                                  3 0      0
+                                                                    Z 3
+                                                                4π 10 3
+                                                              =√          r dr
+                                                                  3 0
+                                                                 π
+                                                              = √ · 1012 .
+                                                                  3
+    This is approximately 1.8138 · 1012 , which is much closer to the actual answer. (An answer of 1.8 · 1012
+    is good enough for full credit.)
+    The answer can also be computed exactly by the Common Lisp code:
+
+    (defconstant +MAX+ 1e6)
+    (defvar +lower+ -2000)
+    (defvar +upper+ 2000)
+    (princ
+
+
+                                                     Guts
+      (loop for x from +lower+ to +upper+ sum
+            (loop for y from +lower+ to +upper+
+                  sum
+                  (let ((S (+ (* x x) (* x y) (* y y))))
+                    (if (and (<= S +MAX+) (> S 0)) S 0)))))
+
+35. [25] Let P denote the set of all subsets of {1, . . . , 23}. A subset S ⊆ P is called good if whenever A, B
+    are sets in S, the set (A \ B) ∪ (B \ A) is also in S. (Here, A \ B denotes the set of all elements in A
+    that are not in B, and B \ A denotes the set of all elements in B that are not in A.) What fraction
+    of the good subsets of P have between 2015 and 3015 elements, inclusive?
+    If your answer is a decimal number or a fraction (of the form m/n, where m and n are positive integers),
+    then your score on this problem will be equal to max{0, 25 − ⌊1000|A − N |⌋}, where N is your answer
+    and A is the actual answer. Otherwise, your score will be zero.
+                    18839183877670041942218307147122500601235
+     Answer:        47691684840486192422095701784512492731212 ≈ 0.3950203047068107     Let n = 23, and ℓ =
+    ⌊n/2⌋ = 11.
+    We use the well-known rephrasing of the symmetric difference ((A \ B) ∪ (B \ A)) in terms of addition
+    modulo 2 of “indicators/characteristic vectors”. So we simply want the number nℓ 2 of dimension ℓ
+    subspaces of the F := F2 -vector space V := Fn2 . Indeed, good subsets of 2d elements simply correspond
+    to dimension d subspaces (in particular, good subsets can only have sizes equal to powers of |F | = 2,
+    and 2ℓ is the only power between 2015 and 3015, inclusive).
+    To do this, it’s easier to first count the number of (ordered) tuples of ℓ linearly independent elements of
+    V , and divide (to get the subspace count) by the number of (ordered) tuples of ℓ linearly independent
+    elements of any ℓ-dimensional subspace of V (a well-defined number independent of the choice of
+    subspace).
+    In general, if we want to count tuples of m linearly independent elements in an n-dimensional space
+    (with n ≥ m), just note that we are building on top of (0) (the zero-dimensional subspace), and once
+    we’ve chosen r ≤ m elements (with 0 ≤ r ≤ m − 1), there are 2n − 2r elements linearly independent
+    to the previous r elements (which span a subspace of dimension r, hence of 2r “bad” elements). Thus
+    the number of m-dimensional subspaces of an n-dimensional space is
+
+                                           (2n − 20 )(2n − 21 ) · · · (2n − 2m−1 )
+                                 
+                                 n
+                                      := m                                         ,
+                                 m 2      (2 − 20 )(2m − 21 ) · · · (2m − 2m−1 )
+
+    a “Gaussian binomial coefficient.”
+    We want to estimate
+                                               n          23
+                                                            
+                                               ℓ 2   1    11 2
+                                           Pn   n
+                                                   = P11       .
+                                            m=0 m 2
+                                                     2 m=0 23
+                                                                    m 2
+
+                           n         n
+                                      
+    To do this, note that m 2 = n−m 2 , so we may restrict our attention to the lower half. Intuitively, the
+    Gaussian binomial coefficients should decay exponentially (or similarly quickly) away from the center;
+    indeed, if m ≤ n/2, then
+
+                                                  (2m − 20 ) · 2m−1
+                                      
+                                  n        n
+                                        /       =                   ≈ 22m−1−n .
+                               m−1 2 m 2            (2n − 2m−1 )
+
+    So in fact, the decay is super-exponential, starting (for n = 23 odd and m ≤ ℓ = 11) at an ≈ 41 rate.
+    So most of the terms (past the first 2 to 4, say) are negligible in our estimation. If we use the first two
+    terms, we get an approximation of 12 · 1+1 1 = 52 = 0.4, which is enough for 20 points. (Including the
+                                                4
+    next term gives an approximation of 32
+                                        81 ≈ 0.3950617, which is good enough to get full credit.)
+    To compute the exact answer, we used the following python3 code:
+
+
+
+                                                     Guts
+    from functools import lru_cache
+    from fractions import Fraction
+
+    @lru_cache(maxsize=None)
+    def gauss_binom(n, k, e):
+        if k < 0 or k > n:
+            return 0
+        if k == 0 or k == n:
+            return 1
+        return e ** k * gauss_binom(n - 1, k, e) + \
+                gauss_binom(n - 1, k - 1, e)
+
+    N = 23
+    K = 11
+    good = gauss_binom(N, K, 2)
+    total = sum(gauss_binom(N, i, 2) for i in range(N + 1))
+    print(Fraction(good, total))
+    print(float(good/total))
+
+36. [25] A prime number p is twin if at least one of p + 2 or p − 2 is prime and sexy if at least one of p + 6
+    and p − 6 is prime.
+    How many sexy twin primes (i.e. primes that are both twin and sexy) are there less than 109 ? Express
+    your answer as a positive integer N in decimal notation;  for example, 521495223.     If your answer is
+                                                                      1
+                                                                                 
+    in this form, your score for this problem will be max 0, 25 − ⌊ 10000 |A − N | }, where A is the actual
+    answer to this problem. Otherwise, your score will be zero.
+     Answer:      1462105 The Hardy-Littlewood conjecture states that given a set A of integers, the
+    number of integers x such that x + a is a prime for all a ∈ A is
+                                                                 w(p;A)
+                                              x      Y1− p
+                                                                  (1 + o(1))
+                                          (ln x) |A|
+                                                     p
+                                                       (1 − p1 )k
+
+    where w(p; A) is the number of distinct residues of A modulo p and the o(1) term goes to 0 as x goes to
+    infinity. Note that for the 4 tuples of the form (0, ±2, ±6), w(p; A) = 3, and using the approximation
+                                        k
+      1−k/p
+              ≈ 1 − k2 /p2 ≈ (1 − p12 )(2) , we have
+                      
+    (1−1/p)k
+
+                                                           k  (k2)  (k2)  (k2)
+                            Y 1 − kp                   6 (2)
+                                                   
+                                                                4      9        9
+                                               ≈              ·              ≈
+                            p>3
+                                  (1 − p1 )k           π2       3      8       10
+
+    Applying this for the four sets A = (0, ±2, ±6), x = 109 (and approximating ln x = 20 and just taking
+    the p = 2 and p = 3 terms, we get the approximate answer
+                                                          3
+                                       109 1 − 12 1 − 23   9
+                                     4· 3 1 3 1 3               = 1640250
+                                       20 ( 2 ) ( 3 )     10
+    One improvement we can make is to remove the double-counted tuples, in particular, integers x such
+    that x, x + 6, x − 6, and one of x ± 2 is prime. Again by the Hardy-Littlewood conjecture, the number
+    of such x is approximately (using the same approximations)
+                                                             6
+                                          109 1 − 12 1 − 23  9
+                                       2· 4 1 4 1 4               ≈ 90000
+                                          20 ( 2 ) ( 3 )     10
+
+    Subtracting gives an estimate of about 1550000. Note that this is still an overestimate, as ln 109 is
+                                                  k
+                             1−k/p           1 (2)
+    actually about 20.7 and (1−1/p) k < (1 − p2 )   .
+    Here is the C++ code that we used to generate the answer:
+
+
+                                                          Guts
+#include<iostream>
+#include<cstring> // memset
+using namespace std;
+
+const int MAXN = 1e9;
+bool is_prime[MAXN + 6];
+
+int main(){
+    // Sieve of Eratosthenes
+    memset(is_prime, true, sizeof(is_prime));
+    is_prime[0] = is_prime[1] = false;
+    for (int i=2; i<MAXN + 6; i++){
+        if (is_prime[i]){
+            for (int j=2 * i; j < MAXN + 6; j += i){
+                is_prime[j] = false;
+            }
+        }
+    }
+
+    // Count twin sexy primes.
+    int ans = 1; // 5 is the only twin sexy prime < 6.
+    for (int i=6; i<MAXN; i++){
+        if (is_prime[i]
+            && (is_prime[i-6] || is_prime[i+6])
+            && (is_prime[i-2] || is_prime[i+2])) {
+             ans++;
+        }
+    }
+
+    cout << ans << endl;
+
+    return 0;
+}
+
+
+
+
+                                     Guts
+

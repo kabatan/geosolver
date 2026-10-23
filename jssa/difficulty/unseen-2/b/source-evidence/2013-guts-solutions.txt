@@ -1,0 +1,736 @@
+                                              HMMT 2013
+                                        Saturday 16 February 2013
+                                                 Guts Round
+1. [4] Arpon chooses a positive real number k. For each positive integer n, he places a marker at the point
+   (n, nk) in the (x, y) plane. Suppose that two markers whose x coordinates differ by 4 have distance
+   31. What is the distance between the markers at (7, 7k) and (19, 19k)?
+   Answer:      93 The difference of the x-coordinates of the markers is 12 = 3 · 4. Thus, by similar
+  triangles (where we draw right triangles whose legs are parallel to the axes and whose hypotenuses lie
+  along the line y = kx), the distance between the markers is 3 · 31 = 93.
+2. [4] The real numbers x, y, z satisfy 0 ≤ x ≤ y ≤ z ≤ 4. If their squares form an arithmetic progression
+   with common difference 2, determine the minimum possible value of |x − y| + |y − z|.
+                   √                                          2
+                                                                −x2     4
+    Answer: 4 − 2 3 Clearly |x − y| + |y − z| = z − x = zz+x        = z+x , which is minimized when z = 4
+           √                               √           √
+   and x = 12. Thus, our answer is 4 − 12 = 4 − 2 3.
+3. [4] Find the rightmost non-zero digit of the expansion of (20)(13!).
+   Answer:        6 We can rewrite this as (10 ∗ 2)(13 ∗ 12 ∗ 11 ∗ 10 ∗ 9 ∗ 8 ∗ 7 ∗ 6 ∗ 5 ∗ 4 ∗ 3 ∗ 2 ∗ 1) =
+  (103 )(2 ∗ 13 ∗ 12 ∗ 11 ∗ 9 ∗ 8 ∗ 7 ∗ 6 ∗ 4 ∗ 3); multiplying together the units digits for the terms not equal
+  to 10 reveals that the rightmost non-zero digit is 6.
+4. [4] Spencer is making burritos, each of which consists of one wrap and one filling. He has enough
+   filling for up to four beef burritos and three chicken burritos. However, he only has five wraps for the
+   burritos; in how many orders can he make exactly five burritos?
+   Answer: 25 Spencer’s burrito-making can include either 3, 2, or 1 chicken burrito; consequently,
+  he has 53 + 52 + 51 = 25 orders in which he can make burritos.
+        ¡¢ ¡¢ ¡¢
+
+5. [5] Rahul has ten cards face-down, which consist of five distinct pairs of matching cards. During each
+   move of his game, Rahul chooses one card to turn face-up, looks at it, and then chooses another to
+   turn face-up and looks at it. If the two face-up cards match, the game ends. If not, Rahul flips both
+   cards face-down and keeps repeating this process. Initially, Rahul doesn’t know which cards are which.
+   Assuming that he has perfect memory, find the smallest number of moves after which he can guarantee
+   that the game has ended.
+   Answer:       4   Label the 10 cards a1 , a2 , ..., a5 , b1 , b2 , ..., b5 such that ai and bi match for 1 ≤ i ≤ 5.
+
+  First, we’ll show that Rahul cannot always end the game in less than 4 moves, in particular, when
+  he turns up his fifth card (during the third move), it is possible that the card he flips over is not one
+  which he has yet encountered; consequently, he will not guarantee being able to match it, so he cannot
+  guarantee that the game can end in three moves.
+  However, Rahul can always end the game in 4 moves. To do this, he can turn over 6 distinct cards in
+  his first 3 moves. If we consider the 5 sets of cards {a1 , b1 }, {a2 , b2 }, {a3 , b3 }, {a4 , b4 }, {a5 , b5 }, then by
+  the pigeonhole principle, at least 2 of the 6 revealed cards must be from the same set. Rahul can then
+  turn over those 2 cards on the fourth move, ending the game.
+6. [5] Let R be the region in the Cartesian plane of points (x, y) satisfying x ≥ 0, y ≥ 0, and x + y +
+   ⌊x⌋ + ⌊y⌋ ≤ 5. Determine the area of R.
+   Answer: 29 We claim that a point in the first quadrant satisfies the desired property if the point
+  is below the line x + y = 3 and does not satisfy the desired property if it is above the line.
+  To see this, for a point inside the region, x + y < 3 and ⌊x⌋ + ⌊y⌋ ≤ x + y < 3 However, ⌊x⌋ + ⌊y⌋ must
+  equal to an integer. Thus, ⌊x⌋ + ⌊y⌋ ≤ 2. Adding these two equations, x + y + ⌊x⌋ + ⌊y⌋ < 5, which
+  satisfies the desired property. Conversely, for a point outside the region, ⌊x⌋+⌊y⌋+{x}+{y} = x+y > 3
+  However, {x} + {y} < 2. Thus, ⌊x⌋ + ⌊y⌋ > 1, so ⌊x⌋ + ⌊y⌋ ≥ 2, implying that x + y + ⌊x⌋ + ⌊y⌋ > 5.
+
+
+                                                   Guts Round
+    To finish, R is the region bounded by the x-axis, the y-axis, and the line x + y = 3 is a right triangle
+    whose legs have length 3. Consequently, R has area 92 .
+ 7. [5] Find the number of positive divisors d of 15! = 15 · 14 · · · · · 2 · 1 such that gcd(d, 60) = 5.
+     Answer: 36 Since gcd(d, 60) = 5, we know that d = 5i d′ for some integer i > 0 and some integer
+    d′ which is relatively prime to 60. Consequently, d′ is a divisor of (15!)/5; eliminating common factors
+    with 60 gives that d′ is a factor of (72 )(11)(13), which has (2 + 1)(1 + 1)(1 + 1) = 12 factors. Finally,
+    i can be 1, 2, or 3, so there are a total of 3 · 12 = 36 possibilities.
+ 8. [5] In a game, there are three indistinguishable boxes; one box contains two red balls, one contains two
+    blue balls, and the last contains one ball of each color. To play, Raj first predicts whether he will draw
+    two balls of the same color or two of different colors. Then, he picks a box, draws a ball at random,
+    looks at the color, and replaces the ball in the same box. Finally, he repeats this; however, the boxes
+    are not shuffled between draws, so he can determine whether he wants to draw again from the same
+    box. Raj wins if he predicts correctly; if he plays optimally, what is the probability that he will win?
+     Answer: 65 Call the box with two red balls box 1, the box with one of each color box 2, and the
+    box with two blue balls box 3. Without loss of generality, assume that the first ball that Bob draws is
+    red. If Bob picked box 1, then he would have picked a red ball with probability 1, and if Bob picked
+    box 2, then he would have picked a red ball with probability 21 . Therefore, the probability that he
+    picked box 1 is 1+1 1 = 32 , and the probability that he picked box 2 is 31 . We will now consider both
+                        2
+    possible predictions and find which one gives a better probability of winning, assuming optimal play.
+
+    If Bob predicts that he will draw two balls of the same color, then there are two possible plays: he
+    draws from the same box, or he draws from a different box. If he draws from the same box, then in the
+    2                                                                                   1
+    3 chance that he originally picked box 1, he will always win, and in the 3 chance that he picked box
+                                     1                               2     1 1        5
+    2, he will win with probability 2 , for a total probability of 3 + 3 · 2 = 6 . If he draws from a different
+    box, then if he originally picked box 1, he will win with probability 41 and if he originally picked box
+    2, he will win with probability 21 , for a total probability of 32 · 41 + 13 · 12 = 31 .
+
+    If Bob predicts that he will draw two balls of different colors, then we can consider the same two possible
+    plays. Using similar calculations, if he draws from the same box, then he will win with probability 61 ,
+    and if he draws from a different box, then he will win with probability 23 . Looking at all cases, Bob’s
+    best play is to predict that he will draw two balls of the same color and then draw the second ball from
+    the same box, with a winning probability of 65 .
+ 9. [6] I have 8 unit cubes of different colors, which I want to glue together into a 2 × 2 × 2 cube. How
+    many distinct 2 × 2 × 2 cubes can I make? Rotations of the same cube are not considered distinct, but
+    reflections are.
+     Answer: 1680 Our goal is to first pin down the cube, so it can’t rotate. Without loss of generality,
+    suppose one of the unit cubes is purple, and let the purple cube be in the top¡ ¢ left front position. Now,
+    look at the three positions that share a face with the purple cube. There are 73 ways to pick the three
+    cubes that fill those positions and two ways to position them that are rotationally distinct. Now, we’ve
+    taken care of any
+                    ¡ ¢ possible rotations, so there are simply 4! ways to position the final four cubes. Thus,
+    our answer is 73 · 2 · 4! = 1680 ways.
+10. [6] Wesyu is a farmer, and she’s building a cao (a relative of the cow) pasture. She starts with a
+    triangle A0 A1 A2 where angle A0 is 90◦ , angle A1 is 60◦ , and A0 A1 is 1. She then extends the pasture.
+    First, she extends A2 A0 to A3 such that A3 A0 = 21 A2 A0 and the new pasture is triangle A1 A2 A3 .
+    Next, she extends A3 A1 to A4 such that A4 A1 = 16 A3 A1 . She continues, each time extending An An−2
+    to An+1 such that An+1 An−2 = 2n1−2 An An−2 . What is the smallest K such that her pasture never
+    exceeds an area of K?
+                  √
+     Answer:        3 First, note that for any i, after performing the operation on triangle Ai Ai+1 Ai+2 ,
+    the resulting pasture is triangle Ai+1 Ai+2 Ai+3 . Let Ki be the area of triangle Ai Ai+1 Ai+2 . From
+
+
+                                                 Guts Round
+    An+1 An−2 = 2n1−2 An An−2 and An An+1 = An An−2 +An−2 An+1 , we have An An+1 = (1+ 2n1−2 )An An−2 .
+    We also know that the area of a triangle is half the product of its base and height, so if we let the base of
+    triangle An−2 An−1 An be An An−2 , its area is Kn−2 = 12 hAn An−2 . The area of triangle An−1 An An+1
+    is Kn−1 = 21 hAn An+1 . The h’s are equal because the distance from An−1 to the base does not change.
+
+                       An An+1                                 n
+    We now have K                      1     2 −1               K1   3 K2     K2 K1   7   3   7
+                Kn−2 = An An−2 = 1 + 2n −2 = 2n −2 . Therefore, K0 = 2 , K0 = K1 K0 = 6 · 2 = 4 ,
+                  n−1
+
+
+    K3    K3 K 2  15 7      15                      Kn     2n+1 −1
+    K0 = K2 K0 = 14 · 4 = 8 . We see the pattern K0 =        2n    , which can be easily proven by induction.
+                               Kn
+    As n approaches infinity, K0 grows arbitrarily close to 2, so the smallest K such that the pasture never
+                                   √
+    exceeds an area of K is 2K0 =              3.
+
+11. [6] Compute the prime factorization of 1007021035035021007001. (You should write your answer in the
+    form pe11 pe22 . . . pekk , where p1 , . . . , pk are distinct prime numbers and e1 , . . . , ek are positive integers.)
+     Answer:        77 · 117 · 137    The number in question is
+                                 7 µ ¶
+                                 X  7
+                                               1000i = (1000 + 1)7 = 10017 = 77 · 117 · 137 .
+                                 i=0
+                                           i
+
+12. [6] For how many integers 1 ≤ k ≤ 2013 does the decimal representation of k k end with a 1?
+     Answer: 202 We claim that this is only possible if k has a units digit of 1. Clearly, it is true in
+    these cases. Additionally, k k cannot have a units digit of 1 when k has a units digit of 2, 4, 5, 6, or 8. If
+    k has a units digit of 3 or 7, then k k has a units digit of 1 if and only if 4|k, a contradiction. Similarly,
+    if k has a units digit of 9, then k k has a units digit of 1 if and only if 2|k, also a contradiction. Since
+    there are 202 integers between 1 and 2013, inclusive, with a units digit of 1, there are 202 such k which
+    fulfill our criterion.
+                                                                   n+1   n+1
+13. [8] Find the smallest positive integer n such that 5 5n +2
+                                                            +2
+                                                               n               > 4.99.
+                                     n+1            n    n+1
+     Answer: 7 Writing 5           = 5 · 5 and 2  = 2 · 2 and cross-multiplying yields 0.01 · 5n > 2.99 · 2n ,
+                                                                   n
+                                 n
+    and re-arranging yields (2.5) > 299. A straightforward calculation shows that the smallest n for which
+    this is true is n = 7.
+
+14. [8] Consider triangle ABC with ∠A = 2∠B. The angle bisectors from A and C intersect at D, and
+                                                          1
+    the angle bisector from C intersects AB at E. If DE               AB
+                                                     DC = 3 , compute AC .
+                   7
+     Answer:       9   Let AE = x and BE = y. Using angle-bisector theorem on △ACE we have
+    x : DE = AC : DC, so AC = 3x. Using some angle chasing, it is simple to see that ∠ADE = ∠AED,
+    so AD = AE = x. Then, note that △CDA ∼ △CEB, so y : (DC+DE) = x : DC, so y : x = 1+ 13 = 34 ,
+    so AB = x + 43 x = 73 x. Thus the desired answer is AB : AC = 37 x : 3x = 97 .
+
+15. [8] Tim and Allen are playing a match of tenus. In a match of tenus, the two players play a series
+    of games, each of which is won by one of the two players. The match ends when one player has won
+    exactly two more games than the other player, at which point the player who has won more games
+    wins the match. In odd-numbered games, Tim wins with probability 3/4, and in the even-numbered
+    games, Allen wins with probability 3/4. What is the expected number of games in a match?
+                    16
+     Answer:         3    Let the answer be E. If Tim wins the first game and Allen wins the second game
+    or vice versa, which occurs with probability (3/4)2 + (1/4)2 = 5/8, the expected number of additional
+    games is just E, so the expected total number of games is E + 2. If, on the other hand, one of Tim and
+    Allen wins both of the first two games, with probability 1 − (5/8) = 3/8, there are exactly 2 games in
+    the match. It follows that
+                                                 3      5
+                                            E = · 2 + · (E + 2),
+                                                 8      8
+    and solving gives E = 16
+                           3 .
+
+
+
+                                                        Guts Round
+16. [8] The walls of a room are in the shape of a triangle ABC with ∠ABC = 90◦ , ∠BAC = 60◦ , and
+    AB = 6. Chong stands at the midpoint of BC and rolls a ball toward AB. Suppose that the ball
+    bounces off AB, then AC, then returns exactly to Chong. Find the length of the path of the ball.
+                     √
+     Answer:       3 21 Let C ′ be the reflection of C across AB and B ′ be the reflection of B across
+    AC ′ ; note that B ′ , A, C are collinear by angle chasing. The image of the path under these reflections
+    is just the line segment M M ′ , where M is the midpoint of BC and M ′ is the midpoint of B ′ C ′ , so
+    our answer is just the length
+                                √     of M M ′ . Applying the Law
+                                      √
+                                                                                             ′ ′
+                                                                 √ of Cosines to triangle M C M , we have
+          ′2                                1                ′
+    M M = 27 + 243 − 2 · 3 3 · 9 3 · 2 = 189, so M M = 3 21.
+
+17. [11] The lines y = x, y = 2x, and y = 3x are the three medians of a triangle with perimeter 1. Find
+    the length of the longest side of the triangle.
+                     √
+    Answer:         √ 58 √     The three medians of a triangle contain its vertices, so the three vertices of
+                  2+ 34+ 58
+    the triangle are (a, a), (b, 2b) and (c, 3c) for some a, b, and c. Then, the midpoint of (a, a) and (b, 2b),
+    which is ( a+b a+2b
+                2 , 2 ), must lie along the line y = 3x. Therefore,
+
+                                                a + 2b      a+b
+                                                       =3·        ,
+                                                  2           2
+                                                a + 2b = 3a + 3b,
+                                                  −2a = b.
+                                                                    2b+3c
+    Similarly, the midpoint of (b, 2b) and (c, 3c), which is ( b+c
+                                                                2 ,   2 ), must lie along the line y = x.
+    Therefore,
+                                               2b + 3c   b+c
+                                                       =       ,
+                                                  2        2
+                                               2b + 3c = b + c,
+                                                      b = −2c,
+                                                           1
+                                                      c = − b = a.
+                                                           2
+    From this, three points can be represented as (a, a), √(−2a, −4a),√and (a, 3a). Using the distance
+    formula, the three side lengths of the triangle are 2|a|, 34|a|, and 58|a|. Since the perimeter
+                                                                                              √
+                                                                                                      of the
+                                          1 √
+    triangle is 1, we find that |a| = 2+√34+     and  therefore the longest side length is   √ 58 √ .
+                                              58                                           2+ 34+ 58
+
+18. [11] Define the sequence of positive integers {an } as follows. Let a1 = 1, a2 = 3, and for each n > 2,
+    let an be the result of expressing an−1 in base n − 1, then reading the resulting numeral in base n,
+    then adding 2 (in base n). For example, a2 = 310 = 112 , so a3 = 113 + 23 = 610 . Express a2013 in base
+    ten.
+     Answer:       23097 We claim that for nonnegative integers m and for 0 ≤ n < 3 · 2m , a3·2m +n =
+          m
+    (3 · 2 + n)(m + 2) + 2n. We will prove this by induction; the base case for a3 = 6 (when m = 0,
+    n = 0) is given in the problem statement. Now, suppose that this is true for some pair m and n. We
+    will divide this into two cases:
+
+       • Case 1: n < 3 · 2m − 1. Then, we want to prove that this is true for m and n + 1. In particular,
+         writing a3·2m +n in base 3 · 2m + n results in the digits m + 2 and 2n. Consequently, reading it in
+         base 3·2m +n+1 gives a3·2m +n+1 = 2+(3·2m +n+1)(m+2)+2n = (2·2m +n+1)(m+2)+2(n+1),
+         as desired.
+       • Case 2: n = 3 · 2m − 1. Then, we want to prove that this is true for m + 1 and 0. Similarly
+         to the previous case, we get that a3·2m +n+1 = a3·2m+1 = 2 + (3 · 2m + n + 1)(m + 2) + 2n =
+         2 + (3 · 2m+1 )(m + 2) + 2(3 · 2m − 1) = (3 · 2m+1 + 0)((m + 1) + 2) + 2(0), as desired.
+    In both cases, we have proved our claim.
+
+
+                                                Guts Round
+19. [11] An isosceles trapezoid ABCD with bases AB and CD has AB = 13, CD = 17, and height 3. Let
+    E be the intersection of AC and BD. Circles Ω and ω are circumscribed about triangles ABE and
+    CDE. Compute the sum of the radii of Ω and ω.
+     Answer:      39 Let Ω have center O and radius R and let ω have center P and radius M . Let Q
+    be the intersection of AB and OE. Note that OE is the perpendicular bisector of AB because the
+    trapezoid is isosceles. Also, we see OE is the circumradius of Ω. On the other hand, we know by
+                                                      13           13
+    similarity of △AEB and △CED that QE = 13+17              · 3 = 30 · 3. And, because BQ = 13/2 and is
+                                                                                              q      ¡ ¢2
+    perpendicular to OQ, we can apply the Pythagorean theorem to △OQB to see OQ = R2 − 13              2   .
+                                            q
+                                                         2
+    Since OE = OQ + QE, R = 13                R2 − 13      . Solving this equation for R yields R = 13
+                                                  ¡    ¢
+                                   30 · 3 +         2                                               30 · 39.
+                             17                        30
+    Since by similarity M = 13 R, we know R + M = 13 R, so R + M = 39.
+20. [11] The polynomial f (x) = x3 − 3x2 − 4x + 4 has three real roots r1 , r2 , and r3 . Let g(x) =
+    x3 + ax2 + bx + c be the polynomial which has roots s1 , √s2 , and s3 , where s1 = r1 + r2 z + r3 z 2 ,
+                                                                    3
+    s2 = r1 z + r2 z 2 + r3 , s3 = r1 z 2 + r2 + r3 z, and z = −1+i
+                                                                 2    . Find the real part of the sum of the
+    coefficients of g(x).
+                                                2π
+     Answer: −26 Note that z = e 3 i = cos 2π         2π           3         2
+                                            3 + i sin 3 , so that z = 1 and z + z + 1 = 0. Also,
+                           2
+    s2 = s1 z and s3 = s1 z .
+    Then, the sum of the coefficients of g(x) is g(1) = (1− s1 )(1− s2 )(1− s3 ) = (1− s1 )(1− s1 z)(1− s1 z 2 ) =
+    1 − (1 + z + z 2 )s1 + (z + z 2 + z 3 )s21 − z 3 s31 = 1 − s31 .
+    Meanwhile, s31 = (r1 + r2 z + r3 z 2 )3 = r13 + r23 + r33 + 3r12 r2 z + 3r12 r3 z 2 + 3r22 r3 z + 3r22 r1 z 2 + 3r32 r1 z +
+    3r32 r2 z 2 + 6r1 r2 r3 .
+    Since the real parts of both z and z 2 are − 12 , and since all of r1 , r2 , and r3 are real, the real part of s31 is
+    r13 +r23 +r33 − 32 (r12 r2 +· · ·+r32 r2 )+6r1 r2 r3 = (r1 +r2 +r3 )3 − 92 (r1 +r2 +r3 )(r1 r2 +r2 r3 +r3 r1 )+ 27
+                                                                                                                     2 r1 r2 r3 =
+    33 − 29 · 3 · −4 + 27    2 · −4  =  27.
+    Therefore, the answer is 1 − 27 = −26.
+
+21. [14] Find the number of positive integers j ≤ 32013 such that
+                                                          m ³                ´
+                                                                      k
+                                                          X
+                                                     j=         (−1) · 3ak
+                                                          k=0
+
+    for some strictly increasing sequence of nonnegative integers {ak }. For example, we may write 3 = 31
+    and 55 = 30 − 33 + 34 , but 4 cannot be written in this form.
+    Answer:     22013 Clearly m must be even, or the sum would be´negative. Furthermore, if am ≤ 2013,
+                            2013
+                                               Pm−1 ³      k
+    the sum cannot exceed 3      since j = 3 + k=0 (−1) · 3ak ≤ 3am . Likewise, if am > 2013, then
+                                            am
+
+    the sum necessarily exceeds 32013 , which is not hard to see by applying the Triangle Inequality and
+    summing a geometric series. Hence, the elements of {ak } can be any subset of {0, 1, . . . , 2013} with an
+    odd number of elements. Since the number of even-sized subsets is equal to the number of odd-sized
+                         2014
+    elements, there are 2 2 = 22013 such subsets.
+    Now, it suffices to show that given such an {ak }, the value of j can only be obtained in this way. Suppose
+    for the the sake of contradiction that there exist two such sequences {ak }0≤k≤ma and {bk }0≤k≤mb
+    which produce the same value of j for j positive or negative, where we choose {ak }, {bk } such that
+    min(ma , mb ) is as small as possible. Then, we note³that since 3´a0 + 3a1 + . . . + 3(ama −1) ≤ 30 + 31 +
+                                                     Pm a         k
+    . . . + 3(ama −1 ) < 2(3(ama −1) ), we have that k=0     (−1) · 3ak > 3(ama −1) . Similarly, we get that
+                  Pm b   ³             ´
+                               k
+    3(amb −1) ≥ k=0        (−1) · 3ak > 3(mb −1) ; for the two to be equal, we must have ma = mb . However,
+    this means that the sequences obtained by removing ama and amb from {ak } {bk } have smaller maximum
+    value but still produce the same alternating sum, contradicting our original assumption.
+
+
+
+                                                       Guts Round
+22. [14] Sherry and Val are playing a game. Sherry has a deck containing 2011 red cards and 2012 black
+    cards, shuffled randomly. Sherry flips these cards over one at a time, and before she flips each card
+    over, Val guesses whether it is red or black. If Val guesses correctly, she wins 1 dollar; otherwise, she
+    loses 1 dollar. In addition, Val must guess red exactly 2011 times. If Val plays optimally, what is her
+    expected profit from this game?
+                      1
+     Answer:        4023    We will prove by induction on r + b that the expected profit for guessing if there
+    are r red cards, b black cards, and where g guesses must be red, is equal to (b − r) + 2(r−b)       (r+b) g. It is
+    not difficult to check that this holds in the cases (r, b, g) = (1, 0, 0), (0, 1, 0), (1, 0, 1), (0, 1, 1). Then,
+    suppose that this is true as long as the number of cards is strictly less than r + b; we will prove that
+    it also holds true when there are r red and b blue cards.
+    Let f (r, b, g) be her expected profit under these conditions. If she guesses red, her expected profit is
+
+                r                               b                                         2(r − b)
+                   (1 + f (r − 1, b, g − 1)) +     (−1 + f (r, b − 1, g − 1)) = (b − r) +          g.
+               r+b                             r+b                                         (r + b)
+    Similarly, if she guesses black, her expected profit is
+                     r                            b                                    2(r − b)
+                        (−1 + f (r − 1, b, g)) +     (1 + f (r, b − 1, g)) = (b − r) +          g.
+                    r+b                          r+b                                   (r + b)
+
+                                                                      1
+    Plugging in the our starting values gives an expected profit of 4023 .
+23. [14] Let ABCD be a parallelogram with AB = 8, AD = 11, and ∠BAD = 60◦ . Let X be on segment
+    CD with CX/XD = 1/3 and Y be on segment AD with AY /Y D = 1/2. Let Z be on segment AB
+    such that AX, BY , and DZ are concurrent. Determine the area of triangle XY Z.
+                     √
+    Answer: 192 3 Let AX and BD meet at P . We have DP/P B = DX/AB = 3/4. Now, applying
+    Ceva’s Theorem in triangle ABD, we see that
+                                           AZ   DP AY   3 1 3
+                                              =   ·    = · = .
+                                           ZB   PB Y D  4 2 8
+
+    Now,
+                                        [AY Z]    [AY Z]  1 1 3     1
+                                               =         = · ·   =    ,
+                                       [ABCD]    2[ABD]   2 3 11   22
+    and similarly
+                                               [DY X]  1 2 3 1
+                                                      = · · = .
+                                              [ABCD]   2 3 4 4
+    Also,                                                  µ           ¶
+                                           [XCBZ]   1          1   8           43
+                                                  =              +         =      .
+                                           [ABCD]   2          4 11            88
+    The area of XY Z is the rest of the fraction of the area of ABCD not covered by the three above
+    polygons, which by a straightforward calculation 19/88 the area of ABCD, so our answer is
+                                                                 √
+                                                       ◦ 19    19 3
+                                        8 · 11 · sin 60 ·    =      .
+                                                          88     2
+
+24. [14] Given a point p and a line segment l, let d(p, l) be the distance between them. Let A, B, and C
+    be points in the plane such that AB = 6, BC = 8, AC = 10. What is the area of the region in the
+    (x, y)-plane formed by the ordered pairs (x, y) such that there exists a point P inside triangle ABC
+    with d(P, AB) + x = d(P, BC) + y = d(P, AC)?
+                     288
+     Answer:          5 .    Place ABC in the coordinate plane so that A = (0, 6), B = (0, 0), C = (8, 0).
+    Consider a point P = (a, b) inside triangle ABC. Clearly, d(P, AB) = a, d(P, BC) = b. Now, we see
+
+
+                                                  Guts Round
+    that the area of triangle ABC is 6·8
+                                       2 = 24, but may also be computed by summing the areas of triangles
+    P AB, P BC, P CA. The area of triangle P AB is 6·a 2 = 3a, and similarly the area of triangle P BC is
+    4b. Thus, it follows easily that d(P, CA) = 24−3a−4b
+                                                     5   . Now, we have
+                                            µ                           ¶
+                                              24 8      4 24 3        9
+                                   (x, y) =     − a − b,       − a− b .
+                                              5    5    b 5      5    5
+    The desired region is the set of (x, y) obtained by those (a, b) subject to the constraints a ≥ 0, b ≥
+    0, 6a + 8b ≤ 48.
+    Consequently, our region is the triangle whose vertices are obtained by evaluating (x, y) at the vertices
+    (a, b) of the triangle. To see this, let f (a, b) output the corresponding (x, y) according to the above.
+    Then, we can write every point P in ABC as P = m(0, 0) + n(0, 6) + p(8, 0) for some m + n + p = 1.
+                                                                24
+    Then, f (P ) = mf (0, 0) + nf (0, 6) + pf (8, 0) = m( 245 , 5 ) + n(−8, 0) + p(0, −6), so f (P ) ranges over
+    the triangle with those three vertices.
+    Therefore, we need the area of the triangle with vertices 24            24
+                                                                      ¡        ¢
+                                                                        5 , 5 , (0, −6), (−8, 0), which is easily
+    computed (for example, using determinants) to be 288    5 .
+
+25. [17] The sequence (zn ) of complex numbers satisfies the following properties:
+    • z1 and z2 are not real.
+                2
+    • zn+2 = zn+1    zn for all integers n ≥ 1.
+      zn+3
+    • 2 is real for all integers n ≥ 1.
+         z
+       ¯ n¯ ¯ ¯
+       ¯ z3 ¯ ¯ z4 ¯
+    • ¯¯ ¯¯ = ¯¯ ¯¯ = 2.
+         z4     z5
+    Find the product of all possible values of z1 .
+     Answer:       65536     All complex numbers can be expressed as r(cos θ + i sin θ) = reiθ . Let zn be
+    rn eiθn .
+
+              2              5
+    zn+3     zn+2 zn+1     zn+1   zn2    5                                  πkn
+       2
+          =       2
+                       =        2
+                                      = zn+1 is real for all n ≥ 1, so θn =      for all n ≥ 2, where kn is an
+      zn         zn            zn                                              5
+                                                      πk1
+    integer. θ1 + 2θ2 = θ3 , so we may write θ1 =          with k1 an integer.
+                                                       5
+    r3   r4       r2                       r3           1                    1
+       =    ⇒ r5 = 4 = r42 r3 , so r3 = 1.    = 2 ⇒ r4 = , r4 = r32 r2 ⇒ r2 = , and r3 = r22 r1 ⇒ r1 = 4.
+    r4   r5       r3                       r4           2                    2
+
+    Therefore, the possible values of z1 are the nonreal roots of the equation x10 − 410 = 0, and the product
+                                   410
+    of the eight possible values is 2 = 48 = 65536. For these values of z1 , it is not difficult to construct
+                                    4
+    a sequence which works, by choosing z2 nonreal so that |z2 | = 12 .
+26. [17] Triangle ABC has perimeter 1. Its three altitudes form the side lengths of a triangle. Find the
+    set of all possible values of min(AB, BC, CA).
+                       √
+     Answer:       ( 3−4 5 , 13 ] Let a, b, c denote the side lengths BC, CA, and AB, respectively. Without
+    loss of generality, assume a ≤ b ≤ c; we are looking for the possible range of a.
+    First, note that the maximum possible value of a is 31 , which occurs when ABC is equilateral. It
+    remains to find a lower bound for a.
+    Now rewrite c = xa and b = ya, where we have x ≥ y ≥ 1. Note that for a non-equilateral triangle,
+    x > 1. The triangle inequality gives us a + b > c, or equivalently, y > x − 1. If we let K be the
+    area, the condition for the altitudes gives us 2K  2K   2K                   1   1   1
+                                                    c + b > a , or equivalently, b > a − c , which after
+                                      x                                                   x
+    some manipulation yields y < x−1 . Putting these conditions together yields x − 1 < x−1  , and after
+                                                          √
+    rearranging and solving a quadratic, we get x < 3+2 5 .
+
+
+                                                  Guts Round
+    We now use the condition a(1 + x + y) = 1, and to find a lower bound for a, we need an upper bound
+                                                     x               1
+    for 1 + x + y. We know that 1 + x + y < 1 + x + x−1  = x − 1 + x−1 + 3.
+                              1
+    Now let f (x) = x − 1 + x−1  + 3. If 1 < x < 2, then 1 + x + y ≤ 1 + 2x < 5. But for x ≥ 2, we see
+    that f (x) attains a minimum³of 5 at  x = 2 and continues to strictly increase after that point. Since
+            √
+          3+ 5
+                                    √ ´
+                                  3+ 5
+                                               √
+    x < 2 , we have f (x) < f       2     = 3 + 5 > 5, so this is a better upper bound than the case for
+                                     ³      ´     √
+    which 1 < x < 2. Therefore, a > 3+1√5 = 3−4 5 .
+                            √              √                      √
+    For any a such that 5 − 2 ≥ a > 3−4 5 , we can let b = 1+2 5 a and c = 1 − a − b. For any other
+    possible a, we can let b = c = 1−a
+                                     2 . The triangle inequality and the altitude condition can both be
+    verified algebraically.
+                                                                 √
+    We now conclude that the set of all possible a is 3−4 5 < a ≤ 13 .
+27. [17] Let W be the hypercube {(x1 , x2 , x3 , x4 ) | 0 ≤ x1 , x2 , x3 , x4 ≤ 1}. The intersection of W and a
+    hyperplane parallel to x1 + x2 + x3 + x4 = 0 is a non-degenerate 3-dimensional polyhedron. What is
+    the maximum number of faces of this polyhedron?
+     Answer:       8 The number of faces in the polyhedron is equal to the number of distinct cells (3-
+    dimensional faces) of the hypercube whose interior the hyperplane intersects. However, it is possible
+    to arrange the hyperplane such that it intersects all 8 cells. Namely, x1 + x2 + x3 + x4 = 23 intersects
+    all 8 cells because it passes through (0, 21 , 21 , 21 ) (which is on the cell x1 = 0), (1, 16 , 61 , 61 ) (which is on
+    the cell x1 = 1), and the points of intersection with the other 6 cells can be found by permuting these
+    quadruples.
+28. [17] Let z0 + z1 + z2 + · · · be an infinite complex geometric series such that z0 = 1 and z2013 = 201312013 .
+    Find the sum of all possible sums of this series.
+                    20132014
+     Answer:      20132013 −1     Clearly, the possible common ratios are the 2013 roots r1 , r2 , . . . , r2013 of the
+               2013        1                                                      1
+    equation r      = 20132013 . We want the sum of the values of xn = 1−r          n
+                                                                                      , so we consider the polynomial
+                                                                           1 2013
+    whose roots are x1 , x2 , . . . , x2013 . It is easy to see that (1 − xn )    = 201312013 , so it follows that the xn
+    are the roots of the polynomial equation 201312013 x2013 − (x − 1)2013 = 0. The leading coefficient of this
+    polynomial is 201312013 − 1, and it follows easily from the Binomial Theorem that the next coefficient is
+    2013, so our answer is, by Vieta’s Formulae,
+                                                    2013          20132014
+                                             −      1         =              .
+                                                 20132013 − 1
+                                                                20132013 − 1
+
+29. [20] Let A1 , A2 , ..., Am be finite sets of size 2012 and let B1 , B2 , ..., Bm be finite sets of size 2013 such
+    that Ai ∩ Bj = ∅ if and only if i = j. Find the maximum value of m.
+                 ¡4025¢
+     Answer:       2012      In general, we will show that if each of the sets Ai contain a elements and if each
+    of the sets Bj contain b elements, then the maximum value for m is a+b
+                                                                                   ¡ ¢
+                                                                                    a .
+    Let U denote the union of all the sets Ai and Bj and let |U | = n. Consider the n! orderings of the
+    elements of U . Note that for any specific ordering, there is at most one value of i such that all the
+    elements in Ai come before all the elements in Bi in this ordering; this follows since Aj shares at least
+    one element with Bi and Bj shares at least one element with Ai for any other j 6= i.
+    On the other hand, the number of ways to permute the (a + b) elements in Ai ∪ Bi so that all the
+    elements in Ai come first is equal to a!b!. Therefore, the number of permutations of U where all the
+    elements in Ai come before all the elements in Bi is equal to:
+
+                                                            a!b!       n!
+                                                   n! ·            = ¡a+b¢
+                                                          (a + b)!     a
+
+    Summing over all m values of i, the total number of orderings where, for some i, the elements in Ai
+    come before Bi is equal to
+
+
+                                                    Guts Round
+                                                        n!m
+                                                       ¡a+b¢
+                                                         a
+
+    But there are at most u! such orderings, since there are u! total orderings, so it follows that m ≤ a+b
+                                                                                                       ¡ ¢
+                                                                                                         a .
+    Equality is attained by taking U to be a set containing (a + b) elements, letting Ai range over all
+    a-element subsets of U , and letting Bi = U \ Ai for each i.
+
+30. [20] How many positive integers k are there such that
+
+                                              k
+                                                  (a + b) = lcm(a, b)
+                                             2013
+    has a solution in positive integers (a, b)?
+     Answer:     1006 First, we can let h = gcd(a, b) so that (a, b) = (hA, hB) where gcd(A, B) = 1.
+                                      k
+    Making these subtitutions yields 2013 (hA+hB) = hAB, so k = 2013AB
+                                                                 A+B . Because A and B are relatively
+    prime, A + B shares no common factors with neither A nor B, so in order to have k be an integer,
+    A + B must divide 2013, and since A and B are positive, A + B > 1.
+    We first show that for different possible values of A + B, the values of k generated are distinct. In
+                                                 2013A′ B ′
+    particular, we need to show that 2013AB                                  ′    ′
+                                        A+B 6= A′ +B ′ whenever A + B 6= A + B . Assume that such an
+                                                         ′  ′    ′ ′
+    equality exists, and cross-multiplying yields AB(A + B ) = A B (A + B). Since AB is relatively prime
+    to A + B, we must have A + B divide A′ + B ′ . With a similar argument, we can show that A′ + B ′
+    must divide A + B, so A + B = A′ + B ′ .
+    Now, we need to show that for the same denominator A + B, the values of k generated are also
+    distinct for some relatively prime non-ordered pair (A, B). Let n = A + B = C + D. Assume
+    that 2013AB
+            n     = 2013CD
+                       n   , or equivalently, A(n − A) = C(n − C). After some rearrangement, we have
+    (C + A)(C − A) = n(C − A) This implies that either C = A or C = n − A = B. But in either case,
+    (C, D) is some permutation of (A, B).
+    Our answer can therefore be obtained by summing up the totients of the factors of 2013 (excluding 1)
+    and dividing by 2 since (A, B) and (B, A) correspond to the same k value, so our answer is 2013−1
+                                                                                                  2   =
+    1006.
+    Remark: It can be proven that the sum of the totients of all the factors of any positive integer N
+    equals N , but in this case, the sum of the totients can be computed by hand.
+
+31. [20] Let ABCD be a quadrilateral inscribed in a unit circle with center O. Suppose that ∠AOB =
+    ∠COD = 135◦ , BC = 1. Let B ′ and C ′ be the reflections of A across BO and CO respectively. Let
+    H1 and H2 be the orthocenters of AB ′ C ′ and BCD, respectively. If M is the midpoint of OH1 , and
+    O′ is the reflection of O about the midpoint of M H2 , compute OO′ .
+                         √     √
+     Answer: 41 (8 − 6 − 3 2) Put the diagram on the complex plane with O at the origin and A at
+    1. Let B have coordinate b and C have coordinate c. We obtain easily that B ′ is b2 , C ′ is c2 , and D
+    is bc. Therefore, H1 is 1 + b2 + c2 and H2 is b + c + bc (we have used the fact that for triangles on the
+    unit circle, their orthocenter is the sum of the vertices). Finally, we have that M is 12 (1 + b2 + c2 ), so
+    the reflection of O about the midpoint of M H2 is 12 (1 + b2 + c2 + 2b + 2c + 2bc) = 12 (b + c + 1)2 , so we
+    just seek 12 |b + c + 1|2 . But we know that b = cis135◦ and c = cis195◦ , so we obtain that this value is
+    1
+           √        √
+    4 (8 −   6 − 3 2).
+
+32. [20] For an even integer positive integer n Kevin has a tape of length 4n with marks at −2n, −2n +
+    1, . . . , 2n − 1, 2n. He then randomly picks n points in the set −n, −n + 1, −n + 2, . . . , n − 1, n, and
+    places a stone on each of these points. We call a stone ‘stuck’ if it is on 2n or −2n, or either all the
+    points to the right, or all the points to the left, all contain stones. Then, every minute, Kevin shifts
+    the unstuck stones in the following manner:
+    • He picks an unstuck stone uniformly at random and then flips a fair coin.
+
+
+                                                  Guts Round
+    • If the coin came up heads, he then moves that stone and every stone in the largest contiguous set
+    containing that stone one point to the left. If the coin came up tails, he moves every stone in that set
+    one point right instead.
+    • He repeats until all the stones are stuck.
+    Let pk be the probability that at the end of the process there are exactly k stones in the right half.
+    Evaluate
+                                  pn−1 − pn−2 + pn−3 − . . . + p3 − p2 + p1
+                                  pn−1 + pn−2 + pn−3 + . . . + p3 + p2 + p1
+    in terms of n.
+                      1
+     Answer:         n−1    After we have selected the positions of the initial n stones, we number their
+    positions: a1 < a2 < . . . < an . The conditions on how we move the stones imply that the expected
+    value of (ai − aj ) after t minutes is still equal to ai − aj . In addition, if bi is the final position of the
+    ith stone, E(bi+1 − bi ) = E(ai+1 − ai ). But this quantity is also equal to (3n + 2) · pi + 1 · (1 − pi ).
+    Now, let’s calculate the expected¡ value
+                                        j
+                                                    ¢ − ai. This is the sum over g = ai+1 − ai , and j, the
+                                              of ai+1
+                                          ¢¡2n−j−g
+    number of spaces before ai of g · i−1    n−i+1 , so we get
+                                                             µ      ¶µ            ¶
+                                           1 X X                  j    2n − j − g
+                                        ¡2n+1¢ g·
+                                           n     g       j
+                                                                 i−1    n−i−1
+         P ¡ j ¢¡2n−j−g¢              ¡2n−g+1¢
+    But j i−1       n−i−1 is just        n−1    . Therefore the expected value of ai+1 − ai is independent of i,
+                                                                        1
+    so pi is constant for all i 6= 0, n. It follows that the answer is n−1 .
+
+33. [25] Compute the value of 125 + 224 + 323 + . . j. + 242 +³251 . If your ´k
+                                                                             answer is A and the correct answer
+                                                               ¡ A ¢2 ¡ C ¢2
+    is C, then your score on this problem will be 25 min C            , A      .
+
+     Answer: 66071772829247409 The sum is extremely unimodal, so we want to approximate it using
+    its largest term. Taking logs of each term, we see that the max occurs when (26 − n) log n peaks, and
+    taking derivatives gives
+    x + x log x = 26
+    From here it’s easy to see that the answer is around 10, and slightly less (it’s actually about 8.3, but
+    in any case it’s hard to find powers of anything except 10). Thus the largest term will be something
+    like 1016 , which is already an order of magnitude within the desired answer 6.6 × 1016 .
+    To do better we’d really need to understand the behavior of the function x26−x , but what approximately
+    happens is that only the four or five largest terms in the sum are of any substantial size; thus it is
+    reasonable here to pick some constant from 4 to 20 to multiply our guess 1016 ; any guess between
+    4.0 × 1016 and 2.0 × 1017 is reasonable.
+
+34. [25] For how many unordered sets {a, b, c, d} of positive integers, none of which exceed 168, do there
+    exist integers w, x, y, z such that (−1)w a + (−1)x b + (−1)y c + (−1)z d = 168? If your answer is A and
+                                                                               |C−A|
+    the correct answer is C, then your score on this problem will be ⌊25e−3 C ⌋.
+     Answer:      761474 As an approximation, we assume a, b, c, d are ordered to begin with (so we
+    have to divide by 24 later) and add to 168 with a unique choice of signs; then, it suffices to count
+    e + f + g + h = 168 with each e, f, g, h in [−168, 168] and then divide by 24 (we drop the condition
+    that none of them can be zero because it shouldn’t affect the answer that much).
+    One way to do this is generating functions. We want the coefficient of t168 in the generating function
+    (t−168 + t−167 + . . . + t167 + t168 )4 = (t169 − t−168 )4 /(t − 1)4
+    Clearing the negative powers, it suffices to find the coefficient of t840 in
+                                                           1
+    (t337 − 1)4 /(t − 1)4 = (1 − 4t337 + 6t674 − . . .) (t−1) 4.
+
+
+    To do this we expand the bottom as a power series in t:
+
+
+                                                     Guts Round
+       1
+               P         ¡n+3¢ n
+    (t−1)4 =       n≥0     3 t
+
+                                             − 4 · 840−337+3   + 6 · 840−674+3
+                                   ¡840+3¢        ¡          ¢      ¡          ¢
+    It remains to calculate           3                3                 3       . This is almost exactly equal to
+    1     3         3                3      7
+    6 (843 − 4 · 506 + 6 · 169 ) ≈ 1.83 × 10 .
+                                                                                           1
+    Dividing by 24, we arrive at an estimation 762500. Even if we use a bad approximation 6·24 (8503 − 4 ·
+       3         3
+    500 + 6 · 150 ) we get approximately 933000, which is fairly close to the answer.
+
+35. [25] Let P be the number to partition 2013 into an ordered tuple of prime numbers? What is
+    log
+    ¥ 1252 (P
+            ¡ )? If¡ Cyour ¢ answer
+                                 ¢¦ is A and the correct answer is C, then your score on this problem will be
+                         A     3
+       2     min       ,
+                     A C     − 5   or zero, whichever is larger.
+    Answer:         614.519...      We use the following facts and heuristics.
+    (1) The ordered partitions of n into any positive integers (not just primes) is 2n−1 . This can be guessed
+    by checking small cases and finding a pattern, and is not difficult to prove.
+    (2) The partitions of 2013
+                             n into any positive integers equals the partitions of 2013 into integers from the
+    set {n, 2n, 3n, · · · }.
+    (3) The small numbers matter more when considering partitions.
+    (4) The set of primes {2, 3, 5, 7, · · · } is close in size (near the small numbers) to {3, 6, 9, · · · } or
+    {2, 4, 6, · · · }.
+    (5) The prime numbers get very sparse compared to the above two sets in the larger numbers.
+                                                                                                                 2013
+    Thus, using these heuristics, the number of partitions of 2013 into primes is approximately 2 3 −1
+        2013
+    or 2 2 −1 , which, taking logarithms, give 670 and 1005.5, respectively. By (5), we should estimate
+    something that is slightly less than these numbers.
+
+36. [24] (Mathematicians A to Z) Below are the names of 26 mathematicians, one for each letter of
+    the alphabet. Your answer to this question should be a subset of {A, B, · · · , Z}, where each letter
+    represents the corresponding mathematician. If two mathematicians in your subset have birthdates
+    that are within 20 years of each other, then your score is 0. Otherwise, your score is max(3(k − 3), 0)
+    where k is the number of elements in your subset.
+
+                                          Niels Abel                  Isaac Netwon
+                                          Étienne Bézout            Nicole Oresme
+                                          Augustin-Louis Cauchy       Blaise Pascal
+                                          René Descartes             Daniel Quillen
+                                          Leonhard Euler              Bernhard Riemann
+                                          Pierre Fatou                Jean-Pierre Serre
+                                          Alexander Grothendieck      Alan Turing
+                                          David Hilbert               Stanislaw Ulam
+                                          Kenkichi Iwasawa            John Venn
+                                          Carl Jacobi                 Andrew Wiles
+                                          Andrey Kolmogorov           Leonardo Ximenes
+                                          Joseph-Louis Lagrange       Shing-Tung Yau
+                                          John Milnor                 Ernst Zermelo
+
+     Answer: {O, D, P, E, B, C, R, H, K, S, Y} A knowledgeable math historian might come up with
+    this 11-element subset, earning 24 points: {O, D, P, E, B, C, R, H, K, S, Y}.
+
+
+
+
+                                                        Guts Round
+

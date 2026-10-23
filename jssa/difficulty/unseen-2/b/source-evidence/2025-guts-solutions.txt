@@ -1,0 +1,1311 @@
+                                 HMMT February 2025
+                                             February 15, 2025
+                                               Guts Round
+1. [5] Call a 9-digit number a cassowary if it uses each of the digits 1 through 9 exactly once. Compute
+   the number of cassowaries that are prime.
+   Proposed by: Rishabh Das, Jacob Paltrowitz
+   Answer:       0
+   Solution: Every cassowary is divisible by 3, as the sum of its digits is 1 + 2 + · · · + 9 = 45. Since
+   all such numbers are divisible by 3 and and greater than 3, none of them are prime. So, there are 0
+   prime cassowaries.
+
+
+
+2. [5] Compute
+                                                         20 + 25−1 1
+                                                                  20
+                                                                       .
+                                                         25 + 20−1 1
+                                                                  25
+
+
+   Proposed by: Rishabh Das
+                 4
+   Answer:       5
+
+   Solution: We can use the fact that
+                                              1           x       x2 y
+                                        x+      1 = x + xy − 1 = xy − 1 .
+                                             y− x
+   Letting x = 20, y = 25 and vice versa in the above expression, we get
+                                             x + y−1 1        x2 y  x  4
+                                                     x
+                                                          =        = =   .
+                                             y + x−1 1        xy 2  y  5
+                                                     y
+
+
+
+
+3. [5] Jacob rolls two fair six-sided dice. If the outcomes of these dice rolls are the same, he rolls a third
+   fair six-sided die. Compute the probability that the sum of outcomes of all the dice he rolls is even.
+   Proposed by: Rishabh Das
+                  5
+   Answer:       12
+
+   Solution: There’s a 12 − 16 = 13 probability that he rolls an even number without getting doubles:
+   whatever the first roll is, there is a 12 chance that the second roll is of opposite parity, and we subtract
+   the 61 chance that the second roll is the same.
+   There’s a 61 · 12 = 12
+                        1
+                          probability that he gets doubles and then rolls an even number.
+   Summing 13 and 12
+                  1
+                     gets us     5
+                                 12 .
+
+
+
+
+4. [5] Let △ABC be an equilateral triangle with side length 4. Across all points P inside triangle △ABC
+   satisfying [P AB] + [P AC] = [P BC], compute the minimum possible length of P A.
+   (Here, [XY Z] denotes the area of triangle △XY Z.)
+   Proposed by: Isabella Zhu
+                √
+   Answer:        3
+   Solution:
+                                                      A
+
+
+
+
+                                                          P
+
+
+
+
+                                  B                                      C
+
+  The area condition implies [ABC] = 2[P BC]. Hence, P lies on the A-midline of △ABC. Therefore,
+  the minimum possible value of P A is the distance from A to this midline. This is achieved by taking
+  P to be the foot of the perpendicular from A to the A-midline. This distance is half the altitude of
+                                                      √    √
+  ABC, which has side length 4, so the answer is 12 (2 3) = 3 .
+
+
+
+5. [6] Compute the largest possible radius of a circle contained in the region defined by |x + |y|| ≤ 1 in
+   the coordinate plane.
+  Proposed by: Rishabh Das
+                √          √
+  Answer:      2 2 − 2 = 2( 2 − 1)
+  Solution:
+
+
+
+
+                                                 −1                  1
+
+
+
+
+  After drawing the graph, it’s clear that the circle should pass through (−1, 0) and be tangent to
+                                                                             √                   √
+  y = x − 1 and y = −x + 1. Letting the radius of this circle be r, we have r 2 + r = 2, so r = 2 2 − 2 .
+
+
+
+
+6. [6] Let △ABC be an equilateral triangle. Point D lies on segment BC such that BD = 1 and DC = 4.
+                              −→       −−→
+   Points E and F lie on rays AC and AB, respectively, such that D is the midpoint of EF . Compute
+   EF .
+  Proposed by: Pitchayut Saengrungkongka
+                 √
+   Answer:      2 13
+   Solution:
+                                                                A
+
+
+
+
+                                                                       E
+
+
+
+
+                             C′                 B
+                                                       D                         C
+
+
+
+
+                                      F
+
+   Let C ′ be the reflection of C over D. Then, EC ∥ C ′ F since ECF C ′ is a parallelogram. Thus,
+   BF C ′ is an equilateral triangle, so BF = BC ′ = 3 and ∠F BD = 120◦ . By Law of Cosines, we get
+          √                   √               √
+   DF = 32 + 3 · 1 + 12 = 13 and EF = 2 13 .
+
+
+
+7. [6] The number
+                                                  99 − 88
+                                                   1001
+   is an integer. Compute the sum of its prime factors.
+   Proposed by: Derek Liu
+   Answer:      231
+   Solution: Observe
+
+                    99 − 88 = 276 − 166
+                            = (272 − 162 )(274 + 272 · 162 + 164 )
+                            = (27 − 16)(27 + 16)(272 − 27 · 16 + 162 )(272 + 27 · 16 + 162 )
+                            = 11 · 43 · 553 · 1417.
+
+   The remaining factorizations are motivated by the fact that 1001 = 7 · 11 · 13. We see that 553 = 7 · 79
+   and 1417 = 13 · 109, so the answer is 43 + 79 + 109 = 231 .
+
+
+
+8. [6] A checkerboard is a rectangular grid of cells colored black and white such that the top-left corner is
+   black and no two cells of the same color share an edge. Two checkerboards are distinct if and only if
+   they have a different number of rows or columns. For example, a 20 × 25 checkerboard and a 25 × 20
+   checkerboard are considered distinct.
+   Compute the number of distinct checkerboards that have exactly 41 black cells.
+   Proposed by: Albert Wang
+   Answer:      9
+   Solution: Since there is a black corner on the checkerboard, the number of white squares is at most
+   the number of black squares. So, the board either has 40 or 41 white squares. Therefore, we want to
+   compute the number of ordered pairs (r, c) with a product of 81 or 82. Since 81 = 34 has 5 divisors
+   and 82 = 41 · 2 has 4 divisors, there are 9 checkerboards with exactly 41 black cells.
+
+
+
+ 9. [7] Let P and Q be points selected uniformly and independently at random inside a regular hexagon
+    ABCDEF . Compute the probability that segment P Q is entirely contained in at least one of the
+    quadrilaterals ABCD, BCDE, CDEF , DEF A, EF AB, or F ABC.
+   Proposed by: Isabella Zhu
+                5
+   Answer:      6
+
+   Solution:
+
+                                          B                  A
+
+                                                         P
+
+
+
+                                                 O
+                                  C                                  F
+
+
+
+
+                                                     Q
+
+                                          D                  E
+
+   Let O be the center of the hexagon. Without loss of generality, assume P is in △ABO. Then, segment
+   P Q is entirely contained in one of the given quadrilaterals if and only if Q is not in △DEO. The
+                                        [DEO]      1                    5
+   probability that Q is in △DEO is [ABCDEF    ] = 6 , so the answer is 6 .
+
+
+
+
+10. [7] A square of side length 1 is dissected into two congruent pentagons. Compute the least upper
+    bound of the perimeter of one of these pentagons.
+   Proposed by: Isabella Zhu
+                     √
+   Answer:      2+3 2
+   Solution:
+
+                                      A                          B
+
+
+                                          Y
+
+
+
+
+                                                             X
+
+
+                                      D                          C
+
+   Let P1 and P2 be the two congruent pentagons. Let p(P ) denote the perimeter of polygon P .
+    We give an upper bound for p(P1 ) + p(P2 ). Note that since a square has four sides, at least four sides
+    of P1 and P2 combined lie on the sides of the square. These sides have total length at most 4, the
+    perimeter of ABCD.
+                                                   √
+    Each of the√remaining sides has length at most 2, since the longest possible length of a segment inside
+    ABCD is 2. There are at most 6 remaining sides, so
+                                                                 √
+                                          p(P1 ) + p(P2 ) ≤ 4 + 6 2.
+
+    Since P1 and P2 are congruent, this implies
+                                                                    √
+                                             p(P1 ) = p(P2 ) ≤ 2 + 3 2 .
+
+    This least upper bound can be achieved by placing X close to C and Y close to A, as seen in the
+    diagram.
+
+
+
+
+11. [7] Let f (n) = n2 + 100. Compute the remainder when f (f (· · · f (f ( 1)) · · · )) is divided by 104 .
+                                                         |      {z       }
+                                                                    2025 f ’s
+
+    Proposed by: Pitchayut Saengrungkongka
+    Answer:       3101
+    Solution: We claim that f k (n) ≡ 1 + 100(2n − 1) mod 104 . We can see this by induction, as
+
+                             f (1 + 100(2n − 1)) = (1 + 100(2n − 1))2 + 100
+                                                  ≡ 1 + 200(2n − 1) + 100       (mod 104 )
+                                                  ≡ 1 + 100(2n+1 − 1)      (mod 104 ).
+
+    Thus, it suffices to compute 22025 mod 100. We note that 22025 ≡ 0 (mod 4) and by Euler’s Totient
+    theorem, 22025 ≡ 25 (mod 25), so 22025 ≡ 32 (mod 100). Hence, we can compute
+
+                                     f 2025 (1) ≡ 1 + 100(31) ≡ 3101 mod 104 .
+
+
+
+
+12. [7] Holden has a collection of polygons. He writes down a list containing the measure of each interior
+    angle of each of his polygons. He writes down the list 30◦ , 50◦ , 60◦ , 70◦ , 90◦ , 100◦ , 120◦ , 160◦ , and
+    x◦ , in some order. Compute x.
+    Proposed by: Rishabh Das
+    Answer:       220
+    Solution: We work in degrees. The sum of all 9 angles is 680 + x. The sum of the angles in a polygon
+    with n sides is 180(n − 2) ≡ 180n mod 360. Since there are 9 angles, the polygons have a total of 9
+    sides, so the sum of the 9 angles must be 9 · 180 ≡ 180 mod 360. Thus 680 + x ≡ 180 mod 360, so
+    x ≡ 220 mod 360. Since 0 < x < 360, we know x = 220 .
+
+
+
+13. [9] A number is upwards if its digits in base 10 are nondecreasing when read from left to right. Compute
+    the number of positive integers less than 106 that are both upwards and multiples of 11.
+    Proposed by: Srinivas Arun
+    Answer:       219
+    Solution: For a number d5 d4 d3 d2 d1 d0 (allowing leading 0s) to be upwards and a multiple of 11, we
+    must have
+                                        d5 ≤ d4 ≤ d3 ≤ d2 ≤ d1 ≤ d0 ,
+                                  d0 − d1 + d2 − d3 + d4 − d5 ≡ 0       (mod 11).
+    Note that d0 − d1 , d2 − d3 , and d4 − d5 are all nonnegative. Thus,
+
+                         0 ≤ (d0 − d1 ) + (d2 − d3 ) + (d4 − d5 )
+                           ≤ (d0 − d1 ) + (d1 − d2 ) + (d2 − d3 ) + (d3 − d4 ) + (d4 − d5 )
+                           = d0 − d5
+                           ≤ 9.
+
+    Therefore,
+                                       (d0 − d1 ) + (d2 − d3 ) + (d4 − d5 ) = 0,
+    which can only occur when d0 = d1 , d2 = d3 , and d4 = d5 , i.e. the number is of the form aabbcc. We
+    can easily verify that all numbers of the form aabbcc for digits a ≤ b ≤ c satisfy our conditions, so we
+    simply have to count them.
+    There are 12
+                   
+                 3   = 220 such triples of digits (a, b, c). However, one of these triples is (0, 0, 0), which
+    corresponds to the number 0. Thus our answer is 220 − 1 = 219 .
+
+
+
+14. [9] A parallelogram P can be folded over a straight line so that the resulting shape is a regular pentagon
+    with side length 1. Compute the perimeter of P .
+    Proposed by: Arul Kolla
+                    √
+    Answer:      5+ 5
+    Solution:
+
+                                     D′                   E′
+
+
+
+
+                                                               A
+
+
+
+
+                                               B                              E
+
+
+
+
+                                                     C                  D
+
+    In regular pentagon ABCDE (labeled clockwise), reflect ABDE across AB to obtain ABD′ E ′ . Then,
+    CDE ′ D′ is one such parallelogram P . The length of CD′ is
+                                                                                   √    √
+                    CB + BD = 1 + 2 cos ∠CBD = 1 + 2 cos(π/5) = 1 + 5+1  2   =              5+3
+                                                                                            2 .
+                                                             √           √
+    Hence, the perimeter of the desired parallelogram is 2 1 + 5+3
+                                                                2    = 5+ 5 .
+15. [9] Right triangle △DEF with ∠D = 90◦ and ∠F = 30◦ is inscribed in equilateral triangle △ABC
+    such that D, E, and F lie on segments BC, CA, and AB, respectively. Given that BD = 7 and
+    DC = 4, compute DE.
+   Proposed by: Pitchayut Saengrungkongka
+                √
+   Answer:        13
+   Solution 1:
+                                                                 A
+
+
+
+
+                                                   F
+
+                                                                                  E
+
+
+
+                                          B                            D               C
+
+
+   From ∠E = 60◦ , we get that ∠AEF = 120◦ − ∠CED = ∠CDE. Therefore, △AEF ∼ △CDE. Since
+   EF : DE = 2 : 1, the ratio of similarity must be 2 : 1, so AE = 2CD = 8. Recall ABC has side length
+                                                                            √                 √
+   7 + 4 = 11, so EC = 11 − 8 = 3. Law of Cosines on △CDE gives DE 2 = 32 + 42 − 3 · 4 = 13 .
+
+   Solution 2:
+                                                                 A
+
+
+
+                                                                        X
+
+
+                                                   F
+
+                                                                                  E
+
+
+
+                                          B                            D               C
+
+
+   Let ⊙(DEF ) meet AC again at point X. Then, ∠F XA = 180◦ − ∠F XE = ∠F DE = 90◦ and
+   ∠XDC = 180◦ − ∠DCX − ∠DXC = 120◦ − ∠DXE = 120◦ − ∠DF E = 90◦ . It follows that
+   CX = 2CD = 8, so AX = 11 − CX = 3, and AF = 2AX = 6. Thus, Law of Cosines on △AEF gives
+         √                 √                      √
+   EF = 82 + 62 − 8 · 6 = 2 13, implying that DE = 13 .
+
+
+
+16. [9] The Cantor set is defined as the set of real numbers x such that 0 ≤ x < 1 and the digit 1 does
+    not appear in the base-3 expansion of x. Two numbers are uniformly and independently selected at
+    random from the Cantor set. Compute the expected value of their absolute difference.
+   (Formally, one can pick a number x uniformly at random from the Cantor set by first picking a real number y uniformly
+   at random from the interval [0, 1), writing it out in binary, reading its digits as if they were in base-3, and setting x to 2
+   times the result.)
+    Proposed by: Derek Liu
+                  2
+    Answer:       5
+
+    Solution: Let d be the expected value of the absolute difference. Observe that the Cantor set is made
+    up of two smaller copies of itself, each scaled down by a factor of 3. There is a 12 chance that the two
+    selected numbers are in the same copy, in which case the expected value of their absolute difference is
+    1                                       2+x      y
+    3 d. Otherwise, we can write them as 3 and 3 for independently and uniformly randomly selected x
+    and y in the Cantor set. Their difference is 2+(x−y)
+                                                      3  , which by symmetry has expected value 23 . Thus
+
+                                              1 1  1 2        2
+                                         d=    · d+ ·  =⇒ d =   .
+                                              2 3  2 3        5
+
+
+
+
+17. [11] Let f be a quadratic polynomial with real coefficients, and let g1 , g2 , g3 , . . . be a geometric
+    progression of real numbers. Define an = f (n) + gn . Given that a1 , a2 , a3 , a4 , and a5 are equal to 1,
+    2, 3, 14, and 16, respectively, compute gg12 .
+    Proposed by: Pitchayut Saengrungkongka
+                    19
+    Answer:       − 10
+    Solution: We will use the method of finite differences. Define bn = an+3 − 3an+2 + 3an+1 − an . Since
+    f is quadratic, the third finite difference of f is zero. So, bn = gn+3 − 3gn+2 + 3gn+1 − gn . Letting
+    the common ratio of the geometric sequence be r, we get that bn = (r3 − 3r2 + 3r − 1)gn . So, bn is
+    a constant multiple of gn . Thus the ratio gg12 = bb12 . Computing b1 = 14 − 3 · 3 + 3 · 2 − 1 = 10 and
+    b2 = 16 − 3 · 14 + 3 · 3 − 3 · 2 = −19, we get
+
+                                                 g2   b2     19
+                                                    =    = −    .
+                                                 g1   b1     10
+
+
+
+
+18. [11] Let f : {1, 2, 3, . . . , 9} → {1, 2, 3, . . . , 9} be a permutation chosen uniformly at random from the
+    9! possible permutations. Compute the expected value of f (f (· · · f (f ( 1)) · · · )).
+                                                                        |    {z    }
+                                                                     2025 f ’s
+
+    Proposed by: Linus Yifeng Tang
+                  7
+    Answer:       2
+
+    Solution: We first compute the probability that f (1) = 1. Note that f (1) = 1 if and only if 1 is part
+    of a cycle whose length divides 2025.
+    We claim that for any given k, the probability that 1 is in a cycle of length k is 91 . Indeed, the
+    probability that f (1) ̸= 1 is 89 . Given this, there are 8 possible values remaining for f (f (1)), so the
+    probability that f (f (1)) ̸= 1 is 78 , and so on. Finally, there are 10 − k possible values remaining for
+                                                                                     1
+    f k (1), so the probability that f k (1) = 1 given all previous assumptions is 10−k . Thus, the probability
+    that 1 is in a cycle of length k is
+                                           8 7    10 − k    1    1
+                                            · ···        ·      = .
+                                           9 8    11 − k 10 − k  9
+    Hence, the probability that f 2025 (1) = 1 is the probability that 1 is in a cycle of length 1, 3, 5, or 9,
+    which is 49 .
+    If f (1) ̸= 1, then f (1) is equally likely to be any of 2 through 9 by symmetry, averaging 5.5.
+    Therefore, the expected value of f (1) is
+
+                                                4      5        7
+                                                  · 1 + · 5.5 =   .
+                                                9      9        2
+
+
+
+
+19. [11] A subset S of {1, 2, 3, . . . , 2025} is called balanced if for all elements a and b both in S, there
+    exists an element c in S such that 2025 divides a + b − 2c. Compute the number of nonempty balanced
+    subsets.
+    Proposed by: Jacob Paltrowitz
+    Answer:      3751
+    Solution: We work mod 2025, so the condition becomes that for any a, b ∈ S, we have a+b
+                                                                                         2 ∈ S.
+
+    First, we prove that S must be an arithmetic sequence. Observe that if S is balanced, then so is the
+    shift S + k = {s + k | s ∈ S} for all k, so we can assume 0 ∈ S. Let s be an element of S such that
+    d = gcd(s, 2025) is minimal. Observe that for any t ∈ S, we have 2t = 0+t             s
+                                                                           2 ∈ S. Thus, 2n is in S for all
+                                                n
+    n. Because gcd(2, 2025) = 1, this implies 2 s mod 2025 ∈ S for all n. We prove the following claim.
+    Claim 1. For all positive integers m, we have ms ∈ S.
+
+    Proof. We proceed with induction on the number of 1’s in the binary representation of m.
+    Base Case: m has one 1 in binary, so m is a power of 2. Then ms ∈ S as noted above.
+    Induction Step: Assume the claim holds for all m which have k 1’s in their binary representations.
+    Suppose m has k + 1 1’s in its binary representation. Let 2n be the largest power of 2 which is at most
+    m. Then m − 2n has k 1’s in its binary representation, so 2(m − 2n ) does as well. By the induction
+                                                             n+1        n
+    hypothesis, 2(m − 2n )s ∈ S. Also, 2n+1 s ∈ S, so ms = 2 s+2(m−2
+                                                                   2
+                                                                          )s
+                                                                             ∈ S, as desired.
+
+    It follows that every multiple of s is in S. The multiples of s are precisely the multiples of d, so S
+    contains every multiple of d. Now assume for sake of contradiction that S contains some element t
+    which is not a multiple of d, so we can write t = cd + r such that 0 < r < d. Then 2t ∈ S, so
+    r = 2t+(−2c)d
+              2     ∈ S. But then gcd(r, 2025) ≤ r < d, contradicting the minimality of d. Thus S is
+    precisely the multiples of d.
+    It can be verified that for any d | 2025, the set of multiples of d is balanced. Indeed, as d is odd, for
+    any ad, bd ∈ S, their average (a+b)d
+                                       2   is a multiple of d and hence also in S. Thus, any shift of such
+    a set is also balanced; as seen above, these classify all balanced sets. For each d | 2025, there are d
+                                                  5      3
+    choices for S, so the answer is d|2025 d = 3 2−1 · 5 4−1 = 3751 .
+                                    P
+
+
+
+20. [11] Compute the 100th smallest positive multiple of 7 whose digits in base 10 are all strictly less than
+    3.
+    Proposed by: Srinivas Arun
+    Answer:      221221
+    Solution:
+    We construct an order-preserving bijection between positive multiples of 7 in base 10 whose digits are
+    all less than 3 and positive multiples of 7. For any multiple of 7 in base 10 with digits all less than 3,
+    interpret it as a base 3 number and convert it to a base 10 decimal, which will be a multiple of 7. For
+    example, 1022 would map to 10223 = 3510 .
+    We first show that this is a valid mapping. Let an . . . a1 a0 be an arbitrary multiple of 7 (in base
+    10) whose digits are all less than 3. This has a natural interpretation in base 3, and converting this
+    interpretation to base 10 gives
+
+    an . . . a1 a0 3 = an · 3n + · · · + a1 · 31 + a0 · 30 ≡ an · 10n + · · · + a1 · 101 + a0 · 100 = an . . . a1 a0   (mod 7),
+
+    which is a multiple of 7.
+    This mapping is an injection because base conversion is an injection, and this mapping is also a
+    surjection because for any multiple of 7 in base 10, we can convert it to base 3 and interpret this
+    number as a base 10 decimal. (Reversing the above steps, we see the resulting decimal number is a
+    multiple of 7.) Furthermore, for two positive multiples of 7 whose digits are less than 3, the larger one
+    will have a larger base 3 representation, so this mapping is order-preserving.
+    Thus, this mapping is a order-preserving bijection between multiples of 7 in base 10 with digits less
+    than 3 and multiples of 7 in base 3. Therefore, the answer is the preimage of the 100th smallest positive
+    multiple of 7, which is equal to 70010 = 221221 3 .
+
+
+
+21. [12] Compute the unique 5-digit positive integer abcde such that a ̸= 0, c ̸= 0, and
+
+                                                      abcde = (ab + cde)2 .
+
+    Proposed by: Rishabh Das
+    Answer:         88209
+    Solution: Let ab = X and cde = Y . The original equation is equivalent to 1000X + Y = (X + Y )2 .
+    Taking this modulo 999, we get (X + Y )2 ≡ X + Y (mod 999). Therefore, 27 · 37 = 999 divides
+    (X + Y )(X + Y − 1). Since gcd(X + Y, X + Y − 1) = 1, each of 27 and 37 can divide at most one of
+    X + Y and X + Y − 1. Therefore, X + Y is either 0 or 1 modulo 27, as well as 0 or 1 modulo 37.
+    By the Chinese Remainder Theorem, the four possible residues for X + Y modulo 999 are 0, 1, 297,
+    and 703. Since (X + Y )2 = abcde must be a 5-digit integer, we know 100 ≤ X + Y ≤ 316, so the only
+    possible value for X + Y is 297. Thus, the answer is (X + Y )2 = 2972 = 88209 .
+
+
+
+22. [12] Let a, b, and c be real numbers such that a2 (b + c) = 1, b2 (c + a) = 2, and c2 (a + b) = 5. Given
+    that there are three possible values for abc, compute the minimum possible value of abc.
+    Proposed by: Pitchayut Saengrungkongka
+                        √
+                    −5− 5
+    Answer:           2
+
+    Solution: Let x = abc. Multiplying all equations together and simplifying gives
+
+                                                         (abc)2 (a + b)(b + c)(c + a) = 10,
+                                                                                   
+                                 (abc)2 a2 (b + c) + b2 (c + a) + c2 (a + b) + 2abc = 10,
+                                                                     x2 (1 + 2 + 5 + 2x) = 10,
+                                                                                 x2 (x + 4) = 5.
+
+    The resulting cubic factors as (x − 1)(x2 + 5x + 5) = 0. Therefore, the smallest possible value of abc
+           √                  √
+               2
+    is −5− 25 −4·5 =      −5− 5
+                            2   .
+23. [12] Regular hexagon ABCDEF has side length 2. Circle ω lies inside the hexagon and is tangent to
+    segments AB and AF . There exist two perpendicular lines tangent to ω that pass through C and E,
+    respectively. Given that these two lines do not intersect on line AD, compute the radius of ω.
+    Proposed by: Karthik Venkata Vedula
+                  √
+                 3 3−3
+                             √
+    Answer:        2   = 32 ( 3 − 1)
+    Solution 1:
+
+                                                       A
+
+
+
+
+                                     F                                    B
+                                                       O
+
+
+                                         P
+
+
+
+
+                                     E                                    C
+
+
+
+
+                                                       D
+
+
+    Let O be the center of ω, and let the two tangent lines intersect at P . Note that O lies on the external
+    angle bisector of ∠CP E because the tangents are symmetric about line P O. Additionally, O lies on
+    the perpendicular bisector of CE by symmetry. By Fact 5, COP E is cyclic and ∠COE = 90◦ . √To
+    finish, observe that ∠COD = 45◦ . Dropping the altitude CH down to AD gives OH = CH = 3.
+                                √                                 √             √
+    So, AO = AH − OH = 3 − 3. The desired answer is then 23 · AO = 3 23−3 .
+
+    Solution 2: Another way to get ∠COE = 90◦ is as follows.
+    Let ω meet the tangents from C and E at Q and R, respectively. Observe OC = OE (as O lies on the
+                                                          +
+    perpendicular bisector of CE) and OQ = OR, so △OCQ ∼  = △OER. Then ∠COE = ∠QOR = 90◦ .
+
+
+
+
+24. [12] For any integer x, let
+
+                                                       x2   x3         x100
+                                                                           
+                                  f (x) = 100! 1 + x +    +    + ··· +        .
+                                                       2!   3!         100!
+
+    A positive integer a is chosen such that f (a) − 20 is divisible by 1012 . Compute the remainder when
+    f (a + 101) is divided by 1012 .
+    Proposed by: Pitchayut Saengrungkongka
+    Answer:       1939
+    Solution 1: By the binomial theorem,
+                                        
+                              n    n     n n−1
+                     (a + 101) ≡ a +       a   101 = an + 101nan−1            (mod 1012 ).
+                                         1
+   Using this gives (all congruences are modulo 1012 )
+                                                 100
+                                                 X   (a + 101)n
+                           f (a + 101) = 100!
+                                                 n=0
+                                                           n!
+                                                 100  n
+                                                            101nan−1
+                                                                         
+                                                 X     a
+                                        ≡ 100!            +
+                                                 n=0
+                                                       n!      n!
+                                                                100
+                                                                X    an−1
+                                        ≡ f (a) + 100! · 101
+                                                                n=1
+                                                                    (n − 1)!
+                                                                          a100
+                                        ≡ f (a) + 101f (a) − 100! · 101
+                                                                          100!
+                                        ≡ f (a) + 101(f (a) − 1)
+                                        ≡ 20 + 101(20 − 1) = 1939            (mod 1012 ).
+
+
+
+   Solution 2: The above solution can be viewed as a consequence of Hensel’s lemma as follows.
+   Because 101 is prime, for any integer x not divisible by 101, we have that
+
+                                     x2          x99
+                                                    
+               ′
+              f (x) = 100! 1 + x +       + ··· +       = f (x) − x100 ≡ f (x) − 1 (mod 101).
+                                      2!         99!
+
+   Clearly 101 ∤ a. Hence, by Hensel’s lemma, we get that
+
+                    f (a + 101) ≡ f (a) + 101f ′ (a) ≡ 20 + 101 · 19 ≡ 1939         (mod 1012 ).
+
+   Remark. All possible a’s are a ≡ 1012, 6670, and 9885 (mod 1012 ). They all lead to the same answer.
+
+
+
+
+25. [14] Let ABCD be a trapezoid such that AB ∥ CD, AD = 13, BC = 15, AB = 20, and CD = 34.
+    Point X lies inside the trapezoid such that ∠XAB = 2∠XBA and ∠XDC = 2∠XCD. Compute
+    XD − XA.
+   Proposed by: Pitchayut Saengrungkongka
+   Answer:      4
+   Solution:
+
+                                    A                  P             B
+
+
+
+                                            X
+
+
+
+
+                                   D                       Q                   C
+
+
+   Construct point P on AB such that XA = XP and point Q on CD such that XD = XQ. The angle
+   condition gives QC = XQ = XD and P B = XP = XA. Moreover, ADQP is an isosceles trapezoid.
+   Let S be the projection of A onto CD, and let T be on CD such that AT ∥ BC. Then ADT is a
+   13-14-15 triangle, so DS = 5. Therefore, QD − P A = 10. Finally, we get
+
+                       XD − XA = QC − P B = (34 − QD) − (20 − P A) = 14 − 10 = 4 .
+
+
+
+
+26. [14] Isabella has a bag with 20 blue diamonds and 25 purple diamonds. She repeats the following
+    process 44 times: she removes a diamond from the bag uniformly at random, then puts one blue
+    diamond and one purple diamond into the bag. Compute the expected number of blue diamonds in
+    the bag after all 44 repetitions.
+   Proposed by: Henrick Rabinovitz, Srinivas Arun
+                 173
+   Answer:        4
+
+   Solution: Let a = 20 and b = 25 be the initial numbers of blue and purple diamonds, respectively,
+   and let c = 44 be the number of times Isabella performs the operation. Suppose that at some point,
+   the bag contains x blue diamonds and y purple diamonds, for x + y = z total diamonds. After one step,
+   the bag will have z + 1 diamonds. The expected change in the number of blue diamonds in this step is
+   (−x/z) + 1 = y/z, and likewise this quantity for purple diamonds is x/z. Thus, the expected change in
+   the difference between the number of blue and purple diamonds is (y − x)/z. Since this difference was
+   initially x − y, the expected value of this difference is multiplied by (z − 1)/z at each step (regardless
+   of x − y). Since z starts at a + b and ends at a + b + c, the expected difference after c operations is
+                                             a+b+c−1
+                                               Y       z−1   (a + b − 1)(a − b)
+                                 (a − b) ·                 =                    ,
+                                                        z     (a + b + c − 1)
+                                              z=a+b
+
+   and as the total number of diamonds is a + b + c, the expected number of blue diamonds at the end is
+
+                                        a + b + c (a + b − 1)(a − b)
+                                                 +                   .
+                                            2      2(a + b + c − 1)
+
+                                                                     173
+   Plugging in a = 20, b = 25, and c = 44 gives us the answer,        4 .
+
+
+
+
+27. [14] Compute the number of ordered pairs (m, n) of odd positive integers both less than 80 such that
+
+                                      gcd(4m + 2m + 1, 4n + 2n + 1) > 1.
+
+   Proposed by: Pitchayut Saengrungkongka
+   Answer:      820
+   Solution: First, we characterize all ordered pairs of general (not necessarily odd) positive integers
+   (m, n) such that gcd(4m + 2m + 1, 4n + 2n + 1) > 1. We claim that (m, n) works if and only if either
+      • m and n are both even, or
+      • ν3 (m) = ν3 (n).
+   Proof of necessity. Suppose that p is a prime that divides both 4m + 2m + 1 and 4n + 2n + 1. If
+   p = 3, m and n must both be even. Henceforth assume that p ̸= 3. Let d be the order of 2 modulo
+   p. Then, as p | 23m − 1, we find that d | 3m. Furthermore, we cannot have p | 2m − 1. Otherwise, by
+   lifting the exponent (and p ̸= 3),
+
+                 νp (23m − 1) = νp (2m − 1) + νp (3) = νp (2m − 1) =⇒ νp (4m + 2m + 1) = 0.
+    The previous two results imply ν3 (d) = ν3 (m) + 1. Similarly, ν3 (d) = ν3 (n) + 1, so ν3 (m) = ν3 (n).
+    Proof of sufficiency. If m and n are both even, then 3 divides both 4m + 2m + 1 and 4n + 2n + 1.
+                                                 k      k
+    If ν3 (m) = ν3 (n) = k, then we claim that 43 + 23 + 1 divides both 4m + 2m + 1 and 4n + 2n + 1.
+                                                                                                    k
+    Indeed, note that as polynomials, x2 + x + 1 divides x2ℓ + xℓ + 1 when 3 ∤ ℓ. Plugging in x = 23 with
+    ℓ = m/3k and ℓ = n/3k yields the desired result.
+    Answer Extraction. We count pairs of odd integers (m, n) less than 80 with ν3 (m) = ν3 (n). Of all
+    integers in the set {1, 3, 5, . . . , 79}, there are 27, 9, 3, and 1 of them that have ν3 equal to 0, 1, 2, and
+    3, respectively. Hence, the answer is 272 + 92 + 32 + 12 = 820 .
+
+
+
+28. [14] Let f be a function from nonnegative integers to nonnegative integers such that f (0) = 0 and
+                                                         j m k       l m m2
+                                             f (m) = f             +
+                                                           2             2
+    for all positive integers m. Compute
+
+                                        f (1) f (2) f (3)         f (31)
+                                             +     +      + ··· +         .
+                                        1·2    2·3   3·4          31 · 32
+    (Here, ⌊z⌋ is the greatest integer less than or equal to z, and ⌈z⌉ is the least positive integer greater
+    than or equal to z.)
+    Proposed by: Carlos Rodriguez
+                  341
+    Answer:        32
+
+    Solution 1: For all positive integers n, let ω(n) = f (n) − f (n − 1). We claim that ω(n) is the largest
+    odd divisor of n for all n > 0. Indeed, for all positive integers k, we have
+
+              ω(2k) = f (2k) − f (2k − 1) = f (k) + k 2 − (f (k − 1) + k 2 ) = f (k) − f (k − 1) = ω(k)
+
+    and
+                   ω(2k + 1) = f (2k + 1) − f (2k) = f (k) + (k + 1)2 − (f (k) + k 2 ) = 2k + 1.
+    Inducting on the positive integers implies that ω(n) is indeed the largest odd divisor of n.
+    We can now rewrite the sum as
+                   31            31                              30
+                                                                                          !
+                   X     f (n)   X    f (n)   f (n)                X  f (n) − f (n − 1)           f (31)
+                               =            −         =                                       −          .
+                   n=1
+                       n(n + 1) n=1     n     n+1                  n=1
+                                                                                n                   32
+
+    Note that by using the original recursive definition, we can compute
+
+                                      f (31) = 162 + 82 + 42 + 22 + 12 = 341.
+
+    Moreover, we also see that f (n)−fn(n−1) = ω(n)
+                                                n =2
+                                                        −ν2 (n)
+                                                                , where 2ν2 (n) is the largest power of 2 dividing
+    n. Thus, our desired sum is
+               31
+                           !
+              X                341                                                          341    341
+                  2−ν2 (n)
+                             −      = 16 · 2−0 + 8 · 2−1 + 4 · 2−2 + 2 · 2−3 + 1 · 2−4 −        =        .
+              n=1
+                                32                                                          32      32
+
+
+    Solution 2: From the original recursion, for all positive integers n, we have
+
+                                 f (2n)     f (n) + n2      f (n)       n
+                                          =            =           +
+                               2n(2n + 1)   2n(2n + 1)   2n(2n + 1) 2(2n + 1)
+   and
+                         f (2n + 1)       f (n) + (n + 1)2         f (n)        n+1
+                                       =                   =                 +          .
+                      (2n + 1)(2n + 2)   (2n + 1)(2n + 2)    (2n + 1)(2n + 2) 2(2n + 1)
+   Adding these two equations gives
+
+                                  f (2n)      f (2n + 1)        f (n)   1
+                                          +                 =          + .
+                                2n(2n + 1) (2n + 1)(2n + 2)   2n(n + 1) 2
+                      Pn     f (k)
+   Thus, if T (n) =     k=1 k(k+1) , we have
+
+                                        2n+1
+                                         X  f (k)
+                         T (2n + 1) =
+                                          k(k + 1)
+                                     k=1
+                                               n                           
+                                     f (1) X          f (2m)     f (2m + 1)
+                                   =      +                    +
+                                     1(2) m=1 2m(2m + 1) (2m + 1)(2m + 2)
+                                           n                  
+                                     1 X           f (m)     1
+                                   = +                     +
+                                     2 m=1 2m(m + 1) 2
+                                        n+1 1
+                                   =       + T (n).
+                                         2  2
+
+   Starting from T (1) = 1, we can compute T (3) = 45 , T (7) = 21            85
+                                                                 8 , T (15) = 16 , and finally, T (31) =
+                                                                                                           341
+                                                                                                            32 .
+
+
+
+
+                                                                                                     √
+29. [16] Points A and B lie on circle ω with center O. Let X be a point inside ω. Suppose that XO = 2 2,
+    XA = 1, XB = 3, and ∠AXB = 90◦ . Points Y and Z are on ω such that Y ̸= A and triangles △AXB
+    and △Y XZ are similar with the same orientation. Compute XY .
+   Proposed by: Ethan Liu
+                 11
+   Answer:        5
+
+   Solution 1: Consider a rotation about X by 90◦ followed by a homothety with ratio 13 that sends
+   B to A. This sends ω to ω ′ with radius 13 of the radius of ω and center O′ . Since A is the image of
+   B under this rotation, we know A lies on both circles; the same argument shows Y must lie on both
+   circles. Thus, Y is the reflection of A over OO′ . In particular, this means that XY = AX ′ , where X ′
+   is the reflection of X over OO′ .
+   Let M be the midpoint of AB. Note that because △OXO′ ∼ △BXA, we also have △XOX ′ ∼
+   △XM A, as they are both isosceles and ∠XOX ′ = 2∠XOO′ = 2∠XBA = ∠XM A. This implies that
+   △XOM ∼ △XX ′ A. Thus, we know that AX ′ = OM · XM        XA
+                                                                = √210 OM . It remains to compute OM ;
+                                                                         √
+   noting that the distance between O and the foot from X to AB is 52 10, and that the altitude of
+                       3
+                         √
+   △AXY has length 10      10, we get that the distance from O to AB is
+                                               s
+                                   3√               √ 2  2 √  2 11 √
+                                      10 +          2 2 −      10 =      10
+                                   10                       5       10
+
+   by the Pythagorean theorem, which means that XY = AX ′ =           11
+                                                                       5 .
+                                                     M
+                                         A                    B
+
+                                                         O′
+                                                                       Y
+                                             X
+                                                                  X′
+
+
+
+
+                                                     O
+
+
+
+
+                                                 Z
+
+
+
+
+Solution 2:
+                                             P
+
+
+                                                     Y   B
+                                             M
+                                 A
+
+                                                 X′
+                                     X
+
+
+
+                                                                  N
+
+
+                                                     O
+
+
+
+
+                                                                           Z
+
+
+
+
+Let M be the midpoint of AB. We will find M O first.
+                                                                                      √
+Let the internal bisector of ∠AXB intersect ⊙(AXB) at P . From Ptolemy, XP = 2 2 = XO. Let
+X ′ be the foot of altitude from X to M O. Observe that O is the reflection of P across XX ′ . By the
+    area of △AXB, we have X ′ M = √310 . Therefore,
+                                                                      √
+                                     ′      ′        ′          ′   11 10   ′
+                          M O = OX + X M = X P + X M = 2X M + M P =       .
+                                                                      10
+    By the spiral similarity △XAB 7→ △XY Z, we have that AY ⊥ BZ and ∠AOB + ∠Y OZ = 90◦ .
+                                                                          √
+    Therefore, △XAM ∼ △XY N where N is the midpoint of Y Z. Thus, Y Z = 11 5 10 and XY = 11
+                                                                                          5 .
+                      −
+    Note: if △XAB ∼ △XY Z, just consider another △XY ′ Z ′ caused by reflecting △XY Z across XO.
+
+
+
+30. [16] Let a, b, and c be real numbers satisfying the system of equations
+                                        p            p
+                                      a 1 + b2 + b 1 + a2 = 43 ,
+                                        p            p
+                                                                5
+                                       b 1 + c2 + c 1 + b2 = 12    , and
+                                        p            p
+                                                2           2   21
+                                      c 1 + a + a 1 + c = 20 .
+
+    Compute a.
+    Proposed by: Pitchayut Saengrungkongka
+    Answer:        √7
+                  2 30
+                                                                    −x                     −x
+                                                            x
+                                                                                                +e−x
+    Solution 1: Recall that the functions sinh(x) = e −e
+                                                       2                 and cosh(x) = e        2      satisfy the relation
+                                                               p                      p
+      sinh(x + y) = sinh(x) cosh(y) + cosh(x) sinh(y) = sinh(x) 1 + sinh(y)2 + sinh(y) 1 + sinh(x)2 .
+
+    Since sinh is surjective, we can perform the substitution a = sinh(x), b = sinh(y), and c = sinh(z),
+    which turns the equations into
+
+                                                              2 − 21
+                                                sinh(x + y) =        ,
+                                                                2
+                                                              3
+                                                                −2
+                                                sinh(y + z) = 2 3 ,
+                                                                2
+                                                              5    2
+                                                                −
+                                                sinh(z + x) = 2 5 .
+                                                                2
+    Thus, x + y = log(2),q
+                          y + z =qlog(3/2),
+                                            and z + x = log(5/2). Solving these equations gives x =
+        p              1    10      3        7
+    log( 10/3), so a = 2     3 −   10 = 2 30 .
+                                            √
+
+
+                                                                                           2             2              2
+                                                                               −1
+    Solution 2: We can find positive real numbers x, y, and z such that a = x 2x  , b = y 2y−1 , and c = z 2z−1 .
+    Then, the first equation becomes
+
+                                         x2 − 1 y 2 + 1 y 2 − 1 x2 + 1  3
+                                               ·       +       ·       = ,
+                                           2x      2y      2y     2x    4
+    which simplifies to
+                                                             1  3
+                                                     xy −      = ,
+                                                            xy  2
+                                                        1
+    from which it follows that xy = 2. Similarly, yz − yz = 56 and zx − zx
+                                                                         1   21
+                                                                           = 10 , so yz = 32 and zx = 25 .
+             q                 q
+                                             (10/3)−1
+    Thus x = (2 · 52 )/( 32 ) = 10
+                                 3 , and a =
+                                               √      = 2√730 .
+                                                 2   10/3
+                      a unique circle that is both tangent to the parabola y = x2 at two points and tangent
+31. [16] There exists q
+                           y3
+    to the curve x =      1−y . Compute the radius of this circle.
+
+    Proposed by: Karthik Venkata Vedula
+                    √
+                     5
+    Answer:         2
+
+    Solution:
+                                                    y
+
+
+
+
+                                                                            x
+
+
+
+                                                                     3
+                                                              y
+    We can square both sides of the second curve to get x2 = 1−y , which further rearranges to
+
+                                                  x2           y
+                                                           = 2     .
+                                              (x2 + y 2 )2  x + y2
+                                                             3
+                                                        y
+    This relation implies that curves y = x2 and x2 = 1−y  map to each other under inversion about the
+                  2  2
+    unit circle x + y = 1. Therefore, the unique circle we seek must be invariant under inversion about
+    x2 + y 2 = 1.
+    Since the circle is tangent to y = x2 , we know that the circle is of the form
+
+                                               x2 + (y − y0 )2 = r2 .
+
+    We know that the length of the tangent from (0, 0) to this circle is 1. Since the distance from (0, 0) to
+    the center of the circle is y0 , using the Pythagorean Theorem gives r2 + 1 = y02 . Because the parabola
+    y = x2 is tangent to this circle at two distinct points, the equation x2 + (x2 − y0 )2 = r2 = y02 − 1 must
+    have two double roots. Therefore,
+
+                                x2 + (x2 − y0 )2 − (y02 − 1) = x4 − (2y0 − 1)x2 + 1
+
+    must be a perfect square, so 2y0 − 1 = 2 =⇒ y0 = 23 . This means r2 = y02 − 1 = 54 , so the radius of
+                    √
+                     5
+    the circle is   2 .
+
+
+
+
+32. [16] In the coordinate plane, a closed lattice loop of length 2n is a sequence of lattice points P0 , P1 ,
+    P2 , . . . , P2n such that P0 and P2n are both the origin and Pi Pi+1 = 1 for each i. A closed lattice loop
+    of length 2026 is chosen uniformly at random from all such loops. Let k be the maximum integer such
+    that the line ℓ with equation x + y = k passes through at least one point of the loop. Compute the
+    expected number of indices i such that 0 ≤ i ≤ 2025 and Pi lies on ℓ.
+    (A lattice point is a point with integer coordinates.)
+    Proposed by: Carlos Rodriguez, Jordan Lefkowitz
+                 1013
+    Answer:       507
+                                                                        2n
+    Solution: We claim that if 2026 is replaced with 2n, the answer is n+1 .
+    Write the path as a sequence of U , D, L, and R moves. The possible sequences that can result are
+    precisely those with an equal number of U ’s and D’s, and an equal number of R’s and L’s. We first
+    project this sequence onto a single dimension by converting each U and R to a 1, and each D and L
+    to a −1. The resulting sequence will have an equal number of 1’s and −1’s.
+    We claim that every such sequence of n 1’s and n −1’s corresponds to the same number of closed
+    lattice loops. Indeed, given such a sequence, a corresponding lattice loop can be made by replacing all
+    1’s with U ’s and R’s, and all −1’s with D’s and L’s, so that there are an equal number of U ’s and D’s.
+    Nothing in this replacement process is order-dependent, so the number of ways to create this loop does
+    not depend on the initial sequence.
+    We can see that each of the 1’s move the path towards ℓ and the −1’s move the path away. Hence,
+    we can think of the path as a one-dimensional walk, starting and ending in the same place, where the
+    points on ℓ correspond exactly to the maxima of this one-dimensional walk.
+    Using Catalan numbers, the probability that any given point is at the maxima is
+                                              1    2n
+                                                      
+                                             n+1 n        1
+                                                2n
+                                                    =       ,
+                                                 n
+                                                        n+1
+                                                                                         2n
+    and thus by linearity, the expected number of i ∈ [0, 2025] such that Pi is on ℓ is n+1 . Plugging in
+                                       1013
+    n = 1013 gives a final answer of    507 .
+
+
+
+
+33. [20] Estimate the total number of pages that teams submitted to the Team Round this year. (All
+    pages associated to at least one problem number count as submitted pages, even blank cover sheets
+    for a problem.)
+                                                                                                2/3 
+                                                                                              |E−A|
+    Submit a positive integer E. If the correct answer is A, you will receive max 0, 20 1 −     100
+    points.
+    Proposed by: Derek Liu
+    Answer:      1003
+    Solution: Including individual teams, 106 teams registered this year, of which 101 teams submitted a
+    nonzero number of pages to the Team Round. A surprisingly accurate estimate of 1000, which scores 19
+    points, can be obtained by simply assuming 100 teams competed and each team submitted an average
+    of one page per problem. (Not every team submits all of their cover pages, which mitigates the effect
+    of multiple-page submissions.)
+
+
+
+34. [20] On the perimeter of a unit circle, 12 points are chosen uniformly and independently at random.
+    Estimate the expected value of the area of the convex 12-gon formed by these points.
+    Submit a positive number E written in decimal.          If the correct answer is A, you will receive
+    round 20e−15|E−A| points.
+    Proposed by: Isabella Zhu
+                 467775 155925 10395  1485   33
+    Answer:       2π 9 − 2π 7 + π 5 − 2π 3 + π ≈ 2.55915198
+Solution: We compute the exact answer as given above. Let n = 12. and θ1 , θ2 , . . . θn be uniformly
+randomly generated such that θ1 + · · · + θn = 2π. We are trying to estimate
+                                  " n              #     n
+                                    1X                1X
+                                E          sin(θi ) =       E[sin(θi )].
+                                    2 i=1             2 i=1
+
+We do this by computing the marginal distribution of θi , which is proportional to the area of the n − 2
+dimensional cross section                X
+                                             θj = 2π − θi .
+                                             j̸=i
+
+The volume of this cross section is proportional to (2π − θi )n−2 . Thus, the marginal probability
+distribution of θi can be written as
+                                      p(θi ) = C(2π − θi )n−2
+                                                           R 2π
+for some constant C. We can solve for C because we know 0 p(θi ) dθi = 1. The result is that
+                                                              n−2
+                                                 n−1        θi
+                                      p(θi ) =           1−         .
+                                                  2π        2π
+
+Thus, the quantity that we seek to estimate is
+                         " n          #
+                          1X              n
+                       E        sin θi = E[sin θi ]
+                          2 i=1           2
+                                            Z 2π
+                                        =n       p(θi ) sin θi dθi
+                                                 0
+                                                                  n−2
+                                           n(n − 1) 2π
+                                                       
+                                                               θ
+                                                   Z
+                                         =                1−             sin θ dθ
+                                              4π     0        2π
+                                                           10
+                                           33 2π
+                                                  
+                                                        θ
+                                             Z
+                                         =          1−         sin θ dθ.
+                                           π 0         2π
+
+We can integrate this using tabular integration by parts.
+
+                                    Differentiate        Integrate   Sign
+                                            θ 10
+                                              
+                                       1 − 2π              sin θ
+                                               θ 9
+                                    − π5 1 − 2π
+                                                  
+                                                           cos θ        +
+                                     45        θ 8
+                                                  
+                                    2π 2 1 − 2π          − sin θ       −
+                                                θ 7
+                                   − π903 1 − 2π          − cos θ       +
+                                    315        θ 6
+                                                  
+                                    π 4 1 − 2π            sin θ        −
+                                                θ 5
+                                   − 945
+                                      π 5 1 − 2π          cos θ        +
+                                   4725         θ 4
+                                    2π 6 1 − 2π          − sin θ       −
+                                                 θ 3
+                                  − 4725
+                                      π7   1 − 2π         − cos θ       +
+                                   14175         θ 2
+                                                   
+                                    2π 8  1 − 2π           sin θ        −
+                                                  θ 1
+                                  − 14175
+                                                    
+                                     2π 9  1 − 2π          cos θ        +
+                                         14175
+                                         4π 10            − sin θ       −
+                                                           cos θ        +
+
+                                                              θ
+                                                                     n
+To compute the product, note that any term of the form C 1 − 2π             sin θ vanishes when taking definite
+    integral from 0 to 2π. Therefore, the desired value is
+                     
+                  33        θ 10    45       θ 8              θ 6             θ 4
+                                                  + 315           − 4725
+                                                                             
+                   π   1 − 2π    − 2π 2 1 − 2π       π 4 1 − 2π     2π 6 1 − 2π
+                                                                            2                  2π
+                                                           + 14175
+                                                              2π 8
+                                                                        θ
+                                                                   1 − 2π        + 14175
+                                                                                   4π 10   cos θ
+                                                                                                0
+                                                          
+                     33       45 315 4725 14175
+                   =       1− 2 + 4 −      +
+                     π       2π  π    2π 6   2π 8
+                        33 1485 10395 155925 467775
+                   =      −      +    −     +
+                        π   2π 3   π5   π7    2π 9
+
+
+
+
+35. [20] Call an 8-digit number a flamingo if it uses each of the digits 2 through 9 exactly once. Estimate
+    the number of flamingos that are prime.
+                                                                                                       
+                                                                                                   A E 21
+    Submit a positive integer E. If the correct answer is A, you will receive round 20 · min E      ,A
+    points.
+    Proposed by: Rishabh Das
+    Answer:      3098
+    Solution: There are 8! = 40320 flamingos which have average m = 61111110.5. No flamingo is
+    divisible by 3, as they all have digit sum 44. Assuming each flamingo has a 32 · ln1m probability of being
+    prime, we get an estimate of 3373, which scores 3 points.
+    We can do a lot better by noting that 83 of flamingos aren’t divisible by 2 or 5 (the ones ending in 3,
+                              4
+    7, or 9), as compared to 10 of numbers in general. Adjusting our old estimate by a factor of 38 · 10
+                                                                                                      4 , we
+    get a new estimate of 3162, which scores 12 points.
+    We can still make some minor improvements. Since the digit sum of a flamingo is 44, a flamingo is
+    divisible by 11 if and only if the alternating digit sums are both 22 (as they can’t be as low as 11).
+    There are 8 four-element subsets of {2, 3, . . . , 9} which have sum 22, and 70 four-element subsets in
+             8
+    all, so 70 of flamingos are divisible by 11. Adjusting our estimate by a factor of 62   11
+                                                                                       70 · 10 , we get a new
+    estimate of 3081, which scores 17 points.
+    Finally, the estimate of ln1m isn’t the most accurate. We can do better with the logarithmic integral;
+                                                                           R 98765433
+    the number of primes from 23456789 to 98765432 is approximately 23456789 lndtt , which can be ap-
+    proximated (e.g., using the asymptotic series). Its true value is around 4220000. There are 75308644
+    numbers from 23456789 to 98765432, respectively. Using these values to estimate prime density instead,
+    we arrive at a final estimate of
+                                    4220000       3 3 10 62 11
+                                            · 8! · · ·  ·  ·   ≈ 3096,
+                                   75308644       2 8 4 70 10
+    which is accurate enough for all 20 points.
+
+
+
+36. [20] Ethan initially writes some numbers on a blackboard, each of which is either a 3 or a 5. He then
+    repeatedly picks two numbers and replaces them with their sum, difference, product, or quotient (if the
+    divisor is nonzero). Let f (n) denote the minimum number of numbers Ethan must initially write for
+    him to be able to eventually write the number n. For example, f (2025) ≤ 6 because Ethan could start
+    with 3, 3, 3, 3, 5, and 5 on the board, then repeatedly multiply two numbers at a time to eventually
+    get 2025.
+    Submit a comma-separated ordered 8-tuple of integers corresponding to the values of f (164), f (187),
+    f (191), f (224), f (255), f (286), f (374), and f (479), in that order, or an X for any value you wish to
+    leave blank. For instance, if you think f (164) = 9 and f (224) = 8, you should submit “9, X, X, 8, X,
+                       j            2
+                                      k
+X, X, X”. You will earn 0.6W · (C+1)
+                                 4      points, where C is the number of correct answers you submit
+and W is the number of incorrect (non-blank) answers.
+Proposed by: Derek Liu
+Answer:     6, 6, 6, 5, 5, 6, 6, 7
+Solution: The following expressions represent optimal ways for Ethan to make each of the 8 given
+numbers.
+
+                       164 = 3(5(5 + 5) + 3) + 5
+                       187 = 3(3 + 5)(3 + 5) − 5
+                       191 = 5 · 5(3 + 5) − 3 · 3
+                       224 = (3 + 5)(5 · 5 + 3)
+                       255 = 5 · 5(5 + 5) + 5
+                       286 = (3 + 5 + 5)(5 · 5 − 3)
+                       374 = 3 · 5 · 5 · 5 − 3/3 = 3 · 5 · 5 · 5 − 5/5
+                       479 = (5 · 5 − 3)(5 · 5 − 3) − 5 = (3 − 5 · 5)(3 − 5 · 5) − 5
+
+It can be checked by code that these are optimal.
+

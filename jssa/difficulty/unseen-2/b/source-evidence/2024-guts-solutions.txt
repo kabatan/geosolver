@@ -1,0 +1,1211 @@
+                                 HMMT February 2024
+                                          February 17, 2024
+                                            Guts Round
+1. [5] Compute the sum of all integers n such that n2 − 3000 is a perfect square.
+   Proposed by: Holden Mui
+   Answer:      0
+   Solution: If n2 − 3000 is a square, then (−n)2 − 3000 is also a square, so the sum is 0 .
+
+
+
+2. [5] Jerry and Neil have a 3-sided die that rolls the numbers 1, 2, and 3, each with probability 13 . Jerry
+   rolls first, then Neil rolls the die repeatedly until his number is at least as large as Jerry’s. Compute
+   the probability that Neil’s final number is 3.
+   Proposed by: Rishabh Das
+                11
+   Answer:      18
+                                                 1
+   Solution: If Jerry rolls k, then there is a 4−k  probability that Neil’s number is 3, since Neil has an
+   equal chance of rolling any of the 4 − k integers not less than k. Thus, the answer is
+                                                             
+                                           1            1 1           11
+                                                   1+    +        =      .
+                                           3            2 3           18
+
+
+
+
+3. [5] Compute the number of even positive integers n ≤ 2024 such that 1, 2, . . . , n can be split into n2
+   pairs, and the sum of the numbers in each pair is a multiple of 3.
+   Proposed by: Rishabh Das
+   Answer:      675
+   Solution: There have to be an even number of multiples of 3 at most n, so this means that n ≡ 0, 2
+   (mod 6). (We can also say that there should be an equal number of 1 (mod 3) and 2 (mod 3) numbers,
+   which gives the same restriction.)
+   We claim that all these work. We know there are an even number of multiples of 3, so we can pair
+   them; then we can pair 3k + 1 and 3k + 2 for all k.
+   This means the answer is 2022
+                              3 + 1 = 675 .
+
+
+
+
+4. [5] Equilateral triangles ABF and BCG are constructed outside regular pentagon ABCDE. Compute
+   ∠F EG.
+   Proposed by: Karthik Venkata Vedula
+   Answer:      48◦ = 4π
+                      15
+
+   Solution: We have ∠F EG = ∠AEG − ∠AEF . Since EG bisects ∠AED, we get ∠AEG = 54◦ .
+   Now, ∠EAF = 108◦ + 60◦ = 168◦ . Since triangle EAF is isosceles, this means ∠AEF = 6◦ , so the
+   answer is 54◦ − 6◦ = 48◦ .
+                                    G                                   F
+
+
+                                                       B
+
+
+
+
+                                        C                               A
+
+
+
+
+                                             D                      E
+
+
+
+
+5. [6] Let a, b, and c be real numbers such that
+
+                                                 a + b + c = 100,
+                                             ab + bc + ca = 20, and
+                                            (a + b)(a + c) = 24.
+
+  Compute all possible values of bc.
+  Proposed by: Pitchayut Saengrungkongka
+  Answer:       224, −176
+  Solution: We first expand the left-hand-side of the third equation to get (a + b)(a + c) = a2 + ac +
+  ab + bc = 24. From this, we subtract the second equation to obtain a2 = 4, so a = ±2.
+  If a = 2, plugging into the first equation gives us b + c = 98 and plugging into the second equation
+  gives us 2(b + c) + bc = 20 ⇒ 2(98) + bc = 20 ⇒ bc = −176.
+  Then, if a = −2, plugging into the first equation gives us b + c = 102, and plugging into the second
+  equation gives us −2(b + c) + bc = 20 ⇒ −2(102) + bc = 20 ⇒ bc = 224.
+  Therefore, the possible values of bc are 224, −176 .
+
+
+
+6. [6] In triangle ABC, points M and N are the midpoints of AB and AC, respectively, and points P
+   and Q trisect BC. Given that A, M , N , P , and Q lie on a circle and BC = 1, compute the area of
+   triangle ABC.
+  Proposed by: Rishabh Das
+                √
+                 7
+  Answer:       12
+
+  Solution: Note that M P ∥ AQ, so AM P Q is an isosceles trapezoid. In particular, we have AM =
+  M B = BP = P Q = 13 , so AB = 23 . Thus ABC is isoceles with base 1 and legs 23 , and the height from
+               √                    √
+                7                    7
+  A to BC is   6 , so the area is   12 .
+                                                        A
+
+
+
+
+                                        M                               N
+
+
+
+
+                           B                                                          C
+                                               Q                  P
+
+
+
+
+7. [6] Positive integers a, b, and c have the property that ab , bc , and ca end in 4, 2, and 9, respectively.
+   Compute the minimum possible value of a + b + c.
+   Proposed by: Derek Liu
+   Answer:      17
+   Solution: This minimum is attained when (a, b, c) = (2, 2, 13). To show that we cannot do better,
+   observe that a must be even, so c ends in 3 or 7. If c ≥ 13, since a and b are even, it’s clear (2, 2, 13) is
+   optimal. Otherwise, c = 3 or c = 7, in which case bc can end in 2 only when b ends in 8. However, no
+   eighth power ends in 4, so we would need b ≥ 18 (and a ≥ 2), which makes the sum 2 + 18 + 3 = 23
+   larger than 17 .
+
+
+
+8. [6] Three points, A, B, and C, are selected independently and uniformly at random from the interior
+   of a unit square. Compute the expected value of ∠ABC.
+   Proposed by: Akash Das
+   Answer:      60◦ = π3
+   Solution: Since ∠ABC + ∠BCA + ∠CAB = 180◦ for all choices of A, B, and C, the expected value
+   is 60◦ .
+
+
+
+9. [7] Compute the sum of all positive integers n such that n2 − 3000 is a perfect square.
+   Proposed by: Holden Mui, Pitchayut Saengrungkongka, Rishabh Das
+   Answer:      1872
+   Solution: Suppose n2 − 3000 = x2 , so n2 − x2 = 3000. This factors as (n − x)(n + x) = 3000. Thus,
+   we have n − x = 2a and n + x = 2b for some positive integers a, b such that ab = 750 and a < b.
+   Therefore, we have n = a + b, so the sum will be just sum of divisors of 750 = 2 · 3 · 53 , which is
+
+                                   (1 + 2)(1 + 3)(1 + 5 + 25 + 125) = 1872 .
+
+   Remark. Problem 1 and 9 have slightly different statements.
+     1. Compute the sum of all integers n such that n2 − 3000 is a perfect square.
+     9. Compute the sum of all positive integers n such that n2 − 3000 is a perfect square.
+   There are 86 teams participating in the Guts rounds. Of these, the distribution of answers to Problem
+   1 is as follows:
+      • 49 teams submitted 0, the correct answer.
+      • 17 teams submitted 1872, the correct answer to Problem 9.
+      • 3 teams submitted 3744, twice the correct answer to Problem 9.
+      • 2 teams submitted each of 55 and 744.
+      • 1 team submitted each of the following answers: 20, 548, 1404, 1586, 1772, 1807, 1817, 1882, 2184,
+        2746, 4680, 7488, and 9360.
+    The distribution of answers to Problem 9 is as follows:
+      • 69 teams submitted 1872, the correct answer.
+      • 5 teams submitted 3744, twice the correct answer.
+      • 2 teams submitted 2184.
+      • 1 team submitted each of the following answers: 55, 205, 548, 1560, 1764, 1772, 1832, 1867, 1893,
+        and 3634.
+
+
+
+
+10. [7] Alice, Bob, and Charlie are playing a game with 6 cards numbered 1 through 6. Each player is dealt
+    2 cards uniformly at random. On each player’s turn, they play one of their cards, and the winner is
+    the person who plays the median of the three cards played. Charlie goes last, so Alice and Bob decide
+    to tell their cards to each other, trying to prevent him from winning whenever possible. Compute the
+    probability that Charlie wins regardless.
+    Proposed by: Ethan Liu
+                  2
+    Answer:      15
+
+    Solution: If Alice has a card that is adjacent to one of Bob’s, then Alice and Bob will play those cards
+    as one of them is guaranteed to win. If Alice and Bob do not have any adjacent cards, since Charlie
+    goes last, Charlie can always choose a card that will win.
+    Let A denote a card that is held by Alice and B denote a card that is held by Bob. We will consider
+    the ascneding order of which Alice and Bob’s cards are held.
+    If the ascending order in which Alice and Bob’s cards are held are ABAB or BABA, then Charlie
+    cannot win. In these 2 cases, there will always be 2 consecutive cards where one is held by Alice and the
+    other is held by Bob. Therefore, the only cases we need to consider are the ascending orders AABB,
+    ABBA, and their symmetric cases.
+    In the case AABB, we must make sure that the larger card Alice holds and the smaller card Bob holds
+    are not consecutive. Alice can thus have {1, 2}, {2, 3}, or {1, 3}. Casework on what Bob can have yields
+    5 different combinations of pairs of cards Alice and Bob can hold. Since this applies to the symmetric
+    case BBAA as well, we get 10 different combinations.
+    In the case ABBA, we see that Alice’s cards must be {1, 6} and Bob’s cards must be {3, 4}. Considering
+    the symmetric case BAAB as well, this gives us 2 more combinations.
+    Thus, there are 12 total possible combinations of Alice’s and Bob’s cards such that Charlie
+                                                                                                will win
+    regardless. The total number of ways to choose Alice’s and Bob’s cards is given by 62 42 = 90, so the
+                                                     12      2
+    probability that Charlie is guaranteed to win is 90 =   15 .
+
+
+
+
+11. [7] Let ABCD be a rectangle such that AB = 20 and AD = 24. Point P lies inside ABCD such that
+    triangles P AC and P BD have areas 20 and 24, respectively. Compute all possible areas of triangle
+    P AB.
+    Proposed by: Pitchayut Saengrungkongka
+    Answer:      98, 118, 122, 142
+    Solution:
+
+                                  A                                            D
+
+
+
+                                                      P
+
+                                              P
+                                                          O    P
+
+                                                          P
+
+
+
+                                  B                                            C
+
+    There are four possible locations of P as shown in the diagram. Let O be the center. Then, [P AO] = 10
+    and [P BO] = 12. Thus, [P AB] = [AOB] ± [P AO] ± [P BO] = 120 ± 10 ± 12, giving the four values
+     98, 118, 122, and 142 .
+
+
+
+12. [7] Compute the number of quadruples (a, b, c, d) of positive integers satisfying
+
+                                         12a + 21b + 28c + 84d = 2024.
+
+    Proposed by: Rishabh Das
+    Answer:      2024
+    Solution: Looking at the equation mod 7 gives a ≡ 3 (mod 7), so let a = 7a′ + 3. Then mod 4 gives
+    b ≡ 0 (mod 4), so let b = 4b′ . Finally, mod 3 gives c ≡ 2 (mod 3), so let c = 3c′ + 2.
+    Now our equation yields
+
+              84a′ + 84b′ + 84c′ + 84d = 2024 − 3 · 12 − 2 · 28 = 1932 =⇒ a′ + b′ + c′ + d = 23.
+
+    Since a, b, c, d are positive integers, we have a′ and c′ are nonnegative and b′ and d are positive. Thus,
+    let b′′ = b′ + 1 and d′ = d + 1, so a′ , b′′ , c′ , d′ are nonnegative integers summing to 21. By stars and
+    bars, there are 24  3 = 2024 such solutions.
+
+
+
+
+13. [9] Mark has a cursed six-sided die that never rolls the same number twice in a row, and all other
+    outcomes are equally likely. Compute the expected number of rolls it takes for Mark to roll every
+    number at least once.
+    Proposed by: Albert Wang
+                  149
+    Answer:        12
+
+    Solution: Suppose Mark has already rolled n unique numbers, where 1 ≤ n ≤ 5. On the next roll,
+    there are 5 possible numbers he could get, with 6 − n of them being new. Therefore, the probability of
+    getting another unique number is 6−n 5 , so the expected number of rolls before getting another unique
+                 5
+    number is 6−n  . Since it always takes 1 roll to get the first number, the expected total number of rolls
+    is 1 + 55 + 54 + 35 + 52 + 51 =   149
+                                       12 .
+
+
+
+
+14. [9] Compute the smallest positive integer such that, no matter how you rearrange its digits (in base
+    ten), the resulting number is a multiple of 63.
+    Proposed by: Arul Kolla
+    Answer:       111 888
+    Solution: First, the number must be a multiple of 9 and 7. The first is easy to check and holds for
+    all permutations. Note that when two adjacent digits a and b are swapped, the number changes by
+    9(a − b) · 10k (we disregard sign), so 9(a − b) must also be a multiple of 63 for all digits a and b. In
+    particular, this is suﬀicient, since a permutation can be represented as a series of transpositions.
+    This means that a − b must be a multiple of 7 for all digits a and b, so either all digits are equal or
+    they are in {0, 7}, {1, 8}, or {2, 9}. We find the minimum for each case separately.
+    We first provide the following useful fact: the first repunit (numbers 1, 11, 111, …) that is a multiple
+    of 7 is 111111. This is because 10 mod 7 = 3, and 3 is a generator modulo 7 (of course, you can just
+    compute the powers of 3 by hand, and it will not take much longer).
+    If a number k · 1 . . . 1 is a multiple of 63, then either k or 1 . . . 1 is a multiple of 7; if it is k, then it’s
+    clear that we need 777 777 777 to make the sum a multiple of 9. If 1 . . . 1 is a multiple of 7, then it is
+    at least 111 111, then to make a multiple of 9, we need 333 333.
+    If the only digits are 7 and 0, then we need at least nine sevens to make the digit sum a multiple of
+    nine, which has more digits than 333 333.
+    If the only digits are 8 and 1, then we can note that since 8 and 1 are both 1 (mod 7), these numbers
+    are equivalent to the repunits modulo 7, so such numbers have at least six digits. The best such
+    six-digit number with digits summing to a multiple of 9 is 111 888, which is our new candidate.
+    If the only digits are 9 and 2, then by analogous logic such numbers have at least six digits. But the
+    smallest such number is 999 999, which is not better.
+    So our best answer is 111 888 . It works.
+
+
+
+
+15. [9] Let a ⋆ b = ab − 2. Compute the remainder when (((579 ⋆ 569) ⋆ 559) ⋆ · · · ⋆ 19) ⋆ 9 is divided by 100.
+    Proposed by: Rishabh Das
+    Answer:       29
+    Solution: Note that
+              (10a + 9) ⋆ (10b + 9) = (100ab + 90a + 90b + 81) − 2 ≡ 90(a + b) + 79            (mod 100),
+    so throughout our process all numbers will end in 9, so we will just track the tens digit. Then the ”new
+    operation” is
+                                       a † b ≡ −(a + b) + 7 mod 10,
+    where a and b track the tens digits. Now
+                                (a † b) † c ≡ (−(a + b) + 7) † c ≡ a + b − c     mod 10.
+    Thus, our expression has tens digit congruent to
+                   −0 + 1 − 2 + 3 − · · · − 54 + 55 − 56 − 57 + 7 ≡ −28 − 57 + 7 ≡ 2 mod 10,
+    making the answer 29 .
+16. [9] Let ABC be an acute isosceles triangle with orthocenter H. Let M and N be the midpoints of
+    sides AB and AC, respectively. The circumcircle of triangle M HN intersects line BC at two points
+    X and Y . Given XY = AB = AC = 2, compute BC 2 .
+    Proposed by: Andrew Wen
+                  √
+    Answer:     2( 17 − 1)
+    Solution:
+
+                                                       A
+
+
+
+
+                                                        H
+                                        M                          N
+
+
+
+
+                             B    Y                   D                   X    C
+
+
+
+
+    Let D be the foot from A to BC, also the midpoint of BC. Note that DX = DY = M A = M B =
+    M D = N A = N C = N D = 1. Thus, M N XY is cyclic with circumcenter D and circumradius 1. H
+    lies on this circle too, hence DH = 1.
+    If we let DB = DC = x, then since △HBD ∼ △BDA,
+                                                                                    √
+                                              p                                         17 − 1
+                BD2 = HD · AD =⇒ x2 =             4 − x2 =⇒ x4 = 4 − x2 =⇒ x2 =                .
+                                                                                         2
+                                         √
+    Our answer is BC 2 = (2x)2 = 4x2 = 2( 17 − 1)
+
+
+
+17. [11] The numbers 1, 2, . . . , 20 are put into a hat. Claire draws two numbers from the hat uniformly
+    at random, a < b, and then puts them back into the hat. Then, William draws two numbers from the
+    hat uniformly at random, c < d.
+    Let N denote the number of integers n that satisfy exactly one of a ≤ n ≤ b and c ≤ n ≤ d. Compute
+    the probability N is even.
+    Proposed by: Rishabh Das
+                 181
+    Answer:      361
+
+    Solution: The number of integers that satisfy exactly one of the two inequalities is equal to the
+    number of integers that satisfy the first one, plus the number of integers that satisfy the second one,
+    minus twice the number of integers that satisfy both. Parity-wise, this is just the number of integers
+    that satisfy the first one, plus the number of integers that satisfy the second one.
+    The number of integers that satisfy the first one is b − a + 1. The probability this is even is 19
+                                                                                                    10
+                                                                                                       , and
+            9
+    odd is 19 . This means the answer is
+                                              102 + 92      181
+                                                        =       .
+                                                 192        361
+
+
+
+
+18. [11] An ordered pair (a, b) of positive integers is called spicy if gcd(a + b, ab + 1) = 1. Compute the
+    probability that both (99, n) and (101, n) are spicy when n is chosen from {1, 2, . . . , 2024!} uniformly
+    at random.
+    Proposed by: Pitchayut Saengrungkongka
+                   96
+    Answer:       595
+
+    Solution: We claim that (a, b) is spicy if and only if both gcd(a+1, b−1) = 1 and gcd(a−1, b+1) = 1.
+    To prove the claim, we note that
+
+                         gcd(a + b, ab + 1) = gcd(a + b, b(−b) + 1) = gcd(a + b, b2 − 1).
+
+    Hence, we have
+
+                 gcd(a + b, ab + 1) = 1 ⇐⇒ gcd(a + b, b2 − 1) = 1
+                                         ⇐⇒ gcd(a + b, b − 1) = 1 and gcd(a + b, b + 1) = 1
+                                         ⇐⇒ gcd(a + 1, b − 1) = 1 and gcd(a − 1, b + 1) = 1,
+
+    proving the claim.
+    Thus, n works if and only if all following four conditions hold:
+      • gcd(n + 1, 98) = 1, or equivalently, n is neither −1 (mod 2) nor −1 (mod 7);
+      • gcd(n − 1, 100) = 1, or equivalently, n is neither 1 (mod 2) nor 1 (mod 5);
+      • gcd(n + 1, 100) = 1, or equivalently, n is neither −1 (mod 2) nor −1 (mod 5); and
+      • gcd(n − 1, 102) = 1, or equivalently, n is neither 1 (mod 2), 1 (mod 3), nor 1 (mod 17).
+    Thus, there are 1, 2, 3, 6, 17 possible residues modulo 2, 3, 5, 7, and 17, respectively. The residues are
+    uniformly distributed within {1, 2, . . . , 2024!}. Hence, the answer is 21 · 32 · 35 · 67 · 17
+                                                                                                 16    96
+                                                                                                    = 595 .
+
+
+
+19. [11] Let A1 A2 . . . A19 be a regular nonadecagon. Lines A1 A5 and A3 A4 meet at X. Compute ∠A7 XA5 .
+    Proposed by: Nithid Anchaleenukoon
+                  1170 ◦
+    Answer:        19    = 13π
+                            38
+
+    Solution:
+                                          X
+
+
+
+
+                                                               A5
+                                                 A6                         A4
+
+                                     A7                                          A3
+
+
+                             A8                                                       A2
+
+
+
+                        A9                                                                 A1
+
+    Inscribing the nondecagon in a circle, note that
+                                              1 \ \               1
+                             ∠A3 XA5 =          (A1 A3 − A4 A5 ) = A\
+                                                                    5 A3 A4 = ∠A5 A3 X.
+                                              2                   2
+    Thus A5 X = A5 A3 = A5 A7 , so
+                                                 1            1
+                                  ∠A7 XA5 = 90◦ − ∠XA5 A7 = ∠A1 A5 A7
+                                                 2            2
+                                            1 \         1 13          1170 ◦
+                                          = A1 A 8 A7 =  ·   · 360◦ =        .
+                                            4           4 19           19
+
+
+
+                 √
+20. [11] Compute 4 55083 + 56253 + 57423 , given that it is an integer.
+    Proposed by: Rishabh Das
+    Answer:       855
+    Solution: Let a = 5625 = 752 and b = 117. Then we have
+
+                55083 + 52653 + 57423 = (a − b)3 + a3 + (a + b)3 = 3a3 + 6ab2 = 3a(a2 + 2b2 ).
+
+    We have 3a = 33 · 54 , so a2 + 2b2 = 34 · (6252 + 2 · 192 ) should be 3 times a fourth power. This means
+
+                                             6252 + 2 · 192 = 3x4
+                                                              √                      √
+    for some integer x. By parity, x must be odd, and also x2 3 ≈ 625. Approximating 3 even as 2, we
+    get x should be around 19. Then x = 17 is clearly too small, and x = 21 is too big. (You can also
+    check mod 7 for this latter one.) Thus, x = 19. The final answer is then
+
+                                                      32 · 5 · 19 = 855 .
+
+
+
+
+21. [12] Kelvin the frog currently sits at (0, 0) in the coordinate plane. If Kelvin is at (x, y), either he can
+    walk to any of (x, y + 1), (x + 1, y), or (x + 1, y + 1), or he can jump to any of (x, y + 2), (x + 2, y)
+    or (x + 1, y + 1). Walking and jumping from (x, y) to (x + 1, y + 1) are considered distinct actions.
+    Compute the number of ways Kelvin can reach (6, 8).
+    Proposed by: Derek Liu
+                                            
+    Answer:            1831830 = 610 · 14
+                                        6
+                                       
+    Solution: Observe there are 14   6   = 3003 up-right paths from (0, 0) to (6, 8), each of which are 14
+    steps long. Any two of these steps can be combined into one: U U , RR, and RU as jumps, and U R as
+    walking from (x, y) to (x + 1, y + 1). The number of ways to combine steps is the number of ways to
+    group 14 actions into singles and consecutive pairs, which is F15 = 610. Every path Kelvin can take
+    can be represented this way, so the answer is 610 · 3003 = 1831830 .
+
+
+
+22. [12] Let x < y be positive real numbers such that
+                                        √        √                 √              p
+                                            x+       y=4     and       x+2+        y + 2 = 5.
+
+    Compute x.
+    Proposed by: Ethan Liu
+                       49
+    Answer:            36
+
+    Solution: Adding and subtracting both equations gives
+                                       √        √     p   √
+                                         x+2+ x+ y+2+ y =9
+                                       √        √     p   √
+                                         x+2− x+ y+2− y =1
+                    √     √               √    √            √       √ √         √
+    Substitute a = x + x + 2 and b = y + y + 2. Then since ( x + 2 + x)( x + 2 − x) = 2, we
+    have
+                                                  a+b=9
+                                                  2 2
+                                                    + =1
+                                                  a b
+    Dividing the first equation by the second one gives
+
+                                                       ab = 18, a = 3, b = 6
+              √        √        √   √       √
+                            x+2+ x−( x+2− x)  3− 2
+    Lastly,       x=               2         = 23          = 76 , so x =   49
+                                                                           36 .
+
+
+
+
+23. [12] Let ℓ and m be two non-coplanar lines in space, and let P1 be a point on ℓ. Let P2 be the point
+    on m closest to P1 , P3 be the point on ℓ closest to P2 , P4 be the point on m closest to P3 , and P5 be
+    the point on ℓ closest to P4 . Given that P1 P2 = 5, P2 P3 = 3, and P3 P4 = 2, compute P4 P5 .
+    Proposed by: Luke Robitaille
+                       √
+                        39
+    Answer:             4
+
+    Solution: The figure below shows the situation of the problem when projected appropriately, which
+    will be explained later.
+                                                                                       ℓ
+
+
+                                                                        P1
+
+
+
+
+                                                   P3                             √ 5 − h2
+                                                                        √          2
+                                                                        9−
+                                                               √ − h2
+                                            P5                               h2
+                                                                4
+                                                 √                                           m
+                                                 a2
+                                                      −                                 P2
+                                                          h2
+                                                                 P4
+
+
+
+
+    Let a be the answer. By taking the z-axis to be the cross product of these two lines, we can let the lines
+    be on the planes z = 0 and z = h, respectively. Then, by projecting√ onto the√xy-plane, we √ get the above
+    diagram.
+    √           The   projected lengths of the first four segments are  25 − h 2,  9 − h 2 , and  4 − h2 , and
+      a − h . By similar triangles, these lengths must form a geometric progression. Therefore, 25 − h2 ,
+       2      2
+
+    9 − h2 , 4 − h2 , a2 − h2 is a geometric progression. By taking consecutive differences, 16, 5, 4 − a2 is a
+                                                                    √
+    geometric progression. Hence, 4 − a2 = 25
+                                           16 =⇒ a =
+                                                                        39
+                                                                        4 .
+
+
+
+
+24. [12] A circle is tangent to both branches of the hyperbola x2 −20y 2 = 24 as well as the x-axis. Compute
+    the area of this circle.
+    Proposed by: Karthik Venkata Vedula
+    Answer:       504π
+    Solution 1:
+                                                             y
+
+
+                                                                          ω
+
+
+
+
+                                                                                           x
+
+
+
+
+   Invert about the unit circle centered at the origin. ω turns into a horizontal line, and the hyperbola
+   turns into the following:
+
+                     x2                20y 2
+                                −                  = 24 =⇒ x2 − 20y 2 = 24(x2 + y 2 )2 .
+                 (x2 + y 2 )2       (x2 + y 2 )2
+                                                         =⇒ 24x4 + (48y 2 − 1)x2 + 24y 4 + 20y 2 = 0
+                                                         =⇒ (48y 2 − 1)2 ≥ 4(24)(24y 4 + 20y 2 )
+                                                         =⇒ 1 − 96y 2 ≥ 1920y 2
+                                                                p
+                                                         =⇒ y ≤ 1/2016.
+                                                         p
+   This means that the horizontal line in question is y = 1/2016. This means that
+                                                                                √ the diameter of the
+   circle is the reciprocal of the distance between the point and line, which is 2016, so the radius is
+   √
+     504, and the answer is 504π .
+
+   Solution 2: Let a be the y-coordinate of both tangency points to the hyperbola. Then, the equation
+   of the circle must be in the form
+                                      x2 − 20y 2 + c(y − a)2 = 24.
+   Comparing the y 2 -coeﬀicient, we see that c = 21. Moreover, we need it to pass through (0, 0), so
+   21a2 = 24. Thus, the equation of the circle is
+
+                          x2 + y 2 − 42ay + 21a2 = 24 =⇒ x2 + (y − 21a)2 = (21a)2 ,
+
+   so the radius is 21a, and the area is (441a2 )π = 504π .
+
+
+
+25. [14] Point P is inside a square ABCD such that ∠AP B = 135◦ , P C = 12, and P D = 15. Compute
+    the area of this square.
+   Proposed by: Pitchayut Saengrungkongka
+                      √
+   Answer:     123 + 6 119
+   Solution:
+                              D                                                     C
+
+
+
+
+                                                                                           x
+                                                                     12
+
+
+                                                                          √                      Q
+                                                                              2y           45◦
+                                                             P
+                                                                                           y
+                                            x               135◦          y
+
+
+                              A                                                     B
+
+    Let x = AP and y = BP . Rotate △BAP by 90◦ around B to get △BCQ. Then, △BP Q is right-
+    isosceles, and from ∠BQC = 135◦ , we get ∠P QC = 90◦ . Therefore, by Pythagorean’s theorem,
+    P C 2 = x2 + 2y 2 . Similarly, P D2 = y 2 + 2x2 .
+                                                                 √
+    Thus, y 2 = 2P C 3−P D = 21, and similarly x2 = 102 =⇒ xy = 3 238.
+                     2     2
+
+
+
+    Thus, by the Law of Cosines, the area of the square is
+                                  AB 2 = AP 2 + BP 2 − 2 cos(135◦ )(AP )(BP )
+                                                    √
+                                       = x2 + y 2 + 2xy
+                                                  √
+                                       = 123 + 6 119 .
+
+
+
+
+26. [14] It can be shown that there exists a unique polynomial P in two variables such that for all positive
+    integers m and n,
+                                                      X
+                                                      m X n
+                                           P (m, n) =       (i + j)7 .
+                                                           i=1 j=1
+
+    Compute P (3, −3).
+    Proposed by: Pitchayut Saengrungkongka
+    Answer:      −2445
+    Solution: Note that for integers m > 0, n > 1,
+                                                                      X
+                                                                      m
+                                     P (m, n) − P (m, n − 1) =                (i + n)7 .
+                                                                      i=1
+
+    For any given positive integer m, both sides are a polynomial in n, so they must be equal as polynomials.
+    In particular,
+                                                 X
+                                                 3
+                     P (3, x) − P (3, x − 1) =         (i + x)7 = (x + 1)7 + (x + 2)7 + (x + 3)7
+                                                 i=1
+
+    for all real x. Moreover, P (3, 1) − P (3, 0) = P (3, 1) =⇒ P (3, 0) = 0. Then
+                   P (3, −3) = P (3, 0) − (17 + 27 + 37 ) − (07 + 17 + 27 ) − ((−1)7 + 07 + 17 )
+                            = −37 − 2 · 27 − 2 = −2445 .
+27. [14] A deck of 100 cards is labeled 1, 2, . . . , 100 from top to bottom. The top two cards are drawn;
+    one of them is discarded at random, and the other is inserted back at the bottom of the deck. This
+    process is repeated until only one card remains in the deck. Compute the expected value of the label
+    of the remaining card.
+    Proposed by: Albert Wang
+                  467
+    Answer:        8
+
+    Solution 1: Note that we can just take averages: every time you draw one of two cards, the EV of
+    the resulting card is the average of the EVs of the two cards. This average must be of the form
+
+                                        2• · 1 + 2• · 2 + 2• · 3 + · · · + 2• · 100
+
+    where the 2• s add up to 1. Clearly, the cards further down in the deck get involved in one less layer of
+    averaging, and therefore 1 through 72 are weighted 2−7 while the rest are weighted 2−6 . To compute
+    the average now, we just add it up to get 4678 .
+
+
+    Solution 2: We see that in a deck with 2n cards, that after repeating the process 2n−1 times, that
+    each card has a chance of 12 of remaining in the deck. This means that the average of the cards in the
+    deck doesn’t change between 2n by 2n−1 cards. Thus, by repeating this process, we determine that
+    the expected value of the last card is the average of all cards whenever we start with 2n cards.
+    Suppose we instead start with 27 = 128 cards in the following order:
+
+                                      73, 73, 74, 74, . . . , 100, 100, 1, 2, 3, . . . , 72.
+
+    Thus, after 28 steps, we will be left with the original configuration. Since a power of 2 cards are in the
+    deck, we expect that the final card will be the average of these numbers. This is 467 8 .
+
+
+
+
+28. [14] Given that the 32-digit integer
+
+                                      64 312 311 692 944 269 609 355 712 372 657
+
+    is the product of 6 consecutive primes, compute the sum of these 6 primes.
+    Proposed by: Derek Liu
+    Answer:       1200974
+    Solution: Because the product is approximately 64 · 1030 , we know the primes are all around 200000.
+    Say they are 200000 + xi for i = 1, . . . , 6.
+                  Q6
+    By expanding i=1 (200000 + xi ) as a polynomial in 200000, we see that
+
+                                       31231 · 1025 = 2000005 (x1 + · · · + x6 )
+
+    plus the carry from the other terms. Note that 31231 = 975 · 32 + 31, so x1 + · · · + x6 ≤ 975.
+    Thus,
+                                                          5                       20
+                16(x1 x2 + x1 x3 + · · · + x5 x6 ) ≤ 16 ·   (x1 + · · · + x6 )2 <    · 10002 < 67 · 105 ,
+                                                         12                        3
+    so the carry term from 2000004 (x1 x2 + · · · + x5 x6 ) is at most 67 · 1025 . The other terms have negligible
+    carry, so it is pretty clear x1 + · · · + x6 > 972, otherwise the carry term would have to be at least
+
+                                      31231 · 1025 − 2000005 (972) = 127 · 1025 .
+    It follows that x1 + · · · + x6 lies in [973, 975], so the sum of the primes, 6 · 200000 + (x1 + · · · + x6 ), lies
+    in [1200973, 1200975].
+    As these primes are all greater than 2, they are all odd, so their sum is even. Thus it must be 1200974 .
+
+
+
+29. [16] For each prime p, a polynomial P (x) with rational coeﬀicients is called p-good if and only if there
+    exist three integers a, b, and c such that 0 ≤ a < b < c < p3 and p divides all the numerators of P (a),
+    P (b), and P (c), when written in simplest form. Compute the number of ordered pairs (r, s) of rational
+    numbers such that the polynomial x3 + 10x2 + rx + s is p-good for infinitely many primes p.
+    Proposed by: Pitchayut Saengrungkongka
+    Answer:       12
+    Solution: By Vieta, the sum of the roots is −10 (mod p). However, since the three roots are less than
+    p/3, it follows that the roots are (p − a′ )/3, (p − b′ )/3, (p − c′ )/3, where there are finitely many choices
+    a′ < b′ < c′ . By pigeonhole, one choice, say (u, v, w) must occur for infinitely many p. We then get
+    that the roots of P are −u/3, −v/3, and −w/3. Moreover, we must have that u, v, w are all 1 (mod 3)
+    or all 2 (mod 3), and by Vieta, we have u + v + w = 30.
+    The polynomial is then uniquely determined by u, v, w. Thus, it suﬀices to count triples u < v < w of
+    positive integers such that u, v, w are all 1 (mod 3) or all 2 (mod 3) and that u + v + w = 30. It’s not
+    very hard to list them all now.
+    When u, v, w ≡ 1 (mod 3), there are 7 triples: (1, 4, 25), (1, 7, 22), (1, 10, 19), (1, 13, 16), (4, 7, 19),
+    (4, 10, 16), and (7, 10, 13).
+    When u, v, w ≡ 2 (mod 3), there are 5 triples: (2, 5, 23), (2, 8, 20), (2, 11, 17), (5, 8, 17), and (5, 11, 14).
+    Hence, the answer is 7 + 5 = 12 .
+
+
+
+30. [16] Let ABC be an equilateral triangle with side length 1. Points D, E, F lie inside triangle ABC
+    such that A, E, F are collinear, B, F , D are collinear, C, D, E are collinear, and triangle DEF is
+    equilateral. Suppose that there exists a unique equilateral triangle XY Z with X on side BC, Y on
+    side AB, and Z on side AC such that D lies on side XZ, E lies on side Y Z, and F lies on side XY .
+    Compute AZ.
+    Proposed by: Jaedon Whyte, Maxim Li
+                     1√
+    Answer:        1+ 3 2
+
+    Solution:
+                                                          A
+
+
+
+
+                                                                      Z
+                                                      E
+                                         Y
+                                                          O
+                                                                  D
+                                                  F
+
+
+                              B                               X                    C
+
+    First, note that point X can be constructed from intersection of ⊙(DOF ) and side BC. Thus, if there
+    is a unique equilateral triangle, then we must have that ⊙(DOF ) is tangent to BC. Furthermore,
+    ⊙(DOF ) is tangent to DE, so by equal tangents, we have CD = CX.
+    We now compute the answer. Let x = AZ = CX = CD = BF . Then, by power of point,
+                                                                      (1 − x)2
+                                    BF · BD = BX 2 =⇒ BD =                     .
+                                                                         x
+    Thus, by law of cosine on △BDC, we have that
+                                              2
+                                      (1 − x)2        (1 − x)2
+                               x2 +               +x·           =1
+                                          x               x
+                                            (1 − x)4
+                                       x2 +          + (1 − x)2 = 1
+                                               x2
+                                                      (1 − x)4
+                                                                = 2x(1 − x)
+                                                          x2
+                                                          1−x     √3
+                                                                = 2
+                                                            x
+                                                                      1
+                                                              x=       √ .
+                                                                    1+ 32
+
+
+
+
+31. [16] Ash and Gary independently come up with their own lineups of 15 fire, grass, and water monsters.
+    Then, the first monster of both lineups will fight, with fire beating grass, grass beating water, and water
+    beating fire. The defeated monster is then substituted with the next one from their team’s lineup; if
+    there is a draw, both monsters get defeated.
+    Gary completes his lineup randomly, with each monster being equally likely to be any of the three
+    types. Without seeing Gary’s lineup, Ash chooses a lineup that maximizes the probability p that his
+    monsters are the last ones standing. Compute p.
+    Proposed by: Albert Wang
+                       15
+    Answer:      1 − 2315
+                                                                            15
+    Solution: First, we show Ash cannot do better. Notice there is a 2315 chance that Gary’s i-th monster
+    ties or defeats Ash’s i-th monster for each i. If this is the case, Ash cannot win, as Ash’s i-th monster
+    will always be defeated by Gary’s i-th monster, if not sooner. Thus, Ash wins with probability at most
+          15
+    1 − 2315 . It remains to show this is achievable.
+    Ash uses the lineup fire-grass-water repeated 5 times. Then, none of Gary’s monsters can defeat more
+    than one monster in Ash’s lineup, so Ash will win unless Gary manages to take down exactly one
+    monster with each of his. In particular, this means the i-th monster Gary has must tie or defeat Ash’s
+    i-th monster, which occurs with 23 chance with each i. Thus this construction achieves the answer of
+          15
+    1 − 3215 .
+
+
+
+32. [16] Over all pairs of complex numbers (x, y) satisfying the equations
+
+                                        x + 2y 2 = x4    and y + 2x2 = y 4 ,
+
+    compute the minimum possible real part of x.
+    Proposed by: Jaedon Whyte
+                 q √
+                 3 1− 33
+    Answer:          2
+
+    Solution 1: Note the following observations:
+     (a) if (x, y) is a solution then (ωx, ω 2 y) is also a solution if ω 3 = 1 and ω ̸= 1.
+    (b) we have some solutions (x, x) where x is a solution of x4 − 2x2 − x = 0.
+    These are really the only necessary observations and the first does not need to be noticed immediately.
+    Indeed, we can try to solve this directly as follows: first, from the first equation, we get y 2 = 21 (x4 − x),
+    so inserting this into the second equation gives
+                                                     1 4
+                                                       (x − x)2 − 2x2 = y
+                                                     4
+                                               2       2
+                                          x4 − x − 8x2 − 8x4 + 8x = 0
+                                                         2
+                                          x8 − 2x5 − 7x2 − 8x4 + 8x = 0
+                                                   x16 + · · · + 41x4 + 8x = 0
+                                                   |           {z        }
+                                                            P (x)
+
+
+    By the second observation, we have that x(x3 − 2x − 1) should be a factor of P . The first observation
+    gives that (x3 − 2ωx − 1)(x3 − 2ω 2 x − 1) should therefore also be factor. Now (x3 − 2ωx − 1)(x3 −
+    2ω 2 x − 1) = x6 + 2x4 − 2x3 + 4x2 − 2x + 1 since ω and ω 2 are roots of x2 + x + 1. So now we see
+    that the last two terms of the product of all of these is −5x4 − x. Hence the last two terms of the
+    polynomial we get after dividing out should be −x3 − 8, and given what we know about the degree
+                                                        q be exactly x − x − 8 which has roots being
+                                                                          6    3
+    and the fact that everything is monic, the quotient must
+                                                                    √
+    the cube roots of the roots to x2 − x − 8, which are 3 1±2 33 . Now x3 − 2x − 1 is further factorable as
+                                           √
+    (x − 1)(x2 − x − 1) with roots 1, 1±2 5 so it is not diﬀicult to compare the real parts of all roots of P ,
+    especially since 5 are real and non-zero, and we have that Re(ωx) = − 21 x if x ∈ R. We conclude that
+                     q √
+                     3 1− 33
+    the smallest is       2    .
+
+    Solution 2: Subtracting the second equation from the first, we get:
+
+                                       (y + 2x2 ) − (x + 2y 2 ) = y 4 − x4 =⇒
+                                 (x − y) + 2(x2 − y 2 ) = (x2 − y 2 )(x2 + y 2 ) =⇒
+                                    (x − y)(1 − (x + y)(x2 + y 2 + 2)) = 0
+   Subtracting y times the first equation from x times the second, we get:
+                                 (xy + 2y 3 ) − (xy + 2x3 ) = x4 y − xy 4 =⇒
+                                       2(y 3 − x3 ) = xy(x3 − y 3 ) =⇒
+                                            (x3 − y 3 )(2 + xy) = 0
+   Subtracting y 2 times the second equation from x2 times the first, we get:
+                                (x3 + 2x2 y 2 ) − (y 3 + 2x2 y 2 ) = x6 − y 6 =⇒
+                                     x3 − y 3 = (x3 + y 3 )(x3 − y 3 ) =⇒
+                                         (x3 − y 3 )(1 − x3 − y 3 ) = 0
+   We have three cases.
+   Case 0. x = 0 Thus, (x, y) = (0, 0) is the only valid solution.
+   Case 1. x = ωy for some third root of unity ω. Thus, y 2 = ω 4 x2 = ωx2
+
+                                              x + 2y 2 = x4 =⇒
+                                             x + 2ωx2 = x4 =⇒
+                                           x(1 + ω)(2 − ωx2 ) = 1
+   Note that x = −ω is always a solution to the above, and so we can factor as:
+                                           x3 + 2(1 + ω)x − 1 = 0
+                                         (x + ω)(x2 − ωx − ω 2 ) = 0
+   and so the other solutions are of the form:
+                                                         √
+                                                      1± 5
+                                                 x=        ·ω
+                                                        2
+                                                                             √
+   for the third root of unity. The minimum real part in this case is − 1+2 5 when ω = 1.
+   Case 2. Since x3 − y 3 ̸= 0, we have xy = −2 and x3 + y 3 = 1.
+                   p                          √               √ 
+   Thus, x3 − y 3 = (x3 + y 3 )2 − 4(xy)2 = ± 33 =⇒ x3 = 1±2 33
+                                                        √ 1/3
+                                                       1− 33
+   This yields the minimum solution of x =               2         as desired.     This is satisfied by letting
+        √ 1/3
+   y = 1+2 33     .
+
+
+
+33. [20] Let p denote the proportion of teams, out of all participating teams, who submitted a negative
+    response to problem 5 of the Team round (e.g. “there are no such integers”). Estimate P = ⌊10000p⌋.
+    An estimate of E earns max(0, ⌊20 − |P − E|/20⌋) points.
+   If you have forgotten, problem 5 of the Team round was the following: “Determine, with proof, whether
+   there exist positive integers x and y such that x + y, x2 + y 2 , and x3 + y 3 are all perfect squares.”
+   Proposed by: Arul Kolla
+   Answer:      5568
+   Solution: Of the 88 teams competing in this year’s Team round, 49 of them answered negatively,
+   9 (correctly) provided a construction, 16 answered ambiguously or did not provide a construction, and
+   the remaining 14 teams did not submit to problem 5. Thus p = 49 88 ≈ 0.5568.
+34. [20] Estimate the number of positive integers n ≤ 106 such that n2 + 1 has a prime factor greater than
+    n.
+                                                                                                     5    
+                                                                                               E 106 −E
+    Submit a positive integer E. If the correct answer is A, you will receive max 0, 20 · min A , 106 −A + 0.5
+    points.
+    Proposed by: Pitchayut Saengrungkongka
+    Answer:      757575
+    Solution: Let N denote 106 . We count by summing over potential prime factors p.
+    For any prime p > 2, we have that p | n2 + 1 for two values of n if p ≡ 1 (mod 4), and zero values
+    otherwise. Pretending these values are equally 
+                                                   likely to
+                                                           be any of 1, . . . , p, we expect the number of n
+                                                       2N
+    corresponding to a 1 (mod 4) prime to be min 2, p .
+    The number of primes up to x is, by the Prime Number Theorem logx x . Assuming around half of the
+                                                                                        1
+    prime numbers are 1 (mod 4), we on average expect some x to be a 1 (mod 4) prime 2 log x of the time.
+                                                                    2
+    Approximating by an integral over potential primes x from 1 to N , using our approximations, gives
+                                           Z N2            
+                                                         2N       dx
+                                                  min 2,      ·         .
+                                            1             x     2 log x
+
+    We now approximately calculate this integral as follows:
+                      Z N2                         Z N          Z N2
+                                    2N       dx            dx              N
+                             min 2,      ·         =            +               dx
+                        1            x     2 log x    1   log x    N    x log x
+                                                       N
+                                                   ≈        + N (log log(N 2 ) − log log N )
+                                                     log N
+                                                       N
+                                                   =        + N log 2.
+                                                     log N
+
+    Here, for the first integral, we estimate log x on [1, N ] by log N , and for the second integral, we use
+                                  1
+    that the antiderivative of x log x is log log x.
+    Using log 2 ≈ 0.7, one can estimate
+
+                                        log N = 2 log 1000 ≈ 20 log 2 ≈ 14
+
+    giving a final estimate of
+                                           106 /14 + 106 · 0.7 = 771428.
+    This estimate yields a score of 15. If one uses the closer estimate log 2 ≈ 0.69, one gets the final
+    estimate of 761428, yielding a score of 18.
+    Here is a code using sympy to calculate the final answer:
+    from sympy.ntheory import factorint
+    cnt = 0
+    for n in range(1,10 ** 6+1):
+        if max(factorint(n ** 2+1, multiple=True)) > n:
+            cnt += 1
+    print(cnt)
+
+
+
+
+35. [20] Barry picks infinitely many points inside a unit circle, each independently and uniformly at
+    random, P1 , P2 , . . . . Compute the expected value of N , where N is the smallest integer such that
+    PN +1 is inside the convex hull formed by the points P1 , P2 , . . . , PN .
+Submit a positive real number E. If the correct answer is A, you will receive ⌊100 · max(0.2099 − |E − A|, 0)⌋
+points.
+Proposed by: Albert Wang, Rishabh Das
+Answer:      6.54
+Solution: Clearly, N ≥ 3, and let’s scale the circle to have area 1. We can see that the probability
+to not reach N = 4 is equal to the probability that the fourth point is inside the convex hull of the
+past three points. That is, the probability is just one minus the expected area of those N points. The
+area of this turns out to be really small, and is around 0.074, and so (1 − 0.074) of all sequences of
+points make it to N = 4. The probability to reach to the fifth point from there should be around
+(1 − 0.074)(1 − 0.074 · 2), as any four points in convex configuration can be covered with 2 triangles.
+Similarly, the chance of reaching N = 6 should be around (1 − 0.074)(1 − 0.074 · 2)(1 − 0.074 · 3), and
+so on. Noting that our terms eventually decay to zero around term 1/0.074 = 13, our answer should
+be an underestimate. In particular, we get
+
+                3 + (1 − 0.074)(1 + (1 − 0.074 · 2)(1 + (1 − 0.074 · 3)(1 + · · · ))) ≈ 6.3.
+
+Guessing anything slightly above this lower bound should give a positive score.
+Here is a Python code that simulates the result.
+from random import randrange ,getrandbits
+import itertools , math
+from tqdm import tqdm
+import numpy as np
+
+DEBUG = False
+
+def unit_circle_pt ():
+    while True:
+        x = randrange(-(2 ** 32),2 ** 32+1)
+        y = randrange(-(2 ** 32),2 ** 32+1)
+        if x*x + y*y < 2 ** 64:
+            return (x,y)
+
+def area_of_triangle(p1 , p2 , p3):
+    return abs((p2[0] - p1[0])*(p3[1] - p2[1]) - (p2[1] - p1[1])*(p3[0] - p2[0]))
+
+def pt_inside_polygon (point , polygon):
+    # point is a pair
+    # polygon is an angle - sorted list of points that are the vertices of a convex polygon in
+                                                        some order
+
+    # area of polygon
+
+    # plot the polygon and the point
+    if DEBUG:
+        import matplotlib.pyplot as plt
+        # plot the big circle
+        circle = plt.Circle ((0,0), 2 ** 32 , color='b', fill=False)
+        # fix view to circle
+        plt.xlim(-2 ** 32 ,2 ** 32)
+        plt.ylim(-2 ** 32 ,2 ** 32)
+        plt.gca().add_artist(circle)
+        # make the window to scale
+        plt.gca().set_aspect('equal ', adjustable='box')
+        plt.plot([x for x,_ in polygon], [y for _,y in polygon])
+        plt.scatter([point[0]], [point[1]])
+        plt.show ()
+
+    area = 0
+    for i in range(1, len(polygon)-1):
+        # add on area between points 0, i, i+1
+        area += area_of_triangle(polygon[0], polygon[i], polygon[i+1])
+        # point is inside polygon if the area of the triangles formed by the point and each edge
+                                                            of the polygon sum to the area of the
+                                                           polygon
+        area_sum = 0
+        for i in range(len(polygon)):
+            # add on area between points point , polygon [i], polygon [(i+1)%len( polygon )]
+            area_sum += area_of_triangle(point , polygon[i], polygon[(i+1)%len(polygon)])
+
+        return area_sum == area
+
+    def convex_hull(points):
+        # sort by x, then y
+        points = sorted(points , key=lambda x: (x[0], x[1]))
+        # graham scan
+
+        # find the lowest point
+        lowest = points[0]
+        for p in points:
+            if p[1] < lowest[1]:
+                lowest = p
+        # sort by angle
+        points = sorted(points , key=lambda x: (math.atan2(x[1]-lowest[1], x[0]-lowest[0]), -x[1]
+                                                          , x[0]))
+        # remove duplicates
+        points = list(k for k,_ in itertools.groupby(points))
+        # stack to hold the points
+        stack = []
+        for p in points:
+            while len(stack) > 1 and (stack[-1][0]-stack[-2][0])*(p[1]-stack[-2][1]) - (stack[-1
+                                                              ][1]-stack[-2][1])*(p[0]-stack[-2][
+                                                              0]) <= 0:
+                stack.pop()
+            stack.append(p)
+        return stack
+
+    def pulse(horizon=1000):
+        cur = [unit_circle_pt () for _ in range(3)]
+
+        for N in range(3, horizon):
+            pt = unit_circle_pt ()
+            if pt_inside_polygon (pt , cur):
+                return N
+            cur = convex_hull(cur + [pt])
+
+    trials = 1000
+    blocks = 100000
+    cur_trials = 0
+    cur_sum = 0
+    results = []
+
+    for block in range(trials):
+        for _ in tqdm(range(blocks)):
+            results.append(pulse ())
+        cur_trials += blocks
+        mean = np.mean(results)
+        stddev = np.std(results)
+        z = 5.0
+        ci = (mean - z*stddev/np.sqrt(cur_trials), mean + z*stddev/np.sqrt(cur_trials))
+        print(block+1, mean , stddev , ci)
+
+
+
+
+36. [20] Let ABC be a triangle. The following diagram contains points P1 , P2 , . . . , P7 , which are the
+    following triangle centers of triangle ABC in some order:
+  • the incenter I;
+  • the circumcenter O;
+  • the orthocenter H;
+  • the symmedian point L, which is the intersections of the reflections of B-median and C-median
+    across angle bisectors of ∠ABC and ∠ACB, respectively;
+  • the Gergonne point G, which is the intersection of lines from B and C to the tangency points of
+    the incircle with AC and AB, respectively;
+  • the Nagel point N , which is the intersection of line from B to the tangency point between B-
+    excircle and AC, and line from C to the tangency point between C-excircle and AB; and
+  • the Kosnita point K, which is the intersection of lines from B and C to the circumcenters of
+    triangles AOC and AOB, respectively.
+
+                                                                           P2
+                                                   P1
+                                          P3
+                                                     P4                    P5
+                                            P6
+
+
+                           P7
+
+Note that the triangle ABC is not shown. Compute which triangle centers {I, O, H, L, G, N, K}
+corresponds to Pk for k ∈ {1, 2, 3, 4, 5, 6, 7}.
+Your answer should be a seven-character string containing I, O, H, L, G, N , K, or X for blank. For
+instance, if you think P2 = H and P6 = L, you would answer XHXXXLX.
+                                                                       If you attempt to identify
+n > 0 points and get them all correct, then you will receive (n − 1)5/3 points. Otherwise, you will
+receive 0 points.
+Proposed by: Kevin Zhao, Pitchayut Saengrungkongka
+Answer:      KOLIN GH
+Solution: Let G′ be the centroid of triangle ABC. Recall the following.
+  • Points O, G′ , H lie on Euler’s line of △ABC with OG′ : G′ H = 1 : 2.
+  • Points I, G′ , N lie on Nagel’s line of △ABC with IG′ : G′ N = 1 : 2.
+Thus, OI ∥ HN with OI : HN = 1 : 2. Therefore, we can detect parallel lines with ratio 2 : 1 in
+the figure. The only possible pairs are P2 P4 ∥ P7 P5 . Therefore, there are two possibilities: (P2 , P7 )
+and (P4 , P5 ) must be (O, H) and (I, N ) in some order. Intuitively, H should be further out, so it’s
+not unreasonable to guess that P2 = O, P7 = H, P4 = I, and P5 = N . Alternatively, perform the
+algorithm below with the other case to see if it fails.
+To identify the remaining points, we recall that the isogonal conjugate of G and N both lie on OI
+(they are insimilicenter and exsimilicenter of incircle and circumcircle, respectively). Thus, H, G, N, I
+lie on isogonal conjugate of OI, known as the Feuerbach’s Hyperbola. It’s also known that OI is
+tangent to this line, and this hyperbola have perpendicular asymptotes.
+Using all information in the above paragraph, we can eyeball a rectangular hyperbola passing through
+H, G, N, I and is tangent to OI. It’s then not hard to see that P6 = G.
+Finally, we need to distinguish between symmedian and Kosnita points. To do that, recall that Kosnita
+point is isogonal conjugate of the nine-point center (not hard to show). Thus, H, L, K, O lies on isogonal
+conjugate of OH, which is the Jerabek’s Hyperbola. One can see that H, L, K, O lies on the same
+branch. Moreover, they lie on this hyperbola in this order because the isogonal conjugates (in order)
+are O, centroid, nine-point center, and H, which lies on OH in this order. Using this fact, we can
+identity P5 = L and P1 = K, completing the identification.
+The following is the diagram with the triangle ABC.
+
+                         A
+
+
+
+
+                                                 P2
+                                      P1
+                               P3
+                                       P4        P5
+                                 P6
+                        P7
+
+
+
+               B                                                                   C
+
+Here is the Asymptote code that generates the diagram in the problem.
+import olympiad;
+import geometry;
+size(7.5cm);
+pair A = (0.5,3.2);
+pair B = (0,0);
+pair C = (4,0);
+pair O = circumcenter(triangle(A,B,C));
+pair H = orthocentercenter (triangle(A,B,C));
+pair L = symmedian(triangle(A,B,C));
+pair Ge = gergonne(triangle(A,B,C));
+pair I = incenter(triangle(A,B,C));
+pair Na = A+B+C - 2I;
+pair K = extension(A, circumcenter(B,O,C), B, circumcenter(A,O,C));
+
+dot("$P_6$",Ge ,dir(-90));
+dot("$P_2$",O,dir(90));
+dot("$P_7$",H,dir(90));
+dot("$P_3$",L,dir(135));
+dot("$P_4$",I,dir(-45));
+dot("$P_5$",Na ,dir(-90));
+dot("$P_1$",K,dir(90));
+
