@@ -64,3 +64,13 @@ jssa/difficulty/ghost-1023/preregistration-2.md の A に従う。DSL は jssa/d
 
 ## sol-4（実装と実験）：退化解を消す介入
 jssa/difficulty/ghost-1023/preregistration-2.md の B に従う。退化解の見つかった組は jssa/difficulty/ghost-exact/per-pair.csv。出発点は jssa/difficulty/minima/raw-323/<id>.json の records の start（seed 0）をそのまま使う。局所探索は probe_basins.py と同じ smb._collect_local_start_record の経路を使い、残差だけを拡張する（src/ は変更しない。jssa 側でラップする）。出力：jssa/difficulty/ghost-intervention/（per-start.csv、per-problem.csv、README.md、score.md）。
+
+---
+
+# 追加3（10/23 16:40）
+
+## sol-5（実験）：誤差の単調変換が効くのは形の誤った出発点だけか
+jssa/difficulty/ghost-1023/preregistration-3.md に従う。変換と a の決め方は jssa/strategy/astra-consult-12/B/experiment.py をそのまま使う（新しく書くなら、2問 AIME 2023 I-12・HMMT 2024 FEB GEO-04 で astra-B の再現結果と一致することを先に確認）。出力：jssa/difficulty/transform-check/（per-start.csv に出発時の hard feasibility も記録、per-problem.csv、score.md）。
+
+## sol-6（解析のみ）：失敗は、G が示した点の組に近づいているか
+GPT-Pro 相談13の6.2。G あり（jssa/difficulty/ghost-exact/per-pair.csv で found=1 の組がある）問題について、minima/raw-323 の全出発点の終点を「成功」「found=1 の組のどれかが重なって失敗（coinc < 1e-4、ghost_scan.py と同じ尺度）」「それ以外の失敗」に分ける。G なしの問題では「どれかの組が重なって失敗」と「それ以外」に分ける。両群の内訳を変数の数の層ごとに表にする。出力：jssa/difficulty/ghost-pairs-match/。
