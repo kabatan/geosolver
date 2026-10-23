@@ -81,3 +81,32 @@ GPT-Pro 相談13の6.2。G あり（jssa/difficulty/ghost-exact/per-pair.csv で
 
 ## sol-7（実装と実験、スーパーPC の計算資源で）：完成した solver での費用の比較
 jssa/difficulty/start-feasibility-1023/preregistration-4.md に従う。src/ は変更しない。jssa 側のランナーで `geosolver.engine.standard.search.scipy_multistart_backend._build_local_start_sequence_with_kinds` を差し替える（monkeypatch）。差し替え後の出発点が実際に使われたことを、各実行の記録（選び直しの回数、形の条件を満たした割合）で確認すること。本番の実行経路・採点は既存の本計測（jssa-main-j6-20261022 で使ったランナー）と同じにする。両条件は同じ計算機で交互に、同じ並列数で走らせる。出力：jssa/difficulty/full-solver-redraw/（per-run.csv、per-problem.csv、README.md、score.md）。所要時間の見込みを最初に知らせること。
+
+---
+
+# 追加5（10/23 19:30）：Aを狙う中心成果の探索（astra を並列で）
+
+背景（全員共通）：GPT-Pro の辛口判定（jssa/strategy/gpt-pro-consult-16-answer.md）は C（Bに近い）。最大の弱点は「この研究で、従来できなかった何ができるようになったのか／従来知られていなかった何を十分な広がりで明らかにしたのか」。本人は「Aを狙って新しい中心成果を探す」を選んだ。中心の問いは固定：(1) solver をどう実現したか、(2) solver の難しさは人間の難しさとどう違うか。自明な予測・自明な結論は不可。現行の本文は jssa/draft/report-draft-v10.md、補足は supplement-v10.md。候補の一覧は jssa/strategy/gpt-pro-consult-17-prompt.md。src/ は凍結（変更しない）。改変は jssa/ 以下で monkeypatch。
+
+全員への依頼：(a) 主張を一文で、(b) 誰も事前に当てられない予測、(c) 予備的な検証の結果（手元のデータで、実際に計算して）、(d) 1日以内・16コアで実行できる事前登録用の本検証の設計、(e) 外れたら何が言えるか、(f) 既知の文献との関係、を answer.md に書く。コードと中間データも同じフォルダに置き、push する。候補として弱いと判断したら、そう結論してよい（それも価値がある）。
+
+## astra-G：許容条件は「壁」か「近道」か（候補1の機構）
+
+観察（Claude、seed 0）：AIME 2010 II-14 では、許容判定を満たす出発点116個のうち104個が「stuck」で、終点も許容のまま。許容しない出発点84個は76個が当たり。実装では、許容判定を破ると残差ベクトルの最後の成分が一定値 10⁴ になる（scipy_multistart_backend._evaluate_augmented_residual_vector）。許容しない領域ではこの成分の勾配が0なので LM は元の等式だけで動くが、許容領域の中からは境界を越える一歩が大きく残差を増やし、拒否される。仮説：許容領域の境界が「壁」になり、解へ向かう道をふさぐ問題では p_F < p_I になる。ただし HMMT 2007年2月 幾何4（wrong_answer が多い）や JMO 2017 予選1（left_box が多い）は別の型に見える。
+依頼：(1) 292問で、許容出発点からの失敗の終点が「境界に張り付いている」か（終点から解の方向・ランダム方向への小さな一歩で許容判定が変わるか、LM の最後の数歩が拒否されているか）を測り、p_F < p_I を説明できるか。(2) 入力の構造（不等式の種類と数、枝の選び方、解が許容境界にどれだけ近いか＝当たりの図での guard の余裕など）から、p_I > p_F の問題を事前に予測できるか。(3) 介入：罰則の扱いだけを変える（例：許容判定の罰則を収束後の判定にだけ使う、または境界までの距離に比例する傾きのある罰則にする）と、「壁」型の問題でだけ p_F が上がり、他は変わらない、という予測を立てて予備的に確かめる。データ：jssa/difficulty/minima/raw-323（start・x・cls）、start-feasibility-1023/。出力：jssa/strategy/astra-consult-17/G/。
+
+## astra-H：図が一つに決まらない問題で値を返す（候補2）
+
+msolve で答えの集合が一致しなかった122問のうち68問は座標の解集合が正次元（supplement-v10.md S1.4、S2.8、データはブランチ nycxfb の jssa/results/exact-comparison-pc-20261022/）。solver はほぼ全部で正解する。依頼：(1) この68問を「図が実際に動く（実数の解が無数で値は一定）」「固定漏れなど見かけの正次元」に全部分類する（S1.4 は10問だけ調べた）。(2) 図が実際に動く問題について、solver の出した解の周りで解集合の次元と、値が一定であることを数値的に確かめる。(3) 値が一定であることの証明書（s^N·P(τ) = Σ C_i F_i）を作れる問題を増やせるか（今は63問中24問）。(4) 既存の方法（Gröbner 基底、msolve、Wu の方法、GMB、AlphaGeometry2）でこれらが本当にできないのかを文献で確かめ、「新しくできるようになったこと」と言える範囲を正直に書く。出力：jssa/strategy/astra-consult-17/H/。
+
+## astra-I：solver が自分の難しさを事前に診断し、構成を選ぶ（候補3）
+
+φ、変数の数、短い予備探索（例えば出発点20個）から、問題ごとに「出発点の方策（許容点を優先する／しない）」や「探索の構成」を選ぶ規則を作り、一律の方策より良いかを予備的に確かめる。予備探索の費用も含めて評価すること。完成 solver の費用比較（jssa/difficulty/full-solver-redraw-cloud/、事前登録 start-feasibility-1023/preregistration-4.md）の途中結果が out/A にある（読むだけ。書き換えない）。出力：jssa/strategy/astra-consult-17/I/。
+
+## astra-J：自由に探す（上の候補にとらわれない）
+
+上の候補を見ずに考えてよい。手元の全データ（jssa/difficulty/、jssa/results/、Easy2Hard の人間の難度 ghost-1023/human_feat.csv）から、「人間と solver の難しさのずれ」について、本人（IMO 金メダリスト）にも事前に当てられない、広がりのある主張を一つ探し、予備的に確かめる。出力：jssa/strategy/astra-consult-17/J/。
+
+## astra-K：審査員として候補を潰しにかかる
+
+jssa/strategy/gpt-pro-consult-16-answer.md の観点（特に過去の受賞作「割当問題の拡張と解法」との比較、新規性、本人の寄与）で、候補1〜3それぞれを最も厳しく批判し、どの候補なら A に届きうるか、届かせるには何が必要かを書く。必要ならデータで反証を試みてよい。出力：jssa/strategy/astra-consult-17/K/。
