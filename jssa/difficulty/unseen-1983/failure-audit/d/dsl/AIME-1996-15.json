@@ -1,0 +1,58 @@
+{
+  "id": "AIME-1996-15",
+  "variables": [
+    "dx",
+    "dy",
+    "r"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(dx, dy)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(1+dx, dy)"
+    },
+    {
+      "name": "O",
+      "expression": "Midpoint(A,C)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "dy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Angle(C,A,B)",
+      "operator": "=",
+      "right": "2*Angle(D,B,A)"
+    },
+    {
+      "left": "Angle(D,B,C)",
+      "operator": "=",
+      "right": "2*Angle(D,B,A)"
+    },
+    {
+      "left": "Angle(A,C,B)",
+      "operator": "=",
+      "right": "r*Angle(A,O,B)"
+    },
+    {
+      "left": "r",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "r"
+}

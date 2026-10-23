@@ -1,0 +1,64 @@
+--- original/HMMT-2022-FEB-GEO-07.json
++++ posthoc/HMMT-2022-FEB-GEO-07.json
+@@ -2,11 +2,7 @@
+   "id": "HMMT-2022-FEB-GEO-07",
+   "variables": [
+     "x",
+-    "y",
+-    "a",
+-    "b",
+-    "h",
+-    "k"
++    "y"
+   ],
+   "constructions": [
+     {
+@@ -76,47 +72,7 @@
+       "left": "Area(O1, O2, O3, O4)",
+       "operator": "=",
+       "right": 50
+-    },
+-    {
+-      "left": "(max([min(Distance(O1, O2), Distance(O2, O3)), min(Distance(O1, O2), Distance(O3, O4)), min(Distance(O1, O2), Distance(O4, O1)), min(Distance(O2, O3), Distance(O3, O4)), min(Distance(O2, O3), Distance(O4, O1)), min(Distance(O3, O4), Distance(O4, O1))]))**2",
+-      "operator": "=",
+-      "right": "a/b"
+-    },
+-    {
+-      "left": "IsInteger(a)",
+-      "operator": "=",
+-      "right": 0
+-    },
+-    {
+-      "left": "IsInteger(b)",
+-      "operator": "=",
+-      "right": 0
+-    },
+-    {
+-      "left": "IsInteger(h)",
+-      "operator": "=",
+-      "right": 0
+-    },
+-    {
+-      "left": "IsInteger(k)",
+-      "operator": "=",
+-      "right": 0
+-    },
+-    {
+-      "left": "a",
+-      "operator": ">",
+-      "right": 0
+-    },
+-    {
+-      "left": "b",
+-      "operator": ">",
+-      "right": 0
+-    },
+-    {
+-      "left": "h*a+k*b",
+-      "operator": "=",
+-      "right": 1
+     }
+   ],
+-  "target": "100*a+b"
++  "target": "(max([min(Distance(O1, O2), Distance(O2, O3)), min(Distance(O1, O2), Distance(O3, O4)), min(Distance(O1, O2), Distance(O4, O1)), min(Distance(O2, O3), Distance(O3, O4)), min(Distance(O2, O3), Distance(O4, O1)), min(Distance(O3, O4), Distance(O4, O1))]))**2"
+ }

@@ -1,0 +1,118 @@
+{
+  "id": "AIME-1985-09",
+  "variables": [
+    "r",
+    "y2",
+    "y3",
+    "y4",
+    "alpha",
+    "beta"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "omega",
+      "expression": "Circle(O,r)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(-2/2, y2)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(2/2, y2)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(-3/2, y3)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(3/2, y3)"
+    },
+    {
+      "name": "E",
+      "expression": "Point(-4/2, y4)"
+    },
+    {
+      "name": "F",
+      "expression": "Point(4/2, y4)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "r",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "OnCircle(A,omega)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "OnCircle(B,omega)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "OnCircle(C,omega)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "OnCircle(D,omega)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "OnCircle(E,omega)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "OnCircle(F,omega)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "Angle(A,O,B)",
+      "operator": "=",
+      "right": "alpha"
+    },
+    {
+      "left": "Angle(C,O,D)",
+      "operator": "=",
+      "right": "beta"
+    },
+    {
+      "left": "Angle(E,O,F)",
+      "operator": "=",
+      "right": "alpha+beta"
+    },
+    {
+      "left": "alpha",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "beta",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "pi",
+      "operator": ">",
+      "right": "alpha+beta"
+    },
+    {
+      "left": "cos(alpha)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "target": "cos(alpha)"
+}

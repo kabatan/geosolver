@@ -1,0 +1,113 @@
+{
+  "id": "AIME-1983-12",
+  "variables": [
+    "a",
+    "b",
+    "h",
+    "p",
+    "q"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(-(10*a+b)/2, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point((10*a+b)/2, 0)"
+    },
+    {
+      "name": "H",
+      "expression": "Point(h, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(h, (10*b+a)/2)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(h, -(10*b+a)/2)"
+    },
+    {
+      "name": "omega",
+      "expression": "Circle(O, (10*a+b)/2)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "IsInteger(a)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(b)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(p)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "IsInteger(q)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "a",
+      "operator": ">=",
+      "right": "1"
+    },
+    {
+      "left": "a",
+      "operator": "<=",
+      "right": "9"
+    },
+    {
+      "left": "b",
+      "operator": ">=",
+      "right": "0"
+    },
+    {
+      "left": "b",
+      "operator": "<=",
+      "right": "9"
+    },
+    {
+      "left": "h",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "p",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "q",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "h",
+      "operator": "=",
+      "right": "p/q"
+    },
+    {
+      "left": "OnCircle(C, omega)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "OnCircle(D, omega)",
+      "operator": "=",
+      "right": "0"
+    }
+  ],
+  "target": "Distance(A, B)"
+}
