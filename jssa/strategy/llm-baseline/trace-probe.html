@@ -1,0 +1,274 @@
+
+
+<div class="trace-viewer-inner">
+    <div class="trace-header">
+        <div class="trace-title">GPT-5.2 (high) on Problem G1</div>
+        
+    </div>
+    
+    <div class="box problem-box">
+        
+            <div class="box-text marked-text">Let $ABCD$ and $WXYZ$ be squares such that $W$ lies on segment $\overline{AD}$, $X$ lies on segment $\overline{AB}$, and points $Y$ and $Z$ lie strictly inside $ABCD$. Given that $AW = 4$, $AX = 5$, and $AB = 12$, compute the area of triangle $\triangle BCY$.
+</div>
+        
+    </div>
+    
+    
+    
+    <div class="box solution-box">
+        <div class="trace-section-title">Correct Answer</div>
+        <div class="box-text marked-text">18</div>
+    </div>
+    
+
+    <div class="tab" role="tablist">
+        
+            
+            
+        
+            
+                
+            
+            <button type="button" class="correctTablink active" data-target="tab-0" data-run="1">Run 1</button>
+        
+            
+            
+        
+            
+                
+            
+            <button type="button" class="correctTablink " data-target="tab-1" data-run="2">Run 2</button>
+        
+            
+            
+        
+            
+                
+            
+            <button type="button" class="correctTablink " data-target="tab-2" data-run="3">Run 3</button>
+        
+            
+            
+        
+            
+                
+            
+            <button type="button" class="correctTablink " data-target="tab-3" data-run="4">Run 4</button>
+        
+    </div>
+
+    
+        
+        
+            
+        
+        <div id="tab-0" class="tabcontent" style="display: block;">
+        
+
+        
+        <div class="box response-box correct">
+            <div class="trace-section-title">Parsed Answer</div>
+            <div class="box-text marked-text">18</div>
+        </div>
+        
+
+        
+
+        
+        
+        <div class="trace-last-message">
+<div class="box response-box assistant">
+    <div class="box-message-header">Assistant</div>
+    
+    
+    <div class="box-text marked-text">\[
+\text{Place }A=(0,0),\;B=(12,0),\;C=(12,12),\;D=(0,12).
+\]
+Since \(AW=4\) and \(W\in \overline{AD}\), we have \(W=(0,4)\).  
+Since \(AX=5\) and \(X\in \overline{AB}\), we have \(X=(5,0)\).
+
+\[
+\overrightarrow{WX}=X-W=(5,-4).
+\]
+Rotating \((5,-4)\) by \(90^\circ\) counterclockwise gives \((4,5)\), which points into the square, so
+\[
+Y=X+(4,5)=(9,5).
+\]
+
+Segment \(\overline{BC}\) is the vertical line \(x=12\) with length \(12\). The perpendicular distance from \(Y\) to the line \(x=12\) is
+\[
+|12-9|=3.
+\]
+Thus,
+\[
+[BCY]=\frac12\cdot 12\cdot 3=18.
+\]
+
+\[
+\boxed{18}
+\]</div>
+    
+    
+</div>
+</div>
+        
+    </div>
+    
+        
+        
+            
+        
+        <div id="tab-1" class="tabcontent" style="display: none;">
+        
+
+        
+        <div class="box response-box correct">
+            <div class="trace-section-title">Parsed Answer</div>
+            <div class="box-text marked-text">18</div>
+        </div>
+        
+
+        
+
+        
+        
+        <div class="trace-last-message">
+<div class="box response-box assistant">
+    <div class="box-message-header">Assistant</div>
+    
+    
+    <div class="box-text marked-text">\[
+\text{Place }A=(0,0),\ B=(12,0),\ C=(12,12),\ D=(0,12).
+\]
+Since \(W\) lies on \(\overline{AD}\) with \(AW=4\), we have \(W=(0,4)\).  
+Since \(X\) lies on \(\overline{AB}\) with \(AX=5\), we have \(X=(5,0)\).
+
+Because \(WXYZ\) is a square with consecutive vertices \(W\to X\to Y\to Z\), the side vector is
+\[
+\overrightarrow{WX}=(5,-4).
+\]
+Rotating this by \(90^\circ\) counterclockwise gives \((4,5)\), placing the other vertices inside the big square:
+\[
+Y=X+(4,5)=(9,5).
+\]
+
+Now \(\overline{BC}\) is the vertical segment \(x=12\) of length \(12\). The perpendicular distance from \(Y=(9,5)\) to the line \(x=12\) is \(12-9=3\). Hence
+\[
+[BCY]=\frac12\cdot 12\cdot 3=18.
+\]
+
+\[
+\boxed{18}
+\]</div>
+    
+    
+</div>
+</div>
+        
+    </div>
+    
+        
+        
+            
+        
+        <div id="tab-2" class="tabcontent" style="display: none;">
+        
+
+        
+        <div class="box response-box correct">
+            <div class="trace-section-title">Parsed Answer</div>
+            <div class="box-text marked-text">18</div>
+        </div>
+        
+
+        
+
+        
+        
+        <div class="trace-last-message">
+<div class="box response-box assistant">
+    <div class="box-message-header">Assistant</div>
+    
+    
+    <div class="box-text marked-text">\[
+A=(0,0),\; B=(12,0),\; C=(12,12),\; D=(0,12)
+\]
+Given \(AW=4\) and \(AX=5\), we have
+\[
+W=(0,4),\quad X=(5,0).
+\]
+Then \(\overrightarrow{WX}=(5,-4)\). Rotating this by \(90^\circ\) inward gives \((4,5)\), so
+\[
+Y = X + (4,5) = (9,5),
+\]
+which lies inside the square.
+
+For \(\triangle BCY\), take base \(BC\) on the line \(x=12\), with length \(|BC|=12\). The perpendicular distance from \(Y=(9,5)\) to \(x=12\) is \(12-9=3\). Thus,
+\[
+[BCY]=\frac12\cdot 12 \cdot 3 = 18.
+\]
+
+\[
+\boxed{18}
+\]</div>
+    
+    
+</div>
+</div>
+        
+    </div>
+    
+        
+        
+            
+        
+        <div id="tab-3" class="tabcontent" style="display: none;">
+        
+
+        
+        <div class="box response-box correct">
+            <div class="trace-section-title">Parsed Answer</div>
+            <div class="box-text marked-text">18</div>
+        </div>
+        
+
+        
+
+        
+        
+        <div class="trace-last-message">
+<div class="box response-box assistant">
+    <div class="box-message-header">Assistant</div>
+    
+    
+    <div class="box-text marked-text">\[
+A=(0,0),\; B=(12,0),\; C=(12,12),\; D=(0,12)
+\]
+Since \(AW=4\) and \(AX=5\),
+\[
+W=(0,4),\quad X=(5,0).
+\]
+Then
+\[
+\overrightarrow{WX}=(5,-4).
+\]
+A perpendicular vector of the same length pointing into the square \(ABCD\) is \((4,5)\), so
+\[
+Y=X+(4,5)=(9,5).
+\]
+Triangle \(BCY\) has base \(BC\) of length \(12\) (the line \(x=12\)), and the perpendicular distance from \(Y\) to \(BC\) is \(12-9=3\). Thus
+\[
+[BCY]=\frac12\cdot 12\cdot 3=18.
+\]
+
+\[
+\boxed{18}
+\]</div>
+    
+    
+</div>
+</div>
+        
+    </div>
+    
+</div>

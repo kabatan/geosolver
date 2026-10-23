@@ -1,0 +1,85 @@
+{
+  "id": "AIME-1996-15",
+  "target": "(1000*r) // 1",
+  "hand_calculated_r": "7/9",
+  "correct_floor": 777,
+  "exception": "IRCompileError: 評価エラー (HP モード): unsupported operand type(s) for //: 'mpf' and 'mpf' (expr: '(1000*r) // 1')",
+  "residual": {
+    "residual_vector": [
+      "0.0",
+      "-8.89103499794031e-162",
+      "-1.77820699958806e-161"
+    ],
+    "residual_norm_hp": "1.98809586457242e-161",
+    "evaluation_status": "ok",
+    "is_finite": true
+  },
+  "answer": {
+    "answer_hp": null,
+    "evaluation_status": "evaluation_failed"
+  },
+  "unfloored_value": "777.777777777778",
+  "public_validation": {
+    "valid": true,
+    "issues": [],
+    "warnings": [],
+    "normalized_problem": {
+      "id": "AIME-1996-15",
+      "variables": [
+        "dx",
+        "dy",
+        "r"
+      ],
+      "constructions": [
+        {
+          "name": "A",
+          "expression": "Point(0, 0)"
+        },
+        {
+          "name": "B",
+          "expression": "Point(1, 0)"
+        },
+        {
+          "name": "D",
+          "expression": "Point(dx, dy)"
+        },
+        {
+          "name": "C",
+          "expression": "Point(1+dx, dy)"
+        },
+        {
+          "name": "O",
+          "expression": "Midpoint(A,C)"
+        }
+      ],
+      "conditions": [
+        {
+          "left": "dy",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Angle(C,A,B)",
+          "operator": "=",
+          "right": "2*Angle(D,B,A)"
+        },
+        {
+          "left": "Angle(D,B,C)",
+          "operator": "=",
+          "right": "2*Angle(D,B,A)"
+        },
+        {
+          "left": "Angle(A,C,B)",
+          "operator": "=",
+          "right": "r*Angle(A,O,B)"
+        },
+        {
+          "left": "r",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "target": "(1000*r) // 1"
+    }
+  }
+}
