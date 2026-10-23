@@ -18,6 +18,8 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from queue import Queue
 
+import psutil
+
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
 from benchmarks.research_runner import (  # noqa: E402
@@ -44,19 +46,27 @@ def run(record, seed, mode, out: Path, cpu: int):
     env = os.environ.copy() | THREAD_ENVIRONMENT | {"REDRAW_STATS": str(stats), "REDRAW_MODE": mode,
                                                   "PYTHONPATH": str(HERE / "patch"),
                                                   "LM_FIRST": os.environ.get("LM_FIRST", "0")}
-    cmd = ["taskset", "-c", str(cpu), sys.executable, "-m", "geosolver.application.cli", "solve",
+    cmd = [sys.executable, "-m", "geosolver.application.cli", "solve",
            str(record.dsl_path), "--time-limit-seconds", "180", "--cores", "1", "--seed", str(seed),
            "--output", str(tmp)]
-    load = os.getloadavg()[0]
+    load = os.getloadavg()[0] if hasattr(os, "getloadavg") else psutil.cpu_percent(0.1)
     t0 = time.monotonic()
     p = subprocess.Popen(cmd, cwd=ROOT, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
-                         start_new_session=True)
+                         encoding="utf-8", errors="replace")
+    try:  # pin before the solver spawns its worker (children inherit the affinity)
+        psutil.Process(p.pid).cpu_affinity([cpu])
+    except (psutil.Error, AttributeError):
+        pass
     timed_out = False
     try:
         so, se = p.communicate(timeout=188)
     except subprocess.TimeoutExpired:
         timed_out = True
-        os.killpg(p.pid, 9)
+        for q in psutil.Process(p.pid).children(recursive=True) + [psutil.Process(p.pid)]:
+            try:
+                q.kill()
+            except psutil.Error:
+                pass
         so, se = p.communicate()
     elapsed = time.monotonic() - t0
     result = None
