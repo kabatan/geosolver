@@ -40,9 +40,11 @@ txt=('② 入力（作図と条件）\n\n'
  '作図  A = (0,0),  B = (4,0)\n'
  '      A1, C1 = A, C から BD への垂線の足\n'
  '      B1, D1 = B, D から AC への垂線の足\n'
- '等式  BC = 5,  CD = 6,  DA = 7,\n'
+ '等式  AB = 4（作図で成立）,\n'
+ '      BC = 5,  CD = 6,  DA = 7,\n'
  '      A, B, C, D が同一円上\n'
  '不等式  C, D は上側、ABCD は凸\n'
+ '        A1B1 > 0（足の一致を除く）\n'
  '求める量  四角形 A1B1C1D1 の周')
 ax2.text(0,0.98,txt,va='top',fontsize=8.6,family='IPAGothic',linespacing=1.5,bbox=dict(boxstyle='round,pad=0.6',fc='#f1f0ec',ec='#d9d8d4'))
 ax3=fig.add_axes([0.72,0.02,0.28,0.9]);ax3.axis('off')
@@ -51,7 +53,8 @@ txt3=('③ solver の出力（12.9秒）\n\n'
  '精密化：14個が収束、6個は不採用\n'
  '値：4.10169491525423…\n'
  '同定（PSLQ）：59τ − 242 = 0\n'
- '確認：120桁以上で条件と枝\n\n'
+ '確認：連続する2段で条件と枝\n'
+ '      最後は180桁以上\n\n'
  '答え（周長）  242/59\n（原問の回答は 242+59 = 301）')
 ax3.text(0,0.98,txt3,va='top',fontsize=8.6,linespacing=1.5,bbox=dict(boxstyle='round,pad=0.6',fc='#eef4fc',ec='#bcd3f0'))
 fig.text(0.29,0.62,'→',fontsize=20,color='#8a8985');fig.text(0.675,0.62,'→',fontsize=20,color='#8a8985')
