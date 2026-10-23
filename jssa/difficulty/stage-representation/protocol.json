@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "task": "Q39",
+  "stage": 1,
+  "execution_authorized": false,
+  "frozen_commit": "60db4b679b04167175c51c479c87c22fa663fda0",
+  "selected_ids": [
+    "AIME-2006-II-09",
+    "AIME-2013-II-04",
+    "AIME-2015-II-07",
+    "AIME-2016-I-15",
+    "AIME-2020-II-04",
+    "AIME-2022-II-07",
+    "AIME-2022-II-11",
+    "HMMT-2006-FEB-GEO-01",
+    "HMMT-2006-FEB-GEO-10",
+    "HMMT-2007-FEB-GEO-04",
+    "HMMT-2008-FEB-GEO-09",
+    "HMMT-2014-FEB-GEO-08",
+    "HMMT-2016-FEB-GEO-10",
+    "HMMT-2020-FEB-GEO-07",
+    "HMMT-2022-FEB-GEO-10",
+    "HMMT-2023-FEB-GEO-07",
+    "HMMT-2023-FEB-GEO-08",
+    "HMMT-2025-FEB-GEO-02",
+    "JMO-2013-PRE-05",
+    "JMO-2014-PRE-01",
+    "JMO-2015-PRE-02",
+    "JMO-2017-PRE-04",
+    "JMO-2021-PRE-07",
+    "JMO-2024-PRE-06",
+    "aime-2002-1-10"
+  ],
+  "selection_file": "selected-problems.txt",
+  "selected_problem_list_sha256": "ffa2da6c51d1cce6f7d7e65854d6e065e3b34858d54d95a8d24a1fc9a28363bd",
+  "arms": [
+    "A->A",
+    "A->B",
+    "B->A",
+    "B->B"
+  ],
+  "seeds": [
+    39001,
+    39002,
+    39003
+  ],
+  "starts_per_seed": 8,
+  "scale_probes_per_problem": 32,
+  "bounds": "frozen infer_problem_bounds; expansion ratio 0",
+  "front": {
+    "backend": "NOMAD/DiscoMADS",
+    "max_callback_evaluations": 1200,
+    "max_seconds_per_start": 6,
+    "seed_formula": "external_seed*100+start_index",
+    "constraint_scales": null,
+    "guard_penalty": 1000000,
+    "observe_both_A_and_B": true,
+    "common_candidate_selection": "min Q among original-hard-feasible box-valid; otherwise min Q among finite box-valid; otherwise missing"
+  },
+  "rear": {
+    "backend": "MpmathRefiner",
+    "seconds_per_candidate": 8,
+    "schedule_dps": [
+      50,
+      100,
+      120
+    ],
+    "closure_schedule_dps": [
+      120,
+      250,
+      350,
+      500
+    ],
+    "max_stage_iters": 80,
+    "analytic_jacobian": false,
+    "finite_difference_row_dependencies": null,
+    "change_all_paths": [
+      "warm_newton",
+      "LM",
+      "post_LM_closure"
+    ]
+  },
+  "phase_C": {
+    "seconds_per_case_seed_arm": 20,
+    "function": "assemble_exact_results",
+    "evaluator": "original A"
+  },
+  "assessment": {
+    "function": "benchmarks.research_runner.assess_campaign",
+    "source_unchanged": true,
+    "semantics": "complete canonical answer-set match and normal_completion",
+    "campaign_config_time_limit_seconds": 180,
+    "canonical_full_solver_performance_claim": false
+  },
+  "diagnostics": {
+    "Q": "max normalized original A rows and frozen B block norms",
+    "candidate_Q_threshold": "1e-4",
+    "refinement_Q_threshold": "1e-50",
+    "target_relative_error_threshold": "1e-50",
+    "target_digits_clip": [
+      0,
+      100
+    ],
+    "measurement_dps": 180,
+    "evaluation_prefixes": [
+      200,
+      800,
+      1200
+    ],
+    "bootstrap_unit": "problem",
+    "bootstrap_replicates": 10000,
+    "bootstrap_seed": 39099
+  },
+  "crossing_gate": {
+    "independent_families": [
+      "tangency",
+      "point_distance_zero"
+    ],
+    "family_definition": "tangency_line_gap + tangency_contact; point_distance_zero. Other strata reported separately.",
+    "front_A_minus_B_min": 0.1,
+    "rear_B_minus_A_min": 0.1,
+    "paired_target_digit_gain_advantage_min": 20,
+    "every_seed_both_directions_positive": true,
+    "cases_per_family_meeting_both_rate_thresholds_min": 3,
+    "common_prefix_completion_fraction_min": 0.9,
+    "multi_command_gate_families_min": 2,
+    "multi_command_distinct_cases_min": 6
+  },
+  "additional_core_gates": {
+    "AB_answer_set_match_advantage_over_best_other_cell_min": 0.05,
+    "regularization_only_is_rejected": true,
+    "requires_crossing_outside_contact_and_radius_deflation": true,
+    "L_robustness": "front gap >=0.05 and rear gap >=0.05 after removing line weight",
+    "R0_explanation_compatible": "for positive rear effect >=0.10, R0 reproduces >=80% of B-A rate gain and median target-digit gain differs by <=10",
+    "deep_theory_not_implied_even_if_gates_pass": true
+  },
+  "controls": {
+    "L_ids": [
+      "AIME-2006-II-09",
+      "AIME-2016-I-15",
+      "AIME-2022-II-07",
+      "HMMT-2007-FEB-GEO-04",
+      "HMMT-2008-FEB-GEO-09",
+      "HMMT-2016-FEB-GEO-10",
+      "HMMT-2020-FEB-GEO-07"
+    ],
+    "R0_ids": [
+      "AIME-2006-II-09",
+      "AIME-2013-II-04",
+      "AIME-2016-I-15",
+      "AIME-2020-II-04",
+      "AIME-2022-II-07",
+      "HMMT-2006-FEB-GEO-01",
+      "HMMT-2006-FEB-GEO-10",
+      "HMMT-2007-FEB-GEO-04",
+      "HMMT-2008-FEB-GEO-09",
+      "HMMT-2014-FEB-GEO-08",
+      "HMMT-2016-FEB-GEO-10",
+      "HMMT-2020-FEB-GEO-07",
+      "HMMT-2022-FEB-GEO-10",
+      "HMMT-2023-FEB-GEO-07",
+      "HMMT-2025-FEB-GEO-02",
+      "JMO-2013-PRE-05",
+      "JMO-2014-PRE-01",
+      "JMO-2015-PRE-02",
+      "JMO-2017-PRE-04",
+      "JMO-2021-PRE-07",
+      "JMO-2024-PRE-06"
+    ],
+    "masked_case": "HMMT-2016-FEB-GEO-10",
+    "masks": [
+      "tangency_line_gap",
+      "tangency_circle_gap",
+      "positive_radius_aux"
+    ],
+    "local_order": {
+      "directions": 3,
+      "epsilon_powers": [
+        -2,
+        -3,
+        -4,
+        -5,
+        -6,
+        -7,
+        -8
+      ],
+      "signs": [
+        -1,
+        1
+      ],
+      "seconds_per_case": 10,
+      "root_source": "lexicographically first originally verified saved point; never a new solve"
+    }
+  },
+  "resources": {
+    "max_workers": 4,
+    "cores_per_worker": 1,
+    "threads_per_library": 1,
+    "max_worker_rss_bytes": 2147483648,
+    "command_timeout_seconds": 150,
+    "max_file_bytes_exclusive": 5000000,
+    "split_at_bytes": 4000000,
+    "rlimit_fsize": 4900000,
+    "max_snapshots_per_candidate": 64,
+    "conservative_worker_seconds": 57854,
+    "four_core_wall_budget_hours": [
+      4,
+      6
+    ]
+  },
+  "next_authorization": "user confirms prediction committed and pushed, then authorizes execution in a separate task",
+  "implementation_status": "numeric wrapper is specified but not implemented or tested; syntax selector only",
+  "stage1_new_solver_runs": 0
+}
