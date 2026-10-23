@@ -1,0 +1,36 @@
+ring R=0,(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,x16,x17,x18,x19,x20,x21),dp;
+ideal I=x0^2 - x12^2 - x17^2,
+x0 + x11 - 30,
+-x13^2 - x18^2 + x3^2,
+x11 + x3 - 30,
+-x14^2 - x19^2 + x4^2,
+x11 + x4 - 30,
+-x15^2 - x20^2 + x5^2,
+x11 + x5 - 30,
+-x16^2 - x21^2 + x6^2,
+x11 + x6 - 30,
+-x11^2 - 2*x11*x12 + 60*x11 - x12^2 + 60*x12 - x17^2 + x7^2 - 900,
+-2*x11 + x7,
+-x12^2 + 2*x12*x13 - x13^2 - x17^2 + 2*x17*x18 - x18^2 + x8^2,
+-2*x11 + x8,
+-x13^2 + 2*x13*x14 - x14^2 - x18^2 + 2*x18*x19 - x19^2 + x9^2,
+-2*x11 + x9,
+x10^2 - x14^2 + 2*x14*x15 - x15^2 - x19^2 + 2*x19*x20 - x20^2,
+x10 - 2*x11,
+x1^2 - x15^2 + 2*x15*x16 - x16^2 - x20^2 + 2*x20*x21 - x21^2,
+x1 - 2*x11,
+-x11^2 - 2*x11*x16 + 60*x11 - x16^2 + 60*x16 + x2^2 - x21^2 - 900,
+-2*x11 + x2;
+ideal G=std(I);
+print("DIM");print(dim(G));print("GB");print(G);
+
+LIB "elim.lib";
+ideal J=I;
+poly f;
+int i;int j;
+list xs=30-x11,x12,x13,x14,x15,x16;
+list ys=0,x17,x18,x19,x20,x21;
+for(i=1;i<=6;i++){for(j=i+1;j<=6;j++){if(j-i!=1 && j-i!=5){f=(xs[i]-xs[j])^2+(ys[i]-ys[j])^2;J=sat(J,ideal(f));}}}
+print("DISTINCT_DIM");print(dim(std(J)));print(J);
+
+quit;
