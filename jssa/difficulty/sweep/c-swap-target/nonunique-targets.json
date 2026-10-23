@@ -1,0 +1,53 @@
+{
+  "analysis_only": true,
+  "scope": "At least these two selected problems. This is not an exhaustive uniqueness proof for the other 18.",
+  "examples": [
+    {
+      "id": "AIME-2012-I-14",
+      "input_sha256": "529ac0e06eac5ad188d45ee4ea6b005dd9be10652d02731418acb91a07fa45c0",
+      "family": "r=sqrt(125/3), x=-r*cos(theta), y=-r*sin(theta), u=-2*x, v=-2*y; 0<theta<pi/2",
+      "checks": [
+        "2*x+u=0",
+        "2*y+v=0",
+        "6*(x^2+y^2)=250",
+        "u>x and v>y"
+      ],
+      "target_values": {
+        "original": "375",
+        "length": "5*sqrt(15)",
+        "area": "(375/4)*sin(2*theta)",
+        "angle": "theta",
+        "ratio": "1/cos(theta)"
+      },
+      "nonconstant_targets": [
+        "area",
+        "angle",
+        "ratio"
+      ]
+    },
+    {
+      "id": "HMMT-2011-FEB-GUTS-01",
+      "input_sha256": "549f9be8d44f49bde57d77f59a045996c283410971ae0a2dc4cf9cf48de91970",
+      "family": "b=2, x=t, y=1, u=v=1/3; t>0. Then F=(t,1/3).",
+      "checks": [
+        "Area(A,B,C)=1",
+        "D.y=E.y=2/3, so DE parallel BC",
+        "DE/BC=1/3",
+        "all interval and positivity conditions hold"
+      ],
+      "target_values": {
+        "original": "1/3",
+        "length": "sqrt(t^2+1)",
+        "area": "t/3",
+        "angle": "acos((t^2+1/3)/sqrt((t^2+1)*(t^2+1/9)))",
+        "ratio": "sqrt((t^2+1)/(t^2+1/9))"
+      },
+      "nonconstant_targets": [
+        "length",
+        "area",
+        "angle",
+        "ratio"
+      ]
+    }
+  ]
+}
