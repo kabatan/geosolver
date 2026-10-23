@@ -1,0 +1,267 @@
+{
+  "id": "aime-2005-1-14",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "vx**2 + vy**2",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "predicate": "Or(And(OnSegment(A, S0, S1) == 0, OnSegment(B, S1, S2) == 0, OnSegment(C, S2, S3) == 0, OnSegment(D, S3, S0) == 0), And(OnSegment(A, S0, S1) == 0, OnSegment(B, S1, S2) == 0, OnSegment(C, S3, S0) == 0, OnSegment(D, S2, S3) == 0), And(OnSegment(A, S0, S1) == 0, OnSegment(B, S2, S3) == 0, OnSegment(C, S1, S2) == 0, OnSegment(D, S3, S0) == 0), And(OnSegment(A, S0, S1) == 0, OnSegment(B, S2, S3) == 0, OnSegment(C, S3, S0) == 0, OnSegment(D, S1, S2) == 0), And(OnSegment(A, S0, S1) == 0, OnSegment(B, S3, S0) == 0, OnSegment(C, S1, S2) == 0, OnSegment(D, S2, S3) == 0), And(OnSegment(A, S0, S1) == 0, OnSegment(B, S3, S0) == 0, OnSegment(C, S2, S3) == 0, OnSegment(D, S1, S2) == 0), And(OnSegment(A, S1, S2) == 0, OnSegment(B, S0, S1) == 0, OnSegment(C, S2, S3) == 0, OnSegment(D, S3, S0) == 0), And(OnSegment(A, S1, S2) == 0, OnSegment(B, S0, S1) == 0, OnSegment(C, S3, S0) == 0, OnSegment(D, S2, S3) == 0), And(OnSegment(A, S1, S2) == 0, OnSegment(B, S2, S3) == 0, OnSegment(C, S0, S1) == 0, OnSegment(D, S3, S0) == 0), And(OnSegment(A, S1, S2) == 0, OnSegment(B, S2, S3) == 0, OnSegment(C, S3, S0) == 0, OnSegment(D, S0, S1) == 0), And(OnSegment(A, S1, S2) == 0, OnSegment(B, S3, S0) == 0, OnSegment(C, S0, S1) == 0, OnSegment(D, S2, S3) == 0), And(OnSegment(A, S1, S2) == 0, OnSegment(B, S3, S0) == 0, OnSegment(C, S2, S3) == 0, OnSegment(D, S0, S1) == 0), And(OnSegment(A, S2, S3) == 0, OnSegment(B, S0, S1) == 0, OnSegment(C, S1, S2) == 0, OnSegment(D, S3, S0) == 0), And(OnSegment(A, S2, S3) == 0, OnSegment(B, S0, S1) == 0, OnSegment(C, S3, S0) == 0, OnSegment(D, S1, S2) == 0), And(OnSegment(A, S2, S3) == 0, OnSegment(B, S1, S2) == 0, OnSegment(C, S0, S1) == 0, OnSegment(D, S3, S0) == 0), And(OnSegment(A, S2, S3) == 0, OnSegment(B, S1, S2) == 0, OnSegment(C, S3, S0) == 0, OnSegment(D, S0, S1) == 0), And(OnSegment(A, S2, S3) == 0, OnSegment(B, S3, S0) == 0, OnSegment(C, S0, S1) == 0, OnSegment(D, S1, S2) == 0), And(OnSegment(A, S2, S3) == 0, OnSegment(B, S3, S0) == 0, OnSegment(C, S1, S2) == 0, OnSegment(D, S0, S1) == 0), And(OnSegment(A, S3, S0) == 0, OnSegment(B, S0, S1) == 0, OnSegment(C, S1, S2) == 0, OnSegment(D, S2, S3) == 0), And(OnSegment(A, S3, S0) == 0, OnSegment(B, S0, S1) == 0, OnSegment(C, S2, S3) == 0, OnSegment(D, S1, S2) == 0), And(OnSegment(A, S3, S0) == 0, OnSegment(B, S1, S2) == 0, OnSegment(C, S0, S1) == 0, OnSegment(D, S2, S3) == 0), And(OnSegment(A, S3, S0) == 0, OnSegment(B, S1, S2) == 0, OnSegment(C, S2, S3) == 0, OnSegment(D, S0, S1) == 0), And(OnSegment(A, S3, S0) == 0, OnSegment(B, S2, S3) == 0, OnSegment(C, S0, S1) == 0, OnSegment(D, S1, S2) == 0), And(OnSegment(A, S3, S0) == 0, OnSegment(B, S2, S3) == 0, OnSegment(C, S1, S2) == 0, OnSegment(D, S0, S1) == 0))"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(cx, cy)",
+        "name": "O"
+      },
+      {
+        "expression": "Point(cx + vx, cy + vy)",
+        "name": "S0"
+      },
+      {
+        "expression": "Point(cx - vy, cy + vx)",
+        "name": "S1"
+      },
+      {
+        "expression": "Point(cx - vx, cy - vy)",
+        "name": "S2"
+      },
+      {
+        "expression": "Point(cx + vy, cy - vx)",
+        "name": "S3"
+      },
+      {
+        "expression": "Segment(S0, S1)",
+        "name": "edge01"
+      },
+      {
+        "expression": "Segment(S1, S2)",
+        "name": "edge12"
+      },
+      {
+        "expression": "Segment(S2, S3)",
+        "name": "edge23"
+      },
+      {
+        "expression": "Segment(S3, S0)",
+        "name": "edge30"
+      },
+      {
+        "expression": "Polygon([S0, S1, S2, S3])",
+        "name": "square"
+      },
+      {
+        "expression": "Point(0, 12)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(10, 9)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(8, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(-4, 7)",
+        "name": "D"
+      }
+    ],
+    "id": "aime-2005-1-14",
+    "target": "Area(S0, S1, S2, S3)",
+    "variables": [
+      "cx",
+      "cy",
+      "vx",
+      "vy"
+    ]
+  },
+  "bounds": [
+    [
+      -24.0,
+      24.0
+    ],
+    [
+      -24.0,
+      24.0
+    ],
+    [
+      -24.0,
+      24.0
+    ],
+    [
+      -24.0,
+      24.0
+    ]
+  ],
+  "var_names": [
+    "cx",
+    "cy",
+    "vx",
+    "vy"
+  ],
+  "starts": [
+    {
+      "seed": 32001,
+      "k": 0,
+      "x": [
+        17.536188892412397,
+        23.724191863842478,
+        13.861678849138166,
+        -22.538517889493374
+      ]
+    },
+    {
+      "seed": 32001,
+      "k": 1,
+      "x": [
+        22.778082268324056,
+        -23.55561474607439,
+        -20.20261289845336,
+        -4.29968862986464
+      ]
+    },
+    {
+      "seed": 32001,
+      "k": 2,
+      "x": [
+        7.385776850066883,
+        -13.062568339972927,
+        -11.996374744537812,
+        8.824302495237255
+      ]
+    },
+    {
+      "seed": 32001,
+      "k": 3,
+      "x": [
+        -2.5751063104862837,
+        -13.57412031443255,
+        -8.673795184367211,
+        -0.7023958713389078
+      ]
+    },
+    {
+      "seed": 32001,
+      "k": 4,
+      "x": [
+        18.79767208401779,
+        -18.85684994008068,
+        11.682424234986485,
+        15.934883800008308
+      ]
+    },
+    {
+      "seed": 32001,
+      "k": 5,
+      "x": [
+        15.546312968061095,
+        -7.586835197197235,
+        -19.030743145284404,
+        -19.5698568421934
+      ]
+    },
+    {
+      "seed": 32001,
+      "k": 6,
+      "x": [
+        16.321118155634565,
+        2.373272298536328,
+        8.014057741138643,
+        18.588528383817007
+      ]
+    },
+    {
+      "seed": 32001,
+      "k": 7,
+      "x": [
+        23.44319443003942,
+        -19.09594016644261,
+        16.315722352430384,
+        21.739001461310018
+      ]
+    },
+    {
+      "seed": 32002,
+      "k": 0,
+      "x": [
+        21.704089153511482,
+        -14.720390395990307,
+        15.416102976476822,
+        0.3879037017215552
+      ]
+    },
+    {
+      "seed": 32002,
+      "k": 1,
+      "x": [
+        -4.066521564356947,
+        11.519366019370722,
+        -16.96322426184262,
+        9.0892786773057
+      ]
+    },
+    {
+      "seed": 32002,
+      "k": 2,
+      "x": [
+        -15.126384827990279,
+        15.490860979913016,
+        18.679630636715224,
+        18.67241811581178
+      ]
+    },
+    {
+      "seed": 32002,
+      "k": 3,
+      "x": [
+        -22.054285137277354,
+        21.653377777370856,
+        -19.51466605759085,
+        0.38551804134064227
+      ]
+    },
+    {
+      "seed": 32002,
+      "k": 4,
+      "x": [
+        22.40161124721935,
+        2.887655232130342,
+        -4.428430042704456,
+        -18.069790114868233
+      ]
+    },
+    {
+      "seed": 32002,
+      "k": 5,
+      "x": [
+        2.032976659001257,
+        -0.724138351665168,
+        -17.69542163551042,
+        -17.356259905956627
+      ]
+    },
+    {
+      "seed": 32002,
+      "k": 6,
+      "x": [
+        16.649073960293734,
+        14.353701024548393,
+        -15.85916428704447,
+        18.929096956058594
+      ]
+    },
+    {
+      "seed": 32002,
+      "k": 7,
+      "x": [
+        -21.88444183556882,
+        -16.527214177421634,
+        3.094004196785022,
+        10.658940557000186
+      ]
+    }
+  ]
+}

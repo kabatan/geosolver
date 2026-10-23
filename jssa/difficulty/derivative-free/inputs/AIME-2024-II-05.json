@@ -1,0 +1,280 @@
+{
+  "id": "AIME-2024-II-05",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": "Distance(B, C)"
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": "Distance(C, D)"
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": "Distance(D, E)"
+      },
+      {
+        "left": "Distance(D, E)",
+        "operator": "=",
+        "right": "Distance(E, F)"
+      },
+      {
+        "left": "Distance(E, F)",
+        "operator": "=",
+        "right": "Distance(F, A)"
+      },
+      {
+        "left": "Parallel(Line(A, B), Line(D, E))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Parallel(Line(B, C), Line(E, F))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Parallel(Line(C, D), Line(F, A))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(U, V) * Distance(U, V) + Distance(V, W) * Distance(V, W) + Distance(W, U) * Distance(W, U)",
+        "operator": "=",
+        "right": 187600
+      },
+      {
+        "left": "Distance(U, V) * Distance(U, V) * Distance(V, W) * Distance(V, W) + Distance(U, V) * Distance(U, V) * Distance(W, U) * Distance(W, U) + Distance(V, W) * Distance(V, W) * Distance(W, U) * Distance(W, U)",
+        "operator": "=",
+        "right": 11088000000
+      },
+      {
+        "left": "Distance(U, V) * Distance(U, V) * Distance(V, W) * Distance(V, W) * Distance(W, U) * Distance(W, U)",
+        "operator": "=",
+        "right": 207360000000000
+      },
+      {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C, D, E, F])"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(s, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(s + s * cos(alpha), s * sin(alpha))",
+        "name": "C"
+      },
+      {
+        "expression": "Point(s + s * cos(alpha) + s * cos(beta), s * sin(alpha) + s * sin(beta))",
+        "name": "D"
+      },
+      {
+        "expression": "Point(s * cos(alpha) + s * cos(beta), s * sin(alpha) + s * sin(beta))",
+        "name": "E"
+      },
+      {
+        "expression": "Point(s * cos(beta), s * sin(beta))",
+        "name": "F"
+      },
+      {
+        "expression": "Intersect(Line(A, B), Line(C, D))",
+        "name": "U"
+      },
+      {
+        "expression": "Intersect(Line(C, D), Line(E, F))",
+        "name": "V"
+      },
+      {
+        "expression": "Intersect(Line(E, F), Line(A, B))",
+        "name": "W"
+      }
+    ],
+    "id": "AIME-2024-II-05",
+    "target": "Distance(A, B)",
+    "variables": [
+      "s",
+      "alpha",
+      "beta"
+    ]
+  },
+  "bounds": [
+    [
+      0.0,
+      40000.0
+    ],
+    [
+      -20000.0,
+      20000.0
+    ],
+    [
+      -20000.0,
+      20000.0
+    ]
+  ],
+  "var_names": [
+    "s",
+    "alpha",
+    "beta"
+  ],
+  "starts": [
+    {
+      "seed": 32001,
+      "k": 0,
+      "x": [
+        25788.50272777202,
+        -13413.665765915348,
+        800.5197036102036
+      ]
+    },
+    {
+      "seed": 32001,
+      "k": 1,
+      "x": [
+        20211.491256562298,
+        6769.150961081868,
+        -16763.9780603287
+      ]
+    },
+    {
+      "seed": 32001,
+      "k": 2,
+      "x": [
+        23686.602086877465,
+        -1092.3148749961329,
+        -15508.704654154908
+      ]
+    },
+    {
+      "seed": 32001,
+      "k": 3,
+      "x": [
+        23048.972144438645,
+        1382.240640078635,
+        -1121.1297799979075
+      ]
+    },
+    {
+      "seed": 32001,
+      "k": 4,
+      "x": [
+        30417.271704891,
+        1065.0104997826384,
+        -3792.4371392902904
+      ]
+    },
+    {
+      "seed": 32001,
+      "k": 5,
+      "x": [
+        10570.996753800106,
+        6903.126889148069,
+        4156.578026494812
+      ]
+    },
+    {
+      "seed": 32001,
+      "k": 6,
+      "x": [
+        28535.57042971,
+        -17759.82183391327,
+        7773.659855578404
+      ]
+    },
+    {
+      "seed": 32001,
+      "k": 7,
+      "x": [
+        23940.3219015134,
+        -10277.97065244303,
+        -18805.19009541683
+      ]
+    },
+    {
+      "seed": 32002,
+      "k": 0,
+      "x": [
+        37412.65891686511,
+        -4939.410732643128,
+        8758.612509758754
+      ]
+    },
+    {
+      "seed": 32002,
+      "k": 1,
+      "x": [
+        15367.77947210933,
+        -1878.8702052731132,
+        19339.238607396524
+      ]
+    },
+    {
+      "seed": 32002,
+      "k": 2,
+      "x": [
+        31520.99695787105,
+        350.6731888940303,
+        12357.42591770662
+      ]
+    },
+    {
+      "seed": 32002,
+      "k": 3,
+      "x": [
+        18253.90262222459,
+        17912.300456328274,
+        6580.7358625075685
+      ]
+    },
+    {
+      "seed": 32002,
+      "k": 4,
+      "x": [
+        6077.116617691001,
+        7158.159996497299,
+        5477.90279073891
+      ]
+    },
+    {
+      "seed": 32002,
+      "k": 5,
+      "x": [
+        5072.8381961930945,
+        8939.341526952288,
+        7774.250170251209
+      ]
+    },
+    {
+      "seed": 32002,
+      "k": 6,
+      "x": [
+        33086.245221274316,
+        -3692.764074317338,
+        -11075.382788653671
+      ]
+    },
+    {
+      "seed": 32002,
+      "k": 7,
+      "x": [
+        24922.769969075947,
+        -292.44700126592215,
+        1264.9013091918132
+      ]
+    }
+  ]
+}
