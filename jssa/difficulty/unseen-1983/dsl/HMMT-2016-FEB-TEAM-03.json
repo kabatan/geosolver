@@ -1,0 +1,67 @@
+{
+  "id": "HMMT-2016-FEB-TEAM-03",
+  "variables": [
+    "ax",
+    "ay"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(144, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "I",
+      "expression": "Incenter(A, B, C)"
+    },
+    {
+      "name": "O",
+      "expression": "Circumcenter(A, B, C)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(C.x-A.x)+(B.y-A.y)*(C.y-A.y))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((A.x-B.x)*(C.x-B.x)+(A.y-B.y)*(C.y-B.y))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((A.x-C.x)*(B.x-C.x)+(A.y-C.y)*(B.y-C.y))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(A, I)",
+      "operator": "=",
+      "right": 97
+    },
+    {
+      "left": "Perpendicular(Line(O, I), Line(A, I))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(O, I)",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Area(A, B, C)"
+}

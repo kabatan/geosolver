@@ -1,0 +1,141 @@
+{
+  "id": "HMMT-2015-FEB-GUTS-02",
+  "variables": [
+    "cx",
+    "cy",
+    "dx",
+    "dy",
+    "ex",
+    "ey"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(dx, dy)"
+    },
+    {
+      "name": "E",
+      "expression": "Point(ex, ey)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Perpendicular(Line(A, B), Line(B, C))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Perpendicular(Line(A, C), Line(C, D))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Perpendicular(Line(A, D), Line(D, E))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": 1
+    },
+    {
+      "left": "Distance(C, D)",
+      "operator": "=",
+      "right": 1
+    },
+    {
+      "left": "Distance(D, E)",
+      "operator": "=",
+      "right": 1
+    },
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(D.y-A.y)-(B.y-A.y)*(D.x-A.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(E.y-A.y)-(B.y-A.y)*(E.x-A.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((C.x-B.x)*(A.y-B.y)-(C.y-B.y)*(A.x-B.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((C.x-B.x)*(D.y-B.y)-(C.y-B.y)*(D.x-B.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((C.x-B.x)*(E.y-B.y)-(C.y-B.y)*(E.x-B.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((D.x-C.x)*(A.y-C.y)-(D.y-C.y)*(A.x-C.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((D.x-C.x)*(B.y-C.y)-(D.y-C.y)*(B.x-C.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((D.x-C.x)*(E.y-C.y)-(D.y-C.y)*(E.x-C.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((E.x-D.x)*(A.y-D.y)-(E.y-D.y)*(A.x-D.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((E.x-D.x)*(B.y-D.y)-(E.y-D.y)*(B.x-D.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((E.x-D.x)*(C.y-D.y)-(E.y-D.y)*(C.x-D.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((A.x-E.x)*(B.y-E.y)-(A.y-E.y)*(B.x-E.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((A.x-E.x)*(C.y-E.y)-(A.y-E.y)*(C.x-E.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((A.x-E.x)*(D.y-E.y)-(A.y-E.y)*(D.x-E.x))",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Distance(A, E)"
+}

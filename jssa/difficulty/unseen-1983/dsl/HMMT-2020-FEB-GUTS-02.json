@@ -1,0 +1,110 @@
+{
+  "id": "HMMT-2020-FEB-GUTS-02",
+  "variables": [
+    "ax",
+    "ay",
+    "bx",
+    "by",
+    "cx",
+    "cy",
+    "dy"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "omega",
+      "expression": "Circle(O, 1)"
+    },
+    {
+      "name": "M",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(bx, by)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(1, dy)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "OnCircle(A, omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(B, omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(C, omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(M, B)",
+      "operator": "=",
+      "right": "Distance(M, C)"
+    },
+    {
+      "left": "((C.x-B.x)*(A.y-B.y)-(C.y-B.y)*(A.x-B.x))*((C.x-B.x)*(M.y-B.y)-(C.y-B.y)*(M.x-B.x))",
+      "operator": "<",
+      "right": 0
+    },
+    {
+      "left": "Distance(A, M)",
+      "operator": "=",
+      "right": "Distance(A, C)"
+    },
+    {
+      "left": "Angle(D, M, C)",
+      "operator": "=",
+      "right": "38*pi/180"
+    },
+    {
+      "left": "((M.x-A.x)*(D.y-A.y)-(M.y-A.y)*(D.x-A.x))*((M.x-A.x)*(C.y-A.y)-(M.y-A.y)*(C.x-A.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Area(A, B, C)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(A, M)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(B, M)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(C, M)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(D, M)",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Degrees(Angle(A, C, B))"
+}

@@ -1,0 +1,126 @@
+{
+  "id": "HMMT-2014-FEB-TEAM-08",
+  "variables": [
+    "ax",
+    "ay",
+    "t",
+    "s"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(6, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "O",
+      "expression": "Circumcenter(A, B, C)"
+    },
+    {
+      "name": "D",
+      "expression": "FootOfPerpendicular(A, Line(B, C))"
+    },
+    {
+      "name": "E",
+      "expression": "Intersect(Line(A, O), Line(B, C))"
+    },
+    {
+      "name": "X",
+      "expression": "PointOnSegment(D, E, t)"
+    },
+    {
+      "name": "Y",
+      "expression": "PointOnSegment(A, D, s)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 4
+    },
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": 5
+    },
+    {
+      "left": "((B.x-A.x)*(C.x-A.x)+(B.y-A.y)*(C.y-A.y))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((A.x-B.x)*(C.x-B.x)+(A.y-B.y)*(C.y-B.y))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((A.x-C.x)*(B.x-C.x)+(A.y-C.y)*(B.y-C.y))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "t",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "t",
+      "operator": "<",
+      "right": 1
+    },
+    {
+      "left": "s",
+      "operator": ">=",
+      "right": 0
+    },
+    {
+      "left": "s",
+      "operator": "<=",
+      "right": 1
+    },
+    {
+      "left": "Parallel(Line(X, Y), Line(A, O))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Perpendicular(Line(Y, O), Line(A, X))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(A, O)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(D, E)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(X, Y)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(Y, O)",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Distance(B, X)"
+}
