@@ -1,0 +1,84 @@
+{
+  "utc": "2026-10-23T18:26:14.889328+00:00",
+  "scope": "Previously planned exploratory time-budget check from protocol.md; not new-problem confirmation, not recovery retries. All main 436 runs completed before selection. No new seed or topic.",
+  "selection_rule": "Select every problem/arm with a paired loss in both original seeds for form_cos, form_vector, repeat_all_32 or dummy_32; include baseline, and dummy_8 when checking dummy_32. Also include all four dummy levels for any observed nonmonotone binary trajectory. De-duplicate overlapping jobs.",
+  "seeds": [
+    43021,
+    43022
+  ],
+  "limit": 180,
+  "max_parallel": 3,
+  "comparisons": [
+    {
+      "id": "AIME-2001-II-13",
+      "arms": [
+        "base",
+        "dummy_1",
+        "dummy_8",
+        "dummy_32"
+      ]
+    },
+    {
+      "id": "AIME-2002-I-02",
+      "arms": [
+        "base",
+        "repeat_all_32"
+      ]
+    },
+    {
+      "id": "HMMT-2015-FEB-GUTS-24",
+      "arms": [
+        "base",
+        "dummy_8",
+        "dummy_32"
+      ]
+    },
+    {
+      "id": "HMMT-2023-FEB-GUTS-03",
+      "arms": [
+        "base",
+        "dummy_8",
+        "dummy_32"
+      ]
+    },
+    {
+      "id": "JMO-2013-PRE-05",
+      "arms": [
+        "base",
+        "form_cos",
+        "form_vector",
+        "dummy_8",
+        "dummy_32"
+      ]
+    },
+    {
+      "id": "JMO-2017-PRE-08",
+      "arms": [
+        "base",
+        "dummy_8",
+        "dummy_32"
+      ]
+    },
+    {
+      "id": "JMO-2023-PRE-10",
+      "arms": [
+        "base",
+        "dummy_8",
+        "dummy_32"
+      ]
+    },
+    {
+      "id": "JMO-2024-PRE-06",
+      "arms": [
+        "base",
+        "form_cos",
+        "form_vector",
+        "repeat_all_32"
+      ]
+    }
+  ],
+  "main_summary_sha256": "003a27eb9f3f5b4b5cdac93edd17538601800debe82941e9fc547378aa2223b5",
+  "main_effects_sha256": "faeaac8c25565b676e1306f55f0b3c3cc2484fc9aecc644e9d0b9919d9500f04",
+  "hypothesis": "none; descriptive persistence at the already-planned public 180-second limit",
+  "stopping_rule": "one execution per listed job, retain every failure and timeout; no replacement and no added seed"
+}

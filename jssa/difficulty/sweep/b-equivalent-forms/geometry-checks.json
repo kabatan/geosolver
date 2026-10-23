@@ -1,0 +1,18 @@
+{
+  "scope": "numerical fields recorded before optional float export; not a new audit or exact proof",
+  "representatives": 1542,
+  "complete_numerical_records": 1542,
+  "numerical_pass": 1542,
+  "numerical_failures": [],
+  "incomplete_records": [],
+  "precision_dps": 100,
+  "threshold": "1E-20",
+  "max_normalized_original_residual": "1.03480100354561282E-94",
+  "max_answer_relative_error": "1.7584421404342692034E-101",
+  "original_audit_pass_flag": 0,
+  "optional_float_export_errors": 1542,
+  "original_rows_sha256": "9132109d989e7ed56e5d4a5bc27d023b5e101491ca533fa2d90f1a6456451b83",
+  "original_audit_sha256": "e79559d425b15fce0396b7d8ced5882287dbb45590979fd34df12345739ef959",
+  "original_script_sha256": "7563cc370e81a07dc207a4dd16f3bf8d07ccf7522c2d9012c32c432823f9dc49",
+  "explanation": "audit_geometry.py records the numerical checks, then calls float(mpf) inside high_precision_mode while exporting points. The exception handler overwrites pass=False. Original flags/errors are retained; this summary separately counts the recorded numerical checks."
+}

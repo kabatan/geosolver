@@ -1,0 +1,52 @@
+{
+  "instruction": "resume_common.txt; preserve plan, order, seeds, time budgets and frozen scoring; no replacement or extra retries",
+  "initial_observation": {
+    "saved_runs": 409,
+    "planned_runs": 436,
+    "host_driver_pid": 3839405,
+    "live_children": [
+      3980019,
+      3980139
+    ],
+    "process_query": "ps -eo pid,etimes,cmd",
+    "state": "original driver was alive; no relaunch or signal sent"
+  },
+  "followup_scope": "only the 180-second checks already described in protocol.md, selected from the original 20 problems, same seeds 43021/43022, maximum three lanes",
+  "frozen_source_read": [
+    "src/geosolver/runtime/integrity.py",
+    "src/geosolver/runtime/worker.py",
+    "src/geosolver/engine/runner.py",
+    "src/geosolver/engine/standard/problem/load_problem_bundle.py",
+    "src/geosolver/engine/standard/problem/tangency_contacts.py",
+    "src/geosolver/engine/standard/refinement/mpmath_refiner.py",
+    "src/geosolver/engine/standard/refinement/analytic_jacobian.py",
+    "src/geosolver/engine/standard/evaluation/snapshots.py",
+    "src/geosolver/problem/domain_bounds.py"
+  ],
+  "clean_root": "/tmp/q43b-clean-60db4b6-d461234c",
+  "concurrency": 3,
+  "main_completion": {
+    "saved_runs": 436,
+    "interrupted_runs": 0,
+    "restarted_runs": 0,
+    "completed_utc": "2026-10-23T18:25:22.913897+00:00"
+  },
+  "recorded_utc": "2026-10-23T18:24:15.732321+00:00",
+  "followup_completion": {
+    "saved_runs": 54,
+    "completed_utc": "2026-10-23T18:57:25.892450+00:00",
+    "wall_seconds": 1859.4438164059538,
+    "new_seeds": false,
+    "retries": 0
+  },
+  "verification": {
+    "recorded_runs": 490,
+    "input_hashes": 240,
+    "numerical_geometry_checks": 1542,
+    "numerical_geometry_pass": 1542,
+    "optional_float_export_errors": 1542,
+    "frozen_scorer_changed": false,
+    "frozen_audit_script_changed": false,
+    "resubstitution_or_solver_retries": 0
+  }
+}
