@@ -561,7 +561,7 @@ def read_run_outcome(raw):
         status = "external_timeout"
     elif process.get("returncode") not in (None, 0) and status == "artifact_missing":
         status = "process_crash"
-    diagnostics = result.get("diagnostics", {})
+    diagnostics = result.get("diagnostics") or {}
     info = diagnostics.get("process_info", {})
     summary = diagnostics.get("pipeline_summary", {})
     assembly = summary.get("exact_assembly", {})

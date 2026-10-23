@@ -1,5 +1,7 @@
 4基準の判定：①直感に反する＝未確認（完備4問では大差なし）、②深い理論が必要＝未確認、③広がりと再現＝未検証、④solverならでは＝未確認。**Aの中心を担えるか：現時点では不可。固定840実行が未完で、中心に据える証拠は得られていない。**
 
+**段階1追補（停止後・再開前）。** [null diagnostics追補](amendment-null-diagnostics/prediction-supplement.md)と[lock](amendment-null-diagnostics/prediction-supplement.lock.json)を追加した。run前の「採点器を変更しない」契約からの変更として、nullを扱う1行を修正し、[84件の再採点が全フィールド・全21ファイルで一致](amendment-null-diagnostics/rescore-84/result.json)した。solver呼出し0回。worker成果物なしは不正解として分母に残し、[版別件数](amendment-null-diagnostics/stage1-mode-counts/per-mode.csv)を別欄に報告する。batch 21の4件は現在も未採点で、許可後に保存runを採点だけし、新規実行はbatch 22からの752件に限定する。[再開前import検査](amendment-null-diagnostics/preflight-stage1.json)も通過したが、commit・push確認と別タスクの明示許可まで停止する。以下の本文は追補以前の停止時点の記録として保持する。
+
 Q38・段階2、環境修復後の再実行。**import先の修復は確認できたが、88実行後に別のworker異常と既存採点器の例外で停止した。84件は採点済み・全件matched、停止batchの4件は未採点、752件は未実行。840件は完遂していない。** 採点器の変更・独自採点・問題の除外・追加再試行は行っていない。40問全体のA/Tと事前予測は未判定である。
 
 **環境修復と旧4件の扱い。** 旧4実行は、ユーザーの指示どおり**「契約違反の無効実行（環境不備、再実行して置換）」**として保存した。正解にも不正解にも数えない。旧rawは `/tmp/q38-58e3993-execution/` に変更なく残し、旧報告・記録・実行補助コードを[保存manifest](execution-records/invalid-attempt-20261023T164136Z/archive-manifest.json)のSHA-256で検証した。[旧報告全文](execution-records/invalid-attempt-20261023T164136Z/answer.md)。
