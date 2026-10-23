@@ -1,0 +1,267 @@
+{
+  "variables": [
+    "q04_px",
+    "q04_py",
+    "q14_e",
+    "q14_f",
+    "q05_h"
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "q04_O"
+    },
+    {
+      "expression": "Circle(q04_O, 8)",
+      "name": "q04_omega"
+    },
+    {
+      "expression": "Point(-sqrt(61), sqrt(3))",
+      "name": "q04_A"
+    },
+    {
+      "expression": "Point(1, -3 * sqrt(7))",
+      "name": "q04_B"
+    },
+    {
+      "expression": "Point(sqrt(61), sqrt(3))",
+      "name": "q04_C"
+    },
+    {
+      "expression": "Point(1, 3 * sqrt(7))",
+      "name": "q04_D"
+    },
+    {
+      "expression": "Point(q04_px, q04_py)",
+      "name": "q04_P"
+    },
+    {
+      "expression": "Circumcircle(q04_A, q04_B, q04_P)",
+      "name": "q04_c1"
+    },
+    {
+      "expression": "Circumcircle(q04_C, q04_D, q04_P)",
+      "name": "q04_c2"
+    },
+    {
+      "expression": "Circumcircle(q04_A, q04_D, q04_P)",
+      "name": "q04_c3"
+    },
+    {
+      "expression": "Circumcircle(q04_B, q04_C, q04_P)",
+      "name": "q04_c4"
+    },
+    {
+      "name": "q14_A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "q14_B",
+      "expression": "Point(900, 0)"
+    },
+    {
+      "name": "q14_C",
+      "expression": "Point(900, 900)"
+    },
+    {
+      "name": "q14_D",
+      "expression": "Point(0, 900)"
+    },
+    {
+      "name": "q14_O",
+      "expression": "Midpoint(q14_A, q14_C)"
+    },
+    {
+      "name": "q14_E",
+      "expression": "Point(q14_e, 0)"
+    },
+    {
+      "name": "q14_F",
+      "expression": "Point(q14_f, 0)"
+    },
+    {
+      "expression": "Point(-250, 0)",
+      "name": "q05_A"
+    },
+    {
+      "expression": "Point(250, 0)",
+      "name": "q05_B"
+    },
+    {
+      "expression": "Point(325, q05_h)",
+      "name": "q05_C"
+    },
+    {
+      "expression": "Point(-325, q05_h)",
+      "name": "q05_D"
+    },
+    {
+      "expression": "Intersect(AngleBisector(q05_D, q05_A, q05_B), AngleBisector(q05_C, q05_D, q05_A))",
+      "name": "q05_P"
+    },
+    {
+      "expression": "Intersect(AngleBisector(q05_A, q05_B, q05_C), AngleBisector(q05_B, q05_C, q05_D))",
+      "name": "q05_Q"
+    },
+    {
+      "expression": "Point(cos(2*pi*0/6), sin(2*pi*0/6))",
+      "name": "q15_A"
+    },
+    {
+      "expression": "Point(cos(2*pi*1/6), sin(2*pi*1/6))",
+      "name": "q15_B"
+    },
+    {
+      "expression": "Point(cos(2*pi*2/6), sin(2*pi*2/6))",
+      "name": "q15_C"
+    },
+    {
+      "expression": "Point(cos(2*pi*3/6), sin(2*pi*3/6))",
+      "name": "q15_D"
+    },
+    {
+      "expression": "Point(cos(2*pi*4/6), sin(2*pi*4/6))",
+      "name": "q15_E"
+    },
+    {
+      "expression": "Point(cos(2*pi*5/6), sin(2*pi*5/6))",
+      "name": "q15_F"
+    },
+    {
+      "expression": "Incircle(q15_B,q15_D,q15_F)",
+      "name": "q15_P"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "OnCircle(q04_A, q04_omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(q04_B, q04_omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(q04_C, q04_omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(q04_D, q04_omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Perpendicular(Line(q04_A, q04_C), Line(q04_B, q04_D))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(q04_A, q04_C)",
+      "operator": "=",
+      "right": "2 * sqrt(61)"
+    },
+    {
+      "left": "Distance(q04_B, q04_D)",
+      "operator": "=",
+      "right": "6 * sqrt(7)"
+    },
+    {
+      "left": "IsTangent(q04_c1, q04_c2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(q04_c3, q04_c4)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "q04_px * q04_px + q04_py * q04_py",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "predicate": "ConvexPolygon([q04_A, q04_B, q04_C, q04_D])"
+    },
+    {
+      "left": "(Vector(q04_A, q04_B).x * Vector(q04_A, q04_P).y - Vector(q04_A, q04_B).y * Vector(q04_A, q04_P).x) * (Vector(q04_B, q04_C).x * Vector(q04_B, q04_P).y - Vector(q04_B, q04_C).y * Vector(q04_B, q04_P).x)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "(Vector(q04_A, q04_B).x * Vector(q04_A, q04_P).y - Vector(q04_A, q04_B).y * Vector(q04_A, q04_P).x) * (Vector(q04_C, q04_D).x * Vector(q04_C, q04_P).y - Vector(q04_C, q04_D).y * Vector(q04_C, q04_P).x)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "(Vector(q04_A, q04_B).x * Vector(q04_A, q04_P).y - Vector(q04_A, q04_B).y * Vector(q04_A, q04_P).x) * (Vector(q04_D, q04_A).x * Vector(q04_D, q04_P).y - Vector(q04_D, q04_A).y * Vector(q04_D, q04_P).x)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "q14_e",
+      "operator": ">=",
+      "right": 0
+    },
+    {
+      "left": "q14_f",
+      "operator": "<=",
+      "right": 900
+    },
+    {
+      "left": "q14_e",
+      "operator": "<",
+      "right": "q14_f"
+    },
+    {
+      "left": "Distance(q14_A, q14_E)",
+      "operator": "<",
+      "right": "Distance(q14_B, q14_F)"
+    },
+    {
+      "left": "Distance(q14_E, q14_F)",
+      "operator": "=",
+      "right": 400
+    },
+    {
+      "left": "Angle(q14_E, q14_O, q14_F)",
+      "operator": "=",
+      "right": "pi/4"
+    },
+    {
+      "left": "Distance(q05_A, q05_B)",
+      "operator": "=",
+      "right": 500
+    },
+    {
+      "left": "Distance(q05_C, q05_D)",
+      "operator": "=",
+      "right": 650
+    },
+    {
+      "left": "Distance(q05_A, q05_D)",
+      "operator": "=",
+      "right": 333
+    },
+    {
+      "left": "Distance(q05_B, q05_C)",
+      "operator": "=",
+      "right": 333
+    },
+    {
+      "left": "q05_h",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(q05_P, q05_Q)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "id": "quad-sum-02",
+  "target": "(Distance(q04_O, q04_P)) + (Distance(q14_B, q14_F)) + (Distance(q05_P, q05_Q)) + (pi*Radius(q15_P)**2/Area(q15_A,q15_B,q15_D,q15_E))"
+}

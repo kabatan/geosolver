@@ -1,0 +1,91 @@
+{
+  "conditions": [
+    {
+      "left": "Dot(Vector(X,R),Vector(X,R))",
+      "operator": "=",
+      "right": "(9)**2"
+    },
+    {
+      "left": "Dot(Vector(X,S),Vector(X,S))",
+      "operator": "=",
+      "right": "(2)**2"
+    },
+    {
+      "left": "Collinear(P, R, X)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Collinear(Q, S, X)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "(2*Dot(Vector(P,R),Vector(Center(O1),P)))**2-4*Dot(Vector(P,R),Vector(P,R))*(Dot(Vector(Center(O1),P),Vector(Center(O1),P))-Radius(O1)**2)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "(2*Dot(Vector(Q,S),Vector(Center(O2),Q)))**2-4*Dot(Vector(Q,S),Vector(Q,S))*(Dot(Vector(Center(O2),Q),Vector(Center(O2),Q))-Radius(O2)**2)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "left": "theta",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "theta",
+      "operator": "<",
+      "right": "pi"
+    },
+    {
+      "left": "p",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "q",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "X"
+    },
+    {
+      "expression": "Point(9, 0)",
+      "name": "R"
+    },
+    {
+      "expression": "Point(2 * cos(theta), 2 * sin(theta))",
+      "name": "S"
+    },
+    {
+      "expression": "Point(p, 0)",
+      "name": "P"
+    },
+    {
+      "expression": "Point(q * cos(theta), q * sin(theta))",
+      "name": "Q"
+    },
+    {
+      "expression": "Circumcircle(P, Q, S)",
+      "name": "O1"
+    },
+    {
+      "expression": "Circumcircle(P, Q, R)",
+      "name": "O2"
+    }
+  ],
+  "id": "JMO-2013-PRE-05",
+  "target": "Radius(O1) / Radius(O2)",
+  "variables": [
+    "theta",
+    "p",
+    "q"
+  ]
+}

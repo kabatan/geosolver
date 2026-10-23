@@ -1,0 +1,63 @@
+{
+  "id": "AIME-2005-II-14",
+  "variables": [
+    "x",
+    "y",
+    "t"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(15, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(x, y)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(15-6, 0)"
+    },
+    {
+      "name": "E",
+      "expression": "PointOnSegment(B, C, t)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 13
+    },
+    {
+      "left": "Distance(B, E)",
+      "operator": "=",
+      "right": "2535/463"
+    },
+    {
+      "left": "y",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "t",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "t",
+      "operator": "<",
+      "right": 1
+    },
+    {
+      "left": "Angle(B, A, E)",
+      "operator": "=",
+      "right": "Angle(C, A, D)"
+    }
+  ],
+  "target": "Distance(A, C)"
+}

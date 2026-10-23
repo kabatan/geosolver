@@ -1,0 +1,1951 @@
+{
+  "created_utc": "2026-10-23T17:27:05.002917+00:00",
+  "frozen_commit": "60db4b679b04167175c51c479c87c22fa663fda0",
+  "source_hash": "sha256:d8fd9bb8392ad2984276bab3386e033669246ee79586317917c322d31b4541f5",
+  "imported_source": "/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/src/geosolver/__init__.py",
+  "src_diff_empty": true,
+  "selection_seed": 20261024,
+  "solver_seeds": [
+    0,
+    1,
+    2
+  ],
+  "seconds_per_run": 90,
+  "max_parallel": 3,
+  "source_input_hashes": {
+    "benchmarks/cases.jsonl": "c5f92269783add80779a38b4159f298b7f49300386bca0008bb02d3c82d3fccb",
+    "jssa/difficulty/unseen-2/a/cases.jsonl": "2d98cb918e73070e1a1e8ea1fe864e00a9f2f816b395e366fb6ce6e5fb757b5c",
+    "jssa/difficulty/unseen-2/b/cases.jsonl": "8c889bdfd609aa6c88eb615feead95ba9ac80071ec2e715d5df899f0ebe624f1"
+  },
+  "selected_problem_count": 24,
+  "inputs": [
+    {
+      "id": "HMMT-2007-FEB-GEO-04",
+      "group": "development",
+      "arm": "forward",
+      "path": "inputs/HMMT-2007-FEB-GEO-04/forward.json",
+      "sha256": "60de49b3b03d64aefa97f03845b4e425ac51dac2ce3f5dce19cc3a32e74d6b4e",
+      "reference": "17",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-17"
+        ],
+        0
+      ],
+      "choice": null
+    },
+    {
+      "id": "HMMT-2007-FEB-GEO-04",
+      "group": "development",
+      "arm": "inverse-02",
+      "path": "inputs/HMMT-2007-FEB-GEO-04/inverse-02.json",
+      "sha256": "f8ac282ff0f5ccdc3ea7d2dd92de163a0aa451d829eb913378fcce45291df22b",
+      "reference": "7",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-7"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 2,
+        "varying_side": "left",
+        "expression": "Distance(B, C)",
+        "given": "7",
+        "dependencies": [
+          "u",
+          "v"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "HMMT-2014-FEB-GEO-04",
+      "group": "development",
+      "arm": "forward",
+      "path": "inputs/HMMT-2014-FEB-GEO-04/forward.json",
+      "sha256": "2e56a12eda5dbe768154727a112bfe7f980b5bc04d5bff15131c99ae3f9f2068",
+      "reference": "28",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-28"
+        ],
+        0
+      ],
+      "choice": null
+    },
+    {
+      "id": "HMMT-2014-FEB-GEO-04",
+      "group": "development",
+      "arm": "inverse-02",
+      "path": "inputs/HMMT-2014-FEB-GEO-04/inverse-02.json",
+      "sha256": "730a9390d898028ea5a4602880e5d5db1f98bf13ae2a36e92de94e516499c95e",
+      "reference": "7*pi/18",
+      "reference_key": [
+        "affine_pi",
+        [
+          [
+            "18",
+            "-7"
+          ],
+          0
+        ],
+        [
+          [
+            "1",
+            "0"
+          ],
+          0
+        ]
+      ],
+      "choice": {
+        "condition_index": 2,
+        "varying_side": "left",
+        "expression": "Angle(B, C, D)",
+        "given": "7*pi/18",
+        "dependencies": [
+          "b"
+        ],
+        "category": "angle"
+      }
+    },
+    {
+      "id": "HMMT-2014-FEB-GEO-04",
+      "group": "development",
+      "arm": "inverse-01",
+      "path": "inputs/HMMT-2014-FEB-GEO-04/inverse-01.json",
+      "sha256": "c16e2890a74702f8d460c74ac32ce1e5d7fe01ea6dfad1fced5d1d23a73b1a0a",
+      "reference": "41*pi/90",
+      "reference_key": [
+        "affine_pi",
+        [
+          [
+            "90",
+            "-41"
+          ],
+          0
+        ],
+        [
+          [
+            "1",
+            "0"
+          ],
+          0
+        ]
+      ],
+      "choice": {
+        "condition_index": 1,
+        "varying_side": "left",
+        "expression": "Angle(D, B, C)",
+        "given": "41*pi/90",
+        "dependencies": [
+          "b"
+        ],
+        "category": "angle"
+      }
+    },
+    {
+      "id": "HMMT-2014-FEB-GEO-04",
+      "group": "development",
+      "arm": "inverse-00",
+      "path": "inputs/HMMT-2014-FEB-GEO-04/inverse-00.json",
+      "sha256": "9edaf53a888cfef2a507d287399d208054ef5af269c2254268744cc59f6fcda2",
+      "reference": "49*pi/90",
+      "reference_key": [
+        "affine_pi",
+        [
+          [
+            "90",
+            "-49"
+          ],
+          0
+        ],
+        [
+          [
+            "1",
+            "0"
+          ],
+          0
+        ]
+      ],
+      "choice": {
+        "condition_index": 0,
+        "varying_side": "left",
+        "expression": "Angle(D, A, C)",
+        "given": "49*pi/90",
+        "dependencies": [
+          "ax",
+          "ay"
+        ],
+        "category": "angle"
+      }
+    },
+    {
+      "id": "JMO-2018-PRE-06",
+      "group": "development",
+      "arm": "forward",
+      "path": "inputs/JMO-2018-PRE-06/forward.json",
+      "sha256": "729a0c0f545547ca6e4e7db049b861f0c799abbfce4b13eae5542bb099cd5835",
+      "reference": "1/10 + sqrt(79)/20",
+      "reference_key": [
+        "algebraic",
+        [
+          "80",
+          "-16",
+          "-15"
+        ],
+        1
+      ],
+      "choice": null
+    },
+    {
+      "id": "JMO-2018-PRE-06",
+      "group": "development",
+      "arm": "inverse-06",
+      "path": "inputs/JMO-2018-PRE-06/inverse-06.json",
+      "sha256": "74d02217f0912e18efc114d0e50cfdc2506ae5795fa9a82b426fd20f3ae47602",
+      "reference": "1/4",
+      "reference_key": [
+        "algebraic",
+        [
+          "4",
+          "-1"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 6,
+        "varying_side": "left",
+        "expression": "Distance(X, Y)",
+        "given": "1/4",
+        "dependencies": [
+          "xx",
+          "xy",
+          "yx",
+          "yy"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "AIME-2012-II-15",
+      "group": "development",
+      "arm": "forward",
+      "path": "inputs/AIME-2012-II-15/forward.json",
+      "sha256": "7225c97a0253e67f249c32dff55067f644980f53bba1ec9316470e98ebde9e13",
+      "reference": "900/19",
+      "reference_key": [
+        "algebraic",
+        [
+          "19",
+          "-900"
+        ],
+        0
+      ],
+      "choice": null
+    },
+    {
+      "id": "AIME-2012-II-15",
+      "group": "development",
+      "arm": "inverse-00",
+      "path": "inputs/AIME-2012-II-15/inverse-00.json",
+      "sha256": "7ebe1ea394f7a3290412f1b97a158d76db293834ba06f71c1fb0a8e9b351aecd",
+      "reference": "7",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-7"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 0,
+        "varying_side": "left",
+        "expression": "Distance(B, C)",
+        "given": "7",
+        "dependencies": [
+          "cx",
+          "cy"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "AIME-2012-II-15",
+      "group": "development",
+      "arm": "inverse-01",
+      "path": "inputs/AIME-2012-II-15/inverse-01.json",
+      "sha256": "886d8866a5b1120ddb8851a567515f4b38ccab2f53af06105552c4dd74c1874a",
+      "reference": "3",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-3"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 1,
+        "varying_side": "left",
+        "expression": "Distance(A, C)",
+        "given": "3",
+        "dependencies": [
+          "cx",
+          "cy"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "AIME-2014-II-11",
+      "group": "development",
+      "arm": "forward",
+      "path": "inputs/AIME-2014-II-11/forward.json",
+      "sha256": "7cf5144fd9e6330544fe150c81f8ee780e87c7afd860e5774b12429e5e78e9e9",
+      "reference": "7/22 - 3*sqrt(3)/22",
+      "reference_key": [
+        "algebraic",
+        [
+          "22",
+          "-14",
+          "1"
+        ],
+        0
+      ],
+      "choice": null
+    },
+    {
+      "id": "AIME-2014-II-11",
+      "group": "development",
+      "arm": "inverse-01",
+      "path": "inputs/AIME-2014-II-11/inverse-01.json",
+      "sha256": "19ad9a5dc22465f41c52d77b607d1a53c3dad8626200b6f11218cb9d13b41b29",
+      "reference": "pi/4",
+      "reference_key": [
+        "affine_pi",
+        [
+          [
+            "4",
+            "-1"
+          ],
+          0
+        ],
+        [
+          [
+            "1",
+            "0"
+          ],
+          0
+        ]
+      ],
+      "choice": {
+        "condition_index": 1,
+        "varying_side": "left",
+        "expression": "Angle(R, E, D)",
+        "given": "pi/4",
+        "dependencies": [
+          "ex",
+          "ey"
+        ],
+        "category": "angle"
+      }
+    },
+    {
+      "id": "AIME-2014-II-11",
+      "group": "development",
+      "arm": "inverse-00",
+      "path": "inputs/AIME-2014-II-11/inverse-00.json",
+      "sha256": "2be1c3c1eee123cab5d76b333153c3ca83917007f278b9961ca79932663e5b29",
+      "reference": "5*pi/12",
+      "reference_key": [
+        "affine_pi",
+        [
+          [
+            "12",
+            "-5"
+          ],
+          0
+        ],
+        [
+          [
+            "1",
+            "0"
+          ],
+          0
+        ]
+      ],
+      "choice": {
+        "condition_index": 0,
+        "varying_side": "left",
+        "expression": "Angle(D, R, E)",
+        "given": "5*pi/12",
+        "dependencies": [
+          "ex",
+          "ey"
+        ],
+        "category": "angle"
+      }
+    },
+    {
+      "id": "aime-2001-1-13",
+      "group": "development",
+      "arm": "forward",
+      "path": "inputs/aime-2001-1-13/forward.json",
+      "sha256": "cf4010471a2cc01f0b34ce4d166504f302dc67cf39afe150c82c743166cee291",
+      "reference": "64/5",
+      "reference_key": [
+        "algebraic",
+        [
+          "5",
+          "-64"
+        ],
+        0
+      ],
+      "choice": null
+    },
+    {
+      "id": "aime-2001-1-13",
+      "group": "development",
+      "arm": "inverse-03",
+      "path": "inputs/aime-2001-1-13/inverse-03.json",
+      "sha256": "61782585f8f773db5902dd47b218d2e650a2181864bbc98864f253c6fafe507d",
+      "reference": "10",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-10"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 3,
+        "varying_side": "left",
+        "expression": "Distance(B, D)",
+        "given": "10",
+        "dependencies": [
+          "w",
+          "z"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "aime-2001-1-13",
+      "group": "development",
+      "arm": "inverse-04",
+      "path": "inputs/aime-2001-1-13/inverse-04.json",
+      "sha256": "b6218597cdc5d987066c085e4d12fadac1331541035ecbf88cd0f8b9745df4ec",
+      "reference": "6",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-6"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 4,
+        "varying_side": "left",
+        "expression": "Distance(B, C)",
+        "given": "6",
+        "dependencies": [
+          "x",
+          "y"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "HMMT-2013-FEB-GEO-03",
+      "group": "development",
+      "arm": "forward",
+      "path": "inputs/HMMT-2013-FEB-GEO-03/forward.json",
+      "sha256": "3b56e48052efaaf85804d7be26d7b087dbc84b1c6efbb48d956c7cee52911978",
+      "reference": "22",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-22"
+        ],
+        0
+      ],
+      "choice": null
+    },
+    {
+      "id": "HMMT-2013-FEB-GEO-03",
+      "group": "development",
+      "arm": "inverse-08",
+      "path": "inputs/HMMT-2013-FEB-GEO-03/inverse-08.json",
+      "sha256": "b2e3fd60ef371293297ef764d8cedd13075e8797a997dce992426b31b009b8f8",
+      "reference": "9",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-9"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 8,
+        "varying_side": "left",
+        "expression": "Area(A3, B1, B2)",
+        "given": "9",
+        "dependencies": [
+          "p",
+          "tx",
+          "ty",
+          "u",
+          "v"
+        ],
+        "category": "area"
+      }
+    },
+    {
+      "id": "HMMT-2013-FEB-GEO-03",
+      "group": "development",
+      "arm": "inverse-06",
+      "path": "inputs/HMMT-2013-FEB-GEO-03/inverse-06.json",
+      "sha256": "33a36f21ccbf55e49b1f4162b335b1cadc2e8edab84c199fd05270913f209500",
+      "reference": "1",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-1"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 6,
+        "varying_side": "left",
+        "expression": "Area(A1, B5, B6)",
+        "given": "1",
+        "dependencies": [
+          "p",
+          "tx",
+          "ty",
+          "u",
+          "v"
+        ],
+        "category": "area"
+      }
+    },
+    {
+      "id": "HMMT-2013-FEB-GEO-03",
+      "group": "development",
+      "arm": "inverse-07",
+      "path": "inputs/HMMT-2013-FEB-GEO-03/inverse-07.json",
+      "sha256": "6710f155f027b4351aede5f22ccdffff800cffbc7f3d98dcd6ca9741a76da3fe",
+      "reference": "4",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-4"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 7,
+        "varying_side": "left",
+        "expression": "Area(A2, B6, B1)",
+        "given": "4",
+        "dependencies": [
+          "p",
+          "tx",
+          "ty",
+          "u",
+          "v"
+        ],
+        "category": "area"
+      }
+    },
+    {
+      "id": "AIME-2019-I-15",
+      "group": "development",
+      "arm": "forward",
+      "path": "inputs/AIME-2019-I-15/forward.json",
+      "sha256": "dd48882377dd4a99791ff96eeef09cc4cdf94baeb5068870ee1605f69fd190cf",
+      "reference": "61/4",
+      "reference_key": [
+        "algebraic",
+        [
+          "4",
+          "-61"
+        ],
+        0
+      ],
+      "choice": null
+    },
+    {
+      "id": "AIME-2019-I-15",
+      "group": "development",
+      "arm": "inverse-14",
+      "path": "inputs/AIME-2019-I-15/inverse-14.json",
+      "sha256": "7c20958641c95a325058294331edd1ad5abbffe9a1cbccebb71e04deb68cdb8b",
+      "reference": "11",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-11"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 14,
+        "varying_side": "left",
+        "expression": "Distance(X, Y)",
+        "given": "11",
+        "dependencies": [
+          "h",
+          "k1",
+          "k2"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "AIME-2023-I-08",
+      "group": "development",
+      "arm": "forward",
+      "path": "inputs/AIME-2023-I-08/forward.json",
+      "sha256": "ac5878ab917b4c12f886c4e8a47e78933c2721bca14b66460e77240f34d22843",
+      "reference": "125",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-125"
+        ],
+        0
+      ],
+      "choice": null
+    },
+    {
+      "id": "AIME-2023-I-08",
+      "group": "development",
+      "arm": "inverse-04",
+      "path": "inputs/AIME-2023-I-08/inverse-04.json",
+      "sha256": "a10053dd36b0a146970225c8544e40b0b5637e70dbb73ed095722b9f16d6b1dd",
+      "reference": "9",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-9"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 4,
+        "varying_side": "left",
+        "expression": "Distance(P, Line(A, D))",
+        "given": "9",
+        "dependencies": [
+          "px",
+          "py",
+          "u",
+          "v"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "AIME-2023-I-08",
+      "group": "development",
+      "arm": "inverse-05",
+      "path": "inputs/AIME-2023-I-08/inverse-05.json",
+      "sha256": "7dd54d6c9885a05cb02eab40975a81ef81a8105488dd9e4e08ac63afba651754",
+      "reference": "5",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-5"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 5,
+        "varying_side": "left",
+        "expression": "Distance(P, Line(A, B))",
+        "given": "5",
+        "dependencies": [
+          "px",
+          "py",
+          "s"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "AIME-2023-I-08",
+      "group": "development",
+      "arm": "inverse-06",
+      "path": "inputs/AIME-2023-I-08/inverse-06.json",
+      "sha256": "cee9e7069707bbd78aba84ee20fe3533c415e96c02a28cbc3a4b5fd59cd35d37",
+      "reference": "16",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-16"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 6,
+        "varying_side": "left",
+        "expression": "Distance(P, Line(B, C))",
+        "given": "16",
+        "dependencies": [
+          "px",
+          "py",
+          "s",
+          "u",
+          "v"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "HMMT-2017-FEB-GEO-01",
+      "group": "development",
+      "arm": "forward",
+      "path": "inputs/HMMT-2017-FEB-GEO-01/forward.json",
+      "sha256": "93bd6f21ba344e33cbcad1a0566fbeb579efd48894bba2c4a345905e96afbd27",
+      "reference": "2/5",
+      "reference_key": [
+        "algebraic",
+        [
+          "5",
+          "-2"
+        ],
+        0
+      ],
+      "choice": null
+    },
+    {
+      "id": "HMMT-2017-FEB-GEO-01",
+      "group": "development",
+      "arm": "inverse-02",
+      "path": "inputs/HMMT-2017-FEB-GEO-01/inverse-02.json",
+      "sha256": "c440aa9bbffb5e01c6507e615d2e833d9c7070fe0c6802516be3c103327f696d",
+      "reference": "6",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-6"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 2,
+        "varying_side": "left",
+        "expression": "Distance(C, D)",
+        "given": "6",
+        "dependencies": [
+          "c",
+          "d",
+          "theta"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "HMMT-2017-FEB-GEO-01",
+      "group": "development",
+      "arm": "inverse-03",
+      "path": "inputs/HMMT-2017-FEB-GEO-01/inverse-03.json",
+      "sha256": "0d8156befa6ad78a8cb92970b85a56bfbe594a2b5f9cfdd571774f9a125db5a1",
+      "reference": "4",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-4"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 3,
+        "varying_side": "left",
+        "expression": "Distance(D, A)",
+        "given": "4",
+        "dependencies": [
+          "a",
+          "d",
+          "theta"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "HMMT-2017-FEB-GEO-01",
+      "group": "development",
+      "arm": "inverse-00",
+      "path": "inputs/HMMT-2017-FEB-GEO-01/inverse-00.json",
+      "sha256": "2ee784030391563b0b084c8a857b0a946fb4f35997f9a0cf8dfdf566f685e8bd",
+      "reference": "3",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-3"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 0,
+        "varying_side": "left",
+        "expression": "Distance(A, B)",
+        "given": "3",
+        "dependencies": [
+          "a",
+          "b",
+          "theta"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "HMMT-2017-FEB-GEO-01",
+      "group": "development",
+      "arm": "inverse-01",
+      "path": "inputs/HMMT-2017-FEB-GEO-01/inverse-01.json",
+      "sha256": "eb71669dff96a044a2c289a99ac494765ecd08a9c883cdf553a7139deae95ab1",
+      "reference": "5",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-5"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 1,
+        "varying_side": "left",
+        "expression": "Distance(B, C)",
+        "given": "5",
+        "dependencies": [
+          "b",
+          "c",
+          "theta"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "JMO-2021-PRE-07",
+      "group": "development",
+      "arm": "forward",
+      "path": "inputs/JMO-2021-PRE-07/forward.json",
+      "sha256": "5e49e2ff97cbc5c44f767f2116bdc225fa7d2c6950dc20d0299c619534e45f43",
+      "reference": "sqrt(231)",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "0",
+          "-231"
+        ],
+        1
+      ],
+      "choice": null
+    },
+    {
+      "id": "JMO-2021-PRE-07",
+      "group": "development",
+      "arm": "inverse-00",
+      "path": "inputs/JMO-2021-PRE-07/inverse-00.json",
+      "sha256": "70b4eaf11f69b1a6dcc7bdb9c5ab70c8f86bd684438014c21e92ec06779c683d",
+      "reference": "10",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-10"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 0,
+        "varying_side": "left",
+        "expression": "Distance(A, B)",
+        "given": "10",
+        "dependencies": [
+          "ax",
+          "ay"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "JMO-2021-PRE-07",
+      "group": "development",
+      "arm": "inverse-01",
+      "path": "inputs/JMO-2021-PRE-07/inverse-01.json",
+      "sha256": "18d79260886be3103477ae6047989851ed1f71a24e3314af6b5acb26993fa77f",
+      "reference": "11",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-11"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 1,
+        "varying_side": "left",
+        "expression": "Distance(A, C)",
+        "given": "11",
+        "dependencies": [
+          "ax",
+          "ay",
+          "c"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "HMMT-2021-FEB-GEO-05",
+      "group": "development",
+      "arm": "forward",
+      "path": "inputs/HMMT-2021-FEB-GEO-05/forward.json",
+      "sha256": "b7f731dd4df868c5039214bca10523fb844b1448e6dc14cb34a5469acd3f489f",
+      "reference": "49/400",
+      "reference_key": [
+        "algebraic",
+        [
+          "400",
+          "-49"
+        ],
+        0
+      ],
+      "choice": null
+    },
+    {
+      "id": "HMMT-2021-FEB-GEO-05",
+      "group": "development",
+      "arm": "inverse-04",
+      "path": "inputs/HMMT-2021-FEB-GEO-05/inverse-04.json",
+      "sha256": "2d84b0331f65cfd25df312ef0d9548047cf46aacceb93ae1db4e8358d5c72457",
+      "reference": "4",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-4"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 4,
+        "varying_side": "left",
+        "expression": "Distance(C, D)",
+        "given": "4",
+        "dependencies": [
+          "cx",
+          "cy",
+          "t"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "HMMT-2021-FEB-GEO-05",
+      "group": "development",
+      "arm": "inverse-03",
+      "path": "inputs/HMMT-2021-FEB-GEO-05/inverse-03.json",
+      "sha256": "e4505c1957597705b3152e5039d83b6112aefb1489308bd372721c07206613c9",
+      "reference": "3",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-3"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 3,
+        "varying_side": "left",
+        "expression": "Distance(B, C)",
+        "given": "3",
+        "dependencies": [
+          "cx",
+          "cy",
+          "t"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "AIME-2005-II-14",
+      "group": "unseen_a",
+      "arm": "forward",
+      "path": "inputs/AIME-2005-II-14/forward.json",
+      "sha256": "a0b4a9b3669f5586e8aa0105fd5e47b15fe650384841e4cee85cef01638cace7",
+      "reference": "2535/463",
+      "reference_key": [
+        "algebraic",
+        [
+          "463",
+          "-2535"
+        ],
+        0
+      ],
+      "choice": null
+    },
+    {
+      "id": "AIME-2005-II-14",
+      "group": "unseen_a",
+      "arm": "inverse-00",
+      "path": "inputs/AIME-2005-II-14/inverse-00.json",
+      "sha256": "b99a62203bcea904013a73a784c4bcbf9c458719d7973ab3d9f70a6578c81621",
+      "reference": "13",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-13"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 0,
+        "varying_side": "left",
+        "expression": "Distance(A, B)",
+        "given": "13",
+        "dependencies": [
+          "x",
+          "y"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "AIME-2005-II-14",
+      "group": "unseen_a",
+      "arm": "inverse-01",
+      "path": "inputs/AIME-2005-II-14/inverse-01.json",
+      "sha256": "6c33efa8cedeb3bd8b667ab4eb440fb94a631c2957b1d107c17c51c872518e26",
+      "reference": "14",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-14"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 1,
+        "varying_side": "left",
+        "expression": "Distance(A, C)",
+        "given": "14",
+        "dependencies": [
+          "x",
+          "y"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "AIME-2005-II-08",
+      "group": "unseen_a",
+      "arm": "forward",
+      "path": "inputs/AIME-2005-II-08/forward.json",
+      "sha256": "e654479bbbda6fec393b4fb1b25dd0cdd1504a5ad24eaf2889c4d368226db78d",
+      "reference": "8*sqrt(390)/7",
+      "reference_key": [
+        "algebraic",
+        [
+          "49",
+          "0",
+          "-24960"
+        ],
+        1
+      ],
+      "choice": null
+    },
+    {
+      "id": "AIME-2005-II-08",
+      "group": "unseen_a",
+      "arm": "inverse-04",
+      "path": "inputs/AIME-2005-II-08/inverse-04.json",
+      "sha256": "dd2fe3136a1f3b47789215e919b63868dddd599e0aa53e3b0a19be69b102c78b",
+      "reference": "10",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-10"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 4,
+        "varying_side": "left",
+        "expression": "Distance(O2, L)",
+        "given": "10",
+        "dependencies": [
+          "a",
+          "b"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "AIME-2005-II-08",
+      "group": "unseen_a",
+      "arm": "inverse-03",
+      "path": "inputs/AIME-2005-II-08/inverse-03.json",
+      "sha256": "ffb0f41ad18277d96b6723a147a7e396a8d6ed20f43577301b2b8c7926ecb049",
+      "reference": "4",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-4"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 3,
+        "varying_side": "left",
+        "expression": "Distance(O1, L)",
+        "given": "4",
+        "dependencies": [
+          "a",
+          "b"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "AIME-2001-II-13",
+      "group": "unseen_a",
+      "arm": "forward",
+      "path": "inputs/AIME-2001-II-13/forward.json",
+      "sha256": "8303b7a3383fe26dc518f50bebc3fab75bee3ab76aedb1580b159f7db0022d6e",
+      "reference": "64/5",
+      "reference_key": [
+        "algebraic",
+        [
+          "5",
+          "-64"
+        ],
+        0
+      ],
+      "choice": null
+    },
+    {
+      "id": "AIME-2001-II-13",
+      "group": "unseen_a",
+      "arm": "inverse-00",
+      "path": "inputs/AIME-2001-II-13/inverse-00.json",
+      "sha256": "281f65fb872a394a09be7cb2caf013916e5091343d74035ce3ec9b9ff1c9dc3c",
+      "reference": "8",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-8"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 0,
+        "varying_side": "left",
+        "expression": "Distance(A, B)",
+        "given": "8",
+        "dependencies": [
+          "ax",
+          "ay"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "AIME-2001-II-13",
+      "group": "unseen_a",
+      "arm": "inverse-01",
+      "path": "inputs/AIME-2001-II-13/inverse-01.json",
+      "sha256": "4636a454cadea90fbfd79f150fa9642f8ac9495293d1a9ff32ce544dd39346d7",
+      "reference": "6",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-6"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 1,
+        "varying_side": "left",
+        "expression": "Distance(B, C)",
+        "given": "6",
+        "dependencies": [
+          "cx",
+          "cy"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "AIME-2005-I-07",
+      "group": "unseen_a",
+      "arm": "forward",
+      "path": "inputs/AIME-2005-I-07/forward.json",
+      "sha256": "558afc3b8db9ce81912b04a34a1a06fe0d06844d269d7bcde6953691db72cc3e",
+      "reference": "9 + sqrt(141)",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-18",
+          "-60"
+        ],
+        1
+      ],
+      "choice": null
+    },
+    {
+      "id": "AIME-2005-I-07",
+      "group": "unseen_a",
+      "arm": "inverse-01",
+      "path": "inputs/AIME-2005-I-07/inverse-01.json",
+      "sha256": "fccea31f25d86e2ddc99fbac6a7c41d1da22b0967bf4643cbcf2684e8b0f3c3c",
+      "reference": "12",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-12"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 1,
+        "varying_side": "left",
+        "expression": "Distance(C, D)",
+        "given": "12",
+        "dependencies": [
+          "b"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "AIME-2002-I-02",
+      "group": "unseen_a",
+      "arm": "forward",
+      "path": "inputs/AIME-2002-I-02/forward.json",
+      "sha256": "59438973ddf49ca54793a20cabc450d36087db42b4e0199e657a9247406fc872",
+      "reference": "-7/2 + 7*sqrt(3)/2",
+      "reference_key": [
+        "algebraic",
+        [
+          "2",
+          "14",
+          "-49"
+        ],
+        1
+      ],
+      "choice": null
+    },
+    {
+      "id": "AIME-2002-I-02",
+      "group": "unseen_a",
+      "arm": "inverse-07",
+      "path": "inputs/AIME-2002-I-02/inverse-07.json",
+      "sha256": "df4e53fb0f85f6fed390a5e89719f6dfbaac556965e0e723adbee48f9cbae573",
+      "reference": "2",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-2"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 7,
+        "varying_side": "left",
+        "expression": "Distance(L2, L3)",
+        "given": "2",
+        "dependencies": [
+          "s"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "AIME-2002-I-02",
+      "group": "unseen_a",
+      "arm": "inverse-40",
+      "path": "inputs/AIME-2002-I-02/inverse-40.json",
+      "sha256": "4a95e7604bc051598b6b82e81375375b0b93a5a9889b8fb81b75708429e0f652",
+      "reference": "2",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-2"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 40,
+        "varying_side": "left",
+        "expression": "Distance(M4, T4)",
+        "given": "2",
+        "dependencies": [
+          "s",
+          "u",
+          "v",
+          "w"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "AIME-2002-I-02",
+      "group": "unseen_a",
+      "arm": "inverse-42",
+      "path": "inputs/AIME-2002-I-02/inverse-42.json",
+      "sha256": "81d212ba8cb2fc0b7ee8127f9ed05ab53daafd063078673b0cb16bfb142b4e28",
+      "reference": "2",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-2"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 42,
+        "varying_side": "left",
+        "expression": "Distance(M5, L5)",
+        "given": "2",
+        "dependencies": [
+          "s",
+          "u",
+          "v"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "AIME-2002-I-02",
+      "group": "unseen_a",
+      "arm": "inverse-43",
+      "path": "inputs/AIME-2002-I-02/inverse-43.json",
+      "sha256": "a57eb313031e1c134b03470413da3a2c0a21ccd9e871ec0282fd57be70c560b9",
+      "reference": "2",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-2"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 43,
+        "varying_side": "left",
+        "expression": "Distance(M5, L6)",
+        "given": "2",
+        "dependencies": [
+          "s",
+          "u",
+          "v"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "AIME-2014-I-10",
+      "group": "unseen_a",
+      "arm": "forward",
+      "path": "inputs/AIME-2014-I-10/forward.json",
+      "sha256": "8aa61a3686e59b15e12f3ac8571ea858c0b1a9d9260f3edf88b38185300bb1c7",
+      "reference": "27/31",
+      "reference_key": [
+        "algebraic",
+        [
+          "31",
+          "-27"
+        ],
+        0
+      ],
+      "choice": null
+    },
+    {
+      "id": "AIME-2014-I-10",
+      "group": "unseen_a",
+      "arm": "inverse-00",
+      "path": "inputs/AIME-2014-I-10/inverse-00.json",
+      "sha256": "d85e9e4f8338215f0b55d9dd22a5aaac203b476e5fe26197577499ccee3b1808",
+      "reference": "2*pi",
+      "reference_key": [
+        "affine_pi",
+        [
+          [
+            "1",
+            "-2"
+          ],
+          0
+        ],
+        [
+          [
+            "1",
+            "0"
+          ],
+          0
+        ]
+      ],
+      "choice": {
+        "condition_index": 0,
+        "varying_side": "left",
+        "expression": "(5+1)*theta",
+        "given": "2*pi",
+        "dependencies": [
+          "theta"
+        ],
+        "category": "scalar"
+      }
+    },
+    {
+      "id": "HMMT-2013-FEB-GUTS-01",
+      "group": "unseen_b",
+      "arm": "forward",
+      "path": "inputs/HMMT-2013-FEB-GUTS-01/forward.json",
+      "sha256": "22a95860d2113414f80b3b03733c207aaf11d364337aa0a691d6812e166509bd",
+      "reference": "93",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-93"
+        ],
+        0
+      ],
+      "choice": null
+    },
+    {
+      "id": "HMMT-2013-FEB-GUTS-01",
+      "group": "unseen_b",
+      "arm": "inverse-01",
+      "path": "inputs/HMMT-2013-FEB-GUTS-01/inverse-01.json",
+      "sha256": "eb3c4dcdf10b456858c3ba5bab0361b7edb8cd1886418c26568684252d3aa8b8",
+      "reference": "31",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-31"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 1,
+        "varying_side": "left",
+        "expression": "Distance(U,V)",
+        "given": "31",
+        "dependencies": [
+          "k"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "HMMT-2010-FEB-GUTS-13",
+      "group": "unseen_b",
+      "arm": "forward",
+      "path": "inputs/HMMT-2010-FEB-GUTS-13/forward.json",
+      "sha256": "dcd9e20e09b005233d4b52294069acaf31637cbddd93ef273d23d882e94fa6a2",
+      "reference": "17/2",
+      "reference_key": [
+        "algebraic",
+        [
+          "2",
+          "-17"
+        ],
+        0
+      ],
+      "choice": null
+    },
+    {
+      "id": "HMMT-2010-FEB-GUTS-13",
+      "group": "unseen_b",
+      "arm": "inverse-01",
+      "path": "inputs/HMMT-2010-FEB-GUTS-13/inverse-01.json",
+      "sha256": "23e4d198cd6a4f0345977d73899693cc69432232bca8a162954b3f89f03f8175",
+      "reference": "5",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-5"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 1,
+        "varying_side": "left",
+        "expression": "max(ax, bx, cx)",
+        "given": "5",
+        "dependencies": [
+          "ax",
+          "bx",
+          "cx"
+        ],
+        "category": "scalar"
+      }
+    },
+    {
+      "id": "HMMT-2010-FEB-GUTS-13",
+      "group": "unseen_b",
+      "arm": "inverse-03",
+      "path": "inputs/HMMT-2010-FEB-GUTS-13/inverse-03.json",
+      "sha256": "3ac588092074346a25104d1c2ec2d3960940a3d4fa90f3a64780f986796e566c",
+      "reference": "13",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-13"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 3,
+        "varying_side": "left",
+        "expression": "max(ay, by, cy)",
+        "given": "13",
+        "dependencies": [
+          "ay",
+          "by",
+          "cy"
+        ],
+        "category": "scalar"
+      }
+    },
+    {
+      "id": "HMMT-2010-FEB-GUTS-13",
+      "group": "unseen_b",
+      "arm": "inverse-04",
+      "path": "inputs/HMMT-2010-FEB-GUTS-13/inverse-04.json",
+      "sha256": "c69bcd2c8ba3f0e99953c7fa1150577ca0c00f0510fe9cb04db9edc72626e54e",
+      "reference": "5",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-5"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 4,
+        "varying_side": "left",
+        "expression": "min((ax+ay)/2, (bx+by)/2, (cx+cy)/2)",
+        "given": "5",
+        "dependencies": [
+          "ax",
+          "ay",
+          "bx",
+          "by",
+          "cx",
+          "cy"
+        ],
+        "category": "ratio"
+      }
+    },
+    {
+      "id": "HMMT-2010-FEB-GUTS-13",
+      "group": "unseen_b",
+      "arm": "inverse-00",
+      "path": "inputs/HMMT-2010-FEB-GUTS-13/inverse-00.json",
+      "sha256": "42fa86c3235223ce2306a04df6a20ffb3daf830e2281db404af1588f2c78f4ea",
+      "reference": "1",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-1"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 0,
+        "varying_side": "left",
+        "expression": "min(ax, bx, cx)",
+        "given": "1",
+        "dependencies": [
+          "ax",
+          "bx",
+          "cx"
+        ],
+        "category": "scalar"
+      }
+    },
+    {
+      "id": "HMMT-2011-FEB-GUTS-01",
+      "group": "unseen_b",
+      "arm": "forward",
+      "path": "inputs/HMMT-2011-FEB-GUTS-01/forward.json",
+      "sha256": "549f9be8d44f49bde57d77f59a045996c283410971ae0a2dc4cf9cf48de91970",
+      "reference": "1/3",
+      "reference_key": [
+        "algebraic",
+        [
+          "3",
+          "-1"
+        ],
+        0
+      ],
+      "choice": null
+    },
+    {
+      "id": "HMMT-2011-FEB-GUTS-01",
+      "group": "unseen_b",
+      "arm": "inverse-00",
+      "path": "inputs/HMMT-2011-FEB-GUTS-01/inverse-00.json",
+      "sha256": "85e5fb270c9b941d0dd1b55465a6b32aa699dda1e9b442b7046e4b5187303d1a",
+      "reference": "1",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-1"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 0,
+        "varying_side": "left",
+        "expression": "Area(A,B,C)",
+        "given": "1",
+        "dependencies": [
+          "b",
+          "x",
+          "y"
+        ],
+        "category": "area"
+      }
+    },
+    {
+      "id": "HMMT-2011-FEB-GUTS-01",
+      "group": "unseen_b",
+      "arm": "inverse-02",
+      "path": "inputs/HMMT-2011-FEB-GUTS-01/inverse-02.json",
+      "sha256": "6fa364a8a52ec33fee9188ef5786e0750719586a8beb5f137cb2c56ca444a678",
+      "reference": "1/3",
+      "reference_key": [
+        "algebraic",
+        [
+          "3",
+          "-1"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 2,
+        "varying_side": "left",
+        "expression": "Distance(D,E)/Distance(B,C)",
+        "given": "1/3",
+        "dependencies": [
+          "b",
+          "u",
+          "v",
+          "x",
+          "y"
+        ],
+        "category": "ratio"
+      }
+    },
+    {
+      "id": "HMMT-2023-FEB-GUTS-03",
+      "group": "unseen_b",
+      "arm": "forward",
+      "path": "inputs/HMMT-2023-FEB-GUTS-03/forward.json",
+      "sha256": "0e929687369b49838d47154c3be9440f898d9ea8538238c589b1ccbbcd67adf9",
+      "reference": "sqrt(21)",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "0",
+          "-21"
+        ],
+        1
+      ],
+      "choice": null
+    },
+    {
+      "id": "HMMT-2023-FEB-GUTS-03",
+      "group": "unseen_b",
+      "arm": "inverse-00",
+      "path": "inputs/HMMT-2023-FEB-GUTS-03/inverse-00.json",
+      "sha256": "fee5ee686baf4130e85faaaa8c886d5f00a2ca2cb172f715072628a8b3ffad43",
+      "reference": "pi/2",
+      "reference_key": [
+        "affine_pi",
+        [
+          [
+            "2",
+            "-1"
+          ],
+          0
+        ],
+        [
+          [
+            "1",
+            "0"
+          ],
+          0
+        ]
+      ],
+      "choice": {
+        "condition_index": 0,
+        "varying_side": "left",
+        "expression": "Angle(B,C,D)",
+        "given": "pi/2",
+        "dependencies": [
+          "cx",
+          "cy",
+          "d"
+        ],
+        "category": "angle"
+      }
+    },
+    {
+      "id": "HMMT-2023-FEB-GUTS-03",
+      "group": "unseen_b",
+      "arm": "inverse-01",
+      "path": "inputs/HMMT-2023-FEB-GUTS-03/inverse-01.json",
+      "sha256": "8ce69a899fa954ac8e60a8694657dcd937362faedbfb8e9f5bf360fefb12b0f2",
+      "reference": "2",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-2"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 1,
+        "varying_side": "left",
+        "expression": "Distance(C,M)",
+        "given": "2",
+        "dependencies": [
+          "cx",
+          "cy",
+          "d"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "HMMT-2023-FEB-GUTS-03",
+      "group": "unseen_b",
+      "arm": "inverse-02",
+      "path": "inputs/HMMT-2023-FEB-GUTS-03/inverse-02.json",
+      "sha256": "c6b5f74efd88d7b5f6dd3879961722d44fdab2cd0482f695a750090e0cf7913d",
+      "reference": "3",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-3"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 2,
+        "varying_side": "left",
+        "expression": "Distance(A,M)",
+        "given": "3",
+        "dependencies": [
+          "a",
+          "d"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "HMMT-2020-FEB-GUTS-13",
+      "group": "unseen_b",
+      "arm": "forward",
+      "path": "inputs/HMMT-2020-FEB-GUTS-13/forward.json",
+      "sha256": "1132294a8cc0b00edbd32baf2aafbeb599d04955a3c4cd20e8a3b8017db08864",
+      "reference": "112/65",
+      "reference_key": [
+        "algebraic",
+        [
+          "65",
+          "-112"
+        ],
+        0
+      ],
+      "choice": null
+    },
+    {
+      "id": "HMMT-2020-FEB-GUTS-13",
+      "group": "unseen_b",
+      "arm": "inverse-01",
+      "path": "inputs/HMMT-2020-FEB-GUTS-13/inverse-01.json",
+      "sha256": "83ccc8eda6f18053d77df5b1e29db75ea75b52a4f8bc1215511b27b3f53cabcc",
+      "reference": "4*sqrt(3)",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "0",
+          "-48"
+        ],
+        1
+      ],
+      "choice": {
+        "condition_index": 1,
+        "varying_side": "left",
+        "expression": "Distance(C,A)",
+        "given": "4*sqrt(3)",
+        "dependencies": [
+          "ax",
+          "ay"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "HMMT-2020-FEB-GUTS-13",
+      "group": "unseen_b",
+      "arm": "inverse-00",
+      "path": "inputs/HMMT-2020-FEB-GUTS-13/inverse-00.json",
+      "sha256": "5abac2017034a7a415bc9e589bbf960d20aecb80fb1ebd5521641361fe178b53",
+      "reference": "7",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-7"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 0,
+        "varying_side": "left",
+        "expression": "Distance(A,B)",
+        "given": "7",
+        "dependencies": [
+          "ax",
+          "ay"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "HMMT-2012-FEB-GUTS-06",
+      "group": "unseen_b",
+      "arm": "forward",
+      "path": "inputs/HMMT-2012-FEB-GUTS-06/forward.json",
+      "sha256": "5ddeb7882fd818131d56c9b757df5151efe475224bf02f1a3ccede6eb866a899",
+      "reference": "72",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-72"
+        ],
+        0
+      ],
+      "choice": null
+    },
+    {
+      "id": "HMMT-2012-FEB-GUTS-06",
+      "group": "unseen_b",
+      "arm": "inverse-01",
+      "path": "inputs/HMMT-2012-FEB-GUTS-06/inverse-01.json",
+      "sha256": "72e00b83f264609771e239ccb62bcf9a8ae0663d9b319636601e9d869892669a",
+      "reference": "6",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-6"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 1,
+        "varying_side": "left",
+        "expression": "Distance(E,Line(A,D))",
+        "given": "6",
+        "dependencies": [
+          "ex",
+          "ey"
+        ],
+        "category": "length"
+      }
+    },
+    {
+      "id": "HMMT-2012-FEB-GUTS-06",
+      "group": "unseen_b",
+      "arm": "inverse-00",
+      "path": "inputs/HMMT-2012-FEB-GUTS-06/inverse-00.json",
+      "sha256": "7978f85143cfc7e67b1026f94ae795212f0b78e1ab6af757387a4dba7e6ce99d",
+      "reference": "6",
+      "reference_key": [
+        "algebraic",
+        [
+          "1",
+          "-6"
+        ],
+        0
+      ],
+      "choice": {
+        "condition_index": 0,
+        "varying_side": "left",
+        "expression": "Distance(E,Line(A,B))",
+        "given": "6",
+        "dependencies": [
+          "ex",
+          "ey"
+        ],
+        "category": "length"
+      }
+    }
+  ],
+  "run_count": 228,
+  "raw_directory": "/tmp/q43f-inverse-20261024",
+  "selection_rule": "For each group sort eligible IDs by SHA256(f\"20261024:{group}:{id}\"); take 12/6/6. Up to 4 choices sorted by SHA256 with :condition:{index} suffix.",
+  "eligibility": "Single elementary exact reference; nonzero numeric equality; other side transitively depends on a free variable. Selection uses inputs only.",
+  "limitations": [
+    "Unseen means corpus origin; other concurrent experiments may already use these problems.",
+    "Inverse reference is a known solution, not proof of uniqueness or a full answer set.",
+    "Unselected problems are not run or used for this exploratory result."
+  ]
+}

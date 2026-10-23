@@ -1,0 +1,75 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(B,C)",
+      "operator": "=",
+      "right": 14
+    },
+    {
+      "left": "Distance(C,A)",
+      "operator": "=",
+      "right": 15
+    },
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "A"
+    },
+    {
+      "expression": "Point(13, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(cx, cy)",
+      "name": "C"
+    },
+    {
+      "expression": "FootOfPerpendicular(Line(A,C),B)",
+      "name": "E"
+    },
+    {
+      "expression": "FootOfPerpendicular(Line(A,B),C)",
+      "name": "F"
+    },
+    {
+      "expression": "Circumcircle(A,E,F)",
+      "name": "omega"
+    },
+    {
+      "expression": "PerpendicularLine(Line(Center(omega),A),A)",
+      "name": "lA"
+    },
+    {
+      "expression": "PerpendicularLine(Line(Center(omega),E),E)",
+      "name": "lE"
+    },
+    {
+      "expression": "PerpendicularLine(Line(Center(omega),F),F)",
+      "name": "lF"
+    },
+    {
+      "expression": "IntersectLines(lA,lE)",
+      "name": "U"
+    },
+    {
+      "expression": "IntersectLines(lE,lF)",
+      "name": "V"
+    },
+    {
+      "expression": "IntersectLines(lF,lA)",
+      "name": "W"
+    }
+  ],
+  "id": "HMMT-2016-FEB-GUTS-14",
+  "target": "Angle(E, A, F)",
+  "variables": [
+    "cx",
+    "cy"
+  ]
+}

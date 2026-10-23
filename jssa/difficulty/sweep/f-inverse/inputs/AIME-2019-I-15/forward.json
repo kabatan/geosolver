@@ -1,0 +1,175 @@
+{
+  "conditions": [
+    {
+      "left": "OnCircle(A, omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(B, omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(A, omega1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(P, omega1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(B, omega2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(P, omega2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(O, O1)",
+      "operator": "=",
+      "right": "Distance(O, A) - Distance(O1, A)"
+    },
+    {
+      "left": "Distance(O, O2)",
+      "operator": "=",
+      "right": "Distance(O, A) - Distance(O2, B)"
+    },
+    {
+      "left": "OnCircle(Q, omega1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(Q, omega2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnLine(X, P, Q)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnLine(Y, P, Q)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(X, omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(Y, omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(X, Y)",
+      "operator": "=",
+      "right": 11
+    },
+    {
+      "left": "Distance(O, A)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "k1",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "k1",
+      "operator": "<",
+      "right": "1"
+    },
+    {
+      "left": "k2",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "k2",
+      "operator": "<",
+      "right": "1"
+    },
+    {
+      "left": "Distance(P, Q)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(X, Y)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "O"
+    },
+    {
+      "expression": "Point(1, h)",
+      "name": "P"
+    },
+    {
+      "expression": "Point(-4, h)",
+      "name": "A"
+    },
+    {
+      "expression": "Point(4, h)",
+      "name": "B"
+    },
+    {
+      "expression": "Circle(O, Distance(O, A))",
+      "name": "omega"
+    },
+    {
+      "expression": "Point(k1 * A.x, k1 * A.y)",
+      "name": "O1"
+    },
+    {
+      "expression": "Point(k2 * B.x, k2 * B.y)",
+      "name": "O2"
+    },
+    {
+      "expression": "Circle(O1, Distance(O1, A))",
+      "name": "omega1"
+    },
+    {
+      "expression": "Circle(O2, Distance(O2, B))",
+      "name": "omega2"
+    },
+    {
+      "expression": "Intersect(omega1, omega2, exclude=P)",
+      "name": "Q"
+    },
+    {
+      "expression": "Line(P, Q)",
+      "name": "PQ"
+    },
+    {
+      "expression": "Intersect(PQ, omega, near=P)",
+      "name": "X"
+    },
+    {
+      "expression": "Intersect(PQ, omega, far=P)",
+      "name": "Y"
+    }
+  ],
+  "id": "AIME-2019-I-15",
+  "target": "Distance(P, Q) * Distance(P, Q)",
+  "variables": [
+    "h",
+    "k1",
+    "k2"
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "conditions": [
+    {
+      "left": "IsTangent(Line(A, B), omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(Line(B, C), omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(Line(C, D), omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(Line(D, A), omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Angle(I, D, E)",
+      "operator": "=",
+      "right": "35 * pi / 180"
+    },
+    {
+      "left": "a",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "d",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "predicate": "ConvexPolygon([A, B, C, D])"
+    },
+    {
+      "left": "Area(A, C, D)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(D, E)",
+      "operator": "!=",
+      "right": "0"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(1, 0)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(cos(70 * pi / 180), sin(70 * pi / 180))",
+      "name": "ABray"
+    },
+    {
+      "expression": "Point(1 + cos(120 * pi / 180), sin(120 * pi / 180))",
+      "name": "CDray"
+    },
+    {
+      "expression": "Point(cos(35 * pi / 180), sin(35 * pi / 180))",
+      "name": "BIray"
+    },
+    {
+      "expression": "Point(1 + cos(150 * pi / 180), sin(150 * pi / 180))",
+      "name": "CIray"
+    },
+    {
+      "expression": "Point(a * cos(70 * pi / 180), a * sin(70 * pi / 180))",
+      "name": "A"
+    },
+    {
+      "expression": "Point(1 - d / 2, d * sqrt(3) / 2)",
+      "name": "D"
+    },
+    {
+      "expression": "Intersect(Line(B, BIray), Line(C, CIray))",
+      "name": "I"
+    },
+    {
+      "expression": "Circle(I, Distance(I, Line(B, C)))",
+      "name": "omega"
+    },
+    {
+      "expression": "Intersect(Line(C, I), Line(A, B))",
+      "name": "E"
+    }
+  ],
+  "id": "HMMT-2010-FEB-GEO-09",
+  "target": "Angle(C, D, A) * 180 / pi",
+  "variables": [
+    "a",
+    "d"
+  ]
+}

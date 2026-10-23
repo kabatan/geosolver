@@ -1,0 +1,103 @@
+{
+  "id": "AIME-2001-II-13",
+  "variables": [
+    "ax",
+    "ay",
+    "cx",
+    "cy"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(10, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Dot(Vector(A,B),Vector(A,B))",
+      "operator": "=",
+      "right": "(8)**2"
+    },
+    {
+      "left": "Dot(Vector(B,C),Vector(B,C))",
+      "operator": "=",
+      "right": "(6)**2"
+    },
+    {
+      "left": "Dot(Vector(A,B),Vector(A,D))/(Distance(A,B)*Distance(A,D))",
+      "operator": "=",
+      "right": "Dot(Vector(D,A),Vector(D,C))/(Distance(D,A)*Distance(D,C))"
+    },
+    {
+      "left": "Dot(Vector(B,A),Vector(B,D))/(Distance(B,A)*Distance(B,D))",
+      "operator": "=",
+      "right": "Dot(Vector(C,B),Vector(C,D))/(Distance(C,B)*Distance(C,D))"
+    },
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "cy",
+      "operator": "<",
+      "right": 0
+    },
+    {
+      "predicate": "ConvexPolygon([A, B, C, D])"
+    },
+    {
+      "left": "Distance(A,B)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(A,D)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(D,A)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(D,C)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(B,A)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(B,D)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(C,B)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(C,D)",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Distance(C, D)"
+}

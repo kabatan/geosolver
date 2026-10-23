@@ -1,0 +1,67 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(P, Line(A, B))",
+      "operator": "=",
+      "right": "((3)*(101/100))"
+    },
+    {
+      "left": "Distance(P, Line(B, C))",
+      "operator": "=",
+      "right": "((6)*(99/100))"
+    },
+    {
+      "left": "Distance(P, Line(C, D))",
+      "operator": "=",
+      "right": "((8)*(101/100))"
+    },
+    {
+      "left": "Distance(P, Line(D, A))",
+      "operator": "=",
+      "right": "((8)*(99/100))"
+    },
+    {
+      "predicate": "ConvexPolygon([A, B, C, D])"
+    },
+    {
+      "left": "b",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "h",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "A"
+    },
+    {
+      "expression": "Point(b, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(cx, h)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(dx, h)",
+      "name": "D"
+    },
+    {
+      "expression": "Intersect(Line(A, C), Line(B, D))",
+      "name": "P"
+    }
+  ],
+  "id": "HMMT-2026-FEB-GUTS-18",
+  "target": "Distance(A, B) + Distance(B, C) + Distance(C, D) + Distance(D, A)",
+  "variables": [
+    "b",
+    "cx",
+    "dx",
+    "h"
+  ]
+}

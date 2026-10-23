@@ -1,0 +1,131 @@
+{
+  "conditions": [
+    {
+      "left": "Dot(Vector(B,C),Vector(B,C))",
+      "operator": "=",
+      "right": "(8)**2"
+    },
+    {
+      "left": "Dot(Vector(C,D),Vector(C,D))",
+      "operator": "=",
+      "right": "(25)**2"
+    },
+    {
+      "left": "Dot(Vector(D,A),Vector(D,A))",
+      "operator": "=",
+      "right": "(12)**2"
+    },
+    {
+      "left": "Dot(Vector(Center(Gamma),D),Vector(Center(Gamma),D))",
+      "operator": "=",
+      "right": "(Radius(Gamma))**2"
+    },
+    {
+      "left": "Dot(Vector(W,T0),Vector(W,T0))",
+      "operator": "=",
+      "right": "(r)**2"
+    },
+    {
+      "left": "(T0.x-D.x)*(A.x-D.x)+(T0.y-D.y)*(A.y-D.y)",
+      "operator": ">=",
+      "right": 0
+    },
+    {
+      "left": "(T0.x-D.x)*(A.x-D.x)+(T0.y-D.y)*(A.y-D.y)",
+      "operator": "<=",
+      "right": "Distance(D,A)**2"
+    },
+    {
+      "left": "Dot(Vector(W,T1),Vector(W,T1))",
+      "operator": "=",
+      "right": "(r)**2"
+    },
+    {
+      "left": "(T1.x-A.x)*(B.x-A.x)+(T1.y-A.y)*(B.y-A.y)",
+      "operator": ">=",
+      "right": 0
+    },
+    {
+      "left": "(T1.x-A.x)*(B.x-A.x)+(T1.y-A.y)*(B.y-A.y)",
+      "operator": "<=",
+      "right": "Distance(A,B)**2"
+    },
+    {
+      "left": "Dot(Vector(W,T2),Vector(W,T2))",
+      "operator": "=",
+      "right": "(r)**2"
+    },
+    {
+      "left": "(T2.x-B.x)*(C.x-B.x)+(T2.y-B.y)*(C.y-B.y)",
+      "operator": ">=",
+      "right": 0
+    },
+    {
+      "left": "(T2.x-B.x)*(C.x-B.x)+(T2.y-B.y)*(C.y-B.y)",
+      "operator": "<=",
+      "right": "Distance(B,C)**2"
+    },
+    {
+      "predicate": "ConvexPolygon([A,B,C,D])"
+    },
+    {
+      "left": "dy",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "r",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "A"
+    },
+    {
+      "expression": "Point(10, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(cx, cy)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(dx, dy)",
+      "name": "D"
+    },
+    {
+      "expression": "Point(wx, wy)",
+      "name": "W"
+    },
+    {
+      "expression": "Circumcircle(A,B,C)",
+      "name": "Gamma"
+    },
+    {
+      "expression": "FootOfPerpendicular(Line(D,A),W)",
+      "name": "T0"
+    },
+    {
+      "expression": "FootOfPerpendicular(Line(A,B),W)",
+      "name": "T1"
+    },
+    {
+      "expression": "FootOfPerpendicular(Line(B,C),W)",
+      "name": "T2"
+    }
+  ],
+  "id": "HMMT-2015-FEB-GUTS-24",
+  "target": "r",
+  "variables": [
+    "cx",
+    "cy",
+    "dx",
+    "dy",
+    "wx",
+    "wy",
+    "r"
+  ]
+}

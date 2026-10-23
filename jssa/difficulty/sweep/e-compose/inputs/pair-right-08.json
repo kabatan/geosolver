@@ -1,0 +1,137 @@
+{
+  "variables": [
+    "q08_b",
+    "q08_x",
+    "q08_d",
+    "q18_ax",
+    "q18_ay",
+    "q18_t",
+    "q18_u"
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, q08_b)",
+      "name": "q08_A"
+    },
+    {
+      "expression": "Point(0, 0)",
+      "name": "q08_B"
+    },
+    {
+      "expression": "Point(q08_x, 0)",
+      "name": "q08_C"
+    },
+    {
+      "expression": "Point(q08_d, q08_b)",
+      "name": "q08_D"
+    },
+    {
+      "expression": "Point(0, 0)",
+      "name": "q18_B"
+    },
+    {
+      "expression": "Point(1, 0)",
+      "name": "q18_D"
+    },
+    {
+      "expression": "Point(1+4, 0)",
+      "name": "q18_C"
+    },
+    {
+      "expression": "Point(q18_ax, q18_ay)",
+      "name": "q18_A"
+    },
+    {
+      "expression": "Point(q18_ax+q18_t*(1+4-q18_ax), q18_ay*(1-q18_t))",
+      "name": "q18_E"
+    },
+    {
+      "expression": "Point(q18_ax*(1-q18_u), q18_ay*(1-q18_u))",
+      "name": "q18_F"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Perpendicular(Line(q08_A, q08_B), Line(q08_A, q08_D))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Perpendicular(Line(q08_B, q08_A), Line(q08_B, q08_C))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Angle(q08_B, q08_C, q08_D)",
+      "operator": "=",
+      "right": "pi / 4"
+    },
+    {
+      "left": "Distance(q08_A, q08_C)",
+      "operator": "=",
+      "right": 19
+    },
+    {
+      "left": "Distance(q08_B, q08_D)",
+      "operator": "=",
+      "right": 15
+    },
+    {
+      "left": "q08_b",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "q08_x",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "q08_d",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "q08_x",
+      "operator": ">",
+      "right": "q08_d"
+    },
+    {
+      "left": "Distance(q18_A,q18_B)",
+      "operator": "=",
+      "right": "Distance(q18_B,q18_C)"
+    },
+    {
+      "left": "Distance(q18_A,q18_C)",
+      "operator": "=",
+      "right": "Distance(q18_B,q18_C)"
+    },
+    {
+      "left": "q18_E.x+q18_F.x",
+      "operator": "=",
+      "right": "2*q18_D.x"
+    },
+    {
+      "left": "q18_E.y+q18_F.y",
+      "operator": "=",
+      "right": "2*q18_D.y"
+    },
+    {
+      "left": "q18_ay",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "q18_t",
+      "operator": ">=",
+      "right": 0
+    },
+    {
+      "left": "q18_u",
+      "operator": ">=",
+      "right": 0
+    }
+  ],
+  "id": "pair-right-08",
+  "target": "(Distance(q18_E,q18_F))"
+}

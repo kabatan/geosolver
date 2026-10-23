@@ -1,0 +1,43 @@
+{
+  "id": "AIME-2001-II-04",
+  "variables": [
+    "p",
+    "q"
+  ],
+  "constructions": [
+    {
+      "name": "P",
+      "expression": "Point(p, 15*p/8)"
+    },
+    {
+      "name": "Q",
+      "expression": "Point(q, 3*q/10)"
+    },
+    {
+      "name": "R",
+      "expression": "Point(8, 6)"
+    },
+    {
+      "name": "M",
+      "expression": "Midpoint(P, Q)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "M.x",
+      "operator": "=",
+      "right": "R.x"
+    },
+    {
+      "left": "M.y",
+      "operator": "=",
+      "right": "R.y"
+    },
+    {
+      "left": "Distance(P, Q)",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Distance(M, Q) / Distance(Q, P)"
+}

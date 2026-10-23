@@ -1,0 +1,79 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": "((60)*(1001/1000))"
+    },
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": "((67)*(1001/1000))"
+    },
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(69, 0)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(ax, ay)",
+      "name": "A"
+    },
+    {
+      "expression": "Incenter(A, B, C)",
+      "name": "I"
+    },
+    {
+      "expression": "Incircle(A, B, C)",
+      "name": "omega"
+    },
+    {
+      "expression": "IncircleContactPoint(A, B, C, side='BC')",
+      "name": "D"
+    },
+    {
+      "expression": "IncircleContactPoint(A, B, C, side='CA')",
+      "name": "E"
+    },
+    {
+      "expression": "IncircleContactPoint(A, B, C, side='AB')",
+      "name": "F"
+    },
+    {
+      "expression": "Intersect(Line(D, I), omega, exclude=D)",
+      "name": "Dp"
+    },
+    {
+      "expression": "Circumcircle(B, Dp, F)",
+      "name": "K1"
+    },
+    {
+      "expression": "Circumcircle(C, Dp, E)",
+      "name": "K2"
+    },
+    {
+      "expression": "Intersect(K1, K2, exclude=Dp)",
+      "name": "Y"
+    },
+    {
+      "expression": "Intersect(Line(Dp, Y), Line(B, C))",
+      "name": "X"
+    }
+  ],
+  "id": "HMMT-2026-FEB-GUTS-30",
+  "target": "Distance(B, X)",
+  "variables": [
+    "ax",
+    "ay"
+  ]
+}

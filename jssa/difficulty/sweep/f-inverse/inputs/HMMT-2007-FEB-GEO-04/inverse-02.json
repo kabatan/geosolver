@@ -1,0 +1,82 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(O, A)",
+      "operator": "=",
+      "right": 13
+    },
+    {
+      "left": "IsTangent(Line(B, C), omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(A, B) + Distance(A, C)",
+      "operator": "=",
+      "right": "17"
+    },
+    {
+      "left": "u",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "v",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(A, B)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(A, C)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Area(A, B, C)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Area(A, B, C)",
+      "operator": "!=",
+      "right": "0"
+    },
+    {
+      "left": "(Vector(B, C).x * Vector(B, O).y - Vector(B, C).y * Vector(B, O).x) * (Vector(B, C).x * Vector(B, A).y - Vector(B, C).y * Vector(B, A).x)",
+      "operator": "<",
+      "right": "0"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "O"
+    },
+    {
+      "expression": "Point(13, 0)",
+      "name": "A"
+    },
+    {
+      "expression": "Circle(O, 5)",
+      "name": "omega"
+    },
+    {
+      "expression": "Point(13 - 12 * u / 13, 5 * u / 13)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(13 - 12 * v / 13, -5 * v / 13)",
+      "name": "C"
+    }
+  ],
+  "id": "HMMT-2007-FEB-GEO-04",
+  "target": "Distance(B, C)",
+  "variables": [
+    "u",
+    "v"
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "variables": [
+    "q01_px",
+    "q01_py",
+    "q11_x",
+    "q11_y",
+    "q11_u",
+    "q11_v"
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0,0)",
+      "name": "q01_O"
+    },
+    {
+      "expression": "Point(q01_px,q01_py)",
+      "name": "q01_P"
+    },
+    {
+      "expression": "Point(cos(0*pi/4)/sqrt(pi),sin(0*pi/4)/sqrt(pi))",
+      "name": "q01_A1"
+    },
+    {
+      "expression": "Point(cos(1*pi/4)/sqrt(pi),sin(1*pi/4)/sqrt(pi))",
+      "name": "q01_A2"
+    },
+    {
+      "expression": "Point(cos(2*pi/4)/sqrt(pi),sin(2*pi/4)/sqrt(pi))",
+      "name": "q01_A3"
+    },
+    {
+      "expression": "Point(cos(3*pi/4)/sqrt(pi),sin(3*pi/4)/sqrt(pi))",
+      "name": "q01_A4"
+    },
+    {
+      "expression": "Point(cos(4*pi/4)/sqrt(pi),sin(4*pi/4)/sqrt(pi))",
+      "name": "q01_A5"
+    },
+    {
+      "expression": "Point(cos(5*pi/4)/sqrt(pi),sin(5*pi/4)/sqrt(pi))",
+      "name": "q01_A6"
+    },
+    {
+      "expression": "Point(cos(6*pi/4)/sqrt(pi),sin(6*pi/4)/sqrt(pi))",
+      "name": "q01_A7"
+    },
+    {
+      "expression": "Point(cos(7*pi/4)/sqrt(pi),sin(7*pi/4)/sqrt(pi))",
+      "name": "q01_A8"
+    },
+    {
+      "name": "q11_A",
+      "expression": "Point(q11_x, q11_y)"
+    },
+    {
+      "name": "q11_B",
+      "expression": "Point(q11_u, q11_y)"
+    },
+    {
+      "name": "q11_C",
+      "expression": "Point(q11_x, q11_v)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "q01_px**2+q01_py**2",
+      "operator": "<",
+      "right": "1/pi"
+    },
+    {
+      "left": "1/8-sqrt(2)/(4*pi)+(Vector(q01_A1,q01_A2).x*Vector(q01_A1,q01_P).y-Vector(q01_A1,q01_A2).y*Vector(q01_A1,q01_P).x)/2",
+      "operator": "=",
+      "right": "1/7"
+    },
+    {
+      "left": "1/8-sqrt(2)/(4*pi)+(Vector(q01_A3,q01_A4).x*Vector(q01_A3,q01_P).y-Vector(q01_A3,q01_A4).y*Vector(q01_A3,q01_P).x)/2",
+      "operator": "=",
+      "right": "1/9"
+    },
+    {
+      "left": "2*q11_x+q11_u",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "2*q11_y+q11_v",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "q11_x**2+q11_y**2+q11_u**2+q11_y**2+q11_x**2+q11_v**2",
+      "operator": "=",
+      "right": 250
+    },
+    {
+      "left": "q11_u",
+      "operator": ">",
+      "right": "q11_x"
+    },
+    {
+      "left": "q11_v",
+      "operator": ">",
+      "right": "q11_y"
+    }
+  ],
+  "id": "pair-sum-01",
+  "target": "(1/8-sqrt(2)/(4*pi)+(Vector(q01_A6,q01_A7).x*Vector(q01_A6,q01_P).y-Vector(q01_A6,q01_A7).y*Vector(q01_A6,q01_P).x)/2) + (Distance(q11_B, q11_C)**2)"
+}

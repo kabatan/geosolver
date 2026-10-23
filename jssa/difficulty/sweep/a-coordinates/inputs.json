@@ -1,0 +1,2333 @@
+[
+  {
+    "id": "HMMT-2013-FEB-GEO-03",
+    "group": "development",
+    "source": "benchmarks/cases.jsonl",
+    "rank": "0122c9152dabdd241438457cdd0cea2dd76ab4e5c6721c8cf6342d7ce17048c2",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Parallel(Line(A1, A3), Line(A4, A6))",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Parallel(Line(A2, A4), Line(A5, A1))",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Parallel(Line(A3, A5), Line(A6, A2))",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(A1, A3)",
+          "operator": "=",
+          "right": "Distance(A4, A6)"
+        },
+        {
+          "left": "Distance(A3, A5)",
+          "operator": "=",
+          "right": "Distance(A6, A2)"
+        },
+        {
+          "left": "Distance(A5, A1)",
+          "operator": "=",
+          "right": "Distance(A2, A4)"
+        },
+        {
+          "left": "Area(A1, B5, B6)",
+          "operator": "=",
+          "right": 1
+        },
+        {
+          "left": "Area(A2, B6, B1)",
+          "operator": "=",
+          "right": 4
+        },
+        {
+          "left": "Area(A3, B1, B2)",
+          "operator": "=",
+          "right": 9
+        },
+        {
+          "left": "OnSegment(B1, A1, A3)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(B1, A2, A4)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(B2, A2, A4)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(B2, A3, A5)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(B3, A3, A5)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(B3, A4, A6)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(B4, A4, A6)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(B4, A5, A1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(B5, A5, A1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(B5, A6, A2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(B6, A6, A2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(B6, A1, A3)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "p",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "v",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "predicate": "ConvexPolygon([A1, A2, A3, A4, A5, A6])"
+        },
+        {
+          "predicate": "SimplePolygon([A1, A2, A3, A4, A5, A6])"
+        },
+        {
+          "left": "Area(B1, B2, B3, B4, B5, B6)",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A1"
+        },
+        {
+          "expression": "Point(p, 0)",
+          "name": "A3"
+        },
+        {
+          "expression": "Point(u, v)",
+          "name": "A5"
+        },
+        {
+          "expression": "Point(tx, ty)",
+          "name": "A4"
+        },
+        {
+          "expression": "Point(tx - p, ty)",
+          "name": "A6"
+        },
+        {
+          "expression": "Point(tx - u, ty - v)",
+          "name": "A2"
+        },
+        {
+          "expression": "Intersect(Line(A1, A3), Line(A2, A4))",
+          "name": "B1"
+        },
+        {
+          "expression": "Intersect(Line(A2, A4), Line(A3, A5))",
+          "name": "B2"
+        },
+        {
+          "expression": "Intersect(Line(A3, A5), Line(A4, A6))",
+          "name": "B3"
+        },
+        {
+          "expression": "Intersect(Line(A4, A6), Line(A5, A1))",
+          "name": "B4"
+        },
+        {
+          "expression": "Intersect(Line(A5, A1), Line(A6, A2))",
+          "name": "B5"
+        },
+        {
+          "expression": "Intersect(Line(A6, A2), Line(A1, A3))",
+          "name": "B6"
+        }
+      ],
+      "id": "HMMT-2013-FEB-GEO-03",
+      "target": "Area(B1, B2, B3, B4, B5, B6)",
+      "variables": [
+        "p",
+        "u",
+        "v",
+        "tx",
+        "ty"
+      ]
+    },
+    "dsl_sha256": "d679aeed4098db2c4d634f08e0530ac37f4351ebb586b6904de1cf832be15daf",
+    "answer": [
+      "22"
+    ],
+    "reference_keys": [
+      "[\"algebraic\",[\"1\",\"-22\"],0]"
+    ]
+  },
+  {
+    "id": "HMMT-2013-FEB-GEO-08",
+    "group": "development",
+    "source": "benchmarks/cases.jsonl",
+    "rank": "020e8f4bdc0241a6125f889020b9f37fe63b141b59961b83b0ba176bef932285",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "g",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "g",
+          "operator": "<",
+          "right": "pi / 2"
+        },
+        {
+          "predicate": "ConvexPolygon([A, B, C, D])"
+        },
+        {
+          "left": "Distance(A, Q)",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(1, 0)",
+          "name": "X"
+        },
+        {
+          "expression": "Point(14 / 11 * cos(g), 14 / 11 * sin(g))",
+          "name": "B"
+        },
+        {
+          "expression": "Point(7 / 4 * cos(g), -(7 / 4) * sin(g))",
+          "name": "D"
+        },
+        {
+          "expression": "Point(-(21 / 2) * cos(g), -(21 / 2) * sin(g))",
+          "name": "P"
+        },
+        {
+          "expression": "Intersect(Line(P, D), Line(A, X))",
+          "name": "C"
+        },
+        {
+          "expression": "Intersect(Line(C, B), Line(A, D))",
+          "name": "Q"
+        }
+      ],
+      "id": "HMMT-2013-FEB-GEO-08",
+      "target": "Distance(A, Q)",
+      "variables": [
+        "g"
+      ]
+    },
+    "dsl_sha256": "38c296bc6499a1bb772eacbec406eb669c0faed0545137f60f866b741b3a5610",
+    "answer": [
+      "42/13"
+    ],
+    "reference_keys": [
+      "[\"algebraic\",[\"13\",\"-42\"],0]"
+    ]
+  },
+  {
+    "id": "AIME-2015-II-11",
+    "group": "development",
+    "source": "benchmarks/cases.jsonl",
+    "rank": "06758931f7f8c22cb58919714bfe33e93baa46e1496c94080fabfcf505c5539c",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, B)",
+          "operator": "=",
+          "right": 5
+        },
+        {
+          "left": "Distance(B, C)",
+          "operator": "=",
+          "right": 4
+        },
+        {
+          "left": "Perpendicular(Line(O, V), Line(O, B))",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(B, Q)",
+          "operator": "=",
+          "right": "9 / 2"
+        },
+        {
+          "left": "cy",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Area(A, B, C)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "predicate": "AcuteTriangle(A, B, C)"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(5, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(cx, cy)",
+          "name": "C"
+        },
+        {
+          "expression": "Circumcenter(A, B, C)",
+          "name": "O"
+        },
+        {
+          "expression": "Point(vx, vy)",
+          "name": "V"
+        },
+        {
+          "expression": "Intersect(Line(O, V), Line(A, B))",
+          "name": "P"
+        },
+        {
+          "expression": "Intersect(Line(O, V), Line(B, C))",
+          "name": "Q"
+        }
+      ],
+      "id": "AIME-2015-II-11",
+      "target": "Distance(B, P)",
+      "variables": [
+        "cx",
+        "cy",
+        "vx",
+        "vy"
+      ]
+    },
+    "dsl_sha256": "ab4780ffd76e6187957c56148c6754cc5367ee50413a8a6640c6854acc3a76e7",
+    "answer": [
+      "18/5"
+    ],
+    "reference_keys": [
+      "[\"algebraic\",[\"5\",\"-18\"],0]"
+    ]
+  },
+  {
+    "id": "aime-2004-2-13",
+    "group": "development",
+    "source": "benchmarks/cases.jsonl",
+    "rank": "06a294ccf49ed995add4a41ae72a0daa959db4aa02f44b2bf652f20023d1aa97",
+    "dsl": {
+      "conditions": [
+        {
+          "predicate": "ConvexPolygon([A, B, C, D, E])"
+        },
+        {
+          "left": "x",
+          "operator": ">",
+          "right": 5
+        },
+        {
+          "left": "Parallel(ac_line, de_line)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(D, E)",
+          "operator": "=",
+          "right": 15
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(3, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(11/2, 5*sqrt(3)/2)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(x/2, x*sqrt(3)/2)",
+          "name": "D"
+        },
+        {
+          "expression": "Point(y, 5*sqrt(3)/2)",
+          "name": "E"
+        },
+        {
+          "expression": "Line(A, C)",
+          "name": "ac_line"
+        },
+        {
+          "expression": "Line(D, E)",
+          "name": "de_line"
+        }
+      ],
+      "id": "aime-2004-2-13",
+      "target": "Area(A, B, C) / Area(E, B, D)",
+      "variables": [
+        "x",
+        "y"
+      ]
+    },
+    "dsl_sha256": "5505c5afae0625852cec49f68de01aa91fd8c0df6902d8374d1efcf97b6778f8",
+    "answer": "49/435",
+    "reference_keys": [
+      "[\"algebraic\",[\"435\",\"-49\"],0]"
+    ]
+  },
+  {
+    "id": "AIME-2012-I-12",
+    "group": "development",
+    "source": "benchmarks/cases.jsonl",
+    "rank": "06bdffe8ca99d5d7071e879bec63b8fa07a687830bff09eda2f6dbaf06b2d127",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Angle(A, C, D)",
+          "operator": "=",
+          "right": "Angle(D, C, E)"
+        },
+        {
+          "left": "Angle(D, C, E)",
+          "operator": "=",
+          "right": "Angle(E, C, B)"
+        },
+        {
+          "left": "Collinear(A, D, B)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Collinear(A, E, B)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(D, A, E)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(E, A, B)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(D, E) / Distance(B, E)",
+          "operator": "=",
+          "right": "8 / 15"
+        },
+        {
+          "left": "a",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "b",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "dx",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "ex",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "dy",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "ey",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(a, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(0, b)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(0, 0)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(dx, dy)",
+          "name": "D"
+        },
+        {
+          "expression": "Point(ex, ey)",
+          "name": "E"
+        }
+      ],
+      "id": "AIME-2012-I-12",
+      "target": "a / b",
+      "variables": [
+        "a",
+        "b",
+        "dx",
+        "dy",
+        "ex",
+        "ey"
+      ]
+    },
+    "dsl_sha256": "bfdecedd3d8db1fc7ded17a47115085c79ca8549989400b9fb3712a678d89e03",
+    "answer": [
+      "4*sqrt(3)/11"
+    ],
+    "reference_keys": [
+      "[\"algebraic\",[\"121\",\"0\",\"-48\"],1]"
+    ]
+  },
+  {
+    "id": "HMMT-2015-FEB-GEO-04",
+    "group": "development",
+    "source": "benchmarks/cases.jsonl",
+    "rank": "0786a7ef6e2ace301c6efa41e583455d498b1477f58c4a65deb792b02cdab6cc",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, B)",
+          "operator": "=",
+          "right": 3
+        },
+        {
+          "left": "Distance(B, C)",
+          "operator": "=",
+          "right": 2
+        },
+        {
+          "left": "Distance(C, D)",
+          "operator": "=",
+          "right": 2
+        },
+        {
+          "left": "Distance(D, A)",
+          "operator": "=",
+          "right": 4
+        },
+        {
+          "left": "AreConcyclic(A, B, C, D)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "ay",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "dy",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "predicate": "ConvexPolygon([A, B, C, D])"
+        },
+        {
+          "left": "Area(B, C, Cp, Bp)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Area(D, A, Ap, Dp)",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(2, 0)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(ax, ay)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(dx, dy)",
+          "name": "D"
+        },
+        {
+          "expression": "FootOfPerpendicular(B, Line(A, D))",
+          "name": "Bp"
+        },
+        {
+          "expression": "FootOfPerpendicular(C, Line(A, D))",
+          "name": "Cp"
+        },
+        {
+          "expression": "FootOfPerpendicular(A, Line(B, C))",
+          "name": "Ap"
+        },
+        {
+          "expression": "FootOfPerpendicular(D, Line(B, C))",
+          "name": "Dp"
+        }
+      ],
+      "id": "HMMT-2015-FEB-GEO-04",
+      "target": "Area(B, C, Cp, Bp) / Area(D, A, Ap, Dp)",
+      "variables": [
+        "ax",
+        "ay",
+        "dx",
+        "dy"
+      ]
+    },
+    "dsl_sha256": "5d5546367654783e5ceeceb55c45d528a1698f79b3113e7718cc2acb142ea227",
+    "answer": [
+      "37/76"
+    ],
+    "reference_keys": [
+      "[\"algebraic\",[\"76\",\"-37\"],0]"
+    ]
+  },
+  {
+    "id": "HMMT-2024-FEB-GEO-01",
+    "group": "development",
+    "source": "benchmarks/cases.jsonl",
+    "rank": "07b5b3124897aa0694483b9e8146e1ebefe2d27305f5b04299aa78ce67373da2",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "OnSegment(U1, A, B)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(V2, A, C)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(W3, B, C)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(U2, V1, W1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(V3, U2, W2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(W1, U3, V3)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(W1, U2)",
+          "operator": "=",
+          "right": 1
+        },
+        {
+          "left": "Distance(U2, V3)",
+          "operator": "=",
+          "right": 1
+        },
+        {
+          "left": "Distance(V3, W1)",
+          "operator": "=",
+          "right": 1
+        },
+        {
+          "left": "x",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "x",
+          "operator": "<",
+          "right": "6"
+        },
+        {
+          "left": "u1y",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "u1y",
+          "operator": "<",
+          "right": "3 * sqrt(3)"
+        },
+        {
+          "left": "u2y",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "u2y",
+          "operator": "<",
+          "right": "3 * sqrt(3)"
+        },
+        {
+          "left": "u3x",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "u3x + x",
+          "operator": "<",
+          "right": "6"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(3, 3 * sqrt(3))",
+          "name": "A"
+        },
+        {
+          "expression": "Point(0, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(6, 0)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(u1x, u1y)",
+          "name": "U1"
+        },
+        {
+          "expression": "Point(u1x + x, u1y)",
+          "name": "V1"
+        },
+        {
+          "expression": "Point(u1x + x / 2, u1y - sqrt(3) * x / 2)",
+          "name": "W1"
+        },
+        {
+          "expression": "Point(u2x, u2y)",
+          "name": "U2"
+        },
+        {
+          "expression": "Point(u2x + x, u2y)",
+          "name": "V2"
+        },
+        {
+          "expression": "Point(u2x + x / 2, u2y - sqrt(3) * x / 2)",
+          "name": "W2"
+        },
+        {
+          "expression": "Point(u3x, u3y)",
+          "name": "U3"
+        },
+        {
+          "expression": "Point(u3x + x, u3y)",
+          "name": "V3"
+        },
+        {
+          "expression": "Point(u3x + x / 2, u3y - sqrt(3) * x / 2)",
+          "name": "W3"
+        }
+      ],
+      "id": "HMMT-2024-FEB-GEO-01",
+      "target": "x",
+      "variables": [
+        "x",
+        "u1x",
+        "u1y",
+        "u2x",
+        "u2y",
+        "u3x",
+        "u3y"
+      ]
+    },
+    "dsl_sha256": "d558e421e755bd6be202ec3569b044cd1a27c0957f252998f62867a7a156769d",
+    "answer": [
+      "5/3"
+    ],
+    "reference_keys": [
+      "[\"algebraic\",[\"3\",\"-5\"],0]"
+    ]
+  },
+  {
+    "id": "HMMT-2014-FEB-GEO-03",
+    "group": "development",
+    "source": "benchmarks/cases.jsonl",
+    "rank": "080e6eef5006a87a580c64925a31358fe5911114303479dc2a8057ce93df36a4",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(B, C)",
+          "operator": "=",
+          "right": 10
+        },
+        {
+          "left": "Distance(C, A)",
+          "operator": "=",
+          "right": 12
+        },
+        {
+          "left": "Parallel(Line(B, M), external)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "ay",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Area(A, B, C)",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(10, 0)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(ax, ay)",
+          "name": "A"
+        },
+        {
+          "expression": "Midpoint(A, C)",
+          "name": "M"
+        },
+        {
+          "expression": "AngleBisector(B, A, C)",
+          "name": "internal"
+        },
+        {
+          "expression": "PerpendicularLine(internal, A)",
+          "name": "external"
+        }
+      ],
+      "id": "HMMT-2014-FEB-GEO-03",
+      "target": "Area(A, B, C)",
+      "variables": [
+        "ax",
+        "ay"
+      ]
+    },
+    "dsl_sha256": "bdf20a62c90b3ff6cbd603247654f7576c5f4d219deaf33532811b461636ec4a",
+    "answer": [
+      "8√14"
+    ],
+    "reference_keys": [
+      "[\"algebraic\",[\"1\",\"0\",\"-896\"],1]"
+    ]
+  },
+  {
+    "id": "HMMT-2022-FEB-GEO-03",
+    "group": "development",
+    "source": "benchmarks/cases.jsonl",
+    "rank": "0964a5fc431032bfe7a2861c9ab3eb60da0aa92bb289ceefe5925ce38cf6a456",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, E)",
+          "operator": "=",
+          "right": 1
+        },
+        {
+          "left": "Distance(A, G)",
+          "operator": "=",
+          "right": 1
+        },
+        {
+          "left": "Perpendicular(Line(A, E), Line(A, G))",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(E, F)",
+          "operator": "=",
+          "right": 1
+        },
+        {
+          "left": "Distance(G, F)",
+          "operator": "=",
+          "right": 1
+        },
+        {
+          "left": "Area(A, E, H, D)",
+          "operator": "=",
+          "right": "1 / 2"
+        },
+        {
+          "left": "ex",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "ey",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "ey",
+          "operator": "<",
+          "right": "ex"
+        },
+        {
+          "left": "gx",
+          "operator": "<",
+          "right": "0"
+        },
+        {
+          "left": "gy",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(1, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(1, 1)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(0, 1)",
+          "name": "D"
+        },
+        {
+          "expression": "Point(ex, ey)",
+          "name": "E"
+        },
+        {
+          "expression": "Point(gx, gy)",
+          "name": "G"
+        },
+        {
+          "expression": "Point(ex + gx, ey + gy)",
+          "name": "F"
+        },
+        {
+          "expression": "Intersect(Line(E, F), Line(C, D))",
+          "name": "H"
+        }
+      ],
+      "id": "HMMT-2022-FEB-GEO-03",
+      "target": "ey / ex",
+      "variables": [
+        "ex",
+        "ey",
+        "gx",
+        "gy"
+      ]
+    },
+    "dsl_sha256": "87fe10351c61455aa9985ca44d567c28eabbed21eede9e3c00ba79e0cda5daf9",
+    "answer": [
+      "3/4"
+    ],
+    "reference_keys": [
+      "[\"algebraic\",[\"4\",\"-3\"],0]"
+    ]
+  },
+  {
+    "id": "HMMT-2014-FEB-GEO-02",
+    "group": "development",
+    "source": "benchmarks/cases.jsonl",
+    "rank": "096b37543c63f634e359602fc492393510b0c140bc980efea9c20e0fab0c48ac",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(P, T)",
+          "operator": "=",
+          "right": 13
+        },
+        {
+          "left": "Distance(K, T)",
+          "operator": "=",
+          "right": "r"
+        },
+        {
+          "left": "Distance(K, P)",
+          "operator": "=",
+          "right": "r"
+        },
+        {
+          "left": "r",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "px",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "T"
+        },
+        {
+          "expression": "Point(1, 0)",
+          "name": "U"
+        },
+        {
+          "expression": "Point(px, 12)",
+          "name": "P"
+        },
+        {
+          "expression": "Point(0, r)",
+          "name": "K"
+        }
+      ],
+      "id": "HMMT-2014-FEB-GEO-02",
+      "target": "r",
+      "variables": [
+        "px",
+        "r"
+      ]
+    },
+    "dsl_sha256": "ba54f9960dcf73d4a777e8e5805ede022b4833731d3a8dbd8e9d6963ddfffd00",
+    "answer": [
+      "169/24"
+    ],
+    "reference_keys": [
+      "[\"algebraic\",[\"24\",\"-169\"],0]"
+    ]
+  },
+  {
+    "id": "AIME-2006-II-06",
+    "group": "development",
+    "source": "benchmarks/cases.jsonl",
+    "rank": "098408375cac99ace659d61b1379f3b8f3c8d50674b547debfcbaef23436a108",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, E)",
+          "operator": "=",
+          "right": "Distance(E, F)"
+        },
+        {
+          "left": "Distance(E, F)",
+          "operator": "=",
+          "right": "Distance(F, A)"
+        },
+        {
+          "left": "Collinear(A, E, V)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(E, B, C)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(F, C, D)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "e",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "e",
+          "operator": "<",
+          "right": "1"
+        },
+        {
+          "left": "f",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "f",
+          "operator": "<",
+          "right": "1"
+        },
+        {
+          "left": "s",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "s",
+          "operator": "<",
+          "right": "1"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(1, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(1, 1)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(0, 1)",
+          "name": "D"
+        },
+        {
+          "expression": "Point(1, e)",
+          "name": "E"
+        },
+        {
+          "expression": "Point(f, 1)",
+          "name": "F"
+        },
+        {
+          "expression": "Point(1 - s, s)",
+          "name": "V"
+        }
+      ],
+      "id": "AIME-2006-II-06",
+      "target": "s",
+      "variables": [
+        "e",
+        "f",
+        "s"
+      ]
+    },
+    "dsl_sha256": "b6c743140cd69104067455cd53a4756f16de46cc62c1520d924f79a4f74b9682",
+    "answer": [
+      "1/2 - sqrt(3)/6"
+    ],
+    "reference_keys": [
+      "[\"algebraic\",[\"6\",\"-6\",\"1\"],0]"
+    ]
+  },
+  {
+    "id": "HMMT-2025-FEB-GEO-08",
+    "group": "development",
+    "source": "benchmarks/cases.jsonl",
+    "rank": "0b6e0418650aec4a79071ca017c06d5c008f8d90aa638b621e4ab03480652681",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, B)",
+          "operator": "=",
+          "right": 4
+        },
+        {
+          "left": "Parallel(Line(A, B), Line(C, D))",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(A, D)",
+          "operator": "=",
+          "right": "Distance(B, C)"
+        },
+        {
+          "left": "Distance(D, E)",
+          "operator": "=",
+          "right": 2
+        },
+        {
+          "left": "Distance(O, A)",
+          "operator": "=",
+          "right": 5
+        },
+        {
+          "left": "Distance(O, B)",
+          "operator": "=",
+          "right": 5
+        },
+        {
+          "left": "Distance(O, C)",
+          "operator": "=",
+          "right": 5
+        },
+        {
+          "left": "Distance(O, D)",
+          "operator": "=",
+          "right": 5
+        },
+        {
+          "left": "Distance(O, M)",
+          "operator": "=",
+          "right": 5
+        },
+        {
+          "left": "dy",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "cd",
+          "operator": ">",
+          "right": "4"
+        },
+        {
+          "predicate": "SimplePolygon([A, B, C, D])"
+        },
+        {
+          "left": "OnSegment(D, E, C)",
+          "operator": "=",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(4, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(dx, dy)",
+          "name": "D"
+        },
+        {
+          "expression": "Point(dx + cd, dy)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(dx - 2, dy)",
+          "name": "E"
+        },
+        {
+          "expression": "Midpoint(A, E)",
+          "name": "M"
+        },
+        {
+          "expression": "Point(ox, oy)",
+          "name": "O"
+        }
+      ],
+      "id": "HMMT-2025-FEB-GEO-08",
+      "target": "Distance(M, D)",
+      "variables": [
+        "dx",
+        "dy",
+        "cd",
+        "ox",
+        "oy"
+      ]
+    },
+    "dsl_sha256": "78858949cc7e2f72e20812a0f24fb073326d6b92d20ca616f101e76b359e1940",
+    "answer": [
+      "√6"
+    ],
+    "reference_keys": [
+      "[\"algebraic\",[\"1\",\"0\",\"-6\"],1]"
+    ]
+  },
+  {
+    "id": "HMMT-2026-FEB-GEO-04",
+    "group": "unseen2026",
+    "source": "jssa/difficulty/new2026/cases.jsonl",
+    "rank": "1701a0b841496886d9934304de77e539b6e2084cfca4968d0152396a6d94699c",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Degrees(Angle(B, A, C))",
+          "operator": "=",
+          "right": 90
+        },
+        {
+          "left": "Distance(T, A)",
+          "operator": "=",
+          "right": "Distance(T, X)"
+        },
+        {
+          "left": "Distance(T, A)",
+          "operator": "=",
+          "right": "Distance(T, Y)"
+        },
+        {
+          "left": "ay",
+          "operator": ">",
+          "right": 0
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(4, 0)",
+          "name": "X"
+        },
+        {
+          "expression": "Point(9, 0)",
+          "name": "Y"
+        },
+        {
+          "expression": "Point(12, 0)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(ax, ay)",
+          "name": "A"
+        },
+        {
+          "expression": "PointOnSegment(A, C, t)",
+          "name": "T"
+        }
+      ],
+      "id": "HMMT-2026-FEB-GEO-04",
+      "target": "Distance(T, A)",
+      "variables": [
+        "ax",
+        "ay",
+        "t"
+      ]
+    },
+    "dsl_sha256": "75c3ea5c9e4ec7c20e5884e4803be71dcc7d68d0c8cae0afbc7c4980223494da",
+    "answer": [
+      "7*sqrt(3)/3"
+    ],
+    "reference_keys": [
+      "[\"algebraic\",[\"3\",\"0\",\"-49\"],1]"
+    ]
+  },
+  {
+    "id": "HMMT-2026-FEB-GEO-01",
+    "group": "unseen2026",
+    "source": "jssa/difficulty/new2026/cases.jsonl",
+    "rank": "2b1ff5b703a5864a95ac8c114ee1c58952c5339a4604aa1c0b026e2a7aa4e08c",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, W)",
+          "operator": "=",
+          "right": 4
+        },
+        {
+          "left": "Distance(A, X)",
+          "operator": "=",
+          "right": 5
+        },
+        {
+          "left": "Distance(W, X)",
+          "operator": "=",
+          "right": "Distance(X, Y)"
+        },
+        {
+          "left": "Distance(X, Y)",
+          "operator": "=",
+          "right": "Distance(Y, Z)"
+        },
+        {
+          "left": "Distance(Y, Z)",
+          "operator": "=",
+          "right": "Distance(Z, W)"
+        },
+        {
+          "left": "Distance(W, Y)",
+          "operator": "=",
+          "right": "Distance(X, Z)"
+        },
+        {
+          "predicate": "ConvexPolygon([W, X, Y, Z])"
+        },
+        {
+          "left": "yx",
+          "operator": ">",
+          "right": 0
+        },
+        {
+          "left": "yx",
+          "operator": "<",
+          "right": 12
+        },
+        {
+          "left": "yy",
+          "operator": ">",
+          "right": 0
+        },
+        {
+          "left": "yy",
+          "operator": "<",
+          "right": 12
+        },
+        {
+          "left": "zx",
+          "operator": ">",
+          "right": 0
+        },
+        {
+          "left": "zx",
+          "operator": "<",
+          "right": 12
+        },
+        {
+          "left": "zy",
+          "operator": ">",
+          "right": 0
+        },
+        {
+          "left": "zy",
+          "operator": "<",
+          "right": 12
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(12, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(12, 12)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(0, 12)",
+          "name": "D"
+        },
+        {
+          "expression": "PointOnSegment(A, D, tw)",
+          "name": "W"
+        },
+        {
+          "expression": "PointOnSegment(A, B, tx)",
+          "name": "X"
+        },
+        {
+          "expression": "Point(yx, yy)",
+          "name": "Y"
+        },
+        {
+          "expression": "Point(zx, zy)",
+          "name": "Z"
+        }
+      ],
+      "id": "HMMT-2026-FEB-GEO-01",
+      "target": "Area(B, C, Y)",
+      "variables": [
+        "tw",
+        "tx",
+        "yx",
+        "yy",
+        "zx",
+        "zy"
+      ]
+    },
+    "dsl_sha256": "b9ac1fa0f97b8e730e0f7187ea9f849d541447693f20ae09f542de433fdf2c02",
+    "answer": [
+      "18"
+    ],
+    "reference_keys": [
+      "[\"algebraic\",[\"1\",\"-18\"],0]"
+    ]
+  },
+  {
+    "id": "HMMT-2026-FEB-GEO-06",
+    "group": "unseen2026",
+    "source": "jssa/difficulty/new2026/cases.jsonl",
+    "rank": "2d68060462f115d6767468c659be30051dfcbada73104df97538beb2a71d8019",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Angle(P, M, B)",
+          "operator": "=",
+          "right": "Angle(B, A, C) / 2"
+        },
+        {
+          "left": "Angle(Q, M, C)",
+          "operator": "=",
+          "right": "Angle(B, A, C) / 2"
+        },
+        {
+          "left": "Distance(A, P)",
+          "operator": "=",
+          "right": 1
+        },
+        {
+          "left": "Distance(A, Q)",
+          "operator": "=",
+          "right": 3
+        },
+        {
+          "left": "ay",
+          "operator": ">",
+          "right": 0
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(-4, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(4, 0)",
+          "name": "C"
+        },
+        {
+          "expression": "Midpoint(B, C)",
+          "name": "M"
+        },
+        {
+          "expression": "Point(ax, ay)",
+          "name": "A"
+        },
+        {
+          "expression": "PointOnSegment(A, B, p)",
+          "name": "P"
+        },
+        {
+          "expression": "PointOnSegment(A, C, q)",
+          "name": "Q"
+        }
+      ],
+      "id": "HMMT-2026-FEB-GEO-06",
+      "target": "Distance(B, P)",
+      "variables": [
+        "ax",
+        "ay",
+        "p",
+        "q"
+      ]
+    },
+    "dsl_sha256": "eba7cc55cddc7741b8c215e0255da3813f431ec8e1fd346a45fdec37f24897b4",
+    "answer": [
+      "sqrt(17) - 1"
+    ],
+    "reference_keys": [
+      "[\"algebraic\",[\"1\",\"2\",\"-16\"],1]"
+    ]
+  },
+  {
+    "id": "HMMT-2026-FEB-GUTS-28",
+    "group": "unseen2026",
+    "source": "jssa/difficulty/new2026/cases.jsonl",
+    "rank": "44d6de165026975974a57376f7d5d9d1ac2a69ca9fd4477d39b1a59fc00f81c4",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Degrees(Angle(A, P, B))",
+          "operator": "=",
+          "right": 60
+        },
+        {
+          "left": "Degrees(Angle(A, P, C))",
+          "operator": "=",
+          "right": 60
+        },
+        {
+          "left": "Dot(Vector(FootOfPerpendicular(P, Line(B, C)), P), Vector(FootOfPerpendicular(A, Line(B, C)), A))",
+          "operator": "<",
+          "right": 0
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(12 * sqrt(2), 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(17 * cos(105 * pi / 180), 17 * sin(105 * pi / 180))",
+          "name": "C"
+        },
+        {
+          "expression": "Point(px, py)",
+          "name": "P"
+        }
+      ],
+      "id": "HMMT-2026-FEB-GUTS-28",
+      "target": "Distance(A, P)",
+      "variables": [
+        "px",
+        "py"
+      ]
+    },
+    "dsl_sha256": "c660311340c1aab3525bcc9c0b9bb068eec029b66e75872b6c13d910072ed5f2",
+    "answer": [
+      "136*sqrt(3)/13"
+    ],
+    "reference_keys": [
+      "[\"algebraic\",[\"169\",\"0\",\"-55488\"],1]"
+    ]
+  },
+  {
+    "id": "HMMT-2026-FEB-GEO-10",
+    "group": "unseen2026",
+    "source": "jssa/difficulty/new2026/cases.jsonl",
+    "rank": "76015ad4cab83a69c21b8338035e089b44d98636a12ee3e78d956cc511a832bc",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, B)",
+          "operator": "=",
+          "right": 11
+        },
+        {
+          "left": "Distance(A, C)",
+          "operator": "=",
+          "right": 13
+        },
+        {
+          "left": "OnLine(Hh, Line(B, C))",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "a",
+          "operator": ">",
+          "right": 0
+        },
+        {
+          "left": "ay",
+          "operator": ">",
+          "right": 0
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(a, 0)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(ax, ay)",
+          "name": "A"
+        },
+        {
+          "expression": "Centroid(A, B, C)",
+          "name": "G"
+        },
+        {
+          "expression": "Circumcenter(A, B, C)",
+          "name": "O"
+        },
+        {
+          "expression": "Orthocenter(A, G, O)",
+          "name": "Hh"
+        }
+      ],
+      "id": "HMMT-2026-FEB-GEO-10",
+      "target": "Distance(B, C)",
+      "variables": [
+        "a",
+        "ax",
+        "ay"
+      ]
+    },
+    "dsl_sha256": "4e3618345c909c97f67070067365b5ddde6c4dd00f89a7ca80326be23297f577",
+    "answer": [
+      "sqrt(580/3)"
+    ],
+    "reference_keys": [
+      "[\"algebraic\",[\"3\",\"0\",\"-580\"],1]"
+    ]
+  },
+  {
+    "id": "HMMT-2026-FEB-GUTS-03",
+    "group": "unseen2026",
+    "source": "jssa/difficulty/new2026/cases.jsonl",
+    "rank": "7dba3004079e1c0aa1ff9cfaa9a8383160abe01b8254b4a0a2abcd7d9c905749",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(R3, R2) + Distance(R2, P) + Distance(P, S3) + Distance(S3, R3)",
+          "operator": "=",
+          "right": "Distance(R2, R1) + Distance(R1, S1) + Distance(S1, S2) + Distance(S2, P) + Distance(P, R2)"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "S0"
+        },
+        {
+          "expression": "Point(10, 0)",
+          "name": "S1"
+        },
+        {
+          "expression": "Point(10, 10)",
+          "name": "S2"
+        },
+        {
+          "expression": "Point(0, 10)",
+          "name": "S3"
+        },
+        {
+          "expression": "Point(4, 0)",
+          "name": "R1"
+        },
+        {
+          "expression": "Point(4, 2)",
+          "name": "R2"
+        },
+        {
+          "expression": "Point(0, 2)",
+          "name": "R3"
+        },
+        {
+          "expression": "PointOnSegment(S3, S2, t)",
+          "name": "P"
+        }
+      ],
+      "id": "HMMT-2026-FEB-GUTS-03",
+      "target": "abs(Area(R3, R2, P, S3) - Area(R2, R1, S1, S2, P))",
+      "variables": [
+        "t"
+      ]
+    },
+    "dsl_sha256": "842279ccb448c68e82085c5e08ed0114b8cfce009bcfa5e74bf18b849d697519",
+    "answer": [
+      "4"
+    ],
+    "reference_keys": [
+      "[\"algebraic\",[\"1\",\"-4\"],0]"
+    ]
+  },
+  {
+    "id": "HMMT-2026-FEB-GEO-07",
+    "group": "unseen2026",
+    "source": "jssa/difficulty/new2026/cases.jsonl",
+    "rank": "8308c390a8bc6f59570c8d552b868512cf804964ae5a9ab04dd3dcdc47cb83a1",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, C)",
+          "operator": "=",
+          "right": "Distance(A, B)"
+        },
+        {
+          "left": "Distance(B, P)",
+          "operator": "=",
+          "right": "Distance(P, Q)"
+        },
+        {
+          "left": "Distance(P, Q)",
+          "operator": "=",
+          "right": "Distance(Q, C)"
+        },
+        {
+          "left": "Degrees(Angle(B, A, P))",
+          "operator": "=",
+          "right": 20
+        },
+        {
+          "left": "Degrees(Angle(P, A, Q))",
+          "operator": "=",
+          "right": 46
+        },
+        {
+          "left": "Degrees(Angle(Q, A, C))",
+          "operator": "=",
+          "right": 26
+        },
+        {
+          "left": "cy",
+          "operator": ">",
+          "right": 0
+        },
+        {
+          "left": "s1",
+          "operator": ">",
+          "right": 0
+        },
+        {
+          "left": "u1",
+          "operator": ">",
+          "right": 0
+        },
+        {
+          "left": "s1 + u1",
+          "operator": "<",
+          "right": 1
+        },
+        {
+          "left": "s2",
+          "operator": ">",
+          "right": 0
+        },
+        {
+          "left": "u2",
+          "operator": ">",
+          "right": 0
+        },
+        {
+          "left": "s2 + u2",
+          "operator": "<",
+          "right": 1
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(1, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(cx, cy)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(s1 + u1 * cx, u1 * cy)",
+          "name": "P"
+        },
+        {
+          "expression": "Point(s2 + u2 * cx, u2 * cy)",
+          "name": "Q"
+        }
+      ],
+      "id": "HMMT-2026-FEB-GEO-07",
+      "target": "Degrees(Angle(A, P, C))",
+      "variables": [
+        "cx",
+        "cy",
+        "s1",
+        "u1",
+        "s2",
+        "u2"
+      ]
+    },
+    "dsl_sha256": "f44c5b849528e69fc586842ab74c48ec6d9d68304ebe373a0eab8316be0baf97",
+    "answer": [
+      "74"
+    ],
+    "reference_keys": [
+      "[\"algebraic\",[\"1\",\"-74\"],0]"
+    ]
+  },
+  {
+    "id": "JMO-2026-PRE-06",
+    "group": "unseen2026",
+    "source": "jssa/difficulty/new2026/cases.jsonl",
+    "rank": "87787fbd5d36479cfc47f6560dbb73c19d901ec87ecc670a05a8d624201f3f85",
+    "dsl": {
+      "conditions": [
+        {
+          "predicate": "Bound(e, (0, 1), inclusive=False)"
+        },
+        {
+          "left": "Dot(Vector(F, A), Vector(F, D))",
+          "operator": "<=",
+          "right": 0
+        },
+        {
+          "left": "Distance(C, E)",
+          "operator": "=",
+          "right": 3
+        },
+        {
+          "left": "Distance(D, F)",
+          "operator": "=",
+          "right": 3
+        },
+        {
+          "left": "Distance(M, B)",
+          "operator": "=",
+          "right": 5
+        },
+        {
+          "left": "Distance(M, C)",
+          "operator": "=",
+          "right": 4
+        },
+        {
+          "left": "b",
+          "operator": ">",
+          "right": 0
+        },
+        {
+          "left": "dy",
+          "operator": ">",
+          "right": 0
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(b, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(dx, dy)",
+          "name": "D"
+        },
+        {
+          "expression": "Point(b + dx, dy)",
+          "name": "C"
+        },
+        {
+          "expression": "PointOnSegment(C, D, e)",
+          "name": "E"
+        },
+        {
+          "expression": "Midpoint(A, E)",
+          "name": "M"
+        },
+        {
+          "expression": "Intersect(Line(B, M), Line(A, D))",
+          "name": "F"
+        }
+      ],
+      "id": "JMO-2026-PRE-06",
+      "target": "Distance(A, B)",
+      "variables": [
+        "b",
+        "dx",
+        "dy",
+        "e"
+      ]
+    },
+    "dsl_sha256": "5d17f65d5e1b36643e0764126dd04c0e16ce8a9b95b82d71b0298432db596974",
+    "answer": [
+      "sqrt(41) - 3"
+    ],
+    "reference_keys": [
+      "[\"algebraic\",[\"1\",\"6\",\"-32\"],1]"
+    ]
+  },
+  {
+    "id": "JMO-2026-PRE-09",
+    "group": "unseen2026",
+    "source": "jssa/difficulty/new2026/cases.jsonl",
+    "rank": "88da897e235e4d81cd8e30c3d32a3afd9d4d2c8c65037d4b5d38079bff0b3394",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, B)",
+          "operator": "=",
+          "right": "Distance(A, C)"
+        },
+        {
+          "predicate": "Bound(d, (0, 1), inclusive=False)"
+        },
+        {
+          "predicate": "Bound(e, (0, 1), inclusive=False)"
+        },
+        {
+          "predicate": "Bound(f, (0, 1), inclusive=False)"
+        },
+        {
+          "left": "Degrees(Angle(E, D, F))",
+          "operator": "=",
+          "right": "180 - Degrees(Angle(B, A, C)) / 2"
+        },
+        {
+          "left": "Distance(E, P)",
+          "operator": "=",
+          "right": 12
+        },
+        {
+          "left": "Distance(F, Q)",
+          "operator": "=",
+          "right": 16
+        },
+        {
+          "left": "Distance(A, R)",
+          "operator": "=",
+          "right": "6*sqrt(7)"
+        },
+        {
+          "left": "ay",
+          "operator": ">",
+          "right": 0
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(21, 0)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(ax, ay)",
+          "name": "A"
+        },
+        {
+          "expression": "PointOnSegment(B, C, d)",
+          "name": "D"
+        },
+        {
+          "expression": "PointOnSegment(C, A, e)",
+          "name": "E"
+        },
+        {
+          "expression": "PointOnSegment(A, B, f)",
+          "name": "F"
+        },
+        {
+          "expression": "Intersect(PerpendicularBisector(B, D), Line(D, E))",
+          "name": "P"
+        },
+        {
+          "expression": "Intersect(PerpendicularBisector(C, D), Line(D, F))",
+          "name": "Q"
+        },
+        {
+          "expression": "Intersect(Line(B, P), Line(C, Q))",
+          "name": "R"
+        }
+      ],
+      "id": "JMO-2026-PRE-09",
+      "target": "Area(D, P, Q)",
+      "variables": [
+        "ax",
+        "ay",
+        "d",
+        "e",
+        "f"
+      ]
+    },
+    "dsl_sha256": "da82c182970da3fadffb8be01152fd30a88c7c3b19a2589e6f3e7cebd141a735",
+    "answer": [
+      "48*sqrt(7)/25"
+    ],
+    "reference_keys": [
+      "[\"algebraic\",[\"625\",\"0\",\"-16128\"],1]"
+    ]
+  },
+  {
+    "id": "HMMT-2026-FEB-GEO-03",
+    "group": "unseen2026",
+    "source": "jssa/difficulty/new2026/cases.jsonl",
+    "rank": "bbbdaebf92c6b4f3f7a4654baf874a9c0dae62ff8ed3bd2f73d2e6eafd401b67",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(W, X)",
+          "operator": "=",
+          "right": "Distance(X, Y)"
+        },
+        {
+          "left": "Distance(X, Y)",
+          "operator": "=",
+          "right": "Distance(Y, Z)"
+        },
+        {
+          "left": "Distance(Y, Z)",
+          "operator": "=",
+          "right": "Distance(Z, W)"
+        },
+        {
+          "predicate": "ConvexPolygon([W, X, Y, Z])"
+        },
+        {
+          "left": "Area(W, X, Y, Z)",
+          "operator": "=",
+          "right": 120
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(12, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(12, 16)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(0, 16)",
+          "name": "D"
+        },
+        {
+          "expression": "PointOnSegment(A, B, tw)",
+          "name": "W"
+        },
+        {
+          "expression": "PointOnSegment(B, C, tx)",
+          "name": "X"
+        },
+        {
+          "expression": "PointOnSegment(C, D, ty)",
+          "name": "Y"
+        },
+        {
+          "expression": "PointOnSegment(D, A, tz)",
+          "name": "Z"
+        }
+      ],
+      "id": "HMMT-2026-FEB-GEO-03",
+      "target": "Distance(X, Y)",
+      "variables": [
+        "tw",
+        "tx",
+        "ty",
+        "tz"
+      ]
+    },
+    "dsl_sha256": "ca627a6f13863460bd3056a5d5847d087ff8c25b14509c12a35bf2d0f4e82710",
+    "answer": [
+      "5*sqrt(5)"
+    ],
+    "reference_keys": [
+      "[\"algebraic\",[\"1\",\"0\",\"-125\"],1]"
+    ]
+  },
+  {
+    "id": "HMMT-2026-FEB-GEO-02",
+    "group": "unseen2026",
+    "source": "jssa/difficulty/new2026/cases.jsonl",
+    "rank": "bee9ae4dca0fffaa6c6fb69b8484e5dc3a3014820253e9e2b3005513a07ce5d4",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Degrees(Angle(E, H, O))",
+          "operator": "=",
+          "right": 90
+        },
+        {
+          "left": "Degrees(Angle(O, R, S))",
+          "operator": "=",
+          "right": 90
+        },
+        {
+          "left": "Degrees(Angle(S, E, H))",
+          "operator": "=",
+          "right": 90
+        },
+        {
+          "left": "Degrees(Angle(H, O, R))",
+          "operator": "=",
+          "right": 135
+        },
+        {
+          "left": "Degrees(Angle(R, S, E))",
+          "operator": "=",
+          "right": 135
+        },
+        {
+          "left": "Distance(S, E)",
+          "operator": "=",
+          "right": 26
+        },
+        {
+          "left": "Distance(O, S)",
+          "operator": "=",
+          "right": 10
+        },
+        {
+          "predicate": "ConvexPolygon([H, O, R, S, E])"
+        },
+        {
+          "left": "ey",
+          "operator": ">",
+          "right": 0
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "H"
+        },
+        {
+          "expression": "Point(20, 0)",
+          "name": "O"
+        },
+        {
+          "expression": "Point(rx, ry)",
+          "name": "R"
+        },
+        {
+          "expression": "Point(sx, sy)",
+          "name": "S"
+        },
+        {
+          "expression": "Point(ex, ey)",
+          "name": "E"
+        }
+      ],
+      "id": "HMMT-2026-FEB-GEO-02",
+      "target": "Area(H, O, R, S, E)",
+      "variables": [
+        "rx",
+        "ry",
+        "sx",
+        "sy",
+        "ex",
+        "ey"
+      ]
+    },
+    "dsl_sha256": "7b3ed58565aff5cfc573e3f21bc5a8d94af2d548862a19fa23b5c133e16d88a3",
+    "answer": [
+      "191"
+    ],
+    "reference_keys": [
+      "[\"algebraic\",[\"1\",\"-191\"],0]"
+    ]
+  },
+  {
+    "id": "HMMT-2026-FEB-GUTS-18",
+    "group": "unseen2026",
+    "source": "jssa/difficulty/new2026/cases.jsonl",
+    "rank": "c33e280f5116552324c495e931f6543ccf6c8cff951506678ea027435f28297b",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(P, Line(A, B))",
+          "operator": "=",
+          "right": 3
+        },
+        {
+          "left": "Distance(P, Line(B, C))",
+          "operator": "=",
+          "right": 6
+        },
+        {
+          "left": "Distance(P, Line(C, D))",
+          "operator": "=",
+          "right": 8
+        },
+        {
+          "left": "Distance(P, Line(D, A))",
+          "operator": "=",
+          "right": 8
+        },
+        {
+          "predicate": "ConvexPolygon([A, B, C, D])"
+        },
+        {
+          "left": "b",
+          "operator": ">",
+          "right": 0
+        },
+        {
+          "left": "h",
+          "operator": ">",
+          "right": 0
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(b, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(cx, h)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(dx, h)",
+          "name": "D"
+        },
+        {
+          "expression": "Intersect(Line(A, C), Line(B, D))",
+          "name": "P"
+        }
+      ],
+      "id": "HMMT-2026-FEB-GUTS-18",
+      "target": "Distance(A, B) + Distance(B, C) + Distance(C, D) + Distance(D, A)",
+      "variables": [
+        "b",
+        "cx",
+        "dx",
+        "h"
+      ]
+    },
+    "dsl_sha256": "5d6a89c7c3d27e9325c4b5eda9fe8d624c9ad5c175a30e07a2286b93617d4d38",
+    "answer": [
+      "165/2"
+    ],
+    "reference_keys": [
+      "[\"algebraic\",[\"2\",\"-165\"],0]"
+    ]
+  }
+]

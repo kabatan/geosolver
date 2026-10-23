@@ -1,0 +1,124 @@
+{
+  "conditions": [
+    {
+      "left": "OnCircle(q04_A, q04_omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(q04_B, q04_omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(q04_C, q04_omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(q04_D, q04_omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Perpendicular(Line(q04_A, q04_C), Line(q04_B, q04_D))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(q04_A, q04_C)",
+      "operator": "=",
+      "right": "2 * sqrt(61)"
+    },
+    {
+      "left": "Distance(q04_B, q04_D)",
+      "operator": "=",
+      "right": "6 * sqrt(7)"
+    },
+    {
+      "left": "IsTangent(q04_c1, q04_c2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(q04_c3, q04_c4)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "q04_px * q04_px + q04_py * q04_py",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "predicate": "ConvexPolygon([q04_A, q04_B, q04_C, q04_D])"
+    },
+    {
+      "left": "(Vector(q04_A, q04_B).x * Vector(q04_A, q04_P).y - Vector(q04_A, q04_B).y * Vector(q04_A, q04_P).x) * (Vector(q04_B, q04_C).x * Vector(q04_B, q04_P).y - Vector(q04_B, q04_C).y * Vector(q04_B, q04_P).x)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "(Vector(q04_A, q04_B).x * Vector(q04_A, q04_P).y - Vector(q04_A, q04_B).y * Vector(q04_A, q04_P).x) * (Vector(q04_C, q04_D).x * Vector(q04_C, q04_P).y - Vector(q04_C, q04_D).y * Vector(q04_C, q04_P).x)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "(Vector(q04_A, q04_B).x * Vector(q04_A, q04_P).y - Vector(q04_A, q04_B).y * Vector(q04_A, q04_P).x) * (Vector(q04_D, q04_A).x * Vector(q04_D, q04_P).y - Vector(q04_D, q04_A).y * Vector(q04_D, q04_P).x)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "q04_O"
+    },
+    {
+      "expression": "Circle(q04_O, 8)",
+      "name": "q04_omega"
+    },
+    {
+      "expression": "Point(-sqrt(61), sqrt(3))",
+      "name": "q04_A"
+    },
+    {
+      "expression": "Point(1, -3 * sqrt(7))",
+      "name": "q04_B"
+    },
+    {
+      "expression": "Point(sqrt(61), sqrt(3))",
+      "name": "q04_C"
+    },
+    {
+      "expression": "Point(1, 3 * sqrt(7))",
+      "name": "q04_D"
+    },
+    {
+      "expression": "Point(q04_px, q04_py)",
+      "name": "q04_P"
+    },
+    {
+      "expression": "Circumcircle(q04_A, q04_B, q04_P)",
+      "name": "q04_c1"
+    },
+    {
+      "expression": "Circumcircle(q04_C, q04_D, q04_P)",
+      "name": "q04_c2"
+    },
+    {
+      "expression": "Circumcircle(q04_A, q04_D, q04_P)",
+      "name": "q04_c3"
+    },
+    {
+      "expression": "Circumcircle(q04_B, q04_C, q04_P)",
+      "name": "q04_c4"
+    }
+  ],
+  "id": "single-04",
+  "target": "Distance(q04_O, q04_P)",
+  "variables": [
+    "q04_px",
+    "q04_py"
+  ]
+}

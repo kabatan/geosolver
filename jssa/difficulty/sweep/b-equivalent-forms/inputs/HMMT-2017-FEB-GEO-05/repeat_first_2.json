@@ -1,0 +1,141 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(I, Line(A, B))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(I, Line(B, C))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(I, Line(C, D))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(I, Line(D, A))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Radius(G1)",
+      "operator": "=",
+      "right": 31
+    },
+    {
+      "left": "Radius(G2)",
+      "operator": "=",
+      "right": 24
+    },
+    {
+      "left": "Radius(G3)",
+      "operator": "=",
+      "right": 12
+    },
+    {
+      "left": "r",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "predicate": "ConvexPolygon([A, B, C, D])"
+    },
+    {
+      "predicate": "Or(And((Vector(A,B).x*Vector(A,I).y-Vector(A,B).y*Vector(A,I).x)>0,(Vector(B,C).x*Vector(B,I).y-Vector(B,C).y*Vector(B,I).x)>0,(Vector(C,D).x*Vector(C,I).y-Vector(C,D).y*Vector(C,I).x)>0,(Vector(D,A).x*Vector(D,I).y-Vector(D,A).y*Vector(D,I).x)>0),And((Vector(A,B).x*Vector(A,I).y-Vector(A,B).y*Vector(A,I).x)<0,(Vector(B,C).x*Vector(B,I).y-Vector(B,C).y*Vector(B,I).x)<0,(Vector(C,D).x*Vector(C,I).y-Vector(C,D).y*Vector(C,I).x)<0,(Vector(D,A).x*Vector(D,I).y-Vector(D,A).y*Vector(D,I).x)<0))"
+    },
+    {
+      "left": "Distance(I, Line(A, B))",
+      "operator": "=",
+      "right": "r"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "I"
+    },
+    {
+      "expression": "Point(r, 0)",
+      "name": "T1"
+    },
+    {
+      "expression": "Point(r * (1 - t2 * t2) / (1 + t2 * t2), r * 2 * t2 / (1 + t2 * t2))",
+      "name": "T2"
+    },
+    {
+      "expression": "Point(r * (1 - t3 * t3) / (1 + t3 * t3), r * 2 * t3 / (1 + t3 * t3))",
+      "name": "T3"
+    },
+    {
+      "expression": "Point(r * (1 - t4 * t4) / (1 + t4 * t4), r * 2 * t4 / (1 + t4 * t4))",
+      "name": "T4"
+    },
+    {
+      "expression": "PerpendicularLine(Line(I, T1), T1)",
+      "name": "l1"
+    },
+    {
+      "expression": "PerpendicularLine(Line(I, T2), T2)",
+      "name": "l2"
+    },
+    {
+      "expression": "PerpendicularLine(Line(I, T3), T3)",
+      "name": "l3"
+    },
+    {
+      "expression": "PerpendicularLine(Line(I, T4), T4)",
+      "name": "l4"
+    },
+    {
+      "expression": "Intersect(l4, l1)",
+      "name": "A"
+    },
+    {
+      "expression": "Intersect(l1, l2)",
+      "name": "B"
+    },
+    {
+      "expression": "Intersect(l2, l3)",
+      "name": "C"
+    },
+    {
+      "expression": "Intersect(l3, l4)",
+      "name": "D"
+    },
+    {
+      "expression": "Circle(I, r)",
+      "name": "omega"
+    },
+    {
+      "expression": "Intersect(Line(A, C), Line(B, D))",
+      "name": "P"
+    },
+    {
+      "expression": "Circumcircle(A, P, B)",
+      "name": "G1"
+    },
+    {
+      "expression": "Circumcircle(B, P, C)",
+      "name": "G2"
+    },
+    {
+      "expression": "Circumcircle(C, P, D)",
+      "name": "G3"
+    },
+    {
+      "expression": "Circumcircle(D, P, A)",
+      "name": "G4"
+    }
+  ],
+  "id": "HMMT-2017-FEB-GEO-05",
+  "target": "Radius(G4)",
+  "variables": [
+    "r",
+    "t2",
+    "t3",
+    "t4"
+  ]
+}

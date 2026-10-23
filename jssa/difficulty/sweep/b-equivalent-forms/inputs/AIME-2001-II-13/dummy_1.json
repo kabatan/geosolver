@@ -1,0 +1,78 @@
+{
+  "id": "AIME-2001-II-13",
+  "variables": [
+    "ax",
+    "ay",
+    "cx",
+    "cy",
+    "q43bT0"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(10, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "q43bDummy0",
+      "expression": "Point(q43bT0, 0)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 8
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": 6
+    },
+    {
+      "left": "Angle(B, A, D)",
+      "operator": "=",
+      "right": "Angle(A, D, C)"
+    },
+    {
+      "left": "Angle(A, B, D)",
+      "operator": "=",
+      "right": "Angle(B, C, D)"
+    },
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "cy",
+      "operator": "<",
+      "right": 0
+    },
+    {
+      "predicate": "ConvexPolygon([A, B, C, D])"
+    },
+    {
+      "left": "Distance(q43bDummy0, Point(0,0))",
+      "operator": "=",
+      "right": 1
+    },
+    {
+      "left": "q43bT0",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Distance(C, D)"
+}

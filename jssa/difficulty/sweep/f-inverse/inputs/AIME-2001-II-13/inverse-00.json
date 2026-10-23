@@ -1,0 +1,63 @@
+{
+  "id": "AIME-2001-II-13",
+  "variables": [
+    "ax",
+    "ay",
+    "cx",
+    "cy"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(10, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(C, D)",
+      "operator": "=",
+      "right": "64/5"
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": 6
+    },
+    {
+      "left": "Angle(B, A, D)",
+      "operator": "=",
+      "right": "Angle(A, D, C)"
+    },
+    {
+      "left": "Angle(A, B, D)",
+      "operator": "=",
+      "right": "Angle(B, C, D)"
+    },
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "cy",
+      "operator": "<",
+      "right": 0
+    },
+    {
+      "predicate": "ConvexPolygon([A, B, C, D])"
+    }
+  ],
+  "target": "Distance(A, B)"
+}

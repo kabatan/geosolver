@@ -1,0 +1,264 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(I, Line(A, B))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(I, Line(B, C))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(I, Line(C, D))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(I, Line(D, A))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Radius(G1)",
+      "operator": "=",
+      "right": 31
+    },
+    {
+      "left": "Radius(G2)",
+      "operator": "=",
+      "right": 24
+    },
+    {
+      "left": "Radius(G3)",
+      "operator": "=",
+      "right": 12
+    },
+    {
+      "left": "r",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "predicate": "ConvexPolygon([A, B, C, D])"
+    },
+    {
+      "predicate": "Or(And((Vector(A,B).x*Vector(A,I).y-Vector(A,B).y*Vector(A,I).x)>0,(Vector(B,C).x*Vector(B,I).y-Vector(B,C).y*Vector(B,I).x)>0,(Vector(C,D).x*Vector(C,I).y-Vector(C,D).y*Vector(C,I).x)>0,(Vector(D,A).x*Vector(D,I).y-Vector(D,A).y*Vector(D,I).x)>0),And((Vector(A,B).x*Vector(A,I).y-Vector(A,B).y*Vector(A,I).x)<0,(Vector(B,C).x*Vector(B,I).y-Vector(B,C).y*Vector(B,I).x)<0,(Vector(C,D).x*Vector(C,I).y-Vector(C,D).y*Vector(C,I).x)<0,(Vector(D,A).x*Vector(D,I).y-Vector(D,A).y*Vector(D,I).x)<0))"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "I"
+    },
+    {
+      "expression": "Point(r, 0)",
+      "name": "T1"
+    },
+    {
+      "expression": "Point(r * (1 - t2 * t2) / (1 + t2 * t2), r * 2 * t2 / (1 + t2 * t2))",
+      "name": "T2"
+    },
+    {
+      "expression": "Point(r * (1 - t3 * t3) / (1 + t3 * t3), r * 2 * t3 / (1 + t3 * t3))",
+      "name": "T3"
+    },
+    {
+      "expression": "Point(r * (1 - t4 * t4) / (1 + t4 * t4), r * 2 * t4 / (1 + t4 * t4))",
+      "name": "T4"
+    },
+    {
+      "expression": "PerpendicularLine(Line(I, T1), T1)",
+      "name": "l1"
+    },
+    {
+      "expression": "PerpendicularLine(Line(I, T2), T2)",
+      "name": "l2"
+    },
+    {
+      "expression": "PerpendicularLine(Line(I, T3), T3)",
+      "name": "l3"
+    },
+    {
+      "expression": "PerpendicularLine(Line(I, T4), T4)",
+      "name": "l4"
+    },
+    {
+      "expression": "Intersect(l4, l1)",
+      "name": "A"
+    },
+    {
+      "expression": "Intersect(l1, l2)",
+      "name": "B"
+    },
+    {
+      "expression": "Intersect(l2, l3)",
+      "name": "C"
+    },
+    {
+      "expression": "Intersect(l3, l4)",
+      "name": "D"
+    },
+    {
+      "expression": "Circle(I, r)",
+      "name": "omega"
+    },
+    {
+      "expression": "Intersect(Line(A, C), Line(B, D))",
+      "name": "P"
+    },
+    {
+      "expression": "Circumcircle(A, P, B)",
+      "name": "G1"
+    },
+    {
+      "expression": "Circumcircle(B, P, C)",
+      "name": "G2"
+    },
+    {
+      "expression": "Circumcircle(C, P, D)",
+      "name": "G3"
+    },
+    {
+      "expression": "Circumcircle(D, P, A)",
+      "name": "G4"
+    },
+    {
+      "name": "q43bDummy0",
+      "expression": "Point(100, 200)"
+    },
+    {
+      "name": "q43bDummy1",
+      "expression": "Point(101, 201)"
+    },
+    {
+      "name": "q43bDummy2",
+      "expression": "Point(102, 202)"
+    },
+    {
+      "name": "q43bDummy3",
+      "expression": "Point(103, 203)"
+    },
+    {
+      "name": "q43bDummy4",
+      "expression": "Point(104, 204)"
+    },
+    {
+      "name": "q43bDummy5",
+      "expression": "Point(105, 205)"
+    },
+    {
+      "name": "q43bDummy6",
+      "expression": "Point(106, 206)"
+    },
+    {
+      "name": "q43bDummy7",
+      "expression": "Point(107, 207)"
+    },
+    {
+      "name": "q43bDummy8",
+      "expression": "Point(108, 208)"
+    },
+    {
+      "name": "q43bDummy9",
+      "expression": "Point(109, 209)"
+    },
+    {
+      "name": "q43bDummy10",
+      "expression": "Point(110, 210)"
+    },
+    {
+      "name": "q43bDummy11",
+      "expression": "Point(111, 211)"
+    },
+    {
+      "name": "q43bDummy12",
+      "expression": "Point(112, 212)"
+    },
+    {
+      "name": "q43bDummy13",
+      "expression": "Point(113, 213)"
+    },
+    {
+      "name": "q43bDummy14",
+      "expression": "Point(114, 214)"
+    },
+    {
+      "name": "q43bDummy15",
+      "expression": "Point(115, 215)"
+    },
+    {
+      "name": "q43bDummy16",
+      "expression": "Point(116, 216)"
+    },
+    {
+      "name": "q43bDummy17",
+      "expression": "Point(117, 217)"
+    },
+    {
+      "name": "q43bDummy18",
+      "expression": "Point(118, 218)"
+    },
+    {
+      "name": "q43bDummy19",
+      "expression": "Point(119, 219)"
+    },
+    {
+      "name": "q43bDummy20",
+      "expression": "Point(120, 220)"
+    },
+    {
+      "name": "q43bDummy21",
+      "expression": "Point(121, 221)"
+    },
+    {
+      "name": "q43bDummy22",
+      "expression": "Point(122, 222)"
+    },
+    {
+      "name": "q43bDummy23",
+      "expression": "Point(123, 223)"
+    },
+    {
+      "name": "q43bDummy24",
+      "expression": "Point(124, 224)"
+    },
+    {
+      "name": "q43bDummy25",
+      "expression": "Point(125, 225)"
+    },
+    {
+      "name": "q43bDummy26",
+      "expression": "Point(126, 226)"
+    },
+    {
+      "name": "q43bDummy27",
+      "expression": "Point(127, 227)"
+    },
+    {
+      "name": "q43bDummy28",
+      "expression": "Point(128, 228)"
+    },
+    {
+      "name": "q43bDummy29",
+      "expression": "Point(129, 229)"
+    },
+    {
+      "name": "q43bDummy30",
+      "expression": "Point(130, 230)"
+    },
+    {
+      "name": "q43bDummy31",
+      "expression": "Point(131, 231)"
+    }
+  ],
+  "id": "HMMT-2017-FEB-GEO-05",
+  "target": "Radius(G4)",
+  "variables": [
+    "r",
+    "t2",
+    "t3",
+    "t4"
+  ]
+}

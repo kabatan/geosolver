@@ -1,0 +1,56 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": "((8)*(99/100))"
+    },
+    {
+      "left": "Distance(A, F)",
+      "operator": "=",
+      "right": "((6)*(99/100))"
+    },
+    {
+      "left": "w",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "h",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "A"
+    },
+    {
+      "expression": "Point(w, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(w, h)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(0, h)",
+      "name": "D"
+    },
+    {
+      "expression": "Point(2 * w - w, 2 * 0 - h)",
+      "name": "E"
+    },
+    {
+      "expression": "Intersect(Line(C, D), Circumcircle(A, C, E), exclude=C)",
+      "name": "F"
+    }
+  ],
+  "id": "HMMT-2026-FEB-GUTS-09",
+  "target": "Area(A, B, C, D)",
+  "variables": [
+    "w",
+    "h"
+  ]
+}

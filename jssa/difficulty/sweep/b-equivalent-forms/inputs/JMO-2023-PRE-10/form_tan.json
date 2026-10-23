@@ -1,0 +1,86 @@
+{
+  "conditions": [
+    {
+      "left": "Collinear(B, P, M)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(P, B, M)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "tan(((Angle(P, A, M))-pi/2)/2)",
+      "operator": "=",
+      "right": "tan(((Angle(M, B, A))-pi/2)/2)"
+    },
+    {
+      "left": "tan(((Angle(B, A, P))-pi/2)/2)",
+      "operator": "=",
+      "right": "tan(((41 * pi / 180)-pi/2)/2)"
+    },
+    {
+      "left": "tan(((Angle(P, D, B))-pi/2)/2)",
+      "operator": "=",
+      "right": "tan(((115 * pi / 180)-pi/2)/2)"
+    },
+    {
+      "left": "cx",
+      "operator": ">",
+      "right": "5"
+    },
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "px",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "py",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "predicate": "AcuteTriangle(A,B,C)"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(cx, 0)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(5, cy)",
+      "name": "A"
+    },
+    {
+      "expression": "FootOfPerpendicular(Line(B, C), A)",
+      "name": "D"
+    },
+    {
+      "expression": "Midpoint(A, C)",
+      "name": "M"
+    },
+    {
+      "expression": "Point(px, py)",
+      "name": "P"
+    }
+  ],
+  "id": "JMO-2023-PRE-10",
+  "target": "180 * Angle(B, A, C) / pi",
+  "variables": [
+    "cx",
+    "cy",
+    "px",
+    "py"
+  ]
+}

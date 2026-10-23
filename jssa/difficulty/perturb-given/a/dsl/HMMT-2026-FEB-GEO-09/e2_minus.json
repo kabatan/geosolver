@@ -1,0 +1,102 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": "((5)*(101/100))"
+    },
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": "((7)*(101/100))"
+    },
+    {
+      "left": "OnCircle(E, Gamma)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(F, Gamma)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(Line(A, B), Gamma)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(Line(A, C), Gamma)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Radius(Gamma)",
+      "operator": "=",
+      "right": "((2)*(101/100)) * Radius(omega)"
+    },
+    {
+      "left": "a",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "rho",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(a, 0)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(ax, ay)",
+      "name": "A"
+    },
+    {
+      "expression": "Incenter(A, B, C)",
+      "name": "I"
+    },
+    {
+      "expression": "Incircle(A, B, C)",
+      "name": "omega"
+    },
+    {
+      "expression": "Circumcircle(B, I, C)",
+      "name": "K"
+    },
+    {
+      "expression": "Intersect(K, omega, n=1)",
+      "name": "E"
+    },
+    {
+      "expression": "Intersect(K, omega, exclude=E)",
+      "name": "F"
+    },
+    {
+      "expression": "Circle(Point(zx, zy), rho)",
+      "name": "Gamma"
+    }
+  ],
+  "id": "HMMT-2026-FEB-GEO-09",
+  "target": "Distance(B, C)",
+  "variables": [
+    "a",
+    "ax",
+    "ay",
+    "zx",
+    "zy",
+    "rho"
+  ]
+}

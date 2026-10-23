@@ -1,0 +1,79 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(A, P)",
+      "operator": "=",
+      "right": "((4)*(1001/1000))"
+    },
+    {
+      "left": "Distance(A, Q)",
+      "operator": "=",
+      "right": "((5)*(1001/1000))"
+    },
+    {
+      "left": "Dot(Vector(A, P), Vector(A, Q))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(A, Q), Vector(A, M))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(A, P)",
+      "operator": "<",
+      "right": "Distance(A, Q)"
+    },
+    {
+      "left": "Distance(A, Q)",
+      "operator": "<",
+      "right": "Distance(A, M)"
+    },
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(7, 0)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(ax, ay)",
+      "name": "A"
+    },
+    {
+      "expression": "Orthocenter(A, B, C)",
+      "name": "H"
+    },
+    {
+      "expression": "AngleBisector(B, A, C)",
+      "name": "bis"
+    },
+    {
+      "expression": "Intersect(bis, Circumcircle(A, B, H), exclude=A)",
+      "name": "P"
+    },
+    {
+      "expression": "Intersect(bis, Circumcircle(A, C, H), exclude=A)",
+      "name": "Q"
+    },
+    {
+      "expression": "Intersect(bis, Circumcircle(A, B, C), exclude=A)",
+      "name": "M"
+    }
+  ],
+  "id": "HMMT-2026-FEB-GEO-08",
+  "target": "Distance(A, M)",
+  "variables": [
+    "ax",
+    "ay"
+  ]
+}

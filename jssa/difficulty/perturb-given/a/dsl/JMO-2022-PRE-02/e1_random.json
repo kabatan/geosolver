@@ -1,0 +1,96 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": "((7)*(9/10))"
+    },
+    {
+      "left": "Distance(D, C)",
+      "operator": "=",
+      "right": "((8)*(9/10))"
+    },
+    {
+      "left": "Distance(O, Line(A, D))",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "Distance(O, Line(A, B))",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "Distance(O, Line(D, C))",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "Distance(O, Line(B, C))",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "b",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "d - a",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Area(A, D, C)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "a",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "b-d",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "predicate": "Or(And((Vector(A,D).x*Vector(A,O).y-Vector(A,D).y*Vector(A,O).x)>0,(Vector(D,C).x*Vector(D,O).y-Vector(D,C).y*Vector(D,O).x)>0,(Vector(C,B).x*Vector(C,O).y-Vector(C,B).y*Vector(C,O).x)>0,(Vector(B,A).x*Vector(B,O).y-Vector(B,A).y*Vector(B,O).x)>0),And((Vector(A,D).x*Vector(A,O).y-Vector(A,D).y*Vector(A,O).x)<0,(Vector(D,C).x*Vector(D,O).y-Vector(D,C).y*Vector(D,O).x)<0,(Vector(C,B).x*Vector(C,O).y-Vector(C,B).y*Vector(C,O).x)<0,(Vector(B,A).x*Vector(B,O).y-Vector(B,A).y*Vector(B,O).x)<0))"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(b, 0)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(a, 6)",
+      "name": "A"
+    },
+    {
+      "expression": "Point(d, 6)",
+      "name": "D"
+    },
+    {
+      "expression": "Point(ox, 3)",
+      "name": "O"
+    },
+    {
+      "expression": "Circle(O, 3)",
+      "name": "omega"
+    }
+  ],
+  "id": "JMO-2022-PRE-02",
+  "target": "Area(A, D, C, B)",
+  "variables": [
+    "a",
+    "d",
+    "b",
+    "ox"
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "conditions": [
+    {
+      "left": "Angle(q03_B, q03_A, q03_C)",
+      "operator": "=",
+      "right": "84 * pi / 180"
+    },
+    {
+      "left": "Angle(q03_A, q03_B, q03_C)",
+      "operator": "=",
+      "right": "60 * pi / 180"
+    },
+    {
+      "left": "Angle(q03_A, q03_C, q03_B)",
+      "operator": "=",
+      "right": "36 * pi / 180"
+    },
+    {
+      "left": "OnSegment(q03_G, q03_B, q03_D)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(q03_H, q03_A, q03_E)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(q03_J, q03_A, q03_F)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "q03_ay",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "q03_B"
+    },
+    {
+      "expression": "Point(6, 0)",
+      "name": "q03_C"
+    },
+    {
+      "expression": "Point(q03_ax, q03_ay)",
+      "name": "q03_A"
+    },
+    {
+      "expression": "Midpoint(q03_B, q03_C)",
+      "name": "q03_D"
+    },
+    {
+      "expression": "Midpoint(q03_A, q03_C)",
+      "name": "q03_E"
+    },
+    {
+      "expression": "Midpoint(q03_A, q03_B)",
+      "name": "q03_F"
+    },
+    {
+      "expression": "Circumcircle(q03_D, q03_E, q03_F)",
+      "name": "q03_Gamma"
+    },
+    {
+      "expression": "Circumcenter(q03_D, q03_E, q03_F)",
+      "name": "q03_O"
+    },
+    {
+      "expression": "Intersect(Line(q03_B, q03_D), q03_Gamma, exclude=q03_D)",
+      "name": "q03_G"
+    },
+    {
+      "expression": "Intersect(Line(q03_A, q03_E), q03_Gamma, exclude=q03_E)",
+      "name": "q03_H"
+    },
+    {
+      "expression": "Intersect(Line(q03_A, q03_F), q03_Gamma, exclude=q03_F)",
+      "name": "q03_J"
+    }
+  ],
+  "id": "single-03",
+  "target": "180 * (Angle(q03_D, q03_O, q03_E) + 2 * Angle(q03_H, q03_O, q03_J) + 3 * Angle(q03_F, q03_O, q03_G)) / pi",
+  "variables": [
+    "q03_ax",
+    "q03_ay"
+  ]
+}

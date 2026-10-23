@@ -1,0 +1,84 @@
+{
+  "conditions": [
+    {
+      "left": "Area(A,B,C)",
+      "operator": "=",
+      "right": 1
+    },
+    {
+      "left": "Parallel(Line(D,E),Line(B,C))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(D,E)/Distance(B,C)",
+      "operator": "=",
+      "right": "((1/3)*(11/10))"
+    },
+    {
+      "left": "b",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "y",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "u",
+      "operator": ">=",
+      "right": 0
+    },
+    {
+      "left": "u",
+      "operator": "<=",
+      "right": 1
+    },
+    {
+      "left": "v",
+      "operator": ">=",
+      "right": 0
+    },
+    {
+      "left": "v",
+      "operator": "<=",
+      "right": 1
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(b, 0)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(x, y)",
+      "name": "A"
+    },
+    {
+      "expression": "PointOnSegment(A,B,u)",
+      "name": "D"
+    },
+    {
+      "expression": "PointOnSegment(A,C,v)",
+      "name": "E"
+    },
+    {
+      "expression": "Reflect(A,Line(D,E))",
+      "name": "F"
+    }
+  ],
+  "id": "HMMT-2011-FEB-GUTS-01",
+  "target": "Area(F,B,C)",
+  "variables": [
+    "b",
+    "x",
+    "y",
+    "u",
+    "v"
+  ]
+}

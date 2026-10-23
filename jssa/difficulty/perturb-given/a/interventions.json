@@ -1,0 +1,38 @@
+{
+  "default": "Perturb each supported direct given independently; keep all other expressions fixed.",
+  "basis": "Input-only inspection before prediction lock; no search or outcome data. These rules do not change the selected 40 IDs.",
+  "exceptions": {
+    "AIME-2010-I-13": {
+      "active_condition_indices": [3],
+      "reason_ja": "AN=126だけを崩す。ON=126は直径252の円の半径で、面積predicateにも使うため固定する。"
+    },
+    "AIME-2010-II-14": {
+      "active_condition_indices": [2, 3],
+      "reason_ja": "CP=1と角の比2を崩す。角C=pi/2は固定し、角A<pi/4という既存の枝指定との対応を保つ。"
+    },
+    "JMO-2017-PRE-08": {
+      "active_condition_indices": [4],
+      "reason_ja": "XD=3だけを崩す。BF=5とCF=6は固定されたBC=11と連動するため固定する。"
+    },
+    "JMO-2022-PRE-02": {
+      "active_condition_indices": [0, 1],
+      "reason_ja": "AB=7とDC=8を崩す。共通の内接円半径3と高さ6、Oの高さ3は一体の構成なので固定する。"
+    },
+    "HMMT-2026-FEB-GEO-05": {
+      "active_condition_indices": [8, 9],
+      "reason_ja": "二つの指定弦長4*sqrt(30)を別々に崩す。半径11・2と中心距離11-2、K1の高さ9は連動するため固定する。"
+    },
+    "AIME-2005-II-08": {
+      "active_condition_indices": [3, 4],
+      "reason_ja": "半径4と10を崩し、中心間距離、内接条件、接線条件、枝指定の同じ半径も同時に更新する。",
+      "aliases": {"r1": "conditions/3/right/0:1", "r2": "conditions/4/right/0:2"},
+      "linked_expressions": [
+        {"path": ["constructions", 1, "expression"], "before": "Point(4+10, 0)", "template": "Point($r1+$r2, 0)"},
+        {"path": ["conditions", 0, "right"], "before": 10, "template": "$r2"},
+        {"path": ["conditions", 1, "right"], "before": "R-4", "template": "R-$r1"},
+        {"path": ["conditions", 2, "right"], "before": "R-10", "template": "R-$r2"},
+        {"path": ["conditions", 6, "left"], "before": "a*(4+10)+b", "template": "a*($r1+$r2)+b"}
+      ]
+    }
+  }
+}

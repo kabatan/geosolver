@@ -1,0 +1,88 @@
+{
+  "conditions": [
+    {
+      "left": "q02_y",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "q02_p",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "q02_q",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "q02_r",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "predicate": "Bound(q02_p, (0, 1), inclusive=False)"
+    },
+    {
+      "predicate": "Bound(q02_q, (0, 1), inclusive=False)"
+    },
+    {
+      "predicate": "Bound(q02_r, (0, 1), inclusive=False)"
+    },
+    {
+      "left": "Distance(q02_B, q02_E)",
+      "operator": "=",
+      "right": "q02_q * Distance(q02_B, q02_C)"
+    },
+    {
+      "left": "Distance(q02_C, q02_F)",
+      "operator": "=",
+      "right": "q02_r * Distance(q02_C, q02_A)"
+    },
+    {
+      "left": "q02_p + q02_q + q02_r",
+      "operator": "=",
+      "right": "2 / 3"
+    },
+    {
+      "left": "q02_p**2 + q02_q**2 + q02_r**2",
+      "operator": "=",
+      "right": "2 / 5"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "q02_B"
+    },
+    {
+      "expression": "Point(15, 0)",
+      "name": "q02_C"
+    },
+    {
+      "expression": "Point(q02_x, q02_y)",
+      "name": "q02_A"
+    },
+    {
+      "expression": "PointOnSegment(q02_A, q02_B, q02_p)",
+      "name": "q02_D"
+    },
+    {
+      "expression": "PointOnSegment(q02_B, q02_C, q02_q)",
+      "name": "q02_E"
+    },
+    {
+      "expression": "PointOnSegment(q02_C, q02_A, q02_r)",
+      "name": "q02_F"
+    }
+  ],
+  "id": "half0-02",
+  "target": "Area(q02_D, q02_E, q02_F) / Area(q02_A, q02_B, q02_C)",
+  "variables": [
+    "q02_x",
+    "q02_y",
+    "q02_p",
+    "q02_q",
+    "q02_r"
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "variables": [
+    "q05_h"
+  ],
+  "constructions": [
+    {
+      "expression": "Point(-250, 0)",
+      "name": "q05_A"
+    },
+    {
+      "expression": "Point(250, 0)",
+      "name": "q05_B"
+    },
+    {
+      "expression": "Point(325, q05_h)",
+      "name": "q05_C"
+    },
+    {
+      "expression": "Point(-325, q05_h)",
+      "name": "q05_D"
+    },
+    {
+      "expression": "Intersect(AngleBisector(q05_D, q05_A, q05_B), AngleBisector(q05_C, q05_D, q05_A))",
+      "name": "q05_P"
+    },
+    {
+      "expression": "Intersect(AngleBisector(q05_A, q05_B, q05_C), AngleBisector(q05_B, q05_C, q05_D))",
+      "name": "q05_Q"
+    },
+    {
+      "expression": "Point(cos(2*pi*0/6), sin(2*pi*0/6))",
+      "name": "q15_A"
+    },
+    {
+      "expression": "Point(cos(2*pi*1/6), sin(2*pi*1/6))",
+      "name": "q15_B"
+    },
+    {
+      "expression": "Point(cos(2*pi*2/6), sin(2*pi*2/6))",
+      "name": "q15_C"
+    },
+    {
+      "expression": "Point(cos(2*pi*3/6), sin(2*pi*3/6))",
+      "name": "q15_D"
+    },
+    {
+      "expression": "Point(cos(2*pi*4/6), sin(2*pi*4/6))",
+      "name": "q15_E"
+    },
+    {
+      "expression": "Point(cos(2*pi*5/6), sin(2*pi*5/6))",
+      "name": "q15_F"
+    },
+    {
+      "expression": "Incircle(q15_B,q15_D,q15_F)",
+      "name": "q15_P"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(q05_A, q05_B)",
+      "operator": "=",
+      "right": 500
+    },
+    {
+      "left": "Distance(q05_C, q05_D)",
+      "operator": "=",
+      "right": 650
+    },
+    {
+      "left": "Distance(q05_A, q05_D)",
+      "operator": "=",
+      "right": 333
+    },
+    {
+      "left": "Distance(q05_B, q05_C)",
+      "operator": "=",
+      "right": 333
+    },
+    {
+      "left": "q05_h",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(q05_P, q05_Q)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "id": "pair-sum-05",
+  "target": "(Distance(q05_P, q05_Q)) + (pi*Radius(q15_P)**2/Area(q15_A,q15_B,q15_D,q15_E))"
+}

@@ -1,0 +1,144 @@
+{
+  "variables": [
+    "q02_x",
+    "q02_y",
+    "q02_p",
+    "q02_q",
+    "q02_r",
+    "q12_theta"
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "q02_B"
+    },
+    {
+      "expression": "Point(15, 0)",
+      "name": "q02_C"
+    },
+    {
+      "expression": "Point(q02_x, q02_y)",
+      "name": "q02_A"
+    },
+    {
+      "expression": "PointOnSegment(q02_A, q02_B, q02_p)",
+      "name": "q02_D"
+    },
+    {
+      "expression": "PointOnSegment(q02_B, q02_C, q02_q)",
+      "name": "q02_E"
+    },
+    {
+      "expression": "PointOnSegment(q02_C, q02_A, q02_r)",
+      "name": "q02_F"
+    },
+    {
+      "name": "q12_E",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "q12_A",
+      "expression": "Point(5, 0)"
+    },
+    {
+      "name": "q12_C",
+      "expression": "Point(5+1, 0)"
+    },
+    {
+      "name": "q12_D",
+      "expression": "Point((5+1)*cos(q12_theta), (5+1)*sin(q12_theta))"
+    },
+    {
+      "name": "q12_B",
+      "expression": "Point(q12_D.x-1, q12_D.y)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "q02_y",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(q02_A, q02_B)",
+      "operator": "=",
+      "right": 13
+    },
+    {
+      "left": "Distance(q02_B, q02_C)",
+      "operator": "=",
+      "right": 15
+    },
+    {
+      "left": "Distance(q02_C, q02_A)",
+      "operator": "=",
+      "right": 17
+    },
+    {
+      "left": "q02_p",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "q02_q",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "q02_r",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "predicate": "Bound(q02_p, (0, 1), inclusive=False)"
+    },
+    {
+      "predicate": "Bound(q02_q, (0, 1), inclusive=False)"
+    },
+    {
+      "predicate": "Bound(q02_r, (0, 1), inclusive=False)"
+    },
+    {
+      "left": "Distance(q02_A, q02_D)",
+      "operator": "=",
+      "right": "q02_p * Distance(q02_A, q02_B)"
+    },
+    {
+      "left": "Distance(q02_B, q02_E)",
+      "operator": "=",
+      "right": "q02_q * Distance(q02_B, q02_C)"
+    },
+    {
+      "left": "Distance(q02_C, q02_F)",
+      "operator": "=",
+      "right": "q02_r * Distance(q02_C, q02_A)"
+    },
+    {
+      "left": "q02_p + q02_q + q02_r",
+      "operator": "=",
+      "right": "2 / 3"
+    },
+    {
+      "left": "q02_p**2 + q02_q**2 + q02_r**2",
+      "operator": "=",
+      "right": "2 / 5"
+    },
+    {
+      "left": "(5+1)*q12_theta",
+      "operator": "=",
+      "right": "2*pi*1"
+    },
+    {
+      "left": "q12_theta",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "q12_theta",
+      "operator": "<",
+      "right": "2*pi"
+    }
+  ],
+  "id": "pair-right-02",
+  "target": "(sin(Angle(q12_B, q12_E, q12_A))**2)"
+}

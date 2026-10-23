@@ -1,0 +1,179 @@
+{
+  "variables": [
+    "q06_t",
+    "q06_ax",
+    "q06_ay",
+    "q16_cx",
+    "q16_cy",
+    "q16_dx",
+    "q16_dy",
+    "q16_wx",
+    "q16_wy",
+    "q16_r"
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "q06_B"
+    },
+    {
+      "expression": "Point(q06_t, 0)",
+      "name": "q06_D"
+    },
+    {
+      "expression": "Point(4 * q06_t, 0)",
+      "name": "q06_C"
+    },
+    {
+      "expression": "Point(q06_ax, q06_ay)",
+      "name": "q06_A"
+    },
+    {
+      "expression": "Midpoint(q06_A, q06_D)",
+      "name": "q06_E"
+    },
+    {
+      "expression": "Point(0, 0)",
+      "name": "q16_A"
+    },
+    {
+      "expression": "Point(10, 0)",
+      "name": "q16_B"
+    },
+    {
+      "expression": "Point(q16_cx, q16_cy)",
+      "name": "q16_C"
+    },
+    {
+      "expression": "Point(q16_dx, q16_dy)",
+      "name": "q16_D"
+    },
+    {
+      "expression": "Point(q16_wx, q16_wy)",
+      "name": "q16_W"
+    },
+    {
+      "expression": "Circumcircle(q16_A,q16_B,q16_C)",
+      "name": "q16_Gamma"
+    },
+    {
+      "expression": "FootOfPerpendicular(Line(q16_D,q16_A),q16_W)",
+      "name": "q16_T0"
+    },
+    {
+      "expression": "FootOfPerpendicular(Line(q16_A,q16_B),q16_W)",
+      "name": "q16_T1"
+    },
+    {
+      "expression": "FootOfPerpendicular(Line(q16_B,q16_C),q16_W)",
+      "name": "q16_T2"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(q06_A, q06_C)",
+      "operator": "=",
+      "right": "Distance(q06_B, q06_C)"
+    },
+    {
+      "left": "Distance(q06_C, q06_E)",
+      "operator": "=",
+      "right": "sqrt(7)"
+    },
+    {
+      "left": "Distance(q06_B, q06_E)",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "q06_t",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "q06_ay",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(q16_B,q16_C)",
+      "operator": "=",
+      "right": 8
+    },
+    {
+      "left": "Distance(q16_C,q16_D)",
+      "operator": "=",
+      "right": 25
+    },
+    {
+      "left": "Distance(q16_D,q16_A)",
+      "operator": "=",
+      "right": 12
+    },
+    {
+      "left": "Distance(Center(q16_Gamma),q16_D)",
+      "operator": "=",
+      "right": "Radius(q16_Gamma)"
+    },
+    {
+      "left": "Distance(q16_W,q16_T0)",
+      "operator": "=",
+      "right": "q16_r"
+    },
+    {
+      "left": "(q16_T0.x-q16_D.x)*(q16_A.x-q16_D.x)+(q16_T0.y-q16_D.y)*(q16_A.y-q16_D.y)",
+      "operator": ">=",
+      "right": 0
+    },
+    {
+      "left": "(q16_T0.x-q16_D.x)*(q16_A.x-q16_D.x)+(q16_T0.y-q16_D.y)*(q16_A.y-q16_D.y)",
+      "operator": "<=",
+      "right": "Distance(q16_D,q16_A)**2"
+    },
+    {
+      "left": "Distance(q16_W,q16_T1)",
+      "operator": "=",
+      "right": "q16_r"
+    },
+    {
+      "left": "(q16_T1.x-q16_A.x)*(q16_B.x-q16_A.x)+(q16_T1.y-q16_A.y)*(q16_B.y-q16_A.y)",
+      "operator": ">=",
+      "right": 0
+    },
+    {
+      "left": "(q16_T1.x-q16_A.x)*(q16_B.x-q16_A.x)+(q16_T1.y-q16_A.y)*(q16_B.y-q16_A.y)",
+      "operator": "<=",
+      "right": "Distance(q16_A,q16_B)**2"
+    },
+    {
+      "left": "Distance(q16_W,q16_T2)",
+      "operator": "=",
+      "right": "q16_r"
+    },
+    {
+      "left": "(q16_T2.x-q16_B.x)*(q16_C.x-q16_B.x)+(q16_T2.y-q16_B.y)*(q16_C.y-q16_B.y)",
+      "operator": ">=",
+      "right": 0
+    },
+    {
+      "left": "(q16_T2.x-q16_B.x)*(q16_C.x-q16_B.x)+(q16_T2.y-q16_B.y)*(q16_C.y-q16_B.y)",
+      "operator": "<=",
+      "right": "Distance(q16_B,q16_C)**2"
+    },
+    {
+      "predicate": "ConvexPolygon([q16_A,q16_B,q16_C,q16_D])"
+    },
+    {
+      "left": "q16_dy",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "q16_r",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "id": "pair-left-06",
+  "target": "(Area(q06_A, q06_B, q06_C))"
+}

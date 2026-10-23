@@ -1,0 +1,109 @@
+{
+  "variables": [
+    "q17_t",
+    "q17_zx",
+    "q17_zy"
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0,0)",
+      "name": "q07_A"
+    },
+    {
+      "expression": "Point(1,sqrt(3))",
+      "name": "q07_B"
+    },
+    {
+      "expression": "Point(3,sqrt(3))",
+      "name": "q07_C"
+    },
+    {
+      "expression": "Point(4,0)",
+      "name": "q07_D"
+    },
+    {
+      "expression": "Point(3,-sqrt(3))",
+      "name": "q07_E"
+    },
+    {
+      "expression": "Point(1,-sqrt(3))",
+      "name": "q07_F"
+    },
+    {
+      "expression": "Circle(q07_A,3)",
+      "name": "q07_omega"
+    },
+    {
+      "expression": "Point(0, 0)",
+      "name": "q17_X"
+    },
+    {
+      "expression": "Point(q17_t, 0)",
+      "name": "q17_Y"
+    },
+    {
+      "expression": "Point(q17_zx, q17_zy)",
+      "name": "q17_Z"
+    },
+    {
+      "expression": "Point(-3, 0)",
+      "name": "q17_A"
+    },
+    {
+      "expression": "Point(q17_t+10, 0)",
+      "name": "q17_D"
+    },
+    {
+      "expression": "Point(-2*q17_zx/Distance(q17_X,q17_Z), -2*q17_zy/Distance(q17_X,q17_Z))",
+      "name": "q17_B"
+    },
+    {
+      "expression": "Point(q17_zx+16*q17_zx/Distance(q17_X,q17_Z), q17_zy+16*q17_zy/Distance(q17_X,q17_Z))",
+      "name": "q17_E"
+    },
+    {
+      "expression": "Point(q17_t+4*(q17_t-q17_zx)/Distance(q17_Y,q17_Z), -4*q17_zy/Distance(q17_Y,q17_Z))",
+      "name": "q17_C"
+    },
+    {
+      "expression": "Point(q17_zx+12*(q17_zx-q17_t)/Distance(q17_Y,q17_Z), q17_zy+12*q17_zy/Distance(q17_Y,q17_Z))",
+      "name": "q17_F"
+    },
+    {
+      "expression": "Circumcircle(q17_A,q17_B,q17_C)",
+      "name": "q17_omega"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(Center(q17_omega),q17_D)",
+      "operator": "=",
+      "right": "Radius(q17_omega)"
+    },
+    {
+      "left": "Distance(Center(q17_omega),q17_E)",
+      "operator": "=",
+      "right": "Radius(q17_omega)"
+    },
+    {
+      "left": "Distance(Center(q17_omega),q17_F)",
+      "operator": "=",
+      "right": "Radius(q17_omega)"
+    },
+    {
+      "left": "q17_t",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "q17_zy",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "predicate": "ConvexPolygon([q17_A,q17_B,q17_C,q17_D,q17_E,q17_F])"
+    }
+  ],
+  "id": "pair-sum-07",
+  "target": "((4*Area(q07_A,q07_B,q07_C,q07_D,q07_E,q07_F)-Area(q07_omega))/6) + (Distance(q17_X,q17_Y)+Distance(q17_Y,q17_Z)+Distance(q17_Z,q17_X))"
+}

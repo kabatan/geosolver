@@ -1,0 +1,46 @@
+{
+  "id": "single-12",
+  "variables": [
+    "q12_theta"
+  ],
+  "constructions": [
+    {
+      "name": "q12_E",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "q12_A",
+      "expression": "Point(5, 0)"
+    },
+    {
+      "name": "q12_C",
+      "expression": "Point(5+1, 0)"
+    },
+    {
+      "name": "q12_D",
+      "expression": "Point((5+1)*cos(q12_theta), (5+1)*sin(q12_theta))"
+    },
+    {
+      "name": "q12_B",
+      "expression": "Point(q12_D.x-1, q12_D.y)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "(5+1)*q12_theta",
+      "operator": "=",
+      "right": "2*pi*1"
+    },
+    {
+      "left": "q12_theta",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "q12_theta",
+      "operator": "<",
+      "right": "2*pi"
+    }
+  ],
+  "target": "sin(Angle(q12_B, q12_E, q12_A))**2"
+}

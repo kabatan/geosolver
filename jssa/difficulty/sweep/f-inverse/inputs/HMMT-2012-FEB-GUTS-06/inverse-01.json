@@ -1,0 +1,74 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(E,Line(A,B))",
+      "operator": "=",
+      "right": 6
+    },
+    {
+      "left": "Area(A,X,Y,D)",
+      "operator": "=",
+      "right": "72"
+    },
+    {
+      "left": "ex",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "ex",
+      "operator": "<",
+      "right": 20
+    },
+    {
+      "left": "ey",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "ey",
+      "operator": "<",
+      "right": 12
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "A"
+    },
+    {
+      "expression": "Point(20, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(20, 12)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(0, 12)",
+      "name": "D"
+    },
+    {
+      "expression": "Point(20, 12+18)",
+      "name": "Z"
+    },
+    {
+      "expression": "Point(ex, ey)",
+      "name": "E"
+    },
+    {
+      "expression": "IntersectLines(Line(E,Z),Line(A,B))",
+      "name": "X"
+    },
+    {
+      "expression": "IntersectLines(Line(E,Z),Line(C,D))",
+      "name": "Y"
+    }
+  ],
+  "id": "HMMT-2012-FEB-GUTS-06",
+  "target": "Distance(E,Line(A,D))",
+  "variables": [
+    "ex",
+    "ey"
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "conditions": [
+    {
+      "left": "Collinear(B, P, M)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(P, B, M)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Dot(Vector(A,P),Vector(A,M))/(Distance(A,P)*Distance(A,M))",
+      "operator": "=",
+      "right": "Dot(Vector(B,M),Vector(B,A))/(Distance(B,M)*Distance(B,A))"
+    },
+    {
+      "left": "Dot(Vector(A,B),Vector(A,P))/(Distance(A,B)*Distance(A,P))",
+      "operator": "=",
+      "right": "cos(41 * pi / 180)"
+    },
+    {
+      "left": "Dot(Vector(D,P),Vector(D,B))/(Distance(D,P)*Distance(D,B))",
+      "operator": "=",
+      "right": "cos(115 * pi / 180)"
+    },
+    {
+      "left": "cx",
+      "operator": ">",
+      "right": "5"
+    },
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "px",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "py",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "predicate": "AcuteTriangle(A,B,C)"
+    },
+    {
+      "left": "Distance(A,P)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(A,M)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(B,M)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(B,A)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(A,B)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(A,P)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(D,P)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Distance(D,B)",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(cx, 0)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(5, cy)",
+      "name": "A"
+    },
+    {
+      "expression": "FootOfPerpendicular(Line(B, C), A)",
+      "name": "D"
+    },
+    {
+      "expression": "Midpoint(A, C)",
+      "name": "M"
+    },
+    {
+      "expression": "Point(px, py)",
+      "name": "P"
+    }
+  ],
+  "id": "JMO-2023-PRE-10",
+  "target": "180 * Angle(B, A, C) / pi",
+  "variables": [
+    "cx",
+    "cy",
+    "px",
+    "py"
+  ]
+}

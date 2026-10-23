@@ -1,0 +1,55 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(q05_A, q05_B)",
+      "operator": "=",
+      "right": 500
+    },
+    {
+      "left": "Distance(q05_C, q05_D)",
+      "operator": "=",
+      "right": 650
+    },
+    {
+      "left": "q05_h",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(q05_P, q05_Q)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(-250, 0)",
+      "name": "q05_A"
+    },
+    {
+      "expression": "Point(250, 0)",
+      "name": "q05_B"
+    },
+    {
+      "expression": "Point(325, q05_h)",
+      "name": "q05_C"
+    },
+    {
+      "expression": "Point(-325, q05_h)",
+      "name": "q05_D"
+    },
+    {
+      "expression": "Intersect(AngleBisector(q05_D, q05_A, q05_B), AngleBisector(q05_C, q05_D, q05_A))",
+      "name": "q05_P"
+    },
+    {
+      "expression": "Intersect(AngleBisector(q05_A, q05_B, q05_C), AngleBisector(q05_B, q05_C, q05_D))",
+      "name": "q05_Q"
+    }
+  ],
+  "id": "half1-05",
+  "target": "Distance(q05_P, q05_Q)",
+  "variables": [
+    "q05_h"
+  ]
+}

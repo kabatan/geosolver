@@ -1,0 +1,65 @@
+{
+  "id": "half0-14",
+  "variables": [
+    "q14_e",
+    "q14_f"
+  ],
+  "constructions": [
+    {
+      "name": "q14_A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "q14_B",
+      "expression": "Point(900, 0)"
+    },
+    {
+      "name": "q14_C",
+      "expression": "Point(900, 900)"
+    },
+    {
+      "name": "q14_D",
+      "expression": "Point(0, 900)"
+    },
+    {
+      "name": "q14_O",
+      "expression": "Midpoint(q14_A, q14_C)"
+    },
+    {
+      "name": "q14_E",
+      "expression": "Point(q14_e, 0)"
+    },
+    {
+      "name": "q14_F",
+      "expression": "Point(q14_f, 0)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "q14_e",
+      "operator": ">=",
+      "right": 0
+    },
+    {
+      "left": "q14_f",
+      "operator": "<=",
+      "right": 900
+    },
+    {
+      "left": "q14_e",
+      "operator": "<",
+      "right": "q14_f"
+    },
+    {
+      "left": "Distance(q14_A, q14_E)",
+      "operator": "<",
+      "right": "Distance(q14_B, q14_F)"
+    },
+    {
+      "left": "Angle(q14_E, q14_O, q14_F)",
+      "operator": "=",
+      "right": "pi/4"
+    }
+  ],
+  "target": "Distance(q14_B, q14_F)"
+}

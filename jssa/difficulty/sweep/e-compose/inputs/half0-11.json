@@ -1,0 +1,46 @@
+{
+  "id": "half0-11",
+  "variables": [
+    "q11_x",
+    "q11_y",
+    "q11_u",
+    "q11_v"
+  ],
+  "constructions": [
+    {
+      "name": "q11_A",
+      "expression": "Point(q11_x, q11_y)"
+    },
+    {
+      "name": "q11_B",
+      "expression": "Point(q11_u, q11_y)"
+    },
+    {
+      "name": "q11_C",
+      "expression": "Point(q11_x, q11_v)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "2*q11_x+q11_u",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "2*q11_y+q11_v",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "q11_u",
+      "operator": ">",
+      "right": "q11_x"
+    },
+    {
+      "left": "q11_v",
+      "operator": ">",
+      "right": "q11_y"
+    }
+  ],
+  "target": "Distance(q11_B, q11_C)**2"
+}

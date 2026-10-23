@@ -1,0 +1,46 @@
+{
+  "id": "AIME-2014-I-10",
+  "variables": [
+    "theta"
+  ],
+  "constructions": [
+    {
+      "name": "E",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(5, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(5+1, 0)"
+    },
+    {
+      "name": "D",
+      "expression": "Point((5+1)*cos(theta), (5+1)*sin(theta))"
+    },
+    {
+      "name": "B",
+      "expression": "Point(D.x-1, D.y)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "sin(Angle(B, E, A))**2",
+      "operator": "=",
+      "right": "27/31"
+    },
+    {
+      "left": "theta",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "theta",
+      "operator": "<",
+      "right": "2*pi"
+    }
+  ],
+  "target": "(5+1)*theta"
+}

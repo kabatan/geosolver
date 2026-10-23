@@ -1,0 +1,189 @@
+{
+  "conditions": [
+    {
+      "left": "Parallel(Line(A1, A3), Line(A4, A6))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Parallel(Line(A2, A4), Line(A5, A1))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Parallel(Line(A3, A5), Line(A6, A2))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(A1, A3)",
+      "operator": "=",
+      "right": "Distance(A4, A6)"
+    },
+    {
+      "left": "Distance(A3, A5)",
+      "operator": "=",
+      "right": "Distance(A6, A2)"
+    },
+    {
+      "left": "Distance(A5, A1)",
+      "operator": "=",
+      "right": "Distance(A2, A4)"
+    },
+    {
+      "left": "Area(A1, B5, B6)",
+      "operator": "=",
+      "right": 1
+    },
+    {
+      "left": "Area(A2, B6, B1)",
+      "operator": "=",
+      "right": 4
+    },
+    {
+      "left": "Area(A3, B1, B2)",
+      "operator": "=",
+      "right": 9
+    },
+    {
+      "left": "OnSegment(B1, A1, A3)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(B1, A2, A4)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(B2, A2, A4)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(B2, A3, A5)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(B3, A3, A5)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(B3, A4, A6)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(B4, A4, A6)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(B4, A5, A1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(B5, A5, A1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(B5, A6, A2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(B6, A6, A2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(B6, A1, A3)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "p",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "v",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "predicate": "ConvexPolygon([A1, A2, A3, A4, A5, A6])"
+    },
+    {
+      "predicate": "SimplePolygon([A1, A2, A3, A4, A5, A6])"
+    },
+    {
+      "left": "Area(B1, B2, B3, B4, B5, B6)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "A1"
+    },
+    {
+      "expression": "Point(p, 0)",
+      "name": "A3"
+    },
+    {
+      "expression": "Point(u, v)",
+      "name": "A5"
+    },
+    {
+      "expression": "Point(tx, ty)",
+      "name": "A4"
+    },
+    {
+      "expression": "Point(tx - p, ty)",
+      "name": "A6"
+    },
+    {
+      "expression": "Point(tx - u, ty - v)",
+      "name": "A2"
+    },
+    {
+      "expression": "Intersect(Line(A1, A3), Line(A2, A4))",
+      "name": "B1"
+    },
+    {
+      "expression": "Intersect(Line(A2, A4), Line(A3, A5))",
+      "name": "B2"
+    },
+    {
+      "expression": "Intersect(Line(A3, A5), Line(A4, A6))",
+      "name": "B3"
+    },
+    {
+      "expression": "Intersect(Line(A4, A6), Line(A5, A1))",
+      "name": "B4"
+    },
+    {
+      "expression": "Intersect(Line(A5, A1), Line(A6, A2))",
+      "name": "B5"
+    },
+    {
+      "expression": "Intersect(Line(A6, A2), Line(A1, A3))",
+      "name": "B6"
+    }
+  ],
+  "id": "HMMT-2013-FEB-GEO-03",
+  "target": "Area(B1, B2, B3, B4, B5, B6)",
+  "variables": [
+    "p",
+    "u",
+    "v",
+    "tx",
+    "ty"
+  ]
+}

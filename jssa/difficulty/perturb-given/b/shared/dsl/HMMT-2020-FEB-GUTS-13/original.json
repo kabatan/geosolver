@@ -1,0 +1,113 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(A,B)",
+      "operator": "=",
+      "right": 7
+    },
+    {
+      "left": "Distance(C,A)",
+      "operator": "=",
+      "right": "4*sqrt(3)"
+    },
+    {
+      "left": "Angle(A,C,D)",
+      "operator": "=",
+      "right": "Angle(D,C,E)"
+    },
+    {
+      "left": "Angle(D,C,E)",
+      "operator": "=",
+      "right": "Angle(E,C,B)"
+    },
+    {
+      "left": "Distance(Center(omega),X)",
+      "operator": "=",
+      "right": "Radius(omega)"
+    },
+    {
+      "left": "Distance(Center(omega),Y)",
+      "operator": "=",
+      "right": "Radius(omega)"
+    },
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "u",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "u",
+      "operator": "<",
+      "right": 1
+    },
+    {
+      "left": "v",
+      "operator": ">",
+      "right": "u"
+    },
+    {
+      "left": "v",
+      "operator": "<",
+      "right": 1
+    },
+    {
+      "left": "tx",
+      "operator": "!=",
+      "right": 0
+    },
+    {
+      "left": "ty",
+      "operator": "!=",
+      "right": 0
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(1, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(ax, ay)",
+      "name": "A"
+    },
+    {
+      "expression": "PointOnSegment(A,B,u)",
+      "name": "D"
+    },
+    {
+      "expression": "PointOnSegment(A,B,v)",
+      "name": "E"
+    },
+    {
+      "expression": "Circumcircle(C,D,E)",
+      "name": "omega"
+    },
+    {
+      "expression": "Point(tx*ax, tx*ay)",
+      "name": "X"
+    },
+    {
+      "expression": "Point(ty, 0)",
+      "name": "Y"
+    }
+  ],
+  "id": "HMMT-2020-FEB-GUTS-13",
+  "target": "Distance(X,Y)",
+  "variables": [
+    "ax",
+    "ay",
+    "u",
+    "v",
+    "tx",
+    "ty"
+  ]
+}
