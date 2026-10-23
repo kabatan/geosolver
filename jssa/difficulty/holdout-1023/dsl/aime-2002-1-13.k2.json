@@ -1,0 +1,94 @@
+{
+ "conditions": [
+  {
+   "left": "y",
+   "operator": ">",
+   "right": 0
+  },
+  {
+   "left": "Distance(A, D)",
+   "operator": "=",
+   "right": 18
+  },
+  {
+   "left": "Distance(C, E)",
+   "operator": "=",
+   "right": 27
+  },
+  {
+   "left": "OnCircle(F, circumcircle)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "Distance(F, C)",
+   "operator": ">",
+   "right": 0
+  },
+  {
+   "left": "Vector(B, D).x",
+   "operator": "=",
+   "right": "Vector(D, C).x"
+  },
+  {
+   "left": "Vector(B, D).y",
+   "operator": "=",
+   "right": "Vector(D, C).y"
+  },
+  {
+   "left": "Vector(A, E).x",
+   "operator": "=",
+   "right": "Vector(E, B).x"
+  },
+  {
+   "left": "Vector(A, E).y",
+   "operator": "=",
+   "right": "Vector(E, B).y"
+  }
+ ],
+ "constructions": [
+  {
+   "expression": "Point(0, 0)",
+   "name": "A"
+  },
+  {
+   "expression": "Point(24, 0)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(x, y)",
+   "name": "C"
+  },
+  {
+   "name": "D",
+   "expression": "Point(x_D, y_D)"
+  },
+  {
+   "name": "E",
+   "expression": "Point(x_E, y_E)"
+  },
+  {
+   "expression": "Line(C, E)",
+   "name": "ce_line"
+  },
+  {
+   "expression": "Circumcircle(A, B, C)",
+   "name": "circumcircle"
+  },
+  {
+   "expression": "PointOnLine(ce_line, t)",
+   "name": "F"
+  }
+ ],
+ "id": "aime-2002-1-13.k2",
+ "target": "Area(A, F, B)",
+ "variables": [
+  "x",
+  "y",
+  "t",
+  "x_D",
+  "y_D",
+  "x_E",
+  "y_E"
+ ]
+}

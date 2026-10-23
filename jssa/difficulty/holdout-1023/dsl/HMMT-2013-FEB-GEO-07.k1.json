@@ -1,0 +1,64 @@
+{
+ "conditions": [
+  {
+   "left": "Angle(A, B, C)",
+   "operator": "=",
+   "right": "pi / 12"
+  },
+  {
+   "left": "Distance(O, D) * Distance(O, D) + Distance(O, C) * Distance(D, C)",
+   "operator": "=",
+   "right": "Distance(O, C) * Distance(O, C)"
+  },
+  {
+   "left": "Ay",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Angle(B, A, C)",
+   "operator": ">",
+   "right": "pi / 2"
+  },
+  {
+   "left": "Distance(O, A)",
+   "operator": "=",
+   "right": "Distance(O, B)"
+  },
+  {
+   "left": "Distance(O, A)",
+   "operator": "=",
+   "right": "Distance(O, C)"
+  }
+ ],
+ "constructions": [
+  {
+   "expression": "Point(0, 0)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(1, 0)",
+   "name": "C"
+  },
+  {
+   "expression": "Point(Ax, Ay)",
+   "name": "A"
+  },
+  {
+   "name": "O",
+   "expression": "Point(x_O, y_O)"
+  },
+  {
+   "expression": "Intersect(Line(A, O), Line(B, C))",
+   "name": "D"
+  }
+ ],
+ "id": "HMMT-2013-FEB-GEO-07.k1",
+ "target": "180 * Angle(A, C, B) / pi",
+ "variables": [
+  "Ax",
+  "Ay",
+  "x_O",
+  "y_O"
+ ]
+}

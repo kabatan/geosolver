@@ -1,0 +1,115 @@
+{
+ "conditions": [
+  {
+   "left": "y",
+   "operator": ">",
+   "right": 0
+  },
+  {
+   "left": "Distance(A, B)",
+   "operator": "=",
+   "right": 13
+  },
+  {
+   "left": "Distance(A, C)",
+   "operator": "=",
+   "right": 15
+  },
+  {
+   "left": "Collinear(B, C, overlap_bc_cpap)",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "Collinear(Cp, Ap, overlap_bc_cpap)",
+   "operator": "=",
+   "right": "0"
+  }
+ ],
+ "constructions": [
+  {
+   "expression": "Point(0, 0)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(14, 0)",
+   "name": "C"
+  },
+  {
+   "expression": "Point(x, y)",
+   "name": "A"
+  },
+  {
+   "expression": "Centroid(A, B, C)",
+   "name": "G"
+  },
+  {
+   "expression": "Point(2 * G.x - A.x, 2 * G.y - A.y)",
+   "name": "Ap"
+  },
+  {
+   "expression": "Point(2 * G.x - B.x, 2 * G.y - B.y)",
+   "name": "Bp"
+  },
+  {
+   "expression": "Point(2 * G.x - C.x, 2 * G.y - C.y)",
+   "name": "Cp"
+  },
+  {
+   "expression": "Line(A, B)",
+   "name": "ab_line"
+  },
+  {
+   "expression": "Line(B, C)",
+   "name": "bc_line"
+  },
+  {
+   "expression": "Line(C, A)",
+   "name": "ca_line"
+  },
+  {
+   "expression": "Line(Ap, Bp)",
+   "name": "apbp_line"
+  },
+  {
+   "expression": "Line(Bp, Cp)",
+   "name": "bpcp_line"
+  },
+  {
+   "expression": "Line(Cp, Ap)",
+   "name": "cpap_line"
+  },
+  {
+   "name": "overlap_bc_cpap",
+   "expression": "Point(x_overlap_bc_cpap, y_overlap_bc_cpap)"
+  },
+  {
+   "expression": "Intersect(bc_line, apbp_line)",
+   "name": "overlap_bc_apbp"
+  },
+  {
+   "expression": "Intersect(ca_line, apbp_line)",
+   "name": "overlap_ca_apbp"
+  },
+  {
+   "expression": "Intersect(ca_line, bpcp_line)",
+   "name": "overlap_ca_bpcp"
+  },
+  {
+   "expression": "Intersect(ab_line, bpcp_line)",
+   "name": "overlap_ab_bpcp"
+  },
+  {
+   "expression": "Intersect(ab_line, cpap_line)",
+   "name": "overlap_ab_cpap"
+  }
+ ],
+ "id": "aime-2003-2-6.k1",
+ "target": "Area(A, B, C) + Area(Ap, Bp, Cp) - Area(overlap_bc_cpap, overlap_bc_apbp, overlap_ca_apbp, overlap_ca_bpcp, overlap_ab_bpcp, overlap_ab_cpap)",
+ "variables": [
+  "x",
+  "y",
+  "x_overlap_bc_cpap",
+  "y_overlap_bc_cpap"
+ ]
+}

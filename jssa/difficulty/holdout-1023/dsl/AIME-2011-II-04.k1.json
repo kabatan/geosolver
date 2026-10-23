@@ -1,0 +1,84 @@
+{
+ "conditions": [
+  {
+   "left": "Distance(A, B)",
+   "operator": "=",
+   "right": 20
+  },
+  {
+   "left": "Distance(A, C)",
+   "operator": "=",
+   "right": 11
+  },
+  {
+   "left": "Angle(B, A, D)",
+   "operator": "=",
+   "right": "Angle(D, A, C)"
+  },
+  {
+   "left": "Collinear(B, D, C)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "by",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "bx",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "bx",
+   "operator": "<",
+   "right": "11"
+  },
+  {
+   "left": "Vector(A, M).x",
+   "operator": "=",
+   "right": "Vector(M, D).x"
+  },
+  {
+   "left": "Vector(A, M).y",
+   "operator": "=",
+   "right": "Vector(M, D).y"
+  }
+ ],
+ "constructions": [
+  {
+   "expression": "Point(0, 0)",
+   "name": "A"
+  },
+  {
+   "expression": "Point(11, 0)",
+   "name": "C"
+  },
+  {
+   "expression": "Point(bx, by)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(bx * (1 - t) + 11 * t, by * (1 - t))",
+   "name": "D"
+  },
+  {
+   "name": "M",
+   "expression": "Point(x_M, y_M)"
+  },
+  {
+   "expression": "Intersect(Line(A, C), Line(B, M))",
+   "name": "P"
+  }
+ ],
+ "id": "AIME-2011-II-04.k1",
+ "target": "Distance(C, P) / Distance(P, A)",
+ "variables": [
+  "bx",
+  "by",
+  "t",
+  "x_M",
+  "y_M"
+ ]
+}

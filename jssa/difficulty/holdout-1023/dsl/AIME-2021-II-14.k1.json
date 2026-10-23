@@ -1,0 +1,89 @@
+{
+ "conditions": [
+  {
+   "left": "2 * Angle(A, B, C)",
+   "operator": "=",
+   "right": "13 * Angle(B, C, A)"
+  },
+  {
+   "left": "17 * Angle(B, C, A)",
+   "operator": "=",
+   "right": "2 * Angle(X, O, Y)"
+  },
+  {
+   "left": "bx",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "cy",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Angle(B, A, C)",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "predicate": "AcuteTriangle(A, B, C)"
+  },
+  {
+   "left": "Distance(O, A)",
+   "operator": "=",
+   "right": "Distance(O, B)"
+  },
+  {
+   "left": "Distance(O, A)",
+   "operator": "=",
+   "right": "Distance(O, C)"
+  }
+ ],
+ "constructions": [
+  {
+   "expression": "Point(0, 0)",
+   "name": "A"
+  },
+  {
+   "expression": "Point(bx, 0)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(cx, cy)",
+   "name": "C"
+  },
+  {
+   "expression": "Circumcircle(A, B, C)",
+   "name": "Gamma"
+  },
+  {
+   "name": "O",
+   "expression": "Point(x_O, y_O)"
+  },
+  {
+   "expression": "Centroid(A, B, C)",
+   "name": "G"
+  },
+  {
+   "expression": "Tangent(A, Gamma)",
+   "name": "tA"
+  },
+  {
+   "expression": "Intersect(tA, PerpendicularLine(G, Line(G, O)))",
+   "name": "X"
+  },
+  {
+   "expression": "Intersect(Line(X, G), Line(B, C))",
+   "name": "Y"
+  }
+ ],
+ "id": "AIME-2021-II-14.k1",
+ "target": "180 * Angle(B, A, C) / pi",
+ "variables": [
+  "bx",
+  "cx",
+  "cy",
+  "x_O",
+  "y_O"
+ ]
+}

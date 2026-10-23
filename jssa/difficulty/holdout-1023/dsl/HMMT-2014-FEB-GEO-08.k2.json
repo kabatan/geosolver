@@ -1,0 +1,93 @@
+{
+ "conditions": [
+  {
+   "left": "Distance(A, B)",
+   "operator": "=",
+   "right": 6
+  },
+  {
+   "left": "Distance(B, C)",
+   "operator": "=",
+   "right": 10
+  },
+  {
+   "left": "Distance(C, A)",
+   "operator": "=",
+   "right": 8
+  },
+  {
+   "left": "IsTangent(Line(A, N), Gamma)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "t",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Area(N, A, Y)",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Vector(B, M).x",
+   "operator": "=",
+   "right": "Vector(M, A).x"
+  },
+  {
+   "left": "Vector(B, M).y",
+   "operator": "=",
+   "right": "Vector(M, A).y"
+  },
+  {
+   "left": "Vector(B, N).x",
+   "operator": "=",
+   "right": "Vector(N, C).x"
+  },
+  {
+   "left": "Vector(B, N).y",
+   "operator": "=",
+   "right": "Vector(N, C).y"
+  }
+ ],
+ "constructions": [
+  {
+   "expression": "Point(0, 0)",
+   "name": "A"
+  },
+  {
+   "expression": "Point(6, 0)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(0, 8)",
+   "name": "C"
+  },
+  {
+   "name": "M",
+   "expression": "Point(x_M, y_M)"
+  },
+  {
+   "name": "N",
+   "expression": "Point(x_N, y_N)"
+  },
+  {
+   "expression": "Point(6 * t / 2, 8 * (1 - t))",
+   "name": "Y"
+  },
+  {
+   "expression": "Circumcircle(A, M, Y)",
+   "name": "Gamma"
+  }
+ ],
+ "id": "HMMT-2014-FEB-GEO-08.k2",
+ "target": "Area(N, A, Y)",
+ "variables": [
+  "t",
+  "x_M",
+  "y_M",
+  "x_N",
+  "y_N"
+ ]
+}

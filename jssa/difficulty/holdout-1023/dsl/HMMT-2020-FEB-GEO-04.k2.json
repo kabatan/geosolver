@@ -1,0 +1,118 @@
+{
+ "conditions": [
+  {
+   "left": "h",
+   "operator": ">",
+   "right": "1"
+  },
+  {
+   "left": "e",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "e",
+   "operator": "<",
+   "right": "h"
+  },
+  {
+   "left": "h-1",
+   "operator": ">=",
+   "right": "e"
+  },
+  {
+   "predicate": "Or(And((Vector(B,C).x*Vector(B,I).y-Vector(B,C).y*Vector(B,I).x)>0,(Vector(C,D).x*Vector(C,I).y-Vector(C,D).y*Vector(C,I).x)>0,(Vector(D,E).x*Vector(D,I).y-Vector(D,E).y*Vector(D,I).x)>0,(Vector(E,B).x*Vector(E,I).y-Vector(E,B).y*Vector(E,I).x)>0),And((Vector(B,C).x*Vector(B,I).y-Vector(B,C).y*Vector(B,I).x)<0,(Vector(C,D).x*Vector(C,I).y-Vector(C,D).y*Vector(C,I).x)<0,(Vector(D,E).x*Vector(D,I).y-Vector(D,E).y*Vector(D,I).x)<0,(Vector(E,B).x*Vector(E,I).y-Vector(E,B).y*Vector(E,I).x)<0))"
+  },
+  {
+   "left": "Distance(I,Line(B,E))",
+   "operator": "=",
+   "right": "1"
+  },
+  {
+   "left": "Distance(T1,T2)",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "OnSegment(T1,B,E)",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "Collinear(B, E, T1)",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "Dot(Vector(T1, I), Vector(B, E))",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "Collinear(B, E, T2)",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "Dot(Vector(T2, J), Vector(B, E))",
+   "operator": "=",
+   "right": "0"
+  }
+ ],
+ "constructions": [
+  {
+   "expression": "Point(0,0)",
+   "name": "A"
+  },
+  {
+   "expression": "Point(2,0)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(2,h)",
+   "name": "C"
+  },
+  {
+   "expression": "Point(0,h)",
+   "name": "D"
+  },
+  {
+   "expression": "Point(0,e)",
+   "name": "E"
+  },
+  {
+   "expression": "Point(1,h-1)",
+   "name": "I"
+  },
+  {
+   "expression": "Circle(I,1)",
+   "name": "omega1"
+  },
+  {
+   "expression": "Incircle(A,B,E)",
+   "name": "omega2"
+  },
+  {
+   "expression": "Incenter(A,B,E)",
+   "name": "J"
+  },
+  {
+   "name": "T1",
+   "expression": "Point(x_T1, y_T1)"
+  },
+  {
+   "name": "T2",
+   "expression": "Point(x_T2, y_T2)"
+  }
+ ],
+ "id": "HMMT-2020-FEB-GEO-04.k2",
+ "target": "Radius(omega1)/Radius(omega2)",
+ "variables": [
+  "h",
+  "e",
+  "x_T1",
+  "y_T1",
+  "x_T2",
+  "y_T2"
+ ]
+}

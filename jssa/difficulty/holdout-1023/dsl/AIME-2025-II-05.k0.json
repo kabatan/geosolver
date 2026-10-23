@@ -1,0 +1,91 @@
+{
+ "conditions": [
+  {
+   "left": "Angle(B, A, C)",
+   "operator": "=",
+   "right": "84 * pi / 180"
+  },
+  {
+   "left": "Angle(A, B, C)",
+   "operator": "=",
+   "right": "60 * pi / 180"
+  },
+  {
+   "left": "Angle(A, C, B)",
+   "operator": "=",
+   "right": "36 * pi / 180"
+  },
+  {
+   "left": "OnSegment(G, B, D)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "OnSegment(H, A, E)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "OnSegment(J, A, F)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "ay",
+   "operator": ">",
+   "right": "0"
+  }
+ ],
+ "constructions": [
+  {
+   "expression": "Point(0, 0)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(6, 0)",
+   "name": "C"
+  },
+  {
+   "expression": "Point(ax, ay)",
+   "name": "A"
+  },
+  {
+   "expression": "Midpoint(B, C)",
+   "name": "D"
+  },
+  {
+   "expression": "Midpoint(A, C)",
+   "name": "E"
+  },
+  {
+   "expression": "Midpoint(A, B)",
+   "name": "F"
+  },
+  {
+   "expression": "Circumcircle(D, E, F)",
+   "name": "Gamma"
+  },
+  {
+   "expression": "Circumcenter(D, E, F)",
+   "name": "O"
+  },
+  {
+   "expression": "Intersect(Line(B, D), Gamma, exclude=D)",
+   "name": "G"
+  },
+  {
+   "expression": "Intersect(Line(A, E), Gamma, exclude=E)",
+   "name": "H"
+  },
+  {
+   "expression": "Intersect(Line(A, F), Gamma, exclude=F)",
+   "name": "J"
+  }
+ ],
+ "id": "AIME-2025-II-05.k0",
+ "target": "180 * (Angle(D, O, E) + 2 * Angle(H, O, J) + 3 * Angle(F, O, G)) / pi",
+ "variables": [
+  "ax",
+  "ay"
+ ]
+}

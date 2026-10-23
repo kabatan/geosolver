@@ -1,0 +1,154 @@
+{
+ "conditions": [
+  {
+   "left": "OnCircle(A2, Gamma)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "OnCircle(A3, Gamma)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "OnCircle(A4, Gamma)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "OnCircle(A5, Gamma)",
+   "operator": "=",
+   "right": 0
+  },
+  {
+   "left": "Angle(A5, A2, A4)",
+   "operator": "=",
+   "right": "pi / 6"
+  },
+  {
+   "left": "Angle(A1, A3, A5)",
+   "operator": "=",
+   "right": "pi / 6"
+  },
+  {
+   "left": "Angle(A2, A4, A1)",
+   "operator": "=",
+   "right": "pi / 6"
+  },
+  {
+   "left": "Angle(A3, A5, A2)",
+   "operator": "=",
+   "right": "pi / 6"
+  },
+  {
+   "left": "u2",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "u3",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "u4",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "u5",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "u2 + u3 + u4 + u5",
+   "operator": "<",
+   "right": "2 * pi"
+  },
+  {
+   "predicate": "ConvexPolygon([A1, A2, A3, A4, A5])"
+  },
+  {
+   "left": "Collinear(A2, A4, B1)",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "Collinear(A3, A5, B1)",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "Collinear(A3, A5, B2)",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "Collinear(A4, A1, B2)",
+   "operator": "=",
+   "right": "0"
+  }
+ ],
+ "constructions": [
+  {
+   "expression": "Point(0, 0)",
+   "name": "O"
+  },
+  {
+   "expression": "Point(0, 1)",
+   "name": "A1"
+  },
+  {
+   "expression": "Point(cos(pi / 2 + u2), sin(pi / 2 + u2))",
+   "name": "A2"
+  },
+  {
+   "expression": "Point(cos(pi / 2 + u2 + u3), sin(pi / 2 + u2 + u3))",
+   "name": "A3"
+  },
+  {
+   "expression": "Point(cos(pi / 2 + u2 + u3 + u4), sin(pi / 2 + u2 + u3 + u4))",
+   "name": "A4"
+  },
+  {
+   "expression": "Point(cos(pi / 2 + u2 + u3 + u4 + u5), sin(pi / 2 + u2 + u3 + u4 + u5))",
+   "name": "A5"
+  },
+  {
+   "expression": "Circle(O, 1)",
+   "name": "Gamma"
+  },
+  {
+   "name": "B1",
+   "expression": "Point(x_B1, y_B1)"
+  },
+  {
+   "name": "B2",
+   "expression": "Point(x_B2, y_B2)"
+  },
+  {
+   "expression": "Intersect(Line(A4, A1), Line(A5, A2))",
+   "name": "B3"
+  },
+  {
+   "expression": "Intersect(Line(A5, A2), Line(A1, A3))",
+   "name": "B4"
+  },
+  {
+   "expression": "Intersect(Line(A1, A3), Line(A2, A4))",
+   "name": "B5"
+  }
+ ],
+ "id": "JMO-2013-PRE-03.k2",
+ "target": "Area(B1, B2, B3, B4, B5)",
+ "variables": [
+  "u2",
+  "u3",
+  "u4",
+  "u5",
+  "x_B1",
+  "y_B1",
+  "x_B2",
+  "y_B2"
+ ]
+}

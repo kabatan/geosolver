@@ -1,0 +1,106 @@
+{
+ "conditions": [
+  {
+   "left": "Distance(A, B)",
+   "operator": "=",
+   "right": 3
+  },
+  {
+   "left": "Distance(A, C)",
+   "operator": "=",
+   "right": 8
+  },
+  {
+   "left": "Distance(B, C)",
+   "operator": "=",
+   "right": 7
+  },
+  {
+   "left": "Distance(A, T)",
+   "operator": "=",
+   "right": "Distance(T, C)"
+  },
+  {
+   "left": "t",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "t",
+   "operator": "<",
+   "right": "1"
+  },
+  {
+   "left": "Distance(D, C)",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Vector(A, M).x",
+   "operator": "=",
+   "right": "Vector(M, B).x"
+  },
+  {
+   "left": "Vector(A, M).y",
+   "operator": "=",
+   "right": "Vector(M, B).y"
+  },
+  {
+   "left": "Vector(A, N).x",
+   "operator": "=",
+   "right": "Vector(N, C).x"
+  },
+  {
+   "left": "Vector(A, N).y",
+   "operator": "=",
+   "right": "Vector(N, C).y"
+  }
+ ],
+ "constructions": [
+  {
+   "expression": "Point(0, 0)",
+   "name": "A"
+  },
+  {
+   "expression": "Point(3, 0)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(4, 4 * sqrt(3))",
+   "name": "C"
+  },
+  {
+   "name": "M",
+   "expression": "Point(x_M, y_M)"
+  },
+  {
+   "name": "N",
+   "expression": "Point(x_N, y_N)"
+  },
+  {
+   "expression": "Point(3 + t, 4 * sqrt(3) * t)",
+   "name": "T"
+  },
+  {
+   "expression": "Circumcircle(B, A, T)",
+   "name": "Gamma1"
+  },
+  {
+   "expression": "Circumcircle(M, A, N)",
+   "name": "Gamma2"
+  },
+  {
+   "expression": "Intersect(Gamma1, Gamma2, exclude=A)",
+   "name": "D"
+  }
+ ],
+ "id": "HMMT-2016-FEB-GEO-04.k2",
+ "target": "Distance(D, C)",
+ "variables": [
+  "t",
+  "x_M",
+  "y_M",
+  "x_N",
+  "y_N"
+ ]
+}

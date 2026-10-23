@@ -1,0 +1,82 @@
+{
+ "conditions": [
+  {
+   "left": "Distance(A, D)",
+   "operator": "=",
+   "right": 7
+  },
+  {
+   "left": "Distance(B, C)",
+   "operator": "=",
+   "right": 9
+  },
+  {
+   "left": "Distance(C, D)",
+   "operator": "=",
+   "right": 10
+  },
+  {
+   "left": "Distance(A, B)",
+   "operator": "=",
+   "right": 5
+  },
+  {
+   "left": "h",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "u",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Collinear(B, C, E)",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "Collinear(D, A, E)",
+   "operator": "=",
+   "right": "0"
+  }
+ ],
+ "constructions": [
+  {
+   "expression": "Point(0, 0)",
+   "name": "A"
+  },
+  {
+   "expression": "Point(5, 0)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(u, h)",
+   "name": "D"
+  },
+  {
+   "expression": "Point(u + 10, h)",
+   "name": "C"
+  },
+  {
+   "name": "E",
+   "expression": "Point(x_E, y_E)"
+  },
+  {
+   "expression": "Midpoint(C, D)",
+   "name": "M"
+  },
+  {
+   "expression": "Intersect(Circumcircle(B, M, C), Circumcircle(D, M, A), exclude=M)",
+   "name": "N"
+  }
+ ],
+ "id": "HMMT-2021-FEB-GEO-04.k1",
+ "target": "Distance(E, N) ** 2",
+ "variables": [
+  "u",
+  "h",
+  "x_E",
+  "y_E"
+ ]
+}

@@ -1,0 +1,115 @@
+{
+ "conditions": [
+  {
+   "left": "Distance(B, C)",
+   "operator": "=",
+   "right": 22
+  },
+  {
+   "left": "Distance(B, T)",
+   "operator": "=",
+   "right": 16
+  },
+  {
+   "left": "Distance(C, T)",
+   "operator": "=",
+   "right": 16
+  },
+  {
+   "left": "Distance(T, X) * Distance(T, X) + Distance(T, Y) * Distance(T, Y) + Distance(X, Y) * Distance(X, Y)",
+   "operator": "=",
+   "right": 1143
+  },
+  {
+   "left": "ay",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "predicate": "AcuteTriangle(A, B, C)"
+  },
+  {
+   "left": "Distance(A, B)",
+   "operator": "!=",
+   "right": "Distance(A, C)"
+  },
+  {
+   "left": "Distance(A, B)",
+   "operator": "!=",
+   "right": "Distance(B, C)"
+  },
+  {
+   "left": "Distance(A, C)",
+   "operator": "!=",
+   "right": "Distance(B, C)"
+  },
+  {
+   "left": "Collinear(A, B, X)",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "Dot(Vector(X, T), Vector(A, B))",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "Collinear(A, C, Y)",
+   "operator": "=",
+   "right": "0"
+  },
+  {
+   "left": "Dot(Vector(Y, T), Vector(A, C))",
+   "operator": "=",
+   "right": "0"
+  }
+ ],
+ "constructions": [
+  {
+   "expression": "Point(ax, ay)",
+   "name": "A"
+  },
+  {
+   "expression": "Point(-11, 0)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(11, 0)",
+   "name": "C"
+  },
+  {
+   "expression": "Circumcircle(A, B, C)",
+   "name": "Gamma"
+  },
+  {
+   "expression": "Tangent(B, Gamma)",
+   "name": "tB"
+  },
+  {
+   "expression": "Tangent(C, Gamma)",
+   "name": "tC"
+  },
+  {
+   "expression": "Intersect(tB, tC)",
+   "name": "T"
+  },
+  {
+   "name": "X",
+   "expression": "Point(x_X, y_X)"
+  },
+  {
+   "name": "Y",
+   "expression": "Point(x_Y, y_Y)"
+  }
+ ],
+ "id": "AIME-2020-II-15.k2",
+ "target": "Distance(X, Y) * Distance(X, Y)",
+ "variables": [
+  "ax",
+  "ay",
+  "x_X",
+  "y_X",
+  "x_Y",
+  "y_Y"
+ ]
+}

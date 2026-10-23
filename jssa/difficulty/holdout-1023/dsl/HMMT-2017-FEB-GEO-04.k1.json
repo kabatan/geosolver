@@ -1,0 +1,84 @@
+{
+ "conditions": [
+  {
+   "left": "Distance(A, B)",
+   "operator": "=",
+   "right": 5
+  },
+  {
+   "left": "Distance(B, C)",
+   "operator": "=",
+   "right": 6
+  },
+  {
+   "left": "Distance(C, D)",
+   "operator": "=",
+   "right": 7
+  },
+  {
+   "left": "Distance(D, A)",
+   "operator": "=",
+   "right": 8
+  },
+  {
+   "left": "dy",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "predicate": "ConvexPolygon([A, B, C, D])"
+  },
+  {
+   "left": "Vector(A, M).x",
+   "operator": "=",
+   "right": "Vector(M, B).x"
+  },
+  {
+   "left": "Vector(A, M).y",
+   "operator": "=",
+   "right": "Vector(M, B).y"
+  }
+ ],
+ "constructions": [
+  {
+   "expression": "Point(0, 0)",
+   "name": "A"
+  },
+  {
+   "expression": "Point(5, 0)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(5, 6)",
+   "name": "C"
+  },
+  {
+   "expression": "Point(dx, dy)",
+   "name": "D"
+  },
+  {
+   "name": "M",
+   "expression": "Point(x_M, y_M)"
+  },
+  {
+   "expression": "Midpoint(B, C)",
+   "name": "P"
+  },
+  {
+   "expression": "Midpoint(C, D)",
+   "name": "N"
+  },
+  {
+   "expression": "Midpoint(D, A)",
+   "name": "Q"
+  }
+ ],
+ "id": "HMMT-2017-FEB-GEO-04.k1",
+ "target": "Distance(M, N) * Distance(M, N) - Distance(P, Q) * Distance(P, Q)",
+ "variables": [
+  "dx",
+  "dy",
+  "x_M",
+  "y_M"
+ ]
+}

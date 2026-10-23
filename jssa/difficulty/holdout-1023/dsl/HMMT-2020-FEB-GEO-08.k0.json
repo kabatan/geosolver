@@ -1,0 +1,86 @@
+{
+ "conditions": [
+  {
+   "left": "Distance(E, V)",
+   "operator": "=",
+   "right": 6
+  },
+  {
+   "left": "Distance(V, A0)",
+   "operator": "=",
+   "right": 7
+  },
+  {
+   "left": "Distance(A0, N)",
+   "operator": "=",
+   "right": 9
+  },
+  {
+   "left": "b",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "cy",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "left": "Area(A, B, C)",
+   "operator": ">",
+   "right": "0"
+  },
+  {
+   "predicate": "AcuteTriangle(A, B, C)"
+  }
+ ],
+ "constructions": [
+  {
+   "expression": "Point(0, 0)",
+   "name": "A"
+  },
+  {
+   "expression": "Point(b, 0)",
+   "name": "B"
+  },
+  {
+   "expression": "Point(cx, cy)",
+   "name": "C"
+  },
+  {
+   "expression": "Circumcenter(A, B, C)",
+   "name": "O"
+  },
+  {
+   "expression": "Circumcircle(A, B, C)",
+   "name": "Gamma"
+  },
+  {
+   "expression": "Reflect(A, O)",
+   "name": "A0"
+  },
+  {
+   "expression": "AngleBisector(B, A, C)",
+   "name": "bis"
+  },
+  {
+   "expression": "Intersect(bis, Line(B, C))",
+   "name": "E"
+  },
+  {
+   "expression": "Intersect(bis, Gamma, exclude=A)",
+   "name": "N"
+  },
+  {
+   "expression": "Intersect(Line(A, A0), Line(B, C))",
+   "name": "V"
+  }
+ ],
+ "id": "HMMT-2020-FEB-GEO-08.k0",
+ "target": "Radius(Gamma)",
+ "variables": [
+  "b",
+  "cx",
+  "cy"
+ ]
+}
