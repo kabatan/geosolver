@@ -1,0 +1,43 @@
+{
+  "recorded_utc": "2026-10-23T17:32:35.384268Z",
+  "state": "stopped_frozen_contract_mismatch",
+  "new_launches_stopped_utc": "2026-10-23T17:20:49.510432Z",
+  "all_started_jobs_completed_utc": "2026-10-23T17:25:34.265607Z",
+  "planned_runs": 360,
+  "started_runs": 104,
+  "completed_runs": 104,
+  "not_started_runs": 256,
+  "active_jobs": 0,
+  "supervisor_and_resume_driver_exited": true,
+  "unknown_completed_runs": 7,
+  "prediction_selection_protocol_changed": false,
+  "grading_executed": false,
+  "source_mismatches_at_inventory": [
+    {
+      "kind": "manifest_source",
+      "path": "benchmarks/research_runner.py",
+      "expected": {
+        "sha256": "b9ddace01355d8ac4e5c0ae75f61c4543c976d46bc430e8a44203926e42f4b81",
+        "bytes": 32627
+      },
+      "actual": {
+        "sha256": "85eae6d8c8f94b73ba679bfd1fd13a962147c7da219aeaf5235b1258e2750ef1",
+        "bytes": 32629
+      }
+    },
+    {
+      "kind": "manifest_source",
+      "path": "jssa/strategy/codex-tasks-1023.md",
+      "expected": {
+        "sha256": "27a7e525c77aa43bcbbb995bc873e231824eddaa8e7dc4ba38d60e096e8a0430",
+        "bytes": 68327
+      },
+      "actual": {
+        "sha256": "30cfa2836fc78fa2414b0b7ce38d6fb0467390e880c336165b00181d0a7704e9",
+        "bytes": 73452
+      }
+    }
+  ],
+  "reason": "User requires stopping rather than changing the frozen prediction, selection or plan; the locked scorer no longer matches.",
+  "preflight_failure_log": "Traceback (most recent call last):\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/execute_stage2.py\", line 413, in <module>\n    main()\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/execute_stage2.py\", line 404, in main\n    run_job(*args.numbers)\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/execute_stage2.py\", line 242, in run_job\n    verify()\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/execute_stage2.py\", line 117, in verify\n    raise RuntimeError(f\"locked source changed: {path}: {actual}\")\nRuntimeError: locked source changed: /tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/benchmarks/research_runner.py: {'sha256': '85eae6d8c8f94b73ba679bfd1fd13a962147c7da219aeaf5235b1258e2750ef1', 'bytes': 32629}\n"
+}

@@ -1,0 +1,83 @@
+{
+  "job": {
+    "lane": 3,
+    "lane_order": 26,
+    "id": "AIME-2024-II-05",
+    "stratum": "B",
+    "seed": 370301,
+    "time_limit_seconds": 360,
+    "within_triplet": 1,
+    "campaign_relative": "campaign/t360/s370301",
+    "cores": 1,
+    "outer_watchdog_seconds": 368
+  },
+  "start_utc": "2026-10-23T16:50:47.481777Z",
+  "pid": 60,
+  "cpu": 15,
+  "affinity": [
+    15
+  ],
+  "load_average": [
+    8.33203125,
+    9.8818359375,
+    13.97314453125
+  ],
+  "adapter_sha256": "aec1f3540107e89ec21392cc1923022540afb3414fffbed78be65cf02ac8ef2f",
+  "prediction_lock_sha256": "0e4729ecb1a500bd46c2e01127f016ae23601e6b1f45d52af96ce142e88c2cbc",
+  "end_utc": "2026-10-23T16:51:45.442050Z",
+  "adapter_elapsed_seconds": 57.960273,
+  "load_average_end": null,
+  "load_samples": [],
+  "observed_processes": [],
+  "affinity_violations": [],
+  "affinity_monitor_unavailable": true,
+  "children_cpu_seconds": null,
+  "raw_path": "jssa/difficulty/budget-monotonicity/campaign/t360/s370301/runs/AIME-2024-II-05/370301.json",
+  "raw_sha256": "af339ff3037be3107322949c476a4c3ad0ed146ca133293ea07806153400b536",
+  "raw_bytes": 1832,
+  "outcome": {
+    "status": "engine_error",
+    "normal_completion": false,
+    "failure_stage": "runtime",
+    "termination_reason": "engine_failed",
+    "rejection_tags": [],
+    "wall_seconds": 57.72931506996974,
+    "process_wall_seconds": 57.954402555013075,
+    "cpu_seconds": null,
+    "peak_rss_bytes": null,
+    "phase_timings": {},
+    "counters": {}
+  },
+  "adapter_error": "Traceback (most recent call last):\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/execute_stage2.py\", line 413, in <module>\n    main()\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/execute_stage2.py\", line 404, in main\n    run_job(*args.numbers)\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/execute_stage2.py\", line 299, in run_job\n    outcome = rr.read_run_outcome(raw)\n              ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/benchmarks/research_runner.py\", line 565, in read_run_outcome\n    info = diagnostics.get(\"process_info\", {})\n           ^^^^^^^^^^^^^^^\nAttributeError: 'NoneType' object has no attribute 'get'\n",
+  "storage_error": null,
+  "mechanism_outcome": "unknown",
+  "receipt_recovery": {
+    "utc": "2026-10-23T16:51:45.552339Z",
+    "script_sha256": "4cf1edb05c7180788c7f8491b216abfa060977c48e325e2d01439385d6ca8bd8",
+    "reason": "frozen read_run_outcome does not accept engine_error diagnostics=null",
+    "end_time_source": "existing atomic raw file mtime; not a recovered worker finish clock",
+    "lost_fields": [
+      "periodic load samples",
+      "process monitor samples",
+      "child CPU accounting"
+    ],
+    "raw_unchanged": true,
+    "solver_reexecuted": false,
+    "supervisor_error": {
+      "utc": "2026-10-23T16:51:45.552083Z",
+      "job": {
+        "lane": 3,
+        "lane_order": 26,
+        "id": "AIME-2024-II-05",
+        "stratum": "B",
+        "seed": 370301,
+        "time_limit_seconds": 360,
+        "within_triplet": 1,
+        "campaign_relative": "campaign/t360/s370301",
+        "cores": 1,
+        "outer_watchdog_seconds": 368
+      },
+      "reason": "outer receipt observer found the logged outcome-reader exception"
+    }
+  }
+}
