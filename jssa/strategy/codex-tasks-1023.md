@@ -74,3 +74,10 @@ jssa/difficulty/ghost-1023/preregistration-3.md に従う。変換と a の決�
 
 ## sol-6（解析のみ）：失敗は、G が示した点の組に近づいているか
 GPT-Pro 相談13の6.2。G あり（jssa/difficulty/ghost-exact/per-pair.csv で found=1 の組がある）問題について、minima/raw-323 の全出発点の終点を「成功」「found=1 の組のどれかが重なって失敗（coinc < 1e-4、ghost_scan.py と同じ尺度）」「それ以外の失敗」に分ける。G なしの問題では「どれかの組が重なって失敗」と「それ以外」に分ける。両群の内訳を変数の数の層ごとに表にする。出力：jssa/difficulty/ghost-pairs-match/。
+
+---
+
+# 追加4（10/23 17:20）
+
+## sol-7（実装と実験、スーパーPC の計算資源で）：完成した solver での費用の比較
+jssa/difficulty/start-feasibility-1023/preregistration-4.md に従う。src/ は変更しない。jssa 側のランナーで `geosolver.engine.standard.search.scipy_multistart_backend._build_local_start_sequence_with_kinds` を差し替える（monkeypatch）。差し替え後の出発点が実際に使われたことを、各実行の記録（選び直しの回数、形の条件を満たした割合）で確認すること。本番の実行経路・採点は既存の本計測（jssa-main-j6-20261022 で使ったランナー）と同じにする。両条件は同じ計算機で交互に、同じ並列数で走らせる。出力：jssa/difficulty/full-solver-redraw/（per-run.csv、per-problem.csv、README.md、score.md）。所要時間の見込みを最初に知らせること。
