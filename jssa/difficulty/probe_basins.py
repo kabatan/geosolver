@@ -126,6 +126,13 @@ def construction_coordinates(base_dsl: dict, names: list[str]):
     return out
 
 
+def _hard_feasible(evaluator, x) -> bool:
+    try:
+        return bool(evaluator.evaluate_float_hard_feasibility(list(x), include_margins=False).hard_feasible)
+    except Exception:  # noqa: BLE001
+        return False
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("case_id")
@@ -136,6 +143,8 @@ def main() -> None:
     ap.add_argument("--dsl", help="use this DSL JSON instead of the case's own")
     ap.add_argument("--init-from", help="k=0 DSL: start extra point variables at their constructed position")
     ap.add_argument("--zero-prefix", help="start variables whose name begins with this prefix at 0 (offset variants)")
+    ap.add_argument("--feasible-starts", action="store_true",
+                    help="redraw each start (own RNG [seed, 99, k], up to 2000 tries) until it passes hard feasibility")
     args = ap.parse_args()
 
     case = load_case(args.case_id)
@@ -154,6 +163,7 @@ def main() -> None:
         "seed": args.seed,
         "init_from": args.init_from,
         "zero_prefix": args.zero_prefix,
+        "feasible_starts": args.feasible_starts,
     }
     if not bundle.var_names:
         out["status"] = "no_variables"
@@ -190,6 +200,12 @@ def main() -> None:
             for j, n in enumerate(names):
                 if n.startswith(args.zero_prefix):
                     start[j] = 0.0
+        redraws = 0
+        if args.feasible_starts:
+            rr = np.random.default_rng([args.seed, 99, k])
+            while redraws < 2000 and not _hard_feasible(evaluator, start):
+                start = lower + rr.random(lower.size) * (upper - lower)
+                redraws += 1
         t0 = time.monotonic()
         n0 = telemetry.evaluation_count
         try:
@@ -207,6 +223,12 @@ def main() -> None:
             err = None
         dt = time.monotonic() - t0
         rec = {"k": k, "sec": dt, "nfev": telemetry.evaluation_count - n0}
+        if args.feasible_starts:
+            rec["redraws"] = redraws
+        rec["start_feasible"] = _hard_feasible(evaluator, start)
+        if cand is not None:
+            rec["x"] = [float(v) for v in cand.x_float]
+            rec["start"] = [float(v) for v in start]
         if cand is None:
             rec["cls"] = "error"
             rec["err"] = err
