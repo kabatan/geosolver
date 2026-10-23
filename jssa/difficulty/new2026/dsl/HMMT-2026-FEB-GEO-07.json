@@ -1,0 +1,101 @@
+{
+  "id": "HMMT-2026-FEB-GEO-07",
+  "variables": [
+    "cx",
+    "cy",
+    "s1",
+    "u1",
+    "s2",
+    "u2"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(s1 + u1 * cx, u1 * cy)"
+    },
+    {
+      "name": "Q",
+      "expression": "Point(s2 + u2 * cx, u2 * cy)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": "Distance(A, B)"
+    },
+    {
+      "left": "Distance(B, P)",
+      "operator": "=",
+      "right": "Distance(P, Q)"
+    },
+    {
+      "left": "Distance(P, Q)",
+      "operator": "=",
+      "right": "Distance(Q, C)"
+    },
+    {
+      "left": "Degrees(Angle(B, A, P))",
+      "operator": "=",
+      "right": 20
+    },
+    {
+      "left": "Degrees(Angle(P, A, Q))",
+      "operator": "=",
+      "right": 46
+    },
+    {
+      "left": "Degrees(Angle(Q, A, C))",
+      "operator": "=",
+      "right": 26
+    },
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "s1",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "u1",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "s1 + u1",
+      "operator": "<",
+      "right": 1
+    },
+    {
+      "left": "s2",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "u2",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "s2 + u2",
+      "operator": "<",
+      "right": 1
+    }
+  ],
+  "target": "Degrees(Angle(A, P, C))"
+}

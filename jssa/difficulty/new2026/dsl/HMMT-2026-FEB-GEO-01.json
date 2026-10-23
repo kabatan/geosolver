@@ -1,0 +1,121 @@
+{
+  "id": "HMMT-2026-FEB-GEO-01",
+  "variables": [
+    "tw",
+    "tx",
+    "yx",
+    "yy",
+    "zx",
+    "zy"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(12, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(12, 12)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(0, 12)"
+    },
+    {
+      "name": "W",
+      "expression": "PointOnSegment(A, D, tw)"
+    },
+    {
+      "name": "X",
+      "expression": "PointOnSegment(A, B, tx)"
+    },
+    {
+      "name": "Y",
+      "expression": "Point(yx, yy)"
+    },
+    {
+      "name": "Z",
+      "expression": "Point(zx, zy)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, W)",
+      "operator": "=",
+      "right": 4
+    },
+    {
+      "left": "Distance(A, X)",
+      "operator": "=",
+      "right": 5
+    },
+    {
+      "left": "Distance(W, X)",
+      "operator": "=",
+      "right": "Distance(X, Y)"
+    },
+    {
+      "left": "Distance(X, Y)",
+      "operator": "=",
+      "right": "Distance(Y, Z)"
+    },
+    {
+      "left": "Distance(Y, Z)",
+      "operator": "=",
+      "right": "Distance(Z, W)"
+    },
+    {
+      "left": "Distance(W, Y)",
+      "operator": "=",
+      "right": "Distance(X, Z)"
+    },
+    {
+      "predicate": "ConvexPolygon([W, X, Y, Z])"
+    },
+    {
+      "left": "yx",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "yx",
+      "operator": "<",
+      "right": 12
+    },
+    {
+      "left": "yy",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "yy",
+      "operator": "<",
+      "right": 12
+    },
+    {
+      "left": "zx",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "zx",
+      "operator": "<",
+      "right": 12
+    },
+    {
+      "left": "zy",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "zy",
+      "operator": "<",
+      "right": 12
+    }
+  ],
+  "target": "Area(B, C, Y)"
+}

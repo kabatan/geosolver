@@ -1,0 +1,56 @@
+{
+  "id": "HMMT-2026-FEB-GUTS-09",
+  "variables": [
+    "w",
+    "h"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(w, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(w, h)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(0, h)"
+    },
+    {
+      "name": "E",
+      "expression": "Point(2 * w - w, 2 * 0 - h)"
+    },
+    {
+      "name": "F",
+      "expression": "Intersect(Line(C, D), Circumcircle(A, C, E), exclude=C)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": 8
+    },
+    {
+      "left": "Distance(A, F)",
+      "operator": "=",
+      "right": 6
+    },
+    {
+      "left": "w",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "h",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Area(A, B, C, D)"
+}

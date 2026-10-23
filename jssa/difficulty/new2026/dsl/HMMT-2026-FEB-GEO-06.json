@@ -1,0 +1,63 @@
+{
+  "id": "HMMT-2026-FEB-GEO-06",
+  "variables": [
+    "ax",
+    "ay",
+    "p",
+    "q"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(-4, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(4, 0)"
+    },
+    {
+      "name": "M",
+      "expression": "Midpoint(B, C)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "P",
+      "expression": "PointOnSegment(A, B, p)"
+    },
+    {
+      "name": "Q",
+      "expression": "PointOnSegment(A, C, q)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Angle(P, M, B)",
+      "operator": "=",
+      "right": "Angle(B, A, C) / 2"
+    },
+    {
+      "left": "Angle(Q, M, C)",
+      "operator": "=",
+      "right": "Angle(B, A, C) / 2"
+    },
+    {
+      "left": "Distance(A, P)",
+      "operator": "=",
+      "right": 1
+    },
+    {
+      "left": "Distance(A, Q)",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Distance(B, P)"
+}

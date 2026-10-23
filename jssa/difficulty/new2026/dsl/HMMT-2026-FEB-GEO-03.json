@@ -1,0 +1,69 @@
+{
+  "id": "HMMT-2026-FEB-GEO-03",
+  "variables": [
+    "tw",
+    "tx",
+    "ty",
+    "tz"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(12, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(12, 16)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(0, 16)"
+    },
+    {
+      "name": "W",
+      "expression": "PointOnSegment(A, B, tw)"
+    },
+    {
+      "name": "X",
+      "expression": "PointOnSegment(B, C, tx)"
+    },
+    {
+      "name": "Y",
+      "expression": "PointOnSegment(C, D, ty)"
+    },
+    {
+      "name": "Z",
+      "expression": "PointOnSegment(D, A, tz)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(W, X)",
+      "operator": "=",
+      "right": "Distance(X, Y)"
+    },
+    {
+      "left": "Distance(X, Y)",
+      "operator": "=",
+      "right": "Distance(Y, Z)"
+    },
+    {
+      "left": "Distance(Y, Z)",
+      "operator": "=",
+      "right": "Distance(Z, W)"
+    },
+    {
+      "predicate": "ConvexPolygon([W, X, Y, Z])"
+    },
+    {
+      "left": "Area(W, X, Y, Z)",
+      "operator": "=",
+      "right": 120
+    }
+  ],
+  "target": "Distance(X, Y)"
+}

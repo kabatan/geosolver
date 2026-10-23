@@ -1,0 +1,79 @@
+{
+  "id": "HMMT-2026-FEB-GUTS-30",
+  "variables": [
+    "ax",
+    "ay"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(69, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "I",
+      "expression": "Incenter(A, B, C)"
+    },
+    {
+      "name": "omega",
+      "expression": "Incircle(A, B, C)"
+    },
+    {
+      "name": "D",
+      "expression": "IncircleContactPoint(A, B, C, side='BC')"
+    },
+    {
+      "name": "E",
+      "expression": "IncircleContactPoint(A, B, C, side='CA')"
+    },
+    {
+      "name": "F",
+      "expression": "IncircleContactPoint(A, B, C, side='AB')"
+    },
+    {
+      "name": "Dp",
+      "expression": "Intersect(Line(D, I), omega, exclude=D)"
+    },
+    {
+      "name": "K1",
+      "expression": "Circumcircle(B, Dp, F)"
+    },
+    {
+      "name": "K2",
+      "expression": "Circumcircle(C, Dp, E)"
+    },
+    {
+      "name": "Y",
+      "expression": "Intersect(K1, K2, exclude=Dp)"
+    },
+    {
+      "name": "X",
+      "expression": "Intersect(Line(Dp, Y), Line(B, C))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 60
+    },
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": 67
+    },
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Distance(B, X)"
+}

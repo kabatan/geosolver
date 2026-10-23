@@ -54,3 +54,13 @@ jssa/strategy/gpt-pro-consult-12-prompt.md の「聞きたいこと」1〜5に�
 ## astra-F（批判役）：今の候補の弱点を突く
 
 jssa/strategy/gpt-pro-consult-13-prompt.md を読み、候補の主張（図の形の正しさ）を、審査員として最も厳しく批判してほしい。特に「罰則の設計が悪いだけでは」「φ は変数の数や不等式の数の言い換えでは」「人間の難易度との無相関は、何も示していないのでは」に、データで答えること（反証を試みる実験をしてよい）。出力は jssa/strategy/astra-consult-14/F/。
+
+---
+
+# 追加2（10/23 16:00）
+
+## sol-3（実装と実験）：未使用の20問での予測
+jssa/difficulty/ghost-1023/preregistration-2.md の A に従う。DSL は jssa/difficulty/new2026/cases.jsonl（benchmarks/cases.jsonl にはない。probe_basins.py の load_case は benchmarks しか読まないので、ケースファイルを差し替えられるように jssa 側だけを直す）。G は jssa/difficulty/ghost_exact.py を流用。手順の (1)〜(3) を終えて predictions.csv を commit してから (4) の集計をすること。出力：jssa/difficulty/new2026-predict/。
+
+## sol-4（実装と実験）：退化解を消す介入
+jssa/difficulty/ghost-1023/preregistration-2.md の B に従う。退化解の見つかった組は jssa/difficulty/ghost-exact/per-pair.csv。出発点は jssa/difficulty/minima/raw-323/<id>.json の records の start（seed 0）をそのまま使う。局所探索は probe_basins.py と同じ smb._collect_local_start_record の経路を使い、残差だけを拡張する（src/ は変更しない。jssa 側でラップする）。出力：jssa/difficulty/ghost-intervention/（per-start.csv、per-problem.csv、README.md、score.md）。

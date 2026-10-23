@@ -1,0 +1,106 @@
+{
+  "id": "JMO-2026-PRE-03",
+  "variables": [
+    "R",
+    "tb",
+    "tc",
+    "td",
+    "te"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "Omega",
+      "expression": "Circle(O, R)"
+    },
+    {
+      "name": "A",
+      "expression": "PointOnCircle(Omega, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "PointOnCircle(Omega, tb)"
+    },
+    {
+      "name": "C",
+      "expression": "PointOnCircle(Omega, tc)"
+    },
+    {
+      "name": "D",
+      "expression": "PointOnCircle(Omega, td)"
+    },
+    {
+      "name": "E",
+      "expression": "PointOnCircle(Omega, te)"
+    },
+    {
+      "name": "P",
+      "expression": "Intersect(Line(B, E), Line(A, C))"
+    },
+    {
+      "name": "Q",
+      "expression": "Intersect(Line(B, E), Line(A, D))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(B, P)",
+      "operator": "=",
+      "right": "Distance(P, Q)"
+    },
+    {
+      "left": "Distance(P, Q)",
+      "operator": "=",
+      "right": "Distance(Q, E)"
+    },
+    {
+      "left": "Area(B, C, P)",
+      "operator": "=",
+      "right": 2
+    },
+    {
+      "left": "Area(A, P, Q)",
+      "operator": "=",
+      "right": 9
+    },
+    {
+      "left": "Area(D, E, Q)",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "R",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "tb",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "tc",
+      "operator": ">",
+      "right": "tb"
+    },
+    {
+      "left": "td",
+      "operator": ">",
+      "right": "tc"
+    },
+    {
+      "left": "te",
+      "operator": ">",
+      "right": "td"
+    },
+    {
+      "left": "te",
+      "operator": "<",
+      "right": 1
+    }
+  ],
+  "target": "Distance(A, C) / Distance(A, D)"
+}

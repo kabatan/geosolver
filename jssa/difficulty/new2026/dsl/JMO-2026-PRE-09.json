@@ -1,0 +1,90 @@
+{
+  "id": "JMO-2026-PRE-09",
+  "variables": [
+    "ax",
+    "ay",
+    "d",
+    "e",
+    "f"
+  ],
+  "constructions": [
+    {
+      "name": "B",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(21, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(ax, ay)"
+    },
+    {
+      "name": "D",
+      "expression": "PointOnSegment(B, C, d)"
+    },
+    {
+      "name": "E",
+      "expression": "PointOnSegment(C, A, e)"
+    },
+    {
+      "name": "F",
+      "expression": "PointOnSegment(A, B, f)"
+    },
+    {
+      "name": "P",
+      "expression": "Intersect(PerpendicularBisector(B, D), Line(D, E))"
+    },
+    {
+      "name": "Q",
+      "expression": "Intersect(PerpendicularBisector(C, D), Line(D, F))"
+    },
+    {
+      "name": "R",
+      "expression": "Intersect(Line(B, P), Line(C, Q))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": "Distance(A, C)"
+    },
+    {
+      "predicate": "Bound(d, (0, 1), inclusive=False)"
+    },
+    {
+      "predicate": "Bound(e, (0, 1), inclusive=False)"
+    },
+    {
+      "predicate": "Bound(f, (0, 1), inclusive=False)"
+    },
+    {
+      "left": "Degrees(Angle(E, D, F))",
+      "operator": "=",
+      "right": "180 - Degrees(Angle(B, A, C)) / 2"
+    },
+    {
+      "left": "Distance(E, P)",
+      "operator": "=",
+      "right": 12
+    },
+    {
+      "left": "Distance(F, Q)",
+      "operator": "=",
+      "right": 16
+    },
+    {
+      "left": "Distance(A, R)",
+      "operator": "=",
+      "right": "6*sqrt(7)"
+    },
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Area(D, P, Q)"
+}
