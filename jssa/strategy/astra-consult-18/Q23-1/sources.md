@@ -1,0 +1,17 @@
+Q23-1 文献確認記録（2026-10-23）
+
+以下は検索後、著者公開原稿・原著の出版社ページ・公式文書で確認したもの。一般的な方法の先行研究であり、Q23-1の具体的予言が新規だと保証する一覧ではない。全文の関連部分まで確認したものとabstractのみのものを区別した。直接引用はしない。
+
+| 記号 | 確認した書誌・一次資料 | 確認範囲と今回の用途 |
+|---|---|---|
+| M | [mpmath公式文書: Root-finding and optimization](https://mpmath.org/doc/current/calculus/optimization.html)、[公式ソース MDNewton](https://github.com/mpmath/mpmath/blob/master/mpmath/calculus/optimization.py) | findrootのverify、tol、過剰決定系対応、および低精度solverで初期値を得て高精度Newtonで磨くという説明。普通のroot polishingとの差を主張するための対照。公開版の説明であり、実験環境の実装同一性をこれだけから主張しない。 |
+| K | C. T. Kelley, [Newton's Method in Mixed Precision](https://epubs.siam.org/doi/10.1137/20M1342902), SIAM Review 64(1), 191–211, 2022. | 出版社書誌・abstract確認。Newtonステップの線形計算を低精度にする研究であり、今回の50→100→120桁スケジュールと同一方式ではない。混合精度自体を新規性としない根拠。 |
+| W | D. J. Wales and J. P. K. Doye, [Global Optimization by Basin-Hopping and the Lowest Energy Structures of Lennard-Jones Clusters Containing up to 110 Atoms](https://www-wales.ch.cam.ac.uk/pdf/JPCA.101.5111.1997.pdf), Journal of Physical Chemistry A 101, 5111–5116, 1997. DOI: 10.1021/jp970984n. | 著者PDFの書誌、abstract、方法導入を確認。点を局所最小点へ対応づける方法は既知。量子化点の成功や大域・局所の協働だけでは新規性にならない。 |
+| P | C. P. Gomes and B. Selman, [Algorithm portfolios](https://www.cs.cornell.edu/selman/papers/pdf/01.aij.portfolios.pdf), Artificial Intelligence 126(1–2), 43–62, 2001. [出版社](https://www.sciencedirect.com/science/article/pii/S0004370200000813) | 著者PDFのabstract・導入と出版社書誌を確認。複数の算法の組合せや実行順の有用性は既知。段階間の因果的な情報受け渡しをこれと区別する。 |
+| T | T. Y. Chen, S. C. Cheung and S. M. Yiu, [Metamorphic Testing: A New Approach for Generating Next Test Cases](https://www.cse.ust.hk/faculty/scc/publ/CS98-01-metamorphictesting.pdf), Technical Report HKUST-CS98-01, 1998. | 原著PDFの書誌・abstract確認。意味を保つ入力変換を使う試験設計の先行。arXiv掲載年2020を原著発表年と取り違えない。 |
+| D | C. M. Hoffmann, A. Lomonosov and M. Sitharam, [Decomposition Plans for Geometric Constraint Systems, Part I: Performance Measures for CAD](https://www.cs.purdue.edu/cgvlab/www/resources/papers/Hoffmann-Journal_of_Symbolic_Computation-2001-Decomposition_Plans_Geometric_Constraint_System_part_I.pdf), Journal of Symbolic Computation 31, 367–408, 2001. DOI: 10.1006/jsco.2000.0402. | 著者PDFの書誌・abstract・導入を確認。分解・再結合、完全性、Church–Rosser性、可解性保存を既に評価軸とする。構成分解や順序依存一般を発見として扱わない。PDF表記では姓がHoffmanとなる箇所がある。 |
+| G | R. Krueger, J. M. Han and D. Selsam, [Automatically Building Diagrams for Olympiad Geometry Problems](https://arxiv.org/abs/2012.02590), arXiv:2012.02590, 2020, revised 2021. | 著者投稿の書誌・abstract確認。DSLでパラメータ化、直接計算、損失を組み合わせて多様な幾何図を生成する先行。今回のsolverの求値・厳密同定まで同じ課題を解いたものとはしない。 |
+| Z | A. Zeller and R. Hildebrandt, [Simplifying and Isolating Failure-Inducing Input](https://st.cispa.saarland/papers/tse2002/?lang=en), IEEE Transactions on Software Engineering 28(2), 183–200, 2002. [著者PDF](https://www.st.cs.uni-saarland.de/publications/files/zeller-tse-2002.pdf) | 著者掲載書誌・abstract・目次確認。失敗差分の縮約・切り分け自体は既知。最小化した実装差分が未知の自然幾何へ移ることは別の未検証主張。 |
+| B | P. Bonami et al., [An algorithmic framework for convex mixed integer nonlinear programs](https://www.sciencedirect.com/science/article/pii/S1572528607000448), Discrete Optimization 5(2), 186–204, 2008. DOI: 10.1016/j.disopt.2006.10.011. [著者原稿](https://egon.cheme.cmu.edu/Papers/OaBB.pdf) | 出版社書誌・abstract、著者原稿の導入確認。離散・連続計算の協働は既存。対象は凸緩和をもつMINLPで、今回の非凸幾何の収束・完全性を保証する定理として援用しない。 |
+
+今回の10仮説に完全一致する先行研究が存在しないことは**未確認**。網羅的な新規性調査は完了していない。「見つからなかった」を「新規」としない。認知科学上の人間の解答過程について新しい文献上の主張は立てない。

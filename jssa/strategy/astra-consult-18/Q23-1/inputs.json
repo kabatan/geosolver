@@ -1,0 +1,1911 @@
+[
+  {
+    "id": "AIME-2008-I-10",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, B)",
+          "operator": "=",
+          "right": "Distance(C, D)"
+        },
+        {
+          "left": "Distance(A, C)",
+          "operator": "=",
+          "right": "10 * sqrt(21)"
+        },
+        {
+          "left": "Distance(B, D)",
+          "operator": "=",
+          "right": "10 * sqrt(21)"
+        },
+        {
+          "left": "Distance(E, A)",
+          "operator": "=",
+          "right": "10 * sqrt(7)"
+        },
+        {
+          "left": "Distance(E, D)",
+          "operator": "=",
+          "right": "30 * sqrt(7)"
+        },
+        {
+          "left": "d",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "u",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "v",
+          "operator": ">",
+          "right": "u"
+        },
+        {
+          "left": "v",
+          "operator": "<",
+          "right": "d"
+        },
+        {
+          "left": "d",
+          "operator": ">",
+          "right": "Distance(B, C)"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(d, 0)",
+          "name": "D"
+        },
+        {
+          "expression": "Point(u, sqrt(3) * u)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(v, sqrt(3) * u)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(ex, ey)",
+          "name": "E"
+        },
+        {
+          "expression": "Point(v, 0)",
+          "name": "F"
+        }
+      ],
+      "id": "AIME-2008-I-10",
+      "target": "Distance(E, F)",
+      "variables": [
+        "d",
+        "u",
+        "v",
+        "ex",
+        "ey"
+      ]
+    },
+    "answer_for_scoring_only": [
+      "25*sqrt(7)"
+    ],
+    "old_p": 0.12,
+    "n": 5,
+    "k": 1,
+    "x": [
+      52.906810523859754,
+      13.7271393583515,
+      39.17627622756615,
+      -26.461699150673645,
+      0.0635757553342798
+    ],
+    "start": [
+      109.53066927332661,
+      50.95740516444311,
+      19.277711122655866,
+      5.234998975850743,
+      52.20869085453219
+    ],
+    "quantized": [
+      52.734375,
+      13.6171875,
+      39.2109375,
+      -26.484375,
+      0.234375
+    ],
+    "saved_residual": 0.0072439124826848165,
+    "bounds": [
+      [
+        0.0,
+        120.0
+      ],
+      [
+        0.0,
+        84.0
+      ],
+      [
+        -42.0,
+        42.0
+      ],
+      [
+        -60.0,
+        60.0
+      ],
+      [
+        -60.0,
+        60.0
+      ]
+    ],
+    "diagnosis": {
+      "n_vars": 5,
+      "n_equalities": 5,
+      "tangencies": [],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": false,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "var_names": [
+      "d",
+      "u",
+      "v",
+      "ex",
+      "ey"
+    ]
+  },
+  {
+    "id": "AIME-2011-II-04",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, B)",
+          "operator": "=",
+          "right": 20
+        },
+        {
+          "left": "Distance(A, C)",
+          "operator": "=",
+          "right": 11
+        },
+        {
+          "left": "Angle(B, A, D)",
+          "operator": "=",
+          "right": "Angle(D, A, C)"
+        },
+        {
+          "left": "Collinear(B, D, C)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "by",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "bx",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "bx",
+          "operator": "<",
+          "right": "11"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(11, 0)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(bx, by)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(bx * (1 - t) + 11 * t, by * (1 - t))",
+          "name": "D"
+        },
+        {
+          "expression": "Midpoint(A, D)",
+          "name": "M"
+        },
+        {
+          "expression": "Intersect(Line(A, C), Line(B, M))",
+          "name": "P"
+        }
+      ],
+      "id": "AIME-2011-II-04",
+      "target": "Distance(C, P) / Distance(P, A)",
+      "variables": [
+        "bx",
+        "by",
+        "t"
+      ]
+    },
+    "answer_for_scoring_only": [
+      "31/20"
+    ],
+    "old_p": 0.06,
+    "n": 3,
+    "k": 172,
+    "x": [
+      0.02980813914107714,
+      19.999977854177484,
+      0.6460901265252622
+    ],
+    "start": [
+      4.8366939496208445,
+      61.884498264743925,
+      0.04127010749341764
+    ],
+    "quantized": [
+      0.021484375,
+      19.84375,
+      0.6015625
+    ],
+    "saved_residual": 0.004053661411371736,
+    "bounds": [
+      [
+        0.0,
+        11.0
+      ],
+      [
+        0.0,
+        80.0
+      ],
+      [
+        -22.0,
+        22.0
+      ]
+    ],
+    "diagnosis": {
+      "n_vars": 3,
+      "n_equalities": 4,
+      "tangencies": [],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": false,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "var_names": [
+      "bx",
+      "by",
+      "t"
+    ]
+  },
+  {
+    "id": "AIME-2012-I-12",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Angle(A, C, D)",
+          "operator": "=",
+          "right": "Angle(D, C, E)"
+        },
+        {
+          "left": "Angle(D, C, E)",
+          "operator": "=",
+          "right": "Angle(E, C, B)"
+        },
+        {
+          "left": "Collinear(A, D, B)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Collinear(A, E, B)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(D, A, E)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(E, A, B)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(D, E) / Distance(B, E)",
+          "operator": "=",
+          "right": "8 / 15"
+        },
+        {
+          "left": "a",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "b",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "dx",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "ex",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "dy",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "ey",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(a, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(0, b)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(0, 0)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(dx, dy)",
+          "name": "D"
+        },
+        {
+          "expression": "Point(ex, ey)",
+          "name": "E"
+        }
+      ],
+      "id": "AIME-2012-I-12",
+      "target": "a / b",
+      "variables": [
+        "a",
+        "b",
+        "dx",
+        "dy",
+        "ex",
+        "ey"
+      ]
+    },
+    "answer_for_scoring_only": [
+      "4*sqrt(3)/11"
+    ],
+    "old_p": 0.185,
+    "n": 6,
+    "k": 121,
+    "x": [
+      6.081752236323474,
+      0.001012405669874177,
+      2.575103230648202e-10,
+      0.0005399674694146667,
+      3.205000231267504e-05,
+      3.0640216777239963e-11
+    ],
+    "start": [
+      17.089954072910942,
+      7.968277623857292,
+      31.010096205842082,
+      23.70077579985522,
+      47.400919078848,
+      27.899538010528634
+    ],
+    "quantized": [
+      6.0546875,
+      0.1171875,
+      0.1171875,
+      0.1171875,
+      0.1171875,
+      0.1171875
+    ],
+    "saved_residual": 0.009829840154608922,
+    "bounds": [
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        60.0
+      ],
+      [
+        0.0,
+        60.0
+      ],
+      [
+        0.0,
+        60.0
+      ],
+      [
+        0.0,
+        60.0
+      ],
+      [
+        0.0,
+        60.0
+      ]
+    ],
+    "diagnosis": {
+      "n_vars": 6,
+      "n_equalities": 9,
+      "tangencies": [],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": false,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "var_names": [
+      "a",
+      "b",
+      "dx",
+      "dy",
+      "ex",
+      "ey"
+    ]
+  },
+  {
+    "id": "AIME-2014-II-11",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Angle(D, R, E)",
+          "operator": "=",
+          "right": "75 * pi / 180"
+        },
+        {
+          "left": "Angle(R, E, D)",
+          "operator": "=",
+          "right": "45 * pi / 180"
+        },
+        {
+          "left": "Collinear(D, C, E)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(C, D, E)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Perpendicular(Line(R, C), Line(E, M))",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Collinear(D, E, A)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(E, D, A)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(C, A)",
+          "operator": "=",
+          "right": "Distance(A, R)"
+        },
+        {
+          "left": "ey",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "cx",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "cy",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "ax",
+          "operator": ">",
+          "right": "ex"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "D"
+        },
+        {
+          "expression": "Point(1, 0)",
+          "name": "R"
+        },
+        {
+          "expression": "Point(ex, ey)",
+          "name": "E"
+        },
+        {
+          "expression": "Midpoint(R, D)",
+          "name": "M"
+        },
+        {
+          "expression": "Point(cx, cy)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(ax, ay)",
+          "name": "A"
+        }
+      ],
+      "id": "AIME-2014-II-11",
+      "target": "Distance(A, E)",
+      "variables": [
+        "ex",
+        "ey",
+        "cx",
+        "cy",
+        "ax",
+        "ay"
+      ]
+    },
+    "answer_for_scoring_only": [
+      "7/22 - 3*sqrt(3)/22"
+    ],
+    "old_p": 0.115,
+    "n": 6,
+    "k": 119,
+    "x": [
+      0.6830114326913106,
+      1.183014782441227,
+      0.08201562047289264,
+      0.1420791673861048,
+      0.723624047708874,
+      1.2532672542063872
+    ],
+    "start": [
+      328.5609547842856,
+      515.9576402872334,
+      18.242105219680305,
+      18.84721064617309,
+      6.0449231263611765,
+      -7.552649068089865
+    ],
+    "quantized": [
+      1.40625,
+      1.40625,
+      0.1171875,
+      0.1171875,
+      0.7421875,
+      1.2890625
+    ],
+    "saved_residual": 0.00028279615349185994,
+    "bounds": [
+      [
+        -360.0,
+        360.0
+      ],
+      [
+        0.0,
+        720.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        -10.0,
+        10.0
+      ],
+      [
+        -10.0,
+        10.0
+      ]
+    ],
+    "diagnosis": {
+      "n_vars": 6,
+      "n_equalities": 10,
+      "tangencies": [],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": false,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "var_names": [
+      "ex",
+      "ey",
+      "cx",
+      "cy",
+      "ax",
+      "ay"
+    ]
+  },
+  {
+    "id": "AIME-2020-I-01",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, B)",
+          "operator": "=",
+          "right": "Distance(A, C)"
+        },
+        {
+          "left": "Distance(A, E)",
+          "operator": "=",
+          "right": "Distance(E, D)"
+        },
+        {
+          "left": "Distance(E, D)",
+          "operator": "=",
+          "right": "Distance(D, B)"
+        },
+        {
+          "left": "Distance(D, B)",
+          "operator": "=",
+          "right": "Distance(B, C)"
+        },
+        {
+          "left": "Collinear(A, D, C)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(D, A, C)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnSegment(E, A, B)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "bx",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "cx",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "cy",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "e",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "e",
+          "operator": "<",
+          "right": "bx"
+        },
+        {
+          "left": "dy",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "dx",
+          "operator": "<",
+          "right": "cx"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(bx, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(cx, cy)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(dx, dy)",
+          "name": "D"
+        },
+        {
+          "expression": "Point(e, 0)",
+          "name": "E"
+        }
+      ],
+      "id": "AIME-2020-I-01",
+      "target": "180 * Angle(A, B, C) / pi",
+      "variables": [
+        "bx",
+        "cx",
+        "cy",
+        "dx",
+        "dy",
+        "e"
+      ]
+    },
+    "answer_for_scoring_only": [
+      "540/7"
+    ],
+    "old_p": 0.07,
+    "n": 6,
+    "k": 7,
+    "x": [
+      10.11825567726701,
+      5.059125919216315,
+      8.762668178276689,
+      5.059125883212144,
+      8.762668122359493,
+      10.11825562521845
+    ],
+    "start": [
+      11.886000603993935,
+      6.758224510142665,
+      7.832380010563225,
+      7.805487040095848,
+      4.543151870667595,
+      12.463742893720848
+    ],
+    "quantized": [
+      10.1171875,
+      5.0390625,
+      8.7890625,
+      5.0390625,
+      8.7890625,
+      10.1171875
+    ],
+    "saved_residual": 2.502145460390914e-06,
+    "bounds": [
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        -10.0,
+        10.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        20.0
+      ]
+    ],
+    "diagnosis": {
+      "n_vars": 6,
+      "n_equalities": 9,
+      "tangencies": [],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": false,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "var_names": [
+      "bx",
+      "cx",
+      "cy",
+      "dx",
+      "dy",
+      "e"
+    ]
+  },
+  {
+    "id": "AIME-2021-I-13",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "OnCircle(A, omega1)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(A, omega2)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Distance(O, O1)",
+          "operator": "=",
+          "right": "r + 961"
+        },
+        {
+          "left": "Distance(O, O2)",
+          "operator": "=",
+          "right": "r + 625"
+        },
+        {
+          "left": "OnCircle(P, omega)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "OnCircle(Q, omega)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Angle(P, O, Q)",
+          "operator": "=",
+          "right": "2 * pi / 3"
+        },
+        {
+          "left": "d",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "ay",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "r",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "O1"
+        },
+        {
+          "expression": "Point(d, 0)",
+          "name": "O2"
+        },
+        {
+          "expression": "Circle(O1, 961)",
+          "name": "omega1"
+        },
+        {
+          "expression": "Circle(O2, 625)",
+          "name": "omega2"
+        },
+        {
+          "expression": "Point(ax, ay)",
+          "name": "A"
+        },
+        {
+          "expression": "Intersect(omega1, omega2, exclude=A)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(ox, oy)",
+          "name": "O"
+        },
+        {
+          "expression": "Circle(O, r)",
+          "name": "omega"
+        },
+        {
+          "expression": "Line(A, B)",
+          "name": "L"
+        },
+        {
+          "expression": "Intersect(L, omega, n=1)",
+          "name": "P"
+        },
+        {
+          "expression": "Intersect(L, omega, exclude=P)",
+          "name": "Q"
+        }
+      ],
+      "id": "AIME-2021-I-13",
+      "target": "Distance(O1, O2)",
+      "variables": [
+        "ax",
+        "ay",
+        "d",
+        "ox",
+        "oy",
+        "r"
+      ]
+    },
+    "answer_for_scoring_only": [
+      "672"
+    ],
+    "old_p": 0.0,
+    "n": 6,
+    "k": 7,
+    "x": [
+      732.4999999997497,
+      622.0649081891428,
+      672.0000000027788,
+      1200.388311148907,
+      -1468.6148091134694,
+      935.7766222998019
+    ],
+    "start": [
+      362.4893160876345,
+      1298.9307508494203,
+      1505.3834380302517,
+      1500.214609106422,
+      -1048.8062104576884,
+      2395.531384173147
+    ],
+    "quantized": [
+      728.2578125,
+      623.1484375,
+      668.1953125,
+      1193.7421875,
+      -1464.0234375,
+      938.4765625
+    ],
+    "saved_residual": 7.729736735405796e-08,
+    "bounds": [
+      [
+        -1922.0,
+        1922.0
+      ],
+      [
+        0.0,
+        3844.0
+      ],
+      [
+        0.0,
+        3844.0
+      ],
+      [
+        -1922.0,
+        1922.0
+      ],
+      [
+        -1922.0,
+        1922.0
+      ],
+      [
+        0.0,
+        3844.0
+      ]
+    ],
+    "diagnosis": {
+      "n_vars": 6,
+      "n_equalities": 7,
+      "tangencies": [],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": false,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "var_names": [
+      "ax",
+      "ay",
+      "d",
+      "ox",
+      "oy",
+      "r"
+    ]
+  },
+  {
+    "id": "HMMT-2013-FEB-GEO-07",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Angle(A, B, C)",
+          "operator": "=",
+          "right": "pi / 12"
+        },
+        {
+          "left": "Distance(O, D) * Distance(O, D) + Distance(O, C) * Distance(D, C)",
+          "operator": "=",
+          "right": "Distance(O, C) * Distance(O, C)"
+        },
+        {
+          "left": "Ay",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Angle(B, A, C)",
+          "operator": ">",
+          "right": "pi / 2"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(1, 0)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(Ax, Ay)",
+          "name": "A"
+        },
+        {
+          "expression": "Circumcenter(A, B, C)",
+          "name": "O"
+        },
+        {
+          "expression": "Intersect(Line(A, O), Line(B, C))",
+          "name": "D"
+        }
+      ],
+      "id": "HMMT-2013-FEB-GEO-07",
+      "target": "180 * Angle(A, C, B) / pi",
+      "variables": [
+        "Ax",
+        "Ay"
+      ]
+    },
+    "answer_for_scoring_only": [
+      "35"
+    ],
+    "old_p": 0.295,
+    "n": 2,
+    "k": 7,
+    "x": [
+      0.9330128891465937,
+      0.2499996661974894
+    ],
+    "start": [
+      11.023461428637319,
+      8.431469788922833
+    ],
+    "quantized": [
+      0.84375,
+      0.28125
+    ],
+    "saved_residual": 3.8406467155760027e-07,
+    "bounds": [
+      [
+        -24.0,
+        24.0
+      ],
+      [
+        0.0,
+        48.0
+      ]
+    ],
+    "diagnosis": {
+      "n_vars": 2,
+      "n_equalities": 2,
+      "tangencies": [],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": false,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "var_names": [
+      "Ax",
+      "Ay"
+    ]
+  },
+  {
+    "id": "HMMT-2017-FEB-GEO-05",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(I, Line(A, B))",
+          "operator": "=",
+          "right": "r"
+        },
+        {
+          "left": "Distance(I, Line(B, C))",
+          "operator": "=",
+          "right": "r"
+        },
+        {
+          "left": "Distance(I, Line(C, D))",
+          "operator": "=",
+          "right": "r"
+        },
+        {
+          "left": "Distance(I, Line(D, A))",
+          "operator": "=",
+          "right": "r"
+        },
+        {
+          "left": "Radius(G1)",
+          "operator": "=",
+          "right": 31
+        },
+        {
+          "left": "Radius(G2)",
+          "operator": "=",
+          "right": 24
+        },
+        {
+          "left": "Radius(G3)",
+          "operator": "=",
+          "right": 12
+        },
+        {
+          "left": "r",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "predicate": "ConvexPolygon([A, B, C, D])"
+        },
+        {
+          "predicate": "Or(And((Vector(A,B).x*Vector(A,I).y-Vector(A,B).y*Vector(A,I).x)>0,(Vector(B,C).x*Vector(B,I).y-Vector(B,C).y*Vector(B,I).x)>0,(Vector(C,D).x*Vector(C,I).y-Vector(C,D).y*Vector(C,I).x)>0,(Vector(D,A).x*Vector(D,I).y-Vector(D,A).y*Vector(D,I).x)>0),And((Vector(A,B).x*Vector(A,I).y-Vector(A,B).y*Vector(A,I).x)<0,(Vector(B,C).x*Vector(B,I).y-Vector(B,C).y*Vector(B,I).x)<0,(Vector(C,D).x*Vector(C,I).y-Vector(C,D).y*Vector(C,I).x)<0,(Vector(D,A).x*Vector(D,I).y-Vector(D,A).y*Vector(D,I).x)<0))"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "I"
+        },
+        {
+          "expression": "Point(r, 0)",
+          "name": "T1"
+        },
+        {
+          "expression": "Point(r * (1 - t2 * t2) / (1 + t2 * t2), r * 2 * t2 / (1 + t2 * t2))",
+          "name": "T2"
+        },
+        {
+          "expression": "Point(r * (1 - t3 * t3) / (1 + t3 * t3), r * 2 * t3 / (1 + t3 * t3))",
+          "name": "T3"
+        },
+        {
+          "expression": "Point(r * (1 - t4 * t4) / (1 + t4 * t4), r * 2 * t4 / (1 + t4 * t4))",
+          "name": "T4"
+        },
+        {
+          "expression": "PerpendicularLine(Line(I, T1), T1)",
+          "name": "l1"
+        },
+        {
+          "expression": "PerpendicularLine(Line(I, T2), T2)",
+          "name": "l2"
+        },
+        {
+          "expression": "PerpendicularLine(Line(I, T3), T3)",
+          "name": "l3"
+        },
+        {
+          "expression": "PerpendicularLine(Line(I, T4), T4)",
+          "name": "l4"
+        },
+        {
+          "expression": "Intersect(l4, l1)",
+          "name": "A"
+        },
+        {
+          "expression": "Intersect(l1, l2)",
+          "name": "B"
+        },
+        {
+          "expression": "Intersect(l2, l3)",
+          "name": "C"
+        },
+        {
+          "expression": "Intersect(l3, l4)",
+          "name": "D"
+        },
+        {
+          "expression": "Circle(I, r)",
+          "name": "omega"
+        },
+        {
+          "expression": "Intersect(Line(A, C), Line(B, D))",
+          "name": "P"
+        },
+        {
+          "expression": "Circumcircle(A, P, B)",
+          "name": "G1"
+        },
+        {
+          "expression": "Circumcircle(B, P, C)",
+          "name": "G2"
+        },
+        {
+          "expression": "Circumcircle(C, P, D)",
+          "name": "G3"
+        },
+        {
+          "expression": "Circumcircle(D, P, A)",
+          "name": "G4"
+        }
+      ],
+      "id": "HMMT-2017-FEB-GEO-05",
+      "target": "Radius(G4)",
+      "variables": [
+        "r",
+        "t2",
+        "t3",
+        "t4"
+      ]
+    },
+    "answer_for_scoring_only": [
+      "19"
+    ],
+    "old_p": 0.0,
+    "n": 4,
+    "k": 8,
+    "x": [
+      19.056403096870078,
+      -1.817845030191528,
+      9.996545839354006,
+      1.4188667099340246
+    ],
+    "start": [
+      16.75196662277899,
+      27.46455418406613,
+      3.143935986990016,
+      -23.5300074306895
+    ],
+    "quantized": [
+      19.1328125,
+      -1.6953125,
+      9.9296875,
+      1.2109375
+    ],
+    "saved_residual": 2.0694408557959184e-07,
+    "bounds": [
+      [
+        0.0,
+        124.0
+      ],
+      [
+        -62.0,
+        62.0
+      ],
+      [
+        -62.0,
+        62.0
+      ],
+      [
+        -62.0,
+        62.0
+      ]
+    ],
+    "diagnosis": {
+      "n_vars": 4,
+      "n_equalities": 7,
+      "tangencies": [],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": false,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "var_names": [
+      "r",
+      "t2",
+      "t3",
+      "t4"
+    ]
+  },
+  {
+    "id": "HMMT-2020-FEB-GEO-08",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(E, V)",
+          "operator": "=",
+          "right": 6
+        },
+        {
+          "left": "Distance(V, A0)",
+          "operator": "=",
+          "right": 7
+        },
+        {
+          "left": "Distance(A0, N)",
+          "operator": "=",
+          "right": 9
+        },
+        {
+          "left": "b",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "cy",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "Area(A, B, C)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "predicate": "AcuteTriangle(A, B, C)"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(b, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(cx, cy)",
+          "name": "C"
+        },
+        {
+          "expression": "Circumcenter(A, B, C)",
+          "name": "O"
+        },
+        {
+          "expression": "Circumcircle(A, B, C)",
+          "name": "Gamma"
+        },
+        {
+          "expression": "Reflect(A, O)",
+          "name": "A0"
+        },
+        {
+          "expression": "AngleBisector(B, A, C)",
+          "name": "bis"
+        },
+        {
+          "expression": "Intersect(bis, Line(B, C))",
+          "name": "E"
+        },
+        {
+          "expression": "Intersect(bis, Gamma, exclude=A)",
+          "name": "N"
+        },
+        {
+          "expression": "Intersect(Line(A, A0), Line(B, C))",
+          "name": "V"
+        }
+      ],
+      "id": "HMMT-2020-FEB-GEO-08",
+      "target": "Radius(Gamma)",
+      "variables": [
+        "b",
+        "cx",
+        "cy"
+      ]
+    },
+    "answer_for_scoring_only": [
+      "15/2"
+    ],
+    "old_p": 0.0,
+    "n": 3,
+    "k": 0,
+    "x": [
+      14.868395709589464,
+      0.04218345908549013,
+      2.259433519801772
+    ],
+    "start": [
+      22.930620743572355,
+      -8.28767830450067,
+      1.4750468617030088
+    ],
+    "quantized": [
+      14.8359375,
+      0.0703125,
+      2.3203125
+    ],
+    "saved_residual": 2.466435957652147e-08,
+    "bounds": [
+      [
+        0.0,
+        36.0
+      ],
+      [
+        -18.0,
+        18.0
+      ],
+      [
+        0.0,
+        36.0
+      ]
+    ],
+    "diagnosis": {
+      "n_vars": 3,
+      "n_equalities": 3,
+      "tangencies": [],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": false,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "var_names": [
+      "b",
+      "cx",
+      "cy"
+    ]
+  },
+  {
+    "id": "HMMT-2023-FEB-GEO-05",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(A, B)",
+          "operator": "=",
+          "right": 13
+        },
+        {
+          "left": "Distance(B, C)",
+          "operator": "=",
+          "right": 14
+        },
+        {
+          "left": "Distance(C, A)",
+          "operator": "=",
+          "right": 15
+        },
+        {
+          "left": "Area(C, A, Q)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "Area(A, B, S)",
+          "operator": "=",
+          "right": 0
+        },
+        {
+          "left": "d",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(5, 12)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(0, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(14, 0)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(m - d, 0)",
+          "name": "P"
+        },
+        {
+          "expression": "Point(m, d)",
+          "name": "Q"
+        },
+        {
+          "expression": "Point(m + d, 0)",
+          "name": "R"
+        },
+        {
+          "expression": "Point(m, -d)",
+          "name": "S"
+        }
+      ],
+      "id": "HMMT-2023-FEB-GEO-05",
+      "target": "Distance(P, Q)",
+      "variables": [
+        "m",
+        "d"
+      ]
+    },
+    "answer_for_scoring_only": [
+      "42√2"
+    ],
+    "old_p": 0.225,
+    "n": 2,
+    "k": 0,
+    "x": [
+      -17.49999978662325,
+      41.99999963936566
+    ],
+    "start": [
+      7.669854490001441,
+      15.108055970776737
+    ],
+    "quantized": [
+      -17.390625,
+      41.890625
+    ],
+    "saved_residual": 5.106516899436493e-07,
+    "bounds": [
+      [
+        -28.0,
+        28.0
+      ],
+      [
+        0.0,
+        56.0
+      ]
+    ],
+    "diagnosis": {
+      "n_vars": 2,
+      "n_equalities": 5,
+      "tangencies": [],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": false,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "var_names": [
+      "m",
+      "d"
+    ]
+  },
+  {
+    "id": "HMMT-2024-FEB-GEO-08",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Area(A, B, T, C, D)",
+          "operator": "=",
+          "right": 22
+        },
+        {
+          "left": "Distance(A, B)",
+          "operator": "=",
+          "right": "Distance(C, D)"
+        },
+        {
+          "left": "Angle(A, T, D)",
+          "operator": "=",
+          "right": "pi / 2"
+        },
+        {
+          "left": "Angle(B, T, C)",
+          "operator": "=",
+          "right": "2 * pi / 3"
+        },
+        {
+          "left": "Distance(T, B)",
+          "operator": "=",
+          "right": 4
+        },
+        {
+          "left": "Distance(T, C)",
+          "operator": "=",
+          "right": 5
+        },
+        {
+          "left": "Distance(Gamma_TAB.center, Gamma_TCD.center)",
+          "operator": "=",
+          "right": "abs(Gamma_TAB.radius - Gamma_TCD.radius)"
+        },
+        {
+          "left": "Area(A, B, T, C, D)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "predicate": "SimplePolygon([A, B, T, C, D])"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "T"
+        },
+        {
+          "expression": "Point(4, 0)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(-5 / 2, -5 * sqrt(3) / 2)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(ax, ay)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(dx, dy)",
+          "name": "D"
+        },
+        {
+          "expression": "Circumcircle(T, A, B)",
+          "name": "Gamma_TAB"
+        },
+        {
+          "expression": "Circumcircle(T, C, D)",
+          "name": "Gamma_TCD"
+        }
+      ],
+      "id": "HMMT-2024-FEB-GEO-08",
+      "target": "Area(T, A, D)",
+      "variables": [
+        "ax",
+        "ay",
+        "dx",
+        "dy"
+      ]
+    },
+    "answer_for_scoring_only": [
+      "64(2-√3)"
+    ],
+    "old_p": 0.0,
+    "n": 4,
+    "k": 11,
+    "x": [
+      4.121245027664786,
+      -2.267014371216861,
+      -3.5024595513897676,
+      -6.367067185460689
+    ],
+    "start": [
+      -9.53752795352181,
+      34.34414297642172,
+      -24.010131769062586,
+      10.840468732371733
+    ],
+    "quantized": [
+      3.953125,
+      -2.234375,
+      -3.609375,
+      -6.359375
+    ],
+    "saved_residual": 0.00020284332102081775,
+    "bounds": [
+      [
+        -44.0,
+        44.0
+      ],
+      [
+        -44.0,
+        44.0
+      ],
+      [
+        -44.0,
+        44.0
+      ],
+      [
+        -44.0,
+        44.0
+      ]
+    ],
+    "diagnosis": {
+      "n_vars": 4,
+      "n_equalities": 7,
+      "tangencies": [],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": false,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "var_names": [
+      "ax",
+      "ay",
+      "dx",
+      "dy"
+    ]
+  },
+  {
+    "id": "HMMT-2024-FEB-GEO-10",
+    "dsl": {
+      "conditions": [
+        {
+          "left": "Distance(P, A)",
+          "operator": "=",
+          "right": 4
+        },
+        {
+          "left": "Distance(P, B)",
+          "operator": "=",
+          "right": 5
+        },
+        {
+          "left": "Distance(P, C)",
+          "operator": "=",
+          "right": 10
+        },
+        {
+          "left": "Angle(P, A, B)",
+          "operator": "=",
+          "right": "Angle(P, D, A)"
+        },
+        {
+          "left": "Angle(P, A, D)",
+          "operator": "=",
+          "right": "Angle(P, D, C)"
+        },
+        {
+          "left": "Angle(P, B, A)",
+          "operator": "=",
+          "right": "Angle(P, C, B)"
+        },
+        {
+          "left": "Angle(P, B, C)",
+          "operator": "=",
+          "right": "Angle(P, C, D)"
+        },
+        {
+          "left": "Area(A, B, C, D)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "predicate": "SimplePolygon([A, B, C, D])"
+        },
+        {
+          "left": "(Vector(A, B).x * Vector(A, P).y - Vector(A, B).y * Vector(A, P).x) * (Vector(B, C).x * Vector(B, P).y - Vector(B, C).y * Vector(B, P).x)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "(Vector(A, B).x * Vector(A, P).y - Vector(A, B).y * Vector(A, P).x) * (Vector(C, D).x * Vector(C, P).y - Vector(C, D).y * Vector(C, P).x)",
+          "operator": ">",
+          "right": "0"
+        },
+        {
+          "left": "(Vector(A, B).x * Vector(A, P).y - Vector(A, B).y * Vector(A, P).x) * (Vector(D, A).x * Vector(D, P).y - Vector(D, A).y * Vector(D, P).x)",
+          "operator": ">",
+          "right": "0"
+        }
+      ],
+      "constructions": [
+        {
+          "expression": "Point(0, 0)",
+          "name": "P"
+        },
+        {
+          "expression": "Point(4, 0)",
+          "name": "A"
+        },
+        {
+          "expression": "Point(bx, by)",
+          "name": "B"
+        },
+        {
+          "expression": "Point(cx, cy)",
+          "name": "C"
+        },
+        {
+          "expression": "Point(dx, dy)",
+          "name": "D"
+        }
+      ],
+      "id": "HMMT-2024-FEB-GEO-10",
+      "target": "Distance(A, B) + Distance(B, C) + Distance(C, D) + Distance(D, A)",
+      "variables": [
+        "bx",
+        "by",
+        "cx",
+        "cy",
+        "dx",
+        "dy"
+      ]
+    },
+    "answer_for_scoring_only": [
+      "9√410/5"
+    ],
+    "old_p": 0.245,
+    "n": 6,
+    "k": 71,
+    "x": [
+      5.000005574179947,
+      -0.005664572352361607,
+      -9.999994066791306,
+      0.011329118938044317,
+      2.89735543132249,
+      0.006695593190376077
+    ],
+    "start": [
+      3.4380560695538094,
+      5.209731973305001,
+      -15.606884557443642,
+      4.997638466719341,
+      -1.7208823506961437,
+      2.284028713359074
+    ],
+    "quantized": [
+      5.0390625,
+      -0.0390625,
+      -9.921875,
+      0.078125,
+      2.9296875,
+      0.0390625
+    ],
+    "saved_residual": 0.006332360763749,
+    "bounds": [
+      [
+        -10.0,
+        10.0
+      ],
+      [
+        -10.0,
+        10.0
+      ],
+      [
+        -20.0,
+        20.0
+      ],
+      [
+        -20.0,
+        20.0
+      ],
+      [
+        -10.0,
+        10.0
+      ],
+      [
+        -10.0,
+        10.0
+      ]
+    ],
+    "diagnosis": {
+      "n_vars": 6,
+      "n_equalities": 7,
+      "tangencies": [],
+      "distances": [],
+      "contacts": [],
+      "radius_sources": [],
+      "q_active": false,
+      "s_applicable": false,
+      "d_applicable": false,
+      "r_applicable": false
+    },
+    "var_names": [
+      "bx",
+      "by",
+      "cx",
+      "cy",
+      "dx",
+      "dy"
+    ]
+  }
+]
