@@ -1,0 +1,135 @@
+{
+  "id": "HMMT-2010-FEB-GEO-09",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "IsTangent(Line(A, B), omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(Line(B, C), omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(Line(C, D), omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(Line(D, A), omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Angle(I, D, E)",
+        "operator": "=",
+        "right": "35 * pi / 180"
+      },
+      {
+        "left": "a",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "d",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C, D])"
+      },
+      {
+        "left": "Area(A, C, D)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(D, E)",
+        "operator": "!=",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(1, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(cos(70 * pi / 180), sin(70 * pi / 180))",
+        "name": "ABray"
+      },
+      {
+        "expression": "Point(1 + cos(120 * pi / 180), sin(120 * pi / 180))",
+        "name": "CDray"
+      },
+      {
+        "expression": "Point(cos(35 * pi / 180), sin(35 * pi / 180))",
+        "name": "BIray"
+      },
+      {
+        "expression": "Point(1 + cos(150 * pi / 180), sin(150 * pi / 180))",
+        "name": "CIray"
+      },
+      {
+        "expression": "Point(a * cos(70 * pi / 180), a * sin(70 * pi / 180))",
+        "name": "A"
+      },
+      {
+        "expression": "Point(1 - d / 2, d * sqrt(3) / 2)",
+        "name": "D"
+      },
+      {
+        "expression": "Intersect(Line(B, BIray), Line(C, CIray))",
+        "name": "I"
+      },
+      {
+        "expression": "Circle(I, Distance(I, Line(B, C)))",
+        "name": "omega"
+      },
+      {
+        "expression": "Intersect(Line(C, I), Line(A, B))",
+        "name": "E"
+      }
+    ],
+    "id": "HMMT-2010-FEB-GEO-09",
+    "target": "Angle(C, D, A) * 180 / pi",
+    "variables": [
+      "a",
+      "d"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2010-FEB-GEO-09.json",
+  "source_sha256": "c9975d46a6ac5f22ffa914a3db02dc9e38e9878d9556dfeb9824e63f2bd6011a",
+  "saved_seed": 0,
+  "eligible_records": 39,
+  "candidates": [
+    {
+      "k": 4,
+      "value_float": 179.99999999999997,
+      "x": [
+        1.130515874847136,
+        0.9999999999999998
+      ],
+      "saved_residual": 2.3551386880256624e-16
+    },
+    {
+      "k": 60,
+      "value_float": 70.00000000000003,
+      "x": [
+        0.5077133059428727,
+        0.9999999999999998
+      ],
+      "saved_residual": 1.7554167342883506e-16
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

@@ -1,0 +1,137 @@
+{
+  "id": "AIME-2023-I-12",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 55
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 55
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": 55
+      },
+      {
+        "left": "Distance(B, D)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Distance(C, E)",
+        "operator": "=",
+        "right": 30
+      },
+      {
+        "left": "Distance(A, F)",
+        "operator": "=",
+        "right": 40
+      },
+      {
+        "left": "Angle(A, E, P)",
+        "operator": "=",
+        "right": "Angle(B, F, P)"
+      },
+      {
+        "left": "Angle(B, F, P)",
+        "operator": "=",
+        "right": "Angle(C, D, P)"
+      },
+      {
+        "left": "px",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "px",
+        "operator": "<",
+        "right": "55"
+      },
+      {
+        "left": "py",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "py",
+        "operator": "<",
+        "right": "55 * sqrt(3) / 2"
+      },
+      {
+        "left": "Vector(A, B).x * Vector(A, P).y - Vector(A, B).y * Vector(A, P).x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Vector(B, C).x * Vector(B, P).y - Vector(B, C).y * Vector(B, P).x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Vector(C, A).x * Vector(C, P).y - Vector(C, A).y * Vector(C, P).x",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(55, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(55 / 2, 55 * sqrt(3) / 2)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(55 - 7 * (55 - 55 / 2) / 55, 7 * (55 * sqrt(3) / 2) / 55)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(55 / 2 * (1 - 30 / 55), 55 * sqrt(3) / 2 * (1 - 30 / 55))",
+        "name": "E"
+      },
+      {
+        "expression": "Point(40, 0)",
+        "name": "F"
+      },
+      {
+        "expression": "Point(px, py)",
+        "name": "P"
+      }
+    ],
+    "id": "AIME-2023-I-12",
+    "target": "4 * Area(A, E, P) * Area(A, E, P) / (Dot(Vector(E, A), Vector(E, P)) * Dot(Vector(E, A), Vector(E, P)))",
+    "variables": [
+      "px",
+      "py"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2023-I-12.json",
+  "source_sha256": "bc6fc489fb522c2bab576d6e43a1d4e36742ba55f5d49c03f919c4d683381d8b",
+  "saved_seed": 0,
+  "eligible_records": 108,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 74.9999999999999,
+      "x": [
+        40.13157894736842,
+        1.13950711024268
+      ],
+      "saved_residual": 1.1359051976736956e-14
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

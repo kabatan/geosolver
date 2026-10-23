@@ -1,0 +1,129 @@
+{
+  "id": "HMMT-2025-FEB-GEO-03",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "aa",
+        "operator": "=",
+        "right": "Area(P, A, B)"
+      },
+      {
+        "left": "bb",
+        "operator": "=",
+        "right": "Area(P, B, C)"
+      },
+      {
+        "left": "cc",
+        "operator": "=",
+        "right": "Area(P, C, D)"
+      },
+      {
+        "left": "dd",
+        "operator": "=",
+        "right": "Area(P, D, A)"
+      },
+      {
+        "left": "aa + bb + cc + dd",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "aa * bb + aa * cc + aa * dd + bb * cc + bb * dd + cc * dd",
+        "operator": "=",
+        "right": 35
+      },
+      {
+        "left": "aa * bb * cc + aa * bb * dd + aa * cc * dd + bb * cc * dd",
+        "operator": "=",
+        "right": 50
+      },
+      {
+        "left": "aa * bb * cc * dd",
+        "operator": "=",
+        "right": 24
+      },
+      {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "px",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "px",
+        "operator": "<",
+        "right": "s"
+      },
+      {
+        "left": "py",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "py",
+        "operator": "<",
+        "right": "s"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(s, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(s, s)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(0, s)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(px, py)",
+        "name": "P"
+      }
+    ],
+    "id": "HMMT-2025-FEB-GEO-03",
+    "target": "Distance(P, A) * Distance(P, B) * Distance(P, C) * Distance(P, D)",
+    "variables": [
+      "s",
+      "px",
+      "py",
+      "aa",
+      "bb",
+      "cc",
+      "dd"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2025-FEB-GEO-03.json",
+  "source_sha256": "4438416476b2890441abb1d5260c902813436c34016e661fb1b2829fafd7f786",
+  "saved_seed": 0,
+  "eligible_records": 20,
+  "candidates": [
+    {
+      "k": 11,
+      "value_float": 25.298221281347026,
+      "x": [
+        3.1622776601683795,
+        2.529822128134703,
+        1.2649110640673482,
+        1.9999999999999944,
+        1.0000000000000009,
+        3.000000000000006,
+        3.999999999999999
+      ],
+      "saved_residual": 3.580361673049448e-15
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

@@ -1,0 +1,92 @@
+{
+  "id": "HMMT-2021-FEB-GEO-04",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 9
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "h",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "u",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(5, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(u, h)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(u + 10, h)",
+        "name": "C"
+      },
+      {
+        "expression": "Intersect(Line(B, C), Line(D, A))",
+        "name": "E"
+      },
+      {
+        "expression": "Midpoint(C, D)",
+        "name": "M"
+      },
+      {
+        "expression": "Intersect(Circumcircle(B, M, C), Circumcircle(D, M, A), exclude=M)",
+        "name": "N"
+      }
+    ],
+    "id": "HMMT-2021-FEB-GEO-04",
+    "target": "Distance(E, N) ** 2",
+    "variables": [
+      "u",
+      "h"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2021-FEB-GEO-04.json",
+  "source_sha256": "261c2ab6d94db51bfc40f828b7bcef51fe729292a21680a8463d59c28b92294f",
+  "saved_seed": 0,
+  "eligible_records": 168,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 81.81818181818979,
+      "x": [
+        0.7000000000007003,
+        6.964912059746214
+      ],
+      "saved_residual": 3.5073939756432477e-13
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

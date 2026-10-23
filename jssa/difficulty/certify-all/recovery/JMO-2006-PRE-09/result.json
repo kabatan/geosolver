@@ -1,0 +1,147 @@
+{
+  "bound_derivation": {
+    "bounds": [
+      "-oo",
+      "oo",
+      "False",
+      "False"
+    ],
+    "explicit_rules": [
+      {
+        "condition_index": 0,
+        "normalized_expression": "Distance(Point(0, 0), Point(5, 0))",
+        "operator": "=",
+        "rational_endpoint": "5"
+      },
+      {
+        "condition_index": 1,
+        "normalized_expression": "Distance(Point(5, 0), Point(ax, ay))",
+        "operator": "=",
+        "rational_endpoint": "7"
+      },
+      {
+        "condition_index": 2,
+        "normalized_expression": "Distance(Point(ax, ay), Point(0, 0))",
+        "operator": "=",
+        "rational_endpoint": "8"
+      },
+      {
+        "condition_index": 5,
+        "normalized_expression": "ay",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 6,
+        "normalized_expression": "oy",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 7,
+        "normalized_expression": "Vector(Point(0, 0), Point(5, 0)).x * Vector(Point(0, 0), Point(ox, oy)).y - Vector(Point(0, 0), Point(5, 0)).y * Vector(Point(0, 0), Point(ox, oy)).x",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 8,
+        "normalized_expression": "Vector(Point(5, 0), Point(ax, ay)).x * Vector(Point(5, 0), Point(ox, oy)).y - Vector(Point(5, 0), Point(ax, ay)).y * Vector(Point(5, 0), Point(ox, oy)).x",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 9,
+        "normalized_expression": "Vector(Point(ax, ay), Point(0, 0)).x * Vector(Point(ax, ay), Point(ox, oy)).y - Vector(Point(ax, ay), Point(0, 0)).y * Vector(Point(ax, ay), Point(ox, oy)).x",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 10,
+        "normalized_expression": "Area(Point(ax, ay), Point(0, 0), Point(5, 0))",
+        "operator": ">",
+        "rational_endpoint": "0"
+      }
+    ],
+    "method": "conservative_rational_interval_arithmetic"
+  },
+  "candidate_union_P": "t15**2 - 49/3",
+  "candidates": [
+    {
+      "P": "t15**2 - 49/3",
+      "candidate_status": "proposed",
+      "float_guard": true,
+      "float_hard": true,
+      "hp_coordinates": [
+        "4.0",
+        "6.928203230275509174109785366023489467771221015241522512223227917807732067635200148324584747028994303",
+        "4.0",
+        "0.5773502691896257645091487805019574556476017512701268760186023264839776723029333456937153955857495253"
+      ],
+      "hp_guard": true,
+      "hp_hard": true,
+      "hp_residual": "5.71493695641e-101",
+      "hp_value": "4.041451884327380351564041463513702189533212258890888132130216285387843706120533419856007769100246677",
+      "iterations": 3,
+      "k": 0,
+      "numeric_fixed_columns": [],
+      "proposal_kind": "100_digit_polished_saved_endpoint",
+      "rank": 4,
+      "rechecked_residual": 8.881784197001252e-16,
+      "root_interval": [
+        "1104728155436/273349327681",
+        "17813029678113/4407581777032"
+      ],
+      "saved_residual": 8.881784197001252e-16,
+      "value_float": 4.041451884327381,
+      "x": [
+        3.9999999999999996,
+        6.92820323027551,
+        4.0,
+        0.5773502691896257
+      ]
+    }
+  ],
+  "detail": "fixed stage or global budget exhausted",
+  "equations": 20,
+  "grevlex_incomplete": true,
+  "group": "development323",
+  "id": "JMO-2006-PRE-09",
+  "identities": [],
+  "input_sha256": "81d3c6196b2000e04128b27e027920260f4dc19ae75d145cae6d608842a7acde",
+  "max_degree": 6,
+  "nondeg_factors": [
+    "v_oy",
+    "v_ax*v_oy - v_ay*v_ox + 5*v_ay - 5*v_oy",
+    "v_ax*v_oy - v_ay*v_ox"
+  ],
+  "official_answer_loaded": false,
+  "primary_main_output_available": false,
+  "proposed_candidate_count": 1,
+  "saved_candidate_count": 1,
+  "seconds": 38.5681052999571,
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2006-PRE-09.json",
+  "source_sha256": "018ed6eda27b5ad01261fd4964c09b1529369bba5fbb6b59b32152a3d91a3369",
+  "stage": "groebner_lex",
+  "stage_timeouts": [
+    "groebner_grevlex",
+    "groebner_lex"
+  ],
+  "stages": {
+    "bounds": 0.005197312217205763,
+    "encode": 0.4464592100121081,
+    "groebner_grevlex": 15.23743790294975,
+    "groebner_lex": 22.004979667952284,
+    "numeric_and_pslq": 0.10284554585814476
+  },
+  "status": "timeout",
+  "system_bytes": 1570,
+  "system_sha256": "b1a235d4f5c423cce6b21b34760804fef17a9972d12e261e5a0692f07ea644f8",
+  "target_symbol": "t15",
+  "total_terms": 109,
+  "variables": 20,
+  "process_wall_seconds": 38.91590507910587,
+  "process_returncode": 0,
+  "hard_timeout": false,
+  "charged_seconds": 38.91590507910587
+}

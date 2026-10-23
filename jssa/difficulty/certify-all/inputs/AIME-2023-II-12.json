@@ -1,0 +1,106 @@
+{
+  "id": "AIME-2023-II-12",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 14
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 15
+      },
+      {
+        "left": "Collinear(A, Q, M)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(Q, A, M)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Angle(P, B, Q)",
+        "operator": "=",
+        "right": "Angle(P, C, Q)"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "qx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "qy",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(13, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Midpoint(B, C)",
+        "name": "M"
+      },
+      {
+        "expression": "Circumcircle(A, B, C)",
+        "name": "Gamma"
+      },
+      {
+        "expression": "Intersect(Line(A, M), Gamma, exclude=A)",
+        "name": "P"
+      },
+      {
+        "expression": "Point(qx, qy)",
+        "name": "Q"
+      }
+    ],
+    "id": "AIME-2023-II-12",
+    "target": "Distance(A, Q)",
+    "variables": [
+      "cx",
+      "cy",
+      "qx",
+      "qy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2023-II-12.json",
+  "source_sha256": "41dcdf266c7c4fcb2120c1c936182580809d3f9055e578f4bf5d899e196c06e3",
+  "saved_seed": 0,
+  "eligible_records": 89,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 8.137749871613511,
+      "x": [
+        7.61538461538361,
+        12.923076923081886,
+        6.895010395008134,
+        4.3222453222457755
+      ],
+      "saved_residual": 6.233309303041909e-12
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

@@ -1,0 +1,89 @@
+{
+  "id": "AIME-2013-I-09",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 12
+      },
+      {
+        "left": "Distance(B, T)",
+        "operator": "=",
+        "right": 9
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": "Distance(B, C)"
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": "Distance(B, C)"
+      },
+      {
+        "left": "Distance(A, M)",
+        "operator": "=",
+        "right": "Distance(T, M)"
+      },
+      {
+        "left": "Distance(A, N)",
+        "operator": "=",
+        "right": "Distance(T, N)"
+      },
+      {
+        "left": "OnSegment(M, A, B)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(N, A, C)",
+        "operator": "=",
+        "right": 0
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(12, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(6, 6 * sqrt(3))",
+        "name": "A"
+      },
+      {
+        "expression": "Point(9, 0)",
+        "name": "T"
+      },
+      {
+        "expression": "PerpendicularBisector(A, T)",
+        "name": "L"
+      },
+      {
+        "expression": "Intersect(L, Line(A, B))",
+        "name": "M"
+      },
+      {
+        "expression": "Intersect(L, Line(A, C))",
+        "name": "N"
+      }
+    ],
+    "id": "AIME-2013-I-09",
+    "target": "Distance(M, N)",
+    "variables": []
+  },
+  "source_kind": "missing_saved_candidate",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2013-I-09.json",
+  "source_sha256": "30b9559b43a08daf17cb30e329765f298d6b6d1eb498c3bd5f046a620b270a0a",
+  "saved_seed": 0,
+  "eligible_records": 0,
+  "candidates": [],
+  "primary_main_output_available": false,
+  "source_status": "no_variables"
+}

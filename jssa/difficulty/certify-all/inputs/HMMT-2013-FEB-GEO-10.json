@@ -1,0 +1,124 @@
+{
+  "id": "HMMT-2013-FEB-GEO-10",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Angle(B, A, C)",
+        "operator": "=",
+        "right": "pi / 3"
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "OnCircle(D, Gamma)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnLine(E, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, E)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "bx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(F, Cp)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(bx, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Circumcircle(A, B, C)",
+        "name": "Gamma"
+      },
+      {
+        "expression": "AngleBisector(B, A, C)",
+        "name": "Lbis"
+      },
+      {
+        "expression": "Intersect(Lbis, Line(B, C))",
+        "name": "E"
+      },
+      {
+        "expression": "Intersect(Line(A, E), Gamma, exclude=A)",
+        "name": "D"
+      },
+      {
+        "expression": "Reflect(A, D)",
+        "name": "Dp"
+      },
+      {
+        "expression": "Reflect(A, C)",
+        "name": "Cp"
+      },
+      {
+        "expression": "Intersect(Tangent(A, Gamma), Line(B, C))",
+        "name": "P"
+      },
+      {
+        "expression": "Circumcircle(A, P, Dp)",
+        "name": "Gamma2"
+      },
+      {
+        "expression": "Intersect(Line(B, C), Gamma2, exclude=P)",
+        "name": "F"
+      }
+    ],
+    "id": "HMMT-2013-FEB-GEO-10",
+    "target": "Distance(F, Cp)",
+    "variables": [
+      "bx",
+      "cx",
+      "cy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2013-FEB-GEO-10.json",
+  "source_sha256": "94a231e18a1582f3564c1e0d5cf25e1b3280f7a469ff95881398ece1e6e36d02",
+  "saved_seed": 0,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 3.2296719128014066,
+      "x": [
+        3.000000004818984,
+        5.0160830953301145,
+        8.68811075680923
+      ],
+      "saved_residual": 6.099968623184303e-09
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

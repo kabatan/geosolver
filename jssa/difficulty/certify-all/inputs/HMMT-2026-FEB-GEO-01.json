@@ -1,0 +1,147 @@
+{
+  "id": "HMMT-2026-FEB-GEO-01",
+  "group": "holdout2026",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, W)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "Distance(A, X)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(W, X)",
+        "operator": "=",
+        "right": "Distance(X, Y)"
+      },
+      {
+        "left": "Distance(X, Y)",
+        "operator": "=",
+        "right": "Distance(Y, Z)"
+      },
+      {
+        "left": "Distance(Y, Z)",
+        "operator": "=",
+        "right": "Distance(Z, W)"
+      },
+      {
+        "left": "Distance(W, Y)",
+        "operator": "=",
+        "right": "Distance(X, Z)"
+      },
+      {
+        "predicate": "ConvexPolygon([W, X, Y, Z])"
+      },
+      {
+        "left": "yx",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "yx",
+        "operator": "<",
+        "right": 12
+      },
+      {
+        "left": "yy",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "yy",
+        "operator": "<",
+        "right": 12
+      },
+      {
+        "left": "zx",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "zx",
+        "operator": "<",
+        "right": 12
+      },
+      {
+        "left": "zy",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "zy",
+        "operator": "<",
+        "right": 12
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(12, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(12, 12)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(0, 12)",
+        "name": "D"
+      },
+      {
+        "expression": "PointOnSegment(A, D, tw)",
+        "name": "W"
+      },
+      {
+        "expression": "PointOnSegment(A, B, tx)",
+        "name": "X"
+      },
+      {
+        "expression": "Point(yx, yy)",
+        "name": "Y"
+      },
+      {
+        "expression": "Point(zx, zy)",
+        "name": "Z"
+      }
+    ],
+    "id": "HMMT-2026-FEB-GEO-01",
+    "target": "Area(B, C, Y)",
+    "variables": [
+      "tw",
+      "tx",
+      "yx",
+      "yy",
+      "zx",
+      "zy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/new2026-predict/raw/HMMT-2026-FEB-GEO-01.json",
+  "source_sha256": "4e2ea6fb015b7a7c7dd7df3bfc0186db37b40bf82f8e2116ec4726a43e255e09",
+  "saved_seed": 5,
+  "eligible_records": 70,
+  "candidates": [
+    {
+      "k": 2,
+      "value_float": 18.0,
+      "x": [
+        0.3333333333333333,
+        0.4166666666666667,
+        9.0,
+        4.999999999999999,
+        4.0,
+        9.0
+      ],
+      "saved_residual": 1.2560739669470201e-15
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

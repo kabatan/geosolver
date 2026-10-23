@@ -1,0 +1,141 @@
+{
+  "bound_derivation": {
+    "bounds": [
+      "0",
+      "oo",
+      "False",
+      "False"
+    ],
+    "explicit_rules": [
+      {
+        "condition_index": 0,
+        "normalized_expression": "Distance(Point(0, 0), Point(cx, cy))",
+        "operator": "=",
+        "rational_endpoint": "10"
+      },
+      {
+        "condition_index": 1,
+        "normalized_expression": "OnCircle(Point(px, py), Circumcircle(Point(11, 0), Orthocenter(Point(0, 0), Point(11, 0), Point(cx, cy)), Point(cx, cy)))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 3,
+        "normalized_expression": "Distance(Point(px, py), Midpoint(Point(11, 0), Point(cx, cy)))",
+        "operator": "=",
+        "rational_endpoint": "3"
+      },
+      {
+        "condition_index": 4,
+        "normalized_expression": "cx",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 5,
+        "normalized_expression": "cy",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 7,
+        "normalized_expression": "Vector(Point(0, 0), Point(11, 0)).x * Vector(Point(0, 0), Point(px, py)).y - Vector(Point(0, 0), Point(11, 0)).y * Vector(Point(0, 0), Point(px, py)).x",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 8,
+        "normalized_expression": "Vector(Point(11, 0), Point(cx, cy)).x * Vector(Point(11, 0), Point(px, py)).y - Vector(Point(11, 0), Point(cx, cy)).y * Vector(Point(11, 0), Point(px, py)).x",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 9,
+        "normalized_expression": "Vector(Point(cx, cy), Point(0, 0)).x * Vector(Point(cx, cy), Point(px, py)).y - Vector(Point(cx, cy), Point(0, 0)).y * Vector(Point(cx, cy), Point(px, py)).x",
+        "operator": ">",
+        "rational_endpoint": "0"
+      }
+    ],
+    "method": "conservative_rational_interval_arithmetic"
+  },
+  "candidate_union_P": "t12**2 - 84",
+  "candidates": [
+    {
+      "P": "t12**2 - 84",
+      "candidate_status": "proposed",
+      "float_guard": true,
+      "float_hard": true,
+      "hp_coordinates": [
+        "6.227272727272727272727272727272727272727272727272727272727272727271078736500921096671949052032488326",
+        "7.824389712953035754879208779712162246626591013097251265614060464303000573173349705041245270481268063",
+        "8.515593895155938951559389515593895155938951559389515593895155938949687756840378271512456812081916378",
+        "0.9137973387390406721026813173386466857374120891208468631374085213783621291444500606352991777626467854"
+      ],
+      "hp_guard": true,
+      "hp_hard": true,
+      "hp_residual": "9.21575648292e-67",
+      "hp_value": "9.165151389911680013176094387456016977968913153535943805214484247816371593672096535031782607667405642",
+      "iterations": 3,
+      "k": 0,
+      "numeric_fixed_columns": [],
+      "proposal_kind": "100_digit_polished_saved_endpoint",
+      "rank": 4,
+      "rechecked_residual": 6.0300365811727374e-09,
+      "root_interval": [
+        "16082359190361/1754729246269",
+        "16967700514810/1851327904249"
+      ],
+      "saved_residual": 7.319031129343552e-09,
+      "value_float": 9.165151425207606,
+      "x": [
+        6.227272698965305,
+        7.824389737030171,
+        8.515593860186446,
+        0.9137973501394618
+      ]
+    }
+  ],
+  "detail": "fixed stage or global budget exhausted",
+  "equations": 13,
+  "grevlex_incomplete": true,
+  "group": "development323",
+  "id": "JMO-2022-PRE-12",
+  "identities": [],
+  "input_sha256": "ba5990f5b2484cad9ca3ddf543c6f03102bda30a6f5fb6f8075e1f0ffec889e7",
+  "max_degree": 4,
+  "nondeg_factors": [
+    "v_cy",
+    "v_cx - 11",
+    "p1 - v_cy"
+  ],
+  "official_answer_loaded": false,
+  "primary_main_output_available": false,
+  "proposed_candidate_count": 1,
+  "saved_candidate_count": 1,
+  "seconds": 37.86805143696256,
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2022-PRE-12.json",
+  "source_sha256": "67999e5558620f5fd73e92215b05bd0d6a8ab1aa24928c6822c7817215e06ae6",
+  "stage": "groebner_lex",
+  "stage_timeouts": [
+    "groebner_grevlex",
+    "groebner_lex"
+  ],
+  "stages": {
+    "bounds": 0.0022660521790385246,
+    "encode": 0.15428307396359742,
+    "groebner_grevlex": 15.000114193884656,
+    "groebner_lex": 22.000076395925134,
+    "numeric_and_pslq": 0.04237888986244798
+  },
+  "status": "timeout",
+  "system_bytes": 974,
+  "system_sha256": "1a1daaee1cf61f53776b9a4f1fdd4c1e80d815db4bfe1db2cd57a06dc5dae0c3",
+  "target_symbol": "t12",
+  "total_terms": 67,
+  "variables": 13,
+  "process_wall_seconds": 38.817678855964914,
+  "process_returncode": 0,
+  "hard_timeout": false,
+  "charged_seconds": 38.817678855964914
+}

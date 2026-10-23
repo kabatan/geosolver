@@ -1,0 +1,91 @@
+{
+  "id": "AIME-2021-II-12",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 9
+      },
+      {
+        "left": "Distance(D, A)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Area(A, B, C, D)",
+        "operator": "=",
+        "right": 30
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "dy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C, D])"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(5, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(dx, dy)",
+        "name": "D"
+      },
+      {
+        "expression": "Intersect(Line(A, C), Line(B, D))",
+        "name": "X"
+      }
+    ],
+    "id": "AIME-2021-II-12",
+    "target": "abs(tan(Angle(A,X,B)))",
+    "variables": [
+      "cx",
+      "cy",
+      "dx",
+      "dy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2021-II-12.json",
+  "source_sha256": "4e6c97c3f7c60b1b40f85b329a9eae4c9837b9deac844142565dde78326b1e2d",
+  "saved_seed": 0,
+  "eligible_records": 28,
+  "candidates": [
+    {
+      "k": 1,
+      "value_float": 5.714285714285712,
+      "x": [
+        1.5060769081307972,
+        4.877755777824793,
+        -6.836916755696093,
+        1.502188162542234
+      ],
+      "saved_residual": 3.66205343881779e-15
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

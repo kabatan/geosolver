@@ -1,0 +1,90 @@
+{
+  "id": "HMMT-2006-FEB-GEO-02",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, P)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(P, C)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Angle(A, B, C)",
+        "operator": "=",
+        "right": "pi / 2"
+      },
+      {
+        "left": "Angle(A, B, P)",
+        "operator": "=",
+        "right": "pi / 4"
+      },
+      {
+        "left": "By",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "!=",
+        "right": "Distance(B, C)"
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "!=",
+        "right": "Distance(A, C)"
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "!=",
+        "right": "Distance(A, C)"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(1, 0)",
+        "name": "P"
+      },
+      {
+        "expression": "Point(3, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(Bx, By)",
+        "name": "B"
+      }
+    ],
+    "id": "HMMT-2006-FEB-GEO-02",
+    "target": "Area(A, B, C)",
+    "variables": [
+      "Bx",
+      "By"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2006-FEB-GEO-02.json",
+  "source_sha256": "6f5bce844568d399607c25508073333864c3f445f07fce0064ca81dda88ef702",
+  "saved_seed": 0,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 1.8,
+      "x": [
+        0.6,
+        1.2
+      ],
+      "saved_residual": 0.0
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

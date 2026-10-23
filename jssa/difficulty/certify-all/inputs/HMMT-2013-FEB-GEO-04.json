@@ -1,0 +1,138 @@
+{
+  "id": "HMMT-2013-FEB-GEO-04",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(O1, O2)",
+        "operator": "=",
+        "right": "r1"
+      },
+      {
+        "left": "Distance(O1, A)",
+        "operator": "=",
+        "right": "r1"
+      },
+      {
+        "left": "Distance(O2, A)",
+        "operator": "=",
+        "right": "r2"
+      },
+      {
+        "left": "Distance(O2, B)",
+        "operator": "=",
+        "right": "r2"
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": "r1"
+      },
+      {
+        "left": "r1",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r2",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Ay",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "!=",
+        "right": "0"
+      },
+      {
+        "left": "Distance(B, O1)",
+        "operator": "!=",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "O1"
+      },
+      {
+        "expression": "Point(r1, 0)",
+        "name": "O2"
+      },
+      {
+        "expression": "Circle(O1, r1)",
+        "name": "omega1"
+      },
+      {
+        "expression": "Circle(O2, r2)",
+        "name": "omega2"
+      },
+      {
+        "expression": "Point(Ax, Ay)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(b, 0)",
+        "name": "B"
+      }
+    ],
+    "id": "HMMT-2013-FEB-GEO-04",
+    "target": "r1 / r2",
+    "variables": [
+      "r1",
+      "r2",
+      "Ax",
+      "Ay",
+      "b"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2013-FEB-GEO-04.json",
+  "source_sha256": "773816bf90f63794b48792942cfa5a92585fdd56d8781fc494e2b1811bfc1a2a",
+  "saved_seed": 0,
+  "eligible_records": 156,
+  "candidates": [
+    {
+      "k": 1,
+      "value_float": 1.0000000000000002,
+      "x": [
+        10.164685400134145,
+        10.164685400134143,
+        5.082342700067076,
+        8.80287577799296,
+        1.8855079714504854e-15
+      ],
+      "saved_residual": 1.7763568394002505e-15
+    },
+    {
+      "k": 3,
+      "value_float": 0.618033988749895,
+      "x": [
+        2.9586459455103764,
+        4.787189700512857,
+        -0.9142718775012403,
+        2.8138395058878793,
+        -1.8285437550024808
+      ],
+      "saved_residual": 8.881784197001252e-16
+    },
+    {
+      "k": 4,
+      "value_float": 1.618033988749895,
+      "x": [
+        2.090757937373957,
+        1.2921594675457295,
+        1.6914587024598433,
+        1.228916681701842,
+        3.3829174049196866
+      ],
+      "saved_residual": 0.0
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

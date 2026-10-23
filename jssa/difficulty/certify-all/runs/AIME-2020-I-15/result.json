@@ -1,0 +1,160 @@
+{
+  "bound_derivation": {
+    "bounds": [
+      "0",
+      "oo",
+      "True",
+      "False"
+    ],
+    "explicit_rules": [
+      {
+        "condition_index": 0,
+        "normalized_expression": "OnCircle(Point(xx, xy), Circumcircle(Point(0, 0), Point(bx, 0), Point(cx, cy)))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 1,
+        "normalized_expression": "OnCircle(Point(yx, yy), Circumcircle(Point(0, 0), Point(bx, 0), Point(cx, cy)))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 2,
+        "normalized_expression": "OnLine(Point(xx, xy), Tangent(Orthocenter(Point(0, 0), Point(bx, 0), Point(cx, cy)), Circumcircle(Orthocenter(Point(0, 0), Point(bx, 0), Point(cx, cy)), Point(bx, 0), Point(cx, cy))))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 3,
+        "normalized_expression": "OnLine(Point(yx, yy), Tangent(Orthocenter(Point(0, 0), Point(bx, 0), Point(cx, cy)), Circumcircle(Orthocenter(Point(0, 0), Point(bx, 0), Point(cx, cy)), Point(bx, 0), Point(cx, cy))))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 4,
+        "normalized_expression": "Distance(Point(0, 0), Orthocenter(Point(0, 0), Point(bx, 0), Point(cx, cy)))",
+        "operator": "=",
+        "rational_endpoint": "3"
+      },
+      {
+        "condition_index": 5,
+        "normalized_expression": "Distance(Orthocenter(Point(0, 0), Point(bx, 0), Point(cx, cy)), Point(xx, xy))",
+        "operator": "=",
+        "rational_endpoint": "2"
+      },
+      {
+        "condition_index": 6,
+        "normalized_expression": "Distance(Orthocenter(Point(0, 0), Point(bx, 0), Point(cx, cy)), Point(yx, yy))",
+        "operator": "=",
+        "rational_endpoint": "6"
+      },
+      {
+        "condition_index": 7,
+        "normalized_expression": "bx",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 8,
+        "normalized_expression": "cy",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 9,
+        "normalized_expression": "Area(Point(0, 0), Point(bx, 0), Point(cx, cy))",
+        "operator": ">",
+        "rational_endpoint": "0"
+      }
+    ],
+    "method": "conservative_rational_interval_arithmetic"
+  },
+  "candidate_union_P": "t8**2 - 495",
+  "candidates": [
+    {
+      "P": "t8**2 - 495",
+      "candidate_status": "proposed",
+      "float_guard": true,
+      "float_hard": true,
+      "hp_coordinates": [
+        "9.080729499274018058353042297341655284750381431440810249156279393350971557789829896035613276110554629",
+        "1.651849667055847553723308774717664722743263583320814826497559159977249187441644697559845235248294853",
+        "4.900178000691620472961582494021507581048629356266412791107891744174068459410853160754967326830729628",
+        "1.141620881903595569743512240544459139593579206774770069862670845347124193979631691535901518238410851",
+        "4.438096637298658089843858847855616930050341825006882555941399001020577706735700248462186026945809228",
+        "3.182536022512603505662698377237281472192316712958949096402224103867624168113571627419311079061030554",
+        "-3.297190389621087269401453286113617306210572274469447869500040599461522555167743200309680257991965618"
+      ],
+      "hp_guard": true,
+      "hp_hard": true,
+      "hp_residual": "6.73553811944e-73",
+      "hp_value": "22.24859546128698884613419232240213918293971295729250479619786979303149054739928059675329477213186941",
+      "iterations": 3,
+      "k": 8,
+      "numeric_fixed_columns": [],
+      "proposal_kind": "100_digit_polished_saved_endpoint",
+      "rank": 7,
+      "rechecked_residual": 1.2242242775073464e-09,
+      "root_interval": [
+        "162956663000988/7324357318849",
+        "15900389825761/714669375576"
+      ],
+      "saved_residual": 1.8062933877474348e-09,
+      "value_float": 22.248595474684077,
+      "x": [
+        9.080729498946583,
+        1.6518496678867178,
+        4.900178003818976,
+        1.1416208810483595,
+        4.438096637210811,
+        3.182536025808543,
+        -3.2971903894203085
+      ]
+    }
+  ],
+  "detail": "fixed stage or global budget exhausted",
+  "equations": 16,
+  "grevlex_incomplete": true,
+  "group": "development323",
+  "id": "AIME-2020-I-15",
+  "identities": [],
+  "input_sha256": "7f521f8465271b8b62850e171268eeddd6d44509d30c90df5a4de37c4984142f",
+  "max_degree": 5,
+  "nondeg_factors": [
+    "v_bx",
+    "v_cy",
+    "v_bx - v_cx",
+    "p1 - v_cy"
+  ],
+  "official_answer_loaded": false,
+  "primary_main_output_available": false,
+  "proposed_candidate_count": 1,
+  "saved_candidate_count": 1,
+  "seconds": 38.37233623303473,
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2020-I-15.json",
+  "source_sha256": "bdc2bde9176c10ea767766094f92494c5bf1389ed648def5cb74aeed1e17dd0e",
+  "stage": "groebner_lex",
+  "stage_timeouts": [
+    "groebner_grevlex",
+    "groebner_lex"
+  ],
+  "stages": {
+    "bounds": 0.0023058499209582806,
+    "encode": 0.15471658413298428,
+    "groebner_grevlex": 15.000106025021523,
+    "groebner_lex": 22.000256763072684,
+    "numeric_and_pslq": 0.06768294097855687
+  },
+  "status": "timeout",
+  "system_bytes": 935,
+  "system_sha256": "807df80839cebd4bc37e5579d0b93a4706cb515395e2fb2e8c0cfcace6d7e4b1",
+  "target_symbol": "t8",
+  "total_terms": 68,
+  "variables": 16,
+  "process_wall_seconds": 38.74722189991735,
+  "process_returncode": 0,
+  "hard_timeout": false,
+  "charged_seconds": 38.74722189991735
+}

@@ -1,0 +1,111 @@
+{
+  "id": "HMMT-2011-equilateral-hexagon",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "d",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "by",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "ey",
+        "operator": "<",
+        "right": "0"
+      },
+      {
+        "predicate": "ConvexPolygon([A,B,C,D,E,F])"
+      },
+      {
+        "left": "Distance(A,B)",
+        "operator": "=",
+        "right": "1"
+      },
+      {
+        "left": "Distance(C,D)",
+        "operator": "=",
+        "right": "1"
+      },
+      {
+        "left": "Distance(D,E)",
+        "operator": "=",
+        "right": "1"
+      },
+      {
+        "left": "Distance(F,A)",
+        "operator": "=",
+        "right": "1"
+      },
+      {
+        "left": "min(Angle(F,A,B),Angle(A,B,C),Angle(B,C,D),Angle(C,D,E),Angle(D,E,F),Angle(E,F,A))",
+        "operator": "=",
+        "right": "pi/45"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0,0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(bx,by)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(bx+1,by)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(d,0)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(ex,ey)",
+        "name": "E"
+      },
+      {
+        "expression": "Point(ex-1,ey)",
+        "name": "F"
+      },
+      {
+        "expression": "Orthocenter(A,B,D)",
+        "name": "H"
+      }
+    ],
+    "id": "HMMT-2011-equilateral-hexagon",
+    "target": "180*min(Angle(H,A,D),Angle(A,D,H),Angle(D,H,A))/pi",
+    "variables": [
+      "d",
+      "bx",
+      "by",
+      "ex",
+      "ey"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2011-equilateral-hexagon.json",
+  "source_sha256": "77bf59d95a299f2c8e07068958cdb70ebc5d52d444255771cf3d2694ee908a7e",
+  "saved_seed": 0,
+  "eligible_records": 41,
+  "candidates": [
+    {
+      "k": 1,
+      "value_float": 3.000000000000002,
+      "x": [
+        2.9987816540381917,
+        0.9993908270190959,
+        0.034899496702501004,
+        1.9993908270190959,
+        -0.03489949670250093
+      ],
+      "saved_residual": 1.3877787807814457e-17
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

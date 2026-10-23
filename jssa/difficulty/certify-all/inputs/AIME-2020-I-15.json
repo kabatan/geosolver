@@ -1,0 +1,133 @@
+{
+  "id": "AIME-2020-I-15",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "OnCircle(X, omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(Y, omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnLine(X, L)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnLine(Y, L)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, H)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(H, X)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Distance(H, Y)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "bx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "AcuteTriangle(A, B, C)"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(bx, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Orthocenter(A, B, C)",
+        "name": "H"
+      },
+      {
+        "expression": "Circumcircle(A, B, C)",
+        "name": "omega"
+      },
+      {
+        "expression": "Circumcircle(H, B, C)",
+        "name": "gamma"
+      },
+      {
+        "expression": "Tangent(H, gamma)",
+        "name": "L"
+      },
+      {
+        "expression": "Point(xx, xy)",
+        "name": "X"
+      },
+      {
+        "expression": "Point(yx, yy)",
+        "name": "Y"
+      }
+    ],
+    "id": "AIME-2020-I-15",
+    "target": "Area(A, B, C)",
+    "variables": [
+      "bx",
+      "cx",
+      "cy",
+      "xx",
+      "xy",
+      "yx",
+      "yy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2020-I-15.json",
+  "source_sha256": "bdc2bde9176c10ea767766094f92494c5bf1389ed648def5cb74aeed1e17dd0e",
+  "saved_seed": 0,
+  "eligible_records": 22,
+  "candidates": [
+    {
+      "k": 8,
+      "value_float": 22.248595474684077,
+      "x": [
+        9.080729498946583,
+        1.6518496678867178,
+        4.900178003818976,
+        1.1416208810483595,
+        4.438096637210811,
+        3.182536025808543,
+        -3.2971903894203085
+      ],
+      "saved_residual": 1.8062933877474348e-09
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

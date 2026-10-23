@@ -1,0 +1,101 @@
+{
+  "id": "AIME-2021-II-02",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, F)",
+        "operator": "=",
+        "right": "Distance(F, G)"
+      },
+      {
+        "left": "9 * Area(A, F, G)",
+        "operator": "=",
+        "right": "8 * Area(B, E, D)"
+      },
+      {
+        "left": "Distance(E, F) + Distance(F, G)",
+        "operator": "=",
+        "right": "Distance(E, G)"
+      },
+      {
+        "left": "d",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "d",
+        "operator": "<",
+        "right": "420 * sqrt(3)"
+      },
+      {
+        "left": "gx",
+        "operator": ">",
+        "right": "420"
+      },
+      {
+        "left": "Area(A, F, G)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(840, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(420, 420 * sqrt(3))",
+        "name": "A"
+      },
+      {
+        "expression": "Point(0, d)",
+        "name": "D"
+      },
+      {
+        "expression": "Line(Point(0, d), Point(1, d))",
+        "name": "ell"
+      },
+      {
+        "expression": "Intersect(ell, Line(A, B))",
+        "name": "E"
+      },
+      {
+        "expression": "Intersect(ell, Line(A, C))",
+        "name": "F"
+      },
+      {
+        "expression": "Point(gx, d)",
+        "name": "G"
+      }
+    ],
+    "id": "AIME-2021-II-02",
+    "target": "Distance(A, F)",
+    "variables": [
+      "d",
+      "gx"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2021-II-02.json",
+  "source_sha256": "13ddfb5b34e69836b3c4306ffde7a9f12924089efbaa306cb5a68a3bd93c40e7",
+  "saved_seed": 0,
+  "eligible_records": 163,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 336.0000000000001,
+      "x": [
+        436.476803507357,
+        923.9999999999999
+      ],
+      "saved_residual": 5.820777193566399e-11
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

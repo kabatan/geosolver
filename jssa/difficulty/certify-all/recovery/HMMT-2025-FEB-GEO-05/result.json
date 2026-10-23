@@ -1,0 +1,130 @@
+{
+  "bound_derivation": {
+    "bounds": [
+      "0",
+      "oo",
+      "False",
+      "False"
+    ],
+    "explicit_rules": [
+      {
+        "condition_index": 0,
+        "normalized_expression": "Distance(Point(0, 0), Point(6, 0))",
+        "operator": "=",
+        "rational_endpoint": "6"
+      },
+      {
+        "condition_index": 1,
+        "normalized_expression": "Distance(Point(6, 0), Point(3, 3 * sqrt(3)))",
+        "operator": "=",
+        "rational_endpoint": "6"
+      },
+      {
+        "condition_index": 2,
+        "normalized_expression": "Distance(Point(3, 3 * sqrt(3)), Point(0, 0))",
+        "operator": "=",
+        "rational_endpoint": "6"
+      },
+      {
+        "condition_index": 4,
+        "normalized_expression": "Distance(Point(0, 0), Intersect(Circumcircle(Point(0, 0), Point(6, 0), Point(3, 3 * sqrt(3))), Circle(Midpoint(Point(0, 0), Point(6 * u + 3 * v, 3 * sqrt(3) * v)), Distance(Point(0, 0), Point(6 * u + 3 * v, 3 * sqrt(3) * v)) / 2), exclude=Point(0, 0)))",
+        "operator": "=",
+        "rational_endpoint": "5"
+      },
+      {
+        "condition_index": 5,
+        "normalized_expression": "u",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 6,
+        "normalized_expression": "v",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 7,
+        "normalized_expression": "u + v",
+        "operator": "<",
+        "rational_endpoint": "1"
+      }
+    ],
+    "method": "conservative_rational_interval_arithmetic"
+  },
+  "candidate_union_P": "t12**4 - 70*t12**2 + 121",
+  "candidates": [
+    {
+      "P": "t12**4 - 70*t12**2 + 121",
+      "candidate_status": "proposed",
+      "float_guard": true,
+      "float_hard": true,
+      "hp_coordinates": [
+        "0.8525937815856090318726593681970141108268829375290095616824392119711781935160235673925722636602123042",
+        "0.01926044825227569853932603486368077749354960419567622834910587863784486018269023405923893032687897082"
+      ],
+      "hp_guard": true,
+      "hp_hard": true,
+      "hp_residual": "1.14298739128e-100",
+      "hp_value": "1.331729908174964954542545381150949186111096534283368090373695155544391202089864008329899072922421709",
+      "iterations": 3,
+      "k": 5,
+      "numeric_fixed_columns": [],
+      "proposal_kind": "100_digit_polished_saved_endpoint",
+      "rank": 2,
+      "rechecked_residual": 8.881784197001252e-16,
+      "root_interval": [
+        "2491217339729/1870662605410",
+        "3074119527554/2308365614291"
+      ],
+      "saved_residual": 8.881784197001252e-16,
+      "value_float": 1.3317299081749645,
+      "x": [
+        0.8525937815856091,
+        0.01926044825227568
+      ]
+    }
+  ],
+  "detail": "fixed stage or global budget exhausted",
+  "equations": 14,
+  "group": "development323",
+  "id": "HMMT-2025-FEB-GEO-05",
+  "identities": [],
+  "input_sha256": "a68bcb5e671d331b8e1bc2bde3d950e3cf0efdb3926432b8f10bf1c64cac9dfc",
+  "max_degree": 5,
+  "nondeg_factors": [
+    "s1"
+  ],
+  "official_answer_loaded": false,
+  "primary_main_output_available": false,
+  "proposed_candidate_count": 1,
+  "saved_candidate_count": 1,
+  "seconds": 30.07638567290269,
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2025-FEB-GEO-05.json",
+  "source_sha256": "34cc8d5e8cf8cdb02912de8c984a7e4e9c1b90c08ad497a62fa952dc0d10fefa",
+  "stage": "groebner_lex",
+  "stage_timeouts": [
+    "groebner_lex"
+  ],
+  "stages": {
+    "bounds": 0.01606449601240456,
+    "encode": 0.6159253471996635,
+    "extract_grevlex_eliminant": 0.005152428988367319,
+    "groebner_grevlex": 5.626054171938449,
+    "groebner_lex": 22.00025578099303,
+    "identity_P": 0.39915665006265044,
+    "numeric_and_pslq": 0.10461096395738423
+  },
+  "status": "timeout",
+  "system_bytes": 792,
+  "system_sha256": "314a8b0c7abb5af6bdcfba340a8ee5aa2413caaf71ec5c5c9785245262e5ce82",
+  "target_symbol": "t12",
+  "total_terms": 64,
+  "variables": 13,
+  "zero_dimensional": true,
+  "process_wall_seconds": 30.26005609286949,
+  "process_returncode": 0,
+  "hard_timeout": false,
+  "charged_seconds": 30.26005609286949
+}

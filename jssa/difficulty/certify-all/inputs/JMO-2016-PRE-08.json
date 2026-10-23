@@ -1,0 +1,90 @@
+{
+  "id": "JMO-2016-PRE-08",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "3 * Distance(A, X)",
+        "operator": "=",
+        "right": "Distance(X, D)"
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Radius(omega)",
+        "operator": "=",
+        "right": "1"
+      },
+      {
+        "left": "10*Distance(A,X)",
+        "operator": "=",
+        "right": "Distance(B,C)"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(b, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Incircle(A, B, C)",
+        "name": "omega"
+      },
+      {
+        "expression": "IncircleContactPoint(A, B, C, side='BC')",
+        "name": "D"
+      },
+      {
+        "expression": "Intersect(Line(A, D), omega, exclude=D)",
+        "name": "X"
+      }
+    ],
+    "id": "JMO-2016-PRE-08",
+    "target": "Distance(X, D)",
+    "variables": [
+      "b",
+      "cx",
+      "cy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2016-PRE-08.json",
+  "source_sha256": "16257782dc8fd27534e886f358921ac912d120708a03cc68d2ec6a47e3945ddf",
+  "saved_seed": 0,
+  "eligible_records": 194,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 1.897366596189829,
+      "x": [
+        6.427188722084532,
+        0.56012047455256,
+        2.361675286271169
+      ],
+      "saved_residual": 5.631858812181239e-10
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

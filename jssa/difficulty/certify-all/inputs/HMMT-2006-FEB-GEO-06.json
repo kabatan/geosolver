@@ -1,0 +1,76 @@
+{
+  "id": "HMMT-2006-FEB-GEO-06",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(I, T)",
+        "operator": "=",
+        "right": "r + t"
+      },
+      {
+        "left": "t",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "t",
+        "operator": "<",
+        "right": "r"
+      },
+      {
+        "left": "L - t * (1 + sqrt(2))",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "1 + sin(pi / 8)",
+        "name": "r"
+      },
+      {
+        "expression": "r / (1 - 1 / sqrt(2))",
+        "name": "L"
+      },
+      {
+        "expression": "Point(r, r)",
+        "name": "I"
+      },
+      {
+        "expression": "Point(L - t * (1 + sqrt(2)), t)",
+        "name": "T"
+      },
+      {
+        "expression": "Circle(I, r)",
+        "name": "omega"
+      },
+      {
+        "expression": "Circle(T, t)",
+        "name": "tau"
+      }
+    ],
+    "id": "HMMT-2006-FEB-GEO-06",
+    "target": "r * t",
+    "variables": [
+      "t"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2006-FEB-GEO-06.json",
+  "source_sha256": "4414396d146d20920b145ba7e13b7dd72faac32a3549ffea831456fe4de7b13b",
+  "saved_seed": 0,
+  "eligible_records": 12,
+  "candidates": [
+    {
+      "k": 2,
+      "value_float": 0.8535533905932733,
+      "x": [
+        0.6173165676349099
+      ],
+      "saved_residual": 0.0
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

@@ -1,0 +1,158 @@
+{
+  "id": "AIME-2020-I-01",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": "Distance(A, C)"
+      },
+      {
+        "left": "Distance(A, E)",
+        "operator": "=",
+        "right": "Distance(E, D)"
+      },
+      {
+        "left": "Distance(E, D)",
+        "operator": "=",
+        "right": "Distance(D, B)"
+      },
+      {
+        "left": "Distance(D, B)",
+        "operator": "=",
+        "right": "Distance(B, C)"
+      },
+      {
+        "left": "Collinear(A, D, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(D, A, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(E, A, B)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "bx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "e",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "e",
+        "operator": "<",
+        "right": "bx"
+      },
+      {
+        "left": "dy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "dx",
+        "operator": "<",
+        "right": "cx"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(bx, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(dx, dy)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(e, 0)",
+        "name": "E"
+      }
+    ],
+    "id": "AIME-2020-I-01",
+    "target": "180 * Angle(A, B, C) / pi",
+    "variables": [
+      "bx",
+      "cx",
+      "cy",
+      "dx",
+      "dy",
+      "e"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2020-I-01.json",
+  "source_sha256": "42027f1830e46ccfc724e15a643c32e1d93dd76692ba47249c7d89f0509d9797",
+  "saved_seed": 0,
+  "eligible_records": 16,
+  "candidates": [
+    {
+      "k": 28,
+      "value_float": 77.14285714285714,
+      "x": [
+        0.011438671846548643,
+        0.010305887223892205,
+        0.004963053711319267,
+        0.008264679865788124,
+        0.003980060055933172,
+        0.005090687885027606
+      ],
+      "saved_residual": 2.1245936804851847e-18
+    },
+    {
+      "k": 41,
+      "value_float": 72.0000000062227,
+      "x": [
+        4.72461621009947,
+        3.8222948065838893,
+        2.7770597298670205,
+        3.822294805872168,
+        2.7770597293573416,
+        2.91997340048405
+      ],
+      "saved_residual": 4.688903925275416e-10
+    },
+    {
+      "k": 190,
+      "value_float": 59.999999983360944,
+      "x": [
+        8.85642487014102,
+        4.428212430526037,
+        7.669888926977756,
+        4.428212429471634,
+        7.669888925170655,
+        8.856424869782195
+      ],
+      "saved_residual": 3.922793412323793e-09
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

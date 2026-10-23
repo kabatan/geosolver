@@ -1,0 +1,122 @@
+{
+  "id": "JMO-2017-PRE-10",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(P, Q) + Distance(Q, R) + Distance(R, P)",
+        "operator": "=",
+        "right": 12
+      },
+      {
+        "left": "Collinear(C, Q, A)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(Q, C, A)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Angle(C, R, P)",
+        "operator": "=",
+        "right": "Angle(C, R, Q)"
+      },
+      {
+        "left": "Angle(B, P, R)",
+        "operator": "=",
+        "right": "Angle(C, P, Q)"
+      },
+      {
+        "left": "p",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "p",
+        "operator": "<",
+        "right": "3"
+      },
+      {
+        "left": "qx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "qy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "qx",
+        "operator": "<",
+        "right": "8"
+      },
+      {
+        "left": "r",
+        "operator": "<",
+        "right": "8"
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(8, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(0, 3)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(0, p)",
+        "name": "P"
+      },
+      {
+        "expression": "Point(qx, qy)",
+        "name": "Q"
+      },
+      {
+        "expression": "Point(r, 0)",
+        "name": "R"
+      }
+    ],
+    "id": "JMO-2017-PRE-10",
+    "target": "Distance(Q, Line(B, C))",
+    "variables": [
+      "p",
+      "qx",
+      "qy",
+      "r"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2017-PRE-10.json",
+  "source_sha256": "d948d2da10deea6124ef0cacf2f083d4ba48b602267b645813f69716ffe257bd",
+  "saved_seed": 0,
+  "eligible_records": 3,
+  "candidates": [
+    {
+      "k": 36,
+      "value_float": 4.499999999999999,
+      "x": [
+        0.7313120867734696,
+        4.499999999999999,
+        1.3125000000000004,
+        5.6623758264530615
+      ],
+      "saved_residual": 1.7798229048217483e-15
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

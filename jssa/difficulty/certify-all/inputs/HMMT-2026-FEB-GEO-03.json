@@ -1,0 +1,93 @@
+{
+  "id": "HMMT-2026-FEB-GEO-03",
+  "group": "holdout2026",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(W, X)",
+        "operator": "=",
+        "right": "Distance(X, Y)"
+      },
+      {
+        "left": "Distance(X, Y)",
+        "operator": "=",
+        "right": "Distance(Y, Z)"
+      },
+      {
+        "left": "Distance(Y, Z)",
+        "operator": "=",
+        "right": "Distance(Z, W)"
+      },
+      {
+        "predicate": "ConvexPolygon([W, X, Y, Z])"
+      },
+      {
+        "left": "Area(W, X, Y, Z)",
+        "operator": "=",
+        "right": 120
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(12, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(12, 16)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(0, 16)",
+        "name": "D"
+      },
+      {
+        "expression": "PointOnSegment(A, B, tw)",
+        "name": "W"
+      },
+      {
+        "expression": "PointOnSegment(B, C, tx)",
+        "name": "X"
+      },
+      {
+        "expression": "PointOnSegment(C, D, ty)",
+        "name": "Y"
+      },
+      {
+        "expression": "PointOnSegment(D, A, tz)",
+        "name": "Z"
+      }
+    ],
+    "id": "HMMT-2026-FEB-GEO-03",
+    "target": "Distance(X, Y)",
+    "variables": [
+      "tw",
+      "tx",
+      "ty",
+      "tz"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/new2026-predict/raw/HMMT-2026-FEB-GEO-03.json",
+  "source_sha256": "53d0a3fa1d229bfb1b99afa9442bb5aa5471d3e4c047d2e6fa1eea52c580489d",
+  "saved_seed": 5,
+  "eligible_records": 175,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 11.180339887498949,
+      "x": [
+        0.8333333333333334,
+        0.6875,
+        0.8333333333333334,
+        0.6875
+      ],
+      "saved_residual": 0.0
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

@@ -1,0 +1,83 @@
+{
+  "id": "HMMT-2013-FEB-GEO-07",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Angle(A, B, C)",
+        "operator": "=",
+        "right": "pi / 12"
+      },
+      {
+        "left": "Distance(O, D) * Distance(O, D) + Distance(O, C) * Distance(D, C)",
+        "operator": "=",
+        "right": "Distance(O, C) * Distance(O, C)"
+      },
+      {
+        "left": "Ay",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Angle(B, A, C)",
+        "operator": ">",
+        "right": "pi / 2"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(1, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(Ax, Ay)",
+        "name": "A"
+      },
+      {
+        "expression": "Circumcenter(A, B, C)",
+        "name": "O"
+      },
+      {
+        "expression": "Intersect(Line(A, O), Line(B, C))",
+        "name": "D"
+      }
+    ],
+    "id": "HMMT-2013-FEB-GEO-07",
+    "target": "180 * Angle(A, C, B) / pi",
+    "variables": [
+      "Ax",
+      "Ay"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2013-FEB-GEO-07.json",
+  "source_sha256": "9714f16437bc99162accee7dc5bd8cf03feba56665afcf01020185e8de7546bb",
+  "saved_seed": 0,
+  "eligible_records": 60,
+  "candidates": [
+    {
+      "k": 3,
+      "value_float": 34.99999999999999,
+      "x": [
+        0.7232377940978993,
+        0.19379098286419869
+      ],
+      "saved_residual": 5.551115123125783e-17
+    },
+    {
+      "k": 154,
+      "value_float": 74.99999975610747,
+      "x": [
+        0.9330127009680592,
+        0.249999999192285
+      ],
+      "saved_residual": 2.159633355567158e-09
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

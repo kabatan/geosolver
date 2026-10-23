@@ -1,0 +1,78 @@
+{
+  "id": "HMMT-2013-FEB-GEO-08",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "g",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "g",
+        "operator": "<",
+        "right": "pi / 2"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C, D])"
+      },
+      {
+        "left": "Distance(A, Q)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(1, 0)",
+        "name": "X"
+      },
+      {
+        "expression": "Point(14 / 11 * cos(g), 14 / 11 * sin(g))",
+        "name": "B"
+      },
+      {
+        "expression": "Point(7 / 4 * cos(g), -(7 / 4) * sin(g))",
+        "name": "D"
+      },
+      {
+        "expression": "Point(-(21 / 2) * cos(g), -(21 / 2) * sin(g))",
+        "name": "P"
+      },
+      {
+        "expression": "Intersect(Line(P, D), Line(A, X))",
+        "name": "C"
+      },
+      {
+        "expression": "Intersect(Line(C, B), Line(A, D))",
+        "name": "Q"
+      }
+    ],
+    "id": "HMMT-2013-FEB-GEO-08",
+    "target": "Distance(A, Q)",
+    "variables": [
+      "g"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2013-FEB-GEO-08.json",
+  "source_sha256": "fae0b282f041e8f037881c2ecf0044f6ecf97af57af4d4e36245aeec3328c83b",
+  "saved_seed": 0,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 3.230769230769231,
+      "x": [
+        0.3756593807430222
+      ],
+      "saved_residual": 0.0
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

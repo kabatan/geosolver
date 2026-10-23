@@ -1,0 +1,140 @@
+{
+  "id": "JMO-2019-PRE-10",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 9
+      },
+      {
+        "left": "Distance(A, E)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Collinear(A, E, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Collinear(B, F, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(F, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Collinear(B, G, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(G, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(F, Gamma1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(G, Gamma1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(T, Gamma2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "sin(theta)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "theta",
+        "operator": "<",
+        "right": "pi"
+      },
+      {
+        "left": "F.x",
+        "operator": ">",
+        "right": "G.x"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C])"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(6, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(9 * cos(theta), 9 * sin(theta))",
+        "name": "C"
+      },
+      {
+        "expression": "Point(4, 0)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(6 * cos(theta), 6 * sin(theta))",
+        "name": "E"
+      },
+      {
+        "expression": "Circumcircle(A, D, E)",
+        "name": "Gamma1"
+      },
+      {
+        "expression": "Circumcircle(A, B, C)",
+        "name": "Gamma2"
+      },
+      {
+        "expression": "Intersect(Line(B, C), Gamma1, near=B)",
+        "name": "F"
+      },
+      {
+        "expression": "Intersect(Line(B, C), Gamma1, exclude=F)",
+        "name": "G"
+      },
+      {
+        "expression": "Intersect(Line(D, F), Line(E, G))",
+        "name": "T"
+      }
+    ],
+    "id": "JMO-2019-PRE-10",
+    "target": "Distance(F, G) / Distance(B, C)",
+    "variables": [
+      "theta"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2019-PRE-10.json",
+  "source_sha256": "8c8d201ca2237fcc11a9ca87615b1ce18ed2e7a3c66f11fec95b69358a7957b5",
+  "saved_seed": 0,
+  "eligible_records": 19,
+  "candidates": [
+    {
+      "k": 6,
+      "value_float": 0.457427107756206,
+      "x": [
+        -11.194429222040224
+      ],
+      "saved_residual": 2.4851607545271517e-12
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

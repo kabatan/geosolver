@@ -1,0 +1,98 @@
+{
+  "id": "HMMT-2023-FEB-GEO-10",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(I, D)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Distance(I, A)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(I, X)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "cx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "ay",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": "!=",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(ax, ay)",
+        "name": "A"
+      },
+      {
+        "expression": "Incenter(A, B, C)",
+        "name": "I"
+      },
+      {
+        "expression": "FootOfPerpendicular(A, Line(B, C))",
+        "name": "D"
+      },
+      {
+        "expression": "Circumcenter(A, B, C)",
+        "name": "O"
+      },
+      {
+        "expression": "Reflect(A, O)",
+        "name": "X"
+      },
+      {
+        "expression": "Incircle(A, B, C)",
+        "name": "incircle"
+      }
+    ],
+    "id": "HMMT-2023-FEB-GEO-10",
+    "target": "incircle.radius",
+    "variables": [
+      "cx",
+      "ax",
+      "ay"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2023-FEB-GEO-10.json",
+  "source_sha256": "564f98099b4821a9b08c95c16e251210946234394a29a97c12c3241ec7ec5317",
+  "saved_seed": 0,
+  "eligible_records": 198,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 0.9166666690175131,
+      "x": [
+        3.4913055929565875,
+        4.609500672305749,
+        3.3333333376470593
+      ],
+      "saved_residual": 8.242592511541819e-10
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

@@ -1,0 +1,133 @@
+{
+  "id": "aime-2001-1-9",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "y",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 13
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 15
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": 17
+      },
+      {
+        "left": "p",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "q",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "predicate": "Bound(p, (0, 1), inclusive=False)"
+      },
+      {
+        "predicate": "Bound(q, (0, 1), inclusive=False)"
+      },
+      {
+        "predicate": "Bound(r, (0, 1), inclusive=False)"
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": "p * Distance(A, B)"
+      },
+      {
+        "left": "Distance(B, E)",
+        "operator": "=",
+        "right": "q * Distance(B, C)"
+      },
+      {
+        "left": "Distance(C, F)",
+        "operator": "=",
+        "right": "r * Distance(C, A)"
+      },
+      {
+        "left": "p + q + r",
+        "operator": "=",
+        "right": "2 / 3"
+      },
+      {
+        "left": "p**2 + q**2 + r**2",
+        "operator": "=",
+        "right": "2 / 5"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(15, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(x, y)",
+        "name": "A"
+      },
+      {
+        "expression": "PointOnSegment(A, B, p)",
+        "name": "D"
+      },
+      {
+        "expression": "PointOnSegment(B, C, q)",
+        "name": "E"
+      },
+      {
+        "expression": "PointOnSegment(C, A, r)",
+        "name": "F"
+      }
+    ],
+    "id": "aime-2001-1-9",
+    "target": "Area(D, E, F) / Area(A, B, C)",
+    "variables": [
+      "x",
+      "y",
+      "p",
+      "q",
+      "r"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/aime-2001-1-9.json",
+  "source_sha256": "e3e3aef0548b87378a865e1b516702725882e025e1488242a6336e207506db62",
+  "saved_seed": 0,
+  "eligible_records": 2,
+  "candidates": [
+    {
+      "k": 42,
+      "value_float": 0.3555555555555555,
+      "x": [
+        3.5,
+        12.519984025548913,
+        0.014710225420481789,
+        0.6319684235927984,
+        0.019988017653386453
+      ],
+      "saved_residual": 1.7783073324607987e-15
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

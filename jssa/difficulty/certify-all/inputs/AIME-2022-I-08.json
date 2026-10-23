@@ -1,0 +1,203 @@
+{
+  "id": "AIME-2022-I-08",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(O, A)",
+        "operator": "=",
+        "right": 18
+      },
+      {
+        "left": "Distance(O, B)",
+        "operator": "=",
+        "right": 18
+      },
+      {
+        "left": "Distance(O, C)",
+        "operator": "=",
+        "right": 18
+      },
+      {
+        "left": "Distance(OA, Line(A, B))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(OA, Line(A, C))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(OB, Line(B, A))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(OB, Line(B, C))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(OC, Line(C, A))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(OC, Line(C, B))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(O, OA)",
+        "operator": "=",
+        "right": "18 - r"
+      },
+      {
+        "left": "Distance(O, OB)",
+        "operator": "=",
+        "right": "18 - r"
+      },
+      {
+        "left": "Distance(O, OC)",
+        "operator": "=",
+        "right": "18 - r"
+      },
+      {
+        "left": "OnCircle(S1, omegaA)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(S1, omegaB)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(S2, omegaB)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(S2, omegaC)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(S3, omegaC)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(S3, omegaA)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(S1, S2)",
+        "operator": "=",
+        "right": "Distance(S2, S3)"
+      },
+      {
+        "left": "Distance(S2, S3)",
+        "operator": "=",
+        "right": "Distance(S3, S1)"
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r",
+        "operator": "<",
+        "right": "18"
+      },
+      {
+        "left": "Area(S1, S2, S3)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "O"
+      },
+      {
+        "expression": "Circle(O, 18)",
+        "name": "omega"
+      },
+      {
+        "expression": "Point(0, 18)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(-9 * sqrt(3), -9)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(9 * sqrt(3), -9)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(0, r - 18)",
+        "name": "OA"
+      },
+      {
+        "expression": "Point(-(r - 18) * sqrt(3) / 2, -(r - 18) / 2)",
+        "name": "OB"
+      },
+      {
+        "expression": "Point((r - 18) * sqrt(3) / 2, -(r - 18) / 2)",
+        "name": "OC"
+      },
+      {
+        "expression": "Circle(OA, r)",
+        "name": "omegaA"
+      },
+      {
+        "expression": "Circle(OB, r)",
+        "name": "omegaB"
+      },
+      {
+        "expression": "Circle(OC, r)",
+        "name": "omegaC"
+      },
+      {
+        "expression": "Intersect(omegaA, omegaB, near=O)",
+        "name": "S1"
+      },
+      {
+        "expression": "Intersect(omegaB, omegaC, near=O)",
+        "name": "S2"
+      },
+      {
+        "expression": "Intersect(omegaC, omegaA, near=O)",
+        "name": "S3"
+      }
+    ],
+    "id": "AIME-2022-I-08",
+    "target": "Distance(S1, S2)",
+    "variables": [
+      "r"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2022-I-08.json",
+  "source_sha256": "75fa567b94445bd5409fc96106e3629cf8eb5819e2b7548a59d0a0f25986db1d",
+  "saved_seed": 0,
+  "eligible_records": 117,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 13.538841572488437,
+      "x": [
+        11.999999999999964
+      ],
+      "saved_residual": 1.291009419234017e-13
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

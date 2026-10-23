@@ -1,0 +1,87 @@
+{
+  "id": "JMO-2006-PRE-02",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(P, Line(A, B))",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(P, Line(A, C))",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Distance(P, Line(B, C))",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "py",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "px",
+        "operator": ">",
+        "right": "py / sqrt(3)"
+      },
+      {
+        "left": "px",
+        "operator": "<",
+        "right": "s - py / sqrt(3)"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(s, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(s / 2, sqrt(3) * s / 2)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(px, py)",
+        "name": "P"
+      }
+    ],
+    "id": "JMO-2006-PRE-02",
+    "target": "Distance(A, B)",
+    "variables": [
+      "s",
+      "px",
+      "py"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2006-PRE-02.json",
+  "source_sha256": "42c340bd296d22878883d4b698f99eccab77b8eb13f0ad07322703795abe4b54",
+  "saved_seed": 0,
+  "eligible_records": 22,
+  "candidates": [
+    {
+      "k": 3,
+      "value_float": 6.928203230275509,
+      "x": [
+        6.928203230275509,
+        2.8867513459481287,
+        1.0
+      ],
+      "saved_residual": 6.280369834735101e-16
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

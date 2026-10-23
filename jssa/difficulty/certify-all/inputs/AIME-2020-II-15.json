@@ -1,0 +1,113 @@
+{
+  "id": "AIME-2020-II-15",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 22
+      },
+      {
+        "left": "Distance(B, T)",
+        "operator": "=",
+        "right": 16
+      },
+      {
+        "left": "Distance(C, T)",
+        "operator": "=",
+        "right": 16
+      },
+      {
+        "left": "Distance(T, X) * Distance(T, X) + Distance(T, Y) * Distance(T, Y) + Distance(X, Y) * Distance(X, Y)",
+        "operator": "=",
+        "right": 1143
+      },
+      {
+        "left": "ay",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "AcuteTriangle(A, B, C)"
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "!=",
+        "right": "Distance(A, C)"
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "!=",
+        "right": "Distance(B, C)"
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "!=",
+        "right": "Distance(B, C)"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(ax, ay)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(-11, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(11, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Circumcircle(A, B, C)",
+        "name": "Gamma"
+      },
+      {
+        "expression": "Tangent(B, Gamma)",
+        "name": "tB"
+      },
+      {
+        "expression": "Tangent(C, Gamma)",
+        "name": "tC"
+      },
+      {
+        "expression": "Intersect(tB, tC)",
+        "name": "T"
+      },
+      {
+        "expression": "FootOfPerpendicular(T, Line(A, B))",
+        "name": "X"
+      },
+      {
+        "expression": "FootOfPerpendicular(T, Line(A, C))",
+        "name": "Y"
+      }
+    ],
+    "id": "AIME-2020-II-15",
+    "target": "Distance(X, Y) * Distance(X, Y)",
+    "variables": [
+      "ax",
+      "ay"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2020-II-15.json",
+  "source_sha256": "faeb8caaebbec7d9215e9d88efeb23842f9fd06415cf60cbb9b544103e231d8d",
+  "saved_seed": 0,
+  "eligible_records": 2,
+  "candidates": [
+    {
+      "k": 113,
+      "value_float": 716.9999999998674,
+      "x": [
+        3.92145097875223,
+        25.04529230541491
+      ],
+      "saved_residual": 1.758086918466865e-11
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

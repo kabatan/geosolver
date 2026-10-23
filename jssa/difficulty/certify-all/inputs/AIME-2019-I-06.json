@@ -1,0 +1,98 @@
+{
+  "id": "AIME-2019-I-06",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Perpendicular(Line(M, N), Line(K, M))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Perpendicular(Line(K, L), Line(L, N))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(M, N)",
+        "operator": "=",
+        "right": 65
+      },
+      {
+        "left": "Distance(K, L)",
+        "operator": "=",
+        "right": 28
+      },
+      {
+        "left": "Distance(K, O)",
+        "operator": "=",
+        "right": 8
+      },
+      {
+        "left": "m",
+        "operator": ">",
+        "right": "8"
+      },
+      {
+        "left": "ny",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "ConvexPolygon([K, L, M, N])"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "K"
+      },
+      {
+        "expression": "Point(m, 0)",
+        "name": "M"
+      },
+      {
+        "expression": "Point(nx, ny)",
+        "name": "N"
+      },
+      {
+        "expression": "Point(lx, ly)",
+        "name": "L"
+      },
+      {
+        "expression": "Intersect(Line(K, M), PerpendicularLine(Line(K, N), L))",
+        "name": "O"
+      }
+    ],
+    "id": "AIME-2019-I-06",
+    "target": "Distance(M, O)",
+    "variables": [
+      "m",
+      "nx",
+      "ny",
+      "lx",
+      "ly"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2019-I-06.json",
+  "source_sha256": "9a4d25bb39d68f625c0534a9f8900a0cd61dabc78643130c11c770137a56f0d3",
+  "saved_seed": 0,
+  "eligible_records": 31,
+  "candidates": [
+    {
+      "k": 5,
+      "value_float": 90.00000000000001,
+      "x": [
+        98.00000000000001,
+        98.00000000000001,
+        65.0,
+        20.587372359265938,
+        -18.977884480124036
+      ],
+      "saved_residual": 3.6624741468941755e-15
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

@@ -1,0 +1,126 @@
+{
+  "id": "JMO-2022-PRE-04",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Distance(A, P)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(B, P)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "Perpendicular(Line(A, P), Line(A, D))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Perpendicular(Line(B, P), Line(C, D))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Area(A, B, P) + Area(B, C, P) + Area(C, D, P) + Area(D, A, P)",
+        "operator": "=",
+        "right": "Area(A, B, C, D)"
+      },
+      {
+        "left": "By",
+        "operator": "<",
+        "right": "0"
+      },
+      {
+        "left": "Cx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C, D])"
+      },
+      {
+        "left": "(Vector(A, B).x * Vector(A, P).y - Vector(A, B).y * Vector(A, P).x) * (Vector(B, C).x * Vector(B, P).y - Vector(B, C).y * Vector(B, P).x)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "(Vector(A, B).x * Vector(A, P).y - Vector(A, B).y * Vector(A, P).x) * (Vector(C, D).x * Vector(C, P).y - Vector(C, D).y * Vector(C, P).x)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "(Vector(A, B).x * Vector(A, P).y - Vector(A, B).y * Vector(A, P).x) * (Vector(D, A).x * Vector(D, P).y - Vector(D, A).y * Vector(D, P).x)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(3, 0)",
+        "name": "P"
+      },
+      {
+        "expression": "Point(0, 5)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(Bx, By)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(Cx, Cy)",
+        "name": "C"
+      }
+    ],
+    "id": "JMO-2022-PRE-04",
+    "target": "Area(A, B, C)",
+    "variables": [
+      "Bx",
+      "By",
+      "Cx",
+      "Cy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2022-PRE-04.json",
+  "source_sha256": "2f344fcf3ade6e83fcefa2983571eacbd38da68f78e80688c8726b5f5991e766",
+  "saved_seed": 0,
+  "eligible_records": 184,
+  "candidates": [
+    {
+      "k": 1,
+      "value_float": 40.833333333333336,
+      "x": [
+        3.6666666666666665,
+        -5.962847939999439,
+        9.938079899999066,
+        6.111111111111111
+      ],
+      "saved_residual": 1.4210861491463966e-14
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

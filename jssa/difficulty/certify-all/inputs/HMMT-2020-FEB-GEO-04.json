@@ -1,0 +1,116 @@
+{
+  "id": "HMMT-2020-FEB-GEO-04",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "h",
+        "operator": ">",
+        "right": "1"
+      },
+      {
+        "left": "e",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "e",
+        "operator": "<",
+        "right": "h"
+      },
+      {
+        "left": "h-1",
+        "operator": ">=",
+        "right": "e"
+      },
+      {
+        "predicate": "Or(And((Vector(B,C).x*Vector(B,I).y-Vector(B,C).y*Vector(B,I).x)>0,(Vector(C,D).x*Vector(C,I).y-Vector(C,D).y*Vector(C,I).x)>0,(Vector(D,E).x*Vector(D,I).y-Vector(D,E).y*Vector(D,I).x)>0,(Vector(E,B).x*Vector(E,I).y-Vector(E,B).y*Vector(E,I).x)>0),And((Vector(B,C).x*Vector(B,I).y-Vector(B,C).y*Vector(B,I).x)<0,(Vector(C,D).x*Vector(C,I).y-Vector(C,D).y*Vector(C,I).x)<0,(Vector(D,E).x*Vector(D,I).y-Vector(D,E).y*Vector(D,I).x)<0,(Vector(E,B).x*Vector(E,I).y-Vector(E,B).y*Vector(E,I).x)<0))"
+      },
+      {
+        "left": "Distance(I,Line(B,E))",
+        "operator": "=",
+        "right": "1"
+      },
+      {
+        "left": "Distance(T1,T2)",
+        "operator": "=",
+        "right": "0"
+      },
+      {
+        "left": "OnSegment(T1,B,E)",
+        "operator": "=",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0,0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(2,0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(2,h)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(0,h)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(0,e)",
+        "name": "E"
+      },
+      {
+        "expression": "Point(1,h-1)",
+        "name": "I"
+      },
+      {
+        "expression": "Circle(I,1)",
+        "name": "omega1"
+      },
+      {
+        "expression": "Incircle(A,B,E)",
+        "name": "omega2"
+      },
+      {
+        "expression": "Incenter(A,B,E)",
+        "name": "J"
+      },
+      {
+        "expression": "FootOfPerpendicular(I,Line(B,E))",
+        "name": "T1"
+      },
+      {
+        "expression": "FootOfPerpendicular(J,Line(B,E))",
+        "name": "T2"
+      }
+    ],
+    "id": "HMMT-2020-FEB-GEO-04",
+    "target": "Radius(omega1)/Radius(omega2)",
+    "variables": [
+      "h",
+      "e"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2020-FEB-GEO-04.json",
+  "source_sha256": "f6683de7a2a699d59c57aa0fe9c2326b801578c8550ea0ada29ea28f6c077e1f",
+  "saved_seed": 0,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 2.6180339878026815,
+      "x": [
+        2.6180339888880915,
+        1.0000000004999998
+      ],
+      "saved_residual": 4.4721347810455046e-10
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

@@ -1,0 +1,122 @@
+{
+  "id": "AIME-2021-I-13",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "OnCircle(A, omega1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(A, omega2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(O, O1)",
+        "operator": "=",
+        "right": "r + 961"
+      },
+      {
+        "left": "Distance(O, O2)",
+        "operator": "=",
+        "right": "r + 625"
+      },
+      {
+        "left": "OnCircle(P, omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(Q, omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Angle(P, O, Q)",
+        "operator": "=",
+        "right": "2 * pi / 3"
+      },
+      {
+        "left": "d",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "ay",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "O1"
+      },
+      {
+        "expression": "Point(d, 0)",
+        "name": "O2"
+      },
+      {
+        "expression": "Circle(O1, 961)",
+        "name": "omega1"
+      },
+      {
+        "expression": "Circle(O2, 625)",
+        "name": "omega2"
+      },
+      {
+        "expression": "Point(ax, ay)",
+        "name": "A"
+      },
+      {
+        "expression": "Intersect(omega1, omega2, exclude=A)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(ox, oy)",
+        "name": "O"
+      },
+      {
+        "expression": "Circle(O, r)",
+        "name": "omega"
+      },
+      {
+        "expression": "Line(A, B)",
+        "name": "L"
+      },
+      {
+        "expression": "Intersect(L, omega, n=1)",
+        "name": "P"
+      },
+      {
+        "expression": "Intersect(L, omega, exclude=P)",
+        "name": "Q"
+      }
+    ],
+    "id": "AIME-2021-I-13",
+    "target": "Distance(O1, O2)",
+    "variables": [
+      "ax",
+      "ay",
+      "d",
+      "ox",
+      "oy",
+      "r"
+    ]
+  },
+  "source_kind": "missing_saved_candidate",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2021-I-13.json",
+  "source_sha256": "6307596fe521e985fdc7bd47ff44a2f17ac8901084117980f50c8cf5ed86a8c5",
+  "saved_seed": 0,
+  "eligible_records": 0,
+  "candidates": [],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

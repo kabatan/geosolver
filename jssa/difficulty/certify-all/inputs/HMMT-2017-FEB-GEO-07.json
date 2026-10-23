@@ -1,0 +1,87 @@
+{
+  "id": "HMMT-2017-FEB-GEO-07",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "t",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "t",
+        "operator": "<",
+        "right": "pi"
+      },
+      {
+        "left": "Distance(A,Q)",
+        "operator": "=",
+        "right": "3*Distance(B,Q)"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0,0)",
+        "name": "O"
+      },
+      {
+        "expression": "Point(10,0)",
+        "name": "I"
+      },
+      {
+        "expression": "Point(17,0)",
+        "name": "P"
+      },
+      {
+        "expression": "Circle(O,17)",
+        "name": "Gamma"
+      },
+      {
+        "expression": "Circle(I,7)",
+        "name": "omega"
+      },
+      {
+        "expression": "Point(10+7*cos(t),7*sin(t))",
+        "name": "Q"
+      },
+      {
+        "expression": "Tangent(Q,omega)",
+        "name": "lineAB"
+      },
+      {
+        "expression": "Intersect(lineAB,Gamma,far=Q)",
+        "name": "A"
+      },
+      {
+        "expression": "Intersect(lineAB,Gamma,near=Q)",
+        "name": "B"
+      },
+      {
+        "expression": "Intersect(Line(P,Q),Gamma,exclude=P)",
+        "name": "R"
+      }
+    ],
+    "id": "HMMT-2017-FEB-GEO-07",
+    "target": "Radius(Circumcircle(A,Q,R))",
+    "variables": [
+      "t"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2017-FEB-GEO-07.json",
+  "source_sha256": "f00d4d1a9d2993b1214780cb8e2d67fc23699e848bb18b178a5f9145d68741e9",
+  "saved_seed": 0,
+  "eligible_records": 135,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 13.038404810405298,
+      "x": [
+        2.133332571338752
+      ],
+      "saved_residual": 7.105427357601002e-15
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

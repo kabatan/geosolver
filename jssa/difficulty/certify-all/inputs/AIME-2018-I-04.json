@@ -1,0 +1,134 @@
+{
+  "id": "AIME-2018-I-04",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 12
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": "Distance(D, E)"
+      },
+      {
+        "left": "Distance(D, E)",
+        "operator": "=",
+        "right": "Distance(E, C)"
+      },
+      {
+        "left": "Collinear(A, D, B)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Collinear(A, E, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(D, A, B)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(E, A, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "dx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "dx",
+        "operator": "<",
+        "right": "10"
+      },
+      {
+        "left": "ey",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "ey",
+        "operator": "<",
+        "right": "48 / 5"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(10, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(14 / 5, 48 / 5)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(dx, dy)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(ex, ey)",
+        "name": "E"
+      }
+    ],
+    "id": "AIME-2018-I-04",
+    "target": "Distance(A, D)",
+    "variables": [
+      "dx",
+      "dy",
+      "ex",
+      "ey"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2018-I-04.json",
+  "source_sha256": "a860609d207ae34aa562e830f7379f675051fb56109040c31b5781725a7449b0",
+  "saved_seed": 0,
+  "eligible_records": 13,
+  "candidates": [
+    {
+      "k": 8,
+      "value_float": 6.41025641025641,
+      "x": [
+        6.41025641025641,
+        7.2602862024560455e-25,
+        1.005128205128205,
+        3.4461538461538455
+      ],
+      "saved_residual": 2.6645352591003757e-15
+    },
+    {
+      "k": 59,
+      "value_float": 9.999999999997346,
+      "x": [
+        9.999999999997346,
+        -5.436810377774477e-23,
+        9.774293631234886e-13,
+        3.3611048996316666e-12
+      ],
+      "saved_residual": 9.865833008132142e-13
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

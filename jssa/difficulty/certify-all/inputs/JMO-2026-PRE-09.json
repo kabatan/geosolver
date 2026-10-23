@@ -1,0 +1,115 @@
+{
+  "id": "JMO-2026-PRE-09",
+  "group": "holdout2026",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": "Distance(A, C)"
+      },
+      {
+        "predicate": "Bound(d, (0, 1), inclusive=False)"
+      },
+      {
+        "predicate": "Bound(e, (0, 1), inclusive=False)"
+      },
+      {
+        "predicate": "Bound(f, (0, 1), inclusive=False)"
+      },
+      {
+        "left": "Degrees(Angle(E, D, F))",
+        "operator": "=",
+        "right": "180 - Degrees(Angle(B, A, C)) / 2"
+      },
+      {
+        "left": "Distance(E, P)",
+        "operator": "=",
+        "right": 12
+      },
+      {
+        "left": "Distance(F, Q)",
+        "operator": "=",
+        "right": 16
+      },
+      {
+        "left": "Distance(A, R)",
+        "operator": "=",
+        "right": "6*sqrt(7)"
+      },
+      {
+        "left": "ay",
+        "operator": ">",
+        "right": 0
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(21, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(ax, ay)",
+        "name": "A"
+      },
+      {
+        "expression": "PointOnSegment(B, C, d)",
+        "name": "D"
+      },
+      {
+        "expression": "PointOnSegment(C, A, e)",
+        "name": "E"
+      },
+      {
+        "expression": "PointOnSegment(A, B, f)",
+        "name": "F"
+      },
+      {
+        "expression": "Intersect(PerpendicularBisector(B, D), Line(D, E))",
+        "name": "P"
+      },
+      {
+        "expression": "Intersect(PerpendicularBisector(C, D), Line(D, F))",
+        "name": "Q"
+      },
+      {
+        "expression": "Intersect(Line(B, P), Line(C, Q))",
+        "name": "R"
+      }
+    ],
+    "id": "JMO-2026-PRE-09",
+    "target": "Area(D, P, Q)",
+    "variables": [
+      "ax",
+      "ay",
+      "d",
+      "e",
+      "f"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/new2026-predict/raw/JMO-2026-PRE-09.json",
+  "source_sha256": "8486c0f22847205d2302d4be24a16067e6eecf8e78fb4819fa81603968a08c16",
+  "saved_seed": 5,
+  "eligible_records": 16,
+  "candidates": [
+    {
+      "k": 10,
+      "value_float": 5.0798425172440185,
+      "x": [
+        10.5,
+        11.905880899790654,
+        0.8579176483759945,
+        0.06968529115401184,
+        0.5629058678640575
+      ],
+      "saved_residual": 2.9134418374455476e-14
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

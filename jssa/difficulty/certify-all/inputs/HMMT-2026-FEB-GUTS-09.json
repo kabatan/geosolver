@@ -1,0 +1,78 @@
+{
+  "id": "HMMT-2026-FEB-GUTS-09",
+  "group": "holdout2026",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 8
+      },
+      {
+        "left": "Distance(A, F)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "w",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "h",
+        "operator": ">",
+        "right": 0
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(w, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(w, h)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(0, h)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(2 * w - w, 2 * 0 - h)",
+        "name": "E"
+      },
+      {
+        "expression": "Intersect(Line(C, D), Circumcircle(A, C, E), exclude=C)",
+        "name": "F"
+      }
+    ],
+    "id": "HMMT-2026-FEB-GUTS-09",
+    "target": "Area(A, B, C, D)",
+    "variables": [
+      "w",
+      "h"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/new2026-predict/raw/HMMT-2026-FEB-GUTS-09.json",
+  "source_sha256": "34077e4c5881666aad8f0188ea48815b7eae2e8dda924d9768e0bf5363920d9b",
+  "saved_seed": 5,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 30.720000000032606,
+      "x": [
+        6.4000000000092125,
+        4.799999999998185
+      ],
+      "saved_residual": 8.820998561188012e-12
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

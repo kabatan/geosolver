@@ -1,0 +1,191 @@
+{
+  "id": "JMO-2014-PRE-04",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(O, A)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(O, B)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(O, C)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(O, D)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(O, E)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(O, F)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(D, E)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "Distance(E, F)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(T, Line(C, F))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, C, D)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, D, E)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "g1",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "g2",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "g3",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "g4",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "g5",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "g1 + g2 + g3 + g4 + g5",
+        "operator": "<",
+        "right": "2 * pi"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C, D, E, F])"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "O"
+      },
+      {
+        "expression": "Point(r, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(r * cos(g1), r * sin(g1))",
+        "name": "B"
+      },
+      {
+        "expression": "Point(r * cos(g1 + g2), r * sin(g1 + g2))",
+        "name": "C"
+      },
+      {
+        "expression": "Point(r * cos(g1 + g2 + g3), r * sin(g1 + g2 + g3))",
+        "name": "D"
+      },
+      {
+        "expression": "Point(r * cos(g1 + g2 + g3 + g4), r * sin(g1 + g2 + g3 + g4))",
+        "name": "E"
+      },
+      {
+        "expression": "Point(r * cos(g1 + g2 + g3 + g4 + g5), r * sin(g1 + g2 + g3 + g4 + g5))",
+        "name": "F"
+      },
+      {
+        "expression": "Circle(O, r)",
+        "name": "omega"
+      },
+      {
+        "expression": "Intersect(Line(A, D), Line(B, E))",
+        "name": "T"
+      }
+    ],
+    "id": "JMO-2014-PRE-04",
+    "target": "Distance(F, A)",
+    "variables": [
+      "r",
+      "g1",
+      "g2",
+      "g3",
+      "g4",
+      "g5"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2014-PRE-04.json",
+  "source_sha256": "09284fa2970fdf54c0df77fee0d8b569e3137bf6bbf6fab1fe0836e56cf2d7bc",
+  "saved_seed": 0,
+  "eligible_records": 9,
+  "candidates": [
+    {
+      "k": 2,
+      "value_float": 1.8750000097677606,
+      "x": [
+        2.9408071143618377,
+        0.3417026720443643,
+        0.6939246120215793,
+        1.0705185173895593,
+        1.4957582455552925,
+        2.0323759723173094
+      ],
+      "saved_residual": 2.84195245114951e-09
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

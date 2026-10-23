@@ -1,0 +1,102 @@
+{
+  "id": "HMMT-2012-FEB-GEO-03",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(B, D)",
+        "operator": "=",
+        "right": "Distance(B, I)"
+      },
+      {
+        "left": "Distance(C, E)",
+        "operator": "=",
+        "right": "Distance(C, I)"
+      },
+      {
+        "left": "Perpendicular(Line(D, E), Line(A, I))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(M, A)",
+        "operator": "=",
+        "right": "Distance(M, I)"
+      },
+      {
+        "left": "alpha",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "alpha",
+        "operator": "<",
+        "right": "pi"
+      },
+      {
+        "left": "d",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "d",
+        "operator": "<",
+        "right": "1"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(cos(alpha / 2), sin(alpha / 2))",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cos(alpha / 2), -sin(alpha / 2))",
+        "name": "C"
+      },
+      {
+        "expression": "Incenter(A, B, C)",
+        "name": "I"
+      },
+      {
+        "expression": "Point(d * cos(alpha / 2), d * sin(alpha / 2))",
+        "name": "D"
+      },
+      {
+        "expression": "Point(d * cos(alpha / 2), -d * sin(alpha / 2))",
+        "name": "E"
+      },
+      {
+        "expression": "Midpoint(D, E)",
+        "name": "M"
+      }
+    ],
+    "id": "HMMT-2012-FEB-GEO-03",
+    "target": "180 * Angle(B, A, C) / pi",
+    "variables": [
+      "alpha",
+      "d"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2012-FEB-GEO-03.json",
+  "source_sha256": "a2878915989fe2908f0e08087a3c35005f7d81c7eb18c0230ae826826e1f339f",
+  "saved_seed": 0,
+  "eligible_records": 167,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 77.14285715922618,
+      "x": [
+        1.3463968518241765,
+        0.30797852831318656
+      ],
+      "saved_residual": 8.282795349771715e-11
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

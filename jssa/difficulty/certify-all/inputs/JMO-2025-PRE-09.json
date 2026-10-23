@@ -1,0 +1,111 @@
+{
+  "id": "JMO-2025-PRE-09",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Angle(A, O, D)",
+        "operator": "=",
+        "right": "pi / 2"
+      },
+      {
+        "left": "Distance(O, D)",
+        "operator": "=",
+        "right": "4 * sqrt(7)"
+      },
+      {
+        "left": "Distance(A, P)",
+        "operator": "=",
+        "right": 11
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "AcuteTriangle(A,B,C)"
+      },
+      {
+        "left": "OnSegment(P,A,O)",
+        "operator": "=",
+        "right": "0"
+      },
+      {
+        "left": "OnSegment(P,E,F)",
+        "operator": "=",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(b, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Circumcenter(A, B, C)",
+        "name": "O"
+      },
+      {
+        "expression": "FootOfPerpendicular(Line(B, C), A)",
+        "name": "D"
+      },
+      {
+        "expression": "FootOfPerpendicular(Line(A, B), D)",
+        "name": "E"
+      },
+      {
+        "expression": "FootOfPerpendicular(Line(A, C), D)",
+        "name": "F"
+      },
+      {
+        "expression": "Intersect(Line(A, O), Line(E, F))",
+        "name": "P"
+      }
+    ],
+    "id": "JMO-2025-PRE-09",
+    "target": "Distance(E, F)",
+    "variables": [
+      "b",
+      "cx",
+      "cy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2025-PRE-09.json",
+  "source_sha256": "ab6a2b02e2dd0a7e503205ae8e51ec8b9e8d86e1e5df0395ded71835a56bb810",
+  "saved_seed": 0,
+  "eligible_records": 191,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 15.620499351813319,
+      "x": [
+        27.293631577904854,
+        8.207042707403426,
+        16.02476316141245
+      ],
+      "saved_residual": 4.3737714791252564e-15
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

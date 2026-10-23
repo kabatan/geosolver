@@ -1,0 +1,132 @@
+{
+  "bound_derivation": {
+    "bounds": [
+      "0",
+      "oo",
+      "False",
+      "False"
+    ],
+    "explicit_rules": [
+      {
+        "condition_index": 1,
+        "normalized_expression": "Dot(Vector(Intersect(Line(Point(b, 0), Midpoint(Point(0, 0), PointOnSegment(Point(b + dx, dy), Point(dx, dy), e))), Line(Point(0, 0), Point(dx, dy))), Point(0, 0)), Vector(Intersect(Line(Point(b, 0), Midpoint(Point(0, 0), PointOnSegment(Point(b + dx, dy), Point(dx, dy), e))), Line(Point(0, 0), Point(dx, dy))), Point(dx, dy)))",
+        "operator": "<=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 2,
+        "normalized_expression": "Distance(Point(b + dx, dy), PointOnSegment(Point(b + dx, dy), Point(dx, dy), e))",
+        "operator": "=",
+        "rational_endpoint": "3"
+      },
+      {
+        "condition_index": 3,
+        "normalized_expression": "Distance(Point(dx, dy), Intersect(Line(Point(b, 0), Midpoint(Point(0, 0), PointOnSegment(Point(b + dx, dy), Point(dx, dy), e))), Line(Point(0, 0), Point(dx, dy))))",
+        "operator": "=",
+        "rational_endpoint": "3"
+      },
+      {
+        "condition_index": 4,
+        "normalized_expression": "Distance(Midpoint(Point(0, 0), PointOnSegment(Point(b + dx, dy), Point(dx, dy), e)), Point(b, 0))",
+        "operator": "=",
+        "rational_endpoint": "5"
+      },
+      {
+        "condition_index": 5,
+        "normalized_expression": "Distance(Midpoint(Point(0, 0), PointOnSegment(Point(b + dx, dy), Point(dx, dy), e)), Point(b + dx, dy))",
+        "operator": "=",
+        "rational_endpoint": "4"
+      },
+      {
+        "condition_index": 6,
+        "normalized_expression": "b",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 7,
+        "normalized_expression": "dy",
+        "operator": ">",
+        "rational_endpoint": "0"
+      }
+    ],
+    "method": "conservative_rational_interval_arithmetic"
+  },
+  "candidate_union_P": "t8**2 + 6*t8 - 32",
+  "candidates": [
+    {
+      "P": "t8**2 + 6*t8 - 32",
+      "candidate_status": "proposed",
+      "float_guard": true,
+      "float_hard": true,
+      "hp_coordinates": [
+        "3.403124237432848686488217674621813264520420132621018885529272626668182758196876074289354302249869963",
+        "-1.405563856997454589716925831014544375138628809599735852921059844878381581067606943136687529762166577",
+        "6.246950475544242620964114804509086111727239153776603790760265977237251471411586413940833465609629232",
+        "0.881542897259329564358270406995794993548789387433220520518369308750142133580957131964626965835925309"
+      ],
+      "hp_guard": true,
+      "hp_hard": true,
+      "hp_residual": "1.14298739128e-100",
+      "hp_value": "3.403124237432848686488217674621813264520420132621018885529272626668182758196876074289354302249869963",
+      "iterations": 3,
+      "k": 0,
+      "numeric_fixed_columns": [],
+      "proposal_kind": "100_digit_polished_saved_endpoint",
+      "rank": 4,
+      "rechecked_residual": 4.440892098500626e-16,
+      "root_interval": [
+        "1170732376273/344016936965",
+        "12179274359153/3578850935028"
+      ],
+      "saved_residual": 4.440892098500626e-16,
+      "value_float": 3.403124237432849,
+      "x": [
+        3.403124237432849,
+        -1.4055638569974542,
+        6.246950475544243,
+        0.8815428972593295
+      ]
+    }
+  ],
+  "equations": 13,
+  "group": "holdout2026",
+  "id": "JMO-2026-PRE-06",
+  "identities": [],
+  "input_sha256": "9c5b1d0ebb187deeb446164978c064c04fd665a152075315c55be082ed686585",
+  "max_degree": 4,
+  "nondeg_factors": [
+    "v_b",
+    "v_dy",
+    "v_e + 1"
+  ],
+  "official_answer_loaded": false,
+  "primary_main_output_available": false,
+  "proposed_candidate_count": 1,
+  "saved_candidate_count": 1,
+  "seconds": 10.238294620066881,
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/new2026-predict/raw/JMO-2026-PRE-06.json",
+  "source_sha256": "7089f7a589e364c962e78311384b89b21d20962c2269a849b8d025ccdc1376c6",
+  "stage": "identity_reflection",
+  "stage_timeouts": [],
+  "stages": {
+    "bounds": 0.0023915800265967846,
+    "encode": 0.21257905289530754,
+    "groebner_grevlex": 8.705049187876284,
+    "identity_P": 0.01744180009700358,
+    "numeric_and_pslq": 0.04117215587757528
+  },
+  "status": "timeout",
+  "system_bytes": 603,
+  "system_sha256": "97b7956c52ecaab4eef2a15255da46a8288e41ce0e4c28c7703356294d9af8dd",
+  "target_symbol": "t8",
+  "total_terms": 46,
+  "variables": 13,
+  "zero_dimensional": true,
+  "detail": "parent enforced the total 60s wall limit",
+  "process_wall_seconds": 60.024367943173274,
+  "process_returncode": -9,
+  "hard_timeout": true,
+  "charged_seconds": 60
+}

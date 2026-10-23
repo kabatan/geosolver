@@ -1,0 +1,167 @@
+{
+  "id": "HMMT-2020-FEB-GEO-07",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "OnCircle(X1, Gamma)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(X1, omega1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(X2, Gamma)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(X2, omega2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(O, O1)",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "Distance(O, O2)",
+        "operator": "=",
+        "right": 9
+      },
+      {
+        "left": "OnCircle(T1, omega1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(T2, omega2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(l, omega1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(l, omega2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(X1, T1)",
+        "operator": "=",
+        "right": "Distance(X2, T2) / 2"
+      },
+      {
+        "left": "h",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "h",
+        "operator": "<",
+        "right": "6"
+      },
+      {
+        "left": "Distance(T1, T2)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, h)",
+        "name": "O"
+      },
+      {
+        "expression": "Circle(O, 12)",
+        "name": "Gamma"
+      },
+      {
+        "expression": "sqrt(100 - (h - 2) * (h - 2))",
+        "name": "u"
+      },
+      {
+        "expression": "sqrt(81 - (h + 3) * (h + 3))",
+        "name": "v"
+      },
+      {
+        "expression": "Point(u, 2)",
+        "name": "O1"
+      },
+      {
+        "expression": "Point(v, -3)",
+        "name": "O2"
+      },
+      {
+        "expression": "Circle(O1, 2)",
+        "name": "omega1"
+      },
+      {
+        "expression": "Circle(O2, 3)",
+        "name": "omega2"
+      },
+      {
+        "expression": "Point(O.x + 12 / 10 * (O1.x - O.x), O.y + 12 / 10 * (O1.y - O.y))",
+        "name": "X1"
+      },
+      {
+        "expression": "Point(O.x + 12 / 9 * (O2.x - O.x), O.y + 12 / 9 * (O2.y - O.y))",
+        "name": "X2"
+      },
+      {
+        "expression": "Point(u, 0)",
+        "name": "T1"
+      },
+      {
+        "expression": "Point(v, 0)",
+        "name": "T2"
+      },
+      {
+        "expression": "Line(Point(0, 0), Point(1, 0))",
+        "name": "l"
+      },
+      {
+        "expression": "Intersect(l,Gamma,n=1)",
+        "name": "A"
+      },
+      {
+        "expression": "Intersect(l, Gamma, exclude=A)",
+        "name": "B"
+      }
+    ],
+    "id": "HMMT-2020-FEB-GEO-07",
+    "target": "Distance(A, B)",
+    "variables": [
+      "h"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2020-FEB-GEO-07.json",
+  "source_sha256": "99ae6279bf8ee635fe5af55d8fd87f6379298a5b162649752e1520930e52a763",
+  "saved_seed": 0,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 23.352204259704948,
+      "x": [
+        2.7692307692307847
+      ],
+      "saved_residual": 3.6955587428207345e-15
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

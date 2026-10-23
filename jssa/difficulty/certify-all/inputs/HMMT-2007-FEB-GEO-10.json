@@ -1,0 +1,117 @@
+{
+  "id": "HMMT-2007-FEB-GEO-10",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Angle(A, B, C)",
+        "operator": "=",
+        "right": "pi / 2"
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(I, Line(A, B))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(I, Line(B, C))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(I, Line(C, D))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(I, Line(D, A))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C, D])"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(2, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(0, 3)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(Dx, Dy)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(Ix, Iy)",
+        "name": "I"
+      },
+      {
+        "expression": "Circle(I, r)",
+        "name": "omega"
+      }
+    ],
+    "id": "HMMT-2007-FEB-GEO-10",
+    "target": "r",
+    "variables": [
+      "Dx",
+      "Dy",
+      "Ix",
+      "Iy",
+      "r"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2007-FEB-GEO-10.json",
+  "source_sha256": "fd095c31f59c33bf2be452ed09d93cee453e5019b3cb831f329619897b4e8cc1",
+  "saved_seed": 0,
+  "eligible_records": 26,
+  "candidates": [
+    {
+      "k": 1,
+      "value_float": 1.5351837584879962,
+      "x": [
+        6.9923017660270625,
+        3.328201177351373,
+        1.5351837584879962,
+        1.5351837584879964,
+        1.5351837584879962
+      ],
+      "saved_residual": 1.3136335981433192e-15
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

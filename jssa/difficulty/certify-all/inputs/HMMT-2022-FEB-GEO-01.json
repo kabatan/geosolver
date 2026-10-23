@@ -1,0 +1,94 @@
+{
+  "id": "HMMT-2022-FEB-GEO-01",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 20
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 22
+      },
+      {
+        "left": "Distance(A, U)",
+        "operator": "=",
+        "right": "Distance(A, V)"
+      },
+      {
+        "left": "Distance(A, U)",
+        "operator": "=",
+        "right": "Distance(U, V)"
+      },
+      {
+        "left": "u",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "u",
+        "operator": "<",
+        "right": "20"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(20, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(11, 11 * sqrt(3))",
+        "name": "C"
+      },
+      {
+        "expression": "Point(u, 0)",
+        "name": "U"
+      },
+      {
+        "expression": "Point(u / 2, u * sqrt(3) / 2)",
+        "name": "V"
+      },
+      {
+        "expression": "Line(U, V)",
+        "name": "l"
+      },
+      {
+        "expression": "FootOfPerpendicular(B, l)",
+        "name": "X"
+      },
+      {
+        "expression": "FootOfPerpendicular(C, l)",
+        "name": "Y"
+      }
+    ],
+    "id": "HMMT-2022-FEB-GEO-01",
+    "target": "Distance(X, Y)",
+    "variables": [
+      "u"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2022-FEB-GEO-01.json",
+  "source_sha256": "2cfce93e7fa28fcb663de3c052a530005d1ad998107a15d668f009cb06368f9e",
+  "saved_seed": 0,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 21.0,
+      "x": [
+        12.739233746429086
+      ],
+      "saved_residual": 0.0
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

@@ -1,0 +1,141 @@
+{
+  "bound_derivation": {
+    "bounds": [
+      "0",
+      "oo",
+      "True",
+      "False"
+    ],
+    "explicit_rules": [
+      {
+        "condition_index": 0,
+        "normalized_expression": "Distance(Point(0, 0), Point(6, 0))",
+        "operator": "=",
+        "rational_endpoint": "6"
+      },
+      {
+        "condition_index": 1,
+        "normalized_expression": "Distance(Point(6, 0), Point(cx, cy))",
+        "operator": "=",
+        "rational_endpoint": "5"
+      },
+      {
+        "condition_index": 2,
+        "normalized_expression": "Distance(Point(cx, cy), Point(0, 0))",
+        "operator": "=",
+        "rational_endpoint": "7"
+      },
+      {
+        "condition_index": 3,
+        "normalized_expression": "OnCircle(Point(zx, zy), Circumcircle(Point(0, 0), Point(6, 0), Point(cx, cy)))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 5,
+        "normalized_expression": "OnSegment(FootOfPerpendicular(Intersect(Tangent(Point(6, 0), Circumcircle(Point(0, 0), Point(6, 0), Point(cx, cy))), Tangent(Point(cx, cy), Circumcircle(Point(0, 0), Point(6, 0), Point(cx, cy)))), Line(Point(cx, cy), Point(zx, zy))), Point(cx, cy), Point(zx, zy))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 6,
+        "normalized_expression": "cy",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 7,
+        "normalized_expression": "Distance(Point(cx, cy), FootOfPerpendicular(Intersect(Tangent(Point(6, 0), Circumcircle(Point(0, 0), Point(6, 0), Point(cx, cy))), Tangent(Point(cx, cy), Circumcircle(Point(0, 0), Point(6, 0), Point(cx, cy)))), Line(Point(cx, cy), Point(zx, zy))))",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 8,
+        "normalized_expression": "Distance(Point(0, 0), Intersect(Circumcircle(Point(6, 0), Point(cx, cy), FootOfPerpendicular(Intersect(Tangent(Point(6, 0), Circumcircle(Point(0, 0), Point(6, 0), Point(cx, cy))), Tangent(Point(cx, cy), Circumcircle(Point(0, 0), Point(6, 0), Point(cx, cy)))), Line(Point(cx, cy), Point(zx, zy)))), Line(Point(0, 0), Point(6, 0)), exclude=Point(6, 0)))",
+        "operator": ">",
+        "rational_endpoint": "0"
+      }
+    ],
+    "method": "conservative_rational_interval_arithmetic"
+  },
+  "candidate_union_P": "t13 - 147/10",
+  "candidates": [
+    {
+      "P": "t13 - 147/10",
+      "candidate_status": "proposed",
+      "float_guard": true,
+      "float_hard": true,
+      "hp_coordinates": [
+        "5.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000721839",
+        "4.898979485566356196394568149411782783931894961313340256865385134501920754914630053079718866212842505",
+        "4.223140495867768595041322314049586776859504132231404958677685950413223140495867768595041322284531789",
+        "-1.417060181775392288213304836606714028410052261536916603225524625682373772082744230229670746449364687"
+      ],
+      "hp_guard": true,
+      "hp_hard": true,
+      "hp_residual": "7.33411372585e-92",
+      "hp_value": "14.69999999999999999999999999999999999999999999999999999999999999999999999999999999999999999992490402",
+      "iterations": 3,
+      "k": 0,
+      "numeric_fixed_columns": [],
+      "proposal_kind": "100_digit_polished_saved_endpoint",
+      "rank": 4,
+      "rechecked_residual": 2.6041391265607672e-11,
+      "root_interval": [
+        "14699999999999999999999999999999/1000000000000000000000000000000",
+        "14700000000000000000000000000001/1000000000000000000000000000000"
+      ],
+      "saved_residual": 2.704280993971468e-11,
+      "value_float": 14.700000000069412,
+      "x": [
+        4.999999999986805,
+        4.8989794855902415,
+        4.2231404958671055,
+        -1.417060181771815
+      ]
+    }
+  ],
+  "detail": "fixed stage or global budget exhausted",
+  "equations": 19,
+  "grevlex_incomplete": true,
+  "group": "development323",
+  "id": "HMMT-2018-FEB-GEO-10",
+  "identities": [],
+  "input_sha256": "be0f6a1c500c9382fb009db41e658e9556f6e77ace1efad10f4f2e0c24ea8dd8",
+  "max_degree": 6,
+  "nondeg_factors": [
+    "v_cy",
+    "p1*v_cx - 6*p1 + 3*v_cy",
+    "p4*v_cy - p5*v_cx + 6*p5 - 6*v_cy"
+  ],
+  "official_answer_loaded": false,
+  "primary_main_output_available": false,
+  "proposed_candidate_count": 1,
+  "saved_candidate_count": 1,
+  "seconds": 39.0701388141606,
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2018-FEB-GEO-10.json",
+  "source_sha256": "55528aee62e8108e383506c9870007e9ed4cd037f70afc252e851c92efa83d35",
+  "stage": "groebner_lex",
+  "stage_timeouts": [
+    "groebner_grevlex",
+    "groebner_lex"
+  ],
+  "stages": {
+    "bounds": 0.004154334077611566,
+    "encode": 0.9908885029144585,
+    "groebner_grevlex": 15.000140075106174,
+    "groebner_lex": 22.000100074103102,
+    "numeric_and_pslq": 0.05207918304949999
+  },
+  "status": "timeout",
+  "system_bytes": 1891,
+  "system_sha256": "e8f4fad1d4d189b9fcbf0bde4308363f117ad567900e34b89e50519b6d1046fb",
+  "target_symbol": "t13",
+  "total_terms": 135,
+  "variables": 18,
+  "process_wall_seconds": 39.31416425202042,
+  "process_returncode": 0,
+  "hard_timeout": false,
+  "charged_seconds": 39.31416425202042
+}

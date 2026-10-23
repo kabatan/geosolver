@@ -1,0 +1,129 @@
+{
+  "id": "HMMT-2021-FEB-GEO-05",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(E, F)",
+        "operator": "=",
+        "right": 20
+      },
+      {
+        "left": "Distance(A, E)",
+        "operator": "=",
+        "right": 21
+      },
+      {
+        "left": "Distance(A, F)",
+        "operator": "=",
+        "right": 21
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "OnCircle(C, Gamma)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "t",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "t",
+        "operator": "<",
+        "right": "1"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": "<",
+        "right": "sqrt(341)"
+      },
+      {
+        "left": "Vector(A, E).x * Vector(A, C).y - Vector(A, E).y * Vector(A, C).x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Vector(E, F).x * Vector(E, C).y - Vector(E, F).y * Vector(E, C).x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Vector(F, A).x * Vector(F, C).y - Vector(F, A).y * Vector(F, C).x",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(10, sqrt(341))",
+        "name": "E"
+      },
+      {
+        "expression": "Point(-10, sqrt(341))",
+        "name": "F"
+      },
+      {
+        "expression": "Point(10 * t, sqrt(341) * t)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(-10 * t, sqrt(341) * t)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Circumcircle(A, B, D)",
+        "name": "Gamma"
+      }
+    ],
+    "id": "HMMT-2021-FEB-GEO-05",
+    "target": "Area(A, B, C, D) / Area(A, E, F)",
+    "variables": [
+      "t",
+      "cx",
+      "cy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2021-FEB-GEO-05.json",
+  "source_sha256": "4ea46d7e4508f8c8f0184c4532a7b3540870ef95a419027e52fe9e72d97a63cd",
+  "saved_seed": 0,
+  "eligible_records": 198,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 0.1225000000000007,
+      "x": [
+        0.30868935136518566,
+        0.5669129797515164,
+        7.328104098154554
+      ],
+      "saved_residual": 1.428007506981779e-14
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

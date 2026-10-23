@@ -1,0 +1,136 @@
+{
+  "bound_derivation": {
+    "bounds": [
+      "0",
+      "oo",
+      "True",
+      "False"
+    ],
+    "explicit_rules": [
+      {
+        "condition_index": 0,
+        "normalized_expression": "Distance(Point(ax, ay), Point(0, 0))",
+        "operator": "=",
+        "rational_endpoint": "2009"
+      },
+      {
+        "condition_index": 1,
+        "normalized_expression": "Distance(Point(ax, ay), Point(2007, 0))",
+        "operator": "=",
+        "rational_endpoint": "2008"
+      },
+      {
+        "condition_index": 2,
+        "normalized_expression": "Distance(Point(0, 0), Point(2007, 0))",
+        "operator": "=",
+        "rational_endpoint": "2007"
+      },
+      {
+        "condition_index": 3,
+        "normalized_expression": "OnCircle(Point(1003, 0), Excircle(Point(ax, ay), Point(0, 0), Point(2007, 0), vertex='A'))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 4,
+        "normalized_expression": "OnSegment(Point(1003, 0), Point(0, 0), Point(2007, 0))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 5,
+        "normalized_expression": "OnSegment(Point(2007, 0), Point(ax, ay), ContactPoint(Excircle(Point(ax, ay), Point(0, 0), Point(2007, 0), vertex='A'), Line(Point(ax, ay), Point(2007, 0))))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 6,
+        "normalized_expression": "OnSegment(Point(0, 0), Point(ax, ay), ContactPoint(Excircle(Point(ax, ay), Point(0, 0), Point(2007, 0), vertex='A'), Line(Point(ax, ay), Point(0, 0))))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 7,
+        "normalized_expression": "Perpendicular(Line(Point(0, 0), Point(2007, 0)), Line(Center(Excircle(Point(ax, ay), Point(0, 0), Point(2007, 0), vertex='A')), Point(1003, 0)))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 8,
+        "normalized_expression": "ay",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 9,
+        "normalized_expression": "Distance(Point(1003, 0), Intersect(PerpendicularLine(Line(Point(ax, ay), Point(1003, 0)), Center(Excircle(Point(ax, ay), Point(0, 0), Point(2007, 0), vertex='A'))), Line(ContactPoint(Excircle(Point(ax, ay), Point(0, 0), Point(2007, 0), vertex='A'), Line(Point(ax, ay), Point(2007, 0))), ContactPoint(Excircle(Point(ax, ay), Point(0, 0), Point(2007, 0), vertex='A'), Line(Point(ax, ay), Point(0, 0))))))",
+        "operator": ">",
+        "rational_endpoint": "0"
+      }
+    ],
+    "method": "conservative_rational_interval_arithmetic"
+  },
+  "candidates": [
+    {
+      "candidate_status": "pslq_failed",
+      "float_guard": true,
+      "float_hard": true,
+      "hp_coordinates": [
+        "1004.50074738415545590433482810164424514200298953662182361733931240657698056801195814648729446935725",
+        "1739.844604700279865201677777356148350784068999008177352316190360483146955432103054858126275746340347"
+      ],
+      "hp_guard": true,
+      "hp_hard": true,
+      "hp_residual": "2.996272867e-95",
+      "hp_value": "2014024.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000012",
+      "iterations": 3,
+      "k": 0,
+      "numeric_fixed_columns": [],
+      "proposal_kind": "100_digit_polished_saved_endpoint",
+      "rank": 2,
+      "rechecked_residual": 4.656612873077393e-10,
+      "saved_residual": 6.585447042442473e-10,
+      "value_float": 2014023.9999999034,
+      "x": [
+        1004.5007473841556,
+        1739.84460470028
+      ]
+    }
+  ],
+  "detail": "At least one saved candidate failed original validation or PSLQ; no subset counted.",
+  "equations": 19,
+  "group": "development323",
+  "id": "HMMT-2008-FEB-GEO-10",
+  "identities": [],
+  "input_sha256": "f213fde3fe8ce92b04de63b597aa09f685c8d758f590c94e8244acb686cd5209",
+  "max_degree": 4,
+  "nondeg_factors": [
+    "s1 + s2 - 2007",
+    "p5*v_ax - 1003*p5 + p6*v_ay - p7*v_ax + 1003*p7 - p8*v_ay"
+  ],
+  "official_answer_loaded": false,
+  "primary_main_output_available": false,
+  "proposed_candidate_count": 0,
+  "saved_candidate_count": 1,
+  "seconds": 0.793998007895425,
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2008-FEB-GEO-10.json",
+  "source_sha256": "21eb37f555d4235db8e97603eef03cc4e51757248ce4800f398f511d695cdafc",
+  "stage": "numeric_and_pslq",
+  "stage_timeouts": [],
+  "stages": {
+    "bounds": 0.0035432560835033655,
+    "encode": 0.309496046975255,
+    "numeric_and_pslq": 0.04484496102668345
+  },
+  "status": "candidate_set_incomplete",
+  "system_bytes": 1645,
+  "system_sha256": "77b8616f0b36fe21d508b3e2a999234eed3cc0ce89d5a73fe840419a037473a7",
+  "target_symbol": "t12",
+  "total_terms": 115,
+  "variables": 15,
+  "process_wall_seconds": 0.9806329440325499,
+  "process_returncode": 0,
+  "hard_timeout": false,
+  "charged_seconds": 0.9806329440325499
+}

@@ -1,0 +1,183 @@
+{
+  "id": "AIME-2016-I-15",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "OnCircle(X, omega1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(X, omega2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(Y, omega1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(Y, omega2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(Line(A, B), omega1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(Line(A, B), omega2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(D, omega1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(C, omega2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(C, omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnLine(C, Y, D)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(X, C)",
+        "operator": "=",
+        "right": 67
+      },
+      {
+        "left": "Distance(X, Y)",
+        "operator": "=",
+        "right": 47
+      },
+      {
+        "left": "Distance(X, D)",
+        "operator": "=",
+        "right": 37
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r1",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r2",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(X, Line(A, B))",
+        "operator": "<",
+        "right": "Distance(Y, Line(A, B))"
+      },
+      {
+        "left": "Distance(D, A)",
+        "operator": "!=",
+        "right": "0"
+      },
+      {
+        "left": "Distance(C, B)",
+        "operator": "!=",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(b, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(0, r1)",
+        "name": "O1"
+      },
+      {
+        "expression": "Point(b, r2)",
+        "name": "O2"
+      },
+      {
+        "expression": "Circle(O1, r1)",
+        "name": "omega1"
+      },
+      {
+        "expression": "Circle(O2, r2)",
+        "name": "omega2"
+      },
+      {
+        "expression": "Midpoint(A, B)",
+        "name": "M"
+      },
+      {
+        "expression": "Intersect(omega1, omega2, near=M)",
+        "name": "X"
+      },
+      {
+        "expression": "Intersect(omega1, omega2, exclude=X)",
+        "name": "Y"
+      },
+      {
+        "expression": "Point(dx, dy)",
+        "name": "D"
+      },
+      {
+        "expression": "Circumcircle(A, B, D)",
+        "name": "omega"
+      },
+      {
+        "expression": "Intersect(omega, omega2, exclude=B)",
+        "name": "C"
+      }
+    ],
+    "id": "AIME-2016-I-15",
+    "target": "Distance(A, B) * Distance(A, B)",
+    "variables": [
+      "b",
+      "r1",
+      "r2",
+      "dx",
+      "dy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2016-I-15.json",
+  "source_sha256": "15f6cb61fa9314ec581e43899c2173205d56adbcb932d6a8f2ed44266d1842e5",
+  "saved_seed": 0,
+  "eligible_records": 2,
+  "candidates": [
+    {
+      "k": 69,
+      "value_float": 270.00000435552397,
+      "x": [
+        16.431676857689357,
+        36.462204760193664,
+        66.02615461851305,
+        -27.89693718130213,
+        12.983421329395162
+      ],
+      "saved_residual": 6.8881691360351386e-09
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

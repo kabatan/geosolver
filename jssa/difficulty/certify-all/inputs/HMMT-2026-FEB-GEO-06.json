@@ -1,0 +1,87 @@
+{
+  "id": "HMMT-2026-FEB-GEO-06",
+  "group": "holdout2026",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Angle(P, M, B)",
+        "operator": "=",
+        "right": "Angle(B, A, C) / 2"
+      },
+      {
+        "left": "Angle(Q, M, C)",
+        "operator": "=",
+        "right": "Angle(B, A, C) / 2"
+      },
+      {
+        "left": "Distance(A, P)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(A, Q)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "ay",
+        "operator": ">",
+        "right": 0
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(-4, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(4, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Midpoint(B, C)",
+        "name": "M"
+      },
+      {
+        "expression": "Point(ax, ay)",
+        "name": "A"
+      },
+      {
+        "expression": "PointOnSegment(A, B, p)",
+        "name": "P"
+      },
+      {
+        "expression": "PointOnSegment(A, C, q)",
+        "name": "Q"
+      }
+    ],
+    "id": "HMMT-2026-FEB-GEO-06",
+    "target": "Distance(B, P)",
+    "variables": [
+      "ax",
+      "ay",
+      "p",
+      "q"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/new2026-predict/raw/HMMT-2026-FEB-GEO-06.json",
+  "source_sha256": "c12f2de7230cc0555abb13f6752274568d7bdc5ebe8af9e3d297c0f4908f3a41",
+  "saved_seed": 5,
+  "eligible_records": 195,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 3.1231056256176606,
+      "x": [
+        -1.2807764064044151,
+        3.099326224848413,
+        0.24253562503633297,
+        0.48994745206561396
+      ],
+      "saved_residual": 1.1102230246251565e-16
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

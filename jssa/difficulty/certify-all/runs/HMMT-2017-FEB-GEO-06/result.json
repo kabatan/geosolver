@@ -1,0 +1,134 @@
+{
+  "bound_derivation": {
+    "bounds": [
+      "0",
+      "oo",
+      "True",
+      "False"
+    ],
+    "explicit_rules": [
+      {
+        "condition_index": 0,
+        "normalized_expression": "Distance(Point(0, 0), Point(15, 0))",
+        "operator": "=",
+        "rational_endpoint": "15"
+      },
+      {
+        "condition_index": 1,
+        "normalized_expression": "Distance(Point(15, 0), Point(cx, cy))",
+        "operator": "=",
+        "rational_endpoint": "16"
+      },
+      {
+        "condition_index": 2,
+        "normalized_expression": "Distance(Point(cx, cy), Point(dx, dy))",
+        "operator": "=",
+        "rational_endpoint": "12"
+      },
+      {
+        "condition_index": 3,
+        "normalized_expression": "Distance(Point(dx, dy), Point(0, 0))",
+        "operator": "=",
+        "rational_endpoint": "25"
+      },
+      {
+        "condition_index": 4,
+        "normalized_expression": "Distance(Point(15, 0), Point(dx, dy))",
+        "operator": "=",
+        "rational_endpoint": "20"
+      },
+      {
+        "condition_index": 5,
+        "normalized_expression": "cy",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 7,
+        "normalized_expression": "Area(Point(0, 0), Point(15, 0), Point(cx, cy), Point(dx, dy), Intersect(Line(Intersect(Line(Point(0, 0), Intersect(Line(Point(cx, cy), Point(15, 0)), Circumcircle(Point(0, 0), Point(15, 0), Point(dx, dy)), exclude=Point(15, 0))), Line(Circumcenter(Point(0, 0), Point(15, 0), Point(dx, dy)), Point(cx, cy))), Point(dx, dy)), Circumcircle(Point(0, 0), Point(15, 0), Point(dx, dy)), exclude=Point(dx, dy)))",
+        "operator": ">",
+        "rational_endpoint": "0"
+      }
+    ],
+    "method": "conservative_rational_interval_arithmetic"
+  },
+  "candidate_union_P": "t14 - 396",
+  "candidates": [
+    {
+      "P": "t14 - 396",
+      "candidate_status": "proposed",
+      "float_guard": true,
+      "float_hard": true,
+      "hp_coordinates": [
+        "24.6",
+        "12.8",
+        "15.0",
+        "20.0"
+      ],
+      "hp_guard": true,
+      "hp_hard": true,
+      "hp_residual": "1.6001823478e-99",
+      "hp_value": "396.0",
+      "iterations": 3,
+      "k": 1,
+      "numeric_fixed_columns": [],
+      "proposal_kind": "100_digit_polished_saved_endpoint",
+      "rank": 4,
+      "rechecked_residual": 8.888889624358853e-12,
+      "root_interval": [
+        "395999999999999999999999999999999/1000000000000000000000000000000",
+        "396000000000000000000000000000001/1000000000000000000000000000000"
+      ],
+      "saved_residual": 8.88888980185254e-12,
+      "value_float": 396.0000000001182,
+      "x": [
+        24.60000000001185,
+        12.799999999991112,
+        15.00000000001185,
+        19.99999999999111
+      ]
+    }
+  ],
+  "detail": "fixed stage or global budget exhausted",
+  "equations": 19,
+  "grevlex_incomplete": true,
+  "group": "development323",
+  "id": "HMMT-2017-FEB-GEO-06",
+  "identities": [],
+  "input_sha256": "d83ead81c173e37d31659cfcb8a59e46007c9a7e66bb4b2afdb35fcaf908dd8a",
+  "max_degree": 4,
+  "nondeg_factors": [
+    "v_dy",
+    "p2*p3 - p3*v_cy + p4*v_cx - 15*p4/2"
+  ],
+  "official_answer_loaded": false,
+  "primary_main_output_available": false,
+  "proposed_candidate_count": 1,
+  "saved_candidate_count": 1,
+  "seconds": 37.62190548190847,
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2017-FEB-GEO-06.json",
+  "source_sha256": "b5a89eafc77a884be697afe34f1dab6d73b2ab63d2d3c4a74969d8d9a9289db2",
+  "stage": "groebner_lex",
+  "stage_timeouts": [
+    "groebner_grevlex",
+    "groebner_lex"
+  ],
+  "stages": {
+    "bounds": 0.0016230239998549223,
+    "encode": 0.2506487020291388,
+    "groebner_grevlex": 15.000082245096564,
+    "groebner_lex": 22.002380664926022,
+    "numeric_and_pslq": 0.024270483059808612
+  },
+  "status": "timeout",
+  "system_bytes": 1831,
+  "system_sha256": "a9b8092e562e1f944f70f5a5b4fb8c950af9f82883247a170218d5d2d78abcd1",
+  "target_symbol": "t14",
+  "total_terms": 125,
+  "variables": 19,
+  "process_wall_seconds": 38.00095847202465,
+  "process_returncode": 0,
+  "hard_timeout": false,
+  "charged_seconds": 38.00095847202465
+}

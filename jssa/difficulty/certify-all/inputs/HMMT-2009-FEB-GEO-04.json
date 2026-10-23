@@ -1,0 +1,95 @@
+{
+  "id": "HMMT-2009-FEB-GEO-04",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "u",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "u",
+        "operator": "<",
+        "right": "1"
+      },
+      {
+        "left": "Distance(O,Line(A,B))",
+        "operator": "=",
+        "right": "Distance(O,Line(B,C))"
+      },
+      {
+        "left": "Parallel(Line(M,Np),Line(A,C))",
+        "operator": "=",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0,0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(x,0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(x,1)",
+        "name": "C"
+      },
+      {
+        "expression": "Reflect(B,Line(A,C))",
+        "name": "D"
+      },
+      {
+        "expression": "Point(u*x,u)",
+        "name": "O"
+      },
+      {
+        "expression": "FootOfPerpendicular(O,Line(A,B))",
+        "name": "M"
+      },
+      {
+        "expression": "Point(x/u,0)",
+        "name": "Bp"
+      },
+      {
+        "expression": "Point(x/u,1/u)",
+        "name": "Cp"
+      },
+      {
+        "expression": "FootOfPerpendicular(C,Line(Bp,Cp))",
+        "name": "Np"
+      }
+    ],
+    "id": "HMMT-2009-FEB-GEO-04",
+    "target": "Distance(A,B)/Distance(B,C)",
+    "variables": [
+      "x",
+      "u"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2009-FEB-GEO-04.json",
+  "source_sha256": "7163fbae48b843a5c6ee851942f3e893a2eec5b84e76d0267ab7a09572067e7f",
+  "saved_seed": 0,
+  "eligible_records": 199,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 1.6180339887498951,
+      "x": [
+        1.6180339887498951,
+        0.6180339887498949
+      ],
+      "saved_residual": 1.6653345369377348e-16
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

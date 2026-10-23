@@ -1,0 +1,108 @@
+{
+  "id": "HMMT-2024-FEB-GEO-05",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 8
+      },
+      {
+        "left": "Perpendicular(Line(O, T), Line(C, D))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(O, T)",
+        "operator": "=",
+        "right": "omega.radius"
+      },
+      {
+        "left": "OnCircle(T, omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "oy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "oy",
+        "operator": "<",
+        "right": "8"
+      },
+      {
+        "left": "OnSegment(T, C, D)",
+        "operator": "=",
+        "right": "0"
+      },
+      {
+        "predicate": "SimplePolygon([A, B, C, D])"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(3, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(0, 2)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(3, 8)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(3, oy)",
+        "name": "O"
+      },
+      {
+        "expression": "Circle(O, Distance(O, A))",
+        "name": "omega"
+      },
+      {
+        "expression": "FootOfPerpendicular(O, Line(C, D))",
+        "name": "T"
+      }
+    ],
+    "id": "HMMT-2024-FEB-GEO-05",
+    "target": "Distance(C, T)",
+    "variables": [
+      "oy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2024-FEB-GEO-05.json",
+  "source_sha256": "47f6ca633fe4fc6123e64dafc0757028ef48b888805cd8ccb898e849a5ea0946",
+  "saved_seed": 0,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 6.298520598934568,
+      "x": [
+        0.9580398915498087
+      ],
+      "saved_residual": 1.1102230246251565e-16
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

@@ -1,0 +1,78 @@
+{
+  "id": "HMMT-2006-FEB-GEO-04",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "Distance(O, E)",
+        "operator": "=",
+        "right": "Distance(O, F)"
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(4, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(11 / 8, 3 * sqrt(15) / 8)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(8 / 5, 0)",
+        "name": "O"
+      },
+      {
+        "expression": "FootOfPerpendicular(O, Line(A, B))",
+        "name": "E"
+      },
+      {
+        "expression": "FootOfPerpendicular(O, Line(A, C))",
+        "name": "F"
+      },
+      {
+        "expression": "Distance(O, E)",
+        "name": "r"
+      },
+      {
+        "expression": "Circle(O, r)",
+        "name": "omega"
+      }
+    ],
+    "id": "HMMT-2006-FEB-GEO-04",
+    "target": "pi * r * r / 2",
+    "variables": []
+  },
+  "source_kind": "missing_saved_candidate",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2006-FEB-GEO-04.json",
+  "source_sha256": "0de8b1b8166102120d57784291f4d610be6b30e6b068bada30e6804e4488e030",
+  "saved_seed": 0,
+  "eligible_records": 0,
+  "candidates": [],
+  "primary_main_output_available": false,
+  "source_status": "no_variables"
+}

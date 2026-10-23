@@ -1,0 +1,65 @@
+{
+  "id": "HMMT-2026-FEB-GUTS-28",
+  "group": "holdout2026",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Degrees(Angle(A, P, B))",
+        "operator": "=",
+        "right": 60
+      },
+      {
+        "left": "Degrees(Angle(A, P, C))",
+        "operator": "=",
+        "right": 60
+      },
+      {
+        "left": "Dot(Vector(FootOfPerpendicular(P, Line(B, C)), P), Vector(FootOfPerpendicular(A, Line(B, C)), A))",
+        "operator": "<",
+        "right": 0
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(12 * sqrt(2), 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(17 * cos(105 * pi / 180), 17 * sin(105 * pi / 180))",
+        "name": "C"
+      },
+      {
+        "expression": "Point(px, py)",
+        "name": "P"
+      }
+    ],
+    "id": "HMMT-2026-FEB-GUTS-28",
+    "target": "Distance(A, P)",
+    "variables": [
+      "px",
+      "py"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/new2026-predict/raw/HMMT-2026-FEB-GUTS-28.json",
+  "source_sha256": "e48d14e7951eb73e68d23fce7d7c776b67b489131d61ce7760c28dc2d70b8ae5",
+  "saved_seed": 5,
+  "eligible_records": 53,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 18.119916140720566,
+      "x": [
+        11.060755966701477,
+        14.352387898598035
+      ],
+      "saved_residual": 1.0048591735576161e-14
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

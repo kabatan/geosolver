@@ -1,0 +1,81 @@
+{
+  "id": "HMMT-2014-FEB-GEO-08",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": 8
+      },
+      {
+        "left": "IsTangent(Line(A, N), Gamma)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "t",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(N, A, Y)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(6, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(0, 8)",
+        "name": "C"
+      },
+      {
+        "expression": "Midpoint(B, A)",
+        "name": "M"
+      },
+      {
+        "expression": "Midpoint(B, C)",
+        "name": "N"
+      },
+      {
+        "expression": "Point(6 * t / 2, 8 * (1 - t))",
+        "name": "Y"
+      },
+      {
+        "expression": "Circumcircle(A, M, Y)",
+        "name": "Gamma"
+      }
+    ],
+    "id": "HMMT-2014-FEB-GEO-08",
+    "target": "Area(N, A, Y)",
+    "variables": [
+      "t"
+    ]
+  },
+  "source_kind": "missing_saved_candidate",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2014-FEB-GEO-08.json",
+  "source_sha256": "cf7c7427fb81052e2de0ba0546763f5083d6c00865a5e4e9066076be221df8fb",
+  "saved_seed": 0,
+  "eligible_records": 0,
+  "candidates": [],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

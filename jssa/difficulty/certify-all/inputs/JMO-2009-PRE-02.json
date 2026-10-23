@@ -1,0 +1,83 @@
+{
+  "id": "JMO-2009-PRE-02",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "t",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "t",
+        "operator": "<",
+        "right": "pi/2"
+      },
+      {
+        "left": "Distance(A,B)",
+        "operator": "=",
+        "right": "4"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0,0)",
+        "name": "O1"
+      },
+      {
+        "expression": "Point(6,0)",
+        "name": "O2"
+      },
+      {
+        "expression": "Point(2,0)",
+        "name": "P"
+      },
+      {
+        "expression": "Circle(O1,2)",
+        "name": "C1"
+      },
+      {
+        "expression": "Circle(O2,4)",
+        "name": "C2"
+      },
+      {
+        "expression": "Point(2+cos(t),-sin(t))",
+        "name": "Q"
+      },
+      {
+        "expression": "Line(P,Q)",
+        "name": "L"
+      },
+      {
+        "expression": "Intersect(L,C1,exclude=P)",
+        "name": "A"
+      },
+      {
+        "expression": "Intersect(L,C2,exclude=P)",
+        "name": "B"
+      }
+    ],
+    "id": "JMO-2009-PRE-02",
+    "target": "Distance(P,B)",
+    "variables": [
+      "t"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2009-PRE-02.json",
+  "source_sha256": "8427a57667306773b712f1d1d6ea159ac32487481c2567b22ff31edd45be4f09",
+  "saved_seed": 0,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 2.666666666653703,
+      "x": [
+        1.2309594173424934
+      ],
+      "saved_residual": 1.944266969644559e-11
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

@@ -1,0 +1,98 @@
+{
+  "id": "HMMT-2006-FEB-GEO-10",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 65
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 33
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 56
+      },
+      {
+        "left": "Distance(O, T)",
+        "operator": "=",
+        "right": "Radius(Gamma) - r"
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r",
+        "operator": "<",
+        "right": "33"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(56, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(0, 33)",
+        "name": "B"
+      },
+      {
+        "expression": "Circumcircle(A, B, C)",
+        "name": "Gamma"
+      },
+      {
+        "expression": "Center(Gamma)",
+        "name": "O"
+      },
+      {
+        "expression": "Point(r, r)",
+        "name": "T"
+      },
+      {
+        "expression": "Circle(T, r)",
+        "name": "omega"
+      }
+    ],
+    "id": "HMMT-2006-FEB-GEO-10",
+    "target": "r",
+    "variables": [
+      "r"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2006-FEB-GEO-10.json",
+  "source_sha256": "725a7b310e17ad80400edb360984012d89d847f44cfbacaa2ca15bea15cecf97",
+  "saved_seed": 0,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 24.000000000000004,
+      "x": [
+        24.000000000000004
+      ],
+      "saved_residual": 5.329070518200751e-15
+    },
+    {
+      "k": 1,
+      "value_float": 8.073244492628334e-14,
+      "x": [
+        8.073244492628334e-14
+      ],
+      "saved_residual": 3.552713678800501e-14
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

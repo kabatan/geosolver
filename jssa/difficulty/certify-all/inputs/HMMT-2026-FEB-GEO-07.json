@@ -1,0 +1,127 @@
+{
+  "id": "HMMT-2026-FEB-GEO-07",
+  "group": "holdout2026",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": "Distance(A, B)"
+      },
+      {
+        "left": "Distance(B, P)",
+        "operator": "=",
+        "right": "Distance(P, Q)"
+      },
+      {
+        "left": "Distance(P, Q)",
+        "operator": "=",
+        "right": "Distance(Q, C)"
+      },
+      {
+        "left": "Degrees(Angle(B, A, P))",
+        "operator": "=",
+        "right": 20
+      },
+      {
+        "left": "Degrees(Angle(P, A, Q))",
+        "operator": "=",
+        "right": 46
+      },
+      {
+        "left": "Degrees(Angle(Q, A, C))",
+        "operator": "=",
+        "right": 26
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "s1",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "u1",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "s1 + u1",
+        "operator": "<",
+        "right": 1
+      },
+      {
+        "left": "s2",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "u2",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "s2 + u2",
+        "operator": "<",
+        "right": 1
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(1, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(s1 + u1 * cx, u1 * cy)",
+        "name": "P"
+      },
+      {
+        "expression": "Point(s2 + u2 * cx, u2 * cy)",
+        "name": "Q"
+      }
+    ],
+    "id": "HMMT-2026-FEB-GEO-07",
+    "target": "Degrees(Angle(A, P, C))",
+    "variables": [
+      "cx",
+      "cy",
+      "s1",
+      "u1",
+      "s2",
+      "u2"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/new2026-predict/raw/HMMT-2026-FEB-GEO-07.json",
+  "source_sha256": "b5a3bebd85242c0bb0d4304661f26e98599c33924a3e781556ac70f31385b497",
+  "saved_seed": 5,
+  "eligible_records": 1,
+  "candidates": [
+    {
+      "k": 171,
+      "value_float": 74.00000000000001,
+      "x": [
+        -0.03489949670250096,
+        0.9993908270190958,
+        0.5535934982959444,
+        0.19908399173680327,
+        0.29331377699179334,
+        0.6112525210601385
+      ],
+      "saved_residual": 5.0282808503419566e-15
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

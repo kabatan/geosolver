@@ -1,0 +1,83 @@
+{
+  "id": "HMMT-2007-FEB-GEO-08",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": "Distance(C, D)"
+      },
+      {
+        "left": "c",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "bc",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "bc",
+        "operator": "<",
+        "right": "v"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C, D])"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "sin(13 * pi / 18) / sin(pi / 18)",
+        "name": "v"
+      },
+      {
+        "expression": "Point(cos(pi / 9), sin(pi / 9))",
+        "name": "B"
+      },
+      {
+        "expression": "Point(v * cos(pi / 9), -v * sin(pi / 9))",
+        "name": "D"
+      },
+      {
+        "expression": "Point(c, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Distance(B, C)",
+        "name": "bc"
+      },
+      {
+        "expression": "Point((1 - bc / v) * v * cos(pi / 9), -(1 - bc / v) * v * sin(pi / 9))",
+        "name": "E"
+      }
+    ],
+    "id": "HMMT-2007-FEB-GEO-08",
+    "target": "180 * Angle(A, C, E) / pi",
+    "variables": [
+      "c"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2007-FEB-GEO-08.json",
+  "source_sha256": "7f87a9847ffb3736c2cb8ebb6cadaf7cbe42346b93c1933fd71d9e4120804e48",
+  "saved_seed": 0,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 54.99999999999995,
+      "x": [
+        2.8793852415718173
+      ],
+      "saved_residual": 2.220446049250313e-16
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

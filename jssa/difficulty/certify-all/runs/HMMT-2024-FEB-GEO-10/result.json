@@ -1,0 +1,159 @@
+{
+  "bound_derivation": {
+    "bounds": [
+      "0",
+      "oo",
+      "False",
+      "False"
+    ],
+    "explicit_rules": [
+      {
+        "condition_index": 0,
+        "normalized_expression": "Distance(Point(0, 0), Point(4, 0))",
+        "operator": "=",
+        "rational_endpoint": "4"
+      },
+      {
+        "condition_index": 1,
+        "normalized_expression": "Distance(Point(0, 0), Point(bx, by))",
+        "operator": "=",
+        "rational_endpoint": "5"
+      },
+      {
+        "condition_index": 2,
+        "normalized_expression": "Distance(Point(0, 0), Point(cx, cy))",
+        "operator": "=",
+        "rational_endpoint": "10"
+      },
+      {
+        "condition_index": 7,
+        "normalized_expression": "Area(Point(4, 0), Point(bx, by), Point(cx, cy), Point(dx, dy))",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 9,
+        "normalized_expression": "(Vector(Point(4, 0), Point(bx, by)).x * Vector(Point(4, 0), Point(0, 0)).y - Vector(Point(4, 0), Point(bx, by)).y * Vector(Point(4, 0), Point(0, 0)).x) * (Vector(Point(bx, by), Point(cx, cy)).x * Vector(Point(bx, by), Point(0, 0)).y - Vector(Point(bx, by), Point(cx, cy)).y * Vector(Point(bx, by), Point(0, 0)).x)",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 10,
+        "normalized_expression": "(Vector(Point(4, 0), Point(bx, by)).x * Vector(Point(4, 0), Point(0, 0)).y - Vector(Point(4, 0), Point(bx, by)).y * Vector(Point(4, 0), Point(0, 0)).x) * (Vector(Point(cx, cy), Point(dx, dy)).x * Vector(Point(cx, cy), Point(0, 0)).y - Vector(Point(cx, cy), Point(dx, dy)).y * Vector(Point(cx, cy), Point(0, 0)).x)",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 11,
+        "normalized_expression": "(Vector(Point(4, 0), Point(bx, by)).x * Vector(Point(4, 0), Point(0, 0)).y - Vector(Point(4, 0), Point(bx, by)).y * Vector(Point(4, 0), Point(0, 0)).x) * (Vector(Point(dx, dy), Point(4, 0)).x * Vector(Point(dx, dy), Point(0, 0)).y - Vector(Point(dx, dy), Point(4, 0)).y * Vector(Point(dx, dy), Point(0, 0)).x)",
+        "operator": ">",
+        "rational_endpoint": "0"
+      }
+    ],
+    "method": "conservative_rational_interval_arithmetic"
+  },
+  "candidate_union_P": "t27**3 - 30*t27**2 - 6642*t27/5 + 39852",
+  "candidates": [
+    {
+      "P": "t27**2 - 6642/5",
+      "candidate_status": "proposed",
+      "float_guard": true,
+      "float_hard": true,
+      "hp_coordinates": [
+        "-3.075",
+        "-3.942635539838801787899220217602907320027547183252994701327568875508735603471430593315117319905971178",
+        "-5.895121951219512195121951219512195121951219512195121951219512195121951219512195121951219512195121951",
+        "8.077594764547789028866695079966932070300340570567111095402824037627653431502443166791947679807355584",
+        "2.195121951219512195121951219512195121951219512195121951219512195121951219512195121951219512195121951",
+        "7.692947394807418122730185790444697209809848162444867709907451464407288982383279206468521599816529128"
+      ],
+      "hp_guard": true,
+      "hp_hard": true,
+      "hp_residual": "1.4287342391e-101",
+      "hp_value": "36.44722211636985647984442412182210615161011089182245119170033508136922473409886006028590402102843205",
+      "iterations": 3,
+      "k": 0,
+      "numeric_fixed_columns": [],
+      "proposal_kind": "100_digit_polished_saved_endpoint",
+      "rank": 6,
+      "rechecked_residual": 1.1102230246251565e-16,
+      "root_interval": [
+        "166683178276254/4573275234641",
+        "9035679042881/247911322680"
+      ],
+      "saved_residual": 1.2412670766236366e-16,
+      "value_float": 36.44722211636986,
+      "x": [
+        -3.0749999999999997,
+        -3.9426355398388018,
+        -5.895121951219514,
+        8.077594764547788,
+        2.195121951219511,
+        7.69294739480742
+      ]
+    },
+    {
+      "P": "t27 - 30",
+      "candidate_status": "proposed",
+      "float_guard": true,
+      "float_hard": true,
+      "hp_error": "ValueError: HP residual 2.4485544e-61",
+      "k": 4,
+      "proposal_kind": "saved_float_pslq_tol_1e-13",
+      "rechecked_residual": 1.0123175174896686e-12,
+      "root_interval": [
+        "29999999999999999999999999999999/1000000000000000000000000000000",
+        "30000000000000000000000000000001/1000000000000000000000000000000"
+      ],
+      "saved_residual": 1.0913535775230746e-12,
+      "value_float": 30.0,
+      "x": [
+        5.0,
+        -1.2686290853571364e-12,
+        -10.0,
+        2.459685646833063e-12,
+        1.55449276221946,
+        1.150630697293393e-12
+      ]
+    }
+  ],
+  "detail": "fixed stage or global budget exhausted",
+  "equations": 17,
+  "grevlex_incomplete": true,
+  "group": "development323",
+  "id": "HMMT-2024-FEB-GEO-10",
+  "identities": [],
+  "input_sha256": "ddebbab0e937000c4028698e4541e6a8cb9b2e696926b6db918a93e8df2d8e7b",
+  "max_degree": 4,
+  "nondeg_factors": [],
+  "official_answer_loaded": false,
+  "primary_main_output_available": false,
+  "proposed_candidate_count": 2,
+  "saved_candidate_count": 2,
+  "seconds": 37.8348720241338,
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2024-FEB-GEO-10.json",
+  "source_sha256": "4c2f8325d4a7e177349edde79f23c7cbb6d11b9522ff27f818c82c40bac572fe",
+  "stage": "groebner_lex",
+  "stage_timeouts": [
+    "groebner_grevlex",
+    "groebner_lex"
+  ],
+  "stages": {
+    "bounds": 0.00288638798519969,
+    "encode": 0.14995760307647288,
+    "groebner_grevlex": 15.000109734945,
+    "groebner_lex": 22.00464538508095,
+    "numeric_and_pslq": 0.24089169106446207
+  },
+  "status": "timeout",
+  "system_bytes": 1053,
+  "system_sha256": "e17f9302beba910f763bd4fa7ae578fe965d3ffb03e2a76b5459f76d62f6c772",
+  "target_symbol": "t27",
+  "total_terms": 77,
+  "variables": 17,
+  "process_wall_seconds": 38.048637852072716,
+  "process_returncode": 0,
+  "hard_timeout": false,
+  "charged_seconds": 38.048637852072716
+}

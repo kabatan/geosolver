@@ -1,0 +1,83 @@
+{
+  "id": "AIME-2007-I-12",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 20
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": "Distance(B, C)"
+      },
+      {
+        "left": "Angle(B, A, C)",
+        "operator": "=",
+        "right": "75 * pi / 180"
+      },
+      {
+        "left": "OnLine(D, A, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnLine(E, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnLine(F, B, C)",
+        "operator": "=",
+        "right": 0
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(20, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(10, 10 * tan(75 * pi / 180))",
+        "name": "C"
+      },
+      {
+        "expression": "Rotate(B, pi / 12, A)",
+        "name": "Bp"
+      },
+      {
+        "expression": "Rotate(C, pi / 12, A)",
+        "name": "Cp"
+      },
+      {
+        "expression": "Intersect(Line(A, C), Line(Bp, Cp))",
+        "name": "D"
+      },
+      {
+        "expression": "Intersect(Line(B, C), Line(Bp, Cp))",
+        "name": "E"
+      },
+      {
+        "expression": "Intersect(Line(B, C), Line(A, Bp))",
+        "name": "F"
+      }
+    ],
+    "id": "AIME-2007-I-12",
+    "target": "Area(A, D, E, F)",
+    "variables": []
+  },
+  "source_kind": "missing_saved_candidate",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2007-I-12.json",
+  "source_sha256": "28216184ce66cee7ff54439131def228ce9b8c2e00830e1338b77e620c193508",
+  "saved_seed": 0,
+  "eligible_records": 0,
+  "candidates": [],
+  "primary_main_output_available": false,
+  "source_status": "no_variables"
+}

@@ -1,0 +1,131 @@
+{
+  "bound_derivation": {
+    "bounds": [
+      "0",
+      "oo",
+      "False",
+      "False"
+    ],
+    "explicit_rules": [
+      {
+        "condition_index": 0,
+        "normalized_expression": "Distance(Point(ax, ay), Point(0, 0))",
+        "operator": "=",
+        "rational_endpoint": "450"
+      },
+      {
+        "condition_index": 1,
+        "normalized_expression": "Distance(Point(bx, by), Point(0, 0))",
+        "operator": "=",
+        "rational_endpoint": "300"
+      },
+      {
+        "condition_index": 2,
+        "normalized_expression": "Distance(Point(ax, ay), Reflect(Intersect(Line(Point(bx, by), Midpoint(Point(ax, ay), Point(0, 0))), Line(Point(0, 0), Intersect(Line(Point(0, 0), Incenter(Point(ax, ay), Point(bx, by), Point(0, 0))), Line(Point(ax, ay), Point(bx, by))))), Midpoint(Point(ax, ay), Point(0, 0))))",
+        "operator": "=",
+        "rational_endpoint": "180"
+      },
+      {
+        "condition_index": 3,
+        "normalized_expression": "ay",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 4,
+        "normalized_expression": "by",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 5,
+        "normalized_expression": "Area(Point(ax, ay), Point(bx, by), Point(0, 0))",
+        "operator": ">",
+        "rational_endpoint": "0"
+      }
+    ],
+    "method": "conservative_rational_interval_arithmetic"
+  },
+  "candidate_union_P": "t12 - 72",
+  "candidates": [
+    {
+      "P": "t12 - 72",
+      "candidate_status": "proposed",
+      "float_guard": true,
+      "float_hard": true,
+      "hp_coordinates": [
+        "103.13299539162723",
+        "438.0223570339196699251699025886646973306446455804987313735950215131673346395253468487720010453927191",
+        "-293.3316024720971748930771280602268268783029798785164675355695755423300802272223594700876960302136984",
+        "62.90127972586531211966946453075462031064004807775820285843839434006215806995523679040478836078480935"
+      ],
+      "hp_guard": true,
+      "hp_hard": true,
+      "hp_residual": "1.82877982605e-99",
+      "hp_value": "72.0",
+      "iterations": 3,
+      "k": 0,
+      "numeric_fixed_columns": [
+        0
+      ],
+      "proposal_kind": "100_digit_polished_saved_endpoint",
+      "rank": 3,
+      "rechecked_residual": 1.2732925824820995e-11,
+      "root_interval": [
+        "71999999999999999999999999999999/1000000000000000000000000000000",
+        "72000000000000000000000000000001/1000000000000000000000000000000"
+      ],
+      "saved_residual": 1.57571146442135e-11,
+      "value_float": 72.00000000000186,
+      "x": [
+        103.13299539162723,
+        438.02235703391517,
+        -293.33160247207604,
+        62.90127972590312
+      ]
+    }
+  ],
+  "detail": "fixed stage or global budget exhausted",
+  "equations": 16,
+  "grevlex_incomplete": true,
+  "group": "development323",
+  "id": "AIME-2009-I-05",
+  "identities": [],
+  "input_sha256": "215db62087fb4f39efa1996061ab12f4a92dcbc5707e0f33f045f443068c0b8a",
+  "max_degree": 6,
+  "nondeg_factors": [
+    "s1 + s2 + s3",
+    "p4*v_ay - p4*v_by - p5*v_ax + p5*v_bx",
+    "p6*v_ay - 2*p6*v_by - p7*v_ax + 2*p7*v_bx"
+  ],
+  "official_answer_loaded": false,
+  "primary_main_output_available": false,
+  "proposed_candidate_count": 1,
+  "saved_candidate_count": 1,
+  "seconds": 37.79863697499968,
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2009-I-05.json",
+  "source_sha256": "86c21f3d6dbc3ecfb47a35fa74ea0e7693ad5b0220f43147da25724148384db0",
+  "stage": "groebner_lex",
+  "stage_timeouts": [
+    "groebner_grevlex",
+    "groebner_lex"
+  ],
+  "stages": {
+    "bounds": 0.002190789906308055,
+    "encode": 0.18797125713899732,
+    "groebner_grevlex": 15.001884351018816,
+    "groebner_lex": 22.065466289874166,
+    "numeric_and_pslq": 0.03642507898621261
+  },
+  "status": "timeout",
+  "system_bytes": 1984,
+  "system_sha256": "e98d0c2044534cd64cd9533d46c55cc8ec7d8ba9d15be7cec198d235f41c8d39",
+  "target_symbol": "t12",
+  "total_terms": 108,
+  "variables": 17,
+  "process_wall_seconds": 38.33151057106443,
+  "process_returncode": 0,
+  "hard_timeout": false,
+  "charged_seconds": 38.33151057106443
+}

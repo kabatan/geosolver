@@ -1,0 +1,152 @@
+{
+  "id": "AIME-2022-II-15",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(O1, O2)",
+        "operator": "=",
+        "right": 15
+      },
+      {
+        "left": "Distance(O1, O2)",
+        "operator": "=",
+        "right": "r1 + r2"
+      },
+      {
+        "left": "OnCircle(B, omega1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(B, Omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(C, omega1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(C, Omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(A, omega2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(A, Omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(D, omega2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(D, Omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 16
+      },
+      {
+        "left": "r1",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r1",
+        "operator": "<",
+        "right": "15"
+      },
+      {
+        "left": "sin(theta)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, O1, C, D, O2])"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "O1"
+      },
+      {
+        "expression": "Point(15, 0)",
+        "name": "O2"
+      },
+      {
+        "expression": "15 - r1",
+        "name": "r2"
+      },
+      {
+        "expression": "Circle(O1, r1)",
+        "name": "omega1"
+      },
+      {
+        "expression": "Circle(O2, r2)",
+        "name": "omega2"
+      },
+      {
+        "expression": "Point(r1 * cos(theta), r1 * sin(theta))",
+        "name": "B"
+      },
+      {
+        "expression": "Circumcircle(O1, O2, B)",
+        "name": "Omega"
+      },
+      {
+        "expression": "Intersect(omega1, Omega, exclude=B)",
+        "name": "C"
+      },
+      {
+        "expression": "Intersect(omega2, Omega, near=B)",
+        "name": "A"
+      },
+      {
+        "expression": "Intersect(omega2, Omega, exclude=A)",
+        "name": "D"
+      }
+    ],
+    "id": "AIME-2022-II-15",
+    "target": "Area(A, B, O1, C, D, O2)",
+    "variables": [
+      "r1",
+      "theta"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2022-II-15.json",
+  "source_sha256": "4c4adf2017e3977ee7d08f321ca7bd147d80a101610733b79267ac50acb84fe3",
+  "saved_seed": 0,
+  "eligible_records": 74,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 140.00000005036057,
+      "x": [
+        3.4688711329543733,
+        -18.007942781956007
+      ],
+      "saved_residual": 2.3845348803690885e-09
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

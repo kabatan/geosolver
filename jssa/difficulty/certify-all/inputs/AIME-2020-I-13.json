@@ -1,0 +1,87 @@
+{
+  "id": "AIME-2020-I-13",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, E, F)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(4, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Intersect(AngleBisector(B, A, C), Line(B, C))",
+        "name": "D"
+      },
+      {
+        "expression": "PerpendicularBisector(A, D)",
+        "name": "L"
+      },
+      {
+        "expression": "Intersect(L, AngleBisector(A, B, C))",
+        "name": "E"
+      },
+      {
+        "expression": "Intersect(L, AngleBisector(A, C, B))",
+        "name": "F"
+      }
+    ],
+    "id": "AIME-2020-I-13",
+    "target": "Area(A, E, F)",
+    "variables": [
+      "cx",
+      "cy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2020-I-13.json",
+  "source_sha256": "2c7fe33f259cbd53124c375e7eade52232b371564b0579623088b49ddb6d53f1",
+  "saved_seed": 0,
+  "eligible_records": 198,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 2.8347335475692046,
+      "x": [
+        3.3750000000000004,
+        4.960783708246107
+      ],
+      "saved_residual": 0.0
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

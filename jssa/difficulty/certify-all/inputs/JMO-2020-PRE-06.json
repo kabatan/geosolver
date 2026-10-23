@@ -1,0 +1,106 @@
+{
+  "id": "JMO-2020-PRE-06",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "t",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "t",
+        "operator": "<",
+        "right": "pi/2"
+      },
+      {
+        "left": "Collinear(L,U,W)",
+        "operator": "=",
+        "right": "0"
+      },
+      {
+        "predicate": "Or(And((Vector(L,B).x*Vector(L,V).y-Vector(L,B).y*Vector(L,V).x)>0,(Vector(B,C).x*Vector(B,V).y-Vector(B,C).y*Vector(B,V).x)>0,(Vector(C,A).x*Vector(C,V).y-Vector(C,A).y*Vector(C,V).x)>0,(Vector(A,L).x*Vector(A,V).y-Vector(A,L).y*Vector(A,V).x)>0),And((Vector(L,B).x*Vector(L,V).y-Vector(L,B).y*Vector(L,V).x)<0,(Vector(B,C).x*Vector(B,V).y-Vector(B,C).y*Vector(B,V).x)<0,(Vector(C,A).x*Vector(C,V).y-Vector(C,A).y*Vector(C,V).x)<0,(Vector(A,L).x*Vector(A,V).y-Vector(A,L).y*Vector(A,V).x)<0))"
+      },
+      {
+        "predicate": "Or(And((Vector(L,B).x*Vector(L,W).y-Vector(L,B).y*Vector(L,W).x)>0,(Vector(B,C).x*Vector(B,W).y-Vector(B,C).y*Vector(B,W).x)>0,(Vector(C,A).x*Vector(C,W).y-Vector(C,A).y*Vector(C,W).x)>0,(Vector(A,L).x*Vector(A,W).y-Vector(A,L).y*Vector(A,W).x)>0),And((Vector(L,B).x*Vector(L,W).y-Vector(L,B).y*Vector(L,W).x)<0,(Vector(B,C).x*Vector(B,W).y-Vector(B,C).y*Vector(B,W).x)<0,(Vector(C,A).x*Vector(C,W).y-Vector(C,A).y*Vector(C,W).x)<0,(Vector(A,L).x*Vector(A,W).y-Vector(A,L).y*Vector(A,W).x)<0))"
+      },
+      {
+        "predicate": "Or(And((Vector(L,B).x*Vector(L,S).y-Vector(L,B).y*Vector(L,S).x)>0,(Vector(B,C).x*Vector(B,S).y-Vector(B,C).y*Vector(B,S).x)>0,(Vector(C,A).x*Vector(C,S).y-Vector(C,A).y*Vector(C,S).x)>0,(Vector(A,L).x*Vector(A,S).y-Vector(A,L).y*Vector(A,S).x)>0),And((Vector(L,B).x*Vector(L,S).y-Vector(L,B).y*Vector(L,S).x)<0,(Vector(B,C).x*Vector(B,S).y-Vector(B,C).y*Vector(B,S).x)<0,(Vector(C,A).x*Vector(C,S).y-Vector(C,A).y*Vector(C,S).x)<0,(Vector(A,L).x*Vector(A,S).y-Vector(A,L).y*Vector(A,S).x)<0))"
+      },
+      {
+        "left": "Distance(V,S)",
+        "operator": ">",
+        "right": "1"
+      },
+      {
+        "left": "Distance(V,S)",
+        "operator": "<",
+        "right": "3"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0,0)",
+        "name": "L"
+      },
+      {
+        "expression": "Point(0,3)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(3,0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(3,3)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(cos(t),3+sin(t))",
+        "name": "U"
+      },
+      {
+        "expression": "Point(cos(t)+sin(t),3+sin(t)-cos(t))",
+        "name": "V"
+      },
+      {
+        "expression": "Point(sin(t),3-cos(t))",
+        "name": "W"
+      },
+      {
+        "expression": "Midpoint(V,B)",
+        "name": "M"
+      },
+      {
+        "expression": "Point(M.x+(B.y-V.y)/2,M.y-(B.x-V.x)/2)",
+        "name": "S"
+      },
+      {
+        "expression": "Point(M.x-(B.y-V.y)/2,M.y+(B.x-V.x)/2)",
+        "name": "T"
+      }
+    ],
+    "id": "JMO-2020-PRE-06",
+    "target": "Area(W,V,S)",
+    "variables": [
+      "t"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2020-PRE-06.json",
+  "source_sha256": "b79584dd9b6efc9d649fc06f41bc3820c57ee5f8662fa5eefb8c3f99eaeb7d92",
+  "saved_seed": 0,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 0.780776406404415,
+      "x": [
+        0.5474570385672402
+      ],
+      "saved_residual": 2.220446049250313e-16
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

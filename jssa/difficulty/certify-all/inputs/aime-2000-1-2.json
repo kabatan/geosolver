@@ -1,0 +1,95 @@
+{
+  "id": "aime-2000-1-2",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "IsInteger(u)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsInteger(v)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "v",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "u",
+        "operator": ">",
+        "right": "v"
+      },
+      {
+        "left": "Area(A, B, C, D, E)",
+        "operator": "=",
+        "right": 451
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(u, v)",
+        "name": "A"
+      },
+      {
+        "expression": "Line(Point(0, 0), Point(1, 1))",
+        "name": "diagonal"
+      },
+      {
+        "expression": "Line(Point(0, 0), Point(0, 1))",
+        "name": "y_axis"
+      },
+      {
+        "expression": "Line(Point(0, 0), Point(1, 0))",
+        "name": "x_axis"
+      },
+      {
+        "expression": "Reflect(A, diagonal)",
+        "name": "B"
+      },
+      {
+        "expression": "Reflect(B, y_axis)",
+        "name": "C"
+      },
+      {
+        "expression": "Reflect(C, x_axis)",
+        "name": "D"
+      },
+      {
+        "expression": "Reflect(D, y_axis)",
+        "name": "E"
+      },
+      {
+        "expression": "Polygon([A, B, C, D, E])",
+        "name": "pentagon"
+      }
+    ],
+    "id": "aime-2000-1-2",
+    "target": "u + v",
+    "variables": [
+      "u",
+      "v"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/aime-2000-1-2.json",
+  "source_sha256": "9e3e3b2d9332bca5d730e4b2be0e509f17edfbfefd47b77d0066988f4b0a78d2",
+  "saved_seed": 0,
+  "eligible_records": 12,
+  "candidates": [
+    {
+      "k": 2,
+      "value_float": 21.00000001861533,
+      "x": [
+        10.999999967668103,
+        10.00000005094723
+      ],
+      "saved_residual": 2.7617270678610058e-14
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

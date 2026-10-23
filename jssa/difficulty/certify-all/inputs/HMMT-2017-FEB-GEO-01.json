@@ -1,0 +1,119 @@
+{
+  "id": "HMMT-2017-FEB-GEO-01",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(D, A)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "OnCircle(D, Gamma)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "a",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "c",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "d",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "theta",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "theta",
+        "operator": "<",
+        "right": "pi"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "P"
+      },
+      {
+        "expression": "Point(-a, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(c, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(b * cos(theta), b * sin(theta))",
+        "name": "B"
+      },
+      {
+        "expression": "Point(-d * cos(theta), -d * sin(theta))",
+        "name": "D"
+      },
+      {
+        "expression": "Circumcircle(A, B, C)",
+        "name": "Gamma"
+      }
+    ],
+    "id": "HMMT-2017-FEB-GEO-01",
+    "target": "a / c",
+    "variables": [
+      "a",
+      "c",
+      "b",
+      "d",
+      "theta"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2017-FEB-GEO-01.json",
+  "source_sha256": "94305a5bdaa8c52291e4733966624753356a01d8d37bfd8f168a85af73171401",
+  "saved_seed": 0,
+  "eligible_records": 126,
+  "candidates": [
+    {
+      "k": 3,
+      "value_float": 0.40000000001616104,
+      "x": [
+        1.8277470669827374,
+        4.569367667272229,
+        2.284683833724343,
+        3.6554941338432565,
+        1.5181404185345597
+      ],
+      "saved_residual": 1.013836938392638e-10
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

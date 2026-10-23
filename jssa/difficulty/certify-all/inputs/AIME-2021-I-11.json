@@ -1,0 +1,113 @@
+{
+  "id": "AIME-2021-I-11",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(D, A)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "AreConcyclic(A, B, C, D)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "dy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C, D])"
+      },
+      {
+        "left": "Distance(A1, B1)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(4, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(dx, dy)",
+        "name": "D"
+      },
+      {
+        "expression": "FootOfPerpendicular(A, Line(B, D))",
+        "name": "A1"
+      },
+      {
+        "expression": "FootOfPerpendicular(C, Line(B, D))",
+        "name": "C1"
+      },
+      {
+        "expression": "FootOfPerpendicular(B, Line(A, C))",
+        "name": "B1"
+      },
+      {
+        "expression": "FootOfPerpendicular(D, Line(A, C))",
+        "name": "D1"
+      }
+    ],
+    "id": "AIME-2021-I-11",
+    "target": "Perimeter(A1, B1, C1, D1)",
+    "variables": [
+      "cx",
+      "cy",
+      "dx",
+      "dy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2021-I-11.json",
+  "source_sha256": "9f5156462e2c1448a9b845207ec6040cf6f7cb913dad6dbe1400203369fa3be0",
+  "saved_seed": 0,
+  "eligible_records": 86,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 4.101694915254238,
+      "x": [
+        5.774193548387098,
+        4.674637660061109,
+        0.24137931034482857,
+        6.995837049884557
+      ],
+      "saved_residual": 1.9860273225978185e-15
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

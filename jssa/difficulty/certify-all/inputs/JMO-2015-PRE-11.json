@@ -1,0 +1,94 @@
+{
+  "id": "JMO-2015-PRE-11",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Area(A, Bp, Cp)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Area(Ap, B, Cp)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Area(Ap, Bp, C)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(b, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Circumcircle(A, B, C)",
+        "name": "Gamma"
+      },
+      {
+        "expression": "Midpoint(Arc(Gamma, B, C, excluding=A))",
+        "name": "Ap"
+      },
+      {
+        "expression": "Midpoint(Arc(Gamma, C, A, excluding=B))",
+        "name": "Bp"
+      },
+      {
+        "expression": "Midpoint(Arc(Gamma, A, B, excluding=C))",
+        "name": "Cp"
+      }
+    ],
+    "id": "JMO-2015-PRE-11",
+    "target": "Area(A, B, C)",
+    "variables": [
+      "b",
+      "cx",
+      "cy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2015-PRE-11.json",
+  "source_sha256": "4a3158b0ee29f3d8adcd4471e7f3b3611e438fbaf44ebaec4bf95302825d2620",
+  "saved_seed": 0,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 8.228571428607639,
+      "x": [
+        3.74126773229054,
+        0.8979042557540861,
+        4.3988145288761835
+      ],
+      "saved_residual": 3.7381051759250295e-11
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

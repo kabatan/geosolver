@@ -1,0 +1,133 @@
+{
+  "id": "HMMT-2024-FEB-GEO-10",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(P, A)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "Distance(P, B)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(P, C)",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "Angle(P, A, B)",
+        "operator": "=",
+        "right": "Angle(P, D, A)"
+      },
+      {
+        "left": "Angle(P, A, D)",
+        "operator": "=",
+        "right": "Angle(P, D, C)"
+      },
+      {
+        "left": "Angle(P, B, A)",
+        "operator": "=",
+        "right": "Angle(P, C, B)"
+      },
+      {
+        "left": "Angle(P, B, C)",
+        "operator": "=",
+        "right": "Angle(P, C, D)"
+      },
+      {
+        "left": "Area(A, B, C, D)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "SimplePolygon([A, B, C, D])"
+      },
+      {
+        "left": "(Vector(A, B).x * Vector(A, P).y - Vector(A, B).y * Vector(A, P).x) * (Vector(B, C).x * Vector(B, P).y - Vector(B, C).y * Vector(B, P).x)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "(Vector(A, B).x * Vector(A, P).y - Vector(A, B).y * Vector(A, P).x) * (Vector(C, D).x * Vector(C, P).y - Vector(C, D).y * Vector(C, P).x)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "(Vector(A, B).x * Vector(A, P).y - Vector(A, B).y * Vector(A, P).x) * (Vector(D, A).x * Vector(D, P).y - Vector(D, A).y * Vector(D, P).x)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "P"
+      },
+      {
+        "expression": "Point(4, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(bx, by)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(dx, dy)",
+        "name": "D"
+      }
+    ],
+    "id": "HMMT-2024-FEB-GEO-10",
+    "target": "Distance(A, B) + Distance(B, C) + Distance(C, D) + Distance(D, A)",
+    "variables": [
+      "bx",
+      "by",
+      "cx",
+      "cy",
+      "dx",
+      "dy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2024-FEB-GEO-10.json",
+  "source_sha256": "4c2f8325d4a7e177349edde79f23c7cbb6d11b9522ff27f818c82c40bac572fe",
+  "saved_seed": 0,
+  "eligible_records": 61,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 36.44722211636986,
+      "x": [
+        -3.0749999999999997,
+        -3.9426355398388018,
+        -5.895121951219514,
+        8.077594764547788,
+        2.195121951219511,
+        7.69294739480742
+      ],
+      "saved_residual": 1.2412670766236366e-16
+    },
+    {
+      "k": 4,
+      "value_float": 30.0,
+      "x": [
+        5.0,
+        -1.2686290853571364e-12,
+        -10.0,
+        2.459685646833063e-12,
+        1.55449276221946,
+        1.150630697293393e-12
+      ],
+      "saved_residual": 1.0913535775230746e-12
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

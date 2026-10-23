@@ -1,0 +1,82 @@
+{
+  "id": "HMMT-2020-FEB-GEO-06",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "ay",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(6, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(ax, ay)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(7 / 5 * -ax, 7 / 5 * -ay)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(11, 0)",
+        "name": "E"
+      },
+      {
+        "expression": "Point(ax+6*(ax-6)/7,13*ay/7)",
+        "name": "F"
+      },
+      {
+        "expression": "Circumcircle(D, E, F)",
+        "name": "Gamma"
+      }
+    ],
+    "id": "HMMT-2020-FEB-GEO-06",
+    "target": "pi * Radius(Gamma)**2",
+    "variables": [
+      "ax",
+      "ay"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2020-FEB-GEO-06.json",
+  "source_sha256": "4bcfdfabf4e996b8d29126ebc11ce67444e4465a42d349587b83fe47c418f6d0",
+  "saved_seed": 0,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 262.8465853505872,
+      "x": [
+        1.0000000000028981,
+        4.898979485571603
+      ],
+      "saved_residual": 5.940664869064314e-12
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

@@ -1,0 +1,175 @@
+{
+  "id": "AIME-2018-I-15",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "a",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "c",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "a+b+c",
+        "operator": "<",
+        "right": "2*pi"
+      },
+      {
+        "left": "sin(Angle(A0,XA,A1))",
+        "operator": "=",
+        "right": "2/3"
+      },
+      {
+        "left": "sin(Angle(B0,XB,B1))",
+        "operator": "=",
+        "right": "3/5"
+      },
+      {
+        "left": "sin(Angle(C0,XC,C1))",
+        "operator": "=",
+        "right": "6/7"
+      },
+      {
+        "left": "Distance(A0,A1)",
+        "operator": "!=",
+        "right": "Distance(A1,A2)"
+      },
+      {
+        "left": "Distance(A0,A1)",
+        "operator": "!=",
+        "right": "Distance(A2,A3)"
+      },
+      {
+        "left": "Distance(A0,A1)",
+        "operator": "!=",
+        "right": "Distance(A3,A0)"
+      },
+      {
+        "left": "Distance(A1,A2)",
+        "operator": "!=",
+        "right": "Distance(A2,A3)"
+      },
+      {
+        "left": "Distance(A1,A2)",
+        "operator": "!=",
+        "right": "Distance(A3,A0)"
+      },
+      {
+        "left": "Distance(A2,A3)",
+        "operator": "!=",
+        "right": "Distance(A3,A0)"
+      },
+      {
+        "left": "Area(A0,A1,A2,A3)",
+        "operator": "=",
+        "right": "Area(B0,B1,B2,B3)"
+      },
+      {
+        "left": "Area(A0,A1,A2,A3)",
+        "operator": "=",
+        "right": "Area(C0,C1,C2,C3)"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0,0)",
+        "name": "O"
+      },
+      {
+        "expression": "Point(cos(0),sin(0))",
+        "name": "A0"
+      },
+      {
+        "expression": "Point(cos(a),sin(a))",
+        "name": "A1"
+      },
+      {
+        "expression": "Point(cos((a)+(b)),sin((a)+(b)))",
+        "name": "A2"
+      },
+      {
+        "expression": "Point(cos((a)+(b)+(c)),sin((a)+(b)+(c)))",
+        "name": "A3"
+      },
+      {
+        "expression": "Intersect(Line(A0,A2),Line(A1,A3))",
+        "name": "XA"
+      },
+      {
+        "expression": "Point(cos(0),sin(0))",
+        "name": "B0"
+      },
+      {
+        "expression": "Point(cos(a),sin(a))",
+        "name": "B1"
+      },
+      {
+        "expression": "Point(cos((a)+(c)),sin((a)+(c)))",
+        "name": "B2"
+      },
+      {
+        "expression": "Point(cos((a)+(c)+(b)),sin((a)+(c)+(b)))",
+        "name": "B3"
+      },
+      {
+        "expression": "Intersect(Line(B0,B2),Line(B1,B3))",
+        "name": "XB"
+      },
+      {
+        "expression": "Point(cos(0),sin(0))",
+        "name": "C0"
+      },
+      {
+        "expression": "Point(cos(a),sin(a))",
+        "name": "C1"
+      },
+      {
+        "expression": "Point(cos((a)+(b)),sin((a)+(b)))",
+        "name": "C2"
+      },
+      {
+        "expression": "Point(cos((a)+(b)+(2*pi-a-b-c)),sin((a)+(b)+(2*pi-a-b-c)))",
+        "name": "C3"
+      },
+      {
+        "expression": "Intersect(Line(C0,C2),Line(C1,C3))",
+        "name": "XC"
+      }
+    ],
+    "id": "AIME-2018-I-15",
+    "target": "Area(A0,A1,A2,A3)",
+    "variables": [
+      "a",
+      "b",
+      "c"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2018-I-15.json",
+  "source_sha256": "a9f12ef469b529f96403f1c3efebd29a231e71c8b84f5b09634ffc8ea3d77b9b",
+  "saved_seed": 0,
+  "eligible_records": 101,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 0.685714285714285,
+      "x": [
+        3.880259741321586,
+        1.1159233482714321,
+        0.9434702534040681
+      ],
+      "saved_residual": 4.440892098500626e-16
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

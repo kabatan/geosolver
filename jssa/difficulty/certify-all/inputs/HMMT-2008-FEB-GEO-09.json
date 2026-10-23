@@ -1,0 +1,110 @@
+{
+  "id": "HMMT-2008-FEB-GEO-09",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(B, I)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(C, I)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(D, I)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "IsTangent(Line(A, B), incircle)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(Line(A, C), incircle)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "ay",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(D, P)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(D, Q)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(0, 3)",
+        "name": "I"
+      },
+      {
+        "expression": "Circle(I, 3)",
+        "name": "incircle"
+      },
+      {
+        "expression": "Point(-3 * sqrt(3), 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(4, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(ax, ay)",
+        "name": "A"
+      },
+      {
+        "expression": "Circle(Midpoint(A, I), Distance(A, I) / 2)",
+        "name": "Delta"
+      },
+      {
+        "expression": "Intersect(Line(B, I), Delta, exclude=I)",
+        "name": "P"
+      },
+      {
+        "expression": "Intersect(Line(C, I), Delta, exclude=I)",
+        "name": "Q"
+      }
+    ],
+    "id": "HMMT-2008-FEB-GEO-09",
+    "target": "Distance(D, P) / Distance(D, Q) * (Distance(D, P) / Distance(D, Q))",
+    "variables": [
+      "ax",
+      "ay"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2008-FEB-GEO-09.json",
+  "source_sha256": "9e214031c433d4ac68d8041dc1109909d73650b964821018dc0c77e5fc90465c",
+  "saved_seed": 0,
+  "eligible_records": 128,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 1.1718750005323384,
+      "x": [
+        0.9135111036989029,
+        10.582247634768859
+      ],
+      "saved_residual": 2.3655713961703764e-09
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

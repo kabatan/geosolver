@@ -1,0 +1,99 @@
+{
+  "id": "HMMT-2023-FEB-GEO-01",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Area(P, B, C)",
+        "operator": "=",
+        "right": 20
+      },
+      {
+        "left": "Area(P, A, D)",
+        "operator": "=",
+        "right": 23
+      },
+      {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "py",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "py",
+        "operator": "<",
+        "right": "sqrt(3) * s / 2"
+      },
+      {
+        "left": "px",
+        "operator": ">",
+        "right": "-s + py / sqrt(3)"
+      },
+      {
+        "left": "px",
+        "operator": "<",
+        "right": "s - py / sqrt(3)"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(s, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(s / 2, sqrt(3) * s / 2)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(-s / 2, sqrt(3) * s / 2)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(-s, 0)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(-s / 2, -sqrt(3) * s / 2)",
+        "name": "E"
+      },
+      {
+        "expression": "Point(s / 2, -sqrt(3) * s / 2)",
+        "name": "F"
+      },
+      {
+        "expression": "Point(px, py)",
+        "name": "P"
+      }
+    ],
+    "id": "HMMT-2023-FEB-GEO-01",
+    "target": "Area(A, B, C, D, E, F)",
+    "variables": [
+      "s",
+      "px",
+      "py"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2023-FEB-GEO-01.json",
+  "source_sha256": "3fa8c9142a2fcb56289ea0f5dc29a6ec6e2c3ceae9983644198d2fc63275facd",
+  "saved_seed": 0,
+  "eligible_records": 187,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 189.00000000006176,
+      "x": [
+        8.529134417859565,
+        6.822210504717061,
+        2.6966394094861528
+      ],
+      "saved_residual": 9.237922522976919e-12
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

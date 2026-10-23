@@ -1,0 +1,140 @@
+{
+  "id": "HMMT-2024-FEB-GEO-03",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(O, S)",
+        "operator": "=",
+        "right": 61
+      },
+      {
+        "left": "Distance(O, W)",
+        "operator": "=",
+        "right": 123
+      },
+      {
+        "left": "Distance(O, Z)",
+        "operator": "=",
+        "right": 123
+      },
+      {
+        "left": "Distance(S, X)",
+        "operator": "=",
+        "right": 61
+      },
+      {
+        "left": "Distance(S, Y)",
+        "operator": "=",
+        "right": 61
+      },
+      {
+        "left": "Distance(W, X)",
+        "operator": "=",
+        "right": "t"
+      },
+      {
+        "left": "Distance(X, Y)",
+        "operator": "=",
+        "right": "2 * t"
+      },
+      {
+        "left": "Distance(Y, Z)",
+        "operator": "=",
+        "right": "3 * t"
+      },
+      {
+        "left": "t",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "W.x",
+        "operator": "<",
+        "right": "X.x"
+      },
+      {
+        "left": "X.x",
+        "operator": "<",
+        "right": "Y.x"
+      },
+      {
+        "left": "Y.x",
+        "operator": "<",
+        "right": "Z.x"
+      },
+      {
+        "left": "h",
+        "operator": "!=",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "O"
+      },
+      {
+        "expression": "sqrt(123 * 123 - h * h)",
+        "name": "L"
+      },
+      {
+        "expression": "L / 3",
+        "name": "t"
+      },
+      {
+        "expression": "Point(-L / 3, sy)",
+        "name": "S"
+      },
+      {
+        "expression": "Point(-L, h)",
+        "name": "W"
+      },
+      {
+        "expression": "Point(-2 * L / 3, h)",
+        "name": "X"
+      },
+      {
+        "expression": "Point(0, h)",
+        "name": "Y"
+      },
+      {
+        "expression": "Point(L, h)",
+        "name": "Z"
+      }
+    ],
+    "id": "HMMT-2024-FEB-GEO-03",
+    "target": "Distance(W, Z)",
+    "variables": [
+      "h",
+      "sy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2024-FEB-GEO-03.json",
+  "source_sha256": "612441d4760d7bf8165e79dbabfc7f132d45886b21cee451589619a2dc35497e",
+  "saved_seed": 0,
+  "eligible_records": 96,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 246.0,
+      "x": [
+        -3.405726029368756e-15,
+        -45.16635916254486
+      ],
+      "saved_residual": 0.0
+    },
+    {
+      "k": 9,
+      "value_float": 42.000000000000064,
+      "x": [
+        -121.19405926034493,
+        -60.597029630172464
+      ],
+      "saved_residual": 1.2306961192854808e-14
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

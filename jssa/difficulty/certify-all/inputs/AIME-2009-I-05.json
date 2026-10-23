@@ -1,0 +1,100 @@
+{
+  "id": "AIME-2009-I-05",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 450
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 300
+      },
+      {
+        "left": "Distance(A, M)",
+        "operator": "=",
+        "right": 180
+      },
+      {
+        "left": "ay",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "by",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(ax, ay)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(bx, by)",
+        "name": "B"
+      },
+      {
+        "expression": "Midpoint(A, C)",
+        "name": "K"
+      },
+      {
+        "expression": "Incenter(A, B, C)",
+        "name": "I"
+      },
+      {
+        "expression": "Intersect(Line(C, I), Line(A, B))",
+        "name": "L"
+      },
+      {
+        "expression": "Intersect(Line(B, K), Line(C, L))",
+        "name": "P"
+      },
+      {
+        "expression": "Reflect(P, K)",
+        "name": "M"
+      }
+    ],
+    "id": "AIME-2009-I-05",
+    "target": "Distance(L, P)",
+    "variables": [
+      "ax",
+      "ay",
+      "bx",
+      "by"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2009-I-05.json",
+  "source_sha256": "86c21f3d6dbc3ecfb47a35fa74ea0e7693ad5b0220f43147da25724148384db0",
+  "saved_seed": 0,
+  "eligible_records": 130,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 72.00000000000186,
+      "x": [
+        103.13299539162723,
+        438.02235703391517,
+        -293.33160247207604,
+        62.90127972590312
+      ],
+      "saved_residual": 1.57571146442135e-11
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

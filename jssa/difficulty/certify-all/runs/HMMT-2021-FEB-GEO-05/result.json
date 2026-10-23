@@ -1,0 +1,242 @@
+{
+  "bound_derivation": {
+    "bounds": [
+      "0",
+      "oo",
+      "False",
+      "False"
+    ],
+    "explicit_rules": [
+      {
+        "condition_index": 0,
+        "normalized_expression": "Distance(Point(10, sqrt(341)), Point(-10, sqrt(341)))",
+        "operator": "=",
+        "rational_endpoint": "20"
+      },
+      {
+        "condition_index": 1,
+        "normalized_expression": "Distance(Point(0, 0), Point(10, sqrt(341)))",
+        "operator": "=",
+        "rational_endpoint": "21"
+      },
+      {
+        "condition_index": 2,
+        "normalized_expression": "Distance(Point(0, 0), Point(-10, sqrt(341)))",
+        "operator": "=",
+        "rational_endpoint": "21"
+      },
+      {
+        "condition_index": 3,
+        "normalized_expression": "Distance(Point(10 * t, sqrt(341) * t), Point(cx, cy))",
+        "operator": "=",
+        "rational_endpoint": "3"
+      },
+      {
+        "condition_index": 4,
+        "normalized_expression": "Distance(Point(cx, cy), Point(-10 * t, sqrt(341) * t))",
+        "operator": "=",
+        "rational_endpoint": "4"
+      },
+      {
+        "condition_index": 5,
+        "normalized_expression": "OnCircle(Point(cx, cy), Circumcircle(Point(0, 0), Point(10 * t, sqrt(341) * t), Point(-10 * t, sqrt(341) * t)))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 6,
+        "normalized_expression": "t",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 7,
+        "normalized_expression": "t",
+        "operator": "<",
+        "rational_endpoint": "1"
+      },
+      {
+        "condition_index": 8,
+        "normalized_expression": "cy",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 10,
+        "normalized_expression": "Vector(Point(0, 0), Point(10, sqrt(341))).x * Vector(Point(0, 0), Point(cx, cy)).y - Vector(Point(0, 0), Point(10, sqrt(341))).y * Vector(Point(0, 0), Point(cx, cy)).x",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 11,
+        "normalized_expression": "Vector(Point(10, sqrt(341)), Point(-10, sqrt(341))).x * Vector(Point(10, sqrt(341)), Point(cx, cy)).y - Vector(Point(10, sqrt(341)), Point(-10, sqrt(341))).y * Vector(Point(10, sqrt(341)), Point(cx, cy)).x",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 12,
+        "normalized_expression": "Vector(Point(-10, sqrt(341)), Point(0, 0)).x * Vector(Point(-10, sqrt(341)), Point(cx, cy)).y - Vector(Point(-10, sqrt(341)), Point(0, 0)).y * Vector(Point(-10, sqrt(341)), Point(cx, cy)).x",
+        "operator": ">",
+        "rational_endpoint": "0"
+      }
+    ],
+    "method": "conservative_rational_interval_arithmetic"
+  },
+  "candidate_union_P": "t8 - 49/400",
+  "candidates": [
+    {
+      "P": "t8 - 49/400",
+      "candidate_status": "proposed",
+      "float_guard": true,
+      "float_hard": true,
+      "hp_coordinates": [
+        "0.3086893513651847748191362527079591798393813884868000939937363555146823981588271745409124075476816862",
+        "0.5669129797515172823289152311913082206937773491931417039435208099671750628331842987731552157175878193",
+        "7.328104098154532613178852980229512016983661715928787353706781366862373072792007472127013518360307305"
+      ],
+      "hp_guard": true,
+      "hp_hard": true,
+      "hp_residual": "8.57240543462e-101",
+      "hp_value": "0.1225",
+      "iterations": 3,
+      "k": 0,
+      "numeric_fixed_columns": [],
+      "proposal_kind": "100_digit_polished_saved_endpoint",
+      "rank": 3,
+      "rechecked_residual": 1.1102230246251565e-14,
+      "root_interval": [
+        "122499999999999999999999999999/1000000000000000000000000000000",
+        "122500000000000000000000000001/1000000000000000000000000000000"
+      ],
+      "saved_residual": 1.428007506981779e-14,
+      "value_float": 0.1225000000000007,
+      "x": [
+        0.30868935136518566,
+        0.5669129797515164,
+        7.328104098154554
+      ]
+    }
+  ],
+  "equations": 13,
+  "group": "development323",
+  "id": "HMMT-2021-FEB-GEO-05",
+  "identities": [
+    {
+      "N": 2,
+      "Q": "t8**4 - 1201*t8**2/80000 + 2401/25600000000",
+      "bytes": 50667,
+      "cofactor_terms": 744,
+      "kind": "E_lex",
+      "raw_saved": true,
+      "root_check": {
+        "all_real_root_intervals": [
+          [
+            "-49/400",
+            "-49/400"
+          ],
+          [
+            "-1/400",
+            "-1/400"
+          ],
+          [
+            "1/400",
+            "1/400"
+          ],
+          [
+            "49/400",
+            "49/400"
+          ]
+        ],
+        "allowed_root_count": 2,
+        "candidate_count": 1,
+        "candidate_matches": [
+          true
+        ],
+        "range": [
+          "0",
+          "oo",
+          false,
+          false
+        ],
+        "set_complete": false,
+        "unique": false
+      },
+      "sha256": "b6c4f640433dbb1da6529e1a5b57b1c0fdbb87fd8d595dca47bae12987cbe418",
+      "verified_fraction": true
+    }
+  ],
+  "input_sha256": "1bca5659aca21550ef63af5c7b2818e0d391ac48e5d220a5137ae7ff5345ebfb",
+  "last_root_check": {
+    "all_real_root_intervals": [
+      [
+        "-49/400",
+        "-49/400"
+      ],
+      [
+        "-1/400",
+        "-1/400"
+      ],
+      [
+        "1/400",
+        "1/400"
+      ],
+      [
+        "49/400",
+        "49/400"
+      ]
+    ],
+    "allowed_root_count": 2,
+    "candidate_count": 1,
+    "candidate_matches": [
+      true
+    ],
+    "range": [
+      "0",
+      "oo",
+      false,
+      false
+    ],
+    "set_complete": false,
+    "unique": false
+  },
+  "lex_zero_dimensional": true,
+  "max_degree": 4,
+  "nondeg_factors": [
+    "s1",
+    "v_t",
+    "s7"
+  ],
+  "official_answer_loaded": false,
+  "primary_main_output_available": false,
+  "proposed_candidate_count": 1,
+  "saved_candidate_count": 1,
+  "seconds": 3.3434834631625563,
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2021-FEB-GEO-05.json",
+  "source_sha256": "4ea46d7e4508f8c8f0184c4532a7b3540870ef95a419027e52fe9e72d97a63cd",
+  "stage": "roots_E_lex",
+  "stage_timeouts": [],
+  "stages": {
+    "bounds": 0.0030553878750652075,
+    "encode": 0.08926815493032336,
+    "extract_grevlex_eliminant": 0.007602378958836198,
+    "groebner_grevlex": 1.1321959509514272,
+    "groebner_lex": 0.7404354510363191,
+    "identity_E_lex": 0.8052263020072132,
+    "identity_P": 0.00025370880030095577,
+    "identity_reflection": 0.0009006068576127291,
+    "numeric_and_pslq": 0.04024618002586067,
+    "roots_E_lex": 0.0019728930201381445
+  },
+  "status": "multiple_roots_remain",
+  "system_bytes": 527,
+  "system_sha256": "efefe8f12d77fe474c5bfc832cb02ac71babe070c5b7be124905e15fb624f2a1",
+  "target_symbol": "t8",
+  "total_terms": 39,
+  "variables": 12,
+  "zero_dimensional": true,
+  "process_wall_seconds": 3.5318712131120265,
+  "process_returncode": 0,
+  "hard_timeout": false,
+  "charged_seconds": 3.5318712131120265
+}

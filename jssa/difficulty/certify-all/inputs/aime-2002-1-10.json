@@ -1,0 +1,122 @@
+{
+  "id": "aime-2002-1-10",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "x",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "predicate": "Bound(t_e, (0, 1))"
+      },
+      {
+        "predicate": "Bound(t_f, (0, 1))"
+      },
+      {
+        "left": "Distance(A, E)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(E, B)",
+        "operator": "=",
+        "right": 9
+      },
+      {
+        "left": "Distance(A, F)",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "Distance(F, C)",
+        "operator": "=",
+        "right": 27
+      },
+      {
+        "left": "OnSegment(D, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(G, A, D)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(G, E, F)",
+        "operator": "=",
+        "right": 0
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(0, 12)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(x, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "PointOnSegment(A, B, t_e)",
+        "name": "E"
+      },
+      {
+        "expression": "PointOnSegment(A, C, t_f)",
+        "name": "F"
+      },
+      {
+        "expression": "Line(B, C)",
+        "name": "bc_line"
+      },
+      {
+        "expression": "AngleBisector(C, A, B)",
+        "name": "angle_bisector"
+      },
+      {
+        "expression": "Intersect(angle_bisector, bc_line)",
+        "name": "D"
+      },
+      {
+        "expression": "Line(E, F)",
+        "name": "ef_line"
+      },
+      {
+        "expression": "Intersect(angle_bisector, ef_line)",
+        "name": "G"
+      }
+    ],
+    "id": "aime-2002-1-10",
+    "target": "Area(D, C, F, G)",
+    "variables": [
+      "x",
+      "t_e",
+      "t_f"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/aime-2002-1-10.json",
+  "source_sha256": "367204813d8e60f2afd1b0a27614f8f3cced2c2fc6081057cb708a3446e5fe0d",
+  "saved_seed": 0,
+  "eligible_records": 199,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 147.65666765666765,
+      "x": [
+        35.0,
+        0.25000000000000006,
+        0.2702702702702703
+      ],
+      "saved_residual": 4.189529226675416e-15
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

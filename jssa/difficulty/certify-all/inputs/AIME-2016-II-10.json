@@ -1,0 +1,81 @@
+{
+  "id": "AIME-2016-II-10",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(B, T)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(A, S)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(13, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(4, 0)",
+        "name": "P"
+      },
+      {
+        "expression": "Point(7, 0)",
+        "name": "Q"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Circumcircle(A, B, C)",
+        "name": "Gamma"
+      },
+      {
+        "expression": "Intersect(Line(C, P), Gamma, exclude=C)",
+        "name": "S"
+      },
+      {
+        "expression": "Intersect(Line(C, Q), Gamma, exclude=C)",
+        "name": "T"
+      }
+    ],
+    "id": "AIME-2016-II-10",
+    "target": "Distance(S, T)",
+    "variables": [
+      "cx",
+      "cy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2016-II-10.json",
+  "source_sha256": "aa1e290917311097c032ea53b3a49021c6f851ae4254e74c9dfa8e67027f52c1",
+  "saved_seed": 0,
+  "eligible_records": 185,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 4.374999999923215,
+      "x": [
+        1.7105263156536905,
+        7.34927879241846
+      ],
+      "saved_residual": 8.740988131875346e-11
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

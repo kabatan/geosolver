@@ -1,0 +1,109 @@
+{
+  "id": "HMMT-2019-FEB-GEO-05",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "OnCircle(A, Omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(B, Omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(C, Omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": "Distance(A, C)"
+      },
+      {
+        "left": "Distance(D, O)",
+        "operator": "=",
+        "right": "sqrt(3)"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "O"
+      },
+      {
+        "expression": "Point(ax, ay)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(bx, by)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Circle(O, 1)",
+        "name": "Omega"
+      },
+      {
+        "expression": "Reflect(C, Line(A, B))",
+        "name": "D"
+      }
+    ],
+    "id": "HMMT-2019-FEB-GEO-05",
+    "target": "Area(A, B, C)",
+    "variables": [
+      "ax",
+      "ay",
+      "bx",
+      "by",
+      "cx",
+      "cy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2019-FEB-GEO-05.json",
+  "source_sha256": "684e3a122eac5a111f75468f40e013961ccf508c37af4a4aa0692f13124bd8d3",
+  "saved_seed": 0,
+  "eligible_records": 81,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 1.2071067811893619,
+      "x": [
+        0.9999997126196802,
+        0.0007581342777962527,
+        -0.7076426598572525,
+        0.7065704960879702,
+        -0.7065704960795326,
+        -0.7076426598692767
+      ],
+      "saved_residual": 7.868418960738605e-12
+    },
+    {
+      "k": 1,
+      "value_float": 0.20710678117997147,
+      "x": [
+        0.7457389221288182,
+        0.6662382907309155,
+        0.056215435580868674,
+        0.9984186620830678,
+        0.9984186620943294,
+        -0.056215435550111485
+      ],
+      "saved_residual": 1.206472887487561e-11
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

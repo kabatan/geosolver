@@ -1,0 +1,96 @@
+{
+  "id": "HMMT-2021-FEB-GEO-03",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Collinear(A, D, B)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Perpendicular(Line(C, D), Line(A, B))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(C, L)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Distance(B, M)",
+        "operator": "=",
+        "right": 12
+      },
+      {
+        "left": "a",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(a, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(0, b)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(0, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(dx, dy)",
+        "name": "D"
+      },
+      {
+        "expression": "Midpoint(A, D)",
+        "name": "L"
+      },
+      {
+        "expression": "Midpoint(D, C)",
+        "name": "M"
+      },
+      {
+        "expression": "Midpoint(C, A)",
+        "name": "N"
+      }
+    ],
+    "id": "HMMT-2021-FEB-GEO-03",
+    "target": "Distance(B, N) ** 2",
+    "variables": [
+      "a",
+      "b",
+      "dx",
+      "dy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2021-FEB-GEO-03.json",
+  "source_sha256": "8e54437701bb3c71c5cd979f1125c19762443ad1e65a47e0a19d17b8f760ae03",
+  "saved_seed": 0,
+  "eligible_records": 155,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 193.0,
+      "x": [
+        7.779768634091892,
+        13.336746229871812,
+        5.804594214037474,
+        3.3860132915218597
+      ],
+      "saved_residual": 7.324948293788351e-15
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

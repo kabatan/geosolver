@@ -1,0 +1,88 @@
+{
+  "id": "HMMT-2019-FEB-GEO-08",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(A, B) + Distance(B, C) + Distance(C, A)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Area(B, C, N)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "ay",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "<",
+        "right": "Distance(A, C)"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(1, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(ax, ay)",
+        "name": "A"
+      },
+      {
+        "expression": "Orthocenter(A, B, C)",
+        "name": "H"
+      },
+      {
+        "expression": "Circumcenter(A, B, C)",
+        "name": "O"
+      },
+      {
+        "expression": "Midpoint(O, H)",
+        "name": "N"
+      }
+    ],
+    "id": "HMMT-2019-FEB-GEO-08",
+    "target": "Area(A, B, C)",
+    "variables": [
+      "ax",
+      "ay"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2019-FEB-GEO-08.json",
+  "source_sha256": "b8443cba7dc586e51705e6eba888fbfd67ba5db51a7be4e3e83bdad9564c5761",
+  "saved_seed": 0,
+  "eligible_records": 190,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 0.8571428571428571,
+      "x": [
+        -1.2857142857142843,
+        1.7142857142857142
+      ],
+      "saved_residual": 1.818360945611186e-15
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

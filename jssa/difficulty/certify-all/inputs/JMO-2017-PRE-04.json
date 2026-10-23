@@ -1,0 +1,110 @@
+{
+  "id": "JMO-2017-PRE-04",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(O, A)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(O, D)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(O, Line(A, C))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(O, Line(D, C))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Perpendicular(Line(O, A), Line(A, C))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Perpendicular(Line(O, D), Line(D, C))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "h",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(-2, 0)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(2, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(1,h)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(ox, oy)",
+        "name": "O"
+      },
+      {
+        "expression": "Circle(O, r)",
+        "name": "Gamma"
+      },
+      {
+        "expression": "Intersect(Line(A, B), Gamma, exclude=A)",
+        "name": "E"
+      },
+      {
+        "expression": "Intersect(Line(C, E), Gamma, exclude=E)",
+        "name": "F"
+      }
+    ],
+    "id": "JMO-2017-PRE-04",
+    "target": "Distance(E, F)",
+    "variables": [
+      "h",
+      "ox",
+      "oy",
+      "r"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2017-PRE-04.json",
+  "source_sha256": "8940fcca26b6f2089ff5fdf2d51fade7443951a601642a10d5b609889bb5b22e",
+  "saved_seed": 0,
+  "eligible_records": 97,
+  "candidates": [
+    {
+      "k": 1,
+      "value_float": 5.999999999530216,
+      "x": [
+        3.872983346035849,
+        -1.9999999998308353,
+        3.0983866767965424,
+        3.098386676799097
+      ],
+      "saved_residual": 5.487711678738264e-11
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

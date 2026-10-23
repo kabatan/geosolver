@@ -1,0 +1,112 @@
+{
+  "id": "JMO-2019-PRE-04",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Collinear(A, G, B)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Collinear(C, H, D)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Collinear(F, G, H)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(B, G)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "Distance(C, H)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(A, G) + Distance(G, B)",
+        "operator": "=",
+        "right": "Distance(A, B)"
+      },
+      {
+        "left": "Distance(C, H) + Distance(H, D)",
+        "operator": "=",
+        "right": "Distance(C, D)"
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(r * cos(pi / 2), r * sin(pi / 2))",
+        "name": "A"
+      },
+      {
+        "expression": "Point(r * cos(pi / 2 + 2 * pi / 5), r * sin(pi / 2 + 2 * pi / 5))",
+        "name": "B"
+      },
+      {
+        "expression": "Point(r * cos(pi / 2 + 4 * pi / 5), r * sin(pi / 2 + 4 * pi / 5))",
+        "name": "C"
+      },
+      {
+        "expression": "Point(r * cos(pi / 2 + 6 * pi / 5), r * sin(pi / 2 + 6 * pi / 5))",
+        "name": "D"
+      },
+      {
+        "expression": "Point(r * cos(pi / 2 + 8 * pi / 5), r * sin(pi / 2 + 8 * pi / 5))",
+        "name": "E"
+      },
+      {
+        "expression": "Intersect(Line(B, E), Line(A, C))",
+        "name": "F"
+      },
+      {
+        "expression": "Point(gx, gy)",
+        "name": "G"
+      },
+      {
+        "expression": "Point(hx, hy)",
+        "name": "H"
+      }
+    ],
+    "id": "JMO-2019-PRE-04",
+    "target": "Distance(A, G)",
+    "variables": [
+      "r",
+      "gx",
+      "gy",
+      "hx",
+      "hy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2019-PRE-04.json",
+  "source_sha256": "ce86c211e472c35f5df4e2433b0a7c5236a33dcd27db116429c5017fb3d551ab",
+  "saved_seed": 0,
+  "eligible_records": 183,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 2.8989794855663558,
+      "x": [
+        5.868622476201162,
+        -2.3453236701675246,
+        4.1646450878868375,
+        1.5505102572168206,
+        -4.747815316817526
+      ],
+      "saved_residual": 4.128465310065394e-15
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

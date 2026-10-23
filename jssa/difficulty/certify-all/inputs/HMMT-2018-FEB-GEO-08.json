@@ -1,0 +1,142 @@
+{
+  "id": "HMMT-2018-FEB-GEO-08",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 8
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 8
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": 8
+      },
+      {
+        "left": "Distance(A, X)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(A, Y)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Collinear(A, Z, T)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Collinear(B, Y, T)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Collinear(C, X, T)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Collinear(B, C, Z)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(Z, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "zy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "zy",
+        "operator": "<",
+        "right": "4 * sqrt(3)"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(8, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(4, 4 * sqrt(3))",
+        "name": "C"
+      },
+      {
+        "expression": "Point(5, 0)",
+        "name": "X"
+      },
+      {
+        "expression": "Point(3 / 2, 3 * sqrt(3) / 2)",
+        "name": "Y"
+      },
+      {
+        "expression": "Point(zx, zy)",
+        "name": "Z"
+      },
+      {
+        "expression": "Point(tx, ty)",
+        "name": "T"
+      },
+      {
+        "expression": "Circumcircle(A, X, Y)",
+        "name": "Gamma"
+      },
+      {
+        "expression": "Intersect(Line(Z, X), Gamma, exclude=X)",
+        "name": "P"
+      },
+      {
+        "expression": "Intersect(Line(Z, Y), Gamma, exclude=Y)",
+        "name": "Q"
+      },
+      {
+        "expression": "Intersect(Line(X, Q), Line(Y, P))",
+        "name": "K"
+      }
+    ],
+    "id": "HMMT-2018-FEB-GEO-08",
+    "target": "Distance(K, X) * Distance(K, Q)",
+    "variables": [
+      "zx",
+      "zy",
+      "tx",
+      "ty"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2018-FEB-GEO-08.json",
+  "source_sha256": "629d46203ce002a186fd3319d5bae94cb04e2fcd800c0de5e67296fd37ec414f",
+  "saved_seed": 0,
+  "eligible_records": 133,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 304.00000000001614,
+      "x": [
+        6.941176470588223,
+        1.8339361491905974,
+        4.816326530612245,
+        1.2725271239281546
+      ],
+      "saved_residual": 1.2084449957466568e-13
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

@@ -1,0 +1,93 @@
+{
+  "id": "HMMT-2006-FEB-GEO-05",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": "2 * sqrt(5)"
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(B, F)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Distance(C, F)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "fy",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(5, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(3 / 5, 4 / 5)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(1, 0)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(fx, fy)",
+        "name": "F"
+      },
+      {
+        "expression": "Intersect(Line(A, B), Line(D, F))",
+        "name": "E"
+      }
+    ],
+    "id": "HMMT-2006-FEB-GEO-05",
+    "target": "Area(C, D, E, B)",
+    "variables": [
+      "fx",
+      "fy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2006-FEB-GEO-05.json",
+  "source_sha256": "3662c828ea534aef002255e1d31beb6ad8ceb7f61d86fcf4b4b7a90f2542c1d1",
+  "saved_seed": 0,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 0.6285714355768859,
+      "x": [
+        1.8000000572112338,
+        2.3999999570915733
+      ],
+      "saved_residual": 4.440892098500626e-16
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

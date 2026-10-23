@@ -1,0 +1,118 @@
+{
+  "id": "JMO-2026-PRE-03",
+  "group": "holdout2026",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(B, P)",
+        "operator": "=",
+        "right": "Distance(P, Q)"
+      },
+      {
+        "left": "Distance(P, Q)",
+        "operator": "=",
+        "right": "Distance(Q, E)"
+      },
+      {
+        "left": "Area(B, C, P)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Area(A, P, Q)",
+        "operator": "=",
+        "right": 9
+      },
+      {
+        "left": "Area(D, E, Q)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "R",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "tb",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "tc",
+        "operator": ">",
+        "right": "tb"
+      },
+      {
+        "left": "td",
+        "operator": ">",
+        "right": "tc"
+      },
+      {
+        "left": "te",
+        "operator": ">",
+        "right": "td"
+      },
+      {
+        "left": "te",
+        "operator": "<",
+        "right": 1
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "O"
+      },
+      {
+        "expression": "Circle(O, R)",
+        "name": "Omega"
+      },
+      {
+        "expression": "PointOnCircle(Omega, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "PointOnCircle(Omega, tb)",
+        "name": "B"
+      },
+      {
+        "expression": "PointOnCircle(Omega, tc)",
+        "name": "C"
+      },
+      {
+        "expression": "PointOnCircle(Omega, td)",
+        "name": "D"
+      },
+      {
+        "expression": "PointOnCircle(Omega, te)",
+        "name": "E"
+      },
+      {
+        "expression": "Intersect(Line(B, E), Line(A, C))",
+        "name": "P"
+      },
+      {
+        "expression": "Intersect(Line(B, E), Line(A, D))",
+        "name": "Q"
+      }
+    ],
+    "id": "JMO-2026-PRE-03",
+    "target": "Distance(A, C) / Distance(A, D)",
+    "variables": [
+      "R",
+      "tb",
+      "tc",
+      "td",
+      "te"
+    ]
+  },
+  "source_kind": "missing_saved_candidate",
+  "source_path": "jssa/difficulty/new2026-predict/raw/JMO-2026-PRE-03.json",
+  "source_sha256": "95c7589ec3ef6bcb2d4634dab0ab6498950e9493c1b3e2507c8b022b2e220c0a",
+  "saved_seed": 5,
+  "eligible_records": 0,
+  "candidates": [],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

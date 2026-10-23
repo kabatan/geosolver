@@ -1,0 +1,124 @@
+{
+  "bound_derivation": {
+    "bounds": [
+      "0",
+      "oo",
+      "False",
+      "False"
+    ],
+    "explicit_rules": [
+      {
+        "condition_index": 0,
+        "normalized_expression": "Distance(Intersect(Line(Point(cx, cy), Incenter(Point(0, 0), Point(b, 0), Point(cx, cy))), Line(Point(0, 0), Point(b, 0))), Incenter(Point(0, 0), Point(b, 0), Point(cx, cy)))",
+        "operator": "=",
+        "rational_endpoint": "2"
+      },
+      {
+        "condition_index": 1,
+        "normalized_expression": "Distance(Intersect(Line(Point(cx, cy), Incenter(Point(0, 0), Point(b, 0), Point(cx, cy))), Line(Point(0, 0), Point(b, 0))), Intersect(Line(Point(cx, cy), Intersect(Line(Point(cx, cy), Incenter(Point(0, 0), Point(b, 0), Point(cx, cy))), Line(Point(0, 0), Point(b, 0)))), Circumcircle(Point(0, 0), Point(b, 0), Point(cx, cy)), exclude=Point(cx, cy)))",
+        "operator": "=",
+        "rational_endpoint": "3"
+      },
+      {
+        "condition_index": 2,
+        "normalized_expression": "b",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 3,
+        "normalized_expression": "cy",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 4,
+        "normalized_expression": "Area(Point(0, 0), Point(b, 0), Point(cx, cy))",
+        "operator": ">",
+        "rational_endpoint": "0"
+      }
+    ],
+    "method": "conservative_rational_interval_arithmetic"
+  },
+  "candidate_union_P": "t13 - 10/3",
+  "candidates": [
+    {
+      "P": "t13 - 10/3",
+      "candidate_status": "proposed",
+      "float_guard": true,
+      "float_hard": true,
+      "hp_coordinates": [
+        "8.000000000033010170266234287441003781219508660701235055795614011301030128619842373137890240128860299",
+        "4.000031919170874",
+        "5.333333333294210168573127743415391861839989189842969426023673211536086131129598835340676553481838084"
+      ],
+      "hp_guard": true,
+      "hp_hard": true,
+      "hp_residual": "3.85132024302e-84",
+      "hp_value": "3.33333333333333333333333333333333333333333333333333333333333333333333333333333333332974290533041391",
+      "iterations": 3,
+      "k": 1,
+      "numeric_fixed_columns": [
+        1
+      ],
+      "proposal_kind": "100_digit_polished_saved_endpoint",
+      "rank": 2,
+      "rechecked_residual": 9.164446979070817e-11,
+      "root_interval": [
+        "9999999999999999999999999999997/3000000000000000000000000000000",
+        "10000000000000000000000000000003/3000000000000000000000000000000"
+      ],
+      "saved_residual": 1.1014204175600582e-10,
+      "value_float": 3.3333333335166198,
+      "x": [
+        8.000000000094103,
+        4.000031919170874,
+        5.333333333538592
+      ]
+    }
+  ],
+  "detail": "fixed stage or global budget exhausted",
+  "equations": 16,
+  "grevlex_incomplete": true,
+  "group": "development323",
+  "id": "AIME-2016-I-06",
+  "identities": [],
+  "input_sha256": "4ddf56889659d6b6561c577646d7ba80a9b8677a0a5b866b89995403fae450bb",
+  "max_degree": 5,
+  "nondeg_factors": [
+    "s1 + s2 + s3",
+    "v_b",
+    "p5 - v_cy",
+    "v_cy"
+  ],
+  "official_answer_loaded": false,
+  "primary_main_output_available": false,
+  "proposed_candidate_count": 1,
+  "saved_candidate_count": 1,
+  "seconds": 38.06012893700972,
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2016-I-06.json",
+  "source_sha256": "379192abc67eca6c6711127f702178677853e05b892ffa836a77d6dd51b2755a",
+  "stage": "groebner_lex",
+  "stage_timeouts": [
+    "groebner_grevlex",
+    "groebner_lex"
+  ],
+  "stages": {
+    "bounds": 0.0018166720401495695,
+    "encode": 0.3424705860670656,
+    "groebner_grevlex": 15.000073485076427,
+    "groebner_lex": 22.000078313983977,
+    "numeric_and_pslq": 0.0752562009729445
+  },
+  "status": "timeout",
+  "system_bytes": 1096,
+  "system_sha256": "f14612466e417eb8dafc32cf2f4971a11f973c3347bfe26f5137b1517ac3b49d",
+  "target_symbol": "t13",
+  "total_terms": 81,
+  "variables": 17,
+  "process_wall_seconds": 38.32295741001144,
+  "process_returncode": 0,
+  "hard_timeout": false,
+  "charged_seconds": 38.32295741001144
+}

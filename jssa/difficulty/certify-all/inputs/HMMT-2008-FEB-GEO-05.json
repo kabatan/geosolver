@@ -1,0 +1,76 @@
+{
+  "id": "HMMT-2008-FEB-GEO-05",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "y",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "e",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "e",
+        "operator": "<",
+        "right": "1"
+      },
+      {
+        "predicate": "ConvexPolygon([A,B,C,D])"
+      },
+      {
+        "left": "Angle(A,D,E)",
+        "operator": "=",
+        "right": "Angle(C,D,E)"
+      },
+      {
+        "predicate": "Or(And(Distance(A,B)==Distance(A,C),Distance(A,B)==Distance(A,D),Angle(D,A,B)==4*pi/5),And(Distance(B,A)==Distance(B,C),Distance(B,A)==Distance(B,D),Angle(A,B,C)==4*pi/5),And(Distance(C,A)==Distance(C,B),Distance(C,A)==Distance(C,D),Angle(B,C,D)==4*pi/5),And(Distance(D,A)==Distance(D,B),Distance(D,A)==Distance(D,C),Angle(C,D,A)==4*pi/5))"
+      },
+      {
+        "left": "Angle(D,E,C)",
+        "operator": "<",
+        "right": "pi/2"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0,0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(1,0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(x,y)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(x,-y)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(e,0)",
+        "name": "E"
+      }
+    ],
+    "id": "HMMT-2008-FEB-GEO-05",
+    "target": "180*Angle(D,E,C)/pi",
+    "variables": [
+      "x",
+      "y",
+      "e"
+    ]
+  },
+  "source_kind": "missing_saved_candidate",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2008-FEB-GEO-05.json",
+  "source_sha256": "93b412639fdfd95d8026a01be8a99eebcf7673bdf0de6cf61d7e1b022881c341",
+  "saved_seed": 0,
+  "eligible_records": 0,
+  "candidates": [],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

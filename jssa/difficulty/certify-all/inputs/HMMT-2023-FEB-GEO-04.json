@@ -1,0 +1,109 @@
+{
+  "id": "HMMT-2023-FEB-GEO-04",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Angle(B, P, D)",
+        "operator": "=",
+        "right": "3 * pi / 4"
+      },
+      {
+        "left": "Angle(B, Q, D)",
+        "operator": "=",
+        "right": "3 * pi / 4"
+      },
+      {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "p",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "p",
+        "operator": "<",
+        "right": "1"
+      },
+      {
+        "left": "q",
+        "operator": ">",
+        "right": "p"
+      },
+      {
+        "left": "q",
+        "operator": "<",
+        "right": "1"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(s, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(s, s)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(0, s)",
+        "name": "D"
+      },
+      {
+        "expression": "Midpoint(B, C)",
+        "name": "M"
+      },
+      {
+        "expression": "Point(p * s, p * s / 2)",
+        "name": "P"
+      },
+      {
+        "expression": "Point(q * s, q * s / 2)",
+        "name": "Q"
+      }
+    ],
+    "id": "HMMT-2023-FEB-GEO-04",
+    "target": "Distance(A, Q) / Distance(A, P)",
+    "variables": [
+      "s",
+      "p",
+      "q"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2023-FEB-GEO-04.json",
+  "source_sha256": "d349d8e4d484790ddcc1ce74fdae9ac52345c3dafd049b846a0505997b7b4c69",
+  "saved_seed": 0,
+  "eligible_records": 172,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 1.0000000000016545,
+      "x": [
+        12.718723915419817,
+        0.3999999999998128,
+        0.4000000000004746
+      ],
+      "saved_residual": 1.2751746953564207e-12
+    },
+    {
+      "k": 1,
+      "value_float": 2.2360679774978474,
+      "x": [
+        5.215104150642934,
+        0.3999999999999973,
+        0.8944271909991329
+      ],
+      "saved_residual": 2.5624033994053464e-12
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

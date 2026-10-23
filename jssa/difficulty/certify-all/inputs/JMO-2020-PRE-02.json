@@ -1,0 +1,106 @@
+{
+  "id": "JMO-2020-PRE-02",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(C, G)",
+        "operator": "=",
+        "right": "Distance(G, H)"
+      },
+      {
+        "left": "Distance(G, H)",
+        "operator": "=",
+        "right": "Distance(H, C)"
+      },
+      {
+        "left": "Vector(A, B).x * Vector(A, H).y - Vector(A, B).y * Vector(A, H).x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Vector(B, C).x * Vector(B, H).y - Vector(B, C).y * Vector(B, H).x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Vector(C, D).x * Vector(C, H).y - Vector(C, D).y * Vector(C, H).x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Vector(D, E).x * Vector(D, H).y - Vector(D, E).y * Vector(D, H).x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Vector(E, F).x * Vector(E, H).y - Vector(E, F).y * Vector(E, H).x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Vector(F, A).x * Vector(F, H).y - Vector(F, A).y * Vector(F, H).x",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(1, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(1 / 2, sqrt(3) / 2)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(-1 / 2, sqrt(3) / 2)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(-1, 0)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(-1 / 2, -sqrt(3) / 2)",
+        "name": "E"
+      },
+      {
+        "expression": "Point(1 / 2, -sqrt(3) / 2)",
+        "name": "F"
+      },
+      {
+        "expression": "Midpoint(A, B)",
+        "name": "G"
+      },
+      {
+        "expression": "Point(hx, hy)",
+        "name": "H"
+      }
+    ],
+    "id": "JMO-2020-PRE-02",
+    "target": "Area(E, F, H)",
+    "variables": [
+      "hx",
+      "hy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2020-PRE-02.json",
+  "source_sha256": "a312f65de0f8723d804ecf5bb297df27809e1c9bcbe834cdb5d7633a36568d22",
+  "saved_seed": 0,
+  "eligible_records": 108,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 0.21650635094610962,
+      "x": [
+        -0.25,
+        -0.4330127018922194
+      ],
+      "saved_residual": 0.0
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

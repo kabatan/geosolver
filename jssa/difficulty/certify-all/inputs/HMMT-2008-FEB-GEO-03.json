@@ -1,0 +1,157 @@
+{
+  "id": "HMMT-2008-FEB-GEO-03",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Angle(B, A, C)",
+        "operator": "=",
+        "right": "pi / 2"
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Area(B, C, Xp)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Area(B, C, Yp)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(Xp, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(Yp, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "c",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r",
+        "operator": "<",
+        "right": "6"
+      },
+      {
+        "left": "h",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(6, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(0, c)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(r, r)",
+        "name": "O"
+      },
+      {
+        "expression": "Circle(O, r)",
+        "name": "omega"
+      },
+      {
+        "expression": "Point(r, 0)",
+        "name": "X"
+      },
+      {
+        "expression": "Point(0, r)",
+        "name": "Y"
+      },
+      {
+        "expression": "Point(2 * r, r)",
+        "name": "Xp"
+      },
+      {
+        "expression": "Point(r, 2 * r)",
+        "name": "Yp"
+      },
+      {
+        "expression": "c * c + 36",
+        "name": "L2"
+      },
+      {
+        "expression": "r * (c + 6) - 6 * c",
+        "name": "f"
+      },
+      {
+        "expression": "r - f * c / L2",
+        "name": "hx"
+      },
+      {
+        "expression": "r - f * 6 / L2",
+        "name": "hy"
+      },
+      {
+        "expression": "sqrt(r * r - f * f / L2)",
+        "name": "h"
+      },
+      {
+        "expression": "Point(hx - 6 * h / sqrt(L2), hy + c * h / sqrt(L2))",
+        "name": "U"
+      },
+      {
+        "expression": "Point(hx + 6 * h / sqrt(L2), hy - c * h / sqrt(L2))",
+        "name": "V"
+      }
+    ],
+    "id": "HMMT-2008-FEB-GEO-03",
+    "target": "r * r * Angle(U, O, V) / 2 - Area(U, O, V)",
+    "variables": [
+      "c",
+      "r"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2008-FEB-GEO-03.json",
+  "source_sha256": "f1e658db4edf80f1887754f8e46cbd523d35a1d196bcb28eb369737e112c07b0",
+  "saved_seed": 0,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 1.1415926535898204,
+      "x": [
+        6.000000000000112,
+        2.0000000000000195
+      ],
+      "saved_residual": 1.7874245903380366e-13
+    },
+    {
+      "k": 1,
+      "value_float": 3.308956890756345e-21,
+      "x": [
+        1.6856440399015368e-10,
+        1.004721257802799e-10
+      ],
+      "saved_residual": 5.059421383109637e-10
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

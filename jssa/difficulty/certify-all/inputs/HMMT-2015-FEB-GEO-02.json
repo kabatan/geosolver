@@ -1,0 +1,64 @@
+{
+  "id": "HMMT-2015-FEB-GEO-02",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 13
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 14
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": 15
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(5, 12)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(14, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(5, 15 / 4)",
+        "name": "H"
+      },
+      {
+        "expression": "Centroid(H, B, C)",
+        "name": "GA"
+      },
+      {
+        "expression": "Centroid(H, C, A)",
+        "name": "GB"
+      },
+      {
+        "expression": "Centroid(H, A, B)",
+        "name": "GC"
+      }
+    ],
+    "id": "HMMT-2015-FEB-GEO-02",
+    "target": "Area(GA, GB, GC)",
+    "variables": []
+  },
+  "source_kind": "missing_saved_candidate",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2015-FEB-GEO-02.json",
+  "source_sha256": "5aafe34d03fc4059af688758a382d0a5562bd261bd6373850a73ad7ba33f032e",
+  "saved_seed": 0,
+  "eligible_records": 0,
+  "candidates": [],
+  "primary_main_output_available": false,
+  "source_status": "no_variables"
+}

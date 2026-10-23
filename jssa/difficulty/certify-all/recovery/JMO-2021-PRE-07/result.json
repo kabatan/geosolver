@@ -1,0 +1,112 @@
+{
+  "bound_derivation": {
+    "bounds": [
+      "6",
+      "oo",
+      "True",
+      "False"
+    ],
+    "explicit_rules": [
+      {
+        "condition_index": 0,
+        "normalized_expression": "Distance(Point(ax, ay), Point(0, 0))",
+        "operator": "=",
+        "rational_endpoint": "10"
+      },
+      {
+        "condition_index": 1,
+        "normalized_expression": "Distance(Point(ax, ay), Point(c, 0))",
+        "operator": "=",
+        "rational_endpoint": "11"
+      },
+      {
+        "condition_index": 2,
+        "normalized_expression": "Distance(Orthocenter(Point(ax, ay), Point(c, 0), Point(5, 0)), Orthocenter(Point(ax, ay), Point(0, 0), Point(c - 6, 0)))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 3,
+        "normalized_expression": "ay",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 4,
+        "normalized_expression": "c",
+        "operator": ">",
+        "rational_endpoint": "6"
+      }
+    ],
+    "method": "conservative_rational_interval_arithmetic"
+  },
+  "candidate_union_P": "t6**2 - 231030*t6/13109 + 483173/13109",
+  "candidates": [
+    {
+      "P": "t6**2 - 231030*t6/13109 + 483173/13109",
+      "candidate_status": "proposed",
+      "float_guard": true,
+      "float_hard": true,
+      "hp_error": "ValueError: HP residual 4.7048925e-13",
+      "k": 0,
+      "proposal_kind": "saved_float_pslq_tol_1e-13",
+      "rechecked_residual": 4.1567129603660123e-13,
+      "root_interval": [
+        "16478105250007/1084179727897",
+        "18530515383113/1219218400480"
+      ],
+      "saved_residual": 4.2625532153173683e-13,
+      "value_float": 15.198684153567262,
+      "x": [
+        15.198684153567262,
+        6.908492797075755,
+        7.229988054814073
+      ]
+    }
+  ],
+  "detail": "fixed stage or global budget exhausted",
+  "equations": 10,
+  "group": "development323",
+  "id": "JMO-2021-PRE-07",
+  "identities": [],
+  "input_sha256": "294afe516fe2a2610d6b14950a4847e763fd4a0f36a431ae066224dff6419fdd",
+  "max_degree": 4,
+  "nondeg_factors": [
+    "v_c - 5",
+    "v_ay",
+    "v_c - 6"
+  ],
+  "official_answer_loaded": false,
+  "primary_main_output_available": false,
+  "proposed_candidate_count": 1,
+  "saved_candidate_count": 1,
+  "seconds": 30.107779336860403,
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2021-PRE-07.json",
+  "source_sha256": "69318c2dcea9b8d0ec3bc44af0f2b2cab329bb674140df9c65d8693388b940b6",
+  "stage": "groebner_lex",
+  "stage_timeouts": [
+    "groebner_lex"
+  ],
+  "stages": {
+    "bounds": 0.0013693950604647398,
+    "encode": 0.3131071119569242,
+    "extract_grevlex_eliminant": 0.01065653283149004,
+    "groebner_grevlex": 5.405582206090912,
+    "groebner_lex": 22.00270019704476,
+    "identity_P": 0.04375306493602693,
+    "identity_reflection": 0.4978625881485641,
+    "numeric_and_pslq": 0.09349122899584472
+  },
+  "status": "timeout",
+  "system_bytes": 433,
+  "system_sha256": "a050ffe79116745e9677ac88a03ea38dac7bef98c9197ee1b24b04a9bbe8f973",
+  "target_symbol": "t6",
+  "total_terms": 32,
+  "variables": 10,
+  "zero_dimensional": true,
+  "process_wall_seconds": 30.880435791797936,
+  "process_returncode": 0,
+  "hard_timeout": false,
+  "charged_seconds": 30.880435791797936
+}

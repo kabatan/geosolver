@@ -1,0 +1,158 @@
+{
+  "id": "aime-2000-2-11",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "IsInteger(x)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsInteger(y)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsInteger(z)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsInteger(w)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C, D])"
+      },
+      {
+        "left": "Parallel(ab_line, cd_line)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": "Distance(B, C)"
+      },
+      {
+        "left": "Parallel(ab_line, bc_line)",
+        "operator": "!=",
+        "right": 0
+      },
+      {
+        "left": "Parallel(ab_line, da_line)",
+        "operator": "!=",
+        "right": 0
+      },
+      {
+        "left": "Parallel(cd_line, bc_line)",
+        "operator": "!=",
+        "right": 0
+      },
+      {
+        "left": "Parallel(cd_line, da_line)",
+        "operator": "!=",
+        "right": 0
+      },
+      {
+        "left": "Parallel(bc_line, da_line)",
+        "operator": "!=",
+        "right": 0
+      },
+      {
+        "left": "B.y - A.y",
+        "operator": "!=",
+        "right": 0
+      },
+      {
+        "left": "B.x - A.x",
+        "operator": "!=",
+        "right": 0
+      },
+      {
+        "left": "C.y - B.y",
+        "operator": "!=",
+        "right": 0
+      },
+      {
+        "left": "C.x - B.x",
+        "operator": "!=",
+        "right": 0
+      },
+      {
+        "left": "D.y - C.y",
+        "operator": "!=",
+        "right": 0
+      },
+      {
+        "left": "D.x - C.x",
+        "operator": "!=",
+        "right": 0
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(20, 100)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(21, 107)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(x, y)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(z, w)",
+        "name": "C"
+      },
+      {
+        "expression": "Line(A, B)",
+        "name": "ab_line"
+      },
+      {
+        "expression": "Line(B, C)",
+        "name": "bc_line"
+      },
+      {
+        "expression": "Line(C, D)",
+        "name": "cd_line"
+      },
+      {
+        "expression": "Line(D, A)",
+        "name": "da_line"
+      }
+    ],
+    "id": "aime-2000-2-11",
+    "target": "Slope(ab_line)",
+    "variables": [
+      "x",
+      "y",
+      "z",
+      "w"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/aime-2000-2-11.json",
+  "source_sha256": "981aba3996df40084a387d53b36c7cf17b63d12ed587d33f3425903cb4c3916c",
+  "saved_seed": 0,
+  "eligible_records": 1,
+  "candidates": [
+    {
+      "k": 67,
+      "value_float": -3.9803921310730273,
+      "x": [
+        71.00000045748936,
+        -103.00000050571144,
+        72.00000045748936,
+        -96.00000050571141
+      ],
+      "saved_residual": 4.612684769414111e-12
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

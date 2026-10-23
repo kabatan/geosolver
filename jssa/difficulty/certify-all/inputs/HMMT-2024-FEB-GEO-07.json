@@ -1,0 +1,100 @@
+{
+  "id": "HMMT-2024-FEB-GEO-07",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 15
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": 24
+      },
+      {
+        "left": "Distance(A, Q)",
+        "operator": "=",
+        "right": 20
+      },
+      {
+        "left": "u",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "u",
+        "operator": "<",
+        "right": "15"
+      },
+      {
+        "left": "Angle(A, B, C)",
+        "operator": "<",
+        "right": "pi / 2"
+      },
+      {
+        "left": "Angle(B, C, A)",
+        "operator": "<",
+        "right": "pi / 2"
+      },
+      {
+        "left": "Angle(C, A, B)",
+        "operator": "<",
+        "right": "pi / 2"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(15, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(u, 24)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(u, 0)",
+        "name": "D"
+      },
+      {
+        "expression": "FootOfPerpendicular(B, Line(C, A))",
+        "name": "E"
+      },
+      {
+        "expression": "FootOfPerpendicular(C, Line(A, B))",
+        "name": "F"
+      },
+      {
+        "expression": "FootOfPerpendicular(A, Line(E, F))",
+        "name": "Q"
+      }
+    ],
+    "id": "HMMT-2024-FEB-GEO-07",
+    "target": "Distance(D, E) + Distance(E, F) + Distance(F, D)",
+    "variables": [
+      "u"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2024-FEB-GEO-07.json",
+  "source_sha256": "d23003ed7e0b9af8972ba4a072d3a12fbb4307e9cdc8eee926a48f9c23523766",
+  "saved_seed": 0,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 26.532998322843202,
+      "x": [
+        12.292746627975903
+      ],
+      "saved_residual": 0.0
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

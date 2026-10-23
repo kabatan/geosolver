@@ -1,0 +1,121 @@
+{
+  "id": "HMMT-2009-FEB-GEO-10",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Area(P, C, D)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(Line(C, D), omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Perpendicular(Line(A, D), Line(A, O))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Perpendicular(Line(B, C), Line(B, O))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "p",
+        "operator": ">",
+        "right": "7"
+      },
+      {
+        "left": "k",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "u",
+        "operator": "!=",
+        "right": "0"
+      },
+      {
+        "left": "v",
+        "operator": "!=",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(7, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(p, 0)",
+        "name": "P"
+      },
+      {
+        "expression": "Point(3.5, k)",
+        "name": "O"
+      },
+      {
+        "expression": "Circle(O, sqrt(k * k + 12.25))",
+        "name": "omega"
+      },
+      {
+        "expression": "Point(7 + v * k, v * 3.5)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(u * k, -u * 3.5)",
+        "name": "D"
+      }
+    ],
+    "id": "HMMT-2009-FEB-GEO-10",
+    "target": "Distance(B, P)",
+    "variables": [
+      "p",
+      "k",
+      "u",
+      "v"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2009-FEB-GEO-10.json",
+  "source_sha256": "2e88aa259e71e1684032c2c015b119d14b9cb64ea4f98c9181adba06f28281a7",
+  "saved_seed": 0,
+  "eligible_records": 12,
+  "candidates": [
+    {
+      "k": 29,
+      "value_float": 9.00000000000251,
+      "x": [
+        16.00000000000251,
+        1.6042223697978677,
+        0.7791937224740636,
+        -0.5194624816493502
+      ],
+      "saved_residual": 7.319466013910302e-13
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

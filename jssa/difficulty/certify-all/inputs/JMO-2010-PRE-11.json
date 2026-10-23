@@ -1,0 +1,125 @@
+{
+  "id": "JMO-2010-PRE-11",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Angle(D, A, B)",
+        "operator": "=",
+        "right": "110 * pi / 180"
+      },
+      {
+        "left": "Angle(A, B, C)",
+        "operator": "=",
+        "right": "50 * pi / 180"
+      },
+      {
+        "left": "Angle(B, C, D)",
+        "operator": "=",
+        "right": "70 * pi / 180"
+      },
+      {
+        "left": "Distance(A, P)",
+        "operator": "=",
+        "right": "Distance(C, P)"
+      },
+      {
+        "left": "Distance(M, P) / Distance(P, N)",
+        "operator": "=",
+        "right": "Distance(A, M) / Distance(C, N)"
+      },
+      {
+        "left": "Collinear(M, P, N)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(P, M, N)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "bx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "dy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "SimplePolygon([A,B,C,D])"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(bx, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(dx, dy)",
+        "name": "D"
+      },
+      {
+        "expression": "Midpoint(A, B)",
+        "name": "M"
+      },
+      {
+        "expression": "Midpoint(C, D)",
+        "name": "N"
+      },
+      {
+        "expression": "Point(px, py)",
+        "name": "P"
+      }
+    ],
+    "id": "JMO-2010-PRE-11",
+    "target": "180 * Angle(A, P, C) / pi",
+    "variables": [
+      "bx",
+      "cx",
+      "cy",
+      "dx",
+      "dy",
+      "px",
+      "py"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2010-PRE-11.json",
+  "source_sha256": "44c11c2f02e72a35dc72432f152a07855dba6b9c0f06ba72b6618b9ee932098a",
+  "saved_seed": 0,
+  "eligible_records": 12,
+  "candidates": [
+    {
+      "k": 7,
+      "value_float": 160.0,
+      "x": [
+        0.5072483241716695,
+        0.02956385528980907,
+        0.5692821819164143,
+        -0.11565416182924596,
+        0.31775719809180397,
+        0.06497183179912874,
+        0.28203463828753017
+      ],
+      "saved_residual": 2.4902799884605145e-16
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

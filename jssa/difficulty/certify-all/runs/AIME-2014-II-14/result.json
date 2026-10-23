@@ -1,0 +1,113 @@
+{
+  "bound_derivation": {
+    "bounds": [
+      "0",
+      "oo",
+      "False",
+      "False"
+    ],
+    "explicit_rules": [
+      {
+        "condition_index": 2,
+        "normalized_expression": "cx",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 3,
+        "normalized_expression": "cy",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 4,
+        "normalized_expression": "Area(Point(0, 0), Point(10, 0), Point(cx, cy))",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 5,
+        "normalized_expression": "Dot(Vector(Point(0, 0), Intersect(Line(Point(0, 0), Incenter(Point(0, 0), Point(10, 0), Point(cx, cy))), Line(Point(10, 0), Point(cx, cy)))), Vector(Point(0, 0), Intersect(Line(Point(0, 0), Intersect(Line(Point(0, 0), Incenter(Point(0, 0), Point(10, 0), Point(cx, cy))), Line(Point(10, 0), Point(cx, cy)))), PerpendicularLine(Line(Point(10, 0), Point(cx, cy)), Midpoint(FootOfPerpendicular(Line(Point(10, 0), Point(cx, cy)), Point(0, 0)), Midpoint(Point(10, 0), Point(cx, cy)))))))",
+        "operator": ">",
+        "rational_endpoint": "0"
+      }
+    ],
+    "method": "conservative_rational_interval_arithmetic"
+  },
+  "candidate_union_P": "t19 - 75/2",
+  "candidates": [
+    {
+      "P": "t19 - 75/2",
+      "candidate_status": "proposed",
+      "float_guard": true,
+      "float_hard": true,
+      "hp_coordinates": [
+        "11.83012701892219323381861585376468091735701313452595157013951744862983237542596874244081424766060077",
+        "6.830127018922193233818615853764680917357013134525951570139517448629832452036598857619784679983339726"
+      ],
+      "hp_guard": true,
+      "hp_hard": true,
+      "hp_residual": "1.9102453424e-71",
+      "hp_value": "37.49999999999999999999999999999999999999999999999999999999999999999999940283998748657192834060142707",
+      "iterations": 3,
+      "k": 0,
+      "numeric_fixed_columns": [],
+      "proposal_kind": "100_digit_polished_saved_endpoint",
+      "rank": 2,
+      "rechecked_residual": 1.0994850585532845e-09,
+      "root_interval": [
+        "37499999999999999999999999999999/1000000000000000000000000000000",
+        "37500000000000000000000000000001/1000000000000000000000000000000"
+      ],
+      "saved_residual": 1.1417647873211169e-09,
+      "value_float": 37.50000001404672,
+      "x": [
+        11.83012701223191,
+        6.830127032402287
+      ]
+    }
+  ],
+  "detail": "fixed stage or global budget exhausted",
+  "equations": 18,
+  "grevlex_incomplete": true,
+  "group": "development323",
+  "id": "AIME-2014-II-14",
+  "identities": [],
+  "input_sha256": "e5b09d56b872e8f1895712b9c5b00fb374ab51edd9a64400aad0cec8c53bba8e",
+  "max_degree": 6,
+  "nondeg_factors": [
+    "s3 + s4 + 10",
+    "p5*v_cy - p6*v_cx + 10*p6",
+    "p7*v_cx - 10*p7 + p8*v_cy"
+  ],
+  "official_answer_loaded": false,
+  "primary_main_output_available": false,
+  "proposed_candidate_count": 1,
+  "saved_candidate_count": 1,
+  "seconds": 37.89482096489519,
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2014-II-14.json",
+  "source_sha256": "a91a66280a94bdfcadddb0c6d36edb7a913966a30b7a539f640bd70a205c443b",
+  "stage": "groebner_lex",
+  "stage_timeouts": [
+    "groebner_grevlex",
+    "groebner_lex"
+  ],
+  "stages": {
+    "bounds": 0.0029648880008608103,
+    "encode": 0.34761183615773916,
+    "groebner_grevlex": 15.000108003849164,
+    "groebner_lex": 22.000087313121185,
+    "numeric_and_pslq": 0.03346431697718799
+  },
+  "status": "timeout",
+  "system_bytes": 1540,
+  "system_sha256": "400eb408e709df81504aa077a2b2944eb99946a4b865f2e17e0067294b6584d7",
+  "target_symbol": "t19",
+  "total_terms": 96,
+  "variables": 18,
+  "process_wall_seconds": 38.217226641019806,
+  "process_returncode": 0,
+  "hard_timeout": false,
+  "charged_seconds": 38.217226641019806
+}

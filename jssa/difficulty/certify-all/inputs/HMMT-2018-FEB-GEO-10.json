@@ -1,0 +1,115 @@
+{
+  "id": "HMMT-2018-FEB-GEO-10",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "OnCircle(Z, Gamma)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(Y, Z)",
+        "operator": "=",
+        "right": "3 * Distance(C, Y)"
+      },
+      {
+        "left": "OnSegment(Y, C, Z)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(C, Y)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(A, K)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(6, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Circumcircle(A, B, C)",
+        "name": "Gamma"
+      },
+      {
+        "expression": "Intersect(Tangent(B, Gamma), Tangent(C, Gamma))",
+        "name": "X"
+      },
+      {
+        "expression": "Point(zx, zy)",
+        "name": "Z"
+      },
+      {
+        "expression": "FootOfPerpendicular(X, Line(C, Z))",
+        "name": "Y"
+      },
+      {
+        "expression": "Intersect(Circumcircle(B,C,Y),Line(A,B),exclude=B)",
+        "name": "K"
+      }
+    ],
+    "id": "HMMT-2018-FEB-GEO-10",
+    "target": "Distance(A, K)",
+    "variables": [
+      "cx",
+      "cy",
+      "zx",
+      "zy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2018-FEB-GEO-10.json",
+  "source_sha256": "55528aee62e8108e383506c9870007e9ed4cd037f70afc252e851c92efa83d35",
+  "saved_seed": 0,
+  "eligible_records": 104,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 14.700000000069412,
+      "x": [
+        4.999999999986805,
+        4.8989794855902415,
+        4.2231404958671055,
+        -1.417060181771815
+      ],
+      "saved_residual": 2.704280993971468e-11
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

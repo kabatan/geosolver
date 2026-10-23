@@ -1,0 +1,96 @@
+{
+  "id": "AIME-2017-II-10",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Area(B, C, P)",
+        "operator": "=",
+        "right": "Area(B, C, O, N) / 2"
+      },
+      {
+        "left": "OnSegment(P, C, O)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "px",
+        "operator": ">",
+        "right": "28"
+      },
+      {
+        "left": "px",
+        "operator": "<",
+        "right": "84"
+      },
+      {
+        "left": "py",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "py",
+        "operator": "<",
+        "right": "42"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(84, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(84, 42)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(0, 42)",
+        "name": "D"
+      },
+      {
+        "expression": "Midpoint(A, D)",
+        "name": "M"
+      },
+      {
+        "expression": "Point(28, 0)",
+        "name": "N"
+      },
+      {
+        "expression": "Intersect(Line(C, M), Line(D, N))",
+        "name": "O"
+      },
+      {
+        "expression": "Point(px, py)",
+        "name": "P"
+      }
+    ],
+    "id": "AIME-2017-II-10",
+    "target": "Area(C, D, P)",
+    "variables": [
+      "px",
+      "py"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2017-II-10.json",
+  "source_sha256": "51e7100591d6e92c46124e97f3e766e6e682c42a9544648e2436a4bfa991a020",
+  "saved_seed": 0,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 546.0,
+      "x": [
+        32.0,
+        29.0
+      ],
+      "saved_residual": 0.0
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

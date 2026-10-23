@@ -1,0 +1,177 @@
+{
+  "id": "HMMT-2024-FEB-GEO-01",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "OnSegment(U1, A, B)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(V2, A, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(W3, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(U2, V1, W1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(V3, U2, W2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(W1, U3, V3)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(W1, U2)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(U2, V3)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(V3, W1)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "x",
+        "operator": "<",
+        "right": "6"
+      },
+      {
+        "left": "u1y",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "u1y",
+        "operator": "<",
+        "right": "3 * sqrt(3)"
+      },
+      {
+        "left": "u2y",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "u2y",
+        "operator": "<",
+        "right": "3 * sqrt(3)"
+      },
+      {
+        "left": "u3x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "u3x + x",
+        "operator": "<",
+        "right": "6"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(3, 3 * sqrt(3))",
+        "name": "A"
+      },
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(6, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(u1x, u1y)",
+        "name": "U1"
+      },
+      {
+        "expression": "Point(u1x + x, u1y)",
+        "name": "V1"
+      },
+      {
+        "expression": "Point(u1x + x / 2, u1y - sqrt(3) * x / 2)",
+        "name": "W1"
+      },
+      {
+        "expression": "Point(u2x, u2y)",
+        "name": "U2"
+      },
+      {
+        "expression": "Point(u2x + x, u2y)",
+        "name": "V2"
+      },
+      {
+        "expression": "Point(u2x + x / 2, u2y - sqrt(3) * x / 2)",
+        "name": "W2"
+      },
+      {
+        "expression": "Point(u3x, u3y)",
+        "name": "U3"
+      },
+      {
+        "expression": "Point(u3x + x, u3y)",
+        "name": "V3"
+      },
+      {
+        "expression": "Point(u3x + x / 2, u3y - sqrt(3) * x / 2)",
+        "name": "W3"
+      }
+    ],
+    "id": "HMMT-2024-FEB-GEO-01",
+    "target": "x",
+    "variables": [
+      "x",
+      "u1x",
+      "u1y",
+      "u2x",
+      "u2y",
+      "u3x",
+      "u3y"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2024-FEB-GEO-01.json",
+  "source_sha256": "d667c9ea8c8ef5ac9f52d84d713e692312517f3e5ca367263838aabb5a8587eb",
+  "saved_seed": 0,
+  "eligible_records": 189,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 1.6666666666666667,
+      "x": [
+        1.6666666666666667,
+        1.6666666666666663,
+        2.8867513459481287,
+        2.9999999999999996,
+        2.309401076758503,
+        1.833333333333333,
+        1.4433756729740643
+      ],
+      "saved_residual": 3.748955369454309e-15
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

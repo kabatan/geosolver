@@ -1,0 +1,73 @@
+{
+  "id": "HMMT-2015-FEB-GEO-03",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Distance(E, K)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 1)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(1, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(2, 1)",
+        "name": "D"
+      },
+      {
+        "expression": "Circumcircle(A, B, C)",
+        "name": "Gamma"
+      },
+      {
+        "expression": "Intersect(Line(A, D), Gamma, exclude=A)",
+        "name": "E"
+      },
+      {
+        "expression": "Intersect(Line(B, D), Gamma, exclude=B)",
+        "name": "F"
+      },
+      {
+        "expression": "Intersect(Line(A, F), Line(C, D))",
+        "name": "K"
+      }
+    ],
+    "id": "HMMT-2015-FEB-GEO-03",
+    "target": "Distance(E, K)",
+    "variables": []
+  },
+  "source_kind": "missing_saved_candidate",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2015-FEB-GEO-03.json",
+  "source_sha256": "0272ce60379a5982d650b8a02117b51fc636ef6a9cf97e1ac47b2573bf22cb04",
+  "saved_seed": 0,
+  "eligible_records": 0,
+  "candidates": [],
+  "primary_main_output_available": false,
+  "source_status": "no_variables"
+}

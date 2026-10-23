@@ -1,0 +1,217 @@
+{
+  "bound_derivation": {
+    "bounds": [
+      "0",
+      "oo",
+      "False",
+      "False"
+    ],
+    "explicit_rules": [
+      {
+        "condition_index": 0,
+        "normalized_expression": "OnCircle(Point(0, k), Circle(Point(-5, (25 + k * k) / (2 * k)), (25 + k * k) / (2 * k)))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 1,
+        "normalized_expression": "OnCircle(Point(0, k), Circle(Point(7, (49 + k * k) / (2 * k)), (49 + k * k) / (2 * k)))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 2,
+        "normalized_expression": "OnCircle(Intersect(Circle(Point(-5, (25 + k * k) / (2 * k)), (25 + k * k) / (2 * k)), Circle(Point(7, (49 + k * k) / (2 * k)), (49 + k * k) / (2 * k)), exclude=Point(0, k)), Circle(Point(-5, (25 + k * k) / (2 * k)), (25 + k * k) / (2 * k)))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 3,
+        "normalized_expression": "OnCircle(Intersect(Circle(Point(-5, (25 + k * k) / (2 * k)), (25 + k * k) / (2 * k)), Circle(Point(7, (49 + k * k) / (2 * k)), (49 + k * k) / (2 * k)), exclude=Point(0, k)), Circle(Point(7, (49 + k * k) / (2 * k)), (49 + k * k) / (2 * k)))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 4,
+        "normalized_expression": "Distance(Point(0, k), Point(2 * Point(-5, 0).x - Point(0, k).x, Point(0, k).y))",
+        "operator": "=",
+        "rational_endpoint": "10"
+      },
+      {
+        "condition_index": 5,
+        "normalized_expression": "Distance(Point(0, k), Point(2 * Point(7, 0).x - Point(0, k).x, Point(0, k).y))",
+        "operator": "=",
+        "rational_endpoint": "14"
+      },
+      {
+        "condition_index": 6,
+        "normalized_expression": "Distance(Point(0, k), Intersect(Circle(Point(-5, (25 + k * k) / (2 * k)), (25 + k * k) / (2 * k)), Circle(Point(7, (49 + k * k) / (2 * k)), (49 + k * k) / (2 * k)), exclude=Point(0, k)))",
+        "operator": "=",
+        "rational_endpoint": "5"
+      },
+      {
+        "condition_index": 9,
+        "normalized_expression": "k",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 10,
+        "normalized_expression": "Distance(Point(-5, 0), Point(7, 0))",
+        "operator": ">",
+        "rational_endpoint": "0"
+      }
+    ],
+    "method": "conservative_rational_interval_arithmetic"
+  },
+  "candidate_union_P": "t9**2 - 4860",
+  "candidates": [
+    {
+      "P": "t9**2 - 4860",
+      "candidate_status": "proposed",
+      "float_guard": true,
+      "float_hard": true,
+      "hp_coordinates": [
+        "3.872983346207416885179265399782399610832921705291590826587573766113483091936979033519287376858673518"
+      ],
+      "hp_guard": true,
+      "hp_hard": true,
+      "hp_residual": "2.28597478256e-100",
+      "hp_value": "69.71370023173350393322677719608319299499259069524863487857632779004269565486562260334717278345612332",
+      "iterations": 3,
+      "k": 0,
+      "numeric_fixed_columns": [],
+      "proposal_kind": "100_digit_polished_saved_endpoint",
+      "rank": 1,
+      "rechecked_residual": 7.993605777301127e-13,
+      "root_interval": [
+        "288608233188289/4139906965617",
+        "27675150522248/396982952135"
+      ],
+      "saved_residual": 7.993625514574976e-13,
+      "value_float": 69.71370023172892,
+      "x": [
+        3.8729833462071626
+      ]
+    }
+  ],
+  "equations": 15,
+  "group": "development323",
+  "id": "AIME-2023-II-09",
+  "identities": [
+    {
+      "N": 3,
+      "Q": "t9**4 - 30780*t9**2 + 125971200",
+      "bytes": 9112,
+      "cofactor_terms": 193,
+      "kind": "E_lex",
+      "raw_saved": true,
+      "root_check": {
+        "all_real_root_intervals": [
+          [
+            "-557288527109761/3461486193606",
+            "-555557800705760/3450736132801"
+          ],
+          [
+            "-27675150522248/396982952135",
+            "-288608233188289/4139906965617"
+          ],
+          [
+            "288608233188289/4139906965617",
+            "27675150522248/396982952135"
+          ],
+          [
+            "555557800705760/3450736132801",
+            "557288527109761/3461486193606"
+          ]
+        ],
+        "allowed_root_count": 2,
+        "candidate_count": 1,
+        "candidate_matches": [
+          true
+        ],
+        "range": [
+          "0",
+          "oo",
+          false,
+          false
+        ],
+        "set_complete": false,
+        "unique": false
+      },
+      "sha256": "6a9ba724680093997972c3d1a11a20f793c3560843c6491ad4c1c9f09259ce1b",
+      "verified_fraction": true
+    }
+  ],
+  "input_sha256": "c7ca49307a5015314817d67581c71129c8a436e3b62141c370d63694bb1f28ce",
+  "last_root_check": {
+    "all_real_root_intervals": [
+      [
+        "-557288527109761/3461486193606",
+        "-555557800705760/3450736132801"
+      ],
+      [
+        "-27675150522248/396982952135",
+        "-288608233188289/4139906965617"
+      ],
+      [
+        "288608233188289/4139906965617",
+        "27675150522248/396982952135"
+      ],
+      [
+        "555557800705760/3450736132801",
+        "557288527109761/3461486193606"
+      ]
+    ],
+    "allowed_root_count": 2,
+    "candidate_count": 1,
+    "candidate_matches": [
+      true
+    ],
+    "range": [
+      "0",
+      "oo",
+      false,
+      false
+    ],
+    "set_complete": false,
+    "unique": false
+  },
+  "lex_zero_dimensional": true,
+  "max_degree": 4,
+  "nondeg_factors": [
+    "v_k"
+  ],
+  "official_answer_loaded": false,
+  "primary_main_output_available": false,
+  "proposed_candidate_count": 1,
+  "saved_candidate_count": 1,
+  "seconds": 2.0500397449359298,
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2023-II-09.json",
+  "source_sha256": "076c5487ed8541b4afff3c8842df5ebb744b466fbca4b5b1441c16bdb0feef96",
+  "stage": "roots_E_lex",
+  "stage_timeouts": [],
+  "stages": {
+    "bounds": 0.0019596819765865803,
+    "encode": 0.20608356897719204,
+    "extract_grevlex_eliminant": 0.0010690249036997557,
+    "groebner_grevlex": 0.10357266711071134,
+    "groebner_lex": 0.6501847009640187,
+    "identity_E_lex": 0.18717246502637863,
+    "identity_P": 0.001006776001304388,
+    "numeric_and_pslq": 0.026765312999486923,
+    "roots_E_lex": 0.004914520075544715
+  },
+  "status": "multiple_roots_remain",
+  "system_bytes": 713,
+  "system_sha256": "30dde0305988c2b935d9016190cf5182db71c874682c57be723d030055e18d66",
+  "target_symbol": "t9",
+  "total_terms": 55,
+  "variables": 11,
+  "zero_dimensional": true,
+  "process_wall_seconds": 2.2372007488738745,
+  "process_returncode": 0,
+  "hard_timeout": false,
+  "charged_seconds": 2.2372007488738745
+}

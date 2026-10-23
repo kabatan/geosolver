@@ -1,0 +1,101 @@
+{
+  "id": "aime-2003-1-15",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "y",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 360
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": 780
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(507, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(x, y)",
+        "name": "A"
+      },
+      {
+        "expression": "Midpoint(C, A)",
+        "name": "M"
+      },
+      {
+        "expression": "Line(C, A)",
+        "name": "ca_line"
+      },
+      {
+        "expression": "Line(B, C)",
+        "name": "bc_line"
+      },
+      {
+        "expression": "AngleBisector(A, B, C)",
+        "name": "angle_bisector"
+      },
+      {
+        "expression": "Intersect(angle_bisector, ca_line)",
+        "name": "D"
+      },
+      {
+        "expression": "Line(B, D)",
+        "name": "bd_line"
+      },
+      {
+        "expression": "PerpendicularLine(bd_line, D)",
+        "name": "df_line"
+      },
+      {
+        "expression": "Intersect(df_line, bc_line)",
+        "name": "F"
+      },
+      {
+        "expression": "Line(B, M)",
+        "name": "bm_line"
+      },
+      {
+        "expression": "Intersect(df_line, bm_line)",
+        "name": "E"
+      }
+    ],
+    "id": "aime-2003-1-15",
+    "target": "Distance(D, E) / Distance(E, F)",
+    "variables": [
+      "x",
+      "y"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/aime-2003-1-15.json",
+  "source_sha256": "f4881eca82e78470efb95990455afbb1c76b5bcb4c6bce9c9727cabb2b8ca255",
+  "saved_seed": 0,
+  "eligible_records": 199,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 0.20416666666666675,
+      "x": [
+        -218.68934911242624,
+        285.9632294278118
+      ],
+      "saved_residual": 1.1368683772161603e-13
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

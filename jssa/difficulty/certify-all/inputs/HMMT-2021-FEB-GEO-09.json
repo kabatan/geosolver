@@ -1,0 +1,103 @@
+{
+  "id": "HMMT-2021-FEB-GEO-09",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 27
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 25
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": "Distance(B, D)"
+      },
+      {
+        "left": "Distance(A, P)",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "h",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "u",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "OnSegment(P,A,C)",
+        "operator": "=",
+        "right": "0"
+      },
+      {
+        "predicate": "ConvexPolygon([A,B,C,D])"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(b,0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(u, h)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(u + 25, h)",
+        "name": "C"
+      },
+      {
+        "expression": "Midpoint(A, B)",
+        "name": "M"
+      },
+      {
+        "expression": "Intersect(Circumcircle(B, C, D), Line(A, C), exclude=C)",
+        "name": "P"
+      }
+    ],
+    "id": "HMMT-2021-FEB-GEO-09",
+    "target": "Distance(M, P)",
+    "variables": [
+      "u",
+      "h",
+      "b"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2021-FEB-GEO-09.json",
+  "source_sha256": "399a6764e057ce3d63fb80b0bda52b8b116607c4f496aa03df46ddfb5503035c",
+  "saved_seed": 0,
+  "eligible_records": 181,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 5.400000000000002,
+      "x": [
+        7.758472019555189,
+        20.77810657638321,
+        15.516944039110381
+      ],
+      "saved_residual": 9.39959687352353e-15
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

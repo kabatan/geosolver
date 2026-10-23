@@ -1,0 +1,138 @@
+{
+  "id": "AIME-2015-II-07",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 12
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 25
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": 17
+      },
+      {
+        "left": "OnSegment(P, A, B)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(Q, A, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(R, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(S, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Parallel(Line(P, Q), Line(R, S))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Parallel(Line(Q, R), Line(S, P))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Perpendicular(Line(P, Q), Line(Q, R))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(P, Q)",
+        "operator": "=",
+        "right": "Distance(R, S)"
+      },
+      {
+        "left": "Distance(Q, R)",
+        "operator": "=",
+        "right": "Distance(S, P)"
+      },
+      {
+        "left": "t",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "t",
+        "operator": "<",
+        "right": "1"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(12, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(-8, 15)",
+        "name": "C"
+      },
+      {
+        "expression": "Line(B, C)",
+        "name": "lineBC"
+      },
+      {
+        "expression": "Line(A, C)",
+        "name": "lineAC"
+      },
+      {
+        "expression": "Point(12 * t, 0)",
+        "name": "P"
+      },
+      {
+        "expression": "Intersect(ParallelLine(P, lineBC), lineAC)",
+        "name": "Q"
+      },
+      {
+        "expression": "Intersect(PerpendicularLine(lineBC, Q), lineBC)",
+        "name": "R"
+      },
+      {
+        "expression": "Intersect(PerpendicularLine(lineBC, P), lineBC)",
+        "name": "S"
+      }
+    ],
+    "id": "AIME-2015-II-07",
+    "target": "Distance(A, Line(B, C)) / Distance(B, C)",
+    "variables": [
+      "t"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2015-II-07.json",
+  "source_sha256": "5ea684dc48f5fa1c35c9aafbe0744bc1b6cdae5ee098794ed798fff8ce7a5ad1",
+  "saved_seed": 0,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 0.288,
+      "x": [
+        0.6369616873214543
+      ],
+      "saved_residual": 4.263614186265453e-14
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

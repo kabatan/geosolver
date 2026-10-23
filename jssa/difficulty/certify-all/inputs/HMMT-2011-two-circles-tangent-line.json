@@ -1,0 +1,174 @@
+{
+  "id": "HMMT-2011-two-circles-tangent-line",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "IsTangent(l, omega1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(l, omega2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(A, omega1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(A, omega2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Angle(A, P, Q)",
+        "operator": "=",
+        "right": "pi / 4"
+      },
+      {
+        "left": "Angle(A, Q, P)",
+        "operator": "=",
+        "right": "pi / 6"
+      },
+      {
+        "left": "OnLine(R, P, A)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnLine(S, Q, A)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(P, Q)",
+        "operator": "=",
+        "right": "Distance(A, R)"
+      },
+      {
+        "left": "Distance(P, Q)",
+        "operator": "=",
+        "right": "Distance(A, S)"
+      },
+      {
+        "left": "Distance(P, R)",
+        "operator": "=",
+        "right": "Distance(P, A) + Distance(A, R)"
+      },
+      {
+        "left": "Distance(Q, S)",
+        "operator": "=",
+        "right": "Distance(Q, A) + Distance(A, S)"
+      },
+      {
+        "left": "OnCircle(C, omega1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": "Distance(C, P)"
+      },
+      {
+        "left": "OnCircle(D, omega2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(D, A)",
+        "operator": "=",
+        "right": "Distance(D, Q)"
+      },
+      {
+        "left": "Distance(A, l)",
+        "operator": "<",
+        "right": "Distance(B, l)"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "P"
+      },
+      {
+        "expression": "Point(1, 0)",
+        "name": "Q"
+      },
+      {
+        "expression": "(sqrt(3) - 1) / 2",
+        "name": "lam"
+      },
+      {
+        "expression": "Point(0, lam)",
+        "name": "O1"
+      },
+      {
+        "expression": "Point(1, 2 * lam)",
+        "name": "O2"
+      },
+      {
+        "expression": "Circle(O1, lam)",
+        "name": "omega1"
+      },
+      {
+        "expression": "Circle(O2, 2 * lam)",
+        "name": "omega2"
+      },
+      {
+        "expression": "Line(P, Q)",
+        "name": "l"
+      },
+      {
+        "expression": "Point(lam, lam)",
+        "name": "A"
+      },
+      {
+        "expression": "Intersect(omega1, omega2, exclude=A)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(A.x + (A.x - P.x) / Distance(A, P), A.y + (A.y - P.y) / Distance(A, P))",
+        "name": "R"
+      },
+      {
+        "expression": "Point(A.x + (A.x - Q.x) / Distance(A, Q), A.y + (A.y - Q.y) / Distance(A, Q))",
+        "name": "S"
+      },
+      {
+        "expression": "Circumcenter(A, S, R)",
+        "name": "O"
+      },
+      {
+        "expression": "Midpoint(A, P)",
+        "name": "MAP"
+      },
+      {
+        "expression": "Midpoint(A, Q)",
+        "name": "MAQ"
+      },
+      {
+        "expression": "Point(O1.x - lam * (MAP.x - O1.x) / Distance(MAP, O1), O1.y - lam * (MAP.y - O1.y) / Distance(MAP, O1))",
+        "name": "C"
+      },
+      {
+        "expression": "Point(O2.x - 2 * lam * (MAQ.x - O2.x) / Distance(MAQ, O2), O2.y - 2 * lam * (MAQ.y - O2.y) / Distance(MAQ, O2))",
+        "name": "D"
+      }
+    ],
+    "id": "HMMT-2011-two-circles-tangent-line",
+    "target": "180 * Angle(C, O, D) / pi",
+    "variables": []
+  },
+  "source_kind": "missing_saved_candidate",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2011-two-circles-tangent-line.json",
+  "source_sha256": "242d2fe6bfd0e2f570742afcba7ba1dc9ae483775a813e4742d2e431156541e0",
+  "saved_seed": 0,
+  "eligible_records": 0,
+  "candidates": [],
+  "primary_main_output_available": false,
+  "source_status": "no_variables"
+}

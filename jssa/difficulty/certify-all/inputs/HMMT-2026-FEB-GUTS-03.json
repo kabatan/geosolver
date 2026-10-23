@@ -1,0 +1,69 @@
+{
+  "id": "HMMT-2026-FEB-GUTS-03",
+  "group": "holdout2026",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(R3, R2) + Distance(R2, P) + Distance(P, S3) + Distance(S3, R3)",
+        "operator": "=",
+        "right": "Distance(R2, R1) + Distance(R1, S1) + Distance(S1, S2) + Distance(S2, P) + Distance(P, R2)"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "S0"
+      },
+      {
+        "expression": "Point(10, 0)",
+        "name": "S1"
+      },
+      {
+        "expression": "Point(10, 10)",
+        "name": "S2"
+      },
+      {
+        "expression": "Point(0, 10)",
+        "name": "S3"
+      },
+      {
+        "expression": "Point(4, 0)",
+        "name": "R1"
+      },
+      {
+        "expression": "Point(4, 2)",
+        "name": "R2"
+      },
+      {
+        "expression": "Point(0, 2)",
+        "name": "R3"
+      },
+      {
+        "expression": "PointOnSegment(S3, S2, t)",
+        "name": "P"
+      }
+    ],
+    "id": "HMMT-2026-FEB-GUTS-03",
+    "target": "abs(Area(R3, R2, P, S3) - Area(R2, R1, S1, S2, P))",
+    "variables": [
+      "t"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/new2026-predict/raw/HMMT-2026-FEB-GUTS-03.json",
+  "source_sha256": "415f34d7a58a77eac95cb3523acf5ddd5323b0075d4a7722d52cf91a0ddda339",
+  "saved_seed": 5,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 3.999999999999992,
+      "x": [
+        0.7999999999999999
+      ],
+      "saved_residual": 0.0
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

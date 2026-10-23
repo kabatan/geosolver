@@ -1,0 +1,169 @@
+{
+  "id": "aime-2003-2-14",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "predicate": "ConvexPolygon([A, B, C, D, E, F])"
+      },
+      {
+        "left": "Angle(F, A, B)",
+        "operator": "=",
+        "right": "2*pi/3"
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": "Distance(A, B)"
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": "Distance(A, B)"
+      },
+      {
+        "left": "Distance(D, E)",
+        "operator": "=",
+        "right": "Distance(A, B)"
+      },
+      {
+        "left": "Distance(E, F)",
+        "operator": "=",
+        "right": "Distance(A, B)"
+      },
+      {
+        "left": "Distance(F, A)",
+        "operator": "=",
+        "right": "Distance(A, B)"
+      },
+      {
+        "left": "Parallel(ab_line, de_line)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Parallel(bc_line, ef_line)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Parallel(cd_line, fa_line)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "predicate": "Or(C.y == 4, C.y == 6, C.y == 8, C.y == 10)"
+      },
+      {
+        "predicate": "Or(D.y == 4, D.y == 6, D.y == 8, D.y == 10)"
+      },
+      {
+        "predicate": "Or(E.y == 4, E.y == 6, E.y == 8, E.y == 10)"
+      },
+      {
+        "predicate": "Or(F.y == 4, F.y == 6, F.y == 8, F.y == 10)"
+      },
+      {
+        "left": "C.y",
+        "operator": "!=",
+        "right": "D.y"
+      },
+      {
+        "left": "C.y",
+        "operator": "!=",
+        "right": "E.y"
+      },
+      {
+        "left": "C.y",
+        "operator": "!=",
+        "right": "F.y"
+      },
+      {
+        "left": "D.y",
+        "operator": "!=",
+        "right": "E.y"
+      },
+      {
+        "left": "D.y",
+        "operator": "!=",
+        "right": "F.y"
+      },
+      {
+        "left": "E.y",
+        "operator": "!=",
+        "right": "F.y"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(b, 2)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(dx, dy)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(ex, ey)",
+        "name": "E"
+      },
+      {
+        "expression": "Point(fx, fy)",
+        "name": "F"
+      },
+      {
+        "expression": "Line(A, B)",
+        "name": "ab_line"
+      },
+      {
+        "expression": "Line(B, C)",
+        "name": "bc_line"
+      },
+      {
+        "expression": "Line(C, D)",
+        "name": "cd_line"
+      },
+      {
+        "expression": "Line(D, E)",
+        "name": "de_line"
+      },
+      {
+        "expression": "Line(E, F)",
+        "name": "ef_line"
+      },
+      {
+        "expression": "Line(F, A)",
+        "name": "fa_line"
+      }
+    ],
+    "id": "aime-2003-2-14",
+    "target": "Area(A, B, C, D, E, F)",
+    "variables": [
+      "b",
+      "cx",
+      "cy",
+      "dx",
+      "dy",
+      "ex",
+      "ey",
+      "fx",
+      "fy"
+    ]
+  },
+  "source_kind": "missing_saved_candidate",
+  "source_path": "jssa/difficulty/minima/raw-323/aime-2003-2-14.json",
+  "source_sha256": "f4277edf1975ff62ed02421673b61f98e6774efe601a20f5be27f40128ca3e3e",
+  "saved_seed": 0,
+  "eligible_records": 0,
+  "candidates": [],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

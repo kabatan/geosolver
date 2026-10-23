@@ -1,0 +1,82 @@
+{
+  "id": "AIME-2009-I-12",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(O, Line(A, I))",
+        "operator": "=",
+        "right": "Distance(C, D) / 2"
+      },
+      {
+        "left": "Distance(O, Line(B, I))",
+        "operator": "=",
+        "right": "Distance(C, D) / 2"
+      },
+      {
+        "left": "ix",
+        "operator": "<",
+        "right": "0"
+      },
+      {
+        "left": "iy",
+        "operator": "<",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(12, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(0, 35)",
+        "name": "B"
+      },
+      {
+        "expression": "FootOfPerpendicular(C, Line(A, B))",
+        "name": "D"
+      },
+      {
+        "expression": "Midpoint(C, D)",
+        "name": "O"
+      },
+      {
+        "expression": "Circle(O, Distance(C, D) / 2)",
+        "name": "omega"
+      },
+      {
+        "expression": "Point(ix, iy)",
+        "name": "I"
+      }
+    ],
+    "id": "AIME-2009-I-12",
+    "target": "(Distance(A, I) + Distance(B, I)) / Distance(A, B) + 1",
+    "variables": [
+      "ix",
+      "iy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2009-I-12.json",
+  "source_sha256": "b2232792e067f109df132a6ee83fad0c790f07301427c67df671a9b5961bca5a",
+  "saved_seed": 0,
+  "eligible_records": 25,
+  "candidates": [
+    {
+      "k": 2,
+      "value_float": 2.6666666666666665,
+      "x": [
+        -0.42074506939371786,
+        -10.439493547601652
+      ],
+      "saved_residual": 8.881784197001252e-16
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

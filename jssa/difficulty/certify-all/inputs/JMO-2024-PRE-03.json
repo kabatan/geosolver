@@ -1,0 +1,113 @@
+{
+  "id": "JMO-2024-PRE-03",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(O, A)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(O, X)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "OnSegment(D, A, B)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(E, A, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, D) + Distance(A, E)",
+        "operator": "=",
+        "right": 13
+      },
+      {
+        "left": "x",
+        "operator": ">",
+        "right": "5"
+      },
+      {
+        "left": "x",
+        "operator": "<",
+        "right": "10"
+      },
+      {
+        "left": "oy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(10, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(5, 5 * sqrt(3))",
+        "name": "A"
+      },
+      {
+        "expression": "Point(x, 0)",
+        "name": "X"
+      },
+      {
+        "expression": "Point(x, oy)",
+        "name": "O"
+      },
+      {
+        "expression": "Circle(O, r)",
+        "name": "Gamma"
+      },
+      {
+        "expression": "Intersect(Line(A, B), Gamma, exclude=A)",
+        "name": "D"
+      },
+      {
+        "expression": "Intersect(Line(A, C), Gamma, exclude=A)",
+        "name": "E"
+      }
+    ],
+    "id": "JMO-2024-PRE-03",
+    "target": "Distance(B, X)",
+    "variables": [
+      "x",
+      "oy",
+      "r"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2024-PRE-03.json",
+  "source_sha256": "88fcfecfaab6901b882026dc616c9c312793bbffa510c88fd14d9ceadd2014fd",
+  "saved_seed": 0,
+  "eligible_records": 145,
+  "candidates": [
+    {
+      "k": 1,
+      "value_float": 8.162277660107023,
+      "x": [
+        8.162277660107023,
+        4.907477288088704,
+        4.9074772880721245
+      ],
+      "saved_residual": 2.6142832456597138e-11
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

@@ -1,0 +1,145 @@
+{
+  "bound_derivation": {
+    "bounds": [
+      "0",
+      "oo",
+      "False",
+      "False"
+    ],
+    "explicit_rules": [
+      {
+        "condition_index": 0,
+        "normalized_expression": "Distance(Point(ax, ay), Point(0, 0))",
+        "operator": "=",
+        "rational_endpoint": "3"
+      },
+      {
+        "condition_index": 1,
+        "normalized_expression": "Distance(Point(0, 0), Point(2, 0))",
+        "operator": "=",
+        "rational_endpoint": "2"
+      },
+      {
+        "condition_index": 2,
+        "normalized_expression": "Distance(Point(2, 0), Point(dx, dy))",
+        "operator": "=",
+        "rational_endpoint": "2"
+      },
+      {
+        "condition_index": 3,
+        "normalized_expression": "Distance(Point(dx, dy), Point(ax, ay))",
+        "operator": "=",
+        "rational_endpoint": "4"
+      },
+      {
+        "condition_index": 4,
+        "normalized_expression": "AreConcyclic(Point(ax, ay), Point(0, 0), Point(2, 0), Point(dx, dy))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 5,
+        "normalized_expression": "ay",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 6,
+        "normalized_expression": "dy",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 8,
+        "normalized_expression": "Area(Point(0, 0), Point(2, 0), FootOfPerpendicular(Point(2, 0), Line(Point(ax, ay), Point(dx, dy))), FootOfPerpendicular(Point(0, 0), Line(Point(ax, ay), Point(dx, dy))))",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 9,
+        "normalized_expression": "Area(Point(dx, dy), Point(ax, ay), FootOfPerpendicular(Point(ax, ay), Line(Point(0, 0), Point(2, 0))), FootOfPerpendicular(Point(dx, dy), Line(Point(0, 0), Point(2, 0))))",
+        "operator": ">",
+        "rational_endpoint": "0"
+      }
+    ],
+    "method": "conservative_rational_interval_arithmetic"
+  },
+  "candidate_union_P": "t10 - 37/76",
+  "candidates": [
+    {
+      "P": "t10 - 37/76",
+      "candidate_status": "proposed",
+      "float_guard": true,
+      "float_hard": true,
+      "hp_coordinates": [
+        "-0.7500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001",
+        "2.904737509655562663884449049836799708124691278968693119940680324585112318952734275139465532644005138",
+        "3.0625",
+        "1.694430213965744887265928612404799829739403246065070986632063522674648852722428327164688227375669664"
+      ],
+      "hp_guard": true,
+      "hp_hard": true,
+      "hp_residual": "5.71493695641e-101",
+      "hp_value": "0.4868421052631578947368421052631578947368421052631578947368421052631578947368421052631578947368421053",
+      "iterations": 3,
+      "k": 2,
+      "numeric_fixed_columns": [],
+      "proposal_kind": "100_digit_polished_saved_endpoint",
+      "rank": 4,
+      "rechecked_residual": 0.0,
+      "root_interval": [
+        "9249999999999999999999999999981/19000000000000000000000000000000",
+        "9250000000000000000000000000019/19000000000000000000000000000000"
+      ],
+      "saved_residual": 0.0,
+      "value_float": 0.4868421052631579,
+      "x": [
+        -0.7500000000000001,
+        2.9047375096555625,
+        3.0625,
+        1.694430213965745
+      ]
+    }
+  ],
+  "detail": "fixed stage or global budget exhausted",
+  "equations": 15,
+  "grevlex_incomplete": true,
+  "group": "development323",
+  "id": "HMMT-2015-FEB-GEO-04",
+  "identities": [],
+  "input_sha256": "e61d7b1ced19f67676a3fa4476c75c9aa3fe4c75731bc53f2b058e021caa34fb",
+  "max_degree": 4,
+  "nondeg_factors": [
+    "s9"
+  ],
+  "official_answer_loaded": false,
+  "primary_main_output_available": false,
+  "proposed_candidate_count": 1,
+  "saved_candidate_count": 1,
+  "seconds": 38.246240054955706,
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2015-FEB-GEO-04.json",
+  "source_sha256": "98008def1a97ba0f8a9c4674f67298220b959c25eeda9e26e68082ef62eff297",
+  "stage": "groebner_lex",
+  "stage_timeouts": [
+    "groebner_grevlex",
+    "groebner_lex"
+  ],
+  "stages": {
+    "bounds": 0.0019566118717193604,
+    "encode": 0.31954041705466807,
+    "groebner_grevlex": 15.032678834861144,
+    "groebner_lex": 22.00025198282674,
+    "numeric_and_pslq": 0.0273192310705781
+  },
+  "status": "timeout",
+  "system_bytes": 1422,
+  "system_sha256": "4b08009b9aa6b6a67938588551dab8b0f3bdb829ef28ea15762335f9eb4c14d0",
+  "target_symbol": "t10",
+  "total_terms": 95,
+  "variables": 15,
+  "process_wall_seconds": 38.423880517017096,
+  "process_returncode": 0,
+  "hard_timeout": false,
+  "charged_seconds": 38.423880517017096
+}

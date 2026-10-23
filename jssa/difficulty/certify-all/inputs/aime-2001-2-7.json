@@ -1,0 +1,162 @@
+{
+  "id": "aime-2001-2-7",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "x",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "x",
+        "operator": "<",
+        "right": 120
+      },
+      {
+        "left": "y",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "y",
+        "operator": "<",
+        "right": 90
+      },
+      {
+        "predicate": "Bound(t, (0, 1))"
+      },
+      {
+        "predicate": "Bound(v, (0, 1))"
+      },
+      {
+        "left": "Perpendicular(st_line, pr_line)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(st_line, C1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Perpendicular(uv_line, pq_line)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(uv_line, C1)",
+        "operator": "=",
+        "right": 0
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "P"
+      },
+      {
+        "expression": "Point(90, 0)",
+        "name": "Q"
+      },
+      {
+        "expression": "Point(0, 120)",
+        "name": "R"
+      },
+      {
+        "expression": "PointOnSegment(P, R, x / 120)",
+        "name": "S"
+      },
+      {
+        "expression": "PointOnSegment(Q, R, t)",
+        "name": "T"
+      },
+      {
+        "expression": "PointOnSegment(P, Q, y / 90)",
+        "name": "U"
+      },
+      {
+        "expression": "PointOnSegment(Q, R, v)",
+        "name": "V"
+      },
+      {
+        "expression": "Line(P, R)",
+        "name": "pr_line"
+      },
+      {
+        "expression": "Line(P, Q)",
+        "name": "pq_line"
+      },
+      {
+        "expression": "Line(S, T)",
+        "name": "st_line"
+      },
+      {
+        "expression": "Line(U, V)",
+        "name": "uv_line"
+      },
+      {
+        "expression": "Incircle(P, Q, R)",
+        "name": "C1"
+      },
+      {
+        "expression": "Incircle(R, S, T)",
+        "name": "C2"
+      },
+      {
+        "expression": "Incircle(Q, U, V)",
+        "name": "C3"
+      }
+    ],
+    "id": "aime-2001-2-7",
+    "target": "Distance(Center(C2), Center(C3))",
+    "variables": [
+      "x",
+      "y",
+      "t",
+      "v"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/aime-2001-2-7.json",
+  "source_sha256": "09d3fc28620b4bd9cec48a14c8dbaebfc76dc060467afbbf2b7c07ec37f0e4c2",
+  "saved_seed": 0,
+  "eligible_records": 121,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 85.14693178780094,
+      "x": [
+        59.99999999999573,
+        59.99999990855533,
+        0.5000000000002153,
+        0.3333333329991948
+      ],
+      "saved_residual": 3.0534230467002886e-09
+    },
+    {
+      "k": 28,
+      "value_float": 47.43416489382249,
+      "x": [
+        59.999999978316,
+        8.228058038474895e-15,
+        0.5000000000861803,
+        0.9999999999999992
+      ],
+      "saved_residual": 7.859813243380236e-10
+    },
+    {
+      "k": 62,
+      "value_float": 44.72135950386078,
+      "x": [
+        4.864407479116461e-11,
+        59.999999906025906,
+        2.5727953148221123e-12,
+        0.33333333295633544
+      ],
+      "saved_residual": 3.7497223462133215e-09
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

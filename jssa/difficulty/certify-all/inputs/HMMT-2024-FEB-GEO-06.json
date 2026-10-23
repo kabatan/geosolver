@@ -1,0 +1,176 @@
+{
+  "id": "HMMT-2024-FEB-GEO-06",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 18
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 36
+      },
+      {
+        "left": "Distance(O, B)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(O, C)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(O, Bp)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(O, Cp)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(A, T)",
+        "operator": "=",
+        "right": 12
+      },
+      {
+        "left": "OnCircle(T, omega_B)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(T, omega_C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(omega_B.center, omega_C.center)",
+        "operator": "=",
+        "right": "omega_B.radius + omega_C.radius"
+      },
+      {
+        "left": "C.y",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "bp",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "bp",
+        "operator": "<",
+        "right": "18"
+      },
+      {
+        "left": "q",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "q",
+        "operator": "<",
+        "right": "1"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(18, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(36 * cos(theta), 36 * sin(theta))",
+        "name": "C"
+      },
+      {
+        "expression": "Point(bp, 0)",
+        "name": "Bp"
+      },
+      {
+        "expression": "Point(q * C.x, q * C.y)",
+        "name": "Cp"
+      },
+      {
+        "expression": "Circumcircle(B, Bp, C)",
+        "name": "omega"
+      },
+      {
+        "expression": "Center(omega)",
+        "name": "O"
+      },
+      {
+        "expression": "Radius(omega)",
+        "name": "r"
+      },
+      {
+        "expression": "Midpoint(B, Bp)",
+        "name": "MB"
+      },
+      {
+        "expression": "Midpoint(C, Cp)",
+        "name": "MC"
+      },
+      {
+        "expression": "Distance(B, Bp) / 2",
+        "name": "rB"
+      },
+      {
+        "expression": "Distance(C, Cp) / 2",
+        "name": "rC"
+      },
+      {
+        "expression": "Circle(MB, rB)",
+        "name": "omega_B"
+      },
+      {
+        "expression": "Circle(MC, rC)",
+        "name": "omega_C"
+      },
+      {
+        "expression": "PointOnSegment(MB, MC, rB / (rB + rC))",
+        "name": "T"
+      }
+    ],
+    "id": "HMMT-2024-FEB-GEO-06",
+    "target": "Distance(A, O)",
+    "variables": [
+      "theta",
+      "bp",
+      "q"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2024-FEB-GEO-06.json",
+  "source_sha256": "ea9dbd83d09e3d9d7758e0b7c28782bf5f9243898fc73b93b77df102e863e5e1",
+  "saved_seed": 0,
+  "eligible_records": 96,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 21.666666666655303,
+      "x": [
+        20.171642259251517,
+        7.999999999778471,
+        0.11111111111040553
+      ],
+      "saved_residual": 1.531385296090443e-10
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

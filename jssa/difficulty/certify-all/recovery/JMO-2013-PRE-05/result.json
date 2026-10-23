@@ -1,0 +1,137 @@
+{
+  "bound_derivation": {
+    "bounds": [
+      "-oo",
+      "oo",
+      "False",
+      "False"
+    ],
+    "explicit_rules": [
+      {
+        "condition_index": 0,
+        "normalized_expression": "Distance(Point(0, 0), Point(9, 0))",
+        "operator": "=",
+        "rational_endpoint": "9"
+      },
+      {
+        "condition_index": 1,
+        "normalized_expression": "Distance(Point(0, 0), Point(2 * cos(theta), 2 * sin(theta)))",
+        "operator": "=",
+        "rational_endpoint": "2"
+      },
+      {
+        "condition_index": 2,
+        "normalized_expression": "Collinear(Point(p, 0), Point(9, 0), Point(0, 0))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 3,
+        "normalized_expression": "Collinear(Point(q * cos(theta), q * sin(theta)), Point(2 * cos(theta), 2 * sin(theta)), Point(0, 0))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 4,
+        "normalized_expression": "IsTangent(Line(Point(p, 0), Point(9, 0)), Circumcircle(Point(p, 0), Point(q * cos(theta), q * sin(theta)), Point(2 * cos(theta), 2 * sin(theta))))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 5,
+        "normalized_expression": "IsTangent(Line(Point(q * cos(theta), q * sin(theta)), Point(2 * cos(theta), 2 * sin(theta))), Circumcircle(Point(p, 0), Point(q * cos(theta), q * sin(theta)), Point(9, 0)))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 6,
+        "normalized_expression": "theta",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 8,
+        "normalized_expression": "p",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 9,
+        "normalized_expression": "q",
+        "operator": ">",
+        "rational_endpoint": "0"
+      }
+    ],
+    "method": "conservative_rational_interval_arithmetic"
+  },
+  "candidate_union_P": "t9**2 - 755631*t9/948617 + 109657/948617",
+  "candidates": [
+    {
+      "P": "t9**2 - 755631*t9/948617 + 109657/948617",
+      "candidate_status": "proposed",
+      "float_guard": true,
+      "float_hard": true,
+      "hp_error": "ValueError: HP residual 9.4731913e-28",
+      "k": 142,
+      "proposal_kind": "saved_float_pslq_tol_1e-13",
+      "rechecked_residual": 1.092201884489441e-09,
+      "root_interval": [
+        "3992345891828/6591093015463",
+        "114596712415/189191420598"
+      ],
+      "saved_residual": 1.1461731673432508e-09,
+      "value_float": 0.6057183357087781,
+      "x": [
+        1.5706531726723214,
+        3.3020419043332785,
+        5.45157233267931
+      ]
+    }
+  ],
+  "detail": "fixed stage or global budget exhausted",
+  "equations": 12,
+  "grevlex_incomplete": true,
+  "group": "development323",
+  "id": "JMO-2013-PRE-05",
+  "identities": [],
+  "input_sha256": "3cce2c0e8960a61a1a9f14018d7c68a94c24354bd8c9d1fa4ea31dce6874adcf",
+  "max_degree": 7,
+  "nondeg_factors": [
+    "v_q - 2",
+    "a2",
+    "v_p",
+    "v_p - 9",
+    "v_q",
+    "s8"
+  ],
+  "official_answer_loaded": false,
+  "primary_main_output_available": false,
+  "proposed_candidate_count": 1,
+  "saved_candidate_count": 1,
+  "seconds": 38.16898641199805,
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2013-PRE-05.json",
+  "source_sha256": "50462fb80a1ac9a95e1c3bfab679cddb32304ddcb012a719a5aed50bd9b467a4",
+  "stage": "groebner_lex",
+  "stage_timeouts": [
+    "groebner_grevlex",
+    "groebner_lex"
+  ],
+  "stages": {
+    "bounds": 0.002547941170632839,
+    "encode": 0.18051489093340933,
+    "groebner_grevlex": 15.000068373978138,
+    "groebner_lex": 22.00577089493163,
+    "numeric_and_pslq": 0.13774753198958933
+  },
+  "status": "timeout",
+  "system_bytes": 1172,
+  "system_sha256": "0f653845970fec7c80695a42b59f47840079c4211c03e6a6148563ccdb3ca568",
+  "target_symbol": "t9",
+  "total_terms": 73,
+  "variables": 12,
+  "process_wall_seconds": 38.715560466982424,
+  "process_returncode": 0,
+  "hard_timeout": false,
+  "charged_seconds": 38.715560466982424
+}

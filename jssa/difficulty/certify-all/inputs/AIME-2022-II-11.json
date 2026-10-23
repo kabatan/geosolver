@@ -1,0 +1,123 @@
+{
+  "id": "AIME-2022-II-11",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(M, Line(A, I1))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(M, Line(D, I2))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "by",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "dy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C, D])"
+      },
+      {
+        "left": "Angle(D, A, B)",
+        "operator": "<",
+        "right": "pi / 2"
+      },
+      {
+        "left": "Angle(A, D, C)",
+        "operator": "<",
+        "right": "pi / 2"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(bx, by)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(dx, dy)",
+        "name": "D"
+      },
+      {
+        "expression": "Midpoint(B, C)",
+        "name": "M"
+      },
+      {
+        "expression": "Incenter(A, B, D)",
+        "name": "I1"
+      },
+      {
+        "expression": "Incenter(A, C, D)",
+        "name": "I2"
+      }
+    ],
+    "id": "AIME-2022-II-11",
+    "target": "Area(A, B, C, D) ** 2",
+    "variables": [
+      "bx",
+      "by",
+      "dx",
+      "dy",
+      "cx",
+      "cy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2022-II-11.json",
+  "source_sha256": "ae0215c2e0abe1138a8952bb6ccd74e3c12684a14f264e2e9ff2b0a9da149c90",
+  "saved_seed": 0,
+  "eligible_records": 2,
+  "candidates": [
+    {
+      "k": 2,
+      "value_float": 180.00000016038726,
+      "x": [
+        -0.06260819704353326,
+        1.9990198138798183,
+        6.642308090211479,
+        2.2090140858463885,
+        4.34472779944585,
+        4.138035809012083
+      ],
+      "saved_residual": 7.927563158180093e-10
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

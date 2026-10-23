@@ -1,0 +1,81 @@
+{
+  "id": "JMO-2015-PRE-08",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(P, B)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(P, C)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "py",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(-6, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(6, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(12, 0)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(px, py)",
+        "name": "P"
+      },
+      {
+        "expression": "Circumcircle(P, A, C)",
+        "name": "Gamma1"
+      },
+      {
+        "expression": "Circumcircle(P, B, D)",
+        "name": "Gamma2"
+      },
+      {
+        "expression": "Intersect(Gamma1, Gamma2, exclude=P)",
+        "name": "Q"
+      }
+    ],
+    "id": "JMO-2015-PRE-08",
+    "target": "Distance(P, Q)",
+    "variables": [
+      "px",
+      "py"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2015-PRE-08.json",
+  "source_sha256": "9bcc99c8d2513abb923af50d360dbf053ca72c740a810d41837d97cd95fb292d",
+  "saved_seed": 0,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 10.394023007756195,
+      "x": [
+        1.000000000052778,
+        4.898979485661897
+      ],
+      "saved_residual": 1.08171718450934e-10
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

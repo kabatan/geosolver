@@ -1,0 +1,96 @@
+{
+  "id": "AIME-2018-II-12",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 14
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "Distance(D, A)",
+        "operator": "=",
+        "right": "2 * sqrt(65)"
+      },
+      {
+        "left": "Area(A, P, B) + Area(C, P, D)",
+        "operator": "=",
+        "right": "Area(B, P, C) + Area(A, P, D)"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "dy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C, D])"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(10, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(dx, dy)",
+        "name": "D"
+      },
+      {
+        "expression": "Intersect(Line(A, C), Line(B, D))",
+        "name": "P"
+      }
+    ],
+    "id": "AIME-2018-II-12",
+    "target": "Area(A, B, C, D)",
+    "variables": [
+      "cx",
+      "cy",
+      "dx",
+      "dy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2018-II-12.json",
+  "source_sha256": "ba9d1672ec170e29cecdfe212a7df50ffb3691ec2ec59260fb00bb543ff5b5e7",
+  "saved_seed": 0,
+  "eligible_records": 101,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 112.00000000000016,
+      "x": [
+        1.6000000000000176,
+        11.200000000000012,
+        -7.999999999999984,
+        14.00000000000001
+      ],
+      "saved_residual": 3.972054645195637e-15
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

@@ -1,0 +1,91 @@
+{
+  "id": "HMMT-2018-FEB-GEO-05",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Area(R, A, M)",
+        "operator": "=",
+        "right": "Area(R, E, M)"
+      },
+      {
+        "left": "theta",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "theta",
+        "operator": "<",
+        "right": "pi"
+      },
+      {
+        "predicate": "ConvexPolygon([M, A, R, E])"
+      },
+      {
+        "left": "Area(M, A, R, E)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "O"
+      },
+      {
+        "expression": "Circle(O, 1)",
+        "name": "omega"
+      },
+      {
+        "expression": "Point(1, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(-1, 0)",
+        "name": "M"
+      },
+      {
+        "expression": "Point(cos(theta), sin(theta))",
+        "name": "R"
+      },
+      {
+        "expression": "AngleBisector(R, A, M)",
+        "name": "bis"
+      },
+      {
+        "expression": "Intersect(bis, omega, exclude=A)",
+        "name": "E"
+      }
+    ],
+    "id": "HMMT-2018-FEB-GEO-05",
+    "target": "Area(M, A, R, E)",
+    "variables": [
+      "theta"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2018-FEB-GEO-05.json",
+  "source_sha256": "6c3620f09aeda3a9036737c38eafb812629bd46da13bb69147cd72f7d6716092",
+  "saved_seed": 0,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 2.3846264338327967e-16,
+      "x": [
+        3.141592653589793
+      ],
+      "saved_residual": 1.2246467991473532e-16
+    },
+    {
+      "k": 1,
+      "value_float": 1.2570787221102464,
+      "x": [
+        0.6796738189119729
+      ],
+      "saved_residual": 4.9719117711788385e-12
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

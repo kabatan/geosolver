@@ -1,0 +1,112 @@
+{
+  "id": "HMMT-2017-FEB-GEO-06",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 15
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 16
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 12
+      },
+      {
+        "left": "Distance(D, A)",
+        "operator": "=",
+        "right": 25
+      },
+      {
+        "left": "Distance(B, D)",
+        "operator": "=",
+        "right": 20
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C, D])"
+      },
+      {
+        "left": "Area(A, B, C, D, E)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(15, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(dx, dy)",
+        "name": "D"
+      },
+      {
+        "expression": "Circumcircle(A, B, D)",
+        "name": "Gamma"
+      },
+      {
+        "expression": "Circumcenter(A, B, D)",
+        "name": "M"
+      },
+      {
+        "expression": "Intersect(Line(C, B), Gamma, exclude=B)",
+        "name": "F"
+      },
+      {
+        "expression": "Intersect(Line(A, F), Line(M, C))",
+        "name": "G"
+      },
+      {
+        "expression": "Intersect(Line(G, D), Gamma, exclude=D)",
+        "name": "E"
+      }
+    ],
+    "id": "HMMT-2017-FEB-GEO-06",
+    "target": "Area(A, B, C, D, E)",
+    "variables": [
+      "cx",
+      "cy",
+      "dx",
+      "dy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2017-FEB-GEO-06.json",
+  "source_sha256": "b5a89eafc77a884be697afe34f1dab6d73b2ab63d2d3c4a74969d8d9a9289db2",
+  "saved_seed": 0,
+  "eligible_records": 54,
+  "candidates": [
+    {
+      "k": 1,
+      "value_float": 396.0000000001182,
+      "x": [
+        24.60000000001185,
+        12.799999999991112,
+        15.00000000001185,
+        19.99999999999111
+      ],
+      "saved_residual": 8.88888980185254e-12
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

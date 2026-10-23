@@ -1,0 +1,99 @@
+{
+  "id": "HMMT-2025-FEB-GEO-07",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 8
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Angle(A, B, P)",
+        "operator": "=",
+        "right": "Angle(A, C, P)"
+      },
+      {
+        "left": "Distance(B, P)",
+        "operator": "=",
+        "right": "Distance(P, C) / 2"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "u",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "v",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "u + v",
+        "operator": "<",
+        "right": "1"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(6, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(6 * u + cx * v, cy * v)",
+        "name": "P"
+      }
+    ],
+    "id": "HMMT-2025-FEB-GEO-07",
+    "target": "Area(B, P, C) / Area(A, B, C)",
+    "variables": [
+      "cx",
+      "cy",
+      "u",
+      "v"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2025-FEB-GEO-07.json",
+  "source_sha256": "cad3d79b9e2e5338659b5d182163ce2bb2395021f12d7f9375f95ead6c245cdc",
+  "saved_seed": 0,
+  "eligible_records": 128,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 0.388888888888889,
+      "x": [
+        4.25,
+        6.77772085586298,
+        0.44444444444444436,
+        0.16666666666666663
+      ],
+      "saved_residual": 9.992007221626409e-16
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

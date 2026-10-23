@@ -1,0 +1,89 @@
+{
+  "id": "HMMT-2023-FEB-GEO-08",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Angle(B, A, C)",
+        "operator": "=",
+        "right": "pi - Angle(D, A, E)"
+      },
+      {
+        "left": "OnSegment(D, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(E, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Angle(B, A, C)",
+        "operator": ">",
+        "right": "pi / 2"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(5, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Point((2 * 5 + cx) / 3, cy / 3)",
+        "name": "D"
+      },
+      {
+        "expression": "Point((5 + 2 * cx) / 3, 2 * cy / 3)",
+        "name": "E"
+      }
+    ],
+    "id": "HMMT-2023-FEB-GEO-08",
+    "target": "Distance(B, C)",
+    "variables": [
+      "cx",
+      "cy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2023-FEB-GEO-08.json",
+  "source_sha256": "6d0625bff9e1ee40ccbe6219c23dce893dc7409e4d8c4c6b1992ea991482df19",
+  "saved_seed": 0,
+  "eligible_records": 189,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 10.535653752852738,
+      "x": [
+        -3.6999999999999997,
+        5.942221806698233
+      ],
+      "saved_residual": 2.6645352591003757e-15
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

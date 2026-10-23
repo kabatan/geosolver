@@ -1,0 +1,197 @@
+{
+  "id": "HMMT-2020-FEB-GEO-09",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": "341 + rb"
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": "rb + rc"
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": "rc + 341"
+      },
+      {
+        "left": "OnCircle(D, omegaB)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(D, omegaC)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnLine(D, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(E, omegaC)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(E, omegaA)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnLine(E, C, A)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(F, omegaA)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(F, omegaB)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnLine(F, A, B)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(L, omegaA)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(L, omegaB)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(L, omegaC)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(W, A)",
+        "operator": "=",
+        "right": "341 + 49"
+      },
+      {
+        "left": "Distance(W, B)",
+        "operator": "=",
+        "right": "rb + 49"
+      },
+      {
+        "left": "Distance(W, C)",
+        "operator": "=",
+        "right": "rc + 49"
+      },
+      {
+        "left": "p",
+        "operator": ">",
+        "right": "1"
+      },
+      {
+        "left": "p",
+        "operator": "<",
+        "right": "sqrt(341) / 7"
+      },
+      {
+        "left": "Distance(T, L)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "sqrt(341) * p / (sqrt(341) - 7 * p)",
+        "name": "q"
+      },
+      {
+        "expression": "49 * p * p",
+        "name": "rb"
+      },
+      {
+        "expression": "49 * q * q",
+        "name": "rc"
+      },
+      {
+        "expression": "Point(0, 341)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(2 * sqrt(341 * 49) * p, rb)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(2 * sqrt(341 * 49) * q, rc)",
+        "name": "C"
+      },
+      {
+        "expression": "Circle(A, 341)",
+        "name": "omegaA"
+      },
+      {
+        "expression": "Circle(B, rb)",
+        "name": "omegaB"
+      },
+      {
+        "expression": "Circle(C, rc)",
+        "name": "omegaC"
+      },
+      {
+        "expression": "PointOnSegment(B, C, rb / (rb + rc))",
+        "name": "D"
+      },
+      {
+        "expression": "PointOnSegment(C, A, rc / (rc + 341))",
+        "name": "E"
+      },
+      {
+        "expression": "PointOnSegment(A, B, 341 / (341 + rb))",
+        "name": "F"
+      },
+      {
+        "expression": "Line(Point(0, 0), Point(1, 0))",
+        "name": "L"
+      },
+      {
+        "expression": "Intersect(Circle(A, 341 + 49), Circle(B, rb + 49), near=C)",
+        "name": "W"
+      },
+      {
+        "expression": "Intersect(Line(B, E), Line(C, F))",
+        "name": "T"
+      }
+    ],
+    "id": "HMMT-2020-FEB-GEO-09",
+    "target": "Distance(T, L)",
+    "variables": [
+      "p"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2020-FEB-GEO-09.json",
+  "source_sha256": "6fe6cadb53152788f0f529400aa2d61bf653990e468da964f632a27f839e5a21",
+  "saved_seed": 0,
+  "eligible_records": 199,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 294.0000000000231,
+      "x": [
+        1.764702094403691
+      ],
+      "saved_residual": 7.347603387340584e-11
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

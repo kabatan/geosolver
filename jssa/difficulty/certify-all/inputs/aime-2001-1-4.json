@@ -1,0 +1,90 @@
+{
+  "id": "aime-2001-1-4",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "x",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "z",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "Angle(B, A, C)",
+        "operator": "=",
+        "right": "pi / 3"
+      },
+      {
+        "left": "Angle(A, B, C)",
+        "operator": "=",
+        "right": "pi / 4"
+      },
+      {
+        "left": "OnSegment(T, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, T)",
+        "operator": "=",
+        "right": 24
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(x, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(y, z)",
+        "name": "A"
+      },
+      {
+        "expression": "Line(B, C)",
+        "name": "bc_line"
+      },
+      {
+        "expression": "AngleBisector(B, A, C)",
+        "name": "a_angle_bisector"
+      },
+      {
+        "expression": "Intersect(a_angle_bisector, bc_line)",
+        "name": "T"
+      }
+    ],
+    "id": "aime-2001-1-4",
+    "target": "Area(A, B, C)",
+    "variables": [
+      "x",
+      "y",
+      "z"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/aime-2001-1-4.json",
+  "source_sha256": "cf7fa923a8fd01b17eb030d5d0d785f1318100eda2879ff0bab0379f7515c37d",
+  "saved_seed": 0,
+  "eligible_records": 199,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 340.7076581449591,
+      "x": [
+        29.393876913398135,
+        23.18221983093764,
+        23.182219830937637
+      ],
+      "saved_residual": 3.554447978966673e-15
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

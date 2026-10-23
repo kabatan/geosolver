@@ -1,0 +1,100 @@
+{
+  "id": "AIME-2021-II-14",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "2 * Angle(A, B, C)",
+        "operator": "=",
+        "right": "13 * Angle(B, C, A)"
+      },
+      {
+        "left": "17 * Angle(B, C, A)",
+        "operator": "=",
+        "right": "2 * Angle(X, O, Y)"
+      },
+      {
+        "left": "bx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Angle(B, A, C)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "AcuteTriangle(A, B, C)"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(bx, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Circumcircle(A, B, C)",
+        "name": "Gamma"
+      },
+      {
+        "expression": "Circumcenter(A, B, C)",
+        "name": "O"
+      },
+      {
+        "expression": "Centroid(A, B, C)",
+        "name": "G"
+      },
+      {
+        "expression": "Tangent(A, Gamma)",
+        "name": "tA"
+      },
+      {
+        "expression": "Intersect(tA, PerpendicularLine(G, Line(G, O)))",
+        "name": "X"
+      },
+      {
+        "expression": "Intersect(Line(X, G), Line(B, C))",
+        "name": "Y"
+      }
+    ],
+    "id": "AIME-2021-II-14",
+    "target": "180 * Angle(B, A, C) / pi",
+    "variables": [
+      "bx",
+      "cx",
+      "cy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2021-II-14.json",
+  "source_sha256": "17dd1511e9e18f77d693caebbc63f7de2b9c2eb988bda67b886320f7b947458c",
+  "saved_seed": 0,
+  "eligible_records": 144,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 83.57142857078226,
+      "x": [
+        2.01034422472622,
+        1.0051721123631145,
+        8.921149240912053
+      ],
+      "saved_residual": 4.466520521868265e-10
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

@@ -1,0 +1,124 @@
+{
+  "id": "AIME-2019-II-15",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "OnLine(X, P, Q)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnLine(Y, P, Q)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(X, Gamma)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(Y, Gamma)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(X, P)",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "Distance(P, Q)",
+        "operator": "=",
+        "right": 25
+      },
+      {
+        "left": "Distance(Q, Y)",
+        "operator": "=",
+        "right": 15
+      },
+      {
+        "left": "OnSegment(P, X, Y)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(Q, X, Y)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "AcuteTriangle(A, B, C)"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(b, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "FootOfPerpendicular(C, Line(A, B))",
+        "name": "P"
+      },
+      {
+        "expression": "FootOfPerpendicular(B, Line(A, C))",
+        "name": "Q"
+      },
+      {
+        "expression": "Circumcircle(A, B, C)",
+        "name": "Gamma"
+      },
+      {
+        "expression": "Point(xx, xy)",
+        "name": "X"
+      },
+      {
+        "expression": "Point(yx, yy)",
+        "name": "Y"
+      }
+    ],
+    "id": "AIME-2019-II-15",
+    "target": "Distance(A, B) * Distance(A, C)",
+    "variables": [
+      "b",
+      "cx",
+      "cy",
+      "xx",
+      "xy",
+      "yx",
+      "yy"
+    ]
+  },
+  "source_kind": "missing_saved_candidate",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2019-II-15.json",
+  "source_sha256": "25214feb36ff57c5e2c3f01f80cd78f8d23dffc30bbc77dd9b7cda216ad271a9",
+  "saved_seed": 0,
+  "eligible_records": 0,
+  "candidates": [],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

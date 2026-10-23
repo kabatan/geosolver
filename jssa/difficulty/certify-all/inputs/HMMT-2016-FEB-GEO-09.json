@@ -1,0 +1,109 @@
+{
+  "id": "HMMT-2016-FEB-GEO-09",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 49
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": 49
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 73
+      },
+      {
+        "left": "AreConcyclic(A, B, C, D)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnLine(M, B, D)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "dy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(I, J)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C, D])"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(49, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(dx, dy)",
+        "name": "D"
+      },
+      {
+        "expression": "Incenter(A, B, D)",
+        "name": "I"
+      },
+      {
+        "expression": "Incenter(C, B, D)",
+        "name": "J"
+      },
+      {
+        "expression": "Midpoint(I, J)",
+        "name": "M"
+      }
+    ],
+    "id": "HMMT-2016-FEB-GEO-09",
+    "target": "Distance(I, J)",
+    "variables": [
+      "cx",
+      "cy",
+      "dx",
+      "dy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2016-FEB-GEO-09.json",
+  "source_sha256": "844af14d145c16e344e93bddcb85b6610d6e9b4d550c96cbcace04902ad7c562",
+  "saved_seed": 0,
+  "eligible_records": 108,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 46.5170936254705,
+      "x": [
+        72.21797239779386,
+        10.656662826936355,
+        -41.31679997961666,
+        26.342400032496613
+      ],
+      "saved_residual": 1.1748259856556945e-09
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

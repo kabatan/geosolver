@@ -1,0 +1,99 @@
+{
+  "id": "HMMT-2025-FEB-GEO-06",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Parallel(Line(A, B), Line(C, D))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 11
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 8
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 19
+      },
+      {
+        "left": "Distance(D, A)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "dy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "SimplePolygon([A, B, C, D])"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(11, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(dx, dy)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(dx + 19, dy)",
+        "name": "C"
+      },
+      {
+        "expression": "Circumcenter(B, C, D)",
+        "name": "O_BCD"
+      },
+      {
+        "expression": "Circumcenter(C, D, A)",
+        "name": "O_CDA"
+      },
+      {
+        "expression": "Circumcenter(D, A, B)",
+        "name": "O_DAB"
+      },
+      {
+        "expression": "Circumcenter(A, B, C)",
+        "name": "O_ABC"
+      }
+    ],
+    "id": "HMMT-2025-FEB-GEO-06",
+    "target": "Area(O_BCD, O_CDA, O_DAB, O_ABC)",
+    "variables": [
+      "dx",
+      "dy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2025-FEB-GEO-06.json",
+  "source_sha256": "6f61251a76d83c3c4aeba6a7b014053f2d496226cf5e1b16ba561d865ecda514",
+  "saved_seed": 0,
+  "eligible_records": 198,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 34.856850115866756,
+      "x": [
+        -1.0,
+        3.8729833462074166
+      ],
+      "saved_residual": 4.440892098500626e-16
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

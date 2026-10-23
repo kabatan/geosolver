@@ -1,0 +1,90 @@
+{
+  "id": "AIME-2012-II-15",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "OnSegment(D, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(5, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Incenter(A, B, C)",
+        "name": "I"
+      },
+      {
+        "expression": "Intersect(Line(A, I), Line(B, C))",
+        "name": "D"
+      },
+      {
+        "expression": "Circumcircle(A, B, C)",
+        "name": "omega"
+      },
+      {
+        "expression": "Intersect(Line(A, D), omega, exclude=A)",
+        "name": "E"
+      },
+      {
+        "expression": "Circle(Midpoint(D, E), Distance(D, E) / 2)",
+        "name": "gamma"
+      },
+      {
+        "expression": "Intersect(omega, gamma, exclude=E)",
+        "name": "F"
+      }
+    ],
+    "id": "AIME-2012-II-15",
+    "target": "Distance(A, F) ** 2",
+    "variables": [
+      "cx",
+      "cy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2012-II-15.json",
+  "source_sha256": "22df9d22ac3f088e48e5badb55dfe504c821b4aef21556c52149b84000b9b269",
+  "saved_seed": 0,
+  "eligible_records": 191,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 47.368421057778235,
+      "x": [
+        -1.5000000004603031,
+        2.5980762106478528
+      ],
+      "saved_residual": 4.152425229408822e-10
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

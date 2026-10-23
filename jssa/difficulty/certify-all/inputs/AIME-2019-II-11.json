@@ -1,0 +1,136 @@
+{
+  "id": "AIME-2019-II-11",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 8
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 9
+      },
+      {
+        "left": "Distance(O1, A)",
+        "operator": "=",
+        "right": "r1"
+      },
+      {
+        "left": "Distance(O1, B)",
+        "operator": "=",
+        "right": "r1"
+      },
+      {
+        "left": "Perpendicular(Line(O1, A), Line(A, C))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(O2, A)",
+        "operator": "=",
+        "right": "r2"
+      },
+      {
+        "left": "Distance(O2, C)",
+        "operator": "=",
+        "right": "r2"
+      },
+      {
+        "left": "Perpendicular(Line(O2, A), Line(A, B))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r1",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r2",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(7, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(o1x, o1y)",
+        "name": "O1"
+      },
+      {
+        "expression": "Point(0, o2y)",
+        "name": "O2"
+      },
+      {
+        "expression": "Circle(O1, r1)",
+        "name": "omega1"
+      },
+      {
+        "expression": "Circle(O2, r2)",
+        "name": "omega2"
+      },
+      {
+        "expression": "Intersect(omega1, omega2, exclude=A)",
+        "name": "K"
+      }
+    ],
+    "id": "AIME-2019-II-11",
+    "target": "Distance(A, K)",
+    "variables": [
+      "cx",
+      "cy",
+      "o1x",
+      "o1y",
+      "r1",
+      "o2y",
+      "r2"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2019-II-11.json",
+  "source_sha256": "f90a968ac191983f32ab0cb7e7bc02707e8d44c3954c220237525c12fa849af9",
+  "saved_seed": 0,
+  "eligible_records": 29,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 4.500000000011328,
+      "x": [
+        4.714285714283021,
+        7.666518779999446,
+        3.4999999999989777,
+        -2.152215428320609,
+        4.108774908643848,
+        5.282710596840099,
+        5.282710596841359
+      ],
+      "saved_residual": 5.056752524986349e-12
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

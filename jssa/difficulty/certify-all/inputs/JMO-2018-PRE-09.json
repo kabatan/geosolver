@@ -1,0 +1,122 @@
+{
+  "id": "JMO-2018-PRE-09",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, I)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(I, P)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(P, S)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(b, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Incircle(A, B, C)",
+        "name": "inc"
+      },
+      {
+        "expression": "Incenter(A, B, C)",
+        "name": "I"
+      },
+      {
+        "expression": "IncircleContactPoint(A, B, C, side='BC')",
+        "name": "P"
+      },
+      {
+        "expression": "IncircleContactPoint(A, B, C, side='CA')",
+        "name": "Q"
+      },
+      {
+        "expression": "IncircleContactPoint(A, B, C, side='AB')",
+        "name": "R"
+      },
+      {
+        "expression": "Excircle(A, B, C, vertex='A')",
+        "name": "exc"
+      },
+      {
+        "expression": "ContactPoint(exc, Line(B, C))",
+        "name": "S"
+      },
+      {
+        "expression": "ContactPoint(exc, Line(C, A))",
+        "name": "T"
+      },
+      {
+        "expression": "ContactPoint(exc, Line(A, B))",
+        "name": "U"
+      },
+      {
+        "expression": "Intersect(Line(P, Q), Line(S, T))",
+        "name": "D"
+      },
+      {
+        "expression": "Intersect(Line(P, R), Line(S, U))",
+        "name": "E"
+      }
+    ],
+    "id": "JMO-2018-PRE-09",
+    "target": "Distance(D, E)",
+    "variables": [
+      "b",
+      "cx",
+      "cy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2018-PRE-09.json",
+  "source_sha256": "a96ceeffa09df7c89ad5a32b37e938d4768f37fdda4cc70f4c3a6cf1f214b7e4",
+  "saved_seed": 0,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 1.8856180830012694,
+      "x": [
+        3.639718489543742,
+        4.386447712753867,
+        3.5447850575309556
+      ],
+      "saved_residual": 4.955321221442677e-10
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

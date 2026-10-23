@@ -1,0 +1,104 @@
+{
+  "id": "JMO-2026-PRE-06",
+  "group": "holdout2026",
+  "dsl": {
+    "conditions": [
+      {
+        "predicate": "Bound(e, (0, 1), inclusive=False)"
+      },
+      {
+        "left": "Dot(Vector(F, A), Vector(F, D))",
+        "operator": "<=",
+        "right": 0
+      },
+      {
+        "left": "Distance(C, E)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(D, F)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(M, B)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(M, C)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "dy",
+        "operator": ">",
+        "right": 0
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(b, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(dx, dy)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(b + dx, dy)",
+        "name": "C"
+      },
+      {
+        "expression": "PointOnSegment(C, D, e)",
+        "name": "E"
+      },
+      {
+        "expression": "Midpoint(A, E)",
+        "name": "M"
+      },
+      {
+        "expression": "Intersect(Line(B, M), Line(A, D))",
+        "name": "F"
+      }
+    ],
+    "id": "JMO-2026-PRE-06",
+    "target": "Distance(A, B)",
+    "variables": [
+      "b",
+      "dx",
+      "dy",
+      "e"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/new2026-predict/raw/JMO-2026-PRE-06.json",
+  "source_sha256": "7089f7a589e364c962e78311384b89b21d20962c2269a849b8d025ccdc1376c6",
+  "saved_seed": 5,
+  "eligible_records": 197,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 3.403124237432849,
+      "x": [
+        3.403124237432849,
+        -1.4055638569974542,
+        6.246950475544243,
+        0.8815428972593295
+      ],
+      "saved_residual": 4.440892098500626e-16
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

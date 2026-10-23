@@ -1,0 +1,110 @@
+{
+  "id": "JMO-2023-PRE-10",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Collinear(B, P, M)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(P, B, M)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Angle(P, A, M)",
+        "operator": "=",
+        "right": "Angle(M, B, A)"
+      },
+      {
+        "left": "Angle(B, A, P)",
+        "operator": "=",
+        "right": "41 * pi / 180"
+      },
+      {
+        "left": "Angle(P, D, B)",
+        "operator": "=",
+        "right": "115 * pi / 180"
+      },
+      {
+        "left": "cx",
+        "operator": ">",
+        "right": "5"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "px",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "py",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "AcuteTriangle(A,B,C)"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(5, cy)",
+        "name": "A"
+      },
+      {
+        "expression": "FootOfPerpendicular(Line(B, C), A)",
+        "name": "D"
+      },
+      {
+        "expression": "Midpoint(A, C)",
+        "name": "M"
+      },
+      {
+        "expression": "Point(px, py)",
+        "name": "P"
+      }
+    ],
+    "id": "JMO-2023-PRE-10",
+    "target": "180 * Angle(B, A, C) / pi",
+    "variables": [
+      "cx",
+      "cy",
+      "px",
+      "py"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2023-PRE-10.json",
+  "source_sha256": "7de76f1e38951a2b65f9cf1e68271600e0ed10bf5a91a67591a63ea887696045",
+  "saved_seed": 0,
+  "eligible_records": 51,
+  "candidates": [
+    {
+      "k": 4,
+      "value_float": 77.99999999999999,
+      "x": [
+        15.275315758202751,
+        8.97272798588758,
+        6.300100408073143,
+        2.788074322470158
+      ],
+      "saved_residual": 1.7832822334594722e-15
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

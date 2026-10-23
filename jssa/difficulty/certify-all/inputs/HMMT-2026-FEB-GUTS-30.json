@@ -1,0 +1,101 @@
+{
+  "id": "HMMT-2026-FEB-GUTS-30",
+  "group": "holdout2026",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 60
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 67
+      },
+      {
+        "left": "ay",
+        "operator": ">",
+        "right": 0
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(69, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(ax, ay)",
+        "name": "A"
+      },
+      {
+        "expression": "Incenter(A, B, C)",
+        "name": "I"
+      },
+      {
+        "expression": "Incircle(A, B, C)",
+        "name": "omega"
+      },
+      {
+        "expression": "IncircleContactPoint(A, B, C, side='BC')",
+        "name": "D"
+      },
+      {
+        "expression": "IncircleContactPoint(A, B, C, side='CA')",
+        "name": "E"
+      },
+      {
+        "expression": "IncircleContactPoint(A, B, C, side='AB')",
+        "name": "F"
+      },
+      {
+        "expression": "Intersect(Line(D, I), omega, exclude=D)",
+        "name": "Dp"
+      },
+      {
+        "expression": "Circumcircle(B, Dp, F)",
+        "name": "K1"
+      },
+      {
+        "expression": "Circumcircle(C, Dp, E)",
+        "name": "K2"
+      },
+      {
+        "expression": "Intersect(K1, K2, exclude=Dp)",
+        "name": "Y"
+      },
+      {
+        "expression": "Intersect(Line(Dp, Y), Line(B, C))",
+        "name": "X"
+      }
+    ],
+    "id": "HMMT-2026-FEB-GUTS-30",
+    "target": "Distance(B, X)",
+    "variables": [
+      "ax",
+      "ay"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/new2026-predict/raw/HMMT-2026-FEB-GUTS-30.json",
+  "source_sha256": "1caf02f866a1c2544f322728885928c25006225ca6eca5c1fb87149eee7057d9",
+  "saved_seed": 5,
+  "eligible_records": 199,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 44.99999999893548,
+      "x": [
+        28.057971015098,
+        53.03536803506805
+      ],
+      "saved_residual": 8.348799451960439e-10
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

@@ -1,0 +1,125 @@
+{
+  "id": "HMMT-2022-FEB-GEO-03",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, E)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(A, G)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Perpendicular(Line(A, E), Line(A, G))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(E, F)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(G, F)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Area(A, E, H, D)",
+        "operator": "=",
+        "right": "1 / 2"
+      },
+      {
+        "left": "ex",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "ey",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "ey",
+        "operator": "<",
+        "right": "ex"
+      },
+      {
+        "left": "gx",
+        "operator": "<",
+        "right": "0"
+      },
+      {
+        "left": "gy",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(1, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(1, 1)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(0, 1)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(ex, ey)",
+        "name": "E"
+      },
+      {
+        "expression": "Point(gx, gy)",
+        "name": "G"
+      },
+      {
+        "expression": "Point(ex + gx, ey + gy)",
+        "name": "F"
+      },
+      {
+        "expression": "Intersect(Line(E, F), Line(C, D))",
+        "name": "H"
+      }
+    ],
+    "id": "HMMT-2022-FEB-GEO-03",
+    "target": "ey / ex",
+    "variables": [
+      "ex",
+      "ey",
+      "gx",
+      "gy"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2022-FEB-GEO-03.json",
+  "source_sha256": "49320661e45339a1908e8dc88d6d70a0f65dec47c607a43e262a711ee840d327",
+  "saved_seed": 0,
+  "eligible_records": 33,
+  "candidates": [
+    {
+      "k": 1,
+      "value_float": 0.75,
+      "x": [
+        0.8,
+        0.6,
+        -0.6000000000000001,
+        0.8
+      ],
+      "saved_residual": 1.1102230246251565e-16
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

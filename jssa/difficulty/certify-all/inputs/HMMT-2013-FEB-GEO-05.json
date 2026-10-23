@@ -1,0 +1,89 @@
+{
+  "id": "HMMT-2013-FEB-GEO-05",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Angle(B, A, C)",
+        "operator": "=",
+        "right": "pi / 4"
+      },
+      {
+        "left": "Distance(A, M)",
+        "operator": "=",
+        "right": "2 * Distance(M, D)"
+      },
+      {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Ay",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(A, M)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "M"
+      },
+      {
+        "expression": "Point(-s, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(s, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(Ax, Ay)",
+        "name": "A"
+      },
+      {
+        "expression": "Circumcircle(A, B, C)",
+        "name": "Gamma"
+      },
+      {
+        "expression": "Intersect(Line(A, M), Gamma, exclude=A)",
+        "name": "D"
+      },
+      {
+        "expression": "Circumcenter(A, B, C)",
+        "name": "O"
+      }
+    ],
+    "id": "HMMT-2013-FEB-GEO-05",
+    "target": "cos(Angle(A, O, D))",
+    "variables": [
+      "s",
+      "Ax",
+      "Ay"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2013-FEB-GEO-05.json",
+  "source_sha256": "6452a97d1520d776e78e58fda1848a0f46af78debe47a116bca5fbd2e15786b9",
+  "saved_seed": 0,
+  "eligible_records": 24,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": -0.12500000177861528,
+      "x": [
+        3.497614442130006,
+        -4.62690899691453,
+        1.7488072238819918
+      ],
+      "saved_residual": 7.924693442854815e-10
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

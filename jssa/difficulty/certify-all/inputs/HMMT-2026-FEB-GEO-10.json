@@ -1,0 +1,105 @@
+{
+  "id": "HMMT-2026-FEB-GEO-10",
+  "group": "holdout2026",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 11
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 13
+      },
+      {
+        "left": "OnLine(Hh, Line(B, C))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "a",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "ay",
+        "operator": ">",
+        "right": 0
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(a, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(ax, ay)",
+        "name": "A"
+      },
+      {
+        "expression": "Centroid(A, B, C)",
+        "name": "G"
+      },
+      {
+        "expression": "Circumcenter(A, B, C)",
+        "name": "O"
+      },
+      {
+        "expression": "Orthocenter(A, G, O)",
+        "name": "Hh"
+      }
+    ],
+    "id": "HMMT-2026-FEB-GEO-10",
+    "target": "Distance(B, C)",
+    "variables": [
+      "a",
+      "ax",
+      "ay"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/new2026-predict/raw/HMMT-2026-FEB-GEO-10.json",
+  "source_sha256": "c476af0bdf0ab4ae09bd78183929d492686b8fb9885a84e75582907c8297bb73",
+  "saved_seed": 5,
+  "eligible_records": 101,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 13.904435743042985,
+      "x": [
+        13.904435743042985,
+        5.226149986159122,
+        9.679222919294778
+      ],
+      "saved_residual": 4.047597962923232e-11
+    },
+    {
+      "k": 3,
+      "value_float": 24.000000000036174,
+      "x": [
+        24.000000000036174,
+        11.000000000026729,
+        1.0385575569983935e-07
+      ],
+      "saved_residual": 2.8348490167090702e-11
+    },
+    {
+      "k": 10,
+      "value_float": 2.0,
+      "x": [
+        2.0,
+        -11.0,
+        1.1042238554145552e-07
+      ],
+      "saved_residual": 0.0
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

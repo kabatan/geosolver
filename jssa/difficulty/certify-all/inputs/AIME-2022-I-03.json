@@ -1,0 +1,86 @@
+{
+  "id": "AIME-2022-I-03",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 500
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 650
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": 333
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 333
+      },
+      {
+        "left": "h",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(P, Q)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(-250, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(250, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(325, h)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(-325, h)",
+        "name": "D"
+      },
+      {
+        "expression": "Intersect(AngleBisector(D, A, B), AngleBisector(C, D, A))",
+        "name": "P"
+      },
+      {
+        "expression": "Intersect(AngleBisector(A, B, C), AngleBisector(B, C, D))",
+        "name": "Q"
+      }
+    ],
+    "id": "AIME-2022-I-03",
+    "target": "Distance(P, Q)",
+    "variables": [
+      "h"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2022-I-03.json",
+  "source_sha256": "bbac746353608f8fcababf075a78843c4e9804a6f470077f790b87ce272dd8c1",
+  "saved_seed": 0,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 242.00000000000003,
+      "x": [
+        324.44414003029857
+      ],
+      "saved_residual": 0.0
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

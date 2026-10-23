@@ -1,0 +1,186 @@
+{
+  "bound_derivation": {
+    "bounds": [
+      "0",
+      "oo",
+      "True",
+      "False"
+    ],
+    "explicit_rules": [
+      {
+        "condition_index": 0,
+        "normalized_expression": "Distance(Point(0, 0), Point(10, 0))",
+        "operator": "=",
+        "rational_endpoint": "10"
+      },
+      {
+        "condition_index": 1,
+        "normalized_expression": "Distance(Point(10, 0), Point(ax, ay))",
+        "operator": "=",
+        "rational_endpoint": "12"
+      },
+      {
+        "condition_index": 2,
+        "normalized_expression": "Parallel(Line(Point(0, 0), Midpoint(Point(ax, ay), Point(10, 0))), PerpendicularLine(AngleBisector(Point(0, 0), Point(ax, ay), Point(10, 0)), Point(ax, ay)))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 3,
+        "normalized_expression": "ay",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 4,
+        "normalized_expression": "Area(Point(ax, ay), Point(0, 0), Point(10, 0))",
+        "operator": ">",
+        "rational_endpoint": "0"
+      }
+    ],
+    "method": "conservative_rational_interval_arithmetic"
+  },
+  "candidate_union_P": "t4**2 - 896",
+  "candidates": [
+    {
+      "P": "t4**2 - 896",
+      "candidate_status": "proposed",
+      "float_guard": true,
+      "float_hard": true,
+      "hp_coordinates": [
+        "-0.4000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001",
+        "5.986651818838306216933997971706478882809631692445963114085992747712056250091102444762895832311007314"
+      ],
+      "hp_guard": true,
+      "hp_hard": true,
+      "hp_residual": "1.14298739128e-100",
+      "hp_value": "29.93325909419153108466998985853239441404815846222981557042996373856028125045551222381447916155503657",
+      "iterations": 3,
+      "k": 0,
+      "numeric_fixed_columns": [],
+      "proposal_kind": "100_digit_polished_saved_endpoint",
+      "rank": 2,
+      "rechecked_residual": 1.1102230246251565e-16,
+      "root_interval": [
+        "97108984358549/3244183470065",
+        "19486825290270/651009141001"
+      ],
+      "saved_residual": 1.1102230246251565e-16,
+      "value_float": 29.933259094191534,
+      "x": [
+        -0.40000000000000013,
+        5.986651818838307
+      ]
+    }
+  ],
+  "certificate_kind": "E_lex",
+  "equations": 6,
+  "group": "development323",
+  "id": "HMMT-2014-FEB-GEO-03",
+  "identities": [
+    {
+      "N": 0,
+      "Q": "t4**4 - 896*t4**2",
+      "bytes": 2108,
+      "cofactor_terms": 61,
+      "kind": "E_lex",
+      "raw_saved": true,
+      "root_check": {
+        "all_real_root_intervals": [
+          [
+            "-19486825290270/651009141001",
+            "-97108984358549/3244183470065"
+          ],
+          [
+            "0",
+            "0"
+          ],
+          [
+            "97108984358549/3244183470065",
+            "19486825290270/651009141001"
+          ]
+        ],
+        "allowed_root_count": 1,
+        "candidate_count": 1,
+        "candidate_matches": [
+          true
+        ],
+        "range": [
+          "0",
+          "oo",
+          true,
+          false
+        ],
+        "set_complete": true,
+        "unique": true
+      },
+      "sha256": "cff879a4ebeefe7b7d5926369223a9bee497ce974faa65bc3e441005c855d48c",
+      "verified_fraction": true
+    }
+  ],
+  "input_sha256": "0b6c6e984db359a556b41618909526230693ca451fed125335f928391daf02cd",
+  "last_root_check": {
+    "all_real_root_intervals": [
+      [
+        "-19486825290270/651009141001",
+        "-97108984358549/3244183470065"
+      ],
+      [
+        "0",
+        "0"
+      ],
+      [
+        "97108984358549/3244183470065",
+        "19486825290270/651009141001"
+      ]
+    ],
+    "allowed_root_count": 1,
+    "candidate_count": 1,
+    "candidate_matches": [
+      true
+    ],
+    "range": [
+      "0",
+      "oo",
+      true,
+      false
+    ],
+    "set_complete": true,
+    "unique": true
+  },
+  "lex_zero_dimensional": true,
+  "max_degree": 3,
+  "nondeg_factors": [],
+  "official_answer_loaded": false,
+  "primary_main_output_available": false,
+  "proposed_candidate_count": 1,
+  "saved_candidate_count": 1,
+  "seconds": 0.3851298971567303,
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2014-FEB-GEO-03.json",
+  "source_sha256": "7b8ca748e2d5ae72bb61e87a6971098a7d42bbc776ea2b0e06a94534470ba00d",
+  "stage": "roots_E_lex",
+  "stage_timeouts": [],
+  "stages": {
+    "bounds": 0.0008523270953446627,
+    "encode": 0.026046626968309283,
+    "extract_grevlex_eliminant": 0.0005174479447305202,
+    "groebner_grevlex": 0.006081964820623398,
+    "groebner_lex": 0.011185435811057687,
+    "identity_E_lex": 0.010542408097535372,
+    "identity_P": 0.00013584899716079235,
+    "numeric_and_pslq": 0.01813989714719355,
+    "roots_E_lex": 0.0015317939687520266
+  },
+  "status": "certified_saved_endpoint_set",
+  "system_bytes": 286,
+  "system_sha256": "6661e4e98ceac3fb563f6edaaef22a88d2c2e3052c7e4e029e3a31cda26eb315",
+  "target_symbol": "t4",
+  "total_terms": 20,
+  "variables": 6,
+  "zero_dimensional": true,
+  "process_wall_seconds": 0.46544887707568705,
+  "process_returncode": 0,
+  "hard_timeout": false,
+  "charged_seconds": 0.46544887707568705
+}

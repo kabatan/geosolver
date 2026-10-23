@@ -1,0 +1,159 @@
+{
+  "bound_derivation": {
+    "bounds": [
+      "-oo",
+      "oo",
+      "False",
+      "False"
+    ],
+    "explicit_rules": [
+      {
+        "condition_index": 0,
+        "normalized_expression": "Distance(Point(0, 0), Point(55, 0))",
+        "operator": "=",
+        "rational_endpoint": "55"
+      },
+      {
+        "condition_index": 1,
+        "normalized_expression": "Distance(Point(55, 0), Point(55 / 2, 55 * sqrt(3) / 2))",
+        "operator": "=",
+        "rational_endpoint": "55"
+      },
+      {
+        "condition_index": 2,
+        "normalized_expression": "Distance(Point(55 / 2, 55 * sqrt(3) / 2), Point(0, 0))",
+        "operator": "=",
+        "rational_endpoint": "55"
+      },
+      {
+        "condition_index": 3,
+        "normalized_expression": "Distance(Point(55, 0), Point(55 - 7 * (55 - 55 / 2) / 55, 7 * (55 * sqrt(3) / 2) / 55))",
+        "operator": "=",
+        "rational_endpoint": "7"
+      },
+      {
+        "condition_index": 4,
+        "normalized_expression": "Distance(Point(55 / 2, 55 * sqrt(3) / 2), Point(55 / 2 * (1 - 30 / 55), 55 * sqrt(3) / 2 * (1 - 30 / 55)))",
+        "operator": "=",
+        "rational_endpoint": "30"
+      },
+      {
+        "condition_index": 5,
+        "normalized_expression": "Distance(Point(0, 0), Point(40, 0))",
+        "operator": "=",
+        "rational_endpoint": "40"
+      },
+      {
+        "condition_index": 8,
+        "normalized_expression": "px",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 9,
+        "normalized_expression": "px",
+        "operator": "<",
+        "rational_endpoint": "55"
+      },
+      {
+        "condition_index": 10,
+        "normalized_expression": "py",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 12,
+        "normalized_expression": "Vector(Point(0, 0), Point(55, 0)).x * Vector(Point(0, 0), Point(px, py)).y - Vector(Point(0, 0), Point(55, 0)).y * Vector(Point(0, 0), Point(px, py)).x",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 13,
+        "normalized_expression": "Vector(Point(55, 0), Point(55 / 2, 55 * sqrt(3) / 2)).x * Vector(Point(55, 0), Point(px, py)).y - Vector(Point(55, 0), Point(55 / 2, 55 * sqrt(3) / 2)).y * Vector(Point(55, 0), Point(px, py)).x",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 14,
+        "normalized_expression": "Vector(Point(55 / 2, 55 * sqrt(3) / 2), Point(0, 0)).x * Vector(Point(55 / 2, 55 * sqrt(3) / 2), Point(px, py)).y - Vector(Point(55 / 2, 55 * sqrt(3) / 2), Point(0, 0)).y * Vector(Point(55 / 2, 55 * sqrt(3) / 2), Point(px, py)).x",
+        "operator": ">",
+        "rational_endpoint": "0"
+      }
+    ],
+    "method": "conservative_rational_interval_arithmetic"
+  },
+  "candidate_union_P": "t15 - 75",
+  "candidates": [
+    {
+      "P": "t15 - 75",
+      "candidate_status": "proposed",
+      "float_guard": true,
+      "float_hard": true,
+      "hp_coordinates": [
+        "40.13157894736842105263157894736842105263157894736842105263157894736842105263157894736842105263157895",
+        "1.139507110242682429952267329938073925620266614348934623720925644376271721650526340184964596550821431"
+      ],
+      "hp_guard": true,
+      "hp_hard": true,
+      "hp_residual": "4.57194956513e-100",
+      "hp_value": "74.99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999",
+      "iterations": 3,
+      "k": 0,
+      "numeric_fixed_columns": [],
+      "proposal_kind": "100_digit_polished_saved_endpoint",
+      "rank": 2,
+      "rechecked_residual": 7.105427357601002e-15,
+      "root_interval": [
+        "74999999999999999999999999999999/1000000000000000000000000000000",
+        "75000000000000000000000000000001/1000000000000000000000000000000"
+      ],
+      "saved_residual": 1.1359051976736956e-14,
+      "value_float": 74.9999999999999,
+      "x": [
+        40.13157894736842,
+        1.13950711024268
+      ]
+    }
+  ],
+  "detail": "fixed stage or global budget exhausted",
+  "equations": 15,
+  "grevlex_incomplete": true,
+  "group": "development323",
+  "id": "AIME-2023-I-12",
+  "identities": [],
+  "input_sha256": "074b6be86db0351b387482870755a6e5e41a42693eb3c3fbec7f47276a1b55ce",
+  "max_degree": 5,
+  "nondeg_factors": [
+    "s1**2 - 2*s1*v_py/25 - 2*v_px/25 + 1"
+  ],
+  "official_answer_loaded": false,
+  "primary_main_output_available": false,
+  "proposed_candidate_count": 1,
+  "saved_candidate_count": 1,
+  "seconds": 37.503041265998036,
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2023-I-12.json",
+  "source_sha256": "bc6fc489fb522c2bab576d6e43a1d4e36742ba55f5d49c03f919c4d683381d8b",
+  "stage": "groebner_lex",
+  "stage_timeouts": [
+    "groebner_grevlex",
+    "groebner_lex"
+  ],
+  "stages": {
+    "bounds": 0.0033474168740212917,
+    "encode": 0.11496014194563031,
+    "groebner_grevlex": 15.00007627508603,
+    "groebner_lex": 22.002864263020456,
+    "numeric_and_pslq": 0.02725063101388514
+  },
+  "status": "timeout",
+  "system_bytes": 947,
+  "system_sha256": "155b997fafaadf24e58c795e6490fa4407337cbe2bd6de5f9badc9ecf46320de",
+  "target_symbol": "t15",
+  "total_terms": 62,
+  "variables": 12,
+  "process_wall_seconds": 37.778704438125715,
+  "process_returncode": 0,
+  "hard_timeout": false,
+  "charged_seconds": 37.778704438125715
+}

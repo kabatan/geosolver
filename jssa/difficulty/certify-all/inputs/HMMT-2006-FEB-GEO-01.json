@@ -1,0 +1,85 @@
+{
+  "id": "HMMT-2006-FEB-GEO-01",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, Aclose)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "g",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "h",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(1, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(1 + sqrt(2), sqrt(2))",
+        "name": "C"
+      },
+      {
+        "expression": "Point(1 + sqrt(2), 3 + sqrt(2))",
+        "name": "D"
+      },
+      {
+        "expression": "Point(1 - sqrt(2), 3 + 3 * sqrt(2))",
+        "name": "E"
+      },
+      {
+        "expression": "Point(-1 - sqrt(2), 3 + 3 * sqrt(2))",
+        "name": "F"
+      },
+      {
+        "expression": "Point(-1 - 2 * sqrt(2), 3 + 2 * sqrt(2))",
+        "name": "G"
+      },
+      {
+        "expression": "Point(-1 - 2 * sqrt(2), 3 + 2 * sqrt(2) - g)",
+        "name": "H"
+      },
+      {
+        "expression": "Point(-1 - 2 * sqrt(2) + h / sqrt(2), 3 + 2 * sqrt(2) - g - h / sqrt(2))",
+        "name": "Aclose"
+      }
+    ],
+    "id": "HMMT-2006-FEB-GEO-01",
+    "target": "1 + 2 + 3 + 4 + 2 + 2 + g + h",
+    "variables": [
+      "g",
+      "h"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/HMMT-2006-FEB-GEO-01.json",
+  "source_sha256": "54fd66945632bf7d35ec8bb0c6cadd46ca9fcc3e681e805a4e84bc737c9f5554",
+  "saved_seed": 0,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 21.414213562373096,
+      "x": [
+        1.9999999999999991,
+        5.414213562373096
+      ],
+      "saved_residual": 4.440892098500626e-16
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

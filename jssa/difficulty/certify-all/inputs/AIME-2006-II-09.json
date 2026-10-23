@@ -1,0 +1,114 @@
+{
+  "id": "AIME-2006-II-09",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "IsTangent(t1, C1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(t1, C2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(t2, C2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(t2, C3)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "m1",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "m2",
+        "operator": "<",
+        "right": "0"
+      },
+      {
+        "left": "b1 * (12 * m1 + b1)",
+        "operator": "<",
+        "right": "0"
+      },
+      {
+        "left": "(12 * m2 + b2) * (24 * m2 + b2)",
+        "operator": "<",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "O1"
+      },
+      {
+        "expression": "Point(12, 0)",
+        "name": "O2"
+      },
+      {
+        "expression": "Point(24, 0)",
+        "name": "O3"
+      },
+      {
+        "expression": "Circle(O1, 1)",
+        "name": "C1"
+      },
+      {
+        "expression": "Circle(O2, 2)",
+        "name": "C2"
+      },
+      {
+        "expression": "Circle(O3, 4)",
+        "name": "C3"
+      },
+      {
+        "expression": "Line(m1, -1, b1)",
+        "name": "t1"
+      },
+      {
+        "expression": "Line(m2, -1, b2)",
+        "name": "t2"
+      },
+      {
+        "expression": "Intersect(t1, t2)",
+        "name": "T"
+      }
+    ],
+    "id": "AIME-2006-II-09",
+    "target": "T.x",
+    "variables": [
+      "m1",
+      "b1",
+      "m2",
+      "b2"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2006-II-09.json",
+  "source_sha256": "b494ba6ca7621ab4b6ea102f76fdf59556f62945cf4fed2007fa0977a58e18d1",
+  "saved_seed": 0,
+  "eligible_records": 42,
+  "candidates": [
+    {
+      "k": 1,
+      "value_float": 12.29179606738084,
+      "x": [
+        0.25819888974716115,
+        -1.0327955589885094,
+        -0.5773502691628998,
+        9.237604306605547
+      ],
+      "saved_residual": 1.5493880222893035e-10
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

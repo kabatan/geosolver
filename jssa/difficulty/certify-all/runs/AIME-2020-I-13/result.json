@@ -1,0 +1,179 @@
+{
+  "bound_derivation": {
+    "bounds": [
+      "0",
+      "oo",
+      "True",
+      "False"
+    ],
+    "explicit_rules": [
+      {
+        "condition_index": 0,
+        "normalized_expression": "Distance(Point(0, 0), Point(4, 0))",
+        "operator": "=",
+        "rational_endpoint": "4"
+      },
+      {
+        "condition_index": 1,
+        "normalized_expression": "Distance(Point(4, 0), Point(cx, cy))",
+        "operator": "=",
+        "rational_endpoint": "5"
+      },
+      {
+        "condition_index": 2,
+        "normalized_expression": "Distance(Point(cx, cy), Point(0, 0))",
+        "operator": "=",
+        "rational_endpoint": "6"
+      },
+      {
+        "condition_index": 3,
+        "normalized_expression": "cy",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 4,
+        "normalized_expression": "Area(Point(0, 0), Intersect(PerpendicularBisector(Point(0, 0), Intersect(AngleBisector(Point(4, 0), Point(0, 0), Point(cx, cy)), Line(Point(4, 0), Point(cx, cy)))), AngleBisector(Point(0, 0), Point(4, 0), Point(cx, cy))), Intersect(PerpendicularBisector(Point(0, 0), Intersect(AngleBisector(Point(4, 0), Point(0, 0), Point(cx, cy)), Line(Point(4, 0), Point(cx, cy)))), AngleBisector(Point(0, 0), Point(cx, cy), Point(4, 0))))",
+        "operator": ">",
+        "rational_endpoint": "0"
+      }
+    ],
+    "method": "conservative_rational_interval_arithmetic"
+  },
+  "candidate_union_P": "t10**2 - 225/28",
+  "candidates": [
+    {
+      "P": "t10**2 - 225/28",
+      "candidate_status": "proposed",
+      "float_guard": true,
+      "float_hard": true,
+      "hp_coordinates": [
+        "3.375",
+        "4.96078370824610735719052953807361329820673596827959408819062711100200404355678180205073666213976927"
+      ],
+      "hp_guard": true,
+      "hp_hard": true,
+      "hp_residual": "5.71493695641e-101",
+      "hp_value": "2.834733547569204204108874021756350456118134839016910907537501206286859453461018172600420949794153869",
+      "iterations": 3,
+      "k": 0,
+      "numeric_fixed_columns": [],
+      "proposal_kind": "100_digit_polished_saved_endpoint",
+      "rank": 2,
+      "rechecked_residual": 0.0,
+      "root_interval": [
+        "1127918325583/397892185158",
+        "7524983149424/2654564537777"
+      ],
+      "saved_residual": 0.0,
+      "value_float": 2.8347335475692046,
+      "x": [
+        3.3750000000000004,
+        4.960783708246107
+      ]
+    }
+  ],
+  "certificate_kind": "P",
+  "equations": 13,
+  "group": "development323",
+  "id": "AIME-2020-I-13",
+  "identities": [
+    {
+      "N": 1,
+      "Q": "t10**2 - 225/28",
+      "bytes": 549358,
+      "cofactor_terms": 13713,
+      "kind": "P",
+      "raw_saved": false,
+      "root_check": {
+        "all_real_root_intervals": [
+          [
+            "-7524983149424/2654564537777",
+            "-1127918325583/397892185158"
+          ],
+          [
+            "1127918325583/397892185158",
+            "7524983149424/2654564537777"
+          ]
+        ],
+        "allowed_root_count": 1,
+        "candidate_count": 1,
+        "candidate_matches": [
+          true
+        ],
+        "range": [
+          "0",
+          "oo",
+          true,
+          false
+        ],
+        "set_complete": true,
+        "unique": true
+      },
+      "sha256": "046c3b1e0f744623d064cfd76e07bcc923b9855c926267f96f4933ab7f2a798f",
+      "verified_fraction": true
+    }
+  ],
+  "input_sha256": "03f7d7172af10df5db08fab357d08cc846423d741eb365b75320ab342274afa7",
+  "last_root_check": {
+    "all_real_root_intervals": [
+      [
+        "-7524983149424/2654564537777",
+        "-1127918325583/397892185158"
+      ],
+      [
+        "1127918325583/397892185158",
+        "7524983149424/2654564537777"
+      ]
+    ],
+    "allowed_root_count": 1,
+    "candidate_count": 1,
+    "candidate_matches": [
+      true
+    ],
+    "range": [
+      "0",
+      "oo",
+      true,
+      false
+    ],
+    "set_complete": true,
+    "unique": true
+  },
+  "max_degree": 8,
+  "nondeg_factors": [
+    "v_cy",
+    "s1 + 4",
+    "p2*s4 - p2*v_cx + 4*p2 - p3*v_cy",
+    "p2*s1*v_cx - 4*p2*s1 + p2*s4*v_cx + p3*s1*v_cy + p3*s4*v_cy"
+  ],
+  "official_answer_loaded": false,
+  "primary_main_output_available": false,
+  "proposed_candidate_count": 1,
+  "saved_candidate_count": 1,
+  "seconds": 9.876993620069697,
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2020-I-13.json",
+  "source_sha256": "2c7fe33f259cbd53124c375e7eade52232b371564b0579623088b49ddb6d53f1",
+  "stage": "roots_P",
+  "stage_timeouts": [],
+  "stages": {
+    "bounds": 0.003722294932231307,
+    "encode": 0.21350547904148698,
+    "groebner_grevlex": 0.6988599060568959,
+    "identity_P": 8.32177778496407,
+    "numeric_and_pslq": 0.029746111948043108,
+    "roots_P": 0.0024534401018172503
+  },
+  "status": "certified_saved_endpoint_set",
+  "system_bytes": 1863,
+  "system_sha256": "0fb3c470f88231b9ed2689dc1bd4d8caf994080e5ca25901bf5cb55aa58dda46",
+  "target_symbol": "t10",
+  "total_terms": 96,
+  "variables": 13,
+  "zero_dimensional": true,
+  "process_wall_seconds": 10.313415862154216,
+  "process_returncode": 0,
+  "hard_timeout": false,
+  "charged_seconds": 10.313415862154216
+}

@@ -1,0 +1,129 @@
+{
+  "bound_derivation": {
+    "bounds": [
+      "-oo",
+      "oo",
+      "False",
+      "False"
+    ],
+    "explicit_rules": [
+      {
+        "condition_index": 0,
+        "normalized_expression": "IsTangent(Line(m1, -1, b1), Circle(Point(0, 0), 1))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 1,
+        "normalized_expression": "IsTangent(Line(m1, -1, b1), Circle(Point(12, 0), 2))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 2,
+        "normalized_expression": "IsTangent(Line(m2, -1, b2), Circle(Point(12, 0), 2))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 3,
+        "normalized_expression": "IsTangent(Line(m2, -1, b2), Circle(Point(24, 0), 4))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 4,
+        "normalized_expression": "m1",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 5,
+        "normalized_expression": "m2",
+        "operator": "<",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 6,
+        "normalized_expression": "b1 * (12 * m1 + b1)",
+        "operator": "<",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 7,
+        "normalized_expression": "(12 * m2 + b2) * (24 * m2 + b2)",
+        "operator": "<",
+        "rational_endpoint": "0"
+      }
+    ],
+    "method": "conservative_rational_interval_arithmetic"
+  },
+  "candidate_union_P": "t3**3 - 2103*t3**2/164 + 859*t3/164 + 652/41",
+  "candidates": [
+    {
+      "P": "t3**3 - 2103*t3**2/164 + 859*t3/164 + 652/41",
+      "candidate_status": "proposed",
+      "float_guard": true,
+      "float_hard": true,
+      "hp_error": "ValueError: HP residual 8.0e-45",
+      "k": 1,
+      "proposal_kind": "saved_float_pslq_tol_1e-13",
+      "rechecked_residual": 1.3813750143754078e-10,
+      "root_interval": [
+        "14679168890411/1194224896829",
+        "18662991899347/1518329119442"
+      ],
+      "saved_residual": 1.5493880222893035e-10,
+      "value_float": 12.29179606738084,
+      "x": [
+        0.25819888974716115,
+        -1.0327955589885094,
+        -0.5773502691628998,
+        9.237604306605547
+      ]
+    }
+  ],
+  "detail": "fixed stage or global budget exhausted",
+  "equations": 8,
+  "grevlex_incomplete": true,
+  "group": "development323",
+  "id": "AIME-2006-II-09",
+  "identities": [],
+  "input_sha256": "8794c9231241ad2f5d1550c1610538d5e0d8dc30560450670fdb7c85877a3f0f",
+  "max_degree": 8,
+  "nondeg_factors": [
+    "v_m1 - v_m2",
+    "v_m1**2 + 1",
+    "v_m2**2 + 1"
+  ],
+  "official_answer_loaded": false,
+  "primary_main_output_available": false,
+  "proposed_candidate_count": 1,
+  "saved_candidate_count": 1,
+  "seconds": 37.62577291787602,
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2006-II-09.json",
+  "source_sha256": "b494ba6ca7621ab4b6ea102f76fdf59556f62945cf4fed2007fa0977a58e18d1",
+  "stage": "groebner_lex",
+  "stage_timeouts": [
+    "groebner_grevlex",
+    "groebner_lex"
+  ],
+  "stages": {
+    "bounds": 0.0011218951549381018,
+    "encode": 0.10066181793808937,
+    "groebner_grevlex": 15.02569488901645,
+    "groebner_lex": 22.00008179806173,
+    "numeric_and_pslq": 0.10080357687547803
+  },
+  "status": "timeout",
+  "system_bytes": 1052,
+  "system_sha256": "3c2305a81a82219d857005a8bf0bdac9ecbb5a664dddd7b968cfe9321f3bddbd",
+  "target_symbol": "t3",
+  "total_terms": 65,
+  "variables": 8,
+  "process_wall_seconds": 37.72804423701018,
+  "process_returncode": 0,
+  "hard_timeout": false,
+  "charged_seconds": 37.72804423701018
+}

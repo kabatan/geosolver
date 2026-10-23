@@ -1,0 +1,86 @@
+{
+  "id": "AIME-2011-I-04",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 125
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 117
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 120
+      },
+      {
+        "left": "ay",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(120, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(ax, ay)",
+        "name": "A"
+      },
+      {
+        "expression": "Incenter(A, B, C)",
+        "name": "I"
+      },
+      {
+        "expression": "Intersect(Line(A, I), Line(B, C))",
+        "name": "L"
+      },
+      {
+        "expression": "Intersect(Line(B, I), Line(A, C))",
+        "name": "K"
+      },
+      {
+        "expression": "FootOfPerpendicular(Line(B, K), C)",
+        "name": "M"
+      },
+      {
+        "expression": "FootOfPerpendicular(Line(A, L), C)",
+        "name": "N"
+      }
+    ],
+    "id": "AIME-2011-I-04",
+    "target": "Distance(M, N)",
+    "variables": [
+      "ax",
+      "ay"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/AIME-2011-I-04.json",
+  "source_sha256": "db12bf7b89851fe69729ef08c157f47cdecf12709d701ef63b252941c377d6de",
+  "saved_seed": 0,
+  "eligible_records": 200,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 56.000000000000064,
+      "x": [
+        68.06666666666658,
+        104.84240024383773
+      ],
+      "saved_residual": 1.0298703575695889e-12
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

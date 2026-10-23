@@ -1,0 +1,129 @@
+{
+  "bound_derivation": {
+    "bounds": [
+      "5",
+      "10",
+      "False",
+      "False"
+    ],
+    "explicit_rules": [
+      {
+        "condition_index": 2,
+        "normalized_expression": "OnSegment(Intersect(Line(Point(5, 5 * sqrt(3)), Point(0, 0)), Circle(Point(x, oy), r), exclude=Point(5, 5 * sqrt(3))), Point(5, 5 * sqrt(3)), Point(0, 0))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 3,
+        "normalized_expression": "OnSegment(Intersect(Line(Point(5, 5 * sqrt(3)), Point(10, 0)), Circle(Point(x, oy), r), exclude=Point(5, 5 * sqrt(3))), Point(5, 5 * sqrt(3)), Point(10, 0))",
+        "operator": "=",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 4,
+        "normalized_expression": "Distance(Point(5, 5 * sqrt(3)), Intersect(Line(Point(5, 5 * sqrt(3)), Point(0, 0)), Circle(Point(x, oy), r), exclude=Point(5, 5 * sqrt(3)))) + Distance(Point(5, 5 * sqrt(3)), Intersect(Line(Point(5, 5 * sqrt(3)), Point(10, 0)), Circle(Point(x, oy), r), exclude=Point(5, 5 * sqrt(3))))",
+        "operator": "=",
+        "rational_endpoint": "13"
+      },
+      {
+        "condition_index": 5,
+        "normalized_expression": "x",
+        "operator": ">",
+        "rational_endpoint": "5"
+      },
+      {
+        "condition_index": 6,
+        "normalized_expression": "x",
+        "operator": "<",
+        "rational_endpoint": "10"
+      },
+      {
+        "condition_index": 7,
+        "normalized_expression": "oy",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 8,
+        "normalized_expression": "r",
+        "operator": ">",
+        "rational_endpoint": "0"
+      }
+    ],
+    "method": "conservative_rational_interval_arithmetic"
+  },
+  "candidate_union_P": "t11**2 - 10*t11 + 15",
+  "candidates": [
+    {
+      "P": "t11**2 - 10*t11 + 15",
+      "candidate_status": "proposed",
+      "float_guard": true,
+      "float_hard": true,
+      "hp_coordinates": [
+        "8.162277660168379331998893544432718533719555139325216826857504852792594438639238221344251399823472864",
+        "4.907477288111818998327764634266638373004614885796078446158119775113810214574933438396581781453940662",
+        "4.907477288111818998327764634266638373004614885796078446158119775113810214574933438396581781453940662"
+      ],
+      "hp_guard": true,
+      "hp_hard": true,
+      "hp_residual": "5.15853847385e-87",
+      "hp_value": "8.162277660168379331998893544432718533719555139325216826857504852792594438639238221344251399823472864",
+      "iterations": 3,
+      "k": 1,
+      "numeric_fixed_columns": [],
+      "proposal_kind": "100_digit_polished_saved_endpoint",
+      "rank": 3,
+      "rechecked_residual": 1.7832846310739114e-11,
+      "root_interval": [
+        "17645809026725/2161873163521",
+        "5580094768081/683644320912"
+      ],
+      "saved_residual": 2.6142832456597138e-11,
+      "value_float": 8.162277660107023,
+      "x": [
+        8.162277660107023,
+        4.907477288088704,
+        4.9074772880721245
+      ]
+    }
+  ],
+  "detail": "fixed stage or global budget exhausted",
+  "equations": 14,
+  "grevlex_incomplete": true,
+  "group": "development323",
+  "id": "JMO-2024-PRE-03",
+  "identities": [],
+  "input_sha256": "72a27fd341e491d84503889e93730b900efc14bda548943755ff5fa9e729b580",
+  "max_degree": 2,
+  "nondeg_factors": [],
+  "official_answer_loaded": false,
+  "primary_main_output_available": false,
+  "proposed_candidate_count": 1,
+  "saved_candidate_count": 1,
+  "seconds": 39.35375978820957,
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2024-PRE-03.json",
+  "source_sha256": "88fcfecfaab6901b882026dc616c9c312793bbffa510c88fd14d9ceadd2014fd",
+  "stage": "groebner_lex",
+  "stage_timeouts": [
+    "groebner_grevlex",
+    "groebner_lex"
+  ],
+  "stages": {
+    "bounds": 0.002206651959568262,
+    "encode": 0.417535592103377,
+    "groebner_grevlex": 15.001272529130802,
+    "groebner_lex": 22.000082415062934,
+    "numeric_and_pslq": 0.12714823009446263
+  },
+  "status": "timeout",
+  "system_bytes": 597,
+  "system_sha256": "9c364c52e67a79b364fb14ef0fafdc7db1f8b774d05dfbb279d4782c8ff8e390",
+  "target_symbol": "t11",
+  "total_terms": 55,
+  "variables": 14,
+  "process_wall_seconds": 39.82186851114966,
+  "process_returncode": 0,
+  "hard_timeout": false,
+  "charged_seconds": 39.82186851114966
+}

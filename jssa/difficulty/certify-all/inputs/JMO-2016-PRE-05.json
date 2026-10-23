@@ -1,0 +1,120 @@
+{
+  "id": "JMO-2016-PRE-05",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 20
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": 16
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": "Distance(A, C)"
+      },
+      {
+        "left": "Distance(A, P)",
+        "operator": "=",
+        "right": "Distance(A, D)"
+      },
+      {
+        "left": "Distance(B, P)",
+        "operator": "=",
+        "right": "Distance(C, D)"
+      },
+      {
+        "left": "Collinear(C, P, D)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(P, C, D)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Area(A, P, D)",
+        "operator": "=",
+        "right": 28
+      },
+      {
+        "left": "by",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "py",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "SimplePolygon([A,B,C,D])"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(16, 0)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(bx, by)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(px, py)",
+        "name": "P"
+      }
+    ],
+    "id": "JMO-2016-PRE-05",
+    "target": "Area(B, C, P)",
+    "variables": [
+      "bx",
+      "by",
+      "cx",
+      "cy",
+      "px",
+      "py"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2016-PRE-05.json",
+  "source_sha256": "2beebf0437e0f086e2e7e8d877cf88b237101679af3a6feb1d990b91bb7cb811",
+  "saved_seed": 0,
+  "eligible_records": 85,
+  "candidates": [
+    {
+      "k": 1,
+      "value_float": 15.74999999999997,
+      "x": [
+        11.101296196019762,
+        16.636142063839117,
+        14.471589283304048,
+        13.804821752393597,
+        15.612494995995997,
+        3.5
+      ],
+      "saved_residual": 6.153480596427404e-15
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

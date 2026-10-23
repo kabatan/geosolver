@@ -1,0 +1,196 @@
+{
+  "id": "JMO-2020-PRE-11",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Collinear(A, K, N)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Collinear(D, K, M)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, K)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(D, K)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(K, M)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "OnCircle(P, Omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(D, Omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(A, GammaA)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(P, GammaA)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(D, GammaD)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(P, GammaD)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "g1",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "g2",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "g3",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "g4",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "g1 + g2 + g3 + g4",
+        "operator": "<",
+        "right": "2 * pi"
+      },
+      {
+        "left": "Distance(O, K)",
+        "operator": "<",
+        "right": "r"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C, D, P])"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "O"
+      },
+      {
+        "expression": "Point(r, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(r * cos(g1), r * sin(g1))",
+        "name": "B"
+      },
+      {
+        "expression": "Point(r * cos(g1 + g2), r * sin(g1 + g2))",
+        "name": "C"
+      },
+      {
+        "expression": "Point(r * cos(g1 + g2 + g3), r * sin(g1 + g2 + g3))",
+        "name": "D"
+      },
+      {
+        "expression": "Point(r * cos(g1 + g2 + g3 + g4), r * sin(g1 + g2 + g3 + g4))",
+        "name": "P"
+      },
+      {
+        "expression": "Midpoint(A, B)",
+        "name": "M"
+      },
+      {
+        "expression": "Midpoint(C, D)",
+        "name": "N"
+      },
+      {
+        "expression": "PerpendicularLine(Line(A, B), A)",
+        "name": "perpA"
+      },
+      {
+        "expression": "PerpendicularBisector(A, P)",
+        "name": "bisAP"
+      },
+      {
+        "expression": "Intersect(perpA, bisAP)",
+        "name": "OA"
+      },
+      {
+        "expression": "CircleThroughPoint(OA, A)",
+        "name": "GammaA"
+      },
+      {
+        "expression": "PerpendicularLine(Line(C, D), D)",
+        "name": "perpD"
+      },
+      {
+        "expression": "PerpendicularBisector(D, P)",
+        "name": "bisDP"
+      },
+      {
+        "expression": "Intersect(perpD, bisDP)",
+        "name": "OD"
+      },
+      {
+        "expression": "CircleThroughPoint(OD, D)",
+        "name": "GammaD"
+      },
+      {
+        "expression": "Intersect(GammaA, GammaD, exclude=P)",
+        "name": "K"
+      },
+      {
+        "expression": "Circle(O, r)",
+        "name": "Omega"
+      },
+      {
+        "expression": "Intersect(Line(P, K), Omega, exclude=P)",
+        "name": "Q"
+      }
+    ],
+    "id": "JMO-2020-PRE-11",
+    "target": "Distance(C, Q)",
+    "variables": [
+      "r",
+      "g1",
+      "g2",
+      "g3",
+      "g4"
+    ]
+  },
+  "source_kind": "missing_saved_candidate",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2020-PRE-11.json",
+  "source_sha256": "7d6c7c5197692e4d9af86229624f33a65d2aa7f0b99e4addef649f863be14f3e",
+  "saved_seed": 0,
+  "eligible_records": 0,
+  "candidates": [],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

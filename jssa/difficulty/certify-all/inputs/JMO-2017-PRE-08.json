@@ -1,0 +1,119 @@
+{
+  "id": "JMO-2017-PRE-08",
+  "group": "development323",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Angle(B, A, D)",
+        "operator": "=",
+        "right": "Angle(A, C, E)"
+      },
+      {
+        "left": "Angle(A, B, D)",
+        "operator": "=",
+        "right": "Angle(C, A, E)"
+      },
+      {
+        "left": "Distance(B, F)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(C, F)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(X, D)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "ay",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "d",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "d",
+        "operator": "<",
+        "right": "e"
+      },
+      {
+        "left": "e",
+        "operator": "<",
+        "right": "11"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(11, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(ax, ay)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(d, 0)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(e, 0)",
+        "name": "E"
+      },
+      {
+        "expression": "Circumcircle(A, B, E)",
+        "name": "Gamma1"
+      },
+      {
+        "expression": "Circumcircle(A, D, C)",
+        "name": "Gamma2"
+      },
+      {
+        "expression": "Intersect(Gamma1, Gamma2, exclude=A)",
+        "name": "X"
+      },
+      {
+        "expression": "Intersect(Line(A, X), Line(B, C))",
+        "name": "F"
+      }
+    ],
+    "id": "JMO-2017-PRE-08",
+    "target": "Distance(X, E)",
+    "variables": [
+      "ax",
+      "ay",
+      "d",
+      "e"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2017-PRE-08.json",
+  "source_sha256": "79235e1b2c7bb683090eef259a6091e0701014b4da4f1ddbf651a93a3eb7b942",
+  "saved_seed": 0,
+  "eligible_records": 47,
+  "candidates": [
+    {
+      "k": 12,
+      "value_float": 3.2863353447657087,
+      "x": [
+        5.151866199309551,
+        3.428263808165121,
+        3.4813380005931407,
+        6.822394399229157
+      ],
+      "saved_residual": 2.2702253416182687e-09
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}

@@ -1,0 +1,128 @@
+{
+  "bound_derivation": {
+    "bounds": [
+      "0",
+      "oo",
+      "False",
+      "False"
+    ],
+    "explicit_rules": [
+      {
+        "condition_index": 0,
+        "normalized_expression": "Distance(Point(0, 0), Incenter(Point(0, 0), Point(b, 0), Point(cx, cy)))",
+        "operator": "=",
+        "rational_endpoint": "3"
+      },
+      {
+        "condition_index": 1,
+        "normalized_expression": "Distance(Incenter(Point(0, 0), Point(b, 0), Point(cx, cy)), IncircleContactPoint(Point(0, 0), Point(b, 0), Point(cx, cy), side='BC'))",
+        "operator": "=",
+        "rational_endpoint": "1"
+      },
+      {
+        "condition_index": 2,
+        "normalized_expression": "Distance(IncircleContactPoint(Point(0, 0), Point(b, 0), Point(cx, cy), side='BC'), ContactPoint(Excircle(Point(0, 0), Point(b, 0), Point(cx, cy), vertex='A'), Line(Point(b, 0), Point(cx, cy))))",
+        "operator": "=",
+        "rational_endpoint": "2"
+      },
+      {
+        "condition_index": 3,
+        "normalized_expression": "b",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 4,
+        "normalized_expression": "cy",
+        "operator": ">",
+        "rational_endpoint": "0"
+      },
+      {
+        "condition_index": 5,
+        "normalized_expression": "Area(Point(0, 0), Point(b, 0), Point(cx, cy))",
+        "operator": ">",
+        "rational_endpoint": "0"
+      }
+    ],
+    "method": "conservative_rational_interval_arithmetic"
+  },
+  "candidate_union_P": "t32**2 - 32/9",
+  "candidates": [
+    {
+      "P": "t32**2 - 32/9",
+      "candidate_status": "proposed",
+      "float_guard": true,
+      "float_hard": true,
+      "hp_coordinates": [
+        "3.639718489050788977522337848858216445912111303319626153260031096696100592038908049915746925421909806",
+        "4.386447713706169204739596104667501680153864347026375896980024186319189349363629585838678736173474611",
+        "3.544785055636411254983286067642994040508120661361670351278220677572537622947042749289165897857803063"
+      ],
+      "hp_guard": true,
+      "hp_hard": true,
+      "hp_residual": "1.10917849713e-77",
+      "hp_value": "1.885618083164126731735584965612930771426229167169264097568906317320976637949488936177406456057060739",
+      "iterations": 3,
+      "k": 0,
+      "numeric_fixed_columns": [],
+      "proposal_kind": "100_digit_polished_saved_endpoint",
+      "rank": 3,
+      "rechecked_residual": 4.762048533279994e-10,
+      "root_interval": [
+        "2558767265025/1356991263433",
+        "3445498353922/1827251437969"
+      ],
+      "saved_residual": 4.955321221442677e-10,
+      "value_float": 1.8856180830012694,
+      "x": [
+        3.639718489543742,
+        4.386447712753867,
+        3.5447850575309556
+      ]
+    }
+  ],
+  "detail": "fixed stage or global budget exhausted",
+  "equations": 36,
+  "grevlex_incomplete": true,
+  "group": "development323",
+  "id": "JMO-2018-PRE-09",
+  "identities": [],
+  "input_sha256": "fd2276024db6a1e93abb3bd166280f8262e47b82f12d76ace34f6871ffe25092",
+  "max_degree": 7,
+  "nondeg_factors": [
+    "s1 + s2 + s3",
+    "s1 - s2 - s3",
+    "p10*p21 - p10*p23 - p11*p20 + p11*p22 - p14*p21 + p14*p23 + p15*p20 - p15*p22",
+    "p10*p21 + p11*p18 - p11*p20 - p16*p21"
+  ],
+  "official_answer_loaded": false,
+  "primary_main_output_available": false,
+  "proposed_candidate_count": 1,
+  "saved_candidate_count": 1,
+  "seconds": 39.85414661606774,
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/minima/raw-323/JMO-2018-PRE-09.json",
+  "source_sha256": "a96ceeffa09df7c89ad5a32b37e938d4768f37fdda4cc70f4c3a6cf1f214b7e4",
+  "stage": "groebner_lex",
+  "stage_timeouts": [
+    "groebner_grevlex",
+    "groebner_lex"
+  ],
+  "stages": {
+    "bounds": 0.0063645378686487675,
+    "encode": 1.8802359141409397,
+    "groebner_grevlex": 15.001888897968456,
+    "groebner_lex": 22.00225158687681,
+    "numeric_and_pslq": 0.08269302709959447
+  },
+  "status": "timeout",
+  "system_bytes": 6068,
+  "system_sha256": "5a215cf110135189f2a2d1d3157f6b834cfd12eb9bd5d5265522c72beab0e801",
+  "target_symbol": "t32",
+  "total_terms": 321,
+  "variables": 36,
+  "process_wall_seconds": 40.10361466300674,
+  "process_returncode": 0,
+  "hard_timeout": false,
+  "charged_seconds": 40.10361466300674
+}

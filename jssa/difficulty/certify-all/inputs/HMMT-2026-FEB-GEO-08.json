@@ -1,0 +1,101 @@
+{
+  "id": "HMMT-2026-FEB-GEO-08",
+  "group": "holdout2026",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, P)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "Distance(A, Q)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Dot(Vector(A, P), Vector(A, Q))",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "Dot(Vector(A, Q), Vector(A, M))",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, P)",
+        "operator": "<",
+        "right": "Distance(A, Q)"
+      },
+      {
+        "left": "Distance(A, Q)",
+        "operator": "<",
+        "right": "Distance(A, M)"
+      },
+      {
+        "left": "ay",
+        "operator": ">",
+        "right": 0
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(7, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(ax, ay)",
+        "name": "A"
+      },
+      {
+        "expression": "Orthocenter(A, B, C)",
+        "name": "H"
+      },
+      {
+        "expression": "AngleBisector(B, A, C)",
+        "name": "bis"
+      },
+      {
+        "expression": "Intersect(bis, Circumcircle(A, B, H), exclude=A)",
+        "name": "P"
+      },
+      {
+        "expression": "Intersect(bis, Circumcircle(A, C, H), exclude=A)",
+        "name": "Q"
+      },
+      {
+        "expression": "Intersect(bis, Circumcircle(A, B, C), exclude=A)",
+        "name": "M"
+      }
+    ],
+    "id": "HMMT-2026-FEB-GEO-08",
+    "target": "Distance(A, M)",
+    "variables": [
+      "ax",
+      "ay"
+    ]
+  },
+  "source_kind": "saved_local_search_endpoints",
+  "source_path": "jssa/difficulty/new2026-predict/raw/HMMT-2026-FEB-GEO-08.json",
+  "source_sha256": "28767c275bcb41dca649bc4be8f7336162efb57172d6fada67fb017e0ef88023",
+  "saved_seed": 5,
+  "eligible_records": 195,
+  "candidates": [
+    {
+      "k": 0,
+      "value_float": 8.306623862928724,
+      "x": [
+        2.9066697241110457,
+        6.377220420560722
+      ],
+      "saved_residual": 4.72473410033703e-11
+    }
+  ],
+  "primary_main_output_available": false,
+  "source_status": "ok"
+}
