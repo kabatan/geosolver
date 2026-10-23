@@ -1,0 +1,68 @@
+{
+  "conditions": [
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "OnSegment(D, B, C)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": 7
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "A"
+    },
+    {
+      "expression": "Point(5, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(cx, cy)",
+      "name": "C"
+    },
+    {
+      "expression": "Incenter(A, B, C)",
+      "name": "I"
+    },
+    {
+      "expression": "Intersect(Line(A, I), Line(B, C))",
+      "name": "D"
+    },
+    {
+      "expression": "Circumcircle(A, B, C)",
+      "name": "omega"
+    },
+    {
+      "expression": "Intersect(Line(A, D), omega, exclude=A)",
+      "name": "E"
+    },
+    {
+      "expression": "Circle(Midpoint(D, E), Distance(D, E) / 2)",
+      "name": "gamma"
+    },
+    {
+      "expression": "Intersect(omega, gamma, exclude=E)",
+      "name": "F"
+    }
+  ],
+  "id": "AIME-2012-II-15",
+  "target": "Distance(A, F) ** 2",
+  "variables": [
+    "cx",
+    "cy"
+  ]
+}

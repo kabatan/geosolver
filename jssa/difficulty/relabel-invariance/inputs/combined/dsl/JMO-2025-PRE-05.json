@@ -1,0 +1,170 @@
+{
+  "conditions": [
+    {
+      "left": "Radius(i2)",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "Vector(B,P).x*Vector(B,O).x+Vector(B,P).y*Vector(B,O).y",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "gamma - beta",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "2 * pi - delta",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "OnCircle(P, Gamma)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(T1, Line(D, P))",
+      "operator": "=",
+      "right": 6
+    },
+    {
+      "left": "Radius(i1)",
+      "operator": "=",
+      "right": 5
+    },
+    {
+      "left": "Distance(T1, Line(B, C))",
+      "operator": "=",
+      "right": 6
+    },
+    {
+      "left": "Vector(C,D).x*Vector(C,O).x+Vector(C,D).y*Vector(C,O).y",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Vector(P,D).x*Vector(P,Q).x+Vector(P,D).y*Vector(P,Q).y",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "delta - gamma",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "beta",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(T1, Line(P, B))",
+      "operator": "=",
+      "right": 6
+    },
+    {
+      "left": "Distance(T1, Line(C, D))",
+      "operator": "=",
+      "right": 6
+    },
+    {
+      "left": "Vector(B,C).x*Vector(B,Q).x+Vector(B,C).y*Vector(B,Q).y",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "predicate": "ConvexPolygon([B, C, D, P])"
+    },
+    {
+      "predicate": "Or(And((Vector(B,C).x*Vector(B,T1).y-Vector(B,C).y*Vector(B,T1).x)>0,(Vector(C,D).x*Vector(C,T1).y-Vector(C,D).y*Vector(C,T1).x)>0,(Vector(D,P).x*Vector(D,T1).y-Vector(D,P).y*Vector(D,T1).x)>0,(Vector(P,B).x*Vector(P,T1).y-Vector(P,B).y*Vector(P,T1).x)>0),And((Vector(B,C).x*Vector(B,T1).y-Vector(B,C).y*Vector(B,T1).x)<0,(Vector(C,D).x*Vector(C,T1).y-Vector(C,D).y*Vector(C,T1).x)<0,(Vector(D,P).x*Vector(D,T1).y-Vector(D,P).y*Vector(D,T1).x)<0,(Vector(P,B).x*Vector(P,T1).y-Vector(P,B).y*Vector(P,T1).x)<0))"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "T1"
+    },
+    {
+      "expression": "Circle(T1, 6)",
+      "name": "omega"
+    },
+    {
+      "expression": "Point(6, 0)",
+      "name": "T2"
+    },
+    {
+      "expression": "Point(6 * cos(beta), 6 * sin(beta))",
+      "name": "T3"
+    },
+    {
+      "expression": "Point(6 * cos(gamma), 6 * sin(gamma))",
+      "name": "T4"
+    },
+    {
+      "expression": "Point(6 * cos(delta), 6 * sin(delta))",
+      "name": "A"
+    },
+    {
+      "expression": "PerpendicularLine(Line(T1, T2), T2)",
+      "name": "l1"
+    },
+    {
+      "expression": "PerpendicularLine(Line(T1, T3), T3)",
+      "name": "l2"
+    },
+    {
+      "expression": "PerpendicularLine(Line(T1, T4), T4)",
+      "name": "l3"
+    },
+    {
+      "expression": "PerpendicularLine(Line(T1, A), A)",
+      "name": "l4"
+    },
+    {
+      "expression": "Intersect(l4, l1)",
+      "name": "B"
+    },
+    {
+      "expression": "Intersect(l1, l2)",
+      "name": "C"
+    },
+    {
+      "expression": "Intersect(l2, l3)",
+      "name": "D"
+    },
+    {
+      "expression": "Intersect(l3, l4)",
+      "name": "P"
+    },
+    {
+      "expression": "Circumcircle(B, C, D)",
+      "name": "Gamma"
+    },
+    {
+      "expression": "Intersect(Line(B, C), Line(P, D))",
+      "name": "Q"
+    },
+    {
+      "expression": "Intersect(Line(B, P), Line(C, D))",
+      "name": "O"
+    },
+    {
+      "expression": "Incircle(Q, C, D)",
+      "name": "i1"
+    },
+    {
+      "expression": "Incircle(O, D, P)",
+      "name": "i2"
+    }
+  ],
+  "id": "JMO-2025-PRE-05",
+  "target": "Distance(C, D) / Distance(D, P)",
+  "variables": [
+    "delta",
+    "gamma",
+    "beta"
+  ]
+}

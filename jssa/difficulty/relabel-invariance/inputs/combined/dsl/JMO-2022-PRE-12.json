@@ -1,0 +1,90 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(A, P)",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "Vector(H, B).x * Vector(H, A).y - Vector(H, B).y * Vector(H, A).x",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "cx",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Vector(C, H).x * Vector(C, A).y - Vector(C, H).y * Vector(C, A).x",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Angle(B, C, A)",
+      "operator": "=",
+      "right": "Angle(H, A, P)"
+    },
+    {
+      "left": "Vector(B, C).x * Vector(B, A).y - Vector(B, C).y * Vector(B, A).x",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(B, H)",
+      "operator": "=",
+      "right": 10
+    },
+    {
+      "left": "OnCircle(A, Gamma)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "predicate": "AcuteTriangle(B, C, H)"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(11, 0)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(cx, cy)",
+      "name": "H"
+    },
+    {
+      "expression": "Orthocenter(B, C, H)",
+      "name": "M"
+    },
+    {
+      "expression": "Midpoint(C, H)",
+      "name": "P"
+    },
+    {
+      "expression": "Point(px, py)",
+      "name": "A"
+    },
+    {
+      "expression": "Circumcircle(C, M, H)",
+      "name": "Gamma"
+    }
+  ],
+  "id": "JMO-2022-PRE-12",
+  "target": "Distance(C, H)",
+  "variables": [
+    "py",
+    "cy",
+    "cx",
+    "px"
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "conditions": [
+    {
+      "left": "Angle(C, Q, M)",
+      "operator": "=",
+      "right": "3 * pi / 4"
+    },
+    {
+      "left": "Angle(C, A, M)",
+      "operator": "=",
+      "right": "3 * pi / 4"
+    },
+    {
+      "left": "s",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "p",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "p",
+      "operator": "<",
+      "right": "1"
+    },
+    {
+      "left": "q",
+      "operator": ">",
+      "right": "p"
+    },
+    {
+      "left": "q",
+      "operator": "<",
+      "right": "1"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(s, 0)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(s, s)",
+      "name": "D"
+    },
+    {
+      "expression": "Point(0, s)",
+      "name": "M"
+    },
+    {
+      "expression": "Midpoint(C, D)",
+      "name": "P"
+    },
+    {
+      "expression": "Point(p * s, p * s / 2)",
+      "name": "Q"
+    },
+    {
+      "expression": "Point(q * s, q * s / 2)",
+      "name": "A"
+    }
+  ],
+  "id": "HMMT-2023-FEB-GEO-04",
+  "target": "Distance(B, A) / Distance(B, Q)",
+  "variables": [
+    "s",
+    "p",
+    "q"
+  ]
+}

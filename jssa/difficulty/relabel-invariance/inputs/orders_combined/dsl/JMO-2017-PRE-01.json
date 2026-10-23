@@ -1,0 +1,71 @@
+{
+  "conditions": [
+    {
+      "predicate": "SimplePolygon([A,B,C,D])"
+    },
+    {
+      "left": "Area(A, C, D)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Area(A, B, C)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "dy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Angle(B, C, D)",
+      "operator": "=",
+      "right": "pi / 6"
+    },
+    {
+      "left": "Angle(A, B, C)",
+      "operator": "=",
+      "right": "pi / 6"
+    },
+    {
+      "left": "Angle(D, A, B)",
+      "operator": "=",
+      "right": "pi / 6"
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": "2 * sqrt(3)"
+    },
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 4
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "A"
+    },
+    {
+      "expression": "Point(4, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(1, sqrt(3))",
+      "name": "C"
+    },
+    {
+      "expression": "Point(dx, dy)",
+      "name": "D"
+    }
+  ],
+  "id": "JMO-2017-PRE-01",
+  "target": "Area(A, B, C, D)",
+  "variables": [
+    "dy",
+    "dx"
+  ]
+}

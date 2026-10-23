@@ -1,0 +1,91 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(X, R)",
+      "operator": "=",
+      "right": 9
+    },
+    {
+      "left": "Distance(X, S)",
+      "operator": "=",
+      "right": 2
+    },
+    {
+      "left": "Collinear(P, R, X)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Collinear(Q, S, X)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(Line(P, R), O1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(Line(Q, S), O2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "theta",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "theta",
+      "operator": "<",
+      "right": "pi"
+    },
+    {
+      "left": "p",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "q",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "X"
+    },
+    {
+      "expression": "Point(9, 0)",
+      "name": "R"
+    },
+    {
+      "expression": "Point(2 * cos(theta), 2 * sin(theta))",
+      "name": "S"
+    },
+    {
+      "expression": "Point(p, 0)",
+      "name": "P"
+    },
+    {
+      "expression": "Point(q * cos(theta), q * sin(theta))",
+      "name": "Q"
+    },
+    {
+      "expression": "Circumcircle(P, Q, S)",
+      "name": "O1"
+    },
+    {
+      "expression": "Circumcircle(P, Q, R)",
+      "name": "O2"
+    }
+  ],
+  "id": "JMO-2013-PRE-05",
+  "target": "Radius(O1) / Radius(O2)",
+  "variables": [
+    "theta",
+    "p",
+    "q"
+  ]
+}

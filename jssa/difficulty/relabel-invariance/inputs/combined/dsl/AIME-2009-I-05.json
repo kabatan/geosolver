@@ -1,0 +1,76 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(B, A)",
+      "operator": "=",
+      "right": 450
+    },
+    {
+      "left": "Distance(K, A)",
+      "operator": "=",
+      "right": 300
+    },
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": 180
+    },
+    {
+      "left": "Area(B, K, A)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "by",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "A"
+    },
+    {
+      "expression": "Point(ax, ay)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(bx, by)",
+      "name": "K"
+    },
+    {
+      "expression": "Midpoint(B, A)",
+      "name": "I"
+    },
+    {
+      "expression": "Incenter(B, K, A)",
+      "name": "L"
+    },
+    {
+      "expression": "Intersect(Line(A, L), Line(B, K))",
+      "name": "P"
+    },
+    {
+      "expression": "Intersect(Line(K, I), Line(A, P))",
+      "name": "M"
+    },
+    {
+      "expression": "Reflect(M, I)",
+      "name": "C"
+    }
+  ],
+  "id": "AIME-2009-I-05",
+  "target": "Distance(P, M)",
+  "variables": [
+    "ax",
+    "by",
+    "ay",
+    "bx"
+  ]
+}

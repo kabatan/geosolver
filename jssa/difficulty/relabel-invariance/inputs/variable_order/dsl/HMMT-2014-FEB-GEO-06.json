@@ -1,0 +1,72 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 5
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": 6
+    },
+    {
+      "left": "Distance(C, D)",
+      "operator": "=",
+      "right": 5
+    },
+    {
+      "left": "Distance(D, A)",
+      "operator": "=",
+      "right": 4
+    },
+    {
+      "left": "Dx",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Dx",
+      "operator": "<",
+      "right": "5"
+    },
+    {
+      "left": "Dy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Dy",
+      "operator": "<",
+      "right": "6"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "A"
+    },
+    {
+      "expression": "Point(5, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(5, 6)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(Dx, Dy)",
+      "name": "D"
+    },
+    {
+      "expression": "Intersect(Line(A, C), Line(B, D))",
+      "name": "E"
+    }
+  ],
+  "id": "HMMT-2014-FEB-GEO-06",
+  "target": "Distance(B, E) / Distance(E, D)",
+  "variables": [
+    "Dy",
+    "Dx"
+  ]
+}

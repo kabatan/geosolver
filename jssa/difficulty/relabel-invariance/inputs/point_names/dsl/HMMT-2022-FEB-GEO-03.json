@@ -1,0 +1,101 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(B, G)",
+      "operator": "=",
+      "right": 1
+    },
+    {
+      "left": "Distance(B, F)",
+      "operator": "=",
+      "right": 1
+    },
+    {
+      "left": "Perpendicular(Line(B, G), Line(B, F))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(G, H)",
+      "operator": "=",
+      "right": 1
+    },
+    {
+      "left": "Distance(F, H)",
+      "operator": "=",
+      "right": 1
+    },
+    {
+      "left": "Area(B, G, A, E)",
+      "operator": "=",
+      "right": "1 / 2"
+    },
+    {
+      "left": "ex",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "ey",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "ey",
+      "operator": "<",
+      "right": "ex"
+    },
+    {
+      "left": "gx",
+      "operator": "<",
+      "right": "0"
+    },
+    {
+      "left": "gy",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(1, 0)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(1, 1)",
+      "name": "D"
+    },
+    {
+      "expression": "Point(0, 1)",
+      "name": "E"
+    },
+    {
+      "expression": "Point(ex, ey)",
+      "name": "G"
+    },
+    {
+      "expression": "Point(gx, gy)",
+      "name": "F"
+    },
+    {
+      "expression": "Point(ex + gx, ey + gy)",
+      "name": "H"
+    },
+    {
+      "expression": "Intersect(Line(G, H), Line(D, E))",
+      "name": "A"
+    }
+  ],
+  "id": "HMMT-2022-FEB-GEO-03",
+  "target": "ey / ex",
+  "variables": [
+    "ex",
+    "ey",
+    "gx",
+    "gy"
+  ]
+}

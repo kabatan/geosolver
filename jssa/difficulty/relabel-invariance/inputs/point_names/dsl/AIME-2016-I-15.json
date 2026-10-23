@@ -1,0 +1,158 @@
+{
+  "conditions": [
+    {
+      "left": "OnCircle(Y, omega1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(Y, omega2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(D, omega1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(D, omega2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(Line(B, O1), omega1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(Line(B, O1), omega2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(C, omega1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(A, omega2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(A, omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnLine(A, D, C)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(Y, A)",
+      "operator": "=",
+      "right": 67
+    },
+    {
+      "left": "Distance(Y, D)",
+      "operator": "=",
+      "right": 47
+    },
+    {
+      "left": "Distance(Y, C)",
+      "operator": "=",
+      "right": 37
+    },
+    {
+      "left": "b",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "r1",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "r2",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(Y, Line(B, O1))",
+      "operator": "<",
+      "right": "Distance(D, Line(B, O1))"
+    },
+    {
+      "left": "Distance(C, B)",
+      "operator": "!=",
+      "right": "0"
+    },
+    {
+      "left": "Distance(A, O1)",
+      "operator": "!=",
+      "right": "0"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(b, 0)",
+      "name": "O1"
+    },
+    {
+      "expression": "Point(0, r1)",
+      "name": "O2"
+    },
+    {
+      "expression": "Point(b, r2)",
+      "name": "M"
+    },
+    {
+      "expression": "Circle(O2, r1)",
+      "name": "omega1"
+    },
+    {
+      "expression": "Circle(M, r2)",
+      "name": "omega2"
+    },
+    {
+      "expression": "Midpoint(B, O1)",
+      "name": "X"
+    },
+    {
+      "expression": "Intersect(omega1, omega2, near=X)",
+      "name": "Y"
+    },
+    {
+      "expression": "Intersect(omega1, omega2, exclude=Y)",
+      "name": "D"
+    },
+    {
+      "expression": "Point(dx, dy)",
+      "name": "C"
+    },
+    {
+      "expression": "Circumcircle(B, O1, C)",
+      "name": "omega"
+    },
+    {
+      "expression": "Intersect(omega, omega2, exclude=O1)",
+      "name": "A"
+    }
+  ],
+  "id": "AIME-2016-I-15",
+  "target": "Distance(B, O1) * Distance(B, O1)",
+  "variables": [
+    "b",
+    "r1",
+    "r2",
+    "dx",
+    "dy"
+  ]
+}

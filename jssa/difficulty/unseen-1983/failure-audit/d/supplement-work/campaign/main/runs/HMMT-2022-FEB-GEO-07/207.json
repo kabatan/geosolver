@@ -1,0 +1,72 @@
+{
+  "schema": "q29d-summary-v1",
+  "raw_full_record_saved": false,
+  "raw_canonical_sha256": "13203dc0ccbed9f67bd9f4c765130352bfa221ebc495145cbb4a95f9888d8f32",
+  "recorded_at_utc": "2026-10-23T15:58:47.040951+00:00",
+  "assessment": {
+    "case_id": "HMMT-2022-FEB-GEO-07",
+    "seed": 207,
+    "matched": false,
+    "geometric_matched": false,
+    "official_output_matched": false,
+    "actual_exact_keys": [],
+    "expected_exact_keys": [
+      "[\"algebraic\",[\"2\",\"-169\"],0]"
+    ],
+    "answer_expressions": [],
+    "converted_outputs": [],
+    "conversion_errors": [],
+    "geometric_reference": "169/2",
+    "official_reference": "16902",
+    "n_answers": 0,
+    "extra": 0,
+    "diag_numeric": null,
+    "diag_identified": null,
+    "status": "process_crash",
+    "normal_completion": false,
+    "failure_stage": "runtime",
+    "termination_reason": null,
+    "rejection_tags": [],
+    "wall_seconds": 63.46401223400608,
+    "process_wall_seconds": 63.46401223400608,
+    "cpu_seconds": null,
+    "peak_rss_bytes": null,
+    "phase_timings": {},
+    "counters": {}
+  },
+  "execution": {
+    "case_id": "HMMT-2022-FEB-GEO-07",
+    "seed": 207,
+    "problem_hash": "909142816cd9a60170210501470642198643e1fd211f796dec278b9947195c65",
+    "source_hash": "sha256:d8fd9bb8392ad2984276bab3386e033669246ee79586317917c322d31b4541f5",
+    "dependency_lock_hash": "70025f7a37e2ec2aa3c7b41d7c0e51a5b6ae11d723ee22f551ba040c5008e1e8",
+    "config": {
+      "time_limit_seconds": 180,
+      "cores": 1,
+      "thread_environment": {
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "NUMEXPR_NUM_THREADS": "1"
+      }
+    },
+    "execution_contract_issues": []
+  },
+  "process": {
+    "assigned_cpu": 7,
+    "actual_affinity": [
+      7
+    ],
+    "returncode": 1,
+    "timed_out": false,
+    "elapsed_seconds": 63.46401223400608
+  },
+  "process_stdout_excerpt": "",
+  "process_stderr_excerpt": "╭───────────────────── Traceback (most recent call last) ──────────────────────╮\n│ /tmp/q29d-frozen-60db4b6-2689ab006a3d/src/geosolver/application/cli.py:61 in │\n│ solve                                                                        │\n│                                                                              │\n│   58 │   if output is None:                                                  │\n│   59 │   │   typer.echo(payload, nl=False)                                   │\n│   60 │   else:                                                               │\n│ ❱ 61 │   │   output.write_text(payload, encoding=\"utf-8\", newline=\"\\n\")      │\n│   62 │   if result.status not in {\"solved\", \"no_answer_found\", \"cancelled\"}: │\n│   63 │   │   raise typer.Exit(2)                                             │\n│   64                                                                         │\n│                                                                              │\n│ ╭───────────────────────────────── locals ─────────────────────────────────╮ │\n│ │              cores = '1'                                                 │ │\n│ │            options = SolveOptions(                                       │ │\n│ │                      │   time_limit_seconds=180.0,                       │ │\n│ │                      │   cores=1,                                        │ │\n│ │                      │   seed=207                                        │ │\n│ │                      )                                                   │ │\n│ │             output = PosixPath('/tmp/claude-1000/-home-kabatan-work-sol… │ │\n│ │            payload = '{\\n  \"status\": \"solved\",\\n  \"completeness\":        │ │\n│ │                      \"unknown\",\\n  \"engine\": {\\n    \"name\": \"'+5217714   │ │\n│ │            problem = PosixPath('/tmp/claude-1000/-home-kabatan-work-sol… │ │\n│ │             result = SolveResult(                                        │ │\n│ │                      │   status=<ResultStatus.SOLVED",
+  "answers": [],
+  "engine": null,
+  "diagnostics": {},
+  "group": "main",
+  "started_at_utc": "2026-10-23T15:57:43.452675+00:00",
+  "finished_at_utc": "2026-10-23T15:58:47.057006+00:00"
+}

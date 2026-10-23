@@ -1,0 +1,175 @@
+{
+  "conditions": [
+    {
+      "left": "Area(K, L, M, N)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Area(F, G, H, J)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "predicate": "ConvexPolygon([A, B, C, D])"
+    },
+    {
+      "left": "s",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Area(K, L, M, N)",
+      "operator": "=",
+      "right": 99
+    },
+    {
+      "left": "OnSegment(N, A, B)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(M, A, D)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(L, G, H)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(K, G, H)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Perpendicular(Line(K, L), Line(L, M))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(M, N)",
+      "operator": "=",
+      "right": "Distance(N, K)"
+    },
+    {
+      "left": "Distance(L, M)",
+      "operator": "=",
+      "right": "Distance(M, N)"
+    },
+    {
+      "left": "Distance(K, L)",
+      "operator": "=",
+      "right": "Distance(L, M)"
+    },
+    {
+      "left": "OnSegment(J, B, C)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(H, A, B)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(G, C, E)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(F, C, E)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Perpendicular(Line(F, G), Line(G, H))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(H, J)",
+      "operator": "=",
+      "right": "Distance(J, F)"
+    },
+    {
+      "left": "Distance(G, H)",
+      "operator": "=",
+      "right": "Distance(H, J)"
+    },
+    {
+      "left": "Distance(F, G)",
+      "operator": "=",
+      "right": "Distance(G, H)"
+    },
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": "Distance(B, C)"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, s)",
+      "name": "A"
+    },
+    {
+      "expression": "Point(0, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(s, 0)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(s, s)",
+      "name": "D"
+    },
+    {
+      "expression": "Midpoint(A, D)",
+      "name": "E"
+    },
+    {
+      "expression": "Point(0, h)",
+      "name": "H"
+    },
+    {
+      "expression": "Point(j, 0)",
+      "name": "J"
+    },
+    {
+      "expression": "Point(J.x - (J.y - H.y), J.y + (J.x - H.x))",
+      "name": "F"
+    },
+    {
+      "expression": "Point(H.x - (J.y - H.y), H.y + (J.x - H.x))",
+      "name": "G"
+    },
+    {
+      "expression": "Point(mx, s)",
+      "name": "M"
+    },
+    {
+      "expression": "Point(0, ny)",
+      "name": "N"
+    },
+    {
+      "expression": "Point(N.x - (N.y - M.y), N.y + (N.x - M.x))",
+      "name": "K"
+    },
+    {
+      "expression": "Point(M.x - (N.y - M.y), M.y + (N.x - M.x))",
+      "name": "L"
+    }
+  ],
+  "id": "AIME-2015-I-07",
+  "target": "Area(F, G, H, J)",
+  "variables": [
+    "s",
+    "h",
+    "j",
+    "mx",
+    "ny"
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "conditions": [
+    {
+      "left": "OnCircle(A, Omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(B, Omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(C, Omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": "Distance(A, C)"
+    },
+    {
+      "left": "Distance(D, O)",
+      "operator": "=",
+      "right": "sqrt(3)"
+    },
+    {
+      "left": "Area(A, B, C)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "O"
+    },
+    {
+      "expression": "Point(ax, ay)",
+      "name": "A"
+    },
+    {
+      "expression": "Point(bx, by)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(cx, cy)",
+      "name": "C"
+    },
+    {
+      "expression": "Circle(O, 1)",
+      "name": "Omega"
+    },
+    {
+      "expression": "Reflect(C, Line(A, B))",
+      "name": "D"
+    }
+  ],
+  "id": "HMMT-2019-FEB-GEO-05",
+  "target": "Area(A, B, C)",
+  "variables": [
+    "cy",
+    "cx",
+    "by",
+    "bx",
+    "ay",
+    "ax"
+  ]
+}

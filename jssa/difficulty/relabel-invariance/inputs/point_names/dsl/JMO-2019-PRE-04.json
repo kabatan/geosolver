@@ -1,0 +1,87 @@
+{
+  "conditions": [
+    {
+      "left": "Collinear(B, H, C)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Collinear(D, A, E)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Collinear(G, H, A)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(C, H)",
+      "operator": "=",
+      "right": 4
+    },
+    {
+      "left": "Distance(D, A)",
+      "operator": "=",
+      "right": 5
+    },
+    {
+      "left": "Distance(B, H) + Distance(H, C)",
+      "operator": "=",
+      "right": "Distance(B, C)"
+    },
+    {
+      "left": "Distance(D, A) + Distance(A, E)",
+      "operator": "=",
+      "right": "Distance(D, E)"
+    },
+    {
+      "left": "r",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(r * cos(pi / 2), r * sin(pi / 2))",
+      "name": "B"
+    },
+    {
+      "expression": "Point(r * cos(pi / 2 + 2 * pi / 5), r * sin(pi / 2 + 2 * pi / 5))",
+      "name": "C"
+    },
+    {
+      "expression": "Point(r * cos(pi / 2 + 4 * pi / 5), r * sin(pi / 2 + 4 * pi / 5))",
+      "name": "D"
+    },
+    {
+      "expression": "Point(r * cos(pi / 2 + 6 * pi / 5), r * sin(pi / 2 + 6 * pi / 5))",
+      "name": "E"
+    },
+    {
+      "expression": "Point(r * cos(pi / 2 + 8 * pi / 5), r * sin(pi / 2 + 8 * pi / 5))",
+      "name": "F"
+    },
+    {
+      "expression": "Intersect(Line(C, F), Line(B, D))",
+      "name": "G"
+    },
+    {
+      "expression": "Point(gx, gy)",
+      "name": "H"
+    },
+    {
+      "expression": "Point(hx, hy)",
+      "name": "A"
+    }
+  ],
+  "id": "JMO-2019-PRE-04",
+  "target": "Distance(B, H)",
+  "variables": [
+    "r",
+    "gx",
+    "gy",
+    "hx",
+    "hy"
+  ]
+}

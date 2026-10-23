@@ -1,0 +1,179 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(A, Line(Itri, B))",
+      "operator": ">=",
+      "right": "r"
+    },
+    {
+      "left": "r",
+      "operator": "<",
+      "right": "4"
+    },
+    {
+      "left": "Distance(A, IC)",
+      "operator": "=",
+      "right": "2 * r"
+    },
+    {
+      "left": "Distance(A, O)",
+      "operator": "=",
+      "right": "2 * r"
+    },
+    {
+      "left": "Vector(C, Itri).x * Vector(C, A).y - Vector(C, Itri).y * Vector(C, A).x",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(O, Line(Itri, C))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(IB, Line(B, Itri))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Vector(Itri, B).x * Vector(Itri, A).y - Vector(Itri, B).y * Vector(Itri, A).x",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "OnLine(IC, C, IA)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(IC, Line(C, Itri))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(C, Itri)",
+      "operator": "=",
+      "right": 14
+    },
+    {
+      "left": "Distance(A, Line(B, C))",
+      "operator": ">=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(IB, Line(B, C))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(A, Line(C, Itri))",
+      "operator": ">=",
+      "right": "r"
+    },
+    {
+      "left": "OnLine(O, Itri, IA)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "predicate": "ConvexPolygon([B, C, Itri])"
+    },
+    {
+      "left": "Distance(IC, Line(C, B))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "r",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(Itri, B)",
+      "operator": "=",
+      "right": 15
+    },
+    {
+      "left": "Distance(O, Line(Itri, B))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "OnLine(IB, B, IA)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Vector(B, C).x * Vector(B, A).y - Vector(B, C).y * Vector(B, A).x",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(A, IB)",
+      "operator": "=",
+      "right": "2 * r"
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": 13
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(13, 0)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(99 / 13, 168 / 13)",
+      "name": "Itri"
+    },
+    {
+      "expression": "Point(7, 4)",
+      "name": "IA"
+    },
+    {
+      "expression": "PointOnSegment(B, IA, r / 4)",
+      "name": "IB"
+    },
+    {
+      "expression": "PointOnSegment(C, IA, r / 4)",
+      "name": "IC"
+    },
+    {
+      "expression": "PointOnSegment(Itri, IA, r / 4)",
+      "name": "O"
+    },
+    {
+      "expression": "Point(ox, oy)",
+      "name": "A"
+    },
+    {
+      "expression": "Circle(IB, r)",
+      "name": "omegaA"
+    },
+    {
+      "expression": "Circle(IC, r)",
+      "name": "omegaB"
+    },
+    {
+      "expression": "Circle(O, r)",
+      "name": "omegaC"
+    },
+    {
+      "expression": "Circle(A, r)",
+      "name": "omega"
+    }
+  ],
+  "id": "AIME-2007-II-15",
+  "target": "r",
+  "variables": [
+    "r",
+    "ox",
+    "oy"
+  ]
+}

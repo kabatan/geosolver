@@ -1,0 +1,91 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(B, C)",
+      "operator": "!=",
+      "right": "Distance(C, T)"
+    },
+    {
+      "left": "Distance(C, X)",
+      "operator": "=",
+      "right": 16
+    },
+    {
+      "left": "Distance(C, T)",
+      "operator": "=",
+      "right": 22
+    },
+    {
+      "left": "Distance(T, X)",
+      "operator": "=",
+      "right": 16
+    },
+    {
+      "left": "Distance(X, Y) * Distance(X, Y) + Distance(X, A) * Distance(X, A) + Distance(Y, A) * Distance(Y, A)",
+      "operator": "=",
+      "right": 1143
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "!=",
+      "right": "Distance(B, T)"
+    },
+    {
+      "left": "ay",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(B, T)",
+      "operator": "!=",
+      "right": "Distance(C, T)"
+    },
+    {
+      "predicate": "AcuteTriangle(B, C, T)"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(ax, ay)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(-11, 0)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(11, 0)",
+      "name": "T"
+    },
+    {
+      "expression": "Circumcircle(B, C, T)",
+      "name": "Gamma"
+    },
+    {
+      "expression": "Tangent(C, Gamma)",
+      "name": "tB"
+    },
+    {
+      "expression": "Tangent(T, Gamma)",
+      "name": "tC"
+    },
+    {
+      "expression": "Intersect(tB, tC)",
+      "name": "X"
+    },
+    {
+      "expression": "FootOfPerpendicular(X, Line(B, C))",
+      "name": "Y"
+    },
+    {
+      "expression": "FootOfPerpendicular(X, Line(B, T))",
+      "name": "A"
+    }
+  ],
+  "id": "AIME-2020-II-15",
+  "target": "Distance(Y, A) * Distance(Y, A)",
+  "variables": [
+    "ay",
+    "ax"
+  ]
+}

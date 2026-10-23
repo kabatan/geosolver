@@ -1,0 +1,102 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(P, C)",
+      "operator": "=",
+      "right": 7
+    },
+    {
+      "left": "Distance(P, D)",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "Distance(C, D)",
+      "operator": "=",
+      "right": 6
+    },
+    {
+      "left": "Distance(P, B)",
+      "operator": "=",
+      "right": 5
+    },
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 10
+    },
+    {
+      "left": "Perpendicular(Line(P, D), Line(P, B))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Perpendicular(Line(C, D), Line(A, B))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Area(P, C, D) + Area(C, A, D) + Area(A, B, D) + Area(B, P, D)",
+      "operator": "=",
+      "right": "Area(P, C, A, B)"
+    },
+    {
+      "left": "By",
+      "operator": "<",
+      "right": "0"
+    },
+    {
+      "left": "Cx",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "predicate": "ConvexPolygon([P, C, A, B])"
+    },
+    {
+      "left": "(Vector(P, C).x * Vector(P, D).y - Vector(P, C).y * Vector(P, D).x) * (Vector(C, A).x * Vector(C, D).y - Vector(C, A).y * Vector(C, D).x)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "(Vector(P, C).x * Vector(P, D).y - Vector(P, C).y * Vector(P, D).x) * (Vector(A, B).x * Vector(A, D).y - Vector(A, B).y * Vector(A, D).x)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "(Vector(P, C).x * Vector(P, D).y - Vector(P, C).y * Vector(P, D).x) * (Vector(B, P).x * Vector(B, D).y - Vector(B, P).y * Vector(B, D).x)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "P"
+    },
+    {
+      "expression": "Point(3, 0)",
+      "name": "D"
+    },
+    {
+      "expression": "Point(0, 5)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(Bx, By)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(Cx, Cy)",
+      "name": "A"
+    }
+  ],
+  "id": "JMO-2022-PRE-04",
+  "target": "Area(P, C, A)",
+  "variables": [
+    "Bx",
+    "By",
+    "Cx",
+    "Cy"
+  ]
+}

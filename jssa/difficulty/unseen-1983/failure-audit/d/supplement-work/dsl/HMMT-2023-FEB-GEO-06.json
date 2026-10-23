@@ -1,0 +1,90 @@
+{
+  "id": "HMMT-2023-FEB-GEO-06",
+  "variables": [
+    "cx",
+    "cy",
+    "dx",
+    "dy"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(dx, dy)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "((B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((B.x-A.x)*(D.y-A.y)-(B.y-A.y)*(D.x-A.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((C.x-B.x)*(A.y-B.y)-(C.y-B.y)*(A.x-B.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((C.x-B.x)*(D.y-B.y)-(C.y-B.y)*(D.x-B.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((D.x-C.x)*(A.y-C.y)-(D.y-C.y)*(A.x-C.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((D.x-C.x)*(B.y-C.y)-(D.y-C.y)*(B.x-C.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((A.x-D.x)*(B.y-D.y)-(A.y-D.y)*(B.x-D.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "((A.x-D.x)*(C.y-D.y)-(A.y-D.y)*(C.x-D.x))",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "Angle(C, A, B)",
+      "operator": "=",
+      "right": "30*pi/180"
+    },
+    {
+      "left": "Angle(A, D, B)",
+      "operator": "=",
+      "right": "30*pi/180"
+    },
+    {
+      "left": "Angle(A, B, D)",
+      "operator": "=",
+      "right": "77*pi/180"
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": "Distance(C, D)"
+    }
+  ],
+  "target": "Angle(B, C, D)"
+}

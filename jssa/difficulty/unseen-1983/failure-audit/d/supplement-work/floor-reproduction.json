@@ -1,0 +1,25 @@
+{
+  "reproduced_at_utc": "2026-10-23T16:12:20.894257Z",
+  "frozen_commit": "60db4b679b04167175c51c479c87c22fa663fda0",
+  "source_hash": "sha256:d8fd9bb8392ad2984276bab3386e033669246ee79586317917c322d31b4541f5",
+  "decimal_precision": 100,
+  "method": "Direct frozen HP evaluator call at the pre-existing r=7/9 witness; no solver/search invocation",
+  "original_dsl_sha256": "6a6aae4721e04df587587ff6001a6c44ea2628241ab9164a2bee87887a8ad568",
+  "original_target": "(1000*r) // 1",
+  "rewritten_dsl_sha256": "c144a5cf8d108272dabe06416a18d18d2e9e5c275e5cbca4946ba4dc3373da70",
+  "rewritten_target": "r",
+  "original_target_error": {
+    "exception_type": "IRCompileError",
+    "message": "評価エラー (HP モード): unsupported operand type(s) for //: 'mpf' and 'mpf' (expr: '(1000*r) // 1')",
+    "cause_type": "TypeError",
+    "cause_message": "unsupported operand type(s) for //: 'mpf' and 'mpf'",
+    "traceback_excerpt": "Traceback (most recent call last):\n  File \"/tmp/q29d-frozen-60db4b6-2689ab006a3d/src/geosolver/problem/ir/compiler.py\", line 265, in safe_eval_expr_hp\n    return eval(code, {\"__builtins__\": {}, \"_dsl_call\": runtime_call}, context)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<ir_expr_hp>\", line 1, in <module>\nTypeError: unsupported operand type(s) for //: 'mpf' and 'mpf'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/unseen-1983/failure-audit/d/analyze_supplement.py\", line 76, in floor_reproduction\n    safe_eval_expr_hp(original, context)\n  File \"/tmp/q29d-frozen-60db4b6-2689ab006a3d/src/geosolver/problem/ir/compiler.py\", line 269, in safe_eval_expr_hp\n    raise IRCompileError(f\"評価エラー (HP モード): {e}\", expr=expr, cause=e) from e\ngeosolver.problem.ir.errors.IRCompileError: 評価エラー (HP モード): unsupported operand type(s) for //: 'mpf' and 'mpf' (expr: '(1000*r) // 1')\n"
+  },
+  "rewritten_target_value": "0.7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777778",
+  "rewritten_target_error": null,
+  "fixed_score_conversion": "777",
+  "score_sha256": "b0a7c5dd9b6d20a06c06f3294fbf7963e88a1f4be928714247a352c688013204",
+  "solver_search_executed": false,
+  "solver_inputs_modified": false,
+  "does_not_establish_cause_of_every_original_search_failure": true
+}

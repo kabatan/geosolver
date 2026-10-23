@@ -1,0 +1,106 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": 13
+    },
+    {
+      "left": "Distance(C, O)",
+      "operator": "=",
+      "right": 14
+    },
+    {
+      "left": "Distance(O, B)",
+      "operator": "=",
+      "right": 15
+    },
+    {
+      "left": "Distance(A, O1)",
+      "operator": "=",
+      "right": "r1"
+    },
+    {
+      "left": "Distance(S, O1)",
+      "operator": "=",
+      "right": "r2"
+    },
+    {
+      "left": "Distance(A, S)",
+      "operator": "=",
+      "right": "r1 + r2"
+    },
+    {
+      "left": "r1",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "r2",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "t",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(5, 12)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(0, 0)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(14, 0)",
+      "name": "O"
+    },
+    {
+      "expression": "Circumcircle(B, C, O)",
+      "name": "Gamma"
+    },
+    {
+      "expression": "Center(Gamma)",
+      "name": "M"
+    },
+    {
+      "expression": "Radius(Gamma)",
+      "name": "R"
+    },
+    {
+      "expression": "Point(7, -4)",
+      "name": "S"
+    },
+    {
+      "expression": "Point(107 / 15, 0)",
+      "name": "T"
+    },
+    {
+      "expression": "Point(5 + t * (107 / 15 - 5), 12 * (1 - t))",
+      "name": "O1"
+    },
+    {
+      "expression": "Point(7 - 2 * (R - r1) / R, 33 / 8 + 63 / 8 * (R - r1) / R)",
+      "name": "A"
+    },
+    {
+      "expression": "Circle(A, r1)",
+      "name": "omega1"
+    },
+    {
+      "expression": "Circle(S, r2)",
+      "name": "omega2"
+    }
+  ],
+  "id": "HMMT-2014-FEB-GEO-10",
+  "target": "r2",
+  "variables": [
+    "r1",
+    "r2",
+    "t"
+  ]
+}

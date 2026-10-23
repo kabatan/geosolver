@@ -1,0 +1,73 @@
+{
+  "conditions": [
+    {
+      "left": "h",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "ny",
+      "operator": "<",
+      "right": "0"
+    },
+    {
+      "left": "Distance(U,T)",
+      "operator": "=",
+      "right": "126"
+    },
+    {
+      "left": "Distance(B,T)",
+      "operator": "=",
+      "right": "126"
+    },
+    {
+      "left": "OnSegment(A,D,O)",
+      "operator": "=",
+      "right": "0"
+    },
+    {
+      "predicate": "Or(3*(Area(B,N,A,O)+126**2*Angle(B,U,T)/2-Area(T,N,U))==(252*h+pi*126**2/2),3*(Area(B,N,A,O)+126**2*Angle(B,U,T)/2-Area(T,N,U))==2*(252*h+pi*126**2/2))"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0,0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(252,0)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(252,h)",
+      "name": "D"
+    },
+    {
+      "expression": "Point(0,h)",
+      "name": "O"
+    },
+    {
+      "expression": "Midpoint(B,C)",
+      "name": "U"
+    },
+    {
+      "expression": "Point(84,0)",
+      "name": "N"
+    },
+    {
+      "expression": "Point(nx,ny)",
+      "name": "T"
+    },
+    {
+      "expression": "Intersect(Line(T,N),Line(D,O))",
+      "name": "A"
+    }
+  ],
+  "id": "AIME-2010-I-13",
+  "target": "Distance(O,B)",
+  "variables": [
+    "h",
+    "nx",
+    "ny"
+  ]
+}

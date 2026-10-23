@@ -1,0 +1,124 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(B, D)",
+      "operator": "=",
+      "right": "2 * sqrt(61)"
+    },
+    {
+      "left": "(Vector(B, C).x * Vector(B, O).y - Vector(B, C).y * Vector(B, O).x) * (Vector(C, D).x * Vector(C, O).y - Vector(C, D).y * Vector(C, O).x)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "(Vector(B, C).x * Vector(B, O).y - Vector(B, C).y * Vector(B, O).x) * (Vector(P, B).x * Vector(P, O).y - Vector(P, B).y * Vector(P, O).x)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "px * px + py * py",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "(Vector(B, C).x * Vector(B, O).y - Vector(B, C).y * Vector(B, O).x) * (Vector(D, P).x * Vector(D, O).y - Vector(D, P).y * Vector(D, O).x)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "OnCircle(C, omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Perpendicular(Line(B, D), Line(C, P))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(B, omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "predicate": "ConvexPolygon([B, C, D, P])"
+    },
+    {
+      "left": "IsTangent(c1, c2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(P, omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(D, omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(c3, c4)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(C, P)",
+      "operator": "=",
+      "right": "6 * sqrt(7)"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "A"
+    },
+    {
+      "expression": "Circle(A, 8)",
+      "name": "omega"
+    },
+    {
+      "expression": "Point(-sqrt(61), sqrt(3))",
+      "name": "B"
+    },
+    {
+      "expression": "Point(1, -3 * sqrt(7))",
+      "name": "C"
+    },
+    {
+      "expression": "Point(sqrt(61), sqrt(3))",
+      "name": "D"
+    },
+    {
+      "expression": "Point(1, 3 * sqrt(7))",
+      "name": "P"
+    },
+    {
+      "expression": "Point(px, py)",
+      "name": "O"
+    },
+    {
+      "expression": "Circumcircle(B, C, O)",
+      "name": "c1"
+    },
+    {
+      "expression": "Circumcircle(D, P, O)",
+      "name": "c2"
+    },
+    {
+      "expression": "Circumcircle(B, P, O)",
+      "name": "c3"
+    },
+    {
+      "expression": "Circumcircle(C, D, O)",
+      "name": "c4"
+    }
+  ],
+  "id": "HMMT-2022-FEB-GEO-10",
+  "target": "Distance(A, O)",
+  "variables": [
+    "py",
+    "px"
+  ]
+}

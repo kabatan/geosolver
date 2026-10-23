@@ -1,0 +1,94 @@
+{
+  "conditions": [
+    {
+      "left": "x",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "y",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "z",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "z",
+      "operator": "<",
+      "right": "x"
+    },
+    {
+      "left": "Distance(A, P) + Distance(P, M) + Distance(M, A)",
+      "operator": "=",
+      "right": 152
+    },
+    {
+      "left": "IsTangent(am_line, omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "IsTangent(pm_line, omega)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(contact_am, A, M)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(contact_pm, P, M)",
+      "operator": "=",
+      "right": 0
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "A"
+    },
+    {
+      "expression": "Point(x, 0)",
+      "name": "P"
+    },
+    {
+      "expression": "Point(0, y)",
+      "name": "M"
+    },
+    {
+      "expression": "Point(z, 0)",
+      "name": "O"
+    },
+    {
+      "expression": "Circle(O, 19)",
+      "name": "omega"
+    },
+    {
+      "expression": "Line(A, M)",
+      "name": "am_line"
+    },
+    {
+      "expression": "Line(P, M)",
+      "name": "pm_line"
+    },
+    {
+      "expression": "ContactPoint(omega, am_line)",
+      "name": "contact_am"
+    },
+    {
+      "expression": "ContactPoint(omega, pm_line)",
+      "name": "contact_pm"
+    }
+  ],
+  "id": "aime-2002-2-14",
+  "target": "Distance(O, P)",
+  "variables": [
+    "z",
+    "y",
+    "x"
+  ]
+}

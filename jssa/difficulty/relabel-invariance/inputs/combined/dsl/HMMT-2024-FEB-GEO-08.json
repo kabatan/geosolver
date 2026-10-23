@@ -1,0 +1,85 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(B, A)",
+      "operator": "=",
+      "right": 5
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": 4
+    },
+    {
+      "left": "Area(D, C, B, A, T)",
+      "operator": "=",
+      "right": 22
+    },
+    {
+      "left": "Angle(D, B, T)",
+      "operator": "=",
+      "right": "pi / 2"
+    },
+    {
+      "left": "Area(D, C, B, A, T)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(D, C)",
+      "operator": "=",
+      "right": "Distance(A, T)"
+    },
+    {
+      "left": "Angle(C, B, A)",
+      "operator": "=",
+      "right": "2 * pi / 3"
+    },
+    {
+      "predicate": "SimplePolygon([D, C, B, A, T])"
+    },
+    {
+      "left": "Distance(Gamma_TAB.center, Gamma_TCD.center)",
+      "operator": "=",
+      "right": "abs(Gamma_TAB.radius - Gamma_TCD.radius)"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(4, 0)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(-5 / 2, -5 * sqrt(3) / 2)",
+      "name": "A"
+    },
+    {
+      "expression": "Point(ax, ay)",
+      "name": "D"
+    },
+    {
+      "expression": "Point(dx, dy)",
+      "name": "T"
+    },
+    {
+      "expression": "Circumcircle(B, D, C)",
+      "name": "Gamma_TAB"
+    },
+    {
+      "expression": "Circumcircle(B, A, T)",
+      "name": "Gamma_TCD"
+    }
+  ],
+  "id": "HMMT-2024-FEB-GEO-08",
+  "target": "Area(B, D, T)",
+  "variables": [
+    "ay",
+    "ax",
+    "dx",
+    "dy"
+  ]
+}

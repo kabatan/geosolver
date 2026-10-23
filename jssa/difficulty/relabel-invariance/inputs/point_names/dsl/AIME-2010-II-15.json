@@ -1,0 +1,126 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(B, M)",
+      "operator": "=",
+      "right": 13
+    },
+    {
+      "left": "Distance(C, M)",
+      "operator": "=",
+      "right": 14
+    },
+    {
+      "left": "OnLine(E, B, M)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(E, B, M)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnLine(P, B, C)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(P, B, C)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(Q, g1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(Q, g2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnLine(A, C, M)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(A, C, M)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Dot(Vector(B, Q), Vector(B, A))",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(C, A)",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(A, M)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(15, 0)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(cx, cy)",
+      "name": "M"
+    },
+    {
+      "expression": "Midpoint(B, M)",
+      "name": "N"
+    },
+    {
+      "expression": "Midpoint(B, C)",
+      "name": "D"
+    },
+    {
+      "expression": "Intersect(AngleBisector(B, C, M), Line(B, M))",
+      "name": "E"
+    },
+    {
+      "expression": "Intersect(AngleBisector(B, M, C), Line(B, C))",
+      "name": "P"
+    },
+    {
+      "expression": "Circumcircle(B, N, D)",
+      "name": "g1"
+    },
+    {
+      "expression": "Circumcircle(B, E, P)",
+      "name": "g2"
+    },
+    {
+      "expression": "Intersect(g1, g2, exclude=B)",
+      "name": "Q"
+    },
+    {
+      "expression": "Intersect(Line(B, Q), Line(C, M))",
+      "name": "A"
+    }
+  ],
+  "id": "AIME-2010-II-15",
+  "target": "Distance(C, A) / Distance(A, M)",
+  "variables": [
+    "cx",
+    "cy"
+  ]
+}
