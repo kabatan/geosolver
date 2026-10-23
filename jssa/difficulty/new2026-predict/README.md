@@ -3,7 +3,7 @@
 対象は `../new2026/cases.jsonl` の20問。判定基準は
 `../ghost-1023/preregistration-2.md` の A1・A2。本ディレクトリの
 `run_predictions.py` は手順 (1)〜(3) と予測の固定までを実施し、
-**p の集計・A1/A2 の判定 (4) は、ユーザーによる commit・push の後まで実施しない。**
+**p の集計・A1/A2 の判定 (4) は、ユーザー側の予測固定commitとorigin追跡refの一致を確認した後に実施した。**
 この README は進行・検証の記録のため更新するが、固定後の `predictions.csv` は変更しない。
 
 ## 実行条件（結果を見る前に固定）
@@ -61,7 +61,7 @@ PYTHONDONTWRITEBYTECODE=1 /home/kabatan/work/solver/.venv/bin/python -u \
 `freeze-manifest.json` は raw 全20ファイルと点対CSVのハッシュ、段階別所要時間を記録する。
 予測が未作成の場合のみ、完了済み raw と問題単位のGチェックポイントから再開できる。
 
-## commit・push 後の集計（まだ実施しない）
+## commit・push 後の集計
 
 ユーザーが予測を commit・push したと確認してから、その commit を指定して実行する：
 
@@ -71,7 +71,8 @@ PYTHONDONTWRITEBYTECODE=1 /home/kabatan/work/solver/.venv/bin/python \
 ```
 
 このコードは集計前に、記録ハッシュ・指定commit中の予測バイト列・現在の予測・raw・コード・入力の一致を検証する。
-push の実施はユーザー確認による。`predictions.csv` は読み取り専用で扱い、末尾でも同一バイト列を確認する。
+今回のpushの確認方法は、HEADとローカルのorigin追跡refの一致による。
+`predictions.csv` は読み取り専用で扱い、末尾でも同一バイト列を確認する。
 結果は `outcomes.csv` と `score.md` を排他的に新規作成する。
 基準を満たさなければ「未使用問題では確認できなかった」と報告し、開発集合内の結果と区別する。
 agent は git commit・push を行わない。
@@ -90,4 +91,41 @@ G は dim でなく found のみから判定する。
 φと固定係数からの予測式、Gの集約、有限 best_x の残差、存在する dim_x の中心差分ランクと
 特異値を再検証する。検証結果は `verification.json`。この検証も p は集計しない。
 
-開始時点では (4) は未実施。完了時刻・所要時間・検証結果は予測固定後に追記する。
+## 実施結果・所要時間
+
+- 開始 UTC：2026-10-23T06:48:22.976093+00:00（15:48:22 JST）。
+- 予測固定 UTC：2026-10-23T07:06:00.132556+00:00（16:06:00 JST）。
+- 実験 wall time 1,057.156秒（17分37秒）。probe 250.921秒、G 806.222秒。
+  実装・手順確認は別途約4分。検証1.547秒、集計コマンド約0.74秒。
+- 指定Python、最大4並列で一度の本計測を完了。中断・再開・条件変更なし。
+  依存関係のインストール、src/の変更、agentによるcommit・pushなし。
+- 全20問で各200出発点を保存。Gは456点対×20出発点＝9,120試行。
+  29点対（2問）で残差基準を満たした。φと両固定モデルの予測を20行のCSVに保存。
+- 予測SHA-256：`68c2009f158ee181b5b6ad3b8e13c851c42cd3f135ea12d14e0280d2c652b5d0`。
+  作成時刻とともに `predictions.sha256` に記録。
+- ユーザー側の予測固定commit：`8930f5d00bbd50b1a6b80bdb0d1630fea001cb3c`
+  （commit時刻16:07:01 JST）。集計前にHEADおよび
+  `refs/remotes/origin/claude/project-thread-9bdbbg` がこのcommitと一致することを確認した。
+  agentはcommit・pushを実行していない。指定commitの予測バイト列、現在の予測、固定ハッシュの一致を確認してから
+  初めてpを集計した（07:08:57 UTC / 16:08:57 JST）。
+- A1成立：full予測とpのSpearman順位相関 **0.791229037885 ≥ 0.4**。
+- A2成立：ロジット二乗誤差の合計 **full 125.602487409 < nvars_only 161.971228243**。
+  事前登録Aの両基準を満たした。20問の結果であり、個々の予測が正確だという主張ではない。
+  問題別の実測と誤差は `outcomes.csv`、判定は `score.md`。
+- 検証成功：20行の特徴量・固定式・ハッシュ、有限な残差証人449個、ランク証人29個の
+  中心差分と特異値が一致。集計後も予測CSVは固定commitとバイト単位で一致した。
+  さらにrawとoutcomesの全20行を照合し、平均順位によるSpearmanと二乗誤差を独立に再計算して一致した。
+
+### うまくいかなかった点・数値的限界
+
+- Gの9,120試行のうち141試行は `Residuals are not finite in the initial point` の
+  ValueError、1,268試行はmax_nfevに到達した。数値ランク計算の失敗は0。
+  評価上限停止でも残差基準を満たせば、元のsol-1と同じく found とする。
+- GEO-08の `bis = AngleBisector(B, A, C)` は直線だが、指定された
+  `ghost_scan.point_names` は点候補に含める。その `bis` を含む7点対は全20試行が非有限残差で失敗した。
+  規則を変えず、そのまま n_pairs_all_failed=7 と記録した。
+  このため G=0 を退化解不存在の証明とは扱わない。
+- GUTS-18、JMO-PRE-03では200出発点のhitが0だった。Gの点対除外はなし。
+  結果を見てDSL・探索条件・予測・モデルを変更していない。
+- GEO-05は10変数で、probeに243.9秒を要した。予測係数は登録済みの「7変数以上」を適用。
+- 出力全体は約2 MB、最大の単一ファイルは約107 KB。大容量ファイルは作成していない。
