@@ -1,0 +1,780 @@
+{
+  "id": "HMMT-2024-FEB-GEO-06",
+  "checks": [
+    {
+      "k": 0,
+      "residual": 1.531385296090443e-10,
+      "guard": true,
+      "hard": true,
+      "ok": true
+    },
+    {
+      "k": 2,
+      "residual": 1.531326543347192e-10,
+      "guard": true,
+      "hard": true,
+      "ok": true
+    },
+    {
+      "k": 7,
+      "residual": 1.531363748712875e-10,
+      "guard": true,
+      "hard": true,
+      "ok": true
+    }
+  ],
+  "var_names": [
+    "theta",
+    "bp",
+    "q"
+  ],
+  "saved_coordinates": [
+    {
+      "k": 0,
+      "sec": 0.4427012040000591,
+      "nfev": 25,
+      "x": [
+        20.171642259251517,
+        7.999999999778471,
+        0.11111111111040553
+      ],
+      "start": [
+        19.72248297428942,
+        4.856160847749665,
+        0.04097352393619469
+      ],
+      "res": 1.531385296090443e-10,
+      "ans": 21.666666666655303,
+      "cls": "hit",
+      "ref": 0
+    },
+    {
+      "k": 2,
+      "sec": 0.08611243400036983,
+      "nfev": 38,
+      "x": [
+        13.888456952071932,
+        7.9999999997784705,
+        0.11111111111040553
+      ],
+      "start": [
+        15.355551710473904,
+        13.13093809771197,
+        0.5436249914654229
+      ],
+      "res": 1.531326543347192e-10,
+      "ans": 21.66666666665531,
+      "cls": "hit",
+      "ref": 0
+    },
+    {
+      "k": 7,
+      "sec": 0.06211010900005931,
+      "nfev": 33,
+      "x": [
+        -55.22658142690352,
+        7.999999999778472,
+        0.1111111111104056
+      ],
+      "start": [
+        -54.103208184062794,
+        12.071239464485346,
+        0.6471895115742501
+      ],
+      "res": 1.531363748712875e-10,
+      "ans": 21.666666666655306,
+      "cls": "hit",
+      "ref": 0
+    }
+  ],
+  "points": {
+    "A": [
+      -0.23980518568471693,
+      -0.24675606063704783
+    ],
+    "B": [
+      0.2592360406594926,
+      -0.24675606063704783
+    ],
+    "C": [
+      0.0058766488121896185,
+      0.7206161627406781
+    ],
+    "Bp": [
+      -0.018009085093432253,
+      -0.24675606063704783
+    ],
+    "Cp": [
+      -0.21250720407412285,
+      -0.1392702580402053
+    ],
+    "O": [
+      0.12061347778303015,
+      0.23380215732595203
+    ],
+    "MB": [
+      0.12061347778303015,
+      -0.24675606063704783
+    ],
+    "MC": [
+      -0.10331527763096662,
+      0.2906729523502364
+    ],
+    "T": [
+      0.06729710744549659,
+      -0.11879677182846923
+    ]
+  },
+  "circles": {
+    "omega": [
+      0.12061347778303015,
+      0.23380215732595203,
+      0.5001523925667185
+    ],
+    "omega_B": [
+      0.12061347778303015,
+      -0.24675606063704783,
+      0.13862256287646244
+    ],
+    "omega_C": [
+      -0.10331527763096662,
+      0.2906729523502364,
+      0.44359220119520504
+    ]
+  },
+  "depths": {
+    "A": 1,
+    "B": 1,
+    "C": 1,
+    "Bp": 1,
+    "Cp": 2,
+    "omega": 2,
+    "O": 3,
+    "r": 3,
+    "MB": 2,
+    "MC": 3,
+    "rB": 2,
+    "rC": 3,
+    "omega_B": 3,
+    "omega_C": 4,
+    "T": 4
+  },
+  "explicit_extraction": {
+    "unhandled_equalities": [
+      {
+        "left": "Distance(omega_B.center, omega_C.center)",
+        "operator": "=",
+        "right": "omega_B.radius + omega_C.radius"
+      }
+    ],
+    "line_groups": [
+      [
+        "B",
+        "Bp",
+        "MB"
+      ],
+      [
+        "C",
+        "Cp",
+        "MC"
+      ],
+      [
+        "MB",
+        "MC",
+        "T"
+      ]
+    ],
+    "circle_groups": [
+      [
+        "B",
+        "Bp",
+        "C"
+      ]
+    ],
+    "equal_length_groups": [
+      [
+        [
+          "B",
+          "MB"
+        ],
+        [
+          "Bp",
+          "MB"
+        ]
+      ],
+      [
+        [
+          "C",
+          "MC"
+        ],
+        [
+          "Cp",
+          "MC"
+        ]
+      ],
+      [
+        [
+          "A",
+          "B"
+        ]
+      ],
+      [
+        [
+          "A",
+          "C"
+        ]
+      ],
+      [
+        [
+          "B",
+          "O"
+        ],
+        [
+          "Bp",
+          "O"
+        ],
+        [
+          "C",
+          "O"
+        ],
+        [
+          "Cp",
+          "O"
+        ]
+      ],
+      [
+        [
+          "A",
+          "T"
+        ]
+      ],
+      [
+        [
+          "MB",
+          "T"
+        ]
+      ],
+      [
+        [
+          "MC",
+          "T"
+        ]
+      ]
+    ]
+  },
+  "predicates": [
+    {
+      "kind": "collinear",
+      "objects": [
+        "A",
+        "B",
+        "Bp"
+      ],
+      "max_error": 0.0,
+      "explicit": false,
+      "depth": 1,
+      "perturbations_valid": 8,
+      "perturbations_broken": 0,
+      "solution_dependent": false
+    },
+    {
+      "kind": "collinear",
+      "objects": [
+        "A",
+        "B",
+        "MB"
+      ],
+      "max_error": 0.0,
+      "explicit": false,
+      "depth": 2,
+      "perturbations_valid": 8,
+      "perturbations_broken": 0,
+      "solution_dependent": false
+    },
+    {
+      "kind": "collinear",
+      "objects": [
+        "A",
+        "Bp",
+        "MB"
+      ],
+      "max_error": 0.0,
+      "explicit": false,
+      "depth": 2,
+      "perturbations_valid": 8,
+      "perturbations_broken": 0,
+      "solution_dependent": false
+    },
+    {
+      "kind": "collinear",
+      "objects": [
+        "A",
+        "C",
+        "Cp"
+      ],
+      "max_error": 3.134511880857159e-17,
+      "explicit": false,
+      "depth": 2,
+      "perturbations_valid": 8,
+      "perturbations_broken": 0,
+      "solution_dependent": false
+    },
+    {
+      "kind": "collinear",
+      "objects": [
+        "A",
+        "C",
+        "MC"
+      ],
+      "max_error": 2.786232782984146e-17,
+      "explicit": false,
+      "depth": 3,
+      "perturbations_valid": 8,
+      "perturbations_broken": 0,
+      "solution_dependent": false
+    },
+    {
+      "kind": "collinear",
+      "objects": [
+        "A",
+        "Cp",
+        "MC"
+      ],
+      "max_error": 5.0779092469950543e-17,
+      "explicit": false,
+      "depth": 3,
+      "perturbations_valid": 8,
+      "perturbations_broken": 0,
+      "solution_dependent": false
+    },
+    {
+      "kind": "collinear",
+      "objects": [
+        "B",
+        "Bp",
+        "MB"
+      ],
+      "max_error": 0.0,
+      "explicit": true,
+      "depth": 2,
+      "perturbations_valid": 8,
+      "perturbations_broken": 0,
+      "solution_dependent": false
+    },
+    {
+      "kind": "collinear",
+      "objects": [
+        "C",
+        "Cp",
+        "MC"
+      ],
+      "max_error": 3.5263258659587115e-17,
+      "explicit": true,
+      "depth": 3,
+      "perturbations_valid": 8,
+      "perturbations_broken": 0,
+      "solution_dependent": false
+    },
+    {
+      "kind": "collinear",
+      "objects": [
+        "MB",
+        "MC",
+        "T"
+      ],
+      "max_error": 2.0470281670740447e-17,
+      "explicit": true,
+      "depth": 4,
+      "perturbations_valid": 8,
+      "perturbations_broken": 0,
+      "solution_dependent": false
+    },
+    {
+      "kind": "concyclic",
+      "objects": [
+        "A",
+        "MB",
+        "MC",
+        "O"
+      ],
+      "max_error": 5.122275179372612e-12,
+      "explicit": false,
+      "depth": 3,
+      "perturbations_valid": 8,
+      "perturbations_broken": 8,
+      "solution_dependent": true
+    },
+    {
+      "kind": "concyclic",
+      "objects": [
+        "B",
+        "Bp",
+        "C",
+        "Cp"
+      ],
+      "max_error": 1.0302760492833002e-11,
+      "explicit": false,
+      "depth": 2,
+      "perturbations_valid": 8,
+      "perturbations_broken": 8,
+      "solution_dependent": true
+    },
+    {
+      "kind": "equal_length",
+      "objects": [
+        "B",
+        "MB",
+        "Bp",
+        "MB"
+      ],
+      "max_error": 1.2638351903056098e-15,
+      "explicit": true,
+      "depth": 2,
+      "perturbations_valid": 8,
+      "perturbations_broken": 0,
+      "solution_dependent": false
+    },
+    {
+      "kind": "equal_length",
+      "objects": [
+        "B",
+        "MB",
+        "MB",
+        "T"
+      ],
+      "max_error": 3.773811878252555e-12,
+      "explicit": false,
+      "depth": 4,
+      "perturbations_valid": 8,
+      "perturbations_broken": 8,
+      "solution_dependent": true
+    },
+    {
+      "kind": "equal_length",
+      "objects": [
+        "B",
+        "O",
+        "Bp",
+        "O"
+      ],
+      "max_error": 0.0,
+      "explicit": true,
+      "depth": 3,
+      "perturbations_valid": 8,
+      "perturbations_broken": 0,
+      "solution_dependent": false
+    },
+    {
+      "kind": "equal_length",
+      "objects": [
+        "B",
+        "O",
+        "C",
+        "O"
+      ],
+      "max_error": 8.876372599625266e-16,
+      "explicit": true,
+      "depth": 3,
+      "perturbations_valid": 8,
+      "perturbations_broken": 0,
+      "solution_dependent": false
+    },
+    {
+      "kind": "equal_length",
+      "objects": [
+        "B",
+        "O",
+        "Cp",
+        "O"
+      ],
+      "max_error": 8.393719839520646e-12,
+      "explicit": true,
+      "depth": 3,
+      "perturbations_valid": 8,
+      "perturbations_broken": 8,
+      "solution_dependent": true
+    },
+    {
+      "kind": "equal_length",
+      "objects": [
+        "Bp",
+        "MB",
+        "MB",
+        "T"
+      ],
+      "max_error": 3.7745340697898684e-12,
+      "explicit": false,
+      "depth": 4,
+      "perturbations_valid": 8,
+      "perturbations_broken": 8,
+      "solution_dependent": true
+    },
+    {
+      "kind": "equal_length",
+      "objects": [
+        "Bp",
+        "O",
+        "C",
+        "O"
+      ],
+      "max_error": 8.876372599625266e-16,
+      "explicit": true,
+      "depth": 3,
+      "perturbations_valid": 8,
+      "perturbations_broken": 0,
+      "solution_dependent": false
+    },
+    {
+      "kind": "equal_length",
+      "objects": [
+        "Bp",
+        "O",
+        "Cp",
+        "O"
+      ],
+      "max_error": 8.393719839520646e-12,
+      "explicit": true,
+      "depth": 3,
+      "perturbations_valid": 8,
+      "perturbations_broken": 8,
+      "solution_dependent": true
+    },
+    {
+      "kind": "equal_length",
+      "objects": [
+        "C",
+        "MC",
+        "Cp",
+        "MC"
+      ],
+      "max_error": 0.0,
+      "explicit": true,
+      "depth": 3,
+      "perturbations_valid": 8,
+      "perturbations_broken": 0,
+      "solution_dependent": false
+    },
+    {
+      "kind": "equal_length",
+      "objects": [
+        "C",
+        "MC",
+        "MC",
+        "T"
+      ],
+      "max_error": 3.7742971008529195e-12,
+      "explicit": false,
+      "depth": 4,
+      "perturbations_valid": 8,
+      "perturbations_broken": 8,
+      "solution_dependent": true
+    },
+    {
+      "kind": "equal_length",
+      "objects": [
+        "C",
+        "O",
+        "Cp",
+        "O"
+      ],
+      "max_error": 8.394385567465614e-12,
+      "explicit": true,
+      "depth": 3,
+      "perturbations_valid": 8,
+      "perturbations_broken": 8,
+      "solution_dependent": true
+    },
+    {
+      "kind": "equal_length",
+      "objects": [
+        "Cp",
+        "MC",
+        "MC",
+        "T"
+      ],
+      "max_error": 3.7742971008529195e-12,
+      "explicit": false,
+      "depth": 4,
+      "perturbations_valid": 8,
+      "perturbations_broken": 8,
+      "solution_dependent": true
+    },
+    {
+      "kind": "similar",
+      "objects": [
+        "A",
+        "B",
+        "C",
+        "A",
+        "Bp",
+        "Cp"
+      ],
+      "max_error": 9.285822111237962e-12,
+      "explicit": false,
+      "depth": 2,
+      "perturbations_valid": 8,
+      "perturbations_broken": 8,
+      "solution_dependent": true
+    },
+    {
+      "kind": "similar",
+      "objects": [
+        "A",
+        "B",
+        "Cp",
+        "A",
+        "Bp",
+        "C"
+      ],
+      "max_error": 2.107813923402091e-12,
+      "explicit": false,
+      "depth": 2,
+      "perturbations_valid": 8,
+      "perturbations_broken": 8,
+      "solution_dependent": true
+    },
+    {
+      "kind": "similar",
+      "objects": [
+        "A",
+        "B",
+        "T",
+        "A",
+        "Bp",
+        "T"
+      ],
+      "max_error": 6.3808403005793934e-12,
+      "explicit": false,
+      "depth": 4,
+      "perturbations_valid": 8,
+      "perturbations_broken": 8,
+      "solution_dependent": true
+    },
+    {
+      "kind": "similar",
+      "objects": [
+        "A",
+        "C",
+        "T",
+        "A",
+        "Cp",
+        "T"
+      ],
+      "max_error": 3.1476488082660126e-12,
+      "explicit": false,
+      "depth": 4,
+      "perturbations_valid": 8,
+      "perturbations_broken": 8,
+      "solution_dependent": true
+    },
+    {
+      "kind": "similar",
+      "objects": [
+        "A",
+        "MB",
+        "O",
+        "A",
+        "MC",
+        "T"
+      ],
+      "max_error": 6.343481295800757e-12,
+      "explicit": false,
+      "depth": 4,
+      "perturbations_valid": 8,
+      "perturbations_broken": 8,
+      "solution_dependent": true
+    },
+    {
+      "kind": "similar",
+      "objects": [
+        "A",
+        "MB",
+        "T",
+        "A",
+        "MC",
+        "O"
+      ],
+      "max_error": 4.692052302246452e-12,
+      "explicit": false,
+      "depth": 4,
+      "perturbations_valid": 8,
+      "perturbations_broken": 8,
+      "solution_dependent": true
+    },
+    {
+      "kind": "similar",
+      "objects": [
+        "B",
+        "MB",
+        "O",
+        "Bp",
+        "MB",
+        "O"
+      ],
+      "max_error": 9.71445146547012e-17,
+      "explicit": false,
+      "depth": 3,
+      "perturbations_valid": 8,
+      "perturbations_broken": 0,
+      "solution_dependent": false
+    },
+    {
+      "kind": "similar",
+      "objects": [
+        "C",
+        "MC",
+        "O",
+        "Cp",
+        "MC",
+        "O"
+      ],
+      "max_error": 6.603162461260581e-12,
+      "explicit": false,
+      "depth": 3,
+      "perturbations_valid": 8,
+      "perturbations_broken": 8,
+      "solution_dependent": true
+    },
+    {
+      "kind": "tangent",
+      "objects": [
+        "A",
+        "T",
+        "omega_B"
+      ],
+      "max_error": 1.887111987753622e-12,
+      "explicit": false,
+      "depth": 4,
+      "perturbations_valid": 8,
+      "perturbations_broken": 8,
+      "solution_dependent": true
+    },
+    {
+      "kind": "tangent",
+      "objects": [
+        "A",
+        "T",
+        "omega_C"
+      ],
+      "max_error": 1.8874874079506514e-12,
+      "explicit": false,
+      "depth": 4,
+      "perturbations_valid": 8,
+      "perturbations_broken": 8,
+      "solution_dependent": true
+    },
+    {
+      "kind": "tangent",
+      "objects": [
+        "omega_B",
+        "omega_C"
+      ],
+      "max_error": 1.887350349788599e-12,
+      "explicit": false,
+      "depth": 4,
+      "perturbations_valid": 8,
+      "perturbations_broken": 8,
+      "solution_dependent": true
+    }
+  ]
+}
