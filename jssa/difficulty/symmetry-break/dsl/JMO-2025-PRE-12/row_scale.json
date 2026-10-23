@@ -1,0 +1,161 @@
+{
+  "conditions": [
+    {
+      "left": "(1 + (1/100)) * (Distance(O, A))",
+      "operator": "=",
+      "right": "(1 + (1/100)) * (r)"
+    },
+    {
+      "left": "Distance(O, B)",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(O, C)",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(O, D)",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(O, E)",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(O, P)",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": "Distance(A, D)"
+    },
+    {
+      "left": "Parallel(Line(B, C), Line(D, E))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "3 * Distance(P, C)",
+      "operator": "=",
+      "right": "2 * Distance(P, D)"
+    },
+    {
+      "left": "3 * Distance(P1, P2)",
+      "operator": "=",
+      "right": "2 * Distance(P4, P5)"
+    },
+    {
+      "left": "11 * Distance(C, D)",
+      "operator": "=",
+      "right": "4 * sqrt(2) * Distance(P2, P4)"
+    },
+    {
+      "left": "r",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "g1",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "g2",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "g3",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "g4",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "g5",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "g1 + g2 + g3 + g4 + g5",
+      "operator": "<",
+      "right": "2 * pi"
+    },
+    {
+      "predicate": "ConvexPolygon([A, B, C, D, E])"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "O"
+    },
+    {
+      "expression": "Point(r, 0)",
+      "name": "A"
+    },
+    {
+      "expression": "Point(r * cos(g1), r * sin(g1))",
+      "name": "B"
+    },
+    {
+      "expression": "Point(r * cos(g1 + g2), r * sin(g1 + g2))",
+      "name": "C"
+    },
+    {
+      "expression": "Point(r * cos(g1 + g2 + g3), r * sin(g1 + g2 + g3))",
+      "name": "P"
+    },
+    {
+      "expression": "Point(r * cos(g1 + g2 + g3 + g4), r * sin(g1 + g2 + g3 + g4))",
+      "name": "D"
+    },
+    {
+      "expression": "Point(r * cos(g1 + g2 + g3 + g4 + g5), r * sin(g1 + g2 + g3 + g4 + g5))",
+      "name": "E"
+    },
+    {
+      "expression": "Circle(O, r)",
+      "name": "Omega"
+    },
+    {
+      "expression": "Reflect(P, Line(A, B))",
+      "name": "P1"
+    },
+    {
+      "expression": "Reflect(P, Line(B, C))",
+      "name": "P2"
+    },
+    {
+      "expression": "Reflect(P, Line(C, D))",
+      "name": "P3"
+    },
+    {
+      "expression": "Reflect(P, Line(D, E))",
+      "name": "P4"
+    },
+    {
+      "expression": "Reflect(P, Line(E, A))",
+      "name": "P5"
+    }
+  ],
+  "id": "JMO-2025-PRE-12",
+  "target": "Distance(P1, P3) / Distance(P1, P5)",
+  "variables": [
+    "r",
+    "g1",
+    "g2",
+    "g3",
+    "g4",
+    "g5"
+  ]
+}

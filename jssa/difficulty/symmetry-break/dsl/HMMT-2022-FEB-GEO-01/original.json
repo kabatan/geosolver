@@ -1,0 +1,73 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 20
+    },
+    {
+      "left": "Distance(A, C)",
+      "operator": "=",
+      "right": 22
+    },
+    {
+      "left": "Distance(A, U)",
+      "operator": "=",
+      "right": "Distance(A, V)"
+    },
+    {
+      "left": "Distance(A, U)",
+      "operator": "=",
+      "right": "Distance(U, V)"
+    },
+    {
+      "left": "u",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "u",
+      "operator": "<",
+      "right": "20"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "A"
+    },
+    {
+      "expression": "Point(20, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(11, 11 * sqrt(3))",
+      "name": "C"
+    },
+    {
+      "expression": "Point(u, 0)",
+      "name": "U"
+    },
+    {
+      "expression": "Point(u / 2, u * sqrt(3) / 2)",
+      "name": "V"
+    },
+    {
+      "expression": "Line(U, V)",
+      "name": "l"
+    },
+    {
+      "expression": "FootOfPerpendicular(B, l)",
+      "name": "X"
+    },
+    {
+      "expression": "FootOfPerpendicular(C, l)",
+      "name": "Y"
+    }
+  ],
+  "id": "HMMT-2022-FEB-GEO-01",
+  "target": "Distance(X, Y)",
+  "variables": [
+    "u"
+  ]
+}

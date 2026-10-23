@@ -1,0 +1,101 @@
+{
+  "conditions": [
+    {
+      "left": "Angle(B, A, C)",
+      "operator": "=",
+      "right": "pi / 3"
+    },
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": 3
+    },
+    {
+      "left": "OnCircle(D, Gamma)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnLine(E, B, C)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(A, E)",
+      "operator": "=",
+      "right": 4
+    },
+    {
+      "left": "bx",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "Distance(F, Cp)",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "A"
+    },
+    {
+      "expression": "Point(bx, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(cx, cy)",
+      "name": "C"
+    },
+    {
+      "expression": "Circumcircle(A, B, C)",
+      "name": "Gamma"
+    },
+    {
+      "expression": "AngleBisector(B, A, C)",
+      "name": "Lbis"
+    },
+    {
+      "expression": "Intersect(Lbis, Line(B, C))",
+      "name": "E"
+    },
+    {
+      "expression": "Intersect(Line(A, E), Gamma, exclude=A)",
+      "name": "D"
+    },
+    {
+      "expression": "Reflect(A, D)",
+      "name": "Dp"
+    },
+    {
+      "expression": "Reflect(A, C)",
+      "name": "Cp"
+    },
+    {
+      "expression": "Intersect(Tangent(A, Gamma), Line(B, C))",
+      "name": "P"
+    },
+    {
+      "expression": "Circumcircle(A, P, Dp)",
+      "name": "Gamma2"
+    },
+    {
+      "expression": "Intersect(Line(B, C), Gamma2, exclude=P)",
+      "name": "F"
+    }
+  ],
+  "id": "HMMT-2013-FEB-GEO-10",
+  "target": "Distance(F, Cp)",
+  "variables": [
+    "bx",
+    "cx",
+    "cy"
+  ]
+}

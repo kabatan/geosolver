@@ -1,0 +1,103 @@
+{
+  "conditions": [
+    {
+      "left": "OnCircle(P, C1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(O1, Line(O, P))",
+      "operator": "=",
+      "right": "r"
+    },
+    {
+      "left": "OnCircle(Q, C2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Collinear(O, P, Q)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Collinear(O, P, R)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "(1 + (1/100)) * (Distance(P, Q))",
+      "operator": "=",
+      "right": "(1 + (1/100)) * (Distance(Q, R))"
+    },
+    {
+      "left": "r",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "r",
+      "operator": "<",
+      "right": "9"
+    },
+    {
+      "left": "py",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "qy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "rx",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "O"
+    },
+    {
+      "expression": "Point(0, 9)",
+      "name": "A"
+    },
+    {
+      "expression": "Point(0, 9 - r)",
+      "name": "O1"
+    },
+    {
+      "expression": "Circle(O1, r)",
+      "name": "C1"
+    },
+    {
+      "expression": "Circle(O, 9)",
+      "name": "C2"
+    },
+    {
+      "expression": "Point(px, py)",
+      "name": "P"
+    },
+    {
+      "expression": "Point(qx, qy)",
+      "name": "Q"
+    },
+    {
+      "expression": "Point(rx, 9)",
+      "name": "R"
+    }
+  ],
+  "id": "JMO-2014-PRE-01",
+  "target": "Distance(O, P)",
+  "variables": [
+    "r",
+    "px",
+    "py",
+    "qx",
+    "qy",
+    "rx"
+  ]
+}

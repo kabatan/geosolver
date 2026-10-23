@@ -1,0 +1,98 @@
+{
+  "conditions": [
+    {
+      "left": "Angle(D, A, B)",
+      "operator": "=",
+      "right": "110 * pi / 180"
+    },
+    {
+      "left": "Angle(A, B, C)",
+      "operator": "=",
+      "right": "50 * pi / 180"
+    },
+    {
+      "left": "Angle(B, C, D)",
+      "operator": "=",
+      "right": "70 * pi / 180"
+    },
+    {
+      "left": "Distance(A, P)",
+      "operator": "=",
+      "right": "(1 + (1/100)) * (Distance(C, P))"
+    },
+    {
+      "left": "Distance(M, P) / Distance(P, N)",
+      "operator": "=",
+      "right": "Distance(A, M) / Distance(C, N)"
+    },
+    {
+      "left": "Collinear(M, P, N)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnSegment(P, M, N)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "bx",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "cy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "dy",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "predicate": "SimplePolygon([A,B,C,D])"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "A"
+    },
+    {
+      "expression": "Point(bx, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(cx, cy)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(dx, dy)",
+      "name": "D"
+    },
+    {
+      "expression": "Midpoint(A, B)",
+      "name": "M"
+    },
+    {
+      "expression": "Midpoint(C, D)",
+      "name": "N"
+    },
+    {
+      "expression": "Point(px, py)",
+      "name": "P"
+    }
+  ],
+  "id": "JMO-2010-PRE-11",
+  "target": "180 * Angle(A, P, C) / pi",
+  "variables": [
+    "bx",
+    "cx",
+    "cy",
+    "dx",
+    "dy",
+    "px",
+    "py"
+  ]
+}

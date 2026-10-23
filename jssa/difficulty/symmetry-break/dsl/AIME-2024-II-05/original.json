@@ -1,0 +1,112 @@
+{
+  "conditions": [
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": "Distance(B, C)"
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": "Distance(C, D)"
+    },
+    {
+      "left": "Distance(C, D)",
+      "operator": "=",
+      "right": "Distance(D, E)"
+    },
+    {
+      "left": "Distance(D, E)",
+      "operator": "=",
+      "right": "Distance(E, F)"
+    },
+    {
+      "left": "Distance(E, F)",
+      "operator": "=",
+      "right": "Distance(F, A)"
+    },
+    {
+      "left": "Parallel(Line(A, B), Line(D, E))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Parallel(Line(B, C), Line(E, F))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Parallel(Line(C, D), Line(F, A))",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(U, V) * Distance(U, V) + Distance(V, W) * Distance(V, W) + Distance(W, U) * Distance(W, U)",
+      "operator": "=",
+      "right": 187600
+    },
+    {
+      "left": "Distance(U, V) * Distance(U, V) * Distance(V, W) * Distance(V, W) + Distance(U, V) * Distance(U, V) * Distance(W, U) * Distance(W, U) + Distance(V, W) * Distance(V, W) * Distance(W, U) * Distance(W, U)",
+      "operator": "=",
+      "right": 11088000000
+    },
+    {
+      "left": "Distance(U, V) * Distance(U, V) * Distance(V, W) * Distance(V, W) * Distance(W, U) * Distance(W, U)",
+      "operator": "=",
+      "right": 207360000000000
+    },
+    {
+      "left": "s",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "predicate": "ConvexPolygon([A, B, C, D, E, F])"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "A"
+    },
+    {
+      "expression": "Point(s, 0)",
+      "name": "B"
+    },
+    {
+      "expression": "Point(s + s * cos(alpha), s * sin(alpha))",
+      "name": "C"
+    },
+    {
+      "expression": "Point(s + s * cos(alpha) + s * cos(beta), s * sin(alpha) + s * sin(beta))",
+      "name": "D"
+    },
+    {
+      "expression": "Point(s * cos(alpha) + s * cos(beta), s * sin(alpha) + s * sin(beta))",
+      "name": "E"
+    },
+    {
+      "expression": "Point(s * cos(beta), s * sin(beta))",
+      "name": "F"
+    },
+    {
+      "expression": "Intersect(Line(A, B), Line(C, D))",
+      "name": "U"
+    },
+    {
+      "expression": "Intersect(Line(C, D), Line(E, F))",
+      "name": "V"
+    },
+    {
+      "expression": "Intersect(Line(E, F), Line(A, B))",
+      "name": "W"
+    }
+  ],
+  "id": "AIME-2024-II-05",
+  "target": "Distance(A, B)",
+  "variables": [
+    "s",
+    "alpha",
+    "beta"
+  ]
+}

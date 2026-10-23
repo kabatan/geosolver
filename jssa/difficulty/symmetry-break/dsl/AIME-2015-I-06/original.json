@@ -1,0 +1,192 @@
+{
+  "conditions": [
+    {
+      "left": "OnCircle(A, omega1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(B, omega1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(C, omega1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(D, omega1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(E, omega1)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(E, omega2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(F, omega2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(G, omega2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(H, omega2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(I, omega2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "OnCircle(A, omega2)",
+      "operator": "=",
+      "right": 0
+    },
+    {
+      "left": "Distance(A, B)",
+      "operator": "=",
+      "right": "Distance(B, C)"
+    },
+    {
+      "left": "Distance(B, C)",
+      "operator": "=",
+      "right": "Distance(C, D)"
+    },
+    {
+      "left": "Distance(C, D)",
+      "operator": "=",
+      "right": "Distance(D, E)"
+    },
+    {
+      "left": "Distance(E, F)",
+      "operator": "=",
+      "right": "Distance(F, G)"
+    },
+    {
+      "left": "Distance(F, G)",
+      "operator": "=",
+      "right": "Distance(G, H)"
+    },
+    {
+      "left": "Distance(G, H)",
+      "operator": "=",
+      "right": "Distance(H, I)"
+    },
+    {
+      "left": "Distance(H, I)",
+      "operator": "=",
+      "right": "Distance(I, A)"
+    },
+    {
+      "left": "Angle(A, B, D) - Angle(A, H, G)",
+      "operator": "=",
+      "right": "12 * pi / 180"
+    },
+    {
+      "left": "d",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "d",
+      "operator": "<",
+      "right": "pi / 4"
+    },
+    {
+      "left": "e",
+      "operator": ">",
+      "right": "0"
+    },
+    {
+      "left": "e",
+      "operator": "<",
+      "right": "pi / 5"
+    },
+    {
+      "left": "r2",
+      "operator": ">",
+      "right": "0"
+    }
+  ],
+  "constructions": [
+    {
+      "expression": "Point(0, 0)",
+      "name": "O"
+    },
+    {
+      "expression": "Point(0, 1)",
+      "name": "C"
+    },
+    {
+      "expression": "Point(cos(pi / 2 - 2 * d), sin(pi / 2 - 2 * d))",
+      "name": "A"
+    },
+    {
+      "expression": "Point(cos(pi / 2 - d), sin(pi / 2 - d))",
+      "name": "B"
+    },
+    {
+      "expression": "Point(cos(pi / 2 + d), sin(pi / 2 + d))",
+      "name": "D"
+    },
+    {
+      "expression": "Point(cos(pi / 2 + 2 * d), sin(pi / 2 + 2 * d))",
+      "name": "E"
+    },
+    {
+      "expression": "E.x - C.x",
+      "name": "evecx"
+    },
+    {
+      "expression": "E.y - C.y",
+      "name": "evecy"
+    },
+    {
+      "expression": "Distance(E, A) / (2 * sin(5 * e / 2))",
+      "name": "r2"
+    },
+    {
+      "expression": "Circle(O, 1)",
+      "name": "omega1"
+    },
+    {
+      "expression": "Circle(C, r2)",
+      "name": "omega2"
+    },
+    {
+      "expression": "Point(C.x + r2 * (evecx / r2 * cos(e) - evecy / r2 * sin(e)), C.y + r2 * (evecx / r2 * sin(e) + evecy / r2 * cos(e)))",
+      "name": "F"
+    },
+    {
+      "expression": "Point(C.x + (F.x - C.x) * cos(e) - (F.y - C.y) * sin(e), C.y + (F.x - C.x) * sin(e) + (F.y - C.y) * cos(e))",
+      "name": "G"
+    },
+    {
+      "expression": "Point(C.x + (G.x - C.x) * cos(e) - (G.y - C.y) * sin(e), C.y + (G.x - C.x) * sin(e) + (G.y - C.y) * cos(e))",
+      "name": "H"
+    },
+    {
+      "expression": "Point(C.x + (H.x - C.x) * cos(e) - (H.y - C.y) * sin(e), C.y + (H.x - C.x) * sin(e) + (H.y - C.y) * cos(e))",
+      "name": "I"
+    }
+  ],
+  "id": "AIME-2015-I-06",
+  "target": "180 * Angle(B, A, G) / pi",
+  "variables": [
+    "d",
+    "e"
+  ]
+}
