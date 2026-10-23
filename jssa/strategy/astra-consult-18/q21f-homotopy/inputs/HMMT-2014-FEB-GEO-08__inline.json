@@ -1,0 +1,160 @@
+{
+  "id": "HMMT-2014-FEB-GEO-08",
+  "mode": "inline",
+  "status": "prepared",
+  "nvars": 2,
+  "neqs": 2,
+  "degrees": [
+    4,
+    2
+  ],
+  "total_degree_product": 8,
+  "dsl_variables": [
+    "t"
+  ],
+  "variables": [
+    "v_t",
+    "zz"
+  ],
+  "saturation_factors": [
+    "v_t - 1"
+  ],
+  "eligible": true,
+  "selection_reason": "within_fixed_caps",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": 8
+      },
+      {
+        "left": "IsTangent(Line(A, N), Gamma)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "t",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(N, A, Y)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(6, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(0, 8)",
+        "name": "C"
+      },
+      {
+        "expression": "Midpoint(B, A)",
+        "name": "M"
+      },
+      {
+        "expression": "Midpoint(B, C)",
+        "name": "N"
+      },
+      {
+        "expression": "Point(6 * t / 2, 8 * (1 - t))",
+        "name": "Y"
+      },
+      {
+        "expression": "Circumcircle(A, M, Y)",
+        "name": "Gamma"
+      }
+    ],
+    "id": "HMMT-2014-FEB-GEO-08",
+    "target": "Area(N, A, Y)",
+    "variables": [
+      "t"
+    ]
+  },
+  "equations": [
+    "v_t**4 - 310*v_t**3/73 + 35997*v_t**2/5329 - 25420*v_t/5329 + 6724/5329",
+    "v_t*zz - zz - 1"
+  ],
+  "polynomials": [
+    [
+      [
+        "1",
+        [
+          4,
+          0
+        ]
+      ],
+      [
+        "-310/73",
+        [
+          3,
+          0
+        ]
+      ],
+      [
+        "35997/5329",
+        [
+          2,
+          0
+        ]
+      ],
+      [
+        "-25420/5329",
+        [
+          1,
+          0
+        ]
+      ],
+      [
+        "6724/5329",
+        [
+          0,
+          0
+        ]
+      ]
+    ],
+    [
+      [
+        "1",
+        [
+          1,
+          1
+        ]
+      ],
+      [
+        "-1",
+        [
+          0,
+          1
+        ]
+      ],
+      [
+        "-1",
+        [
+          0,
+          0
+        ]
+      ]
+    ]
+  ],
+  "angle_vars": {}
+}

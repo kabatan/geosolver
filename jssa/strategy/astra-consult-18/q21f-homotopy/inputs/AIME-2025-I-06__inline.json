@@ -1,0 +1,255 @@
+{
+  "id": "AIME-2025-I-06",
+  "mode": "inline",
+  "status": "prepared",
+  "nvars": 4,
+  "neqs": 4,
+  "degrees": [
+    2,
+    1,
+    4,
+    1
+  ],
+  "total_degree_product": 8,
+  "dsl_variables": [
+    "r",
+    "s"
+  ],
+  "variables": [
+    "s1",
+    "s2",
+    "v_r",
+    "v_s"
+  ],
+  "saturation_factors": [],
+  "eligible": true,
+  "selection_reason": "within_fixed_caps",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Area(A, B, C, D)",
+        "operator": "=",
+        "right": 72
+      },
+      {
+        "left": "Distance(O, Line(A, B))",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(O, Line(B, C))",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(O, Line(C, D))",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(O, Line(D, A))",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r",
+        "operator": "!=",
+        "right": "s"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(-r / 2, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(r / 2, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(s / 2, 6)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(-s / 2, 6)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(0, 3)",
+        "name": "O"
+      },
+      {
+        "expression": "Circle(O, 3)",
+        "name": "omega"
+      }
+    ],
+    "id": "AIME-2025-I-06",
+    "target": "r * r + s * s",
+    "variables": [
+      "r",
+      "s"
+    ]
+  },
+  "equations": [
+    "s1**2 - 9*v_r**2 - 18*v_r*v_s - 9*v_s**2",
+    "s1 - 72",
+    "s2**2*v_r**2 - 2*s2**2*v_r*v_s + s2**2*v_s**2 + 144*s2**2 - 9*v_r**2 - 18*v_r*v_s - 9*v_s**2",
+    "s2 - 3"
+  ],
+  "polynomials": [
+    [
+      [
+        "1",
+        [
+          2,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "-9",
+        [
+          0,
+          0,
+          2,
+          0
+        ]
+      ],
+      [
+        "-18",
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      [
+        "-9",
+        [
+          0,
+          0,
+          0,
+          2
+        ]
+      ]
+    ],
+    [
+      [
+        "1",
+        [
+          1,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "-72",
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    ],
+    [
+      [
+        "1",
+        [
+          0,
+          2,
+          2,
+          0
+        ]
+      ],
+      [
+        "-2",
+        [
+          0,
+          2,
+          1,
+          1
+        ]
+      ],
+      [
+        "1",
+        [
+          0,
+          2,
+          0,
+          2
+        ]
+      ],
+      [
+        "144",
+        [
+          0,
+          2,
+          0,
+          0
+        ]
+      ],
+      [
+        "-9",
+        [
+          0,
+          0,
+          2,
+          0
+        ]
+      ],
+      [
+        "-18",
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      [
+        "-9",
+        [
+          0,
+          0,
+          0,
+          2
+        ]
+      ]
+    ],
+    [
+      [
+        "1",
+        [
+          0,
+          1,
+          0,
+          0
+        ]
+      ],
+      [
+        "-3",
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    ]
+  ],
+  "angle_vars": {}
+}

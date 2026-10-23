@@ -1,0 +1,190 @@
+{
+  "id": "AIME-2006-I-01",
+  "mode": "inline",
+  "status": "prepared",
+  "nvars": 3,
+  "neqs": 3,
+  "degrees": [
+    2,
+    1,
+    1
+  ],
+  "total_degree_product": 2,
+  "dsl_variables": [
+    "Dx",
+    "Dy"
+  ],
+  "variables": [
+    "s1",
+    "v_Dx",
+    "v_Dy"
+  ],
+  "saturation_factors": [],
+  "eligible": true,
+  "selection_reason": "within_fixed_caps",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Angle(A, B, C)",
+        "operator": "=",
+        "right": "pi / 2"
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 18
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 21
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 14
+      },
+      {
+        "left": "Angle(A, C, D)",
+        "operator": "=",
+        "right": "pi / 2"
+      },
+      {
+        "left": "Dy",
+        "operator": ">",
+        "right": "21"
+      },
+      {
+        "left": "Dx",
+        "operator": "<",
+        "right": "18"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(18, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(18, 21)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(Dx, Dy)",
+        "name": "D"
+      }
+    ],
+    "id": "AIME-2006-I-01",
+    "target": "Distance(A, B) + Distance(B, C) + Distance(C, D) + Distance(D, A)",
+    "variables": [
+      "Dx",
+      "Dy"
+    ]
+  },
+  "equations": [
+    "s1**2 - v_Dx**2 + 36*v_Dx - v_Dy**2 + 42*v_Dy - 765",
+    "s1 - 14",
+    "v_Dx + 7*v_Dy/6 - 85/2"
+  ],
+  "polynomials": [
+    [
+      [
+        "1",
+        [
+          2,
+          0,
+          0
+        ]
+      ],
+      [
+        "-1",
+        [
+          0,
+          2,
+          0
+        ]
+      ],
+      [
+        "36",
+        [
+          0,
+          1,
+          0
+        ]
+      ],
+      [
+        "-1",
+        [
+          0,
+          0,
+          2
+        ]
+      ],
+      [
+        "42",
+        [
+          0,
+          0,
+          1
+        ]
+      ],
+      [
+        "-765",
+        [
+          0,
+          0,
+          0
+        ]
+      ]
+    ],
+    [
+      [
+        "1",
+        [
+          1,
+          0,
+          0
+        ]
+      ],
+      [
+        "-14",
+        [
+          0,
+          0,
+          0
+        ]
+      ]
+    ],
+    [
+      [
+        "1",
+        [
+          0,
+          1,
+          0
+        ]
+      ],
+      [
+        "7/6",
+        [
+          0,
+          0,
+          1
+        ]
+      ],
+      [
+        "-85/2",
+        [
+          0,
+          0,
+          0
+        ]
+      ]
+    ]
+  ],
+  "angle_vars": {}
+}

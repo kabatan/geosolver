@@ -1,0 +1,143 @@
+{
+  "id": "JMO-2008-PRE-02",
+  "mode": "inline",
+  "status": "prepared",
+  "nvars": 2,
+  "neqs": 2,
+  "degrees": [
+    4,
+    1
+  ],
+  "total_degree_product": 4,
+  "dsl_variables": [
+    "e"
+  ],
+  "variables": [
+    "s1",
+    "v_e"
+  ],
+  "saturation_factors": [],
+  "eligible": true,
+  "selection_reason": "within_fixed_caps",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(O, Line(C, E))",
+        "operator": "=",
+        "right": "Distance(O, A)"
+      },
+      {
+        "left": "e",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "e",
+        "operator": "<",
+        "right": "1"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(1, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(1, 1)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(0, 1)",
+        "name": "D"
+      },
+      {
+        "expression": "Midpoint(A, D)",
+        "name": "O"
+      },
+      {
+        "expression": "Circle(O, Distance(O, A))",
+        "name": "omega"
+      },
+      {
+        "expression": "Point(e, 0)",
+        "name": "E"
+      }
+    ],
+    "id": "JMO-2008-PRE-02",
+    "target": "Area(C, B, E)",
+    "variables": [
+      "e"
+    ]
+  },
+  "equations": [
+    "s1**2*v_e**2 - 2*s1**2*v_e + 2*s1**2 - v_e**2/4 - v_e/2 - 1/4",
+    "s1 - 1/2"
+  ],
+  "polynomials": [
+    [
+      [
+        "1",
+        [
+          2,
+          2
+        ]
+      ],
+      [
+        "-2",
+        [
+          2,
+          1
+        ]
+      ],
+      [
+        "2",
+        [
+          2,
+          0
+        ]
+      ],
+      [
+        "-1/4",
+        [
+          0,
+          2
+        ]
+      ],
+      [
+        "-1/2",
+        [
+          0,
+          1
+        ]
+      ],
+      [
+        "-1/4",
+        [
+          0,
+          0
+        ]
+      ]
+    ],
+    [
+      [
+        "1",
+        [
+          1,
+          0
+        ]
+      ],
+      [
+        "-1/2",
+        [
+          0,
+          0
+        ]
+      ]
+    ]
+  ],
+  "angle_vars": {}
+}
