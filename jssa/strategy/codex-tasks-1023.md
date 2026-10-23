@@ -119,3 +119,35 @@ jssa/strategy/gpt-pro-consult-16-answer.md の観点（特に過去の受賞作�
 ### astra-L（相談役、実験してよい）：候補4の3時間の成立確認
 GPT-Pro 相談17（jssa/strategy/gpt-pro-consult-17-answer.md）の第一候補「許容条件の一部を緩めた探索で値の候補を得て、元の条件から値を代数的に証明する（許容図を得ずに求値を終える）」が成立するかを、同回答の「3．最初の3時間」の手順どおりに確かめる。既存の証明書の仕組みは /mnt/project-files/jssa/theory/posdim-identities/ には届かないので、branch claude/project-thread-ulho54 の jssa/theory/posdim-identities/（certify.py、README.md、out/）と、branch claude/project-thread-fos2rk の benchmarks/exact_comparison/（algebraize.py、run_exact.py）を使う。Singular が無ければ入れる（apt または conda）。
 特に答えてほしいこと：(1) 既存24問の証明書は、公式解を使わずに自動で作れたか（P は solver の PSLQ 出力か、消去多項式 E か）。(2) 証明できる問題と、探索が難しい問題（jssa/difficulty/minima/basins-323.csv の p が低い、または本計測で遅い）が重なるか。(3) 正次元に限らず、0次元の問題でも同じ証明書の方法が使えるか、どれくらいの問題で何秒か。(4) 許容条件を緩めた探索（例：不等式・枝の guard を外す）で値の候補を集め、PSLQ で P を作り、元の条件から証明し、元の条件で許される値域に根が一つだけ残る、の一巡を、公式解や既存の P を読ませずに、構造の違う数問で動かせるか。(5) 費用：通常探索＋同じ証明器、目標量の直接消去（msolve -e 等）と比べて利点がある問題があるか。最後に「続行／中止」を、同回答の続行条件（入力だけから自動で回り、異なる2〜3種類の問題で費用込みの大きな利点か従来の失敗の救済が見える）に照らして判定すること。出力：jssa/strategy/astra-consult-17/L/。
+
+---
+
+# 待ち行列（10/23 20:45〜。空いた astra/sol に上から順に投入。終わったら Claude が次を足す）
+
+共通：背景は「追加5」の冒頭と同じ。src/ は凍結。結果は push。予測と判定基準は、結果を見る前に preregistration.md として commit してから本実行すること（予備実験は予備と明記）。並列は計算資源に合わせてよい（スーパーPC 16コア）。
+
+## Q1（astra）：探索中に許容条件を課すことは、どれだけ広く難しさの源か（292問、最優先）
+astra-G（jssa/strategy/astra-consult-17/G/）は14問で、hard 罰則を局所探索の間だけ外す（N）と、壁型の問題で許容開始の成功が大きく上がることを示した。これを292問全体に広げる。
+- 条件：B＝凍結版の局所探索、N＝hard feasibility 罰則（`_evaluate_hard_feasibility_penalty`）だけを0、G2＝hard 罰則を「境界からの距離に比例する傾きのある罰則」に置換（既知の滑らかな処理の代表。設計は G と相談して1つに固定）。最終の採点（元の等式・guard・hard・箱・答え）は全条件で同一。
+- 出発点：minima/raw-323 の seed 0 の保存出発点そのもの（各問の start）。同じ出発点を3条件に渡す。
+- 事前に固定する予測（例。G の結果を踏まえて astra が具体化し、実行前に commit）：(P1) N で問題平均 p が上がる。(P2) N では φ と p の偏順位相関（変数の数をそろえる）が、B の 0.38 から 0.15 未満に下がる＝φ の予測力は「壁」による。(P3) N で p が下がる問題の型（hard を外すと退化図・枝違いに落ちる）を事前に特定し、その割合を予測する。(P4) G2 は N と B の中間か、N に近いか。
+- 人間の難度（ghost-1023/human_feat.csv）との関係も B と N で比べる（予測は固定してから）。
+- 出力：jssa/difficulty/wall-292/。
+
+## Q2（sol）：未使用の問題セットを作る（どの候補の本検証にも使う）
+323問（2000〜2025年）と2026年20問のどれとも重ならない、AIME 1983〜1999 と HMMT 2./ARML 等の平面幾何の求値問題から、結果を見ない規則（年・番号順、DSL で書けるもの全部）で24〜30問を選び、DSL 化する。authoring-rules は /mnt/project-files/jssa/new2026/authoring-rules.md と同じ方針（ブランチ claude/project-thread-9bdbbg の jssa/difficulty/new2026/ にもある）。各問に原文→入力の対応カード（jssa/dsl-audit/cards.md の形式）を付け、公式の答えは別ファイルに。**solver・局所探索はまだ走らせない**。問題ID・入力ハッシュ・除外理由を manifest に固定して commit。出力：jssa/difficulty/unseen-1983/。
+
+## Q3（astra）：入力から「壁型」を予告する安い診断（Q2 で検証する準備）
+astra-K の answer.md §7 の一歩診断 W（乱数点から LM の一歩を1回だけ計算し、等式残差が減る最初の試行点が許容を破る割合）を実装し、開発用292問で W と p_I − p_F、N による改善量との関係を測る（開発群なので探索的）。閾値と規則をここで固定し、Q2 の未使用問題に当てる事前登録文を書く（実行は Q2 完成後）。出力：jssa/difficulty/wall-diagnostic/。
+
+## Q4（astra）：残差の重複度と精密化の停滞（astra-K の候補4'）
+jssa/results/tangency-signed/ の接条件の書き換え（符号付き残差、距離0の座標差、半径の補助式）を1種類ずつ切り替え、同じ凍結候補集合で原形・各単独・全体を比べる。DSL から「残差が解で2重に消える条件」を判定する規則を作り、精密化の停滞を予告できるか確かめる。既知の deflation との差も書く。出力：jssa/difficulty/multiplicity/。
+
+## Q5（astra）：完成solverでの N（Q1 で効果が出たら本実行）
+jssa/difficulty/full-solver-redraw-cloud/ のランナーの差し替え方（sitecustomize）を流用し、局所探索の hard 罰則を外した版を、既定（A）と1段目を局所探索にした版（B：LM_FIRST=1）で作る。150問 or 全292問 × 3 seed × {凍結, N}。今は実装と数問の動作確認まで。本実行は Q1 の結果を Claude が見てから。出力：jssa/difficulty/full-solver-nohard/。
+
+## Q6（astra）：wrong_answer 型・left_box 型の逆転問題の監査
+許容開始から wrong_answer に落ちる問題（HMMT 2007年2月 幾何4 など）、left_box に落ちる問題（JMO 2017 予選1、AIME 2021 II-14 など）について、入力（枝・不等式）の誤りや採点の問題でないかを確かめ、壁以外の機構を分類する。出力：jssa/strategy/astra-consult-17/Q6/。
+
+## Q7（astra）：文献調査
+幾何制約ソルバー（CAD の geometric constraint solving）、数値代数幾何、自動幾何、制約付き非線形最小二乗で、「不等式・非退化条件を探索中に強制すると収束域が分断・縮小される」こと、extreme/progressive barrier、penalty の段差と LM の受理判定の相互作用が、どこまで知られているかを調べ、本研究の Q1 の主張がどこまで新しいかを書く。出力：jssa/strategy/astra-consult-17/Q7/。
