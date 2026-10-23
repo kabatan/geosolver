@@ -1,0 +1,93 @@
+{
+  "id": "HMMT-2010-FEB-TEAM1-07",
+  "variables": [
+    "fx",
+    "fy",
+    "dx",
+    "dy",
+    "cx",
+    "cy"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "Q",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "F",
+      "expression": "Point(fx, fy)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(dx, dy)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(cx, cy)"
+    },
+    {
+      "name": "P",
+      "expression": "Point(fx+dx-1, fy+dy)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Angle(F,A,Q)",
+      "operator": "=",
+      "right": "10*pi/180"
+    },
+    {
+      "left": "Angle(P,A,C)",
+      "operator": "=",
+      "right": "10*pi/180"
+    },
+    {
+      "left": "Angle(P,F,A)",
+      "operator": "=",
+      "right": "15*pi/180"
+    },
+    {
+      "left": "Angle(P,D,C)",
+      "operator": "=",
+      "right": "15*pi/180"
+    },
+    {
+      "predicate": "ConvexPolygon([A,F,Q,D,C])"
+    },
+    {
+      "left": "fy",
+      "operator": "<",
+      "right": 0
+    },
+    {
+      "left": "(F.x-A.x)*(P.y-A.y)-(F.y-A.y)*(P.x-A.x)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "(Q.x-F.x)*(P.y-F.y)-(Q.y-F.y)*(P.x-F.x)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "(D.x-Q.x)*(P.y-Q.y)-(D.y-Q.y)*(P.x-Q.x)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "(C.x-D.x)*(P.y-D.y)-(C.y-D.y)*(P.x-D.x)",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "(A.x-C.x)*(P.y-C.y)-(A.y-C.y)*(P.x-C.x)",
+      "operator": ">",
+      "right": 0
+    }
+  ],
+  "target": "Angle(A,Q,C)"
+}

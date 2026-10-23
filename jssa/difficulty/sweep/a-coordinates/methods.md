@@ -13,3 +13,14 @@
 - 生ログ・候補座標・詳細な図は `/tmp/q43a-coordinates-20261024/` に保存し、リポジトリにはコード、選択表、検算、実行ごとの小さな要約、集計と代表図を置く。既存のsrc・既存結果は編集しない。
 
 再現には `/home/kabatan/work/solver/.venv/bin/python -B experiment.py prepare`、`audit`、`launch short` の順で実行する。既存出力がある場合はprepareが停止し、launchは完了済み実行を再実行しない。`analyze.py summarize short` で全予定実行を分母に集計する。`diagnostics.py equivalence` は依存する作図を明示的に評価した補強検算、`diagnostics.py figures short` は図の再評価である。描画だけはmatplotlibのあるsystem Pythonで `plot_results.py short` を使う。
+
+## 再開時の扱い
+
+- 2026-10-24の再開時、ホスト側の`ps -eo pid,etimes,cmd`で元のshortドライバと子プロセスの生存を確認した。二重起動も停止もせず、その1,056試行の自然終了を採用した。会話の中断と実験の中断を区別する。
+- 後続は`/tmp/q43a-clean`に凍結commitをcheckoutして実行する。実験コードのコピーでは`coordinates.py`の`ROOT`をこのcheckout、`BASE`を本結果ディレクトリに向けた。変換・選択・正誤判定のコードは同じ。初期のコピーとハッシュは`resume-audit.json`に記録した。
+- 元から用意されていた`followup.py plan long`で、shortの全結果から基準・書換え対照・縮尺2条件・その他1条件を選ぶ。24問、seed 431201/431202、180秒、240試行。続く`plan fixedbox`は同じ5条件、元のseed 431101/431102、15秒、240試行である。予定外のseed・問題・再試行は加えない。
+- fixedboxは元の問題から得た探索範囲を返す実行時フックを使う。凍結srcのファイルは変更しないが、動作にはこの介入があるため、通常の凍結solverの成績と分けて扱う。内部の補助等式などは固定しない。
+- 初回の図集計では描画用`float`変換を高精度モード内で呼び、全件が変換エラーになった。この変換だけをモードの外へ移した。修正前のコード・集計は外部保存し、`diagnostics-correction.json`に記録した。保存座標の再解析であり、solverの再試行ではない。残差閾値・形の検査・厳密答えの採点は変更していない。
+- 時間はworker終了までの時間であり、最初に正答を見つけた時刻ではない。CPU時間は主workerの値なので、共有機の占有率の厳密な測定にも使わない。
+
+後続の実行順は、クリーンcheckout内の実験コードを使い、`diagnostics.py equivalence` → `analyze.py summarize short` → `followup.py plan long` → `followup.py launch long` → `followup.py plan fixedbox` → `followup.py launch fixedbox`。各段階の`analyze.py summarize <stage>`と`diagnostics.py figures <stage>`の後、本ディレクトリの`report_metrics.py`で問題単位のseed安定性を集計する。これらは今回の探索・再現比較であり、独立した未使用問題による確認実験ではない。

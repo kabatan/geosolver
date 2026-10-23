@@ -1,0 +1,81 @@
+{
+  "id": "HMMT-2017-FEB-GUTS-02",
+  "variables": [
+    "t",
+    "zx",
+    "zy"
+  ],
+  "constructions": [
+    {
+      "name": "X",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "Y",
+      "expression": "Point(t, 0)"
+    },
+    {
+      "name": "Z",
+      "expression": "Point(zx, zy)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(-3, 0)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(t+10, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(-2*zx/Distance(X,Z), -2*zy/Distance(X,Z))"
+    },
+    {
+      "name": "E",
+      "expression": "Point(zx+16*zx/Distance(X,Z), zy+16*zy/Distance(X,Z))"
+    },
+    {
+      "name": "C",
+      "expression": "Point(t+4*(t-zx)/Distance(Y,Z), -4*zy/Distance(Y,Z))"
+    },
+    {
+      "name": "F",
+      "expression": "Point(zx+12*(zx-t)/Distance(Y,Z), zy+12*zy/Distance(Y,Z))"
+    },
+    {
+      "name": "omega",
+      "expression": "Circumcircle(A,B,C)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(Center(omega),D)",
+      "operator": "=",
+      "right": "Radius(omega)"
+    },
+    {
+      "left": "Distance(Center(omega),E)",
+      "operator": "=",
+      "right": "Radius(omega)"
+    },
+    {
+      "left": "Distance(Center(omega),F)",
+      "operator": "=",
+      "right": "Radius(omega)"
+    },
+    {
+      "left": "t",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "zy",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "predicate": "ConvexPolygon([A,B,C,D,E,F])"
+    }
+  ],
+  "target": "Distance(X,Y)+Distance(Y,Z)+Distance(Z,X)"
+}

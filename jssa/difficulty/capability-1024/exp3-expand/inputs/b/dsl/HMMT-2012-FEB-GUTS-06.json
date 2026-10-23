@@ -1,0 +1,74 @@
+{
+  "id": "HMMT-2012-FEB-GUTS-06",
+  "variables": [
+    "ex",
+    "ey"
+  ],
+  "constructions": [
+    {
+      "name": "A",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "B",
+      "expression": "Point(20, 0)"
+    },
+    {
+      "name": "C",
+      "expression": "Point(20, 12)"
+    },
+    {
+      "name": "D",
+      "expression": "Point(0, 12)"
+    },
+    {
+      "name": "Z",
+      "expression": "Point(20, 12+18)"
+    },
+    {
+      "name": "E",
+      "expression": "Point(ex, ey)"
+    },
+    {
+      "name": "X",
+      "expression": "IntersectLines(Line(E,Z),Line(A,B))"
+    },
+    {
+      "name": "Y",
+      "expression": "IntersectLines(Line(E,Z),Line(C,D))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "Distance(E,Line(A,B))",
+      "operator": "=",
+      "right": 6
+    },
+    {
+      "left": "Distance(E,Line(A,D))",
+      "operator": "=",
+      "right": 6
+    },
+    {
+      "left": "ex",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "ex",
+      "operator": "<",
+      "right": 20
+    },
+    {
+      "left": "ey",
+      "operator": ">",
+      "right": 0
+    },
+    {
+      "left": "ey",
+      "operator": "<",
+      "right": 12
+    }
+  ],
+  "target": "Area(A,X,Y,D)"
+}

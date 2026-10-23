@@ -85,7 +85,8 @@ def figures(stage):
                         feasible=e.evaluate_hp_hard_feasibility(vals,precision=80).hard_feasible
                         ans=e.evaluate_answer_hp(vals,precision=80).answer_hp
                         snap=e.evaluation_store.get(vals);ctx=snap.materialize(names)
-                        points={n:[float(ctx[n].x),float(ctx[n].y)] for n in names}
+                    # Plot serialization is outside the guarded HP computation.
+                    points={n:[float(ctx[n].x),float(ctx[n].y)] for n in names}
                     eq_ok=bool(residual.is_finite and residual.residual_norm_hp<mp.mpf('1e-10'))
                     valid+=eq_ok and feasible
                     lengths=[math.dist(points[a],points[z]) for a,z in itertools.combinations(names,2)]

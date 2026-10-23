@@ -1,0 +1,148 @@
+{
+  "kind": "static source reading and already-completed equivalence audit; no new solver trials",
+  "source_hash": "sha256:d8fd9bb8392ad2984276bab3386e033669246ee79586317917c322d31b4541f5",
+  "box_changed_ids": [
+    "HMMT-2013-FEB-GEO-03",
+    "AIME-2015-II-11",
+    "aime-2004-2-13",
+    "AIME-2012-I-12",
+    "HMMT-2015-FEB-GEO-04",
+    "HMMT-2024-FEB-GEO-01",
+    "HMMT-2014-FEB-GEO-03",
+    "HMMT-2022-FEB-GEO-03",
+    "HMMT-2014-FEB-GEO-02",
+    "HMMT-2025-FEB-GEO-08",
+    "HMMT-2026-FEB-GEO-04",
+    "HMMT-2026-FEB-GEO-06",
+    "HMMT-2026-FEB-GUTS-28",
+    "HMMT-2026-FEB-GEO-10",
+    "HMMT-2026-FEB-GEO-07",
+    "JMO-2026-PRE-06",
+    "JMO-2026-PRE-09",
+    "HMMT-2026-FEB-GEO-02",
+    "HMMT-2026-FEB-GUTS-18"
+  ],
+  "residual_count_changed": [
+    {
+      "id": "HMMT-2013-FEB-GEO-03",
+      "base_residual_count": 33,
+      "variant_residual_count": 21
+    },
+    {
+      "id": "AIME-2012-I-12",
+      "base_residual_count": 9,
+      "variant_residual_count": 7
+    },
+    {
+      "id": "HMMT-2024-FEB-GEO-01",
+      "base_residual_count": 15,
+      "variant_residual_count": 9
+    },
+    {
+      "id": "AIME-2006-II-06",
+      "base_residual_count": 7,
+      "variant_residual_count": 5
+    },
+    {
+      "id": "HMMT-2025-FEB-GEO-08",
+      "base_residual_count": 11,
+      "variant_residual_count": 10
+    }
+  ],
+  "example": {
+    "id": "HMMT-2024-FEB-GEO-01",
+    "original_first_condition": {
+      "left": "OnSegment(U1, A, B)",
+      "operator": "=",
+      "right": 0
+    },
+    "scaled_first_condition": {
+      "left": "OnSegment(U1, A, B) / (1 / 10000) ** 1",
+      "operator": "=",
+      "right": "0"
+    },
+    "audit": {
+      "id": "HMMT-2024-FEB-GEO-01",
+      "variant": "scale_-4",
+      "comparisons": 105,
+      "both_undefined": 0,
+      "one_sided_errors": [],
+      "mismatches": [],
+      "max_relative_error": 1.0542197943230523e-80,
+      "hard_feasibility_differences": 0,
+      "base_box": [
+        [
+          0.0,
+          6.0
+        ],
+        [
+          -10.0,
+          10.0
+        ],
+        [
+          0.0,
+          5.196152422706633
+        ],
+        [
+          -12.0,
+          12.0
+        ],
+        [
+          0.0,
+          5.196152422706633
+        ],
+        [
+          0.0,
+          24.0
+        ],
+        [
+          -12.0,
+          12.0
+        ]
+      ],
+      "variant_box": [
+        [
+          0.0,
+          6.0
+        ],
+        [
+          -20000.0,
+          20000.0
+        ],
+        [
+          0.0,
+          5.196152422706633
+        ],
+        [
+          -20000.0,
+          20000.0
+        ],
+        [
+          0.0,
+          5.196152422706633
+        ],
+        [
+          0.0,
+          40000.0
+        ],
+        [
+          -20000.0,
+          20000.0
+        ]
+      ],
+      "base_residual_count": 15,
+      "variant_residual_count": 9
+    }
+  },
+  "observations": [
+    "search_bounds scans absolute numeric literal values, including denominators, and caps its scale at 20000. Both 10000 and 1/10000 contain literal 10000.",
+    "The existing coordinate transform writes OnSegment(...)/((s)**1). rational_constant supports +,-,*,/ but not Pow, so zero_test_call cannot unwrap this denominator.",
+    "necessary_incidence_residuals only adds an oriented-area equation when zero_test_call recognizes OnSegment. The original public equations are retained; the additional numerical equations can disappear.",
+    "These are observed changes to the evaluated representation, not an isolated causal decomposition of outcome differences. Fixedbox only intervenes on inferred search bounds."
+  ],
+  "files": {
+    "src/geosolver/problem/domain_bounds.py": "1717064cd87f3fecdb12e74ab231da76c8b0c51aa0c1d4c70cc469658c09d270",
+    "src/geosolver/problem/incidence_residuals.py": "1e4cefd45dcbba88366016e27a8b1b26aaec369f5978dfc674db422fcd2e1fa5",
+    "src/geosolver/engine/standard/problem/zero_test_source.py": "88dcd49b32a8935668575c2423ab1a9ff9ecb323a242c13893e05d483b5c1c60"
+  }
+}
