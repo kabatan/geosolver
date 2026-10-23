@@ -1,0 +1,3212 @@
+[
+  {
+    "id": "HMMT-2007-FEB-GEO-04",
+    "group": "development",
+    "arm": "forward",
+    "variables": [
+      "u",
+      "v"
+    ],
+    "n_vars": 2,
+    "n_equalities": 3,
+    "bounds": [
+      [
+        0.0,
+        52.0
+      ],
+      [
+        0.0,
+        52.0
+      ]
+    ],
+    "target": "Distance(A, B) + Distance(A, C)",
+    "constraints": [
+      "Distance(O, A)",
+      "IsTangent(Line(B, C), omega)",
+      "Distance(B, C)"
+    ]
+  },
+  {
+    "id": "HMMT-2007-FEB-GEO-04",
+    "group": "development",
+    "arm": "inverse-02",
+    "variables": [
+      "u",
+      "v"
+    ],
+    "n_vars": 2,
+    "n_equalities": 3,
+    "bounds": [
+      [
+        0.0,
+        68.0
+      ],
+      [
+        0.0,
+        68.0
+      ]
+    ],
+    "target": "Distance(B, C)",
+    "constraints": [
+      "Distance(O, A)",
+      "IsTangent(Line(B, C), omega)",
+      "Distance(A, B) + Distance(A, C)"
+    ]
+  },
+  {
+    "id": "HMMT-2014-FEB-GEO-04",
+    "group": "development",
+    "arm": "forward",
+    "variables": [
+      "b",
+      "ax",
+      "ay"
+    ],
+    "n_vars": 3,
+    "n_equalities": 4,
+    "bounds": [
+      [
+        0.0,
+        720.0
+      ],
+      [
+        -360.0,
+        360.0
+      ],
+      [
+        0.0,
+        720.0
+      ]
+    ],
+    "target": "180 * Angle(A, C, D) / pi",
+    "constraints": [
+      "Angle(D, A, C)",
+      "Angle(D, B, C)",
+      "Angle(B, C, D)",
+      "Distance(B, C)"
+    ]
+  },
+  {
+    "id": "HMMT-2014-FEB-GEO-04",
+    "group": "development",
+    "arm": "inverse-02",
+    "variables": [
+      "b",
+      "ax",
+      "ay"
+    ],
+    "n_vars": 3,
+    "n_equalities": 4,
+    "bounds": [
+      [
+        0.0,
+        720.0
+      ],
+      [
+        -360.0,
+        360.0
+      ],
+      [
+        0.0,
+        720.0
+      ]
+    ],
+    "target": "Angle(B, C, D)",
+    "constraints": [
+      "Angle(D, A, C)",
+      "Angle(D, B, C)",
+      "180 * Angle(A, C, D) / pi",
+      "Distance(B, C)"
+    ]
+  },
+  {
+    "id": "HMMT-2014-FEB-GEO-04",
+    "group": "development",
+    "arm": "inverse-01",
+    "variables": [
+      "b",
+      "ax",
+      "ay"
+    ],
+    "n_vars": 3,
+    "n_equalities": 4,
+    "bounds": [
+      [
+        0.0,
+        720.0
+      ],
+      [
+        -360.0,
+        360.0
+      ],
+      [
+        0.0,
+        720.0
+      ]
+    ],
+    "target": "Angle(D, B, C)",
+    "constraints": [
+      "Angle(D, A, C)",
+      "180 * Angle(A, C, D) / pi",
+      "Angle(B, C, D)",
+      "Distance(B, C)"
+    ]
+  },
+  {
+    "id": "HMMT-2014-FEB-GEO-04",
+    "group": "development",
+    "arm": "inverse-00",
+    "variables": [
+      "b",
+      "ax",
+      "ay"
+    ],
+    "n_vars": 3,
+    "n_equalities": 4,
+    "bounds": [
+      [
+        0.0,
+        720.0
+      ],
+      [
+        -360.0,
+        360.0
+      ],
+      [
+        0.0,
+        720.0
+      ]
+    ],
+    "target": "Angle(D, A, C)",
+    "constraints": [
+      "180 * Angle(A, C, D) / pi",
+      "Angle(D, B, C)",
+      "Angle(B, C, D)",
+      "Distance(B, C)"
+    ]
+  },
+  {
+    "id": "JMO-2018-PRE-06",
+    "group": "development",
+    "arm": "forward",
+    "variables": [
+      "xx",
+      "xy",
+      "yx",
+      "yy",
+      "zx",
+      "zy"
+    ],
+    "n_vars": 6,
+    "n_equalities": 12,
+    "bounds": [
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        20.0
+      ]
+    ],
+    "target": "Distance(A, X)",
+    "constraints": [
+      "Collinear(A, Y, X)",
+      "Collinear(B, Z, Y)",
+      "Collinear(C, X, Z)",
+      "OnSegment(Y, A, X)",
+      "OnSegment(Z, B, Y)",
+      "OnSegment(X, C, Z)",
+      "Distance(X, Y)",
+      "Distance(X, Y)",
+      "Perpendicular(Line(X, Y), Line(X, Z))",
+      "(((X).x-(A).x)*((Y).y-(A).y)-((X).y-(A).y)*((Y).x-(A).x))",
+      "(((Y).x-(B).x)*((Z).y-(B).y)-((Y).y-(B).y)*((Z).x-(B).x))",
+      "(((Z).x-(C).x)*((X).y-(C).y)-((Z).y-(C).y)*((X).x-(C).x))"
+    ]
+  },
+  {
+    "id": "JMO-2018-PRE-06",
+    "group": "development",
+    "arm": "inverse-06",
+    "variables": [
+      "xx",
+      "xy",
+      "yx",
+      "yy",
+      "zx",
+      "zy"
+    ],
+    "n_vars": 6,
+    "n_equalities": 12,
+    "bounds": [
+      [
+        0.0,
+        316.0
+      ],
+      [
+        0.0,
+        316.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        20.0
+      ]
+    ],
+    "target": "Distance(X, Y)",
+    "constraints": [
+      "Collinear(A, Y, X)",
+      "Collinear(B, Z, Y)",
+      "Collinear(C, X, Z)",
+      "OnSegment(Y, A, X)",
+      "OnSegment(Z, B, Y)",
+      "OnSegment(X, C, Z)",
+      "Distance(A, X)",
+      "Distance(X, Y)",
+      "Perpendicular(Line(X, Y), Line(X, Z))",
+      "(((X).x-(A).x)*((Y).y-(A).y)-((X).y-(A).y)*((Y).x-(A).x))",
+      "(((Y).x-(B).x)*((Z).y-(B).y)-((Y).y-(B).y)*((Z).x-(B).x))",
+      "(((Z).x-(C).x)*((X).y-(C).y)-((Z).y-(C).y)*((X).x-(C).x))"
+    ]
+  },
+  {
+    "id": "AIME-2012-II-15",
+    "group": "development",
+    "arm": "forward",
+    "variables": [
+      "cx",
+      "cy"
+    ],
+    "n_vars": 2,
+    "n_equalities": 4,
+    "bounds": [
+      [
+        -14.0,
+        14.0
+      ],
+      [
+        0.0,
+        28.0
+      ]
+    ],
+    "target": "Distance(A, F) ** 2",
+    "constraints": [
+      "Distance(B, C)",
+      "Distance(A, C)",
+      "OnSegment(D, B, C)",
+      "(((C).x-(B).x)*((D).y-(B).y)-((C).y-(B).y)*((D).x-(B).x))"
+    ]
+  },
+  {
+    "id": "AIME-2012-II-15",
+    "group": "development",
+    "arm": "inverse-00",
+    "variables": [
+      "cx",
+      "cy"
+    ],
+    "n_vars": 2,
+    "n_equalities": 4,
+    "bounds": [
+      [
+        -1800.0,
+        1800.0
+      ],
+      [
+        0.0,
+        3600.0
+      ]
+    ],
+    "target": "Distance(B, C)",
+    "constraints": [
+      "Distance(A, F) ** 2",
+      "Distance(A, C)",
+      "OnSegment(D, B, C)",
+      "(((C).x-(B).x)*((D).y-(B).y)-((C).y-(B).y)*((D).x-(B).x))"
+    ]
+  },
+  {
+    "id": "AIME-2012-II-15",
+    "group": "development",
+    "arm": "inverse-01",
+    "variables": [
+      "cx",
+      "cy"
+    ],
+    "n_vars": 2,
+    "n_equalities": 4,
+    "bounds": [
+      [
+        -1800.0,
+        1800.0
+      ],
+      [
+        0.0,
+        3600.0
+      ]
+    ],
+    "target": "Distance(A, C)",
+    "constraints": [
+      "Distance(B, C)",
+      "Distance(A, F) ** 2",
+      "OnSegment(D, B, C)",
+      "(((C).x-(B).x)*((D).y-(B).y)-((C).y-(B).y)*((D).x-(B).x))"
+    ]
+  },
+  {
+    "id": "AIME-2014-II-11",
+    "group": "development",
+    "arm": "forward",
+    "variables": [
+      "ex",
+      "ey",
+      "cx",
+      "cy",
+      "ax",
+      "ay"
+    ],
+    "n_vars": 6,
+    "n_equalities": 10,
+    "bounds": [
+      [
+        -360.0,
+        360.0
+      ],
+      [
+        0.0,
+        720.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        -10.0,
+        10.0
+      ],
+      [
+        -10.0,
+        10.0
+      ]
+    ],
+    "target": "Distance(A, E)",
+    "constraints": [
+      "Angle(D, R, E)",
+      "Angle(R, E, D)",
+      "Collinear(D, C, E)",
+      "OnSegment(C, D, E)",
+      "Perpendicular(Line(R, C), Line(E, M))",
+      "Collinear(D, E, A)",
+      "OnSegment(E, D, A)",
+      "Distance(C, A)",
+      "(((E).x-(D).x)*((C).y-(D).y)-((E).y-(D).y)*((C).x-(D).x))",
+      "(((A).x-(D).x)*((E).y-(D).y)-((A).y-(D).y)*((E).x-(D).x))"
+    ]
+  },
+  {
+    "id": "AIME-2014-II-11",
+    "group": "development",
+    "arm": "inverse-01",
+    "variables": [
+      "ex",
+      "ey",
+      "cx",
+      "cy",
+      "ax",
+      "ay"
+    ],
+    "n_vars": 6,
+    "n_equalities": 10,
+    "bounds": [
+      [
+        -360.0,
+        360.0
+      ],
+      [
+        0.0,
+        720.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        -44.0,
+        44.0
+      ],
+      [
+        -44.0,
+        44.0
+      ]
+    ],
+    "target": "Angle(R, E, D)",
+    "constraints": [
+      "Angle(D, R, E)",
+      "Distance(A, E)",
+      "Collinear(D, C, E)",
+      "OnSegment(C, D, E)",
+      "Perpendicular(Line(R, C), Line(E, M))",
+      "Collinear(D, E, A)",
+      "OnSegment(E, D, A)",
+      "Distance(C, A)",
+      "(((E).x-(D).x)*((C).y-(D).y)-((E).y-(D).y)*((C).x-(D).x))",
+      "(((A).x-(D).x)*((E).y-(D).y)-((A).y-(D).y)*((E).x-(D).x))"
+    ]
+  },
+  {
+    "id": "AIME-2014-II-11",
+    "group": "development",
+    "arm": "inverse-00",
+    "variables": [
+      "ex",
+      "ey",
+      "cx",
+      "cy",
+      "ax",
+      "ay"
+    ],
+    "n_vars": 6,
+    "n_equalities": 10,
+    "bounds": [
+      [
+        -360.0,
+        360.0
+      ],
+      [
+        0.0,
+        720.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        -44.0,
+        44.0
+      ],
+      [
+        -44.0,
+        44.0
+      ]
+    ],
+    "target": "Angle(D, R, E)",
+    "constraints": [
+      "Distance(A, E)",
+      "Angle(R, E, D)",
+      "Collinear(D, C, E)",
+      "OnSegment(C, D, E)",
+      "Perpendicular(Line(R, C), Line(E, M))",
+      "Collinear(D, E, A)",
+      "OnSegment(E, D, A)",
+      "Distance(C, A)",
+      "(((E).x-(D).x)*((C).y-(D).y)-((E).y-(D).y)*((C).x-(D).x))",
+      "(((A).x-(D).x)*((E).y-(D).y)-((A).y-(D).y)*((E).x-(D).x))"
+    ]
+  },
+  {
+    "id": "aime-2001-1-13",
+    "group": "development",
+    "arm": "forward",
+    "variables": [
+      "x",
+      "y",
+      "z",
+      "w"
+    ],
+    "n_vars": 4,
+    "n_equalities": 4,
+    "bounds": [
+      [
+        -16.0,
+        16.0
+      ],
+      [
+        -16.0,
+        16.0
+      ],
+      [
+        -20.0,
+        20.0
+      ],
+      [
+        -20.0,
+        20.0
+      ]
+    ],
+    "target": "Distance(C, D)",
+    "constraints": [
+      "Angle(B, A, D)",
+      "Angle(A, B, D)",
+      "Distance(B, D)",
+      "Distance(B, C)"
+    ]
+  },
+  {
+    "id": "aime-2001-1-13",
+    "group": "development",
+    "arm": "inverse-03",
+    "variables": [
+      "x",
+      "y",
+      "z",
+      "w"
+    ],
+    "n_vars": 4,
+    "n_equalities": 4,
+    "bounds": [
+      [
+        -128.0,
+        128.0
+      ],
+      [
+        -128.0,
+        128.0
+      ],
+      [
+        -128.0,
+        128.0
+      ],
+      [
+        -128.0,
+        128.0
+      ]
+    ],
+    "target": "Distance(B, D)",
+    "constraints": [
+      "Angle(B, A, D)",
+      "Angle(A, B, D)",
+      "Distance(C, D)",
+      "Distance(B, C)"
+    ]
+  },
+  {
+    "id": "aime-2001-1-13",
+    "group": "development",
+    "arm": "inverse-04",
+    "variables": [
+      "x",
+      "y",
+      "z",
+      "w"
+    ],
+    "n_vars": 4,
+    "n_equalities": 4,
+    "bounds": [
+      [
+        -128.0,
+        128.0
+      ],
+      [
+        -128.0,
+        128.0
+      ],
+      [
+        -128.0,
+        128.0
+      ],
+      [
+        -128.0,
+        128.0
+      ]
+    ],
+    "target": "Distance(B, C)",
+    "constraints": [
+      "Angle(B, A, D)",
+      "Angle(A, B, D)",
+      "Distance(B, D)",
+      "Distance(C, D)"
+    ]
+  },
+  {
+    "id": "HMMT-2013-FEB-GEO-03",
+    "group": "development",
+    "arm": "forward",
+    "variables": [
+      "p",
+      "u",
+      "v",
+      "tx",
+      "ty"
+    ],
+    "n_vars": 5,
+    "n_equalities": 33,
+    "bounds": [
+      [
+        0.0,
+        36.0
+      ],
+      [
+        -18.0,
+        18.0
+      ],
+      [
+        0.0,
+        36.0
+      ],
+      [
+        -18.0,
+        18.0
+      ],
+      [
+        -18.0,
+        18.0
+      ]
+    ],
+    "target": "Area(B1, B2, B3, B4, B5, B6)",
+    "constraints": [
+      "Parallel(Line(A1, A3), Line(A4, A6))",
+      "Parallel(Line(A2, A4), Line(A5, A1))",
+      "Parallel(Line(A3, A5), Line(A6, A2))",
+      "Distance(A1, A3)",
+      "Distance(A3, A5)",
+      "Distance(A5, A1)",
+      "Area(A1, B5, B6)",
+      "Area(A2, B6, B1)",
+      "Area(A3, B1, B2)",
+      "OnSegment(B1, A1, A3)",
+      "OnSegment(B1, A2, A4)",
+      "OnSegment(B2, A2, A4)",
+      "OnSegment(B2, A3, A5)",
+      "OnSegment(B3, A3, A5)",
+      "OnSegment(B3, A4, A6)",
+      "OnSegment(B4, A4, A6)",
+      "OnSegment(B4, A5, A1)",
+      "OnSegment(B5, A5, A1)",
+      "OnSegment(B5, A6, A2)",
+      "OnSegment(B6, A6, A2)",
+      "OnSegment(B6, A1, A3)",
+      "(((A3).x-(A1).x)*((B1).y-(A1).y)-((A3).y-(A1).y)*((B1).x-(A1).x))",
+      "(((A4).x-(A2).x)*((B1).y-(A2).y)-((A4).y-(A2).y)*((B1).x-(A2).x))",
+      "(((A4).x-(A2).x)*((B2).y-(A2).y)-((A4).y-(A2).y)*((B2).x-(A2).x))",
+      "(((A5).x-(A3).x)*((B2).y-(A3).y)-((A5).y-(A3).y)*((B2).x-(A3).x))",
+      "(((A5).x-(A3).x)*((B3).y-(A3).y)-((A5).y-(A3).y)*((B3).x-(A3).x))",
+      "(((A6).x-(A4).x)*((B3).y-(A4).y)-((A6).y-(A4).y)*((B3).x-(A4).x))",
+      "(((A6).x-(A4).x)*((B4).y-(A4).y)-((A6).y-(A4).y)*((B4).x-(A4).x))",
+      "(((A1).x-(A5).x)*((B4).y-(A5).y)-((A1).y-(A5).y)*((B4).x-(A5).x))",
+      "(((A1).x-(A5).x)*((B5).y-(A5).y)-((A1).y-(A5).y)*((B5).x-(A5).x))",
+      "(((A2).x-(A6).x)*((B5).y-(A6).y)-((A2).y-(A6).y)*((B5).x-(A6).x))",
+      "(((A2).x-(A6).x)*((B6).y-(A6).y)-((A2).y-(A6).y)*((B6).x-(A6).x))",
+      "(((A3).x-(A1).x)*((B6).y-(A1).y)-((A3).y-(A1).y)*((B6).x-(A1).x))"
+    ]
+  },
+  {
+    "id": "HMMT-2013-FEB-GEO-03",
+    "group": "development",
+    "arm": "inverse-08",
+    "variables": [
+      "p",
+      "u",
+      "v",
+      "tx",
+      "ty"
+    ],
+    "n_vars": 5,
+    "n_equalities": 33,
+    "bounds": [
+      [
+        0.0,
+        88.0
+      ],
+      [
+        -44.0,
+        44.0
+      ],
+      [
+        0.0,
+        88.0
+      ],
+      [
+        -44.0,
+        44.0
+      ],
+      [
+        -44.0,
+        44.0
+      ]
+    ],
+    "target": "Area(A3, B1, B2)",
+    "constraints": [
+      "Parallel(Line(A1, A3), Line(A4, A6))",
+      "Parallel(Line(A2, A4), Line(A5, A1))",
+      "Parallel(Line(A3, A5), Line(A6, A2))",
+      "Distance(A1, A3)",
+      "Distance(A3, A5)",
+      "Distance(A5, A1)",
+      "Area(A1, B5, B6)",
+      "Area(A2, B6, B1)",
+      "Area(B1, B2, B3, B4, B5, B6)",
+      "OnSegment(B1, A1, A3)",
+      "OnSegment(B1, A2, A4)",
+      "OnSegment(B2, A2, A4)",
+      "OnSegment(B2, A3, A5)",
+      "OnSegment(B3, A3, A5)",
+      "OnSegment(B3, A4, A6)",
+      "OnSegment(B4, A4, A6)",
+      "OnSegment(B4, A5, A1)",
+      "OnSegment(B5, A5, A1)",
+      "OnSegment(B5, A6, A2)",
+      "OnSegment(B6, A6, A2)",
+      "OnSegment(B6, A1, A3)",
+      "(((A3).x-(A1).x)*((B1).y-(A1).y)-((A3).y-(A1).y)*((B1).x-(A1).x))",
+      "(((A4).x-(A2).x)*((B1).y-(A2).y)-((A4).y-(A2).y)*((B1).x-(A2).x))",
+      "(((A4).x-(A2).x)*((B2).y-(A2).y)-((A4).y-(A2).y)*((B2).x-(A2).x))",
+      "(((A5).x-(A3).x)*((B2).y-(A3).y)-((A5).y-(A3).y)*((B2).x-(A3).x))",
+      "(((A5).x-(A3).x)*((B3).y-(A3).y)-((A5).y-(A3).y)*((B3).x-(A3).x))",
+      "(((A6).x-(A4).x)*((B3).y-(A4).y)-((A6).y-(A4).y)*((B3).x-(A4).x))",
+      "(((A6).x-(A4).x)*((B4).y-(A4).y)-((A6).y-(A4).y)*((B4).x-(A4).x))",
+      "(((A1).x-(A5).x)*((B4).y-(A5).y)-((A1).y-(A5).y)*((B4).x-(A5).x))",
+      "(((A1).x-(A5).x)*((B5).y-(A5).y)-((A1).y-(A5).y)*((B5).x-(A5).x))",
+      "(((A2).x-(A6).x)*((B5).y-(A6).y)-((A2).y-(A6).y)*((B5).x-(A6).x))",
+      "(((A2).x-(A6).x)*((B6).y-(A6).y)-((A2).y-(A6).y)*((B6).x-(A6).x))",
+      "(((A3).x-(A1).x)*((B6).y-(A1).y)-((A3).y-(A1).y)*((B6).x-(A1).x))"
+    ]
+  },
+  {
+    "id": "HMMT-2013-FEB-GEO-03",
+    "group": "development",
+    "arm": "inverse-06",
+    "variables": [
+      "p",
+      "u",
+      "v",
+      "tx",
+      "ty"
+    ],
+    "n_vars": 5,
+    "n_equalities": 33,
+    "bounds": [
+      [
+        0.0,
+        88.0
+      ],
+      [
+        -44.0,
+        44.0
+      ],
+      [
+        0.0,
+        88.0
+      ],
+      [
+        -44.0,
+        44.0
+      ],
+      [
+        -44.0,
+        44.0
+      ]
+    ],
+    "target": "Area(A1, B5, B6)",
+    "constraints": [
+      "Parallel(Line(A1, A3), Line(A4, A6))",
+      "Parallel(Line(A2, A4), Line(A5, A1))",
+      "Parallel(Line(A3, A5), Line(A6, A2))",
+      "Distance(A1, A3)",
+      "Distance(A3, A5)",
+      "Distance(A5, A1)",
+      "Area(B1, B2, B3, B4, B5, B6)",
+      "Area(A2, B6, B1)",
+      "Area(A3, B1, B2)",
+      "OnSegment(B1, A1, A3)",
+      "OnSegment(B1, A2, A4)",
+      "OnSegment(B2, A2, A4)",
+      "OnSegment(B2, A3, A5)",
+      "OnSegment(B3, A3, A5)",
+      "OnSegment(B3, A4, A6)",
+      "OnSegment(B4, A4, A6)",
+      "OnSegment(B4, A5, A1)",
+      "OnSegment(B5, A5, A1)",
+      "OnSegment(B5, A6, A2)",
+      "OnSegment(B6, A6, A2)",
+      "OnSegment(B6, A1, A3)",
+      "(((A3).x-(A1).x)*((B1).y-(A1).y)-((A3).y-(A1).y)*((B1).x-(A1).x))",
+      "(((A4).x-(A2).x)*((B1).y-(A2).y)-((A4).y-(A2).y)*((B1).x-(A2).x))",
+      "(((A4).x-(A2).x)*((B2).y-(A2).y)-((A4).y-(A2).y)*((B2).x-(A2).x))",
+      "(((A5).x-(A3).x)*((B2).y-(A3).y)-((A5).y-(A3).y)*((B2).x-(A3).x))",
+      "(((A5).x-(A3).x)*((B3).y-(A3).y)-((A5).y-(A3).y)*((B3).x-(A3).x))",
+      "(((A6).x-(A4).x)*((B3).y-(A4).y)-((A6).y-(A4).y)*((B3).x-(A4).x))",
+      "(((A6).x-(A4).x)*((B4).y-(A4).y)-((A6).y-(A4).y)*((B4).x-(A4).x))",
+      "(((A1).x-(A5).x)*((B4).y-(A5).y)-((A1).y-(A5).y)*((B4).x-(A5).x))",
+      "(((A1).x-(A5).x)*((B5).y-(A5).y)-((A1).y-(A5).y)*((B5).x-(A5).x))",
+      "(((A2).x-(A6).x)*((B5).y-(A6).y)-((A2).y-(A6).y)*((B5).x-(A6).x))",
+      "(((A2).x-(A6).x)*((B6).y-(A6).y)-((A2).y-(A6).y)*((B6).x-(A6).x))",
+      "(((A3).x-(A1).x)*((B6).y-(A1).y)-((A3).y-(A1).y)*((B6).x-(A1).x))"
+    ]
+  },
+  {
+    "id": "HMMT-2013-FEB-GEO-03",
+    "group": "development",
+    "arm": "inverse-07",
+    "variables": [
+      "p",
+      "u",
+      "v",
+      "tx",
+      "ty"
+    ],
+    "n_vars": 5,
+    "n_equalities": 33,
+    "bounds": [
+      [
+        0.0,
+        88.0
+      ],
+      [
+        -44.0,
+        44.0
+      ],
+      [
+        0.0,
+        88.0
+      ],
+      [
+        -44.0,
+        44.0
+      ],
+      [
+        -44.0,
+        44.0
+      ]
+    ],
+    "target": "Area(A2, B6, B1)",
+    "constraints": [
+      "Parallel(Line(A1, A3), Line(A4, A6))",
+      "Parallel(Line(A2, A4), Line(A5, A1))",
+      "Parallel(Line(A3, A5), Line(A6, A2))",
+      "Distance(A1, A3)",
+      "Distance(A3, A5)",
+      "Distance(A5, A1)",
+      "Area(A1, B5, B6)",
+      "Area(B1, B2, B3, B4, B5, B6)",
+      "Area(A3, B1, B2)",
+      "OnSegment(B1, A1, A3)",
+      "OnSegment(B1, A2, A4)",
+      "OnSegment(B2, A2, A4)",
+      "OnSegment(B2, A3, A5)",
+      "OnSegment(B3, A3, A5)",
+      "OnSegment(B3, A4, A6)",
+      "OnSegment(B4, A4, A6)",
+      "OnSegment(B4, A5, A1)",
+      "OnSegment(B5, A5, A1)",
+      "OnSegment(B5, A6, A2)",
+      "OnSegment(B6, A6, A2)",
+      "OnSegment(B6, A1, A3)",
+      "(((A3).x-(A1).x)*((B1).y-(A1).y)-((A3).y-(A1).y)*((B1).x-(A1).x))",
+      "(((A4).x-(A2).x)*((B1).y-(A2).y)-((A4).y-(A2).y)*((B1).x-(A2).x))",
+      "(((A4).x-(A2).x)*((B2).y-(A2).y)-((A4).y-(A2).y)*((B2).x-(A2).x))",
+      "(((A5).x-(A3).x)*((B2).y-(A3).y)-((A5).y-(A3).y)*((B2).x-(A3).x))",
+      "(((A5).x-(A3).x)*((B3).y-(A3).y)-((A5).y-(A3).y)*((B3).x-(A3).x))",
+      "(((A6).x-(A4).x)*((B3).y-(A4).y)-((A6).y-(A4).y)*((B3).x-(A4).x))",
+      "(((A6).x-(A4).x)*((B4).y-(A4).y)-((A6).y-(A4).y)*((B4).x-(A4).x))",
+      "(((A1).x-(A5).x)*((B4).y-(A5).y)-((A1).y-(A5).y)*((B4).x-(A5).x))",
+      "(((A1).x-(A5).x)*((B5).y-(A5).y)-((A1).y-(A5).y)*((B5).x-(A5).x))",
+      "(((A2).x-(A6).x)*((B5).y-(A6).y)-((A2).y-(A6).y)*((B5).x-(A6).x))",
+      "(((A2).x-(A6).x)*((B6).y-(A6).y)-((A2).y-(A6).y)*((B6).x-(A6).x))",
+      "(((A3).x-(A1).x)*((B6).y-(A1).y)-((A3).y-(A1).y)*((B6).x-(A1).x))"
+    ]
+  },
+  {
+    "id": "AIME-2019-I-15",
+    "group": "development",
+    "arm": "forward",
+    "variables": [
+      "h",
+      "k1",
+      "k2"
+    ],
+    "n_vars": 3,
+    "n_equalities": 15,
+    "bounds": [
+      [
+        -22.0,
+        22.0
+      ],
+      [
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        1.0
+      ]
+    ],
+    "target": "Distance(P, Q) * Distance(P, Q)",
+    "constraints": [
+      "OnCircle(A, omega)",
+      "OnCircle(B, omega)",
+      "OnCircle(A, omega1)",
+      "OnCircle(P, omega1)",
+      "OnCircle(B, omega2)",
+      "OnCircle(P, omega2)",
+      "Distance(O, O1)",
+      "Distance(O, O2)",
+      "OnCircle(Q, omega1)",
+      "OnCircle(Q, omega2)",
+      "OnLine(X, P, Q)",
+      "OnLine(Y, P, Q)",
+      "OnCircle(X, omega)",
+      "OnCircle(Y, omega)",
+      "Distance(X, Y)"
+    ]
+  },
+  {
+    "id": "AIME-2019-I-15",
+    "group": "development",
+    "arm": "inverse-14",
+    "variables": [
+      "h",
+      "k1",
+      "k2"
+    ],
+    "n_vars": 3,
+    "n_equalities": 15,
+    "bounds": [
+      [
+        -122.0,
+        122.0
+      ],
+      [
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        1.0
+      ]
+    ],
+    "target": "Distance(X, Y)",
+    "constraints": [
+      "OnCircle(A, omega)",
+      "OnCircle(B, omega)",
+      "OnCircle(A, omega1)",
+      "OnCircle(P, omega1)",
+      "OnCircle(B, omega2)",
+      "OnCircle(P, omega2)",
+      "Distance(O, O1)",
+      "Distance(O, O2)",
+      "OnCircle(Q, omega1)",
+      "OnCircle(Q, omega2)",
+      "OnLine(X, P, Q)",
+      "OnLine(Y, P, Q)",
+      "OnCircle(X, omega)",
+      "OnCircle(Y, omega)",
+      "Distance(P, Q) * Distance(P, Q)"
+    ]
+  },
+  {
+    "id": "AIME-2023-I-08",
+    "group": "development",
+    "arm": "forward",
+    "variables": [
+      "s",
+      "u",
+      "v",
+      "px",
+      "py"
+    ],
+    "n_vars": 5,
+    "n_equalities": 7,
+    "bounds": [
+      [
+        0.0,
+        64.0
+      ],
+      [
+        0.0,
+        64.0
+      ],
+      [
+        0.0,
+        64.0
+      ],
+      [
+        -32.0,
+        32.0
+      ],
+      [
+        -32.0,
+        32.0
+      ]
+    ],
+    "target": "4 * s",
+    "constraints": [
+      "Distance(A, B)",
+      "Distance(I, Line(A, B))",
+      "Distance(I, Line(A, B))",
+      "OnCircle(P, omega)",
+      "Distance(P, Line(A, D))",
+      "Distance(P, Line(A, B))",
+      "Distance(P, Line(B, C))"
+    ]
+  },
+  {
+    "id": "AIME-2023-I-08",
+    "group": "development",
+    "arm": "inverse-04",
+    "variables": [
+      "s",
+      "u",
+      "v",
+      "px",
+      "py"
+    ],
+    "n_vars": 5,
+    "n_equalities": 7,
+    "bounds": [
+      [
+        0.0,
+        500.0
+      ],
+      [
+        0.0,
+        64.0
+      ],
+      [
+        0.0,
+        64.0
+      ],
+      [
+        -32.0,
+        32.0
+      ],
+      [
+        -32.0,
+        32.0
+      ]
+    ],
+    "target": "Distance(P, Line(A, D))",
+    "constraints": [
+      "Distance(A, B)",
+      "Distance(I, Line(A, B))",
+      "Distance(I, Line(A, B))",
+      "OnCircle(P, omega)",
+      "4 * s",
+      "Distance(P, Line(A, B))",
+      "Distance(P, Line(B, C))"
+    ]
+  },
+  {
+    "id": "AIME-2023-I-08",
+    "group": "development",
+    "arm": "inverse-05",
+    "variables": [
+      "s",
+      "u",
+      "v",
+      "px",
+      "py"
+    ],
+    "n_vars": 5,
+    "n_equalities": 7,
+    "bounds": [
+      [
+        0.0,
+        500.0
+      ],
+      [
+        0.0,
+        64.0
+      ],
+      [
+        0.0,
+        64.0
+      ],
+      [
+        -32.0,
+        32.0
+      ],
+      [
+        -32.0,
+        32.0
+      ]
+    ],
+    "target": "Distance(P, Line(A, B))",
+    "constraints": [
+      "Distance(A, B)",
+      "Distance(I, Line(A, B))",
+      "Distance(I, Line(A, B))",
+      "OnCircle(P, omega)",
+      "Distance(P, Line(A, D))",
+      "4 * s",
+      "Distance(P, Line(B, C))"
+    ]
+  },
+  {
+    "id": "AIME-2023-I-08",
+    "group": "development",
+    "arm": "inverse-06",
+    "variables": [
+      "s",
+      "u",
+      "v",
+      "px",
+      "py"
+    ],
+    "n_vars": 5,
+    "n_equalities": 7,
+    "bounds": [
+      [
+        0.0,
+        500.0
+      ],
+      [
+        0.0,
+        36.0
+      ],
+      [
+        0.0,
+        36.0
+      ],
+      [
+        -18.0,
+        18.0
+      ],
+      [
+        -18.0,
+        18.0
+      ]
+    ],
+    "target": "Distance(P, Line(B, C))",
+    "constraints": [
+      "Distance(A, B)",
+      "Distance(I, Line(A, B))",
+      "Distance(I, Line(A, B))",
+      "OnCircle(P, omega)",
+      "Distance(P, Line(A, D))",
+      "Distance(P, Line(A, B))",
+      "4 * s"
+    ]
+  },
+  {
+    "id": "HMMT-2017-FEB-GEO-01",
+    "group": "development",
+    "arm": "forward",
+    "variables": [
+      "a",
+      "c",
+      "b",
+      "d",
+      "theta"
+    ],
+    "n_vars": 5,
+    "n_equalities": 5,
+    "bounds": [
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        24.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        24.0
+      ],
+      [
+        0.0,
+        3.1415926535897936
+      ]
+    ],
+    "target": "a / c",
+    "constraints": [
+      "Distance(A, B)",
+      "Distance(B, C)",
+      "Distance(C, D)",
+      "Distance(D, A)",
+      "OnCircle(D, Gamma)"
+    ]
+  },
+  {
+    "id": "HMMT-2017-FEB-GEO-01",
+    "group": "development",
+    "arm": "inverse-02",
+    "variables": [
+      "a",
+      "c",
+      "b",
+      "d",
+      "theta"
+    ],
+    "n_vars": 5,
+    "n_equalities": 5,
+    "bounds": [
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        3.1415926535897936
+      ]
+    ],
+    "target": "Distance(C, D)",
+    "constraints": [
+      "Distance(A, B)",
+      "Distance(B, C)",
+      "a / c",
+      "Distance(D, A)",
+      "OnCircle(D, Gamma)"
+    ]
+  },
+  {
+    "id": "HMMT-2017-FEB-GEO-01",
+    "group": "development",
+    "arm": "inverse-03",
+    "variables": [
+      "a",
+      "c",
+      "b",
+      "d",
+      "theta"
+    ],
+    "n_vars": 5,
+    "n_equalities": 5,
+    "bounds": [
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        24.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        24.0
+      ],
+      [
+        0.0,
+        3.1415926535897936
+      ]
+    ],
+    "target": "Distance(D, A)",
+    "constraints": [
+      "Distance(A, B)",
+      "Distance(B, C)",
+      "Distance(C, D)",
+      "a / c",
+      "OnCircle(D, Gamma)"
+    ]
+  },
+  {
+    "id": "HMMT-2017-FEB-GEO-01",
+    "group": "development",
+    "arm": "inverse-00",
+    "variables": [
+      "a",
+      "c",
+      "b",
+      "d",
+      "theta"
+    ],
+    "n_vars": 5,
+    "n_equalities": 5,
+    "bounds": [
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        24.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        24.0
+      ],
+      [
+        0.0,
+        3.1415926535897936
+      ]
+    ],
+    "target": "Distance(A, B)",
+    "constraints": [
+      "a / c",
+      "Distance(B, C)",
+      "Distance(C, D)",
+      "Distance(D, A)",
+      "OnCircle(D, Gamma)"
+    ]
+  },
+  {
+    "id": "HMMT-2017-FEB-GEO-01",
+    "group": "development",
+    "arm": "inverse-01",
+    "variables": [
+      "a",
+      "c",
+      "b",
+      "d",
+      "theta"
+    ],
+    "n_vars": 5,
+    "n_equalities": 5,
+    "bounds": [
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        24.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        24.0
+      ],
+      [
+        0.0,
+        3.1415926535897936
+      ]
+    ],
+    "target": "Distance(B, C)",
+    "constraints": [
+      "Distance(A, B)",
+      "a / c",
+      "Distance(C, D)",
+      "Distance(D, A)",
+      "OnCircle(D, Gamma)"
+    ]
+  },
+  {
+    "id": "JMO-2021-PRE-07",
+    "group": "development",
+    "arm": "forward",
+    "variables": [
+      "c",
+      "ax",
+      "ay"
+    ],
+    "n_vars": 3,
+    "n_equalities": 3,
+    "bounds": [
+      [
+        6.0,
+        50.0
+      ],
+      [
+        -22.0,
+        22.0
+      ],
+      [
+        0.0,
+        44.0
+      ]
+    ],
+    "target": "c",
+    "constraints": [
+      "Distance(A, B)",
+      "Distance(A, C)",
+      "Distance(H1, H2)"
+    ]
+  },
+  {
+    "id": "JMO-2021-PRE-07",
+    "group": "development",
+    "arm": "inverse-00",
+    "variables": [
+      "c",
+      "ax",
+      "ay"
+    ],
+    "n_vars": 3,
+    "n_equalities": 3,
+    "bounds": [
+      [
+        6.0,
+        930.0
+      ],
+      [
+        -22.0,
+        22.0
+      ],
+      [
+        0.0,
+        44.0
+      ]
+    ],
+    "target": "Distance(A, B)",
+    "constraints": [
+      "c",
+      "Distance(A, C)",
+      "Distance(H1, H2)"
+    ]
+  },
+  {
+    "id": "JMO-2021-PRE-07",
+    "group": "development",
+    "arm": "inverse-01",
+    "variables": [
+      "c",
+      "ax",
+      "ay"
+    ],
+    "n_vars": 3,
+    "n_equalities": 3,
+    "bounds": [
+      [
+        6.0,
+        930.0
+      ],
+      [
+        -20.0,
+        20.0
+      ],
+      [
+        0.0,
+        40.0
+      ]
+    ],
+    "target": "Distance(A, C)",
+    "constraints": [
+      "Distance(A, B)",
+      "c",
+      "Distance(H1, H2)"
+    ]
+  },
+  {
+    "id": "HMMT-2021-FEB-GEO-05",
+    "group": "development",
+    "arm": "forward",
+    "variables": [
+      "t",
+      "cx",
+      "cy"
+    ],
+    "n_vars": 3,
+    "n_equalities": 6,
+    "bounds": [
+      [
+        0.0,
+        1.0
+      ],
+      [
+        -682.0,
+        682.0
+      ],
+      [
+        0.0,
+        18.46618531261939
+      ]
+    ],
+    "target": "Area(A, B, C, D) / Area(A, E, F)",
+    "constraints": [
+      "Distance(E, F)",
+      "Distance(A, E)",
+      "Distance(A, F)",
+      "Distance(B, C)",
+      "Distance(C, D)",
+      "OnCircle(C, Gamma)"
+    ]
+  },
+  {
+    "id": "HMMT-2021-FEB-GEO-05",
+    "group": "development",
+    "arm": "inverse-04",
+    "variables": [
+      "t",
+      "cx",
+      "cy"
+    ],
+    "n_vars": 3,
+    "n_equalities": 6,
+    "bounds": [
+      [
+        0.0,
+        1.0
+      ],
+      [
+        -800.0,
+        800.0
+      ],
+      [
+        0.0,
+        18.46618531261939
+      ]
+    ],
+    "target": "Distance(C, D)",
+    "constraints": [
+      "Distance(E, F)",
+      "Distance(A, E)",
+      "Distance(A, F)",
+      "Distance(B, C)",
+      "Area(A, B, C, D) / Area(A, E, F)",
+      "OnCircle(C, Gamma)"
+    ]
+  },
+  {
+    "id": "HMMT-2021-FEB-GEO-05",
+    "group": "development",
+    "arm": "inverse-03",
+    "variables": [
+      "t",
+      "cx",
+      "cy"
+    ],
+    "n_vars": 3,
+    "n_equalities": 6,
+    "bounds": [
+      [
+        0.0,
+        1.0
+      ],
+      [
+        -800.0,
+        800.0
+      ],
+      [
+        0.0,
+        18.46618531261939
+      ]
+    ],
+    "target": "Distance(B, C)",
+    "constraints": [
+      "Distance(E, F)",
+      "Distance(A, E)",
+      "Distance(A, F)",
+      "Area(A, B, C, D) / Area(A, E, F)",
+      "Distance(C, D)",
+      "OnCircle(C, Gamma)"
+    ]
+  },
+  {
+    "id": "AIME-2005-II-14",
+    "group": "unseen_a",
+    "arm": "forward",
+    "variables": [
+      "x",
+      "y",
+      "t"
+    ],
+    "n_vars": 3,
+    "n_equalities": 3,
+    "bounds": [
+      [
+        -30.0,
+        30.0
+      ],
+      [
+        0.0,
+        60.0
+      ],
+      [
+        0.0,
+        1.0
+      ]
+    ],
+    "target": "Distance(B, E)",
+    "constraints": [
+      "Distance(A, B)",
+      "Distance(A, C)",
+      "Angle(B, A, E)"
+    ]
+  },
+  {
+    "id": "AIME-2005-II-14",
+    "group": "unseen_a",
+    "arm": "inverse-00",
+    "variables": [
+      "x",
+      "y",
+      "t"
+    ],
+    "n_vars": 3,
+    "n_equalities": 3,
+    "bounds": [
+      [
+        -30.0,
+        30.0
+      ],
+      [
+        0.0,
+        60.0
+      ],
+      [
+        0.0,
+        1.0
+      ]
+    ],
+    "target": "Distance(A, B)",
+    "constraints": [
+      "Distance(B, E)",
+      "Distance(A, C)",
+      "Angle(B, A, E)"
+    ]
+  },
+  {
+    "id": "AIME-2005-II-14",
+    "group": "unseen_a",
+    "arm": "inverse-01",
+    "variables": [
+      "x",
+      "y",
+      "t"
+    ],
+    "n_vars": 3,
+    "n_equalities": 3,
+    "bounds": [
+      [
+        -30.0,
+        30.0
+      ],
+      [
+        0.0,
+        60.0
+      ],
+      [
+        0.0,
+        1.0
+      ]
+    ],
+    "target": "Distance(A, C)",
+    "constraints": [
+      "Distance(A, B)",
+      "Distance(B, E)",
+      "Angle(B, A, E)"
+    ]
+  },
+  {
+    "id": "AIME-2005-II-08",
+    "group": "unseen_a",
+    "arm": "forward",
+    "variables": [
+      "R",
+      "z",
+      "a",
+      "b"
+    ],
+    "n_vars": 4,
+    "n_equalities": 4,
+    "bounds": [
+      [
+        10.0,
+        50.0
+      ],
+      [
+        -20.0,
+        20.0
+      ],
+      [
+        -20.0,
+        20.0
+      ],
+      [
+        0.0,
+        40.0
+      ]
+    ],
+    "target": "2*sqrt(R**2-Distance(O3, L)**2)",
+    "constraints": [
+      "Distance(O3, O1)",
+      "Distance(O3, O2)",
+      "Distance(O1, L)",
+      "Distance(O2, L)"
+    ]
+  },
+  {
+    "id": "AIME-2005-II-08",
+    "group": "unseen_a",
+    "arm": "inverse-04",
+    "variables": [
+      "R",
+      "z",
+      "a",
+      "b"
+    ],
+    "n_vars": 4,
+    "n_equalities": 4,
+    "bounds": [
+      [
+        10.0,
+        1570.0
+      ],
+      [
+        -780.0,
+        780.0
+      ],
+      [
+        -780.0,
+        780.0
+      ],
+      [
+        0.0,
+        1560.0
+      ]
+    ],
+    "target": "Distance(O2, L)",
+    "constraints": [
+      "Distance(O3, O1)",
+      "Distance(O3, O2)",
+      "Distance(O1, L)",
+      "2 * sqrt(R ** 2 - Distance(O3, L) ** 2)"
+    ]
+  },
+  {
+    "id": "AIME-2005-II-08",
+    "group": "unseen_a",
+    "arm": "inverse-03",
+    "variables": [
+      "R",
+      "z",
+      "a",
+      "b"
+    ],
+    "n_vars": 4,
+    "n_equalities": 4,
+    "bounds": [
+      [
+        10.0,
+        1570.0
+      ],
+      [
+        -780.0,
+        780.0
+      ],
+      [
+        -780.0,
+        780.0
+      ],
+      [
+        0.0,
+        1560.0
+      ]
+    ],
+    "target": "Distance(O1, L)",
+    "constraints": [
+      "Distance(O3, O1)",
+      "Distance(O3, O2)",
+      "2 * sqrt(R ** 2 - Distance(O3, L) ** 2)",
+      "Distance(O2, L)"
+    ]
+  },
+  {
+    "id": "AIME-2001-II-13",
+    "group": "unseen_a",
+    "arm": "forward",
+    "variables": [
+      "ax",
+      "ay",
+      "cx",
+      "cy"
+    ],
+    "n_vars": 4,
+    "n_equalities": 4,
+    "bounds": [
+      [
+        -20.0,
+        20.0
+      ],
+      [
+        0.0,
+        40.0
+      ],
+      [
+        -20.0,
+        20.0
+      ],
+      [
+        -40.0,
+        0.0
+      ]
+    ],
+    "target": "Distance(C, D)",
+    "constraints": [
+      "Distance(A, B)",
+      "Distance(B, C)",
+      "Angle(B, A, D)",
+      "Angle(A, B, D)"
+    ]
+  },
+  {
+    "id": "AIME-2001-II-13",
+    "group": "unseen_a",
+    "arm": "inverse-00",
+    "variables": [
+      "ax",
+      "ay",
+      "cx",
+      "cy"
+    ],
+    "n_vars": 4,
+    "n_equalities": 4,
+    "bounds": [
+      [
+        -20.0,
+        20.0
+      ],
+      [
+        0.0,
+        40.0
+      ],
+      [
+        -128.0,
+        128.0
+      ],
+      [
+        -256.0,
+        0.0
+      ]
+    ],
+    "target": "Distance(A, B)",
+    "constraints": [
+      "Distance(C, D)",
+      "Distance(B, C)",
+      "Angle(B, A, D)",
+      "Angle(A, B, D)"
+    ]
+  },
+  {
+    "id": "AIME-2001-II-13",
+    "group": "unseen_a",
+    "arm": "inverse-01",
+    "variables": [
+      "ax",
+      "ay",
+      "cx",
+      "cy"
+    ],
+    "n_vars": 4,
+    "n_equalities": 4,
+    "bounds": [
+      [
+        -20.0,
+        20.0
+      ],
+      [
+        0.0,
+        40.0
+      ],
+      [
+        -128.0,
+        128.0
+      ],
+      [
+        -256.0,
+        0.0
+      ]
+    ],
+    "target": "Distance(B, C)",
+    "constraints": [
+      "Distance(A, B)",
+      "Distance(C, D)",
+      "Angle(B, A, D)",
+      "Angle(A, B, D)"
+    ]
+  },
+  {
+    "id": "AIME-2005-I-07",
+    "group": "unseen_a",
+    "arm": "forward",
+    "variables": [
+      "b"
+    ],
+    "n_vars": 1,
+    "n_equalities": 1,
+    "bounds": [
+      [
+        0.0,
+        48.0
+      ]
+    ],
+    "target": "Distance(A, B)",
+    "constraints": [
+      "Distance(C, D)"
+    ]
+  },
+  {
+    "id": "AIME-2005-I-07",
+    "group": "unseen_a",
+    "arm": "inverse-01",
+    "variables": [
+      "b"
+    ],
+    "n_vars": 1,
+    "n_equalities": 1,
+    "bounds": [
+      [
+        0.0,
+        564.0
+      ]
+    ],
+    "target": "Distance(C, D)",
+    "constraints": [
+      "Distance(A, B)"
+    ]
+  },
+  {
+    "id": "AIME-2002-I-02",
+    "group": "unseen_a",
+    "arm": "forward",
+    "variables": [
+      "s",
+      "u",
+      "v",
+      "w"
+    ],
+    "n_vars": 4,
+    "n_equalities": 41,
+    "bounds": [
+      [
+        0.0,
+        24.0
+      ],
+      [
+        1.0,
+        25.0
+      ],
+      [
+        1.0,
+        25.0
+      ],
+      [
+        -12.0,
+        12.0
+      ]
+    ],
+    "target": "W/H",
+    "constraints": [
+      "Distance(L0, L1)",
+      "Distance(L1, L2)",
+      "Distance(L2, L3)",
+      "Distance(L3, L4)",
+      "Distance(L4, L5)",
+      "Distance(L5, L6)",
+      "Distance(M0, M1)",
+      "Distance(M1, M2)",
+      "Distance(M2, M3)",
+      "Distance(M3, M4)",
+      "Distance(M4, M5)",
+      "Distance(T0, T1)",
+      "Distance(T1, T2)",
+      "Distance(T2, T3)",
+      "Distance(T3, T4)",
+      "Distance(T4, T5)",
+      "Distance(T5, T6)",
+      "Distance(M0, L0)",
+      "Distance(M0, L1)",
+      "Distance(M0, T0)",
+      "Distance(M0, T1)",
+      "Distance(M1, L1)",
+      "Distance(M1, L2)",
+      "Distance(M1, T1)",
+      "Distance(M1, T2)",
+      "Distance(M2, L2)",
+      "Distance(M2, L3)",
+      "Distance(M2, T2)",
+      "Distance(M2, T3)",
+      "Distance(M3, L3)",
+      "Distance(M3, L4)",
+      "Distance(M3, T3)",
+      "Distance(M3, T4)",
+      "Distance(M4, L4)",
+      "Distance(M4, L5)",
+      "Distance(M4, T4)",
+      "Distance(M4, T5)",
+      "Distance(M5, L5)",
+      "Distance(M5, L6)",
+      "Distance(M5, T5)",
+      "Distance(M5, T6)"
+    ]
+  },
+  {
+    "id": "AIME-2002-I-02",
+    "group": "unseen_a",
+    "arm": "inverse-07",
+    "variables": [
+      "s",
+      "u",
+      "v",
+      "w"
+    ],
+    "n_vars": 4,
+    "n_equalities": 41,
+    "bounds": [
+      [
+        0.0,
+        28.0
+      ],
+      [
+        1.0,
+        25.0
+      ],
+      [
+        1.0,
+        25.0
+      ],
+      [
+        -14.0,
+        14.0
+      ]
+    ],
+    "target": "Distance(L2, L3)",
+    "constraints": [
+      "Distance(L0, L1)",
+      "Distance(L1, L2)",
+      "W / H",
+      "Distance(L3, L4)",
+      "Distance(L4, L5)",
+      "Distance(L5, L6)",
+      "Distance(M0, M1)",
+      "Distance(M1, M2)",
+      "Distance(M2, M3)",
+      "Distance(M3, M4)",
+      "Distance(M4, M5)",
+      "Distance(T0, T1)",
+      "Distance(T1, T2)",
+      "Distance(T2, T3)",
+      "Distance(T3, T4)",
+      "Distance(T4, T5)",
+      "Distance(T5, T6)",
+      "Distance(M0, L0)",
+      "Distance(M0, L1)",
+      "Distance(M0, T0)",
+      "Distance(M0, T1)",
+      "Distance(M1, L1)",
+      "Distance(M1, L2)",
+      "Distance(M1, T1)",
+      "Distance(M1, T2)",
+      "Distance(M2, L2)",
+      "Distance(M2, L3)",
+      "Distance(M2, T2)",
+      "Distance(M2, T3)",
+      "Distance(M3, L3)",
+      "Distance(M3, L4)",
+      "Distance(M3, T3)",
+      "Distance(M3, T4)",
+      "Distance(M4, L4)",
+      "Distance(M4, L5)",
+      "Distance(M4, T4)",
+      "Distance(M4, T5)",
+      "Distance(M5, L5)",
+      "Distance(M5, L6)",
+      "Distance(M5, T5)",
+      "Distance(M5, T6)"
+    ]
+  },
+  {
+    "id": "AIME-2002-I-02",
+    "group": "unseen_a",
+    "arm": "inverse-40",
+    "variables": [
+      "s",
+      "u",
+      "v",
+      "w"
+    ],
+    "n_vars": 4,
+    "n_equalities": 41,
+    "bounds": [
+      [
+        0.0,
+        28.0
+      ],
+      [
+        1.0,
+        25.0
+      ],
+      [
+        1.0,
+        25.0
+      ],
+      [
+        -14.0,
+        14.0
+      ]
+    ],
+    "target": "Distance(M4, T4)",
+    "constraints": [
+      "Distance(L0, L1)",
+      "Distance(L1, L2)",
+      "Distance(L2, L3)",
+      "Distance(L3, L4)",
+      "Distance(L4, L5)",
+      "Distance(L5, L6)",
+      "Distance(M0, M1)",
+      "Distance(M1, M2)",
+      "Distance(M2, M3)",
+      "Distance(M3, M4)",
+      "Distance(M4, M5)",
+      "Distance(T0, T1)",
+      "Distance(T1, T2)",
+      "Distance(T2, T3)",
+      "Distance(T3, T4)",
+      "Distance(T4, T5)",
+      "Distance(T5, T6)",
+      "Distance(M0, L0)",
+      "Distance(M0, L1)",
+      "Distance(M0, T0)",
+      "Distance(M0, T1)",
+      "Distance(M1, L1)",
+      "Distance(M1, L2)",
+      "Distance(M1, T1)",
+      "Distance(M1, T2)",
+      "Distance(M2, L2)",
+      "Distance(M2, L3)",
+      "Distance(M2, T2)",
+      "Distance(M2, T3)",
+      "Distance(M3, L3)",
+      "Distance(M3, L4)",
+      "Distance(M3, T3)",
+      "Distance(M3, T4)",
+      "Distance(M4, L4)",
+      "Distance(M4, L5)",
+      "W / H",
+      "Distance(M4, T5)",
+      "Distance(M5, L5)",
+      "Distance(M5, L6)",
+      "Distance(M5, T5)",
+      "Distance(M5, T6)"
+    ]
+  },
+  {
+    "id": "AIME-2002-I-02",
+    "group": "unseen_a",
+    "arm": "inverse-42",
+    "variables": [
+      "s",
+      "u",
+      "v",
+      "w"
+    ],
+    "n_vars": 4,
+    "n_equalities": 41,
+    "bounds": [
+      [
+        0.0,
+        28.0
+      ],
+      [
+        1.0,
+        25.0
+      ],
+      [
+        1.0,
+        25.0
+      ],
+      [
+        -14.0,
+        14.0
+      ]
+    ],
+    "target": "Distance(M5, L5)",
+    "constraints": [
+      "Distance(L0, L1)",
+      "Distance(L1, L2)",
+      "Distance(L2, L3)",
+      "Distance(L3, L4)",
+      "Distance(L4, L5)",
+      "Distance(L5, L6)",
+      "Distance(M0, M1)",
+      "Distance(M1, M2)",
+      "Distance(M2, M3)",
+      "Distance(M3, M4)",
+      "Distance(M4, M5)",
+      "Distance(T0, T1)",
+      "Distance(T1, T2)",
+      "Distance(T2, T3)",
+      "Distance(T3, T4)",
+      "Distance(T4, T5)",
+      "Distance(T5, T6)",
+      "Distance(M0, L0)",
+      "Distance(M0, L1)",
+      "Distance(M0, T0)",
+      "Distance(M0, T1)",
+      "Distance(M1, L1)",
+      "Distance(M1, L2)",
+      "Distance(M1, T1)",
+      "Distance(M1, T2)",
+      "Distance(M2, L2)",
+      "Distance(M2, L3)",
+      "Distance(M2, T2)",
+      "Distance(M2, T3)",
+      "Distance(M3, L3)",
+      "Distance(M3, L4)",
+      "Distance(M3, T3)",
+      "Distance(M3, T4)",
+      "Distance(M4, L4)",
+      "Distance(M4, L5)",
+      "Distance(M4, T4)",
+      "Distance(M4, T5)",
+      "W / H",
+      "Distance(M5, L6)",
+      "Distance(M5, T5)",
+      "Distance(M5, T6)"
+    ]
+  },
+  {
+    "id": "AIME-2002-I-02",
+    "group": "unseen_a",
+    "arm": "inverse-43",
+    "variables": [
+      "s",
+      "u",
+      "v",
+      "w"
+    ],
+    "n_vars": 4,
+    "n_equalities": 41,
+    "bounds": [
+      [
+        0.0,
+        28.0
+      ],
+      [
+        1.0,
+        25.0
+      ],
+      [
+        1.0,
+        25.0
+      ],
+      [
+        -14.0,
+        14.0
+      ]
+    ],
+    "target": "Distance(M5, L6)",
+    "constraints": [
+      "Distance(L0, L1)",
+      "Distance(L1, L2)",
+      "Distance(L2, L3)",
+      "Distance(L3, L4)",
+      "Distance(L4, L5)",
+      "Distance(L5, L6)",
+      "Distance(M0, M1)",
+      "Distance(M1, M2)",
+      "Distance(M2, M3)",
+      "Distance(M3, M4)",
+      "Distance(M4, M5)",
+      "Distance(T0, T1)",
+      "Distance(T1, T2)",
+      "Distance(T2, T3)",
+      "Distance(T3, T4)",
+      "Distance(T4, T5)",
+      "Distance(T5, T6)",
+      "Distance(M0, L0)",
+      "Distance(M0, L1)",
+      "Distance(M0, T0)",
+      "Distance(M0, T1)",
+      "Distance(M1, L1)",
+      "Distance(M1, L2)",
+      "Distance(M1, T1)",
+      "Distance(M1, T2)",
+      "Distance(M2, L2)",
+      "Distance(M2, L3)",
+      "Distance(M2, T2)",
+      "Distance(M2, T3)",
+      "Distance(M3, L3)",
+      "Distance(M3, L4)",
+      "Distance(M3, T3)",
+      "Distance(M3, T4)",
+      "Distance(M4, L4)",
+      "Distance(M4, L5)",
+      "Distance(M4, T4)",
+      "Distance(M4, T5)",
+      "Distance(M5, L5)",
+      "W / H",
+      "Distance(M5, T5)",
+      "Distance(M5, T6)"
+    ]
+  },
+  {
+    "id": "AIME-2014-I-10",
+    "group": "unseen_a",
+    "arm": "forward",
+    "variables": [
+      "theta"
+    ],
+    "n_vars": 1,
+    "n_equalities": 1,
+    "bounds": [
+      [
+        0.0,
+        6.283185307179587
+      ]
+    ],
+    "target": "sin(Angle(B, E, A))**2",
+    "constraints": [
+      "(5 + 1) * theta"
+    ]
+  },
+  {
+    "id": "AIME-2014-I-10",
+    "group": "unseen_a",
+    "arm": "inverse-00",
+    "variables": [
+      "theta"
+    ],
+    "n_vars": 1,
+    "n_equalities": 1,
+    "bounds": [
+      [
+        0.0,
+        6.283185307179587
+      ]
+    ],
+    "target": "(5+1)*theta",
+    "constraints": [
+      "sin(Angle(B, E, A)) ** 2"
+    ]
+  },
+  {
+    "id": "HMMT-2013-FEB-GUTS-01",
+    "group": "unseen_b",
+    "arm": "forward",
+    "variables": [
+      "k"
+    ],
+    "n_vars": 1,
+    "n_equalities": 1,
+    "bounds": [
+      [
+        0.0,
+        124.0
+      ]
+    ],
+    "target": "Distance(P,Q)",
+    "constraints": [
+      "Distance(U, V)"
+    ]
+  },
+  {
+    "id": "HMMT-2013-FEB-GUTS-01",
+    "group": "unseen_b",
+    "arm": "inverse-01",
+    "variables": [
+      "k"
+    ],
+    "n_vars": 1,
+    "n_equalities": 1,
+    "bounds": [
+      [
+        0.0,
+        372.0
+      ]
+    ],
+    "target": "Distance(U,V)",
+    "constraints": [
+      "Distance(P, Q)"
+    ]
+  },
+  {
+    "id": "HMMT-2010-FEB-GUTS-13",
+    "group": "unseen_b",
+    "arm": "forward",
+    "variables": [
+      "ax",
+      "ay",
+      "bx",
+      "by",
+      "cx",
+      "cy"
+    ],
+    "n_vars": 6,
+    "n_equalities": 6,
+    "bounds": [
+      [
+        -30.0,
+        30.0
+      ],
+      [
+        -30.0,
+        30.0
+      ],
+      [
+        -30.0,
+        30.0
+      ],
+      [
+        -30.0,
+        30.0
+      ],
+      [
+        -30.0,
+        30.0
+      ],
+      [
+        -30.0,
+        30.0
+      ]
+    ],
+    "target": "Area(A,B,C)",
+    "constraints": [
+      "min(ax, bx, cx)",
+      "max(ax, bx, cx)",
+      "min(ay, by, cy)",
+      "max(ay, by, cy)",
+      "min((ax + ay) / 2, (bx + by) / 2, (cx + cy) / 2)",
+      "max((ax + ay) / 2, (bx + by) / 2, (cx + cy) / 2)"
+    ]
+  },
+  {
+    "id": "HMMT-2010-FEB-GUTS-13",
+    "group": "unseen_b",
+    "arm": "inverse-01",
+    "variables": [
+      "ax",
+      "ay",
+      "bx",
+      "by",
+      "cx",
+      "cy"
+    ],
+    "n_vars": 6,
+    "n_equalities": 6,
+    "bounds": [
+      [
+        -34.0,
+        34.0
+      ],
+      [
+        -34.0,
+        34.0
+      ],
+      [
+        -34.0,
+        34.0
+      ],
+      [
+        -34.0,
+        34.0
+      ],
+      [
+        -34.0,
+        34.0
+      ],
+      [
+        -34.0,
+        34.0
+      ]
+    ],
+    "target": "max(ax, bx, cx)",
+    "constraints": [
+      "min(ax, bx, cx)",
+      "Area(A, B, C)",
+      "min(ay, by, cy)",
+      "max(ay, by, cy)",
+      "min((ax + ay) / 2, (bx + by) / 2, (cx + cy) / 2)",
+      "max((ax + ay) / 2, (bx + by) / 2, (cx + cy) / 2)"
+    ]
+  },
+  {
+    "id": "HMMT-2010-FEB-GUTS-13",
+    "group": "unseen_b",
+    "arm": "inverse-03",
+    "variables": [
+      "ax",
+      "ay",
+      "bx",
+      "by",
+      "cx",
+      "cy"
+    ],
+    "n_vars": 6,
+    "n_equalities": 6,
+    "bounds": [
+      [
+        -34.0,
+        34.0
+      ],
+      [
+        -34.0,
+        34.0
+      ],
+      [
+        -34.0,
+        34.0
+      ],
+      [
+        -34.0,
+        34.0
+      ],
+      [
+        -34.0,
+        34.0
+      ],
+      [
+        -34.0,
+        34.0
+      ]
+    ],
+    "target": "max(ay, by, cy)",
+    "constraints": [
+      "min(ax, bx, cx)",
+      "max(ax, bx, cx)",
+      "min(ay, by, cy)",
+      "Area(A, B, C)",
+      "min((ax + ay) / 2, (bx + by) / 2, (cx + cy) / 2)",
+      "max((ax + ay) / 2, (bx + by) / 2, (cx + cy) / 2)"
+    ]
+  },
+  {
+    "id": "HMMT-2010-FEB-GUTS-13",
+    "group": "unseen_b",
+    "arm": "inverse-04",
+    "variables": [
+      "ax",
+      "ay",
+      "bx",
+      "by",
+      "cx",
+      "cy"
+    ],
+    "n_vars": 6,
+    "n_equalities": 6,
+    "bounds": [
+      [
+        -34.0,
+        34.0
+      ],
+      [
+        -34.0,
+        34.0
+      ],
+      [
+        -34.0,
+        34.0
+      ],
+      [
+        -34.0,
+        34.0
+      ],
+      [
+        -34.0,
+        34.0
+      ],
+      [
+        -34.0,
+        34.0
+      ]
+    ],
+    "target": "min((ax+ay)/2, (bx+by)/2, (cx+cy)/2)",
+    "constraints": [
+      "min(ax, bx, cx)",
+      "max(ax, bx, cx)",
+      "min(ay, by, cy)",
+      "max(ay, by, cy)",
+      "Area(A, B, C)",
+      "max((ax + ay) / 2, (bx + by) / 2, (cx + cy) / 2)"
+    ]
+  },
+  {
+    "id": "HMMT-2010-FEB-GUTS-13",
+    "group": "unseen_b",
+    "arm": "inverse-00",
+    "variables": [
+      "ax",
+      "ay",
+      "bx",
+      "by",
+      "cx",
+      "cy"
+    ],
+    "n_vars": 6,
+    "n_equalities": 6,
+    "bounds": [
+      [
+        -34.0,
+        34.0
+      ],
+      [
+        -34.0,
+        34.0
+      ],
+      [
+        -34.0,
+        34.0
+      ],
+      [
+        -34.0,
+        34.0
+      ],
+      [
+        -34.0,
+        34.0
+      ],
+      [
+        -34.0,
+        34.0
+      ]
+    ],
+    "target": "min(ax, bx, cx)",
+    "constraints": [
+      "Area(A, B, C)",
+      "max(ax, bx, cx)",
+      "min(ay, by, cy)",
+      "max(ay, by, cy)",
+      "min((ax + ay) / 2, (bx + by) / 2, (cx + cy) / 2)",
+      "max((ax + ay) / 2, (bx + by) / 2, (cx + cy) / 2)"
+    ]
+  },
+  {
+    "id": "HMMT-2011-FEB-GUTS-01",
+    "group": "unseen_b",
+    "arm": "forward",
+    "variables": [
+      "b",
+      "x",
+      "y",
+      "u",
+      "v"
+    ],
+    "n_vars": 5,
+    "n_equalities": 3,
+    "bounds": [
+      [
+        0.0,
+        20.0
+      ],
+      [
+        -10.0,
+        10.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        1.0
+      ]
+    ],
+    "target": "Area(F,B,C)",
+    "constraints": [
+      "Area(A, B, C)",
+      "Parallel(Line(D, E), Line(B, C))",
+      "Distance(D, E) / Distance(B, C)"
+    ]
+  },
+  {
+    "id": "HMMT-2011-FEB-GUTS-01",
+    "group": "unseen_b",
+    "arm": "inverse-00",
+    "variables": [
+      "b",
+      "x",
+      "y",
+      "u",
+      "v"
+    ],
+    "n_vars": 5,
+    "n_equalities": 3,
+    "bounds": [
+      [
+        0.0,
+        20.0
+      ],
+      [
+        -10.0,
+        10.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        1.0
+      ]
+    ],
+    "target": "Area(A,B,C)",
+    "constraints": [
+      "Area(F, B, C)",
+      "Parallel(Line(D, E), Line(B, C))",
+      "Distance(D, E) / Distance(B, C)"
+    ]
+  },
+  {
+    "id": "HMMT-2011-FEB-GUTS-01",
+    "group": "unseen_b",
+    "arm": "inverse-02",
+    "variables": [
+      "b",
+      "x",
+      "y",
+      "u",
+      "v"
+    ],
+    "n_vars": 5,
+    "n_equalities": 3,
+    "bounds": [
+      [
+        0.0,
+        20.0
+      ],
+      [
+        -10.0,
+        10.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        1.0
+      ]
+    ],
+    "target": "Distance(D,E)/Distance(B,C)",
+    "constraints": [
+      "Area(A, B, C)",
+      "Parallel(Line(D, E), Line(B, C))",
+      "Area(F, B, C)"
+    ]
+  },
+  {
+    "id": "HMMT-2023-FEB-GUTS-03",
+    "group": "unseen_b",
+    "arm": "forward",
+    "variables": [
+      "d",
+      "a",
+      "cx",
+      "cy"
+    ],
+    "n_vars": 4,
+    "n_equalities": 3,
+    "bounds": [
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        20.0
+      ],
+      [
+        -10.0,
+        10.0
+      ],
+      [
+        -10.0,
+        10.0
+      ]
+    ],
+    "target": "Distance(A,D)",
+    "constraints": [
+      "Angle(B, C, D)",
+      "Distance(C, M)",
+      "Distance(A, M)"
+    ]
+  },
+  {
+    "id": "HMMT-2023-FEB-GUTS-03",
+    "group": "unseen_b",
+    "arm": "inverse-00",
+    "variables": [
+      "d",
+      "a",
+      "cx",
+      "cy"
+    ],
+    "n_vars": 4,
+    "n_equalities": 3,
+    "bounds": [
+      [
+        0.0,
+        84.0
+      ],
+      [
+        0.0,
+        84.0
+      ],
+      [
+        -10.0,
+        10.0
+      ],
+      [
+        -10.0,
+        10.0
+      ]
+    ],
+    "target": "Angle(B,C,D)",
+    "constraints": [
+      "Distance(A, D)",
+      "Distance(C, M)",
+      "Distance(A, M)"
+    ]
+  },
+  {
+    "id": "HMMT-2023-FEB-GUTS-03",
+    "group": "unseen_b",
+    "arm": "inverse-01",
+    "variables": [
+      "d",
+      "a",
+      "cx",
+      "cy"
+    ],
+    "n_vars": 4,
+    "n_equalities": 3,
+    "bounds": [
+      [
+        0.0,
+        84.0
+      ],
+      [
+        0.0,
+        84.0
+      ],
+      [
+        -10.0,
+        10.0
+      ],
+      [
+        -10.0,
+        10.0
+      ]
+    ],
+    "target": "Distance(C,M)",
+    "constraints": [
+      "Angle(B, C, D)",
+      "Distance(A, D)",
+      "Distance(A, M)"
+    ]
+  },
+  {
+    "id": "HMMT-2023-FEB-GUTS-03",
+    "group": "unseen_b",
+    "arm": "inverse-02",
+    "variables": [
+      "d",
+      "a",
+      "cx",
+      "cy"
+    ],
+    "n_vars": 4,
+    "n_equalities": 3,
+    "bounds": [
+      [
+        0.0,
+        84.0
+      ],
+      [
+        0.0,
+        84.0
+      ],
+      [
+        -10.0,
+        10.0
+      ],
+      [
+        -10.0,
+        10.0
+      ]
+    ],
+    "target": "Distance(A,M)",
+    "constraints": [
+      "Angle(B, C, D)",
+      "Distance(C, M)",
+      "Distance(A, D)"
+    ]
+  },
+  {
+    "id": "HMMT-2020-FEB-GUTS-13",
+    "group": "unseen_b",
+    "arm": "forward",
+    "variables": [
+      "ax",
+      "ay",
+      "u",
+      "v",
+      "tx",
+      "ty"
+    ],
+    "n_vars": 6,
+    "n_equalities": 6,
+    "bounds": [
+      [
+        -14.0,
+        14.0
+      ],
+      [
+        0.0,
+        28.0
+      ],
+      [
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        1.0
+      ],
+      [
+        -10.0,
+        10.0
+      ],
+      [
+        -10.0,
+        10.0
+      ]
+    ],
+    "target": "Distance(X,Y)",
+    "constraints": [
+      "Distance(A, B)",
+      "Distance(C, A)",
+      "Angle(A, C, D)",
+      "Angle(D, C, E)",
+      "Distance(Center(omega), X)",
+      "Distance(Center(omega), Y)"
+    ]
+  },
+  {
+    "id": "HMMT-2020-FEB-GUTS-13",
+    "group": "unseen_b",
+    "arm": "inverse-01",
+    "variables": [
+      "ax",
+      "ay",
+      "u",
+      "v",
+      "tx",
+      "ty"
+    ],
+    "n_vars": 6,
+    "n_equalities": 6,
+    "bounds": [
+      [
+        -224.0,
+        224.0
+      ],
+      [
+        0.0,
+        448.0
+      ],
+      [
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        1.0
+      ],
+      [
+        -224.0,
+        224.0
+      ],
+      [
+        -224.0,
+        224.0
+      ]
+    ],
+    "target": "Distance(C,A)",
+    "constraints": [
+      "Distance(A, B)",
+      "Distance(X, Y)",
+      "Angle(A, C, D)",
+      "Angle(D, C, E)",
+      "Distance(Center(omega), X)",
+      "Distance(Center(omega), Y)"
+    ]
+  },
+  {
+    "id": "HMMT-2020-FEB-GUTS-13",
+    "group": "unseen_b",
+    "arm": "inverse-00",
+    "variables": [
+      "ax",
+      "ay",
+      "u",
+      "v",
+      "tx",
+      "ty"
+    ],
+    "n_vars": 6,
+    "n_equalities": 6,
+    "bounds": [
+      [
+        -224.0,
+        224.0
+      ],
+      [
+        0.0,
+        448.0
+      ],
+      [
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        1.0
+      ],
+      [
+        -224.0,
+        224.0
+      ],
+      [
+        -224.0,
+        224.0
+      ]
+    ],
+    "target": "Distance(A,B)",
+    "constraints": [
+      "Distance(X, Y)",
+      "Distance(C, A)",
+      "Angle(A, C, D)",
+      "Angle(D, C, E)",
+      "Distance(Center(omega), X)",
+      "Distance(Center(omega), Y)"
+    ]
+  },
+  {
+    "id": "HMMT-2012-FEB-GUTS-06",
+    "group": "unseen_b",
+    "arm": "forward",
+    "variables": [
+      "ex",
+      "ey"
+    ],
+    "n_vars": 2,
+    "n_equalities": 2,
+    "bounds": [
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        12.0
+      ]
+    ],
+    "target": "Area(A,X,Y,D)",
+    "constraints": [
+      "Distance(E, Line(A, B))",
+      "Distance(E, Line(A, D))"
+    ]
+  },
+  {
+    "id": "HMMT-2012-FEB-GUTS-06",
+    "group": "unseen_b",
+    "arm": "inverse-01",
+    "variables": [
+      "ex",
+      "ey"
+    ],
+    "n_vars": 2,
+    "n_equalities": 2,
+    "bounds": [
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        12.0
+      ]
+    ],
+    "target": "Distance(E,Line(A,D))",
+    "constraints": [
+      "Distance(E, Line(A, B))",
+      "Area(A, X, Y, D)"
+    ]
+  },
+  {
+    "id": "HMMT-2012-FEB-GUTS-06",
+    "group": "unseen_b",
+    "arm": "inverse-00",
+    "variables": [
+      "ex",
+      "ey"
+    ],
+    "n_vars": 2,
+    "n_equalities": 2,
+    "bounds": [
+      [
+        0.0,
+        20.0
+      ],
+      [
+        0.0,
+        12.0
+      ]
+    ],
+    "target": "Distance(E,Line(A,B))",
+    "constraints": [
+      "Area(A, X, Y, D)",
+      "Distance(E, Line(A, D))"
+    ]
+  }
+]

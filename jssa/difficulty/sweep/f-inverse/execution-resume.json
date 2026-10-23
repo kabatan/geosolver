@@ -1,0 +1,58 @@
+{
+  "utc": "2026-10-23T18:34:52.021793+00:00",
+  "task": "Q43f inverse exploratory continuation",
+  "process_check": {
+    "command": "ps -eo pid,ppid,etimes,comm,args --width 360 | rg '(^ *PID|q43f|f-inverse)'",
+    "scope": "host, after sandbox-only ps showed its own namespace",
+    "matching_live_experiment_processes": 0
+  },
+  "prior_status": "Reporting work interrupted; original production campaign completed independently.",
+  "production_start": "2026-10-23T17:29:16.309513+00:00",
+  "production_completion": {
+    "utc": "2026-10-23T17:58:23.005524+00:00",
+    "completed": 228,
+    "source_hash": "sha256:d8fd9bb8392ad2984276bab3386e033669246ee79586317917c322d31b4541f5"
+  },
+  "fixed_production_trials": 228,
+  "completed_existing_trials": 228,
+  "missing_trials": 0,
+  "lost_interrupted_trials": 0,
+  "resumed_solver_trials": 0,
+  "added_seeds": 0,
+  "retries": 0,
+  "total_attempts_including_initial_validation_failures": 456,
+  "frozen_commit": "60db4b679b04167175c51c479c87c22fa663fda0",
+  "source_hash": "sha256:d8fd9bb8392ad2984276bab3386e033669246ee79586317917c322d31b4541f5",
+  "isolated_checkout": "/tmp/q43f-clean",
+  "unchanged_inputs_and_grader": {
+    "manifest.json": "af6cbd9d3b3750df8d6f9e80e214185726856b601cf6cecfae50918bf504e4af",
+    "run.py": "3d00a6686891ea4f85f2e329f55265626a5e4c21588e9979f0249363e3b6667d",
+    "prepare.py": "d47d20c649ebfdbfa44eb5c132803c31561d1800160e810982772a9bc6badd6b",
+    "analyze.py": "c4ac70d798969551a7a69165e46b1110465108c01c80d510a0242350b3b066a5",
+    "verify.py": "2d042750a1ee95d9beafe0f2a67347f11d6c28c50284a152538aa55821b1cbdb"
+  },
+  "observer_fix": {
+    "file": "figures.py",
+    "before_sha256": "6d872f659c1ee2573917e4fbcf05aaf5c5be440fcaa4370418799b5cceb404e3",
+    "after_sha256": "d6f8653c5e22662ba90181c6e81f623d0b72025e4153b67bd37ebd8b3622d467",
+    "reason": "Move float serialization outside high_precision_mode; keep 80-digit evaluation and thresholds unchanged.",
+    "initial_failed_coordinate_inspections": 903,
+    "initial_error_log": "/tmp/q43f-inverse-20261024/resume-observer-initial/figure-errors.json",
+    "final_errors": 0
+  },
+  "analysis_commands": [
+    "/home/kabatan/work/solver/.venv/bin/python -B jssa/difficulty/sweep/f-inverse/analyze.py",
+    "/home/kabatan/work/solver/.venv/bin/python -B jssa/difficulty/sweep/f-inverse/figures.py",
+    "/home/kabatan/work/solver/.venv/bin/python -B jssa/difficulty/sweep/f-inverse/summarize_evidence.py",
+    "/home/kabatan/work/solver/.venv/bin/python -B jssa/difficulty/sweep/f-inverse/verify.py"
+  ],
+  "analysis_working_directory": "/tmp/q43f-clean",
+  "full_figure_archive": "/tmp/q43f-inverse-20261024/inspection-complete/figures",
+  "repository_figure_problems": [
+    "AIME-2014-I-10",
+    "HMMT-2014-FEB-GEO-04",
+    "JMO-2018-PRE-06"
+  ],
+  "raw_directory": "/tmp/q43f-inverse-20261024",
+  "confirmation_design": "Existing unexecuted design preserved without new experiments or changed predictions."
+}

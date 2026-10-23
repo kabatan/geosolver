@@ -1,5 +1,13 @@
 # Q36 段階2の記録
 
+2026-10-24（JST）の再開で解析まで完了した。再開時点で局所160ジョブ・完成solver240実行の全件が終了済みだったため、新規実行・再試行・補充は0。8,000開始点と240返答集合を採用し、全receiptと保存物のハッシュを検証した。外側タイムアウト・異常終了・中断で失われた計画試行は0。結論は [answer.md](../answer.md)、全予測の判定は [results.json](results.json)、環境・再開監査・出力ハッシュは [resume-audit.json](resume-audit.json)。
+
+局所P1は8/8、完成solverの主P2は1/2、対照は3/3、補助は2/3。P3は10/10値の分類が一致し、負の対照も的中した。主2問をともに満たすという強い支持条件は不成立。全240実行は集合一致179、部分欠答31、空答30、余分な値と欠測0。seed別の安定性と220の整数用経路の対応も、保存データだけから補足した。
+
+共有worktreeの `benchmarks/research_runner.py` は登録時から変わっていたため、今回の解析には使用していない。`/tmp/q36-clean` に凍結commit `60db4b6` のクリーンな `src/` と `benchmarks/` をcheckoutし、Q36をbytes一致で複製した。元の [stage2.py](../stage2.py)、[stage2_analyze.py](../stage2_analyze.py)、保存worker、採点ロジックは一切編集していない。依存版とsource_hashは元のpreflightに一致し、runtimeの差はimport_rootだけ。凍結採点依存 `benchmarks/research_runner.py` のSHA-256は `b9ddace01355d8ac4e5c0ae75f61c4543c976d46bc430e8a44203926e42f4b81`。解析出力はハッシュ一致を確認してこのディレクトリへ戻した。
+
+更新前の `answer.md` は [answer-stage1.md](../answer-stage1.md) に登録時のbytesで保存した（SHA-256 `11e4d21a213698bbac30e712ccb51ec48ae8763f2ffb94202c5e23d06e3da1c6`）。lockは当時の報告を指すまま保持し、現在の `answer.md` は利用者が依頼した段階2の報告へ更新した。他の登録成果物は変更していない。再開監査時の共有機は32論理CPU、load約55で、元の各試行の負荷履歴はない。時間値は負荷付きの参考値とする。
+
 登録は commit `bffba67`、凍結srcは `60db4b6`。利用者の別タスクでの明示的許可を受けて実行した。予測・対象・seed・閾値・予算は [prediction.md](../prediction.md) と [next-stage-plan.md](../next-stage-plan.md) のまま。並列上限は利用者の指定を優先して2。
 
 `preflight.json` に、登録成果物14件とlockのコミット同一性、選択元 `input-census.csv` のSHA-256、362入力の照合、実行依存関係、探索箱、実行コードのSHA-256を記録した。説明文書2件だけにマージ時の追記があり、登録時の内容は `3e32bf7` でハッシュ一致を確認した。計算入力・probe・固定代表点は一致している。
@@ -20,8 +28,10 @@
 
 主対象2問のR/C/Z、固定効果量条件、各0.025以下の片側正確二項検定、3対照を別々に報告する。P1/P3の境界、測定不足条件、正確二項確率は人工個数で確認した。採点で参照する既存データは固定された選択・参照値・幾何モデルだけで、登録前seedの成績を新規成績へ合算しない。
 
-実行済みseedを再実行するコマンドは上書き防止で拒否する。集計だけの再確認は次の通り。
+実行済みseedを再実行するコマンドは上書き防止で拒否する。以下は今回保存したクリーンcheckout内の複製を再集計するコマンドであり、solverや局所探索を実行しない。共有worktreeから直接採点しない。
 
 ```bash
-env PYTHONDONTWRITEBYTECODE=1 /home/kabatan/work/solver/.venv/bin/python jssa/strategy/astra-consult-18/Q36/stage2_analyze.py
+env PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/tmp/q36-clean/src:/tmp/q36-clean /home/kabatan/work/solver/.venv/bin/python -B /tmp/q36-clean/jssa/strategy/astra-consult-18/Q36/stage2_analyze.py
 ```
+
+主集計は `local-jobs.csv`、`local-values.csv`、`full-runs.csv`、`full-values.csv`、`geometry-new.csv`、`value-sources.csv` と `results.json`。補足の [local-seed-stability.csv](local-seed-stability.csv) は登録済み主2問のseedごとの少数側・0.20閾値を示す記述集計で、P1の合算判定を置換しない。[integer-220-sources.csv](integer-220-sources.csv) は返答220のcanonical keyと値別候補descriptorの一致を確認した30実行分の対応であり、経路の必要性を示す介入実験ではない。全比率のWilson95%区間は主CSV・JSONと補足CSV・監査JSONに保存した。最大ファイルは `full-runs.csv` の1,506,894 bytesで、5MB超の生ログは発生していない。

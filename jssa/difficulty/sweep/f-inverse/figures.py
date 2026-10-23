@@ -48,12 +48,18 @@ def evaluate_figure(bundle,evaluator,original_evaluator,candidate):
         original=original_evaluator.evaluate_hp_residual(values,precision=80)
         original_ans=original_evaluator.evaluate_answer_hp(values,precision=80).answer_hp
         context=build_solution_context_high_precision(bundle.spec,list(bundle.var_names),values,bundle.base_context,80)
-        points={}
+        points_hp={}
         for c in bundle.spec.construction:
             obj=context.get(c.name)
             if hasattr(obj,'x') and hasattr(obj,'y'):
-                x,y=float(obj.x),float(obj.y)
-                if math.isfinite(x) and math.isfinite(y):points[c.name]=[x,y]
+                points_hp[c.name]=(obj.x,obj.y)
+    # Serialize only after leaving HP mode; the frozen engine rejects float(mpf)
+    # inside that mode. The 80-digit evaluation and all thresholds stay unchanged.
+    points={}
+    for name,(x_hp,y_hp) in points_hp.items():
+        x,y=float(x_hp),float(y_hp)
+        if math.isfinite(x) and math.isfinite(y):points[name]=[x,y]
+    with mp.workdps(80):
         pairs=list(itertools.combinations(sorted(points),2))
         distances=[math.dist(points[a],points[b]) for a,b in pairs]
         eq=float(res.residual_norm_hp);orig=float(original.residual_norm_hp)
