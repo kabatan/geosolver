@@ -35,3 +35,22 @@ jssa/strategy/gpt-pro-consult-12-prompt.md の「聞きたいこと」1〜5に�
 ## astra-C（相談役、実験してよい）：変数を増やすと良くなる問題
 
 作図で消していた点を自由点に戻す（変数を増やす）と、たいていは当たる確率が下がる。しかし AIME 2020 II-15 では 0.03 → 0.53 に上がった（他に HMMT 2017 FEB GEO-10、HMMT 2021 FEB GEO-04 でも少し上がった）。元の系の失敗は、図が数百〜10万倍に膨らみ、垂線の足が頂点に重なる、というものだった（ghost-1023/README.md）。なぜ上がるのか、どの問題で上がるかを事前に予測できる規則は何かを考え、確かめてほしい。DSL は jssa/difficulty/holdout-1023/（k0 が元の系、k2 が自由点の系）に無ければ jssa/difficulty/expand_k.py で作れる（`--kmax 2 --min-eligible 2 --max-vars 6`）。実験の道具は jssa/difficulty/probe_common.py。回答とコードを jssa/strategy/astra-consult-12/C/ に置く。
+
+---
+
+# 追加（10/23 15:30）
+
+## astra-D, astra-E（相談役、実験してよい、互いに独立）：中心成果の別の候補を出す
+
+背景：本人の要求は「最高賞レベル。自明な予測と自明な結論は不可」。中心の問いは固定（(1) solver をどう実現したか、(2) solver の難しさは人間の難しさとどう違うか）。いまの候補は「出発点の図が問題の不等式（形の条件）を破るかどうかが当たり外れを大きく左右し、人間の難易度とは無関係」（jssa/difficulty/start-feasibility-1023/README.md、jssa/strategy/astra-consult-12/B/）。本人は「面白いが、最高賞の中心を担えるかは検証が要る。安易に決めない」と言っている。
+
+依頼：この候補とは別の、中心成果の候補を一つ以上出し、手元のデータで予備的に確かめてほしい。各候補について (a) 主張を一文で、(b) 誰も事前に当てられない予測、(c) 2日以内・4〜16コアで実行できる検証の設計、(d) 外れたら何が言えるか、(e) 既知の文献との関係、を書くこと。候補を選ぶ基準は「人間と solver の難しさのずれを、一つの機構から予測できるか」。
+
+- astra-D：solver の内部（局所探索の軌道、精密化の収束、厳密同定）から攻める。データ：jssa/difficulty/minima/（raw-323 と raw-323-seed1 は 323問×200出発点の終点・出発点）、jssa/difficulty/stage-taxonomy/、jssa/results/stage-profile-20261023/。
+- astra-E：人間の側から攻める。人間の難易度は ghost-1023/human_feat.csv の human 列（Easy2Hard）と、問題文（benchmarks/cases.jsonl）。本人は IMO 2025 金メダリストで、その感覚も一次資料になりうる（本人に聞きたいことがあれば質問として書く）。
+
+出力：jssa/strategy/astra-consult-14/D/、E/ に answer.md とコード。
+
+## astra-F（批判役）：今の候補の弱点を突く
+
+jssa/strategy/gpt-pro-consult-13-prompt.md を読み、候補の主張（図の形の正しさ）を、審査員として最も厳しく批判してほしい。特に「罰則の設計が悪いだけでは」「φ は変数の数や不等式の数の言い換えでは」「人間の難易度との無相関は、何も示していないのでは」に、データで答えること（反証を試みる実験をしてよい）。出力は jssa/strategy/astra-consult-14/F/。
