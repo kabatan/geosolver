@@ -1,0 +1,317 @@
+{
+  "analysis_utc": "2026-10-23T20:50:01.598205Z",
+  "prediction_lock_sha256": "0e4729ecb1a500bd46c2e01127f016ae23601e6b1f45d52af96ce142e88c2cbc",
+  "planned_runs": 360,
+  "saved_runs": 360,
+  "assessed_runs": 360,
+  "completed_receipts": 360,
+  "unknown_runs": 51,
+  "status_counts": {
+    "solved": 293,
+    "no_answer_found": 16,
+    "engine_error": 17,
+    "process_crash": 31,
+    "artifact_missing": 3
+  },
+  "unknown_reason_counts": {
+    "engine_error": 17,
+    "storage_file_size_limit": 31,
+    "storage_json_size_limit": 3
+  },
+  "mechanism_metric_bounds_out_of_40": {
+    "N": [
+      1,
+      9
+    ],
+    "R": [
+      0,
+      7
+    ],
+    "R3": [
+      0,
+      3
+    ],
+    "V": [
+      1,
+      9
+    ]
+  },
+  "strata_metric_bounds_out_of_10": {
+    "A": {
+      "N": [
+        1,
+        2
+      ],
+      "R": [
+        0,
+        1
+      ],
+      "R3": [
+        0,
+        0
+      ],
+      "V": [
+        1,
+        2
+      ]
+    },
+    "B": {
+      "N": [
+        0,
+        2
+      ],
+      "R": [
+        0,
+        1
+      ],
+      "R3": [
+        0,
+        0
+      ],
+      "V": [
+        0,
+        2
+      ]
+    },
+    "C": {
+      "N": [
+        0,
+        3
+      ],
+      "R": [
+        0,
+        3
+      ],
+      "R3": [
+        0,
+        2
+      ],
+      "V": [
+        0,
+        3
+      ]
+    },
+    "D": {
+      "N": [
+        0,
+        2
+      ],
+      "R": [
+        0,
+        2
+      ],
+      "R3": [
+        0,
+        1
+      ],
+      "V": [
+        0,
+        2
+      ]
+    }
+  },
+  "budget_categories_out_of_120": {
+    "180": {
+      "correct": 97,
+      "normal_incorrect": 9,
+      "unknown": 14
+    },
+    "360": {
+      "correct": 94,
+      "normal_incorrect": 8,
+      "unknown": 18
+    },
+    "900": {
+      "correct": 94,
+      "normal_incorrect": 7,
+      "unknown": 19
+    }
+  },
+  "budget_pair_counts_out_of_120": {
+    "180->360": {
+      "both_correct": 94,
+      "both_incorrect": 7,
+      "loss": 1,
+      "unknown": 18
+    },
+    "180->900": {
+      "both_correct": 94,
+      "both_incorrect": 6,
+      "loss": 1,
+      "unknown": 19
+    },
+    "360->900": {
+      "both_correct": 93,
+      "both_incorrect": 6,
+      "loss": 1,
+      "gain": 1,
+      "unknown": 19
+    }
+  },
+  "pattern_counts_out_of_120": {
+    "000": 6,
+    "001": 0,
+    "00?": 1,
+    "010": 0,
+    "011": 0,
+    "0??": 2,
+    "100": 0,
+    "101": 1,
+    "110": 1,
+    "111": 93,
+    "1??": 2,
+    "???": 14
+  },
+  "fully_observed_problems": 32,
+  "fully_observed_problem_metric_counts": {
+    "N": 1,
+    "R": 0,
+    "R3": 0,
+    "V": 1
+  },
+  "predictions": {
+    "P1": {
+      "point": 4,
+      "range": [
+        1,
+        8
+      ],
+      "actual_bounds": [
+        1,
+        9
+      ],
+      "verdict": "判定不能"
+    },
+    "P2": {
+      "point": 1,
+      "range": [
+        1,
+        3
+      ],
+      "actual_bounds": [
+        0,
+        7
+      ],
+      "verdict": "判定不能"
+    },
+    "P3": {
+      "verdict": "判定不能",
+      "A_plus_B_N_bounds": [
+        1,
+        4
+      ],
+      "D_N_bounds": [
+        0,
+        2
+      ],
+      "A_plus_B_fraction_bounds_if_N_positive": [
+        0.16666666666666666,
+        1.0
+      ],
+      "N_zero_possible": false
+    }
+  },
+  "execution_start_utc": "2026-10-23T16:28:46.841162Z",
+  "execution_end_utc": "2026-10-23T20:45:42.971648Z",
+  "lane_cpus": [
+    4,
+    10,
+    14,
+    15
+  ],
+  "affinity_violation_runs": 0,
+  "recovered_receipts": 17,
+  "recovered_receipts_with_periodic_monitor_unavailable": 4,
+  "original_campaign_grading_errors": [
+    {
+      "budget": 180,
+      "seed": 370101,
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 526, in <module>\n    main()\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 519, in main\n    assess(*args.numbers)\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 426, in assess\n    rr.assess_campaign(campaign, cases_path=ROOT / \"benchmarks/cases.jsonl\")\n  File \"/tmp/q37-clean/benchmarks/research_runner.py\", line 675, in assess_campaign\n    outcome = read_run_outcome(raw)\n              ^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/q37-clean/benchmarks/research_runner.py\", line 565, in read_run_outcome\n    info = diagnostics.get(\"process_info\", {})\n           ^^^^^^^^^^^^^^^\nAttributeError: 'NoneType' object has no attribute 'get'\n"
+    },
+    {
+      "budget": 180,
+      "seed": 370201,
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 526, in <module>\n    main()\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 519, in main\n    assess(*args.numbers)\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 426, in assess\n    rr.assess_campaign(campaign, cases_path=ROOT / \"benchmarks/cases.jsonl\")\n  File \"/tmp/q37-clean/benchmarks/research_runner.py\", line 675, in assess_campaign\n    outcome = read_run_outcome(raw)\n              ^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/q37-clean/benchmarks/research_runner.py\", line 565, in read_run_outcome\n    info = diagnostics.get(\"process_info\", {})\n           ^^^^^^^^^^^^^^^\nAttributeError: 'NoneType' object has no attribute 'get'\n"
+    },
+    {
+      "budget": 180,
+      "seed": 370301,
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 526, in <module>\n    main()\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 519, in main\n    assess(*args.numbers)\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 426, in assess\n    rr.assess_campaign(campaign, cases_path=ROOT / \"benchmarks/cases.jsonl\")\n  File \"/tmp/q37-clean/benchmarks/research_runner.py\", line 675, in assess_campaign\n    outcome = read_run_outcome(raw)\n              ^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/q37-clean/benchmarks/research_runner.py\", line 565, in read_run_outcome\n    info = diagnostics.get(\"process_info\", {})\n           ^^^^^^^^^^^^^^^\nAttributeError: 'NoneType' object has no attribute 'get'\n"
+    },
+    {
+      "budget": 360,
+      "seed": 370101,
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 526, in <module>\n    main()\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 519, in main\n    assess(*args.numbers)\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 426, in assess\n    rr.assess_campaign(campaign, cases_path=ROOT / \"benchmarks/cases.jsonl\")\n  File \"/tmp/q37-clean/benchmarks/research_runner.py\", line 675, in assess_campaign\n    outcome = read_run_outcome(raw)\n              ^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/q37-clean/benchmarks/research_runner.py\", line 565, in read_run_outcome\n    info = diagnostics.get(\"process_info\", {})\n           ^^^^^^^^^^^^^^^\nAttributeError: 'NoneType' object has no attribute 'get'\n"
+    },
+    {
+      "budget": 360,
+      "seed": 370201,
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 526, in <module>\n    main()\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 519, in main\n    assess(*args.numbers)\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 426, in assess\n    rr.assess_campaign(campaign, cases_path=ROOT / \"benchmarks/cases.jsonl\")\n  File \"/tmp/q37-clean/benchmarks/research_runner.py\", line 675, in assess_campaign\n    outcome = read_run_outcome(raw)\n              ^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/q37-clean/benchmarks/research_runner.py\", line 565, in read_run_outcome\n    info = diagnostics.get(\"process_info\", {})\n           ^^^^^^^^^^^^^^^\nAttributeError: 'NoneType' object has no attribute 'get'\n"
+    },
+    {
+      "budget": 360,
+      "seed": 370301,
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 526, in <module>\n    main()\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 519, in main\n    assess(*args.numbers)\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 426, in assess\n    rr.assess_campaign(campaign, cases_path=ROOT / \"benchmarks/cases.jsonl\")\n  File \"/tmp/q37-clean/benchmarks/research_runner.py\", line 675, in assess_campaign\n    outcome = read_run_outcome(raw)\n              ^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/q37-clean/benchmarks/research_runner.py\", line 565, in read_run_outcome\n    info = diagnostics.get(\"process_info\", {})\n           ^^^^^^^^^^^^^^^\nAttributeError: 'NoneType' object has no attribute 'get'\n"
+    },
+    {
+      "budget": 900,
+      "seed": 370101,
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 526, in <module>\n    main()\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 519, in main\n    assess(*args.numbers)\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 426, in assess\n    rr.assess_campaign(campaign, cases_path=ROOT / \"benchmarks/cases.jsonl\")\n  File \"/tmp/q37-clean/benchmarks/research_runner.py\", line 675, in assess_campaign\n    outcome = read_run_outcome(raw)\n              ^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/q37-clean/benchmarks/research_runner.py\", line 565, in read_run_outcome\n    info = diagnostics.get(\"process_info\", {})\n           ^^^^^^^^^^^^^^^\nAttributeError: 'NoneType' object has no attribute 'get'\n"
+    },
+    {
+      "budget": 900,
+      "seed": 370201,
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 526, in <module>\n    main()\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 519, in main\n    assess(*args.numbers)\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 426, in assess\n    rr.assess_campaign(campaign, cases_path=ROOT / \"benchmarks/cases.jsonl\")\n  File \"/tmp/q37-clean/benchmarks/research_runner.py\", line 675, in assess_campaign\n    outcome = read_run_outcome(raw)\n              ^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/q37-clean/benchmarks/research_runner.py\", line 565, in read_run_outcome\n    info = diagnostics.get(\"process_info\", {})\n           ^^^^^^^^^^^^^^^\nAttributeError: 'NoneType' object has no attribute 'get'\n"
+    },
+    {
+      "budget": 900,
+      "seed": 370301,
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 526, in <module>\n    main()\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 519, in main\n    assess(*args.numbers)\n  File \"/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/budget-monotonicity/isolated_stage2.py\", line 426, in assess\n    rr.assess_campaign(campaign, cases_path=ROOT / \"benchmarks/cases.jsonl\")\n  File \"/tmp/q37-clean/benchmarks/research_runner.py\", line 675, in assess_campaign\n    outcome = read_run_outcome(raw)\n              ^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/q37-clean/benchmarks/research_runner.py\", line 565, in read_run_outcome\n    info = diagnostics.get(\"process_info\", {})\n           ^^^^^^^^^^^^^^^\nAttributeError: 'NoneType' object has no attribute 'get'\n"
+    }
+  ],
+  "load_averages": {
+    "1": {
+      "min": 6.5478515625,
+      "max": 59.37744140625,
+      "mean": 28.752891154200288
+    },
+    "5": {
+      "min": 9.8818359375,
+      "max": 50.67578125,
+      "mean": 28.763770774726087
+    },
+    "15": {
+      "min": 13.6708984375,
+      "max": 46.05078125,
+      "mean": 28.30359148186106
+    }
+  },
+  "worker_cpu_to_solver_wall_ratio": {
+    "min": 0.3195914886128338,
+    "median": 0.9674071002392272,
+    "max": 0.9912938146242801
+  },
+  "max_saved_raw_bytes": 4772455,
+  "sum_process_wall_seconds": 40670.14495126088,
+  "sum_worker_cpu_seconds": 28118.08,
+  "regression_pair_count": 3,
+  "no_additional_solver_runs": true
+}

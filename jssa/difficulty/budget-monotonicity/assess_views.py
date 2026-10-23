@@ -13,12 +13,13 @@ import os
 import resource
 import traceback
 
-import execute_stage2 as execution
+import isolated_stage2 as execution
 
 
 def main():
     resource.setrlimit(resource.RLIMIT_FSIZE, (execution.LIMIT, execution.LIMIT))
     execution.verify()
+    execution.verify_baseline()
     end = execution.read(execution.EXEC / "execution-end.json")
     if end["completed"] != 360:
         raise RuntimeError("all locked runs must finish before this analysis")

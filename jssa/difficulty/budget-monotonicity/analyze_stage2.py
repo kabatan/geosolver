@@ -9,7 +9,7 @@ import json
 from collections import Counter
 from statistics import median
 
-import execute_stage2 as execution
+import isolated_stage2 as execution
 
 BASE = execution.BASE
 EXEC = execution.EXEC
@@ -126,6 +126,11 @@ def concentration_grade(strata):
 
 
 def analyze():
+    execution.verify()
+    execution.verify_baseline()
+    end = read(EXEC / "execution-end.json")
+    if end["completed"] != 360:
+        raise RuntimeError("all locked jobs must finish before final analysis")
     jobs = execution.jobs()
     selection = list(csv.DictReader((BASE / "selection.csv").open()))
     assessments = {}
@@ -144,6 +149,9 @@ def analyze():
                     row["q37_assessment_source"] = str(path.relative_to(BASE))
                     row["q37_unknown_placeholder"] = row["case_id"] in substituted
                     assessments[(row["case_id"], seed, budget)] = row
+    expected_keys = {(j["id"], j["seed"], j["time_limit_seconds"]) for j in jobs}
+    if set(assessments) != expected_keys:
+        raise RuntimeError("assessment coverage differs from the locked 360 jobs")
     runs, diagnostics, receipts = [], {}, {}
     for job in jobs:
         identity = (job["id"], job["seed"], job["time_limit_seconds"])
@@ -166,7 +174,8 @@ def analyze():
                      and assessment["normal_completion"] and assessment["matched"] is not None)
         value = int(assessment["matched"] is True) if known else None
         stderr = raw.get("process", {}).get("stderr", "")
-        missing_reason = (None if known else "storage_file_size_limit" if "[Errno 27] File too large" in stderr
+        missing_reason = (None if known else "storage_json_size_limit" if receipt.get("storage_error")
+                          else "storage_file_size_limit" if "[Errno 27] File too large" in stderr
                           else "assessment_missing" if not assessment else outcome["status"])
         info = diag.get("process_info") or {}
         load = receipt.get("load_samples", [])
@@ -267,6 +276,7 @@ def analyze():
                "planned_runs": 360, "saved_runs": sum(r["raw_sha256"] is not None for r in runs),
                "assessed_runs": len(assessments), "completed_receipts": sum(bool(r) for r in receipts.values()),
                "unknown_runs": sum(r["category"] == "unknown" for r in runs), "status_counts": dict(Counter(r["status"] for r in runs)),
+               "unknown_reason_counts": dict(Counter(r["missing_reason"] for r in runs if r["category"] == "unknown")),
                "mechanism_metric_bounds_out_of_40": metrics, "strata_metric_bounds_out_of_10": strata,
                "budget_categories_out_of_120": bybudget, "budget_pair_counts_out_of_120": bypair,
                "pattern_counts_out_of_120": dict(sorted(patterns.items())),
@@ -277,7 +287,8 @@ def analyze():
                                "P3": concentration_grade(strata)},
                "execution_start_utc": start["execution_start_utc"], "execution_end_utc": end["execution_end_utc"] if end else None,
                "lane_cpus": start["lane_cpus"], "affinity_violation_runs": sum(r["affinity_violations"] > 0 for r in runs),
-               "recovered_receipts_with_periodic_monitor_unavailable": sum(bool(r.get("receipt_recovery")) for r in receipts.values()),
+               "recovered_receipts": sum(bool(r.get("receipt_recovery")) for r in receipts.values()),
+               "recovered_receipts_with_periodic_monitor_unavailable": sum(bool(r.get("affinity_monitor_unavailable")) for r in receipts.values()),
                "original_campaign_grading_errors": end["grading_errors"] if end else None,
                "load_averages": {str(minutes): {"min": min(v[i] for v in all_load), "max": max(v[i] for v in all_load), "mean": sum(v[i] for v in all_load) / len(all_load)} for i, minutes in enumerate((1, 5, 15))} if all_load else {},
                "worker_cpu_to_solver_wall_ratio": {"min": min(ratios), "median": median(ratios), "max": max(ratios)} if ratios else {},

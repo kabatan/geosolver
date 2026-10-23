@@ -4,7 +4,7 @@ from __future__ import annotations
 import itertools
 
 import analyze_stage2 as analysis
-import execute_stage2 as execution
+import isolated_stage2 as execution
 
 
 def main():
