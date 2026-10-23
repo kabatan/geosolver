@@ -27,6 +27,9 @@ for a, b, i, _ in pts:
     if i == "AIME-2010-II-14":
         ax.annotate("AIME 2010 II-14", (a, b), xytext=(a + 0.05, b - 0.12), fontsize=8, color="#333333",
                     arrowprops=dict(arrowstyle="-", color="#666666", lw=0.6))
+    if i == "AIME-2006-II-09":  # the largest miss: p_F rested on 1 feasible start of 200
+        ax.annotate("AIME 2006 II-9（予測の外れ）", (a, b), xytext=(-0.55, 0.66), fontsize=8, color="#333333",
+                    arrowprops=dict(arrowstyle="-", color="#666666", lw=0.6))
 ax.set_xlim(-0.6, 1.0)
 ax.set_ylim(-0.6, 1.0)
 ax.set_xlabel("予測した変化（seed 0 から）", fontsize=9)
