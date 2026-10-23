@@ -1,0 +1,167 @@
+{
+  "registered_trial": false,
+  "optimizer_calls": 0,
+  "meaning": "A=(-3/2,0), B=(3/2,0)なのでAB²=9は恒等的に真。探索は実施しない。",
+  "variants": {
+    "base": {
+      "dsl": {
+        "id": "posthoc-static-circle",
+        "variables": [
+          "x",
+          "y"
+        ],
+        "constructions": [
+          {
+            "name": "A",
+            "expression": "Point(-(3/2),0)"
+          },
+          {
+            "name": "B",
+            "expression": "Point(3/2,0)"
+          },
+          {
+            "name": "C",
+            "expression": "Point(0,13/20)"
+          },
+          {
+            "name": "D",
+            "expression": "Point((3/2)/3,(13/20)/2)"
+          },
+          {
+            "name": "P",
+            "expression": "Point(x,y)"
+          }
+        ],
+        "conditions": [
+          {
+            "left": "Distance(P,A)**2",
+            "operator": "=",
+            "right": "(3/2)**2+1"
+          }
+        ],
+        "target": "Distance(P,A)"
+      },
+      "n_vars": 2,
+      "n_constraints": 1,
+      "guards": [],
+      "hard_checks": "()",
+      "dispatch_predicted_from_source": "Powell",
+      "dispatch_executed": false,
+      "samples": [
+        {
+          "x": [
+            0,
+            1
+          ],
+          "residual": [
+            -4.440892098500626e-16
+          ]
+        },
+        {
+          "x": [
+            0.3,
+            -0.7
+          ],
+          "residual": [
+            0.48
+          ]
+        },
+        {
+          "x": [
+            2,
+            1.5
+          ],
+          "residual": [
+            11.250000000000002
+          ]
+        }
+      ]
+    },
+    "padded": {
+      "dsl": {
+        "id": "posthoc-static-circle",
+        "variables": [
+          "x",
+          "y"
+        ],
+        "constructions": [
+          {
+            "name": "A",
+            "expression": "Point(-(3/2),0)"
+          },
+          {
+            "name": "B",
+            "expression": "Point(3/2,0)"
+          },
+          {
+            "name": "C",
+            "expression": "Point(0,13/20)"
+          },
+          {
+            "name": "D",
+            "expression": "Point((3/2)/3,(13/20)/2)"
+          },
+          {
+            "name": "P",
+            "expression": "Point(x,y)"
+          }
+        ],
+        "conditions": [
+          {
+            "left": "Distance(P,A)**2",
+            "operator": "=",
+            "right": "(3/2)**2+1"
+          },
+          {
+            "left": "Distance(A,B)**2",
+            "operator": "=",
+            "right": "9"
+          }
+        ],
+        "target": "Distance(P,A)"
+      },
+      "n_vars": 2,
+      "n_constraints": 2,
+      "guards": [],
+      "hard_checks": "()",
+      "dispatch_predicted_from_source": "LM",
+      "dispatch_executed": false,
+      "samples": [
+        {
+          "x": [
+            0,
+            1
+          ],
+          "residual": [
+            -4.440892098500626e-16,
+            0.0
+          ]
+        },
+        {
+          "x": [
+            0.3,
+            -0.7
+          ],
+          "residual": [
+            0.48,
+            0.0
+          ]
+        },
+        {
+          "x": [
+            2,
+            1.5
+          ],
+          "residual": [
+            11.250000000000002,
+            0.0
+          ]
+        }
+      ]
+    }
+  },
+  "retained_zero_row": true,
+  "sample_objectives_equal": true,
+  "guards_same": true,
+  "hard_checks_same": true
+}
