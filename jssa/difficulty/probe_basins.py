@@ -57,8 +57,8 @@ RES_TOL = 1e-8
 ANS_RTOL = 1e-6
 
 
-def load_case(case_id: str) -> dict:
-    for line in (ROOT / "benchmarks" / "cases.jsonl").open():
+def load_case(case_id: str, cases_path: str | Path | None = None) -> dict:
+    for line in Path(cases_path or ROOT / "benchmarks" / "cases.jsonl").open():
         case = json.loads(line)
         if case["id"] == case_id:
             return case
@@ -140,6 +140,9 @@ def main() -> None:
     ap.add_argument("--starts", type=int, default=200)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--budget", type=float, default=120.0)
+    ap.add_argument("--cases", type=Path, help="case JSONL (default: benchmarks/cases.jsonl)")
+    ap.add_argument("--defer-summary", action="store_true",
+                    help="save individual records without aggregating hits or p (preregistration)")
     ap.add_argument("--dsl", help="use this DSL JSON instead of the case's own")
     ap.add_argument("--init-from", help="k=0 DSL: start extra point variables at their constructed position")
     ap.add_argument("--zero-prefix", help="start variables whose name begins with this prefix at 0 (offset variants)")
@@ -147,7 +150,7 @@ def main() -> None:
                     help="redraw each start (own RNG [seed, 99, k], up to 2000 tries) until it passes hard feasibility")
     args = ap.parse_args()
 
-    case = load_case(args.case_id)
+    case = load_case(args.case_id, args.cases)
     dsl = json.loads(Path(args.dsl).read_text()) if args.dsl else case["dsl"]
     refs = reference_values(case["answer"])
     doc = GeometryProblem.model_validate(dsl).engine_document()
@@ -223,6 +226,8 @@ def main() -> None:
             err = None
         dt = time.monotonic() - t0
         rec = {"k": k, "sec": dt, "nfev": telemetry.evaluation_count - n0}
+        if args.defer_summary:
+            rec["start"] = [float(v) for v in start]
         if args.feasible_starts:
             rec["redraws"] = redraws
         rec["start_feasible"] = _hard_feasible(evaluator, start)
@@ -266,6 +271,13 @@ def main() -> None:
     out["status"] = "ok"
     out["elapsed"] = time.monotonic() - t_start
     out["starts_done"] = len(records)
+    if args.defer_summary:
+        out["summary_deferred"] = True
+        out["records"] = records
+        Path(args.out).write_text(json.dumps(out))
+        print(args.case_id, "starts_done=", len(records), "summary deferred",
+              "elapsed=%.1f" % out["elapsed"])
+        return
     counts = {}
     for r in records:
         counts[r["cls"]] = counts.get(r["cls"], 0) + 1

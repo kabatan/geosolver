@@ -221,7 +221,7 @@ def solve_pair(cid, names, i, j, bundle, coords, bounds, has_hits):
     )
 
 
-def prepare_problem(row, case):
+def prepare_problem(row, case, raw_dir=None):
     cid, dsl = row["id"], case["dsl"]
     bundle = load_problem_bundle(GeometryProblem.model_validate(dsl).engine_document())
     if len(bundle.var_names) != int(row["n_vars"]):
@@ -231,7 +231,8 @@ def prepare_problem(row, case):
         raise ValueError(f"{cid}: invalid random-start bounds")
     names = sorted(point_names(dsl))
     coords = construction_coordinates(dsl, names)
-    raw = json.loads((ROOT / "jssa/difficulty/minima/raw-323" / f"{cid}.json").read_text())
+    raw_dir = Path(raw_dir) if raw_dir is not None else ROOT / "jssa/difficulty/minima/raw-323"
+    raw = json.loads((raw_dir / f"{cid}.json").read_text())
     hits = [r["x"] for r in raw.get("records", []) if r["cls"] == "hit"]
     # Exactly the pair exclusion convention in ghost_scan.py, including its
     # use of all finite point coordinates to define the relative tolerance.
@@ -259,9 +260,9 @@ def prepare_problem(row, case):
     return bundle, coords, bounds, names, hits, excluded
 
 
-def prepare_summary(row, case):
+def prepare_summary(row, case, raw_dir=None):
     began = time.monotonic()
-    bundle, _, _, names, hits, excluded = prepare_problem(row, case)
+    bundle, _, _, names, hits, excluded = prepare_problem(row, case, raw_dir)
     indices = [ij for ij in combinations(range(len(names)), 2) if ij not in excluded]
     meta = dict(
         id=row["id"],
