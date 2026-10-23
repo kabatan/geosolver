@@ -1,0 +1,54 @@
+{
+  "protocol_version": 4,
+  "request_id": "12e11f5857de4967bb497dafed4cefef",
+  "engine_document": {
+    "task": "solve",
+    "id": "aime-2003-1-7",
+    "variables": {
+      "names": [
+        "x"
+      ]
+    },
+    "construction": [
+      {
+        "name": "A",
+        "expr": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expr": "Point(9, 0)"
+      },
+      {
+        "name": "C",
+        "expr": "Point(30, 0)"
+      },
+      {
+        "name": "D",
+        "expr": "Point(15, x)"
+      }
+    ],
+    "constraints": [
+      {
+        "def": "IsInteger(Distance(A, D))",
+        "value": 0
+      },
+      {
+        "def": "IsInteger(Distance(B, D))",
+        "value": 0
+      }
+    ],
+    "guards": [
+      "AssumeGt(x, 0)"
+    ],
+    "answer": "Distance(A, C) + Distance(A, D) + Distance(C, D)",
+    "post_process": ""
+  },
+  "seed": 1,
+  "deadline_monotonic": 1292760.529900142,
+  "effective_cores": 1,
+  "config_snapshot": {
+    "time_limit_seconds": 180.0,
+    "cores": 1,
+    "seed": 1
+  }
+}

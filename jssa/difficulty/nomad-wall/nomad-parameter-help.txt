@@ -1,0 +1,246 @@
+-----------------------------------------------------------
+ Python Interface to NOMAD version 2.2
+ NOMAD version 4.5.1
+-----------------------------------------------------------
+-------------------------------------------------------------------------------
+-------------------------------- BASIC PARAMETERS -----------------------------
+-------------------------------------------------------------------------------
+
+BB_OUTPUT_TYPE { 
+  
+ . Blackbox output types 
+  
+ . List of types for each blackbox output 
+  
+ . If BB_EXE is defined, the blackbox outputs must be returned by the executable 
+ on a SINGLE LINE of the standard output or in an output file 
+ (see BB_REDIRECTION). The order of outputs must be consistent between the blackbox 
+ and BB_OUTPUT_TYPE. 
+  
+ . Available types 
+     . OBJ       : objective value to minimize (define twice for bi-objective) 
+     . PB        : constraint <= 0 treated with Progressive Barrier (PB) 
+     . CSTR      : same as 'PB' 
+     . EB        : constraint <= 0 treated with Extreme Barrier (EB) 
+     . F         : constraint <= 0 treated with Filter 
+     . CNT_EVAL  : 0 or 1 output: count or not the evaluation (for batch mode and Matlab interface) 
+     . NOTHING   : this output is ignored 
+     . EXTRA_O   : same as 'NOTHING' 
+     .  -        : same as 'NOTHING' 
+     . BBO_UNDEFINED: same as 'NOTHING' 
+  
+ . Equality constraints are not natively supported 
+  
+ . Extra outputs (EXTRA_O, NOTHING, BBO_UNDEFINED, ...) are not used for 
+   optimization but are available for display and custom user testing 
+   (see examples). 
+  
+ . See parameters LOWER_BOUND and UPPER_BOUND for bound constraints 
+  
+ . See parameter H_NORM for the infeasibility measure computation. 
+  
+ . See parameter H_MIN for relaxing the feasibility criterion. 
+  
+ . Examples 
+     . BB_EXE bb.exe                   # these two lines define 
+     . BB_OUTPUT_TYPE OBJ EB EB        # that bb.exe outputs three values 
+  
+ . Default: OBJ
+
+
+}
+
+BB_REDIRECTION { 
+  
+ . Flag to redirect blackbox executable outputs in a stream. The redirection 
+   in a stream does not require an ouptut file. NOMAD interprets the outputs from 
+   the stream according to BB_OUTPUT_TYPE. If the blackbox executable 
+   outputs some verbose, NOMAD cannot interpret correctly the outputs. 
+  
+ . If the redirection is disabled, the blackbox must output its results into a 
+   file having the name of the input file (usually nomadtmp.pid.threadnum) 
+   completed by ".output". The format must follow the BB_OUTPUT_TYPE. 
+   For example, for BB_OUTPUT_TYPE OBJ CSTR, we must have only the two values on 
+   a single line in the output file with an end-of-line. 
+   
+ . Disabling blackbox redirection and managing output file can be convenient when 
+   the blackbox outputs some verbose. All the verbose is put into a temporary 
+   log file nomadtmp.pid.threadnum.tmplog. Both the log file and the output file 
+   are temporaty and are deleted at the end of the optimization. 
+   
+ . This parameter has no effect when BB_EXE is not defined like in library mode. 
+  
+ . Examples 
+     . BB_REDIRECTION false 
+  
+ . Default: true
+
+
+}
+
+SOL_FORMAT { 
+  
+ . SOL_FORMAT is computed from BB_OUTPUT_TYPE and GRANULARITY 
+   parameters. 
+  
+ . Gives the format precision for display of SOL. May also be used for 
+   other ArrayOfDouble of the same DIMENSION (ex. bounds, deltas). 
+  
+ . CANNOT BE MODIFIED BY USER. Internal parameter. 
+  
+ . No default value.
+
+
+}
+
+
+
+-------------------------------------------------------------------------------
+------------------------------ ADVANCED PARAMETERS ----------------------------
+-------------------------------------------------------------------------------
+
+SURROGATE_EXE { 
+ . To indicate a static surrogate executable 
+  
+ . List of strings 
+  
+ . Surrogate executable must have the same number of outputs as blackbox  
+     executable, defined by BB_OUTPUT_TYPE. 
+      
+ . Static surrogate evaluations can be used for sorting trial points before 
+   blackbox evaluation OR for VNS Search. 
+  
+ . Example 
+     SURROGATE_EXE surrogate.exe     # surrogate.exe is a static surrogate executable 
+                                     # for BB_EXE 
+ . Default: Empty string.
+
+
+}
+
+DMULTIMADS_OPTIMIZATION { 
+  
+ . When BB_OUTPUT_TYPE contains more than one objective, DMultiMads algorithm 
+ must be explicitly enabled. 
+  
+ . ChT. TODO modify the note. Pareto front can be output in a file. 
+ . Note: It is recommended to output all evaluation points into a file (use 
+ HISTORY_FILE). The user must do some post-processing for these results to obtain 
+  the approximation of the pareto front. Future version will have the option 
+  to output the pareto front in a file. 
+  
+ . Argument: bool 
+  
+ . Example: DMULTIMADS_OPTIMIZATION true 
+  
+ . Default: false
+
+
+}
+
+
+
+-------------------------------------------------------------------------------
+-------------------------------- BASIC PARAMETERS -----------------------------
+-------------------------------------------------------------------------------
+
+DISCO_MADS_HID_CONST { 
+  
+ . Special use of DiscoMads to reveal hidden constraint regions instead of  
+ discontinuities. Parameters DISCO_MADS_DETECTION_RADIUS and DISCO_MADS_LIMIT_RATE 
+ are not considered in this casem DISCO_MADS_DETECTION_RADIUS takes the value 0. 
+  
+ . Argument: bool 
+  
+ . Example: DISCO_MADS_HID_CONST true 
+  
+ . Default: false
+
+
+}
+
+DISCO_MADS_HID_CONST_OUTPUT_VALUE { 
+  
+ . This attribute is used only when DiscoMads optimization is active and DiscoMads  
+ is used to reveal hidden constraints regions (DISCO_MADS_HID_CONST) 
+  
+ . Argument: Double strictly positive, greater than MODEL_MAX_OUTPUT and 
+ less than NOMAD::INF. 
+  
+ . Example: DISCO_MADS_HID_CONST_OUTPUT_VALUE 1e20 
+  
+ . Default: 1E20
+
+
+}
+
+DISCO_MADS_OPTIMIZATION { 
+  
+ . DiscoMads optimization: reveal and escape either weak discontinuities 
+ in revealing outputs or hidden constraints regions (with DISCO_MADS_HID_CONST). 
+  
+ . If DiscoMads is used for discontinuities, they are characterized by  
+ DISCO_MADS_DETECTION_RADIUS and DISCO_MADS_LIMIT_RATE.  Revealing outputs 
+  should be indicated by appending -R to blackbox outputs type in parameters file. 
+  
+ . Prescribed distance to revealing points is controlled by  
+ DISCO_MADS_EXCLUSION_RADIUS. 
+  
+ . Revealing poll parameters are DISCO_MADS_REVEALING_POLL_NB_POINTS and 
+ DISCO_MADS_REVEALING_POLL_RADIUS. 
+  
+ . Argument: bool 
+  
+ . Example: DISCO_MADS_OPTIMIZATION true 
+  
+ . Default: false
+
+
+}
+
+
+
+-------------------------------------------------------------------------------
+------------------------------ ADVANCED PARAMETERS ----------------------------
+-------------------------------------------------------------------------------
+
+DISCO_MADS_DETECTION_RADIUS { 
+  
+ . DiscoMADS algorithm attempts to reveal discontinuities between couple of 
+ points whose distance is strictly less than this value. 
+  
+ . Argument: greater than or equal to 0. If 0, the DiscoMads algorithm is  
+ equivalent to the Mads algorithm with a special search (the revealing poll). 
+  
+ . This attribute is used only when DiscoMads optimization is active and  
+ DiscoMads is used for discontinuity revealation (DISCO_MADS_HID_CONST false) 
+  
+ . Example: DISCO_MADS_DETECTION_RADIUS 1.0 
+  
+ . This radius is called rd in the article. 
+ . Default: 1.0
+
+
+}
+
+DISCO_MADS_LIMIT_RATE { 
+  
+ . When using DiscoMADS algorithm, a discontinuity is revealed if between two 
+  points at distance at most DISCO_MADS_DETECTION_RADIUS the rate of change of  
+ at least one revealing output exceeds DISCO_MADS_LIMIT_RATE.  
+  
+ . Argument: stricly greater than 0 
+  
+ . This attribute is used only when DiscoMads optimization is active and  
+ DiscoMads is used for discontinuity revealation (DISCO_MADS_HID_CONST false) 
+  
+ . Example: DISCO_MADS_LIMIT_RATE 1.0 
+  
+ . This quantity is called tau in the article. 
+ . Default: 1
+
+
+}
+
+
+
