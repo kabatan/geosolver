@@ -461,7 +461,9 @@ def check():
             data = (HERE / name).read_bytes()
             assert sha(data) == record["sha256"] and len(data) == record["bytes"], name
         actual = {str(p.relative_to(HERE)) for p in HERE.rglob("*")
-                  if p.is_file() and p.name != "prediction.lock.json" and "__pycache__" not in p.parts}
+                  if p.is_file() and p.name != "prediction.lock.json" and "__pycache__" not in p.parts
+                  and p.relative_to(HERE).parts[0] != "stage2"
+                  and p.relative_to(HERE).as_posix() != "answer.md"}
         assert actual == set(lock["files"]), "The fixed-file inventory changed"
         assert lock["execution_authorized"] is False
     return outputs
@@ -488,6 +490,7 @@ def main():
             raise SystemExit("Lock already exists; it will not be overwritten.")
         check()
         assert (HERE / "prediction.md").is_file()
+        assert not (HERE / "stage2").exists() and not (HERE / "answer.md").exists()
         files = {}
         for path in sorted(HERE.rglob("*")):
             if path.is_file() and "__pycache__" not in path.parts:
