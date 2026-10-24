@@ -1,0 +1,54 @@
+{
+  "created_utc": "2026-10-24T02:47:49.198793+00:00",
+  "files": {
+    "/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/mechanism-1024/stage/S1/repair_references.py": "05a638bb37705a22bab06fc617f03d9ae068a94280c3b807b201744535333c34",
+    "/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/mechanism-1024/stage/S1/reference-repair.md": "d3e21a56dda52a0eabdcb7b43f3f124e91f921100306c76ceb61c14a9c156615"
+  },
+  "original_worker_sha256": "c82f8a35b0e05b13b84122ea3c83414452175448b57e5715b009ad46c207ea10",
+  "old": "    with mp.workdps(700), high_precision_mode():\n        refs = [_eval_exact_to_mpf(r, 700) for r in TASK[\"reference_expressions\"]]\n",
+  "new": "    with mp.workdps(700):\n        refs = [_eval_exact_to_mpf(r, 700) for r in TASK[\"reference_expressions\"]]\n    assert all(r is not None and mp.isfinite(r) for r in refs)\n    with mp.workdps(700), high_precision_mode():\n",
+  "other_change": "error_digits=float(digits) -> error_digits=float(str(digits)) (already documented)",
+  "affected": [
+    [
+      "HMMT-2022-FEB-GEO-10",
+      "BASE"
+    ],
+    [
+      "HMMT-2022-FEB-GEO-10",
+      "NO_RESIDUAL_REWRITE"
+    ],
+    [
+      "HMMT-2023-FEB-GEO-07",
+      "NO_RESIDUAL_REWRITE"
+    ],
+    [
+      "HMMT-2023-FEB-GEO-07",
+      "BASE"
+    ],
+    [
+      "JMO-2013-PRE-05",
+      "BASE"
+    ],
+    [
+      "JMO-2013-PRE-05",
+      "NO_RESIDUAL_REWRITE"
+    ],
+    [
+      "JMO-2024-PRE-06",
+      "NO_RESIDUAL_REWRITE"
+    ],
+    [
+      "JMO-2024-PRE-06",
+      "BASE"
+    ],
+    [
+      "aime-2001-2-7",
+      "BASE"
+    ],
+    [
+      "aime-2001-2-7",
+      "NO_RESIDUAL_REWRITE"
+    ]
+  ],
+  "solver_reruns": 0
+}
