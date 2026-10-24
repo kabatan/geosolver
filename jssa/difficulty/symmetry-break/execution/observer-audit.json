@@ -1,0 +1,93 @@
+{
+  "utc": "2026-10-23T18:39:29.988807+00:00",
+  "source_hash": "sha256:d8fd9bb8392ad2984276bab3386e033669246ee79586317917c322d31b4541f5",
+  "constructor_sites": [
+    {
+      "file": "src/geosolver/engine/standard/orchestration/run_external_pipeline.py",
+      "line": 853,
+      "constructor": "RefinedCandidate"
+    },
+    {
+      "file": "src/geosolver/engine/standard/orchestration/run_initial_probe.py",
+      "line": 158,
+      "constructor": "FloatCandidate"
+    },
+    {
+      "file": "src/geosolver/engine/standard/refinement/mpmath_refiner.py",
+      "line": 150,
+      "constructor": "RefinedCandidate"
+    },
+    {
+      "file": "src/geosolver/engine/standard/refinement/mpmath_refiner.py",
+      "line": 1593,
+      "constructor": "RefinedCandidate"
+    },
+    {
+      "file": "src/geosolver/engine/standard/search/algebraic_branches.py",
+      "line": 694,
+      "constructor": "FloatCandidate"
+    },
+    {
+      "file": "src/geosolver/engine/standard/search/finite_guard_search.py",
+      "line": 270,
+      "constructor": "FloatCandidate"
+    },
+    {
+      "file": "src/geosolver/engine/standard/search/nomad_blackbox_adapter.py",
+      "line": 145,
+      "constructor": "FloatCandidate"
+    },
+    {
+      "file": "src/geosolver/engine/standard/search/nomad_blackbox_adapter.py",
+      "line": 99,
+      "constructor": "FloatCandidate"
+    },
+    {
+      "file": "src/geosolver/engine/standard/search/sampling/affine_guards.py",
+      "line": 234,
+      "constructor": "FloatCandidate"
+    },
+    {
+      "file": "src/geosolver/engine/standard/search/sampling/manifold.py",
+      "line": 246,
+      "constructor": "FloatCandidate"
+    },
+    {
+      "file": "src/geosolver/engine/standard/search/scale_chart.py",
+      "line": 74,
+      "constructor": "FloatCandidate"
+    },
+    {
+      "file": "src/geosolver/engine/standard/search/scipy_multistart_backend.py",
+      "line": 719,
+      "constructor": "FloatCandidate"
+    },
+    {
+      "file": "src/geosolver/engine/standard/search/scipy_multistart_backend.py",
+      "line": 648,
+      "constructor": "FloatCandidate"
+    },
+    {
+      "file": "src/geosolver/engine/standard/search/scipy_multistart_backend.py",
+      "line": 693,
+      "constructor": "FloatCandidate"
+    },
+    {
+      "file": "src/geosolver/engine/standard/search/scipy_multistart_backend.py",
+      "line": 676,
+      "constructor": "FloatCandidate"
+    }
+  ],
+  "sites": 15,
+  "fixture_summary": {
+    "candidates": 3,
+    "float": 2,
+    "refined": 1,
+    "observer_seconds": 0.0001192090567201376,
+    "errors": 0
+  },
+  "optimizer_calls": 0,
+  "definition": "Birth means creation of FloatCandidate/RefinedCandidate in the frozen solver. Internal finite-difference evaluation points are not candidate records.",
+  "coverage": "All 15 explicit constructor sites and dataclasses.replace use the same observed class __init__. Includes random/manifold/affine samples, scipy, NOMAD, finite-guard, polynomial/scale-chart, refinement, and direct integer enumeration.",
+  "limitation": "Birth time is solver-side candidate materialization after backend evaluation, not the time an internal scalar algebraic root was first calculated."
+}

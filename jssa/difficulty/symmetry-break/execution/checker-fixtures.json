@@ -1,0 +1,114 @@
+{
+  "utc": "2026-10-23T18:28:41.368189+00:00",
+  "source_hash": "sha256:d8fd9bb8392ad2984276bab3386e033669246ee79586317917c322d31b4541f5",
+  "benchmark_trials": 0,
+  "optimizer_calls": 0,
+  "cases": [
+    {
+      "x": [
+        2
+      ],
+      "expected": true,
+      "actual": {
+        "success": true,
+        "reason": "pass",
+        "float": {
+          "norm": 0.0,
+          "residuals": [
+            0.0
+          ],
+          "guard_ok": true,
+          "guard_violations": [],
+          "hard_ok": true,
+          "hard_tags": [],
+          "target_finite": true
+        },
+        "hp": {
+          "norm": "0.0",
+          "guard_ok": true,
+          "guard_violations": [],
+          "hard_ok": true,
+          "hard_tags": [],
+          "target_finite": true
+        },
+        "evaluated_coordinates_decimal17": [
+          "2"
+        ],
+        "seconds": 0.0026305438950657845
+      }
+    },
+    {
+      "x": [
+        -2
+      ],
+      "expected": false,
+      "actual": {
+        "success": false,
+        "reason": "float_rejected",
+        "float": {
+          "norm": 0.0,
+          "residuals": [
+            0.0
+          ],
+          "guard_ok": false,
+          "guard_violations": [
+            "guard[0] returned False"
+          ],
+          "hard_ok": false,
+          "hard_tags": [
+            "guard[0] returned False"
+          ],
+          "target_finite": true
+        },
+        "hp": null,
+        "evaluated_coordinates_decimal17": [
+          "-2"
+        ],
+        "seconds": 0.0004382389597594738
+      }
+    },
+    {
+      "x": [
+        2.000001
+      ],
+      "expected": false,
+      "actual": {
+        "success": false,
+        "reason": "float_rejected",
+        "float": {
+          "norm": 1.000000000139778e-06,
+          "residuals": [
+            1.000000000139778e-06
+          ],
+          "guard_ok": true,
+          "guard_violations": [],
+          "hard_ok": true,
+          "hard_tags": [],
+          "target_finite": true
+        },
+        "hp": null,
+        "evaluated_coordinates_decimal17": [
+          "2.0000010000000001"
+        ],
+        "seconds": 0.0005788078997284174
+      }
+    },
+    {
+      "x": [
+        "nan"
+      ],
+      "expected": false,
+      "actual": {
+        "success": false,
+        "reason": "evaluation_exception",
+        "float": null,
+        "hp": null,
+        "evaluated_coordinates_decimal17": [
+          "nan"
+        ],
+        "error": "HighPrecisionContaminationError: Non-finite float value is rejected at boundary (origin=scipy.optimize): nan",
+        "seconds": 6.998004391789436e-05
+      }
+    }
+  ]
+}
