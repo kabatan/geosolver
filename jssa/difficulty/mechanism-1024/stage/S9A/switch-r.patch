@@ -1,0 +1,93 @@
+--- a/src/geosolver/engine/standard/refinement/mpmath_refiner.py
++++ b/src/geosolver/engine/standard/refinement/mpmath_refiner.py
+@@ -36,6 +36,7 @@
+ from geosolver.runtime.ablation import ablated
+ from geosolver.runtime.deadline import (
+     count_event,
++    current_deadline,
+     expired,
+     retain_candidates,
+     timed_phase,
+@@ -1422,7 +1423,32 @@
+         current_norm = _vector_norm(current_vec)
+         best = list(current)
+         best_norm = current_norm
+-        damping = mp.mpf(self.config.damping_initial)
++        # Research arms replace only the LM stage; common Newton paths remain.
++        if ablated("NEWTON_ONLY"):
++            closed = _run_findroot_closure(
++                evaluator=evaluator,
++                start_point=current,
++                bounds=bounds,
++                dps=int(dps),
++                target_residual=target_residual,
++                solver_tolerance=target_residual * target_residual,
++                max_steps=int(self.config.max_stage_iters),
++                residual_fn=residual_fn,
++                one_sided_at_cusp=_problem_contains_call(bundle.spec, "Angle"),
++                deadline_monotonic=current_deadline(),
++            )
++            if closed is not None:
++                closed_point, closed_norm = closed
++                if not preserve_hard_feasibility or _evaluate_hard_feasibility(
++                    evaluator, closed_point, int(dps), include_margins=False
++                ).hard_feasible:
++                    return TARGET_REACHED, closed_point, closed_norm
++            return "deadline_reached" if expired() else "newton_failed", best, best_norm
++        fixed_damping = ablated("ZERO_LM_DAMPING") or ablated("FIXED_LM_DAMPING")
++        damping = (
++            mp.mpf("0") if ablated("ZERO_LM_DAMPING")
++            else mp.mpf(self.config.damping_initial)
++        )
+         damping_min = mp.mpf(self.config.damping_min)
+         damping_scale = mp.mpf(self.config.damping_scale)
+         stage_tolerance = mp.mpf(self.config.stage_tolerance)
+@@ -1504,7 +1530,8 @@
+                 if trial_norm < best_norm:
+                     best = list(current)
+                     best_norm = trial_norm
+-                damping = max(damping_min, damping / damping_scale)
++                if not fixed_damping:
++                    damping = max(damping_min, damping / damping_scale)
+                 line_failures = 0
+                 if improvement < stage_tolerance:
+                     stalled_count += 1
+@@ -1514,7 +1541,8 @@
+                     status = STALLED
+                     break
+             else:
+-                damping *= damping_scale
++                if not fixed_damping:
++                    damping *= damping_scale
+                 line_failures += 1
+                 if line_failures >= int(self.config.line_search_failure_limit):
+                     status = LINE_SEARCH_FAILED
+--- a/src/geosolver/engine-lock.json
++++ b/src/geosolver/engine-lock.json
+@@ -1,12 +1,12 @@
+ {
+   "schema_version": 2,
+   "artifact_protocol_version": 4,
+-  "source_tree_hash": "sha256:03a44bfbb743b972d95306c63a14c04b78c7d12b96a1ba83d147c56eea7f86a3",
++  "source_tree_hash": "sha256:25ba4a4412715fda8f2bd7c9148a9ceba08b93162ce8d25c2bdbbd022fafe40a",
+   "resolved_config_hash": "sha256:98810edcd2beb35fb7d31ba65620de8f3cebd3fc289c11a526b8a623adf6d70f",
+   "dependency_lock_hash": "sha256:aa93c94b893ed67b359af271ca6fb62e97d3551fc874a4b9e45a66c8c5e52930",
+   "engines": {
+     "standard": {
+-      "hash": "sha256:03a44bfbb743b972d95306c63a14c04b78c7d12b96a1ba83d147c56eea7f86a3",
++      "hash": "sha256:25ba4a4412715fda8f2bd7c9148a9ceba08b93162ce8d25c2bdbbd022fafe40a",
+       "platforms": [
+         "linux",
+         "windows",
+--- a/src/geosolver/runtime/ablation.py
++++ b/src/geosolver/runtime/ablation.py
+@@ -3,6 +3,9 @@
+ import os
+ 
+ ABLATIONS = (
++    "ZERO_LM_DAMPING",
++    "FIXED_LM_DAMPING",
++    "NEWTON_ONLY",
+     "NO_ALGEBRAIC",
+     "NO_NOMAD",
+     "NO_ANALYTIC_JAC",

@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "environment_policy": "Remove all inherited GEOSOLVER_ABLATE_* variables, then set the selected arm only; all unlisted ablations are unset.",
+  "thread_environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1"
+  },
+  "arms": {
+    "R0": {},
+    "R1": {
+      "GEOSOLVER_ABLATE_ZERO_LM_DAMPING": "1"
+    },
+    "R2": {
+      "GEOSOLVER_ABLATE_FIXED_LM_DAMPING": "1"
+    },
+    "R3": {
+      "GEOSOLVER_ABLATE_NEWTON_ONLY": "1"
+    }
+  },
+  "fixed_lambda": "saved RefinerConfig.damping_initial (S1 default 1e-6); no environment numeric override",
+  "exclusive_switches": [
+    "ZERO_LM_DAMPING",
+    "FIXED_LM_DAMPING",
+    "NEWTON_ONLY"
+  ],
+  "smoke": {
+    "case_id": "AIME-2015-II-15",
+    "candidate_selection": "first tuple entry of S1 initial.pkl, without inspecting numerical fields",
+    "stage": "one _run_stage at first saved schedule_dps; no direct/warm/post paths invoked by harness",
+    "inner_seconds": 8,
+    "outer_seconds": 10,
+    "max_parallel": 1
+  },
+  "future_measurement": {
+    "authorized": false,
+    "seconds_per_candidate_set": 90,
+    "max_parallel": 4,
+    "entry_point": "MpmathRefiner(saved_config).refine_candidates on the complete saved candidate tuple"
+  }
+}
