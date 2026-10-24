@@ -1,0 +1,126 @@
+{
+  "synthetic_only": true,
+  "result": {
+    "id": "synthetic-trig",
+    "status": "verified_complete",
+    "stage": "finished",
+    "identity": {
+      "commit": "60db4b679b04167175c51c479c87c22fa663fda0",
+      "source_hash": "sha256:d8fd9bb8392ad2984276bab3386e033669246ee79586317917c322d31b4541f5",
+      "clean": true,
+      "verifier_file": "/tmp/exstrong-clean/src/geosolver/engine/standard/evaluation/final_verifier.py",
+      "converter_sha256": "23296abd40168721f6277d3220e21320ec5d5ff69c92fd2c8d8e120a9149ab98",
+      "run_exact_sha256": "9ba6001733afddbdb5d48ada4e2e3650c72152b832d4759ed5cde51da48bd64b"
+    },
+    "dsl_sha256": "96d219054b1ed6a843e7cd077fde5f4ebbbd677399eb58ad567c53de5249c8ef",
+    "limits": {
+      "wall_seconds": 600,
+      "memory_bytes": 8589934592,
+      "max_file_bytes": 2900000,
+      "threads": 1,
+      "attempts": 1
+    },
+    "implementation_sha256": {
+      "run_strong.py": "05008e24929b2991593bb50964459df554292ab9c5d6044406c0f0a1ba70f9dc",
+      "strong_translate.py": "7d9cdb4acab1d64bf5f9b1f3a55d6b75585479074a4ebefc0e2da39c54da010a"
+    },
+    "worker_wall_seconds": 7.623832830926403,
+    "translation_seconds": 0.05455990182235837,
+    "nvars": 4,
+    "nequations": 4,
+    "saturation_factors": 0,
+    "algebraic_constants": [
+      {
+        "symbol": "k1",
+        "expression": "cos(pi/7)",
+        "minimal_polynomial": "8*_constant**3 - 4*_constant**2 - 4*_constant + 1",
+        "intended_value_80d": "0.90096886790241912623610231950744505116591916213185715005356242319943242042793997"
+      },
+      {
+        "symbol": "k2",
+        "expression": "sin(pi/7)",
+        "minimal_polynomial": "64*_constant**6 - 112*_constant**4 + 56*_constant**2 - 7",
+        "intended_value_80d": "0.43388373911755812047576833284835875460999072778745987644454730353220325165319842"
+      }
+    ],
+    "variable_order": [
+      "v_x",
+      "k1",
+      "k2",
+      "t3"
+    ],
+    "saturation_factor_expressions": [],
+    "algebra_seconds": 0.01098993606865406,
+    "algebra_returncode": 0,
+    "algebra_solver_calls": 1,
+    "elimination_polynomials": [
+      "8*t3**3 - 4*t3**2 - 4*t3 + 1"
+    ],
+    "target_polynomial_factored": "8*t3**3 - 4*t3**2 - 4*t3 + 1",
+    "candidates_exact": [
+      "CRootOf(8*x**3 - 4*x**2 - 4*x + 1, 0)",
+      "CRootOf(8*x**3 - 4*x**2 - 4*x + 1, 1)",
+      "CRootOf(8*x**3 - 4*x**2 - 4*x + 1, 2)"
+    ],
+    "candidates": [
+      {
+        "nodes": 19,
+        "free_samples": 0,
+        "verifier_calls": 0,
+        "pruned": 0,
+        "incomplete": false,
+        "failures": {
+          "CONJUGATE_CONSTANT": 6
+        },
+        "witness": null,
+        "state": "excluded",
+        "candidate_exact": "CRootOf(8*x**3 - 4*x**2 - 4*x + 1, 0)"
+      },
+      {
+        "nodes": 19,
+        "free_samples": 0,
+        "verifier_calls": 0,
+        "pruned": 0,
+        "incomplete": false,
+        "failures": {
+          "CONJUGATE_CONSTANT": 6
+        },
+        "witness": null,
+        "state": "excluded",
+        "candidate_exact": "CRootOf(8*x**3 - 4*x**2 - 4*x + 1, 1)"
+      },
+      {
+        "nodes": 13,
+        "free_samples": 0,
+        "verifier_calls": 1,
+        "pruned": 0,
+        "incomplete": false,
+        "failures": {
+          "CONJUGATE_CONSTANT": 3
+        },
+        "witness": {
+          "dsl_values_exact": {
+            "x": "CRootOf(8*x**3 - 4*x**2 - 4*x + 1, 2)"
+          },
+          "answer": "0.9009688679024191262361023195074450511659191621318571500535624231994324204279399655014",
+          "normalized_residual": "1.264569452010729407288432151629376112119036734218454229201288880155329354538475742348179209573856865e-183",
+          "precision_dps": 180,
+          "status": "verified",
+          "hard_feasible": true
+        },
+        "state": "verified",
+        "candidate_exact": "CRootOf(8*x**3 - 4*x**2 - 4*x + 1, 2)"
+      }
+    ],
+    "answers": [
+      "CRootOf(8*x**3 - 4*x**2 - 4*x + 1, 2)"
+    ],
+    "filter_seconds": 7.537496176082641,
+    "set_complete": true,
+    "wall_seconds": 8.012132480042055,
+    "peak_tree_rss_bytes": 101892096,
+    "supervisor_returncode": 0,
+    "attempts": 1,
+    "last_algebra_marker": "STRONG_LEX_END"
+  }
+}

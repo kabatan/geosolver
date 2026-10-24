@@ -1,0 +1,44 @@
+LIB "elim.lib";
+option(redSB);
+ring R=0,(x1,x2,x3,x4,x5,x6,x7,x8),dp;
+short=0;
+ideal J=x2^2 - x2*x4 + x3^2,
+-4*x2^2 + 4*x2*x4 - 4*x3^2 - x4^2 + 4*x5^2,
+x5 - 2,
+-4*x1^2 - x4^2 + 4*x6^2,
+x6 - 3,
+-x1^2 - x4^2 + x7^2,
+x7 - x8;
+print("STRONG_SAT_BEGIN");
+J=sat(J,ideal(x1));
+print("STRONG_SAT_FACTOR_1");
+J=sat(J,ideal(x2));
+print("STRONG_SAT_FACTOR_2");
+J=sat(J,ideal(x3));
+print("STRONG_SAT_FACTOR_3");
+J=sat(J,ideal(x4));
+print("STRONG_SAT_FACTOR_4");
+J=sat(J,ideal(x1^2 + x4^2));
+print("STRONG_SAT_FACTOR_5");
+J=sat(J,ideal(x1^2 - 2*x1*x3 + x2^2 + x3^2));
+print("STRONG_SAT_FACTOR_6");
+J=sat(J,ideal(x1*x2 - x1*x4 + x3*x4));
+print("STRONG_SAT_FACTOR_7");
+J=sat(J,ideal(x2^2 + x3^2));
+print("STRONG_SAT_FACTOR_8");
+J=sat(J,ideal(x2^2 - 2*x2*x4 + x3^2 + x4^2));
+print("STRONG_SAT_FACTOR_9");
+print("STRONG_SAT_DONE");
+ideal E=eliminate(J,x1*x2*x3*x4*x5*x6*x7);
+int i;
+print("STRONG_ELIM_BEGIN");
+for(i=1;i<=size(E);i++){print(E[i]);}
+print("STRONG_ELIM_END");
+ring L=0,(x1,x2,x3,x4,x5,x6,x7,x8),lp;
+short=0;
+ideal H=imap(R,J);
+ideal G=std(H);
+print("STRONG_LEX_BEGIN");
+for(int j=1;j<=size(G);j++){print(G[j]);}
+print("STRONG_LEX_END");
+quit;

@@ -1,0 +1,85 @@
+{
+  "guards": [
+    {
+      "source": "condition[0]:Angle:first_ray",
+      "operator": "!=",
+      "expression": "v_cx**2 + v_cy**2"
+    },
+    {
+      "source": "condition[0]:Angle:second_ray",
+      "operator": "!=",
+      "expression": "v_cy**2 + (-v_cx + v_d)**2"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_d"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_a"
+    },
+    {
+      "source": "condition[5]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_a**2"
+    },
+    {
+      "source": "condition[5]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_cx**2 + (v_a - v_cy)**2"
+    },
+    {
+      "source": "condition[5]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_a**2 + v_d**2"
+    },
+    {
+      "source": "condition[5]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_cx**2 + v_cy**2"
+    },
+    {
+      "source": "condition[5]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_d**2"
+    },
+    {
+      "source": "condition[5]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_cy**2 + (v_cx - v_d)**2"
+    },
+    {
+      "source": "condition[5]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "v_a*v_cx"
+    },
+    {
+      "source": "condition[5]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "-v_cx*v_cy - v_cy*(-v_cx + v_d)"
+    },
+    {
+      "source": "condition[5]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "v_a*(-v_cx + v_d) - v_cy*v_d"
+    },
+    {
+      "source": "condition[5]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "v_a*v_d"
+    }
+  ],
+  "algebraic_constants": [],
+  "equations": [
+    "-v_cx**2 + v_cx*v_d - v_cy**2",
+    "4*s3**2 - 4*v_cx**2 + 4*v_cx*v_d - 4*v_cy**2 - v_d**2",
+    "s3 - 2",
+    "4*s4**2 - 4*v_a**2 - v_d**2",
+    "s4 - 3",
+    "s5**2 - v_a**2 - v_d**2",
+    "-s5 + t6"
+  ],
+  "target": "t6"
+}

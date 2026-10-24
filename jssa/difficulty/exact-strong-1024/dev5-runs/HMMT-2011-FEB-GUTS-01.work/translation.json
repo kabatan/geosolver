@@ -1,0 +1,88 @@
+{
+  "guards": [
+    {
+      "source": "construction[3]/D:PointOnSegment:segment",
+      "operator": "!=",
+      "expression": "v_x**2 + v_y**2"
+    },
+    {
+      "source": "construction[4]/E:PointOnSegment:segment",
+      "operator": "!=",
+      "expression": "v_y**2 + (-v_b + v_x)**2"
+    },
+    {
+      "source": "construction[5]/F:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(v_u*v_y - v_v*v_y)**2 + (v_b*v_v + v_u*v_x - v_v*v_x)**2"
+    },
+    {
+      "source": "construction[5]/F:Reflect:argument:line_direction",
+      "operator": "!=",
+      "expression": "(v_u*v_y - v_v*v_y)**2 + (v_b*v_v + v_u*v_x - v_v*v_x)**2"
+    },
+    {
+      "source": "condition[1]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(v_u*v_y - v_v*v_y)**2 + (v_b*v_v + v_u*v_x - v_v*v_x)**2"
+    },
+    {
+      "source": "condition[1]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_b**2"
+    },
+    {
+      "source": "condition[1]:Parallel:argument:line_direction",
+      "operator": "!=",
+      "expression": "(v_u*v_y - v_v*v_y)**2 + (v_b*v_v + v_u*v_x - v_v*v_x)**2"
+    },
+    {
+      "source": "condition[1]:Parallel:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_b**2"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_b"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_y"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": ">=",
+      "expression": "v_u"
+    },
+    {
+      "source": "condition[6]:explicit_comparison",
+      "operator": "<=",
+      "expression": "v_u - 1"
+    },
+    {
+      "source": "condition[7]:explicit_comparison",
+      "operator": ">=",
+      "expression": "v_v"
+    },
+    {
+      "source": "condition[8]:explicit_comparison",
+      "operator": "<=",
+      "expression": "v_v - 1"
+    }
+  ],
+  "algebraic_constants": [],
+  "equations": [
+    "p1*v_b**2*v_v**2 + 2*p1*v_b*v_u*v_v*v_x - 2*p1*v_b*v_v**2*v_x + p1*v_u**2*v_x**2 + p1*v_u**2*v_y**2 - 2*p1*v_u*v_v*v_x**2 - 2*p1*v_u*v_v*v_y**2 + p1*v_v**2*v_x**2 + p1*v_v**2*v_y**2 - v_b**2*v_v**2*v_x - 2*v_b*v_u**2*v_v*v_y**2 + 2*v_b*v_u*v_v**2*v_y**2 - 2*v_b*v_u*v_v*v_x**2 + 2*v_b*v_v**2*v_x**2 - v_u**2*v_x**3 - v_u**2*v_x*v_y**2 + 2*v_u*v_v*v_x**3 + 2*v_u*v_v*v_x*v_y**2 - v_v**2*v_x**3 - v_v**2*v_x*v_y**2",
+    "p2*v_b**2*v_v**2 + 2*p2*v_b*v_u*v_v*v_x - 2*p2*v_b*v_v**2*v_x + p2*v_u**2*v_x**2 + p2*v_u**2*v_y**2 - 2*p2*v_u*v_v*v_x**2 - 2*p2*v_u*v_v*v_y**2 + p2*v_v**2*v_x**2 + p2*v_v**2*v_y**2 + 2*v_b**2*v_u*v_v**2*v_y - v_b**2*v_v**2*v_y + 2*v_b*v_u**2*v_v*v_x*v_y - 2*v_b*v_u*v_v**2*v_x*v_y - 2*v_b*v_u*v_v*v_x*v_y + 2*v_b*v_v**2*v_x*v_y - v_u**2*v_x**2*v_y - v_u**2*v_y**3 + 2*v_u*v_v*v_x**2*v_y + 2*v_u*v_v*v_y**3 - v_v**2*v_x**2*v_y - v_v**2*v_y**3",
+    "4*s3**2 - v_b**2*v_y**2",
+    "s3 - 1",
+    "-v_b*v_u*v_y + v_b*v_v*v_y",
+    "s4**2 - v_b**2*v_v**2 - 2*v_b*v_u*v_v*v_x + 2*v_b*v_v**2*v_x - v_u**2*v_x**2 - v_u**2*v_y**2 + 2*v_u*v_v*v_x**2 + 2*v_u*v_v*v_y**2 - v_v**2*v_x**2 - v_v**2*v_y**2",
+    "s5**2 - v_b**2",
+    "3*s4 - s5",
+    "-p2**2*v_b**2 + 4*s6**2",
+    "-s6 + t7"
+  ],
+  "target": "t7"
+}
