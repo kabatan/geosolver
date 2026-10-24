@@ -1,0 +1,184 @@
+diff --git a/src/geosolver/engine-lock.json b/src/geosolver/engine-lock.json
+index 455aefe..411ad2d 100644
+--- a/src/geosolver/engine-lock.json
++++ b/src/geosolver/engine-lock.json
+@@ -1,12 +1,12 @@
+ {
+   "schema_version": 2,
+   "artifact_protocol_version": 4,
+-  "source_tree_hash": "sha256:d8fd9bb8392ad2984276bab3386e033669246ee79586317917c322d31b4541f5",
++  "source_tree_hash": "sha256:e2115f553d6a59d6d85a30413e5719992c09e376d23d3e3e124fd07fd135b8ee",
+   "resolved_config_hash": "sha256:98810edcd2beb35fb7d31ba65620de8f3cebd3fc289c11a526b8a623adf6d70f",
+   "dependency_lock_hash": "sha256:aa93c94b893ed67b359af271ca6fb62e97d3551fc874a4b9e45a66c8c5e52930",
+   "engines": {
+     "standard": {
+-      "hash": "sha256:d8fd9bb8392ad2984276bab3386e033669246ee79586317917c322d31b4541f5",
++      "hash": "sha256:e2115f553d6a59d6d85a30413e5719992c09e376d23d3e3e124fd07fd135b8ee",
+       "platforms": [
+         "linux",
+         "windows",
+diff --git a/src/geosolver/engine/standard/orchestration/run_external_pipeline.py b/src/geosolver/engine/standard/orchestration/run_external_pipeline.py
+index bb714e8..a6c9cb9 100644
+--- a/src/geosolver/engine/standard/orchestration/run_external_pipeline.py
++++ b/src/geosolver/engine/standard/orchestration/run_external_pipeline.py
+@@ -46,6 +46,7 @@ from geosolver.engine.standard.search.nomad_config import (
+     NomadConfig,
+     derive_seed_values,
+ )
++from geosolver.runtime.ablation import ablated
+ 
+ from .assemble_exact_results import ExactAssemblyResult, assemble_exact_results
+ from .build_pipeline_summary import build_pipeline_summary
+@@ -215,7 +216,7 @@ def _resolve_ordered_search_attempts(
+         pipeline_config=pipeline_config,
+         seed_base=fallback_seed_base,
+     )
+-    if fallback_pipeline_config is None:
++    if fallback_pipeline_config is None or ablated("NO_SECOND_ATTEMPT"):
+         return tuple(resolved_attempts)
+     resolved_attempts.append(
+         _OrderedSearchAttemptDescriptor(
+@@ -442,7 +443,8 @@ def _complete_pipeline_stage(
+         skip_reason="not_attempted",
+     )
+     if (
+-        exact_assembly_needs_completion(exact_assembly_result.accepted_candidates)
++        not ablated("NO_RESCUE")
++        and exact_assembly_needs_completion(exact_assembly_result.accepted_candidates)
+         and runtime_budget.remaining_sec() >= pipeline_config.rescue_time_budget_sec
+     ):
+         try:
+diff --git a/src/geosolver/engine/standard/refinement/analytic_jacobian.py b/src/geosolver/engine/standard/refinement/analytic_jacobian.py
+index 3a0de2e..ea884c1 100644
+--- a/src/geosolver/engine/standard/refinement/analytic_jacobian.py
++++ b/src/geosolver/engine/standard/refinement/analytic_jacobian.py
+@@ -13,6 +13,7 @@ from geosolver.engine.standard.precision.type_guards.high_precision_mode import
+ from geosolver.engine.standard.precision.type_guards.hp_contract import hp_contract
+ from geosolver.problem.expression_source import annotate_source, source_expression
+ from geosolver.problem.ir.compiler import safe_eval_expr_hp
++from geosolver.runtime.ablation import ablated
+ from geosolver.runtime.deadline import check_deadline, count_event
+ 
+ 
+@@ -159,6 +160,8 @@ def _plan(key):
+ 
+ 
+ def derivative_plan(bundle):
++    if ablated("NO_ANALYTIC_JAC"):
++        return None
+     if bundle is None or not 2 <= len(bundle.var_names) <= 12 or bundle.spec.logical_plans:
+         return None
+     plan = _plan(
+diff --git a/src/geosolver/engine/standard/search/algebraic_branches.py b/src/geosolver/engine/standard/search/algebraic_branches.py
+index 786160a..e74c153 100644
+--- a/src/geosolver/engine/standard/search/algebraic_branches.py
++++ b/src/geosolver/engine/standard/search/algebraic_branches.py
+@@ -12,6 +12,8 @@ import threading
+ import time
+ from contextlib import contextmanager
+ 
++from geosolver.runtime.ablation import ablated
++
+ _SUPPORTED_CALLS = {
+     "Angle",
+     "sin",
+@@ -653,7 +655,7 @@ def _discover_polynomial_branches(payload, work):
+ 
+ def search_algebraic_branches(*, bundle, evaluator):
+     """Create proposals only; the ordinary HP refinement and verifier follow."""
+-    if not _eligible(bundle):
++    if ablated("NO_ALGEBRAIC") or not _eligible(bundle):
+         return None
+     from geosolver.engine.standard.contracts.candidate_record import (
+         FloatCandidate,
+diff --git a/src/geosolver/engine/standard/search/nomad_backend.py b/src/geosolver/engine/standard/search/nomad_backend.py
+index c730e8a..fff4535 100644
+--- a/src/geosolver/engine/standard/search/nomad_backend.py
++++ b/src/geosolver/engine/standard/search/nomad_backend.py
+@@ -10,6 +10,7 @@ from geosolver.engine.standard.contracts.evaluator_port import EvaluatorPort
+ from geosolver.engine.standard.contracts.global_search_port import GlobalSearchPort
+ from geosolver.engine.standard.contracts.problem_bundle import ProblemBundle
+ from geosolver.engine.standard.interpreter.compile.infer_bounds import infer_bound_expansion_locks
++from geosolver.runtime.ablation import ablated
+ 
+ from .build_guard_feasible_ledger import build_guard_feasible_ledger
+ from .deduplicate_search_candidates import deduplicate_search_candidates
+@@ -38,6 +39,8 @@ def _expand_bounds(
+ 
+ 
+ def _import_pynomad() -> object:
++    if ablated("NO_NOMAD"):
++        raise ImportError("PyNomad disabled by GEOSOLVER_ABLATE_NO_NOMAD")
+     try:
+         import PyNomad  # type: ignore[import-not-found]
+     except Exception as exc:
+diff --git a/src/geosolver/engine/standard/search/scale_chart.py b/src/geosolver/engine/standard/search/scale_chart.py
+index 0500b53..66e06b2 100644
+--- a/src/geosolver/engine/standard/search/scale_chart.py
++++ b/src/geosolver/engine/standard/search/scale_chart.py
+@@ -5,11 +5,14 @@ from geosolver.engine.standard.evaluation.classify_evaluation_failure import Eva
+ from geosolver.engine.standard.evaluation.scaled_score import scaled_score
+ from geosolver.engine.standard.problem.positive_scale_chart import positive_scale_chart
+ from geosolver.engine.standard.search.algebraic_branches import _eligible
++from geosolver.runtime.ablation import ablated
+ from geosolver.runtime.deadline import count_event
+ from geosolver.runtime.symbolic import OptionalSymbolicTimeout, request
+ 
+ 
+ def search_positive_scale_chart(*, bundle, evaluator):
++    if ablated("NO_SCALE_CHART"):
++        return None
+     if (
+         not getattr(bundle, "var_names", None)
+         or not getattr(getattr(bundle, "spec", None), "answer_expr", None)
+diff --git a/src/geosolver/runtime/ablation.py b/src/geosolver/runtime/ablation.py
+new file mode 100644
+index 0000000..f939875
+--- /dev/null
++++ b/src/geosolver/runtime/ablation.py
+@@ -0,0 +1,20 @@
++"""Research-only ablation switches read from GEOSOLVER_ABLATE_* environment variables."""
++
++import os
++
++ABLATIONS = (
++    "NO_ALGEBRAIC",
++    "NO_NOMAD",
++    "NO_ANALYTIC_JAC",
++    "NO_RESCUE",
++    "NO_SCALE_CHART",
++    "NO_SECOND_ATTEMPT",
++)
++
++
++def ablated(name: str) -> bool:
++    return os.environ.get(f"GEOSOLVER_ABLATE_{name}") == "1"
++
++
++def active_ablations() -> list[str]:
++    return [name for name in ABLATIONS if ablated(name)]
+diff --git a/src/geosolver/runtime/worker.py b/src/geosolver/runtime/worker.py
+index 87e7d45..72499bb 100644
+--- a/src/geosolver/runtime/worker.py
++++ b/src/geosolver/runtime/worker.py
+@@ -16,6 +16,7 @@ from geosolver.engine.standard.contracts.external_pipeline_config import (
+     ExternalPipelineConfig,
+ )
+ from geosolver.engine.standard.orchestration.run_external_pipeline import run_external_pipeline
++from geosolver.runtime.ablation import active_ablations
+ from geosolver.runtime.artifact_commit import atomic_write as _atomic_write
+ from geosolver.runtime.deadline import counters_snapshot, expired, runtime_session
+ from geosolver.runtime.integrity import engine_identity_hashes, installed_dependencies
+@@ -205,7 +206,11 @@ def execute(request: WorkerRequest) -> WorkerArtifact:
+                 "cpu_affinity": _actual_affinity(),
+                 "cpu_seconds": time.process_time(),
+             },
+-            config_snapshot={**request.config_snapshot, "pipeline": _json_value(pipeline_config)},
++            config_snapshot={
++                **request.config_snapshot,
++                "pipeline": _json_value(pipeline_config),
++                "ablations": active_ablations(),
++            },
+         )
+     except TimeoutError:
+         solver_completed_at = time.monotonic()

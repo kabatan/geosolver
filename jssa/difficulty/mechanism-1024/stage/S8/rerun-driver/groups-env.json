@@ -1,0 +1,212 @@
+{
+  "source_root": "/tmp/mechanism-7b-lkdjle5l/final",
+  "source_hash": "sha256:03a44bfbb743b972d95306c63a14c04b78c7d12b96a1ba83d147c56eea7f86a3",
+  "code_prefix": "src/geosolver/engine/standard/",
+  "switch_parser": {
+    "file": "src/geosolver/runtime/ablation.py:18-19",
+    "disabled_exact_value": "1",
+    "enabled_explicit_value": "0",
+    "unset_also_enabled": true
+  },
+  "groups": [
+    {
+      "id": "G1",
+      "name": "探索",
+      "environment_variables": [
+        "GEOSOLVER_ABLATE_NO_NOMAD"
+      ],
+      "off_values": {
+        "GEOSOLVER_ABLATE_NO_NOMAD": "1"
+      },
+      "on_values": {
+        "GEOSOLVER_ABLATE_NO_NOMAD": "0"
+      },
+      "code_locations": [
+        "search/nomad_backend.py:42-46",
+        "orchestration/run_search.py:372-395,447-494"
+      ],
+      "scope": "通常・hybrid探索のNOMAD importをImportErrorにし、SciPy多点出発にfallbackする。scalar scan、有限guard、整数候補は残る。救済の別PyNomad importは止まらない。"
+    },
+    {
+      "id": "G2",
+      "name": "第2探索・救済",
+      "environment_variables": [
+        "GEOSOLVER_ABLATE_NO_SECOND_ATTEMPT",
+        "GEOSOLVER_ABLATE_NO_RESCUE"
+      ],
+      "off_values": {
+        "GEOSOLVER_ABLATE_NO_SECOND_ATTEMPT": "1",
+        "GEOSOLVER_ABLATE_NO_RESCUE": "1"
+      },
+      "on_values": {
+        "GEOSOLVER_ABLATE_NO_SECOND_ATTEMPT": "0",
+        "GEOSOLVER_ABLATE_NO_RESCUE": "0"
+      },
+      "code_locations": [
+        "orchestration/run_external_pipeline.py:196-234,454-479"
+      ],
+      "scope": "第2attempt descriptorを除き、救済の条件分岐を止める。救済には失敗/不足・残時間8秒以上等の条件がある。有効化しても毎回発火しない。"
+    },
+    {
+      "id": "G3",
+      "name": "候補選択",
+      "environment_variables": [
+        "GEOSOLVER_ABLATE_NO_DIVERSE_SELECTION"
+      ],
+      "off_values": {
+        "GEOSOLVER_ABLATE_NO_DIVERSE_SELECTION": "1"
+      },
+      "on_values": {
+        "GEOSOLVER_ABLATE_NO_DIVERSE_SELECTION": "0"
+      },
+      "code_locations": [
+        "orchestration/run_external_pipeline.py:408-416",
+        "search/residual_selection.py:8-36",
+        "orchestration/run_rescue_search.py:79,136-149"
+      ],
+      "scope": "各search→refinementバッチを有限な生残差ノルムの上位20にする。同一candidate_uidだけ統合し、座標距離除去・seed枠なし。通常backendの適格/fallback poolは維持。救済は実装上adapter.records全件が母集団で、従来の各箱上位6限定ではない。主探索の初期点/救済箱の多様性は残る。"
+    },
+    {
+      "id": "G4",
+      "name": "残差書き換え・尺度座標",
+      "environment_variables": [
+        "GEOSOLVER_ABLATE_NO_RESIDUAL_REWRITE",
+        "GEOSOLVER_ABLATE_NO_SCALE_CHART"
+      ],
+      "off_values": {
+        "GEOSOLVER_ABLATE_NO_RESIDUAL_REWRITE": "1",
+        "GEOSOLVER_ABLATE_NO_SCALE_CHART": "1"
+      },
+      "on_values": {
+        "GEOSOLVER_ABLATE_NO_RESIDUAL_REWRITE": "0",
+        "GEOSOLVER_ABLATE_NO_SCALE_CHART": "0"
+      },
+      "code_locations": [
+        "refinement/mpmath_refiner.py:1028-1040,1337-1374",
+        "search/scale_chart.py:13-44",
+        "orchestration/run_search.py:518-534"
+      ],
+      "scope": "精密化の距離0座標差・接条件・正半径補助行を止め、残差の平滑化が必要な解析Jacobian計画も拒否する。最終検証の書き換えは維持。尺度chart候補の生成も別スイッチで止める。"
+    },
+    {
+      "id": "G5",
+      "name": "代数的前処理",
+      "environment_variables": [
+        "GEOSOLVER_ABLATE_NO_ALGEBRAIC"
+      ],
+      "off_values": {
+        "GEOSOLVER_ABLATE_NO_ALGEBRAIC": "1"
+      },
+      "on_values": {
+        "GEOSOLVER_ABLATE_NO_ALGEBRAIC": "0"
+      },
+      "code_locations": [
+        "search/algebraic_branches.py:656-679",
+        "orchestration/run_external_pipeline.py:346-357,406,557-576"
+      ],
+      "scope": "通常primaryのsearch_algebraic_branches入口のみ停止。尺度chartからsymbolic workerへの直接要求、整数近道・離散補完・PSLQは止めない。allow_algebraicフラグ自体をFalseにはしない。"
+    },
+    {
+      "id": "G6",
+      "name": "解析Jacobian",
+      "environment_variables": [
+        "GEOSOLVER_ABLATE_NO_ANALYTIC_JAC"
+      ],
+      "off_values": {
+        "GEOSOLVER_ABLATE_NO_ANALYTIC_JAC": "1"
+      },
+      "on_values": {
+        "GEOSOLVER_ABLATE_NO_ANALYTIC_JAC": "0"
+      },
+      "code_locations": [
+        "refinement/analytic_jacobian.py:162-183",
+        "refinement/mpmath_refiner.py:1020-1049"
+      ],
+      "scope": "closure用derivative_planをNoneにして数値微分へ戻す。LMの数値Jacobianは元から残る。NO_RESIDUAL_REWRITEが1でもrequires_smoothing=Falseの計画は利用可能。"
+    }
+  ],
+  "SEARCH_MODE": {
+    "environment_variable": "GEOSOLVER_ABLATE_SEARCH_MODE",
+    "supported_in_BASE1": false,
+    "policy": "unset; G1 uses NO_NOMAD",
+    "config_field": "ExternalPipelineConfig.global_search_mode",
+    "config_values": [
+      "disco_mads",
+      "mads",
+      "scipy_multistart",
+      "hybrid_legacy_nomad"
+    ],
+    "default": "disco_mads",
+    "rescue_default": "mads"
+  },
+  "dependencies": [
+    {
+      "from": "G1 off",
+      "to": "G2 rescue",
+      "effect": "NO_NOMADは通常backendだけ。G2がonなら救済MADSは使用可能。N+2でも救済PyNomadが動きうる。",
+      "evidence": [
+        "search/nomad_backend.py:43",
+        "orchestration/run_rescue_search.py:27-33,69,112-124"
+      ]
+    },
+    {
+      "from": "G1 off",
+      "to": "G1 backend replacement",
+      "effect": "SciPy多点出発へfallback。ただし1変数scalar scanや整数/有限guard近道の早期返却は残るため、全問がSciPyを通るとは限らない。",
+      "evidence": [
+        "orchestration/run_search.py:337-370,447-494"
+      ]
+    },
+    {
+      "from": "NO_SCALE_CHART=1",
+      "to": "NO_RESIDUAL_REWRITE",
+      "effect": "尺度chart候補生成と精密化残差書き換えは独立。片方の停止で他方は停止しない。G4では両方を同時に停止。通常の残差/列/行スケーリングは残る。",
+      "evidence": [
+        "search/scale_chart.py:14",
+        "refinement/mpmath_refiner.py:1356"
+      ]
+    },
+    {
+      "from": "NO_RESIDUAL_REWRITE=1",
+      "to": "G6",
+      "effect": "requires_smoothing=Trueの解析計画だけ拒否する。G6 onのN+6は平滑化不要な解析計画だけ使用可能。",
+      "evidence": [
+        "refinement/mpmath_refiner.py:1028-1040"
+      ]
+    },
+    {
+      "from": "NO_ANALYTIC_JAC=1",
+      "to": "G4",
+      "effect": "解析計画を全停止するが、残差書き換えや尺度chartを止めない。G4 on/G6 offでも書き換え残差の数値微分が使える。",
+      "evidence": [
+        "refinement/analytic_jacobian.py:163",
+        "refinement/mpmath_refiner.py:1356"
+      ]
+    },
+    {
+      "from": "NO_ALGEBRAIC=1",
+      "to": "G4 scale chart",
+      "effect": "独立。尺度chartは_eligibleを再利用しsymbolic requestを直接呼ぶため、G5 offでもG4 onなら代数workerを使いうる。",
+      "evidence": [
+        "search/scale_chart.py:19,32-44",
+        "search/algebraic_branches.py:658"
+      ]
+    },
+    {
+      "from": "G2 off",
+      "to": "G1/G3/G4/G5/G6",
+      "effect": "第2attemptと救済で追加される候補/残時間/呼出機会を消す。主探索と主精密化は独立に残る。",
+      "evidence": [
+        "orchestration/run_external_pipeline.py:223,455"
+      ]
+    },
+    {
+      "from": "G5 on",
+      "to": "G1/G3/G4 scale chart",
+      "effect": "代数prepassが結果を返すとalgebraic_search or run_searchにより通常探索・尺度chartを迂回する。その後の候補選択と精密化は実行される。",
+      "evidence": [
+        "orchestration/run_external_pipeline.py:355-357,393-408"
+      ]
+    }
+  ]
+}

@@ -1,3 +1,5 @@
+> FSIZE修正（2026-10-24）: solver/workerのRLIMIT_FSIZEを1GiBへ変更し、rawの3MB例外を解除した。3MB制限は集計出力に維持。元launcherは `measurement_launch-original.py`、変更前一式とhashは `fsize-fix-history/` に保存。模擬契約11件・最大並列2が成功（追加solver実行0）。既存 `output/measurement-freeze.json` は旧driver hashのまま保存しているため、修正版でのresumeはhash不一致で拒否される。この変更で既存計測の停止・再開・再計測はしていない。新たに修正版を計測する際は別の空のoutput/raw-rootを指定する。
+
 # S10 事前登録17・部分B 本計測の準備
 
 **準備のみ完了。本計測・solver・新しい参照の計算は実行していない。** commit/push・外部ネットワーク取得なし。S8のrun-superpc / run-winpc / run-superpc-aborted-attempt1の中身は開かず、S8の準備用ソースのみをコピーした。S8の既存ファイルは変更していない。

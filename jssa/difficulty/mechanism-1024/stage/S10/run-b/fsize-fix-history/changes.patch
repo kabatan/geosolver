@@ -1,0 +1,58 @@
+--- a/stage/S10/run-b/measurement_launch.py
++++ b/stage/S10/run-b/measurement_launch.py
+@@ -1,4 +1,4 @@
+-"""Linux/WSL exec bootstrap: pin before importing the solver; cap single files/AS."""
++"""Linux/WSL exec bootstrap: pin before importing the solver; cap solver files at 1GiB and address space."""
+ import os
+ import resource
+ import sys
+@@ -6,6 +6,6 @@
+ if __name__ == '__main__':
+     cpu, address_mib = map(int, sys.argv[1:3])
+     os.sched_setaffinity(0, {cpu})
+-    resource.setrlimit(resource.RLIMIT_FSIZE, (2_900_000, 2_900_000))
++    resource.setrlimit(resource.RLIMIT_FSIZE, (1024**3, 1024**3))
+     resource.setrlimit(resource.RLIMIT_AS, (address_mib*1024**2, address_mib*1024**2))
+     os.execv(sys.argv[3], sys.argv[3:])
+--- a/stage/S10/run-b/measurement_runtime.py
++++ b/stage/S10/run-b/measurement_runtime.py
+@@ -158,7 +158,7 @@
+                 if 'Disk quota exceeded' in body or 'No space left on device' in body:
+                     state='interrupted_environment_storage'
+                     self.violations.add('explicit_storage_exhaustion')
+-        if any(v['size_bytes']>=3_000_000 for v in files.values()):raise RuntimeError('oversize raw file')
++        # Raw is outside the repo: the 3MB cap applies only to aggregate outputs.
+         r=dict(**self.spec,state=state,cpu=self.cpu,pid=self.proc.pid if self.proc else None,start_utc=self.start_utc,end_utc=utc(),
+             wall_seconds=wall,total_wall_through_cleanup_seconds=time.monotonic()-self.t0,cleanup_seconds=cleanup,
+             exit_code=self.proc.returncode if self.proc else None,spawn_error=self.spawn_error,result_path=str(self.raw/'result.json'),
+--- a/stage/S10/run-b/test_measurement_contract.py
++++ b/stage/S10/run-b/test_measurement_contract.py
+@@ -13,6 +13,28 @@
+ 
+ 
+ class Contracts(unittest.TestCase):
++    def test_fsize_large_raw_and_inherited_limit(self):
++        import json
++        with tempfile.TemporaryDirectory(prefix='s10b-fsize-contract-') as td:
++            root=Path(td);out=root/'out';out.mkdir();(out/'receipts').mkdir();raw=root/'raw';raw.mkdir()
++            cpu=sorted(os.sched_getaffinity(0))[0]
++            freeze=dict(base_src=str(root),repo_root=str(root),python=sys.executable,source_hash='mock',python_sha256=sha(Path(sys.executable).resolve()),raw_root=str(raw),slot_cpus=[cpu],memory_mib=4096,address_space_mib=16384)
++            j=dict(queue_index=0,case_id='fsize-mock',machine='superPC',dsl_path='no-solver',configuration='B0',seed=701,time_limit_seconds=3,cores=1,input_sha256='mock')
++            result=raw/'0000/result.json'
++            script=("import resource,subprocess,sys,json; "
++                    "print(json.dumps({'parent':resource.getrlimit(resource.RLIMIT_FSIZE)}),flush=True); "
++                    "subprocess.run([sys.executable,'-B','-c','import resource,json; print(json.dumps({\"child\":resource.getrlimit(resource.RLIMIT_FSIZE)}))'],check=True); "
++                    f"open({str(result)!r},'w').write(json.dumps({{'padding':'x'*3100000}}))")
++            self.assertTrue(execute([j],out,freeze,1,command_factory=lambda j:[sys.executable,'-B','-c',script]))
++            receipt=load(out/'receipts/0000.end.json')
++            self.assertEqual(receipt['exit_code'],0);self.assertEqual(receipt['resource_violations'],[])
++            self.assertGreater(result.stat().st_size,3_000_000)
++            limits=[json.loads(l) for l in (raw/'0000/stdout.log.0000').read_text().splitlines()]
++            self.assertEqual(limits,[dict(parent=[1024**3]*2),dict(child=[1024**3]*2)])
++            self.assertEqual(sha(result),receipt['files']['result.json']['sha256'])
++            with self.assertRaises(ValueError):save(out/'oversize-aggregate.json',dict(padding='x'*3_000_000))
++            self.assertFalse((out/'oversize-aggregate.json').exists())
++
+     def test_internal_environment_and_storage_stop(self):
+         from measurement_runtime import environment_matches
+         from unittest.mock import patch

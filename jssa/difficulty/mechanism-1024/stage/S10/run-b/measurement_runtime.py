@@ -158,7 +158,7 @@ class Job:
                 if 'Disk quota exceeded' in body or 'No space left on device' in body:
                     state='interrupted_environment_storage'
                     self.violations.add('explicit_storage_exhaustion')
-        if any(v['size_bytes']>=3_000_000 for v in files.values()):raise RuntimeError('oversize raw file')
+        # Raw is outside the repo: the 3MB cap applies only to aggregate outputs.
         r=dict(**self.spec,state=state,cpu=self.cpu,pid=self.proc.pid if self.proc else None,start_utc=self.start_utc,end_utc=utc(),
             wall_seconds=wall,total_wall_through_cleanup_seconds=time.monotonic()-self.t0,cleanup_seconds=cleanup,
             exit_code=self.proc.returncode if self.proc else None,spawn_error=self.spawn_error,result_path=str(self.raw/'result.json'),

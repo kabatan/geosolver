@@ -13,6 +13,28 @@ import driver
 
 
 class Contracts(unittest.TestCase):
+    def test_fsize_large_raw_and_inherited_limit(self):
+        import json
+        with tempfile.TemporaryDirectory(prefix='s10b-fsize-contract-') as td:
+            root=Path(td);out=root/'out';out.mkdir();(out/'receipts').mkdir();raw=root/'raw';raw.mkdir()
+            cpu=sorted(os.sched_getaffinity(0))[0]
+            freeze=dict(base_src=str(root),repo_root=str(root),python=sys.executable,source_hash='mock',python_sha256=sha(Path(sys.executable).resolve()),raw_root=str(raw),slot_cpus=[cpu],memory_mib=4096,address_space_mib=16384)
+            j=dict(queue_index=0,case_id='fsize-mock',machine='superPC',dsl_path='no-solver',configuration='B0',seed=701,time_limit_seconds=3,cores=1,input_sha256='mock')
+            result=raw/'0000/result.json'
+            script=("import resource,subprocess,sys,json; "
+                    "print(json.dumps({'parent':resource.getrlimit(resource.RLIMIT_FSIZE)}),flush=True); "
+                    "subprocess.run([sys.executable,'-B','-c','import resource,json; print(json.dumps({\"child\":resource.getrlimit(resource.RLIMIT_FSIZE)}))'],check=True); "
+                    f"open({str(result)!r},'w').write(json.dumps({{'padding':'x'*3100000}}))")
+            self.assertTrue(execute([j],out,freeze,1,command_factory=lambda j:[sys.executable,'-B','-c',script]))
+            receipt=load(out/'receipts/0000.end.json')
+            self.assertEqual(receipt['exit_code'],0);self.assertEqual(receipt['resource_violations'],[])
+            self.assertGreater(result.stat().st_size,3_000_000)
+            limits=[json.loads(l) for l in (raw/'0000/stdout.log.0000').read_text().splitlines()]
+            self.assertEqual(limits,[dict(parent=[1024**3]*2),dict(child=[1024**3]*2)])
+            self.assertEqual(sha(result),receipt['files']['result.json']['sha256'])
+            with self.assertRaises(ValueError):save(out/'oversize-aggregate.json',dict(padding='x'*3_000_000))
+            self.assertFalse((out/'oversize-aggregate.json').exists())
+
     def test_internal_environment_and_storage_stop(self):
         from measurement_runtime import environment_matches
         from unittest.mock import patch

@@ -1,0 +1,561 @@
+--- /dev/null
++++ b/stage/S8/rerun-driver/diagnose_exit2.py
+@@ -0,0 +1,100 @@
++"""One explicitly authorized cause-only run; never grade or inspect answers."""
++import os
++from pathlib import Path
++import sys
++import time
++
++from measurement_common import HERE, load, save, sha, utc
++from measurement_runtime import Job, selected_environment
++
++
++def main():
++    audit = HERE.parent / 'rerun-audit'
++    out = audit / 'diagnostic-0578'
++    out.mkdir()
++    (out / 'receipts').mkdir()
++    raw = Path('/tmp/mechanism-S8-fsize-diagnostic-0578')
++    raw.mkdir()
++    old = HERE.parent / 'run-superpc'
++    freeze = load(old / 'measurement-freeze.json')
++    spec = next(j for j in freeze['jobs'] if j['queue_index'] == 578)
++    original = load(old / 'receipts/0578.start.json')
++    assert spec['time_limit_seconds'] == 180 and spec['cores'] == 1
++    assert sha(Path(freeze['python']).resolve()) == freeze['python_sha256']
++    freeze = dict(freeze, raw_root=str(raw))
++    job = Job(spec, original['cpu'], out, raw, freeze)
++    assert selected_environment(job.env) == original['actual_environment']
++    assert job.command[:2] == original['command'][:2]
++    assert job.command[3:-1] == original['command'][3:-1]
++    observed = {}
++    stderr_tails = {}
++    limits = {}
++    while True:
++        # Observe worker temporary-file sizes and stderr without reading answers.
++        for proc in job.processes():
++            try:
++                limits[str(proc.pid)] = Path(f'/proc/{proc.pid}/limits').read_text()
++                cwd = Path(proc.cwd())
++                if not cwd.name.startswith('geosolver-') or cwd.parent != Path('/tmp'):
++                    continue
++                for p in cwd.iterdir():
++                    if p.is_file():
++                        stat = p.stat()
++                        observed[str(p)] = max(stat.st_size, observed.get(str(p), 0))
++                        if p.name == 'stderr.log':
++                            with p.open('rb') as stream:
++                                stream.seek(max(0, stat.st_size - 8000))
++                                stderr_tails[str(p)] = stream.read().decode(errors='replace')
++            except (OSError, Exception) as error:
++                # Process disappearance between observations is expected.
++                if type(error).__name__ not in ('NoSuchProcess', 'ZombieProcess', 'FileNotFoundError', 'ProcessLookupError'):
++                    raise
++        now = time.monotonic()
++        if now >= job.deadline:
++            receipt = job.finish('timeout', 180.0)
++            break
++        if job.proc is None or job.proc.poll() is not None:
++            receipt = job.finish('completed' if job.proc else 'spawn_failure', now-job.t0)
++            break
++        if now >= job.next_sample:
++            job.sample()
++            if 'tree_memory_limit' in job.violations:
++                receipt = job.finish('memory_limit', now-job.t0)
++                break
++        time.sleep(.01)
++    result = raw / '0578/result.json'
++    error = None
++    result_stderr_tail = ''
++    json_valid = False
++    if result.exists():
++        data = load(result)
++        json_valid = True
++        error = data.get('error')
++        result_stderr_tail = str(data.get('diagnostics', {}).get('stderr', ''))[-8000:]
++        del data  # No status, answers, reference, or correctness inspection.
++    outer_tails = {}
++    for p in (raw / '0578').glob('stderr.log.*'):
++        with p.open('rb') as stream:
++            stream.seek(max(0, p.stat().st_size-8000))
++            outer_tails[str(p)] = stream.read().decode(errors='replace')
++    save(out / 'cause-only.json', dict(
++        utc=utc(), measurement_eligible=False, correctness_inspected=False,
++        solver_calls=1, queue_index=578, case_id=spec['case_id'],
++        configuration=spec['configuration'], seed=spec['seed'],
++        cpu=original['cpu'], time_limit_seconds=180, cores=1,
++        environment_matches_original=True, only_contract_change='RLIMIT_FSIZE=1073741824',
++        original_exit_code=2, original_error=dict(code='artifact_missing', message='worker exited with code 1 without an artifact'),
++        new_exit_code=receipt['exit_code'], state=receipt['state'],
++        wall_seconds=receipt['wall_seconds'], resource_violations=receipt['resource_violations'],
++        result_json_valid=json_valid, new_error=error,
++        result_size_bytes=result.stat().st_size if result.exists() else None,
++        observed_worker_file_sizes=observed, observed_process_limits=limits,
++        worker_stderr_tails=stderr_tails, outer_stderr_tails=outer_tails,
++        result_stderr_tail=result_stderr_tail,
++        raw_directory=str(raw), launch_sha256=sha(HERE/'measurement_launch.py')))
++    print('Cause-only evidence saved:', out/'cause-only.json', flush=True)
++    print('exit=', receipt['exit_code'], 'state=', receipt['state'], 'error=', error, flush=True)
++
++
++if __name__ == '__main__':
++    main()
+--- a/stage/S8/driver.py
++++ b/stage/S8/rerun-driver/driver.py
+@@ -15,12 +15,25 @@
+ CUMULATIVE=['N','C1','C2','C3','C4','C5','BASE']
+ STOP=False
+ 
+-def select_jobs(machine,configs):
++def select_jobs(machine,configs,slots_file=None):
+     known=load(HERE/'configs.json');aliases=known['aliases']
+     selected={aliases.get(c,c) for item in configs for c in item.split(',')}
+     assert selected and selected<={c['name'] for c in known['configurations']},'unknown configs'
+     jobs=[j for j in load(HERE/'run-plan.json')['jobs'] if j['machine'].lower()==machine and j['configuration'] in selected]
+     assert len(jobs)==53*3*len(selected)
++    if slots_file is not None:
++        plan=load(slots_file)
++        original=HERE.parent/'run-superpc'
++        assert sha(original/'per-run.csv')==plan['source_per_run_sha256'],'original CSV changed'
++        assert sha(original/'measurement-freeze.json')==plan['source_freeze_sha256'],'original freeze changed'
++        import csv
++        with (original/'per-run.csv').open() as stream:
++            indices=[int(r['queue_index']) for r in csv.DictReader(stream) if r['reason']=='nonzero_exit']
++        wanted=plan['jobs']
++        assert len(wanted)==320 and len({j['queue_index'] for j in wanted})==320
++        assert [j['queue_index'] for j in wanted]==indices,'must replace exactly original nonzero_exit slots'
++        assert wanted==[j for j in jobs if j['queue_index'] in set(indices)],'slot specification/order changed'
++        return wanted
+     return jobs
+ 
+ 
+@@ -41,11 +54,14 @@
+     for name,h in freeze['measurement_files_sha256'].items():assert sha(HERE/name)==h,('measurement file changed',name)
+     for name,h in freeze['preparation_files_sha256'].items():assert sha(HERE/name)==h,('preparation file changed',name)
+     assert sha(HERE/'references.json')==freeze['references_sha256']
++    assert sha(freeze['slots_file'])==freeze['slots_file_sha256']
+     return freeze
+ 
+ 
+ def run(args):
+-    jobs=select_jobs(args.machine,args.configs)
++    jobs=select_jobs(args.machine,args.configs,args.slots_file)
++    assert args.slots_file is not None,'rerun requires --slots-file'
++    assert args.output != HERE.parent/'run-superpc','never overwrite original'
+     out=args.output;out.mkdir(exist_ok=True,parents=True)
+     lock=(out/'campaign.lock').open('a')
+     fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+@@ -55,6 +71,16 @@
+         contract=load(HERE/'measurement-contract-results.json');assert contract['passed']
+         assert contract['tested_files_sha256']==tested_hashes(),'driver changed after contract checks'
+         check=preflight(args)
++        original=load(HERE.parent/'run-superpc/measurement-freeze.json')
++        assert check['source_hash']==original['source_hash'] and check['python_sha256']==original['python_sha256']
++        assert check['host']==original['preflight']['host']
++        for k in ('memory_mib','address_space_mib'):assert getattr(args,k)==original[k]
++        for k in ('base_src','repo_root','python'):assert str(getattr(args,k))==original[k]
++        for name in ('configs.json','assignment.json','run-plan.json','source-hashes.json','references-hashes.json'):
++            assert sha(HERE/name)==original['preparation_files_sha256'][name]
++        assert sha(HERE/'references.json')==original['references_sha256']
++        for name in ('measurement_exact.py','measurement_grade.py'):
++            assert sha(HERE/name)==original['measurement_files_sha256'][name]
+         refs=load(HERE/'references.json');assert len(refs['cases'])==106
+         assert sha(HERE/'references.json')==load(HERE/'references-hashes.json')['references_sha256']
+         raw=args.raw_root or Path(tempfile.mkdtemp(prefix=f'mechanism-S8-{args.machine}-raw-',dir='/tmp'))
+@@ -69,10 +95,13 @@
+             if key not in seen:slots.append(cpu);seen.add(key)
+         assert len(slots)>=args.max_parallel,'not enough distinct physical cores'
+         freeze=dict(created_utc=utc(),machine=args.machine,configs=sorted({j['configuration'] for j in jobs}),jobs=jobs,
++            slots_file=str(args.slots_file),slots_file_sha256=sha(args.slots_file),
++            original_freeze_sha256=sha(HERE.parent/'run-superpc/measurement-freeze.json'),
+             raw_root=str(raw),base_src=str(args.base_src),repo_root=str(args.repo_root),python=args.python,
+             python_sha256=check['python_sha256'],source_hash=check['source_hash'],max_parallel=args.max_parallel,
+             memory_mib=args.memory_mib,address_space_mib=args.address_space_mib,slot_cpus=slots[:args.max_parallel],
+             preflight=check,references_sha256=sha(HERE/'references.json'),measurement_files_sha256=tested_hashes(),
++            supervisor_sha256=sha(HERE/'supervise_superpc.py'),
+             preparation_files_sha256={n:sha(HERE/n) for n in ['configs.json','assignment.json','run-plan.json','source-hashes.json','references-hashes.json','measurement-contract-results.json']},
+             parent_removed_geosolver_keys=sorted(k for k in os.environ if k.startswith('GEOSOLVER_')),
+             no_retries=True,no_extra_seeds=True,no_commit_or_push=True,
+@@ -82,6 +111,8 @@
+     else:
+         freeze=verify_frozen(out)
+         assert jobs==freeze['jobs'],'resume selection mismatch'
++        assert str(args.slots_file)==freeze['slots_file'] and sha(args.slots_file)==freeze['slots_file_sha256']
++        assert args.raw_root is None or str(args.raw_root.resolve())==freeze['raw_root'],'raw-root mismatch'
+         assert args.max_parallel<=freeze['max_parallel'],'resume cannot increase parallelism'
+         for k in ['base_src','repo_root','python']:assert str(getattr(args,k))==freeze[k],f'resume {k} mismatch'
+         assert args.memory_mib==freeze['memory_mib'] and args.address_space_mib==freeze['address_space_mib']
+@@ -97,7 +128,7 @@
+ 
+ def tested_hashes():
+     return {n:sha(HERE/n) for n in ['driver.py','measurement_common.py','measurement_runtime.py','measurement_launch.py',
+-        'measurement_preflight.py','measurement_exact.py','measurement_grade.py','test_measurement_contract.py','freeze_measurement_references.py']}
++        'measurement_preflight.py','measurement_exact.py','measurement_grade.py','test_measurement_contract.py','freeze_measurement_references.py','supervise_superpc.py','merge_and_grade.py','mock_supervisor_driver.py','report_superpc.py','analysis-freeze-rerun.json']}
+ 
+ 
+ def main():
+@@ -108,7 +139,8 @@
+         p.add_argument('--machine',required=True,type=str.lower,choices=['superpc','winpc'])
+         p.add_argument('--configs',nargs='+',default=CUMULATIVE)
+         p.add_argument('--output',type=Path)
+-        p.add_argument('--repo-root',type=Path,default=HERE.parents[4])
++        p.add_argument('--repo-root',type=Path,default=HERE.parents[5])
++        p.add_argument('--slots-file',type=Path,default=HERE.parent/'run-plan-rerun.json')
+         p.add_argument('--base-src','--source-root',dest='base_src',type=Path)
+         p.add_argument('--python',default=sys.executable)
+         p.add_argument('--max-parallel',type=int,default=8)
+@@ -117,17 +149,20 @@
+         p.add_argument('--address-space-mib',type=int,default=16384)
+     args=parser.parse_args()
+     assert 1<=args.max_parallel<=8
+-    args.repo_root=args.repo_root.resolve();args.output=(args.output or HERE/f'run-{args.machine}').resolve()
++    args.repo_root=args.repo_root.resolve();args.output=(args.output or HERE.parent/'run-superpc-rerun').resolve()
+     if args.base_src:args.base_src=args.base_src.resolve()
++    if args.slots_file:args.slots_file=args.slots_file.resolve()
+     args.python=os.path.abspath(args.python) # keep venv symlink; do not replace by its base binary
+     if args.command=='grade':
+         freeze=verify_frozen(args.output);assert freeze['machine']==args.machine
+-        assert select_jobs(args.machine,args.configs)==freeze['jobs']
+-        from measurement_grade import aggregate
+-        aggregate(args.output,freeze)
++        assert select_jobs(args.machine,args.configs,args.slots_file)==freeze['jobs']
++        from merge_and_grade import merge_and_grade
++        merge_and_grade(args.output,freeze)
+     else:
+         assert args.base_src,'--base-src required'
+-        if args.command=='verify-plan':print(json.dumps(preflight(args),ensure_ascii=False,indent=2))
++        if args.command=='verify-plan':
++            jobs=select_jobs(args.machine,args.configs,args.slots_file)
++            print(json.dumps(dict(preflight=preflight(args),rerun_slots=len(jobs),slots_sha256=sha(args.slots_file),solver_executions=0),ensure_ascii=False,indent=2))
+         else:run(args)
+ 
+ if __name__=='__main__':main()
+--- a/stage/S8/measurement_launch.py
++++ b/stage/S8/rerun-driver/measurement_launch.py
+@@ -1,4 +1,4 @@
+-"""Linux/WSL exec bootstrap: pin before importing the solver; cap single files/AS."""
++"""Linux/WSL exec bootstrap: pin before importing the solver; cap solver files at 1GiB and address space."""
+ import os
+ import resource
+ import sys
+@@ -6,6 +6,6 @@
+ if __name__ == '__main__':
+     cpu, address_mib = map(int, sys.argv[1:3])
+     os.sched_setaffinity(0, {cpu})
+-    resource.setrlimit(resource.RLIMIT_FSIZE, (2_900_000, 2_900_000))
++    resource.setrlimit(resource.RLIMIT_FSIZE, (1024**3, 1024**3))
+     resource.setrlimit(resource.RLIMIT_AS, (address_mib*1024**2, address_mib*1024**2))
+     os.execv(sys.argv[3], sys.argv[3:])
+--- a/stage/S8/measurement_runtime.py
++++ b/stage/S8/rerun-driver/measurement_runtime.py
+@@ -157,7 +157,7 @@
+                 if 'Disk quota exceeded' in body or 'No space left on device' in body:
+                     state='interrupted_environment_storage'
+                     self.violations.add('explicit_storage_exhaustion')
+-        if any(v['size_bytes']>=3_000_000 for v in files.values()):raise RuntimeError('oversize raw file')
++        # Raw is outside the repo: the 3MB cap applies only to aggregate outputs.
+         r=dict(**self.spec,state=state,cpu=self.cpu,pid=self.proc.pid if self.proc else None,start_utc=self.start_utc,end_utc=utc(),
+             wall_seconds=wall,total_wall_through_cleanup_seconds=time.monotonic()-self.t0,cleanup_seconds=cleanup,
+             exit_code=self.proc.returncode if self.proc else None,spawn_error=self.spawn_error,result_path=str(self.raw/'result.json'),
+--- /dev/null
++++ b/stage/S8/rerun-driver/merge_and_grade.py
+@@ -0,0 +1,75 @@
++"""Overlay only the authorized slots; use unchanged S8 graders on all 1113."""
++import csv
++import fcntl
++from pathlib import Path
++import shutil
++from measurement_common import HERE, load, save, sha, utc
++
++
++def replacement_receipt(job, original, fresh=None):
++    if fresh is not None:
++        assert all(fresh[k]==v for k,v in job.items()),'replacement job changed'
++        return fresh
++    # An absent rerun is incomplete; never fall back to the invalid old result.
++    return dict(original,state='interrupted_driver_fsize',exit_code=None,
++                original_exit_code=original['exit_code'],files={},
++                wall_seconds=None,total_wall_through_cleanup_seconds=None,
++                resource_violations=[],driver_invalidation='FSIZE infrastructure interruption; excluded')
++
++
++def merge_and_grade(out,freeze):
++    from measurement_grade import aggregate
++    import report_superpc
++    original=HERE.parent/'run-superpc'
++    old=load(original/'measurement-freeze.json')
++    assert sha(original/'measurement-freeze.json')==freeze['original_freeze_sha256']
++    assert old['source_hash']==freeze['source_hash']
++    assert old['references_sha256']==freeze['references_sha256']==sha(HERE/'references.json')
++    slots={j['queue_index']:j for j in freeze['jobs']}
++    assert len(slots)==320 and len(old['jobs'])==1113
++    lock=(out/'campaign.lock').open('a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
++    merged=out/'merged';merged.mkdir(exist_ok=True)
++    (merged/'receipts').mkdir(exist_ok=True)
++    mapping=[]
++    for j in old['jobs']:
++        q=j['queue_index'];name=f'{q:04d}'
++        oldend=load(original/'receipts'/f'{name}.end.json')
++        origin=original
++        if q in slots:
++            assert slots[q]==j
++            endpath=out/'receipts'/f'{name}.end.json'
++            fresh=load(endpath) if endpath.exists() else None
++            receipt=replacement_receipt(j,oldend,fresh)
++            origin=out if fresh is not None else original
++            save(merged/'receipts'/f'{name}.end.json',receipt)
++        else:
++            shutil.copyfile(original/'receipts'/f'{name}.end.json',merged/'receipts'/f'{name}.end.json')
++        shutil.copyfile(origin/'receipts'/f'{name}.start.json',merged/'receipts'/f'{name}.start.json')
++        mapping.append(dict(queue_index=q,replaced=q in slots,source=str(origin),
++                            old_end_sha256=sha(original/'receipts'/f'{name}.end.json'),
++                            merged_end_sha256=sha(merged/'receipts'/f'{name}.end.json')))
++    combined=dict(old,raw_root='see individual receipts: original + rerun',
++                  rerun_freeze_sha256=sha(out/'measurement-freeze.json'))
++    save(merged/'measurement-freeze.json',combined)
++    save(merged/'replacement-map.json',dict(utc=utc(),originals_preserved=True,slots=mapping))
++    analysis=load(HERE/'analysis-freeze-rerun.json')
++    assert analysis['original_analysis_freeze_sha256']==sha(original/'analysis-freeze.json')
++    assert analysis['supervisor_sha256']==sha(HERE/'supervise_superpc.py')
++    assert analysis['grade_sha256']==sha(HERE/'measurement_grade.py')
++    assert analysis['reporting_sha256']==sha(HERE/'report_superpc.py')
++    save(merged/'analysis-freeze.json',analysis)
++    # aggregate()/grade_one()/exact comparisons and load-policy reporter unchanged.
++    aggregate(merged,combined)
++    report_superpc.OUT=merged
++    report_superpc.main()
++    # report_superpc uses hard-coded original scope text; this provenance note
++    # makes the overlay explicit without changing its statistical policy/code.
++    with (merged/'answer.md').open('a') as stream:
++        stream.write('\n320 original nonzero_exit slots are infrastructure interruptions; '
++                     'only their authorized rerun receipts replace them. '
++                     'Original campaign is preserved. See replacement-map.json.\n')
++    save(merged/'artifact-hashes.json',dict(created_utc=utc(),files_sha256={
++        str(p.relative_to(merged)):sha(p) for p in sorted(merged.rglob('*'))
++        if p.is_file() and p.name not in ('artifact-hashes.json','campaign.lock')}))
++    for p in merged.rglob('*'):
++        if p.is_file():assert p.stat().st_size<3_000_000,p
+--- /dev/null
++++ b/stage/S8/rerun-driver/mock_supervisor_driver.py
+@@ -0,0 +1,18 @@
++"""Synthetic crash/resume fixture; never imports solver."""
++import sys
++from pathlib import Path
++from measurement_common import save
++
++mode=sys.argv[1];out=Path(sys.argv[2]);out.mkdir(exist_ok=True)
++if mode=='run':
++    (out/'receipts').mkdir()
++    save(out/'measurement-freeze.json',dict(jobs=[dict(queue_index=0),dict(queue_index=1)]))
++    save(out/'receipts/0000.start.json',dict(queue_index=0))
++    sys.exit(9)
++if mode=='resume':
++    assert (out/'receipts/0000.start.json').exists()
++    save(out/'receipts/0000.end.json',dict(queue_index=0,state='interrupted_prior_start_no_retry'))
++    save(out/'receipts/0001.start.json',dict(queue_index=1))
++    save(out/'receipts/0001.end.json',dict(queue_index=1,state='completed'))
++else:
++    save(out/'mock-grade-only.json',dict(mock=True))
+--- a/stage/S8/supervise_superpc.py
++++ b/stage/S8/rerun-driver/supervise_superpc.py
+@@ -1,43 +1,90 @@
+-"""Detached campaign owner: resume only unstarted jobs, never retry a started slot."""
+-import json
++"""Foreground owner of the 320-slot rerun; resume only unstarted slots."""
++import argparse
++import fcntl
+ import os
++from pathlib import Path
+ import shutil
+ import subprocess
+ import sys
+ import time
+-from pathlib import Path
++import psutil
+ from measurement_common import HERE, load, save, utc
+ 
+-OUT=HERE/'run-superpc'
+-PYTHON='/home/kabatan/work/solver/.venv/bin/python'
+-ARGS=['--machine','superpc','--configs','N','C1','C2','C3','C4','C5','BASE','--max-parallel','8',
+-      '--base-src','/tmp/mechanism-7b-lkdjle5l/final','--repo-root',str(HERE.parents[4]),'--python',PYTHON]
++
++def cleanup_owned(raw_root):
++    """Only solver roots whose explicit --output belongs to this raw directory."""
++    killed=[]
++    for p in psutil.process_iter(['cmdline']):
++        try:
++            cmd=p.info['cmdline'] or []
++            if 'geosolver.application.cli' not in cmd or '--output' not in cmd:continue
++            output=Path(cmd[cmd.index('--output')+1]).resolve()
++            if not output.is_relative_to(raw_root.resolve()):continue
++            for child in reversed(p.children(recursive=True)):
++                try:child.kill()
++                except psutil.NoSuchProcess:pass
++            p.kill();killed.append(p.pid)
++        except (psutil.Error,OSError,ValueError,IndexError):continue
++    return killed
++
++
++def supervise(args,command_factory=None,grade_factory=None):
++    out=args.output.resolve();out.mkdir(parents=True,exist_ok=True)
++    lock=(out/'supervisor.lock').open('a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
++    status=out/'supervisor-status.json'
++    if status.exists() and load(status)['state']=='complete':return 0
++    shared=['--machine','superpc','--configs','N','C1','C2','C3','C4','C5','BASE',
++            '--slots-file',str(args.slots_file.resolve()),'--output',str(out),
++            '--raw-root',str(args.raw_root.resolve()),'--base-src',str(args.base_src.resolve()),
++            '--repo-root',str(args.repo_root.resolve()),'--python',args.python,
++            '--max-parallel',str(args.max_parallel)]
++    command_factory=command_factory or (lambda mode:[args.python,'-B',str(HERE/'driver.py'),mode,*shared])
++    grade_factory=grade_factory or (lambda:command_factory('grade'))
++    history=[];save(status,dict(pid=os.getpid(),state='starting',utc=utc()))
++    while True:
++        if shutil.disk_usage('/tmp').free<6*1024**3:
++            save(status,dict(pid=os.getpid(),state='storage_stop',history=history,utc=utc()));return 2
++        killed=cleanup_owned(args.raw_root)
++        mode='resume' if (out/'measurement-freeze.json').exists() else 'run'
++        with (out/'driver.log').open('ab',buffering=0) as log:
++            # Supervisor stays in the foreground and waits for this child.
++            p=subprocess.Popen(command_factory(mode),stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
++            save(status,dict(pid=os.getpid(),driver_pid=p.pid,state='running',command=mode,prior_orphans_killed=killed,history=history,utc=utc()))
++            try:code=p.wait()
++            except KeyboardInterrupt:
++                p.terminate()
++                try:p.wait(timeout=5)
++                except subprocess.TimeoutExpired:p.kill();p.wait()
++                cleanup_owned(args.raw_root)
++                save(status,dict(pid=os.getpid(),state='interrupted',history=history,utc=utc()));return 130
++        history.append(dict(command=mode,driver_pid=p.pid,exit_code=code,end_utc=utc()))
++        frozen=out/'measurement-freeze.json'
++        if not frozen.exists():
++            save(status,dict(pid=os.getpid(),state='preflight_failed',history=history,utc=utc()));return 1
++        f=load(frozen);ends=[load(x) for x in (out/'receipts').glob('*.end.json')]
++        if len(ends)==len(f['jobs']):break
++        if code==0 or any(x['state']=='interrupted_environment_storage' for x in ends):
++            save(status,dict(pid=os.getpid(),state='stopped_incomplete',ends=len(ends),history=history,utc=utc()));return 2
++        # Repeated resume/preflight failures need operator attention.
++        if len(history)>=2 and all(x['exit_code']!=0 for x in history[-2:]) and mode=='resume':
++            save(status,dict(pid=os.getpid(),state='repeated_driver_failure',ends=len(ends),history=history,utc=utc()));return 1
++        time.sleep(1)
++    with (out/'grade.log').open('ab',buffering=0) as log:
++        code=subprocess.call(grade_factory(),stdout=log,stderr=subprocess.STDOUT)
++    save(status,dict(pid=os.getpid(),state='complete' if code==0 else 'grading_failed',ends=len(ends),history=history,utc=utc()))
++    return code
++
+ 
+ def main():
+- save(OUT/'supervisor-status.json',dict(pid=os.getpid(),started_utc=utc(),state='starting'),True)
+- history=[]
+- while True:
+-  if shutil.disk_usage('/tmp').free<6*1024**3:
+-   save(OUT/'supervisor-status.json',dict(pid=os.getpid(),state='storage_stop',history=history,utc=utc()));return 2
+-  cmd='resume' if (OUT/'measurement-freeze.json').exists() else 'run'
+-  with (OUT/'driver.log').open('ab',buffering=0) as log:
+-   p=subprocess.Popen([PYTHON,'-B',str(HERE/'driver.py'),cmd,*ARGS],stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
+-   save(OUT/'supervisor-status.json',dict(pid=os.getpid(),driver_pid=p.pid,state='running',command=cmd,history=history,utc=utc()))
+-   code=p.wait()
+-  history.append(dict(command=cmd,driver_pid=p.pid,exit_code=code,end_utc=utc()))
+-  fpath=OUT/'measurement-freeze.json'
+-  if not fpath.exists():
+-   save(OUT/'supervisor-status.json',dict(pid=os.getpid(),state='preflight_failed',history=history,utc=utc()));return 1
+-  f=load(fpath);ends=[load(x) for x in (OUT/'receipts').glob('*.end.json')]
+-  if len(ends)==len(f['jobs']):break
+-  if code==0 or shutil.disk_usage('/tmp').free<6*1024**3 or any(x['state']=='interrupted_environment_storage' for x in ends):
+-   save(OUT/'supervisor-status.json',dict(pid=os.getpid(),state='stopped_incomplete',ends=len(ends),history=history,utc=utc()));return 2
+-  # Unexpected driver death: resume, whose receipt logic skips all prior starts.
+-  time.sleep(1)
+- with (OUT/'grade.log').open('wb') as log:
+-  code=subprocess.call([PYTHON,'-B',str(HERE/'driver.py'),'grade',*ARGS],stdout=log,stderr=subprocess.STDOUT)
+-  if code==0:code=subprocess.call([PYTHON,'-B',str(HERE/'report_superpc.py')],stdout=log,stderr=subprocess.STDOUT)
+- save(OUT/'supervisor-status.json',dict(pid=os.getpid(),state='complete' if code==0 else 'grading_failed',ends=len(ends),history=history,utc=utc()))
+- return code
++    p=argparse.ArgumentParser(description=__doc__)
++    p.add_argument('--output',type=Path,default=HERE.parent/'run-superpc-rerun')
++    p.add_argument('--raw-root',type=Path,default=Path('/tmp/mechanism-S8-rerun-raw'))
++    p.add_argument('--slots-file',type=Path,default=HERE.parent/'run-plan-rerun.json')
++    p.add_argument('--base-src',type=Path,default=Path('/tmp/mechanism-7b-lkdjle5l/final'))
++    p.add_argument('--repo-root',type=Path,default=HERE.parents[5])
++    p.add_argument('--python',default='/home/kabatan/work/solver/.venv/bin/python')
++    p.add_argument('--max-parallel',type=int,default=8)
++    args=p.parse_args();assert 1<=args.max_parallel<=8
++    return supervise(args)
+ 
+ if __name__=='__main__':sys.exit(main())
+--- a/stage/S8/test_measurement_contract.py
++++ b/stage/S8/rerun-driver/test_measurement_contract.py
+@@ -13,6 +13,58 @@
+ 
+ 
+ class Contracts(unittest.TestCase):
++    def test_rerun_selection_and_invalidation(self):
++        from merge_and_grade import replacement_receipt
++        jobs=driver.select_jobs('superpc',driver.CUMULATIVE,HERE.parent/'run-plan-rerun.json')
++        self.assertEqual(len(jobs),320)
++        self.assertEqual(jobs,load(HERE.parent/'run-plan-rerun.json')['jobs'])
++        self.assertTrue(all(j['cores']==1 and j['time_limit_seconds']==180 and j['seed'] in (601,602,603) for j in jobs))
++        r=replacement_receipt(jobs[0],dict(exit_code=1,state='completed'))
++        self.assertEqual(r['state'],'interrupted_driver_fsize')
++        self.assertIsNone(r['wall_seconds']);self.assertEqual(r['files'],{})
++        refs=dict(cases={jobs[0]['case_id']:dict(available=True,set_sha256='mock')})
++        g=grade_one(jobs[0],r,refs,'mock')
++        self.assertIsNone(g['ok']);self.assertIsNone(g['C_seed'])
++        with self.assertRaises(AssertionError):
++            replacement_receipt(jobs[0],{},dict(jobs[0],seed=999))
++
++    def test_fsize_large_raw_and_inherited_limit(self):
++        import json
++        with tempfile.TemporaryDirectory(prefix='s8-fsize-contract-') as td:
++            root=Path(td);out=root/'out';out.mkdir();(out/'receipts').mkdir();raw=root/'raw';raw.mkdir()
++            cpu=sorted(os.sched_getaffinity(0))[0]
++            freeze=dict(base_src=str(root),repo_root=str(root),python=sys.executable,source_hash='mock',python_sha256=sha(Path(sys.executable).resolve()),raw_root=str(raw),slot_cpus=[cpu],memory_mib=4096,address_space_mib=16384)
++            j=dict(queue_index=0,case_id='fsize-mock',machine='superPC',dsl_path='no-solver',configuration='N',seed=601,time_limit_seconds=3,cores=1,input_sha256='mock')
++            result=raw/'0000/result.json'
++            script=("import resource,subprocess,sys,json; "
++                    "print(json.dumps({'parent':resource.getrlimit(resource.RLIMIT_FSIZE)}),flush=True); "
++                    "subprocess.run([sys.executable,'-B','-c','import resource,json; print(json.dumps({\"child\":resource.getrlimit(resource.RLIMIT_FSIZE)}))'],check=True); "
++                    f"open({str(result)!r},'w').write(json.dumps({{'padding':'x'*3100000}}))")
++            self.assertTrue(execute([j],out,freeze,1,command_factory=lambda j:[sys.executable,'-B','-c',script]))
++            receipt=load(out/'receipts/0000.end.json')
++            self.assertEqual(receipt['exit_code'],0);self.assertEqual(receipt['resource_violations'],[])
++            self.assertGreater(result.stat().st_size,3_000_000)
++            limits=[json.loads(l) for l in (raw/'0000/stdout.log.0000').read_text().splitlines()]
++            self.assertEqual(limits,[dict(parent=[1024**3]*2),dict(child=[1024**3]*2)])
++            self.assertEqual(sha(result),receipt['files']['result.json']['sha256'])
++            with self.assertRaises(ValueError):save(out/'oversize-aggregate.json',dict(padding='x'*3_000_000))
++            self.assertFalse((out/'oversize-aggregate.json').exists())
++
++    def test_supervisor_resume_mock_only(self):
++        from argparse import Namespace
++        from supervise_superpc import supervise
++        with tempfile.TemporaryDirectory(prefix='s8-supervisor-contract-') as td:
++            root=Path(td);out=root/'out'
++            args=Namespace(output=out,raw_root=root/'raw',slots_file=HERE.parent/'run-plan-rerun.json',base_src=root,repo_root=root,python=sys.executable,max_parallel=2)
++            def command(mode):return [sys.executable,'-B',str(HERE/'mock_supervisor_driver.py'),mode,str(out)]
++            self.assertEqual(supervise(args,command_factory=command,grade_factory=lambda:command('grade')),0)
++            r=load(out/'supervisor-status.json')
++            self.assertEqual(r['state'],'complete')
++            self.assertEqual([x['command'] for x in r['history']],['run','resume'])
++            self.assertEqual([x['exit_code'] for x in r['history']],[9,0])
++            self.assertTrue(load(out/'mock-grade-only.json')['mock'])
++            self.assertEqual(supervise(args,command_factory=lambda c:self.fail('restart complete')),0)
++
+     def test_internal_environment_and_storage_stop(self):
+         from measurement_runtime import environment_matches
+         from unittest.mock import patch
+@@ -84,7 +136,7 @@
+         from measurement_runtime import ChunkLog
+         with tempfile.TemporaryDirectory(prefix='s8-parallel-contract-') as td:
+             root=Path(td);out=root/'out';out.mkdir();(out/'receipts').mkdir();raw=root/'raw';raw.mkdir()
+-            cpus=sorted(os.sched_getaffinity(0))[:8]
++            cpus=sorted(os.sched_getaffinity(0))[:2]
+             freeze=dict(base_src=str(root),repo_root=str(root),python=sys.executable,source_hash='mock',python_sha256=sha(Path(sys.executable).resolve()),raw_root=str(raw),slot_cpus=cpus,memory_mib=4096,address_space_mib=16384)
+             jobs=[dict(queue_index=i,case_id='parallel-mock',machine='superPC',dsl_path='no-solver',configuration='BASE',seed=601,time_limit_seconds=3,cores=1,input_sha256='mock') for i in range(len(cpus)+2)]
+             self.assertTrue(execute(jobs,out,freeze,len(cpus),command_factory=lambda j:[sys.executable,'-B','-c','import time; time.sleep(.15)']))
+@@ -113,5 +165,5 @@
+     suite=unittest.defaultTestLoader.loadTestsFromTestCase(Contracts)
+     result=unittest.TextTestRunner(verbosity=2).run(suite)
+     save(HERE/'measurement-contract-results.json',dict(created_utc=utc(),passed=result.wasSuccessful(),tests_run=result.testsRun,
+-        mock_only=True,solver_calls=0,tested_files_sha256=driver.tested_hashes()))
++        mock_only=True,solver_calls=0,max_parallel_subprocess_slots=2,tested_files_sha256=driver.tested_hashes()))
+     raise SystemExit(0 if result.wasSuccessful() else 1)
