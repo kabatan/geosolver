@@ -1,0 +1,87 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "z1",
+    "z2",
+    "z3",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_Ax",
+    "x2": "v_Ay",
+    "x3": "k4",
+    "x4": "k5",
+    "x5": "p1",
+    "x6": "s6",
+    "x7": "s7",
+    "x8": "t8"
+  },
+  "target_variable": "x8",
+  "equations": [
+    "-x1**2/2 + x1 - x2**2/2 + x2*x5 + 15/2",
+    "x3**2 - 1/2",
+    "x4**2 - 1/2",
+    "-64*x2**2 + x6**2",
+    "x1**2*x4 - 2*x1*x4 + x2**2*x4 + x3*x6 - 15*x4",
+    "x5**2 - x7**2 + 1",
+    "x7 - x8"
+  ],
+  "saturation_factors": [
+    "x2",
+    "x1**2 + 6*x1 + x2**2 + 9",
+    "x1**2 - 10*x1 + x2**2 + 25"
+  ],
+  "polynomial": "x8**2 - 17",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[4]/O:Circumcenter:triangle",
+      "operator": "!=",
+      "expression": "v_Ay*(5 - v_Ax) - v_Ay*(-v_Ax - 3)"
+    },
+    {
+      "source": "condition[2]:Angle:first_ray",
+      "operator": "!=",
+      "expression": "v_Ay**2 + (-v_Ax - 3)**2"
+    },
+    {
+      "source": "condition[2]:Angle:second_ray",
+      "operator": "!=",
+      "expression": "v_Ay**2 + (5 - v_Ax)**2"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_Ay"
+    }
+  ],
+  "algebraic_constants": [
+    {
+      "symbol": "k4",
+      "expression": "sqrt(2)/2",
+      "minimal_polynomial": "2*_constant**2 - 1",
+      "intended_value_80d": "0.70710678118654752440084436210484903928483593768847403658833986899536623923105352"
+    },
+    {
+      "symbol": "k5",
+      "expression": "-sqrt(2)/2",
+      "minimal_polynomial": "2*_constant**2 - 1",
+      "intended_value_80d": "-0.70710678118654752440084436210484903928483593768847403658833986899536623923105352"
+    }
+  ],
+  "original_target_variable": "t8"
+}

@@ -1,0 +1,179 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_gx",
+    "x2": "v_gy",
+    "x3": "v_hx",
+    "x4": "v_hy",
+    "x5": "v_x",
+    "x6": "v_y",
+    "x7": "s1",
+    "x8": "s2",
+    "x9": "s3",
+    "x10": "s4",
+    "x11": "t5"
+  },
+  "target_variable": "x11",
+  "equations": [
+    "x7**2 - 2",
+    "-x5**2 + 2*x5*x6 - x6**2 + x8**2",
+    "-x1**2 - 2*x1 - x2**2 + 2*x2*x6 - x6**2 + x9**2 - 1",
+    "x8 - x9",
+    "x2*x5 - x2*x6 - x5*x6 + x6**2",
+    "x1*x5 - x1*x6 - x3*x5 + x3*x6",
+    "x1*x4 - x1*x5 - x2*x3 - x2 + x3*x6 + x4 - x5 + x6",
+    "-x1**2 - x2**2 + x7**2",
+    "-x3**2 - x4**2 + x7**2",
+    "-x1**2*x4**2/4 + x1**2*x4*x6/2 - x1**2*x6**2/4 + x1*x2*x3*x4/2 - x1*x2*x3*x6/2 + x1*x2*x4/2 - x1*x2*x6/2 - x1*x3*x4*x5/2 + x1*x3*x5*x6/2 - x1*x4**2/2 - x1*x4*x5/2 + x1*x4*x6 + x1*x5*x6/2 - x1*x6**2/2 + x10**2 - x2**2*x3**2/4 - x2**2*x3/2 - x2**2/4 + x2*x3**2*x5/2 + x2*x3*x4/2 + x2*x3*x5 - x2*x3*x6/2 + x2*x4/2 + x2*x5/2 - x2*x6/2 - x3**2*x5**2/4 - x3*x4*x5/2 - x3*x5**2/2 + x3*x5*x6/2 - x4**2/4 - x4*x5/2 + x4*x6/2 - x5**2/4 + x5*x6/2 - x6**2/4",
+    "x10 - 4*x11"
+  ],
+  "saturation_factors": [
+    "x7",
+    "x10",
+    "x5 + 1",
+    "x5 - x6",
+    "x6 - 1",
+    "x1**2 + 2*x1 + x2**2 - 2*x2*x6 + x6**2 + 1",
+    "x1**2 - 2*x1*x3 + x2**2 - 2*x2*x4 + x3**2 + x4**2",
+    "x3**2 + 2*x3 + x4**2 - 2*x4*x5 + x5**2 + 1"
+  ],
+  "polynomial": "25*x11 - 1",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[5]/omega:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "s1**2"
+    },
+    {
+      "source": "construction[5]/omega:Circle:result:radius",
+      "operator": ">",
+      "expression": "s1"
+    },
+    {
+      "source": "construction[10]/ef_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(-v_x + v_y)**2"
+    },
+    {
+      "source": "construction[11]/fg_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(v_gx + 1)**2 + (v_gy - v_y)**2"
+    },
+    {
+      "source": "construction[12]/gh_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(-v_gx + v_hx)**2 + (-v_gy + v_hy)**2"
+    },
+    {
+      "source": "construction[13]/he_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(-v_hx - 1)**2 + (-v_hy + v_x)**2"
+    },
+    {
+      "source": "condition[0]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_x + 1"
+    },
+    {
+      "source": "condition[1]:explicit_comparison",
+      "operator": ">",
+      "expression": "-v_x + v_y"
+    },
+    {
+      "source": "condition[2]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_y - 1"
+    },
+    {
+      "source": "condition[4]:Perpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "(-v_x + v_y)**2"
+    },
+    {
+      "source": "condition[4]:Perpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "(v_gx + 1)**2 + (v_gy - v_y)**2"
+    },
+    {
+      "source": "condition[5]:Parallel:argument:line_direction",
+      "operator": "!=",
+      "expression": "(-v_x + v_y)**2"
+    },
+    {
+      "source": "condition[5]:Parallel:argument:line_direction",
+      "operator": "!=",
+      "expression": "(-v_gx + v_hx)**2 + (-v_gy + v_hy)**2"
+    },
+    {
+      "source": "condition[6]:Parallel:argument:line_direction",
+      "operator": "!=",
+      "expression": "(v_gx + 1)**2 + (v_gy - v_y)**2"
+    },
+    {
+      "source": "condition[6]:Parallel:argument:line_direction",
+      "operator": "!=",
+      "expression": "(-v_hx - 1)**2 + (-v_hy + v_x)**2"
+    },
+    {
+      "source": "condition[7]:OnCircle:argument:radius_squared",
+      "operator": ">",
+      "expression": "s1**2"
+    },
+    {
+      "source": "condition[7]:OnCircle:argument:radius",
+      "operator": ">",
+      "expression": "s1"
+    },
+    {
+      "source": "condition[8]:OnCircle:argument:radius_squared",
+      "operator": ">",
+      "expression": "s1**2"
+    },
+    {
+      "source": "condition[8]:OnCircle:argument:radius",
+      "operator": ">",
+      "expression": "s1"
+    },
+    {
+      "source": "condition[9]:explicit_comparison",
+      "operator": ">",
+      "expression": "s4"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t5"
+}

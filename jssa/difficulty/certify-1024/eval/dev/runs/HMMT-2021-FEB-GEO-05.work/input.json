@@ -1,0 +1,109 @@
+{
+  "id": "HMMT-2021-FEB-GEO-05",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(E, F)",
+        "operator": "=",
+        "right": 20
+      },
+      {
+        "left": "Distance(A, E)",
+        "operator": "=",
+        "right": 21
+      },
+      {
+        "left": "Distance(A, F)",
+        "operator": "=",
+        "right": 21
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "OnCircle(C, Gamma)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "t",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "t",
+        "operator": "<",
+        "right": "1"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": "<",
+        "right": "sqrt(341)"
+      },
+      {
+        "left": "Vector(A, E).x * Vector(A, C).y - Vector(A, E).y * Vector(A, C).x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Vector(E, F).x * Vector(E, C).y - Vector(E, F).y * Vector(E, C).x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Vector(F, A).x * Vector(F, C).y - Vector(F, A).y * Vector(F, C).x",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(10, sqrt(341))",
+        "name": "E"
+      },
+      {
+        "expression": "Point(-10, sqrt(341))",
+        "name": "F"
+      },
+      {
+        "expression": "Point(10 * t, sqrt(341) * t)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(-10 * t, sqrt(341) * t)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Circumcircle(A, B, D)",
+        "name": "Gamma"
+      }
+    ],
+    "id": "HMMT-2021-FEB-GEO-05",
+    "target": "Area(A, B, C, D) / Area(A, E, F)",
+    "variables": [
+      "t",
+      "cx",
+      "cy"
+    ]
+  }
+}

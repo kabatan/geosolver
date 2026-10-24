@@ -1,0 +1,117 @@
+{
+  "id": "AIME-2022-I-11",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "OnCircle(P, omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(Q, omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnLine(P, A, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnLine(Q, A, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(Line(D, A), omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(Line(A, B), omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(Line(B, C), omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, P)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(P, Q)",
+        "operator": "=",
+        "right": 9
+      },
+      {
+        "left": "Distance(Q, C)",
+        "operator": "=",
+        "right": 16
+      },
+      {
+        "left": "by",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Dot(Vector(A, B), Vector(A, D))",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(bx, by)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(28, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(28 - bx, -by)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(3, 0)",
+        "name": "P"
+      },
+      {
+        "expression": "Point(12, 0)",
+        "name": "Q"
+      },
+      {
+        "expression": "Point(15 / 2, oy)",
+        "name": "O"
+      },
+      {
+        "expression": "Distance(O, P)",
+        "name": "r"
+      },
+      {
+        "expression": "Circle(O, r)",
+        "name": "omega"
+      }
+    ],
+    "id": "AIME-2022-I-11",
+    "target": "Area(A, B, C, D)",
+    "variables": [
+      "bx",
+      "by",
+      "oy"
+    ]
+  }
+}

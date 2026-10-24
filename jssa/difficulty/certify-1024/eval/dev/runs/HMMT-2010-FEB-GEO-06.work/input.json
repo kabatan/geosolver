@@ -1,0 +1,96 @@
+{
+  "id": "HMMT-2010-FEB-GEO-06",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(P, Q)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(P, R)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(Q, R)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "L",
+        "operator": ">",
+        "right": "2"
+      },
+      {
+        "left": "qx",
+        "operator": ">",
+        "right": "1"
+      },
+      {
+        "left": "qx",
+        "operator": "<",
+        "right": "L - 1"
+      },
+      {
+        "left": "ry",
+        "operator": ">",
+        "right": "1"
+      },
+      {
+        "left": "ry",
+        "operator": "<",
+        "right": "L - 1"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(0, L)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(L, L)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(L, 0)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(1, 1)",
+        "name": "P"
+      },
+      {
+        "expression": "Point(qx, L - 1)",
+        "name": "Q"
+      },
+      {
+        "expression": "Point(L - 1, ry)",
+        "name": "R"
+      },
+      {
+        "expression": "Circle(P, 1)",
+        "name": "omega1"
+      },
+      {
+        "expression": "Circle(Q, 1)",
+        "name": "omega2"
+      },
+      {
+        "expression": "Circle(R, 1)",
+        "name": "omega3"
+      }
+    ],
+    "id": "HMMT-2010-FEB-GEO-06",
+    "target": "L",
+    "variables": [
+      "L",
+      "qx",
+      "ry"
+    ]
+  }
+}

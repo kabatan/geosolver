@@ -1,0 +1,164 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "x13",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_u",
+    "x2": "v_x",
+    "x3": "p1",
+    "x4": "p2",
+    "x5": "p3",
+    "x6": "p4",
+    "x7": "p5",
+    "x8": "p6",
+    "x9": "p7",
+    "x10": "s10",
+    "x11": "s8",
+    "x12": "s9",
+    "x13": "t11"
+  },
+  "target_variable": "x13",
+  "equations": [
+    "-x2**3 + x2**2*x3 + x2 + x3",
+    "x2**2*x4 - 2*x2**2 + x4",
+    "x1*x5 - x2",
+    "x1*x6 - x2",
+    "x1*x7 - 1",
+    "-x2*x5**2 + 2*x2*x5*x6 - x2*x6**2 + x5**2*x8 - 2*x5*x6*x8 - x5*x7**2 + x5*x7 + x6**2*x8 - x6*x7 + x7**2*x8",
+    "-x2*x5*x7 + x2*x6*x7 + x5**2*x7 - x5**2*x9 - x5*x6*x7 + 2*x5*x6*x9 - x6**2*x9 - x7**2*x9 + x7**2",
+    "-x1**2 + x11**2",
+    "-x1**2*x2**2 + 2*x1*x2**2 + x12**2 - x2**2",
+    "x11 - x12",
+    "-x1*x2 - x2*x9 + x8",
+    "x10**2 - x2**2",
+    "x10 - x13"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x1 - 1",
+    "x2",
+    "x5**2 - 2*x5*x6 + x6**2 + x7**2",
+    "x2**2 + 1",
+    "x1**2*x2**2 - 2*x1*x2*x8 + x8**2 + x9**2"
+  ],
+  "polynomial": "x13**2 - x13 - 1",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[3]/D:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_x**2 + 1"
+    },
+    {
+      "source": "construction[3]/D:Reflect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_x**2 + 1"
+    },
+    {
+      "source": "construction[5]/M:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_x**2"
+    },
+    {
+      "source": "construction[5]/M:FootOfPerpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_x**2"
+    },
+    {
+      "source": "construction[8]/Np:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "p5**2 + (-p3 + p4)**2"
+    },
+    {
+      "source": "construction[8]/Np:FootOfPerpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "p5**2 + (-p3 + p4)**2"
+    },
+    {
+      "source": "condition[0]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_x"
+    },
+    {
+      "source": "condition[1]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_u"
+    },
+    {
+      "source": "condition[2]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_u - 1"
+    },
+    {
+      "source": "condition[3]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_x**2"
+    },
+    {
+      "source": "condition[3]:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_x**2"
+    },
+    {
+      "source": "condition[3]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "1"
+    },
+    {
+      "source": "condition[3]:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "1"
+    },
+    {
+      "source": "condition[4]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "p7**2 + (p6 - v_u*v_x)**2"
+    },
+    {
+      "source": "condition[4]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_x**2 + 1"
+    },
+    {
+      "source": "condition[4]:Parallel:argument:line_direction",
+      "operator": "!=",
+      "expression": "p7**2 + (p6 - v_u*v_x)**2"
+    },
+    {
+      "source": "condition[4]:Parallel:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_x**2 + 1"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t11"
+}

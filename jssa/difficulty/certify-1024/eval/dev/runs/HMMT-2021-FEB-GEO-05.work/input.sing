@@ -1,0 +1,162 @@
+LIB "elim.lib";
+option(redSB);
+system("--ticks-per-sec",1000);
+ring R=0,(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11),dp;
+short=0;
+ideal F=(x5^2 - 341)/(1),
+(-x3*x5^2 - 100*x3 + 2*x4*x5)/(2),
+(x5^2 - x6^2 + 100)/(1),
+(x6 - 21)/(1),
+(x1^2 - 20*x1*x3 + x2^2 - 2*x2*x3*x5 + x3^2*x5^2 + 100*x3^2 - x7^2)/(1),
+(x7 - 3)/(1),
+(x1^2 + 20*x1*x3 + x2^2 - 2*x2*x3*x5 + x3^2*x5^2 + 100*x3^2 - x8^2)/(1),
+(x8 - 4)/(1),
+(-x1^2 - x2^2 + 2*x2*x4)/(2),
+(-100*x2^2*x3^2 + x9^2)/(1),
+(-x10^2 + 100*x5^2)/(100),
+(-x10*x11 + x9)/(1);
+ideal J=F;
+int ii;
+print("EVENT saturation begin");
+int clock0=rtimer;
+J=sat(J,ideal((x4)/(1)));
+print("EVENT saturation factor 1");
+J=sat(J,ideal((x5)/(1)));
+print("EVENT saturation factor 2");
+J=sat(J,ideal((-x2 + x5)/(1)));
+print("EVENT saturation factor 3");
+J=sat(J,ideal((x10)/(1)));
+print("EVENT saturation factor 4");
+J=sat(J,ideal((x2)/(1)));
+print("EVENT saturation factor 5");
+J=sat(J,ideal((x3)/(1)));
+print("EVENT saturation factor 6");
+J=sat(J,ideal((x3 - 1)/(1)));
+print("EVENT saturation factor 7");
+J=sat(J,ideal((x1*x5 + 10*x2)/(1)));
+print("EVENT saturation factor 8");
+J=sat(J,ideal((x1*x5 - 10*x2)/(1)));
+print("EVENT saturation factor 9");
+print("METRIC saturation_ms "+string(rtimer-clock0));
+print("EVENT saturation end");
+print("BLOCK J BEGIN");
+for(ii=1;ii<=size(J);ii++){print(J[ii]);}
+print("BLOCK J END");
+print("EVENT power begin");
+clock0=rtimer;
+ideal G=std(J);
+print("METRIC power_basis_ms "+string(rtimer-clock0));
+print("METRIC power_basis_size "+string(size(G)));
+poly unitnf=reduce(1,G);
+print("METRIC unit_ideal "+string(unitnf==0));
+print("BLOCK G BEGIN");
+for(ii=1;ii<=size(G);ii++){print(G[ii]);}
+print("BLOCK G END");
+poly p=(400*x11 - 49)/(1);
+int firstm=0;
+poly rem;
+int mm;
+clock0=rtimer;
+rem=reduce(p^1,G);
+print("METRIC nf_1_zero "+string(rem==0));
+print("BLOCK NF1 BEGIN");
+print(rem);
+print("BLOCK NF1 END");
+if(rem==0 && firstm==0){firstm=1;}
+rem=reduce(p^2,G);
+print("METRIC nf_2_zero "+string(rem==0));
+print("BLOCK NF2 BEGIN");
+print(rem);
+print("BLOCK NF2 END");
+if(rem==0 && firstm==0){firstm=2;}
+rem=reduce(p^3,G);
+print("METRIC nf_3_zero "+string(rem==0));
+print("BLOCK NF3 BEGIN");
+print(rem);
+print("BLOCK NF3 END");
+if(rem==0 && firstm==0){firstm=3;}
+rem=reduce(p^4,G);
+print("METRIC nf_4_zero "+string(rem==0));
+print("BLOCK NF4 BEGIN");
+print(rem);
+print("BLOCK NF4 END");
+if(rem==0 && firstm==0){firstm=4;}
+print("METRIC power_nf_ms "+string(rtimer-clock0));
+print("EVENT power end");
+ring S=0,(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,yy),dp;
+short=0;
+ideal J=imap(R,J);
+poly p=imap(R,p);
+ideal I=J,1-yy*p;
+print("EVENT rabinowitsch begin");
+clock0=rtimer;
+ideal G=std(I);
+print("METRIC rab_basis_ms "+string(rtimer-clock0));
+print("METRIC rab_basis_size "+string(size(G)));
+clock0=rtimer;
+poly rem=reduce(1,G);
+int rb=(rem==0);
+print("METRIC rab_unit "+string(rb));
+print("METRIC rab_nf_ms "+string(rtimer-clock0));
+print("BLOCK RAB_G BEGIN");
+for(ii=1;ii<=size(G);ii++){print(G[ii]);}
+print("BLOCK RAB_G END");
+print("BLOCK RAB_NF BEGIN");
+print(rem);
+print("BLOCK RAB_NF END");
+print("EVENT rabinowitsch end");
+setring R;
+int powm=firstm;
+setring S;
+int rabok=rb;
+if(powm>0 || rabok){
+ring C=0,(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,z1,z2,z3,z4,z5,z6,z7,z8,z9,yy),dp;
+short=0;
+ideal K=(x5^2 - 341)/(1),
+(-x3*x5^2 - 100*x3 + 2*x4*x5)/(2),
+(x5^2 - x6^2 + 100)/(1),
+(x6 - 21)/(1),
+(x1^2 - 20*x1*x3 + x2^2 - 2*x2*x3*x5 + x3^2*x5^2 + 100*x3^2 - x7^2)/(1),
+(x7 - 3)/(1),
+(x1^2 + 20*x1*x3 + x2^2 - 2*x2*x3*x5 + x3^2*x5^2 + 100*x3^2 - x8^2)/(1),
+(x8 - 4)/(1),
+(-x1^2 - x2^2 + 2*x2*x4)/(2),
+(-100*x2^2*x3^2 + x9^2)/(1),
+(-x10^2 + 100*x5^2)/(100),
+(-x10*x11 + x9)/(1),
+(-x4*z1 + 1)/(1),
+(-x5*z2 + 1)/(1),
+(x2*z3 - x5*z3 + 1)/(1),
+(-x10*z4 + 1)/(1),
+(-x2*z5 + 1)/(1),
+(-x3*z6 + 1)/(1),
+(-x3*z7 + z7 + 1)/(1),
+(-x1*x5*z8 - 10*x2*z8 + 1)/(1),
+(-x1*x5*z9 + 10*x2*z9 + 1)/(1);
+poly p=imap(R,p);
+matrix A;
+int jj;
+if(powm>0){
+print("EVENT power_certificate begin");
+clock0=rtimer;
+A=lift(K,ideal(p^powm));
+print("BLOCK POWER_COEFF BEGIN");
+for(jj=1;jj<=nrows(A);jj++){print(A[jj,1]);}
+print("BLOCK POWER_COEFF END");
+print("METRIC power_certificate_ms "+string(rtimer-clock0));
+print("EVENT power_certificate end");
+}
+if(rabok){
+print("EVENT rab_certificate begin");
+clock0=rtimer;
+ideal L=K,1-yy*p;
+A=lift(L,ideal(1));
+print("BLOCK RAB_COEFF BEGIN");
+for(jj=1;jj<=nrows(A);jj++){print(A[jj,1]);}
+print("BLOCK RAB_COEFF END");
+print("METRIC rab_certificate_ms "+string(rtimer-clock0));
+print("EVENT rab_certificate end");
+}
+}
+print("EVENT finished end");
+quit;

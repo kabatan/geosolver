@@ -1,0 +1,98 @@
+{
+  "id": "HMMT-2017-FEB-GEO-09",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(X, B)",
+        "operator": "=",
+        "right": "Distance(X, C)"
+      },
+      {
+        "left": "Distance(X, Midpoint(B, C))",
+        "operator": "=",
+        "right": "Distance(B, C) / 2"
+      },
+      {
+        "left": "Distance(Y, C)",
+        "operator": "=",
+        "right": "Distance(Y, A)"
+      },
+      {
+        "left": "Distance(Y, Midpoint(C, A))",
+        "operator": "=",
+        "right": "Distance(C, A) / 2"
+      },
+      {
+        "left": "Distance(Z, A)",
+        "operator": "=",
+        "right": "Distance(Z, B)"
+      },
+      {
+        "left": "Distance(Z, Midpoint(A, B))",
+        "operator": "=",
+        "right": "Distance(A, B) / 2"
+      },
+      {
+        "left": "Distance(A, X)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(B, Y)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Distance(C, Z)",
+        "operator": "=",
+        "right": 8
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C])"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(b, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Point((b + cx + cy) / 2, (b + cy - cx) / 2)",
+        "name": "X"
+      },
+      {
+        "expression": "Point((cx - cy) / 2, (cx + cy) / 2)",
+        "name": "Y"
+      },
+      {
+        "expression": "Point(b / 2, -b / 2)",
+        "name": "Z"
+      }
+    ],
+    "id": "HMMT-2017-FEB-GEO-09",
+    "target": "Area(X, Y, Z)",
+    "variables": [
+      "b",
+      "cx",
+      "cy"
+    ]
+  }
+}

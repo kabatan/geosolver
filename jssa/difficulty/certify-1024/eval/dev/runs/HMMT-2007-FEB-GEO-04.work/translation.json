@@ -1,0 +1,129 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_u",
+    "x2": "v_v",
+    "x3": "s1",
+    "x4": "s2",
+    "x5": "s3",
+    "x6": "s4",
+    "x7": "t5"
+  },
+  "target_variable": "x7",
+  "equations": [
+    "x1**2*x2**2 - 169*x1**2*x2/12 - 169*x1*x2**2/12 + 169*x1*x2",
+    "-x1**2 + 238*x1*x2/169 - x2**2 + x3**2",
+    "x3 - 7",
+    "-x1**2 + x4**2",
+    "-x2**2 + x5**2",
+    "-3600*x1**2*x2**2/28561 + x6**2",
+    "x4 + x5 - x7"
+  ],
+  "saturation_factors": [
+    "x4",
+    "x5",
+    "x6",
+    "x1",
+    "x2",
+    "x1**2 - 238*x1*x2/169 + x2**2",
+    "x1*x2 - 169*x1/24 - 169*x2/24"
+  ],
+  "polynomial": "x7 - 17",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[2]/omega:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "25"
+    },
+    {
+      "source": "construction[2]/omega:Circle:result:radius",
+      "operator": ">",
+      "expression": "5"
+    },
+    {
+      "source": "condition[1]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(-5*v_u/13 - 5*v_v/13)**2 + (12*v_u/13 - 12*v_v/13)**2"
+    },
+    {
+      "source": "condition[1]:IsTangent:argument:line_direction",
+      "operator": "!=",
+      "expression": "(-5*v_u/13 - 5*v_v/13)**2 + (12*v_u/13 - 12*v_v/13)**2"
+    },
+    {
+      "source": "condition[1]:IsTangent:argument:radius_squared",
+      "operator": ">",
+      "expression": "25"
+    },
+    {
+      "source": "condition[1]:IsTangent:argument:radius",
+      "operator": ">",
+      "expression": "5"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_u"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_v"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": ">",
+      "expression": "s2"
+    },
+    {
+      "source": "condition[6]:explicit_comparison",
+      "operator": ">",
+      "expression": "s3"
+    },
+    {
+      "source": "condition[7]:explicit_comparison",
+      "operator": ">",
+      "expression": "s4"
+    },
+    {
+      "source": "condition[8]:explicit_comparison",
+      "operator": "!=",
+      "expression": "s4"
+    },
+    {
+      "source": "condition[9]:explicit_comparison",
+      "operator": "<",
+      "expression": "(-12*v_u*(-5*v_u/13 - 5*v_v/13)/13 - 5*v_u*(12*v_u/13 - 12*v_v/13)/13)*(-5*v_u*(12*v_u/13 - 12*v_v/13)/13 - (-5*v_u/13 - 5*v_v/13)*(12*v_u/13 - 13))"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t5"
+}

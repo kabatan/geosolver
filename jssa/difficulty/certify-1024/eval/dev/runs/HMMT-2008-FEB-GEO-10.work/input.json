@@ -1,0 +1,105 @@
+{
+  "id": "HMMT-2008-FEB-GEO-10",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 2009
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 2008
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 2007
+      },
+      {
+        "left": "OnCircle(D, omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(D, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(C, A, E)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(B, A, F)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Perpendicular(Line(B, C), Line(O, D))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "ay",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(D, G)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(2007, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(ax, ay)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(1003, 0)",
+        "name": "D"
+      },
+      {
+        "expression": "Excircle(A, B, C, vertex='A')",
+        "name": "omega"
+      },
+      {
+        "expression": "Center(omega)",
+        "name": "O"
+      },
+      {
+        "expression": "ContactPoint(omega, Line(A, C))",
+        "name": "E"
+      },
+      {
+        "expression": "ContactPoint(omega, Line(A, B))",
+        "name": "F"
+      },
+      {
+        "expression": "PerpendicularLine(Line(A, D), O)",
+        "name": "ell"
+      },
+      {
+        "expression": "Intersect(ell, Line(E, F))",
+        "name": "G"
+      }
+    ],
+    "id": "HMMT-2008-FEB-GEO-10",
+    "target": "Distance(D, G)",
+    "variables": [
+      "ax",
+      "ay"
+    ]
+  }
+}

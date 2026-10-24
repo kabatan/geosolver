@@ -1,0 +1,81 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "z1",
+    "z2",
+    "z3",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_c",
+    "x2": "v_e",
+    "x3": "v_h",
+    "x4": "p1",
+    "x5": "p2",
+    "x6": "s3",
+    "x7": "s4",
+    "x8": "s5",
+    "x9": "s6",
+    "x10": "t7"
+  },
+  "target_variable": "x10",
+  "equations": [
+    "-x1**3/2 + x1**2*x2 + x1**2*x4 - x1*x2**2/2 - 2*x1*x2*x4 - x1*x3**2 + x2**2*x4 + x3**2*x4",
+    "-x1**2*x3/2 + x1**2*x5 + x1*x2*x3/2 - 2*x1*x2*x5 + x2**2*x5 + x3**2*x5",
+    "-x2**2 + x6**2",
+    "x6 - 5",
+    "-x1**2 + 2*x1*x2 - x2**2 + x7**2",
+    "x7 - 9",
+    "-x1**2*x3**2/4 + x8**2",
+    "x8 - 84",
+    "x2**2 - 2*x2*x4 + x4**2 + x5**2 - x9**2",
+    "-x10 + x9"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x3",
+    "x1**2 - 2*x1*x2 + x2**2 + x3**2"
+  ],
+  "polynomial": "5125*x10**4 - 680985*x10**2 + 21734244",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[5]/F:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_h**2 + (v_c - v_e)**2"
+    },
+    {
+      "source": "construction[5]/F:FootOfPerpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_h**2 + (v_c - v_e)**2"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_c"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_h"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t7"
+}

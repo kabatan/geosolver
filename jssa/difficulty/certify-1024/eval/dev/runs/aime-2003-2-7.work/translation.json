@@ -1,0 +1,98 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_x",
+    "x2": "v_y",
+    "x3": "p1",
+    "x4": "p2",
+    "x5": "s3",
+    "x6": "s4",
+    "x7": "s5",
+    "x8": "t6"
+  },
+  "target_variable": "x8",
+  "equations": [
+    "-x1**2/2 + x1*x3 + x2**2/2",
+    "-x1**2/2 + x2**2/2 + x2*x4",
+    "x1**2 - 2*x1*x3 + x3**2 - x5**2",
+    "x5 - 25/2",
+    "x1**2 + x4**2 - x6**2",
+    "x6 - 25",
+    "-4*x1**2*x2**2 + x7**2",
+    "x7 - x8"
+  ],
+  "saturation_factors": [
+    "-x1 + x3",
+    "x1",
+    "x2",
+    "x1**2 + x4**2"
+  ],
+  "polynomial": "x8 - 400",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[4]/circumcircle_abd:Circumcircle:triangle",
+      "operator": "!=",
+      "expression": "2*v_x*v_y"
+    },
+    {
+      "source": "construction[4]/circumcircle_abd:Circumcircle:result:radius_squared",
+      "operator": ">",
+      "expression": "(-p1 + v_x)**2"
+    },
+    {
+      "source": "construction[5]/circumcircle_acd:Circumcircle:triangle",
+      "operator": "!=",
+      "expression": "2*v_x*v_y"
+    },
+    {
+      "source": "construction[5]/circumcircle_acd:Circumcircle:result:radius_squared",
+      "operator": ">",
+      "expression": "p2**2 + v_x**2"
+    },
+    {
+      "source": "condition[0]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_x"
+    },
+    {
+      "source": "condition[1]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_y"
+    },
+    {
+      "source": "condition[2]:Radius:argument:radius_squared",
+      "operator": ">",
+      "expression": "(-p1 + v_x)**2"
+    },
+    {
+      "source": "condition[3]:Radius:argument:radius_squared",
+      "operator": ">",
+      "expression": "p2**2 + v_x**2"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t6"
+}

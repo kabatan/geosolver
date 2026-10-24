@@ -1,0 +1,88 @@
+{
+  "id": "HMMT-2016-FEB-GEO-06",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 8
+      },
+      {
+        "left": "Angle(B, A, C)",
+        "operator": "=",
+        "right": "pi / 3"
+      },
+      {
+        "left": "Area(X, U, V)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(5, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(4, 4 * sqrt(3))",
+        "name": "C"
+      },
+      {
+        "expression": "Incenter(A, B, C)",
+        "name": "I"
+      },
+      {
+        "expression": "Incircle(A, B, C)",
+        "name": "gamma"
+      },
+      {
+        "expression": "Circumcircle(A, B, C)",
+        "name": "Gamma"
+      },
+      {
+        "expression": "Midpoint(B, C)",
+        "name": "M"
+      },
+      {
+        "expression": "Midpoint(C, A)",
+        "name": "N"
+      },
+      {
+        "expression": "Midpoint(A, B)",
+        "name": "P"
+      },
+      {
+        "expression": "ContactPoint(gamma, Line(C, A))",
+        "name": "E"
+      },
+      {
+        "expression": "ContactPoint(gamma, Line(A, B))",
+        "name": "F"
+      },
+      {
+        "expression": "Intersect(Line(E, F), Line(M, N))",
+        "name": "U"
+      },
+      {
+        "expression": "Intersect(Line(E, F), Line(M, P))",
+        "name": "V"
+      },
+      {
+        "expression": "Point(-3 / 2, 3 * sqrt(3) / 2)",
+        "name": "X"
+      }
+    ],
+    "id": "HMMT-2016-FEB-GEO-06",
+    "target": "Area(X, U, V)",
+    "variables": []
+  }
+}

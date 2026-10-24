@@ -1,0 +1,102 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "z1",
+    "z2",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_r",
+    "x2": "p1",
+    "x3": "p2",
+    "x4": "p3",
+    "x5": "p4",
+    "x6": "s5",
+    "x7": "s6",
+    "x8": "s7",
+    "x9": "t8"
+  },
+  "target_variable": "x9",
+  "equations": [
+    "x1**2*x2 - 7*x1**2/4 - 25*x1/16 + 25*x2/16",
+    "-x1**3 + x1**2*x3 - 5*x1**2/4 + 5*x1/8 + 25*x3/16",
+    "x1**2*x4 + 7*x1**2/4 + 25*x1/16 + 25*x4/16",
+    "-x1**3 + x1**2*x5 - 5*x1**2/4 + 5*x1/8 + 25*x5/16",
+    "-4*x1**2 + x6**2",
+    "-2*x1 + x6",
+    "2*x1**2 - 2*x1*x2 - 2*x1*x3 + x2**2 + x3**2 - x7**2",
+    "-x1 + x7",
+    "2*x1**2 + 2*x1*x4 - 2*x1*x5 + x4**2 + x5**2 - x8**2",
+    "-x1 + x8",
+    "-x1 + x9"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x1**2 + 25/16"
+  ],
+  "polynomial": "7*x9 - 3",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[6]/omega1:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "v_r**2"
+    },
+    {
+      "source": "construction[6]/omega1:Circle:result:radius",
+      "operator": ">",
+      "expression": "v_r"
+    },
+    {
+      "source": "construction[7]/omega2:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "v_r**2"
+    },
+    {
+      "source": "construction[7]/omega2:Circle:result:radius",
+      "operator": ">",
+      "expression": "v_r"
+    },
+    {
+      "source": "construction[8]/T1:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "4*v_r**2 + 25/4"
+    },
+    {
+      "source": "construction[8]/T1:FootOfPerpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "4*v_r**2 + 25/4"
+    },
+    {
+      "source": "construction[9]/T2:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "4*v_r**2 + 25/4"
+    },
+    {
+      "source": "construction[9]/T2:FootOfPerpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "4*v_r**2 + 25/4"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_r"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t8"
+}

@@ -1,0 +1,105 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_t",
+    "x2": "v_x",
+    "x3": "v_y",
+    "x4": "p1",
+    "x5": "p3",
+    "x6": "p4",
+    "x7": "s2",
+    "x8": "s5",
+    "x9": "s6",
+    "x10": "s7",
+    "x11": "t8"
+  },
+  "target_variable": "x11",
+  "equations": [
+    "-x2**2/2 + 12*x2 - x3**2/2 + x3*x4",
+    "-x2**2 + 24*x2 - x3**2 + x7**2 - 144",
+    "-x1*x2*x7 + 12*x1*x7 - 12*x3**2 + x5*x7**2",
+    "-x1*x3*x7 + 12*x2*x3 - 144*x3 + x6*x7**2",
+    "-x2**2/4 - 12*x2 - x3**2/4 + x8**2 - 144",
+    "x8 - 18",
+    "x7 - 27",
+    "x4*x6 - x5**2/2 + 12*x5 - x6**2/2",
+    "x2**2 - 2*x2*x5 + x3**2 - 2*x3*x6 + x5**2 + x6**2 - x9**2",
+    "-x10**2/144 + x6**2",
+    "x10 - x11"
+  ],
+  "saturation_factors": [
+    "x7",
+    "x9",
+    "x3",
+    "x4**2 + 144",
+    "x2**2 - 24*x2 + x3**2 + 144"
+  ],
+  "polynomial": "x11**2 - 3520",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[5]/ce_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_y**2 + (12 - v_x)**2"
+    },
+    {
+      "source": "construction[6]/circumcircle:Circumcircle:triangle",
+      "operator": "!=",
+      "expression": "24*v_y"
+    },
+    {
+      "source": "construction[6]/circumcircle:Circumcircle:result:radius_squared",
+      "operator": ">",
+      "expression": "p1**2 + 144"
+    },
+    {
+      "source": "construction[7]/F:PointOnLine:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_y**2 + (12 - v_x)**2"
+    },
+    {
+      "source": "condition[0]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_y"
+    },
+    {
+      "source": "condition[3]:OnCircle:argument:radius_squared",
+      "operator": ">",
+      "expression": "p1**2 + 144"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "s6"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t8"
+}

@@ -1,0 +1,339 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "x13",
+    "x14",
+    "x15",
+    "x16",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "z10",
+    "z11",
+    "z12",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_s",
+    "x2": "a1",
+    "x3": "a2",
+    "x4": "a3",
+    "x5": "a4",
+    "x6": "p5",
+    "x7": "p6",
+    "x8": "p7",
+    "x9": "p8",
+    "x10": "s10",
+    "x11": "s11",
+    "x12": "s12",
+    "x13": "s13",
+    "x14": "s14",
+    "x15": "s9",
+    "x16": "t15"
+  },
+  "target_variable": "x16",
+  "equations": [
+    "x2**2 + x3**2 - 1",
+    "x4**2 + x5**2 - 1",
+    "x1*x2*x5 - x1*x3*x4 + x1*x5 - x5*x6",
+    "x1*x2**2*x5 - x1*x2*x3*x4 + x1*x2*x4*x5 + x1*x2*x5 - x1*x3*x4**2 - x2*x5*x7 + x3*x4*x7",
+    "x1*x2*x3*x5 + x1*x2*x5**2 - x1*x3**2*x4 - x1*x3*x4*x5 + x1*x3*x5 - x2*x5*x8 + x3*x4*x8",
+    "x1*x2*x5 - x1*x3*x4 + x3*x9",
+    "-x1**2 + x15**2",
+    "x1**2*x2**2 + x1**2*x3**2 - x10**2",
+    "x10 - x15",
+    "x1**2*x4**2 + x1**2*x5**2 - x11**2",
+    "x10 - x11",
+    "x11 - x15",
+    "-x12**2 + x6**2 - 2*x6*x7 + x7**2 + x8**2",
+    "-x13**2 + x7**2 - 2*x7*x9 + x8**2 + x9**2",
+    "-x14**2 + x6**2 - 2*x6*x9 + x9**2",
+    "x12**2 + x13**2 + x14**2 - 187600",
+    "x12**2*x13**2 + x12**2*x14**2 + x13**2*x14**2 - 11088000000",
+    "x12**2*x13**2*x14**2 - 207360000000000",
+    "x15 - x16"
+  ],
+  "saturation_factors": [
+    "x3",
+    "x5",
+    "x1",
+    "x2**2 + 2*x2 + x3**2 + 1",
+    "x2**2 + 2*x2*x4 + 2*x2 + x3**2 + 2*x3*x5 + x4**2 + 2*x4 + x5**2 + 1",
+    "x2**2 + 2*x2*x4 + x3**2 + 2*x3*x5 + x4**2 + x5**2",
+    "x2**2 + 2*x2*x4 - 2*x2 + x3**2 + 2*x3*x5 + x4**2 - 2*x4 + x5**2 + 1",
+    "x2**2 + x3**2",
+    "x2**2 - 2*x2*x4 + 2*x2 + x3**2 - 2*x3*x5 + x4**2 - 2*x4 + x5**2 + 1",
+    "x2*x5 - x3*x4",
+    "x4**2 + x5**2",
+    "x4**2 - 2*x4 + x5**2 + 1"
+  ],
+  "polynomial": "x16 - 80",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "z10",
+    "z11",
+    "z12"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[6]/U:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_s**2"
+    },
+    {
+      "source": "construction[6]/U:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "a3**2*v_s**2 + a4**2*v_s**2"
+    },
+    {
+      "source": "construction[6]/U:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_s**2"
+    },
+    {
+      "source": "construction[6]/U:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "a3**2*v_s**2 + a4**2*v_s**2"
+    },
+    {
+      "source": "construction[7]/V:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "a3**2*v_s**2 + a4**2*v_s**2"
+    },
+    {
+      "source": "construction[7]/V:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "a1**2*v_s**2 + a2**2*v_s**2"
+    },
+    {
+      "source": "construction[7]/V:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "a3**2*v_s**2 + a4**2*v_s**2"
+    },
+    {
+      "source": "construction[7]/V:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "a1**2*v_s**2 + a2**2*v_s**2"
+    },
+    {
+      "source": "construction[8]/W:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "a1**2*v_s**2 + a2**2*v_s**2"
+    },
+    {
+      "source": "construction[8]/W:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_s**2"
+    },
+    {
+      "source": "construction[8]/W:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "a1**2*v_s**2 + a2**2*v_s**2"
+    },
+    {
+      "source": "construction[8]/W:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_s**2"
+    },
+    {
+      "source": "condition[5]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_s**2"
+    },
+    {
+      "source": "condition[5]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_s**2"
+    },
+    {
+      "source": "condition[5]:Parallel:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_s**2"
+    },
+    {
+      "source": "condition[5]:Parallel:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_s**2"
+    },
+    {
+      "source": "condition[6]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "a1**2*v_s**2 + a2**2*v_s**2"
+    },
+    {
+      "source": "condition[6]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "a1**2*v_s**2 + a2**2*v_s**2"
+    },
+    {
+      "source": "condition[6]:Parallel:argument:line_direction",
+      "operator": "!=",
+      "expression": "a1**2*v_s**2 + a2**2*v_s**2"
+    },
+    {
+      "source": "condition[6]:Parallel:argument:line_direction",
+      "operator": "!=",
+      "expression": "a1**2*v_s**2 + a2**2*v_s**2"
+    },
+    {
+      "source": "condition[7]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "a3**2*v_s**2 + a4**2*v_s**2"
+    },
+    {
+      "source": "condition[7]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "a3**2*v_s**2 + a4**2*v_s**2"
+    },
+    {
+      "source": "condition[7]:Parallel:argument:line_direction",
+      "operator": "!=",
+      "expression": "a3**2*v_s**2 + a4**2*v_s**2"
+    },
+    {
+      "source": "condition[7]:Parallel:argument:line_direction",
+      "operator": "!=",
+      "expression": "a3**2*v_s**2 + a4**2*v_s**2"
+    },
+    {
+      "source": "condition[11]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_s"
+    },
+    {
+      "source": "condition[12]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_s**2"
+    },
+    {
+      "source": "condition[12]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "a2**2*v_s**2 + (-a1*v_s - v_s)**2"
+    },
+    {
+      "source": "condition[12]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "(-a2*v_s - a4*v_s)**2 + (-a1*v_s - a3*v_s - v_s)**2"
+    },
+    {
+      "source": "condition[12]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "(-a1*v_s - a3*v_s)**2 + (-a2*v_s - a4*v_s)**2"
+    },
+    {
+      "source": "condition[12]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "a3**2*v_s**2 + a4**2*v_s**2"
+    },
+    {
+      "source": "condition[12]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "a1**2*v_s**2 + a2**2*v_s**2"
+    },
+    {
+      "source": "condition[12]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "(-a1*v_s - a3*v_s)**2 + (-a2*v_s - a4*v_s)**2"
+    },
+    {
+      "source": "condition[12]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "(-a2*v_s - a4*v_s)**2 + (-a1*v_s - a3*v_s + v_s)**2"
+    },
+    {
+      "source": "condition[12]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "a4**2*v_s**2 + (-a3*v_s + v_s)**2"
+    },
+    {
+      "source": "condition[12]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "a3**2*v_s**2 + a4**2*v_s**2"
+    },
+    {
+      "source": "condition[12]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "a4**2*v_s**2 + (-a3*v_s + v_s)**2"
+    },
+    {
+      "source": "condition[12]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "(a2*v_s - a4*v_s)**2 + (a1*v_s - a3*v_s + v_s)**2"
+    },
+    {
+      "source": "condition[12]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_s**2"
+    },
+    {
+      "source": "condition[12]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "a2**2*v_s**2 + (a1*v_s + v_s)**2"
+    },
+    {
+      "source": "condition[12]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "a1**2*v_s**2 + a2**2*v_s**2"
+    },
+    {
+      "source": "condition[12]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "a2*v_s**2"
+    },
+    {
+      "source": "condition[12]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "a1*a4*v_s**2 - a2*a3*v_s**2"
+    },
+    {
+      "source": "condition[12]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "a4*v_s**2"
+    },
+    {
+      "source": "condition[12]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "a2*v_s**2"
+    },
+    {
+      "source": "condition[12]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "a1*a4*v_s**2 - a2*a3*v_s**2"
+    },
+    {
+      "source": "condition[12]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "a4*v_s**2"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t15"
+}

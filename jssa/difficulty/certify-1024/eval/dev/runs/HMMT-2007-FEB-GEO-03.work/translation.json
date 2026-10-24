@@ -1,0 +1,103 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "z1",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "p2",
+    "x2": "p3",
+    "x3": "s1",
+    "x4": "s4",
+    "x5": "s5",
+    "x6": "s6",
+    "x7": "t7"
+  },
+  "target_variable": "x7",
+  "equations": [
+    "x3**2 - 3",
+    "x1*x3**2 + 9*x1 + 18",
+    "x2*x3**2 + 9*x2 - 6*x3",
+    "x3**2 - 4*x4**2 + 1",
+    "x4 - 1",
+    "x3**2 - x5**2 + 1",
+    "x5 - 2",
+    "x1**2*x3**2 + 2*x1*x2*x3 - 2*x1*x3**2 + x2**2 - 2*x2*x3 + x3**2 - x6**2",
+    "x6 - x7"
+  ],
+  "saturation_factors": [
+    "x3**2 + 9"
+  ],
+  "polynomial": "x7**2 - 12",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[3]/omega1:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "1"
+    },
+    {
+      "source": "construction[3]/omega1:Circle:result:radius",
+      "operator": ">",
+      "expression": "1"
+    },
+    {
+      "source": "construction[4]/omega2:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "1"
+    },
+    {
+      "source": "construction[4]/omega2:Circle:result:radius",
+      "operator": ">",
+      "expression": "1"
+    },
+    {
+      "source": "construction[5]/omega3:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "1"
+    },
+    {
+      "source": "construction[5]/omega3:Circle:result:radius",
+      "operator": ">",
+      "expression": "1"
+    },
+    {
+      "source": "construction[11]/R:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "s1**2/4 + 9/4"
+    },
+    {
+      "source": "construction[11]/R:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "s1**2/4 + 9/4"
+    },
+    {
+      "source": "construction[11]/R:Intersect:argument:radius_squared",
+      "operator": ">",
+      "expression": "1"
+    },
+    {
+      "source": "construction[11]/R:Intersect:argument:radius",
+      "operator": ">",
+      "expression": "1"
+    },
+    {
+      "source": "construction[11]/R:Intersect:exclude",
+      "operator": "!=",
+      "expression": "9*s1**2/(4*(s1**2/4 + 9/4)**2) + 81/(4*(s1**2/4 + 9/4)**2)"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t7"
+}

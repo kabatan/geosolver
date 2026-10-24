@@ -1,0 +1,163 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "x13",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_x",
+    "x2": "v_y",
+    "x3": "v_z",
+    "x4": "k10",
+    "x5": "k11",
+    "x6": "k6",
+    "x7": "p3",
+    "x8": "s1",
+    "x9": "s12",
+    "x10": "s13",
+    "x11": "s2",
+    "x12": "s7",
+    "x13": "t14"
+  },
+  "target_variable": "x13",
+  "equations": [
+    "-x2**2 - x3**2 + x8**2",
+    "-x1**2 + 2*x1*x2 + x11**2 - x2**2 - x3**2",
+    "-x1*x8 + x11*x7 + x7*x8",
+    "x6**2 - 3/4",
+    "-x1**2*x3**2 + x12**2",
+    "x1*x2*x6 - x12/2 - x2**2*x6 - x3**2*x6",
+    "x4**2 - 1/2",
+    "x5**2 - 1/2",
+    "x1*x2*x5 + x12*x4",
+    "x2**2 - 2*x2*x7 + x3**2 + x7**2 - x9**2",
+    "x9 - 24",
+    "-x1**2*x3**2/4 + x10**2",
+    "x10 - x13"
+  ],
+  "saturation_factors": [
+    "x11 + x8",
+    "x1",
+    "x3",
+    "x1**2 - 2*x1*x2 + x2**2 + x3**2",
+    "x2**2 + x3**2",
+    "x1**2*x8**2 - 2*x1*x11*x2*x8 - 2*x1*x2*x8**2 + x11**2*x2**2 + x11**2*x3**2 + 2*x11*x2**2*x8 + 2*x11*x3**2*x8 + x2**2*x8**2 + x3**2*x8**2"
+  ],
+  "polynomial": "x13**2 - 432*x13 + 31104",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[3]/bc_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_x**2"
+    },
+    {
+      "source": "construction[4]/a_angle_bisector:AngleBisector:first_ray",
+      "operator": "!=",
+      "expression": "v_y**2 + v_z**2"
+    },
+    {
+      "source": "construction[4]/a_angle_bisector:AngleBisector:second_ray",
+      "operator": "!=",
+      "expression": "v_z**2 + (v_x - v_y)**2"
+    },
+    {
+      "source": "construction[4]/a_angle_bisector:AngleBisector:result:line_direction",
+      "operator": "!=",
+      "expression": "(-s1*v_z - s2*v_z)**2 + (s1*(v_x - v_y) - s2*v_y)**2"
+    },
+    {
+      "source": "construction[5]/T:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "(-s1*v_z - s2*v_z)**2 + (s1*(v_x - v_y) - s2*v_y)**2"
+    },
+    {
+      "source": "construction[5]/T:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_x**2"
+    },
+    {
+      "source": "condition[0]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_x"
+    },
+    {
+      "source": "condition[1]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_z"
+    },
+    {
+      "source": "condition[2]:Angle:first_ray",
+      "operator": "!=",
+      "expression": "v_y**2 + v_z**2"
+    },
+    {
+      "source": "condition[2]:Angle:second_ray",
+      "operator": "!=",
+      "expression": "v_z**2 + (v_x - v_y)**2"
+    },
+    {
+      "source": "condition[3]:Angle:first_ray",
+      "operator": "!=",
+      "expression": "v_y**2 + v_z**2"
+    },
+    {
+      "source": "condition[3]:Angle:second_ray",
+      "operator": "!=",
+      "expression": "v_x**2"
+    },
+    {
+      "source": "condition[4]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "v_x**2"
+    }
+  ],
+  "algebraic_constants": [
+    {
+      "symbol": "k6",
+      "expression": "-sqrt(3)/2",
+      "minimal_polynomial": "4*_constant**2 - 3",
+      "intended_value_80d": "-0.86602540378443864676372317075293618347140262690519031402790348972596650845440002"
+    },
+    {
+      "symbol": "k10",
+      "expression": "sqrt(2)/2",
+      "minimal_polynomial": "2*_constant**2 - 1",
+      "intended_value_80d": "0.70710678118654752440084436210484903928483593768847403658833986899536623923105352"
+    },
+    {
+      "symbol": "k11",
+      "expression": "-sqrt(2)/2",
+      "minimal_polynomial": "2*_constant**2 - 1",
+      "intended_value_80d": "-0.70710678118654752440084436210484903928483593768847403658833986899536623923105352"
+    }
+  ],
+  "original_target_variable": "t14"
+}

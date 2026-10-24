@@ -1,0 +1,77 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "z1",
+    "z2",
+    "z3",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_e",
+    "x2": "v_f",
+    "x3": "v_s",
+    "x4": "s1",
+    "x5": "s2",
+    "x6": "s3",
+    "x7": "t4"
+  },
+  "target_variable": "x7",
+  "equations": [
+    "-x3**2 + x4**2",
+    "-x1**2 + x5**2",
+    "-x2**2 + x6**2",
+    "x5 - x6",
+    "x1 - x2",
+    "x1**2 - x1*x3 + x3**2/20",
+    "x1**2*x7 + 2*x1**2 - x1*x3*x7 - 2*x1*x3 + x3**2"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x1 - x3",
+    "x3"
+  ],
+  "polynomial": "x7 - 18",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "condition[4]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "v_s**2"
+    },
+    {
+      "source": "condition[5]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "v_s**2"
+    },
+    {
+      "source": "condition[6]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_s"
+    },
+    {
+      "source": "condition[7]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_e"
+    },
+    {
+      "source": "condition[8]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_e - v_s"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t4"
+}

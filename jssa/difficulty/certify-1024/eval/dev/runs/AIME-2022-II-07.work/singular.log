@@ -1,0 +1,59 @@
+EVENT saturation begin
+EVENT saturation factor 1
+EVENT saturation factor 2
+METRIC saturation_ms 2
+EVENT saturation end
+BLOCK J BEGIN
+x4-x5
+x3+10
+x1-10*x2
+x5^2-36864
+16*x2^2-9
+BLOCK J END
+EVENT power begin
+METRIC power_basis_ms 0
+METRIC power_basis_size 5
+METRIC unit_ideal 0
+BLOCK G BEGIN
+x4-x5
+x3+10
+x1-10*x2
+x5^2-36864
+16*x2^2-9
+BLOCK G END
+METRIC nf_1_zero 0
+BLOCK NF1 BEGIN
+x5-192
+BLOCK NF1 END
+METRIC nf_2_zero 0
+BLOCK NF2 BEGIN
+-384*x5+73728
+BLOCK NF2 END
+METRIC nf_3_zero 0
+BLOCK NF3 BEGIN
+147456*x5-28311552
+BLOCK NF3 END
+METRIC nf_4_zero 0
+BLOCK NF4 BEGIN
+-56623104*x5+10871635968
+BLOCK NF4 END
+METRIC power_nf_ms 0
+EVENT power end
+EVENT rabinowitsch begin
+METRIC rab_basis_ms 0
+METRIC rab_basis_size 6
+METRIC rab_unit 0
+METRIC rab_nf_ms 0
+BLOCK RAB_G BEGIN
+384*yy+1
+x5+192
+x4+192
+x3+10
+x1-10*x2
+16*x2^2-9
+BLOCK RAB_G END
+BLOCK RAB_NF BEGIN
+1
+BLOCK RAB_NF END
+EVENT rabinowitsch end
+EVENT finished end

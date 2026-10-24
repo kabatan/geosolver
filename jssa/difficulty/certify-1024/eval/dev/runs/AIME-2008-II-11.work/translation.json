@@ -1,0 +1,186 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_o1x",
+    "x2": "v_o1y",
+    "x3": "v_o2x",
+    "x4": "v_o2y",
+    "x5": "v_r",
+    "x6": "s1",
+    "x7": "s2",
+    "x8": "s3",
+    "x9": "s4",
+    "x10": "s5",
+    "x11": "s6",
+    "x12": "t7"
+  },
+  "target_variable": "x12",
+  "equations": [
+    "-576*x1**2/625 - 336*x1*x2/625 + 64512*x1/625 - 49*x2**2/625 + 18816*x2/625 + x6**2 - 1806336/625",
+    "x6 - 16",
+    "-x2**2 + x7**2",
+    "x7 - 16",
+    "-576*x3**2/625 + 336*x3*x4/625 - 49*x4**2/625 + x8**2",
+    "-x5 + x8",
+    "-x4**2 + x9**2",
+    "-x5 + x9",
+    "-x1**2 + 2*x1*x3 + x10**2 - x2**2 + 2*x2*x4 - x3**2 - x4**2",
+    "x10 - x5 - 16",
+    "x11**2 - 576*x3**2/625 - 336*x3*x4/625 + 64512*x3/625 - 49*x4**2/625 + 18816*x4/625 - 1806336/625",
+    "x12 - x5"
+  ],
+  "saturation_factors": [
+    "x2",
+    "x3 + 7*x4/24 - 56",
+    "x3 - 56",
+    "x3 - 7*x4/24",
+    "x4",
+    "x5"
+  ],
+  "polynomial": "x12**2 - 88*x12 + 676",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[5]/P:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "256"
+    },
+    {
+      "source": "construction[5]/P:Circle:result:radius",
+      "operator": ">",
+      "expression": "16"
+    },
+    {
+      "source": "construction[6]/Q:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "v_r**2"
+    },
+    {
+      "source": "construction[6]/Q:Circle:result:radius",
+      "operator": ">",
+      "expression": "v_r"
+    },
+    {
+      "source": "condition[0]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "10000"
+    },
+    {
+      "source": "condition[0]:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "10000"
+    },
+    {
+      "source": "condition[1]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "3136"
+    },
+    {
+      "source": "condition[1]:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "3136"
+    },
+    {
+      "source": "condition[2]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "10000"
+    },
+    {
+      "source": "condition[2]:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "10000"
+    },
+    {
+      "source": "condition[3]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "3136"
+    },
+    {
+      "source": "condition[3]:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "3136"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_r"
+    },
+    {
+      "source": "condition[6]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_o1y"
+    },
+    {
+      "source": "condition[7]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_o2y"
+    },
+    {
+      "source": "condition[8]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_o2x - 56"
+    },
+    {
+      "source": "condition[9]:explicit_comparison",
+      "operator": ">",
+      "expression": "96*v_o2x - 28*v_o2y"
+    },
+    {
+      "source": "condition[10]:explicit_comparison",
+      "operator": ">",
+      "expression": "56*v_o2y"
+    },
+    {
+      "source": "condition[11]:explicit_comparison",
+      "operator": ">",
+      "expression": "-96*v_o2x - 28*v_o2y + 5376"
+    },
+    {
+      "source": "condition[12]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "10000"
+    },
+    {
+      "source": "condition[12]:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "10000"
+    },
+    {
+      "source": "condition[12]:explicit_comparison",
+      "operator": ">=",
+      "expression": "s6 - v_r"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t7"
+}

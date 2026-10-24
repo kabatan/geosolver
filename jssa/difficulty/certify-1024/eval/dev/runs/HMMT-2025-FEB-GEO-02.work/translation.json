@@ -1,0 +1,89 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_H",
+    "x2": "v_x1",
+    "x3": "v_x2",
+    "x4": "v_x3",
+    "x5": "v_x4",
+    "x6": "s1",
+    "x7": "s2",
+    "x8": "s3",
+    "x9": "t4"
+  },
+  "target_variable": "x9",
+  "equations": [
+    "-x1**2 + 126*x1 - x2**2/4 - x2*x3/2 + x2*x4/2 + x2*x5/2 - x3**2/4 + x3*x4/2 + x3*x5/2 - x4**2/4 - x4*x5/2 - x5**2/4 + x6**2 - 3969",
+    "x6",
+    "-x2**2 + 2*x2*x3 - x3**2 + x7**2 - 400",
+    "-x4**2 + 2*x4*x5 - x5**2 + x8**2 - 576",
+    "x7 - x8",
+    "x2*x4 - x2*x5 - x3*x4 + x3*x5 - 480",
+    "-x1 + x9"
+  ],
+  "saturation_factors": [
+    "x7",
+    "x1 - 49",
+    "x2**2 - 2*x2*x3 + x3**2 + 400",
+    "x4**2 - 2*x4*x5 + x5**2 + 576"
+  ],
+  "polynomial": "x9 - 63",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "condition[2]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(-v_x1 + v_x2)**2 + 400"
+    },
+    {
+      "source": "condition[2]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(-v_x3 + v_x4)**2 + 576"
+    },
+    {
+      "source": "condition[2]:Perpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "(-v_x1 + v_x2)**2 + 400"
+    },
+    {
+      "source": "condition[2]:Perpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "(-v_x3 + v_x4)**2 + 576"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_H - 49"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "s2"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t4"
+}

@@ -1,0 +1,142 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "z1",
+    "z2",
+    "z3",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_oy",
+    "x2": "s1",
+    "x3": "s2",
+    "x4": "s3",
+    "x5": "t4"
+  },
+  "target_variable": "x5",
+  "equations": [
+    "-x1**2 + x2**2 - 9",
+    "-x1**2/5 + 16*x1/5 + x3**2 - 64/5",
+    "x2 - x3",
+    "-x1**2/5 + 16*x1/5 + x2**2 - 64/5",
+    "-4*x1**2/5 + 64*x1/5 + x4**2 - 256/5",
+    "x4 - x5"
+  ],
+  "saturation_factors": [
+    "x2",
+    "x1",
+    "x1 - 8"
+  ],
+  "polynomial": "x5**4 - 174*x5**2 + 5329",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[5]/omega:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "s1**2"
+    },
+    {
+      "source": "construction[5]/omega:Circle:result:radius",
+      "operator": ">",
+      "expression": "s1"
+    },
+    {
+      "source": "construction[6]/T:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "45"
+    },
+    {
+      "source": "construction[6]/T:FootOfPerpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "45"
+    },
+    {
+      "source": "condition[3]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(8/5 - v_oy/5)**2 + (2*v_oy/5 - 16/5)**2"
+    },
+    {
+      "source": "condition[3]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "45"
+    },
+    {
+      "source": "condition[3]:Perpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "(8/5 - v_oy/5)**2 + (2*v_oy/5 - 16/5)**2"
+    },
+    {
+      "source": "condition[3]:Perpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "45"
+    },
+    {
+      "source": "condition[5]:OnCircle:argument:radius_squared",
+      "operator": ">",
+      "expression": "s1**2"
+    },
+    {
+      "source": "condition[5]:OnCircle:argument:radius",
+      "operator": ">",
+      "expression": "s1"
+    },
+    {
+      "source": "condition[6]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_oy"
+    },
+    {
+      "source": "condition[7]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_oy - 8"
+    },
+    {
+      "source": "condition[8]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "45"
+    },
+    {
+      "source": "condition[9]:SimplePolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "9"
+    },
+    {
+      "source": "condition[9]:SimplePolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "73"
+    },
+    {
+      "source": "condition[9]:SimplePolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "4"
+    },
+    {
+      "source": "condition[9]:SimplePolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "64"
+    },
+    {
+      "source": "condition[9]:SimplePolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "13"
+    },
+    {
+      "source": "condition[9]:SimplePolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "45"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t4"
+}

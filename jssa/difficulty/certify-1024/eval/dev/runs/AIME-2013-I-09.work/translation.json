@@ -1,0 +1,120 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "p2",
+    "x2": "p3",
+    "x3": "p4",
+    "x4": "p5",
+    "x5": "s1",
+    "x6": "s10",
+    "x7": "s11",
+    "x8": "s6",
+    "x9": "s7",
+    "x10": "s8",
+    "x11": "s9",
+    "x12": "t12"
+  },
+  "target_variable": "x12",
+  "equations": [
+    "x5**2 - 3",
+    "x1*x5**2 - x1/2 - 3*x5**2 + 15/4",
+    "x2*x5**2 - x2/2 - 3*x5**3 + 15*x5/4",
+    "x3*x5**2 + x3/2 - 9*x5**2 - 15/4",
+    "x4*x5**2 + x4/2 - 3*x5**3 - 9*x5/4",
+    "x5**2 - x8**2/36 + 1",
+    "x8 - 12",
+    "x1**2 - 12*x1 + x2**2 - 12*x2*x5 + 36*x5**2 - x9**2 + 36",
+    "x1**2 - 18*x1 - x10**2 + x2**2 + 81",
+    "-x10 + x9",
+    "-x11**2 + x3**2 - 12*x3 + x4**2 - 12*x4*x5 + 36*x5**2 + 36",
+    "x3**2 - 18*x3 + x4**2 - x6**2 + 81",
+    "-x11 + x6",
+    "x1*x5 - x2",
+    "x3*x5 + x4 - 12*x5",
+    "x1**2 - 2*x1*x3 + x2**2 - 2*x2*x4 + x3**2 + x4**2 - x7**2",
+    "-x12 + x7"
+  ],
+  "saturation_factors": [
+    "x5**2 + 1",
+    "x5**2 + 1/2",
+    "x5**2 + 1/4",
+    "x5**2 - 1/2"
+  ],
+  "polynomial": "1225*x12**2 - 59319",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[4]/L:PerpendicularBisector:result:line_direction",
+      "operator": "!=",
+      "expression": "36*s1**2 + 9"
+    },
+    {
+      "source": "construction[5]/M:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "36*s1**2 + 36"
+    },
+    {
+      "source": "construction[5]/M:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "36*s1**2 + 9"
+    },
+    {
+      "source": "construction[5]/M:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "36*s1**2 + 36"
+    },
+    {
+      "source": "construction[6]/N:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "36*s1**2 + 36"
+    },
+    {
+      "source": "construction[6]/N:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "36*s1**2 + 9"
+    },
+    {
+      "source": "construction[6]/N:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "36*s1**2 + 36"
+    },
+    {
+      "source": "condition[6]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "36*s1**2 + 36"
+    },
+    {
+      "source": "condition[7]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "36*s1**2 + 36"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t12"
+}

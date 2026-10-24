@@ -1,0 +1,142 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_dx",
+    "x2": "v_dy",
+    "x3": "p1",
+    "x4": "p2",
+    "x5": "p3",
+    "x6": "p4",
+    "x7": "s5",
+    "x8": "s6",
+    "x9": "s7",
+    "x10": "t8"
+  },
+  "target_variable": "x10",
+  "equations": [
+    "x1**2/2 - 3*x1/2 - x2**2/2 + x2*x3 - 44",
+    "x1**2/2 + 19*x1/2 - x2**2/2 + x2*x4",
+    "-x1**2/2 + 11*x1/2 - x2**2/2 + x2*x5",
+    "-x1**2/2 - 27*x1/2 - x2**2/2 + x2*x6 - 76",
+    "-x1**2 - 16*x1 - x2**2 + x7**2 - 64",
+    "x7 - 8",
+    "-x1**2 - x2**2 + x8**2",
+    "x8 - 4",
+    "x1**2*x3**2 - 2*x1**2*x3*x4 - 2*x1**2*x3*x5 + 2*x1**2*x3*x6 + x1**2*x4**2 + 2*x1**2*x4*x5 - 2*x1**2*x4*x6 + x1**2*x5**2 - 2*x1**2*x5*x6 + x1**2*x6**2 + 8*x1*x3**2 - 16*x1*x3*x4 - 16*x1*x3*x5 + 16*x1*x3*x6 + 8*x1*x4**2 + 16*x1*x4*x5 - 16*x1*x4*x6 + 8*x1*x5**2 - 16*x1*x5*x6 + 8*x1*x6**2 + 16*x3**2 - 32*x3*x4 - 32*x3*x5 + 32*x3*x6 + 16*x4**2 + 32*x4*x5 - 32*x4*x6 + 16*x5**2 - 32*x5*x6 + 16*x6**2 - 4*x9**2",
+    "-x10 + x9"
+  ],
+  "saturation_factors": [
+    "x2",
+    "x1**2 + 16*x1 + x2**2 + 64",
+    "x1**2 + 38*x1 + x2**2 + 361",
+    "x1**2 + x2**2",
+    "x1**2 - 22*x1 + x2**2 + 121"
+  ],
+  "polynomial": "x10**2 - 1215",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[4]/O_BCD:Circumcenter:triangle",
+      "operator": "!=",
+      "expression": "-v_dy*(v_dx - 11) + v_dy*(v_dx + 8)"
+    },
+    {
+      "source": "construction[5]/O_CDA:Circumcenter:triangle",
+      "operator": "!=",
+      "expression": "19*v_dy"
+    },
+    {
+      "source": "construction[6]/O_DAB:Circumcenter:triangle",
+      "operator": "!=",
+      "expression": "v_dx*v_dy + v_dy*(11 - v_dx)"
+    },
+    {
+      "source": "construction[7]/O_ABC:Circumcenter:triangle",
+      "operator": "!=",
+      "expression": "11*v_dy"
+    },
+    {
+      "source": "condition[0]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "121"
+    },
+    {
+      "source": "condition[0]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "361"
+    },
+    {
+      "source": "condition[0]:Parallel:argument:line_direction",
+      "operator": "!=",
+      "expression": "121"
+    },
+    {
+      "source": "condition[0]:Parallel:argument:line_direction",
+      "operator": "!=",
+      "expression": "361"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_dy"
+    },
+    {
+      "source": "condition[6]:SimplePolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "121"
+    },
+    {
+      "source": "condition[6]:SimplePolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_dy**2 + (-v_dx - 19)**2"
+    },
+    {
+      "source": "condition[6]:SimplePolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_dx**2 + v_dy**2"
+    },
+    {
+      "source": "condition[6]:SimplePolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_dy**2 + (-v_dx - 8)**2"
+    },
+    {
+      "source": "condition[6]:SimplePolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_dy**2 + (11 - v_dx)**2"
+    },
+    {
+      "source": "condition[6]:SimplePolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "361"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t8"
+}

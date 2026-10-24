@@ -1,0 +1,63 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "z1",
+    "z2",
+    "z3",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_e",
+    "x2": "v_f",
+    "x3": "v_s",
+    "x4": "s1",
+    "x5": "s2",
+    "x6": "s3",
+    "x7": "t4"
+  },
+  "target_variable": "x7",
+  "equations": [
+    "-x3**2 + x4**2",
+    "-x1**2 + x5**2",
+    "-x2**2 + x6**2",
+    "x5 - x6",
+    "x1 - x2",
+    "x1**2 - x1*x3 + x3**2/20",
+    "x1**2*x7 + 2*x1**2 - x1*x3*x7 - 2*x1*x3 + x3**2"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x1 - x3",
+    "x3"
+  ],
+  "polynomial": "x7 - 18",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "method": "rabinowitsch",
+  "coefficients": [
+    "x7*z3^2*yy-18*z3^2*yy-z3^2",
+    "0",
+    "0",
+    "0",
+    "0",
+    "20*x7*z3^2*yy+40*z3^2*yy",
+    "-20*z3^2*yy",
+    "0",
+    "0",
+    "x3*z3+1",
+    "x4^2*z3^2"
+  ],
+  "exponent": null
+}

@@ -1,0 +1,84 @@
+{
+  "id": "AIME-2022-II-07",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "IsTangent(l1, C1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(l1, C2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(l2, C1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(l2, C2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "m",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "O1"
+      },
+      {
+        "expression": "Point(30, 0)",
+        "name": "O2"
+      },
+      {
+        "expression": "Circle(O1, 6)",
+        "name": "C1"
+      },
+      {
+        "expression": "Circle(O2, 24)",
+        "name": "C2"
+      },
+      {
+        "expression": "Point(6, 0)",
+        "name": "T"
+      },
+      {
+        "expression": "Line(Point(6, 0), Point(6, 1))",
+        "name": "l0"
+      },
+      {
+        "expression": "Line(m, -1, b)",
+        "name": "l1"
+      },
+      {
+        "expression": "Line(-m, -1, -b)",
+        "name": "l2"
+      },
+      {
+        "expression": "Intersect(l1, l2)",
+        "name": "V"
+      },
+      {
+        "expression": "Intersect(l0, l1)",
+        "name": "W1"
+      },
+      {
+        "expression": "Intersect(l0, l2)",
+        "name": "W2"
+      }
+    ],
+    "id": "AIME-2022-II-07",
+    "target": "Area(V, W1, W2)",
+    "variables": [
+      "m",
+      "b"
+    ]
+  }
+}

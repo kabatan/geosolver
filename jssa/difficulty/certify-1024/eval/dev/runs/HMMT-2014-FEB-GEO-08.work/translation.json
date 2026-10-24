@@ -1,0 +1,78 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_t",
+    "x2": "s1",
+    "x3": "t2"
+  },
+  "target_variable": "x3",
+  "equations": [
+    "x1**2 - 164*x1/73 + 6724/5329",
+    "-324*x1**2 + 432*x1 + x2**2 - 144",
+    "x2 - x3"
+  ],
+  "saturation_factors": [
+    "x2",
+    "x1",
+    "x1 - 1",
+    "x1**2 - 128*x1/73 + 64/73"
+  ],
+  "polynomial": "73*x3 - 600",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[6]/Gamma:Circumcircle:triangle",
+      "operator": "!=",
+      "expression": "24 - 24*v_t"
+    },
+    {
+      "source": "construction[6]/Gamma:Circumcircle:result:radius_squared",
+      "operator": ">",
+      "expression": "(73*v_t/16 - 4)**2 + 9/4"
+    },
+    {
+      "source": "condition[3]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "25"
+    },
+    {
+      "source": "condition[3]:IsTangent:argument:line_direction",
+      "operator": "!=",
+      "expression": "25"
+    },
+    {
+      "source": "condition[3]:IsTangent:argument:radius_squared",
+      "operator": ">",
+      "expression": "(73*v_t/16 - 4)**2 + 9/4"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_t"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": ">",
+      "expression": "s1"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t2"
+}

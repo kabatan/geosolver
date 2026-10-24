@@ -1,0 +1,72 @@
+{
+  "id": "HMMT-2011-FEB-ALGGEO-18",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Collinear(A, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": "2 * Distance(B, C)"
+      },
+      {
+        "left": "a",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Dot(Vector(A, E), Vector(A, F))",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(a, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(bx, bx)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, 2 * cx)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(a, a)",
+        "name": "D"
+      },
+      {
+        "expression": "Line(Point(0, 0), Point(1, 1))",
+        "name": "L1"
+      },
+      {
+        "expression": "Line(Point(0, 0), Point(1, 2))",
+        "name": "L2"
+      },
+      {
+        "expression": "Circumcircle(A, D, C)",
+        "name": "Gamma"
+      },
+      {
+        "expression": "Intersect(Gamma, L1, exclude=D)",
+        "name": "E"
+      },
+      {
+        "expression": "Intersect(Line(A, E), L2)",
+        "name": "F"
+      }
+    ],
+    "id": "HMMT-2011-FEB-ALGGEO-18",
+    "target": "Distance(A, E) / Distance(E, F)",
+    "variables": [
+      "a",
+      "bx",
+      "cx"
+    ]
+  }
+}

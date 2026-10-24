@@ -1,0 +1,42 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "z1",
+    "z2",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_r",
+    "x2": "s1",
+    "x3": "t2"
+  },
+  "target_variable": "x3",
+  "equations": [
+    "-2*x1**2 + 89*x1 + x2**2 - 4225/4",
+    "x1 + x2 - 65/2",
+    "-x1 + x3"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x1 - 33"
+  ],
+  "polynomial": "x3 - 24",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "method": "power",
+  "coefficients": [
+    "33*z1*z2-z2",
+    "-33*x2*z1*z2+33*x3*z1*z2+x2*z2-x3*z2-2145/2*z1*z2+65/2*z2",
+    "-66*x1*z1*z2-33*x2*z1*z2+2*x1*z2+x2*z2+4323/2*z1*z2+33*z1-131/2*z2",
+    "-297*z2-33",
+    "-33*x3*z1+x3+9"
+  ],
+  "exponent": 1
+}

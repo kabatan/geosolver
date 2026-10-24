@@ -1,0 +1,206 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "x13",
+    "x14",
+    "x15",
+    "x16",
+    "x17",
+    "x18",
+    "x19",
+    "x20",
+    "x21",
+    "z1",
+    "z2",
+    "z3",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "k8",
+    "x2": "p4",
+    "x3": "p5",
+    "x4": "p6",
+    "x5": "p7",
+    "x6": "s1",
+    "x7": "s10",
+    "x8": "s11",
+    "x9": "s12",
+    "x10": "s13",
+    "x11": "s14",
+    "x12": "s15",
+    "x13": "s16",
+    "x14": "s17",
+    "x15": "s18",
+    "x16": "s19",
+    "x17": "s2",
+    "x18": "s20",
+    "x19": "s3",
+    "x20": "s9",
+    "x21": "t21"
+  },
+  "target_variable": "x21",
+  "equations": [
+    "x6**2 - 111",
+    "x17**2 - 333",
+    "x19**2 - 11",
+    "-x19**2 + x2**2 - 2*x2*x6 + x3**2 + x6**2",
+    "x2**2 + x3**2 - x6**2",
+    "-x19**2 + x4**2 - 2*x4*x6 + x5**2 + x6**2",
+    "x4**2 + x5**2 - x6**2",
+    "x1**2 - 3/4",
+    "-x20**2 + x6**2",
+    "-x20 + x6",
+    "x17**2 + x6**2 - 4*x7**2",
+    "x6 - x7",
+    "x2**2 - 2*x2*x6 + x3**2 + x6**2 - x8**2",
+    "-x19 + x8",
+    "x4**2 - 2*x4*x6 + x5**2 + x6**2 - x9**2",
+    "-x19 + x9",
+    "-x10**2 + x2**2 + x3**2",
+    "-x10 + x6",
+    "x1**2*x2**2 + x1**2*x3**2 - x11**2 + x2**2/4 + x3**2/4",
+    "-x11 + x6",
+    "x10 - x11",
+    "-x12**2 + x4**2 + x5**2",
+    "-x12 + x6",
+    "x1**2*x4**2 + x1**2*x5**2 - x13**2 + x4**2/4 + x5**2/4",
+    "-x13 + x6",
+    "x12 - x13",
+    "x1**2*x2**2 + x1**2*x3**2 - x1*x17*x2 + x1*x3*x6 - x14**2 + x17**2/4 - x17*x3/2 + x2**2/4 - x2*x6/2 + x3**2/4 + x6**2/4",
+    "x1**2*x2**2 + x1**2*x3**2 + x1*x17*x2 - x1*x3*x6 - x15**2 + x17**2/4 - x17*x3/2 + x2**2/4 - x2*x6/2 + x3**2/4 + x6**2/4",
+    "x1**2*x4**2 + x1**2*x5**2 - x1*x17*x4 + x1*x5*x6 - x16**2 + x17**2/4 - x17*x5/2 + x4**2/4 - x4*x6/2 + x5**2/4 + x6**2/4",
+    "x1**2*x4**2 + x1**2*x5**2 + x1*x17*x4 - x1*x5*x6 + x17**2/4 - x17*x5/2 - x18**2 + x4**2/4 - x4*x6/2 + x5**2/4 + x6**2/4",
+    "x14**2 + x15**2 + x16**2 + x18**2 - x21"
+  ],
+  "saturation_factors": [
+    "x6",
+    "x19",
+    "x2**2 - 2*x2*x4 + x3**2 - 2*x3*x5 + x4**2 + x5**2"
+  ],
+  "polynomial": "x21 - 677",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[3]/D1:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "s3**2"
+    },
+    {
+      "source": "construction[3]/D1:Circle:result:radius",
+      "operator": ">",
+      "expression": "s3"
+    },
+    {
+      "source": "construction[3]/D1:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "s1**2"
+    },
+    {
+      "source": "construction[3]/D1:Circle:result:radius",
+      "operator": ">",
+      "expression": "s1"
+    },
+    {
+      "source": "construction[3]/D1:Intersect:argument:radius_squared",
+      "operator": ">",
+      "expression": "s3**2"
+    },
+    {
+      "source": "construction[3]/D1:Intersect:argument:radius",
+      "operator": ">",
+      "expression": "s3"
+    },
+    {
+      "source": "construction[3]/D1:Intersect:argument:radius_squared",
+      "operator": ">",
+      "expression": "s1**2"
+    },
+    {
+      "source": "construction[3]/D1:Intersect:argument:radius",
+      "operator": ">",
+      "expression": "s1"
+    },
+    {
+      "source": "construction[3]/D1:Intersect:distinct_centers",
+      "operator": "!=",
+      "expression": "s1**2"
+    },
+    {
+      "source": "construction[4]/D2:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "s3**2"
+    },
+    {
+      "source": "construction[4]/D2:Circle:result:radius",
+      "operator": ">",
+      "expression": "s3"
+    },
+    {
+      "source": "construction[4]/D2:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "s1**2"
+    },
+    {
+      "source": "construction[4]/D2:Circle:result:radius",
+      "operator": ">",
+      "expression": "s1"
+    },
+    {
+      "source": "construction[4]/D2:Intersect:argument:radius_squared",
+      "operator": ">",
+      "expression": "s3**2"
+    },
+    {
+      "source": "construction[4]/D2:Intersect:argument:radius",
+      "operator": ">",
+      "expression": "s3"
+    },
+    {
+      "source": "construction[4]/D2:Intersect:argument:radius_squared",
+      "operator": ">",
+      "expression": "s1**2"
+    },
+    {
+      "source": "construction[4]/D2:Intersect:argument:radius",
+      "operator": ">",
+      "expression": "s1"
+    },
+    {
+      "source": "construction[4]/D2:Intersect:distinct_centers",
+      "operator": "!=",
+      "expression": "s1**2"
+    },
+    {
+      "source": "construction[4]/D2:Intersect:exclude",
+      "operator": "!=",
+      "expression": "(-p4 + p6)**2 + (-p5 + p7)**2"
+    }
+  ],
+  "algebraic_constants": [
+    {
+      "symbol": "k8",
+      "expression": "sqrt(3)/2",
+      "minimal_polynomial": "4*_constant**2 - 3",
+      "intended_value_80d": "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002"
+    }
+  ],
+  "original_target_variable": "t21"
+}

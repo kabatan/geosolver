@@ -1,0 +1,64 @@
+{
+  "id": "HMMT-2014-FEB-GEO-03",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": 12
+      },
+      {
+        "left": "Parallel(Line(B, M), external)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "ay",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(10, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(ax, ay)",
+        "name": "A"
+      },
+      {
+        "expression": "Midpoint(A, C)",
+        "name": "M"
+      },
+      {
+        "expression": "AngleBisector(B, A, C)",
+        "name": "internal"
+      },
+      {
+        "expression": "PerpendicularLine(internal, A)",
+        "name": "external"
+      }
+    ],
+    "id": "HMMT-2014-FEB-GEO-03",
+    "target": "Area(A, B, C)",
+    "variables": [
+      "ax",
+      "ay"
+    ]
+  }
+}

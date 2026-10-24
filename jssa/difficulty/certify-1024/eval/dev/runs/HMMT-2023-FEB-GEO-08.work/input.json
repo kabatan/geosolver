@@ -1,0 +1,70 @@
+{
+  "id": "HMMT-2023-FEB-GEO-08",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Angle(B, A, C)",
+        "operator": "=",
+        "right": "pi - Angle(D, A, E)"
+      },
+      {
+        "left": "OnSegment(D, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(E, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Angle(B, A, C)",
+        "operator": ">",
+        "right": "pi / 2"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(5, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Point((2 * 5 + cx) / 3, cy / 3)",
+        "name": "D"
+      },
+      {
+        "expression": "Point((5 + 2 * cx) / 3, 2 * cy / 3)",
+        "name": "E"
+      }
+    ],
+    "id": "HMMT-2023-FEB-GEO-08",
+    "target": "Distance(B, C)",
+    "variables": [
+      "cx",
+      "cy"
+    ]
+  }
+}

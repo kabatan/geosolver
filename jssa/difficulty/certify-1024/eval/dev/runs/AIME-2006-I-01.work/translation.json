@@ -1,0 +1,76 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "z1",
+    "z2",
+    "z3",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_Dx",
+    "x2": "v_Dy",
+    "x3": "s1",
+    "x4": "s4",
+    "x5": "t5"
+  },
+  "target_variable": "x5",
+  "equations": [
+    "-x1**2 + 36*x1 - x2**2 + 42*x2 + x3**2 - 765",
+    "x3 - 14",
+    "x1 + 7*x2/6 - 85/2",
+    "-x1**2 - x2**2 + x4**2",
+    "x3 + x4 - x5 + 39"
+  ],
+  "saturation_factors": [
+    "x1 - 18",
+    "x2 - 21",
+    "x1**2 - 36*x1 + x2**2 - 42*x2 + 765"
+  ],
+  "polynomial": "x5 - 84",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "condition[0]:Angle:first_ray",
+      "operator": "!=",
+      "expression": "324"
+    },
+    {
+      "source": "condition[0]:Angle:second_ray",
+      "operator": "!=",
+      "expression": "441"
+    },
+    {
+      "source": "condition[4]:Angle:first_ray",
+      "operator": "!=",
+      "expression": "765"
+    },
+    {
+      "source": "condition[4]:Angle:second_ray",
+      "operator": "!=",
+      "expression": "(v_Dx - 18)**2 + (v_Dy - 21)**2"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_Dy - 21"
+    },
+    {
+      "source": "condition[6]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_Dx - 18"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t5"
+}

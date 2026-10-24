@@ -1,0 +1,70 @@
+{
+  "id": "AIME-2021-II-12",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 9
+      },
+      {
+        "left": "Distance(D, A)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Area(A, B, C, D)",
+        "operator": "=",
+        "right": 30
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "dy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C, D])"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(5, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(dx, dy)",
+        "name": "D"
+      },
+      {
+        "expression": "Intersect(Line(A, C), Line(B, D))",
+        "name": "X"
+      }
+    ],
+    "id": "AIME-2021-II-12",
+    "target": "abs(tan(Angle(A,X,B)))",
+    "variables": [
+      "cx",
+      "cy",
+      "dx",
+      "dy"
+    ]
+  }
+}

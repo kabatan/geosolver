@@ -1,0 +1,166 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "x13",
+    "x14",
+    "x15",
+    "x16",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_b",
+    "x2": "v_cx",
+    "x3": "v_cy",
+    "x4": "p4",
+    "x5": "p5",
+    "x6": "p6",
+    "x7": "p7",
+    "x8": "p8",
+    "x9": "p9",
+    "x10": "s1",
+    "x11": "s10",
+    "x12": "s11",
+    "x13": "s12",
+    "x14": "s2",
+    "x15": "s3",
+    "x16": "t13"
+  },
+  "target_variable": "x16",
+  "equations": [
+    "-x1**2 + 2*x1*x2 + x10**2 - x2**2 - x3**2",
+    "x14**2 - x2**2 - x3**2",
+    "-x1**2 + x15**2",
+    "-x1*x14 + x10*x4 + x14*x4 - x15*x2 + x15*x4",
+    "x10*x5 + x14*x5 - x15*x3 + x15*x5",
+    "x1*x2/2 - x2**2/2 - x3**2/2 + x3*x6",
+    "x1*x2/2 - x2**2/2 - x3**2/2 + x3*x7",
+    "-x1*x14 + x10*x8 + x14*x8 - x15*x2 + x15*x8",
+    "x10*x9 + x14*x9 - x15*x3 + x15*x9",
+    "-x1*x4/2 + x4**2 + x5**2 - x5*x6",
+    "x1**2/4 - x11**2 + x7**2",
+    "x11 - 13",
+    "-x1**2*x3**2 + x10**2*x12**2 + 2*x10*x12**2*x14 + 2*x10*x12**2*x15 + x12**2*x14**2 + 2*x12**2*x14*x15 + x12**2*x15**2",
+    "x12 - 6",
+    "-x1**2*x3**2/4 + x13**2",
+    "x14*x15 - x16"
+  ],
+  "saturation_factors": [
+    "x10 + x14 + x15",
+    "x13",
+    "x1",
+    "x3",
+    "x4**2 + x5**2",
+    "x1**2/4 - x1*x4 + x4**2 + x5**2 - 2*x5*x6 + x6**2",
+    "x1**2/4 + x7**2"
+  ],
+  "polynomial": "x16 - 468",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[3]/I:Incenter:triangle",
+      "operator": "!=",
+      "expression": "v_b*v_cy"
+    },
+    {
+      "source": "construction[4]/O:Circumcenter:triangle",
+      "operator": "!=",
+      "expression": "v_b*v_cy"
+    },
+    {
+      "source": "construction[5]/Gamma:Circumcircle:triangle",
+      "operator": "!=",
+      "expression": "v_b*v_cy"
+    },
+    {
+      "source": "construction[5]/Gamma:Circumcircle:result:radius_squared",
+      "operator": ">",
+      "expression": "p7**2 + v_b**2/4"
+    },
+    {
+      "source": "construction[6]/omega:Incircle:triangle",
+      "operator": "!=",
+      "expression": "v_b*v_cy"
+    },
+    {
+      "source": "construction[6]/omega:Incircle:result:radius_squared",
+      "operator": ">",
+      "expression": "v_b**2*v_cy**2/(s1 + s2 + s3)**2"
+    },
+    {
+      "source": "condition[0]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "p4**2 + p5**2"
+    },
+    {
+      "source": "condition[0]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(-p4 + v_b/2)**2 + (-p5 + p6)**2"
+    },
+    {
+      "source": "condition[0]:Perpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "p4**2 + p5**2"
+    },
+    {
+      "source": "condition[0]:Perpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "(-p4 + v_b/2)**2 + (-p5 + p6)**2"
+    },
+    {
+      "source": "condition[1]:Radius:argument:radius_squared",
+      "operator": ">",
+      "expression": "p7**2 + v_b**2/4"
+    },
+    {
+      "source": "condition[2]:Radius:argument:radius_squared",
+      "operator": ">",
+      "expression": "v_b**2*v_cy**2/(s1 + s2 + s3)**2"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_b"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_cy"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": ">",
+      "expression": "s12"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t13"
+}

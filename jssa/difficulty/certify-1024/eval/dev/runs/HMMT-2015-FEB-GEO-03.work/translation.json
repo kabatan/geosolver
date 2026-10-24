@@ -1,0 +1,106 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "z1",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "s1",
+    "x2": "t2"
+  },
+  "target_variable": "x2",
+  "equations": [
+    "x1**2 - 1/2",
+    "x1 - x2"
+  ],
+  "saturation_factors": [
+    "x1"
+  ],
+  "polynomial": "2*x2**2 - 1",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[4]/Gamma:Circumcircle:triangle",
+      "operator": "!=",
+      "expression": "1"
+    },
+    {
+      "source": "construction[4]/Gamma:Circumcircle:result:radius_squared",
+      "operator": ">",
+      "expression": "1/2"
+    },
+    {
+      "source": "construction[5]/E:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "4"
+    },
+    {
+      "source": "construction[5]/E:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "4"
+    },
+    {
+      "source": "construction[5]/E:Intersect:argument:radius_squared",
+      "operator": ">",
+      "expression": "1/2"
+    },
+    {
+      "source": "construction[5]/E:Intersect:exclude",
+      "operator": "!=",
+      "expression": "1"
+    },
+    {
+      "source": "construction[6]/F:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "5"
+    },
+    {
+      "source": "construction[6]/F:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "5"
+    },
+    {
+      "source": "construction[6]/F:Intersect:argument:radius_squared",
+      "operator": ">",
+      "expression": "1/2"
+    },
+    {
+      "source": "construction[6]/F:Intersect:exclude",
+      "operator": "!=",
+      "expression": "9/5"
+    },
+    {
+      "source": "construction[7]/K:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "8/5"
+    },
+    {
+      "source": "construction[7]/K:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "2"
+    },
+    {
+      "source": "construction[7]/K:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "8/5"
+    },
+    {
+      "source": "construction[7]/K:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "2"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": ">",
+      "expression": "s1"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t2"
+}

@@ -1,0 +1,71 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_L",
+    "x2": "v_qx",
+    "x3": "v_ry",
+    "x4": "s1",
+    "x5": "s2",
+    "x6": "s3",
+    "x7": "t4"
+  },
+  "target_variable": "x7",
+  "equations": [
+    "-x1**2 + 4*x1 - x2**2 + 2*x2 + x4**2 - 5",
+    "x4 - 1",
+    "-x1**2 + 4*x1 - x3**2 + 2*x3 + x5**2 - 5",
+    "x5 - 1",
+    "-2*x1**2 + 2*x1*x2 + 2*x1*x3 + 4*x1 - x2**2 - 2*x2 - x3**2 - 2*x3 + x6**2 - 2",
+    "x6 - 1",
+    "-x1 + x7"
+  ],
+  "saturation_factors": [
+    "x1 - 2",
+    "x1 - x2 - 1",
+    "x1 - x3 - 1",
+    "x2 - 1",
+    "x3 - 1"
+  ],
+  "polynomial": "16*x7**4 - 128*x7**3 + 368*x7**2 - 448*x7 + 193",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "method": "rabinowitsch",
+  "coefficients": [
+    "8*x2*x3*x7^3*z1*yy-8*x3^2*x7^3*z1*yy+4*x3*x7^3*z1^2*yy-8*x2*x7^3*z1*z5*yy+8*x3*x7^3*z1*z5*yy-4*x7^3*z1^2*z5*yy-48*x2*x3*x7^2*z1*yy+48*x3^2*x7^2*z1*yy-8*x2*x7^3*z1*yy+8*x3*x7^3*z1*yy-24*x3*x7^2*z1^2*yy-4*x7^3*z1^2*yy+48*x2*x7^2*z1*z5*yy-48*x3*x7^2*z1*z5*yy+24*x7^2*z1^2*z5*yy-16*x3*x7^3*yy-2*x2*x3^2*z1*yy+2*x3^3*z1*yy+88*x2*x3*x7*z1*yy-88*x3^2*x7*z1*yy+48*x2*x7^2*z1*yy-48*x3*x7^2*z1*yy-x3^2*z1^2*yy+44*x3*x7*z1^2*yy+24*x7^2*z1^2*yy+16*x7^3*z5*yy+2*x2*x3*z1*z5*yy-2*x3^2*z1*z5*yy-88*x2*x7*z1*z5*yy+88*x3*x7*z1*z5*yy+x3*z1^2*z5*yy-44*x7*z1^2*z5*yy+96*x3*x7^2*yy+16*x7^3*yy-44*x2*x3*z1*yy+44*x3^2*z1*yy-88*x2*x7*z1*yy+88*x3*x7*z1*yy-22*x3*z1^2*yy-44*x7*z1^2*yy-96*x7^2*z5*yy+46*x2*z1*z5*yy-46*x3*z1*z5*yy+23*z1^2*z5*yy+4*x3^2*yy-176*x3*x7*yy-96*x7^2*yy+46*x2*z1*yy-46*x3*z1*yy+23*z1^2*yy-4*x3*z5*yy+176*x7*z5*yy+88*x3*yy+176*x7*yy-92*z5*yy-92*yy",
+    "-8*x2*x3*x4*x7^3*z1*yy+8*x3^2*x4*x7^3*z1*yy-4*x3*x4*x7^3*z1^2*yy+8*x2*x4*x7^3*z1*z5*yy-8*x3*x4*x7^3*z1*z5*yy+4*x4*x7^3*z1^2*z5*yy+48*x2*x3*x4*x7^2*z1*yy-48*x3^2*x4*x7^2*z1*yy-8*x2*x3*x7^3*z1*yy+8*x3^2*x7^3*z1*yy+8*x2*x4*x7^3*z1*yy-8*x3*x4*x7^3*z1*yy+24*x3*x4*x7^2*z1^2*yy-4*x3*x7^3*z1^2*yy+4*x4*x7^3*z1^2*yy-48*x2*x4*x7^2*z1*z5*yy+48*x3*x4*x7^2*z1*z5*yy+8*x2*x7^3*z1*z5*yy-8*x3*x7^3*z1*z5*yy-24*x4*x7^2*z1^2*z5*yy+4*x7^3*z1^2*z5*yy+16*x3*x4*x7^3*yy+2*x2*x3^2*x4*z1*yy-2*x3^3*x4*z1*yy-88*x2*x3*x4*x7*z1*yy+88*x3^2*x4*x7*z1*yy+48*x2*x3*x7^2*z1*yy-48*x3^2*x7^2*z1*yy-48*x2*x4*x7^2*z1*yy+48*x3*x4*x7^2*z1*yy+8*x2*x7^3*z1*yy-8*x3*x7^3*z1*yy+x3^2*x4*z1^2*yy-44*x3*x4*x7*z1^2*yy+24*x3*x7^2*z1^2*yy-24*x4*x7^2*z1^2*yy+4*x7^3*z1^2*yy-16*x4*x7^3*z5*yy-2*x2*x3*x4*z1*z5*yy+2*x3^2*x4*z1*z5*yy+88*x2*x4*x7*z1*z5*yy-88*x3*x4*x7*z1*z5*yy-48*x2*x7^2*z1*z5*yy+48*x3*x7^2*z1*z5*yy-x3*x4*z1^2*z5*yy+44*x4*x7*z1^2*z5*yy-24*x7^2*z1^2*z5*yy-96*x3*x4*x7^2*yy+16*x3*x7^3*yy-16*x4*x7^3*yy+2*x2*x3^2*z1*yy-2*x3^3*z1*yy+44*x2*x3*x4*z1*yy-44*x3^2*x4*z1*yy-88*x2*x3*x7*z1*yy+88*x3^2*x7*z1*yy+88*x2*x4*x7*z1*yy-88*x3*x4*x7*z1*yy-48*x2*x7^2*z1*yy+48*x3*x7^2*z1*yy+x3^2*z1^2*yy+22*x3*x4*z1^2*yy-44*x3*x7*z1^2*yy+44*x4*x7*z1^2*yy-24*x7^2*z1^2*yy+96*x4*x7^2*z5*yy-16*x7^3*z5*yy-2*x2*x3*z1*z5*yy+2*x3^2*z1*z5*yy-46*x2*x4*z1*z5*yy+46*x3*x4*z1*z5*yy+88*x2*x7*z1*z5*yy-88*x3*x7*z1*z5*yy-x3*z1^2*z5*yy-23*x4*z1^2*z5*yy+44*x7*z1^2*z5*yy-4*x3^2*x4*yy+176*x3*x4*x7*yy-96*x3*x7^2*yy+96*x4*x7^2*yy-16*x7^3*yy+44*x2*x3*z1*yy-44*x3^2*z1*yy-46*x2*x4*z1*yy+46*x3*x4*z1*yy+88*x2*x7*z1*yy-88*x3*x7*z1*yy+22*x3*z1^2*yy-23*x4*z1^2*yy+44*x7*z1^2*yy+4*x3*x4*z5*yy-176*x4*x7*z5*yy+96*x7^2*z5*yy-46*x2*z1*z5*yy+46*x3*z1*z5*yy-23*z1^2*z5*yy-4*x3^2*yy-88*x3*x4*yy+176*x3*x7*yy-176*x4*x7*yy+96*x7^2*yy-46*x2*z1*yy+46*x3*z1*yy-23*z1^2*yy+4*x3*z5*yy+92*x4*z5*yy-176*x7*z5*yy-88*x3*yy+92*x4*yy-176*x7*yy+92*z5*yy+92*yy",
+    "8*x2*x3*x7^3*z1*yy-8*x3^2*x7^3*z1*yy+4*x3*x7^3*z1^2*yy-8*x2*x7^3*z1*z5*yy+8*x3*x7^3*z1*z5*yy-48*x2*x3*x7^2*z1*yy+48*x3^2*x7^2*z1*yy-8*x2*x7^3*z1*yy+8*x3*x7^3*z1*yy-24*x3*x7^2*z1^2*yy-4*x7^3*z1^2*yy+48*x2*x7^2*z1*z5*yy-48*x3*x7^2*z1*z5*yy+16*x3*x7^3*yy-2*x2*x3^2*z1*yy+2*x3^3*z1*yy+88*x2*x3*x7*z1*yy-88*x3^2*x7*z1*yy+48*x2*x7^2*z1*yy-48*x3*x7^2*z1*yy-16*x7^3*z1*yy-x3^2*z1^2*yy+44*x3*x7*z1^2*yy+24*x7^2*z1^2*yy-16*x7^3*z5*yy+2*x2*x3*z1*z5*yy-2*x3^2*z1*z5*yy-88*x2*x7*z1*z5*yy+88*x3*x7*z1*z5*yy-96*x3*x7^2*yy-16*x7^3*yy-44*x2*x3*z1*yy+44*x3^2*z1*yy-88*x2*x7*z1*yy+88*x3*x7*z1*yy+96*x7^2*z1*yy-22*x3*z1^2*yy-44*x7*z1^2*yy+96*x7^2*z5*yy+46*x2*z1*z5*yy-46*x3*z1*z5*yy-4*x3^2*yy+176*x3*x7*yy+96*x7^2*yy+46*x2*z1*yy-42*x3*z1*yy-176*x7*z1*yy+23*z1^2*yy+4*x3*z5*yy-180*x7*z5*yy-88*x3*yy-176*x7*yy+92*z1*yy+100*z5*yy+92*yy",
+    "-8*x2*x3*x5*x7^3*z1*yy+8*x3^2*x5*x7^3*z1*yy-4*x3*x5*x7^3*z1^2*yy+8*x2*x5*x7^3*z1*z5*yy-8*x3*x5*x7^3*z1*z5*yy+48*x2*x3*x5*x7^2*z1*yy-48*x3^2*x5*x7^2*z1*yy-8*x2*x3*x7^3*z1*yy+8*x3^2*x7^3*z1*yy+8*x2*x5*x7^3*z1*yy-8*x3*x5*x7^3*z1*yy+24*x3*x5*x7^2*z1^2*yy-4*x3*x7^3*z1^2*yy+4*x5*x7^3*z1^2*yy-48*x2*x5*x7^2*z1*z5*yy+48*x3*x5*x7^2*z1*z5*yy+8*x2*x7^3*z1*z5*yy-8*x3*x7^3*z1*z5*yy-16*x3*x5*x7^3*yy+2*x2*x3^2*x5*z1*yy-2*x3^3*x5*z1*yy-88*x2*x3*x5*x7*z1*yy+88*x3^2*x5*x7*z1*yy+48*x2*x3*x7^2*z1*yy-48*x3^2*x7^2*z1*yy-48*x2*x5*x7^2*z1*yy+48*x3*x5*x7^2*z1*yy+8*x2*x7^3*z1*yy-8*x3*x7^3*z1*yy+16*x5*x7^3*z1*yy+x3^2*x5*z1^2*yy-44*x3*x5*x7*z1^2*yy+24*x3*x7^2*z1^2*yy-24*x5*x7^2*z1^2*yy+4*x7^3*z1^2*yy+16*x5*x7^3*z5*yy-2*x2*x3*x5*z1*z5*yy+2*x3^2*x5*z1*z5*yy+88*x2*x5*x7*z1*z5*yy-88*x3*x5*x7*z1*z5*yy-48*x2*x7^2*z1*z5*yy+48*x3*x7^2*z1*z5*yy+96*x3*x5*x7^2*yy-16*x3*x7^3*yy+16*x5*x7^3*yy+2*x2*x3^2*z1*yy-2*x3^3*z1*yy+44*x2*x3*x5*z1*yy-44*x3^2*x5*z1*yy-88*x2*x3*x7*z1*yy+88*x3^2*x7*z1*yy+88*x2*x5*x7*z1*yy-88*x3*x5*x7*z1*yy-48*x2*x7^2*z1*yy+48*x3*x7^2*z1*yy-96*x5*x7^2*z1*yy+16*x7^3*z1*yy+x3^2*z1^2*yy+22*x3*x5*z1^2*yy-44*x3*x7*z1^2*yy+44*x5*x7*z1^2*yy-24*x7^2*z1^2*yy-96*x5*x7^2*z5*yy+16*x7^3*z5*yy-2*x2*x3*z1*z5*yy+2*x3^2*z1*z5*yy-46*x2*x5*z1*z5*yy+46*x3*x5*z1*z5*yy+88*x2*x7*z1*z5*yy-88*x3*x7*z1*z5*yy+4*x3^2*x5*yy-176*x3*x5*x7*yy+96*x3*x7^2*yy-96*x5*x7^2*yy+16*x7^3*yy+44*x2*x3*z1*yy-44*x3^2*z1*yy-46*x2*x5*z1*yy+42*x3*x5*z1*yy+88*x2*x7*z1*yy-88*x3*x7*z1*yy+176*x5*x7*z1*yy-96*x7^2*z1*yy+22*x3*z1^2*yy-23*x5*z1^2*yy+44*x7*z1^2*yy-4*x3*x5*z5*yy+180*x5*x7*z5*yy-96*x7^2*z5*yy-46*x2*z1*z5*yy+46*x3*z1*z5*yy+4*x3^2*yy+88*x3*x5*yy-176*x3*x7*yy+176*x5*x7*yy-96*x7^2*yy-46*x2*z1*yy+42*x3*z1*yy-92*x5*z1*yy+176*x7*z1*yy-23*z1^2*yy-4*x3*z5*yy-100*x5*z5*yy+180*x7*z5*yy+88*x3*yy-92*x5*yy+176*x7*yy-92*z1*yy-100*z5*yy-92*yy",
+    "-8*x2*x3*x7^3*z1*yy+8*x3^2*x7^3*z1*yy-4*x3*x7^3*z1^2*yy+8*x2*x7^3*z1*z5*yy-8*x3*x7^3*z1*z5*yy+4*x7^3*z1^2*z5*yy+48*x2*x3*x7^2*z1*yy-48*x3^2*x7^2*z1*yy+8*x2*x7^3*z1*yy-8*x3*x7^3*z1*yy+24*x3*x7^2*z1^2*yy+4*x7^3*z1^2*yy-48*x2*x7^2*z1*z5*yy+48*x3*x7^2*z1*z5*yy-24*x7^2*z1^2*z5*yy+2*x2*x3^2*z1*yy-2*x3^3*z1*yy-88*x2*x3*x7*z1*yy+88*x3^2*x7*z1*yy-48*x2*x7^2*z1*yy+48*x3*x7^2*z1*yy+x3^2*z1^2*yy-44*x3*x7*z1^2*yy-24*x7^2*z1^2*yy-2*x2*x3*z1*z5*yy+2*x3^2*z1*z5*yy+88*x2*x7*z1*z5*yy-88*x3*x7*z1*z5*yy-x3*z1^2*z5*yy+44*x7*z1^2*z5*yy+44*x2*x3*z1*yy-44*x3^2*z1*yy+88*x2*x7*z1*yy-88*x3*x7*z1*yy+22*x3*z1^2*yy+44*x7*z1^2*yy-46*x2*z1*z5*yy+46*x3*z1*z5*yy-23*z1^2*z5*yy-46*x2*z1*yy+46*x3*z1*yy-23*z1^2*yy",
+    "8*x2*x3*x6*x7^3*z1*yy-8*x3^2*x6*x7^3*z1*yy+4*x3*x6*x7^3*z1^2*yy-8*x2*x6*x7^3*z1*z5*yy+8*x3*x6*x7^3*z1*z5*yy-4*x6*x7^3*z1^2*z5*yy-48*x2*x3*x6*x7^2*z1*yy+48*x3^2*x6*x7^2*z1*yy+8*x2*x3*x7^3*z1*yy-8*x3^2*x7^3*z1*yy-8*x2*x6*x7^3*z1*yy+8*x3*x6*x7^3*z1*yy-24*x3*x6*x7^2*z1^2*yy+4*x3*x7^3*z1^2*yy-4*x6*x7^3*z1^2*yy+48*x2*x6*x7^2*z1*z5*yy-48*x3*x6*x7^2*z1*z5*yy-8*x2*x7^3*z1*z5*yy+8*x3*x7^3*z1*z5*yy+24*x6*x7^2*z1^2*z5*yy-4*x7^3*z1^2*z5*yy-2*x2*x3^2*x6*z1*yy+2*x3^3*x6*z1*yy+88*x2*x3*x6*x7*z1*yy-88*x3^2*x6*x7*z1*yy-48*x2*x3*x7^2*z1*yy+48*x3^2*x7^2*z1*yy+48*x2*x6*x7^2*z1*yy-48*x3*x6*x7^2*z1*yy-8*x2*x7^3*z1*yy+8*x3*x7^3*z1*yy-x3^2*x6*z1^2*yy+44*x3*x6*x7*z1^2*yy-24*x3*x7^2*z1^2*yy+24*x6*x7^2*z1^2*yy-4*x7^3*z1^2*yy+2*x2*x3*x6*z1*z5*yy-2*x3^2*x6*z1*z5*yy-88*x2*x6*x7*z1*z5*yy+88*x3*x6*x7*z1*z5*yy+48*x2*x7^2*z1*z5*yy-48*x3*x7^2*z1*z5*yy+x3*x6*z1^2*z5*yy-44*x6*x7*z1^2*z5*yy+24*x7^2*z1^2*z5*yy-2*x2*x3^2*z1*yy+2*x3^3*z1*yy-44*x2*x3*x6*z1*yy+44*x3^2*x6*z1*yy+88*x2*x3*x7*z1*yy-88*x3^2*x7*z1*yy-88*x2*x6*x7*z1*yy+88*x3*x6*x7*z1*yy+48*x2*x7^2*z1*yy-48*x3*x7^2*z1*yy-x3^2*z1^2*yy-22*x3*x6*z1^2*yy+44*x3*x7*z1^2*yy-44*x6*x7*z1^2*yy+24*x7^2*z1^2*yy+2*x2*x3*z1*z5*yy-2*x3^2*z1*z5*yy+46*x2*x6*z1*z5*yy-46*x3*x6*z1*z5*yy-88*x2*x7*z1*z5*yy+88*x3*x7*z1*z5*yy+x3*z1^2*z5*yy+23*x6*z1^2*z5*yy-44*x7*z1^2*z5*yy-44*x2*x3*z1*yy+44*x3^2*z1*yy+46*x2*x6*z1*yy-46*x3*x6*z1*yy-88*x2*x7*z1*yy+88*x3*x7*z1*yy-22*x3*z1^2*yy+23*x6*z1^2*yy-44*x7*z1^2*yy+46*x2*z1*z5*yy-46*x3*z1*z5*yy+23*z1^2*z5*yy+46*x2*z1*yy-46*x3*z1*yy+23*z1^2*yy",
+    "-4*x1*x7^3*z1^2*z5*yy+24*x1*x7^2*z1^2*z5*yy+8*x7^3*z1^2*z5*yy+16*x1*x7^3*z1*yy+4*x7^3*z1*z5*yy+x1*x3*z1^2*z5*yy-44*x1*x7*z1^2*z5*yy-48*x7^2*z1^2*z5*yy-96*x1*x7^2*z1*yy-32*x7^3*z1*yy-24*x7^2*z1*z5*yy+23*x1*z1^2*z5*yy-2*x3*z1^2*z5*yy+88*x7*z1^2*z5*yy-4*x1*x3*z1*yy+176*x1*x7*z1*yy+192*x7^2*z1*yy+4*x1*x7*z5*yy+4*x7^2*z5*yy-x3*z1*z5*yy+44*x7*z1*z5*yy-46*z1^2*z5*yy-92*x1*z1*yy+8*x3*z1*yy-352*x7*z1*yy-8*x1*z5*yy-24*x7*z5*yy-23*z1*z5*yy+184*z1*yy+32*z5*yy",
+    "-16*x2^2*x3*x7^3*yy+16*x3^3*x7^3*yy-8*x2*x3*x7^3*z1*yy-8*x3^2*x7^3*z1*yy+16*x2^2*x7^3*z5*yy-16*x3^2*x7^3*z5*yy+8*x2*x7^3*z1*z5*yy+8*x3*x7^3*z1*z5*yy-4*x7^4*z1*z5*yy+96*x2^2*x3*x7^2*yy-96*x3^3*x7^2*yy+16*x2^2*x7^3*yy+32*x2*x3*x7^3*yy-48*x3^2*x7^3*yy+48*x2*x3*x7^2*z1*yy+48*x3^2*x7^2*z1*yy+8*x2*x7^3*z1*yy+24*x3*x7^3*z1*yy-96*x2^2*x7^2*z5*yy+96*x3^2*x7^2*z5*yy-32*x2*x7^3*z5*yy+32*x3*x7^3*z5*yy-48*x2*x7^2*z1*z5*yy-48*x3*x7^2*z1*z5*yy+16*x7^3*z1*z5*yy+4*x2^2*x3^2*yy-4*x3^4*yy-176*x2^2*x3*x7*yy+176*x3^3*x7*yy-96*x2^2*x7^2*yy-192*x2*x3*x7^2*yy+288*x3^2*x7^2*yy-32*x2*x7^3*yy+32*x3*x7^3*yy+16*x7^4*yy+2*x2*x3^2*z1*yy+2*x3^3*z1*yy-88*x2*x3*x7*z1*yy-88*x3^2*x7*z1*yy-48*x2*x7^2*z1*yy-144*x3*x7^2*z1*yy-16*x7^3*z1*yy-4*x2^2*x3*z5*yy+4*x3^3*z5*yy+176*x2^2*x7*z5*yy-176*x3^2*x7*z5*yy+192*x2*x7^2*z5*yy-192*x3*x7^2*z5*yy-4*x7^3*z5*yy-2*x2*x3*z1*z5*yy-2*x3^2*z1*z5*yy+88*x2*x7*z1*z5*yy+89*x3*x7*z1*z5*yy+4*x7^2*z1*z5*yy+88*x2^2*x3*yy-8*x2*x3^2*yy-80*x3^3*yy+176*x2^2*x7*yy+352*x2*x3*x7*yy-528*x3^2*x7*yy+192*x2*x7^2*yy-192*x3*x7^2*yy-128*x7^3*yy+44*x2*x3*z1*yy+40*x3^2*z1*yy+88*x2*x7*z1*yy+264*x3*x7*z1*yy+96*x7^2*z1*yy-92*x2^2*z5*yy+8*x2*x3*z5*yy+84*x3^2*z5*yy-352*x2*x7*z5*yy+352*x3*x7*z5*yy+24*x7^2*z5*yy-46*x2*z1*z5*yy-44*x3*z1*z5*yy-65*x7*z1*z5*yy-92*x2^2*yy-176*x2*x3*yy+268*x3^2*yy-352*x2*x7*yy+348*x3*x7*yy+368*x7^2*yy-46*x2*z1*yy-134*x3*z1*yy-176*x7*z1*yy+184*x2*z5*yy-183*x3*z5*yy-44*x7*z5*yy+46*z1*z5*yy+184*x2*yy-176*x3*yy-444*x7*yy+92*z1*yy+23*z5*yy+184*yy",
+    "0",
+    "0",
+    "0",
+    "-4*x3*x7^3*z1^2*yy+24*x3*x7^2*z1^2*yy+4*x7^3*z1^2*yy+16*x7^3*z1*yy+x3^2*z1^2*yy-44*x3*x7*z1^2*yy-24*x7^2*z1^2*yy-96*x7^2*z1*yy+22*x3*z1^2*yy+44*x7*z1^2*yy+4*x3*x7*yy-4*x3*z1*yy+176*x7*z1*yy-23*z1^2*yy-8*x3*yy-4*x7*yy-92*z1*yy+9*yy",
+    "1"
+  ],
+  "exponent": null
+}

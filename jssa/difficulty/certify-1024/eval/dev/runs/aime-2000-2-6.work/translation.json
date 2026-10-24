@@ -1,0 +1,195 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "x13",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "z10",
+    "z11",
+    "z12",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_base_length",
+    "x2": "v_height",
+    "x3": "v_section_fraction",
+    "x4": "v_top_left_x",
+    "x5": "v_top_right_x",
+    "x6": "s1",
+    "x7": "s2",
+    "x8": "s3",
+    "x9": "s4",
+    "x10": "s5",
+    "x11": "s6",
+    "x12": "s7",
+    "x13": "t8"
+  },
+  "target_variable": "x13",
+  "equations": [
+    "-x1**2 + x6**2",
+    "-x4**2 + 2*x4*x5 - x5**2 + x7**2",
+    "x6 - x7 - 100",
+    "-9*x1**2*x2**2/64 + 3*x1*x2**2*x4/32 - 3*x1*x2**2*x5/32 - x2**2*x4**2/64 + x2**2*x4*x5/32 - x2**2*x5**2/64 + x8**2",
+    "-x1**2*x2**2/64 + 3*x1*x2**2*x4/32 - 3*x1*x2**2*x5/32 - 9*x2**2*x4**2/64 + 9*x2**2*x4*x5/32 - 9*x2**2*x5**2/64 + x9**2",
+    "x8 - 3*x9/2",
+    "-x1**2*x3**2 + 2*x1**2*x3 - x1**2 - 2*x1*x3**2*x4 + 2*x1*x3**2*x5 + 2*x1*x3*x4 - 2*x1*x3*x5 + x10**2 - x3**2*x4**2 + 2*x3**2*x4*x5 - x3**2*x5**2",
+    "-x1**2*x2**2*x3**4/4 + x1**2*x2**2*x3**3 - x1**2*x2**2*x3**2 - x1*x2**2*x3**4*x4/2 + x1*x2**2*x3**4*x5/2 + x1*x2**2*x3**3*x4 - x1*x2**2*x3**3*x5 + x11**2 - x2**2*x3**4*x4**2/4 + x2**2*x3**4*x4*x5/2 - x2**2*x3**4*x5**2/4",
+    "-x1**2*x2**2/4 + x1*x2**2*x4/2 - x1*x2**2*x5/2 + x12**2 - x2**2*x4**2/4 + x2**2*x4*x5/2 - x2**2*x5**2/4",
+    "x11 - x12/2",
+    "x10 - x13"
+  ],
+  "saturation_factors": [
+    "x8",
+    "x9",
+    "x10",
+    "x1",
+    "x1 - x4 + x5",
+    "x2",
+    "x3",
+    "x3 - 1",
+    "x4 - x5",
+    "x1**2 - 2*x1*x5 + x2**2 + x5**2",
+    "x1*x3 - x1 + x3*x4 - x3*x5",
+    "x2**2 + x4**2"
+  ],
+  "polynomial": "x13**2 - 18125",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "z10",
+    "z11",
+    "z12"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[4]/bottom_base:Segment:result:line_direction",
+      "operator": "!=",
+      "expression": "v_base_length**2"
+    },
+    {
+      "source": "construction[5]/top_base:Segment:result:line_direction",
+      "operator": "!=",
+      "expression": "(-v_top_left_x + v_top_right_x)**2"
+    },
+    {
+      "source": "construction[6]/bottom_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_base_length**2"
+    },
+    {
+      "source": "construction[7]/top_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(-v_top_left_x + v_top_right_x)**2"
+    },
+    {
+      "source": "construction[8]/left_leg:Segment:result:line_direction",
+      "operator": "!=",
+      "expression": "v_height**2 + v_top_left_x**2"
+    },
+    {
+      "source": "construction[9]/right_leg:Segment:result:line_direction",
+      "operator": "!=",
+      "expression": "v_height**2 + (-v_base_length + v_top_right_x)**2"
+    },
+    {
+      "source": "construction[13]/midline:Segment:result:line_direction",
+      "operator": "!=",
+      "expression": "(v_base_length/2 - v_top_left_x/2 + v_top_right_x/2)**2"
+    },
+    {
+      "source": "construction[14]/midline_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(v_base_length/2 - v_top_left_x/2 + v_top_right_x/2)**2"
+    },
+    {
+      "source": "construction[15]/P:PointOnSegment:segment",
+      "operator": "!=",
+      "expression": "v_height**2 + v_top_left_x**2"
+    },
+    {
+      "source": "construction[16]/Q:PointOnSegment:segment",
+      "operator": "!=",
+      "expression": "v_height**2 + (v_base_length - v_top_right_x)**2"
+    },
+    {
+      "source": "construction[17]/bisector:Segment:result:line_direction",
+      "operator": "!=",
+      "expression": "(-v_base_length*v_section_fraction + v_base_length - v_section_fraction*v_top_left_x + v_section_fraction*v_top_right_x)**2"
+    },
+    {
+      "source": "construction[18]/bisector_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(-v_base_length*v_section_fraction + v_base_length - v_section_fraction*v_top_left_x + v_section_fraction*v_top_right_x)**2"
+    },
+    {
+      "source": "condition[0]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_base_length"
+    },
+    {
+      "source": "condition[1]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_height"
+    },
+    {
+      "source": "condition[2]:explicit_comparison",
+      "operator": ">",
+      "expression": "-v_top_left_x + v_top_right_x"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "s3"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": ">",
+      "expression": "s4"
+    },
+    {
+      "source": "condition[7]:Bound:endpoint",
+      "operator": ">",
+      "expression": "v_section_fraction"
+    },
+    {
+      "source": "condition[7]:Bound:endpoint",
+      "operator": "<",
+      "expression": "v_section_fraction - 1"
+    },
+    {
+      "source": "condition[8]:explicit_comparison",
+      "operator": ">",
+      "expression": "s5"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t8"
+}

@@ -1,0 +1,57 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "z1",
+    "z2",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_px",
+    "x2": "v_r",
+    "x3": "s1",
+    "x4": "s2",
+    "x5": "s3",
+    "x6": "t4"
+  },
+  "target_variable": "x6",
+  "equations": [
+    "-x1**2 + x3**2 - 144",
+    "x3 - 13",
+    "-x2**2 + x4**2",
+    "-x2 + x4",
+    "-x1**2 - x2**2 + 24*x2 + x5**2 - 144",
+    "-x2 + x5",
+    "-x2 + x6"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x2"
+  ],
+  "polynomial": "24*x6 - 169",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "method": "rabinowitsch",
+  "coefficients": [
+    "-yy",
+    "x3*yy+13*yy",
+    "0",
+    "0",
+    "yy",
+    "-x5*yy-x6*yy",
+    "-x2*yy+x5*yy+24*yy",
+    "0",
+    "0",
+    "1"
+  ],
+  "exponent": null
+}

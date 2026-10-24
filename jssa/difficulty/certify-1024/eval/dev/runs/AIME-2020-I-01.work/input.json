@@ -1,0 +1,109 @@
+{
+  "id": "AIME-2020-I-01",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": "Distance(A, C)"
+      },
+      {
+        "left": "Distance(A, E)",
+        "operator": "=",
+        "right": "Distance(E, D)"
+      },
+      {
+        "left": "Distance(E, D)",
+        "operator": "=",
+        "right": "Distance(D, B)"
+      },
+      {
+        "left": "Distance(D, B)",
+        "operator": "=",
+        "right": "Distance(B, C)"
+      },
+      {
+        "left": "Collinear(A, D, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(D, A, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(E, A, B)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "bx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "e",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "e",
+        "operator": "<",
+        "right": "bx"
+      },
+      {
+        "left": "dy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "dx",
+        "operator": "<",
+        "right": "cx"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(bx, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(dx, dy)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(e, 0)",
+        "name": "E"
+      }
+    ],
+    "id": "AIME-2020-I-01",
+    "target": "180 * Angle(A, B, C) / pi",
+    "variables": [
+      "bx",
+      "cx",
+      "cy",
+      "dx",
+      "dy",
+      "e"
+    ]
+  }
+}

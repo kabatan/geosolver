@@ -1,0 +1,209 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "z1",
+    "z2",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_t",
+    "x2": "s1",
+    "x3": "s2",
+    "x4": "t3"
+  },
+  "target_variable": "x4",
+  "equations": [
+    "-625*x1**2 + x2**2",
+    "-1296*x1**2/25 + 2592*x1/25 + x3**2 - 1296/25",
+    "x4 - 36/125"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x1 - 1"
+  ],
+  "polynomial": "125*x4 - 36",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[3]/lineBC:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "625"
+    },
+    {
+      "source": "construction[4]/lineAC:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "289"
+    },
+    {
+      "source": "construction[6]/Q:ParallelLine:argument:line_direction",
+      "operator": "!=",
+      "expression": "625"
+    },
+    {
+      "source": "construction[6]/Q:ParallelLine:result:line_direction",
+      "operator": "!=",
+      "expression": "625"
+    },
+    {
+      "source": "construction[6]/Q:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "625"
+    },
+    {
+      "source": "construction[6]/Q:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "289"
+    },
+    {
+      "source": "construction[7]/R:PerpendicularLine:argument:line_direction",
+      "operator": "!=",
+      "expression": "625"
+    },
+    {
+      "source": "construction[7]/R:PerpendicularLine:result:line_direction",
+      "operator": "!=",
+      "expression": "625"
+    },
+    {
+      "source": "construction[7]/R:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "625"
+    },
+    {
+      "source": "construction[7]/R:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "625"
+    },
+    {
+      "source": "construction[8]/S:PerpendicularLine:argument:line_direction",
+      "operator": "!=",
+      "expression": "625"
+    },
+    {
+      "source": "construction[8]/S:PerpendicularLine:result:line_direction",
+      "operator": "!=",
+      "expression": "625"
+    },
+    {
+      "source": "construction[8]/S:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "625"
+    },
+    {
+      "source": "construction[8]/S:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "625"
+    },
+    {
+      "source": "condition[3]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "144"
+    },
+    {
+      "source": "condition[4]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "289"
+    },
+    {
+      "source": "condition[5]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "625"
+    },
+    {
+      "source": "condition[6]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "625"
+    },
+    {
+      "source": "condition[7]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "625*v_t**2"
+    },
+    {
+      "source": "condition[7]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "625*v_t**2"
+    },
+    {
+      "source": "condition[7]:Parallel:argument:line_direction",
+      "operator": "!=",
+      "expression": "625*v_t**2"
+    },
+    {
+      "source": "condition[7]:Parallel:argument:line_direction",
+      "operator": "!=",
+      "expression": "625*v_t**2"
+    },
+    {
+      "source": "condition[8]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(108/25 - 108*v_t/25)**2 + (144/25 - 144*v_t/25)**2"
+    },
+    {
+      "source": "condition[8]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(108*v_t/25 - 108/25)**2 + (144*v_t/25 - 144/25)**2"
+    },
+    {
+      "source": "condition[8]:Parallel:argument:line_direction",
+      "operator": "!=",
+      "expression": "(108/25 - 108*v_t/25)**2 + (144/25 - 144*v_t/25)**2"
+    },
+    {
+      "source": "condition[8]:Parallel:argument:line_direction",
+      "operator": "!=",
+      "expression": "(108*v_t/25 - 108/25)**2 + (144*v_t/25 - 144/25)**2"
+    },
+    {
+      "source": "condition[9]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "625*v_t**2"
+    },
+    {
+      "source": "condition[9]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(108/25 - 108*v_t/25)**2 + (144/25 - 144*v_t/25)**2"
+    },
+    {
+      "source": "condition[9]:Perpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "625*v_t**2"
+    },
+    {
+      "source": "condition[9]:Perpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "(108/25 - 108*v_t/25)**2 + (144/25 - 144*v_t/25)**2"
+    },
+    {
+      "source": "condition[12]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_t"
+    },
+    {
+      "source": "condition[13]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_t - 1"
+    },
+    {
+      "source": "target:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "625"
+    },
+    {
+      "source": "target:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "625"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t3"
+}

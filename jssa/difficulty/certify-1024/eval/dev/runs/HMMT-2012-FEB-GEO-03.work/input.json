@@ -1,0 +1,83 @@
+{
+  "id": "HMMT-2012-FEB-GEO-03",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(B, D)",
+        "operator": "=",
+        "right": "Distance(B, I)"
+      },
+      {
+        "left": "Distance(C, E)",
+        "operator": "=",
+        "right": "Distance(C, I)"
+      },
+      {
+        "left": "Perpendicular(Line(D, E), Line(A, I))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(M, A)",
+        "operator": "=",
+        "right": "Distance(M, I)"
+      },
+      {
+        "left": "alpha",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "alpha",
+        "operator": "<",
+        "right": "pi"
+      },
+      {
+        "left": "d",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "d",
+        "operator": "<",
+        "right": "1"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(cos(alpha / 2), sin(alpha / 2))",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cos(alpha / 2), -sin(alpha / 2))",
+        "name": "C"
+      },
+      {
+        "expression": "Incenter(A, B, C)",
+        "name": "I"
+      },
+      {
+        "expression": "Point(d * cos(alpha / 2), d * sin(alpha / 2))",
+        "name": "D"
+      },
+      {
+        "expression": "Point(d * cos(alpha / 2), -d * sin(alpha / 2))",
+        "name": "E"
+      },
+      {
+        "expression": "Midpoint(D, E)",
+        "name": "M"
+      }
+    ],
+    "id": "HMMT-2012-FEB-GEO-03",
+    "target": "180 * Angle(B, A, C) / pi",
+    "variables": [
+      "alpha",
+      "d"
+    ]
+  }
+}

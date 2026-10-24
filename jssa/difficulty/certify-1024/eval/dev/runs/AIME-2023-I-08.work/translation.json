@@ -1,0 +1,192 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "x13",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_px",
+    "x2": "v_py",
+    "x3": "v_s",
+    "x4": "v_u",
+    "x5": "v_v",
+    "x6": "s1",
+    "x7": "s2",
+    "x8": "s3",
+    "x9": "s4",
+    "x10": "s5",
+    "x11": "s6",
+    "x12": "s7",
+    "x13": "t8"
+  },
+  "target_variable": "x13",
+  "equations": [
+    "-x5**2/4 + x6**2",
+    "-x3**2 + x7**2",
+    "-x4**2 - x5**2 + x8**2",
+    "x7 - x8",
+    "-x3**2*x5**2/4 + x4**2*x9**2 + x5**2*x9**2",
+    "x6 - x9",
+    "-x1**2 + x1*x3 + x1*x4 - x2**2 + x2*x5 - x3**2/4 - x3*x4/2 - x4**2/4 - x5**2/4 + x6**2",
+    "-x1**2*x5**2 + 2*x1*x2*x4*x5 + x10**2*x4**2 + x10**2*x5**2 - x2**2*x4**2",
+    "x10 - 9",
+    "x11**2 - x2**2",
+    "x11 - 5",
+    "-x1**2*x5**2 + 2*x1*x2*x4*x5 + 2*x1*x3*x5**2 + x12**2*x4**2 + x12**2*x5**2 - x2**2*x4**2 - 2*x2*x3*x4*x5 - x3**2*x5**2",
+    "x12 - 16",
+    "x13 - 4*x3"
+  ],
+  "saturation_factors": [
+    "x6",
+    "x3",
+    "x4",
+    "x5",
+    "x4**2 + x5**2"
+  ],
+  "polynomial": "x13 - 125",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[5]/omega:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_s**2"
+    },
+    {
+      "source": "construction[5]/omega:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_s**2"
+    },
+    {
+      "source": "construction[5]/omega:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "s1**2"
+    },
+    {
+      "source": "construction[5]/omega:Circle:result:radius",
+      "operator": ">",
+      "expression": "s1"
+    },
+    {
+      "source": "condition[1]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_s**2"
+    },
+    {
+      "source": "condition[1]:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_s**2"
+    },
+    {
+      "source": "condition[1]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_u**2 + v_v**2"
+    },
+    {
+      "source": "condition[1]:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_u**2 + v_v**2"
+    },
+    {
+      "source": "condition[2]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_s**2"
+    },
+    {
+      "source": "condition[2]:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_s**2"
+    },
+    {
+      "source": "condition[2]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_u**2 + v_v**2"
+    },
+    {
+      "source": "condition[2]:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_u**2 + v_v**2"
+    },
+    {
+      "source": "condition[3]:OnCircle:argument:radius_squared",
+      "operator": ">",
+      "expression": "s1**2"
+    },
+    {
+      "source": "condition[3]:OnCircle:argument:radius",
+      "operator": ">",
+      "expression": "s1"
+    },
+    {
+      "source": "condition[4]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_u**2 + v_v**2"
+    },
+    {
+      "source": "condition[4]:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_u**2 + v_v**2"
+    },
+    {
+      "source": "condition[5]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_s**2"
+    },
+    {
+      "source": "condition[5]:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_s**2"
+    },
+    {
+      "source": "condition[6]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_u**2 + v_v**2"
+    },
+    {
+      "source": "condition[6]:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_u**2 + v_v**2"
+    },
+    {
+      "source": "condition[7]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_s"
+    },
+    {
+      "source": "condition[8]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_v"
+    },
+    {
+      "source": "condition[9]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_u"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t8"
+}

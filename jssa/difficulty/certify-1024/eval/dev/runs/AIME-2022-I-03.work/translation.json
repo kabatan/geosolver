@@ -1,0 +1,142 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_h",
+    "x2": "s1",
+    "x3": "s2",
+    "x4": "t3"
+  },
+  "target_variable": "x4",
+  "equations": [
+    "-x1**2 + x2**2 - 5625",
+    "x2 - 333",
+    "x2**2 - 1150*x2 - x3**2 + 330625",
+    "x3 - x4"
+  ],
+  "saturation_factors": [
+    "x2",
+    "x3",
+    "x1",
+    "x1**2 + x2**2 + 150*x2 + 5625",
+    "x1**2 + x2**2 - 150*x2 + 5625",
+    "x1**2 + 5625"
+  ],
+  "polynomial": "x4 - 242",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[4]/P:AngleBisector:first_ray",
+      "operator": "!=",
+      "expression": "v_h**2 + 5625"
+    },
+    {
+      "source": "construction[4]/P:AngleBisector:second_ray",
+      "operator": "!=",
+      "expression": "250000"
+    },
+    {
+      "source": "construction[4]/P:AngleBisector:result:line_direction",
+      "operator": "!=",
+      "expression": "250000*v_h**2 + (500*s1 - 37500)**2"
+    },
+    {
+      "source": "construction[4]/P:AngleBisector:first_ray",
+      "operator": "!=",
+      "expression": "422500"
+    },
+    {
+      "source": "construction[4]/P:AngleBisector:second_ray",
+      "operator": "!=",
+      "expression": "v_h**2 + 5625"
+    },
+    {
+      "source": "construction[4]/P:AngleBisector:result:line_direction",
+      "operator": "!=",
+      "expression": "422500*v_h**2 + (650*s1 + 48750)**2"
+    },
+    {
+      "source": "construction[4]/P:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "250000*v_h**2 + (500*s1 - 37500)**2"
+    },
+    {
+      "source": "construction[4]/P:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "422500*v_h**2 + (650*s1 + 48750)**2"
+    },
+    {
+      "source": "construction[5]/Q:AngleBisector:first_ray",
+      "operator": "!=",
+      "expression": "250000"
+    },
+    {
+      "source": "construction[5]/Q:AngleBisector:second_ray",
+      "operator": "!=",
+      "expression": "v_h**2 + 5625"
+    },
+    {
+      "source": "construction[5]/Q:AngleBisector:result:line_direction",
+      "operator": "!=",
+      "expression": "250000*v_h**2 + (37500 - 500*s1)**2"
+    },
+    {
+      "source": "construction[5]/Q:AngleBisector:first_ray",
+      "operator": "!=",
+      "expression": "v_h**2 + 5625"
+    },
+    {
+      "source": "construction[5]/Q:AngleBisector:second_ray",
+      "operator": "!=",
+      "expression": "422500"
+    },
+    {
+      "source": "construction[5]/Q:AngleBisector:result:line_direction",
+      "operator": "!=",
+      "expression": "422500*v_h**2 + (-650*s1 - 48750)**2"
+    },
+    {
+      "source": "construction[5]/Q:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "250000*v_h**2 + (37500 - 500*s1)**2"
+    },
+    {
+      "source": "construction[5]/Q:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "422500*v_h**2 + (-650*s1 - 48750)**2"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_h"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": ">",
+      "expression": "s2"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t3"
+}

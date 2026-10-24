@@ -1,0 +1,87 @@
+{
+  "id": "JMO-2019-PRE-08",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Collinear(A, E, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, E)",
+        "operator": "=",
+        "right": "Distance(A, C) / 9"
+      },
+      {
+        "left": "OnSegment(E, A, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(D, E)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(D, I)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(E, I)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "Distance(A, C)"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(b, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Incenter(A, B, C)",
+        "name": "I"
+      },
+      {
+        "expression": "Point(b / 9, 0)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(ex, ey)",
+        "name": "E"
+      }
+    ],
+    "id": "JMO-2019-PRE-08",
+    "target": "Distance(A, B)",
+    "variables": [
+      "b",
+      "cx",
+      "cy",
+      "ex",
+      "ey"
+    ]
+  }
+}

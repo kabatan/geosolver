@@ -1,0 +1,63 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "z1",
+    "z2",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_t",
+    "x2": "s1",
+    "x3": "s2",
+    "x4": "s3",
+    "x5": "t4"
+  },
+  "target_variable": "x5",
+  "equations": [
+    "-x1**2 - 2*x1 + x2**2 - 1",
+    "-x1**2 + 2*x1 + x3**2 - 1",
+    "x2 - 2*x3",
+    "-8*x1**2 + 12*x1 + x4**2 - 5",
+    "x4 - x5"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x1 - 1"
+  ],
+  "polynomial": "9*x5**2 - 17",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "condition[2]:Angle:first_ray",
+      "operator": "!=",
+      "expression": "4"
+    },
+    {
+      "source": "condition[2]:Angle:second_ray",
+      "operator": "!=",
+      "expression": "4"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_t"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_t - 1"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t4"
+}

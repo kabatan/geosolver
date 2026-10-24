@@ -1,0 +1,71 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "z1",
+    "z2",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_ax",
+    "x2": "v_ay",
+    "x3": "v_t",
+    "x4": "s1",
+    "x5": "s2",
+    "x6": "s3",
+    "x7": "s4",
+    "x8": "s5",
+    "x9": "s6",
+    "x10": "t7"
+  },
+  "target_variable": "x10",
+  "equations": [
+    "-x1**2 + 8*x1*x3 - x2**2 - 16*x3**2 + x4**2",
+    "-16*x3**2 + x5**2",
+    "x4 - x5",
+    "-x1**2/4 + 7*x1*x3/2 - x2**2/4 - 49*x3**2/4 + x6**2",
+    "x7**2 - 7",
+    "x6 - x7",
+    "-x1**2/4 - x1*x3/2 - x2**2/4 - x3**2/4 + x8**2",
+    "x8 - 3",
+    "-4*x2**2*x3**2 + x9**2",
+    "-x10 + x9"
+  ],
+  "saturation_factors": [
+    "x2",
+    "x3"
+  ],
+  "polynomial": "x10**2 - 63",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "method": "rabinowitsch",
+  "coefficients": [
+    "4/31*x2^2*yy-12/31*x1*z2*yy+7/31*z2^2*yy-28/31*yy",
+    "-4/31*x2^2*yy+12/31*x1*z2*yy-7/31*z2^2*yy+28/31*yy",
+    "-4/31*x2^2*x4*yy-4/31*x2^2*x5*yy+12/31*x1*x4*z2*yy+12/31*x1*x5*z2*yy-7/31*x4*z2^2*yy-7/31*x5*z2^2*yy+28/31*x4*yy+28/31*x5*yy",
+    "-10/31*x2^2*yy-1/31*x1*z2*yy-126/31*z2^2*yy+8/31*yy",
+    "10/31*x2^2*yy+1/31*x1*z2*yy+126/31*z2^2*yy-8/31*yy",
+    "10/31*x2^2*x6*yy+10/31*x2^2*x7*yy+1/31*x1*x6*z2*yy+1/31*x1*x7*z2*yy+126/31*x6*z2^2*yy+126/31*x7*z2^2*yy-8/31*x6*yy-8/31*x7*yy",
+    "-6/31*x2^2*yy+49/31*x1*z2*yy+98/31*z2^2*yy-392/31*yy",
+    "6/31*x2^2*x8*yy-49/31*x1*x8*z2*yy-98/31*x8*z2^2*yy+18/31*x2^2*yy-147/31*x1*z2*yy-294/31*z2^2*yy+392/31*x8*yy+1176/31*yy",
+    "yy",
+    "-x9*yy-x10*yy",
+    "0",
+    "-4*x1^2*yy-14*x1*z2*yy+49*x3*z2*yy+49*yy",
+    "1"
+  ],
+  "exponent": null
+}

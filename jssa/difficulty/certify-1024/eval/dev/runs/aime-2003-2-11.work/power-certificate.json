@@ -1,0 +1,50 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "z1",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_x",
+    "x2": "v_y",
+    "x3": "s1",
+    "x4": "s2",
+    "x5": "s3",
+    "x6": "t4"
+  },
+  "target_variable": "x6",
+  "equations": [
+    "-x1**2 - x2**2 + 14*x2 + x3**2 - 49",
+    "x3 - 15",
+    "-x1**2 + 48*x1 - x2**2 + x4**2 - 576",
+    "x4 - 15",
+    "-49*x1**2/16 + 21*x1*x2 - 36*x2**2 + x5**2",
+    "x5 - x6"
+  ],
+  "saturation_factors": [
+    "x1 + 24*x2/7 - 24"
+  ],
+  "polynomial": "1600*x6**2 - 3055019",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "method": "power",
+  "coefficients": [
+    "20592/25*x1+23506/25*x2-884833/25",
+    "-20592/25*x1*x3-23506/25*x2*x3-61776/5*x1-70518/5*x2+884833/25*x3+2654499/5",
+    "-20592/25*x1-23506/25*x2-226083/25",
+    "20592/25*x1*x4+23506/25*x2*x4+61776/5*x1+70518/5*x2+226083/25*x4+678249/5",
+    "1600",
+    "-1600*x5-1600*x6",
+    "0"
+  ],
+  "exponent": 1
+}

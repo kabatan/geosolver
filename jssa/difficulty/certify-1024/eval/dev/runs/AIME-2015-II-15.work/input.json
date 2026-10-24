@@ -1,0 +1,109 @@
+{
+  "id": "AIME-2015-II-15",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "OnCircle(B, omega1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(C, omega2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(Line(B, C), omega1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(Line(B, C), omega2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(D, omega1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(E, omega2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnLine(E, A, D)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Area(D, B, A)",
+        "operator": "=",
+        "right": "Area(A, C, E)"
+      },
+      {
+        "left": "(Vector(A, B).x * Vector(A, D).y - Vector(A, B).y * Vector(A, D).x) * (Vector(A, C).x * Vector(A, D).y - Vector(A, C).y * Vector(A, D).x)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(A, E)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "O1"
+      },
+      {
+        "expression": "Point(5, 0)",
+        "name": "O2"
+      },
+      {
+        "expression": "Point(1, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Circle(O1, 1)",
+        "name": "omega1"
+      },
+      {
+        "expression": "Circle(O2, 4)",
+        "name": "omega2"
+      },
+      {
+        "expression": "Point(-3 / 5, 4 / 5)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(13 / 5, 16 / 5)",
+        "name": "C"
+      },
+      {
+        "expression": "Line(A, Point(A.x + cos(theta), A.y + sin(theta)))",
+        "name": "L"
+      },
+      {
+        "expression": "Intersect(L, omega1, exclude=A)",
+        "name": "D"
+      },
+      {
+        "expression": "Intersect(L, omega2, exclude=A)",
+        "name": "E"
+      }
+    ],
+    "id": "AIME-2015-II-15",
+    "target": "Area(D, B, A)",
+    "variables": [
+      "theta"
+    ]
+  }
+}

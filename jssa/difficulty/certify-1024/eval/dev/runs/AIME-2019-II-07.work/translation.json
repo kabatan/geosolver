@@ -1,0 +1,295 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "s1",
+    "x2": "s2",
+    "x3": "s3",
+    "x4": "s4",
+    "x5": "s5",
+    "x6": "s6",
+    "x7": "s7",
+    "x8": "t8"
+  },
+  "target_variable": "x8",
+  "equations": [
+    "x1**2 - 291200",
+    "x1**2 - 9*x2**2 + 144400",
+    "x2 - 220",
+    "x1**2 - 9*x3**2 + 400",
+    "x3 - 180",
+    "x1**2 - 144*x4**2 + 144400",
+    "x4 - 55",
+    "x1**2 - 144*x5**2 + 400",
+    "x5 - 45",
+    "x1**2 - 576*x6**2/121 + 400",
+    "x1**2 - 576*x7**2/121 + 144400",
+    "x6 + x7 - x8 + 165"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x6",
+    "x7",
+    "x1**2 + 144400",
+    "x1**2 + 400"
+  ],
+  "polynomial": "x8 - 715",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[3]/Ua:PointOnSegment:segment",
+      "operator": "!=",
+      "expression": "14400"
+    },
+    {
+      "source": "construction[4]/Ub:PointOnSegment:segment",
+      "operator": "!=",
+      "expression": "14400"
+    },
+    {
+      "source": "construction[5]/Uc:PointOnSegment:segment",
+      "operator": "!=",
+      "expression": "s1**2/9 + 400/9"
+    },
+    {
+      "source": "construction[6]/lA:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "s1**2/9 + 144400/9"
+    },
+    {
+      "source": "construction[6]/lA:ParallelLine:argument:line_direction",
+      "operator": "!=",
+      "expression": "s1**2/9 + 144400/9"
+    },
+    {
+      "source": "construction[6]/lA:ParallelLine:result:line_direction",
+      "operator": "!=",
+      "expression": "s1**2/9 + 144400/9"
+    },
+    {
+      "source": "construction[7]/lB:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "s1**2/9 + 400/9"
+    },
+    {
+      "source": "construction[7]/lB:ParallelLine:argument:line_direction",
+      "operator": "!=",
+      "expression": "s1**2/9 + 400/9"
+    },
+    {
+      "source": "construction[7]/lB:ParallelLine:result:line_direction",
+      "operator": "!=",
+      "expression": "s1**2/9 + 400/9"
+    },
+    {
+      "source": "construction[8]/lC:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "14400"
+    },
+    {
+      "source": "construction[8]/lC:ParallelLine:argument:line_direction",
+      "operator": "!=",
+      "expression": "14400"
+    },
+    {
+      "source": "construction[8]/lC:ParallelLine:result:line_direction",
+      "operator": "!=",
+      "expression": "14400"
+    },
+    {
+      "source": "construction[9]/A1:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "14400"
+    },
+    {
+      "source": "construction[9]/A1:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "s1**2/9 + 144400/9"
+    },
+    {
+      "source": "construction[9]/A1:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "14400"
+    },
+    {
+      "source": "construction[10]/A2:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "s1**2/9 + 400/9"
+    },
+    {
+      "source": "construction[10]/A2:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "s1**2/9 + 144400/9"
+    },
+    {
+      "source": "construction[10]/A2:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "s1**2/9 + 400/9"
+    },
+    {
+      "source": "construction[11]/B1:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "14400"
+    },
+    {
+      "source": "construction[11]/B1:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "s1**2/9 + 400/9"
+    },
+    {
+      "source": "construction[11]/B1:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "14400"
+    },
+    {
+      "source": "construction[12]/B2:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "s1**2/9 + 144400/9"
+    },
+    {
+      "source": "construction[12]/B2:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "s1**2/9 + 400/9"
+    },
+    {
+      "source": "construction[12]/B2:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "s1**2/9 + 144400/9"
+    },
+    {
+      "source": "construction[13]/C1:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "s1**2/9 + 400/9"
+    },
+    {
+      "source": "construction[13]/C1:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "14400"
+    },
+    {
+      "source": "construction[13]/C1:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "s1**2/9 + 400/9"
+    },
+    {
+      "source": "construction[14]/C2:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "s1**2/9 + 144400/9"
+    },
+    {
+      "source": "construction[14]/C2:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "14400"
+    },
+    {
+      "source": "construction[14]/C2:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "s1**2/9 + 144400/9"
+    },
+    {
+      "source": "construction[15]/I:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "s1**2/9 + 144400/9"
+    },
+    {
+      "source": "construction[15]/I:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "s1**2/9 + 400/9"
+    },
+    {
+      "source": "construction[16]/J:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "s1**2/9 + 400/9"
+    },
+    {
+      "source": "construction[16]/J:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "14400"
+    },
+    {
+      "source": "construction[17]/K:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "14400"
+    },
+    {
+      "source": "construction[17]/K:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "s1**2/9 + 144400/9"
+    },
+    {
+      "source": "condition[6]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "14400"
+    },
+    {
+      "source": "condition[7]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "s1**2/9 + 400/9"
+    },
+    {
+      "source": "condition[8]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "14400"
+    },
+    {
+      "source": "condition[9]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "s1**2/9 + 144400/9"
+    },
+    {
+      "source": "condition[10]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "s1**2/9 + 400/9"
+    },
+    {
+      "source": "condition[11]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "s1**2/9 + 144400/9"
+    },
+    {
+      "source": "condition[12]:explicit_comparison",
+      "operator": ">",
+      "expression": "s1/3"
+    },
+    {
+      "source": "condition[13]:explicit_comparison",
+      "operator": ">",
+      "expression": "s6"
+    },
+    {
+      "source": "condition[14]:explicit_comparison",
+      "operator": ">",
+      "expression": "165"
+    },
+    {
+      "source": "condition[15]:explicit_comparison",
+      "operator": ">",
+      "expression": "s7"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t8"
+}

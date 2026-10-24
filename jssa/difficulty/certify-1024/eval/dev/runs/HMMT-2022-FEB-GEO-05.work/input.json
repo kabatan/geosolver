@@ -1,0 +1,76 @@
+{
+  "id": "HMMT-2022-FEB-GEO-05",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 22
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 22
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 11
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": 19
+      },
+      {
+        "left": "Angle(A, B, D) + Angle(A, C, D)",
+        "operator": "=",
+        "right": "pi / 2"
+      },
+      {
+        "left": "dy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Vector(A, B).x * Vector(A, D).y - Vector(A, B).y * Vector(A, D).x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Vector(B, C).x * Vector(B, D).y - Vector(B, C).y * Vector(B, D).x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Vector(C, A).x * Vector(C, D).y - Vector(C, A).y * Vector(C, D).x",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(-11 / 2, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(11 / 2, 0)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(0, sqrt(22 * 22 - 11 / 2 * (11 / 2)))",
+        "name": "A"
+      },
+      {
+        "expression": "Point(dx, dy)",
+        "name": "D"
+      }
+    ],
+    "id": "HMMT-2022-FEB-GEO-05",
+    "target": "Distance(B, D) ** 2 + Distance(C, D) ** 2",
+    "variables": [
+      "dx",
+      "dy"
+    ]
+  }
+}

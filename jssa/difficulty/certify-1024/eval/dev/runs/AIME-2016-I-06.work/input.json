@@ -1,0 +1,69 @@
+{
+  "id": "AIME-2016-I-06",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(L, I)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Distance(L, D)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(b, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Incenter(A, B, C)",
+        "name": "I"
+      },
+      {
+        "expression": "Intersect(Line(C, I), Line(A, B))",
+        "name": "L"
+      },
+      {
+        "expression": "Circumcircle(A, B, C)",
+        "name": "Gamma"
+      },
+      {
+        "expression": "Intersect(Line(C, L), Gamma, exclude=C)",
+        "name": "D"
+      }
+    ],
+    "id": "AIME-2016-I-06",
+    "target": "Distance(I, C)",
+    "variables": [
+      "b",
+      "cx",
+      "cy"
+    ]
+  }
+}

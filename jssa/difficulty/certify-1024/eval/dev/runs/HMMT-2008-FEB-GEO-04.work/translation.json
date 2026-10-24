@@ -1,0 +1,101 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_Ax",
+    "x2": "v_Ay",
+    "x3": "p1",
+    "x4": "p2",
+    "x5": "s3",
+    "x6": "s4",
+    "x7": "s5",
+    "x8": "s6",
+    "x9": "t7"
+  },
+  "target_variable": "x9",
+  "equations": [
+    "-x1**2/2 + 7*x1 - x2**2/2 + x2*x3",
+    "-x1**2/2 + 16*x1 - x2**2/2 + x2*x4 - 126",
+    "-x1**2 + 28*x1 - x2**2 + x5**2 - 196",
+    "x5 - 13",
+    "x1**2 - 14*x1 + x2**2 - 2*x2*x3 + x3**2 - x6**2 + 49",
+    "x1**2 - 32*x1 + x2**2 - 2*x2*x4 + x4**2 - x7**2 + 256",
+    "x6 - x7",
+    "-81*x2**2 + x8**2",
+    "x8 - x9"
+  ],
+  "saturation_factors": [
+    "x8",
+    "x2",
+    "x1**2 - 14*x1 + x2**2 - 2*x2*x3 + x3**2 + 49",
+    "x1**2 - 32*x1 + x2**2 - 2*x2*x4 + x4**2 + 256"
+  ],
+  "polynomial": "x9 - 108",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[4]/Gamma1:Circumcircle:triangle",
+      "operator": "!=",
+      "expression": "v_Ax*v_Ay + v_Ay*(14 - v_Ax)"
+    },
+    {
+      "source": "construction[4]/Gamma1:Circumcircle:result:radius_squared",
+      "operator": ">",
+      "expression": "(-p1 + v_Ay)**2 + (v_Ax - 7)**2"
+    },
+    {
+      "source": "construction[5]/Gamma2:Circumcircle:triangle",
+      "operator": "!=",
+      "expression": "-v_Ay*(14 - v_Ax) + v_Ay*(18 - v_Ax)"
+    },
+    {
+      "source": "construction[5]/Gamma2:Circumcircle:result:radius_squared",
+      "operator": ">",
+      "expression": "(-p2 + v_Ay)**2 + (v_Ax - 16)**2"
+    },
+    {
+      "source": "condition[3]:Radius:argument:radius_squared",
+      "operator": ">",
+      "expression": "(-p1 + v_Ay)**2 + (v_Ax - 7)**2"
+    },
+    {
+      "source": "condition[3]:Radius:argument:radius_squared",
+      "operator": ">",
+      "expression": "(-p2 + v_Ay)**2 + (v_Ax - 16)**2"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_Ay"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": ">",
+      "expression": "s6"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t7"
+}

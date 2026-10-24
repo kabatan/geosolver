@@ -1,0 +1,109 @@
+{
+  "id": "HMMT-2025-FEB-GEO-08",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "Parallel(Line(A, B), Line(C, D))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": "Distance(B, C)"
+      },
+      {
+        "left": "Distance(D, E)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Distance(O, A)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(O, B)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(O, C)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(O, D)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(O, M)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "dy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cd",
+        "operator": ">",
+        "right": "4"
+      },
+      {
+        "predicate": "SimplePolygon([A, B, C, D])"
+      },
+      {
+        "left": "OnSegment(D, E, C)",
+        "operator": "=",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(4, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(dx, dy)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(dx + cd, dy)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(dx - 2, dy)",
+        "name": "E"
+      },
+      {
+        "expression": "Midpoint(A, E)",
+        "name": "M"
+      },
+      {
+        "expression": "Point(ox, oy)",
+        "name": "O"
+      }
+    ],
+    "id": "HMMT-2025-FEB-GEO-08",
+    "target": "Distance(M, D)",
+    "variables": [
+      "dx",
+      "dy",
+      "cd",
+      "ox",
+      "oy"
+    ]
+  }
+}

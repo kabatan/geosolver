@@ -1,0 +1,97 @@
+{
+  "id": "JMO-2016-PRE-05",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 20
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": 16
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": "Distance(A, C)"
+      },
+      {
+        "left": "Distance(A, P)",
+        "operator": "=",
+        "right": "Distance(A, D)"
+      },
+      {
+        "left": "Distance(B, P)",
+        "operator": "=",
+        "right": "Distance(C, D)"
+      },
+      {
+        "left": "Collinear(C, P, D)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(P, C, D)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Area(A, P, D)",
+        "operator": "=",
+        "right": 28
+      },
+      {
+        "left": "by",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "py",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "SimplePolygon([A,B,C,D])"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(16, 0)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(bx, by)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(px, py)",
+        "name": "P"
+      }
+    ],
+    "id": "JMO-2016-PRE-05",
+    "target": "Area(B, C, P)",
+    "variables": [
+      "bx",
+      "by",
+      "cx",
+      "cy",
+      "px",
+      "py"
+    ]
+  }
+}

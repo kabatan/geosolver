@@ -1,0 +1,79 @@
+{
+  "id": "AIME-2025-I-06",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Area(A, B, C, D)",
+        "operator": "=",
+        "right": 72
+      },
+      {
+        "left": "Distance(O, Line(A, B))",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(O, Line(B, C))",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(O, Line(C, D))",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(O, Line(D, A))",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r",
+        "operator": "!=",
+        "right": "s"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(-r / 2, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(r / 2, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(s / 2, 6)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(-s / 2, 6)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(0, 3)",
+        "name": "O"
+      },
+      {
+        "expression": "Circle(O, 3)",
+        "name": "omega"
+      }
+    ],
+    "id": "AIME-2025-I-06",
+    "target": "r * r + s * s",
+    "variables": [
+      "r",
+      "s"
+    ]
+  }
+}

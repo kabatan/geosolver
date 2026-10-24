@@ -1,0 +1,115 @@
+{
+  "id": "AIME-2007-I-15",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": "s"
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": "s"
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": "s"
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Distance(F, A)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "OnSegment(E, C, A)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Angle(D, E, F)",
+        "operator": "=",
+        "right": "pi / 3"
+      },
+      {
+        "left": "Area(D, E, F)",
+        "operator": "=",
+        "right": "14 * sqrt(3)"
+      },
+      {
+        "left": "s",
+        "operator": ">",
+        "right": "5"
+      },
+      {
+        "left": "ex",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "ex",
+        "operator": "<",
+        "right": "s / 2"
+      },
+      {
+        "left": "ey",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "ey",
+        "operator": "<",
+        "right": "sqrt(3) * s / 2"
+      },
+      {
+        "left": "Distance(B, D)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(B, D)",
+        "operator": "<",
+        "right": "s"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(s, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(s / 2, sqrt(3) * s / 2)",
+        "name": "C"
+      },
+      {
+        "expression": "Point(5, 0)",
+        "name": "F"
+      },
+      {
+        "expression": "Point(s / 2 + 2 * (s - s / 2) / s, sqrt(3) * s / 2 - 2 * (sqrt(3) * s / 2) / s)",
+        "name": "D"
+      },
+      {
+        "expression": "Point(ex, ey)",
+        "name": "E"
+      }
+    ],
+    "id": "AIME-2007-I-15",
+    "target": "Distance(A, B)",
+    "variables": [
+      "s",
+      "ex",
+      "ey"
+    ]
+  }
+}

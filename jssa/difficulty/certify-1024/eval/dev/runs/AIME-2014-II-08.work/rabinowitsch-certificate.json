@@ -1,0 +1,63 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "z1",
+    "z2",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_e",
+    "x2": "v_ex",
+    "x3": "s1",
+    "x4": "s2",
+    "x5": "s3",
+    "x6": "s4",
+    "x7": "t5"
+  },
+  "target_variable": "x7",
+  "equations": [
+    "-9*x1**2 + 12*x1 + x3**2 - 4",
+    "3*x1 + x3 - 2",
+    "-x1**2 - x2**2 + x4**2",
+    "x1 + x4 - 2",
+    "-10*x1**2 + 6*x1*x2 + 12*x1 - x2**2 - 4*x2 + x5**2 - 4",
+    "-4*x1 + x5",
+    "-x1**2 + x6**2",
+    "-x1 + x6",
+    "-3*x1 + x7"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x1 - 2/3"
+  ],
+  "polynomial": "x7**2 + 28*x7 - 44",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "method": "rabinowitsch",
+  "coefficients": [
+    "0",
+    "0",
+    "2/3*x2*z1^2*z2*yy-16/27*z1^2*z2^2*yy-2*x2*z1*z2*yy-8/3*z1^2*z2*yy+16/9*z1*z2^2*yy-14/3*z1^2*yy+3/2*x2*z2*yy+8*z1*z2*yy-4/3*z2^2*yy+14*z1*yy-6*z2*yy-21/2*yy",
+    "-2/3*x2*x4*z1^2*z2*yy+2/9*x2*x7*z1^2*z2*yy+16/27*x4*z1^2*z2^2*yy-16/81*x7*z1^2*z2^2*yy+2*x2*x4*z1*z2*yy-2/3*x2*x7*z1*z2*yy-4/3*x2*z1^2*z2*yy+8/3*x4*z1^2*z2*yy-8/9*x7*z1^2*z2*yy-16/9*x4*z1*z2^2*yy+16/27*x7*z1*z2^2*yy+32/27*z1^2*z2^2*yy+14/3*x4*z1^2*yy-14/9*x7*z1^2*yy-3/2*x2*x4*z2*yy+1/2*x2*x7*z2*yy+4*x2*z1*z2*yy-8*x4*z1*z2*yy+8/3*x7*z1*z2*yy+16/3*z1^2*z2*yy+4/3*x4*z2^2*yy-4/9*x7*z2^2*yy-32/9*z1*z2^2*yy-14*x4*z1*yy+14/3*x7*z1*yy+28/3*z1^2*yy-3*x2*z2*yy+6*x4*z2*yy-2*x7*z2*yy-16*z1*z2*yy+8/3*z2^2*yy+21/2*x4*yy-7/2*x7*yy-28*z1*yy+12*z2*yy+21*yy",
+    "-2/3*x2*z1^2*z2*yy+16/27*z1^2*z2^2*yy+2*x2*z1*z2*yy+8/3*z1^2*z2*yy-16/9*z1*z2^2*yy+2/3*z1^2*yy-3/2*x2*z2*yy-8*z1*z2*yy+4/3*z2^2*yy-2*z1*yy+6*z2*yy+3/2*yy",
+    "2/3*x2*x5*z1^2*z2*yy+8/9*x2*x7*z1^2*z2*yy-16/27*x5*z1^2*z2^2*yy-64/81*x7*z1^2*z2^2*yy-2*x2*x5*z1*z2*yy-8/3*x2*x7*z1*z2*yy-8/3*x5*z1^2*z2*yy-32/9*x7*z1^2*z2*yy+16/9*x5*z1*z2^2*yy+64/27*x7*z1*z2^2*yy-2/3*x5*z1^2*yy-8/9*x7*z1^2*yy+3/2*x2*x5*z2*yy+2*x2*x7*z2*yy+8*x5*z1*z2*yy+32/3*x7*z1*z2*yy-4/3*x5*z2^2*yy-16/9*x7*z2^2*yy+2*x5*z1*yy+8/3*x7*z1*yy-6*x5*z2*yy-8*x7*z2*yy-3/2*x5*yy-2*x7*yy",
+    "0",
+    "0",
+    "2*x1*x2*z1^2*z2*yy-2/9*x2*x4*z1^2*z2*yy-8/9*x2*x5*z1^2*z2*yy-16/9*x1*z1^2*z2^2*yy+16/81*x4*z1^2*z2^2*yy+64/81*x5*z1^2*z2^2*yy-6*x1*x2*z1*z2*yy+2/3*x2*x4*z1*z2*yy+8/3*x2*x5*z1*z2*yy-8*x1*z1^2*z2*yy+4/3*x2*z1^2*z2*yy+8/9*x4*z1^2*z2*yy+32/9*x5*z1^2*z2*yy+16/3*x1*z1*z2^2*yy-16/27*x4*z1*z2^2*yy-64/27*x5*z1*z2^2*yy-32/27*z1^2*z2^2*yy-2/3*x1*z1^2*yy+4/3*x2*z1^2*yy+14/9*x4*z1^2*yy+8/9*x5*z1^2*yy+9/2*x1*x2*z2*yy-1/2*x2*x4*z2*yy-2*x2*x5*z2*yy+24*x1*z1*z2*yy-4*x2*z1*z2*yy-8/3*x4*z1*z2*yy-32/3*x5*z1*z2*yy-176/27*z1^2*z2*yy-4*x1*z2^2*yy+4/9*x4*z2^2*yy+16/9*x5*z2^2*yy+32/9*z1*z2^2*yy+2*x1*z1*yy-4*x2*z1*yy-14/3*x4*z1*yy-8/3*x5*z1*yy-76/9*z1^2*yy-18*x1*z2*yy+3*x2*z2*yy+2*x4*z2*yy+8*x5*z2*yy+176/9*z1*z2*yy-8/3*z2^2*yy-3/2*x1*yy+3*x2*yy+7/2*x4*yy+2*x5*yy+x7*yy+24*z1*yy-44/3*z2*yy+13*yy",
+    "128/27*z1*z2^2*yy+4/3*x7*z1*yy+320/9*z1*z2*yy-64/9*z2^2*yy-4*x7*yy+128/3*z1*yy-64*z2*yy-124*yy",
+    "-4*x2^2*z1^2*yy-4/3*x2*x7*z1^2*yy+32/9*x2*z1^2*z2*yy+32/27*x7*z1^2*z2*yy+12*x2^2*z1*yy+4*x2*x7*z1*yy+8/3*x2*z1^2*yy+16/3*x7*z1^2*yy-32/3*x2*z1*z2*yy-32/9*x7*z1*z2*yy+64/9*z1^2*z2*yy-9*x2^2*yy-3*x2*x7*yy-8*x2*z1*yy-16*x7*z1*yy+64/3*z1^2*yy+8*x2*z2*yy+8/3*x7*z2*yy-256/9*z1*z2*yy+6*x2*yy+12*x7*yy-320/3*z1*yy+80/3*z2*yy+128*yy",
+    "1"
+  ],
+  "exponent": null
+}

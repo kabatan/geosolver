@@ -1,0 +1,99 @@
+EVENT saturation begin
+EVENT saturation factor 1
+EVENT saturation factor 2
+METRIC saturation_ms 1
+EVENT saturation end
+BLOCK J BEGIN
+x9-x10
+x8-3
+x6-x7
+x4-x5
+2*x1-7*x3
+x10^2-63
+x7^2-7
+x5^2-16
+x3^2-1
+4*x2^2-63
+BLOCK J END
+EVENT power begin
+METRIC power_basis_ms 0
+METRIC power_basis_size 10
+METRIC unit_ideal 0
+BLOCK G BEGIN
+x9-x10
+x8-3
+x6-x7
+x4-x5
+2*x1-7*x3
+x10^2-63
+x7^2-7
+x5^2-16
+x3^2-1
+4*x2^2-63
+BLOCK G END
+METRIC nf_1_zero 1
+BLOCK NF1 BEGIN
+0
+BLOCK NF1 END
+METRIC nf_2_zero 1
+BLOCK NF2 BEGIN
+0
+BLOCK NF2 END
+METRIC nf_3_zero 1
+BLOCK NF3 BEGIN
+0
+BLOCK NF3 END
+METRIC nf_4_zero 1
+BLOCK NF4 BEGIN
+0
+BLOCK NF4 END
+METRIC power_nf_ms 0
+EVENT power end
+EVENT rabinowitsch begin
+METRIC rab_basis_ms 0
+METRIC rab_basis_size 1
+METRIC rab_unit 1
+METRIC rab_nf_ms 0
+BLOCK RAB_G BEGIN
+1
+BLOCK RAB_G END
+BLOCK RAB_NF BEGIN
+0
+BLOCK RAB_NF END
+EVENT rabinowitsch end
+EVENT power_certificate begin
+BLOCK POWER_COEFF BEGIN
+4/31*x2^2-12/31*x1*z2+7/31*z2^2-28/31
+-4/31*x2^2+12/31*x1*z2-7/31*z2^2+28/31
+-4/31*x2^2*x4-4/31*x2^2*x5+12/31*x1*x4*z2+12/31*x1*x5*z2-7/31*x4*z2^2-7/31*x5*z2^2+28/31*x4+28/31*x5
+-10/31*x2^2-1/31*x1*z2-126/31*z2^2+8/31
+10/31*x2^2+1/31*x1*z2+126/31*z2^2-8/31
+10/31*x2^2*x6+10/31*x2^2*x7+1/31*x1*x6*z2+1/31*x1*x7*z2+126/31*x6*z2^2+126/31*x7*z2^2-8/31*x6-8/31*x7
+-6/31*x2^2+49/31*x1*z2+98/31*z2^2-392/31
+6/31*x2^2*x8-49/31*x1*x8*z2-98/31*x8*z2^2+18/31*x2^2-147/31*x1*z2-294/31*z2^2+392/31*x8+1176/31
+1
+-x9-x10
+0
+-4*x1^2-14*x1*z2+49*x3*z2+49
+BLOCK POWER_COEFF END
+METRIC power_certificate_ms 1
+EVENT power_certificate end
+EVENT rab_certificate begin
+BLOCK RAB_COEFF BEGIN
+4/31*x2^2*yy-12/31*x1*z2*yy+7/31*z2^2*yy-28/31*yy
+-4/31*x2^2*yy+12/31*x1*z2*yy-7/31*z2^2*yy+28/31*yy
+-4/31*x2^2*x4*yy-4/31*x2^2*x5*yy+12/31*x1*x4*z2*yy+12/31*x1*x5*z2*yy-7/31*x4*z2^2*yy-7/31*x5*z2^2*yy+28/31*x4*yy+28/31*x5*yy
+-10/31*x2^2*yy-1/31*x1*z2*yy-126/31*z2^2*yy+8/31*yy
+10/31*x2^2*yy+1/31*x1*z2*yy+126/31*z2^2*yy-8/31*yy
+10/31*x2^2*x6*yy+10/31*x2^2*x7*yy+1/31*x1*x6*z2*yy+1/31*x1*x7*z2*yy+126/31*x6*z2^2*yy+126/31*x7*z2^2*yy-8/31*x6*yy-8/31*x7*yy
+-6/31*x2^2*yy+49/31*x1*z2*yy+98/31*z2^2*yy-392/31*yy
+6/31*x2^2*x8*yy-49/31*x1*x8*z2*yy-98/31*x8*z2^2*yy+18/31*x2^2*yy-147/31*x1*z2*yy-294/31*z2^2*yy+392/31*x8*yy+1176/31*yy
+yy
+-x9*yy-x10*yy
+0
+-4*x1^2*yy-14*x1*z2*yy+49*x3*z2*yy+49*yy
+1
+BLOCK RAB_COEFF END
+METRIC rab_certificate_ms 0
+EVENT rab_certificate end
+EVENT finished end

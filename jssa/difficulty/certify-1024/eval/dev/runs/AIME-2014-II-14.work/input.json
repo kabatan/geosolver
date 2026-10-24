@@ -1,0 +1,81 @@
+{
+  "id": "AIME-2014-II-14",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Angle(B, A, C)",
+        "operator": "=",
+        "right": "30 * pi / 180"
+      },
+      {
+        "left": "Angle(A, C, B)",
+        "operator": "=",
+        "right": "45 * pi / 180"
+      },
+      {
+        "left": "cx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Dot(Vector(A, D), Vector(A, P))",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(10, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "FootOfPerpendicular(Line(B, C), A)",
+        "name": "H"
+      },
+      {
+        "expression": "Incenter(A, B, C)",
+        "name": "I"
+      },
+      {
+        "expression": "Intersect(Line(A, I), Line(B, C))",
+        "name": "D"
+      },
+      {
+        "expression": "Midpoint(B, C)",
+        "name": "M"
+      },
+      {
+        "expression": "Midpoint(H, M)",
+        "name": "N"
+      },
+      {
+        "expression": "Intersect(Line(A, D), PerpendicularLine(Line(B, C), N))",
+        "name": "P"
+      }
+    ],
+    "id": "AIME-2014-II-14",
+    "target": "Distance(A, P) ** 2",
+    "variables": [
+      "cx",
+      "cy"
+    ]
+  }
+}

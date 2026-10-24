@@ -1,0 +1,105 @@
+EVENT saturation begin
+EVENT saturation factor 1
+EVENT saturation factor 2
+EVENT saturation factor 3
+EVENT saturation factor 4
+METRIC saturation_ms 1
+EVENT saturation end
+BLOCK J BEGIN
+x9-x10
+x7-x8
+x5-x6
+x4-1
+x3-2
+4*x2-1
+2*x1-1
+16*x10^2-45
+x8^2-5
+16*x6^2-5
+BLOCK J END
+EVENT power begin
+METRIC power_basis_ms 0
+METRIC power_basis_size 10
+METRIC unit_ideal 0
+BLOCK G BEGIN
+x9-x10
+x7-x8
+x5-x6
+x4-1
+x3-2
+4*x2-1
+2*x1-1
+16*x10^2-45
+x8^2-5
+16*x6^2-5
+BLOCK G END
+METRIC nf_1_zero 1
+BLOCK NF1 BEGIN
+0
+BLOCK NF1 END
+METRIC nf_2_zero 1
+BLOCK NF2 BEGIN
+0
+BLOCK NF2 END
+METRIC nf_3_zero 1
+BLOCK NF3 BEGIN
+0
+BLOCK NF3 END
+METRIC nf_4_zero 1
+BLOCK NF4 BEGIN
+0
+BLOCK NF4 END
+METRIC power_nf_ms 0
+EVENT power end
+EVENT rabinowitsch begin
+METRIC rab_basis_ms 0
+METRIC rab_basis_size 1
+METRIC rab_unit 1
+METRIC rab_nf_ms 0
+BLOCK RAB_G BEGIN
+1
+BLOCK RAB_G END
+BLOCK RAB_NF BEGIN
+0
+BLOCK RAB_NF END
+EVENT rabinowitsch end
+EVENT power_certificate begin
+BLOCK POWER_COEFF BEGIN
+16*x1-8*x2-64*x4+70
+-32*x1+16*x3+32*x4
+-20*x2+35
+20*x2-35
+20*x2*x5+20*x2*x6-35*x5-35*x6
+40*x2-20*x4-20
+-40*x2+20*x4+20
+-40*x2*x7+20*x4*x7-40*x2*x8+20*x4*x8+20*x7+20*x8
+16
+-16*x9-16*x10
+0
+0
+0
+0
+BLOCK POWER_COEFF END
+METRIC power_certificate_ms 0
+EVENT power_certificate end
+EVENT rab_certificate begin
+BLOCK RAB_COEFF BEGIN
+16*x1*yy-8*x2*yy-64*x4*yy+70*yy
+-32*x1*yy+16*x3*yy+32*x4*yy
+-20*x2*yy+35*yy
+20*x2*yy-35*yy
+20*x2*x5*yy+20*x2*x6*yy-35*x5*yy-35*x6*yy
+40*x2*yy-20*x4*yy-20*yy
+-40*x2*yy+20*x4*yy+20*yy
+-40*x2*x7*yy+20*x4*x7*yy-40*x2*x8*yy+20*x4*x8*yy+20*x7*yy+20*x8*yy
+16*yy
+-16*x9*yy-16*x10*yy
+0
+0
+0
+0
+1
+BLOCK RAB_COEFF END
+METRIC rab_certificate_ms 1
+EVENT rab_certificate end
+EVENT finished end

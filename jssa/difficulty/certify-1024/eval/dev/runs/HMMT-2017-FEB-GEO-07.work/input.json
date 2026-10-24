@@ -1,0 +1,69 @@
+{
+  "id": "HMMT-2017-FEB-GEO-07",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "t",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "t",
+        "operator": "<",
+        "right": "pi"
+      },
+      {
+        "left": "Distance(A,Q)",
+        "operator": "=",
+        "right": "3*Distance(B,Q)"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0,0)",
+        "name": "O"
+      },
+      {
+        "expression": "Point(10,0)",
+        "name": "I"
+      },
+      {
+        "expression": "Point(17,0)",
+        "name": "P"
+      },
+      {
+        "expression": "Circle(O,17)",
+        "name": "Gamma"
+      },
+      {
+        "expression": "Circle(I,7)",
+        "name": "omega"
+      },
+      {
+        "expression": "Point(10+7*cos(t),7*sin(t))",
+        "name": "Q"
+      },
+      {
+        "expression": "Tangent(Q,omega)",
+        "name": "lineAB"
+      },
+      {
+        "expression": "Intersect(lineAB,Gamma,far=Q)",
+        "name": "A"
+      },
+      {
+        "expression": "Intersect(lineAB,Gamma,near=Q)",
+        "name": "B"
+      },
+      {
+        "expression": "Intersect(Line(P,Q),Gamma,exclude=P)",
+        "name": "R"
+      }
+    ],
+    "id": "HMMT-2017-FEB-GEO-07",
+    "target": "Radius(Circumcircle(A,Q,R))",
+    "variables": [
+      "t"
+    ]
+  }
+}

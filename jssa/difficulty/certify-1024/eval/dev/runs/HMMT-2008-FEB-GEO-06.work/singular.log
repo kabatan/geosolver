@@ -1,0 +1,102 @@
+EVENT saturation begin
+EVENT saturation factor 1
+EVENT saturation factor 2
+EVENT saturation factor 3
+METRIC saturation_ms 1
+EVENT saturation end
+BLOCK J BEGIN
+x7-x8
+x8^2-17
+x5^2-16
+2*x4^2-1
+2*x3^2-1
+64*x2^2-x6^2
+64*x1^2-128*x2*x5+x6^2-128*x1-960
+x4*x5*x6+32*x2*x3
+x3*x5*x6+32*x2*x4
+x3*x4*x6+x2*x5
+2*x2*x4*x5+x3*x6
+2*x2*x3*x5+x4*x6
+64*x2*x3*x4+x5*x6
+BLOCK J END
+EVENT power begin
+METRIC power_basis_ms 0
+METRIC power_basis_size 13
+METRIC unit_ideal 0
+BLOCK G BEGIN
+x7-x8
+x8^2-17
+x5^2-16
+2*x4^2-1
+2*x3^2-1
+64*x2^2-x6^2
+64*x1^2-128*x2*x5+x6^2-128*x1-960
+x4*x5*x6+32*x2*x3
+x3*x5*x6+32*x2*x4
+x3*x4*x6+x2*x5
+2*x2*x4*x5+x3*x6
+2*x2*x3*x5+x4*x6
+64*x2*x3*x4+x5*x6
+BLOCK G END
+METRIC nf_1_zero 1
+BLOCK NF1 BEGIN
+0
+BLOCK NF1 END
+METRIC nf_2_zero 1
+BLOCK NF2 BEGIN
+0
+BLOCK NF2 END
+METRIC nf_3_zero 1
+BLOCK NF3 BEGIN
+0
+BLOCK NF3 END
+METRIC nf_4_zero 1
+BLOCK NF4 BEGIN
+0
+BLOCK NF4 END
+METRIC power_nf_ms 0
+EVENT power end
+EVENT rabinowitsch begin
+METRIC rab_basis_ms 0
+METRIC rab_basis_size 1
+METRIC rab_unit 1
+METRIC rab_nf_ms 0
+BLOCK RAB_G BEGIN
+1
+BLOCK RAB_G END
+BLOCK RAB_NF BEGIN
+0
+BLOCK RAB_NF END
+EVENT rabinowitsch end
+EVENT power_certificate begin
+BLOCK POWER_COEFF BEGIN
+-x3*x4*x6*z1^2+2*x4^2*x5*z1
+1/2*x6^2*z1^2
+-2*x2*x5^2*z1
+1/4*z1^2
+-1/2*x3*x6*z1^2+x4*x5*z1
+-x2*z1
+-x2*x7*z1-x2*x8*z1
+-x3*x4*x5*x6*z1+x8^2-16*x2*z1-17
+0
+0
+BLOCK POWER_COEFF END
+METRIC power_certificate_ms 2
+EVENT power_certificate end
+EVENT rab_certificate begin
+BLOCK RAB_COEFF BEGIN
+-2*x3*x4^3*x6*z1^2*yy-1/8*x3*x4^3*x6*z1^2+4*x3^2*x4^2*x5*z1*yy+1/16*x3*x4*x6*z1^2
+-2*x3*x4*x5*x6*z1*yy-2
+1/4*x2*x3^2*x5^2*z1+2*x3*x4*x5*x6*z1*yy+1/8*x3*x4*x5*x6*z1-1/4*x3^2*x8^2+1/4*x3^2
+x3^2*x4^2*z1^2*yy+1/16*x3^2*x4^2*z1^2-1/32*x3^2*z1^2
+-x3*x4^2*x6*z1^2*yy-1/16*x3*x4^2*x6*z1^2+2*x3^2*x4*x5*z1*yy+1/32*x3*x6*z1^2
+-4*x2*x3^2*x4^2*z1*yy-1/4*x3^2*x4^2+1/8*x3^2
+-4*x2*x3^2*x4^2*x7*z1*yy-4*x2*x3^2*x4^2*x8*z1*yy-1/4*x3^2*x4^2*x7-1/4*x3^2*x4^2*x8+1/8*x3^2*x7+1/8*x3^2*x8
+-2*x3*x4^3*x5*x6*z1*yy-1/8*x3*x4^3*x5*x6*z1-64*x2*x3^2*x4^2*z1*yy+1/4*x3^2*x4^2*x5^2-4*x2*x3^2*x4^2*z1+1/16*x3*x4*x5*x6*z1-1/8*x3^2*x5^2+2*x2*x3^2*z1+2*x3^2
+0
+0
+4*x2*x3^2*x4^2*z1
+BLOCK RAB_COEFF END
+METRIC rab_certificate_ms 1
+EVENT rab_certificate end
+EVENT finished end

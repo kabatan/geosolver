@@ -1,0 +1,174 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "z10",
+    "z11",
+    "z12",
+    "z13",
+    "z14",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_xx",
+    "x2": "v_xy",
+    "x3": "v_yx",
+    "x4": "v_yy",
+    "x5": "v_zx",
+    "x6": "v_zy",
+    "x7": "s1",
+    "x8": "s2",
+    "x9": "s3",
+    "x10": "t4"
+  },
+  "target_variable": "x10",
+  "equations": [
+    "x1*x4 - x2*x3",
+    "x3*x6 - x4*x5 + x4 - x6",
+    "x1*x6 - x1 - x2*x5 + x5",
+    "-x1**2 + 2*x1*x3 - x2**2 + 2*x2*x4 - x3**2 - x4**2 + x7**2",
+    "x7 - 1/4",
+    "-x1**2 + 2*x1*x5 - x2**2 + 2*x2*x6 - x5**2 - x6**2 + x8**2",
+    "x7 - x8",
+    "x1**2 - x1*x3 - x1*x5 + x2**2 - x2*x4 - x2*x6 + x3*x5 + x4*x6",
+    "-x1**2 - x2**2 + x9**2",
+    "-x10 + x9"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x1 + x2 - 1",
+    "x2",
+    "x3",
+    "x3 + x4 - 1",
+    "x4",
+    "x5",
+    "x5 + x6 - 1",
+    "x6",
+    "x1**2 + x2**2",
+    "x1**2 - 2*x1*x3 + x2**2 - 2*x2*x4 + x3**2 + x4**2",
+    "x1**2 - 2*x1*x5 + x2**2 - 2*x2*x6 + x5**2 + x6**2",
+    "x3**2 - 2*x3 + x4**2 + 1",
+    "x5**2 + x6**2 - 2*x6 + 1"
+  ],
+  "polynomial": "80*x10**2 - 16*x10 - 15",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "z10",
+    "z11",
+    "z12",
+    "z13",
+    "z14"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "condition[3]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "v_xx**2 + v_xy**2"
+    },
+    {
+      "source": "condition[4]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "v_yy**2 + (1 - v_yx)**2"
+    },
+    {
+      "source": "condition[5]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "v_zx**2 + (1 - v_zy)**2"
+    },
+    {
+      "source": "condition[8]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(-v_xx + v_yx)**2 + (-v_xy + v_yy)**2"
+    },
+    {
+      "source": "condition[8]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(-v_xx + v_zx)**2 + (-v_xy + v_zy)**2"
+    },
+    {
+      "source": "condition[8]:Perpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "(-v_xx + v_yx)**2 + (-v_xy + v_yy)**2"
+    },
+    {
+      "source": "condition[8]:Perpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "(-v_xx + v_zx)**2 + (-v_xy + v_zy)**2"
+    },
+    {
+      "source": "condition[9]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_xx"
+    },
+    {
+      "source": "condition[10]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_xy"
+    },
+    {
+      "source": "condition[11]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_xx + v_xy - 1"
+    },
+    {
+      "source": "condition[12]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_yx"
+    },
+    {
+      "source": "condition[13]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_yy"
+    },
+    {
+      "source": "condition[14]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_yx + v_yy - 1"
+    },
+    {
+      "source": "condition[15]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_zx"
+    },
+    {
+      "source": "condition[16]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_zy"
+    },
+    {
+      "source": "condition[17]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_zx + v_zy - 1"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t4"
+}

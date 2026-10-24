@@ -1,0 +1,81 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "z1",
+    "z2",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_e",
+    "x2": "v_ex",
+    "x3": "s1",
+    "x4": "s2",
+    "x5": "s3",
+    "x6": "s4",
+    "x7": "t5"
+  },
+  "target_variable": "x7",
+  "equations": [
+    "-9*x1**2 + 12*x1 + x3**2 - 4",
+    "3*x1 + x3 - 2",
+    "-x1**2 - x2**2 + x4**2",
+    "x1 + x4 - 2",
+    "-10*x1**2 + 6*x1*x2 + 12*x1 - x2**2 - 4*x2 + x5**2 - 4",
+    "-4*x1 + x5",
+    "-x1**2 + x6**2",
+    "-x1 + x6",
+    "-3*x1 + x7"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x1 - 2/3"
+  ],
+  "polynomial": "x7**2 + 28*x7 - 44",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[3]/C:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "4"
+    },
+    {
+      "source": "construction[3]/C:Circle:result:radius",
+      "operator": ">",
+      "expression": "2"
+    },
+    {
+      "source": "condition[3]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "16"
+    },
+    {
+      "source": "condition[3]:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "16"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_e"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": "<",
+      "expression": "3*v_e - 2"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t5"
+}
