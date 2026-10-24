@@ -1,0 +1,49 @@
+{
+  "arms": {
+    "B0": {},
+    "B014": {
+      "GEOSOLVER_ABLATE_NO_FLOAT_MARGIN_FLOOR": "1"
+    },
+    "B046": {
+      "GEOSOLVER_ABLATE_NO_NOMAD_GUARD_PENALTY": "1"
+    },
+    "B005_006": {
+      "GEOSOLVER_ABLATE_NO_SEARCH_BOX_INFERENCE": "1"
+    },
+    "B005": {
+      "GEOSOLVER_ABLATE_NO_GUARD_BOUND_INFERENCE": "1"
+    },
+    "B006": {
+      "GEOSOLVER_ABLATE_NO_SEARCH_BOX_SCALING": "1"
+    },
+    "B045": {
+      "GEOSOLVER_ABLATE_NO_HIDDEN_CONSTRAINT_MODE": "1"
+    },
+    "B014_046": {
+      "GEOSOLVER_ABLATE_NO_FLOAT_MARGIN_FLOOR": "1",
+      "GEOSOLVER_ABLATE_NO_NOMAD_GUARD_PENALTY": "1"
+    }
+  },
+  "thread_environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1"
+  },
+  "smoke": {
+    "max_parallel": 1,
+    "outer_seconds": 10,
+    "inner_seconds": 3,
+    "seed": 0,
+    "full_process_arms": [
+      "B0",
+      "B014",
+      "B046",
+      "B005_006",
+      "B005",
+      "B006",
+      "B045"
+    ],
+    "extra_composition_probe": "B014_046"
+  }
+}

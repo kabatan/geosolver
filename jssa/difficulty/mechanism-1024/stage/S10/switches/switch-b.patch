@@ -1,0 +1,198 @@
+--- a/src/geosolver/engine/standard/evaluation/_hard_feasibility_core.py
++++ b/src/geosolver/engine/standard/evaluation/_hard_feasibility_core.py
+@@ -31,6 +31,7 @@
+ )
+ from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
+ from geosolver.engine.standard.precision.type_guards.strict_to_mpf import strict_to_mpf
++from geosolver.runtime.ablation import ablated
+ from geosolver.runtime.deadline import check_deadline
+ 
+ LINE_MARGIN_MIN = mp.mpf("1e-12")
+@@ -167,6 +168,8 @@
+     if margin is None:
+         return False, f"{check.check_id}:margin_unavailable", None
+     threshold = LINE_MARGIN_MIN if allow_float else mp.mpf("0")
++    if allow_float and ablated("NO_FLOAT_MARGIN_FLOOR"):
++        threshold = mp.mpf("0")
+     if margin <= threshold:
+         return False, f"{check.check_id}:line_not_distinct", margin
+     return True, None, margin
+@@ -195,6 +198,8 @@
+     if margin is None:
+         return False, f"{check.check_id}:margin_unavailable", None
+     threshold = TRIANGLE_MARGIN_MIN if allow_float else mp.mpf("0")
++    if allow_float and ablated("NO_FLOAT_MARGIN_FLOOR"):
++        threshold = mp.mpf("0")
+     if margin <= threshold:
+         return False, f"{check.check_id}:triangle_degenerate", margin
+     return True, None, margin
+@@ -221,6 +226,8 @@
+     if margin is None:
+         return False, f"{check.check_id}:margin_unavailable", None
+     threshold = INTERSECTION_MARGIN_MIN if allow_float else mp.mpf("0")
++    if allow_float and ablated("NO_FLOAT_MARGIN_FLOOR"):
++        threshold = mp.mpf("0")
+     if margin <= threshold:
+         return False, f"{check.check_id}:exclude_not_distinct", margin
+     return True, None, margin
+--- a/src/geosolver/engine/standard/interpreter/compile/infer_bounds.py
++++ b/src/geosolver/engine/standard/interpreter/compile/infer_bounds.py
+@@ -1,10 +1,10 @@
+ """Search-box expansion locks derived from mathematical domains."""
+ 
+-from geosolver.problem.domain_bounds import mathematical_bounds
++from geosolver.problem.domain_bounds import search_box_domains
+ 
+ 
+ def infer_bound_expansion_locks(spec, var_names):
+-    domains = mathematical_bounds(spec)
++    domains = search_box_domains(spec)
+     return [
+         (domains[name].lower is not None, domains[name].upper is not None) for name in var_names
+     ]
+--- a/src/geosolver/engine/standard/search/nomad_blackbox_adapter.py
++++ b/src/geosolver/engine/standard/search/nomad_blackbox_adapter.py
+@@ -11,6 +11,7 @@
+ from geosolver.engine.standard.contracts.evaluator_port import EvaluatorPort
+ from geosolver.engine.standard.evaluation.classify_evaluation_failure import EvaluationStatus
+ from geosolver.engine.standard.evaluation.search_point import evaluate_search_point
++from geosolver.runtime.ablation import ablated
+ from geosolver.runtime.deadline import deadline_scope, expired
+ 
+ from .nomad_config import NomadConfig
+@@ -115,6 +116,10 @@
+                     origin_evaluation_index=self.evaluation_count,
+                 )
+             )
++            if ablated("NO_HIDDEN_CONSTRAINT_MODE"):
++                # Keep the failure record; only NOMAD sees a valid finite penalty.
++                point.setBBO(str(NON_FINITE_SCORE_PENALTY).encode("utf-8"))
++                return 1
+             return 0
+         evaluation = evaluate_search_point(
+             evaluator=self.evaluator, values=coords, residual=float_eval
+@@ -137,7 +142,11 @@
+         else:
+             scaled_norm_sq = float_eval.residual_norm_float * float_eval.residual_norm_float
+         score = scaled_norm_sq + penalty
+-        point.setBBO(str(score).encode("utf-8"))
++        if ablated("NO_NOMAD_GUARD_PENALTY"):
++            # nomad-wall mode N: preserve record.score and eligibility.
++            point.setBBO(str(scaled_norm_sq).encode("utf-8"))
++        else:
++            point.setBBO(str(score).encode("utf-8"))
+         validity_margin_float = None
+         if hard_snapshot.min_margin is not None and mp.isfinite(hard_snapshot.min_margin):
+             validity_margin_float = float(hard_snapshot.min_margin)
+--- a/src/geosolver/engine/standard/search/nomad_config.py
++++ b/src/geosolver/engine/standard/search/nomad_config.py
+@@ -4,6 +4,8 @@
+ 
+ from dataclasses import dataclass
+ from math import ceil
++
++from geosolver.runtime.ablation import ablated
+ 
+ DISCO_MADS_HID_CONST = True
+ DISCO_MADS_HID_CONST_OUTPUT_VALUE = 1e20
+@@ -77,7 +79,7 @@
+             f"DIMENSION {dimension}",
+             "BB_OUTPUT_TYPE OBJ",
+             f"DISCO_MADS_OPTIMIZATION {disco_mads_optimization}",
+-            f"DISCO_MADS_HID_CONST {str(DISCO_MADS_HID_CONST).lower()}",
++            f"DISCO_MADS_HID_CONST {str(False if ablated("NO_HIDDEN_CONSTRAINT_MODE") else DISCO_MADS_HID_CONST).lower()}",
+             f"DISCO_MADS_HID_CONST_OUTPUT_VALUE {DISCO_MADS_HID_CONST_OUTPUT_VALUE}",
+             f"MAX_BB_EVAL {self.max_bb_eval}",
+             *(
+--- a/src/geosolver/engine-lock.json
++++ b/src/geosolver/engine-lock.json
+@@ -1,12 +1,12 @@
+ {
+   "schema_version": 2,
+   "artifact_protocol_version": 4,
+-  "source_tree_hash": "sha256:03a44bfbb743b972d95306c63a14c04b78c7d12b96a1ba83d147c56eea7f86a3",
++  "source_tree_hash": "sha256:2cb435fc35950aafaf6bb2e3a40df30a7415c9fdc65d3ff4b8d969c361ecac75",
+   "resolved_config_hash": "sha256:98810edcd2beb35fb7d31ba65620de8f3cebd3fc289c11a526b8a623adf6d70f",
+   "dependency_lock_hash": "sha256:aa93c94b893ed67b359af271ca6fb62e97d3551fc874a4b9e45a66c8c5e52930",
+   "engines": {
+     "standard": {
+-      "hash": "sha256:03a44bfbb743b972d95306c63a14c04b78c7d12b96a1ba83d147c56eea7f86a3",
++      "hash": "sha256:2cb435fc35950aafaf6bb2e3a40df30a7415c9fdc65d3ff4b8d969c361ecac75",
+       "platforms": [
+         "linux",
+         "windows",
+--- a/src/geosolver/problem/domain_bounds.py
++++ b/src/geosolver/problem/domain_bounds.py
+@@ -4,10 +4,11 @@
+ 
+ import ast
+ import math
+-from dataclasses import dataclass
++from dataclasses import dataclass, replace
+ from fractions import Fraction
+ from typing import TYPE_CHECKING
+ 
++from geosolver.runtime.ablation import ablated
+ from geosolver.problem.expression_source import source_expression
+ from geosolver.problem.logical_equalities import evaluation_sources
+ 
+@@ -181,6 +182,14 @@
+     return result
+ 
+ 
++def search_box_domains(spec) -> dict[str, AxisDomain]:
++    """Search-only inference; mathematical_bounds remains authoritative."""
++    if ablated("NO_SEARCH_BOX_INFERENCE") or ablated("NO_GUARD_BOUND_INFERENCE"):
++        # Explicit bounds and construction parameter domains still apply.
++        return mathematical_bounds(replace(spec, guards=[]))
++    return mathematical_bounds(spec)
++
++
+ def search_bounds(spec) -> list[tuple[float, float]]:
+     names = spec.variables.resolved_names()
+     scales = {name: 10.0 for name in names}
+@@ -222,17 +231,18 @@
+         dependency_cache[source] = result
+         return result
+ 
+-    for index, expr in enumerate(spec.constraints):
+-        target = (spec.v or [0] * len(spec.constraints))[index]
+-        variables, constants = set(), []
+-        for source in evaluation_sources(expr, spec.logical_plans):
+-            dependent, magnitudes = dependencies(f"({source})-({target})", set())
+-            variables.update(dependent)
+-            constants.extend(magnitudes)
+-        scale = min(20000.0, max([10.0] + [2 * c for c in constants]))
+-        for name in variables:
+-            scales[name] = max(scales[name], scale)
+-    domains = mathematical_bounds(spec)
++    if not (ablated("NO_SEARCH_BOX_INFERENCE") or ablated("NO_SEARCH_BOX_SCALING")):
++        for index, expr in enumerate(spec.constraints):
++            target = (spec.v or [0] * len(spec.constraints))[index]
++            variables, constants = set(), []
++            for source in evaluation_sources(expr, spec.logical_plans):
++                dependent, magnitudes = dependencies(f"({source})-({target})", set())
++                variables.update(dependent)
++                constants.extend(magnitudes)
++            scale = min(20000.0, max([10.0] + [2 * c for c in constants]))
++            for name in variables:
++                scales[name] = max(scales[name], scale)
++    domains = search_box_domains(spec)
+     result = []
+     for name in names:
+         axis = domains[name]
+--- a/src/geosolver/runtime/ablation.py
++++ b/src/geosolver/runtime/ablation.py
+@@ -3,6 +3,12 @@
+ import os
+ 
+ ABLATIONS = (
++    "NO_FLOAT_MARGIN_FLOOR",
++    "NO_NOMAD_GUARD_PENALTY",
++    "NO_SEARCH_BOX_INFERENCE",
++    "NO_GUARD_BOUND_INFERENCE",
++    "NO_SEARCH_BOX_SCALING",
++    "NO_HIDDEN_CONSTRAINT_MODE",
+     "NO_ALGEBRAIC",
+     "NO_NOMAD",
+     "NO_ANALYTIC_JAC",
