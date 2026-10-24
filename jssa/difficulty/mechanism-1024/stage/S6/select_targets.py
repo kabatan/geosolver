@@ -1,6 +1,7 @@
 """Exactly the preregistration-13 union. Reads JSON/text; no solver imports."""
 import ast
 import json
+from pathlib import Path
 from prepare_common import OUT, REPO, STAGE, identity, save, sha
 
 
@@ -78,5 +79,4 @@ def main():
 
 
 if __name__ == '__main__':
-    from pathlib import Path
     main()
