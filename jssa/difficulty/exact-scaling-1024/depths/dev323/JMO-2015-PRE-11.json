@@ -1,0 +1,70 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(b, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(cx, cy)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Gamma",
+  "expression": "Circumcircle(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "Ap",
+  "expression": "Midpoint(Arc(Gamma, B, C, excluding=A))",
+  "dependencies": [
+   "A",
+   "B",
+   "C",
+   "Gamma"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "Bp",
+  "expression": "Midpoint(Arc(Gamma, C, A, excluding=B))",
+  "dependencies": [
+   "A",
+   "B",
+   "C",
+   "Gamma"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "Cp",
+  "expression": "Midpoint(Arc(Gamma, A, B, excluding=C))",
+  "dependencies": [
+   "A",
+   "B",
+   "C",
+   "Gamma"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ }
+]

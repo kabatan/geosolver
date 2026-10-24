@@ -1,0 +1,90 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(s, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(s / 2, sqrt(3) * s / 2)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(-s / 2, sqrt(3) * s / 2)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Point(-s, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "E",
+  "expression": "Point(-s / 2, -sqrt(3) * s / 2)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "F",
+  "expression": "Point(s / 2, -sqrt(3) * s / 2)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "M",
+  "expression": "Midpoint(D, E)",
+  "dependencies": [
+   "D",
+   "E"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "X",
+  "expression": "Intersect(Line(A, C), Line(B, M))",
+  "dependencies": [
+   "A",
+   "B",
+   "C",
+   "M"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ },
+ {
+  "name": "Y",
+  "expression": "Intersect(Line(B, F), Line(A, M))",
+  "dependencies": [
+   "A",
+   "B",
+   "F",
+   "M"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ },
+ {
+  "name": "Z",
+  "expression": "Intersect(Line(A, C), Line(B, F))",
+  "dependencies": [
+   "A",
+   "B",
+   "C",
+   "F"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ }
+]

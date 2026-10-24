@@ -1,0 +1,61 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(6, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(0, 8)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "M",
+  "expression": "Midpoint(B, A)",
+  "dependencies": [
+   "A",
+   "B"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "N",
+  "expression": "Midpoint(B, C)",
+  "dependencies": [
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "Y",
+  "expression": "Point(6 * t / 2, 8 * (1 - t))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Gamma",
+  "expression": "Circumcircle(A, M, Y)",
+  "dependencies": [
+   "A",
+   "M",
+   "Y"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ }
+]

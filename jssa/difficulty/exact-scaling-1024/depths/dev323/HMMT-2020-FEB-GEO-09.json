@@ -1,0 +1,145 @@
+[
+ {
+  "name": "q",
+  "expression": "sqrt(341) * p / (sqrt(341) - 7 * p)",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "rb",
+  "expression": "49 * p * p",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "rc",
+  "expression": "49 * q * q",
+  "dependencies": [
+   "q"
+  ],
+  "depth": 2,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(0, 341)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(2 * sqrt(341 * 49) * p, rb)",
+  "dependencies": [
+   "rb"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "C",
+  "expression": "Point(2 * sqrt(341 * 49) * q, rc)",
+  "dependencies": [
+   "q",
+   "rc"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "omegaA",
+  "expression": "Circle(A, 341)",
+  "dependencies": [
+   "A"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "omegaB",
+  "expression": "Circle(B, rb)",
+  "dependencies": [
+   "B",
+   "rb"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "omegaC",
+  "expression": "Circle(C, rc)",
+  "dependencies": [
+   "C",
+   "rc"
+  ],
+  "depth": 4,
+  "point_depth": 1
+ },
+ {
+  "name": "D",
+  "expression": "PointOnSegment(B, C, rb / (rb + rc))",
+  "dependencies": [
+   "B",
+   "C",
+   "rb",
+   "rc"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ },
+ {
+  "name": "E",
+  "expression": "PointOnSegment(C, A, rc / (rc + 341))",
+  "dependencies": [
+   "A",
+   "C",
+   "rc"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ },
+ {
+  "name": "F",
+  "expression": "PointOnSegment(A, B, 341 / (341 + rb))",
+  "dependencies": [
+   "A",
+   "B",
+   "rb"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "L",
+  "expression": "Line(Point(0, 0), Point(1, 0))",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "W",
+  "expression": "Intersect(Circle(A, 341 + 49), Circle(B, rb + 49), near=C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C",
+   "rb"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ },
+ {
+  "name": "T",
+  "expression": "Intersect(Line(B, E), Line(C, F))",
+  "dependencies": [
+   "B",
+   "C",
+   "E",
+   "F"
+  ],
+  "depth": 5,
+  "point_depth": 3
+ }
+]

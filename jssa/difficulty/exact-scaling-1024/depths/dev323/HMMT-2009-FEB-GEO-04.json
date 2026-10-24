@@ -1,0 +1,77 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0,0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(x,0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(x,1)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Reflect(B,Line(A,C))",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "O",
+  "expression": "Point(u*x,u)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "M",
+  "expression": "FootOfPerpendicular(O,Line(A,B))",
+  "dependencies": [
+   "A",
+   "B",
+   "O"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "Bp",
+  "expression": "Point(x/u,0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Cp",
+  "expression": "Point(x/u,1/u)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Np",
+  "expression": "FootOfPerpendicular(C,Line(Bp,Cp))",
+  "dependencies": [
+   "Bp",
+   "C",
+   "Cp"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ }
+]

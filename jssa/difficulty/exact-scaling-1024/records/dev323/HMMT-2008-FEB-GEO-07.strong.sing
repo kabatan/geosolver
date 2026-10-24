@@ -1,0 +1,68 @@
+LIB "elim.lib";
+option(redSB);
+ring R=0,(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,x16,x17,x18,x19),dp;
+short=0;
+ideal J=-24*x1^2 + 120*x1 + 25*x8^2,
+x1^2 + 20*x1 - 25*x17^2 + 25*x8^2 + 100,
+2*x1^3 + 60*x1^2 + 125*x1*x17^2*x2 + 50*x1*x8^2 + 600*x1 - 250*x17^2*x2 + 500*x8^2 + 2000,
+2*x1^2*x8 + 25*x1*x17^2*x3 + 40*x1*x8 - 50*x17^2*x3 + 50*x8^3 + 200*x8,
+x1^2 - 30*x1 - 25*x18^2 + 25*x8^2 + 225,
+-22*x1^3 + 690*x1^2 + 125*x1*x18^2*x4 - 550*x1*x8^2 - 5850*x1 - 375*x18^2*x4 + 750*x8^2 + 6750,
+3*x1^2*x8 + 25*x1*x18^2*x5 - 90*x1*x8 - 75*x18^2*x5 + 75*x8^3 + 675*x8,
+-x1*x2*x5 + x1*x2*x8 + x1*x3*x4 - x1*x3*x6 - x1*x4*x8 + x1*x5*x6 + 5*x2^2*x5 - 5*x2^2*x8 - 5*x2*x5*x6 - 10*x2*x5 + 5*x2*x6*x8 + 10*x2*x8 + 5*x3^2*x5 - 5*x3^2*x8 - 5*x3*x4^2 + 5*x3*x4*x6 + 10*x3*x4 - 5*x3*x5^2 - 10*x3*x6 + 5*x3*x8^2 + 5*x4^2*x8 - 5*x4*x6*x8 - 10*x4*x8 + 5*x5^2*x8 + 10*x5*x6 - 5*x5*x8^2,
+x1^2*x2 - x1^2*x4 - 5*x1*x2^2 + 20*x1*x2 - 5*x1*x3^2 + 5*x1*x3*x7 + 5*x1*x3*x8 + 5*x1*x4^2 - 20*x1*x4 + 5*x1*x5^2 - 5*x1*x5*x7 - 5*x1*x5*x8 + 25*x2^2*x4 - 50*x2^2 - 25*x2*x4^2 - 25*x2*x5^2 + 25*x2*x5*x7 + 25*x2*x5*x8 - 25*x2*x7*x8 + 100*x2 + 25*x3^2*x4 - 50*x3^2 - 25*x3*x4*x7 - 25*x3*x4*x8 + 50*x3*x7 + 50*x3*x8 + 50*x4^2 + 25*x4*x7*x8 - 100*x4 + 50*x5^2 - 50*x5*x7 - 50*x5*x8,
+-x1 + x17 + 2,
+-x1 + x18 + 3,
+x2^2 + x3^2 - x9^2,
+x9 - 2,
+x1^2 - 10*x1*x2 + 20*x1 - 25*x10^2 + 25*x2^2 - 100*x2 + 25*x3^2 - 50*x3*x8 + 25*x8^2 + 100,
+-x1 + x10,
+x1^2*x3^2 - 10*x1*x2*x3*x8 + 20*x1*x3^2 - 100*x11^2 + 25*x2^2*x8^2 - 100*x2*x3*x8 + 100*x3^2,
+x11,
+-x12^2 + x4^2 - 10*x4 + x5^2 + 25,
+x12 - 3,
+x1^2 - 10*x1*x4 + 20*x1 - 25*x13^2 + 25*x4^2 - 100*x4 + 25*x5^2 - 50*x5*x8 + 25*x8^2 + 100,
+-x1 + x13,
+x1^2*x5^2 - 10*x1*x4*x5*x8 - 30*x1*x5^2 + 50*x1*x5*x8 - 100*x14^2 + 25*x4^2*x8^2 + 150*x4*x5*x8 - 250*x4*x8^2 + 225*x5^2 - 750*x5*x8 + 625*x8^2,
+x14,
+-x1*x2 + x1*x6 + 5*x2^2 - 5*x2*x6 - 10*x2 + 5*x3^2 - 5*x3*x7 - 5*x3*x8 + 10*x6 + 5*x7*x8,
+-x1*x4 + x1*x6 + 5*x4^2 - 5*x4*x6 - 10*x4 + 5*x5^2 - 5*x5*x7 - 5*x5*x8 + 10*x6 + 5*x7*x8,
+-x15^2 + x2^2 - 2*x2*x6 + x3^2 - 2*x3*x7 + x6^2 + x7^2,
+x15 - 4,
+-4*x16^2 + 25*x8^2,
+-x1 + x19;
+J=sat(J,ideal(x8));
+print("SAT_FACTOR=1");
+J=sat(J,ideal(x16));
+print("SAT_FACTOR=2");
+J=sat(J,ideal(x17));
+print("SAT_FACTOR=3");
+J=sat(J,ideal(x18));
+print("SAT_FACTOR=4");
+J=sat(J,ideal(x1));
+print("SAT_FACTOR=5");
+J=sat(J,ideal(x1 - 2));
+print("SAT_FACTOR=6");
+J=sat(J,ideal(x1 - 3));
+print("SAT_FACTOR=7");
+J=sat(J,ideal(x1 - 5));
+print("SAT_FACTOR=8");
+J=sat(J,ideal(x2^2 - 2*x2*x6 + x3^2 - 2*x3*x7 + x6^2 + x7^2));
+print("SAT_FACTOR=9");
+J=sat(J,ideal(x1^2 - 10*x1*x2 + 20*x1 + 25*x2^2 - 100*x2 + 25*x3^2 - 50*x3*x8 + 25*x8^2 + 100));
+print("SAT_FACTOR=10");
+J=sat(J,ideal(x1*x3 - x1*x5 + 5*x2*x5 - 5*x2*x8 - 5*x3*x4 + 10*x3 + 5*x4*x8 - 10*x5));
+print("SAT_FACTOR=11");
+J=sat(J,ideal(x4^2 - 2*x4*x6 + x5^2 - 2*x5*x7 + x6^2 + x7^2));
+print("SAT_FACTOR=12");
+J=sat(J,ideal(x1^2 - 10*x1*x4 + 20*x1 + 25*x4^2 - 100*x4 + 25*x5^2 - 50*x5*x8 + 25*x8^2 + 100));
+print("SAT_FACTOR=13");
+J=sat(J,ideal(x1^2 + 20*x1 + 25*x8^2 + 100));
+print("SAT_FACTOR=14");
+J=sat(J,ideal(x1^2 - 30*x1 + 25*x8^2 + 225));
+print("SAT_FACTOR=15");
+ideal G=std(J);
+print("DIM="+string(dim(G)));
+print("DEG="+string(mult(G)));
+print("VDIM="+string(vdim(G)));
+quit;

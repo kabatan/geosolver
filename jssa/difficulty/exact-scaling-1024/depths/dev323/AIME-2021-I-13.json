@@ -1,0 +1,99 @@
+[
+ {
+  "name": "O1",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "O2",
+  "expression": "Point(d, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "omega1",
+  "expression": "Circle(O1, 961)",
+  "dependencies": [
+   "O1"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "omega2",
+  "expression": "Circle(O2, 625)",
+  "dependencies": [
+   "O2"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(ax, ay)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Intersect(omega1, omega2, exclude=A)",
+  "dependencies": [
+   "A",
+   "omega1",
+   "omega2"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "O",
+  "expression": "Point(ox, oy)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "omega",
+  "expression": "Circle(O, r)",
+  "dependencies": [
+   "O"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "L",
+  "expression": "Line(A, B)",
+  "dependencies": [
+   "A",
+   "B"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "P",
+  "expression": "Intersect(L, omega, n=1)",
+  "dependencies": [
+   "L",
+   "omega"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ },
+ {
+  "name": "Q",
+  "expression": "Intersect(L, omega, exclude=P)",
+  "dependencies": [
+   "L",
+   "P",
+   "omega"
+  ],
+  "depth": 5,
+  "point_depth": 3
+ }
+]

@@ -1,0 +1,73 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(24, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(x, y)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Midpoint(B, C)",
+  "dependencies": [
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "E",
+  "expression": "Midpoint(A, B)",
+  "dependencies": [
+   "A",
+   "B"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "ce_line",
+  "expression": "Line(C, E)",
+  "dependencies": [
+   "C",
+   "E"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "circumcircle",
+  "expression": "Circumcircle(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "F",
+  "expression": "PointOnLine(ce_line, t)",
+  "dependencies": [
+   "ce_line"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ }
+]

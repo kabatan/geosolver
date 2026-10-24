@@ -1,0 +1,139 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(5, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(4, 4 * sqrt(3))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "I",
+  "expression": "Incenter(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "gamma",
+  "expression": "Incircle(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "Gamma",
+  "expression": "Circumcircle(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "M",
+  "expression": "Midpoint(B, C)",
+  "dependencies": [
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "N",
+  "expression": "Midpoint(C, A)",
+  "dependencies": [
+   "A",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "P",
+  "expression": "Midpoint(A, B)",
+  "dependencies": [
+   "A",
+   "B"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "E",
+  "expression": "ContactPoint(gamma, Line(C, A))",
+  "dependencies": [
+   "A",
+   "C",
+   "gamma"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "F",
+  "expression": "ContactPoint(gamma, Line(A, B))",
+  "dependencies": [
+   "A",
+   "B",
+   "gamma"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "U",
+  "expression": "Intersect(Line(E, F), Line(M, N))",
+  "dependencies": [
+   "E",
+   "F",
+   "M",
+   "N"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "V",
+  "expression": "Intersect(Line(E, F), Line(M, P))",
+  "dependencies": [
+   "E",
+   "F",
+   "M",
+   "P"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "X",
+  "expression": "Point(-3 / 2, 3 * sqrt(3) / 2)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ }
+]

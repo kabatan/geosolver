@@ -1,0 +1,182 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(base_length, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Point(top_left_x, height)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(top_right_x, height)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "bottom_base",
+  "expression": "Segment(A, B)",
+  "dependencies": [
+   "A",
+   "B"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "top_base",
+  "expression": "Segment(D, C)",
+  "dependencies": [
+   "C",
+   "D"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "bottom_line",
+  "expression": "Line(A, B)",
+  "dependencies": [
+   "A",
+   "B"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "top_line",
+  "expression": "Line(D, C)",
+  "dependencies": [
+   "C",
+   "D"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "left_leg",
+  "expression": "Segment(A, D)",
+  "dependencies": [
+   "A",
+   "D"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "right_leg",
+  "expression": "Segment(B, C)",
+  "dependencies": [
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "trapezoid",
+  "expression": "Polygon([A, B, C, D])",
+  "dependencies": [
+   "A",
+   "B",
+   "C",
+   "D"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "M",
+  "expression": "Midpoint(A, D)",
+  "dependencies": [
+   "A",
+   "D"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "N",
+  "expression": "Midpoint(B, C)",
+  "dependencies": [
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "midline",
+  "expression": "Segment(M, N)",
+  "dependencies": [
+   "M",
+   "N"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "midline_line",
+  "expression": "Line(M, N)",
+  "dependencies": [
+   "M",
+   "N"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "P",
+  "expression": "PointOnSegment(A, D, section_fraction)",
+  "dependencies": [
+   "A",
+   "D"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "Q",
+  "expression": "PointOnSegment(B, C, section_fraction)",
+  "dependencies": [
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "bisector",
+  "expression": "Segment(P, Q)",
+  "dependencies": [
+   "P",
+   "Q"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "bisector_line",
+  "expression": "Line(P, Q)",
+  "dependencies": [
+   "P",
+   "Q"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ }
+]

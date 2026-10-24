@@ -1,0 +1,17 @@
+LIB "elim.lib";
+option(redSB);
+ring R=0,(x1,x2,x3,x4),dp;
+short=0;
+ideal J=x2,
+x2^2 - x2 + x3^2 - 2,
+-x1 + x3,
+-x1 + x4;
+ideal G=std(J);
+print("DIM="+string(dim(G)));
+print("DEG="+string(mult(G)));
+print("VDIM="+string(vdim(G)));
+ideal E=eliminate(G,x1*x2*x3);
+print("ELIM_BEGIN");
+for(int j=1;j<=size(E);j++){print("POLY_BEGIN");print(E[j]);print("POLY_END");}
+print("ELIM_END");
+quit;

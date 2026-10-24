@@ -1,0 +1,175 @@
+[
+ {
+  "name": "O",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(r, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(r * cos(g1), r * sin(g1))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(r * cos(g1 + g2), r * sin(g1 + g2))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Point(r * cos(g1 + g2 + g3), r * sin(g1 + g2 + g3))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "P",
+  "expression": "Point(r * cos(g1 + g2 + g3 + g4), r * sin(g1 + g2 + g3 + g4))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "M",
+  "expression": "Midpoint(A, B)",
+  "dependencies": [
+   "A",
+   "B"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "N",
+  "expression": "Midpoint(C, D)",
+  "dependencies": [
+   "C",
+   "D"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "perpA",
+  "expression": "PerpendicularLine(Line(A, B), A)",
+  "dependencies": [
+   "A",
+   "B"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "bisAP",
+  "expression": "PerpendicularBisector(A, P)",
+  "dependencies": [
+   "A",
+   "P"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "OA",
+  "expression": "Intersect(perpA, bisAP)",
+  "dependencies": [
+   "bisAP",
+   "perpA"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "GammaA",
+  "expression": "CircleThroughPoint(OA, A)",
+  "dependencies": [
+   "A",
+   "OA"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "perpD",
+  "expression": "PerpendicularLine(Line(C, D), D)",
+  "dependencies": [
+   "C",
+   "D"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "bisDP",
+  "expression": "PerpendicularBisector(D, P)",
+  "dependencies": [
+   "D",
+   "P"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "OD",
+  "expression": "Intersect(perpD, bisDP)",
+  "dependencies": [
+   "bisDP",
+   "perpD"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "GammaD",
+  "expression": "CircleThroughPoint(OD, D)",
+  "dependencies": [
+   "D",
+   "OD"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "K",
+  "expression": "Intersect(GammaA, GammaD, exclude=P)",
+  "dependencies": [
+   "GammaA",
+   "GammaD",
+   "P"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ },
+ {
+  "name": "Omega",
+  "expression": "Circle(O, r)",
+  "dependencies": [
+   "O"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "Q",
+  "expression": "Intersect(Line(P, K), Omega, exclude=P)",
+  "dependencies": [
+   "K",
+   "Omega",
+   "P"
+  ],
+  "depth": 5,
+  "point_depth": 3
+ }
+]

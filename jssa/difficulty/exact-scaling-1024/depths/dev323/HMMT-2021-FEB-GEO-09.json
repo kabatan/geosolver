@@ -1,0 +1,52 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(b,0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Point(u, h)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(u + 25, h)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "M",
+  "expression": "Midpoint(A, B)",
+  "dependencies": [
+   "A",
+   "B"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "P",
+  "expression": "Intersect(Circumcircle(B, C, D), Line(A, C), exclude=C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C",
+   "D"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ }
+]

@@ -1,0 +1,62 @@
+[
+ {
+  "name": "C",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(12, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(0, 35)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "FootOfPerpendicular(C, Line(A, B))",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "O",
+  "expression": "Midpoint(C, D)",
+  "dependencies": [
+   "C",
+   "D"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ },
+ {
+  "name": "omega",
+  "expression": "Circle(O, Distance(C, D) / 2)",
+  "dependencies": [
+   "C",
+   "D",
+   "O"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "I",
+  "expression": "Point(ix, iy)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ }
+]

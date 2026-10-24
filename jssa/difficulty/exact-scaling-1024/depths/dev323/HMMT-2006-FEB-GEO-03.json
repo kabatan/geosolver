@@ -1,0 +1,75 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(-6 * cos(a), -6 * sin(a))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "P",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(5 * cos(a), 5 * sin(a))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Q",
+  "expression": "Point(27, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(27 + 7 * c, 7 * s)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Point(27 - 12 * c, -12 * s)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Gamma",
+  "expression": "Circumcircle(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "O",
+  "expression": "Center(Gamma)",
+  "dependencies": [
+   "Gamma"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "H",
+  "expression": "FootOfPerpendicular(O, Line(P, Q))",
+  "dependencies": [
+   "O",
+   "P",
+   "Q"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ }
+]

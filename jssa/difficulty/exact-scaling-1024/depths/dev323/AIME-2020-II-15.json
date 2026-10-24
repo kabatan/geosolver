@@ -1,0 +1,86 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(ax, ay)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(-11, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(11, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Gamma",
+  "expression": "Circumcircle(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "tB",
+  "expression": "Tangent(B, Gamma)",
+  "dependencies": [
+   "B",
+   "Gamma"
+  ],
+  "depth": 2,
+  "point_depth": 0
+ },
+ {
+  "name": "tC",
+  "expression": "Tangent(C, Gamma)",
+  "dependencies": [
+   "C",
+   "Gamma"
+  ],
+  "depth": 2,
+  "point_depth": 0
+ },
+ {
+  "name": "T",
+  "expression": "Intersect(tB, tC)",
+  "dependencies": [
+   "tB",
+   "tC"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "X",
+  "expression": "FootOfPerpendicular(T, Line(A, B))",
+  "dependencies": [
+   "A",
+   "B",
+   "T"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ },
+ {
+  "name": "Y",
+  "expression": "FootOfPerpendicular(T, Line(A, C))",
+  "dependencies": [
+   "A",
+   "C",
+   "T"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ }
+]

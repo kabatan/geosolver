@@ -1,0 +1,65 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(5, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(cx, cy)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "O",
+  "expression": "Circumcenter(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "V",
+  "expression": "Point(vx, vy)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "P",
+  "expression": "Intersect(Line(O, V), Line(A, B))",
+  "dependencies": [
+   "A",
+   "B",
+   "O",
+   "V"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ },
+ {
+  "name": "Q",
+  "expression": "Intersect(Line(O, V), Line(B, C))",
+  "dependencies": [
+   "B",
+   "C",
+   "O",
+   "V"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ }
+]

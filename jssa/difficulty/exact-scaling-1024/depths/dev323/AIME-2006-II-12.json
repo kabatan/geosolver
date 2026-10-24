@@ -1,0 +1,96 @@
+[
+ {
+  "name": "O",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(2, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(-1, sqrt(3))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(-1, -sqrt(3))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Gamma",
+  "expression": "Circle(O, 2)",
+  "dependencies": [
+   "O"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Point(dx, dy)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "E",
+  "expression": "Point(ex, ey)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "l1",
+  "expression": "ParallelLine(Line(A, E), D)",
+  "dependencies": [
+   "A",
+   "D",
+   "E"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "l2",
+  "expression": "ParallelLine(Line(A, D), E)",
+  "dependencies": [
+   "A",
+   "D",
+   "E"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "F",
+  "expression": "Intersect(l1, l2)",
+  "dependencies": [
+   "l1",
+   "l2"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "G",
+  "expression": "Intersect(Line(A, F), Gamma, exclude=A)",
+  "dependencies": [
+   "A",
+   "F",
+   "Gamma"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ }
+]

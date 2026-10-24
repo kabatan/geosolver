@@ -1,0 +1,38 @@
+LIB "elim.lib";
+option(redSB);
+ring R=0,(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11),dp;
+short=0;
+ideal J=-64*x1^2 + x9^2,
+-x1^2*x2^2 + 2*x1*x2*x3*x4 + x10^2 - x3^2*x4^2,
+x1^2*x9 - x1*x3*x9 - 8*x10*x4 - x2*x4*x9 + x4^2*x9,
+-x1^2*x2^2 + 16*x1^2*x2 - 64*x1^2 + 2*x1*x2*x3*x4 - 16*x1*x2*x3 - 16*x1*x3*x4 + 128*x1*x3 - x3^2*x4^2 + 16*x3^2*x4 - 64*x3^2 + x5^2,
+-x1*x3*x9 + x2^2*x9 - x2*x4*x9 - 8*x2*x9 + x3^2*x9 + 8*x4*x5 + 8*x4*x9 - 64*x5,
+-x1^2 - x4^2 + 16*x4 + x6^2 - 64,
+x6 - 10,
+-x2^2 + 16*x2 - x3^2 + x7^2 - 64,
+x7 - 6,
+-x1^2 + 2*x1*x3 - x2^2 + 2*x2*x4 - x3^2 - x4^2 + x8^2,
+-x11 + x8;
+J=sat(J,ideal(x1));
+print("SAT_FACTOR=1");
+J=sat(J,ideal(x3));
+print("SAT_FACTOR=2");
+J=sat(J,ideal(x1^2 + x4^2));
+print("SAT_FACTOR=3");
+J=sat(J,ideal(x1^2 + x4^2 - 16*x4 + 64));
+print("SAT_FACTOR=4");
+J=sat(J,ideal(x1^2 - 2*x1*x3 + x2^2 - 2*x2*x4 + x3^2 + x4^2));
+print("SAT_FACTOR=5");
+J=sat(J,ideal(x1*x2 - 8*x1 - x3*x4 + 8*x3));
+print("SAT_FACTOR=6");
+J=sat(J,ideal(x1*x2 - x3*x4));
+print("SAT_FACTOR=7");
+J=sat(J,ideal(x2^2 + x3^2));
+print("SAT_FACTOR=8");
+J=sat(J,ideal(x2^2 - 16*x2 + x3^2 + 64));
+print("SAT_FACTOR=9");
+ideal G=std(J);
+print("DIM="+string(dim(G)));
+print("DEG="+string(mult(G)));
+print("VDIM="+string(vdim(G)));
+quit;

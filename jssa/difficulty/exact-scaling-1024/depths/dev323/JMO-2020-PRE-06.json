@@ -1,0 +1,83 @@
+[
+ {
+  "name": "L",
+  "expression": "Point(0,0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(0,3)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(3,0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(3,3)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "U",
+  "expression": "Point(cos(t),3+sin(t))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "V",
+  "expression": "Point(cos(t)+sin(t),3+sin(t)-cos(t))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "W",
+  "expression": "Point(sin(t),3-cos(t))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "M",
+  "expression": "Midpoint(V,B)",
+  "dependencies": [
+   "B",
+   "V"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "S",
+  "expression": "Point(M.x+(B.y-V.y)/2,M.y-(B.x-V.x)/2)",
+  "dependencies": [
+   "B",
+   "M",
+   "V"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ },
+ {
+  "name": "T",
+  "expression": "Point(M.x-(B.y-V.y)/2,M.y+(B.x-V.x)/2)",
+  "dependencies": [
+   "B",
+   "M",
+   "V"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ }
+]

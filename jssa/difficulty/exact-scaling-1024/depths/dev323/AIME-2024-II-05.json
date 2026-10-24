@@ -1,0 +1,80 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(s, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(s + s * cos(alpha), s * sin(alpha))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Point(s + s * cos(alpha) + s * cos(beta), s * sin(alpha) + s * sin(beta))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "E",
+  "expression": "Point(s * cos(alpha) + s * cos(beta), s * sin(alpha) + s * sin(beta))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "F",
+  "expression": "Point(s * cos(beta), s * sin(beta))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "U",
+  "expression": "Intersect(Line(A, B), Line(C, D))",
+  "dependencies": [
+   "A",
+   "B",
+   "C",
+   "D"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "V",
+  "expression": "Intersect(Line(C, D), Line(E, F))",
+  "dependencies": [
+   "C",
+   "D",
+   "E",
+   "F"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "W",
+  "expression": "Intersect(Line(E, F), Line(A, B))",
+  "dependencies": [
+   "A",
+   "B",
+   "E",
+   "F"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ }
+]

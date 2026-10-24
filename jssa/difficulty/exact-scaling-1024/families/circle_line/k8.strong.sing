@@ -1,0 +1,45 @@
+LIB "elim.lib";
+option(redSB);
+ring R=0,(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,x16,x17,x18),dp;
+short=0;
+ideal J=x2,
+x10^2 + x2^2 - x2 - 2,
+x11,
+x10*x11 + x10 - x11^2 + x11 - x12^2 + 2,
+x13,
+x12*x13 + x12 - x13^2 + x13 - x14^2 + 2,
+x15,
+x14*x15 + x14 - x15^2 + x15 - x16^2 + 2,
+x17,
+-x16*x17 - x16 + x17^2 - x17 + x3^2 - 2,
+x4,
+x3*x4 + x3 - x4^2 + x4 - x5^2 + 2,
+x6,
+x5*x6 + x5 - x6^2 + x6 - x7^2 + 2,
+x8,
+x7*x8 + x7 - x8^2 + x8 - x9^2 + 2,
+-x1 + x9,
+-x1 + x18;
+J=sat(J,ideal(x3 + 3));
+print("SAT_FACTOR=1");
+J=sat(J,ideal(x5 + 3));
+print("SAT_FACTOR=2");
+J=sat(J,ideal(x7 + 3));
+print("SAT_FACTOR=3");
+J=sat(J,ideal(x10 + 3));
+print("SAT_FACTOR=4");
+J=sat(J,ideal(x12 + 3));
+print("SAT_FACTOR=5");
+J=sat(J,ideal(x14 + 3));
+print("SAT_FACTOR=6");
+J=sat(J,ideal(x16 + 3));
+print("SAT_FACTOR=7");
+ideal G=std(J);
+print("DIM="+string(dim(G)));
+print("DEG="+string(mult(G)));
+print("VDIM="+string(vdim(G)));
+ideal E=eliminate(G,x1*x2*x3*x4*x5*x6*x7*x8*x9*x10*x11*x12*x13*x14*x15*x16*x17);
+print("ELIM_BEGIN");
+for(int j=1;j<=size(E);j++){print("POLY_BEGIN");print(E[j]);print("POLY_END");}
+print("ELIM_END");
+quit;

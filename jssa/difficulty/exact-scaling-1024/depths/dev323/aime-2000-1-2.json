@@ -1,0 +1,83 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(u, v)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "diagonal",
+  "expression": "Line(Point(0, 0), Point(1, 1))",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "y_axis",
+  "expression": "Line(Point(0, 0), Point(0, 1))",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "x_axis",
+  "expression": "Line(Point(0, 0), Point(1, 0))",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Reflect(A, diagonal)",
+  "dependencies": [
+   "A",
+   "diagonal"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "C",
+  "expression": "Reflect(B, y_axis)",
+  "dependencies": [
+   "B",
+   "y_axis"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "D",
+  "expression": "Reflect(C, x_axis)",
+  "dependencies": [
+   "C",
+   "x_axis"
+  ],
+  "depth": 4,
+  "point_depth": 3
+ },
+ {
+  "name": "E",
+  "expression": "Reflect(D, y_axis)",
+  "dependencies": [
+   "D",
+   "y_axis"
+  ],
+  "depth": 5,
+  "point_depth": 4
+ },
+ {
+  "name": "pentagon",
+  "expression": "Polygon([A, B, C, D, E])",
+  "dependencies": [
+   "A",
+   "B",
+   "C",
+   "D",
+   "E"
+  ],
+  "depth": 6,
+  "point_depth": 4
+ }
+]

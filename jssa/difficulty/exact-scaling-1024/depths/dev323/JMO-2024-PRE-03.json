@@ -1,0 +1,68 @@
+[
+ {
+  "name": "B",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(10, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(5, 5 * sqrt(3))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "X",
+  "expression": "Point(x, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "O",
+  "expression": "Point(x, oy)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Gamma",
+  "expression": "Circle(O, r)",
+  "dependencies": [
+   "O"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Intersect(Line(A, B), Gamma, exclude=A)",
+  "dependencies": [
+   "A",
+   "B",
+   "Gamma"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "E",
+  "expression": "Intersect(Line(A, C), Gamma, exclude=A)",
+  "dependencies": [
+   "A",
+   "C",
+   "Gamma"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ }
+]

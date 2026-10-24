@@ -1,0 +1,36 @@
+{
+  "id": "midpoint_control-k3",
+  "variables": [
+    "t"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "P0",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "P1",
+      "expression": "Midpoint(O, P0)"
+    },
+    {
+      "name": "P2",
+      "expression": "Midpoint(O, P1)"
+    },
+    {
+      "name": "P3",
+      "expression": "Midpoint(O, P2)"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "t",
+      "operator": "=",
+      "right": "P3.x"
+    }
+  ],
+  "target": "t"
+}

@@ -1,0 +1,100 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(b, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(cx, cy)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "O",
+  "expression": "Circumcenter(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "Gamma",
+  "expression": "Circumcircle(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "A0",
+  "expression": "Reflect(A, O)",
+  "dependencies": [
+   "A",
+   "O"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ },
+ {
+  "name": "bis",
+  "expression": "AngleBisector(B, A, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "E",
+  "expression": "Intersect(bis, Line(B, C))",
+  "dependencies": [
+   "B",
+   "C",
+   "bis"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "N",
+  "expression": "Intersect(bis, Gamma, exclude=A)",
+  "dependencies": [
+   "A",
+   "Gamma",
+   "bis"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "V",
+  "expression": "Intersect(Line(A, A0), Line(B, C))",
+  "dependencies": [
+   "A",
+   "A0",
+   "B",
+   "C"
+  ],
+  "depth": 3,
+  "point_depth": 3
+ }
+]

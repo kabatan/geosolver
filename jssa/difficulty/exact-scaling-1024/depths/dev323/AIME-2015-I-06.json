@@ -1,0 +1,135 @@
+[
+ {
+  "name": "O",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(0, 1)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(cos(pi / 2 - 2 * d), sin(pi / 2 - 2 * d))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(cos(pi / 2 - d), sin(pi / 2 - d))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Point(cos(pi / 2 + d), sin(pi / 2 + d))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "E",
+  "expression": "Point(cos(pi / 2 + 2 * d), sin(pi / 2 + 2 * d))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "evecx",
+  "expression": "E.x - C.x",
+  "dependencies": [
+   "C",
+   "E"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "evecy",
+  "expression": "E.y - C.y",
+  "dependencies": [
+   "C",
+   "E"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "r2",
+  "expression": "Distance(E, A) / (2 * sin(5 * e / 2))",
+  "dependencies": [
+   "A",
+   "E"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "omega1",
+  "expression": "Circle(O, 1)",
+  "dependencies": [
+   "O"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "omega2",
+  "expression": "Circle(C, r2)",
+  "dependencies": [
+   "C",
+   "r2"
+  ],
+  "depth": 2,
+  "point_depth": 0
+ },
+ {
+  "name": "F",
+  "expression": "Point(C.x + r2 * (evecx / r2 * cos(e) - evecy / r2 * sin(e)), C.y + r2 * (evecx / r2 * sin(e) + evecy / r2 * cos(e)))",
+  "dependencies": [
+   "C",
+   "evecx",
+   "evecy",
+   "r2"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "G",
+  "expression": "Point(C.x + (F.x - C.x) * cos(e) - (F.y - C.y) * sin(e), C.y + (F.x - C.x) * sin(e) + (F.y - C.y) * cos(e))",
+  "dependencies": [
+   "C",
+   "F"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "H",
+  "expression": "Point(C.x + (G.x - C.x) * cos(e) - (G.y - C.y) * sin(e), C.y + (G.x - C.x) * sin(e) + (G.y - C.y) * cos(e))",
+  "dependencies": [
+   "C",
+   "G"
+  ],
+  "depth": 4,
+  "point_depth": 3
+ },
+ {
+  "name": "I",
+  "expression": "Point(C.x + (H.x - C.x) * cos(e) - (H.y - C.y) * sin(e), C.y + (H.x - C.x) * sin(e) + (H.y - C.y) * cos(e))",
+  "dependencies": [
+   "C",
+   "H"
+  ],
+  "depth": 5,
+  "point_depth": 4
+ }
+]

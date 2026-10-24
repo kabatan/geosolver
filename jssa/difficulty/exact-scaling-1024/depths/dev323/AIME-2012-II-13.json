@@ -1,0 +1,81 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(sqrt(111), 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(sqrt(111) / 2, sqrt(333) / 2)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D1",
+  "expression": "Intersect(Circle(B, sqrt(11)), Circle(A, sqrt(111)), near=C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "D2",
+  "expression": "Intersect(Circle(B, sqrt(11)), Circle(A, sqrt(111)), exclude=D1)",
+  "dependencies": [
+   "A",
+   "B",
+   "D1"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ },
+ {
+  "name": "E1",
+  "expression": "Point(D1.x * cos(pi / 3) - D1.y * sin(pi / 3), D1.x * sin(pi / 3) + D1.y * cos(pi / 3))",
+  "dependencies": [
+   "D1"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ },
+ {
+  "name": "E2",
+  "expression": "Point(D1.x * cos(pi / 3) + D1.y * sin(pi / 3), -D1.x * sin(pi / 3) + D1.y * cos(pi / 3))",
+  "dependencies": [
+   "D1"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ },
+ {
+  "name": "E3",
+  "expression": "Point(D2.x * cos(pi / 3) - D2.y * sin(pi / 3), D2.x * sin(pi / 3) + D2.y * cos(pi / 3))",
+  "dependencies": [
+   "D2"
+  ],
+  "depth": 3,
+  "point_depth": 3
+ },
+ {
+  "name": "E4",
+  "expression": "Point(D2.x * cos(pi / 3) + D2.y * sin(pi / 3), -D2.x * sin(pi / 3) + D2.y * cos(pi / 3))",
+  "dependencies": [
+   "D2"
+  ],
+  "depth": 3,
+  "point_depth": 3
+ }
+]

@@ -1,0 +1,81 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(12, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(-8, 15)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "lineBC",
+  "expression": "Line(B, C)",
+  "dependencies": [
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "lineAC",
+  "expression": "Line(A, C)",
+  "dependencies": [
+   "A",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "P",
+  "expression": "Point(12 * t, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Q",
+  "expression": "Intersect(ParallelLine(P, lineBC), lineAC)",
+  "dependencies": [
+   "P",
+   "lineAC",
+   "lineBC"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "R",
+  "expression": "Intersect(PerpendicularLine(lineBC, Q), lineBC)",
+  "dependencies": [
+   "Q",
+   "lineBC"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "S",
+  "expression": "Intersect(PerpendicularLine(lineBC, P), lineBC)",
+  "dependencies": [
+   "P",
+   "lineBC"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ }
+]

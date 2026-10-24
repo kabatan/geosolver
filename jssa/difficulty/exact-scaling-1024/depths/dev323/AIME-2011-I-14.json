@@ -1,0 +1,174 @@
+[
+ {
+  "name": "A1",
+  "expression": "Point(1, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A2",
+  "expression": "Point(1 / sqrt(2), 1 / sqrt(2))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A3",
+  "expression": "Point(0, 1)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A4",
+  "expression": "Point(-1 / sqrt(2), 1 / sqrt(2))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A5",
+  "expression": "Point(-1, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A6",
+  "expression": "Point(-1 / sqrt(2), -1 / sqrt(2))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A7",
+  "expression": "Point(0, -1)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A8",
+  "expression": "Point(1 / sqrt(2), -1 / sqrt(2))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "M1",
+  "expression": "Midpoint(A1, A2)",
+  "dependencies": [
+   "A1",
+   "A2"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "M3",
+  "expression": "Midpoint(A3, A4)",
+  "dependencies": [
+   "A3",
+   "A4"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "M5",
+  "expression": "Midpoint(A5, A6)",
+  "dependencies": [
+   "A5",
+   "A6"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "M7",
+  "expression": "Midpoint(A7, A8)",
+  "dependencies": [
+   "A7",
+   "A8"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "R1",
+  "expression": "Line(M1, Point(M1.x + cos(theta), M1.y + sin(theta)))",
+  "dependencies": [
+   "M1"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "R3",
+  "expression": "Line(M3, Point(M3.x - sin(theta), M3.y + cos(theta)))",
+  "dependencies": [
+   "M3"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "R5",
+  "expression": "Line(M5, Point(M5.x - cos(theta), M5.y - sin(theta)))",
+  "dependencies": [
+   "M5"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "R7",
+  "expression": "Line(M7, Point(M7.x + sin(theta), M7.y - cos(theta)))",
+  "dependencies": [
+   "M7"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "B1",
+  "expression": "Intersect(R1, R3)",
+  "dependencies": [
+   "R1",
+   "R3"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "B3",
+  "expression": "Intersect(R3, R5)",
+  "dependencies": [
+   "R3",
+   "R5"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "B5",
+  "expression": "Intersect(R5, R7)",
+  "dependencies": [
+   "R5",
+   "R7"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "B7",
+  "expression": "Intersect(R7, R1)",
+  "dependencies": [
+   "R1",
+   "R7"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ }
+]

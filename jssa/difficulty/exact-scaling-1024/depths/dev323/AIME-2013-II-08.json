@@ -1,0 +1,107 @@
+[
+ {
+  "name": "O",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "c22",
+  "expression": "1 - 22 * 22 / (2 * r * r)",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "s22",
+  "expression": "22 * sqrt(4 * r * r - 22 * 22) / (2 * r * r)",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "c20",
+  "expression": "1 - 20 * 20 / (2 * r * r)",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "s20",
+  "expression": "20 * sqrt(4 * r * r - 20 * 20) / (2 * r * r)",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(r, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(r * c22, r * s22)",
+  "dependencies": [
+   "c22",
+   "s22"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "C",
+  "expression": "Point(B.x * c22 - B.y * s22, B.x * s22 + B.y * c22)",
+  "dependencies": [
+   "B",
+   "c22",
+   "s22"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "D",
+  "expression": "Point(C.x * c20 - C.y * s20, C.x * s20 + C.y * c20)",
+  "dependencies": [
+   "C",
+   "c20",
+   "s20"
+  ],
+  "depth": 4,
+  "point_depth": 3
+ },
+ {
+  "name": "E",
+  "expression": "Point(D.x * c22 - D.y * s22, D.x * s22 + D.y * c22)",
+  "dependencies": [
+   "D",
+   "c22",
+   "s22"
+  ],
+  "depth": 5,
+  "point_depth": 4
+ },
+ {
+  "name": "F",
+  "expression": "Point(E.x * c22 - E.y * s22, E.x * s22 + E.y * c22)",
+  "dependencies": [
+   "E",
+   "c22",
+   "s22"
+  ],
+  "depth": 6,
+  "point_depth": 5
+ },
+ {
+  "name": "Gamma",
+  "expression": "Circle(O, r)",
+  "dependencies": [
+   "O"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ }
+]

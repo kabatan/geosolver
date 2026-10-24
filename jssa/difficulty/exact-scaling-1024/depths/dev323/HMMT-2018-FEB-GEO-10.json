@@ -1,0 +1,75 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(6, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(cx, cy)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Gamma",
+  "expression": "Circumcircle(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "X",
+  "expression": "Intersect(Tangent(B, Gamma), Tangent(C, Gamma))",
+  "dependencies": [
+   "B",
+   "C",
+   "Gamma"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "Z",
+  "expression": "Point(zx, zy)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Y",
+  "expression": "FootOfPerpendicular(X, Line(C, Z))",
+  "dependencies": [
+   "C",
+   "X",
+   "Z"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "K",
+  "expression": "Intersect(Circumcircle(B,C,Y),Line(A,B),exclude=B)",
+  "dependencies": [
+   "A",
+   "B",
+   "C",
+   "Y"
+  ],
+  "depth": 4,
+  "point_depth": 3
+ }
+]

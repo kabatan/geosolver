@@ -1,0 +1,182 @@
+[
+ {
+  "name": "I",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "T1",
+  "expression": "Point(r, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "T2",
+  "expression": "Point(r * (1 - t2 * t2) / (1 + t2 * t2), r * 2 * t2 / (1 + t2 * t2))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "T3",
+  "expression": "Point(r * (1 - t3 * t3) / (1 + t3 * t3), r * 2 * t3 / (1 + t3 * t3))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "T4",
+  "expression": "Point(r * (1 - t4 * t4) / (1 + t4 * t4), r * 2 * t4 / (1 + t4 * t4))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "l1",
+  "expression": "PerpendicularLine(Line(I, T1), T1)",
+  "dependencies": [
+   "I",
+   "T1"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "l2",
+  "expression": "PerpendicularLine(Line(I, T2), T2)",
+  "dependencies": [
+   "I",
+   "T2"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "l3",
+  "expression": "PerpendicularLine(Line(I, T3), T3)",
+  "dependencies": [
+   "I",
+   "T3"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "l4",
+  "expression": "PerpendicularLine(Line(I, T4), T4)",
+  "dependencies": [
+   "I",
+   "T4"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Intersect(l4, l1)",
+  "dependencies": [
+   "l1",
+   "l4"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "B",
+  "expression": "Intersect(l1, l2)",
+  "dependencies": [
+   "l1",
+   "l2"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "C",
+  "expression": "Intersect(l2, l3)",
+  "dependencies": [
+   "l2",
+   "l3"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "D",
+  "expression": "Intersect(l3, l4)",
+  "dependencies": [
+   "l3",
+   "l4"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "omega",
+  "expression": "Circle(I, r)",
+  "dependencies": [
+   "I"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "P",
+  "expression": "Intersect(Line(A, C), Line(B, D))",
+  "dependencies": [
+   "A",
+   "B",
+   "C",
+   "D"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "G1",
+  "expression": "Circumcircle(A, P, B)",
+  "dependencies": [
+   "A",
+   "B",
+   "P"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ },
+ {
+  "name": "G2",
+  "expression": "Circumcircle(B, P, C)",
+  "dependencies": [
+   "B",
+   "C",
+   "P"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ },
+ {
+  "name": "G3",
+  "expression": "Circumcircle(C, P, D)",
+  "dependencies": [
+   "C",
+   "D",
+   "P"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ },
+ {
+  "name": "G4",
+  "expression": "Circumcircle(D, P, A)",
+  "dependencies": [
+   "A",
+   "D",
+   "P"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ }
+]

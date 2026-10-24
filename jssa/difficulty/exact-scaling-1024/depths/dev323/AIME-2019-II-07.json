@@ -1,0 +1,182 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(120, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(-20 / 3, sqrt(291200) / 3)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Ua",
+  "expression": "PointOnSegment(A, B, 1 / 4)",
+  "dependencies": [
+   "A",
+   "B"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "Ub",
+  "expression": "PointOnSegment(B, A, 1 / 4)",
+  "dependencies": [
+   "A",
+   "B"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "Uc",
+  "expression": "PointOnSegment(C, A, 1 / 8)",
+  "dependencies": [
+   "A",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "lA",
+  "expression": "ParallelLine(Ua, Line(B, C))",
+  "dependencies": [
+   "B",
+   "C",
+   "Ua"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "lB",
+  "expression": "ParallelLine(Ub, Line(A, C))",
+  "dependencies": [
+   "A",
+   "C",
+   "Ub"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "lC",
+  "expression": "ParallelLine(Uc, Line(A, B))",
+  "dependencies": [
+   "A",
+   "B",
+   "Uc"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "A1",
+  "expression": "Intersect(lA, Line(A, B))",
+  "dependencies": [
+   "A",
+   "B",
+   "lA"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "A2",
+  "expression": "Intersect(lA, Line(A, C))",
+  "dependencies": [
+   "A",
+   "C",
+   "lA"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "B1",
+  "expression": "Intersect(lB, Line(A, B))",
+  "dependencies": [
+   "A",
+   "B",
+   "lB"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "B2",
+  "expression": "Intersect(lB, Line(B, C))",
+  "dependencies": [
+   "B",
+   "C",
+   "lB"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "C1",
+  "expression": "Intersect(lC, Line(A, C))",
+  "dependencies": [
+   "A",
+   "C",
+   "lC"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "C2",
+  "expression": "Intersect(lC, Line(B, C))",
+  "dependencies": [
+   "B",
+   "C",
+   "lC"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "I",
+  "expression": "Intersect(lA, lB)",
+  "dependencies": [
+   "lA",
+   "lB"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "J",
+  "expression": "Intersect(lB, lC)",
+  "dependencies": [
+   "lB",
+   "lC"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "K",
+  "expression": "Intersect(lC, lA)",
+  "dependencies": [
+   "lA",
+   "lC"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ }
+]

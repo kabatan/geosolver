@@ -1,0 +1,34 @@
+LIB "elim.lib";
+option(redSB);
+ring R=0,(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10),dp;
+short=0;
+ideal J=x3*x4 - 11*x3 + x4,
+-x1^2 - x2^2 + x6^2,
+x6 - 20,
+-121*x2^2*x3^2 + 242*x2^2*x3 - 121*x2^2 + x7^2,
+-121*x2^2*x3^2 + x8^2,
+x1^2*x3*x7 - x1^2*x7 - 11*x1*x3*x7 - 11*x1*x3*x8 + 11*x1*x8 + x2^2*x3*x7 - x2^2*x7 + 121*x3*x8,
+x4^2 - 22*x4 - x9^2 + 121,
+x4^2 - x5^2,
+x10*x5 - x9;
+J=sat(J,ideal(x5));
+print("SAT_FACTOR=1");
+J=sat(J,ideal(x1));
+print("SAT_FACTOR=2");
+J=sat(J,ideal(x1 - 11));
+print("SAT_FACTOR=3");
+J=sat(J,ideal(x2));
+print("SAT_FACTOR=4");
+J=sat(J,ideal(x3 + 1));
+print("SAT_FACTOR=5");
+J=sat(J,ideal(x1^2 + x2^2));
+print("SAT_FACTOR=6");
+J=sat(J,ideal(x1^2*x3^2 + 2*x1^2*x3 + x1^2 - 22*x1*x3^2 - 22*x1*x3 + x2^2*x3^2 + 2*x2^2*x3 + x2^2 + 121*x3^2));
+print("SAT_FACTOR=7");
+J=sat(J,ideal(x1^2*x3^2 - 2*x1^2*x3 + x1^2 - 22*x1*x3^2 + 22*x1*x3 + x2^2*x3^2 - 2*x2^2*x3 + x2^2 + 121*x3^2));
+print("SAT_FACTOR=8");
+ideal G=std(J);
+print("DIM="+string(dim(G)));
+print("DEG="+string(mult(G)));
+print("VDIM="+string(vdim(G)));
+quit;

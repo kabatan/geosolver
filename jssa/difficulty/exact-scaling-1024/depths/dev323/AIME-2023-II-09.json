@@ -1,0 +1,117 @@
+[
+ {
+  "name": "P",
+  "expression": "Point(0, k)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(-5, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(7, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "r1",
+  "expression": "(25 + k * k) / (2 * k)",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "r2",
+  "expression": "(49 + k * k) / (2 * k)",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "O1",
+  "expression": "Point(-5, r1)",
+  "dependencies": [
+   "r1"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "O2",
+  "expression": "Point(7, r2)",
+  "dependencies": [
+   "r2"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "omega1",
+  "expression": "Circle(O1, r1)",
+  "dependencies": [
+   "O1",
+   "r1"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "omega2",
+  "expression": "Circle(O2, r2)",
+  "dependencies": [
+   "O2",
+   "r2"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "L",
+  "expression": "ParallelLine(P, Line(A, B))",
+  "dependencies": [
+   "A",
+   "B",
+   "P"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "X",
+  "expression": "Point(2 * A.x - P.x, P.y)",
+  "dependencies": [
+   "A",
+   "P"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "Y",
+  "expression": "Point(2 * B.x - P.x, P.y)",
+  "dependencies": [
+   "B",
+   "P"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "Q",
+  "expression": "Intersect(omega1, omega2, exclude=P)",
+  "dependencies": [
+   "P",
+   "omega1",
+   "omega2"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ }
+]

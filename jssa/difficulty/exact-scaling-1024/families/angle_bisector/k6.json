@@ -1,0 +1,52 @@
+{
+  "id": "angle_bisector-k6",
+  "variables": [
+    "t"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "B0",
+      "expression": "Point(1, 1)"
+    },
+    {
+      "name": "B1",
+      "expression": "Intersect(AngleBisector(A, O, B0), Line(A, B0))"
+    },
+    {
+      "name": "B2",
+      "expression": "Intersect(AngleBisector(A, O, B1), Line(A, B0))"
+    },
+    {
+      "name": "B3",
+      "expression": "Intersect(AngleBisector(A, O, B2), Line(A, B0))"
+    },
+    {
+      "name": "B4",
+      "expression": "Intersect(AngleBisector(A, O, B3), Line(A, B0))"
+    },
+    {
+      "name": "B5",
+      "expression": "Intersect(AngleBisector(A, O, B4), Line(A, B0))"
+    },
+    {
+      "name": "B6",
+      "expression": "Intersect(AngleBisector(A, O, B5), Line(A, B0))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "t",
+      "operator": "=",
+      "right": "B6.y"
+    }
+  ],
+  "target": "t"
+}

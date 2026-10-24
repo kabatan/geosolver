@@ -1,0 +1,122 @@
+[
+ {
+  "name": "P",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Q",
+  "expression": "Point(1, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "ta",
+  "expression": "2 / (sqrt(3) + cos(pi / 12) / sin(pi / 12))",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(ta * cos(pi / 6), ta * sin(pi / 6))",
+  "dependencies": [
+   "ta"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "r1",
+  "expression": "ta",
+  "dependencies": [
+   "ta"
+  ],
+  "depth": 2,
+  "point_depth": 0
+ },
+ {
+  "name": "r2",
+  "expression": "1 / (2 * ta)",
+  "dependencies": [
+   "ta"
+  ],
+  "depth": 2,
+  "point_depth": 0
+ },
+ {
+  "name": "O1",
+  "expression": "Point(0, r1)",
+  "dependencies": [
+   "r1"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "O2",
+  "expression": "Point(1, r2)",
+  "dependencies": [
+   "r2"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "omega1",
+  "expression": "Circle(O1, r1)",
+  "dependencies": [
+   "O1",
+   "r1"
+  ],
+  "depth": 4,
+  "point_depth": 1
+ },
+ {
+  "name": "omega2",
+  "expression": "Circle(O2, r2)",
+  "dependencies": [
+   "O2",
+   "r2"
+  ],
+  "depth": 4,
+  "point_depth": 1
+ },
+ {
+  "name": "B",
+  "expression": "Point((1 - sqrt(3)) / 4, (1 + sqrt(3)) / 4)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "X",
+  "expression": "Point(-ta * cos(pi / 6), ta * sin(pi / 6))",
+  "dependencies": [
+   "ta"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "tt",
+  "expression": "(1 + sqrt(3)) / (2 * ta)",
+  "dependencies": [
+   "ta"
+  ],
+  "depth": 2,
+  "point_depth": 0
+ },
+ {
+  "name": "Y",
+  "expression": "Point(1 + tt * (1 - sqrt(3)) / 4, tt * (1 + sqrt(3)) / 4)",
+  "dependencies": [
+   "tt"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ }
+]

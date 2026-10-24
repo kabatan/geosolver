@@ -1,0 +1,94 @@
+[
+ {
+  "name": "B",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(0, 12)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(x, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "E",
+  "expression": "PointOnSegment(A, B, t_e)",
+  "dependencies": [
+   "A",
+   "B"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "F",
+  "expression": "PointOnSegment(A, C, t_f)",
+  "dependencies": [
+   "A",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "bc_line",
+  "expression": "Line(B, C)",
+  "dependencies": [
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "angle_bisector",
+  "expression": "AngleBisector(C, A, B)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Intersect(angle_bisector, bc_line)",
+  "dependencies": [
+   "angle_bisector",
+   "bc_line"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "ef_line",
+  "expression": "Line(E, F)",
+  "dependencies": [
+   "E",
+   "F"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "G",
+  "expression": "Intersect(angle_bisector, ef_line)",
+  "dependencies": [
+   "angle_bisector",
+   "ef_line"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ }
+]

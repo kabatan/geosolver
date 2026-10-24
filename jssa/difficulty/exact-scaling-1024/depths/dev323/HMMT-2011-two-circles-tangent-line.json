@@ -1,0 +1,164 @@
+[
+ {
+  "name": "P",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Q",
+  "expression": "Point(1, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "lam",
+  "expression": "(sqrt(3) - 1) / 2",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "O1",
+  "expression": "Point(0, lam)",
+  "dependencies": [
+   "lam"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "O2",
+  "expression": "Point(1, 2 * lam)",
+  "dependencies": [
+   "lam"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "omega1",
+  "expression": "Circle(O1, lam)",
+  "dependencies": [
+   "O1",
+   "lam"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "omega2",
+  "expression": "Circle(O2, 2 * lam)",
+  "dependencies": [
+   "O2",
+   "lam"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "l",
+  "expression": "Line(P, Q)",
+  "dependencies": [
+   "P",
+   "Q"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(lam, lam)",
+  "dependencies": [
+   "lam"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "B",
+  "expression": "Intersect(omega1, omega2, exclude=A)",
+  "dependencies": [
+   "A",
+   "omega1",
+   "omega2"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ },
+ {
+  "name": "R",
+  "expression": "Point(A.x + (A.x - P.x) / Distance(A, P), A.y + (A.y - P.y) / Distance(A, P))",
+  "dependencies": [
+   "A",
+   "P"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "S",
+  "expression": "Point(A.x + (A.x - Q.x) / Distance(A, Q), A.y + (A.y - Q.y) / Distance(A, Q))",
+  "dependencies": [
+   "A",
+   "Q"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "O",
+  "expression": "Circumcenter(A, S, R)",
+  "dependencies": [
+   "A",
+   "R",
+   "S"
+  ],
+  "depth": 4,
+  "point_depth": 3
+ },
+ {
+  "name": "MAP",
+  "expression": "Midpoint(A, P)",
+  "dependencies": [
+   "A",
+   "P"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "MAQ",
+  "expression": "Midpoint(A, Q)",
+  "dependencies": [
+   "A",
+   "Q"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "C",
+  "expression": "Point(O1.x - lam * (MAP.x - O1.x) / Distance(MAP, O1), O1.y - lam * (MAP.y - O1.y) / Distance(MAP, O1))",
+  "dependencies": [
+   "MAP",
+   "O1",
+   "lam"
+  ],
+  "depth": 4,
+  "point_depth": 3
+ },
+ {
+  "name": "D",
+  "expression": "Point(O2.x - 2 * lam * (MAQ.x - O2.x) / Distance(MAQ, O2), O2.y - 2 * lam * (MAQ.y - O2.y) / Distance(MAQ, O2))",
+  "dependencies": [
+   "MAQ",
+   "O2",
+   "lam"
+  ],
+  "depth": 4,
+  "point_depth": 3
+ }
+]

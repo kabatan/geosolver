@@ -1,0 +1,89 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(bx, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(cx, cy)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Gamma",
+  "expression": "Circumcircle(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "O",
+  "expression": "Circumcenter(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "G",
+  "expression": "Centroid(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "tA",
+  "expression": "Tangent(A, Gamma)",
+  "dependencies": [
+   "A",
+   "Gamma"
+  ],
+  "depth": 2,
+  "point_depth": 0
+ },
+ {
+  "name": "X",
+  "expression": "Intersect(tA, PerpendicularLine(G, Line(G, O)))",
+  "dependencies": [
+   "G",
+   "O",
+   "tA"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "Y",
+  "expression": "Intersect(Line(X, G), Line(B, C))",
+  "dependencies": [
+   "B",
+   "C",
+   "G",
+   "X"
+  ],
+  "depth": 4,
+  "point_depth": 3
+ }
+]

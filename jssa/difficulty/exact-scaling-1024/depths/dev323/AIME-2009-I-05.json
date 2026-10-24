@@ -1,0 +1,78 @@
+[
+ {
+  "name": "C",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(ax, ay)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(bx, by)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "K",
+  "expression": "Midpoint(A, C)",
+  "dependencies": [
+   "A",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "I",
+  "expression": "Incenter(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "L",
+  "expression": "Intersect(Line(C, I), Line(A, B))",
+  "dependencies": [
+   "A",
+   "B",
+   "C",
+   "I"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ },
+ {
+  "name": "P",
+  "expression": "Intersect(Line(B, K), Line(C, L))",
+  "dependencies": [
+   "B",
+   "C",
+   "K",
+   "L"
+  ],
+  "depth": 3,
+  "point_depth": 3
+ },
+ {
+  "name": "M",
+  "expression": "Reflect(P, K)",
+  "dependencies": [
+   "K",
+   "P"
+  ],
+  "depth": 4,
+  "point_depth": 4
+ }
+]

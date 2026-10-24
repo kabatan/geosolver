@@ -1,0 +1,80 @@
+[
+ {
+  "name": "O1",
+  "expression": "Point(0,0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "O2",
+  "expression": "Point(6,0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "P",
+  "expression": "Point(2,0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C1",
+  "expression": "Circle(O1,2)",
+  "dependencies": [
+   "O1"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "C2",
+  "expression": "Circle(O2,4)",
+  "dependencies": [
+   "O2"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "Q",
+  "expression": "Point(2+cos(t),-sin(t))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "L",
+  "expression": "Line(P,Q)",
+  "dependencies": [
+   "P",
+   "Q"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Intersect(L,C1,exclude=P)",
+  "dependencies": [
+   "C1",
+   "L",
+   "P"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "B",
+  "expression": "Intersect(L,C2,exclude=P)",
+  "dependencies": [
+   "C2",
+   "L",
+   "P"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ }
+]

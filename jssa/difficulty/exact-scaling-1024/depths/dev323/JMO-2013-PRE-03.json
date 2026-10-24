@@ -1,0 +1,113 @@
+[
+ {
+  "name": "O",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A1",
+  "expression": "Point(0, 1)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A2",
+  "expression": "Point(cos(pi / 2 + u2), sin(pi / 2 + u2))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A3",
+  "expression": "Point(cos(pi / 2 + u2 + u3), sin(pi / 2 + u2 + u3))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A4",
+  "expression": "Point(cos(pi / 2 + u2 + u3 + u4), sin(pi / 2 + u2 + u3 + u4))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A5",
+  "expression": "Point(cos(pi / 2 + u2 + u3 + u4 + u5), sin(pi / 2 + u2 + u3 + u4 + u5))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Gamma",
+  "expression": "Circle(O, 1)",
+  "dependencies": [
+   "O"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "B1",
+  "expression": "Intersect(Line(A2, A4), Line(A3, A5))",
+  "dependencies": [
+   "A2",
+   "A3",
+   "A4",
+   "A5"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "B2",
+  "expression": "Intersect(Line(A3, A5), Line(A4, A1))",
+  "dependencies": [
+   "A1",
+   "A3",
+   "A4",
+   "A5"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "B3",
+  "expression": "Intersect(Line(A4, A1), Line(A5, A2))",
+  "dependencies": [
+   "A1",
+   "A2",
+   "A4",
+   "A5"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "B4",
+  "expression": "Intersect(Line(A5, A2), Line(A1, A3))",
+  "dependencies": [
+   "A1",
+   "A2",
+   "A3",
+   "A5"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "B5",
+  "expression": "Intersect(Line(A1, A3), Line(A2, A4))",
+  "dependencies": [
+   "A1",
+   "A2",
+   "A3",
+   "A4"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ }
+]

@@ -1,0 +1,203 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(13, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(99 / 13, 168 / 13)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B1",
+  "expression": "Point(B.x + (B.y - A.y), B.y - (B.x - A.x))",
+  "dependencies": [
+   "A",
+   "B"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "A2",
+  "expression": "Point(A.x + (B.y - A.y), A.y - (B.x - A.x))",
+  "dependencies": [
+   "A",
+   "B"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "C1",
+  "expression": "Point(C.x + (C.y - B.y), C.y - (C.x - B.x))",
+  "dependencies": [
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "B2",
+  "expression": "Point(B.x + (C.y - B.y), B.y - (C.x - B.x))",
+  "dependencies": [
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "A1",
+  "expression": "Point(A.x + (A.y - C.y), A.y - (A.x - C.x))",
+  "dependencies": [
+   "A",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "C2",
+  "expression": "Point(C.x + (A.y - C.y), C.y - (A.x - C.x))",
+  "dependencies": [
+   "A",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "A3",
+  "expression": "Point(A2.x + (A2.y - A1.y), A2.y - (A2.x - A1.x))",
+  "dependencies": [
+   "A1",
+   "A2"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ },
+ {
+  "name": "A4",
+  "expression": "Point(A1.x + (A2.y - A1.y), A1.y - (A2.x - A1.x))",
+  "dependencies": [
+   "A1",
+   "A2"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ },
+ {
+  "name": "B3",
+  "expression": "Point(B2.x + (B2.y - B1.y), B2.y - (B2.x - B1.x))",
+  "dependencies": [
+   "B1",
+   "B2"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ },
+ {
+  "name": "B4",
+  "expression": "Point(B1.x + (B2.y - B1.y), B1.y - (B2.x - B1.x))",
+  "dependencies": [
+   "B1",
+   "B2"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ },
+ {
+  "name": "C3",
+  "expression": "Point(C2.x + (C2.y - C1.y), C2.y - (C2.x - C1.x))",
+  "dependencies": [
+   "C1",
+   "C2"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ },
+ {
+  "name": "C4",
+  "expression": "Point(C1.x + (C2.y - C1.y), C1.y - (C2.x - C1.x))",
+  "dependencies": [
+   "C1",
+   "C2"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ },
+ {
+  "name": "B5",
+  "expression": "Point(B4.x + (B4.y - A3.y), B4.y - (B4.x - A3.x))",
+  "dependencies": [
+   "A3",
+   "B4"
+  ],
+  "depth": 3,
+  "point_depth": 3
+ },
+ {
+  "name": "A6",
+  "expression": "Point(A3.x + (B4.y - A3.y), A3.y - (B4.x - A3.x))",
+  "dependencies": [
+   "A3",
+   "B4"
+  ],
+  "depth": 3,
+  "point_depth": 3
+ },
+ {
+  "name": "C5",
+  "expression": "Point(C4.x + (C4.y - B3.y), C4.y - (C4.x - B3.x))",
+  "dependencies": [
+   "B3",
+   "C4"
+  ],
+  "depth": 3,
+  "point_depth": 3
+ },
+ {
+  "name": "B6",
+  "expression": "Point(B3.x + (C4.y - B3.y), B3.y - (C4.x - B3.x))",
+  "dependencies": [
+   "B3",
+   "C4"
+  ],
+  "depth": 3,
+  "point_depth": 3
+ },
+ {
+  "name": "A5",
+  "expression": "Point(A4.x + (A4.y - C3.y), A4.y - (A4.x - C3.x))",
+  "dependencies": [
+   "A4",
+   "C3"
+  ],
+  "depth": 3,
+  "point_depth": 3
+ },
+ {
+  "name": "C6",
+  "expression": "Point(C3.x + (A4.y - C3.y), C3.y - (A4.x - C3.x))",
+  "dependencies": [
+   "A4",
+   "C3"
+  ],
+  "depth": 3,
+  "point_depth": 3
+ }
+]

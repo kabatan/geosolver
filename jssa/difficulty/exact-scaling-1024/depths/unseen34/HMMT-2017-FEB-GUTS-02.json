@@ -1,0 +1,88 @@
+[
+ {
+  "name": "X",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Y",
+  "expression": "Point(t, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Z",
+  "expression": "Point(zx, zy)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(-3, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Point(t+10, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(-2*zx/Distance(X,Z), -2*zy/Distance(X,Z))",
+  "dependencies": [
+   "X",
+   "Z"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "E",
+  "expression": "Point(zx+16*zx/Distance(X,Z), zy+16*zy/Distance(X,Z))",
+  "dependencies": [
+   "X",
+   "Z"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "C",
+  "expression": "Point(t+4*(t-zx)/Distance(Y,Z), -4*zy/Distance(Y,Z))",
+  "dependencies": [
+   "Y",
+   "Z"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "F",
+  "expression": "Point(zx+12*(zx-t)/Distance(Y,Z), zy+12*zy/Distance(Y,Z))",
+  "dependencies": [
+   "Y",
+   "Z"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "omega",
+  "expression": "Circumcircle(A,B,C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ }
+]

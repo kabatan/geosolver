@@ -1,0 +1,134 @@
+[
+ {
+  "name": "O",
+  "expression": "Point(0, h)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Gamma",
+  "expression": "Circle(O, 12)",
+  "dependencies": [
+   "O"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "u",
+  "expression": "sqrt(100 - (h - 2) * (h - 2))",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "v",
+  "expression": "sqrt(81 - (h + 3) * (h + 3))",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "O1",
+  "expression": "Point(u, 2)",
+  "dependencies": [
+   "u"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "O2",
+  "expression": "Point(v, -3)",
+  "dependencies": [
+   "v"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "omega1",
+  "expression": "Circle(O1, 2)",
+  "dependencies": [
+   "O1"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "omega2",
+  "expression": "Circle(O2, 3)",
+  "dependencies": [
+   "O2"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "X1",
+  "expression": "Point(O.x + 12 / 10 * (O1.x - O.x), O.y + 12 / 10 * (O1.y - O.y))",
+  "dependencies": [
+   "O",
+   "O1"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "X2",
+  "expression": "Point(O.x + 12 / 9 * (O2.x - O.x), O.y + 12 / 9 * (O2.y - O.y))",
+  "dependencies": [
+   "O",
+   "O2"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "T1",
+  "expression": "Point(u, 0)",
+  "dependencies": [
+   "u"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "T2",
+  "expression": "Point(v, 0)",
+  "dependencies": [
+   "v"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "l",
+  "expression": "Line(Point(0, 0), Point(1, 0))",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Intersect(l,Gamma,n=1)",
+  "dependencies": [
+   "Gamma",
+   "l"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "B",
+  "expression": "Intersect(l, Gamma, exclude=A)",
+  "dependencies": [
+   "A",
+   "Gamma",
+   "l"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ }
+]

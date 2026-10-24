@@ -1,0 +1,110 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(15, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(cx, cy)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "M",
+  "expression": "Midpoint(A, C)",
+  "dependencies": [
+   "A",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "N",
+  "expression": "Midpoint(A, B)",
+  "dependencies": [
+   "A",
+   "B"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "D",
+  "expression": "Intersect(AngleBisector(A, B, C), Line(A, C))",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "E",
+  "expression": "Intersect(AngleBisector(A, C, B), Line(A, B))",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "g1",
+  "expression": "Circumcircle(A, M, N)",
+  "dependencies": [
+   "A",
+   "M",
+   "N"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "g2",
+  "expression": "Circumcircle(A, D, E)",
+  "dependencies": [
+   "A",
+   "D",
+   "E"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "P",
+  "expression": "Intersect(g1, g2, exclude=A)",
+  "dependencies": [
+   "A",
+   "g1",
+   "g2"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "Q",
+  "expression": "Intersect(Line(A, P), Line(B, C))",
+  "dependencies": [
+   "A",
+   "B",
+   "C",
+   "P"
+  ],
+  "depth": 4,
+  "point_depth": 3
+ }
+]

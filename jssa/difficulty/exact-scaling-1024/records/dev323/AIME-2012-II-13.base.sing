@@ -1,0 +1,35 @@
+LIB "elim.lib";
+option(redSB);
+ring R=0,(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,x16),dp;
+short=0;
+ideal J=x5^2 - 111,
+x13^2 - 333,
+x14^2 - 11,
+x1^2 - 2*x1*x5 - x14^2 + x2^2 + x5^2,
+x1^2 + x2^2 - x5^2,
+-x14^2 + x3^2 - 2*x3*x5 + x4^2 + x5^2,
+x3^2 + x4^2 - x5^2,
+x15^2 - 3,
+-x16^2 + x5^2,
+-x16 + x5,
+x13^2 + x5^2 - 4*x6^2,
+x5 - x6,
+x1^2 - 2*x1*x5 + x2^2 + x5^2 - x7^2,
+-x14 + x7,
+x3^2 - 2*x3*x5 + x4^2 + x5^2 - x8^2,
+-x14 + x8,
+x1^2 + x2^2 - x9^2,
+x5 - x9,
+x1^2*x15^2 + x1^2 - 4*x10^2 + x15^2*x2^2 + x2^2,
+-x10 + x5,
+-x10 + x9,
+-x11^2 + x3^2 + x4^2,
+-x11 + x5,
+-4*x12^2 + x15^2*x3^2 + x15^2*x4^2 + x3^2 + x4^2,
+-x12 + x5,
+x11 - x12;
+ideal G=std(J);
+print("DIM="+string(dim(G)));
+print("DEG="+string(mult(G)));
+print("VDIM="+string(vdim(G)));
+quit;

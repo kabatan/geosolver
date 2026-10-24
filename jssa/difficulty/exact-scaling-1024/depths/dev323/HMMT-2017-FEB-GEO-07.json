@@ -1,0 +1,91 @@
+[
+ {
+  "name": "O",
+  "expression": "Point(0,0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "I",
+  "expression": "Point(10,0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "P",
+  "expression": "Point(17,0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Gamma",
+  "expression": "Circle(O,17)",
+  "dependencies": [
+   "O"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "omega",
+  "expression": "Circle(I,7)",
+  "dependencies": [
+   "I"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "Q",
+  "expression": "Point(10+7*cos(t),7*sin(t))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "lineAB",
+  "expression": "Tangent(Q,omega)",
+  "dependencies": [
+   "Q",
+   "omega"
+  ],
+  "depth": 2,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Intersect(lineAB,Gamma,far=Q)",
+  "dependencies": [
+   "Gamma",
+   "Q",
+   "lineAB"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "B",
+  "expression": "Intersect(lineAB,Gamma,near=Q)",
+  "dependencies": [
+   "Gamma",
+   "Q",
+   "lineAB"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "R",
+  "expression": "Intersect(Line(P,Q),Gamma,exclude=P)",
+  "dependencies": [
+   "Gamma",
+   "P",
+   "Q"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ }
+]

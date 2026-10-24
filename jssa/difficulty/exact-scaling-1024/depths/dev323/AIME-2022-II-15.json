@@ -1,0 +1,93 @@
+[
+ {
+  "name": "O1",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "O2",
+  "expression": "Point(15, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "r2",
+  "expression": "15 - r1",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "omega1",
+  "expression": "Circle(O1, r1)",
+  "dependencies": [
+   "O1"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "omega2",
+  "expression": "Circle(O2, r2)",
+  "dependencies": [
+   "O2",
+   "r2"
+  ],
+  "depth": 2,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(r1 * cos(theta), r1 * sin(theta))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Omega",
+  "expression": "Circumcircle(O1, O2, B)",
+  "dependencies": [
+   "B",
+   "O1",
+   "O2"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Intersect(omega1, Omega, exclude=B)",
+  "dependencies": [
+   "B",
+   "Omega",
+   "omega1"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "A",
+  "expression": "Intersect(omega2, Omega, near=B)",
+  "dependencies": [
+   "B",
+   "Omega",
+   "omega2"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "D",
+  "expression": "Intersect(omega2, Omega, exclude=A)",
+  "dependencies": [
+   "A",
+   "Omega",
+   "omega2"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ }
+]

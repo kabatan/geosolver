@@ -1,0 +1,115 @@
+[
+ {
+  "name": "O",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(r, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(r * cos(g1), r * sin(g1))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(r * cos(g1 + g2), r * sin(g1 + g2))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "P",
+  "expression": "Point(r * cos(g1 + g2 + g3), r * sin(g1 + g2 + g3))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Point(r * cos(g1 + g2 + g3 + g4), r * sin(g1 + g2 + g3 + g4))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "E",
+  "expression": "Point(r * cos(g1 + g2 + g3 + g4 + g5), r * sin(g1 + g2 + g3 + g4 + g5))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Omega",
+  "expression": "Circle(O, r)",
+  "dependencies": [
+   "O"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "P1",
+  "expression": "Reflect(P, Line(A, B))",
+  "dependencies": [
+   "A",
+   "B",
+   "P"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "P2",
+  "expression": "Reflect(P, Line(B, C))",
+  "dependencies": [
+   "B",
+   "C",
+   "P"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "P3",
+  "expression": "Reflect(P, Line(C, D))",
+  "dependencies": [
+   "C",
+   "D",
+   "P"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "P4",
+  "expression": "Reflect(P, Line(D, E))",
+  "dependencies": [
+   "D",
+   "E",
+   "P"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "P5",
+  "expression": "Reflect(P, Line(E, A))",
+  "dependencies": [
+   "A",
+   "E",
+   "P"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ }
+]

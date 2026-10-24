@@ -1,0 +1,184 @@
+[
+ {
+  "name": "B",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(14, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(x, y)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "G",
+  "expression": "Centroid(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "Ap",
+  "expression": "Point(2 * G.x - A.x, 2 * G.y - A.y)",
+  "dependencies": [
+   "A",
+   "G"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ },
+ {
+  "name": "Bp",
+  "expression": "Point(2 * G.x - B.x, 2 * G.y - B.y)",
+  "dependencies": [
+   "B",
+   "G"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ },
+ {
+  "name": "Cp",
+  "expression": "Point(2 * G.x - C.x, 2 * G.y - C.y)",
+  "dependencies": [
+   "C",
+   "G"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ },
+ {
+  "name": "ab_line",
+  "expression": "Line(A, B)",
+  "dependencies": [
+   "A",
+   "B"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "bc_line",
+  "expression": "Line(B, C)",
+  "dependencies": [
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "ca_line",
+  "expression": "Line(C, A)",
+  "dependencies": [
+   "A",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "apbp_line",
+  "expression": "Line(Ap, Bp)",
+  "dependencies": [
+   "Ap",
+   "Bp"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "bpcp_line",
+  "expression": "Line(Bp, Cp)",
+  "dependencies": [
+   "Bp",
+   "Cp"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "cpap_line",
+  "expression": "Line(Cp, Ap)",
+  "dependencies": [
+   "Ap",
+   "Cp"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "overlap_bc_cpap",
+  "expression": "Intersect(bc_line, cpap_line)",
+  "dependencies": [
+   "bc_line",
+   "cpap_line"
+  ],
+  "depth": 4,
+  "point_depth": 3
+ },
+ {
+  "name": "overlap_bc_apbp",
+  "expression": "Intersect(bc_line, apbp_line)",
+  "dependencies": [
+   "apbp_line",
+   "bc_line"
+  ],
+  "depth": 4,
+  "point_depth": 3
+ },
+ {
+  "name": "overlap_ca_apbp",
+  "expression": "Intersect(ca_line, apbp_line)",
+  "dependencies": [
+   "apbp_line",
+   "ca_line"
+  ],
+  "depth": 4,
+  "point_depth": 3
+ },
+ {
+  "name": "overlap_ca_bpcp",
+  "expression": "Intersect(ca_line, bpcp_line)",
+  "dependencies": [
+   "bpcp_line",
+   "ca_line"
+  ],
+  "depth": 4,
+  "point_depth": 3
+ },
+ {
+  "name": "overlap_ab_bpcp",
+  "expression": "Intersect(ab_line, bpcp_line)",
+  "dependencies": [
+   "ab_line",
+   "bpcp_line"
+  ],
+  "depth": 4,
+  "point_depth": 3
+ },
+ {
+  "name": "overlap_ab_cpap",
+  "expression": "Intersect(ab_line, cpap_line)",
+  "dependencies": [
+   "ab_line",
+   "cpap_line"
+  ],
+  "depth": 4,
+  "point_depth": 3
+ }
+]

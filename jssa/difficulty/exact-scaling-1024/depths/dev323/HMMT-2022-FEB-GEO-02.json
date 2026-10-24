@@ -1,0 +1,150 @@
+[
+ {
+  "name": "P",
+  "expression": "Point(0,0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A0",
+  "expression": "Point(4,0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B0",
+  "expression": "Point(4,3)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C0",
+  "expression": "Point(0,3)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A1",
+  "expression": "Point(B0.x,B0.y)",
+  "dependencies": [
+   "B0"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "F1",
+  "expression": "FootOfPerpendicular(C0,Line(P,A1))",
+  "dependencies": [
+   "A1",
+   "C0",
+   "P"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ },
+ {
+  "name": "C1",
+  "expression": "Point(C0.x-F1.x,C0.y-F1.y)",
+  "dependencies": [
+   "C0",
+   "F1"
+  ],
+  "depth": 3,
+  "point_depth": 3
+ },
+ {
+  "name": "B1",
+  "expression": "Point(A1.x+C1.x,A1.y+C1.y)",
+  "dependencies": [
+   "A1",
+   "C1"
+  ],
+  "depth": 4,
+  "point_depth": 4
+ },
+ {
+  "name": "A2",
+  "expression": "Point(B1.x,B1.y)",
+  "dependencies": [
+   "B1"
+  ],
+  "depth": 5,
+  "point_depth": 5
+ },
+ {
+  "name": "F2",
+  "expression": "FootOfPerpendicular(C1,Line(P,A2))",
+  "dependencies": [
+   "A2",
+   "C1",
+   "P"
+  ],
+  "depth": 6,
+  "point_depth": 6
+ },
+ {
+  "name": "C2",
+  "expression": "Point(C1.x-F2.x,C1.y-F2.y)",
+  "dependencies": [
+   "C1",
+   "F2"
+  ],
+  "depth": 7,
+  "point_depth": 7
+ },
+ {
+  "name": "B2",
+  "expression": "Point(A2.x+C2.x,A2.y+C2.y)",
+  "dependencies": [
+   "A2",
+   "C2"
+  ],
+  "depth": 8,
+  "point_depth": 8
+ },
+ {
+  "name": "A3",
+  "expression": "Point(B2.x,B2.y)",
+  "dependencies": [
+   "B2"
+  ],
+  "depth": 9,
+  "point_depth": 9
+ },
+ {
+  "name": "F3",
+  "expression": "FootOfPerpendicular(C2,Line(P,A3))",
+  "dependencies": [
+   "A3",
+   "C2",
+   "P"
+  ],
+  "depth": 10,
+  "point_depth": 10
+ },
+ {
+  "name": "C3",
+  "expression": "Point(C2.x-F3.x,C2.y-F3.y)",
+  "dependencies": [
+   "C2",
+   "F3"
+  ],
+  "depth": 11,
+  "point_depth": 11
+ },
+ {
+  "name": "B3",
+  "expression": "Point(A3.x+C3.x,A3.y+C3.y)",
+  "dependencies": [
+   "A3",
+   "C3"
+  ],
+  "depth": 12,
+  "point_depth": 12
+ }
+]

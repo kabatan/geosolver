@@ -1,0 +1,86 @@
+[
+ {
+  "name": "O1",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "O2",
+  "expression": "Point(5, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(1, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "omega1",
+  "expression": "Circle(O1, 1)",
+  "dependencies": [
+   "O1"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "omega2",
+  "expression": "Circle(O2, 4)",
+  "dependencies": [
+   "O2"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(-3 / 5, 4 / 5)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(13 / 5, 16 / 5)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "L",
+  "expression": "Line(A, Point(A.x + cos(theta), A.y + sin(theta)))",
+  "dependencies": [
+   "A"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Intersect(L, omega1, exclude=A)",
+  "dependencies": [
+   "A",
+   "L",
+   "omega1"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "E",
+  "expression": "Intersect(L, omega2, exclude=A)",
+  "dependencies": [
+   "A",
+   "L",
+   "omega2"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ }
+]

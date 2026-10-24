@@ -1,0 +1,93 @@
+[
+ {
+  "name": "B",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(1, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "ABray",
+  "expression": "Point(cos(70 * pi / 180), sin(70 * pi / 180))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "CDray",
+  "expression": "Point(1 + cos(120 * pi / 180), sin(120 * pi / 180))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "BIray",
+  "expression": "Point(cos(35 * pi / 180), sin(35 * pi / 180))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "CIray",
+  "expression": "Point(1 + cos(150 * pi / 180), sin(150 * pi / 180))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(a * cos(70 * pi / 180), a * sin(70 * pi / 180))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Point(1 - d / 2, d * sqrt(3) / 2)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "I",
+  "expression": "Intersect(Line(B, BIray), Line(C, CIray))",
+  "dependencies": [
+   "B",
+   "BIray",
+   "C",
+   "CIray"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "omega",
+  "expression": "Circle(I, Distance(I, Line(B, C)))",
+  "dependencies": [
+   "B",
+   "C",
+   "I"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "E",
+  "expression": "Intersect(Line(C, I), Line(A, B))",
+  "dependencies": [
+   "A",
+   "B",
+   "C",
+   "I"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ }
+]

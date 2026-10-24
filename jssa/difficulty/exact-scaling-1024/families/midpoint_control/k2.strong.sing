@@ -1,0 +1,15 @@
+LIB "elim.lib";
+option(redSB);
+ring R=0,(x1,x2),dp;
+short=0;
+ideal J=4*x1 - 1,
+-x1 + x2;
+ideal G=std(J);
+print("DIM="+string(dim(G)));
+print("DEG="+string(mult(G)));
+print("VDIM="+string(vdim(G)));
+ideal E=eliminate(G,x1);
+print("ELIM_BEGIN");
+for(int j=1;j<=size(E);j++){print("POLY_BEGIN");print(E[j]);print("POLY_END");}
+print("ELIM_END");
+quit;

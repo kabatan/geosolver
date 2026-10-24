@@ -1,0 +1,124 @@
+[
+ {
+  "name": "B",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Point(3, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(16, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "m",
+  "expression": "13 / (8 * sqrt(3))",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "xA",
+  "expression": "19 / 2 / (1 + m * m)",
+  "dependencies": [
+   "m"
+  ],
+  "depth": 2,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(xA, m * xA)",
+  "dependencies": [
+   "m",
+   "xA"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "r1",
+  "expression": "xA * (1 + m * m) / (2 * m)",
+  "dependencies": [
+   "m",
+   "xA"
+  ],
+  "depth": 3,
+  "point_depth": 0
+ },
+ {
+  "name": "O1",
+  "expression": "Point(0, r1)",
+  "dependencies": [
+   "r1"
+  ],
+  "depth": 4,
+  "point_depth": 1
+ },
+ {
+  "name": "omega1",
+  "expression": "Circle(O1, r1)",
+  "dependencies": [
+   "O1",
+   "r1"
+  ],
+  "depth": 5,
+  "point_depth": 1
+ },
+ {
+  "name": "O2",
+  "expression": "Point(19 / 2, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "r2",
+  "expression": "13 / 2",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "omega2",
+  "expression": "Circle(O2, r2)",
+  "dependencies": [
+   "O2",
+   "r2"
+  ],
+  "depth": 2,
+  "point_depth": 0
+ },
+ {
+  "name": "T",
+  "expression": "FootOfPerpendicular(O2, Line(A, B))",
+  "dependencies": [
+   "A",
+   "B",
+   "O2"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ },
+ {
+  "name": "E",
+  "expression": "Intersect(Line(A, D), omega1, exclude=A)",
+  "dependencies": [
+   "A",
+   "D",
+   "omega1"
+  ],
+  "depth": 6,
+  "point_depth": 2
+ }
+]

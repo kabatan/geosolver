@@ -1,0 +1,79 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "P",
+  "expression": "Point(x, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "M",
+  "expression": "Point(0, y)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "O",
+  "expression": "Point(z, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "omega",
+  "expression": "Circle(O, 19)",
+  "dependencies": [
+   "O"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "am_line",
+  "expression": "Line(A, M)",
+  "dependencies": [
+   "A",
+   "M"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "pm_line",
+  "expression": "Line(P, M)",
+  "dependencies": [
+   "M",
+   "P"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "contact_am",
+  "expression": "ContactPoint(omega, am_line)",
+  "dependencies": [
+   "am_line",
+   "omega"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "contact_pm",
+  "expression": "ContactPoint(omega, pm_line)",
+  "dependencies": [
+   "omega",
+   "pm_line"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ }
+]

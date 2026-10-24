@@ -1,0 +1,68 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(4, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(cx, cy)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Intersect(AngleBisector(B, A, C), Line(B, C))",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "L",
+  "expression": "PerpendicularBisector(A, D)",
+  "dependencies": [
+   "A",
+   "D"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "E",
+  "expression": "Intersect(L, AngleBisector(A, B, C))",
+  "dependencies": [
+   "A",
+   "B",
+   "C",
+   "L"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "F",
+  "expression": "Intersect(L, AngleBisector(A, C, B))",
+  "dependencies": [
+   "A",
+   "B",
+   "C",
+   "L"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ }
+]

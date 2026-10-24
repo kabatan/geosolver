@@ -21,6 +21,7 @@
 - 以下のコード位置はすべてこの展開物の行番号。`E/` は `src/geosolver/engine/standard/`、`G/` は `src/geosolver/`。共有worktreeのsrcは読んでいない。
 - `rg`で既存名を確認：`jssa/difficulty/capability-1024/ablation34/ablation34_driver.py:31–38` に NO_SECOND_ATTEMPT / NO_NOMAD / NO_ALGEBRAIC / NO_SCALE_CHART / NO_RESCUE / NO_ANALYTIC_JAC。ブランチの所在と差分範囲の記録は同ディレクトリ `README.md:5`。ローカルに67ad79aオブジェクトはない。したがって「既存」は記録上の存在を指し、この凍結版に環境変数が実装済みという意味ではない。
 - 別の既存実験に **`GEOSOLVER_ABLATE_NO_SIGNED_TANGENCY`** がある：`jssa/results/tangency-signed/README.md:5–9`。同記録は `_smooth_zero_constraint_residuals` 全体を止めたと明記しており、今回の精密化側の残差群と対応する。ただし解析微分の整合処理までは記録から確認できない。最終検証にも別実装が見つかったため、今回の新名を既存名の完全な別名とは扱わない。
+- **`GEOSOLVER_ABLATE_SEARCH_MODE`** も既存：`jssa/results/search-mode-ablation/README.md:3`。Phase Aの探索法を替える設定で、救済のMADSは維持すると記録されている。
 
 ## 1. NO_RESIDUAL_REWRITE
 
@@ -49,6 +50,8 @@
 
 **残る代替経路**：`run_external_pipeline.py:349–353,391` の代数的前処理が良い初期点を供給し、精密化の直接受理やclosureで差が隠れる可能性がある。代数経路自身も `search/algebraic_branches.py:495` → `search/cartesian_polynomials.py:230–267` でDistance・接条件を多項式化する。これは別の前処理なのでNO_RESIDUAL_REWRITEでは止めない。NO_ALGEBRAICとの相互作用を別途見る必要がある。
 
+既存NO_ALGEBRAICの移植位置にも注意が要る。凍結版の`run_external_pipeline.py:401`は`allow_algebraic`を`allow_integer_shortcuts`にも渡す。前処理の呼出だけを止める案と、このフラグをFalseにする案では整数二乗列挙等への影響が異なる。67ad79aの実装境界が未確認なので、既存名だけから後者まで止まると断定しない。
+
 さらに、`evaluation/final_verifier.py:122–182` は検査だけでなく座標を最大8回補正する。上記3を入れても一般の補正・片側差分は残り、回復しうる。旧スイッチ相当の「精密化側だけOFF」では、最終検証の符号付き接条件まで代わりをする。この狭い条件を補助比較する場合は `NO_REFINEMENT_REWRITE` 等の別名で区別する。入力読込みの構成契約・OnSegmentの付加行・論理式の変換（`problem/load_problem_bundle.py:46–55`、`G/problem/incidence_residuals.py:15–67`）も残る。これらを一緒に外すと対象群以上の変更になる。
 
 NO_SECOND_ATTEMPT・NO_RESCUE・NO_NOMAD・NO_SCALE_CHARTとはコード上の必須の同時OFF関係はない。ただし候補と残り時間を変える。基準の5構成は単独OFFとし、他の既存スイッチを暗黙に追加しない。
@@ -64,7 +67,7 @@ NO_SECOND_ATTEMPT・NO_RESCUE・NO_NOMAD・NO_SCALE_CHARTとはコード上の�
 | 通常台帳が空の旧経路 | `E/search/deduplicate_search_candidates.py:24–95`。score順、seedごと最小3枠、箱幅で正規化した距離 `<1e-4` を重複除去、最大20。 | NOMADでは各runのscore上位64を母集団にする（`nomad_backend.py:133–157`）。通常経路は全recordsを使うので64制限はかからない。 |
 | 入口ごとの適用 | `nomad_backend.py:143–157`、`scipy_multistart_backend.py:1381–1395`、`orchestration/run_search.py:198–213`。 | 共通関数だけの修正でもこれらに効くが、下記の直通経路を覆わない。 |
 | 直通・結合経路 | `search/scalar_branch_scan.py:55–66` は既に残差順で最大20。`run_external_pipeline.py:391` は代数結果を直通。`run_search.py:332–359,504–541` は整数・有限guard・尺度座標の結果を追加し、再圧縮しない。 | **パイプライン全体の20件上限はない**。 |
-| 救済・離散補完 | `run_external_pipeline.py:482–505` の追加精密化と後続の離散補完。 | 救済は最大6箱×各6候補という別枠。整数closureは1候補から派生候補も作る。 |
+| 救済・離散補完 | `run_rescue_search.py:128–143` で各箱score上位6を集めて近接除去し、`run_external_pipeline.py:482–505` で追加精密化と後続の離散補完。 | 救済は最大6箱×各6候補という別枠。返却された候補は近接除去済み。整数closureは1候補から派生候補も作る。 |
 
 距離正規化は `E/search/coordinate_distance.py:12–16`：各軸を `max(箱幅,1e-12)` で割ってユークリッド距離。初期値選択の近接閾値 `1e-2` は別（`select_search_start_points.py:35–60`、`nomad_config.py:19–23`）。
 
@@ -72,13 +75,13 @@ NO_SECOND_ATTEMPT・NO_RESCUE・NO_NOMAD・NO_SCALE_CHARTとはコード上の�
 
 **推奨は「探索終了→精密化」の境界で一度選び直す方式。** 共通台帳関数だけの差替えでは代数直通・追加候補を取り逃がすためである。
 
-- `E/orchestration/run_external_pipeline.py:402–403` に小さい選択関数を挿入。母集団は `search_result.all_records`（空なら `candidates`）から、**生成経路ごとに元の適格条件を維持して**組み立てる。通常backendの適格条件は `evaluation_status==OK && guard_ok && hard_feasible`。残差は **`residual_norm_float`**。有限値だけを `(残差, candidate_uid, 元の順序)` で安定に並べ、上位20にする。seed割当と座標距離の重複除去をしない。同一来歴レコードの結合重複だけは両方式で同じ扱いにする。
-- **直通経路は通常の適格フィルタに掛けない**。`algebraic_branches.py:690–711`、`scale_chart.py:74–87` の候補は `hard_feasible=None` のままで、代数候補はfloatのguard違反もHP検証へ送る設計。これらと有限guard・整数列挙の元の候補を母集団に加える。NoneをFalse扱いする一律フィルタは、選択法以外に候補生成経路を消してしまう。母集団を生成元で識別できない結合結果では、この境界案を適用しない。
+- `E/orchestration/run_external_pipeline.py:402–403` に小さい選択関数を挿入。母集団は `search_result.all_records`（空なら `candidates`）から、**生成経路ごとに元の適格条件を維持して**組み立てる。通常backendの適格条件は `evaluation_status==OK && guard_ok && hard_feasible`。残差は **`residual_norm_float`**。有限残差を小さい順、元の経路が保持していた非有限・未確定残差をその後に置き、同点は `(candidate_uid, 元の順序)` で安定に並べて上位20にする。NaNは比較キーだけ+infへ正規化し、評価状態は保存する。新しい有限値フィルタで元のfallback候補を消さない。seed割当と座標距離の重複除去をしない。同一来歴レコードの結合重複だけは両方式で同じ扱いにする。
+- **直通経路は通常の適格フィルタに掛けない**。`algebraic_branches.py:690–711`、`scale_chart.py:74–87` の候補は `hard_feasible=None` のままで、代数候補はfloatのguard違反もHP検証へ送る設計。これらと有限guard・整数列挙の元の候補を母集団に加える。NoneをFalse扱いする一律フィルタは、選択法以外に候補生成経路を消してしまう。母集団を生成元で識別する修正を2時間で確認できなければ、この構成を外す。
 - 通常の適格集合が空の場合も、既存の「不適格な探索点から精密化を試す」経路を消さない。旧fallbackと同じ候補集合・評価可否を使って上位20とする。NOMADのfallbackは各run上位64、SciPyはrecordsなので、その既存母集団を返す／識別する小さい補助が必要（`nomad_backend.py:133–157`、`scipy_multistart_backend.py:1388–1395`）。全raw recordsから新たにfallbackを作る案は比較条件を変えるため避ける。
 - 選択済みの `SearchBatchResult.candidates` を `replace` し、要約も実際の精密化入力と一致させる。`all_records` と救済用の広い台帳は保存する。探索初期値・hybridの補助探索・救済箱の作り方はこのスイッチの対象外と明記する。
-- 救済から入る**新規バッチ**にも同じ意味で適用するなら `run_external_pipeline.py:482–492` で選び、精密化とmergeの両方へ同じリストを渡す。既に精密化・検証した候補を20に切り直さない。離散補完中の整数ターゲット列挙は候補生成機構として残す。
+- 救済の**新規バッチ**にも適用する。`run_rescue_search.py:132–138` の近接除去の代わりに、直前の `rescued_candidates`（各箱score上位6を集めた最大36件）から残差順20を選んで返す。`run_external_pipeline.py:482–492` は同じ返却リストを精密化とmergeへ渡す。返却後だけを切り直すと既に除去された点を復元できない。各箱上位6という生成元の保存枠、救済箱の選び方、整数ターゲット列挙は残す。この枠まで外して全raw救済評価点の上位20にする拡張は、母集団を替える別比較として2時間枠から外す。既に精密化・検証した候補を20に切り直さない。
 
-この定義で、主探索から精密化へ渡る数は各attemptで最大20。通常経路は数が同じことが多く、選ばれる座標が変わる。代数・補助結果の結合で20を超えていたバッチは減る。精密化は締切で途中停止し、整数closureで候補が派生する（`mpmath_refiner.py:1153–1205`）ため、**入力20でも最終検証対象が必ず20以下とは言えない**。最終検証は残差順、状態の適格判定、締切による打切りがある（`assemble_exact_results.py:159–175`）。第2attempt・救済も含む実行全体の検証数はさらに別である。
+この定義で、主探索から精密化へ渡る数は各 `_run_pipeline_stage` の**入力バッチで最大20**。不完全な代数列挙の通常primary補完（`run_external_pipeline.py:548–575`）は別バッチなので、primary全体が20以内になるとは限らない。通常経路は数が同じことが多く、選ばれる座標が変わる。補助結果の結合で20を超えていたバッチは減る。一方、旧fallbackや救済で近接除去後が20未満だった場合は、除去を止めることで渡す数が増える場合もある。精密化は締切で途中停止し、整数closureで候補が派生する（`mpmath_refiner.py:1153–1205`）ため、**入力20でも最終検証対象が必ず20以下とは言えない**。最終検証は残差順、状態の適格判定、締切による打切りがある（`assemble_exact_results.py:159–175`）。第2attempt・救済も含む実行全体の検証数はさらに別である。
 
 注意：現行のscoreは正規化された残差とguard罰則を含む。生の残差順という指定は、多様性に加え**順位の尺度**も替える。比較記録にはscore・生の残差の両方を残す。多様性だけの寄与に厳密に分けたい場合は、同じscore順上位20の補助比較が必要（5構成へ無断で追加しない）。
 
@@ -90,10 +93,10 @@ NO_SECOND_ATTEMPT・NO_RESCUE・NO_NOMAD・NO_SCALE_CHARTとはコード上の�
 |---|---|---|
 | ① 接条件：同じ候補から精密化し、直後と最終検証後を比較 | `E/orchestration/run_refinement.py:14–29` → `MpmathRefiner.refine_candidates`。入力は不変dataclassのFloatCandidate群。返値の `x_hp, residual_norm_hp, answer_hp, phase_history, *_precision_dps`（`contracts/candidate_record.py:83–159`）。後段は `assemble_exact_results.py:152`、単体検査は `evaluation/final_verifier.py:85`。 | **可能、標準の候補save/load CLIはない。** 精密化前に全入力フィールドとDSL・bounds・config・source_hashを保存し、別々のevaluatorで復元する。`initial_point_decimal` と `originating_branch_box` を落とすと代数候補の桁と枝が失われる。精密化直後を、最終検証で候補revisionが更新される前に保存する。最終検証後は `numeric_feasible_candidates` と失敗を含む `verification_records`、受理後は `candidate_records`。最終検証は補正も行うので、この2時点は必須。 |
 | ① 残差・目標値誤差 | 精密化残差は書き換えをしない評価器で再評価される（`mpmath_refiner.py:1555–1571`）。最終結果に `residual_norm, normalized_residual, answer_hp, answer_uncertainty, values`。 | 比較用残差は両時点の座標を同じ評価器・同じ評価桁で測り直す。目標式の真値との差はsolver内にはないため、独立した参照値を用意して絶対誤差・必要なら相対誤差を計算。`answer_uncertainty`は誤差の見積りで、正解値との差そのものではない。失敗を落として成功点だけを比べない。 |
-| ② 複数値：選択前台帳を保存し選択だけ替える | `SearchBatchResult.all_records` と `guard_feasible_ledger`（`candidate_record.py:182–191`）、`build_guard_feasible_ledger`はsolverを動かさずレコードに対して呼べる。 | **可能**。保存すべきは圧縮前の`all_records`。160件のledgerやdebug候補（既定32）だけでは足りない。bounds、score、残差、feasibility、uid、元の順序、既存fallbackの母集団も保存。BASEの特殊経路の元の`candidates`も保存して再生する。救済を含む全実行を同じ台帳で再生するには、attempt/boxごとの台帳と予算を分ける。各JSONL断片は3MB以下に分割し、切捨てで上限を守らない。 |
+| ② 複数値：選択前台帳を保存し選択だけ替える | `SearchBatchResult.all_records` と `guard_feasible_ledger`（`candidate_record.py:182–191`）、`build_guard_feasible_ledger`はsolverを動かさずレコードに対して呼べる。 | **可能**。保存すべきは圧縮前の`all_records`。160件のledgerやdebug候補（既定32）だけでは足りない。bounds、score、残差、feasibility、uid、元の順序、既存fallbackの母集団も保存。BASEの特殊経路の元の`candidates`も保存して再生する。救済は`RescueSearchResult`に全recordsがなく、`run_rescue_search.py:128–132`でbox別`adapter.records`と選択前集合を追加保存する必要がある。全実行の再生ではattempt/boxごとの台帳と予算を分ける。各JSONL断片は3MB以下に分割し、切捨てで上限を守らない。 |
 | ③ 保存高精度値に対しPSLQの精度と係数上限を別々に変更 | `G/exact/polynomial_search.py:246` の `find_minimal_polynomial(r, precision, max_degree, max_coeff, max_steps)`。固定次数だけなら同`:316` の `_find_polynomial_pslq`。いずれも探索や精密化を呼ばない。 | **既存関数で可能**。上位 `identify_answer` はtierに次数・係数・反復数が束ねられ、symbolic worker・π探索等も通るため純粋なPSLQ比較には下位関数を使う。precisionとmax_coeffは独立の引数。ただしprecisionは作業桁だけでなくPSLQ許容差も変える。係数上限はスケール変換後の関係に対する上限で、元の変数へ戻した最終係数の上限とは限らない。 |
 
-PSLQの詳細：`find_minimal_polynomial`は作業桁 `max(現在のmp.dps, precision+40,80)`、下位PSLQは `max(現在のmp.dps, precision+30,60)`。許容差はprecision>100なら `10^(-precision//2)`、それ以外は `10^(-precision*3//10)`（`polynomial_search.py:256,282–290,325`）。保存値は十分な桁の十進文字列、またはmpfの正確な二進タプルで保存し、低い既定mp.dpsやfloatを経由させない。元値を高い作業桁で読み、各試行は明示したworkdpsで丸めて使用する。入力の既知精度を超える桁を真の情報として扱わず、発見した関係は別の十分高精度値で確認する。
+PSLQの詳細：`find_minimal_polynomial`は作業桁 `max(現在のmp.dps, precision+40,80)`、下位PSLQは `max(現在のmp.dps, precision+30,60)`。許容差はprecision>100なら `10^(-(precision//2))`、それ以外は `10^(-((3*precision)//10))`（`polynomial_search.py:256,282–290,325`）。保存値は十分な桁の十進文字列、またはmpfの正確な二進タプルで保存し、低い既定mp.dpsやfloatを経由させない。元値を高い作業桁で読み、各試行は明示したworkdpsで丸めて使用する。入力の既知精度を超える桁を真の情報として扱わず、発見した関係は別の十分高精度値で確認する。
 
 既存の同候補比較フック `jssa/results/tangency-signed/probe/sitecustomize.py:44–91` は再利用の参考になる。ただし保存は残差桁数・時間・状態が中心で、共通候補の永続化、目標値誤差、最終検証後の比較までは満たさない。
 

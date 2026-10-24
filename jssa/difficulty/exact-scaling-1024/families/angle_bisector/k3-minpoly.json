@@ -1,0 +1,28 @@
+{
+  "family": "angle_bisector",
+  "k": 3,
+  "target": "t",
+  "minimal_polynomial": "T**8 + 8*T**7 - 28*T**6 - 56*T**5 + 70*T**4 + 56*T**3 - 28*T**2 - 8*T + 1",
+  "coefficient_order": "descending",
+  "coefficients": [
+    "1",
+    "8",
+    "-28",
+    "-56",
+    "70",
+    "56",
+    "-28",
+    "-8",
+    "1"
+  ],
+  "degree": 8,
+  "proof": "Let n=2^k, theta=pi/(4n), zeta=exp(2i theta). zeta has irreducible polynomial X^(2n)+1 (its shift by 1 is 2-Eisenstein), hence degree 2n. i=zeta^n; t=-i(zeta-1)/(zeta+1) is real, and zeta=(1+it)/(1-it). Q(zeta)=Q(t,i), [Q(t,i):Q(t)]=2, so [Q(t):Q]=n. The displayed degree-n polynomial vanishes by tan(n theta)=1 and is therefore minimal.",
+  "eisenstein_check": true,
+  "finiteness_proof": "The selected slopes obey y0=1, s_i=sqrt(1+y_(i-1)^2)>0, y_i=y_(i-1)/(1+s_i)=tan(pi/2^(i+2)). For the relaxed equations both square-root signs give 2^k distinct real slopes; the inverse y_(i-1)=2*y_i/(1-y_i^2) recovers all preceding coordinates. No conjugate equals 0, +/-1 or +/-i, so all line/angle nonzero factors and denominators stay nonzero. The genuine interior bisectors define one configuration.",
+  "intended_target_100_digits": "0.09849140335716425307719752129132743229305245069920269598091612113441943873081297225648521418037360014",
+  "polynomial_residual_at_220_digits": "0.0",
+  "selected_real_target_count": 1,
+  "relaxed_complex_configuration_count": 8,
+  "status": "PROVED_EXACTLY",
+  "numeric_check_role": "sanity only; not the irreducibility/finite-degree proof"
+}

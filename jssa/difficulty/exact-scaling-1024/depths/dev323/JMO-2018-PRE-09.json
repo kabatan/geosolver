@@ -1,0 +1,146 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(b, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(cx, cy)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "inc",
+  "expression": "Incircle(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "I",
+  "expression": "Incenter(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "P",
+  "expression": "IncircleContactPoint(A, B, C, side='BC')",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "Q",
+  "expression": "IncircleContactPoint(A, B, C, side='CA')",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "R",
+  "expression": "IncircleContactPoint(A, B, C, side='AB')",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "exc",
+  "expression": "Excircle(A, B, C, vertex='A')",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "S",
+  "expression": "ContactPoint(exc, Line(B, C))",
+  "dependencies": [
+   "B",
+   "C",
+   "exc"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "T",
+  "expression": "ContactPoint(exc, Line(C, A))",
+  "dependencies": [
+   "A",
+   "C",
+   "exc"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "U",
+  "expression": "ContactPoint(exc, Line(A, B))",
+  "dependencies": [
+   "A",
+   "B",
+   "exc"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "D",
+  "expression": "Intersect(Line(P, Q), Line(S, T))",
+  "dependencies": [
+   "P",
+   "Q",
+   "S",
+   "T"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "E",
+  "expression": "Intersect(Line(P, R), Line(S, U))",
+  "dependencies": [
+   "P",
+   "R",
+   "S",
+   "U"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ }
+]

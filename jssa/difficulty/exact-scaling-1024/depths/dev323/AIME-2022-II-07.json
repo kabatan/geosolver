@@ -1,0 +1,92 @@
+[
+ {
+  "name": "O1",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "O2",
+  "expression": "Point(30, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C1",
+  "expression": "Circle(O1, 6)",
+  "dependencies": [
+   "O1"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "C2",
+  "expression": "Circle(O2, 24)",
+  "dependencies": [
+   "O2"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "T",
+  "expression": "Point(6, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "l0",
+  "expression": "Line(Point(6, 0), Point(6, 1))",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "l1",
+  "expression": "Line(m, -1, b)",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "l2",
+  "expression": "Line(-m, -1, -b)",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "V",
+  "expression": "Intersect(l1, l2)",
+  "dependencies": [
+   "l1",
+   "l2"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "W1",
+  "expression": "Intersect(l0, l1)",
+  "dependencies": [
+   "l0",
+   "l1"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "W2",
+  "expression": "Intersect(l0, l2)",
+  "dependencies": [
+   "l0",
+   "l2"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ }
+]

@@ -1,0 +1,70 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(-6, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(6, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Point(12, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "P",
+  "expression": "Point(px, py)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Gamma1",
+  "expression": "Circumcircle(P, A, C)",
+  "dependencies": [
+   "A",
+   "C",
+   "P"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "Gamma2",
+  "expression": "Circumcircle(P, B, D)",
+  "dependencies": [
+   "B",
+   "D",
+   "P"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "Q",
+  "expression": "Intersect(Gamma1, Gamma2, exclude=P)",
+  "dependencies": [
+   "Gamma1",
+   "Gamma2",
+   "P"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ }
+]

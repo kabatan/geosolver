@@ -1,0 +1,58 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(s, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Point(u, v)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(s + u, v)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "I",
+  "expression": "Midpoint(B, D)",
+  "dependencies": [
+   "B",
+   "D"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "omega",
+  "expression": "Circle(I, Distance(I, Line(A, B)))",
+  "dependencies": [
+   "A",
+   "B",
+   "I"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "P",
+  "expression": "Point(px, py)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ }
+]

@@ -1,0 +1,65 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(b, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(0, c)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "omega",
+  "expression": "Incircle(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "I",
+  "expression": "Center(omega)",
+  "dependencies": [
+   "omega"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "M",
+  "expression": "FootOfPerpendicular(I, Line(A, C))",
+  "dependencies": [
+   "A",
+   "C",
+   "I"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "L",
+  "expression": "Intersect(Line(B, M), omega, exclude=M)",
+  "dependencies": [
+   "B",
+   "M",
+   "omega"
+  ],
+  "depth": 4,
+  "point_depth": 3
+ }
+]

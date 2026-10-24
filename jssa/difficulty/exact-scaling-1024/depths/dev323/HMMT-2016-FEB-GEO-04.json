@@ -1,0 +1,83 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(3, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(4, 4 * sqrt(3))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "M",
+  "expression": "Midpoint(A, B)",
+  "dependencies": [
+   "A",
+   "B"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "N",
+  "expression": "Midpoint(A, C)",
+  "dependencies": [
+   "A",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "T",
+  "expression": "Point(3 + t, 4 * sqrt(3) * t)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Gamma1",
+  "expression": "Circumcircle(B, A, T)",
+  "dependencies": [
+   "A",
+   "B",
+   "T"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "Gamma2",
+  "expression": "Circumcircle(M, A, N)",
+  "dependencies": [
+   "A",
+   "M",
+   "N"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "D",
+  "expression": "Intersect(Gamma1, Gamma2, exclude=A)",
+  "dependencies": [
+   "A",
+   "Gamma1",
+   "Gamma2"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ }
+]

@@ -1,0 +1,80 @@
+[
+ {
+  "name": "B",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(120, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(ax, ay)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "I",
+  "expression": "Incenter(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "L",
+  "expression": "Intersect(Line(A, I), Line(B, C))",
+  "dependencies": [
+   "A",
+   "B",
+   "C",
+   "I"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ },
+ {
+  "name": "K",
+  "expression": "Intersect(Line(B, I), Line(A, C))",
+  "dependencies": [
+   "A",
+   "B",
+   "C",
+   "I"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ },
+ {
+  "name": "M",
+  "expression": "FootOfPerpendicular(Line(B, K), C)",
+  "dependencies": [
+   "B",
+   "C",
+   "K"
+  ],
+  "depth": 3,
+  "point_depth": 3
+ },
+ {
+  "name": "N",
+  "expression": "FootOfPerpendicular(Line(A, L), C)",
+  "dependencies": [
+   "A",
+   "C",
+   "L"
+  ],
+  "depth": 3,
+  "point_depth": 3
+ }
+]

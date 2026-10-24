@@ -1,0 +1,59 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "v",
+  "expression": "sin(13 * pi / 18) / sin(pi / 18)",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(cos(pi / 9), sin(pi / 9))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Point(v * cos(pi / 9), -v * sin(pi / 9))",
+  "dependencies": [
+   "v"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "C",
+  "expression": "Point(c, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "bc",
+  "expression": "Distance(B, C)",
+  "dependencies": [
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "E",
+  "expression": "Point((1 - bc / v) * v * cos(pi / 9), -(1 - bc / v) * v * sin(pi / 9))",
+  "dependencies": [
+   "bc",
+   "v"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ }
+]

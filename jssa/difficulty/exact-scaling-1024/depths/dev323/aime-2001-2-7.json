@@ -1,0 +1,136 @@
+[
+ {
+  "name": "P",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Q",
+  "expression": "Point(90, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "R",
+  "expression": "Point(0, 120)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "S",
+  "expression": "PointOnSegment(P, R, x / 120)",
+  "dependencies": [
+   "P",
+   "R"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "T",
+  "expression": "PointOnSegment(Q, R, t)",
+  "dependencies": [
+   "Q",
+   "R"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "U",
+  "expression": "PointOnSegment(P, Q, y / 90)",
+  "dependencies": [
+   "P",
+   "Q"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "V",
+  "expression": "PointOnSegment(Q, R, v)",
+  "dependencies": [
+   "Q",
+   "R"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "pr_line",
+  "expression": "Line(P, R)",
+  "dependencies": [
+   "P",
+   "R"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "pq_line",
+  "expression": "Line(P, Q)",
+  "dependencies": [
+   "P",
+   "Q"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "st_line",
+  "expression": "Line(S, T)",
+  "dependencies": [
+   "S",
+   "T"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "uv_line",
+  "expression": "Line(U, V)",
+  "dependencies": [
+   "U",
+   "V"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "C1",
+  "expression": "Incircle(P, Q, R)",
+  "dependencies": [
+   "P",
+   "Q",
+   "R"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "C2",
+  "expression": "Incircle(R, S, T)",
+  "dependencies": [
+   "R",
+   "S",
+   "T"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "C3",
+  "expression": "Incircle(Q, U, V)",
+  "dependencies": [
+   "Q",
+   "U",
+   "V"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ }
+]

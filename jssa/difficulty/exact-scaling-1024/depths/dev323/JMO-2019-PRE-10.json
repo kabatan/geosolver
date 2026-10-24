@@ -1,0 +1,94 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(6, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(9 * cos(theta), 9 * sin(theta))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Point(4, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "E",
+  "expression": "Point(6 * cos(theta), 6 * sin(theta))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Gamma1",
+  "expression": "Circumcircle(A, D, E)",
+  "dependencies": [
+   "A",
+   "D",
+   "E"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "Gamma2",
+  "expression": "Circumcircle(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "F",
+  "expression": "Intersect(Line(B, C), Gamma1, near=B)",
+  "dependencies": [
+   "B",
+   "C",
+   "Gamma1"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "G",
+  "expression": "Intersect(Line(B, C), Gamma1, exclude=F)",
+  "dependencies": [
+   "B",
+   "C",
+   "F",
+   "Gamma1"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "T",
+  "expression": "Intersect(Line(D, F), Line(E, G))",
+  "dependencies": [
+   "D",
+   "E",
+   "F",
+   "G"
+  ],
+  "depth": 4,
+  "point_depth": 3
+ }
+]

@@ -1,0 +1,100 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(5, 12)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(14, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Gamma",
+  "expression": "Circumcircle(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "O",
+  "expression": "Center(Gamma)",
+  "dependencies": [
+   "Gamma"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "R",
+  "expression": "Radius(Gamma)",
+  "dependencies": [
+   "Gamma"
+  ],
+  "depth": 2,
+  "point_depth": 0
+ },
+ {
+  "name": "M",
+  "expression": "Point(7, -4)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "S",
+  "expression": "Point(107 / 15, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "T",
+  "expression": "Point(5 + t * (107 / 15 - 5), 12 * (1 - t))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "O1",
+  "expression": "Point(7 - 2 * (R - r1) / R, 33 / 8 + 63 / 8 * (R - r1) / R)",
+  "dependencies": [
+   "R"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "omega1",
+  "expression": "Circle(O1, r1)",
+  "dependencies": [
+   "O1"
+  ],
+  "depth": 4,
+  "point_depth": 1
+ },
+ {
+  "name": "omega2",
+  "expression": "Circle(M, r2)",
+  "dependencies": [
+   "M"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ }
+]

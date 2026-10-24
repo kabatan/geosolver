@@ -1,0 +1,117 @@
+[
+ {
+  "name": "O",
+  "expression": "Point(cx, cy)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "S0",
+  "expression": "Point(cx + vx, cy + vy)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "S1",
+  "expression": "Point(cx - vy, cy + vx)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "S2",
+  "expression": "Point(cx - vx, cy - vy)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "S3",
+  "expression": "Point(cx + vy, cy - vx)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "edge01",
+  "expression": "Segment(S0, S1)",
+  "dependencies": [
+   "S0",
+   "S1"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "edge12",
+  "expression": "Segment(S1, S2)",
+  "dependencies": [
+   "S1",
+   "S2"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "edge23",
+  "expression": "Segment(S2, S3)",
+  "dependencies": [
+   "S2",
+   "S3"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "edge30",
+  "expression": "Segment(S3, S0)",
+  "dependencies": [
+   "S0",
+   "S3"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "square",
+  "expression": "Polygon([S0, S1, S2, S3])",
+  "dependencies": [
+   "S0",
+   "S1",
+   "S2",
+   "S3"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(0, 12)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(10, 9)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(8, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Point(-4, 7)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ }
+]

@@ -1,0 +1,56 @@
+{
+  "id": "circle_line-k7",
+  "variables": [
+    "t"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "U",
+      "expression": "Point(0, 1)"
+    },
+    {
+      "name": "P0",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "P1",
+      "expression": "Intersect(Line(O, U), Circle(Point((1 + P0.y)/2, 0), (3 + P0.y)/2), near=Point(0, 3))"
+    },
+    {
+      "name": "P2",
+      "expression": "Intersect(Line(O, U), Circle(Point((1 + P1.y)/2, 0), (3 + P1.y)/2), near=Point(0, 3))"
+    },
+    {
+      "name": "P3",
+      "expression": "Intersect(Line(O, U), Circle(Point((1 + P2.y)/2, 0), (3 + P2.y)/2), near=Point(0, 3))"
+    },
+    {
+      "name": "P4",
+      "expression": "Intersect(Line(O, U), Circle(Point((1 + P3.y)/2, 0), (3 + P3.y)/2), near=Point(0, 3))"
+    },
+    {
+      "name": "P5",
+      "expression": "Intersect(Line(O, U), Circle(Point((1 + P4.y)/2, 0), (3 + P4.y)/2), near=Point(0, 3))"
+    },
+    {
+      "name": "P6",
+      "expression": "Intersect(Line(O, U), Circle(Point((1 + P5.y)/2, 0), (3 + P5.y)/2), near=Point(0, 3))"
+    },
+    {
+      "name": "P7",
+      "expression": "Intersect(Line(O, U), Circle(Point((1 + P6.y)/2, 0), (3 + P6.y)/2), near=Point(0, 3))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "t",
+      "operator": "=",
+      "right": "P7.y"
+    }
+  ],
+  "target": "t"
+}

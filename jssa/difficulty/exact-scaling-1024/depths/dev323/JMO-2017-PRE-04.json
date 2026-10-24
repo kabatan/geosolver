@@ -1,0 +1,68 @@
+[
+ {
+  "name": "D",
+  "expression": "Point(-2, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(2, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(1,h)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "O",
+  "expression": "Point(ox, oy)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Gamma",
+  "expression": "Circle(O, r)",
+  "dependencies": [
+   "O"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "E",
+  "expression": "Intersect(Line(A, B), Gamma, exclude=A)",
+  "dependencies": [
+   "A",
+   "B",
+   "Gamma"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "F",
+  "expression": "Intersect(Line(C, E), Gamma, exclude=E)",
+  "dependencies": [
+   "C",
+   "E",
+   "Gamma"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ }
+]

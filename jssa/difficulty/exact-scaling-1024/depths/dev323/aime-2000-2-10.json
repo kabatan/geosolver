@@ -1,0 +1,186 @@
+[
+ {
+  "name": "O",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "omega",
+  "expression": "Circle(O, r)",
+  "dependencies": [
+   "O"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "P",
+  "expression": "PointOnCircle(omega, t_ab)",
+  "dependencies": [
+   "omega"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "R",
+  "expression": "PointOnCircle(omega, t_bc)",
+  "dependencies": [
+   "omega"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "Q",
+  "expression": "PointOnCircle(omega, t_cd)",
+  "dependencies": [
+   "omega"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "S",
+  "expression": "PointOnCircle(omega, t_da)",
+  "dependencies": [
+   "omega"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "line_ab",
+  "expression": "Polar(P, omega)",
+  "dependencies": [
+   "P",
+   "omega"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "line_bc",
+  "expression": "Polar(R, omega)",
+  "dependencies": [
+   "R",
+   "omega"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "line_cd",
+  "expression": "Polar(Q, omega)",
+  "dependencies": [
+   "Q",
+   "omega"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "line_da",
+  "expression": "Polar(S, omega)",
+  "dependencies": [
+   "S",
+   "omega"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "A",
+  "expression": "Intersect(line_da, line_ab)",
+  "dependencies": [
+   "line_ab",
+   "line_da"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ },
+ {
+  "name": "B",
+  "expression": "Intersect(line_ab, line_bc)",
+  "dependencies": [
+   "line_ab",
+   "line_bc"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ },
+ {
+  "name": "C",
+  "expression": "Intersect(line_bc, line_cd)",
+  "dependencies": [
+   "line_bc",
+   "line_cd"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ },
+ {
+  "name": "D",
+  "expression": "Intersect(line_cd, line_da)",
+  "dependencies": [
+   "line_cd",
+   "line_da"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ },
+ {
+  "name": "AB",
+  "expression": "Segment(A, B)",
+  "dependencies": [
+   "A",
+   "B"
+  ],
+  "depth": 5,
+  "point_depth": 2
+ },
+ {
+  "name": "BC",
+  "expression": "Segment(B, C)",
+  "dependencies": [
+   "B",
+   "C"
+  ],
+  "depth": 5,
+  "point_depth": 2
+ },
+ {
+  "name": "CD",
+  "expression": "Segment(C, D)",
+  "dependencies": [
+   "C",
+   "D"
+  ],
+  "depth": 5,
+  "point_depth": 2
+ },
+ {
+  "name": "DA",
+  "expression": "Segment(D, A)",
+  "dependencies": [
+   "A",
+   "D"
+  ],
+  "depth": 5,
+  "point_depth": 2
+ },
+ {
+  "name": "quadrilateral",
+  "expression": "Polygon([A, B, C, D])",
+  "dependencies": [
+   "A",
+   "B",
+   "C",
+   "D"
+  ],
+  "depth": 5,
+  "point_depth": 2
+ }
+]

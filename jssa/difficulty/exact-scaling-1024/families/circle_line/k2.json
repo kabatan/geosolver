@@ -1,0 +1,36 @@
+{
+  "id": "circle_line-k2",
+  "variables": [
+    "t"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "U",
+      "expression": "Point(0, 1)"
+    },
+    {
+      "name": "P0",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "P1",
+      "expression": "Intersect(Line(O, U), Circle(Point((1 + P0.y)/2, 0), (3 + P0.y)/2), near=Point(0, 3))"
+    },
+    {
+      "name": "P2",
+      "expression": "Intersect(Line(O, U), Circle(Point((1 + P1.y)/2, 0), (3 + P1.y)/2), near=Point(0, 3))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "t",
+      "operator": "=",
+      "right": "P2.y"
+    }
+  ],
+  "target": "t"
+}

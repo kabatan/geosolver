@@ -1,0 +1,274 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(sqrt(3),0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(2 * cos(theta), 2 * sin(theta))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "IncircleContactPoint(A, B, C, 0)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "H",
+  "expression": "Orthocenter(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "Gamma",
+  "expression": "Circumcircle(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "BAx",
+  "expression": "A.x - B.x",
+  "dependencies": [
+   "A",
+   "B"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "BAy",
+  "expression": "A.y - B.y",
+  "dependencies": [
+   "A",
+   "B"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "BCx",
+  "expression": "C.x - B.x",
+  "dependencies": [
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "BCy",
+  "expression": "C.y - B.y",
+  "dependencies": [
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "uBx",
+  "expression": "BAx / Distance(B, A) + BCx / Distance(B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "BAx",
+   "BCx",
+   "C"
+  ],
+  "depth": 2,
+  "point_depth": 0
+ },
+ {
+  "name": "uBy",
+  "expression": "BAy / Distance(B, A) + BCy / Distance(B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "BAy",
+   "BCy",
+   "C"
+  ],
+  "depth": 2,
+  "point_depth": 0
+ },
+ {
+  "name": "uBn",
+  "expression": "sqrt(uBx * uBx + uBy * uBy)",
+  "dependencies": [
+   "uBx",
+   "uBy"
+  ],
+  "depth": 3,
+  "point_depth": 0
+ },
+ {
+  "name": "sB2",
+  "expression": "sqrt((1 - Dot(Vector(B, A), Vector(B, C)) / (Distance(B, A) * Distance(B, C))) / 2)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "CAx",
+  "expression": "A.x - C.x",
+  "dependencies": [
+   "A",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "CAy",
+  "expression": "A.y - C.y",
+  "dependencies": [
+   "A",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "CBx",
+  "expression": "B.x - C.x",
+  "dependencies": [
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "CBy",
+  "expression": "B.y - C.y",
+  "dependencies": [
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "uCx",
+  "expression": "CAx / Distance(C, A) + CBx / Distance(C, B)",
+  "dependencies": [
+   "A",
+   "B",
+   "C",
+   "CAx",
+   "CBx"
+  ],
+  "depth": 2,
+  "point_depth": 0
+ },
+ {
+  "name": "uCy",
+  "expression": "CAy / Distance(C, A) + CBy / Distance(C, B)",
+  "dependencies": [
+   "A",
+   "B",
+   "C",
+   "CAy",
+   "CBy"
+  ],
+  "depth": 2,
+  "point_depth": 0
+ },
+ {
+  "name": "uCn",
+  "expression": "sqrt(uCx * uCx + uCy * uCy)",
+  "dependencies": [
+   "uCx",
+   "uCy"
+  ],
+  "depth": 3,
+  "point_depth": 0
+ },
+ {
+  "name": "sC2",
+  "expression": "sqrt((1 - Dot(Vector(C, A), Vector(C, B)) / (Distance(C, A) * Distance(C, B))) / 2)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "OB",
+  "expression": "Point(B.x + rb * uBx / (uBn * sB2), B.y + rb * uBy / (uBn * sB2))",
+  "dependencies": [
+   "B",
+   "sB2",
+   "uBn",
+   "uBx",
+   "uBy"
+  ],
+  "depth": 4,
+  "point_depth": 1
+ },
+ {
+  "name": "OC",
+  "expression": "Point(C.x + rc * uCx / (uCn * sC2), C.y + rc * uCy / (uCn * sC2))",
+  "dependencies": [
+   "C",
+   "sC2",
+   "uCn",
+   "uCx",
+   "uCy"
+  ],
+  "depth": 4,
+  "point_depth": 1
+ },
+ {
+  "name": "omegaB",
+  "expression": "Circle(OB, rb)",
+  "dependencies": [
+   "OB"
+  ],
+  "depth": 5,
+  "point_depth": 1
+ },
+ {
+  "name": "omegaC",
+  "expression": "Circle(OC, rc)",
+  "dependencies": [
+   "OC"
+  ],
+  "depth": 5,
+  "point_depth": 1
+ }
+]

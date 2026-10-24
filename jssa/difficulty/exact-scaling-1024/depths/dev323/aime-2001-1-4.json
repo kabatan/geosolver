@@ -1,0 +1,54 @@
+[
+ {
+  "name": "B",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(x, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(y, z)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "bc_line",
+  "expression": "Line(B, C)",
+  "dependencies": [
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "a_angle_bisector",
+  "expression": "AngleBisector(B, A, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "T",
+  "expression": "Intersect(a_angle_bisector, bc_line)",
+  "dependencies": [
+   "a_angle_bisector",
+   "bc_line"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ }
+]

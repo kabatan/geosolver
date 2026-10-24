@@ -1,0 +1,55 @@
+[
+ {
+  "name": "r",
+  "expression": "1 + sin(pi / 8)",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "L",
+  "expression": "r / (1 - 1 / sqrt(2))",
+  "dependencies": [
+   "r"
+  ],
+  "depth": 2,
+  "point_depth": 0
+ },
+ {
+  "name": "I",
+  "expression": "Point(r, r)",
+  "dependencies": [
+   "r"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "T",
+  "expression": "Point(L - t * (1 + sqrt(2)), t)",
+  "dependencies": [
+   "L"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "omega",
+  "expression": "Circle(I, r)",
+  "dependencies": [
+   "I",
+   "r"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "tau",
+  "expression": "Circle(T, t)",
+  "dependencies": [
+   "T"
+  ],
+  "depth": 4,
+  "point_depth": 1
+ }
+]

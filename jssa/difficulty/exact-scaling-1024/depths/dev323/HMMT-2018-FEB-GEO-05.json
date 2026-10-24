@@ -1,0 +1,61 @@
+[
+ {
+  "name": "O",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "omega",
+  "expression": "Circle(O, 1)",
+  "dependencies": [
+   "O"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(1, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "M",
+  "expression": "Point(-1, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "R",
+  "expression": "Point(cos(theta), sin(theta))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "bis",
+  "expression": "AngleBisector(R, A, M)",
+  "dependencies": [
+   "A",
+   "M",
+   "R"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "E",
+  "expression": "Intersect(bis, omega, exclude=A)",
+  "dependencies": [
+   "A",
+   "bis",
+   "omega"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ }
+]

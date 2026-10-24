@@ -1,0 +1,122 @@
+[
+ {
+  "name": "O1",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "O2",
+  "expression": "Point(5, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Kx",
+  "expression": "2 + r / 5",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "Ky",
+  "expression": "sqrt((r - 2) * (r - 2) - Kx * Kx)",
+  "dependencies": [
+   "Kx"
+  ],
+  "depth": 2,
+  "point_depth": 0
+ },
+ {
+  "name": "K",
+  "expression": "Point(Kx, Ky)",
+  "dependencies": [
+   "Kx",
+   "Ky"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "C1",
+  "expression": "Circle(O1, 2)",
+  "dependencies": [
+   "O1"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "C2",
+  "expression": "Circle(O2, 3)",
+  "dependencies": [
+   "O2"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "C3",
+  "expression": "Circle(K, r)",
+  "dependencies": [
+   "K"
+  ],
+  "depth": 4,
+  "point_depth": 1
+ },
+ {
+  "name": "segment_extension_A",
+  "expression": "Line(O1, K)",
+  "dependencies": [
+   "K",
+   "O1"
+  ],
+  "depth": 4,
+  "point_depth": 1
+ },
+ {
+  "name": "A",
+  "expression": "PointOnLine(segment_extension_A, -segment_extension_A.b*(O1.x+(-2 / (r - 2))*(K.x-O1.x))+segment_extension_A.a*(O1.y+(-2 / (r - 2))*(K.y-O1.y)))",
+  "dependencies": [
+   "K",
+   "O1",
+   "segment_extension_A"
+  ],
+  "depth": 5,
+  "point_depth": 2
+ },
+ {
+  "name": "segment_extension_B",
+  "expression": "Line(O2, K)",
+  "dependencies": [
+   "K",
+   "O2"
+  ],
+  "depth": 4,
+  "point_depth": 1
+ },
+ {
+  "name": "B",
+  "expression": "PointOnLine(segment_extension_B, -segment_extension_B.b*(O2.x+(-3 / (r - 3))*(K.x-O2.x))+segment_extension_B.a*(O2.y+(-3 / (r - 3))*(K.y-O2.y)))",
+  "dependencies": [
+   "K",
+   "O2",
+   "segment_extension_B"
+  ],
+  "depth": 5,
+  "point_depth": 2
+ },
+ {
+  "name": "T",
+  "expression": "Intersect(PerpendicularLine(Line(K, A), A), PerpendicularLine(Line(K, B), B))",
+  "dependencies": [
+   "A",
+   "B",
+   "K"
+  ],
+  "depth": 6,
+  "point_depth": 3
+ }
+]

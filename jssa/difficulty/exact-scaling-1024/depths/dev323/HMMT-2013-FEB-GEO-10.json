@@ -1,0 +1,122 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(bx, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(cx, cy)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Gamma",
+  "expression": "Circumcircle(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "Lbis",
+  "expression": "AngleBisector(B, A, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "E",
+  "expression": "Intersect(Lbis, Line(B, C))",
+  "dependencies": [
+   "B",
+   "C",
+   "Lbis"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "D",
+  "expression": "Intersect(Line(A, E), Gamma, exclude=A)",
+  "dependencies": [
+   "A",
+   "E",
+   "Gamma"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "Dp",
+  "expression": "Reflect(A, D)",
+  "dependencies": [
+   "A",
+   "D"
+  ],
+  "depth": 4,
+  "point_depth": 3
+ },
+ {
+  "name": "Cp",
+  "expression": "Reflect(A, C)",
+  "dependencies": [
+   "A",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "P",
+  "expression": "Intersect(Tangent(A, Gamma), Line(B, C))",
+  "dependencies": [
+   "A",
+   "B",
+   "C",
+   "Gamma"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "Gamma2",
+  "expression": "Circumcircle(A, P, Dp)",
+  "dependencies": [
+   "A",
+   "Dp",
+   "P"
+  ],
+  "depth": 5,
+  "point_depth": 3
+ },
+ {
+  "name": "F",
+  "expression": "Intersect(Line(B, C), Gamma2, exclude=P)",
+  "dependencies": [
+   "B",
+   "C",
+   "Gamma2",
+   "P"
+  ],
+  "depth": 6,
+  "point_depth": 4
+ }
+]

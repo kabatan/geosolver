@@ -1,0 +1,79 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(20, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(10, 10 * tan(75 * pi / 180))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Bp",
+  "expression": "Rotate(B, pi / 12, A)",
+  "dependencies": [
+   "A",
+   "B"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "Cp",
+  "expression": "Rotate(C, pi / 12, A)",
+  "dependencies": [
+   "A",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "D",
+  "expression": "Intersect(Line(A, C), Line(Bp, Cp))",
+  "dependencies": [
+   "A",
+   "Bp",
+   "C",
+   "Cp"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ },
+ {
+  "name": "E",
+  "expression": "Intersect(Line(B, C), Line(Bp, Cp))",
+  "dependencies": [
+   "B",
+   "Bp",
+   "C",
+   "Cp"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ },
+ {
+  "name": "F",
+  "expression": "Intersect(Line(B, C), Line(A, Bp))",
+  "dependencies": [
+   "A",
+   "B",
+   "Bp",
+   "C"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ }
+]

@@ -1,0 +1,116 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(13, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(cx, cy)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "E",
+  "expression": "FootOfPerpendicular(Line(A,C),B)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "F",
+  "expression": "FootOfPerpendicular(Line(A,B),C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "omega",
+  "expression": "Circumcircle(A,E,F)",
+  "dependencies": [
+   "A",
+   "E",
+   "F"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "lA",
+  "expression": "PerpendicularLine(Line(Center(omega),A),A)",
+  "dependencies": [
+   "A",
+   "omega"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "lE",
+  "expression": "PerpendicularLine(Line(Center(omega),E),E)",
+  "dependencies": [
+   "E",
+   "omega"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "lF",
+  "expression": "PerpendicularLine(Line(Center(omega),F),F)",
+  "dependencies": [
+   "F",
+   "omega"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "U",
+  "expression": "IntersectLines(lA,lE)",
+  "dependencies": [
+   "lA",
+   "lE"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ },
+ {
+  "name": "V",
+  "expression": "IntersectLines(lE,lF)",
+  "dependencies": [
+   "lE",
+   "lF"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ },
+ {
+  "name": "W",
+  "expression": "IntersectLines(lF,lA)",
+  "dependencies": [
+   "lA",
+   "lF"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ }
+]

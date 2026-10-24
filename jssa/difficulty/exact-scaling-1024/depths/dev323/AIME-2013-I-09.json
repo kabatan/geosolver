@@ -1,0 +1,62 @@
+[
+ {
+  "name": "B",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(12, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(6, 6 * sqrt(3))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "T",
+  "expression": "Point(9, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "L",
+  "expression": "PerpendicularBisector(A, T)",
+  "dependencies": [
+   "A",
+   "T"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "M",
+  "expression": "Intersect(L, Line(A, B))",
+  "dependencies": [
+   "A",
+   "B",
+   "L"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "N",
+  "expression": "Intersect(L, Line(A, C))",
+  "dependencies": [
+   "A",
+   "C",
+   "L"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ }
+]

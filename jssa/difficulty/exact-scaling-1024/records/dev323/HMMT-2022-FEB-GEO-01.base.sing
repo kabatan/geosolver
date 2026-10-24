@@ -1,0 +1,19 @@
+LIB "elim.lib";
+option(redSB);
+ring R=0,(x1,x2,x3,x4,x5,x6,x7,x8,x9),dp;
+short=0;
+ideal J=x5^2 - 3,
+x1*x5^2 + x1 - x5^2*x9 - 20,
+x2*x5^2 + x2 - x5*x9 + 20*x5,
+x3*x5^2 + x3 - x5^2*x9 + 11*x5^2 - 11,
+x4*x5^2 + x4 - 11*x5^3 - x5*x9 + 11*x5,
+121*x5^2 - x6^2 + 121,
+x6 - 22,
+x7^2 - x9^2,
+x5^2*x9^2 - 4*x8^2 + x9^2,
+x7 - x8;
+ideal G=std(J);
+print("DIM="+string(dim(G)));
+print("DEG="+string(mult(G)));
+print("VDIM="+string(vdim(G)));
+quit;

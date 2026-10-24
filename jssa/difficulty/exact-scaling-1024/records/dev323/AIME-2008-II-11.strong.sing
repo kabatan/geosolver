@@ -1,0 +1,33 @@
+LIB "elim.lib";
+option(redSB);
+ring R=0,(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12),dp;
+short=0;
+ideal J=-576*x1^2 - 336*x1*x2 + 64512*x1 - 49*x2^2 + 18816*x2 + 625*x6^2 - 1806336,
+x6 - 16,
+-x2^2 + x7^2,
+x7 - 16,
+-576*x3^2 + 336*x3*x4 - 49*x4^2 + 625*x8^2,
+-x5 + x8,
+-x4^2 + x9^2,
+-x5 + x9,
+-x1^2 + 2*x1*x3 + x10^2 - x2^2 + 2*x2*x4 - x3^2 - x4^2,
+x10 - x5 - 16,
+625*x11^2 - 576*x3^2 - 336*x3*x4 + 64512*x3 - 49*x4^2 + 18816*x4 - 1806336,
+x12 - x5;
+J=sat(J,ideal(x2));
+print("SAT_FACTOR=1");
+J=sat(J,ideal(24*x3 + 7*x4 - 1344));
+print("SAT_FACTOR=2");
+J=sat(J,ideal(x3 - 56));
+print("SAT_FACTOR=3");
+J=sat(J,ideal(24*x3 - 7*x4));
+print("SAT_FACTOR=4");
+J=sat(J,ideal(x4));
+print("SAT_FACTOR=5");
+J=sat(J,ideal(x5));
+print("SAT_FACTOR=6");
+ideal G=std(J);
+print("DIM="+string(dim(G)));
+print("DEG="+string(mult(G)));
+print("VDIM="+string(vdim(G)));
+quit;

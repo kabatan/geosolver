@@ -1,0 +1,78 @@
+[
+ {
+  "name": "D",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "I",
+  "expression": "Point(0, 3)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "incircle",
+  "expression": "Circle(I, 3)",
+  "dependencies": [
+   "I"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(-3 * sqrt(3), 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(4, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(ax, ay)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "Delta",
+  "expression": "Circle(Midpoint(A, I), Distance(A, I) / 2)",
+  "dependencies": [
+   "A",
+   "I"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "P",
+  "expression": "Intersect(Line(B, I), Delta, exclude=I)",
+  "dependencies": [
+   "B",
+   "Delta",
+   "I"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "Q",
+  "expression": "Intersect(Line(C, I), Delta, exclude=I)",
+  "dependencies": [
+   "C",
+   "Delta",
+   "I"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ }
+]

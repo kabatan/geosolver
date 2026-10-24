@@ -1,0 +1,72 @@
+[
+ {
+  "name": "B",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(4, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(11 / 8, 3 * sqrt(15) / 8)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "O",
+  "expression": "Point(8 / 5, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "E",
+  "expression": "FootOfPerpendicular(O, Line(A, B))",
+  "dependencies": [
+   "A",
+   "B",
+   "O"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "F",
+  "expression": "FootOfPerpendicular(O, Line(A, C))",
+  "dependencies": [
+   "A",
+   "C",
+   "O"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "r",
+  "expression": "Distance(O, E)",
+  "dependencies": [
+   "E",
+   "O"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "omega",
+  "expression": "Circle(O, r)",
+  "dependencies": [
+   "O",
+   "r"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ }
+]

@@ -1,0 +1,84 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(-1 / 2, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(1 / 2, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Point(-3, 2 * r)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(3, 2 * r)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "O1",
+  "expression": "Point(r, r)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "O2",
+  "expression": "Point(-r, r)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "omega1",
+  "expression": "Circle(O1, r)",
+  "dependencies": [
+   "O1"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "omega2",
+  "expression": "Circle(O2, r)",
+  "dependencies": [
+   "O2"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "T1",
+  "expression": "FootOfPerpendicular(O1, Line(B, C))",
+  "dependencies": [
+   "B",
+   "C",
+   "O1"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "T2",
+  "expression": "FootOfPerpendicular(O2, Line(A, D))",
+  "dependencies": [
+   "A",
+   "D",
+   "O2"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ }
+]

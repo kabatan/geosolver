@@ -1,0 +1,77 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(a, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(bx, bx)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(cx, 2 * cx)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Point(a, a)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "L1",
+  "expression": "Line(Point(0, 0), Point(1, 1))",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "L2",
+  "expression": "Line(Point(0, 0), Point(1, 2))",
+  "dependencies": [],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "Gamma",
+  "expression": "Circumcircle(A, D, C)",
+  "dependencies": [
+   "A",
+   "C",
+   "D"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "E",
+  "expression": "Intersect(Gamma, L1, exclude=D)",
+  "dependencies": [
+   "D",
+   "Gamma",
+   "L1"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "F",
+  "expression": "Intersect(Line(A, E), L2)",
+  "dependencies": [
+   "A",
+   "E",
+   "L2"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ }
+]

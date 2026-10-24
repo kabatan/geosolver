@@ -1,0 +1,10 @@
+LIB "elim.lib";
+option(redSB);
+ring R=0,(x1),dp;
+short=0;
+ideal J=x1^6 - 58*x1^5 + 1222*x1^4 - 10796*x1^3 + 60281*x1^2 - 457138*x1 - 8825740;
+ideal G=std(J);
+print("DIM="+string(dim(G)));
+print("DEG="+string(mult(G)));
+print("VDIM="+string(vdim(G)));
+quit;

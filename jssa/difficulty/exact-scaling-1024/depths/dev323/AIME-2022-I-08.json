@@ -1,0 +1,120 @@
+[
+ {
+  "name": "O",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "omega",
+  "expression": "Circle(O, 18)",
+  "dependencies": [
+   "O"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(0, 18)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(-9 * sqrt(3), -9)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(9 * sqrt(3), -9)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "OA",
+  "expression": "Point(0, r - 18)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "OB",
+  "expression": "Point(-(r - 18) * sqrt(3) / 2, -(r - 18) / 2)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "OC",
+  "expression": "Point((r - 18) * sqrt(3) / 2, -(r - 18) / 2)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "omegaA",
+  "expression": "Circle(OA, r)",
+  "dependencies": [
+   "OA"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "omegaB",
+  "expression": "Circle(OB, r)",
+  "dependencies": [
+   "OB"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "omegaC",
+  "expression": "Circle(OC, r)",
+  "dependencies": [
+   "OC"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "S1",
+  "expression": "Intersect(omegaA, omegaB, near=O)",
+  "dependencies": [
+   "O",
+   "omegaA",
+   "omegaB"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "S2",
+  "expression": "Intersect(omegaB, omegaC, near=O)",
+  "dependencies": [
+   "O",
+   "omegaB",
+   "omegaC"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "S3",
+  "expression": "Intersect(omegaC, omegaA, near=O)",
+  "dependencies": [
+   "O",
+   "omegaA",
+   "omegaC"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ }
+]

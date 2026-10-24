@@ -1,0 +1,52 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(11, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(bx, by)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Point(bx * (1 - t) + 11 * t, by * (1 - t))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "M",
+  "expression": "Midpoint(A, D)",
+  "dependencies": [
+   "A",
+   "D"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "P",
+  "expression": "Intersect(Line(A, C), Line(B, M))",
+  "dependencies": [
+   "A",
+   "B",
+   "C",
+   "M"
+  ],
+  "depth": 2,
+  "point_depth": 2
+ }
+]

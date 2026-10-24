@@ -1,0 +1,32 @@
+{
+  "id": "angle_bisector-k1",
+  "variables": [
+    "t"
+  ],
+  "constructions": [
+    {
+      "name": "O",
+      "expression": "Point(0, 0)"
+    },
+    {
+      "name": "A",
+      "expression": "Point(1, 0)"
+    },
+    {
+      "name": "B0",
+      "expression": "Point(1, 1)"
+    },
+    {
+      "name": "B1",
+      "expression": "Intersect(AngleBisector(A, O, B0), Line(A, B0))"
+    }
+  ],
+  "conditions": [
+    {
+      "left": "t",
+      "operator": "=",
+      "right": "B1.y"
+    }
+  ],
+  "target": "t"
+}

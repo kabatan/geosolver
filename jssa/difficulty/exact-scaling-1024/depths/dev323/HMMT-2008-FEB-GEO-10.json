@@ -1,0 +1,94 @@
+[
+ {
+  "name": "B",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(2007, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(ax, ay)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Point(1003, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "omega",
+  "expression": "Excircle(A, B, C, vertex='A')",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "O",
+  "expression": "Center(omega)",
+  "dependencies": [
+   "omega"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "E",
+  "expression": "ContactPoint(omega, Line(A, C))",
+  "dependencies": [
+   "A",
+   "C",
+   "omega"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "F",
+  "expression": "ContactPoint(omega, Line(A, B))",
+  "dependencies": [
+   "A",
+   "B",
+   "omega"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "ell",
+  "expression": "PerpendicularLine(Line(A, D), O)",
+  "dependencies": [
+   "A",
+   "D",
+   "O"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "G",
+  "expression": "Intersect(ell, Line(E, F))",
+  "dependencies": [
+   "E",
+   "F",
+   "ell"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ }
+]

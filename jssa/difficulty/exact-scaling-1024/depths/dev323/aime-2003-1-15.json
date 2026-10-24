@@ -1,0 +1,124 @@
+[
+ {
+  "name": "B",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(507, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(x, y)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "M",
+  "expression": "Midpoint(C, A)",
+  "dependencies": [
+   "A",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "ca_line",
+  "expression": "Line(C, A)",
+  "dependencies": [
+   "A",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "bc_line",
+  "expression": "Line(B, C)",
+  "dependencies": [
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "angle_bisector",
+  "expression": "AngleBisector(A, B, C)",
+  "dependencies": [
+   "A",
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Intersect(angle_bisector, ca_line)",
+  "dependencies": [
+   "angle_bisector",
+   "ca_line"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "bd_line",
+  "expression": "Line(B, D)",
+  "dependencies": [
+   "B",
+   "D"
+  ],
+  "depth": 3,
+  "point_depth": 1
+ },
+ {
+  "name": "df_line",
+  "expression": "PerpendicularLine(bd_line, D)",
+  "dependencies": [
+   "D",
+   "bd_line"
+  ],
+  "depth": 4,
+  "point_depth": 1
+ },
+ {
+  "name": "F",
+  "expression": "Intersect(df_line, bc_line)",
+  "dependencies": [
+   "bc_line",
+   "df_line"
+  ],
+  "depth": 5,
+  "point_depth": 2
+ },
+ {
+  "name": "bm_line",
+  "expression": "Line(B, M)",
+  "dependencies": [
+   "B",
+   "M"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "E",
+  "expression": "Intersect(df_line, bm_line)",
+  "dependencies": [
+   "bm_line",
+   "df_line"
+  ],
+  "depth": 5,
+  "point_depth": 2
+ }
+]

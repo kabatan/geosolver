@@ -1,0 +1,130 @@
+[
+ {
+  "name": "B",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(7, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "D",
+  "expression": "Point(5, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "A",
+  "expression": "Point(x, y)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "E",
+  "expression": "PointOnSegment(C, A, e)",
+  "dependencies": [
+   "A",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "Q",
+  "expression": "PointOnSegment(A, B, q)",
+  "dependencies": [
+   "A",
+   "B"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "R",
+  "expression": "PointOnSegment(A, B, r)",
+  "dependencies": [
+   "A",
+   "B"
+  ],
+  "depth": 1,
+  "point_depth": 1
+ },
+ {
+  "name": "ad_line",
+  "expression": "Line(A, D)",
+  "dependencies": [
+   "A",
+   "D"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "be_line",
+  "expression": "Line(B, E)",
+  "dependencies": [
+   "B",
+   "E"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "P",
+  "expression": "Intersect(ad_line, be_line)",
+  "dependencies": [
+   "ad_line",
+   "be_line"
+  ],
+  "depth": 3,
+  "point_depth": 2
+ },
+ {
+  "name": "ca_line",
+  "expression": "Line(C, A)",
+  "dependencies": [
+   "A",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "cb_line",
+  "expression": "Line(C, B)",
+  "dependencies": [
+   "B",
+   "C"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "pq_line",
+  "expression": "Line(P, Q)",
+  "dependencies": [
+   "P",
+   "Q"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ },
+ {
+  "name": "pr_line",
+  "expression": "Line(P, R)",
+  "dependencies": [
+   "P",
+   "R"
+  ],
+  "depth": 4,
+  "point_depth": 2
+ }
+]

@@ -1,0 +1,67 @@
+[
+ {
+  "name": "A",
+  "expression": "Point(0, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "B",
+  "expression": "Point(20, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "C",
+  "expression": "Point(11, 11 * sqrt(3))",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "U",
+  "expression": "Point(u, 0)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "V",
+  "expression": "Point(u / 2, u * sqrt(3) / 2)",
+  "dependencies": [],
+  "depth": 0,
+  "point_depth": 0
+ },
+ {
+  "name": "l",
+  "expression": "Line(U, V)",
+  "dependencies": [
+   "U",
+   "V"
+  ],
+  "depth": 1,
+  "point_depth": 0
+ },
+ {
+  "name": "X",
+  "expression": "FootOfPerpendicular(B, l)",
+  "dependencies": [
+   "B",
+   "l"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ },
+ {
+  "name": "Y",
+  "expression": "FootOfPerpendicular(C, l)",
+  "dependencies": [
+   "C",
+   "l"
+  ],
+  "depth": 2,
+  "point_depth": 1
+ }
+]
