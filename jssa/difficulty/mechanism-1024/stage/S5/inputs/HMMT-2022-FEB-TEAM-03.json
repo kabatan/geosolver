@@ -1,0 +1,111 @@
+{
+  "case_id": "HMMT-2022-FEB-TEAM-03",
+  "dsl": {
+    "id": "HMMT-2022-FEB-TEAM-03",
+    "variables": [
+      "bx",
+      "by",
+      "cx",
+      "cy"
+    ],
+    "constructions": [
+      {
+        "name": "O",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "Gamma",
+        "expression": "Circle(O, 1)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(1, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(bx, by)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "name": "U",
+        "expression": "Midpoint(A, B)"
+      },
+      {
+        "name": "V",
+        "expression": "Midpoint(A, C)"
+      },
+      {
+        "name": "X",
+        "expression": "Point(U.x/Distance(O, U), U.y/Distance(O, U))"
+      },
+      {
+        "name": "Y",
+        "expression": "Point(V.x/Distance(O, V), V.y/Distance(O, V))"
+      },
+      {
+        "name": "omega",
+        "expression": "Incircle(A, B, C)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "OnCircle(B, Gamma)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(C, Gamma)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "((B.x-A.x)*(C.x-A.x)+(B.y-A.y)*(C.y-A.y))",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "((A.x-B.x)*(C.x-B.x)+(A.y-B.y)*(C.y-B.y))",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "((A.x-C.x)*(B.x-C.x)+(A.y-C.y)*(B.y-C.y))",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "Distance(O, U)",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "Distance(O, V)",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "Distance(X, Y)",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(Line(X, Y), omega)",
+        "operator": "=",
+        "right": 0
+      }
+    ],
+    "target": "Distance(X, Y)"
+  },
+  "dsl_path": "jssa/difficulty/unseen-1983/dsl/HMMT-2022-FEB-TEAM-03.json",
+  "selection": null,
+  "reference_expressions": [],
+  "reference_parse_error": null
+}

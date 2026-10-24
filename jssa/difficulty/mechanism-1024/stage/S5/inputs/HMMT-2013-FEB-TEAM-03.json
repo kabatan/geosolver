@@ -1,0 +1,83 @@
+{
+  "case_id": "HMMT-2013-FEB-TEAM-03",
+  "dsl": {
+    "id": "HMMT-2013-FEB-TEAM-03",
+    "variables": [
+      "ax",
+      "ay",
+      "c"
+    ],
+    "constructions": [
+      {
+        "name": "B",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(c, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(ax, ay)"
+      },
+      {
+        "name": "O",
+        "expression": "Circumcenter(A, B, C)"
+      },
+      {
+        "name": "omega",
+        "expression": "Circumcircle(A, O, C)"
+      },
+      {
+        "name": "F",
+        "expression": "Intersect(Line(A, B), omega, exclude=A)"
+      },
+      {
+        "name": "E",
+        "expression": "Intersect(Line(F, O), Line(B, C))"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "c",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "ay",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Area(A, O, C)",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(Line(B, C), omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, F)",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "Distance(F, O)",
+        "operator": ">",
+        "right": 0
+      }
+    ],
+    "target": "Distance(B, E)"
+  },
+  "dsl_path": "jssa/difficulty/unseen-1983/dsl/HMMT-2013-FEB-TEAM-03.json",
+  "selection": null,
+  "reference_expressions": [],
+  "reference_parse_error": null
+}

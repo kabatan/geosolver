@@ -1,0 +1,111 @@
+{
+  "case_id": "HMMT-2026-FEB-GEO-09",
+  "dsl": {
+    "id": "HMMT-2026-FEB-GEO-09",
+    "variables": [
+      "a",
+      "ax",
+      "ay",
+      "zx",
+      "zy",
+      "rho"
+    ],
+    "constructions": [
+      {
+        "name": "B",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(a, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(ax, ay)"
+      },
+      {
+        "name": "I",
+        "expression": "Incenter(A, B, C)"
+      },
+      {
+        "name": "omega",
+        "expression": "Incircle(A, B, C)"
+      },
+      {
+        "name": "K",
+        "expression": "Circumcircle(B, I, C)"
+      },
+      {
+        "name": "E",
+        "expression": "Intersect(K, omega, n=1)"
+      },
+      {
+        "name": "F",
+        "expression": "Intersect(K, omega, exclude=E)"
+      },
+      {
+        "name": "Gamma",
+        "expression": "Circle(Point(zx, zy), rho)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "OnCircle(E, Gamma)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(F, Gamma)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(Line(A, B), Gamma)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(Line(A, C), Gamma)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Radius(Gamma)",
+        "operator": "=",
+        "right": "2 * Radius(omega)"
+      },
+      {
+        "left": "a",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "ay",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "rho",
+        "operator": ">",
+        "right": 0
+      }
+    ],
+    "target": "Distance(B, C)"
+  },
+  "dsl_path": "jssa/difficulty/new2026/dsl/HMMT-2026-FEB-GEO-09.json",
+  "selection": null,
+  "reference_expressions": [
+    "3 + sqrt(11)"
+  ],
+  "reference_parse_error": null
+}
